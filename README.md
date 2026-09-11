@@ -1,7 +1,7 @@
 # NU54DK Arduino Core
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Stable: v0.3.0](https://img.shields.io/badge/stable-v0.3.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0)
+[![Stable: v0.4.0](https://img.shields.io/badge/stable-v0.4.0-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.0)
 [![NCS: v3.4.0](https://img.shields.io/badge/NCS-v3.4.0-00A9CE.svg)](https://github.com/nrfconnect/sdk-nrf)
 [![Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-software-gates.yml/badge.svg?branch=main)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-software-gates.yml)
 [![Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-reproducible-build.yml/badge.svg?branch=main)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-reproducible-build.yml)
@@ -12,14 +12,14 @@ CMSIS-DAP V2와 pyOCD로 업로드합니다.
 
 | 항목 | 현재 기준 |
 | --- | --- |
-| 정식 버전 | [`v0.3.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.3.0) |
+| 정식 버전 | [`v0.4.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.0) |
 | 지원 보드 | NU54DK / nRF54L15 CPUAPP |
 | Arduino FQBN | `nucode:zephyr:nu54dk` |
 | SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 사용자 환경 | Windows 10/11 x64, Arduino IDE 2.x |
 | 기본 업로드 | 온보드 CMSIS-DAP V2 + pyOCD |
 | 기본 메모리 | Application 1,456 KiB + LittleFS 32 KiB + Settings/ZMS 36 KiB |
-| 배포 구성 | Arduino library 8개, 설치 예제 29개 |
+| 배포 구성 | Arduino library 9개, 설치 예제 30개 |
 
 빠르게 찾기: [설치](#빠른-시작) · [지원 범위](#지원-범위) · [개발 현황](00_Docs/TODO_v0.4.0.md) · [문서 안내](00_Docs/README.md)
 
@@ -46,12 +46,12 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 1. `Tools → Board → Boards Manager`를 엽니다.
 2. `NUCODE NU54DK Zephyr Boards`를 검색합니다.
-3. 버전 `0.3.0`을 설치합니다.
+3. 버전 `0.4.0`을 설치합니다.
 4. post-install 실행 확인이 나오면 승인합니다.
 5. NCS v3.4.0과 고정 Toolchain 설치가 끝날 때까지 기다립니다.
 
 첫 설치는 Nordic SDK와 Toolchain을 내려받으므로 오래 걸릴 수 있습니다. 문제가 생기면
-[v0.3.0 문제 해결](<./00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md>)을 확인하십시오.
+[v0.4.0 문제 해결](<./00_Docs/05_릴리스/v0.4.0/TROUBLESHOOTING.md>)을 확인하십시오.
 
 ### 4. 보드와 기능 구성 선택
 
@@ -62,6 +62,8 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 | `Tools → Upload probe` | `CMSIS-DAP (pyOCD)` | 동일 |
 
 일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 작성하지 않아도 됩니다.
+직접 instance·DMA API를 사용할 때만 `Peripheral Fabric (DAP UART disconnected)`를 선택하고
+아래 전기 조건을 따릅니다.
 
 ### 5. 첫 Blink 업로드
 
@@ -97,28 +99,27 @@ NU54DK를 연결한 뒤 `Verify`, `Upload` 순서로 실행합니다. 온보드 
 | [`NUCODE BLE Security`](./libraries/NUCODE_BLE_Security/examples) | SecureKeyboard |
 | [`EEPROM`](./libraries/EEPROM/examples) | EEPROMPersistence |
 | [`LittleFS`](./libraries/LittleFS/examples) | LittleFSPersistence |
+| [`NUCODE Peripheral Fabric`](./libraries/NUCODE_Peripheral_Fabric/examples) | FabricCapabilities |
 
-정식 package에는 Standard profile 22개와 BLE profile 7개, 총 29개 예제가 들어 있습니다.
-설치본 29/29 compile과 대표 Blink pyOCD upload를 정식 승격 gate에서 확인했습니다.
+정식 package에는 Standard profile 22개, BLE profile 7개와 Fabric profile 1개, 총 30개 예제가
+들어 있습니다. 공개 index에서 새로 설치한 package의 30/30 compile, 대표 Blink pyOCD upload,
+0.3.0 전환과 제거·재설치까지 정식 공개 후 검증했습니다.
 
-### v0.4.0 개발 후보
+### v0.4.0 Peripheral Fabric
 
-현재 `main`에는 T16에서 추가한 `Peripheral Fabric (DAP UART disconnected)` profile과
-`NUCODE Peripheral Fabric` 예제 1개가 있습니다. 따라서 **v0.4.0 후보는 library 9개·예제 30개**이며,
-이미 공개된 v0.3.0의 8개·29개와 구분합니다. 이 profile은 검증된 Serial·Analog·Event·PDM·I2S·
+v0.4.0에는 `Peripheral Fabric (DAP UART disconnected)` profile과 `NUCODE Peripheral Fabric`
+예제 1개가 추가됐습니다. 이 profile은 검증된 Serial·Analog·Event·PDM·I2S·
 QDEC20/21과 TEMP/WDT30 직접 API를 활성화하고 기존 `standard`·`ble` singleton 구성을 함께
 켜지 않습니다. QDEC 연속 카운트는 SAMPLE/REPORT event 경로를 사용하며, 동작 중 반복 manual
 `read()/clear`의 무손실 누산은 보증하지 않습니다.
 
 사용자는 `Tools → Feature set → Peripheral Fabric (DAP UART disconnected)`와
 `#include <NUCODE_Peripheral_Fabric.h>`로 진입합니다. DAP UART switch를 물리적으로 분리해야 하는
-P0/P1 route는 profile 이름과 각 API의 electrical profile 선행조건을 따라야 합니다. v0.4.0은 아직
-공개 stable이 아니며 최종 RC·설치 수명주기·소유자 승인을 통과하기 전에는 Boards Manager 설치
-대상으로 안내하지 않습니다.
+P0/P1 route는 profile 이름과 각 API의 electrical profile 선행조건을 따라야 합니다.
 
 ## 지원 범위
 
-상태값은 다음 세 가지로만 구분합니다. `지원`은 `v0.3.0`이 선언한 범위를 구현·검증했다는
+상태값은 다음 세 가지로만 구분합니다. `지원`은 `v0.4.0`이 선언한 범위를 구현·검증했다는
 뜻이고, `부분 지원`은 해당 Arduino API군의 일부 instance나 mode만 제공한다는 뜻입니다.
 `미지원`은 공개 API·예제·runtime 검증이 없는 범위입니다.
 
@@ -225,17 +226,18 @@ Arduino CLI에서 명시적 CMSIS-DAP UID를 사용할 때는 compile과 upload�
 - PMIC write는 매 boot 명시적 승인이 필요합니다. 실제 배터리 전기·온도 보호 검증은 사용자
   조건에서 별도로 수행해야 합니다.
 - Active debugger/SWD는 System OFF와 reset cause를 방해할 수 있습니다.
-- `NU54DK.coreVersion()`은 역사적 문자열 `0.2.0-dev`를 반환합니다. 배포 identity는 Boards
-  Manager 설치 version과 release manifest로 확인하십시오.
+- source tree의 `NU54DK.coreVersion()`은 `0.4.0-dev`, 정식 package는 `0.4.0`을 반환합니다.
+  배포 identity는 Boards Manager 설치 version과 release manifest로 확인하십시오.
 
-전체 경계는 [v0.3.0 알려진 제약](<./00_Docs/05_릴리스/v0.3.0/KNOWN_ISSUES.md>)을 확인하십시오.
+전체 경계는 [v0.4.0 알려진 제약](<./00_Docs/05_릴리스/v0.4.0/KNOWN_ISSUES.md>)을 확인하십시오.
 
 ## 검증과 릴리스 정책
 
-`v0.3.0`은 host/software/docs/package gate, 두 번의 독립 package 재현 build, RC3 runtime
-payload 동등성, 격리 Boards Manager lifecycle, 설치 예제 29/29 compile과 실제 NU54DK upload를
-통과했습니다. 정확한 identity와 실행 결과는
-[v0.3.0 정식 공개 기록](<./00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에
+`v0.4.0`은 Host/software/docs/package gate, 35/35 target build, 독립 package 재현 build,
+RC runtime 동등성, 격리 Boards Manager lifecycle과 실제 NU54DK upload를 통과했습니다. 공개 뒤
+stable index에서 다시 설치해 예제 30/30 compile, upload, 0.3.0 전환과 제거·재설치도 확인했습니다.
+정확한 identity와 실행 결과는
+[v0.4.0 정식 공개 기록](<./00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에
 보존합니다.
 
 ## 로드맵
@@ -244,15 +246,14 @@ payload 동등성, 격리 Boards Manager lifecycle, 설치 예제 29/29 compile�
 | --- | --- | --- |
 | `v0.1.0` | 역사적·비지원 | Core, 기본 API, build/upload와 package |
 | `v0.2.0` | 역사적·비지원 | CI/CD, profile·예제, Board/System과 BLE NUS |
-| `v0.3.0` | **현재 stable** | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
-| `v0.4.0` | 공개 승인 대기 | 전 인스턴스 API 확장. T13~T21·R14 완료, T22 프로젝트 소유자 승인 대기 |
+| `v0.3.0` | 이전 stable·설치 가능 | Arduino compatibility, 동적 peripheral/analog, BLE GAP/GATT/security/profile, storage |
+| `v0.4.0` | **현재 stable** | 전 인스턴스 API 확장과 Peripheral Fabric, T01~T25 완료 |
 | `v0.5.0` | 계획 | Bluetooth LE 확장·ISO/LE Audio·Direction Finding·Channel Sounding·Mesh |
 | `v0.6.0` | 계획 | Storage/Crypto, TF-M, 고급 memory layout와 secure update/recovery |
 | `v0.7.0` | 계획 | Radio profile, IEEE 802.15.4, ESB와 OpenThread |
 | `v0.8.0` | 계획 | Matter 기반, application template와 commissioning HIL |
 
-`v0.4.0`은 개발 중이며 아직 공개되지 않았습니다. 현재 완료 항목과 다음 작업은
-[개발 현황·마일스톤](00_Docs/TODO_v0.4.0.md), 실행 근거는
+`v0.4.0`의 완료 항목과 공개 결과는 [완료 TODO](00_Docs/TODO_v0.4.0.md), 실행 근거는
 [검증 기록](<00_Docs/04_검증 기록/README.md>)에서 확인할 수 있습니다.
 
 ## 동작 구조
@@ -291,11 +292,11 @@ git submodule status
 ## 문서
 
 - [전체 문서 안내](./00_Docs/README.md)
-- [v0.4.0 실행 TODO·재개 체크포인트](./00_Docs/TODO_v0.4.0.md)
+- [v0.4.0 완료 TODO·체크포인트](./00_Docs/TODO_v0.4.0.md)
 - [리팩토링 계획·운영·진행 체크리스트](<./00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md>)
-- [v0.3.0 릴리스 문서](<./00_Docs/05_릴리스/v0.3.0/README.md>)
-- [v0.3.0 마이그레이션](<./00_Docs/05_릴리스/v0.3.0/MIGRATION.md>)
-- [v0.3.0 문제 해결](<./00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md>)
+- [v0.4.0 릴리스 문서](<./00_Docs/05_릴리스/v0.4.0/README.md>)
+- [v0.4.0 마이그레이션](<./00_Docs/05_릴리스/v0.4.0/MIGRATION.md>)
+- [v0.4.0 문제 해결](<./00_Docs/05_릴리스/v0.4.0/TROUBLESHOOTING.md>)
 - [Arduino API 지원 범위](<./00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)
 - [Windows 개발환경 설정](<./00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)
 - [Boards Manager 설치와 package](<./00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)

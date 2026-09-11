@@ -218,7 +218,7 @@ def render_document(contract: dict[str, Any], capabilities: list[dict[str, Any]]
         "COMP/LPCOMP·NFCT·sQSPI·raw RADIO는 각 행의 공개/보드 경계를 따른다. 이를 모두 v0.4.0 필수 "
         "외부 실기로 추가하지 않는다. 정밀 품질·외부 부품 호환성은 "
         "[42번 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)의 범위 밖이다. "
-        "필수 기능·복구·동시성·soak와 최종 RC는 [TODO](../TODO_v0.4.0.md)·readiness를 따르며 공개 HOLD를 유지한다.",
+        "필수 기능·복구·동시성·soak와 최종 RC 결과는 [완료 TODO](../TODO_v0.4.0.md)와 125번 공개 기록을 따른다.",
         "", "## 단일 원본과 검사", "",
         "- Contract: [`variants/nu54dk/system-capability-contract.json`](../../variants/nu54dk/system-capability-contract.json)",
         "- Verifier: [`tools/peripheral/verify_m26_system_contract.py`](../../tools/peripheral/verify_m26_system_contract.py)",

@@ -1,4 +1,4 @@
-# CI/CD와 재현 빌드 — v0.3.0 stable 이후 현재 계약
+# CI/CD와 재현 빌드 — v0.4.0 stable 현재 계약
 
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 | `core-semantic` | M14 Core C++ native semantic runtime |
 | `documents` | tracked Markdown UTF-8과 local link |
 | `package` | Boards Manager package 2회 재현성과 strict validation |
-| `example-discovery` | Arduino CLI `1.5.1`에서 현재 소스 트리를 임시 platform으로 설치해 v0.4 후보 library 9개·예제 30개 열거 |
+| `example-discovery` | Arduino CLI `1.5.1`에서 현재 소스 트리를 임시 platform으로 설치해 v0.4 library 9개·예제 30개 열거 |
 
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
@@ -39,8 +39,8 @@ M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개�
 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
 BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 현재 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
-T16 이후 `main`의 v0.4 후보는 `NUCODE Peripheral Fabric` library·예제 1개를 더해 9개·30개다.
-CI의 현재-source discovery 수와 공개 v0.3.0 stable 수를 같은 값으로 표현하지 않는다.
+v0.4.0 stable은 `NUCODE Peripheral Fabric` library·예제 1개를 더해 9개·30개다. Stable index는
+0.4.0과 전환용 0.3.0을 함께 제공하며 각각의 고정 package lock과 identity를 검사한다.
 
 로컬 진입점은 다음과 같다.
 

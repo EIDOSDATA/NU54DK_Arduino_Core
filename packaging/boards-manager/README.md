@@ -1,13 +1,13 @@
 # NU54DK Boards Manager 패키징
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
 
 | 항목 | 내용 |
 | --- | --- |
-| 현재 stable | `v0.3.0` |
+| 현재 stable | `v0.4.0` |
 | Stable index | `package_nucode_nu54dk_index.json` |
-| Stable source | `94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11` |
-| Stable ZIP | 1,660,169 byte / SHA-256 `138740bcf6c458992fdb5c8eb81d6110d28b0baee18c68f5d8cb050e2e0e1ecc` |
+| Stable source | `ad829439e570c7510fce2f8cc7252e5b9ef32b04` |
+| Stable ZIP | 2,630,374 byte / SHA-256 `6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189` |
 
 이 디렉터리의 도구는 지정한 Git commit과 board submodule을 입력으로 사용해 Arduino
 Boards Manager ZIP, index, checksum, release manifest, SPDX SBOM, license inventory와
@@ -46,6 +46,7 @@ R13의 본문·CLI·산출물 byte 비교는
 | `0.1.0` | `5dbc5e37270e477d21f578dd877f4b5226b44a0d` | 760,412 | `722a46685b97aff42a75fb84db8ea74de75f3c32f59ea58225cd86d5acd141a6` |
 | `0.2.0` | `41fc44e452d2b6eef4b46307af6c277499f8d2d5` | 932,376 | `1c2b4dddd6da0c1530f9d32630ec7d5b5285cff28c826a9a95c864226aeaea6e` |
 | `0.3.0` | `94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11` | 1,660,169 | `138740bcf6c458992fdb5c8eb81d6110d28b0baee18c68f5d8cb050e2e0e1ecc` |
+| `0.4.0` | `ad829439e570c7510fce2f8cc7252e5b9ef32b04` | 2,630,374 | `6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189` |
 
 `STABLE_RELEASE_COMMITS`는 source와 packaging tool이 모두 해당 exact commit에 있을 때만 같은
 stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`는 통합 index에 넣는
@@ -56,14 +57,14 @@ stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`
 | 대상 | 사용할 절차 |
 | --- | --- |
 | 비공개 `v0.4.0-rc.1` 후보 | [M27 prepare](../../tools/release/M27_README.md) |
-| 정식 `v0.4.0` 후보 | [TODO T18~T21](../../00_Docs/TODO_v0.4.0.md)의 절차 준비·RC 고정·최종 검증; 현재 공개 HOLD |
+| 정식 `v0.4.0` | [완료 TODO](../../00_Docs/TODO_v0.4.0.md)와 [125번 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>); 공개 완료 |
 | 이미 공개한 stable | 아래 exact tag 감사 절차 |
 
-현재 `main`에서 `-Version 0.3.0 -Commit HEAD`로 새 package를 만들지 않습니다. `0.3.0`은 위
-고정 source에서만 생성 가능한 공개 버전입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 버전의
+현재 `main`에서 `-Version 0.3.0 -Commit HEAD` 또는 `-Version 0.4.0 -Commit HEAD`로 새 package를
+만들지 않습니다. 두 version은 위 고정 source에서만 생성 가능한 공개 버전입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 version의
 공개는 이중 재현·Host·문서·package·lifecycle·HIL gate와 소유자의 최종 승인 뒤 별도 수행합니다.
 
-## 공개 stable 감사
+## 공개 v0.3.0 감사 예시
 
 이미 공개한 stable 재현은 해당 tag의 별도 worktree에서만 수행합니다. 현재 `main`의 packaging
 tool로 과거 source를 다시 포장하지 않습니다.

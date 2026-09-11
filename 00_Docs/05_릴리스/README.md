@@ -1,6 +1,6 @@
 # NU54DK Arduino Core — 릴리스 문서 안내
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -9,7 +9,7 @@
 | 현재 정식 버전 | `v0.4.0` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
-| 이전 버전 상태 | 공개 공급 종료, archive 브랜치에 원본 보존 |
+| 이전 버전 상태 | `v0.3.0` stable index에 설치 가능, 그 이전 version은 역사 자료로 보존 |
 | 최종 갱신일 | 2026-09-11 |
 
 신규 설치, 지원 요청과 현재 API 기준은 `v0.4.0` 문서를 사용합니다. 이전 stable과 RC 문서는
@@ -44,7 +44,17 @@ runtime 동등성을 확인했으며, 설치에는 위 stable index의 `0.4.0`�
 - [Troubleshooting](v0.4.0-rc.1/TROUBLESHOOTING.md)
 - [Known issues](v0.4.0-rc.1/KNOWN_ISSUES.md)
 
-## 보존된 이전 stable
+## 보존된 이전 버전
+
+### v0.3.0
+
+`v0.3.0`은 이전 stable이며 기존 Sketch 전환과 복구를 위해 stable index에 함께 제공합니다.
+신규 설치와 지원 요청은 `v0.4.0`을 기준으로 합니다.
+
+- [릴리스 개요](v0.3.0/README.md)
+- [Migration](v0.3.0/MIGRATION.md)
+- [Troubleshooting](v0.3.0/TROUBLESHOOTING.md)
+- [Known issues](v0.3.0/KNOWN_ISSUES.md)
 
 ### v0.2.0
 
@@ -81,8 +91,9 @@ RC1~RC3의 공개 Release·tag·설치 목록은 공급 종료 대상입니다. 
 
 ## 문서와 자산 보존 규칙
 
-1. 현재 공급하는 v0.3.0 tag·설치 archive·checksum·SBOM은 그대로 유지합니다.
-2. 소유자가 승인한 2026-09-08 공급 종료 대상은 원본을 archive 브랜치로 보존합니다.
-3. Stable root와 v0.3.0 Release catalog는 0.3.0만 제공하며 preview catalog는 빈 목록입니다.
-4. 실제 검증 수치는 [검증 기록](<../04_검증 기록/README.md>)에서 확인합니다.
-5. 다음 버전 계획은 [제품 로드맵](<../01_아두이노 코어 설계/02_구현_로드맵.md>)에서 관리합니다.
+1. 현재 정식 `v0.4.0` tag·Release·archive·checksum·SBOM은 immutable로 유지합니다.
+2. 이전 stable `v0.3.0` tag·설치 archive·checksum·SBOM도 그대로 유지합니다.
+3. Stable root는 0.4.0과 0.3.0을 제공하고 preview catalog는 빈 목록입니다.
+4. 소유자가 승인한 v0.2.0 이하 공급 종료 대상은 원본을 archive 브랜치로 보존합니다.
+5. 실제 검증 수치는 [검증 기록](<../04_검증 기록/README.md>)에서 확인합니다.
+6. 다음 버전 계획은 [제품 로드맵](<../01_아두이노 코어 설계/02_구현_로드맵.md>)에서 관리합니다.

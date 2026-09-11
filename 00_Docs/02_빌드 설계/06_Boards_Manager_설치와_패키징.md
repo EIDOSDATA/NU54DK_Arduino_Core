@@ -1,11 +1,11 @@
-# Boards Manager 설치와 패키징 — stable v0.3.0
+# Boards Manager 설치와 패키징 — stable v0.4.0
 
 | 항목 | 값 |
 | --- | --- |
 | Package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 stable | `0.3.0` |
-| 공개 downgrade 버전 | 없음; 0.3.0 미만은 공급 종료 |
+| 현재 stable | `0.4.0` |
+| 공개 downgrade 버전 | `0.3.0`; 그 미만은 공급 종료 |
 | 공식 사용자 OS | Windows 10/11 x64 |
 
 ## Stable index와 설치
@@ -16,15 +16,15 @@ Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL입니다.
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-Index는 `0.3.0`만 제공합니다. 2026-09-08 소유자 지시로 이전 stable·RC·preview 공급을
-종료합니다. 원본은 [106번 보존 기록](<../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.
+Index는 `0.4.0`과 이전 stable `0.3.0`을 제공합니다. `0.3.0` 미만 stable·RC·preview 공급 종료와
+원본 보존은 [106번 기록](<../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.
 
 Arduino CLI 설치 예시:
 
 ```powershell
 $StableIndex = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
 arduino-cli core update-index --additional-urls $StableIndex
-arduino-cli core install nucode:zephyr@0.3.0 --run-post-install --additional-urls $StableIndex
+arduino-cli core install nucode:zephyr@0.4.0 --run-post-install --additional-urls $StableIndex
 arduino-cli core list
 arduino-cli board listall nucode:zephyr
 ```
@@ -32,7 +32,7 @@ arduino-cli board listall nucode:zephyr
 설치된 platform의 기본 위치는 다음과 같습니다.
 
 ```text
-%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.3.0
+%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.4.0
 ```
 
 ## 고정 prerequisite
@@ -81,9 +81,10 @@ checksum, release manifest, SPDX와 license inventory를 검증합니다. Index�
 source를 포장하거나 tag·asset을 이동·교체하지 않습니다. 이미 공개한 이전 stable은 해당 tag의
 별도 worktree에서 감사하고 현재 도구로 재생성하지 않습니다.
 
-차기 `v0.4.0-rc.1` 비공개 후보는 [M27 도구](../../tools/release/M27_README.md)를 사용합니다.
-정식 `v0.4.0` 생성·검증·공개 절차는 [TODO T18~T24](../TODO_v0.4.0.md)의 남은 작업이며,
-현재 패키징 안내나 과거 공개 결과만으로 완료 처리하지 않습니다.
+`v0.4.0-rc.1`과 정식 `v0.4.0`의 생성·승인·공개 절차는
+[M27 도구](../../tools/release/M27_README.md)와 [완료 TODO](../TODO_v0.4.0.md)를 따릅니다.
+공개 identity와 공개 URL 설치 결과는 [125번 기록](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에
+고정했습니다.
 
 ## v0.3.0 공개 기준
 

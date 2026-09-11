@@ -25,6 +25,7 @@
 
 ## 배포 상태
 
-이 문서가 저장소에 존재하는 것과 정식 공개는 별개입니다. GitHub `v0.4.0` Release와 stable
-index에 동일 version·archive hash가 실제 등록됐는지 확인하십시오. 공개 전 로컬 후보 검증은
-공개 URL 설치 검증을 대신하지 않습니다.
+`v0.4.0`은 GitHub Release와 stable index에 정식 공개됐습니다. Package는 2,630,374 byte,
+SHA-256 `6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189`이며 공개 URL의
+설치·예제 30/30 compile·실제 Upload·전환·제거·재설치까지 PASS했습니다. 상세 identity와 근거는
+[125번 기록](<../../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.

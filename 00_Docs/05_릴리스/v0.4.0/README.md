@@ -9,10 +9,11 @@
 | 보드 | NU54DK v2, nRF54L15 application core |
 | SDK | nRF Connect SDK v3.4.0 |
 | 기본 설치 channel | Stable Boards Manager index |
-| 현재 배포 상태 확인 | GitHub `v0.4.0` Release와 stable index의 실제 등록 여부 |
+| 배포 상태 | 2026-09-11 정식 공개 완료 |
+| GitHub Release | [`v0.4.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.0) |
 
-이 디렉터리의 문서는 release 후보와 공개 asset에 함께 쓰입니다. 문서가 저장소에 있다는 사실만으로
-공개가 완료된 것은 아닙니다. 설치 가능한 최신 version은 stable index의 실제 항목을 기준으로
+`v0.4.0`은 GitHub Release와 stable Boards Manager index에 공개됐습니다. 공개 archive의 크기·
+SHA-256과 설치 검증 결과는 [125번 기록](<../../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에서
 확인하십시오.
 
 | 문서 | 내용 |

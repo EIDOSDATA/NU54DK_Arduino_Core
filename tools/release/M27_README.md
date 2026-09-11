@@ -1,13 +1,16 @@
-# M27 v0.4.0-rc.1 비공개 릴리스 준비
+# M27 v0.4.0 릴리스 절차 — 완료·동결
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../../00_Docs/TODO_v0.4.0.md>)와
+[125번 공개 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에서
+관리합니다. 아래 준비·승인·게시 명령은 정식 공개 전에 사용한 절차 기록이며, 공개된 0.4.0을
+다른 byte로 다시 만드는 재실행 지시가 아닙니다.
 
 M27 도구는 `v0.4.0-rc.1` package를 두 번 독립 생성해 ZIP·checksum·SBOM·license inventory와
 notices가 byte-identical인지 검증하고 RC index와 HOLD plan을 만든다. 기존 M11/M18/M22 도구와
 공개 `v0.1.0`~`v0.3.0` package allowlist는 수정하지 않는다.
 
-아래 RC 명령은 비공개 후보를 준비합니다. T18에서 추가한 stable 도구로 T21 비공개 stable
-산출물과 최종 검사를 완료했습니다. T22 승인은 아직 없으므로 T23 공개 권한을 뜻하지 않습니다.
+아래 RC 명령은 비공개 후보를 준비한 절차입니다. T18에서 추가한 stable 도구로 T21 비공개 stable
+산출물과 최종 검사를 완료했고 T22 승인 뒤 T23~T25까지 마감했습니다.
 
 이 도구에는 tag, push, GitHub Release, stable index 갱신이나 공개 명령이 없다. M24~M26 physical
 gate, Boards Manager 전체 수명주기와 프로젝트 소유자 승인이 모두 PASS가 되기 전에는 plan의
@@ -74,7 +77,8 @@ Stable 공개 절차의 준비·검사는 T18의 `m27_stable_release.py`로 분�
 
 ## T18 stable 준비·공개 차단 계약
 
-T18 도구 계약은 과거 stable allowlist에 `0.4.0`을 영구 추가하지 않고 확인할 수 있습니다.
+T18 당시에는 `0.4.0`을 process-local로 구성했습니다. 공개 후에는 영구 stable allowlist와 exact
+source/archive identity에 0.4.0을 고정해 다른 commit·byte의 재게시를 거부합니다.
 
 ```powershell
 python tools/release/m27_stable_release.py contract
@@ -98,7 +102,7 @@ python tools/release/m27_stable_release.py prepare `
 - 모든 비인간 technical gate의 PASS evidence 확인
 - stable과 RC의 정규화 runtime payload SHA-256 일치
 - ZIP·checksum·SBOM·license inventory·manifest·notices의 독립 2회 byte 재현
-- 현재 stable index에 `0.4.0`이 없고 기존 record를 바꾸지 않은 새 index 생성
+- 공개 전 stable index에 `0.4.0`이 없고 기존 record를 바꾸지 않은 새 index 생성
 - 비어 있지 않은 출력 경로와 artifact 경로 이탈 거부
 
 `publication-dry-run`, `publish-release`, `publish-index`는 모두 exact stable plan의 SHA-256과
@@ -108,8 +112,8 @@ commit을 지정한 T22 승인 JSON을 필수로 받습니다. 승인 파일이 
 나눕니다. Release asset은 기존 tag/Release가 있으면 생성하지 않고, index는 공개 asset을 다시
 다운로드해 size·SHA-256·byte를 대조한 뒤에만 별도 commit으로 push합니다.
 
-T18에서는 위 실제 게시 명령을 실행하지 않습니다. T22의 명시적 소유자 승인 전에는 승인 JSON을
-만들거나 두 게시 명령을 호출해서도 안 됩니다.
+T18에서는 위 실제 게시 명령을 실행하지 않았습니다. T22의 명시적 소유자 승인 뒤 exact plan에
+승인 JSON을 결합해 게시했고, 공개 이후 같은 version 재게시 경로는 fail-closed입니다.
 
 ## T21 설치 stable 예제 검증
 

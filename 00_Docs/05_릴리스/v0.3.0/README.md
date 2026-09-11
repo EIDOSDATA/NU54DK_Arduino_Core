@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 상태 | **현재 정식 릴리스** |
+| 상태 | **이전 stable·설치 가능** |
 | Package | `nucode:zephyr@0.3.0` |
 | Board/FQBN | NU54DK / `nucode:zephyr:nu54dk` |
 | 공식 사용자 OS | Windows 10/11 x64 |
@@ -10,7 +10,8 @@
 | Board source | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 작성자 | Quantum / NUCODE |
 
-`v0.3.0`은 NU54DK용 loaderless Arduino Core의 현재 stable입니다. Sketch와 선택한 Arduino
+`v0.3.0`은 NU54DK용 loaderless Arduino Core의 이전 stable이며 전환·복구를 위해 stable index에
+계속 제공합니다. 신규 설치와 지원 요청은 `v0.4.0`을 기준으로 합니다. Sketch와 선택한 Arduino
 library를 nRF Connect SDK v3.4.0/Zephyr 4.4.0의 전체 image로 빌드하며, 온보드
 CMSIS-DAP V2와 pyOCD를 기본 업로드 경로로 사용합니다.
 

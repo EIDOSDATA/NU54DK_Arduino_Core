@@ -1,15 +1,15 @@
 # NU54DK Arduino Core — Windows 개발환경 설정
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
 | 문서 개정 | 1.6 |
 | 문서 상태 | 현재 source 개발 기준 |
-| 적용 제품 버전 | `v0.3.0` stable 이후 `main` |
+| 적용 제품 버전 | `v0.4.0` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-10 |
+| 최종 갱신일 | 2026-09-11 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드

@@ -632,8 +632,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parsed = build_parser().parse_args(arguments)
     if parsed.command == "contract":
         package = load_module("nu54_m27_stable_contract", PACKAGE_MODULE)
-        if tuple(package.STABLE_VERSIONS) != ("0.1.0", "0.2.0", "0.3.0"):
-            raise StableReleaseFailure("historical stable allowlist changed before T23")
+        if tuple(package.STABLE_VERSIONS) != ("0.1.0", "0.2.0", "0.3.0", "0.4.0"):
+            raise StableReleaseFailure("published stable allowlist changed after T23")
         choices = set(build_parser()._subparsers._group_actions[0].choices)
         if choices != {
             "contract",

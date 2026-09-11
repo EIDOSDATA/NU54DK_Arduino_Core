@@ -12,6 +12,7 @@
 | T19 frozen RC | Host·문서·inventory·target 35/35·이중 package 재현 PASS |
 | T20 RC 설치 수명주기 | 격리 설치·예제 30/30·실제 Upload·전환·제거·재설치 PASS |
 | T21 stable 최종 검사 | RC runtime 동등성·이중 재현·격리 설치·예제 30/30·실제 Upload PASS |
+| T24 공개 URL 최종 검사 | 공개 archive 확인·설치 예제 30/30·실제 Upload·0.3.0 전환·제거·재설치 PASS |
 
 실행별 exact source·결선·명령과 실패 원본은
 [검증 기록](<../../04_검증 기록/README.md>)에서 확인합니다. `PASS`는 적힌 source·조건에만
@@ -29,8 +30,10 @@ QDEC20/21의 동작 중 반복 manual `read()/clear`에서는 실제 GPIO/SAMPLE
 4. 대표 Sketch를 지정 CMSIS-DAP probe에 erase/recover 없이 Upload합니다.
 5. 제거·재설치와 지원하는 version 전환 뒤 설치 version과 prerequisite 보존을 확인합니다.
 
-로컬 후보 package 결과와 공개 URL 결과는 구분합니다. 실제 GitHub asset과 stable index가 공개된
-뒤에는 새 격리 환경에서 다시 내려받아 archive hash·설치·compile·Upload를 확인합니다.
+로컬 후보 package 결과와 공개 URL 결과는 구분합니다. 실제 GitHub asset과 stable index 공개 뒤
+새 격리 환경에서 archive hash·설치·compile·Upload·version 전환·제거·재설치를 확인했습니다.
+상세 결과는 [125번 기록](<../../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에
+보존합니다.
 
 ## 로컬 source gate
 

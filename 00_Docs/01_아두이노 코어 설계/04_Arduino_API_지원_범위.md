@@ -1,18 +1,18 @@
 # NU54DK Arduino API 지원 범위
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
 
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 6.1 |
-| 대상 | `v0.3.0` stable + `v0.4.0-dev` 추가 범위 |
-| 최종 갱신일 | 2026-09-10 |
-| 상태 | **v0.3 정식 공개 / v0.4 비공개 후보** |
+| 문서 개정 | 6.2 |
+| 대상 | `v0.4.0` stable |
+| 최종 갱신일 | 2026-09-11 |
+| 상태 | **v0.4 정식 공개** |
 
 ## 판정 기준
 
-이 문서는 `nucode:zephyr@0.3.0`이 약속하는 Arduino/NUCODE API 범위를 정리합니다. Header에
+이 문서는 `nucode:zephyr@0.4.0`이 약속하는 Arduino/NUCODE API 범위를 정리합니다. Header에
 이름이 존재하는 것, target에서 compile되는 것과 실제 hardware 지원은 서로 다른 판정입니다.
 
 | 상태 | 의미 |
@@ -25,16 +25,16 @@
 | 전문가 opt-in | 기본 profile 밖의 직접 Zephyr/NCS 경로; portable Arduino 계약 아님 |
 | build-only | 고정 환경에서 build만 확인했으며 runtime 지원이 아님 |
 
-`v0.3.0`은 선언한 제품 범위를 완료했지만 모든 Arduino 보드의 API, 모든 pin/peripheral
+`v0.4.0`은 선언한 제품 범위를 완료했지만 모든 Arduino 보드의 API, 모든 pin/peripheral
 instance와 제3자 library 전체를 지원한다는 뜻은 아닙니다.
 
 ## v0.4.0 `fabric` profile 추가 범위
 
-아래 표는 v0.3.0 stable 계약에 소급하지 않는 v0.4.0 개발 후보입니다. Arduino에서
+아래 표는 v0.3.0 singleton 계약을 유지하면서 v0.4.0에 추가한 정식 지원 범위입니다. Arduino에서
 `Peripheral Fabric (DAP UART disconnected)`를 선택하고 `<NUCODE_Peripheral_Fabric.h>`를 포함할
 때만 활성화됩니다. `standard`·`ble` profile의 기존 singleton 동작은 바꾸지 않습니다.
 
-| API/영역 | v0.4 후보 상태 | 지원 경계 |
+| API/영역 | v0.4 상태 | 지원 경계 |
 | --- | --- | --- |
 | `SerialFabric` | 지원된 범위 | UARTE 5·SPIM 5·SPIS 5·TWIM 4·TWIS 4 identity와 실기 통과 route |
 | `AnalogFabric` | 지원된 범위 | SAADC scan/continuous DMA와 PWM20/21/22 sequence |
@@ -46,7 +46,7 @@ instance와 제3자 library 전체를 지원한다는 뜻은 아닙니다.
 각 identity의 단독 HIL은 통과했지만 manifest의 `concurrent_hil=partial/not_run`은 그대로 유지합니다.
 따라서 특정 identity가 공개 API에 있다는 사실만으로 모든 가능한 동시 조합을 보증하지 않습니다.
 DAP UART와 같은 핀을 쓰는 route는 switch 분리와 profile의 전기 선행조건을 만족해야 합니다.
-v0.4.0 stable 공개 자체는 T22 소유자 승인 전까지 HOLD입니다.
+v0.4.0은 T22 소유자 승인 뒤 stable로 공개됐으며 공개 URL 설치 검증까지 완료했습니다.
 
 ## Runtime과 공통 API
 

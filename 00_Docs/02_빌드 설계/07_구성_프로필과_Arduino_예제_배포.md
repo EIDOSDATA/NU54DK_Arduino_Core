@@ -1,10 +1,10 @@
-# 구성 프로필과 Arduino 예제 배포 — v0.3.0 정식·v0.4.0 개발
+# 구성 프로필과 Arduino 예제 배포 — v0.4.0 정식
 
 | 항목 | 현재 계약 |
 | --- | --- |
-| `v0.3.0` 정식 profile | `standard`, `ble` |
-| `v0.3.0` 정식 사용자 예제 | 8개 library, 총 29개; Standard 22 / BLE 7 |
-| `v0.4.0` 개발 추가 | `fabric` profile, Peripheral Fabric 예제 1개 |
+| `v0.4.0` 정식 profile | `standard`, `ble`, `fabric` |
+| `v0.4.0` 정식 사용자 예제 | 9개 library, 총 30개; Standard 22 / BLE 7 / Fabric 1 |
+| 이전 `v0.3.0` | `standard`, `ble`; 8개 library·예제 29개 |
 | 기본 profile | `standard` |
 | BLE feature ID | `nucode.ble.nus` |
 | BLE config | `ble-nus.conf` |
@@ -185,10 +185,10 @@ Wire target/callback/no-STOP, `Wire1`, `SPI1`은 profile을 선택해도 활성�
 archive가 일치하는지 확인하고 설치본 29개를 모두 compile했다.
 AC-03 두 예제는 `standard`와 `ble` profile build 입력을 각각 별도 smoke로 검사한다.
 
-v0.4.0 후보 lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30개입니다. 이 예제는
+v0.4.0 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30개입니다. 이 예제는
 `fabric` profile만 사용하고 sidecar 없이 빌드됩니다. QDEC20/21은 capability에서 `supported`이며,
-연속 카운트에는 SAMPLE/REPORT event 경로를 사용합니다. T20/T21에서 30개 전체 설치 package
-검증을 다시 수행합니다.
+연속 카운트에는 SAMPLE/REPORT event 경로를 사용합니다. T20/T21과 공개 후 T24에서 30개 전체
+설치 package 검증을 완료했습니다.
 
 외부 Arduino library 호환성은 bundled feature allowlist에 자동 편입하지 않고 M17의 고정된
 별도 gate로 검증한다.

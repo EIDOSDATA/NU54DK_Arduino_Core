@@ -1,6 +1,6 @@
 # NU54DK Arduino Core — 전 인스턴스·DMA·BLE 경쟁 기준과 마일스톤
 
-현재 개발 상태·검증 범위·다음 작업은 [v0.4.0 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
+v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)에서 관리합니다.
 
 이 문서의 경쟁 비교와 초기 engineering 목표는 제품 방향을 설명합니다. 현재 실행 범위에서는
 QDEC 추가 진단·반복 Serial handover·T13 peer 제어 System OFF 추가 2조건을 제외합니다.
@@ -10,12 +10,12 @@ S 정상·동시성·복구 결과, C05 1시간 soak, U 실기, T14 미커버 �
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 2.4 |
+| 문서 개정 | 2.5 |
 | 문서 상태 | 고정 source 비교와 M23~M33 설계·완료 기준; 실행 상태는 TODO 참조 |
-| 현재 공개 기준 | NU54DK Arduino Core `v0.3.0` stable / commit `bae0957d2425e4418199a2a3a018bf8e9a0dc356` |
+| 현재 공개 기준 | NU54DK Arduino Core `v0.4.0` stable / release source `ad829439e570c7510fce2f8cc7252e5b9ef32b04` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-06 |
+| 최종 갱신일 | 2026-09-11 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을

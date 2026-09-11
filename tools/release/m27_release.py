@@ -29,7 +29,7 @@ BASE_RC_VERSIONS = (
     "0.3.0-rc.2",
     "0.3.0-rc.3",
 )
-BASE_STABLE_VERSIONS = ("0.1.0", "0.2.0", "0.3.0")
+BASE_STABLE_VERSIONS = ("0.1.0", "0.2.0", "0.3.0", "0.4.0")
 REQUIRED_GATE_IDS = (
     "m23_inventory",
     "m24_serial_source_build",

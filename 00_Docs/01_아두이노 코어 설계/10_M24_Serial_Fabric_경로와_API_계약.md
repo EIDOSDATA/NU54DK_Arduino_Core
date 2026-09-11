@@ -18,7 +18,7 @@
 고급 선택 API와 DMA 수명주기를 고정한다. 작업 2에서 allocation-free typed handle, 원자적
 route/DMA lease, bounded stop과 fail-closed handover를 구현했고 작업 3~5에서 UARTE, SPIM/SPIS,
 TWIM/TWIS direct nrfx adapter를 연결했다. Kconfig는 기본 off이고 명시적 `fabric` profile에서만 켜진다.
-S 정상 36조건에는 C05 3600초 soak가 포함된다. 완료한 S 시험을 다시 예약하지 않으며, T16 공개 원장 반영은 v0.4.0 stable이 이미 배포됐다는 뜻이 아니다.
+S 정상 36조건에는 C05 3600초 soak가 포함된다. 완료한 S 시험을 다시 예약하지 않으며, T16 공개 원장 반영 뒤 T19~T24 release gate도 완료했다.
 반복 Serial handover와 T13 peer 제어 System OFF 추가 2조건은 제외했다. 아래 원래 계약의 gate 목록을 현재 재실행 지시로 사용하지 않는다. 기존 M15 System OFF PASS는 유지한다.
 
 M24의 후속 순서는 다음과 같다.
@@ -35,7 +35,7 @@ UART Fixture 101~103은 [44번](<../04_검증 기록/44_M24_Fixture_101_UART_실
 SPI Fixture 201~203은 [47번](<../04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md>)·[48번](<../04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md>)·[49번 기록](<../04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md>)을 따른다.
 TWI Fixture 301은 [50번 기록](<../04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md>)을 따른다.
 `functional-hil-pass`는 해당 단독 route의 기능 HIL 판정이다. T16 `fabric` profile에서 API를 선택할 수 있지만,
-`concurrent_hil=not_run`인 조합까지 동시 지원하거나 v0.4.0 stable이 이미 공개됐다는 뜻은 아니다.
+`concurrent_hil=not_run`인 조합까지 동시 지원한다는 뜻은 아니다. v0.4.0 공개와 설치 결과는 125번 기록을 따른다.
 
 ## 2. 공개 객체와 고급 API
 
@@ -125,7 +125,7 @@ fixture 없이 자동화한다. P1 DAP UART를 시험할 때 P0 DAP UART를 제�
 ## 6. 단독 HIL 기준 route
 
 `current-verified`는 기존 v0.3.0 증거가 있는 route, `functional-hil-pass`는 M24 단독 기능 HIL을
-통과한 고정 route다. 후자는 T16 `fabric` profile에 공개됐지만 v0.4.0 stable 공개 승인은 T22까지 HOLD다.
+통과한 고정 route다. 후자는 T16 `fabric` profile에 포함됐고 T22 승인 뒤 v0.4.0 stable로 공개됐다.
 
 | Identity | Route | 핀 | 실행 분류 / 자원 | 상태 | 선행조건 |
 | --- | --- | --- | --- | --- | --- |

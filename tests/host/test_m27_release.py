@@ -96,7 +96,7 @@ class M27ReleaseTests(unittest.TestCase):
         package = MODULE.load_package_module()
         MODULE.configure_v04_candidate(package)
         self.assertIn(MODULE.VERSION, package.RELEASE_CANDIDATE_VERSIONS)
-        self.assertNotIn(MODULE.STABLE_VERSION, package.STABLE_VERSIONS)
+        self.assertIn(MODULE.STABLE_VERSION, package.STABLE_VERSIONS)
         self.assertEqual(package.release_channel(MODULE.VERSION), "release-candidate")
         self.assertEqual(package.release_tag(MODULE.VERSION), "v0.4.0-rc.1")
 

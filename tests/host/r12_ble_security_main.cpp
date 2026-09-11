@@ -47,7 +47,7 @@ namespace nucode::ble::internal
     {
         return false;
     }
-}
+} // namespace nucode::ble::internal
 
 std::array<unsigned, 16> events{};
 bool accept_in_callback = false;

@@ -254,19 +254,19 @@ class M10PackagingTests(unittest.TestCase):
         """! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. """
 
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
-        self.assertEqual(index.stat().st_size, 1126)
+        self.assertEqual(index.stat().st_size, 1879)
         self.assertEqual(
             hashlib.sha256(index.read_bytes()).hexdigest(),
-            "97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57",
+            "522f6715389d34887f4087b4e37dd2d0659d680fa119a9558200d7040514de25",
         )
         self.assertNotEqual(PACKAGE.RC_INDEX_FILENAME, PACKAGE.STABLE_INDEX_FILENAME)
         document = PACKAGE.validate_index(index)
         platforms = document["packages"][0]["platforms"]
         self.assertEqual(
             [platform["version"] for platform in platforms],
-            ["0.3.0"],
+            ["0.4.0", "0.3.0"],
         )
-        for platform, version in zip(platforms, ("0.3.0",), strict=True):
+        for platform, version in zip(platforms, ("0.4.0", "0.3.0"), strict=True):
             identity = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version]
             self.assertEqual(platform["archiveFileName"], PACKAGE.archive_filename(version))
             self.assertEqual(
@@ -299,7 +299,7 @@ class M10PackagingTests(unittest.TestCase):
         crlf_bytes = stable_bytes.replace(b"\n", b"\r\n")
         self.assertNotEqual(
             hashlib.sha256(crlf_bytes).hexdigest(),
-            "97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57",
+            "522f6715389d34887f4087b4e37dd2d0659d680fa119a9558200d7040514de25",
         )
 
     def test_10ab_retired_preview_feed_advertises_no_downloads(self) -> None:
@@ -329,7 +329,7 @@ class M10PackagingTests(unittest.TestCase):
                 "0.3.0-rc.3",
             ),
         )
-        self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0", "0.2.0", "0.3.0"))
+        self.assertEqual(PACKAGE.STABLE_VERSIONS, ("0.1.0", "0.2.0", "0.3.0", "0.4.0"))
         self.assertTrue(
             set(PACKAGE.FAILED_M10_PREVIEW_VERSIONS).issubset(
                 PACKAGE.WINDOWS_SAFE_VERSIONS
@@ -359,6 +359,7 @@ class M10PackagingTests(unittest.TestCase):
                 "0.1.0": "5dbc5e37270e477d21f578dd877f4b5226b44a0d",
                 "0.2.0": "41fc44e452d2b6eef4b46307af6c277499f8d2d5",
                 "0.3.0": "94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11",
+                "0.4.0": "ad829439e570c7510fce2f8cc7252e5b9ef32b04",
             },
         )
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
@@ -369,12 +370,12 @@ class M10PackagingTests(unittest.TestCase):
         platforms = document["packages"][0]["platforms"]
         self.assertEqual(
             [platform["version"] for platform in platforms],
-            ["0.3.0"],
+            ["0.4.0", "0.3.0"],
         )
         self.assertEqual(
             platforms[0]["url"],
             "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/"
-            "v0.3.0/nucode-nu54dk-zephyr-0.3.0.zip",
+            "v0.4.0/nucode-nu54dk-zephyr-0.4.0.zip",
         )
         self.assertEqual(
             PACKAGE.legal_review_status("0.1.0"),
@@ -383,11 +384,12 @@ class M10PackagingTests(unittest.TestCase):
         stable_wrapper = (
             REPO_ROOT / "packaging" / "boards-manager" / "build-stable.ps1"
         ).read_text(encoding="utf-8")
-        self.assertIn("[ValidateSet('0.1.0', '0.2.0', '0.3.0')]", stable_wrapper)
+        self.assertIn("[ValidateSet('0.1.0', '0.2.0', '0.3.0', '0.4.0')]", stable_wrapper)
         self.assertIn('$Commit = "v$Version"', stable_wrapper)
         self.assertIn("nucode-nu54dk-zephyr-0.1.0.zip", stable_wrapper)
         self.assertIn("@('0.2.0', '0.1.0')", stable_wrapper)
         self.assertIn("@('0.3.0', '0.2.0', '0.1.0')", stable_wrapper)
+        self.assertIn("@('0.4.0', '0.3.0')", stable_wrapper)
         self.assertNotIn("--update-index", stable_wrapper)
         self.assertEqual(
             PACKAGE.legal_review_status("0.2.0"),
@@ -410,6 +412,23 @@ class M10PackagingTests(unittest.TestCase):
             {
                 "size": 1660169,
                 "sha256": "138740bcf6c458992fdb5c8eb81d6110d28b0baee18c68f5d8cb050e2e0e1ecc",
+            },
+        )
+        self.assertEqual(
+            PACKAGE.legal_review_status("0.4.0"),
+            "project-owner-approved-for-final-public-release",
+        )
+        self.assertEqual(PACKAGE.release_channel("0.4.0"), "stable")
+        self.assertEqual(PACKAGE.release_tag("0.4.0"), "v0.4.0")
+        self.assertEqual(
+            PACKAGE.STABLE_RELEASE_COMMITS["0.4.0"],
+            "ad829439e570c7510fce2f8cc7252e5b9ef32b04",
+        )
+        self.assertEqual(
+            PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES["0.4.0"],
+            {
+                "size": 2630374,
+                "sha256": "6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189",
             },
         )
         self.assertEqual(

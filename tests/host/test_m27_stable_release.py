@@ -44,22 +44,20 @@ class M27StableReleaseTests(unittest.TestCase):
                 with self.assertRaises(SystemExit):
                     parser.parse_args((command, "--plan", "plan.json"))
 
-    def test_unpublished_stable_configuration_is_process_local(self) -> None:
-        """! @brief v0.4.0을 영구 stable allowlist에 넣지 않습니다. """
+    def test_published_stable_cannot_be_reconfigured(self) -> None:
+        """! @brief 공개된 v0.4.0을 다른 commit으로 다시 구성하지 못하게 합니다. """
         commit = "a" * 40
         package = MODULE.load_module("nu54_m27_stable_config_a", MODULE.PACKAGE_MODULE)
-        self.assertNotIn(MODULE.VERSION, package.STABLE_VERSIONS)
-        MODULE.configure_stable_package(package, commit)
-        self.assertEqual(package.release_channel(MODULE.VERSION), "stable")
-        self.assertEqual(package.release_tag(MODULE.VERSION), MODULE.TAG)
-        self.assertEqual(package.STABLE_RELEASE_COMMITS[MODULE.VERSION], commit)
+        self.assertIn(MODULE.VERSION, package.STABLE_VERSIONS)
         self.assertEqual(
-            package.STABLE_LEGAL_REVIEW_STATUSES[MODULE.VERSION],
-            package.LEGAL_REVIEW_REQUIRED,
+            package.STABLE_RELEASE_COMMITS[MODULE.VERSION],
+            "ad829439e570c7510fce2f8cc7252e5b9ef32b04",
         )
+        with self.assertRaisesRegex(MODULE.StableReleaseFailure, "already"):
+            MODULE.configure_stable_package(package, commit)
         fresh = MODULE.load_module("nu54_m27_stable_config_b", MODULE.PACKAGE_MODULE)
-        self.assertEqual(fresh.STABLE_VERSIONS, ("0.1.0", "0.2.0", "0.3.0"))
-        self.assertNotIn(MODULE.VERSION, fresh.PACKAGE_VERSIONS)
+        self.assertEqual(fresh.STABLE_VERSIONS, ("0.1.0", "0.2.0", "0.3.0", "0.4.0"))
+        self.assertIn(MODULE.VERSION, fresh.PACKAGE_VERSIONS)
 
     def test_wrong_version_or_commit_is_rejected(self) -> None:
         """! @brief 기존 version과 비정규 commit 입력을 거부합니다. """
