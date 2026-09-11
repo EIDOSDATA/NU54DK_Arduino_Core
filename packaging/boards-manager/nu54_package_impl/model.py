@@ -31,7 +31,7 @@ RELEASE_CANDIDATE_VERSIONS = (
 )
 
 
-STABLE_VERSIONS = ("0.1.0", "0.2.0", "0.3.0", "0.4.0")
+STABLE_VERSIONS = ("0.1.0", "0.2.0", "0.3.0", "0.4.0", "0.4.1")
 
 
 ## @brief 이미 공개한 stable archive가 다른 source로 재생성되는 것을 막는 commit 계약입니다.
@@ -40,6 +40,7 @@ STABLE_RELEASE_COMMITS = {
     "0.2.0": "41fc44e452d2b6eef4b46307af6c277499f8d2d5",
     "0.3.0": "94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11",
     "0.4.0": "ad829439e570c7510fce2f8cc7252e5b9ef32b04",
+    "0.4.1": "bbc2dc1fc5823ca465fc1d1ff2170512282b9313",
 }
 
 
@@ -60,6 +61,10 @@ PUBLISHED_STABLE_ARCHIVE_IDENTITIES = {
     "0.4.0": {
         "size": 2630374,
         "sha256": "6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189",
+    },
+    "0.4.1": {
+        "size": 2633005,
+        "sha256": "90c4993d11fd6fadbc70d32659bd1608a8dfb14264e43cc5faed60c5aa6f4d2d",
     },
 }
 
@@ -110,6 +115,7 @@ STABLE_LEGAL_REVIEW_STATUSES = {
     "0.2.0": "project-owner-approved-for-final-public-release",
     "0.3.0": "project-owner-approved-for-final-public-release",
     "0.4.0": "project-owner-approved-for-final-public-release",
+    "0.4.1": "project-owner-approved-for-final-public-release",
 }
 
 

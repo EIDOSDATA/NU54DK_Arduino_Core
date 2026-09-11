@@ -36,16 +36,16 @@ class V041ReleaseTests(unittest.TestCase):
         self.assertNotIn("publish-release", choices)
         self.assertNotIn("publish-index", choices)
 
-    def test_unpublished_stable_configuration_is_process_local(self):
-        """! @brief v0.4.1 후보 구성 후 새 모듈에는 변경이 남지 않는지 확인합니다. """
-        package = load("test_v041_package_configured", "packaging/boards-manager/nu54_package.py")
-        self.assertNotIn(RELEASE.VERSION, package.STABLE_VERSIONS)
-        RELEASE.configure_package(package, "1" * 40)
+    def test_published_stable_cannot_be_reconfigured(self):
+        """! @brief 공개된 v0.4.1의 영구 identity와 재구성 차단을 확인합니다. """
+        package = load("test_v041_package_published", "packaging/boards-manager/nu54_package.py")
         self.assertIn(RELEASE.VERSION, package.STABLE_VERSIONS)
-        self.assertEqual(package.STABLE_RELEASE_COMMITS[RELEASE.VERSION], "1" * 40)
-
-        fresh = load("test_v041_package_fresh", "packaging/boards-manager/nu54_package.py")
-        self.assertNotIn(RELEASE.VERSION, fresh.STABLE_VERSIONS)
+        self.assertEqual(
+            package.STABLE_RELEASE_COMMITS[RELEASE.VERSION],
+            "bbc2dc1fc5823ca465fc1d1ff2170512282b9313",
+        )
+        with self.assertRaisesRegex(RELEASE.ReleaseFailure, "공개 전"):
+            RELEASE.configure_package(package, "1" * 40)
 
     def test_release_documents_are_complete(self):
         """! @brief 공개 사용자 문서 5종과 별도 안내 문서가 모두 있는지 확인합니다. """

@@ -8,9 +8,9 @@
 | --- | --- | --- |
 | P41-01 범위·기준선 | 완료 | clean exact source·board·기존 공개 자산과 변경 범위 기록 |
 | P41-02 코드·정책·문서 | 완료 | 설치기 수정·0.4.1 사용자 문서·이전 버전 지원 종료 표현 일치 |
-| P41-03 로컬·원격 gate | 진행 중 | Host·package·문서·inventory·CI와 재현 빌드 PASS |
-| P41-04 비공개 package | 미착수 | 0.4.1 archive/sidecar 이중 생성·byte 재현·단독 index 검증 |
-| P41-05 공개 | 미착수 | exact 승인 source에 tag·Release 생성, asset byte 재검증 후 index 게시 |
+| P41-03 로컬·원격 gate | 완료 | Host·package·문서·inventory와 exact source 원격 CI 15/15 PASS |
+| P41-04 비공개 package | 완료 | 0.4.1 archive/sidecar 이중 생성·byte 재현·단독 index 검증 |
+| P41-05 공개 | 진행 중 | exact 승인 source의 tag·Release·asset 검증 완료, 단독 index 게시 중 |
 | P41-06 공개 URL 설치 | 미착수 | index에 0.4.1만 노출, 격리 설치·예제 30/30 compile |
 | P41-07 마감 | 미착수 | 영구 identity·문서·기록 갱신, commit·push·exact CI 확인 |
 

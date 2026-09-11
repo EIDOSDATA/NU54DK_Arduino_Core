@@ -29,6 +29,7 @@ class M27PackageExampleTests(unittest.TestCase):
         )
         self.assertEqual(MODULE.VERSION, "0.4.0-rc.1")
         self.assertEqual(MODULE.STABLE_VERSION, "0.4.0")
+        self.assertEqual(MODULE.CURRENT_STABLE_VERSION, "0.4.1")
 
     def test_m22_historical_runner_remains_pinned(self) -> None:
         self.assertEqual(MODULE.BASE.VERSION, "0.3.0-rc.3")
@@ -45,7 +46,12 @@ class M27PackageExampleTests(unittest.TestCase):
         self.assertEqual(option.default, MODULE.VERSION)
         self.assertEqual(
             set(option.choices),
-            {MODULE.VERSION, MODULE.STABLE_VERSION, "0.0.90"},
+            {
+                MODULE.VERSION,
+                MODULE.STABLE_VERSION,
+                MODULE.CURRENT_STABLE_VERSION,
+                "0.0.90",
+            },
         )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
@@ -62,6 +68,11 @@ class M27PackageExampleTests(unittest.TestCase):
                     MODULE.STABLE_VERSION,
                     "M27",
                     "installed-stable-package-examples",
+                ),
+                (
+                    MODULE.CURRENT_STABLE_VERSION,
+                    "P41",
+                    "installed-current-stable-package-examples",
                 ),
             ]:
                 args = argparse.Namespace(

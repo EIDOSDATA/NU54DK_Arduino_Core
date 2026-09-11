@@ -57,6 +57,10 @@ PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES = {
         1879,
         "522f6715389d34887f4087b4e37dd2d0659d680fa119a9558200d7040514de25",
     ),
+    "0.4.1": (
+        1126,
+        "6c3a7d9b480ae1d9618b6106451078260ec8e31e2c44d83ed7c5b49fe207692d",
+    ),
 }
 EXPECTED_PINS = {
     "NCS_VERSION": "v3.4.0",
@@ -157,8 +161,8 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 def assert_package_contract(package: Any = PACKAGE) -> None:
     if tuple(package.RELEASE_CANDIDATE_VERSIONS) != EXPECTED_RC_VERSIONS:
         raise M22ReleaseFailure("release candidate allowlist가 M22 고정 계약과 다릅니다.")
-    if tuple(package.STABLE_VERSIONS) != EXPECTED_STABLE_VERSIONS:
-        raise M22ReleaseFailure("공개 stable allowlist 변경을 M22 RC 도구에서 허용하지 않습니다.")
+    if tuple(package.STABLE_VERSIONS[: len(EXPECTED_STABLE_VERSIONS)]) != EXPECTED_STABLE_VERSIONS:
+        raise M22ReleaseFailure("M22 당시 공개 stable 이력이 변경됐습니다.")
     for name, expected in EXPECTED_PINS.items():
         if getattr(package, name, None) != expected:
             raise M22ReleaseFailure(f"package pin {name}이 M22 고정 계약과 다릅니다.")
