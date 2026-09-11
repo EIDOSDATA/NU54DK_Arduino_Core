@@ -215,9 +215,15 @@ class M27StableReleaseTests(unittest.TestCase):
             self.assertEqual(len(calls), 1)
             command = calls[0]
             self.assertEqual(command[:3], ("gh", "release", "create"))
-            self.assertNotIn(str(root / artifacts["index"]["path"]), command)
+            upload_arguments = command[command.index("--latest") + 1 :]
+            uploaded_paths = {Path(argument).resolve() for argument in upload_arguments}
+            self.assertNotIn(
+                (root / artifacts["index"]["path"]).resolve(), uploaded_paths
+            )
             for role in MODULE.PACKAGE_ROLES + tuple(MODULE.DOCUMENT_PATHS):
-                self.assertIn(str(root / artifacts[role]["path"]), command)
+                self.assertIn(
+                    (root / artifacts[role]["path"]).resolve(), uploaded_paths
+                )
 
 
 if __name__ == "__main__":
