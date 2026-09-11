@@ -105,9 +105,10 @@ NU54DK를 연결한 뒤 `Verify`, `Upload` 순서로 실행합니다. 온보드 
 
 현재 `main`에는 T16에서 추가한 `Peripheral Fabric (DAP UART disconnected)` profile과
 `NUCODE Peripheral Fabric` 예제 1개가 있습니다. 따라서 **v0.4.0 후보는 library 9개·예제 30개**이며,
-이미 공개된 v0.3.0의 8개·29개와 구분합니다. 이 profile은 검증된 Serial·Analog·Event·PDM·I2S와
-TEMP/WDT30 직접 API를 활성화하고 기존 `standard`·`ble` singleton 구성을 함께 켜지 않습니다.
-QDEC는 노출 header에 후보 source가 남아 있어도 capability가 `unsupported`이며 제품 지원이 아닙니다.
+이미 공개된 v0.3.0의 8개·29개와 구분합니다. 이 profile은 검증된 Serial·Analog·Event·PDM·I2S·
+QDEC20/21과 TEMP/WDT30 직접 API를 활성화하고 기존 `standard`·`ble` singleton 구성을 함께
+켜지 않습니다. QDEC 연속 카운트는 SAMPLE/REPORT event 경로를 사용하며, 동작 중 반복 manual
+`read()/clear`의 무손실 누산은 보증하지 않습니다.
 
 사용자는 `Tools → Feature set → Peripheral Fabric (DAP UART disconnected)`와
 `#include <NUCODE_Peripheral_Fabric.h>`로 진입합니다. DAP UART switch를 물리적으로 분리해야 하는

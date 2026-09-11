@@ -11,7 +11,7 @@
 | Board | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | Manifest schema | `1` |
 | 추적 identity | **75개** |
-| 현재 public surface가 있는 identity | **62개** |
+| 현재 public surface가 있는 identity | **64개** |
 | 현재 HIL PASS identity | **62개** |
 | 후속 구현 배정 | M24 23 / M25 36 / M26 16 |
 
@@ -89,8 +89,8 @@
 | `pdm20` | `—` / `pdm20` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | partial |
 | `pdm21` | `—` / `pdm21` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; direct 예정; double-buffered | pass | pass | pass | not-run |
 | `i2s20` | `—` / `i2s20` | verified: `header-p1` | implemented / public: `StreamFabric` | EasyDMA/16 bit; driver; double-buffered | pass | pass | pass | partial |
-| `qdec20` | `—` / `qdec20` | candidate: `header-p1` | implemented / internal: — | 없음 | pass | pass | partial | not-run |
-| `qdec21` | `—` / `qdec21` | candidate: `header-p1` | implemented / internal: — | 없음 | pass | pass | partial | not-run |
+| `qdec20` | `—` / `qdec20` | verified: `header-p1` | implemented / public: `StreamFabric` | 없음 | pass | pass | partial | not-run |
+| `qdec21` | `—` / `qdec21` | verified: `header-p1` | implemented / public: `StreamFabric` | 없음 | pass | pass | partial | not-run |
 
 ## M26 배정 identity
 

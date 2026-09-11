@@ -267,10 +267,11 @@ personality adapter를 명시적 `fabric` profile의 설치 사용자 경로로 
 profile-scoped 공개 후보이며 `v0.3.0`의 공개 API 범위를 늘리지 않는다. 단독 HIL과 공개 노출은
 통과했지만 `concurrent_hil=partial/not_run`인 조합을 전체 동시성 보증으로 확대하지 않는다.
 
-같은 profile에서 `AnalogFabric`, `EventFabric`, PDM/I2S `StreamFabric`, TEMP/WDT30
-`SystemFabric`도 설치 진입점을 갖는다. QDEC20/21은 header source가 있어도 capability
-`unsupported`이며 공개 지원 범위가 아니다. 세부 identity와 근거는 M23 생성 매트릭스와
-[T16 기록](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따른다.
+같은 profile에서 `AnalogFabric`, `EventFabric`, PDM/I2S/QDEC20/21 `StreamFabric`, TEMP/WDT30
+`SystemFabric`도 설치 진입점을 갖는다. QDEC20/21은 SAMPLE/REPORT event 누산을 공개 지원하며,
+동작 중 반복 manual `read()/clear`의 무손실 누산은 보증하지 않는다. 세부 identity와 근거는
+M23 생성 매트릭스, [T16 기록](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)과
+[T22 전 재확정 기록](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)을 따른다.
 
 ## 11. 설정과 profile
 
@@ -325,16 +326,21 @@ commit은 검증 문서가 소유한다.
 - peripheral I/O의 ISR-safe 호환층
 - P2 GPIO interrupt — CPUAPP GPIOTE 경로가 없어 `NOT_AN_INTERRUPT`
 
-## v0.4.0 후보 QDEC의 현재 제한 — 2026-09-08
+## v0.4.0 QDEC 지원과 현재 제한 — 2026-09-11
 
 기존 stable API 설명과 별도로, 후보 `QdecFabric`의 동작 중 주기적 `read()`는 하드웨어 QDEC가 누산한 값을 CPU가 READCLRACC로 읽고 지운다. GPIO를 CPU가 폴링해 디코딩하는 방식이 아니며 QDEC DMA도 없다. SAMPLE/REPORT IRQ 이벤트 경로는 별도로 존재한다.
 
-추가 기능 시험에서 실제 GPIO/SAMPLE 400에 수동 read 누계가 399가 되는 누락이 재현됐다. 읽기 구간 IRQ 보호만으로 해결되지 않았다. SAMPLE/REPORT
-IRQ 40회 일치나 파형 종료 후 한 번 읽기의 제한된 성공을 전체 기능/연속 동작 보증으로 확대하지 않는다. 임의 +1 보정이나 IRQ 경로 자동 대체를 적용하지 않았다.
+추가 기능 시험에서 실제 GPIO/SAMPLE 400에 수동 read 누계가 399가 되는 누락이 재현됐다. 읽기
+구간 IRQ 보호만으로 해결되지 않았다. SAMPLE/REPORT IRQ 40회 일치와 기본 정·역회전 시험은
+QDEC20/21 지원 근거로 사용한다. 반면 파형 종료 후 한 번 읽기의 제한된 성공을 동작 중 반복
+manual read/clear의 무손실 보증으로 확대하지 않는다. 임의 +1 보정이나 IRQ 경로 자동 대체를
+적용하지 않았다.
 
 수동 read/clear 누산 문제는 알려진 제한으로 남겼고 사용자 지시로 추가 QDEC 검증을 제외했다.
 이에 의존하는 T13 QDEC20/21 단독·C07은 실행 목록에서 제외한다.
 유력 원인·회로 부하의 미검증 조건·완화는 [101번](<../04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md>),
-최종 T15 판정과 T16 설치 capability는 [117번](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>)과
-[118번](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따른다.
-QDEC는 수동 read/clear 오류가 해결되지 않아 사용자용 v0.4.0 지원에서 제외했습니다.
+최종 T15 판정과 T16 설치 capability는 [117번](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>),
+[118번](<../04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)과
+[124번](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)을 따른다.
+QDEC20/21은 사용자용 v0.4.0에서 지원하며 연속 카운트에는 기본 SAMPLE/REPORT event 경로를
+사용한다. 동작 중 반복 manual `read()/clear`의 무손실 누산은 지원 보증 범위가 아니다.

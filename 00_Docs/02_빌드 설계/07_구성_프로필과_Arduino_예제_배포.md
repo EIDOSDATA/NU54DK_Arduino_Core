@@ -186,8 +186,9 @@ archive가 일치하는지 확인하고 설치본 29개를 모두 compile했다.
 AC-03 두 예제는 `standard`와 `ble` profile build 입력을 각각 별도 smoke로 검사한다.
 
 v0.4.0 후보 lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30개입니다. 이 예제는
-`fabric` profile만 사용하고 sidecar 없이 빌드됩니다. QDEC는 capability에서 `unsupported`이며,
-T20/T21에서 30개 전체 설치 package 검증을 다시 수행합니다.
+`fabric` profile만 사용하고 sidecar 없이 빌드됩니다. QDEC20/21은 capability에서 `supported`이며,
+연속 카운트에는 SAMPLE/REPORT event 경로를 사용합니다. T20/T21에서 30개 전체 설치 package
+검증을 다시 수행합니다.
 
 외부 Arduino library 호환성은 bundled feature allowlist에 자동 편입하지 않고 M17의 고정된
 별도 gate로 검증한다.

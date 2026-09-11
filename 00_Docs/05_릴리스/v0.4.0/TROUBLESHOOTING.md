@@ -35,3 +35,9 @@ exact source, profile, instance, route, 반환값과 snapshot을 함께 보고�
 TEMP/WDT30은 `fabric`, 기존 WDT31/System OFF는 `standard`/`ble`의 BoardSystem 경로를
 사용합니다. Debugger halt는 watchdog 진행을, active SWD는 System OFF와 reset cause를 바꿀 수
 있습니다. 전원 기능의 결과에는 debugger 상태를 함께 기록하십시오.
+
+## QDEC20/21
+
+연속 카운트에는 `QdecConfiguration::report_events=true`와 `takeEvent()`를 사용하십시오. 자동
+report와 manual `read()`는 각각 누산기를 비우므로 같은 구간에 혼용하지 않습니다. 동작 중
+반복 manual `read()/clear`의 무손실 누산은 보증하지 않습니다.

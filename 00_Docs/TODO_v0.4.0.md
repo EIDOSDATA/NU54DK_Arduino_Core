@@ -2,7 +2,9 @@
 
 현재 정식 배포는 **v0.3.0**입니다. v0.4.0은 합의한 T13 S/U, T14 충돌 판정,
 T15 지원 범위, T16 설치 통합, T17 문서 정리, T18 공개 절차 준비, R14/T19 RC 고정,
-T20 설치 수명주기와 T21 stable 최종 검사를 종료했으며 T22 공개 승인 대기 단계입니다.
+T20 설치 수명주기와 T21 stable 최종 검사를 한 차례 종료했습니다. 2026-09-11 프로젝트
+소유자가 QDEC20/21을 제한이 명시된 공개 지원으로 전환하기로 결정했으므로, 현재는 T22 승인
+전에 지원 계약을 갱신하고 영향받는 T19~T21 gate를 다시 확인하는 단계입니다.
 현재 상태와 다음 작업은 이 문서에서 관리하고, 실행별 원본은 [검증 기록](<04_검증 기록/README.md>)에 보존합니다.
 
 ## 1. 현재 상태
@@ -20,20 +22,29 @@ T20 설치 수명주기와 T21 stable 최종 검사를 종료했으며 T22 공�
 | 요청한 잔여 S 1~3단계 | **범위 종료: PASS 56 + 제외 2 / 58** | System OFF 2조건은 기존 M15 실기와 중복되는 T13 추가 결합 시험으로 제외. 113번 |
 | T13 U 준비·실행 | **완료** | `4f380931` exact image에서 UARTE00 180초, RTS/CTS 200/200, TX/RX 취소 400/400 PASS. 115번 |
 | T14 결함·충돌 판정 | **완료** | PWM 자원 식별 1건 해결, 세 미커버 요구 판정 완료. 116번 |
-| T15 지원 범위 확정 | **완료** | M24/M25 fixture physical gate PASS, QDEC partial·비공개 유지. 117번 |
+| T15 지원 범위 확정 | **완료** | M24/M25 fixture physical gate PASS. 당시 QDEC partial·비공개 판정은 124번에서 제한 명시 공개 지원으로 재확정 중 |
 | T16 설치 통합 | **완료** | `fabric` profile·facade·예제·30개 후보 lock. 118번 |
-| T17 문서·지원 매트릭스 정리 | **완료** | public 62/75, QDEC20/21 unsupported, 사용자 문서 5종. 119번 |
+| T17 문서·지원 매트릭스 정리 | **재조정 중** | public 64/75로 변경, QDEC20/21 partial·지원 계약과 사용자 문서 갱신. 124번 |
 | T18 공개 절차 준비 | **완료** | stable 생성·검증, 승인 evidence 결합과 공개 명령 분리. 120번 |
-| R14·T19 RC 고정·전체 회귀 | **완료** | 35/35 target, Host·문서·inventory, RC 이중 재현 PASS |
-| T20 RC 설치 수명주기 | **완료** | 설치·30/30 예제·실제 Upload·전환·제거·재설치 PASS |
-| T21 stable 최종 검사 | **완료** | stable 이중 재현·30/30 예제·실제 Upload·RC runtime 동등성 PASS. 123번 |
-| T22~T25 승인·공개·마무리 | 대기 | T22 프로젝트 소유자 승인부터 별도 진행 |
+| R14·T19 RC 고정·전체 회귀 | **이전 후보 완료·재검증 예정** | QDEC 공개 capability 변경 뒤 35/35 target, Host·문서·inventory와 RC 재현성 재실행 |
+| T20 RC 설치 수명주기 | **이전 후보 완료·재검증 예정** | 새 package 설치·30/30 예제·Upload·전환·제거·재설치 재확인 |
+| T21 stable 최종 검사 | **이전 후보 완료·재검증 예정** | 새 stable 이중 재현·30/30·Upload·RC runtime 동등성 재확인. 123·124번 |
+| T22~T25 승인·공개·마무리 | 범위 조정 중 | QDEC20/21 지원 계약 반영과 영향 T19~T21 재검증 뒤 T22 승인 |
 
-QDEC·시리얼 핸드오버·T13 peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
+T13 QDEC manual read 단독/C07·시리얼 핸드오버·peer 제어 System OFF 제외와 충돌 반복 생략은 범위 결정이며 새 물리
 PASS가 아닙니다.
 기존 정상 36조건과 수용된 시험을 다시 예약하지 않습니다.
 
 ## 2. 현재 재개 체크포인트
+
+**2026-09-11 T22 직전 지원 범위 조정 진행 중:** 프로젝트 소유자는 QDEC20/21을 공개 지원으로
+전환하되, 검증된 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원 근거로 사용하고 동작 중
+반복 manual `read()/clear`의 무손실 누산은 보증 범위에서 제외하기로 결정했습니다. 반복 Serial
+personality handover, 모든 주변장치 동시 조합, 정밀 ADC 정확도·clock jitter·음질·신호 무결성도
+기존처럼 보증 범위 밖입니다. 이 작업은 과거 QDEC 실패를 PASS로 소급 변경하지 않으며,
+manifest·공개 capability·API 주석·사용자/릴리스 문서·계약 검사를 일치시킨 뒤 변경된 후보로
+T19~T21 영향 gate와 package identity를 다시 고정합니다. 실행 기록은
+[124번](<04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)에 남깁니다.
 
 **2026-09-10 기준: 요청한 S 정리와 U 실행 준비를 먼저 완료했습니다.** 이어진 114번 문서 정비에서는
 본 저장소 Markdown 228개와 고정 보드 문서 6개를 검토했고, 그 정비 자체에는 보드 접근·GPIO 구동·
@@ -69,13 +80,13 @@ M24는 23 identity 기능 HIL pass, M25는 34 pass·QDEC20/21 partial이며,
 
 2026-09-10 T16 완료: `14a979620bb2`에서 별도 `fabric` profile, 설치 library facade와
 `FabricCapabilities` 예제를 연결했습니다. 실제 격리 Arduino 설치 경로에서 수동 Kconfig 편집 없이
-빌드했고 target 324/324, 영향 Host 24 PASS·조건부 1 SKIP, CI 46/46을 통과했습니다. QDEC는
-`unsupported`, v0.3.0 stable 예제는 29개로 유지합니다. 세부 근거는
+빌드했고 target 324/324, 영향 Host 24 PASS·조건부 1 SKIP, CI 46/46을 통과했습니다. 당시 QDEC는
+`unsupported`였고, v0.3.0 stable 예제는 29개로 유지합니다. 세부 근거는
 [118번](<04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따릅니다.
 
 2026-09-10 T17 완료: T16에서 설치 경로에 연결한 지원 범위를 manifest·계약·생성 문서·사용자
-문서에 일치시켰습니다. 75개 identity 중 62개는 `public`과 HIL `pass`, QDEC20/21은
-`internal`·`partial`과 profile `unsupported`로 유지합니다. 이 검증 기록을 포함한 Markdown 239개 UTF-8·로컬 링크,
+문서에 일치시켰습니다. 당시 75개 identity 중 62개는 `public`과 HIL `pass`, QDEC20/21은
+`internal`·`partial`과 profile `unsupported`로 유지했습니다. 이 검증 기록을 포함한 Markdown 239개 UTF-8·로컬 링크,
 Host·CI·inventory·generated·style 검사를 통과했고, release notes·migration·known issues·testing·
 troubleshooting 문서를 추가했습니다. 과거 검증 기록은 당시 조건의 증거이므로 삭제하지 않았습니다.
 세부 근거는 [119번](<04_검증 기록/119_T17_문서와_지원_매트릭스_정리.md>)을 따릅니다.
@@ -275,7 +286,7 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 
 - [x] **T13 — 복구·동시 실행·장시간 안정성 검증**
   - 현행 시간 기준: 사용자 지시로 단독 각 인스턴스 180초. 동시 각 확정 조합 900초, 전체 대표 고부하 한 조합 3600초로 대체. 결과에는 요청/실제 연속 시간을 모두 기록하고 3분을 10분·2시간 통과로 확대하지 않는다.
-  - 상태·선행: **합의 범위 완료**. S는 PASS 56 + System OFF 추가 결합 2건 제외, U는 115번의 UART00 물리시험 PASS다. QDEC20/21·C07 및 연속 handover는 제외하며 T12 완료를 다시 보류하지 않는다.
+  - 상태·선행: **합의 범위 완료**. S는 PASS 56 + System OFF 추가 결합 2건 제외, U는 115번의 UART00 물리시험 PASS다. QDEC20/21 manual read 단독·C07 및 연속 handover는 제외하며 T12 완료를 다시 보류하지 않는다.
   - 완료 실행: UARTE00 1 Mbit/s 8N1 full-duplex 180초, 양 역할 RTS/CTS 각 100회, TX/RX DMA 취소·fresh restart 각 역할 100회. 완료한 S 정상 36조건(C05 3600초 포함)과 수용된 충돌·복구를 중복 예약하지 않는다.
   - 완료 기준: source·topology·rate·시간·buffer·loss·latency/CPU 관측 방법과 누수/복구 판정이 기록된다. 장시간 시험을 코드 구현만으로 완료 처리하지 않는다.
   - 결선·증거: [T13 계획](../tests/hil/nu54dk/T13_PLAN.md), 생성 topology JSON과 [115번 완료 기록](<./04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>)에 원래 계획·적용 범위·원본 hash를 구분한다.
@@ -296,13 +307,15 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 
 - [x] **T16 — 검증된 후보 API를 사용자용 설치 경로에 통합**
   - 완료 결과: `fabric` profile·`NUCODE_Peripheral_Fabric.h`·capability·설치 예제와 M27 30개 lock을 연결했습니다.
-  - 지원 경계: 기존 singleton과 직접 Fabric은 profile로 분리하고 QDEC는 `unsupported`로 유지합니다.
+  - 지원 경계: 기존 singleton과 직접 Fabric은 profile로 분리합니다. QDEC20/21은 124번에서
+    SAMPLE/REPORT event 경로 지원과 반복 manual read/clear 무손실 제외 계약으로 재확정합니다.
   - 검증: 실제 격리 설치본과 T16 target build, Host·CI·inventory·style gate를 통과했습니다.
   - 결선·증거: 새 flash·결선 없음. [118번 기록](<./04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md>)을 따릅니다.
 
 - [x] **T17 — 문서·지원 매트릭스 정리**
   - 완료 결과: README·API·예제·pin/ownership·제한·환경·마일스톤과 release notes·migration·known issues·testing·troubleshooting을 실제 `fabric` 지원 범위에 맞췄습니다.
-  - 지원 원장: 75개 identity 중 public/HIL pass 62개, QDEC20/21 internal/partial·unsupported, 나머지 system identity 11개는 근거에 따라 internal 또는 none입니다.
+  - 지원 원장: 75개 identity 중 public 64개·HIL pass 62개입니다. QDEC20/21은 public/partial이며,
+    나머지 system identity 11개는 근거에 따라 internal 또는 none입니다.
   - 검증: 생성 원본/문서, Host·CI·inventory·문서·style gate를 통과했고 과거 검증·공개 자산은 소급 변경하지 않았습니다.
   - 결선·증거: 새 flash·결선·물리 PASS 없음. [119번 기록](<./04_검증 기록/119_T17_문서와_지원_매트릭스_정리.md>)을 따릅니다.
 
@@ -376,7 +389,7 @@ T09 온보드 PASS로 외부 실기를 대신하지 않습니다.
 | Readiness gate | 연결 작업 | 현재 판정 |
 | --- | --- | --- |
 | `m24_fixture_hil` | T04·T07~T11·T13~T15 | **PASS** |
-| `m25_fixture_hil` | T05~T10·T12~T15 | **PASS**; QDEC는 partial·비공개 경계 |
+| `m25_fixture_hil` | T05~T10·T12~T15 | **PASS**; QDEC20/21은 partial 근거를 명시한 공개 지원 |
 | `host_regression`, `documentation`, `zephyr_repro_build` | T16~T19, T21의 변경 영향 재검증 | **PASS**; runtime 변경 시 재실행 |
 | `package_reproducibility` | T20·T21 | **PASS**; RC/stable 이중 재현과 runtime 동등성 확인 |
 | `boards_manager_lifecycle` | T20·T21; 공개 후 검증은 추가로 T24 | **PASS**; RC/stable 로컬 설치 완료, T24 공개 URL은 별도 |

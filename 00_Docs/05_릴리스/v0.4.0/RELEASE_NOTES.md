@@ -10,7 +10,8 @@
   있습니다.
 - `AnalogFabric`은 SAADC scan/continuous DMA와 PWM20/21/22 sequence를 제공합니다.
 - `EventFabric`은 TIMER·GPIOTE·EGU·DPPI·PPIB의 검증된 identity를 제공합니다.
-- `StreamFabric`은 PDM20/21과 I2S20 double-buffer 경로를 제공합니다.
+- `StreamFabric`은 PDM20/21과 I2S20 double-buffer 경로, QDEC20/21의 기본 정·역회전과
+  SAMPLE/REPORT event 누산을 제공합니다.
 - `SystemFabric`은 온칩 TEMP와 WDT30을 제공합니다.
 - 기존 `Serial`, `Serial1`, `Wire`, `SPI`, ADC/PWM/Tone/Servo, BLE와 Storage API는
   `standard`·`ble` profile에 유지됩니다.
@@ -28,10 +29,10 @@
 ## 호환성과 제한
 
 v0.3.0 Sketch는 기본적으로 수정 없이 `standard` 또는 `ble` profile을 사용합니다. 직접 instance
-API가 필요한 Sketch만 `fabric`으로 이동하십시오. QDEC20/21은 누산 누락 때문에
-`unsupported`이며, 반복 Serial personality handover는 이번 릴리스의 필수 검증에서 제외했습니다.
-모든 가능한 동시 조합, 정밀 ADC 정확도, jitter·음질·신호 품질과 모든 외부 부품 호환성을
-보증하지 않습니다.
+API가 필요한 Sketch만 `fabric`으로 이동하십시오. QDEC20/21은 지원하지만 연속 카운트에는
+SAMPLE/REPORT event 경로를 사용해야 하며, 동작 중 반복 manual `read()/clear`의 무손실 누산은
+보증하지 않습니다. 반복 Serial personality handover, 모든 가능한 동시 조합, 정밀 ADC 정확도,
+jitter·음질·신호 품질과 모든 외부 부품 호환성도 보증하지 않습니다.
 
 공개 여부와 asset identity는 GitHub `v0.4.0` Release와 stable index의 실제 등록을 기준으로
 판정합니다.

@@ -46,5 +46,6 @@ P0.0~P0.3 또는 P1.4~P1.7을 DAP UART가 아닌 직접 peripheral route로 사�
 DAP UART switch를 끄고 공통 GND·I/O 전압을 확인해야 합니다. SWD debug 연결은 유지할 수 있지만
 active debugger는 watchdog halt·System OFF·reset cause 관측에 영향을 줄 수 있습니다.
 
-QDEC는 migration 대상이 아닙니다. Header의 후보 type을 직접 사용해도 v0.4 지원 계약이 되지
-않으며 capability는 `unsupported`입니다.
+QDEC20/21 capability는 `supported`입니다. 연속 카운트에는 기본 `report_events=true`와
+`takeEvent()`를 사용하십시오. 동작 중 반복 manual `read()`는 누산기를 read/clear하므로 무손실
+누산을 보증하지 않으며 자동 report와 같은 구간에 혼용하지 마십시오.

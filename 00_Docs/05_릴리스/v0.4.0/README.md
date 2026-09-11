@@ -51,6 +51,8 @@ switch 상태, 공통 GND와 I/O 전압을 실제 배선에 맞게 확인하십�
 ## 검증 해석
 
 M24 Serial 23개 identity, M25 공개 대상 Analog/Event/Stream, M26 TEMP/WDT30과 합의한
-동시성·오류 복구·안정성 범위를 실제 NU54DK로 검증했습니다. QDEC20/21, 반복 Serial
-personality handover, 정밀 계측·모든 외부 부품 조합은 보증 범위가 아닙니다. 상세 근거는
-[검증 기록](<../../04_검증 기록/README.md>)과 [Known issues](KNOWN_ISSUES.md)를 따릅니다.
+동시성·오류 복구·안정성 범위를 실제 NU54DK로 검증했습니다. QDEC20/21은 기본 정·역회전과
+SAMPLE/REPORT event 누산을 지원하지만 반복 manual `read()/clear`의 무손실은 보증하지
+않습니다. 반복 Serial personality handover, 모든 주변장치 동시 조합과 정밀 계측·모든 외부
+부품 조합도 보증 범위가 아닙니다. 상세 근거는 [검증 기록](<../../04_검증 기록/README.md>)과
+[Known issues](KNOWN_ISSUES.md)를 따릅니다.

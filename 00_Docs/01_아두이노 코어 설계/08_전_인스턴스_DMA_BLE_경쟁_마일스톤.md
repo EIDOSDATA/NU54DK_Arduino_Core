@@ -138,7 +138,7 @@ TWIM/TWIS는 같은 register base와 IRQ 자원을 personality별로 공유하�
 | PWM | PWM20/21/22, 각 4 channel | PWM20 `analogWrite`, PWM21 `tone`, PWM22 Servo | 세 base, 4채널·sequence mode·DPPI/DMA | 12 HW channel의 명시적 allocator, sequence/loop/DPPI와 동시 HIL |
 | PDM | PDM20/21 | 미지원 | 두 base, capture·double buffer 경로 | 두 instance stream, clock/pin route, overrun과 동시 DMA HIL |
 | I2S | I2S20 | 미지원 | TX/RX/duplex double-buffer 경로 | TX/RX/duplex, word/clock format, underrun/overrun과 codec HIL |
-| QDEC | QDEC20/21 | 미지원 | 두 base 선택 경로 | 두 instance, LED precharge·debounce·accumulator·overflow HIL |
+| QDEC | QDEC20/21 | 지원 | 두 base 선택 경로 | 기본·SAMPLE/REPORT event 지원; 반복 manual read/clear 무손실 제외 |
 | COMP/LPCOMP | 각 1 기능군 | 미지원 | register wrapper와 예제 경로 | 입력 route·reference·hysteresis·wake/DPPI, analog conflict HIL |
 | TEMP | 1 | NCS direct 가능, 공개 wrapper 없음 | wrapper | accuracy 경계와 blocking/async API, radio calibration 간섭 확인 |
 | WDT | WDT30/31 | Board/System WDT 한 경로 HIL | base wrapper | 두 instance, channel·pause·reset reason·System OFF 정책 |
@@ -331,11 +331,13 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M25 — Analog·timing·audio·event 전 인스턴스
 
-- 상태: 기능 검증·T14 자원 충돌 판정·T15 physical 판정과 T16 설치 노출 완료. QDEC20/21만 partial·internal candidate로 유지.
+- 상태: 기능 검증·T14 자원 충돌 판정·T15 physical 판정과 T16 설치 노출 완료. T22 전 범위
+  재확정에서 QDEC20/21을 partial 근거와 manual read/clear 제한을 명시한 공개 지원으로 전환했다.
   구현 이력은 [M25 검증 기록](<../04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md>),
   source별 요구 대조는 102번, 외부 ADC 반복 수 차이는 103번, fixture 경계는 42번 기록에 보존한다.
 - 주요 기능 결과: SAADC AIN0~7·내부 ADC/event, PDM 기본/연속, C17 GPIO/GPIOTE·PWM 675+288·I2S 432 PASS.
-  TIMER는 95번의 실제 범위로 완료 정리했다. QDEC는 알려진 문제가 남아 있고 사용자 지시로 추가 검증을 제외한다.
+  TIMER는 95번의 실제 범위로 완료 정리했다. QDEC20/21은 기본 정·역회전과 SAMPLE/REPORT
+  event 경로를 지원하며 반복 manual read/clear 무손실은 보증하지 않는다.
 
 - SAADC 8채널 scan/differential/internal/calibration/oversampling/continuous DMA를 제공한다.
 - PWM20/21/22의 12 hardware channel allocator와 sequence/DPPI/DMA를 `analogWrite`, `tone`, Servo와
@@ -347,7 +349,8 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
   시험은 두 NU54DK의 안전한 ADC 입력·PWM capture·PDM/I2S/QDEC 합성 신호/loopback을 사용한다.
   실제 핀을 통과하는 신호와 기대 sample/frame/count는 필수이며 handle 생성으로 대체하지 않는다.
 - 완료 gate: 현행 범위에 포함된 instance의 단독·허용 동시 기능 HIL, 기본 timing·DMA overflow/underrun·복구·long-run soak.
-  QDEC20/21과 C07은 현재 실행 대상이 아니다. 원래 전 instance 목표와 실제 검증 범위를 구분한다.
+  T13의 QDEC20/21 manual read 단독·C07은 실행 대상에서 제외했으며, 지원 근거인 기본 QDEC와
+  SAMPLE/REPORT event 결과와 구분한다.
   정밀 ADC 정확도·jitter·음질·신호 품질, 실제 마이크·코덱·엔코더별 호환성은 필수 gate에서 제외한다.
   합성 peer 신호를 아직 구현하거나 검증하지 못한 경로는 `NOT RUN`/HOLD를 유지한다.
 - R03에서 ISR/thread 진단 snapshot, queue overflow, stop generation과 lock 대기 계약을 먼저 고정하고

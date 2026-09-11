@@ -23,11 +23,12 @@ void setup()
                    eventFabric().timer(20U) != nullptr && eventFabric().egu(20U) != nullptr &&
                    eventFabric().gpiote(20U) != nullptr && eventFabric().dppi(20U) != nullptr &&
                    eventFabric().ppib(20U) != nullptr && streamFabric().pdm(20U) != nullptr &&
-                   streamFabric().i2s(20U) != nullptr && systemFabric().watchdog(30U) != nullptr &&
+                   streamFabric().i2s(20U) != nullptr && streamFabric().qdec(20U) != nullptr &&
+                   streamFabric().qdec(21U) != nullptr && systemFabric().watchdog(30U) != nullptr &&
                    peripheralInventorySize() == 75U && isSupported(capabilities.serial) &&
                    isSupported(capabilities.analog) && isSupported(capabilities.event) &&
                    isSupported(capabilities.pdm) && isSupported(capabilities.i2s) &&
-                   capabilities.qdec == Support::unsupported && isSupported(capabilities.system);
+                   isSupported(capabilities.qdec) && isSupported(capabilities.system);
 }
 
 void loop()

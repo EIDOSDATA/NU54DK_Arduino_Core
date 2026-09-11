@@ -41,7 +41,7 @@ instance와 제3자 library 전체를 지원한다는 뜻은 아닙니다.
 | `EventFabric` | 지원된 범위 | GPIOTE 2·EGU 2·DPPIC 4·PPIB 8·TIMER 7 identity |
 | `StreamFabric` PDM/I2S | 지원된 범위 | PDM20/21과 I2S20의 double-buffer 수명주기 |
 | `SystemFabric` | 지원된 범위 | 온칩 TEMP centi-Celsius와 WDT30 configure/start/feed/reset-cause |
-| `StreamFabric` QDEC20/21 | **미지원** | manual read/clear 누산 제한으로 capability `unsupported`; 추가 진단 제외 |
+| `StreamFabric` QDEC20/21 | **지원** | 기본 정·역회전·debounce와 SAMPLE/REPORT event 누산; 반복 manual read/clear 무손실은 보증하지 않음 |
 
 각 identity의 단독 HIL은 통과했지만 manifest의 `concurrent_hil=partial/not_run`은 그대로 유지합니다.
 따라서 특정 identity가 공개 API에 있다는 사실만으로 모든 가능한 동시 조합을 보증하지 않습니다.

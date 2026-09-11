@@ -13,19 +13,21 @@
 [119번](119_T17_문서와_지원_매트릭스_정리.md), T18 stable 공개 절차와 승인 차단은
 [120번](120_T18_stable_공개_절차와_승인_차단.md)에서 확인합니다.
 R14/T19 RC 전체 회귀는 [121번](121_T19_RC_소스_고정과_전체_회귀.md), T20 Boards Manager
-설치 수명주기는 [122번](122_T20_RC_설치_수명주기와_실제_Upload.md), T21 stable 최종 검사는
-[123번](123_T21_stable_패키지와_최종_검사.md)에서 확인합니다.
+설치 수명주기는 [122번](122_T20_RC_설치_수명주기와_실제_Upload.md), 이전 후보의 T21 stable
+최종 검사는 [123번](123_T21_stable_패키지와_최종_검사.md), T22 전 QDEC 지원 범위 재확정은
+[124번](124_T22전_QDEC_지원_범위_재확정.md)에서 확인합니다.
 
 ## 최근 확인할 기록
 
 | 기록 | 용도 |
 | --- | --- |
-| [123 — T21 stable 패키지와 최종 검사](123_T21_stable_패키지와_최종_검사.md) | **T21 완료·stable 30/30·Upload·RC/runtime 동등성 PASS** |
+| [124 — T22 전 QDEC20/21 지원 범위 재확정](124_T22전_QDEC_지원_범위_재확정.md) | **진행 중·QDEC 공개 지원과 manual read/clear 제한 계약 반영** |
+| [123 — T21 stable 패키지와 최종 검사](123_T21_stable_패키지와_최종_검사.md) | **이전 후보 T21 완료·stable 30/30·Upload·RC/runtime 동등성 PASS** |
 | [122 — T20 RC 설치 수명주기와 실제 Upload](122_T20_RC_설치_수명주기와_실제_Upload.md) | **T20 완료·설치본 30/30·Upload·전환·제거·재설치 PASS** |
 | [121 — T19 RC 소스 고정과 전체 회귀](121_T19_RC_소스_고정과_전체_회귀.md) | **R14·T19 완료·35/35 target·RC 이중 재현 PASS** |
 | [120 — T18 stable 공개 절차와 승인 차단](120_T18_stable_공개_절차와_승인_차단.md) | **T18 완료·prepare/게시 분리·T22 승인 전 외부 쓰기 차단** |
-| [119 — T17 문서와 지원 매트릭스 정리](119_T17_문서와_지원_매트릭스_정리.md) | **T17 완료·public 62/75·사용자 문서·QDEC unsupported 경계** |
-| [118 — T16 Peripheral Fabric 설치 통합](118_T16_Peripheral_Fabric_설치_통합.md) | **T16 완료·fabric profile·설치 예제·QDEC unsupported 경계** |
+| [119 — T17 문서와 지원 매트릭스 정리](119_T17_문서와_지원_매트릭스_정리.md) | **당시 T17 완료·public 62/75·QDEC unsupported 경계** |
+| [118 — T16 Peripheral Fabric 설치 통합](118_T16_Peripheral_Fabric_설치_통합.md) | **당시 T16 완료·fabric profile·QDEC unsupported 경계** |
 | [117 — T15 지원 범위와 Physical Gate 확정](117_T15_지원_범위와_Physical_Gate_확정.md) | **T15 완료·M24/M25 physical PASS·QDEC partial 경계** |
 | [116 — T14 자원 충돌 판정과 PWM 식별 교정](116_T14_자원_충돌_판정과_PWM_식별_교정.md) | **T14 완료·PWM 자원 결함 해결·두 보드 520 cycle PASS** |
 | [115 — T13 U UART00 완료와 T13 종료](115_T13_U_UART00_완료와_T13_종료.md) | **U 물리시험 완료·T13 합의 범위 종료** |
@@ -77,7 +79,7 @@ R14/T19 RC 전체 회귀는 [121번](121_T19_RC_소스_고정과_전체_회귀.m
 - [116 — T14 자원 충돌 판정과 PWM 식별 교정](<116_T14_자원_충돌_판정과_PWM_식별_교정.md>) — **T14 완료·결함 1건 해결·미해결 0건**
 - [117 — T15 지원 범위와 Physical Gate 확정](<117_T15_지원_범위와_Physical_Gate_확정.md>) — **T15 완료·M24/M25 fixture gate PASS**
 - [118 — T16 Peripheral Fabric 설치 통합](<118_T16_Peripheral_Fabric_설치_통합.md>) — **T16 완료·설치 profile/예제 통합**
-- [119 — T17 문서와 지원 매트릭스 정리](<119_T17_문서와_지원_매트릭스_정리.md>) — **T17 완료·public 62/75·사용자 문서 확정**
+- [119 — T17 문서와 지원 매트릭스 정리](<119_T17_문서와_지원_매트릭스_정리.md>) — **당시 T17 완료·public 62/75·사용자 문서 확정**
 - [120 — T18 stable 공개 절차와 승인 차단](<120_T18_stable_공개_절차와_승인_차단.md>) — **T18 완료·T22 승인 전 공개 차단**
 - [121 — T19 RC 소스 고정과 전체 회귀](<121_T19_RC_소스_고정과_전체_회귀.md>) — **R14·T19 완료·35/35 target·RC 이중 재현 PASS**
 - [122 — T20 RC 설치 수명주기와 실제 Upload](<122_T20_RC_설치_수명주기와_실제_Upload.md>) — **T20 완료·설치본 30/30·Upload·수명주기 PASS**

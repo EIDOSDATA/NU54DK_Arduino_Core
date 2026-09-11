@@ -5,7 +5,7 @@
 | 범위 | 상태 |
 | --- | --- |
 | M24 Serial identity | 23/23 단독 HIL PASS |
-| M25 지원 대상 | 34 PASS, QDEC20/21 partial·unsupported |
+| M25 지원 대상 | 34 HIL PASS, QDEC20/21 기본 48조건·SAMPLE/REPORT IRQ 40회 근거로 조건부 지원 |
 | T13 정상·동시성 | 단독 29/29 + 동시 7/7, C05 3600초 포함 |
 | T13 오류 복구·UARTE00 | 합의 범위 완료 |
 | T14 자원 충돌 교정 | Host·target·두 보드 520 cycle PASS |
@@ -13,6 +13,10 @@
 
 실행별 exact source·결선·명령·원본은 [검증 기록 색인](<../../04_검증 기록/README.md>)에서
 확인합니다. 이전 source의 PASS를 최종 RC 결과로 복사하지 않습니다.
+
+QDEC20/21의 동작 중 반복 manual `read()/clear`에서는 실제 GPIO/SAMPLE 400개에 누계 399개가
+되는 실패가 간헐 재현됐습니다. 이 실패는 PASS로 바꾸지 않았고 해당 방식의 무손실 누산을
+보증하지 않습니다. 공개 지원 경로는 기본 정·역회전과 SAMPLE/REPORT event 누산입니다.
 
 ## 로컬 software 검사
 

@@ -115,7 +115,7 @@ def render(plan: dict, inventory: list[dict], root: Path = ROOT) -> str:
              "- 현재 요구별 증거: [102번 대조](<../04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md>). PWM은 합의한 675조건·추가 모드 288조건 결과를 대조하며 초기 Cartesian 준비 수를 다시 필수로 요구하지 않는다.",
              "- TIMER 기능 완료와 다음 T13 진행 경계는 [103번 정정](<../04_검증 기록/103_TIMER_기능_완료와_T13_진행_경계.md>)을 따른다. TIMER 각 조건 10회와 EGU/DPPI/PPIB 1000 event×10을 구분한다. 외부 ADC 초기 100회와 실제 각 조건 1회 차이도 별도 보존한다.",
              "- T13 실제 조합·결선·선행 HOLD: [T13 계획](../../tests/hil/nu54dk/T13_PLAN.md). 단독 180초·일반 동시 900초·대표 C05 3600초이며 계획 확정은 실기 PASS가 아니다.",
-             "- 현재 범위: QDEC20/21·C07, 반복 serial handover, T13 peer 제어 System OFF 추가 2조건은 제외다. 아래 초기 vector·반복 수는 현재 실행 대열이 아니며 제외 결정을 번복하지 않는다.",
+             "- 현재 T13 실행 범위: QDEC20/21 manual read 단독·C07, 반복 serial handover, peer 제어 System OFF 추가 2조건은 제외다. QDEC 기본·SAMPLE/REPORT event 공개 지원과 이 T13 제외를 구분한다.",
              "- S 정상 36조건(C05 3600초 포함), 요청한 S 복구 범위와 U 실기, T14 충돌 판정과 T15 지원 범위 반영을 종료했다. [115번 U 완료](<../04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>), [116번 T14 완료](<../04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md>), [117번 T15 완료](<../04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md>)와 [TODO](../TODO_v0.4.0.md)를 따른다.",
              "- 원본: [시험 JSON](../../tests/hil/nu54dk/v04_test_plan.json), 검사: [verify_v04_test_plan.py](../../tools/peripheral/verify_v04_test_plan.py).",
              "- 각 family/instance/mode는 별도 결과 ID를 가진다. 적용 불가 mode는 이유를 기록하며 암묵적으로 PASS하지 않는다.",

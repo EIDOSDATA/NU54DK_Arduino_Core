@@ -24,7 +24,7 @@
 | --- | --- | --- |
 | M23 | 75개 peripheral identity, block/channel/DMA 소유권 계약 | 지원·실기 상태는 개별 항목별로 판정 |
 | M24 | `fabric` profile의 UARTE·SPIM/SPIS·TWIM/TWIS 23개 | 단독 HIL·route·공개 원장 PASS, 미실행 동시 조합은 보증하지 않음 |
-| M25 | SAADC·PWM·timer/event·PDM·I2S 직접 API | 검증 범위 공개, QDEC만 unsupported·추가 진단 제외 |
+| M25 | SAADC·PWM·timer/event·PDM·I2S·QDEC 직접 API | QDEC20/21은 기본·event 경로 지원, 반복 manual read/clear 무손실 제외 |
 | M26 | 16개 system 기능의 지원 경계 | TEMP·WDT30 실기 PASS를 `SystemFabric`에 연결, 나머지는 행별 경계 유지 |
 | M27 | checksum·SBOM·license·RC/stable HOLD plan | T18 절차 완료, R14/T19 이후 최종 비공개 package 재생성·검증 필요 |
 
@@ -37,7 +37,8 @@ T16 이후 현재 후보는 `NUCODE Peripheral Fabric` 예제를 포함한 **30�
 ## 현재 범위 결정
 
 - R00~R13과 source별 T11 단독 회귀는 완료했습니다. T12는 QDEC 문제 보고를 포함해 사용자가 수용했습니다.
-- QDEC 추가 진단과 연속 UART/SPI/TWI 종류·역할 전환(시리얼 핸드오버)은 이번 실행에서 제외합니다.
+- QDEC20/21은 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원합니다. 반복 manual
+  `read()/clear` 무손실 검증과 연속 UART/SPI/TWI 종류·역할 전환은 제외합니다.
 - 요청한 S 범위는 **PASS 56 + 제외 2 / 58**로 종료했습니다. 제외한 2조건은 기존 M15 GRTC·버튼
   wake 실기와 중복되는 T13 peer 제어 System OFF 추가 결합 시험입니다.
 - UARTE00 별도 4-net 결선 검사, 정상 180초, RTS/CTS 200회와 TX/RX 취소 400회를 완료했습니다.

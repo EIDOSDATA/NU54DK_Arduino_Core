@@ -46,11 +46,12 @@ namespace nucode::peripheral
     /**
      * @brief T15에서 확정한 지원 경계를 설치 profile capability로 제공합니다.
      *
-     * QDEC는 알려진 manual read/clear 누산 제한 때문에 지원으로 승격하지 않습니다.
+     * QDEC20/21은 SAMPLE/REPORT event 경로를 지원합니다. 동작 중 반복 manual read/clear의
+     * 무손실 누산은 지원 보증 범위가 아닙니다.
      */
     inline constexpr Capabilities capabilities{
-        Support::supported, Support::supported,   Support::supported, Support::supported,
-        Support::supported, Support::unsupported, Support::supported,
+        Support::supported, Support::supported, Support::supported, Support::supported,
+        Support::supported, Support::supported, Support::supported,
     };
 
     /** @brief capability가 일반 사용자 지원 범위인지 확인합니다. */

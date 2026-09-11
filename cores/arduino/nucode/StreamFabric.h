@@ -201,6 +201,8 @@ namespace nucode::arduino
         /**
          * @brief 자동 report/누산기 초기화를 켭니다. false는 명시적인 read()로만 누산기를 읽습니다.
          * @note 자동 report와 read()는 각각 누산기를 비우므로 같은 구간을 중복 합산하지 않습니다.
+         * @warning 연속 동작 중 반복 manual read/clear의 무손실 누산은 보증하지 않습니다.
+         *          연속 카운트에는 기본값 true와 takeEvent()를 사용하십시오.
          */
         bool report_events{true};
         StreamElectricalProfile electrical_profile{StreamElectricalProfile::connector_fixture};
@@ -234,6 +236,11 @@ namespace nucode::arduino
 
         [[nodiscard]] StreamFabricResult configure(const QdecConfiguration &configuration) noexcept;
         [[nodiscard]] StreamFabricResult start() noexcept;
+        /**
+         * @brief 현재 누산값을 읽고 하드웨어 누산기를 비웁니다.
+         * @warning 동작 중 반복 호출의 무손실 누산은 보증하지 않습니다. 연속 카운트에는
+         *          report event와 takeEvent()를 사용하십시오.
+         */
         [[nodiscard]] StreamFabricResult read(QdecEvent &event) noexcept;
         [[nodiscard]] StreamFabricResult stop() noexcept;
         [[nodiscard]] bool takeEvent(QdecEvent &event) noexcept;

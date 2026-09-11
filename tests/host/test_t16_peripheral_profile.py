@@ -107,8 +107,8 @@ class T16PeripheralProfileTests(unittest.TestCase):
         self.assertFalse((example.parent / "prj.conf").exists())
         self.assertFalse((example.parent / "app.overlay").exists())
 
-    def test_public_facade_preserves_qdec_limitation(self) -> None:
-        """! @brief QDEC를 지원으로 잘못 승격하지 않고 공개 family factory를 연결합니다. """
+    def test_public_facade_exposes_supported_qdec_with_read_limitation(self) -> None:
+        """! @brief QDEC 지원과 manual read/clear 제한을 함께 공개합니다. """
 
         header = (LIBRARY / "src" / "NUCODE_Peripheral_Fabric.h").read_text(
             encoding="utf-8"
@@ -123,7 +123,14 @@ class T16PeripheralProfileTests(unittest.TestCase):
         ):
             self.assertIn(f"nucode/{family}.h", header)
         self.assertRegex(header, r"Support\s+qdec;")
-        self.assertRegex(header, r"Support::unsupported,\s*Support::supported,")
+        self.assertNotIn("Support::unsupported, Support::supported,", header)
+        self.assertIn("manual read/clear", header)
+        example = (LIBRARY / "examples" / "FabricCapabilities" / "FabricCapabilities.ino").read_text(
+            encoding="utf-8"
+        )
+        for instance in (20, 21):
+            self.assertIn(f"streamFabric().qdec({instance}U)", example)
+        self.assertIn("isSupported(capabilities.qdec)", example)
 
     def test_support_ledger_matches_the_profile_surface(self) -> None:
         """! @brief T16 공개 family와 원장의 노출·HIL 상태가 일치하는지 확인합니다. """
@@ -149,8 +156,10 @@ class T16PeripheralProfileTests(unittest.TestCase):
             self.assertIn("StreamFabric", item["public_api"], identifier)
         for identifier in ("qdec20", "qdec21"):
             item = lookup[identifier]
-            self.assertEqual(item["states"]["exposure"], "internal", identifier)
+            self.assertEqual(item["route"]["state"], "verified", identifier)
+            self.assertEqual(item["states"]["exposure"], "public", identifier)
             self.assertEqual(item["states"]["hil"], "partial", identifier)
+            self.assertIn("StreamFabric", item["public_api"], identifier)
 
         for identifier in ("temp", "wdt30", "wdt31"):
             item = lookup[identifier]

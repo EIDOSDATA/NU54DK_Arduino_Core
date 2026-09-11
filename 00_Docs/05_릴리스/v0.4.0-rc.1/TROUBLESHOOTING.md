@@ -36,5 +36,8 @@ TEMP/WDT30은 `fabric`, 기존 WDT31/System OFF는 `standard`/`ble`의 BoardSyst
 Debugger halt 설정은 watchdog 진행을, active SWD debug는 System OFF와 reset cause를 바꿀 수
 있습니다. 전원 기능을 진단할 때 debugger 영향 여부를 결과와 함께 기록하십시오.
 
-QDEC 누산 문제는 알려진 unsupported 항목입니다. 일반적인 결선 오류로 간주해 무한 재시도하지
-마십시오.
+## QDEC20/21
+
+연속 카운트에는 `QdecConfiguration::report_events=true`와 `takeEvent()`를 사용하십시오. 자동
+report와 manual `read()`는 각각 누산기를 비우므로 같은 구간에 혼용하지 않습니다. 동작 중
+반복 manual `read()/clear`의 무손실 누산은 보증하지 않습니다.

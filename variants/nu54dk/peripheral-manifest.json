@@ -432,17 +432,17 @@
     },
     {
       "id": "qdec20", "kind": "qdec", "instance": 20, "sharing_group": null, "dt_node": "qdec20",
-      "route": { "state": "candidate", "token": "header-p1" }, "owner": "qdec", "public_object": null,
-      "public_api": [], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md"]
+      "route": { "state": "verified", "token": "header-p1" }, "owner": "qdec", "public_object": null,
+      "public_api": ["StreamFabric"], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/85_T12_Fixture_420_current_source_QDEC_재검증.md", "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md", "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md"]
     },
     {
       "id": "qdec21", "kind": "qdec", "instance": 21, "sharing_group": null, "dt_node": "qdec21",
-      "route": { "state": "candidate", "token": "header-p1" }, "owner": "qdec", "public_object": null,
-      "public_api": [], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
-      "states": { "silicon": "pass", "source": "implemented", "exposure": "internal", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
-      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md"]
+      "route": { "state": "verified", "token": "header-p1" }, "owner": "qdec", "public_object": null,
+      "public_api": ["StreamFabric"], "driver": "nrfx-qdec", "dma": { "hardware": false, "driver_managed": false, "public_mode": "none", "max_count_bits": null },
+      "states": { "silicon": "pass", "source": "implemented", "exposure": "public", "build": "pass", "semantic": "pass", "hil": "partial", "concurrent_hil": "not_run" },
+      "milestone": "M25", "evidence": ["cores/arduino/nucode/StreamFabric.h", "cores/arduino/StreamFabric.cpp", "tests/zephyr/m25_stream_fabric_contract/src/main.cpp", "00_Docs/04_검증 기록/85_T12_Fixture_420_current_source_QDEC_재검증.md", "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md", "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md"]
     },
 
     {

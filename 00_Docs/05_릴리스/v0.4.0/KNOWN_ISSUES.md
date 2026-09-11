@@ -2,7 +2,9 @@
 
 ## 지원 제한
 
-- **QDEC20/21:** manual read/clear 중 간헐 누산 누락이 재현돼 `unsupported`입니다.
+- **QDEC20/21:** 기본 정·역회전과 SAMPLE/REPORT event 누산은 지원합니다. 동작 중 반복
+  manual `read()/clear`에서는 간헐 누산 누락이 재현됐으므로 이 사용 방식의 무손실 누산은
+  보증하지 않습니다.
 - **동시성 범위:** 공개 identity의 단독 HIL은 통과했지만 manifest의
   `concurrent_hil=partial/not_run` 조합은 지원 보증이 아닙니다. 동일 block·pin·event·DMA
   충돌은 fail-closed로 거부됩니다.
