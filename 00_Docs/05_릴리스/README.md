@@ -5,26 +5,26 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-INDEX-001 |
-| 문서 개정 | 2.4 |
-| 현재 정식 버전 | `v0.3.0` |
+| 문서 개정 | 2.5 |
+| 현재 정식 버전 | `v0.4.0` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | 이전 버전 상태 | 공개 공급 종료, archive 브랜치에 원본 보존 |
-| 최종 갱신일 | 2026-09-10 |
+| 최종 갱신일 | 2026-09-11 |
 
-신규 설치, 지원 요청과 현재 API 기준은 `v0.3.0` 문서를 사용합니다. 이전 stable과 RC 문서는
+신규 설치, 지원 요청과 현재 API 기준은 `v0.4.0` 문서를 사용합니다. 이전 stable과 RC 문서는
 당시 artifact, migration 경계와 검증 판단을 보존하는 역사 자료입니다.
 
-## 현재 정식 버전 — v0.3.0
+## 현재 정식 버전 — v0.4.0
 
 | 목적 | 문서 |
 | --- | --- |
-| 릴리스 개요와 공개 identity | [v0.3.0 문서](v0.3.0/README.md) |
-| 추가·변경된 기능 | [Release notes](v0.3.0/RELEASE_NOTES.md) |
-| 이전 버전/RC에서 이동 | [Migration](v0.3.0/MIGRATION.md) |
-| 설치와 기본 시험 | [Testing](v0.3.0/TESTING.md) |
-| 설치·compile·upload 문제 | [Troubleshooting](v0.3.0/TROUBLESHOOTING.md) |
-| 지원 경계와 미검증 범위 | [Known issues](v0.3.0/KNOWN_ISSUES.md) |
+| 릴리스 개요와 공개 identity | [v0.4.0 문서](v0.4.0/README.md) |
+| 추가·변경된 기능 | [Release notes](v0.4.0/RELEASE_NOTES.md) |
+| 이전 버전/RC에서 이동 | [Migration](v0.4.0/MIGRATION.md) |
+| 설치와 기본 시험 | [Testing](v0.4.0/TESTING.md) |
+| 설치·compile·upload 문제 | [Troubleshooting](v0.4.0/TROUBLESHOOTING.md) |
+| 지원 경계와 미검증 범위 | [Known issues](v0.4.0/KNOWN_ISSUES.md) |
 
 Stable package index:
 
@@ -32,11 +32,10 @@ Stable package index:
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-## 다음 버전 준비 — v0.4.0-rc.1
+## 보존된 v0.4.0 내부 후보 — v0.4.0-rc.1
 
-`v0.4.0-rc.1`은 공개 tag·Release·index가 없습니다. M24~M26 physical gate와 T16~T18 사용자
-통합·공개 절차 준비는 완료했지만 R14/T19~T21 release gate와 T22 승인이 남아 있으므로 설치
-대상으로 사용하지 않습니다.
+`v0.4.0-rc.1`은 공개 설치 대상으로 게시하지 않은 내부 후보입니다. 정식 `v0.4.0`과 정규화
+runtime 동등성을 확인했으며, 설치에는 위 stable index의 `0.4.0`을 사용합니다.
 
 - [내부 준비](v0.4.0-rc.1/README.md)
 - [Release notes](v0.4.0-rc.1/RELEASE_NOTES.md)

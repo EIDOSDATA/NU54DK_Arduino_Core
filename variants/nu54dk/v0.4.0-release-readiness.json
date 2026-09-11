@@ -122,7 +122,8 @@
       "state": "passed",
       "evidence": [
         "00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md",
-        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md"
+        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md",
+        "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md"
       ]
     },
     {
@@ -132,7 +133,8 @@
       "state": "passed",
       "evidence": [
         "00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md",
-        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md"
+        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md",
+        "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md"
       ]
     },
     {
@@ -140,7 +142,10 @@
       "kind": "automated",
       "required": true,
       "state": "passed",
-      "evidence": ["00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md"]
+      "evidence": [
+        "00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md",
+        "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md"
+      ]
     },
     {
       "id": "package_reproducibility",
@@ -149,7 +154,8 @@
       "state": "passed",
       "evidence": [
         "00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md",
-        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md"
+        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md",
+        "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md"
       ]
     },
     {
@@ -159,7 +165,8 @@
       "state": "passed",
       "evidence": [
         "00_Docs/04_검증 기록/122_T20_RC_설치_수명주기와_실제_Upload.md",
-        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md"
+        "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md",
+        "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md"
       ]
     },
     {
