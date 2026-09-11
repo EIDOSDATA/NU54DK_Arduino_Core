@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GAP-001 |
-| 문서 개정 | 1.2 |
-| 문서 상태 | v0.4.0에서도 유지하는 정식 GAP 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
+| 문서 개정 | 1.3 |
+| 문서 상태 | v0.4.1에서도 유지하는 정식 GAP 계약 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile |
 | 최종 갱신일 | 2026-09-12 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
@@ -16,7 +16,7 @@ M19는 NUS에 종속되지 않는 Arduino 친화 BLE lifecycle과 GAP API를 제
 Zephyr type을 노출하지 않으며, 동적 할당 없이 단일 연결과 31-byte legacy advertising을
 명시적으로 지원합니다.
 
-이 API는 `v0.3.0`부터 정식 지원하며 v0.4.0에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
+이 API는 `v0.3.0`부터 정식 지원하며 v0.4.1에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
 [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>), stable package 승격은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)이 소유합니다.
 
@@ -103,3 +103,9 @@ Kconfig를 제공합니다. M16 NUS example과 feature ID를 유지해 기존 sk
 disconnect, readvertise와 explicit reconnect를 검증합니다. USB 두 개는 각 보드의 전원·DAPLink
 flash·UART evidence 수집에 사용합니다. Runner의 128-bit nonce 전체에서 service UUID를 만들고
 central이 이를 exact filter하므로 두 transcript가 같은 실제 RF fixture를 만났음을 결합합니다.
+
+## M28 전환 경계
+
+v0.5.0의 multi-role/link, extended·periodic advertising, PAwR와 privacy는
+[M28 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서
+준비한다. 현재 v0.4.1의 연결 1개·legacy 31-byte 계약은 M28 구현·실기 완료 전까지 유지한다.

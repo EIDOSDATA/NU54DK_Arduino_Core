@@ -20,7 +20,7 @@
 이는 사용자 확인이며 배선을 전기적으로 계측했다는 뜻은 아니다.
 
 위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
-펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 | A/DUT | 방향 | B/peer |
 | --- | --- | --- |
@@ -121,7 +121,7 @@ package·전체 target 결과를 새 source의 실행 결과로 복사하지 않
 
 ## 당시 다음: Fixture 201 SPI
 
-이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 **두 USB를 모두 분리한 뒤 A 쪽 신호선 네 개만 아래처럼 옮긴다. B와 공통 GND는 그대로다.**
 현재 A 핀 순서가 앞선 UART 안내와 다르므로 유지할 B 핀을 함께 대조한다.

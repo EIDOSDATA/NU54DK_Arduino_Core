@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-SECURITY-001 |
-| 문서 개정 | 2.1 |
-| 문서 상태 | v0.4.0에서도 유지하는 정식 보안·표준 profile 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
+| 문서 개정 | 2.2 |
+| 문서 상태 | v0.4.1에서도 유지하는 정식 보안·표준 profile 계약 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile |
 | 최종 갱신일 | 2026-09-12 |
 | 대상 library | `NUCODE_BLE_Security` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
@@ -185,10 +185,13 @@ Windows 시험 절차는 다음과 같다.
 - `no_input_output` Just Works는 수동 승인과 암호화·bonding을 제공하지만 MITM 보호가 필요한 제품의
   최종 보안 정책을 대신하지 않는다.
 - Windows 11 검증은 완료했지만 스마트폰별 HID 호환성은 별도 제품 호환성 시험 대상이다.
+- M28 구현 전까지 security 관측과 profile connection도 동시 link 1개 계약이다. M28에서는
+  generation handle별 상태와 bond identity 격리를 별도로 검증한다.
 
 ## 9. 관련 문서
 
 - [BLE Core/GAP API](07_BLE_Core_GAP_API.md)
 - [BLE 범용 GATT API](08_BLE_범용_GATT_API.md)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
+- [M28 BLE GAP·Link·Privacy 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)
 - [v0.3.0 구현 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)

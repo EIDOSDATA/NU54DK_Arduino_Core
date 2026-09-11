@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-RUNTIME-001 |
-| 문서 개정 | 4.2 |
-| 문서 상태 | `v0.4.0` 정식 runtime·profile 계약 |
-| 최종 갱신일 | 2026-09-11 |
+| 문서 개정 | 4.3 |
+| 문서 상태 | `v0.4.1` 정식 runtime·profile 계약 |
+| 최종 갱신일 | 2026-09-12 |
 | 실행 방식 | Loader 없는 Native Full Zephyr 정적 firmware |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 

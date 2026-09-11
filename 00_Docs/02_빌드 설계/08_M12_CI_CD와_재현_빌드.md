@@ -1,4 +1,4 @@
-# CI/CD와 재현 빌드 — v0.4.0 stable 현재 계약
+# CI/CD와 재현 빌드 — v0.4.1 stable 현재 계약
 
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
@@ -39,8 +39,9 @@ M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개�
 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
 BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 해당 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
-v0.4.0 stable은 `NUCODE Peripheral Fabric` library·예제 1개를 더해 9개·30개다. Stable index는
-0.4.0과 전환용 0.3.0을 함께 제공하며 각각의 고정 package lock과 identity를 검사한다.
+v0.4.1 stable은 `NUCODE Peripheral Fabric`을 포함해 9개 library·30개 예제를 제공한다. Stable
+index는 지원 버전 0.4.1 하나만 제공하며, 이전 package lock과 identity는 역사 회귀 입력으로만
+검사한다.
 
 로컬 진입점은 다음과 같다.
 
@@ -220,7 +221,8 @@ HIL workflow가 존재하거나 queue에 들어갔다는 사실은 PASS가 아�
 | Peripheral·Analog | [AC-02B](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>) |
 | Storage·library | [AC-03](<../04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>) |
 | v0.3.0 package·공개 수명주기 | [M22 정식 공개](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>) |
-| v0.4.0 현재 실기·제외 범위 | [실행 TODO](../TODO_v0.4.0.md) |
+| v0.4.0 기능 실기·제외 범위 | [완료 TODO](../TODO_v0.4.0.md) |
+| v0.4.1 설치기 유지보수·공개 검증 | [v0.4.1 TODO](../TODO_v0.4.1.md) |
 
 AC-02B의 `ac02b_hil_dut`와 `ac02b_hil_peer`는 Linux/Windows 재현 build에서 **build-only**다.
 `tests/hil/nu54dk/ac02b_peripheral.py`의 물리 실행은 두 probe UID, 두 COM port, exact image hash,

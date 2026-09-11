@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "milestone": "M28",
+  "product_target": "v0.5.0",
+  "phase": "preparation",
+  "baseline": {
+    "supported_release": "v0.4.1",
+    "source_version": "0.4.1-dev",
+    "ncs_tag": "v3.4.0",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1",
+    "profile": "ble",
+    "current_max_connections": 1,
+    "current_advertising_payload_bytes": 31
+  },
+  "baseline_assertions": [
+    {
+      "path": "platform.txt",
+      "contains": [
+        "version=0.4.1-dev"
+      ]
+    },
+    {
+      "path": "libraries/NUCODE_BLE/zephyr/ble-nus.conf",
+      "contains": [
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_MAX_CONN=1"
+      ]
+    },
+    {
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+      "contains": [
+        "return 1U;",
+        "maximum_payload_length = 31U"
+      ]
+    },
+    {
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapInternal.h",
+      "contains": [
+        "struct bt_conn *active_connection = nullptr;",
+        "struct bt_conn *pending_connection = nullptr;"
+      ]
+    }
+  ],
+  "source_capabilities": [
+    {
+      "id": "multi_role_multi_link",
+      "source_status": "candidate",
+      "runtime_hci_status": "not_run",
+      "implementation_status": "baseline_partial",
+      "required_kconfig": [
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_MAX_CONN=2",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1"
+      ],
+      "source_references": [
+        "nrf/subsys/bluetooth/controller/Kconfig:119",
+        "nrf/subsys/bluetooth/controller/Kconfig:128",
+        "nrfxlib/softdevice_controller/README.rst:12"
+      ]
+    },
+    {
+      "id": "extended_advertising_scanning",
+      "source_status": "candidate",
+      "runtime_hci_status": "not_run",
+      "implementation_status": "not_started",
+      "required_kconfig": [
+        "CONFIG_BT_EXT_ADV=y"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/Kconfig.adv:7",
+        "zephyr/include/zephyr/bluetooth/bluetooth.h:1367",
+        "nrfxlib/softdevice_controller/README.rst:29"
+      ]
+    },
+    {
+      "id": "periodic_advertising_sync_past",
+      "source_status": "candidate",
+      "runtime_hci_status": "not_run",
+      "implementation_status": "not_started",
+      "required_kconfig": [
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/Kconfig:186",
+        "zephyr/subsys/bluetooth/Kconfig.adv:38",
+        "zephyr/include/zephyr/bluetooth/bluetooth.h:1629",
+        "nrfxlib/softdevice_controller/README.rst:31"
+      ]
+    },
+    {
+      "id": "pawr_advertiser_scanner",
+      "source_status": "candidate",
+      "runtime_hci_status": "not_run",
+      "implementation_status": "not_started",
+      "required_kconfig": [
+        "CONFIG_BT_PER_ADV_RSP=y",
+        "CONFIG_BT_PER_ADV_SYNC_RSP=y",
+        "CONFIG_BT_CTLR_SDC_PAWR_ADV=y",
+        "CONFIG_BT_CTLR_SDC_PAWR_SYNC=y"
+      ],
+      "source_references": [
+        "nrf/subsys/bluetooth/controller/Kconfig:429",
+        "nrf/subsys/bluetooth/controller/Kconfig:483",
+        "zephyr/subsys/bluetooth/Kconfig.adv:46",
+        "nrfxlib/softdevice_controller/README.rst:51"
+      ]
+    },
+    {
+      "id": "privacy_rpa",
+      "source_status": "candidate",
+      "runtime_hci_status": "not_run",
+      "implementation_status": "not_started",
+      "required_kconfig": [
+        "CONFIG_BT_PRIVACY=y",
+        "CONFIG_BT_SETTINGS=y"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/host/Kconfig:537",
+        "zephyr/subsys/bluetooth/controller/Kconfig:676"
+      ]
+    },
+    {
+      "id": "per_link_control",
+      "source_status": "candidate",
+      "runtime_hci_status": "not_run",
+      "implementation_status": "baseline_partial",
+      "required_kconfig": [
+        "CONFIG_BT_DATA_LEN_UPDATE=y",
+        "CONFIG_BT_REMOTE_INFO=y",
+        "CONFIG_BT_USER_PHY_UPDATE=y"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/Kconfig:179",
+        "zephyr/subsys/bluetooth/host/Kconfig:495",
+        "zephyr/include/zephyr/bluetooth/conn.h:1452",
+        "zephyr/include/zephyr/bluetooth/conn.h:1684"
+      ]
+    }
+  ],
+  "public_contract": {
+    "target_max_connections": 2,
+    "target_peripheral_connections": 1,
+    "target_central_connections": 1,
+    "compatibility_symbols": [
+      "BLEDevice",
+      "BLEAdvertising",
+      "BLEScan",
+      "BLEConnection"
+    ],
+    "new_contracts": [
+      "generation이 포함된 불투명 per-link handle",
+      "link handle을 포함한 상세 event와 상태 조회",
+      "link별 GATT client, security와 link-control 상태",
+      "고정 크기 advertising set, periodic sync와 connection slot"
+    ],
+    "forbidden_shortcuts": [
+      "CONFIG_BT_MAX_CONN만 늘리고 singleton 상태를 공유",
+      "Zephyr bt_conn 포인터를 공개 API에 노출",
+      "callback에서 사용자 callback 또는 heap 할당 수행",
+      "HCI 미조회 기능을 지원으로 표시"
+    ]
+  },
+  "equipment": {
+    "availability": "not_confirmed",
+    "required": {
+      "nu54dk_boards": 3,
+      "independent_usb_dap_uart_paths": 3,
+      "packet_trace_receivers": 1
+    },
+    "interop_peers": [
+      "Android",
+      "iOS",
+      "Windows",
+      "Linux"
+    ]
+  },
+  "execution_plan": [
+    {
+      "id": "M28-CAP-01",
+      "kind": "hardware_capability",
+      "boards": 1,
+      "timeout_seconds": 180,
+      "criteria": {
+        "required_hci_features_recorded": 6,
+        "missing_required_features": 0,
+        "stale_nonce_tokens": 0
+      }
+    },
+    {
+      "id": "M28-REG-01",
+      "kind": "legacy_regression",
+      "boards": 2,
+      "timeout_seconds": 900,
+      "criteria": {
+        "required_existing_suites": 3,
+        "failed_existing_suites": 0
+      }
+    },
+    {
+      "id": "M28-LINK-01",
+      "kind": "mixed_role_two_link",
+      "boards": 3,
+      "timeout_seconds": 1200,
+      "criteria": {
+        "simultaneous_connections": 2,
+        "central_connections": 1,
+        "peripheral_connections": 1,
+        "reconnect_cycles_per_link": 20,
+        "sequenced_payloads_per_link": 1000,
+        "payload_loss": 0,
+        "payload_corruption": 0,
+        "payload_duplicates": 0,
+        "stale_link_events": 0
+      }
+    },
+    {
+      "id": "M28-ADV-01",
+      "kind": "extended_advertising_scanning",
+      "boards": 2,
+      "timeout_seconds": 600,
+      "criteria": {
+        "payload_bytes": 255,
+        "reports": 100,
+        "payload_corruption": 0,
+        "stale_set_events": 0
+      }
+    },
+    {
+      "id": "M28-PER-01",
+      "kind": "periodic_advertising_sync_past",
+      "boards": 3,
+      "timeout_seconds": 900,
+      "criteria": {
+        "periodic_reports": 1000,
+        "minimum_receive_percent": 99,
+        "payload_corruption": 0,
+        "past_transfers": 20,
+        "past_failures": 0
+      }
+    },
+    {
+      "id": "M28-PAWR-01",
+      "kind": "pawr_advertiser_scanner",
+      "boards": 2,
+      "timeout_seconds": 900,
+      "criteria": {
+        "periodic_events": 100,
+        "subevents": 4,
+        "response_slots": 4,
+        "minimum_valid_response_percent": 99,
+        "response_corruption": 0,
+        "out_of_window_responses": 0
+      }
+    },
+    {
+      "id": "M28-PRIV-01",
+      "kind": "privacy_rpa",
+      "boards": 2,
+      "timeout_seconds": 900,
+      "criteria": {
+        "observed_rpa_rotations": 3,
+        "bonded_reconnect_cycles": 20,
+        "identity_mismatches": 0,
+        "unresolved_reconnects": 0
+      }
+    },
+    {
+      "id": "M28-CTRL-01",
+      "kind": "per_link_control",
+      "boards": 3,
+      "timeout_seconds": 900,
+      "criteria": {
+        "requests_per_link": 20,
+        "links": 2,
+        "cross_link_state_leaks": 0,
+        "stale_link_events": 0,
+        "unreported_driver_errors": 0
+      }
+    },
+    {
+      "id": "M28-SOAK-01",
+      "kind": "mixed_role_soak",
+      "boards": 3,
+      "timeout_seconds": 2100,
+      "criteria": {
+        "run_seconds": 1800,
+        "sequenced_payloads_per_link": 10000,
+        "payload_loss": 0,
+        "payload_corruption": 0,
+        "unexpected_disconnects": 0,
+        "resource_recovery_failures": 0
+      }
+    }
+  ],
+  "work_packages": [
+    "M28-W01 capability image와 HCI 원장",
+    "M28-W02 per-link slot·handle·event 기반",
+    "M28-W03 extended advertising·scanning",
+    "M28-W04 periodic advertising·sync·PAST",
+    "M28-W05 PAwR advertiser·scanner",
+    "M28-W06 privacy·RPA·per-link control",
+    "M28-W07 Host·target·두/세 보드 HIL",
+    "M28-W08 문서·지원표·M29 인계"
+  ],
+  "excluded_from_preparation": [
+    "production implementation",
+    "target build PASS",
+    "physical HIL PASS",
+    "Bluetooth qualification"
+  ]
+}

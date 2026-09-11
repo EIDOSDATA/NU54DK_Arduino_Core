@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GATT-001 |
-| 문서 개정 | 1.2 |
-| 문서 상태 | v0.4.0에서도 유지하는 정식 GATT 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
+| 문서 개정 | 1.3 |
+| 문서 상태 | v0.4.1에서도 유지하는 정식 GATT 계약 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile |
 | 최종 갱신일 | 2026-09-12 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
@@ -15,7 +15,7 @@
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼
 고정 profile wrapper가 아니라 UUID, property, permission과 bounded value를 sketch가 선언합니다.
 
-이 API는 `v0.3.0`부터 정식 지원하며 v0.4.0에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
+이 API는 `v0.3.0`부터 정식 지원하며 v0.4.1에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
 [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>), stable package 승격은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)이 소유합니다.
 
@@ -116,3 +116,10 @@ notification subscribe/unsubscribe, indication confirmation, disconnect handle �
 rediscovery/resubscribe를 검증합니다. Peripheral은 runner의 128-bit nonce를 cached value에 넣고
 central이 첫 read에서 전체 binary challenge를 exact 비교하므로 같은 service UUID를 쓰는 주변의
 stale/병렬 보드가 있어도 서로 다른 peer transcript를 하나의 PASS로 결합하지 않습니다.
+
+## M28 전환 경계
+
+M28은 GATT client session과 remote handle·subscription을 generation이 포함된 link handle별로
+분리해야 한다. 현재 v0.4.1의 단일 connection session은 그대로 지원하며, Kconfig 연결 수만 늘려
+GATT 상태를 공유하는 구현은 [M28 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서
+금지한다.
