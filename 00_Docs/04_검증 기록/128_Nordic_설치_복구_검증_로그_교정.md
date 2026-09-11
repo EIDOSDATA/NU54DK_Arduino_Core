@@ -69,3 +69,23 @@ Windows PowerShell 5.1에서 실행한다. nRF Util·검증기는 임시 대역�
 
 이 기록에 적힌 PASS는 위 로컬 검사 결과다. 푸시 후 exact SHA의 GitHub CI 상태를 별도로
 확인하고 사용자에게 보고한다. 실행 중인 원격 검사를 이 로컬 PASS에 포함하지 않는다.
+
+### 첫 푸시 후 CI 대조
+
+커밋한 `81985bde` 소스의 로컬 `test_m10_packaging.py`는 **21/21 PASS**했다.
+임시 패키지 생성·검사이며 공개 자산 게시나 사용자 설치본 변경은 없다.
+
+`81985bdeca984a9210b2af19fea676bb5f3168f0`의
+[Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/34624045771)는
+6개 job 성공·Windows Host 1개 실패였다. 새 테스트가 CI의 짧은 사용자 경로 `RUNNER~1`과
+PowerShell이 정규화한 긴 경로 `runneradmin`을 문자열로 비교해 동일 폴더를 다르게 판정했다.
+6조건 중 5개가 이 비교에서 중단됐고 검증기 실행 불가 조건은 통과했다.
+
+이는 설치기 판정 실패가 아니라 **회귀 검사의 Windows 경로 별칭 비교 결함**이다.
+NCS·platform 디렉터리를 `samefile()`로 비교하도록 **교정 완료**했으며 기존 SDK 격리·종료 코드·출력 검사는 유지한다.
+실제 Windows 8.3 별칭 회귀도 추가했다. 별칭을 제공하지 않는 볼륨에서는 그 추가 조건만 SKIP한다.
+
+후속 로컬 검사에서는 새 별칭·재사용 조건 **2 PASS**, 나머지 5조건은 임시 .NET 실행 파일에 대한
+Windows Application Control 차단으로 미완료였다. 앞서 통과한 6조건 결과와 구분하며 보안 정책을
+해제하거나 이번 5조건을 PASS로 처리하지 않았다. 첫 CI 실패 기록도 보존하고 후속 exact SHA의
+Windows CI에서 전체 7조건을 다시 확인한다.

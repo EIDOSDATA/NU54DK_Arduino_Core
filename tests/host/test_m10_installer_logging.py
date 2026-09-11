@@ -235,7 +235,13 @@ class M10InstallerLoggingTests(unittest.TestCase):
             }
         )
 
-    def run_installer(self, scenario: str) -> subprocess.CompletedProcess[str]:
+    def run_installer(
+        self,
+        scenario: str,
+        *,
+        platform_root: Path | None = None,
+        ncs_root: Path | None = None,
+    ) -> subprocess.CompletedProcess[str]:
         """! @brief 실제 설치기 복사본을 실행하고 stdout과 stderr를 별도로 보존합니다. """
 
         environment = {**self.environment, "NU54_TEST_SCENARIO": scenario}
@@ -244,7 +250,8 @@ class M10InstallerLoggingTests(unittest.TestCase):
                 str(self.powershell),
                 "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
                 "-File", str(self.installer),
-                "-PlatformRoot", str(self.platform), "-NcsRoot", str(self.ncs_install),
+                "-PlatformRoot", str(platform_root or self.platform),
+                "-NcsRoot", str(ncs_root or self.ncs_install),
             ],
             cwd=self.root,
             env=environment,
@@ -268,8 +275,8 @@ class M10InstallerLoggingTests(unittest.TestCase):
             else []
         )
         for call in self.calls:
-            self.assertEqual(Path(call["ncs_root"]), self.ncs_install)
-            self.assertEqual(Path(call["platform_root"]), self.platform)
+            self.assertTrue(Path(call["ncs_root"]).samefile(self.ncs_install), call)
+            self.assertTrue(Path(call["platform_root"]).samefile(self.platform), call)
             self.assertTrue(call["json"])
             self.assertTrue(call["powershell_version"].startswith("5.1."), call)
         return result
@@ -384,6 +391,52 @@ class M10InstallerLoggingTests(unittest.TestCase):
         self.assertEqual(incomplete["status"], "incomplete")
         self.assertEqual(incomplete["phase"], "설치 byte와 revision 최종 검증")
         self.assertIn("powershell.exe", incomplete["error"])
+
+    def test_short_path_fixture_matches_long_verifier_paths(self) -> None:
+        """! @brief Windows 8.3 임시 경로와 verifier의 긴 경로를 같은 디렉터리로 판정합니다. """
+
+        import ctypes
+
+        self.ncs_install.mkdir()
+        long_platform = self.platform.resolve(strict=True)
+        long_ncs = self.ncs_install.resolve(strict=True)
+        get_short_path = ctypes.WinDLL("kernel32", use_last_error=True).GetShortPathNameW
+        get_short_path.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32]
+        get_short_path.restype = ctypes.c_uint32
+
+        def short_path(path: Path) -> Path:
+            """! @brief 실제 파일시스템이 제공하는 8.3 경로만 반환합니다. """
+
+            size = get_short_path(str(path), None, 0)
+            if not size:
+                raise ctypes.WinError(ctypes.get_last_error())
+            buffer = ctypes.create_unicode_buffer(size)
+            written = get_short_path(str(path), buffer, size)
+            if not written:
+                raise ctypes.WinError(ctypes.get_last_error())
+            self.assertLess(written, size)
+            return Path(buffer.value)
+
+        short_platform = short_path(long_platform)
+        short_ncs = short_path(long_ncs)
+        if short_platform == long_platform and short_ncs == long_ncs:
+            self.skipTest("임시 파일시스템에 실제 Windows 8.3 경로 alias가 없습니다.")
+        self.platform = short_platform
+        self.ncs_install = short_ncs
+        result = self.run_installer(
+            "reuse-success", platform_root=long_platform, ncs_root=long_ncs
+        )
+        self.assertEqual(result.returncode, 0, self.diagnostic)
+        self.assertEqual(result.stderr, "", self.diagnostic)
+        self.assert_verification_log([("reuse", 0)])
+        self.assertTrue(
+            any(
+                Path(call["ncs_root"]) != self.ncs_install
+                or Path(call["platform_root"]) != self.platform
+                for call in self.calls
+            ),
+            "실제 short/long 표기 차이가 있어야 경로 identity 회귀를 검증합니다.",
+        )
 
 
 if __name__ == "__main__":
