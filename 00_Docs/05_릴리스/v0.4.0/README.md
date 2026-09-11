@@ -1,5 +1,8 @@
 # NU54DK Arduino Core v0.4.0
 
+> **지원 종료:** 현재 설치·지원 버전은 [v0.4.1](../v0.4.1/README.md) 하나입니다. 이 문서와
+> 공개 자산은 v0.4.0 당시 상태를 보존하며 stable Boards Manager 목록에서는 제공하지 않습니다.
+
 `v0.4.0`은 nRF54L15 주변장치의 직접 instance·DMA 제어를 `Peripheral Fabric` profile로
 추가하면서 기존 Arduino singleton API와 BLE·Storage profile을 유지하는 릴리스입니다.
 

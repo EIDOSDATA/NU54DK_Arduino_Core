@@ -156,7 +156,7 @@
       "Different serial blocks may run together only when pin and DMA leases are disjoint.",
       "Unsupported instance, route, profile or electrical policy fails before any register or pin change.",
       "Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.",
-      "The advanced header is available in stable v0.4.0 only through the explicit fabric profile and remains disabled in standard and ble profiles."
+      "The advanced header is available in supported stable v0.4.1 only through the explicit fabric profile and remains disabled in standard and ble profiles."
     ]
   },
   "pin_banks": [

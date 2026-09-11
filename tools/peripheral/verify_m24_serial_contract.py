@@ -936,7 +936,7 @@ def render_document(contract: dict[str, Any]) -> str:
             "## 6. 단독 HIL 기준 route",
             "",
             "`current-verified`는 기존 v0.3.0 증거가 있는 route, `functional-hil-pass`는 M24 단독 기능 HIL을",
-            "통과한 고정 route다. 후자는 T16 `fabric` profile에 포함됐고 T22 승인 뒤 v0.4.0 stable로 공개됐다.",
+            "통과한 고정 route다. 후자는 T16 `fabric` profile에 포함됐고 T22 승인 뒤 v0.4.0 stable로 공개됐으며 v0.4.1에서 유지된다.",
             "",
             "| Identity | Route | 핀 | 실행 분류 / 자원 | 상태 | 선행조건 |",
             "| --- | --- | --- | --- | --- | --- |",

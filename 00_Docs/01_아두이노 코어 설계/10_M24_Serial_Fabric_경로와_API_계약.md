@@ -73,7 +73,7 @@ allocation 없는 typed handle로 제공한다. Raw base address는 받지 않�
 - Different serial blocks may run together only when pin and DMA leases are disjoint.
 - Unsupported instance, route, profile or electrical policy fails before any register or pin change.
 - Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.
-- The advanced header is available in stable v0.4.0 only through the explicit fabric profile and remains disabled in standard and ble profiles.
+- The advanced header is available in supported stable v0.4.1 only through the explicit fabric profile and remains disabled in standard and ble profiles.
 
 ## 3. 물리 block과 가능한 personality
 
@@ -125,7 +125,7 @@ fixture 없이 자동화한다. P1 DAP UART를 시험할 때 P0 DAP UART를 제�
 ## 6. 단독 HIL 기준 route
 
 `current-verified`는 기존 v0.3.0 증거가 있는 route, `functional-hil-pass`는 M24 단독 기능 HIL을
-통과한 고정 route다. 후자는 T16 `fabric` profile에 포함됐고 T22 승인 뒤 v0.4.0 stable로 공개됐다.
+통과한 고정 route다. 후자는 T16 `fabric` profile에 포함됐고 T22 승인 뒤 v0.4.0 stable로 공개됐으며 v0.4.1에서 유지된다.
 
 | Identity | Route | 핀 | 실행 분류 / 자원 | 상태 | 선행조건 |
 | --- | --- | --- | --- | --- | --- |

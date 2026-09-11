@@ -49,8 +49,8 @@ M22 당시 stable index 기준은 1,877 byte이고 SHA-256이
 현행 validator는 후속 v0.3.0 최초 index와 공급 종료 후 catalog의 고정 identity도
 허용한다. 2026-09-08 공급 종료 catalog는 1,126 byte, SHA-256
 `97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이었다.
-현재 stable catalog는 0.4.0과 0.3.0을 제공하며 exact identity는
-[125번 공개 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따른다.
+현재 stable catalog는 지원 버전 0.4.1 하나만 제공하며 exact identity는
+[129번 유지보수 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)을 따른다.
 허용 byte를 exact commit과 worktree 양쪽에서 확인하며 과거 plan의 기준을 바꾸지는 않는다.
 
 ## clean-room 정리 계약

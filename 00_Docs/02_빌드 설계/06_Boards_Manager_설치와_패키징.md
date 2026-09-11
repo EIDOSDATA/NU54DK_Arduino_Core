@@ -1,11 +1,11 @@
-# Boards Manager 설치와 패키징 — stable v0.4.0
+# Boards Manager 설치와 패키징 — stable v0.4.1
 
 | 항목 | 값 |
 | --- | --- |
 | Package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 stable | `0.4.0` |
-| 공개 downgrade 버전 | `0.3.0`; 그 미만은 공급 종료 |
+| 현재 stable | `0.4.1`만 지원·제공 |
+| 이전 버전 | `0.4.1` 미만 stable·RC·preview 모두 지원·catalog 공급 종료 |
 | 공식 사용자 OS | Windows 10/11 x64 |
 
 ## Stable index와 설치
@@ -16,15 +16,15 @@ Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL입니다.
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-Index는 `0.4.0`과 이전 stable `0.3.0`을 제공합니다. `0.3.0` 미만 stable·RC·preview 공급 종료와
-원본 보존은 [106번 기록](<../04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.
+Index는 지원 버전 `0.4.1` 하나만 제공합니다. 이전 모든 stable·RC·preview의 tag·Release·자산과
+검증 기록은 감사용으로 보존하지만 일반 설치·지원 목록에는 넣지 않습니다.
 
 Arduino CLI 설치 예시:
 
 ```powershell
 $StableIndex = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
 arduino-cli core update-index --additional-urls $StableIndex
-arduino-cli core install nucode:zephyr@0.4.0 --run-post-install --additional-urls $StableIndex
+arduino-cli core install nucode:zephyr@0.4.1 --run-post-install --additional-urls $StableIndex
 arduino-cli core list
 arduino-cli board listall nucode:zephyr
 ```
@@ -32,7 +32,7 @@ arduino-cli board listall nucode:zephyr
 설치된 platform의 기본 위치는 다음과 같습니다.
 
 ```text
-%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.4.0
+%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.4.1
 ```
 
 ## 고정 prerequisite
@@ -56,7 +56,7 @@ NCS/Toolchain은 Core ZIP에 넣지 않고 `post_install.bat`이 Nordic 공식 �
 
 ```powershell
 $BuildPath = Join-Path $PWD 'build\blink'
-$Sketch = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.4.0\libraries\NUCODE_NU54DK\examples\Blink"
+$Sketch = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.4.1\libraries\NUCODE_NU54DK\examples\Blink"
 arduino-cli compile --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
 arduino-cli upload --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
 ```
@@ -81,20 +81,19 @@ checksum, release manifest, SPDX와 license inventory를 검증합니다. Index�
 source를 포장하거나 tag·asset을 이동·교체하지 않습니다. 이미 공개한 이전 stable은 해당 tag의
 별도 worktree에서 감사하고 현재 도구로 재생성하지 않습니다.
 
-`v0.4.0-rc.1`과 정식 `v0.4.0`의 생성·승인·공개 절차는
-[M27 도구](../../tools/release/M27_README.md)와 [완료 TODO](../TODO_v0.4.0.md)를 따릅니다.
-공개 identity와 공개 URL 설치 결과는 [125번 기록](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에
-고정했습니다.
+`v0.4.1` 생성·공개 절차는 [`v041_release.py`](../../tools/release/v041_release.py)와
+[유지보수 TODO](../TODO_v0.4.1.md)를 따릅니다. 공개 identity와 공개 URL 설치 결과는
+[129번 기록](<../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에 고정합니다.
 
-## v0.4.0 공개 검증
+## v0.4.1 공개 검증
 
-- RC/stable 이중 생성의 byte 재현성과 runtime payload 동등성 확인
+- stable 이중 생성의 byte 재현성과 exact source 확인
 - 승인된 source에 tag·GitHub Release와 11개 자산 공개
 - 실제 공개 index/archive의 identity 확인 후 격리 설치
-- 설치 예제 30/30 compile과 Blink NU54DK pyOCD upload
-- `0.4.0 → 0.3.0 → 0.4.0`, 제거·재설치와 prerequisite 보존 확인
+- 설치 예제 30/30 clean compile
+- stable index에 `0.4.1` 하나만 남는지 확인
 
-결과와 공개 자산은 [v0.4.0 최종 기록](<../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>),
-사용자 진단은 [v0.4.0 문제 해결](<../05_릴리스/v0.4.0/TROUBLESHOOTING.md>)을 따릅니다.
+v0.4.1 결과와 공개 자산은 [129번 기록](<../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>),
+사용자 진단은 [v0.4.1 문제 해결](<../05_릴리스/v0.4.1/TROUBLESHOOTING.md>)을 따릅니다.
 이전 버전의 예제 29개·자산 7개 등 당시 기준은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 보존합니다.

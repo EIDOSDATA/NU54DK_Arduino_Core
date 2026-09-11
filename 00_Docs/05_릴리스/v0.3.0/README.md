@@ -1,5 +1,8 @@
 # NU54DK Arduino Core v0.3.0
 
+> **지원 종료:** 현재 설치·지원 버전은 [v0.4.1](../v0.4.1/README.md) 하나입니다. 이 문서와
+> 공개 자산은 역사 자료로 보존하며 stable Boards Manager 목록에서는 제공하지 않습니다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 상태 | **이전 stable·설치 가능** |
@@ -11,7 +14,7 @@
 | 작성자 | Quantum / NUCODE |
 
 `v0.3.0`은 NU54DK용 loaderless Arduino Core의 이전 stable이며 전환·복구를 위해 stable index에
-계속 제공합니다. 신규 설치와 지원 요청은 [v0.4.0](../v0.4.0/README.md)을 기준으로 합니다.
+보존합니다. 신규 설치와 지원 요청은 [v0.4.1](../v0.4.1/README.md)을 기준으로 합니다.
 이 폴더의 버전별 문서는 공개 당시 기능·제약과 검증 판단을 보존합니다. 본문의 “현재 버전”이나
 지원 요청 기준을 오늘의 정책으로 적용하지 않습니다. Sketch와 선택한 Arduino
 library를 nRF Connect SDK v3.4.0/Zephyr 4.4.0의 전체 image로 빌드하며, 온보드
@@ -90,5 +93,5 @@ Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
 자산은 별도 archive 브랜치에서 보존합니다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개
 payload/sidecar는 유지하며, 해당 Release의 catalog index만 당시 공급 목록과 일치시켰습니다.
 
-현재 stable root는 `0.4.0`, `0.3.0`을 제공하고 preview URL은 빈 목록입니다. 신규 설치와 문제
+현재 stable root는 `0.4.1` 하나만 제공하고 preview URL은 빈 목록입니다. 신규 설치와 문제
 보고는 [현재 릴리스 안내](../README.md)를 따릅니다.

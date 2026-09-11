@@ -47,7 +47,7 @@ class M24SerialContractTests(unittest.TestCase):
 
     def test_published_profile_guidance_keeps_standard_and_ble_disabled(self) -> None:
         rules = " ".join(self.contract["advanced_api"]["rules"])
-        self.assertIn("available in stable v0.4.0", rules)
+        self.assertIn("available in supported stable v0.4.1", rules)
         self.assertIn("remains disabled in standard and ble profiles", rules)
         self.assertNotIn("not a published stable release", rules)
         self.assertIn("v0.4.0의 `fabric` profile로 공개", MODULE.render_document(self.contract))

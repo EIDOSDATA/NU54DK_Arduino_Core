@@ -6,7 +6,7 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | --- | --- |
 | 문서 ID | CORE-API-001 |
 | 문서 개정 | 6.3 |
-| 대상 | `v0.4.0` stable |
+| 대상 | 지원 stable `v0.4.1` (v0.4.0 기능 기준선 유지) |
 | 최종 갱신일 | 2026-09-12 |
 | 상태 | **v0.4 정식 공개** |
 
@@ -47,7 +47,8 @@ QDEC20/21은 기본·event 시험을 근거로 지원하며 manifest의 단독 H
 나머지 공개 Fabric identity의 단독 HIL `pass`와 별개로 `concurrent_hil=partial/not_run`도 유지합니다.
 따라서 특정 identity가 공개 API에 있다는 사실만으로 모든 가능한 동시 조합을 보증하지 않습니다.
 DAP UART와 같은 핀을 쓰는 route는 switch 분리와 profile의 전기 선행조건을 만족해야 합니다.
-v0.4.0은 T22 소유자 승인 뒤 stable로 공개됐으며 공개 URL 설치 검증까지 완료했습니다.
+v0.4.0 기능 기준선은 T22 소유자 승인 뒤 공개 URL 설치 검증까지 완료됐고, 같은 API 범위를
+유지하는 v0.4.1만 현재 설치·지원합니다.
 
 ## Runtime과 공통 API
 

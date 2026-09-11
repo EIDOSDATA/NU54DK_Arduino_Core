@@ -71,7 +71,7 @@ NU54DK.boardModel();
 | `boardTarget()` | build에 사용한 Zephyr board target |
 | `socName()` | build의 SoC 이름 |
 | `ncsVersion()` / `zephyrVersion()` | 고정 compatibility identity |
-| `coreVersion()` | `CoreIdentity.h`의 `NUCODE_CORE_SOURCE_VERSION` 반환; 현재 source 값은 `0.4.0-dev`이며 설치 배포 version은 `platform.txt`와 release manifest로 확인 |
+| `coreVersion()` | `CoreIdentity.h`의 `NUCODE_CORE_SOURCE_VERSION` 반환; 현재 source 값은 `0.4.1-dev`이며 설치 배포 version은 `platform.txt`와 release manifest로 확인 |
 | `deviceId()` | `hwinfo_get_device_id()`의 raw 값을 16진 문자열로 복사 |
 | `resetReport()` | reset cause와 하드웨어 지원 mask를 함께 반환 |
 | `clearResetCause()` | 누적 reset cause latch 제거 |

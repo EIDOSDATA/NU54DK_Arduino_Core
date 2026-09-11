@@ -141,16 +141,20 @@ class M12CiContractTests(unittest.TestCase):
         )
         self.assertIn('"m27_release.py"', gate)
         self.assertIn('"m27_stable_release.py"', gate)
+        self.assertIn('"v041_release.py"', gate)
         workflow = (
             REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
         ).read_text(encoding="utf-8")
         contract = "python3 tools/release/m27_release.py contract"
         stable_contract = "python3 tools/release/m27_stable_release.py contract"
+        maintenance_contract = "python3 tools/release/v041_release.py contract"
         build = "python3 tools/ci/run_zephyr_build.py"
         self.assertIn(contract, workflow)
         self.assertIn(stable_contract, workflow)
+        self.assertIn(maintenance_contract, workflow)
         self.assertLess(workflow.index(contract), workflow.index(build))
         self.assertLess(workflow.index(stable_contract), workflow.index(build))
+        self.assertLess(workflow.index(maintenance_contract), workflow.index(build))
         self.assertIn('      - "v0.4.0-rc.*"', workflow)
         self.assertNotIn("continue-on-error", workflow)
 

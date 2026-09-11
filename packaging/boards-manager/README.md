@@ -1,13 +1,13 @@
 # NU54DK Boards Manager 패키징
 
-v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../../00_Docs/TODO_v0.4.0.md>)에서 관리합니다.
+현재 설치·지원 대상은 v0.4.1 하나이며 이전 version은 catalog 공급을 종료합니다. v0.4.1 상태는
+[유지보수 TODO](<../../00_Docs/TODO_v0.4.1.md>)에서 관리합니다.
 
 | 항목 | 내용 |
 | --- | --- |
-| 현재 stable | `v0.4.0` |
+| 현재 stable | `v0.4.1`만 제공 |
 | Stable index | `package_nucode_nu54dk_index.json` |
-| Stable source | `ad829439e570c7510fce2f8cc7252e5b9ef32b04` |
-| Stable ZIP | 2,630,374 byte / SHA-256 `6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189` |
+| Stable source·ZIP | 129번 공개 기록의 exact identity |
 
 이 디렉터리의 도구는 지정한 Git commit과 board submodule을 입력으로 사용해 Arduino
 Boards Manager ZIP, index, checksum, release manifest, SPDX SBOM, license inventory와
@@ -56,12 +56,13 @@ stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`
 
 | 대상 | 사용할 절차 |
 | --- | --- |
+| 정식 `v0.4.1` | [`v041_release.py`](../../tools/release/v041_release.py)와 [129번 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>) |
 | 보존된 비공개 `v0.4.0-rc.1` 후보 | [M27 prepare 절차 기록](../../tools/release/M27_README.md); 준비·검증 완료 |
 | 정식 `v0.4.0` | [완료 TODO](../../00_Docs/TODO_v0.4.0.md)와 [125번 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>); 공개 완료 |
 | 이미 공개한 stable | 아래 exact tag 감사 절차 |
 
-현재 `main`에서 `-Version 0.3.0 -Commit HEAD` 또는 `-Version 0.4.0 -Commit HEAD`로 새 package를
-만들지 않습니다. 두 version은 위 고정 source에서만 생성 가능한 공개 버전입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 version의
+현재 `main`에서 이전 stable 이름으로 새 package를 만들지 않습니다. 이전 version은 위 고정
+source에서만 감사 가능한 공개 이력입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 version의
 공개는 이중 재현·Host·문서·package·lifecycle·HIL gate와 소유자의 최종 승인 뒤 별도 수행합니다.
 
 ## 공개 stable 감사
@@ -94,14 +95,14 @@ git submodule update --init --recursive
 - channel별 index 파일명, URL, version 순서, archive 크기와 SHA-256
 - 공개 stable의 exact commit 및 immutable ZIP identity
 
-현재 정식 공개 절차와 결과는
-[v0.4.0 공개·T24/T25 마감 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을
-기준으로 합니다. 이전 v0.3.0 공개 결과는
+현재 정식 공개 절차와 결과는 [v0.4.1 유지보수 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)을
+기준으로 합니다. v0.4.0 기능 기준선은 [125번 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>), 이전 v0.3.0 공개 결과는
 [32번 기록](<../../00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 보존합니다.
 
 ## 역사적 preview/RC
 
 `0.0.91`~`0.0.97`, `v0.1.0-rc.1`/`rc.2`, `v0.2.0-rc.1`/`rc.2`와
-`v0.3.0-rc.1`~`rc.3`은 신규 설치 channel이 아닙니다. 당시 tag, 자산과 문서는 실패·교정·승격
+`v0.3.0-rc.1`~`rc.3`은 신규 설치 channel이 아닙니다. 모든 v0.4.1 이전 stable·RC·preview는
+현재 지원하지 않습니다. 당시 tag, 자산과 문서는 실패·교정·승격
 근거를 보존하는 immutable 이력입니다. Preview/RC index를 stable index로 합치거나 기존 자산을
 새 byte로 교체하지 않습니다.

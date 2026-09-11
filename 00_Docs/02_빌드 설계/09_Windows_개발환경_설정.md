@@ -7,7 +7,7 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
 | 문서 개정 | 1.7 |
 | 문서 상태 | 현재 source 개발 기준 |
-| 적용 제품 버전 | `v0.4.0` stable 이후 `main` |
+| 적용 제품 버전 | `v0.4.1` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
 | 최종 갱신일 | 2026-09-12 |
 | 작성자 | Quantum / NUCODE |
@@ -440,7 +440,7 @@ checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자�
 [CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)를 따른다.
 
 정식 설치본의 build/upload 수명주기를 확인하려면 source staging 시험으로 대체하지 말고
-[v0.4.0 설치와 시험](../05_릴리스/v0.4.0/TESTING.md)의 stable Boards Manager 절차를 사용한다.
+[v0.4.1 설치와 시험](../05_릴리스/v0.4.1/TESTING.md)의 stable Boards Manager 절차를 사용한다.
 
 ### C/C++ 코드 정렬 도구
 
