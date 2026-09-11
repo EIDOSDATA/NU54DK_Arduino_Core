@@ -96,6 +96,56 @@ function Invoke-NativeChecked {
     }
 }
 
+## @brief 검증기의 출력과 종료 코드를 단계별 로그에 보존하고 판정은 호출자에게 반환합니다.
+function Invoke-PrerequisiteVerification
+{
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('reuse', 'installed-bytes', 'ready-marker')]
+        [string]$Stage,
+        [switch]$SkipReadyMarker
+    )
+
+    $arguments = @(
+        '-NoLogo', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
+        '-File', $script:verifyScript, '-PlatformRoot', $script:platformRoot,
+        '-NcsRoot', $script:ncsRoot, '-Json'
+    )
+    if ($SkipReadyMarker)
+    {
+        $arguments += '-SkipReadyMarker'
+    }
+
+    ## @details PowerShell 5.1은 native stderr를 ErrorRecord로 감쌉니다. 복구 가능한
+    ## 검증 실패가 Stop 예외가 되거나 부모 stderr로 유출되지 않도록 호출 중에만 캡처합니다.
+    $previousErrorActionPreference = $ErrorActionPreference
+    try
+    {
+        $ErrorActionPreference = 'Continue'
+        ## @details 함수 로컬 변수가 native 종료 코드를 가리지 않게 하며 실행 시작 실패도 성공으로 보지 않습니다.
+        $global:LASTEXITCODE = -1
+        $output = @(& powershell.exe @arguments 2>&1)
+        $exitCode = $global:LASTEXITCODE
+    }
+    finally
+    {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+
+    $outputLines = @($output | ForEach-Object {
+        [string]$_
+    })
+    Add-Content -LiteralPath $script:logPath -Encoding UTF8 -Value "[$([DateTime]::UtcNow.ToString('o'))] verification=$Stage exit_code=$exitCode"
+    foreach ($outputLine in $outputLines)
+    {
+        Add-Content -LiteralPath $script:logPath -Encoding UTF8 -Value $outputLine
+    }
+    return [pscustomobject]@{
+        ExitCode = $exitCode
+        Output = $outputLines
+    }
+}
+
 ## @brief URL에서 file을 임시 위치로 내려받아 원자적으로 교체합니다.
 function Receive-File {
     param(
@@ -204,13 +254,14 @@ try {
 
     if (Test-Path -LiteralPath $readyPath -PathType Leaf) {
         Set-InstallPhase '기존 완료 marker 검증'
-        $verifyArguments = @('-NoLogo', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', $verifyScript, '-PlatformRoot', $platformRoot, '-NcsRoot', $ncsRoot, '-Json')
-        & powershell.exe @verifyArguments | Add-Content -LiteralPath $logPath -Encoding UTF8
-        if ($LASTEXITCODE -eq 0) {
+        $reuseVerification = Invoke-PrerequisiteVerification -Stage 'reuse'
+        if ($reuseVerification.ExitCode -eq 0) {
             Remove-Item -LiteralPath $installingPath, $incompletePath -Force -ErrorAction SilentlyContinue
             Write-Host '[NU54DK] 이미 검증된 Nordic prerequisite를 재사용합니다.' -ForegroundColor Green
             exit 0
         }
+        Write-Host '[NU54DK] 기존 설치를 재사용할 수 없어 복구 설치를 진행합니다. 초기 검증 진단은 log에 기록했습니다.'
+        Write-Host "검증 log : $logPath"
         Remove-Item -LiteralPath $readyPath -Force -ErrorAction SilentlyContinue
     }
 
@@ -257,11 +308,11 @@ try {
     )
 
     Set-InstallPhase '설치 byte와 revision 최종 검증'
-    $verifyOutput = & powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $verifyScript -PlatformRoot $platformRoot -NcsRoot $ncsRoot -SkipReadyMarker -Json 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "설치 검증에 실패했습니다: $($verifyOutput -join ' ')"
+    $verification = Invoke-PrerequisiteVerification -Stage 'installed-bytes' -SkipReadyMarker
+    if ($verification.ExitCode -ne 0) {
+        throw "설치 검증에 실패했습니다: $($verification.Output -join ' ')"
     }
-    $verified = ($verifyOutput -join "`n") | ConvertFrom-Json
+    $verified = ($verification.Output -join "`n") | ConvertFrom-Json
     if ([string]$verified.status -ne 'ready') {
         throw '설치 검증 결과가 ready가 아닙니다.'
     }
@@ -284,9 +335,9 @@ try {
     })
 
     Set-InstallPhase '완료 marker 재검증'
-    $finalOutput = & powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $verifyScript -PlatformRoot $platformRoot -NcsRoot $ncsRoot -Json 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "완료 marker 재검증에 실패했습니다: $($finalOutput -join ' ')"
+    $finalVerification = Invoke-PrerequisiteVerification -Stage 'ready-marker'
+    if ($finalVerification.ExitCode -ne 0) {
+        throw "완료 marker 재검증에 실패했습니다: $($finalVerification.Output -join ' ')"
     }
     Remove-Item -LiteralPath $installingPath, $incompletePath -Force -ErrorAction SilentlyContinue
     Write-Host '[NU54DK] Nordic prerequisite installation PASS.' -ForegroundColor Green

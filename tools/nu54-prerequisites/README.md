@@ -22,6 +22,21 @@ build를 시작하지 않는다.
 자동으로 새 byte를 신뢰하지 않고 중단한다. upstream 변경을 검토하고 새 executable을
 별도로 검증한 뒤 pin과 package version을 함께 갱신해야 한다.
 
+## 설치 출력과 실패 판정
+
+- 기존 `ready.json` 재사용 검증이 실패하면 **복구 안내는 stdout**에 표시하고 고정 환경의
+  설치·복구를 계속한다. 이 사전 검증의 stderr는 console로 흘리지 않으며, 단계(phase),
+  종료 code와 검증기 출력 원문은 설치 log에 남긴다. 복구 안내 자체는 최종 설치 실패가 아니다.
+- 설치 byte·revision의 최종 검증이나 완료 marker 재검증이 실패하면 **stderr와 실패 종료
+  code 1**을 유지하고 `incomplete.json`에 실패 단계와 log 위치를 남긴다. 오류를 숨기거나
+  검증하지 않은 환경을 `ready`로 승인하지 않는다.
+- 아래 수동 `verify-nordic.ps1` 검증은 실패 시 기존대로 stderr와 실패 종료 code를 반환한다.
+
+이 출력 구분은 현재 `main`의 설치기 변경이며 차기 package에 반영할 내용이다. 이미 공개한
+`v0.4.0` package와 사용자 설치본은 교체하지 않으며, 변경이 자동 적용됐다고 보지 않는다.
+
+## 수동 검증
+
 수동 검증은 다음처럼 실행한다.
 
 ```powershell
