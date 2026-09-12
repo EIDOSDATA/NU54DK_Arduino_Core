@@ -92,6 +92,11 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--baud", type=int, default=DEFAULT_BAUD_RATE)
     parser.add_argument("--flash-timeout", type=float, default=45.0)
     parser.add_argument(
+        "--flash-backend",
+        choices=("pyocd-sector", "daplink-msd"),
+        default="pyocd-sector",
+    )
+    parser.add_argument(
         "--result-timeout", type=float, default=DEFAULT_RESULT_TIMEOUT_SECONDS
     )
     parser.add_argument("--evidence")
@@ -217,6 +222,7 @@ def build_evidence(
     peripheral_transcript_path: Path,
     central_transcript_path: Path,
     execution: Any,
+    flash_backend: str,
     peripheral_result: M28TwoBoardRoleResult,
     central_result: M28TwoBoardRoleResult,
 ) -> dict[str, Any]:
@@ -234,6 +240,7 @@ def build_evidence(
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "core_revision": core_revision,
         "board_revision": board_revision,
+        "flash_backend": flash_backend,
         "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
         "nonce": nonce,
         "boards": {
@@ -355,6 +362,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             baud_rate=args.baud,
             flash_timeout=args.flash_timeout,
             result_timeout=args.result_timeout,
+            flash_backend=args.flash_backend,
         )
         validate_image_unchanged(peripheral_image, peripheral_size, peripheral_sha256)
         validate_image_unchanged(central_image, central_size, central_sha256)
@@ -383,6 +391,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             peripheral_transcript_path=peripheral_log,
             central_transcript_path=central_log,
             execution=execution,
+            flash_backend=args.flash_backend,
             peripheral_result=peripheral_result,
             central_result=central_result,
         )

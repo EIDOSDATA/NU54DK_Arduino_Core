@@ -10,7 +10,9 @@ from pathlib import Path
 import hashlib
 import re
 import secrets
+import shutil
 import subprocess
+import sys
 import threading
 import time
 from typing import Any
@@ -43,7 +45,6 @@ from m14_pin_hil import (  # noqa: E402
 NONCE_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 MAX_TRANSCRIPT_BYTES = 262144
 DEFAULT_RESULT_TIMEOUT_SECONDS = 180.0
-DAPLINK_COPY_CHUNK_BYTES = 16 * 1024
 
 
 class BlePairHilFailure(RuntimeError):
@@ -289,22 +290,57 @@ def flash_image(
         raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
     previous_sequence = detail_value(volume.details, "Flash Sequence")
     destination = volume.root / f"NUCODE_{milestone}_{role.upper()}.HEX"
-    with image.open("rb") as source, destination.open("wb", buffering=0) as target:
-        while True:
-            chunk = source.read(DAPLINK_COPY_CHUNK_BYTES)
-            if not chunk:
-                break
-            written = target.write(chunk)
-            if written != len(chunk):
-                raise BlePairHilFailure(
-                    f"{role} DAPLink image가 일부만 기록됐습니다: "
-                    f"{written}/{len(chunk)}"
-                )
+    shutil.copyfile(image, destination)
     details = wait_for_flash_result(volume.root, previous_sequence, timeout_seconds)
     return (
         detail_value(details, "Flash Sequence") or "unknown",
         detail_value(details, "Last Flash Bytes") or "unknown",
     )
+
+
+## @brief exact UID의 target sector만 CMSIS-DAP로 기록합니다.
+def flash_image_pyocd(
+    role: str,
+    board_id: str,
+    image: Path,
+    timeout_seconds: float,
+) -> tuple[str, str]:
+    if timeout_seconds <= 0:
+        raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
+    command = (
+        sys.executable,
+        "-m",
+        "pyocd",
+        "flash",
+        "--uid",
+        board_id,
+        "--target",
+        "nrf54l",
+        "--erase",
+        "sector",
+        "--format",
+        "hex",
+        str(image),
+    )
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise BlePairHilFailure(f"{role} pyOCD sector flash timeout") from error
+    output = result.stdout + result.stderr
+    if result.returncode != 0:
+        raise BlePairHilFailure(
+            f"{role} pyOCD sector flash 실패: "
+            f"{output.decode('utf-8', errors='backslashreplace')}"
+        )
+    match = re.search(rb"programmed\s+(\d+)\s+bytes", output)
+    if match is None:
+        raise BlePairHilFailure(f"{role} pyOCD programmed byte 증거가 없습니다.")
+    return "pyocd-sector", match.group(1).decode("ascii")
 
 
 ## @brief bounded UART capture에서 newline 하나를 읽습니다.
@@ -440,11 +476,14 @@ def execute_pair(
     baud_rate: int,
     flash_timeout: float,
     result_timeout: float,
+    flash_backend: str = "daplink-msd",
 ) -> PairExecution:
     if baud_rate != DEFAULT_BAUD_RATE:
         raise BlePairHilFailure(f"기준선은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
     if not 30.0 <= result_timeout <= 600.0:
         raise BlePairHilFailure("--result-timeout은 30..600초여야 합니다.")
+    if flash_backend not in ("daplink-msd", "pyocd-sector"):
+        raise BlePairHilFailure(f"알 수 없는 flash backend입니다: {flash_backend}")
 
     captures = {"peripheral": bytearray(), "central": bytearray()}
     pending = {"peripheral": bytearray(), "central": bytearray()}
@@ -472,20 +511,34 @@ def execute_pair(
                 )
                 ports[role].reset_input_buffer()
 
-            flashes["peripheral"] = flash_image(
-                milestone,
-                "peripheral",
-                peripheral_endpoint.volume,
-                peripheral_image,
-                flash_timeout,
-            )
-            flashes["central"] = flash_image(
-                milestone,
-                "central",
-                central_endpoint.volume,
-                central_image,
-                flash_timeout,
-            )
+            if flash_backend == "pyocd-sector":
+                flashes["peripheral"] = flash_image_pyocd(
+                    "peripheral",
+                    peripheral_endpoint.board_id,
+                    peripheral_image,
+                    flash_timeout,
+                )
+                flashes["central"] = flash_image_pyocd(
+                    "central",
+                    central_endpoint.board_id,
+                    central_image,
+                    flash_timeout,
+                )
+            else:
+                flashes["peripheral"] = flash_image(
+                    milestone,
+                    "peripheral",
+                    peripheral_endpoint.volume,
+                    peripheral_image,
+                    flash_timeout,
+                )
+                flashes["central"] = flash_image(
+                    milestone,
+                    "central",
+                    central_endpoint.volume,
+                    central_image,
+                    flash_timeout,
+                )
             deadline = time.monotonic() + result_timeout
             for role in ("peripheral", "central"):
                 wait_ready(

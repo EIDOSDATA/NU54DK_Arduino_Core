@@ -3,7 +3,7 @@
 
 from pathlib import Path
 import sys
-import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -27,7 +27,7 @@ if str(HIL_DIRECTORY) not in sys.path:
 
 from ble_pair_hil_common import BlePairHilFailure  # noqa: E402
 import ble_pair_hil_common  # noqa: E402
-from m28_ble_2board import parse_role_transcript  # noqa: E402
+from m28_ble_2board import parse_arguments, parse_role_transcript  # noqa: E402
 
 
 NONCE = "0123456789abcdef0123456789abcdef"
@@ -165,35 +165,29 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_ADV", source)
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_SYNC", source)
 
-    def test_daplink_image_copy_uses_bounded_chunks(self) -> None:
-        """! @brief DAPLink 가상 FAT에 큰 단일 write를 사용하지 않습니다. """
+    def test_pyocd_sector_flash_is_uid_bound(self) -> None:
+        """! @brief M28 기본 flash가 exact UID와 sector erase만 사용합니다. """
 
-        chunk_size = ble_pair_hil_common.DAPLINK_COPY_CHUNK_BYTES
-        self.assertEqual(16 * 1024, chunk_size)
-        with tempfile.TemporaryDirectory(prefix="nu54-m28-daplink-") as folder:
-            root = Path(folder)
-            volume_root = root / "volume"
-            volume_root.mkdir()
-            image = root / "image.hex"
-            payload = bytes(index % 251 for index in range(chunk_size * 2 + 17))
-            image.write_bytes(payload)
-            volume = ble_pair_hil_common.DaplinkVolume(
-                root=volume_root,
-                details="Flash Sequence: 1\n",
+        result = SimpleNamespace(
+            returncode=0,
+            stdout=b"programmed 12288 bytes",
+            stderr=b"",
+        )
+        with patch.object(ble_pair_hil_common.subprocess, "run", return_value=result) as run:
+            sequence, byte_count = ble_pair_hil_common.flash_image_pyocd(
+                "peripheral", "a" * 32, Path("image.hex"), 45.0
             )
-            result = "Flash Sequence: 2\nLast Flash Bytes: 32785\n"
-            with patch.object(
-                ble_pair_hil_common,
-                "wait_for_flash_result",
-                return_value=result,
-            ):
-                sequence, byte_count = ble_pair_hil_common.flash_image(
-                    "M28B2", "peripheral", volume, image, 45.0
-                )
-            destination = volume_root / "NUCODE_M28B2_PERIPHERAL.HEX"
-            self.assertEqual(payload, destination.read_bytes())
-            self.assertEqual("2", sequence)
-            self.assertEqual("32785", byte_count)
+        command = run.call_args.args[0]
+        self.assertEqual("a" * 32, command[command.index("--uid") + 1])
+        self.assertEqual("sector", command[command.index("--erase") + 1])
+        self.assertNotIn("chip", command)
+        self.assertEqual("pyocd-sector", sequence)
+        self.assertEqual("12288", byte_count)
+
+        arguments = parse_arguments(
+            ["--peripheral-board-id", "a" * 32, "--central-board-id", "b" * 32]
+        )
+        self.assertEqual("pyocd-sector", arguments.flash_backend)
 
 
 if __name__ == "__main__":
