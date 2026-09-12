@@ -174,6 +174,9 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             "pawr_phase_deadline_ms = k_uptime_get() + pawr_response_window_ms;",
             source,
         )
+        self.assertIn("std::uint8_t response[23] = {};", source)
+        self.assertIn("first_pawr_response_event =", source)
+        self.assertIn('fail("pawr-response-sequence");', source)
         self.assertIn("phase = Phase::privacy_wait;", source)
         self.assertIn("privacy_rotation_start_pending = true;", source)
         self.assertLess(

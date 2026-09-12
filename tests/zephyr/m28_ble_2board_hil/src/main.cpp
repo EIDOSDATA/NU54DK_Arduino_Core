@@ -90,6 +90,8 @@ namespace
     std::uint8_t pawr_slot_mask = 0U;
     [[maybe_unused]] std::uint16_t last_pawr_event = 0U;
     [[maybe_unused]] bool last_pawr_event_valid = false;
+    [[maybe_unused]] std::uint16_t first_pawr_response_event = 0U;
+    [[maybe_unused]] std::uint16_t last_pawr_response_event = 0U;
     std::int64_t pawr_phase_deadline_ms = 0;
 
     [[maybe_unused]] std::uint32_t rotation_baseline = 0U;
@@ -286,7 +288,8 @@ namespace
     /** @brief PAwR response payload를 현재 request 위치와 결합합니다. */
     [[maybe_unused]] void buildPawrResponse(std::uint8_t *payload,
                                             std::uint8_t subevent,
-                                            std::uint8_t slot)
+                                            std::uint8_t slot,
+                                            std::uint16_t request_event)
     {
         payload[0] = 'R';
         payload[1] = 'S';
@@ -294,6 +297,8 @@ namespace
         ::memcpy(&payload[3], nonce_binary, nonce_binary_length);
         payload[19] = subevent;
         payload[20] = slot;
+        payload[21] = static_cast<std::uint8_t>(request_event & 0xffU);
+        payload[22] = static_cast<std::uint8_t>(request_event >> 8U);
     }
 
     /** @brief 보안 event identity가 이전 연결과 동일한지 누적 검사합니다. */
@@ -482,8 +487,9 @@ namespace
         }
         const std::uint8_t response_subevent =
             static_cast<std::uint8_t>((report.subevent + 2U) % 4U);
-        std::uint8_t response[21] = {};
-        buildPawrResponse(response, response_subevent, selected);
+        std::uint8_t response[23] = {};
+        buildPawrResponse(response, response_subevent, selected,
+                          report.periodic_event_counter);
         if (!BLEPawr.sendResponse(report.sync, report.periodic_event_counter,
                                   report.subevent, response_subevent, selected,
                                   response, sizeof(response)))
@@ -652,7 +658,7 @@ namespace
         {
             return;
         }
-        if (response.payload_length != 21U || response.payload[0] != 'R' ||
+        if (response.payload_length != 23U || response.payload[0] != 'R' ||
             response.payload[1] != 'S' || response.payload[2] != 'P' ||
             ::memcmp(&response.payload[3], nonce_binary, nonce_binary_length) != 0)
         {
@@ -671,6 +677,25 @@ namespace
         if (pawr_response_count == 0U)
         {
             pawr_phase_deadline_ms = k_uptime_get() + pawr_response_window_ms;
+            first_pawr_response_event =
+                static_cast<std::uint16_t>(response.payload[21]) |
+                (static_cast<std::uint16_t>(response.payload[22]) << 8U);
+            last_pawr_response_event = first_pawr_response_event;
+        }
+        else
+        {
+            const std::uint16_t event =
+                static_cast<std::uint16_t>(response.payload[21]) |
+                (static_cast<std::uint16_t>(response.payload[22]) << 8U);
+            const std::uint16_t delta =
+                static_cast<std::uint16_t>(event - last_pawr_response_event);
+            if (delta == 0U || delta > 0x8000U)
+            {
+                ++pawr_out_of_window_count;
+                fail("pawr-response-sequence");
+                return;
+            }
+            last_pawr_response_event = event;
         }
         ++pawr_response_count;
         pawr_subevent_mask |= static_cast<std::uint8_t>(1U << response.subevent);
