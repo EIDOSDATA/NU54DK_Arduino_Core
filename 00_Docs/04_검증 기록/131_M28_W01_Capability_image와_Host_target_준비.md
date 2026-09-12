@@ -25,9 +25,12 @@ Capability image는 `bt_enable()` 뒤 다음 command를 실제 controller에 한
 - Read Local Supported Commands
 - LE Read Local Supported Features
 - LE Read Maximum Advertising Data Length
-- LE Read Number of Supported Advertising Sets
-- LE Read Periodic Advertiser List Size
 - LE Read Resolving List Size
+
+결합 Host/controller 구성의 NCS adapter는 Advertising Set 수와 Periodic Advertiser List 크기 read
+command를 application의 중복 HCI 요청으로 dispatch하지 않는다. 이 두 자원은 Supported Commands
+bit를 확인한 뒤 public Host API로 advertising set 생성/삭제와 periodic list add/remove를 실제
+controller까지 왕복해 최소 한 slot을 검증한다.
 
 Host parser는 출력된 CAP 문자열만 신뢰하지 않고 64-byte command mask, 8-byte LE feature mask와
 자원 값을 다시 계산한다. PAwR은 controller LE feature bit 43/44를 사용한다. Multi-role은 host의
@@ -44,6 +47,7 @@ W02 이후 `M28-LINK-01`에서 별도로 검증한다.
 | 4 | build는 PASS하지만 HCI 자원 기준 미달 | SDC 기본값이 광고 data 31 byte, periodic advertiser list 0개 | 각각 255 byte·1개로 명시하고 compile-time assert 추가 |
 | 5 | 첫 실보드 수집이 READY 전 noise로 FAIL | Zephyr banner와 별개인 `CONFIG_NCS_BOOT_BANNER=y`가 boot 문자열 출력 | NCS banner를 명시적으로 끄고 compile-time assert 뒤 동일 보드·UART로 재검증 |
 | 6 | banner 제거 뒤 READY 앞 4-byte noise로 FAIL | target reset 동안 USB-UART가 관측한 TX high-Z 글리치 | flash 후 입력을 비우고 exact `PROBE`로 검증 세션을 arm하는 handshake 추가 |
+| 7 | HCI `adv_sets` query가 `-EIO` | NCS 결합 Host/controller adapter가 해당 중복 read command를 application dispatch에서 제외 | raw command bit와 public Host API의 set 생성/삭제·list add/remove runtime probe로 분리 |
 
 각 수정은 이전 실패 출력 폴더를 재사용하지 않고 같은 board/SDK/toolchain 조건의 새 build로
 재검증했다. 이유 없는 반복이나 결과 선별은 하지 않았다.

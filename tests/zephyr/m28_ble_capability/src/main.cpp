@@ -73,9 +73,9 @@ namespace
         bt_hci_rp_read_supported_commands commands = {};
         bt_hci_rp_le_read_local_features features = {};
         bt_hci_rp_le_read_max_adv_data_len maximum_advertising_data = {};
-        bt_hci_rp_le_read_num_adv_sets advertising_sets = {};
-        bt_hci_rp_le_read_per_adv_list_size periodic_advertiser_list = {};
         bt_hci_rp_le_read_rl_size resolving_list = {};
+        std::uint8_t advertising_sets = 0U;
+        std::uint8_t periodic_advertiser_list = 0U;
     };
 
     /** @brief 정해진 stage와 오류 코드를 한 번 출력하고 실행을 닫습니다. */
@@ -159,6 +159,50 @@ namespace
         return (features[bit >> 3U] & BIT(bit & 0x07U)) != 0U;
     }
 
+    /** @brief Host API를 통해 controller advertising set 한 개의 생성과 회수를 확인합니다. */
+    bool probeAdvertisingSet(CapabilitySnapshot &snapshot)
+    {
+        const bt_le_adv_param parameters = BT_LE_ADV_PARAM_INIT(
+            BT_LE_ADV_OPT_EXT_ADV, BT_GAP_ADV_FAST_INT_MIN_2, BT_GAP_ADV_FAST_INT_MAX_2, nullptr);
+        bt_le_ext_adv *advertising = nullptr;
+        int result = bt_le_ext_adv_create(&parameters, nullptr, &advertising);
+        if (result != 0)
+        {
+            fail("adv_set_create", result);
+            return false;
+        }
+        snapshot.advertising_sets = 1U;
+        result = bt_le_ext_adv_delete(advertising);
+        if (result != 0)
+        {
+            fail("adv_set_delete", result);
+            return false;
+        }
+        return true;
+    }
+
+    /** @brief Host API로 controller periodic advertiser list 한 slot을 왕복 확인합니다. */
+    bool probePeriodicAdvertiserList(CapabilitySnapshot &snapshot)
+    {
+        bt_addr_le_t address = {};
+        address.type = BT_ADDR_LE_RANDOM;
+        address.a.val[5] = 0xc0U;
+        int result = bt_le_per_adv_list_add(&address, 0U);
+        if (result != 0)
+        {
+            fail("per_adv_list_add", result);
+            return false;
+        }
+        snapshot.periodic_advertiser_list = 1U;
+        result = bt_le_per_adv_list_remove(&address, 0U);
+        if (result != 0)
+        {
+            fail("per_adv_list_remove", result);
+            return false;
+        }
+        return true;
+    }
+
     /** @brief 고정 capability 판정 한 줄을 출력합니다. */
     void printCapability(const char *identifier, bool host, bool controller, const char *evidence)
     {
@@ -215,14 +259,14 @@ namespace
             commandsSupported(snapshot.commands.commands, extended_commands,
                               ARRAY_SIZE(extended_commands)) &&
             sys_le16_to_cpu(snapshot.maximum_advertising_data.max_adv_data_len) >= 255U &&
-            snapshot.advertising_sets.num_sets >= 1U;
+            snapshot.advertising_sets >= 1U;
         const bool periodic_controller =
             featureSupported(snapshot.features.features, BT_LE_FEAT_BIT_PER_ADV) &&
             featureSupported(snapshot.features.features, BT_LE_FEAT_BIT_PAST_SEND) &&
             featureSupported(snapshot.features.features, BT_LE_FEAT_BIT_PAST_RECV) &&
             commandsSupported(snapshot.commands.commands, periodic_commands,
                               ARRAY_SIZE(periodic_commands)) &&
-            snapshot.periodic_advertiser_list.list_size >= 1U;
+            snapshot.periodic_advertiser_list >= 1U;
         const bool pawr_controller =
             featureSupported(snapshot.features.features, BT_LE_FEAT_BIT_PAWR_ADVERTISER) &&
             featureSupported(snapshot.features.features, BT_LE_FEAT_BIT_PAWR_SCANNER);
@@ -308,9 +352,9 @@ namespace
         Serial.print("|max_adv_data_len=");
         Serial.print(sys_le16_to_cpu(snapshot.maximum_advertising_data.max_adv_data_len));
         Serial.print("|adv_sets=");
-        Serial.print(snapshot.advertising_sets.num_sets);
+        Serial.print(snapshot.advertising_sets);
         Serial.print("|per_adv_list=");
-        Serial.print(snapshot.periodic_advertiser_list.list_size);
+        Serial.print(snapshot.periodic_advertiser_list);
         Serial.print("|resolving_list=");
         Serial.println(snapshot.resolving_list.rl_size);
 
@@ -338,10 +382,8 @@ namespace
                readHci(BT_HCI_OP_LE_READ_LOCAL_FEATURES, "le_features", snapshot.features) &&
                readHci(BT_HCI_OP_LE_READ_MAX_ADV_DATA_LEN, "max_adv_data_len",
                        snapshot.maximum_advertising_data) &&
-               readHci(BT_HCI_OP_LE_READ_NUM_ADV_SETS, "adv_sets", snapshot.advertising_sets) &&
-               readHci(BT_HCI_OP_LE_READ_PER_ADV_LIST_SIZE, "per_adv_list",
-                       snapshot.periodic_advertiser_list) &&
-               readHci(BT_HCI_OP_LE_READ_RL_SIZE, "resolving_list", snapshot.resolving_list);
+               readHci(BT_HCI_OP_LE_READ_RL_SIZE, "resolving_list", snapshot.resolving_list) &&
+               probeAdvertisingSet(snapshot) && probePeriodicAdvertiserList(snapshot);
     }
 
     /** @brief flash reset 잡음 뒤 exact PROBE command에 READY로 응답합니다. */

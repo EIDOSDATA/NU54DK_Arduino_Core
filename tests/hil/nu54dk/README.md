@@ -352,8 +352,11 @@ M21은 128-bit nonce 전체를 Peripheral manufacturer data로 광고하고 Cent
 ## M28-W01 capability HIL
 
 W01은 NU54DK 한 대에서 SDC가 실제 반환하는 HCI version·Supported Commands·LE Local Supported
-Features와 advertising/resolving list 자원을 읽는다. Host Kconfig는 target compile-time assert와
-protocol record로 함께 확인한다. GPIO 점퍼는 필요 없고 USB/DAPLink UART 한 경로만 사용한다.
+Features·최대 advertising data·resolving list 자원을 읽는다. 결합 Host/controller adapter에서
+application에 재노출하지 않는 advertising set 수와 periodic advertiser list 크기는 command bit와
+public Host API의 생성/삭제·add/remove 왕복으로 최소 한 slot을 확인한다. Host Kconfig는 target
+compile-time assert와 protocol record로 함께 확인한다. GPIO 점퍼는 필요 없고 USB/DAPLink UART 한
+경로만 사용한다.
 `DISABLE_SWD`와 `DISABLE_UART`는 모두 연결 상태여야 하며 자동 mass erase·recover는 사용하지 않는다.
 
 실행 전 Core 변경을 commit하고 같은 exact commit으로 `nucode.m28.ble_capability` image를 다시
