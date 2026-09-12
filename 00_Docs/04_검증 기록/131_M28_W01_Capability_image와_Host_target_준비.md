@@ -42,6 +42,7 @@ W02 이후 `M28-LINK-01`에서 별도로 검증한다.
 | 2 | compile FAIL `cerrno` / `cstring` | 고정 Zephyr C++ runtime에서 해당 wrapper header가 제공되지 않음 | C header `errno.h`·`string.h`와 global 함수를 사용 |
 | 3 | 첫 build의 `CONFIG_BT_PRIVACY=n` | Host privacy의 `BT_SMP` 의존 누락 | `CONFIG_BT_SMP=y` 추가, resolved `.config` 재검사 |
 | 4 | build는 PASS하지만 HCI 자원 기준 미달 | SDC 기본값이 광고 data 31 byte, periodic advertiser list 0개 | 각각 255 byte·1개로 명시하고 compile-time assert 추가 |
+| 5 | 첫 실보드 수집이 READY 전 noise로 FAIL | Zephyr banner와 별개인 `CONFIG_NCS_BOOT_BANNER=y`가 boot 문자열 출력 | NCS banner를 명시적으로 끄고 compile-time assert 뒤 동일 보드·UART로 재검증 |
 
 각 수정은 이전 실패 출력 폴더를 재사용하지 않고 같은 board/SDK/toolchain 조건의 새 build로
 재검증했다. 이유 없는 반복이나 결과 선별은 하지 않았다.

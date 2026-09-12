@@ -51,6 +51,7 @@ static_assert(IS_ENABLED(CONFIG_BT_SETTINGS));
 static_assert(IS_ENABLED(CONFIG_BT_DATA_LEN_UPDATE));
 static_assert(IS_ENABLED(CONFIG_BT_REMOTE_INFO));
 static_assert(IS_ENABLED(CONFIG_BT_USER_PHY_UPDATE));
+static_assert(!IS_ENABLED(CONFIG_NCS_BOOT_BANNER));
 
 namespace
 {
