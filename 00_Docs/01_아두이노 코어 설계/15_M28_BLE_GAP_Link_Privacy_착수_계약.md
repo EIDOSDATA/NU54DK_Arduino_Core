@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | M28-BLE-READINESS-001 |
-| 문서 개정 | 1.0 |
+| 문서 개정 | 1.1 |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **준비 계약 완료 / 구현·target build·실기 NOT RUN** |
+| 현재 상태 | **M28-W01 진행 중 / Host·target 준비 PASS / 실제 HCI NOT RUN** |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, SoftDevice Controller multirole |
 | 최종 갱신일 | 2026-09-12 |
 | 기계 판정 원본 | [`m28-ble-readiness.json`](../../variants/nu54dk/m28-ble-readiness.json) |
@@ -105,6 +105,22 @@ periodic sync, queue와 payload buffer는 compile-time 상한을 가진 고정 s
 각 작업은 Host 계약 → target build → 필요한 실기의 순서로 판정한다. 실패 시 원인과 수정 source를
 연결해 동일 조건으로 재검증하며, timeout 안의 이유 없는 반복으로 통과를 만들지 않는다.
 
+### 5.1 M28-W01 고정 protocol과 현재 결과
+
+`M28CAP/1`은 임의 로그 문장이 아니라 다음 15개 record의 고정 순서를 사용한다.
+
+1. `READY`, nonce가 결합된 `BEGIN`
+2. Core·board·NCS·Zephyr full revision과 Host Kconfig
+3. HCI version, 64-byte Supported Commands, 8-byte LE Local Supported Features
+4. 최대 advertising data·advertising set·periodic advertiser list·resolving list 자원
+5. 6개 기능군의 Host/controller 판정과 record 수를 고정한 `END`
+
+Firmware는 잘못된 START·nonce·HCI status·응답 크기를 즉시 `FAIL`로 닫는다. Host parser는 전체
+transcript가 정확히 15줄인지 확인하고 noise·중복·누락·순서 변경·stale nonce·wrong revision·
+timeout과 raw HCI bit/resource에 맞지 않는 PASS 문자열을 거부한다. 현재 신규 Host 시험 11개와
+고정 SDK target 1/1 build는 PASS했지만 보드 실행은 `NOT RUN`이므로 기능군의
+`runtime_hci_status`는 계속 `not_run`이다.
+
 ## 6. 유한 시험 계약
 
 정확한 수치와 구조화 필드의 단일 원본은 readiness JSON이다. 아래 요약과 JSON이 다르면 자동
@@ -148,15 +164,15 @@ unlock·recover·mass erase를 사용하지 않는다.
 | --- | --- |
 | P01 Core/board/SDK/toolchain 기준선 | **완료** |
 | P02 M28 정적 capability 원장 | **완료** |
-| P02 실제 HCI capability | **실기 NOT RUN — M28-W01 첫 실행** |
+| P02 실제 HCI capability | **실기 NOT RUN — W01 Host·target 준비 뒤 첫 실행 대기** |
 | P03 공개 API·profile 경계 | **준비 계약 완료** |
 | P04 시험 구성 | **계획 고정 / 장비 확보 미확인** |
 | P05 수치 합격 기준 | **M28 9개 test ID 고정** |
 | P06 실행 목록 | **M28-W01~W08 고정** |
 
-따라서 M28 준비 산출물은 갖췄지만 M28 구현 진행률은 **0/8 작업 묶음, 0%**다. 다음 작업은
-`M28-W01` capability image·parser를 구현하고 `M28-CAP-01`을 Host/target build로 검증한 뒤,
-실물 보드에서 HCI 원장을 채우는 것이다.
+따라서 M28은 구현에 착수했지만 W01 실제 HCI가 남아 진행률은 **0/8 작업 묶음, 0%**다. 다음
+작업은 clean exact commit의 capability image를 실물 NU54DK 한 대에서 실행해 HCI 원장을 채우고,
+결과를 정적 `candidate`와 분리해 기록하는 것이다.
 
 준비 계약 검사는 다음으로 실행한다.
 

@@ -105,6 +105,9 @@ SUITE_GROUPS = {
         ("m26_onboard_hil", "nucode.m26.onboard_hil"),
         ("t16_peripheral_profile_contract", "nucode.t16.peripheral_profile"),
     ),
+    "v0.5.0": (
+        ("m28_ble_capability", "nucode.m28.ble_capability"),
+    ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)
 ## @brief 가장 긴 T16 crypto object도 legacy archive 도구의 260자 경계 안에 둡니다.

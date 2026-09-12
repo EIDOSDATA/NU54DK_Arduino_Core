@@ -1,8 +1,9 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "milestone": "M28",
   "product_target": "v0.5.0",
-  "phase": "preparation",
+  "phase": "implementation",
+  "milestone_status": "in_progress",
   "baseline": {
     "supported_release": "v0.4.1",
     "source_version": "0.4.1-dev",
@@ -69,7 +70,8 @@
       "runtime_hci_status": "not_run",
       "implementation_status": "not_started",
       "required_kconfig": [
-        "CONFIG_BT_EXT_ADV=y"
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255"
       ],
       "source_references": [
         "zephyr/subsys/bluetooth/Kconfig.adv:7",
@@ -85,6 +87,7 @@
       "required_kconfig": [
         "CONFIG_BT_PER_ADV=y",
         "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_BT_CTLR_SYNC_PERIODIC_ADV_LIST_SIZE=1",
         "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
         "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y"
       ],
@@ -310,9 +313,65 @@
     "M28-W07 Host·target·두/세 보드 HIL",
     "M28-W08 문서·지원표·M29 인계"
   ],
-  "excluded_from_preparation": [
-    "production implementation",
-    "target build PASS",
+  "work_package_status": [
+    {
+      "id": "M28-W01",
+      "status": "host_target_ready_hil_not_run",
+      "completed": false,
+      "protocol": "M28CAP/1",
+      "host_parser_tests": "passed",
+      "target_build": "passed",
+      "physical_hci": "not_run",
+      "paths": {
+        "application": "tests/zephyr/m28_ble_capability",
+        "host_parser": "tests/hil/nu54dk/m28_ble_capability.py",
+        "host_tests": "tests/host/test_m28_ble_capability.py"
+      }
+    },
+    {
+      "id": "M28-W02",
+      "status": "not_started",
+      "completed": false
+    },
+    {
+      "id": "M28-W03",
+      "status": "not_started",
+      "completed": false
+    },
+    {
+      "id": "M28-W04",
+      "status": "not_started",
+      "completed": false
+    },
+    {
+      "id": "M28-W05",
+      "status": "not_started",
+      "completed": false
+    },
+    {
+      "id": "M28-W06",
+      "status": "not_started",
+      "completed": false
+    },
+    {
+      "id": "M28-W07",
+      "status": "not_started",
+      "completed": false
+    },
+    {
+      "id": "M28-W08",
+      "status": "not_started",
+      "completed": false
+    }
+  ],
+  "progress": {
+    "completed_work_packages": 0,
+    "total_work_packages": 8,
+    "percent": 0,
+    "current_work_package": "M28-W01"
+  },
+  "not_yet_claimed": [
+    "production BLE implementation",
     "physical HIL PASS",
     "Bluetooth qualification"
   ]

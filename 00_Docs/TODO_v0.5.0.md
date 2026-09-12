@@ -2,8 +2,9 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 준비 계약 완료·구현 미착수이고 M29~M33은 계획·구현 미착수**다. 문서·Host 준비를
-구현 완료나 새 물리 PASS로 세지 않는다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
+**M28은 진행 중이며 M28-W01의 Host·target 준비를 완료하고 실제 HCI는 NOT RUN이다.
+M29~M33은 계획·구현 미착수**다. Host·target build를 작업 묶음 완료나 새 물리 PASS로 세지
+않는다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
 | 정보 | 단일 원본 |
 | --- | --- |
@@ -18,7 +19,8 @@
 ## 1. 다음 착수 순서
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
-다음 구현은 **M28-W01 capability image와 HCI 원장**부터 시작한다. P01~P06은 별도 전역
+현재 **M28-W01 capability image·고정 protocol·Host parser·target build**를 완료했고 다음 실행은
+실물 보드 한 대의 `M28-CAP-01`이다. P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
 M31 전용 장비가 미확보라는 이유로 독립적인 M28 문서·Host 작업까지 차단하지 않는다.
@@ -40,6 +42,16 @@ M28의 상세 상태·Kconfig·시험 수치는
 [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json)을 기계 원본으로 사용하고,
 [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서 사람이
 읽는 설계와 실행 순서를 설명한다. 현재 M28 구현은 **0/8 작업 묶음, 0%**다.
+
+| 작업 묶음 | 현재 상태 | 다음 종료 조건 |
+| --- | --- | --- |
+| M28-W01 | **진행 중 — Host parser PASS, target 1/1 build PASS, HCI NOT RUN** | exact commit image를 NU54DK 1대에서 실행해 6개 기능군의 HCI/Host 원장을 확정 |
+| M28-W02~W08 | **미착수** | W01 실제 HCI 결과를 입력으로 순서대로 구현·검증 |
+
+W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
+HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로
+출력한다. Host parser는 noise·중복·누락·순서 변경·stale nonce·wrong revision·timeout과 raw HCI
+불일치를 모두 거부한다. Target build는 실제 보드 HCI PASS가 아니다.
 
 ## 2. 현재 확인된 지원성 결정 항목
 
@@ -135,8 +147,9 @@ Windows 외 OS로 확대하는 약속이 아니다. Peer 자체 미지원 기능
 
 ## 6. 결과·공개 규칙
 
-- 이번 준비 작업으로 M28의 P01·P03·P05·P06과 P02 정적 원장을 완료했다. 실제 HCI와 장비
-  확보는 각각 `NOT RUN`·미확인이며 M28-W01~W08 또는 M28~M33을 완료 처리하지 않는다.
+- 이번 준비 작업으로 M28의 P01·P03·P05·P06과 P02 정적 원장을 완료했다. W01 Host·target
+  준비도 완료했지만 실제 HCI와 장비 확보는 각각 `NOT RUN`·미확인이므로 W01~W08 또는
+  M28~M33을 완료 처리하지 않는다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.

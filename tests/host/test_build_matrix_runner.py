@@ -41,11 +41,17 @@ ARDUINO = load_module(
 class BuildMatrixRunnerTests(unittest.TestCase):
     """! @brief 릴리스 기능군 범위·명령·진단 경계를 검증합니다. """
 
-    ## @brief Zephyr 68개 시나리오가 중복·누락 없이 4/10/19/35로 분리됩니다.
+    ## @brief Zephyr 69개 시나리오가 중복·누락 없이 4/10/19/35/1로 분리됩니다.
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
-            {"v0.1.0": 4, "v0.2.0": 10, "v0.3.0": 19, "v0.4.0": 35},
+            {
+                "v0.1.0": 4,
+                "v0.2.0": 10,
+                "v0.3.0": 19,
+                "v0.4.0": 35,
+                "v0.5.0": 1,
+            },
         )
         flattened = tuple(
             suite for suites in ZEPHYR.SUITE_GROUPS.values() for suite in suites
@@ -149,13 +155,13 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 out_root=Path("C:/t"),
                 evidence_dir=evidence,
             )
-        self.assertEqual(len(tasks), 4)
+        self.assertEqual(len(tasks), 5)
         outdirs = []
         for task in tasks:
             command = list(task.command)
             self.assertEqual(command[command.index("--group") + 1], task.group)
             outdirs.append(command[command.index("--outdir") + 1])
-        self.assertEqual(len(set(outdirs)), 4)
+        self.assertEqual(len(set(outdirs)), 5)
         self.assertTrue(all(len(outdir) <= 8 for outdir in outdirs))
 
     ## @brief 실패한 Twister suite의 이름·상태·사유가 즉시 표시됩니다.

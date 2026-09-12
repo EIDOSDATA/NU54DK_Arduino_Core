@@ -28,7 +28,8 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 `목표`와 `계획`은 공개 지원 선언이 아니다. 완료 단계와 제품 순서는
 [Master roadmap](02_구현_로드맵.md)이 소유한다.
 
-M28은 **준비 계약 완료·구현 미착수**, M29~M33은 **계획·구현 미착수**다. M28의 기능 지원성·
+M28은 **진행 중이며 W01 Host·target 준비 PASS, 실제 HCI NOT RUN**, M29~M33은
+**계획·구현 미착수**다. M28의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 준비 문서를 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
@@ -403,8 +404,9 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 ### M28 — BLE GAP·Link·Privacy 확장
 
 - nRF54L15·고정 NCS의 controller Kconfig, host API와 board 경계를 대조한 machine-readable
-  [BLE readiness 원장](../../variants/nu54dk/m28-ble-readiness.json)을 준비했다. `M28-W01`에서
-  HCI local feature/command를 채우고 구현 가능·조건부·미지원·미검증을 확정한다.
+  [BLE readiness 원장](../../variants/nu54dk/m28-ble-readiness.json)을 준비했다. `M28-W01`의
+  capability image·`M28CAP/1` parser·target build를 완료했고, 실제 보드에서 HCI local
+  feature/command를 채운 뒤 구현 가능·조건부·미지원·미검증을 확정한다.
 - 기존 `requestPhy()`·`requestMtu()`와 legacy GAP은 회귀 기준선으로 유지한다. 신규 범위는
   multi-role/multi-link, extended/periodic advertising·scanning, sync/PAST와 PAwR이다.
 - 현재 단일 `BLEConnection`과 연결 수 1 계약을 보존할 호환 경로를 정하고, 신규 per-link handle,
@@ -475,7 +477,8 @@ M31-B는 SDC의 실제 지원 범위와 대체 controller/profile의 RX·IQ 경�
 - Bluetooth qualification 적용성, 필요한 QDID/DN과 미완료 인증을 분리해 공개한다.
 - 완료 gate: release package, 전체 BLE regression, mobile/desktop·cross-vendor matrix, 공개 stable 검증.
 
-M28은 준비 계약만 완료했고 구현·실기는 시작하지 않았다. M29~M33은 여전히 계획이다.
+M28은 W01 구현 중이고 Host·target 준비만 완료했으며 실기는 시작하지 않았다. M29~M33은
+여전히 계획이다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은
 것이다. 문서 정비만으로 지원 상향·실기 PASS·일정을 확정하지 않는다.
 

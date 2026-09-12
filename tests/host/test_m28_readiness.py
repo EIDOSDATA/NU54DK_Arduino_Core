@@ -18,6 +18,9 @@ DESIGN_PATH = (
     / "15_M28_BLE_GAP_Link_Privacy_착수_계약.md"
 )
 TODO_PATH = REPOSITORY / "00_Docs" / "TODO_v0.5.0.md"
+CAPABILITY_CONFIG_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_capability" / "prj.conf"
+)
 
 
 class M28ReadinessTests(unittest.TestCase):
@@ -34,10 +37,11 @@ class M28ReadinessTests(unittest.TestCase):
         """! @brief v0.4.1 기준선과 고정 NCS·Zephyr·보드 revision을 대조합니다. """
 
         baseline = self.readiness["baseline"]
-        self.assertEqual(self.readiness["schema_version"], 1)
+        self.assertEqual(self.readiness["schema_version"], 2)
         self.assertEqual(self.readiness["milestone"], "M28")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "preparation")
+        self.assertEqual(self.readiness["phase"], "implementation")
+        self.assertEqual(self.readiness["milestone_status"], "in_progress")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertEqual(baseline["ncs_revision"], self.lock["ncs"]["revision"])
         self.assertEqual(baseline["zephyr_revision"], self.lock["zephyr"]["revision"])
@@ -144,6 +148,40 @@ class M28ReadinessTests(unittest.TestCase):
             self.assertIn("m28-ble-readiness.json", text)
             self.assertIn("M28-CAP-01", text)
             self.assertIn("NOT RUN", text)
+
+    def test_w01_host_target_ready_does_not_complete_hardware_capability(self) -> None:
+        """! @brief W01 Host·build PASS와 실제 HCI NOT RUN을 별도 상태로 고정합니다. """
+
+        statuses = self.readiness["work_package_status"]
+        self.assertEqual(len(statuses), 8)
+        for index, status in enumerate(statuses, start=1):
+            self.assertEqual(status["id"], f"M28-W{index:02d}")
+        w01 = statuses[0]
+        self.assertEqual(w01["status"], "host_target_ready_hil_not_run")
+        self.assertFalse(w01["completed"])
+        self.assertEqual(w01["protocol"], "M28CAP/1")
+        self.assertEqual(w01["host_parser_tests"], "passed")
+        self.assertEqual(w01["target_build"], "passed")
+        self.assertEqual(w01["physical_hci"], "not_run")
+        for path in w01["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
+        capability_config = CAPABILITY_CONFIG_PATH.read_text(encoding="utf-8")
+        for capability in self.readiness["source_capabilities"]:
+            for setting in capability["required_kconfig"]:
+                self.assertIn(setting, capability_config, capability["id"])
+        progress = self.readiness["progress"]
+        self.assertEqual(progress["completed_work_packages"], 0)
+        self.assertEqual(progress["total_work_packages"], 8)
+        self.assertEqual(progress["percent"], 0)
+        self.assertEqual(progress["current_work_package"], "M28-W01")
+        self.assertEqual(
+            self.readiness["not_yet_claimed"],
+            [
+                "production BLE implementation",
+                "physical HIL PASS",
+                "Bluetooth qualification",
+            ],
+        )
 
 
 if __name__ == "__main__":

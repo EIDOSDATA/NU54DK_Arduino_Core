@@ -1,7 +1,8 @@
 # 현재 지원 상태와 다른 PC 개발 준비
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25는 모두 완료됐습니다.** M28은
-준비 계약만 완료하고 구현·실기는 시작하지 않았습니다. 이 문서는 완료한 시험을 재개하라는
+진행 중이며 W01 capability image·고정 protocol·Host parser·target build를 완료했고 실제 HCI는
+`NOT RUN`입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -38,6 +39,20 @@
    검사를 수행합니다. 이전 PC의 PASS와 이번 실행 결과를 구분합니다.
 
 일반 Arduino 사용자라면 위 개발 도구 대신 [Boards Manager 설치](<02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)를 사용합니다.
+
+## M28-W01 현재 인계점
+
+| 구분 | 상태 |
+| --- | --- |
+| Capability image | `tests/zephyr/m28_ble_capability`, Host 필수 Kconfig를 compile-time assert하고 7개 HCI command를 실제 controller에 질의 |
+| Protocol·parser | `M28CAP/1`, full revision·128-bit nonce·고정 15줄; noise·중복·누락·stale·wrong revision·timeout fail-closed |
+| Host 검증 | 신규 parser 시험 11개 PASS |
+| Target 검증 | 고정 NCS v3.4.0에서 `nucode.m28.ble_capability` 1/1 build-only PASS |
+| 실제 HCI | **NOT RUN** — target build나 정적 source 후보를 PASS로 승격하지 않음 |
+| 다음 행동 | clean exact commit image를 NU54DK 1대에 flash하고 `M28-CAP-01` runner로 HCI 원장 생성 |
+
+실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m28-w01-capability-hil), 구현·검증
+경계는 [131번 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)을 따른다.
 
 ## 보존 자료와 재생성 자료
 

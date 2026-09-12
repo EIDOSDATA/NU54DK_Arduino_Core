@@ -24,6 +24,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 GPIO·버튼 | [M14 신규 핀](#m14-신규-핀-hil), [AC-01 loopback](#ac-01-p25p26-gpio-loopback-hil) |
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
+| M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -48,6 +49,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m20_ble_gatt.py` | 범용 GATT read/write/notify/indicate·재발견 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m21_ble_security.py` | pairing·bond 복원/삭제/repair와 BAS/DIS/HID protocol 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `ble_pair_hil_common.py` | M19~M21 exact image·두 UID·UART·evidence 공통 경계 | 직접 실행하지 않음 |
+| `m28_ble_capability.py` | M28CAP/1 HCI/Host 원장·revision·nonce·timeout strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -346,6 +348,36 @@ M21은 128-bit nonce 전체를 Peripheral manufacturer data로 광고하고 Cent
 [M19 검증 기록](<../../../00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md>)과
 [M20 검증 기록](<../../../00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md>),
 [M21 검증 기록](<../../../00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)을 따릅니다.
+
+## M28-W01 capability HIL
+
+W01은 NU54DK 한 대에서 SDC가 실제 반환하는 HCI version·Supported Commands·LE Local Supported
+Features와 advertising/resolving list 자원을 읽는다. Host Kconfig는 target compile-time assert와
+protocol record로 함께 확인한다. GPIO 점퍼는 필요 없고 USB/DAPLink UART 한 경로만 사용한다.
+`DISABLE_SWD`와 `DISABLE_UART`는 모두 연결 상태여야 하며 자동 mass erase·recover는 사용하지 않는다.
+
+실행 전 Core 변경을 commit하고 같은 exact commit으로 `nucode.m28.ble_capability` image를 다시
+빌드해야 한다. Runner는 clean source, Core/board/NCS/Zephyr revision, source digest와 image byte를
+검사하므로 현재 working-tree build를 다른 commit의 HIL에 재사용하지 못한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$Commit = git rev-parse HEAD
+$Hex = "<nucode.m28.ble_capability의 zephyr.hex 절대 경로>"
+$Evidence = "<새 evidence JSON 절대 경로>"
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+
+& $Python -I tests/hil/nu54dk/m28_ble_capability.py `
+  --hex $Hex `
+  --board-id "<시험할 CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --evidence $Evidence
+```
+
+Runner는 180초 단일 deadline, 128-bit nonce와 고정 15줄 protocol을 적용한다. HCI bit/resource가
+부족하거나 noise·중복·누락·wrong revision·stale nonce·target FAIL이 있으면 해당 실행을 실패로
+종료한다. 실패를 무한 재시도하지 않고 USB/UART 연결을 먼저 대조한 뒤, 연결이 정상이면
+CMSIS-DAP으로 controller·GPIO·오류 상태를 확보해 원인 분류 후 동일 조건으로 재검증한다.
 
 ## M15 System OFF 결합 HIL
 
