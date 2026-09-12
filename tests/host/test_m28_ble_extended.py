@@ -93,6 +93,7 @@ class M28BleExtendedTests(unittest.TestCase):
                 "CONFIG_BT_EXT_ADV=y",
                 "CONFIG_BT_EXT_ADV_MAX_ADV_SET=1",
                 "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255",
+                "CONFIG_BT_EXT_SCAN_BUF_SIZE=255",
             ):
                 self.assertIn(setting, config, f"{path}: {setting}")
         for relative_path in (
