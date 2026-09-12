@@ -311,6 +311,7 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             "BLEConnection.requestPhy(outgoing_link",
             "periodic.interval_min = 80U;",
             "periodic.interval_max = 96U;",
+            "periodic.include_tx_power = false;",
             "BLEPeriodicAdvertising.transferSync(periodic_sync, incoming_link",
             "BLEDevice.end();",
         ):
