@@ -35,12 +35,18 @@ namespace
     constexpr std::uint32_t soak_sequence_target = 10000U;
     constexpr std::int64_t reconnect_delay_ms = 250;
     constexpr std::int64_t control_stage_delay_ms = 700;
-    constexpr std::int64_t periodic_update_interval_ms = 100;
+    constexpr std::uint16_t periodic_interval_min = 80U;
+    constexpr std::uint16_t periodic_interval_max = 96U;
+    constexpr std::int64_t periodic_update_interval_ms = 250;
     constexpr std::int64_t periodic_settle_ms = 1500;
     constexpr std::int64_t soak_duration_ms = 1800000;
     constexpr std::int64_t soak_packet_interval_ms = 180;
     constexpr std::uint8_t periodic_sid = 7U;
     constexpr std::uint16_t company_id = 0x054dU;
+
+    static_assert(periodic_update_interval_ms >=
+                  static_cast<std::int64_t>(periodic_interval_max) * 5 / 2,
+                  "Each sequence must span at least two periodic events");
 
     const nucode::ble::BLEUuid service_uuid("9f3c2801-8b7a-4d64-a1b2-001122334455");
     const nucode::ble::BLEUuid value_uuid("9f3c2802-8b7a-4d64-a1b2-001122334455");
@@ -538,8 +544,8 @@ namespace
         extended.interval_min = 0x00a0U;
         extended.interval_max = 0x00a0U;
         nucode::ble::BLEPeriodicAdvertisingParameters periodic{};
-        periodic.interval_min = 80U;
-        periodic.interval_max = 96U;
+        periodic.interval_min = periodic_interval_min;
+        periodic.interval_max = periodic_interval_max;
         periodic.include_tx_power = false;
         if (!BLEExtendedAdvertising.create(extended, periodic_set) ||
             !BLEExtendedAdvertising.setData(periodic_set, extended_payload, extended_length) ||
