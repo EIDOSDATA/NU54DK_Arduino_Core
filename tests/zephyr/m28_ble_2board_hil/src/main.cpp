@@ -859,8 +859,10 @@ namespace
                 ++advertising_sequence;
                 std::uint8_t payload[255] = {};
                 buildAdvertisingPayload(payload, advertising_sequence);
-                if (!BLEExtendedAdvertising.setData(advertising_set, payload,
-                                                    sizeof(payload)))
+                if (!BLEExtendedAdvertising.stop(advertising_set) ||
+                    !BLEExtendedAdvertising.setData(advertising_set, payload,
+                                                    sizeof(payload)) ||
+                    !BLEExtendedAdvertising.start(advertising_set))
                 {
                     fail("advertising-update");
                     return;
