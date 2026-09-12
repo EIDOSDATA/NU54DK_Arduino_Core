@@ -170,6 +170,11 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             source.index("BLEPrivacy.setRotationTimeout(1U)"),
             source.index("startAdvertisingPhase();", source.index("void startProtocol()")),
         )
+        prepare = source.index("void preparePrivateConnectionAdvertising()")
+        self.assertLess(
+            source.index("BLEPrivacy.setRotationTimeout(60U)", prepare),
+            source.index("phase = Phase::privacy_settle", prepare),
+        )
 
     def test_pyocd_sector_flash_is_uid_bound(self) -> None:
         """! @brief M28 기본 flash가 exact UID와 sector erase만 사용합니다. """

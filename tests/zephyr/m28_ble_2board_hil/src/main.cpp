@@ -56,6 +56,7 @@ namespace
         pawr_active,
         privacy_scan,
         privacy_rotation,
+        privacy_settle,
         privacy_link,
         complete,
     };
@@ -572,8 +573,8 @@ namespace
         phase = Phase::privacy_rotation;
     }
 
-    /** @brief 회전 판정 뒤 connectable privacy set을 시작합니다. */
-    void startPrivateConnectionAdvertising()
+    /** @brief 회전 set을 제거하고 다음 RPA의 긴 timeout 적용을 준비합니다. */
+    void preparePrivateConnectionAdvertising()
     {
         if (BLEExtendedAdvertising.running(advertising_set) &&
             !BLEExtendedAdvertising.stop(advertising_set))
@@ -586,6 +587,18 @@ namespace
             fail("privacy-rotation-remove");
             return;
         }
+        if (!BLEPrivacy.setRotationTimeout(60U))
+        {
+            fail("privacy-timeout-restore");
+            return;
+        }
+        phase = Phase::privacy_settle;
+        pending_action_ms = k_uptime_get() + 1500;
+    }
+
+    /** @brief 짧은 RPA timer가 비워진 뒤 connectable privacy set을 시작합니다. */
+    void startPrivateConnectionAdvertising()
+    {
         nucode::ble::BLEExtendedAdvertisingParameters parameters{};
         parameters.connectable = true;
         parameters.sid = privacy_sid;
@@ -936,6 +949,10 @@ namespace
         if (privacy_transition_pending && now >= pending_action_ms)
         {
             privacy_transition_pending = false;
+            preparePrivateConnectionAdvertising();
+        }
+        if (phase == Phase::privacy_settle && now >= pending_action_ms)
+        {
             startPrivateConnectionAdvertising();
         }
 #else
