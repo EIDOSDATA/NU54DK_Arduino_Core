@@ -112,6 +112,7 @@ namespace
     bool advertising_restart_pending = false;
     bool disconnect_pending = false;
     bool reconnect_pending = false;
+    bool reconnect_waiting_for_recycle = false;
     [[maybe_unused]] bool periodic_delete_pending = false;
     [[maybe_unused]] bool past_transfer_pending = false;
     [[maybe_unused]] bool periodic_emission_active = false;
@@ -1098,8 +1099,7 @@ namespace
                 if (phase == Phase::reconnect_outgoing &&
                     outgoing_reconnects < reconnect_target)
                 {
-                    reconnect_pending = true;
-                    action_deadline_ms = k_uptime_get() + reconnect_delay_ms;
+                    reconnect_waiting_for_recycle = true;
                 }
 #if defined(NUCODE_M28_B3_TEST_SOAK)
                 else if (transmit_completed < soak_sequence_target)
@@ -1154,6 +1154,16 @@ namespace
                 ++unexpected_disconnects;
                 fail("unexpected-disconnect");
 #endif
+            }
+        }
+        else if (information.event == nucode::ble::BLEEvent::connection_recycled)
+        {
+            if (phase == Phase::reconnect_outgoing && reconnect_waiting_for_recycle &&
+                outgoing_reconnects < reconnect_target && !outgoing_link.valid())
+            {
+                reconnect_waiting_for_recycle = false;
+                reconnect_pending = true;
+                action_deadline_ms = k_uptime_get();
             }
         }
 #if defined(NUCODE_M28_B3_TEST_PERIODIC)

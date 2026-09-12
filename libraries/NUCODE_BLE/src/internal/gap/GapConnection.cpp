@@ -438,6 +438,15 @@ namespace nucode::ble::internal::gap
             }
         }
 
+        /** @brief stack이 connection object를 pool에 반환한 시점을 main thread에 알립니다. */
+        void connectionRecycled() noexcept
+        {
+            if (atomic_get(&gapState().device_initialized) != 0)
+            {
+                queueEvent(BLEEvent::connection_recycled);
+            }
+        }
+
         /** @brief LE connection parameter update를 exact link event로 변환합니다. */
         void parametersUpdated(struct bt_conn *connection, std::uint16_t interval,
                                std::uint16_t latency, std::uint16_t timeout) noexcept
@@ -558,6 +567,7 @@ namespace nucode::ble::internal::gap
         BT_CONN_CB_DEFINE(nucode_ble_gap_connection_callbacks) = {
             .connected = connectionEstablished,
             .disconnected = connectionDisconnected,
+            .recycled = connectionRecycled,
             .le_param_updated = parametersUpdated,
 #if defined(CONFIG_BT_SMP)
             .identity_resolved = identityResolved,

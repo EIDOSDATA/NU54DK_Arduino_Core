@@ -105,6 +105,17 @@ int main(int argc, char **argv)
         assert(BLEConnection.connected() && mock_connections[1].refs == 1);
         assert(events[static_cast<unsigned>(BLEEvent::mtu_changed)] == 0);
     }
+    else if (std::strcmp(scenario, "recycled") == 0)
+    {
+        const BLEConnectionHandle connection = connect();
+        BLEDevice.poll();
+        assert(BLEConnection.disconnect(connection));
+        mock_conn_callbacks->disconnected(&mock_connections[0], 0x13);
+        mock_conn_callbacks->recycled();
+        BLEDevice.poll();
+        assert(events[static_cast<unsigned>(BLEEvent::disconnected)] == 1U);
+        assert(events[static_cast<unsigned>(BLEEvent::connection_recycled)] == 1U);
+    }
     else if (std::strcmp(scenario, "queue_overflow") == 0)
     {
         connect();

@@ -49,6 +49,7 @@ class M28BleLinkTests(unittest.TestCase):
             "bool connect(const BLEAddress &address,",
             "bool disconnect(BLEConnectionHandle connection) noexcept",
             "std::size_t count() const noexcept",
+            "connection_recycled",
             "return 2U;",
             "extern nucode::ble::Device BLEDevice;",
             "extern nucode::ble::Connection BLEConnection;",
@@ -102,7 +103,13 @@ class M28BleLinkTests(unittest.TestCase):
         """! @brief 실제 production source를 쓰는 Host scenario가 W02 종료 조건을 덮습니다. """
 
         runtime = RUNTIME_TEST.read_text(encoding="utf-8")
-        for scenario in ("multi_link", "generation", "end_two_links", "role_callback_guard"):
+        for scenario in (
+            "multi_link",
+            "generation",
+            "end_two_links",
+            "role_callback_guard",
+            "recycled",
+        ):
             self.assertIn(f'"{scenario}"', runtime)
         self.assertIn("BLEConnection.count() == 2U", runtime)
         self.assertIn("second != first", runtime)

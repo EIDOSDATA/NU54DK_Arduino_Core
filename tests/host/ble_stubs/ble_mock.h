@@ -213,6 +213,7 @@ struct bt_conn_cb
 {
     void (*connected)(bt_conn *, std::uint8_t){};
     void (*disconnected)(bt_conn *, std::uint8_t){};
+    void (*recycled)(){};
     void (*le_param_updated)(bt_conn *, std::uint16_t, std::uint16_t, std::uint16_t){};
     void (*identity_resolved)(bt_conn *, const bt_addr_le_t *, const bt_addr_le_t *){};
     void (*security_changed)(bt_conn *, bt_security_t, bt_security_err){};

@@ -80,6 +80,7 @@ namespace nucode::ble
         remote_information_available,
         rpa_expired,
         error,
+        connection_recycled,
     };
 
     /** @brief BLEDevice.poll() 문맥에서만 호출되는 Core/GAP callback입니다. */
