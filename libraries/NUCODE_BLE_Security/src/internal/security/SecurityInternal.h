@@ -104,6 +104,7 @@ namespace nucode::ble::internal::security
         atomic_t paired_value = ATOMIC_INIT(0);
         atomic_t current_level_value = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityLevel::none));
         atomic_t published_level_value = ATOMIC_INIT(0);
+        atomic_t pending_security_event = ATOMIC_INIT(0);
         atomic_t security_error_value = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityError::none));
         atomic_t security_driver_error_value = ATOMIC_INIT(0);
         struct k_spinlock connection_lock;
@@ -125,6 +126,13 @@ namespace nucode::ble::internal::security
             ::memcpy(result.value, address->a.val, sizeof(result.value));
         }
         return result;
+    }
+
+    /** @brief 아직 identity로 해석되지 않은 random 주소가 RPA인지 확인합니다. */
+    inline bool isResolvablePrivateAddress(const bt_addr_le_t *address) noexcept
+    {
+        return address != nullptr && address->type == BT_ADDR_LE_RANDOM &&
+               (address->a.val[5] & 0xc0U) == 0x40U;
     }
 
     /** @brief 공개 peer 주소를 Zephyr identity 주소로 복사합니다. */

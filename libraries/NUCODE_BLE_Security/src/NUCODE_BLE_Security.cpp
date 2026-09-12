@@ -84,9 +84,16 @@ namespace nucode::ble::internal::security
         }
     }
 
-    /** @brief 같은 연결 수준의 중복 callback을 제거해 security_changed를 한 번만 전달합니다. */
+    /** @brief identity가 준비된 같은 연결 수준을 security_changed로 한 번만 전달합니다. */
     void queueSecurityChangedIfNew(struct bt_conn *connection, bt_security_t level) noexcept
     {
+        if (isResolvablePrivateAddress(connection == nullptr ? nullptr
+                                                             : bt_conn_get_dst(connection)))
+        {
+            atomic_set(&securityState().pending_security_event, 1);
+            return;
+        }
+        atomic_set(&securityState().pending_security_event, 0);
         const atomic_val_t published =
             atomic_set(&securityState().published_level_value, static_cast<atomic_val_t>(level));
         if (published != static_cast<atomic_val_t>(level))
@@ -192,6 +199,7 @@ namespace nucode::ble
         k_spin_unlock(&bondStorage().startup_bond_lock, startup_key);
         atomic_set(&bondStorage().startup_bond_snapshot_ready, 0);
         atomic_set(&securityState().paired_value, 0);
+        atomic_set(&securityState().pending_security_event, 0);
         setBondLifecycle(nullptr, BondState::none, false);
         prepareAuthenticationCallbacks(config.io_capability);
         int result = bt_conn_auth_cb_register(&pairingState().authentication_callbacks);
@@ -222,6 +230,18 @@ namespace nucode::ble
             return;
         }
         processPendingTimeout();
+
+        if (atomic_get(&securityState().pending_security_event) != 0)
+        {
+            struct bt_conn *connection = referenceActiveConnection();
+            if (connection != nullptr)
+            {
+                const bt_security_t level = static_cast<bt_security_t>(
+                    atomic_get(&securityState().current_level_value));
+                queueSecurityChangedIfNew(connection, level);
+                bt_conn_unref(connection);
+            }
+        }
 
         SecurityEventRecord event = {};
         while (k_msgq_get(&securityEventQueue(), &event, K_NO_WAIT) == 0)
@@ -340,6 +360,7 @@ namespace nucode::ble::internal
         const bt_security_t level = bt_conn_get_security(connection);
         atomic_set(&securityState().current_level_value, static_cast<atomic_val_t>(level));
         atomic_set(&securityState().published_level_value, 0);
+        atomic_set(&securityState().pending_security_event, 0);
         atomic_set(&securityState().paired_value, 0);
         captureStartupBonds();
         const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
@@ -398,6 +419,7 @@ namespace nucode::ble::internal
             atomic_set(&securityState().current_level_value,
                        static_cast<atomic_val_t>(SecurityLevel::none));
             atomic_set(&securityState().published_level_value, 0);
+            atomic_set(&securityState().pending_security_event, 0);
         }
     }
 
@@ -425,6 +447,7 @@ namespace nucode::ble::internal
                 setBondLifecycle(nullptr, BondState::none, false);
             }
             atomic_set(&securityState().paired_value, 0);
+            atomic_set(&securityState().pending_security_event, 0);
             recordSecurityError(SecurityError::driver_error, -static_cast<int>(error));
             queueEvent(
                 makeEvent(SecurityEvent::error, connection, 0U, static_cast<std::uint8_t>(error)));

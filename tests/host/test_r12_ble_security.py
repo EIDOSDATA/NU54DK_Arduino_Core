@@ -53,6 +53,7 @@ class BleSecurityTests(unittest.TestCase):
             for scenario in ['pairing_failure', 'pending_timeout', 'pending_duplicate', 'reentrant',
                              'late_callback', 'not_persisted', 'restored_bond', 'erase_failure',
                              'driver_failure', 'identity_type_normalization',
+                             'deferred_rpa_identity',
                              'queue_overflow', 'profiles', 'hid']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)

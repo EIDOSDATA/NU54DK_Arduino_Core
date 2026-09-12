@@ -80,6 +80,11 @@ class M21BleSecurityContractTests(unittest.TestCase):
             "result.type = public_type ? BT_ADDR_LE_PUBLIC : BT_ADDR_LE_RANDOM",
             internal,
         )
+        self.assertIn("atomic_t pending_security_event", internal)
+
+        source = security_source()
+        self.assertIn("isResolvablePrivateAddress", source)
+        self.assertIn("pending_security_event", source)
 
     def test_backend_reuses_common_stack_and_connection_hooks(self) -> None:
         """! @brief M21이 bt_enable이나 별도 connection callback을 만들지 못하게 합니다. """

@@ -86,6 +86,11 @@ int main(int argc, char **argv)
     {
         mock_peer.type = BT_ADDR_LE_RANDOM_ID;
     }
+    else if (std::strcmp(scenario, "deferred_rpa_identity") == 0)
+    {
+        mock_peer.type = BT_ADDR_LE_RANDOM;
+        mock_peer.a.val[5] = 0x40U;
+    }
     SecurityConfig configuration{};
     configuration.response_timeout_ms = 1000;
     assert(BLESecurity.begin(configuration));
@@ -203,6 +208,20 @@ int main(int argc, char **argv)
         assert(events[static_cast<unsigned>(SecurityEvent::security_changed)] == 1);
         assert(last_peer.type == BT_ADDR_LE_RANDOM);
         assert(std::memcmp(last_peer.value, mock_peer.a.val, sizeof(last_peer.value)) == 0);
+    }
+    else if (std::strcmp(scenario, "deferred_rpa_identity") == 0)
+    {
+        connection->security = BT_SECURITY_L2;
+        internal::securityChanged(connection, BT_SECURITY_L2, BT_SECURITY_ERR_SUCCESS);
+        BLESecurity.poll();
+        assert(events[static_cast<unsigned>(SecurityEvent::security_changed)] == 0);
+        mock_peer.type = BT_ADDR_LE_RANDOM_ID;
+        mock_peer.a.val[0] = 0x6bU;
+        mock_peer.a.val[5] = 0xe4U;
+        BLESecurity.poll();
+        assert(events[static_cast<unsigned>(SecurityEvent::security_changed)] == 1);
+        assert(last_peer.type == BT_ADDR_LE_RANDOM);
+        assert(last_peer.value[0] == 0x6bU && last_peer.value[5] == 0xe4U);
     }
     else if (std::strcmp(scenario, "queue_overflow") == 0)
     {
