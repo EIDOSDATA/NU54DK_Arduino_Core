@@ -18,10 +18,10 @@ void onScan(const nucode::ble::BLEScanResult &result, void *)
     }
 }
 
-/** @brief poll 지연 뒤에도 유효한 다음 subevent response를 한 번 예약합니다. */
+/** @brief poll 지연 여유를 둔 두 번째 subevent response를 한 번 예약합니다. */
 void onPeriodicReport(const nucode::ble::BLEPeriodicReport &report, void *)
 {
-    const uint8_t responseSubevent = static_cast<uint8_t>((report.subevent + 1U) % 4U);
+    const uint8_t responseSubevent = static_cast<uint8_t>((report.subevent + 2U) % 4U);
     const uint8_t response[] = {responseSubevent, 0x5aU};
     static_cast<void>(BLEPawr.sendResponse(report.sync, report.periodic_event_counter,
                                           report.subevent, responseSubevent, 0U,

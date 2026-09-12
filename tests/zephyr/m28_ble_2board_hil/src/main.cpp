@@ -453,7 +453,7 @@ namespace
         }
     }
 
-    /** @brief PAwR event마다 한 subevent/slot response만 예약합니다. */
+    /** @brief PAwR event마다 두 subevent 뒤의 한 slot response만 예약합니다. */
     void onPeriodicReport(const nucode::ble::BLEPeriodicReport &report, void *)
     {
         if (phase != Phase::pawr_active || protocol_failed)
@@ -481,7 +481,7 @@ namespace
             return;
         }
         const std::uint8_t response_subevent =
-            static_cast<std::uint8_t>((report.subevent + 1U) % 4U);
+            static_cast<std::uint8_t>((report.subevent + 2U) % 4U);
         std::uint8_t response[21] = {};
         buildPawrResponse(response, response_subevent, selected);
         if (!BLEPawr.sendResponse(report.sync, report.periodic_event_counter,
