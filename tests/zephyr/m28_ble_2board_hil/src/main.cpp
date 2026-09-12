@@ -88,6 +88,13 @@ namespace
     std::uint32_t pawr_out_of_window_count = 0U;
     std::uint8_t pawr_subevent_mask = 0U;
     std::uint8_t pawr_slot_mask = 0U;
+    [[maybe_unused]] std::uint32_t pawr_subevent_counts[4] = {};
+    [[maybe_unused]] std::uint32_t pawr_slot_counts[4] = {};
+    [[maybe_unused]] std::uint32_t pawr_empty_response_count = 0U;
+    [[maybe_unused]] std::uint32_t pawr_missing_event_count = 0U;
+    [[maybe_unused]] std::uint32_t pawr_tx_status_error_count = 0U;
+    [[maybe_unused]] std::int8_t pawr_min_rssi = 127;
+    [[maybe_unused]] std::int8_t pawr_max_rssi = -127;
     [[maybe_unused]] std::uint16_t last_pawr_event = 0U;
     [[maybe_unused]] bool last_pawr_event_valid = false;
     [[maybe_unused]] std::uint16_t first_pawr_response_event = 0U;
@@ -634,6 +641,36 @@ namespace
     {
         if (pawr_response_count < 99U)
         {
+            Serial.print("M28_PAWR_DIAG:received=");
+            Serial.print(pawr_response_count);
+            Serial.print(":empty=");
+            Serial.print(pawr_empty_response_count);
+            Serial.print(":missing_events=");
+            Serial.print(pawr_missing_event_count);
+            Serial.print(":tx_status_errors=");
+            Serial.print(pawr_tx_status_error_count);
+            Serial.print(":subevents=");
+            for (std::size_t index = 0U; index < 4U; ++index)
+            {
+                if (index != 0U)
+                {
+                    Serial.print(',');
+                }
+                Serial.print(pawr_subevent_counts[index]);
+            }
+            Serial.print(":slots=");
+            for (std::size_t index = 0U; index < 4U; ++index)
+            {
+                if (index != 0U)
+                {
+                    Serial.print(',');
+                }
+                Serial.print(pawr_slot_counts[index]);
+            }
+            Serial.print(":rssi=");
+            Serial.print(pawr_min_rssi);
+            Serial.print(',');
+            Serial.println(pawr_max_rssi);
             fail("pawr-response-rate");
             return;
         }
@@ -653,8 +690,17 @@ namespace
     /** @brief advertiser가 받은 PAwR response의 nonce와 위치를 검증합니다. */
     void onPawrResponse(const nucode::ble::BLEPawrResponse &response, void *)
     {
-        if (phase != Phase::pawr_active || protocol_failed || !response.received)
+        if (phase != Phase::pawr_active || protocol_failed)
         {
+            return;
+        }
+        if (response.transmit_status != 0U)
+        {
+            ++pawr_tx_status_error_count;
+        }
+        if (!response.received)
+        {
+            ++pawr_empty_response_count;
             return;
         }
         if (response.payload_length != 23U || response.payload[0] != 'R' ||
@@ -694,9 +740,20 @@ namespace
                 fail("pawr-response-sequence");
                 return;
             }
+            pawr_missing_event_count += static_cast<std::uint32_t>(delta - 1U);
             last_pawr_response_event = event;
         }
         ++pawr_response_count;
+        ++pawr_subevent_counts[response.subevent];
+        ++pawr_slot_counts[response.response_slot];
+        if (response.rssi < pawr_min_rssi)
+        {
+            pawr_min_rssi = response.rssi;
+        }
+        if (response.rssi > pawr_max_rssi)
+        {
+            pawr_max_rssi = response.rssi;
+        }
         pawr_subevent_mask |= static_cast<std::uint8_t>(1U << response.subevent);
         pawr_slot_mask |= static_cast<std::uint8_t>(1U << response.response_slot);
         if (pawr_response_count == required_pawr_responses)
