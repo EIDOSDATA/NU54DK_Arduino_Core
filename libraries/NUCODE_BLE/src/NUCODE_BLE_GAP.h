@@ -603,12 +603,12 @@ namespace nucode::ble
     /** @brief PAwR advertiser의 고정 subevent·response slot 구성입니다. */
     struct BLEPawrAdvertisingParameters
     {
-        std::uint16_t interval_min = 0x00a0U;
-        std::uint16_t interval_max = 0x00f0U;
+        std::uint16_t interval_min = 0x0100U;
+        std::uint16_t interval_max = 0x0100U;
         std::uint8_t subevents = 4U;
-        std::uint8_t subevent_interval = 16U;
-        std::uint8_t response_slot_delay = 1U;
-        std::uint8_t response_slot_spacing = 32U;
+        std::uint8_t subevent_interval = 48U;
+        std::uint8_t response_slot_delay = 8U;
+        std::uint8_t response_slot_spacing = 80U;
         std::uint8_t response_slots = 4U;
         bool include_tx_power = false;
         bool include_adi = false;

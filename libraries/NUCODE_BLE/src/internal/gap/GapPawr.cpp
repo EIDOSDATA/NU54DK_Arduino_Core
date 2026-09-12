@@ -168,6 +168,13 @@ namespace nucode::ble
             return false;
         }
 #if defined(CONFIG_BT_PER_ADV_RSP)
+        const std::uint32_t subevent_span =
+            static_cast<std::uint32_t>(parameters.subevents) *
+            parameters.subevent_interval;
+        const std::uint32_t response_span_eighths =
+            static_cast<std::uint32_t>(parameters.response_slot_delay) * 10U +
+            static_cast<std::uint32_t>(parameters.response_slot_spacing) *
+                parameters.response_slots;
         if (parameters.interval_min < 0x0006U ||
             parameters.interval_min > parameters.interval_max ||
             parameters.subevents == 0U || parameters.subevents > maximum_subevents ||
@@ -175,7 +182,10 @@ namespace nucode::ble
             parameters.response_slot_delay == 0U ||
             parameters.response_slot_spacing < 2U ||
             parameters.response_slots == 0U ||
-            parameters.response_slots > maximum_response_slots)
+            parameters.response_slots > maximum_response_slots ||
+            subevent_span > parameters.interval_min ||
+            response_span_eighths >
+                static_cast<std::uint32_t>(parameters.subevent_interval) * 10U)
         {
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;

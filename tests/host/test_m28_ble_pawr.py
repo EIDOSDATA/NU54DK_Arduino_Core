@@ -94,6 +94,9 @@ class M28BlePawrTests(unittest.TestCase):
             "maximum_subevents = 4U",
             "maximum_response_slots = 4U",
             "maximum_payload_length = 249U",
+            "subevent_interval = 48U",
+            "response_slot_delay = 8U",
+            "response_slot_spacing = 80U",
             "extern nucode::ble::Pawr BLEPawr",
         ):
             self.assertIn(token, header)

@@ -56,8 +56,11 @@ int main(int argc, char **argv)
         assert(BLEPawr.configureAdvertiser(advertising_set));
         assert(mock_periodic_parameters.num_subevents == 4U);
         assert(mock_periodic_parameters.num_response_slots == 4U);
-        assert(mock_periodic_parameters.subevent_interval == 16U);
-        assert(mock_periodic_parameters.response_slot_spacing == 32U);
+        assert(mock_periodic_parameters.interval_min == 0x0100U);
+        assert(mock_periodic_parameters.interval_max == 0x0100U);
+        assert(mock_periodic_parameters.subevent_interval == 48U);
+        assert(mock_periodic_parameters.response_slot_delay == 8U);
+        assert(mock_periodic_parameters.response_slot_spacing == 80U);
         for (std::uint8_t subevent = 0U; subevent < 4U; ++subevent)
         {
             const std::uint8_t payload[] = {subevent, 0xa5U};
@@ -121,6 +124,10 @@ int main(int argc, char **argv)
     else if (std::strcmp(scenario, "invalid_window_end") == 0)
     {
         const BLEAdvertisingSetHandle advertising_set = createAdvertisingSet();
+        BLEPawrAdvertisingParameters invalid_geometry{};
+        invalid_geometry.subevent_interval = 20U;
+        assert(!BLEPawr.configureAdvertiser(advertising_set, invalid_geometry));
+        assert(BLEDevice.lastError() == BLEError::invalid_argument);
         assert(BLEPawr.configureAdvertiser(advertising_set));
         std::array<std::uint8_t, 250> too_large{};
         assert(!BLEPawr.setSubeventData(advertising_set, 0U, too_large.data(),
