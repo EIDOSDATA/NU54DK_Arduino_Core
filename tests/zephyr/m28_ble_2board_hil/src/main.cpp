@@ -47,6 +47,7 @@ namespace
     constexpr std::int64_t secured_disconnect_delay_ms = 700;
     constexpr std::int64_t pawr_discovery_timeout_ms = 60000;
     constexpr std::int64_t pawr_response_window_ms = 35000;
+    constexpr std::int64_t privacy_scan_prepare_ms = 5000;
     constexpr std::int64_t protocol_timeout_ms = 240000;
 
     enum class Phase : std::uint8_t
@@ -55,6 +56,7 @@ namespace
         advertising,
         pawr_discovery,
         pawr_active,
+        privacy_wait,
         privacy_scan,
         privacy_rotation,
         privacy_settle,
@@ -106,9 +108,11 @@ namespace
     [[maybe_unused]] bool disconnect_pending = false;
     [[maybe_unused]] bool advertising_restart_pending = false;
     [[maybe_unused]] bool scan_restart_pending = false;
+    [[maybe_unused]] bool privacy_rotation_start_pending = false;
     [[maybe_unused]] bool privacy_rpa_restart_pending = false;
     [[maybe_unused]] bool privacy_transition_pending = false;
     [[maybe_unused]] std::int64_t privacy_rpa_restart_ms = 0;
+    [[maybe_unused]] std::int64_t privacy_rotation_start_ms = 0;
     [[maybe_unused]] std::int64_t privacy_transition_ms = 0;
     std::int64_t pending_action_ms = 0;
 
@@ -636,7 +640,9 @@ namespace
             return;
         }
         reportPawrPass("PERIPHERAL", pawr_response_count);
-        startPrivacyRotation();
+        phase = Phase::privacy_wait;
+        privacy_rotation_start_pending = true;
+        privacy_rotation_start_ms = k_uptime_get() + privacy_scan_prepare_ms;
     }
 
     /** @brief advertiser가 받은 PAwR response의 nonce와 위치를 검증합니다. */
@@ -959,6 +965,11 @@ namespace
             {
                 fail("privacy-readvertise");
             }
+        }
+        if (privacy_rotation_start_pending && now >= privacy_rotation_start_ms)
+        {
+            privacy_rotation_start_pending = false;
+            startPrivacyRotation();
         }
         if (privacy_rpa_restart_pending && now >= privacy_rpa_restart_ms)
         {

@@ -169,10 +169,13 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         self.assertIn("pawr_response_count < 99U", source)
         self.assertIn("pawr_discovery_timeout_ms = 60000", source)
         self.assertIn("pawr_response_window_ms = 35000", source)
+        self.assertIn("privacy_scan_prepare_ms = 5000", source)
         self.assertIn(
             "pawr_phase_deadline_ms = k_uptime_get() + pawr_response_window_ms;",
             source,
         )
+        self.assertIn("phase = Phase::privacy_wait;", source)
+        self.assertIn("privacy_rotation_start_pending = true;", source)
         self.assertLess(
             source.index("BLEPrivacy.setRotationTimeout(1U)"),
             source.index("startAdvertisingPhase();", source.index("void startProtocol()")),
