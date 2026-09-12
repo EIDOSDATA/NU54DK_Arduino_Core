@@ -33,7 +33,10 @@ void loop()
     static uint8_t sequence = 0U;
     BLEDevice.poll();
     periodicPayload[4] = sequence++;
-    static_cast<void>(BLEPeriodicAdvertising.setData(advertisingSet, periodicPayload,
-                                                     sizeof(periodicPayload)));
+    if (!BLEPeriodicAdvertising.setData(advertisingSet, periodicPayload,
+                                        sizeof(periodicPayload)))
+    {
+        Serial.println("periodic payload update failed");
+    }
     delay(1000);
 }

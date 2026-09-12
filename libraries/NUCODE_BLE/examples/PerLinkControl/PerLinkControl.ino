@@ -22,10 +22,26 @@ void onBleEvent(const nucode::ble::BLEEventInfo &information, void *context)
         {
             peripheralLink = information.connection;
         }
-        static_cast<void>(BLEConnection.requestPhy(information.connection, true));
-        static_cast<void>(BLEConnection.requestDataLength(information.connection));
-        static_cast<void>(BLEConnection.requestParameters(information.connection,
-                                                          24U, 40U, 0U, 400U));
+        const bool phyRequested = BLEConnection.requestPhy(information.connection, true);
+        const bool dataLengthRequested =
+            BLEConnection.requestDataLength(information.connection);
+        const bool parametersRequested =
+            BLEConnection.requestParameters(information.connection, 24U, 40U, 0U, 400U);
+        if (!phyRequested || !dataLengthRequested || !parametersRequested)
+        {
+            Serial.println("per-link control request failed");
+        }
+    }
+    else if (information.event == nucode::ble::BLEEvent::disconnected)
+    {
+        if (information.connection == centralLink)
+        {
+            centralLink = nucode::ble::BLEConnectionHandle{};
+        }
+        if (information.connection == peripheralLink)
+        {
+            peripheralLink = nucode::ble::BLEConnectionHandle{};
+        }
     }
     else if (information.event == nucode::ble::BLEEvent::remote_information_available)
     {

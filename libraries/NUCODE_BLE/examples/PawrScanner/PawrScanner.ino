@@ -12,9 +12,12 @@ void onScan(const nucode::ble::BLEScanResult &result, void *)
 {
     if (!periodicSync.valid() && result.extended && result.periodic_interval != 0U)
     {
-        static_cast<void>(BLEScan.stop());
-        static_cast<void>(BLEPeriodicAdvertising.createSync(result.address, result.sid,
-                                                            periodicSync));
+        if (!BLEScan.stop() ||
+            !BLEPeriodicAdvertising.createSync(result.address, result.sid, periodicSync))
+        {
+            Serial.println("PAwR sync request failed");
+            static_cast<void>(BLEScan.startExtended(false));
+        }
     }
 }
 
@@ -22,9 +25,12 @@ void onScan(const nucode::ble::BLEScanResult &result, void *)
 void onPeriodicReport(const nucode::ble::BLEPeriodicReport &report, void *)
 {
     const uint8_t response[] = {report.subevent, 0x5aU};
-    static_cast<void>(BLEPawr.sendResponse(report.sync, report.periodic_event_counter,
-                                          report.subevent, report.subevent, 0U,
-                                          response, sizeof(response)));
+    if (!BLEPawr.sendResponse(report.sync, report.periodic_event_counter,
+                              report.subevent, report.subevent, 0U,
+                              response, sizeof(response)))
+    {
+        Serial.println("PAwR response failed");
+    }
 }
 
 /** @brief sync 완료 뒤 0~3 subevent 수신을 설정합니다. */
@@ -33,8 +39,11 @@ void onEvent(const nucode::ble::BLEEventInfo &information, void *)
     if (information.event == nucode::ble::BLEEvent::periodic_sync_synchronized)
     {
         const uint8_t subevents[] = {0U, 1U, 2U, 3U};
-        static_cast<void>(BLEPawr.configureScanner(information.periodic_sync, subevents,
-                                                  sizeof(subevents)));
+        if (!BLEPawr.configureScanner(information.periodic_sync, subevents,
+                                      sizeof(subevents)))
+        {
+            Serial.println("PAwR scanner configure failed");
+        }
     }
 }
 
@@ -48,7 +57,10 @@ void setup()
     BLEDevice.onEventInfo(onEvent);
     BLEScan.onResult(onScan);
     BLEPeriodicAdvertising.onReport(onPeriodicReport);
-    static_cast<void>(BLEScan.startExtended(false));
+    if (!BLEScan.startExtended(false))
+    {
+        Serial.println("extended scan failed");
+    }
 }
 
 void loop()

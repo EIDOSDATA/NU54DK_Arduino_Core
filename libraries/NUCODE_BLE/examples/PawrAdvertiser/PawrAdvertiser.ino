@@ -42,8 +42,11 @@ void setup()
         }
     }
     BLEPawr.onResponse(onResponse);
-    static_cast<void>(BLEPeriodicAdvertising.start(advertisingSet));
-    static_cast<void>(BLEExtendedAdvertising.start(advertisingSet));
+    if (!BLEPeriodicAdvertising.start(advertisingSet) ||
+        !BLEExtendedAdvertising.start(advertisingSet))
+    {
+        Serial.println("PAwR advertiser start failed");
+    }
 }
 
 void loop()

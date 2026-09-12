@@ -12,9 +12,12 @@ void onScan(const nucode::ble::BLEScanResult &result, void *)
 {
     if (!periodicSync.valid() && result.extended && result.periodic_interval != 0U)
     {
-        static_cast<void>(BLEScan.stop());
-        static_cast<void>(BLEPeriodicAdvertising.createSync(result.address, result.sid,
-                                                            periodicSync));
+        if (!BLEScan.stop() ||
+            !BLEPeriodicAdvertising.createSync(result.address, result.sid, periodicSync))
+        {
+            Serial.println("periodic sync request failed");
+            static_cast<void>(BLEScan.startExtended(false));
+        }
     }
 }
 
@@ -26,7 +29,10 @@ void setup()
         return;
     }
     BLEScan.onResult(onScan);
-    static_cast<void>(BLEScan.startExtended(false));
+    if (!BLEScan.startExtended(false))
+    {
+        Serial.println("extended scan failed");
+    }
 }
 
 void loop()
