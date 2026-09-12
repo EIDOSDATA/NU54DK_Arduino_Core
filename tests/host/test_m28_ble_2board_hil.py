@@ -22,6 +22,7 @@ APPLICATION_CONFIG = (
     / "m28_ble_2board_hil"
     / "prj.conf"
 )
+PAIR_RUNNER_COMMON = HIL_DIRECTORY / "ble_pair_hil_common.py"
 if str(HIL_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(HIL_DIRECTORY))
 
@@ -217,6 +218,28 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             ["--peripheral-board-id", "a" * 32, "--central-board-id", "b" * 32]
         )
         self.assertEqual("pyocd-sector", arguments.flash_backend)
+
+    def test_each_role_discards_only_pre_flash_uart_bytes(self) -> None:
+        """! @brief 각 image 기록 직전의 이전 실행 UART만 폐기합니다. """
+
+        source = PAIR_RUNNER_COMMON.read_text(encoding="utf-8")
+        pyocd_branch = source.index('if flash_backend == "pyocd-sector":')
+        msd_branch = source.index("else:", pyocd_branch)
+        wait_ready = source.index("deadline = time.monotonic()", msd_branch)
+        for branch_start, branch_end in (
+            (pyocd_branch, msd_branch),
+            (msd_branch, wait_ready),
+        ):
+            branch = source[branch_start:branch_end]
+            peripheral_reset = branch.index(
+                'ports["peripheral"].reset_input_buffer()'
+            )
+            peripheral_flash = branch.index('flashes["peripheral"] =')
+            central_reset = branch.index('ports["central"].reset_input_buffer()')
+            central_flash = branch.index('flashes["central"] =')
+            self.assertLess(peripheral_reset, peripheral_flash)
+            self.assertLess(peripheral_flash, central_reset)
+            self.assertLess(central_reset, central_flash)
 
 
 if __name__ == "__main__":

@@ -518,12 +518,14 @@ def execute_pair(
                 ports[role].reset_input_buffer()
 
             if flash_backend == "pyocd-sector":
+                ports["peripheral"].reset_input_buffer()
                 flashes["peripheral"] = flash_image_pyocd(
                     "peripheral",
                     peripheral_endpoint.board_id,
                     peripheral_image,
                     flash_timeout,
                 )
+                ports["central"].reset_input_buffer()
                 flashes["central"] = flash_image_pyocd(
                     "central",
                     central_endpoint.board_id,
@@ -531,6 +533,7 @@ def execute_pair(
                     flash_timeout,
                 )
             else:
+                ports["peripheral"].reset_input_buffer()
                 flashes["peripheral"] = flash_image(
                     milestone,
                     "peripheral",
@@ -538,6 +541,7 @@ def execute_pair(
                     peripheral_image,
                     flash_timeout,
                 )
+                ports["central"].reset_input_buffer()
                 flashes["central"] = flash_image(
                     milestone,
                     "central",
