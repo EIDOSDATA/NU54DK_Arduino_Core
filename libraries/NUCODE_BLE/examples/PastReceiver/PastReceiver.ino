@@ -66,6 +66,9 @@ void loop()
     if (restartAdvertising && !BLEConnection.connected(senderLink))
     {
         restartAdvertising = false;
-        static_cast<void>(BLEAdvertising.start());
+        if (!BLEAdvertising.start())
+        {
+            Serial.println("PAST receiver advertising restart failed");
+        }
     }
 }

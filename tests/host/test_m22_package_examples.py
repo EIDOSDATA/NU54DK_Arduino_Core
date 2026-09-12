@@ -115,6 +115,8 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "PerLinkControl",
                 "PeriodicAdvertiser",
                 "PeriodicScanner",
+                "PastSender",
+                "PastReceiver",
                 "PrivacyPeripheral",
             )
         }

@@ -1,0 +1,6 @@
+ÿmÿúÿÿÿÿ#ÿÿÿ$ýþÿWÿ[ÿWÿÿÿ'ÿÿ)ÿÿ%ÿÿ[ÿ-ÿ[ÿ5ÿÿ7ÿÿÿÿk­&ÿ]ÿ·ÿÿ{ÿÿOUýÛÿÿÿÿ-ÿVÿÿMWÿÿ)ÿ)ÿWÿÿc³`yÕÿÿÿ;ýÿÿÿMûÿýÿ?ÿÿÿÿOÿ·ÿoþ{ÿÿþ}ûþÿÿÿÿÿÿ[ûÿÿÿÿû·ûÿ5ÿ.[oûÿûUýÿÿÿþ{ûÿÿûOÿKÿÿÿÿÿoýMÿýÿ5ÿÿÿMÿÿ-ÿ-ÿÿÿÿýÿ/ÿþ[_ýÿ[ýÿÿÿÿÿ/=ÿ/O5ÿÿ[7ÿÿÿûÿkÿ=ÿÿ{ÿjÿÿUýÿÿ;ýÿ/oÿÿÿÿ{OÿWýÿ=ýýÿoýÿÿ{ÿÿÿMÿÿý=ÿ5ýÿ_
+ÿGÿÿÿ-ÿÿÿ•*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M28B3_READY:role=mixed:test=PER
+NUCODE_M28B3_mixed:ADVERTISE:PASS:test=PER:nonce=240a7aeb4540fca7a43088456dcf5320
+NUCODE_M28B3_FAIL:role=mixed:test=PER:reason=periodic-source-scan:nonce=240a7aeb4540fca7a43088456dcf5320

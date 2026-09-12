@@ -104,8 +104,9 @@ disconnect, readvertise와 explicit reconnect를 검증합니다. USB 두 개는
 flash·UART evidence 수집에 사용합니다. Runner의 128-bit nonce 전체에서 service UUID를 만들고
 central이 이를 exact filter하므로 두 transcript가 같은 실제 RF fixture를 만났음을 결합합니다.
 
-## M28 전환 경계
+## M28 개발 결과와 공개 경계
 
-v0.5.0의 multi-role/link, extended·periodic advertising, PAwR와 privacy는
-[M28 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서
-준비한다. 현재 v0.4.1의 연결 1개·legacy 31-byte 계약은 M28 구현·실기 완료 전까지 유지한다.
+v0.5.0 개발 source의 multi-role/link, extended·periodic advertising, PAwR와 privacy는
+[M28 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)의 W01~W08과
+9개 test ID를 완료했다. 현재 설치·지원 v0.4.1의 연결 1개·legacy 31-byte 계약은 새 release가
+공개되기 전까지 그대로 유지한다.

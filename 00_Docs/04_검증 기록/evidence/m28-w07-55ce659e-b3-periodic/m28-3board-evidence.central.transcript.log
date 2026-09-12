@@ -1,0 +1,4 @@
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M28B3_READY:role=central:test=PER
+NUCODE_M28B3_FAIL:role=central:test=PER:reason=periodic-final-counts:nonce=c5e00b7c979bf1989bfb569014cb2e91

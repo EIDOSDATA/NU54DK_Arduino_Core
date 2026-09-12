@@ -37,6 +37,9 @@ PRIVACY_CONTROL_CONFIG_PATH = (
 TWO_BOARD_CONFIG_PATH = (
     REPOSITORY / "tests" / "zephyr" / "m28_ble_2board_hil" / "prj.conf"
 )
+THREE_BOARD_CONFIG_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_3board_hil" / "prj.conf"
+)
 
 
 class M28ReadinessTests(unittest.TestCase):
@@ -56,8 +59,8 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertEqual(self.readiness["schema_version"], 2)
         self.assertEqual(self.readiness["milestone"], "M28")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "implementation")
-        self.assertEqual(self.readiness["milestone_status"], "in_progress")
+        self.assertEqual(self.readiness["phase"], "verification_complete")
+        self.assertEqual(self.readiness["milestone_status"], "completed")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertEqual(baseline["ncs_revision"], self.lock["ncs"]["revision"])
         self.assertEqual(baseline["zephyr_revision"], self.lock["zephyr"]["revision"])
@@ -97,9 +100,9 @@ class M28ReadinessTests(unittest.TestCase):
         for entry in capabilities:
             self.assertEqual(entry["source_status"], "candidate", entry["id"])
             self.assertEqual(entry["runtime_hci_status"], "passed", entry["id"])
-            self.assertIn(
+            self.assertEqual(
                 entry["implementation_status"],
-                {"not_started", "baseline_partial", "host_target_passed"},
+                "host_target_hil_passed",
                 entry["id"],
             )
             self.assertGreater(len(entry["required_kconfig"]), 0, entry["id"])
@@ -149,9 +152,34 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertEqual(link["criteria"]["simultaneous_connections"], 2)
         self.assertEqual(link["criteria"]["payload_loss"], 0)
         self.assertEqual(link["criteria"]["stale_link_events"], 0)
-        self.assertEqual(self.readiness["equipment"]["availability"], "partial")
+        self.assertEqual(
+            self.readiness["equipment"]["availability"],
+            "complete_for_m28",
+        )
         self.assertEqual(self.readiness["equipment"]["required"]["nu54dk_boards"], 3)
-        self.assertEqual(self.readiness["equipment"]["observed"]["nu54dk_boards"], 2)
+        self.assertEqual(self.readiness["equipment"]["observed"]["nu54dk_boards"], 3)
+        self.assertEqual(
+            self.readiness["equipment"]["observed"]["independent_usb_dap_uart_paths"],
+            3,
+        )
+        self.assertEqual(
+            self.readiness["equipment"]["observed"]["packet_trace_receivers"],
+            "three_node_receiver_validated_sequence",
+        )
+
+    def test_all_execution_results_are_passed_and_have_existing_evidence(self) -> None:
+        """! @brief 아홉 시험의 PASS가 실제 보존 증거를 빠짐없이 가리키게 합니다. """
+
+        for entry in self.readiness["execution_plan"]:
+            self.assertEqual(entry["status"], "passed", entry["id"])
+            self.assertGreater(len(entry["evidence_files"]), 0, entry["id"])
+            for evidence in entry["evidence_files"]:
+                path = REPOSITORY / evidence
+                self.assertTrue(path.is_file(), f"{entry['id']}: {path}")
+                if path.suffix == ".json":
+                    document = json.loads(path.read_text(encoding="utf-8"))
+                    self.assertEqual(document["status"], "passed", path)
+                    self.assertRegex(document["core_revision"], r"^[0-9a-f]{40}$", path)
 
     def test_work_packages_and_documents_form_a_complete_preparation_index(self) -> None:
         """! @brief 8개 작업 묶음과 현행 문서의 M28 상태 연결을 검사합니다. """
@@ -165,7 +193,8 @@ class M28ReadinessTests(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             self.assertIn("m28-ble-readiness.json", text)
             self.assertIn("M28-CAP-01", text)
-            self.assertIn("NOT RUN", text)
+            self.assertIn("8/8", text)
+            self.assertIn("M29", text)
 
     def test_w01_is_completed_only_with_exact_hardware_capability(self) -> None:
         """! @brief W01 완료가 Host·build·실제 HCI와 exact revision을 모두 가리키게 합니다. """
@@ -193,7 +222,7 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertTrue(w02["completed"])
         self.assertEqual(w02["host_contract_tests"], "passed")
         self.assertEqual(w02["target_build"], "passed")
-        self.assertEqual(w02["physical_hil"], "deferred_to_M28-W07")
+        self.assertEqual(w02["physical_hil"], "passed_by_M28-LINK-01")
         for path in w02["paths"].values():
             self.assertTrue((REPOSITORY / path).exists(), path)
         link_config = LINK_CONFIG_PATH.read_text(encoding="utf-8")
@@ -204,7 +233,7 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertTrue(w03["completed"])
         self.assertEqual(w03["host_contract_tests"], "passed")
         self.assertEqual(w03["target_build"], "passed")
-        self.assertEqual(w03["physical_hil"], "deferred_to_M28-W07")
+        self.assertEqual(w03["physical_hil"], "passed_by_M28-ADV-01")
         for path in w03["paths"].values():
             self.assertTrue((REPOSITORY / path).exists(), path)
         extended_config = EXTENDED_CONFIG_PATH.read_text(encoding="utf-8")
@@ -216,9 +245,7 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertTrue(w04["completed"])
         self.assertEqual(w04["host_contract_tests"], "passed")
         self.assertEqual(w04["target_build"], "passed")
-        self.assertEqual(
-            w04["physical_hil"], "three_board_past_deferred_to_M28-W07"
-        )
+        self.assertEqual(w04["physical_hil"], "passed_by_M28-PER-01")
         for path in w04["paths"].values():
             self.assertTrue((REPOSITORY / path).exists(), path)
         periodic_config = PERIODIC_CONFIG_PATH.read_text(encoding="utf-8")
@@ -235,7 +262,7 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertTrue(w05["completed"])
         self.assertEqual(w05["host_contract_tests"], "passed")
         self.assertEqual(w05["target_build"], "passed")
-        self.assertEqual(w05["physical_hil"], "two_board_pawr_deferred_to_M28-W07")
+        self.assertEqual(w05["physical_hil"], "passed_by_M28-PAWR-01")
         for path in w05["paths"].values():
             self.assertTrue((REPOSITORY / path).exists(), path)
         pawr_config = PAWR_CONFIG_PATH.read_text(encoding="utf-8")
@@ -255,7 +282,7 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertEqual(w06["target_build"], "passed")
         self.assertEqual(
             w06["physical_hil"],
-            "two_and_three_board_control_deferred_to_M28-W07",
+            "passed_by_M28-PRIV-01_and_M28-CTRL-01",
         )
         for path in w06["paths"].values():
             self.assertTrue((REPOSITORY / path).exists(), path)
@@ -269,12 +296,13 @@ class M28ReadinessTests(unittest.TestCase):
         ):
             self.assertIn(setting, privacy_control_config)
         w07 = statuses[6]
-        self.assertEqual(w07["status"], "in_progress")
-        self.assertFalse(w07["completed"])
-        self.assertEqual(w07["host_parser_tests"], "passed_10_of_10")
-        self.assertEqual(w07["target_build"], "passed_2_of_2")
-        self.assertEqual(w07["two_board_hil"], "not_run")
-        self.assertEqual(w07["three_board_hil"], "not_run")
+        self.assertEqual(w07["status"], "completed")
+        self.assertTrue(w07["completed"])
+        self.assertEqual(w07["host_parser_tests"], "passed_29_of_29")
+        self.assertEqual(w07["target_build"], "passed_14_of_14")
+        self.assertEqual(w07["legacy_regression_hil"], "passed_3_of_3")
+        self.assertEqual(w07["two_board_hil"], "passed_3_of_3")
+        self.assertEqual(w07["three_board_hil"], "passed_4_of_4")
         for path in w07["paths"].values():
             self.assertTrue((REPOSITORY / path).exists(), path)
         two_board_config = TWO_BOARD_CONFIG_PATH.read_text(encoding="utf-8")
@@ -289,16 +317,32 @@ class M28ReadinessTests(unittest.TestCase):
             "CONFIG_BT_SETTINGS=y",
         ):
             self.assertIn(setting, two_board_config)
+        three_board_config = THREE_BOARD_CONFIG_PATH.read_text(encoding="utf-8")
+        for setting in (
+            "CONFIG_BT_MAX_CONN=2",
+            "CONFIG_BT_EXT_ADV=y",
+            "CONFIG_BT_PER_ADV=y",
+            "CONFIG_BT_PER_ADV_SYNC=y",
+            "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
+            "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y",
+        ):
+            self.assertIn(setting, three_board_config)
+        w08 = statuses[7]
+        self.assertEqual(w08["status"], "completed")
+        self.assertTrue(w08["completed"])
+        for path in w08["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
         progress = self.readiness["progress"]
-        self.assertEqual(progress["completed_work_packages"], 6)
+        self.assertEqual(progress["completed_work_packages"], 8)
         self.assertEqual(progress["total_work_packages"], 8)
-        self.assertEqual(progress["percent"], 75.0)
-        self.assertEqual(progress["current_work_package"], "M28-W07")
+        self.assertEqual(progress["percent"], 100.0)
+        self.assertIsNone(progress["current_work_package"])
+        self.assertEqual(progress["next_milestone"], "M29")
         self.assertEqual(
             self.readiness["not_yet_claimed"],
             [
-                "full M28 production BLE implementation",
-                "full M28 physical HIL PASS",
+                "v0.5.0 release",
+                "mobile and desktop cross-vendor interoperability",
                 "Bluetooth qualification",
             ],
         )

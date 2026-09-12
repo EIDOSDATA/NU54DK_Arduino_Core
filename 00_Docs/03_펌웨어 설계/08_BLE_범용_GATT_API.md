@@ -117,9 +117,10 @@ rediscovery/resubscribe를 검증합니다. Peripheral은 runner의 128-bit nonc
 central이 첫 read에서 전체 binary challenge를 exact 비교하므로 같은 service UUID를 쓰는 주변의
 stale/병렬 보드가 있어도 서로 다른 peer transcript를 하나의 PASS로 결합하지 않습니다.
 
-## M28 전환 경계
+## M28 회귀 결과와 M29 전환 경계
 
-M28은 GATT client session과 remote handle·subscription을 generation이 포함된 link handle별로
-분리해야 한다. 현재 v0.4.1의 단일 connection session은 그대로 지원하며, Kconfig 연결 수만 늘려
-GATT 상태를 공유하는 구현은 [M28 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서
-금지한다.
+M28은 기존 단일-link GATT server/client를 M20 회귀에서 PASS하고 3보드 LINK 확인용 GATT
+`LINK_UP`을 사용했다. Local central client와 실제 subscribe한 incoming server link를 구분하지만,
+두 link의 임의 동시 GATT operation을 M28 지원으로 주장하지 않는다. Generation별 client session,
+remote handle·subscription과 long/reliable·cache·CoC 확장은 M29에서 고정 자원·상호운용 시험과
+함께 계약한다. 현재 설치·지원 v0.4.1의 단일 connection session은 그대로 유지한다.

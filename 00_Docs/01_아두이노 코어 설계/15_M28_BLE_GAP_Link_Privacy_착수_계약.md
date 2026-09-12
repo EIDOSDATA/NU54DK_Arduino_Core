@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | M28-BLE-READINESS-001 |
-| 문서 개정 | 1.5 |
+| 문서 개정 | 1.6 |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **M28-W01~W06 완료 / W07 착수 / 진행률 6/8, 75.0%** |
+| 현재 상태 | **M28-W01~W08 완료 / 진행률 8/8, 100.0%** |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, SoftDevice Controller multirole |
 | 최종 갱신일 | 2026-09-12 |
 | 기계 판정 원본 | [`m28-ble-readiness.json`](../../variants/nu54dk/m28-ble-readiness.json) |
@@ -16,14 +16,14 @@ M28은 v0.4.1의 단일 링크·legacy advertising 계약을 보존하면서 다
 `v0.5.0` 첫 구현 마일스톤이다.
 
 - central 1개와 peripheral 1개를 동시에 유지하는 **2-link mixed-role**
-- link별 handle·event·GATT client·security·MTU/PHY/parameter 상태
+- link별 handle·event·MTU/PHY/DLE/parameter/remote-info 상태
 - extended advertising/scanning, periodic advertising/sync와 PAST
 - PAwR advertiser/scanner
 - privacy/RPA와 link별 제어·오류·자원 회수
 
-이 문서와 JSON은 구현 순서·자원 상한·유한 시험 기준을 고정하는 준비 산출물이다. 정적 NCS
+이 문서와 JSON은 구현 순서·자원 상한·유한 시험 기준과 완료 evidence를 고정한다. 정적 NCS
 source에 API와 controller 후보가 있다는 사실은 NU54DK image의 HCI 지원, Core 구현 또는 RF
-PASS가 아니다. 아래 `NOT RUN` 항목을 실행하지 않은 상태에서 M28을 완료로 표시하지 않는다.
+PASS가 아니다. M28 완료 판정은 아래 9개 test ID의 실제 PASS를 각각 연결한 결과다.
 
 ## 2. 고정 기준선
 
@@ -36,7 +36,7 @@ PASS가 아니다. 아래 `NOT RUN` 항목을 실행하지 않은 상태에서 M
 | Windows Toolchain | bundle `dcbdc366a1` | lock과 로컬 manifest 일치 확인 |
 | 보드 submodule | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` | 임의 수정 금지 |
 | 현재 BLE 연결 상한 | 2 | `CONFIG_BT_MAX_CONN=2`, central/peripheral 역할 고정 slot 각 1개 |
-| 현재 광고 형식 | legacy 31 byte + extended 255 byte | periodic set은 미구현 |
+| 현재 광고 형식 | legacy 31 byte + extended 255 byte | periodic/PAwR 포함, 고정 set 1개 |
 
 `BLEDevice`, `BLEAdvertising`, `BLEScan`, `BLEConnection`은 v0.4.1 호환 symbol로 유지한다.
 W02에서 `maximumConnections()==2`와 역할 고정 connection slot을 구현했으며 Kconfig 숫자만
@@ -49,12 +49,12 @@ image의 실제 HCI 결과는 별도 열에 두며, 어느 쪽도 production API
 
 | 기능군 | 정적 근거 | W01 실제 HCI | 남은 production 판정 |
 | --- | --- | --- | --- |
-| Multi-role/link | `BT_MAX_CONN`, SDC peripheral count, multirole controller 변형 | **PASS** | 동시 2-link 구현·실기 NOT RUN |
-| Extended advertising/scanning | `BT_EXT_ADV`, `bt_le_ext_adv_*`, SDC Advertising Extensions | **PASS** | public API·Host·target PASS, 255-byte RF 실기 NOT RUN |
-| Periodic advertising/sync·PAST | `BT_PER_ADV*`, sync-transfer sender/receiver API | **PASS** | public API·Host·target PASS, report·PAST 3보드 실기 NOT RUN |
-| PAwR | `BT_PER_ADV_RSP`, `BT_PER_ADV_SYNC_RSP`, SDC PAwR advertiser/scanner | **PASS** | buffer·subevent/slot RF 실기 NOT RUN |
-| Privacy/RPA | Zephyr host `BT_PRIVACY`, controller privacy | **PASS** | bond identity·RPA 회전·재연결 NOT RUN |
-| Per-link control | 기존 MTU/PHY/parameter/tx-power + DLE/remote-info API | **PASS** | 두 링크 격리·DLE·remote-info 실기 NOT RUN |
+| Multi-role/link | `BT_MAX_CONN`, SDC peripheral count, multirole controller 변형 | **PASS** | Host·target와 3보드 동시 2-link/reconnect/soak PASS |
+| Extended advertising/scanning | `BT_EXT_ADV`, `bt_le_ext_adv_*`, SDC Advertising Extensions | **PASS** | Host·target와 255-byte RF report 100개 PASS |
+| Periodic advertising/sync·PAST | `BT_PER_ADV*`, sync-transfer sender/receiver API | **PASS** | Host·target와 3보드 report 1,000개·PAST 20/20 PASS |
+| PAwR | `BT_PER_ADV_RSP`, `BT_PER_ADV_SYNC_RSP`, SDC PAwR advertiser/scanner | **PASS** | Host·target와 4 subevent × 4 slot RF PASS |
+| Privacy/RPA | Zephyr host `BT_PRIVACY`, controller privacy | **PASS** | Host·target와 RPA 3회·bonded reconnect 20/20 PASS |
+| Per-link control | 기존 MTU/PHY/parameter/tx-power + DLE/remote-info API | **PASS** | Host·target와 두 링크 × 20회 제어 격리 PASS |
 
 정적 근거 경로와 필요한 Kconfig의 단일 기계 원본은
 [`m28-ble-readiness.json`](../../variants/nu54dk/m28-ble-readiness.json)에 둔다. 고정 SDK를
@@ -69,7 +69,8 @@ image의 실제 HCI 결과는 별도 열에 두며, 어느 쪽도 production API
 
 1. Link는 slot 번호만이 아니라 **generation을 포함한 불투명 handle**로 식별한다.
 2. 새 상세 event는 link handle을 포함한다. 기존 callback은 호환 view로 남긴다.
-3. GATT discovery/subscription, security/bond 관측, MTU/PHY/DLE/parameter 상태는 link별로 둔다.
+3. GAP 연결과 MTU/PHY/DLE/parameter/remote-info 상태는 link별로 둔다. 기존 GATT/security는
+   회귀하고 다중 link 확장은 각각 M29/M30에서 계약한다.
 4. `struct bt_conn *`와 Zephyr type은 공개 Arduino 헤더에 노출하지 않는다.
 5. Disconnect/end 뒤 이전 generation의 callback은 새 link로 전달하지 않는다.
 
@@ -85,7 +86,7 @@ periodic sync, queue와 payload buffer는 compile-time 상한을 가진 고정 s
 
 다음 구현은 금지한다.
 
-- `CONFIG_BT_MAX_CONN`만 늘리고 singleton GATT/security/connection 상태를 공유
+- `CONFIG_BT_MAX_CONN`만 늘리고 singleton connection/link-control 상태를 공유
 - Bluetooth callback에서 사용자 callback 직접 호출 또는 heap 할당
 - Disconnect 직후 slot을 generation 변경 없이 재사용
 - HCI 미조회 기능이나 peer 미지원 결과를 PASS·지원으로 표기
@@ -137,7 +138,7 @@ MTU 요청은 고정 4개 context에 generation handle을 보존하여 이전 li
 전달하지 않는다. 실제 production GAP source를 사용한 Host lifecycle 13개 시나리오와 W02 source
 계약 5개, `nucode.m28.ble_link_contract` target 1/1 build가 PASS했다. `MixedRoleLinks` 예제는
 central 연결 뒤 peripheral 광고를 시작하고 상세 event로 두 handle을 분리한다. 실제 mixed-role RF
-PASS는 W07의 `M28-LINK-01`에서만 판정한다.
+PASS는 W07의 `M28-LINK-01`에서 실제 3보드 동시 2-link와 재연결로 판정했다.
 
 ### 5.3 M28-W03 확장 광고·스캔 결과
 
@@ -150,7 +151,7 @@ Production profile은 extended advertising set 1개와 controller 광고 payload
 TX power, periodic interval과 primary/secondary PHY를 함께 전달한다. Production source Host 수명
 시나리오 4개와 정적 경계 검사, 고정 NCS의 `nucode.m28.ble_extended_contract` target 1/1 build가
 warning 없이 PASS했다. `ExtendedAdvertising`·`ExtendedScanner` 예제를 함께 추가했다. 실제
-255-byte RF report 100개 판정은 W07의 `M28-ADV-01` 전까지 `NOT RUN`이다.
+255-byte RF report 100개는 W07의 `M28-ADV-01`에서 PASS했다.
 
 ### 5.4 M28-W04 periodic sync·PAST 결과
 
@@ -161,8 +162,9 @@ Periodic advertiser는 W03 extended set 하나에 결합하고, periodic sync는
 PAST sender의 sync/set transfer와 receiver subscribe/unsubscribe는 현재 `BLEConnectionHandle`을
 요구한다. Receiver는 구독된 현재 link에서 전달된 sync만 고정 slot에 할당한다. Production Host
 수명 시나리오 4개와 정적 계약, 고정 NCS의 `nucode.m28.ble_periodic_contract` target 1/1 build가
-warning 없이 PASS했고 `PeriodicAdvertiser`·`PeriodicScanner` 예제를 추가했다. 3-node PAST와
-periodic report RF 판정은 W07의 `M28-PER-01`까지 `NOT RUN`이다.
+warning 없이 PASS했고 `PeriodicAdvertiser`·`PeriodicScanner`·`PastSender`·`PastReceiver` 예제를
+추가했다. 3-node PAST와
+periodic report 1,000개와 PAST 20/20은 W07의 `M28-PER-01`에서 PASS했다.
 
 ### 5.5 M28-W05 PAwR advertiser·scanner 결과
 
@@ -174,7 +176,7 @@ Controller callback data는 고정 storage와 8-entry response queue에 값으�
 `Device::end()`는 callback보다 먼저 context를 무효화하여 이전 request/response가 새 set·sync로
 전달되지 않게 한다. Production Host 시나리오 4개와 정적 계약, 고정 NCS의
 `nucode.m28.ble_pawr_contract` target 1/1 build가 warning 없이 PASS했고 `PawrAdvertiser`와
-`PawrScanner` 예제를 추가했다. 실제 PAwR RF 판정은 W07의 `M28-PAWR-01`까지 `NOT RUN`이다.
+`PawrScanner` 예제를 추가했다. 실제 PAwR RF 판정은 W07의 `M28-PAWR-01`에서 PASS했다.
 
 ### 5.6 M28-W06 privacy·RPA·per-link control 결과
 
@@ -187,18 +189,30 @@ DLE와 remote-info callback은 stack pointer가 현재 active slot과 일치할 
 변환한다. Public API는 handle별 actual parameter, DLE 송수신 값, remote LL version·manufacturer·
 subversion·8-byte LE feature를 값으로 복사한다. Host 수명 시나리오 5개와 정적 계약, 고정 NCS의
 `nucode.m28.privacy_control` target 1/1 build가 warning 없이 PASS했고 `PrivacyPeripheral`·
-`PerLinkControl` 예제를 추가했다. 실제 RPA/bond와 동시 2-link control은 W07까지 `NOT RUN`이다.
+`PerLinkControl` 예제를 추가했다. 실제 RPA/bond는 `M28-PRIV-01`, 동시 2-link control은
+`M28-CTRL-01`에서 PASS했다.
 
-### 5.7 M28-W07 2보드 자동화 준비
+### 5.7 M28-W07 2·3보드 HIL 결과
 
-두 role image는 한 실행에서 255-byte extended advertising, 4 subevent × 4 response slot PAwR,
-초기 RPA와 세 번 회전한 주소, Just Works bond와 20회 재연결을 순서대로 수행한다. `M28B2`
-protocol은 128-bit nonce와 role별 고정 record를 사용하며 Host parser가 누락·중복·순서·수치·
-stale·FAIL을 닫는다. Parser 10/10과 고정 NCS peripheral/central build 2/2가 warning 없이 PASS했다.
+두 role `M28B2` image는 255-byte extended advertising, 4 subevent × 4 response slot PAwR,
+RPA 3회, Just Works bond와 20회 재연결을 순서대로 수행했다. 세 role `M28B3` image는 mixed-role
+2-link, periodic/PAST, link별 제어와 1,800초 soak를 서로 분리해 수행했다. 두 protocol은 128-bit
+nonce와 role별 고정 record를 사용하며 Host parser가 누락·중복·순서·수치·stale·FAIL을 닫는다.
+Parser 29/29와 role/test target 14/14가 PASS했고 두 보드 3/3, 세 보드 4/4, 기존 M19~M21 회귀 3/3이
+실제 HIL에서 PASS했다.
 
-이 결과는 2보드 RF PASS가 아니다. Exact clean commit image로 `M28-ADV-01`, `M28-PAWR-01`,
-`M28-PRIV-01`을 실행하고 기존 M19~M21로 `M28-REG-01`을 채우기 전까지 네 test ID는 `NOT RUN`이다.
-3보드에서는 이 기능을 반복하지 않고 두 link 동시 조건 네 개만 실행한다.
+LINK 재검증에서는 callback만 도착하고 peer가 취소한 half-connection을 성공으로 세던 문제를
+찾았다. Connection role 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도를
+추가한 뒤 exact `289e3d10…` 같은 조건에서 20회·1,000 sequence를 오류 없이 PASS했다. 실패
+transcript·CMSIS-DAP 진단·수정 순서는
+[140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
+
+### 5.8 M28-W08 문서·지원표·인계
+
+Readiness JSON의 여섯 정적 source 판정은 `candidate`로 유지하면서 implementation/HIL 상태만
+완료로 올렸다. 현행 TODO·로드맵·HIL 안내·인계 문서와 9개 test evidence를 연결했다. 첫 공개
+자원 경계는 총 2-link, 역할별 1-link, advertising set 1개, periodic sync 1개와 고정 storage다.
+M29는 ATT/GATT·L2CAP, M30은 security/profile 확장을 별도 계약으로 다룬다.
 
 ## 6. 유한 시험 계약
 
@@ -223,10 +237,9 @@ Periodic/PAwR 수신률은 통제된 bench 조건과 packet trace로 분모를 �
 
 ## 7. 장비와 실행 전 확인
 
-필수 구성은 NU54DK 3개, 독립 USB/DAP/UART 경로 3개와 packet trace 수단 1개다. Android,
-iOS, Windows와 Linux peer는 각 OS/version과 adapter를 기록해 상호운용 표를 채운다. W01에서
-보드·DAP/UART 2경로를 확인했으며 **3번째 경로와 packet trace는 미확인**이다. 장비가 없으면
-관련 시험은 `NOT RUN`이다.
+필수 구성인 NU54DK 3개와 독립 USB/DAP/UART 3경로를 W07에서 확인했다. Packet 분모는 세 UART와
+수신측 GATT/periodic sequence·payload hash를 동일 nonce로 결합했다. Android, iOS, Windows와
+Linux peer 상호운용 및 외부 sniffer air capture는 M28 완료 증거에 포함하지 않는다.
 
 실기 전에는 다음을 확인한다.
 
@@ -246,14 +259,14 @@ unlock·recover·mass erase를 사용하지 않는다.
 | P02 M28 정적 capability 원장 | **완료** |
 | P02 실제 HCI capability | **exact `78078a42…` 실기 6/6 PASS** |
 | P03 공개 API·profile 경계 | **준비 계약 완료** |
-| P04 시험 구성 | **계획 고정 / 보드·DAP/UART 2/3 확인, packet trace 미확인** |
+| P04 시험 구성 | **M28 보드·DAP/UART 3/3, receiver-validated trace 확인** |
 | P05 수치 합격 기준 | **M28 9개 test ID 고정** |
 | P06 실행 목록 | **M28-W01~W08 고정** |
 
-따라서 M28 진행률은 **6/8 작업 묶음, 75.0%**다. 다음 작업은 `M28-W07`이다. 2보드에서
-`M28-REG-01`, `M28-ADV-01`, `M28-PAWR-01`, `M28-PRIV-01`을 먼저 실행하고, 3보드에서는 중복
-기능시험 없이 `M28-LINK-01`, `M28-PER-01`, `M28-CTRL-01`, `M28-SOAK-01`의 동시 조건만
-실행한다. W01~W06 PASS는 W07~W08이나 전체 M28 PASS가 아니다.
+따라서 M28 진행률은 **8/8 작업 묶음, 100.0%**다. 2보드 `REG/ADV/PAWR/PRIV`와 3보드
+`LINK/PER/CTRL/SOAK`, W01 `CAP`의 9개 test ID가 모두 PASS했다. 다음 작업은 M29의 ATT/GATT·
+L2CAP 범위·자원·시험 계약 확정이다. M28 완료를 v0.5.0 공개·cross-vendor 상호운용·Bluetooth
+qualification 완료로 확대하지 않는다.
 
 준비 계약 검사는 다음으로 실행한다.
 

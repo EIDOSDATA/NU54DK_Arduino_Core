@@ -11,8 +11,8 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 2.8 |
-| 문서 상태 | 고정 source 비교, M23~M27 완료 경계와 M28~M33 계획·착수 조건 |
+| 문서 개정 | 2.9 |
+| 문서 상태 | 고정 source 비교, M23~M28 완료 경계와 M29~M33 계획·착수 조건 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.4.1` stable / release source `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -28,8 +28,7 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 `목표`와 `계획`은 공개 지원 선언이 아니다. 완료 단계와 제품 순서는
 [Master roadmap](02_구현_로드맵.md)이 소유한다.
 
-M28은 **진행 중이며 W01 Host·target·실제 HCI 6/6 완료, W02 착수**, M29~M33은
-**계획·구현 미착수**다. M28의 기능 지원성·
+M28은 **W01~W08과 9개 test ID를 완료**했고 M29~M33은 **계획·구현 미착수**다. M28의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 준비 문서를 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
@@ -405,15 +404,15 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 - nRF54L15·고정 NCS의 controller Kconfig, host API와 board 경계를 대조한 machine-readable
   [BLE readiness 원장](../../variants/nu54dk/m28-ble-readiness.json)을 준비했다. `M28-W01`의
-  capability image·`M28CAP/1` parser·target build와 actual HCI 6/6을 완료했다. 정적
-  `candidate`와 runtime HCI PASS를 분리하며 W02 이후 production 구현·RF HIL을 별도 확정한다.
+  capability image·`M28CAP/1` parser·target build와 actual HCI 6/6, W02~W06 production 구현,
+  W07 2·3보드 HIL과 W08 인계를 완료했다. 정적 `candidate`와 runtime HCI·구현·RF PASS는 분리한다.
 - 기존 `requestPhy()`·`requestMtu()`와 legacy GAP은 회귀 기준선으로 유지한다. 신규 범위는
   multi-role/multi-link, extended/periodic advertising·scanning, sync/PAST와 PAwR이다.
-- 현재 단일 `BLEConnection`과 연결 수 1 계약을 보존할 호환 경로를 정하고, 신규 per-link handle,
-  generation·event·GATT/security 상태, 연결·buffer 상한과 자원 반환을 설계한 뒤 multi-link를 구현한다.
+- 기존 `BLEConnection` 호환 view를 보존하면서 신규 generation per-link handle/event, link-control,
+  연결·buffer 상한과 자원 반환을 구현했다. 다중 GATT/security 확장은 M29/M30에서 별도 계약한다.
 - PHY/DLE/MTU의 추가 요청·fallback, power control/path-loss, channel classification, subrating와
   timing은 ledger에서 판정한 지원 범위를 구현한다. 기존 API를 신규 구현 실적으로 중복 계산하지 않는다.
-- privacy list와 RPA lifecycle을 bond storage와 통합한다.
+- RPA lifecycle과 identity 관측을 기존 bond storage 회귀와 함께 검증했다.
 - 완료 gate: [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md)의 9개 test ID와 고정
   topology·연결 수·OS/peer matrix에서 reconnect·loss·long-run HIL을 수행한다.
 
@@ -477,8 +476,9 @@ M31-B는 SDC의 실제 지원 범위와 대체 controller/profile의 RX·IQ 경�
 - Bluetooth qualification 적용성, 필요한 QDID/DN과 미완료 인증을 분리해 공개한다.
 - 완료 gate: release package, 전체 BLE regression, mobile/desktop·cross-vendor matrix, 공개 stable 검증.
 
-M28은 W01 구현 중이고 Host·target 준비만 완료했으며 실기는 시작하지 않았다. M29~M33은
-여전히 계획이다.
+M28은 W01~W08과 9개 test ID를 완료했다. M29~M33은 여전히 계획이다. M28 결과와
+CMSIS-DAP 실패 진단은
+[140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은
 것이다. 문서 정비만으로 지원 상향·실기 PASS·일정을 확정하지 않는다.
 
@@ -499,8 +499,9 @@ M28은 W01 구현 중이고 Host·target 준비만 완료했으며 실기는 시
 | BLE advanced RF | 승인한 ISO/audio 경로의 신호원·수신/분석 환경, DF antenna array/switch와 IQ 수신 환경, CS RF attenuator 또는 통제 거리·calibration data |
 | Mesh/coexistence | 승인 node/model 구성과 power-cycle automation; 최소 802.15.4/ESB 단독 TX/RX 뒤 BLE/Mesh 조합의 traffic·starvation 측정 |
 
-위 BLE 장비 중 NU54DK·독립 DAP/UART 2경로는 W01에서 확인했지만 3번째 경로와 packet trace는
-미확인이다. 전체 확보 여부와 수치 합격 기준은
+위 BLE 장비 중 M28에 필요한 NU54DK·독립 DAP/UART 3경로는 W07에서 확인했다. Packet trace는
+외부 sniffer 대신 세 UART와 receiver-validated GATT/periodic sequence·payload hash를 사용했다.
+M29 이후의 OS peer·고급 RF 장비 확보 여부와 수치 합격 기준은
 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 연결/stream/channel 수, OS·peer 조합, 시험 시간,
 허용 손실·지연/jitter·거리 오차와 복구 횟수를 시험 전에 확정한다. 미확정 값은 PASS가 아니며,
 v0.4.0의 합성 peer 시험·장비 제외·실행 시간을 v0.5.0 RF/audio 합격 기준으로 자동 복사하지 않는다.

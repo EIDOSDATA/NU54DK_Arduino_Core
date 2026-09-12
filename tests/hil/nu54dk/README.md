@@ -3,6 +3,8 @@
 v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 재현에 필요한 실행기·fixture
 계약을 보존하며 현재 보드의 결선 상태를 나타내지 않습니다. 최종 지원·검증 범위는
 [v0.4.0 완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 확인합니다.
+M28 BLE 확장 HIL 9개 test ID도 완료했으며 현재 개발 결과는
+[v0.5.0 계획](<../../../00_Docs/TODO_v0.5.0.md>)과 [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따릅니다.
 
 빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
@@ -24,7 +26,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 GPIO·버튼 | [M14 신규 핀](#m14-신규-핀-hil), [AC-01 loopback](#ac-01-p25p26-gpio-loopback-hil) |
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
-| M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil) |
+| M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -50,6 +52,8 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m21_ble_security.py` | pairing·bond 복원/삭제/repair와 BAS/DIS/HID protocol 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `ble_pair_hil_common.py` | M19~M21 exact image·두 UID·UART·evidence 공통 경계 | 직접 실행하지 않음 |
 | `m28_ble_capability.py` | M28CAP/1 HCI/Host 원장·revision·nonce·timeout strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
+| `m28_ble_2board.py` | M28B2 확장 광고·PAwR·RPA/bond/reconnect strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m28_ble_3board.py` | M28B3 mixed-role LINK·PER/PAST·CTRL·SOAK strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -432,6 +436,50 @@ Pairing 전 두 image는 자기 identity의 기존 bond만 지우며 factory res
 link 재연결 20회만 검증한다. 3보드 단계는 이 세 기능을 반복하지 않고 두 동시 link·PAST·link별
 제어·soak만 수행한다. 준비 결과는
 [139번 기록](<../../../00_Docs/04_검증 기록/139_M28_W07_2보드_HIL_자동화_준비.md>)을 따른다.
+
+실제 2보드 실행은 `M28-ADV-01`, `M28-PAWR-01`, `M28-PRIV-01` 3/3 PASS로 완료됐다. 기존
+M19 GAP·M20 GATT·M21 security 3/3도 별도 image로 회귀했다. Exact source와 evidence는
+[140번 완료 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 있다.
+
+## M28-W07 세 보드 HIL
+
+세 보드는 Peripheral peer, central 1 + peripheral 1을 동시에 갖는 mixed-role DUT, Central peer로
+고정한다. GPIO 점퍼나 보드 간 전원선은 연결하지 않고 각 보드의 USB/DAP/UART만 사용한다.
+
+| Test ID | 검증 조건 |
+| --- | --- |
+| `M28-LINK-01` | DUT 2-link, link당 reconnect 20회·GATT-confirmed sequence 1,000개 |
+| `M28-PER-01` | periodic report 1,000개와 PAST 20/20 |
+| `M28-CTRL-01` | 두 link별 parameter/PHY/DLE/remote-info 요청 20회 |
+| `M28-SOAK-01` | 1,800초와 link당 sequence 10,000개 |
+
+각 test는 별도의 세 role image를 사용한다. 전체 12개 target variant를 build하고 선택한 test의
+세 image·exact UID·UART·revision을 명시해 실행한다. 저장소 module shadowing을 막기 위해 고정
+NCS Python은 `-I`로 실행한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$Commit = git rev-parse HEAD
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+
+& $Python -I tests/hil/nu54dk/m28_ble_3board.py `
+  --test-id M28-LINK-01 `
+  --peripheral-hex "<peripheral zephyr.hex>" `
+  --mixed-hex "<mixed zephyr.hex>" `
+  --central-hex "<central zephyr.hex>" `
+  --peripheral-board-id "<Peripheral CMSIS-DAP UID>" `
+  --mixed-board-id "<Mixed CMSIS-DAP UID>" `
+  --central-board-id "<Central CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --evidence "<새 evidence 디렉터리>\m28-3board-evidence.json"
+```
+
+Runner는 세 role 모두 같은 test와 128-bit nonce를 사용했는지, role별 고정 record 순서와 수치,
+image/build record, DAP target·SWD IDCODE·전압을 확인한다. LINK는 callback 횟수가 아니라 discovery·
+subscription 뒤 상대가 수신한 GATT `LINK_UP`으로 재연결을 확정한다. HCI `UNKNOWN_CONN_ID`는
+object recycle 뒤 최대 3회만 재시도하며 초과, 누락, noise, stale generation과 target FAIL을 즉시
+거부한다. 세 보드 `LINK/PER/CTRL/SOAK` 4/4는 완료했으며 최종 결과와 실패 진단은
+[140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따른다.
 
 ## M15 System OFF 결합 HIL
 

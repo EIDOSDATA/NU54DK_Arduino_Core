@@ -2,8 +2,8 @@
   "schema_version": 2,
   "milestone": "M28",
   "product_target": "v0.5.0",
-  "phase": "implementation",
-  "milestone_status": "in_progress",
+  "phase": "verification_complete",
+  "milestone_status": "completed",
   "baseline": {
     "supported_release": "v0.4.1",
     "source_version": "0.4.1-dev",
@@ -63,7 +63,7 @@
       "id": "multi_role_multi_link",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "host_target_passed",
+      "implementation_status": "host_target_hil_passed",
       "required_kconfig": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_CENTRAL=y",
@@ -80,7 +80,7 @@
       "id": "extended_advertising_scanning",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "host_target_passed",
+      "implementation_status": "host_target_hil_passed",
       "required_kconfig": [
         "CONFIG_BT_EXT_ADV=y",
         "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255"
@@ -95,7 +95,7 @@
       "id": "periodic_advertising_sync_past",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "host_target_passed",
+      "implementation_status": "host_target_hil_passed",
       "required_kconfig": [
         "CONFIG_BT_PER_ADV=y",
         "CONFIG_BT_PER_ADV_SYNC=y",
@@ -114,7 +114,7 @@
       "id": "pawr_advertiser_scanner",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "host_target_passed",
+      "implementation_status": "host_target_hil_passed",
       "required_kconfig": [
         "CONFIG_BT_PER_ADV_RSP=y",
         "CONFIG_BT_PER_ADV_SYNC_RSP=y",
@@ -132,7 +132,7 @@
       "id": "privacy_rpa",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "not_started",
+      "implementation_status": "host_target_hil_passed",
       "required_kconfig": [
         "CONFIG_BT_PRIVACY=y",
         "CONFIG_BT_SETTINGS=y"
@@ -146,7 +146,7 @@
       "id": "per_link_control",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "baseline_partial",
+      "implementation_status": "host_target_hil_passed",
       "required_kconfig": [
         "CONFIG_BT_DATA_LEN_UPDATE=y",
         "CONFIG_BT_REMOTE_INFO=y",
@@ -173,7 +173,7 @@
     "new_contracts": [
       "generation이 포함된 불투명 per-link handle",
       "link handle을 포함한 상세 event와 상태 조회",
-      "link별 GATT client, security와 link-control 상태",
+      "link별 GAP 연결 상태와 link-control 상태",
       "고정 크기 advertising set, periodic sync와 connection slot"
     ],
     "forbidden_shortcuts": [
@@ -184,17 +184,17 @@
     ]
   },
   "equipment": {
-    "availability": "partial",
+    "availability": "complete_for_m28",
     "required": {
       "nu54dk_boards": 3,
       "independent_usb_dap_uart_paths": 3,
       "packet_trace_receivers": 1
     },
     "observed": {
-      "nu54dk_boards": 2,
-      "independent_usb_dap_uart_paths": 2,
-      "packet_trace_receivers": "not_confirmed",
-      "observed_at_utc": "2026-09-12T04:58:53Z"
+      "nu54dk_boards": 3,
+      "independent_usb_dap_uart_paths": 3,
+      "packet_trace_receivers": "three_node_receiver_validated_sequence",
+      "observed_at_utc": "2026-09-12T21:01:26Z"
     },
     "interop_peers": [
       "Android",
@@ -215,7 +215,9 @@
         "stale_nonce_tokens": 0
       },
       "status": "passed",
-      "evidence_record": "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md"
+      "evidence_files": [
+        "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md"
+      ]
     },
     {
       "id": "M28-REG-01",
@@ -225,7 +227,13 @@
       "criteria": {
         "required_existing_suites": 3,
         "failed_existing_suites": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-10231641-reg-m19/m19-gap-evidence.json",
+        "00_Docs/04_검증 기록/evidence/m28-w07-10231641-reg-m20/m20-gatt-evidence.json",
+        "00_Docs/04_검증 기록/evidence/m28-w07-10231641-reg-m21/m21-security-evidence.json"
+      ]
     },
     {
       "id": "M28-LINK-01",
@@ -242,7 +250,11 @@
         "payload_corruption": 0,
         "payload_duplicates": 0,
         "stale_link_events": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-289e3d10-b3-link-final/m28-3board-evidence.json"
+      ]
     },
     {
       "id": "M28-ADV-01",
@@ -254,7 +266,11 @@
         "reports": 100,
         "payload_corruption": 0,
         "stale_set_events": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-e05562b3/m28-2board-evidence.json"
+      ]
     },
     {
       "id": "M28-PER-01",
@@ -267,7 +283,11 @@
         "payload_corruption": 0,
         "past_transfers": 20,
         "past_failures": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-bd66232e-b3-periodic/m28-3board-evidence.json"
+      ]
     },
     {
       "id": "M28-PAWR-01",
@@ -281,7 +301,11 @@
         "minimum_valid_response_percent": 99,
         "response_corruption": 0,
         "out_of_window_responses": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-e05562b3/m28-2board-evidence.json"
+      ]
     },
     {
       "id": "M28-PRIV-01",
@@ -293,7 +317,11 @@
         "bonded_reconnect_cycles": 20,
         "identity_mismatches": 0,
         "unresolved_reconnects": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-e05562b3/m28-2board-evidence.json"
+      ]
     },
     {
       "id": "M28-CTRL-01",
@@ -306,7 +334,11 @@
         "cross_link_state_leaks": 0,
         "stale_link_events": 0,
         "unreported_driver_errors": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-bd66232e-b3-control/m28-3board-evidence.json"
+      ]
     },
     {
       "id": "M28-SOAK-01",
@@ -320,7 +352,11 @@
         "payload_corruption": 0,
         "unexpected_disconnects": 0,
         "resource_recovery_failures": 0
-      }
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-bd66232e-b3-soak/m28-3board-evidence.json"
+      ]
     }
   ],
   "work_packages": [
@@ -356,7 +392,7 @@
       "completed": true,
       "host_contract_tests": "passed",
       "target_build": "passed",
-      "physical_hil": "deferred_to_M28-W07",
+      "physical_hil": "passed_by_M28-LINK-01",
       "paths": {
         "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
         "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
@@ -372,7 +408,7 @@
       "completed": true,
       "host_contract_tests": "passed",
       "target_build": "passed",
-      "physical_hil": "deferred_to_M28-W07",
+      "physical_hil": "passed_by_M28-ADV-01",
       "paths": {
         "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
         "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
@@ -389,7 +425,7 @@
       "completed": true,
       "host_contract_tests": "passed",
       "target_build": "passed",
-      "physical_hil": "three_board_past_deferred_to_M28-W07",
+      "physical_hil": "passed_by_M28-PER-01",
       "paths": {
         "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
         "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
@@ -397,7 +433,9 @@
         "runtime_tests": "tests/host/m28_ble_periodic_main.cpp",
         "target_application": "tests/zephyr/m28_ble_periodic_contract",
         "advertiser_example": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
-        "scanner_example": "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino"
+        "scanner_example": "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino",
+        "past_sender_example": "libraries/NUCODE_BLE/examples/PastSender/PastSender.ino",
+        "past_receiver_example": "libraries/NUCODE_BLE/examples/PastReceiver/PastReceiver.ino"
       }
     },
     {
@@ -406,7 +444,7 @@
       "completed": true,
       "host_contract_tests": "passed",
       "target_build": "passed",
-      "physical_hil": "two_board_pawr_deferred_to_M28-W07",
+      "physical_hil": "passed_by_M28-PAWR-01",
       "paths": {
         "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
         "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
@@ -423,7 +461,7 @@
       "completed": true,
       "host_contract_tests": "passed",
       "target_build": "passed",
-      "physical_hil": "two_and_three_board_control_deferred_to_M28-W07",
+      "physical_hil": "passed_by_M28-PRIV-01_and_M28-CTRL-01",
       "paths": {
         "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
         "connection_implementation": "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
@@ -437,33 +475,45 @@
     },
     {
       "id": "M28-W07",
-      "status": "in_progress",
-      "completed": false,
-      "host_parser_tests": "passed_10_of_10",
-      "target_build": "passed_2_of_2",
-      "two_board_hil": "not_run",
-      "three_board_hil": "not_run",
+      "status": "completed",
+      "completed": true,
+      "host_parser_tests": "passed_29_of_29",
+      "target_build": "passed_14_of_14",
+      "legacy_regression_hil": "passed_3_of_3",
+      "two_board_hil": "passed_3_of_3",
+      "three_board_hil": "passed_4_of_4",
       "paths": {
-        "host_parser_tests": "tests/host/test_m28_ble_2board_hil.py",
-        "hil_runner": "tests/hil/nu54dk/m28_ble_2board.py",
-        "target_application": "tests/zephyr/m28_ble_2board_hil"
+        "two_board_host_parser_tests": "tests/host/test_m28_ble_2board_hil.py",
+        "three_board_host_parser_tests": "tests/host/test_m28_ble_3board_hil.py",
+        "two_board_hil_runner": "tests/hil/nu54dk/m28_ble_2board.py",
+        "three_board_hil_runner": "tests/hil/nu54dk/m28_ble_3board.py",
+        "two_board_target_application": "tests/zephyr/m28_ble_2board_hil",
+        "three_board_target_application": "tests/zephyr/m28_ble_3board_hil",
+        "completion_record": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md"
       }
     },
     {
       "id": "M28-W08",
-      "status": "not_started",
-      "completed": false
+      "status": "completed",
+      "completed": true,
+      "paths": {
+        "design_contract": "00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md",
+        "current_plan": "00_Docs/TODO_v0.5.0.md",
+        "handoff": "00_Docs/HANDOFF.md",
+        "completion_record": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md"
+      }
     }
   ],
   "progress": {
-    "completed_work_packages": 6,
+    "completed_work_packages": 8,
     "total_work_packages": 8,
-    "percent": 75.0,
-    "current_work_package": "M28-W07"
+    "percent": 100.0,
+    "current_work_package": null,
+    "next_milestone": "M29"
   },
   "not_yet_claimed": [
-    "full M28 production BLE implementation",
-    "full M28 physical HIL PASS",
+    "v0.5.0 release",
+    "mobile and desktop cross-vendor interoperability",
     "Bluetooth qualification"
   ]
 }

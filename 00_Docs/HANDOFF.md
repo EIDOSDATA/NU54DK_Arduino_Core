@@ -1,15 +1,15 @@
 # 현재 지원 상태와 다른 PC 개발 준비
 
-**현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25는 모두 완료됐습니다.** M28은
-진행 중이며 W01 capability image·실제 HCI 6/6과 W02~W06의 Host·target 검증을 완료했습니다.
-현재 작업은 W07의 2보드 선행 HIL입니다. 이 문서는 완료한 시험을 재개하라는
+**현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25와 M28 W01~W08은 모두
+완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고 다음
+개발 작업은 M29 ATT/GATT·L2CAP입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
 
 1. [작업 지침](../AGENTS.md): 변경·검증·보존 원칙
 2. [v0.4.1 TODO](TODO_v0.4.1.md): 현재 지원·설치기 유지보수·공개 결과
-3. [v0.5.0 착수 계획](TODO_v0.5.0.md): M28 준비 상태와 다음 구현
+3. [v0.5.0 착수 계획](TODO_v0.5.0.md): M28 완료 상태와 M29 이후 계획
 4. [v0.4.0 완료 TODO](TODO_v0.4.0.md): T01~T25 결과·해결 상태·기능 지원 경계
 
 | 추가로 필요한 내용 | 찾아갈 곳 |
@@ -18,7 +18,7 @@
 | T13 S/U 실제 시험과 종료 상태 | [113번 S 종료](<04_검증 기록/113_T13_S_범위_종료와_U_준비.md>) · [115번 U 종료](<04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>) |
 | 특정 실패·수정·재검증의 원본 | [검증 기록 목차](<04_검증 기록/README.md>) |
 | 설계·설치·API 탐색 | [문서 안내](README.md) |
-| M28 후속 개발 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)과 최신 사용자 요청 |
+| M28 결과·M29 후속 개발 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>), [140번 완료 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과 최신 사용자 요청 |
 
 과거 기록의 “다음 실행”, `running` 표시, PC 절대 경로는 당시 상태입니다.
 현재 명령·보드 연결·실행 중 프로세스의 근거로 사용하지 않습니다.
@@ -40,7 +40,7 @@
 
 일반 Arduino 사용자라면 위 개발 도구 대신 [Boards Manager 설치](<02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)를 사용합니다.
 
-## M28-W01~W06 완료와 현재 W07 인계점
+## M28-W01~W08 완료와 M29 인계점
 
 | 구분 | 상태 |
 | --- | --- |
@@ -54,14 +54,18 @@
 | W03 확장 GAP | generation advertising set 1개, raw AD 255 byte, SID·TX power·periodic interval·PHY scan metadata |
 | W03 검증·예제 | production Host 수명 시나리오 4개·정적 경계·target 1/1 PASS, `ExtendedAdvertising`·`ExtendedScanner` 추가 |
 | W04 periodic·PAST | 1 advertiser·1 generation sync, 255-byte/8-entry report queue, link별 PAST sender/receiver |
-| W04 검증·예제 | production Host 수명 시나리오 4개·정적 경계·target 1/1 PASS, `PeriodicAdvertiser`·`PeriodicScanner` 추가 |
+| W04 검증·예제 | production Host 수명 시나리오 4개·정적 경계·target 1/1 PASS, periodic·PAST 예제 4개 추가 |
 | W05 PAwR | 4 subevent × 4 response slot, 249-byte payload, 8-entry response queue |
 | W05 검증·예제 | production Host 수명 시나리오 4개·정적 경계·target 1/1 PASS, `PawrAdvertiser`·`PawrScanner` 추가 |
 | W06 privacy·제어 | RPA timeout/event, connection 주소와 identity 분리, link별 parameter·DLE·remote-info |
 | W06 검증·예제 | production Host 수명 시나리오 5개·정적 경계·target 1/1 PASS, `PrivacyPeripheral`·`PerLinkControl` 추가 |
-| W07 2보드 준비 | `M28B2` parser 10/10, peripheral/central target 2/2 build-only PASS; 실제 HIL은 `NOT RUN` |
-| 확인 장비 | NU54DK·독립 DAP/UART 2경로; 필수 3번째 보드와 packet trace는 미확인 |
-| 다음 행동 | `M28-W07`의 2보드 `REG/ADV/PAWR/PRIV`를 실행하고, 3보드는 `LINK/PER/CTRL/SOAK`만 수행 |
+| W07 Host·target | `M28B2`·`M28B3` fail-closed parser 29/29, role/test target 14/14 PASS |
+| W07 2보드 실기 | `ADV/PAWR/PRIV` 3/3과 기존 M19~M21 `REG` 3/3 PASS |
+| W07 3보드 실기 | `LINK/PER/CTRL/SOAK` 4/4 PASS; 2-link 재연결 20회·1,000 sequence와 1,800초 soak 포함 |
+| LINK 최종 수정 | role callback 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도 |
+| 확인 장비 | NU54DK·독립 DAP/UART 3경로; receiver-validated sequence trace 사용 |
+| W08 | 현행 문서·지원 경계·readiness 원장·M29 인계 완료 |
+| 다음 행동 | M29 signed write/EATT 정책과 ATT/GATT·LE CoC 자원·malformed/credit/starvation 시험 계약 확정 |
 
 실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m28-w01-capability-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과
@@ -72,7 +76,9 @@
 [137번 W05 기록](<04_검증 기록/137_M28_W05_PAwR_advertiser_scanner.md>)과
 [138번 W06 기록](<04_검증 기록/138_M28_W06_privacy_RPA_link_control.md>)도 함께 따른다.
 [139번 W07 2보드 준비 기록](<04_검증 기록/139_M28_W07_2보드_HIL_자동화_준비.md>)은 fixed
-protocol·runner·target build와 아직 실행하지 않은 실기 경계를 보존한다.
+protocol·runner·target build와 당시 아직 실행하지 않은 실기 경계를 보존한다. 현재 실제 결과,
+CMSIS-DAP 진단과 W08 완료는
+[140번 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따른다.
 
 ## 보존 자료와 재생성 자료
 

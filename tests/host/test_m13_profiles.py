@@ -103,6 +103,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "ExtendedScanner",
                 "PeriodicAdvertiser",
                 "PeriodicScanner",
+                "PastSender",
+                "PastReceiver",
                 "PawrAdvertiser",
                 "PawrScanner",
                 "PrivacyPeripheral",
