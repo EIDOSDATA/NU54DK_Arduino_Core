@@ -325,6 +325,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
             "CONFIG_BT_DIS_SETTINGS=y",
             "CONFIG_BT_HIDS=y",
             "CONFIG_BT_HIDS_DEFAULT_PERM_RW_ENCRYPT=y",
+            "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=2048",
         ):
             self.assertIn(symbol, conf, symbol)
         self.assertNotIn("CONFIG_BT_FIXED_PASSKEY", conf)
