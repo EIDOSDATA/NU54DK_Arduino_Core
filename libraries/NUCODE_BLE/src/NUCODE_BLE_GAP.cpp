@@ -12,6 +12,12 @@ namespace nucode::ble::internal::gap
                       CONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE, alignof(GapEventRecord));
         K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
                       CONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE, alignof(BLEScanResult));
+        K_MSGQ_DEFINE(periodic_report_queue, sizeof(PeriodicReportRecord),
+                      CONFIG_NUCODE_BLE_PERIODIC_REPORT_QUEUE_SIZE,
+                      alignof(BLEPeriodicReport));
+        K_MSGQ_DEFINE(pawr_response_queue, sizeof(PawrResponseRecord),
+                      CONFIG_NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE,
+                      alignof(BLEPawrResponse));
         K_MUTEX_DEFINE(gap_lifecycle_mutex);
 
         GapContext context{};
@@ -28,6 +34,14 @@ namespace nucode::ble::internal::gap
     {
         return scan_result_queue;
     }
+    k_msgq &periodicReportQueue() noexcept
+    {
+        return periodic_report_queue;
+    }
+    k_msgq &pawrResponseQueue() noexcept
+    {
+        return pawr_response_queue;
+    }
     void lockGapLifecycle() noexcept
     {
         k_mutex_lock(&gap_lifecycle_mutex, K_FOREVER);
@@ -37,13 +51,24 @@ namespace nucode::ble::internal::gap
         k_mutex_unlock(&gap_lifecycle_mutex);
     }
     /** @brief event queue에 사용자 callback 대신 작은 record만 저장합니다. */
-    void queueEvent(BLEEvent event, std::uint32_t generation) noexcept
+    void queueEvent(BLEEvent event, BLEConnectionHandle connection, BLELinkRole role,
+                    std::uint32_t device_generation,
+                    BLEAdvertisingSetHandle advertising_set,
+                    BLEPeriodicSyncHandle periodic_sync) noexcept
     {
         const std::uint32_t current_generation =
             static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation));
         const GapEventRecord record = {
-            .event = event,
-            .generation = generation == 0U ? current_generation : generation,
+            .information =
+                {
+                    .event = event,
+                    .connection = connection,
+                    .advertising_set = advertising_set,
+                    .periodic_sync = periodic_sync,
+                    .role = role,
+                },
+            .device_generation =
+                device_generation == 0U ? current_generation : device_generation,
         };
         if (k_msgq_put(&gapEventQueue(), &record, K_NO_WAIT) != 0)
         {
@@ -68,7 +93,11 @@ namespace nucode::ble::internal
     }
     struct bt_conn *referenceConnection() noexcept
     {
-        return referenceActiveConnection();
+        return referenceLegacyConnection();
+    }
+    struct bt_conn *referenceConnection(BLEConnectionHandle connection) noexcept
+    {
+        return gap::referenceConnection(connection);
     }
 } // namespace nucode::ble::internal
 namespace nucode::ble
@@ -124,11 +153,14 @@ namespace nucode::ble
 
         k_msgq_purge(&gapEventQueue());
         k_msgq_purge(&scanResultQueue());
+        k_msgq_purge(&periodicReportQueue());
+        k_msgq_purge(&pawrResponseQueue());
         atomic_set(&gapState().advertising_active, 0);
         atomic_set(&gapState().scanning_active, 0);
         atomic_set(&gapState().connection_connecting, 0);
         atomic_set(&gapState().connection_active, 0);
         atomic_set(&gapState().mtu_exchange_active, 0);
+        atomic_set(&gapState().rpa_expiration_count, 0);
         ::memcpy(gapState().local_name, name, length + 1U);
         if (atomic_cas(&gapState().gatt_callback_registered, 0, 1))
         {
@@ -150,7 +182,7 @@ namespace nucode::ble
         GapEventRecord record = {};
         while (k_msgq_get(&gapEventQueue(), &record, K_NO_WAIT) == 0)
         {
-            if (record.generation !=
+            if (record.device_generation !=
                 static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation)))
             {
                 continue;
@@ -158,7 +190,17 @@ namespace nucode::ble
             BLEEventCallback callback = gapState().event_callback;
             if (callback != nullptr)
             {
-                callback(record.event, gapState().event_context);
+                callback(record.information.event, gapState().event_context);
+            }
+            if (record.device_generation !=
+                static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation)))
+            {
+                continue;
+            }
+            BLEEventInfoCallback information_callback = gapState().event_info_callback;
+            if (information_callback != nullptr)
+            {
+                information_callback(record.information, gapState().event_info_context);
             }
         }
 
@@ -176,6 +218,33 @@ namespace nucode::ble
             }
         }
         internal::pollGatt();
+        BLEPeriodicReportCallback periodic_callback = gapState().periodic_report_callback;
+        if (periodic_callback != nullptr)
+        {
+            PeriodicReportRecord periodic_record = {};
+            while (k_msgq_get(&periodicReportQueue(), &periodic_record, K_NO_WAIT) == 0)
+            {
+                if (periodic_record.device_generation == static_cast<std::uint32_t>(
+                                                             atomic_get(&gapState().device_session_generation)))
+                {
+                    periodic_callback(periodic_record.report,
+                                      gapState().periodic_report_context);
+                }
+            }
+        }
+        BLEPawrResponseCallback pawr_callback = gapState().pawr_response_callback;
+        if (pawr_callback != nullptr)
+        {
+            PawrResponseRecord pawr_record = {};
+            while (k_msgq_get(&pawrResponseQueue(), &pawr_record, K_NO_WAIT) == 0)
+            {
+                if (pawr_record.device_generation == static_cast<std::uint32_t>(
+                                                         atomic_get(&gapState().device_session_generation)))
+                {
+                    pawr_callback(pawr_record.response, gapState().pawr_response_context);
+                }
+            }
+        }
     }
 
     void Device::end() noexcept
@@ -203,35 +272,53 @@ namespace nucode::ble
         {
             static_cast<void>(bt_le_adv_stop());
         }
+        endPawr();
+        endPeriodicAdvertising();
+        endExtendedAdvertising();
 
-        struct bt_conn *active = nullptr;
-        struct bt_conn *pending = nullptr;
+        struct bt_conn *active[maximum_connection_slots] = {};
+        struct bt_conn *pending[maximum_connection_slots] = {};
         k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
-        active = gapState().active_connection;
-        pending = gapState().pending_connection;
-        gapState().active_connection = nullptr;
-        gapState().pending_connection = nullptr;
-        gapState().active_connection_generation = 0U;
-        gapState().pending_connection_generation = 0U;
-        gapState().last_peer_address = BLEAddress{};
+        for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
+        {
+            ConnectionSlot &slot = gapState().connection_slots[index];
+            active[index] = slot.active;
+            pending[index] = slot.pending;
+            slot.active = nullptr;
+            slot.pending = nullptr;
+            slot.generation = 0U;
+            slot.device_generation = 0U;
+            slot.peer_address = BLEAddress{};
+            slot.connection_address = BLEAddress{};
+            slot.identity_resolved = false;
+        }
+        gapState().last_central_address = BLEAddress{};
         k_spin_unlock(&gapState().connection_lock, key);
 
         atomic_set(&gapState().connection_connecting, 0);
         atomic_set(&gapState().connection_active, 0);
         atomic_set(&gapState().mtu_exchange_active, 0);
+        atomic_set(&gapState().rpa_expiration_count, 0);
         k_msgq_purge(&gapEventQueue());
         k_msgq_purge(&scanResultQueue());
+        k_msgq_purge(&periodicReportQueue());
+        k_msgq_purge(&pawrResponseQueue());
 
-        if (pending != nullptr)
+        for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
         {
-            static_cast<void>(bt_conn_disconnect(pending, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
-            bt_conn_unref(pending);
-        }
-        if (active != nullptr)
-        {
-            nucode::ble::internal::securityDisconnected(active);
-            static_cast<void>(bt_conn_disconnect(active, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
-            bt_conn_unref(active);
+            if (pending[index] != nullptr)
+            {
+                static_cast<void>(
+                    bt_conn_disconnect(pending[index], BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                bt_conn_unref(pending[index]);
+            }
+            if (active[index] != nullptr)
+            {
+                nucode::ble::internal::securityDisconnected(active[index]);
+                static_cast<void>(
+                    bt_conn_disconnect(active[index], BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                bt_conn_unref(active[index]);
+            }
         }
         nucode::ble::internal::gattEnded();
         internal::releaseFacade(internal::FacadeOwner::generic);
@@ -252,6 +339,12 @@ namespace nucode::ble
     {
         gapState().event_callback = callback;
         gapState().event_context = context;
+    }
+
+    void Device::onEventInfo(BLEEventInfoCallback callback, void *context) noexcept
+    {
+        gapState().event_info_callback = callback;
+        gapState().event_info_context = context;
     }
 
     bool Device::addService(BLEService &service) noexcept
@@ -282,6 +375,10 @@ namespace nucode::ble
 nucode::ble::Device BLEDevice;
 nucode::ble::Advertising BLEAdvertising;
 nucode::ble::Scan BLEScan;
+nucode::ble::ExtendedAdvertising BLEExtendedAdvertising;
+nucode::ble::PeriodicAdvertising BLEPeriodicAdvertising;
+nucode::ble::Pawr BLEPawr;
+nucode::ble::Privacy BLEPrivacy;
 nucode::ble::Connection BLEConnection;
 
 #endif

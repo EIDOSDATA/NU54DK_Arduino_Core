@@ -9,6 +9,26 @@ namespace nucode::ble::internal::gap
     {
         /** @brief 모듈 설정은 해당 구현에서만 소유합니다. */
         ScanConfiguration scan_configuration;
+
+#if defined(CONFIG_BT_EXT_ADV)
+        /** @brief controller PHY 값을 portable scan PHY로 변환합니다. */
+        BLEPhy scanPhy(std::uint8_t phy) noexcept
+        {
+            if ((phy & BT_GAP_LE_PHY_2M) != 0U)
+            {
+                return BLEPhy::le_2m;
+            }
+            if ((phy & BT_GAP_LE_PHY_CODED) != 0U)
+            {
+                return BLEPhy::coded;
+            }
+            if ((phy & BT_GAP_LE_PHY_1M) != 0U)
+            {
+                return BLEPhy::le_1m;
+            }
+            return BLEPhy::unknown;
+        }
+#endif
         /** @brief raw AD payload에서 완전·축약 local name을 복사합니다. */
         void copyAdvertisedName(BLEScanResult &result) noexcept
         {
@@ -113,7 +133,8 @@ namespace nucode::ble::internal::gap
             }
             return true;
         }
-        /** @brief stack scan callback에서 bounded 결과만 queue로 복사합니다. */
+#if !defined(CONFIG_BT_EXT_ADV)
+        /** @brief legacy stack scan callback에서 bounded 결과만 queue로 복사합니다. */
         void scanReceived(const bt_addr_le_t *address, std::int8_t rssi,
                           std::uint8_t advertising_type, struct net_buf_simple *data) noexcept
         {
@@ -134,7 +155,7 @@ namespace nucode::ble::internal::gap
             const std::size_t copy_length = data->len < BLEScanResult::maximum_payload_length
                                                 ? data->len
                                                 : BLEScanResult::maximum_payload_length;
-            result.payload_length = static_cast<std::uint8_t>(copy_length);
+            result.payload_length = static_cast<std::uint16_t>(copy_length);
             result.truncated = data->len > BLEScanResult::maximum_payload_length;
             if (copy_length != 0U)
             {
@@ -162,7 +183,158 @@ namespace nucode::ble::internal::gap
                 nucode::ble::internal::recordError(BLEError::scan_result_overflow, -ENOBUFS, true);
                 return;
             }
-            queueEvent(BLEEvent::scan_result, generation);
+            queueEvent(BLEEvent::scan_result, {}, BLELinkRole::none, generation);
+        }
+#endif
+
+#if defined(CONFIG_BT_EXT_ADV)
+        /** @brief extended scan metadata와 최대 255-byte payload를 bounded queue로 복사합니다. */
+        void extendedScanReceived(const struct bt_le_scan_recv_info *information,
+                                  struct net_buf_simple *data) noexcept
+        {
+            if (information == nullptr || information->addr == nullptr || data == nullptr ||
+                atomic_get(&gapState().scanning_active) == 0)
+            {
+                return;
+            }
+            const std::uint32_t generation =
+                static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation));
+            BLEScanResult result = {};
+            result.address = fromZephyrAddress(*information->addr);
+            result.rssi = information->rssi;
+            result.tx_power = information->tx_power;
+            result.connectable =
+                (information->adv_props & BT_GAP_ADV_PROP_CONNECTABLE) != 0U;
+            result.scan_response =
+                (information->adv_props & BT_GAP_ADV_PROP_SCAN_RESPONSE) != 0U;
+            result.extended = (information->adv_props & BT_GAP_ADV_PROP_EXT_ADV) != 0U;
+            result.sid = information->sid;
+            result.periodic_interval = information->interval;
+            result.primary_phy = scanPhy(information->primary_phy);
+            result.secondary_phy = scanPhy(information->secondary_phy);
+            const std::size_t copy_length = data->len < BLEScanResult::maximum_payload_length
+                                                ? data->len
+                                                : BLEScanResult::maximum_payload_length;
+            result.payload_length = static_cast<std::uint16_t>(copy_length);
+            result.truncated = data->len > BLEScanResult::maximum_payload_length;
+            if (copy_length != 0U)
+            {
+                ::memcpy(result.payload, data->data, copy_length);
+            }
+            copyAdvertisedName(result);
+            if (!scanResultMatches(result) || atomic_get(&gapState().scanning_active) == 0 ||
+                generation !=
+                    static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation)))
+            {
+                return;
+            }
+            const ScanResultRecord record = {
+                .result = result,
+                .generation = generation,
+            };
+            if (k_msgq_put(&scanResultQueue(), &record, K_NO_WAIT) != 0)
+            {
+                atomic_inc(&gapState().dropped_scan_value);
+                nucode::ble::internal::recordError(BLEError::scan_result_overflow, -ENOBUFS, true);
+                return;
+            }
+            queueEvent(BLEEvent::scan_result, {}, BLELinkRole::none, generation);
+        }
+
+        /** @brief controller scan timeout을 상태와 main-thread event에 반영합니다. */
+        void extendedScanTimeout() noexcept
+        {
+            if (atomic_cas(&gapState().scanning_active, 1, 0))
+            {
+                queueEvent(BLEEvent::scan_stopped);
+            }
+        }
+
+        struct bt_le_scan_cb extended_scan_callbacks = {
+            .recv = extendedScanReceived,
+            .timeout = extendedScanTimeout,
+        };
+#endif
+
+        /** @brief legacy/extended scan 시작의 공통 상태와 controller 호출을 처리합니다. */
+        bool startScan(bool active, bool extended, bool coded) noexcept
+        {
+            if (!requireThreadContext())
+            {
+                return false;
+            }
+            if (atomic_get(&gapState().device_initialized) == 0)
+            {
+                nucode::ble::internal::recordError(BLEError::not_initialized, -EPERM, true);
+                return false;
+            }
+            if (atomic_get(&gapState().scanning_active) != 0)
+            {
+                nucode::ble::internal::recordError(BLEError::already_started, -EALREADY, true);
+                return false;
+            }
+            if (atomic_get(&gapState().advertising_active) != 0 ||
+                atomic_get(&gapState().connection_connecting) != 0 ||
+                atomic_get(&gapState().connection_active) != 0)
+            {
+                nucode::ble::internal::recordError(BLEError::busy, -EBUSY, true);
+                return false;
+            }
+#if defined(CONFIG_BT_EXT_ADV)
+            if (atomic_cas(&gapState().scan_callback_registered, 0, 1))
+            {
+                const int register_result = bt_le_scan_cb_register(&extended_scan_callbacks);
+                if (register_result < 0 && register_result != -EEXIST)
+                {
+                    atomic_set(&gapState().scan_callback_registered, 0);
+                    nucode::ble::internal::recordError(BLEError::driver_error, register_result,
+                                                       true);
+                    return false;
+                }
+            }
+#else
+            if (extended || coded)
+            {
+                nucode::ble::internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+                return false;
+            }
+#endif
+            k_msgq_purge(&scanResultQueue());
+            std::uint32_t options = BT_LE_SCAN_OPT_FILTER_DUPLICATE;
+#if defined(CONFIG_BT_EXT_ADV)
+            if (coded)
+            {
+                options |= BT_LE_SCAN_OPT_CODED;
+            }
+#else
+            ARG_UNUSED(coded);
+#endif
+            const struct bt_le_scan_param parameters = {
+                .type = static_cast<std::uint8_t>(active ? BT_LE_SCAN_TYPE_ACTIVE
+                                                         : BT_LE_SCAN_TYPE_PASSIVE),
+                .options = static_cast<std::uint8_t>(options),
+                .interval = BT_GAP_SCAN_FAST_INTERVAL,
+                .window = BT_GAP_SCAN_FAST_WINDOW,
+                .timeout = 0U,
+                .interval_coded = static_cast<std::uint16_t>(
+                    coded ? static_cast<std::uint16_t>(BT_GAP_SCAN_FAST_INTERVAL) : 0U),
+                .window_coded = static_cast<std::uint16_t>(
+                    coded ? static_cast<std::uint16_t>(BT_GAP_SCAN_FAST_WINDOW) : 0U),
+            };
+#if defined(CONFIG_BT_EXT_ADV)
+            ARG_UNUSED(extended);
+            const int result = bt_le_scan_start(&parameters, nullptr);
+#else
+            const int result = bt_le_scan_start(&parameters, scanReceived);
+#endif
+            if (result < 0)
+            {
+                nucode::ble::internal::recordError(BLEError::driver_error, result, true);
+                return false;
+            }
+            atomic_set(&gapState().scanning_active, 1);
+            queueEvent(BLEEvent::scan_started);
+            return true;
         }
     } // namespace
 } // namespace nucode::ble::internal::gap
@@ -260,47 +432,12 @@ namespace nucode::ble
 
     bool Scan::start(bool active) noexcept
     {
-        if (!requireThreadContext())
-        {
-            return false;
-        }
-        if (atomic_get(&gapState().device_initialized) == 0)
-        {
-            internal::recordError(BLEError::not_initialized, -EPERM, true);
-            return false;
-        }
-        if (running())
-        {
-            internal::recordError(BLEError::already_started, -EALREADY, true);
-            return false;
-        }
-        if (atomic_get(&gapState().advertising_active) != 0 ||
-            atomic_get(&gapState().connection_connecting) != 0 ||
-            atomic_get(&gapState().connection_active) != 0)
-        {
-            internal::recordError(BLEError::busy, -EBUSY, true);
-            return false;
-        }
-        k_msgq_purge(&scanResultQueue());
-        const struct bt_le_scan_param parameters = {
-            .type = static_cast<std::uint8_t>(active ? BT_LE_SCAN_TYPE_ACTIVE
-                                                     : BT_LE_SCAN_TYPE_PASSIVE),
-            .options = BT_LE_SCAN_OPT_FILTER_DUPLICATE,
-            .interval = BT_GAP_SCAN_FAST_INTERVAL,
-            .window = BT_GAP_SCAN_FAST_WINDOW,
-            .timeout = 0U,
-            .interval_coded = 0U,
-            .window_coded = 0U,
-        };
-        const int result = bt_le_scan_start(&parameters, scanReceived);
-        if (result < 0)
-        {
-            internal::recordError(BLEError::driver_error, result, true);
-            return false;
-        }
-        atomic_set(&gapState().scanning_active, 1);
-        queueEvent(BLEEvent::scan_started);
-        return true;
+        return startScan(active, false, false);
+    }
+
+    bool Scan::startExtended(bool active, bool coded) noexcept
+    {
+        return startScan(active, true, coded);
     }
 
     bool Scan::stop() noexcept

@@ -217,9 +217,15 @@ namespace nucode::ble
             internal::recordError(BLEError::already_started, -EALREADY, true);
             return false;
         }
+        if (extendedAdvertisingExists())
+        {
+            internal::recordError(BLEError::busy, -EBUSY, true);
+            return false;
+        }
+        const BLEConnectionHandle peripheral =
+            BLEConnection.handle(BLELinkRole::peripheral);
         if (atomic_get(&gapState().scanning_active) != 0 ||
-            atomic_get(&gapState().connection_connecting) != 0 ||
-            atomic_get(&gapState().connection_active) != 0)
+            atomic_get(&gapState().connection_connecting) != 0 || peripheral.valid())
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;

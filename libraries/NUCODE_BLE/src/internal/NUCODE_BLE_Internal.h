@@ -62,6 +62,9 @@ namespace nucode::ble::internal
     /** @brief 현재 generic BLE connection의 임시 reference를 반환합니다. */
     struct bt_conn *referenceConnection() noexcept;
 
+    /** @brief 지정 generation의 generic BLE connection 임시 reference를 반환합니다. */
+    struct bt_conn *referenceConnection(BLEConnectionHandle connection) noexcept;
+
     /** @brief GATT database를 stack 시작 전 고정 자원에 등록합니다. */
     int prepareGattDatabase() noexcept;
 

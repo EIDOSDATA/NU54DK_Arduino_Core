@@ -389,6 +389,50 @@ CMSIS-DAP으로 controller·GPIO·오류 상태를 확보해 원인 분류 후 �
 실패 분류는 [132번 기록](<../../../00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)에
 보존한다. 이 W01 결과를 W02 이후 production BLE·RF HIL PASS로 재사용하지 않는다.
 
+## M28-W07 두 보드 선행 HIL
+
+W07의 2보드 단계는 세 기능을 한 쌍의 role image로 순서대로 검증한다. 보드 간 GPIO 점퍼는
+사용하지 않으며 두 보드를 각각 USB에 연결하고 debug-control의 SWD/UART를 연결 상태로 둔다.
+
+1. `M28-ADV-01`: nonce가 결합된 255-byte extended report 100개
+2. `M28-PAWR-01`: 4 subevent × 4 response slot, valid response 99% 이상
+3. `M28-PRIV-01`: local RPA 만료 3회, 초기+회전 주소 4개, bond 1개와 재연결 20/20
+
+Runner는 두 UID·MSD·target UART, clean exact commit, source digest, 두 build record와 서로 다른
+role HEX를 확인한 뒤에만 flash한다. `M28B2` protocol의 누락·중복·순서 변경·stale nonce·FAIL,
+corrupt/out-of-window/drop, identity mismatch와 stale handle은 즉시 실패한다. 실제 실행 전 새 clean
+commit에서 아래 두 suite를 다시 build해야 한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$Commit = git rev-parse HEAD
+$BuildRoot = "C:\<아직 없는 한 글자 경로>"
+$Toolchain = "C:\ncs\toolchains\dcbdc366a1"
+$Python = "$Toolchain\opt\bin\python.exe"
+$env:PATH = "$Toolchain;$Toolchain\mingw64\bin;$Toolchain\bin;$Toolchain\opt\bin;$Toolchain\opt\bin\Scripts;$env:PATH"
+$env:PYTHONPATH = "$Toolchain\opt\bin;$Toolchain\opt\bin\Lib;$Toolchain\opt\bin\Lib\site-packages"
+$env:ZEPHYR_TOOLCHAIN_VARIANT = "zephyr/gnu"
+$env:ZEPHYR_SDK_INSTALL_DIR = "$Toolchain\opt\zephyr-sdk"
+
+& $Python -B tools/ci/run_zephyr_build.py `
+  --workspace C:\ncs\v3.4.0 --outdir $BuildRoot --group v0.5.0 --jobs 2 `
+  --suite nucode.m28.b2p --suite nucode.m28.b2c
+
+& $Python -B tests/hil/nu54dk/m28_ble_2board.py `
+  --peripheral-hex "<nucode.m28.b2p zephyr.hex>" `
+  --central-hex "<nucode.m28.b2c zephyr.hex>" `
+  --peripheral-board-id "<Peripheral CMSIS-DAP UID>" `
+  --central-board-id "<Central CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --evidence "<새 m28-two-board.evidence.json>"
+```
+
+Pairing 전 두 image는 자기 identity의 기존 bond만 지우며 factory reset·mass erase·recover를 하지
+않는다. M21의 재부팅 bond 복원은 `M28-REG-01`에서 재사용하고, 이 image는 같은 boot의 RPA 기반
+link 재연결 20회만 검증한다. 3보드 단계는 이 세 기능을 반복하지 않고 두 동시 link·PAST·link별
+제어·soak만 수행한다. 준비 결과는
+[139번 기록](<../../../00_Docs/04_검증 기록/139_M28_W07_2보드_HIL_자동화_준비.md>)을 따른다.
+
 ## M15 System OFF 결합 HIL
 
 System OFF는 자동 HIL과 분리한 단일 수동 session에서 두 단계로 검증합니다.

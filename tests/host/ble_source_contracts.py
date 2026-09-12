@@ -21,6 +21,8 @@ def gap_source():
     base = ROOT / 'libraries/NUCODE_BLE/src'
     names = ['internal/gap/GapInternal.h', 'internal/gap/GapScanning.cpp',
              'internal/gap/GapConnection.cpp', 'internal/gap/GapAdvertising.cpp',
+             'internal/gap/GapExtendedAdvertising.cpp', 'internal/gap/GapPeriodicAdvertising.cpp',
+             'internal/gap/GapPawr.cpp',
              'internal/gap/GapValues.cpp', 'NUCODE_BLE_GAP.cpp']
     return '\n'.join((base / name).read_text(encoding='utf-8') for name in names)
 

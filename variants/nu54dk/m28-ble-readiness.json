@@ -13,8 +13,9 @@
     "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
     "toolchain_bundle": "dcbdc366a1",
     "profile": "ble",
-    "current_max_connections": 1,
-    "current_advertising_payload_bytes": 31
+    "current_max_connections": 2,
+    "current_advertising_payload_bytes": 31,
+    "current_extended_advertising_payload_bytes": 255
   },
   "baseline_assertions": [
     {
@@ -28,21 +29,32 @@
       "contains": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_CENTRAL=y",
-        "CONFIG_BT_MAX_CONN=1"
+        "CONFIG_BT_MAX_CONN=2",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_EXT_ADV_MAX_ADV_SET=1",
+        "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255",
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_BT_PER_ADV_SYNC_MAX=1",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y"
       ]
     },
     {
       "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
       "contains": [
-        "return 1U;",
-        "maximum_payload_length = 31U"
+        "return 2U;",
+        "maximum_payload_length = 31U",
+        "maximum_payload_length = 255U",
+        "class BLEAdvertisingSetHandle final"
       ]
     },
     {
       "path": "libraries/NUCODE_BLE/src/internal/gap/GapInternal.h",
       "contains": [
-        "struct bt_conn *active_connection = nullptr;",
-        "struct bt_conn *pending_connection = nullptr;"
+        "ConnectionSlot connection_slots[maximum_connection_slots]",
+        "atomic_t next_connection_generation"
       ]
     }
   ],
@@ -51,7 +63,7 @@
       "id": "multi_role_multi_link",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "baseline_partial",
+      "implementation_status": "host_target_passed",
       "required_kconfig": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_CENTRAL=y",
@@ -68,7 +80,7 @@
       "id": "extended_advertising_scanning",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "not_started",
+      "implementation_status": "host_target_passed",
       "required_kconfig": [
         "CONFIG_BT_EXT_ADV=y",
         "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255"
@@ -83,7 +95,7 @@
       "id": "periodic_advertising_sync_past",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "not_started",
+      "implementation_status": "host_target_passed",
       "required_kconfig": [
         "CONFIG_BT_PER_ADV=y",
         "CONFIG_BT_PER_ADV_SYNC=y",
@@ -102,7 +114,7 @@
       "id": "pawr_advertiser_scanner",
       "source_status": "candidate",
       "runtime_hci_status": "passed",
-      "implementation_status": "not_started",
+      "implementation_status": "host_target_passed",
       "required_kconfig": [
         "CONFIG_BT_PER_ADV_RSP=y",
         "CONFIG_BT_PER_ADV_SYNC_RSP=y",
@@ -340,33 +352,102 @@
     },
     {
       "id": "M28-W02",
-      "status": "not_started",
-      "completed": false
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "deferred_to_M28-W07",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "host_tests": "tests/host/test_m28_ble_links.py",
+        "runtime_tests": "tests/host/r12_ble_gap_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_link_contract",
+        "example": "libraries/NUCODE_BLE/examples/MixedRoleLinks/MixedRoleLinks.ino"
+      }
     },
     {
       "id": "M28-W03",
-      "status": "not_started",
-      "completed": false
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "deferred_to_M28-W07",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "host_tests": "tests/host/test_m28_ble_extended.py",
+        "runtime_tests": "tests/host/m28_ble_extended_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_extended_contract",
+        "advertiser_example": "libraries/NUCODE_BLE/examples/ExtendedAdvertising/ExtendedAdvertising.ino",
+        "scanner_example": "libraries/NUCODE_BLE/examples/ExtendedScanner/ExtendedScanner.ino"
+      }
     },
     {
       "id": "M28-W04",
-      "status": "not_started",
-      "completed": false
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "three_board_past_deferred_to_M28-W07",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+        "host_tests": "tests/host/test_m28_ble_periodic.py",
+        "runtime_tests": "tests/host/m28_ble_periodic_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_periodic_contract",
+        "advertiser_example": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
+        "scanner_example": "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino"
+      }
     },
     {
       "id": "M28-W05",
-      "status": "not_started",
-      "completed": false
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "two_board_pawr_deferred_to_M28-W07",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+        "host_tests": "tests/host/test_m28_ble_pawr.py",
+        "runtime_tests": "tests/host/m28_ble_pawr_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_pawr_contract",
+        "advertiser_example": "libraries/NUCODE_BLE/examples/PawrAdvertiser/PawrAdvertiser.ino",
+        "scanner_example": "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino"
+      }
     },
     {
       "id": "M28-W06",
-      "status": "not_started",
-      "completed": false
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "two_and_three_board_control_deferred_to_M28-W07",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "connection_implementation": "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "privacy_implementation": "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "host_tests": "tests/host/test_m28_ble_privacy_control.py",
+        "runtime_tests": "tests/host/m28_ble_privacy_control_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_privacy_control_contract",
+        "privacy_example": "libraries/NUCODE_BLE/examples/PrivacyPeripheral/PrivacyPeripheral.ino",
+        "control_example": "libraries/NUCODE_BLE/examples/PerLinkControl/PerLinkControl.ino"
+      }
     },
     {
       "id": "M28-W07",
-      "status": "not_started",
-      "completed": false
+      "status": "in_progress",
+      "completed": false,
+      "host_parser_tests": "passed_10_of_10",
+      "target_build": "passed_2_of_2",
+      "two_board_hil": "not_run",
+      "three_board_hil": "not_run",
+      "paths": {
+        "host_parser_tests": "tests/host/test_m28_ble_2board_hil.py",
+        "hil_runner": "tests/hil/nu54dk/m28_ble_2board.py",
+        "target_application": "tests/zephyr/m28_ble_2board_hil"
+      }
     },
     {
       "id": "M28-W08",
@@ -375,13 +456,13 @@
     }
   ],
   "progress": {
-    "completed_work_packages": 1,
+    "completed_work_packages": 6,
     "total_work_packages": 8,
-    "percent": 12.5,
-    "current_work_package": "M28-W02"
+    "percent": 75.0,
+    "current_work_package": "M28-W07"
   },
   "not_yet_claimed": [
-    "production BLE implementation",
+    "full M28 production BLE implementation",
     "full M28 physical HIL PASS",
     "Bluetooth qualification"
   ]

@@ -1,8 +1,8 @@
 # 현재 지원 상태와 다른 PC 개발 준비
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25는 모두 완료됐습니다.** M28은
-진행 중이며 W01 capability image·고정 protocol·Host parser·target build·실제 HCI 6/6을
-완료했습니다. 현재 작업은 W02 per-link 기반입니다. 이 문서는 완료한 시험을 재개하라는
+진행 중이며 W01 capability image·실제 HCI 6/6과 W02~W06의 Host·target 검증을 완료했습니다.
+현재 작업은 W07의 2보드 선행 HIL입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -40,7 +40,7 @@
 
 일반 Arduino 사용자라면 위 개발 도구 대신 [Boards Manager 설치](<02_빌드 설계/06_Boards_Manager_설치와_패키징.md>)를 사용합니다.
 
-## M28-W01 완료와 현재 W02 인계점
+## M28-W01~W06 완료와 현재 W07 인계점
 
 | 구분 | 상태 |
 | --- | --- |
@@ -48,13 +48,31 @@
 | Protocol·parser | `M28CAP/1`, full revision·128-bit nonce·고정 15줄; noise·중복·누락·stale·wrong revision·timeout fail-closed |
 | Host 검증 | 신규 parser 시험 12개, readiness 7개 PASS |
 | Target 검증 | exact `78078a42…`, 고정 NCS v3.4.0에서 `nucode.m28.ble_capability` 1/1 build-only PASS |
-| 실제 HCI | **6/6 PASS** — source `candidate`와 runtime HCI PASS를 분리, production 구현은 미착수 |
+| 실제 HCI | **6/6 PASS** — source `candidate`와 runtime HCI PASS를 분리 |
+| W02 link 기반 | central/peripheral 고정 2-slot, generation opaque handle, 상세 event, central 우선 legacy view |
+| W02 검증·예제 | production Host 13개 시나리오·source 계약 5개·target 1/1 PASS, `MixedRoleLinks` 추가 |
+| W03 확장 GAP | generation advertising set 1개, raw AD 255 byte, SID·TX power·periodic interval·PHY scan metadata |
+| W03 검증·예제 | production Host 수명 시나리오 4개·정적 경계·target 1/1 PASS, `ExtendedAdvertising`·`ExtendedScanner` 추가 |
+| W04 periodic·PAST | 1 advertiser·1 generation sync, 255-byte/8-entry report queue, link별 PAST sender/receiver |
+| W04 검증·예제 | production Host 수명 시나리오 4개·정적 경계·target 1/1 PASS, `PeriodicAdvertiser`·`PeriodicScanner` 추가 |
+| W05 PAwR | 4 subevent × 4 response slot, 249-byte payload, 8-entry response queue |
+| W05 검증·예제 | production Host 수명 시나리오 4개·정적 경계·target 1/1 PASS, `PawrAdvertiser`·`PawrScanner` 추가 |
+| W06 privacy·제어 | RPA timeout/event, connection 주소와 identity 분리, link별 parameter·DLE·remote-info |
+| W06 검증·예제 | production Host 수명 시나리오 5개·정적 경계·target 1/1 PASS, `PrivacyPeripheral`·`PerLinkControl` 추가 |
+| W07 2보드 준비 | `M28B2` parser 10/10, peripheral/central target 2/2 build-only PASS; 실제 HIL은 `NOT RUN` |
 | 확인 장비 | NU54DK·독립 DAP/UART 2경로; 필수 3번째 보드와 packet trace는 미확인 |
-| 다음 행동 | `M28-W02` 고정 2-slot·generation opaque handle·link별 event/state Host 계약과 구현 |
+| 다음 행동 | `M28-W07`의 2보드 `REG/ADV/PAWR/PRIV`를 실행하고, 3보드는 `LINK/PER/CTRL/SOAK`만 수행 |
 
 실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m28-w01-capability-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과
-[132번 실제 HCI 완료 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)을 따른다.
+[132번 실제 HCI 완료 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)과
+[134번 W02 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>)과
+[135번 W03 기록](<04_검증 기록/135_M28_W03_확장_광고와_스캔.md>)을 따른다.
+[136번 W04 기록](<04_검증 기록/136_M28_W04_periodic_sync_PAST.md>),
+[137번 W05 기록](<04_검증 기록/137_M28_W05_PAwR_advertiser_scanner.md>)과
+[138번 W06 기록](<04_검증 기록/138_M28_W06_privacy_RPA_link_control.md>)도 함께 따른다.
+[139번 W07 2보드 준비 기록](<04_검증 기록/139_M28_W07_2보드_HIL_자동화_준비.md>)은 fixed
+protocol·runner·target build와 아직 실행하지 않은 실기 경계를 보존한다.
 
 ## 보존 자료와 재생성 자료
 

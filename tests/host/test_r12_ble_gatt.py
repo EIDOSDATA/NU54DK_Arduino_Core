@@ -26,6 +26,9 @@ class BleGattTests(unittest.TestCase):
                         'libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp',
 

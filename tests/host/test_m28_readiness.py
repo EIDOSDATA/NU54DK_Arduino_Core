@@ -21,6 +21,22 @@ TODO_PATH = REPOSITORY / "00_Docs" / "TODO_v0.5.0.md"
 CAPABILITY_CONFIG_PATH = (
     REPOSITORY / "tests" / "zephyr" / "m28_ble_capability" / "prj.conf"
 )
+LINK_CONFIG_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_link_contract" / "prj.conf"
+)
+EXTENDED_CONFIG_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_extended_contract" / "prj.conf"
+)
+PERIODIC_CONFIG_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_periodic_contract" / "prj.conf"
+)
+PAWR_CONFIG_PATH = REPOSITORY / "tests" / "zephyr" / "m28_ble_pawr_contract" / "prj.conf"
+PRIVACY_CONTROL_CONFIG_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_privacy_control_contract" / "prj.conf"
+)
+TWO_BOARD_CONFIG_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_2board_hil" / "prj.conf"
+)
 
 
 class M28ReadinessTests(unittest.TestCase):
@@ -51,8 +67,8 @@ class M28ReadinessTests(unittest.TestCase):
             self.lock["windows_toolchain"]["bundle_id"],
         )
 
-    def test_current_single_link_source_contract_is_not_mislabeled_as_m28(self) -> None:
-        """! @brief 현재 단일 링크 제약이 바뀌면 준비 원장을 함께 갱신하도록 강제합니다. """
+    def test_current_source_contract_tracks_completed_work_packages(self) -> None:
+        """! @brief W02의 현재 2-link source 상태를 준비 원장과 함께 고정합니다. """
 
         for assertion in self.readiness["baseline_assertions"]:
             path = REPOSITORY / assertion["path"]
@@ -61,8 +77,9 @@ class M28ReadinessTests(unittest.TestCase):
             for token in assertion["contains"]:
                 self.assertIn(token, text, f"{path}: {token}")
         baseline = self.readiness["baseline"]
-        self.assertEqual(baseline["current_max_connections"], 1)
+        self.assertEqual(baseline["current_max_connections"], 2)
         self.assertEqual(baseline["current_advertising_payload_bytes"], 31)
+        self.assertEqual(baseline["current_extended_advertising_payload_bytes"], 255)
 
     def test_source_candidates_remain_separate_from_runtime_hci_pass(self) -> None:
         """! @brief 정적 후보와 실제 W01 HCI PASS를 서로 다른 상태로 고정합니다. """
@@ -82,7 +99,7 @@ class M28ReadinessTests(unittest.TestCase):
             self.assertEqual(entry["runtime_hci_status"], "passed", entry["id"])
             self.assertIn(
                 entry["implementation_status"],
-                {"not_started", "baseline_partial"},
+                {"not_started", "baseline_partial", "host_target_passed"},
                 entry["id"],
             )
             self.assertGreater(len(entry["required_kconfig"]), 0, entry["id"])
@@ -171,15 +188,116 @@ class M28ReadinessTests(unittest.TestCase):
         for capability in self.readiness["source_capabilities"]:
             for setting in capability["required_kconfig"]:
                 self.assertIn(setting, capability_config, capability["id"])
+        w02 = statuses[1]
+        self.assertEqual(w02["status"], "completed")
+        self.assertTrue(w02["completed"])
+        self.assertEqual(w02["host_contract_tests"], "passed")
+        self.assertEqual(w02["target_build"], "passed")
+        self.assertEqual(w02["physical_hil"], "deferred_to_M28-W07")
+        for path in w02["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
+        link_config = LINK_CONFIG_PATH.read_text(encoding="utf-8")
+        self.assertIn("CONFIG_BT_MAX_CONN=2", link_config)
+        self.assertIn("CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1", link_config)
+        w03 = statuses[2]
+        self.assertEqual(w03["status"], "completed")
+        self.assertTrue(w03["completed"])
+        self.assertEqual(w03["host_contract_tests"], "passed")
+        self.assertEqual(w03["target_build"], "passed")
+        self.assertEqual(w03["physical_hil"], "deferred_to_M28-W07")
+        for path in w03["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
+        extended_config = EXTENDED_CONFIG_PATH.read_text(encoding="utf-8")
+        self.assertIn("CONFIG_BT_EXT_ADV=y", extended_config)
+        self.assertIn("CONFIG_BT_EXT_ADV_MAX_ADV_SET=1", extended_config)
+        self.assertIn("CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255", extended_config)
+        w04 = statuses[3]
+        self.assertEqual(w04["status"], "completed")
+        self.assertTrue(w04["completed"])
+        self.assertEqual(w04["host_contract_tests"], "passed")
+        self.assertEqual(w04["target_build"], "passed")
+        self.assertEqual(
+            w04["physical_hil"], "three_board_past_deferred_to_M28-W07"
+        )
+        for path in w04["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
+        periodic_config = PERIODIC_CONFIG_PATH.read_text(encoding="utf-8")
+        for setting in (
+            "CONFIG_BT_PER_ADV=y",
+            "CONFIG_BT_PER_ADV_SYNC=y",
+            "CONFIG_BT_PER_ADV_SYNC_MAX=1",
+            "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
+            "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y",
+        ):
+            self.assertIn(setting, periodic_config)
+        w05 = statuses[4]
+        self.assertEqual(w05["status"], "completed")
+        self.assertTrue(w05["completed"])
+        self.assertEqual(w05["host_contract_tests"], "passed")
+        self.assertEqual(w05["target_build"], "passed")
+        self.assertEqual(w05["physical_hil"], "two_board_pawr_deferred_to_M28-W07")
+        for path in w05["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
+        pawr_config = PAWR_CONFIG_PATH.read_text(encoding="utf-8")
+        for setting in (
+            "CONFIG_BT_PER_ADV_RSP=y",
+            "CONFIG_BT_PER_ADV_SYNC_RSP=y",
+            "CONFIG_BT_CTLR_SDC_PAWR_ADV_COUNT=1",
+            "CONFIG_BT_CTLR_SDC_PERIODIC_ADV_RSP_TX_BUFFER_COUNT=4",
+            "CONFIG_BT_CTLR_SDC_PERIODIC_ADV_RSP_TX_MAX_DATA_SIZE=249",
+            "CONFIG_BT_CTLR_SDC_PERIODIC_ADV_RSP_RX_BUFFER_COUNT=4",
+        ):
+            self.assertIn(setting, pawr_config)
+        w06 = statuses[5]
+        self.assertEqual(w06["status"], "completed")
+        self.assertTrue(w06["completed"])
+        self.assertEqual(w06["host_contract_tests"], "passed")
+        self.assertEqual(w06["target_build"], "passed")
+        self.assertEqual(
+            w06["physical_hil"],
+            "two_and_three_board_control_deferred_to_M28-W07",
+        )
+        for path in w06["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
+        privacy_control_config = PRIVACY_CONTROL_CONFIG_PATH.read_text(encoding="utf-8")
+        for setting in (
+            "CONFIG_BT_PRIVACY=y",
+            "CONFIG_BT_RPA_TIMEOUT_DYNAMIC=y",
+            "CONFIG_BT_USER_DATA_LEN_UPDATE=y",
+            "CONFIG_BT_REMOTE_INFO=y",
+            "CONFIG_BT_REMOTE_VERSION=y",
+        ):
+            self.assertIn(setting, privacy_control_config)
+        w07 = statuses[6]
+        self.assertEqual(w07["status"], "in_progress")
+        self.assertFalse(w07["completed"])
+        self.assertEqual(w07["host_parser_tests"], "passed_10_of_10")
+        self.assertEqual(w07["target_build"], "passed_2_of_2")
+        self.assertEqual(w07["two_board_hil"], "not_run")
+        self.assertEqual(w07["three_board_hil"], "not_run")
+        for path in w07["paths"].values():
+            self.assertTrue((REPOSITORY / path).exists(), path)
+        two_board_config = TWO_BOARD_CONFIG_PATH.read_text(encoding="utf-8")
+        for setting in (
+            "CONFIG_BT_MAX_CONN=2",
+            "CONFIG_BT_EXT_ADV=y",
+            "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255",
+            "CONFIG_BT_PER_ADV_RSP=y",
+            "CONFIG_BT_PER_ADV_SYNC_RSP=y",
+            "CONFIG_BT_PRIVACY=y",
+            "CONFIG_BT_RPA_TIMEOUT_DYNAMIC=y",
+            "CONFIG_BT_SETTINGS=y",
+        ):
+            self.assertIn(setting, two_board_config)
         progress = self.readiness["progress"]
-        self.assertEqual(progress["completed_work_packages"], 1)
+        self.assertEqual(progress["completed_work_packages"], 6)
         self.assertEqual(progress["total_work_packages"], 8)
-        self.assertEqual(progress["percent"], 12.5)
-        self.assertEqual(progress["current_work_package"], "M28-W02")
+        self.assertEqual(progress["percent"], 75.0)
+        self.assertEqual(progress["current_work_package"], "M28-W07")
         self.assertEqual(
             self.readiness["not_yet_claimed"],
             [
-                "production BLE implementation",
+                "full M28 production BLE implementation",
                 "full M28 physical HIL PASS",
                 "Bluetooth qualification",
             ],

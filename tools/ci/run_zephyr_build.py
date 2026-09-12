@@ -107,6 +107,13 @@ SUITE_GROUPS = {
     ),
     "v0.5.0": (
         ("m28_ble_capability", "nucode.m28.ble_capability"),
+        ("m28_ble_link_contract", "nucode.m28.ble_link_contract"),
+        ("m28_ble_extended_contract", "nucode.m28.ble_extended_contract"),
+        ("m28_ble_periodic_contract", "nucode.m28.ble_periodic_contract"),
+        ("m28_ble_pawr_contract", "nucode.m28.ble_pawr_contract"),
+        ("m28_ble_privacy_control_contract", "nucode.m28.privacy_control"),
+        ("m28_ble_2board_hil", "nucode.m28.b2p"),
+        ("m28_ble_2board_hil", "nucode.m28.b2c"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)
