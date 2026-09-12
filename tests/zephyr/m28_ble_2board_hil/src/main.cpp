@@ -45,7 +45,8 @@ namespace
     constexpr std::int64_t reconnect_advertising_delay_ms = 1200;
     constexpr std::int64_t security_request_delay_ms = 400;
     constexpr std::int64_t secured_disconnect_delay_ms = 700;
-    constexpr std::int64_t pawr_drain_timeout_ms = 35000;
+    constexpr std::int64_t pawr_discovery_timeout_ms = 60000;
+    constexpr std::int64_t pawr_response_window_ms = 35000;
     constexpr std::int64_t protocol_timeout_ms = 240000;
 
     enum class Phase : std::uint8_t
@@ -554,7 +555,7 @@ namespace
             return;
         }
         phase = Phase::pawr_active;
-        pawr_phase_deadline_ms = k_uptime_get() + pawr_drain_timeout_ms;
+        pawr_phase_deadline_ms = k_uptime_get() + pawr_discovery_timeout_ms;
     }
 
     /** @brief 세 번의 RPA 회전을 관측할 non-connectable set을 시작합니다. */
@@ -660,6 +661,10 @@ namespace
             ++pawr_out_of_window_count;
             fail("pawr-response-window");
             return;
+        }
+        if (pawr_response_count == 0U)
+        {
+            pawr_phase_deadline_ms = k_uptime_get() + pawr_response_window_ms;
         }
         ++pawr_response_count;
         pawr_subevent_mask |= static_cast<std::uint8_t>(1U << response.subevent);

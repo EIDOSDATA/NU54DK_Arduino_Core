@@ -166,6 +166,12 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_SYNC", source)
         self.assertIn("constexpr std::uint32_t required_pawr_responses = 100U;", source)
         self.assertIn("pawr_response_count < 99U", source)
+        self.assertIn("pawr_discovery_timeout_ms = 60000", source)
+        self.assertIn("pawr_response_window_ms = 35000", source)
+        self.assertIn(
+            "pawr_phase_deadline_ms = k_uptime_get() + pawr_response_window_ms;",
+            source,
+        )
         self.assertLess(
             source.index("BLEPrivacy.setRotationTimeout(1U)"),
             source.index("startAdvertisingPhase();", source.index("void startProtocol()")),
