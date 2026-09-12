@@ -50,7 +50,7 @@
     {
       "id": "multi_role_multi_link",
       "source_status": "candidate",
-      "runtime_hci_status": "not_run",
+      "runtime_hci_status": "passed",
       "implementation_status": "baseline_partial",
       "required_kconfig": [
         "CONFIG_BT_PERIPHERAL=y",
@@ -67,7 +67,7 @@
     {
       "id": "extended_advertising_scanning",
       "source_status": "candidate",
-      "runtime_hci_status": "not_run",
+      "runtime_hci_status": "passed",
       "implementation_status": "not_started",
       "required_kconfig": [
         "CONFIG_BT_EXT_ADV=y",
@@ -82,7 +82,7 @@
     {
       "id": "periodic_advertising_sync_past",
       "source_status": "candidate",
-      "runtime_hci_status": "not_run",
+      "runtime_hci_status": "passed",
       "implementation_status": "not_started",
       "required_kconfig": [
         "CONFIG_BT_PER_ADV=y",
@@ -101,7 +101,7 @@
     {
       "id": "pawr_advertiser_scanner",
       "source_status": "candidate",
-      "runtime_hci_status": "not_run",
+      "runtime_hci_status": "passed",
       "implementation_status": "not_started",
       "required_kconfig": [
         "CONFIG_BT_PER_ADV_RSP=y",
@@ -119,7 +119,7 @@
     {
       "id": "privacy_rpa",
       "source_status": "candidate",
-      "runtime_hci_status": "not_run",
+      "runtime_hci_status": "passed",
       "implementation_status": "not_started",
       "required_kconfig": [
         "CONFIG_BT_PRIVACY=y",
@@ -133,7 +133,7 @@
     {
       "id": "per_link_control",
       "source_status": "candidate",
-      "runtime_hci_status": "not_run",
+      "runtime_hci_status": "passed",
       "implementation_status": "baseline_partial",
       "required_kconfig": [
         "CONFIG_BT_DATA_LEN_UPDATE=y",
@@ -172,11 +172,17 @@
     ]
   },
   "equipment": {
-    "availability": "not_confirmed",
+    "availability": "partial",
     "required": {
       "nu54dk_boards": 3,
       "independent_usb_dap_uart_paths": 3,
       "packet_trace_receivers": 1
+    },
+    "observed": {
+      "nu54dk_boards": 2,
+      "independent_usb_dap_uart_paths": 2,
+      "packet_trace_receivers": "not_confirmed",
+      "observed_at_utc": "2026-09-12T04:58:53Z"
     },
     "interop_peers": [
       "Android",
@@ -195,7 +201,9 @@
         "required_hci_features_recorded": 6,
         "missing_required_features": 0,
         "stale_nonce_tokens": 0
-      }
+      },
+      "status": "passed",
+      "evidence_record": "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md"
     },
     {
       "id": "M28-REG-01",
@@ -316,16 +324,18 @@
   "work_package_status": [
     {
       "id": "M28-W01",
-      "status": "host_target_ready_hil_not_run",
-      "completed": false,
+      "status": "completed",
+      "completed": true,
       "protocol": "M28CAP/1",
       "host_parser_tests": "passed",
       "target_build": "passed",
-      "physical_hci": "not_run",
+      "physical_hci": "passed",
+      "tested_core_revision": "78078a422351cd373e0d153987add2c5b770acbb",
       "paths": {
         "application": "tests/zephyr/m28_ble_capability",
         "host_parser": "tests/hil/nu54dk/m28_ble_capability.py",
-        "host_tests": "tests/host/test_m28_ble_capability.py"
+        "host_tests": "tests/host/test_m28_ble_capability.py",
+        "evidence_record": "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md"
       }
     },
     {
@@ -365,14 +375,14 @@
     }
   ],
   "progress": {
-    "completed_work_packages": 0,
+    "completed_work_packages": 1,
     "total_work_packages": 8,
-    "percent": 0,
-    "current_work_package": "M28-W01"
+    "percent": 12.5,
+    "current_work_package": "M28-W02"
   },
   "not_yet_claimed": [
     "production BLE implementation",
-    "physical HIL PASS",
+    "full M28 physical HIL PASS",
     "Bluetooth qualification"
   ]
 }

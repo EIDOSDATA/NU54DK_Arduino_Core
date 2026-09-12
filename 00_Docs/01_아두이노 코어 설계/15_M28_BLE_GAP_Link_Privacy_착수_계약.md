@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | M28-BLE-READINESS-001 |
-| 문서 개정 | 1.1 |
+| 문서 개정 | 1.2 |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **M28-W01 진행 중 / Host·target 준비 PASS / 실제 HCI NOT RUN** |
+| 현재 상태 | **M28-W01 완료 / Host·target·실제 HCI 6/6 PASS / W02 착수** |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, SoftDevice Controller multirole |
 | 최종 갱신일 | 2026-09-12 |
 | 기계 판정 원본 | [`m28-ble-readiness.json`](../../variants/nu54dk/m28-ble-readiness.json) |
@@ -44,17 +44,17 @@ symbol이다. `maximumConnections()==1`과 단일 connection pointer를 단순�
 
 ## 3. 고정 SDK 지원 후보 원장
 
-아래 판정은 로컬 NCS v3.4.0 source와 CI lock을 대조한 **정적 후보 판정**이다. 첫 M28 image에서
-지원 HCI feature/command와 실제 생성 가능한 자원 수를 다시 읽어야 한다.
+아래 source 판정은 로컬 NCS v3.4.0 source와 CI lock을 대조한 **정적 후보 판정**이다. W01 exact
+image의 실제 HCI 결과는 별도 열에 두며, 어느 쪽도 production API·RF HIL 완료를 뜻하지 않는다.
 
-| 기능군 | 정적 근거 | 현재 판정 |
-| --- | --- | --- |
-| Multi-role/link | `BT_MAX_CONN`, SDC peripheral count, multirole controller 변형 | 기존 central/peripheral 단일 역할은 있음. 동시 2-link 구현·실기 NOT RUN |
-| Extended advertising/scanning | `BT_EXT_ADV`, `bt_le_ext_adv_*`, SDC Advertising Extensions | source 후보 확인. profile/API/HCI/실기 NOT RUN |
-| Periodic advertising/sync·PAST | `BT_PER_ADV*`, sync-transfer sender/receiver API | source 후보 확인. PAST receiver는 link당 동시 수신 절차 1개 제한 반영 필요 |
-| PAwR | `BT_PER_ADV_RSP`, `BT_PER_ADV_SYNC_RSP`, SDC PAwR advertiser/scanner | source 후보 확인. buffer·subevent/slot 상한 HCI/실기 NOT RUN |
-| Privacy/RPA | Zephyr host `BT_PRIVACY`, controller privacy | source 후보 확인. bond identity·RPA 회전·재연결 NOT RUN |
-| Per-link control | 기존 MTU/PHY/parameter/tx-power + DLE/remote-info API | 단일 링크 일부 구현. 두 링크 격리·DLE·remote-info NOT RUN |
+| 기능군 | 정적 근거 | W01 실제 HCI | 남은 production 판정 |
+| --- | --- | --- | --- |
+| Multi-role/link | `BT_MAX_CONN`, SDC peripheral count, multirole controller 변형 | **PASS** | 동시 2-link 구현·실기 NOT RUN |
+| Extended advertising/scanning | `BT_EXT_ADV`, `bt_le_ext_adv_*`, SDC Advertising Extensions | **PASS** | public API·255-byte RF 실기 NOT RUN |
+| Periodic advertising/sync·PAST | `BT_PER_ADV*`, sync-transfer sender/receiver API | **PASS** | report·PAST 3보드 실기 NOT RUN |
+| PAwR | `BT_PER_ADV_RSP`, `BT_PER_ADV_SYNC_RSP`, SDC PAwR advertiser/scanner | **PASS** | buffer·subevent/slot RF 실기 NOT RUN |
+| Privacy/RPA | Zephyr host `BT_PRIVACY`, controller privacy | **PASS** | bond identity·RPA 회전·재연결 NOT RUN |
+| Per-link control | 기존 MTU/PHY/parameter/tx-power + DLE/remote-info API | **PASS** | 두 링크 격리·DLE·remote-info 실기 NOT RUN |
 
 정적 근거 경로와 필요한 Kconfig의 단일 기계 원본은
 [`m28-ble-readiness.json`](../../variants/nu54dk/m28-ble-readiness.json)에 둔다. 고정 SDK를
@@ -118,9 +118,11 @@ periodic sync, queue와 payload buffer는 compile-time 상한을 가진 고정 s
 
 Firmware는 잘못된 PROBE·START·nonce·HCI status·응답 크기를 즉시 `FAIL`로 닫는다. Host parser는 전체
 transcript가 정확히 15줄인지 확인하고 noise·중복·누락·순서 변경·stale nonce·wrong revision·
-timeout과 raw HCI bit/resource에 맞지 않는 PASS 문자열을 거부한다. 현재 신규 Host 시험 11개와
-고정 SDK target 1/1 build는 PASS했지만 보드 실행은 `NOT RUN`이므로 기능군의
-`runtime_hci_status`는 계속 `not_run`이다.
+timeout과 raw HCI bit/resource에 맞지 않는 PASS 문자열을 거부한다. exact `78078a42…`에서 신규
+parser 시험 12개, 고정 SDK target 1/1 build와 실제 HCI 6/6이 PASS했다. 정적
+`source_status=candidate`는 유지하고 기능군의 별도 `runtime_hci_status`만 `passed`다.
+[132번 기록](<../04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)이 image·raw 증거 hash와
+실패 분류를 보존한다.
 
 ## 6. 유한 시험 계약
 
@@ -146,8 +148,9 @@ Periodic/PAwR 수신률은 통제된 bench 조건과 packet trace로 분모를 �
 ## 7. 장비와 실행 전 확인
 
 필수 구성은 NU54DK 3개, 독립 USB/DAP/UART 경로 3개와 packet trace 수단 1개다. Android,
-iOS, Windows와 Linux peer는 각 OS/version과 adapter를 기록해 상호운용 표를 채운다. 현재 장비
-확보 상태는 **미확인**이며, 장비가 없으면 관련 시험은 `NOT RUN`이다.
+iOS, Windows와 Linux peer는 각 OS/version과 adapter를 기록해 상호운용 표를 채운다. W01에서
+보드·DAP/UART 2경로를 확인했으며 **3번째 경로와 packet trace는 미확인**이다. 장비가 없으면
+관련 시험은 `NOT RUN`이다.
 
 실기 전에는 다음을 확인한다.
 
@@ -165,15 +168,15 @@ unlock·recover·mass erase를 사용하지 않는다.
 | --- | --- |
 | P01 Core/board/SDK/toolchain 기준선 | **완료** |
 | P02 M28 정적 capability 원장 | **완료** |
-| P02 실제 HCI capability | **실기 NOT RUN — W01 Host·target 준비 뒤 첫 실행 대기** |
+| P02 실제 HCI capability | **exact `78078a42…` 실기 6/6 PASS** |
 | P03 공개 API·profile 경계 | **준비 계약 완료** |
-| P04 시험 구성 | **계획 고정 / 장비 확보 미확인** |
+| P04 시험 구성 | **계획 고정 / 보드·DAP/UART 2/3 확인, packet trace 미확인** |
 | P05 수치 합격 기준 | **M28 9개 test ID 고정** |
 | P06 실행 목록 | **M28-W01~W08 고정** |
 
-따라서 M28은 구현에 착수했지만 W01 실제 HCI가 남아 진행률은 **0/8 작업 묶음, 0%**다. 다음
-작업은 clean exact commit의 capability image를 실물 NU54DK 한 대에서 실행해 HCI 원장을 채우고,
-결과를 정적 `candidate`와 분리해 기록하는 것이다.
+따라서 M28 진행률은 **1/8 작업 묶음, 12.5%**다. 다음 작업은 `M28-W02`의 고정 2-slot,
+generation 기반 opaque handle, link별 state/event와 stale callback 거부 계약을 Host 시험부터
+구현하는 것이다. W01 PASS는 W02~W08이나 전체 M28 PASS가 아니다.
 
 준비 계약 검사는 다음으로 실행한다.
 

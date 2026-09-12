@@ -1,0 +1,15 @@
+M28CAP|1|READY
+M28CAP|1|BEGIN|nonce=7ffb92604532fdd3014aada6e07ea690
+M28CAP|1|IDENTITY|nonce=7ffb92604532fdd3014aada6e07ea690|core=78078a422351cd373e0d153987add2c5b770acbb|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+M28CAP|1|HOST|nonce=7ffb92604532fdd3014aada6e07ea690|bt_max_conn=2|peripheral_count=1|central_count=1|ext_adv=1|per_adv=1|per_adv_sync=1|past_sender=1|past_receiver=1|pawr_adv=1|pawr_sync=1|privacy=1|settings=1|data_len_update=1|remote_info=1|user_phy_update=1
+M28CAP|1|HCI_VERSION|nonce=7ffb92604532fdd3014aada6e07ea690|hci_version=17|hci_revision=12345|manufacturer=89|lmp_subversion=12345
+M28CAP|1|HCI_COMMANDS|nonce=7ffb92604532fdd3014aada6e07ea690|commands=2000800000c000000000040000002802000000000000040000b73fec0f0000003040797e7efdbf04e00300000000e40300000000000000000000000000000000
+M28CAP|1|LE_FEATURES|nonce=7ffb92604532fdd3014aada6e07ea690|features=fd71000310190000
+M28CAP|1|RESOURCES|nonce=7ffb92604532fdd3014aada6e07ea690|max_adv_data_len=257|adv_sets=1|per_adv_list=1|resolving_list=8
+M28CAP|1|CAP|nonce=7ffb92604532fdd3014aada6e07ea690|id=multi_role_multi_link|host=pass|controller=pass|evidence=config+commands
+M28CAP|1|CAP|nonce=7ffb92604532fdd3014aada6e07ea690|id=extended_advertising_scanning|host=pass|controller=pass|evidence=le_feature+commands+resource
+M28CAP|1|CAP|nonce=7ffb92604532fdd3014aada6e07ea690|id=periodic_advertising_sync_past|host=pass|controller=pass|evidence=le_feature+commands+resource
+M28CAP|1|CAP|nonce=7ffb92604532fdd3014aada6e07ea690|id=pawr_advertiser_scanner|host=pass|controller=pass|evidence=le_feature
+M28CAP|1|CAP|nonce=7ffb92604532fdd3014aada6e07ea690|id=privacy_rpa|host=pass|controller=pass|evidence=le_feature+commands+resource
+M28CAP|1|CAP|nonce=7ffb92604532fdd3014aada6e07ea690|id=per_link_control|host=pass|controller=pass|evidence=le_feature+commands
+M28CAP|1|END|records=12|capabilities=6|nonce=7ffb92604532fdd3014aada6e07ea690

@@ -368,9 +368,11 @@ Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
 $Commit = git rev-parse HEAD
 $Hex = "<nucode.m28.ble_capability의 zephyr.hex 절대 경로>"
 $Evidence = "<새 evidence JSON 절대 경로>"
-$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Toolchain = "C:\ncs\toolchains\dcbdc366a1"
+$Python = "$Toolchain\opt\bin\python.exe"
+$env:PYTHONPATH = "$Toolchain\opt\bin;$Toolchain\opt\bin\Lib;$Toolchain\opt\bin\Lib\site-packages"
 
-& $Python -I tests/hil/nu54dk/m28_ble_capability.py `
+& $Python -B tests/hil/nu54dk/m28_ble_capability.py `
   --hex $Hex `
   --board-id "<시험할 CMSIS-DAP UID>" `
   --expected-core-revision $Commit `
@@ -382,6 +384,10 @@ Runner는 flash/reset 구간 뒤 UART 입력을 비우고 exact `PROBE`로 검�
 bit/resource가 부족하거나 noise·중복·누락·wrong revision·stale nonce·target FAIL이 있으면 해당
 실행을 실패로 종료한다. 실패를 무한 재시도하지 않고 USB/UART 연결을 먼저 대조한 뒤, 연결이 정상이면
 CMSIS-DAP으로 controller·GPIO·오류 상태를 확보해 원인 분류 후 동일 조건으로 재검증한다.
+
+2026-09-12 exact `78078a42…` 실행은 6개 기능군을 모두 통과했다. 실제 값·artifact hash와
+실패 분류는 [132번 기록](<../../../00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)에
+보존한다. 이 W01 결과를 W02 이후 production BLE·RF HIL PASS로 재사용하지 않는다.
 
 ## M15 System OFF 결합 HIL
 

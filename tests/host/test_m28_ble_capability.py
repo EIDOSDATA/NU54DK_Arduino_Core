@@ -218,12 +218,12 @@ class M28BleCapabilityParserTests(unittest.TestCase):
             )
 
     def test_readiness_keeps_source_candidates_separate_from_hci(self) -> None:
-        """! @brief target build만으로 readiness의 HCI 상태를 PASS로 바꾸지 않습니다. """
+        """! @brief 정적 후보는 유지하되 exact W01 실기 뒤 runtime HCI만 PASS로 기록합니다. """
 
         readiness = json.loads(MODULE.READINESS_PATH.read_text(encoding="utf-8"))
         for capability in readiness["source_capabilities"]:
             self.assertEqual(capability["source_status"], "candidate")
-            self.assertEqual(capability["runtime_hci_status"], "not_run")
+            self.assertEqual(capability["runtime_hci_status"], "passed")
 
 
 if __name__ == "__main__":

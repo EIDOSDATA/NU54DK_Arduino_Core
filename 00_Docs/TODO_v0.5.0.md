@@ -2,9 +2,9 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 진행 중이며 M28-W01의 Host·target 준비를 완료하고 실제 HCI는 NOT RUN이다.
-M29~M33은 계획·구현 미착수**다. Host·target build를 작업 묶음 완료나 새 물리 PASS로 세지
-않는다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
+**M28은 진행 중이며 M28-W01의 Host·target·실제 HCI 6/6을 완료했다. 현재 작업은
+M28-W02이고 M29~M33은 계획·구현 미착수**다. W01 capability PASS를 production BLE 구현이나
+전체 M28 물리 PASS로 확대하지 않는다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
 | 정보 | 단일 원본 |
 | --- | --- |
@@ -14,13 +14,13 @@ M29~M33은 계획·구현 미착수**다. Host·target build를 작업 묶음 �
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
-| 이번 준비 작업의 변경·검사 | [130번 기록](<04_검증 기록/130_개발문서_전수감사와_M28_착수_준비.md>) |
+| W01 실제 HCI·실패 분류·증거 | [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>) |
 
 ## 1. 다음 착수 순서
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
-현재 **M28-W01 capability image·고정 protocol·Host parser·target build**를 완료했고 다음 실행은
-실물 보드 한 대의 `M28-CAP-01`이다. P01~P06은 별도 전역
+**M28-W01 capability image·고정 protocol·Host parser·target build와 실물 `M28-CAP-01` 6/6을
+완료했고, 다음 구현은 M28-W02 per-link 기반**이다. P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
 M31 전용 장비가 미확보라는 이유로 독립적인 M28 문서·Host 작업까지 차단하지 않는다.
@@ -28,30 +28,32 @@ M31 전용 장비가 미확보라는 이유로 독립적인 M28 문서·Host 작
 | 체크 | 상태 | 산출물·완료 조건 |
 | --- | --- | --- |
 | P01 기준선 확인 | **M28 완료** | v0.4.1, Core/board/NCS/Zephyr lock과 현재 단일 링크 source 계약 대조 완료 |
-| P02 기능 지원 원장 | **M28 정적 완료 / HCI NOT RUN** | 6개 기능군의 host/controller source 후보를 기록. 실제 HCI는 `M28-CAP-01`에서 확인 |
+| P02 기능 지원 원장 | **M28 정적 완료 / W01 HCI 6/6 PASS** | 정적 `candidate`는 유지하고 실제 runtime HCI 판정만 별도 PASS |
 | P03 공개 API·profile 경계 | **M28 완료** | 기존 singleton symbol 호환, generation handle, 역할별 1개·총 2-link 고정 자원 계약 확정 |
-| P04 장비·상호운용 matrix | **M28 계획 완료 / 확보 미확인** | NU54DK 3개·독립 DAP/UART 3개·packet trace 1개와 OS peer 표 고정 |
+| P04 장비·상호운용 matrix | **M28 계획 완료 / 2보드·2 DAP/UART 확인** | 필수 3개 중 1개 부족, packet trace와 OS peer 적용성은 미확인 |
 | P05 수치 합격 기준 | **M28 완료** | `M28-CAP-01`~`M28-SOAK-01`의 반복·분모·timeout·오류 기준 고정 |
 | P06 실행 목록 고정 | **M28 완료** | `M28-W01`~`M28-W08`의 구현·검증 순서와 증거 경계 확정 |
 
-P02의 정적 SDK 조사와 실제 HCI 조회는 다른 증거다. 보드 조회를 하지 않았으면 HCI 확인은
-`NOT RUN`으로 남긴다. 미지원 판정에 controller 한계와 칩 자체 비적용을 혼동하지 않는다.
-미판정 항목을 지원 또는 범위 제외로 자동 승격하지 않는다.
+P02의 정적 SDK 조사와 실제 HCI 조회는 다른 증거다. `M28-CAP-01`은 exact `78078a42…`에서
+6개 기능군을 확인했지만, source 후보 자체와 W02~W08 implementation/RF HIL은 별도 상태다.
+미지원 판정에 controller 한계와 칩 자체 비적용을 혼동하지 않고 미판정 항목을 자동 승격하지 않는다.
 
 M28의 상세 상태·Kconfig·시험 수치는
 [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json)을 기계 원본으로 사용하고,
 [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서 사람이
-읽는 설계와 실행 순서를 설명한다. 현재 M28 구현은 **0/8 작업 묶음, 0%**다.
+읽는 설계와 실행 순서를 설명한다. 현재 M28 구현은 **1/8 작업 묶음, 12.5%**다.
 
 | 작업 묶음 | 현재 상태 | 다음 종료 조건 |
 | --- | --- | --- |
-| M28-W01 | **진행 중 — Host parser PASS, target 1/1 build PASS, HCI NOT RUN** | exact commit image를 NU54DK 1대에서 실행해 6개 기능군의 HCI/Host 원장을 확정 |
-| M28-W02~W08 | **미착수** | W01 실제 HCI 결과를 입력으로 순서대로 구현·검증 |
+| M28-W01 | **완료 — Host parser·target 1/1·실제 HCI 6/6 PASS** | exact `78078a42…` 증거와 정적 candidate/runtime HCI 분리 유지 |
+| M28-W02 | **착수 — per-link slot·handle·event 기반** | 고정 2-slot, generation handle, link별 상태·stale event Host/target 계약 |
+| M28-W03~W08 | **미착수** | W02 기반 위에서 순서대로 구현·검증 |
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로
 출력한다. Host parser는 noise·중복·누락·순서 변경·stale nonce·wrong revision·timeout과 raw HCI
-불일치를 모두 거부한다. Target build는 실제 보드 HCI PASS가 아니다.
+불일치를 모두 거부한다. exact `78078a42…`의 target build와 실제 HCI는 각각 PASS했으며 서로 다른
+증거로 유지한다. 상세 값과 hash는 [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)에 있다.
 
 ## 2. 현재 확인된 지원성 결정 항목
 
@@ -110,8 +112,8 @@ NU54DK의 외장 flash 미탑재와 factory-data partition 적용성은 설계 �
 
 ### 장비 확보 상태
 
-현재 장비 상태는 **미확인**이다. 과거 두 보드 시험이나 사용자의 과거 v0.4.0 테스트로 다음
-장비가 모두 확보됐다고 판단하지 않는다. 이 문서는 구매·연결 변경 지시가 아니다.
+현재 **NU54DK 2개와 독립 DAP/UART 2경로는 2026-09-12 W01에서 확인**했다. M28 필수 3개 중
+한 개와 packet trace는 미확인이며, 과거 v0.4.0 시험으로 나머지 장비까지 확보됐다고 판단하지 않는다.
 
 | 시험군 | 계획상 필요한 구성 | 착수 시 확인할 사항 |
 | --- | --- | --- |
@@ -147,9 +149,8 @@ Windows 외 OS로 확대하는 약속이 아니다. Peer 자체 미지원 기능
 
 ## 6. 결과·공개 규칙
 
-- 이번 준비 작업으로 M28의 P01·P03·P05·P06과 P02 정적 원장을 완료했다. W01 Host·target
-  준비도 완료했지만 실제 HCI와 장비 확보는 각각 `NOT RUN`·미확인이므로 W01~W08 또는
-  M28~M33을 완료 처리하지 않는다.
+- M28의 P01·P03·P05·P06, P02 정적 원장과 W01 실제 HCI를 완료했다. W01만 완료한 현재 상태는
+  1/8이며 W02~W08, 전체 M28과 M29~M33을 완료 처리하지 않는다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.

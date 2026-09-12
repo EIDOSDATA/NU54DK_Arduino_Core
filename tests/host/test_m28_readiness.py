@@ -64,8 +64,8 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertEqual(baseline["current_max_connections"], 1)
         self.assertEqual(baseline["current_advertising_payload_bytes"], 31)
 
-    def test_every_source_candidate_remains_runtime_not_run(self) -> None:
-        """! @brief 정적 SDK 근거를 실제 HCI·실기 PASS로 승격하지 못하게 합니다. """
+    def test_source_candidates_remain_separate_from_runtime_hci_pass(self) -> None:
+        """! @brief 정적 후보와 실제 W01 HCI PASS를 서로 다른 상태로 고정합니다. """
 
         capabilities = self.readiness["source_capabilities"]
         expected = {
@@ -79,7 +79,7 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertEqual({entry["id"] for entry in capabilities}, expected)
         for entry in capabilities:
             self.assertEqual(entry["source_status"], "candidate", entry["id"])
-            self.assertEqual(entry["runtime_hci_status"], "not_run", entry["id"])
+            self.assertEqual(entry["runtime_hci_status"], "passed", entry["id"])
             self.assertIn(
                 entry["implementation_status"],
                 {"not_started", "baseline_partial"},
@@ -132,8 +132,9 @@ class M28ReadinessTests(unittest.TestCase):
         self.assertEqual(link["criteria"]["simultaneous_connections"], 2)
         self.assertEqual(link["criteria"]["payload_loss"], 0)
         self.assertEqual(link["criteria"]["stale_link_events"], 0)
-        self.assertEqual(self.readiness["equipment"]["availability"], "not_confirmed")
+        self.assertEqual(self.readiness["equipment"]["availability"], "partial")
         self.assertEqual(self.readiness["equipment"]["required"]["nu54dk_boards"], 3)
+        self.assertEqual(self.readiness["equipment"]["observed"]["nu54dk_boards"], 2)
 
     def test_work_packages_and_documents_form_a_complete_preparation_index(self) -> None:
         """! @brief 8개 작업 묶음과 현행 문서의 M28 상태 연결을 검사합니다. """
@@ -149,20 +150,21 @@ class M28ReadinessTests(unittest.TestCase):
             self.assertIn("M28-CAP-01", text)
             self.assertIn("NOT RUN", text)
 
-    def test_w01_host_target_ready_does_not_complete_hardware_capability(self) -> None:
-        """! @brief W01 Host·build PASS와 실제 HCI NOT RUN을 별도 상태로 고정합니다. """
+    def test_w01_is_completed_only_with_exact_hardware_capability(self) -> None:
+        """! @brief W01 완료가 Host·build·실제 HCI와 exact revision을 모두 가리키게 합니다. """
 
         statuses = self.readiness["work_package_status"]
         self.assertEqual(len(statuses), 8)
         for index, status in enumerate(statuses, start=1):
             self.assertEqual(status["id"], f"M28-W{index:02d}")
         w01 = statuses[0]
-        self.assertEqual(w01["status"], "host_target_ready_hil_not_run")
-        self.assertFalse(w01["completed"])
+        self.assertEqual(w01["status"], "completed")
+        self.assertTrue(w01["completed"])
         self.assertEqual(w01["protocol"], "M28CAP/1")
         self.assertEqual(w01["host_parser_tests"], "passed")
         self.assertEqual(w01["target_build"], "passed")
-        self.assertEqual(w01["physical_hci"], "not_run")
+        self.assertEqual(w01["physical_hci"], "passed")
+        self.assertRegex(w01["tested_core_revision"], r"^[0-9a-f]{40}$")
         for path in w01["paths"].values():
             self.assertTrue((REPOSITORY / path).exists(), path)
         capability_config = CAPABILITY_CONFIG_PATH.read_text(encoding="utf-8")
@@ -170,15 +172,15 @@ class M28ReadinessTests(unittest.TestCase):
             for setting in capability["required_kconfig"]:
                 self.assertIn(setting, capability_config, capability["id"])
         progress = self.readiness["progress"]
-        self.assertEqual(progress["completed_work_packages"], 0)
+        self.assertEqual(progress["completed_work_packages"], 1)
         self.assertEqual(progress["total_work_packages"], 8)
-        self.assertEqual(progress["percent"], 0)
-        self.assertEqual(progress["current_work_package"], "M28-W01")
+        self.assertEqual(progress["percent"], 12.5)
+        self.assertEqual(progress["current_work_package"], "M28-W02")
         self.assertEqual(
             self.readiness["not_yet_claimed"],
             [
                 "production BLE implementation",
-                "physical HIL PASS",
+                "full M28 physical HIL PASS",
                 "Bluetooth qualification",
             ],
         )
