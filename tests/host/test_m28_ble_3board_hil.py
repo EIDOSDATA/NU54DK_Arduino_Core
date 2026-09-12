@@ -309,6 +309,8 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             "BLEConnection.requestMtu(outgoing_link)",
             "BLEConnection.mtu(outgoing_link) >= 31U",
             "BLEConnection.requestPhy(outgoing_link",
+            "periodic.interval_min = 80U;",
+            "periodic.interval_max = 96U;",
             "BLEPeriodicAdvertising.transferSync(periodic_sync, incoming_link",
             "BLEDevice.end();",
         ):

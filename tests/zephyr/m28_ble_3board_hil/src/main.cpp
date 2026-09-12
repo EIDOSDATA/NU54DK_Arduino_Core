@@ -539,7 +539,7 @@ namespace
         extended.interval_max = 0x00a0U;
         nucode::ble::BLEPeriodicAdvertisingParameters periodic{};
         periodic.interval_min = 80U;
-        periodic.interval_max = 80U;
+        periodic.interval_max = 96U;
         periodic.include_tx_power = true;
         if (!BLEExtendedAdvertising.create(extended, periodic_set) ||
             !BLEExtendedAdvertising.setData(periodic_set, extended_payload, extended_length) ||
