@@ -176,6 +176,7 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             source,
         )
         self.assertIn("std::uint8_t response[23] = {};", source)
+        self.assertIn("response_subevent = report.subevent;", source)
         self.assertIn("first_pawr_response_event =", source)
         self.assertIn('fail("pawr-response-sequence");', source)
         self.assertIn("phase = Phase::privacy_wait;", source)

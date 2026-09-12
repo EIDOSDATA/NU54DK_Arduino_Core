@@ -94,9 +94,9 @@ class M28BlePawrTests(unittest.TestCase):
             "maximum_subevents = 4U",
             "maximum_response_slots = 4U",
             "maximum_payload_length = 249U",
-            "subevent_interval = 48U",
-            "response_slot_delay = 8U",
-            "response_slot_spacing = 80U",
+            "subevent_interval = 64U",
+            "response_slot_delay = 24U",
+            "response_slot_spacing = 64U",
             "extern nucode::ble::Pawr BLEPawr",
         ):
             self.assertIn(token, header)
@@ -123,7 +123,7 @@ class M28BlePawrTests(unittest.TestCase):
         scanner = (
             REPOSITORY / "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino"
         ).read_text(encoding="utf-8")
-        self.assertIn("(report.subevent + 2U) % 4U", scanner)
+        self.assertIn("report.subevent, report.subevent, 0U", scanner)
 
 
 if __name__ == "__main__":
