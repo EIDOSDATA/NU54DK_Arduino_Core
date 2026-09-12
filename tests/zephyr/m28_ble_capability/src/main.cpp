@@ -222,18 +222,24 @@ namespace
     /** @brief Host Kconfig와 실제 HCI 응답을 고정 순서로 출력합니다. */
     void printSnapshot(const CapabilitySnapshot &snapshot)
     {
+        /**
+         * @brief combined HCI adapter가 노출하지 않는 수치 조회·전역 clear는 요구하지 않습니다.
+         *
+         * 광고 set과 periodic advertiser list 자원은 앞선 Host API 생성·삭제 왕복으로
+         * 실제 controller까지 확인합니다. peer/local resolved-address 조회는 RPA 운용의
+         * 필수 명령이 아니므로 privacy 판정에 포함하지 않습니다.
+         */
         const std::uint8_t multi_role_commands[][2] = {{26U, 4U}, {36U, 2U}};
         const std::uint8_t extended_commands[][2] = {
-            {36U, 1U}, {36U, 2U}, {36U, 3U}, {36U, 4U}, {36U, 5U}, {36U, 6U},
-            {36U, 7U}, {37U, 0U}, {37U, 1U}, {37U, 5U}, {37U, 6U},
+            {36U, 1U}, {36U, 2U}, {36U, 3U}, {36U, 4U}, {36U, 5U},
+            {36U, 6U}, {37U, 0U}, {37U, 5U}, {37U, 6U},
         };
         const std::uint8_t periodic_commands[][2] = {
             {37U, 2U}, {37U, 3U}, {37U, 4U}, {38U, 0U}, {38U, 1U}, {38U, 2U}, {38U, 3U},
-            {38U, 4U}, {38U, 5U}, {38U, 6U}, {40U, 6U}, {40U, 7U}, {41U, 0U}, {41U, 1U},
+            {38U, 4U}, {38U, 5U}, {40U, 5U}, {40U, 6U}, {40U, 7U}, {41U, 0U}, {41U, 1U},
         };
         const std::uint8_t privacy_commands[][2] = {
-            {34U, 3U}, {34U, 4U}, {34U, 5U}, {34U, 6U}, {34U, 7U},
-            {35U, 0U}, {35U, 1U}, {35U, 2U}, {39U, 2U},
+            {34U, 3U}, {34U, 4U}, {34U, 5U}, {34U, 6U}, {35U, 1U}, {35U, 2U}, {39U, 2U},
         };
         const std::uint8_t link_control_commands[][2] = {
             {0U, 5U}, {27U, 2U}, {27U, 5U}, {33U, 6U}, {35U, 3U}, {35U, 4U}, {35U, 6U},

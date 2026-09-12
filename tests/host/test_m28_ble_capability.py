@@ -121,6 +121,27 @@ class M28BleCapabilityParserTests(unittest.TestCase):
         self.assertEqual(result.maximum_advertising_data_length, 255)
         self.assertEqual(result.identity, IDENTITY)
 
+    def test_ncs_3_4_sdc_command_map_passes(self) -> None:
+        """! @brief 실제 SDC 응답에서 optional query bit가 없어도 실제 slot 왕복 결과를 인정합니다. """
+
+        lines = valid_lines()
+        commands = (
+            "2000800000c000000000040000002802000000000000040000b73fec0f000000"
+            "3040797e7efdbf04e00300000000e40300000000000000000000000000000000"
+        )
+        lines[5] = f"M28CAP|1|HCI_COMMANDS|nonce={NONCE}|commands={commands}"
+        lines[6] = f"M28CAP|1|LE_FEATURES|nonce={NONCE}|features=fd71000310190000"
+        lines[7] = (
+            f"M28CAP|1|RESOURCES|nonce={NONCE}|max_adv_data_len=257|"
+            "adv_sets=1|per_adv_list=1|resolving_list=8"
+        )
+
+        result = MODULE.parse_transcript(transcript(lines), NONCE, IDENTITY)
+
+        self.assertEqual(len(result.capabilities), 6)
+        self.assertEqual(result.advertising_sets, 1)
+        self.assertEqual(result.periodic_advertiser_list_size, 1)
+
     def test_stale_nonce_is_rejected(self) -> None:
         """! @brief 이전 실행 nonce로 묶인 전체 transcript도 거부합니다. """
 

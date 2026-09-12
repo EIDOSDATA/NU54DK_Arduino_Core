@@ -80,6 +80,7 @@ CAPABILITY_EVIDENCE = (
     ("privacy_rpa", "le_feature+commands+resource"),
     ("per_link_control", "le_feature+commands"),
 )
+# combined HCI adapter가 노출하지 않는 수치 조회·전역 clear는 Host API 왕복으로 대신합니다.
 COMMAND_REQUIREMENTS = {
     "multi_role_multi_link": ((26, 4), (36, 2)),
     "extended_advertising_scanning": (
@@ -89,9 +90,7 @@ COMMAND_REQUIREMENTS = {
         (36, 4),
         (36, 5),
         (36, 6),
-        (36, 7),
         (37, 0),
-        (37, 1),
         (37, 5),
         (37, 6),
     ),
@@ -105,7 +104,7 @@ COMMAND_REQUIREMENTS = {
         (38, 3),
         (38, 4),
         (38, 5),
-        (38, 6),
+        (40, 5),
         (40, 6),
         (40, 7),
         (41, 0),
@@ -116,8 +115,6 @@ COMMAND_REQUIREMENTS = {
         (34, 4),
         (34, 5),
         (34, 6),
-        (34, 7),
-        (35, 0),
         (35, 1),
         (35, 2),
         (39, 2),
