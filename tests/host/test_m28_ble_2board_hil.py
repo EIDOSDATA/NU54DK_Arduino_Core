@@ -157,6 +157,7 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y",
             "CONFIG_BT_CTLR_SDC_PAWR_ADV=y",
             "CONFIG_BT_CTLR_SDC_PAWR_SYNC=y",
+            "CONFIG_BT_CTLR_TX_PWR_PLUS_8=y",
         }
         self.assertTrue(required.issubset(set(config)))
 
