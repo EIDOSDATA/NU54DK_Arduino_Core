@@ -106,7 +106,7 @@ class M28BlePawrTests(unittest.TestCase):
                 "CONFIG_BT_CTLR_SDC_PERIODIC_ADV_RSP_TX_BUFFER_COUNT=4",
                 "CONFIG_BT_CTLR_SDC_PERIODIC_ADV_RSP_TX_MAX_DATA_SIZE=249",
                 "CONFIG_BT_CTLR_SDC_PERIODIC_ADV_RSP_RX_BUFFER_COUNT=4",
-                "CONFIG_BT_CTLR_SDC_PERIODIC_SYNC_RSP_TX_BUFFER_COUNT=1",
+                "CONFIG_BT_CTLR_SDC_PERIODIC_SYNC_RSP_TX_BUFFER_COUNT=4",
                 "CONFIG_NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE=8",
             ):
                 self.assertIn(setting, config, f"{path}: {setting}")
