@@ -21,6 +21,11 @@ enum
     BT_ADDR_LE_PUBLIC_ID = 2,
     BT_ADDR_LE_RANDOM_ID = 3
 };
+enum
+{
+    BT_CONN_ROLE_CENTRAL = 0,
+    BT_CONN_ROLE_PERIPHERAL = 1
+};
 using bt_security_t = std::uint8_t;
 enum bt_security_err
 {
@@ -41,6 +46,7 @@ struct bt_conn
     std::uint32_t interval_us{30000U};
     std::uint16_t latency{0U};
     std::uint16_t supervision_timeout{400U};
+    std::uint8_t role{BT_CONN_ROLE_PERIPHERAL};
 };
 inline bt_conn mock_connections[4];
 inline bt_conn *mock_next_connection = &mock_connections[0];
@@ -82,6 +88,7 @@ struct bt_conn_le_data_len_param
 struct bt_conn_info
 {
     int type;
+    std::uint8_t role;
     struct
     {
         const bt_addr_le_t *src;
@@ -123,6 +130,7 @@ inline int bt_conn_le_create(const bt_addr_le_t *peer, const void *, const bt_le
     }
     *c = bt_conn_ref(mock_next_connection);
     (*c)->peer = *peer;
+    (*c)->role = BT_CONN_ROLE_CENTRAL;
     return 0;
 }
 inline const bt_addr_le_t *bt_conn_get_dst(const bt_conn *connection)
@@ -134,6 +142,7 @@ inline int bt_conn_get_info(bt_conn *connection, bt_conn_info *info)
 {
     static bt_conn_le_phy_info phy{};
     info->type = 1;
+    info->role = connection->role;
     info->le.src = nullptr;
     info->le.dst = &connection->peer;
     info->le.local = nullptr;

@@ -38,7 +38,7 @@ class BleGapTests(unittest.TestCase):
             for scenario in ['lifecycle', 'late_callback', 'reconnect', 'queue_overflow',
                              'reentrant', 'pending_end', 'scan_copy', 'driver_failure',
                              'settings_failure', 'advertising', 'multi_link', 'generation',
-                             'end_two_links']:
+                             'end_two_links', 'role_callback_guard']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))

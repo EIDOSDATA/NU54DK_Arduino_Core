@@ -102,11 +102,12 @@ class M28BleLinkTests(unittest.TestCase):
         """! @brief 실제 production source를 쓰는 Host scenario가 W02 종료 조건을 덮습니다. """
 
         runtime = RUNTIME_TEST.read_text(encoding="utf-8")
-        for scenario in ("multi_link", "generation", "end_two_links"):
+        for scenario in ("multi_link", "generation", "end_two_links", "role_callback_guard"):
             self.assertIn(f'"{scenario}"', runtime)
         self.assertIn("BLEConnection.count() == 2U", runtime)
         self.assertIn("second != first", runtime)
         self.assertIn("first_request->func", runtime)
+        self.assertIn("BT_CONN_ROLE_CENTRAL", CONNECTION.read_text(encoding="utf-8"))
 
     def test_mixed_role_example_uses_detailed_handles(self) -> None:
         """! @brief 예제가 singleton callback 순서가 아닌 handle·role로 link를 구분합니다. """

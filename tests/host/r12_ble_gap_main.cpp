@@ -245,8 +245,33 @@ int main(int argc, char **argv)
         assert(!BLEConnection.disconnect(peripheral));
 
         mock_conn_callbacks->connected(&mock_connections[2], 0);
-        assert(mock_connections[2].disconnects == 0);
+        assert(mock_connections[2].disconnects == 1);
         assert(BLEConnection.count() == 1U);
+    }
+    else if (std::strcmp(scenario, "role_callback_guard") == 0)
+    {
+        assert(BLEAdvertising.clear() && BLEAdvertising.start());
+        const BLEConnectionHandle central = connect(0);
+
+        mock_conn_callbacks->connected(&mock_connections[0], 0);
+        assert(mock_connections[0].disconnects == 0);
+        assert(BLEConnection.count() == 1U);
+        assert(!BLEConnection.handle(BLELinkRole::peripheral).valid());
+
+        mock_connections[1].role = BT_CONN_ROLE_CENTRAL;
+        mock_conn_callbacks->connected(&mock_connections[1], 0);
+        assert(mock_connections[1].disconnects == 1);
+        assert(BLEConnection.count() == 1U && BLEConnection.connected(central));
+
+        mock_conn_callbacks->connected(&mock_connections[2], 0);
+        const BLEConnectionHandle peripheral = BLEConnection.handle(BLELinkRole::peripheral);
+        assert(peripheral.valid() && BLEConnection.count() == 2U);
+        mock_conn_callbacks->connected(&mock_connections[2], 0);
+        assert(mock_connections[2].disconnects == 0);
+        assert(BLEConnection.count() == 2U);
+
+        BLEDevice.poll();
+        assert(events[static_cast<unsigned>(BLEEvent::connected)] == 2U);
     }
     else if (std::strcmp(scenario, "generation") == 0)
     {

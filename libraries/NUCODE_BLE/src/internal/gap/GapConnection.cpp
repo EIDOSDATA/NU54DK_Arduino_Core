@@ -111,6 +111,21 @@ namespace nucode::ble::internal::gap
                    (address->a.val[5] & 0xc0U) == 0x40U;
         }
 
+        /** @brief 성공한 연결의 controller 역할이 지원 범위인지 확인합니다. */
+        bool connectionRole(struct bt_conn *connection, std::uint8_t &role) noexcept
+        {
+            struct bt_conn_info information = {};
+            if (bt_conn_get_info(connection, &information) < 0 ||
+                information.type != BT_CONN_TYPE_LE ||
+                (information.role != BT_CONN_ROLE_CENTRAL &&
+                 information.role != BT_CONN_ROLE_PERIPHERAL))
+            {
+                return false;
+            }
+            role = information.role;
+            return true;
+        }
+
         /** @brief stack의 identity와 실제 연결 주소를 callback 밖 값으로 복사합니다. */
         void connectionAddresses(struct bt_conn *connection, BLEAddress &identity,
                                  BLEAddress &connection_address,
@@ -232,9 +247,12 @@ namespace nucode::ble::internal::gap
             bool owns_connection = false;
             bool handles_current_attempt = false;
             bool reject_connection = false;
+            bool duplicate_connection = false;
             struct bt_conn *release_connection = nullptr;
             BLEConnectionHandle handle;
             BLELinkRole role = BLELinkRole::none;
+            std::uint8_t native_role = 0xffU;
+            bool native_role_valid = false;
             std::uint32_t device_generation = 0U;
             const std::uint32_t current_device_generation = static_cast<std::uint32_t>(
                 atomic_get(&gapState().device_session_generation));
@@ -246,12 +264,26 @@ namespace nucode::ble::internal::gap
             bool identity_resolved = true;
             if (error == 0U)
             {
+                native_role_valid = connectionRole(connection, native_role);
                 connectionAddresses(connection, identity_address, connection_address,
                                     identity_resolved);
             }
 
             k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
             ConnectionSlot &central = gapState().connection_slots[central_connection_slot];
+            for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
+            {
+                if (gapState().connection_slots[index].active == connection)
+                {
+                    duplicate_connection = true;
+                    break;
+                }
+            }
+            if (duplicate_connection)
+            {
+                k_spin_unlock(&gapState().connection_lock, key);
+                return;
+            }
             if (central.pending == connection)
             {
                 handles_current_attempt =
@@ -260,7 +292,8 @@ namespace nucode::ble::internal::gap
                 handle = makeHandle(central_connection_slot, central.generation);
                 role = central.role;
                 device_generation = central.device_generation;
-                if (error == 0U && handles_current_attempt && central.active == nullptr)
+                if (error == 0U && handles_current_attempt && central.active == nullptr &&
+                    native_role_valid && native_role == BT_CONN_ROLE_CENTRAL)
                 {
                     central.active = central.pending;
                     central.pending = nullptr;
@@ -280,23 +313,31 @@ namespace nucode::ble::internal::gap
                     central.identity_resolved = false;
                 }
             }
-            else if (error == 0U && atomic_get(&gapState().device_initialized) != 0 &&
-                     acceptsIncomingConnection())
+            else if (error == 0U)
             {
-                ConnectionSlot &peripheral =
-                    gapState().connection_slots[peripheral_connection_slot];
-                if (peripheral.active == nullptr && peripheral.pending == nullptr)
+                if (native_role_valid && native_role == BT_CONN_ROLE_PERIPHERAL &&
+                    atomic_get(&gapState().device_initialized) != 0 &&
+                    acceptsIncomingConnection())
                 {
-                    peripheral.generation = nextConnectionGeneration();
-                    peripheral.device_generation = current_device_generation;
-                    peripheral.peer_address = identity_address;
-                    peripheral.connection_address = connection_address;
-                    peripheral.identity_resolved = identity_resolved;
-                    peripheral.active = bt_conn_ref(connection);
-                    handle = makeHandle(peripheral_connection_slot, peripheral.generation);
-                    role = peripheral.role;
-                    device_generation = peripheral.device_generation;
-                    owns_connection = true;
+                    ConnectionSlot &peripheral =
+                        gapState().connection_slots[peripheral_connection_slot];
+                    if (peripheral.active == nullptr && peripheral.pending == nullptr)
+                    {
+                        peripheral.generation = nextConnectionGeneration();
+                        peripheral.device_generation = current_device_generation;
+                        peripheral.peer_address = identity_address;
+                        peripheral.connection_address = connection_address;
+                        peripheral.identity_resolved = identity_resolved;
+                        peripheral.active = bt_conn_ref(connection);
+                        handle = makeHandle(peripheral_connection_slot, peripheral.generation);
+                        role = peripheral.role;
+                        device_generation = peripheral.device_generation;
+                        owns_connection = true;
+                    }
+                    else
+                    {
+                        reject_connection = true;
+                    }
                 }
                 else
                 {
