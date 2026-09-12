@@ -133,6 +133,10 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             2,
             source.count("BLEScan.startExtended(false, false, false)"),
         )
+        self.assertIn(
+            "constexpr std::int64_t advertising_update_interval_ms = 200;",
+            source,
+        )
 
 
 if __name__ == "__main__":

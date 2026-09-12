@@ -30,7 +30,7 @@ namespace
     constexpr std::uint32_t required_rpa_rotations = 3U;
     constexpr std::uint32_t required_rpa_addresses = required_rpa_rotations + 1U;
     constexpr std::uint32_t required_reconnects = 20U;
-    constexpr std::int64_t advertising_update_interval_ms = 60;
+    constexpr std::int64_t advertising_update_interval_ms = 200;
     constexpr std::int64_t reconnect_advertising_delay_ms = 1200;
     constexpr std::int64_t security_request_delay_ms = 400;
     constexpr std::int64_t secured_disconnect_delay_ms = 700;
