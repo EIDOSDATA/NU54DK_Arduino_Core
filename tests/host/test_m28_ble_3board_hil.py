@@ -63,7 +63,9 @@ def role_lines(test_id: str, role: str, nonce: str = NONCE) -> tuple[str, ...]:
                 ":sequence=1000"
             )
         lines.append(
-            result + ":loss=0:corrupt=0:duplicate=0:stale=0:drops=0" + suffix
+            result
+            + ":attempt_failures=0:loss=0:corrupt=0:duplicate=0:stale=0:drops=0"
+            + suffix
         )
     elif test == "PER":
         if role == "peripheral":
@@ -231,6 +233,16 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
                 transcript(lines), NONCE, "M28-LINK-01", "mixed"
             )
 
+    def test_excessive_reconnect_attempt_failures_are_rejected(self) -> None:
+        lines = tuple(
+            line.replace("attempt_failures=0", "attempt_failures=4")
+            for line in role_lines("M28-LINK-01", "central")
+        )
+        with self.assertRaises(BlePairHilFailure):
+            parse_role_transcript(
+                transcript(lines), NONCE, "M28-LINK-01", "central"
+            )
+
     def test_default_flash_is_uid_bound_sector_programming(self) -> None:
         args = parse_arguments(
             [
@@ -300,6 +312,7 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
         for value in (
             "constexpr std::uint32_t link_sequence_target = 1000U;",
             "constexpr std::uint32_t reconnect_target = 20U;",
+            "constexpr std::uint32_t reconnect_attempt_failure_limit = 3U;",
             "constexpr std::int64_t reconnect_peer_ready_delay_ms = 1000;",
             "constexpr std::uint32_t past_target = 20U;",
             "constexpr std::uint32_t periodic_sequence_target = 1000U;",
@@ -312,6 +325,7 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             "BLEConnection.count() == 2U",
             "BLEConnection.requestMtu(outgoing_link)",
             "BLEEvent::connection_recycled",
+            'ClientWriteKind::link_up, "LINK_UP"',
             "BLEConnection.mtu(outgoing_link) >= 31U",
             "BLEConnection.requestPhy(outgoing_link",
             "periodic.interval_min = periodic_interval_min;",
@@ -336,7 +350,6 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             self.assertIn(value, runner)
         for value in (
             "CONFIG_BT_MAX_CONN=2",
-            "CONFIG_BT_CREATE_CONN_TIMEOUT=10",
             "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
             "CONFIG_BT_L2CAP_TX_MTU=64",
             "CONFIG_BT_BUF_ACL_TX_SIZE=68",

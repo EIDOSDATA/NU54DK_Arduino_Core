@@ -604,14 +604,24 @@ def parse_role_transcript(
                 f"NUCODE_M28B3_{role}:LINK:PASS:links=1:reconnects=20"
                 ":sequence=1000"
             ).encode("ascii")
-        cursor = take_exact(
+        cursor, match = take_pattern(
             lines,
             cursor,
-            result
-            + b":loss=0:corrupt=0:duplicate=0:stale=0:drops=0"
-            + suffix,
+            re.escape(result)
+            + rb":attempt_failures=([0-9]+)"
+            + rb":loss=0:corrupt=0:duplicate=0:stale=0:drops=0:nonce="
+            + nonce.encode("ascii"),
         )
-        metrics = {"links": 2 if role == "mixed" else 1, "sequence": 1000}
+        attempt_failures = int(match.group(1))
+        if attempt_failures > 3:
+            raise BlePairHilFailure(
+                f"LINK 재연결 시도 실패 상한 초과: {attempt_failures}"
+            )
+        metrics = {
+            "links": 2 if role == "mixed" else 1,
+            "sequence": 1000,
+            "attempt_failures": attempt_failures,
+        }
     elif test_name == "PER":
         if role == "peripheral":
             cursor = take_exact(

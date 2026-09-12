@@ -9,6 +9,7 @@
 #include <NUCODE_BLE.h>
 
 #include <zephyr/kernel.h>
+#include <zephyr/bluetooth/hci_types.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -29,6 +30,7 @@ namespace
     constexpr std::size_t nonce_binary_length = 16U;
     constexpr std::uint32_t link_sequence_target = 1000U;
     constexpr std::uint32_t reconnect_target = 20U;
+    constexpr std::uint32_t reconnect_attempt_failure_limit = 3U;
     constexpr std::uint32_t past_target = 20U;
     constexpr std::uint32_t periodic_sequence_target = 1000U;
     constexpr std::uint32_t control_round_target = 20U;
@@ -77,6 +79,7 @@ namespace
     {
         none,
         packet,
+        link_up,
         link_done,
         past_ready,
         past_next,
@@ -115,6 +118,9 @@ namespace
     bool disconnect_pending = false;
     bool reconnect_pending = false;
     bool reconnect_waiting_for_recycle = false;
+    bool outgoing_confirmation_pending = false;
+    bool outgoing_confirmation_queued = false;
+    bool incoming_confirmation_pending = false;
     [[maybe_unused]] bool periodic_delete_pending = false;
     [[maybe_unused]] bool past_transfer_pending = false;
     [[maybe_unused]] bool periodic_emission_active = false;
@@ -133,6 +139,7 @@ namespace
     std::uint32_t incoming_disconnects = 0U;
     std::uint32_t outgoing_reconnects = 0U;
     std::uint32_t incoming_reconnects = 0U;
+    std::uint32_t reconnect_attempt_failures = 0U;
     std::uint32_t stale_events = 0U;
     std::uint32_t unexpected_disconnects = 0U;
 
@@ -408,7 +415,8 @@ namespace
             return;
         }
         if (receive_loss != 0U || receive_corrupt != 0U || receive_duplicate != 0U ||
-            stale_events != 0U || BLEDevice.droppedEvents() != 0U)
+            stale_events != 0U || reconnect_attempt_failures > reconnect_attempt_failure_limit ||
+            BLEDevice.droppedEvents() != 0U)
         {
             fail("link-final-counts");
             return;
@@ -427,6 +435,8 @@ namespace
 #else
         Serial.print(":LINK:PASS:links=1:reconnects=20:sequence=1000");
 #endif
+        Serial.print(":attempt_failures=");
+        Serial.print(reconnect_attempt_failures);
         Serial.print(":loss=0:corrupt=0:duplicate=0:stale=0:drops=0");
         printNonceEnd();
         Serial.print("NUCODE_M28B3_");
@@ -728,6 +738,28 @@ namespace
         }
 #endif
 
+#if defined(NUCODE_M28_B3_TEST_LINK)
+        if (length == 7U && ::memcmp(data, "LINK_UP", length) == 0)
+        {
+#if defined(NUCODE_M28_B3_ROLE_PERIPHERAL)
+            const bool expected_phase = receive_sequence == link_sequence_target;
+#elif defined(NUCODE_M28_B3_ROLE_MIXED)
+            const bool expected_phase = phase == Phase::reconnect_incoming;
+#else
+            const bool expected_phase = false;
+#endif
+            if (!expected_phase || !incoming_confirmation_pending ||
+                incoming_reconnects >= reconnect_target)
+            {
+                fail("link-up-state");
+                return;
+            }
+            incoming_confirmation_pending = false;
+            ++incoming_reconnects;
+            return;
+        }
+#endif
+
 #if defined(NUCODE_M28_B3_ROLE_MIXED)
 #if defined(NUCODE_M28_B3_TEST_LINK)
         if (length == 9U && ::memcmp(data, "LINK_DONE", length) == 0)
@@ -888,6 +920,24 @@ namespace
             {
                 ++transmit_completed;
             }
+            else if (completed == ClientWriteKind::link_up)
+            {
+                if (phase != Phase::reconnect_outgoing ||
+                    !outgoing_confirmation_pending ||
+                    outgoing_reconnects >= reconnect_target)
+                {
+                    fail("link-up-completion");
+                    return;
+                }
+                outgoing_confirmation_pending = false;
+                outgoing_confirmation_queued = false;
+                ++outgoing_reconnects;
+                if (outgoing_reconnects < reconnect_target)
+                {
+                    disconnect_pending = true;
+                    action_deadline_ms = k_uptime_get() + reconnect_delay_ms;
+                }
+            }
 #if defined(NUCODE_M28_B3_ROLE_CENTRAL) && defined(NUCODE_M28_B3_TEST_LINK)
             else if (completed == ClientWriteKind::link_done)
             {
@@ -1002,6 +1052,21 @@ namespace
         }
         if (information.event == nucode::ble::BLEEvent::error)
         {
+#if defined(NUCODE_M28_B3_TEST_LINK)
+            if (BLEDevice.lastDriverError() ==
+                    -static_cast<int>(BT_HCI_ERR_UNKNOWN_CONN_ID) &&
+                (phase == Phase::startup || phase == Phase::reconnect_outgoing) &&
+                reconnect_attempt_failures < reconnect_attempt_failure_limit)
+            {
+                ++reconnect_attempt_failures;
+                outgoing_link = {};
+                client_ready = false;
+                outgoing_confirmation_pending = false;
+                outgoing_confirmation_queued = false;
+                reconnect_waiting_for_recycle = true;
+                return;
+            }
+#endif
             ++unreported_driver_errors;
             fail("ble-error-event");
             return;
@@ -1013,10 +1078,6 @@ namespace
             {
                 outgoing_link = information.connection;
                 ++outgoing_connections;
-                if (outgoing_connections > 1U)
-                {
-                    ++outgoing_reconnects;
-                }
 #if defined(NUCODE_M28_B3_TEST_LINK) || defined(NUCODE_M28_B3_TEST_SOAK)
                 if (outgoing_connections == 1U &&
                     !BLEConnection.requestMtu(outgoing_link))
@@ -1044,10 +1105,7 @@ namespace
             {
                 incoming_link = information.connection;
                 ++incoming_connections;
-                if (incoming_connections > 1U)
-                {
-                    ++incoming_reconnects;
-                }
+                incoming_confirmation_pending = true;
 #if defined(NUCODE_M28_B3_ROLE_PERIPHERAL) && defined(NUCODE_M28_B3_TEST_PERIODIC)
                 if (incoming_connections == 1U && !startPeriodicAdvertiser())
                 {
@@ -1058,22 +1116,11 @@ namespace
             }
 
 #if defined(NUCODE_M28_B3_TEST_LINK)
-            if (phase == Phase::reconnect_outgoing)
+            if (phase == Phase::reconnect_outgoing &&
+                information.role == nucode::ble::BLELinkRole::central)
             {
-                if (outgoing_reconnects < reconnect_target)
-                {
-                    discovery_pending = false;
-                    disconnect_pending = true;
-                    action_deadline_ms = k_uptime_get() + reconnect_delay_ms;
-                }
-                else
-                {
-#if defined(NUCODE_M28_B3_ROLE_MIXED)
-                    scheduleDiscovery();
-#elif defined(NUCODE_M28_B3_ROLE_CENTRAL)
-                    scheduleDiscovery();
-#endif
-                }
+                outgoing_confirmation_pending = true;
+                outgoing_confirmation_queued = false;
             }
 #if defined(NUCODE_M28_B3_ROLE_PERIPHERAL)
             if (incoming_reconnects == reconnect_target &&
@@ -1098,6 +1145,8 @@ namespace
                 }
                 outgoing_link = {};
                 client_ready = false;
+                outgoing_confirmation_pending = false;
+                outgoing_confirmation_queued = false;
                 if (phase == Phase::reconnect_outgoing &&
                     outgoing_reconnects < reconnect_target)
                 {
@@ -1129,21 +1178,31 @@ namespace
                 }
                 incoming_link = {};
                 server_subscribed = false;
+                incoming_confirmation_pending = false;
 #if defined(NUCODE_M28_B3_TEST_LINK)
-#if defined(NUCODE_M28_B3_ROLE_PERIPHERAL)
-                if (receive_sequence == link_sequence_target &&
-                    incoming_reconnects < reconnect_target)
-#else
-                if (phase == Phase::reconnect_incoming &&
-                    incoming_reconnects < reconnect_target)
-#endif
+                if ((phase == Phase::startup || phase == Phase::data) &&
+                    receive_sequence == 0U)
                 {
+                    phase = Phase::startup;
                     advertising_waiting_for_recycle = true;
                 }
                 else
                 {
-                    ++unexpected_disconnects;
-                    fail("unexpected-link-disconnect");
+#if defined(NUCODE_M28_B3_ROLE_PERIPHERAL)
+                    if (receive_sequence == link_sequence_target &&
+                        incoming_reconnects < reconnect_target)
+#else
+                    if (phase == Phase::reconnect_incoming &&
+                        incoming_reconnects < reconnect_target)
+#endif
+                    {
+                        advertising_waiting_for_recycle = true;
+                    }
+                    else
+                    {
+                        ++unexpected_disconnects;
+                        fail("unexpected-link-disconnect");
+                    }
                 }
 #elif defined(NUCODE_M28_B3_TEST_SOAK)
                 if (receive_sequence < soak_sequence_target)
@@ -1165,7 +1224,8 @@ namespace
                 advertising_restart_pending = true;
                 action_deadline_ms = k_uptime_get();
             }
-            if (phase == Phase::reconnect_outgoing && reconnect_waiting_for_recycle &&
+            if ((phase == Phase::startup || phase == Phase::reconnect_outgoing) &&
+                reconnect_waiting_for_recycle &&
                 outgoing_reconnects < reconnect_target && !outgoing_link.valid())
             {
                 reconnect_waiting_for_recycle = false;
@@ -1337,6 +1397,18 @@ namespace
         if (phase == Phase::data)
         {
             driveTraceTransmitter('L', link_sequence_target, 0);
+        }
+        if (phase == Phase::reconnect_outgoing && client_ready &&
+            outgoing_confirmation_pending && !outgoing_confirmation_queued &&
+            pending_client_write == ClientWriteKind::none &&
+            active_client_write == ClientWriteKind::none)
+        {
+            if (!queueClientCommand(ClientWriteKind::link_up, "LINK_UP"))
+            {
+                fail("link-up-queue");
+                return;
+            }
+            outgoing_confirmation_queued = true;
         }
 #endif
 #if defined(NUCODE_M28_B3_ROLE_MIXED)

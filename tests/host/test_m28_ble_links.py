@@ -95,7 +95,6 @@ class M28BleLinkTests(unittest.TestCase):
         target_config = (TARGET / "prj.conf").read_text(encoding="utf-8")
         for text in (profile, target_config):
             self.assertIn("CONFIG_BT_MAX_CONN=2", text)
-            self.assertIn("CONFIG_BT_CREATE_CONN_TIMEOUT=10", text)
             self.assertIn("CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1", text)
         testcase = (TARGET / "testcase.yaml").read_text(encoding="utf-8")
         self.assertIn("nucode.m28.ble_link_contract", testcase)
