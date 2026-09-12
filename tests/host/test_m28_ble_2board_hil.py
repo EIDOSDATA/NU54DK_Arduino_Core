@@ -179,6 +179,9 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             )
         command = run.call_args.args[0]
         self.assertEqual("a" * 32, command[command.index("--uid") + 1])
+        self.assertEqual("500000", command[command.index("--frequency") + 1])
+        self.assertIn("cmsis_dap.limit_packets=true", command)
+        self.assertIn("auto_unlock=false", command)
         self.assertEqual("sector", command[command.index("--erase") + 1])
         self.assertNotIn("chip", command)
         self.assertEqual("pyocd-sector", sequence)
