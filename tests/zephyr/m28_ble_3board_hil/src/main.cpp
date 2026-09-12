@@ -34,6 +34,7 @@ namespace
     constexpr std::uint32_t control_round_target = 20U;
     constexpr std::uint32_t soak_sequence_target = 10000U;
     constexpr std::int64_t reconnect_delay_ms = 250;
+    constexpr std::int64_t reconnect_peer_ready_delay_ms = 1000;
     constexpr std::int64_t control_stage_delay_ms = 700;
     constexpr std::uint16_t periodic_interval_min = 80U;
     constexpr std::uint16_t periodic_interval_max = 96U;
@@ -110,6 +111,7 @@ namespace
     bool client_ready = false;
     bool server_subscribed = false;
     bool advertising_restart_pending = false;
+    bool advertising_waiting_for_recycle = false;
     bool disconnect_pending = false;
     bool reconnect_pending = false;
     bool reconnect_waiting_for_recycle = false;
@@ -1136,8 +1138,7 @@ namespace
                     incoming_reconnects < reconnect_target)
 #endif
                 {
-                    advertising_restart_pending = true;
-                    action_deadline_ms = k_uptime_get() + reconnect_delay_ms;
+                    advertising_waiting_for_recycle = true;
                 }
                 else
                 {
@@ -1158,12 +1159,18 @@ namespace
         }
         else if (information.event == nucode::ble::BLEEvent::connection_recycled)
         {
+            if (advertising_waiting_for_recycle)
+            {
+                advertising_waiting_for_recycle = false;
+                advertising_restart_pending = true;
+                action_deadline_ms = k_uptime_get();
+            }
             if (phase == Phase::reconnect_outgoing && reconnect_waiting_for_recycle &&
                 outgoing_reconnects < reconnect_target && !outgoing_link.valid())
             {
                 reconnect_waiting_for_recycle = false;
                 reconnect_pending = true;
-                action_deadline_ms = k_uptime_get();
+                action_deadline_ms = k_uptime_get() + reconnect_peer_ready_delay_ms;
             }
         }
 #if defined(NUCODE_M28_B3_TEST_PERIODIC)

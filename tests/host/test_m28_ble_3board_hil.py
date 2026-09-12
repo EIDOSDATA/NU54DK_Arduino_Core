@@ -300,6 +300,7 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
         for value in (
             "constexpr std::uint32_t link_sequence_target = 1000U;",
             "constexpr std::uint32_t reconnect_target = 20U;",
+            "constexpr std::int64_t reconnect_peer_ready_delay_ms = 1000;",
             "constexpr std::uint32_t past_target = 20U;",
             "constexpr std::uint32_t periodic_sequence_target = 1000U;",
             "constexpr std::uint16_t periodic_interval_min = 80U;",
@@ -310,6 +311,7 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             "constexpr std::int64_t soak_duration_ms = 1800000;",
             "BLEConnection.count() == 2U",
             "BLEConnection.requestMtu(outgoing_link)",
+            "BLEEvent::connection_recycled",
             "BLEConnection.mtu(outgoing_link) >= 31U",
             "BLEConnection.requestPhy(outgoing_link",
             "periodic.interval_min = periodic_interval_min;",
