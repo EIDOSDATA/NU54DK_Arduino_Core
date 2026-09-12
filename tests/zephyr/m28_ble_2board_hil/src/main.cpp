@@ -38,7 +38,6 @@ namespace
     constexpr std::uint32_t advertising_updates = 110U;
     constexpr std::uint32_t required_advertising_reports = 100U;
     constexpr std::uint32_t required_pawr_responses = 100U;
-    constexpr std::uint32_t central_pawr_responses = 105U;
     constexpr std::uint32_t required_rpa_rotations = 3U;
     constexpr std::uint32_t required_rpa_addresses = required_rpa_rotations + 1U;
     constexpr std::uint32_t required_reconnects = 20U;
@@ -46,6 +45,7 @@ namespace
     constexpr std::int64_t reconnect_advertising_delay_ms = 1200;
     constexpr std::int64_t security_request_delay_ms = 400;
     constexpr std::int64_t secured_disconnect_delay_ms = 700;
+    constexpr std::int64_t pawr_drain_timeout_ms = 35000;
     constexpr std::int64_t protocol_timeout_ms = 240000;
 
     enum class Phase : std::uint8_t
@@ -86,6 +86,7 @@ namespace
     std::uint8_t pawr_slot_mask = 0U;
     [[maybe_unused]] std::uint16_t last_pawr_event = 0U;
     [[maybe_unused]] bool last_pawr_event_valid = false;
+    std::int64_t pawr_phase_deadline_ms = 0;
 
     [[maybe_unused]] std::uint32_t rotation_baseline = 0U;
     std::uint32_t connection_count = 0U;
@@ -450,6 +451,10 @@ namespace
         {
             return;
         }
+        if (pawr_response_count >= required_pawr_responses)
+        {
+            return;
+        }
         if (!validPawrPayload(report))
         {
             ++pawr_corrupt_count;
@@ -482,9 +487,9 @@ namespace
         ++pawr_response_count;
         pawr_subevent_mask |= static_cast<std::uint8_t>(1U << selected);
         pawr_slot_mask |= static_cast<std::uint8_t>(1U << selected);
-        if (pawr_response_count >= central_pawr_responses)
+        if (pawr_response_count == required_pawr_responses)
         {
-            startPrivacyScan();
+            pawr_phase_deadline_ms = k_uptime_get() + 3000;
         }
     }
 
@@ -545,6 +550,7 @@ namespace
             return;
         }
         phase = Phase::pawr_active;
+        pawr_phase_deadline_ms = k_uptime_get() + pawr_drain_timeout_ms;
     }
 
     /** @brief 세 번의 RPA 회전을 관측할 non-connectable set을 시작합니다. */
@@ -597,6 +603,25 @@ namespace
         passToken("NUCODE_M28B2_PERIPHERAL:RPA:PASS:rotations=3");
     }
 
+    /** @brief 100회 window가 끝난 PAwR 수신률을 판정하고 privacy로 전환합니다. */
+    void finishPawrPeripheral()
+    {
+        if (pawr_response_count < 99U)
+        {
+            fail("pawr-response-rate");
+            return;
+        }
+        if (!BLEPeriodicAdvertising.stop(advertising_set) ||
+            !BLEExtendedAdvertising.stop(advertising_set) ||
+            !BLEExtendedAdvertising.remove(advertising_set))
+        {
+            fail("pawr-stop");
+            return;
+        }
+        reportPawrPass("PERIPHERAL", pawr_response_count);
+        startPrivacyRotation();
+    }
+
     /** @brief advertiser가 받은 PAwR response의 nonce와 위치를 검증합니다. */
     void onPawrResponse(const nucode::ble::BLEPawrResponse &response, void *)
     {
@@ -625,15 +650,7 @@ namespace
         pawr_slot_mask |= static_cast<std::uint8_t>(1U << response.response_slot);
         if (pawr_response_count == required_pawr_responses)
         {
-            if (!BLEPeriodicAdvertising.stop(advertising_set) ||
-                !BLEExtendedAdvertising.stop(advertising_set) ||
-                !BLEExtendedAdvertising.remove(advertising_set))
-            {
-                fail("pawr-stop");
-                return;
-            }
-            reportPawrPass("PERIPHERAL", pawr_response_count);
-            startPrivacyRotation();
+            finishPawrPeripheral();
         }
     }
 
@@ -875,6 +892,10 @@ namespace
             return;
         }
 #if !defined(NUCODE_M28_B2_CENTRAL)
+        if (phase == Phase::pawr_active && now >= pawr_phase_deadline_ms)
+        {
+            finishPawrPeripheral();
+        }
         if (phase == Phase::advertising && now >= next_advertising_update_ms)
         {
             if (advertising_sequence < advertising_updates)
@@ -918,6 +939,12 @@ namespace
             startPrivateConnectionAdvertising();
         }
 #else
+        if (phase == Phase::pawr_active &&
+            pawr_response_count == required_pawr_responses &&
+            now >= pawr_phase_deadline_ms)
+        {
+            startPrivacyScan();
+        }
         if (security_request_pending && now >= pending_action_ms)
         {
             security_request_pending = false;

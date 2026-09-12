@@ -74,7 +74,7 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             transcript(role_lines("peripheral")), NONCE, "peripheral"
         )
         central = parse_role_transcript(
-            transcript(role_lines("central", responses=105)), NONCE, "central"
+            transcript(role_lines("central")), NONCE, "central"
         )
         self.assertEqual(255, peripheral.advertising_payload_bytes)
         self.assertEqual(20, central.reconnects)
@@ -164,6 +164,8 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         self.assertIn("CONFIG_BT_CTLR_SYNC_TRANSFER_SENDER", source)
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_ADV", source)
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_SYNC", source)
+        self.assertIn("constexpr std::uint32_t required_pawr_responses = 100U;", source)
+        self.assertIn("pawr_response_count < 99U", source)
         self.assertLess(
             source.index("BLEPrivacy.setRotationTimeout(1U)"),
             source.index("startAdvertisingPhase();", source.index("void startProtocol()")),
