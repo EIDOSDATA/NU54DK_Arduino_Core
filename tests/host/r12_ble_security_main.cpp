@@ -51,9 +51,11 @@ namespace nucode::ble::internal
 
 std::array<unsigned, 16> events{};
 bool accept_in_callback = false;
+PeerAddress last_peer{};
 void observed(const SecurityEventRecord &event, void *)
 {
     ++events[static_cast<unsigned>(event.event)];
+    last_peer = event.peer;
     if (accept_in_callback && event.event == SecurityEvent::pairing_requested)
     {
         assert(BLESecurity.acceptPairing(true));
@@ -80,6 +82,10 @@ int main(int argc, char **argv)
     const char *scenario = argv[1];
     mock_saved_bond =
         std::strcmp(scenario, "restored_bond") == 0 || std::strcmp(scenario, "erase_failure") == 0;
+    if (std::strcmp(scenario, "identity_type_normalization") == 0)
+    {
+        mock_peer.type = BT_ADDR_LE_RANDOM_ID;
+    }
     SecurityConfig configuration{};
     configuration.response_timeout_ms = 1000;
     assert(BLESecurity.begin(configuration));
@@ -188,6 +194,15 @@ int main(int argc, char **argv)
         mock_auth->pairing_confirm(connection);
         mock_auth_error = -EIO;
         assert(!BLESecurity.acceptPairing(true) && connection->refs == 2);
+    }
+    else if (std::strcmp(scenario, "identity_type_normalization") == 0)
+    {
+        connection->security = BT_SECURITY_L2;
+        internal::securityChanged(connection, BT_SECURITY_L2, BT_SECURITY_ERR_SUCCESS);
+        BLESecurity.poll();
+        assert(events[static_cast<unsigned>(SecurityEvent::security_changed)] == 1);
+        assert(last_peer.type == BT_ADDR_LE_RANDOM);
+        assert(std::memcmp(last_peer.value, mock_peer.a.val, sizeof(last_peer.value)) == 0);
     }
     else if (std::strcmp(scenario, "queue_overflow") == 0)
     {

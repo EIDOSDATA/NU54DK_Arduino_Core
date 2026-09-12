@@ -119,7 +119,9 @@ namespace nucode::ble::internal::security
         PeerAddress result = {};
         if (address != nullptr)
         {
-            result.type = address->type;
+            const bool public_type = address->type == BT_ADDR_LE_PUBLIC ||
+                                     address->type == BT_ADDR_LE_PUBLIC_ID;
+            result.type = public_type ? BT_ADDR_LE_PUBLIC : BT_ADDR_LE_RANDOM;
             ::memcpy(result.value, address->a.val, sizeof(result.value));
         }
         return result;

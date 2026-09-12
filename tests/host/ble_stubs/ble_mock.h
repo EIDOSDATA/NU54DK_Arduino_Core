@@ -18,7 +18,8 @@ enum
 {
     BT_ADDR_LE_PUBLIC = 0,
     BT_ADDR_LE_RANDOM = 1,
-    BT_ADDR_LE_PUBLIC_ID = 2
+    BT_ADDR_LE_PUBLIC_ID = 2,
+    BT_ADDR_LE_RANDOM_ID = 3
 };
 using bt_security_t = std::uint8_t;
 enum bt_security_err
