@@ -195,6 +195,7 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         )
         self.assertIn("privacy_rpa_restart_pending = true;", source)
         self.assertIn("fail(\"privacy-rpa-rotate\");", source)
+        self.assertIn("if (connection_count == 0U)", source)
         restart = source.index(
             "if (privacy_rpa_restart_pending && now >= privacy_rpa_restart_ms)"
         )

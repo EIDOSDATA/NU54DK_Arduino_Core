@@ -460,7 +460,10 @@ namespace
                     return;
                 }
                 phase = Phase::privacy_link;
-                passToken("NUCODE_M28B2_CENTRAL:RPA:PASS:rotations=3");
+                if (connection_count == 0U)
+                {
+                    passToken("NUCODE_M28B2_CENTRAL:RPA:PASS:rotations=3");
+                }
             }
         }
     }
