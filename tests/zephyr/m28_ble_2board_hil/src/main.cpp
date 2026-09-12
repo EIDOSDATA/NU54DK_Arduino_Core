@@ -466,10 +466,12 @@ namespace
         {
             return;
         }
+        const std::uint8_t response_subevent =
+            static_cast<std::uint8_t>((report.subevent + 1U) % 4U);
         std::uint8_t response[21] = {};
-        buildPawrResponse(response, selected, selected);
+        buildPawrResponse(response, response_subevent, selected);
         if (!BLEPawr.sendResponse(report.sync, report.periodic_event_counter,
-                                  report.subevent, selected, selected,
+                                  report.subevent, response_subevent, selected,
                                   response, sizeof(response)))
         {
             fail("pawr-response-send");

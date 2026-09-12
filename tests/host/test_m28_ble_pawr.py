@@ -117,6 +117,10 @@ class M28BlePawrTests(unittest.TestCase):
             example = REPOSITORY / relative_path
             self.assertTrue(example.is_file(), example)
             self.assertIn("BLEDevice.begin(", example.read_text(encoding="utf-8"))
+        scanner = (
+            REPOSITORY / "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino"
+        ).read_text(encoding="utf-8")
+        self.assertIn("(report.subevent + 1U) % 4U", scanner)
 
 
 if __name__ == "__main__":

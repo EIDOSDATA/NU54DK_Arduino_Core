@@ -659,7 +659,7 @@ namespace nucode::ble
                                             const std::uint8_t *subevents,
                                             std::size_t count) noexcept;
 
-        /** @brief 수신 request의 event/subevent에 한 번 사용할 response를 설정합니다. */
+        /** @brief 수신 request에 한 번 사용할 이후 subevent response를 설정합니다. */
         [[nodiscard]] bool sendResponse(BLEPeriodicSyncHandle sync,
                                         std::uint16_t request_event,
                                         std::uint8_t request_subevent,
