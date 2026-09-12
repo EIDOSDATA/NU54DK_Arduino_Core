@@ -63,7 +63,7 @@ namespace
     [[maybe_unused]] std::uint32_t advertising_report_count = 0U;
     [[maybe_unused]] std::uint32_t advertising_corrupt_count = 0U;
     [[maybe_unused]] std::uint32_t advertising_stale_count = 0U;
-    [[maybe_unused]] bool advertising_sequences[advertising_updates + 1U] = {};
+    [[maybe_unused]] std::uint32_t advertising_latest_sequence = 0U;
     [[maybe_unused]] std::uint32_t advertising_sequence = 0U;
     [[maybe_unused]] std::int64_t next_advertising_update_ms = 0;
 
@@ -368,13 +368,17 @@ namespace
             {
                 return;
             }
-            if (advertising_sequences[sequence])
+            if (sequence < advertising_latest_sequence)
             {
                 ++advertising_stale_count;
-                fail("advertising-duplicate");
+                fail("advertising-stale");
                 return;
             }
-            advertising_sequences[sequence] = true;
+            if (sequence == advertising_latest_sequence)
+            {
+                return;
+            }
+            advertising_latest_sequence = sequence;
             ++advertising_report_count;
             if (advertising_report_count == required_advertising_reports)
             {
