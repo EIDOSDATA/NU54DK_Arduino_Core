@@ -555,8 +555,7 @@ namespace
         std::uint8_t payload[24] = {};
         buildDiscoveryPayload(payload, "ROT0");
         rotation_baseline = BLEPrivacy.expirationCount();
-        if (!BLEPrivacy.setRotationTimeout(1U) ||
-            !BLEExtendedAdvertising.create(parameters, advertising_set) ||
+        if (!BLEExtendedAdvertising.create(parameters, advertising_set) ||
             !BLEExtendedAdvertising.setData(advertising_set, payload,
                                             sizeof(payload)) ||
             !BLEExtendedAdvertising.start(advertising_set))
@@ -823,6 +822,11 @@ namespace
             fail("advertising-scan-start");
         }
 #else
+        if (!BLEPrivacy.setRotationTimeout(1U))
+        {
+            fail("privacy-timeout-configure");
+            return;
+        }
         startAdvertisingPhase();
 #endif
     }

@@ -164,6 +164,10 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         self.assertIn("CONFIG_BT_CTLR_SYNC_TRANSFER_SENDER", source)
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_ADV", source)
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_SYNC", source)
+        self.assertLess(
+            source.index("BLEPrivacy.setRotationTimeout(1U)"),
+            source.index("startAdvertisingPhase();", source.index("void startProtocol()")),
+        )
 
     def test_pyocd_sector_flash_is_uid_bound(self) -> None:
         """! @brief M28 기본 flash가 exact UID와 sector erase만 사용합니다. """
