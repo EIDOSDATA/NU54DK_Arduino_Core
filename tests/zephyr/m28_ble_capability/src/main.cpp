@@ -11,6 +11,7 @@
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/bluetooth/hci_types.h>
 #include <zephyr/net_buf.h>
+#include <zephyr/settings/settings.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/sys/util.h>
 
@@ -481,6 +482,13 @@ void setup()
     if (result != 0)
     {
         fail("bt_enable", result);
+        return;
+    }
+
+    const int settings_result = settings_load();
+    if (settings_result != 0)
+    {
+        fail("settings_load", settings_result);
         return;
     }
 }
