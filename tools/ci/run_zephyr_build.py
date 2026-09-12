@@ -114,6 +114,18 @@ SUITE_GROUPS = {
         ("m28_ble_privacy_control_contract", "nucode.m28.privacy_control"),
         ("m28_ble_2board_hil", "nucode.m28.b2p"),
         ("m28_ble_2board_hil", "nucode.m28.b2c"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.link.peripheral"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.link.mixed"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.link.central"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.periodic.peripheral"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.periodic.mixed"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.periodic.central"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.control.peripheral"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.control.mixed"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.control.central"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.soak.peripheral"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.soak.mixed"),
+        ("m28_ble_3board_hil", "nucode.m28.b3.soak.central"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)

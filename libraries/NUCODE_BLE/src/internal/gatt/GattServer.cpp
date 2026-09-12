@@ -47,6 +47,30 @@ namespace nucode::ble::internal::gatt
         return nullptr;
     }
 
+    /** @brief CCC를 실제로 설정한 active link를 peripheral 우선으로 참조합니다. */
+    struct bt_conn *referenceSubscribedConnection(const struct bt_gatt_attr *attribute,
+                                                  std::uint16_t value) noexcept
+    {
+        constexpr BLELinkRole roles[] = {
+            BLELinkRole::peripheral,
+            BLELinkRole::central,
+        };
+        for (BLELinkRole role : roles)
+        {
+            struct bt_conn *connection = internal::referenceConnection(role);
+            if (connection == nullptr)
+            {
+                continue;
+            }
+            if (bt_gatt_is_subscribed(connection, attribute, value))
+            {
+                return connection;
+            }
+            bt_conn_unref(connection);
+        }
+        return nullptr;
+    }
+
     /** @brief cached characteristic value를 stack read deadline 안에서 반환합니다. */
     ssize_t serverRead(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                        void *buffer, std::uint16_t length, std::uint16_t offset) noexcept
@@ -56,7 +80,7 @@ namespace nucode::ble::internal::gatt
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
         }
-        if (!currentGattConnection(connection))
+        if (!internal::activeConnection(connection))
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
         }
@@ -72,13 +96,12 @@ namespace nucode::ble::internal::gatt
                         const void *buffer, std::uint16_t length, std::uint16_t offset,
                         std::uint8_t flags) noexcept
     {
-        ARG_UNUSED(connection);
         BLECharacteristic *characteristic = static_cast<BLECharacteristic *>(attribute->user_data);
         if (characteristic == nullptr || (buffer == nullptr && length != 0U))
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
         }
-        if (!currentGattConnection(connection))
+        if (!internal::activeConnection(connection))
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
         }
@@ -113,7 +136,7 @@ namespace nucode::ble::internal::gatt
     /** @brief connection별 CCC 변경을 main-thread event로 변환합니다. */
     void cccChanged(const struct bt_gatt_attr *attribute, std::uint16_t value) noexcept
     {
-        if (atomic_get(&sessionState().gatt_link_active) == 0)
+        if (!internal::hasActiveConnection())
         {
             return;
         }
@@ -150,7 +173,7 @@ namespace nucode::ble::internal::gatt
         if (token_connection == connection &&
             token_generation ==
                 static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation)) &&
-            currentGattConnection(connection))
+            internal::activeConnection(connection))
         {
             queueServerEvent(*notification->characteristic,
                              BLECharacteristicEvent::notification_sent);
@@ -193,7 +216,7 @@ namespace nucode::ble::internal::gatt
         if (slot->indication_connections[index] != connection ||
             slot->indication_generations[index] !=
                 static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation)) ||
-            !currentGattConnection(connection))
+            !internal::activeConnection(connection))
         {
             return;
         }
@@ -307,15 +330,16 @@ namespace nucode::ble
         {
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
+        const struct bt_gatt_attr *attribute =
+            &slot->attributes[slot->value_attribute_index[index]];
+        struct bt_conn *connection =
+            referenceSubscribedConnection(attribute, BT_GATT_CCC_NOTIFY);
         if (connection == nullptr)
         {
             return false;
         }
-        const bool subscribed = bt_gatt_is_subscribed(
-            connection, &slot->attributes[slot->value_attribute_index[index]], BT_GATT_CCC_NOTIFY);
         bt_conn_unref(connection);
-        return subscribed;
+        return true;
     }
 
     bool BLECharacteristic::indicationSubscribed() const noexcept
@@ -330,16 +354,16 @@ namespace nucode::ble
         {
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
+        const struct bt_gatt_attr *attribute =
+            &slot->attributes[slot->value_attribute_index[index]];
+        struct bt_conn *connection =
+            referenceSubscribedConnection(attribute, BT_GATT_CCC_INDICATE);
         if (connection == nullptr)
         {
             return false;
         }
-        const bool subscribed =
-            bt_gatt_is_subscribed(connection, &slot->attributes[slot->value_attribute_index[index]],
-                                  BT_GATT_CCC_INDICATE);
         bt_conn_unref(connection);
-        return subscribed;
+        return true;
     }
 
     bool BLECharacteristic::notify() noexcept
@@ -365,25 +389,24 @@ namespace nucode::ble
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
+        const struct bt_gatt_attr *attribute =
+            &slot->attributes[slot->value_attribute_index[index]];
+        struct bt_conn *connection =
+            referenceSubscribedConnection(attribute, BT_GATT_CCC_NOTIFY);
         if (connection == nullptr)
         {
             atomic_set(&slot->notification_active[index], 0);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
-        const struct bt_gatt_attr *attribute =
-            &slot->attributes[slot->value_attribute_index[index]];
-        const bool subscribed = bt_gatt_is_subscribed(connection, attribute, BT_GATT_CCC_NOTIFY);
         const std::size_t mtu = bt_gatt_get_mtu(connection);
         std::uint8_t snapshot[maximum_value_length] = {};
         const std::size_t snapshot_length = copyCachedValue(*this, snapshot, sizeof(snapshot));
-        if (!subscribed || mtu < 3U || snapshot_length > mtu - 3U)
+        if (mtu < 3U || snapshot_length > mtu - 3U)
         {
             bt_conn_unref(connection);
             atomic_set(&slot->notification_active[index], 0);
-            internal::recordError(subscribed ? BLEError::value_overflow : BLEError::wrong_state,
-                                  subscribed ? -EMSGSIZE : -EPERM, true);
+            internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
         }
         NotificationContext &notification = slot->notifications[index];
@@ -435,25 +458,24 @@ namespace nucode::ble
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
+        const struct bt_gatt_attr *attribute =
+            &slot->attributes[slot->value_attribute_index[index]];
+        struct bt_conn *connection =
+            referenceSubscribedConnection(attribute, BT_GATT_CCC_INDICATE);
         if (connection == nullptr)
         {
             atomic_set(&slot->indication_active[index], 0);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
-        const struct bt_gatt_attr *attribute =
-            &slot->attributes[slot->value_attribute_index[index]];
-        const bool subscribed = bt_gatt_is_subscribed(connection, attribute, BT_GATT_CCC_INDICATE);
         const std::size_t mtu = bt_gatt_get_mtu(connection);
         const std::size_t snapshot_length =
             copyCachedValue(*this, slot->indication_data[index], maximum_value_length);
-        if (!subscribed || mtu < 3U || snapshot_length > mtu - 3U)
+        if (mtu < 3U || snapshot_length > mtu - 3U)
         {
             bt_conn_unref(connection);
             atomic_set(&slot->indication_active[index], 0);
-            internal::recordError(subscribed ? BLEError::value_overflow : BLEError::wrong_state,
-                                  subscribed ? -EMSGSIZE : -EPERM, true);
+            internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
         }
         struct bt_gatt_indicate_params &parameters = slot->indications[index];

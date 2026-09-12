@@ -104,6 +104,8 @@ class M28BlePeriodicTests(unittest.TestCase):
         for relative_path in (
             "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
             "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino",
+            "libraries/NUCODE_BLE/examples/PastSender/PastSender.ino",
+            "libraries/NUCODE_BLE/examples/PastReceiver/PastReceiver.ino",
         ):
             example = REPOSITORY / relative_path
             self.assertTrue(example.is_file(), example)

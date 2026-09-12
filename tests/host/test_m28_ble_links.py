@@ -17,6 +17,7 @@ INTERNAL = (
     / "GapInternal.h"
 )
 CONNECTION = INTERNAL.parent / "GapConnection.cpp"
+GATT_SERVER = INTERNAL.parents[1] / "gatt" / "GattServer.cpp"
 PROFILE = REPOSITORY / "libraries" / "NUCODE_BLE" / "zephyr" / "ble-nus.conf"
 TARGET = REPOSITORY / "tests" / "zephyr" / "m28_ble_link_contract"
 EXAMPLE = (
@@ -28,6 +29,7 @@ EXAMPLE = (
     / "MixedRoleLinks.ino"
 )
 RUNTIME_TEST = REPOSITORY / "tests" / "host" / "r12_ble_gap_main.cpp"
+GATT_RUNTIME_TEST = REPOSITORY / "tests" / "host" / "r12_ble_gatt_main.cpp"
 
 
 class M28BleLinkTests(unittest.TestCase):
@@ -74,6 +76,16 @@ class M28BleLinkTests(unittest.TestCase):
         self.assertIn("activeConnectionHandle", source)
         self.assertIn("role == BLELinkRole::central", source)
         self.assertIn("role == BLELinkRole::peripheral", source)
+
+    def test_gatt_server_routes_to_the_subscribed_incoming_link(self) -> None:
+        """! @brief mixed role에서 server I/O가 central client slot로 새지 않게 고정합니다. """
+
+        runtime = GATT_RUNTIME_TEST.read_text(encoding="utf-8")
+        server = GATT_SERVER.read_text(encoding="utf-8")
+        self.assertIn('"mixed_server_route"', runtime)
+        self.assertIn("internal::activeConnection(connection)", server)
+        self.assertIn("referenceSubscribedConnection", server)
+        self.assertIn("BLELinkRole::peripheral", server)
 
     def test_profile_and_target_fix_the_controller_partition(self) -> None:
         """! @brief production profile과 target image의 2=1+1 구성을 대조합니다. """

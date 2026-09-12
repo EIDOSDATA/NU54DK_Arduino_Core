@@ -309,6 +309,7 @@ def flash_image_pyocd(
         raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
     command = (
         sys.executable,
+        "-I",
         "-m",
         "pyocd",
         "flash",

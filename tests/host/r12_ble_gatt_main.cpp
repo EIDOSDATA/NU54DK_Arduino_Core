@@ -202,6 +202,34 @@ int main(int argc, char **argv)
         assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::indication_confirmed)] ==
                1);
     }
+    else if (std::strcmp(scenario, "mixed_server_route") == 0)
+    {
+        assert(BLEAdvertising.clear() && BLEAdvertising.start());
+        mock_conn_callbacks->connected(&mock_connections[1], 0);
+        BLEDevice.poll();
+        assert(BLEConnection.count() == 2U);
+        assert(BLEConnection.role(BLEConnection.handle(BLELinkRole::peripheral)) ==
+               BLELinkRole::peripheral);
+        assert(attribute->write(&mock_connections[1], attribute, payload, 4, 0, 0) == 4);
+        assert(attribute->write(&mock_connections[2], attribute, payload, 4, 0, 0) ==
+               BT_GATT_ERR(BT_ATT_ERR_UNLIKELY));
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::written)] == 1U);
+        assert(characteristic.setValue(payload, 4));
+        assert(characteristic.notify());
+        assert(mock_notification_connection == &mock_connections[1]);
+        mock_notification.func(&mock_connections[1], mock_notification.user_data);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::notification_sent)] ==
+               1U);
+        assert(characteristic.indicate());
+        assert(mock_indication_connection == &mock_connections[1]);
+        mock_indication->func(&mock_connections[1], mock_indication, 0);
+        mock_indication->destroy(mock_indication);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::indication_confirmed)] ==
+               1U);
+    }
     else if (std::strcmp(scenario, "discovery_failure") == 0)
     {
         mock_discover_error = -EIO;

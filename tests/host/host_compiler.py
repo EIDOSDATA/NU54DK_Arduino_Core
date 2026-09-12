@@ -30,7 +30,7 @@ def compiler_command(language="c++", optional=False):
     return [compiler, *flags]
 
 
-def run_executable(command, *, application_control_retries=2, retry_delay_seconds=0.25, **kwargs):
+def run_executable(command, *, application_control_retries=5, retry_delay_seconds=1.0, **kwargs):
     """! @brief Windows 정책이 새 실행 파일 검사를 마칠 때까지 제한적으로 다시 시작합니다. """
     for attempt in range(application_control_retries + 1):
         try:

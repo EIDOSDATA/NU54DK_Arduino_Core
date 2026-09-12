@@ -35,6 +35,7 @@ ARDUINO_TESTS = (
     "m16",
     "m19m20",
     "m21",
+    "m28",
     "ac02b",
     "ac03",
     "examples",
@@ -1392,6 +1393,29 @@ def test_m21_example(cli: Path, config: Path, root: Path, repository: Path) -> N
             raise SmokeFailure(f"BLE security symbol is disabled: {symbol}")
 
 
+## @brief M28 GAP·multi-link·periodic·PAwR·privacy 예제를 BLE profile로 빌드합니다.
+def test_m28_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    test_ble_examples(
+        cli,
+        config,
+        root,
+        repository,
+        (
+            "MixedRoleLinks",
+            "ExtendedAdvertising",
+            "ExtendedScanner",
+            "PeriodicAdvertiser",
+            "PeriodicScanner",
+            "PastSender",
+            "PastReceiver",
+            "PawrAdvertiser",
+            "PawrScanner",
+            "PrivacyPeripheral",
+            "PerLinkControl",
+        ),
+    )
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -1431,10 +1455,21 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
         "NUCODE BLE": {
             "CustomGattCentral",
             "CustomGattPeripheral",
+            "ExtendedAdvertising",
+            "ExtendedScanner",
             "GAPCentral",
             "GAPPeripheral",
+            "MixedRoleLinks",
             "NUSCentral",
             "NUSPeripheral",
+            "PastReceiver",
+            "PastSender",
+            "PawrAdvertiser",
+            "PawrScanner",
+            "PerLinkControl",
+            "PeriodicAdvertiser",
+            "PeriodicScanner",
+            "PrivacyPeripheral",
         },
         "NUCODE BLE Security": {"SecureKeyboard"},
     }
@@ -1611,6 +1646,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m16": test_m16_examples,
                 "m19m20": test_m19_m20_examples,
                 "m21": test_m21_example,
+                "m28": test_m28_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

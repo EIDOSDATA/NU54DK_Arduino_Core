@@ -99,6 +99,69 @@ namespace nucode::ble::internal
     {
         return gap::referenceConnection(connection);
     }
+    struct bt_conn *referenceConnection(BLELinkRole role) noexcept
+    {
+        const std::size_t slot_index =
+            role == BLELinkRole::central
+                ? central_connection_slot
+                : role == BLELinkRole::peripheral ? peripheral_connection_slot
+                                                  : maximum_connection_slots;
+        struct bt_conn *connection = nullptr;
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        if (slot_index < maximum_connection_slots)
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[slot_index];
+            if (slot.active != nullptr && slot.generation != 0U &&
+                slot.device_generation == static_cast<std::uint32_t>(
+                                              atomic_get(&gapState().device_session_generation)))
+            {
+                connection = slot.active;
+                bt_conn_ref(connection);
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return connection;
+    }
+    bool activeConnection(struct bt_conn *connection) noexcept
+    {
+        if (connection == nullptr)
+        {
+            return false;
+        }
+        bool active = false;
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[index];
+            if (slot.active == connection && slot.generation != 0U &&
+                slot.device_generation == static_cast<std::uint32_t>(
+                                              atomic_get(&gapState().device_session_generation)))
+            {
+                active = true;
+                break;
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return active;
+    }
+    bool hasActiveConnection() noexcept
+    {
+        bool active = false;
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[index];
+            if (slot.active != nullptr && slot.generation != 0U &&
+                slot.device_generation == static_cast<std::uint32_t>(
+                                              atomic_get(&gapState().device_session_generation)))
+            {
+                active = true;
+                break;
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return active;
+    }
 } // namespace nucode::ble::internal
 namespace nucode::ble
 {

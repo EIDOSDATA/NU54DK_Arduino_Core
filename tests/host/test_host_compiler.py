@@ -53,7 +53,7 @@ class HostCompilerTests(unittest.TestCase):
                 patch("host_compiler.time.sleep") as sleeper:
             self.assertIs(run_executable(["generated.exe"]), completed)
         self.assertEqual(runner.call_count, 2)
-        sleeper.assert_called_once_with(0.25)
+        sleeper.assert_called_once_with(1.0)
 
     def test_non_policy_start_error_is_not_retried(self):
         failure = OSError("missing")
