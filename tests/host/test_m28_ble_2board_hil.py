@@ -14,6 +14,12 @@ APPLICATION_SOURCE = (
     / "src"
     / "main.cpp"
 )
+APPLICATION_CONFIG = (
+    Path(__file__).resolve().parents[1]
+    / "zephyr"
+    / "m28_ble_2board_hil"
+    / "prj.conf"
+)
 if str(HIL_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(HIL_DIRECTORY))
 
@@ -137,6 +143,24 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             "constexpr std::int64_t advertising_update_interval_ms = 200;",
             source,
         )
+
+    def test_pawr_controller_dependencies_are_enabled(self) -> None:
+        """! @brief PAwR controller 기능이 PAST 누락으로 꺼지는 회귀를 막습니다. """
+
+        config = APPLICATION_CONFIG.read_text(encoding="utf-8").splitlines()
+        required = {
+            "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
+            "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y",
+            "CONFIG_BT_CTLR_SDC_PAWR_ADV=y",
+            "CONFIG_BT_CTLR_SDC_PAWR_SYNC=y",
+        }
+        self.assertTrue(required.issubset(set(config)))
+
+        source = APPLICATION_SOURCE.read_text(encoding="utf-8")
+        self.assertIn("CONFIG_BT_CTLR_SYNC_TRANSFER_RECEIVER", source)
+        self.assertIn("CONFIG_BT_CTLR_SYNC_TRANSFER_SENDER", source)
+        self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_ADV", source)
+        self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_SYNC", source)
 
 
 if __name__ == "__main__":

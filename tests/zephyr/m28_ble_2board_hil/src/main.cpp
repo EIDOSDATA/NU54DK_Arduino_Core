@@ -14,6 +14,18 @@
 #include <cstdint>
 #include <string.h>
 
+#if !defined(CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER) || \
+    !defined(CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER)
+#error "M28B2 requires both periodic sync transfer roles"
+#endif
+
+#if !defined(CONFIG_BT_CTLR_SYNC_TRANSFER_RECEIVER) || \
+    !defined(CONFIG_BT_CTLR_SYNC_TRANSFER_SENDER) || \
+    !defined(CONFIG_BT_CTLR_SDC_PAWR_ADV) || \
+    !defined(CONFIG_BT_CTLR_SDC_PAWR_SYNC)
+#error "M28B2 requires PAST-backed SDC PAwR controller support"
+#endif
+
 namespace
 {
 
