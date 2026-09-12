@@ -336,6 +336,7 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             self.assertIn(value, runner)
         for value in (
             "CONFIG_BT_MAX_CONN=2",
+            "CONFIG_BT_CREATE_CONN_TIMEOUT=10",
             "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
             "CONFIG_BT_L2CAP_TX_MTU=64",
             "CONFIG_BT_BUF_ACL_TX_SIZE=68",
