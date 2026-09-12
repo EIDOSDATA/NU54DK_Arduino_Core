@@ -56,7 +56,7 @@ int main(int argc, char **argv)
         assert(BLEPawr.configureAdvertiser(advertising_set));
         assert(mock_periodic_parameters.num_subevents == 4U);
         assert(mock_periodic_parameters.num_response_slots == 4U);
-        assert(mock_periodic_parameters.response_slot_spacing == 4U);
+        assert(mock_periodic_parameters.response_slot_spacing == 8U);
         for (std::uint8_t subevent = 0U; subevent < 4U; ++subevent)
         {
             const std::uint8_t payload[] = {subevent, 0xa5U};

@@ -608,7 +608,7 @@ namespace nucode::ble
         std::uint8_t subevents = 4U;
         std::uint8_t subevent_interval = 8U;
         std::uint8_t response_slot_delay = 1U;
-        std::uint8_t response_slot_spacing = 4U;
+        std::uint8_t response_slot_spacing = 8U;
         std::uint8_t response_slots = 4U;
         bool include_tx_power = false;
         bool include_adi = false;
