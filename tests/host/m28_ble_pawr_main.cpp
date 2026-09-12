@@ -58,7 +58,7 @@ int main(int argc, char **argv)
         assert(mock_periodic_parameters.num_response_slots == 4U);
         assert(mock_periodic_parameters.interval_min == 0x0100U);
         assert(mock_periodic_parameters.interval_max == 0x0100U);
-        assert(mock_periodic_parameters.subevent_interval == 48U);
+        assert(mock_periodic_parameters.subevent_interval == 64U);
         assert(mock_periodic_parameters.response_slot_delay == 8U);
         assert(mock_periodic_parameters.response_slot_spacing == 80U);
         for (std::uint8_t subevent = 0U; subevent < 4U; ++subevent)
