@@ -14,7 +14,7 @@
 | 산출물 | 구현 내용 |
 | --- | --- |
 | `tests/zephyr/m28_ble_capability` | nRF54L15·NCS v3.4.0·SDC capability image, 필수 Host Kconfig compile-time assert |
-| `M28CAP/1` | READY/BEGIN, full revision, Host config, HCI version·commands·features·자원, 6개 capability, END의 고정 15줄 |
+| `M28CAP/1` | flash 뒤 PROBE/READY handshake, BEGIN, full revision, Host config, HCI version·commands·features·자원, 6개 capability, END의 고정 15줄 |
 | `tests/hil/nu54dk/m28_ble_capability.py` | exact image/board/nonce 결합, 180초 timeout, raw HCI와 CAP 판정의 fail-closed 대조, JSON·raw transcript 증적 |
 | `tests/host/test_m28_ble_capability.py` | 정상과 noise·중복·누락·stale nonce·wrong revision·raw feature/resource mismatch·target FAIL·timeout 검증 |
 | CI target group | `v0.5.0` Zephyr group과 GitHub pinned container matrix에 W01 suite 추가 |
@@ -43,6 +43,7 @@ W02 이후 `M28-LINK-01`에서 별도로 검증한다.
 | 3 | 첫 build의 `CONFIG_BT_PRIVACY=n` | Host privacy의 `BT_SMP` 의존 누락 | `CONFIG_BT_SMP=y` 추가, resolved `.config` 재검사 |
 | 4 | build는 PASS하지만 HCI 자원 기준 미달 | SDC 기본값이 광고 data 31 byte, periodic advertiser list 0개 | 각각 255 byte·1개로 명시하고 compile-time assert 추가 |
 | 5 | 첫 실보드 수집이 READY 전 noise로 FAIL | Zephyr banner와 별개인 `CONFIG_NCS_BOOT_BANNER=y`가 boot 문자열 출력 | NCS banner를 명시적으로 끄고 compile-time assert 뒤 동일 보드·UART로 재검증 |
+| 6 | banner 제거 뒤 READY 앞 4-byte noise로 FAIL | target reset 동안 USB-UART가 관측한 TX high-Z 글리치 | flash 후 입력을 비우고 exact `PROBE`로 검증 세션을 arm하는 handshake 추가 |
 
 각 수정은 이전 실패 출력 폴더를 재사용하지 않고 같은 board/SDK/toolchain 조건의 새 build로
 재검증했다. 이유 없는 반복이나 결과 선별은 하지 않았다.

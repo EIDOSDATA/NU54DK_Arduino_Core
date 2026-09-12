@@ -93,6 +93,17 @@ class EmptySerial:
 
     in_waiting = 0
 
+    def reset_input_buffer(self) -> None:
+        """! @brief flash reset 구간의 입력 폐기를 모사합니다. """
+
+    def write(self, payload: bytes) -> int:
+        """! @brief PROBE command 전체가 UART에 기록된 것으로 모사합니다. """
+
+        return len(payload)
+
+    def flush(self) -> None:
+        """! @brief synthetic UART에는 지연된 출력이 없습니다. """
+
     def read(self, _size: int) -> bytes:
         """! @brief 항상 빈 입력을 반환합니다. """
 

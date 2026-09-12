@@ -432,6 +432,12 @@ def collect_transcript(
     deadline = monotonic() + timeout_seconds
     pending = bytearray()
     capture = bytearray()
+    serial_port.reset_input_buffer()
+    probe = b"M28CAP|1|PROBE\r\n"
+    written = serial_port.write(probe)
+    serial_port.flush()
+    if written != len(probe):
+        raise M28CapabilityFailure("PROBE command가 일부만 기록됐습니다.")
     first = read_line(serial_port, pending, capture, deadline)
     if first != b"M28CAP|1|READY":
         raise M28CapabilityFailure(f"READY 앞 noise 또는 stale record입니다: {first!r}")

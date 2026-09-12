@@ -107,7 +107,8 @@ periodic sync, queue와 payload buffer는 compile-time 상한을 가진 고정 s
 
 ### 5.1 M28-W01 고정 protocol과 현재 결과
 
-`M28CAP/1`은 임의 로그 문장이 아니라 다음 15개 record의 고정 순서를 사용한다.
+`M28CAP/1`은 임의 로그 문장이 아니다. Host가 flash/reset 구간의 UART byte를 버린 뒤 exact
+`PROBE` command로 세션을 arm하고, firmware는 다음 15개 record를 고정 순서로 출력한다.
 
 1. `READY`, nonce가 결합된 `BEGIN`
 2. Core·board·NCS·Zephyr full revision과 Host Kconfig
@@ -115,7 +116,7 @@ periodic sync, queue와 payload buffer는 compile-time 상한을 가진 고정 s
 4. 최대 advertising data·advertising set·periodic advertiser list·resolving list 자원
 5. 6개 기능군의 Host/controller 판정과 record 수를 고정한 `END`
 
-Firmware는 잘못된 START·nonce·HCI status·응답 크기를 즉시 `FAIL`로 닫는다. Host parser는 전체
+Firmware는 잘못된 PROBE·START·nonce·HCI status·응답 크기를 즉시 `FAIL`로 닫는다. Host parser는 전체
 transcript가 정확히 15줄인지 확인하고 noise·중복·누락·순서 변경·stale nonce·wrong revision·
 timeout과 raw HCI bit/resource에 맞지 않는 PASS 문자열을 거부한다. 현재 신규 Host 시험 11개와
 고정 SDK target 1/1 build는 PASS했지만 보드 실행은 `NOT RUN`이므로 기능군의

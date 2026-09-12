@@ -374,9 +374,10 @@ $Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
   --evidence $Evidence
 ```
 
-Runner는 180초 단일 deadline, 128-bit nonce와 고정 15줄 protocol을 적용한다. HCI bit/resource가
-부족하거나 noise·중복·누락·wrong revision·stale nonce·target FAIL이 있으면 해당 실행을 실패로
-종료한다. 실패를 무한 재시도하지 않고 USB/UART 연결을 먼저 대조한 뒤, 연결이 정상이면
+Runner는 flash/reset 구간 뒤 UART 입력을 비우고 exact `PROBE`로 검증 세션을 arm한다. 그 뒤
+180초 단일 deadline, 128-bit nonce와 고정 15줄 protocol을 적용한다. 세션 시작 뒤 HCI
+bit/resource가 부족하거나 noise·중복·누락·wrong revision·stale nonce·target FAIL이 있으면 해당
+실행을 실패로 종료한다. 실패를 무한 재시도하지 않고 USB/UART 연결을 먼저 대조한 뒤, 연결이 정상이면
 CMSIS-DAP으로 controller·GPIO·오류 상태를 확보해 원인 분류 후 동일 조건으로 재검증한다.
 
 ## M15 System OFF 결합 HIL

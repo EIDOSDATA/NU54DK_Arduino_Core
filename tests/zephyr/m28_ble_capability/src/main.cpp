@@ -56,6 +56,7 @@ static_assert(!IS_ENABLED(CONFIG_NCS_BOOT_BANNER));
 namespace
 {
 
+    constexpr char probe_command[] = "M28CAP|1|PROBE";
     constexpr char start_prefix[] = "M28CAP|1|START|nonce=";
     constexpr std::size_t nonce_length = 32U;
     constexpr std::size_t command_capacity = sizeof(start_prefix) + nonce_length;
@@ -63,6 +64,7 @@ namespace
     char command[command_capacity] = {};
     char nonce[nonce_length + 1U] = {};
     std::size_t command_length = 0U;
+    bool protocol_ready = false;
     bool protocol_finished = false;
 
     struct CapabilitySnapshot
@@ -342,6 +344,20 @@ namespace
                readHci(BT_HCI_OP_LE_READ_RL_SIZE, "resolving_list", snapshot.resolving_list);
     }
 
+    /** @brief flash reset 잡음 뒤 exact PROBE command에 READY로 응답합니다. */
+    void probeProtocol()
+    {
+        if (command_length != strlen(probe_command) ||
+            memcmp(command, probe_command, strlen(probe_command)) != 0)
+        {
+            fail("probe_command", -EINVAL);
+            return;
+        }
+        Serial.println("M28CAP|1|READY");
+        protocol_ready = true;
+        command_length = 0U;
+    }
+
     /** @brief exact nonce command를 검증하고 capability 수집을 한 번 수행합니다. */
     void startProtocol()
     {
@@ -393,7 +409,14 @@ namespace
             if (value == '\n')
             {
                 command[command_length] = '\0';
-                startProtocol();
+                if (protocol_ready)
+                {
+                    startProtocol();
+                }
+                else
+                {
+                    probeProtocol();
+                }
                 return;
             }
             if (command_length + 1U >= sizeof(command))
@@ -407,7 +430,7 @@ namespace
 
 } // namespace
 
-/** @brief Bluetooth controller를 초기화하고 단일 READY를 출력합니다. */
+/** @brief Bluetooth controller를 초기화하고 Host의 PROBE를 기다립니다. */
 void setup()
 {
     Serial.begin(115200);
@@ -418,7 +441,6 @@ void setup()
         fail("bt_enable", result);
         return;
     }
-    Serial.println("M28CAP|1|READY");
 }
 
 /** @brief Host의 exact START command가 올 때까지만 UART를 확인합니다. */
