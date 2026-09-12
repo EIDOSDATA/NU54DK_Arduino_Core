@@ -138,7 +138,7 @@ namespace
     std::uint32_t outgoing_disconnects = 0U;
     std::uint32_t incoming_disconnects = 0U;
     std::uint32_t outgoing_reconnects = 0U;
-    std::uint32_t incoming_reconnects = 0U;
+    [[maybe_unused]] std::uint32_t incoming_reconnects = 0U;
     std::uint32_t reconnect_attempt_failures = 0U;
     std::uint32_t stale_events = 0U;
     std::uint32_t unexpected_disconnects = 0U;
