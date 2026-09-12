@@ -105,7 +105,10 @@ namespace
     [[maybe_unused]] bool disconnect_pending = false;
     [[maybe_unused]] bool advertising_restart_pending = false;
     [[maybe_unused]] bool scan_restart_pending = false;
+    [[maybe_unused]] bool privacy_rpa_restart_pending = false;
     [[maybe_unused]] bool privacy_transition_pending = false;
+    [[maybe_unused]] std::int64_t privacy_rpa_restart_ms = 0;
+    [[maybe_unused]] std::int64_t privacy_transition_ms = 0;
     std::int64_t pending_action_ms = 0;
 
     /** @brief 현재 image의 role 이름을 반환합니다. */
@@ -703,11 +706,17 @@ namespace
         }
 #else
         if (information.event == nucode::ble::BLEEvent::rpa_expired &&
-            phase == Phase::privacy_rotation &&
-            BLEPrivacy.expirationCount() - rotation_baseline >= required_rpa_rotations)
+            phase == Phase::privacy_rotation)
         {
-            privacy_transition_pending = true;
-            pending_action_ms = k_uptime_get() + 600;
+            const std::int64_t now = k_uptime_get();
+            privacy_rpa_restart_pending = true;
+            privacy_rpa_restart_ms = now + 50;
+            if (BLEPrivacy.expirationCount() - rotation_baseline >=
+                required_rpa_rotations)
+            {
+                privacy_transition_pending = true;
+                privacy_transition_ms = now + 600;
+            }
         }
 #endif
         if (information.event == nucode::ble::BLEEvent::connected &&
@@ -946,7 +955,17 @@ namespace
                 fail("privacy-readvertise");
             }
         }
-        if (privacy_transition_pending && now >= pending_action_ms)
+        if (privacy_rpa_restart_pending && now >= privacy_rpa_restart_ms)
+        {
+            privacy_rpa_restart_pending = false;
+            if (!BLEExtendedAdvertising.stop(advertising_set) ||
+                !BLEExtendedAdvertising.start(advertising_set))
+            {
+                fail("privacy-rpa-rotate");
+                return;
+            }
+        }
+        if (privacy_transition_pending && now >= privacy_transition_ms)
         {
             privacy_transition_pending = false;
             preparePrivateConnectionAdvertising();
