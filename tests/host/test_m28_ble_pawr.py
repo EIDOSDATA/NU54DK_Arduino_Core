@@ -68,6 +68,7 @@ class M28BlePawrTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
             for scenario in (
                 "advertiser_request",
+                "advertiser_wrapped_request",
                 "advertiser_response",
                 "scanner_response",
                 "invalid_window_end",

@@ -66,6 +66,21 @@ int main(int argc, char **argv)
         mock_ext_advertising_callbacks->pawr_data_request(&mock_ext_advertisers[0], &request);
         assert(mock_pawr_subevent_data_count == 4U);
     }
+    else if (std::strcmp(scenario, "advertiser_wrapped_request") == 0)
+    {
+        const BLEAdvertisingSetHandle advertising_set = createAdvertisingSet();
+        assert(BLEPawr.configureAdvertiser(advertising_set));
+        for (std::uint8_t subevent = 0U; subevent < 4U; ++subevent)
+        {
+            const std::uint8_t payload[] = {subevent, 0x5aU};
+            assert(BLEPawr.setSubeventData(advertising_set, subevent, payload,
+                                          sizeof(payload)));
+        }
+        bt_le_per_adv_data_request request{3U, 4U};
+        mock_ext_advertising_callbacks->pawr_data_request(&mock_ext_advertisers[0], &request);
+        assert(mock_pawr_subevent_data_count == 4U);
+        assert(BLEDevice.lastError() == BLEError::none);
+    }
     else if (std::strcmp(scenario, "advertiser_response") == 0)
     {
         const BLEAdvertisingSetHandle advertising_set = createAdvertisingSet();

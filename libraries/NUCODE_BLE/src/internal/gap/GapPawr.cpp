@@ -42,8 +42,8 @@ namespace nucode::ble::internal::gap
         if (request == nullptr ||
             !currentPawrAdvertiser(advertiser, handle, device_generation) ||
             request->count == 0U ||
-            static_cast<std::size_t>(request->start) + request->count >
-                gapState().pawr.subevent_count)
+            request->start >= gapState().pawr.subevent_count ||
+            request->count > gapState().pawr.subevent_count)
         {
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return;
@@ -53,7 +53,9 @@ namespace nucode::ble::internal::gap
         struct net_buf_simple buffers[Pawr::maximum_subevents] = {};
         for (std::size_t offset = 0U; offset < request->count; ++offset)
         {
-            const std::size_t subevent = static_cast<std::size_t>(request->start) + offset;
+            const std::size_t subevent =
+                (static_cast<std::size_t>(request->start) + offset) %
+                gapState().pawr.subevent_count;
             const PawrSubeventContext &source = gapState().pawr.subevents[subevent];
             if (!source.configured)
             {
