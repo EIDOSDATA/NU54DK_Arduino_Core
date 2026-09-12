@@ -7,6 +7,13 @@ import unittest
 
 
 HIL_DIRECTORY = Path(__file__).resolve().parents[1] / "hil" / "nu54dk"
+APPLICATION_SOURCE = (
+    Path(__file__).resolve().parents[1]
+    / "zephyr"
+    / "m28_ble_2board_hil"
+    / "src"
+    / "main.cpp"
+)
 if str(HIL_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(HIL_DIRECTORY))
 
@@ -117,6 +124,15 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         )
         with self.assertRaises(BlePairHilFailure):
             parse_role_transcript(transcript(lines), NONCE, "peripheral")
+
+    def test_changing_payload_and_rpa_scans_disable_duplicate_filter(self) -> None:
+        """! @brief 데이터·RPA 변화 관측 scan이 controller 중복 제거를 끕니다. """
+
+        source = APPLICATION_SOURCE.read_text(encoding="utf-8")
+        self.assertEqual(
+            2,
+            source.count("BLEScan.startExtended(false, false, false)"),
+        )
 
 
 if __name__ == "__main__":

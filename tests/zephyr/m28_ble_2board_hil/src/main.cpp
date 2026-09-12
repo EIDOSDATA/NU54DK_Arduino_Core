@@ -803,7 +803,8 @@ namespace
         protocol_deadline_ms = k_uptime_get() + protocol_timeout_ms;
 #if defined(NUCODE_M28_B2_CENTRAL)
         phase = Phase::advertising;
-        if (!BLEScan.clearFilters() || !BLEScan.startExtended(false))
+        if (!BLEScan.clearFilters() ||
+            !BLEScan.startExtended(false, false, false))
         {
             fail("advertising-scan-start");
         }
