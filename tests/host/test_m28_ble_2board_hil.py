@@ -3,7 +3,9 @@
 
 from pathlib import Path
 import sys
+import tempfile
 import unittest
+from unittest.mock import patch
 
 
 HIL_DIRECTORY = Path(__file__).resolve().parents[1] / "hil" / "nu54dk"
@@ -24,6 +26,7 @@ if str(HIL_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(HIL_DIRECTORY))
 
 from ble_pair_hil_common import BlePairHilFailure  # noqa: E402
+import ble_pair_hil_common  # noqa: E402
 from m28_ble_2board import parse_role_transcript  # noqa: E402
 
 
@@ -161,6 +164,36 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         self.assertIn("CONFIG_BT_CTLR_SYNC_TRANSFER_SENDER", source)
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_ADV", source)
         self.assertIn("CONFIG_BT_CTLR_SDC_PAWR_SYNC", source)
+
+    def test_daplink_image_copy_uses_bounded_chunks(self) -> None:
+        """! @brief DAPLink 가상 FAT에 큰 단일 write를 사용하지 않습니다. """
+
+        chunk_size = ble_pair_hil_common.DAPLINK_COPY_CHUNK_BYTES
+        self.assertEqual(16 * 1024, chunk_size)
+        with tempfile.TemporaryDirectory(prefix="nu54-m28-daplink-") as folder:
+            root = Path(folder)
+            volume_root = root / "volume"
+            volume_root.mkdir()
+            image = root / "image.hex"
+            payload = bytes(index % 251 for index in range(chunk_size * 2 + 17))
+            image.write_bytes(payload)
+            volume = ble_pair_hil_common.DaplinkVolume(
+                root=volume_root,
+                details="Flash Sequence: 1\n",
+            )
+            result = "Flash Sequence: 2\nLast Flash Bytes: 32785\n"
+            with patch.object(
+                ble_pair_hil_common,
+                "wait_for_flash_result",
+                return_value=result,
+            ):
+                sequence, byte_count = ble_pair_hil_common.flash_image(
+                    "M28B2", "peripheral", volume, image, 45.0
+                )
+            destination = volume_root / "NUCODE_M28B2_PERIPHERAL.HEX"
+            self.assertEqual(payload, destination.read_bytes())
+            self.assertEqual("2", sequence)
+            self.assertEqual("32785", byte_count)
 
 
 if __name__ == "__main__":

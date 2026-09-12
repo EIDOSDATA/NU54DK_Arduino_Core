@@ -10,7 +10,6 @@ from pathlib import Path
 import hashlib
 import re
 import secrets
-import shutil
 import subprocess
 import threading
 import time
@@ -44,6 +43,7 @@ from m14_pin_hil import (  # noqa: E402
 NONCE_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 MAX_TRANSCRIPT_BYTES = 262144
 DEFAULT_RESULT_TIMEOUT_SECONDS = 180.0
+DAPLINK_COPY_CHUNK_BYTES = 16 * 1024
 
 
 class BlePairHilFailure(RuntimeError):
@@ -289,7 +289,17 @@ def flash_image(
         raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
     previous_sequence = detail_value(volume.details, "Flash Sequence")
     destination = volume.root / f"NUCODE_{milestone}_{role.upper()}.HEX"
-    shutil.copyfile(image, destination)
+    with image.open("rb") as source, destination.open("wb", buffering=0) as target:
+        while True:
+            chunk = source.read(DAPLINK_COPY_CHUNK_BYTES)
+            if not chunk:
+                break
+            written = target.write(chunk)
+            if written != len(chunk):
+                raise BlePairHilFailure(
+                    f"{role} DAPLink image가 일부만 기록됐습니다: "
+                    f"{written}/{len(chunk)}"
+                )
     details = wait_for_flash_result(volume.root, previous_sequence, timeout_seconds)
     return (
         detail_value(details, "Flash Sequence") or "unknown",
