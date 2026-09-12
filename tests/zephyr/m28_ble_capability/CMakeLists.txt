@@ -9,9 +9,12 @@ get_filename_component(NUCODE_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE
 get_filename_component(NCS_ROOT "${ZEPHYR_BASE}/.." ABSOLUTE)
 
 # @brief capability image에 결합할 exact Git revision을 읽습니다.
+#
+# Checkout 소유자와 build 사용자가 다른 container에서도 전역 Git 설정을
+# 변경하지 않고 현재 조회 대상만 safe.directory로 허용합니다.
 function(m28_git_revision repository output_name)
   execute_process(
-    COMMAND git -C "${repository}" rev-parse HEAD
+    COMMAND git -c "safe.directory=${repository}" -C "${repository}" rev-parse HEAD
     RESULT_VARIABLE command_result
     OUTPUT_VARIABLE revision
     ERROR_VARIABLE command_error

@@ -12,6 +12,9 @@ import unittest
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 MODULE_PATH = REPOSITORY / "tests" / "hil" / "nu54dk" / "m28_ble_capability.py"
+APP_CMAKE_PATH = (
+    REPOSITORY / "tests" / "zephyr" / "m28_ble_capability" / "CMakeLists.txt"
+)
 SPECIFICATION = importlib.util.spec_from_file_location("m28_ble_capability_test", MODULE_PATH)
 assert SPECIFICATION is not None and SPECIFICATION.loader is not None
 MODULE = importlib.util.module_from_spec(SPECIFICATION)
@@ -141,6 +144,13 @@ class M28BleCapabilityParserTests(unittest.TestCase):
         self.assertEqual(len(result.capabilities), 6)
         self.assertEqual(result.advertising_sets, 1)
         self.assertEqual(result.periodic_advertiser_list_size, 1)
+
+    def test_revision_query_is_container_ownership_safe(self) -> None:
+        """! @brief Container의 다른 checkout 소유자를 명령 단위로 처리합니다. """
+
+        cmake = APP_CMAKE_PATH.read_text(encoding="utf-8")
+        self.assertIn('git -c "safe.directory=${repository}"', cmake)
+        self.assertNotIn("git config --global", cmake)
 
     def test_stale_nonce_is_rejected(self) -> None:
         """! @brief 이전 실행 nonce로 묶인 전체 transcript도 거부합니다. """

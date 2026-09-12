@@ -11,6 +11,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 
 | 기록 | 용도 |
 | --- | --- |
+| [133 — M28-W01 CI container revision 교정](133_M28_W01_CI_container_revision_교정.md) | Linux Git 소유권 CMake 수정·3보드 실기 직전 정지 경계 |
 | [132 — M28-W01 실제 HCI capability 완료](132_M28_W01_실제_HCI_capability_완료.md) | exact `78078a42…`, target 1/1·실제 HCI 6/6 PASS, W01 완료 1/8 |
 | [131 — M28-W01 Capability image와 Host·target 준비](131_M28_W01_Capability_image와_Host_target_준비.md) | `M28CAP/1`·fail-closed parser·고정 NCS target 1/1 PASS, 당시 실제 HCI NOT RUN |
 | [130 — 개발문서 전수 감사와 M28 착수 준비](130_개발문서_전수감사와_M28_착수_준비.md) | 현행 문서 교정·M28 정적 원장·API/자원/유한 시험 계약 |
@@ -35,7 +36,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 실기·공개, v0.4.1 유지보수와 M28 착수 — 94~132</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수와 M28 착수 — 94~133</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -76,6 +77,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 - [130 — 개발문서 전수 감사와 M28 착수 준비](<130_개발문서_전수감사와_M28_착수_준비.md>) — 현행 문서 교정·정적 capability 원장·착수 계약
 - [131 — M28-W01 Capability image와 Host·target 준비](<131_M28_W01_Capability_image와_Host_target_준비.md>) — **고정 protocol·Host parser·target 1/1 PASS, 당시 실제 HCI NOT RUN**
 - [132 — M28-W01 실제 HCI capability 완료](<132_M28_W01_실제_HCI_capability_완료.md>) — **exact target 1/1·실제 HCI 6/6 PASS, W01 완료**
+- [133 — M28-W01 CI container revision 교정](<133_M28_W01_CI_container_revision_교정.md>) — **Linux Git 소유권 수정·3보드 실기 직전 정지 경계**
 
 </details>
 
