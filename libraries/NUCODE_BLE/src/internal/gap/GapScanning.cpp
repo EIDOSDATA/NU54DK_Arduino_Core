@@ -275,8 +275,7 @@ namespace nucode::ble::internal::gap
                 return false;
             }
             if (atomic_get(&gapState().advertising_active) != 0 ||
-                atomic_get(&gapState().connection_connecting) != 0 ||
-                atomic_get(&gapState().connection_active) != 0)
+                atomic_get(&gapState().connection_connecting) != 0)
             {
                 nucode::ble::internal::recordError(BLEError::busy, -EBUSY, true);
                 return false;

@@ -135,6 +135,18 @@ int main(int argc, char **argv)
         assert(scanned_result.payload_length == 255U && !scanned_result.truncated);
         assert(scanned_result.payload[0] == 254U && scanned_result.payload[254] == 254U);
     }
+    else if (std::strcmp(scenario, "connected_scan") == 0)
+    {
+        mock_next_connection = &mock_connections[0];
+        BLEConnectionHandle connection;
+        assert(BLEConnection.connect(
+            BLEAddress("01:02:03:04:05:06", BLEAddress::Type::public_address), connection));
+        mock_conn_callbacks->connected(&mock_connections[0], 0U);
+        assert(BLEConnection.connected(connection));
+        assert(BLEScan.startExtended(false, false, false));
+        assert(BLEScan.running());
+        assert(BLEScan.stop());
+    }
     else if (std::strcmp(scenario, "end_cleanup") == 0)
     {
         BLEExtendedAdvertisingParameters parameters{};

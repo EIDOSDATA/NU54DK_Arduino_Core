@@ -60,7 +60,13 @@ class M28BleExtendedTests(unittest.TestCase):
             ]
             result = subprocess.run(command + ["-o", str(binary)], capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
-            for scenario in ("set_lifecycle", "invalid_payload", "extended_scan", "end_cleanup"):
+            for scenario in (
+                "set_lifecycle",
+                "invalid_payload",
+                "extended_scan",
+                "connected_scan",
+                "end_cleanup",
+            ):
                 with self.subTest(scenario=scenario):
                     result = run_executable(
                         [str(binary), scenario], capture_output=True, timeout=10
