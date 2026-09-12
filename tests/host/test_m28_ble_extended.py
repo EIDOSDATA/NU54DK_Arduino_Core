@@ -78,7 +78,8 @@ class M28BleExtendedTests(unittest.TestCase):
         for token in (
             "class BLEAdvertisingSetHandle final",
             "maximum_payload_length = 255U",
-            "bool startExtended(bool active = true, bool coded = false)",
+            "bool startExtended(bool active = true, bool coded = false,",
+            "bool filter_duplicates = true)",
             "class ExtendedAdvertising final",
             "extern nucode::ble::ExtendedAdvertising BLEExtendedAdvertising",
         ):

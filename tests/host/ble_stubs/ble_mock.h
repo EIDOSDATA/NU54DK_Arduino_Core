@@ -691,8 +691,10 @@ inline void bt_le_scan_cb_unregister(bt_le_scan_cb *callbacks)
 using MockScanCallback = void (*)(const bt_addr_le_t *, std::int8_t, std::uint8_t,
                                   net_buf_simple *);
 inline MockScanCallback mock_scan_callback{};
-inline int bt_le_scan_start(const bt_le_scan_param *, MockScanCallback callback)
+inline std::uint32_t mock_scan_options = 0U;
+inline int bt_le_scan_start(const bt_le_scan_param *parameters, MockScanCallback callback)
 {
+    mock_scan_options = parameters->options;
     mock_scan_callback = callback;
     return mock_start_error;
 }

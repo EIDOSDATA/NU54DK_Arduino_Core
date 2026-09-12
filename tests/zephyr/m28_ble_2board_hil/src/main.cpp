@@ -332,7 +332,7 @@ namespace
         }
         reportPawrPass("CENTRAL", pawr_response_count);
         phase = Phase::privacy_scan;
-        if (!BLEScan.clearFilters() || !BLEScan.startExtended(false))
+        if (!BLEScan.clearFilters() || !BLEScan.startExtended(false, false, false))
         {
             fail("privacy-scan-start");
         }

@@ -449,8 +449,9 @@ namespace nucode::ble
         /** @brief active 또는 passive scan을 시작합니다. */
         [[nodiscard]] bool start(bool active = true) noexcept;
 
-        /** @brief extended report와 선택적 coded PHY를 포함해 scan을 시작합니다. */
-        [[nodiscard]] bool startExtended(bool active = true, bool coded = false) noexcept;
+        /** @brief extended report, coded PHY와 controller 중복 제거 선택을 포함해 scan을 시작합니다. */
+        [[nodiscard]] bool startExtended(bool active = true, bool coded = false,
+                                         bool filter_duplicates = true) noexcept;
 
         /** @brief scan을 중지합니다. */
         [[nodiscard]] bool stop() noexcept;

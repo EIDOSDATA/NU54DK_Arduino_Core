@@ -104,7 +104,9 @@ int main(int argc, char **argv)
     }
     else if (std::strcmp(scenario, "extended_scan") == 0)
     {
-        assert(BLEScan.startExtended(true, true));
+        assert(BLEScan.startExtended(true, true, false));
+        assert((mock_scan_options & BT_LE_SCAN_OPT_FILTER_DUPLICATE) == 0U);
+        assert((mock_scan_options & BT_LE_SCAN_OPT_CODED) != 0U);
         assert(mock_extended_scan_callbacks != nullptr);
         auto payload = maximumPayload();
         const bt_addr_le_t address{BT_ADDR_LE_RANDOM, {{1, 3, 5, 7, 9, 11}}};

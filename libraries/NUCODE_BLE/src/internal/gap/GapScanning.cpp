@@ -257,7 +257,8 @@ namespace nucode::ble::internal::gap
 #endif
 
         /** @brief legacy/extended scan 시작의 공통 상태와 controller 호출을 처리합니다. */
-        bool startScan(bool active, bool extended, bool coded) noexcept
+        bool startScan(bool active, bool extended, bool coded,
+                       bool filter_duplicates) noexcept
         {
             if (!requireThreadContext())
             {
@@ -300,7 +301,9 @@ namespace nucode::ble::internal::gap
             }
 #endif
             k_msgq_purge(&scanResultQueue());
-            std::uint32_t options = BT_LE_SCAN_OPT_FILTER_DUPLICATE;
+            std::uint32_t options =
+                filter_duplicates ? static_cast<std::uint32_t>(BT_LE_SCAN_OPT_FILTER_DUPLICATE)
+                                  : 0U;
 #if defined(CONFIG_BT_EXT_ADV)
             if (coded)
             {
@@ -432,12 +435,12 @@ namespace nucode::ble
 
     bool Scan::start(bool active) noexcept
     {
-        return startScan(active, false, false);
+        return startScan(active, false, false, true);
     }
 
-    bool Scan::startExtended(bool active, bool coded) noexcept
+    bool Scan::startExtended(bool active, bool coded, bool filter_duplicates) noexcept
     {
-        return startScan(active, true, coded);
+        return startScan(active, true, coded, filter_duplicates);
     }
 
     bool Scan::stop() noexcept
