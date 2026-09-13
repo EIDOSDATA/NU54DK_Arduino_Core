@@ -705,10 +705,14 @@ namespace
         }
         if (phase == Phase::discovering)
         {
-            if (information.event != nucode::ble::BLEGattClientEvent::discovery_complete ||
-                !BLEClient.discovered(connection_handle))
+            if (information.event != nucode::ble::BLEGattClientEvent::discovery_complete)
             {
-                fail("discovery_result");
+                fail("discovery_event", static_cast<int>(information.event));
+                return;
+            }
+            if (!BLEClient.discovered(connection_handle))
+            {
+                fail("discovery_state");
                 return;
             }
             if (mode == Mode::sign)

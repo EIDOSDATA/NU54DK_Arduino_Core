@@ -6,7 +6,7 @@
 | 준비 기준 HEAD | `d425248b8063cfb4e816c12cab6dd62c88cae446` 이후 미커밋 W07 source |
 | NCS / Zephyr | `99553055607b…` / `bf801e4e3d19…` |
 | board / toolchain | `fe65f2f0880b…` / `dcbdc366a1` |
-| W07 공개 계약 | **7/7 PASS** |
+| W07 공개 계약 | **8/8 PASS** |
 | strict Host parser | **14/14 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
@@ -59,7 +59,7 @@ wrong revision·stale nonce, counter rollback, replay accept, EATT shortfall, ta
 
 ## 3. Host·target 준비 결과
 
-W07 공개 계약 7/7, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
+W07 공개 계약 8/8, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
 M22 stable package 경계 7/7, readiness 8/8이 PASS했다. 전체 Host gate에서 W07 신규 예제를 후속
 후보 집합에 반영하지 않은 1건은 수정 뒤 동일 시험 7/7 PASS했다. 임시 native EXE 일부는 첫 실행에
 Windows Application Control `WinError 4551`로 17회 차단됐다. PAwR·TWIM 실패 module을 같은 source와
@@ -114,7 +114,33 @@ nonce·name·start 실패 stage를 각각 분리했다. Source 계약을 추가�
 30/30과 수정 target 2/2 warning 0이 PASS했다. 이 dirty build는 실제 PASS로 승격하지 않고 새 exact
 commit의 CI·clean build 뒤 동일 보드와 조건으로 다시 실행한다.
 
-## 5. 남은 유한 실행 순서
+## 5. 두 번째 exact HIL 실패와 진단 강화
+
+수정 commit `fbbb0d11e8ede7a141e6d1146ace88e6550935df`의 Software Gates 7/7과 새 clean
+target 2/2 warning 0을 확인했다. 같은 두 보드를 UID로 다시 찾은 뒤 실행한 결과 광고·scan, 최초
+pairing, 양쪽 bond 1개와 warm reboot 뒤 bond 복원까지 통과했다. 첫 Signed Write iteration의
+재연결과 scan도 성공했지만 central discovery callback에서 다음과 같이 중단됐다.
+
+```text
+M29W07|1|FAIL|role=central|mode=sign|stage=discovery_result|code=0|iteration=1|...
+```
+
+Raw 기록은 `evidence/m29-w07-fbbb0d11-signed-eatt/result.peripheral.transcript.log`와
+`result.central.transcript.log`에 보존한다. 두 DAP/UART가 계속 독립적으로 탐색되고 실제 광고·scan·
+pairing을 완료했으므로 첫 실패의 payload·GPIO·RF 시작 문제는 재발하지 않았다. 실패 뒤 central을
+CMSIS-DAP로 halt해 확인한 `CFSR=0`, `HFSR=0`과 정상 thread PC는 CPU fault가 없음을 보였다.
+Application SRAM은 `mode=sign`, `phase=complete`, `session_finished=1`이었고 두 GATT client state가
+해제돼 있었다. Peripheral도 같은 종료 상태와 유효했던 generation handle을 보존한 뒤 GATT link
+state가 해제돼, discovery 도중 link teardown event가 먼저 전달됐을 가능성을 포함해 event 종류를
+추가로 식별해야 한다. 캡처 뒤 두 core는 다시 실행시켰다.
+
+기존 `discovery_result/code=0`은 `discovery_complete` 뒤 handle 상태 실패와 다른 GATT event 수신을
+구분하지 못한다. Target을 `discovery_event/code=<BLEGattClientEvent ordinal>`과
+`discovery_state/code=0`으로 분리하고 Host source 계약으로 고정했다. 다음 exact 실행은 이 진단을
+사용해 원인을 하나로 분류한 뒤 단일 수정과 동일 조건 재검증으로 이어간다. 이 실패를 SIGN/EATT
+PASS로 승격하지 않는다.
+
+## 6. 남은 유한 실행 순서
 
 1. W07 준비 변경을 commit/push하고 exact GitHub Software·Reproducible Build CI를 확인한다.
 2. Clean exact commit으로 Signed/EATT 두 role을 재빌드한다.

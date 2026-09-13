@@ -160,6 +160,15 @@ class M29BleSignedEattTests(unittest.TestCase):
         self.assertNotIn("BLEAdvertising.addServiceUuid(service_uuid)", target)
         self.assertNotIn("BLEScan.filterServiceUuid(service_uuid)", target)
 
+    def test_hil_discovery_failure_preserves_event_class(self):
+        """! @brief discovery event 종류와 완료 뒤 상태 실패를 서로 구분합니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertIn(
+            'fail("discovery_event", static_cast<int>(information.event))', target
+        )
+        self.assertIn('fail("discovery_state")', target)
+        self.assertNotIn('fail("discovery_result")', target)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
