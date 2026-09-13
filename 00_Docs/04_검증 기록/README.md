@@ -12,6 +12,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 | 기록 | 용도 |
 | --- | --- |
 | [140 — M28-W07 2·3보드 HIL과 W08 완료](140_M28_W07_3보드_HIL과_W08_완료.md) | **9개 test ID·M28 8/8 PASS, CMSIS-DAP LINK 실패 진단·수정·M29 인계** |
+| [143 — M29-W03 long/reliable write](143_M29_W03_long_reliable_write.md) | **link별 prepare transaction·target 2/2·2보드 512-byte write/read-back 100/100 PASS, M29 3/8** |
 | [142 — M29-W02 link별 GATT long read](142_M29_W02_link별_GATT_long_read.md) | **2-link 고정 context·Host 전체·target 2/2·2보드 512-byte read 100/100 PASS, M29 2/8** |
 | [141 — M29-W01 ATT/GATT·L2CAP capability](141_M29_W01_ATT_GATT_L2CAP_capability.md) | **M29CAP/1 parser 16/16·target 1/1·실제 capability 7/7 PASS, M29 1/8** |
 | [139 — M28-W07 2보드 HIL 자동화 준비](139_M28_W07_2보드_HIL_자동화_준비.md) | `M28B2` protocol/parser/runner·target 2/2, 실제 HIL NOT RUN |
@@ -45,7 +46,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28 완료와 M29 진행 — 94~142</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28 완료와 M29 진행 — 94~143</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -96,6 +97,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 - [140 — M28-W07 2·3보드 HIL과 W08 완료](<140_M28_W07_3보드_HIL과_W08_완료.md>) — **9개 test ID·M28 8/8 PASS, LINK 재연결 진단·수정·M29 인계**
 - [141 — M29-W01 ATT/GATT·L2CAP capability](<141_M29_W01_ATT_GATT_L2CAP_capability.md>) — **M29-CAP-01·W01 완료, M29 1/8**
 - [142 — M29-W02 link별 GATT client와 long read](<142_M29_W02_link별_GATT_long_read.md>) — **Host·target·2보드 512-byte read PASS, M29 2/8**
+- [143 — M29-W03 long/reliable write](<143_M29_W03_long_reliable_write.md>) — **Host·target·2보드 512-byte write/read-back PASS, M29 3/8**
 
 </details>
 

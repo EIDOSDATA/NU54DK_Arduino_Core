@@ -27,7 +27,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
 | M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
-| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil) |
+| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -57,6 +57,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m28_ble_3board.py` | M28B3 mixed-role LINK·PER/PAST·CTRL·SOAK strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m29_ble_capability.py` | M29CAP/1 ATT/GATT·L2CAP Host capability strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
 | `m29_ble_long.py` | M29W02/1 MTU 247·512-byte long read 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_long_write.py` | M29W03/1 MTU 247·512-byte reliable write/read-back 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -121,6 +122,39 @@ $CentralHex = "<nucode.m29.ble_long_central의 zephyr.hex>"
 고정 parser는 READY·BEGIN·ADVERTISE/SCAN·LINK·RESULT·END 순서와 MTU 247, 512-byte read
 100/100, corrupt·stale 0, main-thread callback을 요구한다. W02 PASS는 long read 근거이며 W03의
 long/reliable write와 partial commit을 포함하지 않으므로 `M29-LONG-01` 전체 PASS가 아니다.
+
+## M29-W03 두 보드 long/reliable write HIL
+
+W03은 W02와 같은 두 NU54DK·독립 DAP/UART·무배선 RF 구성을 사용한다. Runner는 exact clean
+Core와 W03 application뿐 아니라 재사용하는 W02 공통 runner source도 digest 검사에 묶는다.
+Flash 뒤 UART input을 비우고 각 role에 `M29W03|1|READY?`를 보낸 뒤 고정 READY 한 줄만
+받으므로 DAPLink reset 시작 byte가 protocol record로 오인되지 않는다. 그 뒤 두 role은 같은
+128-bit nonce와 full Core SHA를 사용한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_long_write_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_long_write_central의 zephyr.hex>"
+
+& $Python -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long_write.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w03\long-write-evidence.json"
+```
+
+고정 parser는 READY·BEGIN·ADVERTISE/SCAN·LINK·RESULT·END 순서, MTU 247, 512-byte reliable
+write와 read-back 각 100/100, corrupt·partial commit·stale 0, main-thread callback을 요구한다.
+Host negative는 cancel·offset·overflow·다른 characteristic 혼합·stale generation을 포함한다.
+exact `babba5a1…`에서 target 2/2와 두 보드 HIL이 PASS해 `M29-LONG-01`을 닫았다. 첫 exact
+`8629611e…` 실행은 READY 앞 raw `0x1c`를 fail-closed로 거부했으며, RF·GPIO·ATT를 시작하기 전의
+DAPLink UART 시작 noise로 분류했다. 실패와 수정 뒤 PASS transcript는 모두 143번 기록에 보존한다.
 
 ## M15 공식 CI artifact 계약
 
