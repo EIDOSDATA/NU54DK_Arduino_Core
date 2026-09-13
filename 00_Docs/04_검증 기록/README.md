@@ -12,7 +12,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 | 기록 | 용도 |
 | --- | --- |
 | [146 — M29-W06 LE CoC·credit](146_M29_W06_LE_CoC_credit_buffers.md) | **2-channel·512-byte·각 방향 1,000 SDU와 5 negative class PASS, M29 6/8** |
-| [147 — M29-W07 Signed Write·EATT 준비](147_M29_W07_Signed_Write_EATT_HIL_준비.md) | **Host 17/17·parser 16/16·target 2/2 PASS, 실제 SIGN/EATT/MULTI/REG NOT RUN** |
+| [147 — M29-W07 Signed Write·EATT 2보드 완료](147_M29_W07_Signed_Write_EATT_HIL_준비.md) | **exact `c71ef4a2…` SIGN/EATT PASS, MULTI/REG NOT RUN, M29 6/8·test ID 8/10** |
 | [145 — M29-W05 robust GATT cache](145_M29_W05_robust_GATT_cache_migration.md) | **bonded reconnect 20·Service Changed·migration·corrupt 거부 PASS, M29 5/8** |
 | [140 — M28-W07 2·3보드 HIL과 W08 완료](140_M28_W07_3보드_HIL과_W08_완료.md) | **9개 test ID·M28 8/8 PASS, CMSIS-DAP LINK 실패 진단·수정·M29 인계** |
 | [144 — M29-W04 descriptor·authorization](144_M29_W04_descriptor_authorization_read_multiple.md) | **descriptor 4개·authorization·4-handle read multiple 100/100 PASS, M29 4/8** |
@@ -105,7 +105,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 - [144 — M29-W04 descriptor·authorization·read multiple](<144_M29_W04_descriptor_authorization_read_multiple.md>) — **Host·target·2보드 descriptor 4개와 read multiple PASS, M29 4/8**
 - [145 — M29-W05 robust GATT cache](<145_M29_W05_robust_GATT_cache_migration.md>) — **Host·target·2보드 cache migration PASS, M29 5/8**
 - [146 — M29-W06 LE CoC·credit](<146_M29_W06_LE_CoC_credit_buffers.md>) — **Host·target·2보드 COC/NEG PASS, M29 6/8**
-- [147 — M29-W07 Signed Write·EATT HIL 준비](<147_M29_W07_Signed_Write_EATT_HIL_준비.md>) — **Host/parser·target 준비 PASS, 실제 4개 test ID NOT RUN**
+- [147 — M29-W07 Signed Write·EATT HIL 준비와 2보드 완료](<147_M29_W07_Signed_Write_EATT_HIL_준비.md>) — **Host/parser·target과 실제 SIGN/EATT PASS, MULTI/REG NOT RUN**
 
 </details>
 

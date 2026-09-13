@@ -2,7 +2,7 @@
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25와 M28 W01~W08은 모두
 완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고
-M29 ATT/GATT·L2CAP는 W07 HIL 준비, 6/8입니다. 이 문서는 완료한 시험을 재개하라는
+M29 ATT/GATT·L2CAP는 W07 2보드 SIGN/EATT HIL 완료, 6/8·test ID 8/10입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -66,18 +66,17 @@ M29 ATT/GATT·L2CAP는 W07 HIL 준비, 6/8입니다. 이 문서는 완료한 시
 | LINK 최종 수정 | role callback 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도 |
 | 확인 장비 | NU54DK·독립 DAP/UART 3경로; receiver-validated sequence trace 사용 |
 | W08 | 현행 문서·지원 경계·readiness 원장·M29 인계 완료 |
-| 다음 행동 | W07 exact commit으로 `M29-SIGN/EATT/MULTI/REG-01` HIL 실행 |
+| 다음 행동 | W07-D/E에서 세 보드 `M29-MULTI-01`·`M29-REG-01` HIL 실행 |
 
-## M29-W01~W06 완료와 W07 HIL 준비 상태
+## M29-W01~W06 완료와 W07 2보드 HIL 상태
 
 M29는 [착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)에서 W01~W08,
 10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **6/8**이며 정적 SDK candidate를 실제
-구현·target·HIL PASS로 승격하지 않는다.
+구현·target·HIL PASS로 자동 승격하지 않는다. 독립 실기 증거가 있는 test ID만 별도로 PASS한다.
 
 exact `d604642b…`의 `M29CAP/1` parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`
 capability 7/7이 PASS했다. 실제 실행은 GATT service와 LE CoC server·동적 PSM 등록까지이며,
-Signed Write와 EATT peer negotiation은 target 2/2까지 준비했지만 각각 `M29-SIGN-01`,
-`M29-EATT-01` 실제 HIL 전이므로 `NOT RUN`이다.
+이후 W07 exact `c71ef4a2…`에서 Signed Write와 EATT peer negotiation도 실제 PASS했다.
 
 Signed Write는 기본 OFF인 deprecated legacy opt-in, EATT는 기본 OFF인 experimental opt-in으로
 개발한다. 기본 GATT/LE CoC와 두 선택 profile의 결과를 분리한다. NU54DK 3개와 DAP/UART 3경로는
@@ -184,8 +183,17 @@ Exact `08cc52d6…` 전체 실행은 제한된 `0x3e`를 네 session에서 복�
 20/20·counter 20·replay 수락 0을 통과했다. EATT 후반은 central `1000/739`, peripheral
 `1000/734`에서 reason `0x08`로 끊겼고 양쪽 CPU fault register는 0이었다. 4-buffer 공유 window는
 격리 EATT에서 204.859초가 걸렸으며, Zephyr EATT pending-send 경계에 맞춘 bearer별 고정
-1-buffer/1-in-flight 수정은 같은 두 보드에서 105.391초에 `2000/2000`을 통과했다. 공식 test ID는
-새 clean exact 전체 runner가 끝날 때까지 `NOT RUN`이다.
+1-buffer/1-in-flight 수정은 같은 두 보드에서 105.391초에 `2000/2000`을 통과했다. 이 격리 결과는
+공식 PASS로 올리지 않고 clean exact 전체 runner를 다시 실행했다.
+
+Exact `c71ef4a21465923760933f6b87ad7d92d9a95698`의 clean target 2/2, warning 0 이미지로 두 보드
+전체 runner를 실행해 연결 재시도 0, Signed Write 20/20, counter rollback 0, 동일 PDU replay 수락
+0을 확인했다. EATT는 암호화 전 거부와 상한 초과 거부, bearer 2개에서 각각 1,000 SDU,
+production enhanced read/write, payload 오류·deadlock·starvation 0으로 끝났다. 따라서
+`M29-SIGN-01`·`M29-EATT-01`은 PASS이며 원본은
+`evidence/m29-w07-c71ef4a2-signed-eatt/`에 있다. W07 전체와 M29 진행률은 세 보드
+`M29-MULTI-01`·`M29-REG-01`이 `NOT RUN`이므로 **6/8**이다. 다음 작업은 W07-D/E이며 이번에는
+사용자 중단 지시에 따라 착수하지 않는다.
 
 실행기와 보드 조건은 [W07 HIL 안내](../tests/hil/nu54dk/README.md#m29-w07-두-보드-signed-writeeatt-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과

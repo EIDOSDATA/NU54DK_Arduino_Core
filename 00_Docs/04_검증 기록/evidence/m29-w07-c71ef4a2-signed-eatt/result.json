@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "gate": "m29-w07-signed-write-eatt-pair-hil",
+  "status": "passed",
+  "created_at_utc": "2026-09-13T21:15:47.358588+00:00",
+  "core_revision": "c71ef4a21465923760933f6b87ad7d92d9a95698",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "c87304474258bc4fcdfd56926301f82e",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "54153603000528402aae46c5e8e3712a",
+      "msd_root": "G:\\",
+      "uart_port": "COM10"
+    },
+    "central": {
+      "daplink_uid": "5415360300052840fcd47678fd7d106d",
+      "msd_root": "E:\\",
+      "uart_port": "COM13"
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 766002,
+      "sha256": "64dd0c67652d0f15bbceb269d0f12186539f8cc361f1bed908b2649bfa551a53",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "8192",
+      "build_record": {
+        "core_revision": "c71ef4a21465",
+        "core_source_sha256": "663b843011bcd5ed11583b9624a8ae4e5f0a51c86a8318f006d9bbdb1f691836",
+        "application_source_sha256": "9a9a862580a68572d6c3c8b1cdabb85155ad0a2db16e6f5f49767fd1adfc7367",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "c4c91e48477f6576833bccbb8392528998d25ea74a75ed02753639cc6b8c4747"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 780995,
+      "sha256": "ac7b641f9750183644d598f2cad1daa8532d90645db92af8b3c046bc93656038",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "8192",
+      "build_record": {
+        "core_revision": "c71ef4a21465",
+        "core_source_sha256": "663b843011bcd5ed11583b9624a8ae4e5f0a51c86a8318f006d9bbdb1f691836",
+        "application_source_sha256": "9a9a862580a68572d6c3c8b1cdabb85155ad0a2db16e6f5f49767fd1adfc7367",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "c4c91e48477f6576833bccbb8392528998d25ea74a75ed02753639cc6b8c4747"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "result.peripheral.transcript.log",
+      "size": 19859,
+      "sha256": "01becc35aaeaa017b53b61c360c3f461859289c2171a5bb607aba34213ae7d27"
+    },
+    "central": {
+      "name": "result.central.transcript.log",
+      "size": 19379,
+      "sha256": "57d03c300ebffb2821319f74d18b921c2b19ce2fec709865eda976db16d09fd1"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "connection_retries": 0,
+      "signing_reboots": 20,
+      "signed_writes": 21,
+      "final_local_counter": 0,
+      "final_remote_counter": 21,
+      "replay_attempts": 1,
+      "replay_accepts": 0,
+      "eatt_bearers": 2,
+      "operations_per_bearer": 1000,
+      "deadlocks": 0,
+      "starvation": 0,
+      "callback_context": "pass"
+    },
+    "central": {
+      "role": "central",
+      "connection_retries": 0,
+      "signing_reboots": 20,
+      "signed_writes": 21,
+      "final_local_counter": 21,
+      "final_remote_counter": 0,
+      "replay_attempts": 1,
+      "replay_accepts": 0,
+      "eatt_bearers": 2,
+      "operations_per_bearer": 1000,
+      "deadlocks": 0,
+      "starvation": 0,
+      "callback_context": "pass"
+    }
+  },
+  "coverage": {
+    "signing_profile": "deprecated-opt-in",
+    "signing_reboots": 20,
+    "maximum_connection_retries_per_session": 2,
+    "signed_writes": 21,
+    "counter_rollbacks": 0,
+    "replay_attempts": 1,
+    "replay_accepts": 0,
+    "eatt_profile": "experimental-opt-in",
+    "eatt_bearers": 2,
+    "operations_per_bearer": 1000,
+    "deadlocks": 0,
+    "starvation": 0,
+    "m29_sign_01_status": "passed",
+    "m29_eatt_01_status": "passed"
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "pmic_write_executed": false
+  }
+}

@@ -1,19 +1,19 @@
-# M29-W07 Signed Write·EATT HIL 준비
+# M29-W07 Signed Write·EATT HIL 준비와 2보드 완료
 
 | 항목 | 현재 결과 |
 | --- | --- |
 | 작업일 | 2026-09-14 |
-| 진단 기준 HEAD | `08cc52d627a0aa362c77320f6b35a86e7200b33b` 이후 EATT window 수정 source |
+| 2보드 PASS 기준 HEAD | `c71ef4a21465923760933f6b87ad7d92d9a95698` |
 | NCS / Zephyr | `99553055607b…` / `bf801e4e3d19…` |
 | board / toolchain | `fe65f2f0880b…` / `dcbdc366a1` |
 | W07 공개 계약 | **17/17 PASS** |
 | strict Host parser | **16/16 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
-| target build | **`08cc52d6…` 2/2와 bearer별 1-buffer 수정 source 2/2 PASS, warning 0** |
-| 실제 `M29-SIGN-01` / `M29-EATT-01` | **NOT RUN / NOT RUN** |
+| target build | **clean exact `c71ef4a2…` 2/2 PASS, warning 0** |
+| 실제 `M29-SIGN-01` / `M29-EATT-01` | **PASS / PASS** |
 | 실제 `M29-MULTI-01` / `M29-REG-01` | **NOT RUN / NOT RUN** |
-| M29 진행률 | **6/8 유지** |
+| M29 진행률 | **6/8 유지, test ID 8/10 PASS** |
 
 ## 1. 구현한 정책과 공개 API
 
@@ -80,9 +80,9 @@ GATT·CoC 8개, GATT cache 2개, legacy signing 2개와 EATT 2개를 합친 **14
 - `nucode.m29.ble_signed_eatt_peripheral`
 - `nucode.m29.ble_signed_eatt_central`
 
-이 build는 dirty W07 source로 수행했으므로 정확한 물리 실행 identity가 아니다. 먼저 source·문서·
-시험을 commit/push하고 exact commit CI를 확인한 뒤, 같은 commit을 새로 build해 HIL runner에
-전달한다.
+Bearer별 1-buffer 수정은 `c71ef4a21465923760933f6b87ad7d92d9a95698`로 commit/push한 뒤
+깨끗한 source에서 두 role을 다시 build했다. 결과는 2/2 build-only PASS, warning 0이며 이 exact
+image를 아래 2보드 HIL runner에 전달했다.
 
 ## 4. 첫 exact HIL 실패와 원인 분류
 
@@ -246,16 +246,34 @@ diagnostic EATT-only 실행은 105.391초에 bearer별 1,000, payload 오류·de
 통과했다. 이 격리 결과는 공식 PASS가 아니며, 새 clean exact commit으로 20회 signing부터 EATT까지
 전체 runner를 다시 실행한다.
 
-## 7. 남은 유한 실행 순서
+## 7. Exact `c71ef4a2…` 2보드 SIGN·EATT 완료
 
-1. W07 준비 변경을 commit/push하고 exact GitHub Software·Reproducible Build CI를 확인한다.
-2. Clean exact commit으로 Signed/EATT 두 role을 재빌드한다.
-3. 두 보드 `M29-SIGN-01`과 `M29-EATT-01`을 한 runner session에서 실행한다.
-4. 세 보드 mixed DUT의 두 link에서 GATT/CoC traffic 각 1,000회와 교차 event 0을 검증한다.
-5. M19·M20·M21·M28 필수 BLE 회귀 네 그룹을 세 보드 장비 집합에서 실행한다.
-6. 실패하면 DAP/UART·전압·RF/GPIO 연결성을 먼저 확인하고, 연결이 정상이면 CMSIS-DAP로
+Clean exact `c71ef4a21465923760933f6b87ad7d92d9a95698`의 두 role build는 2/2, warning 0으로
+끝났다. Peripheral `54153603000528402aae46c5e8e3712a`/COM10과 central
+`5415360300052840fcd47678fd7d106d`/COM13을 pyOCD sector flash한 단일 strict runner session은
+연결 재시도 없이 다음을 모두 통과했다.
+
+- bond 초기화, 신규 pairing과 양쪽 CSRK 생성
+- Signed Write 20회와 매 회 양쪽 warm reboot 뒤 counter 정확한 증가
+- 20회 뒤 central local counter 20, peripheral remote counter 20, rollback 0
+- 새 signed original 1회와 동일 ATT PDU replay 1회 전송, peripheral 적용 1회·replay 수락 0
+- 암호화 전 EATT 거부, 암호화 뒤 bearer 2개와 상한 초과 거부
+- production enhanced read/write와 bearer별 1,000 SDU, payload 오류·deadlock·starvation 0
+- 모든 완료 callback의 main-thread context PASS
+
+최종 counter는 replay 검증에 쓴 새 original까지 포함해 central local 21, peripheral remote 21이다.
+이는 20회 반복 기준의 rollback이 아니라 의도한 추가 원본 1회의 증가다. 기계 증적과 양쪽 원본
+transcript는 `evidence/m29-w07-c71ef4a2-signed-eatt/`에 보존한다. 따라서
+`M29-SIGN-01`과 `M29-EATT-01`은 PASS다. SDK source 상태는 계속
+`candidate_deprecated`/`candidate_experimental`이며 실제 구현·실기 판정과 혼동하지 않는다.
+
+## 8. 남은 유한 실행 순서
+
+1. 세 보드 mixed DUT의 두 link에서 GATT/CoC traffic 각 1,000회와 교차 event 0을 검증한다.
+2. M19·M20·M21·M28 필수 BLE 회귀 네 그룹을 세 보드 장비 집합에서 실행한다.
+3. 실패하면 DAP/UART·전압·RF/GPIO 연결성을 먼저 확인하고, 연결이 정상이면 CMSIS-DAP로
    주변장치·DMA·GPIO·오류 register와 SRAM 상태를 수집한다. 원인을 분류해 한 번 수정한 뒤 같은
    조건으로 재검증하며 무한 재시도하지 않는다.
 
-현재 단계에서는 네 물리 test ID와 W07을 PASS로 표시하지 않는다. SDK source `candidate` 역시
-구현·target·HIL PASS와 분리한다.
+현재 `M29-MULTI-01`과 `M29-REG-01`은 `NOT RUN`이며 W07 전체를 PASS로 표시하지 않는다. W07-D/E는
+사용자 중단 경계에 따라 착수하지 않는다.

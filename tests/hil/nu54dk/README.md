@@ -301,7 +301,8 @@ Runner는 clean exact Core와 board revision, application·공통 runner source,
 record를 flash 전에 검사한다. `M29W07|1` parser는 READY·CLEAR·PAIR·20 REBOOT/SIGN·REPLAY·EATT
 순서와 full revision·nonce·iteration·counter를 고정하며 noise·누락·중복·재배치·rollback·replay
 accept·bearer shortfall·timeout을 모두 거부한다. Dirty source target 2/2 build는 준비 근거일 뿐
-HIL PASS가 아니다. 실행 전 결과는
+HIL PASS가 아니다. Clean exact `c71ef4a2…`의 target 2/2와 실제 두 보드 실행은 Signed Write
+20/20·replay 수락 0·EATT bearer별 1,000 operation·deadlock/starvation 0으로 PASS했다. 원본은
 [147번 기록](<../../../00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 있다.
 
 ## M15 공식 CI artifact 계약

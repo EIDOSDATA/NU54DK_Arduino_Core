@@ -3,13 +3,13 @@
 | 항목 | 고정값 |
 | --- | --- |
 | 대상 릴리즈 | `v0.5.0` |
-| 기준 Core | `767bb4af6f93cd390b139a2e5699830dcdd03262` |
+| 기준 Core | `c71ef4a21465923760933f6b87ad7d92d9a95698` |
 | 기준 NCS | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
 | 기준 Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M29 상태 | **W06 완료, W01~W08 6/8** |
+| M29 상태 | **W07 2보드 SIGN/EATT 완료, W01~W08 6/8·test ID 8/10** |
 | 기계 원장 | `variants/nu54dk/m29-ble-readiness.json` |
 
 ## 1. 목표와 완료 의미
@@ -153,8 +153,8 @@ NU54DK 3개와 독립 DAP/UART 3경로는 M28에서 확인했다. 2보드 LONG/D
 Windows BLE adapter의 EATT/robust caching 적용성은 아직 M29 실기로 확인하지 않았다.
 
 W01은 exact `d604642b…`에서 parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`을 PASS했다.
-동적 GATT service와 LE CoC server·PSM 등록은 실제 실행했지만 Signed Write/EATT peer negotiation은
-각각 M29-SIGN-01/M29-EATT-01까지 `NOT RUN`이다.
+동적 GATT service와 LE CoC server·PSM 등록을 실제 실행했고, W07 exact `c71ef4a2…`에서는
+Signed Write/EATT peer negotiation과 부하까지 실행해 `M29-SIGN-01`·`M29-EATT-01`을 PASS했다.
 
 W02는 exact `dacf6341…`에서 link별 고정 client context와 512-byte long read를 구현했다. 전체 Host
 gate, W02 source 계약 6개·parser 11개와 target role 2/2가 PASS했고 두 NU54DK에서 MTU 247,
@@ -194,6 +194,14 @@ W06은 exact `767bb4af…`에서 generation opaque handle의 LE CoC server 1개�
 각 20회 거부, payload/cross-channel·예상 밖 수락·resource recovery·stale accept 0을 확인했다.
 첫 실행의 W06 광고 PSM과 공통 runner 기대값 불일치는 RF 시작 전에 fail-closed로 거부했고,
 역할별 광고 field를 명시하도록 수정한 뒤 같은 조건에서 PASS했다.
+
+W07-C는 exact `c71ef4a21465923760933f6b87ad7d92d9a95698`에서 Host 계약 17/17, parser 16/16,
+target role 2/2 warning 0을 확인했다. 두 NU54DK의 단일 strict runner session은 Signed Write
+20회와 각 warm reboot 사이의 counter 영속, 동일 signed ATT PDU replay 수락 0을 검증했다.
+EATT는 암호화 전 거부, 암호화 뒤 bearer 2개와 상한 초과 거부, production enhanced read/write,
+bearer별 1,000 SDU와 payload 오류·deadlock·starvation 0을 확인했다. 따라서
+`M29-SIGN-01`·`M29-EATT-01`은 PASS다. `M29-MULTI-01`·`M29-REG-01`은 `NOT RUN`이므로 W07과
+M29 전체를 완료로 승격하지 않는다.
 
 Cross-vendor 완료 gate에 실제 OS peer 조작이 필요해지는 시점 전까지 코드·Host 시험·target build,
 NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거나 기능을 지원하지 않으면 해당

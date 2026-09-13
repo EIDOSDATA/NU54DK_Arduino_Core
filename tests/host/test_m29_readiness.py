@@ -38,7 +38,7 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(self.readiness["schema_version"], 1)
         self.assertEqual(self.readiness["milestone"], "M29")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "w07_hil_ready")
+        self.assertEqual(self.readiness["phase"], "w07_two_board_hil_passed")
         self.assertEqual(self.readiness["milestone_status"], "in_progress")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertRegex(baseline["core_revision"], r"^[0-9a-f]{40}$")
@@ -71,8 +71,8 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertIn("encrypted_link", eatt["completion_requires"])
         self.assertIn("peer_support", eatt["completion_requires"])
 
-    def test_source_candidates_are_not_implementation_passes(self) -> None:
-        """! @brief 고정 SDK source 후보가 실제 구현·HIL PASS로 승격되지 않았는지 검사합니다. """
+    def test_source_candidates_require_independent_implementation_passes(self) -> None:
+        """! @brief SDK source 후보와 독립적인 구현·HIL PASS 상태를 함께 검사합니다. """
 
         expected = {
             "gatt_long_reliable",
@@ -86,11 +86,7 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual({entry["id"] for entry in capabilities}, expected)
         for entry in capabilities:
             self.assertTrue(entry["source_status"].startswith("candidate"), entry["id"])
-            expected_status = "target_ready" if entry["id"] in {
-                "signed_write",
-                "eatt",
-            } else "passed"
-            self.assertEqual(entry["implementation_status"], expected_status, entry["id"])
+            self.assertEqual(entry["implementation_status"], "passed", entry["id"])
             self.assertGreater(len(entry["source_references"]), 0, entry["id"])
             for reference in entry["source_references"]:
                 self.assertNotRegex(reference, r"^[A-Za-z]:[\\/]", reference)
@@ -115,7 +111,7 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertGreater(value, 0, name)
 
     def test_work_packages_begin_at_w07_after_w06_completion(self) -> None:
-        """! @brief W01~W06 완료와 W07 target 준비 상태를 검사합니다. """
+        """! @brief W01~W06 완료와 W07 2보드 HIL 상태를 검사합니다. """
 
         packages = self.readiness["work_packages"]
         self.assertEqual(len(packages), 8)
@@ -188,20 +184,41 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
         w07 = packages[6]
         self.assertEqual(w07["production_host_scenarios"], 3)
-        self.assertEqual(w07["host_contract_tests"], 7)
-        self.assertEqual(w07["host_parser_tests"], 14)
+        self.assertEqual(w07["host_contract_tests"], 17)
+        self.assertEqual(w07["host_parser_tests"], 16)
         self.assertEqual(w07["target_builds"], 2)
-        self.assertEqual(w07["physical_signed_write"], "not_run")
-        self.assertEqual(w07["physical_eatt"], "not_run")
+        self.assertEqual(w07["physical_signed_write"], "passed")
+        self.assertEqual(w07["physical_eatt"], "passed")
         self.assertEqual(w07["physical_multi_link"], "not_run")
         self.assertEqual(w07["physical_regression"], "not_run")
+        self.assertRegex(w07["tested_core_revision"], r"^[0-9a-f]{40}$")
+        self.assertEqual(len(w07["failure_evidence_files"]), 3)
+        self.assertEqual(len(w07["evidence_files"]), 3)
+        for relative in w07["failure_evidence_files"] + w07["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        evidence = json.loads(
+            (REPOSITORY / w07["evidence_files"][0]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(evidence["gate"], "m29-w07-signed-write-eatt-pair-hil")
+        self.assertEqual(evidence["status"], "passed")
+        self.assertEqual(evidence["core_revision"], w07["tested_core_revision"])
+        self.assertEqual(
+            evidence["board_revision"], self.readiness["baseline"]["board_revision"]
+        )
+        self.assertEqual(evidence["coverage"]["signing_reboots"], 20)
+        self.assertEqual(evidence["coverage"]["counter_rollbacks"], 0)
+        self.assertEqual(evidence["coverage"]["replay_accepts"], 0)
+        self.assertEqual(evidence["coverage"]["eatt_bearers"], 2)
+        self.assertEqual(evidence["coverage"]["operations_per_bearer"], 1000)
+        self.assertEqual(evidence["coverage"]["deadlocks"], 0)
+        self.assertEqual(evidence["coverage"]["starvation"], 0)
         completion = self.readiness["completion"]
         self.assertEqual(completion["completed_work_packages"], 6)
         self.assertEqual(completion["total_work_packages"], 8)
-        self.assertEqual(completion["passed_test_ids"], 6)
+        self.assertEqual(completion["passed_test_ids"], 8)
         self.assertEqual(completion["total_test_ids"], 10)
 
-    def test_execution_plan_is_finite_fail_closed_and_not_run(self) -> None:
+    def test_execution_plan_is_finite_and_fail_closed(self) -> None:
         """! @brief 열 개 test ID에 보드·timeout·정수 합격값이 있는지 검사합니다. """
 
         expected = {
@@ -223,17 +240,9 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertGreater(entry["timeout_seconds"], 0, entry["id"])
             self.assertLessEqual(entry["timeout_seconds"], 1800, entry["id"])
             expected_status = (
-                "passed"
-                if entry["id"]
-                in {
-                    "M29-CAP-01",
-                    "M29-LONG-01",
-                    "M29-DESC-01",
-                    "M29-CACHE-01",
-                    "M29-COC-01",
-                    "M29-NEG-01",
-                }
-                else "not_run"
+                "not_run"
+                if entry["id"] in {"M29-MULTI-01", "M29-REG-01"}
+                else "passed"
             )
             self.assertEqual(entry["status"], expected_status, entry["id"])
             self.assertGreater(len(entry["criteria"]), 0, entry["id"])
@@ -265,6 +274,12 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
         negative = next(entry for entry in plan if entry["id"] == "M29-NEG-01")
         for entry in (coc, negative):
+            self.assertEqual(len(entry["evidence_files"]), 3)
+            for relative in entry["evidence_files"]:
+                self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        signed = next(entry for entry in plan if entry["id"] == "M29-SIGN-01")
+        eatt = next(entry for entry in plan if entry["id"] == "M29-EATT-01")
+        for entry in (signed, eatt):
             self.assertEqual(len(entry["evidence_files"]), 3)
             for relative in entry["evidence_files"]:
                 self.assertTrue((REPOSITORY / relative).is_file(), relative)

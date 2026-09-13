@@ -2,7 +2,7 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W07 HIL 준비, 6/8이다. M30~M33은
+**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W07 2보드 HIL 완료, 6/8·test ID 8/10이다. M30~M33은
 계획·구현 미착수**다. M28 완료는 v0.5.0 공개, mobile/desktop cross-vendor 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
@@ -29,7 +29,7 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M29 W04 descriptor·authorization | [144번 기록](<04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>) |
 | M29 W05 robust GATT cache | [145번 기록](<04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>) |
 | M29 W06 LE CoC·negative | [146번 기록](<04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>) |
-| M29 W07 Signed Write·EATT HIL 준비 | [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>) |
+| M29 W07 Signed Write·EATT 2보드 HIL | [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>) |
 
 ## 1. 다음 착수 순서
 
@@ -38,8 +38,8 @@ M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·
 periodic·PAST, W05 PAwR, W06 privacy·link control, W07 두/세 보드 HIL과 W08 문서·인계를
 완료했고, **M29-W01 capability, W02 link별 GATT long read, W03 long/reliable write, W04
 descriptor·authorization·read multiple, W05 robust GATT cache와 W06 LE CoC를 완료했다.
-W07 Signed Write·EATT 구현·Host parser·target 2/2까지 준비했고 두 exact HIL 실패를 진단 중이므로
-현재 M29는 계속 **6/8**이다.
+W07 Signed Write·EATT 구현·Host parser·target 2/2와 exact 2보드 SIGN/EATT HIL을 완료했다.
+세 보드 MULTI/REG가 남아 현재 M29는 계속 **6/8**, test ID는 **8/10**이다.
 P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
@@ -87,7 +87,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser를 구
 | M29-W04 | **완료 — Host·target 2/2·2보드 descriptor/read multiple 100/100 PASS** | exact `068a1765…`, descriptor 4개·authorization 오판 0 증거 유지 |
 | M29-W05 | **완료 — Host·target 2/2·2보드 cache migration PASS** | exact `e587c4fe…`, bonded reconnect 20·stale/corrupt accept 0 증거 유지 |
 | M29-W06 | **완료 — Host·target 2/2·2보드 CoC/negative PASS** | exact `767bb4af…`, 2-channel·512 byte·각 방향 1,000 SDU·5 negative class·복구 오류 0 증거 유지 |
-| M29-W07 | **진행 중 — Host 계약 17/17·parser 16/16·target 2/2 PASS** | exact commit 기준 `M29-SIGN/EATT/MULTI/REG-01` HIL과 증거 보존 |
+| M29-W07 | **진행 중 — Host 계약 17/17·parser 16/16·target 2/2·SIGN/EATT PASS** | exact `c71ef4a2…` 2보드 증거 유지, 세 보드 `M29-MULTI/REG-01` 실행 |
 | M29-W08 | 미착수 | 전체 회귀·예제·문서·지원 판정·CI와 M30 인계 |
 
 M29-W02는 central/peripheral 두 link가 각각 discovery/read/write/subscription parameter와 512-byte
@@ -162,8 +162,8 @@ PASS했다. Exact `fbbb0d11…` 재실기는 광고·scan·pair·bond 재부팅 
 확인했고 GATT event 종류와 discovery 완료 뒤 상태 실패를 분리해 보고하도록 target과 Host 계약을
 보강했다. Exact `08a6512c…` 동일 조건 진단은 event 17 `signed_write_complete`를 잡아냈다.
 Write 시작 전 `signing` phase 전환 누락으로 같은 poll의 완료 event를 discovery 오류로 오분류한
-target 상태기계 결함이므로 전용 phase를 추가했다. 아직 완주하지 않았으므로
-`M29-SIGN/EATT/MULTI/REG-01`은 계속 `NOT RUN`이다. 실패와 진단 경계는
+target 상태기계 결함이므로 전용 phase를 추가했다. 당시에는 완주하지 않았으므로 네 test ID를
+`NOT RUN`으로 유지했다. 실패와 진단 경계는
 [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 보존한다.
 
 Exact `80f8de79…` 재검증은 Signed Write·counter persistence 19/20을 통과한 뒤 마지막 discovery의
@@ -201,7 +201,16 @@ Exact `08cc52d6…`은 제한된 `0x3e`를 sign 1·7·15회와 replay에서 복�
 `1000/739`, peer 수신 `1000/734`에서 HCI `0x08`로 끊겼고 양쪽 `CFSR/HFSR=0`이었다. 기존
 4-buffer 공유 window의 EATT-only 실행은 204.859초에 통과했지만, Zephyr의 bearer별 pending-send
 경계에 맞춘 고정 1-buffer/1-in-flight 수정은 같은 보드에서 105.391초에 `2000/2000`을 통과했다.
-이 격리 실행은 공식 PASS가 아니며 새 clean exact 전체 runner로 재검증한다.
+이 격리 실행은 공식 PASS가 아니므로 새 clean exact 전체 runner로 재검증했다.
+
+Exact `c71ef4a21465923760933f6b87ad7d92d9a95698`의 clean target build는 2/2, warning 0이다.
+같은 두 보드의 단일 strict runner session에서 연결 재시도 0, Signed Write 20/20과 warm reboot 간
+counter rollback 0, 새 원본을 포함한 최종 counter 21, 동일 ATT PDU replay 수락 0을 확인했다.
+EATT는 암호화 전 거부, 암호화 뒤 bearer 2개, 상한 초과 거부, production enhanced read/write와
+bearer별 1,000 SDU를 완료했고 payload 오류·deadlock·starvation은 모두 0이다. 따라서
+`M29-SIGN-01`과 `M29-EATT-01`은 PASS다. JSON과 양쪽 raw transcript는
+`evidence/m29-w07-c71ef4a2-signed-eatt/`에 보존한다. `M29-MULTI-01`과 `M29-REG-01`은
+여전히 `NOT RUN`이며 사용자 중단 경계에 따라 W07-D/E는 다음 작업으로 남긴다.
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로
