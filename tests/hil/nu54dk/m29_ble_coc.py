@@ -275,6 +275,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             protocol=PROTOCOL,
             flash_label="M29W06",
             ready_query=f"{PROTOCOL}|READY?\r\n".encode("ascii"),
+            peripheral_advertise_fields="psm=128|status=pass",
         )
         validate_image_unchanged(peripheral_image, peripheral_size, peripheral_sha256)
         validate_image_unchanged(central_image, central_size, central_sha256)

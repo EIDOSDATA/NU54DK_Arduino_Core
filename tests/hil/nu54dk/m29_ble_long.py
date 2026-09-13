@@ -206,13 +206,14 @@ def _wait_advertising(
     capture: bytearray,
     deadline: float,
     protocol: str = PROTOCOL,
+    advertise_fields: str = "status=pass",
 ) -> None:
     """! @brief peripheral BEGIN과 ADVERTISE를 exact 순서로 소비합니다. """
 
     suffix = _suffix(nonce, core_revision)
     expected = (
         f"{protocol}|BEGIN|role=peripheral".encode("ascii") + suffix,
-        f"{protocol}|ADVERTISE|role=peripheral|status=pass".encode("ascii")
+        f"{protocol}|ADVERTISE|role=peripheral|{advertise_fields}".encode("ascii")
         + suffix,
     )
     for wanted in expected:
@@ -272,6 +273,7 @@ def execute_long_pair(
     protocol: str = PROTOCOL,
     flash_label: str = "M29W02",
     ready_query: bytes | None = None,
+    peripheral_advertise_fields: str = "status=pass",
 ) -> PairExecution:
     """! @brief 두 image를 flash하고 peripheral 광고 뒤 central을 시작합니다. """
 
@@ -346,6 +348,7 @@ def execute_long_pair(
                 captures["peripheral"],
                 deadline,
                 protocol,
+                peripheral_advertise_fields,
             )
             _write_start(ports["central"], nonce, core_revision, protocol)
             stop_event = threading.Event()

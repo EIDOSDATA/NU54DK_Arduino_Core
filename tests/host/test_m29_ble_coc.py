@@ -147,6 +147,7 @@ class M29BleCocTests(unittest.TestCase):
             '"m29_coc_01_status": "passed"',
             '"m29_neg_01_status": "passed"',
             "validate_source_clean",
+            'peripheral_advertise_fields="psm=128|status=pass"',
         ):
             self.assertIn(token, runner)
 
