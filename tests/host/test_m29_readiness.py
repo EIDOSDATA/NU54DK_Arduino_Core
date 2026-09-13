@@ -38,7 +38,7 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(self.readiness["schema_version"], 1)
         self.assertEqual(self.readiness["milestone"], "M29")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "w01_complete")
+        self.assertEqual(self.readiness["phase"], "w02_complete")
         self.assertEqual(self.readiness["milestone_status"], "in_progress")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertRegex(baseline["core_revision"], r"^[0-9a-f]{40}$")
@@ -86,7 +86,8 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual({entry["id"] for entry in capabilities}, expected)
         for entry in capabilities:
             self.assertTrue(entry["source_status"].startswith("candidate"), entry["id"])
-            self.assertEqual(entry["implementation_status"], "not_started", entry["id"])
+            expected_status = "in_progress" if entry["id"] == "gatt_long_reliable" else "not_started"
+            self.assertEqual(entry["implementation_status"], expected_status, entry["id"])
             self.assertGreater(len(entry["source_references"]), 0, entry["id"])
             for reference in entry["source_references"]:
                 self.assertNotRegex(reference, r"^[A-Za-z]:[\\/]", reference)
@@ -110,22 +111,32 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIsInstance(value, int, name)
             self.assertGreater(value, 0, name)
 
-    def test_work_packages_begin_at_w02_after_w01_completion(self) -> None:
-        """! @brief W01 완료 증거와 W02 이후 미착수 상태를 검사합니다. """
+    def test_work_packages_begin_at_w03_after_w02_completion(self) -> None:
+        """! @brief W01·W02 완료 증거와 W03 이후 미착수 상태를 검사합니다. """
 
         packages = self.readiness["work_packages"]
         self.assertEqual(len(packages), 8)
         for index, package in enumerate(packages, start=1):
             self.assertEqual(package["id"], f"M29-W{index:02d}")
-            expected_status = "completed" if index == 1 else "not_started"
+            expected_status = "completed" if index <= 2 else "not_started"
             self.assertEqual(package["status"], expected_status, package["id"])
         w01 = packages[0]
         self.assertEqual(w01["host_parser_tests"], 16)
         self.assertEqual(w01["target_build"], "passed")
         self.assertEqual(w01["physical_capability"], "passed")
         self.assertRegex(w01["tested_core_revision"], r"^[0-9a-f]{40}$")
+        w02 = packages[1]
+        self.assertEqual(w02["production_host_scenarios"], 14)
+        self.assertEqual(w02["host_contract_tests"], 6)
+        self.assertEqual(w02["host_parser_tests"], 11)
+        self.assertEqual(w02["target_builds"], 2)
+        self.assertEqual(w02["physical_long_read"], "passed")
+        self.assertRegex(w02["tested_core_revision"], r"^[0-9a-f]{40}$")
+        self.assertEqual(len(w02["evidence_files"]), 3)
+        for relative in w02["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
         completion = self.readiness["completion"]
-        self.assertEqual(completion["completed_work_packages"], 1)
+        self.assertEqual(completion["completed_work_packages"], 2)
         self.assertEqual(completion["total_work_packages"], 8)
         self.assertEqual(completion["passed_test_ids"], 1)
         self.assertEqual(completion["total_test_ids"], 10)
@@ -203,7 +214,7 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIn("16_M29_ATT_GATT_L2CAP_착수_계약.md", text, path)
             self.assertIn("m29-ble-readiness.json", text, path)
             self.assertIn("M29-W01", text, path)
-            self.assertIn("1/8", text, path)
+            self.assertIn("2/8", text, path)
 
 
 if __name__ == "__main__":

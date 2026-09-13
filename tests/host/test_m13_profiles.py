@@ -98,6 +98,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "NUSPeripheral",
                 "GAPCentral",
                 "GAPPeripheral",
+                "LongGattCentral",
+                "LongGattPeripheral",
                 "MixedRoleLinks",
                 "ExtendedAdvertising",
                 "ExtendedScanner",

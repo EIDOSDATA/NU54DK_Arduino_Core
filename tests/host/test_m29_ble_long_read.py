@@ -11,6 +11,7 @@ CLIENT = ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp"
 SESSION = ROOT / "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp"
 CONNECTION = ROOT / "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp"
 HOST_SCENARIO = ROOT / "tests/host/r12_ble_gatt_main.cpp"
+EXAMPLES = ROOT / "libraries/NUCODE_BLE/examples"
 
 
 class M29BleLongReadTests(unittest.TestCase):
@@ -107,6 +108,27 @@ class M29BleLongReadTests(unittest.TestCase):
             "second.data() + 500, 13",
         ):
             self.assertIn(token, scenario, token)
+
+    def test_public_examples_use_exact_handle_and_full_payload(self):
+        """! @brief 사용자 예제가 512 byte와 상세 handle callback을 실제로 사용해야 합니다. """
+
+        peripheral = (EXAMPLES / "LongGattPeripheral" / "LongGattPeripheral.ino").read_text(
+            encoding="utf-8"
+        )
+        central = (EXAMPLES / "LongGattCentral" / "LongGattCentral.ino").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("uint8_t payload[512]", peripheral)
+        self.assertIn("BLEAdvertising.addServiceUuid(serviceUuid)", peripheral)
+        for token in (
+            "BLEConnectionHandle peer",
+            "BLEDevice.onEventInfo(onBleEvent)",
+            "BLEClient.onDetailedEvent(onClientEvent)",
+            "BLEClient.discover(peer, serviceUuid, valueUuid)",
+            "BLEClient.read(peer)",
+            "length != 512U",
+        ):
+            self.assertIn(token, central, token)
 
 
 if __name__ == "__main__":

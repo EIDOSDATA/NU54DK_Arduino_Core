@@ -36,6 +36,7 @@ ARDUINO_TESTS = (
     "m19m20",
     "m21",
     "m28",
+    "m29",
     "ac02b",
     "ac03",
     "examples",
@@ -45,12 +46,14 @@ ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
+    "v0.5.0": ("m29",),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
     "v0.2.0": ARDUINO_GROUPS["v0.2.0"],
     "v0.3.0-ble": ("m19m20", "m21"),
     "v0.3.0-compat": ("ac02b", "ac03", "examples"),
+    "v0.5.0": ARDUINO_GROUPS["v0.5.0"],
 }
 ARDUINO_SELECTIONS = {**ARDUINO_GROUPS, **ARDUINO_MATRIX_GROUPS}
 CLI_BOOTSTRAP_RETRY_MARKERS = (
@@ -1416,6 +1419,17 @@ def test_m28_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
     )
 
 
+## @brief M29 link별 long GATT 예제를 BLE profile로 빌드합니다.
+def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    test_ble_examples(
+        cli,
+        config,
+        root,
+        repository,
+        ("LongGattPeripheral", "LongGattCentral"),
+    )
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -1459,6 +1473,8 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "ExtendedScanner",
             "GAPCentral",
             "GAPPeripheral",
+            "LongGattCentral",
+            "LongGattPeripheral",
             "MixedRoleLinks",
             "NUSCentral",
             "NUSPeripheral",
@@ -1647,6 +1663,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m19m20": test_m19_m20_examples,
                 "m21": test_m21_example,
                 "m28": test_m28_examples,
+                "m29": test_m29_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

@@ -27,6 +27,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
 | M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
+| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -54,6 +55,8 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m28_ble_capability.py` | M28CAP/1 HCI/Host 원장·revision·nonce·timeout strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
 | `m28_ble_2board.py` | M28B2 확장 광고·PAwR·RPA/bond/reconnect strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m28_ble_3board.py` | M28B3 mixed-role LINK·PER/PAST·CTRL·SOAK strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_capability.py` | M29CAP/1 ATT/GATT·L2CAP Host capability strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
+| `m29_ble_long.py` | M29W02/1 MTU 247·512-byte long read 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -88,6 +91,36 @@ T12 PWM capture의 초기 240조건은 [97번](<../../../00_Docs/04_검증 기�
 - 실기 PASS는 해당 commit, artifact hash와 fixture 조건을 검증 기록에 연결합니다.
 - M15 운영 절차에서는 고정된 NCS Ubuntu container를 사용하는 clean GitHub Actions build
   artifact만 사용합니다. 로컬 Windows build를 M15 검증 증적으로 대체하지 않습니다.
+
+## M29-W02 두 보드 long read HIL
+
+W02는 peripheral과 central NU54DK 각 한 대, 독립 DAPLink target UART 두 경로를 사용하며 보드
+간 GPIO나 전원선을 연결하지 않는다. Runner는 현재 UID·MSD·UART를 함께 확인하고 exact clean
+Core·board·application source digest와 HEX 옆 build record를 검사한 뒤에만 flash한다. Peripheral
+광고 확인 전에는 central scan을 시작하지 않으며 두 role은 같은 128-bit nonce와 full Core SHA를
+사용한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_long_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_long_central의 zephyr.hex>"
+
+& $Python -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w02\long-read-evidence.json"
+```
+
+고정 parser는 READY·BEGIN·ADVERTISE/SCAN·LINK·RESULT·END 순서와 MTU 247, 512-byte read
+100/100, corrupt·stale 0, main-thread callback을 요구한다. W02 PASS는 long read 근거이며 W03의
+long/reliable write와 partial commit을 포함하지 않으므로 `M29-LONG-01` 전체 PASS가 아니다.
 
 ## M15 공식 CI artifact 계약
 

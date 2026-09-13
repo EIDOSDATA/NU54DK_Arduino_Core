@@ -109,6 +109,8 @@ class M22PackageExamplesTests(unittest.TestCase):
             for name in (
                 "ExtendedAdvertising",
                 "ExtendedScanner",
+                "LongGattCentral",
+                "LongGattPeripheral",
                 "MixedRoleLinks",
                 "PawrAdvertiser",
                 "PawrScanner",
