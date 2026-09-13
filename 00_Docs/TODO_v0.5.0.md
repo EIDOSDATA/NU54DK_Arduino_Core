@@ -153,8 +153,11 @@ Host 전체 24개 시나리오, source 계약 7개, strict HIL parser 14개와 �
 PASS했다. Windows Application Control의 첫 전체 실행 차단은 유한 4551 대기를 보강한 뒤 전체 Host
 1,106개 PASS(조건부 2개 skip)로 재검증했다. Arduino M29 smoke는 `EattCentral`의 미지원
 `<cstring>`을 `<string.h>`로 고친 뒤 GATT·CoC·cache·signing·EATT 예제 **14/14 PASS**로
-처음부터 재검증했다. 다만 dirty
-source build는 물리 PASS가 아니므로 `M29-SIGN/EATT/MULTI/REG-01`은 계속 `NOT RUN`이다.
+처음부터 재검증했다. Exact `fb03df6e…`의 첫 HIL은 두 보드의 flash·READY·CLEAR·reboot 뒤 legacy
+광고가 flags+128-bit service UUID+manufacturer nonce로 41/31 byte가 되어 `-EMSGSIZE`로 중단됐다.
+CMSIS-DAP에서 CPU fault 0과 RADIO 미시작을 확인한 뒤 중복 service 광고·filter를 제거하고 exact
+nonce 검사와 23/31 byte compile-time 상한을 유지했다. 수정 source 계약 30/30과 target 2/2는
+PASS했지만 새 exact commit HIL 전이므로 `M29-SIGN/EATT/MULTI/REG-01`은 계속 `NOT RUN`이다.
 실행 전 경계는 [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 보존한다.
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,

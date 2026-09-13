@@ -139,9 +139,11 @@ Production Host 전체 24개 시나리오·W07 계약 7/7·parser 14/14와 targe
 Windows Application Control 4551에만 최대 30초 유한 대기를 적용한 뒤 전체 Host 1,106개도
 PASS(조건부 2개 skip)했다. Arduino M29 smoke는 `EattCentral`의 최소 C++ runtime 비호환
 `<cstring>`을 `<string.h>`로 교체한 뒤 전체 14개 예제를 처음부터 다시 build해 14/14 PASS했다.
-현재 target은 dirty source build이므로
-물리 증거로 승격하지 않으며, clean exact commit/push/CI 뒤 두 보드 SIGN/EATT와 세 보드
-MULTI/REG를 실행한다. 준비 기록은
+Exact `fb03df6e…` 첫 HIL은 flash·READY·CLEAR·reboot 뒤 41/31-byte legacy 광고를 `-EMSGSIZE`로
+거부했다. DAP/UART와 CPU fault·RADIO 미시작을 확인하고 중복 128-bit service 광고·filter를 제거해
+23/31-byte compile-time 상한으로 고쳤다. 수정 source target 2/2는 PASS했지만 아직 dirty build이므로
+물리 증거로 승격하지 않는다. 새 clean exact commit/push/CI 뒤 같은 두 보드 SIGN/EATT와 세 보드
+MULTI/REG를 실행한다. 실패 raw transcript와 준비 기록은
 [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 있다.
 
 실행기와 보드 조건은 [W07 HIL 안내](../tests/hil/nu54dk/README.md#m29-w07-두-보드-signed-writeeatt-hil), 구현·검증

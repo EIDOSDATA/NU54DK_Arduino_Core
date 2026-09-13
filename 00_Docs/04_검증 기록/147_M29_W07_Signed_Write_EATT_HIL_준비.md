@@ -10,7 +10,7 @@
 | strict Host parser | **14/14 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
-| target build | **peripheral·central 2/2 PASS, warning 0** |
+| target build | **`fb03df6e…` 2/2와 광고 수정 source 2/2 PASS, warning 0** |
 | 실제 `M29-SIGN-01` / `M29-EATT-01` | **NOT RUN / NOT RUN** |
 | 실제 `M29-MULTI-01` / `M29-REG-01` | **NOT RUN / NOT RUN** |
 | M29 진행률 | **6/8 유지** |
@@ -84,7 +84,37 @@ GATT·CoC 8개, GATT cache 2개, legacy signing 2개와 EATT 2개를 합친 **14
 시험을 commit/push하고 exact commit CI를 확인한 뒤, 같은 commit을 새로 build해 HIL runner에
 전달한다.
 
-## 4. 남은 유한 실행 순서
+## 4. 첫 exact HIL 실패와 원인 분류
+
+Exact `fb03df6e1220f77ca52b311ffb78de987a48aae0`의 Software Gates 7/7과 Reproducible
+Builds 10/10을 확인하고 clean target 2/2를 만들었다. Peripheral
+`54153603000528402aae46c5e8e3712a`/COM10과 central
+`5415360300052840fcd47678fd7d106d`/COM13은 pyOCD sector flash, READY, CLEAR와 양쪽 warm reboot를
+통과했다. 첫 `pair` session의 peripheral은 다음 record로 즉시 멈췄다.
+
+```text
+M29W07|1|FAIL|role=peripheral|mode=pair|stage=advertising_start|code=-122|iteration=0|...
+```
+
+Raw 기록은 `evidence/m29-w07-fb03df6e-signed-eatt/result.peripheral.transcript.log`와
+`result.central.transcript.log`에 보존한다. Zephyr minimal libc의 `122`는 `EMSGSIZE`다. Legacy
+광고 payload에 flags 3 byte, 128-bit service UUID field 18 byte와 company ID·128-bit nonce
+manufacturer field 20 byte를 함께 넣어 **41/31 byte**가 됐다. Central callback은 이미 company ID와
+exact nonce를 직접 검사하므로 service UUID 광고와 scan filter는 중복이었다.
+
+결선·debug 경계를 먼저 확인했다. 두 CMSIS-DAP UID와 UART는 독립적으로 열렸고 flash·양방향 command·
+reboot transcript가 정상이다. 실패 직후 peripheral을 CMSIS-DAP로 halt해 읽은 `CFSR=0`, `HFSR=0`은
+CPU fault가 없음을 보였다. RADIO READY/END event와 STATE는 0으로 controller RF 동작 전에 API가
+거부된 것과 일치했고 UARTE20/DMA register는 Serial 송신이 진행된 상태였다. GPIO register에도 fault
+징후가 없었다. 캡처 뒤 core는 다시 실행시켰다.
+
+수정은 중복 service UUID 광고·filter를 제거하고 exact manufacturer nonce 검사를 유지한다. Flags와
+manufacturer field 합계 **23/31 byte**를 compile-time `static_assert`로 고정하고, clear·connectable·
+nonce·name·start 실패 stage를 각각 분리했다. Source 계약을 추가한 뒤 W07 계약/parser/readiness
+30/30과 수정 target 2/2 warning 0이 PASS했다. 이 dirty build는 실제 PASS로 승격하지 않고 새 exact
+commit의 CI·clean build 뒤 동일 보드와 조건으로 다시 실행한다.
+
+## 5. 남은 유한 실행 순서
 
 1. W07 준비 변경을 commit/push하고 exact GitHub Software·Reproducible Build CI를 확인한다.
 2. Clean exact commit으로 Signed/EATT 두 role을 재빌드한다.

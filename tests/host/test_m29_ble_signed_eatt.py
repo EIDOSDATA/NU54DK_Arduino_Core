@@ -150,6 +150,16 @@ class M29BleSignedEattTests(unittest.TestCase):
         ):
             self.assertIn(token, smoke)
 
+    def test_hil_nonce_fits_legacy_advertising_budget(self):
+        """! @brief exact RF nonce가 31-byte legacy 광고 예산을 넘지 않게 고정합니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertIn("legacy_manufacturer_serialized_length", target)
+        self.assertIn("Advertising::maximum_payload_length", target)
+        self.assertIn("validRfNonce(result)", target)
+        self.assertIn("setManufacturerData(company_id, nonce_binary", target)
+        self.assertNotIn("BLEAdvertising.addServiceUuid(service_uuid)", target)
+        self.assertNotIn("BLEScan.filterServiceUuid(service_uuid)", target)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

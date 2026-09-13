@@ -65,6 +65,9 @@ namespace
     constexpr std::uint16_t company_id = 0x29a7U;
     constexpr std::size_t nonce_text_length = 32U;
     constexpr std::size_t nonce_binary_length = 16U;
+    constexpr std::size_t legacy_flags_serialized_length = 3U;
+    constexpr std::size_t legacy_manufacturer_serialized_length =
+        2U + 2U + nonce_binary_length;
     constexpr std::uint32_t eatt_operations_per_bearer = 1000U;
     constexpr std::int64_t session_timeout_ms = 900000;
     constexpr std::int64_t replay_observation_ms = 1500;
@@ -73,6 +76,10 @@ namespace
     constexpr std::uint8_t eatt_production_marker = 0xe6U;
     constexpr std::uint8_t eatt_raw_marker = 0xe7U;
     constexpr std::size_t eatt_tx_buffer_count = 4U;
+
+    static_assert(legacy_flags_serialized_length +
+                      legacy_manufacturer_serialized_length <=
+                  nucode::ble::Advertising::maximum_payload_length);
 
     enum class Mode : std::uint8_t
     {
@@ -958,18 +965,39 @@ namespace
         printBegin();
 #if defined(NUCODE_M29_ADVANCED_CENTRAL)
         phase = Phase::scanning;
-        if (!BLEScan.clearFilters() || !BLEScan.filterServiceUuid(service_uuid) ||
-            !BLEScan.start(true))
+        if (!BLEScan.clearFilters())
+        {
+            fail("scan_clear", BLEDevice.lastDriverError());
+            return;
+        }
+        if (!BLEScan.start(true))
         {
             fail("scan_start", BLEDevice.lastDriverError());
         }
 #else
         phase = Phase::connecting;
-        if (!BLEAdvertising.clear() || !BLEAdvertising.setConnectable(true) ||
-            !BLEAdvertising.addServiceUuid(service_uuid) ||
-            !BLEAdvertising.setManufacturerData(company_id, nonce_binary,
-                                                  sizeof(nonce_binary)) ||
-            !BLEAdvertising.setScanResponseName(true) || !BLEAdvertising.start())
+        if (!BLEAdvertising.clear())
+        {
+            fail("advertising_clear", BLEDevice.lastDriverError());
+            return;
+        }
+        if (!BLEAdvertising.setConnectable(true))
+        {
+            fail("advertising_connectable", BLEDevice.lastDriverError());
+            return;
+        }
+        if (!BLEAdvertising.setManufacturerData(company_id, nonce_binary,
+                                                 sizeof(nonce_binary)))
+        {
+            fail("advertising_nonce", BLEDevice.lastDriverError());
+            return;
+        }
+        if (!BLEAdvertising.setScanResponseName(true))
+        {
+            fail("advertising_name", BLEDevice.lastDriverError());
+            return;
+        }
+        if (!BLEAdvertising.start())
         {
             fail("advertising_start", BLEDevice.lastDriverError());
             return;
