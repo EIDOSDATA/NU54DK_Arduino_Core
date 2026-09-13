@@ -13,6 +13,7 @@
 #include <zephyr/bluetooth/att.h>
 #include <zephyr/bluetooth/conn.h>
 #include <zephyr/bluetooth/gatt.h>
+#include <zephyr/bluetooth/hci_types.h>
 #include <zephyr/bluetooth/l2cap.h>
 #include <zephyr/kernel.h>
 #include <zephyr/net_buf.h>
@@ -72,6 +73,7 @@ namespace
     constexpr std::int64_t session_timeout_ms = 900000;
     constexpr std::int64_t replay_observation_ms = 1500;
     constexpr std::int64_t disconnect_settle_ms = 250;
+    constexpr std::uint32_t maximum_connection_retries = 2U;
     constexpr std::uint8_t signed_marker = 0x51U;
     constexpr std::uint8_t replay_marker = 0x52U;
     constexpr std::uint8_t eatt_production_marker = 0xe6U;
@@ -104,6 +106,7 @@ namespace
         eatt_writing,
         eatt_traffic,
         replay_observation,
+        retry_waiting_for_recycle,
         disconnect_delay,
         disconnecting,
         complete,
@@ -140,6 +143,7 @@ namespace
     std::int64_t replay_deadline = 0;
     std::int64_t disconnect_at = 0;
     std::uint32_t expected_ble_errors = 0U;
+    std::uint32_t connection_retries = 0U;
     std::uint32_t server_signed_writes = 0U;
     std::uint32_t server_replay_writes = 0U;
     std::uint32_t server_eatt_production_writes = 0U;
@@ -468,12 +472,15 @@ namespace
             fail("scan_stop");
             return;
         }
-        Serial.print(protocol);
-        Serial.print("|SCAN|role=central|mode=");
-        Serial.print(modeName());
-        Serial.print("|status=pass");
-        printSuffix();
-        Serial.println();
+        if (connection_retries == 0U)
+        {
+            Serial.print(protocol);
+            Serial.print("|SCAN|role=central|mode=");
+            Serial.print(modeName());
+            Serial.print("|status=pass");
+            printSuffix();
+            Serial.println();
+        }
         phase = Phase::connecting;
         if (!BLEConnection.connect(result.address, connection_handle))
         {
@@ -903,6 +910,54 @@ namespace
         }
     }
 
+    /** @brief HCI 0x3e 연결 동기화 실패만 고정 횟수 안에서 재시도하도록 예약합니다. */
+    bool scheduleConnectionRetry(std::uint8_t reason)
+    {
+        if (reason != BT_HCI_ERR_CONN_FAIL_TO_ESTAB ||
+            (phase != Phase::connecting && phase != Phase::discovering) ||
+            connection_retries >= maximum_connection_retries)
+        {
+            return false;
+        }
+        ++connection_retries;
+        Serial.print(protocol);
+        Serial.print("|RETRY|role=");
+        Serial.print(roleName());
+        Serial.print("|reason=");
+        Serial.print(reason);
+        Serial.print("|attempt=");
+        Serial.print(connection_retries);
+        printSuffix();
+        Serial.println();
+        connection_handle = {};
+        security_changed = false;
+        pairing_seen = false;
+        phase = Phase::retry_waiting_for_recycle;
+        return true;
+    }
+
+    /** @brief connection object recycle 뒤 기존 RF 설정으로 같은 session 연결을 다시 시작합니다. */
+    void restartConnectionAttempt()
+    {
+        if (phase != Phase::retry_waiting_for_recycle)
+        {
+            return;
+        }
+#if defined(NUCODE_M29_ADVANCED_CENTRAL)
+        phase = Phase::scanning;
+        if (!BLEScan.start(true))
+        {
+            fail("retry_scan_start", BLEDevice.lastDriverError());
+        }
+#else
+        phase = Phase::connecting;
+        if (!BLEAdvertising.start())
+        {
+            fail("retry_advertising_start", BLEDevice.lastDriverError());
+        }
+#endif
+    }
+
     /** @brief GAP event를 generation handle·role·고정 GATT phase에 연결합니다. */
     void onBleEvent(const nucode::ble::BLEEventInfo &information, void *context)
     {
@@ -920,6 +975,11 @@ namespace
                 return;
             }
             const int driver_error = BLEDevice.lastDriverError();
+            if (driver_error == -BT_HCI_ERR_CONN_FAIL_TO_ESTAB &&
+                scheduleConnectionRetry(BT_HCI_ERR_CONN_FAIL_TO_ESTAB))
+            {
+                return;
+            }
 #if defined(NUCODE_M29_ADVANCED_CENTRAL)
             /** @brief Discovery 오류는 뒤따르는 link별 GATT event에서 정확한 stage로 판정합니다. */
             if (phase == Phase::discovering && driver_error == -ENOENT)
@@ -932,6 +992,7 @@ namespace
         }
         if (information.event == nucode::ble::BLEEvent::connected)
         {
+            atomic_set(&disconnect_reason, -1);
             connection_handle = information.connection;
             if (!connection_handle.valid())
             {
@@ -965,7 +1026,17 @@ namespace
                 printEnd();
                 return;
             }
-            fail("unexpected_disconnect", static_cast<int>(atomic_get(&disconnect_reason)));
+            const int reason = static_cast<int>(atomic_get(&disconnect_reason));
+            if (reason >= 0 && scheduleConnectionRetry(static_cast<std::uint8_t>(reason)))
+            {
+                return;
+            }
+            fail("unexpected_disconnect", reason);
+            return;
+        }
+        if (information.event == nucode::ble::BLEEvent::connection_recycled)
+        {
+            restartConnectionAttempt();
         }
     }
 
@@ -992,6 +1063,7 @@ namespace
         eatt_unencrypted_rejected = false;
         eatt_over_limit_rejected = false;
         expected_ble_errors = 0U;
+        connection_retries = 0U;
         server_signed_writes = 0U;
         server_replay_writes = 0U;
         server_eatt_production_writes = 0U;

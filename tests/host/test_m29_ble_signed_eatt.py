@@ -229,9 +229,27 @@ class M29BleSignedEattTests(unittest.TestCase):
         self.assertIn("BT_CONN_CB_DEFINE(m29_advanced_connection_callbacks)", target)
         self.assertIn("atomic_set(&disconnect_reason", target)
         self.assertIn(
-            'fail("unexpected_disconnect", static_cast<int>(atomic_get(&disconnect_reason)))',
+            "const int reason = static_cast<int>(atomic_get(&disconnect_reason));",
             target,
         )
+        self.assertIn('fail("unexpected_disconnect", reason);', target)
+
+    def test_hil_retries_only_bounded_hci_0x3e_after_recycle(self):
+        """! @brief RF 동기화 실패만 두 번 이내에서 object recycle 뒤 재시도합니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        runner = (ROOT / "tests/hil/nu54dk/m29_ble_signed_eatt.py").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "maximum_connection_retries = 2U",
+            "BT_HCI_ERR_CONN_FAIL_TO_ESTAB",
+            "Phase::retry_waiting_for_recycle",
+            "BLEEvent::connection_recycled",
+            "restartConnectionAttempt();",
+        ):
+            self.assertIn(token, target)
+        self.assertIn("MAX_CONNECTION_RETRIES = 2", runner)
+        self.assertIn("reason=62|attempt={attempt}", runner)
 
 
 if __name__ == "__main__":

@@ -56,6 +56,7 @@ DEFAULT_RESULT_TIMEOUT_SECONDS = 900.0
 SIGN_REBOOTS = 20
 REPLAY_ITERATION = 21
 EATT_ITERATION = 22
+MAX_CONNECTION_RETRIES = 2
 REBOOT_SERIAL_SETTLE_SECONDS = 1.0
 
 
@@ -64,6 +65,7 @@ class AdvancedRoleResult:
     """! @brief 한 role의 W07 signing·EATT 정량 결과입니다. """
 
     role: str
+    connection_retries: int
     signing_reboots: int
     signed_writes: int
     final_local_counter: int
@@ -169,6 +171,7 @@ def parse_role_transcript(
 
     local_counter = 0
     remote_counter = 0
+    connection_retries = 0
 
     def take_reboot_and_ready(expected_bonds: int) -> None:
         nonlocal cursor
@@ -201,6 +204,26 @@ def parse_role_transcript(
             event = f"{PROTOCOL}|SCAN|role=central|mode={mode}|status=pass"
         cursor = _take_exact(lines, cursor, event.encode("ascii") + suffix)
 
+    def take_connection_retries(iteration: int) -> None:
+        """! @brief 해당 session의 HCI 0x3e 재시도를 순번·상한까지 검증합니다. """
+
+        nonlocal connection_retries, cursor
+        attempt = 1
+        prefix = f"{PROTOCOL}|RETRY|role={role}|".encode("ascii")
+        while cursor < len(lines) and lines[cursor].startswith(prefix):
+            if attempt > MAX_CONNECTION_RETRIES:
+                raise BlePairHilFailure("W07 connection retry가 고정 상한을 넘었습니다.")
+            cursor = _take_exact(
+                lines,
+                cursor,
+                (
+                    f"{PROTOCOL}|RETRY|role={role}|reason=62|attempt={attempt}"
+                ).encode("ascii")
+                + _suffix(iteration, nonce, core_revision),
+            )
+            attempt += 1
+            connection_retries += 1
+
     def take_end(mode: str, iteration: int) -> None:
         nonlocal cursor
         cursor = _take_exact(
@@ -215,6 +238,7 @@ def parse_role_transcript(
 
     take_reboot_and_ready(0)
     take_session_header("pair", 0)
+    take_connection_retries(0)
     pair_pattern = re.compile(
         (
             rf"{escaped_protocol}\|PAIR\|role={role}\|bond_count=1\|local_counter=(\d+)"
@@ -232,6 +256,7 @@ def parse_role_transcript(
     for iteration in range(1, SIGN_REBOOTS + 1):
         take_reboot_and_ready(1)
         take_session_header("sign", iteration)
+        take_connection_retries(iteration)
         sign_pattern = re.compile(
             (
                 rf"{escaped_protocol}\|SIGN\|role={role}\|writes=1\|local_counter=(\d+)"
@@ -256,6 +281,7 @@ def parse_role_transcript(
 
     take_reboot_and_ready(1)
     take_session_header("replay", REPLAY_ITERATION)
+    take_connection_retries(REPLAY_ITERATION)
     if role == "central":
         replay_prefix = (
             f"{PROTOCOL}|REPLAY|role=central|sent=2|signed_originals=1|replays=1"
@@ -288,6 +314,7 @@ def parse_role_transcript(
 
     take_reboot_and_ready(1)
     take_session_header("eatt", EATT_ITERATION)
+    take_connection_retries(EATT_ITERATION)
     if role == "central":
         eatt = (
             f"{PROTOCOL}|EATT|role=central|bearers=2|ops_bearer0=1000|"
@@ -311,6 +338,7 @@ def parse_role_transcript(
 
     return AdvancedRoleResult(
         role=role,
+        connection_retries=connection_retries,
         signing_reboots=SIGN_REBOOTS,
         signed_writes=SIGN_REBOOTS + 1,
         final_local_counter=local_counter,
@@ -864,6 +892,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "coverage": {
                 "signing_profile": "deprecated-opt-in",
                 "signing_reboots": SIGN_REBOOTS,
+                "maximum_connection_retries_per_session": MAX_CONNECTION_RETRIES,
                 "signed_writes": SIGN_REBOOTS + 1,
                 "counter_rollbacks": 0,
                 "replay_attempts": 1,

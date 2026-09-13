@@ -156,6 +156,45 @@ class M29BleSignedEattParserTests(unittest.TestCase):
         result = parse_role_transcript(build_transcript("central"), NONCE, REVISION, "central")
         self.assertEqual(result.final_local_counter, 21)
         self.assertEqual(result.operations_per_bearer, 1000)
+        self.assertEqual(result.connection_retries, 0)
+
+    def test_accepts_bounded_hci_0x3e_retry(self):
+        lines = build_transcript("central").splitlines()
+        sign = next(
+            index
+            for index, line in enumerate(lines)
+            if b"|SIGN|role=central|" in line and b"|iteration=1|" in line
+        )
+        lines.insert(
+            sign,
+            (
+                f"{PROTOCOL}|RETRY|role=central|reason=62|attempt=1{_suffix(1)}"
+            ).encode("ascii"),
+        )
+        result = parse_role_transcript(
+            b"\n".join(lines) + b"\n", NONCE, REVISION, "central"
+        )
+        self.assertEqual(result.connection_retries, 1)
+
+    def test_rejects_retry_above_bound(self):
+        lines = build_transcript("central").splitlines()
+        sign = next(
+            index
+            for index, line in enumerate(lines)
+            if b"|SIGN|role=central|" in line and b"|iteration=1|" in line
+        )
+        for attempt in range(1, 4):
+            lines.insert(
+                sign + attempt - 1,
+                (
+                    f"{PROTOCOL}|RETRY|role=central|reason=62|attempt={attempt}"
+                    f"{_suffix(1)}"
+                ).encode("ascii"),
+            )
+        with self.assertRaises(BlePairHilFailure):
+            parse_role_transcript(
+                b"\n".join(lines) + b"\n", NONCE, REVISION, "central"
+            )
 
     def test_rejects_noise(self):
         transcript = b"noise\n" + build_transcript("central")

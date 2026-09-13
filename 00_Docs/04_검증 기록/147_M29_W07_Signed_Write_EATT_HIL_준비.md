@@ -213,6 +213,18 @@ W07 target에 추가 Zephyr connection observer를 등록해 callback의 실제 
 재시도 목적이 아니라 timeout `0x08`, remote user termination `0x13` 등 원인 class를 직접
 구분하기 위한 진단이다. Source 계약 15/15와 진단 target 2/2 warning 0을 확인했다.
 
+Exact `f497d382…` 진단 실행은 첫 sign 재연결에서 실제 reason **62(`0x3e`)**를 출력했다. 이는
+HCI `Connection Failed to be Established / Synchronization Timeout`이며 장시간 link timeout
+`0x08`이나 양쪽 정상 종료 충돌 `0x13`이 아니다. Raw 기록은
+`evidence/m29-w07-f497d382-signed-eatt/`에 보존한다.
+
+`0x3e`는 Signed Write가 시작되기 전 연결 생성 RF 동기화 단계의 유한 transient class다. Target은
+이 reason이 `connecting`/`discovering`에서 발생한 경우에만 session당 최대 2회 재시도한다. 기존
+connection object의 `connection_recycled` event를 받은 뒤에만 peripheral 광고 또는 central scan을
+다시 시작하며, 각 재시도는 고정 `RETRY/reason=62/attempt=1..2` record로 남긴다. 다른 reason,
+다른 phase, 3회째 실패는 즉시 FAIL이다. Parser도 optional record의 위치·reason·순번·상한을
+fail-closed로 검사한다. Source 계약 16/16·parser 16/16·readiness 8/8 뒤 target build로 검증한다.
+
 ## 6. 남은 유한 실행 순서
 
 1. W07 준비 변경을 commit/push하고 exact GitHub Software·Reproducible Build CI를 확인한다.
