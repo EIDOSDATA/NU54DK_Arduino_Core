@@ -6,7 +6,7 @@
 | 준비 기준 HEAD | `d425248b8063cfb4e816c12cab6dd62c88cae446` 이후 미커밋 W07 source |
 | NCS / Zephyr | `99553055607b…` / `bf801e4e3d19…` |
 | board / toolchain | `fe65f2f0880b…` / `dcbdc366a1` |
-| W07 공개 계약 | **12/12 PASS** |
+| W07 공개 계약 | **13/13 PASS** |
 | strict Host parser | **14/14 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
@@ -59,7 +59,7 @@ wrong revision·stale nonce, counter rollback, replay accept, EATT shortfall, ta
 
 ## 3. Host·target 준비 결과
 
-W07 공개 계약 12/12, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
+W07 공개 계약 13/13, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
 M22 stable package 경계 7/7, readiness 8/8이 PASS했다. 전체 Host gate에서 W07 신규 예제를 후속
 후보 집합에 반영하지 않은 1건은 수정 뒤 동일 시험 7/7 PASS했다. 임시 native EXE 일부는 첫 실행에
 Windows Application Control `WinError 4551`로 17회 차단됐다. PAwR·TWIM 실패 module을 같은 source와
@@ -174,6 +174,19 @@ phase에는 pair/EATT 완료 record가 반복되지 않도록 guard를 둔다. �
 것이 아니라 각 iteration의 Host/controller 자원을 다음 reboot 전에 유한하게 회수하는 수정이다.
 Source 계약 12/12와 수정 target 2/2 warning 0을 확인했으며 새 exact commit으로 같은 전체 분모를
 다시 실행한다.
+
+Exact `23fa4a6e…` 재실기는 정상 disconnect 뒤 `END` 순서로 Signed Write **20/20**, central local
+counter 20과 peripheral remote counter 20, replay 원본 1·재전송 1 중 replay 수락 0을 통과했다.
+EATT도 암호화·bearer 2개·상한 초과 거부와 enhanced read까지 통과했으나 응답형 enhanced write
+시작에서 `eatt_write_start/code=0`으로 멈췄다. Raw 기록은
+`evidence/m29-w07-23fa4a6e-signed-eatt/`에 보존한다. CMSIS-DAP의 `CFSR=0`, `HFSR=0`과 정상
+thread PC로 CPU fault가 없음을 재확인했다.
+
+Target characteristic은 `read`, `write_without_response`, `authenticated_signed_write`만 선언했지만
+EATT production 경로는 응답형 `BLEClient.write(..., enhanced)`를 호출했다. 공개 API가 property
+계약에 따라 시작을 거부한 것이므로 controller/EATT bearer 결함이 아니다. `BLEProperty::write`를
+명시적으로 추가하고 실패 record에도 `BLEDevice.lastDriverError()`를 남기도록 수정했다. Host source
+계약 13/13 뒤 새 exact 전체 실행으로 bearer별 1,000 operation까지 확인한다.
 
 ## 6. 남은 유한 실행 순서
 

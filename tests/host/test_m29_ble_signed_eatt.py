@@ -198,6 +198,15 @@ class M29BleSignedEattTests(unittest.TestCase):
             "phase == Phase::disconnect_delay || phase == Phase::disconnecting", target
         )
 
+    def test_hil_eatt_write_uses_declared_property(self):
+        """! @brief enhanced write 경로의 응답형 write property를 service에 선언합니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertIn("nucode::ble::BLEProperty::write |", target)
+        self.assertIn("nucode::ble::BLEGattBearer::enhanced", target)
+        self.assertIn(
+            'fail("eatt_write_start", BLEDevice.lastDriverError())', target
+        )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -115,6 +115,7 @@ namespace
     nucode::ble::BLECharacteristic test_characteristic(
         characteristic_uuid,
         nucode::ble::BLEProperty::read |
+            nucode::ble::BLEProperty::write |
             nucode::ble::BLEProperty::write_without_response |
             nucode::ble::BLEProperty::authenticated_signed_write,
         nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 32U);
@@ -825,7 +826,7 @@ namespace
             if (!BLEClient.write(connection_handle, payload, sizeof(payload),
                                  nucode::ble::BLEGattBearer::enhanced))
             {
-                fail("eatt_write_start");
+                fail("eatt_write_start", BLEDevice.lastDriverError());
             }
             return;
         }
