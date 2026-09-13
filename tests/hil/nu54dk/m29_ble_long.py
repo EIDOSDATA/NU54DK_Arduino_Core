@@ -172,10 +172,11 @@ def _wait_ready(
     pending: bytearray,
     capture: bytearray,
     deadline: float,
+    protocol: str = PROTOCOL,
 ) -> None:
     """! @brief READY 앞 noise와 다른 revision token을 즉시 거부합니다. """
 
-    expected = f"{PROTOCOL}|READY|role={role}|core={core_revision}".encode("ascii")
+    expected = f"{protocol}|READY|role={role}|core={core_revision}".encode("ascii")
     line = read_line(serial_port, pending, capture, deadline)
     if line != expected:
         raise BlePairHilFailure(
@@ -183,11 +184,13 @@ def _wait_ready(
         )
 
 
-def _write_start(serial_port: Any, nonce: str, core_revision: str) -> None:
+def _write_start(
+    serial_port: Any, nonce: str, core_revision: str, protocol: str = PROTOCOL
+) -> None:
     """! @brief nonce와 exact Core revision이 결합된 start record를 기록합니다. """
 
     request = (
-        f"{PROTOCOL}|START|nonce={nonce}|core={core_revision}\r\n".encode("ascii")
+        f"{protocol}|START|nonce={nonce}|core={core_revision}\r\n".encode("ascii")
     )
     written = serial_port.write(request)
     serial_port.flush()
@@ -202,13 +205,14 @@ def _wait_advertising(
     pending: bytearray,
     capture: bytearray,
     deadline: float,
+    protocol: str = PROTOCOL,
 ) -> None:
     """! @brief peripheral BEGIN과 ADVERTISE를 exact 순서로 소비합니다. """
 
     suffix = _suffix(nonce, core_revision)
     expected = (
-        f"{PROTOCOL}|BEGIN|role=peripheral".encode("ascii") + suffix,
-        f"{PROTOCOL}|ADVERTISE|role=peripheral|status=pass".encode("ascii")
+        f"{protocol}|BEGIN|role=peripheral".encode("ascii") + suffix,
+        f"{protocol}|ADVERTISE|role=peripheral|status=pass".encode("ascii")
         + suffix,
     )
     for wanted in expected:
@@ -228,11 +232,12 @@ def _collect_end(
     capture: bytearray,
     deadline: float,
     stop_event: threading.Event,
+    protocol: str = PROTOCOL,
 ) -> None:
     """! @brief END까지 모든 protocol line을 보존하며 FAIL·timeout을 전파합니다. """
 
     expected_end = (
-        f"{PROTOCOL}|END|role={role}|status=pass".encode("ascii")
+        f"{protocol}|END|role={role}|status=pass".encode("ascii")
         + _suffix(nonce, core_revision)
     )
     try:
@@ -240,11 +245,11 @@ def _collect_end(
             line = read_line(serial_port, pending, capture, deadline, stop_event=stop_event)
             if line:
                 print(f"[{role}] {line.decode('utf-8', errors='backslashreplace')}")
-            if line.startswith(f"{PROTOCOL}|FAIL|".encode("ascii")):
+            if line.startswith(f"{protocol}|FAIL|".encode("ascii")):
                 raise BlePairHilFailure(f"{role} target 실패: {line!r}")
             if line == expected_end:
                 return
-            if line.startswith(f"{PROTOCOL}|END|".encode("ascii")):
+            if line.startswith(f"{protocol}|END|".encode("ascii")):
                 raise BlePairHilFailure(f"{role} END identity/status 불일치: {line!r}")
     except Exception:
         stop_event.set()
@@ -264,6 +269,8 @@ def execute_long_pair(
     flash_timeout: float,
     result_timeout: float,
     flash_backend: str,
+    protocol: str = PROTOCOL,
+    flash_label: str = "M29W02",
 ) -> PairExecution:
     """! @brief 두 image를 flash하고 peripheral 광고 뒤 central을 시작합니다. """
 
@@ -307,7 +314,7 @@ def execute_long_pair(
                     )
                 else:
                     flashes[role] = flash_image(
-                        "M29W02", role, endpoint.volume, image, flash_timeout
+                        flash_label, role, endpoint.volume, image, flash_timeout
                     )
             deadline = time.monotonic() + result_timeout
             for role in ("peripheral", "central"):
@@ -318,8 +325,9 @@ def execute_long_pair(
                     pending[role],
                     captures[role],
                     deadline,
+                    protocol,
                 )
-            _write_start(ports["peripheral"], nonce, core_revision)
+            _write_start(ports["peripheral"], nonce, core_revision, protocol)
             _wait_advertising(
                 ports["peripheral"],
                 nonce,
@@ -327,8 +335,9 @@ def execute_long_pair(
                 pending["peripheral"],
                 captures["peripheral"],
                 deadline,
+                protocol,
             )
-            _write_start(ports["central"], nonce, core_revision)
+            _write_start(ports["central"], nonce, core_revision, protocol)
             stop_event = threading.Event()
             with ThreadPoolExecutor(max_workers=2) as executor:
                 futures = [
@@ -342,6 +351,7 @@ def execute_long_pair(
                         captures[role],
                         deadline,
                         stop_event,
+                        protocol,
                     )
                     for role in ("peripheral", "central")
                 ]

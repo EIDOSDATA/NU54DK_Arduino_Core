@@ -129,6 +129,8 @@ SUITE_GROUPS = {
         ("m29_ble_capability", "nucode.m29.ble_capability"),
         ("m29_ble_long_hil", "nucode.m29.ble_long_peripheral"),
         ("m29_ble_long_hil", "nucode.m29.ble_long_central"),
+        ("m29_ble_long_write_hil", "nucode.m29.ble_long_write_peripheral"),
+        ("m29_ble_long_write_hil", "nucode.m29.ble_long_write_central"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)

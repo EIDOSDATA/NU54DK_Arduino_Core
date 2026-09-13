@@ -13,6 +13,69 @@ namespace nucode::ble::internal::gatt
     {
         return state;
     }
+
+    namespace
+    {
+        /** @brief lock을 잡은 상태에서 transaction slot을 초기화합니다. */
+        void resetPrepareTransaction(PrepareTransaction &transaction) noexcept
+        {
+            transaction.connection = nullptr;
+            transaction.characteristic = nullptr;
+            transaction.generation = 0U;
+            transaction.length = 0U;
+        }
+
+        /** @brief exact native link의 transaction을 찾습니다. */
+        PrepareTransaction *findPrepareTransaction(struct bt_conn *connection) noexcept
+        {
+            for (PrepareTransaction &transaction : serverState().prepare_transactions)
+            {
+                if (transaction.connection == connection)
+                {
+                    return &transaction;
+                }
+            }
+            return nullptr;
+        }
+
+        /** @brief 빈 prepare transaction slot을 찾습니다. */
+        PrepareTransaction *findAvailablePrepareTransaction() noexcept
+        {
+            for (PrepareTransaction &transaction : serverState().prepare_transactions)
+            {
+                if (transaction.connection == nullptr)
+                {
+                    return &transaction;
+                }
+            }
+            return nullptr;
+        }
+    } // namespace
+
+    void clearServerTransaction(struct bt_conn *connection) noexcept
+    {
+        if (connection == nullptr)
+        {
+            return;
+        }
+        k_spinlock_key_t key = k_spin_lock(&serverState().characteristic_value_lock);
+        PrepareTransaction *transaction = findPrepareTransaction(connection);
+        if (transaction != nullptr)
+        {
+            resetPrepareTransaction(*transaction);
+        }
+        k_spin_unlock(&serverState().characteristic_value_lock, key);
+    }
+
+    void clearServerTransactions() noexcept
+    {
+        k_spinlock_key_t key = k_spin_lock(&serverState().characteristic_value_lock);
+        for (PrepareTransaction &transaction : serverState().prepare_transactions)
+        {
+            resetPrepareTransaction(transaction);
+        }
+        k_spin_unlock(&serverState().characteristic_value_lock, key);
+    }
     /** @brief cached characteristic 값을 spinlock 아래 bounded snapshot으로 복사합니다. */
     std::size_t copyCachedValue(const BLECharacteristic &characteristic, void *output,
                                 std::size_t capacity) noexcept
@@ -91,7 +154,7 @@ namespace nucode::ble::internal::gatt
                                  snapshot_length);
     }
 
-    /** @brief peer write를 cached buffer와 bounded main-thread event로 복사합니다. */
+    /** @brief peer write를 link별 prepare 검증 뒤 atomic cached value로 commit합니다. */
     ssize_t serverWrite(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                         const void *buffer, std::uint16_t length, std::uint16_t offset,
                         std::uint8_t flags) noexcept
@@ -105,19 +168,122 @@ namespace nucode::ble::internal::gatt
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
         }
-        if ((flags & (BT_GATT_WRITE_FLAG_PREPARE | BT_GATT_WRITE_FLAG_EXECUTE)) != 0U)
+
+        const std::size_t capacity = GattAccess::capacity(*characteristic);
+        if (length == 0U &&
+            (flags & (BT_GATT_WRITE_FLAG_PREPARE | BT_GATT_WRITE_FLAG_EXECUTE)) != 0U)
         {
-            return BT_GATT_ERR(BT_ATT_ERR_NOT_SUPPORTED);
-        }
-        if (offset > GattAccess::capacity(*characteristic))
-        {
-            return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
-        }
-        if (static_cast<std::size_t>(offset) + length > GattAccess::capacity(*characteristic))
-        {
+            clearServerTransaction(connection);
             return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
         }
+        if (offset > capacity)
+        {
+            clearServerTransaction(connection);
+            return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+        }
+        if (static_cast<std::size_t>(offset) + length > capacity)
+        {
+            clearServerTransaction(connection);
+            return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+        }
+
+        if ((flags & BT_GATT_WRITE_FLAG_PREPARE) != 0U)
+        {
+            if ((flags & (BT_GATT_WRITE_FLAG_CMD | BT_GATT_WRITE_FLAG_EXECUTE)) != 0U)
+            {
+                clearServerTransaction(connection);
+                return BT_GATT_ERR(BT_ATT_ERR_NOT_SUPPORTED);
+            }
+            const std::uint32_t generation =
+                static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
+            k_spinlock_key_t key = k_spin_lock(&serverState().characteristic_value_lock);
+            PrepareTransaction *transaction = findPrepareTransaction(connection);
+            if (transaction != nullptr && transaction->generation != generation)
+            {
+                resetPrepareTransaction(*transaction);
+                transaction = nullptr;
+            }
+            if (transaction != nullptr && transaction->characteristic != characteristic)
+            {
+                resetPrepareTransaction(*transaction);
+                k_spin_unlock(&serverState().characteristic_value_lock, key);
+                return BT_GATT_ERR(BT_ATT_ERR_PREPARE_QUEUE_FULL);
+            }
+            if (transaction != nullptr && offset == 0U)
+            {
+                resetPrepareTransaction(*transaction);
+                transaction = nullptr;
+            }
+            if (transaction == nullptr)
+            {
+                if (offset != 0U)
+                {
+                    k_spin_unlock(&serverState().characteristic_value_lock, key);
+                    return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+                }
+                transaction = findAvailablePrepareTransaction();
+                if (transaction == nullptr)
+                {
+                    k_spin_unlock(&serverState().characteristic_value_lock, key);
+                    return BT_GATT_ERR(BT_ATT_ERR_PREPARE_QUEUE_FULL);
+                }
+                transaction->connection = connection;
+                transaction->characteristic = characteristic;
+                transaction->generation = generation;
+            }
+            if (offset != transaction->length)
+            {
+                resetPrepareTransaction(*transaction);
+                k_spin_unlock(&serverState().characteristic_value_lock, key);
+                return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+            }
+            transaction->length = static_cast<std::uint16_t>(offset + length);
+            k_spin_unlock(&serverState().characteristic_value_lock, key);
+            return 0;
+        }
+
+        if ((flags & BT_GATT_WRITE_FLAG_EXECUTE) != 0U)
+        {
+            if ((flags & BT_GATT_WRITE_FLAG_CMD) != 0U)
+            {
+                clearServerTransaction(connection);
+                return BT_GATT_ERR(BT_ATT_ERR_NOT_SUPPORTED);
+            }
+            const std::uint32_t generation =
+                static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
+            k_spinlock_key_t key = k_spin_lock(&serverState().characteristic_value_lock);
+            PrepareTransaction *transaction = findPrepareTransaction(connection);
+            if (transaction == nullptr || transaction->characteristic != characteristic ||
+                transaction->generation != generation || offset != 0U)
+            {
+                if (transaction != nullptr)
+                {
+                    resetPrepareTransaction(*transaction);
+                }
+                k_spin_unlock(&serverState().characteristic_value_lock, key);
+                return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+            }
+            if (transaction->length != length)
+            {
+                resetPrepareTransaction(*transaction);
+                k_spin_unlock(&serverState().characteristic_value_lock, key);
+                return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+            }
+            ::memcpy(GattAccess::value(*characteristic), buffer, length);
+            GattAccess::setLength(*characteristic, length);
+            resetPrepareTransaction(*transaction);
+            k_spin_unlock(&serverState().characteristic_value_lock, key);
+            queueServerEvent(*characteristic, BLECharacteristicEvent::written, buffer, length, 0U,
+                             false, 0, connection);
+            return length;
+        }
+
         k_spinlock_key_t key = k_spin_lock(&serverState().characteristic_value_lock);
+        if (findPrepareTransaction(connection) != nullptr)
+        {
+            k_spin_unlock(&serverState().characteristic_value_lock, key);
+            return BT_GATT_ERR(BT_ATT_ERR_PREPARE_QUEUE_FULL);
+        }
         if (length != 0U)
         {
             ::memcpy(GattAccess::value(*characteristic) + offset, buffer, length);

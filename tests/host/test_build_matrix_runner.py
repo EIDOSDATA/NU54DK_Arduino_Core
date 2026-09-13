@@ -50,7 +50,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.2.0": 10,
                 "v0.3.0": 19,
                 "v0.4.0": 35,
-                "v0.5.0": 23,
+                "v0.5.0": 25,
             },
         )
         flattened = tuple(

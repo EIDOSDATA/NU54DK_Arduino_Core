@@ -528,7 +528,7 @@ namespace nucode::ble::internal::gatt
         }
     }
 
-    bool validClientPayload(ClientState &state, std::size_t length) noexcept
+    bool validWriteCommandPayload(ClientState &state, std::size_t length) noexcept
     {
         struct bt_conn *connection = nucode::ble::internal::referenceConnection(
             state.connection_handle);
@@ -858,8 +858,9 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        if (!validClientPayload(*state, length))
+        if (length > maximum_value_length)
         {
+            internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
         }
         if (!atomic_cas(&state->client_busy_value, 0, 1))
@@ -931,7 +932,7 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        if (!validClientPayload(*state, length))
+        if (!validWriteCommandPayload(*state, length))
         {
             return false;
         }

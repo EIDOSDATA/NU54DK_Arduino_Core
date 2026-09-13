@@ -210,6 +210,7 @@ namespace nucode::ble::internal
                 }
                 const BLECharacteristicEventInfo event = {
                     .event = record.server_event,
+                    .connection = record.connection,
                     .data = record.length == 0U ? nullptr : record.data,
                     .length = record.length,
                     .offset = record.offset,
@@ -296,6 +297,7 @@ namespace nucode::ble::internal
 
     void gattDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
+        clearServerTransaction(connection);
         ClientState *matched = nullptr;
         for (ClientState &client : clientStates())
         {
@@ -331,6 +333,7 @@ namespace nucode::ble::internal
     {
         atomic_inc(&sessionState().gatt_session_generation);
         k_msgq_purge(&gattEventQueue());
+        clearServerTransactions();
         for (ClientState &client : clientStates())
         {
             static_cast<void>(clearClientState(client));

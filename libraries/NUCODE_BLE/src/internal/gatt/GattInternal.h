@@ -281,12 +281,30 @@ namespace nucode::ble::internal::gatt
     /** @brief 사용된 server 경로만 slot 저장소를 참조하도록 별도로 소유합니다. */
     using ServiceSlots = ServiceSlot[maximum_services];
     ServiceSlots &serviceSlots() noexcept;
+    inline constexpr std::size_t maximum_prepare_transactions = 2U;
+
+    /** @brief link 하나의 long write prepare 범위를 고정 상태로 소유합니다. */
+    struct PrepareTransaction
+    {
+        struct bt_conn *connection = nullptr;
+        BLECharacteristic *characteristic = nullptr;
+        std::uint32_t generation = 0U;
+        std::uint16_t length = 0U;
+    };
+
     /** @brief server 값 snapshot lock 상태입니다. */
     struct ServerState
     {
         struct k_spinlock characteristic_value_lock;
+        PrepareTransaction prepare_transactions[maximum_prepare_transactions] = {};
     };
     ServerState &serverState() noexcept;
+
+    /** @brief 해제된 link의 prepare transaction을 상수 시간에 폐기합니다. */
+    void clearServerTransaction(struct bt_conn *connection) noexcept;
+
+    /** @brief image session의 모든 prepare transaction을 폐기합니다. */
+    void clearServerTransactions() noexcept;
     /** @brief GATT image session generation 상태입니다. */
     struct SessionState
     {
@@ -411,7 +429,7 @@ namespace nucode::ble::internal::gatt
         }
         if (hasPermission(permissions, BLEPermission::write))
         {
-            result |= BT_GATT_PERM_WRITE;
+            result |= BT_GATT_PERM_WRITE | BT_GATT_PERM_PREPARE_WRITE;
         }
         return result;
     }

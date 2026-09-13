@@ -72,6 +72,7 @@ namespace nucode::ble
     struct BLECharacteristicEventInfo
     {
         BLECharacteristicEvent event;
+        BLEConnectionHandle connection;
         const std::uint8_t *data;
         std::size_t length;
         std::size_t offset;
@@ -311,10 +312,10 @@ namespace nucode::ble
         /** @brief 지정 link에서 최대 512 byte long read를 시작합니다. */
         [[nodiscard]] bool read(BLEConnectionHandle connection) noexcept;
 
-        /** @brief response가 있는 bounded write를 시작합니다. */
+        /** @brief response가 있는 최대 512 byte long/reliable write를 시작합니다. */
         [[nodiscard]] bool write(const void *data, std::size_t length) noexcept;
 
-        /** @brief 지정 link에서 response가 있는 bounded write를 시작합니다. */
+        /** @brief 지정 link에서 최대 512 byte long/reliable write를 시작합니다. */
         [[nodiscard]] bool write(BLEConnectionHandle connection, const void *data,
                                  std::size_t length) noexcept;
 

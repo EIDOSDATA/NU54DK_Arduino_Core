@@ -1,6 +1,7 @@
 /** @file @brief 실제 GAP/GATT의 등록·전송·session과 지연 callback을 검증합니다. */
 #include <NUCODE_BLE_GATT.h>
 #include <internal/NUCODE_BLE_Internal.h>
+#include <internal/gatt/GattInternal.h>
 #include <gatt_mock.h>
 #include <array>
 #include <cstring>
@@ -31,10 +32,13 @@ constexpr BLEProperty properties = BLEProperty::read | BLEProperty::write |
 BLEService service(BLEUuid(std::uint16_t{0x180A}));
 BLEService second_service(BLEUuid(std::uint16_t{0x180F}));
 BLECharacteristic characteristic(BLEUuid(std::uint16_t{0x2A29}), properties,
-                                 BLEPermission::read | BLEPermission::write, 20);
+                                 BLEPermission::read | BLEPermission::write, 512);
+BLECharacteristic alternate_characteristic(BLEUuid(std::uint16_t{0x2A24}), BLEProperty::write,
+                                           BLEPermission::write, 512);
 BLECharacteristic second_characteristic(BLEUuid(std::uint16_t{0x2A19}), BLEProperty::read,
                                         BLEPermission::read, 20);
 std::array<unsigned, 16> server_events{}, client_events{};
+BLEConnectionHandle observed_server_connection;
 std::array<std::uint8_t, 512> observed_data{};
 std::size_t observed_length = 0;
 std::array<BLEConnectionHandle, 2> observed_handles{};
@@ -45,6 +49,7 @@ bool reenter = false;
 void serverObserved(BLECharacteristic &, const BLECharacteristicEventInfo &event, void *)
 {
     ++server_events[static_cast<unsigned>(event.event)];
+    observed_server_connection = event.connection;
     if (event.data != nullptr)
     {
         observed_length = event.length;
@@ -162,6 +167,7 @@ int main(int argc, char **argv)
     assert(argc == 2);
     const char *scenario = argv[1];
     assert(service.addCharacteristic(characteristic));
+    assert(service.addCharacteristic(alternate_characteristic));
     assert(BLEDevice.addService(service));
     if (std::strcmp(scenario, "registration_failure") == 0)
     {
@@ -180,6 +186,7 @@ int main(int argc, char **argv)
     characteristic.onEvent(serverObserved, nullptr);
     BLEClient.onEvent(clientObserved, nullptr);
     if (std::strcmp(scenario, "m29_long_parallel") == 0 ||
+        std::strcmp(scenario, "m29_long_write") == 0 ||
         std::strcmp(scenario, "client_reentrant_end") == 0)
     {
         BLEClient.onDetailedEvent(detailedClientObserved, nullptr);
@@ -200,9 +207,11 @@ int main(int argc, char **argv)
         std::uint8_t output[4]{};
         assert(attribute->read(connection, attribute, output, 4, 1) == 3);
         assert(output[0] == 2);
-        assert(attribute->write(connection, attribute, payload, 4, 0, BT_GATT_WRITE_FLAG_PREPARE) ==
-               -6);
-        assert(attribute->write(connection, attribute, payload, 4, 19, 0) == -13);
+        assert(attribute->write(connection, attribute, payload, 4, 0,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(connection, attribute, payload, 4, 0,
+                                BT_GATT_WRITE_FLAG_EXECUTE) == 4);
+        assert(attribute->write(connection, attribute, payload, 4, 510, 0) == -13);
     }
     else if (std::strcmp(scenario, "server_overflow") == 0 ||
              std::strcmp(scenario, "server_reentrant") == 0)
@@ -371,6 +380,127 @@ int main(int argc, char **argv)
         assert(detailed_events[1][static_cast<unsigned>(BLEGattClientEvent::operation_failed)] ==
                1U);
         assert(BLEDevice.lastError() == BLEError::value_overflow);
+    }
+    else if (std::strcmp(scenario, "m29_long_write") == 0)
+    {
+        observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+        assert(observed_handles[0].valid());
+        assert(BLEAdvertising.clear() && BLEAdvertising.start());
+        mock_conn_callbacks->connected(&mock_connections[1], 0);
+        BLEDevice.poll();
+        observed_handles[1] = BLEConnection.handle(BLELinkRole::peripheral);
+        assert(observed_handles[1].valid() && observed_handles[1] != observed_handles[0]);
+        discoverLink(observed_handles[0], 0U, 1U);
+        discoverLink(observed_handles[1], 1U, 21U);
+
+        std::array<std::uint8_t, 512> first{};
+        std::array<std::uint8_t, 512> second{};
+        for (std::size_t index = 0U; index < first.size(); ++index)
+        {
+            first[index] = static_cast<std::uint8_t>((index * 3U) & 0xffU);
+            second[index] = static_cast<std::uint8_t>((index * 5U + 0x31U) & 0xffU);
+        }
+        assert(BLEClient.write(observed_handles[0], first.data(), first.size()));
+        assert(BLEClient.write(observed_handles[1], second.data(), second.size()));
+        auto *first_write = mock_writes[0];
+        auto *second_write = mock_writes[1];
+        assert(first_write != nullptr && second_write != nullptr && first_write != second_write);
+        assert(first_write->length == 512U && second_write->length == 512U);
+        first[0] ^= 0xffU;
+        second[0] ^= 0xffU;
+        assert(static_cast<const std::uint8_t *>(first_write->data)[0] != first[0]);
+        assert(static_cast<const std::uint8_t *>(second_write->data)[0] != second[0]);
+        second_write->func(&mock_connections[1], 0U, second_write);
+        first_write->func(&mock_connections[0], 0U, first_write);
+        BLEDevice.poll();
+        assert(detailed_events[0][static_cast<unsigned>(BLEGattClientEvent::write_complete)] == 1U);
+        assert(detailed_events[1][static_cast<unsigned>(BLEGattClientEvent::write_complete)] == 1U);
+        std::array<std::uint8_t, 513> oversized{};
+        assert(!BLEClient.write(observed_handles[0], oversized.data(), oversized.size()));
+        assert(BLEDevice.lastError() == BLEError::value_overflow);
+        assert(!BLEClient.writeWithoutResponse(observed_handles[0], first.data(), first.size()));
+
+        const auto *alternate_attribute = &mock_services[0]->attrs[5];
+        assert((attribute->perm & BT_GATT_PERM_PREPARE_WRITE) != 0U);
+        assert((alternate_attribute->perm & BT_GATT_PERM_PREPARE_WRITE) != 0U);
+        const std::array<std::uint8_t, 4> seed{9U, 8U, 7U, 6U};
+        assert(characteristic.setValue(seed.data(), seed.size()));
+        std::array<std::uint8_t, 512> before{};
+        assert(characteristic.readValue(before.data(), before.size()) == seed.size());
+
+        first[0] ^= 0xffU;
+        second[0] ^= 0xffU;
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 242U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[1], attribute, second.data(), 242U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data() + 242U, 242U, 242U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[1], attribute, second.data() + 242U, 242U, 242U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data() + 484U, 28U, 484U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[1], attribute, second.data() + 484U, 28U, 484U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(characteristic.readValue(before.data(), before.size()) == seed.size());
+        assert(std::memcmp(before.data(), seed.data(), seed.size()) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 512U, 0U,
+                                BT_GATT_WRITE_FLAG_EXECUTE) == 512);
+        assert(attribute->write(&mock_connections[1], attribute, second.data(), 512U, 0U,
+                                BT_GATT_WRITE_FLAG_EXECUTE) == 512);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::written)] == 2U);
+        assert(observed_server_connection == observed_handles[1]);
+        assert(characteristic.readValue(before.data(), before.size()) == second.size());
+        assert(before == second);
+
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 242U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data() + 243U, 20U, 243U,
+                                BT_GATT_WRITE_FLAG_PREPARE) ==
+               BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET));
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 512U, 0U,
+                                BT_GATT_WRITE_FLAG_EXECUTE) ==
+               BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET));
+        assert(characteristic.readValue(before.data(), before.size()) == second.size());
+        assert(before == second);
+
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 242U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data() + 484U, 29U, 484U,
+                                BT_GATT_WRITE_FLAG_PREPARE) ==
+               BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN));
+        assert(attribute->write(&mock_connections[0], alternate_attribute, first.data(), 10U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 10U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) ==
+               BT_GATT_ERR(BT_ATT_ERR_PREPARE_QUEUE_FULL));
+        assert(characteristic.readValue(before.data(), before.size()) == second.size());
+        assert(before == second);
+
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 10U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 11U, 0U,
+                                BT_GATT_WRITE_FLAG_EXECUTE) ==
+               BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN));
+        assert(characteristic.readValue(before.data(), before.size()) == second.size());
+        assert(before == second);
+
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 10U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        nucode::ble::internal::gatt::clearServerTransaction(&mock_connections[0]);
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 10U, 0U,
+                                BT_GATT_WRITE_FLAG_EXECUTE) ==
+               BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET));
+        assert(characteristic.readValue(before.data(), before.size()) == second.size());
+        assert(before == second);
+
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 512U, 0U,
+                                BT_GATT_WRITE_FLAG_PREPARE) == 0);
+        assert(attribute->write(&mock_connections[0], attribute, first.data(), 512U, 0U,
+                                BT_GATT_WRITE_FLAG_EXECUTE) == 512);
+        assert(characteristic.readValue(before.data(), before.size()) == first.size());
+        assert(before == first);
     }
     else if (std::strcmp(scenario, "client_reentrant_end") == 0)
     {

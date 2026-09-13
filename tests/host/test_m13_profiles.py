@@ -100,6 +100,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "GAPPeripheral",
                 "LongGattCentral",
                 "LongGattPeripheral",
+                "ReliableWriteCentral",
+                "ReliableWritePeripheral",
                 "MixedRoleLinks",
                 "ExtendedAdvertising",
                 "ExtendedScanner",
