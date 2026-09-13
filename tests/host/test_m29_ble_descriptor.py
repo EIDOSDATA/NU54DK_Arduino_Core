@@ -96,6 +96,7 @@ class M29BleDescriptorTests(unittest.TestCase):
             "authorization_allowed_events != 401U",
             "completed_reads != required_iterations",
             "BLEClient.readMultiple(connection_handle, descriptor_handles, descriptor_count)",
+            "phase == Phase::rejecting && driver_error == -EIO",
         ):
             self.assertIn(token, target)
         self.assertIn('PROTOCOL = "M29W04|1"', runner)

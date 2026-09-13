@@ -10,6 +10,7 @@
 
 #include <zephyr/kernel.h>
 
+#include <cerrno>
 #include <cstddef>
 #include <cstdint>
 #include <string.h>
@@ -544,7 +545,15 @@ namespace
         }
         if (information.event == nucode::ble::BLEEvent::error)
         {
-            fail("gap_error", BLEDevice.lastDriverError());
+            const int driver_error = BLEDevice.lastDriverError();
+#if defined(NUCODE_M29_DESCRIPTOR_CENTRAL)
+            /** @brief 예상 ATT 거부는 뒤따르는 상세 event에서 error code까지 판정합니다. */
+            if (phase == Phase::rejecting && driver_error == -EIO)
+            {
+                return;
+            }
+#endif
+            fail("gap_error", driver_error);
             return;
         }
         if (information.event == nucode::ble::BLEEvent::connected)
