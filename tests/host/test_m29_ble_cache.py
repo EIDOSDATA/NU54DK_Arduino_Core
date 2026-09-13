@@ -95,6 +95,14 @@ class M29BleCacheTests(unittest.TestCase):
             self.assertIn(token, self.cache)
         self.assertIn("remote_database_hash[GattDatabase::hash_length]", self.internal)
 
+    def test_remote_properties_use_explicit_zephyr_conversion(self) -> None:
+        """! @brief Zephyr bit를 공개 enum으로 직접 cast하는 회귀를 차단합니다. """
+
+        self.assertIn("publicProperties(characteristic->properties)", self.cache)
+        self.assertNotIn(
+            "static_cast<BLEProperty>(characteristic->properties)", self.cache
+        )
+
     def test_profile_enables_cache_bond_and_persistent_settings(self) -> None:
         """! @brief production profile에 robust caching과 bond 저장 조건을 검사합니다. """
 

@@ -229,9 +229,33 @@ void completeCachedTarget(bt_conn *connection, std::uint16_t first_handle)
     BLEDevice.poll();
 }
 
+/** @brief CCC가 없는 read/write target을 service 마지막 handle에서 완료합니다. */
+void completeCachedTargetWithoutCcc(bt_conn *connection, std::uint16_t first_handle)
+{
+    bt_gatt_service_val service_value{
+        BT_UUID_GATT_PRIMARY, static_cast<std::uint16_t>(first_handle + 2U)};
+    bt_gatt_attr attribute{};
+    attribute.user_data = &service_value;
+    attribute.handle = first_handle;
+    assert(mock_discovery->type == BT_GATT_DISCOVER_PRIMARY);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+
+    bt_gatt_chrc characteristic_value{
+        BT_UUID_GATT_CHRC, static_cast<std::uint16_t>(first_handle + 2U),
+        static_cast<std::uint8_t>(BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE)};
+    attribute.user_data = &characteristic_value;
+    attribute.handle = static_cast<std::uint16_t>(first_handle + 1U);
+    assert(mock_discovery->type == BT_GATT_DISCOVER_CHARACTERISTIC);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+    BLEDevice.poll();
+}
+
 /** @brief standard Service Changed·Client Features·Database Hash 동기화를 주입합니다. */
 void synchronizeCachedDiscovery(BLEConnectionHandle handle, bt_conn *connection,
-                                bool expect_target, std::uint16_t first_handle = 20U)
+                                bool expect_target, std::uint16_t first_handle = 20U,
+                                bool target_without_ccc = false)
 {
     assert(BLEClient.discoverCached(handle, BLEUuid(std::uint16_t{0x180A}),
                                     BLEUuid(std::uint16_t{0x2A29}), 7U));
@@ -283,7 +307,14 @@ void synchronizeCachedDiscovery(BLEConnectionHandle handle, bt_conn *connection,
     BLEDevice.poll();
     if (expect_target)
     {
-        completeCachedTarget(connection, first_handle);
+        if (target_without_ccc)
+        {
+            completeCachedTargetWithoutCcc(connection, first_handle);
+        }
+        else
+        {
+            completeCachedTarget(connection, first_handle);
+        }
     }
     else
     {
@@ -431,6 +462,17 @@ int main(int argc, char **argv)
         assert(BLEClient.cacheState(handle) == BLEGattCacheState::discovered);
         assert(BLEClient.cacheStatistics().corrupt_rejected == 1U);
         assert(client_events[static_cast<unsigned>(BLEGattClientEvent::cache_restored)] == 0U);
+    }
+    else if (std::strcmp(scenario, "m29_cache_no_ccc") == 0)
+    {
+        const BLEConnectionHandle handle = BLEConnection.handle(BLELinkRole::central);
+        synchronizeCachedDiscovery(handle, connection, true, 20U, true);
+        assert(BLEClient.cacheState(handle) == BLEGattCacheState::discovered);
+        assert(BLEClient.remoteCharacteristic(handle).valueHandle() == 22U);
+        assert(BLEClient.remoteCharacteristic(handle).cccHandle() == 0U);
+        assert(BLEClient.remoteCharacteristic(handle).properties() ==
+               (BLEProperty::read | BLEProperty::write));
+        assert(BLEDevice.lastError() != BLEError::not_connected);
     }
     else if (std::strcmp(scenario, "m29_descriptor_authorization") == 0)
     {

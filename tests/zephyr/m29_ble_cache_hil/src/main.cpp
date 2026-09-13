@@ -205,7 +205,7 @@ namespace
     }
 
     /** @brief 첫 실패를 고정 protocol로 출력하고 추가 동작을 중단합니다. */
-    void fail(const char *stage, int code = 0)
+    void fail(const char *stage, int code = 0, int ble_error = -1)
     {
         if (protocol_finished)
         {
@@ -216,6 +216,11 @@ namespace
         Serial.print(roleName());
         Serial.print("|stage=");
         Serial.print(stage == nullptr ? "unknown" : stage);
+        if (ble_error >= 0)
+        {
+            Serial.print("|ble_error=");
+            Serial.print(ble_error);
+        }
         Serial.print("|code=");
         Serial.print(code);
         printSuffix();
@@ -905,7 +910,8 @@ namespace
         }
         if (information.event == nucode::ble::BLEEvent::error)
         {
-            fail("gap_error", BLEDevice.lastDriverError());
+            fail("gap_error", BLEDevice.lastDriverError(),
+                 static_cast<int>(BLEDevice.lastError()));
             return;
         }
         if (information.event == nucode::ble::BLEEvent::connected)

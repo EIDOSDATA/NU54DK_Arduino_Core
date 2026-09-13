@@ -667,7 +667,7 @@ namespace nucode::ble::internal::gatt
             k_spinlock_key_t key = k_spin_lock(&state->client_state_lock);
             GattAccess::set(state->remote_characteristic, state->target_characteristic_uuid,
                             attribute->handle, characteristic->value_handle,
-                            static_cast<BLEProperty>(characteristic->properties));
+                            publicProperties(characteristic->properties));
             k_spin_unlock(&state->client_state_lock, key);
             atomic_set(&state->cache_stage,
                        static_cast<atomic_val_t>(CacheStage::target_characteristic_found));

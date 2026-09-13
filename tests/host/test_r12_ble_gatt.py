@@ -47,7 +47,7 @@ class BleGattTests(unittest.TestCase):
                              'm29_long_parallel', 'm29_long_write',
                              'm29_descriptor_authorization', 'm29_descriptor_reuse',
                              'm29_cache_restore', 'm29_cache_service_changed',
-                             'm29_cache_corrupt',
+                             'm29_cache_corrupt', 'm29_cache_no_ccc',
                              'client_reentrant_end']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
