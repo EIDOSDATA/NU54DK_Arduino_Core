@@ -3,6 +3,7 @@
 #include <internal/NUCODE_BLE_Internal.h>
 #include <internal/gatt/GattInternal.h>
 #include <gatt_mock.h>
+#include <zephyr/settings/settings.h>
 #include <array>
 #include <cstring>
 #include <iostream>
@@ -16,6 +17,8 @@ static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::read_complete) == 1U
               "기존 client event ordinal을 유지해야 합니다.");
 static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::operation_failed) == 9U,
               "기존 client event ordinal을 유지해야 합니다.");
+static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::read_multiple_complete) == 11U,
+              "W04 client event ordinal을 유지해야 합니다.");
 
 namespace nucode::ble::internal
 {
@@ -52,12 +55,12 @@ BLEDescriptor descriptors[] = {
     BLEDescriptor(BLEUuid(std::uint16_t{0x2905}), BLEPermission::read | BLEPermission::write, 4U),
     BLEDescriptor(BLEUuid(std::uint16_t{0x2906}), BLEPermission::read | BLEPermission::write, 4U),
 };
-std::array<unsigned, 16> server_events{}, client_events{};
+std::array<unsigned, 20> server_events{}, client_events{};
 BLEConnectionHandle observed_server_connection;
 std::array<std::uint8_t, 512> observed_data{};
 std::size_t observed_length = 0;
 std::array<BLEConnectionHandle, 2> observed_handles{};
-std::array<std::array<unsigned, 16>, 2> detailed_events{};
+std::array<std::array<unsigned, 20>, 2> detailed_events{};
 std::array<std::array<std::uint8_t, 512>, 2> detailed_data{};
 std::array<std::size_t, 2> detailed_lengths{};
 bool reenter = false;
@@ -197,6 +200,97 @@ void discoverLink(BLEConnectionHandle handle, unsigned index, std::uint16_t firs
     assert(BLEClient.remoteCharacteristic(handle).valueHandle() == first_handle + 2U);
     assert(BLEClient.remoteCharacteristic(handle).cccHandle() == first_handle + 3U);
 }
+
+/** @brief cache miss 후 target service·characteristic·CCC discovery를 완료합니다. */
+void completeCachedTarget(bt_conn *connection, std::uint16_t first_handle)
+{
+    bt_gatt_service_val service_value{
+        BT_UUID_GATT_PRIMARY, static_cast<std::uint16_t>(first_handle + 11U)};
+    bt_gatt_attr attribute{};
+    attribute.user_data = &service_value;
+    attribute.handle = first_handle;
+    assert(mock_discovery->type == BT_GATT_DISCOVER_PRIMARY);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+
+    bt_gatt_chrc characteristic_value{
+        BT_UUID_GATT_CHRC, static_cast<std::uint16_t>(first_handle + 2U), 0x3eU};
+    attribute.user_data = &characteristic_value;
+    attribute.handle = static_cast<std::uint16_t>(first_handle + 1U);
+    assert(mock_discovery->type == BT_GATT_DISCOVER_CHARACTERISTIC);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+
+    attribute.user_data = nullptr;
+    attribute.handle = static_cast<std::uint16_t>(first_handle + 3U);
+    assert(mock_discovery->type == BT_GATT_DISCOVER_DESCRIPTOR);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+    BLEDevice.poll();
+}
+
+/** @brief standard Service Changed·Client Features·Database Hash 동기화를 주입합니다. */
+void synchronizeCachedDiscovery(BLEConnectionHandle handle, bt_conn *connection,
+                                bool expect_target, std::uint16_t first_handle = 20U)
+{
+    assert(BLEClient.discoverCached(handle, BLEUuid(std::uint16_t{0x180A}),
+                                    BLEUuid(std::uint16_t{0x2A29}), 7U));
+    bt_gatt_service_val gatt_service{BT_UUID_GATT, 8U};
+    bt_gatt_attr attribute{};
+    attribute.user_data = &gatt_service;
+    attribute.handle = 1U;
+    assert(mock_discovery->uuid == BT_UUID_GATT);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+
+    bt_gatt_chrc standard_characteristic{BT_UUID_GATT_SC, 3U, BT_GATT_CHRC_INDICATE};
+    attribute.user_data = &standard_characteristic;
+    attribute.handle = 2U;
+    assert(mock_discovery->uuid == BT_UUID_GATT_SC);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+
+    attribute.user_data = nullptr;
+    attribute.handle = 4U;
+    assert(mock_discovery->uuid == BT_UUID_GATT_CCC);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+    assert(mock_subscription->value_handle == 3U && mock_subscription->ccc_handle == 4U);
+    mock_subscription->subscribe(connection, 0U, mock_subscription);
+    BLEDevice.poll();
+
+    standard_characteristic = {BT_UUID_GATT_CLIENT_FEATURES, 6U, BT_GATT_CHRC_WRITE};
+    attribute.user_data = &standard_characteristic;
+    attribute.handle = 5U;
+    assert(mock_discovery->uuid == BT_UUID_GATT_CLIENT_FEATURES);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+    assert(mock_write->handle == 6U && mock_write->length == 1U);
+    assert(*static_cast<const std::uint8_t *>(mock_write->data) == 1U);
+    mock_write->func(connection, 0U, mock_write);
+    BLEDevice.poll();
+
+    standard_characteristic = {BT_UUID_GATT_DB_HASH, 8U, BT_GATT_CHRC_READ};
+    attribute.user_data = &standard_characteristic;
+    attribute.handle = 7U;
+    assert(mock_discovery->uuid == BT_UUID_GATT_DB_HASH);
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+    assert(mock_read->single.handle == 8U && mock_read->handle_count == 1U);
+    assert(mock_read->func(connection, 0U, mock_read, mock_database_hash,
+                           sizeof(mock_database_hash)) == BT_GATT_ITER_CONTINUE);
+    assert(mock_read->func(connection, 0U, mock_read, nullptr, 0U) == BT_GATT_ITER_STOP);
+    BLEDevice.poll();
+    if (expect_target)
+    {
+        completeCachedTarget(connection, first_handle);
+    }
+    else
+    {
+        BLEDevice.poll();
+        assert(!BLEClient.busy(handle));
+    }
+}
 int main(int argc, char **argv)
 {
     assert(argc == 2);
@@ -228,6 +322,12 @@ int main(int argc, char **argv)
     assert(service.addCharacteristic(characteristic));
     assert(service.addCharacteristic(alternate_characteristic));
     assert(BLEDevice.addService(service));
+    const bool cache_scenario = std::strncmp(scenario, "m29_cache_", 10U) == 0;
+    if (cache_scenario)
+    {
+        assert(BLEGattDatabase.setRevision(0x10203040U));
+        assert(BLEGattDatabase.revision() == 0x10203040U);
+    }
     if (std::strcmp(scenario, "registration_failure") == 0)
     {
         assert(second_service.addCharacteristic(second_characteristic));
@@ -257,12 +357,82 @@ int main(int argc, char **argv)
         BLEClient.onDetailedEvent(detailedClientObserved, nullptr);
     }
     assert(BLEDevice.begin("gatt"));
+    if (cache_scenario)
+    {
+        std::uint8_t local_hash[GattDatabase::hash_length]{};
+        assert(BLEGattDatabase.hash(local_hash));
+        assert(std::memcmp(local_hash, mock_database_hash, sizeof(local_hash)) == 0);
+        assert(std::strcmp(mock_settings_saved_key, "nucode/gatt/database_identity") == 0);
+        assert(mock_settings_saved_length == 28U);
+        assert(mock_settings_saved_value[8] == 0x40U &&
+               mock_settings_saved_value[9] == 0x30U &&
+               mock_settings_saved_value[10] == 0x20U &&
+               mock_settings_saved_value[11] == 0x10U);
+    }
     assert(!service.addCharacteristic(second_characteristic));
     connect();
     auto *connection = &mock_connections[0];
     const auto *attribute = &mock_services[0]->attrs[2];
     std::uint8_t payload[]{1, 2, 3, 4};
-    if (std::strcmp(scenario, "m29_descriptor_authorization") == 0)
+    if (std::strcmp(scenario, "m29_cache_restore") == 0)
+    {
+        BLEConnectionHandle handle = BLEConnection.handle(BLELinkRole::central);
+        synchronizeCachedDiscovery(handle, connection, true, 20U);
+        assert(BLEClient.cacheState(handle) == BLEGattCacheState::discovered);
+        assert(BLEClient.remoteCharacteristic(handle).valueHandle() == 22U);
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::cache_saved)] == 1U);
+        mock_conn_callbacks->disconnected(connection, 0x13U);
+        BLEDevice.poll();
+        connect(1U);
+        connection = &mock_connections[1];
+        handle = BLEConnection.handle(BLELinkRole::central);
+        synchronizeCachedDiscovery(handle, connection, false);
+        assert(BLEClient.cacheState(handle) == BLEGattCacheState::restored);
+        assert(BLEClient.remoteCharacteristic(handle).valueHandle() == 22U);
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::cache_restored)] == 1U);
+        const BLEGattCacheStatistics statistics = BLEClient.cacheStatistics();
+        assert(statistics.saved == 1U && statistics.restored == 1U);
+    }
+    else if (std::strcmp(scenario, "m29_cache_service_changed") == 0)
+    {
+        const BLEConnectionHandle handle = BLEConnection.handle(BLELinkRole::central);
+        synchronizeCachedDiscovery(handle, connection, true, 20U);
+        const std::uint16_t old_handle = BLEClient.remoteCharacteristic(handle).valueHandle();
+        for (std::size_t index = 0U; index < sizeof(mock_database_hash); ++index)
+        {
+            mock_database_hash[index] ^= 0x5aU;
+        }
+        const std::uint8_t changed_range[]{0x01U, 0x00U, 0xffU, 0xffU};
+        assert(mock_subscription->notify(connection, mock_subscription, changed_range,
+                                         sizeof(changed_range)) == BT_GATT_ITER_CONTINUE);
+        BLEDevice.poll();
+        assert(!BLEClient.discovered(handle));
+        assert(mock_read->func(connection, 0U, mock_read, mock_database_hash,
+                               sizeof(mock_database_hash)) == BT_GATT_ITER_CONTINUE);
+        assert(mock_read->func(connection, 0U, mock_read, nullptr, 0U) ==
+               BT_GATT_ITER_STOP);
+        BLEDevice.poll();
+        completeCachedTarget(connection, 40U);
+        assert(BLEClient.cacheState(handle) == BLEGattCacheState::discovered);
+        assert(BLEClient.remoteCharacteristic(handle).valueHandle() == 42U);
+        assert(BLEClient.remoteCharacteristic(handle).valueHandle() != old_handle);
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::service_changed)] == 1U);
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::cache_invalidated)] == 1U);
+        assert(BLEClient.cacheStatistics().invalidated == 1U);
+    }
+    else if (std::strcmp(scenario, "m29_cache_corrupt") == 0)
+    {
+        std::uint8_t corrupt_record[84]{};
+        std::memset(corrupt_record, 0xa5, sizeof(corrupt_record));
+        assert(settings_save_one("nucode/gatt/cache/0", corrupt_record,
+                                 sizeof(corrupt_record)) == 0);
+        const BLEConnectionHandle handle = BLEConnection.handle(BLELinkRole::central);
+        synchronizeCachedDiscovery(handle, connection, true, 20U);
+        assert(BLEClient.cacheState(handle) == BLEGattCacheState::discovered);
+        assert(BLEClient.cacheStatistics().corrupt_rejected == 1U);
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::cache_restored)] == 0U);
+    }
+    else if (std::strcmp(scenario, "m29_descriptor_authorization") == 0)
     {
         const BLEConnectionHandle handle = BLEConnection.handle(BLELinkRole::central);
         assert(handle.valid());

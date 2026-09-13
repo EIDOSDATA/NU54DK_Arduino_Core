@@ -204,6 +204,10 @@ namespace nucode::ble
         }
         if (result == 0)
         {
+            result = internal::recordGattDatabaseIdentity();
+        }
+        if (result == 0)
+        {
             result = bt_set_name(name);
         }
         if (result < 0)

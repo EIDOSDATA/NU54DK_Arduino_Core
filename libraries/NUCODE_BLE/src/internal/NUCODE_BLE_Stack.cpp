@@ -114,6 +114,12 @@ namespace nucode::ble::internal
         return 0;
     }
 
+    /** @brief M29 GATT cache가 링크되기 전에는 database identity를 기록하지 않습니다. */
+    __weak int recordGattDatabaseIdentity() noexcept
+    {
+        return 0;
+    }
+
     /** @brief M20이 링크되기 전에는 custom GATT schema가 없습니다. */
     __weak bool hasGattSchema() noexcept
     {

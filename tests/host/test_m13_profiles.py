@@ -117,6 +117,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "PerLinkControl",
                 "CustomGattCentral",
                 "CustomGattPeripheral",
+                "GattCacheCentral",
+                "GattCachePeripheral",
                 "SecureKeyboard",
                 "FabricCapabilities",
             },
@@ -335,6 +337,8 @@ class M13ProfileContractTests(unittest.TestCase):
             "GAPPeripheral",
             "CustomGattCentral",
             "CustomGattPeripheral",
+            "GattCacheCentral",
+            "GattCachePeripheral",
             "SecureKeyboard",
         ):
             self.assertIn(name, encoded)

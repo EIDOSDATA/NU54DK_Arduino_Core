@@ -137,6 +137,11 @@ inline const bt_addr_le_t *bt_conn_get_dst(const bt_conn *connection)
 {
     return &connection->peer;
 }
+inline bool mock_bond_exists = true;
+inline bool bt_le_bond_exists(std::uint8_t, const bt_addr_le_t *)
+{
+    return mock_bond_exists;
+}
 inline bt_conn_le_data_len_info mock_data_lengths[4]{};
 inline int bt_conn_get_info(bt_conn *connection, bt_conn_info *info)
 {

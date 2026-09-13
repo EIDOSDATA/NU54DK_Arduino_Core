@@ -1419,7 +1419,7 @@ def test_m28_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
     )
 
 
-## @brief M29 link별 long GATT 예제를 BLE profile로 빌드합니다.
+## @brief M29 GATT와 bonded cache 예제를 BLE profile로 끝까지 빌드합니다.
 def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     test_ble_examples(
         cli,
@@ -1435,6 +1435,36 @@ def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             "GattAuthorization",
         ),
     )
+    for example_name in ("GattCachePeripheral", "GattCacheCentral"):
+        security_sketch = (
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Security"
+            / "examples"
+            / example_name
+        )
+        if not (security_sketch / f"{example_name}.ino").is_file():
+            raise SmokeFailure(f"incomplete M29 GATT cache example: {security_sketch}")
+        security_build = root / f"build-ble-{example_name.lower()}"
+        security_command = list(
+            compile_command(cli, config, security_build, security_sketch)
+        )
+        security_command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(security_command)
+        security_context = assert_build(security_build, f"{example_name}.ino")
+        if security_context.get("profile") != "ble":
+            raise SmokeFailure(
+                f"M29 GATT cache example did not use BLE profile: {security_sketch}"
+            )
+        security_features = {
+            item.get("id")
+            for item in security_context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if "nucode.ble.security" not in security_features:
+            raise SmokeFailure(
+                f"BLE security feature was not selected: {security_sketch}"
+            )
 
 
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
@@ -1498,7 +1528,11 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "GattDescriptors",
             "GattAuthorization",
         },
-        "NUCODE BLE Security": {"SecureKeyboard"},
+        "NUCODE BLE Security": {
+            "GattCacheCentral",
+            "GattCachePeripheral",
+            "SecureKeyboard",
+        },
     }
     discovered: dict[str, set[str]] = {}
     for record in records:

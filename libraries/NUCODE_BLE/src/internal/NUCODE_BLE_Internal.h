@@ -77,6 +77,9 @@ namespace nucode::ble::internal
     /** @brief GATT database를 stack 시작 전 고정 자원에 등록합니다. */
     int prepareGattDatabase() noexcept;
 
+    /** @brief settings load 후 application revision·실제 database hash를 기록합니다. */
+    int recordGattDatabaseIdentity() noexcept;
+
     /** @brief generic GATT schema가 있는지 반환합니다. */
     bool hasGattSchema() noexcept;
 

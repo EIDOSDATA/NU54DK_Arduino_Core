@@ -39,6 +39,7 @@ namespace nucode::ble::internal::gatt
             client.read_multiple = false;
             clearClientOperationToken(client);
             clearClientSubscriptionToken(client);
+            clearClientCacheState(client);
             return had_handles;
         }
 
@@ -272,6 +273,7 @@ namespace nucode::ble::internal
             }
         }
         progressClientDiscovery();
+        progressGattCache();
     }
 
     void gattConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept

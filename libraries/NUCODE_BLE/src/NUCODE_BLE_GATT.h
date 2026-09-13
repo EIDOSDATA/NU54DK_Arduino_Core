@@ -380,6 +380,48 @@ namespace nucode::ble
         operation_failed,
         descriptor_discovery_complete,
         read_multiple_complete,
+        database_hash_read,
+        cache_restored,
+        cache_saved,
+        service_changed,
+        cache_invalidated,
+    };
+
+    /** @brief link별 robust GATT cache의 현재 상태입니다. */
+    enum class BLEGattCacheState : std::uint8_t
+    {
+        idle,
+        synchronizing,
+        restored,
+        discovered,
+        invalidated,
+        failed,
+    };
+
+    /** @brief image 수명 동안 누적한 bounded GATT cache 통계입니다. */
+    struct BLEGattCacheStatistics
+    {
+        std::uint32_t restored = 0U;
+        std::uint32_t saved = 0U;
+        std::uint32_t invalidated = 0U;
+        std::uint32_t corrupt_rejected = 0U;
+        std::uint32_t stale_handle_rejected = 0U;
+    };
+
+    /** @brief application revision과 표준 16-byte database hash를 관리합니다. */
+    class GattDatabase final
+    {
+      public:
+        static constexpr std::size_t hash_length = 16U;
+
+        /** @brief Bluetooth 시작 전 비영인 32-bit database revision을 고정합니다. */
+        [[nodiscard]] bool setRevision(std::uint32_t revision) noexcept;
+
+        /** @brief 현재 application database revision을 반환합니다. */
+        [[nodiscard]] std::uint32_t revision() const noexcept;
+
+        /** @brief 등록된 실제 GATT database hash를 16 byte로 복사합니다. */
+        [[nodiscard]] bool hash(std::uint8_t output[hash_length]) const noexcept;
     };
 
     /** @brief GATT operation이 사용한 ATT bearer 종류입니다. */
@@ -421,6 +463,16 @@ namespace nucode::ble
         /** @brief 지정 link에서 exact service와 characteristic UUID discovery를 시작합니다. */
         [[nodiscard]] bool discover(BLEConnectionHandle connection, const BLEUuid &service_uuid,
                                     const BLEUuid &characteristic_uuid) noexcept;
+
+        /**
+         * @brief bonded identity의 database hash를 확인한 뒤 cache 복원 또는 discovery를
+         * 시작합니다.
+         * @param schema_version Sketch가 관리하는 비영인 cache schema version입니다.
+         */
+        [[nodiscard]] bool discoverCached(BLEConnectionHandle connection,
+                                          const BLEUuid &service_uuid,
+                                          const BLEUuid &characteristic_uuid,
+                                          std::uint16_t schema_version = 1U) noexcept;
 
         /** @brief remote service와 characteristic discovery가 완료됐는지 반환합니다. */
         [[nodiscard]] bool discovered() const noexcept;
@@ -520,6 +572,15 @@ namespace nucode::ble
         /** @brief 지정 link의 마지막 remote ATT 오류 byte를 반환합니다. */
         [[nodiscard]] std::uint8_t lastAttError(BLEConnectionHandle connection) const noexcept;
 
+        /** @brief 지정 link의 robust cache 상태를 반환합니다. */
+        [[nodiscard]] BLEGattCacheState cacheState(BLEConnectionHandle connection) const noexcept;
+
+        /** @brief 지정 link와 peer identity의 handle cache를 fail-closed로 폐기합니다. */
+        [[nodiscard]] bool invalidateCache(BLEConnectionHandle connection) noexcept;
+
+        /** @brief image 수명 동안의 robust cache 통계 복사본을 반환합니다. */
+        [[nodiscard]] BLEGattCacheStatistics cacheStatistics() const noexcept;
+
         /** @brief main-thread generic client callback을 등록합니다. */
         void onEvent(BLEGattClientCallback callback, void *context = nullptr) noexcept;
 
@@ -532,5 +593,8 @@ namespace nucode::ble
 
 /** @brief NU54DK의 단일 bounded generic GATT client 객체입니다. */
 extern nucode::ble::GattClient BLEClient;
+
+/** @brief NU54DK의 application revision·database hash 관리 객체입니다. */
+extern nucode::ble::GattDatabase BLEGattDatabase;
 
 #endif

@@ -297,6 +297,13 @@ namespace nucode::ble::internal
             slot.service.attr_count = attribute_index;
         }
 
+        const int cache_result = prepareGattCacheDatabase();
+        if (cache_result < 0)
+        {
+            unlockGattSchema();
+            return cache_result;
+        }
+
         std::size_t registered_count = 0U;
         for (std::size_t service_index = 0U;
              service_index < databaseState().registered_service_count; ++service_index)
@@ -325,6 +332,7 @@ namespace nucode::ble::internal
                         }
                     }
                 }
+                rollbackGattCacheDatabase();
                 unlockGattSchema();
                 return result;
             }

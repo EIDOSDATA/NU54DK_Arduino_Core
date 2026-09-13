@@ -38,6 +38,10 @@ enum
     BT_GATT_DISCOVER_DESCRIPTOR = 4,
     BT_GATT_SUBSCRIBE_FLAG_VOLATILE = 0
 };
+#define BT_UUID_GATT_DB_HASH_VAL 0x2B2A
+#define BT_UUID_GATT_SERVICE_VAL 0x1801
+#define BT_UUID_GATT_SC_VAL 0x2A05
+#define BT_UUID_GATT_CLIENT_FEATURES_VAL 0x2B29
 #define BT_GATT_ERR(value) (-static_cast<int>(value))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 struct bt_uuid
@@ -57,9 +61,18 @@ struct bt_uuid_128
 inline const bt_uuid_16 mock_primary{{BT_UUID_TYPE_16}, 0x2800};
 inline const bt_uuid_16 mock_chrc{{BT_UUID_TYPE_16}, 0x2803};
 inline const bt_uuid_16 mock_ccc{{BT_UUID_TYPE_16}, 0x2902};
+inline const bt_uuid_16 mock_database_hash_uuid{{BT_UUID_TYPE_16}, BT_UUID_GATT_DB_HASH_VAL};
+inline const bt_uuid_16 mock_gatt_service_uuid{{BT_UUID_TYPE_16}, BT_UUID_GATT_SERVICE_VAL};
+inline const bt_uuid_16 mock_service_changed_uuid{{BT_UUID_TYPE_16}, BT_UUID_GATT_SC_VAL};
+inline const bt_uuid_16 mock_client_features_uuid{{BT_UUID_TYPE_16},
+                                                  BT_UUID_GATT_CLIENT_FEATURES_VAL};
 #define BT_UUID_GATT_PRIMARY (&mock_primary.uuid)
 #define BT_UUID_GATT_CHRC (&mock_chrc.uuid)
 #define BT_UUID_GATT_CCC (&mock_ccc.uuid)
+#define BT_UUID_GATT_DB_HASH (&mock_database_hash_uuid.uuid)
+#define BT_UUID_GATT (&mock_gatt_service_uuid.uuid)
+#define BT_UUID_GATT_SC (&mock_service_changed_uuid.uuid)
+#define BT_UUID_GATT_CLIENT_FEATURES (&mock_client_features_uuid.uuid)
 struct bt_gatt_attr
 {
     const bt_uuid *uuid;
@@ -132,6 +145,8 @@ struct bt_gatt_read_params
         bool variable;
     } multiple;
 };
+using bt_gatt_discover_func_t = std::uint8_t (*)(
+    bt_conn *, const bt_gatt_attr *, bt_gatt_discover_params *);
 struct bt_gatt_write_params
 {
     void (*func)(bt_conn *, std::uint8_t, bt_gatt_write_params *);
@@ -151,10 +166,43 @@ inline void atomic_set_bit(int *flags, int bit)
 {
     *flags |= 1 << bit;
 }
+inline std::uint8_t mock_database_hash[16] = {
+    0x10U, 0x11U, 0x12U, 0x13U, 0x14U, 0x15U, 0x16U, 0x17U,
+    0x18U, 0x19U, 0x1aU, 0x1bU, 0x1cU, 0x1dU, 0x1eU, 0x1fU,
+};
+inline ssize_t mock_database_hash_read(bt_conn *, const bt_gatt_attr *, void *output,
+                                       std::uint16_t capacity, std::uint16_t offset)
+{
+    if (offset > sizeof(mock_database_hash))
+    {
+        return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+    }
+    const std::size_t copied =
+        std::min<std::size_t>(capacity, sizeof(mock_database_hash) - offset);
+    std::memcpy(output, mock_database_hash + offset, copied);
+    return static_cast<ssize_t>(copied);
+}
+inline bt_gatt_attr mock_database_hash_attribute{
+    BT_UUID_GATT_DB_HASH, mock_database_hash_read, nullptr, nullptr, 0x0006U, BT_GATT_PERM_READ};
+inline void bt_gatt_foreach_attr(std::uint16_t, std::uint16_t,
+                                 std::uint8_t (*callback)(const bt_gatt_attr *, std::uint16_t,
+                                                          void *),
+                                 void *context)
+{
+    callback(&mock_database_hash_attribute, mock_database_hash_attribute.handle, context);
+}
 inline int mock_registration_calls = 0, mock_unregister_calls = 0, mock_register_fail_at = 0;
+inline bt_gatt_service *mock_revision_service{};
+inline int mock_revision_register_error = 0;
 inline bt_gatt_service *mock_services[4]{};
 inline int bt_gatt_service_register(bt_gatt_service *service)
 {
+    if (service->attr_count == 1U && service->attrs[0].uuid == BT_UUID_GATT_PRIMARY &&
+        service->attrs[0].user_data != nullptr)
+    {
+        mock_revision_service = service;
+        return mock_revision_register_error;
+    }
     ++mock_registration_calls;
     if (mock_registration_calls == mock_register_fail_at)
     {
@@ -163,8 +211,13 @@ inline int bt_gatt_service_register(bt_gatt_service *service)
     mock_services[mock_registration_calls - 1] = service;
     return 0;
 }
-inline int bt_gatt_service_unregister(bt_gatt_service *)
+inline int bt_gatt_service_unregister(bt_gatt_service *service)
 {
+    if (service == mock_revision_service)
+    {
+        mock_revision_service = nullptr;
+        return 0;
+    }
     ++mock_unregister_calls;
     return 0;
 }

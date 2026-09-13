@@ -232,6 +232,12 @@ namespace nucode::ble::internal
             characteristic.ccc_handle_ = handle;
         }
 
+        static std::uint16_t declarationHandle(
+            const BLERemoteCharacteristic &characteristic) noexcept
+        {
+            return characteristic.declaration_handle_;
+        }
+
         static void clear(BLERemoteDescriptor &descriptor) noexcept
         {
             descriptor.uuid_ = BLEUuid{};
@@ -255,8 +261,11 @@ namespace nucode::ble::internal::gatt
     using nucode::ble::BLECharacteristic;
     using nucode::ble::BLECharacteristicEvent;
     using nucode::ble::BLECharacteristicEventInfo;
+    using nucode::ble::BLEAddress;
     using nucode::ble::BLEDescriptor;
     using nucode::ble::BLEError;
+    using nucode::ble::BLEGattCacheState;
+    using nucode::ble::BLEGattCacheStatistics;
     using nucode::ble::BLEGattAuthorizationOperation;
     using nucode::ble::BLEGattAuthorizationRequest;
     using nucode::ble::BLEGattClientCallback;
@@ -269,6 +278,7 @@ namespace nucode::ble::internal::gatt
     using nucode::ble::BLERemoteService;
     using nucode::ble::BLEService;
     using nucode::ble::BLEUuid;
+    using nucode::ble::GattDatabase;
     using nucode::ble::internal::GattAccess;
 
     inline constexpr std::size_t maximum_services = CONFIG_NUCODE_BLE_GATT_MAX_SERVICES;
@@ -380,6 +390,35 @@ namespace nucode::ble::internal::gatt
         ready,
     };
 
+    /** @brief robust cache 동기화의 고정 비동기 단계입니다. */
+    enum class CacheStage : atomic_val_t
+    {
+        idle,
+        discovering_gatt_service,
+        gatt_service_found,
+        discovering_service_changed,
+        service_changed_found,
+        discovering_service_changed_ccc,
+        service_changed_ccc_found,
+        subscribing_service_changed,
+        service_changed_subscribed,
+        discovering_client_features,
+        client_features_found,
+        writing_client_features,
+        client_features_written,
+        discovering_database_hash,
+        database_hash_found,
+        reading_database_hash,
+        database_hash_read,
+        discovering_target_service,
+        target_service_found,
+        discovering_target_characteristic,
+        target_characteristic_found,
+        discovering_target_ccc,
+        target_ccc_found,
+        rediscovery_pending,
+    };
+
     /** @brief database의 고정 schema·slot 상태입니다. */
     struct DatabaseState
     {
@@ -443,6 +482,9 @@ namespace nucode::ble::internal::gatt
         atomic_t client_subscription_value = ATOMIC_INIT(0);
         atomic_t client_last_att_error = ATOMIC_INIT(0);
         atomic_t descriptor_boundary_ready = ATOMIC_INIT(0);
+        atomic_t cache_state =
+            ATOMIC_INIT(static_cast<atomic_val_t>(BLEGattCacheState::idle));
+        atomic_t cache_stage = ATOMIC_INIT(static_cast<atomic_val_t>(CacheStage::idle));
         BLERemoteService remote_service;
         BLERemoteCharacteristic remote_characteristic;
         BLERemoteDescriptor remote_descriptors[maximum_descriptors] = {};
@@ -458,14 +500,28 @@ namespace nucode::ble::internal::gatt
         struct bt_gatt_read_params read_parameters = {};
         struct bt_gatt_write_params write_parameters = {};
         struct bt_gatt_subscribe_params subscribe_parameters = {};
+        struct bt_gatt_discover_params cache_discovery_parameters = {};
+        struct bt_gatt_read_params cache_read_parameters = {};
+        struct bt_gatt_write_params cache_write_parameters = {};
+        struct bt_gatt_subscribe_params cache_subscribe_parameters = {};
         std::uint8_t read_data[maximum_value_length] = {};
+        std::uint8_t remote_database_hash[GattDatabase::hash_length] = {};
+        std::uint8_t client_features_value = 1U;
         std::uint16_t read_handles[maximum_descriptors] = {};
+        std::uint16_t cache_schema_version = 0U;
+        std::uint16_t gatt_service_start_handle = 0U;
+        std::uint16_t gatt_service_end_handle = 0U;
+        std::uint16_t service_changed_value_handle = 0U;
+        std::uint16_t service_changed_ccc_handle = 0U;
+        std::uint16_t client_features_handle = 0U;
+        std::uint16_t database_hash_handle = 0U;
         std::uint16_t descriptor_end_handle = 0U;
         std::uint8_t write_data[maximum_value_length] = {};
         std::size_t read_length = 0U;
         bool read_multiple = false;
         struct bt_conn *client_operation_connection = nullptr;
         struct bt_conn *client_subscription_connection = nullptr;
+        struct bt_conn *cache_subscription_connection = nullptr;
         struct bt_conn *gatt_connection = nullptr;
     };
     using ClientStates = ClientState[maximum_client_contexts];
@@ -673,6 +729,20 @@ namespace nucode::ble::internal::gatt
     void continueCccDiscovery(ClientState &state) noexcept;
     void continueDescriptorDiscovery(ClientState &state) noexcept;
     void progressClientDiscovery() noexcept;
+    int prepareGattCacheDatabase() noexcept;
+    void rollbackGattCacheDatabase() noexcept;
+    int recordGattDatabaseIdentity() noexcept;
+    bool setGattDatabaseRevision(std::uint32_t revision) noexcept;
+    std::uint32_t gattDatabaseRevision() noexcept;
+    bool readGattDatabaseHash(std::uint8_t output[GattDatabase::hash_length]) noexcept;
+    bool startCachedDiscovery(BLEConnectionHandle connection, const BLEUuid &service_uuid,
+                              const BLEUuid &characteristic_uuid,
+                              std::uint16_t schema_version) noexcept;
+    BLEGattCacheState clientCacheState(BLEConnectionHandle connection) noexcept;
+    bool invalidateClientCache(BLEConnectionHandle connection) noexcept;
+    BLEGattCacheStatistics clientCacheStatistics() noexcept;
+    void clearClientCacheState(ClientState &state) noexcept;
+    void progressGattCache() noexcept;
     bool validClientPayload(ClientState &state, std::size_t length) noexcept;
     bool startSubscription(ClientState &state, std::uint16_t value) noexcept;
     k_msgq &gattEventQueue() noexcept;
