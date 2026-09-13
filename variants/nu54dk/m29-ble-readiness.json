@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "milestone": "M29",
+  "product_target": "v0.5.0",
+  "phase": "implementation_started",
+  "milestone_status": "in_progress",
+  "baseline": {
+    "supported_release": "v0.4.1",
+    "source_version": "0.4.1-dev",
+    "core_revision": "a834dccf95d6133e23889508d7b1c406e7cd64e9",
+    "ncs_tag": "v3.4.0",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1",
+    "profile": "ble",
+    "max_connections": 2
+  },
+  "policy": {
+    "signed_write": {
+      "sdk_status": "deprecated",
+      "publication": "legacy_opt_in",
+      "default_enabled": false,
+      "completion_requires": [
+        "csrk_persistence",
+        "sign_counter_persistence",
+        "replay_rejection"
+      ]
+    },
+    "eatt": {
+      "sdk_status": "experimental",
+      "publication": "experimental_opt_in",
+      "default_enabled": false,
+      "maximum_bearers_per_connection": 2,
+      "completion_requires": [
+        "encrypted_link",
+        "peer_support",
+        "bearer_specific_errors",
+        "starvation_test"
+      ]
+    }
+  },
+  "resource_contract": {
+    "gatt_client_contexts": 2,
+    "pending_operations_per_link": 1,
+    "maximum_value_bytes": 512,
+    "prepare_transactions_per_link": 1,
+    "descriptors_per_characteristic": 4,
+    "read_multiple_handles": 4,
+    "l2cap_servers": 1,
+    "l2cap_channels_total": 2,
+    "l2cap_sdu_bytes": 512,
+    "l2cap_rx_records_per_channel": 4,
+    "l2cap_tx_buffers_total": 4
+  },
+  "source_capabilities": [
+    {
+      "id": "gatt_long_reliable",
+      "source_status": "candidate",
+      "implementation_status": "not_started",
+      "source_references": [
+        "zephyr/include/zephyr/bluetooth/gatt.h:1930",
+        "zephyr/include/zephyr/bluetooth/gatt.h:2053"
+      ]
+    },
+    {
+      "id": "gatt_read_multiple",
+      "source_status": "candidate",
+      "implementation_status": "not_started",
+      "source_references": [
+        "zephyr/subsys/bluetooth/host/Kconfig.gatt:197"
+      ]
+    },
+    {
+      "id": "gatt_service_changed_cache",
+      "source_status": "candidate",
+      "implementation_status": "not_started",
+      "source_references": [
+        "zephyr/subsys/bluetooth/host/Kconfig.gatt:116",
+        "zephyr/subsys/bluetooth/host/Kconfig.gatt:128"
+      ]
+    },
+    {
+      "id": "l2cap_credit_based_channel",
+      "source_status": "candidate",
+      "implementation_status": "not_started",
+      "source_references": [
+        "zephyr/subsys/bluetooth/host/Kconfig.l2cap:47",
+        "zephyr/include/zephyr/bluetooth/l2cap.h:799"
+      ]
+    },
+    {
+      "id": "signed_write",
+      "source_status": "candidate_deprecated",
+      "implementation_status": "not_started",
+      "source_references": [
+        "zephyr/subsys/bluetooth/host/Kconfig:631"
+      ]
+    },
+    {
+      "id": "eatt",
+      "source_status": "candidate_experimental",
+      "implementation_status": "not_started",
+      "source_references": [
+        "zephyr/subsys/bluetooth/host/Kconfig.gatt:55",
+        "zephyr/subsys/bluetooth/host/Kconfig.l2cap:54"
+      ]
+    }
+  ],
+  "work_packages": [
+    {"id": "M29-W01", "status": "in_progress", "title": "capability_policy_resource_protocol"},
+    {"id": "M29-W02", "status": "not_started", "title": "per_link_gatt_long_read"},
+    {"id": "M29-W03", "status": "not_started", "title": "long_reliable_write_prepare_execute"},
+    {"id": "M29-W04", "status": "not_started", "title": "descriptor_authorization_read_multiple"},
+    {"id": "M29-W05", "status": "not_started", "title": "service_changed_database_hash_cache"},
+    {"id": "M29-W06", "status": "not_started", "title": "le_coc_credit_buffers"},
+    {"id": "M29-W07", "status": "not_started", "title": "signed_write_eatt_integrated_hil"},
+    {"id": "M29-W08", "status": "not_started", "title": "regression_examples_documents_ci"}
+  ],
+  "execution_plan": [
+    {"id": "M29-CAP-01", "boards": 1, "timeout_seconds": 120, "status": "not_run", "criteria": {"capability_groups": 7, "revision_mismatches": 0}},
+    {"id": "M29-LONG-01", "boards": 2, "timeout_seconds": 300, "status": "not_run", "criteria": {"att_mtu": 247, "payload_bytes": 512, "iterations": 100, "payload_errors": 0, "partial_commits": 0}},
+    {"id": "M29-DESC-01", "boards": 2, "timeout_seconds": 300, "status": "not_run", "criteria": {"descriptors": 4, "multiple_handles": 4, "iterations": 100, "authorization_errors": 0}},
+    {"id": "M29-CACHE-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"migration_reconnects": 20, "stale_handle_uses": 0, "cache_corruption_accepts": 0}},
+    {"id": "M29-COC-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"channels": 2, "sdu_bytes": 512, "sdus_per_channel": 1000, "payload_errors": 0}},
+    {"id": "M29-NEG-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"iterations_per_error_class": 20, "unexpected_accepts": 0, "resource_recovery_failures": 0}},
+    {"id": "M29-SIGN-01", "boards": 2, "timeout_seconds": 900, "status": "not_run", "criteria": {"reboots": 20, "replay_accepts": 0, "counter_rollbacks": 0}},
+    {"id": "M29-EATT-01", "boards": 2, "timeout_seconds": 900, "status": "not_run", "criteria": {"bearers": 2, "operations_per_bearer": 1000, "deadlocks": 0}},
+    {"id": "M29-MULTI-01", "boards": 3, "timeout_seconds": 900, "status": "not_run", "criteria": {"simultaneous_links": 2, "operations_per_link": 1000, "cross_link_events": 0}},
+    {"id": "M29-REG-01", "boards": 3, "timeout_seconds": 1800, "status": "not_run", "criteria": {"regression_groups": 4, "regression_failures": 0}}
+  ],
+  "equipment": {
+    "nu54dk_boards": 3,
+    "independent_dap_uart_paths": 3,
+    "external_bluetooth_sniffer": "unconfirmed",
+    "cross_vendor_peers": {
+      "android": "unconfirmed",
+      "ios": "unconfirmed",
+      "windows": "unconfirmed",
+      "linux": "unconfirmed"
+    }
+  },
+  "completion": {
+    "completed_work_packages": 0,
+    "total_work_packages": 8,
+    "passed_test_ids": 0,
+    "total_test_ids": 10,
+    "target_build": "not_run",
+    "physical_hil": "not_run",
+    "cross_vendor_hil": "not_run"
+  }
+}

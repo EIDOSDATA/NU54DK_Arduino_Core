@@ -2,7 +2,7 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 M28-W01~W08과 9개 test ID를 완료했다. 다음 작업은 M29이며 M29~M33은
+**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W01 착수, 0/8이다. M30~M33은
 계획·구현 미착수**다. M28 완료는 v0.5.0 공개, mobile/desktop cross-vendor 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
@@ -13,6 +13,8 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | v0.5.0 착수 체크·결정 상태 | 이 문서 |
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
+| M29 API·정책·자원·시험 계약 | [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>) |
+| M29 기계 판정 원본 | [`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json) |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
 | W01 실제 HCI·실패 분류·증거 | [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>) |
 | W02 2-slot·generation 구현·검증 | [134번 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>) |
@@ -27,7 +29,8 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 **M28-W01 capability, W02 고정 2-slot·generation handle, W03 확장 광고·스캔, W04
 periodic·PAST, W05 PAwR, W06 privacy·link control, W07 두/세 보드 HIL과 W08 문서·인계를
-완료했고, 다음은 M29**다. P01~P06은 별도 전역
+완료했고, **M29-W01 capability·정책·자원·protocol 계약에 착수했다. 현재 M29는 0/8**이다.
+P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
 M31 전용 장비가 미확보라는 이유로 독립적인 M28 문서·Host 작업까지 차단하지 않는다.
@@ -60,6 +63,16 @@ M28의 상세 상태·Kconfig·시험 수치는
 | M28-W06 | **완료 — Host 계약·target 1/1 PASS** | RPA timeout/event, identity, DLE·parameter·remote-info link 격리, 예제 2개 |
 | M28-W07 | **완료 — parser 29/29·target 14/14·실기 9/9 PASS** | 2보드 REG/ADV/PAWR/PRIV, 3보드 LINK/PER/CTRL/SOAK exact evidence 보존 |
 | M28-W08 | **완료** | 지원 경계·실패 진단·M29 인계와 기계 원장 정합화 |
+
+M29는 [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
+[`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json)을 기준으로 실행한다.
+Signed Write는 deprecated legacy opt-in, EATT는 experimental opt-in이며 둘 다 기본 profile에서는
+OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser를 구현·실행해야 완료된다.
+
+| 작업 묶음 | 현재 상태 | 다음 종료 조건 |
+| --- | --- | --- |
+| M29-W01 | **착수 — 계약·원장 작성 중** | readiness Host 시험, capability target build와 실제 실행 |
+| M29-W02~W08 | 미착수 | 앞 작업의 자원·수명 계약을 보존해 순서대로 구현·검증 |
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로

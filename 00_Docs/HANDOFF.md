@@ -1,8 +1,8 @@
 # 현재 지원 상태와 다른 PC 개발 준비
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25와 M28 W01~W08은 모두
-완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고 다음
-개발 작업은 M29 ATT/GATT·L2CAP입니다. 이 문서는 완료한 시험을 재개하라는
+완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고
+M29 ATT/GATT·L2CAP는 W01 착수, 0/8입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -18,7 +18,8 @@
 | T13 S/U 실제 시험과 종료 상태 | [113번 S 종료](<04_검증 기록/113_T13_S_범위_종료와_U_준비.md>) · [115번 U 종료](<04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md>) |
 | 특정 실패·수정·재검증의 원본 | [검증 기록 목차](<04_검증 기록/README.md>) |
 | 설계·설치·API 탐색 | [문서 안내](README.md) |
-| M28 결과·M29 후속 개발 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>), [140번 완료 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과 최신 사용자 요청 |
+| M28 결과 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>), [140번 완료 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
+| M29 현재 개발 | [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>), [`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json)과 최신 사용자 요청 |
 
 과거 기록의 “다음 실행”, `running` 표시, PC 절대 경로는 당시 상태입니다.
 현재 명령·보드 연결·실행 중 프로세스의 근거로 사용하지 않습니다.
@@ -65,7 +66,18 @@
 | LINK 최종 수정 | role callback 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도 |
 | 확인 장비 | NU54DK·독립 DAP/UART 3경로; receiver-validated sequence trace 사용 |
 | W08 | 현행 문서·지원 경계·readiness 원장·M29 인계 완료 |
-| 다음 행동 | M29 signed write/EATT 정책과 ATT/GATT·LE CoC 자원·malformed/credit/starvation 시험 계약 확정 |
+| 다음 행동 | M29-W01 capability image·고정 protocol·fail-closed parser 구현과 target 실행 |
+
+## M29-W01 착수 상태
+
+M29는 [착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)에서 W01~W08,
+10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **0/8**이며 정적 SDK candidate를 실제
+구현·target·HIL PASS로 승격하지 않는다.
+
+Signed Write는 기본 OFF인 deprecated legacy opt-in, EATT는 기본 OFF인 experimental opt-in으로
+개발한다. 기본 GATT/LE CoC와 두 선택 profile의 결과를 분리한다. NU54DK 3개와 DAP/UART 3경로는
+확보됐지만 외부 sniffer와 Android/iOS/Windows/Linux cross-vendor peer 적용성은 아직 미확인이다.
+해당 실기 경계 전까지 Host·target·NU54DK 2·3보드 구현과 검증을 계속한다.
 
 실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m28-w01-capability-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과
