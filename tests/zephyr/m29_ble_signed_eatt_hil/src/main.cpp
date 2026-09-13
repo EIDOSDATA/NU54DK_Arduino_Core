@@ -71,6 +71,7 @@ namespace
     constexpr std::uint32_t eatt_operations_per_bearer = 1000U;
     constexpr std::int64_t session_timeout_ms = 900000;
     constexpr std::int64_t replay_observation_ms = 1500;
+    constexpr std::int64_t disconnect_settle_ms = 250;
     constexpr std::uint8_t signed_marker = 0x51U;
     constexpr std::uint8_t replay_marker = 0x52U;
     constexpr std::uint8_t eatt_production_marker = 0xe6U;
@@ -103,6 +104,8 @@ namespace
         eatt_writing,
         eatt_traffic,
         replay_observation,
+        disconnect_delay,
+        disconnecting,
         complete,
     };
 
@@ -134,6 +137,7 @@ namespace
     bool eatt_over_limit_rejected = false;
     std::int64_t session_deadline = 0;
     std::int64_t replay_deadline = 0;
+    std::int64_t disconnect_at = 0;
     std::uint32_t expected_ble_errors = 0U;
     std::uint32_t server_signed_writes = 0U;
     std::uint32_t server_replay_writes = 0U;
@@ -269,6 +273,17 @@ namespace
         Serial.println();
         session_finished = true;
         phase = Phase::complete;
+    }
+
+    /** @brief 성공 record 뒤 central의 정상 disconnect가 끝날 때까지 END를 보류합니다. */
+    void requestSessionEnd()
+    {
+        if (phase == Phase::disconnect_delay || phase == Phase::disconnecting)
+        {
+            return;
+        }
+        phase = Phase::disconnect_delay;
+        disconnect_at = k_uptime_get() + disconnect_settle_ms;
     }
 
     /** @brief lowercase hexadecimal nibble을 binary 값으로 변환합니다. */
@@ -637,7 +652,7 @@ namespace
             Serial.print(remote_counter);
             printSuffix();
             Serial.println();
-            printEnd();
+            requestSessionEnd();
             return;
         }
         if (mode == Mode::replay)
@@ -792,7 +807,7 @@ namespace
             Serial.print(remote_counter);
             printSuffix();
             Serial.println();
-            printEnd();
+            requestSessionEnd();
             return;
         }
         if (mode == Mode::eatt && phase == Phase::eatt_reading)
@@ -932,6 +947,11 @@ namespace
         if (information.event == nucode::ble::BLEEvent::disconnected &&
             information.connection == connection_handle)
         {
+            if (phase == Phase::disconnect_delay || phase == Phase::disconnecting)
+            {
+                printEnd();
+                return;
+            }
             fail("unexpected_disconnect");
         }
     }
@@ -968,6 +988,7 @@ namespace
         server_eatt_next_sequence[1] = 0U;
         connection_handle = {};
         session_deadline = k_uptime_get() + session_timeout_ms;
+        disconnect_at = 0;
 #if defined(NUCODE_M29_ADVANCED_CENTRAL)
         eatt_channels[0] = nullptr;
         eatt_channels[1] = nullptr;
@@ -1124,7 +1145,8 @@ namespace
     void drivePairCompletion()
     {
         if (mode != Mode::pair || !security_changed || !pairing_seen ||
-            BLESecurity.bondCount() != 1U)
+            BLESecurity.bondCount() != 1U || phase == Phase::disconnect_delay ||
+            phase == Phase::disconnecting)
         {
             return;
         }
@@ -1143,7 +1165,7 @@ namespace
         Serial.print(remote_counter);
         printSuffix();
         Serial.println();
-        printEnd();
+        requestSessionEnd();
     }
 
     /** @brief replay observation window 뒤 server write가 한 번뿐인지 판정합니다. */
@@ -1190,13 +1212,14 @@ namespace
 #endif
         printSuffix();
         Serial.println();
-        printEnd();
+        requestSessionEnd();
     }
 
     /** @brief encrypted link에서 EATT 연결·production API·bearer별 raw 부하를 진행합니다. */
     void driveEatt()
     {
-        if (mode != Mode::eatt || !security_changed)
+        if (mode != Mode::eatt || !security_changed ||
+            phase == Phase::disconnect_delay || phase == Phase::disconnecting)
         {
             return;
         }
@@ -1268,7 +1291,7 @@ namespace
             Serial.print("|deadlocks=0|starvation=0");
             printSuffix();
             Serial.println();
-            printEnd();
+            requestSessionEnd();
         }
 #else
         if (BLEEatt.count(connection_handle) != 2U ||
@@ -1289,7 +1312,23 @@ namespace
         Serial.print("deadlocks=0|starvation=0");
         printSuffix();
         Serial.println();
-        printEnd();
+        requestSessionEnd();
+#endif
+    }
+
+    /** @brief 성공 결과 정착 뒤 central만 정상 disconnect를 시작합니다. */
+    void driveSessionDisconnect()
+    {
+#if defined(NUCODE_M29_ADVANCED_CENTRAL)
+        if (phase != Phase::disconnect_delay || k_uptime_get() < disconnect_at)
+        {
+            return;
+        }
+        phase = Phase::disconnecting;
+        if (!BLEConnection.disconnect(connection_handle))
+        {
+            fail("disconnect_start", BLEDevice.lastDriverError());
+        }
 #endif
     }
 
@@ -1350,6 +1389,7 @@ void loop()
     drivePairCompletion();
     driveReplayCompletion();
     driveEatt();
+    driveSessionDisconnect();
     if (!session_finished && k_uptime_get() >= session_deadline)
     {
         fail("timeout");

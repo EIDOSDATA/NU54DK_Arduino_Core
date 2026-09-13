@@ -187,6 +187,17 @@ class M29BleSignedEattTests(unittest.TestCase):
         )
         self.assertIn('fail("gatt_operation", information.status)', target)
 
+    def test_hil_releases_link_before_runner_reboots(self):
+        """! @brief 각 성공 session은 정상 disconnect 뒤에만 END를 출력합니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertIn("disconnect_settle_ms = 250", target)
+        self.assertIn("phase = Phase::disconnecting;", target)
+        self.assertIn("BLEConnection.disconnect(connection_handle)", target)
+        self.assertIn("driveSessionDisconnect();", target)
+        self.assertIn(
+            "phase == Phase::disconnect_delay || phase == Phase::disconnecting", target
+        )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

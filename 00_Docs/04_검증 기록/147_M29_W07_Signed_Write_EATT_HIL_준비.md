@@ -6,7 +6,7 @@
 | 준비 기준 HEAD | `d425248b8063cfb4e816c12cab6dd62c88cae446` 이후 미커밋 W07 source |
 | NCS / Zephyr | `99553055607b…` / `bf801e4e3d19…` |
 | board / toolchain | `fe65f2f0880b…` / `dcbdc366a1` |
-| W07 공개 계약 | **11/11 PASS** |
+| W07 공개 계약 | **12/12 PASS** |
 | strict Host parser | **14/14 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
@@ -59,7 +59,7 @@ wrong revision·stale nonce, counter rollback, replay accept, EATT shortfall, ta
 
 ## 3. Host·target 준비 결과
 
-W07 공개 계약 11/11, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
+W07 공개 계약 12/12, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
 M22 stable package 경계 7/7, readiness 8/8이 PASS했다. 전체 Host gate에서 W07 신규 예제를 후속
 후보 집합에 반영하지 않은 1건은 수정 뒤 동일 시험 7/7 PASS했다. 임시 native EXE 일부는 첫 실행에
 Windows Application Control `WinError 4551`로 17회 차단됐다. PAwR·TWIM 실패 module을 같은 source와
@@ -160,6 +160,20 @@ discovery miss인지 다른 link 오류인지 구분할 수 없다. Central의 `
 진단 순서를 고정했다. 다른 phase와 다른 전역 오류는 계속 즉시 실패한다. 새 exact 실행에서
 상세 실패가 재현되면 그 단계로 원인을 좁히고, 재현되지 않더라도 20회 전체와 replay·EATT가 끝나기
 전에는 PASS로 승격하지 않는다.
+
+Exact `890c3892…`의 상세 순서 실행은 1~17회를 통과한 뒤 18회차에서 link별
+`unexpected_disconnect`를 직접 확인했다. 즉 앞선 20회차 `ENOENT`는 counter 값이나 Signed Write
+payload 결함이 아니라, 성공한 연결을 정상 종료하지 않고 곧바로 양쪽 warm reboot를 반복해 이전
+ACL 해제를 controller timeout에 맡긴 시험 종료 순서와 같은 intermittent link teardown 계열이다.
+Raw 기록은 `evidence/m29-w07-890c3892-signed-eatt/`에 보존한다.
+
+각 pair/sign/replay/EATT 결과 뒤 250ms 정착 시간을 두고 central만 generation handle로 정상
+disconnect를 시작하며, 양쪽 target이 실제 `disconnected` event를 받은 뒤에만 `END`를 출력하도록
+고쳤다. Peripheral은 임의로 동시 disconnect하지 않고 central의 종료를 기다린다. 결과를 출력한
+phase에는 pair/EATT 완료 record가 반복되지 않도록 guard를 둔다. 이 변경은 재시도 횟수를 늘리는
+것이 아니라 각 iteration의 Host/controller 자원을 다음 reboot 전에 유한하게 회수하는 수정이다.
+Source 계약 12/12와 수정 target 2/2 warning 0을 확인했으며 새 exact commit으로 같은 전체 분모를
+다시 실행한다.
 
 ## 6. 남은 유한 실행 순서
 
