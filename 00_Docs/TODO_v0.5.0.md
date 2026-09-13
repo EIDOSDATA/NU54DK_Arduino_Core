@@ -2,7 +2,7 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W04 완료, 4/8이다. M30~M33은
+**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W05 완료, 5/8이다. M30~M33은
 계획·구현 미착수**다. M28 완료는 v0.5.0 공개, mobile/desktop cross-vendor 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
@@ -27,14 +27,16 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M29 W02 link별 long read | [142번 기록](<04_검증 기록/142_M29_W02_link별_GATT_long_read.md>) |
 | M29 W03 long/reliable write | [143번 기록](<04_검증 기록/143_M29_W03_long_reliable_write.md>) |
 | M29 W04 descriptor·authorization | [144번 기록](<04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>) |
+| M29 W05 robust GATT cache | [145번 기록](<04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>) |
 
 ## 1. 다음 착수 순서
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 **M28-W01 capability, W02 고정 2-slot·generation handle, W03 확장 광고·스캔, W04
 periodic·PAST, W05 PAwR, W06 privacy·link control, W07 두/세 보드 HIL과 W08 문서·인계를
-완료했고, **M29-W01 capability, W02 link별 GATT long read, W03 long/reliable write와 W04
-descriptor·authorization·read multiple을 완료했다. 현재 M29는 4/8**이다.
+완료했고, **M29-W01 capability, W02 link별 GATT long read, W03 long/reliable write, W04
+descriptor·authorization·read multiple과 W05 robust GATT cache를 완료했다. 현재 M29는
+5/8**이다.
 P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
@@ -80,8 +82,9 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser를 구
 | M29-W02 | **완료 — Host 전체 gate·target 2/2·2보드 long read 100/100 PASS** | exact `dacf6341…`, MTU 247·512 byte·corrupt/stale 0 증거 유지 |
 | M29-W03 | **완료 — Host·target 2/2·2보드 reliable write 100/100 PASS** | exact `babba5a1…`, MTU 247·512 byte·corrupt/partial commit 0 증거 유지 |
 | M29-W04 | **완료 — Host·target 2/2·2보드 descriptor/read multiple 100/100 PASS** | exact `068a1765…`, descriptor 4개·authorization 오판 0 증거 유지 |
-| M29-W05 | **다음 작업** | Service Changed·database hash·robust cache migration과 `M29-CACHE-01` 검증 |
-| M29-W06~W08 | 미착수 | 앞 작업의 자원·수명 계약을 보존해 순서대로 구현·검증 |
+| M29-W05 | **완료 — Host·target 2/2·2보드 cache migration PASS** | exact `e587c4fe…`, bonded reconnect 20·stale/corrupt accept 0 증거 유지 |
+| M29-W06 | **다음 작업** | LE CoC 2-channel·512-byte SDU·credit starvation·회수와 `M29-COC/NEG-01` 검증 |
+| M29-W07~W08 | 미착수 | 앞 작업의 자원·수명 계약을 보존해 순서대로 구현·검증 |
 
 M29-W02는 central/peripheral 두 link가 각각 discovery/read/write/subscription parameter와 512-byte
 고정 buffer를 소유하도록 GATT client를 분리했다. 무인자 API는 central 우선 legacy view를
@@ -113,6 +116,17 @@ Arduino BLE 예제 6개와 exact target 2/2가 PASS했다. 두 NU54DK 실기는 
 실패로 오판했으며, 상세 GATT event에서만 exact ATT 값을 판정하도록 수정한 뒤 같은 조건에서
 PASS했다. 원본과 결과는 [144번 기록](<04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>)에
 보존한다.
+
+W05는 bonded resolved identity·database hash·target UUID·schema version·CRC를 결합한
+84-byte 고정 cache record 4개와 application database revision을 추가했다. Service Changed 또는
+hash 변경은 해당 link의 handle을 먼저 폐기한 뒤 rediscovery하며 잘린·미래 schema·다른 identity·
+손상 CRC record를 복원하지 않는다. `GattCachePeripheral`·`GattCacheCentral` 예제를 추가했고
+production GATT Host 18개 시나리오, W05 source 9개·parser 14개, Arduino M29 예제 8개와 exact
+target 2/2가 PASS했다. 두 NU54DK의 `M29-CACHE-01`은 bonded reconnect 20/20, hash read 24,
+cache restore 20, Service Changed 1, migration 1, corrupt cache 거부 1, stale handle 0을 확인했다.
+첫 실기의 `-ENOTCONN`은 CMSIS-DAP/GDB에서 Zephyr property bit를 공개 enum으로 직접 cast해
+write를 notify로 오인한 것으로 확정했고 명시 변환 뒤 동일 조건 PASS했다. 원본과 최종 결과는
+[145번 기록](<04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>)에 보존한다.
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로

@@ -16,6 +16,12 @@ namespace nucode::ble::internal
         return 0;
     }
 
+    /** @brief Security 단독 호스트 시험에는 기록할 GATT database identity가 없습니다. */
+    int recordGattDatabaseIdentity() noexcept
+    {
+        return 0;
+    }
+
     /** @brief Security 단독 호스트 시험에는 사용자 GATT schema가 없습니다. */
     bool hasGattSchema() noexcept
     {

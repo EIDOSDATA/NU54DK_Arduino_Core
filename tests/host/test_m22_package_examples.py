@@ -126,6 +126,10 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "PrivacyPeripheral",
             )
         }
+        later_ble_examples |= {
+            ("NUCODE_BLE_Security", "GattCacheCentral"),
+            ("NUCODE_BLE_Security", "GattCachePeripheral"),
+        }
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(
             all_source_examples - locked_examples,

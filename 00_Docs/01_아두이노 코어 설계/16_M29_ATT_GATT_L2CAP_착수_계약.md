@@ -9,7 +9,7 @@
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M29 상태 | **W04 완료, W01~W08 4/8** |
+| M29 상태 | **W05 완료, W01~W08 5/8** |
 | 기계 원장 | `variants/nu54dk/m29-ble-readiness.json` |
 
 ## 1. 목표와 완료 의미
@@ -177,6 +177,16 @@ authorization 402회 중 허용 401·예상 거부 1·오판 0, corrupt·stale 0
 GATT event의 ATT 값을 기다리도록 수정한 뒤 동일 조건 PASS했다. 제품의 오류 보고 의미를
 축소하지 않았고 다른 phase의 전역 오류는 계속 즉시 실패한다.
 
+W05는 exact `e587c4fe…`에서 bonded resolved identity, database hash, target UUID, schema version과
+CRC를 결합한 4×84-byte 고정 cache를 구현했다. Service Changed와 hash 변경은 해당 generation
+link handle을 먼저 폐기한 뒤 재탐색하며 손상·잘린·미래 schema·다른 identity record는 복원하지
+않는다. Production Host 18개 시나리오, source 계약 9개·parser 14개, target role 2/2와 Arduino
+BLE 예제 8개가 PASS했다. 두 NU54DK의 `M29-CACHE-01`은 bonded reconnect 20/20, database hash
+read 24, cache restore 20, Service Changed 1, migration 1, corrupt cache 거부 1, stale handle 0을
+확인했다. 첫 `8f1f167d…` 실기의 `-ENOTCONN`은 CMSIS-DAP/GDB에서 Zephyr property bit를 공개
+enum으로 직접 cast해 write를 notify로 오인한 것으로 확정했고 `publicProperties()` 변환 뒤 같은
+조건에서 PASS했다.
+
 Cross-vendor 완료 gate에 실제 OS peer 조작이 필요해지는 시점 전까지 코드·Host 시험·target build,
 NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거나 기능을 지원하지 않으면 해당
 결과는 `NOT RUN` 또는 `NOT APPLICABLE`로 근거를 남기며 M29 전체 PASS로 승격하지 않는다.
@@ -184,7 +194,7 @@ NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거
 ## 8. 예제 계획
 
 - `LongGattPeripheral`, `LongGattCentral`, `ReliableWritePeripheral`, `ReliableWriteCentral`
-- `GattDescriptors`, `GattAuthorization`, `GattCacheMigration`
+- `GattDescriptors`, `GattAuthorization`, `GattCachePeripheral`, `GattCacheCentral`
 - `L2capCocServer`, `L2capCocClient`
 - `LegacySignedWrite` — deprecated opt-in 경고 포함
 - `ExperimentalEatt` — experimental opt-in과 암호화 요구 포함

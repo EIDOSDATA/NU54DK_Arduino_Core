@@ -2,7 +2,7 @@
   "schema_version": 1,
   "milestone": "M29",
   "product_target": "v0.5.0",
-  "phase": "w04_complete",
+  "phase": "w05_complete",
   "milestone_status": "in_progress",
   "baseline": {
     "supported_release": "v0.4.1",
@@ -74,7 +74,7 @@
     {
       "id": "gatt_service_changed_cache",
       "source_status": "candidate",
-      "implementation_status": "not_started",
+      "implementation_status": "passed",
       "source_references": [
         "zephyr/subsys/bluetooth/host/Kconfig.gatt:116",
         "zephyr/subsys/bluetooth/host/Kconfig.gatt:128"
@@ -112,7 +112,7 @@
     {"id": "M29-W02", "status": "completed", "title": "per_link_gatt_long_read", "production_host_scenarios": 14, "host_contract_tests": 6, "host_parser_tests": 11, "target_builds": 2, "physical_long_read": "passed", "tested_core_revision": "dacf6341b2326235f4daf85d9582212a475a9cf9", "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w02-dacf6341-long-read/m29-w02-long-read-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w02-dacf6341-long-read/m29-w02-long-read-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w02-dacf6341-long-read/m29-w02-long-read-evidence.central.transcript.log"]},
     {"id": "M29-W03", "status": "completed", "title": "long_reliable_write_prepare_execute", "production_host_scenarios": 15, "host_contract_tests": 6, "host_parser_tests": 11, "target_builds": 2, "physical_long_reliable_write": "passed", "tested_core_revision": "babba5a1bf306e69b6900df26711ea316fa5dc12", "failure_evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w03-8629611e-long-write/m29-w03-long-write-evidence.central.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w03-8629611e-long-write/m29-w03-long-write-evidence.peripheral.transcript.log"], "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w03-babba5a1-long-write/m29-w03-long-write-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w03-babba5a1-long-write/m29-w03-long-write-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w03-babba5a1-long-write/m29-w03-long-write-evidence.central.transcript.log"]},
     {"id": "M29-W04", "status": "completed", "title": "descriptor_authorization_read_multiple", "production_host_scenarios": 17, "host_contract_tests": 8, "host_parser_tests": 11, "target_builds": 2, "physical_descriptor_authorization": "passed", "tested_core_revision": "068a1765f74e39c83cbf6e9e2f54de467c923441", "failure_evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w04-34d24ea6-descriptor-authorization-failure/m29-w04-descriptor-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w04-34d24ea6-descriptor-authorization-failure/m29-w04-descriptor-evidence.central.transcript.log"], "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w04-068a1765-descriptor-authorization/m29-w04-descriptor-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w04-068a1765-descriptor-authorization/m29-w04-descriptor-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w04-068a1765-descriptor-authorization/m29-w04-descriptor-evidence.central.transcript.log"]},
-    {"id": "M29-W05", "status": "not_started", "title": "service_changed_database_hash_cache"},
+    {"id": "M29-W05", "status": "completed", "title": "service_changed_database_hash_cache", "production_host_scenarios": 18, "host_contract_tests": 9, "host_parser_tests": 14, "target_builds": 2, "physical_cache_migration": "passed", "tested_core_revision": "e587c4fe563df65f37eb6cb322b3c07386f69ffa", "failure_evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w05-8f1f167d-cache-failure-ab/central.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w05-8f1f167d-cache-failure-ab/peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w05-8f1f167d-cache-failure-ac/central.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w05-8f1f167d-cache-failure-ac/peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w05-8f1f167d-cache-diagnostic/central.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w05-8f1f167d-cache-diagnostic/peripheral.transcript.log"], "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w05-e587c4fe-gatt-cache/m29-w05-cache-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w05-e587c4fe-gatt-cache/m29-w05-cache-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w05-e587c4fe-gatt-cache/m29-w05-cache-evidence.central.transcript.log"]},
     {"id": "M29-W06", "status": "not_started", "title": "le_coc_credit_buffers"},
     {"id": "M29-W07", "status": "not_started", "title": "signed_write_eatt_integrated_hil"},
     {"id": "M29-W08", "status": "not_started", "title": "regression_examples_documents_ci"}
@@ -121,7 +121,7 @@
     {"id": "M29-CAP-01", "boards": 1, "timeout_seconds": 120, "status": "passed", "criteria": {"capability_groups": 7, "revision_mismatches": 0}, "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w01-d604642b-cap/m29-capability-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w01-d604642b-cap/m29-capability-evidence.transcript.log"]},
     {"id": "M29-LONG-01", "boards": 2, "timeout_seconds": 300, "status": "passed", "criteria": {"att_mtu": 247, "payload_bytes": 512, "iterations": 100, "payload_errors": 0, "partial_commits": 0}, "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w03-babba5a1-long-write/m29-w03-long-write-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w03-babba5a1-long-write/m29-w03-long-write-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w03-babba5a1-long-write/m29-w03-long-write-evidence.central.transcript.log"]},
     {"id": "M29-DESC-01", "boards": 2, "timeout_seconds": 300, "status": "passed", "criteria": {"descriptors": 4, "multiple_handles": 4, "iterations": 100, "authorization_errors": 0}, "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w04-068a1765-descriptor-authorization/m29-w04-descriptor-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w04-068a1765-descriptor-authorization/m29-w04-descriptor-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w04-068a1765-descriptor-authorization/m29-w04-descriptor-evidence.central.transcript.log"]},
-    {"id": "M29-CACHE-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"migration_reconnects": 20, "stale_handle_uses": 0, "cache_corruption_accepts": 0}},
+    {"id": "M29-CACHE-01", "boards": 2, "timeout_seconds": 600, "status": "passed", "criteria": {"migration_reconnects": 20, "stale_handle_uses": 0, "cache_corruption_accepts": 0}, "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w05-e587c4fe-gatt-cache/m29-w05-cache-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w05-e587c4fe-gatt-cache/m29-w05-cache-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m29-w05-e587c4fe-gatt-cache/m29-w05-cache-evidence.central.transcript.log"]},
     {"id": "M29-COC-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"channels": 2, "sdu_bytes": 512, "sdus_per_channel": 1000, "payload_errors": 0}},
     {"id": "M29-NEG-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"iterations_per_error_class": 20, "unexpected_accepts": 0, "resource_recovery_failures": 0}},
     {"id": "M29-SIGN-01", "boards": 2, "timeout_seconds": 900, "status": "not_run", "criteria": {"reboots": 20, "replay_accepts": 0, "counter_rollbacks": 0}},
@@ -141,12 +141,12 @@
     }
   },
   "completion": {
-    "completed_work_packages": 4,
+    "completed_work_packages": 5,
     "total_work_packages": 8,
-    "passed_test_ids": 3,
+    "passed_test_ids": 4,
     "total_test_ids": 10,
-    "target_build": "w01_w04_passed",
-    "physical_hil": "w01_capability_w02_long_read_w03_long_write_w04_descriptor_passed",
+    "target_build": "w01_w05_passed",
+    "physical_hil": "w01_capability_w02_long_read_w03_long_write_w04_descriptor_w05_cache_passed",
     "cross_vendor_hil": "not_run"
   }
 }
