@@ -135,7 +135,7 @@ W07은 기본 OFF의 `NUCODE_BLE_LegacySigning`·`NUCODE_BLE_EATT` 선택 librar
 local/remote sign counter는 정상 완료에서 main thread가 저장하며 queue 포화 fallback도 counter를
 저장하고 실패 시 link를 끊는다. Strict `M29W07|1` target·runner는 20회 재부팅 counter,
 동일 signed ATT PDU replay 거부, 암호화 전 EATT 거부, 2 bearer별 1,000 operation을 판정한다.
-Production Host 전체 24개 시나리오·W07 계약 10/10·parser 14/14와 target role 2/2는 PASS했다.
+Production Host 전체 24개 시나리오·W07 계약 11/11·parser 14/14와 target role 2/2는 PASS했다.
 Windows Application Control 4551에만 최대 30초 유한 대기를 적용한 뒤 전체 Host 1,106개도
 PASS(조건부 2개 skip)했다. Arduino M29 smoke는 `EattCentral`의 최소 C++ runtime 비호환
 `<cstring>`을 `<string.h>`로 교체한 뒤 전체 14개 예제를 처음부터 다시 build해 14/14 PASS했다.
@@ -149,6 +149,11 @@ DAP/UART와 CPU fault 0, 종료 SRAM을 확인한 뒤 GATT event 종류와 완�
 discovery 오류로 오분류한 target 상태기계 결함이므로 전용 `signing` phase를 추가했다. 새 exact
 build로 같은 두 보드 SIGN/EATT와 세 보드 MULTI/REG를 실행한다. 실패 raw transcript와 준비 기록은
 [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 있다.
+
+Exact `80f8de79…`는 Signed Write와 counter 영속화 19/20을 연속 통과한 뒤 20회차 discovery의
+전역 `ENOENT`에서 멈췄다. DAP/UART와 CPU fault 0을 확인했고, 중앙 target은 `discovering`에서만
+전역 `ENOENT`를 소비한 뒤 generation link별 GATT `operation_failed/status`를 판정하도록 보강했다.
+다른 phase·오류는 즉시 실패하며 20회 전체와 replay·EATT 완주 전에는 PASS로 승격하지 않는다.
 
 실행기와 보드 조건은 [W07 HIL 안내](../tests/hil/nu54dk/README.md#m29-w07-두-보드-signed-writeeatt-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과

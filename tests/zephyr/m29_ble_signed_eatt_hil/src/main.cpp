@@ -891,7 +891,15 @@ namespace
                 --expected_ble_errors;
                 return;
             }
-            fail("gap_error", BLEDevice.lastDriverError());
+            const int driver_error = BLEDevice.lastDriverError();
+#if defined(NUCODE_M29_ADVANCED_CENTRAL)
+            /** @brief Discovery 오류는 뒤따르는 link별 GATT event에서 정확한 stage로 판정합니다. */
+            if (phase == Phase::discovering && driver_error == -ENOENT)
+            {
+                return;
+            }
+#endif
+            fail("gap_error", driver_error);
             return;
         }
         if (information.event == nucode::ble::BLEEvent::connected)

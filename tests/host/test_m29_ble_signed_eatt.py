@@ -179,6 +179,14 @@ class M29BleSignedEattTests(unittest.TestCase):
             "mode == Mode::sign && phase == Phase::signing &&", target
         )
 
+    def test_hil_reports_link_specific_discovery_failure(self):
+        """! @brief 전역 ENOENT보다 뒤따르는 link별 GATT 실패를 판정합니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertIn(
+            "phase == Phase::discovering && driver_error == -ENOENT", target
+        )
+        self.assertIn('fail("gatt_operation", information.status)', target)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

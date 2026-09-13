@@ -6,7 +6,7 @@
 | 준비 기준 HEAD | `d425248b8063cfb4e816c12cab6dd62c88cae446` 이후 미커밋 W07 source |
 | NCS / Zephyr | `99553055607b…` / `bf801e4e3d19…` |
 | board / toolchain | `fe65f2f0880b…` / `dcbdc366a1` |
-| W07 공개 계약 | **10/10 PASS** |
+| W07 공개 계약 | **11/11 PASS** |
 | strict Host parser | **14/14 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
@@ -59,7 +59,7 @@ wrong revision·stale nonce, counter rollback, replay accept, EATT shortfall, ta
 
 ## 3. Host·target 준비 결과
 
-W07 공개 계약 10/10, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
+W07 공개 계약 11/11, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
 M22 stable package 경계 7/7, readiness 8/8이 PASS했다. 전체 Host gate에서 W07 신규 예제를 후속
 후보 집합에 반영하지 않은 1건은 수정 뒤 동일 시험 7/7 PASS했다. 임시 native EXE 일부는 첫 실행에
 Windows Application Control `WinError 4551`로 17회 차단됐다. PAwR·TWIM 실패 module을 같은 source와
@@ -145,6 +145,21 @@ state가 해제돼, discovery 도중 link teardown event가 먼저 전달됐을 
 돌아온 완료 event를 아직 `discovering` phase가 잘못 거부한 target 상태기계 결함이다. 전용
 `Phase::signing`을 추가하고 write 시작 전에 전환하며, 완료 event도 그 phase에서만 수락하도록
 단일 수정했다. 이 실패를 SIGN/EATT PASS로 승격하지 않고 새 exact build로 동일 조건을 재검증한다.
+
+Exact `80f8de79…`의 단일 수정 재검증은 pairing 뒤 Signed Write와 counter 영속화를 1~19회 연속
+통과했다. 매회 central local counter와 peripheral remote counter가 같은 값으로 증가했고 양쪽 bond
+1개와 callback main-thread 판정도 유지됐다. 20회차는 scan까지 통과한 뒤 central의 전역
+`gap_error/code=-2`(`ENOENT`)에서 멈췄다. Raw 기록은
+`evidence/m29-w07-80f8de79-signed-eatt/`에 보존한다. UID 기반 DAP/UART 재탐색은 정상이고
+CMSIS-DAP의 `CFSR=0`, `HFSR=0`, 정상 thread PC로 CPU fault가 없음을 다시 확인했다.
+
+GATT discovery의 `failClient(-ENOENT)`는 전역 BLE error와 link별 `operation_failed`를 함께
+queue하며 전역 event가 먼저 전달될 수 있다. 현재 target은 전역 event에서 즉시 종료해 service
+discovery miss인지 다른 link 오류인지 구분할 수 없다. Central의 `discovering` phase에서만 전역
+`ENOENT`를 소비하고 뒤따르는 generation link별 GATT `operation_failed/status`로 판정하도록
+진단 순서를 고정했다. 다른 phase와 다른 전역 오류는 계속 즉시 실패한다. 새 exact 실행에서
+상세 실패가 재현되면 그 단계로 원인을 좁히고, 재현되지 않더라도 20회 전체와 replay·EATT가 끝나기
+전에는 PASS로 승격하지 않는다.
 
 ## 6. 남은 유한 실행 순서
 
