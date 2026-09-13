@@ -3,14 +3,14 @@
 | 항목 | 현재 결과 |
 | --- | --- |
 | 작업일 | 2026-09-14 |
-| 준비 기준 HEAD | `d425248b8063cfb4e816c12cab6dd62c88cae446` 이후 미커밋 W07 source |
+| 진단 기준 HEAD | `08cc52d627a0aa362c77320f6b35a86e7200b33b` 이후 EATT window 수정 source |
 | NCS / Zephyr | `99553055607b…` / `bf801e4e3d19…` |
 | board / toolchain | `fe65f2f0880b…` / `dcbdc366a1` |
-| W07 공개 계약 | **13/13 PASS** |
-| strict Host parser | **14/14 PASS** |
+| W07 공개 계약 | **17/17 PASS** |
+| strict Host parser | **16/16 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
-| target build | **`fb03df6e…` 2/2와 광고 수정 source 2/2 PASS, warning 0** |
+| target build | **`08cc52d6…` 2/2와 bearer별 1-buffer 수정 source 2/2 PASS, warning 0** |
 | 실제 `M29-SIGN-01` / `M29-EATT-01` | **NOT RUN / NOT RUN** |
 | 실제 `M29-MULTI-01` / `M29-REG-01` | **NOT RUN / NOT RUN** |
 | M29 진행률 | **6/8 유지** |
@@ -49,17 +49,17 @@ END에 full Core revision, 128-bit nonce와 iteration을 붙인다. Signed 단�
 
 EATT 단계는 암호화 전 연결 거부, 암호화 뒤 bearer 2개, 상한 초과 거부를 확인한다. Production
 enhanced read/write 뒤 두 실제 EATT L2CAP channel에서 bearer별 1,000 ATT Write Command를 보내고
-peripheral이 sequence·checksum·bearer 분리를 검증한다. TX buffer는 4개 고정 pool이며 무한 재시도는
-없다.
+peripheral이 sequence·checksum·bearer 분리를 검증한다. TX buffer는 bearer마다 1개, 전체 2개인
+고정 pool이며 각 bearer에 pending SDU를 하나만 둔다. 무한 재시도는 없다.
 
 `tests/hil/nu54dk/m29_ble_signed_eatt.py`는 source clean·revision·build record·보드 UID/UART를 flash
-전에 확인한다. Parser 14개는 정상 두 role 외에 ASCII/non-ASCII noise, 누락·중복·재배치,
-wrong revision·stale nonce, counter rollback, replay accept, EATT shortfall, target FAIL과 END 뒤
+전에 확인한다. Parser 16개는 정상 두 role과 제한된 HCI `0x3e` 재시도 외에 ASCII/non-ASCII
+noise, 누락·중복·재배치, wrong revision·stale nonce, counter rollback, replay accept, EATT shortfall, target FAIL과 END 뒤
 추가 record를 fail-closed로 거부한다.
 
 ## 3. Host·target 준비 결과
 
-W07 공개 계약 13/13, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
+W07 공개 계약 17/17, parser 16/16, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
 M22 stable package 경계 7/7, readiness 8/8이 PASS했다. 전체 Host gate에서 W07 신규 예제를 후속
 후보 집합에 반영하지 않은 1건은 수정 뒤 동일 시험 7/7 PASS했다. 임시 native EXE 일부는 첫 실행에
 Windows Application Control `WinError 4551`로 17회 차단됐다. PAwR·TWIM 실패 module을 같은 source와
@@ -223,9 +223,30 @@ HCI `Connection Failed to be Established / Synchronization Timeout`이며 장시
 connection object의 `connection_recycled` event를 받은 뒤에만 peripheral 광고 또는 central scan을
 다시 시작하며, 각 재시도는 고정 `RETRY/reason=62/attempt=1..2` record로 남긴다. 다른 reason,
 다른 phase, 3회째 실패는 즉시 FAIL이다. Parser도 optional record의 위치·reason·순번·상한을
-fail-closed로 검사한다. Source 계약 16/16·parser 16/16·readiness 8/8 뒤 target build로 검증한다.
+fail-closed로 검사한다. Source 계약 16/16·parser 16/16·readiness 8/8 뒤 target build로 검증했다.
 
-## 6. 남은 유한 실행 순서
+## 6. Exact `08cc52d6…` EATT timeout과 단일 window 수정
+
+Exact `08cc52d627a0aa362c77320f6b35a86e7200b33b` 전체 실행은 연결 생성 `0x3e`를 sign 1·7·15회와
+replay 21회에서 각각 1회씩 제한 복구했다. 그 뒤 Signed Write 20/20, central local counter 20,
+peripheral remote counter 20과 동일 PDU replay 수락 0을 통과했다. EATT는 두 bearer와 production
+enhanced read/write까지 성공한 뒤 raw 부하 중 `unexpected_disconnect/code=8`로 끝났다. 원본은
+`evidence/m29-w07-08cc52d6-signed-eatt/`에 보존하며 전체 test ID는 계속 `NOT RUN`이다.
+
+양쪽 CMSIS-DAP에서 `CFSR=0`, `HFSR=0`을 확인했다. Central SRAM은 production read/write `1/1`,
+bearer별 송신 `1000/739`, 반환 buffer `1739`, peripheral은 production write `1`, 수신
+`1000/734`를 보존했고 disconnect reason은 양쪽 `0x08`이었다. 따라서 CPU fault나 EATT 협상 전
+실패가 아니라 4-buffer 공유 송신 window의 후반 정체로 분류했다. 같은 exact image에서 EATT만
+격리 실행하면 204.859초에 `2000/2000`을 통과해 기능 부재가 아님도 확인했다.
+
+Zephyr EATT host의 bearer별 pending-send 경계에 맞춰 HIL raw sender를 bearer별 고정 1-buffer,
+전체 2-buffer로 제한했다. 한 bearer의 buffer가 반환되기 전에는 그 bearer에 다음 SDU를 넣지 않는다.
+Host 계약 17/17, parser 16/16, readiness 8/8과 target 2/2 warning 0 뒤 같은 두 보드·bond의 dirty
+diagnostic EATT-only 실행은 105.391초에 bearer별 1,000, payload 오류·deadlock·starvation 0으로
+통과했다. 이 격리 결과는 공식 PASS가 아니며, 새 clean exact commit으로 20회 signing부터 EATT까지
+전체 runner를 다시 실행한다.
+
+## 7. 남은 유한 실행 순서
 
 1. W07 준비 변경을 commit/push하고 exact GitHub Software·Reproducible Build CI를 확인한다.
 2. Clean exact commit으로 Signed/EATT 두 role을 재빌드한다.

@@ -87,7 +87,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser를 구
 | M29-W04 | **완료 — Host·target 2/2·2보드 descriptor/read multiple 100/100 PASS** | exact `068a1765…`, descriptor 4개·authorization 오판 0 증거 유지 |
 | M29-W05 | **완료 — Host·target 2/2·2보드 cache migration PASS** | exact `e587c4fe…`, bonded reconnect 20·stale/corrupt accept 0 증거 유지 |
 | M29-W06 | **완료 — Host·target 2/2·2보드 CoC/negative PASS** | exact `767bb4af…`, 2-channel·512 byte·각 방향 1,000 SDU·5 negative class·복구 오류 0 증거 유지 |
-| M29-W07 | **진행 중 — Host 계약 16/16·parser 16/16·target 2/2 PASS** | exact commit 기준 `M29-SIGN/EATT/MULTI/REG-01` HIL과 증거 보존 |
+| M29-W07 | **진행 중 — Host 계약 17/17·parser 16/16·target 2/2 PASS** | exact commit 기준 `M29-SIGN/EATT/MULTI/REG-01` HIL과 증거 보존 |
 | M29-W08 | 미착수 | 전체 회귀·예제·문서·지원 판정·CI와 M30 인계 |
 
 M29-W02는 central/peripheral 두 link가 각각 discovery/read/write/subscription parameter와 512-byte
@@ -149,7 +149,7 @@ profile을 바꾸지 않는다. Signed Write는 bonded CSRK와 local/remote sign
 즉시 저장하며 저장 실패 시 link를 끊는다. EATT는 암호화된 link에서만 최대 2 bearer를 열고,
 read/write overload가 unenhanced/enhanced bearer를 명시하며 상세 event가 실제 선택 bearer를
 보고한다. 기존 enum ordinal과 무인자 API는 유지한다. 공개 예제 4개, W07 3개를 포함한 production
-Host 전체 24개 시나리오, source 계약 16개, strict HIL parser 16개와 고정 NCS target role 2/2가
+Host 전체 24개 시나리오, source 계약 17개, strict HIL parser 16개와 고정 NCS target role 2/2가
 PASS했다. Windows Application Control의 첫 전체 실행 차단은 유한 4551 대기를 보강한 뒤 전체 Host
 1,106개 PASS(조건부 2개 skip)로 재검증했다. Arduino M29 smoke는 `EattCentral`의 미지원
 `<cstring>`을 `<string.h>`로 고친 뒤 GATT·CoC·cache·signing·EATT 예제 **14/14 PASS**로
@@ -195,6 +195,13 @@ Exact `f497d382…`은 첫 sign 재연결에서 reason 62(`0x3e`, connection est
 확정했다. Signed Write 전 RF 연결 생성 transient에 한해 session당 최대 2회, 기존 object의
 `connection_recycled` 뒤에만 다시 광고/scan한다. `RETRY` record의 reason·attempt·상한은 parser가
 검사하며 다른 reason·phase와 3회째 실패는 즉시 거부한다.
+
+Exact `08cc52d6…`은 제한된 `0x3e`를 sign 1·7·15회와 replay에서 복구한 뒤 Signed Write
+20/20·counter 20·replay 수락 0을 통과했다. EATT는 production read/write 뒤 bearer 송신
+`1000/739`, peer 수신 `1000/734`에서 HCI `0x08`로 끊겼고 양쪽 `CFSR/HFSR=0`이었다. 기존
+4-buffer 공유 window의 EATT-only 실행은 204.859초에 통과했지만, Zephyr의 bearer별 pending-send
+경계에 맞춘 고정 1-buffer/1-in-flight 수정은 같은 보드에서 105.391초에 `2000/2000`을 통과했다.
+이 격리 실행은 공식 PASS가 아니며 새 clean exact 전체 runner로 재검증한다.
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로

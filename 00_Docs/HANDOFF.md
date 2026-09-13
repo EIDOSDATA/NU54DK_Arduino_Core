@@ -135,7 +135,7 @@ W07은 기본 OFF의 `NUCODE_BLE_LegacySigning`·`NUCODE_BLE_EATT` 선택 librar
 local/remote sign counter는 정상 완료에서 main thread가 저장하며 queue 포화 fallback도 counter를
 저장하고 실패 시 link를 끊는다. Strict `M29W07|1` target·runner는 20회 재부팅 counter,
 동일 signed ATT PDU replay 거부, 암호화 전 EATT 거부, 2 bearer별 1,000 operation을 판정한다.
-Production Host 전체 24개 시나리오·W07 계약 16/16·parser 16/16와 target role 2/2는 PASS했다.
+Production Host 전체 24개 시나리오·W07 계약 17/17·parser 16/16와 target role 2/2는 PASS했다.
 Windows Application Control 4551에만 최대 30초 유한 대기를 적용한 뒤 전체 Host 1,106개도
 PASS(조건부 2개 skip)했다. Arduino M29 smoke는 `EattCentral`의 최소 C++ runtime 비호환
 `<cstring>`을 `<string.h>`로 교체한 뒤 전체 14개 예제를 처음부터 다시 build해 14/14 PASS했다.
@@ -179,6 +179,13 @@ Exact `f497d382…`은 reason 62(`0x3e`, connection establishment sync timeout)�
 직접 확인했다. Target은 Signed Write 전 `connecting`/`discovering`에서 이 reason만 session당 2회
 이내로 허용하고 `connection_recycled` 뒤 광고/scan을 재개한다. `RETRY` reason·순번·상한은 strict
 parser가 검사하며 다른 disconnect와 상한 초과는 계속 즉시 실패한다.
+
+Exact `08cc52d6…` 전체 실행은 제한된 `0x3e`를 네 session에서 복구한 뒤 Signed Write
+20/20·counter 20·replay 수락 0을 통과했다. EATT 후반은 central `1000/739`, peripheral
+`1000/734`에서 reason `0x08`로 끊겼고 양쪽 CPU fault register는 0이었다. 4-buffer 공유 window는
+격리 EATT에서 204.859초가 걸렸으며, Zephyr EATT pending-send 경계에 맞춘 bearer별 고정
+1-buffer/1-in-flight 수정은 같은 두 보드에서 105.391초에 `2000/2000`을 통과했다. 공식 test ID는
+새 clean exact 전체 runner가 끝날 때까지 `NOT RUN`이다.
 
 실행기와 보드 조건은 [W07 HIL 안내](../tests/hil/nu54dk/README.md#m29-w07-두-보드-signed-writeeatt-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과

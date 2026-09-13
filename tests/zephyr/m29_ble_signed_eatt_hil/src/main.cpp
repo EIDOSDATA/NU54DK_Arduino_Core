@@ -78,7 +78,7 @@ namespace
     constexpr std::uint8_t replay_marker = 0x52U;
     constexpr std::uint8_t eatt_production_marker = 0xe6U;
     constexpr std::uint8_t eatt_raw_marker = 0xe7U;
-    constexpr std::size_t eatt_tx_buffer_count = 4U;
+    constexpr std::size_t eatt_bearer_count = 2U;
 
     static_assert(legacy_flags_serialized_length +
                       legacy_manufacturer_serialized_length <=
@@ -165,20 +165,34 @@ namespace
     };
 
 #if defined(NUCODE_M29_ADVANCED_CENTRAL)
-    struct bt_l2cap_chan *eatt_channels[2] = {};
-    std::uint32_t eatt_sent[2] = {};
+    struct bt_l2cap_chan *eatt_channels[eatt_bearer_count] = {};
+    std::uint32_t eatt_sent[eatt_bearer_count] = {};
     std::uint32_t eatt_next_bearer = 0U;
-    atomic_t eatt_buffers_completed = ATOMIC_INIT(0);
+    atomic_t eatt_buffers_completed[eatt_bearer_count] = {
+        ATOMIC_INIT(0),
+        ATOMIC_INIT(0),
+    };
 
-    /** @brief EATT 전송 buffer가 controller 완료 뒤 pool로 돌아온 횟수를 셉니다. */
-    void eattBufferDestroyed(struct net_buf *buffer)
+    /** @brief 첫 EATT bearer의 단일 전송 buffer 반환 횟수를 셉니다. */
+    void eattBearer0BufferDestroyed(struct net_buf *buffer)
     {
-        atomic_inc(&eatt_buffers_completed);
+        atomic_inc(&eatt_buffers_completed[0]);
         net_buf_destroy(buffer);
     }
 
-    NET_BUF_POOL_FIXED_DEFINE(eatt_tx_pool, eatt_tx_buffer_count, 32U,
-                              CONFIG_BT_CONN_TX_USER_DATA_SIZE, eattBufferDestroyed);
+    /** @brief 둘째 EATT bearer의 단일 전송 buffer 반환 횟수를 셉니다. */
+    void eattBearer1BufferDestroyed(struct net_buf *buffer)
+    {
+        atomic_inc(&eatt_buffers_completed[1]);
+        net_buf_destroy(buffer);
+    }
+
+    NET_BUF_POOL_FIXED_DEFINE(eatt_tx_pool_0, 1U, 32U,
+                              CONFIG_BT_CONN_TX_USER_DATA_SIZE,
+                              eattBearer0BufferDestroyed);
+    NET_BUF_POOL_FIXED_DEFINE(eatt_tx_pool_1, 1U, 32U,
+                              CONFIG_BT_CONN_TX_USER_DATA_SIZE,
+                              eattBearer1BufferDestroyed);
 #endif
 
     /** @brief 현재 image의 고정 role 이름을 반환합니다. */
@@ -600,7 +614,9 @@ namespace
     /** @brief 지정 EATT bearer에 sequence가 결합된 실제 ATT Write Command를 보냅니다. */
     int sendEattWrite(std::size_t bearer_index, std::uint32_t sequence)
     {
-        struct net_buf *buffer = net_buf_alloc(&eatt_tx_pool, K_NO_WAIT);
+        struct net_buf_pool *pool =
+            bearer_index == 0U ? &eatt_tx_pool_0 : &eatt_tx_pool_1;
+        struct net_buf *buffer = net_buf_alloc(pool, K_NO_WAIT);
         if (buffer == nullptr)
         {
             return 0;
@@ -1081,7 +1097,8 @@ namespace
         eatt_sent[0] = 0U;
         eatt_sent[1] = 0U;
         eatt_next_bearer = 0U;
-        atomic_set(&eatt_buffers_completed, 0);
+        atomic_set(&eatt_buffers_completed[0], 0);
+        atomic_set(&eatt_buffers_completed[1], 0);
 #endif
         printBegin();
 #if defined(NUCODE_M29_ADVANCED_CENTRAL)
@@ -1340,7 +1357,7 @@ namespace
         {
             return;
         }
-        for (std::size_t attempt = 0U; attempt < eatt_tx_buffer_count; ++attempt)
+        for (std::size_t attempt = 0U; attempt < eatt_bearer_count; ++attempt)
         {
             const std::size_t bearer = eatt_next_bearer % 2U;
             eatt_next_bearer = static_cast<std::uint32_t>((eatt_next_bearer + 1U) % 2U);
@@ -1361,8 +1378,10 @@ namespace
         }
         if (eatt_sent[0] == eatt_operations_per_bearer &&
             eatt_sent[1] == eatt_operations_per_bearer &&
-            atomic_get(&eatt_buffers_completed) ==
-                static_cast<atomic_val_t>(eatt_operations_per_bearer * 2U))
+            atomic_get(&eatt_buffers_completed[0]) ==
+                static_cast<atomic_val_t>(eatt_operations_per_bearer) &&
+            atomic_get(&eatt_buffers_completed[1]) ==
+                static_cast<atomic_val_t>(eatt_operations_per_bearer))
         {
             Serial.print(protocol);
             Serial.print("|EATT|role=central|bearers=2|ops_bearer0=1000|");

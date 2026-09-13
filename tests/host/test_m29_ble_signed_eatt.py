@@ -207,6 +207,16 @@ class M29BleSignedEattTests(unittest.TestCase):
             'fail("eatt_write_start", BLEDevice.lastDriverError())', target
         )
 
+    def test_hil_limits_eatt_to_one_in_flight_sdu_per_bearer(self):
+        """! @brief EATT host 규칙처럼 각 bearer에 단일 pending SDU만 둡니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertIn("eatt_bearer_count = 2U", target)
+        self.assertIn("NET_BUF_POOL_FIXED_DEFINE(eatt_tx_pool_0, 1U", target)
+        self.assertIn("NET_BUF_POOL_FIXED_DEFINE(eatt_tx_pool_1, 1U", target)
+        self.assertIn("atomic_get(&eatt_buffers_completed[0])", target)
+        self.assertIn("atomic_get(&eatt_buffers_completed[1])", target)
+        self.assertNotIn("eatt_tx_buffer_count", target)
+
     def test_hil_resynchronizes_uart_after_each_warm_reboot(self):
         """! @brief reset framing 구간을 닫은 뒤 질의한 exact READY만 증거에 넣습니다. """
         runner = (ROOT / "tests/hil/nu54dk/m29_ble_signed_eatt.py").read_text(
