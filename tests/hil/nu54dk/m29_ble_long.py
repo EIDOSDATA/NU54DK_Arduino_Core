@@ -271,6 +271,7 @@ def execute_long_pair(
     flash_backend: str,
     protocol: str = PROTOCOL,
     flash_label: str = "M29W02",
+    ready_query: bytes | None = None,
 ) -> PairExecution:
     """! @brief 두 image를 flash하고 peripheral 광고 뒤 central을 시작합니다. """
 
@@ -316,6 +317,15 @@ def execute_long_pair(
                     flashes[role] = flash_image(
                         flash_label, role, endpoint.volume, image, flash_timeout
                     )
+            if ready_query is not None:
+                for role in ("peripheral", "central"):
+                    ports[role].reset_input_buffer()
+                    written = ports[role].write(ready_query)
+                    ports[role].flush()
+                    if written != len(ready_query):
+                        raise BlePairHilFailure(
+                            f"{role} READY query가 일부만 기록됐습니다."
+                        )
             deadline = time.monotonic() + result_timeout
             for role in ("peripheral", "central"):
                 _wait_ready(

@@ -15,7 +15,7 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any
+from typing import Any, Sequence
 
 
 HIL_DIRECTORY = Path(__file__).resolve().parent
@@ -123,8 +123,13 @@ def validate_pair_identity(peripheral: RoleEndpoint, central: RoleEndpoint) -> N
 
 ## @brief exact-commit HIL 입력 source와 board checkout이 clean인지 검사합니다.
 def validate_source_clean(
-    milestone: str, application_root: Path, runner_path: Path
+    milestone: str,
+    application_root: Path,
+    runner_path: Path,
+    additional_paths: Sequence[Path] = (),
 ) -> None:
+    """! @brief runner가 직접 import하는 추가 source까지 exact clean 상태로 묶습니다. """
+
     core_paths = (
         "cores/arduino",
         "dts",
@@ -138,6 +143,7 @@ def validate_source_clean(
         "tests/hil/nu54dk/ble_pair_hil_common.py",
         "tests/hil/nu54dk/m14_pin_hil.py",
         "tests/hil/nu54dk/m6_serial_echo.py",
+        *(str(path.resolve().relative_to(REPOSITORY)) for path in additional_paths),
     )
     core = subprocess.run(
         (

@@ -92,6 +92,7 @@ class M29BleLongWriteTests(unittest.TestCase):
             self.assertIn(token, host, token)
         for token in (
             'protocol[] = "M29W03|1"',
+            'ready_query[] = "M29W03|1|READY?"',
             "required_iterations = 100U",
             "partial_commit",
             "BLEClient.write(connection_handle, payload, sizeof(payload))",
@@ -100,6 +101,7 @@ class M29BleLongWriteTests(unittest.TestCase):
             self.assertIn(token, target, token)
         self.assertIn('PROTOCOL = "M29W03|1"', runner)
         self.assertIn('"m29_long_01_status": "passed"', runner)
+        self.assertIn('additional_paths=(HIL_DIRECTORY / "m29_ble_long.py",)', runner)
 
 
 if __name__ == "__main__":

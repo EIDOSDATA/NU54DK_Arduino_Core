@@ -201,7 +201,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
     core_revision = git_revision(REPOSITORY, args.expected_core_revision)
     board_revision = git_revision(BOARD_ROOT)
     validate_board_revision(board_revision)
-    validate_source_clean("M29W03", APPLICATION_SOURCE_ROOT, Path(__file__).resolve())
+    validate_source_clean(
+        "M29W03",
+        APPLICATION_SOURCE_ROOT,
+        Path(__file__).resolve(),
+        additional_paths=(HIL_DIRECTORY / "m29_ble_long.py",),
+    )
     peripheral_record = validate_build_record(
         peripheral_image, core_revision, board_revision, APPLICATION_SOURCE_ROOT
     )
@@ -230,6 +235,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             flash_backend=args.flash_backend,
             protocol=PROTOCOL,
             flash_label="M29W03",
+            ready_query=f"{PROTOCOL}|READY?\r\n".encode("ascii"),
         )
         validate_image_unchanged(peripheral_image, peripheral_size, peripheral_sha256)
         validate_image_unchanged(central_image, central_size, central_sha256)

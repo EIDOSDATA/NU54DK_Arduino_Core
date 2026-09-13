@@ -28,6 +28,7 @@ namespace
 {
 
     constexpr char protocol[] = "M29W03|1";
+    constexpr char ready_query[] = "M29W03|1|READY?";
     constexpr char start_prefix[] = "M29W03|1|START|nonce=";
     constexpr char core_field[] = "|core=";
     constexpr char peer_name[] = "NU54-M29-WRITE";
@@ -216,6 +217,16 @@ namespace
         Serial.print(roleName());
         printSuffix();
         Serial.println();
+    }
+
+    /** @brief Host 질의에 현재 image identity READY를 한 번 출력합니다. */
+    void printReady()
+    {
+        Serial.print(protocol);
+        Serial.print("|READY|role=");
+        Serial.print(roleName());
+        Serial.print("|core=");
+        Serial.println(M29_LONG_WRITE_CORE_REVISION);
     }
 
     /** @brief 실제 negotiated ATT MTU를 고정 LINK record로 출력합니다. */
@@ -557,6 +568,12 @@ namespace
             if (value == '\n')
             {
                 command[command_length] = '\0';
+                if (::strcmp(command, ready_query) == 0)
+                {
+                    command_length = 0U;
+                    printReady();
+                    return;
+                }
                 startProtocol();
                 return;
             }
@@ -598,11 +615,7 @@ void setup()
         fail("device_begin", BLEDevice.lastDriverError());
         return;
     }
-    Serial.print(protocol);
-    Serial.print("|READY|role=");
-    Serial.print(roleName());
-    Serial.print("|core=");
-    Serial.println(M29_LONG_WRITE_CORE_REVISION);
+    printReady();
 }
 
 void loop()
