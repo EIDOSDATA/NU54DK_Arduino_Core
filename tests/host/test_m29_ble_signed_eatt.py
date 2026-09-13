@@ -207,6 +207,22 @@ class M29BleSignedEattTests(unittest.TestCase):
             'fail("eatt_write_start", BLEDevice.lastDriverError())', target
         )
 
+    def test_hil_resynchronizes_uart_after_each_warm_reboot(self):
+        """! @brief reset framing 구간을 닫은 뒤 질의한 exact READY만 증거에 넣습니다. """
+        runner = (ROOT / "tests/hil/nu54dk/m29_ble_signed_eatt.py").read_text(
+            encoding="utf-8"
+        )
+        reboot = runner[runner.index("def _reboot_pair(") : runner.index("def _run_session(")]
+        self.assertIn("REBOOT_SERIAL_SETTLE_SECONDS = 1.0", runner)
+        self.assertIn("time.sleep(REBOOT_SERIAL_SETTLE_SECONDS)", reboot)
+        self.assertIn("ports[role].reset_input_buffer()", reboot)
+        self.assertIn('f"{PROTOCOL}|READY?"', reboot)
+        self.assertLess(
+            reboot.index("ports[role].reset_input_buffer()"),
+            reboot.index('f"{PROTOCOL}|READY?"'),
+        )
+        self.assertIn("del captures[role][-pending_length:]", reboot)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

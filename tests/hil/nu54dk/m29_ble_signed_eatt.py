@@ -56,6 +56,7 @@ DEFAULT_RESULT_TIMEOUT_SECONDS = 900.0
 SIGN_REBOOTS = 20
 REPLAY_ITERATION = 21
 EATT_ITERATION = 22
+REBOOT_SERIAL_SETTLE_SECONDS = 1.0
 
 
 @dataclass(frozen=True)
@@ -445,43 +446,62 @@ def _reboot_pair(
     expected_bonds: int,
     timeout_seconds: float,
 ) -> None:
-    """! @brief 두 target을 warm reboot하고 exact READY까지 동시에 수집합니다. """
+    """! @brief 두 target을 warm reboot하고 UART 재동기화 뒤 exact READY를 질의합니다. """
 
     command = f"{PROTOCOL}|REBOOT|nonce={nonce}|core={core_revision}"
     for role in ("peripheral", "central"):
         _write_line(ports[role], command)
 
-    stop_event = threading.Event()
-
-    def wait_role(role: str) -> None:
+    def wait_rebooting(role: str) -> None:
         deadline = time.monotonic() + timeout_seconds
-        try:
-            _read_expected(
-                ports[role],
-                role,
-                pending[role],
-                captures[role],
-                deadline,
-                f"{PROTOCOL}|REBOOTING|role={role}|nonce={nonce}|core={core_revision}".encode(
-                    "ascii"
-                ),
-            )
-            _read_expected(
-                ports[role],
-                role,
-                pending[role],
-                captures[role],
-                deadline,
-                f"{PROTOCOL}|READY|role={role}|bond_count={expected_bonds}|core={core_revision}".encode(
-                    "ascii"
-                ),
-            )
-        except Exception:
-            stop_event.set()
-            raise
+        _read_expected(
+            ports[role],
+            role,
+            pending[role],
+            captures[role],
+            deadline,
+            f"{PROTOCOL}|REBOOTING|role={role}|nonce={nonce}|core={core_revision}".encode(
+                "ascii"
+            ),
+        )
 
     with ThreadPoolExecutor(max_workers=2) as executor:
-        futures = [executor.submit(wait_role, role) for role in ("peripheral", "central")]
+        futures = [
+            executor.submit(wait_rebooting, role)
+            for role in ("peripheral", "central")
+        ]
+        for future in futures:
+            future.result()
+
+    # Warm reset 동안 DAPLink UART가 만드는 첫 framing byte와 자동 READY는
+    # 결과 protocol의 경계 밖에서 버린다. 경계 뒤에는 exact READY 한 줄만 허용한다.
+    time.sleep(REBOOT_SERIAL_SETTLE_SECONDS)
+    for role in ("peripheral", "central"):
+        if pending[role]:
+            pending_length = len(pending[role])
+            if captures[role][-pending_length:] != pending[role]:
+                raise BlePairHilFailure(f"{role} UART pending/capture 경계가 손상됐습니다.")
+            del captures[role][-pending_length:]
+            pending[role].clear()
+        ports[role].reset_input_buffer()
+        _write_line(ports[role], f"{PROTOCOL}|READY?")
+
+    def wait_ready(role: str) -> None:
+        _read_expected(
+            ports[role],
+            role,
+            pending[role],
+            captures[role],
+            time.monotonic() + timeout_seconds,
+            f"{PROTOCOL}|READY|role={role}|bond_count={expected_bonds}|core={core_revision}".encode(
+                "ascii"
+            ),
+        )
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [
+            executor.submit(wait_ready, role) for role in ("peripheral", "central")
+        ]
         for future in futures:
             future.result()
 

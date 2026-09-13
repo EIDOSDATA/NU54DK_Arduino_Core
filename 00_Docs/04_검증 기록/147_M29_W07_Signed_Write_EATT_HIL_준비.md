@@ -188,6 +188,19 @@ EATT production 경로는 응답형 `BLEClient.write(..., enhanced)`를 호출�
 명시적으로 추가하고 실패 record에도 `BLEDevice.lastDriverError()`를 남기도록 수정했다. Host source
 계약 13/13 뒤 새 exact 전체 실행으로 bearer별 1,000 operation까지 확인한다.
 
+Exact `6b659002…` 재실기는 수정한 EATT 경로에 도달하기 전 Signed Write 8회차 뒤 warm reboot의
+central 자동 READY 첫 byte에 raw `0xfe`가 붙어 strict runner가 즉시 거부했다. 그 뒤 target은
+SIGN 12회차까지 정상 출력했으므로 BLE link·CSRK counter·CPU fault가 아니라 reset 순간 DAPLink
+UART framing 경계 문제로 분류한다. 실패 원본은
+`evidence/m29-w07-6b659002-signed-eatt/`에 보존하며 성공 증거로 승격하지 않는다.
+
+이는 143번 W03의 flash/reset 직후 raw `0x1c`와 같은 계열이지만 W07은 한 실행에서 warm reboot를
+23회 수행하므로 reboot마다 재동기화가 필요하다. Runner는 양쪽 exact `REBOOTING`을 먼저 검증하고
+1초 정착 뒤 reset 구간의 자동 READY와 framing byte를 protocol 증거 경계 밖에서 비운다. 그 다음
+고정 `M29W07|1|READY?`를 각 target에 한 번 보내 exact READY 한 줄만 받는다. READY 질의 이후
+noise·누락·중복·wrong revision 거부와 최종 transcript parser는 완화하지 않았다. Host source 계약
+14/14·parser 14/14·readiness 8/8이 PASS했으며 새 exact commit으로 처음부터 재검증한다.
+
 ## 6. 남은 유한 실행 순서
 
 1. W07 준비 변경을 commit/push하고 exact GitHub Software·Reproducible Build CI를 확인한다.

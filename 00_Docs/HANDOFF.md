@@ -135,7 +135,7 @@ W07은 기본 OFF의 `NUCODE_BLE_LegacySigning`·`NUCODE_BLE_EATT` 선택 librar
 local/remote sign counter는 정상 완료에서 main thread가 저장하며 queue 포화 fallback도 counter를
 저장하고 실패 시 link를 끊는다. Strict `M29W07|1` target·runner는 20회 재부팅 counter,
 동일 signed ATT PDU replay 거부, 암호화 전 EATT 거부, 2 bearer별 1,000 operation을 판정한다.
-Production Host 전체 24개 시나리오·W07 계약 13/13·parser 14/14와 target role 2/2는 PASS했다.
+Production Host 전체 24개 시나리오·W07 계약 14/14·parser 14/14와 target role 2/2는 PASS했다.
 Windows Application Control 4551에만 최대 30초 유한 대기를 적용한 뒤 전체 Host 1,106개도
 PASS(조건부 2개 skip)했다. Arduino M29 smoke는 `EattCentral`의 최소 C++ runtime 비호환
 `<cstring>`을 `<string.h>`로 교체한 뒤 전체 14개 예제를 처음부터 다시 build해 14/14 PASS했다.
@@ -164,6 +164,11 @@ Exact `23fa4a6e…`는 Signed Write 20/20·counter 20·replay 수락 0을 통과
 enhanced read까지 진입했다. 응답형 enhanced write에 필요한 characteristic `write` property가
 target schema에서 빠져 시작이 거부된 것으로 확정해 property와 driver error 보고를 추가했다.
 Bearer별 1,000 operation 전에는 EATT PASS로 표시하지 않는다.
+
+Exact `6b659002…`의 다음 실행은 sign 8회차 뒤 central warm reboot READY 앞 raw `0xfe`를 strict
+runner가 거부했다. BLE나 target fault가 아니라 reset 순간 DAPLink UART framing 경계로 분류하고
+원본을 보존했다. Runner는 양쪽 exact `REBOOTING` 뒤 1초 UART 정착·입력 경계 재설정·고정
+`READY?` 질의를 수행하며, 질의 뒤 READY와 전체 결과 parser는 계속 noise를 fail-closed로 거부한다.
 
 실행기와 보드 조건은 [W07 HIL 안내](../tests/hil/nu54dk/README.md#m29-w07-두-보드-signed-writeeatt-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과
