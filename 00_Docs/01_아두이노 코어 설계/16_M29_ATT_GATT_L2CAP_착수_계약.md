@@ -9,8 +9,13 @@
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M29 상태 | **W07 2보드 SIGN/EATT 완료, W01~W08 6/8·test ID 8/10** |
-| 기계 원장 | `variants/nu54dk/m29-ble-readiness.json` |
+| M29 상태 | **W07-C 2보드 SIGN/EATT 완료, W01~W08 6/8(75%)·test ID 8/10** |
+| 기계 원장 | [`m29-ble-readiness.json`](../../variants/nu54dk/m29-ble-readiness.json) |
+
+W07-C 완료 뒤 개발을 일시 중단한 상태다. W07-D/E의 3보드 `M29-MULTI-01`·`M29-REG-01`은
+`NOT RUN`, W08은 미착수다. 이 문서의 공개 API 목표는 v0.5.0 개발 계약이며, 설치·지원
+v0.4.1의 기능 확대를 뜻하지 않는다. 현재 결과는
+[147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)을 따른다.
 
 ## 1. 목표와 완료 의미
 
@@ -203,18 +208,26 @@ bearer별 1,000 SDU와 payload 오류·deadlock·starvation 0을 확인했다. �
 `M29-SIGN-01`·`M29-EATT-01`은 PASS다. `M29-MULTI-01`·`M29-REG-01`은 `NOT RUN`이므로 W07과
 M29 전체를 완료로 승격하지 않는다.
 
-Cross-vendor 완료 gate에 실제 OS peer 조작이 필요해지는 시점 전까지 코드·Host 시험·target build,
-NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거나 기능을 지원하지 않으면 해당
+W07-C 이후 재개가 승인되면 코드·Host 시험·target build, NU54DK 3보드 HIL,
+parser·문서·예제를 진행한다. Cross-vendor gate에 OS peer 조작이 필요하면 그 시점에 안내한다.
+OS peer가 없거나 기능을 지원하지 않으면 해당
 결과는 `NOT RUN` 또는 `NOT APPLICABLE`로 근거를 남기며 M29 전체 PASS로 승격하지 않는다.
 
-## 8. 예제 계획
+## 8. 개발 예제와 남은 예제
 
-- `LongGattPeripheral`, `LongGattCentral`, `ReliableWritePeripheral`, `ReliableWriteCentral`
-- `GattDescriptors`, `GattAuthorization`, `GattCachePeripheral`, `GattCacheCentral`
-- `L2capCocServer`, `L2capCocClient`
-- `LegacySignedWrite` — deprecated opt-in 경고 포함
-- `ExperimentalEatt` — experimental opt-in과 암호화 요구 포함
-- `MixedGattCocLinks` — 3보드 mixed-role 구성
+다음 14개 예제는 현재 개발 소스에 있으며 Arduino `v0.5.0` smoke group에서 검사한다.
+설치·지원 v0.4.1의 30개 예제 목록과는 별개다.
+
+| Library | 작성된 예제 | 범위 |
+| --- | --- | --- |
+| `NUCODE_BLE` | `LongGattPeripheral`, `LongGattCentral`, `ReliableWritePeripheral`, `ReliableWriteCentral` | 512-byte long/reliable operation |
+| `NUCODE_BLE` | `GattDescriptors`, `GattAuthorization`, `L2capCocServer`, `L2capCocClient` | descriptor·권한·고정 2-channel CoC |
+| `NUCODE_BLE_Security` | `GattCachePeripheral`, `GattCacheCentral` | bond·database hash·cache |
+| `NUCODE_BLE_LegacySigning` | `LegacySignedWritePeripheral`, `LegacySignedWriteCentral` | deprecated legacy opt-in 경고 포함 |
+| `NUCODE_BLE_EATT` | `EattPeripheral`, `EattCentral` | experimental opt-in·암호화·최대 2 bearer |
+
+`MixedGattCocLinks`는 3보드 mixed-role 통합 단계의 계획이며 아직 작성 완료로 표시하지 않는다.
+예제 파일은 [`libraries`](../../libraries) 아래 각 library의 `examples`가 단일 원본이다.
 
 모든 예제는 시작 함수와 비동기 결과를 검사하고 runtime 실패를 Serial에 출력한다. callback-only
 완료를 peer 수신 성공으로 과장하지 않는다.

@@ -1,8 +1,9 @@
 # NU54DK Arduino Core
 
-**nRF54L15에서 Arduino Sketch를 실행하세요.**
-NCS와 Zephyr를 기반으로 Sketch와 library를 하나의 firmware로 빌드하고,
-온보드 CMSIS-DAP으로 업로드합니다. 별도 Loader는 필요하지 않습니다.
+**NU54DK의 nRF54L15를 Arduino IDE에서 개발하는 오픈소스 Arduino Core입니다.**
+익숙한 `setup()`/`loop()`와 Arduino API로 시작하고, BLE와 인스턴스별 DMA 제어까지
+확장할 수 있습니다. Nordic nRF Connect SDK(NCS)와 Zephyr를 기반으로 Sketch·library·OS를
+하나의 firmware로 빌드하며, 온보드 CMSIS-DAP으로 업로드합니다. 별도 Sketch Loader는 필요하지 않습니다.
 
 [![Stable: v0.4.1](https://img.shields.io/badge/stable-v0.4.1-blue.svg)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -10,11 +11,37 @@ NCS와 Zephyr를 기반으로 Sketch와 library를 하나의 firmware로 빌드�
 [![Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-software-gates.yml/badge.svg?branch=main)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-software-gates.yml)
 [![Reproducible Builds](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-reproducible-build.yml/badge.svg?branch=main)](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/workflows/m12-reproducible-build.yml)
 
-[빠른 시작](#빠른-시작) · [지원 기능](#지원-기능) · [예제](#예제) · [문서](#문서) · [릴리스](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.1)
+[현재 상태](#현재-상태) · [빠른 시작](#빠른-시작) · [지원 기능](#지원-기능) · [개발 중인 기능](#개발-중인-기능) · [예제](#예제) · [문서](#문서) · [문제 보고와 기여](#문제-보고와-기여)
 
 | 보드 | 개발 환경 | 기반 SDK | 업로드 |
 | --- | --- | --- | --- |
 | **NU54DK · nRF54L15 CPUAPP** | Windows 10/11 x64 · Arduino IDE 2.x | NCS v3.4.0 · Zephyr 4.4.0 | CMSIS-DAP V2 + pyOCD |
+
+## 현재 상태
+
+| 구분 | 상태 | 사용할 때의 기준 |
+| --- | --- | --- |
+| 설치·지원 배포판 | **v0.4.1** | Boards Manager에서 제공하는 유일한 지원 버전. 아래 지원 기능·설치 예제의 기준 |
+| 개발 브랜치 | `main`, 소스 식별자 `0.4.1-dev` | v0.5.0을 목표로 BLE 확장 개발 중. 배포판에 없는 API·예제가 포함됨 |
+| M28 GAP·Link·Privacy | **8/8 완료** | 두·세 NU54DK 실기 완료. 개발 브랜치에 반영됐으며 v0.4.1에는 미포함 |
+| M29 ATT/GATT·L2CAP | **6/8 완료(75%)** | W07-C의 Signed Write·EATT 두 보드 시험까지 PASS. W07-D/E와 W08은 남음 |
+| v0.5.0 릴리스 | 미공개 | M29 잔여와 M30~M33 구현·검증·릴리스 절차가 필요 |
+
+현재 개발 중단점은 **M29 W07-C 완료**이며, 다음 실기 단계는 세 보드 통합·회귀 시험입니다.
+최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
+위 CI 배지는 소프트웨어 검사 상태이며 보드 실기·상호운용·정식 릴리스 완료를 뜻하지 않습니다.
+
+### 프로젝트의 구성
+
+- **Arduino 사용 경로:** Boards Manager 설치, 기능 선택, 예제 Verify/Upload로 시작합니다.
+- **Zephyr 기반 실행:** Sketch와 선택 기능을 함께 빌드합니다. 첫 설치와 최초 빌드는 SDK·툴체인을
+  준비하므로 시간이 걸리며, 이후에는 증분 빌드와 캐시를 재사용합니다.
+- **고급 주변장치 제어:** Peripheral Fabric API로 인스턴스·고정 DMA 버퍼·공유 자원을 명시적으로 다룹니다.
+- **검증 근거 공개:** Host 시험, target build, 실제 보드 시험을 구분하고 source·조건·결과를 보존합니다.
+
+지원 보드는 **NU54DK의 nRF54L15 CPUAPP**입니다. 다른 nRF54 보드와 Linux/macOS용 Arduino 설치는
+현재 지원 대상에 포함되지 않습니다. Zephyr API 직접 사용이나 임의 외부 Arduino library의 빌드 가능성이
+그 조합의 검증·제품 지원을 뜻하지는 않습니다.
 
 ## 빠른 시작
 
@@ -89,7 +116,7 @@ void loop()
 | Wire·SPI | **부분 지원:** Wire는 I2C22 master, SPI는 SPI00 controller. 둘 다 runtime pin route 제공 |
 | Analog·출력 | ADC 채널·resolution, 동적 PWM, `tone()`, Servo |
 | Storage | EEPROM facade 1,024 byte, 내부 LittleFS 32 KiB, Settings/ZMS |
-| BLE | NUS, GAP Peripheral/Central, 범용 GATT, pairing·bonding, BAS·DIS·HID keyboard |
+| BLE | **동시 연결 1개**, GAP Peripheral 또는 Central, NUS, 범용 GATT, pairing·bonding, BAS·DIS·HID keyboard |
 | Board·System | Board identity, watchdog, GRTC, System OFF와 timed/button wake |
 
 `Serial`은 native USB CDC가 아닙니다. Wire target/slave·`Wire1`, SPI peripheral·`SPI1`은
@@ -116,9 +143,32 @@ QDEC는 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원합니다.
 > 전체 공개 계약은 [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)와
 > [알려진 제약](<00_Docs/05_릴리스/v0.4.1/KNOWN_ISSUES.md>)을 확인하세요.
 
+## 개발 중인 기능
+
+아래는 **`main`의 v0.5.0 개발 범위**입니다. Boards Manager의 v0.4.1 지원표와 구분해서 읽어주세요.
+PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·OS peer 전체에 대한 보증은 아닙니다.
+
+| 단계 | 구현·검증한 기능 | 남은 범위 |
+| --- | --- | --- |
+| M28 — 완료 | Central 최대 1개 + Peripheral 최대 1개, 총 2-link. Generation handle, 확장 광고·스캔, periodic 광고·sync·PAST, PAwR, privacy/RPA, link별 제어 | 해당 개발 계약 완료. OS별 상호운용·Bluetooth qualification·v0.5.0 공개는 별도 |
+| M29 W01~W06 — 완료 | Capability, 512-byte long/reliable GATT, descriptor·authorization·read multiple, GATT cache·Service Changed, LE CoC와 오류 거부 | 신규 기능을 두 link에서 통합 검증하고 최종 회귀 필요 |
+| M29 W07-C — 완료 | Signed Write 20회·재부팅 counter 보존·replay 거부, EATT 2 bearer × 1,000 SDU와 enhanced read/write | W07-D `M29-MULTI-01`, W07-E `M29-REG-01`은 **NOT RUN** |
+| M29 W08 — 미착수 | 전체 결과·지원표·예제·문서·CI 마감 | W07 잔여 검증 후 M30으로 인계 |
+| M30~M33 — 계획 | 보안·profile·최소 BLE DFU, ISO/Audio·방향탐지·Channel Sounding 적용성, Mesh·공존, v0.5.0 통합·릴리스 | 구현·장비·지원 가능 범위 판정과 실제 검증 필요 |
+
+Signed Write는 기본 OFF의 **deprecated legacy opt-in** (`NUCODE_BLE_LegacySigning`),
+EATT는 기본 OFF의 **experimental opt-in** (`NUCODE_BLE_EATT`)입니다.
+현재 M29는 작업 묶음 **6/8**, 시험 ID **8/10 PASS**이며 두 분모를 섞어 완료율을 계산하지 않습니다.
+
+상세 계약과 제한은 [M28](<00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)·
+[M29](<00_Docs/01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>),
+실제 결과는 [M28 완료 기록](<00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)·
+[M29 W07-C 기록](<00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에서 확인할 수 있습니다.
+
 ## 예제
 
-9개 library에 **30개 예제**가 포함됩니다: Standard 22개 · BLE 7개 · Fabric 1개.
+**v0.4.1 설치본**에는 9개 library와 **30개 예제**가 포함됩니다: Standard 22개 · BLE 7개 · Fabric 1개.
+아래는 배포판에서도 사용할 수 있는 시작 예제입니다.
 
 | 해보고 싶은 것 | 시작할 예제 |
 | --- | --- |
@@ -134,6 +184,19 @@ QDEC는 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원합니다.
 [v0.4.0 정식 공개 검증 기록](<00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)에,
 v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에 보존합니다.
 예제 build 통과와 각 주변장치의 실기 검증 범위는 별개로 기록합니다.
+
+`main`에는 다음 개발 예제도 있습니다. 소스에서 개발할 때 사용하며 v0.4.1 설치 예제에는 포함되지 않습니다.
+
+| 개발 기능 | 예제 진입점 |
+| --- | --- |
+| 두 link·확장 광고 | [MixedRoleLinks](libraries/NUCODE_BLE/examples/MixedRoleLinks), [ExtendedAdvertising](libraries/NUCODE_BLE/examples/ExtendedAdvertising) |
+| Periodic·PAST·PAwR | [PeriodicAdvertiser](libraries/NUCODE_BLE/examples/PeriodicAdvertiser), [PastSender](libraries/NUCODE_BLE/examples/PastSender), [PawrAdvertiser](libraries/NUCODE_BLE/examples/PawrAdvertiser) |
+| Long/reliable GATT | [LongGattCentral](libraries/NUCODE_BLE/examples/LongGattCentral), [ReliableWriteCentral](libraries/NUCODE_BLE/examples/ReliableWriteCentral) |
+| Cache·LE CoC | [GattCacheCentral](libraries/NUCODE_BLE_Security/examples/GattCacheCentral), [L2capCocClient](libraries/NUCODE_BLE/examples/L2capCocClient) |
+| 선택 Signed Write·EATT | [LegacySignedWriteCentral](libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWriteCentral), [EattCentral](libraries/NUCODE_BLE_EATT/examples/EattCentral) |
+
+송신/수신 역할에 맞는 짝 예제와 보드 수는 각 Sketch 주석과
+[프로필·전체 예제 목록](<00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)을 따릅니다.
 
 ## 사용 전 확인
 
@@ -153,7 +216,7 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
-| 향후 개발 계획 | [M28 완료 계약](<00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) · [v0.5.0 계획](00_Docs/TODO_v0.5.0.md) — M28 개발·실기 완료, M29 계획이며 현재 v0.4.1 지원과 별개 |
+| 현재 개발·다음 작업 | [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M28 완료, M29 W07-C 완료 후 잔여 통합·회귀 대기 |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
 ### 소스에서 개발하기
@@ -170,6 +233,23 @@ git submodule status
 Core 작업에서는 보드 submodule을 임의 수정하지 않습니다.
 `NU54DK.coreVersion()`은 소스 식별자 `0.4.1-dev`를 반환합니다. 정식 설치본에서도 이 값은 같으며,
 배포 버전 `0.4.1`은 Boards Manager·`platform.txt`·release manifest로 확인합니다.
+
+SDK·Zephyr·툴체인·보드 revision은 [CI lock](tools/ci/ncs-3.4.0.lock.json)으로 고정합니다.
+개발 환경과 검사 명령은 [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)과
+[개발 인계](00_Docs/HANDOFF.md)를 따르세요.
+
+## 문제 보고와 기여
+
+[GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues)에 아래 정보를 함께 적으면
+설치 문제와 firmware 문제를 재현하기 쉽습니다.
+
+- 설치 버전 또는 `main` commit, Windows·Arduino IDE/CLI 버전, 선택한 Feature set.
+- 문제가 재현되는 최소 Sketch와 기대 동작·실제 동작·재현 순서.
+- Verify/Upload 오류 전문 또는 Serial 로그, 보드 수·역할·결선과 사용한 주변장치.
+
+인증 정보와 개인 경로·원시 probe UID는 공개 로그에서 제거하세요. 코드·문서 기여는
+[작업 지침](AGENTS.md)의 스타일·검증 규칙을 따르고, 변경 이유와 실제 수행한 검사를 함께 남겨주세요.
+구현·build 통과를 실기 PASS로 기록하지 않으며, 검증하지 않은 조합은 명시합니다.
 
 ## 작성자와 라이선스
 

@@ -30,10 +30,15 @@ python tools/peripheral/verify_m24_serial_contract.py --ncs-root C:\ncs\v3.4.0
 ```
 
 Profile/feature schema는 builder configuration 모듈과 `libraries/*/zephyr/feature.yml`,
-`variants/nu54dk/profiles`가 소유한다. Readiness는
+`variants/nu54dk/profiles`가 소유한다. 완료한 v0.4.0의 릴리스 readiness는
 [v0.4.0-release-readiness.json](../../variants/nu54dk/v0.4.0-release-readiness.json)이 소유하며
 [M27](../release/m27_release.py)의 16개 gate 검사가 이를 대조한다. 생성기 성공으로
 readiness/HIL/public 지원 수준을 올리지 않는다.
+
+후속 BLE 작업은 별도 [M28 readiness](../../variants/nu54dk/m28-ble-readiness.json)와
+[M29 readiness](../../variants/nu54dk/m29-ble-readiness.json)에서 작업 묶음·test ID·실행 증거를
+관리한다. M27 PASS는 후속 BLE 시험을 대신하지 않으며, 현재 진행률은
+[v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 따른다.
 
 `EXPECTED_*`의 하드웨어·공개 API 상수는 원본 오류를 잡는 독립 검증 oracle이므로
 검사 대상 JSON에서 다시 만들어 비교하지 않는다. 생성물의 실제 원본만 한 곳으로 유지한다.

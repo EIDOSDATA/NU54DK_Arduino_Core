@@ -1,5 +1,9 @@
 # M29-W01 ATT/GATT·L2CAP capability 완료
 
+> 이 기록의 진행률·미실행·다음 작업은 해당 W 단계 완료 당시의 상태입니다. 후속 W07-C의
+> Signed Write·EATT 2보드 결과는 [147번 기록](147_M29_W07_Signed_Write_EATT_HIL_준비.md)에,
+> 현재 작업과 남은 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 있습니다.
+
 | 항목 | 결과 |
 | --- | --- |
 | 작업일 | 2026-09-13 |
@@ -61,4 +65,3 @@ EATT peer negotiation을 대신하지 않는다.
 Signed Write는 `deprecated` legacy opt-in, EATT는 `experimental` opt-in으로 출력했다. 두 CAP의
 probe 값은 `peer_required`이며 실제 지원 PASS가 아니다. 다음 작업은 M29-W02의 generation link별
 GATT client context와 512-byte long read다.
-

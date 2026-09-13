@@ -5,11 +5,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.7 |
+| 문서 개정 | 1.8 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.4.1` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-12 |
+| 최종 갱신일 | 2026-09-14 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -397,7 +397,7 @@ hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸�
 ```powershell
 & $Python .\tests\arduino-cli\run_smoke.py `
   --cli $ArduinoCli `
-  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 ac02b ac03 examples
+  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 m28 m29 ac02b ac03 examples
 ```
 
 릴리스에서 도입한 기능군별로 원인을 빠르게 나누려면 `--tests` 대신 `--group`을 쓴다.
@@ -406,9 +406,10 @@ hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸�
 & $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.1.0
 & $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.2.0
 & $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.3.0
+& $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.5.0
 ```
 
-세 명령을 자동 병렬 실행하고 그룹별 log와 실패 요약 JSON을 남기려면 다음처럼 실행한다.
+그룹을 자동 병렬 실행하고 log와 실패 요약 JSON을 남기려면 다음처럼 실행한다.
 Evidence 경로는 실행 전에 없어야 한다.
 
 ```powershell
@@ -420,20 +421,22 @@ Evidence 경로는 실행 전에 없어야 한다.
 ```
 
 자동 matrix에서는 긴 `v0.3.0`을 `v0.3.0-ble`과 `v0.3.0-compat` 두 하위 작업으로 더 나눠
-총 네 작업을 배치한다. 수동 `--group v0.3.0` 명령의 검사 합집합과 정확히 같다.
+기존 네 작업과 `v0.5.0`을 합쳐 총 다섯 작업을 배치한다. `v0.5.0`은 현재 M29 예제 14개를
+검사하며 M28 예제 11개는 `--tests m28`로 따로 실행한다.
 
-Exact NCS Zephyr 그룹도 같은 방식으로 실행할 수 있다. Windows에서는 모든 Twister outdir가
-8자 이하가 되도록 `--out-root C:\t`를 사용하고, Nordic Toolchain Python으로 runner를 시작한다.
+Windows의 Zephyr build는 Nordic Toolchain Python으로 직접 runner를 시작한다. 현재 Twister
+outdir는 전체 절대경로가 4자 이하여야 하므로 `C:\z`처럼 사용하지 않는 짧은 경로를 선택한다.
 
 ```powershell
-& $NcsPython .\tools\ci\run_build_matrix.py `
-  --runner zephyr `
+& $NcsPython .\tools\ci\run_zephyr_build.py `
   --workspace $NcsRoot `
-  --out-root C:\t `
-  --evidence-dir .\artifacts\zephyr-matrix `
-  --max-workers 2 `
+  --outdir C:\z `
+  --group v0.5.0 `
   --jobs 2
 ```
+
+다른 그룹은 `--group`과 빈 outdir를 함께 바꾼다. Matrix helper의 `z1`~`z5` 하위 경로는 현재
+Windows 제한보다 길어 Zephyr 병렬 실행에 사용하지 않는다. Arduino matrix에는 이 제한이 없다.
 
 이는 현재 `main`의 기능을 도입 릴리스별로 묶은 회귀 시험이다. 과거 `v0.1.0`·`v0.2.0` tag
 checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자세한 범위와 CI matrix는
@@ -470,6 +473,7 @@ gate와 해당 Zephyr target build를 다시 실행하고, 동작 설명 일반 
 
 - NU54DK 한 대: Blink, GPIO, 단일 보드 peripheral, upload/debug 시험
 - NU54DK 두 대: BLE Central/Peripheral pair와 일부 peripheral 동시 시험
+- NU54DK 세 대: M28 mixed-role·PAST·동시 link 제어·soak, M29 MULTI/REG 통합 시험
 - 보드별 USB data cable과 독립 CMSIS-DAP V2/UART 연결
 - HIL 문서가 지정한 jumper wire와 pin fixture
 - 외장 J-Link 경로를 시험할 때만 SEGGER J-Link Software와 외장 probe
@@ -529,5 +533,5 @@ Core 설치·빌드 문제는 [v0.4.1 문제 해결](../05_릴리스/v0.4.1/TROU
 - [Boards Manager 설치와 package](./06_Boards_Manager_설치와_패키징.md)
 - [CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)
 - [NU54DK HIL 시험](../../tests/hil/nu54dk/README.md)
-- [v0.4.0 설치와 시험](../05_릴리스/v0.4.0/TESTING.md)
+- [v0.4.1 설치와 시험](../05_릴리스/v0.4.1/TESTING.md)
 - [v0.4.1 문제 해결](../05_릴리스/v0.4.1/TROUBLESHOOTING.md)

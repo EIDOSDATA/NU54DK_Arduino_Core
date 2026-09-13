@@ -3,14 +3,16 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GAP-001 |
-| 문서 개정 | 1.3 |
-| 문서 상태 | v0.4.1에서도 유지하는 정식 GAP 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile |
-| 최종 갱신일 | 2026-09-12 |
+| 문서 개정 | 1.4 |
+| 문서 상태 | v0.4.1 정식 GAP 계약과 v0.5.0 M28 개발 결과 |
+| 적용 제품 버전 | 설치·지원 `v0.4.1`의 `ble` profile, 별도 표시한 `v0.5.0` 개발 source |
+| 최종 갱신일 | 2026-09-14 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
 ## 목적과 범위
+
+아래 본문은 설치·지원 v0.4.1 계약이다. 개발 `main`의 M28 확장은 마지막 절에서 별도로 설명한다.
 
 M19는 NUS에 종속되지 않는 Arduino 친화 BLE lifecycle과 GAP API를 제공합니다. 공개 헤더는
 Zephyr type을 노출하지 않으며, 동적 할당 없이 단일 연결과 31-byte legacy advertising을
@@ -110,3 +112,15 @@ v0.5.0 개발 source의 multi-role/link, extended·periodic advertising, PAwR와
 [M28 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)의 W01~W08과
 9개 test ID를 완료했다. 현재 설치·지원 v0.4.1의 연결 1개·legacy 31-byte 계약은 새 release가
 공개되기 전까지 그대로 유지한다.
+
+| 개발 API/자원 | M28에서 확인한 상한과 동작 |
+| --- | --- |
+| `BLEConnectionHandle`·상세 event | central 1 + peripheral 1, 총 2-link; generation으로 stale callback 차단 |
+| Extended advertising/scanning | generation set 1개, payload 최대 255 byte, SID·PHY·TX power metadata |
+| Periodic advertising/sync·PAST | periodic sync 1개, report 최대 255 byte, 현재 connection handle에 결합한 transfer |
+| PAwR advertiser/scanner | 4 subevent × 4 response slot, payload 최대 249 byte |
+| Privacy·link control | RPA timeout 1~3600초, identity·DLE·parameter·remote-info를 link별 조회 |
+
+인자 없는 기존 singleton API는 호환 view를 유지한다. 현재 개발 자원과 실제 두/세 보드 결과는
+[M28 readiness](../../variants/nu54dk/m28-ble-readiness.json)와
+[140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따른다.

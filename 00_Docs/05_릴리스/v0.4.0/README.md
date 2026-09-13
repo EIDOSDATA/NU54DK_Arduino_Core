@@ -11,7 +11,7 @@
 | 제품선 | Peripheral Parity |
 | 보드 | NU54DK v2, nRF54L15 application core |
 | SDK | nRF Connect SDK v3.4.0 |
-| 기본 설치 channel | Stable Boards Manager index |
+| 당시 설치 channel | Stable Boards Manager index |
 | 배포 상태 | 2026-09-11 정식 공개 완료 |
 | GitHub Release | [`v0.4.0`](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.4.0) |
 
@@ -27,7 +27,10 @@ SHA-256과 설치 검증 결과는 [125번 기록](<../../04_검증 기록/125_v
 | [Troubleshooting](TROUBLESHOOTING.md) | 설치·빌드·실행 진단 |
 | [Known issues](KNOWN_ISSUES.md) | 의도적 제한과 미지원 항목 |
 
-## 설치
+## 당시 설치 절차
+
+아래는 v0.4.0 공개 당시의 절차입니다. 현재 index에서는 `0.4.0`을 선택할 수 없으며,
+새 설치에는 [v0.4.1 설치 안내](../v0.4.1/README.md#설치)를 사용합니다.
 
 Arduino IDE의 Additional Boards Manager URLs에 stable index를 추가합니다.
 

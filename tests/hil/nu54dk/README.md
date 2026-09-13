@@ -3,8 +3,14 @@
 v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 재현에 필요한 실행기·fixture
 계약을 보존하며 현재 보드의 결선 상태를 나타내지 않습니다. 최종 지원·검증 범위는
 [v0.4.0 완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 확인합니다.
-M28 BLE 확장 HIL 9개 test ID도 완료했으며 현재 개발 결과는
-[v0.5.0 계획](<../../../00_Docs/TODO_v0.5.0.md>)과 [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따릅니다.
+
+| 개발 범위 | 현재 실기·작업 상태 | 근거 |
+| --- | --- | --- |
+| M28 GAP/Link/Privacy | W01~W08 완료, 9/9 test ID PASS | [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
+| M29 ATT/GATT/L2CAP | W01~W06 완료, W07-C Signed Write·EATT 두 보드 실기 완료 | [147번 기록](<../../../00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>) |
+| M29 잔여 | W07-D/E MULTI·REG NOT RUN, W08 미완료; 작업 묶음 6/8(75%), test ID 8/10 | [v0.5.0 TODO](<../../../00_Docs/TODO_v0.5.0.md>) |
+
+이는 개발 소스의 검증 상태이며 공개 v0.4.1 패키지에 BLE 확장이 포함됐다는 뜻이 아닙니다.
 
 빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
@@ -27,7 +33,8 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
 | M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
-| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil), [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil), [W06 LE CoC·negative](#m29-w06-두-보드-le-cocnegative-hil), [W07 Signed Write·EATT](#m29-w07-두-보드-signed-writeeatt-hil) |
+| M29 ATT/GATT | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil) |
+| M29 cache·CoC·Signed/EATT | [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil), [W06 LE CoC·negative](#m29-w06-두-보드-le-cocnegative-hil), [W07 Signed Write·EATT](#m29-w07-두-보드-signed-writeeatt-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -61,6 +68,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m29_ble_descriptor.py` | M29W04/1 descriptor 4개·authorization·4-handle read multiple 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m29_ble_cache.py` | M29W05/1 bonded reconnect·Service Changed·database migration·corrupt cache strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m29_ble_coc.py` | M29W06/1 동시 CoC 2채널·512-byte SDU·5종 negative·disconnect 복구 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_signed_eatt.py` | M29W07/1 Signed Write·CSRK/counter persistence·replay 거부·EATT 2-bearer strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음; W07-C 범위 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -304,6 +312,10 @@ accept·bearer shortfall·timeout을 모두 거부한다. Dirty source target 2/
 HIL PASS가 아니다. Clean exact `c71ef4a2…`의 target 2/2와 실제 두 보드 실행은 Signed Write
 20/20·replay 수락 0·EATT bearer별 1,000 operation·deadlock/starvation 0으로 PASS했다. 원본은
 [147번 기록](<../../../00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 있다.
+
+이 결과는 W07-C 완료이며 W07 전체의 완료가 아니다. W07-D의 `M29-MULTI-01`과 W07-E의
+`M29-REG-01`은 아직 `NOT RUN`이며, 이 두 test ID의 PASS를 Signed Write·EATT 결과에서
+추정하지 않는다.
 
 ## M15 공식 CI artifact 계약
 
@@ -787,25 +799,37 @@ debug-control `DISABLE_SWD`가 격리 위치이면 USB와 COM이 보이더라도
 $CoreRoot = (Get-Location).Path
 $Python = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe'
 $PyOcd = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\pyocd.exe'
-$BuildRoot = 'C:\nb\01' # 전체 8자 이하, 아직 없는 하위 경로
+$BuildRoot = 'C:\z' # 전체 4자 이하, 현재 존재하지 않는 전용 경로로 변경
 $EvidenceRoot = Join-Path $env:USERPROFILE 'Documents\NU54DK-evidence\v04-run01'
 $ProbeId = '<시험할 CMSIS-DAP UID>'
 
-if ((Get-Command python.exe).Source -ne $Python) {
-  throw 'NCS environment is required: pyocd.exe must select the bundled Python'
+if ((Get-Command python.exe).Source -ne $Python)
+{
+    throw 'NCS environment is required: pyocd.exe must select the bundled Python'
+}
+if (Test-Path -LiteralPath $BuildRoot)
+{
+    throw 'BuildRoot must be an unused path; do not overwrite existing build evidence'
 }
 & $Python -I -c 'import sys, pyocd; print(sys.executable); print(pyocd.__version__, pyocd.__file__)'
 
 & $Python tools\ci\run_zephyr_build.py `
   --workspace C:\ncs\v3.4.0 --outdir $BuildRoot --group v0.4.0 --jobs 4
-if ($LASTEXITCODE -ne 0) { throw 'v0.4.0 build failed' }
+if ($LASTEXITCODE -ne 0)
+{
+    throw 'v0.4.0 build failed'
+}
 
 $Runners = @('m24_uarte_onboard', 'm24_twim_onboard', 'm25_onboard', 'm26_onboard')
-foreach ($Runner in $Runners) {
-  & $Python "tests\hil\nu54dk\$Runner.py" `
-    --repository $CoreRoot --build-root $BuildRoot --probe-id $ProbeId --pyocd $PyOcd `
-    --evidence "$EvidenceRoot\$Runner.json"
-  if ($LASTEXITCODE -ne 0) { throw "$Runner failed; later gates were not run" }
+foreach ($Runner in $Runners)
+{
+    & $Python "tests\hil\nu54dk\$Runner.py" `
+        --repository $CoreRoot --build-root $BuildRoot --probe-id $ProbeId --pyocd $PyOcd `
+        --evidence "$EvidenceRoot\$Runner.json"
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "$Runner failed; later gates were not run"
+    }
 }
 ```
 

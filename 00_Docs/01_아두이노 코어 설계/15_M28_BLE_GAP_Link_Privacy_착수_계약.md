@@ -3,11 +3,11 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | M28-BLE-READINESS-001 |
-| 문서 개정 | 1.6 |
+| 문서 개정 | 1.7 |
 | 대상 제품선 | `v0.5.0` |
 | 현재 상태 | **M28-W01~W08 완료 / 진행률 8/8, 100.0%** |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, SoftDevice Controller multirole |
-| 최종 갱신일 | 2026-09-12 |
+| 최종 갱신일 | 2026-09-14 |
 | 기계 판정 원본 | [`m28-ble-readiness.json`](../../variants/nu54dk/m28-ble-readiness.json) |
 
 ## 1. 목표와 완료 경계
@@ -47,7 +47,7 @@ W02에서 `maximumConnections()==2`와 역할 고정 connection slot을 구현�
 아래 source 판정은 로컬 NCS v3.4.0 source와 CI lock을 대조한 **정적 후보 판정**이다. W01 exact
 image의 실제 HCI 결과는 별도 열에 두며, 어느 쪽도 production API·RF HIL 완료를 뜻하지 않는다.
 
-| 기능군 | 정적 근거 | W01 실제 HCI | 남은 production 판정 |
+| 기능군 | 정적 근거 | W01 실제 HCI | 후속 production 검증 결과 |
 | --- | --- | --- | --- |
 | Multi-role/link | `BT_MAX_CONN`, SDC peripheral count, multirole controller 변형 | **PASS** | Host·target와 3보드 동시 2-link/reconnect/soak PASS |
 | Extended advertising/scanning | `BT_EXT_ADV`, `bt_le_ext_adv_*`, SDC Advertising Extensions | **PASS** | Host·target와 255-byte RF report 100개 PASS |
@@ -163,8 +163,7 @@ PAST sender의 sync/set transfer와 receiver subscribe/unsubscribe는 현재 `BL
 요구한다. Receiver는 구독된 현재 link에서 전달된 sync만 고정 slot에 할당한다. Production Host
 수명 시나리오 4개와 정적 계약, 고정 NCS의 `nucode.m28.ble_periodic_contract` target 1/1 build가
 warning 없이 PASS했고 `PeriodicAdvertiser`·`PeriodicScanner`·`PastSender`·`PastReceiver` 예제를
-추가했다. 3-node PAST와
-periodic report 1,000개와 PAST 20/20은 W07의 `M28-PER-01`에서 PASS했다.
+추가했다. 3-node 구성의 periodic report 1,000개와 PAST 20/20은 W07의 `M28-PER-01`에서 PASS했다.
 
 ### 5.5 M28-W05 PAwR advertiser·scanner 결과
 
@@ -264,8 +263,10 @@ unlock·recover·mass erase를 사용하지 않는다.
 | P06 실행 목록 | **M28-W01~W08 고정** |
 
 따라서 M28 진행률은 **8/8 작업 묶음, 100.0%**다. 2보드 `REG/ADV/PAWR/PRIV`와 3보드
-`LINK/PER/CTRL/SOAK`, W01 `CAP`의 9개 test ID가 모두 PASS했다. 다음 작업은 M29의 ATT/GATT·
-L2CAP 범위·자원·시험 계약 확정이다. M28 완료를 v0.5.0 공개·cross-vendor 상호운용·Bluetooth
+`LINK/PER/CTRL/SOAK`, W01 `CAP`의 9개 test ID가 모두 PASS했다. 후속 M29는
+[ATT/GATT·L2CAP 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md)에서 관리하며 W01~W06과 W07-C를
+완료했다. 남은 3보드 통합·회귀와 W08은 [v0.5.0 TODO](../TODO_v0.5.0.md)를 따른다.
+M28 완료를 v0.5.0 공개·cross-vendor 상호운용·Bluetooth
 qualification 완료로 확대하지 않는다.
 
 준비 계약 검사는 다음으로 실행한다.

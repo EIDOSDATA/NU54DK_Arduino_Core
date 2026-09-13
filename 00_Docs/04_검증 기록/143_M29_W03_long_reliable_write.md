@@ -1,5 +1,9 @@
 # M29-W03 long/reliable write 완료
 
+> 이 기록의 진행률·미실행·다음 작업은 해당 W 단계 완료 당시의 상태입니다. 후속 W07-C의
+> Signed Write·EATT 2보드 결과는 [147번 기록](147_M29_W07_Signed_Write_EATT_HIL_준비.md)에,
+> 현재 작업과 남은 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 있습니다.
+
 | 항목 | 결과 |
 | --- | --- |
 | 작업일 | 2026-09-13 |
@@ -56,7 +60,7 @@ Runner는 두 board UID·MSD·target UART를 교차 확인하고 exact Core·boa
 digest와 HEX 옆 build record가 맞을 때만 UID 지정 sector flash를 수행했다. Peripheral READY와
 광고를 확인한 뒤 central을 시작했으며 두 role은 같은 128-bit nonce와 full Core SHA를 사용했다.
 외부 GPIO·전원 결선, mass erase/recover와 PMIC write는 사용하지 않았다. 세 번째 NU54DK는 이
-2-link test ID에 필요하지 않아 flash하지 않았다.
+단일 link·2보드 test ID에 필요하지 않아 flash하지 않았다.
 
 | 판정 | 관측값 |
 | --- | ---: |

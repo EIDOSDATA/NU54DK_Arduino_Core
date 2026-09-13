@@ -11,12 +11,12 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 2.9 |
-| 문서 상태 | 고정 source 비교, M23~M28 완료 경계와 M29~M33 계획·착수 조건 |
+| 문서 개정 | 3.0 |
+| 문서 상태 | 고정 source 비교, M23~M28 완료·M29 진행과 M30~M33 계획 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.4.1` stable / release source `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-12 |
+| 최종 갱신일 | 2026-09-14 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을
@@ -28,7 +28,8 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 `목표`와 `계획`은 공개 지원 선언이 아니다. 완료 단계와 제품 순서는
 [Master roadmap](02_구현_로드맵.md)이 소유한다.
 
-M28은 **W01~W08과 9개 test ID를 완료**했고 M29~M33은 **계획·구현 미착수**다. M28의 기능 지원성·
+M28은 **W01~W08과 9개 test ID를 완료**했다. M29는 **W01~W06·W07-C 완료, 작업 6/8(75%)·
+test ID 8/10**이며 3보드 MULTI/REG와 W08이 남아 있다. M30~M33은 **계획·구현 미착수**다. M28의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 준비 문서를 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
@@ -418,12 +419,17 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M29 — ATT/GATT·L2CAP 완성
 
+- 현재 상태: W01~W06과 W07-C의 2보드 SIGN/EATT HIL을 완료했다. 3보드
+  `M29-MULTI-01`·`M29-REG-01`은 `NOT RUN`이며 W07 전체와 W08은 완료하지 않았다.
+  [M29 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md)과
+  [147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)을 따른다.
 - long/reliable read/write, descriptor·authorization과 read multiple을 확장한다.
 - Service Changed, database hash와 robust caching을 firmware migration까지 검증한다.
 - LE Credit Based Channel과 EATT의 MTU/credit/starvation/error 경계를 정한다. 고정 NCS의 Zephyr는
   `BT_SIGNING`을 **deprecated**, `BT_EATT`를 **experimental**로 분류한다.
-- signed write와 EATT는 구현 전에 기본 공개·명시적 opt-in·제약과 지원 정책을 결정한다. Deprecated와
-  experimental 표시는 자동 제외나 완료 사유가 아니다. 제외·SDK 교체는 별도 승인 없이 결정하지 않는다.
+- signed write와 EATT는 각각 기본 OFF인 legacy opt-in·experimental opt-in library로 구현했다.
+  Deprecated/experimental 상태는 두 보드 HIL PASS 뒤에도 유지하며 기본 BLE profile의 안정 기능으로
+  승격하지 않는다. 제외·SDK 교체는 별도 승인 없이 결정하지 않는다.
 - 완료 gate: 승인한 정책·상한에 따른 server/client 양방향, multi-channel, cross-vendor와 malformed
   peer negative. Signed write를 포함하면 CSRK·counter 영속성과 replay 거부를 함께 검증한다.
 
@@ -476,7 +482,7 @@ M31-B는 SDC의 실제 지원 범위와 대체 controller/profile의 RX·IQ 경�
 - Bluetooth qualification 적용성, 필요한 QDID/DN과 미완료 인증을 분리해 공개한다.
 - 완료 gate: release package, 전체 BLE regression, mobile/desktop·cross-vendor matrix, 공개 stable 검증.
 
-M28은 W01~W08과 9개 test ID를 완료했다. M29~M33은 여전히 계획이다. M28 결과와
+M28은 W01~W08과 9개 test ID를 완료했고 M29는 W07-C까지 진행했다. M30~M33은 계획이다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은

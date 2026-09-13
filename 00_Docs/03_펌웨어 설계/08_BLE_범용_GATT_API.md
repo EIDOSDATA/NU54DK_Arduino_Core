@@ -3,14 +3,17 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GATT-001 |
-| 문서 개정 | 1.4 |
+| 문서 개정 | 1.5 |
 | 문서 상태 | v0.4.1 정식 GATT 계약과 v0.5.0 M29 개발 확장 |
 | 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile, `v0.5.0` 개발 source |
-| 최종 갱신일 | 2026-09-13 |
+| 최종 갱신일 | 2026-09-14 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
 ## 목적과 범위
+
+Server schema부터 예제·검증 절까지는 설치·지원 v0.4.1 계약이다. 하단의 M29 절은
+개발 `main`의 확장을 설명하며, 두 범위의 value 크기·연결 수·지원 operation을 혼합하지 않는다.
 
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼
 고정 profile wrapper가 아니라 UUID, property, permission과 bounded value를 sketch가 선언합니다.
@@ -153,3 +156,22 @@ channel을 종료한다. Late callback과 disconnect 뒤 stale handle은 새 ses
 검증했다. 이 결과는 NU54DK 간 LE CoC 범위이며 cross-vendor peer, Signed Write와 EATT 지원을
 의미하지 않는다. 상세 근거는
 [146번 기록](<../04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
+
+## M29-W07-C Signed Write·EATT 개발 확장
+
+두 기능은 기본 BLE profile에서 OFF이며 별도 library header를 포함할 때만 선택한다.
+
+| 선택 library | 개발 계약 | 작성된 예제 |
+| --- | --- | --- |
+| `NUCODE_BLE_LegacySigning` | deprecated legacy opt-in; bonded CSRK·local/remote counter 영속성과 replay 거부 | `LegacySignedWritePeripheral`, `LegacySignedWriteCentral` |
+| `NUCODE_BLE_EATT` | experimental opt-in; 암호화된 link당 최대 2 bearer, GATT의 `unenhanced`/`enhanced` 선택 | `EattPeripheral`, `EattCentral` |
+
+Exact `c71ef4a2…`의 두 보드 HIL에서 Signed Write 20회·warm reboot counter 유지·replay 수락 0,
+EATT의 암호화 전 거부·2 bearer·상한 초과 거부·production enhanced read/write와 bearer별
+1,000 SDU를 검증했다. Payload 오류·deadlock·starvation은 0이다. 이 결과로 SDK의
+deprecated/experimental 등급을 안정 기능으로 바꾸지 않는다.
+
+현재 M29는 작업 묶음 6/8(75%), test ID 8/10이다. 3보드 `M29-MULTI-01`·`M29-REG-01`은
+`NOT RUN`, W08은 미착수다. 세부 API·자원과 exact 원본은
+[M29 계약](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
+[147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에서 관리한다.
