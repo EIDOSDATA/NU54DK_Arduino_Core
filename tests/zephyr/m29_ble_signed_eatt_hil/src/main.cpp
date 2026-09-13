@@ -97,6 +97,7 @@ namespace
         connecting,
         discovering,
         securing,
+        signing,
         eatt_connecting,
         eatt_reading,
         eatt_writing,
@@ -728,6 +729,7 @@ namespace
                 std::uint8_t payload[8] = {signed_marker, 0U, 0U, 0U,
                                            0U, nonce_binary[0], 0x29U, 0x07U};
                 sys_put_le32(iteration, &payload[1]);
+                phase = Phase::signing;
                 if (!BLEClient.writeSigned(connection_handle, payload, sizeof(payload)))
                 {
                     fail("signed_write_start", BLEDevice.lastDriverError());
@@ -773,7 +775,7 @@ namespace
             }
             return;
         }
-        if (mode == Mode::sign &&
+        if (mode == Mode::sign && phase == Phase::signing &&
             information.event == nucode::ble::BLEGattClientEvent::signed_write_complete)
         {
             std::uint32_t local_counter = 0U;

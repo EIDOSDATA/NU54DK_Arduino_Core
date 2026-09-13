@@ -169,6 +169,16 @@ class M29BleSignedEattTests(unittest.TestCase):
         self.assertIn('fail("discovery_state")', target)
         self.assertNotIn('fail("discovery_result")', target)
 
+    def test_hil_enters_signing_phase_before_write_completion(self):
+        """! @brief 동기성 completion도 discovery event로 오분류하지 않습니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        phase_assignment = target.index("phase = Phase::signing;")
+        write_start = target.index("BLEClient.writeSigned(connection_handle")
+        self.assertLess(phase_assignment, write_start)
+        self.assertIn(
+            "mode == Mode::sign && phase == Phase::signing &&", target
+        )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

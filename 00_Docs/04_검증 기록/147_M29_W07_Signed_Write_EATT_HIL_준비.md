@@ -6,7 +6,7 @@
 | 준비 기준 HEAD | `d425248b8063cfb4e816c12cab6dd62c88cae446` 이후 미커밋 W07 source |
 | NCS / Zephyr | `99553055607b…` / `bf801e4e3d19…` |
 | board / toolchain | `fe65f2f0880b…` / `dcbdc366a1` |
-| W07 공개 계약 | **8/8 PASS** |
+| W07 공개 계약 | **10/10 PASS** |
 | strict Host parser | **14/14 PASS** |
 | production GATT Host | **W07 3개 포함 전체 24개 시나리오 PASS** |
 | Arduino M29 예제 | **14/14 PASS** |
@@ -59,7 +59,7 @@ wrong revision·stale nonce, counter rollback, replay accept, EATT shortfall, ta
 
 ## 3. Host·target 준비 결과
 
-W07 공개 계약 8/8, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
+W07 공개 계약 10/10, parser 14/14, M13 allowlist·canonical example 11/11(설치본 전용 1 skip),
 M22 stable package 경계 7/7, readiness 8/8이 PASS했다. 전체 Host gate에서 W07 신규 예제를 후속
 후보 집합에 반영하지 않은 1건은 수정 뒤 동일 시험 7/7 PASS했다. 임시 native EXE 일부는 첫 실행에
 Windows Application Control `WinError 4551`로 17회 차단됐다. PAwR·TWIM 실패 module을 같은 source와
@@ -136,9 +136,15 @@ state가 해제돼, discovery 도중 link teardown event가 먼저 전달됐을 
 
 기존 `discovery_result/code=0`은 `discovery_complete` 뒤 handle 상태 실패와 다른 GATT event 수신을
 구분하지 못한다. Target을 `discovery_event/code=<BLEGattClientEvent ordinal>`과
-`discovery_state/code=0`으로 분리하고 Host source 계약으로 고정했다. 다음 exact 실행은 이 진단을
-사용해 원인을 하나로 분류한 뒤 단일 수정과 동일 조건 재검증으로 이어간다. 이 실패를 SIGN/EATT
-PASS로 승격하지 않는다.
+`discovery_state/code=0`으로 분리하고 Host source 계약으로 고정했다. Exact `08a6512c…`의 같은
+조건 재실기는 `discovery_event/code=17`을 출력했고, enum 17은 `signed_write_complete`다. Raw
+기록은 `evidence/m29-w07-08a6512c-discovery-diagnostic/`에 보존한다.
+
+따라서 discovery와 link teardown은 원인이 아니었다. Discovery 완료 callback에서
+`BLEClient.writeSigned()`를 시작하기 전에 phase를 바꾸지 않아, 같은 `BLEDevice.poll()`에서 즉시
+돌아온 완료 event를 아직 `discovering` phase가 잘못 거부한 target 상태기계 결함이다. 전용
+`Phase::signing`을 추가하고 write 시작 전에 전환하며, 완료 event도 그 phase에서만 수락하도록
+단일 수정했다. 이 실패를 SIGN/EATT PASS로 승격하지 않고 새 exact build로 동일 조건을 재검증한다.
 
 ## 6. 남은 유한 실행 순서
 
