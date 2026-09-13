@@ -73,12 +73,22 @@ std::array<BLEConnectionHandle, 2> observed_handles{};
 std::array<std::array<unsigned, 20>, 2> detailed_events{};
 std::array<std::array<std::uint8_t, 512>, 2> detailed_data{};
 std::array<std::size_t, 2> detailed_lengths{};
+std::array<BLEGattBearer, 2> detailed_bearers{};
 bool reenter = false;
 BLEDescriptor *observed_descriptor = nullptr;
 BLEGattAuthorizationOperation observed_authorization_operation =
     BLEGattAuthorizationOperation::read;
 unsigned authorization_calls = 0U;
 bool descriptor_access_allowed = true;
+unsigned signing_persist_calls = 0U;
+int signing_persist_result = 0;
+
+/** @brief Host 시험에서 main-thread signing counter 영속화 결과를 주입합니다. */
+extern "C" int nucode_ble_signing_persist(struct bt_conn *)
+{
+    ++signing_persist_calls;
+    return signing_persist_result;
+}
 
 bool authorizeAccess(const BLEGattAuthorizationRequest &request, void *context)
 {
@@ -137,6 +147,7 @@ void detailedClientObserved(const BLEGattClientEventInfo &information, void *)
     }
     assert(index < observed_handles.size());
     ++detailed_events[index][static_cast<unsigned>(information.event)];
+    detailed_bearers[index] = information.bearer;
     if (information.data != nullptr)
     {
         detailed_lengths[index] = information.length;
@@ -178,6 +189,30 @@ void discover(unsigned index = 0)
     assert(BLEClient.remoteCharacteristic().valueHandle() == 3);
     assert(BLEClient.remoteCharacteristic().cccHandle() == 4);
     assert(connection->refs == 1);
+}
+
+/** @brief Authenticated Signed Write 전용 remote characteristic discovery를 완료합니다. */
+void discoverSigned(unsigned index = 0)
+{
+    assert(BLEClient.discover(BLEUuid(std::uint16_t{0x180A}),
+                              BLEUuid(std::uint16_t{0x2A29})));
+    bt_gatt_service_val value{BT_UUID_GATT_PRIMARY, 12};
+    bt_gatt_attr attribute{};
+    attribute.user_data = &value;
+    attribute.handle = 1;
+    auto *connection = &mock_connections[index];
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+    bt_gatt_chrc chrc{BT_UUID_GATT_CHRC, 3, 0x40};
+    attribute.user_data = &chrc;
+    attribute.handle = 2;
+    mock_discovery->func(connection, &attribute, mock_discovery);
+    BLEDevice.poll();
+    BLEDevice.poll();
+    assert(BLEClient.discovered() && !BLEClient.busy());
+    assert(nucode::ble::internal::gatt::hasProperty(
+        BLEClient.remoteCharacteristic().properties(),
+        BLEProperty::authenticated_signed_write));
 }
 void discoverLink(BLEConnectionHandle handle, unsigned index, std::uint16_t first_handle)
 {
@@ -393,6 +428,9 @@ int main(int argc, char **argv)
     BLEClient.onEvent(clientObserved, nullptr);
     if (std::strcmp(scenario, "m29_long_parallel") == 0 ||
         std::strcmp(scenario, "m29_long_write") == 0 ||
+        std::strcmp(scenario, "m29_signed_write") == 0 ||
+        std::strcmp(scenario, "m29_signed_overflow") == 0 ||
+        std::strcmp(scenario, "m29_eatt") == 0 ||
         std::strcmp(scenario, "client_reentrant_end") == 0)
     {
         BLEClient.onDetailedEvent(detailedClientObserved, nullptr);
@@ -910,8 +948,89 @@ int main(int argc, char **argv)
     }
     else
     {
-        discover();
-        if (std::strcmp(scenario, "client_io") == 0)
+        if (std::strcmp(scenario, "m29_signed_write") == 0)
+        {
+            observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+            discoverSigned();
+            assert(!BLEClient.write(payload, sizeof(payload)));
+            assert(BLEClient.writeSigned(payload, sizeof(payload)));
+            assert(mock_command_signed[0]);
+            mock_command_callback(connection, mock_command_user_data);
+            assert(BLEClient.busy());
+            BLEDevice.poll();
+            assert(signing_persist_calls == 1U && !BLEClient.busy());
+            assert(detailed_events[0][static_cast<unsigned>(
+                       BLEGattClientEvent::signed_write_complete)] == 1U);
+
+            connection->security = BT_SECURITY_L2;
+            assert(!BLEClient.writeSigned(payload, sizeof(payload)));
+            connection->security = BT_SECURITY_L1;
+            signing_persist_result = -EIO;
+            assert(BLEClient.writeSigned(payload, sizeof(payload)));
+            mock_command_callback(connection, mock_command_user_data);
+            BLEDevice.poll();
+            assert(signing_persist_calls == 2U && BLEClient.busy());
+            assert(detailed_events[0][static_cast<unsigned>(
+                       BLEGattClientEvent::operation_failed)] == 1U);
+        }
+        else if (std::strcmp(scenario, "m29_signed_overflow") == 0)
+        {
+            observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+            discoverSigned();
+            for (unsigned index = 0U; index < 24U; ++index)
+            {
+                assert(attribute->write(connection, attribute, payload, sizeof(payload),
+                                        0U, 0U) == sizeof(payload));
+            }
+            assert(BLEClient.writeSigned(payload, sizeof(payload)));
+            mock_command_callback(connection, mock_command_user_data);
+            assert(signing_persist_calls == 1U);
+            assert(!BLEClient.busy());
+            assert(BLEDevice.lastError() == BLEError::event_overflow);
+            BLEDevice.poll();
+            assert(detailed_events[0][static_cast<unsigned>(
+                       BLEGattClientEvent::signed_write_complete)] == 0U);
+        }
+        else if (std::strcmp(scenario, "m29_eatt") == 0)
+        {
+            observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+            discover();
+            assert(!BLEEatt.connect(observed_handles[0], 2U));
+            connection->security = BT_SECURITY_L2;
+            assert(BLEEatt.connect(observed_handles[0], 2U));
+            assert(BLEEatt.count(observed_handles[0]) == 2U);
+            assert(mock_eatt_connect_requests[0] == 2U);
+            assert(!BLEEatt.connect(observed_handles[0], 1U));
+
+            assert(BLEClient.read(observed_handles[0], BLEGattBearer::enhanced));
+            assert(mock_read->chan_opt == BT_ATT_CHAN_OPT_ENHANCED_ONLY);
+            assert(mock_read->func(connection, 0U, mock_read, payload,
+                                   sizeof(payload)) == BT_GATT_ITER_CONTINUE);
+            assert(mock_read->func(connection, 0U, mock_read, nullptr, 0U) ==
+                   BT_GATT_ITER_STOP);
+            BLEDevice.poll();
+            assert(detailed_bearers[0] == BLEGattBearer::enhanced);
+
+            assert(BLEClient.write(observed_handles[0], payload, sizeof(payload),
+                                   BLEGattBearer::enhanced));
+            assert(mock_write->chan_opt == BT_ATT_CHAN_OPT_ENHANCED_ONLY);
+            mock_write->func(connection, 0U, mock_write);
+            BLEDevice.poll();
+            assert(detailed_bearers[0] == BLEGattBearer::enhanced);
+            assert(BLEEatt.disconnect(observed_handles[0]));
+            assert(BLEEatt.count(observed_handles[0]) == 0U);
+            assert(!BLEClient.read(observed_handles[0], BLEGattBearer::enhanced));
+        }
+        else
+        {
+            discover();
+        }
+        if (std::strcmp(scenario, "m29_signed_write") == 0 ||
+            std::strcmp(scenario, "m29_signed_overflow") == 0 ||
+            std::strcmp(scenario, "m29_eatt") == 0)
+        {
+        }
+        else if (std::strcmp(scenario, "client_io") == 0)
         {
             mock_read_error = -EIO;
             assert(!BLEClient.read() && !BLEClient.busy());

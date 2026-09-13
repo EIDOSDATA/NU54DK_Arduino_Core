@@ -2,7 +2,7 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W06 완료, 6/8이다. M30~M33은
+**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W07 HIL 준비, 6/8이다. M30~M33은
 계획·구현 미착수**다. M28 완료는 v0.5.0 공개, mobile/desktop cross-vendor 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
@@ -29,6 +29,7 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M29 W04 descriptor·authorization | [144번 기록](<04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>) |
 | M29 W05 robust GATT cache | [145번 기록](<04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>) |
 | M29 W06 LE CoC·negative | [146번 기록](<04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>) |
+| M29 W07 Signed Write·EATT HIL 준비 | [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>) |
 
 ## 1. 다음 착수 순서
 
@@ -37,7 +38,8 @@ M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·
 periodic·PAST, W05 PAwR, W06 privacy·link control, W07 두/세 보드 HIL과 W08 문서·인계를
 완료했고, **M29-W01 capability, W02 link별 GATT long read, W03 long/reliable write, W04
 descriptor·authorization·read multiple, W05 robust GATT cache와 W06 LE CoC를 완료했다.
-현재 M29는 **6/8**이다.
+W07 Signed Write·EATT 구현·Host parser·target 2/2까지 준비했으며 실제 HIL 전이므로 현재 M29는
+계속 **6/8**이다.
 P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
@@ -85,7 +87,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser를 구
 | M29-W04 | **완료 — Host·target 2/2·2보드 descriptor/read multiple 100/100 PASS** | exact `068a1765…`, descriptor 4개·authorization 오판 0 증거 유지 |
 | M29-W05 | **완료 — Host·target 2/2·2보드 cache migration PASS** | exact `e587c4fe…`, bonded reconnect 20·stale/corrupt accept 0 증거 유지 |
 | M29-W06 | **완료 — Host·target 2/2·2보드 CoC/negative PASS** | exact `767bb4af…`, 2-channel·512 byte·각 방향 1,000 SDU·5 negative class·복구 오류 0 증거 유지 |
-| M29-W07 | **다음 작업** | Signed Write legacy opt-in과 EATT experimental opt-in 구현·`M29-SIGN/EATT/MULTI-01` 검증 |
+| M29-W07 | **진행 중 — Host 계약 7/7·parser 14/14·target 2/2 PASS** | exact commit 기준 `M29-SIGN/EATT/MULTI/REG-01` HIL과 증거 보존 |
 | M29-W08 | 미착수 | 전체 회귀·예제·문서·지원 판정·CI와 M30 인계 |
 
 M29-W02는 central/peripheral 두 link가 각각 discovery/read/write/subscription parameter와 512-byte
@@ -140,6 +142,20 @@ payload/cross-channel·resource recovery·stale accept 0을 확인해 `M29-COC-0
 닫았다. 첫 실행의 W06 전용 광고 PSM 필드와 공통 runner 계약 불일치는 transcript를 보존하고
 역할별 기대 필드를 명시한 뒤 동일 조건에서 PASS했다. 결과는
 [146번 기록](<04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 보존한다.
+
+W07은 `NUCODE_BLE_LegacySigning`과 `NUCODE_BLE_EATT`를 별도 bundled library로 추가해 기본 BLE
+profile을 바꾸지 않는다. Signed Write는 bonded CSRK와 local/remote sign counter를 저장하고,
+정상 완료 event는 main thread에서 처리한다. Event queue 포화 시에는 counter rollback을 막기 위해
+즉시 저장하며 저장 실패 시 link를 끊는다. EATT는 암호화된 link에서만 최대 2 bearer를 열고,
+read/write overload가 unenhanced/enhanced bearer를 명시하며 상세 event가 실제 선택 bearer를
+보고한다. 기존 enum ordinal과 무인자 API는 유지한다. 공개 예제 4개, W07 3개를 포함한 production
+Host 전체 24개 시나리오, source 계약 7개, strict HIL parser 14개와 고정 NCS target role 2/2가
+PASS했다. Windows Application Control의 첫 전체 실행 차단은 유한 4551 대기를 보강한 뒤 전체 Host
+1,106개 PASS(조건부 2개 skip)로 재검증했다. Arduino M29 smoke는 `EattCentral`의 미지원
+`<cstring>`을 `<string.h>`로 고친 뒤 GATT·CoC·cache·signing·EATT 예제 **14/14 PASS**로
+처음부터 재검증했다. 다만 dirty
+source build는 물리 PASS가 아니므로 `M29-SIGN/EATT/MULTI/REG-01`은 계속 `NOT RUN`이다.
+실행 전 경계는 [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 보존한다.
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로

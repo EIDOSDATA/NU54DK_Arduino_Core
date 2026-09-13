@@ -131,6 +131,10 @@ class M22PackageExamplesTests(unittest.TestCase):
             ("NUCODE_BLE", "L2capCocServer"),
             ("NUCODE_BLE_Security", "GattCacheCentral"),
             ("NUCODE_BLE_Security", "GattCachePeripheral"),
+            ("NUCODE_BLE_LegacySigning", "LegacySignedWriteCentral"),
+            ("NUCODE_BLE_LegacySigning", "LegacySignedWritePeripheral"),
+            ("NUCODE_BLE_EATT", "EattCentral"),
+            ("NUCODE_BLE_EATT", "EattPeripheral"),
         }
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(

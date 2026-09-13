@@ -268,6 +268,7 @@ namespace nucode::ble::internal::gatt
     using nucode::ble::BLEGattCacheStatistics;
     using nucode::ble::BLEGattAuthorizationOperation;
     using nucode::ble::BLEGattAuthorizationRequest;
+    using nucode::ble::BLEGattBearer;
     using nucode::ble::BLEGattClientCallback;
     using nucode::ble::BLEGattClientEvent;
     using nucode::ble::BLEGattClientInfoCallback;
@@ -372,7 +373,9 @@ namespace nucode::ble::internal::gatt
         std::uint16_t length;
         std::uint16_t offset;
         bool without_response;
+        bool persist_signing;
         std::uint8_t att_error;
+        BLEGattBearer bearer;
         int status;
         std::uint8_t data[maximum_value_length];
     };
@@ -481,6 +484,9 @@ namespace nucode::ble::internal::gatt
         atomic_t client_subscribed = ATOMIC_INIT(0);
         atomic_t client_subscription_value = ATOMIC_INIT(0);
         atomic_t client_last_att_error = ATOMIC_INIT(0);
+        atomic_t client_operation_bearer =
+            ATOMIC_INIT(static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
+        atomic_t client_signed_write = ATOMIC_INIT(0);
         atomic_t descriptor_boundary_ready = ATOMIC_INIT(0);
         atomic_t cache_state =
             ATOMIC_INIT(static_cast<atomic_val_t>(BLEGattCacheState::idle));
@@ -563,6 +569,10 @@ namespace nucode::ble::internal::gatt
         {
             result |= BT_GATT_CHRC_INDICATE;
         }
+        if (hasProperty(properties, BLEProperty::authenticated_signed_write))
+        {
+            result |= 0x40U;
+        }
         return result;
     }
 
@@ -589,6 +599,10 @@ namespace nucode::ble::internal::gatt
         if ((properties & BT_GATT_CHRC_INDICATE) != 0U)
         {
             result = result | BLEProperty::indicate;
+        }
+        if ((properties & 0x40U) != 0U)
+        {
+            result = result | BLEProperty::authenticated_signed_write;
         }
         return result;
     }
@@ -625,7 +639,9 @@ namespace nucode::ble::internal::gatt
         }
         const bool readable = hasProperty(properties, BLEProperty::read);
         const bool writable = hasProperty(properties, BLEProperty::write) ||
-                              hasProperty(properties, BLEProperty::write_without_response);
+                              hasProperty(properties, BLEProperty::write_without_response) ||
+                              hasProperty(properties,
+                                          BLEProperty::authenticated_signed_write);
         return readable == hasPermission(permissions, BLEPermission::read) &&
                writable == hasPermission(permissions, BLEPermission::write);
     }
@@ -652,7 +668,7 @@ namespace nucode::ble::internal::gatt
                           BLEDescriptor *descriptor = nullptr,
                           BLEGattAuthorizationOperation authorization_operation =
                               BLEGattAuthorizationOperation::read) noexcept;
-    void queueClientEvent(ClientState &state, BLEGattClientEvent event,
+    bool queueClientEvent(ClientState &state, BLEGattClientEvent event,
                           const void *data = nullptr, std::size_t length = 0U,
                           std::size_t offset = 0U, int status = 0,
                           std::uint8_t att_error = 0U) noexcept;

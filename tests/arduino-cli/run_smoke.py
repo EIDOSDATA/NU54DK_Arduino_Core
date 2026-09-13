@@ -1419,7 +1419,7 @@ def test_m28_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
     )
 
 
-## @brief M29 GATT·LE CoC와 bonded cache 예제를 BLE profile로 끝까지 빌드합니다.
+## @brief M29 GATT·CoC·cache와 선택형 signing/EATT 예제를 끝까지 빌드합니다.
 def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     test_ble_examples(
         cli,
@@ -1467,6 +1467,42 @@ def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             raise SmokeFailure(
                 f"BLE security feature was not selected: {security_sketch}"
             )
+
+    optional_examples = (
+        (
+            "NUCODE_BLE_LegacySigning",
+            "nucode.ble.legacy_signing",
+            ("LegacySignedWritePeripheral", "LegacySignedWriteCentral"),
+        ),
+        (
+            "NUCODE_BLE_EATT",
+            "nucode.ble.eatt",
+            ("EattPeripheral", "EattCentral"),
+        ),
+    )
+    for library_name, feature_id, example_names in optional_examples:
+        for example_name in example_names:
+            sketch = repository / "libraries" / library_name / "examples" / example_name
+            if not (sketch / f"{example_name}.ino").is_file():
+                raise SmokeFailure(f"incomplete M29 optional example: {sketch}")
+            build = root / f"build-ble-{example_name.lower()}"
+            command = list(compile_command(cli, config, build, sketch))
+            command[-1:-1] = ("--board-options", "feature_set=ble")
+            run(command)
+            context = assert_build(build, f"{example_name}.ino")
+            if context.get("profile") != "ble":
+                raise SmokeFailure(
+                    f"M29 optional example did not use BLE profile: {sketch}"
+                )
+            features = {
+                item.get("id")
+                for item in context.get("selected_features", [])
+                if isinstance(item, dict)
+            }
+            if feature_id not in features:
+                raise SmokeFailure(
+                    f"M29 optional feature was not selected: {feature_id}: {sketch}"
+                )
 
 
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.

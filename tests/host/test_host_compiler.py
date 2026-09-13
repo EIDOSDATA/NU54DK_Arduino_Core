@@ -64,6 +64,22 @@ class HostCompilerTests(unittest.TestCase):
                 run_executable(["missing.exe"])
         runner.assert_called_once()
 
+    def test_application_control_retry_exhaustion_remains_fail_closed(self):
+        blocked = OSError("blocked")
+        blocked.winerror = 4551
+        with patch("host_compiler.os.name", "nt"), \
+                patch("host_compiler.subprocess.run", side_effect=blocked) as runner, \
+                patch("host_compiler.time.sleep") as sleeper:
+            with self.assertRaises(OSError):
+                run_executable(
+                    ["blocked.exe"],
+                    application_control_retries=2,
+                    retry_delay_seconds=0.25,
+                )
+        self.assertEqual(runner.call_count, 3)
+        self.assertEqual(sleeper.call_count, 2)
+        sleeper.assert_called_with(0.25)
+
 
 if __name__ == "__main__":
     unittest.main()

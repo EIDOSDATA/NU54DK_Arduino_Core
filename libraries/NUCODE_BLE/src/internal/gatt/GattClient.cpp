@@ -4,6 +4,14 @@
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 #include "GattInternal.h"
 
+#if defined(CONFIG_BT_EATT)
+/** @brief pinned Zephyr host가 제공하는 전체 EATT 해제 내부 진입점입니다. */
+extern "C" int bt_eatt_disconnect(struct bt_conn *connection);
+#endif
+
+/** @brief legacy signing 선택 라이브러리의 counter 영속화 진입점입니다. */
+extern "C" int nucode_ble_signing_persist(struct bt_conn *connection);
+
 namespace nucode::ble::internal::gatt
 {
     namespace
@@ -17,6 +25,35 @@ namespace nucode::ble::internal::gatt
             ClientState *state = legacyClientState();
             return state == nullptr ? BLEConnectionHandle{} : state->connection_handle;
         }
+
+        /** @brief 요청한 ATT bearer가 현재 link에서 사용 가능한지 확인합니다. */
+        bool validBearer(struct bt_conn *connection, BLEGattBearer bearer) noexcept
+        {
+            if (bearer == BLEGattBearer::unenhanced)
+            {
+                return true;
+            }
+#if defined(CONFIG_BT_EATT)
+            if (bearer == BLEGattBearer::enhanced && bt_eatt_count(connection) != 0U)
+            {
+                return true;
+            }
+            nucode::ble::internal::recordError(BLEError::wrong_state, -ENOTCONN, true);
+#else
+            ARG_UNUSED(connection);
+            nucode::ble::internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+#endif
+            return false;
+        }
+
+#if defined(CONFIG_BT_EATT)
+        /** @brief 공개 bearer 종류를 Zephyr ATT channel option으로 변환합니다. */
+        enum bt_att_chan_opt zephyrBearer(BLEGattBearer bearer) noexcept
+        {
+            return bearer == BLEGattBearer::enhanced ? BT_ATT_CHAN_OPT_ENHANCED_ONLY
+                                                     : BT_ATT_CHAN_OPT_UNENHANCED_ONLY;
+        }
+#endif
     } // namespace
 
     ClientStates &clientStates() noexcept
@@ -223,14 +260,18 @@ namespace nucode::ble::internal::gatt
         state.descriptor_end_handle = 0U;
         atomic_set(&state.descriptor_boundary_ready, 0);
         atomic_set(&state.client_last_att_error, att_error);
-        atomic_set(&state.client_busy_value, 0);
         if (atomic_get(&state.client_stage) != static_cast<atomic_val_t>(ClientStage::ready))
         {
             atomic_set(&state.client_stage, static_cast<atomic_val_t>(ClientStage::idle));
         }
         nucode::ble::internal::recordError(error, driver_error, true);
-        queueClientEvent(state, BLEGattClientEvent::operation_failed, nullptr, 0U, 0U,
-                         att_error != 0U ? -static_cast<int>(att_error) : driver_error, att_error);
+        static_cast<void>(queueClientEvent(
+            state, BLEGattClientEvent::operation_failed, nullptr, 0U, 0U,
+            att_error != 0U ? -static_cast<int>(att_error) : driver_error, att_error));
+        atomic_set(&state.client_operation_bearer,
+                   static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
+        atomic_set(&state.client_signed_write, 0);
+        atomic_set(&state.client_busy_value, 0);
     }
 
     std::uint8_t serviceDiscovered(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
@@ -419,10 +460,13 @@ namespace nucode::ble::internal::gatt
         state->read_multiple = false;
         clearClientOperationToken(*state);
         atomic_set(&state->client_busy_value, 0);
-        queueClientEvent(*state,
-                         read_multiple ? BLEGattClientEvent::read_multiple_complete
-                                       : BLEGattClientEvent::read_complete,
-                         state->read_data, completed_length);
+        static_cast<void>(queueClientEvent(
+            *state,
+            read_multiple ? BLEGattClientEvent::read_multiple_complete
+                          : BLEGattClientEvent::read_complete,
+            state->read_data, completed_length));
+        atomic_set(&state->client_operation_bearer,
+                   static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
         return BT_GATT_ITER_STOP;
     }
 
@@ -441,7 +485,9 @@ namespace nucode::ble::internal::gatt
         }
         clearClientOperationToken(*state);
         atomic_set(&state->client_busy_value, 0);
-        queueClientEvent(*state, BLEGattClientEvent::write_complete);
+        static_cast<void>(queueClientEvent(*state, BLEGattClientEvent::write_complete));
+        atomic_set(&state->client_operation_bearer,
+                   static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
     }
 
     void clientWriteCommandCompleted(struct bt_conn *connection, void *user_data) noexcept
@@ -451,9 +497,35 @@ namespace nucode::ble::internal::gatt
         {
             return;
         }
+        if (atomic_get(&state->client_signed_write) != 0)
+        {
+            if (!queueClientEvent(*state, BLEGattClientEvent::signed_write_complete))
+            {
+                /* 완료 event 포화 시에도 전송 counter를 저장해 rollback을 막습니다. */
+                const int persist_result = nucode_ble_signing_persist(connection);
+                if (persist_result >= 0)
+                {
+                    clearClientOperationToken(*state);
+                    atomic_set(&state->client_busy_value, 0);
+                    atomic_set(&state->client_signed_write, 0);
+                    atomic_set(&state->client_operation_bearer,
+                               static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
+                }
+                else
+                {
+                    internal::recordError(BLEError::driver_error, persist_result, true);
+                    static_cast<void>(bt_conn_disconnect(
+                        connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                }
+            }
+            return;
+        }
         clearClientOperationToken(*state);
         atomic_set(&state->client_busy_value, 0);
-        queueClientEvent(*state, BLEGattClientEvent::write_without_response_complete);
+        static_cast<void>(
+            queueClientEvent(*state, BLEGattClientEvent::write_without_response_complete));
+        atomic_set(&state->client_operation_bearer,
+                   static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
     }
 
     void clientSubscribeCompleted(struct bt_conn *connection, std::uint8_t error,
@@ -1045,6 +1117,11 @@ namespace nucode::ble
 
     bool GattClient::read(BLEConnectionHandle connection_handle) noexcept
     {
+        return read(connection_handle, BLEGattBearer::unenhanced);
+    }
+
+    bool GattClient::read(BLEConnectionHandle connection_handle, BLEGattBearer bearer) noexcept
+    {
         if (!internal::requireThreadContext())
         {
             return false;
@@ -1082,6 +1159,12 @@ namespace nucode::ble
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
+        if (!validBearer(connection, bearer))
+        {
+            bt_conn_unref(connection);
+            atomic_set(&state->client_busy_value, 0);
+            return false;
+        }
         state->read_length = 0U;
         state->read_multiple = false;
         ::memset(&state->read_parameters, 0, sizeof(state->read_parameters));
@@ -1089,12 +1172,18 @@ namespace nucode::ble
         state->read_parameters.handle_count = 1U;
         state->read_parameters.single.handle = characteristic.valueHandle();
         state->read_parameters.single.offset = 0U;
+#if defined(CONFIG_BT_EATT)
+        state->read_parameters.chan_opt = zephyrBearer(bearer);
+#endif
+        atomic_set(&state->client_operation_bearer, static_cast<atomic_val_t>(bearer));
         setClientOperationToken(*state, connection);
         const int result = bt_gatt_read(connection, &state->read_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
             clearClientOperationToken(*state);
+            atomic_set(&state->client_operation_bearer,
+                       static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
             atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
@@ -1166,6 +1255,8 @@ namespace nucode::ble
         state->read_parameters.handle_count = count;
         state->read_parameters.multiple.handles = state->read_handles;
         state->read_parameters.multiple.variable = false;
+        atomic_set(&state->client_operation_bearer,
+                   static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
         setClientOperationToken(*state, connection);
         const int result = bt_gatt_read(connection, &state->read_parameters);
         bt_conn_unref(connection);
@@ -1173,6 +1264,8 @@ namespace nucode::ble
         {
             clearClientOperationToken(*state);
             state->read_multiple = false;
+            atomic_set(&state->client_operation_bearer,
+                       static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
             atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
@@ -1187,6 +1280,12 @@ namespace nucode::ble
 
     bool GattClient::write(BLEConnectionHandle connection_handle, const void *data,
                            std::size_t length) noexcept
+    {
+        return write(connection_handle, data, length, BLEGattBearer::unenhanced);
+    }
+
+    bool GattClient::write(BLEConnectionHandle connection_handle, const void *data,
+                           std::size_t length, BLEGattBearer bearer) noexcept
     {
         if (!internal::requireThreadContext())
         {
@@ -1231,6 +1330,12 @@ namespace nucode::ble
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
+        if (!validBearer(connection, bearer))
+        {
+            bt_conn_unref(connection);
+            atomic_set(&state->client_busy_value, 0);
+            return false;
+        }
         if (length != 0U)
         {
             ::memcpy(state->write_data, data, length);
@@ -1241,12 +1346,18 @@ namespace nucode::ble
         state->write_parameters.offset = 0U;
         state->write_parameters.data = state->write_data;
         state->write_parameters.length = static_cast<std::uint16_t>(length);
+#if defined(CONFIG_BT_EATT)
+        state->write_parameters.chan_opt = zephyrBearer(bearer);
+#endif
+        atomic_set(&state->client_operation_bearer, static_cast<atomic_val_t>(bearer));
         setClientOperationToken(*state, connection);
         const int result = bt_gatt_write(connection, &state->write_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
             clearClientOperationToken(*state);
+            atomic_set(&state->client_operation_bearer,
+                       static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
             atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
@@ -1308,6 +1419,9 @@ namespace nucode::ble
         {
             ::memcpy(state->write_data, data, length);
         }
+        atomic_set(&state->client_signed_write, 0);
+        atomic_set(&state->client_operation_bearer,
+                   static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
         setClientOperationToken(*state, connection);
         const int result = bt_gatt_write_without_response_cb(
             connection, characteristic.valueHandle(), state->write_data,
@@ -1316,11 +1430,104 @@ namespace nucode::ble
         if (result < 0)
         {
             clearClientOperationToken(*state);
+            atomic_set(&state->client_signed_write, 0);
             atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
         return true;
+    }
+
+    bool GattClient::writeSigned(const void *data, std::size_t length) noexcept
+    {
+        return writeSigned(legacyConnectionHandle(), data, length);
+    }
+
+    bool GattClient::writeSigned(BLEConnectionHandle connection_handle, const void *data,
+                                 std::size_t length) noexcept
+    {
+        if (!internal::requireThreadContext())
+        {
+            return false;
+        }
+#if !defined(CONFIG_BT_SIGNING)
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(data);
+        ARG_UNUSED(length);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#else
+        ClientState *state = findClientState(connection_handle);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const BLERemoteCharacteristic characteristic = copyRemoteCharacteristic(*state);
+        if (!discovered(connection_handle) || !characteristic.valid() ||
+            !hasProperty(characteristic.properties(), BLEProperty::authenticated_signed_write))
+        {
+            internal::recordError(BLEError::wrong_state, -EPERM, true);
+            return false;
+        }
+        if (data == nullptr && length != 0U)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        if (!atomic_cas(&state->client_busy_value, 0, 1))
+        {
+            internal::recordError(BLEError::busy, -EBUSY, true);
+            return false;
+        }
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (connection == nullptr || !currentGattConnection(*state, connection))
+        {
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            atomic_set(&state->client_busy_value, 0);
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const std::size_t mtu = bt_gatt_get_mtu(connection);
+        if (length > maximum_value_length || mtu < 15U || length > mtu - 15U)
+        {
+            bt_conn_unref(connection);
+            atomic_set(&state->client_busy_value, 0);
+            internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
+            return false;
+        }
+        if (bt_conn_get_security(connection) != BT_SECURITY_L1)
+        {
+            bt_conn_unref(connection);
+            atomic_set(&state->client_busy_value, 0);
+            internal::recordError(BLEError::wrong_state, -EACCES, true);
+            return false;
+        }
+        if (length != 0U)
+        {
+            ::memcpy(state->write_data, data, length);
+        }
+        atomic_set(&state->client_signed_write, 1);
+        atomic_set(&state->client_operation_bearer,
+                   static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
+        setClientOperationToken(*state, connection);
+        const int result = bt_gatt_write_without_response_cb(
+            connection, characteristic.valueHandle(), state->write_data,
+            static_cast<std::uint16_t>(length), true, clientWriteCommandCompleted, state);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            clearClientOperationToken(*state);
+            atomic_set(&state->client_signed_write, 0);
+            atomic_set(&state->client_busy_value, 0);
+            internal::recordError(BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#endif
     }
 
     bool GattClient::subscribeNotifications() noexcept
@@ -1470,7 +1677,131 @@ namespace nucode::ble
         clientCallbacks().detailed_context = context;
     }
 
+    bool Eatt::enabled() const noexcept
+    {
+#if defined(CONFIG_BT_EATT)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool Eatt::connect(BLEConnectionHandle connection_handle,
+                       std::size_t bearer_count) noexcept
+    {
+        if (!internal::requireThreadContext())
+        {
+            return false;
+        }
+#if !defined(CONFIG_BT_EATT)
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(bearer_count);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#else
+        if (bearer_count == 0U || bearer_count > maximum_bearers_per_connection)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        ClientState *state = findClientState(connection_handle);
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (state == nullptr || connection == nullptr || !currentGattConnection(*state, connection))
+        {
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const std::size_t existing = bt_eatt_count(connection);
+        if (existing + bearer_count > maximum_bearers_per_connection)
+        {
+            bt_conn_unref(connection);
+            internal::recordError(BLEError::driver_error, -ENOSPC, true);
+            return false;
+        }
+        if (bt_conn_get_security(connection) < BT_SECURITY_L2)
+        {
+            bt_conn_unref(connection);
+            internal::recordError(BLEError::wrong_state, -EACCES, true);
+            return false;
+        }
+        const int result = bt_eatt_connect(connection, bearer_count);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#endif
+    }
+
+    std::size_t Eatt::count(BLEConnectionHandle connection_handle) const noexcept
+    {
+#if !defined(CONFIG_BT_EATT)
+        ARG_UNUSED(connection_handle);
+        return 0U;
+#else
+        ClientState *state = findClientState(connection_handle);
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (state == nullptr || connection == nullptr || !currentGattConnection(*state, connection))
+        {
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            return 0U;
+        }
+        const std::size_t bearer_count = bt_eatt_count(connection);
+        bt_conn_unref(connection);
+        return bearer_count;
+#endif
+    }
+
+    bool Eatt::disconnect(BLEConnectionHandle connection_handle) noexcept
+    {
+        if (!internal::requireThreadContext())
+        {
+            return false;
+        }
+#if !defined(CONFIG_BT_EATT)
+        ARG_UNUSED(connection_handle);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#else
+        ClientState *state = findClientState(connection_handle);
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (state == nullptr || connection == nullptr || !currentGattConnection(*state, connection))
+        {
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        if (bt_eatt_count(connection) == 0U)
+        {
+            bt_conn_unref(connection);
+            internal::recordError(BLEError::wrong_state, -ENOTCONN, true);
+            return false;
+        }
+        const int result = bt_eatt_disconnect(connection);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#endif
+    }
+
 } // namespace nucode::ble
 
 nucode::ble::GattClient BLEClient;
+nucode::ble::Eatt BLEEatt;
 #endif

@@ -38,6 +38,12 @@ enum
     BT_GATT_DISCOVER_DESCRIPTOR = 4,
     BT_GATT_SUBSCRIBE_FLAG_VOLATILE = 0
 };
+enum bt_att_chan_opt
+{
+    BT_ATT_CHAN_OPT_NONE = 0,
+    BT_ATT_CHAN_OPT_UNENHANCED_ONLY = 1,
+    BT_ATT_CHAN_OPT_ENHANCED_ONLY = 2,
+};
 #define BT_UUID_GATT_DB_HASH_VAL 0x2B2A
 #define BT_UUID_GATT_SERVICE_VAL 0x1801
 #define BT_UUID_GATT_SC_VAL 0x2A05
@@ -144,6 +150,9 @@ struct bt_gatt_read_params
         std::uint16_t *handles;
         bool variable;
     } multiple;
+#if defined(CONFIG_BT_EATT)
+    int chan_opt;
+#endif
 };
 using bt_gatt_discover_func_t = std::uint8_t (*)(
     bt_conn *, const bt_gatt_attr *, bt_gatt_discover_params *);
@@ -153,6 +162,9 @@ struct bt_gatt_write_params
     std::uint16_t handle, offset;
     const void *data;
     std::uint16_t length;
+#if defined(CONFIG_BT_EATT)
+    int chan_opt;
+#endif
 };
 struct bt_gatt_subscribe_params
 {
@@ -278,6 +290,9 @@ inline void (*mock_command_callback)(bt_conn *, void *){};
 inline void *mock_command_user_data{};
 inline void (*mock_command_callbacks[4])(bt_conn *, void *){};
 inline void *mock_command_user_data_by_connection[4]{};
+inline bool mock_command_signed[4]{};
+inline std::size_t mock_eatt_channels[4]{};
+inline std::size_t mock_eatt_connect_requests[4]{};
 inline int bt_gatt_notify_cb(bt_conn *connection, bt_gatt_notify_params *p)
 {
     mock_notification_connection = connection;
@@ -311,7 +326,7 @@ inline int bt_gatt_write(bt_conn *connection, bt_gatt_write_params *p)
 }
 inline int bt_gatt_write_without_response_cb(bt_conn *connection, std::uint16_t, const void *,
                                              std::uint16_t,
-                                             bool, void (*callback)(bt_conn *, void *),
+                                             bool sign, void (*callback)(bt_conn *, void *),
                                              void *user_data)
 {
     mock_command_callback = callback;
@@ -319,7 +334,24 @@ inline int bt_gatt_write_without_response_cb(bt_conn *connection, std::uint16_t,
     const std::size_t index = static_cast<std::size_t>(connection - mock_connections);
     mock_command_callbacks[index] = callback;
     mock_command_user_data_by_connection[index] = user_data;
+    mock_command_signed[index] = sign;
     return mock_write_error;
+}
+extern "C" inline int bt_eatt_connect(bt_conn *connection, std::size_t count)
+{
+    const std::size_t index = static_cast<std::size_t>(connection - mock_connections);
+    mock_eatt_connect_requests[index] = count;
+    mock_eatt_channels[index] += count;
+    return 0;
+}
+extern "C" inline std::size_t bt_eatt_count(bt_conn *connection)
+{
+    return mock_eatt_channels[static_cast<std::size_t>(connection - mock_connections)];
+}
+extern "C" inline int bt_eatt_disconnect(bt_conn *connection)
+{
+    mock_eatt_channels[static_cast<std::size_t>(connection - mock_connections)] = 0U;
+    return 0;
 }
 inline int bt_gatt_subscribe(bt_conn *connection, bt_gatt_subscribe_params *p)
 {

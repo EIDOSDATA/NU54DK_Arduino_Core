@@ -43,6 +43,12 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     "${NUCODE_ARDUINO_CORE_ROOT}/dts"
     "${NUCODE_ARDUINO_VARIANT_ROOT}"
   )
+  if(CONFIG_BT_SIGNING)
+    # 고정 NCS v3.4.0의 deprecated signing key 저장 adapter만 private Host API를 사용한다.
+    zephyr_include_directories(
+      "${ZEPHYR_BASE}/subsys/bluetooth/host"
+    )
+  endif()
   zephyr_system_include_directories(
     "${NUCODE_ARDUINO_API_ROOT}"
   )

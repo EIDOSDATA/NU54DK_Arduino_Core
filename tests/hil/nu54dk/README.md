@@ -27,7 +27,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
 | M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
-| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil), [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil), [W06 LE CoC·negative](#m29-w06-두-보드-le-cocnegative-hil) |
+| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil), [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil), [W06 LE CoC·negative](#m29-w06-두-보드-le-cocnegative-hil), [W07 Signed Write·EATT](#m29-w07-두-보드-signed-writeeatt-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -269,6 +269,40 @@ revision·128-bit nonce로 검사한다. Exact `767bb4af…`에서 target 2/2 wa
 기대하지 않아 RF 시작 전 fail-closed 중단됐다. W02~W04 기본 계약은 유지하고 W06이 역할별 광고
 필드를 명시하도록 수정한 뒤 같은 두 보드 조건에서 PASS했다. 실패 transcript와 최종 근거는
 [146번 기록](<../../../00_Docs/04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
+
+## M29-W07 두 보드 Signed Write·EATT HIL
+
+W07의 `M29-SIGN-01`과 `M29-EATT-01`은 두 NU54DK·독립 DAP/UART·무배선 RF 구성이다.
+Peripheral·central은 먼저 bond/CSRK를 만들고 20회 재부팅 사이에서 sign counter가 각각 정확히
+증가하는지 검사한다. Runner는 실제 송신한 Signed Write ATT PDU를 한 번 더 전송해 receiver가
+두 번째 PDU를 적용하지 않는지 판정한다. EATT 단계는 암호화 전 연결·3개 bearer 요청을 거부하고,
+암호화 뒤 정확히 2 bearer에서 각각 1,000 ATT operation과 production read/write를 실행한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_signed_eatt_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_signed_eatt_central의 zephyr.hex>"
+
+& $Python -I "$CoreRoot\tests\hil\nu54dk\m29_ble_signed_eatt.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --flash-backend pyocd-sector `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w07\signed-eatt-evidence.json"
+```
+
+Runner는 clean exact Core와 board revision, application·공통 runner source, 각 HEX 옆 build
+record를 flash 전에 검사한다. `M29W07|1` parser는 READY·CLEAR·PAIR·20 REBOOT/SIGN·REPLAY·EATT
+순서와 full revision·nonce·iteration·counter를 고정하며 noise·누락·중복·재배치·rollback·replay
+accept·bearer shortfall·timeout을 모두 거부한다. Dirty source target 2/2 build는 준비 근거일 뿐
+HIL PASS가 아니다. 실행 전 결과는
+[147번 기록](<../../../00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 있다.
 
 ## M15 공식 CI artifact 계약
 

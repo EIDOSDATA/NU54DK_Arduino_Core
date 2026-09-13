@@ -2,7 +2,7 @@
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25와 M28 W01~W08은 모두
 완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고
-M29 ATT/GATT·L2CAP는 W06 완료, 6/8입니다. 이 문서는 완료한 시험을 재개하라는
+M29 ATT/GATT·L2CAP는 W07 HIL 준비, 6/8입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -66,9 +66,9 @@ M29 ATT/GATT·L2CAP는 W06 완료, 6/8입니다. 이 문서는 완료한 시험�
 | LINK 최종 수정 | role callback 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도 |
 | 확인 장비 | NU54DK·독립 DAP/UART 3경로; receiver-validated sequence trace 사용 |
 | W08 | 현행 문서·지원 경계·readiness 원장·M29 인계 완료 |
-| 다음 행동 | M29-W07 Signed Write legacy opt-in·EATT experimental opt-in 구현·시험 |
+| 다음 행동 | W07 exact commit으로 `M29-SIGN/EATT/MULTI/REG-01` HIL 실행 |
 
-## M29-W01~W06 완료 상태
+## M29-W01~W06 완료와 W07 HIL 준비 상태
 
 M29는 [착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)에서 W01~W08,
 10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **6/8**이며 정적 SDK candidate를 실제
@@ -76,7 +76,8 @@ M29는 [착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착�
 
 exact `d604642b…`의 `M29CAP/1` parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`
 capability 7/7이 PASS했다. 실제 실행은 GATT service와 LE CoC server·동적 PSM 등록까지이며,
-Signed Write와 EATT peer negotiation은 각각 `M29-SIGN-01`, `M29-EATT-01`까지 `NOT RUN`이다.
+Signed Write와 EATT peer negotiation은 target 2/2까지 준비했지만 각각 `M29-SIGN-01`,
+`M29-EATT-01` 실제 HIL 전이므로 `NOT RUN`이다.
 
 Signed Write는 기본 OFF인 deprecated legacy opt-in, EATT는 기본 OFF인 experimental opt-in으로
 개발한다. 기본 GATT/LE CoC와 두 선택 profile의 결과를 분리한다. NU54DK 3개와 DAP/UART 3경로는
@@ -129,7 +130,21 @@ callback은 payload를 복사하고 `BLEDevice.poll()`에서만 공개 callback�
 `M29-COC-01`과 `M29-NEG-01`을 닫았다. 첫 runner protocol 불일치와 동일 조건 재검증 원본은
 [146번 기록](<04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
 
-실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m29-w06-두-보드-le-cocnegative-hil), 구현·검증
+W07은 기본 OFF의 `NUCODE_BLE_LegacySigning`·`NUCODE_BLE_EATT` 선택 library, 기존 ordinal을
+보존한 Signed Write·bearer 지정 read/write 공개 API, 고정 두 EATT bearer를 구현했다. CSRK와
+local/remote sign counter는 정상 완료에서 main thread가 저장하며 queue 포화 fallback도 counter를
+저장하고 실패 시 link를 끊는다. Strict `M29W07|1` target·runner는 20회 재부팅 counter,
+동일 signed ATT PDU replay 거부, 암호화 전 EATT 거부, 2 bearer별 1,000 operation을 판정한다.
+Production Host 전체 24개 시나리오·W07 계약 7/7·parser 14/14와 target role 2/2는 PASS했다.
+Windows Application Control 4551에만 최대 30초 유한 대기를 적용한 뒤 전체 Host 1,106개도
+PASS(조건부 2개 skip)했다. Arduino M29 smoke는 `EattCentral`의 최소 C++ runtime 비호환
+`<cstring>`을 `<string.h>`로 교체한 뒤 전체 14개 예제를 처음부터 다시 build해 14/14 PASS했다.
+현재 target은 dirty source build이므로
+물리 증거로 승격하지 않으며, clean exact commit/push/CI 뒤 두 보드 SIGN/EATT와 세 보드
+MULTI/REG를 실행한다. 준비 기록은
+[147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 있다.
+
+실행기와 보드 조건은 [W07 HIL 안내](../tests/hil/nu54dk/README.md#m29-w07-두-보드-signed-writeeatt-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과
 [132번 실제 HCI 완료 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)과
 [134번 W02 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>)과

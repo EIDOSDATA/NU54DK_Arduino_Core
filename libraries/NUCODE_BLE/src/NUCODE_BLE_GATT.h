@@ -30,6 +30,8 @@ namespace nucode::ble
         write_without_response = 1U << 2U,
         notify = 1U << 3U,
         indicate = 1U << 4U,
+        /** @brief deprecated Authenticated Signed Write를 광고합니다. */
+        authenticated_signed_write = 1U << 5U,
     };
 
     /** @brief BLEProperty bit 조합을 만듭니다. */
@@ -385,6 +387,7 @@ namespace nucode::ble
         cache_saved,
         service_changed,
         cache_invalidated,
+        signed_write_complete,
     };
 
     /** @brief link별 robust GATT cache의 현재 상태입니다. */
@@ -519,6 +522,10 @@ namespace nucode::ble
         /** @brief 지정 link에서 최대 512 byte long read를 시작합니다. */
         [[nodiscard]] bool read(BLEConnectionHandle connection) noexcept;
 
+        /** @brief 지정 link와 ATT bearer 종류로 최대 512 byte long read를 시작합니다. */
+        [[nodiscard]] bool read(BLEConnectionHandle connection,
+                                BLEGattBearer bearer) noexcept;
+
         /** @brief 현재 link에서 최대 4개 attribute를 한 번에 읽습니다. */
         [[nodiscard]] bool readMultiple(const std::uint16_t *handles,
                                         std::size_t count) noexcept;
@@ -535,12 +542,29 @@ namespace nucode::ble
         [[nodiscard]] bool write(BLEConnectionHandle connection, const void *data,
                                  std::size_t length) noexcept;
 
+        /** @brief 지정 link와 ATT bearer 종류로 long/reliable write를 시작합니다. */
+        [[nodiscard]] bool write(BLEConnectionHandle connection, const void *data,
+                                 std::size_t length, BLEGattBearer bearer) noexcept;
+
         /** @brief response 없는 bounded write와 local TX 완료를 시작합니다. */
         [[nodiscard]] bool writeWithoutResponse(const void *data, std::size_t length) noexcept;
 
         /** @brief 지정 link에서 response 없는 bounded write를 시작합니다. */
         [[nodiscard]] bool writeWithoutResponse(BLEConnectionHandle connection, const void *data,
                                                 std::size_t length) noexcept;
+
+        /**
+         * @brief 현재 link에서 deprecated Authenticated Signed Write를 시작합니다.
+         * @warning `NUCODE_BLE_LegacySigning.h`를 명시적으로 포함한 build에서만 동작합니다.
+         */
+        [[nodiscard]] bool writeSigned(const void *data, std::size_t length) noexcept;
+
+        /**
+         * @brief 지정 link에서 deprecated Authenticated Signed Write를 시작합니다.
+         * @warning 암호화되지 않은 bonded legacy link와 영속 CSRK가 필요합니다.
+         */
+        [[nodiscard]] bool writeSigned(BLEConnectionHandle connection, const void *data,
+                                       std::size_t length) noexcept;
 
         /** @brief remote CCC notification 구독을 시작합니다. */
         [[nodiscard]] bool subscribeNotifications() noexcept;
@@ -589,6 +613,27 @@ namespace nucode::ble
                              void *context = nullptr) noexcept;
     };
 
+    /** @brief 암호화 link의 experimental Enhanced ATT bearer를 관리합니다. */
+    class Eatt final
+    {
+      public:
+        static constexpr std::size_t maximum_bearers_per_connection = 2U;
+
+        /** @brief 현재 build가 EATT opt-in을 포함하는지 반환합니다. */
+        [[nodiscard]] bool enabled() const noexcept;
+
+        /** @brief 지정 암호화 link에 1~2개의 EATT bearer 연결을 시작합니다. */
+        [[nodiscard]] bool connect(BLEConnectionHandle connection,
+                                   std::size_t bearer_count =
+                                       maximum_bearers_per_connection) noexcept;
+
+        /** @brief 지정 link에 현재 연결된 EATT bearer 수를 반환합니다. */
+        [[nodiscard]] std::size_t count(BLEConnectionHandle connection) const noexcept;
+
+        /** @brief 지정 link의 모든 EATT bearer 연결 해제를 시작합니다. */
+        [[nodiscard]] bool disconnect(BLEConnectionHandle connection) noexcept;
+    };
+
 } // namespace nucode::ble
 
 /** @brief NU54DK의 단일 bounded generic GATT client 객체입니다. */
@@ -596,5 +641,8 @@ extern nucode::ble::GattClient BLEClient;
 
 /** @brief NU54DK의 application revision·database hash 관리 객체입니다. */
 extern nucode::ble::GattDatabase BLEGattDatabase;
+
+/** @brief NU54DK의 experimental EATT bearer 관리 객체입니다. */
+extern nucode::ble::Eatt BLEEatt;
 
 #endif

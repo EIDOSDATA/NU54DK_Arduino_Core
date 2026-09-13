@@ -4,6 +4,13 @@
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 #include "internal/gatt/GattInternal.h"
 
+/** @brief legacy signing library가 제공하지 않으면 영속화를 fail-closed로 거부합니다. */
+extern "C" __weak int nucode_ble_signing_persist(struct bt_conn *connection)
+{
+    ARG_UNUSED(connection);
+    return -ENOTSUP;
+}
+
 namespace nucode::ble::internal::gatt
 {
     namespace
@@ -33,6 +40,9 @@ namespace nucode::ble::internal::gatt
             atomic_set(&client.client_subscribed, 0);
             atomic_set(&client.client_subscription_value, 0);
             atomic_set(&client.client_last_att_error, 0);
+            atomic_set(&client.client_operation_bearer,
+                       static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
+            atomic_set(&client.client_signed_write, 0);
             atomic_set(&client.descriptor_boundary_ready, 0);
             client.descriptor_end_handle = 0U;
             client.read_length = 0U;
@@ -122,22 +132,38 @@ namespace nucode::ble::internal::gatt
         record.length = static_cast<std::uint16_t>(length);
         record.offset = static_cast<std::uint16_t>(offset);
         record.without_response = without_response;
+        record.persist_signing =
+            event == BLECharacteristicEvent::written && without_response &&
+            connection != nullptr && bt_conn_get_security(connection) == BT_SECURITY_L1 &&
+            hasProperty(GattAccess::properties(characteristic),
+                        BLEProperty::authenticated_signed_write);
         record.status = status;
         if (data != nullptr && length != 0U)
         {
             ::memcpy(record.data, data, length);
         }
-        static_cast<void>(queueGattEvent(record));
+        if (!queueGattEvent(record) && record.persist_signing && connection != nullptr)
+        {
+            /* queue 포화 시에도 수신 counter를 되돌릴 수 없도록 즉시 저장합니다. */
+            const int persist_result = nucode_ble_signing_persist(connection);
+            if (persist_result < 0)
+            {
+                nucode::ble::internal::recordError(BLEError::driver_error,
+                                                   persist_result, true);
+                static_cast<void>(bt_conn_disconnect(
+                    connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+            }
+        }
     }
 
-    void queueClientEvent(ClientState &client, BLEGattClientEvent event, const void *data,
+    bool queueClientEvent(ClientState &client, BLEGattClientEvent event, const void *data,
                           std::size_t length, std::size_t offset, int status,
                           std::uint8_t att_error) noexcept
     {
         if (length > maximum_value_length)
         {
             nucode::ble::internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
-            return;
+            return false;
         }
         GattEventRecord record = {};
         record.owner_kind = GattEventRecord::Owner::client;
@@ -148,12 +174,14 @@ namespace nucode::ble::internal::gatt
         record.length = static_cast<std::uint16_t>(length);
         record.offset = static_cast<std::uint16_t>(offset);
         record.att_error = att_error;
+        record.bearer = static_cast<BLEGattBearer>(
+            atomic_get(&client.client_operation_bearer));
         record.status = status;
         if (data != nullptr && length != 0U)
         {
             ::memcpy(record.data, data, length);
         }
-        static_cast<void>(queueGattEvent(record));
+        return queueGattEvent(record);
     }
 
     void queueInvalidatedEvent(BLEConnectionHandle connection) noexcept
@@ -219,6 +247,17 @@ namespace nucode::ble::internal
                     {
                         continue;
                     }
+                    if (record.persist_signing)
+                    {
+                        const int persist_result = nucode_ble_signing_persist(connection);
+                        if (persist_result < 0)
+                        {
+                            record.status = persist_result;
+                            recordError(BLEError::driver_error, persist_result, true);
+                            static_cast<void>(bt_conn_disconnect(
+                                connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                        }
+                    }
                     bt_conn_unref(connection);
                 }
                 const BLECharacteristicEventInfo event = {
@@ -245,6 +284,41 @@ namespace nucode::ble::internal
             {
                 continue;
             }
+            if (record.client_event == BLEGattClientEvent::signed_write_complete)
+            {
+                ClientState *client = findClientState(record.connection);
+                struct bt_conn *connection = referenceConnection(record.connection);
+                int persist_result = -ENOTCONN;
+                if (client != nullptr && connection != nullptr &&
+                    currentGattConnection(*client, connection))
+                {
+                    persist_result = nucode_ble_signing_persist(connection);
+                }
+                if (connection != nullptr && persist_result < 0)
+                {
+                    static_cast<void>(bt_conn_disconnect(
+                        connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                }
+                if (connection != nullptr)
+                {
+                    bt_conn_unref(connection);
+                }
+                if (client != nullptr && persist_result >= 0)
+                {
+                    clearClientOperationToken(*client);
+                    atomic_set(&client->client_busy_value, 0);
+                    atomic_set(&client->client_signed_write, 0);
+                    atomic_set(&client->client_operation_bearer,
+                               static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
+                }
+                if (persist_result < 0)
+                {
+                    /* disconnect 전까지 busy를 유지해 counter rollback 가능성을 닫습니다. */
+                    record.client_event = BLEGattClientEvent::operation_failed;
+                    record.status = persist_result;
+                    recordError(BLEError::driver_error, persist_result, true);
+                }
+            }
             ClientCallbacks &callbacks = clientCallbacks();
             if (callbacks.legacy != nullptr)
             {
@@ -267,7 +341,7 @@ namespace nucode::ble::internal
                     .offset = record.offset,
                     .att_error = record.att_error,
                     .status = record.status,
-                    .bearer = BLEGattBearer::unenhanced,
+                    .bearer = record.bearer,
                 };
                 callbacks.detailed(information, callbacks.detailed_context);
             }

@@ -38,7 +38,7 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(self.readiness["schema_version"], 1)
         self.assertEqual(self.readiness["milestone"], "M29")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "w06_complete")
+        self.assertEqual(self.readiness["phase"], "w07_hil_ready")
         self.assertEqual(self.readiness["milestone_status"], "in_progress")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertRegex(baseline["core_revision"], r"^[0-9a-f]{40}$")
@@ -86,17 +86,10 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual({entry["id"] for entry in capabilities}, expected)
         for entry in capabilities:
             self.assertTrue(entry["source_status"].startswith("candidate"), entry["id"])
-            expected_status = (
-                "passed"
-                if entry["id"]
-                in {
-                    "gatt_long_reliable",
-                    "gatt_read_multiple",
-                    "gatt_service_changed_cache",
-                    "l2cap_credit_based_channel",
-                }
-                else "not_started"
-            )
+            expected_status = "target_ready" if entry["id"] in {
+                "signed_write",
+                "eatt",
+            } else "passed"
             self.assertEqual(entry["implementation_status"], expected_status, entry["id"])
             self.assertGreater(len(entry["source_references"]), 0, entry["id"])
             for reference in entry["source_references"]:
@@ -122,13 +115,17 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertGreater(value, 0, name)
 
     def test_work_packages_begin_at_w07_after_w06_completion(self) -> None:
-        """! @brief W01~W06 완료 증거와 W07 이후 미착수 상태를 검사합니다. """
+        """! @brief W01~W06 완료와 W07 target 준비 상태를 검사합니다. """
 
         packages = self.readiness["work_packages"]
         self.assertEqual(len(packages), 8)
         for index, package in enumerate(packages, start=1):
             self.assertEqual(package["id"], f"M29-W{index:02d}")
-            expected_status = "completed" if index <= 6 else "not_started"
+            expected_status = (
+                "completed" if index <= 6 else
+                "in_progress" if index == 7 else
+                "not_started"
+            )
             self.assertEqual(package["status"], expected_status, package["id"])
         w01 = packages[0]
         self.assertEqual(w01["host_parser_tests"], 16)
@@ -189,6 +186,15 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(len(w06["evidence_files"]), 3)
         for relative in w06["failure_evidence_files"] + w06["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        w07 = packages[6]
+        self.assertEqual(w07["production_host_scenarios"], 3)
+        self.assertEqual(w07["host_contract_tests"], 7)
+        self.assertEqual(w07["host_parser_tests"], 14)
+        self.assertEqual(w07["target_builds"], 2)
+        self.assertEqual(w07["physical_signed_write"], "not_run")
+        self.assertEqual(w07["physical_eatt"], "not_run")
+        self.assertEqual(w07["physical_multi_link"], "not_run")
+        self.assertEqual(w07["physical_regression"], "not_run")
         completion = self.readiness["completion"]
         self.assertEqual(completion["completed_work_packages"], 6)
         self.assertEqual(completion["total_work_packages"], 8)
