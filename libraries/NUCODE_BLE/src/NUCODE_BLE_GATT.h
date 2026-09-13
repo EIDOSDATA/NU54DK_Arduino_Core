@@ -94,7 +94,7 @@ namespace nucode::ble
     class BLECharacteristic final
     {
       public:
-        static constexpr std::size_t maximum_value_length = 244U;
+        static constexpr std::size_t maximum_value_length = 512U;
 
         /** @brief 내부 고정 buffer를 사용하는 characteristic을 선언합니다. */
         BLECharacteristic(const BLEUuid &uuid, BLEProperty properties, BLEPermission permissions,
@@ -246,9 +246,33 @@ namespace nucode::ble
         operation_failed,
     };
 
+    /** @brief GATT operation이 사용한 ATT bearer 종류입니다. */
+    enum class BLEGattBearer : std::uint8_t
+    {
+        unenhanced,
+        enhanced,
+    };
+
+    /** @brief client event의 link·오류·payload 상세 정보입니다. */
+    struct BLEGattClientEventInfo
+    {
+        BLEGattClientEvent event = BLEGattClientEvent::operation_failed;
+        BLEConnectionHandle connection;
+        const std::uint8_t *data = nullptr;
+        std::size_t length = 0U;
+        std::size_t offset = 0U;
+        std::uint8_t att_error = 0U;
+        int status = 0;
+        BLEGattBearer bearer = BLEGattBearer::unenhanced;
+    };
+
     /** @brief BLEDevice.poll()에서만 호출되는 generic GATT client callback입니다. */
     using BLEGattClientCallback = void (*)(BLEGattClientEvent event, const std::uint8_t *data,
                                            std::size_t length, void *context);
+
+    /** @brief BLEDevice.poll()에서만 호출되는 link 식별 가능 client callback입니다. */
+    using BLEGattClientInfoCallback = void (*)(const BLEGattClientEventInfo &information,
+                                               void *context);
 
     /** @brief 한 번에 한 service/characteristic operation을 수행하는 bounded GATT client입니다. */
     class GattClient final
@@ -258,41 +282,85 @@ namespace nucode::ble
         [[nodiscard]] bool discover(const BLEUuid &service_uuid,
                                     const BLEUuid &characteristic_uuid) noexcept;
 
+        /** @brief 지정 link에서 exact service와 characteristic UUID discovery를 시작합니다. */
+        [[nodiscard]] bool discover(BLEConnectionHandle connection, const BLEUuid &service_uuid,
+                                    const BLEUuid &characteristic_uuid) noexcept;
+
         /** @brief remote service와 characteristic discovery가 완료됐는지 반환합니다. */
         [[nodiscard]] bool discovered() const noexcept;
+
+        /** @brief 지정 link의 remote handle discovery가 완료됐는지 반환합니다. */
+        [[nodiscard]] bool discovered(BLEConnectionHandle connection) const noexcept;
 
         /** @brief 현재 remote service handle의 동기화된 값 복사본을 반환합니다. */
         [[nodiscard]] BLERemoteService remoteService() const noexcept;
 
+        /** @brief 지정 link의 remote service handle 복사본을 반환합니다. */
+        [[nodiscard]] BLERemoteService remoteService(BLEConnectionHandle connection) const noexcept;
+
         /** @brief 현재 remote characteristic handle의 동기화된 값 복사본을 반환합니다. */
         [[nodiscard]] BLERemoteCharacteristic remoteCharacteristic() const noexcept;
+
+        /** @brief 지정 link의 remote characteristic handle 복사본을 반환합니다. */
+        [[nodiscard]] BLERemoteCharacteristic remoteCharacteristic(
+            BLEConnectionHandle connection) const noexcept;
 
         /** @brief remote cached value의 단일 bounded read를 시작합니다. */
         [[nodiscard]] bool read() noexcept;
 
+        /** @brief 지정 link에서 최대 512 byte long read를 시작합니다. */
+        [[nodiscard]] bool read(BLEConnectionHandle connection) noexcept;
+
         /** @brief response가 있는 bounded write를 시작합니다. */
         [[nodiscard]] bool write(const void *data, std::size_t length) noexcept;
+
+        /** @brief 지정 link에서 response가 있는 bounded write를 시작합니다. */
+        [[nodiscard]] bool write(BLEConnectionHandle connection, const void *data,
+                                 std::size_t length) noexcept;
 
         /** @brief response 없는 bounded write와 local TX 완료를 시작합니다. */
         [[nodiscard]] bool writeWithoutResponse(const void *data, std::size_t length) noexcept;
 
+        /** @brief 지정 link에서 response 없는 bounded write를 시작합니다. */
+        [[nodiscard]] bool writeWithoutResponse(BLEConnectionHandle connection, const void *data,
+                                                std::size_t length) noexcept;
+
         /** @brief remote CCC notification 구독을 시작합니다. */
         [[nodiscard]] bool subscribeNotifications() noexcept;
+
+        /** @brief 지정 link의 remote CCC notification 구독을 시작합니다. */
+        [[nodiscard]] bool subscribeNotifications(BLEConnectionHandle connection) noexcept;
 
         /** @brief remote CCC indication 구독을 시작합니다. */
         [[nodiscard]] bool subscribeIndications() noexcept;
 
+        /** @brief 지정 link의 remote CCC indication 구독을 시작합니다. */
+        [[nodiscard]] bool subscribeIndications(BLEConnectionHandle connection) noexcept;
+
         /** @brief 현재 remote CCC 구독 해제를 시작합니다. */
         [[nodiscard]] bool unsubscribe() noexcept;
+
+        /** @brief 지정 link의 현재 remote CCC 구독 해제를 시작합니다. */
+        [[nodiscard]] bool unsubscribe(BLEConnectionHandle connection) noexcept;
 
         /** @brief 비동기 client operation이 진행 중인지 반환합니다. */
         [[nodiscard]] bool busy() const noexcept;
 
+        /** @brief 지정 link에서 비동기 operation이 진행 중인지 반환합니다. */
+        [[nodiscard]] bool busy(BLEConnectionHandle connection) const noexcept;
+
         /** @brief 마지막 remote ATT 오류 byte를 반환합니다. */
         [[nodiscard]] std::uint8_t lastAttError() const noexcept;
 
+        /** @brief 지정 link의 마지막 remote ATT 오류 byte를 반환합니다. */
+        [[nodiscard]] std::uint8_t lastAttError(BLEConnectionHandle connection) const noexcept;
+
         /** @brief main-thread generic client callback을 등록합니다. */
         void onEvent(BLEGattClientCallback callback, void *context = nullptr) noexcept;
+
+        /** @brief link 식별 가능 main-thread client callback을 등록합니다. */
+        void onDetailedEvent(BLEGattClientInfoCallback callback,
+                             void *context = nullptr) noexcept;
     };
 
 } // namespace nucode::ble

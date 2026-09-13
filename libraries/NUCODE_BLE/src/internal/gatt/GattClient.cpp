@@ -1,450 +1,537 @@
-/** @file @brief GATT discovery·client operation·subscription 수명주기입니다.
+/** @file @brief GATT discovery·link별 client operation·subscription 수명주기입니다.
  * SPDX-License-Identifier: MIT
  */
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 #include "GattInternal.h"
+
 namespace nucode::ble::internal::gatt
 {
     namespace
     {
-        ClientState state{};
-        BLEUuid target_service_uuid;
-        BLEUuid target_characteristic_uuid;
-        ZephyrUuid target_service_zephyr_uuid;
-        ZephyrUuid target_characteristic_zephyr_uuid;
-        struct bt_gatt_discover_params discovery_parameters = {};
-        struct bt_gatt_read_params read_parameters = {};
-        struct bt_gatt_write_params write_parameters = {};
-        struct bt_gatt_subscribe_params subscribe_parameters = {};
-        std::uint8_t client_write_data[maximum_value_length] = {};
+        ClientStates states{};
+        ClientCallbacks callbacks{};
+
+        /** @brief 기존 무인자 API가 사용할 central 우선 handle을 반환합니다. */
+        BLEConnectionHandle legacyConnectionHandle() noexcept
+        {
+            ClientState *state = legacyClientState();
+            return state == nullptr ? BLEConnectionHandle{} : state->connection_handle;
+        }
     } // namespace
-    ClientState &clientState() noexcept
+
+    ClientStates &clientStates() noexcept
     {
-        return state;
-    }
-    /** @brief remote handle 두 개를 하나의 spinlock 아래 값으로 복사합니다. */
-    void copyRemoteHandles(BLERemoteService &service,
-                           BLERemoteCharacteristic &characteristic) noexcept
-    {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_state_lock);
-        service = clientState().remote_service;
-        characteristic = clientState().remote_characteristic;
-        k_spin_unlock(&clientState().client_state_lock, key);
+        return states;
     }
 
-    /** @brief remote service handle을 spinlock 아래 값으로 복사합니다. */
-    BLERemoteService copyRemoteService() noexcept
+    ClientCallbacks &clientCallbacks() noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_state_lock);
-        const BLERemoteService service = clientState().remote_service;
-        k_spin_unlock(&clientState().client_state_lock, key);
+        return callbacks;
+    }
+
+    ClientState *findClientState(BLEConnectionHandle connection) noexcept
+    {
+        if (!connection.valid())
+        {
+            return nullptr;
+        }
+        for (ClientState &state : clientStates())
+        {
+            k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
+            const bool matches = state.connection_handle == connection &&
+                                 state.gatt_connection != nullptr;
+            k_spin_unlock(&state.client_token_lock, key);
+            if (matches)
+            {
+                return &state;
+            }
+        }
+        return nullptr;
+    }
+
+    ClientState *legacyClientState() noexcept
+    {
+        ClientState *state = findClientState(BLEConnection.handle(BLELinkRole::central));
+        if (state == nullptr)
+        {
+            state = findClientState(BLEConnection.handle(BLELinkRole::peripheral));
+        }
+        return state;
+    }
+
+    ClientState *findDiscoveryState(struct bt_gatt_discover_params *parameters) noexcept
+    {
+        if (parameters == nullptr)
+        {
+            return nullptr;
+        }
+        for (ClientState &state : clientStates())
+        {
+            if (&state.discovery_parameters == parameters)
+            {
+                return &state;
+            }
+        }
+        return nullptr;
+    }
+
+    ClientState *findReadState(struct bt_gatt_read_params *parameters) noexcept
+    {
+        if (parameters == nullptr)
+        {
+            return nullptr;
+        }
+        for (ClientState &state : clientStates())
+        {
+            if (&state.read_parameters == parameters)
+            {
+                return &state;
+            }
+        }
+        return nullptr;
+    }
+
+    ClientState *findWriteState(struct bt_gatt_write_params *parameters) noexcept
+    {
+        if (parameters == nullptr)
+        {
+            return nullptr;
+        }
+        for (ClientState &state : clientStates())
+        {
+            if (&state.write_parameters == parameters)
+            {
+                return &state;
+            }
+        }
+        return nullptr;
+    }
+
+    ClientState *findSubscriptionState(struct bt_gatt_subscribe_params *parameters) noexcept
+    {
+        if (parameters == nullptr)
+        {
+            return nullptr;
+        }
+        for (ClientState &state : clientStates())
+        {
+            if (&state.subscribe_parameters == parameters)
+            {
+                return &state;
+            }
+        }
+        return nullptr;
+    }
+
+    void copyRemoteHandles(ClientState &state, BLERemoteService &service,
+                           BLERemoteCharacteristic &characteristic) noexcept
+    {
+        k_spinlock_key_t key = k_spin_lock(&state.client_state_lock);
+        service = state.remote_service;
+        characteristic = state.remote_characteristic;
+        k_spin_unlock(&state.client_state_lock, key);
+    }
+
+    BLERemoteService copyRemoteService(ClientState &state) noexcept
+    {
+        k_spinlock_key_t key = k_spin_lock(&state.client_state_lock);
+        const BLERemoteService service = state.remote_service;
+        k_spin_unlock(&state.client_state_lock, key);
         return service;
     }
 
-    /** @brief remote characteristic handle을 spinlock 아래 값으로 복사합니다. */
-    BLERemoteCharacteristic copyRemoteCharacteristic() noexcept
+    BLERemoteCharacteristic copyRemoteCharacteristic(ClientState &state) noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_state_lock);
-        const BLERemoteCharacteristic characteristic = clientState().remote_characteristic;
-        k_spin_unlock(&clientState().client_state_lock, key);
+        k_spinlock_key_t key = k_spin_lock(&state.client_state_lock);
+        const BLERemoteCharacteristic characteristic = state.remote_characteristic;
+        k_spin_unlock(&state.client_state_lock, key);
         return characteristic;
     }
 
-    /** @brief 새 client operation의 connection/session token을 저장합니다. */
-    void setClientOperationToken(struct bt_conn *connection) noexcept
+    void setClientOperationToken(ClientState &state, struct bt_conn *connection) noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_token_lock);
-        clientState().client_operation_connection = connection;
-        clientState().client_operation_generation =
-            static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
-        k_spin_unlock(&clientState().client_token_lock, key);
+        k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
+        state.client_operation_connection = connection;
+        k_spin_unlock(&state.client_token_lock, key);
     }
 
-    /** @brief callback이 현재 client operation에 속하는지 검사합니다. */
-    bool validClientOperation(struct bt_conn *connection) noexcept
+    bool validClientOperation(ClientState &state, struct bt_conn *connection) noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_token_lock);
-        const bool matches =
-            clientState().client_operation_connection == connection &&
-            clientState().client_operation_generation ==
-                static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
-        k_spin_unlock(&clientState().client_token_lock, key);
-        return matches && currentGattConnection(connection);
+        k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
+        const bool matches = state.client_operation_connection == connection;
+        k_spin_unlock(&state.client_token_lock, key);
+        return matches && currentGattConnection(state, connection);
     }
 
-    /** @brief 현재 client operation token을 회수합니다. */
-    void clearClientOperationToken() noexcept
+    void clearClientOperationToken(ClientState &state) noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_token_lock);
-        clientState().client_operation_connection = nullptr;
-        clientState().client_operation_generation = 0U;
-        k_spin_unlock(&clientState().client_token_lock, key);
+        k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
+        state.client_operation_connection = nullptr;
+        k_spin_unlock(&state.client_token_lock, key);
     }
 
-    /** @brief 새 subscription의 connection/session token을 저장합니다. */
-    void setClientSubscriptionToken(struct bt_conn *connection) noexcept
+    void setClientSubscriptionToken(ClientState &state, struct bt_conn *connection) noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_token_lock);
-        clientState().client_subscription_connection = connection;
-        clientState().client_subscription_generation =
-            static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
-        k_spin_unlock(&clientState().client_token_lock, key);
+        k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
+        state.client_subscription_connection = connection;
+        k_spin_unlock(&state.client_token_lock, key);
     }
 
-    /** @brief callback이 현재 subscription에 속하는지 검사합니다. */
-    bool validClientSubscription(struct bt_conn *connection) noexcept
+    bool validClientSubscription(ClientState &state, struct bt_conn *connection) noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_token_lock);
-        const bool matches =
-            clientState().client_subscription_connection == connection &&
-            clientState().client_subscription_generation ==
-                static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
-        k_spin_unlock(&clientState().client_token_lock, key);
-        return matches && currentGattConnection(connection);
+        k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
+        const bool matches = state.client_subscription_connection == connection;
+        k_spin_unlock(&state.client_token_lock, key);
+        return matches && currentGattConnection(state, connection);
     }
 
-    /** @brief 현재 subscription token을 회수합니다. */
-    void clearClientSubscriptionToken() noexcept
+    void clearClientSubscriptionToken(ClientState &state) noexcept
     {
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_token_lock);
-        clientState().client_subscription_connection = nullptr;
-        clientState().client_subscription_generation = 0U;
-        k_spin_unlock(&clientState().client_token_lock, key);
+        k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
+        state.client_subscription_connection = nullptr;
+        k_spin_unlock(&state.client_token_lock, key);
     }
 
-    /** @brief client operation 실패 상태와 main-thread event를 함께 기록합니다. */
-    void failClient(int driver_error, std::uint8_t att_error) noexcept
+    void failClient(ClientState &state, int driver_error, std::uint8_t att_error) noexcept
     {
-        clearClientOperationToken();
-        atomic_set(&clientState().client_last_att_error, att_error);
-        atomic_set(&clientState().client_busy_value, 0);
-        atomic_set(&clientState().client_stage, static_cast<atomic_val_t>(ClientStage::idle));
-        nucode::ble::internal::recordError(driver_error == -ENOENT ? BLEError::not_found
-                                                                   : BLEError::driver_error,
-                                           driver_error, true);
-        queueClientEvent(BLEGattClientEvent::operation_failed, nullptr, 0U,
-                         att_error != 0U ? -static_cast<int>(att_error) : driver_error);
+        BLEError error = BLEError::driver_error;
+        if (driver_error == -ENOENT)
+        {
+            error = BLEError::not_found;
+        }
+        else if (driver_error == -EMSGSIZE)
+        {
+            error = BLEError::value_overflow;
+        }
+        else if (driver_error == -ENOTCONN)
+        {
+            error = BLEError::not_connected;
+        }
+        clearClientOperationToken(state);
+        state.read_length = 0U;
+        atomic_set(&state.client_last_att_error, att_error);
+        atomic_set(&state.client_busy_value, 0);
+        if (atomic_get(&state.client_stage) != static_cast<atomic_val_t>(ClientStage::ready))
+        {
+            atomic_set(&state.client_stage, static_cast<atomic_val_t>(ClientStage::idle));
+        }
+        nucode::ble::internal::recordError(error, driver_error, true);
+        queueClientEvent(state, BLEGattClientEvent::operation_failed, nullptr, 0U, 0U,
+                         att_error != 0U ? -static_cast<int>(att_error) : driver_error, att_error);
     }
 
-    /** @brief service discovery callback에서 handle 복사본만 보존합니다. */
     std::uint8_t serviceDiscovered(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                                    struct bt_gatt_discover_params *parameters) noexcept
     {
-        ARG_UNUSED(parameters);
-        if (!validClientOperation(connection))
+        ClientState *state = findDiscoveryState(parameters);
+        if (state == nullptr || !validClientOperation(*state, connection))
         {
             return BT_GATT_ITER_STOP;
         }
         if (attribute == nullptr)
         {
-            failClient(-ENOENT);
+            failClient(*state, -ENOENT);
             return BT_GATT_ITER_STOP;
         }
         const auto *value = static_cast<const struct bt_gatt_service_val *>(attribute->user_data);
         if (value == nullptr || value->end_handle <= attribute->handle)
         {
-            failClient(-EINVAL);
+            failClient(*state, -EINVAL);
             return BT_GATT_ITER_STOP;
         }
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_state_lock);
-        GattAccess::set(clientState().remote_service, target_service_uuid, attribute->handle,
+        k_spinlock_key_t key = k_spin_lock(&state->client_state_lock);
+        GattAccess::set(state->remote_service, state->target_service_uuid, attribute->handle,
                         value->end_handle);
-        k_spin_unlock(&clientState().client_state_lock, key);
-        atomic_set(&clientState().client_stage,
-                   static_cast<atomic_val_t>(ClientStage::service_found));
+        k_spin_unlock(&state->client_state_lock, key);
+        atomic_set(&state->client_stage, static_cast<atomic_val_t>(ClientStage::service_found));
         return BT_GATT_ITER_STOP;
     }
 
-    /** @brief characteristic discovery callback에서 portable handle만 보존합니다. */
     std::uint8_t characteristicDiscovered(struct bt_conn *connection,
                                           const struct bt_gatt_attr *attribute,
                                           struct bt_gatt_discover_params *parameters) noexcept
     {
-        ARG_UNUSED(parameters);
-        if (!validClientOperation(connection))
+        ClientState *state = findDiscoveryState(parameters);
+        if (state == nullptr || !validClientOperation(*state, connection))
         {
             return BT_GATT_ITER_STOP;
         }
         if (attribute == nullptr)
         {
-            failClient(-ENOENT);
+            failClient(*state, -ENOENT);
             return BT_GATT_ITER_STOP;
         }
         const auto *value = static_cast<const struct bt_gatt_chrc *>(attribute->user_data);
         if (value == nullptr || value->value_handle == 0U)
         {
-            failClient(-EINVAL);
+            failClient(*state, -EINVAL);
             return BT_GATT_ITER_STOP;
         }
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_state_lock);
-        GattAccess::set(clientState().remote_characteristic, target_characteristic_uuid,
+        k_spinlock_key_t key = k_spin_lock(&state->client_state_lock);
+        GattAccess::set(state->remote_characteristic, state->target_characteristic_uuid,
                         attribute->handle, value->value_handle,
                         publicProperties(value->properties));
-        k_spin_unlock(&clientState().client_state_lock, key);
-        atomic_set(&clientState().client_stage,
+        k_spin_unlock(&state->client_state_lock, key);
+        atomic_set(&state->client_stage,
                    static_cast<atomic_val_t>(ClientStage::characteristic_found));
         return BT_GATT_ITER_STOP;
     }
 
-    /** @brief CCC discovery callback에서 descriptor handle만 보존합니다. */
     std::uint8_t cccDiscovered(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                                struct bt_gatt_discover_params *parameters) noexcept
     {
-        ARG_UNUSED(parameters);
-        if (!validClientOperation(connection))
+        ClientState *state = findDiscoveryState(parameters);
+        if (state == nullptr || !validClientOperation(*state, connection))
         {
             return BT_GATT_ITER_STOP;
         }
         if (attribute == nullptr)
         {
-            failClient(-ENOENT);
+            failClient(*state, -ENOENT);
             return BT_GATT_ITER_STOP;
         }
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_state_lock);
-        GattAccess::setCcc(clientState().remote_characteristic, attribute->handle);
-        k_spin_unlock(&clientState().client_state_lock, key);
-        atomic_set(&clientState().client_stage, static_cast<atomic_val_t>(ClientStage::ccc_found));
+        k_spinlock_key_t key = k_spin_lock(&state->client_state_lock);
+        GattAccess::setCcc(state->remote_characteristic, attribute->handle);
+        k_spin_unlock(&state->client_state_lock, key);
+        atomic_set(&state->client_stage, static_cast<atomic_val_t>(ClientStage::ccc_found));
         return BT_GATT_ITER_STOP;
     }
 
-    /** @brief remote read의 첫 bounded fragment를 main-thread queue로 복사합니다. */
     std::uint8_t clientReadCompleted(struct bt_conn *connection, std::uint8_t error,
                                      struct bt_gatt_read_params *parameters, const void *data,
                                      std::uint16_t length) noexcept
     {
-        ARG_UNUSED(parameters);
-        if (!validClientOperation(connection))
+        ClientState *state = findReadState(parameters);
+        if (state == nullptr || !validClientOperation(*state, connection))
         {
             return BT_GATT_ITER_STOP;
         }
         if (error != 0U)
         {
-            failClient(-EIO, error);
+            failClient(*state, -EIO, error);
             return BT_GATT_ITER_STOP;
         }
         if (data != nullptr)
         {
-            clearClientOperationToken();
-            atomic_set(&clientState().client_busy_value, 0);
-            queueClientEvent(BLEGattClientEvent::read_complete, data, length);
-            return BT_GATT_ITER_STOP;
+            if (length == 0U || state->read_length + length > maximum_value_length)
+            {
+                failClient(*state, -EMSGSIZE);
+                return BT_GATT_ITER_STOP;
+            }
+            ::memcpy(state->read_data + state->read_length, data, length);
+            state->read_length += length;
+            return BT_GATT_ITER_CONTINUE;
         }
-        clearClientOperationToken();
-        atomic_set(&clientState().client_busy_value, 0);
-        queueClientEvent(BLEGattClientEvent::read_complete);
+        const std::size_t completed_length = state->read_length;
+        state->read_length = 0U;
+        clearClientOperationToken(*state);
+        atomic_set(&state->client_busy_value, 0);
+        queueClientEvent(*state, BLEGattClientEvent::read_complete, state->read_data,
+                         completed_length);
         return BT_GATT_ITER_STOP;
     }
 
-    /** @brief response write 완료를 main-thread event로 변환합니다. */
     void clientWriteCompleted(struct bt_conn *connection, std::uint8_t error,
                               struct bt_gatt_write_params *parameters) noexcept
     {
-        ARG_UNUSED(parameters);
-        if (!validClientOperation(connection))
+        ClientState *state = findWriteState(parameters);
+        if (state == nullptr || !validClientOperation(*state, connection))
         {
             return;
         }
         if (error != 0U)
         {
-            failClient(-EIO, error);
+            failClient(*state, -EIO, error);
             return;
         }
-        clearClientOperationToken();
-        atomic_set(&clientState().client_busy_value, 0);
-        queueClientEvent(BLEGattClientEvent::write_complete);
+        clearClientOperationToken(*state);
+        atomic_set(&state->client_busy_value, 0);
+        queueClientEvent(*state, BLEGattClientEvent::write_complete);
     }
 
-    /** @brief write command의 local TX 완료를 main-thread event로 변환합니다. */
     void clientWriteCommandCompleted(struct bt_conn *connection, void *user_data) noexcept
     {
-        ARG_UNUSED(user_data);
-        if (!validClientOperation(connection))
+        auto *state = static_cast<ClientState *>(user_data);
+        if (state == nullptr || !validClientOperation(*state, connection))
         {
             return;
         }
-        clearClientOperationToken();
-        atomic_set(&clientState().client_busy_value, 0);
-        queueClientEvent(BLEGattClientEvent::write_without_response_complete);
+        clearClientOperationToken(*state);
+        atomic_set(&state->client_busy_value, 0);
+        queueClientEvent(*state, BLEGattClientEvent::write_without_response_complete);
     }
 
-    /** @brief CCC write response를 main-thread event로 변환합니다. */
     void clientSubscribeCompleted(struct bt_conn *connection, std::uint8_t error,
                                   struct bt_gatt_subscribe_params *parameters) noexcept
     {
-        if (!validClientSubscription(connection))
+        ClientState *state = findSubscriptionState(parameters);
+        if (state == nullptr || !validClientSubscription(*state, connection))
         {
             return;
         }
         if (error != 0U)
         {
-            atomic_set(&clientState().client_subscribed, 0);
-            atomic_set(&clientState().client_subscription_value, 0);
-            clearClientSubscriptionToken();
-            failClient(-EIO, error);
-            return;
-        }
-        if (parameters == nullptr)
-        {
-            atomic_set(&clientState().client_subscribed, 0);
-            atomic_set(&clientState().client_subscription_value, 0);
-            clearClientSubscriptionToken();
-            failClient(-EINVAL);
+            atomic_set(&state->client_subscribed, 0);
+            atomic_set(&state->client_subscription_value, 0);
+            clearClientSubscriptionToken(*state);
+            failClient(*state, -EIO, error);
             return;
         }
         if (parameters->value == 0U)
         {
-            atomic_set(&clientState().client_subscribed, 0);
-            atomic_set(&clientState().client_busy_value, 0);
+            atomic_set(&state->client_subscribed, 0);
+            atomic_set(&state->client_busy_value, 0);
             return;
         }
-        atomic_set(&clientState().client_subscribed, 1);
-        atomic_set(&clientState().client_subscription_value, parameters->value);
-        atomic_set(&clientState().client_busy_value, 0);
-        queueClientEvent(BLEGattClientEvent::subscribed);
+        atomic_set(&state->client_subscribed, 1);
+        atomic_set(&state->client_subscription_value, parameters->value);
+        atomic_set(&state->client_busy_value, 0);
+        queueClientEvent(*state, BLEGattClientEvent::subscribed);
     }
 
-    /** @brief notify/indicate payload와 unsubscribe를 bounded queue로 복사합니다. */
     std::uint8_t clientNotification(struct bt_conn *connection,
                                     struct bt_gatt_subscribe_params *parameters, const void *data,
                                     std::uint16_t length) noexcept
     {
-        ARG_UNUSED(parameters);
-        if (!validClientSubscription(connection))
+        ClientState *state = findSubscriptionState(parameters);
+        if (state == nullptr || !validClientSubscription(*state, connection))
         {
             return BT_GATT_ITER_STOP;
         }
         if (data == nullptr)
         {
-            atomic_set(&clientState().client_subscribed, 0);
-            atomic_set(&clientState().client_subscription_value, 0);
-            clearClientSubscriptionToken();
-            atomic_set(&clientState().client_busy_value, 0);
-            queueClientEvent(BLEGattClientEvent::unsubscribed);
+            atomic_set(&state->client_subscribed, 0);
+            atomic_set(&state->client_subscription_value, 0);
+            clearClientSubscriptionToken(*state);
+            atomic_set(&state->client_busy_value, 0);
+            queueClientEvent(*state, BLEGattClientEvent::unsubscribed);
             return BT_GATT_ITER_STOP;
         }
-        queueClientEvent(atomic_get(&clientState().client_subscription_value) ==
-                                 BT_GATT_CCC_INDICATE
+        queueClientEvent(*state,
+                         atomic_get(&state->client_subscription_value) == BT_GATT_CCC_INDICATE
                              ? BLEGattClientEvent::indication_received
                              : BLEGattClientEvent::notification_received,
                          data, length);
         return BT_GATT_ITER_CONTINUE;
     }
 
-    /** @brief service 발견 뒤 characteristic discovery를 main thread에서 시작합니다. */
-    void continueCharacteristicDiscovery() noexcept
+    void continueCharacteristicDiscovery(ClientState &state) noexcept
     {
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection();
+        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
+            state.connection_handle);
         if (connection == nullptr)
         {
-            failClient(-ENOTCONN);
+            failClient(state, -ENOTCONN);
             return;
         }
-        if (!validClientOperation(connection))
+        if (!validClientOperation(state, connection))
         {
             bt_conn_unref(connection);
-            failClient(-ENOTCONN);
+            failClient(state, -ENOTCONN);
             return;
         }
-        const BLERemoteService service = copyRemoteService();
-        ::memset(&discovery_parameters, 0, sizeof(discovery_parameters));
-        discovery_parameters.uuid =
-            target_characteristic_zephyr_uuid.assign(target_characteristic_uuid);
-        discovery_parameters.func = characteristicDiscovered;
-        discovery_parameters.start_handle = service.startHandle() + 1U;
-        discovery_parameters.end_handle = service.endHandle();
-        discovery_parameters.type = BT_GATT_DISCOVER_CHARACTERISTIC;
-        atomic_set(&clientState().client_stage,
+        const BLERemoteService service = copyRemoteService(state);
+        ::memset(&state.discovery_parameters, 0, sizeof(state.discovery_parameters));
+        state.discovery_parameters.uuid =
+            state.target_characteristic_zephyr_uuid.assign(state.target_characteristic_uuid);
+        state.discovery_parameters.func = characteristicDiscovered;
+        state.discovery_parameters.start_handle = service.startHandle() + 1U;
+        state.discovery_parameters.end_handle = service.endHandle();
+        state.discovery_parameters.type = BT_GATT_DISCOVER_CHARACTERISTIC;
+        atomic_set(&state.client_stage,
                    static_cast<atomic_val_t>(ClientStage::discovering_characteristic));
-        const int result = bt_gatt_discover(connection, &discovery_parameters);
+        const int result = bt_gatt_discover(connection, &state.discovery_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            failClient(result);
+            failClient(state, result);
         }
     }
 
-    /** @brief characteristic 발견 뒤 CCC descriptor discovery를 시작합니다. */
-    void continueCccDiscovery() noexcept
+    void continueCccDiscovery(ClientState &state) noexcept
     {
         BLERemoteService service;
         BLERemoteCharacteristic characteristic;
-        copyRemoteHandles(service, characteristic);
+        copyRemoteHandles(state, service, characteristic);
         const BLEProperty properties = characteristic.properties();
         if (!hasProperty(properties, BLEProperty::notify) &&
             !hasProperty(properties, BLEProperty::indicate))
         {
-            atomic_set(&clientState().client_stage, static_cast<atomic_val_t>(ClientStage::ready));
-            clearClientOperationToken();
-            atomic_set(&clientState().client_busy_value, 0);
-            queueClientEvent(BLEGattClientEvent::discovery_complete);
+            atomic_set(&state.client_stage, static_cast<atomic_val_t>(ClientStage::ready));
+            clearClientOperationToken(state);
+            atomic_set(&state.client_busy_value, 0);
+            queueClientEvent(state, BLEGattClientEvent::discovery_complete);
             return;
         }
 
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection();
+        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
+            state.connection_handle);
         if (connection == nullptr)
         {
-            failClient(-ENOTCONN);
+            failClient(state, -ENOTCONN);
             return;
         }
-        if (!validClientOperation(connection))
+        if (!validClientOperation(state, connection))
         {
             bt_conn_unref(connection);
-            failClient(-ENOTCONN);
+            failClient(state, -ENOTCONN);
             return;
         }
         if (characteristic.valueHandle() >= service.endHandle())
         {
             bt_conn_unref(connection);
-            failClient(-ENOENT);
+            failClient(state, -ENOENT);
             return;
         }
-        ::memset(&discovery_parameters, 0, sizeof(discovery_parameters));
-        discovery_parameters.uuid = BT_UUID_GATT_CCC;
-        discovery_parameters.func = cccDiscovered;
-        discovery_parameters.start_handle = characteristic.valueHandle() + 1U;
-        discovery_parameters.end_handle = service.endHandle();
-        discovery_parameters.type = BT_GATT_DISCOVER_DESCRIPTOR;
-        atomic_set(&clientState().client_stage,
+        ::memset(&state.discovery_parameters, 0, sizeof(state.discovery_parameters));
+        state.discovery_parameters.uuid = BT_UUID_GATT_CCC;
+        state.discovery_parameters.func = cccDiscovered;
+        state.discovery_parameters.start_handle = characteristic.valueHandle() + 1U;
+        state.discovery_parameters.end_handle = service.endHandle();
+        state.discovery_parameters.type = BT_GATT_DISCOVER_DESCRIPTOR;
+        atomic_set(&state.client_stage,
                    static_cast<atomic_val_t>(ClientStage::discovering_ccc));
-        const int result = bt_gatt_discover(connection, &discovery_parameters);
+        const int result = bt_gatt_discover(connection, &state.discovery_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            failClient(result);
+            failClient(state, result);
         }
     }
 
-    /** @brief callback 결과 단계에 따라 다음 client discovery를 진행합니다. */
     void progressClientDiscovery() noexcept
     {
-        if (atomic_cas(&clientState().client_stage,
-                       static_cast<atomic_val_t>(ClientStage::service_found),
-                       static_cast<atomic_val_t>(ClientStage::discovering_characteristic)))
+        for (ClientState &state : clientStates())
         {
-            continueCharacteristicDiscovery();
-            return;
-        }
-        if (atomic_cas(&clientState().client_stage,
-                       static_cast<atomic_val_t>(ClientStage::characteristic_found),
-                       static_cast<atomic_val_t>(ClientStage::discovering_ccc)))
-        {
-            continueCccDiscovery();
-            return;
-        }
-        if (atomic_cas(&clientState().client_stage,
-                       static_cast<atomic_val_t>(ClientStage::ccc_found),
-                       static_cast<atomic_val_t>(ClientStage::ready)))
-        {
-            clearClientOperationToken();
-            atomic_set(&clientState().client_busy_value, 0);
-            queueClientEvent(BLEGattClientEvent::discovery_complete);
+            if (atomic_cas(&state.client_stage,
+                           static_cast<atomic_val_t>(ClientStage::service_found),
+                           static_cast<atomic_val_t>(ClientStage::discovering_characteristic)))
+            {
+                continueCharacteristicDiscovery(state);
+                continue;
+            }
+            if (atomic_cas(&state.client_stage,
+                           static_cast<atomic_val_t>(ClientStage::characteristic_found),
+                           static_cast<atomic_val_t>(ClientStage::discovering_ccc)))
+            {
+                continueCccDiscovery(state);
+                continue;
+            }
+            if (atomic_cas(&state.client_stage,
+                           static_cast<atomic_val_t>(ClientStage::ccc_found),
+                           static_cast<atomic_val_t>(ClientStage::ready)))
+            {
+                clearClientOperationToken(state);
+                atomic_set(&state.client_busy_value, 0);
+                queueClientEvent(state, BLEGattClientEvent::discovery_complete);
+            }
         }
     }
 
-    /** @brief client payload가 현재 ATT MTU의 단일 PDU에 들어가는지 검사합니다. */
-    bool validClientPayload(std::size_t length) noexcept
+    bool validClientPayload(ClientState &state, std::size_t length) noexcept
     {
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection();
+        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
+            state.connection_handle);
         if (connection == nullptr)
         {
             nucode::ble::internal::recordError(BLEError::not_connected, -ENOTCONN, true);
@@ -460,53 +547,52 @@ namespace nucode::ble::internal::gatt
         return true;
     }
 
-    /** @brief notify/indicate 공통 subscription 요청을 시작합니다. */
-    bool startSubscription(std::uint16_t value) noexcept
+    bool startSubscription(ClientState &state, std::uint16_t value) noexcept
     {
         BLERemoteService service;
         BLERemoteCharacteristic characteristic;
-        copyRemoteHandles(service, characteristic);
-        if (atomic_get(&clientState().client_stage) !=
-                static_cast<atomic_val_t>(ClientStage::ready) ||
+        copyRemoteHandles(state, service, characteristic);
+        if (atomic_get(&state.client_stage) != static_cast<atomic_val_t>(ClientStage::ready) ||
             !characteristic.valid() || characteristic.cccHandle() == 0U)
         {
             nucode::ble::internal::recordError(BLEError::wrong_state, -EPERM, true);
             return false;
         }
-        if (!atomic_cas(&clientState().client_busy_value, 0, 1))
+        if (!atomic_cas(&state.client_busy_value, 0, 1))
         {
             nucode::ble::internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        if (atomic_get(&clientState().client_subscribed) != 0)
+        if (atomic_get(&state.client_subscribed) != 0)
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            atomic_set(&state.client_busy_value, 0);
             nucode::ble::internal::recordError(BLEError::already_started, -EALREADY, true);
             return false;
         }
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection();
+        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
+            state.connection_handle);
         if (connection == nullptr)
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            atomic_set(&state.client_busy_value, 0);
             nucode::ble::internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
-        ::memset(&subscribe_parameters, 0, sizeof(subscribe_parameters));
-        subscribe_parameters.notify = clientNotification;
-        subscribe_parameters.subscribe = clientSubscribeCompleted;
-        subscribe_parameters.value_handle = characteristic.valueHandle();
-        subscribe_parameters.ccc_handle = characteristic.cccHandle();
-        subscribe_parameters.value = value;
-        atomic_set_bit(subscribe_parameters.flags, BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
-        atomic_set(&clientState().client_subscription_value, value);
-        setClientSubscriptionToken(connection);
-        const int result = bt_gatt_subscribe(connection, &subscribe_parameters);
+        ::memset(&state.subscribe_parameters, 0, sizeof(state.subscribe_parameters));
+        state.subscribe_parameters.notify = clientNotification;
+        state.subscribe_parameters.subscribe = clientSubscribeCompleted;
+        state.subscribe_parameters.value_handle = characteristic.valueHandle();
+        state.subscribe_parameters.ccc_handle = characteristic.cccHandle();
+        state.subscribe_parameters.value = value;
+        atomic_set_bit(state.subscribe_parameters.flags, BT_GATT_SUBSCRIBE_FLAG_VOLATILE);
+        atomic_set(&state.client_subscription_value, value);
+        setClientSubscriptionToken(state, connection);
+        const int result = bt_gatt_subscribe(connection, &state.subscribe_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            atomic_set(&clientState().client_busy_value, 0);
-            atomic_set(&clientState().client_subscription_value, 0);
-            clearClientSubscriptionToken();
+            atomic_set(&state.client_busy_value, 0);
+            atomic_set(&state.client_subscription_value, 0);
+            clearClientSubscriptionToken(state);
             nucode::ble::internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
@@ -514,9 +600,11 @@ namespace nucode::ble::internal::gatt
     }
 
 } // namespace nucode::ble::internal::gatt
+
 namespace nucode::ble
 {
     using namespace internal::gatt;
+
     bool BLERemoteService::valid() const noexcept
     {
         return valid_;
@@ -565,6 +653,13 @@ namespace nucode::ble
     bool GattClient::discover(const BLEUuid &service_uuid,
                               const BLEUuid &characteristic_uuid) noexcept
     {
+        return discover(legacyConnectionHandle(), service_uuid, characteristic_uuid);
+    }
+
+    bool GattClient::discover(BLEConnectionHandle connection_handle,
+                              const BLEUuid &service_uuid,
+                              const BLEUuid &characteristic_uuid) noexcept
+    {
         if (!internal::requireThreadContext())
         {
             return false;
@@ -576,43 +671,52 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        if (!atomic_cas(&clientState().client_busy_value, 0, 1))
+        ClientState *state = findClientState(connection_handle);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        if (!atomic_cas(&state->client_busy_value, 0, 1))
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
-        if (connection == nullptr)
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (connection == nullptr || !currentGattConnection(*state, connection))
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
-
-        target_service_uuid = service_uuid;
-        target_characteristic_uuid = characteristic_uuid;
-        k_spinlock_key_t key = k_spin_lock(&clientState().client_state_lock);
-        GattAccess::clear(clientState().remote_service);
-        GattAccess::clear(clientState().remote_characteristic);
-        k_spin_unlock(&clientState().client_state_lock, key);
-        atomic_set(&clientState().client_subscribed, 0);
-        atomic_set(&clientState().client_subscription_value, 0);
-        atomic_set(&clientState().client_last_att_error, 0);
-        ::memset(&discovery_parameters, 0, sizeof(discovery_parameters));
-        discovery_parameters.uuid = target_service_zephyr_uuid.assign(service_uuid);
-        discovery_parameters.func = serviceDiscovered;
-        discovery_parameters.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
-        discovery_parameters.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
-        discovery_parameters.type = BT_GATT_DISCOVER_PRIMARY;
-        atomic_set(&clientState().client_stage,
+        state->target_service_uuid = service_uuid;
+        state->target_characteristic_uuid = characteristic_uuid;
+        k_spinlock_key_t key = k_spin_lock(&state->client_state_lock);
+        GattAccess::clear(state->remote_service);
+        GattAccess::clear(state->remote_characteristic);
+        k_spin_unlock(&state->client_state_lock, key);
+        atomic_set(&state->client_subscribed, 0);
+        atomic_set(&state->client_subscription_value, 0);
+        atomic_set(&state->client_last_att_error, 0);
+        state->read_length = 0U;
+        ::memset(&state->discovery_parameters, 0, sizeof(state->discovery_parameters));
+        state->discovery_parameters.uuid = state->target_service_zephyr_uuid.assign(service_uuid);
+        state->discovery_parameters.func = serviceDiscovered;
+        state->discovery_parameters.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
+        state->discovery_parameters.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
+        state->discovery_parameters.type = BT_GATT_DISCOVER_PRIMARY;
+        atomic_set(&state->client_stage,
                    static_cast<atomic_val_t>(ClientStage::discovering_service));
-        setClientOperationToken(connection);
-        const int result = bt_gatt_discover(connection, &discovery_parameters);
+        setClientOperationToken(*state, connection);
+        const int result = bt_gatt_discover(connection, &state->discovery_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            clearClientOperationToken();
-            failClient(result);
+            failClient(*state, result);
             return false;
         }
         return true;
@@ -620,37 +724,66 @@ namespace nucode::ble
 
     bool GattClient::discovered() const noexcept
     {
-        if (atomic_get(&clientState().client_stage) !=
-            static_cast<atomic_val_t>(ClientStage::ready))
+        return discovered(legacyConnectionHandle());
+    }
+
+    bool GattClient::discovered(BLEConnectionHandle connection) const noexcept
+    {
+        ClientState *state = findClientState(connection);
+        if (state == nullptr ||
+            atomic_get(&state->client_stage) != static_cast<atomic_val_t>(ClientStage::ready))
         {
             return false;
         }
         BLERemoteService service;
         BLERemoteCharacteristic characteristic;
-        copyRemoteHandles(service, characteristic);
-        return atomic_get(&clientState().client_stage) ==
-                   static_cast<atomic_val_t>(ClientStage::ready) &&
+        copyRemoteHandles(*state, service, characteristic);
+        return atomic_get(&state->client_stage) == static_cast<atomic_val_t>(ClientStage::ready) &&
                service.valid() && characteristic.valid();
     }
 
     BLERemoteService GattClient::remoteService() const noexcept
     {
-        return copyRemoteService();
+        return remoteService(legacyConnectionHandle());
+    }
+
+    BLERemoteService GattClient::remoteService(BLEConnectionHandle connection) const noexcept
+    {
+        ClientState *state = findClientState(connection);
+        return state == nullptr ? BLERemoteService{} : copyRemoteService(*state);
     }
 
     BLERemoteCharacteristic GattClient::remoteCharacteristic() const noexcept
     {
-        return copyRemoteCharacteristic();
+        return remoteCharacteristic(legacyConnectionHandle());
+    }
+
+    BLERemoteCharacteristic GattClient::remoteCharacteristic(
+        BLEConnectionHandle connection) const noexcept
+    {
+        ClientState *state = findClientState(connection);
+        return state == nullptr ? BLERemoteCharacteristic{} : copyRemoteCharacteristic(*state);
     }
 
     bool GattClient::read() noexcept
+    {
+        return read(legacyConnectionHandle());
+    }
+
+    bool GattClient::read(BLEConnectionHandle connection_handle) noexcept
     {
         if (!internal::requireThreadContext())
         {
             return false;
         }
-        const BLERemoteCharacteristic characteristic = remoteCharacteristic();
-        if (!discovered() || !characteristic.valid())
+        ClientState *state = findClientState(connection_handle);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const BLERemoteCharacteristic characteristic = copyRemoteCharacteristic(*state);
+        if (!discovered(connection_handle) || !characteristic.valid())
         {
             internal::recordError(BLEError::wrong_state, -EPERM, true);
             return false;
@@ -660,30 +793,35 @@ namespace nucode::ble
             internal::recordError(BLEError::unsupported, -ENOTSUP, true);
             return false;
         }
-        if (!atomic_cas(&clientState().client_busy_value, 0, 1))
+        if (!atomic_cas(&state->client_busy_value, 0, 1))
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
-        if (connection == nullptr)
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (connection == nullptr || !currentGattConnection(*state, connection))
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
-        ::memset(&read_parameters, 0, sizeof(read_parameters));
-        read_parameters.func = clientReadCompleted;
-        read_parameters.handle_count = 1U;
-        read_parameters.single.handle = characteristic.valueHandle();
-        read_parameters.single.offset = 0U;
-        setClientOperationToken(connection);
-        const int result = bt_gatt_read(connection, &read_parameters);
+        state->read_length = 0U;
+        ::memset(&state->read_parameters, 0, sizeof(state->read_parameters));
+        state->read_parameters.func = clientReadCompleted;
+        state->read_parameters.handle_count = 1U;
+        state->read_parameters.single.handle = characteristic.valueHandle();
+        state->read_parameters.single.offset = 0U;
+        setClientOperationToken(*state, connection);
+        const int result = bt_gatt_read(connection, &state->read_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            clearClientOperationToken();
-            atomic_set(&clientState().client_busy_value, 0);
+            clearClientOperationToken(*state);
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
@@ -692,12 +830,24 @@ namespace nucode::ble
 
     bool GattClient::write(const void *data, std::size_t length) noexcept
     {
+        return write(legacyConnectionHandle(), data, length);
+    }
+
+    bool GattClient::write(BLEConnectionHandle connection_handle, const void *data,
+                           std::size_t length) noexcept
+    {
         if (!internal::requireThreadContext())
         {
             return false;
         }
-        const BLERemoteCharacteristic characteristic = remoteCharacteristic();
-        if (!discovered() || !characteristic.valid() ||
+        ClientState *state = findClientState(connection_handle);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const BLERemoteCharacteristic characteristic = copyRemoteCharacteristic(*state);
+        if (!discovered(connection_handle) || !characteristic.valid() ||
             !hasProperty(characteristic.properties(), BLEProperty::write))
         {
             internal::recordError(BLEError::wrong_state, -EPERM, true);
@@ -708,39 +858,43 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        if (!validClientPayload(length))
+        if (!validClientPayload(*state, length))
         {
             return false;
         }
-        if (!atomic_cas(&clientState().client_busy_value, 0, 1))
+        if (!atomic_cas(&state->client_busy_value, 0, 1))
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
-        if (connection == nullptr)
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (connection == nullptr || !currentGattConnection(*state, connection))
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
         if (length != 0U)
         {
-            ::memcpy(client_write_data, data, length);
+            ::memcpy(state->write_data, data, length);
         }
-        ::memset(&write_parameters, 0, sizeof(write_parameters));
-        write_parameters.func = clientWriteCompleted;
-        write_parameters.handle = characteristic.valueHandle();
-        write_parameters.offset = 0U;
-        write_parameters.data = client_write_data;
-        write_parameters.length = static_cast<std::uint16_t>(length);
-        setClientOperationToken(connection);
-        const int result = bt_gatt_write(connection, &write_parameters);
+        ::memset(&state->write_parameters, 0, sizeof(state->write_parameters));
+        state->write_parameters.func = clientWriteCompleted;
+        state->write_parameters.handle = characteristic.valueHandle();
+        state->write_parameters.offset = 0U;
+        state->write_parameters.data = state->write_data;
+        state->write_parameters.length = static_cast<std::uint16_t>(length);
+        setClientOperationToken(*state, connection);
+        const int result = bt_gatt_write(connection, &state->write_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            clearClientOperationToken();
-            atomic_set(&clientState().client_busy_value, 0);
+            clearClientOperationToken(*state);
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
@@ -749,12 +903,24 @@ namespace nucode::ble
 
     bool GattClient::writeWithoutResponse(const void *data, std::size_t length) noexcept
     {
+        return writeWithoutResponse(legacyConnectionHandle(), data, length);
+    }
+
+    bool GattClient::writeWithoutResponse(BLEConnectionHandle connection_handle, const void *data,
+                                          std::size_t length) noexcept
+    {
         if (!internal::requireThreadContext())
         {
             return false;
         }
-        const BLERemoteCharacteristic characteristic = remoteCharacteristic();
-        if (!discovered() || !characteristic.valid() ||
+        ClientState *state = findClientState(connection_handle);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const BLERemoteCharacteristic characteristic = copyRemoteCharacteristic(*state);
+        if (!discovered(connection_handle) || !characteristic.valid() ||
             !hasProperty(characteristic.properties(), BLEProperty::write_without_response))
         {
             internal::recordError(BLEError::wrong_state, -EPERM, true);
@@ -765,35 +931,39 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        if (!validClientPayload(length))
+        if (!validClientPayload(*state, length))
         {
             return false;
         }
-        if (!atomic_cas(&clientState().client_busy_value, 0, 1))
+        if (!atomic_cas(&state->client_busy_value, 0, 1))
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
-        if (connection == nullptr)
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (connection == nullptr || !currentGattConnection(*state, connection))
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
         if (length != 0U)
         {
-            ::memcpy(client_write_data, data, length);
+            ::memcpy(state->write_data, data, length);
         }
-        setClientOperationToken(connection);
+        setClientOperationToken(*state, connection);
         const int result = bt_gatt_write_without_response_cb(
-            connection, characteristic.valueHandle(), client_write_data,
-            static_cast<std::uint16_t>(length), false, clientWriteCommandCompleted, nullptr);
+            connection, characteristic.valueHandle(), state->write_data,
+            static_cast<std::uint16_t>(length), false, clientWriteCommandCompleted, state);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            clearClientOperationToken();
-            atomic_set(&clientState().client_busy_value, 0);
+            clearClientOperationToken(*state);
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
@@ -802,64 +972,101 @@ namespace nucode::ble
 
     bool GattClient::subscribeNotifications() noexcept
     {
+        return subscribeNotifications(legacyConnectionHandle());
+    }
+
+    bool GattClient::subscribeNotifications(BLEConnectionHandle connection) noexcept
+    {
         if (!internal::requireThreadContext())
         {
             return false;
         }
-        const BLERemoteCharacteristic characteristic = remoteCharacteristic();
+        ClientState *state = findClientState(connection);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const BLERemoteCharacteristic characteristic = copyRemoteCharacteristic(*state);
         if (!characteristic.valid() ||
             !hasProperty(characteristic.properties(), BLEProperty::notify))
         {
             internal::recordError(BLEError::unsupported, -ENOTSUP, true);
             return false;
         }
-        return startSubscription(BT_GATT_CCC_NOTIFY);
+        return startSubscription(*state, BT_GATT_CCC_NOTIFY);
     }
 
     bool GattClient::subscribeIndications() noexcept
+    {
+        return subscribeIndications(legacyConnectionHandle());
+    }
+
+    bool GattClient::subscribeIndications(BLEConnectionHandle connection) noexcept
     {
         if (!internal::requireThreadContext())
         {
             return false;
         }
-        const BLERemoteCharacteristic characteristic = remoteCharacteristic();
+        ClientState *state = findClientState(connection);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const BLERemoteCharacteristic characteristic = copyRemoteCharacteristic(*state);
         if (!characteristic.valid() ||
             !hasProperty(characteristic.properties(), BLEProperty::indicate))
         {
             internal::recordError(BLEError::unsupported, -ENOTSUP, true);
             return false;
         }
-        return startSubscription(BT_GATT_CCC_INDICATE);
+        return startSubscription(*state, BT_GATT_CCC_INDICATE);
     }
 
     bool GattClient::unsubscribe() noexcept
+    {
+        return unsubscribe(legacyConnectionHandle());
+    }
+
+    bool GattClient::unsubscribe(BLEConnectionHandle connection_handle) noexcept
     {
         if (!internal::requireThreadContext())
         {
             return false;
         }
-        if (atomic_get(&clientState().client_subscribed) == 0)
+        ClientState *state = findClientState(connection_handle);
+        if (state == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        if (atomic_get(&state->client_subscribed) == 0)
         {
             internal::recordError(BLEError::wrong_state, -EPERM, true);
             return false;
         }
-        if (!atomic_cas(&clientState().client_busy_value, 0, 1))
+        if (!atomic_cas(&state->client_busy_value, 0, 1))
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
         }
-        struct bt_conn *connection = internal::referenceConnection();
-        if (connection == nullptr)
+        struct bt_conn *connection = internal::referenceConnection(connection_handle);
+        if (connection == nullptr || !currentGattConnection(*state, connection))
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
-        const int result = bt_gatt_unsubscribe(connection, &subscribe_parameters);
+        const int result = bt_gatt_unsubscribe(connection, &state->subscribe_parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            atomic_set(&clientState().client_busy_value, 0);
+            atomic_set(&state->client_busy_value, 0);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
@@ -868,12 +1075,26 @@ namespace nucode::ble
 
     bool GattClient::busy() const noexcept
     {
-        return atomic_get(&clientState().client_busy_value) != 0;
+        return busy(legacyConnectionHandle());
+    }
+
+    bool GattClient::busy(BLEConnectionHandle connection) const noexcept
+    {
+        ClientState *state = findClientState(connection);
+        return state != nullptr && atomic_get(&state->client_busy_value) != 0;
     }
 
     std::uint8_t GattClient::lastAttError() const noexcept
     {
-        return static_cast<std::uint8_t>(atomic_get(&clientState().client_last_att_error));
+        return lastAttError(legacyConnectionHandle());
+    }
+
+    std::uint8_t GattClient::lastAttError(BLEConnectionHandle connection) const noexcept
+    {
+        ClientState *state = findClientState(connection);
+        return state == nullptr
+                   ? 0U
+                   : static_cast<std::uint8_t>(atomic_get(&state->client_last_att_error));
     }
 
     void GattClient::onEvent(BLEGattClientCallback callback, void *context) noexcept
@@ -882,10 +1103,21 @@ namespace nucode::ble
         {
             return;
         }
-        clientState().client_callback = callback;
-        clientState().client_context = context;
+        clientCallbacks().legacy = callback;
+        clientCallbacks().legacy_context = context;
+    }
+
+    void GattClient::onDetailedEvent(BLEGattClientInfoCallback callback, void *context) noexcept
+    {
+        if (!internal::requireThreadContext())
+        {
+            return;
+        }
+        clientCallbacks().detailed = callback;
+        clientCallbacks().detailed_context = context;
     }
 
 } // namespace nucode::ble
+
 nucode::ble::GattClient BLEClient;
 #endif

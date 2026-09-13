@@ -129,7 +129,7 @@ namespace nucode::ble::internal::gatt
         GattAccess::setLength(*characteristic, new_length);
         k_spin_unlock(&serverState().characteristic_value_lock, key);
         queueServerEvent(*characteristic, BLECharacteristicEvent::written, buffer, length, offset,
-                         (flags & BT_GATT_WRITE_FLAG_CMD) != 0U);
+                         (flags & BT_GATT_WRITE_FLAG_CMD) != 0U, 0, connection);
         return length;
     }
 
@@ -176,7 +176,8 @@ namespace nucode::ble::internal::gatt
             internal::activeConnection(connection))
         {
             queueServerEvent(*notification->characteristic,
-                             BLECharacteristicEvent::notification_sent);
+                             BLECharacteristicEvent::notification_sent, nullptr, 0U, 0U, false, 0,
+                             connection);
         }
     }
 
@@ -221,9 +222,9 @@ namespace nucode::ble::internal::gatt
             return;
         }
         queueServerEvent(*slot->characteristics[index],
-                         error == 0U ? BLECharacteristicEvent::indication_confirmed
-                                     : BLECharacteristicEvent::indication_failed,
-                         nullptr, 0U, 0U, false, -static_cast<int>(error));
+                          error == 0U ? BLECharacteristicEvent::indication_confirmed
+                                      : BLECharacteristicEvent::indication_failed,
+                          nullptr, 0U, 0U, false, -static_cast<int>(error), connection);
     }
 
     /** @brief stack이 indication 수명을 해제한 뒤 slot 재사용을 허용합니다. */

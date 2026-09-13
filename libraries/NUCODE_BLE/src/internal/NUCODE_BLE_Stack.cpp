@@ -126,17 +126,17 @@ namespace nucode::ble::internal
     }
 
     /** @brief M20이 링크되기 전에는 generic GATT connection 관찰을 생략합니다. */
-    __weak void gattConnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    __weak void gattConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
         ARG_UNUSED(connection);
-        ARG_UNUSED(generation);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M20이 링크되기 전에는 generic GATT disconnect 관찰을 생략합니다. */
-    __weak void gattDisconnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    __weak void gattDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
         ARG_UNUSED(connection);
-        ARG_UNUSED(generation);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M20이 링크되기 전에는 GATT 종료 정리가 없습니다. */

@@ -202,14 +202,21 @@ inline int mock_read_error = 0, mock_write_error = 0, mock_subscribe_error = 0,
            mock_unsubscribe_error = 0;
 inline bt_gatt_notify_params mock_notification{};
 inline bt_conn *mock_notification_connection{};
-inline std::uint8_t mock_notification_data[244]{};
+inline std::uint8_t mock_notification_data[512]{};
 inline bt_gatt_indicate_params *mock_indication{};
 inline bt_conn *mock_indication_connection{};
 inline bt_gatt_discover_params *mock_discovery{};
 inline bt_gatt_read_params *mock_read{};
 inline bt_gatt_write_params *mock_write{};
 inline bt_gatt_subscribe_params *mock_subscription{};
+inline bt_gatt_discover_params *mock_discoveries[4]{};
+inline bt_gatt_read_params *mock_reads[4]{};
+inline bt_gatt_write_params *mock_writes[4]{};
+inline bt_gatt_subscribe_params *mock_subscriptions[4]{};
 inline void (*mock_command_callback)(bt_conn *, void *){};
+inline void *mock_command_user_data{};
+inline void (*mock_command_callbacks[4])(bt_conn *, void *){};
+inline void *mock_command_user_data_by_connection[4]{};
 inline int bt_gatt_notify_cb(bt_conn *connection, bt_gatt_notify_params *p)
 {
     mock_notification_connection = connection;
@@ -223,30 +230,40 @@ inline int bt_gatt_indicate(bt_conn *connection, bt_gatt_indicate_params *p)
     mock_indication = p;
     return mock_indicate_error;
 }
-inline int bt_gatt_discover(bt_conn *, bt_gatt_discover_params *p)
+inline int bt_gatt_discover(bt_conn *connection, bt_gatt_discover_params *p)
 {
     mock_discovery = p;
+    mock_discoveries[static_cast<std::size_t>(connection - mock_connections)] = p;
     return mock_discover_error;
 }
-inline int bt_gatt_read(bt_conn *, bt_gatt_read_params *p)
+inline int bt_gatt_read(bt_conn *connection, bt_gatt_read_params *p)
 {
     mock_read = p;
+    mock_reads[static_cast<std::size_t>(connection - mock_connections)] = p;
     return mock_read_error;
 }
-inline int bt_gatt_write(bt_conn *, bt_gatt_write_params *p)
+inline int bt_gatt_write(bt_conn *connection, bt_gatt_write_params *p)
 {
     mock_write = p;
+    mock_writes[static_cast<std::size_t>(connection - mock_connections)] = p;
     return mock_write_error;
 }
-inline int bt_gatt_write_without_response_cb(bt_conn *, std::uint16_t, const void *, std::uint16_t,
-                                             bool, void (*callback)(bt_conn *, void *), void *)
+inline int bt_gatt_write_without_response_cb(bt_conn *connection, std::uint16_t, const void *,
+                                             std::uint16_t,
+                                             bool, void (*callback)(bt_conn *, void *),
+                                             void *user_data)
 {
     mock_command_callback = callback;
+    mock_command_user_data = user_data;
+    const std::size_t index = static_cast<std::size_t>(connection - mock_connections);
+    mock_command_callbacks[index] = callback;
+    mock_command_user_data_by_connection[index] = user_data;
     return mock_write_error;
 }
-inline int bt_gatt_subscribe(bt_conn *, bt_gatt_subscribe_params *p)
+inline int bt_gatt_subscribe(bt_conn *connection, bt_gatt_subscribe_params *p)
 {
     mock_subscription = p;
+    mock_subscriptions[static_cast<std::size_t>(connection - mock_connections)] = p;
     return mock_subscribe_error;
 }
 inline int bt_gatt_unsubscribe(bt_conn *, bt_gatt_subscribe_params *)

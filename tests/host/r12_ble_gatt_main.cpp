@@ -35,8 +35,12 @@ BLECharacteristic characteristic(BLEUuid(std::uint16_t{0x2A29}), properties,
 BLECharacteristic second_characteristic(BLEUuid(std::uint16_t{0x2A19}), BLEProperty::read,
                                         BLEPermission::read, 20);
 std::array<unsigned, 16> server_events{}, client_events{};
-std::array<std::uint8_t, 244> observed_data{};
+std::array<std::uint8_t, 512> observed_data{};
 std::size_t observed_length = 0;
+std::array<BLEConnectionHandle, 2> observed_handles{};
+std::array<std::array<unsigned, 16>, 2> detailed_events{};
+std::array<std::array<std::uint8_t, 512>, 2> detailed_data{};
+std::array<std::size_t, 2> detailed_lengths{};
 bool reenter = false;
 void serverObserved(BLECharacteristic &, const BLECharacteristicEventInfo &event, void *)
 {
@@ -60,6 +64,30 @@ void clientObserved(BLEGattClientEvent event, const std::uint8_t *data, std::siz
     {
         observed_length = length;
         std::memcpy(observed_data.data(), data, length);
+    }
+}
+void clientEndObserved(BLEGattClientEvent event, const std::uint8_t *, std::size_t, void *)
+{
+    ++client_events[static_cast<unsigned>(event)];
+    BLEDevice.end();
+}
+void detailedClientObserved(const BLEGattClientEventInfo &information, void *)
+{
+    std::size_t index = 2U;
+    for (std::size_t candidate = 0U; candidate < observed_handles.size(); ++candidate)
+    {
+        if (information.connection == observed_handles[candidate])
+        {
+            index = candidate;
+            break;
+        }
+    }
+    assert(index < observed_handles.size());
+    ++detailed_events[index][static_cast<unsigned>(information.event)];
+    if (information.data != nullptr)
+    {
+        detailed_lengths[index] = information.length;
+        std::memcpy(detailed_data[index].data(), information.data, information.length);
     }
 }
 void connect(unsigned index = 0)
@@ -98,6 +126,37 @@ void discover(unsigned index = 0)
     assert(BLEClient.remoteCharacteristic().cccHandle() == 4);
     assert(connection->refs == 1);
 }
+void discoverLink(BLEConnectionHandle handle, unsigned index, std::uint16_t first_handle)
+{
+    assert(BLEClient.discover(handle, BLEUuid(std::uint16_t{0x180A}),
+                              BLEUuid(std::uint16_t{0x2A29})));
+    bt_gatt_service_val value{BT_UUID_GATT_PRIMARY,
+                              static_cast<std::uint16_t>(first_handle + 11U)};
+    bt_gatt_attr attribute{};
+    attribute.user_data = &value;
+    attribute.handle = first_handle;
+    auto *connection = &mock_connections[index];
+    auto *parameters = mock_discoveries[index];
+    assert(parameters != nullptr && parameters->type == BT_GATT_DISCOVER_PRIMARY);
+    parameters->func(connection, &attribute, parameters);
+    BLEDevice.poll();
+    parameters = mock_discoveries[index];
+    bt_gatt_chrc chrc{BT_UUID_GATT_CHRC,
+                      static_cast<std::uint16_t>(first_handle + 2U), 0x3E};
+    attribute.user_data = &chrc;
+    attribute.handle = static_cast<std::uint16_t>(first_handle + 1U);
+    assert(parameters->type == BT_GATT_DISCOVER_CHARACTERISTIC);
+    parameters->func(connection, &attribute, parameters);
+    BLEDevice.poll();
+    parameters = mock_discoveries[index];
+    attribute.handle = static_cast<std::uint16_t>(first_handle + 3U);
+    assert(parameters->type == BT_GATT_DISCOVER_DESCRIPTOR);
+    parameters->func(connection, &attribute, parameters);
+    BLEDevice.poll();
+    assert(BLEClient.discovered(handle) && !BLEClient.busy(handle));
+    assert(BLEClient.remoteCharacteristic(handle).valueHandle() == first_handle + 2U);
+    assert(BLEClient.remoteCharacteristic(handle).cccHandle() == first_handle + 3U);
+}
 int main(int argc, char **argv)
 {
     assert(argc == 2);
@@ -120,6 +179,11 @@ int main(int argc, char **argv)
     }
     characteristic.onEvent(serverObserved, nullptr);
     BLEClient.onEvent(clientObserved, nullptr);
+    if (std::strcmp(scenario, "m29_long_parallel") == 0 ||
+        std::strcmp(scenario, "client_reentrant_end") == 0)
+    {
+        BLEClient.onDetailedEvent(detailedClientObserved, nullptr);
+    }
     assert(BLEDevice.begin("gatt"));
     assert(!service.addCharacteristic(second_characteristic));
     connect();
@@ -230,6 +294,98 @@ int main(int argc, char **argv)
         assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::indication_confirmed)] ==
                1U);
     }
+    else if (std::strcmp(scenario, "m29_long_parallel") == 0)
+    {
+        observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+        assert(observed_handles[0].valid());
+        assert(BLEAdvertising.clear() && BLEAdvertising.start());
+        mock_conn_callbacks->connected(&mock_connections[1], 0);
+        BLEDevice.poll();
+        observed_handles[1] = BLEConnection.handle(BLELinkRole::peripheral);
+        assert(observed_handles[1].valid() && observed_handles[1] != observed_handles[0]);
+        discoverLink(observed_handles[0], 0U, 1U);
+        discoverLink(observed_handles[1], 1U, 21U);
+
+        std::array<std::uint8_t, 512> first{};
+        std::array<std::uint8_t, 512> second{};
+        for (std::size_t index = 0U; index < first.size(); ++index)
+        {
+            first[index] = static_cast<std::uint8_t>(index & 0xffU);
+            second[index] = static_cast<std::uint8_t>((index + 0x5aU) & 0xffU);
+        }
+        assert(BLEClient.read(observed_handles[0]));
+        assert(BLEClient.read(observed_handles[1]));
+        assert(BLEClient.busy(observed_handles[0]) && BLEClient.busy(observed_handles[1]));
+        auto *first_read = mock_reads[0];
+        auto *second_read = mock_reads[1];
+        assert(first_read != nullptr && second_read != nullptr && first_read != second_read);
+        assert(first_read->func(&mock_connections[0], 0, first_read, first.data(), 246) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(second_read->func(&mock_connections[1], 0, second_read, second.data(), 246) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(first_read->func(&mock_connections[0], 0, first_read, first.data() + 246, 246) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(second_read->func(&mock_connections[1], 0, second_read, second.data() + 246, 246) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(first_read->func(&mock_connections[0], 0, first_read, first.data() + 492, 20) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(second_read->func(&mock_connections[1], 0, second_read, second.data() + 492, 20) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(first_read->func(&mock_connections[0], 0, first_read, nullptr, 0) ==
+               BT_GATT_ITER_STOP);
+        assert(second_read->func(&mock_connections[1], 0, second_read, nullptr, 0) ==
+               BT_GATT_ITER_STOP);
+        BLEDevice.poll();
+        assert(detailed_lengths[0] == 512U && detailed_lengths[1] == 512U);
+        assert(detailed_data[0] == first && detailed_data[1] == second);
+        assert(detailed_events[0][static_cast<unsigned>(BLEGattClientEvent::read_complete)] == 1U);
+        assert(detailed_events[1][static_cast<unsigned>(BLEGattClientEvent::read_complete)] == 1U);
+
+        assert(BLEClient.read(observed_handles[0]));
+        assert(BLEClient.read(observed_handles[1]));
+        first_read = mock_reads[0];
+        second_read = mock_reads[1];
+        mock_conn_callbacks->disconnected(&mock_connections[0], 0x13);
+        assert(first_read->func(&mock_connections[0], 0, first_read, first.data(), 20) ==
+               BT_GATT_ITER_STOP);
+        assert(BLEClient.busy(observed_handles[1]));
+        assert(second_read->func(&mock_connections[1], 0, second_read, second.data(), 512) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(second_read->func(&mock_connections[1], 0, second_read, nullptr, 0) ==
+               BT_GATT_ITER_STOP);
+        BLEDevice.poll();
+        assert(!BLEClient.read(observed_handles[0]));
+        assert(detailed_events[0][static_cast<unsigned>(BLEGattClientEvent::read_complete)] == 1U);
+        assert(detailed_events[0][static_cast<unsigned>(BLEGattClientEvent::handles_invalidated)] ==
+               1U);
+        assert(detailed_events[1][static_cast<unsigned>(BLEGattClientEvent::read_complete)] == 2U);
+
+        assert(BLEClient.read(observed_handles[1]));
+        second_read = mock_reads[1];
+        assert(second_read->func(&mock_connections[1], 0, second_read, second.data(), 500) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(second_read->func(&mock_connections[1], 0, second_read, second.data() + 500, 13) ==
+               BT_GATT_ITER_STOP);
+        assert(!BLEClient.busy(observed_handles[1]));
+        BLEDevice.poll();
+        assert(detailed_events[1][static_cast<unsigned>(BLEGattClientEvent::operation_failed)] ==
+               1U);
+        assert(BLEDevice.lastError() == BLEError::value_overflow);
+    }
+    else if (std::strcmp(scenario, "client_reentrant_end") == 0)
+    {
+        observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+        assert(observed_handles[0].valid());
+        discover();
+        BLEClient.onEvent(clientEndObserved, nullptr);
+        assert(BLEClient.read());
+        assert(mock_read->func(connection, 0, mock_read, payload, 4) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(mock_read->func(connection, 0, mock_read, nullptr, 0) == BT_GATT_ITER_STOP);
+        BLEDevice.poll();
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::read_complete)] == 1U);
+        assert(detailed_events[0][static_cast<unsigned>(BLEGattClientEvent::read_complete)] == 0U);
+    }
     else if (std::strcmp(scenario, "discovery_failure") == 0)
     {
         mock_discover_error = -EIO;
@@ -250,8 +406,11 @@ int main(int argc, char **argv)
             assert(!BLEClient.read() && !BLEClient.busy());
             mock_read_error = 0;
             assert(BLEClient.read() && BLEClient.busy());
-            mock_read->func(connection, 0, mock_read, payload, 4);
+            assert(mock_read->func(connection, 0, mock_read, payload, 4) ==
+                   BT_GATT_ITER_CONTINUE);
+            assert(BLEClient.busy());
             payload[0] = 99;
+            assert(mock_read->func(connection, 0, mock_read, nullptr, 0) == BT_GATT_ITER_STOP);
             BLEDevice.poll();
             assert(observed_data[0] == 1 && !BLEClient.busy());
             mock_write_error = -EIO;
@@ -263,7 +422,7 @@ int main(int argc, char **argv)
             mock_write->func(connection, 0, mock_write);
             assert(!BLEClient.busy());
             assert(BLEClient.writeWithoutResponse(payload, 4));
-            mock_command_callback(connection, nullptr);
+            mock_command_callback(connection, mock_command_user_data);
             assert(!BLEClient.busy());
         }
         else if (std::strcmp(scenario, "client_late") == 0)
@@ -280,7 +439,10 @@ int main(int argc, char **argv)
             assert(BLEClient.read());
             callback(connection, 0, mock_read, payload, 4);
             assert(BLEClient.busy());
-            mock_read->func(&mock_connections[1], 0, mock_read, payload, 4);
+            assert(mock_read->func(&mock_connections[1], 0, mock_read, payload, 4) ==
+                   BT_GATT_ITER_CONTINUE);
+            assert(mock_read->func(&mock_connections[1], 0, mock_read, nullptr, 0) ==
+                   BT_GATT_ITER_STOP);
             assert(!BLEClient.busy());
         }
         else if (std::strcmp(scenario, "subscription") == 0)

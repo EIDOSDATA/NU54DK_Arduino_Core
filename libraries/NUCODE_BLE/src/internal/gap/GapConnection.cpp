@@ -382,11 +382,7 @@ namespace nucode::ble::internal::gap
             {
                 atomic_set(&gapState().advertising_active, 0);
             }
-            if (role == BLELinkRole::central)
-            {
-                nucode::ble::internal::gattConnected(
-                    connection, BLEConnectionHandleAccess::generation(handle));
-            }
+            nucode::ble::internal::gattConnected(connection, handle);
             nucode::ble::internal::securityConnected(connection);
             queueEvent(BLEEvent::connected, handle, role, device_generation);
         }
@@ -424,11 +420,7 @@ namespace nucode::ble::internal::gap
                 return;
             }
 
-            if (role == BLELinkRole::central)
-            {
-                nucode::ble::internal::gattDisconnected(
-                    connection, BLEConnectionHandleAccess::generation(handle));
-            }
+            nucode::ble::internal::gattDisconnected(connection, handle);
             nucode::ble::internal::securityDisconnected(connection);
             bt_conn_unref(connection);
             refreshConnectionFlags();

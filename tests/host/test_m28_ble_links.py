@@ -75,8 +75,10 @@ class M28BleLinkTests(unittest.TestCase):
         self.assertNotIn("struct bt_conn *pending_connection", header)
         self.assertIn("matchesSlotLocked", source)
         self.assertIn("activeConnectionHandle", source)
-        self.assertIn("role == BLELinkRole::central", source)
-        self.assertIn("role == BLELinkRole::peripheral", source)
+        self.assertIn("native_role == BT_CONN_ROLE_CENTRAL", source)
+        self.assertIn("native_role == BT_CONN_ROLE_PERIPHERAL", source)
+        self.assertEqual(source.count("gattConnected(connection, handle)"), 1)
+        self.assertEqual(source.count("gattDisconnected(connection, handle)"), 1)
 
     def test_gatt_server_routes_to_the_subscribed_incoming_link(self) -> None:
         """! @brief mixed role에서 server I/O가 central client slot로 새지 않게 고정합니다. """

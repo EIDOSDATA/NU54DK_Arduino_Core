@@ -84,10 +84,10 @@ namespace nucode::ble::internal
     void pollGatt() noexcept;
 
     /** @brief 새 generic connection을 GATT client lifecycle에 전달합니다. */
-    void gattConnected(struct bt_conn *connection, std::uint32_t generation) noexcept;
+    void gattConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept;
 
     /** @brief disconnect에서 remote handle과 subscription을 무효화합니다. */
-    void gattDisconnected(struct bt_conn *connection, std::uint32_t generation) noexcept;
+    void gattDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept;
 
     /** @brief Device::end에서 GATT session과 queue를 event 없이 폐기합니다. */
     void gattEnded() noexcept;

@@ -28,12 +28,12 @@ namespace nucode::ble::internal
     }
 
     /** @brief Security 단독 호스트 시험에서 GATT 연결 통지를 소비합니다. */
-    void gattConnected(struct bt_conn *, std::uint32_t) noexcept
+    void gattConnected(struct bt_conn *, BLEConnectionHandle) noexcept
     {
     }
 
     /** @brief Security 단독 호스트 시험에서 GATT 해제 통지를 소비합니다. */
-    void gattDisconnected(struct bt_conn *, std::uint32_t) noexcept
+    void gattDisconnected(struct bt_conn *, BLEConnectionHandle) noexcept
     {
     }
 
