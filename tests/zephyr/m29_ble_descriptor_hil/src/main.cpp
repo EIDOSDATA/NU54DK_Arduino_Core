@@ -10,9 +10,9 @@
 
 #include <zephyr/kernel.h>
 
-#include <cerrno>
 #include <cstddef>
 #include <cstdint>
+#include <errno.h>
 #include <string.h>
 
 #ifndef M29_DESCRIPTOR_CORE_REVISION
