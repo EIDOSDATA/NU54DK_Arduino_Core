@@ -127,6 +127,8 @@ class M22PackageExamplesTests(unittest.TestCase):
             )
         }
         later_ble_examples |= {
+            ("NUCODE_BLE", "L2capCocClient"),
+            ("NUCODE_BLE", "L2capCocServer"),
             ("NUCODE_BLE_Security", "GattCacheCentral"),
             ("NUCODE_BLE_Security", "GattCachePeripheral"),
         }

@@ -22,6 +22,16 @@ static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::read_multiple_comple
 
 namespace nucode::ble::internal
 {
+    /** @brief GATT 단독 호스트 시험에는 LE CoC main-thread 작업이 없습니다. */
+    void pollL2cap() noexcept
+    {
+    }
+
+    /** @brief GATT 단독 호스트 시험에는 LE CoC 종료 작업이 없습니다. */
+    void l2capEnded() noexcept
+    {
+    }
+
     /** @brief GATT 단독 호스트 시험에서 Security 연결 통지를 소비합니다. */
     void securityConnected(struct bt_conn *) noexcept
     {

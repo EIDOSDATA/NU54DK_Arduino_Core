@@ -80,6 +80,23 @@ config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
 	  server write·CCC·전송 완료와 client payload를 최대 244 byte까지
 	  복사해 BLEDevice.poll()로 전달하는 고정 record 개수입니다.
 
+config NUCODE_BLE_L2CAP
+	bool "NUCODE BLE LE Credit Based Channel 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_L2CAP_DYNAMIC_CHANNEL
+	help
+	  server 1개와 generation 기반 channel 2개, 512-byte SDU를
+	  고정 RX record와 TX buffer로 BLEDevice.poll()에 전달합니다.
+
+config NUCODE_BLE_L2CAP_EVENT_QUEUE_SIZE
+	int "NUCODE BLE LE CoC event queue 항목 수"
+	default 16
+	range 8 32
+	depends on NUCODE_BLE_L2CAP
+	help
+	  stack callback과 BLEDevice.poll() 사이의 작은 고정 event record 수입니다.
+
 config NUCODE_BLE_RX_BUFFER_SIZE
 	int "NUCODE BLE NUS RX queue byte 수"
 	default 512

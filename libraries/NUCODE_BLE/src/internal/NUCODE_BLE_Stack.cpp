@@ -150,6 +150,16 @@ namespace nucode::ble::internal
     {
     }
 
+    /** @brief M29 LE CoC가 링크되기 전에는 main-thread 작업이 없습니다. */
+    __weak void pollL2cap() noexcept
+    {
+    }
+
+    /** @brief M29 LE CoC가 링크되기 전에는 channel 종료 작업이 없습니다. */
+    __weak void l2capEnded() noexcept
+    {
+    }
+
     /** @brief M20이 링크되지 않은 M19-only image는 custom schema를 거부합니다. */
     __weak bool addGattService(BLEService &service) noexcept
     {

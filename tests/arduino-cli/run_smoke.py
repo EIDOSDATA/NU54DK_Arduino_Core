@@ -1419,7 +1419,7 @@ def test_m28_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
     )
 
 
-## @brief M29 GATT와 bonded cache 예제를 BLE profile로 끝까지 빌드합니다.
+## @brief M29 GATT·LE CoC와 bonded cache 예제를 BLE profile로 끝까지 빌드합니다.
 def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
     test_ble_examples(
         cli,
@@ -1433,6 +1433,8 @@ def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             "ReliableWriteCentral",
             "GattDescriptors",
             "GattAuthorization",
+            "L2capCocServer",
+            "L2capCocClient",
         ),
     )
     for example_name in ("GattCachePeripheral", "GattCacheCentral"):
@@ -1527,6 +1529,8 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "ReliableWritePeripheral",
             "GattDescriptors",
             "GattAuthorization",
+            "L2capCocClient",
+            "L2capCocServer",
         },
         "NUCODE BLE Security": {
             "GattCacheCentral",

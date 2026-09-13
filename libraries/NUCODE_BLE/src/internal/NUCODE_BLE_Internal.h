@@ -71,6 +71,9 @@ namespace nucode::ble::internal
     /** @brief callback connection이 현재 두 slot 중 하나에 속하는지 확인합니다. */
     bool activeConnection(struct bt_conn *connection) noexcept;
 
+    /** @brief callback connection을 현재 generation 공개 handle로 변환합니다. */
+    BLEConnectionHandle handleForActiveConnection(struct bt_conn *connection) noexcept;
+
     /** @brief 현재 두 slot 중 하나라도 active인지 확인합니다. */
     bool hasActiveConnection() noexcept;
 
@@ -94,6 +97,12 @@ namespace nucode::ble::internal
 
     /** @brief Device::end에서 GATT session과 queue를 event 없이 폐기합니다. */
     void gattEnded() noexcept;
+
+    /** @brief LE CoC queued event를 Arduino main thread에서 전달합니다. */
+    void pollL2cap() noexcept;
+
+    /** @brief Device::end에서 LE CoC channel과 queue를 bounded 방식으로 폐기합니다. */
+    void l2capEnded() noexcept;
 
     /** @brief M21 security 계층에 새 connection reference를 관찰용으로 전달합니다. */
     void securityConnected(struct bt_conn *connection) noexcept;
