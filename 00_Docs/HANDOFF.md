@@ -2,7 +2,7 @@
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25와 M28 W01~W08은 모두
 완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고
-M29 ATT/GATT·L2CAP는 W01 착수, 0/8입니다. 이 문서는 완료한 시험을 재개하라는
+M29 ATT/GATT·L2CAP는 W01 완료, 1/8입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -66,13 +66,17 @@ M29 ATT/GATT·L2CAP는 W01 착수, 0/8입니다. 이 문서는 완료한 시험�
 | LINK 최종 수정 | role callback 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도 |
 | 확인 장비 | NU54DK·독립 DAP/UART 3경로; receiver-validated sequence trace 사용 |
 | W08 | 현행 문서·지원 경계·readiness 원장·M29 인계 완료 |
-| 다음 행동 | M29-W01 capability image·고정 protocol·fail-closed parser 구현과 target 실행 |
+| 다음 행동 | M29-W02 generation link별 GATT client와 512-byte long read 구현·시험 |
 
-## M29-W01 착수 상태
+## M29-W01 완료 상태
 
 M29는 [착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)에서 W01~W08,
-10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **0/8**이며 정적 SDK candidate를 실제
+10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **1/8**이며 정적 SDK candidate를 실제
 구현·target·HIL PASS로 승격하지 않는다.
+
+exact `d604642b…`의 `M29CAP/1` parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`
+capability 7/7이 PASS했다. 실제 실행은 GATT service와 LE CoC server·동적 PSM 등록까지이며,
+Signed Write와 EATT peer negotiation은 각각 `M29-SIGN-01`, `M29-EATT-01`까지 `NOT RUN`이다.
 
 Signed Write는 기본 OFF인 deprecated legacy opt-in, EATT는 기본 OFF인 experimental opt-in으로
 개발한다. 기본 GATT/LE CoC와 두 선택 profile의 결과를 분리한다. NU54DK 3개와 DAP/UART 3경로는

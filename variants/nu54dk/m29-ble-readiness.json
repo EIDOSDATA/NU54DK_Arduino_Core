@@ -2,7 +2,7 @@
   "schema_version": 1,
   "milestone": "M29",
   "product_target": "v0.5.0",
-  "phase": "implementation_started",
+  "phase": "w01_complete",
   "milestone_status": "in_progress",
   "baseline": {
     "supported_release": "v0.4.1",
@@ -108,7 +108,7 @@
     }
   ],
   "work_packages": [
-    {"id": "M29-W01", "status": "in_progress", "title": "capability_policy_resource_protocol"},
+    {"id": "M29-W01", "status": "completed", "title": "capability_policy_resource_protocol", "host_parser_tests": 16, "target_build": "passed", "physical_capability": "passed", "tested_core_revision": "d604642b1b439fda2840f613f7f157672d801597"},
     {"id": "M29-W02", "status": "not_started", "title": "per_link_gatt_long_read"},
     {"id": "M29-W03", "status": "not_started", "title": "long_reliable_write_prepare_execute"},
     {"id": "M29-W04", "status": "not_started", "title": "descriptor_authorization_read_multiple"},
@@ -118,7 +118,7 @@
     {"id": "M29-W08", "status": "not_started", "title": "regression_examples_documents_ci"}
   ],
   "execution_plan": [
-    {"id": "M29-CAP-01", "boards": 1, "timeout_seconds": 120, "status": "not_run", "criteria": {"capability_groups": 7, "revision_mismatches": 0}},
+    {"id": "M29-CAP-01", "boards": 1, "timeout_seconds": 120, "status": "passed", "criteria": {"capability_groups": 7, "revision_mismatches": 0}, "evidence_files": ["00_Docs/04_검증 기록/evidence/m29-w01-d604642b-cap/m29-capability-evidence.json", "00_Docs/04_검증 기록/evidence/m29-w01-d604642b-cap/m29-capability-evidence.transcript.log"]},
     {"id": "M29-LONG-01", "boards": 2, "timeout_seconds": 300, "status": "not_run", "criteria": {"att_mtu": 247, "payload_bytes": 512, "iterations": 100, "payload_errors": 0, "partial_commits": 0}},
     {"id": "M29-DESC-01", "boards": 2, "timeout_seconds": 300, "status": "not_run", "criteria": {"descriptors": 4, "multiple_handles": 4, "iterations": 100, "authorization_errors": 0}},
     {"id": "M29-CACHE-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"migration_reconnects": 20, "stale_handle_uses": 0, "cache_corruption_accepts": 0}},
@@ -141,12 +141,12 @@
     }
   },
   "completion": {
-    "completed_work_packages": 0,
+    "completed_work_packages": 1,
     "total_work_packages": 8,
-    "passed_test_ids": 0,
+    "passed_test_ids": 1,
     "total_test_ids": 10,
-    "target_build": "not_run",
-    "physical_hil": "not_run",
+    "target_build": "w01_passed",
+    "physical_hil": "capability_only_passed",
     "cross_vendor_hil": "not_run"
   }
 }

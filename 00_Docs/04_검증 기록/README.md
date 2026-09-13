@@ -12,6 +12,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 | 기록 | 용도 |
 | --- | --- |
 | [140 — M28-W07 2·3보드 HIL과 W08 완료](140_M28_W07_3보드_HIL과_W08_완료.md) | **9개 test ID·M28 8/8 PASS, CMSIS-DAP LINK 실패 진단·수정·M29 인계** |
+| [141 — M29-W01 ATT/GATT·L2CAP capability](141_M29_W01_ATT_GATT_L2CAP_capability.md) | **M29CAP/1 parser 16/16·target 1/1·실제 capability 7/7 PASS, M29 1/8** |
 | [139 — M28-W07 2보드 HIL 자동화 준비](139_M28_W07_2보드_HIL_자동화_준비.md) | `M28B2` protocol/parser/runner·target 2/2, 실제 HIL NOT RUN |
 | [138 — M28-W06 privacy·RPA·link control](138_M28_W06_privacy_RPA_link_control.md) | identity/RPA·DLE·remote-info link 격리·Host/target·예제 |
 | [137 — M28-W05 PAwR advertiser·scanner](137_M28_W05_PAwR_advertiser_scanner.md) | 4 subevent × 4 slot·request/response queue·Host/target·예제 |

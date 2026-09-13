@@ -2,7 +2,7 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W01 착수, 0/8이다. M30~M33은
+**M28은 M28-W01~W08과 9개 test ID를 완료했고 M29는 W01 완료, 1/8이다. M30~M33은
 계획·구현 미착수**다. M28 완료는 v0.5.0 공개, mobile/desktop cross-vendor 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
@@ -29,7 +29,7 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 **M28-W01 capability, W02 고정 2-slot·generation handle, W03 확장 광고·스캔, W04
 periodic·PAST, W05 PAwR, W06 privacy·link control, W07 두/세 보드 HIL과 W08 문서·인계를
-완료했고, **M29-W01 capability·정책·자원·protocol 계약에 착수했다. 현재 M29는 0/8**이다.
+완료했고, **M29-W01 capability·정책·자원·protocol을 완료했다. 현재 M29는 1/8**이다.
 P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
@@ -71,8 +71,9 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser를 구
 
 | 작업 묶음 | 현재 상태 | 다음 종료 조건 |
 | --- | --- | --- |
-| M29-W01 | **착수 — 계약·원장 작성 중** | readiness Host 시험, capability target build와 실제 실행 |
-| M29-W02~W08 | 미착수 | 앞 작업의 자원·수명 계약을 보존해 순서대로 구현·검증 |
+| M29-W01 | **완료 — parser 16/16·target 1/1·실제 capability 7/7 PASS** | exact `d604642b…` 증거와 peer-required 기능 분리 유지 |
+| M29-W02 | **다음 작업** | generation link별 GATT client와 512-byte long read 구현·시험 |
+| M29-W03~W08 | 미착수 | 앞 작업의 자원·수명 계약을 보존해 순서대로 구현·검증 |
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로

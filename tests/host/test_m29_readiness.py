@@ -38,7 +38,7 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(self.readiness["schema_version"], 1)
         self.assertEqual(self.readiness["milestone"], "M29")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "implementation_started")
+        self.assertEqual(self.readiness["phase"], "w01_complete")
         self.assertEqual(self.readiness["milestone_status"], "in_progress")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertRegex(baseline["core_revision"], r"^[0-9a-f]{40}$")
@@ -110,19 +110,24 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIsInstance(value, int, name)
             self.assertGreater(value, 0, name)
 
-    def test_work_packages_begin_at_w01_only(self) -> None:
-        """! @brief 여덟 작업 묶음이 순서대로 있고 W01만 착수 상태인지 검사합니다. """
+    def test_work_packages_begin_at_w02_after_w01_completion(self) -> None:
+        """! @brief W01 완료 증거와 W02 이후 미착수 상태를 검사합니다. """
 
         packages = self.readiness["work_packages"]
         self.assertEqual(len(packages), 8)
         for index, package in enumerate(packages, start=1):
             self.assertEqual(package["id"], f"M29-W{index:02d}")
-            expected_status = "in_progress" if index == 1 else "not_started"
+            expected_status = "completed" if index == 1 else "not_started"
             self.assertEqual(package["status"], expected_status, package["id"])
+        w01 = packages[0]
+        self.assertEqual(w01["host_parser_tests"], 16)
+        self.assertEqual(w01["target_build"], "passed")
+        self.assertEqual(w01["physical_capability"], "passed")
+        self.assertRegex(w01["tested_core_revision"], r"^[0-9a-f]{40}$")
         completion = self.readiness["completion"]
-        self.assertEqual(completion["completed_work_packages"], 0)
+        self.assertEqual(completion["completed_work_packages"], 1)
         self.assertEqual(completion["total_work_packages"], 8)
-        self.assertEqual(completion["passed_test_ids"], 0)
+        self.assertEqual(completion["passed_test_ids"], 1)
         self.assertEqual(completion["total_test_ids"], 10)
 
     def test_execution_plan_is_finite_fail_closed_and_not_run(self) -> None:
@@ -146,7 +151,8 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIn(entry["boards"], {1, 2, 3}, entry["id"])
             self.assertGreater(entry["timeout_seconds"], 0, entry["id"])
             self.assertLessEqual(entry["timeout_seconds"], 1800, entry["id"])
-            self.assertEqual(entry["status"], "not_run", entry["id"])
+            expected_status = "passed" if entry["id"] == "M29-CAP-01" else "not_run"
+            self.assertEqual(entry["status"], expected_status, entry["id"])
             self.assertGreater(len(entry["criteria"]), 0, entry["id"])
             for name, value in entry["criteria"].items():
                 self.assertIsInstance(value, int, f"{entry['id']}:{name}")
@@ -158,6 +164,10 @@ class M29ReadinessTests(unittest.TestCase):
         coc = next(entry for entry in plan if entry["id"] == "M29-COC-01")
         self.assertEqual(coc["criteria"]["channels"], 2)
         self.assertEqual(coc["criteria"]["payload_errors"], 0)
+        capability = next(entry for entry in plan if entry["id"] == "M29-CAP-01")
+        self.assertEqual(len(capability["evidence_files"]), 2)
+        for relative in capability["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
 
     def test_equipment_distinguishes_known_boards_from_unknown_peers(self) -> None:
         """! @brief 확인한 세 보드와 아직 확인하지 않은 cross-vendor 장비를 분리합니다. """
@@ -193,7 +203,7 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIn("16_M29_ATT_GATT_L2CAP_착수_계약.md", text, path)
             self.assertIn("m29-ble-readiness.json", text, path)
             self.assertIn("M29-W01", text, path)
-            self.assertIn("0/8", text, path)
+            self.assertIn("1/8", text, path)
 
 
 if __name__ == "__main__":

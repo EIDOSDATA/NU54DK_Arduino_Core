@@ -9,7 +9,7 @@
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M29 상태 | **착수, W01~W08 0/8** |
+| M29 상태 | **W01 완료, W01~W08 1/8** |
 | 기계 원장 | `variants/nu54dk/m29-ble-readiness.json` |
 
 ## 1. 목표와 완료 의미
@@ -152,6 +152,10 @@ NU54DK 3개와 독립 DAP/UART 3경로는 M28에서 확인했다. 2보드 LONG/D
 3보드 MULTI/REG는 자동 실행할 수 있다. 외부 sniffer와 Android/iOS/Linux peer의 보유·버전,
 Windows BLE adapter의 EATT/robust caching 적용성은 아직 M29 실기로 확인하지 않았다.
 
+W01은 exact `d604642b…`에서 parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`을 PASS했다.
+동적 GATT service와 LE CoC server·PSM 등록은 실제 실행했지만 Signed Write/EATT peer negotiation은
+각각 M29-SIGN-01/M29-EATT-01까지 `NOT RUN`이다.
+
 Cross-vendor 완료 gate에 실제 OS peer 조작이 필요해지는 시점 전까지 코드·Host 시험·target build,
 NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거나 기능을 지원하지 않으면 해당
 결과는 `NOT RUN` 또는 `NOT APPLICABLE`로 근거를 남기며 M29 전체 PASS로 승격하지 않는다.
@@ -167,4 +171,3 @@ NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거
 
 모든 예제는 시작 함수와 비동기 결과를 검사하고 runtime 실패를 Serial에 출력한다. callback-only
 완료를 peer 수신 성공으로 과장하지 않는다.
-
