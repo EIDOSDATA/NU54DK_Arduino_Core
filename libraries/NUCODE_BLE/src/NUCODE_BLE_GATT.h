@@ -64,9 +64,43 @@ namespace nucode::ble
         notification_sent,
         indication_confirmed,
         indication_failed,
+        descriptor_written,
+        authorization_allowed,
+        authorization_denied,
     };
 
     class BLECharacteristic;
+    class BLEDescriptor;
+
+    /** @brief server authorization callback이 판정할 접근 종류입니다. */
+    enum class BLEGattAuthorizationOperation : std::uint8_t
+    {
+        read,
+        write,
+    };
+
+    /** @brief Bluetooth callback 문맥에서만 유효한 bounded authorization 요청입니다. */
+    struct BLEGattAuthorizationRequest
+    {
+        BLEConnectionHandle connection;
+        BLECharacteristic *characteristic = nullptr;
+        BLEDescriptor *descriptor = nullptr;
+        BLEGattAuthorizationOperation operation = BLEGattAuthorizationOperation::read;
+        const std::uint8_t *data = nullptr;
+        std::size_t length = 0U;
+        std::size_t offset = 0U;
+        bool prepare = false;
+        bool execute = false;
+        bool without_response = false;
+    };
+
+    /**
+     * @brief server read/write를 동기 판정하는 callback입니다.
+     * @return 접근을 허용하면 true, ATT authorization 오류로 거부하면 false입니다.
+     * @warning Bluetooth callback 문맥에서 실행되므로 bounded·non-blocking이어야 합니다.
+     */
+    using BLEGattAuthorizationCallback = bool (*)(const BLEGattAuthorizationRequest &request,
+                                                   void *context);
 
     /** @brief server characteristic event의 callback 동안 유효한 상세 정보입니다. */
     struct BLECharacteristicEventInfo
@@ -78,12 +112,71 @@ namespace nucode::ble
         std::size_t offset;
         bool without_response;
         int status;
+        BLEDescriptor *descriptor = nullptr;
+        BLEGattAuthorizationOperation authorization_operation =
+            BLEGattAuthorizationOperation::read;
     };
 
     /** @brief BLEDevice.poll()에서만 호출되는 characteristic callback입니다. */
     using BLECharacteristicCallback = void (*)(BLECharacteristic &characteristic,
                                                const BLECharacteristicEventInfo &event,
                                                void *context);
+
+    /**
+     * @brief characteristic에 속하는 고정 value descriptor입니다.
+     * @warning 등록한 객체와 caller-owned buffer는 image 수명 동안 유효해야 합니다.
+     */
+    class BLEDescriptor final
+    {
+      public:
+        static constexpr std::size_t maximum_value_length = 512U;
+
+        /** @brief 내부 고정 buffer를 사용하는 descriptor를 선언합니다. */
+        BLEDescriptor(const BLEUuid &uuid, BLEPermission permissions,
+                      std::size_t capacity = 20U) noexcept;
+
+        /** @brief caller-owned 고정 buffer를 사용하는 descriptor를 선언합니다. */
+        BLEDescriptor(const BLEUuid &uuid, BLEPermission permissions, std::uint8_t *buffer,
+                      std::size_t capacity) noexcept;
+
+        BLEDescriptor(const BLEDescriptor &) = delete;
+        BLEDescriptor &operator=(const BLEDescriptor &) = delete;
+
+        /** @brief descriptor UUID를 반환합니다. */
+        [[nodiscard]] const BLEUuid &uuid() const noexcept;
+
+        /** @brief descriptor permission bit를 반환합니다. */
+        [[nodiscard]] BLEPermission permissions() const noexcept;
+
+        /** @brief descriptor value 최대 길이를 반환합니다. */
+        [[nodiscard]] std::size_t capacity() const noexcept;
+
+        /** @brief descriptor value 현재 길이를 반환합니다. */
+        [[nodiscard]] std::size_t valueLength() const noexcept;
+
+        /** @brief descriptor value를 caller buffer로 복사하고 실제 길이를 반환합니다. */
+        [[nodiscard]] std::size_t readValue(void *output, std::size_t capacity) const noexcept;
+
+        /** @brief descriptor의 cached value를 갱신합니다. */
+        [[nodiscard]] bool setValue(const void *data, std::size_t length) noexcept;
+
+        /** @brief Bluetooth callback 문맥의 read/write authorization을 등록합니다. */
+        void onAuthorize(BLEGattAuthorizationCallback callback,
+                         void *context = nullptr) noexcept;
+
+      private:
+        friend struct internal::GattAccess;
+
+        BLEUuid uuid_;
+        BLEPermission permissions_ = BLEPermission::none;
+        std::uint8_t *value_ = nullptr;
+        std::size_t capacity_ = 0U;
+        std::size_t value_length_ = 0U;
+        std::uint8_t internal_value_[maximum_value_length] = {};
+        BLEGattAuthorizationCallback authorization_callback_ = nullptr;
+        void *authorization_context_ = nullptr;
+        bool registered_ = false;
+    };
 
     /**
      * @brief cached value와 고정 callback queue를 소유하는 GATT characteristic입니다.
@@ -96,6 +189,7 @@ namespace nucode::ble
     {
       public:
         static constexpr std::size_t maximum_value_length = 512U;
+        static constexpr std::size_t maximum_descriptors = 4U;
 
         /** @brief 내부 고정 buffer를 사용하는 characteristic을 선언합니다. */
         BLECharacteristic(const BLEUuid &uuid, BLEProperty properties, BLEPermission permissions,
@@ -132,6 +226,19 @@ namespace nucode::ble
         /** @brief server read 응답에 사용할 cached value를 갱신합니다. */
         [[nodiscard]] bool setValue(const void *data, std::size_t length) noexcept;
 
+        /** @brief Bluetooth 시작 전 descriptor를 추가합니다. */
+        [[nodiscard]] bool addDescriptor(BLEDescriptor &descriptor) noexcept;
+
+        /** @brief 등록한 descriptor 수를 반환합니다. */
+        [[nodiscard]] std::size_t descriptorCount() const noexcept;
+
+        /** @brief 등록한 descriptor를 반환하며 범위를 벗어나면 nullptr입니다. */
+        [[nodiscard]] BLEDescriptor *descriptor(std::size_t index) const noexcept;
+
+        /** @brief Bluetooth callback 문맥의 read/write authorization을 등록합니다. */
+        void onAuthorize(BLEGattAuthorizationCallback callback,
+                         void *context = nullptr) noexcept;
+
         /** @brief 현재 peer가 notification CCC를 활성화했는지 반환합니다. */
         [[nodiscard]] bool notificationSubscribed() const noexcept;
 
@@ -141,8 +248,14 @@ namespace nucode::ble
         /** @brief cached value를 notification으로 전송합니다. */
         [[nodiscard]] bool notify() noexcept;
 
+        /** @brief 지정 generation link로 cached value notification을 전송합니다. */
+        [[nodiscard]] bool notify(BLEConnectionHandle connection) noexcept;
+
         /** @brief cached value를 confirmation이 있는 indication으로 전송합니다. */
         [[nodiscard]] bool indicate() noexcept;
+
+        /** @brief 지정 generation link로 confirmation이 있는 indication을 전송합니다. */
+        [[nodiscard]] bool indicate(BLEConnectionHandle connection) noexcept;
 
         /** @brief server write·CCC·전송 완료 callback을 등록합니다. */
         void onEvent(BLECharacteristicCallback callback, void *context = nullptr) noexcept;
@@ -159,6 +272,10 @@ namespace nucode::ble
         std::uint8_t internal_value_[maximum_value_length] = {};
         BLECharacteristicCallback callback_ = nullptr;
         void *callback_context_ = nullptr;
+        BLEGattAuthorizationCallback authorization_callback_ = nullptr;
+        void *authorization_context_ = nullptr;
+        BLEDescriptor *descriptors_[maximum_descriptors] = {};
+        std::size_t descriptor_count_ = 0U;
         bool registered_ = false;
     };
 
@@ -232,6 +349,22 @@ namespace nucode::ble
         bool valid_ = false;
     };
 
+    /** @brief disconnect까지 유효한 discovered remote descriptor handle입니다. */
+    class BLERemoteDescriptor final
+    {
+      public:
+        [[nodiscard]] bool valid() const noexcept;
+        [[nodiscard]] const BLEUuid &uuid() const noexcept;
+        [[nodiscard]] std::uint16_t handle() const noexcept;
+
+      private:
+        friend struct internal::GattAccess;
+
+        BLEUuid uuid_;
+        std::uint16_t handle_ = 0U;
+        bool valid_ = false;
+    };
+
     /** @brief generic GATT client operation의 main-thread event입니다. */
     enum class BLEGattClientEvent : std::uint8_t
     {
@@ -245,6 +378,8 @@ namespace nucode::ble
         indication_received,
         handles_invalidated,
         operation_failed,
+        descriptor_discovery_complete,
+        read_multiple_complete,
     };
 
     /** @brief GATT operation이 사용한 ATT bearer 종류입니다. */
@@ -306,11 +441,40 @@ namespace nucode::ble
         [[nodiscard]] BLERemoteCharacteristic remoteCharacteristic(
             BLEConnectionHandle connection) const noexcept;
 
+        /** @brief 현재 characteristic 뒤에서 exact descriptor UUID discovery를 시작합니다. */
+        [[nodiscard]] bool discoverDescriptor(const BLEUuid &descriptor_uuid) noexcept;
+
+        /** @brief 지정 link에서 exact descriptor UUID discovery를 시작합니다. */
+        [[nodiscard]] bool discoverDescriptor(BLEConnectionHandle connection,
+                                              const BLEUuid &descriptor_uuid) noexcept;
+
+        /** @brief 현재 link에 저장한 remote descriptor 수를 반환합니다. */
+        [[nodiscard]] std::size_t descriptorCount() const noexcept;
+
+        /** @brief 지정 link에 저장한 remote descriptor 수를 반환합니다. */
+        [[nodiscard]] std::size_t descriptorCount(BLEConnectionHandle connection) const noexcept;
+
+        /** @brief 현재 link의 remote descriptor 복사본을 반환합니다. */
+        [[nodiscard]] BLERemoteDescriptor remoteDescriptor(std::size_t index) const noexcept;
+
+        /** @brief 지정 link의 remote descriptor 복사본을 반환합니다. */
+        [[nodiscard]] BLERemoteDescriptor remoteDescriptor(BLEConnectionHandle connection,
+                                                           std::size_t index) const noexcept;
+
         /** @brief remote cached value의 단일 bounded read를 시작합니다. */
         [[nodiscard]] bool read() noexcept;
 
         /** @brief 지정 link에서 최대 512 byte long read를 시작합니다. */
         [[nodiscard]] bool read(BLEConnectionHandle connection) noexcept;
+
+        /** @brief 현재 link에서 최대 4개 attribute를 한 번에 읽습니다. */
+        [[nodiscard]] bool readMultiple(const std::uint16_t *handles,
+                                        std::size_t count) noexcept;
+
+        /** @brief 지정 link에서 최대 4개 attribute를 한 번에 읽습니다. */
+        [[nodiscard]] bool readMultiple(BLEConnectionHandle connection,
+                                        const std::uint16_t *handles,
+                                        std::size_t count) noexcept;
 
         /** @brief response가 있는 최대 512 byte long/reliable write를 시작합니다. */
         [[nodiscard]] bool write(const void *data, std::size_t length) noexcept;

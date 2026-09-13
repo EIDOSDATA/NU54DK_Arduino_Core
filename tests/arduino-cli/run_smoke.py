@@ -1431,6 +1431,8 @@ def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             "LongGattCentral",
             "ReliableWritePeripheral",
             "ReliableWriteCentral",
+            "GattDescriptors",
+            "GattAuthorization",
         ),
     )
 
@@ -1493,6 +1495,8 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "PrivacyPeripheral",
             "ReliableWriteCentral",
             "ReliableWritePeripheral",
+            "GattDescriptors",
+            "GattAuthorization",
         },
         "NUCODE BLE Security": {"SecureKeyboard"},
     }

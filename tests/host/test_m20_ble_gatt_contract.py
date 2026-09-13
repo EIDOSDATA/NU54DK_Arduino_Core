@@ -96,7 +96,7 @@ class M20BleGattContractTests(unittest.TestCase):
             "GattAccess::dispatch(*record.characteristic, event)",
             "characteristic_value_lock",
             "copyCachedValue(*characteristic, snapshot",
-            "copyCachedValue(*this, snapshot",
+            "copyCachedValue(*this, slot->notification_data[index]",
         ):
             self.assertIn(token, source, token)
         server_write = source[source.index("ssize_t serverWrite(") : source.index(

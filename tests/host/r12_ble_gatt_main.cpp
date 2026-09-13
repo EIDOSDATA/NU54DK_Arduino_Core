@@ -8,6 +8,15 @@
 #include <iostream>
 using namespace nucode::ble;
 
+static_assert(static_cast<std::uint8_t>(BLECharacteristicEvent::subscribed) == 1U,
+              "기존 server event ordinal을 유지해야 합니다.");
+static_assert(static_cast<std::uint8_t>(BLECharacteristicEvent::indication_failed) == 5U,
+              "기존 server event ordinal을 유지해야 합니다.");
+static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::read_complete) == 1U,
+              "기존 client event ordinal을 유지해야 합니다.");
+static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::operation_failed) == 9U,
+              "기존 client event ordinal을 유지해야 합니다.");
+
 namespace nucode::ble::internal
 {
     /** @brief GATT 단독 호스트 시험에서 Security 연결 통지를 소비합니다. */
@@ -36,7 +45,13 @@ BLECharacteristic characteristic(BLEUuid(std::uint16_t{0x2A29}), properties,
 BLECharacteristic alternate_characteristic(BLEUuid(std::uint16_t{0x2A24}), BLEProperty::write,
                                            BLEPermission::write, 512);
 BLECharacteristic second_characteristic(BLEUuid(std::uint16_t{0x2A19}), BLEProperty::read,
-                                        BLEPermission::read, 20);
+                                         BLEPermission::read, 20);
+BLEDescriptor descriptors[] = {
+    BLEDescriptor(BLEUuid(std::uint16_t{0x2901}), BLEPermission::read | BLEPermission::write, 4U),
+    BLEDescriptor(BLEUuid(std::uint16_t{0x2904}), BLEPermission::read | BLEPermission::write, 4U),
+    BLEDescriptor(BLEUuid(std::uint16_t{0x2905}), BLEPermission::read | BLEPermission::write, 4U),
+    BLEDescriptor(BLEUuid(std::uint16_t{0x2906}), BLEPermission::read | BLEPermission::write, 4U),
+};
 std::array<unsigned, 16> server_events{}, client_events{};
 BLEConnectionHandle observed_server_connection;
 std::array<std::uint8_t, 512> observed_data{};
@@ -46,10 +61,30 @@ std::array<std::array<unsigned, 16>, 2> detailed_events{};
 std::array<std::array<std::uint8_t, 512>, 2> detailed_data{};
 std::array<std::size_t, 2> detailed_lengths{};
 bool reenter = false;
+BLEDescriptor *observed_descriptor = nullptr;
+BLEGattAuthorizationOperation observed_authorization_operation =
+    BLEGattAuthorizationOperation::read;
+unsigned authorization_calls = 0U;
+bool descriptor_access_allowed = true;
+
+bool authorizeAccess(const BLEGattAuthorizationRequest &request, void *context)
+{
+    ++authorization_calls;
+    assert(request.connection.valid());
+    if (context != nullptr && !*static_cast<bool *>(context))
+    {
+        return false;
+    }
+    return request.operation != BLEGattAuthorizationOperation::write || request.length == 0U ||
+           request.data[0] != 0xDEU;
+}
+
 void serverObserved(BLECharacteristic &, const BLECharacteristicEventInfo &event, void *)
 {
     ++server_events[static_cast<unsigned>(event.event)];
     observed_server_connection = event.connection;
+    observed_descriptor = event.descriptor;
+    observed_authorization_operation = event.authorization_operation;
     if (event.data != nullptr)
     {
         observed_length = event.length;
@@ -166,6 +201,30 @@ int main(int argc, char **argv)
 {
     assert(argc == 2);
     const char *scenario = argv[1];
+    if (std::strcmp(scenario, "m29_descriptor_authorization") == 0)
+    {
+        const std::uint8_t descriptor_values[][4] = {
+            {0x11U, 0x12U, 0x13U, 0x14U},
+            {0x21U, 0x22U, 0x23U, 0x24U},
+            {0x31U, 0x32U, 0x33U, 0x34U},
+            {0x41U, 0x42U, 0x43U, 0x44U},
+        };
+        for (std::size_t index = 0U; index < std::size(descriptors); ++index)
+        {
+            assert(descriptors[index].setValue(descriptor_values[index],
+                                               sizeof(descriptor_values[index])));
+            assert(characteristic.addDescriptor(descriptors[index]));
+        }
+        BLEDescriptor fifth_descriptor(BLEUuid(std::uint16_t{0x2907}), BLEPermission::read, 4U);
+        assert(!characteristic.addDescriptor(fifth_descriptor));
+        characteristic.onAuthorize(authorizeAccess, nullptr);
+        descriptors[0].onAuthorize(authorizeAccess, &descriptor_access_allowed);
+    }
+    else if (std::strcmp(scenario, "m29_descriptor_reuse") == 0)
+    {
+        assert(characteristic.addDescriptor(descriptors[0]));
+        assert(alternate_characteristic.addDescriptor(descriptors[0]));
+    }
     assert(service.addCharacteristic(characteristic));
     assert(service.addCharacteristic(alternate_characteristic));
     assert(BLEDevice.addService(service));
@@ -183,6 +242,12 @@ int main(int argc, char **argv)
         BLEDevice.end();
         return 0;
     }
+    if (std::strcmp(scenario, "m29_descriptor_reuse") == 0)
+    {
+        assert(!BLEDevice.begin("descriptor-reuse"));
+        assert(BLEDevice.lastDriverError() == -EEXIST);
+        return 0;
+    }
     characteristic.onEvent(serverObserved, nullptr);
     BLEClient.onEvent(clientObserved, nullptr);
     if (std::strcmp(scenario, "m29_long_parallel") == 0 ||
@@ -197,7 +262,101 @@ int main(int argc, char **argv)
     auto *connection = &mock_connections[0];
     const auto *attribute = &mock_services[0]->attrs[2];
     std::uint8_t payload[]{1, 2, 3, 4};
-    if (std::strcmp(scenario, "server_copy") == 0)
+    if (std::strcmp(scenario, "m29_descriptor_authorization") == 0)
+    {
+        const BLEConnectionHandle handle = BLEConnection.handle(BLELinkRole::central);
+        assert(handle.valid());
+        assert(characteristic.setValue(payload, sizeof(payload)));
+        std::uint8_t output[4]{};
+        assert(attribute->read(connection, attribute, output, sizeof(output), 0U) == 4);
+        assert(std::memcmp(output, payload, sizeof(payload)) == 0);
+
+        const std::uint8_t rejected[]{0xDEU, 0xADU};
+        assert(attribute->write(connection, attribute, rejected, sizeof(rejected), 0U, 0U) ==
+               BT_GATT_ERR(BT_ATT_ERR_AUTHORIZATION));
+        assert(characteristic.readValue(output, sizeof(output)) == sizeof(payload));
+        assert(std::memcmp(output, payload, sizeof(payload)) == 0);
+
+        const auto *descriptor_attribute = &mock_services[0]->attrs[3];
+        assert(descriptor_attribute->read(connection, descriptor_attribute, output,
+                                          sizeof(output), 0U) == 4);
+        const std::uint8_t changed[]{0x51U, 0x52U, 0x53U, 0x54U};
+        assert(descriptor_attribute->write(connection, descriptor_attribute, changed,
+                                           sizeof(changed), 0U, 0U) == 4);
+        descriptor_access_allowed = false;
+        assert(descriptor_attribute->read(connection, descriptor_attribute, output,
+                                          sizeof(output), 0U) ==
+               BT_GATT_ERR(BT_ATT_ERR_AUTHORIZATION));
+        BLEDevice.poll();
+        assert(authorization_calls == 5U);
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::authorization_allowed)] ==
+               3U);
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::authorization_denied)] ==
+               2U);
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::descriptor_written)] ==
+               1U);
+        assert(observed_descriptor == &descriptors[0]);
+        assert(observed_authorization_operation == BLEGattAuthorizationOperation::read);
+
+        assert(characteristic.notify(handle));
+        assert(mock_notification_connection == connection);
+        mock_notification.func(connection, mock_notification.user_data);
+        BLEDevice.poll();
+        assert(characteristic.indicate(handle));
+        assert(mock_indication_connection == connection);
+        mock_indication->func(connection, mock_indication, 0U);
+        mock_indication->destroy(mock_indication);
+        BLEDevice.poll();
+
+        discover();
+        for (std::size_t index = 0U; index < std::size(descriptors); ++index)
+        {
+            assert(BLEClient.discoverDescriptor(descriptors[index].uuid()));
+            bt_gatt_attr next_characteristic{};
+            next_characteristic.handle = 10U;
+            assert(mock_discovery->func(connection, &next_characteristic, mock_discovery) ==
+                   BT_GATT_ITER_STOP);
+            BLEDevice.poll();
+            bt_gatt_attr descriptor_discovery{};
+            descriptor_discovery.handle = static_cast<std::uint16_t>(5U + index);
+            mock_discovery->func(connection, &descriptor_discovery, mock_discovery);
+            BLEDevice.poll();
+        }
+        assert(BLEClient.descriptorCount() == 4U);
+        std::uint16_t handles[4]{};
+        for (std::size_t index = 0U; index < std::size(handles); ++index)
+        {
+            const BLERemoteDescriptor remote = BLEClient.remoteDescriptor(index);
+            assert(remote.valid() && remote.uuid() == descriptors[index].uuid());
+            handles[index] = remote.handle();
+        }
+        assert(BLEClient.readMultiple(handles, std::size(handles)));
+        assert(mock_read->handle_count == 4U && !mock_read->multiple.variable);
+        assert(std::memcmp(mock_read->multiple.handles, handles, sizeof(handles)) == 0);
+        const std::uint8_t values[]{0x11U, 0x12U, 0x13U, 0x14U, 0x21U, 0x22U, 0x23U, 0x24U,
+                                    0x31U, 0x32U, 0x33U, 0x34U, 0x41U, 0x42U, 0x43U, 0x44U};
+        assert(mock_read->func(connection, 0U, mock_read, values, sizeof(values)) ==
+               BT_GATT_ITER_CONTINUE);
+        assert(mock_read->func(connection, 0U, mock_read, nullptr, 0U) == BT_GATT_ITER_STOP);
+        BLEDevice.poll();
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::descriptor_discovery_complete)] ==
+               4U);
+        assert(client_events[static_cast<unsigned>(BLEGattClientEvent::read_multiple_complete)] ==
+               1U);
+        assert(observed_length == sizeof(values));
+        assert(std::memcmp(observed_data.data(), values, sizeof(values)) == 0);
+        assert(!BLEClient.readMultiple(nullptr, std::size(handles)));
+        assert(!BLEClient.readMultiple(handles, 1U));
+        std::uint16_t five_handles[]{5U, 6U, 7U, 8U, 9U};
+        assert(!BLEClient.readMultiple(five_handles, std::size(five_handles)));
+        std::uint16_t duplicate_handles[]{handles[0], handles[0]};
+        assert(!BLEClient.readMultiple(duplicate_handles, std::size(duplicate_handles)));
+        std::uint16_t outside_handles[]{BLEClient.remoteService().startHandle(), handles[1]};
+        assert(!BLEClient.readMultiple(outside_handles, std::size(outside_handles)));
+        const BLEUuid fifth_descriptor(std::uint16_t{0x2907});
+        assert(!BLEClient.discoverDescriptor(fifth_descriptor));
+    }
+    else if (std::strcmp(scenario, "server_copy") == 0)
     {
         assert(attribute->write(connection, attribute, payload, 4, 0, 0) == 4);
         payload[0] = 99;

@@ -22,43 +22,51 @@ namespace nucode::ble::internal::gatt
                                      atomic_get(&client.client_busy_value) != 0;
             GattAccess::clear(client.remote_service);
             GattAccess::clear(client.remote_characteristic);
+            for (BLERemoteDescriptor &descriptor : client.remote_descriptors)
+            {
+                GattAccess::clear(descriptor);
+            }
+            client.remote_descriptor_count = 0U;
             k_spin_unlock(&client.client_state_lock, state_key);
             atomic_set(&client.client_stage, static_cast<atomic_val_t>(ClientStage::idle));
             atomic_set(&client.client_busy_value, 0);
             atomic_set(&client.client_subscribed, 0);
             atomic_set(&client.client_subscription_value, 0);
             atomic_set(&client.client_last_att_error, 0);
+            atomic_set(&client.descriptor_boundary_ready, 0);
+            client.descriptor_end_handle = 0U;
             client.read_length = 0U;
+            client.read_multiple = false;
             clearClientOperationToken(client);
             clearClientSubscriptionToken(client);
             return had_handles;
         }
 
-        /** @brief active native connection을 exact generation handle로 변환합니다. */
-        BLEConnectionHandle handleForConnection(struct bt_conn *connection) noexcept
-        {
-            constexpr BLELinkRole roles[] = {
-                BLELinkRole::central,
-                BLELinkRole::peripheral,
-            };
-            for (BLELinkRole role : roles)
-            {
-                const BLEConnectionHandle handle = BLEConnection.handle(role);
-                struct bt_conn *candidate = nucode::ble::internal::referenceConnection(handle);
-                if (candidate == nullptr)
-                {
-                    continue;
-                }
-                const bool matches = candidate == connection;
-                bt_conn_unref(candidate);
-                if (matches)
-                {
-                    return handle;
-                }
-            }
-            return BLEConnectionHandle{};
-        }
     } // namespace
+
+    BLEConnectionHandle handleForConnection(struct bt_conn *connection) noexcept
+    {
+        constexpr BLELinkRole roles[] = {
+            BLELinkRole::central,
+            BLELinkRole::peripheral,
+        };
+        for (BLELinkRole role : roles)
+        {
+            const BLEConnectionHandle handle = BLEConnection.handle(role);
+            struct bt_conn *candidate = nucode::ble::internal::referenceConnection(handle);
+            if (candidate == nullptr)
+            {
+                continue;
+            }
+            const bool matches = candidate == connection;
+            bt_conn_unref(candidate);
+            if (matches)
+            {
+                return handle;
+            }
+        }
+        return BLEConnectionHandle{};
+    }
 
     SessionState &sessionState() noexcept
     {
@@ -92,7 +100,9 @@ namespace nucode::ble::internal::gatt
 
     void queueServerEvent(BLECharacteristic &characteristic, BLECharacteristicEvent event,
                           const void *data, std::size_t length, std::size_t offset,
-                          bool without_response, int status, struct bt_conn *connection) noexcept
+                          bool without_response, int status, struct bt_conn *connection,
+                          BLEDescriptor *descriptor,
+                          BLEGattAuthorizationOperation authorization_operation) noexcept
     {
         if (length > maximum_value_length)
         {
@@ -105,7 +115,9 @@ namespace nucode::ble::internal::gatt
             static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
         record.connection = handleForConnection(connection);
         record.characteristic = &characteristic;
+        record.descriptor = descriptor;
         record.server_event = event;
+        record.authorization_operation = authorization_operation;
         record.length = static_cast<std::uint16_t>(length);
         record.offset = static_cast<std::uint16_t>(offset);
         record.without_response = without_response;
@@ -216,6 +228,8 @@ namespace nucode::ble::internal
                     .offset = record.offset,
                     .without_response = record.without_response,
                     .status = record.status,
+                    .descriptor = record.descriptor,
+                    .authorization_operation = record.authorization_operation,
                 };
                 GattAccess::dispatch(*record.characteristic, event);
                 continue;

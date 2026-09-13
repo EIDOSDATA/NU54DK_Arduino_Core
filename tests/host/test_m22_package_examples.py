@@ -113,6 +113,8 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "LongGattPeripheral",
                 "ReliableWriteCentral",
                 "ReliableWritePeripheral",
+                "GattDescriptors",
+                "GattAuthorization",
                 "MixedRoleLinks",
                 "PawrAdvertiser",
                 "PawrScanner",

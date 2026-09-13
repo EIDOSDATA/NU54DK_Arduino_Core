@@ -27,6 +27,7 @@ enum
     BT_GATT_ITER_CONTINUE = 1,
     BT_ATT_ERR_NOT_SUPPORTED = 6,
     BT_ATT_ERR_INVALID_OFFSET = 7,
+    BT_ATT_ERR_AUTHORIZATION = 8,
     BT_ATT_ERR_PREPARE_QUEUE_FULL = 9,
     BT_ATT_ERR_INVALID_ATTRIBUTE_LEN = 13,
     BT_ATT_ERR_UNLIKELY = 14,
@@ -125,6 +126,11 @@ struct bt_gatt_read_params
     {
         std::uint16_t handle, offset;
     } single;
+    struct
+    {
+        std::uint16_t *handles;
+        bool variable;
+    } multiple;
 };
 struct bt_gatt_write_params
 {
