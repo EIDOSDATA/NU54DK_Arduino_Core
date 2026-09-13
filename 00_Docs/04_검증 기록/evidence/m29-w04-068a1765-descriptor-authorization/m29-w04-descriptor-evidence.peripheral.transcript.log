@@ -1,0 +1,6 @@
+M29W04|1|READY|role=peripheral|core=068a1765f74e39c83cbf6e9e2f54de467c923441
+M29W04|1|BEGIN|role=peripheral|nonce=bd06b30ecb255f7bd858668311bfa22a|core=068a1765f74e39c83cbf6e9e2f54de467c923441
+M29W04|1|ADVERTISE|role=peripheral|status=pass|nonce=bd06b30ecb255f7bd858668311bfa22a|core=068a1765f74e39c83cbf6e9e2f54de467c923441
+M29W04|1|LINK|role=peripheral|mtu=247|nonce=bd06b30ecb255f7bd858668311bfa22a|core=068a1765f74e39c83cbf6e9e2f54de467c923441
+M29W04|1|RESULT|role=peripheral|descriptors=4|authorization_checks=402|allowed=401|denied=1|descriptor_writes=0|authorization_errors=0|callback_context=pass|nonce=bd06b30ecb255f7bd858668311bfa22a|core=068a1765f74e39c83cbf6e9e2f54de467c923441
+M29W04|1|END|role=peripheral|status=pass|nonce=bd06b30ecb255f7bd858668311bfa22a|core=068a1765f74e39c83cbf6e9e2f54de467c923441

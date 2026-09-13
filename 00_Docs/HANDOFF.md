@@ -2,7 +2,7 @@
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25와 M28 W01~W08은 모두
 완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고
-M29 ATT/GATT·L2CAP는 W03 완료, 3/8입니다. 이 문서는 완료한 시험을 재개하라는
+M29 ATT/GATT·L2CAP는 W04 완료, 4/8입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -66,12 +66,12 @@ M29 ATT/GATT·L2CAP는 W03 완료, 3/8입니다. 이 문서는 완료한 시험�
 | LINK 최종 수정 | role callback 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도 |
 | 확인 장비 | NU54DK·독립 DAP/UART 3경로; receiver-validated sequence trace 사용 |
 | W08 | 현행 문서·지원 경계·readiness 원장·M29 인계 완료 |
-| 다음 행동 | M29-W04 descriptor·authorization·read multiple 구현·시험 |
+| 다음 행동 | M29-W05 Service Changed·database hash·robust cache migration 구현·시험 |
 
-## M29-W01~W03 완료 상태
+## M29-W01~W04 완료 상태
 
 M29는 [착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)에서 W01~W08,
-10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **3/8**이며 정적 SDK candidate를 실제
+10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **4/8**이며 정적 SDK candidate를 실제
 구현·target·HIL PASS로 승격하지 않는다.
 
 exact `d604642b…`의 `M29CAP/1` parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`
@@ -101,7 +101,16 @@ Arduino CI group에서 BLE profile로 compile된다. 첫 HIL에서 발견한 DAP
 명시적 READY 질의 수정·동일 조건 PASS 원본은
 [143번 기록](<04_검증 기록/143_M29_W03_long_reliable_write.md>)에 있다.
 
-실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m29-w03-두-보드-longreliable-write-hil), 구현·검증
+W04 exact `068a1765…`는 characteristic당 descriptor 4개, 동기 authorization, link generation별
+remote descriptor cache와 read multiple 4-handle, link 지정 notify/indicate를 구현했다. 비동기
+notification payload는 전송 완료까지 고정 slot이 소유하고 기존 무인자 API·기존 event enum 값은
+유지한다. Production Host 17개 시나리오, source 계약 8개, parser 11개, Arduino BLE 예제 6개와
+target role 2/2가 PASS했다. 두 NU54DK 실기에서 ATT MTU 247, descriptor 4개, read multiple
+4-handle 100/100, authorization 허용 401·예상 거부 1·오판 0, corrupt·stale 0을 확인해
+`M29-DESC-01`을 닫았다. 첫 실행의 예상 ATT 거부 전역 error 오판과 수정 뒤 동일 조건 PASS 원본은
+[144번 기록](<04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>)에 있다.
+
+실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m29-w04-두-보드-descriptorauthorization-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과
 [132번 실제 HCI 완료 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)과
 [134번 W02 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>)과

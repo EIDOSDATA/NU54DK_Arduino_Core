@@ -9,7 +9,7 @@
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M29 상태 | **W03 완료, W01~W08 3/8** |
+| M29 상태 | **W04 완료, W01~W08 4/8** |
 | 기계 원장 | `variants/nu54dk/m29-ble-readiness.json` |
 
 ## 1. 목표와 완료 의미
@@ -167,6 +167,15 @@ main-thread callback을 확인했다. 따라서 `M29-LONG-01`은 PASS다. 첫 �
 READY 앞에 raw `0x1c`가 붙은 시작 noise를 protocol 위반으로 거부했고, flash 뒤 입력을 비운 다음
 고정 `M29W03|1|READY?` 질의에 응답하도록 수정해 동일 조건에서 PASS했다. 이 실패는 RF·GPIO·ATT
 실패가 아니며 실패 transcript와 최종 증거를 모두 보존한다.
+
+W04는 exact `068a1765…`에서 characteristic당 descriptor 4개, read/write authorization,
+generation link별 descriptor cache와 4-handle Read Multiple, link 지정 notify/indicate를 구현했다.
+Host production 17개 시나리오, source 계약 8개·parser 11개, target role 2/2와 Arduino BLE 예제
+6개가 PASS했다. 두 NU54DK의 `M29-DESC-01`은 MTU 247, descriptor 4개, Read Multiple 100/100,
+authorization 402회 중 허용 401·예상 거부 1·오판 0, corrupt·stale 0을 확인했다. 첫 실기는
+예상 ATT `0x08`에 앞선 전역 `-EIO`를 target이 실패로 오판했으며, rejecting phase에서는 상세
+GATT event의 ATT 값을 기다리도록 수정한 뒤 동일 조건 PASS했다. 제품의 오류 보고 의미를
+축소하지 않았고 다른 phase의 전역 오류는 계속 즉시 실패한다.
 
 Cross-vendor 완료 gate에 실제 OS peer 조작이 필요해지는 시점 전까지 코드·Host 시험·target build,
 NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거나 기능을 지원하지 않으면 해당

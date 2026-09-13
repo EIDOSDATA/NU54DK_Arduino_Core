@@ -27,7 +27,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
 | M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
-| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil) |
+| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -58,6 +58,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m29_ble_capability.py` | M29CAP/1 ATT/GATT·L2CAP Host capability strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
 | `m29_ble_long.py` | M29W02/1 MTU 247·512-byte long read 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m29_ble_long_write.py` | M29W03/1 MTU 247·512-byte reliable write/read-back 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_descriptor.py` | M29W04/1 descriptor 4개·authorization·4-handle read multiple 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -109,7 +110,7 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 $PeripheralHex = "<nucode.m29.ble_long_peripheral의 zephyr.hex>"
 $CentralHex = "<nucode.m29.ble_long_central의 zephyr.hex>"
 
-& $Python -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long.py" `
+& $Python -I -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long.py" `
   --peripheral-hex $PeripheralHex `
   --central-hex $CentralHex `
   --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
@@ -139,7 +140,7 @@ $Commit = git -C $CoreRoot rev-parse HEAD
 $PeripheralHex = "<nucode.m29.ble_long_write_peripheral의 zephyr.hex>"
 $CentralHex = "<nucode.m29.ble_long_write_central의 zephyr.hex>"
 
-& $Python -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long_write.py" `
+& $Python -I -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long_write.py" `
   --peripheral-hex $PeripheralHex `
   --central-hex $CentralHex `
   --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
@@ -155,6 +156,51 @@ Host negative는 cancel·offset·overflow·다른 characteristic 혼합·stale g
 exact `babba5a1…`에서 target 2/2와 두 보드 HIL이 PASS해 `M29-LONG-01`을 닫았다. 첫 exact
 `8629611e…` 실행은 READY 앞 raw `0x1c`를 fail-closed로 거부했으며, RF·GPIO·ATT를 시작하기 전의
 DAPLink UART 시작 noise로 분류했다. 실패와 수정 뒤 PASS transcript는 모두 143번 기록에 보존한다.
+
+## M29-W04 두 보드 descriptor·authorization HIL
+
+W04는 W02/W03과 같은 두 NU54DK·독립 DAP/UART·무배선 RF 구성을 사용한다. Peripheral은
+characteristic 하나에 4개 descriptor를 등록하고 characteristic write와 descriptor read를 동기
+authorization한다. Central은 exact UUID 4개를 현재 characteristic handle 범위에서 발견하고,
+잘못된 write가 ATT `0x08`로 거부되는지 확인한 뒤 nonce로 unlock하여 4-handle Read Multiple을
+100회 수행한다. Runner는 `M29W04|1`의 exact record 순서·full revision·128-bit nonce와 build
+record를 검사하며 noise·누락·중복·재배치·stale nonce·wrong revision·target FAIL을 거부한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Commit = git -C $CoreRoot rev-parse HEAD
+$BuildRoot = "C:\<아직 없는 한 글자 경로>"
+$Toolchain = "C:\ncs\toolchains\dcbdc366a1"
+$Python = "$Toolchain\opt\bin\python.exe"
+$env:PATH = "$Toolchain;$Toolchain\mingw64\bin;$Toolchain\bin;$Toolchain\opt\bin;$Toolchain\opt\bin\Scripts;$env:PATH"
+$env:PYTHONPATH = "$Toolchain\opt\bin;$Toolchain\opt\bin\Lib;$Toolchain\opt\bin\Lib\site-packages"
+$env:ZEPHYR_TOOLCHAIN_VARIANT = "zephyr/gnu"
+$env:ZEPHYR_SDK_INSTALL_DIR = "$Toolchain\opt\zephyr-sdk"
+
+& $Python -B tools/ci/run_zephyr_build.py `
+  --workspace C:\ncs\v3.4.0 --outdir $BuildRoot --group v0.5.0 --jobs 2 `
+  --suite nucode.m29.ble_descriptor_peripheral `
+  --suite nucode.m29.ble_descriptor_central
+
+& $Python -I -B "$CoreRoot\tests\hil\nu54dk\m29_ble_descriptor.py" `
+  --peripheral-hex "<nucode.m29.ble_descriptor_peripheral의 zephyr.hex>" `
+  --central-hex "<nucode.m29.ble_descriptor_central의 zephyr.hex>" `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --flash-backend pyocd-sector `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w04\descriptor-evidence.json"
+```
+
+Exact `068a1765…`에서 target 2/2 warning 0과 `M29-DESC-01`이 PASS했다. MTU 247,
+descriptor 4개, 4-handle Read Multiple 100/100, authorization 허용 401·예상 거부 1·오판 0,
+corrupt·stale 0을 확인했다. 첫 `34d24ea6…` 실기는 예상 authorization 거부의 전역 `-EIO`를
+상세 ATT event보다 먼저 실패로 오판했다. `rejecting` phase에서만 상세 `operation_failed`의 exact
+ATT `0x08`을 기다리도록 수정했고, 다른 phase의 전역 오류는 계속 즉시 실패한다. 실패와 PASS
+원본은 [144번 기록](<../../../00_Docs/04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>)에
+보존한다.
 
 ## M15 공식 CI artifact 계약
 
