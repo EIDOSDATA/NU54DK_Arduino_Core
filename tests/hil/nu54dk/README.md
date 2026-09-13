@@ -27,7 +27,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
 | M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
-| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil), [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil) |
+| M29 ATT/GATT·L2CAP | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil), [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil), [W06 LE CoC·negative](#m29-w06-두-보드-le-cocnegative-hil) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -60,6 +60,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m29_ble_long_write.py` | M29W03/1 MTU 247·512-byte reliable write/read-back 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m29_ble_descriptor.py` | M29W04/1 descriptor 4개·authorization·4-handle read multiple 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m29_ble_cache.py` | M29W05/1 bonded reconnect·Service Changed·database migration·corrupt cache strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_coc.py` | M29W06/1 동시 CoC 2채널·512-byte SDU·5종 negative·disconnect 복구 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -235,6 +236,39 @@ py -3.14 -B "$CoreRoot\tests\hil\nu54dk\m29_ble_cache.py" `
 `startCacheDiscovery(start=20,end=19)` 호출을 포착해 Zephyr property bit 직접 cast 문제로
 확정했다. `publicProperties()`로 수정한 뒤 같은 두 보드 조건에서 PASS했으며 상세 근거는
 [145번 기록](<../../../00_Docs/04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>)에 있다.
+
+## M29-W06 두 보드 LE CoC·negative HIL
+
+W06은 두 NU54DK·독립 DAP/UART·무배선 RF 구성을 사용한다. Peripheral은 동적 PSM `0x0080`의
+server를 열고 central은 generation handle 2개로 동시에 연결한다. Runner는 clean exact Core·
+board·application·공통 runner와 각 HEX 옆 build record를 검증하고, `M29W06|1` READY 뒤
+peripheral 광고를 먼저 확인한 다음 central을 시작한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_coc_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_coc_central의 zephyr.hex>"
+
+py -3.14 -B "$CoreRoot\tests\hil\nu54dk\m29_ble_coc.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --flash-backend pyocd-sector `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w06\coc-evidence.json"
+```
+
+고정 parser는 두 채널·local/remote MTU 512, 방향별 channel당 1,000 SDU, malformed·offset·execute·
+PSM·credit 각 20회 거부, disconnect 뒤 이전 handle 거부와 새 2채널 복구를 exact 순서·full
+revision·128-bit nonce로 검사한다. Exact `767bb4af…`에서 target 2/2 warning 0,
+`M29-COC-01`과 `M29-NEG-01`이 PASS했다. 첫 실행은 W06 광고의 `psm=128` 필드를 공통 runner가
+기대하지 않아 RF 시작 전 fail-closed 중단됐다. W02~W04 기본 계약은 유지하고 W06이 역할별 광고
+필드를 명시하도록 수정한 뒤 같은 두 보드 조건에서 PASS했다. 실패 transcript와 최종 근거는
+[146번 기록](<../../../00_Docs/04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
 
 ## M15 공식 CI artifact 계약
 

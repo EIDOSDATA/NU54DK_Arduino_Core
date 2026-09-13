@@ -2,7 +2,7 @@
 
 **현재 설치·지원 버전은 v0.4.1 하나이며 v0.4.0의 T01~T25와 M28 W01~W08은 모두
 완료됐습니다.** M28은 capability 6/6, Host·target, 2·3보드 9개 test ID를 실제 PASS했고
-M29 ATT/GATT·L2CAP는 W05 완료, 5/8입니다. 이 문서는 완료한 시험을 재개하라는
+M29 ATT/GATT·L2CAP는 W06 완료, 6/8입니다. 이 문서는 완료한 시험을 재개하라는
 지시가 아니라, 다른 PC에서 후속 개발에 필요한 저장소·도구·증거를 찾는 안내입니다.
 
 ## 먼저 확인할 문서
@@ -66,12 +66,12 @@ M29 ATT/GATT·L2CAP는 W05 완료, 5/8입니다. 이 문서는 완료한 시험�
 | LINK 최종 수정 | role callback 검증, object recycle event, GATT `LINK_UP` 확인과 최대 3회 유한 재시도 |
 | 확인 장비 | NU54DK·독립 DAP/UART 3경로; receiver-validated sequence trace 사용 |
 | W08 | 현행 문서·지원 경계·readiness 원장·M29 인계 완료 |
-| 다음 행동 | M29-W06 LE CoC 고정 channel·credit·buffer 수명 구현·시험 |
+| 다음 행동 | M29-W07 Signed Write legacy opt-in·EATT experimental opt-in 구현·시험 |
 
-## M29-W01~W05 완료 상태
+## M29-W01~W06 완료 상태
 
 M29는 [착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)에서 W01~W08,
-10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **5/8**이며 정적 SDK candidate를 실제
+10개 test ID와 고정 자원 상한을 정의했다. 현재 진행률은 **6/8**이며 정적 SDK candidate를 실제
 구현·target·HIL PASS로 승격하지 않는다.
 
 exact `d604642b…`의 `M29CAP/1` parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`
@@ -119,7 +119,17 @@ CMSIS-DAP/GDB에서 Zephyr property bit 직접 cast가 write를 notify로 오인
 명시 변환 뒤 동일 조건 PASS했다. 실패와 최종 원본은
 [145번 기록](<04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>)에 있다.
 
-실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m29-w05-두-보드-robust-gatt-cache-hil), 구현·검증
+W06 exact `767bb4af…`는 generation opaque handle을 사용하는 LE CoC server 1개·channel 2개,
+512-byte SDU, channel당 RX record 4개와 전체 TX buffer 4개를 고정 자원으로 구현했다. Stack
+callback은 payload를 복사하고 `BLEDevice.poll()`에서만 공개 callback을 호출하며 TX pool/credit
+고갈은 `busy`로 분류한다. Production Host 7개 시나리오, source 7개, parser 12개, target role
+2/2 warning 0과 `L2capCocServer`·`L2capCocClient` 예제 build가 PASS했다. 두 NU54DK에서 동시
+2-channel·512-byte SDU를 방향별 channel당 1,000회 검증했고 malformed·offset·execute·PSM·credit
+각 20회 거부, 예상 밖 수락·payload/cross-channel·stale·resource recovery 오류 0으로
+`M29-COC-01`과 `M29-NEG-01`을 닫았다. 첫 runner protocol 불일치와 동일 조건 재검증 원본은
+[146번 기록](<04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
+
+실행기와 보드 조건은 [HIL 안내](../tests/hil/nu54dk/README.md#m29-w06-두-보드-le-cocnegative-hil), 구현·검증
 경계는 [131번 준비 기록](<04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md>)과
 [132번 실제 HCI 완료 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)과
 [134번 W02 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>)과

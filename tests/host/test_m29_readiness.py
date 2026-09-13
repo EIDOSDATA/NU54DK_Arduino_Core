@@ -38,7 +38,7 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(self.readiness["schema_version"], 1)
         self.assertEqual(self.readiness["milestone"], "M29")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "w05_complete")
+        self.assertEqual(self.readiness["phase"], "w06_complete")
         self.assertEqual(self.readiness["milestone_status"], "in_progress")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertRegex(baseline["core_revision"], r"^[0-9a-f]{40}$")
@@ -93,6 +93,7 @@ class M29ReadinessTests(unittest.TestCase):
                     "gatt_long_reliable",
                     "gatt_read_multiple",
                     "gatt_service_changed_cache",
+                    "l2cap_credit_based_channel",
                 }
                 else "not_started"
             )
@@ -120,14 +121,14 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIsInstance(value, int, name)
             self.assertGreater(value, 0, name)
 
-    def test_work_packages_begin_at_w06_after_w05_completion(self) -> None:
-        """! @brief W01~W05 완료 증거와 W06 이후 미착수 상태를 검사합니다. """
+    def test_work_packages_begin_at_w07_after_w06_completion(self) -> None:
+        """! @brief W01~W06 완료 증거와 W07 이후 미착수 상태를 검사합니다. """
 
         packages = self.readiness["work_packages"]
         self.assertEqual(len(packages), 8)
         for index, package in enumerate(packages, start=1):
             self.assertEqual(package["id"], f"M29-W{index:02d}")
-            expected_status = "completed" if index <= 5 else "not_started"
+            expected_status = "completed" if index <= 6 else "not_started"
             self.assertEqual(package["status"], expected_status, package["id"])
         w01 = packages[0]
         self.assertEqual(w01["host_parser_tests"], 16)
@@ -177,10 +178,21 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(len(w05["evidence_files"]), 3)
         for relative in w05["failure_evidence_files"] + w05["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        w06 = packages[5]
+        self.assertEqual(w06["production_host_scenarios"], 7)
+        self.assertEqual(w06["host_contract_tests"], 7)
+        self.assertEqual(w06["host_parser_tests"], 12)
+        self.assertEqual(w06["target_builds"], 2)
+        self.assertEqual(w06["physical_le_coc"], "passed")
+        self.assertRegex(w06["tested_core_revision"], r"^[0-9a-f]{40}$")
+        self.assertEqual(len(w06["failure_evidence_files"]), 2)
+        self.assertEqual(len(w06["evidence_files"]), 3)
+        for relative in w06["failure_evidence_files"] + w06["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
         completion = self.readiness["completion"]
-        self.assertEqual(completion["completed_work_packages"], 5)
+        self.assertEqual(completion["completed_work_packages"], 6)
         self.assertEqual(completion["total_work_packages"], 8)
-        self.assertEqual(completion["passed_test_ids"], 4)
+        self.assertEqual(completion["passed_test_ids"], 6)
         self.assertEqual(completion["total_test_ids"], 10)
 
     def test_execution_plan_is_finite_fail_closed_and_not_run(self) -> None:
@@ -212,6 +224,8 @@ class M29ReadinessTests(unittest.TestCase):
                     "M29-LONG-01",
                     "M29-DESC-01",
                     "M29-CACHE-01",
+                    "M29-COC-01",
+                    "M29-NEG-01",
                 }
                 else "not_run"
             )
@@ -243,6 +257,11 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(len(cache["evidence_files"]), 3)
         for relative in cache["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        negative = next(entry for entry in plan if entry["id"] == "M29-NEG-01")
+        for entry in (coc, negative):
+            self.assertEqual(len(entry["evidence_files"]), 3)
+            for relative in entry["evidence_files"]:
+                self.assertTrue((REPOSITORY / relative).is_file(), relative)
 
     def test_equipment_distinguishes_known_boards_from_unknown_peers(self) -> None:
         """! @brief 확인한 세 보드와 아직 확인하지 않은 cross-vendor 장비를 분리합니다. """
@@ -278,7 +297,7 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIn("16_M29_ATT_GATT_L2CAP_착수_계약.md", text, path)
             self.assertIn("m29-ble-readiness.json", text, path)
             self.assertIn("M29-W01", text, path)
-            self.assertIn("5/8", text, path)
+            self.assertIn("6/8", text, path)
 
 
 if __name__ == "__main__":

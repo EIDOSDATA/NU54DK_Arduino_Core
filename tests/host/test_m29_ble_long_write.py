@@ -66,14 +66,15 @@ class M29BleLongWriteTests(unittest.TestCase):
         self.assertIn("clearServerTransactions()", text)
 
     def test_client_and_stack_limits_preserve_command_boundary(self):
-        """! @brief reliable write만 512 byte이고 command와 ATT pool은 별도 한계를 지켜야 합니다. """
+        """! @brief CoC 512-byte MTU와 ATT command·ACL 한계를 함께 지켜야 합니다. """
 
         client = CLIENT.read_text(encoding="utf-8")
         config = CONFIG.read_text(encoding="utf-8")
         self.assertIn("length > maximum_value_length", client)
         self.assertIn("validWriteCommandPayload(*state, length)", client)
         self.assertIn("CONFIG_BT_ATT_PREPARE_COUNT=6", config)
-        self.assertIn("CONFIG_BT_L2CAP_TX_MTU=247", config)
+        self.assertIn("CONFIG_BT_L2CAP_TX_MTU=512", config)
+        self.assertIn("CONFIG_BT_BUF_ACL_TX_SIZE=251", config)
 
     def test_host_and_target_cover_atomic_negative_and_quantitative_paths(self):
         """! @brief Host 음성 case와 target 100회 고정 protocol이 모두 존재해야 합니다. """

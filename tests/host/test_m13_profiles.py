@@ -119,6 +119,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "CustomGattPeripheral",
                 "GattCacheCentral",
                 "GattCachePeripheral",
+                "L2capCocClient",
+                "L2capCocServer",
                 "SecureKeyboard",
                 "FabricCapabilities",
             },

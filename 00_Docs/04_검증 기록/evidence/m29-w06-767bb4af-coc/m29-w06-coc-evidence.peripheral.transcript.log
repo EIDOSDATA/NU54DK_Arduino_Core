@@ -1,0 +1,10 @@
+M29W06|1|READY|role=peripheral|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|BEGIN|role=peripheral|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|ADVERTISE|role=peripheral|psm=128|status=pass|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|NEG|role=peripheral|class=offset|attempts=20|rejected=20|unexpected=0|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|NEG|role=peripheral|class=execute|attempts=20|rejected=20|unexpected=0|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|CHANNELS|role=peripheral|connected=2|local_mtu=512|remote_mtu=512|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|COC|role=peripheral|channels=2|sdu=512|tx_per_channel=1000|rx_per_channel=1000|payload_errors=0|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|RECOVERY|role=peripheral|new_channels=2|echoes=2|failures=0|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|RESULT|role=peripheral|offset=20|execute=20|unexpected=0|recovery_failures=0|cross_channel=0|callback_context=pass|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262
+M29W06|1|END|role=peripheral|status=pass|nonce=03fdbe25a874446b41cba3c156cfb41c|core=767bb4af6f93cd390b139a2e5699830dcdd03262

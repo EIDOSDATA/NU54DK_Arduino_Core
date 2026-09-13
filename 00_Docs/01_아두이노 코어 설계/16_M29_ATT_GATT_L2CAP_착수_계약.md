@@ -3,13 +3,13 @@
 | 항목 | 고정값 |
 | --- | --- |
 | 대상 릴리즈 | `v0.5.0` |
-| 기준 Core | `a834dccf95d6133e23889508d7b1c406e7cd64e9` |
+| 기준 Core | `767bb4af6f93cd390b139a2e5699830dcdd03262` |
 | 기준 NCS | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
 | 기준 Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M29 상태 | **W05 완료, W01~W08 5/8** |
+| M29 상태 | **W06 완료, W01~W08 6/8** |
 | 기계 원장 | `variants/nu54dk/m29-ble-readiness.json` |
 
 ## 1. 목표와 완료 의미
@@ -186,6 +186,14 @@ read 24, cache restore 20, Service Changed 1, migration 1, corrupt cache 거부 
 확인했다. 첫 `8f1f167d…` 실기의 `-ENOTCONN`은 CMSIS-DAP/GDB에서 Zephyr property bit를 공개
 enum으로 직접 cast해 write를 notify로 오인한 것으로 확정했고 `publicProperties()` 변환 뒤 같은
 조건에서 PASS했다.
+
+W06은 exact `767bb4af…`에서 generation opaque handle의 LE CoC server 1개·channel 2개,
+512-byte SDU, channel당 RX record 4개와 전체 TX buffer 4개를 구현했다. Production Host 7개
+시나리오, source 계약 7개·parser 12개와 target role 2/2 warning 0이 PASS했다. 두 NU54DK의
+`M29-COC-01`·`M29-NEG-01`은 방향별 channel당 1,000 SDU, malformed·offset·execute·PSM·credit
+각 20회 거부, payload/cross-channel·예상 밖 수락·resource recovery·stale accept 0을 확인했다.
+첫 실행의 W06 광고 PSM과 공통 runner 기대값 불일치는 RF 시작 전에 fail-closed로 거부했고,
+역할별 광고 field를 명시하도록 수정한 뒤 같은 조건에서 PASS했다.
 
 Cross-vendor 완료 gate에 실제 OS peer 조작이 필요해지는 시점 전까지 코드·Host 시험·target build,
 NU54DK 2·3보드 HIL, parser·문서·예제를 계속한다. OS peer가 없거나 기능을 지원하지 않으면 해당
