@@ -223,6 +223,16 @@ class M29BleSignedEattTests(unittest.TestCase):
         )
         self.assertIn("del captures[role][-pending_length:]", reboot)
 
+    def test_hil_reports_actual_disconnect_reason(self):
+        """! @brief 간헐 disconnect를 실제 HCI reason으로 분류할 수 있어야 합니다. """
+        target = (TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertIn("BT_CONN_CB_DEFINE(m29_advanced_connection_callbacks)", target)
+        self.assertIn("atomic_set(&disconnect_reason", target)
+        self.assertIn(
+            'fail("unexpected_disconnect", static_cast<int>(atomic_get(&disconnect_reason)))',
+            target,
+        )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

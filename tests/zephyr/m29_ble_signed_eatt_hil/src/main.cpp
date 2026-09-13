@@ -147,6 +147,18 @@ namespace
     std::uint32_t server_eatt_next_sequence[2] = {};
     nucode::ble::BLEConnectionHandle connection_handle;
     struct k_thread *setup_thread = nullptr;
+    atomic_t disconnect_reason = ATOMIC_INIT(-1);
+
+    /** @brief Zephyr callback에서 실제 HCI disconnect reason을 진단용으로 보존합니다. */
+    void onConnectionDisconnected(struct bt_conn *connection, std::uint8_t reason)
+    {
+        ARG_UNUSED(connection);
+        atomic_set(&disconnect_reason, static_cast<atomic_val_t>(reason));
+    }
+
+    BT_CONN_CB_DEFINE(m29_advanced_connection_callbacks) = {
+        .disconnected = onConnectionDisconnected,
+    };
 
 #if defined(NUCODE_M29_ADVANCED_CENTRAL)
     struct bt_l2cap_chan *eatt_channels[2] = {};
@@ -953,7 +965,7 @@ namespace
                 printEnd();
                 return;
             }
-            fail("unexpected_disconnect");
+            fail("unexpected_disconnect", static_cast<int>(atomic_get(&disconnect_reason)));
         }
     }
 
@@ -987,6 +999,7 @@ namespace
         server_eatt_received[1] = 0U;
         server_eatt_next_sequence[0] = 0U;
         server_eatt_next_sequence[1] = 0U;
+        atomic_set(&disconnect_reason, -1);
         connection_handle = {};
         session_deadline = k_uptime_get() + session_timeout_ms;
         disconnect_at = 0;

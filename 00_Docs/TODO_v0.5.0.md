@@ -87,7 +87,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser를 구
 | M29-W04 | **완료 — Host·target 2/2·2보드 descriptor/read multiple 100/100 PASS** | exact `068a1765…`, descriptor 4개·authorization 오판 0 증거 유지 |
 | M29-W05 | **완료 — Host·target 2/2·2보드 cache migration PASS** | exact `e587c4fe…`, bonded reconnect 20·stale/corrupt accept 0 증거 유지 |
 | M29-W06 | **완료 — Host·target 2/2·2보드 CoC/negative PASS** | exact `767bb4af…`, 2-channel·512 byte·각 방향 1,000 SDU·5 negative class·복구 오류 0 증거 유지 |
-| M29-W07 | **진행 중 — Host 계약 14/14·parser 14/14·target 2/2 PASS** | exact commit 기준 `M29-SIGN/EATT/MULTI/REG-01` HIL과 증거 보존 |
+| M29-W07 | **진행 중 — Host 계약 15/15·parser 14/14·target 2/2 PASS** | exact commit 기준 `M29-SIGN/EATT/MULTI/REG-01` HIL과 증거 보존 |
 | M29-W08 | 미착수 | 전체 회귀·예제·문서·지원 판정·CI와 M30 인계 |
 
 M29-W02는 central/peripheral 두 link가 각각 discovery/read/write/subscription parameter와 512-byte
@@ -149,7 +149,7 @@ profile을 바꾸지 않는다. Signed Write는 bonded CSRK와 local/remote sign
 즉시 저장하며 저장 실패 시 link를 끊는다. EATT는 암호화된 link에서만 최대 2 bearer를 열고,
 read/write overload가 unenhanced/enhanced bearer를 명시하며 상세 event가 실제 선택 bearer를
 보고한다. 기존 enum ordinal과 무인자 API는 유지한다. 공개 예제 4개, W07 3개를 포함한 production
-Host 전체 24개 시나리오, source 계약 14개, strict HIL parser 14개와 고정 NCS target role 2/2가
+Host 전체 24개 시나리오, source 계약 15개, strict HIL parser 14개와 고정 NCS target role 2/2가
 PASS했다. Windows Application Control의 첫 전체 실행 차단은 유한 4551 대기를 보강한 뒤 전체 Host
 1,106개 PASS(조건부 2개 skip)로 재검증했다. Arduino M29 smoke는 `EattCentral`의 미지원
 `<cstring>`을 `<string.h>`로 고친 뒤 GATT·CoC·cache·signing·EATT 예제 **14/14 PASS**로
@@ -185,6 +185,11 @@ Exact `6b659002…` 재실기는 Signed Write 8회차 뒤 warm reboot의 central
 strict runner가 거부했다. 이는 BLE가 아니라 reset 순간 DAPLink UART framing 경계이며 실패 원본을
 보존한다. 매 reboot에서 exact `REBOOTING`을 확인한 뒤 1초 정착·입력 경계 재설정·고정 `READY?`
 질의를 수행하도록 runner를 고쳤다. 질의 이후의 fail-closed parser는 그대로 유지한다.
+
+Exact `28c04448…`은 UART framing 재발 없이 sign 15회까지 통과했으나 16회차가
+`unexpected_disconnect/code=0`으로 끝났다. 양쪽 CMSIS-DAP의 CPU fault register는 0이다. 기존
+상세 GAP event가 버린 실제 HCI disconnect reason을 W07 target의 별도 Zephyr observer로 보존해
+다음 exact 실행에서 원인 class를 직접 판정한다.
 
 W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
 HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로

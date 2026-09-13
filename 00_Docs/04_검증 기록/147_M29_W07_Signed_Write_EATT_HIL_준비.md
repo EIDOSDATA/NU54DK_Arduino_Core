@@ -201,6 +201,18 @@ UART framing 경계 문제로 분류한다. 실패 원본은
 noise·누락·중복·wrong revision 거부와 최종 transcript parser는 완화하지 않았다. Host source 계약
 14/14·parser 14/14·readiness 8/8이 PASS했으며 새 exact commit으로 처음부터 재검증한다.
 
+Exact `28c04448…` 재검증은 reboot마다 질의한 READY만 수집해 raw framing byte 문제가 재발하지
+않았음을 확인했다. Signed Write 1~15회는 counter와 정상 disconnect를 통과했으나 16회차 연결이
+`unexpected_disconnect/code=0`으로 끝났다. Raw 기록은
+`evidence/m29-w07-28c04448-signed-eatt/`에 보존한다. 두 보드는 DAP/UART로 계속 식별됐고
+CMSIS-DAP에서 양쪽 `CFSR=0`, `HFSR=0`과 정상 thread PC를 확인했으므로 CPU fault가 아니다.
+
+기존 Core 상세 GAP event는 disconnect HCI reason을 노출하지 않아 target의 code가 기본값 0이었다.
+W07 target에 추가 Zephyr connection observer를 등록해 callback의 실제 `reason`을 atomic으로
+보존하고, main-thread의 `unexpected_disconnect/code=<reason>`에 연결한다. 다음 exact 실행은
+재시도 목적이 아니라 timeout `0x08`, remote user termination `0x13` 등 원인 class를 직접
+구분하기 위한 진단이다. Source 계약 15/15와 진단 target 2/2 warning 0을 확인했다.
+
 ## 6. 남은 유한 실행 순서
 
 1. W07 준비 변경을 commit/push하고 exact GitHub Software·Reproducible Build CI를 확인한다.
