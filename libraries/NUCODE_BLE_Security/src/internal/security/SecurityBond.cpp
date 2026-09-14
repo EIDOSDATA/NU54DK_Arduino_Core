@@ -175,7 +175,7 @@ namespace nucode::ble::internal::security
                     continue;
                 }
                 const ssize_t length = settings_load_one(key, record, sizeof(record));
-                if (length == -ENOENT)
+                if (length == 0 || length == -ENOENT)
                 {
                     continue;
                 }

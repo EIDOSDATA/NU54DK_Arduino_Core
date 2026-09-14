@@ -265,6 +265,17 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertIn("실제 영속 삭제 완료를 뜻하지 않습니다", header)
         self.assertNotIn("factoryReset", HEADER.read_text(encoding="utf-8"))
 
+    def test_missing_bond_metadata_slot_is_not_rejected(self) -> None:
+        """! @brief settings_load_one의 0-byte 미존재 결과를 손상 record로 계수하지 않습니다. """
+
+        source = security_source()
+        loader = function_body(source, "void loadBondMetadata")
+        self.assertIn("if (length == 0 || length == -ENOENT)", loader)
+        empty = loader.split("if (length == 0 || length == -ENOENT)", 1)[1]
+        empty = empty.split("bool legacy", 1)[0]
+        self.assertIn("continue;", empty)
+        self.assertNotIn("rejected_count", empty)
+
     def test_already_encrypted_restore_is_verified_without_duplicate_event(self) -> None:
         """! @brief connected 시점에 이미 L2인 bond 복원 race를 즉시 검증합니다. """
 
