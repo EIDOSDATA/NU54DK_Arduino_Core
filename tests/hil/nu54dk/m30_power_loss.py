@@ -341,6 +341,10 @@ def manifest_document(
             "unconfirmed": unconfirmed.record,
             "central": central_build.record,
         },
+        "runner": {
+            "name": RUNNER_PATH.name,
+            "sha256": file_sha256(RUNNER_PATH),
+        },
         "preflight": preflight,
         "safety": {
             "physical_power_cuts": 0,
@@ -654,7 +658,6 @@ def reset_bond_storage(board_id: str, timeout_seconds: float) -> None:
     program = f"""
 import sys
 from pyocd.core.helpers import ConnectHelper
-from pyocd.flash.loader import FlashLoader
 
 session = ConnectHelper.session_with_chosen_probe(
     unique_id=sys.argv[1],
@@ -669,15 +672,22 @@ session = ConnectHelper.session_with_chosen_probe(
 if session is None:
     raise RuntimeError("exact probe session을 열 수 없습니다.")
 with session:
-    loader = FlashLoader(
-        session,
-        chip_erase="sector",
-        smart_flash=False,
-        keep_unwritten=False,
-        no_reset=False,
+    target = session.target
+    region = target.memory_map.get_region_for_address(
+        {STORAGE_OFFSET}, target.selected_core.node_name
     )
-    loader.add_data({STORAGE_OFFSET}, bytes([255]) * {STORAGE_SIZE})
-    loader.commit()
+    if region is None or region.flash is None:
+        raise RuntimeError("storage flash algorithm을 찾을 수 없습니다.")
+    flash = region.flash
+    flash.init(flash.Operation.PROGRAM)
+    try:
+        for address in range(
+            {STORAGE_OFFSET}, {STORAGE_OFFSET + STORAGE_SIZE}, {0x1000}
+        ):
+            flash.program_page(address, bytes([255]) * {0x1000})
+    finally:
+        flash.cleanup()
+    target.reset()
     observed = session.target.read_memory_block8({STORAGE_OFFSET}, {STORAGE_SIZE})
     if len(observed) != {STORAGE_SIZE} or any(value != 255 for value in observed):
         raise RuntimeError("storage 0xff readback 검증에 실패했습니다.")
@@ -904,7 +914,13 @@ def validate_manifest(
 ) -> None:
     """! @brief 실행 시점 manifest의 revision·board·image identity를 재검증합니다. """
 
-    for key in ("schema_version", "test_id", "core_revision", "board_revision"):
+    for key in (
+        "schema_version",
+        "test_id",
+        "core_revision",
+        "board_revision",
+        "runner",
+    ):
         if manifest.get(key) != expected.get(key):
             raise M30PowerFailure(f"manifest {key} identity가 다릅니다.")
     if manifest.get("status") != "blocked_human_power_cut":
@@ -1081,9 +1097,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
         RUNNER_PATH,
         (DFU_RUNNER_PATH, BOOT_RUNNER_PATH),
     )
-    core_revision = git_revision(REPOSITORY)
-    if args.expected_core_revision and args.expected_core_revision != core_revision:
-        raise M30PowerFailure("현재 Core revision이 --expected-core-revision과 다릅니다.")
+    repository_revision = git_revision(REPOSITORY)
+    core_revision = args.expected_core_revision or repository_revision
+    if re.fullmatch(r"[0-9a-f]{40}", core_revision) is None:
+        raise M30PowerFailure("--expected-core-revision은 full lowercase SHA-1이어야 합니다.")
     board_revision = git_revision(BOARD_ROOT)
     validate_board_revision(board_revision)
     trust_key = validate_private_key(args.trust_signing_key, "trust signing key")

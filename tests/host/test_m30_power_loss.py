@@ -105,10 +105,11 @@ class M30PowerLossTests(unittest.TestCase):
         command = run.call_args.args[0]
         program = command[3]
         self.assertEqual(command[-1], "secret-board")
-        self.assertIn(f"loader.add_data({RUNNER.STORAGE_OFFSET}", program)
+        self.assertIn("flash.Operation.PROGRAM", program)
+        self.assertIn(f"range(\n            {RUNNER.STORAGE_OFFSET}", program)
+        self.assertIn("flash.program_page(address", program)
         self.assertIn(f"read_memory_block8({RUNNER.STORAGE_OFFSET}", program)
-        self.assertIn('chip_erase="sector"', program)
-        for forbidden in ("--mass", 'chip_erase="chip"', "--recover"):
+        for forbidden in ("--mass", "Operation.ERASE", "--recover"):
             self.assertNotIn(forbidden, program)
 
     def test_physical_cycle_requires_both_interfaces_to_disappear(self) -> None:
