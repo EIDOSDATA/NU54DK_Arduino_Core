@@ -99,11 +99,11 @@ namespace nucode::ble::internal::security
         }
 
         /** @brief callback 실패를 fail-closed 취소와 비밀 없는 event로 기록합니다. */
-        void rejectOob(struct bt_conn *connection, int error) noexcept
+        void rejectOob(struct bt_conn *connection, int error, std::uint8_t reason) noexcept
         {
             static_cast<void>(bt_conn_auth_cancel(connection));
             recordSecurityError(SecurityError::rejected, error);
-            queueEvent(makeEvent(SecurityEvent::oob_data_rejected, connection));
+            queueEvent(makeEvent(SecurityEvent::oob_data_rejected, connection, 0U, reason));
         }
     } // namespace
 
@@ -134,7 +134,7 @@ namespace nucode::ble::internal::security
         {
             if (connection != nullptr)
             {
-                rejectOob(connection, -EINVAL);
+                rejectOob(connection, -EINVAL, 1U);
             }
             return;
         }
@@ -146,7 +146,7 @@ namespace nucode::ble::internal::security
             connection_information.le.local == nullptr ||
             connection_information.le.remote == nullptr)
         {
-            rejectOob(connection, -ENOTCONN);
+            rejectOob(connection, -ENOTCONN, 2U);
             return;
         }
 
@@ -163,15 +163,25 @@ namespace nucode::ble::internal::security
         const bool remote_required =
             information->lesc.oob_config !=
             decltype(bt_conn_oob_info{}.lesc)::BT_CONN_OOB_LOCAL_ONLY;
-        if ((local_required && (!snapshot.local_valid ||
-                                !sameAddress(snapshot.local.pairing_address, local_address))) ||
-            (remote_required && (!snapshot.remote_valid ||
-                                 !sameAddress(snapshot.remote.pairing_address, remote_address))) ||
-            (snapshot.local_valid && snapshot.remote_valid &&
-             ::memcmp(snapshot.local.session_nonce, snapshot.remote.session_nonce,
-                      sizeof(snapshot.local.session_nonce)) != 0))
+        if (local_required &&
+            (!snapshot.local_valid ||
+             !sameAddress(snapshot.local.pairing_address, local_address)))
         {
-            rejectOob(connection, -EACCES);
+            rejectOob(connection, -EACCES, 3U);
+            return;
+        }
+        if (remote_required &&
+            (!snapshot.remote_valid ||
+             !sameAddress(snapshot.remote.pairing_address, remote_address)))
+        {
+            rejectOob(connection, -EACCES, 4U);
+            return;
+        }
+        if (snapshot.local_valid && snapshot.remote_valid &&
+            ::memcmp(snapshot.local.session_nonce, snapshot.remote.session_nonce,
+                     sizeof(snapshot.local.session_nonce)) != 0)
+        {
+            rejectOob(connection, -EACCES, 5U);
             return;
         }
 
@@ -191,7 +201,7 @@ namespace nucode::ble::internal::security
                                                   remote_required ? &remote : nullptr);
         if (result != 0)
         {
-            rejectOob(connection, result);
+            rejectOob(connection, result, 6U);
             return;
         }
         markPairingStarted(connection);

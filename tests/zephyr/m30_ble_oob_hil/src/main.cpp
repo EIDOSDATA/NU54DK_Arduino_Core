@@ -48,6 +48,7 @@ namespace
     bool secure_seen = false;
     bool pass_reported = false;
     const char *failure_reason = nullptr;
+    std::uint8_t authentication_reason = 0U;
     std::int64_t security_request_due_ms = 0;
 
     /** @brief compile-time image 역할 이름을 반환합니다. */
@@ -86,6 +87,8 @@ namespace
             Serial.print(static_cast<unsigned int>(BLESecurity.lastError()));
             Serial.print("|driver_error=");
             Serial.print(BLESecurity.lastDriverError());
+            Serial.print("|authentication_reason=");
+            Serial.print(authentication_reason);
             Serial.print("|ble_error=");
             Serial.print(static_cast<unsigned int>(BLEDevice.lastError()));
             Serial.print("|ble_driver_error=");
@@ -185,6 +188,7 @@ namespace
         secure_seen = false;
         pass_reported = false;
         failure_reason = nullptr;
+        authentication_reason = 0U;
         security_request_due_ms = 0;
     }
 
@@ -339,11 +343,14 @@ namespace
                 fail("security-level");
             }
             break;
+        case nucode::ble::SecurityEvent::oob_data_rejected:
+            authentication_reason = event.reason;
+            fail("oob-rejected");
+            break;
         case nucode::ble::SecurityEvent::pairing_requested:
         case nucode::ble::SecurityEvent::passkey_display:
         case nucode::ble::SecurityEvent::passkey_input_requested:
         case nucode::ble::SecurityEvent::passkey_confirmation_requested:
-        case nucode::ble::SecurityEvent::oob_data_rejected:
         case nucode::ble::SecurityEvent::pairing_failed:
         case nucode::ble::SecurityEvent::timeout:
         case nucode::ble::SecurityEvent::error:
