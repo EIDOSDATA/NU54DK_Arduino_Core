@@ -90,6 +90,10 @@ def expected_lines(role: str, nonce: str, revision: str) -> list[str]:
         lines.append(f"{PROTOCOL}|SCAN|role=central|status=pass{suffix}")
         connections, gatt_tx, gatt_rx, coc_tx, coc_rx = 1, 1000, 0, 1000, 1000
     lines.extend(
+        f"{PROTOCOL}|PROGRESS|role={role}|operations_per_link={operations}{suffix}"
+        for operations in range(100, 1001, 100)
+    )
+    lines.extend(
         (
             f"{PROTOCOL}|LINK|role={role}|connections={connections}|gatt=ready|coc=ready{suffix}",
             f"{PROTOCOL}|RESULT|role={role}|connections={connections}|gatt_tx={gatt_tx}"

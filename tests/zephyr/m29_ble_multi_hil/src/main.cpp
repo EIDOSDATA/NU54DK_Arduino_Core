@@ -74,7 +74,7 @@ namespace
     bool coc_waiting_for_echo = false;
     bool server_echo_pending = false;
     std::int64_t session_deadline = 0;
-    std::uint32_t client_iteration = 0U;
+    std::uint32_t progress_reported = 0U;
     std::uint32_t client_gatt_completed = 0U;
     std::uint32_t client_coc_sent = 0U;
     std::uint32_t client_coc_received = 0U;
@@ -347,30 +347,68 @@ namespace
 #endif
     }
 
-    /** @brief 한 client link의 GATT write와 CoC echo를 같은 iteration에 함께 시작합니다. */
+    /** @brief GATT와 CoC에 각각 최대 한 작업만 유지해 두 transport를 병렬 진행합니다. */
     void issueClientTraffic()
     {
-        if (!hasClient() || !traffic_started || gatt_inflight || coc_waiting_for_echo ||
-            client_iteration >= required_operations)
+        if (!hasClient() || !traffic_started)
         {
             return;
         }
-        MultiPayload::build(gatt_payload, peerMarker(), MultiPayload::gatt_kind,
-                            client_iteration, nonce_binary);
-        MultiPayload::build(coc_payload, peerMarker(), MultiPayload::coc_kind,
-                            client_iteration, nonce_binary);
-        if (!BLEClient.write(client_connection, gatt_payload, sizeof(gatt_payload)))
+        if (!gatt_inflight && client_gatt_completed < required_operations)
         {
-            fail("gatt_write_start", BLEDevice.lastDriverError());
-            return;
+            MultiPayload::build(gatt_payload, peerMarker(), MultiPayload::gatt_kind,
+                                client_gatt_completed, nonce_binary);
+            if (!BLEClient.write(client_connection, gatt_payload, sizeof(gatt_payload)))
+            {
+                fail("gatt_write_start", BLEDevice.lastDriverError());
+                return;
+            }
+            gatt_inflight = true;
         }
-        gatt_inflight = true;
-        if (!BLEL2cap.send(client_channel, coc_payload, sizeof(coc_payload)))
+        if (!coc_waiting_for_echo && client_coc_received < required_operations)
         {
-            fail("coc_send_start", BLEDevice.lastDriverError());
-            return;
+            MultiPayload::build(coc_payload, peerMarker(), MultiPayload::coc_kind,
+                                client_coc_received, nonce_binary);
+            if (!BLEL2cap.send(client_channel, coc_payload, sizeof(coc_payload)))
+            {
+                fail("coc_send_start", BLEDevice.lastDriverError());
+                return;
+            }
+            coc_waiting_for_echo = true;
         }
-        coc_waiting_for_echo = true;
+    }
+
+    /** @brief 모든 local link가 100회씩 전진한 지점을 고정 progress record로 출력합니다. */
+    void printProgress()
+    {
+        std::uint32_t completed = required_operations;
+        if (hasClient())
+        {
+            completed = client_gatt_completed < client_coc_received
+                            ? client_gatt_completed
+                            : client_coc_received;
+        }
+        if (hasServer())
+        {
+            const std::uint32_t server_completed =
+                server_gatt_received < server_coc_sent ? server_gatt_received
+                                                       : server_coc_sent;
+            if (server_completed < completed)
+            {
+                completed = server_completed;
+            }
+        }
+        while (progress_reported + 100U <= completed)
+        {
+            progress_reported += 100U;
+            Serial.print(protocol);
+            Serial.print("|PROGRESS|role=");
+            Serial.print(roleName());
+            Serial.print("|operations_per_link=");
+            Serial.print(progress_reported);
+            printSuffix();
+            Serial.println();
+        }
     }
 
     /** @brief role별 모든 정량 조건과 production CoC 통계를 확인해 RESULT·END를 출력합니다. */
@@ -383,7 +421,7 @@ namespace
         const bool client_complete = !hasClient() ||
                                      (client_gatt_completed == required_operations &&
                                       client_coc_received == required_operations &&
-                                      client_coc_sent == required_operations);
+            client_coc_sent == required_operations);
         const bool server_complete = !hasServer() ||
                                      (server_gatt_received == required_operations &&
                                       server_coc_received == required_operations &&
@@ -502,18 +540,15 @@ namespace
             return;
         }
         if (information.event != nucode::ble::BLEGattClientEvent::write_complete ||
-            !gatt_inflight || client_gatt_completed != client_iteration)
+            !gatt_inflight)
         {
             fail("gatt_write_event");
             return;
         }
         gatt_inflight = false;
         ++client_gatt_completed;
-        if (!coc_waiting_for_echo)
-        {
-            ++client_iteration;
-            issueClientTraffic();
-        }
+        issueClientTraffic();
+        printProgress();
         finishIfComplete();
     }
 
@@ -546,6 +581,7 @@ namespace
             return;
         }
         ++server_gatt_received;
+        printProgress();
         finishIfComplete();
     }
 
@@ -683,6 +719,7 @@ namespace
             {
                 server_echo_pending = false;
                 ++server_coc_sent;
+                printProgress();
                 finishIfComplete();
             }
             return;
@@ -695,7 +732,8 @@ namespace
         {
             if (!coc_waiting_for_echo ||
                 !MultiPayload::valid(information.data, information.length, peerMarker(),
-                                     MultiPayload::coc_kind, client_iteration, nonce_binary))
+                                     MultiPayload::coc_kind, client_coc_received,
+                                     nonce_binary))
             {
                 ++payload_errors;
                 fail("client_coc_payload");
@@ -703,11 +741,8 @@ namespace
             }
             coc_waiting_for_echo = false;
             ++client_coc_received;
-            if (!gatt_inflight)
-            {
-                ++client_iteration;
-                issueClientTraffic();
-            }
+            issueClientTraffic();
+            printProgress();
             finishIfComplete();
             return;
         }
@@ -848,6 +883,7 @@ void loop()
         }
     }
     issueClientTraffic();
+    printProgress();
     finishIfComplete();
     if (!session_finished && k_uptime_get() >= session_deadline)
     {
