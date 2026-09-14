@@ -436,6 +436,7 @@ def execute_hil(
                 future.result()
         time.sleep(1.0)
 
+        # metadata migration은 첫 연결에서 identity bond snapshot을 캡처할 때 실행됩니다.
         for role in endpoints:
             send_line(ports[role], "M30BOND|1|READY?")
         for role in endpoints:
@@ -445,7 +446,7 @@ def execute_hil(
                 captures[role],
                 (
                     f"M30BOND|1|READY|role={role}|stage=resume|bonds=1|"
-                    f"migrations=1|rejected=0|core={core_revision}"
+                    f"migrations=0|rejected=0|core={core_revision}"
                 ).encode("ascii"),
                 deadline,
                 allow_boot_noise=True,

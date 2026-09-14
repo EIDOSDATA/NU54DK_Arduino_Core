@@ -57,6 +57,19 @@ class M30BleBondHilTests(unittest.TestCase):
         self.assertIn('(\"m30_ble_bond_hil\", \"nucode.m30.bond.p\")', matrix)
         self.assertIn('(\"m30_ble_bond_hil\", \"nucode.m30.bond.c\")', matrix)
 
+    def test_runner_checks_migration_after_first_restored_connection(self) -> None:
+        """! @brief resume READY 전에는 0, 최종 restored link 뒤에는 1을 요구합니다. """
+
+        runner = RUNNER.read_text(encoding="utf-8")
+        self.assertIn(
+            'f"migrations=0|rejected=0|core={core_revision}"',
+            runner,
+        )
+        self.assertIn(
+            'rb"\\|migration=1\\|stale_key_accepts=0\\|new_pairings=0"',
+            runner,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
