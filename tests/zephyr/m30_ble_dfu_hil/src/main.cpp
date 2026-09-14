@@ -488,7 +488,8 @@ namespace
             k_uptime_get() >= security_due_ms)
         {
             security_due_ms = 0;
-            if (!BLESecurity.requestSecurity(connection_handle))
+            if (!BLESecurity.requestSecurity(connection_handle) &&
+                BLESecurity.lastError() != nucode::ble::SecurityError::busy)
             {
                 fail("security-request");
                 return;

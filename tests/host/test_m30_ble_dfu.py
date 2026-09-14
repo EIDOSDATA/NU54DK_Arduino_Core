@@ -81,6 +81,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
             self.assertIn(token, configuration)
         for token in (
             "BLEConnection.requestMtu(connection_handle)",
+            "BLESecurity.lastError() != nucode::ble::SecurityError::busy",
             'Serial.print("|LINK|role=central|level=4|key_size=16|mtu=247|smp=1")',
             'Serial.print("|BOOT|role=peripheral|active_area_id=")',
             '::strcmp(line, "M30DFU|1|READY?")',
