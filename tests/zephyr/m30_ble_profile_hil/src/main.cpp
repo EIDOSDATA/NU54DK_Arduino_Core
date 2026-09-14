@@ -764,7 +764,7 @@ namespace
             started = true;
             deadline_ms = k_uptime_get() + protocol_timeout_ms;
 #if defined(NUCODE_M30_PROFILE_CENTRAL)
-            if (!BLEScan.clearFilters() || !BLEScan.startExtended(false, false, true))
+            if (!BLEScan.clearFilters() || !BLEScan.start(false))
             {
                 fail("scan-start");
                 return;
