@@ -9,7 +9,7 @@
 | 처음 설치·업로드 | [프로젝트 README](../README.md), [v0.4.1 사용자 안내](<05_릴리스/v0.4.1/README.md>) |
 | v0.4.1 유지보수 상태 | [v0.4.1 TODO](TODO_v0.4.1.md), [129번 기록](<04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>) |
 | v0.4.0 완료 상태 | [v0.4.0 완료 TODO](TODO_v0.4.0.md), [정식 공개 기록](<04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>) |
-| M28·M29 완료와 M30 진행 | [M29 완료 기록](<04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>), [M30 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>), [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json), [v0.5.0 계획](TODO_v0.5.0.md) — M30-W01·HOST-W01~W03 진행 |
+| M28·M29 완료와 M30 진행 | [M29 완료 기록](<04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>), [M30 W01 완료 기록](<04_검증 기록/152_M30_W01_capability_실기_완료.md>), [M30 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>), [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json), [v0.5.0 계획](TODO_v0.5.0.md) — M30-W02 진행·HOST-W01~W03 완료 |
 | 다른 PC에서 개발 재개 | [인계 문서](HANDOFF.md), [Windows 개발환경](<02_빌드 설계/09_Windows_개발환경_설정.md>) |
 | v0.5.0 다중 Host 지원 계획 | [Windows·Ubuntu·macOS 착수 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) — M30 시작, M33 공개 전 완료 |
 | API·GPIO·설계 계약 | 아래 설계 문서 목차 |

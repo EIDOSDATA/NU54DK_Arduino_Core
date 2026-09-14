@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29 완료, 다음 M30**입니다. M29는 작업 묶음 **8/8**,
-test ID **10/10 PASS**입니다.
+**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W02 진행**입니다. M29는 작업 묶음 **8/8**,
+test ID **10/10 PASS**이고 M30은 작업 묶음 **1/8**, test ID **1/10 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
@@ -12,6 +12,7 @@ test ID **10/10 PASS**입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [152 — M30-W01 capability 실기 완료](152_M30_W01_capability_실기_완료.md) | Host parser·target build·1보드 보안/OOB/profile/DFU capability 7/7 PASS |
 | [151 — M30-W01 계약과 HOST-W01~W03 기반](151_M30_W01_계약과_HOST_W01_W03_기반.md) | 유선 OOB/NFC 비검증·secure DFU 계약, Host inventory·resolver·launcher와 Windows 회귀 |
 | [150 — v0.5.0 다중 Host 지원 계획 정비](150_v0.5.0_다중_Host_지원_계획_정비.md) | Windows·Ubuntu·macOS 지원 범위, M30 시작·M33 완료 계약 |
 | [149 — M29-W07 3보드·회귀·상호운용과 W08 완료](149_M29_W07_3보드_회귀_상호운용과_W08_완료.md) | MULTI/REG, Windows/Intel GATT, 예제·리팩터링·M30 인계 |
@@ -46,7 +47,7 @@ test ID **10/10 PASS**입니다.
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29 완료 — 94~149</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29 완료와 M30 진행 — 94~152</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -105,6 +106,8 @@ test ID **10/10 PASS**입니다.
 - [148 — 개발문서 전수 검토와 README 개선](<148_개발문서_전수검토와_README_개선.md>) — 지원 배포·개발 상태 구분, 문서 가독성과 탐색 경로 정비
 - [149 — M29-W07 3보드·회귀·Windows 상호운용과 W08 완료](<149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) — **M29 8/8·test ID 10/10 PASS, M30 인계**
 - [150 — v0.5.0 다중 Host 지원 계획 정비](<150_v0.5.0_다중_Host_지원_계획_정비.md>) — **M30 시작·M33 완료의 세 Host 구현·검증 계약**
+- [151 — M30-W01 계약과 HOST-W01~W03 기반](<151_M30_W01_계약과_HOST_W01_W03_기반.md>) — **유선 OOB·NFC 비검증·secure DFU·Host 공통 기반 계약**
+- [152 — M30-W01 capability 실기 완료](<152_M30_W01_capability_실기_완료.md>) — **parser 13/13·target 1/1·실제 capability 7/7 PASS, M30 1/8**
 
 </details>
 

@@ -100,8 +100,8 @@
     "dfu_slots": 2
   },
   "work_packages": [
-    {"id": "M30-W01", "status": "in_progress", "title": "capability_policy_resource_protocol"},
-    {"id": "M30-W02", "status": "not_started", "title": "per_link_security_and_key_lifecycle"},
+    {"id": "M30-W01", "status": "completed", "title": "capability_policy_resource_protocol", "host_parser_tests": 13, "target_build": "passed", "physical_capability": "passed", "tested_core_revision": "6254398c1ea4e7320b1905014dce1c2a405a53fc", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w01-6254398c-cap/m30-capability-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w01-6254398c-cap/m30-capability-evidence.transcript.log"]},
+    {"id": "M30-W02", "status": "in_progress", "title": "per_link_security_and_key_lifecycle"},
     {"id": "M30-W03", "status": "not_started", "title": "wired_oob_bond_privacy_nfc_adapter"},
     {"id": "M30-W04", "status": "not_started", "title": "adopted_profile_catalog"},
     {"id": "M30-W05", "status": "not_started", "title": "mcuboot_layout_signing"},
@@ -120,7 +120,7 @@
     {"id": "HOST-W08", "status": "not_started", "title": "release_regression_support_matrix"}
   ],
   "execution_plan": [
-    {"id": "M30-CAP-01", "boards": 1, "timeout_seconds": 120, "status": "not_run", "criteria": {"capability_groups": 7, "revision_mismatches": 0}},
+    {"id": "M30-CAP-01", "boards": 1, "timeout_seconds": 120, "status": "passed", "criteria": {"capability_groups": 7, "revision_mismatches": 0}, "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w01-6254398c-cap/m30-capability-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w01-6254398c-cap/m30-capability-evidence.transcript.log"]},
     {"id": "M30-PAIR-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"io_capabilities": 5, "rounds_per_capability": 10, "unexpected_auth_failures": 0}},
     {"id": "M30-OOB-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"wired_pairings": 20, "mitm_links": 20, "mismatched_payload_accepts": 0, "nfc_rf_runs": 0}},
     {"id": "M30-BOND-01", "boards": 2, "timeout_seconds": 900, "status": "not_run", "criteria": {"bonded_reconnects": 20, "privacy_rotations": 3, "stale_key_accepts": 0}},
@@ -140,9 +140,9 @@
     "manual_power_cut_required": true
   },
   "completion": {
-    "completed_work_packages": 0,
+    "completed_work_packages": 1,
     "total_work_packages": 8,
-    "passed_test_ids": 0,
+    "passed_test_ids": 1,
     "total_test_ids": 10,
     "current_stop_boundary": "before_m30_power_01_physical_cut",
     "power_hil": "not_run"

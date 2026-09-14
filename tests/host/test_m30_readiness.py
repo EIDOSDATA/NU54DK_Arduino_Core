@@ -97,6 +97,11 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertEqual(len(packages), 8)
         for index, package in enumerate(packages, start=1):
             self.assertEqual(package["id"], f"M30-W{index:02d}")
+        self.assertEqual(packages[0]["status"], "completed")
+        self.assertEqual(packages[0]["host_parser_tests"], 13)
+        self.assertEqual(packages[0]["target_build"], "passed")
+        self.assertEqual(packages[0]["physical_capability"], "passed")
+        self.assertEqual(packages[1]["status"], "in_progress")
         self.assertEqual(packages[-1]["status"], "blocked_by_power_hil")
         host_packages = self.readiness["host_work_packages"]
         self.assertEqual(len(host_packages), 8)
@@ -121,6 +126,10 @@ class M30ReadinessTests(unittest.TestCase):
                 self.assertIsInstance(value, int, f"{entry['id']}:{name}")
                 self.assertGreaterEqual(value, 0, f"{entry['id']}:{name}")
         power = next(entry for entry in plan if entry["id"] == "M30-POWER-01")
+        capability = next(entry for entry in plan if entry["id"] == "M30-CAP-01")
+        self.assertEqual(capability["status"], "passed")
+        for relative in capability["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
         self.assertEqual(power["status"], "blocked_human_power_cut")
         self.assertEqual(power["criteria"]["injection_points"], 4)
         self.assertEqual(power["criteria"]["cuts_per_point"], 3)
@@ -128,6 +137,8 @@ class M30ReadinessTests(unittest.TestCase):
             self.readiness["completion"]["current_stop_boundary"],
             "before_m30_power_01_physical_cut",
         )
+        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 1)
+        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 1)
 
     def test_profile_catalog_and_equipment_scope_are_explicit(self) -> None:
         """! @brief 기존/신규 profile과 세 보드·전원 장비 경계를 검사합니다. """
