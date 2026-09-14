@@ -107,6 +107,7 @@ namespace nucode::ble
     struct SecurityEventRecord
     {
         SecurityEvent event = SecurityEvent::error;
+        BLEConnectionHandle connection = {};
         SecurityLevel level = SecurityLevel::none;
         PeerAddress peer = {};
         std::uint32_t passkey = 0U;
@@ -145,17 +146,33 @@ namespace nucode::ble
         /** @brief 현재 연결에 설정된 최소 security level을 요청합니다. */
         [[nodiscard]] bool requestSecurity() noexcept;
 
+        /** @brief 지정 generation의 연결에 설정된 최소 security level을 요청합니다. */
+        [[nodiscard]] bool requestSecurity(BLEConnectionHandle connection) noexcept;
+
         /** @brief Just Works pairing 요청을 승인하거나 거부합니다. */
         [[nodiscard]] bool acceptPairing(bool accept) noexcept;
+
+        /** @brief 지정 연결의 Just Works pairing 요청을 승인하거나 거부합니다. */
+        [[nodiscard]] bool acceptPairing(BLEConnectionHandle connection, bool accept) noexcept;
 
         /** @brief passkey input 요청에 000000~999999 값을 제공합니다. */
         [[nodiscard]] bool enterPasskey(std::uint32_t passkey) noexcept;
 
+        /** @brief 지정 연결의 passkey input 요청에 000000~999999 값을 제공합니다. */
+        [[nodiscard]] bool enterPasskey(BLEConnectionHandle connection,
+                                        std::uint32_t passkey) noexcept;
+
         /** @brief numeric comparison 결과를 승인하거나 거부합니다. */
         [[nodiscard]] bool confirmPasskey(bool accept) noexcept;
 
+        /** @brief 지정 연결의 numeric comparison 결과를 승인하거나 거부합니다. */
+        [[nodiscard]] bool confirmPasskey(BLEConnectionHandle connection, bool accept) noexcept;
+
         /** @brief 진행 중인 사용자 pairing 응답을 취소합니다. */
         [[nodiscard]] bool cancelPairing() noexcept;
+
+        /** @brief 지정 연결에서 진행 중인 사용자 pairing 응답을 취소합니다. */
+        [[nodiscard]] bool cancelPairing(BLEConnectionHandle connection) noexcept;
 
         /** @brief 현재 identity에 저장된 bond 수를 반환합니다. */
         [[nodiscard]] std::size_t bondCount() const noexcept;
@@ -181,14 +198,26 @@ namespace nucode::ble
         /** @brief 현재 연결이 pairing을 완료했는지 반환합니다. */
         [[nodiscard]] bool paired() const noexcept;
 
+        /** @brief 지정 generation의 연결이 pairing을 완료했는지 반환합니다. */
+        [[nodiscard]] bool paired(BLEConnectionHandle connection) const noexcept;
+
         /** @brief 재부팅 뒤 저장 key로 L2 이상 복원까지 검증되었는지 반환합니다. */
         [[nodiscard]] bool bonded() const noexcept;
+
+        /** @brief 지정 연결이 저장 key로 L2 이상 복원됐는지 반환합니다. */
+        [[nodiscard]] bool bonded(BLEConnectionHandle connection) const noexcept;
 
         /** @brief 현재 연결에서 관찰한 bond 수명주기 상태를 반환합니다. */
         [[nodiscard]] BondState bondState() const noexcept;
 
+        /** @brief 지정 연결에서 관찰한 bond 수명주기 상태를 반환합니다. */
+        [[nodiscard]] BondState bondState(BLEConnectionHandle connection) const noexcept;
+
         /** @brief 현재 연결에서 관찰한 실제 security level을 반환합니다. */
         [[nodiscard]] SecurityLevel currentLevel() const noexcept;
+
+        /** @brief 지정 연결에서 관찰한 실제 security level을 반환합니다. */
+        [[nodiscard]] SecurityLevel currentLevel(BLEConnectionHandle connection) const noexcept;
 
         /** @brief 사용자 event callback을 등록합니다. */
         void onEvent(SecurityEventCallback callback, void *context = nullptr) noexcept;

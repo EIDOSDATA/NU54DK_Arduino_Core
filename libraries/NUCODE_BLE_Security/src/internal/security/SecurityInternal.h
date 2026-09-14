@@ -21,6 +21,8 @@
 
 namespace nucode::ble::internal::security
 {
+    inline constexpr std::size_t maximum_security_links = 2U;
+
     using nucode::ble::BondState;
     using nucode::ble::DeviceInformation;
     using nucode::ble::KeyboardReport;
@@ -45,6 +47,7 @@ namespace nucode::ble::internal::security
     /** @brief 단일 connection의 사용자 응답 대기 상태입니다. */
     struct PendingState
     {
+        BLEConnectionHandle handle = {};
         struct bt_conn *connection = nullptr;
         PendingResponse response = PendingResponse::none;
         std::int64_t deadline_ms = 0;
@@ -59,6 +62,19 @@ namespace nucode::ble::internal::security
         bool paired_this_connection = false;
     };
 
+    /** @brief 한 generation 연결이 소유하는 보안·bond snapshot입니다. */
+    struct SecurityLinkState
+    {
+        BLEConnectionHandle handle = {};
+        struct bt_conn *connection = nullptr;
+        atomic_t paired_value = ATOMIC_INIT(0);
+        atomic_t current_level_value =
+            ATOMIC_INIT(static_cast<atomic_val_t>(SecurityLevel::none));
+        atomic_t published_level_value = ATOMIC_INIT(0);
+        atomic_t pending_security_event = ATOMIC_INIT(0);
+        BondLifecycleState bond_lifecycle = {};
+    };
+
     /** @brief 한 HIDS connection의 protocol mode와 등록 상태입니다. */
     struct HidConnectionState
     {
@@ -71,7 +87,7 @@ namespace nucode::ble::internal::security
     struct PairingState
     {
         struct k_spinlock pending_lock;
-        PendingState pending_state = {};
+        PendingState pending_states[maximum_security_links] = {};
         struct bt_conn_auth_cb authentication_callbacks = {};
         struct bt_conn_auth_info_cb authentication_info_callbacks = {};
     };
@@ -109,6 +125,7 @@ namespace nucode::ble::internal::security
         atomic_t security_driver_error_value = ATOMIC_INIT(0);
         struct k_spinlock connection_lock;
         struct bt_conn *active_connection = nullptr;
+        SecurityLinkState links[maximum_security_links] = {};
         SecurityConfig security_config = {};
         SecurityEventCallback security_event_callback = nullptr;
         void *security_event_context = nullptr;
@@ -149,10 +166,15 @@ namespace nucode::ble::internal::security
     void recordSecurityError(SecurityError error, int driver_error = 0) noexcept;
     void recordHidError(SecurityError error, int driver_error = 0) noexcept;
     BondState currentBondState() noexcept;
+    BondState currentBondState(struct bt_conn *connection) noexcept;
     void setBondLifecycle(const bt_addr_le_t *peer, BondState state,
                           bool paired_this_connection) noexcept;
+    void setBondLifecycle(struct bt_conn *connection, const bt_addr_le_t *peer, BondState state,
+                          bool paired_this_connection) noexcept;
     bool bondLifecycleMatches(const bt_addr_le_t *peer) noexcept;
+    bool bondLifecycleMatches(struct bt_conn *connection, const bt_addr_le_t *peer) noexcept;
     BondLifecycleState copyBondLifecycle() noexcept;
+    BondLifecycleState copyBondLifecycle(struct bt_conn *connection) noexcept;
     void restoreBondLifecycle(const BondLifecycleState &snapshot) noexcept;
     bool isStartupBond(const bt_addr_le_t *peer) noexcept;
     void removeStartupBond(const bt_addr_le_t *peer) noexcept;
@@ -166,12 +188,22 @@ namespace nucode::ble::internal::security
     bool synchronizeSatisfiedSecurity(struct bt_conn *connection,
                                       bt_security_t required_level) noexcept;
     struct bt_conn *referenceActiveConnection() noexcept;
+    struct bt_conn *referenceConnection(BLEConnectionHandle handle) noexcept;
     bool isActiveConnection(struct bt_conn *connection) noexcept;
+    bool isActiveConnection(BLEConnectionHandle handle, struct bt_conn *connection) noexcept;
+    BLEConnectionHandle securityHandle(struct bt_conn *connection) noexcept;
+    bool copyLinkState(BLEConnectionHandle handle, bool &paired, SecurityLevel &level,
+                       BondState &bond_state) noexcept;
+    void setLinkPaired(struct bt_conn *connection, bool paired) noexcept;
+    void setLinkLevel(struct bt_conn *connection, bt_security_t level) noexcept;
     void captureStartupBonds() noexcept;
     void clearPending(struct bt_conn *matching_connection = nullptr) noexcept;
+    void clearPending(BLEConnectionHandle handle) noexcept;
     bool setPending(struct bt_conn *connection, PendingResponse response, SecurityEvent event,
                     std::uint32_t passkey = 0U) noexcept;
     struct bt_conn *takePending(PendingResponse expected) noexcept;
+    struct bt_conn *takePending(BLEConnectionHandle handle, PendingResponse expected) noexcept;
+    struct bt_conn *takePending(BLEConnectionHandle handle) noexcept;
     void processPendingTimeout() noexcept;
     void markPairingStarted(struct bt_conn *connection) noexcept;
     enum bt_security_err pairingAccept(struct bt_conn *connection,

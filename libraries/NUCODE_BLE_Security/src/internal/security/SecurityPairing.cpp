@@ -16,14 +16,40 @@ namespace nucode::ble::internal::security
     /** @brief pending SMP 사용자 응답 connection을 안전하게 해제합니다. */
     void clearPending(struct bt_conn *matching_connection) noexcept
     {
+        struct bt_conn *released[maximum_security_links] = {};
+        std::size_t released_count = 0U;
+        k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection != nullptr &&
+                (matching_connection == nullptr || matching_connection == pending.connection))
+            {
+                released[released_count++] = pending.connection;
+                pending = {};
+            }
+        }
+        k_spin_unlock(&pairingState().pending_lock, key);
+        for (std::size_t index = 0U; index < released_count; ++index)
+        {
+            bt_conn_unref(released[index]);
+        }
+    }
+
+    /** @brief 지정 generation의 pending SMP reference만 해제합니다. */
+    void clearPending(BLEConnectionHandle handle) noexcept
+    {
         struct bt_conn *released = nullptr;
         k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
-        if (pairingState().pending_state.connection != nullptr &&
-            (matching_connection == nullptr ||
-             matching_connection == pairingState().pending_state.connection))
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
         {
-            released = pairingState().pending_state.connection;
-            pairingState().pending_state = {};
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection != nullptr && pending.handle == handle)
+            {
+                released = pending.connection;
+                pending = {};
+                break;
+            }
         }
         k_spin_unlock(&pairingState().pending_lock, key);
         if (released != nullptr)
@@ -40,21 +66,40 @@ namespace nucode::ble::internal::security
         {
             return false;
         }
-        if (!isActiveConnection(connection))
+        const BLEConnectionHandle handle = securityHandle(connection);
+        if (!handle.valid() || !isActiveConnection(handle, connection))
         {
             static_cast<void>(bt_conn_auth_cancel(connection));
             return false;
         }
         bool accepted = false;
         k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
-        if (pairingState().pending_state.connection == nullptr)
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
         {
-            pairingState().pending_state.connection = bt_conn_ref(connection);
-            pairingState().pending_state.response = response;
-            pairingState().pending_state.deadline_ms =
-                k_uptime_get() +
-                static_cast<std::int64_t>(securityState().security_config.response_timeout_ms);
-            accepted = true;
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection == connection || pending.handle == handle)
+            {
+                k_spin_unlock(&pairingState().pending_lock, key);
+                recordSecurityError(SecurityError::busy, -EBUSY);
+                queueEvent(makeEvent(SecurityEvent::error, connection));
+                static_cast<void>(bt_conn_auth_cancel(connection));
+                return false;
+            }
+        }
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection == nullptr)
+            {
+                pending.handle = handle;
+                pending.connection = bt_conn_ref(connection);
+                pending.response = response;
+                pending.deadline_ms =
+                    k_uptime_get() + static_cast<std::int64_t>(
+                                         securityState().security_config.response_timeout_ms);
+                accepted = true;
+                break;
+            }
         }
         k_spin_unlock(&pairingState().pending_lock, key);
         if (!accepted)
@@ -73,11 +118,54 @@ namespace nucode::ble::internal::security
     {
         struct bt_conn *connection = nullptr;
         k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
-        if (pairingState().pending_state.connection != nullptr &&
-            pairingState().pending_state.response == expected)
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
         {
-            connection = pairingState().pending_state.connection;
-            pairingState().pending_state = {};
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection != nullptr && pending.response == expected)
+            {
+                connection = pending.connection;
+                pending = {};
+                break;
+            }
+        }
+        k_spin_unlock(&pairingState().pending_lock, key);
+        return connection;
+    }
+
+    /** @brief 지정 generation에서 예상 종류의 pending 소유권을 넘깁니다. */
+    struct bt_conn *takePending(BLEConnectionHandle handle, PendingResponse expected) noexcept
+    {
+        struct bt_conn *connection = nullptr;
+        k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection != nullptr && pending.handle == handle &&
+                pending.response == expected)
+            {
+                connection = pending.connection;
+                pending = {};
+                break;
+            }
+        }
+        k_spin_unlock(&pairingState().pending_lock, key);
+        return connection;
+    }
+
+    /** @brief 지정 generation에서 종류와 무관하게 pending 소유권을 넘깁니다. */
+    struct bt_conn *takePending(BLEConnectionHandle handle) noexcept
+    {
+        struct bt_conn *connection = nullptr;
+        k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection != nullptr && pending.handle == handle)
+            {
+                connection = pending.connection;
+                pending = {};
+                break;
+            }
         }
         k_spin_unlock(&pairingState().pending_lock, key);
         return connection;
@@ -86,23 +174,28 @@ namespace nucode::ble::internal::security
     /** @brief timeout이 지난 pending pairing 요청을 취소합니다. */
     void processPendingTimeout() noexcept
     {
-        struct bt_conn *connection = nullptr;
+        struct bt_conn *expired[maximum_security_links] = {};
+        std::size_t expired_count = 0U;
         k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
-        if (pairingState().pending_state.connection != nullptr &&
-            k_uptime_get() >= pairingState().pending_state.deadline_ms)
+        const std::int64_t now = k_uptime_get();
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
         {
-            connection = pairingState().pending_state.connection;
-            pairingState().pending_state = {};
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection != nullptr && now >= pending.deadline_ms)
+            {
+                expired[expired_count++] = pending.connection;
+                pending = {};
+            }
         }
         k_spin_unlock(&pairingState().pending_lock, key);
-        if (connection == nullptr)
+        for (std::size_t index = 0U; index < expired_count; ++index)
         {
-            return;
+            struct bt_conn *const connection = expired[index];
+            static_cast<void>(bt_conn_auth_cancel(connection));
+            recordSecurityError(SecurityError::timeout, -ETIMEDOUT);
+            queueEvent(makeEvent(SecurityEvent::timeout, connection));
+            bt_conn_unref(connection);
         }
-        static_cast<void>(bt_conn_auth_cancel(connection));
-        recordSecurityError(SecurityError::timeout, -ETIMEDOUT);
-        queueEvent(makeEvent(SecurityEvent::timeout, connection));
-        bt_conn_unref(connection);
     }
 
     /** @brief 새 SMP pairing 시작 시 restored candidate를 즉시 무효화합니다. */
@@ -113,11 +206,12 @@ namespace nucode::ble::internal::security
             return;
         }
         const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
-        if (bondLifecycleMatches(peer) && currentBondState() == BondState::restored_candidate)
+        if (bondLifecycleMatches(connection, peer) &&
+            currentBondState(connection) == BondState::restored_candidate)
         {
-            setBondLifecycle(peer, BondState::none, true);
+            setBondLifecycle(connection, peer, BondState::none, true);
         }
-        atomic_set(&securityState().paired_value, 0);
+        setLinkPaired(connection, false);
     }
 
     /** @brief 모든 SMP pairing req/rsp를 허용하되 새 pairing 여부를 먼저 기록합니다. */
@@ -181,20 +275,18 @@ namespace nucode::ble::internal::security
         {
             return;
         }
-        atomic_set(&securityState().paired_value, 1);
-        atomic_set(&securityState().current_level_value,
-                   static_cast<atomic_val_t>(bt_conn_get_security(connection)));
+        setLinkPaired(connection, true);
+        setLinkLevel(connection, bt_conn_get_security(connection));
         const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
         if (bonded && securityState().security_config.bonding)
         {
-            setBondLifecycle(peer, BondState::persistence_pending, true);
+            setBondLifecycle(connection, peer, BondState::persistence_pending, true);
             queueEvent(makeEvent(SecurityEvent::paired, connection));
-            queueEvent(makePeerEvent(SecurityEvent::bond_persistence_pending, peer,
-                                     BondState::persistence_pending));
+            queueEvent(makeEvent(SecurityEvent::bond_persistence_pending, connection));
         }
         else
         {
-            setBondLifecycle(peer, BondState::none, true);
+            setBondLifecycle(connection, peer, BondState::none, true);
             queueEvent(makeEvent(SecurityEvent::paired, connection));
         }
     }
@@ -207,10 +299,10 @@ namespace nucode::ble::internal::security
         {
             return;
         }
-        atomic_set(&securityState().paired_value, 0);
-        if (bondLifecycleMatches(bt_conn_get_dst(connection)))
+        setLinkPaired(connection, false);
+        if (bondLifecycleMatches(connection, bt_conn_get_dst(connection)))
         {
-            setBondLifecycle(nullptr, BondState::none, false);
+            setBondLifecycle(connection, nullptr, BondState::none, false);
         }
         recordSecurityError(SecurityError::rejected, -static_cast<int>(reason));
         queueEvent(makeEvent(SecurityEvent::pairing_failed, connection, 0U,
@@ -222,13 +314,28 @@ namespace nucode::ble::internal::security
     {
         ARG_UNUSED(identity);
         removeStartupBond(peer);
-        if (bondLifecycleMatches(peer))
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
         {
-            if (currentBondState() != BondState::removal_requested)
+            struct bt_conn *connection = nullptr;
+            k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+            if (securityState().links[index].connection != nullptr)
             {
-                setBondLifecycle(nullptr, BondState::none, false);
+                connection = bt_conn_ref(securityState().links[index].connection);
             }
-            atomic_set(&securityState().paired_value, 0);
+            k_spin_unlock(&securityState().connection_lock, key);
+            if (connection == nullptr)
+            {
+                continue;
+            }
+            if (bondLifecycleMatches(connection, peer))
+            {
+                if (currentBondState(connection) != BondState::removal_requested)
+                {
+                    setBondLifecycle(connection, nullptr, BondState::none, false);
+                }
+                setLinkPaired(connection, false);
+            }
+            bt_conn_unref(connection);
         }
     }
 
@@ -302,6 +409,32 @@ namespace nucode::ble
         return true;
     }
 
+    bool SecurityManager::acceptPairing(BLEConnectionHandle handle, bool accept) noexcept
+    {
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        struct bt_conn *connection =
+            takePending(handle, PendingResponse::pairing_confirmation);
+        if (connection == nullptr)
+        {
+            recordSecurityError(SecurityError::invalid_state, -EALREADY);
+            return false;
+        }
+        const int result =
+            accept ? bt_conn_auth_pairing_confirm(connection) : bt_conn_auth_cancel(connection);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordSecurityError(SecurityError::driver_error, result);
+            return false;
+        }
+        recordSecurityError(accept ? SecurityError::none : SecurityError::rejected,
+                            accept ? 0 : -ECANCELED);
+        return true;
+    }
+
     bool SecurityManager::enterPasskey(std::uint32_t passkey) noexcept
     {
         if (!requireThreadContext() || passkey > 999999U)
@@ -313,6 +446,34 @@ namespace nucode::ble
             return false;
         }
         struct bt_conn *connection = takePending(PendingResponse::passkey_entry);
+        if (connection == nullptr)
+        {
+            recordSecurityError(SecurityError::invalid_state, -EALREADY);
+            return false;
+        }
+        const int result = bt_conn_auth_passkey_entry(connection, passkey);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordSecurityError(SecurityError::driver_error, result);
+            return false;
+        }
+        recordSecurityError(SecurityError::none);
+        return true;
+    }
+
+    bool SecurityManager::enterPasskey(BLEConnectionHandle handle,
+                                       std::uint32_t passkey) noexcept
+    {
+        if (!requireThreadContext() || passkey > 999999U)
+        {
+            if (passkey > 999999U)
+            {
+                recordSecurityError(SecurityError::invalid_argument, -EINVAL);
+            }
+            return false;
+        }
+        struct bt_conn *connection = takePending(handle, PendingResponse::passkey_entry);
         if (connection == nullptr)
         {
             recordSecurityError(SecurityError::invalid_state, -EALREADY);
@@ -354,6 +515,32 @@ namespace nucode::ble
         return true;
     }
 
+    bool SecurityManager::confirmPasskey(BLEConnectionHandle handle, bool accept) noexcept
+    {
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        struct bt_conn *connection =
+            takePending(handle, PendingResponse::passkey_confirmation);
+        if (connection == nullptr)
+        {
+            recordSecurityError(SecurityError::invalid_state, -EALREADY);
+            return false;
+        }
+        const int result =
+            accept ? bt_conn_auth_passkey_confirm(connection) : bt_conn_auth_cancel(connection);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordSecurityError(SecurityError::driver_error, result);
+            return false;
+        }
+        recordSecurityError(accept ? SecurityError::none : SecurityError::rejected,
+                            accept ? 0 : -ECANCELED);
+        return true;
+    }
+
     bool SecurityManager::cancelPairing() noexcept
     {
         if (!requireThreadContext())
@@ -362,12 +549,40 @@ namespace nucode::ble
         }
         struct bt_conn *connection = nullptr;
         k_spinlock_key_t key = k_spin_lock(&pairingState().pending_lock);
-        if (pairingState().pending_state.connection != nullptr)
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
         {
-            connection = pairingState().pending_state.connection;
-            pairingState().pending_state = {};
+            PendingState &pending = pairingState().pending_states[index];
+            if (pending.connection != nullptr)
+            {
+                connection = pending.connection;
+                pending = {};
+                break;
+            }
         }
         k_spin_unlock(&pairingState().pending_lock, key);
+        if (connection == nullptr)
+        {
+            recordSecurityError(SecurityError::invalid_state, -EALREADY);
+            return false;
+        }
+        const int result = bt_conn_auth_cancel(connection);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordSecurityError(SecurityError::driver_error, result);
+            return false;
+        }
+        recordSecurityError(SecurityError::none);
+        return true;
+    }
+
+    bool SecurityManager::cancelPairing(BLEConnectionHandle handle) noexcept
+    {
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        struct bt_conn *connection = takePending(handle);
         if (connection == nullptr)
         {
             recordSecurityError(SecurityError::invalid_state, -EALREADY);

@@ -173,10 +173,26 @@ namespace nucode::ble::internal
         ARG_UNUSED(connection);
     }
 
+    /** @brief M30이 링크되기 전에는 exact security connection 관찰을 비활성화합니다. */
+    __weak void securityConnected(struct bt_conn *connection,
+                                  BLEConnectionHandle handle) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
+    }
+
     /** @brief M21이 링크되기 전에는 security disconnect 관찰을 비활성화합니다. */
     __weak void securityDisconnected(struct bt_conn *connection) noexcept
     {
         ARG_UNUSED(connection);
+    }
+
+    /** @brief M30이 링크되기 전에는 exact security disconnect 관찰을 비활성화합니다. */
+    __weak void securityDisconnected(struct bt_conn *connection,
+                                     BLEConnectionHandle handle) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M21이 링크되기 전에는 security level 변경 관찰을 비활성화합니다. */
@@ -184,6 +200,16 @@ namespace nucode::ble::internal
                                 enum bt_security_err error) noexcept
     {
         ARG_UNUSED(connection);
+        ARG_UNUSED(level);
+        ARG_UNUSED(error);
+    }
+
+    /** @brief M30이 링크되기 전에는 exact security 변경 관찰을 비활성화합니다. */
+    __weak void securityChanged(struct bt_conn *connection, BLEConnectionHandle handle,
+                                bt_security_t level, enum bt_security_err error) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
         ARG_UNUSED(level);
         ARG_UNUSED(error);
     }

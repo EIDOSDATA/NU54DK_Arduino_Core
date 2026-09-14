@@ -68,10 +68,26 @@ namespace nucode::ble::internal
 std::array<unsigned, 16> events{};
 bool accept_in_callback = false;
 PeerAddress last_peer{};
+BLEConnectionHandle central_handle{};
+BLEConnectionHandle peripheral_handle{};
+unsigned central_pairing_events = 0U;
+unsigned peripheral_pairing_events = 0U;
 void observed(const SecurityEventRecord &event, void *)
 {
     ++events[static_cast<unsigned>(event.event)];
     last_peer = event.peer;
+    if (event.event == SecurityEvent::pairing_requested ||
+        event.event == SecurityEvent::passkey_input_requested)
+    {
+        if (event.connection == central_handle)
+        {
+            ++central_pairing_events;
+        }
+        if (event.connection == peripheral_handle)
+        {
+            ++peripheral_pairing_events;
+        }
+    }
     if (accept_in_callback && event.event == SecurityEvent::pairing_requested)
     {
         assert(BLESecurity.acceptPairing(true));
@@ -91,6 +107,17 @@ void disconnect(unsigned index = 0)
 {
     mock_conn_callbacks->disconnected(&mock_connections[index], 0x13);
     assert(mock_connections[index].refs == 0);
+}
+
+/** @brief legacy advertising으로 두 번째 peripheral link를 주입합니다. */
+void connectPeripheral(unsigned index)
+{
+    assert(BLEAdvertising.clear());
+    assert(BLEAdvertising.start());
+    mock_connections[index].role = BT_CONN_ROLE_PERIPHERAL;
+    mock_conn_callbacks->connected(&mock_connections[index], 0U);
+    BLEDevice.poll();
+    assert(mock_connections[index].refs == 2);
 }
 int main(int argc, char **argv)
 {
@@ -249,6 +276,71 @@ int main(int argc, char **argv)
                BLESecurity.lastDriverError() == -ENOBUFS);
         BLESecurity.poll();
         assert(events[static_cast<unsigned>(SecurityEvent::passkey_display)] == 24);
+    }
+    else if (std::strcmp(scenario, "dual_pending_isolation") == 0)
+    {
+        connectPeripheral(1);
+        central_handle = BLEConnection.handle(BLELinkRole::central);
+        peripheral_handle = BLEConnection.handle(BLELinkRole::peripheral);
+        assert(central_handle.valid() && peripheral_handle.valid() &&
+               central_handle != peripheral_handle);
+        mock_auth->passkey_entry(connection);
+        mock_auth->pairing_confirm(&mock_connections[1]);
+        assert(connection->refs == 3 && mock_connections[1].refs == 3);
+        BLESecurity.poll();
+        assert(central_pairing_events == 1U && peripheral_pairing_events == 1U);
+        assert(BLESecurity.acceptPairing(peripheral_handle, true));
+        assert(mock_connections[1].refs == 2 && connection->refs == 3);
+        assert(BLESecurity.enterPasskey(central_handle, 123456U));
+        assert(connection->refs == 2);
+        connection->security = BT_SECURITY_L2;
+        mock_connections[1].security = BT_SECURITY_L3;
+        mock_auth_info->pairing_complete(connection, true);
+        mock_auth_info->pairing_complete(&mock_connections[1], true);
+        assert(BLESecurity.paired(central_handle));
+        assert(BLESecurity.paired(peripheral_handle));
+        assert(BLESecurity.currentLevel(central_handle) == SecurityLevel::encrypted);
+        assert(BLESecurity.currentLevel(peripheral_handle) == SecurityLevel::authenticated);
+        internal::securityChanged(connection, central_handle, BT_SECURITY_L2,
+                                  BT_SECURITY_ERR_AUTH_FAIL);
+        assert(!BLESecurity.paired(central_handle));
+        assert(BLESecurity.paired(peripheral_handle));
+        const BLEConnectionHandle stale = central_handle;
+        disconnect(0);
+        assert(!BLESecurity.paired(stale));
+        assert(BLESecurity.currentLevel(stale) == SecurityLevel::none);
+        assert(!BLESecurity.requestSecurity(stale));
+        assert(BLESecurity.paired(peripheral_handle));
+    }
+    else if (std::strcmp(scenario, "dual_timeout_isolation") == 0)
+    {
+        connectPeripheral(1);
+        central_handle = BLEConnection.handle(BLELinkRole::central);
+        peripheral_handle = BLEConnection.handle(BLELinkRole::peripheral);
+        mock_auth->passkey_entry(connection);
+        waited_us = 500000;
+        mock_auth->pairing_confirm(&mock_connections[1]);
+        waited_us = 1000000;
+        BLESecurity.poll();
+        assert(mock_cancel_calls == 1U && connection->refs == 2);
+        assert(mock_connections[1].refs == 3);
+        assert(!BLESecurity.enterPasskey(central_handle, 123456U));
+        assert(BLESecurity.acceptPairing(peripheral_handle, true));
+        assert(mock_connections[1].refs == 2);
+    }
+    else if (std::strcmp(scenario, "sparse_pending_duplicate") == 0)
+    {
+        connectPeripheral(1);
+        central_handle = BLEConnection.handle(BLELinkRole::central);
+        peripheral_handle = BLEConnection.handle(BLELinkRole::peripheral);
+        mock_auth->passkey_entry(connection);
+        mock_auth->pairing_confirm(&mock_connections[1]);
+        assert(BLESecurity.enterPasskey(central_handle, 123456U));
+        assert(connection->refs == 2 && mock_connections[1].refs == 3);
+        mock_auth->pairing_confirm(&mock_connections[1]);
+        assert(mock_cancel_calls == 1U && mock_connections[1].refs == 3);
+        assert(BLESecurity.acceptPairing(peripheral_handle, true));
+        assert(mock_connections[1].refs == 2);
     }
     else if (std::strcmp(scenario, "profiles") == 0)
     {

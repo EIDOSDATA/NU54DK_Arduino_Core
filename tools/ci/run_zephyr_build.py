@@ -143,6 +143,16 @@ SUITE_GROUPS = {
         ("m29_ble_multi_hil", "nucode.m29.ble_multi_mixed"),
         ("m29_ble_multi_hil", "nucode.m29.ble_multi_central"),
         ("m30_ble_capability", "nucode.m30.ble_capability"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.ni.p"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.ni.c"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.dk.p"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.dk.c"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.kd.p"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.kd.c"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.yn.p"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.yn.c"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.kdf.p"),
+        ("m30_ble_pair_hil", "nucode.m30.pair.kdf.c"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)

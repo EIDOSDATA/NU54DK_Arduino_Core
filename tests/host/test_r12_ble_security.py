@@ -54,7 +54,9 @@ class BleSecurityTests(unittest.TestCase):
                              'late_callback', 'not_persisted', 'restored_bond', 'erase_failure',
                              'driver_failure', 'identity_type_normalization',
                              'deferred_rpa_identity',
-                             'queue_overflow', 'profiles', 'hid']:
+                             'queue_overflow', 'dual_pending_isolation',
+                             'dual_timeout_isolation', 'sparse_pending_duplicate',
+                             'profiles', 'hid']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))

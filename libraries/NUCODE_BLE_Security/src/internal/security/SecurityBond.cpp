@@ -23,6 +23,28 @@ namespace nucode::ble::internal::security
         return static_cast<BondState>(atomic_get(&bondStorage().bond_state_value));
     }
 
+    /** @brief exact link의 bond 상태를 generation slot에서 반환합니다. */
+    BondState currentBondState(struct bt_conn *connection) noexcept
+    {
+        if (connection == nullptr)
+        {
+            return BondState::none;
+        }
+        BondState result = BondState::none;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            const SecurityLinkState &link = securityState().links[index];
+            if (link.connection == connection)
+            {
+                result = link.bond_lifecycle.state;
+                break;
+            }
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        return result;
+    }
+
     /** @brief 현재 peer의 bond 상태를 원자적으로 교체합니다. */
     void setBondLifecycle(const bt_addr_le_t *peer, BondState state,
                           bool paired_this_connection) noexcept
@@ -40,6 +62,39 @@ namespace nucode::ble::internal::security
         atomic_set(&bondStorage().bond_state_value, static_cast<atomic_val_t>(state));
     }
 
+    /** @brief exact link의 bond 상태와 필요 시 legacy mirror를 교체합니다. */
+    void setBondLifecycle(struct bt_conn *connection, const bt_addr_le_t *peer, BondState state,
+                          bool paired_this_connection) noexcept
+    {
+        bool found = false;
+        bool legacy = false;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            SecurityLinkState &link = securityState().links[index];
+            if (link.connection != connection)
+            {
+                continue;
+            }
+            link.bond_lifecycle = {};
+            if (peer != nullptr)
+            {
+                bt_addr_le_copy(&link.bond_lifecycle.peer, peer);
+                link.bond_lifecycle.peer_valid = true;
+            }
+            link.bond_lifecycle.state = state;
+            link.bond_lifecycle.paired_this_connection = paired_this_connection;
+            found = true;
+            legacy = securityState().active_connection == connection;
+            break;
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        if (found && legacy)
+        {
+            setBondLifecycle(peer, state, paired_this_connection);
+        }
+    }
+
     /** @brief 지정 peer와 현재 bond 후보가 같은지 확인합니다. */
     bool bondLifecycleMatches(const bt_addr_le_t *peer) noexcept
     {
@@ -55,6 +110,29 @@ namespace nucode::ble::internal::security
         return matches;
     }
 
+    /** @brief 지정 connection의 bond 후보와 peer가 같은지 확인합니다. */
+    bool bondLifecycleMatches(struct bt_conn *connection, const bt_addr_le_t *peer) noexcept
+    {
+        if (connection == nullptr || peer == nullptr)
+        {
+            return false;
+        }
+        bool matches = false;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            const SecurityLinkState &link = securityState().links[index];
+            if (link.connection == connection)
+            {
+                matches = link.bond_lifecycle.peer_valid &&
+                          bt_addr_le_eq(&link.bond_lifecycle.peer, peer);
+                break;
+            }
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        return matches;
+    }
+
     /** @brief 오류 rollback에 사용할 bond 상태 snapshot을 복사합니다. */
     BondLifecycleState copyBondLifecycle() noexcept
     {
@@ -62,6 +140,28 @@ namespace nucode::ble::internal::security
         k_spinlock_key_t key = k_spin_lock(&bondStorage().bond_lock);
         snapshot = bondStorage().bond_lifecycle;
         k_spin_unlock(&bondStorage().bond_lock, key);
+        return snapshot;
+    }
+
+    /** @brief exact link의 bond 상태 snapshot을 복사합니다. */
+    BondLifecycleState copyBondLifecycle(struct bt_conn *connection) noexcept
+    {
+        BondLifecycleState snapshot = {};
+        if (connection == nullptr)
+        {
+            return snapshot;
+        }
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            const SecurityLinkState &link = securityState().links[index];
+            if (link.connection == connection)
+            {
+                snapshot = link.bond_lifecycle;
+                break;
+            }
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
         return snapshot;
     }
 
@@ -125,15 +225,16 @@ namespace nucode::ble::internal::security
             return;
         }
         const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
-        if (bondLifecycleMatches(peer) && currentBondState() == BondState::restored_candidate)
+        if (bondLifecycleMatches(connection, peer) &&
+            currentBondState(connection) == BondState::restored_candidate)
         {
-            setBondLifecycle(peer, BondState::verified, false);
-            atomic_set(&securityState().paired_value, 1);
-            queueEvent(makePeerEvent(SecurityEvent::bond_verified, peer, BondState::verified));
+            setBondLifecycle(connection, peer, BondState::verified, false);
+            setLinkPaired(connection, true);
+            queueEvent(makeEvent(SecurityEvent::bond_verified, connection));
         }
-        else if (currentBondState() != BondState::removal_requested)
+        else if (currentBondState(connection) != BondState::removal_requested)
         {
-            atomic_set(&securityState().paired_value, 1);
+            setLinkPaired(connection, true);
         }
     }
 
@@ -232,16 +333,36 @@ namespace nucode::ble
         }
         const bt_addr_le_t address = nativeAddress(peer);
         const BondLifecycleState previous = copyBondLifecycle();
+        struct bt_conn *connection = referenceActiveConnection();
+        const BondLifecycleState link_previous = copyBondLifecycle(connection);
         if (bondLifecycleMatches(&address))
         {
             setBondLifecycle(&address, BondState::removal_requested, false);
+        }
+        if (connection != nullptr && bondLifecycleMatches(connection, &address))
+        {
+            setBondLifecycle(connection, &address, BondState::removal_requested, false);
         }
         const int result = bt_unpair(BT_ID_DEFAULT, &address);
         if (result < 0)
         {
             restoreBondLifecycle(previous);
+            if (connection != nullptr)
+            {
+                setBondLifecycle(connection,
+                                 link_previous.peer_valid ? &link_previous.peer : nullptr,
+                                 link_previous.state, link_previous.paired_this_connection);
+            }
+            if (connection != nullptr)
+            {
+                bt_conn_unref(connection);
+            }
             recordSecurityError(SecurityError::driver_error, result);
             return false;
+        }
+        if (connection != nullptr)
+        {
+            bt_conn_unref(connection);
         }
         queueEvent(makePeerEvent(SecurityEvent::bond_removal_requested, &address,
                                  BondState::removal_requested));
@@ -256,14 +377,33 @@ namespace nucode::ble
             return false;
         }
         const BondLifecycleState previous = copyBondLifecycle();
+        struct bt_conn *connection = referenceActiveConnection();
+        const BondLifecycleState link_previous = copyBondLifecycle(connection);
         setBondLifecycle(previous.peer_valid ? &previous.peer : nullptr,
                          BondState::removal_requested, false);
+        if (connection != nullptr)
+        {
+            setBondLifecycle(connection,
+                             link_previous.peer_valid ? &link_previous.peer : nullptr,
+                             BondState::removal_requested, false);
+        }
         const int result = bt_unpair(BT_ID_DEFAULT, BT_ADDR_LE_ANY);
         if (result < 0)
         {
             restoreBondLifecycle(previous);
+            if (connection != nullptr)
+            {
+                setBondLifecycle(connection,
+                                 link_previous.peer_valid ? &link_previous.peer : nullptr,
+                                 link_previous.state, link_previous.paired_this_connection);
+                bt_conn_unref(connection);
+            }
             recordSecurityError(SecurityError::driver_error, result);
             return false;
+        }
+        if (connection != nullptr)
+        {
+            bt_conn_unref(connection);
         }
         queueEvent(makePeerEvent(SecurityEvent::all_bonds_removal_requested, nullptr,
                                  BondState::removal_requested));

@@ -383,7 +383,7 @@ namespace nucode::ble::internal::gap
                 atomic_set(&gapState().advertising_active, 0);
             }
             nucode::ble::internal::gattConnected(connection, handle);
-            nucode::ble::internal::securityConnected(connection);
+            nucode::ble::internal::securityConnected(connection, handle);
             queueEvent(BLEEvent::connected, handle, role, device_generation);
         }
 
@@ -421,7 +421,7 @@ namespace nucode::ble::internal::gap
             }
 
             nucode::ble::internal::gattDisconnected(connection, handle);
-            nucode::ble::internal::securityDisconnected(connection);
+            nucode::ble::internal::securityDisconnected(connection, handle);
             bt_conn_unref(connection);
             refreshConnectionFlags();
             if (atomic_get(&gapState().device_initialized) != 0)
@@ -552,7 +552,13 @@ namespace nucode::ble::internal::gap
         void linkSecurityChanged(struct bt_conn *connection, bt_security_t level,
                                  enum bt_security_err error) noexcept
         {
-            nucode::ble::internal::securityChanged(connection, level, error);
+            BLEConnectionHandle handle;
+            BLELinkRole role = BLELinkRole::none;
+            std::uint32_t device_generation = 0U;
+            if (activeConnectionHandle(connection, handle, role, device_generation))
+            {
+                nucode::ble::internal::securityChanged(connection, handle, level, error);
+            }
         }
 #endif
 
