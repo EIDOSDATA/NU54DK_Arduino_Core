@@ -91,9 +91,14 @@ class M29BleMultiTests(unittest.TestCase):
             "validate_build_record",
             "validate_three_role_session",
             "ThreadPoolExecutor(max_workers=3)",
+            "with ExitStack() as stack:",
             '"m29_multi_01_status": "passed"',
         ):
             self.assertIn(token, runner)
+        self.assertLess(
+            runner.index("for role in ROLES:\n            if flash_backend"),
+            runner.index("with ExitStack() as stack:"),
+        )
         for token in (
             'PROTOCOL = "M29W07D|1"',
             "non-ASCII UART noise",

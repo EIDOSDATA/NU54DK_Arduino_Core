@@ -257,6 +257,22 @@ def execute_three_board(
     pending = {role: bytearray() for role in ROLES}
     flashes = {role: ("not-started", "unknown") for role in ROLES}
     try:
+        for role in ROLES:
+            if flash_backend == "pyocd-sector":
+                flashes[role] = common.flash_image_pyocd(
+                    role,
+                    endpoints[role].board_id,
+                    images[role],
+                    flash_timeout,
+                )
+            else:
+                flashes[role] = common.flash_image(
+                    MILESTONE,
+                    role,
+                    endpoints[role].volume,
+                    images[role],
+                    flash_timeout,
+                )
         with ExitStack() as stack:
             ports = {
                 role: stack.enter_context(
@@ -272,22 +288,6 @@ def execute_three_board(
                 )
                 for role in ROLES
             }
-            for role in ROLES:
-                if flash_backend == "pyocd-sector":
-                    flashes[role] = common.flash_image_pyocd(
-                        role,
-                        endpoints[role].board_id,
-                        images[role],
-                        flash_timeout,
-                    )
-                else:
-                    flashes[role] = common.flash_image(
-                        MILESTONE,
-                        role,
-                        endpoints[role].volume,
-                        images[role],
-                        flash_timeout,
-                    )
             for role in ROLES:
                 ports[role].reset_input_buffer()
                 _write_line(ports[role], "M29W07D|1|READY?")
