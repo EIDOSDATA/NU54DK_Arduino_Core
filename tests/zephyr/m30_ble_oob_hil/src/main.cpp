@@ -199,6 +199,19 @@ namespace
     /** @brief local OOB 생성과 frame/NDEF round-trip 뒤 raw frame을 Host에 전달합니다. */
     void prepareLocal()
     {
+#if !defined(NUCODE_M30_OOB_CENTRAL)
+        /**
+         * Legacy advertiser 시작은 기존 RPA를 무효화하므로 먼저 광고를 시작한 뒤
+         * bt_le_oob_get_local()이 현재 광고 주소를 회전·고정하도록 합니다.
+         */
+        if (!BLEAdvertising.setManufacturerData(rf_company_id, nonce_binary,
+                                                  sizeof(nonce_binary)) ||
+            !BLEAdvertising.start())
+        {
+            fail("advertising-prepare");
+            return;
+        }
+#endif
         nucode::ble::SecureConnectionsOobRecord local = {};
         if (!BLESecurity.createLocalOob(localRole(), nonce_binary, sizeof(nonce_binary), local))
         {
@@ -482,9 +495,7 @@ namespace
             return;
         }
 #else
-        if (!BLEAdvertising.setManufacturerData(rf_company_id, nonce_binary,
-                                                  sizeof(nonce_binary)) ||
-            !BLEAdvertising.start())
+        if (!BLEAdvertising.running())
         {
             fail("advertising-start");
             return;
