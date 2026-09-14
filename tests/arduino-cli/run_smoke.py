@@ -1732,9 +1732,13 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "L2capCocServer",
         },
         "NUCODE BLE Security": {
+            "EnvironmentalSensing",
             "GattCacheCentral",
             "GattCachePeripheral",
+            "HeartRate",
+            "SecureConsumerControl",
             "SecureKeyboard",
+            "SecureMouse",
         },
     }
     discovered: dict[str, set[str]] = {}
