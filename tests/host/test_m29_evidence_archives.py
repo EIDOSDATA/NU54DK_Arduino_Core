@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M29-W07 raw HIL 증거 archive의 byte 동일성을 검증합니다. """
+"""! @brief M29 raw HIL 증거 archive의 byte 동일성을 검증합니다. """
 
 from __future__ import annotations
 
@@ -40,6 +40,13 @@ ARCHIVES = {
         "result": "result.json",
         "gate": "m29-cross-vendor-windows-gatt-hil",
         "files": 2,
+    },
+    "m29-w08-ab3f85d3-multi-rerun": {
+        "purpose": "M29-W08 refactored target exact three-board rerun evidence",
+        "revision": "ab3f85d3cb505f8f82865becfbd8bd0fe8511f27",
+        "result": "m29-w08-ab3f85d3.json",
+        "gate": "m29-w07-d-three-board-multi-link-hil",
+        "files": 4,
     },
 }
 

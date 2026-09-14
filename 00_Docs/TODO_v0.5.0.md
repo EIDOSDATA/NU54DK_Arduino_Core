@@ -86,7 +86,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser의 실
 | M29-W05 | **완료 — Host·target 2/2·2보드 cache migration PASS** | exact `e587c4fe…`, bonded reconnect 20·stale/corrupt accept 0 증거 유지 |
 | M29-W06 | **완료 — Host·target 2/2·2보드 CoC/negative PASS** | exact `767bb4af…`, 2-channel·512 byte·각 방향 1,000 SDU·5 negative class·복구 오류 0 증거 유지 |
 | M29-W07 | **완료 — SIGN/EATT·3보드 MULTI/REG·Windows GATT PASS** | exact `c71ef4a2…`·`16eb8fce…`·`a964ae20…` 원본 증거 유지 |
-| M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, 문서·지원표·M30 인계 |
+| M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, exact `ab3f85d3…` 3보드 재검증, 문서·지원표·M30 인계 |
 
 ### 현재 재개 지점: M29 완료, 다음 M30
 
@@ -95,7 +95,9 @@ Exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 보드 `M29-MULTI-01`은
 `M29-REG-01`은 M19/M20/M21/M28 회귀 4/4·실패 0이다. exact
 `a964ae205e237d90149f6d2c0eb0ec6492492a33`의 Windows/Intel GATT는 discovery, read, 두 write,
 notify, indicate와 2회 재연결을 PASS했다. 원본 byte는 Base64 archive와 SHA-256 manifest로
-보존한다. 다음 구현·장비 계약은 [HANDOFF](HANDOFF.md)의 M30 경계를 따른다.
+보존한다. W08 분할·예제 반영 뒤 exact `ab3f85d3cb505f8f82865becfbd8bd0fe8511f27`로 세 role을
+다시 build하고 같은 3보드 `M29-MULTI-01`을 재실행해 2-link와 오류 0을 재확인했다. 다음
+구현·장비 계약은 [HANDOFF](HANDOFF.md)의 M30 경계를 따른다.
 
 M28과 M29 각 단계의 구현·시험 수치는 위 작업표와 해당 계약에서 확인한다.
 시도별 실패·CMSIS-DAP 진단·수정·재검증 상세는 [140번](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과

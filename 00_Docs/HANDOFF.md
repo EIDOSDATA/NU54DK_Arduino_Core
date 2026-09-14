@@ -17,6 +17,7 @@ capability·장비·수치 gate 확정**입니다.
 | M29 W07-C | 두 보드 Signed Write·EATT PASS — exact `c71ef4a2…` |
 | M29 W07-D/E | 세 보드 MULTI·M19/M20/M21/M28 회귀 PASS — exact `16eb8fce…` |
 | M29 상호운용 | Windows 11·Intel Bluetooth·WinRT 기본 GATT PASS — exact `a964ae20…` |
+| M29 W08 최종 재검증 | 분할 후 세 role build·3보드 MULTI PASS — exact `ab3f85d3…` |
 | 다음 개발 단계 | M30 BLE Security·Profile·최소 secure BLE DFU |
 
 ## 2. 고정 환경
@@ -43,7 +44,8 @@ capability·장비·수치 gate 확정**입니다.
 - Windows/Intel peer는 광고 UUID, service·characteristic·property, nonce read, response write,
   write command, notify 2회, indicate 1회와 connect/disconnect 2회를 확인했습니다.
 - W08은 `MixedGattCocLinks` 예제를 추가하고 896줄 target을 protocol·RF·traffic·event·command로
-  분할했습니다. 세 role target 재빌드는 분할 전과 같은 FLASH/RAM 수치로 PASS했습니다.
+  분할했습니다. 세 role target 재빌드는 분할 전과 같은 FLASH/RAM 수치로 PASS했고 exact
+  `ab3f85d3…`을 세 보드에서 다시 실행해 2-link GATT·CoC와 오류 0을 재확인했습니다.
 
 사람이 읽는 단일 완료 기록은
 [149번](<04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>), 기계 원장은

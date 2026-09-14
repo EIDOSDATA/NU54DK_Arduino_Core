@@ -218,6 +218,9 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(w08["arduino_examples"], 15)
         self.assertEqual(w08["arduino_example_builds"], 15)
         self.assertEqual(w08["target_refactor_builds"], 3)
+        self.assertEqual(w08["physical_refactor_rerun"], "passed")
+        self.assertRegex(w08["tested_core_revision"], r"^[0-9a-f]{40}$")
+        self.assertTrue((REPOSITORY / w08["evidence_manifest"]).is_file())
         self.assertEqual(w08["canonical_zephyr_scenarios"], 3)
         self.assertEqual(w08["canonical_v050_scenarios"], 36)
         self.assertEqual(
@@ -265,8 +268,9 @@ class M29ReadinessTests(unittest.TestCase):
         multi = next(entry for entry in plan if entry["id"] == "M29-MULTI-01")
         self.assertEqual(multi["boards"], 3)
         self.assertEqual(multi["criteria"]["simultaneous_links"], 2)
-        self.assertEqual(len(multi["evidence_files"]), 1)
-        self.assertTrue((REPOSITORY / multi["evidence_files"][0]).is_file())
+        self.assertEqual(len(multi["evidence_files"]), 2)
+        for relative in multi["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
         regression = next(entry for entry in plan if entry["id"] == "M29-REG-01")
         self.assertEqual(len(regression["evidence_files"]), 1)
         self.assertTrue((REPOSITORY / regression["evidence_files"][0]).is_file())
