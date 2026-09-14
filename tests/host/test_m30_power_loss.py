@@ -93,18 +93,23 @@ class M30PowerLossTests(unittest.TestCase):
             RUNNER.validate_options(base)
 
     def test_bond_storage_reset_is_exact_sector_only(self) -> None:
-        """! @brief stale bond 정리는 고정 storage sector만 대상으로 합니다. """
+        """! @brief stale bond 정리는 고정 storage 범위를 0xff로 기록·검증합니다. """
 
-        with mock.patch.object(RUNNER, "run_pyocd") as run:
-            RUNNER.erase_bond_storage("secret-board", 30.0)
-        command = run.call_args.args[0]
-        self.assertIn("--sector", command)
-        self.assertIn(
-            f"{hex(RUNNER.STORAGE_OFFSET)}-{hex(RUNNER.STORAGE_END)}", command
+        result = SimpleNamespace(
+            returncode=0,
+            stdout=f"M30_STORAGE_RESET_PASS={RUNNER.STORAGE_SIZE}\n".encode(),
+            stderr=b"",
         )
-        self.assertNotIn("--mass", command)
-        self.assertNotIn("--chip", command)
-        self.assertNotIn("--recover", command)
+        with mock.patch.object(RUNNER.subprocess, "run", return_value=result) as run:
+            RUNNER.reset_bond_storage("secret-board", 30.0)
+        command = run.call_args.args[0]
+        program = command[3]
+        self.assertEqual(command[-1], "secret-board")
+        self.assertIn(f"loader.add_data({RUNNER.STORAGE_OFFSET}", program)
+        self.assertIn(f"read_memory_block8({RUNNER.STORAGE_OFFSET}", program)
+        self.assertIn('chip_erase="sector"', program)
+        for forbidden in ("--mass", 'chip_erase="chip"', "--recover"):
+            self.assertNotIn(forbidden, program)
 
     def test_physical_cycle_requires_both_interfaces_to_disappear(self) -> None:
         """! @brief reset처럼 MSD·UART가 유지되면 실제 power cycle로 인정하지 않습니다. """

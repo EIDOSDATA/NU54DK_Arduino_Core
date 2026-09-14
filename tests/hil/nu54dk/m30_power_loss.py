@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import re
 import struct
+import subprocess
 import sys
 import tempfile
 import time
@@ -56,8 +57,6 @@ from m30_ble_dfu import (  # noqa: E402
 from m30_mcuboot import (  # noqa: E402
     M30BootFailure,
     erase_secondary_slot,
-    pyocd_command_prefix,
-    run_pyocd,
     validate_private_key,
 )
 from m6_serial_echo import (  # noqa: E402
@@ -87,7 +86,6 @@ UNCONFIRMED_VERSION = (41, 0, 0, 0)
 RETRY_VERSION = (42, 0, 0, 0)
 STORAGE_OFFSET = 0x174000
 STORAGE_SIZE = 0x9000
-STORAGE_END = STORAGE_OFFSET + STORAGE_SIZE
 POWER_STATE_PATTERN = re.compile(
     rb"^M30POWER\|1\|STATE\|bond_count=(\d+)\|rejected_bonds=(\d+)"
     rb"\|bonded=(\d+)\|settings_valid=(\d+)$"
@@ -650,15 +648,57 @@ def validate_storage_partition(build_root: Path) -> None:
         raise M30PowerFailure("build devicetree의 storage partition 범위가 다릅니다.")
 
 
-def erase_bond_storage(board_id: str, timeout_seconds: float) -> None:
-    """! @brief stale bond 정리를 위해 storage partition의 exact sector만 지웁니다. """
+def reset_bond_storage(board_id: str, timeout_seconds: float) -> None:
+    """! @brief RRAM storage exact 범위를 0xff로 기록하고 다시 읽어 검증합니다. """
 
-    command = (
-        *pyocd_command_prefix("erase", board_id),
-        "--sector",
-        f"{hex(STORAGE_OFFSET)}-{hex(STORAGE_END)}",
+    program = f"""
+import sys
+from pyocd.core.helpers import ConnectHelper
+from pyocd.flash.loader import FlashLoader
+
+session = ConnectHelper.session_with_chosen_probe(
+    unique_id=sys.argv[1],
+    target_override="nrf54l",
+    frequency=500000,
+    options={{
+        "auto_unlock": False,
+        "cmsis_dap.limit_packets": True,
+        "hide_programming_progress": True,
+    }},
+)
+if session is None:
+    raise RuntimeError("exact probe session을 열 수 없습니다.")
+with session:
+    loader = FlashLoader(
+        session,
+        chip_erase="sector",
+        smart_flash=False,
+        keep_unwritten=False,
+        no_reset=False,
     )
-    run_pyocd(command, "bond storage exact-sector erase", timeout_seconds)
+    loader.add_data({STORAGE_OFFSET}, bytes([255]) * {STORAGE_SIZE})
+    loader.commit()
+    observed = session.target.read_memory_block8({STORAGE_OFFSET}, {STORAGE_SIZE})
+    if len(observed) != {STORAGE_SIZE} or any(value != 255 for value in observed):
+        raise RuntimeError("storage 0xff readback 검증에 실패했습니다.")
+print("M30_STORAGE_RESET_PASS={STORAGE_SIZE}")
+"""
+    command = (sys.executable, "-I", "-c", program, board_id)
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise M30PowerFailure(f"bond storage exact reset 실패: {error}") from error
+    output = result.stdout + result.stderr
+    if result.returncode != 0 or f"M30_STORAGE_RESET_PASS={STORAGE_SIZE}".encode() not in output:
+        safe_output = output.decode("utf-8", errors="backslashreplace").replace(
+            board_id, "[redacted]"
+        )
+        raise M30PowerFailure(f"bond storage exact reset 실패: {safe_output}")
 
 
 def reopen_peripheral(session: DfuSession) -> None:
@@ -821,8 +861,8 @@ def preflight(
     if args.reset_bond_storage:
         validate_storage_partition(confirmed.root)
         validate_storage_partition(central_build.root)
-        erase_bond_storage(peripheral.board_id, args.flash_timeout)
-        erase_bond_storage(central.board_id, args.flash_timeout)
+        reset_bond_storage(peripheral.board_id, args.flash_timeout)
+        reset_bond_storage(central.board_id, args.flash_timeout)
         storage_reset["performed"] = True
         storage_reset["boards"] = 2
     flash_results = normalize_boards(
