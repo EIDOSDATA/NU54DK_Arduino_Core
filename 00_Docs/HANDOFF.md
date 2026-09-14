@@ -1,10 +1,10 @@
-# 개발 인계 — M30-W02 진행·HOST-W01~W03 완료
+# 개발 인계 — M30-W03 진행·HOST-W01~W03 완료
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
-OS/adapter 상호운용 완료를 뜻하지 않습니다. M30-W01 capability는 완료했고 현재 구현 지점은
-**M30-W02 link별 security·pairing·key 수명주기**입니다. 병행한 **HOST-W01~W03 inventory·Host
-resolver·launcher**도 완료했습니다.
+OS/adapter 상호운용 완료를 뜻하지 않습니다. M30-W01 capability와 W02 link별 security·pairing은
+완료했고 현재 구현 지점은 **M30-W03 유선 OOB·bond/privacy migration·NFC adapter**입니다.
+병행한 **HOST-W01~W03 inventory·Host resolver·launcher**도 완료했습니다.
 M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 시험에서만 사람 개입을 요청합니다.
 
 ## 1. 현재 체크포인트
@@ -20,8 +20,9 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
 | M29 W07-D/E | 세 보드 MULTI·M19/M20/M21/M28 회귀 PASS — exact `16eb8fce…` |
 | M29 상호운용 | Windows 11·Intel Bluetooth·WinRT 기본 GATT PASS — exact `a964ae20…` |
 | M29 W08 최종 재검증 | 분할 후 세 role build·3보드 MULTI PASS — exact `ab3f85d3…` |
-| M30 | W01 완료·W02 진행, 작업 묶음 1/8·test ID 1/10 PASS |
+| M30 | W01~W02 완료·W03 진행, 작업 묶음 2/8·test ID 2/10 PASS |
 | M30 W01 | exact `6254398c…`, parser 13/13·target 1/1·실제 capability 7/7 PASS |
+| M30 W02 | exact `4f91e347…`, target 10/10·IO capability 5종 × 10회 = 50/50 PASS |
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M30 자동 중단점 | `M30-POWER-01` 실제 target USB 전원 차단 직전 |
@@ -78,10 +79,10 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
    [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과
    [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)의 M30 절을 읽습니다.
 2. 완료된 HOST-W01~W03 inventory·공통 backend·OS descriptor·`.cmd`/`.sh` 경계를 보존합니다.
-3. exact `6254398c…` M30-W01의 SMP·SC-only·16-byte key·bond 4·privacy·OOB/MCUmgr service
-   capability 증거를 확인하고 W02 link별 상태 구현으로 진행합니다.
-4. OOB, key distribution/size, bond migration·privacy, 추가 profile catalog와 OS peer matrix를
-   먼저 결정합니다. SDK symbol 존재를 제품 PASS로 승격하지 않습니다.
+3. exact `4f91e347…` M30-W02의 link별 pairing 상태, IO capability 5종·50/50 증거와
+   Just Works L2 / 나머지 L4 경계를 보존합니다.
+4. W03은 wired USB/DAPLink VCOM으로 OOB 20회와 mismatch accept 0을 검증하고 bond migration·
+   privacy를 이어서 검사합니다. NFC adapter는 구현·build만 하고 RF는 `NOT RUN`으로 남깁니다.
 5. 최소 BLE DFU의 MCUboot 사용 여부, 고정 memory layout, 신뢰키·서명, 초기 설치, BLE update,
    rollback·corruption·power-loss recovery와 Arduino 제공 형태를 코드 전에 계약합니다. 새 도구는
    Windows 전용 진입점을 추가하지 않고 세 Host에서 같은 backend를 사용합니다.

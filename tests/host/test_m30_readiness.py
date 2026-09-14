@@ -101,7 +101,11 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertEqual(packages[0]["host_parser_tests"], 13)
         self.assertEqual(packages[0]["target_build"], "passed")
         self.assertEqual(packages[0]["physical_capability"], "passed")
-        self.assertEqual(packages[1]["status"], "in_progress")
+        self.assertEqual(packages[1]["status"], "completed")
+        self.assertEqual(packages[1]["production_host_scenarios"], 17)
+        self.assertEqual(packages[1]["target_builds"], 10)
+        self.assertEqual(packages[1]["physical_pairings"], 50)
+        self.assertEqual(packages[2]["status"], "in_progress")
         self.assertEqual(packages[-1]["status"], "blocked_by_power_hil")
         host_packages = self.readiness["host_work_packages"]
         self.assertEqual(len(host_packages), 8)
@@ -127,9 +131,29 @@ class M30ReadinessTests(unittest.TestCase):
                 self.assertGreaterEqual(value, 0, f"{entry['id']}:{name}")
         power = next(entry for entry in plan if entry["id"] == "M30-POWER-01")
         capability = next(entry for entry in plan if entry["id"] == "M30-CAP-01")
+        pairing = next(entry for entry in plan if entry["id"] == "M30-PAIR-01")
         self.assertEqual(capability["status"], "passed")
         for relative in capability["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        self.assertEqual(pairing["status"], "passed")
+        self.assertEqual(pairing["criteria"]["io_capabilities"], 5)
+        self.assertEqual(pairing["criteria"]["rounds_per_capability"], 10)
+        for relative in pairing["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        pairing_evidence = json.loads(
+            (REPOSITORY / pairing["evidence_files"][0]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(pairing_evidence["status"], "passed")
+        self.assertEqual(pairing_evidence["core_revision"], pairing["tested_core_revision"])
+        self.assertEqual(pairing_evidence["total_pairings"], 50)
+        self.assertEqual(pairing_evidence["unexpected_auth_failures"], 0)
+        self.assertEqual(pairing_evidence["passkey_evidence_policy"], "redacted")
+        self.assertFalse(pairing_evidence["power_cut_injected"])
+        self.assertFalse(pairing_evidence["mass_erase_or_recover"])
+        self.assertEqual(
+            {endpoint["volume"] for endpoint in pairing_evidence["endpoints"].values()},
+            {"F:", "G:"},
+        )
         self.assertEqual(power["status"], "blocked_human_power_cut")
         self.assertEqual(power["criteria"]["injection_points"], 4)
         self.assertEqual(power["criteria"]["cuts_per_point"], 3)
@@ -137,8 +161,8 @@ class M30ReadinessTests(unittest.TestCase):
             self.readiness["completion"]["current_stop_boundary"],
             "before_m30_power_01_physical_cut",
         )
-        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 1)
-        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 1)
+        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 2)
+        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 2)
 
     def test_profile_catalog_and_equipment_scope_are_explicit(self) -> None:
         """! @brief 기존/신규 profile과 세 보드·전원 장비 경계를 검사합니다. """

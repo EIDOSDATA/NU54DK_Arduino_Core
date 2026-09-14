@@ -9,7 +9,7 @@
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M30 상태 | **W01 구현 중, W02~W07 미착수, W08 전원 HIL 대기** |
+| M30 상태 | **W01~W02 완료, W03 진행, W04~W07 미착수, W08 전원 HIL 대기** |
 | 기계 원장 | [`m30-ble-readiness.json`](../../variants/nu54dk/m30-ble-readiness.json) |
 
 이 문서는 M30 구현 전에 보안 정책, OOB carrier, profile catalog, MCUboot layout, 신뢰키와 열 개의
