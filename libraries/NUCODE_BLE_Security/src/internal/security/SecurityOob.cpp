@@ -223,7 +223,7 @@ namespace nucode::ble::internal::security
         }
         k_spin_unlock(&oobState().lock, key);
 
-        /* Zephyr SMP가 pairing 종료까지 이 포인터를 보관하므로 역할 slot 수명이 필요합니다. */
+        /** @brief Zephyr SMP가 pairing 종료까지 보관하므로 역할 slot 수명이 필요합니다. */
         const int result = bt_le_oob_set_sc_data(connection, local, remote);
         if (result != 0)
         {
