@@ -162,6 +162,9 @@ SUITE_GROUPS = {
         ("m30_mcuboot_hil", "nucode.m30.mcuboot_hil"),
         ("m30_ble_dfu_hil", "nucode.m30.dfu.peripheral"),
         ("m30_ble_dfu_hil", "nucode.m30.dfu.central"),
+        ("m30_ble_multi_hil", "nucode.m30.multi.peripheral"),
+        ("m30_ble_multi_hil", "nucode.m30.multi.mixed"),
+        ("m30_ble_multi_hil", "nucode.m30.multi.central"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)

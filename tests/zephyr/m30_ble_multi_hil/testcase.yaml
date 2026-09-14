@@ -1,0 +1,19 @@
+tests:
+  nucode.m30.multi.peripheral:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_MULTI_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.multi.mixed:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_MULTI_ROLE=mixed]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.multi.central:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_MULTI_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
