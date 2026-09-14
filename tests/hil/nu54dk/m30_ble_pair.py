@@ -548,18 +548,18 @@ def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
     if not 30.0 <= args.result_timeout <= 600.0:
         raise M30PairFailure("--result-timeout은 30..600초여야 합니다.")
-    serial_module = import_pyserial()
+    serial_module, list_ports = import_pyserial()
     peripheral = discover_endpoint(
         args.peripheral_board_id,
         args.peripheral_volume,
         args.peripheral_port,
-        serial_module.tools.list_ports,
+        list_ports,
     )
     central = discover_endpoint(
         args.central_board_id,
         args.central_volume,
         args.central_port,
-        serial_module.tools.list_ports,
+        list_ports,
     )
     validate_pair_identity(peripheral, central)
     if args.discover_only:
