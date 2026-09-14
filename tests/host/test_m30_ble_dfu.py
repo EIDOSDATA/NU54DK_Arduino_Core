@@ -84,12 +84,25 @@ class M30SecureBleDfuTests(unittest.TestCase):
             "BLESecurity.lastError() != nucode::ble::SecurityError::busy",
             'Serial.print("|LINK|role=central|level=4|key_size=16|mtu=247|smp=1")',
             'Serial.print("|BOOT|role=peripheral|active_area_id=")',
+            'Serial.print("|UNLINK|role=central")',
             '::strcmp(line, "M30DFU|1|READY?")',
             "NUCODE_M30_DFU_AUTO_CONFIRM",
         ):
             self.assertIn(token, source)
         self.assertEqual(HIL_RUNNER.PRIMARY_FLASH_AREA_ID, 1)
         self.assertNotIn("power_cut", source.casefold())
+
+    def test_hil_runner_waits_for_disconnect_before_restarting_peripheral(self) -> None:
+        """! @brief reset 응답 직후 이전 application에 START를 보내는 경쟁을 방지합니다. """
+
+        source = HIL_RUNNER_PATH.read_text(encoding="utf-8")
+        reset_body = source.split("def reset_and_reconnect", 1)[1].split(
+            "def validate_boot", 1
+        )[0]
+        self.assertLess(
+            reset_body.index("self.wait_unlink(deadline)"),
+            reset_body.index("self.reconnect(deadline)"),
+        )
 
     def test_hil_runner_cbor_round_trip_is_strict(self) -> None:
         """! @brief SMP map·array·byte·bool을 보존하고 trailing byte를 거부합니다. """

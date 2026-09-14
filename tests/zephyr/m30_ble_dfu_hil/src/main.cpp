@@ -574,6 +574,12 @@ namespace
 #endif
         else if (information.event == nucode::ble::BLEEvent::disconnected)
         {
+#if !defined(NUCODE_M30_DFU_PERIPHERAL)
+            Serial.print(protocol);
+            Serial.print("|UNLINK|role=central");
+            printSuffix();
+            Serial.println();
+#endif
             connection_handle = {};
             secured = false;
             link_reported = false;

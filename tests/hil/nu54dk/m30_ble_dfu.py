@@ -640,6 +640,10 @@ RX_PATTERN = re.compile(
     rb"^M30DFU\|1\|RX\|role=central\|data=([0-9a-f]+)"
     rb"\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
 )
+UNLINK_PATTERN = re.compile(
+    rb"^M30DFU\|1\|UNLINK\|role=central"
+    rb"\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
+)
 
 
 class DfuSession:
@@ -847,6 +851,21 @@ class DfuSession:
             except ValueError as error:
                 raise M30DfuFailure("SMP RX hex가 잘못됐습니다.") from error
 
+    def wait_unlink(self, deadline: float) -> None:
+        """! @brief reset response 뒤 기존 Peripheral 연결 종료를 확인합니다. """
+
+        while True:
+            line = self.checked_line("central", deadline)
+            match = UNLINK_PATTERN.fullmatch(line)
+            if match is None:
+                continue
+            if (
+                match.group(1).decode("ascii") != self.nonce
+                or match.group(2).decode("ascii") != self.core_revision
+            ):
+                raise M30DfuFailure("central UNLINK identity가 다릅니다.")
+            return
+
     def transaction(
         self,
         operation: int,
@@ -984,6 +1003,7 @@ class DfuSession:
         """! @brief OS management reset response 뒤 새 peripheral boot를 L4로 재연결합니다. """
 
         self.require_success(self.transaction(2, 0, 5, {}, deadline), "OS reset")
+        self.wait_unlink(deadline)
         return self.reconnect(deadline)
 
 
