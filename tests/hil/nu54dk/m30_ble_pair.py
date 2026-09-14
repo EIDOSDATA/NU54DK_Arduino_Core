@@ -570,7 +570,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     core_revision = git_revision(REPOSITORY)
     if args.expected_core_revision and args.expected_core_revision != core_revision:
         raise M30PairFailure("현재 Core revision이 --expected-core-revision과 다릅니다.")
-    board_revision = validate_board_revision(REPOSITORY, BOARD_ROOT)
+    board_revision = git_revision(BOARD_ROOT)
+    validate_board_revision(board_revision)
     build_outdir = Path(args.build_outdir).resolve()
     if not build_outdir.is_dir():
         raise M30PairFailure("--build-outdir가 directory가 아닙니다.")

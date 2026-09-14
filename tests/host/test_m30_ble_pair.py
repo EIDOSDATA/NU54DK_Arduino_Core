@@ -93,6 +93,8 @@ class M30BlePairTests(unittest.TestCase):
         self.assertIn("flash_image_pyocd", source)
         self.assertIn("serial_module, list_ports = import_pyserial()", source)
         self.assertNotIn("serial_module.tools.list_ports", source)
+        self.assertIn("board_revision = git_revision(BOARD_ROOT)", source)
+        self.assertIn("validate_board_revision(board_revision)", source)
         self.assertIn('"power_cut_injected": False', source)
         self.assertIn('"mass_erase_or_recover": False', source)
         self.assertIn("30.0 <= args.result_timeout <= 600.0", source)
