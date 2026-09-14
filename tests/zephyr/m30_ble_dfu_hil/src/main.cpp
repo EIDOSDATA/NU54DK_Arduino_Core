@@ -18,6 +18,9 @@
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/uuid.h>
 #include <zephyr/kernel.h>
+#if defined(NUCODE_M30_DFU_POWER_HIL)
+#include <zephyr/mgmt/mcumgr/mgmt/callbacks.h>
+#endif
 #include <zephyr/mgmt/mcumgr/transport/smp_bt.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/byteorder.h>
@@ -158,6 +161,33 @@ namespace
 
 #if defined(NUCODE_M30_DFU_PERIPHERAL)
 
+#if defined(NUCODE_M30_DFU_POWER_HIL)
+    struct mgmt_callback image_management_callback = {};
+
+    /** @brief DFU 최종 검증 직후 실제 전원 차단을 위한 유한 관찰 창을 엽니다. */
+    enum mgmt_cb_return onImageManagementEvent(
+        std::uint32_t event, enum mgmt_cb_return previous_status,
+        std::int32_t *return_code, std::uint16_t *group, bool *abort_more,
+        void *data, std::size_t data_size)
+    {
+        ARG_UNUSED(return_code);
+        ARG_UNUSED(group);
+        ARG_UNUSED(abort_more);
+        ARG_UNUSED(data);
+        ARG_UNUSED(data_size);
+        if (previous_status != MGMT_CB_OK)
+        {
+            return previous_status;
+        }
+        if (event == MGMT_EVT_OP_IMG_MGMT_DFU_PENDING)
+        {
+            Serial.println("M30POWER|1|WINDOW|point=image_validation_write");
+            k_msleep(15000);
+        }
+        return MGMT_CB_OK;
+    }
+#endif
+
     /** @brief 실행 image와 explicit confirm 결과를 UART로 보고합니다. */
     void reportBoot()
     {
@@ -180,6 +210,21 @@ namespace
         printSuffix();
         Serial.println();
     }
+
+#if defined(NUCODE_M30_DFU_POWER_HIL)
+    /** @brief settings load 결과와 bond 구조 상태를 민감 정보 없이 보고합니다. */
+    void reportPowerState()
+    {
+        Serial.print("M30POWER|1|STATE|bond_count=");
+        Serial.print(static_cast<unsigned long>(BLESecurity.bondCount()));
+        Serial.print("|rejected_bonds=");
+        Serial.print(static_cast<unsigned long>(BLESecurity.rejectedBondCount()));
+        Serial.print("|bonded=");
+        Serial.print(BLESecurity.bonded() ? 1 : 0);
+        Serial.print("|settings_valid=");
+        Serial.println(BLESecurity.rejectedBondCount() == 0U ? 1 : 0);
+    }
+#endif
 
     /** @brief nonce로 묶은 connectable advertising을 시작합니다. */
     bool startAdvertising()
@@ -677,6 +722,13 @@ namespace
 #endif
             return;
         }
+#if defined(NUCODE_M30_DFU_PERIPHERAL) && defined(NUCODE_M30_DFU_POWER_HIL)
+        if (::strcmp(line, "M30POWER|1|STATE?") == 0)
+        {
+            reportPowerState();
+            return;
+        }
+#endif
         constexpr char start_marker[] = "M30DFU|1|START|";
         if (::strncmp(line, start_marker, sizeof(start_marker) - 1U) == 0 && !started)
         {
@@ -760,6 +812,11 @@ void setup()
 {
     Serial.begin(115200);
 #if defined(NUCODE_M30_DFU_PERIPHERAL)
+#if defined(NUCODE_M30_DFU_POWER_HIL)
+    image_management_callback.callback = onImageManagementEvent;
+    image_management_callback.event_id = MGMT_EVT_OP_IMG_MGMT_DFU_PENDING;
+    mgmt_callback_register(&image_management_callback);
+#endif
     if (!BLESecureDfu.begin())
     {
         fail("dfu-begin");

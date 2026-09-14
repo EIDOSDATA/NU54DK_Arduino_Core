@@ -10,6 +10,7 @@ project(nucode_m30_ble_dfu_hil)
 # @brief 일반 빌드와 sysbuild에서 전달된 역할 변수를 동일하게 읽습니다.
 zephyr_get(M30_DFU_ROLE)
 zephyr_get(M30_DFU_AUTO_CONFIRM)
+zephyr_get(M30_DFU_POWER_HIL)
 
 if(NOT "${M30_DFU_ROLE}" STREQUAL "peripheral" AND
    NOT "${M30_DFU_ROLE}" STREQUAL "central")
@@ -68,5 +69,8 @@ if("${M30_DFU_ROLE}" STREQUAL "peripheral")
     target_compile_definitions(app PRIVATE NUCODE_M30_DFU_AUTO_CONFIRM=0)
   else()
     target_compile_definitions(app PRIVATE NUCODE_M30_DFU_AUTO_CONFIRM=1)
+  endif()
+  if("${M30_DFU_POWER_HIL}" STREQUAL "1")
+    target_compile_definitions(app PRIVATE NUCODE_M30_DFU_POWER_HIL=1)
   endif()
 endif()
