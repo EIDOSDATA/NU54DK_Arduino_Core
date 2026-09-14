@@ -1,10 +1,10 @@
-# 개발 인계 — M29 완료, 다음 M30
+# 개발 인계 — M30-W01·HOST-W01~W03 진행
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
-OS/adapter 상호운용 완료를 뜻하지 않습니다. 다음 구현 재개 지점은 **M30-W01 착수 계약과
-capability·장비·수치 gate 확정**, 그리고 동시에 시작하는 **HOST-W01 Windows 전용 가정
-inventory**입니다.
+OS/adapter 상호운용 완료를 뜻하지 않습니다. 현재 구현 지점은 **M30-W01 착수 계약과
+capability gate**, 그리고 병행하는 **HOST-W01~W03 inventory·Host resolver·launcher**입니다.
+M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 시험에서만 사람 개입을 요청합니다.
 
 ## 1. 현재 체크포인트
 
@@ -19,9 +19,12 @@ inventory**입니다.
 | M29 W07-D/E | 세 보드 MULTI·M19/M20/M21/M28 회귀 PASS — exact `16eb8fce…` |
 | M29 상호운용 | Windows 11·Intel Bluetooth·WinRT 기본 GATT PASS — exact `a964ae20…` |
 | M29 W08 최종 재검증 | 분할 후 세 role build·3보드 MULTI PASS — exact `ab3f85d3…` |
-| 다음 개발 단계 | M30 BLE Security·Profile·최소 secure BLE DFU |
+| M30 | W01 계약·HOST-W01~W03 구현 진행, test ID 0/10 PASS |
+| M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
+| M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
+| M30 자동 중단점 | `M30-POWER-01` 실제 target USB 전원 차단 직전 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
-| Host 구현 상태 | 계획 승인, HOST-W01~W08 미착수; M30 시작·M33 공개 전 완료 |
+| Host 구현 상태 | HOST-W01~W03 구현·gate 진행, HOST-W04~W08 미착수 |
 
 ## 2. 고정 환경
 
@@ -82,6 +85,12 @@ inventory**입니다.
    Windows 전용 진입점을 추가하지 않고 세 Host에서 같은 backend를 사용합니다.
 6. M30 test ID별 보드/peer 수, 반복 수, timeout, negative 입력과 증거 protocol을 고정한 뒤
    Host → target build → 실제 HIL 순서로 진행합니다.
+
+고정 결과는 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
+[`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)에 있다. 실제 OOB carrier는
+wired USB/DAPLink VCOM이며 NFC adapter는 구현·build만 하고 RF는 `NOT RUN`이다. 마지막
+`M30-POWER-01`은 네 주입 지점마다 3회 실제 target USB 전원 차단이 필요하며 reset은 대체 증거가
+아니다.
 
 ## 6. 재검증 규칙
 

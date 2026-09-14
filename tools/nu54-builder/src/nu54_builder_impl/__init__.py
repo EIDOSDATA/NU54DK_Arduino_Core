@@ -141,6 +141,21 @@ from .frontend import (
     record_source,
     create_archive,
 )
+from . import host
+from .host import (
+    HostDescriptor,
+    EXECUTABLE_CANDIDATES,
+    canonical_host_os,
+    canonical_architecture,
+    version_tuple,
+    linux_release,
+    describe_host,
+    require_supported_host,
+    executable_candidates,
+    resolve_toolchain_executable,
+    application_data_root,
+    user_cache_root,
+)
 from . import locking
 from .locking import (
     process_is_alive,
@@ -293,6 +308,18 @@ __all__ = [
     'record_path',
     'record_source',
     'create_archive',
+    'HostDescriptor',
+    'EXECUTABLE_CANDIDATES',
+    'canonical_host_os',
+    'canonical_architecture',
+    'version_tuple',
+    'linux_release',
+    'describe_host',
+    'require_supported_host',
+    'executable_candidates',
+    'resolve_toolchain_executable',
+    'application_data_root',
+    'user_cache_root',
     'is_within',
     'directory_size',
     'cache_entry_is_locked',

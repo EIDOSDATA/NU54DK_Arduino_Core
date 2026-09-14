@@ -12,6 +12,7 @@ test ID **10/10 PASS**입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [151 — M30-W01 계약과 HOST-W01~W03 기반](151_M30_W01_계약과_HOST_W01_W03_기반.md) | 유선 OOB/NFC 비검증·secure DFU 계약, Host inventory·resolver·launcher와 Windows 회귀 |
 | [150 — v0.5.0 다중 Host 지원 계획 정비](150_v0.5.0_다중_Host_지원_계획_정비.md) | Windows·Ubuntu·macOS 지원 범위, M30 시작·M33 완료 계약 |
 | [149 — M29-W07 3보드·회귀·상호운용과 W08 완료](149_M29_W07_3보드_회귀_상호운용과_W08_완료.md) | MULTI/REG, Windows/Intel GATT, 예제·리팩터링·M30 인계 |
 | [148 — 개발문서 전수 검토와 README 개선](148_개발문서_전수검토와_README_개선.md) | 지원 범위·개발 현황 안내, 중복 설명 정리와 문서 검사 |

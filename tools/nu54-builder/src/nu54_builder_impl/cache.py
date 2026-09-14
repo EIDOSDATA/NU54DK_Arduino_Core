@@ -51,6 +51,8 @@ def cache_input_manifest(
         "release-manifest.json",
         "post_install.bat",
         "platform.txt",
+        "tools/nu54-builder/nu54-builder.cmd",
+        "tools/nu54-builder/nu54-builder.sh",
         "boards.txt",
         "programmers.txt",
         "cores",

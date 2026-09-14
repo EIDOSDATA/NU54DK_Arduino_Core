@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "milestone": "M30",
+  "product_target": "v0.5.0",
+  "phase": "implementation",
+  "milestone_status": "in_progress",
+  "baseline": {
+    "supported_release": "v0.4.1",
+    "source_version": "0.4.1-dev",
+    "core_revision": "30699be4b58439fbd4c90ffb7df46009f7e893fe",
+    "ncs_tag": "v3.4.0",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1",
+    "profile": "ble",
+    "max_connections": 2
+  },
+  "security_policy": {
+    "default_pairing": "le_secure_connections_only",
+    "minimum_encryption_key_bytes": 16,
+    "mitm_required_when_io_permits": true,
+    "legacy_pairing_default_enabled": false,
+    "legacy_signing_publication": "legacy_opt_in",
+    "bond_identity_key": "resolved_identity_not_rpa",
+    "simultaneous_security_contexts": 2,
+    "pairing_response_slots_per_link": 1,
+    "bond_records": 4
+  },
+  "oob_policy": {
+    "primary": {
+      "carrier": "wired_usb_daplink_vcom",
+      "payload": "le_sc_local_and_remote_oob_data",
+      "default_enabled": false,
+      "physical_hil_required": true,
+      "publication": "stable_after_hil"
+    },
+    "nfc": {
+      "carrier": "nfct_ndef_adapter",
+      "implementation_required": true,
+      "build_and_contract_required": true,
+      "default_enabled": false,
+      "physical_hil": "not_run_by_scope_decision",
+      "supported": false,
+      "publication": "implementation_only_unverified"
+    }
+  },
+  "profile_catalog": [
+    {"id": "battery_service", "status": "baseline", "publication": "stable"},
+    {"id": "device_information_service", "status": "baseline", "publication": "stable"},
+    {"id": "hid_keyboard", "status": "baseline", "publication": "stable"},
+    {"id": "hid_mouse", "status": "planned", "publication": "candidate"},
+    {"id": "hid_consumer_control", "status": "planned", "publication": "candidate"},
+    {"id": "heart_rate_service", "status": "planned", "publication": "candidate"},
+    {"id": "environmental_sensing_service", "status": "planned", "publication": "candidate"}
+  ],
+  "dfu_policy": {
+    "default_loaderless_profile_unchanged": true,
+    "delivery": "separate_secure_ble_dfu_profile",
+    "bootloader": "mcuboot",
+    "transport": "mcumgr_smp_over_ble",
+    "transport_security": "authenticated_encrypted_connection",
+    "layout": {
+      "boot_offset": 0,
+      "boot_bytes": 63488,
+      "slot0_offset": 65536,
+      "slot0_bytes": 729088,
+      "slot1_offset": 794624,
+      "slot1_bytes": 729088,
+      "storage_offset": 1523712,
+      "storage_bytes": 36864
+    },
+    "trust_key": {
+      "algorithm": "ecdsa_p256",
+      "repository_private_key": "forbidden",
+      "development_test_key": "generated_outside_repository",
+      "production_key": "user_supplied_outside_repository"
+    },
+    "anti_rollback": "security_counter_and_confirmed_image",
+    "power_loss_recovery_required": true
+  },
+  "source_capabilities": [
+    {"id": "smp_io_capabilities", "source_status": "candidate_present", "implementation_status": "baseline_revalidation", "source_references": ["libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h"]},
+    {"id": "le_secure_connections_oob", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["zephyr/include/zephyr/bluetooth/conn.h", "zephyr/include/zephyr/bluetooth/bluetooth.h"]},
+    {"id": "bond_privacy_migration", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["libraries/NUCODE_BLE_Security/src/internal/SecurityInternal.h"]},
+    {"id": "adopted_profiles", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h"]},
+    {"id": "mcuboot_signed_image", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["zephyr/share/sysbuild/images/bootloader/Kconfig"]},
+    {"id": "mcumgr_ble_transport", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["zephyr/subsys/mgmt/mcumgr/transport/Kconfig.bluetooth"]},
+    {"id": "dfu_rollback_recovery", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["nrf/samples/dfu/smp_svr_mini_boot"]}
+  ],
+  "resource_contract": {
+    "security_link_contexts": 2,
+    "pairing_response_slots": 2,
+    "oob_records": 2,
+    "bond_records": 4,
+    "maximum_oob_frame_bytes": 192,
+    "maximum_profile_instances": 7,
+    "mcumgr_connections": 1,
+    "mcumgr_reassembly_bytes": 1024,
+    "dfu_slots": 2
+  },
+  "work_packages": [
+    {"id": "M30-W01", "status": "in_progress", "title": "capability_policy_resource_protocol"},
+    {"id": "M30-W02", "status": "not_started", "title": "per_link_security_and_key_lifecycle"},
+    {"id": "M30-W03", "status": "not_started", "title": "wired_oob_bond_privacy_nfc_adapter"},
+    {"id": "M30-W04", "status": "not_started", "title": "adopted_profile_catalog"},
+    {"id": "M30-W05", "status": "not_started", "title": "mcuboot_layout_signing"},
+    {"id": "M30-W06", "status": "not_started", "title": "secure_ble_dfu_negative_rollback"},
+    {"id": "M30-W07", "status": "not_started", "title": "integrated_hil_before_power_loss"},
+    {"id": "M30-W08", "status": "blocked_by_power_hil", "title": "power_recovery_regression_documents_ci"}
+  ],
+  "host_work_packages": [
+    {"id": "HOST-W01", "status": "completed", "title": "windows_assumption_inventory"},
+    {"id": "HOST-W02", "status": "completed", "title": "host_descriptor_executable_path_resolver"},
+    {"id": "HOST-W03", "status": "completed", "title": "thin_cmd_and_posix_launchers"},
+    {"id": "HOST-W04", "status": "not_started", "title": "platform_prerequisites"},
+    {"id": "HOST-W05", "status": "not_started", "title": "portable_cache_lock_paths"},
+    {"id": "HOST-W06", "status": "not_started", "title": "package_and_ci_matrix"},
+    {"id": "HOST-W07", "status": "not_started", "title": "physical_upload_debug_serial"},
+    {"id": "HOST-W08", "status": "not_started", "title": "release_regression_support_matrix"}
+  ],
+  "execution_plan": [
+    {"id": "M30-CAP-01", "boards": 1, "timeout_seconds": 120, "status": "not_run", "criteria": {"capability_groups": 7, "revision_mismatches": 0}},
+    {"id": "M30-PAIR-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"io_capabilities": 5, "rounds_per_capability": 10, "unexpected_auth_failures": 0}},
+    {"id": "M30-OOB-01", "boards": 2, "timeout_seconds": 600, "status": "not_run", "criteria": {"wired_pairings": 20, "mitm_links": 20, "mismatched_payload_accepts": 0, "nfc_rf_runs": 0}},
+    {"id": "M30-BOND-01", "boards": 2, "timeout_seconds": 900, "status": "not_run", "criteria": {"bonded_reconnects": 20, "privacy_rotations": 3, "stale_key_accepts": 0}},
+    {"id": "M30-PROFILE-01", "boards": 2, "timeout_seconds": 900, "status": "not_run", "criteria": {"catalog_entries": 7, "operations_per_service": 100, "payload_errors": 0}},
+    {"id": "M30-BOOT-01", "boards": 1, "timeout_seconds": 900, "status": "not_run", "criteria": {"signed_boots": 20, "unsigned_accepts": 0, "wrong_key_accepts": 0}},
+    {"id": "M30-DFU-01", "boards": 2, "timeout_seconds": 1200, "status": "not_run", "criteria": {"successful_updates": 10, "image_hash_mismatches": 0, "unconfirmed_boots": 0}},
+    {"id": "M30-DFU-NEG-01", "boards": 2, "timeout_seconds": 1200, "status": "not_run", "criteria": {"negative_classes": 5, "repetitions_per_class": 20, "invalid_image_accepts": 0, "rollback_accepts": 0}},
+    {"id": "M30-MULTI-01", "boards": 3, "timeout_seconds": 1200, "status": "not_run", "criteria": {"simultaneous_links": 2, "security_operations_per_link": 100, "cross_link_events": 0}},
+    {"id": "M30-POWER-01", "boards": 2, "timeout_seconds": 1800, "status": "blocked_human_power_cut", "criteria": {"injection_points": 4, "cuts_per_point": 3, "recovery_failures": 0, "invalid_image_boots": 0}}
+  ],
+  "equipment": {
+    "nu54dk_boards": 3,
+    "independent_dap_uart_paths": 3,
+    "wired_oob_path": "daplink_vcom",
+    "nfc_antenna_fixture": "not_required_by_scope_decision",
+    "programmable_usb_power_switch": "unconfirmed",
+    "manual_power_cut_required": true
+  },
+  "completion": {
+    "completed_work_packages": 0,
+    "total_work_packages": 8,
+    "passed_test_ids": 0,
+    "total_test_ids": 10,
+    "current_stop_boundary": "before_m30_power_01_physical_cut",
+    "power_hil": "not_run"
+  }
+}

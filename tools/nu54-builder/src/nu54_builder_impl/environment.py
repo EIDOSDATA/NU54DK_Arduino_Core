@@ -27,6 +27,11 @@ from .common import (
     release_manifest,
 )
 from .paths import build_cache_root
+from .host import (
+    application_data_root,
+    canonical_host_os,
+    resolve_toolchain_executable,
+)
 
 
 ## @brief 요청 platform root가 exact Git checkout인지 확인합니다.
@@ -61,7 +66,11 @@ def discover_ncs_root(*, prefer_user_profile: bool = False) -> Path:
             "명시한 NUCODE_NCS_ROOT에 nRF Connect SDK v3.4.0이 없습니다: "
             f"{candidate}"
         )
-    default_candidates = (Path("C:/ncs/v3.4.0"), Path.home() / "ncs" / "v3.4.0")
+    default_candidates = (
+        Path("C:/ncs/v3.4.0"),
+        Path.home() / "ncs" / "v3.4.0",
+        Path("/opt/nordic/ncs/v3.4.0"),
+    )
     if prefer_user_profile:
         default_candidates = tuple(reversed(default_candidates))
     for candidate in default_candidates:
@@ -98,7 +107,7 @@ def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> 
         pinned = toolchains_root / TOOLCHAIN_BUNDLE_ID
         if (
             (pinned / "environment.json").is_file()
-            and (pinned / "opt" / "bin" / "python.exe").is_file()
+            and resolve_toolchain_executable(pinned, "python", required=False) is not None
         ):
             return pinned.resolve()
         raise AdapterError(
@@ -122,7 +131,10 @@ def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> 
         if key in visited:
             continue
         visited.add(key)
-        if (candidate / "environment.json").is_file() and (candidate / "opt" / "bin" / "python.exe").is_file():
+        if (
+            (candidate / "environment.json").is_file()
+            and resolve_toolchain_executable(candidate, "python", required=False) is not None
+        ):
             return candidate.resolve()
     raise AdapterError(
         "NCS toolchain environment.json을 찾을 수 없습니다. NUCODE_TOOLCHAIN_ROOT를 설정하십시오."
@@ -162,11 +174,8 @@ def prerequisite_state_root() -> Path:
     configured = os.environ.get("NUCODE_PREREQUISITE_STATE_ROOT")
     if configured:
         return canonical_path(configured)
-    local_data = os.environ.get("LOCALAPPDATA")
-    if not local_data:
-        raise AdapterError("[NU54:E_PREREQUISITE_STATE] LOCALAPPDATA 환경 변수가 없습니다.")
     return canonical_path(
-        Path(local_data) / "NUCODE" / "NU54DK_Arduino_Core" / "prerequisites"
+        application_data_root() / "NUCODE" / "NU54DK_Arduino_Core" / "prerequisites"
     )
 
 
@@ -240,11 +249,10 @@ def validate_packaged_prerequisites(
     marker_ncs_root = ready.get("ncs_root")
     marker_toolchain_root = ready.get("toolchain_root")
     marker_nrfutil = ready.get("nrfutil_path")
-    local_data = os.environ.get("LOCALAPPDATA")
-    if not local_data:
-        raise AdapterError("[NU54:E_PREREQUISITE_STATE] LOCALAPPDATA 환경 변수가 없습니다.")
+    host_os = canonical_host_os("windows" if os.name == "nt" else os.uname().sysname)
+    nrfutil_name = "nrfutil.exe" if host_os == "windows" else "nrfutil"
     expected_nrfutil = canonical_path(
-        Path(local_data) / "NUCODE" / "NU54DK_Arduino_Core" / "tools" / "nrfutil.exe"
+        application_data_root() / "NUCODE" / "NU54DK_Arduino_Core" / "tools" / nrfutil_name
     )
     if (
         not isinstance(marker_ncs_root, str)
@@ -259,11 +267,8 @@ def validate_packaged_prerequisites(
         )
     if toolchain_root.name != TOOLCHAIN_BUNDLE_ID:
         raise AdapterError("[NU54:E_PREREQUISITE_TOOLCHAIN] 고정 Toolchain bundle이 아닙니다.")
-    bundled_git = toolchain_root / "bin" / "git.exe"
-    if not bundled_git.is_file():
-        raise AdapterError(
-            "[NU54:E_PREREQUISITE_TOOLCHAIN] Toolchain bundle의 Git 실행 파일이 없습니다."
-        )
+    bundled_git = resolve_toolchain_executable(toolchain_root, "git")
+    assert bundled_git is not None
     toolchain_manifest = load_json_object(
         toolchain_root / "manifest.json", "E_PREREQUISITE_TOOLCHAIN"
     )
@@ -293,24 +298,17 @@ def tool_environment(platform_root: Path | None = None) -> ToolEnvironment:
     environment = apply_toolchain_environment(toolchain_root)
     zephyr_base = ncs_root / "zephyr"
     environment["ZEPHYR_BASE"] = str(zephyr_base)
-    west = toolchain_root / "opt" / "bin" / "Scripts" / "west.exe"
-    git = toolchain_root / "bin" / "git.exe"
-    compiler = (
-        toolchain_root
-        / "opt"
-        / "zephyr-sdk"
-        / "gnu"
-        / "arm-zephyr-eabi"
-        / "bin"
-        / "arm-zephyr-eabi-g++.exe"
-    )
-    size_tool = compiler.with_name("arm-zephyr-eabi-size.exe")
-    ccache = toolchain_root / "opt" / "bin" / ("ccache.exe" if os.name == "nt" else "ccache")
-    for executable in (west, git, compiler, size_tool):
-        if not executable.is_file():
-            raise AdapterError(f"NCS toolchain 실행 파일이 없습니다: {executable}")
+    west = resolve_toolchain_executable(toolchain_root, "west")
+    git = resolve_toolchain_executable(toolchain_root, "git")
+    compiler = resolve_toolchain_executable(toolchain_root, "cxx")
+    size_tool = resolve_toolchain_executable(toolchain_root, "size")
+    ccache = resolve_toolchain_executable(toolchain_root, "ccache", required=False)
+    assert west is not None
+    assert git is not None
+    assert compiler is not None
+    assert size_tool is not None
     ccache_root = build_cache_root() / "compiler-cache"
-    if ccache.is_file():
+    if ccache is not None:
         ccache_root.mkdir(parents=True, exist_ok=True)
         environment["CCACHE_DIR"] = str(ccache_root)
         environment["CCACHE_MAXSIZE"] = os.environ.get(
@@ -326,7 +324,7 @@ def tool_environment(platform_root: Path | None = None) -> ToolEnvironment:
         "git": git,
         "compiler": compiler,
         "size": size_tool,
-        "ccache": ccache if ccache.is_file() else None,
+        "ccache": ccache,
         "ccache_root": ccache_root,
     }
 
