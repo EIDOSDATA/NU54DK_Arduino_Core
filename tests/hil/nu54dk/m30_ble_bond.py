@@ -258,7 +258,7 @@ def suffix(nonce: str, core_revision: str) -> bytes:
 def result_pattern(role: str, nonce: str, core_revision: str) -> re.Pattern[bytes]:
     """! @brief final bond_count만 0..1을 허용하는 RESULT pattern을 반환합니다. """
 
-    rotations = rb"\|privacy_rotations=3" if role == "central" else b""
+    rotations = rb"\|privacy_rotations=3" if role == "peripheral" else b""
     return re.compile(
         rb"M30BOND\|1\|RESULT\|role="
         + role.encode("ascii")
@@ -299,7 +299,7 @@ def collect_final(
     return BondResult(
         role=role,
         reconnects=ROUNDS,
-        rotations=ROTATIONS if role == "central" else 0,
+        rotations=ROTATIONS if role == "peripheral" else 0,
         migration=1,
         stale_key_accepts=0,
         new_pairings=0,
@@ -459,6 +459,8 @@ def execute_hil(
             + suffix(nonce, core_revision),
             b"M30BOND|1|ADVERTISE|role=peripheral|phase=resume"
             + suffix(nonce, core_revision),
+            b"M30BOND|1|RPA|role=peripheral|rotations=3"
+            + suffix(nonce, core_revision),
         ):
             wait_exact(
                 ports["peripheral"],
@@ -482,10 +484,7 @@ def execute_hil(
 
         reconnect_records: dict[str, list[bytes]] = {
             "peripheral": [],
-            "central": [
-                b"M30BOND|1|RPA|role=central|rotations=3"
-                + suffix(nonce, core_revision)
-            ],
+            "central": [],
         }
         for role in endpoints:
             reconnect_records[role].extend(
@@ -672,7 +671,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "power_cut_injected": False,
         "mass_erase_or_recover": False,
         "bonded_reconnects": min(value.reconnects for value in results.values()),
-        "privacy_rotations": results["central"].rotations,
+        "privacy_rotations": results["peripheral"].rotations,
         "metadata_migrations": min(value.migration for value in results.values()),
         "stale_key_attempts": 1,
         "stale_key_accepts": max(value.stale_key_accepts for value in results.values()),

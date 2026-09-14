@@ -27,8 +27,8 @@ class M30BleBondHilTests(unittest.TestCase):
         nonce = "01" * 16
         revision = "a" * 40
         line = (
-            "M30BOND|1|RESULT|role=central|bonded_reconnects=20|privacy_rotations=3|"
-            "migration=1|stale_key_accepts=0|new_pairings=0|bond_count=1|"
+            "M30BOND|1|RESULT|role=central|bonded_reconnects=20|migration=1|"
+            "stale_key_accepts=0|new_pairings=0|bond_count=1|"
             f"callback_context=pass|nonce={nonce}|core={revision}"
         ).encode("ascii")
         self.assertIsNotNone(BOND.result_pattern("central", nonce, revision).fullmatch(line))
@@ -39,15 +39,16 @@ class M30BleBondHilTests(unittest.TestCase):
         nonce = "23" * 16
         revision = "b" * 40
         valid = (
-            "M30BOND|1|RESULT|role=peripheral|bonded_reconnects=20|migration=1|"
-            "stale_key_accepts=0|new_pairings=0|bond_count=0|callback_context=pass|"
+            "M30BOND|1|RESULT|role=peripheral|bonded_reconnects=20|privacy_rotations=3|"
+            "migration=1|stale_key_accepts=0|new_pairings=0|bond_count=0|"
+            "callback_context=pass|"
             f"nonce={nonce}|core={revision}"
         ).encode("ascii")
         pattern = BOND.result_pattern("peripheral", nonce, revision)
         self.assertIsNotNone(pattern.fullmatch(valid))
         self.assertIsNone(pattern.fullmatch(valid.replace(b"accepts=0", b"accepts=1")))
         self.assertIsNone(
-            pattern.fullmatch(valid.replace(b"|migration=1", b"|privacy_rotations=3|migration=1"))
+            pattern.fullmatch(valid.replace(b"|privacy_rotations=3", b""))
         )
 
     def test_build_matrix_contains_both_bond_roles(self) -> None:

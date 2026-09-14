@@ -49,7 +49,7 @@ namespace
     constexpr std::size_t command_capacity = 128U;
     constexpr std::uint16_t company_id = 0x3054U;
     constexpr std::uint8_t required_reconnects = 20U;
-    constexpr std::uint8_t required_rpa_addresses = 4U;
+    [[maybe_unused]] constexpr std::uint32_t required_rpa_rotations = 3U;
     constexpr std::int64_t security_delay_ms = 350;
     constexpr std::int64_t action_delay_ms = 250;
     constexpr std::int64_t protocol_timeout_ms = 900000;
@@ -81,13 +81,15 @@ namespace
     bool security_pending = false;
     bool disconnect_pending = false;
     bool restart_pending = false;
+    [[maybe_unused]] bool rpa_restart_pending = false;
+    [[maybe_unused]] bool rpa_reported = false;
     bool reboot_pending = false;
     bool stale_rejected = false;
     bool stale_secure = false;
     bool result_reported = false;
     std::uint8_t reconnects = 0U;
-    [[maybe_unused]] std::uint8_t rpa_count = 0U;
-    [[maybe_unused]] nucode::ble::BLEAddress observed_rpas[required_rpa_addresses] = {};
+    [[maybe_unused]] std::uint32_t rotation_baseline = 0U;
+    [[maybe_unused]] nucode::ble::BLEAdvertisingSetHandle advertising_set;
     std::int64_t action_due_ms = 0;
     std::int64_t protocol_deadline_ms = 0;
 
@@ -302,48 +304,41 @@ namespace
         return false;
     }
 
-    /** @brief 현재 nonce의 connectable legacy advertising을 시작합니다. */
+    /** @brief 현재 nonce의 connectable extended advertising을 시작합니다. */
     [[maybe_unused]] bool startAdvertising(bool configure)
     {
-        if (configure &&
-            !BLEAdvertising.setManufacturerData(company_id, nonce_binary,
-                                                  sizeof(nonce_binary)))
+        if (configure)
         {
-            return false;
+            std::uint8_t payload[23] = {
+                2U,
+                BT_DATA_FLAGS,
+                BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR,
+                static_cast<std::uint8_t>(nonce_bytes + 3U),
+                BT_DATA_MANUFACTURER_DATA,
+                static_cast<std::uint8_t>(company_id & 0xffU),
+                static_cast<std::uint8_t>(company_id >> 8U),
+            };
+            ::memcpy(&payload[7], nonce_binary, sizeof(nonce_binary));
+            nucode::ble::BLEExtendedAdvertisingParameters parameters = {};
+            parameters.connectable = true;
+            parameters.sid = 7U;
+            if (!BLEExtendedAdvertising.create(parameters, advertising_set) ||
+                !BLEExtendedAdvertising.setData(advertising_set, payload, sizeof(payload)))
+            {
+                return false;
+            }
         }
-        return BLEAdvertising.start();
+        return BLEExtendedAdvertising.start(advertising_set);
     }
 
 #if defined(NUCODE_M30_BOND_CENTRAL)
     /** @brief 현재 nonce를 찾는 passive scan을 시작합니다. */
     bool startScan()
     {
-        return BLEScan.clearFilters() && BLEScan.start(false);
+        return BLEScan.clearFilters() && BLEScan.startExtended(false, false, true);
     }
 
-    /** @brief 중복 없는 RPA baseline+3회 주소만 고정 배열에 보존합니다. */
-    void rememberRpa(const nucode::ble::BLEAddress &address)
-    {
-        if (address.type() != nucode::ble::BLEAddress::Type::random_address ||
-            (address.data()[5] & 0xc0U) != 0x40U)
-        {
-            fail("non-rpa-advertiser");
-            return;
-        }
-        for (std::uint8_t index = 0U; index < rpa_count; ++index)
-        {
-            if (observed_rpas[index] == address)
-            {
-                return;
-            }
-        }
-        if (rpa_count < ARRAY_SIZE(observed_rpas))
-        {
-            observed_rpas[rpa_count++] = address;
-        }
-    }
-
-    /** @brief 정확한 nonce·RPA를 가진 peer만 선택해 연결합니다. */
+    /** @brief 정확한 nonce를 가진 resolved peer만 선택해 연결합니다. */
     void onScanResult(const nucode::ble::BLEScanResult &result, void *context)
     {
         ARG_UNUSED(context);
@@ -351,18 +346,6 @@ namespace
             result.scan_response || !validPayload(result) || connection_handle.valid())
         {
             return;
-        }
-        if (phase == Phase::resume && reconnects == 0U)
-        {
-            rememberRpa(result.address);
-            if (protocol_failed || rpa_count < required_rpa_addresses)
-            {
-                return;
-            }
-            Serial.print(protocol);
-            Serial.print("|RPA|role=central|rotations=3");
-            printSuffix();
-            Serial.println();
         }
         if (!BLEScan.stop() || !BLEConnection.connect(result.address, connection_handle))
         {
@@ -486,9 +469,9 @@ namespace
         Serial.print(roleName());
         Serial.print("|bonded_reconnects=");
         Serial.print(reconnects);
-#if defined(NUCODE_M30_BOND_CENTRAL)
+#if !defined(NUCODE_M30_BOND_CENTRAL)
         Serial.print("|privacy_rotations=");
-        Serial.print(static_cast<unsigned int>(rpa_count - 1U));
+        Serial.print(required_rpa_rotations);
 #endif
         Serial.print("|migration=");
         Serial.print(BLESecurity.bondMigrationCount());
@@ -513,6 +496,16 @@ namespace
         {
             return;
         }
+#if !defined(NUCODE_M30_BOND_CENTRAL)
+        if (information.event == nucode::ble::BLEEvent::rpa_expired &&
+            phase == Phase::resume && reconnects == 0U &&
+            information.advertising_set == advertising_set)
+        {
+            rpa_restart_pending = true;
+            action_due_ms = k_uptime_get() + 50;
+            return;
+        }
+#endif
         if (information.event == nucode::ble::BLEEvent::connected &&
             (phase == Phase::prime || phase == Phase::resume || phase == Phase::stale))
         {
@@ -758,10 +751,14 @@ namespace
         Serial.print("|SCAN|role=central|phase=");
         Serial.print(phaseName(phase));
 #else
-        if (phase == Phase::resume && !BLEPrivacy.setRotationTimeout(1U))
+        if (phase == Phase::resume)
         {
-            fail("privacy-timeout");
-            return;
+            if (!BLEPrivacy.setRotationTimeout(1U))
+            {
+                fail("privacy-timeout");
+                return;
+            }
+            rotation_baseline = BLEPrivacy.expirationCount();
         }
         if (!startAdvertising(true))
         {
@@ -954,6 +951,31 @@ namespace
             }
 #endif
         }
+#if !defined(NUCODE_M30_BOND_CENTRAL)
+        if (rpa_restart_pending && now >= action_due_ms)
+        {
+            rpa_restart_pending = false;
+            const std::uint32_t rotations =
+                BLEPrivacy.expirationCount() - rotation_baseline;
+            if ((BLEExtendedAdvertising.running(advertising_set) &&
+                 !BLEExtendedAdvertising.stop(advertising_set)) ||
+                (rotations >= required_rpa_rotations &&
+                 !BLEPrivacy.setRotationTimeout(60U)) ||
+                !BLEExtendedAdvertising.start(advertising_set))
+            {
+                fail("privacy-rpa-restart");
+                return;
+            }
+            if (rotations >= required_rpa_rotations && !rpa_reported)
+            {
+                rpa_reported = true;
+                Serial.print(protocol);
+                Serial.print("|RPA|role=peripheral|rotations=3");
+                printSuffix();
+                Serial.println();
+            }
+        }
+#endif
     }
 } // namespace
 
@@ -987,14 +1009,6 @@ void setup()
     }
 #if defined(NUCODE_M30_BOND_CENTRAL)
     BLEScan.onResult(handleScanResult);
-#else
-    if (!BLEAdvertising.clear() || !BLEAdvertising.setConnectable(true) ||
-        !BLEAdvertising.setFlags(BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR) ||
-        !BLEAdvertising.setScanResponseName(true))
-    {
-        fail("advertising-config");
-        return;
-    }
 #endif
     resume_available = loadSession();
 }
