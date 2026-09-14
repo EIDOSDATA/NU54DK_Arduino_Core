@@ -73,6 +73,8 @@ class M30BleBondHilTests(unittest.TestCase):
             'rb"\\|migration=1\\|stale_key_accepts=0\\|new_pairings=0"',
             runner,
         )
+        self.assertIn("M30_BOND_PROGRESS={decoded}", runner)
+        self.assertIn('peripheral_path.write_bytes(captures["peripheral"])', runner)
 
 
 if __name__ == "__main__":

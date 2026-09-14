@@ -194,12 +194,13 @@ def capture_line(capture: bytearray, line: bytes) -> None:
     """! @brief ASCII protocol line을 bounded transcript에 추가합니다. """
 
     try:
-        line.decode("ascii")
+        decoded = line.decode("ascii")
     except UnicodeDecodeError as error:
         raise M30BondFailure("M30-BOND-01 protocol line이 ASCII가 아닙니다.") from error
     capture.extend(line + b"\n")
     if len(capture) > MAX_TRANSCRIPT_BYTES:
         raise M30BondFailure("M30-BOND-01 transcript가 허용 크기를 넘었습니다.")
+    print(f"M30_BOND_PROGRESS={decoded}", flush=True)
 
 
 def send_line(serial_port: Any, line: str) -> None:
@@ -630,17 +631,24 @@ def main(arguments: Sequence[str] | None = None) -> int:
     captures = {"peripheral": bytearray(), "central": bytearray()}
     nonce = build_nonce()
     started = time.monotonic()
-    results, flash_results = execute_hil(
-        serial_module,
-        endpoints,
-        images,
-        args.baud,
-        args.flash_timeout,
-        args.result_timeout,
-        core_revision,
-        nonce,
-        captures,
-    )
+    try:
+        results, flash_results = execute_hil(
+            serial_module,
+            endpoints,
+            images,
+            args.baud,
+            args.flash_timeout,
+            args.result_timeout,
+            core_revision,
+            nonce,
+            captures,
+        )
+    except M30BondFailure as error:
+        peripheral_path.write_bytes(captures["peripheral"])
+        central_path.write_bytes(captures["central"])
+        raise M30BondFailure(
+            f"{error}; 실패 transcript: {peripheral_path.name}, {central_path.name}"
+        ) from error
     duration = time.monotonic() - started
     peripheral_path.write_bytes(captures["peripheral"])
     central_path.write_bytes(captures["central"])
