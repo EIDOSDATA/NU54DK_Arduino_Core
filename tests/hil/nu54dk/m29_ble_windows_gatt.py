@@ -26,6 +26,7 @@ from ble_pair_hil_common import (  # noqa: E402
     DEFAULT_BAUD_RATE,
     REPOSITORY,
     BlePairHilFailure,
+    PairExecutionFailure,
     RoleExecution,
     build_nonce,
     collect_until_final,
@@ -154,7 +155,10 @@ def _get_characteristic(client: Any) -> tuple[Any, Any]:
 
     service = client.services.get_service(SERVICE_UUID)
     if service is None:
-        raise BlePairHilFailure("Windows GATT discovery에서 service가 누락되었습니다.")
+        observed = sorted(str(item.uuid) for item in client.services)
+        raise BlePairHilFailure(
+            f"Windows GATT discovery에서 service가 누락되었습니다: {observed}"
+        )
     characteristic = service.get_characteristic(CHARACTERISTIC_UUID)
     if characteristic is None:
         raise BlePairHilFailure("Windows GATT discovery에서 characteristic이 누락되었습니다.")
@@ -186,9 +190,7 @@ async def execute_windows_gatt(
             if round_number == 1:
                 first_device = device
                 first_advertisement = advertisement
-            async with bleak_client(
-                device, services=[SERVICE_UUID], timeout=scan_timeout
-            ) as client:
+            async with bleak_client(device, timeout=scan_timeout) as client:
                 if not client.is_connected:
                     raise BlePairHilFailure("Windows GATT 연결이 성립하지 않았습니다.")
                 connections += 1
@@ -274,46 +276,49 @@ def execute_target(
         raise BlePairHilFailure("--result-timeout은 30..600초여야 합니다.")
     capture = bytearray()
     pending = bytearray()
-    with serial_module.Serial(
-        port=endpoint.port_name,
-        baudrate=baud_rate,
-        bytesize=serial_module.EIGHTBITS,
-        parity=serial_module.PARITY_NONE,
-        stopbits=serial_module.STOPBITS_ONE,
-        timeout=0.1,
-        write_timeout=2.0,
-    ) as serial_port:
-        serial_port.reset_input_buffer()
-        flash_sequence, flash_bytes = flash_image(
-            "M20", "peripheral", endpoint.volume, image, flash_timeout
-        )
-        deadline = time.monotonic() + result_timeout
-        wait_ready(
-            serial_port, "M20", "peripheral", pending, capture, deadline
-        )
-        write_start_command(serial_port, "M20", nonce)
-        wait_peripheral_advertising(
-            serial_port, "M20", nonce, pending, capture, deadline
-        )
-        observation = asyncio.run(
-            execute_windows_gatt(
-                bleak_scanner,
-                bleak_client,
-                nonce,
-                scan_timeout,
-                result_timeout,
+    try:
+        with serial_module.Serial(
+            port=endpoint.port_name,
+            baudrate=baud_rate,
+            bytesize=serial_module.EIGHTBITS,
+            parity=serial_module.PARITY_NONE,
+            stopbits=serial_module.STOPBITS_ONE,
+            timeout=0.1,
+            write_timeout=2.0,
+        ) as serial_port:
+            serial_port.reset_input_buffer()
+            flash_sequence, flash_bytes = flash_image(
+                "M20", "peripheral", endpoint.volume, image, flash_timeout
             )
-        )
-        collect_until_final(
-            serial_port,
-            "M20",
-            "peripheral",
-            nonce,
-            pending,
-            capture,
-            deadline,
-            threading.Event(),
-        )
+            deadline = time.monotonic() + result_timeout
+            wait_ready(
+                serial_port, "M20", "peripheral", pending, capture, deadline
+            )
+            write_start_command(serial_port, "M20", nonce)
+            wait_peripheral_advertising(
+                serial_port, "M20", nonce, pending, capture, deadline
+            )
+            observation = asyncio.run(
+                execute_windows_gatt(
+                    bleak_scanner,
+                    bleak_client,
+                    nonce,
+                    scan_timeout,
+                    result_timeout,
+                )
+            )
+            collect_until_final(
+                serial_port,
+                "M20",
+                "peripheral",
+                nonce,
+                pending,
+                capture,
+                deadline,
+                threading.Event(),
+            )
+    except Exception as error:
+        raise PairExecutionFailure(str(error), bytes(capture), b"") from error
     return RoleExecution(flash_sequence, flash_bytes, bytes(capture)), observation
 
 
@@ -429,9 +434,11 @@ def main(arguments: Sequence[str] | None = None) -> int:
             json.dumps(evidence, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
-    except Exception:
+    except Exception as error:
         if execution is not None:
             transcript_path.write_bytes(execution.transcript)
+        elif isinstance(error, PairExecutionFailure):
+            transcript_path.write_bytes(error.peripheral_transcript)
         raise
     print(
         "M29 Windows cross-vendor GATT HIL PASS: "
