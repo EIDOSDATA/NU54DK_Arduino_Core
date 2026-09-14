@@ -722,7 +722,7 @@ namespace
         if (resume_available)
         {
             if (::strcmp(parsed_nonce, nonce) != 0 || BLESecurity.bondCount() != 1U ||
-                BLESecurity.bondMigrationCount() != 1U ||
+                BLESecurity.bondMigrationCount() != 0U ||
                 BLESecurity.rejectedBondCount() != 0U)
             {
                 fail("resume-contract");
