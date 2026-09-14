@@ -8,6 +8,11 @@
 | 이전 버전 | `0.4.1` 미만 stable·RC·preview 모두 지원·catalog 공급 종료 |
 | 공식 사용자 OS | Windows 10/11 x64 |
 
+이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.4.1` 계약이다. `v0.5.0`부터 Windows와
+함께 Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 지원하며 구현·검증 순서는
+[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다. 검증 전 Linux/macOS
+명령을 현재 설치 절차로 추정하지 않는다.
+
 ## Stable index와 설치
 
 Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL입니다.
@@ -48,9 +53,13 @@ arduino-cli board listall nucode:zephyr
 
 단일 원본은 [`pins.json`](../../tools/nu54-prerequisites/pins.json)과
 [`nrfutil-requirements.json`](../../tools/nu54-prerequisites/nrfutil-requirements.json)입니다.
-NCS/Toolchain은 Core ZIP에 넣지 않고 `post_install.bat`이 Nordic 공식 배포 경로에서
+NCS/Toolchain은 Core ZIP에 넣지 않고 현재 v0.4.1의 `post_install.bat`이 Nordic 공식 배포 경로에서
 사용자 영역에 준비합니다. 같은 exact 설치는 Core version 간 공유하며 uninstall 때 자동
 삭제하지 않습니다.
+
+v0.5.0은 OS·architecture별 공식 nRF Util 자산의 URL·SHA-256을 manifest에 고정하고 같은
+prerequisite 검증 backend를 `.cmd`와 `.sh`에서 호출한다. Linux/macOS에서 system Python·Git이
+우연히 존재하는 것을 설치 성공 조건으로 삼지 않는다.
 
 ## Compile과 Upload
 

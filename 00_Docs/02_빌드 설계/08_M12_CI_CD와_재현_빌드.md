@@ -10,6 +10,12 @@ CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 �
 artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)과
 [M17 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)에 보존한다.
 
+현재 Linux container target build는 Linux Arduino 사용자 Host 지원이 아니며 Windows job 결과도
+macOS 지원을 뜻하지 않는다. `v0.5.0`은
+[다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 M31에서 Windows·Ubuntu·
+Apple Silicon macOS package/build matrix를 추가하고 M32에서 각 실제 Host upload/lifecycle을
+분리해 검증한다.
+
 ---
 
 ## 1. Software gates
@@ -261,6 +267,18 @@ artifact identity와 함께 검증 기록으로 승격한다. 과거 run ID나 �
 
 Workflow는 package를 검증하지만 tag 생성, stable index 변경, GitHub Release 공개 또는
 latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람 승인과 릴리스 절차가 필요하다.
+
+### v0.5.0 다중 Host CI 승격 조건
+
+| CI/HIL 행 | 자동화할 범위 | CI만으로 증명하지 않는 것 |
+| --- | --- | --- |
+| Windows 10/11 x64 | Host unit, prerequisite, 전체 예제 package build | 모든 Windows adapter·실물 board runtime |
+| Ubuntu 24.04+ AMD64 | 지원 release별 clean install·build·artifact 비교 | container 밖 USB 권한·실물 upload |
+| macOS 26+ Apple Silicon | native ARM64 install·build·artifact 비교 | Intel/Rosetta·실물 upload |
+| Host별 HIL | 명시적 UID upload, Blink·Serial·BLE 대표 runtime, lifecycle | 모든 BLE RF 기능을 OS마다 반복한 결과 |
+
+새 OS 행은 먼저 `candidate`로 추가한다. 정적 job만 통과해 `supported`로 바꾸지 않고 실제 Host의
+clean install·upload 증거와 release 문서 갱신까지 완료한다.
 
 ---
 

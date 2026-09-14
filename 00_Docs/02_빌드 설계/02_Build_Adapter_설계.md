@@ -7,6 +7,7 @@
 | 다음 목표 버전 | `v0.5.0` |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
+| v0.5.0 Host 목표 | Windows 10/11 x64, Ubuntu 24.04+ AMD64, macOS 26+ Apple Silicon |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
 
 Build Adapter는 Arduino의 전처리·library discovery lifecycle을 보존하면서 실제 컴파일과 최종
@@ -273,7 +274,8 @@ Arduino build path의 생성 source만 cache mirror로 옮긴다.
 - sysbuild/multi-image, MCUboot, DFU와 OTA
 - LLEXT 또는 Loader ABI
 - remote/distributed cache와 network cache
-- Linux/macOS Boards Manager production 지원
+- Linux/macOS Boards Manager production 지원은 `v0.4.1`에 포함되지 않는다. `v0.5.0`에서는
+  [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 M30부터 구현하고 M33에서 판정한다.
 - Arduino IDE Debug 버튼 자동 구성
 - 자동 recover 또는 mass erase
 

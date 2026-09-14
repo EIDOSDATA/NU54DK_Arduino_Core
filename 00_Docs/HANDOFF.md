@@ -3,7 +3,8 @@
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
 OS/adapter 상호운용 완료를 뜻하지 않습니다. 다음 구현 재개 지점은 **M30-W01 착수 계약과
-capability·장비·수치 gate 확정**입니다.
+capability·장비·수치 gate 확정**, 그리고 동시에 시작하는 **HOST-W01 Windows 전용 가정
+inventory**입니다.
 
 ## 1. 현재 체크포인트
 
@@ -19,6 +20,8 @@ capability·장비·수치 gate 확정**입니다.
 | M29 상호운용 | Windows 11·Intel Bluetooth·WinRT 기본 GATT PASS — exact `a964ae20…` |
 | M29 W08 최종 재검증 | 분할 후 세 role build·3보드 MULTI PASS — exact `ab3f85d3…` |
 | 다음 개발 단계 | M30 BLE Security·Profile·최소 secure BLE DFU |
+| v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
+| Host 구현 상태 | 계획 승인, HOST-W01~W08 미착수; M30 시작·M33 공개 전 완료 |
 
 ## 2. 고정 환경
 
@@ -66,14 +69,18 @@ capability·장비·수치 gate 확정**입니다.
 
 ## 5. M30 재개 순서
 
-1. [v0.5.0 계획](TODO_v0.5.0.md)과
+1. [v0.5.0 계획](TODO_v0.5.0.md),
+   [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과
    [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>)의 M30 절을 읽습니다.
-2. 기존 SMP IO capability 5종·LE Secure Connections·bond·BAS/DIS/HID를 회귀 기준선으로 고정합니다.
-3. OOB, key distribution/size, bond migration·privacy, 추가 profile catalog와 OS peer matrix를
+2. HOST-W01에서 `.exe`, `%LOCALAPPDATA%`, `.cmd`/`.bat`, Windows prerequisite URL과 upload
+   경로를 inventory하고, 공통 Python backend·OS descriptor·얇은 `.cmd`/`.sh` 경계를 고정합니다.
+3. 기존 SMP IO capability 5종·LE Secure Connections·bond·BAS/DIS/HID를 회귀 기준선으로 고정합니다.
+4. OOB, key distribution/size, bond migration·privacy, 추가 profile catalog와 OS peer matrix를
    먼저 결정합니다. SDK symbol 존재를 제품 PASS로 승격하지 않습니다.
-4. 최소 BLE DFU의 MCUboot 사용 여부, 고정 memory layout, 신뢰키·서명, 초기 설치, BLE update,
-   rollback·corruption·power-loss recovery와 Arduino 제공 형태를 코드 전에 계약합니다.
-5. M30 test ID별 보드/peer 수, 반복 수, timeout, negative 입력과 증거 protocol을 고정한 뒤
+5. 최소 BLE DFU의 MCUboot 사용 여부, 고정 memory layout, 신뢰키·서명, 초기 설치, BLE update,
+   rollback·corruption·power-loss recovery와 Arduino 제공 형태를 코드 전에 계약합니다. 새 도구는
+   Windows 전용 진입점을 추가하지 않고 세 Host에서 같은 backend를 사용합니다.
+6. M30 test ID별 보드/peer 수, 반복 수, timeout, negative 입력과 증거 protocol을 고정한 뒤
    Host → target build → 실제 HIL 순서로 진행합니다.
 
 ## 6. 재검증 규칙

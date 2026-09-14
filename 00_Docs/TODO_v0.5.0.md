@@ -15,6 +15,7 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
 | M29 API·정책·자원·시험 계약 | [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>) |
 | M29 기계 판정 원본 | [`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json) |
+| v0.5.0 Windows·Ubuntu·macOS Host 계약 | [다중 Host 지원 착수 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
 | W01 실제 HCI·실패 분류·증거 | [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>) |
 | W02 2-slot·generation 구현·검증 | [134번 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>) |
@@ -37,11 +38,12 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
 GATT·cache·CoC 구현, W07 두/세 보드 HIL·회귀·Windows 상호운용과 W08을 완료했다.
-현재 개발 재개 지점은 **M30-W01 계약과 capability 판정**이다.
+현재 개발 재개 지점은 **M30-W01 계약과 capability 판정**이며, 같은 시점에 다중 Host
+`HOST-W01` inventory를 시작한다.
 P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
-M31 전용 장비가 미확보라는 이유로 독립적인 M28 문서·Host 작업까지 차단하지 않는다.
+M31 전용 장비가 미확보라는 이유로 독립적인 Host 구현·시험까지 차단하지 않는다.
 
 | 체크 | 상태 | 산출물·완료 조건 |
 | --- | --- | --- |
@@ -141,12 +143,12 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | --- | --- | --- |
 | M28 | 지원 원장 → per-link 계약 → GAP/link/privacy 확장 → 다중 peer HIL | 고정 capability/profile·연결/자원 한계·회귀 목록 |
 | M29 | GATT/CoC → signed write/EATT 정책 적용 → 오류·상호운용 | client/server·cache·credit·실험/legacy 제약과 시험 근거 |
-| M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 | M34~M36이 재사용할 key 식별·소유권·저장 형식·layout·migration·rollback 계약 |
-| M31-A | ISO/CIS/BIS 기반 → 채택한 LC3·LE Audio profile → audio HIL | ISO buffer·latency·선택 audio profile의 검증 경계 |
+| M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 + HOST-W01~W03 | M34~M36이 재사용할 보안 계약과 Host 공통 backend·Windows 전용 가정 inventory |
+| M31-A | ISO/CIS/BIS 기반 → 채택한 LC3·LE Audio profile → audio HIL + HOST-W04~W06 | ISO 검증 경계와 Ubuntu/macOS prerequisite·build/package CI 근거 |
 | M31-B | DF 송수신·controller 적용성 → RF fixture → 적용 가능한 CTE/IQ 경로 | 지원/미지원·조건부 기능과 controller별 제약, 적용 RF 근거 |
 | M31-C | Connected ACL·CS 보안 → 거리 보정·반복성·상호운용 | 연결·보안·거리 오차·peer별 측정 근거 |
-| M32 | 최소 radio/profile·단독 TX/RX → Mesh → 선택 조합 공존·복구 | M38~M41이 재사용할 backend·자원 소유권·허용 조합·부하 한계 |
-| M33 | 필수 기능 회귀·지원표 → package/설치 → 범위 확인·공개 | exact source·자산·지원/제약·상호운용·qualification 적용성 |
+| M32 | 최소 radio/profile·단독 TX/RX → Mesh → 선택 조합 공존·복구 + HOST-W07 | 공존 계약과 세 Host 실제 upload/debug/serial·설치 lifecycle 근거 |
+| M33 | 필수 기능·HOST-W08 회귀·지원표 → package/설치 → 범위 확인·공개 | exact source·자산·세 Host 지원/제약·상호운용·qualification 적용성 |
 
 M31-A/B/C는 **M31 내부 작업 ID**다. 하나를 완료해 M31 전체 완료로 계산하지 않는다.
 M30 최소 DFU에서는 고정 layout·신뢰키·초기 설치·BLE 갱신·전원 차단 복구와 Arduino 제공 형태를
@@ -174,8 +176,9 @@ Android/iOS/Linux cross-vendor matrix는 M28/M29 PASS에 포함하지 않는다.
 | Channel Sounding | CS 지원 peer, 통제 거리 또는 RF 감쇠 조건·보정 데이터 | 실제 거리 기준·환경·방향·cross-vendor peer 확보 |
 | Mesh/coexistence | topology별 노드, power-cycle 수단, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수, 허용 동시 조합·부하, starvation 측정 방법 |
 
-Android/iOS/Linux 항목은 **BLE 상대 장치 상호운용**이며 Arduino Core 개발·설치 host 지원을
-Windows 외 OS로 확대하는 약속이 아니다. Peer 자체 미지원 기능은 근거를 남기고 해당 칸을
+Android/iOS/Linux 항목은 **BLE 상대 장치 상호운용**이며 Arduino Core 개발·설치 Host matrix와
+서로 다른 시험이다. v0.5.0의 Host 확대는 [별도 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)으로
+Windows 10/11 x64, Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 다룬다. Peer 자체 미지원 기능은 근거를 남기고 해당 칸을
 비적용으로 분리한다. 필요한 장비가 없는 필수 시험은 `NOT RUN`이지 PASS 또는 자동 제외가 아니다.
 
 ### 실행 전에 고정할 합격표
@@ -207,5 +210,7 @@ M30 이후의 수치는 아직 **미확정**이다. 임의 숫자를 제품 보�
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.
 - 문서상의 기능 계획과 Bluetooth/Matter 제품 인증 취득은 별개다.
 - v0.4.0·v0.4.1 공개 승인은 v0.5.0 공개 승인이 아니다. M33에서 exact 결과·자산 기준으로 공개 범위를 확정한다.
+- v0.5.0부터 세 Host 계열을 정식 범위로 공개하려면 지원표의 모든 OS 행에 clean 설치·전체 예제
+  build·대표 upload/runtime·lifecycle 증거가 있어야 한다. 미래 OS는 자동 PASS로 올리지 않는다.
 - 다음 작업 보고에는 완료 범위·현재 항목·남은 항목과 **해당 작업의 분모**를 적는다.
   P 준비 체크, M28~M33의 6개 마일스톤, v0.4.0의 T13 분모 58을 섞지 않는다.

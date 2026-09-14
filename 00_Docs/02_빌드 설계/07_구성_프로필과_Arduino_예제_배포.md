@@ -9,6 +9,11 @@
 | BLE feature ID | `nucode.ble.nus` |
 | BLE config | `ble-nus.conf` |
 
+위 수치는 현재 stable `v0.4.1`의 Windows 설치본 계약이다. `v0.5.0` 공개 전에는 새 BLE 예제를
+포함한 최종 공개 예제 목록을 고정하고, [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의
+모든 지원 OS 행에서 목록 discovery와 독립 compile을 수행한다. 한 Host의 compile 결과를 다른
+Host의 PASS로 합산하지 않는다.
+
 Profile은 사용자가 먼저 선택하는 보드 수준 구성이고 feature는 Arduino가 실제 선택한 bundled
 library에서 자동 해석하는 추가 구성이다. 실행 결과와 실기 증거는
 [M13](<../04_검증 기록/15_M13_구성_프로필_검증.md>),

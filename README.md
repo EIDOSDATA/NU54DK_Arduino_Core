@@ -13,9 +13,13 @@
 
 [현재 상태](#현재-상태) · [빠른 시작](#빠른-시작) · [지원 기능](#지원-기능) · [개발 중인 기능](#개발-중인-기능) · [예제](#예제) · [문서](#문서) · [문제 보고와 기여](#문제-보고와-기여)
 
-| 보드 | 개발 환경 | 기반 SDK | 업로드 |
+| 보드 | 현재 정식 개발 환경 | 기반 SDK | 업로드 |
 | --- | --- | --- | --- |
 | **NU54DK · nRF54L15 CPUAPP** | Windows 10/11 x64 · Arduino IDE 2.x | NCS v3.4.0 · Zephyr 4.4.0 | CMSIS-DAP V2 + pyOCD |
+
+위 행은 현재 stable `v0.4.1` 기준입니다. `v0.5.0`부터 Windows 10/11 x64에 더해
+**Ubuntu 24.04 이상 AMD64**와 **macOS 26 이상 Apple Silicon**을 정식 Host로 지원할 계획입니다.
+새 OS는 실제 설치·build·upload를 통과한 뒤 지원으로 승격합니다.
 
 ## 현재 상태
 
@@ -25,6 +29,7 @@
 | 개발 브랜치 | `main`, 소스 식별자 `0.4.1-dev` | v0.5.0을 목표로 BLE 확장 개발 중. 배포판에 없는 API·예제가 포함됨 |
 | M28 GAP·Link·Privacy | **8/8 완료** | 두·세 NU54DK 실기 완료. 개발 브랜치에 반영됐으며 v0.4.1에는 미포함 |
 | M29 ATT/GATT·L2CAP | **8/8 완료** | 10/10 test ID, 세 보드 통합·회귀와 Windows/Intel GATT 상호운용 PASS |
+| v0.5.0 다중 Host | 계획 승인·구현 전 | M30부터 기반 정비, M31~M32 구현·실기, M33에서 Windows·Ubuntu·macOS 지원 판정 |
 | v0.5.0 릴리스 | 미공개 | M30~M33 구현·검증·릴리스 절차가 필요 |
 
 현재 개발 체크포인트는 **M29 완료**이며 다음 구현 단계는 M30 BLE 보안·profile·최소 DFU입니다.
@@ -39,9 +44,11 @@
 - **고급 주변장치 제어:** Peripheral Fabric API로 인스턴스·고정 DMA 버퍼·공유 자원을 명시적으로 다룹니다.
 - **검증 근거 공개:** Host 시험, target build, 실제 보드 시험을 구분하고 source·조건·결과를 보존합니다.
 
-지원 보드는 **NU54DK의 nRF54L15 CPUAPP**입니다. 다른 nRF54 보드와 Linux/macOS용 Arduino 설치는
-현재 지원 대상에 포함되지 않습니다. Zephyr API 직접 사용이나 임의 외부 Arduino library의 빌드 가능성이
-그 조합의 검증·제품 지원을 뜻하지는 않습니다.
+지원 보드는 **NU54DK의 nRF54L15 CPUAPP**입니다. 다른 nRF54 보드는 지원 대상이 아닙니다.
+Linux/macOS용 Arduino 설치는 현재 `v0.4.1`에는 포함되지 않으며 `v0.5.0`에서 지원할 계획입니다.
+Zephyr API 직접 사용이나 임의 외부 Arduino library의 빌드 가능성이 그 조합의 검증·제품 지원을
+뜻하지는 않습니다. 정확한 Host 범위와 승격 절차는
+[다중 Host 지원 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따릅니다.
 
 ## 빠른 시작
 
@@ -152,7 +159,7 @@ PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·O
 | --- | --- | --- |
 | M28 — 완료 | Central 최대 1개 + Peripheral 최대 1개, 총 2-link. Generation handle, 확장 광고·스캔, periodic 광고·sync·PAST, PAwR, privacy/RPA, link별 제어 | 해당 개발 계약 완료. OS별 상호운용·Bluetooth qualification·v0.5.0 공개는 별도 |
 | M29 — 완료 | 512-byte long/reliable GATT, descriptor·authorization·read multiple, robust cache, LE CoC, Signed Write·EATT opt-in | 10/10 test ID와 세 보드 mixed-link·M19~M21/M28 회귀 PASS. Windows/Intel GATT 외 OS·adapter 전체는 미검증 |
-| M30~M33 — 계획 | 보안·profile·최소 BLE DFU, ISO/Audio·방향탐지·Channel Sounding 적용성, Mesh·공존, v0.5.0 통합·릴리스 | 구현·장비·지원 가능 범위 판정과 실제 검증 필요 |
+| M30~M33 — 계획 | 보안·profile·최소 BLE DFU, ISO/Audio·방향탐지·Channel Sounding 적용성, Mesh·공존, Windows·Ubuntu·macOS Host와 v0.5.0 통합·릴리스 | 기능·Host 구현, 장비·지원 가능 범위 판정과 실제 검증 필요 |
 
 Signed Write는 기본 OFF의 **deprecated legacy opt-in** (`NUCODE_BLE_LegacySigning`),
 EATT는 기본 OFF의 **experimental opt-in** (`NUCODE_BLE_EATT`)입니다.
@@ -215,6 +222,7 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | 설치·이전 버전에서 이동 | [Boards Manager 설치](<00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md>) · [마이그레이션](<00_Docs/05_릴리스/v0.4.1/MIGRATION.md>) |
 | API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
+| v0.5.0 Windows·Ubuntu·macOS 계획 | [다중 Host 지원 착수 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
 | 현재 개발·다음 작업 | [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M28·M29 완료, 다음 M30 |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
@@ -235,15 +243,17 @@ Core 작업에서는 보드 submodule을 임의 수정하지 않습니다.
 배포 버전 `0.4.1`은 Boards Manager·`platform.txt`·release manifest로 확인합니다.
 
 SDK·Zephyr·툴체인·보드 revision은 [CI lock](tools/ci/ncs-3.4.0.lock.json)으로 고정합니다.
-개발 환경과 검사 명령은 [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)과
-[개발 인계](00_Docs/HANDOFF.md)를 따르세요.
+현재 개발 환경과 검사 명령은 [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)과
+[개발 인계](00_Docs/HANDOFF.md)를 따르세요. Linux/macOS 개발 절차는 구현·실증 전까지 사용자
+설치 절차가 아니며 [v0.5.0 다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)의
+M30~M33 작업으로 관리합니다.
 
 ## 문제 보고와 기여
 
 [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues)에 아래 정보를 함께 적으면
 설치 문제와 firmware 문제를 재현하기 쉽습니다.
 
-- 설치 버전 또는 `main` commit, Windows·Arduino IDE/CLI 버전, 선택한 Feature set.
+- 설치 버전 또는 `main` commit, Host OS·architecture·Arduino IDE/CLI 버전, 선택한 Feature set.
 - 문제가 재현되는 최소 Sketch와 기대 동작·실제 동작·재현 순서.
 - Verify/Upload 오류 전문 또는 Serial 로그, 보드 수·역할·결선과 사용한 주변장치.
 

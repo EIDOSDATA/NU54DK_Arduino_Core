@@ -12,6 +12,7 @@ test ID **10/10 PASS**입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [150 — v0.5.0 다중 Host 지원 계획 정비](150_v0.5.0_다중_Host_지원_계획_정비.md) | Windows·Ubuntu·macOS 지원 범위, M30 시작·M33 완료 계약 |
 | [149 — M29-W07 3보드·회귀·상호운용과 W08 완료](149_M29_W07_3보드_회귀_상호운용과_W08_완료.md) | MULTI/REG, Windows/Intel GATT, 예제·리팩터링·M30 인계 |
 | [148 — 개발문서 전수 검토와 README 개선](148_개발문서_전수검토와_README_개선.md) | 지원 범위·개발 현황 안내, 중복 설명 정리와 문서 검사 |
 | [147 — M29-W07 Signed Write·EATT 2보드 완료](147_M29_W07_Signed_Write_EATT_HIL_준비.md) | exact `c71ef4a2…` SIGN/EATT PASS, MULTI/REG NOT RUN, 실패 진단부터 최종 증거까지 |
@@ -102,6 +103,7 @@ test ID **10/10 PASS**입니다.
 - [147 — M29-W07 Signed Write·EATT HIL 준비와 2보드 완료](<147_M29_W07_Signed_Write_EATT_HIL_준비.md>) — **Host/parser·target과 실제 SIGN/EATT PASS, MULTI/REG NOT RUN**
 - [148 — 개발문서 전수 검토와 README 개선](<148_개발문서_전수검토와_README_개선.md>) — 지원 배포·개발 상태 구분, 문서 가독성과 탐색 경로 정비
 - [149 — M29-W07 3보드·회귀·Windows 상호운용과 W08 완료](<149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) — **M29 8/8·test ID 10/10 PASS, M30 인계**
+- [150 — v0.5.0 다중 Host 지원 계획 정비](<150_v0.5.0_다중_Host_지원_계획_정비.md>) — **M30 시작·M33 완료의 세 Host 구현·검증 계약**
 
 </details>
 
