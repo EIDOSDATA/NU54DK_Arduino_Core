@@ -269,6 +269,12 @@ def validate_packaged_prerequisites(
         raise AdapterError("[NU54:E_PREREQUISITE_TOOLCHAIN] 고정 Toolchain bundle이 아닙니다.")
     bundled_git = resolve_toolchain_executable(toolchain_root, "git")
     assert bundled_git is not None
+    if host_os == "windows":
+        ## @note Windows 임시 경로는 resolve 과정에서 8.3 이름과 긴 이름이 서로 바뀔 수
+        ##       있습니다. package가 지정한 lexical root를 Git 실행 인수에 보존합니다.
+        lexical_git = toolchain_root / "bin" / "git.exe"
+        if path_key(lexical_git) == path_key(bundled_git):
+            bundled_git = lexical_git
     toolchain_manifest = load_json_object(
         toolchain_root / "manifest.json", "E_PREREQUISITE_TOOLCHAIN"
     )
