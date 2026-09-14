@@ -98,6 +98,12 @@ namespace nucode::ble::internal::security
                    ::memcmp(left.value, right.value, sizeof(left.value)) == 0;
         }
 
+        /** @brief 주소 type을 제외한 48-bit 값만 같은지 확인합니다. */
+        bool sameAddressValue(const PeerAddress &left, const PeerAddress &right) noexcept
+        {
+            return ::memcmp(left.value, right.value, sizeof(left.value)) == 0;
+        }
+
         /** @brief callback 실패를 fail-closed 취소와 비밀 없는 event로 기록합니다. */
         void rejectOob(struct bt_conn *connection, int error, std::uint8_t reason) noexcept
         {
@@ -167,14 +173,24 @@ namespace nucode::ble::internal::security
             (!snapshot.local_valid ||
              !sameAddress(snapshot.local.pairing_address, local_address)))
         {
-            rejectOob(connection, -EACCES, 3U);
+            const std::uint8_t reason =
+                snapshot.local_valid &&
+                        sameAddressValue(snapshot.local.pairing_address, local_address)
+                    ? 3U
+                    : 7U;
+            rejectOob(connection, -EACCES, reason);
             return;
         }
         if (remote_required &&
             (!snapshot.remote_valid ||
              !sameAddress(snapshot.remote.pairing_address, remote_address)))
         {
-            rejectOob(connection, -EACCES, 4U);
+            const std::uint8_t reason =
+                snapshot.remote_valid &&
+                        sameAddressValue(snapshot.remote.pairing_address, remote_address)
+                    ? 4U
+                    : 8U;
+            rejectOob(connection, -EACCES, reason);
             return;
         }
         if (snapshot.local_valid && snapshot.remote_valid &&
