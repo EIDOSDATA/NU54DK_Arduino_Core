@@ -60,6 +60,7 @@ APPLICATION_SOURCE_ROOT = REPOSITORY / "tests" / "zephyr" / "m20_ble_gatt_hil"
 PROTOCOL_SOURCE = Path(__file__).with_name("m29_ble_windows_gatt_protocol.py")
 M20_RUNNER_SOURCE = Path(__file__).with_name("m20_ble_gatt.py")
 EVIDENCE_SCHEMA = 1
+WINDOWS_DISCONNECT_SETTLE_SECONDS = 5.0
 
 
 def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespace:
@@ -225,7 +226,7 @@ async def execute_windows_gatt(
                     )
             disconnects += 1
             if round_number == 1:
-                await asyncio.sleep(1.0)
+                await asyncio.sleep(WINDOWS_DISCONNECT_SETTLE_SECONDS)
 
     if any(
         value is None
