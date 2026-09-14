@@ -59,6 +59,7 @@ class M29BleMultiTests(unittest.TestCase):
             'constexpr char protocol[] = "M29W07D|1"',
             'start_prefix[] = "M29W07D|1|START|test=M29-MULTI-01|nonce="',
             "validRfPeer",
+            "setManufacturerData(company_id, manufacturer",
             "server_gatt_received",
             "server_coc_received",
             'fail("cross_link_gatt_client")',
@@ -67,6 +68,8 @@ class M29BleMultiTests(unittest.TestCase):
             'Serial.print("|cross_link=0|payload_errors=0|dropped_events=0")',
         ):
             self.assertIn(token, target)
+        self.assertNotIn("BLEAdvertising.addServiceUuid(service_uuid)", target)
+        self.assertNotIn("BLEScan.filterServiceUuid(service_uuid)", target)
 
     def test_three_role_build_matrix_is_explicit(self) -> None:
         cases = CASES.read_text(encoding="utf-8")

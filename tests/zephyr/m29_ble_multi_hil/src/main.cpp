@@ -255,7 +255,6 @@ namespace
         manufacturer[0] = serverMarker();
         ::memcpy(manufacturer + 1U, nonce_binary, MultiPayload::nonce_binary_length);
         if (!BLEAdvertising.clear() || !BLEAdvertising.setConnectable(true) ||
-            !BLEAdvertising.addServiceUuid(service_uuid) ||
             !BLEAdvertising.setManufacturerData(company_id, manufacturer,
                                                   sizeof(manufacturer)) ||
             !BLEAdvertising.setScanResponseName(true) || !BLEAdvertising.start())
@@ -273,11 +272,10 @@ namespace
         return true;
     }
 
-    /** @brief service UUID와 exact nonce를 함께 검사하는 active scan을 시작합니다. */
+    /** @brief company ID·role·exact nonce로 peer를 고르는 active scan을 시작합니다. */
     [[maybe_unused]] bool startScan()
     {
-        if (!BLEScan.clearFilters() || !BLEScan.filterServiceUuid(service_uuid) ||
-            !BLEScan.start(true))
+        if (!BLEScan.clearFilters() || !BLEScan.start(true))
         {
             return false;
         }
