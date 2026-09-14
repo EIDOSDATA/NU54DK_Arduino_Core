@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-SECURITY-001 |
-| 문서 개정 | 2.2 |
-| 문서 상태 | v0.4.1에서도 유지하는 정식 보안·표준 profile 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile |
-| 최종 갱신일 | 2026-09-12 |
+| 문서 개정 | 2.3 |
+| 문서 상태 | v0.4.1 정식 기준선 + v0.5.0 개발 후보 profile 계약 |
+| 적용 제품 버전 | `v0.3.0`~`v0.4.1`과 v0.5.0 개발 source의 `ble` profile |
+| 최종 갱신일 | 2026-09-14 |
 | 대상 library | `NUCODE_BLE_Security` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
@@ -20,6 +20,8 @@
 - Battery Service(BAS)
 - Device Information Service(DIS)
 - 암호화된 BLE HID keyboard
+- v0.5.0 개발 후보의 암호화된 HID mouse·consumer-control
+- v0.5.0 개발 후보의 Heart Rate Service(HRS)·Environmental Sensing Service(ESS)
 
 library는 Zephyr type을 Sketch에 노출하지 않으며 별도의 `bt_enable()`, `settings_load()` 또는
 connection callback을 소유하지 않는다. 범용 advertising·connection·poll은 `NUCODE_BLE` API를
@@ -131,7 +133,7 @@ none
 재부팅 뒤 `bondCount()==0`과 이전 key 재연결 거부로 확인한다. 이 API는 mass erase나 factory reset을
 실행하지 않는다.
 
-## 6. BAS, DIS와 HID keyboard
+## 6. BAS, DIS와 표준 profile
 
 ### 6.1 Battery Service
 
@@ -160,6 +162,28 @@ if (BLEKeyboard.connected() && BLEKeyboard.press(0x04U))
 }
 ```
 
+### 6.4 HID mouse와 consumer-control
+
+v0.5.0 개발 source의 `BLEMouse`와 `BLEConsumerControl`은 keyboard와 하나의 정적 HIDS database를
+공유한다. report ID와 payload는 각각 keyboard 1/8 byte, mouse 2/4 byte, consumer-control
+3/2 byte로 고정된다. 각 facade는 별도로 `begin()`해야 하며 L2 이상 연결과 해당 report CCC 구독
+전에 전송하지 않는다. keyboard boot protocol에서는 mouse와 consumer-control을 거부한다.
+
+`BLEMouse.move()`는 5개 button bit와 signed X/Y/wheel 상대 이동을 보낸다.
+`BLEConsumerControl.press()`는 `0x0001`~`0x03ff` Consumer Page usage를 보내고 `release()`는 zero
+report를 보낸다.
+
+### 6.5 Heart Rate Service
+
+`BLEHeartRate.setRate()`는 1~240 bpm을 표준 HRS measurement notification으로 보낸다. 현재 값은
+`rate()`로 읽는다. measurement CCC write는 security profile에서 암호화 정책을 따른다.
+
+### 6.6 Environmental Sensing Service
+
+`BLEEnvironmentalSensing`은 표준 ESS `0x181A` 안에 0.01 °C 단위 signed temperature와 0.01 % 단위
+humidity characteristic을 제공한다. 습도는 0~10000만 허용한다. 두 characteristic의 read와 CCC
+write는 암호화된 연결에서만 허용한다.
+
 ## 7. SecureKeyboard 예제 사용 절차
 
 Arduino IDE에서 `NUCODE BLE Security → SecureKeyboard` 예제를 열고 `Feature set → BLE NUS`를
@@ -180,7 +204,8 @@ Windows 시험 절차는 다음과 같다.
 
 - 모든 facade의 `lastError()`를 먼저 확인하고 필요한 경우 `lastDriverError()`로 NCS 오류를 진단한다.
 - 현재 설치·지원 v0.4.1의 BLE 연결과 security/profile active view는 1개이며 bond 저장 한도는 4개다.
-- HID는 keyboard input report만 제공한다. Consumer Control, mouse와 복합 HID는 현재 범위가 아니다.
+- 공개 v0.4.1 패키지는 keyboard input report만 제공한다. mouse·consumer-control·HRS·ESS는
+  v0.5.0 개발 source에서 실제 두 보드 HIL을 통과했지만 아직 공개 stable package 기능이 아니다.
 - 사용자 UI callback에서 Bluetooth API를 재진입하거나 무제한 block하지 않는다.
 - `no_input_output` Just Works는 수동 승인과 암호화·bonding을 제공하지만 MITM 보호가 필요한 제품의
   최종 보안 정책을 대신하지 않는다.
@@ -195,4 +220,5 @@ Windows 시험 절차는 다음과 같다.
 - [BLE 범용 GATT API](08_BLE_범용_GATT_API.md)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [M28 BLE GAP·Link·Privacy 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)
+- [M30-W04 일곱 BLE profile 완료](<../04_검증 기록/155_M30_W04_7개_BLE_profile_완료.md>)
 - [v0.3.0 구현 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)

@@ -49,10 +49,10 @@
     {"id": "battery_service", "status": "baseline", "publication": "stable"},
     {"id": "device_information_service", "status": "baseline", "publication": "stable"},
     {"id": "hid_keyboard", "status": "baseline", "publication": "stable"},
-    {"id": "hid_mouse", "status": "planned", "publication": "candidate"},
-    {"id": "hid_consumer_control", "status": "planned", "publication": "candidate"},
-    {"id": "heart_rate_service", "status": "planned", "publication": "candidate"},
-    {"id": "environmental_sensing_service", "status": "planned", "publication": "candidate"}
+    {"id": "hid_mouse", "status": "completed_physical_hil", "publication": "candidate"},
+    {"id": "hid_consumer_control", "status": "completed_physical_hil", "publication": "candidate"},
+    {"id": "heart_rate_service", "status": "completed_physical_hil", "publication": "candidate"},
+    {"id": "environmental_sensing_service", "status": "completed_physical_hil", "publication": "candidate"}
   ],
   "dfu_policy": {
     "default_loaderless_profile_unchanged": true,
@@ -83,7 +83,7 @@
     {"id": "smp_io_capabilities", "source_status": "candidate_present", "implementation_status": "completed_pairing_matrix", "source_references": ["libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h"]},
     {"id": "le_secure_connections_oob", "source_status": "candidate_present", "implementation_status": "completed_wired_hil", "source_references": ["zephyr/include/zephyr/bluetooth/conn.h", "zephyr/include/zephyr/bluetooth/bluetooth.h"]},
     {"id": "bond_privacy_migration", "source_status": "candidate_present", "implementation_status": "completed_physical_hil", "source_references": ["libraries/NUCODE_BLE_Security/src/internal/SecurityInternal.h"]},
-    {"id": "adopted_profiles", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h"]},
+    {"id": "adopted_profiles", "source_status": "candidate_present", "implementation_status": "completed_physical_hil", "source_references": ["libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h"]},
     {"id": "mcuboot_signed_image", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["zephyr/share/sysbuild/images/bootloader/Kconfig"]},
     {"id": "mcumgr_ble_transport", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["zephyr/subsys/mgmt/mcumgr/transport/Kconfig.bluetooth"]},
     {"id": "dfu_rollback_recovery", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["nrf/samples/dfu/smp_svr_mini_boot"]}
@@ -103,8 +103,8 @@
     {"id": "M30-W01", "status": "completed", "title": "capability_policy_resource_protocol", "host_parser_tests": 13, "target_build": "passed", "physical_capability": "passed", "tested_core_revision": "6254398c1ea4e7320b1905014dce1c2a405a53fc", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w01-6254398c-cap/m30-capability-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w01-6254398c-cap/m30-capability-evidence.transcript.log"]},
     {"id": "M30-W02", "status": "completed", "title": "per_link_security_and_key_lifecycle", "production_host_scenarios": 17, "host_contract_tests": 11, "target_builds": 10, "physical_pairings": 50, "tested_core_revision": "4f91e347e8e36e77c959de90def7d9c2622be30b", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w02-4f91e347-pair/m30-pair-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w02-4f91e347-pair/m30-pair-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w02-4f91e347-pair/m30-pair-evidence.central.transcript.log"], "superseded_evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w02-aa1e962a-pair/m30-pair-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w02-aa1e962a-pair/m30-pair-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w02-aa1e962a-pair/m30-pair-evidence.central.transcript.log"]},
     {"id": "M30-W03", "status": "completed", "title": "wired_oob_bond_privacy_nfc_adapter", "host_contract_tests": 13, "target_builds": 4, "wired_oob_pairings": 20, "mitm_links": 20, "mismatched_payload_accepts": 0, "bonded_reconnects": 20, "privacy_rotations": 3, "metadata_migrations": 1, "stale_key_accepts": 0, "nfc_rf": "not_run_by_scope_decision", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.central.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.central.transcript.log"]},
-    {"id": "M30-W04", "status": "not_started", "title": "adopted_profile_catalog"},
-    {"id": "M30-W05", "status": "not_started", "title": "mcuboot_layout_signing"},
+    {"id": "M30-W04", "status": "completed", "title": "adopted_profile_catalog", "host_contract_tests": 6, "arduino_examples_built": 4, "target_builds": 2, "catalog_entries": 7, "operations_per_service": 100, "payload_errors": 0, "driver_errors": 0, "tested_core_revision": "d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.json", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.central.transcript.log"]},
+    {"id": "M30-W05", "status": "in_progress", "title": "mcuboot_layout_signing"},
     {"id": "M30-W06", "status": "not_started", "title": "secure_ble_dfu_negative_rollback"},
     {"id": "M30-W07", "status": "not_started", "title": "integrated_hil_before_power_loss"},
     {"id": "M30-W08", "status": "blocked_by_power_hil", "title": "power_recovery_regression_documents_ci"}
@@ -124,7 +124,7 @@
     {"id": "M30-PAIR-01", "boards": 2, "timeout_seconds": 600, "status": "passed", "criteria": {"io_capabilities": 5, "rounds_per_capability": 10, "unexpected_auth_failures": 0}, "tested_core_revision": "4f91e347e8e36e77c959de90def7d9c2622be30b", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w02-4f91e347-pair/m30-pair-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w02-4f91e347-pair/m30-pair-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w02-4f91e347-pair/m30-pair-evidence.central.transcript.log"]},
     {"id": "M30-OOB-01", "boards": 2, "timeout_seconds": 600, "status": "passed", "criteria": {"wired_pairings": 20, "mitm_links": 20, "mismatched_payload_accepts": 0, "nfc_rf_runs": 0}, "tested_core_revision": "284254c7176fa0bf996137567952ae9d0ce5b4c0", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.central.transcript.log"]},
     {"id": "M30-BOND-01", "boards": 2, "timeout_seconds": 900, "status": "passed", "criteria": {"bonded_reconnects": 20, "privacy_rotations": 3, "stale_key_accepts": 0}, "tested_core_revision": "83a4d11a20e6d16ed0db56382c20133f448cff91", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.central.transcript.log"]},
-    {"id": "M30-PROFILE-01", "boards": 2, "timeout_seconds": 900, "status": "not_run", "criteria": {"catalog_entries": 7, "operations_per_service": 100, "payload_errors": 0}},
+    {"id": "M30-PROFILE-01", "boards": 2, "timeout_seconds": 900, "status": "passed", "criteria": {"catalog_entries": 7, "operations_per_service": 100, "payload_errors": 0}, "tested_core_revision": "d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.json", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.central.transcript.log"]},
     {"id": "M30-BOOT-01", "boards": 1, "timeout_seconds": 900, "status": "not_run", "criteria": {"signed_boots": 20, "unsigned_accepts": 0, "wrong_key_accepts": 0}},
     {"id": "M30-DFU-01", "boards": 2, "timeout_seconds": 1200, "status": "not_run", "criteria": {"successful_updates": 10, "image_hash_mismatches": 0, "unconfirmed_boots": 0}},
     {"id": "M30-DFU-NEG-01", "boards": 2, "timeout_seconds": 1200, "status": "not_run", "criteria": {"negative_classes": 5, "repetitions_per_class": 20, "invalid_image_accepts": 0, "rollback_accepts": 0}},
@@ -140,9 +140,9 @@
     "manual_power_cut_required": true
   },
   "completion": {
-    "completed_work_packages": 3,
+    "completed_work_packages": 4,
     "total_work_packages": 8,
-    "passed_test_ids": 4,
+    "passed_test_ids": 5,
     "total_test_ids": 10,
     "current_stop_boundary": "before_m30_power_01_physical_cut",
     "power_hil": "not_run"

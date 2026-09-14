@@ -1,9 +1,10 @@
-# 개발 인계 — M30-W04 진행·HOST-W01~W03 완료
+# 개발 인계 — M30-W05 진행·HOST-W01~W03 완료
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
-OS/adapter 상호운용 완료를 뜻하지 않습니다. M30-W01 capability, W02 link별 security·pairing과
-W03 유선 OOB·bond/privacy는 완료했고 현재 구현 지점은 **M30-W04 HID mouse/consumer·HRS·ESS catalog**입니다.
+OS/adapter 상호운용 완료를 뜻하지 않습니다. M30-W01 capability, W02 link별 security·pairing,
+W03 유선 OOB·bond/privacy와 W04 일곱 BLE profile을 완료했고 현재 구현 지점은
+**M30-W05 MCUboot layout·서명**입니다.
 병행한 **HOST-W01~W03 inventory·Host resolver·launcher**도 완료했습니다.
 M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 시험에서만 사람 개입을 요청합니다.
 
@@ -20,10 +21,11 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
 | M29 W07-D/E | 세 보드 MULTI·M19/M20/M21/M28 회귀 PASS — exact `16eb8fce…` |
 | M29 상호운용 | Windows 11·Intel Bluetooth·WinRT 기본 GATT PASS — exact `a964ae20…` |
 | M29 W08 최종 재검증 | 분할 후 세 role build·3보드 MULTI PASS — exact `ab3f85d3…` |
-| M30 | W01~W03 완료·W04 진행, 작업 묶음 3/8·test ID 4/10 PASS |
+| M30 | W01~W04 완료·W05 진행, 작업 묶음 4/8·test ID 5/10 PASS |
 | M30 W01 | exact `6254398c…`, parser 13/13·target 1/1·실제 capability 7/7 PASS |
 | M30 W02 | exact `4f91e347…`, target 10/10·IO capability 5종 × 10회 = 50/50 PASS |
 | M30 W03 | OOB exact `284254c7…` 20/20·MITM 20/20, BOND exact `83a4d11a…` reconnect 20/20·RPA 3·migration 1·stale accept 0 |
+| M30 W04 | exact `d2a0b968…`, profile 7/7·서비스별 100 operation·payload/driver 오류 0 |
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M30 자동 중단점 | `M30-POWER-01` 실제 target USB 전원 차단 직전 |
@@ -82,9 +84,9 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
 2. 완료된 HOST-W01~W03 inventory·공통 backend·OS descriptor·`.cmd`/`.sh` 경계를 보존합니다.
 3. exact `4f91e347…` M30-W02의 IO capability 5종·50/50과 exact `284254c7…`/`83a4d11a…`
    M30-W03 OOB·bond/privacy 증거를 보존합니다. NFC RF는 `NOT RUN` 상태를 유지합니다.
-4. W04는 기존 BAS/DIS/HID keyboard 회귀와 HID mouse/consumer, HRS, ESS catalog를 구현하고
-   서비스별 100 operation을 두 보드에서 검사합니다.
-5. 최소 BLE DFU의 MCUboot 사용 여부, 고정 memory layout, 신뢰키·서명, 초기 설치, BLE update,
+4. 완료된 W04의 BAS/DIS/HID keyboard/mouse/consumer, HRS, ESS catalog와 서비스별 100 operation
+   증적을 보존합니다.
+5. W05에서 최소 BLE DFU의 MCUboot 사용 여부, 고정 memory layout, 신뢰키·서명, 초기 설치, BLE update,
    rollback·corruption·power-loss recovery와 Arduino 제공 형태를 코드 전에 계약합니다. 새 도구는
    Windows 전용 진입점을 추가하지 않고 세 Host에서 같은 backend를 사용합니다.
 6. M30 test ID별 보드/peer 수, 반복 수, timeout, negative 입력과 증거 protocol을 고정한 뒤

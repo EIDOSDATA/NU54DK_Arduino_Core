@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W04 진행**입니다. M29는 작업 묶음 **8/8**,
-test ID **10/10 PASS**이고 M30은 작업 묶음 **3/8**, test ID **4/10 PASS**입니다.
+**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W05 진행**입니다. M29는 작업 묶음 **8/8**,
+test ID **10/10 PASS**이고 M30은 작업 묶음 **4/8**, test ID **5/10 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
@@ -12,6 +12,7 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **3/8**, test ID **4/10 PASS**
 
 | 기록 | 용도 |
 | --- | --- |
+| [155 — M30-W04 일곱 BLE profile 완료](155_M30_W04_7개_BLE_profile_완료.md) | BAS·DIS·HID 3종·HRS·ESS, 두 보드 서비스별 100회·오류 0 PASS |
 | [152 — M30-W01 capability 실기 완료](152_M30_W01_capability_실기_완료.md) | Host parser·target build·1보드 보안/OOB/profile/DFU capability 7/7 PASS |
 | [153 — M30-W02 link별 security와 IO 5종 완료](153_M30_W02_link별_security와_IO_5종_완료.md) | generation별 보안 상태·IO 5종 target 10/10·실제 pairing 50/50 PASS |
 | [154 — M30-W03 유선 OOB·bond/privacy·NFC adapter 완료](154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md) | 유선 OOB 20/20·bond reconnect 20/20·RPA 3·migration 1, NFC RF NOT RUN |
@@ -112,6 +113,7 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **3/8**, test ID **4/10 PASS**
 - [152 — M30-W01 capability 실기 완료](<152_M30_W01_capability_실기_완료.md>) — **parser 13/13·target 1/1·실제 capability 7/7 PASS, M30 1/8**
 - [153 — M30-W02 link별 security와 IO 5종 완료](<153_M30_W02_link별_security와_IO_5종_완료.md>) — **target 10/10·실제 pairing 50/50 PASS, M30 2/8**
 - [154 — M30-W03 유선 OOB·bond/privacy·NFC adapter 완료](<154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md>) — **OOB·BOND 실기 PASS, NFC RF NOT RUN, M30 3/8**
+- [155 — M30-W04 일곱 BLE profile 완료](<155_M30_W04_7개_BLE_profile_완료.md>) — **catalog 7/7·서비스별 100회·오류 0, M30 4/8**
 
 </details>
 

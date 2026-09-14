@@ -1,0 +1,98 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": 2,
+  "catalog": [
+    "battery",
+    "device_information",
+    "hid_keyboard",
+    "hid_mouse",
+    "hid_consumer_control",
+    "heart_rate",
+    "environmental_sensing"
+  ],
+  "catalog_entries": 7,
+  "core_revision": "d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283",
+  "driver_errors": 0,
+  "duration_seconds": 44.167,
+  "endpoints": {
+    "central": {
+      "board_id_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port": "COM10",
+      "volume": "G:"
+    },
+    "peripheral": {
+      "board_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "port": "COM14",
+      "volume": "F:"
+    }
+  },
+  "flash_backend": "pyocd-sector",
+  "flash_results": {
+    "central": {
+      "bytes": "167936",
+      "sequence": "p"
+    },
+    "peripheral": {
+      "bytes": "4096",
+      "sequence": "p"
+    }
+  },
+  "images": {
+    "central": {
+      "build_record": {
+        "application_source_sha256": "5d6b79f680202860ffda84b7534fe568cdd2b562ae9d51073ac788dfd230345e",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "core_revision": "d2a0b96888bd",
+        "core_source_sha256": "ccf7af5a0271d3fa757dee76d872a8f9bbc798353011de898994e8862d4927f5",
+        "ncs_revision": "99553055607b",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "06368b98e62534b43ab0ab1f86a65c572243022438917bf18695d4c77b1f82a5",
+        "zephyr_revision": "bf801e4e3d19"
+      },
+      "name": "zephyr.hex",
+      "sha256": "89ba245445998d58b71f5effaf920167d4a62037d9aa8db2ffa44b71cfb93905",
+      "size": 706445
+    },
+    "peripheral": {
+      "build_record": {
+        "application_source_sha256": "5d6b79f680202860ffda84b7534fe568cdd2b562ae9d51073ac788dfd230345e",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "core_revision": "d2a0b96888bd",
+        "core_source_sha256": "ccf7af5a0271d3fa757dee76d872a8f9bbc798353011de898994e8862d4927f5",
+        "ncs_revision": "99553055607b",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "06368b98e62534b43ab0ab1f86a65c572243022438917bf18695d4c77b1f82a5",
+        "zephyr_revision": "bf801e4e3d19"
+      },
+      "name": "zephyr.hex",
+      "sha256": "08b60f94d0b5c7e53837c83598a66d025b7ae86474c8697bfb4dfc9efd2dffa9",
+      "size": 709198
+    }
+  },
+  "mass_erase_or_recover": false,
+  "operations_per_service": 100,
+  "payload_errors": 0,
+  "power_cut_injected": false,
+  "schema_version": 1,
+  "status": "passed",
+  "test_id": "M30-PROFILE-01",
+  "timestamp_utc": "2026-09-14T14:35:24.708608+00:00",
+  "transcripts": {
+    "central": {
+      "name": "m30-profile-01.central.transcript.log",
+      "sha256": "569f9a819106d075909b4e15925ca7e6bead0ae4a3dbcbaec92efc13b0e25d5b",
+      "size": 602
+    },
+    "peripheral": {
+      "name": "m30-profile-01.peripheral.transcript.log",
+      "sha256": "4377841f8def3f222c9508d3cebf8f52ed724fa5af0753a9cea4a01bc7fc819e",
+      "size": 598
+    }
+  }
+}
