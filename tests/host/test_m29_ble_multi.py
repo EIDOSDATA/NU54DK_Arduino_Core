@@ -65,6 +65,7 @@ class M29BleMultiTests(unittest.TestCase):
             "progress_reported += 100U",
             "client_gatt_completed, nonce_binary",
             "client_coc_received, nonce_binary",
+            "hasServer() && (!server_connection.valid() || !server_channel_connected)",
             'fail("cross_link_gatt_client")',
             'fail("cross_link_gatt_server")',
             'fail("cross_link_coc_event")',

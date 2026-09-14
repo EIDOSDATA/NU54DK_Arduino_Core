@@ -476,17 +476,18 @@ namespace
     /** @brief mixed/central에서 두 transport가 준비된 순간 traffic을 시작합니다. */
     void startTrafficIfReady()
     {
-        if (traffic_started || !hasClient() || !client_discovered ||
-            !client_channel_connected)
+        if (traffic_started)
         {
             return;
         }
-#if defined(NUCODE_M29_MULTI_MIXED)
-        if (!server_connection.valid() || !server_channel_connected)
+        if (hasClient() && (!client_discovered || !client_channel_connected))
         {
             return;
         }
-#endif
+        if (hasServer() && (!server_connection.valid() || !server_channel_connected))
+        {
+            return;
+        }
         printLinkIfReady();
         traffic_started = true;
         issueClientTraffic();
@@ -710,6 +711,8 @@ namespace
                 {
                     fail("client_coc_sent_overflow");
                 }
+                printProgress();
+                finishIfComplete();
             }
             else if (!server_echo_pending)
             {
