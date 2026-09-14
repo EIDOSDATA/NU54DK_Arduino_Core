@@ -58,6 +58,15 @@ class M30BleBondHilTests(unittest.TestCase):
         self.assertIn('(\"m30_ble_bond_hil\", \"nucode.m30.bond.p\")', matrix)
         self.assertIn('(\"m30_ble_bond_hil\", \"nucode.m30.bond.c\")', matrix)
 
+    def test_target_enables_extended_privacy_advertising(self) -> None:
+        """! @brief 송신측 RPA 만료 callback에 필요한 단일 extended set을 고정합니다. """
+
+        configuration = (
+            ROOT / "tests/zephyr/m30_ble_bond_hil/prj.conf"
+        ).read_text(encoding="utf-8")
+        self.assertIn("CONFIG_BT_EXT_ADV=y", configuration)
+        self.assertIn("CONFIG_BT_EXT_ADV_MAX_ADV_SET=1", configuration)
+
     def test_runner_checks_migration_after_first_restored_connection(self) -> None:
         """! @brief resume READY 전에는 0, 최종 restored link 뒤에는 1을 요구합니다. """
 
