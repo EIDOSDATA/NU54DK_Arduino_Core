@@ -1,0 +1,13 @@
+tests:
+  nucode.m30.oob.p:
+    tags: [nucode, arduino, m30, bluetooth, security, oob, hil]
+    build_only: true
+    extra_args: [M30_OOB_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.oob.c:
+    tags: [nucode, arduino, m30, bluetooth, security, oob, hil]
+    build_only: true
+    extra_args: [M30_OOB_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
