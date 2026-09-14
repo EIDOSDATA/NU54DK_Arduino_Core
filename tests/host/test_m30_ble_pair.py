@@ -2,6 +2,7 @@
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 import sys
+from types import SimpleNamespace
 import unittest
 
 
@@ -82,6 +83,23 @@ class M30BlePairTests(unittest.TestCase):
         self.assertEqual(PAIR.parse_fields(valid, "PASS")["key_size"], "16")
         with self.assertRaises(PAIR.M30PairFailure):
             PAIR.parse_fields(valid + b"|level=3", "PASS")
+
+    def test_endpoint_evidence_keeps_exact_windows_volume(self) -> None:
+        """! @brief Windows drive 문자를 보존하고 임의 경로는 증적에서 거부합니다. """
+
+        endpoint = PAIR.RoleEndpoint(
+            "a" * 32,
+            SimpleNamespace(root=Path("f:/")),
+            "COM14",
+        )
+        self.assertEqual(PAIR.endpoint_evidence(endpoint)["volume"], "F:")
+        invalid = PAIR.RoleEndpoint(
+            "b" * 32,
+            SimpleNamespace(root=Path("relative-volume")),
+            "COM10",
+        )
+        with self.assertRaises(PAIR.M30PairFailure):
+            PAIR.endpoint_evidence(invalid)
 
     def test_ten_role_images_are_in_target_and_canonical_matrix(self) -> None:
         """! @brief 다섯 조합의 양쪽 image가 Twister와 v0.5.0 gate에 모두 포함됩니다. """

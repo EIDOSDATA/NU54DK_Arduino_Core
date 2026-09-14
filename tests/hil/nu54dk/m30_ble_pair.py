@@ -551,9 +551,12 @@ def image_evidence(image: ImageInput) -> dict[str, Any]:
 def endpoint_evidence(endpoint: RoleEndpoint) -> dict[str, str]:
     """! @brief raw UID를 공개하지 않고 endpoint exact identity를 기록합니다. """
 
+    match = re.match(r"^([A-Za-z]):(?:[\\/]|$)", str(endpoint.volume.root))
+    if match is None:
+        raise M30PairFailure("DAPLink volume이 Windows drive root가 아닙니다.")
     return {
         "board_id_sha256": hashlib.sha256(endpoint.board_id.encode("ascii")).hexdigest(),
-        "volume": endpoint.volume.root.name,
+        "volume": f"{match.group(1).upper()}:",
         "port": endpoint.port_name,
     }
 
