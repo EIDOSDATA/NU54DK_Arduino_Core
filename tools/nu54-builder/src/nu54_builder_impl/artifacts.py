@@ -125,7 +125,35 @@ def validate_linked_code_partition(zephyr_output: Path) -> dict[str, int | str]:
     if flash is None:
         raise AdapterError("[NU54:E_MEMORY_LAYOUT] linker map의 FLASH 영역을 해석할 수 없습니다.")
     linker_start, linker_size = (int(value, 16) for value in flash.groups())
-    if (linker_start, linker_size) != code_region:
+    mcuboot = re.search(
+        r"^CONFIG_BOOTLOADER_MCUBOOT=y\s*$", configuration, re.MULTILINE
+    ) is not None
+    if mcuboot:
+        start_offset_match = re.search(
+            r"^CONFIG_ROM_START_OFFSET=(0x[0-9a-fA-F]+|[0-9]+)\s*$",
+            configuration,
+            re.MULTILINE,
+        )
+        end_offset_match = re.search(
+            r"^CONFIG_ROM_END_OFFSET=(0x[0-9a-fA-F]+|[0-9]+)\s*$",
+            configuration,
+            re.MULTILINE,
+        )
+        if start_offset_match is None or end_offset_match is None:
+            raise AdapterError(
+                "[NU54:E_MEMORY_LAYOUT] MCUboot image의 ROM header/trailer 경계를 해석할 수 없습니다."
+            )
+        start_offset = int(start_offset_match.group(1), 0)
+        end_offset = int(end_offset_match.group(1), 0)
+        linked_region_matches = (
+            start_offset > 0
+            and end_offset > 0
+            and linker_start == code_start
+            and linker_size + end_offset == code_size
+        )
+    else:
+        linked_region_matches = (linker_start, linker_size) == code_region
+    if not linked_region_matches:
         raise AdapterError(
             "[NU54:E_MEMORY_LAYOUT] linker FLASH 영역과 devicetree code partition이 다릅니다: "
             f"linker=0x{linker_start:x}+0x{linker_size:x}, "
@@ -312,6 +340,63 @@ def validate_manifest_artifact(
     return artifact, actual_hash
 
 
+## @brief sysbuild domain과 flash 순서가 bootloader 다음 application인지 검증합니다.
+def validate_sysbuild_domains(zephyr_build: Path) -> tuple[Path, Path]:
+    domains_path = zephyr_build / "domains.yaml"
+    if not domains_path.is_file():
+        raise AdapterError(
+            f"[NU54:E_FLASH_SYSBUILD_DOMAINS] domains.yaml이 없습니다: {domains_path}"
+        )
+    try:
+        import yaml
+
+        document = yaml.safe_load(domains_path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise AdapterError(
+            f"[NU54:E_FLASH_SYSBUILD_DOMAINS] domains.yaml을 읽지 못했습니다: {error}"
+        ) from error
+    if not isinstance(document, dict):
+        raise AdapterError("[NU54:E_FLASH_SYSBUILD_DOMAINS] domains.yaml root가 object가 아닙니다.")
+    default_domain = document.get("default")
+    domains = document.get("domains")
+    flash_order = document.get("flash_order")
+    if (
+        not isinstance(default_domain, str)
+        or default_domain == "mcuboot"
+        or not isinstance(domains, list)
+        or len(domains) != 2
+        or flash_order != ["mcuboot", default_domain]
+    ):
+        raise AdapterError(
+            "[NU54:E_FLASH_SYSBUILD_DOMAINS] bootloader/application flash 순서가 고정 계약과 다릅니다."
+        )
+    domain_builds: dict[str, Path] = {}
+    for entry in domains:
+        if not isinstance(entry, dict) or set(entry) != {"name", "build_dir"}:
+            raise AdapterError(
+                "[NU54:E_FLASH_SYSBUILD_DOMAINS] domain record 형식이 잘못되었습니다."
+            )
+        name = entry.get("name")
+        build_dir = entry.get("build_dir")
+        if not isinstance(name, str) or not isinstance(build_dir, str) or name in domain_builds:
+            raise AdapterError(
+                "[NU54:E_FLASH_SYSBUILD_DOMAINS] domain 이름 또는 build directory가 잘못되었습니다."
+            )
+        resolved = canonical_path(build_dir)
+        if not is_within(resolved, zephyr_build) or path_key(resolved) != path_key(
+            zephyr_build / name
+        ):
+            raise AdapterError(
+                "[NU54:E_FLASH_SYSBUILD_DOMAINS] domain build directory가 sysbuild root와 다릅니다."
+            )
+        domain_builds[name] = resolved
+    if set(domain_builds) != {"mcuboot", default_domain}:
+        raise AdapterError(
+            "[NU54:E_FLASH_SYSBUILD_DOMAINS] MCUboot 또는 application domain이 없습니다."
+        )
+    return domain_builds["mcuboot"], domain_builds[default_domain]
+
+
 ## @brief M8 upload가 사용할 manifest와 native Zephyr artifact를 검증합니다.
 def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
     build_path = canonical_path(args.build_path)
@@ -331,10 +416,9 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         raise AdapterError("[NU54:E_FLASH_MANIFEST_VERSION] 지원하지 않는 build manifest version입니다.")
     if manifest.get("fqbn") != args.fqbn or manifest.get("board") != args.board:
         raise AdapterError("[NU54:E_FLASH_BOARD_MISMATCH] manifest의 FQBN 또는 Zephyr board가 다릅니다.")
-    if manifest.get("sysbuild") is not False:
-        raise AdapterError(
-            "[NU54:E_FLASH_SYSBUILD_UNSUPPORTED] M8 upload는 non-sysbuild zephyr.hex만 지원합니다."
-        )
+    sysbuild = manifest.get("sysbuild")
+    if not isinstance(sysbuild, bool):
+        raise AdapterError("[NU54:E_FLASH_SYSBUILD] manifest의 sysbuild 값이 boolean이 아닙니다.")
 
     context = manifest.get("context")
     if not isinstance(context, dict):
@@ -343,6 +427,8 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         raise AdapterError("[NU54:E_FLASH_CONTEXT] 지원하지 않는 session context version입니다.")
     if context.get("state") != "built":
         raise AdapterError("[NU54:E_FLASH_CONTEXT] 마지막으로 완료된 build context가 아닙니다.")
+    if context.get("sysbuild") is not sysbuild:
+        raise AdapterError("[NU54:E_FLASH_CONTEXT] manifest와 context의 sysbuild 값이 다릅니다.")
     context_pairs = {
         "fqbn": args.fqbn,
         "board": args.board,
@@ -395,8 +481,28 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         raise AdapterError("[NU54:E_FLASH_CONTEXT] Zephyr build directory가 cache context와 다릅니다.")
     if not (zephyr_build / "CMakeCache.txt").is_file() or not (zephyr_build / "build.ninja").is_file():
         raise AdapterError(f"[NU54:E_FLASH_CONTEXT] 유효한 Zephyr build directory가 아닙니다: {zephyr_build}")
-    native_hex = zephyr_build / "zephyr" / "zephyr.hex"
-    native_elf = zephyr_build / "zephyr" / "zephyr.elf"
+    runner_builds = [zephyr_build]
+    if sysbuild:
+        boot_build, application_build = validate_sysbuild_domains(zephyr_build)
+        runner_builds = [boot_build, application_build]
+        exported_boot, boot_hash = validate_manifest_artifact(
+            manifest, "boot.hex", build_path
+        )
+        validate_manifest_artifact(manifest, "update.bin", build_path)
+        native_boot = boot_build / "zephyr" / "zephyr.hex"
+        if not native_boot.is_file() or native_boot.stat().st_size == 0:
+            raise AdapterError(
+                f"[NU54:E_FLASH_ARTIFACT_MISSING] native boot HEX가 없습니다: {native_boot}"
+            )
+        if file_sha256(native_boot) != boot_hash:
+            raise AdapterError(
+                "[NU54:E_FLASH_ARTIFACT_HASH] native boot HEX와 export artifact가 다릅니다."
+            )
+        native_hex = application_build / "zephyr" / "zephyr.signed.hex"
+        native_elf = application_build / "zephyr" / "zephyr.elf"
+    else:
+        native_hex = zephyr_build / "zephyr" / "zephyr.hex"
+        native_elf = zephyr_build / "zephyr" / "zephyr.elf"
     for extension, native, exported_hash in (
         ("hex", native_hex, hex_hash),
         ("elf", native_elf, elf_hash),
@@ -416,6 +522,7 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         "elf": exported_elf,
         "hex_sha256": hex_hash,
         "elf_sha256": elf_hash,
+        "runner_builds": runner_builds,
     }
 
 

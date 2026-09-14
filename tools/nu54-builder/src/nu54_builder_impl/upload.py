@@ -260,7 +260,8 @@ def flash(args: argparse.Namespace) -> None:
                 raise AdapterError(
                     "[NU54:E_FLASH_CONTEXT] session context가 artifact manifest와 다릅니다."
                 )
-            validate_runner_configuration(inputs["zephyr_build"], args.runner)
+            for runner_build in inputs.get("runner_builds", [inputs["zephyr_build"]]):
+                validate_runner_configuration(runner_build, args.runner)
             if args.runner == "pyocd":
                 probe_id = select_pyocd_probe(args.probe_id)
             else:

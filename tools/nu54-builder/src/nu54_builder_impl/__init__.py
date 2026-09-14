@@ -117,6 +117,7 @@ from .configuration import (
     declared_path,
     load_configuration_profile,
     load_library_feature,
+    resolve_profile_signing_key,
     resolve_library_features,
 )
 from . import environment
@@ -265,6 +266,7 @@ __all__ = [
     'declared_path',
     'load_configuration_profile',
     'load_library_feature',
+    'resolve_profile_signing_key',
     'resolve_library_features',
     'add_workspace_paths',
     'paths_from_context',

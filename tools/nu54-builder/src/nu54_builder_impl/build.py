@@ -46,6 +46,7 @@ from .configuration import (
     declared_path,
     load_configuration_profile,
     load_product_identity,
+    resolve_profile_signing_key,
     resolve_library_features,
 )
 from .environment import tool_environment
@@ -79,13 +80,19 @@ def configure_command(
     build_platform = platform_build_root(paths)
     if build_platform != paths['platform_root']:
         board_root = build_platform / 'board_package' / 'NU54DK_Zephyr_DTS'
+    profile = load_configuration_profile(
+        paths["platform_root"],
+        getattr(args, "profile", DEFAULT_PROFILE),
+        fqbn=args.fqbn,
+        zephyr_board=args.board,
+    )
     command: list[str | Path] = [
         tools["west"],
         "-z",
         tools["zephyr_base"],
         "build",
         "--cmake-only",
-        "--no-sysbuild",
+        "--sysbuild" if profile["sysbuild"] else "--no-sysbuild",
     ]
     if pristine:
         command.append("--pristine=always")
@@ -114,6 +121,10 @@ def configure_command(
     overlay = paths["app"] / "app.overlay"
     if overlay.is_file():
         command.append(f"-DDTC_OVERLAY_FILE={overlay.as_posix()}")
+    if profile["sysbuild"]:
+        command.append(
+            f"-DSB_EXTRA_CONF_FILE={(paths['app'] / 'sysbuild' / 'signing-key.conf').as_posix()}"
+        )
     return command
 
 
@@ -180,9 +191,21 @@ def materialize_application(
             + sketch_overlay.read_text(encoding="utf-8").rstrip()
             + "\n"
         )
-        atomic_write_text(generated_overlay, combined_overlay)
     else:
-        atomic_write_text(generated_overlay, base_overlay)
+        combined_overlay = base_overlay
+    atomic_write_text(generated_overlay, combined_overlay)
+
+    if profile["sysbuild"]:
+        signing_key = resolve_profile_signing_key(platform_root, profile)
+        for source in profile["sysbuild_paths"]:
+            relative = source.relative_to(profile["root"])
+            atomic_write_bytes_if_changed(app_root / relative, source.read_bytes())
+        signing_conf = app_root / "sysbuild" / "signing-key.conf"
+        atomic_write_text(
+            signing_conf,
+            "# Build Adapter가 저장소 외부 private key를 현재 cache에만 연결합니다.\n"
+            f'SB_CONFIG_BOOT_SIGNATURE_KEY_FILE="{signing_key.as_posix()}"\n',
+        )
 
 
 ## @brief 현재 고정 입력으로 Zephyr configure-only를 수행하고 context를 기록합니다.
@@ -201,6 +224,10 @@ def prepare(args: argparse.Namespace) -> BuildContext:
     product_identity = load_product_identity(platform_root)
     tools = tool_environment(platform_root)
     input_manifest = cache_input_manifest(session_paths, args, tools)
+    target_manifest = input_manifest.get("target")
+    sysbuild = bool(
+        isinstance(target_manifest, dict) and target_manifest.get("sysbuild") is True
+    )
     cache_key = cache_key_for_manifest(input_manifest)
     workspace = cache_workspace(cache_key, root=cache_root)
     paths = add_workspace_paths(session_paths, workspace)
@@ -329,7 +356,7 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                 "fqbn": args.fqbn,
                 "board": args.board,
                 "profile": getattr(args, "profile", DEFAULT_PROFILE),
-                "sysbuild": False,
+                "sysbuild": sysbuild,
                 "ncs_version": NCS_VERSION,
                 "zephyr_version": "4.4.0",
                 "platform_root": platform_root.as_posix(),
@@ -565,9 +592,18 @@ def link(args: argparse.Namespace) -> None:
                     cwd=west_build_working_directory(paths),
                     environment=tools["environment"],
                 )
-                memory_layout = validate_linked_code_partition(
-                    paths["zephyr_build"] / "zephyr"
+                profile = load_configuration_profile(
+                    paths["platform_root"],
+                    getattr(args, "profile", DEFAULT_PROFILE),
+                    fqbn=args.fqbn,
+                    zephyr_board=args.board,
                 )
+                zephyr_output = (
+                    paths["zephyr_build"] / "app" / "zephyr"
+                    if profile["sysbuild"]
+                    else paths["zephyr_build"] / "zephyr"
+                )
+                memory_layout = validate_linked_code_partition(zephyr_output)
             except Exception as error:
                 transition_cache_state(
                     paths["workspace"],
@@ -580,13 +616,22 @@ def link(args: argparse.Namespace) -> None:
             build_seconds = time.perf_counter() - build_started
             try:
                 ccache_after = read_ccache_stats(tools)
-                zephyr_output = paths["zephyr_build"] / "zephyr"
-                artifacts = {
-                    "elf": zephyr_output / "zephyr.elf",
-                    "hex": zephyr_output / "zephyr.hex",
-                    "bin": zephyr_output / "zephyr.bin",
-                    "map": zephyr_output / "zephyr.map",
-                }
+                if profile["sysbuild"]:
+                    artifacts = {
+                        "elf": zephyr_output / "zephyr.elf",
+                        "hex": zephyr_output / "zephyr.signed.hex",
+                        "bin": zephyr_output / "zephyr.signed.bin",
+                        "map": zephyr_output / "zephyr.map",
+                        "boot.hex": paths["zephyr_build"] / "mcuboot" / "zephyr" / "zephyr.hex",
+                        "update.bin": zephyr_output / "zephyr.signed.bin",
+                    }
+                else:
+                    artifacts = {
+                        "elf": zephyr_output / "zephyr.elf",
+                        "hex": zephyr_output / "zephyr.hex",
+                        "bin": zephyr_output / "zephyr.bin",
+                        "map": zephyr_output / "zephyr.map",
+                    }
                 with publish_artifact_generation(
                     artifacts,
                     paths["build_path"],
@@ -595,7 +640,11 @@ def link(args: argparse.Namespace) -> None:
                     paths["context"],
                     rollback_context,
                 ) as exported:
-                    build_record = paths["zephyr_build"] / "nucode_arduino_core_build.yml"
+                    build_record = (
+                        paths["zephyr_build"]
+                        / ("app" if profile["sysbuild"] else "")
+                        / "nucode_arduino_core_build.yml"
+                    )
                     if not build_record.is_file():
                         raise AdapterError(
                             f"[NU54:E_BUILD_RECORD] live build record가 없습니다: {build_record}"
@@ -624,7 +673,7 @@ def link(args: argparse.Namespace) -> None:
                     "product_identity": load_product_identity(paths["platform_root"]),
                     "fqbn": args.fqbn,
                     "board": args.board,
-                    "sysbuild": False,
+                    "sysbuild": profile["sysbuild"],
                     "cache": {
                         "schema_version": CACHE_SCHEMA_VERSION,
                         "key": cache_key,

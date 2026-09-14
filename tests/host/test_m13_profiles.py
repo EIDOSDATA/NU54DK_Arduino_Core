@@ -128,7 +128,11 @@ class M13ProfileContractTests(unittest.TestCase):
                 "LegacySignedWritePeripheral",
                 "EattCentral",
                 "EattPeripheral",
+                "EnvironmentalSensing",
+                "HeartRate",
+                "SecureConsumerControl",
                 "SecureKeyboard",
+                "SecureMouse",
                 "FabricCapabilities",
             },
         )

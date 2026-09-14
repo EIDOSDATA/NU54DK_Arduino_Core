@@ -75,7 +75,10 @@ class AC03StorageContractTests(unittest.TestCase):
         self.assertEqual(BUILDER.FEATURE_ALLOWLIST["LittleFS"], "nucode.littlefs")
         for feature in resolved:
             self.assertEqual(feature["requires"], ["storage"])
-            self.assertEqual(feature["compatible_profiles"], ["standard", "ble"])
+            self.assertEqual(
+                feature["compatible_profiles"],
+                ["standard", "ble", "secure_ble_dfu"],
+            )
 
     def test_builder_validates_the_effective_linker_partition(self) -> None:
         """! @brief generated DTS와 linker map의 일치를 산출물 공개 전에 검증합니다. """
@@ -133,6 +136,23 @@ class AC03StorageContractTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(BUILDER.AdapterError, "E_MEMORY_LAYOUT"):
                 BUILDER.validate_linked_code_partition(zephyr)
+
+            (zephyr / ".config").write_text(
+                "CONFIG_USE_DT_CODE_PARTITION=y\n"
+                "CONFIG_FLASH_USES_MAPPED_PARTITION=y\n"
+                "CONFIG_BOOTLOADER_MCUBOOT=y\n"
+                "CONFIG_ROM_START_OFFSET=0x800\n"
+                "CONFIG_ROM_END_OFFSET=0x4096\n",
+                encoding="utf-8",
+            )
+            (zephyr / "zephyr.map").write_text(
+                "FLASH 0x0000000000000000 0x0000000000167f6a xr\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                BUILDER.validate_linked_code_partition(zephyr)["flash_size"],
+                0x16C000,
+            )
 
     def test_eeprom_record_and_explicit_commit_contract(self) -> None:
         """! @brief EEPROM의 mirror, CRC, bounds, 명시적 commit 계약을 검증합니다. """

@@ -38,6 +38,7 @@ ARDUINO_TESTS = (
     "m28",
     "m29",
     "m30",
+    "m30secure",
     "ac02b",
     "ac03",
     "examples",
@@ -47,7 +48,7 @@ ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
-    "v0.5.0": ("m29", "m30"),
+    "v0.5.0": ("m29", "m30", "m30secure"),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
@@ -294,6 +295,95 @@ def assert_build(build_path: Path, project_name: str) -> dict:
         != build_record.get("sha256")
     ):
         raise SmokeFailure("live build record provenance hash mismatch")
+    return context
+
+
+## @brief M30 secure profile의 sysbuild·signed artifact·dual-slot 계약을 검증합니다.
+def assert_m30_secure_build(
+    build_path: Path, project_name: str, signing_key: Path
+) -> dict:
+    context_path = build_path / "nu54-zephyr" / "context.json"
+    if not context_path.is_file():
+        raise SmokeFailure(f"missing secure build context: {context_path}")
+    context = json.loads(context_path.read_text(encoding="utf-8"))
+    if context.get("profile") != "secure_ble_dfu" or context.get("sysbuild") is not True:
+        raise SmokeFailure("M30 secure build did not enable the dedicated sysbuild profile")
+    zephyr_build = Path(str(context.get("zephyr_build_dir", "")))
+    application = zephyr_build / "app" / "zephyr"
+    bootloader = zephyr_build / "mcuboot" / "zephyr"
+    assert_external_lfxo(application / "zephyr.dts")
+    required_native = (
+        application / "zephyr.signed.hex",
+        application / "zephyr.signed.bin",
+        application / "zephyr.elf",
+        bootloader / "zephyr.hex",
+        zephyr_build / "domains.yaml",
+    )
+    for path in required_native:
+        if not path.is_file() or path.stat().st_size == 0:
+            raise SmokeFailure(f"missing secure native artifact: {path}")
+    domains = (zephyr_build / "domains.yaml").read_text(encoding="utf-8")
+    if (
+        re.search(r"(?m)^default:\s+app\s*$", domains) is None
+        or re.search(
+            r"(?m)^flash_order:\s*$\n\s*-\s*mcuboot\s*$\n\s*-\s*app\s*$",
+            domains,
+        ) is None
+    ):
+        raise SmokeFailure("M30 sysbuild flash order is not MCUboot then application")
+    application_config = (application / ".config").read_text(encoding="utf-8")
+    bootloader_config = (bootloader / ".config").read_text(encoding="utf-8")
+    for symbol in (
+        "CONFIG_BOOTLOADER_MCUBOOT=y",
+        "CONFIG_MCUBOOT_IMG_MANAGER=y",
+        'CONFIG_MCUBOOT_EXTRA_IMGTOOL_ARGS="--security-counter 1"',
+    ):
+        if symbol not in application_config.splitlines():
+            raise SmokeFailure(f"M30 application config omitted {symbol}")
+    for symbol in (
+        "CONFIG_BOOT_SIGNATURE_TYPE_ECDSA_P256=y",
+        "CONFIG_BOOT_SWAP_USING_MOVE=y",
+        "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION=y",
+        "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION_SECURITY_COUNTER=y",
+        "CONFIG_FPROTECT=y",
+    ):
+        if symbol not in bootloader_config.splitlines():
+            raise SmokeFailure(f"M30 bootloader config omitted {symbol}")
+    devicetree = (application / "zephyr.dts").read_text(encoding="utf-8")
+    for pattern in (
+        r"boot_partition:\s+partition@0\s*\{.*?reg\s*=\s*<\s*0x0\s+0xf800\s*>",
+        r"slot0_partition:\s+partition@10000\s*\{.*?reg\s*=\s*<\s*0x10000\s+0xb2000\s*>",
+        r"slot1_partition:\s+partition@c2000\s*\{.*?reg\s*=\s*<\s*0xc2000\s+0xb2000\s*>",
+        r"storage_partition:\s+partition@174000\s*\{.*?reg\s*=\s*<\s*0x174000\s+0x9000\s*>",
+    ):
+        if re.search(pattern, devicetree, re.DOTALL) is None:
+            raise SmokeFailure(f"M30 partition layout mismatch: {pattern}")
+    manifest_path = build_path / f"{project_name}.nu54-build.json"
+    manifest_text = manifest_path.read_text(encoding="utf-8")
+    manifest = json.loads(manifest_text)
+    if manifest.get("sysbuild") is not True:
+        raise SmokeFailure("M30 artifact manifest did not record sysbuild")
+    if signing_key.resolve().as_posix() in manifest_text or str(signing_key.resolve()) in manifest_text:
+        raise SmokeFailure("M30 artifact manifest exposed the private key path")
+    native_by_extension = {
+        "hex": application / "zephyr.signed.hex",
+        "bin": application / "zephyr.signed.bin",
+        "elf": application / "zephyr.elf",
+        "map": application / "zephyr.map",
+        "boot.hex": bootloader / "zephyr.hex",
+        "update.bin": application / "zephyr.signed.bin",
+    }
+    for extension, native in native_by_extension.items():
+        exported = build_path / f"{project_name}.{extension}"
+        record = manifest.get("artifacts", {}).get(extension, {})
+        digest = hashlib.sha256(exported.read_bytes()).hexdigest() if exported.is_file() else ""
+        if (
+            not exported.is_file()
+            or exported.stat().st_size == 0
+            or record.get("sha256") != digest
+            or native.read_bytes() != exported.read_bytes()
+        ):
+            raise SmokeFailure(f"M30 secure artifact mismatch: {exported}")
     return context
 
 
@@ -1548,6 +1638,35 @@ def test_m30_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
                 )
 
 
+## @brief M30 secure BLE DFU profile을 별도 Arduino sysbuild로 검증합니다.
+def test_m30_secure_example(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    signing_key_value = os.environ.get("NUCODE_DFU_SIGNING_KEY", "").strip()
+    if not signing_key_value:
+        raise SmokeFailure("M30 secure Arduino build requires NUCODE_DFU_SIGNING_KEY")
+    signing_key = Path(signing_key_value).resolve()
+    if not signing_key.is_file():
+        raise SmokeFailure(f"M30 external signing key is missing: {signing_key}")
+    library = repository / "libraries" / "NUCODE_BLE_Security"
+    secure_example = "HeartRate"
+    secure_sketch = library / "examples" / secure_example
+    secure_build = root / "build-secure-ble-dfu"
+    secure_command = list(compile_command(cli, config, secure_build, secure_sketch))
+    secure_command[-1:-1] = ("--board-options", "feature_set=secure_ble_dfu")
+    run(secure_command)
+    secure_context = assert_m30_secure_build(
+        secure_build, f"{secure_example}.ino", signing_key
+    )
+    secure_features = {
+        item.get("id")
+        for item in secure_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if "nucode.ble.security" not in secure_features:
+        raise SmokeFailure("M30 secure profile did not select BLE security feature")
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -1794,6 +1913,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m28": test_m28_examples,
                 "m29": test_m29_examples,
                 "m30": test_m30_examples,
+                "m30secure": test_m30_secure_example,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

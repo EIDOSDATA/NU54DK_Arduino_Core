@@ -310,7 +310,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
         feature = json.loads(FEATURE.read_text(encoding="utf-8"))
         self.assertEqual(feature["id"], "nucode.ble.security")
         self.assertEqual(feature["requires"], ["ble"])
-        self.assertEqual(feature["compatible_profiles"], ["ble"])
+        self.assertEqual(feature["compatible_profiles"], ["ble", "secure_ble_dfu"])
         self.assertEqual(feature["conf"], ["ble-security.conf"])
 
         conf = CONF.read_text(encoding="utf-8")

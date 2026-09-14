@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "id": "secure_ble_dfu",
+  "display_name": "Secure BLE DFU (MCUboot)",
+  "board": "nucode:zephyr:nu54dk",
+  "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_version": "v3.4.0",
+  "conf": "prj.conf",
+  "overlay": "app.overlay",
+  "sysbuild": true,
+  "sysbuild_files": [
+    "sysbuild.conf",
+    "sysbuild/mcuboot.conf",
+    "sysbuild/mcuboot.overlay"
+  ],
+  "signing_key_env": "NUCODE_DFU_SIGNING_KEY",
+  "features": ["gpio", "serial", "wire", "spi", "adc", "pwm", "storage", "ble", "dfu"],
+  "conflicts": [],
+  "requires_hil": ["wire", "spi", "adc", "pwm", "storage", "ble", "dfu"]
+}
