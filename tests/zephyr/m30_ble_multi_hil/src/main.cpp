@@ -55,7 +55,7 @@ namespace
     bool client_security_pending = false;
     bool client_secure = false;
     bool server_secure = false;
-    bool upstream_reported = false;
+    [[maybe_unused]] bool upstream_reported = false;
     bool advertising_started = false;
     bool link_reported = false;
     std::int64_t security_request_due_ms = 0;
@@ -258,7 +258,7 @@ namespace
     }
 
     /** @brief role marker와 nonce를 넣은 connectable advertising을 시작합니다. */
-    bool startAdvertising()
+    [[maybe_unused]] bool startAdvertising()
     {
         std::uint8_t manufacturer[nonce_binary_length + 1U] = {};
         manufacturer[0] = serverMarker();
@@ -283,7 +283,7 @@ namespace
     }
 
     /** @brief exact peer를 찾는 active scan을 시작합니다. */
-    bool startScan()
+    [[maybe_unused]] bool startScan()
     {
         if (!BLEScan.clearFilters() || !BLEScan.start(true))
         {
