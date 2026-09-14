@@ -48,6 +48,8 @@ class M30BlePairTests(unittest.TestCase):
             "bt_conn_enc_key_size(connection)",
             "event.connection != connection_handle",
             "unexpected_auth_failures",
+            '::strcmp(verb, "IDENTIFY")',
+            "reportReady()",
         ):
             self.assertIn(token, source, token)
 
@@ -95,6 +97,8 @@ class M30BlePairTests(unittest.TestCase):
         self.assertNotIn("serial_module.tools.list_ports", source)
         self.assertIn("board_revision = git_revision(BOARD_ROOT)", source)
         self.assertIn("validate_board_revision(board_revision)", source)
+        self.assertIn('send_command(ports[role], "IDENTIFY"', source)
+        self.assertIn("ready_nonces[role]", source)
         self.assertIn('"power_cut_injected": False', source)
         self.assertIn('"mass_erase_or_recover": False', source)
         self.assertIn("30.0 <= args.result_timeout <= 600.0", source)

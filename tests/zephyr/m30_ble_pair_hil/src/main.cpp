@@ -48,6 +48,7 @@ namespace
     bool persistence_pending_seen = false;
     bool secure_seen = false;
     bool pass_reported = false;
+    const char *failure_reason = nullptr;
     std::uint8_t encryption_key_size = 0U;
     std::uint32_t unexpected_auth_failures = 0U;
     std::int64_t security_request_due_ms = 0;
@@ -62,23 +63,47 @@ namespace
 #endif
     }
 
-    /** @brief 실패를 현재 case·round·nonce와 함께 한 번만 출력합니다. */
+    /** @brief 현재 실패 원인을 case·round·nonce와 함께 출력합니다. */
+    void reportFailure(const char *reason)
+    {
+        Serial.print("M30PAIR|1|FAIL|role=");
+        Serial.print(roleName());
+        Serial.print("|case=");
+        Serial.print(NUCODE_M30_PAIR_CASE_NAME);
+        Serial.print("|round=");
+        Serial.print(current_round);
+        Serial.print("|reason=");
+        Serial.print(reason == nullptr ? "unknown" : reason);
+        Serial.print("|nonce=");
+        Serial.println(nonce);
+    }
+
+    /** @brief 최초 실패를 보존하고 중복 비동기 오류 출력을 막습니다. */
     void fail(const char *reason)
     {
         if (!protocol_failed)
         {
-            Serial.print("M30PAIR|1|FAIL|role=");
-            Serial.print(roleName());
-            Serial.print("|case=");
-            Serial.print(NUCODE_M30_PAIR_CASE_NAME);
-            Serial.print("|round=");
-            Serial.print(current_round);
-            Serial.print("|reason=");
-            Serial.print(reason == nullptr ? "unknown" : reason);
-            Serial.print("|nonce=");
-            Serial.println(nonce);
+            failure_reason = reason;
+            reportFailure(reason);
         }
         protocol_failed = true;
+    }
+
+    /** @brief nonce가 결합된 현재 image identity를 Host 요청에 응답합니다. */
+    void reportReady()
+    {
+        Serial.print("M30PAIR|1|READY|role=");
+        Serial.print(roleName());
+        Serial.print("|case=");
+        Serial.print(NUCODE_M30_PAIR_CASE_NAME);
+        Serial.print("|round=");
+        Serial.print(current_round);
+        Serial.print("|io=");
+        Serial.print(NUCODE_M30_PAIR_IO);
+        Serial.print("|bond_count=");
+        Serial.print(BLESecurity.bondCount());
+        Serial.print("|nonce=");
+        Serial.println(nonce);
     }
 
     /** @brief 소문자 32자리 nonce인지 검사합니다. */
@@ -483,7 +508,7 @@ namespace
         return true;
     }
 
-    /** @brief 완전한 한 줄 command를 CLEAR·START·KEY로 실행합니다. */
+    /** @brief 완전한 한 줄 command를 IDENTIFY·CLEAR·START·KEY로 실행합니다. */
     void executeCommand(char *line)
     {
         char *verb = nullptr;
@@ -493,7 +518,18 @@ namespace
             fail("bad-command");
             return;
         }
-        if (::strcmp(verb, "CLEAR") == 0 && argument == nullptr)
+        if (::strcmp(verb, "IDENTIFY") == 0 && argument == nullptr)
+        {
+            if (protocol_failed)
+            {
+                reportFailure(failure_reason);
+            }
+            else
+            {
+                reportReady();
+            }
+        }
+        else if (::strcmp(verb, "CLEAR") == 0 && argument == nullptr)
         {
             clearRound();
         }
@@ -606,14 +642,6 @@ void setup()
         return;
     }
 #endif
-    Serial.print("M30PAIR|1|READY|role=");
-    Serial.print(roleName());
-    Serial.print("|case=");
-    Serial.print(NUCODE_M30_PAIR_CASE_NAME);
-    Serial.print("|io=");
-    Serial.print(NUCODE_M30_PAIR_IO);
-    Serial.print("|bond_count=");
-    Serial.println(BLESecurity.bondCount());
 }
 
 void loop()

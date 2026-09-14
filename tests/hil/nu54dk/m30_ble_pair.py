@@ -286,14 +286,16 @@ def wait_expected(
             raise M30PairFailure(f"예상 밖 protocol line입니다: {line!r}")
 
 
-def ready_line(case: CapabilityCase, role: str) -> bytes:
-    """! @brief role image의 exact READY line을 생성합니다. """
+def ready_line(case: CapabilityCase, role: str, nonce: str) -> tuple[bytes, bytes]:
+    """! @brief nonce 결합 READY의 bond count 앞뒤 exact byte를 생성합니다. """
 
     io_value = case.peripheral_io if role == "peripheral" else case.central_io
-    return (
+    prefix = (
         f"M30PAIR|1|READY|role={role}|case={case.case_name}|"
-        f"io={io_value}|bond_count="
+        f"round=1|io={io_value}|bond_count="
     ).encode("ascii")
+    suffix = f"|nonce={nonce}".encode("ascii")
+    return prefix, suffix
 
 
 def wait_ready(
@@ -303,17 +305,18 @@ def wait_ready(
     pending: bytearray,
     capture: bytearray,
     deadline: float,
+    nonce: str,
 ) -> None:
-    """! @brief flash 뒤 현재 case의 READY와 bounded bond count를 검증합니다. """
+    """! @brief IDENTIFY 뒤 nonce 결합 READY와 bounded bond count를 검증합니다. """
 
-    prefix = ready_line(case, role)
+    prefix, suffix = ready_line(case, role, nonce)
     while True:
         line = read_wire_line(serial_port, pending, deadline)
         if line.startswith(FAIL_PREFIX):
             capture_sanitized(capture, line)
             raise M30PairFailure(f"{role} setup 실패: {line!r}")
-        if line.startswith(prefix):
-            count = line[len(prefix) :].decode("ascii", errors="strict")
+        if line.startswith(prefix) and line.endswith(suffix):
+            count = line[len(prefix) : -len(suffix)].decode("ascii", errors="strict")
             if DECIMAL_PATTERN.fullmatch(count) is None or int(count) > 4:
                 raise M30PairFailure("READY bond_count가 잘못됐습니다.")
             capture_sanitized(capture, line)
@@ -456,8 +459,19 @@ def execute_case(
         }
         for port in ports.values():
             port.reset_input_buffer()
+        ready_nonces = {role: build_nonce() for role in ("peripheral", "central")}
         for role in ("peripheral", "central"):
-            wait_ready(ports[role], case, role, pending[role], captures[role], deadline)
+            send_command(ports[role], "IDENTIFY", 1, ready_nonces[role])
+        for role in ("peripheral", "central"):
+            wait_ready(
+                ports[role],
+                case,
+                role,
+                pending[role],
+                captures[role],
+                deadline,
+                ready_nonces[role],
+            )
 
         results: list[dict[str, Any]] = []
         for round_index in range(1, ROUNDS_PER_CAPABILITY + 1):
