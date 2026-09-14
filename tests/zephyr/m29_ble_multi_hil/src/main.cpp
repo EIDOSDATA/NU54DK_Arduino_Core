@@ -572,7 +572,8 @@ namespace
             }
             if (information.role == nucode::ble::BLELinkRole::central && hasClient())
             {
-                if (client_connection.valid())
+                if (client_connection.valid() &&
+                    client_connection != information.connection)
                 {
                     ++cross_link_events;
                     fail("duplicate_client_link");

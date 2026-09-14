@@ -65,6 +65,7 @@ class M29BleMultiTests(unittest.TestCase):
             'fail("cross_link_gatt_client")',
             'fail("cross_link_gatt_server")',
             'fail("cross_link_coc_event")',
+            "client_connection != information.connection",
             'Serial.print("|cross_link=0|payload_errors=0|dropped_events=0")',
         ):
             self.assertIn(token, target)
