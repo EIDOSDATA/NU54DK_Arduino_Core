@@ -2,8 +2,8 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
-**M28은 W01~W08·9개 test ID, M29는 W01~W08·10개 test ID를 완료했다. M30은 W01~W02와
-`M30-CAP-01`·`M30-PAIR-01`을 완료하고 W03을 진행 중이며 HOST-W01~W03도 완료했다.
+**M28은 W01~W08·9개 test ID, M29는 W01~W08·10개 test ID를 완료했다. M30은 W01~W03과
+`M30-CAP-01`·`M30-PAIR-01`·`M30-OOB-01`·`M30-BOND-01`을 완료하고 W04를 진행 중이며 HOST-W01~W03도 완료했다.
 M31~M33은 미착수**다. M28·M29 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
@@ -37,16 +37,19 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M29 W07 3보드·회귀·Windows와 W08 완료 | [149번 기록](<04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
 | M30 W01 capability | [152번 기록](<04_검증 기록/152_M30_W01_capability_실기_완료.md>) |
 | M30 W02 link별 security·pairing | [153번 기록](<04_검증 기록/153_M30_W02_link별_security와_IO_5종_완료.md>) |
+| M30 W03 유선 OOB·bond/privacy·NFC adapter | [154번 기록](<04_검증 기록/154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md>) |
 
 ## 1. 다음 착수 순서
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
 GATT·cache·CoC 구현, W07 두/세 보드 HIL·회귀·Windows 상호운용과 W08을 완료했다.
-현재 개발 지점은 **M30-W03 유선 OOB·bond/privacy migration·NFC adapter**다. M30-W01은 exact
+현재 개발 지점은 **M30-W04 HID mouse/consumer·HRS·ESS catalog**다. M30-W01은 exact
 `6254398c…`에서 parser 13/13, target 1/1과 실제 capability 7/7을 완료했다. M30-W02는 exact
 `4f91e347…`에서 고정 link별 보안 상태와 pairing 응답을 구현하고 IO capability 5종을 각각
-10회, 총 50/50 PASS했다. 다중 Host
+10회, 총 50/50 PASS했다. M30-W03은 유선 OOB 20/20·MITM 20/20, mismatch accept 0과
+bonded reconnect 20/20·RPA rotation 3·metadata migration 1·stale key accept 0을 완료했다.
+NFC adapter는 Host/target build를 통과했고 RF는 범위 결정대로 `NOT RUN`이다. 다중 Host
 `HOST-W01` inventory, `HOST-W02` descriptor/resolver와 `HOST-W03` launcher도 완료했다.
 P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
@@ -98,7 +101,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser의 실
 | M29-W07 | **완료 — SIGN/EATT·3보드 MULTI/REG·Windows GATT PASS** | exact `c71ef4a2…`·`16eb8fce…`·`a964ae20…` 원본 증거 유지 |
 | M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, exact `ab3f85d3…` 3보드 재검증, 문서·지원표·M30 인계 |
 
-### 현재 개발 지점: M30-W03, HOST-W01~W03 완료
+### 현재 개발 지점: M30-W04, HOST-W01~W03 완료
 
 Exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 보드 `M29-MULTI-01`은 mixed DUT의
 두 link 각각 GATT·CoC 1,000회와 cross-link/payload/drop 오류 0을 확인했다. 같은 revision의
@@ -110,15 +113,18 @@ notify, indicate와 2회 재연결을 PASS했다. 원본 byte는 Base64 archive�
 exact `6254398c1ea4e7320b1905014dce1c2a405a53fc` target과 고정 NU54DK 한 대에서 security/OOB/
 profile/DFU capability 7/7, revision mismatch 0을 확인했다.
 M30-W02는 exact `4f91e347e8e36e77c959de90def7d9c2622be30b`에서 Just Works L2 10회와
-MITM 가능한 네 조합 L4 40회를 모두 통과했고, 예상 밖 인증 실패·cross-link 수용은 0이었다. 다음
+MITM 가능한 네 조합 L4 40회를 모두 통과했고, 예상 밖 인증 실패·cross-link 수용은 0이었다.
+M30-W03은 exact `284254c7176fa0bf996137567952ae9d0ce5b4c0`에서 유선 OOB·MITM 20/20과
+mismatch accept 0을, exact `83a4d11a20e6d16ed0db56382c20133f448cff91`에서 bond reconnect
+20/20·RPA rotation 3·metadata migration 1·stale key accept 0을 확인했다. NFC adapter는
+구현·Host/target build를 통과했지만 RF HIL은 범위 결정대로 `NOT RUN`이다. 다음
 구현·장비 계약은 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
-[`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)을 따른다. OOB는 wired
-USB/DAPLink VCOM을 실제 경로로 사용하고 NFC는 구현·build까지만 수행해 RF HIL을 `NOT RUN`으로
-남긴다. 자동 작업은 `M30-POWER-01`의 실제 전원 차단 직전에 멈춘다.
+[`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)을 따른다. 자동 작업은
+`M30-POWER-01`의 실제 전원 차단 직전에 멈춘다.
 
 M28과 M29 각 단계의 구현·시험 수치는 위 작업표와 해당 계약에서 확인한다.
 시도별 실패·CMSIS-DAP 진단·수정·재검증 상세는 [140번](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과
-[141~149번 검증 기록](<04_검증 기록/README.md>)에 보존하며 이 TODO에 중복하지 않는다.
+[141~154번 검증 기록](<04_검증 기록/README.md>)에 보존하며 이 TODO에 중복하지 않는다.
 정적 SDK `candidate`, Host 시험, target build와 실기 PASS는 서로 다른 증거다.
 
 ## 2. 현재 확인된 지원성 결정 항목
