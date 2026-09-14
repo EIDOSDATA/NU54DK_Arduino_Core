@@ -19,6 +19,12 @@ CONTRACT_PATH = (
 )
 TODO_PATH = REPOSITORY / "00_Docs" / "TODO_v0.5.0.md"
 HANDOFF_PATH = REPOSITORY / "00_Docs" / "HANDOFF.md"
+PREPARATION_RECORD_PATH = (
+    REPOSITORY
+    / "00_Docs"
+    / "04_검증 기록"
+    / "159_M30_W08_전원_HIL_주입_직전_준비.md"
+)
 
 
 class M30ReadinessTests(unittest.TestCase):
@@ -142,6 +148,12 @@ class M30ReadinessTests(unittest.TestCase):
         for relative in packages[6]["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
         self.assertEqual(packages[-1]["status"], "blocked_by_power_hil")
+        self.assertEqual(packages[-1]["preparation_status"], "passed")
+        self.assertEqual(packages[-1]["target_builds"], 3)
+        self.assertEqual(packages[-1]["bond_storage_reset_boards"], 2)
+        self.assertEqual(packages[-1]["physical_power_cuts"], 0)
+        for relative in packages[-1]["preparation_evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
         host_packages = self.readiness["host_work_packages"]
         self.assertEqual(len(host_packages), 8)
         for index, package in enumerate(host_packages, start=1):
@@ -280,14 +292,40 @@ class M30ReadinessTests(unittest.TestCase):
             self.assertNotIn("board_id", endpoint)
             self.assertRegex(endpoint["board_id_sha256"], r"^[0-9a-f]{64}$")
         self.assertEqual(power["status"], "blocked_human_power_cut")
+        self.assertEqual(power["preparation_status"], "passed")
+        self.assertEqual(power["physical_power_cuts"], 0)
         self.assertEqual(power["criteria"]["injection_points"], 4)
         self.assertEqual(power["criteria"]["cuts_per_point"], 3)
+        preparation = json.loads(
+            (REPOSITORY / power["preparation_evidence_files"][0]).read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(preparation["test_id"], "M30-POWER-01")
+        self.assertEqual(preparation["status"], "blocked_human_power_cut")
+        self.assertEqual(preparation["power_hil"], "not_run")
+        self.assertEqual(preparation["preflight"]["status"], "passed")
+        self.assertEqual(preparation["preflight"]["security_level"], 4)
+        self.assertEqual(preparation["preflight"]["encryption_key_bytes"], 16)
+        self.assertEqual(preparation["preflight"]["state"]["bond_count"], 1)
+        self.assertEqual(preparation["preflight"]["state"]["rejected_bonds"], 0)
+        self.assertEqual(preparation["preflight"]["physical_power_cuts"], 0)
+        self.assertEqual(preparation["safety"]["physical_power_cuts"], 0)
+        self.assertFalse(preparation["safety"]["raw_probe_uids_stored"])
+        self.assertFalse(preparation["safety"]["reset_substitution_allowed"])
+        self.assertFalse(preparation["safety"]["mass_erase_or_recover"])
+        for endpoint in preparation["boards"].values():
+            self.assertNotIn("board_id", endpoint)
+            self.assertRegex(endpoint["board_id_sha256"], r"^[0-9a-f]{64}$")
         self.assertEqual(
             self.readiness["completion"]["current_stop_boundary"],
             "before_m30_power_01_physical_cut",
         )
         self.assertEqual(self.readiness["completion"]["completed_work_packages"], 7)
         self.assertEqual(self.readiness["completion"]["passed_test_ids"], 9)
+        self.assertEqual(self.readiness["completion"]["preparation_status"], "passed")
+        self.assertEqual(self.readiness["completion"]["physical_power_cuts"], 0)
+        self.assertEqual(self.readiness["completion"]["power_hil"], "not_run")
 
     def test_profile_catalog_and_equipment_scope_are_explicit(self) -> None:
         """! @brief 기존/신규 profile과 세 보드·전원 장비 경계를 검사합니다. """
@@ -310,12 +348,22 @@ class M30ReadinessTests(unittest.TestCase):
             "wired USB/DAPLink VCOM", "NFC", "m30-ble-readiness.json",
         ):
             self.assertIn(token, contract)
+        self.assertTrue(PREPARATION_RECORD_PATH.is_file())
         for path in (TODO_PATH, HANDOFF_PATH):
             text = path.read_text(encoding="utf-8")
             self.assertIn("17_M30_BLE_Security_Profile_DFU_착수_계약.md", text, path)
             self.assertIn("m30-ble-readiness.json", text, path)
             self.assertIn("M30-W01", text, path)
             self.assertIn("M30-POWER-01", text, path)
+        preparation_record = PREPARATION_RECORD_PATH.read_text(encoding="utf-8")
+        for token in (
+            "17_M30_BLE_Security_Profile_DFU_착수_계약.md",
+            "m30-ble-readiness.json",
+            "M30-W08",
+            "M30-POWER-01",
+            "전원 차단은 **0회**",
+        ):
+            self.assertIn(token, preparation_record)
 
 
 if __name__ == "__main__":

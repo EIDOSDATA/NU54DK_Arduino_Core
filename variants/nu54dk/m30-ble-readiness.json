@@ -107,7 +107,7 @@
     {"id": "M30-W05", "status": "completed", "title": "mcuboot_layout_signing", "host_contract_tests": 10, "arduino_examples_built": 1, "target_builds": 2, "signed_boots": 20, "unsigned_accepts": 0, "wrong_key_accepts": 0, "tested_core_revision": "b16b44f405ee8617a675cae9f5dfcc027f03816a", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w05-b16b44f4-boot/m30-boot-01.json", "00_Docs/04_검증 기록/evidence/m30-w05-b16b44f4-boot/m30-boot-01.transcript.log"]},
     {"id": "M30-W06", "status": "completed", "title": "secure_ble_dfu_negative_rollback", "host_contract_tests": 8, "target_builds": 3, "successful_updates": 10, "image_hash_mismatches": 0, "unconfirmed_boots": 0, "negative_classes": 5, "negative_attempts_per_class": 20, "invalid_image_accepts": 0, "rollback_accepts": 0, "tested_core_revision": "df9ea2a3ee5111c350364a938409021d379810e2", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.central.transcript.log"]},
     {"id": "M30-W07", "status": "completed", "title": "integrated_hil_before_power_loss", "host_contract_tests": 7, "target_builds": 3, "simultaneous_links": 2, "security_operations_per_link": 100, "cross_link_events": 0, "security_errors": 0, "key_size_errors": 0, "tested_core_revision": "d94f5ec310e99611ab021854c43dd6d72031e825", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.mixed.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.central.transcript.log"]},
-    {"id": "M30-W08", "status": "blocked_by_power_hil", "title": "power_recovery_regression_documents_ci"}
+    {"id": "M30-W08", "status": "blocked_by_power_hil", "title": "power_recovery_regression_documents_ci", "preparation_status": "passed", "target_builds": 3, "bond_storage_reset_boards": 2, "physical_power_cuts": 0, "prepared_core_revision": "05b639b4d402e9a7490648776b5bb5eb45a94916", "preparation_evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w08-05b639b4-power-prep/m30-power-01-preparation.json"]}
   ],
   "host_work_packages": [
     {"id": "HOST-W01", "status": "completed", "title": "windows_assumption_inventory"},
@@ -129,7 +129,7 @@
     {"id": "M30-DFU-01", "boards": 2, "timeout_seconds": 1200, "status": "passed", "criteria": {"successful_updates": 10, "image_hash_mismatches": 0, "unconfirmed_boots": 0}, "tested_core_revision": "df9ea2a3ee5111c350364a938409021d379810e2", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.central.transcript.log"]},
     {"id": "M30-DFU-NEG-01", "boards": 2, "timeout_seconds": 1200, "status": "passed", "criteria": {"negative_classes": 5, "repetitions_per_class": 20, "invalid_image_accepts": 0, "rollback_accepts": 0}, "tested_core_revision": "df9ea2a3ee5111c350364a938409021d379810e2", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.central.transcript.log"]},
     {"id": "M30-MULTI-01", "boards": 3, "timeout_seconds": 1200, "status": "passed", "criteria": {"simultaneous_links": 2, "security_operations_per_link": 100, "cross_link_events": 0, "security_errors": 0, "key_size_errors": 0}, "tested_core_revision": "d94f5ec310e99611ab021854c43dd6d72031e825", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.mixed.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w07-d94f5ec3-multi/m30-multi-evidence.central.transcript.log"]},
-    {"id": "M30-POWER-01", "boards": 2, "timeout_seconds": 1800, "status": "blocked_human_power_cut", "criteria": {"injection_points": 4, "cuts_per_point": 3, "recovery_failures": 0, "invalid_image_boots": 0}}
+    {"id": "M30-POWER-01", "boards": 2, "timeout_seconds": 1800, "status": "blocked_human_power_cut", "preparation_status": "passed", "prepared_core_revision": "05b639b4d402e9a7490648776b5bb5eb45a94916", "physical_power_cuts": 0, "criteria": {"injection_points": 4, "cuts_per_point": 3, "recovery_failures": 0, "invalid_image_boots": 0}, "preparation_evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w08-05b639b4-power-prep/m30-power-01-preparation.json"]}
   ],
   "equipment": {
     "nu54dk_boards": 3,
@@ -145,6 +145,8 @@
     "passed_test_ids": 9,
     "total_test_ids": 10,
     "current_stop_boundary": "before_m30_power_01_physical_cut",
+    "preparation_status": "passed",
+    "physical_power_cuts": 0,
     "power_hil": "not_run"
   }
 }

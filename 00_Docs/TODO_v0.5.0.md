@@ -3,7 +3,7 @@
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
 **M28은 W01~W08·9개 test ID, M29는 W01~W08·10개 test ID를 완료했다. M30은 W01~W07과
-`M30-CAP-01`부터 `M30-MULTI-01`까지 9개 test ID를 완료하고 W08 전원 HIL을 준비 중이며
+`M30-CAP-01`부터 `M30-MULTI-01`까지 9개 test ID를 완료했고 W08 전원 HIL 준비·preflight를 통과했으며
 HOST-W01~W03도 완료했다.
 M31~M33은 미착수**다. M28·M29 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
@@ -43,13 +43,14 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M30 W05 MCUboot layout·서명 | [156번 기록](<04_검증 기록/156_M30_W05_MCUboot_layout_signing_완료.md>) |
 | M30 W06 secure BLE DFU·negative·rollback | [157번 기록](<04_검증 기록/157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md>) |
 | M30 W07 세 보드 secure multi-link | [158번 기록](<04_검증 기록/158_M30_W07_3보드_secure_multi_link_완료.md>) |
+| M30 W08 전원 HIL 주입 직전 준비 | [159번 기록](<04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>) |
 
 ## 1. 다음 착수 순서
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
 GATT·cache·CoC 구현, W07 두/세 보드 HIL·회귀·Windows 상호운용과 W08을 완료했다.
-현재 개발 지점은 **M30-W08 `M30-POWER-01` 자동 준비**다. M30-W01은 exact
+현재 개발 지점은 **M30-W08 `M30-POWER-01` 준비 완료·첫 실제 전원 차단 대기**다. M30-W01은 exact
 `6254398c…`에서 parser 13/13, target 1/1과 실제 capability 7/7을 완료했다. M30-W02는 exact
 `4f91e347…`에서 고정 link별 보안 상태와 pairing 응답을 구현하고 IO capability 5종을 각각
 10회, 총 50/50 PASS했다. M30-W03은 유선 OOB 20/20·MITM 20/20, mismatch accept 0과
@@ -113,7 +114,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser의 실
 | M29-W07 | **완료 — SIGN/EATT·3보드 MULTI/REG·Windows GATT PASS** | exact `c71ef4a2…`·`16eb8fce…`·`a964ae20…` 원본 증거 유지 |
 | M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, exact `ab3f85d3…` 3보드 재검증, 문서·지원표·M30 인계 |
 
-### 현재 개발 지점: M30-W08 전원 HIL 준비, HOST-W01~W03 완료
+### 현재 개발 지점: M30-W08 전원 HIL 준비·preflight 완료, 첫 물리 차단 대기
 
 Exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 보드 `M29-MULTI-01`은 mixed DUT의
 두 link 각각 GATT·CoC 1,000회와 cross-link/payload/drop 오류 0을 확인했다. 같은 revision의
@@ -139,14 +140,16 @@ M30-W06은 exact `df9ea2a3ee5111c350364a938409021d379810e2`에서 authenticated 
 update 10/10, negative 5종 × 20회, invalid image accept 0과 unconfirmed image의 confirmed v10
 복귀를 확인했다. M30-W07은 exact `d94f5ec310e99611ab021854c43dd6d72031e825`에서 세 보드의
 동시 두 secure link와 Peripheral/Mixed/Central의 handle별 보안 연산 총 400회, cross-link·security·
-key-size 오류 0을 확인했다. Reset은 실제 전원 차단 증거로 계산하지 않았다. 다음
+key-size 오류 0을 확인했다. Exact `05b639b4d402e9a7490648776b5bb5eb45a94916`에서 W08의 세 role
+image와 fail-closed runner를 만들고 두 보드 bond 저장영역 초기화·보안 DFU retry preflight를 통과했다.
+주입 계획은 네 지점 × 3회이며 실제 전원 차단은 아직 0회다. Reset은 실제 전원 차단 증거로 계산하지 않았다. 다음
 구현·장비 계약은 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
 [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)을 따른다. 자동 작업은
-`M30-POWER-01`의 실제 전원 차단 직전에 멈춘다.
+`M30-POWER-01`의 첫 실제 전원 차단 직전에 멈춘 상태다.
 
 M28과 M29 각 단계의 구현·시험 수치는 위 작업표와 해당 계약에서 확인한다.
 시도별 실패·CMSIS-DAP 진단·수정·재검증 상세는 [140번](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과
-[141~158번 검증 기록](<04_검증 기록/README.md>)에 보존하며 이 TODO에 중복하지 않는다.
+[141~159번 검증 기록](<04_검증 기록/README.md>)에 보존하며 이 TODO에 중복하지 않는다.
 정적 SDK `candidate`, Host 시험, target build와 실기 PASS는 서로 다른 증거다.
 
 ## 2. 현재 확인된 지원성 결정 항목
