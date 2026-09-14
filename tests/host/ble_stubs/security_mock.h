@@ -32,6 +32,81 @@ inline bt_security_t bt_conn_get_security(bt_conn *c)
 }
 inline int mock_security_error = 0, mock_auth_error = 0, mock_auth_register_error = 0;
 inline unsigned mock_cancel_calls = 0, mock_confirm_calls = 0, mock_security_calls = 0;
+struct bt_le_oob_sc_data
+{
+    std::uint8_t r[16];
+    std::uint8_t c[16];
+};
+struct bt_le_oob
+{
+    bt_addr_le_t addr;
+    bt_le_oob_sc_data le_sc_data;
+};
+struct bt_conn_oob_info
+{
+    enum
+    {
+        BT_CONN_OOB_LE_LEGACY,
+        BT_CONN_OOB_LE_SC
+    } type;
+    struct
+    {
+        enum
+        {
+            BT_CONN_OOB_LOCAL_ONLY,
+            BT_CONN_OOB_REMOTE_ONLY,
+            BT_CONN_OOB_BOTH_PEERS,
+            BT_CONN_OOB_NO_DATA
+        } oob_config;
+    } lesc;
+};
+inline bt_addr_le_t mock_local_identity{BT_ADDR_LE_PUBLIC, {{6, 5, 4, 3, 2, 1}}};
+inline bt_addr_le_t mock_local_pairing{BT_ADDR_LE_RANDOM, {{7, 8, 9, 10, 11, 0x4c}}};
+inline bt_le_oob_sc_data mock_local_sc{};
+inline bt_le_oob_sc_data mock_set_local_sc{};
+inline bt_le_oob_sc_data mock_set_remote_sc{};
+inline bool mock_oob_flag = false;
+inline int mock_oob_get_error = 0, mock_oob_set_error = 0;
+inline void bt_id_get(bt_addr_le_t *addresses, std::size_t *count)
+{
+    if (addresses == nullptr || count == nullptr || *count < 1U)
+    {
+        if (count != nullptr)
+        {
+            *count = 0U;
+        }
+        return;
+    }
+    addresses[0] = mock_local_identity;
+    *count = 1U;
+}
+inline int bt_le_oob_get_local(std::uint8_t, bt_le_oob *oob)
+{
+    if (mock_oob_get_error != 0)
+    {
+        return mock_oob_get_error;
+    }
+    oob->addr = mock_local_pairing;
+    oob->le_sc_data = mock_local_sc;
+    return 0;
+}
+inline void bt_le_oob_set_sc_flag(bool enabled)
+{
+    mock_oob_flag = enabled;
+}
+inline int bt_le_oob_set_sc_data(bt_conn *, const bt_le_oob_sc_data *local,
+                                 const bt_le_oob_sc_data *remote)
+{
+    if (local != nullptr)
+    {
+        mock_set_local_sc = *local;
+    }
+    if (remote != nullptr)
+    {
+        mock_set_remote_sc = *remote;
+    }
+    return mock_oob_set_error;
+}
 inline int bt_conn_set_security(bt_conn *, bt_security_t)
 {
     ++mock_security_calls;
@@ -64,6 +139,7 @@ struct bt_conn_auth_cb
     void (*passkey_display)(bt_conn *, unsigned int);
     void (*passkey_entry)(bt_conn *);
     void (*passkey_confirm)(bt_conn *, unsigned int);
+    void (*oob_data_request)(bt_conn *, bt_conn_oob_info *);
     void (*cancel)(bt_conn *);
     void (*pairing_confirm)(bt_conn *);
 };

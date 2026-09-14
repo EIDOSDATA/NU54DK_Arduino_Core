@@ -22,10 +22,12 @@
 namespace nucode::ble::internal::security
 {
     inline constexpr std::size_t maximum_security_links = 2U;
+    inline constexpr std::size_t maximum_bond_records = 4U;
 
     using nucode::ble::BondState;
     using nucode::ble::DeviceInformation;
     using nucode::ble::KeyboardReport;
+    using nucode::ble::OobRole;
     using nucode::ble::PeerAddress;
     using nucode::ble::SecurityConfig;
     using nucode::ble::SecurityError;
@@ -34,6 +36,25 @@ namespace nucode::ble::internal::security
     using nucode::ble::SecurityEventRecord;
     using nucode::ble::SecurityIoCapability;
     using nucode::ble::SecurityLevel;
+    using nucode::ble::SecureConnectionsOobRecord;
+
+    /** @brief 역할 하나가 소유하는 local·remote OOB material입니다. */
+    struct OobSlot
+    {
+        OobRole role = OobRole::peripheral;
+        SecureConnectionsOobRecord local = {};
+        SecureConnectionsOobRecord remote = {};
+        bool local_valid = false;
+        bool remote_valid = false;
+    };
+
+    /** @brief OOB 구현이 단일 소유하는 두 역할 고정 상태입니다. */
+    struct OobState
+    {
+        struct k_spinlock lock;
+        OobSlot slots[maximum_security_links] = {};
+    };
+    OobState &oobState() noexcept;
 
     /** @brief 사용자 응답을 기다리는 SMP 요청 종류입니다. */
     enum class PendingResponse : std::uint8_t
@@ -60,6 +81,17 @@ namespace nucode::ble::internal::security
         BondState state = BondState::none;
         bool peer_valid = false;
         bool paired_this_connection = false;
+    };
+
+    /** @brief 비밀 key material 없이 저장 record 검증값만 보존합니다. */
+    struct BondMetadataSnapshot
+    {
+        PeerAddress peer = {};
+        std::uint16_t database_revision = 0U;
+        std::uint8_t key_size = 0U;
+        std::uint8_t security_level = 0U;
+        std::uint8_t flags = 0U;
+        bool valid = false;
     };
 
     /** @brief 한 generation 연결이 소유하는 보안·bond snapshot입니다. */
@@ -97,9 +129,12 @@ namespace nucode::ble::internal::security
     {
         atomic_t bond_state_value = ATOMIC_INIT(static_cast<atomic_val_t>(BondState::none));
         atomic_t startup_bond_snapshot_ready = ATOMIC_INIT(0);
+        atomic_t migration_count = ATOMIC_INIT(0);
+        atomic_t rejected_count = ATOMIC_INIT(0);
         struct k_spinlock bond_lock;
         struct k_spinlock startup_bond_lock;
         BondLifecycleState bond_lifecycle = {};
+        BondMetadataSnapshot metadata[maximum_bond_records] = {};
         std::size_t startup_bond_count = 0U;
     };
     BondStorage &bondStorage() noexcept;
@@ -197,6 +232,11 @@ namespace nucode::ble::internal::security
     void setLinkPaired(struct bt_conn *connection, bool paired) noexcept;
     void setLinkLevel(struct bt_conn *connection, bt_security_t level) noexcept;
     void captureStartupBonds() noexcept;
+    bool bondMetadataValid(const bt_addr_le_t *peer) noexcept;
+    bool bondMetadataValid(struct bt_conn *connection) noexcept;
+    bool persistBondMetadata(struct bt_conn *connection) noexcept;
+    void eraseBondMetadata(const bt_addr_le_t *peer) noexcept;
+    void eraseAllBondMetadata() noexcept;
     void clearPending(struct bt_conn *matching_connection = nullptr) noexcept;
     void clearPending(BLEConnectionHandle handle) noexcept;
     bool setPending(struct bt_conn *connection, PendingResponse response, SecurityEvent event,
@@ -205,6 +245,8 @@ namespace nucode::ble::internal::security
     struct bt_conn *takePending(BLEConnectionHandle handle, PendingResponse expected) noexcept;
     struct bt_conn *takePending(BLEConnectionHandle handle) noexcept;
     void processPendingTimeout() noexcept;
+    void resetOobState() noexcept;
+    void oobDataRequest(struct bt_conn *connection, struct bt_conn_oob_info *information);
     void markPairingStarted(struct bt_conn *connection) noexcept;
     enum bt_security_err pairingAccept(struct bt_conn *connection,
                                        const struct bt_conn_pairing_feat *features);

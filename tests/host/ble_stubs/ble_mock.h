@@ -32,6 +32,11 @@ enum bt_security_err
     BT_SECURITY_ERR_SUCCESS = 0,
     BT_SECURITY_ERR_AUTH_FAIL = 1
 };
+enum
+{
+    BT_SECURITY_FLAG_SC = 1,
+    BT_SECURITY_FLAG_OOB = 2
+};
 struct bt_conn
 {
     int refs{0};
@@ -101,6 +106,12 @@ struct bt_conn_info
         bt_conn_le_phy_info *phy;
         bt_conn_le_data_len_info *data_len;
     } le;
+    struct
+    {
+        bt_security_t level;
+        std::uint8_t enc_key_size;
+        std::uint8_t flags;
+    } security;
 };
 struct bt_conn_le_phy_param
 {
@@ -146,17 +157,21 @@ inline bt_conn_le_data_len_info mock_data_lengths[4]{};
 inline int bt_conn_get_info(bt_conn *connection, bt_conn_info *info)
 {
     static bt_conn_le_phy_info phy{};
+    extern bt_addr_le_t mock_local_pairing;
     info->type = 1;
     info->role = connection->role;
     info->le.src = nullptr;
     info->le.dst = &connection->peer;
-    info->le.local = nullptr;
+    info->le.local = &mock_local_pairing;
     info->le.remote = &connection->peer;
     info->le.interval_us = connection->interval_us;
     info->le.latency = connection->latency;
     info->le.timeout = connection->supervision_timeout;
     info->le.phy = &phy;
     info->le.data_len = &mock_data_lengths[static_cast<std::size_t>(connection - mock_connections)];
+    info->security.level = connection->security;
+    info->security.enc_key_size = 16U;
+    info->security.flags = BT_SECURITY_FLAG_SC;
     return 0;
 }
 inline int bt_conn_le_phy_update(bt_conn *connection, const bt_conn_le_phy_param *)

@@ -3,6 +3,8 @@
 #include <internal/NUCODE_BLE_Internal.h>
 #include <security_mock.h>
 #include <zephyr/kernel.h>
+#include <zephyr/settings/settings.h>
+#include <zephyr/sys/byteorder.h>
 #include <array>
 #include <cstring>
 #include <iostream>
@@ -65,7 +67,7 @@ namespace nucode::ble::internal
     }
 } // namespace nucode::ble::internal
 
-std::array<unsigned, 16> events{};
+std::array<unsigned, 20> events{};
 bool accept_in_callback = false;
 PeerAddress last_peer{};
 BLEConnectionHandle central_handle{};
@@ -119,6 +121,45 @@ void connectPeripheral(unsigned index)
     BLEDevice.poll();
     assert(mock_connections[index].refs == 2);
 }
+
+/** @brief production metadata와 같은 CRC-32를 Host fixture에 계산합니다. */
+std::uint32_t metadataCrc(const std::uint8_t *data, std::size_t length)
+{
+    std::uint32_t crc = 0xffffffffUL;
+    for (std::size_t index = 0U; index < length; ++index)
+    {
+        crc ^= data[index];
+        for (std::uint8_t bit = 0U; bit < 8U; ++bit)
+        {
+            const std::uint32_t mask = 0U - (crc & 1U);
+            crc = (crc >> 1U) ^ (0xedb88320UL & mask);
+        }
+    }
+    return ~crc;
+}
+
+/** @brief current·legacy·future metadata record를 settings mock에 준비합니다. */
+void primeBondMetadata(std::uint16_t schema, std::size_t stored_length)
+{
+    std::uint8_t record[22] = {};
+    sys_put_le32(0x32424e4dUL, &record[0]);
+    sys_put_le16(schema, &record[4]);
+    record[6] = BT_ADDR_LE_PUBLIC;
+    std::memcpy(&record[7], mock_peer.a.val, sizeof(mock_peer.a.val));
+    record[13] = 16U;
+    record[14] = BT_SECURITY_L2;
+    record[15] = BT_SECURITY_FLAG_SC;
+    if (schema == 1U)
+    {
+        sys_put_le32(metadataCrc(record, 16U), &record[16]);
+    }
+    else
+    {
+        sys_put_le16(1U, &record[16]);
+        sys_put_le32(metadataCrc(record, 18U), &record[18]);
+    }
+    assert(settings_save_one("nucode/security/bond/0", record, stored_length) == 0);
+}
 int main(int argc, char **argv)
 {
     assert(argc == 2);
@@ -136,12 +177,135 @@ int main(int argc, char **argv)
     }
     SecurityConfig configuration{};
     configuration.response_timeout_ms = 1000;
+    const bool oob_scenario = std::strncmp(scenario, "oob_", 4U) == 0;
+    configuration.secure_connections_oob = oob_scenario;
+    if (std::strcmp(scenario, "restored_bond") == 0 ||
+        std::strcmp(scenario, "erase_failure") == 0)
+    {
+        primeBondMetadata(2U, 22U);
+    }
+    else if (std::strcmp(scenario, "bond_legacy_migration") == 0)
+    {
+        mock_saved_bond = true;
+        primeBondMetadata(1U, 20U);
+    }
+    else if (std::strcmp(scenario, "bond_future_rejected") == 0)
+    {
+        mock_saved_bond = true;
+        primeBondMetadata(3U, 22U);
+    }
+    else if (std::strcmp(scenario, "bond_truncated_rejected") == 0)
+    {
+        mock_saved_bond = true;
+        primeBondMetadata(2U, 11U);
+    }
     assert(BLESecurity.begin(configuration));
     BLESecurity.onEvent(observed, nullptr);
+    SecureConnectionsOobRecord local_oob{};
+    SecureConnectionsOobRecord remote_oob{};
+    std::uint8_t oob_nonce[16] = {};
+    if (oob_scenario)
+    {
+        for (std::size_t index = 0U; index < sizeof(oob_nonce); ++index)
+        {
+            oob_nonce[index] = static_cast<std::uint8_t>(index + 1U);
+            mock_local_sc.r[index] = static_cast<std::uint8_t>(0x10U + index);
+            mock_local_sc.c[index] = static_cast<std::uint8_t>(0x30U + index);
+        }
+        assert(BLESecurity.createLocalOob(OobRole::central, oob_nonce, sizeof(oob_nonce),
+                                          local_oob));
+        remote_oob.schema = SecureConnectionsOobRecord::current_schema;
+        remote_oob.role = OobRole::peripheral;
+        remote_oob.identity.type = BT_ADDR_LE_PUBLIC;
+        remote_oob.pairing_address.type = mock_peer.type;
+        std::memcpy(remote_oob.identity.value, mock_peer.a.val,
+                    sizeof(remote_oob.identity.value));
+        for (std::size_t index = 0U; index < sizeof(remote_oob.pairing_address.value); ++index)
+        {
+            remote_oob.pairing_address.value[index] =
+                mock_peer.a.val[sizeof(remote_oob.pairing_address.value) - index - 1U];
+        }
+        std::memcpy(remote_oob.session_nonce, oob_nonce, sizeof(oob_nonce));
+        for (std::size_t index = 0U; index < sizeof(remote_oob.random); ++index)
+        {
+            remote_oob.random[index] = static_cast<std::uint8_t>(0x50U + index);
+            remote_oob.confirm[index] = static_cast<std::uint8_t>(0x70U + index);
+        }
+        if (std::strcmp(scenario, "oob_mismatch") == 0)
+        {
+            remote_oob.pairing_address.value[0] ^= 0x80U;
+        }
+        assert(BLESecurity.setRemoteOob(OobRole::central, remote_oob));
+        assert(mock_oob_flag);
+    }
     assert(BLEDevice.begin("security"));
     connect();
     auto *connection = &mock_connections[0];
-    if (std::strcmp(scenario, "pairing_failure") == 0)
+    if (std::strcmp(scenario, "bond_legacy_migration") == 0)
+    {
+        assert(BLESecurity.bondMigrationCount() == 1U);
+        assert(BLESecurity.rejectedBondCount() == 0U);
+        assert(mock_settings_lengths[0] == 22U);
+        assert(BLESecurity.bondState() == BondState::restored_candidate);
+    }
+    else if (std::strcmp(scenario, "bond_future_rejected") == 0 ||
+             std::strcmp(scenario, "bond_truncated_rejected") == 0)
+    {
+        assert(BLESecurity.bondMigrationCount() == 0U);
+        assert(BLESecurity.rejectedBondCount() >= 1U);
+        assert(!mock_saved_bond);
+        assert(BLESecurity.bondState() == BondState::none);
+    }
+    else if (std::strcmp(scenario, "oob_codec") == 0)
+    {
+        std::uint8_t frame[OobFrameCodec::maximum_frame_bytes] = {};
+        std::size_t frame_length = 0U;
+        SecureConnectionsOobRecord decoded{};
+        assert(OobFrameCodec::encode(local_oob, frame, sizeof(frame), frame_length));
+        assert(frame_length == OobFrameCodec::frame_bytes);
+        assert(OobFrameCodec::decode(frame, frame_length, decoded));
+        assert(std::memcmp(&decoded, &local_oob, sizeof(decoded)) == 0);
+        frame[22] ^= 0x01U;
+        assert(!OobFrameCodec::decode(frame, frame_length, decoded));
+
+        std::uint8_t ndef[OobNdefAdapter::maximum_ndef_bytes] = {};
+        std::size_t ndef_length = 0U;
+        assert(OobNdefAdapter::enabled());
+        assert(OobNdefAdapter::encode(local_oob, ndef, sizeof(ndef), ndef_length));
+        assert(ndef_length <= OobNdefAdapter::maximum_ndef_bytes);
+        assert(OobNdefAdapter::decode(ndef, ndef_length, decoded));
+        assert(std::memcmp(&decoded, &local_oob, sizeof(decoded)) == 0);
+        ndef[ndef_length - 1U] ^= 0x01U;
+        assert(!OobNdefAdapter::decode(ndef, ndef_length, decoded));
+    }
+    else if (std::strcmp(scenario, "oob_pairing") == 0 ||
+             std::strcmp(scenario, "oob_mismatch") == 0)
+    {
+        bt_conn_oob_info information{};
+        information.type = bt_conn_oob_info::BT_CONN_OOB_LE_SC;
+        information.lesc.oob_config =
+            decltype(bt_conn_oob_info{}.lesc)::BT_CONN_OOB_BOTH_PEERS;
+        mock_auth->oob_data_request(connection, &information);
+        if (std::strcmp(scenario, "oob_pairing") == 0)
+        {
+            assert(mock_cancel_calls == 0U);
+            assert(std::memcmp(mock_set_local_sc.r, local_oob.random,
+                               sizeof(local_oob.random)) == 0);
+            assert(std::memcmp(mock_set_remote_sc.c, remote_oob.confirm,
+                               sizeof(remote_oob.confirm)) == 0);
+            BLESecurity.poll();
+            assert(events[static_cast<unsigned>(SecurityEvent::oob_data_applied)] == 1U);
+        }
+        else
+        {
+            assert(mock_cancel_calls == 1U);
+            BLESecurity.poll();
+            assert(events[static_cast<unsigned>(SecurityEvent::oob_data_rejected)] == 1U);
+        }
+        assert(BLESecurity.clearOob(OobRole::central));
+        assert(!mock_oob_flag);
+    }
+    else if (std::strcmp(scenario, "pairing_failure") == 0)
     {
         mock_auth->pairing_confirm(connection);
         assert(connection->refs == 3);

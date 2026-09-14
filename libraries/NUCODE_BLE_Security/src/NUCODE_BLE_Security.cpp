@@ -323,7 +323,8 @@ namespace nucode::ble
         if (level < static_cast<unsigned int>(SecurityLevel::encrypted) ||
             level > static_cast<unsigned int>(SecurityLevel::secure_connections) ||
             io_capability > static_cast<unsigned int>(SecurityIoCapability::keyboard_display) ||
-            config.response_timeout_ms < 1000U || config.response_timeout_ms > 300000U)
+            config.response_timeout_ms < 1000U || config.response_timeout_ms > 300000U ||
+            config.bond_database_revision == 0U)
         {
             recordSecurityError(SecurityError::invalid_argument, -EINVAL);
             return false;
@@ -340,6 +341,14 @@ namespace nucode::ble
         bondStorage().startup_bond_count = 0U;
         k_spin_unlock(&bondStorage().startup_bond_lock, startup_key);
         atomic_set(&bondStorage().startup_bond_snapshot_ready, 0);
+        atomic_set(&bondStorage().migration_count, 0);
+        atomic_set(&bondStorage().rejected_count, 0);
+        k_spinlock_key_t metadata_key = k_spin_lock(&bondStorage().bond_lock);
+        for (std::size_t index = 0U; index < maximum_bond_records; ++index)
+        {
+            bondStorage().metadata[index] = {};
+        }
+        k_spin_unlock(&bondStorage().bond_lock, metadata_key);
         atomic_set(&securityState().paired_value, 0);
         atomic_set(&securityState().current_level_value,
                    static_cast<atomic_val_t>(SecurityLevel::none));
@@ -361,6 +370,7 @@ namespace nucode::ble
         }
         k_spin_unlock(&securityState().connection_lock, connection_key);
         setBondLifecycle(nullptr, BondState::none, false);
+        resetOobState();
         prepareAuthenticationCallbacks(config.io_capability);
         int result = bt_conn_auth_cb_register(&pairingState().authentication_callbacks);
         if (result == 0)

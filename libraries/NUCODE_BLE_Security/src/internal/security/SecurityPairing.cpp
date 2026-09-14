@@ -283,6 +283,11 @@ namespace nucode::ble::internal::security
             setBondLifecycle(connection, peer, BondState::persistence_pending, true);
             queueEvent(makeEvent(SecurityEvent::paired, connection));
             queueEvent(makeEvent(SecurityEvent::bond_persistence_pending, connection));
+            if (!persistBondMetadata(connection))
+            {
+                recordSecurityError(SecurityError::storage_error, -EIO);
+                queueEvent(makeEvent(SecurityEvent::error, connection));
+            }
         }
         else
         {
@@ -314,6 +319,7 @@ namespace nucode::ble::internal::security
     {
         ARG_UNUSED(identity);
         removeStartupBond(peer);
+        eraseBondMetadata(peer);
         for (std::size_t index = 0U; index < maximum_security_links; ++index)
         {
             struct bt_conn *connection = nullptr;
@@ -346,6 +352,10 @@ namespace nucode::ble::internal::security
         pairingState().authentication_callbacks.pairing_accept = pairingAccept;
         pairingState().authentication_callbacks.cancel = authenticationCancelled;
         pairingState().authentication_callbacks.pairing_confirm = pairingConfirm;
+        if (securityState().security_config.secure_connections_oob)
+        {
+            pairingState().authentication_callbacks.oob_data_request = oobDataRequest;
+        }
 
         switch (capability)
         {
