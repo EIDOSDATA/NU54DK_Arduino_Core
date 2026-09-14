@@ -52,6 +52,8 @@ class M30BlePairTests(unittest.TestCase):
             "bt_conn_enc_key_size(connection)",
             "event.connection != connection_handle",
             "unexpected_auth_failures",
+            "connection_attempted",
+            "ble_driver_error",
             '::strcmp(verb, "IDENTIFY")',
             "reportReady()",
         ):

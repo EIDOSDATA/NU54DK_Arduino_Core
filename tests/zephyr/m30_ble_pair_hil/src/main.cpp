@@ -39,6 +39,7 @@ namespace
     bool protocol_started = false;
     bool protocol_failed = false;
     bool clearing = false;
+    bool connection_attempted = false;
     bool security_request_pending = false;
     bool pairing_requested_seen = false;
     bool passkey_display_seen = false;
@@ -78,6 +79,10 @@ namespace
         Serial.print(static_cast<unsigned int>(BLESecurity.lastError()));
         Serial.print("|driver_error=");
         Serial.print(BLESecurity.lastDriverError());
+        Serial.print("|ble_error=");
+        Serial.print(static_cast<unsigned int>(BLEDevice.lastError()));
+        Serial.print("|ble_driver_error=");
+        Serial.print(BLEDevice.lastDriverError());
         Serial.print("|nonce=");
         Serial.println(nonce);
     }
@@ -394,11 +399,12 @@ namespace
     void onScanResult(const nucode::ble::BLEScanResult &result, void *context)
     {
         ARG_UNUSED(context);
-        if (!protocol_started || protocol_failed || !result.connectable ||
-            result.scan_response || !validRfBinding(result))
+        if (!protocol_started || protocol_failed || connection_attempted ||
+            !result.connectable || result.scan_response || !validRfBinding(result))
         {
             return;
         }
+        connection_attempted = true;
         static_cast<void>(BLEScan.stop());
         if (!BLEConnection.connect(result.address))
         {
@@ -412,6 +418,7 @@ namespace
     {
         connection_handle = {};
         protocol_failed = false;
+        connection_attempted = false;
         security_request_pending = false;
         pairing_requested_seen = false;
         passkey_display_seen = false;
