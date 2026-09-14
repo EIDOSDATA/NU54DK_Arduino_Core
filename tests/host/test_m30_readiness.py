@@ -117,7 +117,13 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertEqual(packages[3]["payload_errors"], 0)
         for relative in packages[3]["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
-        self.assertEqual(packages[4]["status"], "in_progress")
+        self.assertEqual(packages[4]["status"], "completed")
+        self.assertEqual(packages[4]["signed_boots"], 20)
+        self.assertEqual(packages[4]["unsigned_accepts"], 0)
+        self.assertEqual(packages[4]["wrong_key_accepts"], 0)
+        for relative in packages[4]["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        self.assertEqual(packages[5]["status"], "in_progress")
         self.assertEqual(packages[-1]["status"], "blocked_by_power_hil")
         host_packages = self.readiness["host_work_packages"]
         self.assertEqual(len(host_packages), 8)
@@ -147,6 +153,7 @@ class M30ReadinessTests(unittest.TestCase):
         oob = next(entry for entry in plan if entry["id"] == "M30-OOB-01")
         bond = next(entry for entry in plan if entry["id"] == "M30-BOND-01")
         profile = next(entry for entry in plan if entry["id"] == "M30-PROFILE-01")
+        boot = next(entry for entry in plan if entry["id"] == "M30-BOOT-01")
         self.assertEqual(capability["status"], "passed")
         for relative in capability["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
@@ -192,6 +199,20 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertEqual(profile_evidence["payload_errors"], 0)
         self.assertFalse(profile_evidence["power_cut_injected"])
         self.assertFalse(profile_evidence["mass_erase_or_recover"])
+        self.assertEqual(boot["status"], "passed")
+        for relative in boot["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        boot_evidence = json.loads(
+            (REPOSITORY / boot["evidence_files"][0]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(boot_evidence["status"], "passed")
+        self.assertEqual(boot_evidence["core_revision"], boot["tested_core_revision"])
+        self.assertEqual(boot_evidence["signed_boots"], 20)
+        self.assertEqual(boot_evidence["unsigned_accepts"], 0)
+        self.assertEqual(boot_evidence["wrong_key_accepts"], 0)
+        self.assertFalse(boot_evidence["physical_power_loss_claim"])
+        self.assertFalse(boot_evidence["power_cut_injected"])
+        self.assertFalse(boot_evidence["mass_erase_or_recover"])
         self.assertEqual(power["status"], "blocked_human_power_cut")
         self.assertEqual(power["criteria"]["injection_points"], 4)
         self.assertEqual(power["criteria"]["cuts_per_point"], 3)
@@ -199,8 +220,8 @@ class M30ReadinessTests(unittest.TestCase):
             self.readiness["completion"]["current_stop_boundary"],
             "before_m30_power_01_physical_cut",
         )
-        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 4)
-        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 5)
+        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 5)
+        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 6)
 
     def test_profile_catalog_and_equipment_scope_are_explicit(self) -> None:
         """! @brief 기존/신규 profile과 세 보드·전원 장비 경계를 검사합니다. """
