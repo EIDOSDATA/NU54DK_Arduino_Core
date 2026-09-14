@@ -47,6 +47,8 @@ namespace
     bool persistence_pending_seen = false;
     bool secure_seen = false;
     bool pass_reported = false;
+    bool remote_pairing_address_ready = false;
+    nucode::ble::PeerAddress remote_pairing_address = {};
     const char *failure_reason = nullptr;
     std::uint8_t authentication_reason = 0U;
     std::int64_t security_request_due_ms = 0;
@@ -187,6 +189,8 @@ namespace
         persistence_pending_seen = false;
         secure_seen = false;
         pass_reported = false;
+        remote_pairing_address_ready = false;
+        remote_pairing_address = {};
         failure_reason = nullptr;
         authentication_reason = 0U;
         security_request_due_ms = 0;
@@ -258,6 +262,8 @@ namespace
             return;
         }
         remote_ready = true;
+        remote_pairing_address = remote.pairing_address;
+        remote_pairing_address_ready = true;
         Serial.print("M30OOB|1|ARMED|role=");
         Serial.print(roleName());
         Serial.print("|round=");
@@ -437,6 +443,17 @@ namespace
         if (!protocol_started || protocol_failed || connection_attempted || !result.connectable ||
             result.scan_response || !validRfBinding(result))
         {
+            return;
+        }
+        const std::uint8_t expected_type =
+            result.address.type() == nucode::ble::BLEAddress::Type::public_address
+                ? BT_ADDR_LE_PUBLIC
+                : BT_ADDR_LE_RANDOM;
+        if (!remote_pairing_address_ready || remote_pairing_address.type != expected_type ||
+            ::memcmp(remote_pairing_address.value, result.address.data(),
+                     sizeof(remote_pairing_address.value)) != 0)
+        {
+            fail("scan-address-mismatch");
             return;
         }
         connection_attempted = true;
