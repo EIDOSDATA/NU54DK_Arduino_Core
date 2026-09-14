@@ -105,8 +105,12 @@ class M30PowerLossTests(unittest.TestCase):
         command = run.call_args.args[0]
         program = command[3]
         self.assertEqual(command[-1], "secret-board")
+        self.assertIn("target.reset_and_halt()", program)
         self.assertIn("flash.Operation.PROGRAM", program)
-        self.assertIn(f"range(\n            {RUNNER.STORAGE_OFFSET}", program)
+        self.assertIn(
+            f"{RUNNER.STORAGE_OFFSET}, {RUNNER.STORAGE_OFFSET + RUNNER.STORAGE_SIZE}, 4096",
+            program,
+        )
         self.assertIn("flash.program_page(address", program)
         self.assertIn(f"read_memory_block8({RUNNER.STORAGE_OFFSET}", program)
         for forbidden in ("--mass", "Operation.ERASE", "--recover"):

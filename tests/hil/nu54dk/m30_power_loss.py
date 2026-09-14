@@ -673,22 +673,25 @@ if session is None:
     raise RuntimeError("exact probe session을 열 수 없습니다.")
 with session:
     target = session.target
+    target.reset_and_halt()
     region = target.memory_map.get_region_for_address(
         {STORAGE_OFFSET}, target.selected_core.node_name
     )
     if region is None or region.flash is None:
         raise RuntimeError("storage flash algorithm을 찾을 수 없습니다.")
-    flash = region.flash
-    flash.init(flash.Operation.PROGRAM)
     try:
-        for address in range(
-            {STORAGE_OFFSET}, {STORAGE_OFFSET + STORAGE_SIZE}, {0x1000}
-        ):
-            flash.program_page(address, bytes([255]) * {0x1000})
+        flash = region.flash
+        flash.init(flash.Operation.PROGRAM)
+        try:
+            for address in range(
+                {STORAGE_OFFSET}, {STORAGE_OFFSET + STORAGE_SIZE}, {0x1000}
+            ):
+                flash.program_page(address, bytes([255]) * {0x1000})
+        finally:
+            flash.cleanup()
+        observed = target.read_memory_block8({STORAGE_OFFSET}, {STORAGE_SIZE})
     finally:
-        flash.cleanup()
-    target.reset()
-    observed = session.target.read_memory_block8({STORAGE_OFFSET}, {STORAGE_SIZE})
+        target.reset()
     if len(observed) != {STORAGE_SIZE} or any(value != 255 for value in observed):
         raise RuntimeError("storage 0xff readback 검증에 실패했습니다.")
 print("M30_STORAGE_RESET_PASS={STORAGE_SIZE}")
