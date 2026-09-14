@@ -24,10 +24,10 @@
 | 설치·지원 배포판 | **v0.4.1** | Boards Manager에서 제공하는 유일한 지원 버전. 아래 지원 기능·설치 예제의 기준 |
 | 개발 브랜치 | `main`, 소스 식별자 `0.4.1-dev` | v0.5.0을 목표로 BLE 확장 개발 중. 배포판에 없는 API·예제가 포함됨 |
 | M28 GAP·Link·Privacy | **8/8 완료** | 두·세 NU54DK 실기 완료. 개발 브랜치에 반영됐으며 v0.4.1에는 미포함 |
-| M29 ATT/GATT·L2CAP | **6/8 완료(75%)** | W07-C의 Signed Write·EATT 두 보드 시험까지 PASS. W07-D/E와 W08은 남음 |
-| v0.5.0 릴리스 | 미공개 | M29 잔여와 M30~M33 구현·검증·릴리스 절차가 필요 |
+| M29 ATT/GATT·L2CAP | **8/8 완료** | 10/10 test ID, 세 보드 통합·회귀와 Windows/Intel GATT 상호운용 PASS |
+| v0.5.0 릴리스 | 미공개 | M30~M33 구현·검증·릴리스 절차가 필요 |
 
-현재 개발 중단점은 **M29 W07-C 완료**이며, 다음 실기 단계는 세 보드 통합·회귀 시험입니다.
+현재 개발 체크포인트는 **M29 완료**이며 다음 구현 단계는 M30 BLE 보안·profile·최소 DFU입니다.
 최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
 위 CI 배지는 소프트웨어 검사 상태이며 보드 실기·상호운용·정식 릴리스 완료를 뜻하지 않습니다.
 
@@ -151,19 +151,18 @@ PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·O
 | 단계 | 구현·검증한 기능 | 남은 범위 |
 | --- | --- | --- |
 | M28 — 완료 | Central 최대 1개 + Peripheral 최대 1개, 총 2-link. Generation handle, 확장 광고·스캔, periodic 광고·sync·PAST, PAwR, privacy/RPA, link별 제어 | 해당 개발 계약 완료. OS별 상호운용·Bluetooth qualification·v0.5.0 공개는 별도 |
-| M29 W01~W06 — 완료 | Capability, 512-byte long/reliable GATT, descriptor·authorization·read multiple, GATT cache·Service Changed, LE CoC와 오류 거부 | 신규 기능을 두 link에서 통합 검증하고 최종 회귀 필요 |
-| M29 W07-C — 완료 | Signed Write 20회·재부팅 counter 보존·replay 거부, EATT 2 bearer × 1,000 SDU와 enhanced read/write | W07-D `M29-MULTI-01`, W07-E `M29-REG-01`은 **NOT RUN** |
-| M29 W08 — 미착수 | 전체 결과·지원표·예제·문서·CI 마감 | W07 잔여 검증 후 M30으로 인계 |
+| M29 — 완료 | 512-byte long/reliable GATT, descriptor·authorization·read multiple, robust cache, LE CoC, Signed Write·EATT opt-in | 10/10 test ID와 세 보드 mixed-link·M19~M21/M28 회귀 PASS. Windows/Intel GATT 외 OS·adapter 전체는 미검증 |
 | M30~M33 — 계획 | 보안·profile·최소 BLE DFU, ISO/Audio·방향탐지·Channel Sounding 적용성, Mesh·공존, v0.5.0 통합·릴리스 | 구현·장비·지원 가능 범위 판정과 실제 검증 필요 |
 
 Signed Write는 기본 OFF의 **deprecated legacy opt-in** (`NUCODE_BLE_LegacySigning`),
 EATT는 기본 OFF의 **experimental opt-in** (`NUCODE_BLE_EATT`)입니다.
-현재 M29는 작업 묶음 **6/8**, 시험 ID **8/10 PASS**이며 두 분모를 섞어 완료율을 계산하지 않습니다.
+M29는 작업 묶음 **8/8**, 시험 ID **10/10 PASS**입니다. 이 완료를 v0.5.0 공개나 모든 OS의
+Bluetooth 상호운용·qualification 완료로 해석하지 않습니다.
 
 상세 계약과 제한은 [M28](<00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)·
 [M29](<00_Docs/01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>),
 실제 결과는 [M28 완료 기록](<00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)·
-[M29 W07-C 기록](<00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에서 확인할 수 있습니다.
+[M29 완료 기록](<00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)에서 확인할 수 있습니다.
 
 ## 예제
 
@@ -193,6 +192,7 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | Periodic·PAST·PAwR | [PeriodicAdvertiser](libraries/NUCODE_BLE/examples/PeriodicAdvertiser), [PastSender](libraries/NUCODE_BLE/examples/PastSender), [PawrAdvertiser](libraries/NUCODE_BLE/examples/PawrAdvertiser) |
 | Long/reliable GATT | [LongGattCentral](libraries/NUCODE_BLE/examples/LongGattCentral), [ReliableWriteCentral](libraries/NUCODE_BLE/examples/ReliableWriteCentral) |
 | Cache·LE CoC | [GattCacheCentral](libraries/NUCODE_BLE_Security/examples/GattCacheCentral), [L2capCocClient](libraries/NUCODE_BLE/examples/L2capCocClient) |
+| 세 보드 mixed GATT·CoC | [MixedGattCocLinks](libraries/NUCODE_BLE/examples/MixedGattCocLinks) — 같은 Sketch의 role을 바꿔 세 보드에 업로드 |
 | 선택 Signed Write·EATT | [LegacySignedWriteCentral](libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWriteCentral), [EattCentral](libraries/NUCODE_BLE_EATT/examples/EattCentral) |
 
 송신/수신 역할에 맞는 짝 예제와 보드 수는 각 Sketch 주석과
@@ -216,7 +216,7 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
-| 현재 개발·다음 작업 | [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M28 완료, M29 W07-C 완료 후 잔여 통합·회귀 대기 |
+| 현재 개발·다음 작업 | [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M28·M29 완료, 다음 M30 |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
 ### 소스에서 개발하기

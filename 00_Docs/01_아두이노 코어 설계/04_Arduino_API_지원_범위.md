@@ -15,7 +15,7 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 이 문서는 `nucode:zephyr@0.4.1`이 약속하는 Arduino/NUCODE API 범위를 정리합니다. Header에
 이름이 존재하는 것, target에서 compile되는 것과 실제 hardware 지원은 서로 다른 판정입니다.
 
-`main`의 `0.4.1-dev`는 v0.5.0을 준비하는 개발 소스입니다. M28 완료와 M29 W07-C까지의
+`main`의 `0.4.1-dev`는 v0.5.0을 준비하는 개발 소스입니다. M28·M29 완료 범위의
 BLE 확장은 아래 정식 설치본 지원표에 소급하지 않습니다. 개발 결과는
 [M28 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md)과
 [M29 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md)에서 별도로 확인합니다.

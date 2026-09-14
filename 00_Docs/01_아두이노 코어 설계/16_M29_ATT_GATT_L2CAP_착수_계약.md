@@ -3,19 +3,20 @@
 | 항목 | 고정값 |
 | --- | --- |
 | 대상 릴리즈 | `v0.5.0` |
-| 기준 Core | `c71ef4a21465923760933f6b87ad7d92d9a95698` |
+| 마지막 실제 HIL Core | `a964ae205e237d90149f6d2c0eb0ec6492492a33` |
 | 기준 NCS | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
 | 기준 Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M29 상태 | **W07-C 2보드 SIGN/EATT 완료, W01~W08 6/8(75%)·test ID 8/10** |
+| M29 상태 | **W01~W08 8/8·test ID 10/10 완료** |
 | 기계 원장 | [`m29-ble-readiness.json`](../../variants/nu54dk/m29-ble-readiness.json) |
 
-W07-C 완료 뒤 개발을 일시 중단한 상태다. W07-D/E의 3보드 `M29-MULTI-01`·`M29-REG-01`은
-`NOT RUN`, W08은 미착수다. 이 문서의 공개 API 목표는 v0.5.0 개발 계약이며, 설치·지원
-v0.4.1의 기능 확대를 뜻하지 않는다. 현재 결과는
-[147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)을 따른다.
+W07-C의 두 보드 SIGN/EATT, W07-D/E의 세 보드 `M29-MULTI-01`·`M29-REG-01`, Windows/Intel
+GATT 상호운용과 W08 예제·문서·회귀를 완료했다. 이 문서의 공개 API 목표는 v0.5.0 개발 계약이며,
+설치·지원 v0.4.1의 기능 확대를 뜻하지 않는다. W07-C까지는
+[147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>), 최종 결과는
+[149번 기록](<../04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)을 따른다.
 
 ## 1. 목표와 완료 의미
 
@@ -151,11 +152,12 @@ target FAIL을 거부한다.
 확인하고, 연결이 정상이면 CMSIS-DAP으로 fault, SRAM state, queue·buffer·credit·ATT/L2CAP 오류
 counter를 확보한다. 원인 분류, 단일 수정, 동일 조건 재검증 순서를 지키고 무한 재시도하지 않는다.
 
-## 7. 장비와 중단 경계
+## 7. 장비와 완료 결과
 
-NU54DK 3개와 독립 DAP/UART 3경로는 M28에서 확인했다. 2보드 LONG/DESC/CACHE/COC/NEG/SIGN/EATT와
-3보드 MULTI/REG는 자동 실행할 수 있다. 외부 sniffer와 Android/iOS/Linux peer의 보유·버전,
-Windows BLE adapter의 EATT/robust caching 적용성은 아직 M29 실기로 확인하지 않았다.
+NU54DK 3개와 독립 DAP/UART 3경로로 2보드 LONG/DESC/CACHE/COC/NEG/SIGN/EATT와 3보드
+MULTI/REG를 실행했다. Windows 11의 Intel Bluetooth/WinRT peer로 기본 M20 GATT 상호운용도
+확인했다. 외부 sniffer와 Android/iOS/Linux peer, Windows EATT·robust caching은 확인하지 않았으며
+이 미확인 범위를 M29 PASS에 포함하지 않는다.
 
 W01은 exact `d604642b…`에서 parser 16/16, target 1/1 warning 0과 실제 `M29-CAP-01`을 PASS했다.
 동적 GATT service와 LE CoC server·PSM 등록을 실제 실행했고, W07 exact `c71ef4a2…`에서는
@@ -205,29 +207,38 @@ target role 2/2 warning 0을 확인했다. 두 NU54DK의 단일 strict runner se
 20회와 각 warm reboot 사이의 counter 영속, 동일 signed ATT PDU replay 수락 0을 검증했다.
 EATT는 암호화 전 거부, 암호화 뒤 bearer 2개와 상한 초과 거부, production enhanced read/write,
 bearer별 1,000 SDU와 payload 오류·deadlock·starvation 0을 확인했다. 따라서
-`M29-SIGN-01`·`M29-EATT-01`은 PASS다. `M29-MULTI-01`·`M29-REG-01`은 `NOT RUN`이므로 W07과
-M29 전체를 완료로 승격하지 않는다.
+`M29-SIGN-01`·`M29-EATT-01`은 PASS다.
 
-W07-C 이후 재개가 승인되면 코드·Host 시험·target build, NU54DK 3보드 HIL,
-parser·문서·예제를 진행한다. Cross-vendor gate에 OS peer 조작이 필요하면 그 시점에 안내한다.
-OS peer가 없거나 기능을 지원하지 않으면 해당
-결과는 `NOT RUN` 또는 `NOT APPLICABLE`로 근거를 남기며 M29 전체 PASS로 승격하지 않는다.
+W07-D exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 NU54DK에서는 mixed DUT의 central
+1-link와 peripheral 1-link를 동시에 유지했다. 두 link 각각 GATT 1,000회와 LE CoC 1,000회,
+수신측 sequence 검증, cross-link event·payload 오류·dropped event 0을 확인해
+`M29-MULTI-01`을 PASS했다. 같은 revision의 W07-E는 M19 GAP, M20 GATT, M21 security,
+M28 extended advertising·PAwR·RPA·bonded reconnect를 세 보드에 순환 배치했고 4/4 회귀군,
+실패 0으로 `M29-REG-01`을 PASS했다.
+
+Windows/Intel 상호운용은 exact `a964ae205e237d90149f6d2c0eb0ec6492492a33` M20 peripheral에서
+광고 service UUID, GATT service·characteristic·property, nonce read, response write,
+write command, notification 2회, indication 1회와 connect/disconnect 2회를 확인했다. WinRT 객체
+close와 실제 RF disconnect 사이의 측정 지연 3.05초를 반영해 두 round 사이를 5초로 고정했다.
+Android/iOS/Linux와 Windows의 모든 adapter·고급 profile을 시험한 결과로 확대하지 않는다.
 
 ## 8. 개발 예제와 남은 예제
 
-다음 14개 예제는 현재 개발 소스에 있으며 Arduino `v0.5.0` smoke group에서 검사한다.
+다음 15개 예제는 현재 개발 소스에 있으며 Arduino `v0.5.0` smoke group에서 검사한다.
 설치·지원 v0.4.1의 30개 예제 목록과는 별개다.
 
 | Library | 작성된 예제 | 범위 |
 | --- | --- | --- |
 | `NUCODE_BLE` | `LongGattPeripheral`, `LongGattCentral`, `ReliableWritePeripheral`, `ReliableWriteCentral` | 512-byte long/reliable operation |
 | `NUCODE_BLE` | `GattDescriptors`, `GattAuthorization`, `L2capCocServer`, `L2capCocClient` | descriptor·권한·고정 2-channel CoC |
+| `NUCODE_BLE` | `MixedGattCocLinks` | 같은 Sketch의 role 선택으로 3보드 mixed GATT·CoC 실행 |
 | `NUCODE_BLE_Security` | `GattCachePeripheral`, `GattCacheCentral` | bond·database hash·cache |
 | `NUCODE_BLE_LegacySigning` | `LegacySignedWritePeripheral`, `LegacySignedWriteCentral` | deprecated legacy opt-in 경고 포함 |
 | `NUCODE_BLE_EATT` | `EattPeripheral`, `EattCentral` | experimental opt-in·암호화·최대 2 bearer |
 
-`MixedGattCocLinks`는 3보드 mixed-role 통합 단계의 계획이며 아직 작성 완료로 표시하지 않는다.
-예제 파일은 [`libraries`](../../libraries) 아래 각 library의 `examples`가 단일 원본이다.
+`MixedGattCocLinks`는 peripheral·mixed·central role을 같은 source에서 선택하고, mixed 보드의 두
+generation link를 별도 handle로 유지한다. 예제 파일은 [`libraries`](../../libraries) 아래 각
+library의 `examples`가 단일 원본이다.
 
 모든 예제는 시작 함수와 비동기 결과를 검사하고 runtime 실패를 Serial에 출력한다. callback-only
 완료를 peer 수신 성공으로 과장하지 않는다.

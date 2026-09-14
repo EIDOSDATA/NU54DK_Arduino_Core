@@ -421,7 +421,7 @@ Evidence 경로는 실행 전에 없어야 한다.
 ```
 
 자동 matrix에서는 긴 `v0.3.0`을 `v0.3.0-ble`과 `v0.3.0-compat` 두 하위 작업으로 더 나눠
-기존 네 작업과 `v0.5.0`을 합쳐 총 다섯 작업을 배치한다. `v0.5.0`은 현재 M29 예제 14개를
+기존 네 작업과 `v0.5.0`을 합쳐 총 다섯 작업을 배치한다. `v0.5.0`은 현재 M29 예제 15개를
 검사하며 M28 예제 11개는 `--tests m28`로 따로 실행한다.
 
 Windows의 Zephyr build는 Nordic Toolchain Python으로 직접 runner를 시작한다. 현재 Twister

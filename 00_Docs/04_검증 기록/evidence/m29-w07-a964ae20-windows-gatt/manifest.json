@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "archive_format": "base64-rfc4648",
+  "purpose": "M29 Windows/Intel cross-vendor GATT exact raw HIL evidence",
+  "core_revision": "a964ae205e237d90149f6d2c0eb0ec6492492a33",
+  "files": [
+    {
+      "logical_name": "result.json",
+      "archive_file": "raw/result.json.b64",
+      "raw_size": 3314,
+      "raw_sha256": "c3639f43ae4ed0b6043abd68ace62f7a1b1fa469fd7d10c1ae561e97c3a97d3c"
+    },
+    {
+      "logical_name": "result.peripheral.transcript.log",
+      "archive_file": "raw/result.peripheral.transcript.log.b64",
+      "raw_size": 958,
+      "raw_sha256": "4898818354051ddf92a82bf0b0ff9c36cc70354e767fe64b74b0627547949284"
+    }
+  ]
+}

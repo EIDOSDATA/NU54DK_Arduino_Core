@@ -115,6 +115,7 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "ReliableWritePeripheral",
                 "GattDescriptors",
                 "GattAuthorization",
+                "MixedGattCocLinks",
                 "MixedRoleLinks",
                 "PawrAdvertiser",
                 "PawrScanner",

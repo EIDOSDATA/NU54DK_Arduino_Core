@@ -80,9 +80,9 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 | `v0.2.0` | 10 | M14 Core/variant, M15 Board/System, M16 BLE NUS, M17 direct sensor |
 | `v0.3.0` | 19 | M19 GAP, M20 GATT, M21 Security, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
 | `v0.4.0` | 35 | R01 구성, pair/T13 HIL build, M23 inventory, M24 Serial, M25 Analog/Event/Stream, M26 System, T16 Fabric profile |
-| `v0.5.0` | 33 | M28 capability·GAP/link·두/세 보드 image, M29 capability·W02~W07-C 두 보드 image |
+| `v0.5.0` | 36 | M28 capability·GAP/link·두/세 보드 image, M29 capability·W02~W07-C 두 보드 image·W07-D 세 보드 image |
 
-2026-09-14의 `tools/ci/run_zephyr_build.py` 기준 101개 시나리오가 위 다섯 그룹에 속한다.
+2026-09-14의 `tools/ci/run_zephyr_build.py` 기준 104개 시나리오가 위 다섯 그룹에 속한다.
 증감 시에는 이 표가 아니라 runner의 `SUITE_GROUPS`를 실행 목록의 원본으로 사용한다. Matrix의
 `fail-fast: false` 때문에 한 그룹이 실패해도 나머지 그룹은 끝까지 실행되어 영향 범위를 한 번에
 알 수 있다. 각 `twister.json`과 `m12-build-evidence.json`은 group 이름, 실제 시나리오와 내부

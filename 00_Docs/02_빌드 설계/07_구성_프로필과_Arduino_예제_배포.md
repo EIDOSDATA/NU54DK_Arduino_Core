@@ -199,14 +199,14 @@ v0.4.1 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30
 
 ### 개발 `main`의 추가 예제
 
-`0.4.1-dev`에는 v0.5.0을 준비하는 M28 예제 11개와 M29 예제 14개가 추가되어 있다. 정식 v0.4.1의
-30개와 합치면 소스 트리에는 11개 library·55개 예제가 있지만, 이 수를 v0.4.1 설치본의 제공 수로
-표시하지 않는다. M28은 완료했고 M29는 W07-C까지 진행 중이다.
+`0.4.1-dev`에는 v0.5.0을 준비하는 M28 예제 11개와 M29 예제 15개가 추가되어 있다. 정식 v0.4.1의
+30개와 합치면 소스 트리에는 11개 library·56개 예제가 있지만, 이 수를 v0.4.1 설치본의 제공 수로
+표시하지 않는다. M28·M29는 완료했고 다음 개발 단계는 M30이다.
 
 | 개발 추가 범위 | Library와 선택 방식 | 검증 진입점 |
 | --- | --- | --- |
 | M28 GAP/link/periodic/PAwR/privacy 11개 | `NUCODE_BLE`, `feature_set=ble` | `run_smoke.py --tests m28` |
-| M29 GATT·descriptor·CoC 8개 | `NUCODE_BLE`, `feature_set=ble` | `run_smoke.py --group v0.5.0` |
+| M29 GATT·descriptor·CoC·mixed 9개 | `NUCODE_BLE`, `feature_set=ble` | `run_smoke.py --group v0.5.0` |
 | M29 GATT cache 2개 | `NUCODE_BLE_Security`, `nucode.ble.security` | 같은 v0.5.0 group |
 | M29 Signed Write 2개 | `NUCODE_BLE_LegacySigning`, `nucode.ble.legacy_signing` | 같은 v0.5.0 group; deprecated legacy opt-in |
 | M29 EATT 2개 | `NUCODE_BLE_EATT`, `nucode.ble.eatt` | 같은 v0.5.0 group; experimental opt-in |

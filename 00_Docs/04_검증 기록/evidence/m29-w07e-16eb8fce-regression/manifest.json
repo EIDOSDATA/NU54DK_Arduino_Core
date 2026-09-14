@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "archive_format": "base64-rfc4648",
+  "purpose": "M29-REG-01 exact raw HIL evidence",
+  "core_revision": "16eb8fce204f656beb6ed0a0d6f763cc7d492215",
+  "files": [
+    {
+      "logical_name": "m19-gap.central.transcript.log",
+      "archive_file": "raw/m19-gap.central.transcript.log.b64",
+      "raw_size": 930,
+      "raw_sha256": "5271443bff2f628e82f70e996247d38c77fc38e6d8dc7cb731d82d7d94a70571"
+    },
+    {
+      "logical_name": "m19-gap.json",
+      "archive_file": "raw/m19-gap.json.b64",
+      "raw_size": 4043,
+      "raw_sha256": "256ace6ec4a3496fe7704c54df1b1cdbb0feda48ac95b53cbeb3b6b4e824bc59"
+    },
+    {
+      "logical_name": "m19-gap.peripheral.transcript.log",
+      "archive_file": "raw/m19-gap.peripheral.transcript.log.b64",
+      "raw_size": 842,
+      "raw_sha256": "c86fd231b48e9788f8f044bab9c222933474bfad8ebc86f4948ee9987382c88e"
+    },
+    {
+      "logical_name": "m20-gatt.central.transcript.log",
+      "archive_file": "raw/m20-gatt.central.transcript.log.b64",
+      "raw_size": 2132,
+      "raw_sha256": "f1186482559120cd93af1b626514ef70708ac75d2fe28a272a9138ed8c0fd2c7"
+    },
+    {
+      "logical_name": "m20-gatt.json",
+      "archive_file": "raw/m20-gatt.json.b64",
+      "raw_size": 4480,
+      "raw_sha256": "009710da4cf10b30b83a9dedcf73214f75ae884d9adc1eec7c7330da11865314"
+    },
+    {
+      "logical_name": "m20-gatt.peripheral.transcript.log",
+      "archive_file": "raw/m20-gatt.peripheral.transcript.log.b64",
+      "raw_size": 957,
+      "raw_sha256": "1ac5719789d96124eef12a47a990b5b099bf4b92be23f9e38f3918a1be280244"
+    },
+    {
+      "logical_name": "m21-security.central.transcript.log",
+      "archive_file": "raw/m21-security.central.transcript.log.b64",
+      "raw_size": 3774,
+      "raw_sha256": "4703b092b7fd225620d72afd9cb9ea13b0cf76aff0f646fa23cfdb18c2dac6c2"
+    },
+    {
+      "logical_name": "m21-security.json",
+      "archive_file": "raw/m21-security.json.b64",
+      "raw_size": 3002,
+      "raw_sha256": "2f206c303eec775a00332d9640b25a0dcc71915cdac7bf37e0cf335a64487457"
+    },
+    {
+      "logical_name": "m21-security.peripheral.transcript.log",
+      "archive_file": "raw/m21-security.peripheral.transcript.log.b64",
+      "raw_size": 2924,
+      "raw_sha256": "2f6137248312fd74890196d85a7d4baf312e3d3af6486fad6aabdde850cf698d"
+    },
+    {
+      "logical_name": "m28-2board.central.transcript.log",
+      "archive_file": "raw/m28-2board.central.transcript.log.b64",
+      "raw_size": 1134,
+      "raw_sha256": "fc3766855b08e74dbe5da4cf6fdc56696f7181f8b617d7006cd31d10f17590b0"
+    },
+    {
+      "logical_name": "m28-2board.json",
+      "archive_file": "raw/m28-2board.json.b64",
+      "raw_size": 4622,
+      "raw_sha256": "4167091cf1a132ae69c457524cd0358b4fd8df7778d50fe2226918ca20ae9aab"
+    },
+    {
+      "logical_name": "m28-2board.peripheral.transcript.log",
+      "archive_file": "raw/m28-2board.peripheral.transcript.log.b64",
+      "raw_size": 827,
+      "raw_sha256": "3f377b0fce752b2955bea33d5d83107f72b638e0617f0b0d61ded425aee9504f"
+    },
+    {
+      "logical_name": "m29-reg.json",
+      "archive_file": "raw/m29-reg.json.b64",
+      "raw_size": 3541,
+      "raw_sha256": "5c5f88e467176d1b45a82cc80fa1595d14d298b70c64e4072b584b3e85cebb43"
+    }
+  ]
+}

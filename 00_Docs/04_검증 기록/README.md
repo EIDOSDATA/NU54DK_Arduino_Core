@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28 완료 / M29 W07-C 완료 후 중단**입니다. M29는 W07-D/E와 W08이
-남아 공식 작업 묶음 **6/8(75%)**, test ID **8/10 PASS**입니다.
+**v0.4.1**, 개발 상태는 **M28·M29 완료, 다음 M30**입니다. M29는 작업 묶음 **8/8**,
+test ID **10/10 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
@@ -12,6 +12,7 @@
 
 | 기록 | 용도 |
 | --- | --- |
+| [149 — M29-W07 3보드·회귀·상호운용과 W08 완료](149_M29_W07_3보드_회귀_상호운용과_W08_완료.md) | MULTI/REG, Windows/Intel GATT, 예제·리팩터링·M30 인계 |
 | [148 — 개발문서 전수 검토와 README 개선](148_개발문서_전수검토와_README_개선.md) | 지원 범위·개발 현황 안내, 중복 설명 정리와 문서 검사 |
 | [147 — M29-W07 Signed Write·EATT 2보드 완료](147_M29_W07_Signed_Write_EATT_HIL_준비.md) | exact `c71ef4a2…` SIGN/EATT PASS, MULTI/REG NOT RUN, 실패 진단부터 최종 증거까지 |
 | [146 — M29-W06 LE CoC·credit](146_M29_W06_LE_CoC_credit_buffers.md) | 2-channel·512-byte·각 방향 1,000 SDU와 5 negative class PASS |
@@ -24,6 +25,7 @@
 | 확인할 내용 | 기록 |
 | --- | --- |
 | M29 GATT·cache·CoC 구현과 단일 link 실기 | [141 capability](141_M29_W01_ATT_GATT_L2CAP_capability.md) · [142 long read](142_M29_W02_link별_GATT_long_read.md) · [143 reliable write](143_M29_W03_long_reliable_write.md) · [144 descriptor](144_M29_W04_descriptor_authorization_read_multiple.md) · [145 cache](145_M29_W05_robust_GATT_cache_migration.md) · [146 CoC](146_M29_W06_LE_CoC_credit_buffers.md) |
+| M29 Signed/EATT·3보드·상호운용 완료 | [147 두 보드 Signed/EATT](147_M29_W07_Signed_Write_EATT_HIL_준비.md) · [149 세 보드 MULTI/REG·Windows](149_M29_W07_3보드_회귀_상호운용과_W08_완료.md) |
 | M28 보드 수와 RF 검증 범위 | [140번 시험별 결과표](140_M28_W07_3보드_HIL과_W08_완료.md) — PAwR은 2보드, periodic/PAST는 3보드 |
 | QDEC20/21 지원·비보증 경계 | [124번 지원 계약](124_T22전_QDEC_지원_범위_재확정.md) |
 | v0.4.0 주변장치 실기 종료·결함 해결 | [115 T13 종료](115_T13_U_UART00_완료와_T13_종료.md) · [116 T14 자원 충돌](116_T14_자원_충돌_판정과_PWM_식별_교정.md) |
@@ -42,7 +44,7 @@
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28 완료와 M29 진행 — 94~148</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29 완료 — 94~149</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -99,6 +101,7 @@
 - [146 — M29-W06 LE CoC·credit](<146_M29_W06_LE_CoC_credit_buffers.md>) — **Host·target·2보드 COC/NEG PASS, M29 6/8**
 - [147 — M29-W07 Signed Write·EATT HIL 준비와 2보드 완료](<147_M29_W07_Signed_Write_EATT_HIL_준비.md>) — **Host/parser·target과 실제 SIGN/EATT PASS, MULTI/REG NOT RUN**
 - [148 — 개발문서 전수 검토와 README 개선](<148_개발문서_전수검토와_README_개선.md>) — 지원 배포·개발 상태 구분, 문서 가독성과 탐색 경로 정비
+- [149 — M29-W07 3보드·회귀·Windows 상호운용과 W08 완료](<149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) — **M29 8/8·test ID 10/10 PASS, M30 인계**
 
 </details>
 

@@ -157,7 +157,7 @@ channel을 종료한다. Late callback과 disconnect 뒤 stale handle은 새 ses
 의미하지 않는다. 상세 근거는
 [146번 기록](<../04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
 
-## M29-W07-C Signed Write·EATT 개발 확장
+## M29-W07 Signed Write·EATT와 통합 완료
 
 두 기능은 기본 BLE profile에서 OFF이며 별도 library header를 포함할 때만 선택한다.
 
@@ -171,7 +171,10 @@ EATT의 암호화 전 거부·2 bearer·상한 초과 거부·production enhance
 1,000 SDU를 검증했다. Payload 오류·deadlock·starvation은 0이다. 이 결과로 SDK의
 deprecated/experimental 등급을 안정 기능으로 바꾸지 않는다.
 
-현재 M29는 작업 묶음 6/8(75%), test ID 8/10이다. 3보드 `M29-MULTI-01`·`M29-REG-01`은
-`NOT RUN`, W08은 미착수다. 세부 API·자원과 exact 원본은
+후속 통합은 exact `16eb8fce…`에서 3보드 `M29-MULTI-01`·`M29-REG-01`을 PASS했고,
+exact `a964ae20…`에서 Windows WinRT peer 교차 제조사 GATT 상호운용을 PASS했다.
+이로써 M29는 작업 묶음 8/8(100%), test ID 10/10이며 다음 개발 단계는 M30이다.
+세부 API·자원과 단계별·완료 exact 원본은
 [M29 계약](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
-[147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에서 관리한다.
+[147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>),
+[149번 완료 기록](<../04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)에서 관리한다.

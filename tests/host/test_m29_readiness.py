@@ -38,8 +38,8 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(self.readiness["schema_version"], 1)
         self.assertEqual(self.readiness["milestone"], "M29")
         self.assertEqual(self.readiness["product_target"], "v0.5.0")
-        self.assertEqual(self.readiness["phase"], "w07_two_board_hil_passed")
-        self.assertEqual(self.readiness["milestone_status"], "in_progress")
+        self.assertEqual(self.readiness["phase"], "completed")
+        self.assertEqual(self.readiness["milestone_status"], "completed")
         self.assertEqual(baseline["supported_release"], "v0.4.1")
         self.assertRegex(baseline["core_revision"], r"^[0-9a-f]{40}$")
         self.assertEqual(baseline["ncs_revision"], self.lock["ncs"]["revision"])
@@ -110,19 +110,14 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIsInstance(value, int, name)
             self.assertGreater(value, 0, name)
 
-    def test_work_packages_begin_at_w07_after_w06_completion(self) -> None:
-        """! @brief W01~W06 완료와 W07 2보드 HIL 상태를 검사합니다. """
+    def test_all_work_packages_have_completion_evidence(self) -> None:
+        """! @brief W01~W08 완료와 W07 통합 HIL 상태를 검사합니다. """
 
         packages = self.readiness["work_packages"]
         self.assertEqual(len(packages), 8)
         for index, package in enumerate(packages, start=1):
             self.assertEqual(package["id"], f"M29-W{index:02d}")
-            expected_status = (
-                "completed" if index <= 6 else
-                "in_progress" if index == 7 else
-                "not_started"
-            )
-            self.assertEqual(package["status"], expected_status, package["id"])
+            self.assertEqual(package["status"], "completed", package["id"])
         w01 = packages[0]
         self.assertEqual(w01["host_parser_tests"], 16)
         self.assertEqual(w01["target_build"], "passed")
@@ -184,16 +179,22 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
         w07 = packages[6]
         self.assertEqual(w07["production_host_scenarios"], 3)
-        self.assertEqual(w07["host_contract_tests"], 17)
-        self.assertEqual(w07["host_parser_tests"], 16)
-        self.assertEqual(w07["target_builds"], 2)
+        self.assertEqual(w07["signed_eatt_host_contract_tests"], 17)
+        self.assertEqual(w07["signed_eatt_parser_tests"], 16)
+        self.assertEqual(w07["multi_host_tests"], 20)
+        self.assertEqual(w07["regression_host_tests"], 17)
+        self.assertEqual(w07["windows_protocol_tests"], 12)
+        self.assertEqual(w07["target_builds"], 14)
         self.assertEqual(w07["physical_signed_write"], "passed")
         self.assertEqual(w07["physical_eatt"], "passed")
-        self.assertEqual(w07["physical_multi_link"], "not_run")
-        self.assertEqual(w07["physical_regression"], "not_run")
-        self.assertRegex(w07["tested_core_revision"], r"^[0-9a-f]{40}$")
-        self.assertEqual(len(w07["failure_evidence_files"]), 3)
-        self.assertEqual(len(w07["evidence_files"]), 3)
+        self.assertEqual(w07["physical_multi_link"], "passed")
+        self.assertEqual(w07["physical_regression"], "passed")
+        self.assertEqual(w07["cross_vendor_windows_gatt"], "passed")
+        self.assertEqual(len(w07["tested_core_revisions"]), 3)
+        for revision in w07["tested_core_revisions"]:
+            self.assertRegex(revision, r"^[0-9a-f]{40}$")
+        self.assertEqual(len(w07["failure_evidence_files"]), 4)
+        self.assertEqual(len(w07["evidence_files"]), 6)
         for relative in w07["failure_evidence_files"] + w07["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
         evidence = json.loads(
@@ -201,7 +202,7 @@ class M29ReadinessTests(unittest.TestCase):
         )
         self.assertEqual(evidence["gate"], "m29-w07-signed-write-eatt-pair-hil")
         self.assertEqual(evidence["status"], "passed")
-        self.assertEqual(evidence["core_revision"], w07["tested_core_revision"])
+        self.assertEqual(evidence["core_revision"], w07["tested_core_revisions"][0])
         self.assertEqual(
             evidence["board_revision"], self.readiness["baseline"]["board_revision"]
         )
@@ -213,9 +214,25 @@ class M29ReadinessTests(unittest.TestCase):
         self.assertEqual(evidence["coverage"]["deadlocks"], 0)
         self.assertEqual(evidence["coverage"]["starvation"], 0)
         completion = self.readiness["completion"]
-        self.assertEqual(completion["completed_work_packages"], 6)
+        w08 = packages[7]
+        self.assertEqual(w08["arduino_examples"], 15)
+        self.assertEqual(w08["arduino_example_builds"], 15)
+        self.assertEqual(w08["target_refactor_builds"], 3)
+        self.assertEqual(w08["canonical_zephyr_scenarios"], 3)
+        self.assertEqual(w08["canonical_v050_scenarios"], 36)
+        self.assertEqual(
+            w08["local_gate_results"],
+            {
+                "contract_tests": 46,
+                "host": "passed",
+                "document_files": 286,
+                "package_tests": 21,
+            },
+        )
+        self.assertTrue((REPOSITORY / w08["completion_record"]).is_file())
+        self.assertEqual(completion["completed_work_packages"], 8)
         self.assertEqual(completion["total_work_packages"], 8)
-        self.assertEqual(completion["passed_test_ids"], 8)
+        self.assertEqual(completion["passed_test_ids"], 10)
         self.assertEqual(completion["total_test_ids"], 10)
 
     def test_execution_plan_is_finite_and_fail_closed(self) -> None:
@@ -239,12 +256,7 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIn(entry["boards"], {1, 2, 3}, entry["id"])
             self.assertGreater(entry["timeout_seconds"], 0, entry["id"])
             self.assertLessEqual(entry["timeout_seconds"], 1800, entry["id"])
-            expected_status = (
-                "not_run"
-                if entry["id"] in {"M29-MULTI-01", "M29-REG-01"}
-                else "passed"
-            )
-            self.assertEqual(entry["status"], expected_status, entry["id"])
+            self.assertEqual(entry["status"], "passed", entry["id"])
             self.assertGreater(len(entry["criteria"]), 0, entry["id"])
             for name, value in entry["criteria"].items():
                 self.assertIsInstance(value, int, f"{entry['id']}:{name}")
@@ -253,6 +265,11 @@ class M29ReadinessTests(unittest.TestCase):
         multi = next(entry for entry in plan if entry["id"] == "M29-MULTI-01")
         self.assertEqual(multi["boards"], 3)
         self.assertEqual(multi["criteria"]["simultaneous_links"], 2)
+        self.assertEqual(len(multi["evidence_files"]), 1)
+        self.assertTrue((REPOSITORY / multi["evidence_files"][0]).is_file())
+        regression = next(entry for entry in plan if entry["id"] == "M29-REG-01")
+        self.assertEqual(len(regression["evidence_files"]), 1)
+        self.assertTrue((REPOSITORY / regression["evidence_files"][0]).is_file())
         coc = next(entry for entry in plan if entry["id"] == "M29-COC-01")
         self.assertEqual(coc["criteria"]["channels"], 2)
         self.assertEqual(coc["criteria"]["payload_errors"], 0)
@@ -284,8 +301,8 @@ class M29ReadinessTests(unittest.TestCase):
             for relative in entry["evidence_files"]:
                 self.assertTrue((REPOSITORY / relative).is_file(), relative)
 
-    def test_equipment_distinguishes_known_boards_from_unknown_peers(self) -> None:
-        """! @brief 확인한 세 보드와 아직 확인하지 않은 cross-vendor 장비를 분리합니다. """
+    def test_equipment_distinguishes_tested_windows_from_unknown_peers(self) -> None:
+        """! @brief 확인한 세 보드·Windows와 미확인 peer를 분리합니다. """
 
         equipment = self.readiness["equipment"]
         self.assertEqual(equipment["nu54dk_boards"], 3)
@@ -295,8 +312,12 @@ class M29ReadinessTests(unittest.TestCase):
             set(equipment["cross_vendor_peers"]),
             {"android", "ios", "windows", "linux"},
         )
-        for status in equipment["cross_vendor_peers"].values():
-            self.assertEqual(status, "unconfirmed")
+        self.assertEqual(
+            equipment["cross_vendor_peers"]["windows"],
+            "passed_winrt_intel_m20_gatt",
+        )
+        for name in ("android", "ios", "linux"):
+            self.assertEqual(equipment["cross_vendor_peers"][name], "unconfirmed")
 
     def test_contract_and_current_documents_are_linked(self) -> None:
         """! @brief 사람이 읽는 계약과 현행 TODO·HANDOFF의 M29 링크를 검사합니다. """
@@ -318,7 +339,8 @@ class M29ReadinessTests(unittest.TestCase):
             self.assertIn("16_M29_ATT_GATT_L2CAP_착수_계약.md", text, path)
             self.assertIn("m29-ble-readiness.json", text, path)
             self.assertIn("M29-W01", text, path)
-            self.assertIn("6/8", text, path)
+            self.assertIn("8/8", text, path)
+            self.assertIn("M30", text, path)
 
 
 if __name__ == "__main__":

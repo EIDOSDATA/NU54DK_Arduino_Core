@@ -1435,6 +1435,7 @@ def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             "GattAuthorization",
             "L2capCocServer",
             "L2capCocClient",
+            "MixedGattCocLinks",
         ),
     )
     for example_name in ("GattCachePeripheral", "GattCacheCentral"):
@@ -1550,6 +1551,7 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "GAPPeripheral",
             "LongGattCentral",
             "LongGattPeripheral",
+            "MixedGattCocLinks",
             "MixedRoleLinks",
             "NUSCentral",
             "NUSPeripheral",

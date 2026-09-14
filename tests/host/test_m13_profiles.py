@@ -106,6 +106,7 @@ class M13ProfileContractTests(unittest.TestCase):
                 "ReliableWritePeripheral",
                 "GattDescriptors",
                 "GattAuthorization",
+                "MixedGattCocLinks",
                 "MixedRoleLinks",
                 "ExtendedAdvertising",
                 "ExtendedScanner",
