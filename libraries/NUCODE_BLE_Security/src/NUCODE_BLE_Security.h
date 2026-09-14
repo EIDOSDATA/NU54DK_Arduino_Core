@@ -383,6 +383,108 @@ namespace nucode::ble
         [[nodiscard]] int lastDriverError() const noexcept;
     };
 
+    /** @brief 표준 HID mouse input report의 고정 4-byte 표현입니다. */
+    struct MouseReport
+    {
+        std::uint8_t buttons = 0U;
+        std::int8_t x = 0;
+        std::int8_t y = 0;
+        std::int8_t wheel = 0;
+    };
+
+    /** @brief 암호화된 BLE HID mouse input report를 전송합니다. */
+    class HidMouse final
+    {
+      public:
+        /** @brief 공용 HIDS에 mouse report를 활성화합니다. */
+        [[nodiscard]] bool begin() noexcept;
+
+        /** @brief 현재 encrypted peer에 하나의 mouse report를 보냅니다. */
+        [[nodiscard]] bool sendReport(const MouseReport &report) noexcept;
+
+        /** @brief 버튼과 상대 X/Y/wheel 이동을 한 report로 보냅니다. */
+        [[nodiscard]] bool move(std::int8_t x, std::int8_t y, std::int8_t wheel = 0,
+                                std::uint8_t buttons = 0U) noexcept;
+
+        /** @brief 모든 mouse button을 놓는 zero report를 보냅니다. */
+        [[nodiscard]] bool releaseAll() noexcept;
+
+        /** @brief mouse profile이 활성화되고 encrypted peer가 연결됐는지 반환합니다. */
+        [[nodiscard]] bool connected() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+
+        /** @brief 마지막 Zephyr/NCS 음수 오류를 반환합니다. */
+        [[nodiscard]] int lastDriverError() const noexcept;
+    };
+
+    /** @brief HID Consumer Page의 단일 16-bit usage report입니다. */
+    struct ConsumerControlReport
+    {
+        std::uint16_t usage = 0U;
+    };
+
+    /** @brief 암호화된 BLE HID consumer-control input report를 전송합니다. */
+    class HidConsumerControl final
+    {
+      public:
+        /** @brief 공용 HIDS에 consumer-control report를 활성화합니다. */
+        [[nodiscard]] bool begin() noexcept;
+
+        /** @brief 현재 encrypted peer에 하나의 consumer report를 보냅니다. */
+        [[nodiscard]] bool sendReport(const ConsumerControlReport &report) noexcept;
+
+        /** @brief 0x0001~0x03ff 범위의 Consumer Page usage를 누릅니다. */
+        [[nodiscard]] bool press(std::uint16_t usage) noexcept;
+
+        /** @brief consumer usage를 놓는 zero report를 보냅니다. */
+        [[nodiscard]] bool release() noexcept;
+
+        /** @brief consumer profile이 활성화되고 encrypted peer가 연결됐는지 반환합니다. */
+        [[nodiscard]] bool connected() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+
+        /** @brief 마지막 Zephyr/NCS 음수 오류를 반환합니다. */
+        [[nodiscard]] int lastDriverError() const noexcept;
+    };
+
+    /** @brief 표준 Heart Rate Service의 측정값과 notification을 관리합니다. */
+    class HeartRateService final
+    {
+      public:
+        /** @brief 1~240 bpm을 저장하고 구독자에게 알립니다. */
+        [[nodiscard]] bool setRate(std::uint16_t beats_per_minute) noexcept;
+
+        /** @brief 마지막으로 저장한 심박수를 반환합니다. */
+        [[nodiscard]] std::uint16_t rate() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+    };
+
+    /** @brief 표준 Environmental Sensing Service의 온도·습도를 관리합니다. */
+    class EnvironmentalSensingService final
+    {
+      public:
+        /** @brief 0.01 °C 단위 signed 온도를 저장하고 구독자에게 알립니다. */
+        [[nodiscard]] bool setTemperature(std::int16_t hundredths_celsius) noexcept;
+
+        /** @brief 마지막 온도를 0.01 °C 단위로 반환합니다. */
+        [[nodiscard]] std::int16_t temperature() const noexcept;
+
+        /** @brief 0.01 % 단위 0~10000 습도를 저장하고 구독자에게 알립니다. */
+        [[nodiscard]] bool setHumidity(std::uint16_t hundredths_percent) noexcept;
+
+        /** @brief 마지막 습도를 0.01 % 단위로 반환합니다. */
+        [[nodiscard]] std::uint16_t humidity() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+    };
+
 } // namespace nucode::ble
 
 /** @brief NU54DK의 단일 BLE security manager입니다. */
@@ -396,5 +498,17 @@ extern nucode::ble::DeviceInformationService BLEDeviceInformation;
 
 /** @brief NU54DK의 암호화 BLE HID keyboard facade입니다. */
 extern nucode::ble::HidKeyboard BLEKeyboard;
+
+/** @brief NU54DK의 암호화 BLE HID mouse facade입니다. */
+extern nucode::ble::HidMouse BLEMouse;
+
+/** @brief NU54DK의 암호화 BLE HID consumer-control facade입니다. */
+extern nucode::ble::HidConsumerControl BLEConsumerControl;
+
+/** @brief NU54DK의 표준 BLE Heart Rate Service facade입니다. */
+extern nucode::ble::HeartRateService BLEHeartRate;
+
+/** @brief NU54DK의 표준 BLE Environmental Sensing Service facade입니다. */
+extern nucode::ble::EnvironmentalSensingService BLEEnvironmentalSensing;
 
 #endif

@@ -26,7 +26,9 @@ namespace nucode::ble::internal::security
 
     using nucode::ble::BondState;
     using nucode::ble::DeviceInformation;
+    using nucode::ble::ConsumerControlReport;
     using nucode::ble::KeyboardReport;
+    using nucode::ble::MouseReport;
     using nucode::ble::OobRole;
     using nucode::ble::PeerAddress;
     using nucode::ble::SecurityConfig;
@@ -144,6 +146,7 @@ namespace nucode::ble::internal::security
     struct HidState
     {
         atomic_t hid_initialized = ATOMIC_INIT(0);
+        atomic_t hid_profile_mask = ATOMIC_INIT(0);
         atomic_t hid_error_value = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityError::none));
         atomic_t hid_driver_error_value = ATOMIC_INIT(0);
         struct k_spinlock hid_state_lock;
@@ -202,6 +205,10 @@ namespace nucode::ble::internal::security
     bool requireThreadContext() noexcept;
     void recordSecurityError(SecurityError error, int driver_error = 0) noexcept;
     void recordHidError(SecurityError error, int driver_error = 0) noexcept;
+    bool initializeHidProfile(std::uint8_t profile_mask) noexcept;
+    bool sendHidReport(std::uint8_t profile_mask, std::uint8_t report_index,
+                       const void *data, std::size_t length, bool keyboard_boot) noexcept;
+    bool hidProfileConnected(std::uint8_t profile_mask) noexcept;
     BondState currentBondState() noexcept;
     BondState currentBondState(struct bt_conn *connection) noexcept;
     void setBondLifecycle(const bt_addr_le_t *peer, BondState state,

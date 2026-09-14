@@ -527,17 +527,36 @@ int main(int argc, char **argv)
         assert(mock_hids_parameters.is_kb && mock_hids_parameters.info.bcd_hid == 0x0111);
         assert(mock_hids_parameters.info.flags ==
                (BT_HIDS_REMOTE_WAKE | BT_HIDS_NORMALLY_CONNECTABLE));
-        assert(mock_hids_parameters.inp_rep_group_init.cnt == 1);
+        assert(mock_hids_parameters.inp_rep_group_init.cnt == 3);
         assert(mock_hids_parameters.inp_rep_group_init.reports[0].id == 1);
         assert(mock_hids_parameters.inp_rep_group_init.reports[0].size == 8);
-        assert(mock_hids_parameters.rep_map.size == 47 &&
+        assert(mock_hids_parameters.inp_rep_group_init.reports[1].id == 2);
+        assert(mock_hids_parameters.inp_rep_group_init.reports[1].size == 4);
+        assert(mock_hids_parameters.inp_rep_group_init.reports[2].id == 3);
+        assert(mock_hids_parameters.inp_rep_group_init.reports[2].size == 2);
+        assert(mock_hids_parameters.rep_map.size > 47 &&
                mock_hids_parameters.rep_map.data[0] == 0x05);
+        assert(BLEMouse.begin());
+        assert(BLEConsumerControl.begin());
+        assert(!BLEMouse.begin() && BLEMouse.lastError() == SecurityError::busy);
         assert(!BLEKeyboard.press(4));
         connection->security = BT_SECURITY_L2;
         assert(BLEKeyboard.press(4, 2) && !mock_hids_boot);
+        assert(mock_hids_report_index == 0 && mock_hids_report_size == 8);
         assert(mock_hids_data[0] == 2 && mock_hids_data[2] == 4);
+        assert(BLEMouse.move(4, -3, 1, 1));
+        assert(mock_hids_report_index == 1 && mock_hids_report_size == 4);
+        assert(mock_hids_data[0] == 1 && mock_hids_data[1] == 4);
+        assert(!BLEMouse.move(0, 0, 0, 0x80));
+        assert(BLEConsumerControl.press(0x00e9));
+        assert(mock_hids_report_index == 2 && mock_hids_report_size == 2);
+        assert(mock_hids_data[0] == 0xe9 && mock_hids_data[1] == 0);
+        assert(!BLEConsumerControl.press(0x0400));
         mock_hids_parameters.pm_evt_handler(BT_HIDS_PM_EVT_BOOT_MODE_ENTERED, connection);
         assert(BLEKeyboard.releaseAll() && mock_hids_boot && mock_hids_data[2] == 0);
+        assert(!BLEMouse.releaseAll() && BLEMouse.lastError() == SecurityError::invalid_state);
+        assert(!BLEConsumerControl.release() &&
+               BLEConsumerControl.lastError() == SecurityError::invalid_state);
         assert(!BLEKeyboard.press(0x66));
         mock_hids_send_error = -EACCES;
         assert(!BLEKeyboard.press(4) && BLEKeyboard.lastError() == SecurityError::not_subscribed);

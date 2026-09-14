@@ -23,9 +23,8 @@ extern "C"
     /** @brief SDK enum을 C++에 노출하지 않는 protocol mode callback입니다. */
     typedef void (*nucode_ble_hids_protocol_callback)(bool boot_mode, struct bt_conn *connection);
 
-    /** @brief 기존 keyboard descriptor와 protocol callback으로 정적 HIDS를 초기화합니다. */
+    /** @brief keyboard·mouse·consumer descriptor와 protocol callback으로 정적 HIDS를 초기화합니다. */
     int nucode_ble_hids_initialize(const uint8_t *report_map, size_t report_map_size,
-                                   uint8_t report_id, uint8_t report_index,
                                    nucode_ble_hids_protocol_callback callback);
 
     /** @brief exact connection을 정적 HIDS에 등록합니다. */

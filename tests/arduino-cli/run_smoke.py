@@ -37,6 +37,7 @@ ARDUINO_TESTS = (
     "m21",
     "m28",
     "m29",
+    "m30",
     "ac02b",
     "ac03",
     "examples",
@@ -46,7 +47,7 @@ ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
-    "v0.5.0": ("m29",),
+    "v0.5.0": ("m29", "m30"),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
@@ -1468,7 +1469,6 @@ def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             raise SmokeFailure(
                 f"BLE security feature was not selected: {security_sketch}"
             )
-
     optional_examples = (
         (
             "NUCODE_BLE_LegacySigning",
@@ -1503,6 +1503,48 @@ def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             if feature_id not in features:
                 raise SmokeFailure(
                     f"M29 optional feature was not selected: {feature_id}: {sketch}"
+                )
+
+
+## @brief M30 mouse·consumer-control·HRS·ESS 예제를 Security profile로 빌드합니다.
+def test_m30_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    library = repository / "libraries" / "NUCODE_BLE_Security"
+    for example_name in (
+        "SecureMouse",
+        "SecureConsumerControl",
+        "HeartRate",
+        "EnvironmentalSensing",
+    ):
+        sketch = library / "examples" / example_name
+        project_name = f"{example_name}.ino"
+        if not (sketch / project_name).is_file():
+            raise SmokeFailure(f"incomplete M30 profile example: {sketch}")
+        build = root / f"build-ble-{example_name.lower()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(command)
+        context = assert_build(build, project_name)
+        if context.get("profile") != "ble":
+            raise SmokeFailure(f"M30 profile example did not use BLE profile: {sketch}")
+        selected_features = {
+            item.get("id")
+            for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if "nucode.ble.security" not in selected_features:
+            raise SmokeFailure(f"M30 Security feature was not selected: {sketch}")
+        configuration = (
+            Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+        ).read_text(encoding="utf-8")
+        for symbol in (
+            "CONFIG_BT_HIDS",
+            "CONFIG_BT_HIDS_DEFAULT_PERM_RW_ENCRYPT",
+            "CONFIG_BT_HRS",
+            "CONFIG_BT_HRS_DEFAULT_PERM_RW_ENCRYPT",
+        ):
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(
+                    f"M30 profile symbol is disabled: {example_name}: {symbol}"
                 )
 
 
@@ -1751,6 +1793,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m21": test_m21_example,
                 "m28": test_m28_examples,
                 "m29": test_m29_examples,
+                "m30": test_m30_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

@@ -224,4 +224,6 @@ inline int mock_hids_init_error = 0, mock_hids_attach_error = 0, mock_hids_detac
            mock_hids_send_error = 0;
 inline unsigned mock_hids_attach_calls = 0, mock_hids_detach_calls = 0, mock_hids_send_calls = 0;
 inline bool mock_hids_boot = false;
+inline std::uint8_t mock_hids_report_index = 0;
+inline std::size_t mock_hids_report_size = 0;
 inline std::uint8_t mock_hids_data[8]{};
