@@ -70,19 +70,21 @@ class CapabilityCase:
     peripheral_io: int
     central_io: int
     method: str
+    security_level: int
 
 
 CASES = (
-    CapabilityCase("no_io", "no_input_output", 0, 0, "just_works"),
-    CapabilityCase("display_keyboard", "display_keyboard", 1, 2, "passkey_entry"),
-    CapabilityCase("keyboard_display", "keyboard_display", 2, 1, "passkey_entry"),
-    CapabilityCase("yes_no", "display_yes_no", 3, 3, "numeric_comparison"),
+    CapabilityCase("no_io", "no_input_output", 0, 0, "just_works", 2),
+    CapabilityCase("display_keyboard", "display_keyboard", 1, 2, "passkey_entry", 4),
+    CapabilityCase("keyboard_display", "keyboard_display", 2, 1, "passkey_entry", 4),
+    CapabilityCase("yes_no", "display_yes_no", 3, 3, "numeric_comparison", 4),
     CapabilityCase(
         "keyboard_display_full",
         "keyboard_display_full",
         4,
         4,
         "numeric_comparison",
+        4,
     ),
 )
 
@@ -390,7 +392,7 @@ def collect_round(
                 "case": case.case_name,
                 "round": str(round_index),
                 "method": case.method,
-                "level": "4",
+                "level": str(case.security_level),
                 "key_size": "16",
                 "paired": "1",
                 "unexpected_auth_failures": "0",
@@ -517,7 +519,7 @@ def execute_case(
                     "round": round_index,
                     "nonce_sha256": hashlib.sha256(nonce.encode("ascii")).hexdigest(),
                     "method": case.method,
-                    "security_level": 4,
+                    "security_level": case.security_level,
                     "key_size": 16,
                     "unexpected_auth_failures": 0,
                 }

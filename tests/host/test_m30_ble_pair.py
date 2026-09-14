@@ -34,13 +34,17 @@ class M30BlePairTests(unittest.TestCase):
         }
         self.assertEqual(values, set(range(5)))
         self.assertEqual(PAIR.ROUNDS_PER_CAPABILITY, 10)
+        self.assertEqual(PAIR.CASES[0].security_level, 2)
+        self.assertTrue(all(case.security_level == 4 for case in PAIR.CASES[1:]))
 
-    def test_target_uses_sc_l4_exact_handle_and_runtime_key_size(self) -> None:
-        """! @brief 합성 PASS 대신 실제 generation·L4·암호화 key 길이를 검사합니다. """
+    def test_target_uses_sc_levels_exact_handle_and_runtime_key_size(self) -> None:
+        """! @brief Just Works L2와 MITM L4·exact generation·key 길이를 검사합니다. """
 
         source = TARGET_PATH.read_text(encoding="utf-8")
         for token in (
             "SecurityLevel::secure_connections",
+            "SecurityLevel::encrypted",
+            "expectedSecurityLevel()",
             "BLESecurity.requestSecurity(connection_handle)",
             "BLESecurity.acceptPairing(event.connection, true)",
             "BLESecurity.confirmPasskey(event.connection, true)",

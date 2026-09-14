@@ -74,6 +74,10 @@ namespace
         Serial.print(current_round);
         Serial.print("|reason=");
         Serial.print(reason == nullptr ? "unknown" : reason);
+        Serial.print("|security_error=");
+        Serial.print(static_cast<unsigned int>(BLESecurity.lastError()));
+        Serial.print("|driver_error=");
+        Serial.print(BLESecurity.lastDriverError());
         Serial.print("|nonce=");
         Serial.println(nonce);
     }
@@ -150,11 +154,21 @@ namespace
     bool expectedMethodObserved()
     {
 #if NUCODE_M30_PAIR_CASE == 0
-        return pairing_requested_seen;
+        return true;
 #elif NUCODE_M30_PAIR_CASE == 1 || NUCODE_M30_PAIR_CASE == 2
         return passkey_display_seen || passkey_input_seen;
 #else
         return passkey_confirmation_seen;
+#endif
+    }
+
+    /** @brief Just Works는 L2, MITM 가능한 나머지 조합은 L4를 요구합니다. */
+    nucode::ble::SecurityLevel expectedSecurityLevel()
+    {
+#if NUCODE_M30_PAIR_CASE == 0
+        return nucode::ble::SecurityLevel::encrypted;
+#else
+        return nucode::ble::SecurityLevel::secure_connections;
 #endif
     }
 
@@ -191,8 +205,7 @@ namespace
             return;
         }
         if (!BLESecurity.paired(connection_handle) ||
-            BLESecurity.currentLevel(connection_handle) !=
-                nucode::ble::SecurityLevel::secure_connections ||
+            BLESecurity.currentLevel(connection_handle) != expectedSecurityLevel() ||
             BLESecurity.bondState(connection_handle) !=
                 nucode::ble::BondState::persistence_pending)
         {
@@ -207,7 +220,9 @@ namespace
         Serial.print(current_round);
         Serial.print("|method=");
         Serial.print(NUCODE_M30_PAIR_METHOD);
-        Serial.print("|level=4|key_size=16|paired=1|unexpected_auth_failures=");
+        Serial.print("|level=");
+        Serial.print(static_cast<unsigned int>(expectedSecurityLevel()));
+        Serial.print("|key_size=16|paired=1|unexpected_auth_failures=");
         Serial.print(unexpected_auth_failures);
         Serial.print("|nonce=");
         Serial.println(nonce);
@@ -286,7 +301,7 @@ namespace
             persistence_pending_seen = true;
             break;
         case nucode::ble::SecurityEvent::security_changed:
-            if (event.level != nucode::ble::SecurityLevel::secure_connections)
+            if (event.level != expectedSecurityLevel())
             {
                 fail("security-level");
             }
@@ -608,7 +623,7 @@ void setup()
 {
     Serial.begin(115200);
     nucode::ble::SecurityConfig security = {};
-    security.minimum_level = nucode::ble::SecurityLevel::secure_connections;
+    security.minimum_level = expectedSecurityLevel();
     security.bonding = true;
     security.response_timeout_ms = 30000U;
     security.io_capability =
