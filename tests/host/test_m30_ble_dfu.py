@@ -82,10 +82,12 @@ class M30SecureBleDfuTests(unittest.TestCase):
         for token in (
             "BLEConnection.requestMtu(connection_handle)",
             'Serial.print("|LINK|role=central|level=4|key_size=16|mtu=247|smp=1")',
+            'Serial.print("|BOOT|role=peripheral|active_area_id=")',
             '::strcmp(line, "M30DFU|1|READY?")',
             "NUCODE_M30_DFU_AUTO_CONFIRM",
         ):
             self.assertIn(token, source)
+        self.assertEqual(HIL_RUNNER.PRIMARY_FLASH_AREA_ID, 1)
         self.assertNotIn("power_cut", source.casefold())
 
     def test_hil_runner_cbor_round_trip_is_strict(self) -> None:

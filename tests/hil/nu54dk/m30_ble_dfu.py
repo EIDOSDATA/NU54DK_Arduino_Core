@@ -65,6 +65,7 @@ MCUBOOT_HASH_TLV = 0x10
 MCUBOOT_TLV_INFO_MAGIC = 0x6907
 MCUBOOT_PROTECTED_TLV_INFO_MAGIC = 0x6908
 SLOT_SIZE = 729088
+PRIMARY_FLASH_AREA_ID = 1
 PROTOCOL = b"M30DFU|1|"
 MAX_SMP_PACKET = 244
 MAX_TRANSCRIPT_BYTES = 8 * 1024 * 1024
@@ -116,7 +117,7 @@ class CentralBuild:
 class BootRecord:
     """! @brief peripheral BOOT protocol에서 읽은 실행 image 상태입니다. """
 
-    active_slot: int
+    active_area_id: int
     confirmed: int
     auto_confirm: int
     version: tuple[int, int, int, int]
@@ -621,7 +622,7 @@ BEGIN_PATTERN = re.compile(
     rb"^M30DFU\|1\|BEGIN\|role=(peripheral|central)\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
 )
 BOOT_PATTERN = re.compile(
-    rb"^M30DFU\|1\|BOOT\|role=peripheral\|active_slot=(\d+)\|confirmed=(\d+)"
+    rb"^M30DFU\|1\|BOOT\|role=peripheral\|active_area_id=(\d+)\|confirmed=(\d+)"
     rb"\|auto_confirm=(\d+)\|version=(\d+)\.(\d+)\.(\d+)\+(\d+)"
     rb"\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
 )
@@ -996,7 +997,7 @@ def validate_boot(
     """! @brief 실행 image version·confirm mode·active slot을 검증합니다. """
 
     if (
-        record.active_slot != 0
+        record.active_area_id != PRIMARY_FLASH_AREA_ID
         or record.version != version
         or record.confirmed != confirmed
         or record.auto_confirm != auto_confirm

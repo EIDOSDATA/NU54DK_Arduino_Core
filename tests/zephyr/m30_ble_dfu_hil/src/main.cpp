@@ -163,7 +163,7 @@ namespace
     {
         const nucode::ble::SecureDfuImageVersion version = BLESecureDfu.version();
         Serial.print(protocol);
-        Serial.print("|BOOT|role=peripheral|active_slot=");
+        Serial.print("|BOOT|role=peripheral|active_area_id=");
         Serial.print(BLESecureDfu.activeSlot());
         Serial.print("|confirmed=");
         Serial.print(BLESecureDfu.confirmed() ? 1 : 0);
