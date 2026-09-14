@@ -69,6 +69,7 @@ class M30PowerLossTests(unittest.TestCase):
             prepare_only=False,
             execute_power_cuts=False,
             flash_preflight=False,
+            reset_bond_storage=False,
             journal=None,
             evidence=None,
             phase_timeout=1800.0,
@@ -85,6 +86,25 @@ class M30PowerLossTests(unittest.TestCase):
         base.journal = "journal.json"
         base.evidence = "evidence.json"
         RUNNER.validate_options(base)
+        base.execute_power_cuts = False
+        base.prepare_only = True
+        base.reset_bond_storage = True
+        with self.assertRaisesRegex(RUNNER.M30PowerFailure, "flash-preflight"):
+            RUNNER.validate_options(base)
+
+    def test_bond_storage_reset_is_exact_sector_only(self) -> None:
+        """! @brief stale bond 정리는 고정 storage sector만 대상으로 합니다. """
+
+        with mock.patch.object(RUNNER, "run_pyocd") as run:
+            RUNNER.erase_bond_storage("secret-board", 30.0)
+        command = run.call_args.args[0]
+        self.assertIn("--sector", command)
+        self.assertIn(
+            f"{hex(RUNNER.STORAGE_OFFSET)}-{hex(RUNNER.STORAGE_END)}", command
+        )
+        self.assertNotIn("--mass", command)
+        self.assertNotIn("--chip", command)
+        self.assertNotIn("--recover", command)
 
     def test_physical_cycle_requires_both_interfaces_to_disappear(self) -> None:
         """! @brief reset처럼 MSD·UART가 유지되면 실제 power cycle로 인정하지 않습니다. """

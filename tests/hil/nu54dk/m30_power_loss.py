@@ -56,6 +56,8 @@ from m30_ble_dfu import (  # noqa: E402
 from m30_mcuboot import (  # noqa: E402
     M30BootFailure,
     erase_secondary_slot,
+    pyocd_command_prefix,
+    run_pyocd,
     validate_private_key,
 )
 from m6_serial_echo import (  # noqa: E402
@@ -83,6 +85,9 @@ TOTAL_CUTS = len(INJECTION_POINTS) * CUTS_PER_POINT
 CONFIRMED_VERSION = (40, 0, 0, 0)
 UNCONFIRMED_VERSION = (41, 0, 0, 0)
 RETRY_VERSION = (42, 0, 0, 0)
+STORAGE_OFFSET = 0x174000
+STORAGE_SIZE = 0x9000
+STORAGE_END = STORAGE_OFFSET + STORAGE_SIZE
 POWER_STATE_PATTERN = re.compile(
     rb"^M30POWER\|1\|STATE\|bond_count=(\d+)\|rejected_bonds=(\d+)"
     rb"\|bonded=(\d+)\|settings_valid=(\d+)$"
@@ -136,6 +141,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     modes.add_argument("--prepare-only", action="store_true")
     modes.add_argument("--execute-power-cuts", action="store_true")
     parser.add_argument("--flash-preflight", action="store_true")
+    parser.add_argument("--reset-bond-storage", action="store_true")
     parser.add_argument("--confirmed-build-outdir", required=True)
     parser.add_argument("--unconfirmed-build-outdir", required=True)
     parser.add_argument("--central-build-outdir", required=True)
@@ -170,6 +176,10 @@ def validate_options(args: argparse.Namespace) -> None:
         raise M30PowerFailure("실행 mode 하나를 명시해야 합니다.")
     if args.flash_preflight and not args.prepare_only:
         raise M30PowerFailure("--flash-preflight는 --prepare-only와 함께 사용해야 합니다.")
+    if args.reset_bond_storage and not (args.prepare_only and args.flash_preflight):
+        raise M30PowerFailure(
+            "--reset-bond-storage는 --prepare-only --flash-preflight와 함께 사용해야 합니다."
+        )
     if args.execute_power_cuts and (not args.journal or not args.evidence):
         raise M30PowerFailure("실제 전원 시험에는 --journal과 --evidence가 필요합니다.")
     if not 120.0 <= args.phase_timeout <= 1800.0:
@@ -620,6 +630,37 @@ def read_power_state(
     raise M30PowerFailure("M30POWER STATE 응답 timeout")
 
 
+def validate_storage_partition(build_root: Path) -> None:
+    """! @brief build devicetree의 storage 범위가 고정 erase 범위와 같은지 검사합니다. """
+
+    candidates = (
+        build_root / "m30_ble_dfu_hil/zephyr/zephyr.dts",
+        build_root / "zephyr/zephyr.dts",
+    )
+    devicetree = next((path for path in candidates if path.is_file()), None)
+    if devicetree is None:
+        raise M30PowerFailure("build devicetree에서 storage partition을 확인할 수 없습니다.")
+    source = devicetree.read_text(encoding="utf-8", errors="strict")
+    pattern = re.compile(
+        rf"storage_partition:\s+partition@{STORAGE_OFFSET:x}\s*\{{.*?"
+        rf"reg\s*=\s*<\s*0x{STORAGE_OFFSET:x}\s+0x{STORAGE_SIZE:x}\s*>;",
+        re.DOTALL,
+    )
+    if pattern.search(source) is None:
+        raise M30PowerFailure("build devicetree의 storage partition 범위가 다릅니다.")
+
+
+def erase_bond_storage(board_id: str, timeout_seconds: float) -> None:
+    """! @brief stale bond 정리를 위해 storage partition의 exact sector만 지웁니다. """
+
+    command = (
+        *pyocd_command_prefix("erase", board_id),
+        "--sector",
+        f"{hex(STORAGE_OFFSET)}-{hex(STORAGE_END)}",
+    )
+    run_pyocd(command, "bond storage exact-sector erase", timeout_seconds)
+
+
 def reopen_peripheral(session: DfuSession) -> None:
     """! @brief 재연결된 동일 target UART를 기존 BLE session에 다시 엽니다. """
 
@@ -771,6 +812,19 @@ def preflight(
 ) -> dict[str, Any]:
     """! @brief 실제 cut 없이 flash·L4·settings·DFU retry 준비 상태를 검증합니다. """
 
+    storage_reset = {
+        "performed": False,
+        "boards": 0,
+        "offset": STORAGE_OFFSET,
+        "size": STORAGE_SIZE,
+    }
+    if args.reset_bond_storage:
+        validate_storage_partition(confirmed.root)
+        validate_storage_partition(central_build.root)
+        erase_bond_storage(peripheral.board_id, args.flash_timeout)
+        erase_bond_storage(central.board_id, args.flash_timeout)
+        storage_reset["performed"] = True
+        storage_reset["boards"] = 2
     flash_results = normalize_boards(
         peripheral,
         central,
@@ -799,6 +853,7 @@ def preflight(
         "encryption_key_bytes": 16,
         "state": state,
         "dfu_retry": retry,
+        "bond_storage_reset": storage_reset,
         "physical_power_cuts": 0,
     }
 
