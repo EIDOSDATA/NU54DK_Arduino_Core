@@ -21,7 +21,7 @@ if(NOT revision_result EQUAL 0 OR NOT revision_length EQUAL 40 OR
   message(FATAL_ERROR "M30 boot Core revision query failed: ${revision_error}")
 endif()
 
-target_sources(app PRIVATE src/main.c)
+target_sources(app PRIVATE src/main.cpp)
 target_compile_definitions(app PRIVATE
   M30_BOOT_CORE_REVISION="${M30_BOOT_CORE_REVISION}"
 )

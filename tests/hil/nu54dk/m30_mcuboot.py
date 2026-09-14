@@ -600,6 +600,26 @@ def query_ready(
     return wait_ready(serial_port, pending, capture, deadline, core_revision)
 
 
+def synchronize_ready(
+    serial_port: Any,
+    pending: bytearray,
+    capture: bytearray,
+    deadline: float,
+    core_revision: str,
+) -> ReadyRecord:
+    """! @brief port-open reset의 자동 READY 뒤에만 명령 전송을 시작합니다. """
+
+    startup_deadline = min(deadline, time.monotonic() + 5.0)
+    try:
+        return wait_ready(
+            serial_port, pending, capture, startup_deadline, core_revision
+        )
+    except M30BootFailure as error:
+        if "UART token timeout" not in str(error):
+            raise
+    return query_ready(serial_port, pending, capture, deadline, core_revision)
+
+
 def warm_reboot(
     serial_port: Any,
     pending: bytearray,
@@ -655,7 +675,11 @@ def exercise_current_image(
     with open_serial(serial_module, endpoint, baud) as serial_port:
         serial_port.reset_input_buffer()
         pending = bytearray()
-        records.append(query_ready(serial_port, pending, capture, deadline, core_revision))
+        records.append(
+            synchronize_ready(
+                serial_port, pending, capture, deadline, core_revision
+            )
+        )
         for _index in range(reboots):
             records.append(
                 warm_reboot(serial_port, pending, capture, deadline, core_revision)
@@ -676,7 +700,9 @@ def exercise_candidate(
     with open_serial(serial_module, endpoint, baud) as serial_port:
         serial_port.reset_input_buffer()
         pending = bytearray()
-        baseline = query_ready(serial_port, pending, capture, deadline, core_revision)
+        baseline = synchronize_ready(
+            serial_port, pending, capture, deadline, core_revision
+        )
         if baseline.version != PRIMARY_VERSION:
             raise M30BootFailure(f"candidate 전 primary version이 다릅니다: {baseline}")
         request_test_upgrade(serial_port, pending, capture, deadline, core_revision)

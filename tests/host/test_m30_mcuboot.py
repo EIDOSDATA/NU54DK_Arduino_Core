@@ -169,7 +169,7 @@ class M30McubootContractTests(unittest.TestCase):
         """! @brief target이 confirm·warm reboot·test upgrade 명령만 제공함을 검증합니다. """
 
         target = (
-            REPOSITORY / "tests/zephyr/m30_mcuboot_hil/src/main.c"
+            REPOSITORY / "tests/zephyr/m30_mcuboot_hil/src/main.cpp"
         ).read_text(encoding="utf-8")
         for token in (
             "boot_write_img_confirmed()",
@@ -177,8 +177,8 @@ class M30McubootContractTests(unittest.TestCase):
             "boot_read_bank_header(",
             "boot_request_upgrade(BOOT_UPGRADE_TEST)",
             "sys_reboot(SYS_REBOOT_WARM)",
-            'strcmp(command, "M30BOOT|1|REBOOT")',
-            '"|version=%u.%u.%u+%u"',
+            '::strcmp(line, "M30BOOT|1|REBOOT")',
+            'Serial.print("|version=")',
         ):
             self.assertIn(token, target)
         self.assertNotIn("power_cut", target.casefold())
