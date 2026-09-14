@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import struct
@@ -340,6 +341,7 @@ def create_wrong_key_image(
             capture_output=True,
             timeout=60.0,
             check=False,
+            env=imgtool_environment(imgtool_python),
         )
     except (OSError, subprocess.TimeoutExpired) as error:
         raise M30BootFailure(f"wrong-key image 생성 실패: {error}") from error
@@ -349,6 +351,44 @@ def create_wrong_key_image(
         )
         raise M30BootFailure(f"wrong-key image 서명 실패: {message}")
     return immutable_image(output, expected_version=WRONG_KEY_VERSION)
+
+
+def imgtool_environment(imgtool_python: Path) -> dict[str, str]:
+    """! @brief imgtool 자식에만 NCS toolchain Python 환경을 격리합니다. """
+
+    bundle = imgtool_python.resolve().parents[2]
+    descriptor = bundle / "environment.json"
+    try:
+        document = json.loads(descriptor.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise M30BootFailure(f"toolchain environment를 읽지 못했습니다: {error}") from error
+    specifications = document.get("env_vars")
+    if not isinstance(specifications, list):
+        raise M30BootFailure("toolchain environment의 env_vars가 배열이 아닙니다.")
+    environment = os.environ.copy()
+    for specification in specifications:
+        if not isinstance(specification, dict):
+            raise M30BootFailure("toolchain environment 항목이 객체가 아닙니다.")
+        key = specification.get("key")
+        if not isinstance(key, str) or not key:
+            raise M30BootFailure("toolchain environment key가 잘못됐습니다.")
+        if specification.get("type") == "relative_paths":
+            values = specification.get("values")
+            if not isinstance(values, list) or not all(
+                isinstance(value, str) for value in values
+            ):
+                raise M30BootFailure(f"toolchain environment path가 잘못됐습니다: {key}")
+            value = os.pathsep.join(str(bundle / item) for item in values)
+            if specification.get("existing_value_treatment") == "prepend_to":
+                existing = environment.get(key)
+                if existing:
+                    value = f"{value}{os.pathsep}{existing}"
+        else:
+            value = specification.get("value")
+            if not isinstance(value, str):
+                raise M30BootFailure(f"toolchain environment value가 잘못됐습니다: {key}")
+        environment[key] = value
+    return environment
 
 
 def pyocd_command_prefix(subcommand: str, board_id: str) -> tuple[str, ...]:

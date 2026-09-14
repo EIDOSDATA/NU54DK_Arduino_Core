@@ -234,6 +234,18 @@ class M30McubootContractTests(unittest.TestCase):
         self.assertNotIn('"--chip"', source)
         self.assertIn('"physical_power_loss_claim": False', source)
 
+    def test_imgtool_environment_is_scoped_to_child_process(self) -> None:
+        """! @brief NCS Python 환경을 현재 host Python에 섞지 않습니다. """
+
+        python = Path("C:/ncs/toolchains/dcbdc366a1/opt/bin/python.exe")
+        if not python.is_file():
+            self.skipTest("고정 NCS toolchain Python이 없습니다.")
+        previous = os.environ.get("PYTHONPATH")
+        child = HIL_MODULE.imgtool_environment(python)
+        self.assertIn("PYTHONPATH", child)
+        self.assertEqual(os.environ.get("PYTHONPATH"), previous)
+        self.assertEqual(child["ZEPHYR_TOOLCHAIN_VARIANT"], "zephyr/gnu")
+
 
 if __name__ == "__main__":
     unittest.main()
