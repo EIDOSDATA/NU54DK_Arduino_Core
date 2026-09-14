@@ -99,10 +99,12 @@ class M30BleMultiTests(unittest.TestCase):
             "validate_build_record",
             "validate_image_unchanged",
             "ThreadPoolExecutor(max_workers=3)",
+            '"board_id_sha256"',
             '"security_operations_per_link": 100',
             '"power_cut_executed": False',
         ):
             self.assertIn(token, source)
+        self.assertNotIn('"daplink_uid"', source)
 
     def test_canonical_transcripts_pass(self) -> None:
         results = {

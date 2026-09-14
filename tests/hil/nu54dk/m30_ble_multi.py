@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -356,12 +357,15 @@ def execute_three_board(
 
 
 def _board(endpoint: RoleEndpoint) -> dict[str, str]:
-    """! @brief evidence용 DAP/UART/MSD identity를 복사합니다. """
+    """! @brief raw UID를 공개하지 않고 endpoint exact identity를 기록합니다. """
 
+    volume = endpoint.volume.root.drive.upper()
+    if len(volume) != 2 or volume[1] != ":":
+        raise BlePairHilFailure("DAPLink volume이 Windows drive root가 아닙니다.")
     return {
-        "daplink_uid": endpoint.board_id,
-        "msd_root": str(endpoint.volume.root),
-        "uart_port": endpoint.port_name,
+        "board_id_sha256": hashlib.sha256(endpoint.board_id.encode("ascii")).hexdigest(),
+        "volume": volume,
+        "port": endpoint.port_name,
     }
 
 
@@ -461,7 +465,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     print(
         "NU54DK M30-W07 discovery SUCCESS: "
         + ", ".join(
-            f"{role}={endpoints[role].board_id}/{endpoints[role].port_name}"
+            f"{role}={_board(endpoints[role])['board_id_sha256'][:12]}/"
+            f"{endpoints[role].port_name}"
             for role in ROLES
         )
     )
