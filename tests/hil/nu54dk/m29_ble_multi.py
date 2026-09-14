@@ -525,6 +525,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         )
         for role in ROLES:
             validate_image_unchanged(images[role], image_sizes[role], image_hashes[role])
+            transcript_paths[role].write_bytes(getattr(execution, role).transcript)
         results = {
             role: parse_role_transcript(
                 getattr(execution, role).transcript, role, nonce, core_revision
@@ -532,8 +533,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
             for role in ROLES
         }
         validate_three_role_session(results)
-        for role in ROLES:
-            transcript_paths[role].write_bytes(getattr(execution, role).transcript)
         evidence = _evidence(
             core_revision=core_revision,
             board_revision=board_revision,

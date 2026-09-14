@@ -47,6 +47,18 @@ class M29BleMultiParserTests(unittest.TestCase):
         self.assertEqual(results["mixed"].connections, 2)
         self.assertEqual(results["mixed"].coc_tx, 2000)
 
+    def test_link_precedes_progress_and_result(self) -> None:
+        lines = expected_lines("peripheral", NONCE, REVISION)
+        link_index = next(index for index, line in enumerate(lines) if "|LINK|" in line)
+        progress_index = next(
+            index for index, line in enumerate(lines) if "|PROGRESS|" in line
+        )
+        result_index = next(
+            index for index, line in enumerate(lines) if "|RESULT|" in line
+        )
+        self.assertLess(link_index, progress_index)
+        self.assertLess(progress_index, result_index)
+
     def test_rejects_missing_record(self) -> None:
         records = expected_lines("mixed", NONCE, REVISION)
         self.assert_rejected(("\n".join(records[:3] + records[4:]) + "\n").encode())
