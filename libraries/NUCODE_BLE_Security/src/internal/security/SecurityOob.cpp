@@ -201,20 +201,30 @@ namespace nucode::ble::internal::security
             return;
         }
 
-        struct bt_le_oob_sc_data local = {};
-        struct bt_le_oob_sc_data remote = {};
+        struct bt_le_oob_sc_data *local = nullptr;
+        struct bt_le_oob_sc_data *remote = nullptr;
+        key = k_spin_lock(&oobState().lock);
+        OobSlot &active = oobState().slots[roleIndex(role)];
         if (local_required)
         {
-            ::memcpy(local.r, snapshot.local.random, sizeof(local.r));
-            ::memcpy(local.c, snapshot.local.confirm, sizeof(local.c));
+            ::memcpy(active.native_local.r, snapshot.local.random,
+                     sizeof(active.native_local.r));
+            ::memcpy(active.native_local.c, snapshot.local.confirm,
+                     sizeof(active.native_local.c));
+            local = &active.native_local;
         }
         if (remote_required)
         {
-            ::memcpy(remote.r, snapshot.remote.random, sizeof(remote.r));
-            ::memcpy(remote.c, snapshot.remote.confirm, sizeof(remote.c));
+            ::memcpy(active.native_remote.r, snapshot.remote.random,
+                     sizeof(active.native_remote.r));
+            ::memcpy(active.native_remote.c, snapshot.remote.confirm,
+                     sizeof(active.native_remote.c));
+            remote = &active.native_remote;
         }
-        const int result = bt_le_oob_set_sc_data(connection, local_required ? &local : nullptr,
-                                                  remote_required ? &remote : nullptr);
+        k_spin_unlock(&oobState().lock, key);
+
+        /* Zephyr SMP가 pairing 종료까지 이 포인터를 보관하므로 역할 slot 수명이 필요합니다. */
+        const int result = bt_le_oob_set_sc_data(connection, local, remote);
         if (result != 0)
         {
             rejectOob(connection, result, 6U);

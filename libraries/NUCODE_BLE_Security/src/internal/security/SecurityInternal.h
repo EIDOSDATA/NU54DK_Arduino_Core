@@ -44,6 +44,8 @@ namespace nucode::ble::internal::security
         OobRole role = OobRole::peripheral;
         SecureConnectionsOobRecord local = {};
         SecureConnectionsOobRecord remote = {};
+        struct bt_le_oob_sc_data native_local = {};
+        struct bt_le_oob_sc_data native_remote = {};
         bool local_valid = false;
         bool remote_valid = false;
     };

@@ -373,6 +373,7 @@ namespace
         case nucode::ble::SecurityEvent::pairing_failed:
         case nucode::ble::SecurityEvent::timeout:
         case nucode::ble::SecurityEvent::error:
+            authentication_reason = event.reason;
             fail("authentication");
             break;
         default:

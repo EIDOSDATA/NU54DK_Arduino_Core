@@ -64,11 +64,15 @@ class M30BleOobBondTests(unittest.TestCase):
         internal = INTERNAL_HEADER.read_text(encoding="utf-8")
         source = OOB_SOURCE.read_text(encoding="utf-8")
         self.assertIn("OobSlot slots[maximum_security_links]", internal)
+        self.assertIn("struct bt_le_oob_sc_data native_local", internal)
+        self.assertIn("struct bt_le_oob_sc_data native_remote", internal)
         self.assertIn("frame_bytes = 74U", PUBLIC_HEADER.read_text(encoding="utf-8"))
         for token in (
             "crc32(buffer, frame_crc_offset)",
             "bt_le_oob_get_local(BT_ID_DEFAULT, &native)",
             "bt_le_oob_set_sc_data(connection",
+            "local = &active.native_local",
+            "remote = &active.native_remote",
             "sameAddress(snapshot.local.pairing_address, local_address)",
             "sameAddress(snapshot.remote.pairing_address, remote_address)",
             "bt_conn_auth_cancel(connection)",
