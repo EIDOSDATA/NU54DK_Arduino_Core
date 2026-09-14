@@ -85,8 +85,8 @@
     {"id": "bond_privacy_migration", "source_status": "candidate_present", "implementation_status": "completed_physical_hil", "source_references": ["libraries/NUCODE_BLE_Security/src/internal/SecurityInternal.h"]},
     {"id": "adopted_profiles", "source_status": "candidate_present", "implementation_status": "completed_physical_hil", "source_references": ["libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h"]},
     {"id": "mcuboot_signed_image", "source_status": "candidate_present", "implementation_status": "completed_physical_hil", "source_references": ["zephyr/share/sysbuild/images/bootloader/Kconfig"]},
-    {"id": "mcumgr_ble_transport", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["zephyr/subsys/mgmt/mcumgr/transport/Kconfig.bluetooth"]},
-    {"id": "dfu_rollback_recovery", "source_status": "candidate_present", "implementation_status": "planned", "source_references": ["nrf/samples/dfu/smp_svr_mini_boot"]}
+    {"id": "mcumgr_ble_transport", "source_status": "candidate_present", "implementation_status": "completed_authenticated_physical_hil", "source_references": ["zephyr/subsys/mgmt/mcumgr/transport/Kconfig.bluetooth", "libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.h"]},
+    {"id": "dfu_rollback_recovery", "source_status": "candidate_present", "implementation_status": "completed_reset_rollback_hil_power_pending", "source_references": ["nrf/samples/dfu/smp_svr_mini_boot", "libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.h"]}
   ],
   "resource_contract": {
     "security_link_contexts": 2,
@@ -105,8 +105,8 @@
     {"id": "M30-W03", "status": "completed", "title": "wired_oob_bond_privacy_nfc_adapter", "host_contract_tests": 13, "target_builds": 4, "wired_oob_pairings": 20, "mitm_links": 20, "mismatched_payload_accepts": 0, "bonded_reconnects": 20, "privacy_rotations": 3, "metadata_migrations": 1, "stale_key_accepts": 0, "nfc_rf": "not_run_by_scope_decision", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-284254c7-oob/m30-oob-evidence.central.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.central.transcript.log"]},
     {"id": "M30-W04", "status": "completed", "title": "adopted_profile_catalog", "host_contract_tests": 6, "arduino_examples_built": 4, "target_builds": 2, "catalog_entries": 7, "operations_per_service": 100, "payload_errors": 0, "driver_errors": 0, "tested_core_revision": "d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.json", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.central.transcript.log"]},
     {"id": "M30-W05", "status": "completed", "title": "mcuboot_layout_signing", "host_contract_tests": 10, "arduino_examples_built": 1, "target_builds": 2, "signed_boots": 20, "unsigned_accepts": 0, "wrong_key_accepts": 0, "tested_core_revision": "b16b44f405ee8617a675cae9f5dfcc027f03816a", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w05-b16b44f4-boot/m30-boot-01.json", "00_Docs/04_검증 기록/evidence/m30-w05-b16b44f4-boot/m30-boot-01.transcript.log"]},
-    {"id": "M30-W06", "status": "in_progress", "title": "secure_ble_dfu_negative_rollback"},
-    {"id": "M30-W07", "status": "not_started", "title": "integrated_hil_before_power_loss"},
+    {"id": "M30-W06", "status": "completed", "title": "secure_ble_dfu_negative_rollback", "host_contract_tests": 8, "target_builds": 3, "successful_updates": 10, "image_hash_mismatches": 0, "unconfirmed_boots": 0, "negative_classes": 5, "negative_attempts_per_class": 20, "invalid_image_accepts": 0, "rollback_accepts": 0, "tested_core_revision": "df9ea2a3ee5111c350364a938409021d379810e2", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.central.transcript.log"]},
+    {"id": "M30-W07", "status": "in_progress", "title": "integrated_hil_before_power_loss"},
     {"id": "M30-W08", "status": "blocked_by_power_hil", "title": "power_recovery_regression_documents_ci"}
   ],
   "host_work_packages": [
@@ -126,8 +126,8 @@
     {"id": "M30-BOND-01", "boards": 2, "timeout_seconds": 900, "status": "passed", "criteria": {"bonded_reconnects": 20, "privacy_rotations": 3, "stale_key_accepts": 0}, "tested_core_revision": "83a4d11a20e6d16ed0db56382c20133f448cff91", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w03-83a4d11a-bond/m30-bond-evidence.central.transcript.log"]},
     {"id": "M30-PROFILE-01", "boards": 2, "timeout_seconds": 900, "status": "passed", "criteria": {"catalog_entries": 7, "operations_per_service": 100, "payload_errors": 0}, "tested_core_revision": "d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.json", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w04-d2a0b968-profile/m30-profile-01.central.transcript.log"]},
     {"id": "M30-BOOT-01", "boards": 1, "timeout_seconds": 900, "status": "passed", "criteria": {"signed_boots": 20, "unsigned_accepts": 0, "wrong_key_accepts": 0}, "tested_core_revision": "b16b44f405ee8617a675cae9f5dfcc027f03816a", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w05-b16b44f4-boot/m30-boot-01.json", "00_Docs/04_검증 기록/evidence/m30-w05-b16b44f4-boot/m30-boot-01.transcript.log"]},
-    {"id": "M30-DFU-01", "boards": 2, "timeout_seconds": 1200, "status": "not_run", "criteria": {"successful_updates": 10, "image_hash_mismatches": 0, "unconfirmed_boots": 0}},
-    {"id": "M30-DFU-NEG-01", "boards": 2, "timeout_seconds": 1200, "status": "not_run", "criteria": {"negative_classes": 5, "repetitions_per_class": 20, "invalid_image_accepts": 0, "rollback_accepts": 0}},
+    {"id": "M30-DFU-01", "boards": 2, "timeout_seconds": 1200, "status": "passed", "criteria": {"successful_updates": 10, "image_hash_mismatches": 0, "unconfirmed_boots": 0}, "tested_core_revision": "df9ea2a3ee5111c350364a938409021d379810e2", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.central.transcript.log"]},
+    {"id": "M30-DFU-NEG-01", "boards": 2, "timeout_seconds": 1200, "status": "passed", "criteria": {"negative_classes": 5, "repetitions_per_class": 20, "invalid_image_accepts": 0, "rollback_accepts": 0}, "tested_core_revision": "df9ea2a3ee5111c350364a938409021d379810e2", "evidence_files": ["00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.json", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.peripheral.transcript.log", "00_Docs/04_검증 기록/evidence/m30-w06-df9ea2a3-dfu/m30-dfu-evidence.central.transcript.log"]},
     {"id": "M30-MULTI-01", "boards": 3, "timeout_seconds": 1200, "status": "not_run", "criteria": {"simultaneous_links": 2, "security_operations_per_link": 100, "cross_link_events": 0}},
     {"id": "M30-POWER-01", "boards": 2, "timeout_seconds": 1800, "status": "blocked_human_power_cut", "criteria": {"injection_points": 4, "cuts_per_point": 3, "recovery_failures": 0, "invalid_image_boots": 0}}
   ],
@@ -140,9 +140,9 @@
     "manual_power_cut_required": true
   },
   "completion": {
-    "completed_work_packages": 5,
+    "completed_work_packages": 6,
     "total_work_packages": 8,
-    "passed_test_ids": 6,
+    "passed_test_ids": 8,
     "total_test_ids": 10,
     "current_stop_boundary": "before_m30_power_01_physical_cut",
     "power_hil": "not_run"

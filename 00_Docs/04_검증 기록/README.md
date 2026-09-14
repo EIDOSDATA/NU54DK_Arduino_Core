@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W06 진행**입니다. M29는 작업 묶음 **8/8**,
-test ID **10/10 PASS**이고 M30은 작업 묶음 **5/8**, test ID **6/10 PASS**입니다.
+**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W07 진행**입니다. M29는 작업 묶음 **8/8**,
+test ID **10/10 PASS**이고 M30은 작업 묶음 **6/8**, test ID **8/10 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
@@ -12,6 +12,7 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **5/8**, test ID **6/10 PASS**
 
 | 기록 | 용도 |
 | --- | --- |
+| [157 — M30-W06 secure BLE DFU·negative·rollback 완료](157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md) | 인증 BLE update 10/10·negative 5×20·invalid/rollback accept 0 |
 | [156 — M30-W05 MCUboot layout·서명 완료](156_M30_W05_MCUboot_layout_signing_완료.md) | 별도 secure profile·외부 ECDSA P-256, signed boot 20/20·unsigned/wrong-key accept 0 |
 | [155 — M30-W04 일곱 BLE profile 완료](155_M30_W04_7개_BLE_profile_완료.md) | BAS·DIS·HID 3종·HRS·ESS, 두 보드 서비스별 100회·오류 0 PASS |
 | [152 — M30-W01 capability 실기 완료](152_M30_W01_capability_실기_완료.md) | Host parser·target build·1보드 보안/OOB/profile/DFU capability 7/7 PASS |
@@ -116,6 +117,7 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **5/8**, test ID **6/10 PASS**
 - [154 — M30-W03 유선 OOB·bond/privacy·NFC adapter 완료](<154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md>) — **OOB·BOND 실기 PASS, NFC RF NOT RUN, M30 3/8**
 - [155 — M30-W04 일곱 BLE profile 완료](<155_M30_W04_7개_BLE_profile_완료.md>) — **catalog 7/7·서비스별 100회·오류 0, M30 4/8**
 - [156 — M30-W05 MCUboot layout·서명 완료](<156_M30_W05_MCUboot_layout_signing_완료.md>) — **signed boot 20/20·unsigned/wrong-key accept 0, M30 5/8**
+- [157 — M30-W06 secure BLE DFU·negative·rollback 완료](<157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md>) — **update 10/10·negative 5×20·invalid/rollback accept 0, M30 6/8**
 
 </details>
 

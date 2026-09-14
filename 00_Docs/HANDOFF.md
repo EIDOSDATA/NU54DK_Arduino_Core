@@ -1,10 +1,10 @@
-# 개발 인계 — M30-W06 진행·HOST-W01~W03 완료
+# 개발 인계 — M30-W07 진행·HOST-W01~W03 완료
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
 OS/adapter 상호운용 완료를 뜻하지 않습니다. M30-W01 capability, W02 link별 security·pairing,
-W03 유선 OOB·bond/privacy, W04 일곱 BLE profile과 W05 MCUboot layout·서명을 완료했고 현재
-구현 지점은 **M30-W06 secure BLE DFU·negative·rollback**입니다.
+W03 유선 OOB·bond/privacy, W04 일곱 BLE profile, W05 MCUboot layout·서명과 W06 secure BLE
+DFU·negative·rollback을 완료했고 현재 구현 지점은 **M30-W07 세 보드 통합 HIL**입니다.
 병행한 **HOST-W01~W03 inventory·Host resolver·launcher**도 완료했습니다.
 M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 시험에서만 사람 개입을 요청합니다.
 
@@ -21,12 +21,13 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
 | M29 W07-D/E | 세 보드 MULTI·M19/M20/M21/M28 회귀 PASS — exact `16eb8fce…` |
 | M29 상호운용 | Windows 11·Intel Bluetooth·WinRT 기본 GATT PASS — exact `a964ae20…` |
 | M29 W08 최종 재검증 | 분할 후 세 role build·3보드 MULTI PASS — exact `ab3f85d3…` |
-| M30 | W01~W05 완료·W06 진행, 작업 묶음 5/8·test ID 6/10 PASS |
+| M30 | W01~W06 완료·W07 진행, 작업 묶음 6/8·test ID 8/10 PASS |
 | M30 W01 | exact `6254398c…`, parser 13/13·target 1/1·실제 capability 7/7 PASS |
 | M30 W02 | exact `4f91e347…`, target 10/10·IO capability 5종 × 10회 = 50/50 PASS |
 | M30 W03 | OOB exact `284254c7…` 20/20·MITM 20/20, BOND exact `83a4d11a…` reconnect 20/20·RPA 3·migration 1·stale accept 0 |
 | M30 W04 | exact `d2a0b968…`, profile 7/7·서비스별 100 operation·payload/driver 오류 0 |
 | M30 W05 | exact `b16b44f4…`, signed boot 20/20·unsigned/wrong-key accept 0·power cut 0 |
+| M30 W06 | exact `df9ea2a3…`, authenticated BLE update 10/10·negative 5×20·invalid/rollback accept 0·power cut 0 |
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M30 자동 중단점 | `M30-POWER-01` 실제 target USB 전원 차단 직전 |
@@ -92,9 +93,10 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
 5. 완료된 W05 exact `b16b44f4…`의 별도 `secure_ble_dfu` profile, MCUboot dual-slot, 외부
    ECDSA P-256 키 정책과 signed boot 20/20·unsigned/wrong-key accept 0 증거를 보존합니다.
    실제 전원 차단은 수행하지 않았습니다.
-6. W06에서 인증·암호화된 SMP over BLE 정상 update 10회와 다섯 negative class 각 20회,
-   invalid/rollback accept 0을 Host → target build → 두 보드 HIL 순서로 검증합니다.
-7. W07 3보드 통합 HIL과 회귀까지 완료한 뒤 `M30-POWER-01` 실제 전원 차단 주입 직전에
+6. 완료된 W06 exact `df9ea2a3…`의 인증 BLE update 10/10, negative 5종 × 20회와
+   invalid/rollback accept 0 증거를 보존합니다. reset은 실제 전원 차단 증거가 아닙니다.
+7. W07 3보드 통합 HIL과 CAP~MULTI 회귀까지 완료한 뒤 `M30-POWER-01` image·runner·manifest를
+   준비하고 실제 전원 차단 주입 직전에
    중단합니다.
 
 고정 결과는 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과

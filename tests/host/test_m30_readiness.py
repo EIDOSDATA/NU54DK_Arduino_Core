@@ -123,7 +123,15 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertEqual(packages[4]["wrong_key_accepts"], 0)
         for relative in packages[4]["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
-        self.assertEqual(packages[5]["status"], "in_progress")
+        self.assertEqual(packages[5]["status"], "completed")
+        self.assertEqual(packages[5]["successful_updates"], 10)
+        self.assertEqual(packages[5]["negative_classes"], 5)
+        self.assertEqual(packages[5]["negative_attempts_per_class"], 20)
+        self.assertEqual(packages[5]["invalid_image_accepts"], 0)
+        self.assertEqual(packages[5]["rollback_accepts"], 0)
+        for relative in packages[5]["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        self.assertEqual(packages[6]["status"], "in_progress")
         self.assertEqual(packages[-1]["status"], "blocked_by_power_hil")
         host_packages = self.readiness["host_work_packages"]
         self.assertEqual(len(host_packages), 8)
@@ -154,6 +162,10 @@ class M30ReadinessTests(unittest.TestCase):
         bond = next(entry for entry in plan if entry["id"] == "M30-BOND-01")
         profile = next(entry for entry in plan if entry["id"] == "M30-PROFILE-01")
         boot = next(entry for entry in plan if entry["id"] == "M30-BOOT-01")
+        dfu = next(entry for entry in plan if entry["id"] == "M30-DFU-01")
+        dfu_negative = next(
+            entry for entry in plan if entry["id"] == "M30-DFU-NEG-01"
+        )
         self.assertEqual(capability["status"], "passed")
         for relative in capability["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
@@ -213,6 +225,28 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertFalse(boot_evidence["physical_power_loss_claim"])
         self.assertFalse(boot_evidence["power_cut_injected"])
         self.assertFalse(boot_evidence["mass_erase_or_recover"])
+        for entry in (dfu, dfu_negative):
+            self.assertEqual(entry["status"], "passed")
+            for relative in entry["evidence_files"]:
+                self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        dfu_evidence = json.loads(
+            (REPOSITORY / dfu["evidence_files"][0]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(dfu_evidence["status"], "passed")
+        self.assertEqual(dfu_evidence["core_revision"], dfu["tested_core_revision"])
+        self.assertEqual(dfu_evidence["results"]["M30-DFU-01"]["updates"], 10)
+        self.assertEqual(
+            dfu_evidence["results"]["M30-DFU-01"]["hash_mismatches"], 0
+        )
+        negative_result = dfu_evidence["results"]["M30-DFU-NEG-01"]
+        self.assertEqual(len(negative_result["classes"]), 5)
+        for result in negative_result["classes"].values():
+            self.assertEqual(result["attempts"], 20)
+            self.assertEqual(result["invalid_accepts"], 0)
+        self.assertEqual(negative_result["rollback_accepts"], 0)
+        self.assertFalse(dfu_evidence["physical_power_loss_claim"])
+        self.assertFalse(dfu_evidence["power_cut_injected"])
+        self.assertFalse(dfu_evidence["mass_erase_or_recover"])
         self.assertEqual(power["status"], "blocked_human_power_cut")
         self.assertEqual(power["criteria"]["injection_points"], 4)
         self.assertEqual(power["criteria"]["cuts_per_point"], 3)
@@ -220,8 +254,8 @@ class M30ReadinessTests(unittest.TestCase):
             self.readiness["completion"]["current_stop_boundary"],
             "before_m30_power_01_physical_cut",
         )
-        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 5)
-        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 6)
+        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 6)
+        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 8)
 
     def test_profile_catalog_and_equipment_scope_are_explicit(self) -> None:
         """! @brief 기존/신규 profile과 세 보드·전원 장비 경계를 검사합니다. """
