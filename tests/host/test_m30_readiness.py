@@ -131,7 +131,16 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertEqual(packages[5]["rollback_accepts"], 0)
         for relative in packages[5]["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
-        self.assertEqual(packages[6]["status"], "in_progress")
+        self.assertEqual(packages[6]["status"], "completed")
+        self.assertEqual(packages[6]["host_contract_tests"], 7)
+        self.assertEqual(packages[6]["target_builds"], 3)
+        self.assertEqual(packages[6]["simultaneous_links"], 2)
+        self.assertEqual(packages[6]["security_operations_per_link"], 100)
+        self.assertEqual(packages[6]["cross_link_events"], 0)
+        self.assertEqual(packages[6]["security_errors"], 0)
+        self.assertEqual(packages[6]["key_size_errors"], 0)
+        for relative in packages[6]["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
         self.assertEqual(packages[-1]["status"], "blocked_by_power_hil")
         host_packages = self.readiness["host_work_packages"]
         self.assertEqual(len(host_packages), 8)
@@ -166,6 +175,7 @@ class M30ReadinessTests(unittest.TestCase):
         dfu_negative = next(
             entry for entry in plan if entry["id"] == "M30-DFU-NEG-01"
         )
+        multi = next(entry for entry in plan if entry["id"] == "M30-MULTI-01")
         self.assertEqual(capability["status"], "passed")
         for relative in capability["evidence_files"]:
             self.assertTrue((REPOSITORY / relative).is_file(), relative)
@@ -247,6 +257,28 @@ class M30ReadinessTests(unittest.TestCase):
         self.assertFalse(dfu_evidence["physical_power_loss_claim"])
         self.assertFalse(dfu_evidence["power_cut_injected"])
         self.assertFalse(dfu_evidence["mass_erase_or_recover"])
+        self.assertEqual(multi["status"], "passed")
+        self.assertEqual(multi["criteria"]["simultaneous_links"], 2)
+        self.assertEqual(multi["criteria"]["security_operations_per_link"], 100)
+        for relative in multi["evidence_files"]:
+            self.assertTrue((REPOSITORY / relative).is_file(), relative)
+        multi_evidence = json.loads(
+            (REPOSITORY / multi["evidence_files"][0]).read_text(encoding="utf-8")
+        )
+        self.assertEqual(multi_evidence["status"], "passed")
+        self.assertEqual(multi_evidence["core_revision"], multi["tested_core_revision"])
+        self.assertEqual(multi_evidence["coverage"]["simultaneous_links"], 2)
+        self.assertEqual(
+            multi_evidence["coverage"]["security_operations_per_link"], 100
+        )
+        self.assertEqual(multi_evidence["coverage"]["cross_link_events"], 0)
+        self.assertEqual(multi_evidence["coverage"]["security_errors"], 0)
+        self.assertEqual(multi_evidence["coverage"]["key_size_errors"], 0)
+        self.assertFalse(multi_evidence["safety"]["power_cut_executed"])
+        self.assertFalse(multi_evidence["safety"]["mass_erase_requested"])
+        for endpoint in multi_evidence["boards"].values():
+            self.assertNotIn("board_id", endpoint)
+            self.assertRegex(endpoint["board_id_sha256"], r"^[0-9a-f]{64}$")
         self.assertEqual(power["status"], "blocked_human_power_cut")
         self.assertEqual(power["criteria"]["injection_points"], 4)
         self.assertEqual(power["criteria"]["cuts_per_point"], 3)
@@ -254,8 +286,8 @@ class M30ReadinessTests(unittest.TestCase):
             self.readiness["completion"]["current_stop_boundary"],
             "before_m30_power_01_physical_cut",
         )
-        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 6)
-        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 8)
+        self.assertEqual(self.readiness["completion"]["completed_work_packages"], 7)
+        self.assertEqual(self.readiness["completion"]["passed_test_ids"], 9)
 
     def test_profile_catalog_and_equipment_scope_are_explicit(self) -> None:
         """! @brief 기존/신규 profile과 세 보드·전원 장비 경계를 검사합니다. """
