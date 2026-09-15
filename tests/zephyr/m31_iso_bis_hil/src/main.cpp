@@ -584,7 +584,11 @@ namespace
         {
             transmit_qos.sdu = CONFIG_BT_ISO_TX_MTU;
             transmit_qos.phy = BT_GAP_LE_PHY_2M;
+#if defined(M31_BIS_TIME_SYNC)
+            transmit_qos.rtn = 2U;
+#else
             transmit_qos.rtn = 1U;
+#endif
             qos.tx = &transmit_qos;
             const struct bt_le_adv_param advertising_parameter =
                 BT_LE_ADV_PARAM_INIT(BT_LE_ADV_OPT_EXT_ADV,
