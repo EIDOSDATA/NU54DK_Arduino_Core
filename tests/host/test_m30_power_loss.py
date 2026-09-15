@@ -553,7 +553,7 @@ class M30PowerLossTests(unittest.TestCase):
         runner = RUNNER_PATH.read_text(encoding="utf-8")
         self.assertIn("MGMT_EVT_OP_IMG_MGMT_DFU_PENDING", source)
         self.assertIn("M30POWER|1|WINDOW|point=image_validation_write", source)
-        self.assertIn("k_msleep(15000)", source)
+        self.assertIn("k_msleep(60000)", source)
         self.assertIn("CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS=y", peripheral_conf)
         self.assertGreaterEqual(
             runner.count('wait_window(session, "image_validation_write", deadline)'),
@@ -561,7 +561,7 @@ class M30PowerLossTests(unittest.TestCase):
         )
         self.assertIn("MCUBOOT_STATUS_UPGRADING", hook)
         self.assertIn("M30POWER|1|WINDOW|point=mcuboot_test_swap", hook)
-        self.assertIn("k_sleep(K_SECONDS(15))", hook)
+        self.assertIn("k_sleep(K_SECONDS(60))", hook)
         self.assertIn("CONFIG_MCUBOOT_ACTION_HOOKS=y", power_conf)
         boot_conf = (TARGET / "sysbuild/mcuboot.conf").read_text(encoding="utf-8")
         self.assertIn("CONFIG_FLASH=y", boot_conf)

@@ -211,7 +211,7 @@ namespace
         if (event == MGMT_EVT_OP_IMG_MGMT_DFU_PENDING)
         {
             Serial.println("M30POWER|1|WINDOW|point=image_validation_write");
-            k_msleep(15000);
+            k_msleep(60000);
         }
         return MGMT_CB_OK;
     }

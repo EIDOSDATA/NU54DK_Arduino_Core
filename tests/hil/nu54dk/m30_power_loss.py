@@ -196,7 +196,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--flash-timeout", type=float, default=120.0)
     parser.add_argument("--phase-timeout", type=float, default=1800.0)
     parser.add_argument("--power-cycle-timeout", type=float, default=120.0)
-    parser.add_argument("--window-cut-timeout", type=float, default=12.0)
+    parser.add_argument("--window-cut-timeout", type=float, default=45.0)
     parser.add_argument("--absence-stable", type=float, default=0.75)
     parser.add_argument("--trust-signing-key", required=True)
     parser.add_argument("--imgtool-python", required=True)
@@ -229,8 +229,8 @@ def validate_options(args: argparse.Namespace) -> None:
         raise M30PowerFailure("flash·power cycle timeout은 0보다 커야 합니다.")
     if not 0.5 <= args.absence_stable <= 5.0:
         raise M30PowerFailure("--absence-stable은 0.5..5.0초여야 합니다.")
-    if not 2.0 <= args.window_cut_timeout < 15.0:
-        raise M30PowerFailure("--window-cut-timeout은 2초 이상 15초 미만이어야 합니다.")
+    if not 2.0 <= args.window_cut_timeout < 60.0:
+        raise M30PowerFailure("--window-cut-timeout은 2초 이상 60초 미만이어야 합니다.")
 
 
 def build_nonce(explicit: str | None, index: int = 0) -> str:

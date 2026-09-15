@@ -15,6 +15,6 @@ void mcuboot_status_change(mcuboot_status_type_t status)
     if (status == MCUBOOT_STATUS_UPGRADING)
     {
         printk("M30POWER|1|WINDOW|point=mcuboot_test_swap\n");
-        k_sleep(K_SECONDS(15));
+        k_sleep(K_SECONDS(60));
     }
 }
