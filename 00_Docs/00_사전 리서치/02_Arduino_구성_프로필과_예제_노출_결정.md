@@ -93,16 +93,18 @@ Loaderless 제품선의 기본값은 **단일 application이 영구 저장소를
 layout**이다. 향후 boot/update 기능을 사용하지 않는 사용자에게 MCUboot 예약과 두 번째 image
 slot 비용을 기본으로 부과하지 않는다.
 
-향후 `v0.5.0` M30은 BLE DFU에 필요한 최소 MCUboot·signed update·rollback 기반을 먼저
-설계·검증한다. 이 단계에서 제한된 고정 layout과 제공 경로(profile 또는 application template)를
-선택하며, 현재 `v0.4.1` profile에 boot 영역이나 update slot을 추가한다는 뜻은 아니다.
+`v0.5.0` 개발 M30은 제한된 고정 layout과 별도 `secure_ble_dfu` profile을 선택해 최소 MCUboot·
+signed update·BLE update·rollback 경로를 구현했다. 이는 현재 설치·지원 `v0.4.1` profile에
+boot 영역이나 update slot을 추가한다는 뜻은 아니다.
 
 `v0.6.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
 선택으로 확장하는 후속 계획이다. Layout 선택은 단순 Devicetree 조각이 아니라 code partition,
 linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 계약이다.
 Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공하며, 전문가 `app.overlay`도 같은 충돌
-검사와 linker assertion을 통과할 때만 지원 조합으로 인정한다. M30과 M36 모두 아직 미착수이며,
-M30의 선행 결정·완료 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다.
+검사와 linker assertion을 통과할 때만 지원 조합으로 인정한다. M30은 W01~W07 완료·W08 미완료,
+M36은 미착수다. M30의 현재 중단 상태와 재개 선행조건은
+[v0.5.0 착수 계획](../TODO_v0.5.0.md)과
+[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)에서 관리한다.
 
 ---
 

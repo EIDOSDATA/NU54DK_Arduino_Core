@@ -1,13 +1,14 @@
-# 개발 인계 — M30-W08 준비 완료·첫 실제 전원 차단 대기
+# 개발 인계 — M30-W08 사용자 중단·재개 준비 복구 필요
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
 OS/adapter 상호운용 완료를 뜻하지 않습니다. M30-W01 capability, W02 link별 security·pairing,
 W03 유선 OOB·bond/privacy, W04 일곱 BLE profile, W05 MCUboot layout·서명과 W06 secure BLE
 DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했고 W08의 image·runner·manifest와
-두 보드 preflight까지 통과했습니다. 현재 구현 지점은 **M30-W08 `M30-POWER-01` 첫 실제 전원 차단 직전**입니다.
+두 보드 preflight까지 당시 통과했습니다. 현재 구현 지점은 **M30-W08 `M30-POWER-01` 사용자 중단**입니다.
+2026-09-15 문서 검토에서 필수 image 3개 부재를 확인했으므로 즉시 전원 시험을 시작할 수 없습니다.
 병행한 **HOST-W01~W03 inventory·Host resolver·launcher**도 완료했습니다.
-M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 시험에서만 사람 개입을 요청합니다.
+문서 개정은 개발·HIL 재개 허가가 아닙니다. 다음 개발 요청 시 아래 재개 순서와 사람 준비 확인을 먼저 적용합니다.
 
 ## 1. 현재 체크포인트
 
@@ -22,7 +23,7 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
 | M29 W07-D/E | 세 보드 MULTI·M19/M20/M21/M28 회귀 PASS — exact `16eb8fce…` |
 | M29 상호운용 | Windows 11·Intel Bluetooth·WinRT 기본 GATT PASS — exact `a964ae20…` |
 | M29 W08 최종 재검증 | 분할 후 세 role build·3보드 MULTI PASS — exact `ab3f85d3…` |
-| M30 | W01~W07 완료·W08 준비/preflight PASS, 작업 묶음 7/8·test ID 9/10 PASS |
+| M30 | W01~W07 완료, 작업 묶음 7/8·test ID 9/10 PASS. W08 중단·재개 준비 복구 필요 |
 | M30 W01 | exact `6254398c…`, parser 13/13·target 1/1·실제 capability 7/7 PASS |
 | M30 W02 | exact `4f91e347…`, target 10/10·IO capability 5종 × 10회 = 50/50 PASS |
 | M30 W03 | OOB exact `284254c7…` 20/20·MITM 20/20, BOND exact `83a4d11a…` reconnect 20/20·RPA 3·migration 1·stale accept 0 |
@@ -33,7 +34,7 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
 | M30 W08 준비 | exact `05b639b4…`, target 3/3·두 보드 저장영역 초기화·DFU retry preflight PASS·실제 전원 차단 0회 |
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
-| M30 자동 중단점 | `M30-POWER-01` 실제 target USB 전원 차단 직전 |
+| M30 현재 중단점 | 사용자 중단. 재개 도구·산출물·preflight 복구 → 사람 준비 확인 → 실제 차단 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
 | Host 구현 상태 | HOST-W01~W03 완료, HOST-W04~W08 미착수 |
 
@@ -98,11 +99,16 @@ M30은 `M30-POWER-01` 실제 전원 차단 직전까지 자동 진행하고 그 
    실제 전원 차단은 수행하지 않았습니다.
 6. 완료된 W06 exact `df9ea2a3…`의 인증 BLE update 10/10, negative 5종 × 20회와
    invalid/rollback accept 0 증거를 보존합니다. reset은 실제 전원 차단 증거가 아닙니다.
-7. 완료된 W07 exact `d94f5ec3…`의 세 role build와 `M30-MULTI-01` 증거를 보존합니다. Target
-   UART는 DAPLink interface 3을 자동 탐색하며 E/F/G의 당시 mapping은 COM13/COM14/COM10입니다.
-8. `M30-POWER-01` exact `05b639b4…`의 image·runner·두 보드 manifest와 네 주입 지점별 3회 절차는
-   준비됐습니다. [159번 기록](<04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>)의 경계를 보존하고
-   runner가 첫 `slot1_transfer` window를 arm하면 Peripheral DUT의 target USB를 실제로 분리·재연결합니다.
+7. 완료된 W07 exact `d94f5ec3…`의 세 role build와 `M30-MULTI-01` 증거를 보존합니다.
+   당시 COM mapping을 현재 장비에 자동 적용하지 않습니다. W07 L2·16-byte key와 DFU L4는 별도 조건입니다.
+8. [159번 기록](<04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>)의 exact `05b639b4…`
+   준비/preflight PASS는 역사적 근거로 보존합니다. 현재 산출물 부재·재개 조건은
+   [160번 기록](<04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)을 따릅니다.
+9. [개정 실행 순서](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의
+   W08-A source/manifest 검증·실행 환경 안정화 → B 확정 source의 image/manifest 재생성·preflight를 먼저 완료합니다.
+10. B 결과를 보고하고 사람의 준비 확인 후에만 C의 네 지점 × 3회 주입을 arm합니다.
+    배터리·별도 전원·역급전을 확인해 실제 DUT 전원 상실이 성립해야 합니다.
+    이어 D의 영향 회귀·문서/기계 원장·CI가 끝나야 W08과 M30을 완료합니다.
 
 고정 결과는 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
 [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)에 있다. 실제 OOB carrier는

@@ -9,7 +9,7 @@
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M30 상태 | **W01~W07 완료, W08 실제 전원 HIL 준비** |
+| M30 상태 | **W01~W07 완료, W08 사용자 중단·재개 준비 복구 필요** |
 | 기계 원장 | [`m30-ble-readiness.json`](../../variants/nu54dk/m30-ble-readiness.json) |
 
 이 문서는 M30 구현 전에 보안 정책, OOB carrier, profile catalog, MCUboot layout, 신뢰키와 열 개의
@@ -137,5 +137,19 @@ runner 지시에 맞춰 다시 연결하는 것이다. DAPLink reset, CPU reset,
 bond가 구조적으로 유효하며 DFU 재시도가 가능해야 한다. Programmable USB power switch가 확인되면
 같은 protocol로 자동 주입할 수 있지만 현재는 이를 가정하지 않는다.
 
-M30-W08과 M30 완료는 이 실제 시험 뒤에만 판정한다. 그 전까지 `M30-POWER-01`은
-`blocked_human_power_cut`, M30은 `in_progress`다.
+M30-W08과 M30 완료는 이 실제 시험과 영향 회귀·문서·CI 마감 뒤에만 판정한다.
+기계 원장의 `blocked_human_power_cut`과 M30 `in_progress`는 미완료 상태를 뜻하며
+현재 image/manifest가 즉시 재사용 가능하다는 보증이 아니다.
+
+### 8.1 2026-09-15 재개 조건 보완
+
+현재 W08은 사용자 중단, 실제 전원 차단 0/12다. 과거 `05b639b4…` 준비/preflight PASS는
+[159번 기록](<../04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>)에 보존한다.
+현재 필수 image 부재와 재개 검증 보강은 [160번 기록](<../04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)을 따른다.
+
+재개 순서는 [개정 실행 계획](18_문서_전면검토와_개선_마일스톤.md)의 W08-A 도구·provenance 안정화,
+B 확정 source의 image/manifest 재생성·preflight, 사람 준비 확인, C 실제 주입, D 회귀·마감이다.
+A~D는 W08 내부 작업이므로 기존 8개 작업·10개 test ID·12회 주입 기준을 변경하지 않는다.
+Runner는 사람이 준비됐다고 확인하기 전 주입 window를 열지 않아야 한다.
+USB/COM 소멸 외에 배터리·별도 전원·역급전 조건을 확인해 DUT의 실제 전원 상실을 성립시킨다.
+문서 개정은 중단된 build/flash/HIL의 재개 허가가 아니다.

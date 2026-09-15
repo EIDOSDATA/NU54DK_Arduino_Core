@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GATT-001 |
-| 문서 개정 | 1.5 |
+| 문서 개정 | 1.6 |
 | 문서 상태 | v0.4.1 정식 GATT 계약과 v0.5.0 M29 개발 확장 |
 | 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile, `v0.5.0` 개발 source |
-| 최종 갱신일 | 2026-09-14 |
+| 최종 갱신일 | 2026-09-15 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
@@ -173,7 +173,8 @@ deprecated/experimental 등급을 안정 기능으로 바꾸지 않는다.
 
 후속 통합은 exact `16eb8fce…`에서 3보드 `M29-MULTI-01`·`M29-REG-01`을 PASS했고,
 exact `a964ae20…`에서 Windows WinRT peer 교차 제조사 GATT 상호운용을 PASS했다.
-이로써 M29는 작업 묶음 8/8(100%), test ID 10/10이며 다음 개발 단계는 M30이다.
+이로써 M29는 작업 묶음 8/8(100%), test ID 10/10을 완료했다. 후속 M30의 현재 진행·중단 상태는
+[v0.5.0 TODO](../TODO_v0.5.0.md)를 따른다.
 세부 API·자원과 단계별·완료 exact 원본은
 [M29 계약](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
 [147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>),

@@ -9,7 +9,7 @@
 | 공식 사용자 OS | Windows 10/11 x64 |
 
 이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.4.1` 계약이다. `v0.5.0`부터 Windows와
-함께 Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 지원하며 구현·검증 순서는
+함께 Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 지원하는 것이 목표이며 구현·검증 순서는
 [다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다. 검증 전 Linux/macOS
 명령을 현재 설치 절차로 추정하지 않는다.
 

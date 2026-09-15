@@ -1,7 +1,7 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W08 전원 HIL 준비·preflight 완료**입니다. M29는 작업 묶음 **8/8**,
+**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W08 사용자 중단·재개 준비 복구 필요**입니다. M29는 작업 묶음 **8/8**,
 test ID **10/10 PASS**이고 M30은 작업 묶음 **7/8**, test ID **9/10 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
@@ -12,6 +12,7 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **7/8**, test ID **9/10 PASS**
 
 | 기록 | 용도 |
 | --- | --- |
+| [160 — 전체 문서 검토와 마일스톤 개정](160_전체_문서_검토와_마일스톤_개정.md) | 현황 모순 교정, 과거 준비/현재 재개 조건 분리, W08 내부 gate·M33 예제·후속 ARF 배치 |
 | [159 — M30-W08 전원 HIL 주입 직전 준비](159_M30_W08_전원_HIL_주입_직전_준비.md) | 세 role build·두 보드 preflight PASS, 네 지점 × 3회 계획, 실제 전원 차단 0회 |
 | [158 — M30-W07 3보드 secure multi-link 완료](158_M30_W07_3보드_secure_multi_link_완료.md) | 동시 두 link·handle별 보안 연산 총 400회·cross-link/security/key-size 오류 0 |
 | [157 — M30-W06 secure BLE DFU·negative·rollback 완료](157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md) | 인증 BLE update 10/10·negative 5×20·invalid/rollback accept 0 |

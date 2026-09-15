@@ -4,7 +4,7 @@
 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
 **M28은 W01~W08·9개 test ID, M29는 W01~W08·10개 test ID를 완료했다. M30은 W01~W07과
 `M30-CAP-01`부터 `M30-MULTI-01`까지 9개 test ID를 완료했고 W08 전원 HIL 준비·preflight를 통과했으며
-HOST-W01~W03도 완료했다.
+HOST-W01~W03도 완료했다. 현재 W08은 사용자 중단 상태로 재개 준비 복구가 필요하며 실제 차단은 0/12다.
 M31~M33은 미착수**다. M28·M29 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
@@ -13,6 +13,7 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M28~M45 순서·전체 상태 | [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>) |
 | BLE 기능군별 목표·완료 조건 | [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>) |
 | v0.5.0 착수 체크·결정 상태 | 이 문서 |
+| 재개 복구·Adafruit 개선 과제의 배치 | [개정 실행 순서](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>) |
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
 | M29 API·정책·자원·시험 계약 | [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>) |
@@ -50,7 +51,7 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
 GATT·cache·CoC 구현, W07 두/세 보드 HIL·회귀·Windows 상호운용과 W08을 완료했다.
-현재 개발 지점은 **M30-W08 `M30-POWER-01` 준비 완료·첫 실제 전원 차단 대기**다. M30-W01은 exact
+현재 개발 지점은 **M30-W08 `M30-POWER-01` 사용자 중단·재개 준비 복구 필요**다. M30-W01은 exact
 `6254398c…`에서 parser 13/13, target 1/1과 실제 capability 7/7을 완료했다. M30-W02는 exact
 `4f91e347…`에서 고정 link별 보안 상태와 pairing 응답을 구현하고 IO capability 5종을 각각
 10회, 총 50/50 PASS했다. M30-W03은 유선 OOB 20/20·MITM 20/20, mismatch accept 0과
@@ -114,7 +115,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser의 실
 | M29-W07 | **완료 — SIGN/EATT·3보드 MULTI/REG·Windows GATT PASS** | exact `c71ef4a2…`·`16eb8fce…`·`a964ae20…` 원본 증거 유지 |
 | M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, exact `ab3f85d3…` 3보드 재검증, 문서·지원표·M30 인계 |
 
-### 현재 개발 지점: M30-W08 전원 HIL 준비·preflight 완료, 첫 물리 차단 대기
+### 현재 개발 지점: M30-W08 중단, 재개 준비 복구 필요
 
 Exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 보드 `M29-MULTI-01`은 mixed DUT의
 두 link 각각 GATT·CoC 1,000회와 cross-link/payload/drop 오류 0을 확인했다. 같은 revision의
@@ -145,7 +146,12 @@ image와 fail-closed runner를 만들고 두 보드 bond 저장영역 초기화�
 주입 계획은 네 지점 × 3회이며 실제 전원 차단은 아직 0회다. Reset은 실제 전원 차단 증거로 계산하지 않았다. 다음
 구현·장비 계약은 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
 [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)을 따른다. 자동 작업은
-`M30-POWER-01`의 첫 실제 전원 차단 직전에 멈춘 상태다.
+사용자 지시로 중단된 상태다. 당시 준비 PASS와 현재 재개 readiness는 구분한다.
+2026-09-15 확인한 필수 image 부재와 재개 검증 보강은 [160번 기록](<04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)을 따른다.
+
+재개 시 [W08 내부 실행 단계](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의
+**A 도구·provenance 안정화 → B 산출물 재생성·preflight → 사람 준비 확인 → C 실제 12회 차단 → D 회귀·마감**을 적용한다.
+A~D는 W08 하위 단계로 기존 작업·시험 분모를 늘리지 않는다. 이 문서 개정만으로 구현·HIL을 재개하지 않는다.
 
 M28과 M29 각 단계의 구현·시험 수치는 위 작업표와 해당 계약에서 확인한다.
 시도별 실패·CMSIS-DAP 진단·수정·재검증 상세는 [140번](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과
@@ -198,12 +204,17 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 
 M31-A/B/C는 **M31 내부 작업 ID**다. 하나를 완료해 M31 전체 완료로 계산하지 않는다.
 M30 최소 DFU에서는 고정 layout·신뢰키·초기 설치·BLE 갱신·전원 차단 복구와 Arduino 제공 형태를
-먼저 결정한다. 현재 `--no-sysbuild` build·native HEX upload를 그대로 MCUboot 지원으로 간주하지
+별도 `secure_ble_dfu` profile에 고정했다. 기본 `--no-sysbuild` build·native HEX upload를 그대로 MCUboot 지원으로 간주하지
 않으며, 기본 loaderless 경로는 유지한다. M36은 다중 layout/transport와 hardening 확장이다.
 
 M42 시작 전에는 사용할 Matter transport, Thread 선택 시 M40의 network 근거, M32의 적용 공존
 조합, update 경로, RAM/RRAM·저장소 예산과 개발용/생산용 credential 정책을 연결한다.
 NU54DK의 외장 flash 미탑재와 factory-data partition 적용성은 설계 입력이며 Matter 불가능 판정이 아니다.
+
+M33의 사용자 경로 정리에 기존 API만 사용하는 ARF-04A 목적별 예제를 연결한다.
+새 public API·buffered NUS·PWM pool·BLE role-budget은 M30/M33 필수 구현에 합치지 않고
+[별도 개선 작업](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)으로 검증한다.
+후속 배포 버전은 착수 gate에서 확정하며 기존 M34~M45 제품선을 임의 재배치하지 않는다.
 
 ## 5. 장비와 정량 판정 기준
 
@@ -230,7 +241,8 @@ Windows 10/11 x64, Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 �
 ### 실행 전에 고정할 합격표
 
 M28 GAP/multi-link 9개와 M29 ATT/GATT·L2CAP 10개 test ID를 모두 확정·실행했다.
-M30 이후의 수치는 아직 **미확정**이다. 임의 숫자를 제품 보증으로 채우지 않고, 선택 profile과 장비가 결정되면 P05에서
+M30은 [착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)의 10개 test ID와 수치가 확정됐다.
+M31 이후의 수치는 아직 **미확정**이다. 임의 숫자를 제품 보증으로 채우지 않고, 선택 profile과 장비가 결정되면 P05에서
 숫자·단위·계산식·측정 수단을 채운다. `장시간`, `안정적`, `저지연`만으로 합격 기준을 대신하지 않는다.
 
 | 시험군 | 반드시 고정할 입력 | 수치·판정 항목 |

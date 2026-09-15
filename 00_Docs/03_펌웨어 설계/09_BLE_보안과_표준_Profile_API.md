@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-SECURITY-001 |
-| 문서 개정 | 2.3 |
+| 문서 개정 | 2.4 |
 | 문서 상태 | v0.4.1 정식 기준선 + v0.5.0 개발 후보 profile 계약 |
 | 적용 제품 버전 | `v0.3.0`~`v0.4.1`과 v0.5.0 개발 source의 `ble` profile |
-| 최종 갱신일 | 2026-09-14 |
+| 최종 갱신일 | 2026-09-15 |
 | 대상 library | `NUCODE_BLE_Security` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
@@ -210,9 +210,20 @@ Windows 시험 절차는 다음과 같다.
 - `no_input_output` Just Works는 수동 승인과 암호화·bonding을 제공하지만 MITM 보호가 필요한 제품의
   최종 보안 정책을 대신하지 않는다.
 - Windows 11 검증은 완료했지만 스마트폰별 HID 호환성은 별도 제품 호환성 시험 대상이다.
-- M28 개발 source는 총 GAP 2-link와 identity/RPA 관측을 검증했지만 동시 security/profile
-  active view 확대는 주장하지 않는다. Generation별 security/bond 정책과 추가 profile은 M30에서
-  별도 자원·상호운용 계약으로 검증한다.
+- M28의 총 GAP 2-link PASS와 M30의 동시 security/profile 검증은 별도 증거다. M30-W07은
+  세 보드의 동시 두 secure link와 handle별 보안 연산을 검증했으며 임의 연결 수 확대는 포함하지 않는다.
+
+### M30 개발 결과와 남은 전원 검증
+
+M30은 W01~W07 7/8·test ID 9/10 PASS다. Link별 security·IO capability 5종, 유선 OOB,
+bond/privacy, 일곱 profile, 별도 MCUboot·서명·BLE update·rollback과 secure multi-link의 결과를
+[M30 착수 계약](<../01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)에서 관리한다.
+NFC adapter는 구현·Host/target build 범위이며 NFC RF 검증은 사용자 결정대로 `NOT RUN`이다.
+
+W08은 사용자 지시로 중단됐고 실제 전원 차단은 0/12회다. `05b639b4…` 준비·preflight PASS는
+당시 증거로 보존하며 현재 실행 준비 완료로 해석하지 않는다. 재개 선행조건은
+[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
+이 개발 결과는 설치·지원 v0.4.1의 보안 API·profile 범위를 바꾸지 않는다.
 
 ## 9. 관련 문서
 

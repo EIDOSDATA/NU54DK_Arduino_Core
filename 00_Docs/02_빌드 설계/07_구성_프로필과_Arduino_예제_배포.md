@@ -140,16 +140,17 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 `0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
 32 KiB와 36 KiB다. Feature set 선택은 메모리 layout을 암묵적으로 바꾸지 않는다.
 
-향후 `v0.5.0` M30에서 BLE DFU용 최소 MCUboot·signed update·rollback 기반을 먼저
-설계·검증한다. 제한된 고정 layout과 제공 경로(profile 또는 application template)를 선택하는
-단계이며, 아직 새 profile·feature·Tools 메뉴를 제공하지 않는다.
+`v0.5.0` 개발 M30은 BLE DFU용 최소 MCUboot·signed update·rollback 기반과 별도
+`secure_ble_dfu` profile을 구현했다. 개발 Tools 메뉴의 `Secure BLE DFU (MCUboot)`는
+sysbuild와 maximum size `729088` byte를 선택한다. 설치·지원 v0.4.1의 위 세 profile에는 포함되지 않는다.
 
 `v0.6.0` M36은 이 최소 기반을 여러 layout·update transport로 확장하는 후속 계획이다.
 고급 `Tools → Memory layout`을 제공할 때에는 검증된 preset이 feature set과 별개의 명시적
 입력이 되고, fixed partition, linker 경계, Arduino maximum size와 cache identity가 함께
 바뀌어야 한다. 현재는 임의 숫자나 Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을
-정식 지원하지 않는다. M30과 M36 모두 미착수이며, M30 착수·인계 조건은
-[v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
+정식 지원하지 않는다. M30은 W01~W07 완료·W08 미완료이며 현재 사용자 중단 상태다. 실제 전원 차단은
+0/12회이고 M36은 미착수다. 재개·인계 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)과
+[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
 
 ---
 
@@ -204,9 +205,10 @@ v0.4.1 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30
 
 ### 개발 `main`의 추가 예제
 
-`0.4.1-dev`에는 v0.5.0을 준비하는 M28 예제 11개와 M29 예제 15개가 추가되어 있다. 정식 v0.4.1의
-30개와 합치면 소스 트리에는 11개 library·56개 예제가 있지만, 이 수를 v0.4.1 설치본의 제공 수로
-표시하지 않는다. M28·M29는 완료했고 다음 개발 단계는 M30이다.
+2026-09-15 검토한 `8c311d9a…`의 `0.4.1-dev` 소스 트리에는 12개 library와 60개 `.ino`가 있다.
+정식 v0.4.1 예제 30개에 M28 11개, M29 15개, M30 profile 예제 4개가 추가된 snapshot이다.
+`NUCODE_BLE_DFU`는 별도 library이며 새 `.ino`를 더하지 않는다. 이 수를 v0.4.1 설치본의 제공 수로
+표시하지 않는다. M28·M29는 완료했고 M30은 W01~W07 완료·W08 사용자 중단 상태다.
 
 | 개발 추가 범위 | Library와 선택 방식 | 검증 진입점 |
 | --- | --- | --- |
@@ -215,6 +217,8 @@ v0.4.1 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30
 | M29 GATT cache 2개 | `NUCODE_BLE_Security`, `nucode.ble.security` | 같은 v0.5.0 group |
 | M29 Signed Write 2개 | `NUCODE_BLE_LegacySigning`, `nucode.ble.legacy_signing` | 같은 v0.5.0 group; deprecated legacy opt-in |
 | M29 EATT 2개 | `NUCODE_BLE_EATT`, `nucode.ble.eatt` | 같은 v0.5.0 group; experimental opt-in |
+| M30 profile 4개 | `NUCODE_BLE_Security`, `feature_set=ble` | `run_smoke.py --tests m30` |
+| M30 secure DFU build 조건 | 기존 `HeartRate` 예제, `feature_set=secure_ble_dfu` | `run_smoke.py --tests m30secure`; 저장소 밖 signing key 필요 |
 
 선택형 두 library는 모두 `ble` profile에서만 사용하며, header를 포함하지 않은 기본 BLE build에
 signing/EATT를 강제로 켜지 않는다. M29의 실제 예제명과 완료·잔여 상태는

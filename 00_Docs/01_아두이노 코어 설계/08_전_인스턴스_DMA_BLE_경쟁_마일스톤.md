@@ -11,12 +11,12 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 3.1 |
-| 문서 상태 | 고정 source 비교, M23~M29 완료와 M30~M33 계획 |
+| 문서 개정 | 3.2 |
+| 문서 상태 | 고정 source 비교, M23~M29 완료·M30 진행/중단과 M31~M33 계획 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.4.1` stable / release source `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-14 |
+| 최종 갱신일 | 2026-09-15 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을
@@ -29,7 +29,7 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 [Master roadmap](02_구현_로드맵.md)이 소유한다.
 
 M28은 **W01~W08·9개 test ID**, M29는 **W01~W08·10개 test ID를 완료**했다.
-M30~M33은 **계획·구현 미착수**다. M28·M29의 기능 지원성·
+M30은 **W01~W07 완료·W08 사용자 중단**, M31~M33은 **계획·구현 미착수**다. M28·M29의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 준비 문서를 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
@@ -351,8 +351,9 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
   event 경로를 지원하며 반복 manual read/clear 무손실은 보증하지 않는다.
 
 - SAADC 8채널 scan/differential/internal/calibration/oversampling/continuous DMA를 제공한다.
-- PWM20/21/22의 12 hardware channel allocator와 sequence/DPPI/DMA를 `analogWrite`, `tone`, Servo와
-  충돌 없이 통합한다.
+- PWM20/21/22의 12 hardware channel과 sequence/DPPI/DMA를 명시적 Fabric 소유권으로 관리한다.
+  기본 analogWrite PWM20/tone PWM21/Servo PWM22와 Fabric profile의 배타 경계를 유지한다.
+  기본 API가 유휴 block을 자동 공유하는 기능은 완료 범위가 아니며 후속 ARF-02 opt-in 과제다.
 - TIMER00/10/20~24, GPIOTE20/30, EGU10/20, DPPIC00/10/20/30,
   PPIB00/01/10/11/20/21/22/30과 GRTC 고급 경로를 제공한다.
 - PDM20/21·I2S20은 DMA streaming/double-buffer API, QDEC20/21은 하드웨어 누산·read/clear·IRQ event API와 fixture를 사용한다. QDEC에는 DMA가 없다.
@@ -440,13 +441,17 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 - 기존 BAS/DIS/HID keyboard와 추가 HID class·adopted services/profiles를 분리한 catalog를 승인한다.
 - BLE DFU에 필요한 최소 MCUboot·고정 layout·서명/검증·BLE transport·rollback·power-loss recovery를
   먼저 구현·검증한다. Loaderless 기본값은 유지하고 update는 검증한 선택 profile 또는 application
-  template로 제공한다. 어느 경로를 채택할지는 착수 시 결정한다.
+  template로 제공한다. 현재는 별도 `secure_ble_dfu` profile을 채택했으며 W08 전원 복구는 미완료다.
+- 유선 OOB는 W03 실기를 완료했다. NFC NDEF adapter는 Host/build만 검증하고 RF NOT RUN·지원 제외를 유지한다.
 - v0.5.0 다중 Host의 HOST-W01~W03을 같은 시점에 시작한다. 기존 `.exe`·`%LOCALAPPDATA%`·batch
   가정을 inventory하고 공통 Python backend, OS별 resolver와 얇은 `.cmd`/`.sh` launcher를 만든다.
   M30에서 추가하는 DFU 도구도 처음부터 같은 추상화를 사용한다.
 - M36에는 해당 layout·image/key 정책·업데이트 상태 전이·복구 시험 결과를 인계한다. M36은 이를
   여러 layout/transport로 확장·hardening하며, M30의 필수 서명·복구 검증을 뒤로 미루는 단계가 아니다.
-- 완료 gate: OS별 pairing UX, replay/downgrade/corruption negative와 update recovery HIL.
+- 완료 gate: M30 계약의 10개 test ID와 update recovery HIL. OS별 pairing UX·추가 peer 상호운용은
+  M33 matrix에서 적용 범위를 추적하며 NU54DK scripted pairing PASS로 모든 OS UX를 대체하지 않는다.
+- 현재 W08은 재개 도구·산출물·preflight 복구 → 사람 준비 확인 → 실제 차단 → 영향 회귀·마감 순서다.
+  [개정 실행 계획](18_문서_전면검토와_개선_마일스톤.md)의 W08 내부 gate를 따른다.
 
 ### M31 — ISO·LE Audio·Direction Finding·Channel Sounding
 
@@ -486,6 +491,11 @@ M31-B는 SDC의 실제 지원 범위와 대체 controller/profile의 RX·IQ 경�
 ### M33 — `v0.5.0` Bluetooth LE Complete 릴리스
 
 - M28~M32의 API, profile, memory·throughput·power 한계와 interop 결과를 통합한다.
+- ARF-04A 목적별 Fabric 예제는 기존 API만 사용하는 사용자 경로 보강으로 연결한다. 새 public API,
+  buffered NUS·PWM pool·BLE role-budget은 [별도 후속 ARF](18_문서_전면검토와_개선_마일스톤.md)로 검증한다.
+- M30에서 인계한 OS별 pairing·bond/HID UX와 security/profile 상호운용을 기능별 matrix 행으로
+  추적한다. 적용 필수 행이 NOT RUN이면 공개 gate는 미완료다. 기본 GATT 또는 NU54DK scripted
+  pairing PASS로 해당 OS UX를 대체하지 않으며, 범위 제외에는 별도 결정이 필요하다.
 - Bluetooth qualification 적용성, 필요한 QDID/DN과 미완료 인증을 분리해 공개한다.
 - HOST-W08에서 Windows 10/11 x64, Ubuntu 24.04부터 최신 지원 release까지 AMD64, macOS 26부터
   최신 지원 major까지 Apple Silicon의 전체 예제·대표 실제 upload/runtime·lifecycle을 마감한다.
@@ -496,7 +506,7 @@ M31-B는 SDC의 실제 지원 범위와 대체 controller/profile의 RX·IQ 경�
 [v0.5.0 다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
 M28은 W01~W08·9개 test ID, M29는 W01~W08·10개 test ID를 완료했다. M30은 W01~W07·9개 test
-ID를 완료하고 W08 전원 HIL을 준비 중이며 M31~M33은 계획이다. M28 결과와
+ID를 완료했으며 W08은 사용자 중단·재개 준비 복구 필요, 실제 차단 0/12다. M31~M33은 계획이다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은

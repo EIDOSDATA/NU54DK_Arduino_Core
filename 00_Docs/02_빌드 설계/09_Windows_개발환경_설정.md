@@ -5,11 +5,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.9 |
+| 문서 개정 | 1.10 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.4.1` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-14 |
+| 최종 갱신일 | 2026-09-15 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -17,10 +17,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 작성하려는 사용자는 저장소 개발 도구를 모두 설치할 필요가 없으며, 최상위
 [빠른 시작](../../README.md#빠른-시작)을 따르면 된다.
 
-이 절차는 현재 `v0.4.1`과 M30 착수 전 개발 기준이다. `v0.5.0`부터 추가할 Ubuntu AMD64·
-Apple Silicon macOS는 Windows 명령을 번역해 추정하지 않고
-[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 HOST-W01~W08을 구현·
-실증한 뒤 별도 사용자 절차로 제공한다.
+이 절차는 현재 `v0.4.1`과 개발 `main`의 Windows 환경 기준이다. M30은 W01~W07 완료·W08 사용자
+중단 상태이며 HOST-W01~W03은 완료했다. `v0.5.0`부터 추가할 Ubuntu AMD64·Apple Silicon macOS는
+[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 남은 HOST-W04~W08 구현·
+실증 뒤 별도 사용자 절차로 제공한다. M30 전원 HIL의 재개 조건은
+[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
 
 ---
 
@@ -402,7 +403,7 @@ hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸�
 ```powershell
 & $Python .\tests\arduino-cli\run_smoke.py `
   --cli $ArduinoCli `
-  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 m28 m29 ac02b ac03 examples
+  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 m28 m29 m30 ac02b ac03 examples
 ```
 
 릴리스에서 도입한 기능군별로 원인을 빠르게 나누려면 `--tests` 대신 `--group`을 쓴다.
@@ -426,8 +427,11 @@ Evidence 경로는 실행 전에 없어야 한다.
 ```
 
 자동 matrix에서는 긴 `v0.3.0`을 `v0.3.0-ble`과 `v0.3.0-compat` 두 하위 작업으로 더 나눠
-기존 네 작업과 `v0.5.0`을 합쳐 총 다섯 작업을 배치한다. `v0.5.0`은 현재 M29 예제 15개를
-검사하며 M28 예제 11개는 `--tests m28`로 따로 실행한다.
+기존 네 작업과 `v0.5.0`을 합쳐 총 다섯 작업을 배치한다. 2026-09-15의 `8c311d9a…` snapshot에서
+`v0.5.0`은 M29 예제 15개, M30 profile 예제 4개와 기존 HeartRate의 secure DFU 조건을 검사한다.
+M28 예제 11개는 `--tests m28`로 따로 실행한다. `m30secure` 단독 또는 이를 포함하는 v0.5.0 group은
+`NUCODE_DFU_SIGNING_KEY`로 저장소 밖 signing key 파일을 지정해야 한다. 위 개별 `--tests` 명령에는
+키를 요구하는 `m30secure`를 포함하지 않았으므로 secure profile 검증 완료로 해석하지 않는다.
 
 Windows의 Zephyr build는 Nordic Toolchain Python으로 직접 runner를 시작한다. 현재 Twister
 outdir는 전체 절대경로가 4자 이하여야 하므로 `C:\z`처럼 사용하지 않는 짧은 경로를 선택한다.
