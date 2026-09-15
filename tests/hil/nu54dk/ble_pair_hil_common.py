@@ -249,16 +249,12 @@ def validate_build_record(
                 f"build record 불일치: {key}={values[key]}, expected={expected_value}"
             )
     toolchain_path = values["toolchain_path"].replace("\\", "/").casefold()
-    compiler_path = values["cxx_compiler"].replace("\\", "/").casefold()
     expected_toolchain_suffix = "/toolchains/dcbdc366a1/opt/zephyr-sdk"
-    expected_compiler_suffix = "/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++"
     if not toolchain_path.endswith(expected_toolchain_suffix):
         raise BlePairHilFailure(
             f"build record toolchain bundle 불일치: {values['toolchain_path']}"
         )
-    if not compiler_path.removesuffix(".exe").endswith(
-        expected_toolchain_suffix + expected_compiler_suffix
-    ):
+    if values["cxx_compiler"] != "GNU 14.3.0":
         raise BlePairHilFailure(
             f"build record C++ compiler 불일치: {values['cxx_compiler']}"
         )

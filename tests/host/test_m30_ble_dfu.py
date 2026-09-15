@@ -10,6 +10,7 @@ import struct
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -146,6 +147,64 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertIn('"mass_erase_or_recover": False', source)
         self.assertNotIn('"--mass"', source)
         self.assertNotIn('"--chip"', source)
+
+    def test_build_record_pins_the_bundled_gnu_compiler_identity(self) -> None:
+        """! @brief build record의 compiler ID·version과 Toolchain bundle을 함께 고정합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-build-record-") as directory:
+            root = Path(directory)
+            image = root / "zephyr" / "zephyr.hex"
+            image.parent.mkdir()
+            image.write_text(":00000001FF\n", encoding="ascii")
+            digest = "1" * 64
+            record = root / "nucode_arduino_core_build.yml"
+            record.write_text(
+                "nucode_arduino_core:\n"
+                "  core_revision: 'aabbccddeeff'\n"
+                f"  core_source_sha256: '{digest}'\n"
+                f"  application_source_sha256: '{digest}'\n"
+                "  board_revision: '112233445566'\n"
+                f"  board_source_sha256: '{digest}'\n"
+                "  ncs_revision: '99553055607b'\n"
+                "  zephyr_revision: 'bf801e4e3d19'\n"
+                "  board: 'nrf54l15dk'\n"
+                "  board_qualifiers: 'nrf54l15/cpuapp/nu54dk'\n"
+                "  toolchain_variant: 'zephyr'\n"
+                "  toolchain_path: 'C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk'\n"
+                "  cxx_compiler: 'GNU 14.3.0'\n",
+                encoding="utf-8",
+            )
+            expected_digests = {
+                "core_source_sha256": digest,
+                "application_source_sha256": digest,
+                "board_source_sha256": digest,
+            }
+            with mock.patch(
+                "ble_pair_hil_common.current_source_digests",
+                return_value=expected_digests,
+            ):
+                values = HIL_RUNNER.validate_build_record(
+                    image,
+                    "aabbccddeeff" + "0" * 28,
+                    "112233445566" + "0" * 28,
+                    HIL_TARGET,
+                )
+                self.assertEqual(values["cxx_compiler"], "GNU 14.3.0")
+                record.write_text(
+                    record.read_text(encoding="utf-8").replace(
+                        "GNU 14.3.0", "GNU 14.2.0"
+                    ),
+                    encoding="utf-8",
+                )
+                with self.assertRaisesRegex(
+                    HIL_RUNNER.BlePairHilFailure, "C\\+\\+ compiler"
+                ):
+                    HIL_RUNNER.validate_build_record(
+                        image,
+                        "aabbccddeeff" + "0" * 28,
+                        "112233445566" + "0" * 28,
+                        HIL_TARGET,
+                    )
 
 
 if __name__ == "__main__":
