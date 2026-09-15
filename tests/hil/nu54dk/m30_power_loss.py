@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -67,6 +68,7 @@ from m6_serial_echo import (  # noqa: E402
     import_pyserial,
     is_target_uart_interface,
     read_details,
+    wait_for_flash_result,
 )
 
 
@@ -99,6 +101,7 @@ UNCONFIRMED_VERSION = (41, 0, 0, 0)
 RETRY_VERSION = (42, 0, 0, 0)
 STORAGE_OFFSET = 0x174000
 STORAGE_SIZE = 0x9000
+FLASH_BACKENDS = ("pyocd", "daplink-msd")
 POWER_STATE_PATTERN = re.compile(
     rb"^M30POWER\|1\|STATE\|bond_count=(\d+)\|rejected_bonds=(\d+)"
     rb"\|bonded=(\d+)\|settings_valid=(\d+)$"
@@ -171,6 +174,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     modes.add_argument("--prepare-only", action="store_true")
     modes.add_argument("--execute-power-cuts", action="store_true")
     parser.add_argument("--flash-preflight", action="store_true")
+    parser.add_argument("--flash-backend", choices=FLASH_BACKENDS, default="pyocd")
     parser.add_argument("--reset-bond-storage", action="store_true")
     parser.add_argument("--confirmed-build-outdir", required=True)
     parser.add_argument("--unconfirmed-build-outdir", required=True)
@@ -734,9 +738,11 @@ session = ConnectHelper.session_with_chosen_probe(
     unique_id=sys.argv[1],
     target_override="nrf54l",
     frequency=500000,
+    connect_mode="under-reset",
     options={{
         "auto_unlock": False,
         "cmsis_dap.limit_packets": True,
+        "cmsis_dap.prefer_v1": False,
         "hide_programming_progress": True,
     }},
 )
@@ -785,6 +791,87 @@ print("M30_STORAGE_RESET_PASS={STORAGE_SIZE}")
         raise M30PowerFailure(f"bond storage exact reset 실패: {safe_output}")
 
 
+def intel_hex_record(address: int, record_type: int, payload: bytes) -> str:
+    """! @brief 한 Intel HEX record를 checksum과 함께 만듭니다. """
+
+    if not 0 <= address <= 0xFFFF:
+        raise M30PowerFailure("Intel HEX address 범위가 유효하지 않습니다.")
+    if not 0 <= record_type <= 0xFF or len(payload) > 0xFF:
+        raise M30PowerFailure("Intel HEX record 형식이 유효하지 않습니다.")
+    header = bytes(
+        (
+            len(payload),
+            (address >> 8) & 0xFF,
+            address & 0xFF,
+            record_type,
+        )
+    )
+    checksum = (-sum(header + payload)) & 0xFF
+    return ":" + (header + payload + bytes((checksum,))).hex().upper()
+
+
+def write_storage_clear_hex(path: Path) -> None:
+    """! @brief storage partition exact 범위를 0xff로 채운 Intel HEX를 만듭니다. """
+
+    upper = STORAGE_OFFSET >> 16
+    lines = [intel_hex_record(0, 4, upper.to_bytes(2, "big"))]
+    for address in range(STORAGE_OFFSET, STORAGE_OFFSET + STORAGE_SIZE, 32):
+        size = min(32, STORAGE_OFFSET + STORAGE_SIZE - address)
+        lines.append(intel_hex_record(address & 0xFFFF, 0, bytes([255]) * size))
+    lines.append(intel_hex_record(0, 1, b""))
+    path.write_text("\n".join(lines) + "\n", encoding="ascii", newline="\n")
+
+
+def flash_image_daplink(
+    role: str,
+    endpoint: RoleEndpoint,
+    image: Path,
+    timeout_seconds: float,
+) -> tuple[str, str]:
+    """! @brief DAPLink MSD로 exact HEX를 기록하고 완료 sequence를 검증합니다. """
+
+    if timeout_seconds <= 0:
+        raise M30PowerFailure("--flash-timeout은 0보다 커야 합니다.")
+    current_details = read_details(endpoint.volume.root) or endpoint.volume.details
+    previous_sequence = detail_value(current_details, "Flash Sequence")
+    safe_role = re.sub(r"[^A-Za-z0-9_-]", "_", role).upper()
+    destination = endpoint.volume.root / f"NUCODE_M30_{safe_role}.HEX"
+    try:
+        shutil.copyfile(image, destination)
+        details = wait_for_flash_result(
+            endpoint.volume.root, previous_sequence, timeout_seconds
+        )
+    except (OSError, RuntimeError, TimeoutError) as error:
+        raise M30PowerFailure(f"{role} DAPLink MSD flash 실패: {error}") from error
+    byte_count = detail_value(details, "Last Flash Bytes") or "unknown"
+    if not byte_count.isdigit() or int(byte_count) <= 0:
+        raise M30PowerFailure(f"{role} DAPLink flash byte 근거가 없습니다.")
+    return "daplink-msd", byte_count
+
+
+def reset_bond_storage_daplink(
+    endpoint: RoleEndpoint, timeout_seconds: float
+) -> tuple[str, str]:
+    """! @brief DAPLink로 storage exact 범위에 0xff를 기록합니다. """
+
+    with tempfile.TemporaryDirectory(prefix="n54-m30-storage-clear-") as directory:
+        image = Path(directory) / "m30-storage-clear.hex"
+        write_storage_clear_hex(image)
+        return flash_image_daplink(
+            "bond-storage-reset", endpoint, image, timeout_seconds
+        )
+
+
+def flash_backend_evidence(backend: str) -> str:
+    """! @brief CLI flash backend를 manifest 식별 문자열로 바꿉니다. """
+
+    if backend == "pyocd":
+        return "pyocd-exact-sector"
+    if backend == "daplink-msd":
+        return "daplink-msd-exact-range"
+    raise M30PowerFailure(f"지원하지 않는 flash backend입니다: {backend}")
+
+
 def reopen_peripheral(session: DfuSession) -> None:
     """! @brief 재연결된 동일 target UART를 기존 BLE session에 다시 엽니다. """
 
@@ -817,34 +904,41 @@ def normalize_boards(
     confirmed: PeripheralBuild,
     central_build: CentralBuild,
     flash_timeout: float,
+    flash_backend: str = "pyocd",
 ) -> dict[str, Any]:
     """! @brief sector erase만 사용해 매 attempt의 confirmed baseline을 복원합니다. """
 
-    erase_secondary_slot(peripheral.board_id, flash_timeout)
+    if flash_backend == "pyocd":
+        erase_secondary_slot(peripheral.board_id, flash_timeout)
+        flash = lambda role, endpoint, image: flash_image_pyocd(  # noqa: E731
+            role, endpoint.board_id, image, flash_timeout
+        )
+    elif flash_backend == "daplink-msd":
+        flash = lambda role, endpoint, image: flash_image_daplink(  # noqa: E731
+            role, endpoint, image, flash_timeout
+        )
+    else:
+        raise M30PowerFailure(f"지원하지 않는 flash backend입니다: {flash_backend}")
     return {
-        "peripheral_bootloader": flash_image_pyocd(
+        "peripheral_bootloader": flash(
             "power-peripheral-bootloader",
-            peripheral.board_id,
+            peripheral,
             confirmed.boot_hex,
-            flash_timeout,
         ),
-        "peripheral_primary": flash_image_pyocd(
+        "peripheral_primary": flash(
             "power-peripheral-primary",
-            peripheral.board_id,
+            peripheral,
             confirmed.signed_hex,
-            flash_timeout,
         ),
-        "central_bootloader": flash_image_pyocd(
+        "central_bootloader": flash(
             "power-central-bootloader",
-            central.board_id,
+            central,
             central_build.boot_hex,
-            flash_timeout,
         ),
-        "central_primary": flash_image_pyocd(
+        "central_primary": flash(
             "power-central-primary",
-            central.board_id,
+            central,
             central_build.signed_hex,
-            flash_timeout,
         ),
     }
 
@@ -947,12 +1041,23 @@ def preflight(
         "boards": 0,
         "offset": STORAGE_OFFSET,
         "size": STORAGE_SIZE,
+        "backend": "not-run",
     }
     if args.reset_bond_storage:
         validate_storage_partition(confirmed.root)
         validate_storage_partition(central_build.root)
-        reset_bond_storage(peripheral.board_id, args.flash_timeout)
-        reset_bond_storage(central.board_id, args.flash_timeout)
+        if args.flash_backend == "pyocd":
+            reset_bond_storage(peripheral.board_id, args.flash_timeout)
+            reset_bond_storage(central.board_id, args.flash_timeout)
+            storage_reset["backend"] = "pyocd-program-readback"
+        else:
+            storage_reset["results"] = {
+                "peripheral": reset_bond_storage_daplink(
+                    peripheral, args.flash_timeout
+                ),
+                "central": reset_bond_storage_daplink(central, args.flash_timeout),
+            }
+            storage_reset["backend"] = "daplink-msd-exact-range"
         storage_reset["performed"] = True
         storage_reset["boards"] = 2
     flash_results = normalize_boards(
@@ -961,6 +1066,7 @@ def preflight(
         confirmed,
         central_build,
         args.flash_timeout,
+        args.flash_backend,
     )
     with DfuSession(
         serial_module,
@@ -977,7 +1083,7 @@ def preflight(
         retry = verify_retry(session, candidates["retry"], deadline)
     return {
         "status": "passed",
-        "flash_backend": "pyocd-exact-sector",
+        "flash_backend": flash_backend_evidence(args.flash_backend),
         "flash_results": flash_results,
         "security_level": 4,
         "encryption_key_bytes": 16,
@@ -998,7 +1104,6 @@ def validate_preflight_evidence(
         raise M30PowerFailure("manifest preflight가 JSON object가 아닙니다.")
     expected_scalars = {
         "status": "passed",
-        "flash_backend": "pyocd-exact-sector",
         "security_level": 4,
         "encryption_key_bytes": 16,
         "physical_power_cuts": 0,
@@ -1007,6 +1112,14 @@ def validate_preflight_evidence(
     for key, expected_value in expected_scalars.items():
         if preflight_result.get(key) != expected_value:
             raise M30PowerFailure(f"manifest preflight {key} 근거가 유효하지 않습니다.")
+
+    backend = preflight_result.get("flash_backend")
+    markers = {
+        "pyocd-exact-sector": "pyocd-sector",
+        "daplink-msd-exact-range": "daplink-msd",
+    }
+    if backend not in markers:
+        raise M30PowerFailure("manifest preflight flash_backend 근거가 유효하지 않습니다.")
 
     flash_results = preflight_result.get("flash_results")
     expected_roles = {
@@ -1021,7 +1134,7 @@ def validate_preflight_evidence(
         if (
             not isinstance(result, (list, tuple))
             or len(result) != 2
-            or result[0] != "pyocd-sector"
+            or result[0] != markers[backend]
             or not isinstance(result[1], str)
             or not result[1].isdigit()
             or int(result[1]) <= 0
@@ -1062,6 +1175,24 @@ def validate_preflight_evidence(
         or storage.get("size") != STORAGE_SIZE
     ):
         raise M30PowerFailure("manifest preflight bond storage 근거가 유효하지 않습니다.")
+    if performed is True and backend == "daplink-msd-exact-range":
+        if storage.get("backend") != "daplink-msd-exact-range":
+            raise M30PowerFailure("manifest preflight DAPLink storage 근거가 유효하지 않습니다.")
+        reset_results = storage.get("results")
+        if not isinstance(reset_results, dict) or set(reset_results) != {
+            "peripheral",
+            "central",
+        }:
+            raise M30PowerFailure("manifest preflight DAPLink storage 근거가 유효하지 않습니다.")
+        for result in reset_results.values():
+            if (
+                not isinstance(result, (list, tuple))
+                or len(result) != 2
+                or result[0] != "daplink-msd"
+                or not str(result[1]).isdigit()
+                or int(result[1]) <= 0
+            ):
+                raise M30PowerFailure("manifest preflight DAPLink storage 근거가 유효하지 않습니다.")
 
 
 def validate_manifest(
@@ -1123,6 +1254,7 @@ def execute_power_hil(
             confirmed,
             central_build,
             args.flash_timeout,
+            args.flash_backend,
         )
         nonce = build_nonce(args.nonce, index)
         with DfuSession(
@@ -1136,6 +1268,8 @@ def execute_power_hil(
             deadline = started + args.phase_timeout
             baseline = session.connect_initial(deadline)
             validate_boot(baseline, BASE_VERSION, confirmed=1, auto_confirm=1)
+            if args.flash_backend == "daplink-msd":
+                session.erase_secondary(deadline)
             arm_point(
                 session,
                 point,
@@ -1321,6 +1455,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
             )
         else:
             manifest = load_json(manifest_path, "power manifest")
+            if manifest.get("preflight", {}).get(
+                "flash_backend"
+            ) != flash_backend_evidence(args.flash_backend):
+                raise M30PowerFailure("실행 flash backend가 manifest preflight와 다릅니다.")
             validate_manifest(manifest, expected_manifest)
             execute_power_hil(
                 serial_module,

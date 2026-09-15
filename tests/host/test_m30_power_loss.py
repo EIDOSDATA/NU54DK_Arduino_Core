@@ -151,6 +151,8 @@ class M30PowerLossTests(unittest.TestCase):
         program = command[3]
         self.assertEqual(command[-1], "secret-board")
         self.assertIn("target.reset_and_halt()", program)
+        self.assertIn('connect_mode="under-reset"', program)
+        self.assertIn('"cmsis_dap.prefer_v1": False', program)
         self.assertIn("flash.Operation.PROGRAM", program)
         self.assertIn(
             f"{RUNNER.STORAGE_OFFSET}, {RUNNER.STORAGE_OFFSET + RUNNER.STORAGE_SIZE}, 4096",
@@ -201,6 +203,68 @@ class M30PowerLossTests(unittest.TestCase):
         self.assertEqual(flash.call_count, 4)
         self.assertEqual(flash.call_args_list[2].args[2], central_build.boot_hex)
         self.assertEqual(flash.call_args_list[3].args[2], central_build.signed_hex)
+
+    def test_daplink_normalize_uses_msd_without_pyocd_erase(self) -> None:
+        """! @brief DAPLink backend은 각 role volume에 네 image만 기록합니다. """
+
+        peripheral = SimpleNamespace(board_id="peripheral", volume=object())
+        central = SimpleNamespace(board_id="central", volume=object())
+        confirmed = SimpleNamespace(
+            boot_hex=Path("peripheral-boot.hex"),
+            signed_hex=Path("peripheral-primary.hex"),
+        )
+        central_build = SimpleNamespace(
+            boot_hex=Path("central-boot.hex"),
+            signed_hex=Path("central-primary.hex"),
+        )
+        with mock.patch.object(RUNNER, "erase_secondary_slot") as erase, mock.patch.object(
+            RUNNER, "flash_image_pyocd"
+        ) as pyocd, mock.patch.object(
+            RUNNER,
+            "flash_image_daplink",
+            side_effect=lambda role, _endpoint, _image, _timeout: (
+                "daplink-msd",
+                str(len(role)),
+            ),
+        ) as daplink:
+            results = RUNNER.normalize_boards(
+                peripheral,
+                central,
+                confirmed,
+                central_build,
+                30.0,
+                "daplink-msd",
+            )
+        erase.assert_not_called()
+        pyocd.assert_not_called()
+        self.assertEqual(daplink.call_count, 4)
+        self.assertTrue(
+            all(result[0] == "daplink-msd" for result in results.values())
+        )
+
+    def test_storage_clear_hex_covers_only_exact_partition(self) -> None:
+        """! @brief DAPLink storage image의 주소·길이·checksum을 고정합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-storage-hex-") as directory:
+            image = Path(directory) / "storage.hex"
+            RUNNER.write_storage_clear_hex(image)
+            records = [line for line in image.read_text(encoding="ascii").splitlines()]
+        self.assertEqual(records[0], RUNNER.intel_hex_record(0, 4, b"\x00\x17"))
+        self.assertEqual(records[-1], ":00000001FF")
+        data_records = [line for line in records if line[7:9] == "00"]
+        self.assertEqual(sum(int(line[1:3], 16) for line in data_records), RUNNER.STORAGE_SIZE)
+        self.assertEqual(int(data_records[0][3:7], 16), RUNNER.STORAGE_OFFSET & 0xFFFF)
+        last_size = int(data_records[-1][1:3], 16)
+        self.assertEqual(
+            int(data_records[-1][3:7], 16) + last_size,
+            (RUNNER.STORAGE_OFFSET + RUNNER.STORAGE_SIZE) & 0xFFFF,
+        )
+        for line in records:
+            raw = bytes.fromhex(line[1:])
+            self.assertEqual(sum(raw) & 0xFF, 0)
+        for line in data_records:
+            size = int(line[1:3], 16)
+            self.assertEqual(bytes.fromhex(line[9 : 9 + size * 2]), bytes([255]) * size)
 
     def test_physical_cycle_requires_both_interfaces_to_disappear(self) -> None:
         """! @brief reset처럼 MSD·UART가 유지되면 실제 power cycle로 인정하지 않습니다. """
@@ -281,6 +345,25 @@ class M30PowerLossTests(unittest.TestCase):
         """! @brief 준비 manifest의 모든 입력과 완료 preflight가 같으면 통과합니다. """
 
         manifest, expected = self.manifest_documents()
+        RUNNER.validate_manifest(manifest, expected)
+
+    def test_manifest_accepts_daplink_preflight_evidence(self) -> None:
+        """! @brief DAPLink flash·storage exact-range 근거도 실행 전에 검증합니다. """
+
+        manifest, expected = self.manifest_documents()
+        preflight = manifest["preflight"]
+        preflight["flash_backend"] = "daplink-msd-exact-range"
+        for role in preflight["flash_results"]:
+            preflight["flash_results"][role][0] = "daplink-msd"
+        preflight["bond_storage_reset"].update(
+            {
+                "backend": "daplink-msd-exact-range",
+                "results": {
+                    "peripheral": ["daplink-msd", "900"],
+                    "central": ["daplink-msd", "901"],
+                },
+            }
+        )
         RUNNER.validate_manifest(manifest, expected)
 
     def test_manifest_rejects_changed_build_key_plan_and_helper(self) -> None:

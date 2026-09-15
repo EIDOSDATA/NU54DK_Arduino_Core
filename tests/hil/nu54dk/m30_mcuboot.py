@@ -406,8 +406,12 @@ def pyocd_command_prefix(subcommand: str, board_id: str) -> tuple[str, ...]:
         "nrf54l",
         "--frequency",
         "500000",
+        "--connect",
+        "under-reset",
         "-O",
         "cmsis_dap.limit_packets=true",
+        "-O",
+        "cmsis_dap.prefer_v1=false",
         "-O",
         "auto_unlock=false",
     )
