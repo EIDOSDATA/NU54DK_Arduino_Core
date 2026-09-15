@@ -109,20 +109,20 @@
       "owner_work_id": "M31-W02",
       "controller_variant": "default_sdc",
       "source_status": "source_candidate",
-      "target_applicability": "applicable_native_build_only",
+      "target_applicability": "applicable_combined_three_board",
       "native_build": "PASS",
       "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
       "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": "4699bbb9682f2ecd6b83b5642c67698587ec9019",
+      "nu54dk_build": "PASS",
+      "source_revision": "9e49bee2f3eab012654c97943d6d865162db6df4",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w02-native-4699bbb9/combined-native-manifest.json",
-        "nu54dk_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-manifest.json",
         "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-clean-01.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-manifest.json"
       }
     },
     {
@@ -1137,9 +1137,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "9e49bee2f3eab012654c97943d6d865162db6df4",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-manifest.json"
         },
         {
           "id": "M31-ISO-01:time_sync",
@@ -1902,7 +1902,7 @@
     "work_total": 8,
     "work_completed": 1,
     "test_family_total": 10,
-    "test_family_passed": 2,
+    "test_family_passed": 3,
     "audio_group_total": 11,
     "example_role_total": 42,
     "parity_rows": 703,

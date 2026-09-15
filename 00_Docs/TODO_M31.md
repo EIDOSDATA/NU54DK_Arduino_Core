@@ -63,7 +63,7 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | 작업 | 상태 | 구현·검증 범위 | 완료 산출물 |
 | --- | --- | --- | --- |
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
-| M31-W02 raw ISO 기반 | **진행 중** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | 두 보드 20회×100 clean CIS·[BIS 전체 positive/negative](<04_검증 기록/evidence/m31-w02-exact-07858747/bis-case-manifest.json>)·[time sync](<04_검증 기록/evidence/m31-w02-exact-504badee/time-manifest.json>) PASS; [combined native build](<04_검증 기록/evidence/m31-w02-native-4699bbb9/combined-native-manifest.json>) PASS, 세 보드 기능·역할 예제 잔여 |
+| M31-W02 raw ISO 기반 | **진행 중** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | 두 보드 20회×100 clean CIS·[BIS 전체 positive/negative](<04_검증 기록/evidence/m31-w02-exact-07858747/bis-case-manifest.json>)·[time sync](<04_검증 기록/evidence/m31-w02-exact-504badee/time-manifest.json>) PASS; [combined native build](<04_검증 기록/evidence/m31-w02-native-4699bbb9/combined-native-manifest.json>)와 [세 보드 20회×100 CIS→BIS 기능](<04_검증 기록/166_M31_W02_3보드_CIS_BIS_통합_실기.md>) PASS, 설치 Arduino 역할 예제 잔여 |
 | M31-W03 전체 LE Audio profile | **미착수** | §3의 LC3·BAP/PACS/ASCS·BASS·CAP·CSIP·PBP와 제어/용도별 profile 전부 판정·구현; 합성 PCM·encoded payload source/sink | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계 |
 | M31-W04 Direction Finding | **미착수** | connectionless/connected AoA CTE TX, 기본 안테나 raw IQ RX 제공 경로·적용성 및 가능 시 2보드 HIL, SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분 |
 | M31-W05 connected Channel Sounding | **미착수** | initiator·reflector, secure ACL·capability·procedure, RAS·raw 결과·거리 추정 출력, stop/restart·peer loss·보안 negative | 두 역할 Arduino 예제·CS API/직접 경로·고정 buffer, 2보드 procedure·복구 HIL, 정밀도 비보증 표시 |
@@ -198,7 +198,7 @@ GPIO·전원 차단을 실행하지 않는다. M30의 4지점 × 3회 정책과 
 
 ## 8. 고정 test family와 W01 수치 확정 TODO
 
-다음 **10개 test family는 계획 식별자**다. 작업 분모 8과 다르며 현재 runtime PASS는 0이다.
+다음 **10개 test family는 기능 식별자**다. 작업 분모 8과 다르며 현재 CAP·PARITY·ISO 3/10 PASS다.
 각 family 아래 역할·profile별 subcase를 W01 원장에 전수 열거하고 그 분모를 함께 고정한다.
 아래 시간·반복은 기능 검증의 계획 기준이며 제품 성능 보증이 아니다. SDU/codec/PHY·허용 손실과
 구체 자원 상한은 고정 sample 기본값·board budget을 대조해 첫 시험 전에 계약과 JSON에 확정한다.
