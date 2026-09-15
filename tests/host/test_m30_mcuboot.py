@@ -159,6 +159,7 @@ class M30McubootContractTests(unittest.TestCase):
         ):
             self.assertIn(token, sysbuild)
         for token in (
+            "CONFIG_FLASH=y",
             "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION=y",
             "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION_SECURITY_COUNTER=y",
             "CONFIG_FPROTECT=y",

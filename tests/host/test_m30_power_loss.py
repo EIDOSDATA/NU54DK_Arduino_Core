@@ -320,6 +320,8 @@ class M30PowerLossTests(unittest.TestCase):
         self.assertIn("M30POWER|1|WINDOW|point=mcuboot_test_swap", hook)
         self.assertIn("k_sleep(K_SECONDS(15))", hook)
         self.assertIn("CONFIG_MCUBOOT_ACTION_HOOKS=y", power_conf)
+        boot_conf = (TARGET / "sysbuild/mcuboot.conf").read_text(encoding="utf-8")
+        self.assertIn("CONFIG_FLASH=y", boot_conf)
 
     def test_power_build_scenarios_are_separate_from_normal_dfu(self) -> None:
         """! @brief confirmed·unconfirmed 전원 image만 power hook define을 받습니다. """
