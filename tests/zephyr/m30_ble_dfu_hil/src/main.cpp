@@ -28,6 +28,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <errno.h>
 #include <string.h>
 
 namespace
@@ -88,6 +89,10 @@ namespace
             Serial.print(static_cast<unsigned int>(BLESecurity.lastError()));
             Serial.print("|security_driver=");
             Serial.print(BLESecurity.lastDriverError());
+            Serial.print("|gap_error=");
+            Serial.print(static_cast<unsigned int>(BLEDevice.lastError()));
+            Serial.print("|gap_driver=");
+            Serial.print(BLEDevice.lastDriverError());
             printSuffix();
             Serial.println();
         }
@@ -298,6 +303,18 @@ namespace
         restart_scan_pending = true;
         restart_scan_due_ms = now;
         restart_scan_deadline_ms = now + scan_retry_timeout_ms;
+    }
+
+    /** @brief scan 재시작 중 발생 가능한 controller busy 상태만 재시도 대상으로 판별합니다. */
+    bool isTransientScanRestartError()
+    {
+        const nucode::ble::BLEError error = BLEDevice.lastError();
+        const int driver_error = BLEDevice.lastDriverError();
+        return restart_scan_pending &&
+               ((error == nucode::ble::BLEError::busy && driver_error == -EBUSY) ||
+                ((error == nucode::ble::BLEError::already_started ||
+                  error == nucode::ble::BLEError::wrong_state) &&
+                 driver_error == -EALREADY));
     }
 
     /** @brief scan 결과의 manufacturer field를 exact nonce와 비교합니다. */
@@ -622,8 +639,7 @@ namespace
             {
                 if (!connection_handle.valid())
                 {
-                    static_cast<void>(BLEScan.stop());
-                    if (BLEScan.clearFilters() && BLEScan.start(false))
+                    if (BLEScan.running() || BLEScan.start(false))
                     {
                         restart_scan_pending = false;
                         restart_scan_due_ms = 0;
@@ -711,6 +727,13 @@ namespace
         }
         else if (information.event == nucode::ble::BLEEvent::error)
         {
+#if !defined(NUCODE_M30_DFU_PERIPHERAL)
+            if (isTransientScanRestartError())
+            {
+                restart_scan_due_ms = k_uptime_get() + scan_retry_ms;
+                return;
+            }
+#endif
             fail("gap-error");
         }
     }
