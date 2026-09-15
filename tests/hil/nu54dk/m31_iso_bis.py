@@ -31,6 +31,11 @@ EVENT_FIELDS = {
     "RX_END": {"nonce", "received", "corrupt", "duplicate", "out_of_order", "empty_slots"},
     "BIG_DISCONNECTED": {"nonce", "reason"},
     "STOPPED": {"nonce", "role", "tx", "rx"},
+    "BAD_CODE_READY": set(),
+    "BAD_CODE_DISCONNECTED": {"nonce", "reason"},
+    "BAD_CODE_REJECTED": {"nonce", "received", "empty_slots", "disconnected"},
+    "LOSS_ARMED": {"nonce"},
+    "SYNC_LOST": {"nonce"},
 }
 
 

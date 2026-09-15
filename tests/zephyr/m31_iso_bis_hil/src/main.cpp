@@ -33,6 +33,9 @@ namespace
     constexpr char start_suffix[] = "|count=100";
     constexpr char stop_prefix[] = "M31BIS|1|STOP|nonce=";
     constexpr char send_prefix[] = "M31BIS|1|SEND|nonce=";
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    constexpr char check_bad_code_prefix[] = "M31BIS|1|CHECK_BAD_CODE|nonce=";
+#endif
     constexpr char role_name[] = M31_BIS_ROLE;
     const bool source_role = strcmp(role_name, "source") == 0;
     char command[sizeof(start_prefix) + nonce_length + sizeof(start_suffix)] = {};
@@ -53,6 +56,14 @@ namespace
     bool sync_requested = false;
     bool big_requested = false;
     bool big_disconnected = false;
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    bool expect_sync_loss = false;
+#endif
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    bool wrong_code_next = false;
+    bool wrong_code_active = false;
+    bool authentication_rejected = false;
+#endif
     int64_t stop_start_ms = 0;
     atomic_t sent = ATOMIC_INIT(0);
     atomic_t received = ATOMIC_INIT(0);
@@ -174,19 +185,17 @@ namespace
         {
             if (!rx_end_printed)
             {
-                const atomic_val_t prior = atomic_inc(&empty_slots);
-                if (prior < 4)
-                {
-                    Serial.print("M31BIS|1|EMPTY_SLOT|nonce=");
-                    Serial.print(nonce);
-                    Serial.print("|seq=");
-                    Serial.print(information->seq_num);
-                    Serial.print("|flags=");
-                    Serial.println(information->flags);
-                }
+                atomic_inc(&empty_slots);
             }
             return;
         }
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        if (wrong_code_active)
+        {
+            fail("wrong_code_payload_leak", -EBADMSG);
+            return;
+        }
+#endif
         if (buffer->len != sdu_length)
         {
             atomic_inc(&corrupt);
@@ -290,6 +299,16 @@ namespace
     {
         (void)channel;
         big_disconnected = true;
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        if (wrong_code_active && !stopping)
+        {
+            authentication_rejected = reason == BT_HCI_ERR_TERM_DUE_TO_MIC_FAIL;
+            Serial.print("M31BIS|1|BAD_CODE_DISCONNECTED|nonce=");
+            Serial.print(nonce);
+            Serial.print("|reason=");
+            Serial.println(reason);
+        }
+#endif
 #if defined(CONFIG_BT_ISO_BROADCASTER)
         k_work_cancel_delayable(&send_work);
 #endif
@@ -522,7 +541,16 @@ namespace
         (void)information;
         if (started && !stopping && !finished)
         {
-            fail("pa_sync_lost", -ENOLINK);
+            if (expect_sync_loss && sync == periodic_sync)
+            {
+                Serial.print("M31BIS|1|SYNC_LOST|nonce=");
+                Serial.println(nonce);
+                expect_sync_loss = false;
+            }
+            else
+            {
+                fail("pa_sync_lost", -ENOLINK);
+            }
         }
     }
 
@@ -534,7 +562,12 @@ namespace
         {
             return;
         }
-        if (information == nullptr || information->num_bis != 1U || information->encryption)
+        if (information == nullptr || information->num_bis != 1U ||
+#if defined(M31_BIS_ENCRYPTED)
+            !information->encryption)
+#else
+            information->encryption)
+#endif
         {
             fail("biginfo", -ENOTSUP);
             return;
@@ -566,6 +599,14 @@ namespace
             .sync_timeout = 100U,
             .encryption = false,
         };
+#if defined(M31_BIS_ENCRYPTED)
+        parameter.encryption = true;
+        memcpy(parameter.bcode, nonce_bytes, sizeof(parameter.bcode));
+        if (wrong_code_active)
+        {
+            parameter.bcode[0] ^= 0x01U;
+        }
+#endif
         const int result = bt_iso_big_sync(periodic_sync, &parameter, &big);
         if (result != 0)
         {
@@ -644,6 +685,10 @@ namespace
                 .framing = BT_ISO_FRAMING_UNFRAMED,
                 .encryption = false,
             };
+#if defined(M31_BIS_ENCRYPTED)
+            parameter.encryption = true;
+            memcpy(parameter.bcode, nonce_bytes, sizeof(parameter.bcode));
+#endif
             const int result = bt_iso_big_create(advertiser, &parameter, &big);
             if (result != 0)
             {
@@ -692,6 +737,13 @@ namespace
         sync_requested = false;
         big_requested = false;
         big_disconnected = false;
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        expect_sync_loss = false;
+#endif
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        wrong_code_active = wrong_code_next;
+        authentication_rejected = false;
+#endif
         atomic_set(&sent, 0);
         atomic_set(&received, 0);
         atomic_set(&empty_slots, 0);
@@ -774,6 +826,63 @@ namespace
     }
 #endif
 
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    /** @brief 동기 해제 negative에서만 peer loss를 기대 상태로 둡니다. */
+    void expectSyncLoss()
+    {
+        if (!started || finished || stopping ||
+            command_length != strlen("M31BIS|1|EXPECT_SYNC_LOSS|nonce=") + nonce_length ||
+            memcmp(command, "M31BIS|1|EXPECT_SYNC_LOSS|nonce=",
+                   strlen("M31BIS|1|EXPECT_SYNC_LOSS|nonce=")) != 0 ||
+            memcmp(command + strlen("M31BIS|1|EXPECT_SYNC_LOSS|nonce="), nonce,
+                   nonce_length) != 0)
+        {
+            fail("sync_loss_command", -EINVAL);
+            return;
+        }
+        expect_sync_loss = true;
+        Serial.print("M31BIS|1|LOSS_ARMED|nonce=");
+        Serial.println(nonce);
+    }
+#endif
+
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    /** @brief 다음 한 세션에서만 고의로 다른 128-bit broadcast code를 씁니다. */
+    void selectWrongCode()
+    {
+        if (started || stopping || strcmp(command, "M31BIS|1|BAD_CODE") != 0)
+        {
+            fail("bad_code_command", -EINVAL);
+            return;
+        }
+        wrong_code_next = true;
+        Serial.println("M31BIS|1|BAD_CODE_READY");
+    }
+
+    /** @brief 송신 뒤 유효 payload 유출 없이 BIG 인증 거부를 확인합니다. */
+    void checkWrongCode()
+    {
+        const size_t prefix_length = strlen(check_bad_code_prefix);
+        if (!started || finished || stopping || !wrong_code_active ||
+            command_length != prefix_length + nonce_length ||
+            memcmp(command, check_bad_code_prefix, prefix_length) != 0 ||
+            memcmp(command + prefix_length, nonce, nonce_length) != 0 ||
+            atomic_get(&received) != 0 || !authentication_rejected)
+        {
+            fail("bad_code_not_rejected", -EBADMSG);
+            return;
+        }
+        Serial.print("M31BIS|1|BAD_CODE_REJECTED|nonce=");
+        Serial.print(nonce);
+        Serial.print("|received=");
+        Serial.print(atomic_get(&received));
+        Serial.print("|empty_slots=");
+        Serial.print(atomic_get(&empty_slots));
+        Serial.print("|disconnected=");
+        Serial.println(authentication_rejected ? 1 : 0);
+    }
+#endif
+
     /** @brief STOP은 동일 session을 보유한 host에게서만 수락합니다. */
     void stopProtocol()
     {
@@ -793,7 +902,7 @@ namespace
 #endif
         if (big != nullptr)
         {
-            const int result = bt_iso_big_terminate(big);
+            const int result = big_disconnected ? 0 : bt_iso_big_terminate(big);
             if (result != 0)
             {
                 Serial.print("M31BIS|1|FAIL|nonce=");
@@ -887,6 +996,11 @@ namespace
         memset(&iso_channel, 0, sizeof(iso_channel));
         memset(nonce, 0, sizeof(nonce));
         memset(nonce_bytes, 0, sizeof(nonce_bytes));
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        wrong_code_next = false;
+        wrong_code_active = false;
+        authentication_rejected = false;
+#endif
     }
 
     /** @brief PROBE, START, STOP 외의 UART command를 bounded 실패로 처리합니다. */
@@ -920,6 +1034,24 @@ namespace
                 {
                     stopProtocol();
                 }
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+                else if (strncmp(command, "M31BIS|1|EXPECT_SYNC_LOSS|nonce=",
+                                 strlen("M31BIS|1|EXPECT_SYNC_LOSS|nonce=")) == 0)
+                {
+                    expectSyncLoss();
+                }
+#endif
+#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+                else if (strcmp(command, "M31BIS|1|BAD_CODE") == 0)
+                {
+                    selectWrongCode();
+                }
+                else if (strncmp(command, check_bad_code_prefix,
+                                 strlen(check_bad_code_prefix)) == 0)
+                {
+                    checkWrongCode();
+                }
+#endif
 #if defined(CONFIG_BT_ISO_BROADCASTER)
                 else if (strncmp(command, send_prefix, strlen(send_prefix)) == 0)
                 {

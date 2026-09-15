@@ -24,6 +24,7 @@ from m6_serial_echo import import_pyserial  # noqa: E402
 from m31_ble_capability import ExpectedIdentity  # noqa: E402
 from m31_ble_capability_run import collect_register_identity, discover  # noqa: E402
 from m31_iso_bis import parse_bis_transcript, validate_bis_envelope  # noqa: E402
+from m31_iso_bis_negative import parse_negative_transcript, validate_negative_envelope  # noqa: E402
 from m31_iso_time import parse_time_transcript, validate_time_envelope  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
@@ -90,7 +91,11 @@ def execute(args: argparse.Namespace) -> dict:
         raise BisExecutionFailure("기존 attempt evidence를 덮어쓰지 않습니다")
     if args.cycles < 1 or args.cycles > 20:
         raise BisExecutionFailure("development cycle 분모는 1..20입니다")
-    if args.cycles != 20 and not args.development:
+    if args.negative and args.cycles != 2:
+        raise BisExecutionFailure("BIS negative는 실패 1회·복구 1회입니다")
+    if args.negative and args.time_sync:
+        raise BisExecutionFailure("negative BIS와 ISO timestamp는 별도 기능 gate입니다")
+    if args.cycles != (2 if args.negative else 20) and not args.development:
         raise BisExecutionFailure("exact HIL은 20-cycle만 허용합니다")
     sdk = args.sdk_root.resolve()
     lock = json.loads((REPOSITORY / "tools/ci/ncs-3.4.0.lock.json").read_text(encoding="utf-8"))
@@ -150,18 +155,52 @@ def execute(args: argparse.Namespace) -> dict:
                 ).hexdigest()[:32]
                 nonces.append(nonce)
                 command = f"M31BIS|1|START|nonce={nonce}|count=100"
+                if args.negative == "wrong_broadcast_code" and cycle == 0:
+                    write_command(ports["receiver"], "M31BIS|1|BAD_CODE")
+                    wait_event(ports["receiver"], "receiver", transcript, "BAD_CODE_READY", None, 10.0)
                 write_command(ports["source"], command)
                 wait_event(ports["source"], "source", transcript, "BIG_SYNCED", nonce, 60.0)
                 write_command(ports["receiver"], command)
                 wait_event(ports["receiver"], "receiver", transcript, "BIG_SYNCED", nonce, 60.0)
+                if args.negative == "sync_loss" and cycle == 0:
+                    write_command(ports["receiver"], f"M31BIS|1|EXPECT_SYNC_LOSS|nonce={nonce}")
+                    wait_event(ports["receiver"], "receiver", transcript, "LOSS_ARMED", nonce, 10.0)
+                    write_command(ports["source"], f"M31BIS|1|STOP|nonce={nonce}")
+                    wait_event(ports["source"], "source", transcript, "STOPPED", nonce, 35.0)
+                    wait_event(ports["receiver"], "receiver", transcript, "SYNC_LOST", nonce, 35.0)
+                    write_command(ports["receiver"], f"M31BIS|1|STOP|nonce={nonce}")
+                    wait_event(ports["receiver"], "receiver", transcript, "STOPPED", nonce, 35.0)
+                    continue
                 write_command(ports["source"], f"M31BIS|1|SEND|nonce={nonce}")
                 wait_event(ports["source"], "source", transcript, "TX_END", nonce, 60.0)
-                wait_event(ports["receiver"], "receiver", transcript, "RX_END", nonce, 60.0)
+                if args.negative == "wrong_broadcast_code" and cycle == 0:
+                    time.sleep(1.0)
+                    write_command(ports["receiver"], f"M31BIS|1|CHECK_BAD_CODE|nonce={nonce}")
+                    wait_event(ports["receiver"], "receiver", transcript, "BAD_CODE_REJECTED", nonce, 10.0)
+                else:
+                    wait_event(ports["receiver"], "receiver", transcript, "RX_END", nonce, 60.0)
                 for role in ROLES:
                     write_command(ports[role], f"M31BIS|1|STOP|nonce={nonce}")
                 for role in ROLES:
                     wait_event(ports[role], role, transcript, "STOPPED", nonce, 35.0)
-            if args.cycles == 20:
+            if args.negative:
+                raw = ("\n".join(transcript) + "\n").encode("ascii", errors="replace")
+                if dirty:
+                    measured = parse_negative_transcript(raw, nonces, identity, args.negative)
+                    status = "PASS_CANDIDATE"
+                else:
+                    public_boards = {role: {key: value for key, value in board.items()
+                                           if key not in {"uid", "image"}}
+                                     for role, board in boards.items()}
+                    envelope = {
+                        "source_clean": True, "test_id": "M31-ISO-01:bis",
+                        "negative_class": args.negative, "transcript": raw,
+                        "nonces": nonces, "boards": public_boards,
+                    }
+                    images = {role: board["image_sha256"] for role, board in boards.items()}
+                    measured = validate_negative_envelope(envelope, images, identity)
+                    status = "PASS"
+            elif args.cycles == 20:
                 raw = ("\n".join(transcript) + "\n").encode("ascii", errors="replace")
                 test_id = "M31-ISO-01:time_sync" if args.time_sync else "M31-ISO-01:bis"
                 public_boards = {role: {key: value for key, value in board.items()
@@ -193,7 +232,9 @@ def execute(args: argparse.Namespace) -> dict:
     evidence = {
         "test_id": "M31-ISO-01:time_sync" if args.time_sync else "M31-ISO-01:bis",
         "scope": "two_board_iso_timestamp_twenty_cycles" if args.time_sync else
+                 "two_board_bis_negative_and_recovery" if args.negative else
                  "two_board_bis_twenty_cycles",
+        "negative_class": args.negative,
         "status": status, "source_clean": not bool(dirty), "identity": vars(identity),
         "boards": public_boards, "nonces": nonces, "cycles": args.cycles,
         "reason": reason, "measurement": vars(measured) if measured is not None else None,
@@ -213,6 +254,7 @@ def main() -> int:
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--development", action="store_true")
     parser.add_argument("--time-sync", action="store_true")
+    parser.add_argument("--negative", choices=("wrong_broadcast_code", "sync_loss"))
     args = parser.parse_args()
     try:
         result = execute(args)
