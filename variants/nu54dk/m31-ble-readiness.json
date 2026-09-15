@@ -15,8 +15,8 @@
     {
       "id": "M31-W01",
       "title": "capability_inventory_contract",
-      "status": "in_progress",
-      "exact_evidence": null
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json"
     },
     {
       "id": "M31-W02",
@@ -1039,9 +1039,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "f5619f235a6a4bd2347e8ba41d8bc5e76221228c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/parity-audit.json"
         }
       ]
     },
@@ -1727,9 +1727,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "f5619f235a6a4bd2347e8ba41d8bc5e76221228c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/negative-audit.json"
         },
         {
           "id": "M31-NEG-01:target_recovery",
@@ -1900,9 +1900,9 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 0,
+    "work_completed": 1,
     "test_family_total": 10,
-    "test_family_passed": 1,
+    "test_family_passed": 2,
     "audio_group_total": 11,
     "example_role_total": 42,
     "parity_rows": 703,

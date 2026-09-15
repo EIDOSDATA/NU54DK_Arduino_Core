@@ -238,6 +238,18 @@ def validate(doc: dict) -> None:
         package["status"] == "completed" for package in doc["work_packages"]
     ):
         raise ValueError("work denominator mismatch")
+    for package in doc["work_packages"]:
+        if package["status"] not in {"not_started", "in_progress", "completed"}:
+            raise ValueError("work package status unknown")
+        if package["status"] == "completed":
+            proof = package.get("exact_evidence")
+            if not proof or not (CORE / proof).is_file():
+                raise ValueError("completed work without exact evidence")
+            audit = json.loads((CORE / proof).read_text(encoding="utf-8"))
+            if audit.get("status") != "PASS" or audit.get("source_clean") is not True or (
+                audit.get("work_id") != package["id"]
+            ):
+                raise ValueError("completed work evidence scope mismatch")
     if counts["test_family_total"] != len(doc["test_families"]) or counts["test_subcases"] != sum(
         len(family["cases"]) for family in doc["test_families"]
     ):

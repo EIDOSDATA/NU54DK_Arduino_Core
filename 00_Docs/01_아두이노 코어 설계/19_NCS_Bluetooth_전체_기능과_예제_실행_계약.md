@@ -327,10 +327,12 @@ BR/EDR Classic sample(`Z:classic`)은 nRF54L15 내장 BLE radio 지원 목표 �
 초보자용 최소 예제, 고급 직접 API 예제, 자동 regression runner는 목적이 다르므로 각 실행 경로와
 지원 범위를 설명한다. NCS sample의 모든 내부 helper를 public Arduino API로 승격할 의무는 없다.
 
-## 10. 전체 source·예제 parity 기계 원장 구현 TODO
+## 10. 전체 source·예제 parity 기계 원장
 
-다음 산출물은 **M31-W01에서 새로 구현할 TODO**다. 이 문서 작성 시점에는 생성기·schema·원장·CI가
-완료되지 않았다. M31 capability 원장과 전체 sample 원장은 서로 다른 목적이며 함께 연결한다.
+다음 산출물의 생성기·schema·원장·Host 20/20 negative와 local drift gate는 **M31-W01에서 구현해
+완료**했다. 원격 CI/CD 실행·조회는 최신 사용자 지시로 생략했다. M31 capability 원장과 전체
+sample 원장은 서로 다른 목적이며 함께 연결한다. 개별 예제 target/Arduino build·기능 HIL은
+해당 M31/M32/M33 owner가 완료 전 별도로 닫는다.
 
 - `variants/nu54dk/m31-ble-readiness.json`: M31 기능·고정 test ID·target·runtime 판정.
 - `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`: 고정 upstream Bluetooth 예제 전수와
@@ -374,12 +376,13 @@ BR/EDR Classic sample(`Z:classic`)은 nRF54L15 내장 BLE radio 지원 목표 �
 `supported` 같은 boolean 하나로 source·build·runtime을 합치지 않는다. 실행하지 않은 결과에
 `PASS`·빈 success evidence를 허용하지 않고, 미확정 측정값은 `null`로 유지하면서 필수 시험 착수 전에
 값을 고정하도록 gate를 둔다. 실제 board serial/probe 원문을 원장에 저장하지 않는다.
-이 schema와 gate는 아직 구현 TODO다. 사용자 후속 Apple/Google·외장 I/O 실물 case는
+W01 schema/validator는 이 stage와 source-only 부당 승격을 거부한다. 사용자 후속 Apple/Google·외장 I/O 실물 case는
 `verification_owner: user`, `verification_stage: user_follow_up`, `development_blocker: false`,
 `release_blocker: false`로 분리하고, 해당 기능의 구현·예제·자동 검사 case는 필수로 유지한다.
 Ubuntu/macOS 실물 case는 `verification_owner: user`, `verification_stage: final_release`,
 `development_blocker: false`, `release_blocker: true`로 두어 해당 OS 최종 지원 검증을 보존한다.
-위 필드값은 미래 schema의 계약이며 기존 readiness JSON이 이미 이 정책을 구현한 것으로 간주하지 않는다.
+위 필드값은 현행 readiness/parity schema의 계약이다. 외부 실물 `NOT_RUN`과 필수 개발
+case를 합치지 않으며, 기능별 외부 경로 구현/검증은 담당 작업에서 계속한다.
 
 ### Host unit·negative와 CI 계약
 
@@ -399,7 +402,8 @@ Ubuntu/macOS 실물 case는 `verification_owner: user`, `verification_stage: fin
 
 ### 분모와 M33 release gate
 
-다음 수치를 매번 동시에 출력한다. 고정 source를 실제 수집하기 전 전체 예제 개수를 임의로 적지 않는다.
+다음 수치를 매번 동시에 출력한다. 고정 source W01 수집 결과는 sample 190, test variant
+474, source-only M31 symbol 39, parity 703행이며 pin 변경 시 생성기 `--check`로 다시 대조한다.
 
 - `discovered`: 전체 sample·test variant·source-only feature 각각의 원수.
 - `mapped`: owner와 Arduino 제공 경로 또는 근거 있는 제외를 가진 행 수.

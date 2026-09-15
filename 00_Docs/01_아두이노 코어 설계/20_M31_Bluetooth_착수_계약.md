@@ -7,7 +7,7 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | 원장·capability·CIS 개발 후보 구현; M31 전체 완료 판정 전 |
+| 현 단계 | W01 inventory·capability 계약 완료 1/8; W02 clean CIS PASS, M31 전체 완료 판정 전 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각
@@ -82,4 +82,6 @@ clean `8c125a220c4df722e4922887fdf6c5a5e3793612`을 기준으로 다시 빌드�
 5개 HCI query와 [W02 exact manifest](<../04_검증 기록/evidence/m31-w02-exact-8c125a22/cis-manifest.json>)의
 20회×100 CIS는 PASS다. 이는 controller query와 CIS subcase의 범위만 닫는다.
 BIS/Audio/DF raw IQ·CS procedure와 역할 예제 기능 단계는 별도로 판정한다.
+[W01 clean 감사 결과](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>)는
+parity 703행, Host 오류 입력 20/20 거부, 전체 Host 회귀를 확인해 W01만 완료했다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.
