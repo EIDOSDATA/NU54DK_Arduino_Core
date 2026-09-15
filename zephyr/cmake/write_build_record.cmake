@@ -122,14 +122,12 @@ function(nucode_filter_build_inputs output_variable)
 
   foreach(input_file IN LISTS ARGN)
     get_filename_component(input_name "${input_file}" NAME)
-    get_filename_component(input_extension "${input_file}" EXT)
     string(TOLOWER "${input_name}" input_name)
-    string(TOLOWER "${input_extension}" input_extension)
     if(input_name STREQUAL "cmakelists.txt" OR
        input_name STREQUAL "platform.txt" OR
        input_name STREQUAL "kconfig" OR
        input_name MATCHES "^kconfig\\." OR
-       input_extension MATCHES "^\\.(asm|c|cc|cmake|conf|cpp|cxx|dts|dtsi|h|hh|hpp|impl|inc|inl|ld|overlay|s|yaml|yml)$")
+       input_name MATCHES "\\.(asm|c|cc|cmake|conf|cpp|cxx|dts|dtsi|h|hh|hpp|impl|inc|inl|ld|overlay|s|yaml|yml)$")
       list(APPEND filtered_inputs "${input_file}")
     endif()
   endforeach()
@@ -148,9 +146,11 @@ file(GLOB_RECURSE core_inputs
   "${NUCODE_CORE_ROOT}/dts/*"
   "${NUCODE_CORE_ROOT}/libraries/*"
   "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API/*"
-  "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
   "${NUCODE_CORE_ROOT}/variants/nu54dk/*"
   "${NUCODE_CORE_ROOT}/zephyr/*"
+)
+list(APPEND core_inputs
+  "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
   "${NUCODE_CORE_ROOT}/platform.txt"
 )
 list(SORT core_inputs)

@@ -7,6 +7,8 @@ import importlib.util
 import json
 from pathlib import Path
 import re
+import shutil
+import subprocess
 from types import SimpleNamespace
 from unittest import mock
 import sys
@@ -23,6 +25,7 @@ if SPEC is None or SPEC.loader is None:
 RUNNER = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = RUNNER
 SPEC.loader.exec_module(RUNNER)
+COMMON_RUNNER = sys.modules["ble_pair_hil_common"]
 
 
 class FakeClock:
@@ -302,6 +305,43 @@ class M30PowerLossTests(unittest.TestCase):
             self.assertEqual(initial, RUNNER.source_files_digest(root, (root,)))
             source.write_text("int value = 2;\n", encoding="utf-8")
             self.assertNotEqual(initial, RUNNER.source_files_digest(root, (root,)))
+
+    def test_cmake_and_python_build_input_digests_match(self) -> None:
+        """! @brief CMake record와 HIL 검증기가 다중 확장자·단일 파일을 같게 계산합니다. """
+
+        cmake = shutil.which("cmake")
+        git = shutil.which("git")
+        if cmake is None or git is None:
+            self.skipTest("CMake 또는 Git 실행 파일이 없습니다.")
+        with tempfile.TemporaryDirectory(prefix="n54-m30-record-") as directory:
+            record = Path(directory) / "record.yml"
+            command = [
+                cmake,
+                f"-DNUCODE_CORE_ROOT={REPOSITORY.as_posix()}",
+                f"-DNUCODE_APPLICATION_SOURCE_DIR={TARGET.as_posix()}",
+                f"-DNUCODE_BOARD_PACKAGE_ROOT={RUNNER.BOARD_ROOT.as_posix()}",
+                f"-DNUCODE_NRF_DIR={REPOSITORY.as_posix()}",
+                f"-DNUCODE_ZEPHYR_BASE={REPOSITORY.as_posix()}",
+                f"-DNUCODE_GIT_EXECUTABLE={Path(git).as_posix()}",
+                f"-DNUCODE_BUILD_RECORD={record.as_posix()}",
+                "-DNUCODE_BOARD=nrf54l15dk",
+                "-DNUCODE_BOARD_QUALIFIERS=nrf54l15/cpuapp/nu54dk",
+                "-DNUCODE_TOOLCHAIN_VARIANT=zephyr",
+                "-DNUCODE_TOOLCHAIN_PATH=C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+                "-DNUCODE_CXX_COMPILER=GNU 14.3.0",
+                "-P",
+                str(REPOSITORY / "zephyr/cmake/write_build_record.cmake"),
+            ]
+            subprocess.run(command, check=True, capture_output=True, text=True)
+            recorded = COMMON_RUNNER.build_record_value(
+                record.read_text(encoding="utf-8"), "core_source_sha256"
+            )
+            self.assertEqual(
+                recorded,
+                RUNNER.source_files_digest(
+                    REPOSITORY, COMMON_RUNNER.CORE_SOURCE_SCOPES
+                ),
+            )
 
     def test_target_has_bounded_validation_and_swap_windows(self) -> None:
         """! @brief 전원 전용 app·MCUboot marker와 15초 유한 창을 검사합니다. """
