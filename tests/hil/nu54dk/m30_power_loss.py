@@ -33,7 +33,7 @@ from ble_pair_hil_common import (  # noqa: E402
     file_sha256,
     flash_image_pyocd,
     git_revision,
-    source_files_digest,
+    source_files_digest,  # noqa: F401 - host 계약에서 public helper로 사용합니다.
     validate_board_revision,
     validate_image_unchanged,
     validate_pair_identity,
@@ -42,6 +42,7 @@ from ble_pair_hil_common import (  # noqa: E402
 from m30_ble_dfu import (  # noqa: E402
     APPLICATION_ROOT,
     BASE_VERSION,
+    CentralBuild,
     DfuSession,
     ImageArtifact,
     MAX_SMP_PACKET,
@@ -350,7 +351,7 @@ def manifest_document(
     central: RoleEndpoint,
     confirmed: PeripheralBuild,
     unconfirmed: PeripheralBuild,
-    central_build: Any,
+    central_build: CentralBuild,
     candidates: dict[str, ImageArtifact],
     preflight: dict[str, Any],
 ) -> dict[str, Any]:
@@ -391,9 +392,16 @@ def manifest_document(
             "window_seconds": 15,
         },
         "central_image": {
-            "name": central_build.image.name,
-            "size": central_build.image.stat().st_size,
-            "sha256": file_sha256(central_build.image),
+            "bootloader": {
+                "name": central_build.boot_hex.name,
+                "size": central_build.boot_hex.stat().st_size,
+                "sha256": file_sha256(central_build.boot_hex),
+            },
+            "primary": {
+                "name": central_build.signed_hex.name,
+                "size": central_build.signed_hex.stat().st_size,
+                "sha256": file_sha256(central_build.signed_hex),
+            },
         },
         "trust_public_key_source_sha256": confirmed.public_key_sha256,
         "build_records": {
@@ -807,7 +815,7 @@ def normalize_boards(
     peripheral: RoleEndpoint,
     central: RoleEndpoint,
     confirmed: PeripheralBuild,
-    central_build: Any,
+    central_build: CentralBuild,
     flash_timeout: float,
 ) -> dict[str, Any]:
     """! @brief sector erase만 사용해 매 attempt의 confirmed baseline을 복원합니다. """
@@ -826,10 +834,16 @@ def normalize_boards(
             confirmed.signed_hex,
             flash_timeout,
         ),
-        "central": flash_image_pyocd(
-            "power-central-relay",
+        "central_bootloader": flash_image_pyocd(
+            "power-central-bootloader",
             central.board_id,
-            central_build.image,
+            central_build.boot_hex,
+            flash_timeout,
+        ),
+        "central_primary": flash_image_pyocd(
+            "power-central-primary",
+            central.board_id,
+            central_build.signed_hex,
             flash_timeout,
         ),
     }
@@ -921,7 +935,7 @@ def preflight(
     peripheral: RoleEndpoint,
     central: RoleEndpoint,
     confirmed: PeripheralBuild,
-    central_build: Any,
+    central_build: CentralBuild,
     candidates: dict[str, ImageArtifact],
     args: argparse.Namespace,
     core_revision: str,
@@ -998,7 +1012,8 @@ def validate_preflight_evidence(
     expected_roles = {
         "peripheral_bootloader",
         "peripheral_primary",
-        "central",
+        "central_bootloader",
+        "central_primary",
     }
     if not isinstance(flash_results, dict) or set(flash_results) != expected_roles:
         raise M30PowerFailure("manifest preflight flash role 근거가 유효하지 않습니다.")
@@ -1072,7 +1087,7 @@ def execute_power_hil(
     peripheral: RoleEndpoint,
     central: RoleEndpoint,
     confirmed: PeripheralBuild,
-    central_build: Any,
+    central_build: CentralBuild,
     candidates: dict[str, ImageArtifact],
     args: argparse.Namespace,
     core_revision: str,
@@ -1239,7 +1254,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
     unconfirmed = collect_power_build(
         args.unconfirmed_build_outdir, core_revision, trust_key, 0
     )
-    central_build = collect_central_build(args.central_build_outdir, core_revision)
+    central_build = collect_central_build(
+        args.central_build_outdir, core_revision, trust_key
+    )
     if confirmed.public_key_sha256 != unconfirmed.public_key_sha256:
         raise M30PowerFailure("confirmed와 unconfirmed MCUboot public key가 다릅니다.")
     if file_sha256(confirmed.boot_hex) != file_sha256(unconfirmed.boot_hex):
@@ -1253,7 +1270,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
             unconfirmed.boot_hex,
             unconfirmed.signed_hex,
             unconfirmed.raw_bin,
-            central_build.image,
+            central_build.boot_hex,
+            central_build.signed_hex,
         )
     }
     imgtool_python = Path(args.imgtool_python).resolve()

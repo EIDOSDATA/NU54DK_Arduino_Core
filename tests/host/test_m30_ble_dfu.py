@@ -148,6 +148,65 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertNotIn('"--mass"', source)
         self.assertNotIn('"--chip"', source)
 
+    def test_central_build_requires_sysbuild_bootloader_and_signed_primary(self) -> None:
+        """! @brief Central도 보드 계약대로 MCUboot와 서명 primary를 사용합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-central-") as directory:
+            root = Path(directory)
+            app = root / HIL_RUNNER.APPLICATION_DOMAIN
+            boot = root / HIL_RUNNER.BOOT_DOMAIN
+            (app / "zephyr").mkdir(parents=True)
+            (boot / "zephyr").mkdir(parents=True)
+            core_revision = "a" * 40
+            trust_key = root / "trust.pem"
+            trust_key.write_text("test-key\n", encoding="ascii")
+            (root / "domains.yaml").write_text(
+                "default: m30_ble_dfu_hil\n"
+                f"build_dir: {root.as_posix()}\n"
+                "domains:\n"
+                "  - name: m30_ble_dfu_hil\n"
+                f"    build_dir: {app.as_posix()}\n"
+                "  - name: mcuboot\n"
+                f"    build_dir: {boot.as_posix()}\n"
+                "flash_order:\n"
+                "  - mcuboot\n"
+                "  - m30_ble_dfu_hil\n",
+                encoding="utf-8",
+            )
+            (app / "zephyr/.config").write_text(
+                "CONFIG_BOOTLOADER_MCUBOOT=y\n"
+                "CONFIG_BT_SMP_SC_PAIR_ONLY=y\n"
+                "CONFIG_BT_SMP_MIN_ENC_KEY_SIZE=16\n"
+                "CONFIG_BT_L2CAP_TX_MTU=247\n",
+                encoding="utf-8",
+            )
+            (boot / "zephyr/.config").write_text(
+                "CONFIG_FLASH=y\n"
+                "CONFIG_BOOT_SIGNATURE_TYPE_ECDSA_P256=y\n"
+                "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION=y\n"
+                "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION_SECURITY_COUNTER=y\n"
+                f'CONFIG_BOOT_SIGNATURE_KEY_FILE="{trust_key.as_posix()}"\n',
+                encoding="utf-8",
+            )
+            (app / "build.ninja").write_text(
+                f'M30_DFU_CORE_REVISION=\\"{core_revision}\\"\n',
+                encoding="utf-8",
+            )
+            boot_hex = boot / "zephyr/zephyr.hex"
+            signed_hex = app / "zephyr/zephyr.signed.hex"
+            boot_hex.write_text(":00000001FF\n", encoding="ascii")
+            signed_hex.write_text(":00000001FF\n", encoding="ascii")
+            with mock.patch.object(
+                HIL_RUNNER, "validate_build_record", return_value={}
+            ), mock.patch.object(HIL_RUNNER, "git_revision", return_value="b" * 40):
+                build = HIL_RUNNER.collect_central_build(
+                    str(root), core_revision, trust_key.resolve()
+                )
+            self.assertEqual(build.boot_hex, boot_hex)
+            self.assertEqual(build.signed_hex, signed_hex)
+            self.assertIn("bootloader_config_sha256", build.record)
+            self.assertIn("domains_sha256", build.record)
+
     def test_build_record_pins_the_bundled_gnu_compiler_identity(self) -> None:
         """! @brief build record의 compiler ID·version과 Toolchain bundle을 함께 고정합니다. """
 

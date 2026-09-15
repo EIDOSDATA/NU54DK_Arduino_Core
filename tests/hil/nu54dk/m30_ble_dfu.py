@@ -106,10 +106,11 @@ class PeripheralBuild:
 
 @dataclass(frozen=True)
 class CentralBuild:
-    """! @brief Central relay image와 exact build record입니다. """
+    """! @brief Central relay MCUboot와 서명 application build 입력입니다. """
 
     root: Path
-    image: Path
+    boot_hex: Path
+    signed_hex: Path
     record: dict[str, str]
 
 
@@ -476,41 +477,63 @@ def collect_peripheral_build(
     )
 
 
-def collect_central_build(argument: str, core_revision: str) -> CentralBuild:
-    """! @brief loaderless Central relay와 L4·MTU role define을 검증합니다. """
+def collect_central_build(
+    argument: str, core_revision: str, trust_key: Path
+) -> CentralBuild:
+    """! @brief Central sysbuild·신뢰키·L4·MTU role define을 검증합니다. """
 
-    root = Path(argument).resolve()
-    if (root / "domains.yaml").exists():
-        raise M30DfuFailure("Central build는 --no-sysbuild loaderless image여야 합니다.")
+    root = resolve_sysbuild_root(argument)
+    validate_domains(root)
+    app = root / APPLICATION_DOMAIN
+    boot = root / BOOT_DOMAIN
     require_text_tokens(
-        root / "zephyr/.config",
+        app / "zephyr/.config",
         (
-            "# CONFIG_BOOTLOADER_MCUBOOT is not set",
+            "CONFIG_BOOTLOADER_MCUBOOT=y",
             "CONFIG_BT_SMP_SC_PAIR_ONLY=y",
             "CONFIG_BT_SMP_MIN_ENC_KEY_SIZE=16",
             "CONFIG_BT_L2CAP_TX_MTU=247",
         ),
     )
+    boot_config = require_text_tokens(
+        boot / "zephyr/.config",
+        (
+            "CONFIG_FLASH=y",
+            "CONFIG_BOOT_SIGNATURE_TYPE_ECDSA_P256=y",
+            "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION=y",
+            "CONFIG_MCUBOOT_DOWNGRADE_PREVENTION_SECURITY_COUNTER=y",
+        ),
+    )
+    key_match = re.search(
+        r'^CONFIG_BOOT_SIGNATURE_KEY_FILE="(.+)"$', boot_config, re.M
+    )
+    if key_match is None or Path(key_match.group(1)).resolve() != trust_key:
+        raise M30DfuFailure("Central MCUboot build identity가 trust key와 다릅니다.")
     ninja = require_text_tokens(
-        root / "build.ninja",
+        app / "build.ninja",
         (f'M30_DFU_CORE_REVISION=\\"{core_revision}\\"',),
     )
     if "NUCODE_M30_DFU_PERIPHERAL=1" in ninja:
         raise M30DfuFailure("Central build에 peripheral 역할 define이 있습니다.")
-    image = root / "zephyr/zephyr.hex"
+    boot_hex = boot / "zephyr/zephyr.hex"
+    if not boot_hex.is_file():
+        raise M30DfuFailure("Central MCUboot HEX가 없습니다.")
+    signed_hex = app / "zephyr/zephyr.signed.hex"
     record = validate_build_record(
-        image,
+        signed_hex,
         core_revision,
         git_revision(BOARD_ROOT),
         APPLICATION_ROOT,
     )
     record.update(
         {
-            "application_config_sha256": file_sha256(root / "zephyr/.config"),
-            "application_build_ninja_sha256": file_sha256(root / "build.ninja"),
+            "application_config_sha256": file_sha256(app / "zephyr/.config"),
+            "application_build_ninja_sha256": file_sha256(app / "build.ninja"),
+            "bootloader_config_sha256": file_sha256(boot / "zephyr/.config"),
+            "domains_sha256": file_sha256(root / "domains.yaml"),
         }
     )
-    return CentralBuild(root, image, record)
+    return CentralBuild(root, boot_hex, signed_hex, record)
 
 
 def run_imgtool(
@@ -1290,7 +1313,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
     unconfirmed = collect_peripheral_build(
         args.unconfirmed_build_outdir, core_revision, trust_key, 0
     )
-    central = collect_central_build(args.central_build_outdir, core_revision)
+    central = collect_central_build(
+        args.central_build_outdir, core_revision, trust_key
+    )
     if confirmed.public_key_sha256 != unconfirmed.public_key_sha256:
         raise M30DfuFailure("confirmed와 unconfirmed MCUboot public key가 다릅니다.")
     if file_sha256(confirmed.boot_hex) != file_sha256(unconfirmed.boot_hex):
@@ -1304,7 +1329,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
             unconfirmed.boot_hex,
             unconfirmed.signed_hex,
             unconfirmed.raw_bin,
-            central.image,
+            central.boot_hex,
+            central.signed_hex,
         )
     }
     evidence_path, peripheral_transcript, central_transcript = output_paths(
@@ -1340,10 +1366,16 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 confirmed.signed_hex,
                 args.flash_timeout,
             )
-            flash_results["central"] = flash_image_pyocd(
-                "central-relay",
+            flash_results["central_bootloader"] = flash_image_pyocd(
+                "central-bootloader",
                 central_endpoint.board_id,
-                central.image,
+                central.boot_hex,
+                args.flash_timeout,
+            )
+            flash_results["central_primary"] = flash_image_pyocd(
+                "central-primary",
+                central_endpoint.board_id,
+                central.signed_hex,
                 args.flash_timeout,
             )
 

@@ -66,7 +66,8 @@ class M30PowerLossTests(unittest.TestCase):
             "flash_results": {
                 "peripheral_bootloader": ["pyocd-sector", "100"],
                 "peripheral_primary": ["pyocd-sector", "200"],
-                "central": ["pyocd-sector", "300"],
+                "central_bootloader": ["pyocd-sector", "300"],
+                "central_primary": ["pyocd-sector", "400"],
             },
             "security_level": 4,
             "encryption_key_bytes": 16,
@@ -159,6 +160,47 @@ class M30PowerLossTests(unittest.TestCase):
         self.assertIn(f"read_memory_block8({RUNNER.STORAGE_OFFSET}", program)
         for forbidden in ("--mass", "Operation.ERASE", "--recover"):
             self.assertNotIn(forbidden, program)
+
+    def test_normalize_flashes_both_central_sysbuild_domains(self) -> None:
+        """! @brief Central MCUboot와 서명 primary를 별도 sector 기록합니다. """
+
+        peripheral = SimpleNamespace(board_id="peripheral")
+        central = SimpleNamespace(board_id="central")
+        confirmed = SimpleNamespace(
+            boot_hex=Path("peripheral-boot.hex"),
+            signed_hex=Path("peripheral-primary.hex"),
+        )
+        central_build = SimpleNamespace(
+            boot_hex=Path("central-boot.hex"),
+            signed_hex=Path("central-primary.hex"),
+        )
+        with mock.patch.object(RUNNER, "erase_secondary_slot"), mock.patch.object(
+            RUNNER,
+            "flash_image_pyocd",
+            side_effect=lambda role, _board, _image, _timeout: (
+                "pyocd-sector",
+                role,
+            ),
+        ) as flash:
+            results = RUNNER.normalize_boards(
+                peripheral,
+                central,
+                confirmed,
+                central_build,
+                30.0,
+            )
+        self.assertEqual(
+            list(results),
+            [
+                "peripheral_bootloader",
+                "peripheral_primary",
+                "central_bootloader",
+                "central_primary",
+            ],
+        )
+        self.assertEqual(flash.call_count, 4)
+        self.assertEqual(flash.call_args_list[2].args[2], central_build.boot_hex)
+        self.assertEqual(flash.call_args_list[3].args[2], central_build.signed_hex)
 
     def test_physical_cycle_requires_both_interfaces_to_disappear(self) -> None:
         """! @brief reset처럼 MSD·UART가 유지되면 실제 power cycle로 인정하지 않습니다. """
