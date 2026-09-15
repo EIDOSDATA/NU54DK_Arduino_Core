@@ -221,8 +221,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 build = HIL_RUNNER.collect_central_build(
                     str(root), core_revision, trust_key.resolve()
                 )
-            self.assertEqual(build.boot_hex, boot_hex)
-            self.assertEqual(build.signed_hex, signed_hex)
+            self.assertEqual(build.boot_hex.resolve(), boot_hex.resolve())
+            self.assertEqual(build.signed_hex.resolve(), signed_hex.resolve())
             self.assertIn("bootloader_config_sha256", build.record)
             self.assertIn("domains_sha256", build.record)
 
