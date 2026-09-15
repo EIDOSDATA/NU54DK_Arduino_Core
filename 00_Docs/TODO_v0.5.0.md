@@ -1,4 +1,4 @@
-# v0.5.0 착수 계획 — BLE 확장과 지원 범위 판정
+# v0.5.0 실행 계획 — 전체 Bluetooth 기능·NCS 예제·다중 Host
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
@@ -20,6 +20,9 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M30 보안·OOB·profile·DFU 계약 | [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 판정 원본 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 TODO | [M31 TODO](TODO_M31.md) |
+| M32 최신 LE·Mesh·공존 TODO | [M32 TODO](TODO_M32.md) |
+| M33 전체 예제·상호운용·공개 TODO | [M33 TODO](TODO_M33.md) |
+| 기능별 upstream·제공 경로·예제·검증 | [전체 Bluetooth 기능 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) |
 | v0.5.0 Windows·Ubuntu·macOS Host 계약 | [다중 Host 지원 착수 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
 | W01 실제 HCI·실패 분류·증거 | [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>) |
@@ -48,6 +51,26 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M30 W08 실제 전원 HIL과 M30 완료 | [161번 기록](<04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
 
 ## 1. 다음 착수 순서
+
+### 2026-09-16 재배치
+
+사용자 목표는 **고정 NCS v3.4.0에서 nRF54L15가 할 수 있는 Bluetooth 기능과 예제를 NU54DK의
+Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 wrapper/direct/profile/template 중
+기능에 맞게 정하고 upstream sample·역할·test ID를 전수 추적한다. 계획 문서 작성은 구현 완료에 포함하지 않는다.
+
+| 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
+| --- | --- | --- |
+| M31 | **0/8** | W01 전체 sample 원장·capability → W02 ISO → W03 전체 Audio profile; W04 DF·W05 CS → W06~W08 통합·마감 |
+| M32 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
+| M33 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 Host·RC·공개 |
+| Host | **3/8** | HOST-W04 Ubuntu prerequisite·path·권한부터 시작; HOST-W05~HOST-W08은 별도 잔여 |
+
+M31/M32의 외부 장비 행을 기다리는 동안 독립적인 M32-A·M33 예제 준비·Host 작업은 진행한다.
+M31 8/8과 HOST-W04~HOST-W06 완료는 독립 집계하며 v0.5.0 공개에서 M33이 결합한다.
+사용자가 보드 3개 연결을 확인했다. 실제 mapping은 재검증하며, 정밀 RF·음질·거리/각도 보정은
+필수 gate 밖으로 변경한다. 보드 기반 실제 데이터·보안·복구 검증은 계속 필수다.
+
+### 보존하는 M28~M30 기준선
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
@@ -168,7 +191,12 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M29 Signed Write | Zephyr host `BT_SIGNING`은 `DEPRECATED` | 기본 OFF의 `NUCODE_BLE_LegacySigning`, legacy opt-in으로 구현. CSRK/counter 영속화·replay 거부와 통합 회귀 PASS |
 | M29 EATT | Zephyr host `BT_EATT`는 `EXPERIMENTAL` | 기본 OFF의 `NUCODE_BLE_EATT`, experimental opt-in으로 구현. 암호화·2 bearer 부하와 통합 회귀 PASS; 안정 API로 승격하지 않음 |
 | M31 방향탐지 | 기본 SDC의 CTE 송신은 AoA 지원·AoD 미지원. 전체 RX/IQ 경로 지원을 뜻하지 않음 | 송신·수신·안테나 전환을 분리해 controller/profile 적용성 판정. 대체 Zephyr LL은 별도 후보이지 검증 완료 대안이 아님 |
+| M31 Audio 확장 | Host source에는 BAP/CAP 외 다수 역할/profile이 존재; sample의 nRF54L15 대상 여부는 개별 확인 필요 | PACS/ASCS·BASS·CSIP·PBP·VCP/VOCS/AICS·MICP·MCP/MCS·CCP/TBS·TMAP/GMAP/HAP/HAS를 W03에서 전수 구현/적용성 판정 |
+| M32-A 최신 LE | 고정 SDC의 power/path loss·subrating·SCA·frame space·shorter interval·extended feature set 및 Nordic 확장 | M28의 기존 6개 capability PASS와 구분해 W01~W05에 신규 구현·예제·negative 배정 |
+| M32-A EAD/coding·자원 | EAD Host source·광고 coding 설정, nRF54L15용 multi-set/identity 예제 존재 | EAD/coding은 적용 build·runtime 확인 전 candidate; 1 advertising set 기본값과 확장 preset 분리 |
+| M32-B Mesh 1.1 | Remote Provisioning·SAR·Opcode Aggregator·Large Composition·Private Beacon/Proxy·Solicitation·Subnet Bridge source 존재 | node/model 역할·RRAM/RAM·BLOB/DFU/Distribution과 함께 W06~W08에서 검증 |
 | M32 공존 | 802.15.4/ESB와 BLE 병행시험에는 동작하는 단독 radio 경로가 먼저 필요 | M32 안에서 최소 검증용 기반·단독 TX/RX를 확보하고, M38/M39는 공개 API·예제·일반 제품화 확장으로 연결 |
+| M33 외부 ecosystem·진단 | Fast Pair·ANCS/AMS·HCI/DTM 예제별 peer/credential/transport 전제 존재 | template/direct 제공, 외부 행 NOT RUN 명시; BR/EDR·nRF54L15 비대상 nrf_dm는 비적용 근거 기록 |
 
 정적 근거는 NCS checkout의 `zephyr/subsys/bluetooth/host/Kconfig` (`BT_SIGNING`),
 `zephyr/subsys/bluetooth/host/Kconfig.gatt` (`BT_EATT`),
@@ -196,11 +224,13 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M28 | 지원 원장 → per-link 계약 → GAP/link/privacy 확장 → 다중 peer HIL | 고정 capability/profile·연결/자원 한계·회귀 목록 |
 | M29 | GATT/CoC → signed write/EATT 정책 적용 → 오류·상호운용 | client/server·cache·credit·실험/legacy 제약과 시험 근거 |
 | M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 + HOST-W01~HOST-W03 | M34~M36이 재사용할 보안 계약과 Host 공통 backend·Windows 전용 가정 inventory |
-| M31-A | ISO/CIS/BIS 기반 → 채택한 LC3·LE Audio profile → audio HIL + HOST-W04~HOST-W06 | ISO 검증 경계와 Ubuntu/macOS prerequisite·build/package CI 근거 |
-| M31-B | DF 송수신·controller 적용성 → RF fixture → 적용 가능한 CTE/IQ 경로 | 지원/미지원·조건부 기능과 controller별 제약, 적용 RF 근거 |
-| M31-C | Connected ACL·CS 보안 → 거리 보정·반복성·상호운용 | 연결·보안·거리 오차·peer별 측정 근거 |
-| M32 | 최소 radio/profile·단독 TX/RX → Mesh → 선택 조합 공존·복구 + HOST-W07 | 공존 계약과 세 Host 실제 upload/debug/serial·설치 lifecycle 근거 |
-| M33 | 필수 기능·HOST-W08 회귀·지원표 → package/설치 → 범위 확인·공개 | exact source·자산·세 Host 지원/제약·상호운용·qualification 적용성 |
+| M31-A | ISO/CIS/BIS·combined/time sync → LC3·전체 Audio profile → 합성 데이터/제어 HIL | stream/buffer·codec·역할별 짝 예제·미지원/외부 I/O 미검증 행 |
+| M31-B | controller 적용성 → AoA CTE TX 제어/지원 경로; RX/IQ·AoD 개별 판정 | TX 증거 깊이, RX/IQ candidate·fixture 상태, SDC AoD 미지원 |
+| M31-C | Connected ACL·CS/RAS·raw 결과/거리 산출 → security/peer loss/recovery | 기능 동작 근거; 정밀 거리 보정·정확도는 필수 밖 |
+| M32-A | power/path loss → timing/subrate → adv/EAD/identity/resource → Nordic LLPM/QoS/event | 새 자원 preset·실험적 opt-in·짝 예제·2/3보드 기능/negative |
+| M32-B | Mesh 기본 → Mesh 1.1 → BLOB/Mesh DFU/Distribution | node/model·key/settings·transfer·복구, 내부 RRAM/배포자 한계와 M36 인계 |
+| M32-C | 최소 radio/profile·802.15.4/ESB 단독 TX/RX → 선택 공존·복구 | MPSL ownership·loss/서비스 지연·M38/M39 공개 예제 인계 |
+| M33 | GATT/beacon·ecosystem·HCI/DTM 예제 → 전체 parity·interop → HOST-W08/RC → 공개 | 누락 0 원장·예제 제공 범위·실행 증거·세 Host 지원/제약·qualification 적용성 |
 
 M31-A/B/C는 **M31 내부 작업 ID**다. 하나를 완료해 M31 전체 완료로 계산하지 않는다.
 M30 최소 DFU에서는 고정 layout·신뢰키·초기 설치·BLE 갱신·전원 차단 복구와 Arduino 제공 형태를
@@ -212,8 +242,9 @@ M42 시작 전에는 사용할 Matter transport, Thread 선택 시 M40의 networ
 NU54DK의 외장 flash 미탑재와 factory-data partition 적용성은 설계 입력이며 Matter 불가능 판정이 아니다.
 
 M33의 사용자 경로 정리에 기존 API만 사용하는 ARF-04A 목적별 예제를 연결한다.
-새 public API·buffered NUS·PWM pool·BLE role-budget은 M30/M33 필수 구현에 합치지 않고
+Buffered NUS·PWM pool·별도 편의 API는 M30/M33 필수 구현에 합치지 않고
 [별도 개선 작업](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)으로 검증한다.
+BLE role-budget ARF-01은 M32-W04로 통합해 기본 2-link 및 확장 역할 preset과 한 번 검증한다.
 후속 배포 버전은 착수 gate에서 확정하며 기존 M34~M45 제품선을 임의 재배치하지 않는다.
 
 ## 5. 장비와 정량 판정 기준
@@ -227,11 +258,16 @@ Android/iOS/Linux cross-vendor matrix는 M28/M29 PASS에 포함하지 않는다.
 
 | 시험군 | 계획상 필요한 구성 | 착수 시 확인할 사항 |
 | --- | --- | --- |
-| BLE 기본·multi-link | 최소 NU54DK 3개와 packet trace, Android/iOS/Windows/Linux peer | 실제 보드 수·역할, OS/version·어댑터·peer 기능별 적용성 |
-| ISO/LE Audio | 채택 profile을 송수신할 peer와 해당 audio 입력·출력/측정 수단 | codec/profile, clock·buffer 조건, 측정 가능한 loss·latency·jitter |
-| Direction Finding | 지원 판정된 controller와 역할별 antenna array/switch·IQ 수집 구성 | NU54DK 단독으로 되는 역할과 추가 RF 구성이 필요한 역할 구분 |
-| Channel Sounding | CS 지원 peer, 통제 거리 또는 RF 감쇠 조건·보정 데이터 | 실제 거리 기준·환경·방향·cross-vendor peer 확보 |
-| Mesh/coexistence | topology별 노드, power-cycle 수단, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수, 허용 동시 조합·부하, starvation 측정 방법 |
+| BLE 기본·multi-link | NU54DK 2~3개와 수신측 sequence/hash | probe SHA-256·serial·role·revision; OS peer는 별도 M33 행 |
+| ISO/LE Audio | 2보드 송수신, 3보드 source/sink/assistant 또는 broadcast; 합성 PCM/LC3 | 실제 SDU·codec·제어·buffer/복구, 외부 microphone/speaker/codec는 별도 미검증 행 |
+| Direction Finding | CTE TX 1보드; IQ 수신은 지원 controller와 해당 안테나/receiver 필요 | TX 제어와 RF 수신 증거 구분, SDC AoD 미지원·RX candidate; 장비 없으면 RX NOT RUN |
+| Channel Sounding | CS initiator/reflector 2보드, 선택 3번째 peer | procedure/RAS·결과·보안·재연결 기능; 정밀 거리·방향 보정 요구 없음 |
+| Mesh/coexistence | 승인 topology의 2~3노드, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수·단독 통신·조합·부하·서비스 지연; 전원 차단은 별도 사람 개입 |
+
+보드만으로 모든 RX/IQ·외부 audio·OS/계정 기반 경로까지 실제 PASS가 되는 것은 아니다.
+사용자가 제외한 정밀 계측은 `out_of_scope_by_user_decision`, 외부 장비 미확보는 `NOT RUN`,
+고정 controller 비지원은 `UNSUPPORTED`로 기록한다. 보드 수 초과 topology는 target build와
+별도 장비 필요 행으로 남기며 3보드 표본 결과를 더 큰 topology의 PASS로 확대하지 않는다.
 
 Android/iOS/Linux 항목은 **BLE 상대 장치 상호운용**이며 Arduino Core 개발·설치 Host matrix와
 서로 다른 시험이다. v0.5.0의 Host 확대는 [별도 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)으로
@@ -242,22 +278,24 @@ Windows 10/11 x64, Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 �
 
 M28 GAP/multi-link 9개와 M29 ATT/GATT·L2CAP 10개 test ID를 모두 확정·실행했다.
 M30은 [착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)의 10개 test ID와 수치가 확정됐다.
-M31 이후의 수치는 아직 **미확정**이다. 임의 숫자를 제품 보증으로 채우지 않고, 선택 profile과 장비가 결정되면 P05에서
-숫자·단위·계산식·측정 수단을 채운다. `장시간`, `안정적`, `저지연`만으로 합격 기준을 대신하지 않는다.
+M31~M33 TODO의 시험 ID·계획 기준은 구현 시 계약/기계 원장에 고정한다. W01에서 역할별
+설정·하위 case·숫자·단위·계산식·관측 수단·최대 시간을 확정한 뒤 실행한다. 계획 수치는 성능
+보증이나 실제 PASS가 아니다. `장시간`, `안정적`, `저지연`만으로 합격 기준을 대신하지 않는다.
 
 | 시험군 | 반드시 고정할 입력 | 수치·판정 항목 |
 | --- | --- | --- |
 | GAP/multi-link | 연결 수·역할·PHY·MTU/DLE·interval·전송률·환경 | reconnect 반복 수·timeout, 요청/실제 연속 시간, 송수신 분모·허용 loss/중복/순서 오류, 자원 복구 기준 |
 | GATT/CoC/EATT | value/MTU·channel/credit 수·동시 부하·malformed 입력 | payload 일치, 오류 종류·횟수, 최대 서비스 지연·복구 timeout, leak 판정 |
 | Security/DFU | IO/OOB·key 정책·서명·image/layout·중단 주입 지점 | 거부해야 할 입력·예상 오류, 전원 차단 반복 수·부팅/복구 timeout, rollback·데이터 보존 기준 |
-| ISO/Audio | codec/profile·SDU·buffer·clock·부하 | loss 분모·허용률, latency/jitter 통계와 상한·측정 오차, underrun/overrun·복구 시간 |
-| DF/CS | 역할·controller·안테나·거리·보정·환경 | sample 수·유효률, 오차 통계/상한·반복성, 보안 실패·연결 끊김 복구 기준 |
+| ISO/Audio | codec/profile·SDU·buffer·clock·부하 | loss 분모·허용률·sequence/payload·codec 완료·underrun/overrun·복구 시간; 관측 가능한 지연은 측정법과 함께 기록 |
+| DF/CS | 역할·controller·CTE/CS procedure·결과 형식·환경 | command/결과 수·유효성·보안 실패·연결 복구; RF 각도/거리 절대 오차와 보정은 필수 밖 |
 | Mesh/coexistence | topology·model·동시 조합·각 protocol 부하 | 전달률·서비스 지연 상한·starvation 판정, power-cycle 수·복구 timeout·soak 시간 |
 
 각 test ID에는 최대 실행 시간·반복 수·오류 중단 조건·진단 후 동일 조건 재검증 횟수도 고정한다.
 실패는 원인·수정·동일 조건 재검증을 연결하며 무한 재시도로 통과를 만들지 않는다.
-통신 손실, audio jitter, 거리 오차의 허용치는 기능별 기준이며 모든 주변장치 조합이나 정밀
-계측 품질을 일괄 보증하지 않는다. v0.4.0의 범위 제외는 그대로 보존한다.
+통신 손실과 관측 가능한 software 지연·복구 허용치는 기능별 측정법과 함께 고정한다.
+모든 주변장치 조합이나 정밀 RF·음질·거리/각도 계측 품질을 일괄 보증하지 않는다.
+v0.4.0의 범위 제외는 그대로 보존한다.
 
 ## 6. 결과·공개 규칙
 
@@ -266,6 +304,9 @@ M31 이후의 수치는 아직 **미확정**이다. 임의 숫자를 제품 보�
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.
+- 이번 문서 개정은 2026-09-16의 사용자 범위 결정이다. 정밀 RF/audio/거리/각도 계측 제외를 적용하고
+  전체 NCS Bluetooth 기능·예제를 명시한 단계에 배치했다. Capability parser·target·parity JSON은
+  아직 구현하지 않았으며 M31-W01의 다음 실행 항목이다.
 - 문서상의 기능 계획과 Bluetooth/Matter 제품 인증 취득은 별개다.
 - v0.4.0·v0.4.1 공개 승인은 v0.5.0 공개 승인이 아니다. M33에서 exact 결과·자산 기준으로 공개 범위를 확정한다.
 - v0.5.0부터 세 Host 계열을 정식 범위로 공개하려면 지원표의 모든 OS 행에 clean 설치·전체 예제

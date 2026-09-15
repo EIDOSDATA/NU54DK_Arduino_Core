@@ -7,13 +7,16 @@ W03 유선 OOB·bond/privacy, W04 일곱 BLE profile, W05 MCUboot layout·서명
 DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했습니다. W08은 exact
 `ae5186f7…`에서 `M30-POWER-01` 네 지점 × 3회 실제 전원 차단 **12/12**를 통과했고 M30을 완료했습니다.
 병행한 **HOST-W01~HOST-W03 inventory·Host resolver·launcher**도 완료했습니다.
-다음 개발 요청은 [M31 TODO](TODO_M31.md)에 따라 착수 계약과 RF/audio 장비 gate를 먼저 확정해야 합니다.
+다음 구현은 [M31 TODO](TODO_M31.md)의 전체 Bluetooth sample 원장·capability 계약과 HOST-W04입니다.
+2026-09-16에 [전체 기능·예제 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)으로
+M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제를 Arduino에서 사용하는 것이며,
+보드 기반 기능 검증을 수행하고 정밀 RF·음질·거리/각도 보정은 필수 gate에서 제외합니다.
 
 ## 1. 현재 체크포인트
 
 | 항목 | 상태 |
 | --- | --- |
-| Branch | `main` |
+| Branch | `m31-w01` — `main`의 `eff575da948f96fe8361b16f0475f7eb113ccf50`에서 분기한 문서 작업 |
 | 공개 배포 | v0.4.1 단독 지원 |
 | 개발 소스 | 0.4.1-dev |
 | M28 | W01~W08 **8/8**, test ID 9/9 PASS |
@@ -35,7 +38,8 @@ DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했습니�
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 순서 | [M31 TODO](TODO_M31.md) |
-| 현재 개발 지점 | M30 완료. M31 범위·장비 gate 확인 뒤 착수 |
+| M31 / M32 / M33 구현 진도 | **0/8 · 0/12 · 0/8**; [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md), 문서 개정은 구현 완료가 아님 |
+| 현재 개발 지점 | M30 완료. 전체 기능·예제 계획 반영 후 M31-W01과 HOST-W04 구현 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
 | Host 구현 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 미착수 |
 
@@ -75,19 +79,35 @@ DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했습니�
 
 ## 4. 다른 컴퓨터에서 바로 할 일
 
-1. `main`을 fetch/pull한 뒤 branch, HEAD, 작업 트리, board submodule, NCS/Zephyr/toolchain lock을 확인합니다.
+1. `git fetch origin` 뒤 branch·HEAD·작업 트리·원격 변경을 확인합니다. 신규 작업은 `main`의 ff-only
+   갱신 뒤 전용 branch에서 수행합니다. 기존 `m31-w01` 작업은 보존하고 해당 branch 최신 상태에서 재개합니다.
 2. 이 문서와 [M31 TODO](TODO_M31.md), [v0.5.0 계획](TODO_v0.5.0.md),
    [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 읽습니다.
 3. 전체 Host regression을 먼저 실행해 인계 source의 기준선을 확인합니다.
-4. M31-W01 착수 계약, `m31-ble-readiness.json`, capability parser와 negative Host test를 만듭니다.
-5. 고정 SDK의 ISO/Audio·DF·CS source candidate와 실제 NU54DK runtime capability를 분리합니다.
-6. HOST-W04 prerequisite manifest·검증기는 M31 RF/audio 장비 대기와 독립적으로 병행합니다.
-7. 실제 보드 시험 전에는 현재 probe UID·COM·role·firmware revision을 다시 확인하며 과거 mapping을
+4. M31-W01에서 `m31-ble-readiness.json`과 전체 `ncs-v3.4.0-bluetooth-sample-parity.json`,
+   수집기/검증기·capability parser·negative Host test·capability target/build matrix를 구현합니다.
+   이번 문서 작업에서 이 코드·JSON을 이미 구현했다고 가정하지 않습니다.
+5. 고정 SDK의 sample/test ID·nRF54L15 metadata와 Arduino 제공 경로를 연결하고 source candidate,
+   native/Arduino build, 실제 NU54DK runtime·peer interop를 각각 기록합니다.
+6. HOST-W04 Ubuntu prerequisite manifest·실행 파일·path·udev/권한과 negative test를 병행합니다.
+   M31 외부 장비 행 대기 중 M32-A 및 M33 예제 준비도 독립 진행할 수 있습니다.
+7. 실제 보드 시험 전에는 현재 probe SHA-256 identity·COM/serial·role·firmware revision을 다시 확인하며 과거 mapping을
    자동 재사용하지 않습니다.
 
-M31-W01 capability는 NU54DK 한 대부터 시작할 수 있습니다. Raw ISO는 최소 두 대가 필요하고,
-LE Audio·Direction Finding·정량 Channel Sounding은 승인된 peer와 audio/antenna/IQ/거리 fixture가
-확정돼야 실기 판정할 수 있습니다. 장비가 없는 필수 행은 `NOT RUN`으로 유지합니다.
+사용자가 NU54DK 세 대 연결과 보드만 보유한 상태를 확인했습니다. 이는 영구 probe mapping이 아닙니다.
+M31-W01 capability/CTE TX 제어는 한 대, ISO·합성 Audio·CS는 두 대, broadcast/assistant·통합은
+세 대 구성을 기본으로 합니다. 적용 가능한 실제 기능 경로는 반복 실행·증거 수집을 자동화합니다.
+AoA RX/IQ·외부 audio 입출력·타사 peer·실제 Ubuntu/macOS PC가 필요한 개별 행은 장비 없으면
+`NOT RUN`이며 기본 보드 기능시험과 따로 추적합니다. 정밀 계측은 현재 범위 밖입니다.
+
+### 시작 시 확인한 CI
+
+2026-09-16 확인 시 `ebe74f47…`의 Software Gates는 성공, Reproducible Builds는 **cancelled**였습니다.
+최신 기반 `eff575da…`의 Software Gates는 성공이며 Reproducible Builds는 당시 **in_progress**였습니다.
+재개 시 원격 최신 상태를 확인하고 문서 작업 push의 exact SHA 결과와 별도로 기록합니다.
+
+이후 사용자 지시로 이번 문서 작업의 CI/CD 실행 요청·확인은 생략합니다. 로컬 검증만 새 결과로
+기록하며 이 문서 commit의 CI 성공을 주장하지 않습니다. 다음 구현 때의 검사 범위는 최신 요청을 따릅니다.
 
 ## 5. 재검증 규칙
 

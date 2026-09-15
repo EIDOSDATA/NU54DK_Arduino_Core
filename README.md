@@ -36,7 +36,9 @@
 현재 개발 체크포인트는 **M30 완료, M31 착수 대기**입니다. M30-W08 `M30-POWER-01`은
 actual power cut 12/12를 통과했습니다. [M31 TODO](00_Docs/TODO_M31.md)와
 [개정 실행 순서](<00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)에 따라
-M31 capability·장비·Host 선행조건부터 착수합니다.
+M31의 전체 NCS Bluetooth 예제 원장·capability와 HOST-W04부터 착수합니다.
+신규 범위는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)에
+따라 M31 8개·M32 12개·M33 8개 작업으로 재배치했습니다. 구현은 아직 미착수입니다.
 최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
 위 CI 배지는 소프트웨어 검사 상태이며 보드 실기·상호운용·정식 릴리스 완료를 뜻하지 않습니다.
 
@@ -164,7 +166,9 @@ PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·O
 | M28 — 완료 | Central 최대 1개 + Peripheral 최대 1개, 총 2-link. Generation handle, 확장 광고·스캔, periodic 광고·sync·PAST, PAwR, privacy/RPA, link별 제어 | 해당 개발 계약 완료. OS별 상호운용·Bluetooth qualification·v0.5.0 공개는 별도 |
 | M29 — 완료 | 512-byte long/reliable GATT, descriptor·authorization·read multiple, robust cache, LE CoC, Signed Write·EATT opt-in | 10/10 test ID와 세 보드 mixed-link·M19~M21/M28 회귀 PASS. Windows/Intel GATT 외 OS·adapter 전체는 미검증 |
 | M30 — 완료 | link별 security·pairing, 유선 OOB·bond/privacy, profile 7개, MCUboot·secure BLE DFU, 세 보드 secure multi-link | W01~W08·10/10 test ID와 실제 전원 차단 12/12 PASS. NFC RF는 결정된 범위대로 NOT RUN |
-| M31~M33 — 계획 | ISO/Audio·방향탐지·Channel Sounding 적용성, Mesh·공존, Windows·Ubuntu·macOS Host와 v0.5.0 통합·릴리스 | 기능·Host 구현, 장비·지원 가능 범위 판정과 실제 검증 필요 |
+| M31 — 계획 0/8 | ISO·전체 LE Audio profile, 방향탐지·connected Channel Sounding과 NCS 예제 원장 | 역할별 Arduino 예제·보드 기반 기능/복구 HIL·지원성 판정 |
+| M32 — 계획 0/12 | 최신 LE 링크/광고·Nordic 확장, Mesh 1.1·DFU, 최소 radio·공존 | 기능·자원 preset·예제·2/3보드 HIL; HOST-W07 병행 |
+| M33 — 계획 0/8 | 표준 service·beacon·ecosystem·HCI/DTM 예제, 전수 parity·Host·상호운용·릴리스 | 전체 예제 설치/build·실행 상태, 세 Host 증거·공개 gate |
 
 Signed Write는 기본 OFF의 **deprecated legacy opt-in** (`NUCODE_BLE_LegacySigning`),
 EATT는 기본 OFF의 **experimental opt-in** (`NUCODE_BLE_EATT`)입니다.
@@ -211,6 +215,11 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 송신/수신 역할에 맞는 짝 예제와 보드 수는 각 Sketch 주석과
 [프로필·전체 예제 목록](<00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)을 따릅니다.
 
+앞으로 고정 NCS v3.4.0의 nRF54L15 적용 Bluetooth 예제마다 Arduino wrapper·직접 API·검증된
+profile·template 중 제공 경로를 배정합니다. 예제에는 보드 역할·설정·예상 출력·오류/복구를 포함합니다.
+M31의 기본 수락은 보드 간 실제 프로토콜·합성 Audio 데이터·복구이며 정밀 RF·음질·거리/각도 보정은
+필수 gate 밖입니다. 외부 장치와 실제 Host의 미검증 행은 별도로 공개합니다.
+
 ## 사용 전 확인
 
 - 실제 결선은 [P2/P4 커넥터 핀맵](<00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)을 기준으로 합니다.
@@ -231,6 +240,7 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | v0.5.0 Windows·Ubuntu·macOS 계획 | [다중 Host 지원 착수 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
 | 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M30 완료, M31 착수 대기 |
+| 이후 Bluetooth 전체 구현·예제 | [전체 기능 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) · [M32 TODO](00_Docs/TODO_M32.md) · [M33 TODO](00_Docs/TODO_M33.md) |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
 ### 소스에서 개발하기
