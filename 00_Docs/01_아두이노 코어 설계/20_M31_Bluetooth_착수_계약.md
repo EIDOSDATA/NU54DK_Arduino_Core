@@ -7,7 +7,7 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | W01 inventory·capability 계약 완료 1/8; W02 clean CIS·BIS positive·ISO time sync PASS, M31 전체 완료 판정 전 |
+| 현 단계 | W01 inventory·capability 계약 완료 1/8; W02 clean CIS·BIS 전체·ISO time sync PASS, combined 세 보드 기능 전 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각
@@ -85,8 +85,12 @@ BIS의 두 보드 20회×100 유효 SDU 개발 후보도
 [W02 BIS 개발 원본](<../04_검증 기록/evidence/m31-w02-dev-candidate/m31-bis-dev-04.json>)에
 보존했다. clean `c097b15d3f323d81751af269d348312a02dc1ca9`에서
 [BIS exact positive manifest](<../04_검증 기록/evidence/m31-w02-exact-c097b15d/bis-manifest.json>)의
-2,000/2,000 유효 SDU와 양 BIG 해제·재시작을 다시 확인했다. wrong broadcast code·
-sync loss negative는 남아 있으므로 BIS 전체 subcase·W02 작업 묶음은 완료 판정 전이다.
+2,000/2,000 유효 SDU와 양 BIG 해제·재시작을 다시 확인했다. 이 positive 판정만으로
+BIS 전체 subcase를 닫지 않았다. clean `078587471637db187e508db2deec7d091a8262ef`의
+[BIS 전체 case](<../04_검증 기록/evidence/m31-w02-exact-07858747/bis-case-manifest.json>)는
+20회×100의 매회 최소 99개 수신과 wrong broadcast code의 MIC failure·유출 0,
+sync loss 뒤 각 100/100 새 BIG 복구를 확인해 `M31-ISO-01:bis`를 PASS로 판정했다.
+W02 작업 묶음에는 combined 세 보드 기능이 남아 있다.
 clean `504badeec81723f4949879611b0b19371389b56d`의
 [ISO time sync exact manifest](<../04_검증 기록/evidence/m31-w02-exact-504badee/time-manifest.json>)는
 20회×100 receiver timestamp와 양 BIG 해제·재시작을 PASS로 판정했다. 첫 clean
