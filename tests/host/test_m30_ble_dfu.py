@@ -90,6 +90,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
             'constexpr char rescan_marker[] = "M30DFU|1|RESCAN|"',
             "scheduleCentralScan()",
             "isTransientScanRestartError()",
+            "clearScheduledCentralScan()",
+            "started && !connection_handle.valid()",
             "BLEScan.running() || BLEScan.start(false)",
             "scan-restart-timeout",
             'Serial.print("|gap_driver=")',

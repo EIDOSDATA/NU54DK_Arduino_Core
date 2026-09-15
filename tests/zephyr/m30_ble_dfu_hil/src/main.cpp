@@ -305,6 +305,14 @@ namespace
         restart_scan_deadline_ms = now + scan_retry_timeout_ms;
     }
 
+    /** @brief 연결 또는 scan 시작이 확인되면 남은 재시작 예약을 해제합니다. */
+    void clearScheduledCentralScan()
+    {
+        restart_scan_pending = false;
+        restart_scan_due_ms = 0;
+        restart_scan_deadline_ms = 0;
+    }
+
     /** @brief scan 재시작 중 발생 가능한 controller busy 상태만 재시도 대상으로 판별합니다. */
     bool isTransientScanRestartError()
     {
@@ -641,9 +649,7 @@ namespace
                 {
                     if (BLEScan.running() || BLEScan.start(false))
                     {
-                        restart_scan_pending = false;
-                        restart_scan_due_ms = 0;
-                        restart_scan_deadline_ms = 0;
+                        clearScheduledCentralScan();
                     }
                     else
                     {
@@ -652,7 +658,7 @@ namespace
                 }
                 else
                 {
-                    restart_scan_due_ms = now + scan_retry_ms;
+                    clearScheduledCentralScan();
                 }
                 if (restart_scan_pending && now >= restart_scan_deadline_ms)
                 {
@@ -677,6 +683,7 @@ namespace
             connection_handle = information.connection;
             security_due_ms = k_uptime_get() + security_delay_ms;
 #if !defined(NUCODE_M30_DFU_PERIPHERAL)
+            clearScheduledCentralScan();
             if (!BLEConnection.requestMtu(connection_handle))
             {
                 fail("mtu-request");
@@ -719,7 +726,7 @@ namespace
         else if (information.event == nucode::ble::BLEEvent::connection_recycled)
         {
 #if !defined(NUCODE_M30_DFU_PERIPHERAL)
-            if (started)
+            if (started && !connection_handle.valid())
             {
                 scheduleCentralScan();
             }
