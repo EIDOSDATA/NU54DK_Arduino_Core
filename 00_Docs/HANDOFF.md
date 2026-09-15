@@ -12,6 +12,13 @@ DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했습니�
 M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제를 Arduino에서 사용하는 것이며,
 보드 기반 기능 검증을 수행하고 정밀 RF·음질·거리/각도 보정은 필수 gate에서 제외합니다.
 
+최종 사용자 결정에서 Apple/Google 등 외부 ecosystem와 마이크·스피커·외장 장치는 **구현·예제·
+설정/연결 안내·자동 가능한 검사까지 필수**, 실제 운용·실물 검증은 **사용자 후속·v0.5.0 개발/공개
+비차단**으로 확정했습니다. Ubuntu/macOS 실물 설치·USB·serial·debug는 **최종 릴리스 단계에서
+사용자가 검증**합니다. 이 두 종류의 NOT RUN을 같은 release blocker로 취급하지 않습니다.
+DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·build·가능한 보드 시험부터 판정합니다.
+상세 근거와 인계 개정은 [164번 기록](<04_검증 기록/164_사용자_후속_검증_범위와_DF_IQ_인계.md>)을 따릅니다.
+
 ## 1. 현재 체크포인트
 
 | 항목 | 상태 |
@@ -79,35 +86,51 @@ M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제
 
 ## 4. 다른 컴퓨터에서 바로 할 일
 
-1. `git fetch origin` 뒤 branch·HEAD·작업 트리·원격 변경을 확인합니다. 신규 작업은 `main`의 ff-only
-   갱신 뒤 전용 branch에서 수행합니다. 기존 `m31-w01` 작업은 보존하고 해당 branch 최신 상태에서 재개합니다.
-2. 이 문서와 [M31 TODO](TODO_M31.md), [v0.5.0 계획](TODO_v0.5.0.md),
-   [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 읽습니다.
+1. 실제 저장소와 `AGENTS.md`, branch·HEAD·미커밋 변경의 소유권부터 확인합니다. `git fetch origin` 뒤
+   **기존 `m31-w01`을 이어받고** `git pull --ff-only`로 갱신합니다. 로컬 branch가 없을 때만
+   `git switch --track origin/m31-w01`로 만듭니다. main으로 돌아가 재분기하거나 merge하지 않습니다.
+   Dirty/diverged 상태면 덮어쓰기·reset/rebase/강제 push하지 말고 안전한 재개 가능 여부를 판단합니다.
+   전달받은 exact commit이 HEAD에 포함됐고 이 문서와 164번 기록이 있는지 확인합니다.
+2. 루트 README, 이 문서, [M31](TODO_M31.md)·[M32](TODO_M32.md)·[M33](TODO_M33.md)·[v0.5.0](TODO_v0.5.0.md)
+   TODO, [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
+   [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>), [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>),
+   [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>), 161~164번 기록과 M30 원장을 읽습니다.
+   Board submodule을 초기화·갱신하고 §2의 고정 revision 및 SDK/toolchain lock을 확인합니다.
 3. 전체 Host regression을 먼저 실행해 인계 source의 기준선을 확인합니다.
-4. M31-W01에서 `m31-ble-readiness.json`과 전체 `ncs-v3.4.0-bluetooth-sample-parity.json`,
+4. M31-W01에서 `variants/nu54dk/m31-ble-readiness.json`과
+   `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`,
    수집기/검증기·capability parser·negative Host test·capability target/build matrix를 구현합니다.
    이번 문서 작업에서 이 코드·JSON을 이미 구현했다고 가정하지 않습니다.
 5. 고정 SDK의 sample/test ID·nRF54L15 metadata와 Arduino 제공 경로를 연결하고 source candidate,
    native/Arduino build, 실제 NU54DK runtime·peer interop를 각각 기록합니다.
 6. HOST-W04 Ubuntu prerequisite manifest·실행 파일·path·udev/권한과 negative test를 병행합니다.
-   M31 외부 장비 행 대기 중 M32-A 및 M33 예제 준비도 독립 진행할 수 있습니다.
+   M32-A 및 M33 예제 준비도 의존성이 허용하는 범위에서 독립 진행합니다. 사용자 후속 외장 실기를
+   구현 선행조건으로 요구하지 않습니다. 다음 순서는 M31-W02 raw ISO입니다.
 7. 실제 보드 시험 전에는 현재 probe SHA-256 identity·COM/serial·role·firmware revision을 다시 확인하며 과거 mapping을
    자동 재사용하지 않습니다.
 
 사용자가 NU54DK 세 대 연결과 보드만 보유한 상태를 확인했습니다. 이는 영구 probe mapping이 아닙니다.
 M31-W01 capability/CTE TX 제어는 한 대, ISO·합성 Audio·CS는 두 대, broadcast/assistant·통합은
 세 대 구성을 기본으로 합니다. 적용 가능한 실제 기능 경로는 반복 실행·증거 수집을 자동화합니다.
-AoA RX/IQ·외부 audio 입출력·타사 peer·실제 Ubuntu/macOS PC가 필요한 개별 행은 장비 없으면
-`NOT RUN`이며 기본 보드 기능시험과 따로 추적합니다. 정밀 계측은 현재 범위 밖입니다.
+Apple/Google·외장 audio 등 실제 운용은 사용자 후속으로 남기되 사용 가능한 구현과 예제는 제공합니다.
+Ubuntu/macOS 실기는 최종 릴리스 때 인계합니다. 정밀 RF·음질·거리/각도 보정은 필수 밖입니다.
 
-### 시작 시 확인한 CI
+DF 원시 IQ 수신과 각도 산출을 혼동하지 않습니다. 고정 SDC는 DF TX만 제공하고 Zephyr LL에는
+RX 코드가 있으나 NU54DK target build/runtime은 아직 미검증입니다. 고정 Zephyr 수신 예제의
+안테나 배열은 선택 사항입니다. W01에서 기본 안테나 수신 구성을 조사·build하고 W04에서 적용
+가능한 2보드 수신·buffer·callback·복구를 검증합니다. 아직 실행하지 않은 것을 PASS로 쓰거나,
+배열이 없다는 이유로 RX를 기술적 미지원으로 분류하지 않습니다. 실제 각도/안테나 전환은 별도
+외장 경로입니다. CS의 `A1_B1` 기본 두 보드 시험은 DF RX의 판정과 독립적으로 진행합니다.
 
-2026-09-16 확인 시 `ebe74f47…`의 Software Gates는 성공, Reproducible Builds는 **cancelled**였습니다.
-최신 기반 `eff575da…`의 Software Gates는 성공이며 Reproducible Builds는 당시 **in_progress**였습니다.
-재개 시 원격 최신 상태를 확인하고 문서 작업 push의 exact SHA 결과와 별도로 기록합니다.
+### CI/CD와 이번 인계의 종료 범위
 
-이후 사용자 지시로 이번 문서 작업의 CI/CD 실행 요청·확인은 생략합니다. 로컬 검증만 새 결과로
-기록하며 이 문서 commit의 CI 성공을 주장하지 않습니다. 다음 구현 때의 검사 범위는 최신 요청을 따릅니다.
+최신 사용자 지시는 **문서 정비 → 로컬 검사 → 커밋·푸시까지만**입니다. CI/CD 실행 요청·조회·
+대기, PR 생성·main 병합·tag/Release 게시·보드 작업을 하지 않습니다. 이전 CI 상태는
+[163번 기록](<04_검증 기록/163_Bluetooth_전체_기능_예제와_마일스톤_재배치.md>)에 당시 이력으로 남아 있으며
+재감시 지시가 아닙니다. 다음 PC도 최신 사용자가 변경하지 않는 한 CI/CD 확인을 요구하지 않습니다.
+
+이번 문서 인계에서 새 capability/parser/원장·firmware·예제 코드는 구현하지 않았습니다. M31/M32/M33
+구현은 0/8·0/12·0/8, HOST는 3/8이며, 다음 PC가 첫 실행할 개발은 M31-W01 + HOST-W04입니다.
 
 ## 5. 재검증 규칙
 

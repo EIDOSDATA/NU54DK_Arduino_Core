@@ -65,10 +65,23 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 | M33 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 Host·RC·공개 |
 | Host | **3/8** | HOST-W04 Ubuntu prerequisite·path·권한부터 시작; HOST-W05~HOST-W08은 별도 잔여 |
 
-M31/M32의 외부 장비 행을 기다리는 동안 독립적인 M32-A·M33 예제 준비·Host 작업은 진행한다.
+M31/M32·독립적인 M32-A·M33 예제 준비·Host 작업은 추가 외장 장치 확보를 기다리지 않고 진행한다.
 M31 8/8과 HOST-W04~HOST-W06 완료는 독립 집계하며 v0.5.0 공개에서 M33이 결합한다.
 사용자가 보드 3개 연결을 확인했다. 실제 mapping은 재검증하며, 정밀 RF·음질·거리/각도 보정은
 필수 gate 밖으로 변경한다. 보드 기반 실제 데이터·보안·복구 검증은 계속 필수다.
+
+### 최종 사용자 결정 — 구현과 실물 검증의 책임
+
+| 범위 | 개발에서 반드시 완료할 일 | 실제 운용·실물 검증과 v0.5.0 gate |
+| --- | --- | --- |
+| Apple/Google 등 외부 ecosystem/peer | 동작 가능한 기능·예제·설정·credential 입력 경로·자동 가능한 unit/negative/build 검사 | 사용자가 추후 수행. 미실행 NOT RUN은 개발·공개 차단 아님; 검증된 상호운용 주장은 금지 |
+| 마이크·스피커·외장 장치 | 실제 연결해 사용할 API·설정·예제·연결 안내와 가능한 자동 검사; 합성 보드 경로 검증 | 외부 장치의 실제 운용·호환성은 사용자 후속. 개발·공개 차단 아님 |
+| DF 원시 IQ | 기본 SDC TX와 Zephyr LL RX 후보 구분, 배열 없이 수신 구성 조사·build·적용 가능한 2보드 HIL | 장비 대기가 아닌 소프트웨어 지원성/기능 판정. 각도 산출·실제 안테나 전환은 별도 외장 경로 |
+| Ubuntu/macOS 사용자 Host | prerequisite·launcher/resolver·설치/업로드 도구·자동 가능한 검사와 재현 가능한 검증 절차 | 최종 릴리스 단계에서 사용자가 실물 검증. 중간 개발은 차단하지 않되 최종 Host 지원 gate는 유지 |
+
+세 보드의 USB 접근·명확한 mapping을 전제로 추가 부품 연결을 중간 선행조건으로 요구하지 않는다.
+이는 지원되는 기능의 실제 자동 HIL이나 결함 수정을 면제하는 결정이 아니다. 사용자 후속 실기,
+기술적 미지원, 미해결 결함을 다른 상태로 기록한다. 상세 원본은 [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)이다.
 
 ### 보존하는 M28~M30 기준선
 
@@ -92,7 +105,7 @@ invalid/rollback accept 0을 확인했다. M30-W07은 exact `d94f5ec3…`에서 
 P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
-M31 전용 장비가 미확보라는 이유로 독립적인 Host 구현·시험까지 차단하지 않는다.
+사용자 후속 외장 실기를 M31 또는 Host 구현·자동 검사의 선행조건으로 되돌리지 않는다.
 
 | 체크 | 상태 | 산출물·완료 조건 |
 | --- | --- | --- |
@@ -174,7 +187,7 @@ M30의 구현·장비 계약은 [M30 착수 계약](<01_아두이노 코어 설�
 [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)을 따른다. [159번 준비 기록](<04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>)과
 [160번 재개 계획](<04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)은 당시 상태의 역사적 근거로 유지한다.
 다음 제품 작업은 [M31 TODO](TODO_M31.md)의 ISO·LE Audio·방향탐지·connected Channel Sounding
-지원성 및 장비 gate다.
+지원성·예제 구현과 보드 기반 자동 기능 검증이다.
 
 M28과 M29 각 단계의 구현·시험 수치는 위 작업표와 해당 계약에서 확인한다.
 시도별 실패·CMSIS-DAP 진단·수정·재검증 상세는 [140번](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과
@@ -225,7 +238,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M29 | GATT/CoC → signed write/EATT 정책 적용 → 오류·상호운용 | client/server·cache·credit·실험/legacy 제약과 시험 근거 |
 | M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 + HOST-W01~HOST-W03 | M34~M36이 재사용할 보안 계약과 Host 공통 backend·Windows 전용 가정 inventory |
 | M31-A | ISO/CIS/BIS·combined/time sync → LC3·전체 Audio profile → 합성 데이터/제어 HIL | stream/buffer·codec·역할별 짝 예제·미지원/외부 I/O 미검증 행 |
-| M31-B | controller 적용성 → AoA CTE TX 제어/지원 경로; RX/IQ·AoD 개별 판정 | TX 증거 깊이, RX/IQ candidate·fixture 상태, SDC AoD 미지원 |
+| M31-B | controller 적용성 → CTE TX와 배열 없는 raw IQ 수신 후보 조사/build·적용 HIL; AoD 개별 판정 | TX/RX 증거 깊이, 고정 Zephyr LL 후보의 실제 결과, SDC AoD 미지원·각도/전환 후속 경로 |
 | M31-C | Connected ACL·CS/RAS·raw 결과/거리 산출 → security/peer loss/recovery | 기능 동작 근거; 정밀 거리 보정·정확도는 필수 밖 |
 | M32-A | power/path loss → timing/subrate → adv/EAD/identity/resource → Nordic LLPM/QoS/event | 새 자원 preset·실험적 opt-in·짝 예제·2/3보드 기능/negative |
 | M32-B | Mesh 기본 → Mesh 1.1 → BLOB/Mesh DFU/Distribution | node/model·key/settings·transfer·복구, 내부 RRAM/배포자 한계와 M36 인계 |
@@ -260,19 +273,20 @@ Android/iOS/Linux cross-vendor matrix는 M28/M29 PASS에 포함하지 않는다.
 | --- | --- | --- |
 | BLE 기본·multi-link | NU54DK 2~3개와 수신측 sequence/hash | probe SHA-256·serial·role·revision; OS peer는 별도 M33 행 |
 | ISO/LE Audio | 2보드 송수신, 3보드 source/sink/assistant 또는 broadcast; 합성 PCM/LC3 | 실제 SDU·codec·제어·buffer/복구, 외부 microphone/speaker/codec는 별도 미검증 행 |
-| Direction Finding | CTE TX 1보드; IQ 수신은 지원 controller와 해당 안테나/receiver 필요 | TX 제어와 RF 수신 증거 구분, SDC AoD 미지원·RX candidate; 장비 없으면 RX NOT RUN |
+| Direction Finding | CTE TX 1보드; 기본 안테나의 raw IQ 수신 후보 조사/build 후 적용 가능한 2보드 | 기본 SDC RX 미제공·Zephyr LL RX build/runtime 미검증; 배열 유무만으로 수신 불가 판정 금지. 실제 각도와 전환은 별도 |
 | Channel Sounding | CS initiator/reflector 2보드, 선택 3번째 peer | procedure/RAS·결과·보안·재연결 기능; 정밀 거리·방향 보정 요구 없음 |
-| Mesh/coexistence | 승인 topology의 2~3노드, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수·단독 통신·조합·부하·서비스 지연; 전원 차단은 별도 사람 개입 |
+| Mesh/coexistence | 승인 topology의 2~3노드, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수·단독 통신·조합·부하·서비스 지연; 새 power-loss 확장은 M36 후속이며 v0.5.0 추가 필수 gate 아님 |
 
-보드만으로 모든 RX/IQ·외부 audio·OS/계정 기반 경로까지 실제 PASS가 되는 것은 아니다.
-사용자가 제외한 정밀 계측은 `out_of_scope_by_user_decision`, 외부 장비 미확보는 `NOT RUN`,
-고정 controller 비지원은 `UNSUPPORTED`로 기록한다. 보드 수 초과 topology는 target build와
-별도 장비 필요 행으로 남기며 3보드 표본 결과를 더 큰 topology의 PASS로 확대하지 않는다.
+사용자가 제외한 정밀 계측은 `out_of_scope_by_user_decision`, 사용자 후속 외장/상호운용 실기는
+`NOT RUN`과 후속 책임·비차단 범위를 함께 기록한다. DF RX 후보의 build/runtime 미검증은
+별도 기술 상태이며 장비 부족 또는 `UNSUPPORTED`로 자동 분류하지 않는다. 고정 controller의
+실제 비지원은 근거와 함께 기록한다. 3보드 결과를 더 큰 topology의 PASS로 확대하지 않는다.
 
 Android/iOS/Linux 항목은 **BLE 상대 장치 상호운용**이며 Arduino Core 개발·설치 Host matrix와
 서로 다른 시험이다. v0.5.0의 Host 확대는 [별도 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)으로
 Windows 10/11 x64, Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 다룬다. Peer 자체 미지원 기능은 근거를 남기고 해당 칸을
-비적용으로 분리한다. 필요한 장비가 없는 필수 시험은 `NOT RUN`이지 PASS 또는 자동 제외가 아니다.
+비적용으로 분리한다. 실제 외부 peer 시험은 사용자 후속·개발/공개 비차단이며 필수 Host 실기와
+구분한다. Ubuntu/macOS Host 실기는 최종 릴리스 때 사용자 검증 전까지 `NOT RUN`으로 남긴다.
 
 ### 실행 전에 고정할 합격표
 
@@ -307,6 +321,9 @@ v0.4.0의 범위 제외는 그대로 보존한다.
 - 이번 문서 개정은 2026-09-16의 사용자 범위 결정이다. 정밀 RF/audio/거리/각도 계측 제외를 적용하고
   전체 NCS Bluetooth 기능·예제를 명시한 단계에 배치했다. Capability parser·target·parity JSON은
   아직 구현하지 않았으며 M31-W01의 다음 실행 항목이다.
+- Apple/Google 및 외장 장치의 실제 운용·검증을 사용자 후속으로 확정한 결정은 v0.5.0 개발·공개
+  gate에서 적용한다. 구현·예제·가능한 자동 검사는 필수이며, 사용자 후속 NOT RUN은 PASS가 아니다.
+  원장의 구현 요구·검증 책임·개발/공개 차단 여부를 독립 필드로 구현해 이 구분을 검사한다.
 - 문서상의 기능 계획과 Bluetooth/Matter 제품 인증 취득은 별개다.
 - v0.4.0·v0.4.1 공개 승인은 v0.5.0 공개 승인이 아니다. M33에서 exact 결과·자산 기준으로 공개 범위를 확정한다.
 - v0.5.0부터 세 Host 계열을 정식 범위로 공개하려면 지원표의 모든 OS 행에 clean 설치·전체 예제

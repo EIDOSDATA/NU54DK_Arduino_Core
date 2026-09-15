@@ -7,7 +7,7 @@
 | 현재 상태 | **문서 계획 수립**. 아래 신규 API·예제·기계 원장·검증기는 구현 미착수이며 신규 build/HIL PASS가 아니다 |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
-| 범위 제외 | 정밀 RF 보정, 안테나/기구물별 거리·각도 정확도, 물리 audio 입출력의 음질·정밀 latency/jitter 보증 |
+| 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
 | 최종 갱신일 | 2026-09-16 |
 
 전체 번호·제품선은 [제품 로드맵](02_구현_로드맵.md), 작업 묶음은 [M31 TODO](../TODO_M31.md),
@@ -16,6 +16,27 @@
 계약을 소유한다. 기존 [NCS API matrix](06_NCS_3.4.0_기능과_예제_지원_매트릭스.md)는 현재 공개 지원표이며
 이 계획 문서와 상태를 구분한다. `coverage/generated` 등 생성 문서는 해당 원본·생성기를 갱신하고
 재생성하며 생성 Markdown을 수작업으로 수정하지 않는다.
+
+### 2026-09-16 최종 사용자 결정 — 구현 책임과 실물 검증 gate
+
+이 표는 M31~M33과 Host 문서가 참조하는 **현행 범위 원본**이다. 앞선 계획에서 외부 장치·peer를
+일반적인 개발 선행조건으로 적은 문구보다 아래 결정을 우선한다. 구현·예제·자동 가능한 검사를
+완료할 의무와 실제 제품·외장 장치 검증의 담당자를 분리하며, 후속 시험을 PASS로 대신 기록하지 않는다.
+
+| 대상 | 이번 개발에서 반드시 제공할 것 | 실제 운용·검증 담당과 시점 | v0.5.0 개발·릴리스 gate |
+| --- | --- | --- | --- |
+| 보드 기반 Bluetooth 기능 | 사용 가능한 구현·설정·역할별 Arduino 예제·Host/negative·target build·지원 가능한 1~3보드 기능 HIL | 개발 자동화; 실제 시험 전 mapping 재대조 | 적용 필수 기능의 구현·자동 검증은 필수. SDK 제약/미지원/미판정은 근거를 남기고 임의 PASS·제외 금지 |
+| Apple/Google 및 외부 제품 ecosystem | 실사용 가능한 기능·예제·설정·credential 입력 안내, 자동 가능한 parser/semantic·build·scripted peer 검증. 빈 stub·문서만 제공 금지 | 실제 운용·제품 상호운용은 사용자 추후 | 구현·예제·자동 검사는 필수. 사용자 후속 실제 제품 시험은 필수 gate에서 제외; `NOT_RUN`·상호운용 미검증 표시는 유지 |
+| 마이크·스피커·코덱·센서·외장 장치 | 실제 연결용 adapter/설정·예제·연결 안내와 자동 가능한 검사; 합성 PCM/data의 실제 protocol 경로 검증 | 실물 연결·운용·검증은 사용자 추후 | 구현·예제·자동 검사는 필수. 외장 I/O 실물 시험은 필수 gate에서 제외; `NOT_RUN`과 검증 범위 유지 |
+| DF 원시 IQ 수신 | 기본 안테나 사용 가능 수신 경로의 source/controller/DTS 조사 → 별도 target build → 적용 가능한 2보드 IQ HIL | M31-W04 개발 항목; 안테나 배열 구매/연결을 착수 조건으로 요구하지 않음 | source candidate·build·runtime 별도 판정. 미확인 상태를 장비 부족 또는 칩 불가능으로 확정하지 않음 |
+| DF 실제 AoA 각도·안테나 전환 | 적용 가능한 설정·예제·연결 안내와 raw IQ/각도 계산 경계 | 외부 안테나 구성의 실물 운용·검증은 사용자 추후 | 외장 실물 시험은 필수 gate 제외. 정밀 각도 보정·정확도 보증은 범위 밖 |
+| Connected Channel Sounding | 기본 안테나의 initiator/reflector·RAS·결과 처리·보안·복구 예제 | 기본 보드 2개로 개발 자동화; 필요 시 세 번째 peer | 지원 경로의 board-only 기능 HIL 필수. 정밀 거리 보정·정확도는 범위 밖 |
+| Ubuntu/macOS 실제 Host | prerequisite·resolver/launcher·path/권한·package·자동 검사·최종 검증 절차 | 사용자가 최종 릴리스 단계에서 설치·USB upload·serial·debug·수명주기를 검증 | 중간 개발/HOST-W07의 장비 대기로 작업 중단하지 않음. 해당 OS 정식 지원의 최종 실물 gate는 유지 |
+
+외부 장치·계정이 없다는 이유로 위 사용자 후속 실물 시험을 다시 개발/릴리스 blocker로 만들지 않는다.
+반대로 아직 구현하지 않은 기능의 SDK 결함·자원 제한까지 해결됐다고 선언하는 결정도 아니다.
+새롭게 발견한 실제 소프트웨어 제약은 코드·빌드·실행 근거로 조사하고, SDK 교체·기본 controller 변경·
+지원 범위 축소가 필요하면 별도 결정으로 다룬다. 이 문서는 그러한 변경을 자동 승인하지 않는다.
 
 ## 1. 완료 기준선과 추가 구현의 경계
 
@@ -76,7 +97,7 @@
 | Upstream nRF54L15 근거 | sample의 `platform_allow`, `integration_platforms`, board overlay 및 maturity를 각각 저장. 명시가 없으면 `null` 또는 미판정 |
 | Target 적용성 | `unresolved`, `applicable`, `experimental`, `unsupported`, `not_applicable`; controller/profile별 이유·근거 필수 |
 | 실행 결과 | `NOT_RUN`, `PASS`, `FAIL`, `HOLD`, `NOT_APPLICABLE`; native nRF54L15 build·NU54DK build·Arduino build·runtime·negative·interop마다 독립 |
-| Scope | 필수 구현, 추가 장비 조건부 실행, 사용자 제외, 고정 SDK 비적용을 이유·소유자와 함께 기록 |
+| Scope | 필수 구현/자동 검증, 사용자 후속 실물 검증, 최종 Host 실물 gate, 사용자 제외, 고정 SDK 비적용을 이유·소유자와 함께 기록 |
 
 `build_only: true`는 upstream 시험 실행 방식이며 nRF54L15 미지원 표시가 아니다. 반대로
 `build_only: false`, `integration_platforms`에 target이 있음, Kconfig enable 성공 중 어느 하나도
@@ -151,6 +172,9 @@ M32-A 중 M31의 ISO/Audio/CS 자원을 사용하지 않는 항목은 공통 cap
 합성 PCM은 LC3·BAP·ISO 데이터 경로가 실제로 통과해야 한다. Boot banner, 광고 시작, callback 한 번을
 audio 송수신 PASS로 판정하지 않는다. 송신 frame과 수신 frame·decode 결과·sequence를 결합하고,
 timestamp에 근거한 소프트웨어 관측 지연과 외부 계측 end-to-end 지연을 구분한다.
+외장 microphone/speaker/codec를 연결해서 사용할 구현·예제·설정·연결 안내도 필수 산출물이다.
+그 실물 운용·검증은 사용자 후속으로 인계하며 M31/M33 개발·릴리스 필수 gate에서 제외한다.
+합성 PCM 검증을 외장 음성 입출력 검증으로 표시하지 않는다.
 
 ## 5. M31-B/C — Direction Finding과 connected Channel Sounding
 
@@ -158,12 +182,22 @@ timestamp에 근거한 소프트웨어 관측 지연과 외부 계측 end-to-end
 | --- | --- | --- | --- |
 | M31-W04 connectionless AoA CTE TX | SDC CTE advertising, `N:direction_finding_connectionless_tx` nRF54L15 metadata. NCS maturity는 experimental | `profile/direct`: `DirectionFindingCteBeacon` | 1보드 capability/start/stop; CTE 실제 수신 확인은 지원 RX peer 필요. 보드 3개 보유만으로 IQ RX를 가정하지 않음 |
 | M31-W04 connected AoA CTE response TX | SDC Connection CTE Response, `N:direction_finding_peripheral` nRF54L15 metadata. experimental | `profile/direct`: `DirectionFindingCtePeripheral` | 2역할; 요청·응답 기능은 적용 가능한 requester가 있어야 HIL. unsupported command·재연결 |
-| M31-W04 AoA RX/IQ·antenna switching | `N/Z:direction_finding_central`, `direction_finding_connectionless_rx` source; 기본 SDC의 TX 지원으로 RX를 추론하지 않음 | 적용 가능한 controller이면 `profile/direct`: `DirectionFindingIqReceiver`; 아니면 명시적 미지원 판정 | 1보드 target 판정, 실제 IQ는 지원 controller·antenna/switch fixture 필요 시 `NOT RUN`. 보정·각도 정확도는 범위 제외 |
+| M31-W04 원시 AoA RX/IQ | 기본 SDC는 DF TX 범위이며 RX 미제공. Zephyr LL의 RX 코드·nRF54L15 DTS `dfe-supported`는 후보 근거이나 해당 RX sample metadata에 nRF54L15 없음 | `profile/direct` 후보 `DirectionFindingIqReceiver`; 기본 안테나로 수집 가능한 별도 구성부터 조사·build | 1보드 target 판정 → 적용 가능 시 2보드 실제 IQ·count/형식/수명주기 HIL. 현재 build/runtime 미확인; 배열을 raw IQ의 선행조건으로 두지 않음 |
+| M31-W04 실제 AoA 각도·antenna switching | 공간적 위상차를 이용한 각도 계산과 외장 antenna 제어는 원시 IQ 수집과 다른 경로 | 적용 가능한 설정·예제·연결 안내를 별도 제공 | 실물 안테나 구성의 운용·검증은 사용자 후속·릴리스 비차단 `NOT_RUN`; 정밀 각도 보정·정확도 보증은 범위 제외 |
 | M31-W04 AoD | 고정 SDC의 connectionless/connected CTE는 AoD 미지원 | 기본 SDC `excluded`; 명확한 오류·capability 예제로 표시 | Unsupported negative. 다른 controller가 필요하면 별도 영향 평가; 자동 전환하지 않음 |
-| M31-W05 CS initiator/reflector | `BT_CHANNEL_SOUNDING`; `N:channel_sounding/ras_initiator`, `ras_reflector` nRF54L15 metadata·`build_only` 존재 | `wrapper/profile`: `ChannelSoundingInitiator`, `ChannelSoundingReflector` | 2보드; ACL→security→capability/config→procedure→result→stop |
+| M31-W05 CS initiator/reflector | `BT_CHANNEL_SOUNDING`; `N:channel_sounding/ras_initiator`, `ras_reflector` nRF54L15 metadata·`build_only` 존재, initiator의 `A1_B1`은 양쪽 안테나 1개 | `wrapper/profile`: `ChannelSoundingInitiator`, `ChannelSoundingReflector` | 기본 안테나의 2보드; ACL→security→capability/config→procedure→result→stop. 안테나 배열을 요구하지 않음 |
 | M31-W05 RAS 결과 전송 | NCS RAS initiator/reflector와 service/header | `profile/direct`: 위 CS 예제의 RAS mode | 2보드; raw subevent·결과 길이·분할/재조합·procedure ID·buffer 소유권 |
 | M31-W05 계산 결과·반복 실행 | sample의 ranging 결과와 선택 algorithm | `wrapper/direct`: `ChannelSoundingResults` | 2보드; 실제 procedure 수·유효 결과·finite/invalid 값 구분. 미보정 추정 거리의 정확도는 보증하지 않음 |
 | M31-W05 CS negative·다중 peer | 보안·procedure/state·M28 link handle | CS 예제 공통 runner, `ChannelSoundingMultiPeer` | 2보드 negative, 3보드 peer 격리; insecure ACL·잘못된 config·timeout·peer loss·reconnect |
+
+고정 [Zephyr 수신 README](https://github.com/nrfconnect/sdk-zephyr/blob/bf801e4e3d19e1ffa76164346480cb7734dd2800/samples/bluetooth/direction_finding_connectionless_rx/README.rst)는
+AoA antenna matrix를 선택 사항으로 적는다. 이는 NU54DK 수신 PASS가 아니라 **배열이 없다는 이유만으로
+원시 IQ 개발을 차단하면 안 된다는 근거**다. 같은 경로의 `sample.yaml`에는 nRF54L15가 없으므로,
+Zephyr LL RX 코드·DTS `dfe-supported` 존재만으로 해당 SoC/보드의 수신 적용성을 확정하지 않는다.
+고정 SDK·기본 SDC를 보존한 별도 후보 구성의 source/build 조사부터 수행하고, 실제 controller 전환이
+필요한 경우 영향·허가 범위를 먼저 확인한다. 기존 SDC의 TX/AoD 제한을 전체 칩의 RX 불가능으로 확대하지 않는다.
+CS의 단일 안테나 계획은 고정 [RAS initiator 설정](https://github.com/nrfconnect/sdk-nrf/blob/99553055607b2e9885fbc80ccd11fa9da81c2df0/samples/bluetooth/channel_sounding/ras_initiator/src/main.c#L963)에
+근거하며 DF의 각도용 배열 조건과 혼동하지 않는다.
 
 NCS의 `nrf_dm`은 이 고정 버전의 sample metadata에 nRF54L15가 없고 nRF52/nRF5340 대상으로
 한정되어 있다. 해당 예제는 `not_applicable/excluded` 근거를 남기고 nRF54L15의 connected CS 경로를
@@ -225,8 +259,8 @@ ARF-01 BLE role-budget의 `C1P1/C2P0/C0P2`는 M32-W04 자원 preset에 통합한
 | W08 Mesh DFU·Firmware Distribution | `BT_MESH_DFU_CLI/SRV`, `BT_MESH_DFD_SRV` 및 firmware slot | `profile/template`: `MeshDfuTarget`, `MeshFirmwareDistributor` | distributor+2 target 3보드; 서명/hash·wrong image·version·전송/설치 단계·재시작. 외장 flash 없는 layout 예산 필수 |
 | W09 최소 802.15.4·ESB 단독 radio | 고정 NCS radio/ESB/MPSL·Zephyr IEEE 802.15.4 API | 검증용 `profile/direct`: `Radio154Pair`, `EsbPair` | 2보드; 각 protocol 단독 TX/RX·channel·payload·종료/재시작 |
 | W10 BLE↔Mesh↔802.15.4↔ESB 공존 | MPSL/timeslot·profile 적용 조합; `N:radio_coex_1wire` | `profile/direct`: `BleMeshCoexistence`, `Ble154Coexistence`, `BleEsbCoexistence` | 최소 3보드; 조합별 단독 기준→공존·기아/지연·priority·자원 반환. 모든 protocol 동시 실행을 가정하지 않음 |
-| W10 외부 radio coexistence 제어선 | `N:radio_coex_1wire`와 해당 hardware 요구 | 조건부 `template`: `RadioCoexistenceOneWire` | 필요한 외부 장치·승인 결선이 없으면 build와 계약 검증, 실제 신호는 `NOT RUN` |
-| W11~W12 통합·회귀·마감 | 위 기능 + M19~M31 회귀·HOST-W07 | role별 runner·예제·readiness·handoff | 실제 topology별 2~3보드 또는 필요한 수; 부족하면 해당 행 `NOT RUN` |
+| W10 외부 radio coexistence 제어선 | `N:radio_coex_1wire`와 해당 hardware 요구 | `template`: `RadioCoexistenceOneWire`, 실제 연결용 구현·예제·안내 필수 | build·계약·자동 검사 수행. 외장 실물 신호 검증은 사용자 후속 `NOT_RUN`이며 개발·릴리스 비차단 |
+| W11~W12 통합·회귀·마감 | 위 기능 + M19~M31 회귀; HOST-W07 절차 준비는 독립 | role별 runner·예제·readiness·handoff | 실제 topology별 2~3보드 또는 필요한 수; 초과 topology는 별도 필요 수·검증 범위. Ubuntu/macOS 실물은 최종 사용자 gate |
 
 Mesh 1.1이라는 버전명만으로 모든 선택 기능을 지원한다고 선언하지 않는다. 예를 들어 directed
 forwarding처럼 고정 source에서 적용성을 아직 확인하지 않은 기능은 W01/W07 조사 행으로 남기고,
@@ -255,9 +289,9 @@ M33은 공개 정리와 함께 generic GATT 위에서 제공할 신규 서비스
 | W02 NUS·LBS·GATT discovery/MTU·장문 예제 | `N:central_uart`, `peripheral_uart`, `peripheral_lbs`, `peripheral_gatt_dm`, `shell_bt_nus`; `Z:peripheral_nus`, `central_gatt_write`, `peripheral_gatt_write`, `mtu_update` | `wrapper/direct/profile`: `UartOverBlePair`, `LedButtonPair`, `GattDiscoveryClient`, `GattMtuTransfer` | 2보드; 실제 payload·MTU·disconnect·특성 미발견. 새 buffered NUS API는 ARF owner와 별도 연계 |
 | W02 iBeacon·Eddystone·BTHome·beacon/observer | `Z:ibeacon`, `eddystone`, `bthome_sensor_template`, `beacon`, `observer` | `template/profile`: `IBeacon`, `EddystoneBeacon`, `BTHomeSensor`, `BeaconObserver` | 2보드; AD byte·UUID/service data·암호 적용성·decode·malformed AD |
 | W02 additional GATT/service candidates | `Z:peripheral_ets`, `N:peripheral_status`, 기타 고정 sample service·client | 원장에 서비스와 owner·제공 경로를 개별 추가 | synthetic peer로 가능한 기능 실행, source가 없는 항목은 별도 candidate 사유 |
-| W03 ANCS·AMS | `N:peripheral_ancs_client`, `peripheral_ams_client` | `template/profile`: `AppleNotificationClient`, `AppleMediaClient` | build/Host parser 자동화; 실제 Apple peer 없으면 interoperability `NOT RUN` |
-| W03 Fast Pair input device·locator tag | `N:fast_pair/input_device`, `locator_tag` | `template/profile`: `FastPairInputDevice`, `FastPairLocatorTag` | SDK 제공 시험 credential과 production credential 구분; Google 설정·호환 peer 없으면 external runtime `NOT RUN` |
-| W03 외부 ecosystem·진단 transport template | `N:enocean`, `nrf_auraconfig`, `peripheral_mds`, 관련 별도 service/backend | `template`: 기능별 실제 이름·외부 peer/계정/라이선스 기록 | 필요한 EnOcean/audio gateway/cloud 등 없으면 조건부 행. 빈 success stub 금지 |
+| W03 ANCS·AMS | `N:peripheral_ancs_client`, `peripheral_ams_client` | `template/profile`: 실사용 구현·`AppleNotificationClient`·`AppleMediaClient`·설정 안내 | build/Host parser·자동 가능한 semantic/peer 검사 필수. 실제 Apple 운용·interop는 사용자 후속 `NOT_RUN`, 릴리스 비차단 |
+| W03 Fast Pair input device·locator tag | `N:fast_pair/input_device`, `locator_tag` | `template/profile`: 실사용 구현·`FastPairInputDevice`·`FastPairLocatorTag`·credential 안내 | 시험/production credential 구분·자동 검사 필수. 실제 Google 제품 운용·interop는 사용자 후속 `NOT_RUN`, 릴리스 비차단 |
+| W03 외부 ecosystem·진단 transport template | `N:enocean`, `nrf_auraconfig`, `peripheral_mds`, 관련 별도 service/backend | `template`: 실제 기능·설정·연결/계정 안내·자동 검사 필수; 빈 success stub 금지 | EnOcean/audio gateway/cloud 등 실제 운용·외장 검증은 사용자 후속 `NOT_RUN`, 개발·릴리스 비차단 |
 | W04 Direct Test Mode | `N:direct_test_mode` nRF54L15 metadata와 2-DK UART 절차 | 독점 test `profile/template`: `DirectTestMode` | 1보드 command/상태·stop, 2보드 TX/RX·수신 packet count·역할 교대 자동화. RF 감도·출력·스펙트럼 측정은 별도 tester 없으면 `NOT RUN`/범위 밖 |
 | W04 HCI UART·3-wire·async·LPUART | `Z:hci_uart`, `hci_uart_3wire`, `hci_uart_async`; `N:hci_lpuart` | 독점 controller `profile/template`: `HciUartController`, `HciThreeWireController`, `HciLowPowerUartController` | Host transport·결선/flow·frame·reset·malformed command; 보드 실제 UART 경로에 맞춰 판정 |
 | W04 HCI SPI·USB·IPC·RPC | `Z:hci_spi`, `hci_usb`, `hci_ipc`; `N:rpc_host` | 적용 시 `profile/template`, 비적용은 `excluded` 이유 | SPI peer·USB device hardware·IPC core 구조 각각 별도. DAPLink VCOM을 SoC native USB controller로 간주하지 않음 |
@@ -332,6 +366,7 @@ BR/EDR Classic sample(`Z:classic`)은 nRF54L15 내장 BLE radio 지원 목표 �
 | Arduino 제공 | 기본 `route`와 보조 route, 계획/실제 sketch·profile·library·build matrix ID, public/direct API 경계 |
 | 자원·장비 | 최소 보드 수, roles, controller/peer·외부 장비/계정·결선 의존성, RAM/RRAM/slots/buffer 상한 |
 | 검증 계약 | 고정 local test ID, timeout/iterations/denominator, metric·단위·수락 조건, negative 기대 오류, 중단/재시험 한도 |
+| 책임·차단 정책 | case별 `verification_owner`·`verification_stage`·`development_blocker`·`release_blocker`, 사용자 결정 근거/날짜. 구현/자동 검사와 외부 실물 case를 분리 |
 | 개별 결과 | native nRF54L15 build, NU54DK target build, Arduino build, runtime, negative, interoperability 각각 status·exact source/profile·evidence |
 | 증거 identity | firmware/image SHA-256, board/submodule·SDK lock, probe SHA-256 identity, role·serial mapping의 익명화된 참조, nonce·attempt ID·raw evidence hash |
 | 예외·인계 | `scope_status`, reason, 결정 근거·날짜, external dependency, follow-up owner, 알려진 제한 |
@@ -339,12 +374,20 @@ BR/EDR Classic sample(`Z:classic`)은 nRF54L15 내장 BLE radio 지원 목표 �
 `supported` 같은 boolean 하나로 source·build·runtime을 합치지 않는다. 실행하지 않은 결과에
 `PASS`·빈 success evidence를 허용하지 않고, 미확정 측정값은 `null`로 유지하면서 필수 시험 착수 전에
 값을 고정하도록 gate를 둔다. 실제 board serial/probe 원문을 원장에 저장하지 않는다.
+이 schema와 gate는 아직 구현 TODO다. 사용자 후속 Apple/Google·외장 I/O 실물 case는
+`verification_owner: user`, `verification_stage: user_follow_up`, `development_blocker: false`,
+`release_blocker: false`로 분리하고, 해당 기능의 구현·예제·자동 검사 case는 필수로 유지한다.
+Ubuntu/macOS 실물 case는 `verification_owner: user`, `verification_stage: final_release`,
+`development_blocker: false`, `release_blocker: true`로 두어 해당 OS 최종 지원 검증을 보존한다.
+위 필드값은 미래 schema의 계약이며 기존 readiness JSON이 이미 이 정책을 구현한 것으로 간주하지 않는다.
 
 ### Host unit·negative와 CI 계약
 
 - 정상 metadata·common/test merge·여러 role/variant·nullable field·한글/공백 경로를 검사한다.
 - 중복 ID, 누락 sample/test, 잘못된 revision/target qualifier, 잘못된 route/owner, 삭제된 evidence link,
   잘못된 status 전이, source-only의 runtime PASS, `build_only`를 support로 해석하는 입력을 거부한다.
+- 사용자 후속 실물 case의 `NOT_RUN`을 PASS로 바꾸거나 개발·릴리스 blocker로 재분류하는 입력,
+  구현/자동 검사 case를 사용자 후속으로 숨기는 입력, Ubuntu/macOS 최종 실물 gate를 면제하는 입력을 거부한다.
 - HIL parser는 revision/nonce/role mismatch, 누락·중복 결과, timeout·partial transcript,
   unsupported 조합·범위 밖 수치·negative의 예상 외 성공을 fail-closed 처리한다.
 - M31 고정 시험 family는 `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`,
@@ -364,25 +407,31 @@ BR/EDR Classic sample(`Z:classic`)은 nRF54L15 내장 BLE radio 지원 목표 �
 - `applicable_required`: nRF54L15/NU54DK에 적용되는 필수 행 수.
 - build/runtime/negative/interop의 `PASS`, `FAIL`, `HOLD`, `NOT_RUN`, `NOT_APPLICABLE` 각각의 수.
 - 조건부 external 행·사용자 범위 제외·고정 SDK 비적용 행 수와 이유별 합계.
+- 구현/자동 검증 필수 case, 사용자 후속 실물 case, 최종 Host 실물 case의 분모와 blocker 수.
 
 `mapped == discovered`와 `unresolved == 0`은 누락 방지 완료 조건이다. 기능 구현 완료율은 적용되는
-필수 행의 실제 Arduino build/runtime/negative를 별도로 계산한다. 제외 행을 PASS 분자에 더하지 않는다.
+필수 case의 실제 Arduino build/runtime/negative를 별도로 계산한다. 사용자 후속 실물 case와 범위 제외를 PASS 분자에 더하지 않는다.
 공식 nRF54L15 sample 중 필수 경로가 빠졌거나 board-only runtime이 미실행이면 M33 완료로 올리지 않는다.
-외부 장비/계정 시험은 조건부 지원표에 `NOT RUN`으로 드러내며 그 외 필수 완료 결과와 합산하지 않는다.
+Apple/Google·외장 I/O의 사용자 후속 실물 시험은 지원표에 `NOT_RUN`으로 드러내며 필수 완료 결과와
+합산하거나 M33/릴리스 blocker로 사용하지 않는다. 구현·예제·자동 검사 의무는 유지한다.
+Ubuntu/macOS 실제 Host는 최종 릴리스의 사용자 검증까지 해당 OS 지원 gate를 미완료로 유지한다.
 
 ## 11. 세 보드 자동 실행과 증거의 경계
 
 M31-W01~W08의 구현·Host/negative·target build·문서·예제와 지원 가능한 board-only 기능 HIL은
-자동 실행 흐름으로 설계한다. 세 보드가 모든 RF 역할을 지원한다는 전제는 두지 않는다. 특히 DF IQ RX,
-USB HCI, 물리 audio 장치, Apple/Google peer 및 큰 Mesh topology는 해당 의존성을 다시 확인한다.
+자동 실행 흐름으로 설계한다. 세 보드가 모든 RF 역할을 지원한다는 전제는 두지 않는다. DF IQ RX는
+source/build/실행 적용성을 조사할 개발 항목이지 사전 안테나 배열 대기가 아니다. USB HCI의 SoC 적용성,
+큰 Mesh topology는 별도 근거로 판정하고 외부 audio/Apple/Google 실물 시험은 사용자 후속으로 인계한다.
 
 | 자동화 수준 | 할 일 | 멈추거나 `NOT RUN`으로 남길 조건 |
 | --- | --- | --- |
 | 보드 없이 가능 | source 조사·schema/parser·Host unit/negative·CI·역할별 native/Arduino build·예제/문서 | SDK/toolchain 접근 실패 등 실제 원인을 기록 |
 | 1보드 | capability, codec 합성 loopback, local command·resource·start/stop | probe SHA-256·serial·role·image mapping 미확정 |
-| 2보드 | ISO·Audio synthetic 송수신, CS initiator/reflector, 대부분 GAP/GATT/Nordic 기능 | 양 역할 capability/profile 미지원, 외부 장비에만 있는 관측 경로 |
+| 2보드 | ISO·Audio synthetic 송수신, 기본 안테나 CS, 적용 가능 시 원시 DF IQ, 대부분 GAP/GATT/Nordic 기능 | 양 역할 capability/profile 제약은 실제 근거로 조사. 사용자 후속 외장 실물 경로는 별도 비차단 행 |
 | 3보드 | BIS 복수 수신·BASS assistant·CSIP set·다중 peer·Mesh 기본 topology·선택 공존 | 별도 네 번째 역할이나 더 큰 topology가 필수이면 추가 보드 필요 |
-| 외부 의존 | 실제 Apple/Google/audio/DF RX/antenna·RF tester·전력계·Host PC | 장비/credential/결선이 없으면 독립 build까지 진행하고 해당 실제 행은 `NOT RUN` |
+| 사용자 후속 | 실제 Apple/Google·외장 audio/I/O·각도용 antenna 구성 | 사용 가능한 구현·예제·안내·자동 검사를 완료하고 실물 행만 `NOT_RUN`으로 인계; 개발·릴리스 비차단 |
+| 최종 Host 실물 | Ubuntu/macOS 설치·USB upload·serial·debug·수명주기 | 사용자가 최종 릴리스 때 검증. 중간 개발 비차단, 해당 OS 정식 지원의 최종 gate 유지 |
+| 정밀 계측 | RF tester·전력계·정밀 음질·각도/거리 보정 | 사용자 범위 밖 결과를 PASS로 만들지 않으며 보드 기능 검증의 선행조건으로 요구하지 않음 |
 
 실물 작업 직전에 probe는 원문 UID를 출력·저장하지 않고 SHA-256 identity만 비교한다. 여러 probe 중
 임의 선택을 금지하고 firmware revision·image hash·serial/COM·role를 다시 대조한다. 승인된 대상의

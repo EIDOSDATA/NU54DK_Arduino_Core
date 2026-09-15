@@ -5,7 +5,7 @@
 | 대상 제품선 | `v0.5.0` |
 | 현재 구현 상태 | **계획 — 0/12 작업 묶음** |
 | 하위 gate | M32-A Controller/Host·Nordic 확장, M32-B Mesh, M32-C 최소 radio·공존 |
-| 선행·병행 | M31의 controller/resource 계약 인계, HOST-W07 독립 병행 |
+| 선행·병행 | M31의 controller/resource 계약 인계, HOST-W07 자동 검사·최종 사용자 검증 절차 준비 독립 병행 |
 | 고정 기준 | NCS `v3.4.0`, [CI lock](../tools/ci/ncs-3.4.0.lock.json)의 Zephyr·toolchain revision |
 | 사용자 장비 조건 | NU54DK 3개 연결, 외부 RF·audio 계측 장비 없음; 실행 직전 실제 mapping 재확인 |
 | 최종 갱신일 | 2026-09-16 |
@@ -33,6 +33,10 @@
   Host 주입 시험과 실제 RF 결과를 각각 남긴다.
 - 보드 수가 세 개를 넘는 topology, 외부 coex 신호 배선, 전원 차단 장치나 다른 vendor peer가 필요한
   행은 필요 조건을 기록한다. 해당 기능 행이 `NOT RUN`이어도 독립적인 구현·build는 계속 진행한다.
+- [전체 계약의 최종 사용자 결정](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)에
+  따라 외장 장치·Apple/Google 등 제품의 실제 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate에서
+  제외한다. 실제 연결해서 사용할 구현·예제·설정/연결 안내·자동 가능한 검사는 반드시 제공한다.
+  Ubuntu/macOS 실물 설치·USB·serial·debug는 사용자가 최종 릴리스 때 검증하며 중간 작업을 차단하지 않는다.
 
 ## 2. 작업 배치
 
@@ -53,6 +57,7 @@
 
 W02~W05와 W06~W08은 W01 계약 뒤 독립 가능한 범위를 병행한다. W10은 해당 protocol의 W09
 단독 TX/RX 증거를 선행조건으로 사용한다. HOST-W07은 별도 분모이며 M32의 12개 묶음에 합산하지 않는다.
+HOST-W07의 자동 검사·최종 인계 절차는 준비하되 Ubuntu/macOS PC를 중간에 연결하도록 요구하지 않는다.
 
 ## 3. M32-A 세부 구현 TODO
 
@@ -64,6 +69,9 @@ W02~W05와 W06~W08은 W01 계약 뒤 독립 가능한 범위를 병행한다. W1
   Kconfig·API·upstream sample·Arduino 제공 경로·resource profile·예정 test ID를 연결한다.
 - [ ] Source candidate, NU54DK native build, Arduino build, runtime capability, 기능 HIL, 외부 peer
   interop 상태를 독립 필드로 정의하고 unknown·누락·중복·revision mismatch를 거부한다.
+- [ ] Master 원장의 case별 검증 책임·시점·개발/릴리스 blocker 필드를 연결한다. 사용자 후속 외장 실물
+  case와 필수 구현/자동 검사를 분리하고 외장 실물 `NOT_RUN`을 PASS 또는 릴리스 차단으로 바꾸지 않는다.
+  Ubuntu/macOS 실제 Host는 사용자 최종 릴리스 gate로 연결하며 중간 개발 blocker로 사용하지 않는다.
 - [ ] Capability parser, 정상/negative Host test, capability target image와 build matrix를 구현한다.
 - [ ] 기능별 연결·광고 set·identity·sync·Mesh node·buffer·RAM/RRAM 상한과 profile 충돌표를 고정한다.
 - [ ] 이 문서의 예정 test ID별 board role·반복/packet 분모·timeout·허용 손실·복구 상한·유한 재검증
@@ -161,11 +169,13 @@ W02~W05와 W06~W08은 W01 계약 뒤 독립 가능한 범위를 병행한다. W1
 - [ ] BLOB Transfer client/server, block/chunk, pull/push 적용성·분할·중단/재개·digest 확인을 구현한다.
 - [ ] Mesh DFU target, initiator, distributor/Firmware Distribution의 역할별 profile와 예제를 제공한다.
 - [ ] NU54DK 외장 flash 미탑재 조건에서 object 크기·RRAM/partition·image 저장·settings 예산을 판정한다.
-  외장 저장소가 필요한 variant는 별도 template·장비 조건으로 남긴다.
+  외장 저장소가 필요한 variant도 사용 가능한 template·설정·연결 안내·자동 검사를 제공한다.
+  그 variant의 실제 외장 저장소 운용·검증만 사용자 후속·릴리스 비차단 `NOT_RUN`으로 인계한다.
 - [ ] M30의 서명·image/key·rollback 계약을 재사용하고 Mesh transport의 인증·배포 권한·metadata·version·
   hash 검증·부분 image·잘못된 target/키·미확인 image 복귀를 추가 검증한다.
-- [ ] Transport cancel·peer loss·다시 시작·정상 재부팅 복구를 자동화한다. 실제 전원 차단은 별도 장치·
-  사용자 실행 조건이 있는 시험 행으로 두며, reset 시험으로 전원 차단 PASS를 기록하지 않는다.
+- [ ] Transport cancel·peer loss·다시 시작·정상 재부팅 복구를 자동화한다. 새로운 실제 전원 차단 확장은
+  M36 후속으로 인계하며 M32/v0.5.0의 추가 필수 사용자 gate로 만들지 않는다. 별도 정책·장치·사용자
+  요청 없이 실행하지 않고, reset 시험으로 전원 차단 PASS를 기록하지 않는다.
 - [ ] `M32-BLOB-01`, `M32-MDFU-01`의 role image·object/image hash·분모·negative 결과를 보존한다.
 - [ ] M36으로 partition·배포 transport·복구 경계·남은 외장 storage variant를 인계한다.
 
@@ -185,8 +195,9 @@ W02~W05와 W06~W08은 W01 계약 뒤 독립 가능한 범위를 병행한다. W1
 - [ ] 허용 조합의 traffic·priority·scheduler·slot 거부·starvation·지연·drop·복구 상한을 고정한다.
 - [ ] 세 보드에서 실행 가능한 조합을 선택하고 protocol별 sequence/hash·서비스 간격·오류를 동시에 기록한다.
 - [ ] 미지원 controller 조합·double ownership·slot 부족·다른 protocol 종료/재시작·주요 BLE 기능 회귀를 검증한다.
-- [ ] 1-wire 등 외부 coexistence 신호는 배선/외부 peer가 필요한 개별 행으로 관리한다. 내부 MPSL 공존
-  결과를 외부 arbitration 실기 PASS로 확대하지 않는다.
+- [ ] 1-wire 등 외부 coexistence 신호도 실제 연결용 구현·예제·설정/연결 안내·자동 검사를 제공한다.
+  외부 peer와 결선의 실물 운용·검증은 사용자 후속·릴리스 비차단 개별 행으로 관리한다.
+  내부 MPSL 공존 결과를 외부 arbitration 실기 PASS로 확대하지 않는다.
 - [ ] `M32-COEX-01`에 각 조합의 개별 결과를 연결한다. 모든 protocol의 동시 실행을 하나의 PASS로 선언하지 않는다.
 
 ### M32-W11 — 회귀·세 보드 HIL
@@ -205,8 +216,9 @@ W02~W05와 W06~W08은 W01 계약 뒤 독립 가능한 범위를 병행한다. W1
 - [ ] Source candidate 또는 build-only 행이 지원 catalog로 잘못 승격되는 것을 gate에서 차단한다.
 - [ ] M33에 설치용 예제·profile·known limitation·cross-vendor NOT RUN 목록을 인계한다.
 - [ ] M36에 Mesh update/storage, M38/M39에 최소 radio/public 확장, M40/M42에 적용 공존 조합을 인계한다.
-- [ ] HOST-W07 실제 PC별 결과를 별도 표로 연결한다. 사용할 수 없는 Ubuntu/macOS PC의 USB·serial·debug는
-  `NOT RUN`으로 남기며 M32의 보드 기능 완료와 Host 완료를 별도로 보고한다.
+- [ ] HOST-W07 자동 검사 결과와 사용자용 최종 실물 검증 절차를 별도 표로 연결한다. Ubuntu/macOS
+  설치·USB·serial·debug 실기는 사용자가 최종 릴리스 때 수행한다. 그때까지 `NOT_RUN`으로 유지하되
+  중간 PC 연결을 요구하거나 M32 완료를 차단하지 않는다. 해당 OS 최종 지원 gate는 유지한다.
 
 ## 6. 예정 test ID와 판정 입력
 
@@ -232,8 +244,9 @@ W02~W05와 W06~W08은 W01 계약 뒤 독립 가능한 범위를 병행한다. W1
 
 각 case는 최소한 `iterations`, `timeout_s`, payload/packet 분모, 허용 loss/latency,
 `recovery_timeout_s`, 즉시 중단 오류와 유한 재검증 정책을 가진다. 누락되면 실행을 차단한다.
-실제 power cut을 수행하는 새로운 case는 별도 정책·fixture를 기록하고 M30-POWER-01의 고정
-4지점 × 3회 완료 이력과 합치지 않는다.
+실제 power cut을 수행하는 새로운 case는 M36 후속 범위다. 현재 M32/v0.5.0 개발·릴리스는 그
+새 시험의 사용자 실행을 기다리지 않는다. 후속 실행 시 별도 정책·fixture를 기록하고
+M30-POWER-01의 고정 4지점 × 3회 완료 이력과 합치지 않는다.
 
 ## 7. 증거·완료 규칙
 
@@ -248,5 +261,7 @@ W02~W05와 W06~W08은 W01 계약 뒤 독립 가능한 범위를 병행한다. W1
   target 적용성 값이다. SDK maturity 근거와 실행 결과 `PASS`, `FAIL`, `NOT_RUN`은 별도 필드다.
   `unsupported`는 성공한 RF 기능 수에 포함하지 않는다.
 - M32 구현 완료는 12/12 작업, 적용 필수 기능/예제의 실제 증거와 명시적 제한·인계가 모두 갖춰질 때
-  판정한다. 추가 장비가 필요한 행을 남기면 완료 가능한 board-only 범위와 미완료 외부 범위를 각각 적는다.
-  HOST-W07 완료와 v0.5.0 공개/qualification은 독립 gate다.
+  판정한다. 필수 구현·예제·자동 검증과 사용자 후속 외장 실물 행의 분모를 분리한다. 사용자 후속
+  실물 미검증은 PASS가 아니지만 M32 개발·릴리스 blocker도 아니다. SDK 제약·미지원은 근거 없이
+  사용자 후속으로 넘기지 않는다. Ubuntu/macOS 실물은 최종 사용자 Host 지원 gate이며,
+  v0.5.0 공개 승인·qualification은 자동화 장비 조건과 독립된 절차다.

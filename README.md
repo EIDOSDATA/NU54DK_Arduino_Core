@@ -167,7 +167,7 @@ PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·O
 | M29 — 완료 | 512-byte long/reliable GATT, descriptor·authorization·read multiple, robust cache, LE CoC, Signed Write·EATT opt-in | 10/10 test ID와 세 보드 mixed-link·M19~M21/M28 회귀 PASS. Windows/Intel GATT 외 OS·adapter 전체는 미검증 |
 | M30 — 완료 | link별 security·pairing, 유선 OOB·bond/privacy, profile 7개, MCUboot·secure BLE DFU, 세 보드 secure multi-link | W01~W08·10/10 test ID와 실제 전원 차단 12/12 PASS. NFC RF는 결정된 범위대로 NOT RUN |
 | M31 — 계획 0/8 | ISO·전체 LE Audio profile, 방향탐지·connected Channel Sounding과 NCS 예제 원장 | 역할별 Arduino 예제·보드 기반 기능/복구 HIL·지원성 판정 |
-| M32 — 계획 0/12 | 최신 LE 링크/광고·Nordic 확장, Mesh 1.1·DFU, 최소 radio·공존 | 기능·자원 preset·예제·2/3보드 HIL; HOST-W07 병행 |
+| M32 — 계획 0/12 | 최신 LE 링크/광고·Nordic 확장, Mesh 1.1·DFU, 최소 radio·공존 | 기능·자원 preset·예제·2/3보드 HIL; HOST-W07 도구·절차 준비 |
 | M33 — 계획 0/8 | 표준 service·beacon·ecosystem·HCI/DTM 예제, 전수 parity·Host·상호운용·릴리스 | 전체 예제 설치/build·실행 상태, 세 Host 증거·공개 gate |
 
 Signed Write는 기본 OFF의 **deprecated legacy opt-in** (`NUCODE_BLE_LegacySigning`),
@@ -220,11 +220,18 @@ profile·template 중 제공 경로를 배정합니다. 예제에는 보드 역�
 M31의 기본 수락은 보드 간 실제 프로토콜·합성 Audio 데이터·복구이며 정밀 RF·음질·거리/각도 보정은
 필수 gate 밖입니다. 외부 장치와 실제 Host의 미검증 행은 별도로 공개합니다.
 
+2026-09-16 최종 범위에서 Apple/Google 등 외부 ecosystem와 마이크·스피커·외장 장치는 사용 가능한
+구현·예제·설정/연결 안내·자동 가능한 검사까지 제공하고 실제 운용·실물 검증은 사용자 후속입니다.
+해당 미실행은 v0.5.0 개발·릴리스 차단이 아니며, 실물 호환성이 검증됐다고 표시하지 않습니다.
+Ubuntu/macOS 실제 설치·USB·serial·debug는 최종 릴리스 단계에서 사용자가 검증합니다.
+DF 원시 IQ는 안테나 배열 확보를 선행조건으로 삼지 않고 고정 controller별 수신 경로의 적용성부터
+확인합니다. 현재 Zephyr LL 수신 후보의 NU54DK build/runtime은 미검증이며 실제 각도 산출과 별개입니다.
+
 ## 사용 전 확인
 
 - 실제 결선은 [P2/P4 커넥터 핀맵](<00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)을 기준으로 합니다.
   Fabric의 DAP UART 분리 등 각 API의 전기적 선행조건을 지키세요.
-- v0.4.1은 Native USB, OTA/DFU와 외부 filesystem을 지원하지 않습니다. main의 별도 secure BLE DFU는 개발·검증 중입니다.
+- v0.4.1은 Native USB, OTA/DFU와 외부 filesystem을 지원하지 않습니다. 개발 source의 별도 secure BLE DFU는 M30에서 검증 완료했으며 v0.4.1 설치본에는 포함되지 않습니다.
 - Storage format/reset은 데이터를 지웁니다. 버전 이동 전에는 필요한 데이터를 백업하세요.
 - GPIO interrupt callback에서 blocking·heap 할당·`Serial`·`delay()`를 사용하지 마세요.
 - Servo는 적합한 외부 전원과 공통 GND를 사용하세요. PMIC write는 매 boot 명시적 승인이 필요합니다.

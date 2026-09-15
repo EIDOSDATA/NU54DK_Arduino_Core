@@ -27,10 +27,16 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
    필요한 sample을 정확히 분류한다. 기능/예제 누락을 `excluded`로 자동 처리하지 않는다.
 4. 세 NU54DK만으로 가능한 기능은 보드 간 payload·state·counter·hash로 자동 검증한다. 정밀 RF/audio
    품질·calibration은 제품 완료 조건에 추가하지 않는다.
-5. Apple/Android/Google/외부 vendor 상호운용과 Ubuntu/macOS 실물 Host가 없는 행은 `NOT RUN`이다.
-   적용 가능한 기능 구현·예제 build를 계속하고 실제 검증한 지원 catalog와 미검증 template를 명시한다.
+5. Apple/Google·외부 제품 기능과 microphone/speaker/codec/외장 장치는 사용 가능한 구현·예제·설정/연결
+   안내·자동 가능한 검사까지 필수다. 실제 운용·제품 상호운용·외장 실물 검증은 사용자 후속이며
+   개발·릴리스 필수 gate에서 제외한다. 해당 실제 결과는 `NOT_RUN`·상호운용 미검증으로 유지한다.
+   Ubuntu/macOS 실물 Host는 사용자가 최종 릴리스 때 검증하며 해당 OS 지원 gate는 유지한다.
 6. 문서에 등록한 예제, source candidate, build PASS, 실제 기능 PASS, 외부 ecosystem 인증은 독립 상태다.
    M33 공개 시 지원한다고 표시할 필수 행은 증거가 필요하며, 미검증 행은 지원 선언에서 구분한다.
+
+위 책임·차단 정책은 [전체 계약의 최종 사용자 결정](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)을
+단일 원본으로 사용한다. 외부 장치/peer를 기다리며 구현을 중단하지 않으며, 후속 실물 검증을 미룬 것을
+구현 면제나 실제 상호운용 PASS로 해석하지 않는다. Windows 회귀는 가능한 자동 개발 범위에 포함한다.
 
 ## 2. 작업 배치
 
@@ -38,7 +44,7 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 | --- | --- | --- |
 | M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | 미착수 |
 | M33-W02 | 표준 GATT profile와 beacon·목적별 예제 보강 | 미착수 |
-| M33-W03 | Fast Pair·ANCS/AMS 등 외부 ecosystem template·상호운용 | 미착수 |
+| M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | 미착수 |
 | M33-W04 | DTM/HCI와 특수 진단 application template | 미착수 |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | 미착수 |
 | M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | 미착수 |
@@ -63,7 +69,12 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
   모두 추적하고, source가 없는 추가 service도 계획 여부·제공 방식·근거를 catalog에 남긴다.
 - [ ] `variants/nu54dk/m33-release-readiness.json`과 release 계약을 구현해 필수 행·지원 제외·미검증
   template·실험 기능의 공개 정책 및 test case 분모를 고정한다.
+- [ ] Master schema의 `verification_owner`·`verification_stage`·`development_blocker`·`release_blocker`를
+  case별로 적용한다. Apple/Google·외장 I/O 실제 case는 `user`/`user_follow_up`/`false`/`false`,
+  Ubuntu/macOS 실물은 `user`/`final_release`/`false`/`true`로 구분한다. 구현·예제·자동 검사 case는
+  필수로 남기며 사용자 후속 실제 case와 합치지 않는다. 이 정책은 현재 원장에 구현 완료된 것이 아니다.
 - [ ] `M33-INV-01`의 inventory drift·누락·중복·잘못된 지원 승격 negative를 구현한다.
+  사용자 후속 실물 `NOT_RUN`의 재차단/PASS 승격, 필수 구현을 후속으로 숨김, 최종 Host gate 면제도 거부한다.
 
 ### M33-W02 — 표준 GATT와 beacon 예제
 
@@ -91,9 +102,11 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
   fail-closed로 거부한다. 인증/승인 절차를 build 또는 sample 실행으로 완료 처리하지 않는다.
 - [ ] ANCS client·AMS client의 discovery·subscription·attribute/control·bond/reconnect 예제를 제공한다.
 - [ ] iOS/macOS·Android·Windows/Linux BLE peer의 pairing/bond/HID UX를 실제 기능별 적용 표에 배정한다.
-- [ ] Apple/Google peer가 없을 때 Host parser/semantic·target/Arduino build·scripted peer 시험을 수행하고
-  실제 외부 ecosystem runtime은 `NOT RUN`으로 남긴다.
-- [ ] 실제 peer를 사용할 때 모델/OS/앱/adapter·기능 지원성·수동 단계·timeout·보안 결과를 기록한다.
+- [ ] 실제 Apple/Google 제품에 사용할 기능·예제·설정을 완성하고 자동 가능한 Host parser/semantic·
+  target/Arduino build·scripted peer 시험을 수행한다. 실제 운용·제품 상호운용은 사용자 후속이며
+  `NOT_RUN`으로 기록하고 M33 개발·릴리스 필수 gate에서 제외한다. 빈 success stub으로 완료하지 않는다.
+- [ ] 사용자용 실제 peer 검증 절차에 모델/OS/앱/adapter·기능 지원성·설정·수동 단계·timeout·보안
+  결과 양식을 제공한다. 사용자 후속 결과가 도착하기 전에도 필수 구현·자동 검사를 완료하면 W03을 마감할 수 있다.
 - [ ] `M33-ECOSYSTEM-01`에 Fast Pair/ANCS/AMS/OS UX의 독립 하위 case와 unavailable/unsupported 이유를 남긴다.
 
 ### M33-W04 — DTM/HCI와 특수 application
@@ -117,6 +130,9 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
   runner/config를 연결한다. 독립 application template는 별도 위치·빌드 방식을 catalog에 명시한다.
 - [ ] 모든 예제에 목표 기능, upstream path/revision, 필요한 보드 수와 역할, Tools profile/Kconfig,
   예상 출력·종료/재시작·보안·제한·negative·증거 ID를 작성한다.
+- [ ] 마이크·스피커·코덱·외장 장치용 adapter/설정·실사용 예제·연결 안내와 자동 가능한 검사를
+  owner 결과에서 대조한다. 실물 운용·검증은 사용자 후속 `NOT_RUN`·릴리스 비차단으로 표시하고
+  합성 PCM/data PASS를 실제 외장 I/O 검증으로 확대하지 않는다.
 - [ ] 초급 예제는 유한하고 작은 기능을 보여 주며 고급 예제는 callback/loop·소유권·buffer·동시성·
   timeout·실험적 선택의 책임을 설명한다. 한국어 Doxygen·Allman·탭 4칸·제어문 괄호 규칙을 적용한다.
 - [ ] 실제 package에 포함된 예제 발견 목록과 catalog를 자동 대조하고 한 역할 누락·필요 profile 누락·
@@ -136,6 +152,8 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
   성능 수치는 완료 요구에 추가하지 않는다.
 - [ ] Android/iOS/Windows/Linux와 Nordic/타 vendor matrix를 기능별로 만들고 `PASS/FAIL/NOT RUN`,
   peer 자체 미지원과 Core 미지원을 구분한다. Windows 기본 GATT의 과거 PASS를 전체 OS UX에 복사하지 않는다.
+- [ ] Apple/Google·외부 제품의 실제 interop 행은 사용자 후속으로 인계한다. 구현·자동 가능한 semantic/
+  scripted peer 검사와 실제 제품 interop의 분모를 나누고 후속 실기 부재로 W06/릴리스를 차단하지 않는다.
 - [ ] `M33-REG-01`, `M33-RESOURCE-01`, `M33-INTEROP-01`에 exact image·profile·peer 결과를 연결한다.
 - [ ] Bluetooth qualification의 Host/controller/Mesh 적용성·component 근거·제품별 추가 절차를 조사해
   별도 문서에 적는다. Component 자격과 제품 자격·예제 사용 가능성을 서로 구분한다.
@@ -144,17 +162,20 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
 
 - [ ] [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)에 따라 Windows 10/11 x64,
   Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon의 지원 version matrix를 release 시점에 고정한다.
-- [ ] HOST-W04~HOST-W07의 prerequisite/path/cache/package/USB·serial·debug 결과를 exact 입력과 대조한다.
+- [ ] HOST-W04~HOST-W07의 prerequisite/path/cache/package·자동 검사 결과와 최종 사용자 USB·serial·
+  debug 검증 절차를 exact 입력과 대조한다. 중간 단계에서 Ubuntu/macOS PC 연결을 요구하지 않는다.
 - [ ] HOST-W08의 clean 설치·전체 예제 compile·대표 실제 upload/runtime·upgrade/reinstall/uninstall을
-  실제 각 Host에서 마감한다. PC 또는 USB 접근이 없으면 해당 행은 `NOT RUN`이고 세 Host 정식 지원
-  공개 gate는 미완료다.
+  실제 각 Host에서 마감한다. Ubuntu/macOS는 사용자가 최종 릴리스 단계에서 실행하며 설치·USB upload·
+  serial·debug·수명주기 증거를 인계받는다. 그때까지 해당 행은 `NOT_RUN`이고 해당 OS 정식 지원 공개
+  gate는 미완료다. Windows의 가능한 자동 회귀와 나머지 개발·RC 준비는 계속한다.
 - [ ] Release candidate의 source/board/SDK/toolchain·profile/catalog·version·hash를 고정하고 package를
   독립 두 번 생성해 재현성과 runtime payload·예제 포함 목록을 검증한다.
 - [ ] API/profile migration·known limitation·experimental opt-in·미검증 template·외부 ecosystem·Host
   상태를 release notes와 readiness에 동일하게 기록한다.
 - [ ] `M33-PACKAGE-01`, `M33-INSTALL-01`을 HOST-W08 증거와 연결하고 공개할 필수 행의 미완료를 차단한다.
-- [ ] 기능 구현 완료, 지원 범위 결정 완료, 세 Host 완료, RC 준비 완료를 각각 보고한다. 외부 peer 미확보는
-  관련 지원 행에 남기며 독립적으로 가능한 RC 준비까지 진행한다.
+- [ ] 기능 구현 완료, 지원 범위 결정 완료, 세 Host 완료, RC 준비 완료를 각각 보고한다. Apple/Google·
+  외장 장치의 사용자 후속 실물 행은 지원 제한으로 남기되 개발·릴리스 blocker로 사용하지 않는다.
+  최종 사용자 장비 검증 gate는 Ubuntu/macOS이며 공개 승인·제품 인증은 별도 절차다.
 
 ### M33-W08 — 공개·최종 인계
 
@@ -163,9 +184,10 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
   이 TODO 작성과 과거 v0.4.1 공개 승인을 새 v0.5.0 tag/Release/index 게시 승인으로 사용하지 않는다.
 - [ ] 승인된 exact plan으로 tag·Release·asset·stable index를 게시하고 기존 공개 자산을 보존한다.
 - [ ] 공개 URL의 hash·격리 설치·예제·대표 upload/runtime·수명주기를 검증한다.
-- [ ] `M33-RELEASE-01`에 승인·공개·공개 설치를 독립 결과로 남기고 exact push commit의 CI 완료를 확인한다.
+- [ ] `M33-RELEASE-01`에 승인·공개·공개 설치를 독립 결과로 남긴다. Exact push commit의 CI 확인은
+  최신 사용자의 명시적 생략 지시를 우선하며, 현재 인계에서는 CI/CD 실행 요청·조회·대기를 하지 않는다.
 - [ ] README·API/profile·example catalog·release-readiness·검증 기록·HANDOFF와 제품 지원 버전을 맞춘다.
-- [ ] M34~M45와 별도 ARF에 남은 security/storage/radio/network/Matter·외부 ecosystem·미검증 Host
+- [ ] M34~M45와 별도 ARF에 남은 security/storage/radio/network/Matter·사용자 후속 외부 ecosystem·후속 Host 확대
   요구를 구체적 다음 행동·장비·owner·상태와 함께 인계한다.
 
 ## 4. 예정 test ID·장비·완료 입력
@@ -178,21 +200,22 @@ timeout·packet/object 분모·허용 loss/latency·복구 한계·즉시 중단
 | M33-INV-01 | Host | 고정 upstream 전수 매핑·누락/중복/미배정 owner 0, 허위 지원 승격 거부 |
 | M33-PROFILE-01 | 2~3보드 | Profile/role별 payload·보안·lifecycle, malformed·권한 오류·cross-link 거부 |
 | M33-BEACON-01 | 2보드 | Protocol별 실제 수신/decode, length/version·변조 거부 |
-| M33-ECOSYSTEM-01 | 해당 Apple/Google/OS peer | Template build와 실제 peer 결과 분리, credential 누락·bond/access 거부 |
+| M33-ECOSYSTEM-01 | 자동 검사 Host/적용 보드; 실제 Apple/Google/OS peer는 사용자 후속 | 실사용 구현·예제·설정·자동 검사 필수, credential 누락·bond/access 거부. 실제 제품 시험은 비차단 `NOT_RUN` |
 | M33-DIAG-01 | DTM 2보드, 기타 transport별 외부 Host | DTM 양방향 TX/RX·실제 수신 수·유한 STOP·UART 격리·ownership, tester 없는 정밀 RF 측정 NOT RUN/범위 밖 |
 | M33-EXAMPLE-01 | 각 build Host, runtime은 해당 role 보드 | 설치 catalog/role 전수 compile·실행 절차, 누락 profile·잘못된 조합 거부 |
 | M33-REG-01 / M33-RESOURCE-01 | Host + 최대 3보드 | 이전 기능·명시 조합·자원 회수·오귀속/손상/누수·유한 부하 |
-| M33-INTEROP-01 | 기능별 외부 BLE peer | 모델·OS·기능별 actual 결과, peer 미지원·장비 부재 구분 |
-| M33-PACKAGE-01 / M33-INSTALL-01 | 실제 세 Host와 USB 보드 | 재현 package·전체 예제·수명주기, hash/arch/profile·권한 오류 |
-| M33-RELEASE-01 | 승인된 exact plan·공개 URL | 승인·게시·다운로드 byte·공개 설치·CI, 미완료 필수 gate 게시 차단 |
+| M33-INTEROP-01 | 자동 가능한 peer 검사 + 실제 외부 BLE 제품은 사용자 후속 | 기능·모델별 상태·peer 미지원 구분; 실제 Apple/Google·외부 제품 검증은 릴리스 비차단, 자동 결과로 대체 금지 |
+| M33-PACKAGE-01 / M33-INSTALL-01 | 세 Host와 USB 보드; Ubuntu/macOS 실물은 최종 사용자 검증 | 재현 package·전체 예제·설치/USB upload/serial/debug·수명주기, hash/arch/profile·권한 오류; 최종 OS gate 유지 |
+| M33-RELEASE-01 | 승인된 exact plan·공개 URL | 승인·게시·다운로드 byte·공개 설치, 미완료 필수 gate 게시 차단; CI 확인은 최신 사용자 생략 지시 우선 |
 
 ## 5. 완료와 보존 계약
 
 - M33의 구현 완료 분모는 W01~W08 **8개**다. 예제 수·role 수·test case 수·HOST-W08은 별도 분모로
   기록하며 원장 검증으로 숫자를 집계한다. 계획 문서 완성을 W 완료로 계산하지 않는다.
-- 공개 지원이라고 표시할 모든 적용 기능/예제/Host 행에는 실제 필요한 증거가 있어야 한다. 외부 장비나
-  credential이 없는 행은 `NOT RUN`·지원 제한·template 상태를 공개하며 기본 GATT 또는 보드 peer PASS로
-  전체 ecosystem 상호운용을 대신하지 않는다.
+- 공개 지원이라고 표시할 모든 적용 기능/예제/Host 행에는 주장 범위에 맞는 증거가 있어야 한다.
+  Apple/Google·외장 장치의 구현·예제·자동 검사 완료와 사용자 후속 실물 `NOT_RUN`을 함께 공개하며,
+  이 후속 실기만을 이유로 M33 개발·릴리스 gate를 차단하지 않는다. 기본 GATT 또는 보드 peer PASS로
+  전체 ecosystem 상호운용·실물 I/O를 대신하지 않는다. Ubuntu/macOS 실물은 사용자 최종 지원 gate다.
 - NU54DK 미지원·SDK 미지원·experimental·external-add-on·build-only를 이유와 함께 분류하면 누락
   판정은 닫을 수 있다. 그 행의 runtime 결과가 자동 PASS로 바뀌지는 않는다.
 - M28/M29/M30 완료와 M30-POWER-01의 4지점 × 3회·12/12 PASS, 실제 source

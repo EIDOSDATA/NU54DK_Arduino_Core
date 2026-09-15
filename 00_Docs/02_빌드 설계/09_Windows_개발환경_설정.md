@@ -5,11 +5,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.10 |
+| 문서 개정 | 1.11 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.4.1` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-15 |
+| 최종 갱신일 | 2026-09-16 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -20,8 +20,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 이 절차는 현재 `v0.4.1`과 개발 `main`의 Windows 환경 기준이다. M30은 W01~W08 8/8·test ID
 10/10·실제 전원 차단 12/12를 완료했고 HOST-W01~HOST-W03도 완료했다. `v0.5.0`부터 추가할 Ubuntu AMD64·Apple Silicon macOS는
 [다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 남은 HOST-W04~HOST-W08 구현·
-실증 뒤 별도 사용자 절차로 제공한다. 다음 Host 작업은 [M31 TODO](../TODO_M31.md)의
-HOST-W04~HOST-W06 실행 순서를 따른다.
+자동 검사·사용자 절차를 준비한다. Ubuntu/macOS의 실제 설치·USB upload·serial·debug·수명주기는
+사용자가 최종 릴리스 단계에서 검증한다. 중간 개발/HOST-W07을 해당 PC 연결 대기로 차단하지 않으며,
+정식 지원의 최종 실물 gate는 유지한다. 다음 Host 작업은 [M31 TODO](../TODO_M31.md)의
+HOST-W04~HOST-W06 실행 순서를 따른다. 이번 문서·인계 작업의 CI/CD 생략은
+[CI/CD 계약의 현행 예외](08_M12_CI_CD와_재현_빌드.md)를 따른다.
 
 ---
 

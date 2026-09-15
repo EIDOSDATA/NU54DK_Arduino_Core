@@ -252,11 +252,16 @@ signing/EATT를 강제로 켜지 않는다. M29의 실제 예제명과 완료·�
   opt-in한다. v0.4.1의 기존 30개 sidecar-free 계약과 새 고급 template 계약을 혼합하지 않는다.
 - [ ] `setup()/loop()` 사용·buffer 수명·timeout·error 처리·STOP/해제와 한국어 Doxygen/Allman/4칸 스타일을 검증한다.
 - [ ] 자동 실행 경로는 버튼 입력을 Serial 명령/역할 설정으로 재현한다. GPIO 전기 동작이 본질인 예제는
-  실제 route를 별도 검증하고 단순 Serial 대체로 물리 PASS를 주장하지 않는다.
+  실제 연결 route·설정·사용법을 구현하고 실물 검증을 사용자 후속으로 남긴다. 단순 Serial 대체로 물리 PASS를 주장하지 않는다.
 - [ ] source/native target/Arduino compile·설치 discovery·role runtime·negative·외부 peer 상태를 각각 기록한다.
 - [ ] 설치 archive 안의 예제 집합·설정·upstream provenance와 원장 집합이 일치해야 M33을 완료한다.
-- [ ] NU54DK의 board-only 기능은 합성 payload/PCM과 실제 무선 결과로 검증한다. 외부 mic/speaker/IQ
-  receiver·Apple/Google peer·정밀 계측 경계는 예제와 원장에 함께 표시한다.
+- [ ] NU54DK의 board-only 기능은 합성 payload/PCM과 실제 무선 결과로 검증한다. Apple/Google 및
+  mic/speaker/외장 장치는 사용 가능한 구현·예제·설정/연결 안내와 자동 가능한 검사를 필수로 제공한다.
+  실제 운용·상호운용은 사용자 후속 NOT RUN이며 v0.5.0 개발·공개 차단이 아님을 예제/원장에 명시한다.
+- [ ] DF 원시 IQ는 배열 없는 수신 후보를 먼저 조사·build하고 적용되면 2보드 수신을 검증한다.
+  실제 각도 산출·안테나 전환 예제는 별도 외장 경로로 설명한다. 단일 안테나 IQ를 각도 검증으로 쓰지 않는다.
+- [ ] Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
+  실패 증거 수집 안내를 제공하고 마지막 릴리스 단계로 인계한다.
 
 향후 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
 upstream case를 포괄하면 대응 case 전부를 명시하고, 발견 개수·적용 개수·build/runtime PASS 개수를
