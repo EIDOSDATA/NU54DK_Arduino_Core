@@ -114,6 +114,8 @@ SUITE_GROUPS = {
         ("m31_df_iq_candidate", "nucode.m31.df_iq_candidate"),
         ("m31_iso_cis_hil", "nucode.m31.iso_cis.central"),
         ("m31_iso_cis_hil", "nucode.m31.iso_cis.peripheral"),
+        ("m31_iso_bis_hil", "nucode.m31.iso_bis.source"),
+        ("m31_iso_bis_hil", "nucode.m31.iso_bis.receiver"),
         ("m28_ble_capability", "nucode.m28.ble_capability"),
         ("m28_ble_link_contract", "nucode.m28.ble_link_contract"),
         ("m28_ble_extended_contract", "nucode.m28.ble_extended_contract"),

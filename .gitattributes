@@ -13,3 +13,6 @@ coverage/ncs-v3.4.0/** text eol=lf
 
 # 공개 stable index는 Windows checkout에서도 승인된 SHA-256의 LF 바이트를 유지합니다.
 /package_nucode_nu54dk_index.json text eol=lf
+
+# 실기 UART 원본은 증거 JSON의 byte SHA-256과 checkout 후에도 같아야 합니다.
+**/*.transcript.log text eol=lf

@@ -81,7 +81,10 @@ clean `8c125a220c4df722e4922887fdf6c5a5e3793612`을 기준으로 다시 빌드�
 [W01 exact manifest](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-manifest.json>)의
 5개 HCI query와 [W02 exact manifest](<../04_검증 기록/evidence/m31-w02-exact-8c125a22/cis-manifest.json>)의
 20회×100 CIS는 PASS다. 이는 controller query와 CIS subcase의 범위만 닫는다.
-BIS/Audio/DF raw IQ·CS procedure와 역할 예제 기능 단계는 별도로 판정한다.
+BIS의 두 보드 20회×100 유효 SDU 개발 후보도
+[W02 BIS 개발 원본](<../04_검증 기록/evidence/m31-w02-dev-candidate/m31-bis-dev-04.json>)에
+보존했다. 이 결과는 `source_clean=false`이며 clean 재빌드·실기 전에는 PASS가 아니다.
+combined/time sync·Audio/DF raw IQ·CS procedure와 역할 예제 기능 단계는 별도로 판정한다.
 [W01 clean 감사 결과](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>)는
 parity 703행, Host 오류 입력 20/20 거부, 전체 Host 회귀를 확인해 W01만 완료했다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.
