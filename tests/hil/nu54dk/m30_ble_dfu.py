@@ -448,7 +448,20 @@ def collect_peripheral_build(
     if not raw.is_file() or core_revision.encode("ascii") not in raw.read_bytes():
         raise M30DfuFailure("peripheral raw image에 exact Core revision이 없습니다.")
     signed_hex = app / "zephyr/zephyr.signed.hex"
-    record = validate_build_record(signed_hex, core_revision, git_revision(BOARD_ROOT), APPLICATION_ROOT)
+    record = validate_build_record(
+        signed_hex,
+        core_revision,
+        git_revision(BOARD_ROOT),
+        APPLICATION_ROOT,
+    )
+    record.update(
+        {
+            "application_config_sha256": file_sha256(app / "zephyr/.config"),
+            "application_build_ninja_sha256": file_sha256(app / "build.ninja"),
+            "bootloader_config_sha256": file_sha256(boot / "zephyr/.config"),
+            "domains_sha256": file_sha256(root / "domains.yaml"),
+        }
+    )
     public_key = boot / "zephyr/autogen-pubkey.c"
     if not public_key.is_file():
         raise M30DfuFailure("MCUboot 생성 public key source가 없습니다.")
@@ -485,7 +498,18 @@ def collect_central_build(argument: str, core_revision: str) -> CentralBuild:
     if "NUCODE_M30_DFU_PERIPHERAL=1" in ninja:
         raise M30DfuFailure("Central build에 peripheral 역할 define이 있습니다.")
     image = root / "zephyr/zephyr.hex"
-    record = validate_build_record(image, core_revision, git_revision(BOARD_ROOT), APPLICATION_ROOT)
+    record = validate_build_record(
+        image,
+        core_revision,
+        git_revision(BOARD_ROOT),
+        APPLICATION_ROOT,
+    )
+    record.update(
+        {
+            "application_config_sha256": file_sha256(root / "zephyr/.config"),
+            "application_build_ninja_sha256": file_sha256(root / "build.ninja"),
+        }
+    )
     return CentralBuild(root, image, record)
 
 

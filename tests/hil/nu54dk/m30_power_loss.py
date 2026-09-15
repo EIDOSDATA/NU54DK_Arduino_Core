@@ -33,6 +33,7 @@ from ble_pair_hil_common import (  # noqa: E402
     file_sha256,
     flash_image_pyocd,
     git_revision,
+    source_files_digest,
     validate_board_revision,
     validate_image_unchanged,
     validate_pair_identity,
@@ -72,7 +73,18 @@ MILESTONE = "M30"
 RUNNER_PATH = Path(__file__).resolve()
 DFU_RUNNER_PATH = HIL_DIRECTORY / "m30_ble_dfu.py"
 BOOT_RUNNER_PATH = HIL_DIRECTORY / "m30_mcuboot.py"
-PROTOCOL_VERSION = 1
+COMMON_RUNNER_PATH = HIL_DIRECTORY / "ble_pair_hil_common.py"
+PIN_RUNNER_PATH = HIL_DIRECTORY / "m14_pin_hil.py"
+SERIAL_RUNNER_PATH = HIL_DIRECTORY / "m6_serial_echo.py"
+RUNNER_DEPENDENCIES = (
+    RUNNER_PATH,
+    DFU_RUNNER_PATH,
+    BOOT_RUNNER_PATH,
+    COMMON_RUNNER_PATH,
+    PIN_RUNNER_PATH,
+    SERIAL_RUNNER_PATH,
+)
+PROTOCOL_VERSION = 2
 INJECTION_POINTS = (
     "slot1_transfer",
     "image_validation_write",
@@ -92,6 +104,25 @@ POWER_STATE_PATTERN = re.compile(
 )
 WINDOW_PATTERN = re.compile(
     rb"^M30POWER\|1\|WINDOW\|point=(image_validation_write|mcuboot_test_swap)$"
+)
+MANIFEST_IDENTITY_KEYS = (
+    "schema_version",
+    "test_id",
+    "status",
+    "power_hil",
+    "core_revision",
+    "board_revision",
+    "boards",
+    "injection_plan",
+    "criteria",
+    "images",
+    "bootloader",
+    "central_image",
+    "trust_public_key_source_sha256",
+    "build_records",
+    "runner",
+    "safety",
+    "next_action",
 )
 
 
@@ -284,6 +315,34 @@ def daplink_identity(endpoint: RoleEndpoint) -> dict[str, str]:
     return result
 
 
+def runner_identity() -> dict[str, Any]:
+    """! @brief entrypoint와 transitive 로컬 helper byte를 하나의 identity로 묶습니다. """
+
+    return {
+        "entrypoint": RUNNER_PATH.relative_to(REPOSITORY).as_posix(),
+        "files": [
+            {
+                "path": path.relative_to(REPOSITORY).as_posix(),
+                "sha256": file_sha256(path),
+            }
+            for path in RUNNER_DEPENDENCIES
+        ],
+    }
+
+
+def manifest_input_identity(document: dict[str, Any]) -> str:
+    """! @brief source·build·장비·키·계획을 canonical SHA-256으로 결합합니다. """
+
+    identity = {key: document.get(key) for key in MANIFEST_IDENTITY_KEYS}
+    encoded = json.dumps(
+        identity,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def manifest_document(
     core_revision: str,
     board_revision: str,
@@ -297,7 +356,8 @@ def manifest_document(
 ) -> dict[str, Any]:
     """! @brief 실제 cut 전 단계만 나타내는 redacted 2보드 manifest를 만듭니다. """
 
-    return {
+    preflight_document = dict(preflight)
+    document = {
         "schema_version": PROTOCOL_VERSION,
         "test_id": "M30-POWER-01",
         "status": "blocked_human_power_cut",
@@ -341,11 +401,8 @@ def manifest_document(
             "unconfirmed": unconfirmed.record,
             "central": central_build.record,
         },
-        "runner": {
-            "name": RUNNER_PATH.name,
-            "sha256": file_sha256(RUNNER_PATH),
-        },
-        "preflight": preflight,
+        "runner": runner_identity(),
+        "preflight": preflight_document,
         "safety": {
             "physical_power_cuts": 0,
             "reset_substitution_allowed": False,
@@ -355,6 +412,12 @@ def manifest_document(
         },
         "next_action": "execute runner and physically disconnect DUT target USB at first armed window",
     }
+    document["input_identity_sha256"] = manifest_input_identity(document)
+    if preflight_document.get("status") == "passed":
+        preflight_document["input_identity_sha256"] = document[
+            "input_identity_sha256"
+        ]
+    return document
 
 
 def write_new_json(path: Path, document: dict[str, Any], overwrite: bool) -> None:
@@ -911,33 +974,96 @@ def preflight(
     }
 
 
+def validate_preflight_evidence(
+    preflight_result: Any,
+    input_identity_sha256: str,
+) -> None:
+    """! @brief 실행 전에 완료된 flash·L4·settings·DFU 준비 근거를 검증합니다. """
+
+    if not isinstance(preflight_result, dict):
+        raise M30PowerFailure("manifest preflight가 JSON object가 아닙니다.")
+    expected_scalars = {
+        "status": "passed",
+        "flash_backend": "pyocd-exact-sector",
+        "security_level": 4,
+        "encryption_key_bytes": 16,
+        "physical_power_cuts": 0,
+        "input_identity_sha256": input_identity_sha256,
+    }
+    for key, expected_value in expected_scalars.items():
+        if preflight_result.get(key) != expected_value:
+            raise M30PowerFailure(f"manifest preflight {key} 근거가 유효하지 않습니다.")
+
+    flash_results = preflight_result.get("flash_results")
+    expected_roles = {
+        "peripheral_bootloader",
+        "peripheral_primary",
+        "central",
+    }
+    if not isinstance(flash_results, dict) or set(flash_results) != expected_roles:
+        raise M30PowerFailure("manifest preflight flash role 근거가 유효하지 않습니다.")
+    for role, result in flash_results.items():
+        if (
+            not isinstance(result, (list, tuple))
+            or len(result) != 2
+            or result[0] != "pyocd-sector"
+            or not isinstance(result[1], str)
+            or not result[1].isdigit()
+            or int(result[1]) <= 0
+        ):
+            raise M30PowerFailure(
+                f"manifest preflight {role} sector flash 근거가 유효하지 않습니다."
+            )
+
+    state = preflight_result.get("state")
+    if (
+        not isinstance(state, dict)
+        or not isinstance(state.get("bond_count"), int)
+        or not 1 <= state["bond_count"] <= 4
+        or state.get("rejected_bonds") != 0
+        or state.get("bonded") != 1
+        or state.get("settings_valid") != 1
+    ):
+        raise M30PowerFailure("manifest preflight bond/settings 근거가 유효하지 않습니다.")
+
+    retry = preflight_result.get("dfu_retry")
+    if (
+        not isinstance(retry, dict)
+        or not isinstance(retry.get("requests"), int)
+        or retry["requests"] <= 0
+        or re.fullmatch(r"[0-9a-f]{64}", str(retry.get("image_hash", ""))) is None
+    ):
+        raise M30PowerFailure("manifest preflight DFU retry 근거가 유효하지 않습니다.")
+
+    storage = preflight_result.get("bond_storage_reset")
+    if not isinstance(storage, dict):
+        raise M30PowerFailure("manifest preflight bond storage 근거가 유효하지 않습니다.")
+    performed = storage.get("performed")
+    expected_boards = 2 if performed is True else 0
+    if (
+        not isinstance(performed, bool)
+        or storage.get("boards") != expected_boards
+        or storage.get("offset") != STORAGE_OFFSET
+        or storage.get("size") != STORAGE_SIZE
+    ):
+        raise M30PowerFailure("manifest preflight bond storage 근거가 유효하지 않습니다.")
+
+
 def validate_manifest(
     manifest: dict[str, Any],
     expected: dict[str, Any],
 ) -> None:
-    """! @brief 실행 시점 manifest의 revision·board·image identity를 재검증합니다. """
+    """! @brief 실행 시점 manifest의 모든 immutable 입력과 preflight를 재검증합니다. """
 
-    for key in (
-        "schema_version",
-        "test_id",
-        "core_revision",
-        "board_revision",
-        "runner",
-    ):
+    for key in MANIFEST_IDENTITY_KEYS:
         if manifest.get(key) != expected.get(key):
             raise M30PowerFailure(f"manifest {key} identity가 다릅니다.")
-    if manifest.get("status") != "blocked_human_power_cut":
-        raise M30PowerFailure("manifest가 실제 cut 직전 blocked 상태가 아닙니다.")
-    if manifest.get("power_hil") != "not_run":
-        raise M30PowerFailure("이미 실행된 power manifest를 재사용할 수 없습니다.")
-    if manifest.get("boards") != expected.get("boards"):
-        raise M30PowerFailure("manifest 2보드 endpoint identity가 다릅니다.")
-    if manifest.get("images") != expected.get("images"):
-        raise M30PowerFailure("manifest candidate identity가 다릅니다.")
-    if manifest.get("bootloader") != expected.get("bootloader"):
-        raise M30PowerFailure("manifest MCUboot identity가 다릅니다.")
-    if manifest.get("central_image") != expected.get("central_image"):
-        raise M30PowerFailure("manifest Central image identity가 다릅니다.")
+    input_identity = manifest.get("input_identity_sha256")
+    if input_identity != expected.get("input_identity_sha256"):
+        raise M30PowerFailure("manifest 결합 input identity가 다릅니다.")
+    if input_identity != manifest_input_identity(manifest):
+        raise M30PowerFailure("manifest 결합 input identity가 변조됐습니다.")
+    validate_preflight_evidence(manifest.get("preflight"), input_identity)
 
 
 def execute_power_hil(

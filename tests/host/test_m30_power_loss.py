@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+import re
 from types import SimpleNamespace
 from unittest import mock
 import sys
@@ -43,6 +44,46 @@ class FakeClock:
 
 class M30PowerLossTests(unittest.TestCase):
     """! @brief 전원 차단을 reset·키 입력으로 대체하지 못하게 고정합니다. """
+
+    def manifest_documents(self) -> tuple[dict[str, object], dict[str, object]]:
+        """! @brief manifest 재사용 검증용 정상 expected·prepared 문서를 만듭니다. """
+
+        expected: dict[str, object] = {
+            key: {"identity": key} for key in RUNNER.MANIFEST_IDENTITY_KEYS
+        }
+        expected["input_identity_sha256"] = RUNNER.manifest_input_identity(expected)
+        expected["preflight"] = {
+            "status": "not_run",
+            "physical_power_cuts": 0,
+        }
+        manifest = json.loads(json.dumps(expected))
+        manifest["preflight"] = {
+            "status": "passed",
+            "flash_backend": "pyocd-exact-sector",
+            "flash_results": {
+                "peripheral_bootloader": ["pyocd-sector", "100"],
+                "peripheral_primary": ["pyocd-sector", "200"],
+                "central": ["pyocd-sector", "300"],
+            },
+            "security_level": 4,
+            "encryption_key_bytes": 16,
+            "state": {
+                "bond_count": 1,
+                "rejected_bonds": 0,
+                "bonded": 1,
+                "settings_valid": 1,
+            },
+            "dfu_retry": {"requests": 10, "image_hash": "a" * 64},
+            "bond_storage_reset": {
+                "performed": True,
+                "boards": 2,
+                "offset": RUNNER.STORAGE_OFFSET,
+                "size": RUNNER.STORAGE_SIZE,
+            },
+            "physical_power_cuts": 0,
+            "input_identity_sha256": expected["input_identity_sha256"],
+        }
+        return manifest, expected
 
     def test_plan_is_exactly_four_points_and_three_cuts(self) -> None:
         """! @brief 계약의 4x3 순서와 image version을 고정합니다. """
@@ -190,6 +231,77 @@ class M30PowerLossTests(unittest.TestCase):
         self.assertNotIn(endpoint.board_id, serialized)
         self.assertRegex(evidence["board_id_sha256"], r"^[0-9a-f]{64}$")
         self.assertNotIn("board_id", evidence)
+
+    def test_manifest_accepts_exact_inputs_and_completed_preflight(self) -> None:
+        """! @brief 준비 manifest의 모든 입력과 완료 preflight가 같으면 통과합니다. """
+
+        manifest, expected = self.manifest_documents()
+        RUNNER.validate_manifest(manifest, expected)
+
+    def test_manifest_rejects_changed_build_key_plan_and_helper(self) -> None:
+        """! @brief build·키·계획·helper identity 중 하나라도 다르면 재사용을 거부합니다. """
+
+        for key in (
+            "build_records",
+            "trust_public_key_source_sha256",
+            "injection_plan",
+            "criteria",
+            "runner",
+        ):
+            with self.subTest(key=key):
+                manifest, expected = self.manifest_documents()
+                manifest[key] = {"changed": key}
+                with self.assertRaisesRegex(RUNNER.M30PowerFailure, key):
+                    RUNNER.validate_manifest(manifest, expected)
+
+    def test_manifest_rejects_incomplete_or_unbound_preflight(self) -> None:
+        """! @brief 미완료·다른 입력에 결합된 preflight를 실제 cut 전에 거부합니다. """
+
+        for key, value in (
+            ("status", "not_run"),
+            ("security_level", 2),
+            ("physical_power_cuts", 1),
+            ("input_identity_sha256", "b" * 64),
+        ):
+            with self.subTest(key=key):
+                manifest, expected = self.manifest_documents()
+                manifest["preflight"][key] = value
+                with self.assertRaisesRegex(RUNNER.M30PowerFailure, "preflight"):
+                    RUNNER.validate_manifest(manifest, expected)
+
+    def test_runner_identity_covers_transitive_local_helpers(self) -> None:
+        """! @brief power runner의 직접·간접 로컬 import를 모두 manifest에 결합합니다. """
+
+        identity = RUNNER.runner_identity()
+        paths = {entry["path"] for entry in identity["files"]}
+        self.assertEqual(
+            paths,
+            {
+                path.relative_to(REPOSITORY).as_posix()
+                for path in RUNNER.RUNNER_DEPENDENCIES
+            },
+        )
+        self.assertTrue(
+            all(
+                re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])
+                for entry in identity["files"]
+            )
+        )
+
+    def test_source_digest_ignores_docs_but_tracks_compiler_inputs(self) -> None:
+        """! @brief 비컴파일 문서와 실제 compiler 입력 변경을 구분합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-source-digest-") as directory:
+            root = Path(directory)
+            source = root / "main.cpp"
+            document = root / "README.md"
+            source.write_text("int value = 1;\n", encoding="utf-8")
+            document.write_text("first\n", encoding="utf-8")
+            initial = RUNNER.source_files_digest(root, (root,))
+            document.write_text("second\n", encoding="utf-8")
+            self.assertEqual(initial, RUNNER.source_files_digest(root, (root,)))
+            source.write_text("int value = 2;\n", encoding="utf-8")
+            self.assertNotEqual(initial, RUNNER.source_files_digest(root, (root,)))
 
     def test_target_has_bounded_validation_and_swap_windows(self) -> None:
         """! @brief 전원 전용 app·MCUboot marker와 15초 유한 창을 검사합니다. """
