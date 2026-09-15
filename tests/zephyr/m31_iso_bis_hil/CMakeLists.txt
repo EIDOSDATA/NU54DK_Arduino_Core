@@ -6,6 +6,7 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(m31_iso_bis_hil)
 
 zephyr_get(M31_BIS_ROLE)
+zephyr_get(M31_BIS_TIME_SYNC)
 if(NOT "${M31_BIS_ROLE}" STREQUAL "source" AND
    NOT "${M31_BIS_ROLE}" STREQUAL "receiver")
     message(FATAL_ERROR "M31_BIS_ROLE must be source or receiver")
@@ -44,4 +45,7 @@ target_compile_definitions(app PRIVATE
     M31_NCS_REVISION="${M31_NCS_REVISION}"
     M31_ZEPHYR_REVISION="${M31_ZEPHYR_REVISION}"
 )
+if("${M31_BIS_TIME_SYNC}" STREQUAL "1")
+    target_compile_definitions(app PRIVATE M31_BIS_TIME_SYNC=1)
+endif()
 target_sources(app PRIVATE src/main.cpp)

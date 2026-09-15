@@ -24,6 +24,7 @@ from m6_serial_echo import import_pyserial  # noqa: E402
 from m31_ble_capability import ExpectedIdentity  # noqa: E402
 from m31_ble_capability_run import collect_register_identity, discover  # noqa: E402
 from m31_iso_bis import parse_bis_transcript, validate_bis_envelope  # noqa: E402
+from m31_iso_time import parse_time_transcript, validate_time_envelope  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
 
@@ -162,16 +163,21 @@ def execute(args: argparse.Namespace) -> dict:
                     wait_event(ports[role], role, transcript, "STOPPED", nonce, 35.0)
             if args.cycles == 20:
                 raw = ("\n".join(transcript) + "\n").encode("ascii", errors="replace")
+                test_id = "M31-ISO-01:time_sync" if args.time_sync else "M31-ISO-01:bis"
                 public_boards = {role: {key: value for key, value in board.items()
                                        if key not in {"uid", "image"}} for role, board in boards.items()}
                 if dirty:
-                    measured = parse_bis_transcript(raw, nonces, identity)
+                    measured = (parse_time_transcript(raw, nonces, identity) if args.time_sync else
+                                parse_bis_transcript(raw, nonces, identity))
                     status = "PASS_CANDIDATE"
                 else:
-                    measured = validate_bis_envelope({
-                        "source_clean": True, "test_id": "M31-ISO-01:bis", "transcript": raw,
+                    envelope = {
+                        "source_clean": True, "test_id": test_id, "transcript": raw,
                         "nonces": nonces, "boards": public_boards,
-                    }, {role: board["image_sha256"] for role, board in boards.items()}, identity)
+                    }
+                    images = {role: board["image_sha256"] for role, board in boards.items()}
+                    measured = (validate_time_envelope(envelope, images, identity) if args.time_sync else
+                                validate_bis_envelope(envelope, images, identity))
                     status = "PASS"
             else:
                 status = "DEV_PROBE"
@@ -185,7 +191,9 @@ def execute(args: argparse.Namespace) -> dict:
     public_boards = {role: {key: value for key, value in board.items()
                            if key not in {"uid", "image"}} for role, board in boards.items()}
     evidence = {
-        "test_id": "M31-ISO-01:bis", "scope": "two_board_bis_twenty_cycles",
+        "test_id": "M31-ISO-01:time_sync" if args.time_sync else "M31-ISO-01:bis",
+        "scope": "two_board_iso_timestamp_twenty_cycles" if args.time_sync else
+                 "two_board_bis_twenty_cycles",
         "status": status, "source_clean": not bool(dirty), "identity": vars(identity),
         "boards": public_boards, "nonces": nonces, "cycles": args.cycles,
         "reason": reason, "measurement": vars(measured) if measured is not None else None,
@@ -204,6 +212,7 @@ def main() -> int:
     parser.add_argument("--output-prefix", required=True, type=Path)
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--development", action="store_true")
+    parser.add_argument("--time-sync", action="store_true")
     args = parser.parse_args()
     try:
         result = execute(args)

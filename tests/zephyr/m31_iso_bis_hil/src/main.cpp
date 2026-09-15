@@ -61,6 +61,19 @@ namespace
     atomic_t duplicate = ATOMIC_INIT(0);
     atomic_t out_of_order = ATOMIC_INIT(0);
     int last_sequence = -1;
+#if defined(M31_BIS_TIME_SYNC)
+    atomic_t valid_timestamp = ATOMIC_INIT(0);
+    uint32_t first_timestamp = 0U;
+    uint32_t last_timestamp = 0U;
+#endif
+#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+    uint32_t next_tx_timestamp = 0U;
+    uint32_t first_tx_timestamp = 0U;
+    uint32_t last_hci_timestamp = 0U;
+    uint16_t last_hci_sequence = 0U;
+    bool timestamp_ready = false;
+    uint16_t timestamped_sent = 0U;
+#endif
     uint32_t seen[(sdu_count + 31U) / 32U] = {};
     struct bt_le_ext_adv *advertiser = nullptr;
     struct bt_le_per_adv_sync *periodic_sync = nullptr;
@@ -205,12 +218,37 @@ namespace
             fail("out_of_order", -EBADMSG);
             return;
         }
+#if defined(M31_BIS_TIME_SYNC)
+        if ((information->flags & BT_ISO_FLAGS_TS) == 0U ||
+            (atomic_get(&valid_timestamp) > 0 &&
+             static_cast<int32_t>(information->ts - last_timestamp) <= 0))
+        {
+            fail("iso_timestamp", -EBADMSG);
+            return;
+        }
+        if (atomic_get(&valid_timestamp) == 0)
+        {
+            first_timestamp = information->ts;
+        }
+        last_timestamp = information->ts;
+        atomic_inc(&valid_timestamp);
+#endif
         last_sequence = sequence;
         word |= bit;
         atomic_inc(&received);
         if (sequence == sdu_count - 1U && !rx_end_printed)
         {
             rx_end_printed = true;
+#if defined(M31_BIS_TIME_SYNC)
+            Serial.print("M31BIS|1|TIME_END|nonce=");
+            Serial.print(nonce);
+            Serial.print("|valid=");
+            Serial.print(atomic_get(&valid_timestamp));
+            Serial.print("|stale=0|first_ts=");
+            Serial.print(first_timestamp);
+            Serial.print("|last_ts=");
+            Serial.println(last_timestamp);
+#endif
             Serial.print("M31BIS|1|RX_END|nonce=");
             Serial.print(nonce);
             Serial.print("|received=");
@@ -261,10 +299,60 @@ namespace
         Serial.println(reason);
     }
 
+#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+    /** @brief 송신 완료 HCI 기준시각에서 다음 10ms SDU timestamp를 계산합니다. */
+    void isoSent(struct bt_iso_chan *channel)
+    {
+        if (!started || finished || stopping || !send_armed)
+        {
+            return;
+        }
+        const int completed = atomic_get(&sent);
+        if (completed <= 0 || completed >= sdu_count)
+        {
+            return;
+        }
+        struct bt_iso_tx_info information = {};
+        const int result = bt_iso_chan_get_tx_sync(channel, &information);
+        if (result != 0)
+        {
+            fail("tx_sync_query", result);
+            return;
+        }
+        if (completed > 1 &&
+            (static_cast<int16_t>(information.seq_num - last_hci_sequence) <= 0 ||
+             static_cast<int32_t>(information.ts - last_hci_timestamp) <= 0))
+        {
+            Serial.print("M31BIS|1|TX_SYNC_DIAG|nonce=");
+            Serial.print(nonce);
+            Serial.print("|completed=");
+            Serial.print(completed);
+            Serial.print("|hci_seq=");
+            Serial.print(information.seq_num);
+            Serial.print("|hci_ts=");
+            Serial.println(information.ts);
+            fail("tx_sync_monotonic", -EBADMSG);
+            return;
+        }
+        if (completed == 1)
+        {
+            first_tx_timestamp = information.ts;
+        }
+        next_tx_timestamp = information.ts + 10000U;
+        last_hci_sequence = information.seq_num;
+        last_hci_timestamp = information.ts;
+        timestamp_ready = true;
+        k_work_schedule(&send_work, K_NO_WAIT);
+    }
+#endif
+
     struct bt_iso_chan_ops iso_operations = {
         .connected = isoConnected,
         .disconnected = isoDisconnected,
         .recv = isoReceived,
+#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+        .sent = isoSent,
+#endif
     };
 
 #if defined(CONFIG_BT_ISO_BROADCASTER)
@@ -281,6 +369,12 @@ namespace
         {
             return;
         }
+#if defined(M31_BIS_TIME_SYNC)
+        if (sequence > 0U && !timestamp_ready)
+        {
+            return;
+        }
+#endif
         struct net_buf *buffer = net_buf_alloc(&iso_tx_pool, K_NO_WAIT);
         if (buffer == nullptr)
         {
@@ -294,7 +388,13 @@ namespace
         payload[3] = nonce_bytes[1];
         sys_put_le32(checksum(sequence), payload + 4U);
         net_buf_add_mem(buffer, payload, sizeof(payload));
+#if defined(M31_BIS_TIME_SYNC)
+        const int result = sequence == 0U ?
+            bt_iso_chan_send(&iso_channel, buffer, sequence) :
+            bt_iso_chan_send_ts(&iso_channel, buffer, sequence, next_tx_timestamp);
+#else
         const int result = bt_iso_chan_send(&iso_channel, buffer, sequence);
+#endif
         if (result != 0)
         {
             net_buf_unref(buffer);
@@ -302,15 +402,34 @@ namespace
             return;
         }
         atomic_inc(&sent);
+#if defined(M31_BIS_TIME_SYNC)
+        if (sequence > 0U)
+        {
+            timestamped_sent++;
+        }
+        timestamp_ready = false;
+#endif
         if (sequence == sdu_count - 1U)
         {
+#if defined(M31_BIS_TIME_SYNC)
+            Serial.print("M31BIS|1|TIME_TX_END|nonce=");
+            Serial.print(nonce);
+            Serial.print("|timestamped=");
+            Serial.print(timestamped_sent);
+            Serial.print("|first_ts=");
+            Serial.print(first_tx_timestamp);
+            Serial.print("|last_ts=");
+            Serial.println(next_tx_timestamp);
+#endif
             Serial.print("M31BIS|1|TX_END|nonce=");
             Serial.print(nonce);
             Serial.print("|sent=");
             Serial.println(atomic_get(&sent));
             return;
         }
+#if !defined(M31_BIS_TIME_SYNC)
         k_work_schedule(&send_work, K_MSEC(10));
+#endif
     }
 #endif
 
@@ -576,6 +695,19 @@ namespace
         atomic_set(&duplicate, 0);
         atomic_set(&out_of_order, 0);
         last_sequence = -1;
+#if defined(M31_BIS_TIME_SYNC)
+        atomic_set(&valid_timestamp, 0);
+        first_timestamp = 0U;
+        last_timestamp = 0U;
+#endif
+#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+        next_tx_timestamp = 0U;
+        first_tx_timestamp = 0U;
+        last_hci_timestamp = 0U;
+        last_hci_sequence = 0U;
+        timestamp_ready = false;
+        timestamped_sent = 0U;
+#endif
         memset(seen, 0, sizeof(seen));
 #if defined(CONFIG_BT_ISO_BROADCASTER)
         send_armed = false;

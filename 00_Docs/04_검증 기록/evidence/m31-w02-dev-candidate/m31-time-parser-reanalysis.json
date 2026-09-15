@@ -1,0 +1,21 @@
+{
+  "test_id": "M31-ISO-01:time_sync",
+  "status": "PASS_CANDIDATE",
+  "source_clean": false,
+  "scope": "twenty_cycle_raw_transcript_parser_reanalysis",
+  "source_revision": "26270df3bcddd2cd39c866c346047bb170cd7df4",
+  "original_attempt": "00_Docs/04_검증 기록/evidence/m31-w02-dev-candidate/m31-time-dev-04.json",
+  "raw_transcript": "00_Docs/04_검증 기록/evidence/m31-w02-dev-candidate/m31-time-dev-04.transcript.log",
+  "transcript_sha256": "ab91c64e5e0e5fe68687a786607a53158c13405090f1acf86db703c50d1ef981",
+  "original_parser_error": "strict 990000 us difference rejected receiver 989999 us",
+  "interval_tolerance_us": 1000,
+  "measurement": {
+    "cycles": 20,
+    "total_sent": 2000,
+    "total_received": 2000,
+    "valid_monotonic": 2000,
+    "stale_callback": 0,
+    "timestamped_sent": 1980
+  },
+  "exact_hil": "NOT_RUN"
+}
