@@ -106,6 +106,18 @@ class M30PowerLossTests(unittest.TestCase):
         self.assertLess(RUNNER.CONFIRMED_VERSION, RUNNER.UNCONFIRMED_VERSION)
         self.assertLess(RUNNER.UNCONFIRMED_VERSION, RUNNER.RETRY_VERSION)
 
+    def test_each_cut_has_an_independent_bounded_link_timeout(self) -> None:
+        """! @brief 12회 전체가 아닌 각 cut과 link 복구에 독립 제한을 적용합니다. """
+
+        source = RUNNER_PATH.read_text(encoding="utf-8")
+        self.assertIn("attempt_started = time.monotonic()", source)
+        self.assertIn("deadline = attempt_started + args.phase_timeout", source)
+        self.assertGreaterEqual(
+            source.count("time.monotonic() + LINK_RECOVERY_TIMEOUT_SECONDS"),
+            3,
+        )
+        self.assertNotIn("M30-POWER-01 전체 1800초 timeout", source)
+
     def test_runner_requires_explicit_mode_and_outputs_for_execution(self) -> None:
         """! @brief 실제 실행은 명시 flag·journal·evidence 없이는 시작하지 않습니다. """
 

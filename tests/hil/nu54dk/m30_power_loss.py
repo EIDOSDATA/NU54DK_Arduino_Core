@@ -88,6 +88,7 @@ RUNNER_DEPENDENCIES = (
     PIN_RUNNER_PATH,
     SERIAL_RUNNER_PATH,
 )
+LINK_RECOVERY_TIMEOUT_SECONDS = 60.0
 PROTOCOL_VERSION = 2
 INJECTION_POINTS = (
     "slot1_transfer",
@@ -1154,7 +1155,10 @@ def preflight(
         core_revision,
     ) as session:
         deadline = time.monotonic() + min(args.phase_timeout, 600.0)
-        boot = session.connect_initial(deadline)
+        link_deadline = min(
+            deadline, time.monotonic() + LINK_RECOVERY_TIMEOUT_SECONDS
+        )
+        boot = session.connect_initial(link_deadline)
         validate_boot(boot, BASE_VERSION, confirmed=1, auto_confirm=1)
         state = read_power_state(session, deadline, False)
         retry = verify_retry(session, candidates["retry"], deadline)
@@ -1318,13 +1322,12 @@ def execute_power_hil(
         for point in INJECTION_POINTS
         for attempt in range(1, CUTS_PER_POINT + 1)
     ]
-    started = time.monotonic()
     for index, (point, attempt) in enumerate(
         plan[len(journal["completed_attempts"]) :],
         start=len(journal["completed_attempts"]),
     ):
-        if time.monotonic() - started >= args.phase_timeout:
-            raise M30PowerFailure("M30-POWER-01 전체 1800초 timeout을 넘었습니다.")
+        attempt_started = time.monotonic()
+        deadline = attempt_started + args.phase_timeout
         flash_results = normalize_boards(
             peripheral,
             central,
@@ -1342,8 +1345,10 @@ def execute_power_hil(
             nonce,
             core_revision,
         ) as session:
-            deadline = started + args.phase_timeout
-            baseline = session.connect_initial(deadline)
+            link_deadline = min(
+                deadline, time.monotonic() + LINK_RECOVERY_TIMEOUT_SECONDS
+            )
+            baseline = session.connect_initial(link_deadline)
             validate_boot(baseline, BASE_VERSION, confirmed=1, auto_confirm=1)
             if args.flash_backend == "daplink-msd":
                 session.erase_secondary(deadline)
@@ -1378,7 +1383,10 @@ def execute_power_hil(
             journal["current_attempt"]["cycle"] = cycle.__dict__
             atomic_write_json(journal_path, journal)
             reopen_peripheral(session)
-            recovered = session.reconnect(deadline)
+            link_deadline = min(
+                deadline, time.monotonic() + LINK_RECOVERY_TIMEOUT_SECONDS
+            )
+            recovered = session.reconnect(link_deadline)
             validate_recovery_boot(point, recovered)
             state = read_power_state(session, deadline, True)
             retry = verify_retry(session, candidates["retry"], deadline)

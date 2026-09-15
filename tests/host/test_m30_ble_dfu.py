@@ -88,7 +88,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
             'Serial.print("|UNLINK|role=central")',
             '::strcmp(line, "M30DFU|1|READY?")',
             'constexpr char rescan_marker[] = "M30DFU|1|RESCAN|"',
-            "restartCentralScan()",
+            "scheduleCentralScan()",
+            "scan-restart-timeout",
             "NUCODE_M30_DFU_AUTO_CONFIRM",
         ):
             self.assertIn(token, source)

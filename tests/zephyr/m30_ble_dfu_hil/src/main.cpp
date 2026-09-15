@@ -39,6 +39,8 @@ namespace
     constexpr std::uint16_t company_id = 0x054dU;
     constexpr std::size_t command_capacity = 640U;
     constexpr std::int64_t security_delay_ms = 300;
+    constexpr std::int64_t scan_retry_ms = 100;
+    constexpr std::int64_t scan_retry_timeout_ms = 30000;
     constexpr std::int64_t protocol_timeout_ms = 2400000;
 
     char nonce[nonce_characters + 1U] = {};
@@ -277,6 +279,8 @@ namespace
     bool subscription_started = false;
     bool mtu_ready = false;
     bool restart_scan_pending = false;
+    std::int64_t restart_scan_due_ms = 0;
+    std::int64_t restart_scan_deadline_ms = 0;
 
     /** @brief 현재 Central L4·MTU·SMP 준비 상태를 protocol로 다시 보고합니다. */
     void reportCentralLink()
@@ -287,12 +291,13 @@ namespace
         Serial.println();
     }
 
-    /** @brief hard power loss 뒤 누락될 수 있는 scan 재시작을 명시 수행합니다. */
-    bool restartCentralScan()
+    /** @brief hard power loss 뒤 scan 재시작을 bounded retry 상태로 예약합니다. */
+    void scheduleCentralScan()
     {
-        static_cast<void>(BLEScan.stop());
-        restart_scan_pending = false;
-        return BLEScan.clearFilters() && BLEScan.start(false);
+        const std::int64_t now = k_uptime_get();
+        restart_scan_pending = true;
+        restart_scan_due_ms = now;
+        restart_scan_deadline_ms = now + scan_retry_timeout_ms;
     }
 
     /** @brief scan 결과의 manufacturer field를 exact nonce와 비교합니다. */
@@ -612,10 +617,31 @@ namespace
         reportResponse();
         if (restart_scan_pending)
         {
-            restart_scan_pending = false;
-            if (!BLEScan.start(false))
+            const std::int64_t now = k_uptime_get();
+            if (now >= restart_scan_due_ms)
             {
-                fail("scan-restart");
+                if (!connection_handle.valid())
+                {
+                    static_cast<void>(BLEScan.stop());
+                    if (BLEScan.clearFilters() && BLEScan.start(false))
+                    {
+                        restart_scan_pending = false;
+                        restart_scan_due_ms = 0;
+                        restart_scan_deadline_ms = 0;
+                    }
+                    else
+                    {
+                        restart_scan_due_ms = now + scan_retry_ms;
+                    }
+                }
+                else
+                {
+                    restart_scan_due_ms = now + scan_retry_ms;
+                }
+                if (restart_scan_pending && now >= restart_scan_deadline_ms)
+                {
+                    fail("scan-restart-timeout");
+                }
             }
         }
     }
@@ -677,7 +703,10 @@ namespace
         else if (information.event == nucode::ble::BLEEvent::connection_recycled)
         {
 #if !defined(NUCODE_M30_DFU_PERIPHERAL)
-            restart_scan_pending = started;
+            if (started)
+            {
+                scheduleCentralScan();
+            }
 #endif
         }
         else if (information.event == nucode::ble::BLEEvent::error)
@@ -774,10 +803,9 @@ namespace
                 fail("rescan-command");
                 return;
             }
-            if (!connection_handle.valid() && !restartCentralScan())
+            if (!connection_handle.valid())
             {
-                fail("rescan-start");
-                return;
+                scheduleCentralScan();
             }
             Serial.print(protocol);
             Serial.print("|RESCAN|role=central");
