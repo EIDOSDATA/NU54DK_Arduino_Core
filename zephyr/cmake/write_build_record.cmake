@@ -124,6 +124,7 @@ function(nucode_filter_build_inputs output_variable)
     get_filename_component(input_name "${input_file}" NAME)
     string(TOLOWER "${input_name}" input_name)
     if(input_name STREQUAL "cmakelists.txt" OR
+       input_name STREQUAL "library.properties" OR
        input_name STREQUAL "platform.txt" OR
        input_name STREQUAL "kconfig" OR
        input_name MATCHES "^kconfig\\." OR

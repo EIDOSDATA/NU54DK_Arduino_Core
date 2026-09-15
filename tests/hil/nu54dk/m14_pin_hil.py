@@ -237,7 +237,7 @@ def files_digest(base_directory: Path, scopes: Sequence[Path]) -> str:
 ## @brief firmware 생성에 영향을 주는 source·설정 파일인지 판정합니다.
 def is_build_input(path: Path) -> bool:
     name = path.name.casefold()
-    if name in ("cmakelists.txt", "platform.txt") or name == "kconfig":
+    if name in ("cmakelists.txt", "library.properties", "platform.txt") or name == "kconfig":
         return True
     if name.startswith("kconfig."):
         return True

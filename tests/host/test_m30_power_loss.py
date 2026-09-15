@@ -495,10 +495,16 @@ class M30PowerLossTests(unittest.TestCase):
             root = Path(directory)
             source = root / "main.cpp"
             document = root / "README.md"
+            metadata = root / "library.properties"
             source.write_text("int value = 1;\n", encoding="utf-8")
             document.write_text("first\n", encoding="utf-8")
+            metadata.write_text("name=Fixture\n", encoding="utf-8")
             initial = RUNNER.source_files_digest(root, (root,))
             document.write_text("second\n", encoding="utf-8")
+            self.assertEqual(initial, RUNNER.source_files_digest(root, (root,)))
+            metadata.write_text("name=Changed\n", encoding="utf-8")
+            self.assertNotEqual(initial, RUNNER.source_files_digest(root, (root,)))
+            metadata.write_text("name=Fixture\n", encoding="utf-8")
             self.assertEqual(initial, RUNNER.source_files_digest(root, (root,)))
             source.write_text("int value = 2;\n", encoding="utf-8")
             self.assertNotEqual(initial, RUNNER.source_files_digest(root, (root,)))

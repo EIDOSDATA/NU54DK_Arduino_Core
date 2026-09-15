@@ -459,8 +459,8 @@ def read_build_record_field(record: Path, field: str) -> str:
     return match.group(1).replace("''", "'")
 
 
-## @brief CMake GLOB_RECURSE 선언에서 core root 기준 상대 경로 집합을 읽습니다.
-def read_cmake_glob_scope(cmake_file: Path, collection: str, root_variable: str) -> set[str]:
+## @brief CMake GLOB_RECURSE와 후속 APPEND에서 core root 기준 상대 경로 집합을 읽습니다.
+def read_cmake_input_scope(cmake_file: Path, collection: str, root_variable: str) -> set[str]:
     content = cmake_file.read_text(encoding="utf-8")
     match = re.search(
         rf"file\(GLOB_RECURSE\s+{re.escape(collection)}\b(.*?)\n\s*\)",
@@ -469,7 +469,21 @@ def read_cmake_glob_scope(cmake_file: Path, collection: str, root_variable: str)
     )
     if match is None:
         raise SmokeFailure(f"CMake core input scope was not found: {cmake_file}: {collection}")
-    return set(re.findall(rf'"\$\{{{re.escape(root_variable)}\}}/([^\"]+)"', match.group(1)))
+    bodies = [match.group(1)]
+    bodies.extend(
+        append.group(1)
+        for append in re.finditer(
+            rf"list\(APPEND\s+{re.escape(collection)}\b(.*?)\n\s*\)",
+            content,
+            re.DOTALL,
+        )
+    )
+    return set(
+        re.findall(
+            rf'"\$\{{{re.escape(root_variable)}\}}/([^\"]+)"',
+            "\n".join(bodies),
+        )
+    )
 
 
 ## @brief 공개 header, library metadata, DTS binding이 live core provenance에 포함되는지 검증합니다.
@@ -478,12 +492,12 @@ def test_live_build_record_scope(context: dict, root: Path) -> None:
     configure_source = platform / "zephyr" / "cmake" / "source_provenance.cmake"
     if not configure_source.is_file():
         configure_source = platform / "zephyr" / "CMakeLists.txt"
-    configure_scope = read_cmake_glob_scope(
+    configure_scope = read_cmake_input_scope(
         configure_source,
         "NUCODE_CORE_BUILD_INPUTS",
         "NUCODE_ARDUINO_CORE_ROOT",
     )
-    live_scope = read_cmake_glob_scope(
+    live_scope = read_cmake_input_scope(
         platform / "zephyr" / "cmake" / "write_build_record.cmake",
         "core_inputs",
         "NUCODE_CORE_ROOT",

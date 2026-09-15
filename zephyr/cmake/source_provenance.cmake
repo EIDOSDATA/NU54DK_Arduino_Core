@@ -114,6 +114,26 @@ function(nucode_files_digest base_directory output_variable)
   set(${output_variable} "${digest}" PARENT_SCOPE)
 endfunction()
 
+# @brief 문서·예제·readiness 원장을 제외하고 firmware build 입력만 남깁니다.
+function(nucode_filter_build_inputs output_variable)
+  set(filtered_inputs)
+
+  foreach(input_file IN LISTS ARGN)
+    get_filename_component(input_name "${input_file}" NAME)
+    string(TOLOWER "${input_name}" input_name)
+    if(input_name STREQUAL "cmakelists.txt" OR
+       input_name STREQUAL "library.properties" OR
+       input_name STREQUAL "platform.txt" OR
+       input_name STREQUAL "kconfig" OR
+       input_name MATCHES "^kconfig\\." OR
+       input_name MATCHES "\\.(asm|c|cc|cmake|conf|cpp|cxx|dts|dtsi|h|hh|hpp|impl|inc|inl|ld|overlay|s|yaml|yml)$")
+      list(APPEND filtered_inputs "${input_file}")
+    endif()
+  endforeach()
+
+  set(${output_variable} "${filtered_inputs}" PARENT_SCOPE)
+endfunction()
+
 set(NUCODE_BOARD_PACKAGE_ROOT "")
 foreach(board_directory IN LISTS BOARD_DIRECTORIES)
   string(REPLACE "\\" "/" normalized_board_directory "${board_directory}")
@@ -143,11 +163,15 @@ file(GLOB_RECURSE NUCODE_CORE_BUILD_INPUTS
   "${NUCODE_ARDUINO_CORE_ROOT}/dts/*"
   "${NUCODE_ARDUINO_CORE_ROOT}/libraries/*"
   "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API/*"
-  "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
   "${NUCODE_ARDUINO_CORE_ROOT}/variants/nu54dk/*"
   "${NUCODE_ARDUINO_CORE_ROOT}/zephyr/*"
 )
+list(APPEND NUCODE_CORE_BUILD_INPUTS
+  "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
+  "${NUCODE_ARDUINO_CORE_ROOT}/platform.txt"
+)
 list(SORT NUCODE_CORE_BUILD_INPUTS)
+nucode_filter_build_inputs(NUCODE_CORE_BUILD_INPUTS ${NUCODE_CORE_BUILD_INPUTS})
 
 file(GLOB_RECURSE NUCODE_APPLICATION_BUILD_INPUTS
   LIST_DIRECTORIES FALSE
