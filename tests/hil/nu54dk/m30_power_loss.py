@@ -744,7 +744,10 @@ def wait_window(session: DfuSession, expected: str, deadline: float) -> None:
     """! @brief target 또는 MCUboot가 보고한 exact 전원 관찰 창을 기다립니다. """
 
     while time.monotonic() < deadline:
-        line = session.checked_line("peripheral", deadline)
+        try:
+            line = session.checked_line("peripheral", deadline)
+        except TimeoutError:
+            break
         match = WINDOW_PATTERN.fullmatch(line)
         if match is None:
             continue
@@ -1028,6 +1031,7 @@ def verify_retry(
 
     session.erase_secondary(deadline)
     requests = session.upload(retry, deadline)
+    wait_window(session, "image_validation_write", deadline)
     state = session.state_for_hash(retry.image_hash, deadline)
     if state is None or state.get("bootable") is not True:
         raise M30PowerFailure("복구 뒤 DFU retry image가 bootable state에 없습니다.")
@@ -1080,6 +1084,7 @@ def arm_point(
         else confirmed_candidate
     )
     session.upload(candidate, deadline)
+    wait_window(session, "image_validation_write", deadline)
     session.require_success(
         session.request_test(candidate.image_hash, deadline),
         f"{point} test request",
