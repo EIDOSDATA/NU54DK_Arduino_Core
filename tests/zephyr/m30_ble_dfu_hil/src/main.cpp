@@ -145,6 +145,28 @@ namespace
         return decodeNonce(parsed);
     }
 
+#if !defined(NUCODE_M30_DFU_PERIPHERAL)
+    /** @brief RESCAN command가 현재 nonce와 exact revision에 결합됐는지 확인합니다. */
+    bool parseRescan(const char *line)
+    {
+        constexpr char prefix[] = "M30DFU|1|RESCAN|nonce=";
+        constexpr char core_marker[] = "|core=";
+        const std::size_t prefix_length = sizeof(prefix) - 1U;
+        if (line == nullptr || ::strncmp(line, prefix, prefix_length) != 0)
+        {
+            return false;
+        }
+        const char *value = line + prefix_length;
+        return ::strlen(value) ==
+                   nonce_characters + sizeof(core_marker) - 1U + 40U &&
+               ::strncmp(value, nonce, nonce_characters) == 0 &&
+               ::strncmp(value + nonce_characters, core_marker,
+                         sizeof(core_marker) - 1U) == 0 &&
+               ::strcmp(value + nonce_characters + sizeof(core_marker) - 1U,
+                        M30_DFU_CORE_REVISION) == 0;
+    }
+#endif
+
     /** @brief 실제 연결의 encryption key 크기를 반환합니다. */
     std::uint8_t encryptionKeySize()
     {
@@ -255,6 +277,23 @@ namespace
     bool subscription_started = false;
     bool mtu_ready = false;
     bool restart_scan_pending = false;
+
+    /** @brief 현재 Central L4·MTU·SMP 준비 상태를 protocol로 다시 보고합니다. */
+    void reportCentralLink()
+    {
+        Serial.print(protocol);
+        Serial.print("|LINK|role=central|level=4|key_size=16|mtu=247|smp=1");
+        printSuffix();
+        Serial.println();
+    }
+
+    /** @brief hard power loss 뒤 누락될 수 있는 scan 재시작을 명시 수행합니다. */
+    bool restartCentralScan()
+    {
+        static_cast<void>(BLEScan.stop());
+        restart_scan_pending = false;
+        return BLEScan.clearFilters() && BLEScan.start(false);
+    }
 
     /** @brief scan 결과의 manufacturer field를 exact nonce와 비교합니다. */
     bool validPayload(const nucode::ble::BLEScanResult &result)
@@ -568,10 +607,7 @@ namespace
                 return;
             }
             link_reported = true;
-            Serial.print(protocol);
-            Serial.print("|LINK|role=central|level=4|key_size=16|mtu=247|smp=1");
-            printSuffix();
-            Serial.println();
+            reportCentralLink();
         }
         reportResponse();
         if (restart_scan_pending)
@@ -728,6 +764,33 @@ namespace
             reportPowerState();
             return;
         }
+#endif
+        constexpr char rescan_marker[] = "M30DFU|1|RESCAN|";
+#if !defined(NUCODE_M30_DFU_PERIPHERAL)
+        if (::strncmp(line, rescan_marker, sizeof(rescan_marker) - 1U) == 0)
+        {
+            if (!started || !parseRescan(line))
+            {
+                fail("rescan-command");
+                return;
+            }
+            if (!connection_handle.valid() && !restartCentralScan())
+            {
+                fail("rescan-start");
+                return;
+            }
+            Serial.print(protocol);
+            Serial.print("|RESCAN|role=central");
+            printSuffix();
+            Serial.println();
+            if (link_reported)
+            {
+                reportCentralLink();
+            }
+            return;
+        }
+#else
+        ARG_UNUSED(rescan_marker);
 #endif
         constexpr char start_marker[] = "M30DFU|1|START|";
         if (::strncmp(line, start_marker, sizeof(start_marker) - 1U) == 0 && !started)

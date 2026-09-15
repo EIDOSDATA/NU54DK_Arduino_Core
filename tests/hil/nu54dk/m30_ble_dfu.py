@@ -668,6 +668,9 @@ READY_PATTERN = re.compile(rb"^M30DFU\|1\|READY\|role=(peripheral|central)\|core
 BEGIN_PATTERN = re.compile(
     rb"^M30DFU\|1\|BEGIN\|role=(peripheral|central)\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
 )
+RESCAN_PATTERN = re.compile(
+    rb"^M30DFU\|1\|RESCAN\|role=central\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
+)
 BOOT_PATTERN = re.compile(
     rb"^M30DFU\|1\|BOOT\|role=peripheral\|active_area_id=(\d+)\|confirmed=(\d+)"
     rb"\|auto_confirm=(\d+)\|version=(\d+)\.(\d+)\.(\d+)\+(\d+)"
@@ -853,6 +856,26 @@ class DfuSession:
         self.wait_begin("central", deadline)
         self.central_started = True
 
+    def restart_central_scan(self, deadline: float) -> None:
+        """! @brief 전원 복귀 뒤 Central scan을 같은 nonce·revision으로 명시 재시작합니다. """
+
+        self.synchronize("central", deadline)
+        self.send_line(
+            "central",
+            f"M30DFU|1|RESCAN|nonce={self.nonce}|core={self.core_revision}",
+        )
+        while True:
+            line = self.checked_line("central", deadline)
+            match = RESCAN_PATTERN.fullmatch(line)
+            if match is None:
+                continue
+            if (
+                match.group(1).decode("ascii") != self.nonce
+                or match.group(2).decode("ascii") != self.core_revision
+            ):
+                raise M30DfuFailure("central RESCAN identity가 다릅니다.")
+            return
+
     def wait_link(self, role: str, deadline: float) -> None:
         """! @brief exact L4·16-byte key·MTU·SMP link token을 검증합니다. """
 
@@ -879,6 +902,7 @@ class DfuSession:
         """! @brief peripheral reboot 뒤 같은 Central과 다시 L4 연결합니다. """
 
         boot = self.start_peripheral(deadline)
+        self.restart_central_scan(deadline)
         self.wait_link("peripheral", deadline)
         self.wait_link("central", deadline)
         return boot

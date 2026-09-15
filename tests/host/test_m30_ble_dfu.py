@@ -87,6 +87,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
             'Serial.print("|BOOT|role=peripheral|active_area_id=")',
             'Serial.print("|UNLINK|role=central")',
             '::strcmp(line, "M30DFU|1|READY?")',
+            'constexpr char rescan_marker[] = "M30DFU|1|RESCAN|"',
+            "restartCentralScan()",
             "NUCODE_M30_DFU_AUTO_CONFIRM",
         ):
             self.assertIn(token, source)
@@ -103,6 +105,17 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertLess(
             reset_body.index("self.wait_unlink(deadline)"),
             reset_body.index("self.reconnect(deadline)"),
+        )
+        reconnect_body = source.split("def reconnect", 1)[1].split(
+            "def wait_rx", 1
+        )[0]
+        self.assertLess(
+            reconnect_body.index("self.start_peripheral(deadline)"),
+            reconnect_body.index("self.restart_central_scan(deadline)"),
+        )
+        self.assertLess(
+            reconnect_body.index("self.restart_central_scan(deadline)"),
+            reconnect_body.index('self.wait_link("central", deadline)'),
         )
 
     def test_hil_runner_cbor_round_trip_is_strict(self) -> None:
