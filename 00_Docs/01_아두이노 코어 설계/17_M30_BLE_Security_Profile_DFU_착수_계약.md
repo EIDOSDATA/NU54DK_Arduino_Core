@@ -9,13 +9,12 @@
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
 | 현재 지원 릴리즈 | `v0.4.1` 하나 |
-| M30 상태 | **W01~W07 완료, W08 사용자 중단·재개 준비 복구 필요** |
+| M30 상태 | **W01~W08 8/8 완료, test ID 10/10 PASS** |
 | 기계 원장 | [`m30-ble-readiness.json`](../../variants/nu54dk/m30-ble-readiness.json) |
 
 이 문서는 M30 구현 전에 보안 정책, OOB carrier, profile catalog, MCUboot layout, 신뢰키와 열 개의
-유한 test ID를 고정한다. 설치·지원 v0.4.1의 기능 확대나 M30 완료를 뜻하지 않는다. M30은
-`M30-POWER-01`의 실제 전원 차단 직전까지 자동으로 진행하고, 그 시점에서만 사람의 전원 조작을
-요청한다.
+유한 test ID를 고정했다. 설치·지원 v0.4.1의 기능 확대를 뜻하지 않는다. M30은 2026-09-15에
+`M30-POWER-01` 네 지점 × 3회 실제 전원 차단 12/12까지 통과해 완료됐다.
 
 ## 1. 목표와 호환 경계
 
@@ -106,7 +105,7 @@ M30과 병행하는 `HOST-W01`~`HOST-W03`은
 [다중 Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다. W01은
 Windows 전용 가정 inventory, W02는 OS/architecture·executable/path resolver, W03은 같은 Python
 backend를 호출하는 얇은 `.cmd`/`.sh` 진입점이다. Linux/macOS prerequisite asset과 실제 Host
-build/upload는 후속 HOST-W04~W07의 필수 `NOT RUN` 상태를 유지한다.
+build/upload는 후속 HOST-W04~HOST-W07의 필수 `NOT RUN` 상태를 유지한다.
 
 ## 7. 고정 test ID
 
@@ -128,28 +127,24 @@ build/upload는 후속 HOST-W04~W07의 필수 `NOT RUN` 상태를 유지한다.
 
 ## 8. 자동 중단점과 실제 전원 조작
 
-자동 작업은 `M30-CAP-01`부터 `M30-MULTI-01`까지 완료하고 `M30-POWER-01` image·runner·두 보드
-manifest를 준비한 뒤 멈춘다. 그때 필요한 사람 동작은 DUT의 target USB 전원만 실제로 뽑았다가
-runner 지시에 맞춰 다시 연결하는 것이다. DAPLink reset, CPU reset, `west reset`은 인정하지 않는다.
+`M30-POWER-01` 실행은 image·runner·두 보드 manifest를 준비한 뒤 각 주입 창에서 멈추고 사람에게
+DUT의 target USB 전원만 실제로 뽑았다가 다시 연결하도록 요청한다. DAPLink reset, CPU reset,
+`west reset`은 인정하지 않는다.
 
 전원 차단 지점은 slot 1 transfer, image validation/write, MCUboot test swap, 새 image 첫 boot의 네
 상태이며 각 3회다. 각 복구에서 이전 confirmed image 또는 검증된 새 image만 boot하고, settings와
 bond가 구조적으로 유효하며 DFU 재시도가 가능해야 한다. Programmable USB power switch가 확인되면
 같은 protocol로 자동 주입할 수 있지만 현재는 이를 가정하지 않는다.
 
-M30-W08과 M30 완료는 이 실제 시험과 영향 회귀·문서·CI 마감 뒤에만 판정한다.
-기계 원장의 `blocked_human_power_cut`과 M30 `in_progress`는 미완료 상태를 뜻하며
-현재 image/manifest가 즉시 재사용 가능하다는 보증이 아니다.
+M30-W08과 M30 완료는 이 실제 시험과 영향 회귀·문서 마감 뒤에만 판정한다.
+Exact `ae5186f7790a748641fb04128c16156519ee1017`에서 12/12 실제 차단, recovery failure 0,
+invalid image boot 0을 확인했으며 [161번 완료 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)을
+최종 근거로 사용한다.
 
 ### 8.1 2026-09-15 재개 조건 보완
 
-현재 W08은 사용자 중단, 실제 전원 차단 0/12다. 과거 `05b639b4…` 준비/preflight PASS는
-[159번 기록](<../04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>)에 보존한다.
-현재 필수 image 부재와 재개 검증 보강은 [160번 기록](<../04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)을 따른다.
-
-재개 순서는 [개정 실행 계획](18_문서_전면검토와_개선_마일스톤.md)의 W08-A 도구·provenance 안정화,
-B 확정 source의 image/manifest 재생성·preflight, 사람 준비 확인, C 실제 주입, D 회귀·마감이다.
-A~D는 W08 내부 작업이므로 기존 8개 작업·10개 test ID·12회 주입 기준을 변경하지 않는다.
-Runner는 사람이 준비됐다고 확인하기 전 주입 window를 열지 않아야 한다.
-USB/COM 소멸 외에 배터리·별도 전원·역급전 조건을 확인해 DUT의 실제 전원 상실을 성립시킨다.
-문서 개정은 중단된 build/flash/HIL의 재개 허가가 아니다.
+과거 `05b639b4…` 준비/preflight PASS는 [159번 기록](<../04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>)에,
+재개 검증 보강은 [160번 기록](<../04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)에 보존한다.
+완료 실행은 A 도구·provenance 안정화, B 확정 image/manifest·preflight, 사람 준비 확인,
+C 실제 12회 주입, D 증거·문서 마감을 따랐다. 기존 8개 작업·10개 test ID·12회 주입 기준은
+변경하지 않았다.

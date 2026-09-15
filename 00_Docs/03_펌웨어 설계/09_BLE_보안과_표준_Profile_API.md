@@ -213,16 +213,16 @@ Windows 시험 절차는 다음과 같다.
 - M28의 총 GAP 2-link PASS와 M30의 동시 security/profile 검증은 별도 증거다. M30-W07은
   세 보드의 동시 두 secure link와 handle별 보안 연산을 검증했으며 임의 연결 수 확대는 포함하지 않는다.
 
-### M30 개발 결과와 남은 전원 검증
+### M30 개발 완료 결과
 
-M30은 W01~W07 7/8·test ID 9/10 PASS다. Link별 security·IO capability 5종, 유선 OOB,
+M30은 W01~W08 8/8·test ID 10/10 PASS다. Link별 security·IO capability 5종, 유선 OOB,
 bond/privacy, 일곱 profile, 별도 MCUboot·서명·BLE update·rollback과 secure multi-link의 결과를
 [M30 착수 계약](<../01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)에서 관리한다.
 NFC adapter는 구현·Host/target build 범위이며 NFC RF 검증은 사용자 결정대로 `NOT RUN`이다.
 
-W08은 사용자 지시로 중단됐고 실제 전원 차단은 0/12회다. `05b639b4…` 준비·preflight PASS는
-당시 증거로 보존하며 현재 실행 준비 완료로 해석하지 않는다. 재개 선행조건은
-[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
+W08은 actual power cut 네 지점 × 3회(12/12)를 통과했고 recovery failure와 invalid image boot는
+0이었다. Reset 대체나 mass erase는 사용하지 않았다. Exact 결과와 제외한 Host timeout 시도의
+판정 근거는 [161번 완료 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)에 보존한다.
 이 개발 결과는 설치·지원 v0.4.1의 보안 API·profile 범위를 바꾸지 않는다.
 
 ## 9. 관련 문서
@@ -232,4 +232,5 @@ W08은 사용자 지시로 중단됐고 실제 전원 차단은 0/12회다. `05b
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [M28 BLE GAP·Link·Privacy 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)
 - [M30-W04 일곱 BLE profile 완료](<../04_검증 기록/155_M30_W04_7개_BLE_profile_완료.md>)
+- [M30-W08 실제 전원 HIL과 M30 완료](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)
 - [v0.3.0 구현 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)

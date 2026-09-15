@@ -214,9 +214,9 @@ image·layout·서명 정책을 식별하는 별도 manifest·cache·upload 검�
 `v0.6.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
 hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
 제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
-M30은 W01~W07 완료·W08 미완료, M36은 미착수다. 실제 전원 차단은 0/12회이고 M30 HIL은 사용자
-지시로 중단됐다. 과거 준비·preflight PASS는 당시 source의 이력이며 현재 실행 준비를 뜻하지 않는다.
-현재 `v0.4.1`의 지원 범위와 기본 loaderless layout은 유지한다. 재개 선행조건은
+M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단 12/12를 완료했고 M36은 미착수다.
+현재 `v0.4.1`의 지원 범위와 기본 loaderless layout은 유지한다. 완료 근거와 후속 경계는
+[161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
 [v0.5.0 착수 계획](../TODO_v0.5.0.md)과
 [문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
 

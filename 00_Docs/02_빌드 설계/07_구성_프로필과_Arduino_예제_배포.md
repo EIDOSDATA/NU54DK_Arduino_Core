@@ -148,8 +148,8 @@ sysbuild와 maximum size `729088` byte를 선택한다. 설치·지원 v0.4.1의
 고급 `Tools → Memory layout`을 제공할 때에는 검증된 preset이 feature set과 별개의 명시적
 입력이 되고, fixed partition, linker 경계, Arduino maximum size와 cache identity가 함께
 바뀌어야 한다. 현재는 임의 숫자나 Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을
-정식 지원하지 않는다. M30은 W01~W07 완료·W08 미완료이며 현재 사용자 중단 상태다. 실제 전원 차단은
-0/12회이고 M36은 미착수다. 재개·인계 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)과
+정식 지원하지 않는다. M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단 12/12를 완료했고
+M36은 미착수다. 완료·인계 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)과
 [문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
 
 ---
@@ -208,7 +208,7 @@ v0.4.1 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30
 2026-09-15 검토한 `8c311d9a…`의 `0.4.1-dev` 소스 트리에는 12개 library와 60개 `.ino`가 있다.
 정식 v0.4.1 예제 30개에 M28 11개, M29 15개, M30 profile 예제 4개가 추가된 snapshot이다.
 `NUCODE_BLE_DFU`는 별도 library이며 새 `.ino`를 더하지 않는다. 이 수를 v0.4.1 설치본의 제공 수로
-표시하지 않는다. M28·M29는 완료했고 M30은 W01~W07 완료·W08 사용자 중단 상태다.
+표시하지 않는다. M28·M29·M30은 완료했지만 v0.5.0 package 공개는 아직 아니다.
 
 | 개발 추가 범위 | Library와 선택 방식 | 검증 진입점 |
 | --- | --- | --- |

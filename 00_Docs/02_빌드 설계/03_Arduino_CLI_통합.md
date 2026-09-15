@@ -270,7 +270,7 @@ Adapter는 넘겨받은 source/include record를 검증하고 package allowlist 
 - sysbuild, MCUboot, DFU, OTA와 LLEXT 미지원
 - Linux/macOS Boards Manager production 지원은 `v0.4.1`에 미제공. `v0.5.0`은
   [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 Ubuntu AMD64·Apple Silicon
-  macOS 구현·실증을 M30~M33에서 완료한 뒤 제공
+  macOS 구현·실증 중 남은 HOST-W04~HOST-W08을 M31~M33에서 완료한 뒤 제공
 
 ## 9. 오류와 검증 기록
 

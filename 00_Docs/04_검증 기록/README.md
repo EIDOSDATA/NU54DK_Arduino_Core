@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29 완료, M30-W08 사용자 중단·재개 준비 복구 필요**입니다. M29는 작업 묶음 **8/8**,
-test ID **10/10 PASS**이고 M30은 작업 묶음 **7/8**, test ID **9/10 PASS**입니다.
+**v0.4.1**, 개발 상태는 **M28·M29·M30 완료**입니다. M29와 M30은 각각 작업 묶음 **8/8**,
+test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
@@ -12,6 +12,8 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **7/8**, test ID **9/10 PASS**
 
 | 기록 | 용도 |
 | --- | --- |
+| [162 — 전체 문서 정비와 M31 TODO 확정](162_전체_문서_정비와_M31_TODO.md) | 308개 Markdown 전수 감사, 현재 계약·Host 표기 교정, M31-W01~W08 TODO와 재개 순서 |
+| [161 — M30-W08 실제 전원 HIL과 M30 완료](161_M30_W08_실제_전원_HIL과_M30_완료.md) | 네 지점 × 3회 실제 차단 12/12, recovery failure·invalid boot 0, M30 8/8·10/10 완료 |
 | [160 — 전체 문서 검토와 마일스톤 개정](160_전체_문서_검토와_마일스톤_개정.md) | 현황 모순 교정, 과거 준비/현재 재개 조건 분리, W08 내부 gate·M33 예제·후속 ARF 배치 |
 | [159 — M30-W08 전원 HIL 주입 직전 준비](159_M30_W08_전원_HIL_주입_직전_준비.md) | 세 role build·두 보드 preflight PASS, 네 지점 × 3회 계획, 실제 전원 차단 0회 |
 | [158 — M30-W07 3보드 secure multi-link 완료](158_M30_W07_3보드_secure_multi_link_완료.md) | 동시 두 link·handle별 보안 연산 총 400회·cross-link/security/key-size 오류 0 |
@@ -55,7 +57,7 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **7/8**, test ID **9/10 PASS**
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29 완료와 M30 진행 — 94~159</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29·M30 완료와 M31 준비 — 94~162</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -123,6 +125,9 @@ test ID **10/10 PASS**이고 M30은 작업 묶음 **7/8**, test ID **9/10 PASS**
 - [157 — M30-W06 secure BLE DFU·negative·rollback 완료](<157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md>) — **update 10/10·negative 5×20·invalid/rollback accept 0, M30 6/8**
 - [158 — M30-W07 3보드 secure multi-link 완료](<158_M30_W07_3보드_secure_multi_link_완료.md>) — **동시 2-link·handle별 보안 연산 총 400회·오류 0, M30 7/8**
 - [159 — M30-W08 전원 HIL 주입 직전 준비](<159_M30_W08_전원_HIL_주입_직전_준비.md>) — **세 role build·두 보드 preflight PASS, 실제 전원 차단 0회, M30 7/8 유지**
+- [160 — 전체 문서 검토와 마일스톤 개정](<160_전체_문서_검토와_마일스톤_개정.md>) — **현황 모순 교정과 W08·M33·후속 ARF 배치 확정**
+- [161 — M30-W08 실제 전원 HIL과 M30 완료](<161_M30_W08_실제_전원_HIL과_M30_완료.md>) — **네 지점 × 3회 실제 차단 12/12 PASS, M30 8/8·10/10 완료**
+- [162 — 전체 문서 정비와 M31 TODO 확정](<162_전체_문서_정비와_M31_TODO.md>) — **308개 Markdown 전수 감사·Host 표기 교정·M31 재개 순서 확정**
 
 </details>
 

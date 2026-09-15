@@ -110,6 +110,7 @@ class M30PowerLossTests(unittest.TestCase):
         """! @brief 12회 전체가 아닌 각 cut과 link 복구에 독립 제한을 적용합니다. """
 
         source = RUNNER_PATH.read_text(encoding="utf-8")
+        self.assertGreater(RUNNER.LINK_RECOVERY_TIMEOUT_SECONDS, 60.0)
         self.assertIn("attempt_started = time.monotonic()", source)
         self.assertIn("deadline = attempt_started + args.phase_timeout", source)
         self.assertGreaterEqual(

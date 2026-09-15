@@ -265,7 +265,8 @@ unlock·recover·mass erase를 사용하지 않는다.
 따라서 M28 진행률은 **8/8 작업 묶음, 100.0%**다. 2보드 `REG/ADV/PAWR/PRIV`와 3보드
 `LINK/PER/CTRL/SOAK`, W01 `CAP`의 9개 test ID가 모두 PASS했다. 후속 M29는
 [ATT/GATT·L2CAP 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md)에 따라 W01~W08과 10개 test ID를
-완료했다. 현재 M30 진행·W08 중단과 후속 작업은 [v0.5.0 TODO](../TODO_v0.5.0.md)를 따른다.
+완료했다. M30도 W01~W08·10개 test ID와 실제 전원 차단 12/12를 완료했으며, 후속 M31 작업은
+[M31 TODO](../TODO_M31.md)를 따른다.
 M28 완료를 v0.5.0 공개·cross-vendor 상호운용·Bluetooth
 qualification 완료로 확대하지 않는다.
 

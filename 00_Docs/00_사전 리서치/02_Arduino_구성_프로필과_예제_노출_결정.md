@@ -101,10 +101,10 @@ boot 영역이나 update slot을 추가한다는 뜻은 아니다.
 선택으로 확장하는 후속 계획이다. Layout 선택은 단순 Devicetree 조각이 아니라 code partition,
 linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 계약이다.
 Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공하며, 전문가 `app.overlay`도 같은 충돌
-검사와 linker assertion을 통과할 때만 지원 조합으로 인정한다. M30은 W01~W07 완료·W08 미완료,
-M36은 미착수다. M30의 현재 중단 상태와 재개 선행조건은
-[v0.5.0 착수 계획](../TODO_v0.5.0.md)과
-[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)에서 관리한다.
+검사와 linker assertion을 통과할 때만 지원 조합으로 인정한다. M30은 W01~W08·10개 test ID와
+실제 전원 차단 12/12를 완료했고 M36은 미착수다. M30의 완료 근거와 후속 경계는
+[161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
+[v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다.
 
 ---
 

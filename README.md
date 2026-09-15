@@ -29,14 +29,14 @@
 | 개발 브랜치 | `main`, 소스 식별자 `0.4.1-dev` | v0.5.0을 목표로 BLE 확장 개발 중. 배포판에 없는 API·예제가 포함됨 |
 | M28 GAP·Link·Privacy | **8/8 완료** | 두·세 NU54DK 실기 완료. 개발 브랜치에 반영됐으며 v0.4.1에는 미포함 |
 | M29 ATT/GATT·L2CAP | **8/8 완료** | 10/10 test ID, 세 보드 통합·회귀와 Windows/Intel GATT 상호운용 PASS |
-| M30 보안·profile·최소 DFU | **7/8 진행·시험 중단** | 9/10 test ID PASS, 실제 전원 차단 0/12. W08 재개 준비 복구 필요 |
-| v0.5.0 다중 Host | 기반 구현 진행 | HOST-W01~W03 공통 backend·resolver·launcher 완료. M33에서 Windows·Ubuntu·macOS 지원 판정 |
-| v0.5.0 릴리스 | 미공개 | M30~M33 구현·검증·릴리스 절차가 필요 |
+| M30 보안·profile·최소 DFU | **8/8 완료** | 10/10 test ID, 실제 전원 차단 4지점 × 3회(12/12), 복구 실패·invalid image boot 0 |
+| v0.5.0 다중 Host | 기반 구현 진행 | HOST-W01~HOST-W03 공통 backend·resolver·launcher 완료. M33에서 Windows·Ubuntu·macOS 지원 판정 |
+| v0.5.0 릴리스 | 미공개 | M31~M33 구현·검증·릴리스 절차가 필요 |
 
-현재 개발 체크포인트는 **M30-W08 `M30-POWER-01` 사용자 중단**이며 실제 전원 차단은 0/12입니다.
-과거 image·runner·manifest·두 보드 preflight는 통과했지만 현재 필수 산출물의 부재를 확인했습니다.
+현재 개발 체크포인트는 **M30 완료, M31 착수 대기**입니다. M30-W08 `M30-POWER-01`은
+actual power cut 12/12를 통과했습니다. [M31 TODO](00_Docs/TODO_M31.md)와
 [개정 실행 순서](<00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)에 따라
-재개 준비를 복구하고 사람의 준비 확인을 받은 뒤에만 실제 전원 주입을 진행합니다.
+M31 capability·장비·Host 선행조건부터 착수합니다.
 최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
 위 CI 배지는 소프트웨어 검사 상태이며 보드 실기·상호운용·정식 릴리스 완료를 뜻하지 않습니다.
 
@@ -163,7 +163,7 @@ PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·O
 | --- | --- | --- |
 | M28 — 완료 | Central 최대 1개 + Peripheral 최대 1개, 총 2-link. Generation handle, 확장 광고·스캔, periodic 광고·sync·PAST, PAwR, privacy/RPA, link별 제어 | 해당 개발 계약 완료. OS별 상호운용·Bluetooth qualification·v0.5.0 공개는 별도 |
 | M29 — 완료 | 512-byte long/reliable GATT, descriptor·authorization·read multiple, robust cache, LE CoC, Signed Write·EATT opt-in | 10/10 test ID와 세 보드 mixed-link·M19~M21/M28 회귀 PASS. Windows/Intel GATT 외 OS·adapter 전체는 미검증 |
-| M30 — 진행 | link별 security·pairing, 유선 OOB·bond/privacy, profile 7개, MCUboot·secure BLE DFU, 세 보드 secure multi-link | W01~W07·9/10 test ID PASS. W08 재개 준비 복구·실제 전원 차단·회귀·마감 필요 |
+| M30 — 완료 | link별 security·pairing, 유선 OOB·bond/privacy, profile 7개, MCUboot·secure BLE DFU, 세 보드 secure multi-link | W01~W08·10/10 test ID와 실제 전원 차단 12/12 PASS. NFC RF는 결정된 범위대로 NOT RUN |
 | M31~M33 — 계획 | ISO/Audio·방향탐지·Channel Sounding 적용성, Mesh·공존, Windows·Ubuntu·macOS Host와 v0.5.0 통합·릴리스 | 기능·Host 구현, 장비·지원 가능 범위 판정과 실제 검증 필요 |
 
 Signed Write는 기본 OFF의 **deprecated legacy opt-in** (`NUCODE_BLE_LegacySigning`),
@@ -174,7 +174,8 @@ Bluetooth 상호운용·qualification 완료로 해석하지 않습니다.
 상세 계약과 제한은 [M28](<00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)·
 [M29](<00_Docs/01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>),
 실제 결과는 [M28 완료 기록](<00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)·
-[M29 완료 기록](<00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)에서 확인할 수 있습니다.
+[M29 완료 기록](<00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)·
+[M30 완료 기록](<00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)에서 확인할 수 있습니다.
 
 ## 예제
 
@@ -229,7 +230,7 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
 | v0.5.0 Windows·Ubuntu·macOS 계획 | [다중 Host 지원 착수 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
-| 현재 개발·다음 작업 | [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M30-W08 중단, 재개 준비 복구 필요 |
+| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M30 완료, M31 착수 대기 |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
 ### 소스에서 개발하기

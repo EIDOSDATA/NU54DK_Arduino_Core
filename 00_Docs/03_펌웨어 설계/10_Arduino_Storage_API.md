@@ -75,9 +75,10 @@ signed update·BLE update·rollback 기반을 구현했다. Boot/update 영역�
 확장하고 hardening한다. 기본 loaderless layout은 유지하며, MCUboot/DFU와 signed update·rollback이
 실제로 포함된 검증 경로에서만 boot 영역과 dual-slot layout을 노출한다. Arduino Tools에는 임의
 숫자 입력 대신 검증된 preset을 제공하고, 전문가 overlay는 같은 정적 검사와 linker assertion을
-통과할 때만 지원 대상으로 인정한다. M30은 W01~W07 완료·W08 사용자 중단 상태이며 실제 전원 차단은
-0/12회다. M36은 미착수다. M30의 재개·인계 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)과
-[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
+통과할 때만 지원 대상으로 인정한다. M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단
+4지점 × 3회(12/12)를 완료했다. M36은 미착수다. M30의 완료 근거와 후속 인계는
+[161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
+[v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
 
 ## 3. EEPROM 계약
 

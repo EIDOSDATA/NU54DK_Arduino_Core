@@ -2,10 +2,9 @@
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
-**M28은 W01~W08·9개 test ID, M29는 W01~W08·10개 test ID를 완료했다. M30은 W01~W07과
-`M30-CAP-01`부터 `M30-MULTI-01`까지 9개 test ID를 완료했고 W08 전원 HIL 준비·preflight를 통과했으며
-HOST-W01~W03도 완료했다. 현재 W08은 사용자 중단 상태로 재개 준비 복구가 필요하며 실제 차단은 0/12다.
-M31~M33은 미착수**다. M28·M29 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
+**M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
+M30-W08 `M30-POWER-01`은 네 지점 × 3회 실제 전원 차단 12/12를 통과했고 HOST-W01~HOST-W03도
+완료했다. M31~M33은 미착수**다. M28~M30 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
 | 정보 | 단일 원본 |
@@ -20,6 +19,7 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M29 기계 판정 원본 | [`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json) |
 | M30 보안·OOB·profile·DFU 계약 | [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 판정 원본 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
+| M31 실행 TODO | [M31 TODO](TODO_M31.md) |
 | v0.5.0 Windows·Ubuntu·macOS Host 계약 | [다중 Host 지원 착수 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
 | W01 실제 HCI·실패 분류·증거 | [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>) |
@@ -45,13 +45,14 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | M30 W06 secure BLE DFU·negative·rollback | [157번 기록](<04_검증 기록/157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md>) |
 | M30 W07 세 보드 secure multi-link | [158번 기록](<04_검증 기록/158_M30_W07_3보드_secure_multi_link_완료.md>) |
 | M30 W08 전원 HIL 주입 직전 준비 | [159번 기록](<04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>) |
+| M30 W08 실제 전원 HIL과 M30 완료 | [161번 기록](<04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
 
 ## 1. 다음 착수 순서
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
 GATT·cache·CoC 구현, W07 두/세 보드 HIL·회귀·Windows 상호운용과 W08을 완료했다.
-현재 개발 지점은 **M30-W08 `M30-POWER-01` 사용자 중단·재개 준비 복구 필요**다. M30-W01은 exact
+현재 개발 지점은 **M30 완료, M31 착수 대기**다. M30-W01은 exact
 `6254398c…`에서 parser 13/13, target 1/1과 실제 capability 7/7을 완료했다. M30-W02는 exact
 `4f91e347…`에서 고정 link별 보안 상태와 pairing 응답을 구현하고 IO capability 5종을 각각
 10회, 총 50/50 PASS했다. M30-W03은 유선 OOB 20/20·MITM 20/20, mismatch accept 0과
@@ -115,7 +116,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser의 실
 | M29-W07 | **완료 — SIGN/EATT·3보드 MULTI/REG·Windows GATT PASS** | exact `c71ef4a2…`·`16eb8fce…`·`a964ae20…` 원본 증거 유지 |
 | M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, exact `ab3f85d3…` 3보드 재검증, 문서·지원표·M30 인계 |
 
-### 현재 개발 지점: M30-W08 중단, 재개 준비 복구 필요
+### 현재 개발 지점: M30 완료, M31 착수 대기
 
 Exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 보드 `M29-MULTI-01`은 mixed DUT의
 두 link 각각 GATT·CoC 1,000회와 cross-link/payload/drop 오류 0을 확인했다. 같은 revision의
@@ -141,21 +142,20 @@ M30-W06은 exact `df9ea2a3ee5111c350364a938409021d379810e2`에서 authenticated 
 update 10/10, negative 5종 × 20회, invalid image accept 0과 unconfirmed image의 confirmed v10
 복귀를 확인했다. M30-W07은 exact `d94f5ec310e99611ab021854c43dd6d72031e825`에서 세 보드의
 동시 두 secure link와 Peripheral/Mixed/Central의 handle별 보안 연산 총 400회, cross-link·security·
-key-size 오류 0을 확인했다. Exact `05b639b4d402e9a7490648776b5bb5eb45a94916`에서 W08의 세 role
-image와 fail-closed runner를 만들고 두 보드 bond 저장영역 초기화·보안 DFU retry preflight를 통과했다.
-주입 계획은 네 지점 × 3회이며 실제 전원 차단은 아직 0회다. Reset은 실제 전원 차단 증거로 계산하지 않았다. 다음
-구현·장비 계약은 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
-[`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)을 따른다. 자동 작업은
-사용자 지시로 중단된 상태다. 당시 준비 PASS와 현재 재개 readiness는 구분한다.
-2026-09-15 확인한 필수 image 부재와 재개 검증 보강은 [160번 기록](<04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)을 따른다.
+key-size 오류 0을 확인했다. M30-W08은 exact `ae5186f7790a748641fb04128c16156519ee1017`에서
+네 주입 지점 × 3회 실제 전원 차단 12/12, recovery failure 0, invalid image boot 0을 확인했다.
+Reset 대체와 mass erase는 없었다. 상세 결과와 60초 MCUboot 관찰 훅/Host timeout 경계 감사는
+[161번 완료 기록](<04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)에 보존한다.
 
-재개 시 [W08 내부 실행 단계](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의
-**A 도구·provenance 안정화 → B 산출물 재생성·preflight → 사람 준비 확인 → C 실제 12회 차단 → D 회귀·마감**을 적용한다.
-A~D는 W08 하위 단계로 기존 작업·시험 분모를 늘리지 않는다. 이 문서 개정만으로 구현·HIL을 재개하지 않는다.
+M30의 구현·장비 계약은 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
+[`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)을 따른다. [159번 준비 기록](<04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md>)과
+[160번 재개 계획](<04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md>)은 당시 상태의 역사적 근거로 유지한다.
+다음 제품 작업은 [M31 TODO](TODO_M31.md)의 ISO·LE Audio·방향탐지·connected Channel Sounding
+지원성 및 장비 gate다.
 
 M28과 M29 각 단계의 구현·시험 수치는 위 작업표와 해당 계약에서 확인한다.
 시도별 실패·CMSIS-DAP 진단·수정·재검증 상세는 [140번](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과
-[141~159번 검증 기록](<04_검증 기록/README.md>)에 보존하며 이 TODO에 중복하지 않는다.
+[141~161번 검증 기록](<04_검증 기록/README.md>)에 보존하며 이 TODO에 중복하지 않는다.
 정적 SDK `candidate`, Host 시험, target build와 실기 PASS는 서로 다른 증거다.
 
 ## 2. 현재 확인된 지원성 결정 항목
@@ -195,8 +195,8 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | --- | --- | --- |
 | M28 | 지원 원장 → per-link 계약 → GAP/link/privacy 확장 → 다중 peer HIL | 고정 capability/profile·연결/자원 한계·회귀 목록 |
 | M29 | GATT/CoC → signed write/EATT 정책 적용 → 오류·상호운용 | client/server·cache·credit·실험/legacy 제약과 시험 근거 |
-| M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 + HOST-W01~W03 | M34~M36이 재사용할 보안 계약과 Host 공통 backend·Windows 전용 가정 inventory |
-| M31-A | ISO/CIS/BIS 기반 → 채택한 LC3·LE Audio profile → audio HIL + HOST-W04~W06 | ISO 검증 경계와 Ubuntu/macOS prerequisite·build/package CI 근거 |
+| M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 + HOST-W01~HOST-W03 | M34~M36이 재사용할 보안 계약과 Host 공통 backend·Windows 전용 가정 inventory |
+| M31-A | ISO/CIS/BIS 기반 → 채택한 LC3·LE Audio profile → audio HIL + HOST-W04~HOST-W06 | ISO 검증 경계와 Ubuntu/macOS prerequisite·build/package CI 근거 |
 | M31-B | DF 송수신·controller 적용성 → RF fixture → 적용 가능한 CTE/IQ 경로 | 지원/미지원·조건부 기능과 controller별 제약, 적용 RF 근거 |
 | M31-C | Connected ACL·CS 보안 → 거리 보정·반복성·상호운용 | 연결·보안·거리 오차·peer별 측정 근거 |
 | M32 | 최소 radio/profile·단독 TX/RX → Mesh → 선택 조합 공존·복구 + HOST-W07 | 공존 계약과 세 Host 실제 upload/debug/serial·설치 lifecycle 근거 |
@@ -261,8 +261,8 @@ M31 이후의 수치는 아직 **미확정**이다. 임의 숫자를 제품 보�
 
 ## 6. 결과·공개 규칙
 
-- M28과 M29의 capability·구현·Host·target·유한 HIL·문서 인계를 완료했다.
-  M30~M33과 v0.5.0 공개는 완료 처리하지 않는다.
+- M28·M29·M30의 capability·구현·Host·target·유한 HIL·문서 인계를 완료했다.
+  M31~M33과 v0.5.0 공개는 완료 처리하지 않는다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.
