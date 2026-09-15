@@ -77,5 +77,9 @@ IDENTITY/결과/STOPPED의 누락·중복·잘못된 nonce/role/feature·절단�
 `source_clean=false`이므로 W01 완료 증거가 아니다. 두 보드 CIS 20회 × 100개 유효
 SDU 및 해제/재시작 역시 [W02 후보 증거](<../04_검증 기록/evidence/m31-w02-dev-candidate>)로
 기록했다. 각 ISO event의 무효 빈 slot은 유효 payload 분모와 구별한다.
-clean commit을 기준으로 다시 빌드·실기 검증하고, BIS/Audio/DF/CS 기능 단계는 별도로 닫는다.
+clean `8c125a220c4df722e4922887fdf6c5a5e3793612`을 기준으로 다시 빌드했고,
+[W01 exact manifest](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-manifest.json>)의
+5개 HCI query와 [W02 exact manifest](<../04_검증 기록/evidence/m31-w02-exact-8c125a22/cis-manifest.json>)의
+20회×100 CIS는 PASS다. 이는 controller query와 CIS subcase의 범위만 닫는다.
+BIS/Audio/DF raw IQ·CS procedure와 역할 예제 기능 단계는 별도로 판정한다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import sys
 
 
@@ -181,9 +182,14 @@ def contract() -> dict:
         "capabilities": [
             {"id": identifier, "owner_work_id": owner, "controller_variant": controller,
              "source_status": "source_candidate", "target_applicability": "unresolved",
-             "native_build": "NOT_RUN", "arduino_build": "NOT_RUN",
+             "native_build": "NOT_RUN", "nu54dk_build": "NOT_RUN",
+             "arduino_build": "NOT_RUN",
              "runtime_query": "NOT_RUN", "functional_hil": "NOT_RUN",
-             "evidence": None}
+             "source_revision": None, "stage_evidence": {
+                 "native_build": None, "nu54dk_build": None,
+                 "arduino_build": None, "runtime_query": None,
+                 "functional_hil": None,
+             }, "evidence": None}
             for identifier, owner, controller in capabilities
         ],
         "audio_groups": [
@@ -236,6 +242,11 @@ def validate(doc: dict) -> None:
         len(family["cases"]) for family in doc["test_families"]
     ):
         raise ValueError("test denominator mismatch")
+    if counts["test_family_passed"] != sum(
+        all(entry["status"] == "PASS" for entry in family["cases"])
+        for family in doc["test_families"]
+    ):
+        raise ValueError("test family PASS denominator drift")
     if counts["audio_group_total"] != len(doc["audio_groups"]):
         raise ValueError("audio group denominator mismatch")
     if counts["example_role_total"] != len(doc["example_roles"]):
@@ -248,10 +259,37 @@ def validate(doc: dict) -> None:
             for entry in doc["test_families"][3]["cases"]
         ):
             raise ValueError("audio group PASS without functional case")
+    for capability in doc["capabilities"]:
+        stages = ("native_build", "nu54dk_build", "arduino_build", "runtime_query", "functional_hil")
+        if set(capability.get("stage_evidence", {})) != set(stages):
+            raise ValueError("capability stage schema missing")
+        for stage in stages:
+            status = capability.get(stage)
+            if status not in {"NOT_RUN", "PASS", "FAIL", "HOLD", "UNSUPPORTED"}:
+                raise ValueError("capability stage status unknown")
+            evidence = capability["stage_evidence"][stage]
+            if status == "PASS" and (not evidence or not capability.get("source_revision")):
+                raise ValueError("capability PASS without exact stage evidence")
+            if status == "NOT_RUN" and evidence is not None:
+                raise ValueError("NOT_RUN capability has success evidence")
+            if status == "PASS" and (
+                re.fullmatch(r"[0-9a-f]{40}", capability["source_revision"]) is None or
+                not (CORE / evidence).is_file()
+            ):
+                raise ValueError("capability PASS source/evidence path invalid")
+        if capability["functional_hil"] == "PASS" and (
+            capability["nu54dk_build"] != "PASS" or capability["runtime_query"] != "PASS"
+        ):
+            raise ValueError("functional HIL promoted before build/query")
     for family in doc["test_families"]:
         for entry in family["cases"]:
             if entry["status"] == "PASS" and (not entry["source_revision"] or not entry["evidence"]):
                 raise ValueError("PASS without exact evidence")
+            if entry["status"] == "PASS" and (
+                re.fullmatch(r"[0-9a-f]{40}", entry["source_revision"]) is None or
+                not (CORE / entry["evidence"]).is_file()
+            ):
+                raise ValueError("PASS case source/evidence path invalid")
             if entry["verification_owner"] != "developer" or entry["verification_stage"] != "development":
                 raise ValueError("required implementation hidden as follow-up")
     for entry in doc["follow_up_cases"]:

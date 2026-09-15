@@ -7,8 +7,9 @@ W03 유선 OOB·bond/privacy, W04 일곱 BLE profile, W05 MCUboot layout·서명
 DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했습니다. W08은 exact
 `ae5186f7…`에서 `M30-POWER-01` 네 지점 × 3회 실제 전원 차단 **12/12**를 통과했고 M30을 완료했습니다.
 병행한 **HOST-W01~HOST-W03 inventory·Host resolver·launcher**도 완료했습니다.
-현재 [M31 TODO](TODO_M31.md)의 전체 Bluetooth sample 원장·capability 계약과 CIS 개발 후보를
-구현 중입니다. clean 기능 증거와 BIS·Audio·DF·CS, HOST-W04가 잔여입니다.
+현재 [M31 TODO](TODO_M31.md)의 전체 Bluetooth sample 원장·capability 계약을 구현 중이며
+clean HCI query 5/5와 CIS 20회 × 100 유효 SDU를 통과했습니다. parity/negative 최종 판정,
+BIS·Audio·DF·CS, HOST-W04가 잔여입니다.
 2026-09-16에 [전체 기능·예제 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)으로
 M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제를 Arduino에서 사용하는 것이며,
 보드 기반 기능 검증을 수행하고 정밀 RF·음질·거리/각도 보정은 필수 gate에서 제외합니다.

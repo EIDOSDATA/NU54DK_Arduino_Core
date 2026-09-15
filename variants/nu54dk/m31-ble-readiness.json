@@ -67,12 +67,21 @@
       "owner_work_id": "M31-W02",
       "controller_variant": "default_sdc",
       "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "target_applicability": "applicable_cis_two_board",
       "native_build": "NOT_RUN",
       "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": null,
+      "nu54dk_build": "PASS",
+      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w02-exact-8c125a22/cis-build-twister.json",
+        "arduino_build": null,
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-iso-clean-8c125a22-01.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w02-exact-8c125a22/m31-cis-clean-8c125a22-01.json"
+      }
     },
     {
       "id": "bis_source_receiver",
@@ -82,9 +91,18 @@
       "target_applicability": "unresolved",
       "native_build": "NOT_RUN",
       "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
+      "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-iso-clean-8c125a22-01.json",
+        "functional_hil": null
+      }
     },
     {
       "id": "bis_cis_combined",
@@ -96,7 +114,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "iso_time_sync",
@@ -108,7 +135,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-01",
@@ -120,7 +156,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-02",
@@ -132,7 +177,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-03",
@@ -144,7 +198,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-04",
@@ -156,7 +219,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-05",
@@ -168,7 +240,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-06",
@@ -180,7 +261,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-07",
@@ -192,7 +282,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-08",
@@ -204,7 +303,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-09",
@@ -216,7 +324,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-10",
@@ -228,7 +345,16 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "W03-11",
@@ -240,19 +366,37 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "connectionless_cte_tx",
       "owner_work_id": "M31-W04",
       "controller_variant": "default_sdc",
       "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "target_applicability": "controller_query_only",
       "native_build": "NOT_RUN",
       "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
+      "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "PASS",
+      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-build-twister.json",
+        "arduino_build": null,
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-df-tx-clean-8c125a22-01.json",
+        "functional_hil": null
+      }
     },
     {
       "id": "connected_cte_response_tx",
@@ -264,43 +408,80 @@
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": null,
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": null,
+        "functional_hil": null
+      }
     },
     {
       "id": "raw_iq_rx",
       "owner_work_id": "M31-W04",
       "controller_variant": "zephyr_ll_candidate",
       "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "target_applicability": "zephyr_ll_controller_candidate",
       "native_build": "NOT_RUN",
       "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
+      "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "PASS",
+      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-build-twister.json",
+        "arduino_build": null,
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-ll-clean-8c125a22-01.json",
+        "functional_hil": null
+      }
     },
     {
       "id": "aod",
       "owner_work_id": "M31-W04",
       "controller_variant": "default_sdc",
       "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "target_applicability": "unsupported_default_sdc",
       "native_build": "NOT_RUN",
       "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
+      "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "NOT_RUN",
+      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": null,
+        "arduino_build": null,
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-default-clean-8c125a22-01.json",
+        "functional_hil": null
+      },
+      "support_reason": "기본 SDC HCI AoD bit 21 false; controller 범위만 판정"
     },
     {
       "id": "connected_channel_sounding",
       "owner_work_id": "M31-W05",
       "controller_variant": "default_sdc",
       "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "target_applicability": "controller_query_only",
       "native_build": "NOT_RUN",
       "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
+      "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "nu54dk_build": "PASS",
+      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "stage_evidence": {
+        "native_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-build-twister.json",
+        "arduino_build": null,
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-cs-clean-8c125a22-01.json",
+        "functional_hil": null
+      }
     }
   ],
   "audio_groups": [
@@ -826,9 +1007,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-manifest.json"
         }
       ]
     },
@@ -895,9 +1076,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-exact-8c125a22/cis-manifest.json"
         },
         {
           "id": "M31-ISO-01:bis",
@@ -1721,7 +1902,7 @@
     "work_total": 8,
     "work_completed": 0,
     "test_family_total": 10,
-    "test_family_passed": 0,
+    "test_family_passed": 1,
     "audio_group_total": 11,
     "example_role_total": 42,
     "parity_rows": 703,

@@ -62,8 +62,8 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 
 | 작업 | 상태 | 구현·검증 범위 | 완료 산출물 |
 | --- | --- | --- | --- |
-| M31-W01 capability·착수 계약 | **진행 중** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | M31 착수 계약·두 JSON·schema/parser·Host negative·5구성 target와 개발 HCI query 구현; clean exact HIL 잔여 |
-| M31-W02 raw ISO 기반 | **진행 중** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | 두 보드 20회×100 CIS 개발 후보 구현; clean exact CIS와 BIS·combined·time sync·역할 예제 잔여 |
+| M31-W01 capability·착수 계약 | **진행 중** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | M31 착수 계약·두 JSON·schema/parser·Host negative·5구성 clean target/HCI query PASS; parity/negative 최종 판정 잔여 |
+| M31-W02 raw ISO 기반 | **진행 중** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | 두 보드 20회×100 clean CIS PASS; BIS·combined·time sync·역할 예제 잔여 |
 | M31-W03 전체 LE Audio profile | **미착수** | §3의 LC3·BAP/PACS/ASCS·BASS·CAP·CSIP·PBP와 제어/용도별 profile 전부 판정·구현; 합성 PCM·encoded payload source/sink | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계 |
 | M31-W04 Direction Finding | **미착수** | connectionless/connected AoA CTE TX, 기본 안테나 raw IQ RX 제공 경로·적용성 및 가능 시 2보드 HIL, SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분 |
 | M31-W05 connected Channel Sounding | **미착수** | initiator·reflector, secure ACL·capability·procedure, RAS·raw 결과·거리 추정 출력, stop/restart·peer loss·보안 negative | 두 역할 Arduino 예제·CS API/직접 경로·고정 buffer, 2보드 procedure·복구 HIL, 정밀도 비보증 표시 |
@@ -118,7 +118,7 @@ interval, 다중 advertising/identity, EAD, LLPM/QoS 등은 전체 원장에 등
    M31 이외 예제도 누락 없이 M32/M33 또는 후속 radio 마일스톤의 소유자에 연결한다.
 3. `variants/nu54dk/m31-ble-readiness.json`과 M31 착수 계약을 만든다. capability별 source candidate,
    controller support, compile 결과, runtime query, 기능 HIL을 분리하고 profile별 opt-in·지원 제한과
-   §3의 모든 Audio 행을 담는다. 문서 단계에서는 이 두 JSON이 구현됐다고 표시하지 않는다.
+   §3의 모든 Audio 행을 담는다. 현행 두 JSON의 구현 단계와 개별 미실행 상태는 원장에 기록한다.
    두 원장에 master 계약의 case별 `verification_owner`·`verification_stage`·`development_blocker`·
    `release_blocker`를 적용한다. Apple/Google·외장 실물은 `user`/`user_follow_up`/`false`/`false`,
    Ubuntu/macOS 실물은 `user`/`final_release`/`false`/`true`로 구분한다. 구현·예제·자동 검사 case는
