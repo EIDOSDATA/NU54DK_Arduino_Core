@@ -120,6 +120,8 @@ SUITE_GROUPS = {
         ("m31_iso_bis_hil", "nucode.m31.iso_time.receiver"),
         ("m31_iso_bis_hil", "nucode.m31.iso_bis_encrypted.source"),
         ("m31_iso_bis_hil", "nucode.m31.iso_bis_encrypted.receiver"),
+        ("m31_iso_cis_hil", "nucode.m31.iso_combined.peer"),
+        ("m31_iso_combined_hil", "nucode.m31.iso_combined.central"),
         ("m28_ble_capability", "nucode.m28.ble_capability"),
         ("m28_ble_link_contract", "nucode.m28.ble_link_contract"),
         ("m28_ble_extended_contract", "nucode.m28.ble_extended_contract"),

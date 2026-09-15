@@ -5,6 +5,7 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(nucode_m31_iso_cis_hil)
 
 zephyr_get(M31_ISO_ROLE)
+zephyr_get(M31_ISO_COMBINED_PEER)
 if(NOT "${M31_ISO_ROLE}" STREQUAL "central" AND
    NOT "${M31_ISO_ROLE}" STREQUAL "peripheral")
     message(FATAL_ERROR "M31_ISO_ROLE must be central or peripheral")
@@ -44,3 +45,9 @@ target_compile_definitions(app PRIVATE
     M31_NCS_REVISION="${M31_NCS_REVISION}"
     M31_ZEPHYR_REVISION="${M31_ZEPHYR_REVISION}"
 )
+if("${M31_ISO_COMBINED_PEER}" STREQUAL "1")
+    if(NOT "${M31_ISO_ROLE}" STREQUAL "peripheral")
+        message(FATAL_ERROR "combined CIS peer must be peripheral")
+    endif()
+    target_compile_definitions(app PRIVATE M31_ISO_COMBINED_PEER=1)
+endif()

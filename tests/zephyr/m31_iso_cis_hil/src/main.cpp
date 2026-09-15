@@ -33,8 +33,17 @@ namespace
     constexpr char start_prefix[] = "M31ISO|1|START|nonce=";
     constexpr char start_suffix[] = "|count=100";
     constexpr char stop_prefix[] = "M31ISO|1|STOP|nonce=";
+#if defined(M31_ISO_COMBINED_PEER)
+    constexpr char send_prefix[] = "M31ISO|1|SEND|nonce=";
+    constexpr uint32_t send_period_ms = 18U;
+#else
+    constexpr uint32_t send_period_ms = 10U;
+#endif
     constexpr char role_name[] = M31_ISO_ROLE;
     const bool central_role = strcmp(role_name, "central") == 0;
+#if defined(M31_ISO_COMBINED_PEER)
+    bool send_armed = false;
+#endif
     char command[sizeof(start_prefix) + nonce_length + sizeof(start_suffix)] = {};
     size_t command_length = 0U;
     char nonce[nonce_length + 1U] = {};
@@ -114,7 +123,11 @@ namespace
     {
         const uint32_t marker = static_cast<uint32_t>(nonce_bytes[0]) |
                                 (static_cast<uint32_t>(nonce_bytes[1]) << 8U);
+#if defined(M31_ISO_COMBINED_PEER)
+        return 0x31b15000U ^ (static_cast<uint32_t>(sequence) * 0x9e3779b1U) ^ marker;
+#else
         return 0x31a50000U ^ (static_cast<uint32_t>(sequence) * 0x9e3779b1U) ^ marker;
+#endif
     }
 
     /** @brief 같은 session의 순서·길이·flags·payload를 확인합니다. */
@@ -205,12 +218,38 @@ namespace
     /** @brief 한 개의 HCI transparent path를 role 방향에 따라 선택합니다. */
     void isoConnected(struct bt_iso_chan *channel)
     {
+#if defined(M31_ISO_COMBINED_PEER)
+        struct bt_iso_info information = {};
+        const int information_result = bt_iso_chan_get_info(channel, &information);
+        if (information_result != 0)
+        {
+            fail("iso_info", information_result);
+            return;
+        }
+        Serial.print("M31ISO|1|ISO_INFO|nonce=");
+        Serial.print(nonce);
+        Serial.print("|can_send=");
+        Serial.print(information.can_send ? 1 : 0);
+        Serial.print("|p_bn=");
+        Serial.print(information.unicast.peripheral.bn);
+        Serial.print("|max_sdu=");
+        Serial.println(information.unicast.peripheral.max_sdu);
+        if (!information.can_send)
+        {
+            fail("iso_tx_unavailable", -ENOTSUP);
+            return;
+        }
+#endif
         const struct bt_iso_chan_path path = {
             .pid = BT_ISO_DATA_PATH_HCI,
             .format = BT_HCI_CODING_FORMAT_TRANSPARENT,
         };
         const uint8_t direction = central_role ? BT_HCI_DATAPATH_DIR_HOST_TO_CTLR :
+#if defined(M31_ISO_COMBINED_PEER)
+                                                 BT_HCI_DATAPATH_DIR_HOST_TO_CTLR;
+#else
                                                  BT_HCI_DATAPATH_DIR_CTLR_TO_HOST;
+#endif
         const int result = bt_iso_setup_data_path(channel, direction, &path);
         if (result != 0)
         {
@@ -221,7 +260,7 @@ namespace
         Serial.println(nonce);
         if (central_role)
         {
-            k_work_schedule(&send_work, K_MSEC(10));
+            k_work_schedule(&send_work, K_MSEC(send_period_ms));
         }
     }
 
@@ -242,16 +281,28 @@ namespace
         .recv = isoReceived,
     };
     struct bt_iso_chan_io_qos transmit_qos = {
+#if defined(M31_ISO_COMBINED_PEER)
+        .sdu = sdu_length,
+#else
         .sdu = CONFIG_BT_ISO_TX_MTU,
+#endif
         .phy = BT_GAP_LE_PHY_2M,
+#if defined(M31_ISO_COMBINED_PEER)
+        .rtn = 10U,
+#else
         .rtn = 2U,
+#endif
     };
+#if !defined(M31_ISO_COMBINED_PEER)
     struct bt_iso_chan_io_qos receive_qos = {
         .sdu = CONFIG_BT_ISO_RX_MTU,
         .phy = BT_GAP_LE_PHY_2M,
     };
+#endif
     struct bt_iso_chan_qos qos = {
+#if !defined(M31_ISO_COMBINED_PEER)
         .rx = &receive_qos,
+#endif
         .tx = &transmit_qos,
     };
 
@@ -263,6 +314,12 @@ namespace
         {
             return;
         }
+#if defined(M31_ISO_COMBINED_PEER)
+        if (!send_armed)
+        {
+            return;
+        }
+#endif
         const uint16_t sequence = static_cast<uint16_t>(atomic_get(&transmitted));
         if (sequence >= sdu_count)
         {
@@ -271,7 +328,7 @@ namespace
         struct net_buf *buffer = net_buf_alloc(&iso_tx_pool, K_NO_WAIT);
         if (buffer == nullptr)
         {
-            k_work_schedule(&send_work, K_MSEC(10));
+            k_work_schedule(&send_work, K_MSEC(send_period_ms));
             return;
         }
         net_buf_reserve(buffer, BT_ISO_CHAN_SEND_RESERVE);
@@ -298,7 +355,7 @@ namespace
             Serial.println(atomic_get(&transmitted));
             return;
         }
-        k_work_schedule(&send_work, K_MSEC(10));
+        k_work_schedule(&send_work, K_MSEC(send_period_ms));
     }
 
     /** @brief 이미 사용 중인 ISO slot은 수락하지 않습니다. */
@@ -505,6 +562,9 @@ namespace
         finished = false;
         rx_end_printed = false;
         tx_end_printed = false;
+#if defined(M31_ISO_COMBINED_PEER)
+        send_armed = false;
+#endif
         atomic_set(&transmitted, 0);
         atomic_set(&received, 0);
         atomic_set(&invalid_or_lost, 0);
@@ -538,6 +598,27 @@ namespace
         }
         startRadio();
     }
+
+#if defined(M31_ISO_COMBINED_PEER)
+    /** @brief BIS receiver가 BIG에 붙은 뒤 peer CIS 송신을 시작합니다. */
+    void startSending()
+    {
+        const size_t prefix_length = strlen(send_prefix);
+        if (central_role || !started || finished || stopping || send_armed ||
+            iso_channel.state != BT_ISO_STATE_CONNECTED ||
+            command_length != prefix_length + nonce_length ||
+            memcmp(command, send_prefix, prefix_length) != 0 ||
+            memcmp(command + prefix_length, nonce, nonce_length) != 0)
+        {
+            fail("send_command", -EINVAL);
+            return;
+        }
+        send_armed = true;
+        Serial.print("M31ISO|1|SEND_ARMED|nonce=");
+        Serial.println(nonce);
+        k_work_schedule(&send_work, K_MSEC(send_period_ms));
+    }
+#endif
 
     /** @brief STOP은 보유 session nonce가 정확할 때만 무선 자원을 해제합니다. */
     void stopProtocol()
@@ -672,6 +753,12 @@ namespace
                 {
                     stopProtocol();
                 }
+#if defined(M31_ISO_COMBINED_PEER)
+                else if (strncmp(command, send_prefix, strlen(send_prefix)) == 0)
+                {
+                    startSending();
+                }
+#endif
                 else
                 {
                     fail("command", -EINVAL);
