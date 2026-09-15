@@ -321,7 +321,8 @@ v0.4.0의 범위 제외는 그대로 보존한다.
 - 이번 문서 개정은 2026-09-16의 사용자 범위 결정이다. 정밀 RF/audio/거리/각도 계측 제외를 적용하고
   전체 NCS Bluetooth 기능·예제를 명시한 단계에 배치했다. M31-W01 inventory·readiness·
   capability parser/target의 clean HCI query, parity 703행·negative 20/20으로 W01을
-  완료했다. W02 clean CIS 20회는 PASS이며 BIS·Audio·DF·CS와 나머지 기능 gate가 잔여다.
+  완료했다. W02 clean CIS와 BIS positive 각 20회는 PASS이며 BIS negative·combined·
+  time sync·Audio·DF·CS와 나머지 기능 gate가 잔여다.
 - Apple/Google 및 외장 장치의 실제 운용·검증을 사용자 후속으로 확정한 결정은 v0.5.0 개발·공개
   gate에서 적용한다. 구현·예제·가능한 자동 검사는 필수이며, 사용자 후속 NOT RUN은 PASS가 아니다.
   원장의 구현 요구·검증 책임·개발/공개 차단 여부를 독립 필드로 구현해 이 구분을 검사한다.

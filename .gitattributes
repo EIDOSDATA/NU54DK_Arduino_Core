@@ -16,3 +16,6 @@ coverage/ncs-v3.4.0/** text eol=lf
 
 # 실기 UART 원본은 증거 JSON의 byte SHA-256과 checkout 후에도 같아야 합니다.
 **/*.transcript.log text eol=lf
+
+# 증거 JSON의 byte hash는 Windows/Linux checkout에서 동일한 CRLF 원본을 사용합니다.
+**/evidence/**/*.json text eol=crlf

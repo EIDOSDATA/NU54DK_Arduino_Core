@@ -88,20 +88,20 @@
       "owner_work_id": "M31-W02",
       "controller_variant": "default_sdc",
       "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "target_applicability": "applicable_bis_two_board",
       "native_build": "NOT_RUN",
       "arduino_build": "NOT_RUN",
       "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
+      "functional_hil": "PASS",
       "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "nu54dk_build": "PASS",
+      "source_revision": "c097b15d3f323d81751af269d348312a02dc1ca9",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w02-exact-c097b15d/bis-build-twister.json",
         "arduino_build": null,
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-iso-clean-8c125a22-01.json",
-        "functional_hil": null
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w02-exact-c097b15d/bis-hil-01.json"
       }
     },
     {

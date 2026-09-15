@@ -1,0 +1,32 @@
+{
+  "test_id": "M31-ISO-01:bis",
+  "status": "PASS",
+  "scope": "two_board_bis_positive_only",
+  "source_clean": true,
+  "source_revision": "c097b15d3f323d81751af269d348312a02dc1ca9",
+  "target_build": {
+    "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-c097b15d/bis-build-twister.json",
+    "sha256": "14586171cce4724d811f18c1f1bff192a4aba292a771120ab9905b4f87bfd894",
+    "build_only_count": 2,
+    "scenarios": [
+      "nucode.m31.iso_bis.source",
+      "nucode.m31.iso_bis.receiver"
+    ]
+  },
+  "result_path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-c097b15d/bis-hil-01.json",
+  "result_sha256": "fa506993ea5e015a5fc731c9134d88fa416f36606b48f67b38f9cccc131cf7e3",
+  "transcript_sha256": "74e60bcf0f8922f1e4f2615faae836afbda31bfe87f10f618404d7f942ad02a7",
+  "measurement": {
+    "cycles": 20,
+    "total_sent": 2000,
+    "total_received": 2000,
+    "minimum_received": 100,
+    "empty_slots": 100
+  },
+  "negative_classes": {
+    "wrong_broadcast_code": "NOT_RUN",
+    "sync_loss": "NOT_RUN"
+  },
+  "combined": "NOT_RUN",
+  "time_sync": "NOT_RUN"
+}
