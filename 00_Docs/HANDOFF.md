@@ -1,4 +1,4 @@
-# 개발 인계 — M30 완료, M31 착수 대기
+# 개발 인계 — M30 완료, M31-W01·W02 진행 중
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
@@ -7,7 +7,8 @@ W03 유선 OOB·bond/privacy, W04 일곱 BLE profile, W05 MCUboot layout·서명
 DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했습니다. W08은 exact
 `ae5186f7…`에서 `M30-POWER-01` 네 지점 × 3회 실제 전원 차단 **12/12**를 통과했고 M30을 완료했습니다.
 병행한 **HOST-W01~HOST-W03 inventory·Host resolver·launcher**도 완료했습니다.
-다음 구현은 [M31 TODO](TODO_M31.md)의 전체 Bluetooth sample 원장·capability 계약과 HOST-W04입니다.
+현재 [M31 TODO](TODO_M31.md)의 전체 Bluetooth sample 원장·capability 계약과 CIS 개발 후보를
+구현 중입니다. clean 기능 증거와 BIS·Audio·DF·CS, HOST-W04가 잔여입니다.
 2026-09-16에 [전체 기능·예제 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)으로
 M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제를 Arduino에서 사용하는 것이며,
 보드 기반 기능 검증을 수행하고 정밀 RF·음질·거리/각도 보정은 필수 gate에서 제외합니다.
@@ -23,7 +24,7 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 
 | 항목 | 상태 |
 | --- | --- |
-| Branch | `m31-w01` — `main`의 `eff575da948f96fe8361b16f0475f7eb113ccf50`에서 분기한 문서 작업 |
+| Branch | `m31-w01` — M30 인계 `10f16eaa913f9b1d1906239fbe6ff98c53c73cd1` 포함; 현행 M31 작업은 이 브랜치에서 진행 |
 | 공개 배포 | v0.4.1 단독 지원 |
 | 개발 소스 | 0.4.1-dev |
 | M28 | W01~W08 **8/8**, test ID 9/9 PASS |
@@ -45,8 +46,8 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 순서 | [M31 TODO](TODO_M31.md) |
-| M31 / M32 / M33 구현 진도 | **0/8 · 0/12 · 0/8**; [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md), 문서 개정은 구현 완료가 아님 |
-| 현재 개발 지점 | M30 완료. 전체 기능·예제 계획 반영 후 M31-W01과 HOST-W04 구현 |
+| M31 / M32 / M33 구현 진도 | **0/8 · 0/12 · 0/8**; M31-W01·W02 진행, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
+| 현재 개발 지점 | M30 완료. [M31 착수 계약](<01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md>)·[165번 기록](<04_검증 기록/165_M31_W01_착수와_W02_CIS_개발_후보.md>) 기반 W01·W02 검증 진행 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
 | Host 구현 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 미착수 |
 

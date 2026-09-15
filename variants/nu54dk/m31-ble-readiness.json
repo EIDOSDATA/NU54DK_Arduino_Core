@@ -1,0 +1,1730 @@
+{
+  "schema_version": 1,
+  "milestone": "M31",
+  "phase": "implementation_in_progress",
+  "milestone_status": "not_completed",
+  "baseline": {
+    "supported_release": "v0.4.1",
+    "source_version": "0.4.1-dev",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "work_packages": [
+    {
+      "id": "M31-W01",
+      "title": "capability_inventory_contract",
+      "status": "in_progress",
+      "exact_evidence": null
+    },
+    {
+      "id": "M31-W02",
+      "title": "raw_iso",
+      "status": "in_progress",
+      "exact_evidence": null
+    },
+    {
+      "id": "M31-W03",
+      "title": "full_le_audio",
+      "status": "not_started",
+      "exact_evidence": null
+    },
+    {
+      "id": "M31-W04",
+      "title": "direction_finding",
+      "status": "not_started",
+      "exact_evidence": null
+    },
+    {
+      "id": "M31-W05",
+      "title": "channel_sounding",
+      "status": "not_started",
+      "exact_evidence": null
+    },
+    {
+      "id": "M31-W06",
+      "title": "integration_regression",
+      "status": "not_started",
+      "exact_evidence": null
+    },
+    {
+      "id": "M31-W07",
+      "title": "three_board_hil_examples",
+      "status": "not_started",
+      "exact_evidence": null
+    },
+    {
+      "id": "M31-W08",
+      "title": "closure_handoff",
+      "status": "not_started",
+      "exact_evidence": null
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "cis_central_peripheral",
+      "owner_work_id": "M31-W02",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "bis_source_receiver",
+      "owner_work_id": "M31-W02",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "bis_cis_combined",
+      "owner_work_id": "M31-W02",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "iso_time_sync",
+      "owner_work_id": "M31-W02",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-01",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-02",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-03",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-04",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-05",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-06",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-07",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-08",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-09",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-10",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-11",
+      "owner_work_id": "M31-W03",
+      "controller_variant": "audio_opt_in",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "connectionless_cte_tx",
+      "owner_work_id": "M31-W04",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "connected_cte_response_tx",
+      "owner_work_id": "M31-W04",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "raw_iq_rx",
+      "owner_work_id": "M31-W04",
+      "controller_variant": "zephyr_ll_candidate",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "aod",
+      "owner_work_id": "M31-W04",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "connected_channel_sounding",
+      "owner_work_id": "M31-W05",
+      "controller_variant": "default_sdc",
+      "source_status": "source_candidate",
+      "target_applicability": "unresolved",
+      "native_build": "NOT_RUN",
+      "arduino_build": "NOT_RUN",
+      "runtime_query": "NOT_RUN",
+      "functional_hil": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "audio_groups": [
+    {
+      "id": "W03-01",
+      "title": "LC3 합성 PCM encode/decode",
+      "roles": [
+        "codec"
+      ],
+      "minimum_boards": 1,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-02",
+      "title": "BAP unicast PACS/ASCS",
+      "roles": [
+        "client",
+        "server"
+      ],
+      "minimum_boards": 2,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-03",
+      "title": "BAP broadcast",
+      "roles": [
+        "source",
+        "sink"
+      ],
+      "minimum_boards": 2,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-04",
+      "title": "BASS",
+      "roles": [
+        "source",
+        "scan_delegator",
+        "assistant"
+      ],
+      "minimum_boards": 3,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-05",
+      "title": "CAP",
+      "roles": [
+        "initiator",
+        "acceptor",
+        "commander"
+      ],
+      "minimum_boards": 3,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-06",
+      "title": "CSIP",
+      "roles": [
+        "coordinator",
+        "member_a",
+        "member_b"
+      ],
+      "minimum_boards": 3,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-07",
+      "title": "PBP public broadcast",
+      "roles": [
+        "source",
+        "sink"
+      ],
+      "minimum_boards": 2,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-08",
+      "title": "VCP/VOCS/AICS/MICP",
+      "roles": [
+        "controller",
+        "renderer",
+        "microphone"
+      ],
+      "minimum_boards": 2,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-09",
+      "title": "MCP/MCS/CCP/TBS",
+      "roles": [
+        "controller",
+        "server"
+      ],
+      "minimum_boards": 2,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-10",
+      "title": "TMAP/GMAP 역할",
+      "roles": [
+        "central",
+        "peripheral",
+        "broadcast"
+      ],
+      "minimum_boards": 3,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "W03-11",
+      "title": "HAP/HAS",
+      "roles": [
+        "hearing_client",
+        "hearing_server"
+      ],
+      "minimum_boards": 2,
+      "status": "NOT_RUN"
+    }
+  ],
+  "example_roles": [
+    {
+      "id": "raw_iso_central",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "raw_iso_peripheral",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "raw_iso_broadcaster",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "raw_iso_receiver",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "iso_combined_source",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "iso_combined_peer",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "iso_time_sync_sender",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "iso_time_sync_receiver",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-01:codec",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-02:client",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-02:server",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-03:source",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-03:sink",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-04:source",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-04:scan_delegator",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-04:assistant",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-05:initiator",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-05:acceptor",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-05:commander",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-06:coordinator",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-06:member_a",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-06:member_b",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-07:source",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-07:sink",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-08:controller",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-08:renderer",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-08:microphone",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-09:controller",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-09:server",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-10:central",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-10:peripheral",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-10:broadcast",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-11:hearing_client",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "W03-11:hearing_server",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "cte_beacon",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "cte_peripheral",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "raw_iq_receiver_candidate",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "external_angle_control",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "cs_initiator",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "cs_reflector",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "cs_result",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "cs_multipeer",
+      "planned_sketch": null,
+      "actual_sketch": null,
+      "source_revision": null,
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "test_families": [
+    {
+      "id": "M31-CAP-01",
+      "cases": [
+        {
+          "id": "M31-CAP-01:controller",
+          "owner_work_id": "M31-W01",
+          "roles": [
+            "capability_probe"
+          ],
+          "minimum_boards": 1,
+          "timeout_seconds": 60,
+          "iterations": 1,
+          "denominator": 7,
+          "metric": "feature_role_count",
+          "acceptance": {
+            "matched": 7,
+            "revision_mismatch": 0,
+            "unsupported_false_positive": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-PARITY-01",
+      "cases": [
+        {
+          "id": "M31-PARITY-01:all_upstream",
+          "owner_work_id": "M31-W01",
+          "roles": [
+            "inventory"
+          ],
+          "minimum_boards": 0,
+          "timeout_seconds": 60,
+          "iterations": 1,
+          "denominator": 703,
+          "metric": "all_inventory_rows",
+          "acceptance": {
+            "mapped": 703,
+            "duplicate": 0,
+            "invalid_pass": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-ISO-01",
+      "cases": [
+        {
+          "id": "M31-ISO-01:cis",
+          "owner_work_id": "M31-W02",
+          "roles": [
+            "central",
+            "peripheral"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "received_sdu",
+          "acceptance": {
+            "minimum_received": 99,
+            "duplicate": 0,
+            "out_of_order": 0,
+            "corrupt": 0
+          },
+          "negative_classes": [
+            "disconnect_pending_tx",
+            "invalid_qos"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-ISO-01:bis",
+          "owner_work_id": "M31-W02",
+          "roles": [
+            "broadcaster",
+            "receiver"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "received_sdu",
+          "acceptance": {
+            "minimum_received": 99,
+            "duplicate": 0,
+            "out_of_order": 0,
+            "corrupt": 0
+          },
+          "negative_classes": [
+            "wrong_broadcast_code",
+            "sync_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-ISO-01:bis_cis_combined",
+          "owner_work_id": "M31-W02",
+          "roles": [
+            "broadcaster",
+            "central",
+            "peer"
+          ],
+          "minimum_boards": 3,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "received_sdu_per_stream",
+          "acceptance": {
+            "minimum_received_per_stream": 99,
+            "cross_stream": 0,
+            "corrupt": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-ISO-01:time_sync",
+          "owner_work_id": "M31-W02",
+          "roles": [
+            "sender",
+            "receiver"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "timestamp_relation",
+          "acceptance": {
+            "valid_monotonic": 100,
+            "stale_callback": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-AUDIO-01",
+      "cases": [
+        {
+          "id": "M31-AUDIO-01:W03-01",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "codec"
+          ],
+          "minimum_boards": 1,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-02",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "client",
+            "server"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-03",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "source",
+            "sink"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-04",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "source",
+            "scan_delegator",
+            "assistant"
+          ],
+          "minimum_boards": 3,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-05",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "initiator",
+            "acceptor",
+            "commander"
+          ],
+          "minimum_boards": 3,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-06",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "coordinator",
+            "member_a",
+            "member_b"
+          ],
+          "minimum_boards": 3,
+          "timeout_seconds": 180,
+          "iterations": 100,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-07",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "source",
+            "sink"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-08",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "controller",
+            "renderer",
+            "microphone"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 100,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-09",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "controller",
+            "server"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 100,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-10",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "central",
+            "peripheral",
+            "broadcast"
+          ],
+          "minimum_boards": 3,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-AUDIO-01:W03-11",
+          "owner_work_id": "M31-W03",
+          "roles": [
+            "hearing_client",
+            "hearing_server"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 100,
+          "denominator": 100,
+          "metric": "control_operations_or_frames",
+          "acceptance": {
+            "valid": 100,
+            "state_mismatch": 0,
+            "invalid_accept": 0
+          },
+          "negative_classes": [
+            "invalid_argument",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-DF-01",
+      "cases": [
+        {
+          "id": "M31-DF-01:connectionless_cte_tx",
+          "owner_work_id": "M31-W04",
+          "roles": [
+            "cte_advertiser"
+          ],
+          "minimum_boards": 1,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 20,
+          "metric": "start_stop_count",
+          "acceptance": {
+            "completed": 20,
+            "invalid_cte_accept": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-DF-01:connected_cte_response_tx",
+          "owner_work_id": "M31-W04",
+          "roles": [
+            "peripheral",
+            "requester"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 20,
+          "metric": "response_count",
+          "acceptance": {
+            "completed": 20,
+            "invalid_cte_accept": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-DF-01:raw_iq_rx_candidate",
+          "owner_work_id": "M31-W04",
+          "roles": [
+            "cte_advertiser",
+            "iq_receiver"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 20,
+          "metric": "iq_report_count",
+          "acceptance": {
+            "minimum_reports": 20,
+            "invalid_sample_format": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-DF-01:sdc_aod_unsupported",
+          "owner_work_id": "M31-W04",
+          "roles": [
+            "capability_probe"
+          ],
+          "minimum_boards": 1,
+          "timeout_seconds": 60,
+          "iterations": 20,
+          "denominator": 20,
+          "metric": "unsupported_rejections",
+          "acceptance": {
+            "rejected": 20,
+            "false_support": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-CS-01",
+      "cases": [
+        {
+          "id": "M31-CS-01:secure_ras",
+          "owner_work_id": "M31-W05",
+          "roles": [
+            "initiator",
+            "reflector"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 600,
+          "iterations": 100,
+          "denominator": 100,
+          "metric": "procedure_result_count",
+          "acceptance": {
+            "valid_results": 100,
+            "invalid_or_nan": 0,
+            "insecure_accept": 0
+          },
+          "negative_classes": [
+            "insecure_acl",
+            "wrong_peer",
+            "peer_loss"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-CS-01:restart",
+          "owner_work_id": "M31-W05",
+          "roles": [
+            "initiator",
+            "reflector"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 600,
+          "iterations": 20,
+          "denominator": 20,
+          "metric": "stop_restart_count",
+          "acceptance": {
+            "completed": 20,
+            "stale_result": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-NEG-01",
+      "cases": [
+        {
+          "id": "M31-NEG-01:host_parser",
+          "owner_work_id": "M31-W01",
+          "roles": [
+            "host"
+          ],
+          "minimum_boards": 0,
+          "timeout_seconds": 60,
+          "iterations": 20,
+          "denominator": 20,
+          "metric": "rejected_bad_inputs",
+          "acceptance": {
+            "rejected": 20,
+            "unexpected_success": 0
+          },
+          "negative_classes": [
+            "malformed",
+            "stale",
+            "wrong_role",
+            "unsupported",
+            "wrong_key",
+            "resource_exhaustion"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        },
+        {
+          "id": "M31-NEG-01:target_recovery",
+          "owner_work_id": "M31-W06",
+          "roles": [
+            "sender",
+            "receiver"
+          ],
+          "minimum_boards": 2,
+          "timeout_seconds": 180,
+          "iterations": 20,
+          "denominator": 20,
+          "metric": "recovered_failures",
+          "acceptance": {
+            "completed": 20,
+            "resource_leaks": 0
+          },
+          "negative_classes": [
+            "peer_loss",
+            "wrong_key",
+            "resource_exhaustion"
+          ],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-REG-01",
+      "cases": [
+        {
+          "id": "M31-REG-01:m19_m30",
+          "owner_work_id": "M31-W06",
+          "roles": [
+            "regression"
+          ],
+          "minimum_boards": 3,
+          "timeout_seconds": 180,
+          "iterations": 1,
+          "denominator": 12,
+          "metric": "baseline_family_count",
+          "acceptance": {
+            "families": 12,
+            "cross_link": 0,
+            "resource_leaks": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-EXAMPLE-01",
+      "cases": [
+        {
+          "id": "M31-EXAMPLE-01:board_roles",
+          "owner_work_id": "M31-W07",
+          "roles": [
+            "all_applicable_roles"
+          ],
+          "minimum_boards": 3,
+          "timeout_seconds": 600,
+          "iterations": 1,
+          "denominator": 42,
+          "metric": "planned_role_example_count",
+          "acceptance": {
+            "built_percent": 100,
+            "runtime_oracle_mismatch": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    },
+    {
+      "id": "M31-CLOSE-01",
+      "cases": [
+        {
+          "id": "M31-CLOSE-01:ledger_docs",
+          "owner_work_id": "M31-W08",
+          "roles": [
+            "host"
+          ],
+          "minimum_boards": 0,
+          "timeout_seconds": 60,
+          "iterations": 1,
+          "denominator": 8,
+          "metric": "work_package_count",
+          "acceptance": {
+            "completed": 8,
+            "unowned_followup": 0,
+            "drift": 0
+          },
+          "negative_classes": [],
+          "recovery_timeout_seconds": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "NOT_RUN",
+          "source_revision": null,
+          "evidence": null
+        }
+      ]
+    }
+  ],
+  "follow_up_cases": [
+    {
+      "id": "external_audio_io_physical",
+      "verification_owner": "user",
+      "verification_stage": "user_follow_up",
+      "development_blocker": false,
+      "release_blocker": false,
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "external_antenna_angle_physical",
+      "verification_owner": "user",
+      "verification_stage": "user_follow_up",
+      "development_blocker": false,
+      "release_blocker": false,
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "ubuntu_host_physical",
+      "verification_owner": "user",
+      "verification_stage": "final_release",
+      "development_blocker": false,
+      "release_blocker": true,
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "macos_host_physical",
+      "verification_owner": "user",
+      "verification_stage": "final_release",
+      "development_blocker": false,
+      "release_blocker": true,
+      "status": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "counts": {
+    "work_total": 8,
+    "work_completed": 0,
+    "test_family_total": 10,
+    "test_family_passed": 0,
+    "audio_group_total": 11,
+    "example_role_total": 42,
+    "parity_rows": 703,
+    "test_subcases": 28
+  }
+}

@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **계획 개정 완료 / 구현 미착수 — 0/8 작업 묶음** |
+| 현재 상태 | **W01·W02 구현 진행 중 / 완료 0/8 작업 묶음** |
 | 선행 완료 | M30 W01~W08 8/8, test ID 10/10, 실제 전원 차단 4지점 × 3회 = 12/12 |
 | 병행 Host 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 잔여; M31과 독립된 8개 작업 분모 |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, 고정 lock revision |
@@ -19,7 +19,9 @@ M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF
 예제 판정 규칙은 [NCS Bluetooth 전체 기능·예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
 기능별 목표는 [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>),
 Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
-이 문서의 계획 개정은 API 구현, JSON 원장 생성, build 또는 HIL 실행 완료를 뜻하지 않는다.
+계획 개정 자체는 구현 증거가 아니다. 현행 W01·W02 개발 후보와 미완료 범위는
+[착수 계약](<01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md>)과
+[165번 기록](<04_검증 기록/165_M31_W01_착수와_W02_CIS_개발_후보.md>)에서 구분한다.
 
 ## 1. 착수 원칙과 지원 판정
 
@@ -60,8 +62,8 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 
 | 작업 | 상태 | 구현·검증 범위 | 완료 산출물 |
 | --- | --- | --- | --- |
-| M31-W01 capability·착수 계약 | **미착수** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | M31 착수 계약, readiness와 sample parity JSON, schema/parser·Host negative, capability target·build matrix·exact evidence |
-| M31-W02 raw ISO 기반 | **미착수** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | Arduino 제공 경로, 역할별 raw ISO 예제, Host/target test와 2~3보드 데이터·복구 HIL |
+| M31-W01 capability·착수 계약 | **진행 중** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | M31 착수 계약·두 JSON·schema/parser·Host negative·5구성 target와 개발 HCI query 구현; clean exact HIL 잔여 |
+| M31-W02 raw ISO 기반 | **진행 중** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | 두 보드 20회×100 CIS 개발 후보 구현; clean exact CIS와 BIS·combined·time sync·역할 예제 잔여 |
 | M31-W03 전체 LE Audio profile | **미착수** | §3의 LC3·BAP/PACS/ASCS·BASS·CAP·CSIP·PBP와 제어/용도별 profile 전부 판정·구현; 합성 PCM·encoded payload source/sink | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계 |
 | M31-W04 Direction Finding | **미착수** | connectionless/connected AoA CTE TX, 기본 안테나 raw IQ RX 제공 경로·적용성 및 가능 시 2보드 HIL, SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분 |
 | M31-W05 connected Channel Sounding | **미착수** | initiator·reflector, secure ACL·capability·procedure, RAS·raw 결과·거리 추정 출력, stop/restart·peer loss·보안 negative | 두 역할 Arduino 예제·CS API/직접 경로·고정 buffer, 2보드 procedure·복구 HIL, 정밀도 비보증 표시 |

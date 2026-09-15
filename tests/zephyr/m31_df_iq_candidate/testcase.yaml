@@ -1,0 +1,15 @@
+tests:
+  nucode.m31.df_iq_candidate:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - direction_finding
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - SNIPPET=bt-ll-sw-split
