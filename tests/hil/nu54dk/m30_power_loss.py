@@ -1226,7 +1226,7 @@ def validate_preflight_evidence(
         or not isinstance(state.get("bond_count"), int)
         or not 1 <= state["bond_count"] <= 4
         or state.get("rejected_bonds") != 0
-        or state.get("bonded") != 1
+        or state.get("bonded") not in (0, 1)
         or state.get("settings_valid") != 1
     ):
         raise M30PowerFailure("manifest preflight bond/settings 근거가 유효하지 않습니다.")

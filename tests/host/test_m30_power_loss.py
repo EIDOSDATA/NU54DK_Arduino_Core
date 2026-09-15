@@ -399,6 +399,13 @@ class M30PowerLossTests(unittest.TestCase):
         manifest, expected = self.manifest_documents()
         RUNNER.validate_manifest(manifest, expected)
 
+    def test_manifest_accepts_newly_created_bond_preflight(self) -> None:
+        """! @brief 신규 pairing의 저장 bond는 연결 복원 flag가 0이어도 유효합니다. """
+
+        manifest, expected = self.manifest_documents()
+        manifest["preflight"]["state"]["bonded"] = 0
+        RUNNER.validate_manifest(manifest, expected)
+
     def test_manifest_accepts_daplink_preflight_evidence(self) -> None:
         """! @brief DAPLink flash·storage exact-range 근거도 실행 전에 검증합니다. """
 
