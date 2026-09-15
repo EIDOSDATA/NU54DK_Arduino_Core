@@ -341,6 +341,58 @@ class M30PowerLossTests(unittest.TestCase):
         self.assertRegex(evidence["board_id_sha256"], r"^[0-9a-f]{64}$")
         self.assertNotIn("board_id", evidence)
 
+    def test_candidate_bundle_persists_exact_preflight_bytes(self) -> None:
+        """! @brief 비결정적 재서명 대신 preflight의 exact image byte를 재사용합니다. """
+
+        versions = {
+            name: specification[1]
+            for name, specification in RUNNER.CANDIDATE_SPECS.items()
+        }
+        with tempfile.TemporaryDirectory(prefix="n54-m30-candidates-") as directory:
+            root = Path(directory)
+            sources = root / "sources"
+            sources.mkdir()
+            candidates = {}
+            for index, (name, (filename, version)) in enumerate(
+                RUNNER.CANDIDATE_SPECS.items(), start=1
+            ):
+                path = sources / filename
+                path.write_bytes(bytes([index]) * (32 + index))
+                candidates[name] = RUNNER.ImageArtifact(
+                    path,
+                    path.stat().st_size,
+                    RUNNER.file_sha256(path),
+                    version,
+                    bytes([index]) * 32,
+                )
+
+            def parse(path: Path) -> object:
+                name = next(
+                    key
+                    for key, specification in RUNNER.CANDIDATE_SPECS.items()
+                    if specification[0] == path.name
+                )
+                source = candidates[name]
+                return RUNNER.ImageArtifact(
+                    path,
+                    path.stat().st_size,
+                    RUNNER.file_sha256(path),
+                    versions[name],
+                    source.image_hash,
+                )
+
+            bundle = RUNNER.candidate_directory(root / "manifest.json")
+            with mock.patch.object(RUNNER, "parse_mcuboot_image", side_effect=parse):
+                persisted = RUNNER.persist_power_candidates(candidates, bundle, False)
+                for source in candidates.values():
+                    source.path.write_bytes(b"different-signature")
+                loaded = RUNNER.load_power_candidates(bundle)
+
+            self.assertEqual(
+                {name: artifact.sha256 for name, artifact in loaded.items()},
+                {name: artifact.sha256 for name, artifact in persisted.items()},
+            )
+
     def test_manifest_accepts_exact_inputs_and_completed_preflight(self) -> None:
         """! @brief 준비 manifest의 모든 입력과 완료 preflight가 같으면 통과합니다. """
 

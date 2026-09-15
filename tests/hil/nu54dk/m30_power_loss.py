@@ -54,6 +54,7 @@ from m30_ble_dfu import (  # noqa: E402
     collect_central_build,
     collect_peripheral_build,
     endpoint_evidence,
+    parse_mcuboot_image,
     run_imgtool,
     validate_boot,
 )
@@ -99,6 +100,11 @@ TOTAL_CUTS = len(INJECTION_POINTS) * CUTS_PER_POINT
 CONFIRMED_VERSION = (40, 0, 0, 0)
 UNCONFIRMED_VERSION = (41, 0, 0, 0)
 RETRY_VERSION = (42, 0, 0, 0)
+CANDIDATE_SPECS = {
+    "confirmed": ("m30-power-confirmed-v40.bin", CONFIRMED_VERSION),
+    "unconfirmed": ("m30-power-unconfirmed-v41.bin", UNCONFIRMED_VERSION),
+    "retry": ("m30-power-retry-v42.bin", RETRY_VERSION),
+}
 STORAGE_OFFSET = 0x174000
 STORAGE_SIZE = 0x9000
 FLASH_BACKENDS = ("pyocd", "daplink-msd")
@@ -273,7 +279,7 @@ def create_power_candidates(
     return {
         "confirmed": run_imgtool(
             confirmed.raw_bin,
-            directory / "m30-power-confirmed-v40.bin",
+            directory / CANDIDATE_SPECS["confirmed"][0],
             CONFIRMED_VERSION,
             40,
             imgtool_python,
@@ -282,7 +288,7 @@ def create_power_candidates(
         ),
         "unconfirmed": run_imgtool(
             unconfirmed.raw_bin,
-            directory / "m30-power-unconfirmed-v41.bin",
+            directory / CANDIDATE_SPECS["unconfirmed"][0],
             UNCONFIRMED_VERSION,
             41,
             imgtool_python,
@@ -291,7 +297,7 @@ def create_power_candidates(
         ),
         "retry": run_imgtool(
             confirmed.raw_bin,
-            directory / "m30-power-retry-v42.bin",
+            directory / CANDIDATE_SPECS["retry"][0],
             RETRY_VERSION,
             42,
             imgtool_python,
@@ -299,6 +305,77 @@ def create_power_candidates(
             trust_key,
         ),
     }
+
+
+def candidate_directory(manifest_path: Path) -> Path:
+    """! @brief 준비 manifest에 결합할 exact signed image 보관 경로를 반환합니다. """
+
+    resolved = manifest_path.resolve()
+    return resolved.with_name(f"{resolved.stem}-images")
+
+
+def validate_candidate_artifact(name: str, artifact: ImageArtifact) -> None:
+    """! @brief 보존 후보의 이름과 MCUboot version이 고정 계약과 같은지 검사합니다. """
+
+    expected_name, expected_version = CANDIDATE_SPECS[name]
+    if artifact.path.name != expected_name or artifact.version != expected_version:
+        raise M30PowerFailure(f"{name} candidate identity가 다릅니다.")
+
+
+def persist_power_candidates(
+    candidates: dict[str, ImageArtifact], directory: Path, overwrite: bool
+) -> dict[str, ImageArtifact]:
+    """! @brief preflight에서 검증한 exact signed image byte를 manifest 옆에 보존합니다. """
+
+    expected_names = {spec[0] for spec in CANDIDATE_SPECS.values()}
+    if set(candidates) != set(CANDIDATE_SPECS):
+        raise M30PowerFailure("보존할 power candidate 구성이 다릅니다.")
+    if directory.exists():
+        if directory.is_symlink() or not directory.is_dir():
+            raise M30PowerFailure(f"candidate 경로가 일반 directory가 아닙니다: {directory}")
+        entries = list(directory.iterdir())
+        if any(
+            entry.name not in expected_names or entry.is_symlink() or not entry.is_file()
+            for entry in entries
+        ):
+            raise M30PowerFailure("candidate directory에 예상하지 않은 항목이 있습니다.")
+        if entries and not overwrite:
+            raise M30PowerFailure(f"기존 candidate image를 덮어쓰지 않습니다: {directory}")
+    else:
+        directory.mkdir(parents=True)
+
+    persisted: dict[str, ImageArtifact] = {}
+    for name, source in candidates.items():
+        validate_candidate_artifact(name, source)
+        destination = directory / CANDIDATE_SPECS[name][0]
+        shutil.copyfile(source.path, destination)
+        artifact = parse_mcuboot_image(destination)
+        validate_candidate_artifact(name, artifact)
+        if artifact_evidence(artifact) != artifact_evidence(source):
+            raise M30PowerFailure(f"{name} candidate 보존 byte가 달라졌습니다.")
+        persisted[name] = artifact
+    return persisted
+
+
+def load_power_candidates(directory: Path) -> dict[str, ImageArtifact]:
+    """! @brief manifest 준비 때 보존한 exact signed image bundle을 다시 읽습니다. """
+
+    if directory.is_symlink() or not directory.is_dir():
+        raise M30PowerFailure(f"candidate directory가 없습니다: {directory}")
+    expected_names = {spec[0] for spec in CANDIDATE_SPECS.values()}
+    entries = list(directory.iterdir())
+    if (
+        {entry.name for entry in entries} != expected_names
+        or any(entry.is_symlink() or not entry.is_file() for entry in entries)
+    ):
+        raise M30PowerFailure("candidate directory 구성이 exact bundle과 다릅니다.")
+
+    candidates: dict[str, ImageArtifact] = {}
+    for name, (filename, _version) in CANDIDATE_SPECS.items():
+        artifact = parse_mcuboot_image(directory / filename)
+        validate_candidate_artifact(name, artifact)
+        candidates[name] = artifact
+    return candidates
 
 
 def daplink_identity(endpoint: RoleEndpoint) -> dict[str, str]:
@@ -1411,67 +1488,77 @@ def main(arguments: Sequence[str] | None = None) -> int:
     imgtool_python = Path(args.imgtool_python).resolve()
     imgtool = Path(args.imgtool).resolve()
     manifest_path = Path(args.manifest).resolve()
-    with tempfile.TemporaryDirectory(prefix="n54-m30-power-") as temporary:
-        candidates = create_power_candidates(
-            confirmed,
-            unconfirmed,
-            trust_key,
-            imgtool_python,
-            imgtool,
-            Path(temporary),
-        )
-        preflight_result: dict[str, Any] = {
-            "status": "not_run",
-            "physical_power_cuts": 0,
-        }
-        if args.prepare_only and args.flash_preflight:
-            preflight_result = preflight(
-                serial_module,
-                peripheral,
-                central,
+    candidate_path = candidate_directory(manifest_path)
+    preflight_result: dict[str, Any] = {
+        "status": "not_run",
+        "physical_power_cuts": 0,
+    }
+    if args.prepare_only:
+        if manifest_path.exists() and not args.overwrite_manifest:
+            raise M30PowerFailure(f"기존 파일을 덮어쓰지 않습니다: {manifest_path}")
+        with tempfile.TemporaryDirectory(prefix="n54-m30-power-") as temporary:
+            transient_candidates = create_power_candidates(
                 confirmed,
-                central_build,
-                candidates,
-                args,
-                core_revision,
+                unconfirmed,
+                trust_key,
+                imgtool_python,
+                imgtool,
+                Path(temporary),
             )
-        expected_manifest = manifest_document(
-            core_revision,
-            board_revision,
+            if args.flash_preflight:
+                preflight_result = preflight(
+                    serial_module,
+                    peripheral,
+                    central,
+                    confirmed,
+                    central_build,
+                    transient_candidates,
+                    args,
+                    core_revision,
+                )
+            candidates = persist_power_candidates(
+                transient_candidates,
+                candidate_path,
+                args.overwrite_manifest,
+            )
+    else:
+        candidates = load_power_candidates(candidate_path)
+
+    expected_manifest = manifest_document(
+        core_revision,
+        board_revision,
+        peripheral,
+        central,
+        confirmed,
+        unconfirmed,
+        central_build,
+        candidates,
+        preflight_result,
+    )
+    if args.prepare_only:
+        write_new_json(manifest_path, expected_manifest, args.overwrite_manifest)
+        print(
+            "M30_POWER_PREPARE_PASS=2;POINTS=4;CUTS_PER_POINT=3;PHYSICAL_CUTS=0"
+        )
+    else:
+        manifest = load_json(manifest_path, "power manifest")
+        if manifest.get("preflight", {}).get(
+            "flash_backend"
+        ) != flash_backend_evidence(args.flash_backend):
+            raise M30PowerFailure("실행 flash backend가 manifest preflight와 다릅니다.")
+        validate_manifest(manifest, expected_manifest)
+        execute_power_hil(
+            serial_module,
+            list_ports,
             peripheral,
             central,
             confirmed,
-            unconfirmed,
             central_build,
             candidates,
-            preflight_result,
+            args,
+            core_revision,
+            manifest_path,
         )
-        if args.prepare_only:
-            write_new_json(
-                manifest_path, expected_manifest, args.overwrite_manifest
-            )
-            print(
-                "M30_POWER_PREPARE_PASS=2;POINTS=4;CUTS_PER_POINT=3;PHYSICAL_CUTS=0"
-            )
-        else:
-            manifest = load_json(manifest_path, "power manifest")
-            if manifest.get("preflight", {}).get(
-                "flash_backend"
-            ) != flash_backend_evidence(args.flash_backend):
-                raise M30PowerFailure("실행 flash backend가 manifest preflight와 다릅니다.")
-            validate_manifest(manifest, expected_manifest)
-            execute_power_hil(
-                serial_module,
-                list_ports,
-                peripheral,
-                central,
-                confirmed,
-                central_build,
-                candidates,
-                args,
-                core_revision,
-                manifest_path,
-            )
     for path, (size, digest) in immutable.items():
         validate_image_unchanged(path, size, digest)
     return 0
