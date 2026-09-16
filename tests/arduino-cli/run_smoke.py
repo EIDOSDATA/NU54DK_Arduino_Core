@@ -1741,6 +1741,30 @@ def test_m31_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
                 raise SmokeFailure(f"M31 ISO symbol disabled: {example_name}: {symbol}")
         print(f"M31_ISO_ARDUINO_BUILD_PASS={example_name}", flush=True)
 
+    audio_library = root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" / "NUCODE_BLE_Audio"
+    audio_name = "Lc3SyntheticLoopback"
+    audio_sketch = audio_library / "examples" / audio_name
+    if not (audio_sketch / f"{audio_name}.ino").is_file() or not (audio_sketch / "prj.conf").is_file():
+        raise SmokeFailure(f"incomplete M31 Audio role example: {audio_sketch}")
+    audio_build = root / "build-m31-lc3syntheticloopback"
+    audio_command = list(compile_command(cli, config, audio_build, audio_sketch))
+    audio_command[-1:-1] = ("--board-options", "feature_set=ble")
+    run(audio_command)
+    audio_context = assert_build(audio_build, f"{audio_name}.ino")
+    audio_features = {
+        item.get("id") for item in audio_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if audio_context.get("profile") != "ble" or "nucode.ble.audio" not in audio_features:
+        raise SmokeFailure("M31 Audio BLE profile 또는 feature가 없습니다")
+    audio_configuration = (
+        Path(audio_context["zephyr_build_dir"]) / "zephyr" / ".config"
+    ).read_text(encoding="utf-8")
+    for symbol in ("CONFIG_LIBLC3", "CONFIG_FPU"):
+        if not read_kconfig_boolean(audio_configuration, symbol):
+            raise SmokeFailure(f"M31 Audio symbol disabled: {audio_name}: {symbol}")
+    print(f"M31_AUDIO_ARDUINO_BUILD_PASS={audio_name}", flush=True)
+
 
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:

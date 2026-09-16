@@ -73,3 +73,15 @@
 한국어 Doxygen 주석, BSD/Allman 중괄호, 들여쓰기와 탭 폭 4칸을 사용합니다.
 제어문 본문은 한 줄이어도 중괄호를 생략하지 않습니다.
 [.clang-format](.clang-format)과 [정렬 도구 안내](tools/format/README.md)를 따릅니다.
+
+## 공개 Arduino 예제와 backend 경계
+
+- 공개 `.ino`에는 일반 C/C++과 해당 library의 `NUCODE_*` 공개 API를 사용한 의미 있는
+  `setup()`/`loop()` 흐름을 둡니다. 구현 전체를 헤더 하나에 숨긴 include-only sketch는 금지합니다.
+- 공개 `.ino`에서 Zephyr header·type과 `bt_*`, `k_*`, `device_*` API를 직접 호출하지 않습니다.
+  Zephyr/NCS 직접 구현은 library `.cpp` 또는 `src/internal`이 소유합니다.
+- `M31`, `M32` 같은 개발 마일스톤 식별자를 공개 API, class, macro, 예제, 광고 이름과 사용자
+  출력에 넣지 않습니다. 시험 ID와 증거 protocol은 `tests`와 검증 도구 내부에만 둡니다.
+- 역할·기능 선택은 공개 enum/config와 검증된 Kconfig feature로 표현합니다. Sketch-local 개발용
+  `#define`으로 backend 역할을 고르지 않습니다.
+- 예제 변경은 `tools/ci/m31_example_audit.py`의 공개 경계 검사와 해당 예제 build를 통과해야 합니다.

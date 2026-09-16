@@ -20,8 +20,8 @@
 #include <stdint.h>
 #include <string.h>
 
-#ifndef M31_BIS_ROLE
-#error "M31_BIS_ROLE is required"
+#ifndef NUCODE_BLE_ISO_BIS_ROLE
+#error "NUCODE_BLE_ISO_BIS_ROLE is required"
 #endif
 
 namespace
@@ -33,10 +33,10 @@ namespace
     constexpr char start_suffix[] = "|count=100";
     constexpr char stop_prefix[] = "M31BIS|1|STOP|nonce=";
     constexpr char send_prefix[] = "M31BIS|1|SEND|nonce=";
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
     constexpr char check_bad_code_prefix[] = "M31BIS|1|CHECK_BAD_CODE|nonce=";
 #endif
-    constexpr char role_name[] = M31_BIS_ROLE;
+    constexpr char role_name[] = NUCODE_BLE_ISO_BIS_ROLE;
     const bool source_role = strcmp(role_name, "source") == 0;
     char command[sizeof(start_prefix) + nonce_length + sizeof(start_suffix)] = {};
     size_t command_length = 0U;
@@ -60,7 +60,7 @@ namespace
     bool expect_sync_loss = false;
     bool receiver_negative_session = false;
 #endif
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
     bool wrong_code_next = false;
     bool wrong_code_active = false;
     bool authentication_rejected = false;
@@ -73,12 +73,12 @@ namespace
     atomic_t duplicate = ATOMIC_INIT(0);
     atomic_t out_of_order = ATOMIC_INIT(0);
     int last_sequence = -1;
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
     atomic_t valid_timestamp = ATOMIC_INIT(0);
     uint32_t first_timestamp = 0U;
     uint32_t last_timestamp = 0U;
 #endif
-#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
     uint32_t next_tx_timestamp = 0U;
     uint32_t first_tx_timestamp = 0U;
     uint32_t last_hci_timestamp = 0U;
@@ -175,7 +175,7 @@ namespace
             return;
         }
         rx_end_printed = true;
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         Serial.print("M31BIS|1|TIME_END|nonce=");
         Serial.print(nonce);
         Serial.print("|valid=");
@@ -222,7 +222,7 @@ namespace
             }
             return;
         }
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         if (wrong_code_active)
         {
             fail("wrong_code_payload_leak", -EBADMSG);
@@ -260,7 +260,7 @@ namespace
             fail("out_of_order", -EBADMSG);
             return;
         }
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         if ((information->flags & BT_ISO_FLAGS_TS) == 0U ||
             (atomic_get(&valid_timestamp) > 0 &&
              static_cast<int32_t>(information->ts - last_timestamp) <= 0))
@@ -310,7 +310,7 @@ namespace
     {
         (void)channel;
         big_disconnected = true;
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         if (wrong_code_active && !stopping)
         {
             authentication_rejected = reason == BT_HCI_ERR_TERM_DUE_TO_MIC_FAIL;
@@ -329,7 +329,7 @@ namespace
         Serial.println(reason);
     }
 
-#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
     /** @brief 송신 완료 HCI 기준시각에서 다음 10ms SDU timestamp를 계산합니다. */
     void isoSent(struct bt_iso_chan *channel)
     {
@@ -380,7 +380,7 @@ namespace
         .connected = isoConnected,
         .disconnected = isoDisconnected,
         .recv = isoReceived,
-#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
         .sent = isoSent,
 #endif
     };
@@ -399,7 +399,7 @@ namespace
         {
             return;
         }
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         if (sequence > 0U && !timestamp_ready)
         {
             return;
@@ -418,7 +418,7 @@ namespace
         payload[3] = nonce_bytes[1];
         sys_put_le32(checksum(sequence), payload + 4U);
         net_buf_add_mem(buffer, payload, sizeof(payload));
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         const int result = sequence == 0U ?
             bt_iso_chan_send(&iso_channel, buffer, sequence) :
             bt_iso_chan_send_ts(&iso_channel, buffer, sequence, next_tx_timestamp);
@@ -432,7 +432,7 @@ namespace
             return;
         }
         atomic_inc(&sent);
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         if (sequence > 0U)
         {
             timestamped_sent++;
@@ -441,7 +441,7 @@ namespace
 #endif
         if (sequence == sdu_count - 1U)
         {
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
             Serial.print("M31BIS|1|TIME_TX_END|nonce=");
             Serial.print(nonce);
             Serial.print("|timestamped=");
@@ -457,7 +457,7 @@ namespace
             Serial.println(atomic_get(&sent));
             return;
         }
-#if !defined(M31_BIS_TIME_SYNC)
+#if !defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         k_work_schedule(&send_work, K_MSEC(10));
 #endif
     }
@@ -574,7 +574,7 @@ namespace
             return;
         }
         if (information == nullptr || information->num_bis != 1U ||
-#if defined(M31_BIS_ENCRYPTED)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED)
             !information->encryption)
 #else
             information->encryption)
@@ -610,7 +610,7 @@ namespace
             .sync_timeout = 100U,
             .encryption = false,
         };
-#if defined(M31_BIS_ENCRYPTED)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED)
         parameter.encryption = true;
         memcpy(parameter.bcode, nonce_bytes, sizeof(parameter.bcode));
         if (wrong_code_active)
@@ -636,7 +636,7 @@ namespace
         {
             transmit_qos.sdu = CONFIG_BT_ISO_TX_MTU;
             transmit_qos.phy = BT_GAP_LE_PHY_2M;
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
             transmit_qos.rtn = 2U;
 #else
             transmit_qos.rtn = 1U;
@@ -696,7 +696,7 @@ namespace
                 .framing = BT_ISO_FRAMING_UNFRAMED,
                 .encryption = false,
             };
-#if defined(M31_BIS_ENCRYPTED)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED)
             parameter.encryption = true;
             memcpy(parameter.bcode, nonce_bytes, sizeof(parameter.bcode));
 #endif
@@ -752,7 +752,7 @@ namespace
         expect_sync_loss = false;
         receiver_negative_session = false;
 #endif
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         wrong_code_active = wrong_code_next;
         receiver_negative_session = wrong_code_active;
         authentication_rejected = false;
@@ -764,12 +764,12 @@ namespace
         atomic_set(&duplicate, 0);
         atomic_set(&out_of_order, 0);
         last_sequence = -1;
-#if defined(M31_BIS_TIME_SYNC)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         atomic_set(&valid_timestamp, 0);
         first_timestamp = 0U;
         last_timestamp = 0U;
 #endif
-#if defined(M31_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
+#if defined(NUCODE_BLE_ISO_BIS_TIME_SYNC) && defined(CONFIG_BT_ISO_BROADCASTER)
         next_tx_timestamp = 0U;
         first_tx_timestamp = 0U;
         last_hci_timestamp = 0U;
@@ -790,13 +790,13 @@ namespace
         Serial.print("M31BIS|1|IDENTITY|nonce=");
         Serial.print(nonce);
         Serial.print("|core=");
-        Serial.print(M31_CORE_REVISION);
+        Serial.print(NUCODE_CORE_REVISION);
         Serial.print("|board=");
-        Serial.print(M31_BOARD_REVISION);
+        Serial.print(NUCODE_BOARD_REVISION);
         Serial.print("|ncs=");
-        Serial.print(M31_NCS_REVISION);
+        Serial.print(NUCODE_NCS_REVISION);
         Serial.print("|zephyr=");
-        Serial.println(M31_ZEPHYR_REVISION);
+        Serial.println(NUCODE_ZEPHYR_REVISION);
         if (!bluetooth_enabled)
         {
             const int result = bt_enable(nullptr);
@@ -860,7 +860,7 @@ namespace
     }
 #endif
 
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
     /** @brief 다음 한 세션에서만 고의로 다른 128-bit broadcast code를 씁니다. */
     void selectWrongCode()
     {
@@ -908,7 +908,7 @@ namespace
             fail("stop_command", -EINVAL);
             return;
         }
-#if defined(CONFIG_BT_ISO_SYNC_RECEIVER) && !defined(M31_BIS_TIME_SYNC)
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER) && !defined(NUCODE_BLE_ISO_BIS_TIME_SYNC)
         const bool print_receiver_end =
             !source_role && !rx_end_printed && !receiver_negative_session;
         if (print_receiver_end)
@@ -1018,7 +1018,7 @@ namespace
         memset(&iso_channel, 0, sizeof(iso_channel));
         memset(nonce, 0, sizeof(nonce));
         memset(nonce_bytes, 0, sizeof(nonce_bytes));
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         wrong_code_next = false;
         wrong_code_active = false;
         authentication_rejected = false;
@@ -1063,7 +1063,7 @@ namespace
                     expectSyncLoss();
                 }
 #endif
-#if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+#if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
                 else if (strcmp(command, "M31BIS|1|BAD_CODE") == 0)
                 {
                     selectWrongCode();
@@ -1097,23 +1097,41 @@ namespace
     }
 }
 
-/** @brief Serial command 수락 전 모든 work object를 한 번 초기화합니다. */
-void setup()
+/** @brief Arduino sketch에서 호출하는 BIS 프로그램 API입니다. */
+namespace nucode::ble::iso::internal
 {
-    Serial.begin(115200);
+    /** @brief Serial command 수락 전 모든 work object를 한 번 초기화합니다. */
+    void begin()
+    {
+        Serial.begin(115200);
 #if defined(CONFIG_BT_ISO_BROADCASTER)
-    k_work_init_delayable(&send_work, sendNext);
+        k_work_init_delayable(&send_work, sendNext);
 #endif
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
-    k_work_init(&sync_work, createPeriodicSync);
-    k_work_init(&big_work, createBigSync);
+        k_work_init(&sync_work, createPeriodicSync);
+        k_work_init(&big_work, createBigSync);
 #endif
+    }
+
+    /** @brief Arduino loop에서 UART·30초 STOP watchdog을 처리합니다. */
+    void poll()
+    {
+        pollSerial();
+        finishStop();
+    }
 }
 
-/** @brief Arduino loop에서 UART·30초 STOP watchdog을 처리합니다. */
+#if !defined(NUCODE_BLE_ISO_LIBRARY_BACKEND)
+/** @brief native HIL 앱의 Arduino 진입점을 제공합니다. */
+void setup()
+{
+    nucode::ble::iso::internal::begin();
+}
+
+/** @brief native HIL 앱에서 BIS 프로그램을 계속 실행합니다. */
 void loop()
 {
-    pollSerial();
-    finishStop();
+    nucode::ble::iso::internal::poll();
     delay(1);
 }
+#endif

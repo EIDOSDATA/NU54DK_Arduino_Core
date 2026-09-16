@@ -39,15 +39,15 @@ m31_iso_revision("${NCS_ROOT}/zephyr" M31_ZEPHYR_REVISION)
 
 target_sources(app PRIVATE src/main.cpp)
 target_compile_definitions(app PRIVATE
-    M31_ISO_ROLE="${M31_ISO_ROLE}"
-    M31_CORE_REVISION="${M31_CORE_REVISION}"
-    M31_BOARD_REVISION="${M31_BOARD_REVISION}"
-    M31_NCS_REVISION="${M31_NCS_REVISION}"
-    M31_ZEPHYR_REVISION="${M31_ZEPHYR_REVISION}"
+    NUCODE_BLE_ISO_CIS_ROLE="${M31_ISO_ROLE}"
+    NUCODE_CORE_REVISION="${M31_CORE_REVISION}"
+    NUCODE_BOARD_REVISION="${M31_BOARD_REVISION}"
+    NUCODE_NCS_REVISION="${M31_NCS_REVISION}"
+    NUCODE_ZEPHYR_REVISION="${M31_ZEPHYR_REVISION}"
 )
 if("${M31_ISO_COMBINED_PEER}" STREQUAL "1")
     if(NOT "${M31_ISO_ROLE}" STREQUAL "peripheral")
         message(FATAL_ERROR "combined CIS peer must be peripheral")
     endif()
-    target_compile_definitions(app PRIVATE M31_ISO_COMBINED_PEER=1)
+    target_compile_definitions(app PRIVATE NUCODE_BLE_ISO_CIS_TO_BIS_PEER=1)
 endif()

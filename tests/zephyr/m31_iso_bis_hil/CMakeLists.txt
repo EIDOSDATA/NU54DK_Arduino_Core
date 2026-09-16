@@ -40,16 +40,16 @@ m31_bis_revision("${NCS_ROOT}/nrf" M31_NCS_REVISION)
 m31_bis_revision("${NCS_ROOT}/zephyr" M31_ZEPHYR_REVISION)
 
 target_compile_definitions(app PRIVATE
-    M31_BIS_ROLE="${M31_BIS_ROLE}"
-    M31_CORE_REVISION="${M31_CORE_REVISION}"
-    M31_BOARD_REVISION="${M31_BOARD_REVISION}"
-    M31_NCS_REVISION="${M31_NCS_REVISION}"
-    M31_ZEPHYR_REVISION="${M31_ZEPHYR_REVISION}"
+    NUCODE_BLE_ISO_BIS_ROLE="${M31_BIS_ROLE}"
+    NUCODE_CORE_REVISION="${M31_CORE_REVISION}"
+    NUCODE_BOARD_REVISION="${M31_BOARD_REVISION}"
+    NUCODE_NCS_REVISION="${M31_NCS_REVISION}"
+    NUCODE_ZEPHYR_REVISION="${M31_ZEPHYR_REVISION}"
 )
 if("${M31_BIS_TIME_SYNC}" STREQUAL "1")
-    target_compile_definitions(app PRIVATE M31_BIS_TIME_SYNC=1)
+    target_compile_definitions(app PRIVATE NUCODE_BLE_ISO_BIS_TIME_SYNC=1)
 endif()
 if("${M31_BIS_ENCRYPTED}" STREQUAL "1")
-    target_compile_definitions(app PRIVATE M31_BIS_ENCRYPTED=1)
+    target_compile_definitions(app PRIVATE NUCODE_BLE_ISO_BIS_ENCRYPTED=1)
 endif()
 target_sources(app PRIVATE src/main.cpp)

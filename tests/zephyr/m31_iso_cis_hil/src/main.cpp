@@ -21,8 +21,8 @@
 #include <stdint.h>
 #include <string.h>
 
-#ifndef M31_ISO_ROLE
-#error "M31_ISO_ROLE is required"
+#ifndef NUCODE_BLE_ISO_CIS_ROLE
+#error "NUCODE_BLE_ISO_CIS_ROLE is required"
 #endif
 
 namespace
@@ -33,15 +33,15 @@ namespace
     constexpr char start_prefix[] = "M31ISO|1|START|nonce=";
     constexpr char start_suffix[] = "|count=100";
     constexpr char stop_prefix[] = "M31ISO|1|STOP|nonce=";
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
     constexpr char send_prefix[] = "M31ISO|1|SEND|nonce=";
     constexpr uint32_t send_period_ms = 18U;
 #else
     constexpr uint32_t send_period_ms = 10U;
 #endif
-    constexpr char role_name[] = M31_ISO_ROLE;
+    constexpr char role_name[] = NUCODE_BLE_ISO_CIS_ROLE;
     const bool central_role = strcmp(role_name, "central") == 0;
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
     bool send_armed = false;
 #endif
     char command[sizeof(start_prefix) + nonce_length + sizeof(start_suffix)] = {};
@@ -123,7 +123,7 @@ namespace
     {
         const uint32_t marker = static_cast<uint32_t>(nonce_bytes[0]) |
                                 (static_cast<uint32_t>(nonce_bytes[1]) << 8U);
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
         return 0x31b15000U ^ (static_cast<uint32_t>(sequence) * 0x9e3779b1U) ^ marker;
 #else
         return 0x31a50000U ^ (static_cast<uint32_t>(sequence) * 0x9e3779b1U) ^ marker;
@@ -218,7 +218,7 @@ namespace
     /** @brief 한 개의 HCI transparent path를 role 방향에 따라 선택합니다. */
     void isoConnected(struct bt_iso_chan *channel)
     {
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
         struct bt_iso_info information = {};
         const int information_result = bt_iso_chan_get_info(channel, &information);
         if (information_result != 0)
@@ -245,7 +245,7 @@ namespace
             .format = BT_HCI_CODING_FORMAT_TRANSPARENT,
         };
         const uint8_t direction = central_role ? BT_HCI_DATAPATH_DIR_HOST_TO_CTLR :
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
                                                  BT_HCI_DATAPATH_DIR_HOST_TO_CTLR;
 #else
                                                  BT_HCI_DATAPATH_DIR_CTLR_TO_HOST;
@@ -281,26 +281,26 @@ namespace
         .recv = isoReceived,
     };
     struct bt_iso_chan_io_qos transmit_qos = {
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
         .sdu = sdu_length,
 #else
         .sdu = CONFIG_BT_ISO_TX_MTU,
 #endif
         .phy = BT_GAP_LE_PHY_2M,
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
         .rtn = 10U,
 #else
         .rtn = 2U,
 #endif
     };
-#if !defined(M31_ISO_COMBINED_PEER)
+#if !defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
     struct bt_iso_chan_io_qos receive_qos = {
         .sdu = CONFIG_BT_ISO_RX_MTU,
         .phy = BT_GAP_LE_PHY_2M,
     };
 #endif
     struct bt_iso_chan_qos qos = {
-#if !defined(M31_ISO_COMBINED_PEER)
+#if !defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
         .rx = &receive_qos,
 #endif
         .tx = &transmit_qos,
@@ -314,7 +314,7 @@ namespace
         {
             return;
         }
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
         if (!send_armed)
         {
             return;
@@ -562,7 +562,7 @@ namespace
         finished = false;
         rx_end_printed = false;
         tx_end_printed = false;
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
         send_armed = false;
 #endif
         atomic_set(&transmitted, 0);
@@ -579,13 +579,13 @@ namespace
         Serial.print("M31ISO|1|IDENTITY|nonce=");
         Serial.print(nonce);
         Serial.print("|core=");
-        Serial.print(M31_CORE_REVISION);
+        Serial.print(NUCODE_CORE_REVISION);
         Serial.print("|board=");
-        Serial.print(M31_BOARD_REVISION);
+        Serial.print(NUCODE_BOARD_REVISION);
         Serial.print("|ncs=");
-        Serial.print(M31_NCS_REVISION);
+        Serial.print(NUCODE_NCS_REVISION);
         Serial.print("|zephyr=");
-        Serial.println(M31_ZEPHYR_REVISION);
+        Serial.println(NUCODE_ZEPHYR_REVISION);
         if (!bluetooth_enabled)
         {
             const int enabled = bt_enable(nullptr);
@@ -599,7 +599,7 @@ namespace
         startRadio();
     }
 
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
     /** @brief BIS receiver가 BIG에 붙은 뒤 peer CIS 송신을 시작합니다. */
     void startSending()
     {
@@ -753,7 +753,7 @@ namespace
                 {
                     stopProtocol();
                 }
-#if defined(M31_ISO_COMBINED_PEER)
+#if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
                 else if (strncmp(command, send_prefix, strlen(send_prefix)) == 0)
                 {
                     startSending();
@@ -776,16 +776,34 @@ namespace
     }
 }
 
-/** @brief UART PROBE 뒤 역할별 무선 시작을 기다립니다. */
-void setup()
+/** @brief Arduino sketch에서 호출하는 CIS 프로그램 API입니다. */
+namespace nucode::ble::iso::internal
 {
-    Serial.begin(115200);
+    /** @brief UART PROBE 뒤 역할별 무선 시작을 기다립니다. */
+    void begin()
+    {
+        Serial.begin(115200);
+    }
+
+    /** @brief 무선 callback이 진행하는 동안 bounded serial command를 처리합니다. */
+    void poll()
+    {
+        pollSerial();
+        finishStop();
+    }
 }
 
-/** @brief 무선 callback이 진행하는 동안 bounded serial command를 처리합니다. */
+#if !defined(NUCODE_BLE_ISO_LIBRARY_BACKEND)
+/** @brief native HIL 앱의 Arduino 진입점을 제공합니다. */
+void setup()
+{
+    nucode::ble::iso::internal::begin();
+}
+
+/** @brief native HIL 앱에서 CIS 프로그램을 계속 실행합니다. */
 void loop()
 {
-    pollSerial();
-    finishStop();
+    nucode::ble::iso::internal::poll();
     delay(1);
 }
+#endif

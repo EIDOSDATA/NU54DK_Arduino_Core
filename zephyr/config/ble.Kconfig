@@ -7,6 +7,54 @@ config NUCODE_BLE_NUS
 	  공식 NCS NUS service/client를 하나의 Arduino Stream으로 노출합니다.
 	  callback 데이터는 고정 queue를 거쳐 Sketch의 poll 문맥에서 전달됩니다.
 
+config NUCODE_BLE_ISO
+	bool "NUCODE BLE ISO API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  Arduino 공개 API를 통해 CIS, BIS와 CIS-BIS bridge 프로그램을 실행합니다.
+	  실제 Zephyr ISO 객체와 callback은 라이브러리 구현 안에 유지됩니다.
+
+choice NUCODE_BLE_ISO_MODE
+	prompt "NUCODE BLE ISO 실행 역할"
+	depends on NUCODE_BLE_ISO
+
+config NUCODE_BLE_ISO_MODE_CIS_CENTRAL
+	bool "CIS central"
+
+config NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL
+	bool "CIS peripheral"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER
+	bool "CIS-to-BIS peer"
+
+config NUCODE_BLE_ISO_MODE_BIS_SOURCE
+	bool "BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_RECEIVER
+	bool "BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE
+	bool "암호화 BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER
+	bool "암호화 BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE
+	bool "timestamp BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER
+	bool "timestamp BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE
+	bool "CIS-to-BIS bridge"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER
+	bool "CIS-to-BIS receiver"
+
+endchoice
+
 config NUCODE_BLE_CORE
 	bool "NUCODE BLE Core/GAP 활성화"
 	default n

@@ -13,13 +13,29 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
-ISO_SOURCES = {
-    "NUCODE_ISO_CIS_Program.h": "m31_iso_cis_hil",
-    "NUCODE_ISO_BIS_Program.h": "m31_iso_bis_hil",
-    "NUCODE_ISO_Combined_Program.h": "m31_iso_combined_hil",
+ISO_BACKENDS = {
+    "CIS": ("NUCODE_ISO_CIS_Impl.inc", "m31_iso_cis_hil"),
+    "BIS": ("NUCODE_ISO_BIS_Impl.inc", "m31_iso_bis_hil"),
+    "Combined": ("NUCODE_ISO_Combined_Impl.inc", "m31_iso_combined_hil"),
 }
-HEADER_PREFIX = b"#pragma once\n#if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)\n"
-HEADER_SUFFIX = b"\n#endif\n"
+ISO_ROLE_BACKEND = {
+    "CIS_CENTRAL": "CIS",
+    "CIS_PERIPHERAL": "CIS",
+    "CIS_TO_BIS_PEER": "CIS",
+    "BIS_SOURCE": "BIS",
+    "BIS_RECEIVER": "BIS",
+    "BIS_ENCRYPTED_SOURCE": "BIS",
+    "BIS_ENCRYPTED_RECEIVER": "BIS",
+    "BIS_TIME_SOURCE": "BIS",
+    "BIS_TIME_RECEIVER": "BIS",
+    "CIS_TO_BIS_RECEIVER": "BIS",
+    "CIS_TO_BIS_BRIDGE": "Combined",
+}
+BACKEND_PREFIX = b"#define NUCODE_BLE_ISO_LIBRARY_BACKEND\n"
+MILESTONE_IDENTIFIER = re.compile(r"\bM[0-9]{2}[A-Za-z0-9_]*")
+ZEPHYR_DIRECT_USE = re.compile(
+    r"#\s*include\s*[<\"]zephyr/|\b(?:bt|k|device)_[A-Za-z0-9_]+\s*\("
+)
 
 
 ## @brief 입출력 예제마다 직접 코드 또는 검증 source와 byte 동일한 backend를 확인합니다.
@@ -39,36 +55,49 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         "backend": None,
         "status": "VISIBLE_CODE" if has_setup and has_loop else "MISSING_ENTRYPOINT",
     }
-    if has_setup and has_loop:
+    if MILESTONE_IDENTIFIER.search(text):
+        row["status"] = "PUBLIC_MILESTONE_IDENTIFIER"
+        return row
+    if ZEPHYR_DIRECT_USE.search(text):
+        row["status"] = "PUBLIC_ZEPHYR_DIRECT_USE"
         return row
     if library.name != "NUCODE_BLE_ISO":
         return row
     included = re.findall(r"^#include\s*<([^>]+)>\s*$", text, flags=re.MULTILINE)
-    matched = [name for name in included if name in ISO_SOURCES]
-    if len(matched) != 1:
+    if included.count("NUCODE_BLE_ISO.h") != 1:
         return row
-    header_name = matched[0]
-    backend = library / "src" / header_name
-    source = ROOT / "tests" / "zephyr" / ISO_SOURCES[header_name] / "src" / "main.cpp"
+    configuration = sketch.parent / "prj.conf"
+    if not configuration.is_file():
+        row["status"] = "ROLE_CONFIGURATION_MISSING"
+        return row
+    configuration_text = configuration.read_text(encoding="utf-8")
+    selected_roles = [
+        role for role in ISO_ROLE_BACKEND
+        if f"CONFIG_NUCODE_BLE_ISO_MODE_{role}=y" in configuration_text
+    ]
+    if len(selected_roles) != 1 or "CONFIG_NUCODE_BLE_ISO=y" not in configuration_text:
+        row["status"] = "ROLE_CONFIGURATION_INVALID"
+        return row
+    kind = ISO_ROLE_BACKEND[selected_roles[0]]
+    backend_name, target = ISO_BACKENDS[kind]
+    backend = library / "src" / "internal" / backend_name
+    source = ROOT / "tests" / "zephyr" / target / "src" / "main.cpp"
     if not backend.is_file() or not source.is_file():
         return row
     source_bytes = source.read_bytes().replace(b"\r\n", b"\n")
-    if backend.read_bytes() != HEADER_PREFIX + source_bytes + HEADER_SUFFIX:
+    if backend.read_bytes() != BACKEND_PREFIX + source_bytes:
         row["status"] = "BACKEND_SOURCE_MISMATCH"
         return row
     if re.search(rb"\bvoid\s+setup\s*\(", source_bytes) is None or (
         re.search(rb"\bvoid\s+loop\s*\(", source_bytes) is None
     ):
         return row
-    if not (sketch.parent / "prj.conf").is_file():
-        row["status"] = "ROLE_CONFIGURATION_MISSING"
-        return row
     row["backend"] = {
         "path": backend.relative_to(ROOT).as_posix(),
         "verified_source": source.relative_to(ROOT).as_posix(),
         "source_sha256": hashlib.sha256(source_bytes).hexdigest(),
     }
-    row["status"] = "VERIFIED_BACKEND"
+    row["status"] = "VISIBLE_VERIFIED_BACKEND" if has_setup and has_loop else "VERIFIED_BACKEND"
     return row
 
 
@@ -85,12 +114,23 @@ def audit() -> dict[str, object]:
             "status": "HAS_EXAMPLES" if sketches else "NO_EXAMPLES",
         })
     sketches = [example for library in rows for example in library["examples"]]
+    public_surface_issues = []
+    for library in sorted((ROOT / "libraries").iterdir()):
+        if not library.is_dir() or not (library / "library.properties").is_file():
+            continue
+        candidates = list((library / "examples").rglob("*.ino"))
+        candidates.extend((library / "examples").glob("*.md"))
+        candidates.extend((library / "src").glob("*.h"))
+        for candidate in candidates:
+            if MILESTONE_IDENTIFIER.search(candidate.read_text(encoding="utf-8")):
+                public_surface_issues.append(candidate.relative_to(ROOT).as_posix())
     issues = [
         library["library"] for library in rows if library["status"] != "HAS_EXAMPLES"
     ] + [
         str(example["path"]) for example in sketches
-        if example["status"] not in ("VISIBLE_CODE", "VERIFIED_BACKEND")
-    ]
+        if example["status"] not in ("VISIBLE_CODE", "VERIFIED_BACKEND", "VISIBLE_VERIFIED_BACKEND")
+    ] + public_surface_issues
+    issues = sorted(set(issues), key=str.casefold)
     revision = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True
     ).strip()
@@ -104,8 +144,12 @@ def audit() -> dict[str, object]:
         "library_count": len(rows),
         "example_count": len(sketches),
         "visible_code_count": sum(example["status"] == "VISIBLE_CODE" for example in sketches),
-        "verified_backend_count": sum(example["status"] == "VERIFIED_BACKEND" for example in sketches),
+        "verified_backend_count": sum(
+            example["status"] in ("VERIFIED_BACKEND", "VISIBLE_VERIFIED_BACKEND")
+            for example in sketches
+        ),
         "issues": issues,
+        "public_surface_issues": public_surface_issues,
         "libraries": rows,
     }
 

@@ -51,6 +51,9 @@
   요구하는 NCS 예제는 M32-W04의 새 자원 profile로 구현·검증한다.
 - 지원 기능을 Arduino facade 하나에 모두 넣는 방식으로 제한하지 않는다. 역할별 profile와 직접 API를
   포함해 설치·build·실행 가능한 Arduino 예제를 제공한다. 기본 singleton의 ABI·오류·소유권은 보존한다.
+- 설치 Arduino 예제의 `.ino`는 일반 C/C++과 `NUCODE_*` 공개 API 사용 흐름을 보여 준다. Zephyr
+  header·type과 `bt_*`, `k_*` 직접 호출은 library 구현 내부에 두고, 개발 마일스톤 식별자는
+  공개 API·macro·예제·사용자 출력에 넣지 않는다. 역할 선택은 공개 enum과 Kconfig가 함께 소유한다.
 
 | 재사용할 완료 기능 | 추가 구현·예제로 연결할 범위 | 후속 소유자 |
 | --- | --- | --- |

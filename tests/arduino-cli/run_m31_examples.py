@@ -20,6 +20,7 @@ EXAMPLES = (
     "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
     "CISToBISReceiver",
 )
+AUDIO_EXAMPLES = ("Lc3SyntheticLoopback",)
 
 
 ## @brief Git source 상태를 읽고 exact build의 clean 전제조건을 검사합니다.
@@ -33,7 +34,8 @@ def source_identity(repository: Path, require_clean: bool) -> dict[str, object]:
 
 
 ## @brief Arduino CLI verbose log와 HEX를 staging 안에 보존합니다.
-def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, direct_checkout: bool, reuse_stage: bool, package_root: Path | None) -> None:
+def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, direct_checkout: bool,
+                   reuse_stage: bool, package_root: Path | None, suite: str = "iso") -> None:
     repository = Path(__file__).resolve().parents[2]
     if sum((direct_checkout, reuse_stage, package_root is not None)) > 1:
         raise ValueError("Arduino staging 방식을 하나만 선택해야 합니다")
@@ -63,10 +65,12 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
     config = root / "arduino-cli.yaml"
     write_cli_config(config, user_root, root / "data", root / "downloads")
     cli = default_cli()
+    library_name = "NUCODE_BLE_ISO" if suite == "iso" else "NUCODE_BLE_Audio"
+    identity_name = "m31_iso_revisions" if suite == "iso" else "m31_audio_revisions"
     images: dict[str, object] = {}
     for name in names:
         platform = user_root / "hardware" / "nucode" / "zephyr"
-        sketch = (repository if reuse_stage else platform) / "libraries" / "NUCODE_BLE_ISO" / "examples" / name
+        sketch = (repository if reuse_stage else platform) / "libraries" / library_name / "examples" / name
         build = root / "build" / name
         build.mkdir(parents=True, exist_ok=True)
         command = compile_command(cli, config, build, sketch)
@@ -91,7 +95,7 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
             "log": str(log),
             "artifact_manifest": str(artifact_path),
             "artifact_manifest_sha256": hashlib.sha256(artifact_path.read_bytes()).hexdigest(),
-            "identity_revisions": artifact.get("source_inputs", {}).get("m31_iso_revisions"),
+            "identity_revisions": artifact.get("source_inputs", {}).get(identity_name),
             "flash_bytes": int(flash[-1]) if flash else None,
             "ram_bytes": int(ram[-1]) if ram else None,
             "profile": context.get("profile"),
@@ -99,7 +103,8 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
         }
         print(f"M31_ARDUINO_BUILD_PASS={name};SHA256={images[name]['sha256']}", flush=True)
     manifest = {**identity, "images": images}
-    (root / "m31-arduino-build-manifest.json").write_text(
+    manifest_name = "m31-arduino-build-manifest.json" if suite == "iso" else "m31-audio-arduino-build-manifest.json"
+    (root / manifest_name).write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
 
@@ -107,10 +112,18 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-root", type=Path, required=True)
-    parser.add_argument("--examples", nargs="+", choices=EXAMPLES, default=EXAMPLES)
+    parser.add_argument("--suite", choices=("iso", "audio"), default="iso")
+    parser.add_argument("--examples", nargs="+")
     parser.add_argument("--require-clean", action="store_true")
     parser.add_argument("--direct-checkout", action="store_true")
     parser.add_argument("--reuse-stage", action="store_true")
     parser.add_argument("--package-root", type=Path)
     args = parser.parse_args()
-    build_examples(args.output_root.resolve(), tuple(args.examples), args.require_clean, args.direct_checkout, args.reuse_stage, args.package_root.resolve() if args.package_root else None)
+    allowed = EXAMPLES if args.suite == "iso" else AUDIO_EXAMPLES
+    selected = tuple(args.examples) if args.examples else allowed
+    unknown = sorted(set(selected) - set(allowed))
+    if unknown:
+        parser.error(f"--suite {args.suite}에 없는 예제입니다: {', '.join(unknown)}")
+    build_examples(args.output_root.resolve(), selected, args.require_clean, args.direct_checkout,
+                   args.reuse_stage, args.package_root.resolve() if args.package_root else None,
+                   args.suite)

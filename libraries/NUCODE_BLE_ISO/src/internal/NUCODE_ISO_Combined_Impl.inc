@@ -1,5 +1,4 @@
-#pragma once
-#if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
+#define NUCODE_BLE_ISO_LIBRARY_BACKEND
 /**
  * @file main.cpp
  * @brief Arduino runtime에서 CIS 수신 SDU를 한 BIS로 실제 전달하고 재시작을 검증합니다.
@@ -569,8 +568,8 @@ namespace
         emit(line);
         snprintf(line, sizeof(line),
                  "M31COMB|1|IDENTITY|nonce=%s|core=%s|board=%s|ncs=%s|zephyr=%s",
-                 nonce, M31_CORE_REVISION, M31_BOARD_REVISION,
-                 M31_NCS_REVISION, M31_ZEPHYR_REVISION);
+                 nonce, NUCODE_CORE_REVISION, NUCODE_BOARD_REVISION,
+                 NUCODE_NCS_REVISION, NUCODE_ZEPHYR_REVISION);
         emit(line);
         if (!enabled)
         {
@@ -744,19 +743,35 @@ namespace
     }
 }
 
-/** @brief Serial command 수락 전 BIS 전달 work를 초기화합니다. */
+/** @brief Arduino sketch에서 호출하는 CIS→BIS 프로그램 API입니다. */
+namespace nucode::ble::iso::internal
+{
+    /** @brief Serial command 수락 전 BIS 전달 work를 초기화합니다. */
+    void begin()
+    {
+        Serial.begin(115200);
+        k_work_init_delayable(&forward_work, forwardNext);
+    }
+
+    /** @brief Arduino loop에서 유한 STOP watchdog과 UART를 처리합니다. */
+    void poll()
+    {
+        pollSerial();
+        finishStop();
+    }
+}
+
+#if !defined(NUCODE_BLE_ISO_LIBRARY_BACKEND)
+/** @brief native HIL 앱의 Arduino 진입점을 제공합니다. */
 void setup()
 {
-    Serial.begin(115200);
-    k_work_init_delayable(&forward_work, forwardNext);
+    nucode::ble::iso::internal::begin();
 }
 
-/** @brief Arduino loop에서 유한 STOP watchdog과 UART를 처리합니다. */
+/** @brief native HIL 앱에서 CIS→BIS 프로그램을 계속 실행합니다. */
 void loop()
 {
-    pollSerial();
-    finishStop();
+    nucode::ble::iso::internal::poll();
     delay(1);
 }
-
 #endif

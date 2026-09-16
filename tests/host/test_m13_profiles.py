@@ -36,6 +36,7 @@ class M13ProfileContractTests(unittest.TestCase):
             {
                 "nucode.ble.nus",
                 "nucode.ble.iso",
+                "nucode.ble.audio",
                 "nucode.ble.dfu",
                 "nucode.ble.security",
                 "nucode.ble.legacy_signing",
@@ -74,7 +75,7 @@ class M13ProfileContractTests(unittest.TestCase):
         """! @brief 공개 예제가 ino만으로 탐색 가능한지 확인합니다. """
         examples = sorted(
             sketch for sketch in ROOT.glob("libraries/*/examples/*/*.ino")
-            if sketch.parent.parent.parent.name != "NUCODE_BLE_ISO"
+            if sketch.parent.parent.parent.name not in {"NUCODE_BLE_ISO", "NUCODE_BLE_Audio"}
         )
         self.assertEqual(
             {sketch.parent.name for sketch in examples},
@@ -161,6 +162,20 @@ class M13ProfileContractTests(unittest.TestCase):
         for sketch in examples:
             self.assertTrue((sketch.parent / "prj.conf").is_file())
             self.assertFalse((sketch.parent / "app.overlay").exists())
+            source = sketch.read_text(encoding="utf-8")
+            self.assertRegex(source, r"\bvoid\s+setup\s*\(")
+            self.assertRegex(source, r"\bvoid\s+loop\s*\(")
+
+    def test_m31_advanced_audio_examples_have_role_configuration(self) -> None:
+        """! @brief 직접 Audio API 예제의 역할별 Kconfig와 탐색 가능한 ino를 확인합니다. """
+        examples = sorted(ROOT.glob("libraries/NUCODE_BLE_Audio/examples/*/*.ino"))
+        self.assertEqual({sketch.parent.name for sketch in examples}, {"Lc3SyntheticLoopback"})
+        for sketch in examples:
+            self.assertTrue((sketch.parent / "prj.conf").is_file())
+            self.assertFalse((sketch.parent / "app.overlay").exists())
+            source = sketch.read_text(encoding="utf-8")
+            self.assertRegex(source, r"\bvoid\s+setup\s*\(")
+            self.assertRegex(source, r"\bvoid\s+loop\s*\(")
 
     def test_only_selected_bundled_library_is_resolved(self) -> None:
         """! @brief 실제 source record에 등장한 bundled library만 선택합니다. """

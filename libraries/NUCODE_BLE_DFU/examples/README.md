@@ -20,5 +20,4 @@ MCUboot sysbuild, ECDSA P-256 image 서명, MCUmgr SMP over BLE, 인증된 GATT 
 `CONFIRM`을 자동 호출하지 않는다. 새 test image를 확인하지 않고 재시작하면 MCUboot rollback
 대상이 된다. 연결이 없거나 사용자 응답이 만료되면 pairing 명령을 거부한다. 32-byte보다 긴
 UART 줄 전체를 폐기하고 명령의 나머지 조각을 실행하지 않는다. 인증된 peer의 DFU image 업로드,
-reboot, rollback 실기는 [M30 DFU 검증 기록](<../../../00_Docs/04_검증 기록/157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md>)의
-별도 HIL 결과와 구분한다.
+reboot, rollback 실기는 저장소의 별도 DFU HIL 검증 기록에서 확인한다.

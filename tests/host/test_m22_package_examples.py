@@ -158,6 +158,7 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "CISToBISReceiver",
             )
         }
+        later_ble_examples.add(("NUCODE_BLE_Audio", "Lc3SyntheticLoopback"))
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(
             all_source_examples - locked_examples,

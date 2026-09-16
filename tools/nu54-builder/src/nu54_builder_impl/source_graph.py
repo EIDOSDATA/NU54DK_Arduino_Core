@@ -209,14 +209,19 @@ def write_source_manifest(
     lines.extend(f'  "{cmake_quote(path)}"' for path in includes)
     lines.extend((")", ""))
     iso_revisions: dict[str, str] = {}
+    m31_identity_keys: list[str] = []
     if "NUCODE_BLE_ISO" in selected_libraries:
+        m31_identity_keys.append("m31_iso_revisions")
+    if "NUCODE_BLE_Audio" in selected_libraries:
+        m31_identity_keys.append("m31_audio_revisions")
+    if m31_identity_keys:
         if input_manifest is None:
             raise AdapterError("[NU54:E_M31_ISO_REVISION] target manifest가 없습니다.")
         iso_revisions = {
-            "M31_CORE_REVISION": git_or_release_revision(paths["platform_root"], paths["platform_root"], "core_revision"),
-            "M31_BOARD_REVISION": str(input_manifest["board_package"]["revision"]),
-            "M31_NCS_REVISION": str(input_manifest["ncs"]["nrf_revision"]),
-            "M31_ZEPHYR_REVISION": str(input_manifest["ncs"]["zephyr_revision"]),
+            "NUCODE_CORE_REVISION": git_or_release_revision(paths["platform_root"], paths["platform_root"], "core_revision"),
+            "NUCODE_BOARD_REVISION": str(input_manifest["board_package"]["revision"]),
+            "NUCODE_NCS_REVISION": str(input_manifest["ncs"]["nrf_revision"]),
+            "NUCODE_ZEPHYR_REVISION": str(input_manifest["ncs"]["zephyr_revision"]),
         }
         if any(len(value) != 40 or any(char not in "0123456789abcdef" for char in value) for value in iso_revisions.values()):
             raise AdapterError("[NU54:E_M31_ISO_REVISION] pinned revision이 40자리 SHA가 아닙니다.")
@@ -236,5 +241,6 @@ def write_source_manifest(
         ],
     }
     if iso_revisions:
-        provenance["m31_iso_revisions"] = iso_revisions
+        for identity_key in m31_identity_keys:
+            provenance[identity_key] = iso_revisions
     return sources, provenance, changed
