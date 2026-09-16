@@ -32,10 +32,13 @@ def main():
     parser.add_argument("--flash-client-only", action="store_true")
     parser.add_argument("--flash-only", action="store_true")
     parser.add_argument("--source-clean", action="store_true")
+    parser.add_argument("--client-flash-record", type=Path)
+    parser.add_argument("--server-flash-record", type=Path)
     parser.add_argument("--require-lc3", action="store_true")
     parser.add_argument("--arduino-sink", action="store_true")
     parser.add_argument("--arduino-source", action="store_true")
     parser.add_argument("--arduino-duplex-server", action="store_true")
+    parser.add_argument("--arduino-duplex-pair", action="store_true")
     parser.add_argument("--timeout-seconds", type=float, default=90.0)
     args = parser.parse_args()
     if args.timeout_seconds < 10.0 or args.timeout_seconds > 180.0:
@@ -48,6 +51,11 @@ def main():
         parser.error("Arduino source measurement requires Arduino sink")
     if args.arduino_duplex_server and (not args.arduino_sink or args.arduino_source):
         parser.error("Arduino duplex server requires sink without Arduino source")
+    if args.arduino_duplex_pair and (not args.arduino_sink or args.arduino_source or
+                                     args.arduino_duplex_server):
+        parser.error("Arduino duplex pair requires sink and excludes other source modes")
+    if (args.client_flash_record or args.server_flash_record) and not args.reset_only:
+        parser.error("flash records are only accepted for reset-only measurements")
     client_config = args.client_config or (args.client_image.parent / ".config")
     server_config = args.server_config or (args.server_image.parent / ".config")
     if args.require_lc3:
@@ -66,6 +74,22 @@ def main():
         if changed or args.core_revision != revision:
             parser.error("exact HIL requires clean source and full HEAD revision")
 
+    for role, record_path, image, probe in (
+        ("client", args.client_flash_record, args.client_image,
+         args.client_probe_sha256),
+        ("server", args.server_flash_record, args.server_image,
+         args.server_probe_sha256),
+    ):
+        if record_path is None:
+            continue
+        flashed = json.loads(record_path.read_text(encoding="utf-8-sig"))
+        if (flashed.get("status") != "FLASH_PREPARED" or
+                not flashed.get(f"{role}_flash") or
+                flashed.get(f"{role}_probe_sha256") != probe or
+                flashed.get(f"{role}_image_sha256") !=
+                hashlib.sha256(image.read_bytes()).hexdigest()):
+            parser.error(f"{role} flash record does not match the selected image/probe")
+
     serial, ports = import_pyserial()
     client_uid, client_volume, client_port = discover(args.client_probe_sha256, ports)
     server_uid, server_volume, server_port = discover(args.server_probe_sha256, ports)
@@ -73,7 +97,8 @@ def main():
         raise RuntimeError("role mapping overlap")
     record = {
         "status": "FAIL",
-        "test": "arduino_bap_unicast_lc3_duplex_server" if args.arduino_duplex_server else
+        "test": "arduino_bap_unicast_lc3_duplex_pair" if args.arduino_duplex_pair else
+                "arduino_bap_unicast_lc3_duplex_server" if args.arduino_duplex_server else
                 "arduino_bap_unicast_lc3_pair" if args.arduino_source else
                 "arduino_bap_unicast_lc3_sink" if args.arduino_sink else
                 "upstream_bap_unicast_bidirectional_sdu",
@@ -103,15 +128,29 @@ def main():
         "server_plc_count": 0,
         "server_pcm_energy": 0,
         "server_queue_drops": 0,
+        "client_pcm_energy": 0,
+        "client_queue_drops": 0,
         "require_lc3": args.require_lc3,
+        "client_flash_record_sha256": (
+            hashlib.sha256(args.client_flash_record.read_bytes()).hexdigest() if
+            args.client_flash_record else None
+        ),
+        "server_flash_record_sha256": (
+            hashlib.sha256(args.server_flash_record.read_bytes()).hexdigest() if
+            args.server_flash_record else None
+        ),
     }
     tx_pattern = re.compile(
         r"Stream (0x[0-9a-fA-F]+): Sent (\d+) total SDUs of size (\d+)"
     )
-    client_rx_pattern = re.compile(r"Incoming audio on stream .* len 40 \((\d+)\)")
+    client_rx_pattern = re.compile(
+        r"LE Audio duplex received=(\d+) energy=(\d+) dropped=(\d+)" if
+        args.arduino_duplex_pair else
+        r"Incoming audio on stream .* len 40 \((\d+)\)"
+    )
     server_rx_pattern = re.compile(
         r"LE Audio duplex received=(\d+) energy=(\d+) dropped=(\d+)" if
-        args.arduino_duplex_server else
+        (args.arduino_duplex_server or args.arduino_duplex_pair) else
         r"LE Audio decoded frames=(\d+) energy=(\d+) dropped=(\d+)" if
         args.arduino_sink else
         r"Incoming audio on stream .* len 40 \((\d+)\)"
@@ -175,6 +214,13 @@ def main():
                                 int(count), record[tx_key].get(stream, 0)
                             )
                         if key == "client_lines":
+                            if args.arduino_duplex_pair:
+                                match = re.search(r"LE Audio duplex sent frames=(\d+)", line)
+                                if match is not None:
+                                    record["client_tx_streams"]["arduino"] = max(
+                                        int(match.group(1)),
+                                        record["client_tx_streams"].get("arduino", 0)
+                                    )
                             if args.arduino_source:
                                 match = re.search(r"LE Audio sent frames=(\d+)", line)
                                 if match is not None:
@@ -187,8 +233,15 @@ def main():
                                 record["client_rx_sdus"] = max(
                                     int(match.group(1)), record["client_rx_sdus"]
                                 )
+                                if args.arduino_duplex_pair:
+                                    record["client_pcm_energy"] = max(
+                                        int(match.group(2)), record["client_pcm_energy"]
+                                    )
+                                    record["client_queue_drops"] = max(
+                                        int(match.group(3)), record["client_queue_drops"]
+                                    )
                         elif key == "server_lines":
-                            if args.arduino_duplex_server:
+                            if args.arduino_duplex_server or args.arduino_duplex_pair:
                                 match = re.search(r"LE Audio duplex sent=(\d+)", line)
                                 if match is not None:
                                     record["server_tx_streams"]["arduino"] = max(
@@ -213,7 +266,7 @@ def main():
                             len([count for count in record["client_tx_streams"].values()
                                  if count >= 1000]) >= 1 and
                             record["server_rx_sdus"] >= 1000 and
-                            (not args.arduino_duplex_server or
+                            (not (args.arduino_duplex_server or args.arduino_duplex_pair) or
                              (record["server_tx_streams"].get("arduino", 0) >= 1000 and
                               record["client_rx_sdus"] >= 1000))):
                         break
@@ -225,7 +278,8 @@ def main():
                             record["client_rx_sdus"] >= 1000):
                         break
                 record["elapsed_s"] = round(time.monotonic() - started, 3)
-                if not any(("LE Audio source streaming" if args.arduino_source
+                if not any(("LE Audio duplex client streaming" if args.arduino_duplex_pair
+                            else "LE Audio source streaming" if args.arduino_source
                             else "Streams started") in line
                            for line in record["client_lines"]):
                     raise RuntimeError("BAP client streams did not start")
@@ -246,12 +300,21 @@ def main():
                         "failed" in line.lower() for line in record["client_lines"]
                     ):
                         raise RuntimeError("Arduino source error observed")
-                    if args.arduino_duplex_server:
+                    if args.arduino_duplex_server or args.arduino_duplex_pair:
                         if record["server_tx_streams"].get("arduino", 0) < 1000:
                             raise RuntimeError("Arduino server TX did not reach 1000 SDUs")
                         if record["client_rx_sdus"] < 1000:
-                            raise RuntimeError("native client RX did not reach 1000 SDUs")
+                            raise RuntimeError("client RX did not reach 1000 SDUs")
+                    if args.arduino_duplex_pair:
+                        if record["client_pcm_energy"] == 0:
+                            raise RuntimeError("Arduino client decoded zero-energy PCM")
+                        if record["client_queue_drops"] != 0 or any(
+                            "failed" in line.lower() for line in record["client_lines"]
+                        ):
+                            raise RuntimeError("Arduino client error or queue drop observed")
                     record["status"] = (
+                        "ARDUINO_BAP_DUPLEX_PAIR_1000_FRAME_PASS" if args.arduino_duplex_pair
+                        else
                         "ARDUINO_BAP_DUPLEX_SERVER_1000_FRAME_PASS" if
                         args.arduino_duplex_server else
                         "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS" if args.arduino_source
@@ -269,7 +332,7 @@ def main():
                 if args.require_lc3:
                     if record["server_rx_sdus"] < 1000:
                         raise RuntimeError("LC3 server RX did not reach 1000 valid SDUs")
-                    keys = () if args.arduino_source else (
+                    keys = () if (args.arduino_source or args.arduino_duplex_pair) else (
                         ("client_lines",) if args.arduino_sink else (
                         "client_lines", "server_lines"
                         )
@@ -303,7 +366,8 @@ def main():
         "NATIVE_BAP_1000_SDU_PASS", "NATIVE_BAP_LC3_1000_SDU_PASS",
         "ARDUINO_BAP_LC3_1000_FRAME_PASS",
         "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS",
-        "ARDUINO_BAP_DUPLEX_SERVER_1000_FRAME_PASS"
+        "ARDUINO_BAP_DUPLEX_SERVER_1000_FRAME_PASS",
+        "ARDUINO_BAP_DUPLEX_PAIR_1000_FRAME_PASS"
     ) else 1
 
 

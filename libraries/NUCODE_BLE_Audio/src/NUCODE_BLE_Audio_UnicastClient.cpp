@@ -31,6 +31,8 @@ namespace nucode::ble::audio
     {
         constexpr std::size_t frame_octets = 40U;
 
+        K_MSGQ_DEFINE(receive_queue, frame_octets, 8, 4);
+
         NET_BUF_POOL_FIXED_DEFINE(tx_pool, 4, BT_ISO_SDU_BUF_SIZE(CONFIG_BT_ISO_TX_MTU),
                                   CONFIG_BT_CONN_TX_USER_DATA_SIZE, nullptr);
 
@@ -40,11 +42,13 @@ namespace nucode::ble::audio
             none = 0,
             secured,
             discovered,
+            source_discovered,
             configured,
+            source_configured,
             qos_set,
             enabled,
+            source_enabled,
             connected,
-            streaming,
             disabled,
             released,
         };
@@ -55,13 +59,23 @@ namespace nucode::ble::audio
             UnicastClient *owner = nullptr;
             bt_conn *connection = nullptr;
             bt_bap_ep *sink = nullptr;
+            bt_bap_ep *source = nullptr;
             bt_bap_unicast_group *group = nullptr;
             bt_bap_stream stream = {};
+            bt_bap_stream receive_stream = {};
+            bool duplex = false;
             atomic_t event = 0;
             atomic_t error = 0;
             atomic_t sent = 0;
+            atomic_t received = 0;
+            atomic_t dropped = 0;
             atomic_t sequence = 0;
             atomic_t codec_found = 0;
+            atomic_t source_codec_found = 0;
+            atomic_t qos_responses = 0;
+            atomic_t started_streams = 0;
+            atomic_t disabled_streams = 0;
+            atomic_t released_streams = 0;
             atomic_t stopping = 0;
             atomic_t expected_disconnect = 0;
             std::uint32_t security_wait_started = 0U;
@@ -90,7 +104,8 @@ namespace nucode::ble::audio
         /** @brief 현재 연결의 성공 callback만 다음 단계로 전달합니다. */
         void acceptResponse(bt_bap_stream *stream, bt_bap_ascs_rsp_code code)
         {
-            if ((client.owner == nullptr) || (stream != &client.stream))
+            if ((client.owner == nullptr) ||
+                ((stream != &client.stream) && (stream != &client.receive_stream)))
             {
                 return;
             }
@@ -143,27 +158,38 @@ namespace nucode::ble::audio
                        const bt_audio_codec_cap *capability)
         {
             if ((client.owner == nullptr) || (connection != client.connection) ||
-                (direction != BT_AUDIO_DIR_SINK) || (capability == nullptr))
+                (capability == nullptr))
             {
                 return;
             }
             if (capability->id == BT_HCI_CODING_FORMAT_LC3)
             {
-                atomic_set(&client.codec_found, 1);
+                if (direction == BT_AUDIO_DIR_SINK)
+                {
+                    atomic_set(&client.codec_found, 1);
+                }
+                else if ((direction == BT_AUDIO_DIR_SOURCE) && client.duplex)
+                {
+                    atomic_set(&client.source_codec_found, 1);
+                }
             }
         }
 
         /** @brief 발견한 첫 sink ASE를 선택합니다. */
         void endpoint(bt_conn *connection, bt_audio_dir direction, bt_bap_ep *ep)
         {
-            if ((client.owner == nullptr) || (connection != client.connection) ||
-                (direction != BT_AUDIO_DIR_SINK) || (ep == nullptr))
+            if ((client.owner == nullptr) || (connection != client.connection) || (ep == nullptr))
             {
                 return;
             }
-            if (client.sink == nullptr)
+            if ((direction == BT_AUDIO_DIR_SINK) && (client.sink == nullptr))
             {
                 client.sink = ep;
+            }
+            else if ((direction == BT_AUDIO_DIR_SOURCE) && client.duplex &&
+                     (client.source == nullptr))
+            {
+                client.source = ep;
             }
         }
 
@@ -171,7 +197,8 @@ namespace nucode::ble::audio
         void discovered(bt_conn *connection, int error, bt_audio_dir direction)
         {
             if ((client.owner == nullptr) || (connection != client.connection) ||
-                (direction != BT_AUDIO_DIR_SINK))
+                ((direction != BT_AUDIO_DIR_SINK) &&
+                 ((direction != BT_AUDIO_DIR_SOURCE) || !client.duplex)))
             {
                 return;
             }
@@ -181,7 +208,9 @@ namespace nucode::ble::audio
             }
             else
             {
-                atomic_set(&client.event, static_cast<int>(Event::discovered));
+                atomic_set(&client.event, static_cast<int>(
+                    (direction == BT_AUDIO_DIR_SINK) ? Event::discovered :
+                                                       Event::source_discovered));
             }
         }
 
@@ -200,38 +229,56 @@ namespace nucode::ble::audio
         void streamConfigured(bt_bap_stream *stream, const bt_bap_qos_cfg_pref *preference)
         {
             static_cast<void>(preference);
-            if ((client.owner != nullptr) && (stream == &client.stream) &&
-                (atomic_get(&client.stopping) == 0))
+            if ((client.owner != nullptr) && (atomic_get(&client.stopping) == 0))
             {
-                atomic_set(&client.event, static_cast<int>(Event::configured));
+                if (stream == &client.stream)
+                {
+                    atomic_set(&client.event, static_cast<int>(Event::configured));
+                }
+                else if ((stream == &client.receive_stream) && client.duplex)
+                {
+                    atomic_set(&client.event, static_cast<int>(Event::source_configured));
+                }
             }
         }
 
         /** @brief ASE 상태가 QoS configured로 바뀐 뒤에만 enable로 진행합니다. */
         void streamQosSet(bt_bap_stream *stream)
         {
-            if ((client.owner != nullptr) && (stream == &client.stream) &&
+            if ((client.owner != nullptr) &&
+                ((stream == &client.stream) ||
+                 (client.duplex && (stream == &client.receive_stream))) &&
                 (atomic_get(&client.stopping) == 0))
             {
-                atomic_set(&client.event, static_cast<int>(Event::qos_set));
+                atomic_inc(&client.qos_responses);
+                if (atomic_get(&client.qos_responses) >= (client.duplex ? 2 : 1))
+                {
+                    atomic_set(&client.event, static_cast<int>(Event::qos_set));
+                }
             }
         }
 
         /** @brief ASE 상태가 enabled로 바뀐 뒤에만 CIS로 진행합니다. */
         void streamEnabled(bt_bap_stream *stream)
         {
-            if ((client.owner != nullptr) && (stream == &client.stream) &&
-                (atomic_get(&client.stopping) == 0))
+            if ((client.owner != nullptr) && (atomic_get(&client.stopping) == 0))
             {
-                atomic_set(&client.event, static_cast<int>(Event::enabled));
+                if (stream == &client.stream)
+                {
+                    atomic_set(&client.event, static_cast<int>(Event::enabled));
+                }
+                else if ((stream == &client.receive_stream) && client.duplex)
+                {
+                    atomic_set(&client.event, static_cast<int>(Event::source_enabled));
+                }
             }
         }
 
         /** @brief CIS 연결 완료를 다음 단계로 전달합니다. */
         void streamConnected(bt_bap_stream *stream)
         {
-            if ((client.owner != nullptr) && (stream == &client.stream) &&
-                (atomic_get(&client.stopping) == 0))
+            if ((client.owner != nullptr) && client.duplex &&
+                (stream == &client.stream) && (atomic_get(&client.stopping) == 0))
             {
                 atomic_set(&client.event, static_cast<int>(Event::connected));
             }
@@ -240,42 +287,79 @@ namespace nucode::ble::audio
         /** @brief peer가 sink stream을 시작했음을 알립니다. */
         void streamStarted(bt_bap_stream *stream)
         {
-            if ((client.owner != nullptr) && (stream == &client.stream) &&
-                (atomic_get(&client.stopping) == 0))
+            if ((client.owner != nullptr) && (atomic_get(&client.stopping) == 0))
             {
-                atomic_set(&client.event, static_cast<int>(Event::streaming));
+                if (stream == &client.stream)
+                {
+                    atomic_or(&client.started_streams, 1);
+                }
+                else if ((stream == &client.receive_stream) && client.duplex)
+                {
+                    atomic_or(&client.started_streams, 2);
+                }
             }
         }
 
         /** @brief sink ASE가 QoS configured로 돌아오면 release를 예약합니다. */
         void streamDisabled(bt_bap_stream *stream)
         {
-            if ((client.owner != nullptr) && (stream == &client.stream) &&
+            if ((client.owner != nullptr) &&
+                ((stream == &client.stream) ||
+                 (client.duplex && (stream == &client.receive_stream))) &&
                 (atomic_get(&client.stopping) != 0))
             {
-                atomic_set(&client.event, static_cast<int>(Event::disabled));
+                atomic_inc(&client.disabled_streams);
+                if (atomic_get(&client.disabled_streams) >= (client.duplex ? 2 : 1))
+                {
+                    atomic_set(&client.event, static_cast<int>(Event::disabled));
+                }
             }
         }
 
         /** @brief ASE 자원 반환 완료를 Arduino poll()에 알립니다. */
         void streamReleased(bt_bap_stream *stream)
         {
-            if ((client.owner != nullptr) && (stream == &client.stream) &&
+            if ((client.owner != nullptr) &&
+                ((stream == &client.stream) ||
+                 (client.duplex && (stream == &client.receive_stream))) &&
                 (atomic_get(&client.stopping) != 0))
             {
-                atomic_set(&client.event, static_cast<int>(Event::released));
+                atomic_inc(&client.released_streams);
+                if (atomic_get(&client.released_streams) >= (client.duplex ? 2 : 1))
+                {
+                    atomic_set(&client.event, static_cast<int>(Event::released));
+                }
             }
         }
 
         /** @brief stream 중단을 전송 거부 상태로 반영합니다. */
         void streamStopped(bt_bap_stream *stream, std::uint8_t reason)
         {
-            if ((client.owner != nullptr) && (stream == &client.stream))
+            if ((client.owner != nullptr) &&
+                ((stream == &client.stream) ||
+                 (client.duplex && (stream == &client.receive_stream))))
             {
                 if (atomic_get(&client.stopping) == 0)
                 {
                     atomic_set(&client.error, -(0x100 + static_cast<int>(reason)));
                 }
+            }
+        }
+
+        /** @brief 양방향 client의 유효한 수신 LC3 frame만 고정 queue에 복사합니다. */
+        void streamReceived(bt_bap_stream *stream, const bt_iso_recv_info *info, net_buf *buffer)
+        {
+            if ((client.owner == nullptr) || !client.duplex ||
+                (stream != &client.receive_stream) ||
+                ((info->flags & BT_ISO_FLAGS_VALID) == 0U) ||
+                (buffer->len != frame_octets))
+            {
+                return;
+            }
+            atomic_inc(&client.received);
+            if (k_msgq_put(&receive_queue, buffer->data, K_NO_WAIT) != 0)
+            {
+                atomic_inc(&client.dropped);
             }
         }
 
@@ -287,6 +371,7 @@ namespace nucode::ble::audio
             .released = streamReleased,
             .started = streamStarted,
             .stopped = streamStopped,
+            .recv = streamReceived,
             .connected = streamConnected,
         };
 
@@ -328,15 +413,19 @@ namespace nucode::ble::audio
             .security_changed = securityChanged,
         };
 
-        /** @brief 하나의 TX ASE에 대한 고정 unicast group을 구성합니다. */
+        /** @brief TX와 선택적 RX ASE를 한 CIS group의 stream pair로 묶습니다. */
         int createGroup()
         {
             bt_bap_unicast_group_stream_param tx = {
                 .stream = &client.stream,
                 .qos = &preset.qos,
             };
+            bt_bap_unicast_group_stream_param rx = {
+                .stream = &client.receive_stream,
+                .qos = &preset.qos,
+            };
             bt_bap_unicast_group_stream_pair_param pair = {
-                .rx_param = nullptr,
+                .rx_param = client.duplex ? &rx : nullptr,
                 .tx_param = &tx,
             };
             bt_bap_unicast_group_param parameters = {
@@ -362,9 +451,26 @@ namespace nucode::ble::audio
         return error;
     }
 
-    /** @brief 공개 연결을 참조하고 L2 보안을 요청합니다. */
+    /** @brief 기존 단방향 송신 client의 진입점을 유지합니다. */
     Error UnicastClient::begin(const BLEConnectionHandle &connection) noexcept
     {
+        return begin(connection, UnicastClientMode::transmit_only);
+    }
+
+    /** @brief 공개 연결을 참조하고 요청한 방향의 L2 보안을 요청합니다. */
+    Error UnicastClient::begin(const BLEConnectionHandle &connection,
+                               UnicastClientMode mode) noexcept
+    {
+        if ((mode != UnicastClientMode::transmit_only) && (mode != UnicastClientMode::duplex))
+        {
+            return record(Error::invalid_argument);
+        }
+        if ((mode == UnicastClientMode::duplex) &&
+            (!IS_ENABLED(CONFIG_BT_AUDIO_RX) ||
+             !IS_ENABLED(CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC)))
+        {
+            return record(Error::unsupported);
+        }
         if (!connection.valid())
         {
             return record(Error::invalid_argument);
@@ -385,18 +491,33 @@ namespace nucode::ble::audio
         client.owner = this;
         client.connection = native;
         client.sink = nullptr;
+        client.source = nullptr;
         client.group = nullptr;
+        client.duplex = mode == UnicastClientMode::duplex;
         memset(&client.stream, 0, sizeof(client.stream));
+        memset(&client.receive_stream, 0, sizeof(client.receive_stream));
         bt_bap_stream_cb_register(&client.stream, &stream_callbacks);
+        if (client.duplex)
+        {
+            bt_bap_stream_cb_register(&client.receive_stream, &stream_callbacks);
+        }
         atomic_set(&client.event, 0);
         atomic_set(&client.error, 0);
         atomic_set(&client.sent, 0);
+        atomic_set(&client.received, 0);
+        atomic_set(&client.dropped, 0);
         atomic_set(&client.sequence, 0);
         atomic_set(&client.codec_found, 0);
+        atomic_set(&client.source_codec_found, 0);
+        atomic_set(&client.qos_responses, 0);
+        atomic_set(&client.started_streams, 0);
+        atomic_set(&client.disabled_streams, 0);
+        atomic_set(&client.released_streams, 0);
         atomic_set(&client.stopping, 0);
         atomic_set(&client.expected_disconnect, 0);
         client.security_wait_started = k_uptime_get_32();
         client.security_requested = false;
+        k_msgq_purge(&receive_queue);
         int result = bt_bap_unicast_client_register_cb(&client_callbacks);
         if (result != 0)
         {
@@ -433,6 +554,12 @@ namespace nucode::ble::audio
         {
             (void)record(Error::stack_error, -ETIMEDOUT);
             return;
+        }
+        if ((stage_ == UnicastClientStage::configuring) &&
+            ((atomic_get(&client.started_streams) & (client.duplex ? 3 : 1)) ==
+             (client.duplex ? 3 : 1)))
+        {
+            stage_ = UnicastClientStage::streaming;
         }
         if ((stage_ == UnicastClientStage::securing) && (atomic_get(&client.event) == 0))
         {
@@ -487,12 +614,38 @@ namespace nucode::ble::audio
                 (void)record(Error::unsupported);
                 return;
             }
+            if (client.duplex)
+            {
+                last_step_ = UnicastClientStep::discover;
+                result = bt_bap_unicast_client_discover(client.connection, BT_AUDIO_DIR_SOURCE);
+            }
+            else
+            {
+                stage_ = UnicastClientStage::configuring;
+                last_step_ = UnicastClientStep::configure;
+                result = bt_bap_stream_config(client.connection, &client.stream, client.sink,
+                                              &preset.codec_cfg);
+            }
+        }
+        else if (event == Event::source_discovered)
+        {
+            if ((client.source == nullptr) || (atomic_get(&client.source_codec_found) == 0))
+            {
+                (void)record(Error::unsupported);
+                return;
+            }
             stage_ = UnicastClientStage::configuring;
             last_step_ = UnicastClientStep::configure;
             result = bt_bap_stream_config(client.connection, &client.stream, client.sink,
                                           &preset.codec_cfg);
         }
-        else if (event == Event::configured)
+        else if ((event == Event::configured) && client.duplex)
+        {
+            last_step_ = UnicastClientStep::configure;
+            result = bt_bap_stream_config(client.connection, &client.receive_stream,
+                                          client.source, &preset.codec_cfg);
+        }
+        else if ((event == Event::configured) || (event == Event::source_configured))
         {
             last_step_ = UnicastClientStep::group;
             result = createGroup();
@@ -510,20 +663,44 @@ namespace nucode::ble::audio
         }
         else if (event == Event::enabled)
         {
+            if (client.duplex)
+            {
+                last_step_ = UnicastClientStep::enable;
+                result = bt_bap_stream_enable(&client.receive_stream, preset.codec_cfg.meta,
+                                              preset.codec_cfg.meta_len);
+            }
+            else
+            {
+                last_step_ = UnicastClientStep::connect;
+                result = bt_bap_stream_connect(&client.stream);
+            }
+        }
+        else if (event == Event::source_enabled)
+        {
             last_step_ = UnicastClientStep::connect;
             result = bt_bap_stream_connect(&client.stream);
         }
-        else if (event == Event::streaming)
+        else if (event == Event::connected)
         {
-            if (stage_ == UnicastClientStage::configuring)
+            last_step_ = UnicastClientStep::connect;
+            result = bt_bap_stream_connect(&client.receive_stream);
+            if (result == -EALREADY)
             {
-                stage_ = UnicastClientStage::streaming;
+                result = 0;
+            }
+            if (result == 0)
+            {
+                result = bt_bap_stream_start(&client.receive_stream);
             }
         }
         else if (event == Event::disabled)
         {
             last_step_ = UnicastClientStep::release;
             result = bt_bap_stream_release(&client.stream);
+            if ((result == 0) && client.duplex)
+            {
+                result = bt_bap_stream_release(&client.receive_stream);
+            }
         }
         else if (event == Event::released)
         {
@@ -563,6 +740,13 @@ namespace nucode::ble::audio
         return record(Error::none);
     }
 
+    /** @brief 양방향 client에서 LC3 frame을 하나 꺼냅니다. */
+    bool UnicastClient::readFrame(std::uint8_t (&frame)[40]) noexcept
+    {
+        return started_ && client.duplex &&
+               (k_msgq_get(&receive_queue, frame, K_NO_WAIT) == 0);
+    }
+
     /** @brief sink ASE를 disable하고 QoS 상태 callback에서 release합니다. */
     Error UnicastClient::stop() noexcept
     {
@@ -580,6 +764,14 @@ namespace nucode::ble::audio
             atomic_set(&client.stopping, 0);
             return record(Error::stack_error, result);
         }
+        if (client.duplex)
+        {
+            const int receive_result = bt_bap_stream_disable(&client.receive_stream);
+            if (receive_result != 0)
+            {
+                return record(Error::stack_error, receive_result);
+            }
+        }
         return record(Error::none);
     }
 
@@ -590,7 +782,7 @@ namespace nucode::ble::audio
         {
             return record(Error::not_started);
         }
-        if (client.stream.conn != nullptr)
+        if ((client.stream.conn != nullptr) || (client.receive_stream.conn != nullptr))
         {
             return record(Error::busy);
         }
@@ -609,6 +801,7 @@ namespace nucode::ble::audio
             return record(Error::stack_error, result);
         }
         bt_conn_unref(client.connection);
+        k_msgq_purge(&receive_queue);
         client = {};
         started_ = false;
         stage_ = UnicastClientStage::idle;
@@ -639,6 +832,18 @@ namespace nucode::ble::audio
         return started_ ? static_cast<std::uint32_t>(atomic_get(&client.sent)) : 0U;
     }
 
+    /** @brief 유효하게 수신한 frame 수를 반환합니다. */
+    std::uint32_t UnicastClient::receivedFrames() const noexcept
+    {
+        return started_ ? static_cast<std::uint32_t>(atomic_get(&client.received)) : 0U;
+    }
+
+    /** @brief queue 포화로 버린 frame 수를 반환합니다. */
+    std::uint32_t UnicastClient::droppedFrames() const noexcept
+    {
+        return started_ ? static_cast<std::uint32_t>(atomic_get(&client.dropped)) : 0U;
+    }
+
     /** @brief 마지막 공개 오류를 반환합니다. */
     Error UnicastClient::lastError() const noexcept
     {
@@ -662,6 +867,12 @@ namespace nucode::ble::audio
         return record(Error::not_ready);
     }
 
+    /** @brief client 기능이 없는 image에서는 양방향 시작도 거부합니다. */
+    Error UnicastClient::begin(const BLEConnectionHandle &, UnicastClientMode) noexcept
+    {
+        return record(Error::not_ready);
+    }
+
     /** @brief 기능이 없는 image에서는 다음 단계가 없습니다. */
     void UnicastClient::poll() noexcept
     {
@@ -672,6 +883,13 @@ namespace nucode::ble::audio
     {
         static_cast<void>(frame);
         return record(Error::not_ready);
+    }
+
+    /** @brief 기능이 없는 image에서는 수신 frame이 없습니다. */
+    bool UnicastClient::readFrame(std::uint8_t (&frame)[40]) noexcept
+    {
+        static_cast<void>(frame);
+        return false;
     }
 
     /** @brief 기능이 없는 image에서는 stream을 중단하지 않습니다. */
@@ -706,6 +924,18 @@ namespace nucode::ble::audio
 
     /** @brief 기능이 없는 image는 전송 수가 0입니다. */
     std::uint32_t UnicastClient::sentFrames() const noexcept
+    {
+        return 0U;
+    }
+
+    /** @brief 기능이 없는 image에서는 수신 수가 0입니다. */
+    std::uint32_t UnicastClient::receivedFrames() const noexcept
+    {
+        return 0U;
+    }
+
+    /** @brief 기능이 없는 image에서는 drop 수가 0입니다. */
+    std::uint32_t UnicastClient::droppedFrames() const noexcept
     {
         return 0U;
     }

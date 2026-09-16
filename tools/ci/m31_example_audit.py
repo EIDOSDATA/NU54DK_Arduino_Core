@@ -91,6 +91,21 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_PAC_SRC=y", "CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT=1",
                 "CONFIG_BT_ASCS_MAX_ASE_SRC_COUNT=1", "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "BapUnicastDuplexClient":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>", "UnicastClient", "Lc3Codec",
+                "UnicastClientMode::duplex", "BLEScan.start(",
+                "BLEConnection.connect(", "audioClient.readFrame(",
+                "audioClient.sendFrame(", "codec.decode(", "codec.encode(",
+            )
+            options = (
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_GROUP_STREAM_COUNT=2",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SNK_COUNT=2",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC_COUNT=2",
+                "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name in {"BapUnicastSource", "BapUnicastCycle"}:
             required = (
                 "#include <NUCODE_BLE.h>",

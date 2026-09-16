@@ -51,8 +51,8 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 
 - 두 보드 중 서버에 올린다. 이 예제는 `UnicastServerMode::duplex`로 sink와
   source ASE를 각각 하나 등록하고 ASCS UUID를 광고한다. 상대 client에는 양방향
-  BAP 지원 image가 필요하다. 현재 Arduino client 예제는 송신 전용이므로 이
-  서버의 양방향 검증 상대는 고정 NCS `bap_unicast_client`다.
+  BAP 지원 image가 필요하다. 같은 목록의 `BapUnicastDuplexClient`를 짝으로
+  사용할 수 있으며, 고정 NCS `bap_unicast_client`와도 별도로 확인한다.
 - `loop()`가 수신 LC3 frame을 복호화하고 PCM energy를 계산한다. 동시에 일반
   C++로 합성 PCM을 만들어 LC3로 인코딩한 뒤 공개 `sendFrame()`으로 반대 방향에
   보낸다. 정상 동작이면 115200 baud Serial에 `duplex received=... energy=...
@@ -60,6 +60,19 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 - `prj.conf`는 sink/source ASE 각 1개, 양방향 ISO channel 2개, LC3와 비영속
   L2 pairing을 고정한다. RAM 사용량은 약 88%이므로 추가 buffer/stream과 외장
   audio I/O를 합치기 전에 자원 예산을 다시 측정한다.
+
+## `BapUnicastDuplexClient`
+
+- 상대 보드에 `BapUnicastDuplexServer`를 올리고 이 예제를 client 보드에 올린다.
+  ASCS UUID를 검색한 뒤 공개 `UnicastClientMode::duplex`로 PACS/ASCS의
+  sink/source ASE를 한 unicast group에 묶는다.
+- `loop()`에서 합성 PCM을 LC3로 encode해 보내고, 반대 방향의 LC3 frame을
+  `readFrame()`으로 꺼내 decode한다. 115200 baud Serial의 `duplex sent
+  frames=...`와 `duplex received=... energy=... dropped=0`을 두 보드에서
+  확인한다. `s`를 입력하면 양쪽 ASE의 disable/release를 요청한다.
+- 고정 SDK는 client의 방향별 ASE 검색 용량을 0 또는 2개 이상으로 요구한다.
+  따라서 `prj.conf`는 각 방향 검색 용량 2개, 실제 group stream 2개와
+  ISO channel 2개를 설정한다. 예제는 각 방향 첫 ASE 하나만 사용한다.
 
 ## `BapUnicastCycle`
 
