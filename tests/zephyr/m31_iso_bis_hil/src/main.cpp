@@ -166,7 +166,6 @@ namespace
         return 0x31b15000U ^ (static_cast<uint32_t>(sequence) * 0x9e3779b1U) ^ marker;
     }
 
-#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
     /** @brief 마지막 SDU 손실도 포함하도록 현재 receiver 결과를 한 번만 출력합니다. */
     void printReceiveEnd()
     {
@@ -198,7 +197,6 @@ namespace
         Serial.print("|empty_slots=");
         Serial.println(atomic_get(&empty_slots));
     }
-#endif
 
     /** @brief 유효 SDU만 100개 분모에 포함하고 빈 controller slot은 별도 셉니다. */
     void isoReceived(struct bt_iso_chan *channel, const struct bt_iso_recv_info *information,
