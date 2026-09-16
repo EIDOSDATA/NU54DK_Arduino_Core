@@ -28,13 +28,9 @@
 #include "internal/NUCODE_ISO_BIS_Impl.inc"
 #endif
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE)
-#define NUCODE_BLE_ISO_BIS_ROLE "source"
-#define NUCODE_BLE_ISO_BIS_ENCRYPTED
-#include "internal/NUCODE_ISO_BIS_Impl.inc"
+#define NUCODE_BLE_ISO_RAW_BIS
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER)
-#define NUCODE_BLE_ISO_BIS_ROLE "receiver"
-#define NUCODE_BLE_ISO_BIS_ENCRYPTED
-#include "internal/NUCODE_ISO_BIS_Impl.inc"
+#define NUCODE_BLE_ISO_RAW_BIS
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
 #define NUCODE_BLE_ISO_BIS_ROLE "source"
 #define NUCODE_BLE_ISO_BIS_TIME_SYNC

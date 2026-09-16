@@ -217,11 +217,14 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
             return row
         row["status"] = "VISIBLE_CODE"
         return row
-    if role in {"BIS_SOURCE", "BIS_RECEIVER"}:
+    if role in {"BIS_SOURCE", "BIS_RECEIVER",
+                "BIS_ENCRYPTED_SOURCE", "BIS_ENCRYPTED_RECEIVER"}:
         required = (
             "RawBis", f"Role::{expected_role}", ".begin(", ".poll(", ".stop(",
-            ".sendFrame(" if role == "BIS_SOURCE" else ".readFrame(",
+            ".sendFrame(" if role in ISO_SEND_ROLES else ".readFrame(",
         )
+        if role.startswith("BIS_ENCRYPTED_"):
+            required += ("broadcastCode",)
         backend = library / "src" / "NUCODE_BLE_ISO_RawBis.cpp"
         if any(token not in code for token in required) or not backend.is_file() or (
             MILESTONE_IDENTIFIER.search(backend.read_text(encoding="utf-8"))

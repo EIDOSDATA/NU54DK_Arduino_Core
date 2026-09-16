@@ -106,15 +106,17 @@ namespace nucode::ble::iso
     /**
      * @brief 한 BIG/BIS의 사용자 SDU를 송신하거나 동기화해 읽습니다.
      *
-     * 현재 공개 구현은 비암호화 source/receiver 한 쌍과 최대 16-byte SDU를
-     * 지원합니다. 역할별 image Kconfig와 16-byte session ID가 일치해야 합니다.
+     * source/receiver 한 쌍의 최대 16-byte SDU를 지원합니다. 역할별 image
+     * Kconfig와 16-byte session ID가 일치해야 합니다. 암호화 역할에는 별도의
+     * 16-byte broadcast code가 필요하며 광고에는 노출하지 않습니다.
      * 한 image에서 이 객체 하나만 사용할 수 있습니다.
      */
     class RawBis final
     {
       public:
-        /** @brief BIG source 또는 synchronized receiver를 시작합니다. */
-        Error begin(Role role, const std::uint8_t session_id[16]) noexcept;
+        /** @brief BIG 역할을 시작하며 암호화 역할에는 broadcast code를 지정합니다. */
+        Error begin(Role role, const std::uint8_t session_id[16],
+                    const std::uint8_t broadcast_code[16] = nullptr) noexcept;
 
         /** @brief 비동기 종료와 callback 오류를 main thread에서 처리합니다. */
         Error poll() noexcept;

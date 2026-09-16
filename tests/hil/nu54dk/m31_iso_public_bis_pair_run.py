@@ -22,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[3]
 SENT = re.compile(r"^BIS sent frames=100$")
 RECEIVED = re.compile(r"^BIS received frames=(99|100) missing=(0|1) errors=0$")
 RECEIVE_END = re.compile(r"^BIS received frames=")
+WRONG_CODE_REJECTED = re.compile(r"^BIS wrong code rejected native=-61 leaked=0$")
+WRONG_CODE_FAILURE = re.compile(r"^BIS wrong code (?:begin failed|failed|timeout)")
 ERROR = re.compile(
     r"^BIS (?:start|send) failed:|^BIS error:|^BIS receive timeout|"
     r"^BIS peer stopped before enough frames:"
@@ -61,7 +63,8 @@ def reset(uid: str) -> None:
 
 ## @brief 두 COM의 완결된 줄을 원본 순서와 시간과 함께 저장합니다.
 def capture(ports: dict[str, str], probe_ids: dict[str, str],
-            seconds: float, cycles: int, revision: str) -> dict[str, list[dict]]:
+            seconds: float, cycles: int, revision: str,
+            wrong_code: bool) -> dict[str, list[dict]]:
     streams = {role: serial.Serial(port, 115200, timeout=0.1)
                for role, port in ports.items()}
     lines: dict[str, list[dict]] = {role: [] for role in ports}
@@ -84,8 +87,18 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
                     })
             after_boot = {role: after_final_boot(items, revision)
                           for role, items in lines.items()}
-            if (sum(bool(SENT.fullmatch(item["text"])) for item in after_boot["source"]) >= cycles and
-                sum(bool(RECEIVED.fullmatch(item["text"])) for item in after_boot["receiver"]) >= cycles):
+            sent_count = sum(bool(SENT.fullmatch(item["text"]))
+                             for item in after_boot["source"])
+            receiver_done = (
+                sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= 1 and
+                any(item["text"] == "BIS wrong code stopped"
+                    for item in after_boot["receiver"])
+            ) if wrong_code else (
+                sum(bool(RECEIVED.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= cycles
+            )
+            if sent_count >= cycles and receiver_done:
                 break
     finally:
         for stream in streams.values():
@@ -110,11 +123,16 @@ def main() -> int:
         parser.add_argument(f"--{role}-port", required=True)
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--seconds", type=float, default=120.0)
+    parser.add_argument("--mode", choices=("plain", "encrypted", "encrypted_negative"),
+                        default="plain")
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--allow-dirty-candidate", action="store_true")
     args = parser.parse_args()
     if args.cycles <= 0 or args.seconds <= 0:
         parser.error("cycles와 seconds는 양수여야 합니다")
+    wrong_code = args.mode == "encrypted_negative"
+    if wrong_code and args.cycles != 1:
+        parser.error("encrypted_negative는 한 송신 session을 검사합니다")
     revision = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=ROOT,
                                        text=True).strip()
     dirty = subprocess.check_output(("git", "status", "--porcelain"), cwd=ROOT,
@@ -139,7 +157,8 @@ def main() -> int:
     for role in ("receiver", "source"):
         flash[role] = flash_image_pyocd(role, probe_ids[role], images[role],
                                         120.0, hardware_reset=True)
-    lines = capture(ports, probe_ids, args.seconds, args.cycles, revision)
+    lines = capture(ports, probe_ids, args.seconds, args.cycles, revision,
+                    wrong_code)
     post_boot = {role: after_final_boot(items, revision)
                  for role, items in lines.items()}
     sent = sum(bool(SENT.fullmatch(item["text"])) for item in post_boot["source"])
@@ -152,23 +171,33 @@ def main() -> int:
     bad = []
     for role in post_boot:
         for item in post_boot[role]:
-            if (ERROR.search(item["text"]) or
+            if (ERROR.search(item["text"]) or WRONG_CODE_FAILURE.search(item["text"]) or
                 (RECEIVE_END.search(item["text"]) and
                  not RECEIVED.fullmatch(item["text"]))):
                 bad.append(item)
+    rejected = sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
+                   for item in post_boot["receiver"])
+    stopped = sum(item["text"] == "BIS wrong code stopped"
+                  for item in post_boot["receiver"])
     image_revision_confirmed = {
         role: any(item["text"] == f"BIS core revision={revision}"
                   for item in lines[role])
         for role in lines
     }
-    accepted = (sent == args.cycles and received == args.cycles and
-                payload_frames + missing_frames == args.cycles * 100 and
-                missing_frames <= args.cycles and
-                not bad and all(image_revision_confirmed.values()))
+    if wrong_code:
+        accepted = (sent == 1 and received == 0 and rejected == 1 and stopped == 1 and
+                    payload_frames == 0 and not bad and
+                    all(image_revision_confirmed.values()))
+    else:
+        accepted = (sent == args.cycles and received == args.cycles and
+                    payload_frames + missing_frames == args.cycles * 100 and
+                    missing_frames <= args.cycles and
+                    rejected == 0 and not bad and
+                    all(image_revision_confirmed.values()))
     status = ("CANDIDATE_PASS" if dirty else "PASS") if accepted else "FAIL"
     result = {
         "status": status,
-        "test": "arduino_public_raw_bis_pair",
+        "test": f"arduino_public_raw_bis_{args.mode}_pair",
         "core_revision": revision,
         "source_clean": not bool(dirty),
         "probe_sha256": probe_hashes,
@@ -181,6 +210,8 @@ def main() -> int:
         "payload_frames": payload_frames,
         "missing_frames": missing_frames,
         "allowed_missing": args.cycles,
+        "wrong_code_rejected": rejected,
+        "wrong_code_stopped": stopped,
         "image_revision_confirmed": image_revision_confirmed,
         "excluded_pre_boot_lines": {role: len(lines[role]) - len(post_boot[role])
                                     for role in lines},

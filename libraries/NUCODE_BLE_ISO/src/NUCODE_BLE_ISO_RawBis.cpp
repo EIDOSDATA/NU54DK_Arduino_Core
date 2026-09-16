@@ -1,6 +1,6 @@
 /**
  * @file NUCODE_BLE_ISO_RawBis.cpp
- * @brief 비암호화 BIG/BIS 사용자 SDU를 Arduino API로 연결합니다.
+ * @brief 일반·암호화 BIG/BIS 사용자 SDU를 Arduino API로 연결합니다.
  * SPDX-License-Identifier: MIT
  */
 
@@ -8,7 +8,9 @@
 
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE) && \
     (defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE) || \
-     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER))
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER))
 
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gap.h>
@@ -27,16 +29,25 @@ namespace
     using nucode::ble::iso::Error;
     using nucode::ble::iso::RawBis;
 
-#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE)
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE)
     constexpr bool source_role = true;
 #else
     constexpr bool source_role = false;
+#endif
+
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER)
+    constexpr bool encrypted_role = true;
+#else
+    constexpr bool encrypted_role = false;
 #endif
 
     constexpr std::size_t session_length = 16U;
     constexpr std::size_t frame_capacity = 16U;
     RawBis *owner = nullptr;
     std::uint8_t session_id[session_length] = {};
+    std::uint8_t broadcast_code[session_length] = {};
     struct bt_le_ext_adv *advertiser = nullptr;
     struct bt_le_per_adv_sync *periodic_sync = nullptr;
     struct bt_iso_big *big = nullptr;
@@ -231,7 +242,7 @@ namespace
             return;
         }
         if (information == nullptr || information->num_bis != 1U ||
-            information->encryption)
+            information->encryption != encrypted_role)
         {
             recordError(-ENOTSUP);
             return;
@@ -272,8 +283,12 @@ namespace
             .bis_bitfield = BT_ISO_BIS_INDEX_BIT(1),
             .mse = BT_ISO_SYNC_MSE_ANY,
             .sync_timeout = 100U,
-            .encryption = false,
+            .encryption = encrypted_role,
         };
+        if (encrypted_role)
+        {
+            memcpy(parameter.bcode, broadcast_code, sizeof(parameter.bcode));
+        }
         big_disconnected = false;
         const int result = bt_iso_big_sync(periodic_sync, &parameter, &big);
         if (result != 0)
@@ -310,6 +325,7 @@ namespace
 #endif
         started = false;
         owner = nullptr;
+        memset(broadcast_code, 0, sizeof(broadcast_code));
     }
 
     /** @brief BIG callback이 닫힌 뒤 광고 또는 sync 자원을 반환합니다. */
@@ -363,6 +379,7 @@ namespace
         started = false;
         stopping = false;
         owner = nullptr;
+        memset(broadcast_code, 0, sizeof(broadcast_code));
         atomic_set(&channel_ready, 0);
         atomic_set(&peer_ended, 0);
         return Error::none;
@@ -372,14 +389,21 @@ namespace
 namespace nucode::ble::iso
 {
     /** @brief 16-byte session ID로 한 BIG/BIS source 또는 receiver를 시작합니다. */
-    Error RawBis::begin(Role role, const std::uint8_t requested_id[16]) noexcept
+    Error RawBis::begin(Role role, const std::uint8_t requested_id[16],
+                        const std::uint8_t requested_code[16]) noexcept
     {
-        const Role configured = source_role ? Role::bis_source : Role::bis_receiver;
+        const Role configured = encrypted_role ?
+            (source_role ? Role::bis_encrypted_source : Role::bis_encrypted_receiver) :
+            (source_role ? Role::bis_source : Role::bis_receiver);
         if (role != configured)
         {
             return Error::configuration_mismatch;
         }
         if (requested_id == nullptr)
+        {
+            return Error::invalid_argument;
+        }
+        if (encrypted_role == (requested_code == nullptr))
         {
             return Error::invalid_argument;
         }
@@ -389,6 +413,10 @@ namespace nucode::ble::iso
         }
         owner = this;
         memcpy(session_id, requested_id, session_length);
+        if (encrypted_role)
+        {
+            memcpy(broadcast_code, requested_code, sizeof(broadcast_code));
+        }
         atomic_set(&native_error, 0);
         atomic_set(&channel_ready, 0);
         atomic_set(&peer_ended, 0);
@@ -408,6 +436,7 @@ namespace nucode::ble::iso
             {
                 recordError(result);
                 owner = nullptr;
+                memset(broadcast_code, 0, sizeof(broadcast_code));
                 return Error::transport_failure;
             }
             bluetooth_enabled = true;
@@ -456,8 +485,12 @@ namespace nucode::ble::iso
                 .latency = 20U,
                 .packing = BT_ISO_PACKING_SEQUENTIAL,
                 .framing = BT_ISO_FRAMING_UNFRAMED,
-                .encryption = false,
+                .encryption = encrypted_role,
             };
+            if (encrypted_role)
+            {
+                memcpy(parameter.bcode, broadcast_code, sizeof(parameter.bcode));
+            }
             big_disconnected = false;
             result = bt_iso_big_create(advertiser, &parameter, &big);
         }
