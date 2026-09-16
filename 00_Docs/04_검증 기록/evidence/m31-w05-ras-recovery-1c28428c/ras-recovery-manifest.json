@@ -1,0 +1,27 @@
+{
+  "case": "M31-CS-01 recovery and wrong-service third peer",
+  "status": "PARTIAL",
+  "pair_firmware_revision": "d1a258161cd439b5b5f2e869538aa00857799b5a",
+  "three_board_firmware_revision": "907ab2f7493cf5f866d7690ffc35fef00da1b192",
+  "runner_revision": "1c28428c51fb7f54cef99672518a326bdd9bcc14",
+  "initiator_pair_hex_sha256": "5ba9c27f5c10a29524acc63e1a49d5e9d2ff785e3b3c6791d1792005fe918dd4",
+  "initiator_three_board_hex_sha256": "07f7905304c718995f20ebdcccc74751880649554e0c2b1038e48a8e18c8bcdf",
+  "reflector_hex_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "wrong_peer_hex_sha256": "c8fdff8dcbe6832e5e6d82a7b2ff5dfdd0afa2634bc7949c126b720319030b34",
+  "files": {
+    "combined-scan-filter-no-peer.json": "8a973d63ab65256cfefd376706180cfc2ee1c20f3fe550efe5d074910ac27618",
+    "flash-stall-initiator-registers.txt": "c545091b43fbb5c8b83ab812915b8aec742e69e5fab2cd6efa20527177c102ff",
+    "flash-stall-reflector-registers.txt": "1d283805a3c1b85ff2edd42667acc04e2bc795b1c3b7483854c22cc5d9b357bd",
+    "initiator-907ab2f7.build.log.gz": "4ecc06de304410cbf90641b63a81768760965ad5da1482b59503e84bc2e12309",
+    "initiator-907ab2f7.hex.gz": "7fe20ae4a05b4998811f4e05a35fc4ae01367d7847b6ec2e153caa47105291fe",
+    "initiator-d1a25816.hex.gz": "c6d0632d44b6087939e020200a95fb25703143a3391ab2054098ca118d9bdd85",
+    "pair-afterflash-reset-100-20-20.json": "aeb6fea8821b29b41de2bc701060ba8800f282cac52cf7f386201fbf6320109d",
+    "pair-clean-100-20-20.json": "ac979ec4d4b4fa2a6b2c832fd3abc9fb70f22bd495ba56db4f1487e69ed90368",
+    "pair-flash-100-20.json": "1291ff672089a422beb42973985e6c42910914f9a1dd376223dc001bd3932826",
+    "pair-postflash-counter-gap.json": "cb5c326ab07107e52292fe7a64ce9196ee7ecef5b1b6dc36d47eef110812a508",
+    "three-board-serial-noise-fail.json": "dd084550ff1622eb255c9ee4a83a75c5c997a9c3abfcc0ef4a2cb7a4c739f373",
+    "three-board-wrong-service-100.json": "5a887cb0c464a53de520f2d2eee1b7be2b862cf375e60309cabf5df3d5cc08bb",
+    "wrong-peer-907ab2f7.build.log.gz": "f594130e1e86969ea72d6b02c854f32607fce26f1ad9f70f6ec9a4f902ec4714",
+    "wrong-peer-907ab2f7.hex.gz": "170cd5a393839e6166c8c8e3a0e6dfe51b2eba479483966428ddf1cacba249be"
+  }
+}
