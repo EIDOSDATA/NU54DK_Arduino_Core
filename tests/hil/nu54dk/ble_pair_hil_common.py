@@ -325,6 +325,8 @@ def flash_image_pyocd(
     board_id: str,
     image: Path,
     timeout_seconds: float,
+    *,
+    hardware_reset: bool = False,
 ) -> tuple[str, str]:
     if timeout_seconds <= 0:
         raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
@@ -356,6 +358,8 @@ def flash_image_pyocd(
         "hex",
         str(image),
     )
+    if hardware_reset:
+        command = command[:-1] + ("--no-reset", command[-1])
     try:
         result = subprocess.run(
             command,
@@ -374,6 +378,46 @@ def flash_image_pyocd(
     match = re.search(rb"programmed\s+(\d+)\s+bytes", output)
     if match is None:
         raise BlePairHilFailure(f"{role} pyOCD programmed byte 증거가 없습니다.")
+    if hardware_reset:
+        ## @brief nRF54 ISO 앱 시작 전 CMSIS-DAP의 비파괴 hardware reset을 분리합니다.
+        reset_command = (
+            sys.executable,
+            "-I",
+            "-m",
+            "pyocd",
+            "reset",
+            "--uid",
+            board_id,
+            "--target",
+            "nrf54l",
+            "--frequency",
+            "500000",
+            "--connect",
+            "under-reset",
+            "-O",
+            "cmsis_dap.limit_packets=true",
+            "-O",
+            "cmsis_dap.prefer_v1=false",
+            "-O",
+            "auto_unlock=false",
+            "--method",
+            "hw",
+        )
+        try:
+            reset_result = subprocess.run(
+                reset_command,
+                capture_output=True,
+                timeout=min(timeout_seconds, 30.0),
+                check=False,
+            )
+        except subprocess.TimeoutExpired as error:
+            raise BlePairHilFailure(f"{role} pyOCD hardware reset timeout") from error
+        if reset_result.returncode != 0:
+            raise BlePairHilFailure(
+                f"{role} pyOCD hardware reset 실패: "
+                f"{(reset_result.stdout + reset_result.stderr).decode('utf-8', errors='backslashreplace')}"
+            )
+        return "pyocd-sector-hw-reset", match.group(1).decode("ascii")
     return "pyocd-sector", match.group(1).decode("ascii")
 
 

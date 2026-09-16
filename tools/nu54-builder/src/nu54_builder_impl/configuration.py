@@ -200,16 +200,19 @@ def resolve_library_features(
 ) -> list[dict[str, Any]]:
     resolved: list[dict[str, Any]] = []
     profile_features = set(profile["features"])
+    selected = [
+        feature
+        for library_name in sorted(set(library_names), key=str.casefold)
+        if (feature := load_library_feature(platform_root, library_name)) is not None
+    ]
+    available_features = profile_features | {feature["id"] for feature in selected}
     conflict_owners = {
         resource: f"profile:{profile['id']}" for resource in profile["conflicts"]
     }
-    for library_name in sorted(set(library_names), key=str.casefold):
-        feature = load_library_feature(platform_root, library_name)
-        if feature is None:
-            continue
+    for feature in selected:
         if profile["id"] not in feature["compatible_profiles"]:
             raise AdapterError(f"[NU54:E_FEATURE_PROFILE] {feature['id']}는 {profile['id']} profile과 호환되지 않습니다.")
-        missing = sorted(set(feature["requires"]) - profile_features)
+        missing = sorted(set(feature["requires"]) - available_features)
         conflicts = sorted(set(feature["conflicts"]) & conflict_owners.keys())
         if missing:
             raise AdapterError(f"[NU54:E_FEATURE_REQUIREMENT] {feature['id']} 요구 기능이 없습니다: {missing}")

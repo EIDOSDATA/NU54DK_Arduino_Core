@@ -140,6 +140,7 @@ class M22PackageExamplesTests(unittest.TestCase):
             ("NUCODE_BLE_LegacySigning", "LegacySignedWritePeripheral"),
             ("NUCODE_BLE_EATT", "EattCentral"),
             ("NUCODE_BLE_EATT", "EattPeripheral"),
+            ("NUCODE_BLE_DFU", "SecureDfuPeripheral"),
         }
         later_ble_examples |= {
             ("NUCODE_BLE_ISO", name)

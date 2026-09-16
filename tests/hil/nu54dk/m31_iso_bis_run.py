@@ -137,7 +137,7 @@ def execute(args: argparse.Namespace) -> dict:
                 board = boards[role]
                 board["registers"] = collect_register_identity(board["uid"], board["volume"])
                 board["flash_mode"], board["flash_bytes"] = flash_image_pyocd(
-                    role, board["uid"], board["image"], 120.0
+                    role, board["uid"], board["image"], 120.0, hardware_reset=True
                 )
             time.sleep(2.0)
             ports = {role: serial_module.Serial(board["vcom"], 115200, timeout=0.15)

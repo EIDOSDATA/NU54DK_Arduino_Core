@@ -36,6 +36,7 @@ class M13ProfileContractTests(unittest.TestCase):
             {
                 "nucode.ble.nus",
                 "nucode.ble.iso",
+                "nucode.ble.dfu",
                 "nucode.ble.security",
                 "nucode.ble.legacy_signing",
                 "nucode.ble.eatt",
@@ -137,6 +138,7 @@ class M13ProfileContractTests(unittest.TestCase):
                 "SecureConsumerControl",
                 "SecureKeyboard",
                 "SecureMouse",
+                "SecureDfuPeripheral",
                 "FabricCapabilities",
             },
         )
@@ -171,6 +173,19 @@ class M13ProfileContractTests(unittest.TestCase):
         self.assertEqual(MODULE.selected_bundled_libraries(paths, records), ["Wire"])
         profile = MODULE.load_configuration_profile(ROOT, "standard")
         self.assertEqual([item["id"] for item in MODULE.resolve_library_features(ROOT, profile, ["Wire", "Unknown"])], ["nucode.wire"])
+
+    def test_dfu_requires_selected_security_feature(self) -> None:
+        """! @brief DFU feature가 선택된 보안 library를 요구함을 검증합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "secure_ble_dfu")
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_FEATURE_REQUIREMENT.*nucode.ble.security"):
+            MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_DFU"])
+        selected = MODULE.resolve_library_features(
+            ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_DFU", "NUCODE_BLE_Security"]
+        )
+        self.assertEqual(
+            {item["id"] for item in selected},
+            {"nucode.ble.dfu", "nucode.ble.security", "nucode.ble.nus"},
+        )
 
     def test_schema_path_conflict_and_cache_key_contract(self) -> None:
         """! @brief 잘못된 manifest를 거부하고 feature 집합이 cache key를 바꾸는지 확인합니다. """

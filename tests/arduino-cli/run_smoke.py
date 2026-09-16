@@ -1681,6 +1681,25 @@ def test_m30_secure_example(
     if "nucode.ble.security" not in secure_features:
         raise SmokeFailure("M30 secure profile did not select BLE security feature")
 
+    dfu_sketch = (
+        repository / "libraries" / "NUCODE_BLE_DFU" / "examples" /
+        "SecureDfuPeripheral"
+    )
+    dfu_build = root / "build-secure-ble-dfu-peripheral"
+    dfu_command = list(compile_command(cli, config, dfu_build, dfu_sketch))
+    dfu_command[-1:-1] = ("--board-options", "feature_set=secure_ble_dfu")
+    run(dfu_command)
+    dfu_context = assert_m30_secure_build(
+        dfu_build, "SecureDfuPeripheral.ino", signing_key
+    )
+    dfu_features = {
+        item.get("id")
+        for item in dfu_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if not {"nucode.ble.security", "nucode.ble.dfu"}.issubset(dfu_features):
+        raise SmokeFailure("DFU example did not select secure BLE DFU features")
+
 
 ## @brief M31의 실제 ISO 역할 예제를 Arduino 설치 source에서 전수 compile합니다.
 def test_m31_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
@@ -1796,6 +1815,7 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "SecureKeyboard",
             "SecureMouse",
         },
+        "NUCODE BLE Secure DFU": {"SecureDfuPeripheral"},
         "NUCODE BLE ISO": {
             "CISCentral", "CISPeripheral", "BISSource", "BISReceiver",
             "BISEncryptedSource", "BISEncryptedReceiver", "BISTimeSource",
