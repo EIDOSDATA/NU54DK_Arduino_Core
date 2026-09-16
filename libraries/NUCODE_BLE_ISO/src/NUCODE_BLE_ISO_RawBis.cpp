@@ -12,6 +12,7 @@
 
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gap.h>
+#include <zephyr/bluetooth/hci_types.h>
 #include <zephyr/bluetooth/iso.h>
 #include <zephyr/kernel.h>
 #include <zephyr/net_buf.h>
@@ -55,6 +56,7 @@ namespace
     std::uint16_t next_sequence = 0U;
     atomic_t channel_ready = ATOMIC_INIT(0);
     atomic_t native_error = ATOMIC_INIT(0);
+    atomic_t peer_ended = ATOMIC_INIT(0);
     K_MSGQ_DEFINE(receive_queue, sizeof(BisFrame), 8U, 4U);
 
 #if defined(CONFIG_BT_ISO_BROADCASTER)
@@ -138,7 +140,14 @@ namespace
         atomic_set(&channel_ready, 0);
         if (started && !stopping)
         {
-            recordError(-static_cast<int>(reason));
+            if (!source_role && reason == BT_HCI_ERR_REMOTE_USER_TERM_CONN)
+            {
+                atomic_set(&peer_ended, 1);
+            }
+            else
+            {
+                recordError(-static_cast<int>(reason));
+            }
         }
     }
 
@@ -236,7 +245,8 @@ namespace
                             const struct bt_le_per_adv_sync_term_info *information)
     {
         static_cast<void>(information);
-        if (started && !stopping && sync == periodic_sync)
+        if (started && !stopping && sync == periodic_sync &&
+            atomic_get(&peer_ended) == 0)
         {
             recordError(-ENOLINK);
         }
@@ -354,6 +364,7 @@ namespace
         stopping = false;
         owner = nullptr;
         atomic_set(&channel_ready, 0);
+        atomic_set(&peer_ended, 0);
         return Error::none;
     }
 }
@@ -380,6 +391,7 @@ namespace nucode::ble::iso
         memcpy(session_id, requested_id, session_length);
         atomic_set(&native_error, 0);
         atomic_set(&channel_ready, 0);
+        atomic_set(&peer_ended, 0);
         k_msgq_purge(&receive_queue);
         next_sequence = 0U;
         sync_requested = false;
@@ -491,7 +503,13 @@ namespace nucode::ble::iso
         {
             return cleanup;
         }
-        return atomic_get(&native_error) == 0 ? Error::none : Error::transport_failure;
+        const int failure = atomic_get(&native_error);
+        if (failure != 0 &&
+            !(failure == -ENOLINK && atomic_get(&peer_ended) != 0))
+        {
+            return Error::transport_failure;
+        }
+        return atomic_get(&peer_ended) != 0 ? Error::peer_stopped : Error::none;
     }
 
     /** @brief 사용자 SDU를 Zephyr net_buf에 복사해 한 BIS로 보냅니다. */

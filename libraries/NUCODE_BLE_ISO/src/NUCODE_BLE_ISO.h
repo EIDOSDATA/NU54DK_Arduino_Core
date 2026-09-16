@@ -41,6 +41,7 @@ namespace nucode::ble::iso
         busy,
         not_ready,
         transport_failure,
+        peer_stopped,
     };
 
     /** @brief 한 CIS에서 받은 사용자 SDU와 controller 메타데이터입니다. */

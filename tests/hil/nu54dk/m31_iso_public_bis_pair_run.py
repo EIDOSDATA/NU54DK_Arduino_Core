@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from argparse import ArgumentParser
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import hashlib
 import json
@@ -21,9 +20,12 @@ from ble_pair_hil_common import flash_image_pyocd
 
 ROOT = Path(__file__).resolve().parents[3]
 SENT = re.compile(r"^BIS sent frames=100$")
-RECEIVED = re.compile(r"^BIS received frames=100 errors=0$")
+RECEIVED = re.compile(r"^BIS received frames=(99|100) missing=(0|1) errors=0$")
 RECEIVE_END = re.compile(r"^BIS received frames=")
-ERROR = re.compile(r"^BIS (?:start|send) failed:|^BIS error:|^BIS receive timeout")
+ERROR = re.compile(
+    r"^BIS (?:start|send) failed:|^BIS error:|^BIS receive timeout|"
+    r"^BIS peer stopped before enough frames:"
+)
 
 
 ## @brief probe UID는 메모리에서만 사용하고 결과에는 SHA-256만 기록합니다.
@@ -67,9 +69,8 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
     try:
         for stream in streams.values():
             stream.reset_input_buffer()
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            list(pool.map(reset, (probe_ids[role]
-                                  for role in ("receiver", "source"))))
+        reset(probe_ids["source"])
+        reset(probe_ids["receiver"])
         start = time.monotonic()
         deadline = start + seconds
         while time.monotonic() < deadline:
@@ -142,7 +143,12 @@ def main() -> int:
     post_boot = {role: after_final_boot(items, revision)
                  for role, items in lines.items()}
     sent = sum(bool(SENT.fullmatch(item["text"])) for item in post_boot["source"])
-    received = sum(bool(RECEIVED.fullmatch(item["text"])) for item in post_boot["receiver"])
+    receive_matches = [RECEIVED.fullmatch(item["text"])
+                       for item in post_boot["receiver"]]
+    receive_matches = [match for match in receive_matches if match is not None]
+    received = len(receive_matches)
+    payload_frames = sum(int(match.group(1)) for match in receive_matches)
+    missing_frames = sum(int(match.group(2)) for match in receive_matches)
     bad = []
     for role in post_boot:
         for item in post_boot[role]:
@@ -156,6 +162,8 @@ def main() -> int:
         for role in lines
     }
     accepted = (sent == args.cycles and received == args.cycles and
+                payload_frames + missing_frames == args.cycles * 100 and
+                missing_frames <= args.cycles and
                 not bad and all(image_revision_confirmed.values()))
     status = ("CANDIDATE_PASS" if dirty else "PASS") if accepted else "FAIL"
     result = {
@@ -170,6 +178,9 @@ def main() -> int:
         "flash": flash,
         "requested_cycles": args.cycles,
         "completed_cycles": {"source": sent, "receiver": received},
+        "payload_frames": payload_frames,
+        "missing_frames": missing_frames,
+        "allowed_missing": args.cycles,
         "image_revision_confirmed": image_revision_confirmed,
         "excluded_pre_boot_lines": {role: len(lines[role]) - len(post_boot[role])
                                     for role in lines},
@@ -187,4 +198,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

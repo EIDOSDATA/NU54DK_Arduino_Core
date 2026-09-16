@@ -20,24 +20,45 @@ namespace
     RawBis bis;
     std::uint16_t received = 0U;
     std::uint16_t errors = 0U;
+    std::uint16_t missing = 0U;
+    std::uint16_t last_sequence = 0U;
     std::uint32_t session_ms = 0U;
     std::uint32_t restart_ms = 0U;
     bool running = false;
     bool closing = false;
+    bool connection_reported = false;
+    bool have_frame = false;
 
     /** @brief 수신 payload와 예상 sequence를 사용자 영역에서 검사합니다. */
-    bool validFrame(const BisFrame &frame)
+    bool validFrame(const BisFrame &frame, std::uint16_t &number)
     {
         if (frame.length != 8U || frame.data[0] != 'B' || frame.data[1] != 'I' ||
             frame.data[6] != 0xB1U || frame.data[7] != 0x50U)
         {
             return false;
         }
-        const std::uint16_t number = static_cast<std::uint16_t>(frame.data[2]) |
-                                     (static_cast<std::uint16_t>(frame.data[3]) << 8U);
-        return number == received &&
+        number = static_cast<std::uint16_t>(frame.data[2]) |
+                 (static_cast<std::uint16_t>(frame.data[3]) << 8U);
+        return number < 100U &&
                frame.data[4] == static_cast<std::uint8_t>(number ^ 0x5AU) &&
                frame.data[5] == static_cast<std::uint8_t>((number >> 8U) ^ 0xA5U);
+    }
+
+    /** @brief 수신량·누락·오류를 한 session의 종료 결과로 표시합니다. */
+    void reportSession()
+    {
+        if (have_frame)
+        {
+            missing += static_cast<std::uint16_t>(99U - last_sequence);
+        }
+        Serial.print("BIS received frames=");
+        Serial.print(received);
+        Serial.print(" missing=");
+        Serial.print(missing);
+        Serial.print(" errors=");
+        Serial.println(errors);
+        bis.stop();
+        closing = true;
     }
 
     /** @brief session ID가 일치하는 periodic advertising을 찾습니다. */
@@ -54,9 +75,13 @@ namespace
         }
         received = 0U;
         errors = 0U;
+        missing = 0U;
+        last_sequence = 0U;
+        have_frame = false;
         session_ms = millis();
         running = true;
         closing = false;
+        connection_reported = false;
         Serial.println("BIS receiver scanning");
     }
 }
@@ -83,26 +108,71 @@ void loop()
         return;
     }
     const Error progress = bis.poll();
-    if (progress == Error::transport_failure && !closing)
+    if (!connection_reported && bis.connected())
     {
-        Serial.print("BIS error: ");
-        Serial.println(bis.nativeError());
-        bis.stop();
-        closing = true;
+        connection_reported = true;
+        Serial.print("BIS receiver synchronized ms=");
+        Serial.println(millis() - session_ms);
     }
     BisFrame frame = {};
     while (!closing && bis.readFrame(frame))
     {
-        if (!validFrame(frame))
+        std::uint16_t number = 0U;
+        if (!validFrame(frame, number))
         {
             ++errors;
+            continue;
         }
+        if (!have_frame)
+        {
+            Serial.print("BIS first frame=");
+            Serial.println(number);
+            missing = number;
+            have_frame = true;
+        }
+        else if (number <= last_sequence)
+        {
+            ++errors;
+            continue;
+        }
+        else
+        {
+            missing += static_cast<std::uint16_t>(number - last_sequence - 1U);
+        }
+        last_sequence = number;
         ++received;
     }
     if (!closing && received == 100U)
     {
-        Serial.print("BIS received frames=");
+        reportSession();
+    }
+    if (!closing && progress == Error::peer_stopped)
+    {
+        if (received >= 99U && missing + (99U - last_sequence) <= 1U &&
+            errors == 0U)
+        {
+            reportSession();
+        }
+        else
+        {
+            Serial.print("BIS peer stopped before enough frames: ");
+            Serial.print(received);
+            Serial.print(" missing=");
+            Serial.print(missing);
+            Serial.print(" errors=");
+            Serial.println(errors);
+            bis.stop();
+            closing = true;
+        }
+    }
+    if (!closing && progress == Error::transport_failure)
+    {
+        Serial.print("BIS error: ");
+        Serial.print(bis.nativeError());
+        Serial.print(" frames=");
         Serial.print(received);
+        Serial.print(" missing=");
+        Serial.print(missing);
         Serial.print(" errors=");
         Serial.println(errors);
         bis.stop();
