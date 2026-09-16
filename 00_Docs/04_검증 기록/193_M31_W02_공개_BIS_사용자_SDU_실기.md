@@ -31,3 +31,6 @@ byte/RAM 106,467 byte였다. 양 image의 Serial revision은 clean source와 일
 닫는다. 암호화·timestamp·CIS→BIS 세 보드의 공개 예제 7개는 여전히 고정 시험
 backend 중심이다. 전체 W02와 M31은 진행 중이며, 시험용 무선 HIL의 이전 PASS를
 공개 Arduino 예제 완료로 대신하지 않는다.
+
+후속 [194번 암호화 BIS 실기](194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md)에서
+암호화 두 역할을 더 전환해 현재 남은 공개 ISO 예제는 **5개**다.

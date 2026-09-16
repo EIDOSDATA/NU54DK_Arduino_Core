@@ -12,6 +12,7 @@
 
 | 기록 | 용도 |
 | --- | --- |
+| [194 — M31-W02 공개 암호화 BIS 사용자 SDU 실기](194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md) | clean 암호화 두 역할 20/20·2,000/2,000, 잘못된 Code MIC 거부·유효 SDU 0, W02 공개 예제 5개 진행 중 |
 | [193 — M31-W02 공개 BIS 사용자 SDU 실기](193_M31_W02_공개_BIS_사용자_SDU_실기.md) | clean 공개 `RawBis` source/receiver 20/20, 1,999/2,000 수신·회차별 최소 99, W02 공개 예제 7개 진행 중 |
 | [192 — M31-W02 공개 CIS 사용자 SDU 실기](192_M31_W02_공개_CIS_사용자_SDU_실기.md) | clean 공개 `RawCis` 두 역할 20회×100 송수신·payload 오류 0, W02 나머지 9개 예제 진행 중 |
 | [188 — M31-W03 Arduino BAP 원격 잘못된 ASE 상태 거부 20회](188_M31_W03_Arduino_BAP_원격_잘못된_ASE_상태_거부_20회.md) | clean 공개 Arduino server의 idle ASE 원격 Release가 20/20 `code=4 reason=0`으로 거부됨 |

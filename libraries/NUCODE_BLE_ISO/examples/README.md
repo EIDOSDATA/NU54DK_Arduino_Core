@@ -10,14 +10,20 @@ BLE로 빌드한다. Central은 100 frame을 전송하고 Peripheral은 받은 �
 시작한 뒤 receiver가 같은 광고에 동기화한다. 수신 측은 빠진 packet을 별도로
 세고, 매 회차 99개 이상·손상 0개를 확인한 후 다시 시작한다.
 
-나머지 7개 스케치는 고정 시험 SDU를 실행하는 진단 역할 예제다. `.ino`에서 사용자
+`BISEncryptedSource`와 `BISEncryptedReceiver`는 같은 데이터 흐름에 별도의
+16-byte `broadcastCode`를 더한다. 두 `.ino`의 Code가 일치해야 하며 실제
+사용자는 예제 값을 새 값으로 바꾸어야 한다. 잘못된 Code에서는 MIC가 수신 SDU를
+거부한다.
+
+나머지 5개 스케치는 고정 시험 SDU를 실행하는 진단 역할 예제다. `.ino`에서 사용자
 payload를 송수신하는 공개 API를 아직 사용하지 않으므로 일반 Arduino 데이터 예제로
 간주하지 않는다. [재점검 기록](<../../../00_Docs/04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)과
 [CIS 두 역할 실기](<../../../00_Docs/04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md>),
-[BIS 두 역할 실기](<../../../00_Docs/04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md>)에
+[BIS 두 역할 실기](<../../../00_Docs/04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md>),
+[암호화 BIS 실기](<../../../00_Docs/04_검증 기록/194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md>)에
 W02 재작업 범위와 검증 결과를 기록했다.
 
-`CISCentral`/`CISPeripheral`과 `BISSource`/`BISReceiver`의 `.ino`에는 payload
+`CISCentral`/`CISPeripheral`과 일반·암호화 BIS 두 쌍의 `.ino`에는 payload
 생성·검사, 시작·전송·수신·오류·종료 흐름이 있다. Bluetooth ISO 객체,
 Zephyr callback과 buffer 관리는 라이브러리 구현 내부에 있다. 다른 역할은 공개
 데이터 API로 전환하는 중이다.

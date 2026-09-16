@@ -627,19 +627,21 @@
       "id": "raw_iso_broadcaster",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
-      "source_revision": "f1c5ea60493ed79829885887d67dd5693c7b9c87",
+      "source_revision": "1bb127b4d211c0a7b85da16cb3de8dc8e130b4dc",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-f1c5ea60/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-encrypted-1bb127b4/manifest.json",
+      "related_sketches": ["libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino"]
     },
     {
       "id": "raw_iso_receiver",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
-      "source_revision": "f1c5ea60493ed79829885887d67dd5693c7b9c87",
+      "source_revision": "1bb127b4d211c0a7b85da16cb3de8dc8e130b4dc",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-f1c5ea60/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-encrypted-1bb127b4/manifest.json",
+      "related_sketches": ["libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino"]
     },
     {
       "id": "iso_combined_source",

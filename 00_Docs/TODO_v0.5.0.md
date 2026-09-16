@@ -60,7 +60,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
-| M31 | **1/8** | W01 원장·capability 완료. W02의 고정 시험 무선 HIL과 공개 CIS·BIS 4개 역할 실기는 PASS, 암호화·time sync·combined 공개 ISO 예제 7개 재작업 중. W03 Audio·W04 DF·W05 CS 진행 → W06~W08 통합·마감 |
+| M31 | **1/8** | W01 원장·capability 완료. W02 고정 시험 무선 HIL과 공개 CIS·일반/암호화 BIS 6개 역할 실기는 PASS, time sync·combined 공개 ISO 예제 5개 재작업 중. W03 Audio·W04 DF·W05 CS 진행 → W06~W08 통합·마감 |
 | M32 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
 | M33 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 Host·RC·공개 |
 | Host | **3/8** | HOST-W04 Ubuntu prerequisite·path·권한부터 시작; HOST-W05~HOST-W08은 별도 잔여 |
