@@ -73,6 +73,15 @@ config NUCODE_BLE_DF_RESPONDER
 	  공개 연결 handle을 받아 기본 안테나 CTE 응답을 시작·중단합니다.
 	  Zephyr 연결 객체와 방향 탐지 호출은 라이브러리 구현 내부에 둡니다.
 
+config NUCODE_BLE_CS_REFLECTOR
+	bool "NUCODE BLE Ranging Service reflector API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_CHANNEL_SOUNDING && BT_RAS_RRSP
+	help
+	  공개 BLE 연결 handle에 CS reflector 역할을 결합합니다.
+	  Zephyr CS 호출과 연결 객체는 라이브러리 구현 내부에 둡니다.
+
 config NUCODE_BLE_CORE
 	bool "NUCODE BLE Core/GAP 활성화"
 	default n
