@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 import time
 
@@ -27,9 +28,20 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--reset-only", action="store_true")
+    parser.add_argument("--source-clean", action="store_true")
     args = parser.parse_args()
     if not 1 <= args.cycles <= 20:
         parser.error("cycles must be between 1 and 20")
+    if args.source_clean:
+        root = Path(__file__).resolve().parents[3]
+        revision = subprocess.check_output(
+            ("git", "rev-parse", "HEAD"), cwd=root, text=True
+        ).strip()
+        changed = subprocess.check_output(
+            ("git", "status", "--porcelain"), cwd=root, text=True
+        ).strip()
+        if changed or args.core_revision != revision:
+            parser.error("exact HIL requires clean source and full HEAD revision")
 
     serial, ports = import_pyserial()
     init_uid, init_volume, init_port = discover(args.initiator_probe_sha256, ports)
@@ -40,6 +52,7 @@ def main():
         "status": "FAIL",
         "test": "advertised_ranging_uuid_without_gatt_service",
         "core_revision": args.core_revision,
+        "source_clean": args.source_clean,
         "initiator_probe_sha256": args.initiator_probe_sha256,
         "spoof_probe_sha256": args.spoof_probe_sha256,
         "initiator_port": init_port,
