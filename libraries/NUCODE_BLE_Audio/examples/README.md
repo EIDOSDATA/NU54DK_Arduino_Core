@@ -54,6 +54,8 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 - `stream stopped`와 `completed cycles=N`을 출력한 뒤 연결을 끊고 새 광고를
   검색한다. 두 보드가 다시 연결되면 새로운 frame을 보낸다. 외부 Serial 명령이나
   오디오 장치 없이 stream 수명과 복구를 반복 시험하는 예제다.
+- stop 직후 중복 stop과 frame 전송을 각각 거부하는지 확인하고
+  `invalid transition rejected`를 출력한다.
 
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는

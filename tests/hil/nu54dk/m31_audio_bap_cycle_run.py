@@ -45,6 +45,7 @@ def collect_cycles(client, server, record: dict, requested: int) -> None:
     sent = False
     stopped = False
     disconnected = False
+    rejected = False
     decoded = 0
     while expected <= requested:
         if time.monotonic() - cycle_started > 30.0:
@@ -67,13 +68,20 @@ def collect_cycles(client, server, record: dict, requested: int) -> None:
                     streaming = True
                 if streaming and "LE Audio sent frames=100" in line:
                     sent = True
+                if "LE Audio invalid transition accepted" in line:
+                    raise RuntimeError(f"client accepted invalid transition in cycle {expected}")
+                if "LE Audio invalid transition rejected" in line:
+                    if rejected:
+                        raise RuntimeError(f"duplicate negative result in cycle {expected}")
+                    rejected = True
+                    record["rejected_operations"] += 2
                 if "LE Audio stream stopped" in line:
                     stopped = True
                 if stopped and "LE Audio peer disconnected" in line:
                     disconnected = True
                 match = CYCLE_PATTERN.search(line)
                 if match is not None:
-                    if int(match.group(1)) != expected or not (streaming and sent and stopped):
+                    if int(match.group(1)) != expected or not (streaming and sent and stopped and rejected):
                         raise RuntimeError(f"cycle {expected} skipped stream/stop/release")
                     record["completed_cycles"] = expected
             else:
@@ -92,8 +100,11 @@ def collect_cycles(client, server, record: dict, requested: int) -> None:
             sent = False
             stopped = False
             disconnected = False
+            rejected = False
     record["elapsed_s"] = round(time.monotonic() - started, 3)
     record["server_decoded_frames"] = decoded
+    if record["rejected_operations"] != requested * 2:
+        raise RuntimeError("invalid-transition operation denominator mismatch")
 
 
 def main() -> int:
@@ -137,6 +148,7 @@ def main() -> int:
         "client_config_sha256": file_hash(args.client_config),
         "server_config_sha256": file_hash(args.server_config),
         "requested_cycles": args.cycles, "completed_cycles": 0,
+        "rejected_operations": 0,
         "cycle_seconds": [], "client_lines": [], "server_lines": [],
     }
     try:

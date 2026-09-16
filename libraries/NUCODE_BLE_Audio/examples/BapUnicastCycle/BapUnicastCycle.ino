@@ -222,5 +222,19 @@ void loop()
         const Error result = audioSource.stop();
         Serial.print("LE Audio auto stop result=");
         Serial.println(static_cast<unsigned int>(result));
+        if (result == Error::none)
+        {
+            /** @brief 중단 중인 ASE에 대한 중복 제어와 frame 전송은 거부되어야 합니다. */
+            const Error duplicateStop = audioSource.stop();
+            const Error lateFrame = audioSource.sendFrame(frame);
+            if ((duplicateStop == Error::not_ready) && (lateFrame == Error::not_ready))
+            {
+                Serial.println("LE Audio invalid transition rejected");
+            }
+            else
+            {
+                Serial.println("LE Audio invalid transition accepted");
+            }
+        }
     }
 }

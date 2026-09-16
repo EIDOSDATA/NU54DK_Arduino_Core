@@ -90,7 +90,8 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=3200",
             )
             if sketch.parent.name == "BapUnicastCycle":
-                required += ("audioSource.stop(", "completed cycles=")
+                required += ("audioSource.stop(", "completed cycles=",
+                             "invalid transition rejected")
         else:
             required = (
                 "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",
