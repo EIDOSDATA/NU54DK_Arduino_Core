@@ -166,6 +166,40 @@ namespace
         return 0x31b15000U ^ (static_cast<uint32_t>(sequence) * 0x9e3779b1U) ^ marker;
     }
 
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    /** @brief 마지막 SDU 손실도 포함하도록 현재 receiver 결과를 한 번만 출력합니다. */
+    void printReceiveEnd()
+    {
+        if (rx_end_printed)
+        {
+            return;
+        }
+        rx_end_printed = true;
+#if defined(M31_BIS_TIME_SYNC)
+        Serial.print("M31BIS|1|TIME_END|nonce=");
+        Serial.print(nonce);
+        Serial.print("|valid=");
+        Serial.print(atomic_get(&valid_timestamp));
+        Serial.print("|stale=0|first_ts=");
+        Serial.print(first_timestamp);
+        Serial.print("|last_ts=");
+        Serial.println(last_timestamp);
+#endif
+        Serial.print("M31BIS|1|RX_END|nonce=");
+        Serial.print(nonce);
+        Serial.print("|received=");
+        Serial.print(atomic_get(&received));
+        Serial.print("|corrupt=");
+        Serial.print(atomic_get(&corrupt));
+        Serial.print("|duplicate=");
+        Serial.print(atomic_get(&duplicate));
+        Serial.print("|out_of_order=");
+        Serial.print(atomic_get(&out_of_order));
+        Serial.print("|empty_slots=");
+        Serial.println(atomic_get(&empty_slots));
+    }
+#endif
+
     /** @brief 유효 SDU만 100개 분모에 포함하고 빈 controller slot은 별도 셉니다. */
     void isoReceived(struct bt_iso_chan *channel, const struct bt_iso_recv_info *information,
                      struct net_buf *buffer)
@@ -247,29 +281,7 @@ namespace
         atomic_inc(&received);
         if (sequence == sdu_count - 1U && !rx_end_printed)
         {
-            rx_end_printed = true;
-#if defined(M31_BIS_TIME_SYNC)
-            Serial.print("M31BIS|1|TIME_END|nonce=");
-            Serial.print(nonce);
-            Serial.print("|valid=");
-            Serial.print(atomic_get(&valid_timestamp));
-            Serial.print("|stale=0|first_ts=");
-            Serial.print(first_timestamp);
-            Serial.print("|last_ts=");
-            Serial.println(last_timestamp);
-#endif
-            Serial.print("M31BIS|1|RX_END|nonce=");
-            Serial.print(nonce);
-            Serial.print("|received=");
-            Serial.print(atomic_get(&received));
-            Serial.print("|corrupt=");
-            Serial.print(atomic_get(&corrupt));
-            Serial.print("|duplicate=");
-            Serial.print(atomic_get(&duplicate));
-            Serial.print("|out_of_order=");
-            Serial.print(atomic_get(&out_of_order));
-            Serial.print("|empty_slots=");
-            Serial.println(atomic_get(&empty_slots));
+            printReceiveEnd();
         }
     }
 
@@ -894,6 +906,12 @@ namespace
             fail("stop_command", -EINVAL);
             return;
         }
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER) && !defined(M31_BIS_TIME_SYNC)
+        if (!source_role && !rx_end_printed)
+        {
+            printReceiveEnd();
+        }
+#endif
         finished = true;
         stopping = true;
         stop_start_ms = k_uptime_get();

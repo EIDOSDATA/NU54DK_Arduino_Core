@@ -39,6 +39,22 @@ class M31IsoBisTests(unittest.TestCase):
         self.assertEqual(result.minimum_received, 100)
         self.assertGreater(result.empty_slots, 0)
 
+    def test_last_sdu_loss_uses_stop_snapshot_and_keeps_acceptance_boundary(self) -> None:
+        """! @brief 마지막 SDU 손실도 RX_END 99개 snapshot으로 유한 판정합니다. """
+        nonce = NONCES[0].encode("ascii")
+        changed = TRANSCRIPT.replace(
+            b"receiver: M31BIS|1|RX_END|nonce=" + nonce + b"|received=100|",
+            b"receiver: M31BIS|1|RX_END|nonce=" + nonce + b"|received=99|",
+            1,
+        ).replace(
+            b"receiver: M31BIS|1|STOPPED|nonce=" + nonce + b"|role=receiver|tx=0|rx=100",
+            b"receiver: M31BIS|1|STOPPED|nonce=" + nonce + b"|role=receiver|tx=0|rx=99",
+            1,
+        )
+        result = parse_bis_transcript(changed, NONCES, IDENTITY)
+        self.assertEqual(result.minimum_received, 99)
+        self.assertEqual(result.total_received, 1999)
+
     def test_corrupt_order_and_missing_big_return_fail_closed(self) -> None:
         """! @brief payload 오류·역순 수신·BIG 자원 반환 누락을 각각 거부합니다. """
         for corrupted in (

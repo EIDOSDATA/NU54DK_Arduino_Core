@@ -178,7 +178,16 @@ def execute(args: argparse.Namespace) -> dict:
                     write_command(ports["receiver"], f"M31BIS|1|CHECK_BAD_CODE|nonce={nonce}")
                     wait_event(ports["receiver"], "receiver", transcript, "BAD_CODE_REJECTED", nonce, 10.0)
                 else:
-                    wait_event(ports["receiver"], "receiver", transcript, "RX_END", nonce, 60.0)
+                    if args.time_sync:
+                        wait_event(ports["receiver"], "receiver", transcript, "RX_END", nonce, 60.0)
+                    else:
+                        time.sleep(0.25)
+                        write_command(ports["receiver"], f"M31BIS|1|STOP|nonce={nonce}")
+                        wait_event(ports["receiver"], "receiver", transcript, "RX_END", nonce, 10.0)
+                        wait_event(ports["receiver"], "receiver", transcript, "STOPPED", nonce, 35.0)
+                        write_command(ports["source"], f"M31BIS|1|STOP|nonce={nonce}")
+                        wait_event(ports["source"], "source", transcript, "STOPPED", nonce, 35.0)
+                        continue
                 for role in ROLES:
                     write_command(ports[role], f"M31BIS|1|STOP|nonce={nonce}")
                 for role in ROLES:
