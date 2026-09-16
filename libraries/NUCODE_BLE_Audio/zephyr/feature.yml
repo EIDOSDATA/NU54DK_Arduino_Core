@@ -4,6 +4,6 @@
   "requires": ["ble"],
   "conf": [],
   "overlays": [],
-  "conflicts": ["radio"],
+  "conflicts": [],
   "compatible_profiles": ["ble"]
 }

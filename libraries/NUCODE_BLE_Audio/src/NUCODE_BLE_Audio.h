@@ -25,6 +25,8 @@ namespace nucode::ble::audio
         not_started,
         buffer_too_small,
         codec_error,
+        stack_error,
+        not_ready,
     };
 
     /** @brief 한 LC3 stream의 frame 구성을 지정합니다. */
@@ -65,12 +67,12 @@ namespace nucode::ble::audio
         void end() noexcept;
 
         /** @brief PCM 한 frame을 LC3 byte frame으로 encode합니다. */
-        Error encode(const std::int16_t *pcm, std::size_t sample_count,
-                     std::uint8_t *frame, std::size_t frame_capacity) noexcept;
+        Error encode(const std::int16_t *pcm, std::size_t sample_count, std::uint8_t *frame,
+                     std::size_t frame_capacity) noexcept;
 
         /** @brief LC3 byte frame 하나를 PCM으로 decode합니다. */
-        Error decode(const std::uint8_t *frame, std::size_t frame_size,
-                     std::int16_t *pcm, std::size_t sample_capacity) noexcept;
+        Error decode(const std::uint8_t *frame, std::size_t frame_size, std::int16_t *pcm,
+                     std::size_t sample_capacity) noexcept;
 
         /** @brief 현재 구성의 PCM sample/frame 수를 반환합니다. */
         [[nodiscard]] std::size_t frameSamples() const noexcept;
@@ -87,6 +89,60 @@ namespace nucode::ble::audio
         void *state_ = nullptr;
         Error last_error_ = Error::not_started;
     };
-}
+
+    /**
+     * @brief PACS와 ASCS의 unicast sink를 제공하고 LC3 frame을 수신합니다.
+     *
+     * BLEDevice.begin() 뒤, 광고 시작 전에 begin()을 호출합니다. 하나의
+     * 16 kHz·10 ms·40-byte mono LC3 stream과 고정 크기 수신 queue를 사용합니다.
+     * 수신 frame의 복호화는 공개 Lc3Codec으로 Arduino loop에서 수행합니다.
+     */
+    class UnicastServer final
+    {
+      public:
+        UnicastServer() = default;
+
+        ~UnicastServer()
+        {
+            (void)end();
+        }
+
+        UnicastServer(const UnicastServer &) = delete;
+        UnicastServer &operator=(const UnicastServer &) = delete;
+        UnicastServer(UnicastServer &&) = delete;
+        UnicastServer &operator=(UnicastServer &&) = delete;
+
+        /** @brief PACS/ASCS와 LC3 sink capability를 등록합니다. */
+        Error begin() noexcept;
+
+        /** @brief 연결이 해제된 뒤 서비스와 고정 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 현재 ASE가 streaming 상태인지 반환합니다. */
+        [[nodiscard]] bool streaming() const noexcept;
+
+        /** @brief 수신한 LC3 frame 하나를 복사하고 queue에서 제거합니다. */
+        [[nodiscard]] bool readFrame(std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief 유효하게 수신한 LC3 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t receivedFrames() const noexcept;
+
+        /** @brief queue가 가득 차서 버린 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t droppedFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 stack 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+} // namespace nucode::ble::audio
 
 #endif

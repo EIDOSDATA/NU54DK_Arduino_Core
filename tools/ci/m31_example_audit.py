@@ -66,11 +66,25 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         row["status"] = "PUBLIC_API_FLOW_MISSING"
         return row
     if library.name == "NUCODE_BLE_Audio":
-        required = (
-            "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",
-            ".encode(", ".decode(",
-        )
-        if any(token not in code for token in required):
+        configuration = sketch.parent / "prj.conf"
+        if sketch.parent.name == "BapUnicastSink":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>", "UnicastServer", "Lc3Codec",
+                "BLEAdvertising.start(", "audioSink.begin(",
+                "audioSink.readFrame(", "codec.decode(",
+            )
+            options = ("CONFIG_BT_BAP_UNICAST_SERVER=y", "CONFIG_LIBLC3=y")
+        else:
+            required = (
+                "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",
+                ".encode(", ".decode(",
+            )
+            options = ()
+        if (any(token not in code for token in required) or
+            (options and (not configuration.is_file() or
+             any(option not in configuration.read_text(encoding="utf-8")
+                 for option in options)))):
             row["status"] = "PUBLIC_AUDIO_API_FLOW_MISSING"
         return row
     if library.name == "NUCODE_BLE_DirectionFinding":

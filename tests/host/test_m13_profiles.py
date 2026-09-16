@@ -76,7 +76,10 @@ class M13ProfileContractTests(unittest.TestCase):
         """! @brief 공개 예제가 ino만으로 탐색 가능한지 확인합니다. """
         examples = sorted(
             sketch for sketch in ROOT.glob("libraries/*/examples/*/*.ino")
-            if sketch.parent.parent.parent.name not in {"NUCODE_BLE_ISO", "NUCODE_BLE_Audio", "NUCODE_BLE_DirectionFinding"}
+            if sketch.parent.parent.parent.name not in {
+                "NUCODE_BLE_ISO", "NUCODE_BLE_Audio",
+                "NUCODE_BLE_DirectionFinding", "NUCODE_BLE_ChannelSounding"
+            }
         )
         self.assertEqual(
             {sketch.parent.name for sketch in examples},
@@ -170,7 +173,8 @@ class M13ProfileContractTests(unittest.TestCase):
     def test_m31_advanced_audio_examples_have_role_configuration(self) -> None:
         """! @brief 직접 Audio API 예제의 역할별 Kconfig와 탐색 가능한 ino를 확인합니다. """
         examples = sorted(ROOT.glob("libraries/NUCODE_BLE_Audio/examples/*/*.ino"))
-        self.assertEqual({sketch.parent.name for sketch in examples}, {"Lc3SyntheticLoopback"})
+        self.assertEqual({sketch.parent.name for sketch in examples},
+                         {"Lc3SyntheticLoopback", "BapUnicastSink"})
         for sketch in examples:
             self.assertTrue((sketch.parent / "prj.conf").is_file())
             self.assertFalse((sketch.parent / "app.overlay").exists())
