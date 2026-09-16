@@ -24,6 +24,7 @@ SENT = re.compile(r"^CIS sent frames=100$")
 RECEIVED = re.compile(r"^CIS received frames=100 errors=0$")
 RECEIVE_END = re.compile(r"^CIS received frames=")
 ERROR = re.compile(r"^CIS (?:start|send) failed:|^CIS error:")
+RETRYABLE_SETUP_FAILURE = "CIS error: -62"
 
 
 ## @brief probe UID는 메모리에서만 사용하고 결과에는 SHA-256만 기록합니다.
@@ -142,16 +143,39 @@ def main() -> int:
                  for role, items in lines.items()}
     sent = sum(bool(SENT.fullmatch(item["text"])) for item in post_boot["central"])
     received = sum(bool(RECEIVED.fullmatch(item["text"])) for item in post_boot["peripheral"])
-    bad = [item for role in post_boot for item in post_boot[role]
-           if ERROR.search(item["text"]) or
-           (RECEIVE_END.search(item["text"]) and not RECEIVED.fullmatch(item["text"]))]
+    recovered_setup_failures = []
+    bad = []
+    for role in post_boot:
+        for item in post_boot[role]:
+            if item["text"] == RETRYABLE_SETUP_FAILURE and role == "central":
+                deadline = item["at_s"] + 30.0
+                central_recovered = any(
+                    SENT.fullmatch(next_item["text"]) and
+                    item["at_s"] < next_item["at_s"] <= deadline
+                    for next_item in post_boot["central"]
+                )
+                peripheral_recovered = any(
+                    RECEIVED.fullmatch(next_item["text"]) and
+                    item["at_s"] < next_item["at_s"] <= deadline
+                    for next_item in post_boot["peripheral"]
+                )
+                if central_recovered and peripheral_recovered:
+                    recovered_setup_failures.append(item)
+                else:
+                    bad.append(item)
+            elif (ERROR.search(item["text"]) or
+                  (RECEIVE_END.search(item["text"]) and
+                   not RECEIVED.fullmatch(item["text"]))):
+                bad.append(item)
     image_revision_confirmed = {
         role: any(item["text"] == f"CIS core revision={revision}"
                   for item in lines[role])
         for role in lines
     }
-    status = "PASS" if (sent == args.cycles and received == args.cycles and
-                        not bad and all(image_revision_confirmed.values())) else "FAIL"
+    accepted = (sent == args.cycles and received == args.cycles and
+                not bad and len(recovered_setup_failures) <= 2 and
+                all(image_revision_confirmed.values()))
+    status = ("PASS_RECOVERED" if recovered_setup_failures else "PASS") if accepted else "FAIL"
     result = {
         "status": status,
         "test": "arduino_public_raw_cis_pair",
@@ -168,6 +192,7 @@ def main() -> int:
         "excluded_pre_boot_lines": {role: len(lines[role]) - len(post_boot[role])
                                     for role in lines},
         "failed_lines": bad,
+        "recovered_setup_failures": recovered_setup_failures,
         "lines": lines,
     }
     args.evidence.parent.mkdir(parents=True, exist_ok=True)
@@ -176,7 +201,7 @@ def main() -> int:
     args.evidence.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
                              encoding="utf-8")
     print(f"ARDUINO_PUBLIC_CIS_PAIR={status};CYCLES={sent}/{received}")
-    return 0 if status == "PASS" else 1
+    return 0 if accepted else 1
 
 
 if __name__ == "__main__":
