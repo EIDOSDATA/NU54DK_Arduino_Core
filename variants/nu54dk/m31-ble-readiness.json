@@ -665,19 +665,19 @@
       "id": "iso_time_sync_sender",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino",
-      "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+      "source_revision": "7e4c0109d0f292c32257a3f0dfeb5bbbb5353da9",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json"
     },
     {
       "id": "iso_time_sync_receiver",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino",
-      "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+      "source_revision": "7e4c0109d0f292c32257a3f0dfeb5bbbb5353da9",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json"
     },
     {
       "id": "W03-01:codec",
@@ -1173,8 +1173,8 @@
           "development_blocker": true,
           "release_blocker": true,
           "status": "PASS",
-          "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
-          "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+          "source_revision": "7e4c0109d0f292c32257a3f0dfeb5bbbb5353da9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json"
         }
       ]
     },
