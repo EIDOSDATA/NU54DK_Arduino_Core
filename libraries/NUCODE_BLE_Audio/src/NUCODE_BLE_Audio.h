@@ -44,6 +44,13 @@ namespace nucode::ble::audio
         std::size_t frame_octets = 40U;
     };
 
+    /** @brief unicast server가 제공할 Audio 방향입니다. */
+    enum class UnicastServerMode : std::uint8_t
+    {
+        sink_only,
+        duplex,
+    };
+
     /**
      * @brief 16 kHz 이하 PCM과 LC3 frame을 변환합니다.
      *
@@ -119,8 +126,11 @@ namespace nucode::ble::audio
         UnicastServer(UnicastServer &&) = delete;
         UnicastServer &operator=(UnicastServer &&) = delete;
 
-        /** @brief PACS/ASCS와 LC3 sink capability를 등록합니다. */
+        /** @brief 기존 단방향 PACS/ASCS sink를 등록합니다. */
         Error begin() noexcept;
+
+        /** @brief 요청한 방향의 PACS/ASCS와 LC3 capability를 등록합니다. */
+        Error begin(UnicastServerMode mode) noexcept;
 
         /** @brief 연결이 해제된 뒤 서비스와 고정 자원을 반환합니다. */
         Error end() noexcept;
@@ -130,6 +140,15 @@ namespace nucode::ble::audio
 
         /** @brief 수신한 LC3 frame 하나를 복사하고 queue에서 제거합니다. */
         [[nodiscard]] bool readFrame(std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief duplex source ASE가 streaming 상태인지 반환합니다. */
+        [[nodiscard]] bool sourceStreaming() const noexcept;
+
+        /** @brief duplex source ASE로 LC3 frame 하나를 보냅니다. */
+        Error sendFrame(const std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief controller가 수락한 duplex source frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t sentFrames() const noexcept;
 
         /** @brief 유효하게 수신한 LC3 frame 수를 반환합니다. */
         [[nodiscard]] std::uint32_t receivedFrames() const noexcept;

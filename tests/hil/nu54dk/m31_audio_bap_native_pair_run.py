@@ -35,6 +35,7 @@ def main():
     parser.add_argument("--require-lc3", action="store_true")
     parser.add_argument("--arduino-sink", action="store_true")
     parser.add_argument("--arduino-source", action="store_true")
+    parser.add_argument("--arduino-duplex-server", action="store_true")
     parser.add_argument("--timeout-seconds", type=float, default=90.0)
     args = parser.parse_args()
     if args.timeout_seconds < 10.0 or args.timeout_seconds > 180.0:
@@ -45,6 +46,8 @@ def main():
         parser.error("flash-only cannot also request reset-only")
     if args.arduino_source and not args.arduino_sink:
         parser.error("Arduino source measurement requires Arduino sink")
+    if args.arduino_duplex_server and (not args.arduino_sink or args.arduino_source):
+        parser.error("Arduino duplex server requires sink without Arduino source")
     client_config = args.client_config or (args.client_image.parent / ".config")
     server_config = args.server_config or (args.server_image.parent / ".config")
     if args.require_lc3:
@@ -70,7 +73,8 @@ def main():
         raise RuntimeError("role mapping overlap")
     record = {
         "status": "FAIL",
-        "test": "arduino_bap_unicast_lc3_pair" if args.arduino_source else
+        "test": "arduino_bap_unicast_lc3_duplex_server" if args.arduino_duplex_server else
+                "arduino_bap_unicast_lc3_pair" if args.arduino_source else
                 "arduino_bap_unicast_lc3_sink" if args.arduino_sink else
                 "upstream_bap_unicast_bidirectional_sdu",
         "source_clean": args.source_clean,
@@ -106,6 +110,8 @@ def main():
     )
     client_rx_pattern = re.compile(r"Incoming audio on stream .* len 40 \((\d+)\)")
     server_rx_pattern = re.compile(
+        r"LE Audio duplex received=(\d+) energy=(\d+) dropped=(\d+)" if
+        args.arduino_duplex_server else
         r"LE Audio decoded frames=(\d+) energy=(\d+) dropped=(\d+)" if
         args.arduino_sink else
         r"Incoming audio on stream .* len 40 \((\d+)\)"
@@ -182,6 +188,13 @@ def main():
                                     int(match.group(1)), record["client_rx_sdus"]
                                 )
                         elif key == "server_lines":
+                            if args.arduino_duplex_server:
+                                match = re.search(r"LE Audio duplex sent=(\d+)", line)
+                                if match is not None:
+                                    record["server_tx_streams"]["arduino"] = max(
+                                        int(match.group(1)),
+                                        record["server_tx_streams"].get("arduino", 0)
+                                    )
                             match = server_rx_pattern.search(line)
                             if match is not None:
                                 record["server_rx_sdus"] = max(
@@ -199,7 +212,10 @@ def main():
                     if (args.arduino_sink and
                             len([count for count in record["client_tx_streams"].values()
                                  if count >= 1000]) >= 1 and
-                            record["server_rx_sdus"] >= 1000):
+                            record["server_rx_sdus"] >= 1000 and
+                            (not args.arduino_duplex_server or
+                             (record["server_tx_streams"].get("arduino", 0) >= 1000 and
+                              record["client_rx_sdus"] >= 1000))):
                         break
                     if (not args.arduino_sink and
                             len([count for count in record["client_tx_streams"].values()
@@ -230,7 +246,14 @@ def main():
                         "failed" in line.lower() for line in record["client_lines"]
                     ):
                         raise RuntimeError("Arduino source error observed")
+                    if args.arduino_duplex_server:
+                        if record["server_tx_streams"].get("arduino", 0) < 1000:
+                            raise RuntimeError("Arduino server TX did not reach 1000 SDUs")
+                        if record["client_rx_sdus"] < 1000:
+                            raise RuntimeError("native client RX did not reach 1000 SDUs")
                     record["status"] = (
+                        "ARDUINO_BAP_DUPLEX_SERVER_1000_FRAME_PASS" if
+                        args.arduino_duplex_server else
                         "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS" if args.arduino_source
                         else "ARDUINO_BAP_LC3_1000_FRAME_PASS"
                     )
@@ -279,7 +302,8 @@ def main():
     return 0 if record["status"] in (
         "NATIVE_BAP_1000_SDU_PASS", "NATIVE_BAP_LC3_1000_SDU_PASS",
         "ARDUINO_BAP_LC3_1000_FRAME_PASS",
-        "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS"
+        "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS",
+        "ARDUINO_BAP_DUPLEX_SERVER_1000_FRAME_PASS"
     ) else 1
 
 

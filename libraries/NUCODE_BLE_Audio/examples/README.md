@@ -47,6 +47,20 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 - Serial에 `s`를 보내면 공개 `UnicastClient::stop()`으로 ASE를 disable·release한 뒤
   연결을 끊고 새 stream을 연다.
 
+## `BapUnicastDuplexServer`
+
+- 두 보드 중 서버에 올린다. 이 예제는 `UnicastServerMode::duplex`로 sink와
+  source ASE를 각각 하나 등록하고 ASCS UUID를 광고한다. 상대 client에는 양방향
+  BAP 지원 image가 필요하다. 현재 Arduino client 예제는 송신 전용이므로 이
+  서버의 양방향 검증 상대는 고정 NCS `bap_unicast_client`다.
+- `loop()`가 수신 LC3 frame을 복호화하고 PCM energy를 계산한다. 동시에 일반
+  C++로 합성 PCM을 만들어 LC3로 인코딩한 뒤 공개 `sendFrame()`으로 반대 방향에
+  보낸다. 정상 동작이면 115200 baud Serial에 `duplex received=... energy=...
+  dropped=0`과 `duplex sent=...`가 각각 100 frame마다 나타난다.
+- `prj.conf`는 sink/source ASE 각 1개, 양방향 ISO channel 2개, LC3와 비영속
+  L2 pairing을 고정한다. RAM 사용량은 약 88%이므로 추가 buffer/stream과 외장
+  audio I/O를 합치기 전에 자원 예산을 다시 측정한다.
+
 ## `BapUnicastCycle`
 
 - `BapUnicastSink`와 짝을 이뤄 실행한다. 매 연결에서 합성 LC3 frame 120개를
