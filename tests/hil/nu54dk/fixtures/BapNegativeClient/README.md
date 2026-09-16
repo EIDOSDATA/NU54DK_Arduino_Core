@@ -15,6 +15,7 @@ Arduino 예제를 상대 역할로 사용한다.
 
 `m31_audio_bap_negative_run.py`는 원격 ASCS 응답 code 7과 codec reason 2
 또는 QoS SDU reason 6을 확인한다. 매 반복에서 두 보드를 함께 hardware
-reset하여 이전 연결의 휘발성 bond를 제거한다. 한 회차의 거부만으로 전체
+reset하고 시험 client의 bonding flag를 끄므로 이전 연결의 휘발성 bond가
+다음 회차의 보안 절차에 영향을 주지 않는다. 한 회차의 거부만으로 전체
 W03-02를 완료로 판정하지 않으며, 원격의 잘못된 ASE 상태 요청과 Arduino
 양방향 stream은 별도 시험이 필요하다.

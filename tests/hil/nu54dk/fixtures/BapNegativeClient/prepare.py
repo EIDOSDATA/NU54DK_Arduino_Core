@@ -84,6 +84,8 @@ def prepare(source: Path, destination: Path) -> dict[str, str]:
         "\tfor (size_t i = 0; i < ARRAY_SIZE(streams); i++) {\n"
         "\t\tstreams[i].ops = &stream_ops;\n"
         "\t}\n",
+        "    /** @brief 반복 재시작에서 휘발성 bond 불일치를 남기지 않습니다. */\n"
+        "    bt_set_bondable(false);\n\n"
         "#if defined(M31_BAP_NEG_CODEC)\n"
         "    /** @brief 서버가 광고하지 않은 24 kHz LC3를 요청합니다. */\n"
         "    err = bt_audio_codec_cfg_set_freq(&codec_configuration.codec_cfg,\n"

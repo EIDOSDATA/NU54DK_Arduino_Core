@@ -54,7 +54,8 @@ def collect_response(client, server, record: dict, case: str, attempt: int) -> N
                 if "LE Audio" in line:
                     record["server_lines"].append(line)
                 continue
-            if any(key in line for key in ("Connected", "Sinks discovered", "M31_NEG", "Failed")):
+            if any(key in line for key in ("Connected", "Disconnected", "Sinks discovered",
+                                           "M31_NEG", "Failed", "bt_gatt", "bt_smp")):
                 record["client_lines"].append(line)
             if line == "Connected" or line.startswith("Connected:"):
                 connected = True
