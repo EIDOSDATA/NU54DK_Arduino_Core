@@ -9,9 +9,7 @@
 
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 
-#if !defined(CONFIG_NUCODE_BLE_DF_BEACON)
-#error "NUCODE BLE Direction Finding beacon Kconfig가 필요합니다."
-#endif
+#if defined(CONFIG_NUCODE_BLE_DF_BEACON)
 
 #include <errno.h>
 
@@ -214,5 +212,7 @@ namespace nucode::ble::df
         return native_code_;
     }
 }
+
+#endif
 
 #endif

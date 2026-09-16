@@ -64,6 +64,15 @@ config NUCODE_BLE_DF_BEACON
 	  공개 Arduino Beacon 객체에서 connectionless AoA CTE 송신을 제어합니다.
 	  Zephyr 광고 set과 callback은 라이브러리 구현 내부에 유지합니다.
 
+config NUCODE_BLE_DF_RESPONDER
+	bool "NUCODE BLE 연결 기반 AoA CTE 응답 API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_DF_CONNECTION_CTE_RSP
+	help
+	  공개 연결 handle을 받아 기본 안테나 CTE 응답을 시작·중단합니다.
+	  Zephyr 연결 객체와 방향 탐지 호출은 라이브러리 구현 내부에 둡니다.
+
 config NUCODE_BLE_CORE
 	bool "NUCODE BLE Core/GAP 활성화"
 	default n

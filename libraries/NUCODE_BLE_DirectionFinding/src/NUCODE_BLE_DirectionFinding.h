@@ -9,8 +9,12 @@
 #define NUCODE_BLE_DIRECTION_FINDING_H
 
 #include <Arduino.h>
-
 #include <cstdint>
+
+namespace nucode::ble
+{
+    class BLEConnectionHandle;
+}
 
 namespace nucode::ble::df
 {
@@ -24,6 +28,7 @@ namespace nucode::ble::df
         already_started,
         not_started,
         controller_error,
+        not_connected,
     };
 
     /** @brief periodic advertising 한 event의 CTE 송신 설정입니다. */
@@ -81,6 +86,59 @@ namespace nucode::ble::df
         Error record(Error error, int native_code = 0) noexcept;
 
         void *advertisement_ = nullptr;
+        Error last_error_ = Error::not_initialized;
+        int native_code_ = 0;
+        bool active_ = false;
+    };
+
+    /**
+     * @brief 연결된 peer의 AoA CTE 요청에 기본 안테나로 응답합니다.
+     *
+     * 연결 수명과 광고는 NUCODE_BLE Core가 소유합니다. 이 객체는 응답 설정과
+     * 활성화만 담당하며 Zephyr 연결 객체를 공개하지 않습니다.
+     */
+    class ConnectedResponder final
+    {
+      public:
+        /** @brief 아직 연결되지 않은 응답 객체를 만듭니다. */
+        ConnectedResponder() = default;
+
+        /** @brief 객체가 소유한 연결 reference와 응답 설정을 반환합니다. */
+        ~ConnectedResponder()
+        {
+            end();
+        }
+
+        ConnectedResponder(const ConnectedResponder &) = delete;
+        ConnectedResponder &operator=(const ConnectedResponder &) = delete;
+        ConnectedResponder(ConnectedResponder &&) = delete;
+        ConnectedResponder &operator=(ConnectedResponder &&) = delete;
+
+        /** @brief 현재 연결에서 기본 안테나 AoA CTE 응답을 준비합니다. */
+        Error begin(BLEConnectionHandle connection) noexcept;
+
+        /** @brief peer가 보낸 CTE 요청에 대한 응답을 활성화합니다. */
+        Error start() noexcept;
+
+        /** @brief 응답을 중단하고 동일 연결에서 재시작할 수 있게 합니다. */
+        Error stop() noexcept;
+
+        /** @brief 연결 reference를 반환하며 단절 뒤에도 호출할 수 있습니다. */
+        void end() noexcept;
+
+        /** @brief 현재 응답 활성 상태를 반환합니다. */
+        [[nodiscard]] bool active() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 controller 또는 Host 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        void *connection_ = nullptr;
         Error last_error_ = Error::not_initialized;
         int native_code_ = 0;
         bool active_ = false;
