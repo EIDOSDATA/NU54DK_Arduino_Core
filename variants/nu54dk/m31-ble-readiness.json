@@ -428,16 +428,16 @@
       "native_build": "PASS",
       "arduino_build": "NOT_RUN",
       "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-rx-diagnostic-8d64d915/diagnostic-manifest.json",
+      "functional_hil": "FAIL",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-owned-ff1565a9/manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "53399559daa748b07539025c1ab64bb6464c7788",
+      "source_revision": "ff1565a971f900d4605056cee8cdb863f577f2e0",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-native-build-manifest.json",
         "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-build-twister.json",
         "arduino_build": null,
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-ll-clean-8c125a22-01.json",
-        "functional_hil": null
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-df-owned-ff1565a9/pair-01.json"
       }
     },
     {
@@ -1599,9 +1599,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "FAIL",
+          "source_revision": "ff1565a971f900d4605056cee8cdb863f577f2e0",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-owned-ff1565a9/pair-01.json"
         },
         {
           "id": "M31-DF-01:sdc_aod_unsupported",
