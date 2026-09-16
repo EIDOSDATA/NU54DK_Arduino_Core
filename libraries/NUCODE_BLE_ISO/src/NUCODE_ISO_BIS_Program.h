@@ -60,6 +60,7 @@ namespace
     bool big_disconnected = false;
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
     bool expect_sync_loss = false;
+    bool receiver_negative_session = false;
 #endif
 #if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
     bool wrong_code_next = false;
@@ -751,9 +752,11 @@ namespace
         big_disconnected = false;
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         expect_sync_loss = false;
+        receiver_negative_session = false;
 #endif
 #if defined(M31_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         wrong_code_active = wrong_code_next;
+        receiver_negative_session = wrong_code_active;
         authentication_rejected = false;
 #endif
         atomic_set(&sent, 0);
@@ -853,6 +856,7 @@ namespace
             return;
         }
         expect_sync_loss = true;
+        receiver_negative_session = true;
         Serial.print("M31BIS|1|LOSS_ARMED|nonce=");
         Serial.println(nonce);
     }
@@ -907,10 +911,8 @@ namespace
             return;
         }
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER) && !defined(M31_BIS_TIME_SYNC)
-        bool print_receiver_end = !source_role && !rx_end_printed;
-#if defined(M31_BIS_ENCRYPTED)
-        print_receiver_end = print_receiver_end && !wrong_code_active;
-#endif
+        const bool print_receiver_end =
+            !source_role && !rx_end_printed && !receiver_negative_session;
         if (print_receiver_end)
         {
             printReceiveEnd();
