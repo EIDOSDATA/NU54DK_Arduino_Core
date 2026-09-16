@@ -78,7 +78,7 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_BAP_UNICAST_SERVER=y", "CONFIG_LIBLC3=y",
                 "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=3200",
             )
-        elif sketch.parent.name == "BapUnicastSource":
+        elif sketch.parent.name in {"BapUnicastSource", "BapUnicastCycle"}:
             required = (
                 "#include <NUCODE_BLE.h>",
                 "#include <NUCODE_BLE_Audio.h>", "UnicastClient", "Lc3Codec",
@@ -89,6 +89,8 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_BAP_UNICAST_CLIENT=y", "CONFIG_LIBLC3=y",
                 "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=3200",
             )
+            if sketch.parent.name == "BapUnicastCycle":
+                required += ("audioSource.stop(", "completed cycles=")
         else:
             required = (
                 "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",

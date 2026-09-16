@@ -44,6 +44,16 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
   pairing을 사용하므로 다른 예제의 bond 설정을 변경하지 않는다.
 - sink 보드가 재시작되면 검색과 연결을 다시 시도한다. 두 역할의 Serial에서
   `source streaming`, `sent frames=100`, `decoded frames=100`을 새로 확인한다.
+- Serial에 `s`를 보내면 공개 `UnicastClient::stop()`으로 ASE를 disable·release한 뒤
+  연결을 끊고 새 stream을 연다.
+
+## `BapUnicastCycle`
+
+- `BapUnicastSink`와 짝을 이뤄 실행한다. 매 연결에서 합성 LC3 frame 120개를
+  보내고 `UnicastClient::stop()`으로 ASE를 disable·release한다.
+- `stream stopped`와 `completed cycles=N`을 출력한 뒤 연결을 끊고 새 광고를
+  검색한다. 두 보드가 다시 연결되면 새로운 frame을 보낸다. 외부 Serial 명령이나
+  오디오 장치 없이 stream 수명과 복구를 반복 시험하는 예제다.
 
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는

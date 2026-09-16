@@ -160,6 +160,8 @@ namespace nucode::ble::audio
         configuring,
         streaming,
         failed,
+        stopping,
+        released,
     };
 
     /** @brief 마지막 unicast client 작업을 나타냅니다. */
@@ -175,6 +177,8 @@ namespace nucode::ble::audio
         connect,
         send,
         cleanup,
+        disable,
+        release,
     };
 
     /**
@@ -207,6 +211,9 @@ namespace nucode::ble::audio
 
         /** @brief streaming 상태에서 한 LC3 frame을 비차단 전송합니다. */
         Error sendFrame(const std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief sink ASE를 비동기로 disable한 뒤 release합니다. */
+        Error stop() noexcept;
 
         /** @brief peer 연결 해제 뒤 그룹과 callback 자원을 반환합니다. */
         Error end() noexcept;

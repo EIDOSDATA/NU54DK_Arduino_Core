@@ -1,6 +1,6 @@
 /**
- * @file BapUnicastSource.ino
- * @brief 합성 PCM을 LC3로 encode해 LE Audio unicast sink로 보냅니다.
+ * @file BapUnicastCycle.ino
+ * @brief 합성 LC3 stream의 시작·중단·release·재연결을 반복합니다.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -33,6 +33,7 @@ namespace
     bool reportedFailure = false;
     std::uint32_t lastFrameAt = 0U;
     std::uint16_t wavePosition = 0U;
+    std::uint32_t completedCycles = 0U;
 
     /** @brief ASCS UUID를 광고하는 첫 연결 가능한 sink를 선택합니다. */
     void onScanResult(const BLEScanResult &result, void *context)
@@ -125,21 +126,6 @@ void loop()
     BLEDevice.poll();
     audioSource.poll();
 
-    while (Serial.available() > 0)
-    {
-        if (Serial.read() == 's')
-        {
-            const Error result = audioSource.stop();
-            if (result != Error::none)
-            {
-                Serial.print("LE Audio stop failed: ");
-                Serial.print(static_cast<unsigned int>(result));
-                Serial.print(" native=");
-                Serial.println(audioSource.nativeCode());
-            }
-        }
-    }
-
     if (peerFound && !BLEConnection.connected() && !BLEConnection.connecting())
     {
         peerFound = false;
@@ -167,6 +153,9 @@ void loop()
     {
         announcedStopped = true;
         Serial.println("LE Audio stream stopped");
+        completedCycles++;
+        Serial.print("LE Audio completed cycles=");
+        Serial.println(completedCycles);
         if (!BLEConnection.disconnect(peer))
         {
             Serial.println("LE Audio disconnect failed");
@@ -227,5 +216,11 @@ void loop()
     {
         Serial.print("LE Audio sent frames=");
         Serial.println(count);
+    }
+    if (count == 120U)
+    {
+        const Error result = audioSource.stop();
+        Serial.print("LE Audio auto stop result=");
+        Serial.println(static_cast<unsigned int>(result));
     }
 }
