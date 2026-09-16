@@ -907,7 +907,11 @@ namespace
             return;
         }
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER) && !defined(M31_BIS_TIME_SYNC)
-        if (!source_role && !rx_end_printed)
+        bool print_receiver_end = !source_role && !rx_end_printed;
+#if defined(M31_BIS_ENCRYPTED)
+        print_receiver_end = print_receiver_end && !wrong_code_active;
+#endif
+        if (print_receiver_end)
         {
             printReceiveEnd();
         }
