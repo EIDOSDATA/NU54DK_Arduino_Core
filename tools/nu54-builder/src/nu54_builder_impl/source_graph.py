@@ -214,6 +214,8 @@ def write_source_manifest(
         m31_identity_keys.append("m31_iso_revisions")
     if "NUCODE_BLE_Audio" in selected_libraries:
         m31_identity_keys.append("m31_audio_revisions")
+    if "NUCODE_BLE_DirectionFinding" in selected_libraries:
+        m31_identity_keys.append("m31_df_revisions")
     if m31_identity_keys:
         if input_manifest is None:
             raise AdapterError("[NU54:E_M31_ISO_REVISION] target manifest가 없습니다.")

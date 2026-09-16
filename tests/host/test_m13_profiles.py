@@ -37,6 +37,7 @@ class M13ProfileContractTests(unittest.TestCase):
                 "nucode.ble.nus",
                 "nucode.ble.iso",
                 "nucode.ble.audio",
+                "nucode.ble.direction_finding",
                 "nucode.ble.dfu",
                 "nucode.ble.security",
                 "nucode.ble.legacy_signing",
@@ -75,7 +76,7 @@ class M13ProfileContractTests(unittest.TestCase):
         """! @brief 공개 예제가 ino만으로 탐색 가능한지 확인합니다. """
         examples = sorted(
             sketch for sketch in ROOT.glob("libraries/*/examples/*/*.ino")
-            if sketch.parent.parent.parent.name not in {"NUCODE_BLE_ISO", "NUCODE_BLE_Audio"}
+            if sketch.parent.parent.parent.name not in {"NUCODE_BLE_ISO", "NUCODE_BLE_Audio", "NUCODE_BLE_DirectionFinding"}
         )
         self.assertEqual(
             {sketch.parent.name for sketch in examples},

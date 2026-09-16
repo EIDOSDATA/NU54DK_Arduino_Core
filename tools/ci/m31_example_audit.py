@@ -73,6 +73,17 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         if any(token not in code for token in required):
             row["status"] = "PUBLIC_AUDIO_API_FLOW_MISSING"
         return row
+    if library.name == "NUCODE_BLE_DirectionFinding":
+        required = (
+            "#include <NUCODE_BLE_DirectionFinding.h>", "Beacon", ".begin(",
+            ".start(", ".stop(",
+        )
+        configuration = sketch.parent / "prj.conf"
+        if any(token not in code for token in required) or not configuration.is_file() or (
+            "CONFIG_NUCODE_BLE_DF_BEACON=y" not in configuration.read_text(encoding="utf-8")
+        ):
+            row["status"] = "PUBLIC_DF_API_FLOW_MISSING"
+        return row
     if library.name != "NUCODE_BLE_ISO":
         return row
     included = re.findall(r"^#include\s*<([^>]+)>\s*$", text, flags=re.MULTILINE)

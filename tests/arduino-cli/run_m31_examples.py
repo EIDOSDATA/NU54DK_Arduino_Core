@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief W02 Arduino ISO 예제를 보존 가능한 C-drive staging에서 빌드합니다. """
+"""! @brief M31 Arduino ISO·Audio·DF 예제를 C-drive staging에서 빌드합니다. """
 
 from __future__ import annotations
 
@@ -21,6 +21,12 @@ EXAMPLES = (
     "CISToBISReceiver",
 )
 AUDIO_EXAMPLES = ("Lc3SyntheticLoopback",)
+DF_EXAMPLES = ("CteBeacon",)
+SUITES = {
+    "iso": ("NUCODE_BLE_ISO", "m31_iso_revisions", "m31-arduino-build-manifest.json", EXAMPLES),
+    "audio": ("NUCODE_BLE_Audio", "m31_audio_revisions", "m31-audio-arduino-build-manifest.json", AUDIO_EXAMPLES),
+    "df": ("NUCODE_BLE_DirectionFinding", "m31_df_revisions", "m31-df-arduino-build-manifest.json", DF_EXAMPLES),
+}
 
 
 ## @brief Git source 상태를 읽고 exact build의 clean 전제조건을 검사합니다.
@@ -65,8 +71,7 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
     config = root / "arduino-cli.yaml"
     write_cli_config(config, user_root, root / "data", root / "downloads")
     cli = default_cli()
-    library_name = "NUCODE_BLE_ISO" if suite == "iso" else "NUCODE_BLE_Audio"
-    identity_name = "m31_iso_revisions" if suite == "iso" else "m31_audio_revisions"
+    library_name, identity_name, manifest_name, _allowed = SUITES[suite]
     images: dict[str, object] = {}
     for name in names:
         platform = user_root / "hardware" / "nucode" / "zephyr"
@@ -103,7 +108,6 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
         }
         print(f"M31_ARDUINO_BUILD_PASS={name};SHA256={images[name]['sha256']}", flush=True)
     manifest = {**identity, "images": images}
-    manifest_name = "m31-arduino-build-manifest.json" if suite == "iso" else "m31-audio-arduino-build-manifest.json"
     (root / manifest_name).write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -112,14 +116,14 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-root", type=Path, required=True)
-    parser.add_argument("--suite", choices=("iso", "audio"), default="iso")
+    parser.add_argument("--suite", choices=tuple(SUITES), default="iso")
     parser.add_argument("--examples", nargs="+")
     parser.add_argument("--require-clean", action="store_true")
     parser.add_argument("--direct-checkout", action="store_true")
     parser.add_argument("--reuse-stage", action="store_true")
     parser.add_argument("--package-root", type=Path)
     args = parser.parse_args()
-    allowed = EXAMPLES if args.suite == "iso" else AUDIO_EXAMPLES
+    allowed = SUITES[args.suite][3]
     selected = tuple(args.examples) if args.examples else allowed
     unknown = sorted(set(selected) - set(allowed))
     if unknown:

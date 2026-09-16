@@ -1765,6 +1765,30 @@ def test_m31_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
             raise SmokeFailure(f"M31 Audio symbol disabled: {audio_name}: {symbol}")
     print(f"M31_AUDIO_ARDUINO_BUILD_PASS={audio_name}", flush=True)
 
+    df_library = root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" / "NUCODE_BLE_DirectionFinding"
+    df_name = "CteBeacon"
+    df_sketch = df_library / "examples" / df_name
+    if not (df_sketch / f"{df_name}.ino").is_file() or not (df_sketch / "prj.conf").is_file():
+        raise SmokeFailure(f"incomplete M31 Direction Finding example: {df_sketch}")
+    df_build = root / "build-m31-ctebeacon"
+    df_command = list(compile_command(cli, config, df_build, df_sketch))
+    df_command[-1:-1] = ("--board-options", "feature_set=ble")
+    run(df_command)
+    df_context = assert_build(df_build, f"{df_name}.ino")
+    df_features = {
+        item.get("id") for item in df_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if df_context.get("profile") != "ble" or "nucode.ble.direction_finding" not in df_features:
+        raise SmokeFailure("M31 Direction Finding BLE profile 또는 feature가 없습니다")
+    df_configuration = (
+        Path(df_context["zephyr_build_dir"]) / "zephyr" / ".config"
+    ).read_text(encoding="utf-8")
+    for symbol in ("CONFIG_BT_DF_CONNECTIONLESS_CTE_TX", "CONFIG_NUCODE_BLE_DF_BEACON"):
+        if not read_kconfig_boolean(df_configuration, symbol):
+            raise SmokeFailure(f"M31 Direction Finding symbol disabled: {df_name}: {symbol}")
+    print(f"M31_DF_ARDUINO_BUILD_PASS={df_name}", flush=True)
+
 
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
@@ -1846,6 +1870,8 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
             "CISToBISReceiver",
         },
+        "NUCODE BLE Audio": {"Lc3SyntheticLoopback"},
+        "NUCODE BLE Direction Finding": {"CteBeacon"},
     }
     discovered: dict[str, set[str]] = {}
     for record in records:

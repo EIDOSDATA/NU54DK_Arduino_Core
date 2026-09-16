@@ -159,6 +159,7 @@ class M22PackageExamplesTests(unittest.TestCase):
             )
         }
         later_ble_examples.add(("NUCODE_BLE_Audio", "Lc3SyntheticLoopback"))
+        later_ble_examples.add(("NUCODE_BLE_DirectionFinding", "CteBeacon"))
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(
             all_source_examples - locked_examples,

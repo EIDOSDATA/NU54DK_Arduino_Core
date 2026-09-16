@@ -70,6 +70,23 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
                              "PUBLIC_AUDIO_API_FLOW_MISSING")
 
+    def test_direction_finding_sketch_must_keep_public_control_flow(self) -> None:
+        """! @brief CTE 송신 예제의 공개 start/stop 호출과 Kconfig를 검사합니다. """
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            library = Path(temporary) / "NUCODE_BLE_DirectionFinding"
+            sketch = library / "examples/CteBeacon/CteBeacon.ino"
+            sketch.parent.mkdir(parents=True)
+            source = ROOT / "libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon"
+            shutil.copy2(source / "CteBeacon.ino", sketch)
+            shutil.copy2(source / "prj.conf", sketch.parent / "prj.conf")
+            self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"], "VISIBLE_CODE")
+            sketch.write_text(
+                sketch.read_text(encoding="utf-8").replace("beacon.stop()", "beacon.fake()"),
+                encoding="utf-8",
+            )
+            self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                             "PUBLIC_DF_API_FLOW_MISSING")
+
 
 if __name__ == "__main__":
     unittest.main()
