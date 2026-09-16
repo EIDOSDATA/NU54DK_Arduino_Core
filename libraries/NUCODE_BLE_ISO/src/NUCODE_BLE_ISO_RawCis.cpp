@@ -516,6 +516,12 @@ namespace nucode::ble::iso
     {
         return owner == this ? atomic_get(&native_error) : 0;
     }
+
+    /** @brief 빌드 시각의 Core revision을 검증 가능한 값으로 노출합니다. */
+    const char *RawCis::buildRevision() noexcept
+    {
+        return NUCODE_CORE_REVISION;
+    }
 }
 
 #endif

@@ -87,6 +87,9 @@ namespace nucode::ble::iso
 
         /** @brief native 호출의 마지막 실패 코드를 반환합니다. */
         [[nodiscard]] int nativeError() const noexcept;
+
+        /** @brief image에 실제로 포함된 Core source revision을 반환합니다. */
+        [[nodiscard]] static const char *buildRevision() noexcept;
     };
 
     /**
