@@ -10,11 +10,9 @@
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 
 #if defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL)
-#define NUCODE_BLE_ISO_CIS_ROLE "central"
-#include "internal/NUCODE_ISO_CIS_Impl.inc"
+#define NUCODE_BLE_ISO_RAW_CIS
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL)
-#define NUCODE_BLE_ISO_CIS_ROLE "peripheral"
-#include "internal/NUCODE_ISO_CIS_Impl.inc"
+#define NUCODE_BLE_ISO_RAW_CIS
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER)
 #define NUCODE_BLE_ISO_CIS_ROLE "peripheral"
 #define NUCODE_BLE_ISO_CIS_TO_BIS_PEER
@@ -81,6 +79,10 @@ namespace nucode::ble::iso
     /** @brief 역할 일치 여부를 확인한 뒤 내부 Zephyr backend를 시작합니다. */
     Error Program::begin() noexcept
     {
+#if defined(NUCODE_BLE_ISO_RAW_CIS)
+        last_error_ = Error::not_ready;
+        return last_error_;
+#else
         if (role_ != configuredRole())
         {
             last_error_ = Error::configuration_mismatch;
@@ -90,11 +92,16 @@ namespace nucode::ble::iso
         started_ = true;
         last_error_ = Error::none;
         return last_error_;
+#endif
     }
 
     /** @brief 시작된 backend의 bounded main-thread 작업을 실행합니다. */
     Error Program::poll() noexcept
     {
+#if defined(NUCODE_BLE_ISO_RAW_CIS)
+        last_error_ = Error::not_ready;
+        return last_error_;
+#else
         if (!started_)
         {
             last_error_ = Error::not_started;
@@ -103,6 +110,7 @@ namespace nucode::ble::iso
         internal::poll();
         last_error_ = Error::none;
         return last_error_;
+#endif
     }
 }
 

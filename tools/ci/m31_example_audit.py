@@ -203,13 +203,26 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         row["status"] = "ROLE_CONFIGURATION_INVALID"
         return row
     expected_role = selected_roles[0].lower()
+    role = selected_roles[0]
+    if role in {"CIS_CENTRAL", "CIS_PERIPHERAL"}:
+        required = (
+            "RawCis", f"Role::{expected_role}", ".begin(", ".poll(", ".stop(",
+            ".sendFrame(" if role == "CIS_CENTRAL" else ".readFrame(",
+        )
+        backend = library / "src" / "NUCODE_BLE_ISO_RawCis.cpp"
+        if any(token not in code for token in required) or not backend.is_file() or (
+            MILESTONE_IDENTIFIER.search(backend.read_text(encoding="utf-8"))
+        ):
+            row["status"] = "PUBLIC_ISO_DATA_FLOW_MISSING"
+            return row
+        row["status"] = "VISIBLE_CODE"
+        return row
     if (re.search(rf"\bProgram\s+\w+\s*\(\s*Role::{expected_role}\s*\)", code) is None or
         re.search(r"\b\w+\.begin\s*\(", code) is None or
         re.search(r"\b\w+\.poll\s*\(", code) is None):
         row["status"] = "PUBLIC_ISO_API_FLOW_MISSING"
         return row
-    role = selected_roles[0]
-    if (".start(" not in code or ".stop(" not in code or
+    if (".stop(" not in code or
         (role in ISO_SEND_ROLES and ".sendFrame(" not in code) or
         (role in ISO_RECEIVE_ROLES and ".readFrame(" not in code)):
         row["status"] = "PUBLIC_ISO_DATA_FLOW_MISSING"
