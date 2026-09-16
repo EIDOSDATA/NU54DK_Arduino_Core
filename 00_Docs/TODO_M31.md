@@ -80,8 +80,9 @@ interval, 다중 advertising/identity, EAD, LLPM/QoS 등은 전체 원장에 등
 
 아래 `W03-01`은 Arduino codec 내부 loopback과 Arduino source→sink의 실제 ISO LC3
 encode/decode까지, `W03-02`는 native unicast 양방향 ISO 및 Arduino source/sink
-단방향 전송·sink 재시작 회복 20회까지 진행했다. Arduino 양방향 stream과 정량 negative,
-명시적 stop/release는 미완료이며, 나머지 행은 계획/조사 단계다.
+단방향 전송·sink 재시작 회복 20회, 명시적 stop/release 20회와 중단 중 잘못된
+상태 전이 거부 40회까지 진행했다. Arduino 양방향 stream과 원격 ASCS 제어의
+잘못된 ASE 상태·codec/QoS 거부는 미완료이며, 나머지 행은 계획/조사 단계다.
 각 행은 source·target·Arduino build·runtime·negative
 상태를 독립적으로 가진다. role 이름만 제공하는 빈 예제나 단일 BAP 성공으로 전체 profile을
 완료하지 않는다. 고정 SDK에서 nRF54L15 지원성이 불명확한 profile은 source candidate부터 검증한다.
