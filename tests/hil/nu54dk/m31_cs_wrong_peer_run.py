@@ -67,6 +67,8 @@ def main():
                                        ("reflector", reflector), ("wrong", wrong)):
                         line = port.readline().decode("utf-8", errors="replace").strip()
                         if line:
+                            if role == "wrong" and "CS wrong peer advertising" in line:
+                                line = "CS wrong peer advertising"
                             record[f"{role}_lines"].append(line[:400])
                             if role == "initiator" and line.startswith("CS_RAW counter="):
                                 record["procedures"] += 1
