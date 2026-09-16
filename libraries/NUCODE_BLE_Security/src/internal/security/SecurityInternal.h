@@ -25,12 +25,13 @@ namespace nucode::ble::internal::security
     inline constexpr std::size_t maximum_bond_records = 4U;
 
     using nucode::ble::BondState;
-    using nucode::ble::DeviceInformation;
     using nucode::ble::ConsumerControlReport;
+    using nucode::ble::DeviceInformation;
     using nucode::ble::KeyboardReport;
     using nucode::ble::MouseReport;
     using nucode::ble::OobRole;
     using nucode::ble::PeerAddress;
+    using nucode::ble::SecureConnectionsOobRecord;
     using nucode::ble::SecurityConfig;
     using nucode::ble::SecurityError;
     using nucode::ble::SecurityEvent;
@@ -38,7 +39,6 @@ namespace nucode::ble::internal::security
     using nucode::ble::SecurityEventRecord;
     using nucode::ble::SecurityIoCapability;
     using nucode::ble::SecurityLevel;
-    using nucode::ble::SecureConnectionsOobRecord;
 
     /** @brief 역할 하나가 소유하는 local·remote OOB material입니다. */
     struct OobSlot
@@ -104,8 +104,7 @@ namespace nucode::ble::internal::security
         BLEConnectionHandle handle = {};
         struct bt_conn *connection = nullptr;
         atomic_t paired_value = ATOMIC_INIT(0);
-        atomic_t current_level_value =
-            ATOMIC_INIT(static_cast<atomic_val_t>(SecurityLevel::none));
+        atomic_t current_level_value = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityLevel::none));
         atomic_t published_level_value = ATOMIC_INIT(0);
         atomic_t pending_security_event = ATOMIC_INIT(0);
         BondLifecycleState bond_lifecycle = {};
@@ -177,8 +176,8 @@ namespace nucode::ble::internal::security
         PeerAddress result = {};
         if (address != nullptr)
         {
-            const bool public_type = address->type == BT_ADDR_LE_PUBLIC ||
-                                     address->type == BT_ADDR_LE_PUBLIC_ID;
+            const bool public_type =
+                address->type == BT_ADDR_LE_PUBLIC || address->type == BT_ADDR_LE_PUBLIC_ID;
             result.type = public_type ? BT_ADDR_LE_PUBLIC : BT_ADDR_LE_RANDOM;
             ::memcpy(result.value, address->a.val, sizeof(result.value));
         }
@@ -206,8 +205,8 @@ namespace nucode::ble::internal::security
     void recordSecurityError(SecurityError error, int driver_error = 0) noexcept;
     void recordHidError(SecurityError error, int driver_error = 0) noexcept;
     bool initializeHidProfile(std::uint8_t profile_mask) noexcept;
-    bool sendHidReport(std::uint8_t profile_mask, std::uint8_t report_index,
-                       const void *data, std::size_t length, bool keyboard_boot) noexcept;
+    bool sendHidReport(std::uint8_t profile_mask, std::uint8_t report_index, const void *data,
+                       std::size_t length, bool keyboard_boot) noexcept;
     bool hidProfileConnected(std::uint8_t profile_mask) noexcept;
     BondState currentBondState() noexcept;
     BondState currentBondState(struct bt_conn *connection) noexcept;

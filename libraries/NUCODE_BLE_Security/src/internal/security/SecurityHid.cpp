@@ -91,13 +91,15 @@ namespace nucode::ble::internal::security
             0xA1, 0x01,               /** 애플리케이션 collection 시작입니다. */
             0x85, consumer_report_id, /** Consumer input report ID입니다. */
             0x15, 0x00,               /** usage 논리 최소값입니다. */
-            0x26, 0xFF, 0x03,         /** usage 논리 최대 0x03ff입니다. */
-            0x19, 0x00,               /** usage 최소값입니다. */
-            0x2A, 0xFF, 0x03,         /** usage 최대값 0x03ff입니다. */
-            0x75, 0x10,               /** usage report 크기입니다. */
-            0x95, 0x01,               /** usage report 개수입니다. */
-            0x81, 0x00,               /** 배열 입력입니다. */
-            0xC0,                     /** Consumer collection 종료입니다. */
+            0x26, 0xFF,
+            0x03,       /** usage 논리 최대 0x03ff입니다. */
+            0x19, 0x00, /** usage 최소값입니다. */
+            0x2A, 0xFF,
+            0x03,       /** usage 최대값 0x03ff입니다. */
+            0x75, 0x10, /** usage report 크기입니다. */
+            0x95, 0x01, /** usage report 개수입니다. */
+            0x81, 0x00, /** 배열 입력입니다. */
+            0xC0,       /** Consumer collection 종료입니다. */
         };
 
         /** @brief keyboard report의 모든 key usage가 descriptor 범위 안인지 확인합니다. */
@@ -138,8 +140,8 @@ namespace nucode::ble::internal::security
             return false;
         }
         lockHidApi();
-        if ((static_cast<std::uint8_t>(atomic_get(&hidState().hid_profile_mask)) &
-             profile_mask) != 0U)
+        if ((static_cast<std::uint8_t>(atomic_get(&hidState().hid_profile_mask)) & profile_mask) !=
+            0U)
         {
             unlockHidApi();
             recordHidError(SecurityError::busy, -EALREADY);
@@ -181,8 +183,8 @@ namespace nucode::ble::internal::security
     }
 
     /** @brief 활성 profile의 report를 encrypted HIDS connection으로 전송합니다. */
-    bool sendHidReport(std::uint8_t profile_mask, std::uint8_t report_index,
-                       const void *data, std::size_t length, bool keyboard_boot) noexcept
+    bool sendHidReport(std::uint8_t profile_mask, std::uint8_t report_index, const void *data,
+                       std::size_t length, bool keyboard_boot) noexcept
     {
         if (!requireThreadContext())
         {
@@ -195,8 +197,8 @@ namespace nucode::ble::internal::security
             return false;
         }
         if (atomic_get(&hidState().hid_initialized) == 0 ||
-            (static_cast<std::uint8_t>(atomic_get(&hidState().hid_profile_mask)) &
-             profile_mask) == 0U)
+            (static_cast<std::uint8_t>(atomic_get(&hidState().hid_profile_mask)) & profile_mask) ==
+                0U)
         {
             recordHidError(SecurityError::not_initialized, -EACCES);
             return false;
@@ -210,17 +212,16 @@ namespace nucode::ble::internal::security
             recordHidError(SecurityError::not_connected, -ENOTCONN);
             return false;
         }
-        if (bt_conn_get_security(connection) < BT_SECURITY_L2 ||
-            (boot_mode && !keyboard_boot))
+        if (bt_conn_get_security(connection) < BT_SECURITY_L2 || (boot_mode && !keyboard_boot))
         {
             bt_conn_unref(connection);
             unlockHidApi();
             recordHidError(SecurityError::invalid_state, -EACCES);
             return false;
         }
-        const int result = nucode_ble_hids_send(
-            connection, boot_mode && keyboard_boot, report_index,
-            static_cast<const std::uint8_t *>(data), length);
+        const int result =
+            nucode_ble_hids_send(connection, boot_mode && keyboard_boot, report_index,
+                                 static_cast<const std::uint8_t *>(data), length);
         bt_conn_unref(connection);
         unlockHidApi();
         if (result < 0)
@@ -237,8 +238,8 @@ namespace nucode::ble::internal::security
     /** @brief profile bit·exact connection·L2 이상을 함께 검사합니다. */
     bool hidProfileConnected(std::uint8_t profile_mask) noexcept
     {
-        if ((static_cast<std::uint8_t>(atomic_get(&hidState().hid_profile_mask)) &
-             profile_mask) == 0U)
+        if ((static_cast<std::uint8_t>(atomic_get(&hidState().hid_profile_mask)) & profile_mask) ==
+            0U)
         {
             return false;
         }
@@ -382,8 +383,8 @@ namespace nucode::ble
             recordHidError(SecurityError::invalid_argument, -EINVAL);
             return false;
         }
-        return sendHidReport(keyboard_profile_mask, keyboard_report_index, &report,
-                             sizeof(report), true);
+        return sendHidReport(keyboard_profile_mask, keyboard_report_index, &report, sizeof(report),
+                             true);
     }
 
     bool HidKeyboard::press(std::uint8_t usage, std::uint8_t modifiers) noexcept
@@ -478,8 +479,8 @@ namespace nucode::ble
             recordHidError(SecurityError::invalid_argument, -EINVAL);
             return false;
         }
-        return sendHidReport(consumer_profile_mask, consumer_report_index, &report,
-                             sizeof(report), false);
+        return sendHidReport(consumer_profile_mask, consumer_report_index, &report, sizeof(report),
+                             false);
     }
 
     bool HidConsumerControl::press(std::uint16_t usage) noexcept

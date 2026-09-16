@@ -147,13 +147,12 @@ namespace nucode::ble::internal::security
             return;
         }
         atomic_set(&link->pending_security_event, 0);
-        const atomic_val_t published = atomic_set(&link->published_level_value,
-                                                  static_cast<atomic_val_t>(level));
+        const atomic_val_t published =
+            atomic_set(&link->published_level_value, static_cast<atomic_val_t>(level));
         if (legacy)
         {
             atomic_set(&securityState().pending_security_event, 0);
-            atomic_set(&securityState().published_level_value,
-                       static_cast<atomic_val_t>(level));
+            atomic_set(&securityState().published_level_value, static_cast<atomic_val_t>(level));
         }
         if (published != static_cast<atomic_val_t>(level))
         {
@@ -286,8 +285,7 @@ namespace nucode::ble::internal::security
             atomic_set(&link->current_level_value, static_cast<atomic_val_t>(level));
             if (isLegacyConnectionLocked(connection))
             {
-                atomic_set(&securityState().current_level_value,
-                           static_cast<atomic_val_t>(level));
+                atomic_set(&securityState().current_level_value, static_cast<atomic_val_t>(level));
             }
         }
         k_spin_unlock(&securityState().connection_lock, key);
@@ -362,8 +360,7 @@ namespace nucode::ble
             link.handle = {};
             link.connection = nullptr;
             atomic_set(&link.paired_value, 0);
-            atomic_set(&link.current_level_value,
-                       static_cast<atomic_val_t>(SecurityLevel::none));
+            atomic_set(&link.current_level_value, static_cast<atomic_val_t>(SecurityLevel::none));
             atomic_set(&link.published_level_value, 0);
             atomic_set(&link.pending_security_event, 0);
             link.bond_lifecycle = {};
@@ -604,7 +601,8 @@ namespace nucode::ble::internal
         bool inserted = false;
         bool legacy = false;
         k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
-        if (linkForConnectionLocked(connection) == nullptr && linkForHandleLocked(handle) == nullptr)
+        if (linkForConnectionLocked(connection) == nullptr &&
+            linkForHandleLocked(handle) == nullptr)
         {
             for (std::size_t index = 0U; index < maximum_security_links; ++index)
             {
@@ -706,8 +704,7 @@ namespace nucode::ble::internal
             link->handle = {};
             link->connection = nullptr;
             atomic_set(&link->paired_value, 0);
-            atomic_set(&link->current_level_value,
-                       static_cast<atomic_val_t>(SecurityLevel::none));
+            atomic_set(&link->current_level_value, static_cast<atomic_val_t>(SecurityLevel::none));
             atomic_set(&link->published_level_value, 0);
             atomic_set(&link->pending_security_event, 0);
             link->bond_lifecycle = {};
@@ -745,8 +742,7 @@ namespace nucode::ble::internal
             if (promoted != nullptr)
             {
                 setBondLifecycle(promoted_bond.peer_valid ? &promoted_bond.peer : nullptr,
-                                 promoted_bond.state,
-                                 promoted_bond.paired_this_connection);
+                                 promoted_bond.state, promoted_bond.paired_this_connection);
             }
             else if (currentBondState() != BondState::removal_requested)
             {

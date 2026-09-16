@@ -19,8 +19,7 @@ namespace nucode::ble::internal::security
     {
         atomic_t heart_rate_value = ATOMIC_INIT(0);
         atomic_t heart_rate_error = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityError::none));
-        atomic_t environmental_error =
-            ATOMIC_INIT(static_cast<atomic_val_t>(SecurityError::none));
+        atomic_t environmental_error = ATOMIC_INIT(static_cast<atomic_val_t>(SecurityError::none));
 
         /** @brief ISR·인자·driver 결과를 공통 profile 오류로 변환합니다. */
         bool profileResult(atomic_t &error_value, int result) noexcept
@@ -69,8 +68,7 @@ namespace nucode::ble
         return static_cast<SecurityError>(atomic_get(&heart_rate_error));
     }
 
-    bool EnvironmentalSensingService::setTemperature(
-        std::int16_t hundredths_celsius) noexcept
+    bool EnvironmentalSensingService::setTemperature(std::int16_t hundredths_celsius) noexcept
     {
         if (k_is_in_isr())
         {
@@ -87,8 +85,7 @@ namespace nucode::ble
         return nucode_ble_ess_get_temperature();
     }
 
-    bool EnvironmentalSensingService::setHumidity(
-        std::uint16_t hundredths_percent) noexcept
+    bool EnvironmentalSensingService::setHumidity(std::uint16_t hundredths_percent) noexcept
     {
         if (k_is_in_isr())
         {
@@ -102,8 +99,7 @@ namespace nucode::ble
                        static_cast<atomic_val_t>(SecurityError::invalid_argument));
             return false;
         }
-        return profileResult(environmental_error,
-                             nucode_ble_ess_set_humidity(hundredths_percent));
+        return profileResult(environmental_error, nucode_ble_ess_set_humidity(hundredths_percent));
     }
 
     std::uint16_t EnvironmentalSensingService::humidity() const noexcept

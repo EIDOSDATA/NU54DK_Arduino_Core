@@ -95,8 +95,8 @@ namespace nucode::ble::internal::security
                 pending.connection = bt_conn_ref(connection);
                 pending.response = response;
                 pending.deadline_ms =
-                    k_uptime_get() + static_cast<std::int64_t>(
-                                         securityState().security_config.response_timeout_ms);
+                    k_uptime_get() +
+                    static_cast<std::int64_t>(securityState().security_config.response_timeout_ms);
                 accepted = true;
                 break;
             }
@@ -425,8 +425,7 @@ namespace nucode::ble
         {
             return false;
         }
-        struct bt_conn *connection =
-            takePending(handle, PendingResponse::pairing_confirmation);
+        struct bt_conn *connection = takePending(handle, PendingResponse::pairing_confirmation);
         if (connection == nullptr)
         {
             recordSecurityError(SecurityError::invalid_state, -EALREADY);
@@ -472,8 +471,7 @@ namespace nucode::ble
         return true;
     }
 
-    bool SecurityManager::enterPasskey(BLEConnectionHandle handle,
-                                       std::uint32_t passkey) noexcept
+    bool SecurityManager::enterPasskey(BLEConnectionHandle handle, std::uint32_t passkey) noexcept
     {
         if (!requireThreadContext() || passkey > 999999U)
         {
@@ -531,8 +529,7 @@ namespace nucode::ble
         {
             return false;
         }
-        struct bt_conn *connection =
-            takePending(handle, PendingResponse::passkey_confirmation);
+        struct bt_conn *connection = takePending(handle, PendingResponse::passkey_confirmation);
         if (connection == nullptr)
         {
             recordSecurityError(SecurityError::invalid_state, -EALREADY);
