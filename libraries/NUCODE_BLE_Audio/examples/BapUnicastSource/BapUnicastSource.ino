@@ -41,6 +41,7 @@ namespace
         {
             peerAddress = result.address;
             peerFound = true;
+            Serial.println("LE Audio sink found");
             if (!BLEScan.stop())
             {
                 Serial.println("LE Audio scan stop failed");
@@ -64,6 +65,7 @@ namespace
             {
                 Serial.print("LE Audio client begin failed: ");
                 Serial.println(audioSource.nativeCode());
+                static_cast<void>(BLEConnection.disconnect(peer));
             }
         }
         else if ((event.event == BLEEvent::disconnected) && (event.connection == peer))
@@ -132,9 +134,13 @@ void loop()
     if (restartScan && !BLEConnection.connected() && !BLEConnection.connecting())
     {
         restartScan = false;
-        if (!BLEScan.start(true))
+        if (!BLEScan.startExtended(true, false, false))
         {
             Serial.println("LE Audio scan restart failed");
+        }
+        else
+        {
+            Serial.println("LE Audio scan restarted");
         }
     }
 
@@ -150,6 +156,10 @@ void loop()
         Serial.print(static_cast<unsigned int>(audioSource.lastStep()));
         Serial.print(" native=");
         Serial.println(audioSource.nativeCode());
+        if (BLEConnection.connected(peer))
+        {
+            static_cast<void>(BLEConnection.disconnect(peer));
+        }
     }
     if (stage != UnicastClientStage::streaming)
     {

@@ -74,7 +74,10 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "BLEAdvertising.start(", "audioSink.begin(",
                 "audioSink.readFrame(", "codec.decode(",
             )
-            options = ("CONFIG_BT_BAP_UNICAST_SERVER=y", "CONFIG_LIBLC3=y")
+            options = (
+                "CONFIG_BT_BAP_UNICAST_SERVER=y", "CONFIG_LIBLC3=y",
+                "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=3200",
+            )
         elif sketch.parent.name == "BapUnicastSource":
             required = (
                 "#include <NUCODE_BLE.h>",
@@ -82,7 +85,10 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "BLEScan.start(", "BLEConnection.connect(",
                 "audioSource.begin(", "audioSource.sendFrame(", "codec.encode(",
             )
-            options = ("CONFIG_BT_BAP_UNICAST_CLIENT=y", "CONFIG_LIBLC3=y")
+            options = (
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y", "CONFIG_LIBLC3=y",
+                "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=3200",
+            )
         else:
             required = (
                 "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",

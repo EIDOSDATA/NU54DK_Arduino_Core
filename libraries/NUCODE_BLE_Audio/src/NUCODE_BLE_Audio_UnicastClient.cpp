@@ -246,6 +246,11 @@ namespace nucode::ble::audio
             }
             if (error != BT_SECURITY_ERR_SUCCESS)
             {
+                if (error == BT_SECURITY_ERR_PIN_OR_KEY_MISSING)
+                {
+                    /** @brief 상대가 재시작하며 잃어버린 bond만 제거해 다음 연결에서 재페어링합니다. */
+                    static_cast<void>(bt_unpair(BT_ID_DEFAULT, bt_conn_get_dst(connection)));
+                }
                 atomic_set(&client.error, -static_cast<int>(error));
             }
             else if (level >= BT_SECURITY_L2)
@@ -366,24 +371,34 @@ namespace nucode::ble::audio
             (void)record(Error::stack_error, callback_error);
             return;
         }
-        if ((stage_ == UnicastClientStage::securing) && !client.security_requested &&
-            (atomic_get(&client.event) == 0))
+        if ((stage_ == UnicastClientStage::securing) && (atomic_get(&client.event) == 0))
         {
-            if (bt_gatt_get_mtu(client.connection) > 23U)
+            if (bt_conn_get_security(client.connection) >= BT_SECURITY_L2)
+            {
+                atomic_set(&client.event, static_cast<int>(Event::secured));
+            }
+            else if (!client.security_requested && (bt_gatt_get_mtu(client.connection) > 23U))
             {
                 client.security_requested = true;
                 last_step_ = UnicastClientStep::security;
                 const int security_result = bt_conn_set_security(client.connection, BT_SECURITY_L2);
-                if (security_result != 0)
+                /** @brief 재연결 시 bond의 자동 암호화가 진행 중이면 완료 callback을 기다립니다. */
+                if ((security_result != 0) && (security_result != -EBUSY))
                 {
                     (void)record(Error::stack_error, security_result);
+                    return;
                 }
             }
-            else if ((k_uptime_get_32() - client.security_wait_started) > 10000U)
+            if ((atomic_get(&client.event) == 0) &&
+                ((k_uptime_get_32() - client.security_wait_started) > 10000U))
             {
                 (void)record(Error::stack_error, -ETIMEDOUT);
+                return;
             }
-            return;
+            if (atomic_get(&client.event) == 0)
+            {
+                return;
+            }
         }
         const Event event = static_cast<Event>(atomic_set(&client.event, 0));
         if (event == Event::none)
