@@ -73,6 +73,16 @@ class M31ReadinessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "related Arduino sketch path invalid"):
             MODULE.validate(doc)
 
+    def test_w02_wire_hil_cannot_close_thin_public_examples(self) -> None:
+        """! @brief 무선 시험 PASS만으로 데이터 경로가 없는 ISO 예제를 완료 처리하지 않습니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        package = next(item for item in doc["work_packages"] if item["id"] == "M31-W02")
+        package["status"] = "completed"
+        doc["counts"]["work_completed"] += 1
+        with self.assertRaisesRegex(ValueError, "W02 public ISO example flow incomplete"):
+            MODULE.validate(doc)
+
 
 if __name__ == "__main__":
     unittest.main()

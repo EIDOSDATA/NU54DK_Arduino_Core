@@ -7,7 +7,7 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | W01~W02 완료 2/8; 설치 ISO sketch 11/11 build와 7개 실제 보드 case PASS, W03 전체 LE Audio 진행 |
+| 현 단계 | W01 완료 1/8; ISO 고정 시험 sketch 11/11 build와 7개 실제 보드 case PASS. 공개 payload API·예제 결함으로 W02 재작업, W03 전체 LE Audio 진행 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각

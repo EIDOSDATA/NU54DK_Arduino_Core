@@ -1,5 +1,9 @@
 # M31-W02 설치 Arduino ISO 예제 완료
 
+> **현재 판정 정정(2026-09-17):** 이 기록의 무선 HIL·빌드 원본은 유효하지만,
+> 공개 `.ino`의 사용자 payload 송수신 API가 빠져 W02 완료 판정은 취소했다.
+> [191번 재점검](191_M31_W02_공개_ISO_예제_재점검.md)과 [M31 TODO](../TODO_M31.md)를 따른다.
+
 2026-09-16 현재 M31-W02의 raw ISO 기능과 설치 가능한 Arduino 역할 예제를 모두 완료했다.
 clean source `e6ae812eb18cb40ce2d9b178e59fa48c16ff3989`로 만든 private
 `0.5.0-rc.1` package에서 11개 sketch를 발견·빌드했고, 그 image를 서로 다른 CMSIS-DAP V2

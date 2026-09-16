@@ -4,7 +4,7 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | 개발 source `0.4.1-dev`에서 구현하는 `v0.5.0` M31~M33 및 M34~M45로 인계할 의존성 |
-| 현재 상태 | **M31 구현·검증 진행 중**. W01·W02와 W03-02 기능 HIL 결과는 [M31 TODO](../TODO_M31.md) 및 readiness 원장에 기록했으며, 나머지 profile과 M31 전체 완료는 아직 아니다 |
+| 현재 상태 | **M31 구현·검증 진행 중**. W01 완료, W02 무선 기능 HIL 통과·공개 ISO API/예제 재작업 중, W03-02 기능 HIL 완료를 [M31 TODO](../TODO_M31.md) 및 readiness 원장에 기록했다 |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
@@ -54,6 +54,9 @@
 - 설치 Arduino 예제의 `.ino`는 일반 C/C++과 `NUCODE_*` 공개 API 사용 흐름을 보여 준다. Zephyr
   header·type과 `bt_*`, `k_*` 직접 호출은 library 구현 내부에 두고, 개발 마일스톤 식별자는
   공개 API·macro·예제·사용자 출력에 넣지 않는다. 역할 선택은 공개 enum과 Kconfig가 함께 소유한다.
+- 데이터 경로 예제는 `.ino`에 payload 생성·송신·수신 처리·종료와 오류 처리를 드러낸다.
+  고정 시험 payload와 Serial oracle이 library 내부에서 실행되고 `.ino`가 `begin()`/`poll()`만
+  호출하는 경우, 무선 HIL이 통과해도 사용자용 예제와 공개 API 완료로 세지 않는다.
 
 | 재사용할 완료 기능 | 추가 구현·예제로 연결할 범위 | 후속 소유자 |
 | --- | --- | --- |
@@ -158,11 +161,15 @@ M32-A 중 M31의 ISO/Audio/CS 자원을 사용하지 않는 항목은 공통 cap
 | ISO time synchronization | `N:iso_time_sync`에 nRF54L15 metadata 존재 | `profile/direct`: `IsoTimeSyncSender`, `IsoTimeSyncReceiver` | 2보드, 3번째 receiver 확장; timestamp 관계·restart. 외부 계측 정확도는 범위 제외 |
 | 자원·보안·복구 | ISO callback·error 경로와 M28/M30 link/security 계약 | 위 예제 공통 finite runner | 2~3보드; stale callback, disconnect 중 pending TX, wrong broadcast code, timeout, 재시작 |
 
-W02는 clean `e6ae812e…` private package에서 실제 설치 sketch 11개를 11/11 빌드하고,
-CIS·BIS·암호화·wrong code·sync loss·time sync·세 보드 CIS→BIS를 모두 다시 실행해 완료했다.
-역할별 실제 경로와 image·transcript hash는
+W02는 clean `e6ae812e…` private package에서 설치 sketch 11개를 11/11 빌드하고,
+CIS·BIS·암호화·wrong code·sync loss·time sync·세 보드 CIS→BIS 무선 시험을 통과했다.
+하지만 2026-09-17 공개 예제 점검에서 11개 sketch가 `Program::begin()`/`poll()`만
+호출하고 시험용 고정 SDU·Serial protocol을 library backend에 맡기는 결함을 확인했다.
+따라서 W02 작업 묶음은 공개 ISO 데이터 API와 사용자 편집 가능한 송수신 예제를 구현·재검증할
+때까지 **진행 중**으로 재개한다. 이전 무선 시험의 역할별 경로와 image·transcript hash는
 [W02 closure audit](<../04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>)가 소유한다.
-계획 예제 이름은 기능 계약이며 실제 설치 이름은 readiness의 `actual_sketch`가 기준이다.
+그 audit는 현재 공개 예제 완료 판정의 근거가 아니다. 계획 예제 이름은 기능 계약이며
+실제 설치 이름은 readiness의 `actual_sketch`가 기준이다.
 
 ### M31-W03 LE Audio 하위 계약
 

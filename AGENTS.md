@@ -78,6 +78,9 @@
 
 - 공개 `.ino`에는 일반 C/C++과 해당 library의 `NUCODE_*` 공개 API를 사용한 의미 있는
   `setup()`/`loop()` 흐름을 둡니다. 구현 전체를 헤더 하나에 숨긴 include-only sketch는 금지합니다.
+- 데이터 송수신 예제는 사용자가 payload 생성·전송과 수신 데이터 처리·오류·종료 흐름을 `.ino`에서
+  읽고 바꿀 수 있어야 합니다. `begin()`/`poll()`만 호출하고 고정 시험 payload·세션을 library
+  내부에서 실행하는 sketch는 공개 예제 완료로 세지 않습니다.
 - 공개 `.ino`에서 Zephyr header·type과 `bt_*`, `k_*`, `device_*` API를 직접 호출하지 않습니다.
   Zephyr/NCS 직접 구현은 library `.cpp` 또는 `src/internal`이 소유합니다.
 - `M31`, `M32` 같은 개발 마일스톤 식별자를 공개 API, class, macro, 예제, 광고 이름과 사용자
@@ -85,3 +88,5 @@
 - 역할·기능 선택은 공개 enum/config와 검증된 Kconfig feature로 표현합니다. Sketch-local 개발용
   `#define`으로 backend 역할을 고르지 않습니다.
 - 예제 변경은 `tools/ci/m31_example_audit.py`의 공개 경계 검사와 해당 예제 build를 통과해야 합니다.
+- HIL UART oracle·nonce·고정 count·마일스톤 출력은 `tests`의 전용 시험 image에만 둡니다.
+  공개 library에서 시험 backend를 재사용할 때는 사용자 데이터 API와 출력 경계를 별도로 검증합니다.

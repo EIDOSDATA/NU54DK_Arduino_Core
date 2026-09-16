@@ -1,5 +1,10 @@
 # NUCODE BLE ISO 예제
 
+> 현재 11개 스케치는 고정 시험 SDU를 실행하는 진단 역할 예제입니다. 사용자 payload를
+> `.ino`에서 송수신하는 공개 API가 아직 없으므로 일반 Arduino 데이터 예제로 사용하지
+> 마세요. [재점검 기록](<../../../00_Docs/04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)에
+> W02 재작업 범위를 기록했습니다.
+
 이 예제들은 `NUCODE_BLE_ISO.h`의 공개 Arduino API로 CIS, BIS와 CIS-BIS 전달 역할을
 실행한다. `.ino`에는 역할 선택, 초기화, 오류 처리와 `poll()` 흐름이 보인다. Bluetooth
 ISO 객체, Zephyr callback, work queue와 buffer 관리는 라이브러리 구현 내부에 있다.

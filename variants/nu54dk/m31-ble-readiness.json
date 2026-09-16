@@ -21,8 +21,9 @@
     {
       "id": "M31-W02",
       "title": "raw_iso",
-      "status": "completed",
-      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+      "status": "in_progress",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json",
+      "public_example_status": "rework_required"
     },
     {
       "id": "M31-W03",
@@ -1905,7 +1906,7 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 2,
+    "work_completed": 1,
     "test_family_total": 10,
     "test_family_passed": 3,
     "audio_group_total": 11,

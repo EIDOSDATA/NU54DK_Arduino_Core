@@ -242,6 +242,9 @@ def validate(doc: dict) -> None:
         if package["status"] not in {"not_started", "in_progress", "completed"}:
             raise ValueError("work package status unknown")
         if package["status"] == "completed":
+            if (package["id"] == "M31-W02" and
+                    package.get("public_example_status") != "PASS"):
+                raise ValueError("W02 public ISO example flow incomplete")
             proof = package.get("exact_evidence")
             if not proof or not (CORE / proof).is_file():
                 raise ValueError("completed work without exact evidence")

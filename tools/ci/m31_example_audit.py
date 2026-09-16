@@ -31,6 +31,14 @@ ISO_ROLE_BACKEND = {
     "CIS_TO_BIS_RECEIVER": "BIS",
     "CIS_TO_BIS_BRIDGE": "Combined",
 }
+ISO_SEND_ROLES = {
+    "CIS_CENTRAL", "CIS_TO_BIS_PEER", "BIS_SOURCE",
+    "BIS_ENCRYPTED_SOURCE", "BIS_TIME_SOURCE", "CIS_TO_BIS_BRIDGE",
+}
+ISO_RECEIVE_ROLES = {
+    "CIS_PERIPHERAL", "BIS_RECEIVER", "BIS_ENCRYPTED_RECEIVER",
+    "BIS_TIME_RECEIVER", "CIS_TO_BIS_BRIDGE", "CIS_TO_BIS_RECEIVER",
+}
 BACKEND_PREFIX = b"#define NUCODE_BLE_ISO_LIBRARY_BACKEND\n"
 MILESTONE_IDENTIFIER = re.compile(r"\bM[0-9]{2}[A-Za-z0-9_]*")
 ZEPHYR_DIRECT_USE = re.compile(
@@ -200,11 +208,20 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         re.search(r"\b\w+\.poll\s*\(", code) is None):
         row["status"] = "PUBLIC_ISO_API_FLOW_MISSING"
         return row
+    role = selected_roles[0]
+    if (".start(" not in code or ".stop(" not in code or
+        (role in ISO_SEND_ROLES and ".sendFrame(" not in code) or
+        (role in ISO_RECEIVE_ROLES and ".readFrame(" not in code)):
+        row["status"] = "PUBLIC_ISO_DATA_FLOW_MISSING"
+        return row
     kind = ISO_ROLE_BACKEND[selected_roles[0]]
     backend_name, target = ISO_BACKENDS[kind]
     backend = library / "src" / "internal" / backend_name
     source = ROOT / "tests" / "zephyr" / target / "src" / "main.cpp"
     if not backend.is_file() or not source.is_file():
+        return row
+    if MILESTONE_IDENTIFIER.search(backend.read_text(encoding="utf-8")):
+        row["status"] = "PUBLIC_ISO_TEST_ORACLE_BACKEND"
         return row
     source_bytes = source.read_bytes().replace(b"\r\n", b"\n")
     if backend.read_bytes() != BACKEND_PREFIX + source_bytes:
