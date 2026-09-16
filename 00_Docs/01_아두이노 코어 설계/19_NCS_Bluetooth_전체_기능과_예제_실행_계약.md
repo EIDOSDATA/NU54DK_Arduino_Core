@@ -339,6 +339,20 @@ BR/EDR Classic sample(`Z:classic`)은 nRF54L15 내장 BLE radio 지원 목표 �
 9. 이중 role 예제는 두 역할을 모두 설치한다. 상위 BAP sample 한 개를 raw ISO·CAP·PBP 모든 예제의
    완료 증거로 대체하지 않는다. 공통 구현을 공유하더라도 원장에서는 역할별 행을 보존한다.
 
+공개 Arduino 예제의 `setup()`·`loop()`에는 사용자가 읽고 수정할 수 있는 실제
+설정·호출·결과 처리 흐름을 둔다. 일반 C/C++ 계산은 Sketch에 두어도 되지만,
+Zephyr header·type과 `bt_*`·`k_*`·`device_*` 직접 호출은 공개 `.ino`에
+두지 않는다. 해당 동작은 library 구현과 공개 `NUCODE_*` API가 소유한다.
+include-only Sketch 또는 개발 마일스톤(`M31` 등)을 포함한 공개 macro·class·
+광고 이름·출력은 예제 완료로 인정하지 않는다. `NUCODE_*` 명칭과 사용자가
+이해할 수 있는 역할·설정으로 표현한다.
+
+예제 완료 판정 전에 `tools/ci/m31_example_audit.py`로 모든 설치 예제의
+진입점·공개 경계·역할 설정을 전수 검사하고, 변경한 역할별 Sketch를 실제
+Arduino target으로 build한다. 기능 HIL과 negative가 필요한 항목은 별도
+증거가 있어야 PASS다. 새 공개 예제를 추가할 때 audit 규칙도 함께 확장하며,
+검사가 통과하더라도 `.ino`에서 사용자에게 핵심 동작이 보이는지 검토한다.
+
 초보자용 최소 예제, 고급 직접 API 예제, 자동 regression runner는 목적이 다르므로 각 실행 경로와
 지원 범위를 설명한다. NCS sample의 모든 내부 helper를 public Arduino API로 승격할 의무는 없다.
 

@@ -12,6 +12,7 @@
 
 | 기록 | 용도 |
 | --- | --- |
+| [188 — M31-W03 Arduino BAP 원격 잘못된 ASE 상태 거부 20회](188_M31_W03_Arduino_BAP_원격_잘못된_ASE_상태_거부_20회.md) | clean 공개 Arduino server의 idle ASE 원격 Release가 20/20 `code=4 reason=0`으로 거부됨 |
 | [187 — M31-W03 Arduino BAP 원격 codec·QoS 거부 각 20회](187_M31_W03_Arduino_BAP_원격_codec_QoS_거부_각_20회.md) | clean 공개 Arduino server의 원격 ASCS unsupported codec·invalid QoS 각각 20/20 거부 |
 | [186 — M31-W03 Arduino BAP 잘못된 상태 거부 40회](186_M31_W03_Arduino_BAP_잘못된_상태_거부_40회.md) | clean 공개 API 중복 stop·정지 중 frame 전송 40/40 거부, LC3 2,400 frame과 재연결 20/20 |
 | [185 — M31-W03 Arduino BAP stop/release 20회](185_M31_W03_Arduino_BAP_stop_release_20회.md) | clean 공개 예제의 ASE disable·release·재연결 20/20과 LC3 2,400 frame, 정상 연결 해제 오류 교정 |

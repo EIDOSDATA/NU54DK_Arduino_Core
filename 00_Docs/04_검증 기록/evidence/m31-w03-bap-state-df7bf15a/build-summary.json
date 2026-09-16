@@ -1,0 +1,16 @@
+{
+  "core_revision": "df7bf15a58dc0e853efdb8b83b9532c7b767ca0b",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "generated_main_sha256": "2348cc69191054e4ac46351a6aa8166615c5638d2270118aa6718ddfd83f4efb",
+  "generated_cmake_sha256": "d1919657b5d86f1e277abda699d2682ee66d204479e30a4395cd5cd13cc3efdb",
+  "image_sha256": "809f3038dc9788d79226628869ccd7d954b20575968e92cb5666939104b3660d",
+  "config_sha256": "2b05c55266947e7415ebd663bd5f7255730bc42962167341d22e9ee3caa06df9",
+  "server_image_sha256": "53cfdadc8de7276ac6fb00def4dc1e6c61a5b5097d48e6f3d4026b46048fd8c8",
+  "server_config_sha256": "580f72c5838e0622658c2ac12b1d2cdc849d943c4e64893373fc05f65a7530b4",
+  "cmake_negative_case": "state",
+  "flash_bytes": 349600,
+  "ram_bytes": 71936,
+  "prior_server_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-remote-negative-db995970/manifest.json"
+}
