@@ -246,9 +246,10 @@ namespace nucode::ble::audio
             }
             if (error != BT_SECURITY_ERR_SUCCESS)
             {
-                if (error == BT_SECURITY_ERR_PIN_OR_KEY_MISSING)
+                if ((error == BT_SECURITY_ERR_PIN_OR_KEY_MISSING) ||
+                    (error == BT_SECURITY_ERR_AUTH_REQUIREMENT))
                 {
-                    /** @brief 상대가 재시작하며 잃어버린 bond만 제거해 다음 연결에서 재페어링합니다. */
+                    /** @brief 상대의 재시작·재플래시 뒤 불일치한 bond를 지워 다시 페어링합니다. */
                     static_cast<void>(bt_unpair(BT_ID_DEFAULT, bt_conn_get_dst(connection)));
                 }
                 atomic_set(&client.error, -static_cast<int>(error));

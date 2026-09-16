@@ -14,6 +14,7 @@
 #include <zephyr/bluetooth/audio/bap.h>
 #include <zephyr/bluetooth/audio/lc3.h>
 #include <zephyr/bluetooth/audio/pacs.h>
+#include <zephyr/bluetooth/conn.h>
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/bluetooth/iso.h>
 #include <zephyr/kernel.h>
@@ -43,6 +44,22 @@ namespace nucode::ble::audio
         };
 
         ServerState server;
+
+        /** @brief peer의 재플래시로 보안 정보가 어긋나면 해당 bond만 제거합니다. */
+        void securityChanged(bt_conn *connection, bt_security_t level, bt_security_err error)
+        {
+            static_cast<void>(level);
+            if ((server.owner != nullptr) &&
+                ((error == BT_SECURITY_ERR_PIN_OR_KEY_MISSING) ||
+                 (error == BT_SECURITY_ERR_AUTH_REQUIREMENT)))
+            {
+                static_cast<void>(bt_unpair(BT_ID_DEFAULT, bt_conn_get_dst(connection)));
+            }
+        }
+
+        BT_CONN_CB_DEFINE(nucode_audio_server_connection_callbacks) = {
+            .security_changed = securityChanged,
+        };
 
         const bt_audio_codec_cap codec_cap = BT_AUDIO_CODEC_CAP_LC3(
             BT_AUDIO_CODEC_CAP_FREQ_16KHZ, BT_AUDIO_CODEC_CAP_DURATION_10,
