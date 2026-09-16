@@ -1,13 +1,19 @@
 # NUCODE BLE ISO 예제
 
-> 현재 11개 스케치는 고정 시험 SDU를 실행하는 진단 역할 예제입니다. 사용자 payload를
-> `.ino`에서 송수신하는 공개 API가 아직 없으므로 일반 Arduino 데이터 예제로 사용하지
-> 마세요. [재점검 기록](<../../../00_Docs/04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)에
-> W02 재작업 범위를 기록했습니다.
+`CISCentral`과 `CISPeripheral`은 `RawCis` 공개 API로 `.ino`에서 8-byte payload를
+만들고 검사하는 예제다. 두 보드의 16-byte `sessionId`를 같게 두고 각각 NU54DK Zephyr /
+BLE로 빌드한다. Central은 100 frame을 전송하고 Peripheral은 받은 내용과 순서를
+검사한다. 각 예제는 종료 뒤 다음 세션을 시작한다.
 
-이 예제들은 `NUCODE_BLE_ISO.h`의 공개 Arduino API로 CIS, BIS와 CIS-BIS 전달 역할을
-실행한다. `.ino`에는 역할 선택, 초기화, 오류 처리와 `poll()` 흐름이 보인다. Bluetooth
-ISO 객체, Zephyr callback, work queue와 buffer 관리는 라이브러리 구현 내부에 있다.
+나머지 9개 스케치는 고정 시험 SDU를 실행하는 진단 역할 예제다. `.ino`에서 사용자
+payload를 송수신하는 공개 API를 아직 사용하지 않으므로 일반 Arduino 데이터 예제로
+간주하지 않는다. [재점검 기록](<../../../00_Docs/04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)과
+[CIS 두 역할 실기](<../../../00_Docs/04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md>)에
+W02 재작업 범위와 검증 결과를 기록했다.
+
+`CISCentral`/`CISPeripheral`의 `.ino`에는 payload 생성·검사, 시작·전송·수신·오류·종료
+흐름이 있다. Bluetooth ISO 객체, Zephyr callback과 buffer 관리는 라이브러리 구현
+내부에 있다. 다른 역할은 공개 데이터 API로 전환하는 중이다.
 
 | 예제 | 보드 수 | 역할 |
 |---|---:|---|
@@ -22,8 +28,9 @@ ISO 객체, Zephyr callback, work queue와 buffer 관리는 라이브러리 구�
 `Error::configuration_mismatch`를 반환한다. Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE**
 feature set을 선택해 빌드한다.
 
-프로그램은 115200 baud Serial로 유한 검증 세션을 제어할 수 있다. 이 명령 형식은
-회귀 시험용 구현 세부사항이며 Arduino 공개 API나 호환성 계약에는 포함되지 않는다.
+남은 진단 역할의 115200 baud Serial 명령 형식은 회귀 시험용 구현 세부사항이며
+Arduino 공개 API나 호환성 계약에는 포함되지 않는다. 새 CIS 예제는 Serial 명령에
+의존하지 않고 `RawCis` API를 직접 사용한다.
 
 ## 출처와 라이선스
 
