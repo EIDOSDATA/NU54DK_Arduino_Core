@@ -1,4 +1,4 @@
-"""! @brief Arduino ASCS server의 원격 codec·QoS 거부를 실제 두 보드에서 확인합니다. """
+"""! @brief Arduino ASCS server의 원격 codec·QoS·ASE 상태 거부를 두 보드에서 확인합니다. """
 
 import argparse
 import hashlib
@@ -19,8 +19,8 @@ from v04_protocol import ProbeLocks
 
 ROOT = Path(__file__).resolve().parents[3]
 ADDRESS_PATTERN = re.compile(r"\b[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5}\b")
-RESPONSE_PATTERN = re.compile(r"M31_NEG_(CODEC|QOS)_RSP code=(\d+) reason=(\d+)")
-EXPECTED_REASON = {"codec": 2, "qos": 6}
+RESPONSE_PATTERN = re.compile(r"M31_NEG_(CODEC|QOS|STATE)_RSP code=(\d+) reason=(\d+)")
+EXPECTED_RESPONSE = {"codec": (7, 2), "qos": (7, 6), "state": (4, 0)}
 
 
 def file_hash(path: Path) -> str:
@@ -64,8 +64,9 @@ def collect_response(client, server, record: dict, case: str, attempt: int) -> N
             match = RESPONSE_PATTERN.search(line)
             if match is not None:
                 response_case, code, reason = match.groups()
-                if response_case.lower() != case or int(code) != 7 or \
-                        int(reason) != EXPECTED_REASON[case] or not (connected and discovered):
+                if response_case.lower() != case or \
+                        (int(code), int(reason)) != EXPECTED_RESPONSE[case] or \
+                        not (connected and discovered):
                     raise RuntimeError(f"unexpected ASCS response in attempt {attempt}: {line}")
                 record["attempt_seconds"].append(round(time.monotonic() - started, 3))
                 record["rejected_operations"] += 1
@@ -76,7 +77,7 @@ def collect_response(client, server, record: dict, case: str, attempt: int) -> N
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--case", choices=("codec", "qos"), required=True)
+    parser.add_argument("--case", choices=("codec", "qos", "state"), required=True)
     parser.add_argument("--client-probe-sha256", required=True)
     parser.add_argument("--server-probe-sha256", required=True)
     parser.add_argument("--client-image", required=True, type=Path)

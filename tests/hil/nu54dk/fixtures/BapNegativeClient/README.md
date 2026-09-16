@@ -9,13 +9,14 @@
 `west build --no-sysbuild`로 빌드한다. 추가 CMake 인자
 `M31_BAP_NEGATIVE_CASE=codec`은 서버가 제공하지 않는 24 kHz LC3를,
 `M31_BAP_NEGATIVE_CASE=qos`는 서버의 40-byte 고정 SDU와 다른 41 byte를
-요청한다. 두 경우 모두 기존
+요청한다. `M31_BAP_NEGATIVE_CASE=state`는 검색된 idle sink ASE에
+원격 ASCS Release를 직접 보내 상태 오류 응답을 확인한다. 세 경우 모두 기존
 [`BapUnicastSink`](../../../../../libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino)
 Arduino 예제를 상대 역할로 사용한다.
 
-`m31_audio_bap_negative_run.py`는 원격 ASCS 응답 code 7과 codec reason 2
-또는 QoS SDU reason 6을 확인한다. 매 반복에서 두 보드를 함께 hardware
+`m31_audio_bap_negative_run.py`는 원격 ASCS 응답 codec `code=7 reason=2`,
+QoS SDU `code=7 reason=6`, idle Release `code=4 reason=0`을 구분한다.
+매 반복에서 두 보드를 함께 hardware
 reset하고 시험 client의 bonding flag를 끄므로 이전 연결의 휘발성 bond가
 다음 회차의 보안 절차에 영향을 주지 않는다. 한 회차의 거부만으로 전체
-W03-02를 완료로 판정하지 않으며, 원격의 잘못된 ASE 상태 요청과 Arduino
-양방향 stream은 별도 시험이 필요하다.
+W03-02를 완료로 판정하지 않으며, Arduino 양방향 stream은 별도 시험이 필요하다.
