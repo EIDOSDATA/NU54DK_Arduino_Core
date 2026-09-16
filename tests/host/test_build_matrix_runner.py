@@ -125,7 +125,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.1.0": ("blink", "m6", "m7"),
                 "v0.2.0": ("m15", "m16"),
                 "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
-                "v0.5.0": ("m29", "m30", "m30secure"),
+                "v0.5.0": ("m29", "m30", "m30secure", "m31"),
             },
         )
         self.assertEqual(
@@ -135,7 +135,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.2.0": ("m15", "m16"),
                 "v0.3.0-ble": ("m19m20", "m21"),
                 "v0.3.0-compat": ("ac02b", "ac03", "examples"),
-                "v0.5.0": ("m29", "m30", "m30secure"),
+                "v0.5.0": ("m29", "m30", "m30secure", "m31"),
             },
         )
         flattened = tuple(

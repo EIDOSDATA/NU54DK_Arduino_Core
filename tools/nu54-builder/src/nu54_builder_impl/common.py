@@ -53,6 +53,7 @@ FEATURE_SCHEMA_VERSION = 1
 
 FEATURE_ALLOWLIST = {
     "NUCODE_BLE": "nucode.ble.nus",
+    "NUCODE_BLE_ISO": "nucode.ble.iso",
     "NUCODE_BLE_EATT": "nucode.ble.eatt",
     "NUCODE_BLE_LegacySigning": "nucode.ble.legacy_signing",
     "NUCODE_BLE_Security": "nucode.ble.security",

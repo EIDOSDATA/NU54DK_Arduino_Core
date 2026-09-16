@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "nucode.ble.iso",
+  "requires": ["ble"],
+  "conf": [],
+  "overlays": [],
+  "conflicts": ["radio"],
+  "compatible_profiles": ["ble"]
+}

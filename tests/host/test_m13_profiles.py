@@ -35,6 +35,7 @@ class M13ProfileContractTests(unittest.TestCase):
             {MODULE.load_library_feature(ROOT, name)["id"] for name in MODULE.FEATURE_ALLOWLIST},
             {
                 "nucode.ble.nus",
+                "nucode.ble.iso",
                 "nucode.ble.security",
                 "nucode.ble.legacy_signing",
                 "nucode.ble.eatt",
@@ -70,7 +71,10 @@ class M13ProfileContractTests(unittest.TestCase):
 
     def test_canonical_examples_have_no_zephyr_sidecars(self) -> None:
         """! @brief 공개 예제가 ino만으로 탐색 가능한지 확인합니다. """
-        examples = sorted(ROOT.glob("libraries/*/examples/*/*.ino"))
+        examples = sorted(
+            sketch for sketch in ROOT.glob("libraries/*/examples/*/*.ino")
+            if sketch.parent.parent.parent.name != "NUCODE_BLE_ISO"
+        )
         self.assertEqual(
             {sketch.parent.name for sketch in examples},
             {
@@ -138,6 +142,22 @@ class M13ProfileContractTests(unittest.TestCase):
         )
         for sketch in examples:
             self.assertFalse((sketch.parent / "prj.conf").exists())
+            self.assertFalse((sketch.parent / "app.overlay").exists())
+
+    def test_m31_advanced_iso_examples_have_role_configuration(self) -> None:
+        """! @brief 직접 ISO API 예제의 역할별 Kconfig와 탐색 가능한 ino를 확인합니다. """
+        examples = sorted(ROOT.glob("libraries/NUCODE_BLE_ISO/examples/*/*.ino"))
+        self.assertEqual(
+            {sketch.parent.name for sketch in examples},
+            {
+                "CISCentral", "CISPeripheral", "BISSource", "BISReceiver",
+                "BISEncryptedSource", "BISEncryptedReceiver", "BISTimeSource",
+                "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
+                "CISToBISReceiver",
+            },
+        )
+        for sketch in examples:
+            self.assertTrue((sketch.parent / "prj.conf").is_file())
             self.assertFalse((sketch.parent / "app.overlay").exists())
 
     def test_only_selected_bundled_library_is_resolved(self) -> None:

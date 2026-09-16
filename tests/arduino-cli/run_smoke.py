@@ -39,6 +39,7 @@ ARDUINO_TESTS = (
     "m29",
     "m30",
     "m30secure",
+    "m31",
     "ac02b",
     "ac03",
     "examples",
@@ -48,7 +49,7 @@ ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
-    "v0.5.0": ("m29", "m30", "m30secure"),
+    "v0.5.0": ("m29", "m30", "m30secure", "m31"),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
@@ -1681,6 +1682,47 @@ def test_m30_secure_example(
         raise SmokeFailure("M30 secure profile did not select BLE security feature")
 
 
+## @brief M31의 실제 ISO 역할 예제를 Arduino 설치 source에서 전수 compile합니다.
+def test_m31_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    del repository
+    library = root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" / "NUCODE_BLE_ISO"
+    example_names = (
+        "CISCentral", "CISPeripheral", "BISSource", "BISReceiver",
+        "BISEncryptedSource", "BISEncryptedReceiver", "BISTimeSource",
+        "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
+        "CISToBISReceiver",
+    )
+    for example_name in example_names:
+        sketch = library / "examples" / example_name
+        if not (sketch / f"{example_name}.ino").is_file() or not (sketch / "prj.conf").is_file():
+            raise SmokeFailure(f"incomplete M31 ISO role example: {sketch}")
+        build = root / f"build-m31-{example_name.casefold()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(command)
+        context = assert_build(build, f"{example_name}.ino")
+        if context.get("profile") != "ble":
+            raise SmokeFailure(f"M31 ISO BLE profile missing: {example_name}")
+        features = {
+            item.get("id") for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if "nucode.ble.iso" not in features:
+            raise SmokeFailure(f"M31 ISO feature missing: {example_name}")
+        configuration = (Path(context["zephyr_build_dir"]) / "zephyr" / ".config").read_text(encoding="utf-8")
+        required = {"CONFIG_BT"}
+        if example_name.startswith("CIS"):
+            required.add("CONFIG_BT_ISO_PERIPHERAL" if example_name.endswith(("Peripheral", "Peer")) else "CONFIG_BT_ISO_CENTRAL")
+        if example_name.startswith("BIS") or example_name == "CISToBISReceiver":
+            required.add("CONFIG_BT_ISO_SYNC_RECEIVER" if example_name.endswith("Receiver") else "CONFIG_BT_ISO_BROADCASTER")
+        if example_name == "CISToBISBridge":
+            required.update(("CONFIG_BT_ISO_CENTRAL", "CONFIG_BT_ISO_BROADCASTER"))
+        for symbol in required:
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(f"M31 ISO symbol disabled: {example_name}: {symbol}")
+        print(f"M31_ISO_ARDUINO_BUILD_PASS={example_name}", flush=True)
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -1753,6 +1795,12 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "SecureConsumerControl",
             "SecureKeyboard",
             "SecureMouse",
+        },
+        "NUCODE BLE ISO": {
+            "CISCentral", "CISPeripheral", "BISSource", "BISReceiver",
+            "BISEncryptedSource", "BISEncryptedReceiver", "BISTimeSource",
+            "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
+            "CISToBISReceiver",
         },
     }
     discovered: dict[str, set[str]] = {}
@@ -1932,6 +1980,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m29": test_m29_examples,
                 "m30": test_m30_examples,
                 "m30secure": test_m30_secure_example,
+                "m31": test_m31_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

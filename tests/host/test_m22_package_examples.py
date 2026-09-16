@@ -141,6 +141,22 @@ class M22PackageExamplesTests(unittest.TestCase):
             ("NUCODE_BLE_EATT", "EattCentral"),
             ("NUCODE_BLE_EATT", "EattPeripheral"),
         }
+        later_ble_examples |= {
+            ("NUCODE_BLE_ISO", name)
+            for name in (
+                "CISCentral",
+                "CISPeripheral",
+                "BISSource",
+                "BISReceiver",
+                "BISEncryptedSource",
+                "BISEncryptedReceiver",
+                "BISTimeSource",
+                "BISTimeReceiver",
+                "CISToBISBridge",
+                "CISToBISPeer",
+                "CISToBISReceiver",
+            )
+        }
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(
             all_source_examples - locked_examples,
