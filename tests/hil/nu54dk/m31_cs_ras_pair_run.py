@@ -100,7 +100,19 @@ def main():
     parser.add_argument("--core-revision", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--flash", action="store_true")
+    parser.add_argument("--post-flash-reset", action="store_true")
+    parser.add_argument("--disconnect-cycles", type=int, default=0)
+    parser.add_argument("--procedures", type=int, default=100)
+    parser.add_argument("--procedure-timeout", type=float, default=600.0)
     args = parser.parse_args()
+    if args.disconnect_cycles < 0 or args.disconnect_cycles > 20:
+        parser.error("disconnect cycles must be between 0 and 20")
+    if args.procedures < 1 or args.procedures > 100:
+        parser.error("procedures must be between 1 and 100")
+    if args.procedure_timeout <= 0.0 or args.procedure_timeout > 600.0:
+        parser.error("procedure timeout must be within 600 seconds")
+    if args.post_flash_reset and not args.flash:
+        parser.error("post-flash reset requires flash")
     serial, ports = import_pyserial()
     init_uid, init_volume, init_port = discover(args.initiator_probe_sha256, ports)
     refl_uid, refl_volume, refl_port = discover(args.reflector_probe_sha256, ports)
@@ -115,9 +127,11 @@ def main():
         "reflector_image_sha256": sha256(args.reflector_image),
         "initiator_port": init_port,
         "reflector_port": refl_port,
-        "mode": "sector_flash_and_reset" if args.flash else "hardware_reset_only",
+        "mode": ("sector_flash_pair_reset" if args.post_flash_reset else
+                 "sector_flash_and_reset" if args.flash else "hardware_reset_only"),
         "procedures": 0,
         "stop_restart_cycles": 0,
+        "disconnect_reconnect_cycles": 0,
         "initiator_lines": [],
         "reflector_lines": [],
     }
@@ -142,12 +156,18 @@ def main():
                         "cs_initiator", init_uid, args.initiator_image,
                         120.0, hardware_reset=True
                     )
+                    if args.post_flash_reset:
+                        initiator.reset_input_buffer()
+                        reflector.reset_input_buffer()
+                        hardware_reset(refl_uid)
+                        hardware_reset(init_uid)
                 else:
                     hardware_reset(refl_uid)
                     hardware_reset(init_uid)
                 started = time.monotonic()
-                read_procedures(initiator, reflector, record, 100, 600.0)
-                record["hundred_procedures_elapsed_s"] = round(
+                read_procedures(initiator, reflector, record,
+                                args.procedures, args.procedure_timeout)
+                record["procedure_elapsed_s"] = round(
                     time.monotonic() - started, 3
                 )
                 for cycle in range(20):
@@ -169,6 +189,20 @@ def main():
                     ):
                         raise RuntimeError("restart confirmation timeout")
                     record["stop_restart_cycles"] = cycle + 1
+                for cycle in range(args.disconnect_cycles):
+                    initiator.write(b"d")
+                    initiator.flush()
+                    if not collect_until(
+                        initiator, reflector, record,
+                        [("i", "CS disconnect requested"),
+                         ("i", "CS initiator disconnected"),
+                         ("r", "CS reflector disconnected"),
+                         ("i", "CS initiator connected; securing"),
+                         ("r", "CS reflector connected"),
+                         ("i", "CS_RAW counter=")], 30.0
+                    ):
+                        raise RuntimeError("disconnect recovery timeout")
+                    record["disconnect_reconnect_cycles"] = cycle + 1
                 record["status"] = "PASS"
     except Exception as error:
         record["failure_class"] = type(error).__name__
@@ -188,7 +222,8 @@ def main():
     )
     print("M31_CS_RAS_PAIR=" + record["status"] +
           ";PROCEDURES=" + str(record["procedures"]) +
-          ";CYCLES=" + str(record["stop_restart_cycles"]))
+          ";CYCLES=" + str(record["stop_restart_cycles"]) +
+          ";RECONNECTS=" + str(record["disconnect_reconnect_cycles"]))
     return 0 if record["status"] == "PASS" else 1
 
 

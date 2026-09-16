@@ -93,6 +93,31 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
             option not in configuration.read_text(encoding="utf-8")):
             row["status"] = "PUBLIC_DF_API_FLOW_MISSING"
         return row
+    if library.name == "NUCODE_BLE_ChannelSounding":
+        configuration = sketch.parent / "prj.conf"
+        if sketch.parent.name == "RasInitiator":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_ChannelSounding.h>",
+                "RasInitiator", "BLEScan.filterName(",
+                "BLEDevice.onEventInfo(", "initiator.begin(",
+                "initiator.poll(", "initiator.start(",
+                "initiator.stop(", "initiator.read(",
+            )
+            option = "CONFIG_NUCODE_BLE_CS_INITIATOR=y"
+        else:
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_ChannelSounding.h>",
+                "RasReflector", "BLEAdvertising.start(",
+                "BLEDevice.onEventInfo(", "reflector.begin(",
+                "reflector.poll(",
+            )
+            option = "CONFIG_NUCODE_BLE_CS_REFLECTOR=y"
+        if (any(token not in code for token in required) or not configuration.is_file() or
+            option not in configuration.read_text(encoding="utf-8")):
+            row["status"] = "PUBLIC_CS_API_FLOW_MISSING"
+        return row
     if library.name != "NUCODE_BLE_ISO":
         return row
     included = re.findall(r"^#include\s*<([^>]+)>\s*$", text, flags=re.MULTILINE)

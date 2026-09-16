@@ -168,6 +168,17 @@ void loop()
                 Serial.println("CS procedures restart requested");
             }
         }
+        else if ((command == 'd') && peer.valid())
+        {
+            if (BLEConnection.disconnect(peer))
+            {
+                Serial.println("CS disconnect requested");
+            }
+            else
+            {
+                Serial.println("CS disconnect failed");
+            }
+        }
     }
     delay(1);
 }

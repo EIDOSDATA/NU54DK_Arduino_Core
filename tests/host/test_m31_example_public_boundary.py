@@ -87,6 +87,24 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
                              "PUBLIC_DF_API_FLOW_MISSING")
 
+    def test_channel_sounding_sketch_must_keep_public_ranging_flow(self) -> None:
+        """! @brief RAS 예제의 공개 수신 흐름과 역할 설정을 검사합니다. """
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            library = Path(temporary) / "NUCODE_BLE_ChannelSounding"
+            source = ROOT / "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator"
+            sketch = library / "examples/RasInitiator/RasInitiator.ino"
+            sketch.parent.mkdir(parents=True)
+            shutil.copy2(source / "RasInitiator.ino", sketch)
+            shutil.copy2(source / "prj.conf", sketch.parent / "prj.conf")
+            self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"], "VISIBLE_CODE")
+            sketch.write_text(
+                sketch.read_text(encoding="utf-8").replace("initiator.read(",
+                                                         "initiator.fake("),
+                encoding="utf-8",
+            )
+            self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                             "PUBLIC_CS_API_FLOW_MISSING")
+
 
 if __name__ == "__main__":
     unittest.main()
