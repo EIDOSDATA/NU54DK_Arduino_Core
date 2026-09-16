@@ -157,7 +157,7 @@ def contract() -> dict:
         ("iso_time_sync", "M31-W02", "default_sdc"),
         *[(identifier, "M31-W03", "audio_opt_in") for identifier, *_rest in AUDIO_GROUPS],
         ("connectionless_cte_tx", "M31-W04", "default_sdc"),
-        ("connected_cte_response_tx", "M31-W04", "default_sdc"),
+        ("connected_cte_response_tx", "M31-W04", "zephyr_ll_candidate"),
         ("raw_iq_rx", "M31-W04", "zephyr_ll_candidate"),
         ("aod", "M31-W04", "default_sdc"),
         ("connected_channel_sounding", "M31-W05", "default_sdc"),

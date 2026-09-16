@@ -401,21 +401,21 @@
     {
       "id": "connected_cte_response_tx",
       "owner_work_id": "M31-W04",
-      "controller_variant": "default_sdc",
+      "controller_variant": "zephyr_ll_candidate",
       "source_status": "verified",
-      "target_applicability": "target_build_only",
+      "target_applicability": "response_command_control_only",
       "native_build": "PASS",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-native-build-manifest.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/arduino-20-cycle-pass.json",
       "nu54dk_build": "PASS",
-      "source_revision": "53399559daa748b07539025c1ab64bb6464c7788",
+      "source_revision": "426faf0e72bc3d34bf7ce198557869a4fa8dc55b",
       "stage_evidence": {
-        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-native-build-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-native-build-manifest.json",
-        "arduino_build": null,
-        "runtime_query": null,
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/ll-native-enabled.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/ll-native-enabled.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/arduino-20-cycle-pass.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/arduino-20-cycle-pass.json",
         "functional_hil": null
       }
     },
@@ -424,20 +424,20 @@
       "owner_work_id": "M31-W04",
       "controller_variant": "zephyr_ll_candidate",
       "source_status": "source_candidate",
-      "target_applicability": "zephyr_ll_aoa_sync_fault_under_investigation",
+      "target_applicability": "host_single_antenna_rejected_hci_commands_accepted_iq_unproven",
       "native_build": "PASS",
       "arduino_build": "NOT_RUN",
       "runtime_query": "PASS",
       "functional_hil": "FAIL",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-owned-ff1565a9/manifest.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/diagnostic-manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "ff1565a971f900d4605056cee8cdb863f577f2e0",
+      "source_revision": "8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb",
       "stage_evidence": {
-        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-native-build-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-build-twister.json",
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/diagnostic-manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/diagnostic-manifest.json",
         "arduino_build": null,
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-ll-clean-8c125a22-01.json",
-        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-df-owned-ff1565a9/pair-01.json"
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/connected-aoa-host-controller-diagnostic.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/connected-aoa-host-controller-diagnostic.json"
       }
     },
     {
@@ -1601,8 +1601,8 @@
           "development_blocker": true,
           "release_blocker": true,
           "status": "FAIL",
-          "source_revision": "ff1565a971f900d4605056cee8cdb863f577f2e0",
-          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-owned-ff1565a9/pair-01.json"
+          "source_revision": "8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/connected-aoa-host-controller-diagnostic.json"
         },
         {
           "id": "M31-DF-01:sdc_aod_unsupported",
