@@ -467,7 +467,7 @@
       "owner_work_id": "M31-W05",
       "controller_variant": "default_sdc",
       "source_status": "verified",
-      "target_applicability": "native_secure_procedure_observed_arduino_pending",
+      "target_applicability": "native_result_observed_repeat_reset_arduino_pending",
       "native_build": "PASS",
       "arduino_build": "NOT_RUN",
       "runtime_query": "PASS",

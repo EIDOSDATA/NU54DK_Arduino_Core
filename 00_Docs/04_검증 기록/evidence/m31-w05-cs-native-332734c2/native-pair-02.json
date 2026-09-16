@@ -1,0 +1,71 @@
+{
+  "status": "CANDIDATE",
+  "source_clean": false,
+  "initiator_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "initiator_image_sha256": "95783e32d05e59df4867a4b986ba451c99dec41f90564e28c22120b18d9cd1d4",
+  "reflector_image_sha256": "8d5eb2c045c3e83684b9d6a61979d12cb341935dd7621834e82c431aa09398fd",
+  "initiator_port": "COM7",
+  "reflector_port": "COM5",
+  "initiator_lines": [
+    "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+    "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+    "Starting Channel Sounding Demo",
+    "Found device with name CS Sample, connecting...",
+    "Connected to <bt-address> (random) (err 0x00)",
+    "MTU exchange success (247)",
+    "Security changed to level 2.",
+    "CS capability exchange completed.",
+    "CS config creation complete. ID: 0",
+    "CS security enabled.",
+    "CS procedures enabled.",
+    "Estimated distance to reflector:",
+    "- Round-Trip Timing method: 1.773772 meters (derived from 6 samples)",
+    "- Phase-Based Ranging method: 1.600384 meters (derived from 36 samples)",
+    "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+    "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+    "Starting Channel Sounding Demo"
+  ],
+  "reflector_lines": [
+    "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+    "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+    "Starting Channel Sounding Demo",
+    "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+    "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+    "Starting Channel Sounding Demo",
+    "Connected to <bt-address> (random) (err 0x00)",
+    "MTU exchange success (247)",
+    "Discovery: attr 0x20006564",
+    "UUID 87654321-4567-2389-1254-f67f9fedcba8",
+    "Found expected UUID",
+    "CS capability exchange completed.",
+    "CS config creation complete. ID: 0",
+    "CS security enabled.",
+    "CS procedures enabled.",
+    "Disconnected (reason 0x08)"
+  ],
+  "initiator_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "221184"
+  ],
+  "initiator_flash": [
+    "pyocd-sector-hw-reset",
+    "237568"
+  ]
+}

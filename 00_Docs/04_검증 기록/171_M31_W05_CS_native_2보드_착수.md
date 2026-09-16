@@ -18,3 +18,13 @@ characteristic 발견, capability 교환을 출력했다. 첫 결과에서 추�
 다음 단계는 Zephyr 호출을 비공개 C++ 구현에 두는 NU54DK Arduino CS API와 양쪽 `.ino`
 예제를 작성하고, nonce·역할·보안·raw step 수·오류·중단/재시작을 두 보드 HIL에서 검증하는
 것이다. 현재 M31-W05와 `M31-CS-01`은 **진행 중**이며 기능 완료 PASS가 아니다.
+
+같은 native image로 100회 결과를 요청한 [두 번째 진단](evidence/m31-w05-cs-native-332734c2/native-pair-02-manifest.json)은
+90초 동안 **1회** 결과만 관찰해 `FAIL`로 기록했다. 그 결과에는 RTT 기반 `1.773772 m`
+(6 sample), phase 기반 `1.600384 m`(36 sample)의 추정 출력이 있었지만, 정밀도
+검증이 아니다. 이어 initiator boot banner가 다시 나오고 reflector가 HCI reason `0x08`로
+연결을 잃었다. [UART 원본](evidence/m31-w05-cs-native-332734c2/native-pair-02.json)을
+보존했다. CMSIS-DAP V2 attach로 [RESETREAS](evidence/m31-w05-cs-native-332734c2/resetreas-02.json)를
+읽었을 때 `0x00000001`(pin reset)이었지만, 시험 전 sector flash 뒤 수행한 hardware reset도
+이 bit를 설정하므로 나중의 reboot 원인을 이 값으로 단정하지 않는다. 후속 Arduino 구현과
+별도로 native 반복 중단 원인을 조사해야 한다.
