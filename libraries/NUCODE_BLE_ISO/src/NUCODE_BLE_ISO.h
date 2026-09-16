@@ -92,6 +92,54 @@ namespace nucode::ble::iso
         [[nodiscard]] static const char *buildRevision() noexcept;
     };
 
+    /** @brief 한 BIS에서 받은 사용자 SDU와 controller 시각입니다. */
+    struct BisFrame final
+    {
+        std::uint8_t data[16] = {};
+        std::uint8_t length = 0U;
+        std::uint16_t sequence = 0U;
+        std::uint32_t timestamp_us = 0U;
+        bool timestamp_valid = false;
+    };
+
+    /**
+     * @brief 한 BIG/BIS의 사용자 SDU를 송신하거나 동기화해 읽습니다.
+     *
+     * 현재 공개 구현은 비암호화 source/receiver 한 쌍과 최대 16-byte SDU를
+     * 지원합니다. 역할별 image Kconfig와 16-byte session ID가 일치해야 합니다.
+     * 한 image에서 이 객체 하나만 사용할 수 있습니다.
+     */
+    class RawBis final
+    {
+      public:
+        /** @brief BIG source 또는 synchronized receiver를 시작합니다. */
+        Error begin(Role role, const std::uint8_t session_id[16]) noexcept;
+
+        /** @brief 비동기 종료와 callback 오류를 main thread에서 처리합니다. */
+        Error poll() noexcept;
+
+        /** @brief source의 BIS에 사용자 SDU를 보냅니다. */
+        Error sendFrame(const std::uint8_t *data, std::size_t length) noexcept;
+
+        /** @brief receiver의 다음 SDU가 있으면 frame에 복사합니다. */
+        bool readFrame(BisFrame &frame) noexcept;
+
+        /** @brief BIG·광고 또는 periodic sync 해제를 시작합니다. */
+        Error stop() noexcept;
+
+        /** @brief BIG의 HCI data path가 준비되었는지 확인합니다. */
+        [[nodiscard]] bool connected() const noexcept;
+
+        /** @brief 보유한 무선 자원이 모두 반환되었는지 확인합니다. */
+        [[nodiscard]] bool stopped() const noexcept;
+
+        /** @brief 마지막 Zephyr 호출 오류를 반환합니다. */
+        [[nodiscard]] int nativeError() const noexcept;
+
+        /** @brief image에 포함된 Core source revision을 반환합니다. */
+        [[nodiscard]] static const char *buildRevision() noexcept;
+    };
+
     /**
      * @brief 선택한 CIS, BIS 또는 bridge 역할을 Arduino loop에서 실행합니다.
      *

@@ -18,12 +18,15 @@
 #define NUCODE_BLE_ISO_CIS_TO_BIS_PEER
 #include "internal/NUCODE_ISO_CIS_Impl.inc"
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE)
-#define NUCODE_BLE_ISO_BIS_ROLE "source"
-#include "internal/NUCODE_ISO_BIS_Impl.inc"
+#define NUCODE_BLE_ISO_RAW_BIS
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER) || \
     defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER)
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER)
+#define NUCODE_BLE_ISO_RAW_BIS
+#else
 #define NUCODE_BLE_ISO_BIS_ROLE "receiver"
 #include "internal/NUCODE_ISO_BIS_Impl.inc"
+#endif
 #elif defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE)
 #define NUCODE_BLE_ISO_BIS_ROLE "source"
 #define NUCODE_BLE_ISO_BIS_ENCRYPTED
@@ -79,7 +82,7 @@ namespace nucode::ble::iso
     /** @brief 역할 일치 여부를 확인한 뒤 내부 Zephyr backend를 시작합니다. */
     Error Program::begin() noexcept
     {
-#if defined(NUCODE_BLE_ISO_RAW_CIS)
+#if defined(NUCODE_BLE_ISO_RAW_CIS) || defined(NUCODE_BLE_ISO_RAW_BIS)
         last_error_ = Error::not_ready;
         return last_error_;
 #else
@@ -98,7 +101,7 @@ namespace nucode::ble::iso
     /** @brief 시작된 backend의 bounded main-thread 작업을 실행합니다. */
     Error Program::poll() noexcept
     {
-#if defined(NUCODE_BLE_ISO_RAW_CIS)
+#if defined(NUCODE_BLE_ISO_RAW_CIS) || defined(NUCODE_BLE_ISO_RAW_BIS)
         last_error_ = Error::not_ready;
         return last_error_;
 #else
