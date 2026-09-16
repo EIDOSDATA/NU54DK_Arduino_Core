@@ -59,7 +59,7 @@ def reset(uid: str) -> None:
 
 ## @brief 두 COM의 완결된 줄을 원본 순서와 시간과 함께 저장합니다.
 def capture(ports: dict[str, str], probe_ids: dict[str, str],
-            seconds: float, cycles: int) -> dict[str, list[dict]]:
+            seconds: float, cycles: int, revision: str) -> dict[str, list[dict]]:
     streams = {role: serial.Serial(port, 115200, timeout=0.1)
                for role, port in ports.items()}
     lines: dict[str, list[dict]] = {role: [] for role in ports}
@@ -81,13 +81,23 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
                         "at_s": round(time.monotonic() - start, 3),
                         "text": line.rstrip(b"\r").decode("utf-8", errors="replace"),
                     })
-            if (sum(bool(SENT.fullmatch(item["text"])) for item in lines["central"]) >= cycles and
-                sum(bool(RECEIVED.fullmatch(item["text"])) for item in lines["peripheral"]) >= cycles):
+            after_boot = {role: after_final_boot(items, revision)
+                          for role, items in lines.items()}
+            if (sum(bool(SENT.fullmatch(item["text"])) for item in after_boot["central"]) >= cycles and
+                sum(bool(RECEIVED.fullmatch(item["text"])) for item in after_boot["peripheral"]) >= cycles):
                 break
     finally:
         for stream in streams.values():
             stream.close()
     return lines
+
+
+## @brief 최종 hardware reset의 boot banner 이후만 한 실행으로 셉니다.
+def after_final_boot(lines: list[dict], revision: str) -> list[dict]:
+    banner = f"CIS core revision={revision}"
+    positions = [index for index, item in enumerate(lines)
+                 if item["text"] == banner]
+    return lines[positions[-1] + 1:] if positions else []
 
 
 ## @brief exact source·image·probe 결합을 확인하고 20회 사용자 payload 경로를 실행합니다.
@@ -127,10 +137,12 @@ def main() -> int:
     for role in ("peripheral", "central"):
         flash[role] = flash_image_pyocd(role, probe_ids[role], images[role],
                                         120.0, hardware_reset=True)
-    lines = capture(ports, probe_ids, args.seconds, args.cycles)
-    sent = sum(bool(SENT.fullmatch(item["text"])) for item in lines["central"])
-    received = sum(bool(RECEIVED.fullmatch(item["text"])) for item in lines["peripheral"])
-    bad = [item for role in lines for item in lines[role]
+    lines = capture(ports, probe_ids, args.seconds, args.cycles, revision)
+    post_boot = {role: after_final_boot(items, revision)
+                 for role, items in lines.items()}
+    sent = sum(bool(SENT.fullmatch(item["text"])) for item in post_boot["central"])
+    received = sum(bool(RECEIVED.fullmatch(item["text"])) for item in post_boot["peripheral"])
+    bad = [item for role in post_boot for item in post_boot[role]
            if ERROR.search(item["text"]) or
            (RECEIVE_END.search(item["text"]) and not RECEIVED.fullmatch(item["text"]))]
     image_revision_confirmed = {
@@ -153,6 +165,8 @@ def main() -> int:
         "requested_cycles": args.cycles,
         "completed_cycles": {"central": sent, "peripheral": received},
         "image_revision_confirmed": image_revision_confirmed,
+        "excluded_pre_boot_lines": {role: len(lines[role]) - len(post_boot[role])
+                                    for role in lines},
         "failed_lines": bad,
         "lines": lines,
     }
