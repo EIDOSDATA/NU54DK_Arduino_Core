@@ -39,8 +39,8 @@
     {
       "id": "M31-W05",
       "title": "channel_sounding",
-      "status": "not_started",
-      "exact_evidence": null
+      "status": "in_progress",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json"
     },
     {
       "id": "M31-W06",
@@ -467,17 +467,17 @@
       "owner_work_id": "M31-W05",
       "controller_variant": "default_sdc",
       "source_status": "verified",
-      "target_applicability": "native_result_observed_repeat_reset_arduino_pending",
+      "target_applicability": "native_ras_100_estimates_reset_only_arduino_pending",
       "native_build": "PASS",
       "arduino_build": "NOT_RUN",
       "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-cs-native-332734c2/native-pair-01.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "332734c2733a93abd77e4a8720359b0cc71b7ea0",
+      "source_revision": "96de07ba31f32e53f3cb34a5893fd8dbff8c223b",
       "stage_evidence": {
-        "native_build": "00_Docs/04_검증 기록/evidence/m31-w05-cs-native-332734c2/native-build-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-build-twister.json",
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
         "arduino_build": null,
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-cs-clean-8c125a22-01.json",
         "functional_hil": null

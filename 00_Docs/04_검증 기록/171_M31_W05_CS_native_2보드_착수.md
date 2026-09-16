@@ -28,3 +28,7 @@ characteristic 발견, capability 교환을 출력했다. 첫 결과에서 추�
 읽었을 때 `0x00000001`(pin reset)이었지만, 시험 전 sector flash 뒤 수행한 hardware reset도
 이 bit를 설정하므로 나중의 reboot 원인을 이 값으로 단정하지 않는다. 후속 Arduino 구현과
 별도로 native 반복 중단 원인을 조사해야 한다.
+
+후속 고정 NCS `ras_initiator`·`ras_reflector` native build 및 동일 두 이미지의 reset-only
+재실행에서 거리 결과 100개를 얻은 범위는 [173번 진단](173_M31_W05_RAS_native_100회_진단.md)에
+기록했다. 이는 W05 Arduino API와 필수 100회·복구·negative 검증을 대신하지 않는다.
