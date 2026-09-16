@@ -26,6 +26,7 @@ def main():
     parser.add_argument("--core-revision", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--cycles", type=int, default=20)
+    parser.add_argument("--reset-only", action="store_true")
     args = parser.parse_args()
     if not 1 <= args.cycles <= 20:
         parser.error("cycles must be between 1 and 20")
@@ -47,6 +48,8 @@ def main():
         "spoof_image_sha256": hashlib.sha256(args.spoof_image.read_bytes()).hexdigest(),
         "cycles_expected": args.cycles,
         "cycles_rejected": 0,
+        "disconnect_commands": 0,
+        "mode": "hardware_reset_only" if args.reset_only else "sector_flash_pair_reset",
         "initiator_lines": [],
         "reflector_lines": [],
     }
@@ -58,14 +61,17 @@ def main():
                     serial.Serial(spoof_port, 115200, timeout=0.05) as spoof:
                 initiator.reset_input_buffer()
                 spoof.reset_input_buffer()
-                record["spoof_flash"] = flash_image_pyocd(
-                    "cs_missing_ras", spoof_uid, args.spoof_image,
-                    120.0, hardware_reset=True
-                )
-                record["initiator_flash"] = flash_image_pyocd(
-                    "cs_initiator", init_uid, args.initiator_image,
-                    120.0, hardware_reset=True
-                )
+                if not args.reset_only:
+                    record["spoof_flash"] = flash_image_pyocd(
+                        "cs_missing_ras", spoof_uid, args.spoof_image,
+                        120.0, hardware_reset=True
+                    )
+                    record["initiator_flash"] = flash_image_pyocd(
+                        "cs_initiator", init_uid, args.initiator_image,
+                        120.0, hardware_reset=True
+                    )
+                initiator.reset_input_buffer()
+                spoof.reset_input_buffer()
                 hardware_reset(spoof_uid)
                 hardware_reset(init_uid)
                 started = time.monotonic()
@@ -73,17 +79,10 @@ def main():
                     if cycle > 0:
                         initiator.write(b"d")
                         initiator.flush()
-                        if not collect_until(
-                            initiator, spoof, record,
-                            [("i", "CS disconnect requested"),
-                             ("i", "CS initiator disconnected"),
-                             ("r", "CS missing service disconnected")], 30.0
-                        ):
-                            raise RuntimeError("spoof disconnect timeout")
+                        record["disconnect_commands"] += 1
                     if not collect_until(
                         initiator, spoof, record,
                         [("i", "CS initiator connected; securing"),
-                         ("r", "CS missing service connected"),
                          ("i", "CS initiator failed: -2")], 30.0
                     ):
                         raise RuntimeError("missing GATT service not rejected")
@@ -91,6 +90,29 @@ def main():
                            for line in record["initiator_lines"]):
                         raise RuntimeError("spoof produced ranging output")
                     record["cycles_rejected"] = cycle + 1
+                record["initiator_disconnects"] = sum(
+                    "CS initiator disconnected" in line
+                    for line in record["initiator_lines"]
+                )
+                record["spoof_disconnects"] = sum(
+                    "CS missing service disconnected" in line
+                    for line in record["reflector_lines"]
+                )
+                initiator_failures = sum(
+                    "CS initiator failed: -2" in line
+                    for line in record["initiator_lines"]
+                )
+                spoof_connections = sum(
+                    "CS missing service connected" in line
+                    for line in record["reflector_lines"]
+                )
+                record["initiator_failures"] = initiator_failures
+                record["spoof_connections"] = spoof_connections
+                if (initiator_failures != args.cycles or
+                        spoof_connections < args.cycles or
+                        record["initiator_disconnects"] < args.cycles - 1 or
+                        record["spoof_disconnects"] < args.cycles - 1):
+                    raise RuntimeError("reject or connection count mismatch")
                 record["elapsed_s"] = round(time.monotonic() - started, 3)
                 record["status"] = "PASS"
     except Exception as error:
