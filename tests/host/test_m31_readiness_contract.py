@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -61,6 +62,15 @@ class M31ReadinessTests(unittest.TestCase):
         doc = MODULE.contract()
         doc["work_packages"][0]["status"] = "completed"
         with self.assertRaisesRegex(ValueError, "work denominator"):
+            MODULE.validate(doc)
+
+    def test_related_public_example_must_exist(self) -> None:
+        """! @brief 완료된 역할에 기록한 추가 Arduino 예제의 실재를 검사합니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        client = next(role for role in doc["example_roles"] if role["id"] == "W03-02:client")
+        client["related_sketches"] = ["libraries/NUCODE_BLE_Audio/examples/Missing/Missing.ino"]
+        with self.assertRaisesRegex(ValueError, "related Arduino sketch path invalid"):
             MODULE.validate(doc)
 
 

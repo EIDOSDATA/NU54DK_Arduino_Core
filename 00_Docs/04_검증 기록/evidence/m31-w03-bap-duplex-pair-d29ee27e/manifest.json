@@ -1,0 +1,117 @@
+{
+  "core_revision": "d29ee27e61acf600b6792282be8d0c3d3bf50a1c",
+  "source_clean_at_hil": true,
+  "images": [
+    {
+      "role": "duplex_client",
+      "hex_sha256": "f17d1dfacdb363e082e7e45eff3d192015f988cc985afae64ce966b395205381",
+      "config_sha256": "3d6b6e2de5b4547fc23aa5a67af2a9dc4f2599afbccc1c2a6fe54f792d667500",
+      "flash_record": "duplex-client-flash.json",
+      "flash_bytes": 519240
+    },
+    {
+      "role": "duplex_server",
+      "hex_sha256": "61a86cc2645edaaf0cf2b0f0082153f187ec6c906d9f69844cfaa34854f6b7bb",
+      "config_sha256": "913a7fdd3cf709a0b559d6982ff675297b6a6881dc897d1aaef1d159f7873d4e",
+      "flash_record": "duplex-server-flash.json",
+      "flash_bytes": 515512
+    },
+    {
+      "role": "source",
+      "hex_sha256": "1e8953ef42f0375e0c19d43f908a9b5d6b4eadd9902a9fb062959440c4736c98",
+      "config_sha256": "39b213a5a9ad9a459542aa83cf8cc6d37050b388054da2a3b3934fd475d7864d",
+      "flash_record": "source-sink-flash.json",
+      "flash_bytes": 503720
+    },
+    {
+      "role": "sink",
+      "hex_sha256": "085f45ce19da7d9bd27cbc1958b65dfcd76c4a9d0dd094ea4079b1bec7cfdf09",
+      "config_sha256": "580f72c5838e0622658c2ac12b1d2cdc849d943c4e64893373fc05f65a7530b4",
+      "flash_record": "source-sink-flash.json",
+      "flash_bytes": 475176
+    },
+    {
+      "role": "source_cycle",
+      "hex_sha256": "d27d0fe54a1368ce354b671c7a9ae1b7ef927a4729541405a7e78402609ee143",
+      "config_sha256": "39b213a5a9ad9a459542aa83cf8cc6d37050b388054da2a3b3934fd475d7864d",
+      "flash_record": "source-cycle-flash.json",
+      "flash_bytes": 503872
+    }
+  ],
+  "accepted": [
+    "duplex-pair-exact.json",
+    "duplex-cycle-exact.json",
+    "source-sink-exact.json",
+    "source-cycle-exact.json"
+  ],
+  "artifacts": [
+    {
+      "path": "diagnostic-invalid-disconnect.json",
+      "sha256": "c8d3248a4b7e612f33d792cbe5a060cdd6ff19de2398d21d28597fc1986e81d5"
+    },
+    {
+      "path": "diagnostic-stale-serial.json",
+      "sha256": "738363f171457a479e4ca65a94c590ae6a3cf79534d6cefb4de3bb8ed4b35bdf"
+    },
+    {
+      "path": "diagnostic-stop-race.json",
+      "sha256": "d8474a4eb73d7454a7da80a974d4ac1fa3f10af41f46f9e3c0dfa16db8c8d7b2"
+    },
+    {
+      "path": "duplex-client-build.log",
+      "sha256": "7c5e54ae80214622187af395a28420f2f4e031932a9235aa5feda559c59d5297"
+    },
+    {
+      "path": "duplex-client-flash.json",
+      "sha256": "360c879690a1a4899f9253c691ae69a77ea64b7b5932ebbcdb66ed763248e70b"
+    },
+    {
+      "path": "duplex-cycle-exact.json",
+      "sha256": "eb92ed15beeb8140616756bfe32d3ce41912b448dcd09b075ab334bb42e280be"
+    },
+    {
+      "path": "duplex-pair-exact.json",
+      "sha256": "acd81ab02637e934c747c86bdc5521277c19a963bf2ca4fe77276fc8982754cc"
+    },
+    {
+      "path": "duplex-server-build.log",
+      "sha256": "8276ed4e575a35e4732560f0f86d7b9030d3d603b387d9c5e78569d5fbe2ca15"
+    },
+    {
+      "path": "duplex-server-flash.json",
+      "sha256": "c13bbdbe3798374e8fc88513cddfbed9cb2248d446135c2400dfc8be8af78605"
+    },
+    {
+      "path": "provenance-audit.json",
+      "sha256": "71bf5026f39af3d4b8a23a02bed8284087c7a29031cdd8d3a2952dd95c485d35"
+    },
+    {
+      "path": "sink-build.log",
+      "sha256": "89559ac4bd47e547dd6285670a484f3cc3dbcf8c17a87aa1135c8386704e386f"
+    },
+    {
+      "path": "source-build.log",
+      "sha256": "555a80c3d437c63295bb43fe44ea38abc0f44eae6e122461df7d9b9ee0b2af1e"
+    },
+    {
+      "path": "source-cycle-build.log",
+      "sha256": "163ed45e5c9ad6169d4dc117af5633739fa5545dc7f1984a780a80d7b63de990"
+    },
+    {
+      "path": "source-cycle-exact.json",
+      "sha256": "55af094bbbed998780aa294819e234cb76bb0990a39868ced4c080747e8dd7a2"
+    },
+    {
+      "path": "source-cycle-flash.json",
+      "sha256": "9e4f47b259e42fd5a38eddb806dd1012ead24f0144d3e5c170269f5afc632be3"
+    },
+    {
+      "path": "source-sink-exact.json",
+      "sha256": "01d858f931d75d64771a1b7d9fbf3feb277a6a39831bba67893b4c7ae7848eb8"
+    },
+    {
+      "path": "source-sink-flash.json",
+      "sha256": "3bf3e46c6016c2311d87409cce5b6990ca35a02be9718b4e3514ec7e3b14f715"
+    }
+  ]
+}

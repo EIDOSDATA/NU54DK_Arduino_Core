@@ -263,6 +263,29 @@ def validate(doc: dict) -> None:
         raise ValueError("audio group denominator mismatch")
     if counts["example_role_total"] != len(doc["example_roles"]):
         raise ValueError("example role denominator mismatch")
+    role_ids = [role["id"] for role in doc["example_roles"]]
+    if len(role_ids) != len(set(role_ids)) or set(role_ids) != set(EXAMPLE_ROLES):
+        raise ValueError("example role identity mismatch")
+    for role in doc["example_roles"]:
+        related = role.get("related_sketches", [])
+        if (not isinstance(related, list) or
+                any(not isinstance(sketch, str) for sketch in related) or
+                len(related) != len(set(related))):
+            raise ValueError("related Arduino sketch list invalid")
+        sketches = ([role["actual_sketch"]] if role["actual_sketch"] else []) + related
+        for sketch in sketches:
+            if (not isinstance(sketch, str) or not sketch.startswith("libraries/") or
+                    not sketch.endswith(".ino") or
+                    not (CORE / sketch).resolve().is_relative_to((CORE / "libraries").resolve()) or
+                    not (CORE / sketch).is_file()):
+                raise ValueError("related Arduino sketch path invalid")
+        if role["runtime_status"] == "PASS" and (
+            role["build_status"] != "PASS" or not sketches or not role["evidence"] or
+            not (CORE / role["evidence"]).is_file() or
+            not role["source_revision"] or
+            re.fullmatch(r"[0-9a-f]{40}", role["source_revision"]) is None
+        ):
+            raise ValueError("example runtime PASS without source, build or evidence")
     if counts["parity_rows"] != PARITY_ROWS:
         raise ValueError("parity discovered denominator mismatch")
     for group in doc["audio_groups"]:
