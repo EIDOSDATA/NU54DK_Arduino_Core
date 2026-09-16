@@ -64,7 +64,7 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | --- | --- | --- | --- |
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
 | M31-W02 raw ISO 기반 | **완료** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | 설치 package 역할 예제 11/11 build, CIS·BIS·암호화·wrong code·sync loss·time sync·세 보드 combined exact HIL PASS; [W02 closure audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
-| M31-W03 전체 LE Audio profile | **진행 중** | Arduino LC3 내부 loopback, native BAP unicast 양방향 ISO, 공개 Arduino source→sink의 LC3 1,000 frame 전송·복호화·drop 0 확인. §3의 나머지 profile·양방향 Arduino stream·negative·반복 복구는 잔여. Source/Sink RAM 약 85% | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계; [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[Arduino sink](<04_검증 기록/182_M31_W03_Arduino_BAP_unicast_LC3_sink_실기.md>)·[Arduino source→sink](<04_검증 기록/183_M31_W03_Arduino_BAP_unicast_LC3_두_역할_실기.md>) |
+| M31-W03 전체 LE Audio profile | **진행 중** | Arduino LC3 내부 loopback, native BAP unicast 양방향 ISO, 공개 Arduino source→sink의 LC3 1,000 frame 전송·복호화·drop 0 및 sink 재시작 뒤 새 연결·LC3 100 frame 복구 20/20 확인. §3의 나머지 profile·Arduino 양방향 stream·명시적 stop/release·negative는 잔여. Source/Sink RAM 약 86% | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계; [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[Arduino sink](<04_검증 기록/182_M31_W03_Arduino_BAP_unicast_LC3_sink_실기.md>)·[Arduino source→sink](<04_검증 기록/183_M31_W03_Arduino_BAP_unicast_LC3_두_역할_실기.md>)·[재시작 복구 20회](<04_검증 기록/184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md>) |
 | M31-W04 Direction Finding | **진행 중** | connectionless AoA CTE TX 20회, Zephyr LL connected AoA CTE 응답 stop/restart 20회 확인; 기본 안테나 raw IQ RX는 실패·미완료. 연결 RX Host는 1안테나에서 `-EINVAL`, 직접 HCI 두 명령은 수락됐으나 IQ 미확인. SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분; [CTE 송신](<04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md>), [연결 응답](<04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md>), [IQ 수신 진단](<04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md>), [Host/controller 경계](<04_검증 기록/178_M31_W04_연결_AoA_수신_Host_Controller_경계.md>) |
 | M31-W05 connected Channel Sounding | **진행 중** | Arduino initiator·reflector의 secure ACL·CS procedure·RAS raw 결과 100개, stop/restart 20회와 disconnect/reconnect 20회 확인; 동일 이름·다른 광고 서비스의 3보드 peer 분리, Ranging UUID 위장/GATT 서비스 부재 거부 20회, 미암호화 RAS Features read의 ATT 15 거부 20회 확인. flash 직후 간헐 중단 원인·같은 ACL 반복 read 중단·wrong-key negative는 잔여 | 비보정 RTT 거리 출력의 수치 정확도를 보증하지 않으며 전체 W05 완료로 승격하지 않음; [착수 기록](<04_검증 기록/171_M31_W05_CS_native_2보드_착수.md>)·[RAS native](<04_검증 기록/173_M31_W05_RAS_native_100회_진단.md>)·[Arduino reflector](<04_검증 기록/175_M31_W05_Arduino_RAS_reflector_100회_진단.md>)·[Arduino initiator](<04_검증 기록/176_M31_W05_Arduino_RAS_initiator_100회와_재시작_진단.md>)·[복구/3보드](<04_검증 기록/177_M31_W05_RAS_재연결과_3보드_peer_분리_진단.md>)·[위장 GATT 거부](<04_검증 기록/179_M31_W05_RAS_UUID_위장_peer_거부_20회.md>)·[미암호화 read 거부](<04_검증 기록/180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md>) |
 | M31-W06 통합·회귀 | **미착수** | M31-A/B/C 선택 조합의 자원 충돌·link 격리, M19~M30 영향 회귀, stale callback·disconnect·재연결 | 통합 runner, RAM/RRAM·stream/connection 예산, 오류·복구 증거와 명시적 동시 조합 |
@@ -78,9 +78,10 @@ interval, 다중 advertising/identity, EAD, LLPM/QoS 등은 전체 원장에 등
 
 ## 3. W03 세부 구현·예제 TODO
 
-아래 `W03-01`은 Arduino codec 내부 loopback과 Arduino BAP sink의 실제 ISO LC3 decode까지,
-`W03-02`는 native unicast 양방향 ISO 및 Arduino sink 역할까지 진행했다. Arduino
-client/source와 정량 negative·회복 검증은 미완료이며, 나머지 행은 계획/조사 단계다.
+아래 `W03-01`은 Arduino codec 내부 loopback과 Arduino source→sink의 실제 ISO LC3
+encode/decode까지, `W03-02`는 native unicast 양방향 ISO 및 Arduino source/sink
+단방향 전송·sink 재시작 회복 20회까지 진행했다. Arduino 양방향 stream과 정량 negative,
+명시적 stop/release는 미완료이며, 나머지 행은 계획/조사 단계다.
 각 행은 source·target·Arduino build·runtime·negative
 상태를 독립적으로 가진다. role 이름만 제공하는 빈 예제나 단일 BAP 성공으로 전체 profile을
 완료하지 않는다. 고정 SDK에서 nRF54L15 지원성이 불명확한 profile은 source candidate부터 검증한다.

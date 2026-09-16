@@ -156,17 +156,17 @@
       "arduino_build": "PASS",
       "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "b5623c7de6941ed043d3b2a50f4171f990cdbff5",
+      "source_revision": "1f560fed1bb889b5def834e88c62d18939db2e4e",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json",
         "functional_hil": null
       },
-      "support_reason": "기존 Arduino LC3 내부 loopback과 clean b5623c7d Arduino source→sink 실제 LC3 CIS frame 1000개 encode/decode·drop 0·PCM energy 양수 확인. 양방향 Arduino stream·negative·반복 회복은 미완료. Native 양방향 증거: m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json"
+      "support_reason": "Arduino LC3 내부 loopback과 clean 1f560fed Arduino source→sink LC3 CIS frame 1000개 encode/decode·drop 0·PCM energy 양수, sink 재시작 뒤 새 LC3 100 frame 복구 20/20 확인. 양방향 Arduino stream·negative는 미완료. Native 양방향 증거: m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json"
     },
     {
       "id": "W03-02",
@@ -178,17 +178,17 @@
       "arduino_build": "PASS",
       "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "b5623c7de6941ed043d3b2a50f4171f990cdbff5",
+      "source_revision": "1f560fed1bb889b5def834e88c62d18939db2e4e",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/pair-exact.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/pair-exact.json",
         "functional_hil": null
       },
-      "support_reason": "고정 NCS upstream client/server의 native 양방향 ISO와 clean b5623c7d Arduino PACS/ASCS source→sink의 1000 LC3 frame encode/decode를 확인했다. Arduino 양방향 stream 및 stop/release 20회·negative는 미완료."
+      "support_reason": "고정 NCS upstream client/server의 native 양방향 ISO와 clean 1f560fed Arduino PACS/ASCS source→sink의 1000 LC3 frame encode/decode, sink 재시작 뒤 재연결·새 LC3 100 frame 복구 20/20을 확인했다. Arduino 양방향 stream 및 명시적 stop/release 20회·negative는 미완료."
     },
     {
       "id": "W03-03",
@@ -689,19 +689,19 @@
       "id": "W03-02:client",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSource/BapUnicastSource.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSource/BapUnicastSource.ino",
-      "source_revision": "b5623c7de6941ed043d3b2a50f4171f990cdbff5",
+      "source_revision": "1f560fed1bb889b5def834e88c62d18939db2e4e",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json"
     },
     {
       "id": "W03-02:server",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino",
-      "source_revision": "b5623c7de6941ed043d3b2a50f4171f990cdbff5",
+      "source_revision": "1f560fed1bb889b5def834e88c62d18939db2e4e",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-pair-b5623c7d/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json"
     },
     {
       "id": "W03-03:source",
