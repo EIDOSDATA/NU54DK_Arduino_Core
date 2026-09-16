@@ -1,6 +1,6 @@
 # Ranging Service initiator
 
-이 스케치는 `NU54-CS-RSP` 이름의 reflector를 검색해 연결합니다. 공개
+이 스케치는 Ranging Service UUID를 광고하는 reflector를 검색해 연결합니다. 공개
 `RasInitiator` API가 L2 보안, Ranging Service 탐색, CS capability·config·보안
 절차를 진행합니다. 준비가 되면 CS 절차를 시작하고 같은 counter의 로컬·상대
 raw step 개수와 유효한 mode 1 왕복 시간으로 계산한 거리 추정치를 출력합니다.

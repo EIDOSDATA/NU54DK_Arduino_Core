@@ -13,6 +13,7 @@ using nucode::ble::BLEConnectionHandle;
 using nucode::ble::BLEEvent;
 using nucode::ble::BLEEventInfo;
 using nucode::ble::BLEScanResult;
+using nucode::ble::BLEUuid;
 using nucode::ble::cs::Error;
 using nucode::ble::cs::InitiatorStage;
 using nucode::ble::cs::RasInitiator;
@@ -28,7 +29,7 @@ namespace
     bool started = false;
     bool reportedFailure = false;
 
-    /** @brief 정확한 이름을 가진 연결 가능한 reflector를 선택합니다. */
+    /** @brief Ranging Service를 광고하는 연결 가능한 reflector를 선택합니다. */
     void onScanResult(const BLEScanResult &result, void *context)
     {
         static_cast<void>(context);
@@ -83,7 +84,7 @@ void setup()
     BLEScan.onResult(onScanResult);
     BLEDevice.onEventInfo(onBleEvent);
     if (!BLEDevice.begin("NU54-CS-INIT") || !BLEScan.clearFilters() ||
-        !BLEScan.filterName("NU54-CS-RSP") || !BLEScan.start(true))
+        !BLEScan.filterServiceUuid(BLEUuid(0x185BU)) || !BLEScan.start(true))
     {
         Serial.println("CS initiator scan failed");
     }

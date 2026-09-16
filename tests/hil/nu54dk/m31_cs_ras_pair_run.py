@@ -104,6 +104,7 @@ def main():
     parser.add_argument("--disconnect-cycles", type=int, default=0)
     parser.add_argument("--procedures", type=int, default=100)
     parser.add_argument("--procedure-timeout", type=float, default=600.0)
+    parser.add_argument("--diagnose-timeout", action="store_true")
     args = parser.parse_args()
     if args.disconnect_cycles < 0 or args.disconnect_cycles > 20:
         parser.error("disconnect cycles must be between 0 and 20")
@@ -165,8 +166,28 @@ def main():
                     hardware_reset(refl_uid)
                     hardware_reset(init_uid)
                 started = time.monotonic()
-                read_procedures(initiator, reflector, record,
-                                args.procedures, args.procedure_timeout)
+                try:
+                    read_procedures(initiator, reflector, record,
+                                    args.procedures, args.procedure_timeout)
+                except RuntimeError as error:
+                    if str(error) == "procedure count timeout" and args.diagnose_timeout:
+                        initiator.write(b"s")
+                        initiator.flush()
+                        record["timeout_stop_confirmed"] = collect_until(
+                            initiator, reflector, record,
+                            [("i", "CS procedures stop requested"),
+                             ("r", "CS procedures disabled")], 8.0
+                        )
+                        if record["timeout_stop_confirmed"]:
+                            initiator.write(b"r")
+                            initiator.flush()
+                            record["timeout_restart_raw_confirmed"] = collect_until(
+                                initiator, reflector, record,
+                                [("i", "CS procedures restart requested"),
+                                 ("r", "CS procedures enabled"),
+                                 ("i", "CS_RAW counter=")], 10.0
+                            )
+                    raise
                 record["procedure_elapsed_s"] = round(
                     time.monotonic() - started, 3
                 )

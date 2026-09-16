@@ -99,7 +99,7 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
             required = (
                 "#include <NUCODE_BLE.h>",
                 "#include <NUCODE_BLE_ChannelSounding.h>",
-                "RasInitiator", "BLEScan.filterName(",
+                "RasInitiator", "BLEScan.filterServiceUuid(",
                 "BLEDevice.onEventInfo(", "initiator.begin(",
                 "initiator.poll(", "initiator.start(",
                 "initiator.stop(", "initiator.read(",
