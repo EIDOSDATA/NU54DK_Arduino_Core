@@ -15,6 +15,7 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 import ble_pair_hil_common as common  # noqa: E402
+import m31_iso_combined as combined  # noqa: E402
 
 
 class M31IsoHardwareFlashTests(unittest.TestCase):
@@ -50,6 +51,33 @@ class M31IsoHardwareFlashTests(unittest.TestCase):
                 common.flash_image_pyocd(
                     "central", "a" * 32, Path("image.hex"), 120.0, hardware_reset=True
                 )
+
+    def test_combined_exact_requires_hardware_reset_evidence(self) -> None:
+        """! @brief 결합 HIL 완료 승격에서 명시적 hardware reset 근거를 요구합니다. """
+        identity = combined.ExpectedIdentity("a" * 40, "b" * 40, "c" * 40, "d" * 40)
+        images = {"peer": "1" * 64, "combined": "2" * 64, "receiver": "3" * 64}
+        envelope = {
+            "source_clean": True,
+            "test_id": "M31-ISO-01:bis_cis_combined",
+            "cycles": 20,
+            "identity": vars(identity),
+            "boards": {
+                role: {
+                    "image_sha256": images[role],
+                    "probe_sha256": str(index) * 64,
+                    "flash_mode": "pyocd-sector-hw-reset",
+                }
+                for index, role in enumerate(images, 4)
+            },
+            "transcript": b"validated-by-parser",
+            "nonces": ["0" * 32] * 20,
+        }
+        marker = object()
+        with patch.object(combined, "parse_combined_transcript", return_value=marker):
+            self.assertIs(marker, combined.validate_combined_envelope(envelope, images, identity))
+            envelope["boards"]["combined"]["flash_mode"] = "pyocd-sector"
+            with self.assertRaisesRegex(combined.M31CombinedFailure, "sector flash"):
+                combined.validate_combined_envelope(envelope, images, identity)
 
 
 if __name__ == "__main__":

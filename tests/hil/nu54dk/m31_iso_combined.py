@@ -279,7 +279,7 @@ def validate_combined_envelope(envelope: dict, images: dict[str, str],
         if not isinstance(board, dict) or board.get("image_sha256") != images[role] or (
             SHA256.fullmatch(images[role]) is None or
             SHA256.fullmatch(board.get("probe_sha256", "")) is None or
-            board.get("flash_mode") != "pyocd-sector"
+            board.get("flash_mode") != "pyocd-sector-hw-reset"
         ):
             raise M31CombinedFailure("image/probe SHA 또는 sector flash 오류")
         probes.add(board["probe_sha256"])
