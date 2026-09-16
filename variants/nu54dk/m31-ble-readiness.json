@@ -156,14 +156,14 @@
       "arduino_build": "PASS",
       "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-audio-857641e1/audio-lc3-01.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json",
       "nu54dk_build": "PASS",
-      "source_revision": "857641e1caa28a22508a470b82168850b3275dd2",
+      "source_revision": "5219626ba016449b629b0d72c8246d533670d2bd",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-audio-857641e1/audio-arduino-build-manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-audio-857641e1/audio-arduino-build-manifest.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-audio-857641e1/audio-lc3-01.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-arduino-build-manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-arduino-build-manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json",
         "functional_hil": null
       }
     },
@@ -677,10 +677,10 @@
       "id": "W03-01:codec",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino",
-      "source_revision": "857641e1caa28a22508a470b82168850b3275dd2",
+      "source_revision": "5219626ba016449b629b0d72c8246d533670d2bd",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-audio-857641e1/audio-lc3-01.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json"
     },
     {
       "id": "W03-02:client",
