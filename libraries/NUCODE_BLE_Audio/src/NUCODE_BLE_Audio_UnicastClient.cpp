@@ -63,6 +63,7 @@ namespace nucode::ble::audio
             atomic_t sequence = 0;
             atomic_t codec_found = 0;
             atomic_t stopping = 0;
+            atomic_t expected_disconnect = 0;
             std::uint32_t security_wait_started = 0U;
             std::uint32_t stop_wait_started = 0U;
             bool security_requested = false;
@@ -315,7 +316,8 @@ namespace nucode::ble::audio
         /** @brief 연결 해제 뒤 진행 중인 상태를 실패로 돌립니다. */
         void disconnected(bt_conn *connection, std::uint8_t reason)
         {
-            if ((client.owner != nullptr) && (connection == client.connection))
+            if ((client.owner != nullptr) && (connection == client.connection) &&
+                (atomic_get(&client.expected_disconnect) == 0))
             {
                 atomic_set(&client.error, -(0x200 + static_cast<int>(reason)));
             }
@@ -392,6 +394,7 @@ namespace nucode::ble::audio
         atomic_set(&client.sequence, 0);
         atomic_set(&client.codec_found, 0);
         atomic_set(&client.stopping, 0);
+        atomic_set(&client.expected_disconnect, 0);
         client.security_wait_started = k_uptime_get_32();
         client.security_requested = false;
         int result = bt_bap_unicast_client_register_cb(&client_callbacks);
@@ -524,6 +527,7 @@ namespace nucode::ble::audio
         }
         else if (event == Event::released)
         {
+            atomic_set(&client.expected_disconnect, 1);
             stage_ = UnicastClientStage::released;
         }
         if (result != 0)

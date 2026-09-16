@@ -61,6 +61,8 @@ def collect_cycles(client, server, record: dict, requested: int) -> None:
                 continue
             record[f"{role}_lines"].append(line)
             if role == "client":
+                if "LE Audio setup failed" in line and (streaming or record["completed_cycles"] > 0):
+                    raise RuntimeError(f"client failed after stream start in cycle {expected}")
                 if "LE Audio source streaming" in line:
                     streaming = True
                 if streaming and "LE Audio sent frames=100" in line:
