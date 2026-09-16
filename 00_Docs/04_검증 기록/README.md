@@ -12,6 +12,7 @@
 
 | 기록 | 용도 |
 | --- | --- |
+| [186 — M31-W03 Arduino BAP 잘못된 상태 거부 40회](186_M31_W03_Arduino_BAP_잘못된_상태_거부_40회.md) | clean 공개 API 중복 stop·정지 중 frame 전송 40/40 거부, LC3 2,400 frame과 재연결 20/20 |
 | [185 — M31-W03 Arduino BAP stop/release 20회](185_M31_W03_Arduino_BAP_stop_release_20회.md) | clean 공개 예제의 ASE disable·release·재연결 20/20과 LC3 2,400 frame, 정상 연결 해제 오류 교정 |
 | [184 — M31-W03 Arduino BAP 재시작 복구 20회](184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md) | clean source/sink 1,000 LC3 frame과 sink reset 복구 20/20 |
 | [167 — M31-W02 설치 Arduino ISO 예제 완료](167_M31_W02_설치_Arduino_ISO_예제_완료.md) | package sketch 11/11 build, CIS·BIS·암호화·negative·time·combined 실제 보드 PASS, W02 완료 |

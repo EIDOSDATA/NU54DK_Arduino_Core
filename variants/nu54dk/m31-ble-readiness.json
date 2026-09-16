@@ -178,17 +178,17 @@
       "arduino_build": "PASS",
       "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-stop-release-860a3eed/manifest.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-invalid-state-9084063b/manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "860a3eedac5625ec34d33a179c20fe284e19af5c",
+      "source_revision": "9084063b42e2a63fcb360e8feb75203ea43e5bcf",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-stop-release-860a3eed/manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-stop-release-860a3eed/manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-invalid-state-9084063b/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-invalid-state-9084063b/manifest.json",
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/pair-exact.json",
         "functional_hil": null
       },
-      "support_reason": "고정 NCS upstream client/server의 native 양방향 ISO와 clean 1f560fed Arduino PACS/ASCS source→sink의 1000 LC3 frame encode/decode, sink 재시작 복구 20/20을 확인했다. clean 860a3eed 공개 API의 ASE disable·release·재연결 20/20, Sink LC3 복호화 2400 frame을 추가 확인했다. Arduino 양방향 stream과 잘못된 ASE 상태·codec/QoS negative는 미완료."
+      "support_reason": "고정 NCS upstream client/server의 native 양방향 ISO와 clean 1f560fed Arduino PACS/ASCS source→sink의 1000 LC3 frame encode/decode, sink 재시작 복구 20/20을 확인했다. clean 9084063b 공개 API의 ASE disable·release·재연결 20/20, Sink LC3 복호화 2400 frame, 중복 stop·정지 중 frame 거부 40/40을 추가 확인했다. Arduino 양방향 stream과 원격 ASCS의 잘못된 ASE 상태·codec/QoS negative는 미완료."
     },
     {
       "id": "W03-03",

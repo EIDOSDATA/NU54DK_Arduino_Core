@@ -1,0 +1,14 @@
+{
+  "source_revision": "9084063b42e2a63fcb360e8feb75203ea43e5bcf",
+  "files": {
+    ".gitattributes": "00914fde86857422778b8dbea4d70cd16bf60ff06ebe5fd9d65d00a2c992dd15",
+    "cycles-exact.json": "a40a95a9ecfc954a9aec4ba4aeeaba22c835a16e113e64c5c4aa9eef36e1f765",
+    "flash.json": "a6e4a97296a1d5dd3b8b9e980f206afec7a5a2608774e6d5d281e04091543722",
+    "sink-build.json": "9da28db7dafb4dbb28b592a7099762569f6b21c8b7e22cb13dd0f94aebf12fc2",
+    "sink.config.gz": "c1d562bdde659c9a65c191740350ecfe524406b1e7b4089de76ef25ae6b49409",
+    "sink.hex.gz": "7e4d1d39cda1cdfee19e6f4a3a2193e4e583b667c153f4e5be08c36e550dcc98",
+    "source-build.json": "a14eec9a96ea86353daec8c2c41163b905ecf0ff2dd0c15ab4873f1dc5a8f7d6",
+    "source.config.gz": "161f0207ebe4cb0b329f5dd52fdb7f4a82b608806b493aa2a3e389d470949f24",
+    "source.hex.gz": "4df937f38d25e9cc2f5ac2315b6627602b9b43b7bd206cea008bfc8e0c0e9e48"
+  }
+}
