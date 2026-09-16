@@ -151,8 +151,8 @@
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
       "source_status": "verified",
-      "target_applicability": "applicable_codec_only_iso_stream_pending",
-      "native_build": "NOT_RUN",
+      "target_applicability": "native_lc3_unicast_one_way_decode_arduino_stream_pending",
+      "native_build": "PASS",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
@@ -160,33 +160,35 @@
       "nu54dk_build": "PASS",
       "source_revision": "5219626ba016449b629b0d72c8246d533670d2bd",
       "stage_evidence": {
-        "native_build": null,
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
         "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-arduino-build-manifest.json",
         "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-arduino-build-manifest.json",
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json",
         "functional_hil": null
-      }
+      },
+      "support_reason": "Arduino LC3 내부 loopback은 기존 PASS. clean b28631df upstream native BAP unicast에서 실제 LC3 encode→ISO→서버 decode 1000 valid SDU 및 양방향 ISO 전송을 확인했지만 Arduino stream API·negative·반복 회복은 미완료."
     },
     {
       "id": "W03-02",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
-      "native_build": "NOT_RUN",
+      "source_status": "verified",
+      "target_applicability": "native_unicast_lc3_confirmed_arduino_pending",
+      "native_build": "PASS",
       "arduino_build": "NOT_RUN",
       "runtime_query": "NOT_RUN",
       "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "b28631df3cdc4bcf1c4926730e81eea377f7ef47",
       "stage_evidence": {
-        "native_build": null,
-        "nu54dk_build": null,
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
         "arduino_build": null,
         "runtime_query": null,
         "functional_hil": null
-      }
+      },
+      "support_reason": "고정 NCS upstream client/server의 NU54DK native build와 clean 2보드 PACS discovery→ASE codec/QoS→stream 시작→양방향 ISO 1000 SDU, 서버 LC3 decode를 확인했다. Arduino API·설치 예제·stop/release 20회·negative는 미완료."
     },
     {
       "id": "W03-03",
