@@ -240,11 +240,14 @@ namespace
     /** @brief 끊어진 ACL 참조를 한 번만 반환합니다. */
     void aclDisconnected(struct bt_conn *connection, std::uint8_t reason)
     {
-        static_cast<void>(reason);
         if (connection == acl)
         {
             bt_conn_unref(acl);
             acl = nullptr;
+            if (central_role && started && !stopping)
+            {
+                recordError(-static_cast<int>(reason));
+            }
         }
         atomic_set(&channel_ready, 0);
     }
