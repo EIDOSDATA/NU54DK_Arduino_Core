@@ -467,7 +467,7 @@
       "owner_work_id": "M31-W05",
       "controller_variant": "default_sdc",
       "source_status": "verified",
-      "target_applicability": "arduino_ras_100_procedures_20_control_20_reconnect_3board_wrong_service_partial",
+      "target_applicability": "arduino_ras_100_procedures_20_control_20_reconnect_3board_wrong_service_20_missing_gatt_rejections_partial",
       "native_build": "PASS",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
@@ -482,7 +482,7 @@
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-cs-clean-8c125a22-01.json",
         "functional_hil": null
       },
-      "support_reason": "Arduino 양쪽 역할의 100 procedure·20 stop/restart·20 disconnect/reconnect, 3보드 동일 이름/다른 서비스 peer 분리는 부분 PASS. 위장 RAS UUID/GATT 불일치·미인증·wrong-key negative와 flash 직후 간헐 연결 중단 원인은 미완료"
+      "support_reason": "Arduino 양쪽 역할의 100 procedure·20 stop/restart·20 disconnect/reconnect, 3보드 동일 이름/다른 서비스 peer 분리와 위장 RAS UUID/GATT 서비스 부재 거부 20회는 부분 PASS. 위장 서비스의 잘못된 속성/권한·미인증·wrong-key negative와 flash 직후 간헐 연결 중단 원인은 미완료. 추가 증거: 00_Docs/04_검증 기록/evidence/m31-w05-missing-ras-add22762/missing-service-manifest.json"
     }
   ],
   "audio_groups": [

@@ -53,3 +53,6 @@ peer 분리를 증명한다. RAS UUID를 위장하지만 GATT 서비스가 없�
 아직 미검증이다. `M31-CS-01`/W05 전체 완료로 승격하지 않는다.
 [증거 manifest](evidence/m31-w05-ras-recovery-1c28428c/ras-recovery-manifest.json)에
 각 파일의 SHA-256을 기록했다.
+
+광고에서 Ranging UUID를 **위장**하지만 GATT 서비스가 없는 peer는
+[후속 20회 시험](179_M31_W05_RAS_UUID_위장_peer_거부_20회.md)에서 별도로 거부를 확인했다.
