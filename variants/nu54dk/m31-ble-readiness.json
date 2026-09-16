@@ -627,19 +627,19 @@
       "id": "raw_iso_broadcaster",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
-      "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+      "source_revision": "f1c5ea60493ed79829885887d67dd5693c7b9c87",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-f1c5ea60/manifest.json"
     },
     {
       "id": "raw_iso_receiver",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
-      "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+      "source_revision": "f1c5ea60493ed79829885887d67dd5693c7b9c87",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-f1c5ea60/manifest.json"
     },
     {
       "id": "iso_combined_source",

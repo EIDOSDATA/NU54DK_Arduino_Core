@@ -7,7 +7,7 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | W01 완료 1/8; ISO 고정 시험 sketch 11/11 build와 7개 실제 보드 case PASS. 공개 payload API·예제 결함으로 W02 재작업, W03 전체 LE Audio 진행 |
+| 현 단계 | W01 완료 1/8; ISO 고정 시험 sketch 11/11 build와 7개 실제 보드 case PASS. 공개 CIS·BIS 네 역할 새 payload API 실기 PASS, 나머지 7개 ISO 예제 재작업과 W03 전체 LE Audio 진행 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각
@@ -95,6 +95,11 @@ native combined 기능을 닫았다. 최종 clean `e6ae812e…` package에서는
 11개를 모두 빌드하고 CIS·BIS·암호화·두 negative·time sync·combined를 새 image로 다시
 실행했다. [W02 closure audit](<../04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>)로
 W02를 완료했으며 M31 작업 묶음은 2/8이다.
+이 문장은 2026-09-16 당시 판정이다. [191번 재점검](<../04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)에서
+공개 payload 예제 결함으로 W02 완료를 철회해 현행 분자는 **1/8**이다.
+[192번 공개 CIS](<../04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md>)와
+[193번 공개 BIS](<../04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md>)의
+네 역할은 새 clean 실기 PASS이며, 나머지 7개 공개 ISO 역할은 진행 중이다.
 clean `504badeec81723f4949879611b0b19371389b56d`의
 [ISO time sync exact manifest](<../04_검증 기록/evidence/m31-w02-exact-504badee/time-manifest.json>)는
 20회×100 receiver timestamp와 양 BIG 해제·재시작을 PASS로 판정했다. 첫 clean

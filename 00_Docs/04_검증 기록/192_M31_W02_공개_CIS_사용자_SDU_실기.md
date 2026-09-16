@@ -28,5 +28,8 @@ Peripheral FLASH 272,036 B·RAM 115,554 B다.
 이 결과는 W02의 공개 CIS central 송신/peripheral 수신 **두 역할**에 해당한다.
 BIS source/receiver·암호화·time sync·세 보드 combined의 남은 9개 공개 예제는
 여전히 시험용 `Program::begin()`/`poll()` 중심이므로 W02 전체는 진행 중이다.
+
+후속 [193번 BIS 실기](193_M31_W02_공개_BIS_사용자_SDU_실기.md)에서 비암호화 BIS
+두 역할을 공개 데이터 예제로 전환해 남은 공개 예제는 **7개**다.
 기존 고정 SDU 무선 HIL은 유지하되 그 PASS를 새 공개 payload API 증거로
 대체하지 않는다. CI/CD는 조회하지 않았다.
