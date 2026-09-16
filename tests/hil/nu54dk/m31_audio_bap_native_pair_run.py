@@ -30,6 +30,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--reset-only", action="store_true")
     parser.add_argument("--flash-client-only", action="store_true")
+    parser.add_argument("--flash-server-only", action="store_true")
     parser.add_argument("--flash-only", action="store_true")
     parser.add_argument("--source-clean", action="store_true")
     parser.add_argument("--client-flash-record", type=Path)
@@ -45,8 +46,12 @@ def main():
         parser.error("timeout must be between 10 and 180 seconds")
     if args.reset_only and args.flash_client_only:
         parser.error("reset-only cannot also flash the client")
+    if args.reset_only and args.flash_server_only:
+        parser.error("reset-only cannot also flash the server")
     if args.reset_only and args.flash_only:
         parser.error("flash-only cannot also request reset-only")
+    if args.flash_client_only and args.flash_server_only:
+        parser.error("choose at most one flash-only role")
     if args.arduino_source and not args.arduino_sink:
         parser.error("Arduino source measurement requires Arduino sink")
     if args.arduino_duplex_server and (not args.arduino_sink or args.arduino_source):
@@ -106,6 +111,7 @@ def main():
         "core_revision": args.core_revision,
         "mode": "hardware_reset_only" if args.reset_only else
                 "sector_flash_client_reset" if args.flash_client_only else
+                "sector_flash_server_reset" if args.flash_server_only else
                 "sector_flash_pair_reset",
         "client_probe_sha256": args.client_probe_sha256,
         "server_probe_sha256": args.server_probe_sha256,
@@ -173,10 +179,11 @@ def main():
                             "bap_unicast_server", server_uid, args.server_image,
                             120.0, hardware_reset=True
                         )
-                    record["client_flash"] = flash_image_pyocd(
-                        "bap_unicast_client", client_uid, args.client_image,
-                        120.0, hardware_reset=True
-                    )
+                    if not args.flash_server_only:
+                        record["client_flash"] = flash_image_pyocd(
+                            "bap_unicast_client", client_uid, args.client_image,
+                            120.0, hardware_reset=True
+                        )
                     if args.flash_only:
                         record["status"] = "FLASH_PREPARED"
                         args.output.parent.mkdir(parents=True, exist_ok=True)

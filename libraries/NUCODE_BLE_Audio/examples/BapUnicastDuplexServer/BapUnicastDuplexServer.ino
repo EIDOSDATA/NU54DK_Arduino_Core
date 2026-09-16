@@ -153,7 +153,8 @@ void loop()
         else
         {
             const Error sent = audioServer.sendFrame(frame);
-            if ((sent != Error::none) && (sent != Error::busy))
+            if ((sent != Error::none) && (sent != Error::busy) &&
+                !((sent == Error::not_ready) && !audioServer.sourceStreaming()))
             {
                 printError("send", sent);
             }
