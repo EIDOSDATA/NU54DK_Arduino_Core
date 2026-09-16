@@ -110,13 +110,19 @@
 | Arduino 제공 경로 | 사용 계약 |
 | --- | --- |
 | `wrapper` | 한국어 Doxygen 문서·고정 자원·Arduino 자료형의 public facade. Zephyr 내부 구조체를 public ABI로 노출하지 않음 |
-| `direct` | 별도 고급 header/profile에서 고정 NCS 공개 API를 스케치가 직접 사용. version·lifetime·callback 제약과 facade 혼용 금지를 명시 |
+| `direct` | 별도 고급 `NUCODE_*` 공개 header/profile에서 고정 NCS 기능을 직접 제어하는 Arduino API를 사용. Zephyr/NCS header·type·함수는 library `.cpp`/`src/internal`에만 둔다. version·lifetime·callback 제약과 facade 혼용 금지를 명시 |
 | `profile` | 필요한 Kconfig·partition·controller·자원 preset와 Arduino 예제를 함께 설치. 기존 기본 profile의 동작을 보존 |
 | `template` | 외부 credential/peer/배선/별도 application 구조가 필요한 시작 프로젝트. build와 실제 external runtime 상태를 표시 |
 | `excluded` | BR/EDR, 고정 nRF54L15 비적용 등 증명된 제외. 이유·upstream 경로를 남겨 원장에서는 제거하지 않음 |
 
 한 기능은 복수 경로를 가질 수 있지만 기본 권장 경로 하나를 지정한다. `direct` 또는 `template`라는
 이유로 build·예제 설명·보안 negative 검증 의무를 생략하지 않는다.
+
+공개 `.ino`는 일반 C/C++과 `NUCODE_*` API로 `setup()`/`loop()`의 역할별 동작,
+연결·송수신·오류 처리를 읽고 실행할 수 있어야 한다. Zephyr `bt_*`·`k_*` 호출이나
+header-only 위임 몇 줄로 예제를 대신하지 않는다. `M31` 등 개발 마일스톤 이름은
+공개 class/macro/API·광고명에 넣지 않는다. 예제 변경은 공개 경계 audit와 해당
+Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 
 ## 3. 실행 순서와 소유 마일스톤
 

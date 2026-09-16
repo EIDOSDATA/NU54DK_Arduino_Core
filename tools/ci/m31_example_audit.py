@@ -75,6 +75,14 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "audioSink.readFrame(", "codec.decode(",
             )
             options = ("CONFIG_BT_BAP_UNICAST_SERVER=y", "CONFIG_LIBLC3=y")
+        elif sketch.parent.name == "BapUnicastSource":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>", "UnicastClient", "Lc3Codec",
+                "BLEScan.start(", "BLEConnection.connect(",
+                "audioSource.begin(", "audioSource.sendFrame(", "codec.encode(",
+            )
+            options = ("CONFIG_BT_BAP_UNICAST_CLIENT=y", "CONFIG_LIBLC3=y")
         else:
             required = (
                 "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",

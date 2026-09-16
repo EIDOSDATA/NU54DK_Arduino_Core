@@ -13,6 +13,11 @@
 #include <cstddef>
 #include <cstdint>
 
+namespace nucode::ble
+{
+    class BLEConnectionHandle;
+}
+
 namespace nucode::ble::audio
 {
     /** @brief LC3 codec API의 안정된 오류 분류입니다. */
@@ -27,6 +32,8 @@ namespace nucode::ble::audio
         codec_error,
         stack_error,
         not_ready,
+        not_connected,
+        unsupported,
     };
 
     /** @brief 한 LC3 stream의 frame 구성을 지정합니다. */
@@ -140,6 +147,95 @@ namespace nucode::ble::audio
         Error record(Error error, int native_code = 0) noexcept;
 
         bool started_ = false;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief unicast client의 공개 비동기 단계입니다. */
+    enum class UnicastClientStage : std::uint8_t
+    {
+        idle,
+        securing,
+        discovering,
+        configuring,
+        streaming,
+        failed,
+    };
+
+    /** @brief 마지막 unicast client 작업을 나타냅니다. */
+    enum class UnicastClientStep : std::uint8_t
+    {
+        none,
+        security,
+        discover,
+        configure,
+        group,
+        qos,
+        enable,
+        connect,
+        send,
+        cleanup,
+    };
+
+    /**
+     * @brief PACS/ASCS sink를 찾고 mono LC3 frame을 CIS로 보냅니다.
+     *
+     * BLEDevice가 연결한 하나의 peer에만 결합합니다. poll()은 보안, PACS 검색,
+     * ASE codec/QoS·enable·CIS 시작을 비동기로 진행합니다. 40-byte LC3 frame
+     * encode와 전송 간격 선택은 Arduino sketch가 공개 API로 수행합니다.
+     */
+    class UnicastClient final
+    {
+      public:
+        UnicastClient() = default;
+
+        ~UnicastClient()
+        {
+            (void)end();
+        }
+
+        UnicastClient(const UnicastClient &) = delete;
+        UnicastClient &operator=(const UnicastClient &) = delete;
+        UnicastClient(UnicastClient &&) = delete;
+        UnicastClient &operator=(UnicastClient &&) = delete;
+
+        /** @brief 연결된 peer를 참조하고 L2 보안 절차를 시작합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief callback 결과를 Arduino 문맥에서 다음 단계로 진행합니다. */
+        void poll() noexcept;
+
+        /** @brief streaming 상태에서 한 LC3 frame을 비차단 전송합니다. */
+        Error sendFrame(const std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief peer 연결 해제 뒤 그룹과 callback 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 현재 비동기 단계를 반환합니다. */
+        [[nodiscard]] UnicastClientStage stage() const noexcept;
+
+        /** @brief 마지막 실패가 발생한 단계를 반환합니다. */
+        [[nodiscard]] UnicastClientStage failedAt() const noexcept;
+
+        /** @brief 마지막 Host 요청 또는 오류 callback의 작업을 반환합니다. */
+        [[nodiscard]] UnicastClientStep lastStep() const noexcept;
+
+        /** @brief controller에 수락된 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t sentFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Host/controller 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        UnicastClientStage stage_ = UnicastClientStage::idle;
+        UnicastClientStage failure_stage_ = UnicastClientStage::idle;
+        UnicastClientStep last_step_ = UnicastClientStep::none;
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };

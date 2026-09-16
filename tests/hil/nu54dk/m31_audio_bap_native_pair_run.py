@@ -24,15 +24,28 @@ def main():
     parser.add_argument("--server-probe-sha256", required=True)
     parser.add_argument("--client-image", type=Path, required=True)
     parser.add_argument("--server-image", type=Path, required=True)
+    parser.add_argument("--client-config", type=Path)
     parser.add_argument("--server-config", type=Path)
     parser.add_argument("--core-revision", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--reset-only", action="store_true")
+    parser.add_argument("--flash-client-only", action="store_true")
+    parser.add_argument("--flash-only", action="store_true")
     parser.add_argument("--source-clean", action="store_true")
     parser.add_argument("--require-lc3", action="store_true")
     parser.add_argument("--arduino-sink", action="store_true")
+    parser.add_argument("--arduino-source", action="store_true")
+    parser.add_argument("--timeout-seconds", type=float, default=90.0)
     args = parser.parse_args()
-    client_config = args.client_image.parent / ".config"
+    if args.timeout_seconds < 10.0 or args.timeout_seconds > 180.0:
+        parser.error("timeout must be between 10 and 180 seconds")
+    if args.reset_only and args.flash_client_only:
+        parser.error("reset-only cannot also flash the client")
+    if args.reset_only and args.flash_only:
+        parser.error("flash-only cannot also request reset-only")
+    if args.arduino_source and not args.arduino_sink:
+        parser.error("Arduino source measurement requires Arduino sink")
+    client_config = args.client_config or (args.client_image.parent / ".config")
     server_config = args.server_config or (args.server_image.parent / ".config")
     if args.require_lc3:
         for config_path in (client_config, server_config):
@@ -57,11 +70,14 @@ def main():
         raise RuntimeError("role mapping overlap")
     record = {
         "status": "FAIL",
-        "test": "arduino_bap_unicast_lc3_sink" if args.arduino_sink else
+        "test": "arduino_bap_unicast_lc3_pair" if args.arduino_source else
+                "arduino_bap_unicast_lc3_sink" if args.arduino_sink else
                 "upstream_bap_unicast_bidirectional_sdu",
         "source_clean": args.source_clean,
         "core_revision": args.core_revision,
-        "mode": "hardware_reset_only" if args.reset_only else "sector_flash_pair_reset",
+        "mode": "hardware_reset_only" if args.reset_only else
+                "sector_flash_client_reset" if args.flash_client_only else
+                "sector_flash_pair_reset",
         "client_probe_sha256": args.client_probe_sha256,
         "server_probe_sha256": args.server_probe_sha256,
         "client_port": client_port,
@@ -107,20 +123,30 @@ def main():
                 client.reset_input_buffer()
                 server.reset_input_buffer()
                 if not args.reset_only:
-                    record["server_flash"] = flash_image_pyocd(
-                        "bap_unicast_server", server_uid, args.server_image,
-                        120.0, hardware_reset=True
-                    )
+                    if not args.flash_client_only:
+                        record["server_flash"] = flash_image_pyocd(
+                            "bap_unicast_server", server_uid, args.server_image,
+                            120.0, hardware_reset=True
+                        )
                     record["client_flash"] = flash_image_pyocd(
                         "bap_unicast_client", client_uid, args.client_image,
                         120.0, hardware_reset=True
                     )
+                    if args.flash_only:
+                        record["status"] = "FLASH_PREPARED"
+                        args.output.parent.mkdir(parents=True, exist_ok=True)
+                        args.output.write_text(
+                            json.dumps(record, ensure_ascii=False, indent=2) + "\n",
+                            encoding="utf-8"
+                        )
+                        print("M31_BAP_NATIVE=FLASH_PREPARED")
+                        return 0
                 client.reset_input_buffer()
                 server.reset_input_buffer()
                 hardware_reset(server_uid)
                 hardware_reset(client_uid)
                 started = time.monotonic()
-                deadline = started + 90.0
+                deadline = started + args.timeout_seconds
                 while time.monotonic() < deadline:
                     for port, key, tx_key in (
                         (client, "client_lines", "client_tx_streams"),
@@ -143,6 +169,13 @@ def main():
                                 int(count), record[tx_key].get(stream, 0)
                             )
                         if key == "client_lines":
+                            if args.arduino_source:
+                                match = re.search(r"LE Audio sent frames=(\d+)", line)
+                                if match is not None:
+                                    record["client_tx_streams"]["arduino"] = max(
+                                        int(match.group(1)),
+                                        record["client_tx_streams"].get("arduino", 0)
+                                    )
                             match = client_rx_pattern.search(line)
                             if match is not None:
                                 record["client_rx_sdus"] = max(
@@ -176,7 +209,8 @@ def main():
                             record["client_rx_sdus"] >= 1000):
                         break
                 record["elapsed_s"] = round(time.monotonic() - started, 3)
-                if not any("Streams started" in line
+                if not any(("LE Audio source streaming" if args.arduino_source
+                            else "Streams started") in line
                            for line in record["client_lines"]):
                     raise RuntimeError("BAP client streams did not start")
                 required_client_streams = 1 if args.arduino_sink else 2
@@ -192,7 +226,14 @@ def main():
                         "failed" in line.lower() for line in record["server_lines"]
                     ):
                         raise RuntimeError("Arduino sink error or queue drop observed")
-                    record["status"] = "ARDUINO_BAP_LC3_1000_FRAME_PASS"
+                    if args.arduino_source and any(
+                        "failed" in line.lower() for line in record["client_lines"]
+                    ):
+                        raise RuntimeError("Arduino source error observed")
+                    record["status"] = (
+                        "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS" if args.arduino_source
+                        else "ARDUINO_BAP_LC3_1000_FRAME_PASS"
+                    )
                 else:
                     if len([count for count in record["server_tx_streams"].values()
                             if count >= 1000]) < 1:
@@ -205,8 +246,10 @@ def main():
                 if args.require_lc3:
                     if record["server_rx_sdus"] < 1000:
                         raise RuntimeError("LC3 server RX did not reach 1000 valid SDUs")
-                    keys = ("client_lines",) if args.arduino_sink else (
+                    keys = () if args.arduino_source else (
+                        ("client_lines",) if args.arduino_sink else (
                         "client_lines", "server_lines"
+                        )
                     )
                     for key in keys:
                         if not any("Setting up LC3 encoder" in line
@@ -235,7 +278,8 @@ def main():
     print("M31_BAP_NATIVE=" + record["status"])
     return 0 if record["status"] in (
         "NATIVE_BAP_1000_SDU_PASS", "NATIVE_BAP_LC3_1000_SDU_PASS",
-        "ARDUINO_BAP_LC3_1000_FRAME_PASS"
+        "ARDUINO_BAP_LC3_1000_FRAME_PASS",
+        "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS"
     ) else 1
 
 

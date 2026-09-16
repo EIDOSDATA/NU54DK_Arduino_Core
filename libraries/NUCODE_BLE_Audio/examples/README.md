@@ -31,6 +31,17 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 - 현 빌드는 RAM 약 85%를 사용한다. 외장 mic/speaker나 추가 stream을 이 설정에
   바로 합치지 말고 자원 예산을 다시 계산해야 한다.
 
+## `BapUnicastSource`
+
+- 두 보드에 각각 `BapUnicastSource`와 `BapUnicastSink`를 올린다. Source는
+  ASCS UUID를 광고하는 sink를 검색하고 연결한 뒤 공개 `UnicastClient`로
+  PACS/ASCS 설정과 CIS 시작을 진행한다.
+- Arduino `loop()`에서 16 kHz 합성 PCM을 만들고 `Lc3Codec::encode()`로
+  40-byte LC3 frame을 생성해 `UnicastClient::sendFrame()`으로 보낸다.
+  Zephyr 호출은 라이브러리 구현 내부에만 있다.
+- `prj.conf`는 unicast client, ISO TX와 liblc3를 선택한다. 일시적인 L2
+  pairing을 사용하므로 다른 예제의 bond 설정을 변경하지 않는다.
+
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 bounded 검증 명령은 반복 회귀 시험을 위한 구현 세부사항이며 Arduino 공개 API나
 호환성 계약에는 포함되지 않는다. PDM/I2S microphone과 I2S codec/speaker 경로는

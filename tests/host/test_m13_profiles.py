@@ -174,7 +174,7 @@ class M13ProfileContractTests(unittest.TestCase):
         """! @brief 직접 Audio API 예제의 역할별 Kconfig와 탐색 가능한 ino를 확인합니다. """
         examples = sorted(ROOT.glob("libraries/NUCODE_BLE_Audio/examples/*/*.ino"))
         self.assertEqual({sketch.parent.name for sketch in examples},
-                         {"Lc3SyntheticLoopback", "BapUnicastSink"})
+                         {"Lc3SyntheticLoopback", "BapUnicastSink", "BapUnicastSource"})
         for sketch in examples:
             self.assertTrue((sketch.parent / "prj.conf").is_file())
             self.assertFalse((sketch.parent / "app.overlay").exists())
