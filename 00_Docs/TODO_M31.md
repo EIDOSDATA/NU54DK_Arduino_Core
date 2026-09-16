@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **W01~W02 완료, W03 착수 / 완료 2/8 작업 묶음** |
+| 현재 상태 | **W01~W02 완료, W03·W04 진행 중 / 완료 2/8 작업 묶음** |
 | 선행 완료 | M30 W01~W08 8/8, test ID 10/10, 실제 전원 차단 4지점 × 3회 = 12/12 |
 | 병행 Host 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 잔여; M31과 독립된 8개 작업 분모 |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, 고정 lock revision |
@@ -65,7 +65,7 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
 | M31-W02 raw ISO 기반 | **완료** | CIG/CIS central·peripheral, BIG/BIS source·receiver, combined CIS/BIS 적용성, ISO time sync, buffer·sequence·timestamp·암호화·해제·재시작 | 설치 package 역할 예제 11/11 build, CIS·BIS·암호화·wrong code·sync loss·time sync·세 보드 combined exact HIL PASS; [W02 closure audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
 | M31-W03 전체 LE Audio profile | **진행 중** | §3의 LC3·BAP/PACS/ASCS·BASS·CAP·CSIP·PBP와 제어/용도별 profile 전부 판정·구현; 합성 PCM·encoded payload source/sink | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계 |
-| M31-W04 Direction Finding | **미착수** | connectionless/connected AoA CTE TX, 기본 안테나 raw IQ RX 제공 경로·적용성 및 가능 시 2보드 HIL, SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분 |
+| M31-W04 Direction Finding | **진행 중** | connectionless/connected AoA CTE TX, 기본 안테나 raw IQ RX 제공 경로·적용성 및 가능 시 2보드 HIL, SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분; [CTE 송신 진행 기록](<04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md>) |
 | M31-W05 connected Channel Sounding | **미착수** | initiator·reflector, secure ACL·capability·procedure, RAS·raw 결과·거리 추정 출력, stop/restart·peer loss·보안 negative | 두 역할 Arduino 예제·CS API/직접 경로·고정 buffer, 2보드 procedure·복구 HIL, 정밀도 비보증 표시 |
 | M31-W06 통합·회귀 | **미착수** | M31-A/B/C 선택 조합의 자원 충돌·link 격리, M19~M30 영향 회귀, stale callback·disconnect·재연결 | 통합 runner, RAM/RRAM·stream/connection 예산, 오류·복구 증거와 명시적 동시 조합 |
 | M31-W07 기능 HIL·예제 실행 | **미착수** | 3보드 역할 재배치로 적용 가능한 모든 board-only subcase 유한 실행, Arduino 설치 예제의 실제 실행; 외부 peer 행 별도 관리 | exact image·익명 mapping·transcript·원본 hash, 기능/role별 PASS·FAIL·NOT RUN·UNSUPPORTED 근거 |
