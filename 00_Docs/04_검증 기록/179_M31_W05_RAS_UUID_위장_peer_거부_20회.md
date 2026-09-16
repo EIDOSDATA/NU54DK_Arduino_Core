@@ -30,3 +30,5 @@ image SHA-256
 접근·wrong-key, Ranging Service가 있으나 속성/권한이 잘못된 peer,
 정상 peer의 flash 직후 간헐 중단 원인은 별도 잔여다. 따라서
 `M31-CS-01` 및 W05 전체는 아직 완료가 아니다.
+미암호화 상태의 실제 RAS Features 읽기는
+[별도 20회 시험](180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md)에서 확인했다.
