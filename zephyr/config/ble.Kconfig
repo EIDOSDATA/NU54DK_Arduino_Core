@@ -82,6 +82,15 @@ config NUCODE_BLE_CS_REFLECTOR
 	  공개 BLE 연결 handle에 CS reflector 역할을 결합합니다.
 	  Zephyr CS 호출과 연결 객체는 라이브러리 구현 내부에 둡니다.
 
+config NUCODE_BLE_CS_INITIATOR
+	bool "NUCODE BLE Ranging Service initiator API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_CHANNEL_SOUNDING && BT_RAS_RREQ
+	help
+	  공개 BLE 연결 handle로 RAS GATT 탐색과 CS procedure를 실행합니다.
+	  Zephyr 호출과 raw step 버퍼는 라이브러리 구현 내부에 둡니다.
+
 config NUCODE_BLE_CORE
 	bool "NUCODE BLE Core/GAP 활성화"
 	default n
