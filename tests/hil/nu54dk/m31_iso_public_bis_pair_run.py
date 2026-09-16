@@ -21,12 +21,17 @@ from ble_pair_hil_common import flash_image_pyocd
 ROOT = Path(__file__).resolve().parents[3]
 SENT = re.compile(r"^BIS sent frames=100$")
 RECEIVED = re.compile(r"^BIS received frames=(99|100) missing=(0|1) errors=0$")
+TIME_SENT = re.compile(
+    r"^BIS time sent frames=100 timestamped=99 first_hci_ts=(\d+) last_hci_ts=(\d+)$"
+)
+TIME_RECEIVED = re.compile(r"^BIS time received frames=100 timestamps=100 errors=0$")
 RECEIVE_END = re.compile(r"^BIS received frames=")
 WRONG_CODE_REJECTED = re.compile(r"^BIS wrong code rejected native=-61 leaked=0$")
 WRONG_CODE_FAILURE = re.compile(r"^BIS wrong code (?:begin failed|failed|timeout)")
 ERROR = re.compile(
     r"^BIS (?:start|send) failed:|^BIS error:|^BIS receive timeout|"
-    r"^BIS peer stopped before enough frames:"
+    r"^BIS peer stopped before enough frames:|^BIS time (?:invalid|error:|"
+    r"source timeout|receive timeout|TX sync sequence regressed|send failed:)"
 )
 
 
@@ -64,7 +69,7 @@ def reset(uid: str) -> None:
 ## @brief 두 COM의 완결된 줄을 원본 순서와 시간과 함께 저장합니다.
 def capture(ports: dict[str, str], probe_ids: dict[str, str],
             seconds: float, cycles: int, revision: str,
-            wrong_code: bool) -> dict[str, list[dict]]:
+            wrong_code: bool, time_mode: bool) -> dict[str, list[dict]]:
     streams = {role: serial.Serial(port, 115200, timeout=0.1)
                for role, port in ports.items()}
     lines: dict[str, list[dict]] = {role: [] for role in ports}
@@ -87,7 +92,9 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
                     })
             after_boot = {role: after_final_boot(items, revision)
                           for role, items in lines.items()}
-            sent_count = sum(bool(SENT.fullmatch(item["text"]))
+            sent_pattern = TIME_SENT if time_mode else SENT
+            receive_pattern = TIME_RECEIVED if time_mode else RECEIVED
+            sent_count = sum(bool(sent_pattern.fullmatch(item["text"]))
                              for item in after_boot["source"])
             receiver_done = (
                 sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
@@ -95,7 +102,7 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
                 any(item["text"] == "BIS wrong code stopped"
                     for item in after_boot["receiver"])
             ) if wrong_code else (
-                sum(bool(RECEIVED.fullmatch(item["text"]))
+                sum(bool(receive_pattern.fullmatch(item["text"]))
                     for item in after_boot["receiver"]) >= cycles
             )
             if sent_count >= cycles and receiver_done:
@@ -123,7 +130,8 @@ def main() -> int:
         parser.add_argument(f"--{role}-port", required=True)
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--seconds", type=float, default=120.0)
-    parser.add_argument("--mode", choices=("plain", "encrypted", "encrypted_negative"),
+    parser.add_argument("--mode", choices=("plain", "encrypted", "encrypted_negative",
+                                           "time"),
                         default="plain")
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--allow-dirty-candidate", action="store_true")
@@ -131,6 +139,7 @@ def main() -> int:
     if args.cycles <= 0 or args.seconds <= 0:
         parser.error("cycles와 seconds는 양수여야 합니다")
     wrong_code = args.mode == "encrypted_negative"
+    time_mode = args.mode == "time"
     if wrong_code and args.cycles != 1:
         parser.error("encrypted_negative는 한 송신 session을 검사합니다")
     revision = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=ROOT,
@@ -158,22 +167,36 @@ def main() -> int:
         flash[role] = flash_image_pyocd(role, probe_ids[role], images[role],
                                         120.0, hardware_reset=True)
     lines = capture(ports, probe_ids, args.seconds, args.cycles, revision,
-                    wrong_code)
+                    wrong_code, time_mode)
     post_boot = {role: after_final_boot(items, revision)
                  for role, items in lines.items()}
-    sent = sum(bool(SENT.fullmatch(item["text"])) for item in post_boot["source"])
-    receive_matches = [RECEIVED.fullmatch(item["text"])
+    sent_pattern = TIME_SENT if time_mode else SENT
+    receive_pattern = TIME_RECEIVED if time_mode else RECEIVED
+    sent_matches = [sent_pattern.fullmatch(item["text"])
+                    for item in post_boot["source"]]
+    sent_matches = [match for match in sent_matches if match is not None]
+    sent = len(sent_matches)
+    receive_matches = [receive_pattern.fullmatch(item["text"])
                        for item in post_boot["receiver"]]
     receive_matches = [match for match in receive_matches if match is not None]
     received = len(receive_matches)
-    payload_frames = sum(int(match.group(1)) for match in receive_matches)
-    missing_frames = sum(int(match.group(2)) for match in receive_matches)
+    payload_frames = received * 100 if time_mode else sum(
+        int(match.group(1)) for match in receive_matches
+    )
+    missing_frames = 0 if time_mode else sum(
+        int(match.group(2)) for match in receive_matches
+    )
+    valid_hci_times = not time_mode or all(
+        0 < int(match.group(1)) < int(match.group(2)) for match in sent_matches
+    )
     bad = []
     for role in post_boot:
         for item in post_boot[role]:
             if (ERROR.search(item["text"]) or WRONG_CODE_FAILURE.search(item["text"]) or
                 (RECEIVE_END.search(item["text"]) and
-                 not RECEIVED.fullmatch(item["text"]))):
+                 not RECEIVED.fullmatch(item["text"])) or
+                (item["text"].startswith("BIS time received frames=") and
+                 not TIME_RECEIVED.fullmatch(item["text"]))):
                 bad.append(item)
     rejected = sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
                    for item in post_boot["receiver"])
@@ -191,8 +214,9 @@ def main() -> int:
     else:
         accepted = (sent == args.cycles and received == args.cycles and
                     payload_frames + missing_frames == args.cycles * 100 and
-                    missing_frames <= args.cycles and
+                    missing_frames <= (0 if time_mode else args.cycles) and
                     rejected == 0 and not bad and
+                    valid_hci_times and
                     all(image_revision_confirmed.values()))
     status = ("CANDIDATE_PASS" if dirty else "PASS") if accepted else "FAIL"
     result = {
@@ -209,7 +233,8 @@ def main() -> int:
         "completed_cycles": {"source": sent, "receiver": received},
         "payload_frames": payload_frames,
         "missing_frames": missing_frames,
-        "allowed_missing": args.cycles,
+        "allowed_missing": 0 if time_mode else args.cycles,
+        "valid_hci_times": valid_hci_times,
         "wrong_code_rejected": rejected,
         "wrong_code_stopped": stopped,
         "image_revision_confirmed": image_revision_confirmed,

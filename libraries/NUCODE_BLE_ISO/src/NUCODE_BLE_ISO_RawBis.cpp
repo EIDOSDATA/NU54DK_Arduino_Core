@@ -1,6 +1,6 @@
 /**
  * @file NUCODE_BLE_ISO_RawBis.cpp
- * @brief 일반·암호화 BIG/BIS 사용자 SDU를 Arduino API로 연결합니다.
+ * @brief 일반·암호화·시각동기 BIG/BIS 사용자 SDU를 Arduino API로 연결합니다.
  * SPDX-License-Identifier: MIT
  */
 
@@ -10,7 +10,9 @@
     (defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE) || \
      defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER) || \
      defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE) || \
-     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER))
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER))
 
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gap.h>
@@ -26,14 +28,23 @@
 namespace
 {
     using nucode::ble::iso::BisFrame;
+    using nucode::ble::iso::BisTxSync;
     using nucode::ble::iso::Error;
     using nucode::ble::iso::RawBis;
 
 #if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE) || \
-    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE)
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
     constexpr bool source_role = true;
 #else
     constexpr bool source_role = false;
+#endif
+
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER)
+    constexpr bool time_role = true;
+#else
+    constexpr bool time_role = false;
 #endif
 
 #if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE) || \
@@ -68,6 +79,11 @@ namespace
     atomic_t channel_ready = ATOMIC_INIT(0);
     atomic_t native_error = ATOMIC_INIT(0);
     atomic_t peer_ended = ATOMIC_INIT(0);
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+    BisTxSync tx_sync = {};
+    atomic_t tx_sync_available = ATOMIC_INIT(0);
+    bool tx_sync_seen = false;
+#endif
     K_MSGQ_DEFINE(receive_queue, sizeof(BisFrame), 8U, 4U);
 
 #if defined(CONFIG_BT_ISO_BROADCASTER)
@@ -162,10 +178,42 @@ namespace
         }
     }
 
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+    /** @brief 완료된 SDU의 HCI 기준시각을 Arduino thread에 전달합니다. */
+    void sent(struct bt_iso_chan *sent_channel)
+    {
+        if (!started || stopping || sent_channel != &channel)
+        {
+            return;
+        }
+        struct bt_iso_tx_info information = {};
+        const int result = bt_iso_chan_get_tx_sync(sent_channel, &information);
+        if (result != 0)
+        {
+            recordError(result);
+            return;
+        }
+        if (tx_sync_seen &&
+            (static_cast<std::int16_t>(information.seq_num - tx_sync.sequence) <= 0 ||
+             static_cast<std::int32_t>(information.ts - tx_sync.timestamp_us) <= 0))
+        {
+            recordError(-EBADMSG);
+            return;
+        }
+        tx_sync.sequence = information.seq_num;
+        tx_sync.timestamp_us = information.ts;
+        tx_sync_seen = true;
+        atomic_set(&tx_sync_available, 1);
+    }
+#endif
+
     struct bt_iso_chan_ops operations = {
         .connected = connected,
         .disconnected = disconnected,
         .recv = received,
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+        .sent = sent,
+#endif
     };
 
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
@@ -382,6 +430,9 @@ namespace
         memset(broadcast_code, 0, sizeof(broadcast_code));
         atomic_set(&channel_ready, 0);
         atomic_set(&peer_ended, 0);
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+        atomic_set(&tx_sync_available, 0);
+#endif
         return Error::none;
     }
 }
@@ -392,9 +443,11 @@ namespace nucode::ble::iso
     Error RawBis::begin(Role role, const std::uint8_t requested_id[16],
                         const std::uint8_t requested_code[16]) noexcept
     {
-        const Role configured = encrypted_role ?
-            (source_role ? Role::bis_encrypted_source : Role::bis_encrypted_receiver) :
-            (source_role ? Role::bis_source : Role::bis_receiver);
+        const Role configured = time_role ?
+            (source_role ? Role::bis_time_source : Role::bis_time_receiver) :
+            (encrypted_role ?
+                (source_role ? Role::bis_encrypted_source : Role::bis_encrypted_receiver) :
+                (source_role ? Role::bis_source : Role::bis_receiver));
         if (role != configured)
         {
             return Error::configuration_mismatch;
@@ -420,6 +473,11 @@ namespace nucode::ble::iso
         atomic_set(&native_error, 0);
         atomic_set(&channel_ready, 0);
         atomic_set(&peer_ended, 0);
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+        tx_sync = {};
+        tx_sync_seen = false;
+        atomic_set(&tx_sync_available, 0);
+#endif
         k_msgq_purge(&receive_queue);
         next_sequence = 0U;
         sync_requested = false;
@@ -445,7 +503,7 @@ namespace nucode::ble::iso
 #if defined(CONFIG_BT_ISO_BROADCASTER)
         transmit_qos.sdu = CONFIG_BT_ISO_TX_MTU;
         transmit_qos.phy = BT_GAP_LE_PHY_2M;
-        transmit_qos.rtn = 1U;
+        transmit_qos.rtn = time_role ? 2U : 1U;
         qos.tx = &transmit_qos;
         const struct bt_le_adv_param advertising_parameter =
             BT_LE_ADV_PARAM_INIT(BT_LE_ADV_OPT_EXT_ADV,
@@ -557,6 +615,10 @@ namespace nucode::ble::iso
         {
             return Error::not_ready;
         }
+        if (time_role && next_sequence > 0U)
+        {
+            return Error::invalid_argument;
+        }
 #if defined(CONFIG_BT_ISO_BROADCASTER)
         struct net_buf *buffer = net_buf_alloc(&transmit_pool, K_NO_WAIT);
         if (buffer == nullptr)
@@ -576,6 +638,60 @@ namespace nucode::ble::iso
         return Error::none;
 #else
         return Error::not_ready;
+#endif
+    }
+
+    /** @brief time source의 사용자 SDU를 명시적 HCI 시각으로 보냅니다. */
+    Error RawBis::sendFrameAt(const std::uint8_t *data, std::size_t length,
+                              std::uint32_t timestamp_us) noexcept
+    {
+        if (data == nullptr || length == 0U || length > frame_capacity)
+        {
+            return Error::invalid_argument;
+        }
+        if (!time_role || !source_role || owner != this || !started || stopping ||
+            atomic_get(&channel_ready) == 0 || next_sequence == 0U)
+        {
+            return Error::not_ready;
+        }
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+        struct net_buf *buffer = net_buf_alloc(&transmit_pool, K_NO_WAIT);
+        if (buffer == nullptr)
+        {
+            return Error::busy;
+        }
+        net_buf_reserve(buffer, BT_ISO_CHAN_SEND_RESERVE);
+        net_buf_add_mem(buffer, data, length);
+        const int result = bt_iso_chan_send_ts(&channel, buffer, next_sequence,
+                                                timestamp_us);
+        if (result != 0)
+        {
+            net_buf_unref(buffer);
+            recordError(result);
+            return Error::transport_failure;
+        }
+        ++next_sequence;
+        return Error::none;
+#else
+        return Error::not_ready;
+#endif
+    }
+
+    /** @brief 완료된 SDU의 HCI sequence·시각을 Arduino loop에서 한 번 읽습니다. */
+    bool RawBis::takeTxSync(BisTxSync &sync) noexcept
+    {
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+        if (owner != this || !started || stopping ||
+            atomic_get(&tx_sync_available) == 0)
+        {
+            return false;
+        }
+        sync = tx_sync;
+        atomic_set(&tx_sync_available, 0);
+        return true;
+#else
+        static_cast<void>(sync);
+        return false;
 #endif
     }
 

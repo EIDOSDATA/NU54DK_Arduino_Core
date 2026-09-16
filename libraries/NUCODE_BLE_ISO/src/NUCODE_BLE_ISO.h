@@ -103,6 +103,13 @@ namespace nucode::ble::iso
         bool timestamp_valid = false;
     };
 
+    /** @brief 송신 완료 SDU의 controller sequence와 HCI 기준시각입니다. */
+    struct BisTxSync final
+    {
+        std::uint16_t sequence = 0U;
+        std::uint32_t timestamp_us = 0U;
+    };
+
     /**
      * @brief 한 BIG/BIS의 사용자 SDU를 송신하거나 동기화해 읽습니다.
      *
@@ -123,6 +130,13 @@ namespace nucode::ble::iso
 
         /** @brief source의 BIS에 사용자 SDU를 보냅니다. */
         Error sendFrame(const std::uint8_t *data, std::size_t length) noexcept;
+
+        /** @brief time source의 다음 SDU를 HCI 기준시각에 보냅니다. */
+        Error sendFrameAt(const std::uint8_t *data, std::size_t length,
+                          std::uint32_t timestamp_us) noexcept;
+
+        /** @brief 마지막 송신 완료의 HCI 기준시각을 한 번 읽습니다. */
+        bool takeTxSync(BisTxSync &sync) noexcept;
 
         /** @brief receiver의 다음 SDU가 있으면 frame에 복사합니다. */
         bool readFrame(BisFrame &frame) noexcept;
