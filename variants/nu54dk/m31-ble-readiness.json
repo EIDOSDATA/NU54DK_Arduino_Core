@@ -467,21 +467,22 @@
       "owner_work_id": "M31-W05",
       "controller_variant": "default_sdc",
       "source_status": "verified",
-      "target_applicability": "native_ras_100_estimates_reset_only_arduino_pending",
+      "target_applicability": "arduino_ras_100_procedures_20_cycles_partial_peer_recovery_pending",
       "native_build": "PASS",
-      "arduino_build": "NOT_RUN",
+      "arduino_build": "PASS",
       "runtime_query": "PASS",
       "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-arduino-pair-d934cfcb/ras-pair-manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "96de07ba31f32e53f3cb34a5893fd8dbff8c223b",
+      "source_revision": "babdf15e0361b1a681ec5c92d493b6bfe65612f3",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
         "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
-        "arduino_build": null,
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-arduino-pair-d934cfcb/ras-pair-manifest.json",
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-cs-clean-8c125a22-01.json",
         "functional_hil": null
-      }
+      },
+      "support_reason": "Arduino 양쪽 역할의 100 procedure·20 stop/restart는 부분 PASS. 미인증·wrong peer·disconnect 복구·3번째 peer 분리와 flash 직후 간헐 중단 원인은 미완료"
     }
   ],
   "audio_groups": [
