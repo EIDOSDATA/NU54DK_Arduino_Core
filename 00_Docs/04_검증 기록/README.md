@@ -12,6 +12,8 @@
 
 | 기록 | 용도 |
 | --- | --- |
+| [185 — M31-W03 Arduino BAP stop/release 20회](185_M31_W03_Arduino_BAP_stop_release_20회.md) | clean 공개 예제의 ASE disable·release·재연결 20/20과 LC3 2,400 frame, 정상 연결 해제 오류 교정 |
+| [184 — M31-W03 Arduino BAP 재시작 복구 20회](184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md) | clean source/sink 1,000 LC3 frame과 sink reset 복구 20/20 |
 | [167 — M31-W02 설치 Arduino ISO 예제 완료](167_M31_W02_설치_Arduino_ISO_예제_완료.md) | package sketch 11/11 build, CIS·BIS·암호화·negative·time·combined 실제 보드 PASS, W02 완료 |
 | [166 — M31-W02 세 보드 CIS→BIS 기능 실기](166_M31_W02_3보드_CIS_BIS_통합_실기.md) | native 세 역할 build와 20회×100 CIS 수신→BIS 전달 PASS, 설치 예제 전 단계 |
 | [165 — M31-W01 완료와 W02 CIS/BIS 진행](165_M31_W01_착수와_W02_CIS_개발_후보.md) | W01 1/8 완료, CIS·BIS·time sync 개발·exact 시도와 실패 보존 |
