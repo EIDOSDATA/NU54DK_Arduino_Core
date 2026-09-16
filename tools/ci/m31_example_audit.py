@@ -41,6 +41,7 @@ ZEPHYR_DIRECT_USE = re.compile(
 ## @brief 입출력 예제마다 직접 코드 또는 검증 source와 byte 동일한 backend를 확인합니다.
 def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
     text = sketch.read_text(encoding="utf-8")
+    code = re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.DOTALL)
     has_setup = re.search(r"\bvoid\s+setup\s*\(", text) is not None
     has_loop = re.search(r"\bvoid\s+loop\s*\(", text) is not None
     code_lines = sum(
@@ -61,6 +62,17 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
     if ZEPHYR_DIRECT_USE.search(text):
         row["status"] = "PUBLIC_ZEPHYR_DIRECT_USE"
         return row
+    if not has_setup or not has_loop or code_lines < 10:
+        row["status"] = "PUBLIC_API_FLOW_MISSING"
+        return row
+    if library.name == "NUCODE_BLE_Audio":
+        required = (
+            "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",
+            ".encode(", ".decode(",
+        )
+        if any(token not in code for token in required):
+            row["status"] = "PUBLIC_AUDIO_API_FLOW_MISSING"
+        return row
     if library.name != "NUCODE_BLE_ISO":
         return row
     included = re.findall(r"^#include\s*<([^>]+)>\s*$", text, flags=re.MULTILINE)
@@ -77,6 +89,12 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
     ]
     if len(selected_roles) != 1 or "CONFIG_NUCODE_BLE_ISO=y" not in configuration_text:
         row["status"] = "ROLE_CONFIGURATION_INVALID"
+        return row
+    expected_role = selected_roles[0].lower()
+    if (re.search(rf"\bProgram\s+\w+\s*\(\s*Role::{expected_role}\s*\)", code) is None or
+        re.search(r"\b\w+\.begin\s*\(", code) is None or
+        re.search(r"\b\w+\.poll\s*\(", code) is None):
+        row["status"] = "PUBLIC_ISO_API_FLOW_MISSING"
         return row
     kind = ISO_ROLE_BACKEND[selected_roles[0]]
     backend_name, target = ISO_BACKENDS[kind]
@@ -120,9 +138,19 @@ def audit() -> dict[str, object]:
             continue
         candidates = list((library / "examples").rglob("*.ino"))
         candidates.extend((library / "examples").glob("*.md"))
-        candidates.extend((library / "src").glob("*.h"))
+        public_headers = []
+        for suffix in ("*.h", "*.hh", "*.hpp", "*.hxx"):
+            public_headers.extend(
+                candidate for candidate in (library / "src").rglob(suffix)
+                if "internal" not in candidate.relative_to(library / "src").parts
+            )
+        candidates.extend(public_headers)
+        candidates.append(library / "library.properties")
         for candidate in candidates:
-            if MILESTONE_IDENTIFIER.search(candidate.read_text(encoding="utf-8")):
+            candidate_text = candidate.read_text(encoding="utf-8")
+            if MILESTONE_IDENTIFIER.search(candidate_text) or (
+                candidate in public_headers and ZEPHYR_DIRECT_USE.search(candidate_text)
+            ):
                 public_surface_issues.append(candidate.relative_to(ROOT).as_posix())
     issues = [
         library["library"] for library in rows if library["status"] != "HAS_EXAMPLES"

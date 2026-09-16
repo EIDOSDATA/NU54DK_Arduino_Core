@@ -44,6 +44,20 @@ namespace nucode::ble::audio
     class Lc3Codec final
     {
       public:
+        /** @brief 시작 전 codec 객체를 만듭니다. */
+        Lc3Codec() = default;
+
+        /** @brief 객체 수명 종료 시 소유한 codec 자원을 반환합니다. */
+        ~Lc3Codec()
+        {
+            end();
+        }
+
+        Lc3Codec(const Lc3Codec &) = delete;
+        Lc3Codec &operator=(const Lc3Codec &) = delete;
+        Lc3Codec(Lc3Codec &&) = delete;
+        Lc3Codec &operator=(Lc3Codec &&) = delete;
+
         /** @brief 주어진 frame 구성으로 encoder와 decoder를 만듭니다. */
         Error begin(const Lc3Config &config = {}) noexcept;
 
