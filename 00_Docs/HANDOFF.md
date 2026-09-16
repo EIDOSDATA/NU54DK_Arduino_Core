@@ -1,4 +1,4 @@
-# 개발 인계 — M30 완료, M31-W01 완료·W02 진행 중
+# 개발 인계 — M30 완료, M31-W01~W02 완료·W03 진행 중
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
@@ -9,9 +9,9 @@ DFU·negative·rollback과 W07 세 보드 secure multi-link를 완료했습니�
 병행한 **HOST-W01~HOST-W03 inventory·Host resolver·launcher**도 완료했습니다.
 현재 [M31 TODO](TODO_M31.md)의 전체 Bluetooth sample 원장·capability 계약 W01을
 703행 parity·20/20 negative·clean HCI query 5/5로 완료했습니다. W02 CIS와 BIS
-positive·negative 두 종류, time sync를 실제 두 보드에서 통과했습니다. combined도
-[세 보드 CIS→BIS 20회×100](<04_검증 기록/166_M31_W02_3보드_CIS_BIS_통합_실기.md>)
-clean 기능을 통과했습니다. 설치 Arduino 역할 예제·Audio·DF·CS, HOST-W04가 잔여입니다.
+positive·negative 두 종류, time sync를 실제 두 보드에서 통과했습니다. combined와 설치
+Arduino sketch 11개도 [W02 완료 기록](<04_검증 기록/167_M31_W02_설치_Arduino_ISO_예제_완료.md>)의
+clean package/image로 다시 통과했습니다. Audio·DF·CS, HOST-W04가 잔여입니다.
 2026-09-16에 [전체 기능·예제 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)으로
 M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제를 Arduino에서 사용하는 것이며,
 보드 기반 기능 검증을 수행하고 정밀 RF·음질·거리/각도 보정은 필수 gate에서 제외합니다.
@@ -49,8 +49,8 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 순서 | [M31 TODO](TODO_M31.md) |
-| M31 / M32 / M33 구현 진도 | **1/8 · 0/12 · 0/8**; M31-W01 완료·W02 진행, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
-| 현재 개발 지점 | M30 완료. [M31 착수 계약](<01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md>)·[166번 exact 기능 기록](<04_검증 기록/166_M31_W02_3보드_CIS_BIS_통합_실기.md>) 기반 W02 설치 Arduino 예제 진행 |
+| M31 / M32 / M33 구현 진도 | **2/8 · 0/12 · 0/8**; M31-W01~W02 완료·W03 진행, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
+| 현재 개발 지점 | M30 완료. [W02 closure audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) 기반 W03 전체 LE Audio 구현 진행 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
 | Host 구현 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 미착수 |
 
@@ -134,8 +134,8 @@ CI/CD 실행 요청·조회·대기는 생략합니다. PR 생성·main 병합·
 재감시 지시가 아닙니다. 다음 PC도 최신 사용자가 변경하지 않는 한 CI/CD 확인을 요구하지 않습니다.
 
 2026-09-16 현재 M31-W01 inventory·capability·parser·원장·실기 증거를 구현해 완료했고
-M31/M32/M33은 1/8·0/12·0/8, HOST는 3/8입니다. W02 CIS·BIS 전체·time sync·
-combined 세 보드 기능을 clean source에서 마쳤고 이제 역할별 Arduino 설치 예제를 구현합니다.
+M31/M32/M33은 2/8·0/12·0/8, HOST는 3/8입니다. W02 CIS·BIS 전체·time sync·
+combined와 역할별 Arduino 설치 예제를 clean source에서 마쳤고 이제 W03 전체 LE Audio를 구현합니다.
 HOST-W04는 별도 병행 구현 잔여입니다.
 
 ## 5. 재검증 규칙

@@ -7,7 +7,7 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | W01 inventory·capability 계약 완료 1/8; W02 clean CIS·BIS 전체·ISO time sync PASS, combined 세 보드 기능 전 |
+| 현 단계 | W01~W02 완료 2/8; 설치 ISO sketch 11/11 build와 7개 실제 보드 case PASS, W03 전체 LE Audio 진행 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각
@@ -90,12 +90,16 @@ BIS 전체 subcase를 닫지 않았다. clean `078587471637db187e508db2deec7d091
 [BIS 전체 case](<../04_검증 기록/evidence/m31-w02-exact-07858747/bis-case-manifest.json>)는
 20회×100의 매회 최소 99개 수신과 wrong broadcast code의 MIC failure·유출 0,
 sync loss 뒤 각 100/100 새 BIG 복구를 확인해 `M31-ISO-01:bis`를 PASS로 판정했다.
-W02 작업 묶음에는 combined 세 보드 기능이 남아 있다.
+이전 단계에서는 combined 세 보드 기능이 남아 있었고, 이후 clean `9e49bee2…`에서
+native combined 기능을 닫았다. 최종 clean `e6ae812e…` package에서는 설치 ISO sketch
+11개를 모두 빌드하고 CIS·BIS·암호화·두 negative·time sync·combined를 새 image로 다시
+실행했다. [W02 closure audit](<../04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>)로
+W02를 완료했으며 M31 작업 묶음은 2/8이다.
 clean `504badeec81723f4949879611b0b19371389b56d`의
 [ISO time sync exact manifest](<../04_검증 기록/evidence/m31-w02-exact-504badee/time-manifest.json>)는
 20회×100 receiver timestamp와 양 BIG 해제·재시작을 PASS로 판정했다. 첫 clean
 99/100 실패는 [원본 감사](<../04_검증 기록/evidence/m31-w02-exact-0c7849c2/time-failure-audit.json>)로 보존한다.
-combined CIS/BIS·Audio/DF raw IQ·CS procedure와 역할 예제 기능 단계는 별도로 판정한다.
+Audio/DF raw IQ·CS procedure와 해당 역할 예제 기능 단계는 별도로 판정한다.
 [W01 clean 감사 결과](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>)는
 parity 703행, Host 오류 입력 20/20 거부, 전체 Host 회귀를 확인해 W01만 완료했다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.

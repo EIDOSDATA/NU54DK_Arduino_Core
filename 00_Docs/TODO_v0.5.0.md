@@ -4,7 +4,7 @@
 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
 **M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
 M30-W08 `M30-POWER-01`은 네 지점 × 3회 실제 전원 차단 12/12를 통과했고 HOST-W01~HOST-W03도
-완료했다. M31-W01은 완료·W02는 구현 진행 중이며 1/8, M32·M33은 미착수**다. M28~M30 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
+완료했다. M31-W01~W02는 완료해 2/8이고 W03 전체 LE Audio를 진행하며, M32·M33은 미착수**다. M28~M30 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
 | 정보 | 단일 원본 |
@@ -60,7 +60,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
-| M31 | **1/8** | W01 전체 sample 원장·capability 완료 → W02 ISO 진행 → W03 전체 Audio profile; W04 DF·W05 CS → W06~W08 통합·마감 |
+| M31 | **2/8** | W01 원장·capability와 W02 설치 ISO 11개·기능 HIL 완료 → W03 전체 Audio profile 진행; W04 DF·W05 CS → W06~W08 통합·마감 |
 | M32 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
 | M33 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 Host·RC·공개 |
 | Host | **3/8** | HOST-W04 Ubuntu prerequisite·path·권한부터 시작; HOST-W05~HOST-W08은 별도 잔여 |
@@ -88,7 +88,7 @@ M31 8/8과 HOST-W04~HOST-W06 완료는 독립 집계하며 v0.5.0 공개에서 M
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
 M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
 GATT·cache·CoC 구현, W07 두/세 보드 HIL·회귀·Windows 상호운용과 W08을 완료했다.
-현재 개발 지점은 **M30 완료, M31-W01 완료·W02 구현 진행 중**이다. M30-W01은 exact
+현재 개발 지점은 **M30 완료, M31-W01~W02 완료·W03 구현 진행 중**이다. M30-W01은 exact
 `6254398c…`에서 parser 13/13, target 1/1과 실제 capability 7/7을 완료했다. M30-W02는 exact
 `4f91e347…`에서 고정 link별 보안 상태와 pairing 응답을 구현하고 IO capability 5종을 각각
 10회, 총 50/50 PASS했다. M30-W03은 유선 OOB 20/20·MITM 20/20, mismatch accept 0과
@@ -152,7 +152,7 @@ OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser의 실
 | M29-W07 | **완료 — SIGN/EATT·3보드 MULTI/REG·Windows GATT PASS** | exact `c71ef4a2…`·`16eb8fce…`·`a964ae20…` 원본 증거 유지 |
 | M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, exact `ab3f85d3…` 3보드 재검증, 문서·지원표·M30 인계 |
 
-### 현재 개발 지점: M30 완료, M31-W01 완료·W02 진행 중
+### 현재 개발 지점: M30 완료, M31-W01~W02 완료·W03 진행 중
 
 Exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 보드 `M29-MULTI-01`은 mixed DUT의
 두 link 각각 GATT·CoC 1,000회와 cross-link/payload/drop 오류 0을 확인했다. 같은 revision의

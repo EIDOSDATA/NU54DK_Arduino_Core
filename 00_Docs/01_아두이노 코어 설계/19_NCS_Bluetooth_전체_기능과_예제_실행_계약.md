@@ -149,6 +149,12 @@ M32-A 중 M31의 ISO/Audio/CS 자원을 사용하지 않는 항목은 공통 cap
 | ISO time synchronization | `N:iso_time_sync`에 nRF54L15 metadata 존재 | `profile/direct`: `IsoTimeSyncSender`, `IsoTimeSyncReceiver` | 2보드, 3번째 receiver 확장; timestamp 관계·restart. 외부 계측 정확도는 범위 제외 |
 | 자원·보안·복구 | ISO callback·error 경로와 M28/M30 link/security 계약 | 위 예제 공통 finite runner | 2~3보드; stale callback, disconnect 중 pending TX, wrong broadcast code, timeout, 재시작 |
 
+W02는 clean `e6ae812e…` private package에서 실제 설치 sketch 11개를 11/11 빌드하고,
+CIS·BIS·암호화·wrong code·sync loss·time sync·세 보드 CIS→BIS를 모두 다시 실행해 완료했다.
+역할별 실제 경로와 image·transcript hash는
+[W02 closure audit](<../04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>)가 소유한다.
+계획 예제 이름은 기능 계약이며 실제 설치 이름은 readiness의 `actual_sketch`가 기준이다.
+
 ### M31-W03 LE Audio 하위 계약
 
 아래 11개 묶음의 source는 개별 nRF54L15 target build 전까지 candidate다. nRF5340·simulation만
