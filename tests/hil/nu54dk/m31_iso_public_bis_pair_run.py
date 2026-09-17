@@ -30,6 +30,10 @@ WRONG_CODE_REJECTED = re.compile(r"^BIS wrong code rejected native=-61 leaked=0$
 RECOVERED = re.compile(
     r"^BIS wrong code recovered frames=(99|100) missing=(0|1) errors=0$"
 )
+SYNC_LOST = re.compile(
+    r"^BIS (?:peer stopped before enough frames: |error: -67 frames=)"
+    r"(\d{1,2}) missing=(\d{1,2}) errors=0$"
+)
 WRONG_CODE_FAILURE = re.compile(r"^BIS wrong code (?:begin failed|failed|timeout)")
 ERROR = re.compile(
     r"^BIS (?:start|send) failed:|^BIS error:|^BIS receive timeout|"
@@ -74,7 +78,8 @@ def reset(uid: str) -> None:
 def capture(ports: dict[str, str], probe_ids: dict[str, str],
             seconds: float, cycles: int, revision: str,
             wrong_code: bool, time_mode: bool,
-            recovery_mode: bool) -> dict[str, list[dict]]:
+            recovery_mode: bool, sync_loss_mode: bool,
+            injection: dict) -> dict[str, list[dict]]:
     streams = {role: serial.Serial(port, 115200, timeout=0.1)
                for role, port in ports.items()}
     lines: dict[str, list[dict]] = {role: [] for role in ports}
@@ -97,6 +102,21 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
                     })
             after_boot = {role: after_final_boot(items, revision)
                           for role, items in lines.items()}
+            if sync_loss_mode and "source_reset_at_s" not in injection and any(
+                item["text"].startswith("BIS receiver synchronized ms=")
+                for item in after_boot["receiver"]
+            ):
+                injection["payload_before_reset"] = any(
+                    item["text"].startswith("BIS first frame=") or
+                    item["text"].startswith("BIS received frames=")
+                    for item in after_boot["receiver"]
+                )
+                injection["completed_before_reset"] = any(
+                    item["text"].startswith("BIS received frames=")
+                    for item in after_boot["receiver"]
+                )
+                reset(probe_ids["source"])
+                injection["source_reset_at_s"] = round(time.monotonic() - start, 3)
             sent_pattern = TIME_SENT if time_mode else SENT
             receive_pattern = TIME_RECEIVED if time_mode else RECEIVED
             sent_count = sum(bool(sent_pattern.fullmatch(item["text"]))
@@ -114,6 +134,11 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
                 any(item["text"] == "BIS wrong code recovery stopped"
                     for item in after_boot["receiver"])
             ) if recovery_mode else (
+                any(SYNC_LOST.fullmatch(item["text"])
+                    for item in after_boot["receiver"]) and
+                any(RECEIVED.fullmatch(item["text"])
+                    for item in after_boot["receiver"])
+            ) if sync_loss_mode else (
                 sum(bool(receive_pattern.fullmatch(item["text"]))
                     for item in after_boot["receiver"]) >= cycles
             )
@@ -143,7 +168,7 @@ def main() -> int:
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--seconds", type=float, default=120.0)
     parser.add_argument("--mode", choices=("plain", "encrypted", "encrypted_negative",
-                                           "encrypted_recovery", "time"),
+                                           "encrypted_recovery", "sync_loss", "time"),
                         default="plain")
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--allow-dirty-candidate", action="store_true")
@@ -152,11 +177,14 @@ def main() -> int:
         parser.error("cycles와 seconds는 양수여야 합니다")
     wrong_code = args.mode == "encrypted_negative"
     recovery_mode = args.mode == "encrypted_recovery"
+    sync_loss_mode = args.mode == "sync_loss"
     time_mode = args.mode == "time"
     if wrong_code and args.cycles != 1:
         parser.error("encrypted_negative는 한 송신 session을 검사합니다")
     if recovery_mode and args.cycles != 1:
         parser.error("encrypted_recovery는 wrong-code 후 한 복구 session을 검사합니다")
+    if sync_loss_mode and args.cycles != 1:
+        parser.error("sync_loss는 BIG 중단 후 한 복구 session을 검사합니다")
     revision = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=ROOT,
                                        text=True).strip()
     dirty = subprocess.check_output(("git", "status", "--porcelain"), cwd=ROOT,
@@ -181,8 +209,10 @@ def main() -> int:
     for role in ("receiver", "source"):
         flash[role] = flash_image_pyocd(role, probe_ids[role], images[role],
                                         120.0, hardware_reset=True)
+    injection: dict = {}
     lines = capture(ports, probe_ids, args.seconds, args.cycles, revision,
-                    wrong_code, time_mode, recovery_mode)
+                    wrong_code, time_mode, recovery_mode, sync_loss_mode,
+                    injection)
     post_boot = {role: after_final_boot(items, revision)
                  for role, items in lines.items()}
     sent_pattern = TIME_SENT if time_mode else SENT
@@ -191,9 +221,10 @@ def main() -> int:
                     for item in post_boot["source"]]
     sent_matches = [match for match in sent_matches if match is not None]
     sent = len(sent_matches)
+    receive_items = [item for item in post_boot["receiver"]
+                     if receive_pattern.fullmatch(item["text"])]
     receive_matches = [receive_pattern.fullmatch(item["text"])
-                       for item in post_boot["receiver"]]
-    receive_matches = [match for match in receive_matches if match is not None]
+                       for item in receive_items]
     received = len(receive_matches)
     payload_frames = received * 100 if time_mode else sum(
         int(match.group(1)) for match in receive_matches
@@ -207,7 +238,9 @@ def main() -> int:
     bad = []
     for role in post_boot:
         for item in post_boot[role]:
-            if (ERROR.search(item["text"]) or WRONG_CODE_FAILURE.search(item["text"]) or
+            if ((ERROR.search(item["text"]) and
+                 not (sync_loss_mode and SYNC_LOST.fullmatch(item["text"]))) or
+                WRONG_CODE_FAILURE.search(item["text"]) or
                 (RECEIVE_END.search(item["text"]) and
                  not RECEIVED.fullmatch(item["text"])) or
                 (item["text"].startswith("BIS wrong code recovered frames=") and
@@ -224,6 +257,24 @@ def main() -> int:
     recovery_matches = [match for match in recovery_matches if match is not None]
     recovery_stopped = sum(item["text"] == "BIS wrong code recovery stopped"
                            for item in post_boot["receiver"])
+    sync_loss_matches = [item for item in post_boot["receiver"]
+                         if SYNC_LOST.fullmatch(item["text"])]
+    sync_loss_partial = all(
+        sum(int(value) for value in SYNC_LOST.fullmatch(item["text"]).groups()) < 100
+        for item in sync_loss_matches
+    )
+    recovery_path_confirmed = False
+    if len(sync_loss_matches) == 1 and len(receive_items) == 1:
+        receiver_lines = post_boot["receiver"]
+        loss_index = receiver_lines.index(sync_loss_matches[0])
+        receive_index = receiver_lines.index(receive_items[0])
+        recovery_path_confirmed = any(
+            loss_index < scan_index < sync_index < receive_index
+            for scan_index, scan_line in enumerate(receiver_lines)
+            if scan_line["text"] == "BIS receiver scanning"
+            for sync_index, sync_line in enumerate(receiver_lines)
+            if sync_line["text"].startswith("BIS receiver synchronized ms=")
+        )
     recovered_frames = sum(int(match.group(1)) for match in recovery_matches)
     recovery_missing = sum(int(match.group(2)) for match in recovery_matches)
     if recovery_mode:
@@ -235,7 +286,17 @@ def main() -> int:
                   for item in lines[role])
         for role in lines
     }
-    if recovery_mode:
+    if sync_loss_mode:
+        accepted = ("source_reset_at_s" in injection and
+                    not injection["completed_before_reset"] and
+                    sent >= 1 and received == 1 and len(sync_loss_matches) == 1 and
+                    sync_loss_partial and recovery_path_confirmed and
+                    injection["source_reset_at_s"] < sync_loss_matches[0]["at_s"] and
+                    sync_loss_matches[0]["at_s"] < receive_items[0]["at_s"] and
+                    payload_frames + missing_frames == 100 and
+                    missing_frames <= 1 and rejected == 0 and not bad and
+                    all(image_revision_confirmed.values()))
+    elif recovery_mode:
         accepted = (sent >= 2 and rejected == 1 and stopped == 1 and
                     len(recovery_matches) == 1 and recovery_stopped == 1 and
                     recovered_frames + recovery_missing == 100 and
@@ -274,6 +335,9 @@ def main() -> int:
         "recovered_frames": recovered_frames,
         "recovery_missing": recovery_missing,
         "recovery_stopped": recovery_stopped,
+        "sync_loss_injection": injection,
+        "sync_loss_lines": sync_loss_matches,
+        "recovery_path_confirmed": recovery_path_confirmed,
         "image_revision_confirmed": image_revision_confirmed,
         "excluded_pre_boot_lines": {role: len(lines[role]) - len(post_boot[role])
                                     for role in lines},
