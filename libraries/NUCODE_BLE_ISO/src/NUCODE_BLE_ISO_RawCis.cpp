@@ -8,7 +8,9 @@
 
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE) && \
     (defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL) || \
-     defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL))
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE))
 
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/conn.h>
@@ -27,10 +29,30 @@ namespace
     using nucode::ble::iso::Error;
     using nucode::ble::iso::RawCis;
 
-#if defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL)
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE)
     constexpr bool central_role = true;
 #else
     constexpr bool central_role = false;
+#endif
+
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER)
+    constexpr bool transmitting_role = true;
+#else
+    constexpr bool transmitting_role = false;
+#endif
+
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER)
+    constexpr bool peer_role = true;
+#else
+    constexpr bool peer_role = false;
+#endif
+
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE)
+    constexpr bool bridge_role = true;
+#else
+    constexpr bool bridge_role = false;
 #endif
 
     constexpr std::size_t session_length = 16U;
@@ -103,7 +125,7 @@ namespace
             .pid = BT_ISO_DATA_PATH_HCI,
             .format = BT_HCI_CODING_FORMAT_TRANSPARENT,
         };
-        const std::uint8_t direction = central_role ?
+        const std::uint8_t direction = transmitting_role ?
             BT_HCI_DATAPATH_DIR_HOST_TO_CTLR : BT_HCI_DATAPATH_DIR_CTLR_TO_HOST;
         const int result = bt_iso_setup_data_path(connected_channel, direction, &path);
         if (result != 0)
@@ -284,6 +306,7 @@ namespace
             }
             cig = nullptr;
         }
+#if defined(CONFIG_BT_ISO_PERIPHERAL)
         if (server_registered)
         {
             const int result = bt_iso_server_unregister(&server);
@@ -294,6 +317,7 @@ namespace
             }
             server_registered = false;
         }
+#endif
         k_msgq_purge(&receive_queue);
         memset(&channel, 0, sizeof(channel));
         started = false;
@@ -309,7 +333,9 @@ namespace nucode::ble::iso
     /** @brief CIS 자원을 한 객체에 예약하고 정확한 session peer를 찾습니다. */
     Error RawCis::begin(Role role, const std::uint8_t requested_id[16]) noexcept
     {
-        const Role configured = central_role ? Role::cis_central : Role::cis_peripheral;
+        const Role configured = bridge_role ? Role::cis_to_bis_bridge :
+            (peer_role ? Role::cis_to_bis_peer :
+             (central_role ? Role::cis_central : Role::cis_peripheral));
         if (role != configured)
         {
             return Error::configuration_mismatch;
@@ -331,6 +357,18 @@ namespace nucode::ble::iso
         memset(&channel, 0, sizeof(channel));
         channel.ops = &operations;
         channel.qos = &qos;
+        if (bridge_role)
+        {
+            receive_qos.sdu = 8U;
+            receive_qos.rtn = 10U;
+            qos.tx = nullptr;
+        }
+        if (peer_role)
+        {
+            transmit_qos.sdu = 8U;
+            transmit_qos.rtn = 10U;
+            qos.rx = nullptr;
+        }
         if (!bluetooth_enabled)
         {
             const int result = bt_enable(nullptr);
@@ -349,10 +387,10 @@ namespace nucode::ble::iso
             const struct bt_iso_cig_param parameter = {
                 .cis_channels = channels,
                 .num_cis = 1U,
-                .c_to_p_interval = 10000U,
-                .p_to_c_interval = 10000U,
-                .c_to_p_latency = 20U,
-                .p_to_c_latency = 20U,
+                .c_to_p_interval = bridge_role ? 20000U : 10000U,
+                .p_to_c_interval = bridge_role ? 20000U : 10000U,
+                .c_to_p_latency = bridge_role ? 40U : 20U,
+                .p_to_c_latency = bridge_role ? 40U : 20U,
                 .sca = BT_GAP_SCA_UNKNOWN,
                 .packing = BT_ISO_PACKING_SEQUENTIAL,
                 .framing = BT_ISO_FRAMING_UNFRAMED,
@@ -379,6 +417,7 @@ namespace nucode::ble::iso
         }
         else
         {
+#if defined(CONFIG_BT_ISO_PERIPHERAL)
             const int register_result = bt_iso_server_register(&server);
             if (register_result != 0)
             {
@@ -404,6 +443,11 @@ namespace nucode::ble::iso
                 return Error::transport_failure;
             }
             advertising_active = true;
+#else
+            started = false;
+            owner = nullptr;
+            return Error::configuration_mismatch;
+#endif
         }
         return Error::none;
     }
@@ -430,7 +474,7 @@ namespace nucode::ble::iso
         {
             return Error::invalid_argument;
         }
-        if (owner != this || !started || stopping || !central_role ||
+        if (owner != this || !started || stopping || !transmitting_role ||
             atomic_get(&channel_ready) == 0)
         {
             return Error::not_ready;

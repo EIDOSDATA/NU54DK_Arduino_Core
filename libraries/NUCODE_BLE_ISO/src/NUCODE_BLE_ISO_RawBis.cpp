@@ -12,7 +12,9 @@
      defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE) || \
      defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER) || \
      defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE) || \
-     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER))
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE) || \
+     defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER))
 
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gap.h>
@@ -34,10 +36,18 @@ namespace
 
 #if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE) || \
     defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE) || \
-    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE)
     constexpr bool source_role = true;
 #else
     constexpr bool source_role = false;
+#endif
+
+#if defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE) || \
+    defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER)
+    constexpr bool relay_role = true;
+#else
+    constexpr bool relay_role = false;
 #endif
 
 #if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE) || \
@@ -443,11 +453,13 @@ namespace nucode::ble::iso
     Error RawBis::begin(Role role, const std::uint8_t requested_id[16],
                         const std::uint8_t requested_code[16]) noexcept
     {
-        const Role configured = time_role ?
-            (source_role ? Role::bis_time_source : Role::bis_time_receiver) :
-            (encrypted_role ?
-                (source_role ? Role::bis_encrypted_source : Role::bis_encrypted_receiver) :
-                (source_role ? Role::bis_source : Role::bis_receiver));
+        const Role configured = relay_role ?
+            (source_role ? Role::cis_to_bis_bridge : Role::cis_to_bis_receiver) :
+            (time_role ?
+                (source_role ? Role::bis_time_source : Role::bis_time_receiver) :
+                (encrypted_role ?
+                    (source_role ? Role::bis_encrypted_source : Role::bis_encrypted_receiver) :
+                    (source_role ? Role::bis_source : Role::bis_receiver)));
         if (role != configured)
         {
             return Error::configuration_mismatch;
@@ -503,7 +515,7 @@ namespace nucode::ble::iso
 #if defined(CONFIG_BT_ISO_BROADCASTER)
         transmit_qos.sdu = CONFIG_BT_ISO_TX_MTU;
         transmit_qos.phy = BT_GAP_LE_PHY_2M;
-        transmit_qos.rtn = time_role ? 2U : 1U;
+        transmit_qos.rtn = relay_role ? 10U : (time_role ? 2U : 1U);
         qos.tx = &transmit_qos;
         const struct bt_le_adv_param advertising_parameter =
             BT_LE_ADV_PARAM_INIT(BT_LE_ADV_OPT_EXT_ADV,
@@ -520,8 +532,10 @@ namespace nucode::ble::iso
         if (result == 0)
         {
             const struct bt_le_per_adv_param periodic_parameter =
-                BT_LE_PER_ADV_PARAM_INIT(BT_GAP_MS_TO_PER_ADV_INTERVAL(60),
-                                         BT_GAP_MS_TO_PER_ADV_INTERVAL(60),
+                BT_LE_PER_ADV_PARAM_INIT(BT_GAP_MS_TO_PER_ADV_INTERVAL(
+                                             relay_role ? 20 : 60),
+                                         BT_GAP_MS_TO_PER_ADV_INTERVAL(
+                                             relay_role ? 20 : 60),
                                          BT_LE_PER_ADV_OPT_NONE);
             result = bt_le_per_adv_set_param(advertiser, &periodic_parameter);
         }
@@ -539,8 +553,8 @@ namespace nucode::ble::iso
             struct bt_iso_big_create_param parameter = {
                 .bis_channels = channels,
                 .num_bis = 1U,
-                .interval = 10000U,
-                .latency = 20U,
+                .interval = relay_role ? 20000U : 10000U,
+                .latency = relay_role ? 40U : 20U,
                 .packing = BT_ISO_PACKING_SEQUENTIAL,
                 .framing = BT_ISO_FRAMING_UNFRAMED,
                 .encryption = encrypted_role,

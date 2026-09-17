@@ -57,7 +57,7 @@ namespace nucode::ble::iso
     /**
      * @brief CIS의 사용자 SDU를 직접 송수신하는 Arduino facade입니다.
      *
-     * 현재 image의 CIS central/peripheral Kconfig 역할 하나만 소유합니다. begin()에
+     * 현재 image의 CIS central/peripheral 또는 CIS→BIS peer/bridge 역할을 소유합니다. begin()에
      * 넘기는 16-byte session ID가 같은 두 보드만 연결하며, 수신 frame은 내부
      * 8개 queue에 복사되어 readFrame()으로 전달됩니다. Zephyr handle은 노출하지
      * 않습니다. 한 image에서 이 객체 하나만 사용할 수 있습니다.
@@ -113,7 +113,7 @@ namespace nucode::ble::iso
     /**
      * @brief 한 BIG/BIS의 사용자 SDU를 송신하거나 동기화해 읽습니다.
      *
-     * source/receiver 한 쌍의 최대 16-byte SDU를 지원합니다. 역할별 image
+     * source/receiver 및 CIS→BIS bridge/receiver의 최대 16-byte SDU를 지원합니다. 역할별 image
      * Kconfig와 16-byte session ID가 일치해야 합니다. 암호화 역할에는 별도의
      * 16-byte broadcast code가 필요하며 광고에는 노출하지 않습니다.
      * 한 image에서 이 객체 하나만 사용할 수 있습니다.

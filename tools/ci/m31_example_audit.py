@@ -204,10 +204,10 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         return row
     expected_role = selected_roles[0].lower()
     role = selected_roles[0]
-    if role in {"CIS_CENTRAL", "CIS_PERIPHERAL"}:
+    if role in {"CIS_CENTRAL", "CIS_PERIPHERAL", "CIS_TO_BIS_PEER"}:
         required = (
             "RawCis", f"Role::{expected_role}", ".begin(", ".poll(", ".stop(",
-            ".sendFrame(" if role == "CIS_CENTRAL" else ".readFrame(",
+            ".sendFrame(" if role != "CIS_PERIPHERAL" else ".readFrame(",
         )
         backend = library / "src" / "NUCODE_BLE_ISO_RawCis.cpp"
         if any(token not in code for token in required) or not backend.is_file() or (
@@ -219,7 +219,8 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         return row
     if role in {"BIS_SOURCE", "BIS_RECEIVER",
                 "BIS_ENCRYPTED_SOURCE", "BIS_ENCRYPTED_RECEIVER",
-                "BIS_TIME_SOURCE", "BIS_TIME_RECEIVER"}:
+                "BIS_TIME_SOURCE", "BIS_TIME_RECEIVER",
+                "CIS_TO_BIS_RECEIVER"}:
         required = (
             "RawBis", f"Role::{expected_role}", ".begin(", ".poll(", ".stop(",
             ".sendFrame(" if role in ISO_SEND_ROLES else ".readFrame(",
@@ -234,6 +235,22 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         if any(token not in code for token in required) or not backend.is_file() or (
             MILESTONE_IDENTIFIER.search(backend.read_text(encoding="utf-8"))
         ):
+            row["status"] = "PUBLIC_ISO_DATA_FLOW_MISSING"
+            return row
+        row["status"] = "VISIBLE_CODE"
+        return row
+    if role == "CIS_TO_BIS_BRIDGE":
+        required = (
+            "RawCis", "RawBis", "Role::cis_to_bis_bridge",
+            "cis.begin(", "bis.begin(", "cis.poll(", "bis.poll(",
+            "cis.readFrame(", "bis.sendFrame(", "cis.stop(", "bis.stop(",
+        )
+        cis_backend = library / "src" / "NUCODE_BLE_ISO_RawCis.cpp"
+        bis_backend = library / "src" / "NUCODE_BLE_ISO_RawBis.cpp"
+        if (any(token not in code for token in required) or
+            not cis_backend.is_file() or not bis_backend.is_file() or
+            any(MILESTONE_IDENTIFIER.search(path.read_text(encoding="utf-8"))
+                for path in (cis_backend, bis_backend))):
             row["status"] = "PUBLIC_ISO_DATA_FLOW_MISSING"
             return row
         row["status"] = "VISIBLE_CODE"
