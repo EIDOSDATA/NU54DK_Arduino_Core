@@ -1,4 +1,4 @@
-# 개발 인계 — M30 완료, M31-W01 완료·W02~W05 진행 중
+# 개발 인계 — M30 완료, M31-W01·W02 완료·W03~W05 진행 중
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
@@ -27,7 +27,9 @@ clean package/image로 다시 통과했습니다. 다만 공개 ISO 예제의 �
 100/100 SDU로 확인했습니다. 일반 BIS의 강제 sync loss 뒤 새 session 복구도
 [198번](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)에서
 100/100 SDU로 확인했습니다. 공개 ISO 예제 감사는 82개 중 0건이며,
-설치 package 전수 build 확인 뒤 W02 완료를 판정합니다.
+독립 개발 package에서 ISO 11개를 전수 빌드하고 같은 revision의 11역할을
+두·세 보드에서 다시 20회씩 실행했습니다. [199번 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)에
+따라 **W02를 완료**했습니다.
 Audio·DF·CS, HOST-W04도 잔여입니다.
 2026-09-16에 [전체 기능·예제 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)으로
 M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제를 Arduino에서 사용하는 것이며,
@@ -66,8 +68,8 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 순서 | [M31 TODO](TODO_M31.md) |
-| M31 / M32 / M33 구현 진도 | **1/8 · 0/12 · 0/8**; M31-W01 완료·W02~W05 진행, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
-| 현재 개발 지점 | M30 완료. [W02 공개 세 보드 실기](<04_검증 기록/196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md>) 후 ISO 예제 11개 payload 실기 완료, W02 잔여 회귀·설치본 검사와 W03 전체 LE Audio 구현 진행 |
+| M31 / M32 / M33 구현 진도 | **2/8 · 0/12 · 0/8**; M31-W01·W02 완료·W03~W05 진행, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
+| 현재 개발 지점 | M30 완료. [W02 독립 package·11역할 실기 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) 후 W03 전체 LE Audio·W04 DF·W05 CS 구현 진행 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
 | Host 구현 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 미착수 |
 
@@ -107,28 +109,25 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 
 ## 4. 다른 컴퓨터에서 바로 할 일
 
-1. 실제 저장소와 `AGENTS.md`, branch·HEAD·미커밋 변경의 소유권부터 확인합니다. `git fetch origin` 뒤
-   **기존 `m31-w01`을 이어받고** `git pull --ff-only`로 갱신합니다. 로컬 branch가 없을 때만
-   `git switch --track origin/m31-w01`로 만듭니다. main으로 돌아가 재분기하거나 merge하지 않습니다.
-   Dirty/diverged 상태면 덮어쓰기·reset/rebase/강제 push하지 말고 안전한 재개 가능 여부를 판단합니다.
-   전달받은 exact commit이 HEAD에 포함됐고 이 문서와 164번 기록이 있는지 확인합니다.
-2. 루트 README, 이 문서, [M31](TODO_M31.md)·[M32](TODO_M32.md)·[M33](TODO_M33.md)·[v0.5.0](TODO_v0.5.0.md)
-   TODO, [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
-   [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>), [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>),
-   [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>), 161~164번 기록과 M30 원장을 읽습니다.
-   Board submodule을 초기화·갱신하고 §2의 고정 revision 및 SDK/toolchain lock을 확인합니다.
-3. 전체 Host regression을 먼저 실행해 인계 source의 기준선을 확인합니다.
-4. M31-W01에서 `variants/nu54dk/m31-ble-readiness.json`과
-   `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`,
-   수집기/검증기·capability parser·negative Host test·capability target/build matrix를 구현합니다.
-   이번 문서 작업에서 이 코드·JSON을 이미 구현했다고 가정하지 않습니다.
-5. 고정 SDK의 sample/test ID·nRF54L15 metadata와 Arduino 제공 경로를 연결하고 source candidate,
-   native/Arduino build, 실제 NU54DK runtime·peer interop를 각각 기록합니다.
-6. HOST-W04 Ubuntu prerequisite manifest·실행 파일·path·udev/권한과 negative test를 병행합니다.
-   M32-A 및 M33 예제 준비도 의존성이 허용하는 범위에서 독립 진행합니다. 사용자 후속 외장 실기를
-   구현 선행조건으로 요구하지 않습니다. 다음 순서는 M31-W02 raw ISO입니다.
-7. 실제 보드 시험 전에는 현재 probe SHA-256 identity·COM/serial·role·firmware revision을 다시 확인하며 과거 mapping을
-   자동 재사용하지 않습니다.
+1. [200번 다른 PC 인계](<04_검증 기록/200_M31_다른_PC_작업_인계.md>)를 먼저 읽습니다. 실제 C drive
+   저장소의 `AGENTS.md`, branch·HEAD·미커밋 변경 소유권을 확인하고 `git fetch origin` 뒤
+   **기존 `m31-w01`을 이어받아** `git pull --ff-only`로 갱신합니다. 로컬 branch가 없을 때만
+   `git switch --track origin/m31-w01`로 만듭니다. Dirty/diverged 상태를 덮어쓰거나 강제 push하지 않습니다.
+2. 이 문서, [M31 TODO](TODO_M31.md), [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
+   [W02 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
+   [M31 readiness](../variants/nu54dk/m31-ble-readiness.json)을 대조합니다. Board submodule을
+   초기화하고 §2의 고정 revision 및 SDK/toolchain lock을 확인합니다.
+3. 현재 기준선은 **M31-W01·W02 완료 2/8**입니다. W01 원장과 W02 공개 ISO 11역할을 재구현하거나
+   기존 PC의 임시 package·HEX 경로를 결과물로 가정하지 않습니다. 신규 변경은 새 PC에서 clean source,
+   설치 예제 build, 보드 역할별 runtime을 같은 revision으로 결합해 검증합니다.
+4. 다음 우선순위는 W03의 미완료 LC3/LE Audio profile 행입니다. W03-02 BAP unicast는 완료 근거를
+   보존하고 §3의 W03-01 잔여와 W03-03~W03-11을 차례로 판정합니다. W04 raw IQ RX와 W05 CS의
+   미해결 오류는 실제 register/log 근거로 조사하며 W06~W08은 아직 미착수입니다.
+5. 실제 보드 시험 직전에 현재 CMSIS-DAP V2 probe SHA-256 identity·COM/serial·role·firmware를
+   다시 확인합니다. 이전 PC mapping을 자동 재사용하지 않습니다. 공개 `.ino`는 의미 있는 사용자
+   C++/NUCODE API 흐름을 두고 Zephyr 직접 호출과 개발 마일스톤 이름을 노출하지 않습니다.
+6. HOST-W04 이후는 독립 트랙으로 유지합니다. 사용자 후속 외장 audio·Apple/Google 실물 검증과
+   최종 릴리스 단계 Ubuntu/macOS 실기를 M31 기능 구현 완료로 잘못 승격하지 않습니다.
 
 사용자가 NU54DK 세 대 연결과 보드만 보유한 상태를 확인했습니다. 이는 영구 probe mapping이 아닙니다.
 M31-W01 capability/CTE TX 제어는 한 대, ISO·합성 Audio·CS는 두 대, broadcast/assistant·통합은
@@ -152,9 +151,8 @@ CI/CD 실행 요청·조회·대기는 생략합니다. PR 생성·main 병합·
 
 2026-09-16 당시에는 M31/M32/M33을 2/8·0/12·0/8로 기록했으나,
 2026-09-17 공개 Arduino 데이터 예제 재점검으로 W02 완료 판정을 철회했다.
-현행 분자는 **1/8·0/12·0/8**이다. CIS·일반 BIS·암호화 BIS·시각 동기 BIS의 공개 사용자 SDU
-열한 역할을 새 clean image로 검증했고, W02 잔여 회귀·설치 package와 W03 이후 작업,
-HOST-W04가 남아 있다.
+이후 공개 사용자 SDU 11역할, 오류 후 복구와 독립 개발 package 실기를 완료했다.
+현행 분자는 **2/8·0/12·0/8**이다. W03 이후 작업과 HOST-W04가 남아 있다.
 
 ## 5. 재검증 규칙
 
@@ -164,4 +162,4 @@ HOST-W04가 남아 있다.
   CMSIS-DAP으로 fault, SRAM, queue/buffer/credit와 peripheral 오류 register를 확보합니다.
 - 원인 분류 → 단일 수정 → 동일 조건 재검증을 지키고 무한 재시도로 PASS를 만들지 않습니다.
 - 과거 기록의 당시 판정과 원시 증거는 소급 수정하거나 삭제하지 않습니다.
-- 공개 v0.4.1 package와 개발 main의 API·예제·지원 상태를 항상 구분합니다.
+- 공개 v0.4.1 package와 개발 `m31-w01` branch의 API·예제·지원 상태를 항상 구분합니다.

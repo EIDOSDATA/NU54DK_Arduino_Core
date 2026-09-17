@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **W01 완료, W02·W03·W04·W05 진행 중 / 완료 1/8 작업 묶음** |
+| 현재 상태 | **W01·W02 완료, W03·W04·W05 진행 중 / 완료 2/8 작업 묶음** |
 | 선행 완료 | M30 W01~W08 8/8, test ID 10/10, 실제 전원 차단 4지점 × 3회 = 12/12 |
 | 병행 Host 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 잔여; M31과 독립된 8개 작업 분모 |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, 고정 lock revision |
@@ -19,10 +19,9 @@ M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF
 예제 판정 규칙은 [NCS Bluetooth 전체 기능·예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
 기능별 목표는 [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>),
 Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
-계획 개정 자체는 구현 증거가 아니다. W01 완료와 W02 무선 기능 HIL·공개 예제 재작업,
-W03 이후 미완료 범위는
+계획 개정 자체는 구현 증거가 아니다. W01·W02 완료와 W03 이후 미완료 범위는
 [착수 계약](<01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md>)과
-[W02 완료 기록](<04_검증 기록/167_M31_W02_설치_Arduino_ISO_예제_완료.md>)에서 구분한다.
+[W02 최종 완료 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)에서 구분한다.
 
 ## 1. 착수 원칙과 지원 판정
 
@@ -64,7 +63,7 @@ W03 이후 미완료 범위는
 | 작업 | 상태 | 구현·검증 범위 | 완료 산출물 |
 | --- | --- | --- | --- |
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
-| M31-W02 raw ISO 기반 | **진행 중** | 공개 `RawCis`/`RawBis` 기반 **11개 역할**의 사용자 payload 경로를 두 보드·세 보드에서 각 20회 실기 PASS, 세 보드 CIS→BIS 전달·수신 2,000/2,000, 예제 감사 82개 중 0건. 잘못된 Broadcast Code의 유효 SDU 수신 0, 이어서 같은 image의 올바른 Code 복구 100/100 SDU PASS. 일반 BIS sync loss 강제 주입 후 새 세션 100/100 복구 PASS. 고정 시험 backend의 이전 CIS·BIS·combined·time sync HIL은 별도 근거로 유효. 설치 package 전수 build 확인은 잔여 | [공개 CIS](<04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md>)·[일반 BIS](<04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md>)·[암호화 BIS](<04_검증 기록/194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md>)·[시각 동기 BIS](<04_검증 기록/195_M31_W02_공개_BIS_시각동기_사용자_SDU_실기.md>)·[세 보드 전달](<04_검증 기록/196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md>)·[암호화 오류 후 복구](<04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)·[sync loss 재시작](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)·[이전 W02 고정 시험 audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>). 잔여 설치본 검사 후 완료 판정 |
+| M31-W02 raw ISO 기반 | **완료** | 공개 `RawCis`/`RawBis` 기반 **11개 역할**의 사용자 payload와 정지·재시작을 각 20회 실기 PASS. 잘못된 Broadcast Code의 유효 SDU 유출 0, 같은 image의 정상 Code 복구 100/100, 강제 sync loss 후 새 session 100/100. 독립 Sketchbook 개발 package 485파일 무결성·고정 prerequisite·11/11 예제 발견·빌드와 같은 revision의 두/세 보드 11역할 실기 20회씩 PASS. 공개 예제 감사 82개 중 0건 | [W02 최종 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)·[완료 audit](<04_검증 기록/evidence/m31-w02-installed-examples-b47aaf40/closure-audit.json>)·[오류 후 복구](<04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)·[sync loss 재시작](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)·[이전 고정 시험 audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
 | M31-W03 전체 LE Audio profile | **진행 중** | Arduino LC3 내부 loopback, native BAP unicast 양방향 ISO, 공개 Arduino source→sink의 LC3 1,000 frame 전송·복호화·drop 0, sink 재시작 뒤 새 연결·LC3 100 frame 복구 20/20, 공개 API stop/release·재연결 20/20과 중단 중 잘못된 상태 전이 거부 40/40, 원격 unsupported codec·invalid QoS 각각 20/20 및 idle ASE Release 잘못된 상태 20/20 거부 확인. W03-02 양방향 client↔server 1,000 frame 및 종료·재연결 20/20, 기존 단방향 20/20 회귀 완료. §3의 나머지 profile은 잔여. Source/Sink RAM 약 86%, duplex 역할 RAM 88% | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계; [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[Arduino sink](<04_검증 기록/182_M31_W03_Arduino_BAP_unicast_LC3_sink_실기.md>)·[Arduino source→sink](<04_검증 기록/183_M31_W03_Arduino_BAP_unicast_LC3_두_역할_실기.md>)·[재시작 복구 20회](<04_검증 기록/184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md>)·[stop/release 20회](<04_검증 기록/185_M31_W03_Arduino_BAP_stop_release_20회.md>)·[잘못된 상태 거부 40회](<04_검증 기록/186_M31_W03_Arduino_BAP_잘못된_상태_거부_40회.md>)·[원격 codec/QoS 거부 각 20회](<04_검증 기록/187_M31_W03_Arduino_BAP_원격_codec_QoS_거부_각_20회.md>)·[원격 idle ASE 상태 거부 20회](<04_검증 기록/188_M31_W03_Arduino_BAP_원격_잘못된_ASE_상태_거부_20회.md>)·[Arduino 양방향 서버](<04_검증 기록/189_M31_W03_Arduino_BAP_양방향_서버_실기.md>)·[Arduino 양방향 client/server와 회귀](<04_검증 기록/190_M31_W03_Arduino_BAP_양방향_클라이언트_및_회귀.md>) |
 | M31-W04 Direction Finding | **진행 중** | connectionless AoA CTE TX 20회, Zephyr LL connected AoA CTE 응답 stop/restart 20회 확인; 기본 안테나 raw IQ RX는 실패·미완료. 연결 RX Host는 1안테나에서 `-EINVAL`, 직접 HCI 두 명령은 수락됐으나 IQ 미확인. SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분; [CTE 송신](<04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md>), [연결 응답](<04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md>), [IQ 수신 진단](<04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md>), [Host/controller 경계](<04_검증 기록/178_M31_W04_연결_AoA_수신_Host_Controller_경계.md>) |
 | M31-W05 connected Channel Sounding | **진행 중** | Arduino initiator·reflector의 secure ACL·CS procedure·RAS raw 결과 100개, stop/restart 20회와 disconnect/reconnect 20회 확인; 동일 이름·다른 광고 서비스의 3보드 peer 분리, Ranging UUID 위장/GATT 서비스 부재 거부 20회, 미암호화 RAS Features read의 ATT 15 거부 20회 확인. flash 직후 간헐 중단 원인·같은 ACL 반복 read 중단·wrong-key negative는 잔여 | 비보정 RTT 거리 출력의 수치 정확도를 보증하지 않으며 전체 W05 완료로 승격하지 않음; [착수 기록](<04_검증 기록/171_M31_W05_CS_native_2보드_착수.md>)·[RAS native](<04_검증 기록/173_M31_W05_RAS_native_100회_진단.md>)·[Arduino reflector](<04_검증 기록/175_M31_W05_Arduino_RAS_reflector_100회_진단.md>)·[Arduino initiator](<04_검증 기록/176_M31_W05_Arduino_RAS_initiator_100회와_재시작_진단.md>)·[복구/3보드](<04_검증 기록/177_M31_W05_RAS_재연결과_3보드_peer_분리_진단.md>)·[위장 GATT 거부](<04_검증 기록/179_M31_W05_RAS_UUID_위장_peer_거부_20회.md>)·[미암호화 read 거부](<04_검증 기록/180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md>) |
