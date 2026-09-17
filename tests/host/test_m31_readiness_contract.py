@@ -79,6 +79,7 @@ class M31ReadinessTests(unittest.TestCase):
         doc = json.loads(readiness.read_text(encoding="utf-8"))
         package = next(item for item in doc["work_packages"] if item["id"] == "M31-W02")
         package["status"] = "completed"
+        package["public_example_status"] = "rework_required"
         doc["counts"]["work_completed"] += 1
         with self.assertRaisesRegex(ValueError, "W02 public ISO example flow incomplete"):
             MODULE.validate(doc)

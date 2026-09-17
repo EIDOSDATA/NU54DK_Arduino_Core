@@ -23,7 +23,7 @@
       "title": "raw_iso",
       "status": "in_progress",
       "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json",
-      "public_example_status": "rework_required"
+      "public_example_status": "PASS"
     },
     {
       "id": "M31-W03",
@@ -647,19 +647,28 @@
       "id": "iso_combined_source",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino",
-      "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+      "source_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json"
     },
     {
       "id": "iso_combined_peer",
       "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino",
       "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino",
-      "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+      "source_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json"
+    },
+    {
+      "id": "iso_combined_receiver",
+      "planned_sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino",
+      "source_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json"
     },
     {
       "id": "iso_time_sync_sender",
@@ -1146,8 +1155,8 @@
           "development_blocker": true,
           "release_blocker": true,
           "status": "PASS",
-          "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
-          "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json"
+          "source_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json"
         },
         {
           "id": "M31-ISO-01:time_sync",
@@ -1816,7 +1825,7 @@
           "minimum_boards": 3,
           "timeout_seconds": 600,
           "iterations": 1,
-          "denominator": 42,
+          "denominator": 43,
           "metric": "planned_role_example_count",
           "acceptance": {
             "built_percent": 100,
@@ -1912,7 +1921,7 @@
     "test_family_total": 10,
     "test_family_passed": 3,
     "audio_group_total": 11,
-    "example_role_total": 42,
+    "example_role_total": 43,
     "parity_rows": 703,
     "test_subcases": 28
   }

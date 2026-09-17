@@ -15,18 +15,24 @@ BLE로 빌드한다. Central은 100 frame을 전송하고 Peripheral은 받은 �
 사용자는 예제 값을 새 값으로 바꾸어야 한다. 잘못된 Code에서는 MIC가 수신 SDU를
 거부한다.
 
-나머지 5개 스케치는 고정 시험 SDU를 실행하는 진단 역할 예제다. `.ino`에서 사용자
-payload를 송수신하는 공개 API를 아직 사용하지 않으므로 일반 Arduino 데이터 예제로
-간주하지 않는다. [재점검 기록](<../../../00_Docs/04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)과
-[CIS 두 역할 실기](<../../../00_Docs/04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md>),
-[BIS 두 역할 실기](<../../../00_Docs/04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md>),
-[암호화 BIS 실기](<../../../00_Docs/04_검증 기록/194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md>)에
-W02 재작업 범위와 검증 결과를 기록했다.
+`BISTimeSource`는 첫 SDU 완료의 HCI 시각을 읽고 다음 99개 SDU에 명시 시각을
+붙인다. `BISTimeReceiver`는 받은 payload와 시각의 유효성·단조 증가를 검사한다.
+두 예제의 `sessionId`가 같아야 한다.
 
-`CISCentral`/`CISPeripheral`과 일반·암호화 BIS 두 쌍의 `.ino`에는 payload
-생성·검사, 시작·전송·수신·오류·종료 흐름이 있다. Bluetooth ISO 객체,
-Zephyr callback과 buffer 관리는 라이브러리 구현 내부에 있다. 다른 역할은 공개
-데이터 API로 전환하는 중이다.
+`CISToBISPeer`·`CISToBISBridge`·`CISToBISReceiver`는 세 보드에서 각각
+CIS payload 생성, CIS 수신→BIS 전달, BIS 수신을 수행한다. Peer와 bridge의
+`cisSessionId`, bridge와 receiver의 `bisSessionId`가 각각 일치해야 한다.
+Receiver는 첫 부팅에서 이전 BIG의 해제를 기다린 뒤 동기화를 시작한다.
+
+11개 `.ino`는 모두 payload 생성·검사, 시작·전송·수신·오류·종료 흐름을 공개
+`RawCis`/`RawBis` API로 보여 준다. Bluetooth ISO 객체, Zephyr callback과
+buffer 관리는 라이브러리 구현 내부에 있다. [재점검 기록](<../../../00_Docs/04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)과
+[CIS 실기](<../../../00_Docs/04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md>),
+[일반 BIS 실기](<../../../00_Docs/04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md>),
+[암호화 BIS 실기](<../../../00_Docs/04_검증 기록/194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md>),
+[시각 동기 실기](<../../../00_Docs/04_검증 기록/195_M31_W02_공개_BIS_시각동기_사용자_SDU_실기.md>),
+[세 보드 전달 실기](<../../../00_Docs/04_검증 기록/196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md>)에
+각 역할의 exact build·실행 범위를 기록했다.
 
 | 예제 | 보드 수 | 역할 |
 |---|---:|---|
@@ -41,9 +47,9 @@ Zephyr callback과 buffer 관리는 라이브러리 구현 내부에 있다. 다
 `Error::configuration_mismatch`를 반환한다. Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE**
 feature set을 선택해 빌드한다.
 
-남은 진단 역할의 115200 baud Serial 명령 형식은 회귀 시험용 구현 세부사항이며
-Arduino 공개 API나 호환성 계약에는 포함되지 않는다. 새 CIS/BIS 예제는 Serial 명령에
-의존하지 않고 `RawCis`/`RawBis` API를 직접 사용한다.
+이전 고정 시험 backend의 115200 baud Serial 명령 형식은 회귀 시험용 구현
+세부사항이며 Arduino 공개 API나 호환성 계약에는 포함되지 않는다. 현재 11개
+예제는 Serial 명령에 의존하지 않고 `RawCis`/`RawBis` API를 직접 사용한다.
 
 ## 출처와 라이선스
 

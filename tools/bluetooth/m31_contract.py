@@ -36,6 +36,7 @@ AUDIO_GROUPS = (
 EXAMPLE_ROLES = (
     "raw_iso_central", "raw_iso_peripheral", "raw_iso_broadcaster",
     "raw_iso_receiver", "iso_combined_source", "iso_combined_peer",
+    "iso_combined_receiver",
     "iso_time_sync_sender", "iso_time_sync_receiver",
     *(f"{identifier}:{role}" for identifier, _title, roles, _boards in AUDIO_GROUPS
       for role in roles),
