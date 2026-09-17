@@ -14,6 +14,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "packaging" / "boards-manager"))
 from nu54_package_impl.inputs import collect_source_files  # noqa: E402
+from nu54_package_impl import model as package_model  # noqa: E402
 
 
 ## @brief 배포 대상 파일의 현재 clean checkout byte를 독립 디렉터리에 복사합니다.
@@ -41,6 +42,7 @@ def main() -> int:
     platform = destination / "user" / "hardware" / "nucode" / "zephyr"
     digest = hashlib.sha256()
     total_bytes = 0
+    file_hashes: dict[str, str] = {}
     for item in selected:
         source = ROOT / item.path
         if not source.is_file() or source.is_symlink():
@@ -50,8 +52,32 @@ def main() -> int:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
         digest.update(item.path.encode("utf-8") + b"\0")
-        digest.update(hashlib.sha256(data).digest())
+        file_digest = hashlib.sha256(data).digest()
+        digest.update(file_digest)
+        file_hashes[item.path] = file_digest.hex()
         total_bytes += len(data)
+    runtime_manifest = {
+        "schema_version": 1,
+        "package_name": "NUCODE NU54DK Zephyr Boards",
+        "version": "0.4.1-dev",
+        "staging_type": "unpublished_clean_development_checkout",
+        "core_revision": revision,
+        "board_revision": board_revision,
+        "ncs_version": package_model.NCS_VERSION,
+        "ncs_revision": package_model.NCS_REVISION,
+        "zephyr_version": package_model.ZEPHYR_VERSION,
+        "zephyr_revision": package_model.ZEPHYR_REVISION,
+        "toolchain_bundle_id": package_model.TOOLCHAIN_BUNDLE_ID,
+        "prerequisites_pins_sha256": file_hashes[
+            "tools/nu54-prerequisites/pins.json"],
+        "file_count": len(selected),
+        "total_size": total_bytes,
+        "file_hashes": file_hashes,
+    }
+    (platform / "release-manifest.json").write_text(
+        json.dumps(runtime_manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     config = destination / "arduino-cli.yaml"
     config.write_text(
         "directories:\n"
