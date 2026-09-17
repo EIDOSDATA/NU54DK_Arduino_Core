@@ -27,11 +27,15 @@ TIME_SENT = re.compile(
 TIME_RECEIVED = re.compile(r"^BIS time received frames=100 timestamps=100 errors=0$")
 RECEIVE_END = re.compile(r"^BIS received frames=")
 WRONG_CODE_REJECTED = re.compile(r"^BIS wrong code rejected native=-61 leaked=0$")
+RECOVERED = re.compile(
+    r"^BIS wrong code recovered frames=(99|100) missing=(0|1) errors=0$"
+)
 WRONG_CODE_FAILURE = re.compile(r"^BIS wrong code (?:begin failed|failed|timeout)")
 ERROR = re.compile(
     r"^BIS (?:start|send) failed:|^BIS error:|^BIS receive timeout|"
     r"^BIS peer stopped before enough frames:|^BIS time (?:invalid|error:|"
-    r"source timeout|receive timeout|TX sync sequence regressed|send failed:)"
+    r"source timeout|receive timeout|TX sync sequence regressed|send failed:)|"
+    r"^BIS recovery (?:begin failed:|exhausted)"
 )
 
 
@@ -69,7 +73,8 @@ def reset(uid: str) -> None:
 ## @brief 두 COM의 완결된 줄을 원본 순서와 시간과 함께 저장합니다.
 def capture(ports: dict[str, str], probe_ids: dict[str, str],
             seconds: float, cycles: int, revision: str,
-            wrong_code: bool, time_mode: bool) -> dict[str, list[dict]]:
+            wrong_code: bool, time_mode: bool,
+            recovery_mode: bool) -> dict[str, list[dict]]:
     streams = {role: serial.Serial(port, 115200, timeout=0.1)
                for role, port in ports.items()}
     lines: dict[str, list[dict]] = {role: [] for role in ports}
@@ -102,10 +107,17 @@ def capture(ports: dict[str, str], probe_ids: dict[str, str],
                 any(item["text"] == "BIS wrong code stopped"
                     for item in after_boot["receiver"])
             ) if wrong_code else (
+                sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= 1 and
+                sum(bool(RECOVERED.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= 1 and
+                any(item["text"] == "BIS wrong code recovery stopped"
+                    for item in after_boot["receiver"])
+            ) if recovery_mode else (
                 sum(bool(receive_pattern.fullmatch(item["text"]))
                     for item in after_boot["receiver"]) >= cycles
             )
-            if sent_count >= cycles and receiver_done:
+            if sent_count >= (2 if recovery_mode else cycles) and receiver_done:
                 break
     finally:
         for stream in streams.values():
@@ -131,7 +143,7 @@ def main() -> int:
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--seconds", type=float, default=120.0)
     parser.add_argument("--mode", choices=("plain", "encrypted", "encrypted_negative",
-                                           "time"),
+                                           "encrypted_recovery", "time"),
                         default="plain")
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--allow-dirty-candidate", action="store_true")
@@ -139,9 +151,12 @@ def main() -> int:
     if args.cycles <= 0 or args.seconds <= 0:
         parser.error("cycles와 seconds는 양수여야 합니다")
     wrong_code = args.mode == "encrypted_negative"
+    recovery_mode = args.mode == "encrypted_recovery"
     time_mode = args.mode == "time"
     if wrong_code and args.cycles != 1:
         parser.error("encrypted_negative는 한 송신 session을 검사합니다")
+    if recovery_mode and args.cycles != 1:
+        parser.error("encrypted_recovery는 wrong-code 후 한 복구 session을 검사합니다")
     revision = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=ROOT,
                                        text=True).strip()
     dirty = subprocess.check_output(("git", "status", "--porcelain"), cwd=ROOT,
@@ -167,7 +182,7 @@ def main() -> int:
         flash[role] = flash_image_pyocd(role, probe_ids[role], images[role],
                                         120.0, hardware_reset=True)
     lines = capture(ports, probe_ids, args.seconds, args.cycles, revision,
-                    wrong_code, time_mode)
+                    wrong_code, time_mode, recovery_mode)
     post_boot = {role: after_final_boot(items, revision)
                  for role, items in lines.items()}
     sent_pattern = TIME_SENT if time_mode else SENT
@@ -195,6 +210,8 @@ def main() -> int:
             if (ERROR.search(item["text"]) or WRONG_CODE_FAILURE.search(item["text"]) or
                 (RECEIVE_END.search(item["text"]) and
                  not RECEIVED.fullmatch(item["text"])) or
+                (item["text"].startswith("BIS wrong code recovered frames=") and
+                 not RECOVERED.fullmatch(item["text"])) or
                 (item["text"].startswith("BIS time received frames=") and
                  not TIME_RECEIVED.fullmatch(item["text"]))):
                 bad.append(item)
@@ -202,12 +219,29 @@ def main() -> int:
                    for item in post_boot["receiver"])
     stopped = sum(item["text"] == "BIS wrong code stopped"
                   for item in post_boot["receiver"])
+    recovery_matches = [RECOVERED.fullmatch(item["text"])
+                        for item in post_boot["receiver"]]
+    recovery_matches = [match for match in recovery_matches if match is not None]
+    recovery_stopped = sum(item["text"] == "BIS wrong code recovery stopped"
+                           for item in post_boot["receiver"])
+    recovered_frames = sum(int(match.group(1)) for match in recovery_matches)
+    recovery_missing = sum(int(match.group(2)) for match in recovery_matches)
+    if recovery_mode:
+        received = len(recovery_matches)
+        payload_frames = recovered_frames
+        missing_frames = recovery_missing
     image_revision_confirmed = {
         role: any(item["text"] == f"BIS core revision={revision}"
                   for item in lines[role])
         for role in lines
     }
-    if wrong_code:
+    if recovery_mode:
+        accepted = (sent >= 2 and rejected == 1 and stopped == 1 and
+                    len(recovery_matches) == 1 and recovery_stopped == 1 and
+                    recovered_frames + recovery_missing == 100 and
+                    recovery_missing <= 1 and not bad and
+                    all(image_revision_confirmed.values()))
+    elif wrong_code:
         accepted = (sent == 1 and received == 0 and rejected == 1 and stopped == 1 and
                     payload_frames == 0 and not bad and
                     all(image_revision_confirmed.values()))
@@ -237,6 +271,9 @@ def main() -> int:
         "valid_hci_times": valid_hci_times,
         "wrong_code_rejected": rejected,
         "wrong_code_stopped": stopped,
+        "recovered_frames": recovered_frames,
+        "recovery_missing": recovery_missing,
+        "recovery_stopped": recovery_stopped,
         "image_revision_confirmed": image_revision_confirmed,
         "excluded_pre_boot_lines": {role: len(lines[role]) - len(post_boot[role])
                                     for role in lines},
