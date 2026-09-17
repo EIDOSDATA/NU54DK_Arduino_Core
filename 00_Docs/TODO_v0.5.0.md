@@ -60,7 +60,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
-| M31 | **1/8** | W01 원장·capability 완료. W02 공개 CIS·BIS·time sync·CIS→BIS 11개 역할의 사용자 SDU 실기 및 암호화 오류 후 같은 image 복구 PASS; sync loss·재시작·설치 package 전수 검사는 잔여. W03 Audio·W04 DF·W05 CS 진행 → W06~W08 통합·마감 |
+| M31 | **1/8** | W01 원장·capability 완료. W02 공개 CIS·BIS·time sync·CIS→BIS 11개 역할의 사용자 SDU 실기, 암호화 오류 후 같은 image 복구, 일반 BIS sync loss 뒤 재시작 PASS; 설치 package 전수 build는 잔여. W03 Audio·W04 DF·W05 CS 진행 → W06~W08 통합·마감 |
 | M32 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
 | M33 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 Host·RC·공개 |
 | Host | **3/8** | HOST-W04 Ubuntu prerequisite·path·권한부터 시작; HOST-W05~HOST-W08은 별도 잔여 |
