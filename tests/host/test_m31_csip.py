@@ -68,12 +68,22 @@ class CsipContractTests(unittest.TestCase):
             "bt_le_bond_exists(information.id, information.le.dst)",
             "bt_addr_le_eq(information.le.dst, &authorized_identity)",
             "struct CoordinatorOperation",
-            "operation.session == coordinator_context.session",
+            "operation.session != coordinator_context.session",
             "invalidateCoordinatorOperationLocked()",
-            "invalidateCoordinatorMember(instance",
+            "invalidateCoordinatorMember(snapshot",
             "aggregate_locked",
             "member_context.transitioning",
             "bt_csip_set_member_unregister(instance)",
+            "acquireMemberOperation(this, operation)",
+            "releaseMemberOperation(this, operation, result)",
+            "member_context.quarantined",
+            "member_context.authorized_connection == authorized_connection",
+            "bt_csip_set_coordinator_set_member_by_conn(connection)",
+            "coordinatorOperationCurrentLocked",
+            "completeCoordinatorLockOperationLocked",
+            "coordinator_operation_timeout_ms",
+            "current.set_size == set_size",
+            "current.rank == rank ? 0 : -ENOTSUP",
         ):
             self.assertIn(token, text)
         self.assertNotIn("TEST_SAMPLE_DATA", text)
@@ -92,6 +102,7 @@ class CsipContractTests(unittest.TestCase):
             "Set SIRK read authorization failed",
             "startMemberAdvertising()",
             "setMember.generateRsi(rsi)",
+            "setMember.authorizeSirkRead(information.connection, false)",
             "로컬 상호운용 시험 전용",
             "고유 비밀",
         ):
@@ -103,8 +114,44 @@ class CsipContractTests(unittest.TestCase):
             "coordinator.begin(setKey, 2U)",
             "BLEScan.start(true)",
             "CsipStage::failed",
+            "SecurityEvent::pairing_failed",
+            "Set coordinator progress timeout",
+            "progressDeadlineMs",
         ):
             self.assertIn(token, coordinator)
+
+    @unittest.skipUnless(Path("C:/ncs/v3.4.0").is_dir(), "locked SDK unavailable")
+    def test_locked_sdk_callback_identity_constraints_are_explicit(self) -> None:
+        """! @brief fixed SDK callback 문맥과 size/rank 제약을 source로 고정합니다. """
+
+        sdk = Path("C:/ncs/v3.4.0/zephyr")
+        header = (sdk / "include/zephyr/bluetooth/audio/csip.h").read_text(
+            encoding="utf-8"
+        )
+        coordinator = (
+            sdk / "subsys/bluetooth/audio/csip_set_coordinator.c"
+        ).read_text(encoding="utf-8")
+        member = (sdk / "subsys/bluetooth/audio/csip_set_member.c").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "bt_csip_set_coordinator_set_member_by_conn(const struct bt_conn *conn)",
+            header,
+        )
+        self.assertIn("client->conn == conn", coordinator)
+        for token in (
+            "client = &client_insts[bt_conn_index(conn)]",
+            "listener->lock_changed(inst, locked)",
+            "listener->sirk_changed(inst)",
+            "listener->size_changed(conn, inst)",
+        ):
+            self.assertIn(token, coordinator)
+        self.assertIn(
+            "typedef void (*bt_csip_set_coordinator_lock_set_cb)(int err);", header
+        )
+        size_guard = member.index("if (svc_inst->set_size == size)")
+        rank_write = member.index("svc_inst->rank = svc_inst->lockable ? rank : 0U;")
+        self.assertLess(size_guard, rank_write)
 
     def test_examples_pass_public_boundary_audit(self) -> None:
         """! @brief 두 역할 sketch가 공개 NUCODE API와 역할 Kconfig를 유지합니다. """

@@ -79,6 +79,11 @@ namespace
         {
             if (authorizationCandidate == information.connection)
             {
+                if (setMember.authorizeSirkRead(information.connection, false) !=
+                    nucode::ble::audio::Error::none)
+                {
+                    Serial.println("Set SIRK read authorization revoke failed");
+                }
                 authorizationCandidate = {};
             }
             if (!BLEAdvertising.running() && !startMemberAdvertising())

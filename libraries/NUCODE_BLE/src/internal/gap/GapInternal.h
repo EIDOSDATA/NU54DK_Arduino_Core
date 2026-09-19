@@ -22,6 +22,9 @@
 #define CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS 1
 #endif
 #if CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS == 2
+#if !defined(CONFIG_BT_CENTRAL) || CONFIG_BT_CENTRAL == 0
+#error "Two central slots require CONFIG_BT_CENTRAL=y"
+#endif
 #if !defined(CONFIG_BT_MAX_CONN) || CONFIG_BT_MAX_CONN < 2
 #error "Two central slots require CONFIG_BT_MAX_CONN >= 2"
 #endif

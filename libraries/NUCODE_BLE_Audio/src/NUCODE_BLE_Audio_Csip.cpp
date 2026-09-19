@@ -12,6 +12,7 @@
 #include <internal/NUCODE_BLE_Internal.h>
 
 #include <zephyr/bluetooth/audio/csip.h>
+#include <zephyr/kernel.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/util.h>
 
@@ -59,13 +60,18 @@ namespace nucode::ble::audio
             const CsipSetMember *owner = nullptr;
             struct bt_csip_set_member_svc_inst *instance = nullptr;
             bt_addr_le_t authorized_identity = {};
+            BLEConnectionHandle authorized_connection;
             std::uint8_t authorized_local_id = 0U;
+            std::uint32_t session = 0U;
+            std::uint32_t next_session = 1U;
+            std::uint32_t in_flight = 0U;
             Error last_error = Error::not_started;
             int native_code = 0;
             atomic_t locked = ATOMIC_INIT(0);
             atomic_t lock_changes = ATOMIC_INIT(0);
             bool identity_authorized = false;
             bool transitioning = false;
+            bool quarantined = false;
             struct k_spinlock lock;
         };
 
@@ -95,7 +101,9 @@ namespace nucode::ble::audio
             struct bt_csip_set_member_svc_inst *instance) noexcept
         {
             bt_addr_le_t authorized_identity = {};
+            BLEConnectionHandle authorized_connection;
             std::uint8_t authorized_local_id = 0U;
+            std::uint32_t session = 0U;
             bool authorized = false;
             k_spinlock_key_t key = k_spin_lock(&member_context.lock);
             if (connection != nullptr && member_context.owner != nullptr &&
@@ -103,9 +111,21 @@ namespace nucode::ble::audio
                 member_context.identity_authorized)
             {
                 authorized_identity = member_context.authorized_identity;
+                authorized_connection = member_context.authorized_connection;
                 authorized_local_id = member_context.authorized_local_id;
+                session = member_context.session;
                 authorized = true;
             }
+            k_spin_unlock(&member_context.lock, key);
+            const BLEConnectionHandle handle = internal::handleForActiveConnection(connection);
+            key = k_spin_lock(&member_context.lock);
+            authorized = authorized && handle.valid() && authorized_connection == handle &&
+                         member_context.owner != nullptr &&
+                         member_context.instance == instance &&
+                         member_context.session == session &&
+                         member_context.identity_authorized &&
+                         member_context.authorized_connection == authorized_connection &&
+                         !member_context.transitioning;
             k_spin_unlock(&member_context.lock, key);
             if (!authorized || bt_conn_get_security(connection) < BT_SECURITY_L2)
             {
@@ -128,34 +148,60 @@ namespace nucode::ble::audio
             .sirk_read_req = memberSirkReadRequested,
         };
 
-        /** @brief owner와 안정된 service instance를 lifecycle lock 아래에서 확인합니다. */
-        struct bt_csip_set_member_svc_inst *memberInstance(
-            const CsipSetMember *owner) noexcept
+        /** @brief public native 호출 동안 instance unregister와 ABA 재사용을 막는 lease입니다. */
+        struct MemberOperation
         {
             struct bt_csip_set_member_svc_inst *instance = nullptr;
-            k_spinlock_key_t key = k_spin_lock(&member_context.lock);
-            if (member_context.owner == owner && !member_context.transitioning)
-            {
-                instance = member_context.instance;
-            }
-            k_spin_unlock(&member_context.lock, key);
-            return instance;
-        }
+            std::uint32_t session = 0U;
+        };
 
-        /** @brief native 결과가 같은 owner·instance 수명에 속할 때만 상태에 반영합니다. */
-        void recordMemberResult(const CsipSetMember *owner,
-                                struct bt_csip_set_member_svc_inst *instance,
-                                int result) noexcept
+        /** @brief owner의 현재 instance에 in-flight lease를 설정합니다. */
+        bool acquireMemberOperation(const CsipSetMember *owner,
+                                    MemberOperation &operation) noexcept
         {
             k_spinlock_key_t key = k_spin_lock(&member_context.lock);
-            if (member_context.owner == owner && member_context.instance == instance &&
-                !member_context.transitioning)
+            if (member_context.owner == owner && member_context.instance != nullptr &&
+                !member_context.transitioning && !member_context.quarantined)
+            {
+                operation.instance = member_context.instance;
+                operation.session = member_context.session;
+                ++member_context.in_flight;
+            }
+            k_spin_unlock(&member_context.lock, key);
+            return operation.instance != nullptr;
+        }
+
+        /** @brief native 결과를 같은 session에만 기록하고 in-flight lease를 반환합니다. */
+        void releaseMemberOperation(const CsipSetMember *owner,
+                                    const MemberOperation &operation, int result) noexcept
+        {
+            k_spinlock_key_t key = k_spin_lock(&member_context.lock);
+            if (member_context.owner == owner &&
+                member_context.instance == operation.instance &&
+                member_context.session == operation.session)
             {
                 member_context.last_error = publicError(result);
                 member_context.native_code = result;
             }
+            if (member_context.in_flight != 0U)
+            {
+                --member_context.in_flight;
+            }
             k_spin_unlock(&member_context.lock, key);
         }
+
+        /** @brief 0을 건너뛰는 Member session 번호를 발급합니다. */
+        std::uint32_t nextMemberSessionLocked() noexcept
+        {
+            std::uint32_t session = member_context.next_session++;
+            if (session == 0U)
+            {
+                session = member_context.next_session++;
+            }
+            return session;
+        }
+
+        constexpr std::uint32_t member_end_timeout_ms = 250U;
 #endif
 
 #if defined(CONFIG_BT_CSIP_SET_COORDINATOR)
@@ -180,6 +226,7 @@ namespace nucode::ble::audio
             const struct bt_csip_set_coordinator_csis_inst
                 *instances[CsipSetCoordinator::maximum_members] = {};
             const struct bt_csip_set_coordinator_set_info *set_info = nullptr;
+            std::uint32_t started_ms = 0U;
             std::uint8_t count = 0U;
             bool active = false;
             bool valid = false;
@@ -205,11 +252,24 @@ namespace nucode::ble::audio
             std::uint32_t session = 0U;
             std::uint32_t next_session = 1U;
             std::uint32_t next_operation_identity = 1U;
+            std::uint32_t tokenless_quarantine_until_ms = 0U;
             CoordinatorOperation operation;
             struct k_spinlock lock;
         };
 
         CoordinatorContext coordinator_context;
+
+        constexpr std::uint32_t coordinator_operation_timeout_ms = 15000U;
+        constexpr std::uint32_t coordinator_callback_quarantine_ms = 35000U;
+
+        /** @brief callback instance와 exact 연결 session을 함께 보존합니다. */
+        struct CoordinatorMemberSnapshot
+        {
+            BLEConnectionHandle connection;
+            const struct bt_csip_set_coordinator_set_member *member = nullptr;
+            const struct bt_csip_set_coordinator_csis_inst *instance = nullptr;
+            std::uint32_t session = 0U;
+        };
 
         /** @brief spinlock 자체를 유지하며 공개 coordinator session만 초기화합니다. */
         void resetCoordinatorSessionLocked() noexcept
@@ -251,6 +311,18 @@ namespace nucode::ble::audio
             {
                 return false;
             }
+            if ((step == CsipStep::ordered_access || step == CsipStep::lock ||
+                 step == CsipStep::release) &&
+                coordinator_context.tokenless_quarantine_until_ms != 0U)
+            {
+                if (static_cast<std::int32_t>(
+                        k_uptime_get_32() -
+                        coordinator_context.tokenless_quarantine_until_ms) < 0)
+                {
+                    return false;
+                }
+                coordinator_context.tokenless_quarantine_until_ms = 0U;
+            }
             CoordinatorOperation operation = {};
             operation.identity = coordinator_context.next_operation_identity++;
             if (operation.identity == 0U)
@@ -259,6 +331,7 @@ namespace nucode::ble::audio
             }
             operation.session = coordinator_context.session;
             operation.step = step;
+            operation.started_ms = k_uptime_get_32();
             operation.count = coordinator_context.member_count;
             operation.active = true;
             operation.valid = true;
@@ -276,46 +349,142 @@ namespace nucode::ble::audio
             return true;
         }
 
-        /** @brief pending operation을 무효화하되 늦은 callback을 소비할 때까지 보존합니다. */
+        /** @brief pending operation을 즉시 취소해 callback 유실 뒤에도 재시작을 허용합니다. */
         void invalidateCoordinatorOperationLocked() noexcept
         {
-            if (coordinator_context.operation.active)
+            if (coordinator_context.operation.active &&
+                (coordinator_context.operation.step == CsipStep::ordered_access ||
+                 coordinator_context.operation.step == CsipStep::lock ||
+                 coordinator_context.operation.step == CsipStep::release))
             {
-                coordinator_context.operation.valid = false;
+                coordinator_context.tokenless_quarantine_until_ms =
+                    k_uptime_get_32() + coordinator_callback_quarantine_ms;
             }
+            coordinator_context.operation = {};
         }
 
-        /** @brief expected callback의 session·step·exact member snapshot을 검증하고 소비합니다. */
-        bool consumeCoordinatorOperation(CsipStep step,
-                                         CoordinatorOperation &operation) noexcept
+        /** @brief callback instance가 현재 exact native member인지 SDK 연결 map으로 검증합니다. */
+        bool snapshotCoordinatorMember(
+            const struct bt_csip_set_coordinator_csis_inst *instance,
+            CoordinatorMemberSnapshot &snapshot) noexcept
         {
             k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-            if (!coordinator_context.operation.active ||
-                coordinator_context.operation.step != step)
+            for (std::size_t index = 0U; coordinator_context.owner != nullptr &&
+                                         index < coordinator_context.member_count;
+                 ++index)
             {
-                k_spin_unlock(&coordinator_context.lock, key);
-                return false;
-            }
-            operation = coordinator_context.operation;
-            coordinator_context.operation.active = false;
-            coordinator_context.operation.valid = false;
-            bool current = operation.valid && coordinator_context.owner != nullptr &&
-                           operation.session == coordinator_context.session &&
-                           operation.count == coordinator_context.member_count;
-            for (std::size_t index = 0U; current && index < operation.count; ++index)
-            {
-                current = coordinator_context.members[index].connection ==
-                              operation.connections[index] &&
-                          coordinator_context.members[index].member == operation.members[index] &&
-                          coordinator_context.members[index].instance ==
-                              operation.instances[index];
+                if (coordinator_context.members[index].instance == instance)
+                {
+                    snapshot.connection = coordinator_context.members[index].connection;
+                    snapshot.member = coordinator_context.members[index].member;
+                    snapshot.instance = coordinator_context.members[index].instance;
+                    snapshot.session = coordinator_context.session;
+                    break;
+                }
             }
             k_spin_unlock(&coordinator_context.lock, key);
-            for (std::size_t index = 0U; current && index < operation.count; ++index)
+            if (snapshot.member == nullptr)
             {
-                current = BLEConnection.connected(operation.connections[index]);
+                return false;
             }
-            return current;
+
+            struct bt_conn *connection = internal::referenceConnection(snapshot.connection);
+            if (connection == nullptr)
+            {
+                return false;
+            }
+            const struct bt_csip_set_coordinator_set_member *const current_member =
+                bt_csip_set_coordinator_set_member_by_conn(connection);
+            bt_conn_unref(connection);
+            if (current_member != snapshot.member)
+            {
+                return false;
+            }
+
+            key = k_spin_lock(&coordinator_context.lock);
+            bool current = coordinator_context.owner != nullptr &&
+                           coordinator_context.session == snapshot.session;
+            bool found = false;
+            for (std::size_t index = 0U; current && index < coordinator_context.member_count;
+                 ++index)
+            {
+                const CoordinatorMember &candidate = coordinator_context.members[index];
+                found = found || (candidate.connection == snapshot.connection &&
+                                  candidate.member == snapshot.member &&
+                                  candidate.instance == snapshot.instance);
+            }
+            k_spin_unlock(&coordinator_context.lock, key);
+            return current && found;
+        }
+
+        /** @brief 저장된 snapshot이 현재 coordinator slot과 여전히 같은지 검사합니다. */
+        bool coordinatorMemberCurrentLocked(const CoordinatorMemberSnapshot &snapshot,
+                                            std::size_t &member_index) noexcept
+        {
+            if (coordinator_context.owner == nullptr ||
+                coordinator_context.session != snapshot.session)
+            {
+                return false;
+            }
+            for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
+            {
+                const CoordinatorMember &candidate = coordinator_context.members[index];
+                if (candidate.connection == snapshot.connection &&
+                    candidate.member == snapshot.member &&
+                    candidate.instance == snapshot.instance)
+                {
+                    member_index = index;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** @brief active operation의 session과 모든 exact member snapshot을 검증합니다. */
+        bool coordinatorOperationCurrentLocked(CsipStep step) noexcept
+        {
+            const CoordinatorOperation &operation = coordinator_context.operation;
+            if (!operation.active || !operation.valid || operation.step != step ||
+                coordinator_context.owner == nullptr ||
+                operation.session != coordinator_context.session ||
+                operation.count != coordinator_context.member_count)
+            {
+                return false;
+            }
+            for (std::size_t index = 0U; index < operation.count; ++index)
+            {
+                const CoordinatorMember &member = coordinator_context.members[index];
+                if (member.connection != operation.connections[index] ||
+                    member.member != operation.members[index] ||
+                    member.instance != operation.instances[index])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /** @brief exact member 상태가 목표와 일치할 때만 lock/release를 완료합니다. */
+        bool completeCoordinatorLockOperationLocked(CsipStep step, bool locked) noexcept
+        {
+            if (!coordinatorOperationCurrentLocked(step) ||
+                coordinator_context.member_count == 0U)
+            {
+                return false;
+            }
+            for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
+            {
+                if (coordinator_context.members[index].information.locked != locked)
+                {
+                    return false;
+                }
+            }
+            coordinator_context.operation = {};
+            coordinator_context.locked = locked;
+            coordinator_context.last_error = Error::none;
+            coordinator_context.native_code = 0;
+            coordinator_context.stage = locked ? CsipStage::locked : CsipStage::ready;
+            return true;
         }
 
         /** @brief 동기 시작 실패에는 callback이 없으므로 operation token을 즉시 폐기합니다. */
@@ -419,35 +588,22 @@ namespace nucode::ble::audio
             k_spin_unlock(&coordinator_context.lock, key);
         }
 
-        /** @brief lock procedure 완료를 공개 상태로 변환합니다. */
+        /** @brief quarantine 뒤 시작된 exact lock operation의 SDK 완료만 반영합니다. */
         void coordinatorLocked(int error) noexcept
         {
-            CoordinatorOperation operation;
-            if (!consumeCoordinatorOperation(CsipStep::lock, operation))
-            {
-                return;
-            }
-            if (error != 0)
-            {
-                k_spinlock_key_t error_key = k_spin_lock(&coordinator_context.lock);
-                if (coordinator_context.owner != nullptr &&
-                    coordinator_context.session == operation.session)
-                {
-                    coordinator_context.last_error = publicError(error);
-                    coordinator_context.native_code = error;
-                    coordinator_context.stage = CsipStage::failed;
-                }
-                k_spin_unlock(&coordinator_context.lock, error_key);
-                return;
-            }
             k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-            if (coordinator_context.owner != nullptr &&
-                coordinator_context.session == operation.session)
+            if (!coordinatorOperationCurrentLocked(CsipStep::lock))
+            {
+                k_spin_unlock(&coordinator_context.lock, key);
+                return;
+            }
+            coordinator_context.operation = {};
+            coordinator_context.last_error = publicError(error);
+            coordinator_context.native_code = error;
+            coordinator_context.stage = error == 0 ? CsipStage::locked : CsipStage::failed;
+            if (error == 0)
             {
                 coordinator_context.locked = true;
-                coordinator_context.last_error = Error::none;
-                coordinator_context.native_code = 0;
-                coordinator_context.stage = CsipStage::locked;
                 for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
                 {
                     coordinator_context.members[index].information.locked = true;
@@ -456,35 +612,22 @@ namespace nucode::ble::audio
             k_spin_unlock(&coordinator_context.lock, key);
         }
 
-        /** @brief release procedure 완료를 공개 상태로 변환합니다. */
+        /** @brief quarantine 뒤 시작된 exact release operation의 SDK 완료만 반영합니다. */
         void coordinatorReleased(int error) noexcept
         {
-            CoordinatorOperation operation;
-            if (!consumeCoordinatorOperation(CsipStep::release, operation))
-            {
-                return;
-            }
-            if (error != 0)
-            {
-                k_spinlock_key_t error_key = k_spin_lock(&coordinator_context.lock);
-                if (coordinator_context.owner != nullptr &&
-                    coordinator_context.session == operation.session)
-                {
-                    coordinator_context.last_error = publicError(error);
-                    coordinator_context.native_code = error;
-                    coordinator_context.stage = CsipStage::failed;
-                }
-                k_spin_unlock(&coordinator_context.lock, error_key);
-                return;
-            }
             k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-            if (coordinator_context.owner != nullptr &&
-                coordinator_context.session == operation.session)
+            if (!coordinatorOperationCurrentLocked(CsipStep::release))
+            {
+                k_spin_unlock(&coordinator_context.lock, key);
+                return;
+            }
+            coordinator_context.operation = {};
+            coordinator_context.last_error = publicError(error);
+            coordinator_context.native_code = error;
+            coordinator_context.stage = error == 0 ? CsipStage::ready : CsipStage::failed;
+            if (error == 0)
             {
                 coordinator_context.locked = false;
-                coordinator_context.last_error = Error::none;
-                coordinator_context.native_code = 0;
-                coordinator_context.stage = CsipStage::ready;
                 for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
                 {
                     coordinator_context.members[index].information.locked = false;
@@ -497,65 +640,52 @@ namespace nucode::ble::audio
         void coordinatorLockChanged(struct bt_csip_set_coordinator_csis_inst *instance,
                                     bool locked) noexcept
         {
-            k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-            bool found = false;
-            for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
+            CoordinatorMemberSnapshot snapshot;
+            if (!snapshotCoordinatorMember(instance, snapshot))
             {
-                if (coordinator_context.owner != nullptr &&
-                    coordinator_context.members[index].instance == instance)
-                {
-                    coordinator_context.members[index].information.locked = locked;
-                    ++coordinator_context.lock_changes;
-                    found = true;
-                    break;
-                }
+                return;
             }
-            if (found)
+            k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
+            std::size_t member_index = 0U;
+            if (!coordinatorMemberCurrentLocked(snapshot, member_index))
             {
-                bool aggregate_locked = coordinator_context.member_count ==
-                                        coordinator_context.expected_members;
-                for (std::size_t index = 0U;
-                     aggregate_locked && index < coordinator_context.member_count; ++index)
-                {
-                    aggregate_locked = coordinator_context.members[index].information.locked;
-                }
-                coordinator_context.locked = aggregate_locked;
-                if (coordinator_context.stage != CsipStage::operating)
-                {
-                    coordinator_context.stage =
-                        aggregate_locked ? CsipStage::locked
-                                         : (coordinator_context.member_count ==
-                                                    coordinator_context.expected_members
-                                                ? CsipStage::ready
-                                                : CsipStage::discovering);
-                }
+                k_spin_unlock(&coordinator_context.lock, key);
+                return;
+            }
+            coordinator_context.members[member_index].information.locked = locked;
+            ++coordinator_context.lock_changes;
+            bool aggregate_locked = coordinator_context.member_count ==
+                                    coordinator_context.expected_members;
+            for (std::size_t index = 0U;
+                 aggregate_locked && index < coordinator_context.member_count; ++index)
+            {
+                aggregate_locked = coordinator_context.members[index].information.locked;
+            }
+            coordinator_context.locked = aggregate_locked;
+            const bool completed_lock =
+                completeCoordinatorLockOperationLocked(CsipStep::lock, true);
+            const bool completed_release =
+                completeCoordinatorLockOperationLocked(CsipStep::release, false);
+            if (!completed_lock && !completed_release &&
+                coordinator_context.stage != CsipStage::operating)
+            {
+                coordinator_context.stage =
+                    aggregate_locked ? CsipStage::locked
+                                     : (coordinator_context.member_count ==
+                                                coordinator_context.expected_members
+                                            ? CsipStage::ready
+                                            : CsipStage::discovering);
             }
             k_spin_unlock(&coordinator_context.lock, key);
         }
 
         /** @brief 변경된 exact member를 제거하고 기존 순서·aggregate lock을 무효화합니다. */
-        void invalidateCoordinatorMember(
-            const struct bt_csip_set_coordinator_csis_inst *instance,
-            BLEConnectionHandle connection, int error) noexcept
+        void invalidateCoordinatorMember(const CoordinatorMemberSnapshot &snapshot,
+                                         int error) noexcept
         {
             k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-            if (coordinator_context.owner == nullptr)
-            {
-                k_spin_unlock(&coordinator_context.lock, key);
-                return;
-            }
-            std::size_t remove_index = coordinator_context.member_count;
-            for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
-            {
-                const CoordinatorMember &candidate = coordinator_context.members[index];
-                if (candidate.instance == instance &&
-                    (!connection.valid() || candidate.connection == connection))
-                {
-                    remove_index = index;
-                    break;
-                }
-            }
-            if (remove_index == coordinator_context.member_count)
+            std::size_t remove_index = 0U;
+            if (!coordinatorMemberCurrentLocked(snapshot, remove_index))
             {
                 k_spin_unlock(&coordinator_context.lock, key);
                 return;
@@ -582,7 +712,11 @@ namespace nucode::ble::audio
         /** @brief SIRK 변경은 기존 set identity를 무효화하므로 재검색을 요구합니다. */
         void coordinatorSirkChanged(struct bt_csip_set_coordinator_csis_inst *instance) noexcept
         {
-            invalidateCoordinatorMember(instance, BLEConnectionHandle{}, -EACCES);
+            CoordinatorMemberSnapshot snapshot;
+            if (snapshotCoordinatorMember(instance, snapshot))
+            {
+                invalidateCoordinatorMember(snapshot, -EACCES);
+            }
         }
 
         /** @brief set size 변경은 rank 일관성을 잃으므로 재검색을 요구합니다. */
@@ -590,8 +724,14 @@ namespace nucode::ble::audio
             struct bt_conn *connection,
             const struct bt_csip_set_coordinator_csis_inst *instance) noexcept
         {
-            invalidateCoordinatorMember(instance, internal::handleForActiveConnection(connection),
-                                        -ERANGE);
+            CoordinatorMemberSnapshot snapshot;
+            const BLEConnectionHandle callback_connection =
+                internal::handleForActiveConnection(connection);
+            if (snapshotCoordinatorMember(instance, snapshot) &&
+                callback_connection == snapshot.connection)
+            {
+                invalidateCoordinatorMember(snapshot, -ERANGE);
+            }
         }
 
         /** @brief ordered access의 최종 GATT 결과를 반영합니다. */
@@ -601,46 +741,66 @@ namespace nucode::ble::audio
             bool locked,
             struct bt_csip_set_coordinator_set_member *member) noexcept
         {
-            CoordinatorOperation operation;
-            if (!consumeCoordinatorOperation(CsipStep::ordered_access, operation) ||
-                set_info != operation.set_info)
+            k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
+            if (!coordinatorOperationCurrentLocked(CsipStep::ordered_access) ||
+                set_info != coordinator_context.operation.set_info)
             {
+                k_spin_unlock(&coordinator_context.lock, key);
                 return;
             }
             if (member != nullptr)
             {
                 bool exact_member = false;
-                for (std::size_t index = 0U; index < operation.count; ++index)
+                for (std::size_t index = 0U; index < coordinator_context.operation.count;
+                     ++index)
                 {
-                    exact_member = exact_member || operation.members[index] == member;
+                    exact_member = exact_member ||
+                                   coordinator_context.operation.members[index] == member;
                 }
                 if (!exact_member)
                 {
+                    k_spin_unlock(&coordinator_context.lock, key);
                     return;
                 }
             }
             if (error != 0 || locked)
             {
                 const int operation_error = error == 0 ? -EBUSY : error;
-                k_spinlock_key_t error_key = k_spin_lock(&coordinator_context.lock);
-                if (coordinator_context.owner != nullptr &&
-                    coordinator_context.session == operation.session)
-                {
-                    coordinator_context.last_error = publicError(operation_error);
-                    coordinator_context.native_code = operation_error;
-                    coordinator_context.stage = CsipStage::failed;
-                }
-                k_spin_unlock(&coordinator_context.lock, error_key);
+                coordinator_context.operation = {};
+                coordinator_context.last_error = publicError(operation_error);
+                coordinator_context.native_code = operation_error;
+                coordinator_context.stage = CsipStage::failed;
+                k_spin_unlock(&coordinator_context.lock, key);
                 return;
             }
-            k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-            if (coordinator_context.owner != nullptr &&
-                coordinator_context.session == operation.session)
+            std::uint8_t previous_rank = 0U;
+            for (std::size_t ordered_index = 0U;
+                 ordered_index < coordinator_context.operation.count; ++ordered_index)
             {
-                coordinator_context.last_error = Error::none;
-                coordinator_context.native_code = 0;
-                coordinator_context.stage = CsipStage::ready;
+                const BLEConnectionHandle ordered_connection =
+                    coordinator_context.ordered[ordered_index];
+                bool found = false;
+                for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
+                {
+                    const CoordinatorMember &candidate = coordinator_context.members[index];
+                    if (candidate.connection == ordered_connection &&
+                        candidate.information.rank > previous_rank)
+                    {
+                        previous_rank = candidate.information.rank;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    k_spin_unlock(&coordinator_context.lock, key);
+                    return;
+                }
             }
+            coordinator_context.operation = {};
+            coordinator_context.last_error = Error::none;
+            coordinator_context.native_code = 0;
+            coordinator_context.stage = CsipStage::ready;
             k_spin_unlock(&coordinator_context.lock, key);
         }
 
@@ -723,9 +883,41 @@ namespace nucode::ble::audio
             k_spin_unlock(&member_context.lock, context_key);
             return error;
         }
+        if (member_context.quarantined)
+        {
+            if (member_context.in_flight != 0U || member_context.transitioning ||
+                member_context.instance == nullptr)
+            {
+                k_spin_unlock(&member_context.lock, context_key);
+                return Error::busy;
+            }
+            struct bt_csip_set_member_svc_inst *const quarantined_instance =
+                member_context.instance;
+            member_context.transitioning = true;
+            k_spin_unlock(&member_context.lock, context_key);
+            const int cleanup_result = bt_csip_set_member_unregister(quarantined_instance);
+            context_key = k_spin_lock(&member_context.lock);
+            member_context.last_error = publicError(cleanup_result);
+            member_context.native_code = cleanup_result;
+            member_context.transitioning = false;
+            if (cleanup_result != 0 || member_context.instance != quarantined_instance ||
+                !member_context.quarantined)
+            {
+                const Error error = cleanup_result == 0 ? Error::busy
+                                                        : publicError(cleanup_result);
+                k_spin_unlock(&member_context.lock, context_key);
+                return error;
+            }
+            member_context.instance = nullptr;
+            member_context.quarantined = false;
+        }
         member_context.owner = this;
         member_context.transitioning = true;
         member_context.identity_authorized = false;
+        member_context.authorized_identity = {};
+        member_context.authorized_connection = BLEConnectionHandle{};
+        member_context.authorized_local_id = 0U;
+        member_context.session = nextMemberSessionLocked();
         k_spin_unlock(&member_context.lock, context_key);
         struct bt_csip_set_member_register_param parameters = {
             .set_size = configuration.set_size,
@@ -743,6 +935,7 @@ namespace nucode::ble::audio
         {
             member_context.instance = registered_instance;
             member_context.transitioning = false;
+            member_context.quarantined = false;
             atomic_set(&member_context.locked, 0);
             atomic_set(&member_context.lock_changes, 0);
         }
@@ -751,6 +944,7 @@ namespace nucode::ble::audio
             member_context.owner = nullptr;
             member_context.instance = nullptr;
             member_context.transitioning = false;
+            member_context.session = 0U;
         }
         const Error public_result = member_context.last_error;
         k_spin_unlock(&member_context.lock, context_key);
@@ -776,13 +970,48 @@ namespace nucode::ble::audio
             return Error::busy;
         }
         struct bt_csip_set_member_svc_inst *const instance = member_context.instance;
+        const std::uint32_t session = member_context.session;
         member_context.transitioning = true;
         k_spin_unlock(&member_context.lock, context_key);
+
+        const std::uint32_t deadline = k_uptime_get_32() + member_end_timeout_ms;
+        for (;;)
+        {
+            context_key = k_spin_lock(&member_context.lock);
+            const bool current = member_context.owner == this &&
+                                 member_context.instance == instance &&
+                                 member_context.session == session;
+            const bool drained = member_context.in_flight == 0U;
+            k_spin_unlock(&member_context.lock, context_key);
+            if (!current)
+            {
+                return Error::busy;
+            }
+            if (drained)
+            {
+                break;
+            }
+            if (static_cast<std::int32_t>(k_uptime_get_32() - deadline) >= 0)
+            {
+                context_key = k_spin_lock(&member_context.lock);
+                if (member_context.owner == this && member_context.instance == instance &&
+                    member_context.session == session)
+                {
+                    member_context.transitioning = false;
+                    member_context.last_error = Error::busy;
+                    member_context.native_code = -ETIMEDOUT;
+                }
+                k_spin_unlock(&member_context.lock, context_key);
+                return Error::busy;
+            }
+            k_yield();
+        }
         const int result = bt_csip_set_member_unregister(instance);
         context_key = k_spin_lock(&member_context.lock);
         member_context.last_error = publicError(result);
         member_context.native_code = result;
-        if (member_context.owner == this && member_context.instance == instance)
+        if (member_context.owner == this && member_context.instance == instance &&
+            member_context.session == session)
         {
             if (result == 0)
             {
@@ -790,6 +1019,10 @@ namespace nucode::ble::audio
                 member_context.instance = nullptr;
                 member_context.identity_authorized = false;
                 member_context.authorized_identity = {};
+                member_context.authorized_connection = BLEConnectionHandle{};
+                member_context.authorized_local_id = 0U;
+                member_context.session = 0U;
+                member_context.quarantined = false;
                 atomic_set(&member_context.locked, 0);
             }
             member_context.transitioning = false;
@@ -802,16 +1035,35 @@ namespace nucode::ble::audio
 #endif
     }
 
+    void CsipSetMember::abandon() noexcept
+    {
+#if defined(CONFIG_BT_CSIP_SET_MEMBER)
+        k_spinlock_key_t key = k_spin_lock(&member_context.lock);
+        if (member_context.owner == this)
+        {
+            member_context.owner = nullptr;
+            member_context.identity_authorized = false;
+            member_context.authorized_identity = {};
+            member_context.authorized_connection = BLEConnectionHandle{};
+            member_context.authorized_local_id = 0U;
+            member_context.session = nextMemberSessionLocked();
+            member_context.transitioning = false;
+            member_context.quarantined = member_context.instance != nullptr;
+        }
+        k_spin_unlock(&member_context.lock, key);
+#endif
+    }
+
     Error CsipSetMember::generateRsi(std::uint8_t (&rsi)[6]) noexcept
     {
 #if defined(CONFIG_BT_CSIP_SET_MEMBER)
-        struct bt_csip_set_member_svc_inst *const instance = memberInstance(this);
-        if (instance == nullptr)
+        MemberOperation operation;
+        if (!acquireMemberOperation(this, operation))
         {
             return Error::not_started;
         }
-        const int result = bt_csip_set_member_generate_rsi(instance, rsi);
-        recordMemberResult(this, instance, result);
+        const int result = bt_csip_set_member_generate_rsi(operation.instance, rsi);
+        releaseMemberOperation(this, operation, result);
         return publicError(result);
 #else
         ARG_UNUSED(rsi);
@@ -823,6 +1075,27 @@ namespace nucode::ble::audio
                                            bool authorized) noexcept
     {
 #if defined(CONFIG_BT_CSIP_SET_MEMBER)
+        if (!authorized)
+        {
+            k_spinlock_key_t revoke_key = k_spin_lock(&member_context.lock);
+            if (member_context.owner != this || member_context.instance == nullptr ||
+                member_context.transitioning)
+            {
+                k_spin_unlock(&member_context.lock, revoke_key);
+                return Error::not_started;
+            }
+            if (member_context.authorized_connection == connection)
+            {
+                member_context.identity_authorized = false;
+                member_context.authorized_identity = {};
+                member_context.authorized_connection = BLEConnectionHandle{};
+                member_context.authorized_local_id = 0U;
+            }
+            member_context.last_error = Error::none;
+            member_context.native_code = 0;
+            k_spin_unlock(&member_context.lock, revoke_key);
+            return Error::none;
+        }
         struct bt_conn *native_connection = internal::referenceConnection(connection);
         if (native_connection == nullptr)
         {
@@ -848,6 +1121,7 @@ namespace nucode::ble::audio
         member_context.identity_authorized = authorized;
         member_context.authorized_local_id = authorized ? information.id : 0U;
         member_context.authorized_identity = authorized ? identity : bt_addr_le_t{};
+        member_context.authorized_connection = authorized ? connection : BLEConnectionHandle{};
         member_context.last_error = Error::none;
         member_context.native_code = 0;
         k_spin_unlock(&member_context.lock, key);
@@ -862,13 +1136,13 @@ namespace nucode::ble::audio
     Error CsipSetMember::setKey(const CsipSetKey &key) noexcept
     {
 #if defined(CONFIG_BT_CSIP_SET_MEMBER)
-        struct bt_csip_set_member_svc_inst *const instance = memberInstance(this);
-        if (instance == nullptr)
+        MemberOperation operation;
+        if (!acquireMemberOperation(this, operation))
         {
             return Error::not_started;
         }
-        const int result = bt_csip_set_member_sirk(instance, key.bytes);
-        recordMemberResult(this, instance, result);
+        const int result = bt_csip_set_member_sirk(operation.instance, key.bytes);
+        releaseMemberOperation(this, operation, result);
         return publicError(result);
 #else
         ARG_UNUSED(key);
@@ -879,18 +1153,26 @@ namespace nucode::ble::audio
     Error CsipSetMember::setSizeAndRank(std::uint8_t set_size, std::uint8_t rank) noexcept
     {
 #if defined(CONFIG_BT_CSIP_SET_MEMBER)
-        struct bt_csip_set_member_svc_inst *const instance = memberInstance(this);
-        if (instance == nullptr)
-        {
-            return Error::not_started;
-        }
         if (set_size == 0U || rank == 0U || rank > set_size)
         {
             return Error::invalid_argument;
         }
-        const int result =
-            bt_csip_set_member_set_size_and_rank(instance, set_size, rank);
-        recordMemberResult(this, instance, result);
+        MemberOperation operation;
+        if (!acquireMemberOperation(this, operation))
+        {
+            return Error::not_started;
+        }
+        struct bt_csip_set_member_set_info current = {};
+        int result = bt_csip_set_member_get_info(operation.instance, &current);
+        if (result == 0 && current.set_size == set_size)
+        {
+            result = current.rank == rank ? 0 : -ENOTSUP;
+        }
+        else if (result == 0)
+        {
+            result = bt_csip_set_member_set_size_and_rank(operation.instance, set_size, rank);
+        }
+        releaseMemberOperation(this, operation, result);
         return publicError(result);
 #else
         ARG_UNUSED(set_size);
@@ -902,13 +1184,13 @@ namespace nucode::ble::audio
     Error CsipSetMember::forceRelease() noexcept
     {
 #if defined(CONFIG_BT_CSIP_SET_MEMBER)
-        struct bt_csip_set_member_svc_inst *const instance = memberInstance(this);
-        if (instance == nullptr)
+        MemberOperation operation;
+        if (!acquireMemberOperation(this, operation))
         {
             return Error::not_started;
         }
-        const int result = bt_csip_set_member_lock(instance, false, true);
-        recordMemberResult(this, instance, result);
+        const int result = bt_csip_set_member_lock(operation.instance, false, true);
+        releaseMemberOperation(this, operation, result);
         return publicError(result);
 #else
         return Error::unsupported;
@@ -918,15 +1200,15 @@ namespace nucode::ble::audio
     Error CsipSetMember::info(CsipMemberInfo &information) const noexcept
     {
 #if defined(CONFIG_BT_CSIP_SET_MEMBER)
-        struct bt_csip_set_member_svc_inst *const instance = memberInstance(this);
-        if (instance == nullptr)
+        MemberOperation operation;
+        if (!acquireMemberOperation(this, operation))
         {
             return Error::not_started;
         }
         struct bt_csip_set_member_set_info native_information = {};
         const int result =
-            bt_csip_set_member_get_info(instance, &native_information);
-        recordMemberResult(this, instance, result);
+            bt_csip_set_member_get_info(operation.instance, &native_information);
+        releaseMemberOperation(this, operation, result);
         if (result == 0)
         {
             information = {
@@ -1070,8 +1352,7 @@ namespace nucode::ble::audio
             k_spin_unlock(&coordinator_context.lock, key);
             return Error::none;
         }
-        if (coordinator_context.owner != this ||
-            coordinator_context.stage == CsipStage::operating)
+        if (coordinator_context.owner != this)
         {
             k_spin_unlock(&coordinator_context.lock, key);
             return Error::busy;
@@ -1175,7 +1456,7 @@ namespace nucode::ble::audio
             if (coordinator_context.operation.active &&
                 coordinator_context.operation.identity == operation_identity)
             {
-                coordinator_context.operation = {};
+                invalidateCoordinatorOperationLocked();
                 coordinator_context.pending_connection = BLEConnectionHandle{};
                 coordinator_context.last_error = publicError(result);
                 coordinator_context.native_code = result;
@@ -1200,6 +1481,20 @@ namespace nucode::ble::audio
         k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
         if (coordinator_context.owner == this)
         {
+            if (coordinator_context.operation.active &&
+                static_cast<std::uint32_t>(k_uptime_get_32() -
+                                           coordinator_context.operation.started_ms) >=
+                    coordinator_operation_timeout_ms)
+            {
+                if (coordinator_context.operation.step == CsipStep::discover)
+                {
+                    coordinator_context.pending_connection = BLEConnectionHandle{};
+                }
+                invalidateCoordinatorOperationLocked();
+                coordinator_context.last_error = Error::busy;
+                coordinator_context.native_code = -ETIMEDOUT;
+                coordinator_context.stage = CsipStage::failed;
+            }
             count = coordinator_context.member_count;
             pending_connection = coordinator_context.pending_connection;
             for (std::size_t index = 0U; index < count; ++index)

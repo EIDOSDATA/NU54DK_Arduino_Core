@@ -33,6 +33,7 @@ class CsipGapTests(unittest.TestCase):
                 "-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24",
                 "-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8",
                 "-DCONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS=2",
+                "-DCONFIG_BT_CENTRAL=1",
                 "-DCONFIG_BT_MAX_CONN=2",
                 "-DCONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0",
                 "-DCONFIG_BT_PERIPHERAL=0",
@@ -88,6 +89,7 @@ class CsipGapTests(unittest.TestCase):
                 "-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24",
                 "-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8",
                 "-DCONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS=2",
+                "-DCONFIG_BT_CENTRAL=1",
                 "-DCONFIG_BT_MAX_CONN=2",
                 "-DCONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0",
                 "-DCONFIG_BT_PERIPHERAL=0",
@@ -156,6 +158,7 @@ class CsipGapTests(unittest.TestCase):
         )
         for token in (
             "CONFIG_BT_MAX_CONN < 2",
+            "CONFIG_BT_CENTRAL",
             "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT != 0",
             "Two central slots require a central-only Bluetooth Host",
             "slot.reserved",
@@ -182,6 +185,7 @@ class CsipGapTests(unittest.TestCase):
                 "-fsyntax-only",
                 "-DCONFIG_BT_DEVICE_NAME_MAX=32",
                 "-DCONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS=2",
+                "-DCONFIG_BT_CENTRAL=1",
                 "-I",
                 str(ROOT / "tests/host/ble_stubs"),
                 "-I",
@@ -189,6 +193,8 @@ class CsipGapTests(unittest.TestCase):
                 str(source),
             ]
             invalid_allocations = (
+                ("-UCONFIG_BT_CENTRAL",),
+                ("-DCONFIG_BT_CENTRAL=0",),
                 ("-DCONFIG_BT_MAX_CONN=1", "-DCONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0"),
                 ("-DCONFIG_BT_MAX_CONN=2", "-DCONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1"),
             )

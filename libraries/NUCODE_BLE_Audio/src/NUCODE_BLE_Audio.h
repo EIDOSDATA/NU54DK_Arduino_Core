@@ -1649,7 +1649,10 @@ namespace nucode::ble::audio
 
         ~CsipSetMember()
         {
-            (void)end();
+            if (end() != Error::none)
+            {
+                abandon();
+            }
         }
 
         CsipSetMember(const CsipSetMember &) = delete;
@@ -1673,7 +1676,10 @@ namespace nucode::ble::audio
         /** @brief 등록된 service의 SIRK를 변경합니다. */
         Error setKey(const CsipSetKey &key) noexcept;
 
-        /** @brief size 변경과 함께 rank를 원자적으로 갱신합니다. */
+        /**
+         * @brief size 변경과 함께 rank를 원자적으로 갱신합니다.
+         * @note 고정 SDK 제약으로 size가 같은 rank-only 변경은 unsupported입니다.
+         */
         Error setSizeAndRank(std::uint8_t set_size, std::uint8_t rank) noexcept;
 
         /** @brief 잠금 소유자와 무관하게 local CSIS 잠금을 해제합니다. */
@@ -1696,6 +1702,10 @@ namespace nucode::ble::audio
 
         /** @brief 마지막 CSIS 원본 오류를 반환합니다. */
         [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        /** @brief unregister 실패 시 callback owner를 안전하게 격리합니다. */
+        void abandon() noexcept;
     };
 
     /** @brief 최대 두 bonded peer의 Coordinated Set을 검색하고 잠급니다. */

@@ -19,6 +19,10 @@ namespace
     bool candidateReady = false;
     bool scanPending = false;
     bool recoveryPending = false;
+    std::uint32_t progressDeadlineMs = 0U;
+
+    constexpr std::uint32_t securityTimeoutMs = 30000U;
+    constexpr std::uint32_t discoveryTimeoutMs = 15000U;
 
     /** @brief 이 고정 키는 로컬 상호운용 시험 전용이며 제품에는 고유 비밀을 주입해야 합니다. */
     constexpr nucode::ble::audio::CsipSetKey setKey = {{
@@ -48,6 +52,19 @@ namespace
         {
             if (BLEConnection.connected(links[index]) &&
                 BLEConnection.peerAddress(links[index]) == address)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** @brief 보안 event의 exact handle이 현재 session 링크인지 확인합니다. */
+    bool currentLink(const nucode::ble::BLEConnectionHandle &connection)
+    {
+        for (std::size_t index = 0U; index < linkCount; ++index)
+        {
+            if (links[index] == connection)
             {
                 return true;
             }
@@ -85,6 +102,11 @@ namespace
             if (!BLESecurity.requestSecurity(information.connection))
             {
                 Serial.println("Set coordinator security request failed");
+                recoveryPending = true;
+            }
+            else
+            {
+                progressDeadlineMs = millis() + securityTimeoutMs;
             }
         }
         else if (information.event == nucode::ble::BLEEvent::disconnected)
@@ -100,6 +122,7 @@ namespace
                 }
             }
             reportedMembers = coordinator.memberCount();
+            progressDeadlineMs = 0U;
             scanPending = true;
         }
     }
@@ -123,6 +146,19 @@ namespace
                 Serial.println("Set member discovery failed to start");
                 recoveryPending = true;
             }
+            else
+            {
+                progressDeadlineMs = millis() + discoveryTimeoutMs;
+            }
+        }
+        else if (currentLink(record.connection) &&
+                 (record.event == nucode::ble::SecurityEvent::pairing_failed ||
+                  record.event == nucode::ble::SecurityEvent::pairing_cancelled ||
+                  record.event == nucode::ble::SecurityEvent::timeout ||
+                  record.event == nucode::ble::SecurityEvent::error))
+        {
+            Serial.println("Set coordinator security failed");
+            recoveryPending = true;
         }
     }
 
@@ -166,6 +202,7 @@ namespace
         linkCount = 0U;
         reportedMembers = 0U;
         candidateReady = false;
+        progressDeadlineMs = 0U;
         require(coordinator.begin(setKey, 2U) == nucode::ble::audio::Error::none,
                 "coordinator-rebegin");
         require(BLEScan.start(true), "coordinator-rescan");
@@ -200,6 +237,14 @@ void loop()
     BLESecurity.poll();
     coordinator.poll();
 
+    if (progressDeadlineMs != 0U &&
+        static_cast<std::int32_t>(millis() - progressDeadlineMs) >= 0)
+    {
+        Serial.println("Set coordinator progress timeout");
+        progressDeadlineMs = 0U;
+        recoveryPending = true;
+    }
+
     if (coordinator.stage() == nucode::ble::audio::CsipStage::failed)
     {
         recoveryPending = true;
@@ -222,6 +267,7 @@ void loop()
     if (coordinator.memberCount() != reportedMembers)
     {
         reportedMembers = coordinator.memberCount();
+        progressDeadlineMs = 0U;
         printMembers();
         if (!coordinator.ready() && !BLEScan.running() && !BLEConnection.connecting())
         {
