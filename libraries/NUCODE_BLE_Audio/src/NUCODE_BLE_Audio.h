@@ -1660,7 +1660,10 @@ namespace nucode::ble::audio
         CsipSetMember(CsipSetMember &&) = delete;
         CsipSetMember &operator=(CsipSetMember &&) = delete;
 
-        /** @brief CSIS service를 주어진 key·size·rank로 등록합니다. */
+        /**
+         * @brief CSIS service를 주어진 key·size·rank로 등록합니다.
+         * @note lockable service는 rank 1..size, non-lockable service는 rank 0만 허용합니다.
+         */
         Error begin(const CsipMemberConfig &configuration) noexcept;
 
         /** @brief 등록한 CSIS service를 해제합니다. */
@@ -1679,6 +1682,7 @@ namespace nucode::ble::audio
         /**
          * @brief size 변경과 함께 rank를 원자적으로 갱신합니다.
          * @note 고정 SDK 제약으로 size가 같은 rank-only 변경은 unsupported입니다.
+         * @note 현재 service가 non-lockable이면 rank는 0이어야 합니다.
          */
         Error setSizeAndRank(std::uint8_t set_size, std::uint8_t rank) noexcept;
 

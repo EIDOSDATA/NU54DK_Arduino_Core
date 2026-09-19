@@ -12,8 +12,19 @@
 namespace
 {
     nucode::ble::audio::CsipSetMember setMember;
+    nucode::ble::BLEConnectionHandle activeConnection;
     nucode::ble::BLEConnectionHandle authorizationCandidate;
     std::uint32_t reportedLockChanges = 0U;
+    std::uint32_t securityDeadlineMs = 0U;
+    std::uint32_t recoveryRetryMs = 0U;
+    std::uint32_t disconnectDeadlineMs = 0U;
+    bool recoveryPending = false;
+    bool disconnectPending = false;
+    bool advertisingRestartPending = false;
+
+    constexpr std::uint32_t securityTimeoutMs = 30000U;
+    constexpr std::uint32_t disconnectTimeoutMs = 5000U;
+    constexpr std::uint32_t recoveryRetryMsValue = 250U;
 
     /** @brief 이 고정 키는 로컬 상호운용 시험 전용이며 제품에는 고유 비밀을 주입해야 합니다. */
     constexpr nucode::ble::audio::CsipSetKey setKey = {{
@@ -46,6 +57,17 @@ namespace
                BLEAdvertising.setResolvableSetIdentifier(rsi) && BLEAdvertising.start();
     }
 
+    /** @brief 현재 exact link를 보안 실패 복구 대상으로 표시합니다. */
+    void requestConnectionRecovery(const nucode::ble::BLEConnectionHandle &connection)
+    {
+        if (activeConnection == connection)
+        {
+            securityDeadlineMs = 0U;
+            recoveryPending = true;
+            recoveryRetryMs = millis();
+        }
+    }
+
     /** @brief 두 member가 같은 sketch에서 서로 다른 rank를 선택하게 합니다. */
     std::uint8_t chooseRank()
     {
@@ -70,9 +92,19 @@ namespace
         static_cast<void>(context);
         if (information.event == nucode::ble::BLEEvent::connected)
         {
+            activeConnection = information.connection;
+            authorizationCandidate = {};
+            recoveryPending = false;
+            disconnectPending = false;
+            advertisingRestartPending = false;
             if (!BLESecurity.requestSecurity(information.connection))
             {
                 Serial.println("Set member security request failed");
+                requestConnectionRecovery(information.connection);
+            }
+            else
+            {
+                securityDeadlineMs = millis() + securityTimeoutMs;
             }
         }
         else if (information.event == nucode::ble::BLEEvent::disconnected)
@@ -86,9 +118,15 @@ namespace
                 }
                 authorizationCandidate = {};
             }
-            if (!BLEAdvertising.running() && !startMemberAdvertising())
+            if (activeConnection == information.connection)
             {
-                Serial.println("Set member advertising restart failed");
+                activeConnection = {};
+                securityDeadlineMs = 0U;
+                recoveryPending = false;
+                disconnectPending = false;
+                disconnectDeadlineMs = 0U;
+                advertisingRestartPending = true;
+                recoveryRetryMs = millis();
             }
         }
     }
@@ -102,13 +140,28 @@ namespace
             if (!BLESecurity.acceptPairing(record.connection, true))
             {
                 Serial.println("Set member pairing approval failed");
+                requestConnectionRecovery(record.connection);
             }
         }
         else if (record.event == nucode::ble::SecurityEvent::paired ||
                  record.event == nucode::ble::SecurityEvent::bond_verified)
         {
-            authorizationCandidate = record.connection;
-            Serial.println("Set member bonded; physically verify the controller, then send a");
+            if (record.connection == activeConnection && !recoveryPending &&
+                !disconnectPending)
+            {
+                securityDeadlineMs = 0U;
+                authorizationCandidate = record.connection;
+                Serial.println("Set member bonded; physically verify the controller, then send a");
+            }
+        }
+        else if (record.connection == activeConnection &&
+                 (record.event == nucode::ble::SecurityEvent::pairing_failed ||
+                  record.event == nucode::ble::SecurityEvent::pairing_cancelled ||
+                  record.event == nucode::ble::SecurityEvent::timeout ||
+                  record.event == nucode::ble::SecurityEvent::error))
+        {
+            Serial.println("Set member security failed");
+            requestConnectionRecovery(record.connection);
         }
     }
 } // namespace
@@ -144,6 +197,59 @@ void loop()
 {
     BLEDevice.poll();
     BLESecurity.poll();
+
+    if (securityDeadlineMs != 0U &&
+        static_cast<std::int32_t>(millis() - securityDeadlineMs) >= 0)
+    {
+        Serial.println("Set member security timeout");
+        requestConnectionRecovery(activeConnection);
+    }
+    if (disconnectPending &&
+        static_cast<std::int32_t>(millis() - disconnectDeadlineMs) >= 0)
+    {
+        Serial.println("Set member recovery disconnect timeout");
+        disconnectPending = false;
+        recoveryPending = true;
+        recoveryRetryMs = millis();
+    }
+    if (recoveryPending && !disconnectPending &&
+        static_cast<std::int32_t>(millis() - recoveryRetryMs) >= 0)
+    {
+        if (activeConnection.valid() && BLEConnection.connected(activeConnection))
+        {
+            if (BLEConnection.disconnect(activeConnection))
+            {
+                disconnectPending = true;
+                disconnectDeadlineMs = millis() + disconnectTimeoutMs;
+                recoveryPending = false;
+            }
+            else
+            {
+                Serial.println("Set member recovery disconnect failed");
+                recoveryRetryMs = millis() + recoveryRetryMsValue;
+            }
+        }
+        else
+        {
+            activeConnection = {};
+            recoveryPending = false;
+            advertisingRestartPending = true;
+            recoveryRetryMs = millis();
+        }
+    }
+    if (advertisingRestartPending &&
+        static_cast<std::int32_t>(millis() - recoveryRetryMs) >= 0)
+    {
+        if (BLEAdvertising.running() || startMemberAdvertising())
+        {
+            advertisingRestartPending = false;
+        }
+        else
+        {
+            Serial.println("Set member advertising restart failed");
+            recoveryRetryMs = millis() + recoveryRetryMsValue;
+        }
+    }
 
     if (setMember.lockChanges() != reportedLockChanges)
     {

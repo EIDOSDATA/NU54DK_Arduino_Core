@@ -225,11 +225,29 @@ namespace nucode::ble::audio
                 *members[CsipSetCoordinator::maximum_members] = {};
             const struct bt_csip_set_coordinator_csis_inst
                 *instances[CsipSetCoordinator::maximum_members] = {};
-            const struct bt_csip_set_coordinator_set_info *set_info = nullptr;
+            struct bt_csip_set_coordinator_set_info set_info = {};
             std::uint32_t started_ms = 0U;
             std::uint8_t count = 0U;
+            bool set_info_valid = false;
             bool active = false;
             bool valid = false;
+        };
+
+        /** @brief 남은 member의 고아 잠금을 exact session 안에서 정리합니다. */
+        struct CoordinatorCleanup
+        {
+            std::uint32_t session = 0U;
+            std::uint32_t started_ms = 0U;
+            std::uint32_t next_attempt_ms = 0U;
+            BLEConnectionHandle connections[CsipSetCoordinator::maximum_members] = {};
+            const struct bt_csip_set_coordinator_set_member
+                *members[CsipSetCoordinator::maximum_members] = {};
+            const struct bt_csip_set_coordinator_csis_inst
+                *instances[CsipSetCoordinator::maximum_members] = {};
+            std::uint8_t count = 0U;
+            std::uint8_t attempts = 0U;
+            bool pending = false;
+            bool starting = false;
         };
 
         /** @brief callback 등록은 image 수명 한 번, 공개 owner는 한 번에 하나입니다. */
@@ -254,6 +272,7 @@ namespace nucode::ble::audio
             std::uint32_t next_operation_identity = 1U;
             std::uint32_t tokenless_quarantine_until_ms = 0U;
             CoordinatorOperation operation;
+            CoordinatorCleanup cleanup;
             struct k_spinlock lock;
         };
 
@@ -261,6 +280,9 @@ namespace nucode::ble::audio
 
         constexpr std::uint32_t coordinator_operation_timeout_ms = 15000U;
         constexpr std::uint32_t coordinator_callback_quarantine_ms = 35000U;
+        constexpr std::uint32_t coordinator_cleanup_retry_ms = 250U;
+        constexpr std::uint32_t coordinator_cleanup_timeout_ms = 120000U;
+        constexpr std::uint8_t coordinator_cleanup_max_attempts = 3U;
 
         /** @brief callback instance와 exact 연결 session을 함께 보존합니다. */
         struct CoordinatorMemberSnapshot
@@ -291,6 +313,7 @@ namespace nucode::ble::audio
             coordinator_context.lock_changes = 0U;
             coordinator_context.locked = false;
             coordinator_context.session = 0U;
+            coordinator_context.cleanup = {};
         }
 
         /** @brief 0을 건너뛰는 coordinator session 번호를 발급합니다. */
@@ -343,7 +366,8 @@ namespace nucode::ble::audio
             }
             if (operation.count != 0U)
             {
-                operation.set_info = &coordinator_context.members[0].instance->info;
+                operation.set_info = coordinator_context.members[0].instance->info;
+                operation.set_info_valid = true;
             }
             coordinator_context.operation = operation;
             return true;
@@ -464,6 +488,77 @@ namespace nucode::ble::audio
             return true;
         }
 
+        /** @brief cleanup snapshot이 현재 session의 남은 exact member 집합인지 확인합니다. */
+        bool coordinatorCleanupCurrentLocked() noexcept
+        {
+            const CoordinatorCleanup &cleanup = coordinator_context.cleanup;
+            if (!cleanup.pending || coordinator_context.owner == nullptr ||
+                cleanup.session != coordinator_context.session ||
+                cleanup.count != coordinator_context.member_count)
+            {
+                return false;
+            }
+            for (std::size_t index = 0U; index < cleanup.count; ++index)
+            {
+                const CoordinatorMember &member = coordinator_context.members[index];
+                if (member.connection != cleanup.connections[index] ||
+                    member.member != cleanup.members[index] ||
+                    member.instance != cleanup.instances[index])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /** @brief 남은 exact member 집합의 release 재시도 상태를 설정합니다. */
+        void scheduleCoordinatorCleanupLocked() noexcept
+        {
+            if (coordinator_context.owner == nullptr ||
+                coordinator_context.member_count == 0U)
+            {
+                coordinator_context.cleanup = {};
+                return;
+            }
+            const std::uint32_t now = k_uptime_get_32();
+            const bool continuing = coordinator_context.cleanup.pending &&
+                                    coordinator_context.cleanup.session ==
+                                        coordinator_context.session;
+            const std::uint32_t started =
+                continuing ? coordinator_context.cleanup.started_ms : now;
+            const std::uint8_t attempts =
+                continuing ? coordinator_context.cleanup.attempts : 0U;
+            coordinator_context.cleanup = {};
+            coordinator_context.cleanup.session = coordinator_context.session;
+            coordinator_context.cleanup.started_ms = started;
+            coordinator_context.cleanup.next_attempt_ms = now;
+            coordinator_context.cleanup.count = coordinator_context.member_count;
+            coordinator_context.cleanup.attempts = attempts;
+            coordinator_context.cleanup.pending = true;
+            for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
+            {
+                coordinator_context.cleanup.connections[index] =
+                    coordinator_context.members[index].connection;
+                coordinator_context.cleanup.members[index] =
+                    coordinator_context.members[index].member;
+                coordinator_context.cleanup.instances[index] =
+                    coordinator_context.members[index].instance;
+            }
+        }
+
+        /** @brief SDK 복사본의 전체 set 값을 현재 operation snapshot과 대조합니다. */
+        bool coordinatorSetInfoCurrentLocked(
+            const struct bt_csip_set_coordinator_set_info *set_info) noexcept
+        {
+            const CoordinatorOperation &operation = coordinator_context.operation;
+            return set_info != nullptr && operation.set_info_valid &&
+                   ::memcmp(set_info->sirk, operation.set_info.sirk,
+                            sizeof(operation.set_info.sirk)) == 0 &&
+                   set_info->set_size == operation.set_info.set_size &&
+                   set_info->rank == operation.set_info.rank &&
+                   set_info->lockable == operation.set_info.lockable;
+        }
+
         /** @brief exact member 상태가 목표와 일치할 때만 lock/release를 완료합니다. */
         bool completeCoordinatorLockOperationLocked(CsipStep step, bool locked) noexcept
         {
@@ -479,11 +574,23 @@ namespace nucode::ble::audio
                     return false;
                 }
             }
+            const bool cleanup = step == CsipStep::release &&
+                                 coordinatorCleanupCurrentLocked();
             coordinator_context.operation = {};
             coordinator_context.locked = locked;
             coordinator_context.last_error = Error::none;
             coordinator_context.native_code = 0;
-            coordinator_context.stage = locked ? CsipStage::locked : CsipStage::ready;
+            if (cleanup)
+            {
+                coordinator_context.cleanup = {};
+                coordinator_context.last_step = CsipStep::cleanup;
+            }
+            coordinator_context.stage =
+                locked ? CsipStage::locked
+                       : (coordinator_context.member_count ==
+                                  coordinator_context.expected_members
+                              ? CsipStage::ready
+                              : CsipStage::discovering);
             return true;
         }
 
@@ -609,6 +716,10 @@ namespace nucode::ble::audio
                     coordinator_context.members[index].information.locked = true;
                 }
             }
+            else
+            {
+                scheduleCoordinatorCleanupLocked();
+            }
             k_spin_unlock(&coordinator_context.lock, key);
         }
 
@@ -621,10 +732,10 @@ namespace nucode::ble::audio
                 k_spin_unlock(&coordinator_context.lock, key);
                 return;
             }
+            const bool cleanup = coordinatorCleanupCurrentLocked();
             coordinator_context.operation = {};
             coordinator_context.last_error = publicError(error);
             coordinator_context.native_code = error;
-            coordinator_context.stage = error == 0 ? CsipStage::ready : CsipStage::failed;
             if (error == 0)
             {
                 coordinator_context.locked = false;
@@ -632,6 +743,29 @@ namespace nucode::ble::audio
                 {
                     coordinator_context.members[index].information.locked = false;
                 }
+                if (cleanup)
+                {
+                    coordinator_context.cleanup = {};
+                    coordinator_context.last_step = CsipStep::cleanup;
+                }
+                coordinator_context.stage =
+                    coordinator_context.member_count ==
+                            coordinator_context.expected_members
+                        ? CsipStage::ready
+                        : CsipStage::discovering;
+            }
+            else
+            {
+                if (!cleanup)
+                {
+                    scheduleCoordinatorCleanupLocked();
+                }
+                else
+                {
+                    coordinator_context.cleanup.next_attempt_ms =
+                        k_uptime_get_32() + coordinator_cleanup_retry_ms;
+                }
+                coordinator_context.stage = CsipStage::failed;
             }
             k_spin_unlock(&coordinator_context.lock, key);
         }
@@ -690,6 +824,11 @@ namespace nucode::ble::audio
                 k_spin_unlock(&coordinator_context.lock, key);
                 return;
             }
+            const bool cleanup_required =
+                coordinator_context.locked || coordinator_context.cleanup.pending ||
+                (coordinator_context.operation.active &&
+                 (coordinator_context.operation.step == CsipStep::lock ||
+                  coordinator_context.operation.step == CsipStep::release));
             for (std::size_t index = remove_index + 1U;
                  index < coordinator_context.member_count; ++index)
             {
@@ -702,6 +841,10 @@ namespace nucode::ble::audio
             }
             coordinator_context.locked = false;
             invalidateCoordinatorOperationLocked();
+            if (cleanup_required)
+            {
+                scheduleCoordinatorCleanupLocked();
+            }
             coordinator_context.last_error = publicError(error);
             coordinator_context.native_code = error;
             coordinator_context.stage = CsipStage::discovering;
@@ -743,7 +886,7 @@ namespace nucode::ble::audio
         {
             k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
             if (!coordinatorOperationCurrentLocked(CsipStep::ordered_access) ||
-                set_info != coordinator_context.operation.set_info)
+                !coordinatorSetInfoCurrentLocked(set_info))
             {
                 k_spin_unlock(&coordinator_context.lock, key);
                 return;
@@ -816,24 +959,27 @@ namespace nucode::ble::audio
                 !coordinator_context.operation.valid ||
                 coordinator_context.operation.step != CsipStep::ordered_access ||
                 coordinator_context.operation.session != coordinator_context.session ||
-                set_info != coordinator_context.operation.set_info ||
+                !coordinatorSetInfoCurrentLocked(set_info) ||
                 count != coordinator_context.operation.count ||
                 count != coordinator_context.member_count)
             {
                 k_spin_unlock(&coordinator_context.lock, key);
                 return false;
             }
+            bool member_seen[CsipSetCoordinator::maximum_members] = {};
             for (std::size_t ordered_index = 0U; ordered_index < count; ++ordered_index)
             {
                 bool found = false;
                 for (std::size_t index = 0U; index < coordinator_context.member_count; ++index)
                 {
-                    if (coordinator_context.members[index].member ==
+                    if (!member_seen[index] &&
+                        coordinator_context.members[index].member ==
                             coordinator_context.operation.members[index] &&
                         coordinator_context.members[index].member == members[ordered_index])
                     {
                         coordinator_context.ordered[ordered_index] =
                             coordinator_context.members[index].connection;
+                        member_seen[index] = true;
                         found = true;
                         break;
                     }
@@ -867,8 +1013,11 @@ namespace nucode::ble::audio
         {
             return Error::stack_error;
         }
-        if (configuration.set_size == 0U || configuration.rank == 0U ||
-            configuration.rank > configuration.set_size)
+        const bool valid_rank = configuration.lockable
+                                    ? configuration.rank != 0U &&
+                                          configuration.rank <= configuration.set_size
+                                    : configuration.rank == 0U;
+        if (configuration.set_size == 0U || !valid_rank)
         {
             return Error::invalid_argument;
         }
@@ -1153,7 +1302,7 @@ namespace nucode::ble::audio
     Error CsipSetMember::setSizeAndRank(std::uint8_t set_size, std::uint8_t rank) noexcept
     {
 #if defined(CONFIG_BT_CSIP_SET_MEMBER)
-        if (set_size == 0U || rank == 0U || rank > set_size)
+        if (set_size == 0U)
         {
             return Error::invalid_argument;
         }
@@ -1164,7 +1313,13 @@ namespace nucode::ble::audio
         }
         struct bt_csip_set_member_set_info current = {};
         int result = bt_csip_set_member_get_info(operation.instance, &current);
-        if (result == 0 && current.set_size == set_size)
+        const bool valid_rank = current.lockable ? rank != 0U && rank <= set_size
+                                                 : rank == 0U;
+        if (result == 0 && !valid_rank)
+        {
+            result = -EINVAL;
+        }
+        else if (result == 0 && current.set_size == set_size)
         {
             result = current.rank == rank ? 0 : -ENOTSUP;
         }
@@ -1416,6 +1571,7 @@ namespace nucode::ble::audio
         k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
         if (coordinator_context.owner != this || coordinator_context.pending_connection.valid() ||
             coordinator_context.operation.active ||
+            coordinator_context.cleanup.pending ||
             coordinator_context.stage == CsipStage::operating ||
             coordinator_context.member_count >= coordinator_context.expected_members)
         {
@@ -1477,7 +1633,8 @@ namespace nucode::ble::audio
         CoordinatorMember snapshot[maximum_members] = {};
         BLEConnectionHandle pending_connection;
         std::size_t count = 0U;
-        bool release_remaining = false;
+        bool start_cleanup = false;
+        std::uint32_t cleanup_session = 0U;
         k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
         if (coordinator_context.owner == this)
         {
@@ -1486,11 +1643,19 @@ namespace nucode::ble::audio
                                            coordinator_context.operation.started_ms) >=
                     coordinator_operation_timeout_ms)
             {
+                const bool cleanup_required =
+                    coordinator_context.cleanup.pending ||
+                    coordinator_context.operation.step == CsipStep::lock ||
+                    coordinator_context.operation.step == CsipStep::release;
                 if (coordinator_context.operation.step == CsipStep::discover)
                 {
                     coordinator_context.pending_connection = BLEConnectionHandle{};
                 }
                 invalidateCoordinatorOperationLocked();
+                if (cleanup_required)
+                {
+                    scheduleCoordinatorCleanupLocked();
+                }
                 coordinator_context.last_error = Error::busy;
                 coordinator_context.native_code = -ETIMEDOUT;
                 coordinator_context.stage = CsipStage::failed;
@@ -1528,6 +1693,12 @@ namespace nucode::ble::audio
                     coordinator_context.members[index - 1U].connection ==
                         snapshot[index - 1U].connection)
                 {
+                    const bool cleanup_required =
+                        coordinator_context.locked ||
+                        coordinator_context.cleanup.pending ||
+                        (coordinator_context.operation.active &&
+                         (coordinator_context.operation.step == CsipStep::lock ||
+                          coordinator_context.operation.step == CsipStep::release));
                     for (std::size_t move = index; move < coordinator_context.member_count; ++move)
                     {
                         coordinator_context.members[move - 1U] =
@@ -1539,9 +1710,12 @@ namespace nucode::ble::audio
                     {
                         coordinator_context.ordered[ordered_index] = BLEConnectionHandle{};
                     }
-                    release_remaining = release_remaining || coordinator_context.locked;
                     coordinator_context.locked = false;
                     invalidateCoordinatorOperationLocked();
+                    if (cleanup_required)
+                    {
+                        scheduleCoordinatorCleanupLocked();
+                    }
                     coordinator_context.last_error = Error::not_connected;
                     coordinator_context.native_code = -ENOTCONN;
                     coordinator_context.stage = CsipStage::discovering;
@@ -1550,9 +1724,67 @@ namespace nucode::ble::audio
                 k_spin_unlock(&coordinator_context.lock, key);
             }
         }
-        if (release_remaining && memberCount() != 0U)
+        key = k_spin_lock(&coordinator_context.lock);
+        if (coordinator_context.owner == this && coordinator_context.cleanup.pending)
         {
-            (void)release();
+            const std::uint32_t now = k_uptime_get_32();
+            if (!coordinatorCleanupCurrentLocked())
+            {
+                coordinator_context.cleanup = {};
+                coordinator_context.last_error = Error::stack_error;
+                coordinator_context.native_code = -EIO;
+                coordinator_context.stage = CsipStage::failed;
+            }
+            else if (!coordinator_context.operation.active &&
+                     (static_cast<std::uint32_t>(
+                          now - coordinator_context.cleanup.started_ms) >=
+                          coordinator_cleanup_timeout_ms ||
+                      coordinator_context.cleanup.attempts >=
+                          coordinator_cleanup_max_attempts))
+            {
+                coordinator_context.cleanup = {};
+                coordinator_context.last_error = Error::busy;
+                coordinator_context.native_code = -ETIMEDOUT;
+                coordinator_context.stage = CsipStage::failed;
+            }
+            else
+            {
+                const bool quarantine_active =
+                    coordinator_context.tokenless_quarantine_until_ms != 0U &&
+                    static_cast<std::int32_t>(
+                        now - coordinator_context.tokenless_quarantine_until_ms) < 0;
+                if (!coordinator_context.cleanup.starting &&
+                    !coordinator_context.operation.active && !quarantine_active &&
+                    static_cast<std::int32_t>(
+                        now - coordinator_context.cleanup.next_attempt_ms) >= 0)
+                {
+                    coordinator_context.cleanup.starting = true;
+                    cleanup_session = coordinator_context.cleanup.session;
+                    start_cleanup = true;
+                }
+            }
+        }
+        k_spin_unlock(&coordinator_context.lock, key);
+        if (start_cleanup)
+        {
+            const Error result = release();
+            key = k_spin_lock(&coordinator_context.lock);
+            if (coordinator_context.owner == this &&
+                coordinator_context.cleanup.pending &&
+                coordinator_context.cleanup.session == cleanup_session)
+            {
+                coordinator_context.cleanup.starting = false;
+                if (result == Error::none)
+                {
+                    ++coordinator_context.cleanup.attempts;
+                }
+                else
+                {
+                    coordinator_context.cleanup.next_attempt_ms =
+                        k_uptime_get_32() + coordinator_cleanup_retry_ms;
+                }
+            }
+            k_spin_unlock(&coordinator_context.lock, key);
         }
 #endif
     }
@@ -1568,6 +1800,7 @@ namespace nucode::ble::audio
         k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
         if (coordinator_context.owner != this ||
             coordinator_context.member_count != coordinator_context.expected_members ||
+            coordinator_context.cleanup.pending ||
             coordinator_context.stage == CsipStage::operating ||
             coordinator_context.operation.active)
         {
@@ -1624,6 +1857,7 @@ namespace nucode::ble::audio
         k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
         if (coordinator_context.owner != this ||
             coordinator_context.member_count != coordinator_context.expected_members ||
+            coordinator_context.cleanup.pending ||
             coordinator_context.stage == CsipStage::operating ||
             coordinator_context.operation.active)
         {
@@ -1681,8 +1915,7 @@ namespace nucode::ble::audio
         std::uint8_t count = 0U;
         std::uint32_t operation_identity = 0U;
         k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-        const bool cleanup = coordinator_context.last_step == CsipStep::cleanup &&
-                             coordinator_context.member_count != 0U;
+        const bool cleanup = coordinatorCleanupCurrentLocked();
         if (coordinator_context.owner != this || (!coordinator_context.locked && !cleanup) ||
             coordinator_context.stage == CsipStage::operating ||
             coordinator_context.operation.active)

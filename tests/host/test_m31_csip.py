@@ -62,7 +62,6 @@ class CsipContractTests(unittest.TestCase):
             "coordinator_context.members[index].information.rank == instance->info.rank",
             "!BLEConnection.connected(snapshot[index - 1U].connection)",
             "!BLEConnection.connected(pending_connection)",
-            "release_remaining = release_remaining || coordinator_context.locked",
             "internal::handleForActiveConnection(connection)",
             "BT_CSIP_READ_SIRK_REQ_RSP_REJECT",
             "bt_le_bond_exists(information.id, information.le.dst)",
@@ -80,12 +79,24 @@ class CsipContractTests(unittest.TestCase):
             "member_context.authorized_connection == authorized_connection",
             "bt_csip_set_coordinator_set_member_by_conn(connection)",
             "coordinatorOperationCurrentLocked",
+            "coordinatorSetInfoCurrentLocked",
+            "operation.set_info = coordinator_context.members[0].instance->info",
+            "set_info->rank == operation.set_info.rank",
+            "set_info->lockable == operation.set_info.lockable",
             "completeCoordinatorLockOperationLocked",
             "coordinator_operation_timeout_ms",
+            "struct CoordinatorCleanup",
+            "scheduleCoordinatorCleanupLocked",
+            "coordinatorCleanupCurrentLocked",
+            "coordinator_cleanup_max_attempts",
+            "coordinator_context.cleanup.pending",
             "current.set_size == set_size",
             "current.rank == rank ? 0 : -ENOTSUP",
+            "current.lockable ? rank != 0U && rank <= set_size",
+            ": rank == 0U",
         ):
             self.assertIn(token, text)
+        self.assertNotIn("set_info != coordinator_context.operation.set_info", text)
         self.assertNotIn("TEST_SAMPLE_DATA", text)
 
     def test_examples_require_physical_sirk_approval_and_recover_discovery(self) -> None:
@@ -103,6 +114,13 @@ class CsipContractTests(unittest.TestCase):
             "startMemberAdvertising()",
             "setMember.generateRsi(rsi)",
             "setMember.authorizeSirkRead(information.connection, false)",
+            "requestConnectionRecovery(information.connection)",
+            "SecurityEvent::pairing_failed",
+            "Set member security failed",
+            "Set member security timeout",
+            "BLEConnection.disconnect(activeConnection)",
+            "advertisingRestartPending = true",
+            "disconnectDeadlineMs",
             "로컬 상호운용 시험 전용",
             "고유 비밀",
         ):
@@ -149,6 +167,11 @@ class CsipContractTests(unittest.TestCase):
         self.assertIn(
             "typedef void (*bt_csip_set_coordinator_lock_set_cb)(int err);", header
         )
+        self.assertIn("memcpy(&active.info, info, sizeof(active.info));", coordinator)
+        self.assertIn("active.oap_cb(&active.info, active.members", coordinator)
+        self.assertIn("ordered_access_complete(&active.info", coordinator)
+        self.assertIn("if (!svc_inst->lockable && rank != 0U)", member)
+        self.assertIn("if (svc_inst->lockable && !IN_RANGE(rank, 1U, size))", member)
         size_guard = member.index("if (svc_inst->set_size == size)")
         rank_write = member.index("svc_inst->rank = svc_inst->lockable ? rank : 0U;")
         self.assertLess(size_guard, rank_write)
