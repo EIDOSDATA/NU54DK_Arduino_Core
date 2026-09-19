@@ -191,6 +191,12 @@ class M13ProfileContractTests(unittest.TestCase):
                 "CapCommander",
                 "CapUnicastInitiator",
                 "CapUnicastAcceptor",
+                "CsipSetCoordinator",
+                "CsipSetMember",
+                "PublicAudioBroadcastSource",
+                "PublicAudioBroadcastSink",
+                "AudioControlController",
+                "AudioControlDevice",
             },
         )
         for sketch in examples:

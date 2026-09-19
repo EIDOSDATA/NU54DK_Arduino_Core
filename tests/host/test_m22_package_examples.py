@@ -176,6 +176,12 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "CapCommander",
                 "CapUnicastInitiator",
                 "CapUnicastAcceptor",
+                "CsipSetCoordinator",
+                "CsipSetMember",
+                "PublicAudioBroadcastSource",
+                "PublicAudioBroadcastSink",
+                "AudioControlController",
+                "AudioControlDevice",
             )
         }
         later_ble_examples |= {
