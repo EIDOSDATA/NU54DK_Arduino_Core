@@ -885,12 +885,12 @@ namespace nucode::ble::audio
             struct bt_csip_set_coordinator_set_member *member) noexcept
         {
             k_spinlock_key_t key = k_spin_lock(&coordinator_context.lock);
-            if (!coordinatorOperationCurrentLocked(CsipStep::ordered_access) ||
-                !coordinatorSetInfoCurrentLocked(set_info))
+            if (!coordinatorOperationCurrentLocked(CsipStep::ordered_access))
             {
                 k_spin_unlock(&coordinator_context.lock, key);
                 return;
             }
+            ARG_UNUSED(set_info);
             if (member != nullptr)
             {
                 bool exact_member = false;

@@ -96,6 +96,7 @@ class CsipContractTests(unittest.TestCase):
             ": rank == 0U",
         ):
             self.assertIn(token, text)
+        self.assertEqual(text.count("coordinatorSetInfoCurrentLocked(set_info)"), 1)
         self.assertNotIn("set_info != coordinator_context.operation.set_info", text)
         self.assertNotIn("TEST_SAMPLE_DATA", text)
 
@@ -170,6 +171,14 @@ class CsipContractTests(unittest.TestCase):
         self.assertIn("memcpy(&active.info, info, sizeof(active.info));", coordinator)
         self.assertIn("active.oap_cb(&active.info, active.members", coordinator)
         self.assertIn("ordered_access_complete(&active.info", coordinator)
+        completion = coordinator[
+            coordinator.index("static void ordered_access_complete(") :
+            coordinator.index("static void discover_complete(")
+        ]
+        self.assertLess(
+            completion.index("active_members_reset();"),
+            completion.index("listener->ordered_access(set_info"),
+        )
         self.assertIn("if (!svc_inst->lockable && rank != 0U)", member)
         self.assertIn("if (svc_inst->lockable && !IN_RANGE(rank, 1U, size))", member)
         size_guard = member.index("if (svc_inst->set_size == size)")

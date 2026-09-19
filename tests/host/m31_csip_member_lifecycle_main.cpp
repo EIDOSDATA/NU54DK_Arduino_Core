@@ -382,8 +382,10 @@ int main()
                                          coordinator_ordered_members, 2U));
     assert(coordinator.orderedMember(0U) == coordinator_handles[1]);
     assert(coordinator.orderedMember(1U) == coordinator_handles[0]);
-    coordinator_callbacks->ordered_access(&wrong_set, 0, false, nullptr);
+    bt_csip_set_coordinator_set_member wrong_member{};
+    coordinator_callbacks->ordered_access(&wrong_set, 0, false, &wrong_member);
     assert(coordinator.stage() == CsipStage::operating);
+    coordinator_ordered_info = {};
     coordinator_callbacks->ordered_access(&coordinator_ordered_info, 0, false, nullptr);
     assert(coordinator.ready());
     coordinator_callbacks->ordered_access(&coordinator_ordered_info, -EIO, true,
