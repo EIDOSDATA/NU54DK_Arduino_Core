@@ -121,6 +121,32 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
                     self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
                                      "PUBLIC_AUDIO_API_FLOW_MISSING")
 
+    def test_cap_unicast_sketches_keep_group_and_data_flow(self) -> None:
+        """! @brief CAP unicast의 공개 group·취소·LC3 흐름을 검사합니다. """
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            library = Path(temporary) / "NUCODE_BLE_Audio"
+            for name, token in (
+                ("CapUnicastInitiator", "initiator.cancel("),
+                ("CapUnicastAcceptor", "audioSink.readFrame("),
+            ):
+                source = ROOT / "libraries/NUCODE_BLE_Audio/examples" / name
+                sketch = library / "examples" / name / f"{name}.ino"
+                sketch.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source / f"{name}.ino", sketch)
+                shutil.copy2(source / "prj.conf", sketch.parent / "prj.conf")
+                with self.subTest(name=name, state="valid"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "VISIBLE_CODE")
+                sketch.write_text(
+                    sketch.read_text(encoding="utf-8").replace(
+                        token, token.replace("(", "Fake(")
+                    ),
+                    encoding="utf-8",
+                )
+                with self.subTest(name=name, state="mutated"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "PUBLIC_AUDIO_API_FLOW_MISSING")
+
     def test_cap_delegated_sink_must_cleanup_failed_reception(self) -> None:
         """! @brief peer loss 오류 뒤 예약된 BASS cleanup이 먼저 실행되는지 검사합니다. """
         source = (

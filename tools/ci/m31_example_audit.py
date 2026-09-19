@@ -241,6 +241,41 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_BAP_BROADCAST_ASSISTANT_RECV_STATE_COUNT=1",
                 "CONFIG_BT_BAP_BASS_MAX_SUBGROUPS=1",
             )
+        elif sketch.parent.name == "CapUnicastInitiator":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "CapUnicastInitiator", "Lc3Codec",
+                "BLEScan.start(", "BLEConnection.connect(",
+                "initiator.begin(", "initiator.poll(",
+                "initiator.start(", "initiator.cancel(",
+                "initiator.sendFrame(", "initiator.stop(",
+                "codec.encode(",
+            )
+            options = (
+                "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_GROUP_STREAM_COUNT=1",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SNK_COUNT=2",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "CapUnicastAcceptor":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "CapAcceptor", "UnicastServer", "Lc3Codec",
+                "BLEAdvertising.addServiceUuid(",
+                "acceptor.begin(", "audioSink.begin(",
+                "audioSink.readFrame(", "codec.decode(",
+            )
+            options = (
+                "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                "CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT=1",
+                "CONFIG_BT_AUDIO_CODEC_CFG_MAX_METADATA_SIZE=4",
+                "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name in {"BapUnicastSource", "BapUnicastCycle"}:
             required = (
                 "#include <NUCODE_BLE.h>",

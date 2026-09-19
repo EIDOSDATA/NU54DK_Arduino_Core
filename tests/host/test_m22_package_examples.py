@@ -158,8 +158,34 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "CISToBISReceiver",
             )
         }
-        later_ble_examples.add(("NUCODE_BLE_Audio", "Lc3SyntheticLoopback"))
-        later_ble_examples.add(("NUCODE_BLE_DirectionFinding", "CteBeacon"))
+        later_ble_examples |= {
+            ("NUCODE_BLE_Audio", name)
+            for name in (
+                "Lc3SyntheticLoopback",
+                "BapUnicastSink",
+                "BapUnicastSource",
+                "BapUnicastCycle",
+                "BapUnicastDuplexClient",
+                "BapUnicastDuplexServer",
+                "BapBroadcastSource",
+                "BapBroadcastSink",
+                "BapBroadcastAssistant",
+                "BapBroadcastDelegatorSink",
+                "CapInitiator",
+                "CapAcceptor",
+                "CapCommander",
+                "CapUnicastInitiator",
+                "CapUnicastAcceptor",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_DirectionFinding", name)
+            for name in ("CteBeacon", "ConnectedCteResponder")
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_ChannelSounding", name)
+            for name in ("RasInitiator", "RasReflector")
+        }
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(
             all_source_examples - locked_examples,

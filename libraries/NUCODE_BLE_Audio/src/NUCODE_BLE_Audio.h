@@ -290,6 +290,117 @@ namespace nucode::ble::audio
         int native_code_ = 0;
     };
 
+    /** @brief CAP unicast Initiator의 공개 비동기 단계입니다. */
+    enum class CapUnicastStage : std::uint8_t
+    {
+        idle,
+        securing,
+        discovering_common_audio_service,
+        discovering_audio_streams,
+        ready,
+        starting,
+        streaming,
+        stopping,
+        cancelled,
+        failed,
+    };
+
+    /** @brief 마지막 CAP unicast 작업을 나타냅니다. */
+    enum class CapUnicastStep : std::uint8_t
+    {
+        none,
+        security,
+        common_audio_service,
+        audio_streams,
+        group,
+        start,
+        send,
+        stop,
+        cancel,
+        cleanup,
+    };
+
+    /**
+     * @brief CAP 절차로 한 Acceptor의 mono LC3 unicast stream을 제어합니다.
+     *
+     * begin()은 연결된 Acceptor의 보안, CAS, PACS/ASCS를 차례로 확인합니다.
+     * ready() 뒤 start()를 호출하면 ad-hoc CAP unicast group을 시작합니다.
+     * 진행 중인 시작·중단 절차는 cancel()로 취소할 수 있으며, callback이 특정
+     * Acceptor 실패를 보고했는지는 failedOnPeer()로 구분합니다.
+     */
+    class CapUnicastInitiator final
+    {
+      public:
+        CapUnicastInitiator() = default;
+
+        ~CapUnicastInitiator()
+        {
+            (void)end();
+        }
+
+        CapUnicastInitiator(const CapUnicastInitiator &) = delete;
+        CapUnicastInitiator &operator=(const CapUnicastInitiator &) = delete;
+        CapUnicastInitiator(CapUnicastInitiator &&) = delete;
+        CapUnicastInitiator &operator=(CapUnicastInitiator &&) = delete;
+
+        /** @brief 연결된 Acceptor를 참조하고 보안·CAS·PACS/ASCS 검색을 시작합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief callback 결과를 Arduino 문맥에서 다음 단계로 진행합니다. */
+        void poll() noexcept;
+
+        /** @brief 준비된 Acceptor에 CAP unicast audio 시작 절차를 요청합니다. */
+        Error start() noexcept;
+
+        /** @brief 진행 중인 CAP unicast 시작·중단 절차를 취소합니다. */
+        Error cancel() noexcept;
+
+        /** @brief streaming stream을 중단하고 Acceptor ASE를 release합니다. */
+        Error stop() noexcept;
+
+        /** @brief group, callback과 연결 참조를 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief CAP group 시작을 요청할 준비가 되었는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief CIS가 LC3 frame 전송 가능한 상태인지 반환합니다. */
+        [[nodiscard]] bool streaming() const noexcept;
+
+        /** @brief 마지막 완료 callback이 명시적 취소를 확인했는지 반환합니다. */
+        [[nodiscard]] bool cancelled() const noexcept;
+
+        /** @brief 마지막 실패 callback이 특정 Acceptor를 지목했는지 반환합니다. */
+        [[nodiscard]] bool failedOnPeer() const noexcept;
+
+        /** @brief 현재 CAP unicast 단계를 반환합니다. */
+        [[nodiscard]] CapUnicastStage stage() const noexcept;
+
+        /** @brief 마지막 CAP unicast 작업을 반환합니다. */
+        [[nodiscard]] CapUnicastStep lastStep() const noexcept;
+
+        /** @brief CIS로 LC3 frame 하나를 비차단 전송합니다. */
+        Error sendFrame(const std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief controller에 수락된 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t sentFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 CAP/GATT/controller 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        CapUnicastStage stage_ = CapUnicastStage::idle;
+        CapUnicastStep last_step_ = CapUnicastStep::none;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
     /** @brief broadcast audio 객체의 공개 비동기 단계입니다. */
     enum class BroadcastStage : std::uint8_t
     {
