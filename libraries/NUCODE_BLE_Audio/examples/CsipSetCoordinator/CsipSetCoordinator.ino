@@ -17,6 +17,7 @@ namespace
     std::size_t linkCount = 0U;
     std::size_t reportedMembers = 0U;
     bool candidateReady = false;
+    bool scanPending = false;
 
     constexpr nucode::ble::audio::CsipSetKey setKey = {{
         0x91U, 0x72U, 0x44U, 0x13U, 0xa8U, 0x5cU, 0x2dU, 0xe1U,
@@ -97,6 +98,7 @@ namespace
                 }
             }
             reportedMembers = coordinator.memberCount();
+            scanPending = true;
         }
     }
 
@@ -171,7 +173,7 @@ void loop()
         if (!BLEConnection.connect(candidateAddress, connection))
         {
             Serial.println("Set member connection failed");
-            require(BLEScan.start(true), "scan-restart");
+            scanPending = true;
         }
     }
     if (coordinator.memberCount() != reportedMembers)
@@ -187,9 +189,9 @@ void loop()
             Serial.println("Set ready; send o to order, l to lock, u to release");
         }
     }
-    if (!coordinator.ready() && !candidateReady && !BLEScan.running() &&
-        !BLEConnection.connecting() && coordinator.stage() != nucode::ble::audio::CsipStage::operating)
+    if (scanPending && !candidateReady && !BLEScan.running() && !BLEConnection.connecting())
     {
+        scanPending = false;
         require(BLEScan.start(true), "recovery-scan");
     }
 
