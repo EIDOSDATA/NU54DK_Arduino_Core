@@ -553,7 +553,7 @@ namespace nucode::ble::audio
      * @brief BAP broadcast source를 찾고 mono LC3 frame을 수신합니다.
      *
      * BLEDevice.begin() 뒤 begin()을 호출하고 loop()에서 poll()을 반복합니다.
-     * 광고 이름이 일치하는 source의 periodic advertising과 BIS 1에 동기화하며,
+     * 광고 이름이 일치하는 source의 periodic advertising과 지원 codec BIS에 동기화하며,
      * 수신 frame의 복호화는 공개 Lc3Codec으로 Arduino loop에서 수행합니다.
      */
     class BroadcastSink final
@@ -1509,6 +1509,8 @@ namespace nucode::ble::audio
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
         bool started_ = false;
+        bool acceptor_started_ = false;
+        bool sink_started_ = false;
     };
 
     /**

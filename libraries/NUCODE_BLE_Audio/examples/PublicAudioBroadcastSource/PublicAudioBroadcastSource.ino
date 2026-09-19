@@ -9,6 +9,7 @@
 #include <NUCODE_BLE_Audio.h>
 
 using nucode::ble::audio::BroadcastCode;
+using nucode::ble::audio::CapStage;
 using nucode::ble::audio::Error;
 using nucode::ble::audio::Lc3Codec;
 using nucode::ble::audio::PublicAudioBroadcastSource;
@@ -31,6 +32,17 @@ namespace
     std::uint32_t lastFrameAt = 0U;
     std::uint16_t wavePosition = 0U;
     bool announcedStreaming = false;
+    bool broadcasting = false;
+    bool recoveryPending = false;
+    bool automaticRecovery = true;
+    std::uint32_t recoveryAt = 0U;
+
+    /** @brief 다음 정리·재시작 시도를 1초 뒤로 제한합니다. */
+    void scheduleRecovery()
+    {
+        recoveryPending = true;
+        recoveryAt = millis() + 1000U;
+    }
 
     /** @brief 16 kHz의 bounded 삼각파 PCM frame 하나를 생성합니다. */
     void fillPcm(std::int16_t (&pcm)[160])
@@ -54,10 +66,31 @@ namespace
         {
             Serial.print("public audio source start failed: ");
             Serial.println(audioSource.nativeCode());
+            broadcasting = audioSource.stage() == CapStage::failed;
             return false;
         }
+        broadcasting = true;
         announcedStreaming = false;
+        recoveryPending = false;
         Serial.println("public audio source preparing");
+        return true;
+    }
+
+    /** @brief source teardown이 끝난 경우에만 공개 상태를 stopped로 바꿉니다. */
+    bool stopBroadcast()
+    {
+        if (!broadcasting)
+        {
+            return true;
+        }
+        const Error result = audioSource.end();
+        if (result != Error::none)
+        {
+            Serial.print("public audio source stop failed: ");
+            Serial.println(audioSource.nativeCode());
+            return false;
+        }
+        broadcasting = false;
         return true;
     }
 } // namespace
@@ -76,7 +109,10 @@ void setup()
         Serial.println("LC3 codec start failed");
         return;
     }
-    static_cast<void>(startBroadcast());
+    if (!startBroadcast())
+    {
+        scheduleRecovery();
+    }
 }
 
 /** @brief LC3 송신과 중단·재시작·미지원 품질 확인 명령을 처리합니다. */
@@ -89,22 +125,54 @@ void loop()
         const char command = static_cast<char>(Serial.read());
         if (command == 's')
         {
-            const Error result = audioSource.end();
-            Serial.print("public audio source stopped: ");
-            Serial.println(static_cast<unsigned int>(result));
+            automaticRecovery = false;
+            recoveryPending = false;
+            if (stopBroadcast())
+            {
+                Serial.println("public audio source stopped");
+            }
         }
         else if (command == 'r')
         {
-            static_cast<void>(startBroadcast());
+            automaticRecovery = true;
+            if (stopBroadcast() && !startBroadcast())
+            {
+                scheduleRecovery();
+            }
         }
         else if (command == 'h')
         {
-            static_cast<void>(audioSource.end());
-            broadcastConfig.quality = PublicBroadcastQuality::high;
-            const Error result = audioSource.begin(broadcastConfig, broadcastCode);
-            Serial.print("high quality rejected: ");
-            Serial.println(static_cast<unsigned int>(result));
-            broadcastConfig.quality = PublicBroadcastQuality::standard;
+            automaticRecovery = true;
+            if (stopBroadcast())
+            {
+                broadcastConfig.quality = PublicBroadcastQuality::high;
+                const Error result = audioSource.begin(broadcastConfig, broadcastCode);
+                Serial.print("high quality rejected: ");
+                Serial.println(static_cast<unsigned int>(result));
+                broadcastConfig.quality = PublicBroadcastQuality::standard;
+                scheduleRecovery();
+            }
+        }
+    }
+
+    if (broadcasting && automaticRecovery && !recoveryPending &&
+        (audioSource.stage() == CapStage::failed))
+    {
+        Serial.print("public audio source failed: ");
+        Serial.println(audioSource.nativeCode());
+        scheduleRecovery();
+    }
+    if (recoveryPending &&
+        (static_cast<std::int32_t>(millis() - recoveryAt) >= 0))
+    {
+        recoveryPending = false;
+        if (broadcasting && !stopBroadcast())
+        {
+            scheduleRecovery();
+        }
+        else if (!startBroadcast())
+        {
+            scheduleRecovery();
         }
     }
 

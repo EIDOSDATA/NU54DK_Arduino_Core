@@ -653,6 +653,82 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         self.assertIn("Error::unsupported", sink)
         self.assertIn("PublicBroadcastQuality::standard", wrapper)
 
+    def test_public_audio_scan_matches_security_and_exact_ad_bytes(self) -> None:
+        """! @brief PBA 보안 조건과 길이 기반 이름 검사를 고정합니다. """
+        sink = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_BroadcastSink.cpp"
+        ).read_text(encoding="utf-8")
+        compact = " ".join(sink.split())
+
+        self.assertIn(
+            "match.encrypted == sink_state.has_broadcast_code", compact
+        )
+        self.assertIn("BT_GAP_ADV_PROP_CONNECTABLE", sink)
+        self.assertGreaterEqual(sink.count("memchr("), 2)
+        self.assertIn("data->data_len == strlen(sink_state.target_name)", compact)
+        self.assertIn("memcmp(data->data, sink_state.target_name", compact)
+
+    def test_public_audio_base_selects_supported_bis(self) -> None:
+        """! @brief BASE codec를 검사한 BIS만 sync 호출에 전달하는지 검사합니다. """
+        sink = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_BroadcastSink.cpp"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "bt_bap_base_foreach_subgroup(",
+            "bt_bap_base_subgroup_foreach_bis(",
+            "bt_audio_codec_cfg_get_freq(",
+            "BT_AUDIO_CODEC_CFG_FREQ_16KHZ",
+            "BT_AUDIO_CODEC_CFG_DURATION_10",
+            "bt_audio_codec_cfg_get_octets_per_frame(",
+            "bt_audio_codec_cfg_get_frame_blocks_per_sdu(",
+            "sink_state.selected_bis, streams",
+            "atomic_set(&sink_state.error, -EMSGSIZE);",
+        ):
+            self.assertIn(token, sink)
+
+    def test_public_audio_teardown_preserves_failed_resources(self) -> None:
+        """! @brief teardown 실패가 소유권을 잃거나 즉시 재시작되지 않게 고정합니다. """
+        sink = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_BroadcastSink.cpp"
+        ).read_text(encoding="utf-8")
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_CapInitiator.cpp"
+        ).read_text(encoding="utf-8")
+        wrapper = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_PublicBroadcast.cpp"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("stream_generation_slots", sink)
+        self.assertIn("const int wait_result = k_sem_take(&sink_stopped", sink)
+        self.assertIn("stage_ = BroadcastStage::failed;", sink)
+        self.assertIn("int releaseCapSource() noexcept", source)
+        self.assertIn("const int wait_result =", source)
+        self.assertIn("atomic_get(&cap_source_state.stopping) == 0", source)
+        self.assertIn("return CapStage::failed;", source)
+        self.assertIn("sink_started_ = false;", wrapper)
+        self.assertIn("acceptor_started_ = false;", wrapper)
+
+    def test_public_audio_recovery_checks_end_and_uses_backoff(self) -> None:
+        """! @brief 공개 예제가 end 오류와 재시도 backoff를 처리하는지 검사합니다. """
+        examples = ROOT / "libraries/NUCODE_BLE_Audio/examples"
+        for name, stop_call in (
+            ("PublicAudioBroadcastSource", "stopBroadcast()"),
+            ("PublicAudioBroadcastSink", "stopListening()"),
+        ):
+            sketch = (examples / name / f"{name}.ino").read_text(encoding="utf-8")
+            with self.subTest(name=name):
+                self.assertIn("scheduleRecovery()", sketch)
+                self.assertIn("recoveryAt = millis() + 1000U;", sketch)
+                self.assertIn(stop_call, sketch)
+                self.assertIn("stop failed", sketch)
+                self.assertNotIn("<zephyr/", sketch)
+                self.assertNotIn("M31", sketch)
+
     def test_direction_finding_sketch_must_keep_public_control_flow(self) -> None:
         """! @brief CTE 송신 예제의 공개 start/stop 호출과 Kconfig를 검사합니다. """
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:

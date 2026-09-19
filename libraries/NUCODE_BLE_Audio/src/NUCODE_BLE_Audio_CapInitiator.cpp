@@ -54,6 +54,7 @@ namespace nucode::ble::audio
             atomic_t sent = 0;
             atomic_t sequence = 0;
             atomic_t error = 0;
+            atomic_t stopping = 0;
             bool callbacks_registered = false;
             bool extended_started = false;
             bool periodic_started = false;
@@ -91,10 +92,17 @@ namespace nucode::ble::audio
         /** @brief CAP BIS가 중단되면 공개 송신 상태를 내립니다. */
         void streamStopped(bt_bap_stream *stream, std::uint8_t reason)
         {
-            static_cast<void>(reason);
             if (stream == &cap_source_state.stream.bap_stream)
             {
                 atomic_set(&cap_source_state.streaming, 0);
+                if ((cap_source_state.owner != nullptr) &&
+                    (atomic_get(&cap_source_state.stopping) == 0))
+                {
+                    atomic_set(&cap_source_state.error,
+                               reason != 0U
+                                   ? -static_cast<int>(reason)
+                                   : -ECONNRESET);
+                }
             }
         }
 
@@ -106,7 +114,9 @@ namespace nucode::ble::audio
         /** @brief CAP broadcast 시작 완료를 객체 상태에 반영합니다. */
         void broadcastStarted(bt_cap_broadcast_source *source)
         {
-            if (source == cap_source_state.source)
+            if ((cap_source_state.owner != nullptr) &&
+                (atomic_get(&cap_source_state.stopping) == 0) &&
+                (source == cap_source_state.source))
             {
                 cap_source_state.source_started = true;
             }
@@ -115,12 +125,22 @@ namespace nucode::ble::audio
         /** @brief CAP broadcast 중단 완료를 대기 중인 Arduino 문맥에 알립니다. */
         void broadcastStopped(bt_cap_broadcast_source *source, std::uint8_t reason)
         {
-            static_cast<void>(reason);
             if (source == cap_source_state.source)
             {
                 cap_source_state.source_started = false;
                 atomic_set(&cap_source_state.streaming, 0);
-                k_sem_give(&cap_source_stopped);
+                if ((cap_source_state.owner != nullptr) &&
+                    (atomic_get(&cap_source_state.stopping) == 0))
+                {
+                    atomic_set(&cap_source_state.error,
+                               reason != 0U
+                                   ? -static_cast<int>(reason)
+                                   : -ECONNRESET);
+                }
+                else if (atomic_get(&cap_source_state.stopping) != 0)
+                {
+                    k_sem_give(&cap_source_stopped);
+                }
             }
         }
 
@@ -130,43 +150,118 @@ namespace nucode::ble::audio
         };
 
         /** @brief 부분 생성된 CAP/advertising 자원을 역순으로 반환합니다. */
-        void releaseCapSource() noexcept
+        int releaseCapSource() noexcept
         {
+            int first_error = 0;
+            atomic_set(&cap_source_state.stopping, 1);
             if ((cap_source_state.source != nullptr) && cap_source_state.source_started)
             {
-                if (bt_cap_initiator_broadcast_audio_stop(cap_source_state.source) == 0)
+                k_sem_reset(&cap_source_stopped);
+                const int result =
+                    bt_cap_initiator_broadcast_audio_stop(cap_source_state.source);
+                if (result == 0)
                 {
-                    (void)k_sem_take(&cap_source_stopped, K_SECONDS(2));
+                    const int wait_result =
+                        k_sem_take(&cap_source_stopped, K_SECONDS(2));
+                    if (wait_result == 0)
+                    {
+                        cap_source_state.source_started = false;
+                    }
+                    else
+                    {
+                        first_error = wait_result;
+                    }
+                }
+                else if (result == -EALREADY)
+                {
+                    cap_source_state.source_started = false;
+                }
+                else
+                {
+                    first_error = result;
                 }
             }
-            if (cap_source_state.source != nullptr)
+            if ((cap_source_state.source != nullptr) &&
+                !cap_source_state.source_started)
             {
-                (void)bt_cap_initiator_broadcast_audio_delete(cap_source_state.source);
-                cap_source_state.source = nullptr;
+                const int result = bt_cap_initiator_broadcast_audio_delete(
+                    cap_source_state.source);
+                if (result == 0)
+                {
+                    cap_source_state.source = nullptr;
+                }
+                else if (first_error == 0)
+                {
+                    first_error = result;
+                }
             }
-            if (cap_source_state.periodic_started &&
+            if ((cap_source_state.source == nullptr) &&
+                cap_source_state.periodic_started &&
                 (cap_source_state.advertising != nullptr))
             {
-                (void)bt_le_per_adv_stop(cap_source_state.advertising);
-                cap_source_state.periodic_started = false;
+                const int result = bt_le_per_adv_stop(cap_source_state.advertising);
+                if ((result == 0) || (result == -EALREADY))
+                {
+                    cap_source_state.periodic_started = false;
+                }
+                else if (first_error == 0)
+                {
+                    first_error = result;
+                }
             }
-            if (cap_source_state.extended_started &&
+            if ((cap_source_state.source == nullptr) &&
+                !cap_source_state.periodic_started &&
+                cap_source_state.extended_started &&
                 (cap_source_state.advertising != nullptr))
             {
-                (void)bt_le_ext_adv_stop(cap_source_state.advertising);
-                cap_source_state.extended_started = false;
+                const int result = bt_le_ext_adv_stop(cap_source_state.advertising);
+                if ((result == 0) || (result == -EALREADY))
+                {
+                    cap_source_state.extended_started = false;
+                }
+                else if (first_error == 0)
+                {
+                    first_error = result;
+                }
             }
-            if (cap_source_state.advertising != nullptr)
+            if ((cap_source_state.source == nullptr) &&
+                !cap_source_state.periodic_started &&
+                !cap_source_state.extended_started &&
+                (cap_source_state.advertising != nullptr))
             {
-                (void)bt_le_ext_adv_delete(cap_source_state.advertising);
-                cap_source_state.advertising = nullptr;
+                const int result = bt_le_ext_adv_delete(cap_source_state.advertising);
+                if (result == 0)
+                {
+                    cap_source_state.advertising = nullptr;
+                }
+                else if (first_error == 0)
+                {
+                    first_error = result;
+                }
             }
-            if (cap_source_state.callbacks_registered)
+            if ((cap_source_state.source == nullptr) &&
+                (cap_source_state.advertising == nullptr) &&
+                cap_source_state.callbacks_registered)
             {
-                (void)bt_cap_initiator_unregister_cb(&cap_initiator_callbacks);
-                cap_source_state.callbacks_registered = false;
+                const int result =
+                    bt_cap_initiator_unregister_cb(&cap_initiator_callbacks);
+                if (result == 0)
+                {
+                    cap_source_state.callbacks_registered = false;
+                }
+                else if (first_error == 0)
+                {
+                    first_error = result;
+                }
             }
-            atomic_set(&cap_source_state.streaming, 0);
+            if ((first_error == 0) && (cap_source_state.source == nullptr) &&
+                (cap_source_state.advertising == nullptr) &&
+                !cap_source_state.callbacks_registered)
+            {
+                atomic_set(&cap_source_state.streaming, 0);
+                atomic_set(&cap_source_state.stopping, 0);
+            }
+            return first_error;
         }
     } // namespace
 
@@ -431,7 +526,13 @@ namespace nucode::ble::audio
         }
         if (result != 0)
         {
-            releaseCapSource();
+            const int cleanup_result = releaseCapSource();
+            if (cleanup_result != 0)
+            {
+                started_ = true;
+                stage_ = CapStage::failed;
+                return record(Error::stack_error, cleanup_result);
+            }
             cap_source_state.owner = nullptr;
             stage_ = CapStage::failed;
             return record(Error::stack_error, result);
@@ -439,7 +540,6 @@ namespace nucode::ble::audio
 
         atomic_set(&cap_source_state.sent, 0);
         atomic_set(&cap_source_state.sequence, 0);
-        atomic_set(&cap_source_state.error, 0);
         started_ = true;
         stage_ = CapStage::ready;
         return record(Error::none);
@@ -454,7 +554,12 @@ namespace nucode::ble::audio
         }
 
         stage_ = CapStage::stopping;
-        releaseCapSource();
+        const int result = releaseCapSource();
+        if (result != 0)
+        {
+            stage_ = CapStage::failed;
+            return record(Error::stack_error, result);
+        }
         cap_source_state.owner = nullptr;
         started_ = false;
         stage_ = CapStage::idle;
@@ -524,6 +629,10 @@ namespace nucode::ble::audio
     /** @brief callback을 반영한 CAP Initiator 단계를 반환합니다. */
     CapStage CapInitiator::stage() const noexcept
     {
+        if (atomic_get(&cap_source_state.error) != 0)
+        {
+            return CapStage::failed;
+        }
         if (streaming())
         {
             return CapStage::streaming;
@@ -542,7 +651,9 @@ namespace nucode::ble::audio
     /** @brief 마지막 공개 오류를 반환합니다. */
     Error CapInitiator::lastError() const noexcept
     {
-        return last_error_;
+        return atomic_get(&cap_source_state.error) != 0
+                   ? Error::stack_error
+                   : last_error_;
     }
 
     /** @brief 마지막 원본 stack 오류를 반환합니다. */

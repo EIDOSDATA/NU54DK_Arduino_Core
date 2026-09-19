@@ -37,7 +37,15 @@ namespace
     bool announcedSelection = false;
     bool announcedStreaming = false;
     bool recoveryPending = false;
+    bool automaticRecovery = true;
     std::uint32_t recoveryAt = 0U;
+
+    /** @brief 다음 정리·재시작 시도를 1초 뒤로 제한합니다. */
+    void scheduleRecovery()
+    {
+        recoveryPending = true;
+        recoveryAt = millis() + 1000U;
+    }
 
     /** @brief 공개 API로 조건에 맞는 방송 검색을 시작합니다. */
     bool startListening(const BroadcastCode &code)
@@ -48,7 +56,7 @@ namespace
         {
             Serial.print("public audio sink start failed: ");
             Serial.println(audioSink.nativeCode());
-            listening = false;
+            listening = audioSink.stage() == BroadcastStage::failed;
             return false;
         }
         listening = true;
@@ -60,13 +68,20 @@ namespace
     }
 
     /** @brief 실행 중인 검색을 끝내고 객체 상태를 갱신합니다. */
-    void stopListening()
+    bool stopListening()
     {
         if (listening)
         {
-            static_cast<void>(audioSink.end());
+            const Error result = audioSink.end();
+            if (result != Error::none)
+            {
+                Serial.print("public audio sink stop failed: ");
+                Serial.println(audioSink.nativeCode());
+                return false;
+            }
             listening = false;
         }
+        return true;
     }
 
     /** @brief PCM frame의 절대값 합으로 실제 decode 결과를 확인합니다. */
@@ -110,30 +125,41 @@ void loop()
         const char command = static_cast<char>(Serial.read());
         if (command == 's')
         {
-            stopListening();
+            automaticRecovery = false;
             recoveryPending = false;
-            Serial.println("public audio sink stopped");
+            if (stopListening())
+            {
+                Serial.println("public audio sink stopped");
+            }
         }
         else if (command == 'r')
         {
-            stopListening();
-            static_cast<void>(startListening(broadcastCode));
+            automaticRecovery = true;
+            if (stopListening() && !startListening(broadcastCode))
+            {
+                scheduleRecovery();
+            }
         }
         else if (command == 'w')
         {
-            stopListening();
-            static_cast<void>(startListening(alternateBroadcastCode));
+            automaticRecovery = true;
+            if (stopListening() && !startListening(alternateBroadcastCode))
+            {
+                scheduleRecovery();
+            }
         }
         else if (command == 'h')
         {
-            stopListening();
-            broadcastFilter.required_quality = PublicBroadcastQuality::high;
-            const Error result = audioSink.begin(broadcastFilter, broadcastCode);
-            Serial.print("high quality rejected: ");
-            Serial.println(static_cast<unsigned int>(result));
-            broadcastFilter.required_quality = PublicBroadcastQuality::standard;
-            recoveryPending = true;
-            recoveryAt = millis() + 1000U;
+            automaticRecovery = true;
+            if (stopListening())
+            {
+                broadcastFilter.required_quality = PublicBroadcastQuality::high;
+                const Error result = audioSink.begin(broadcastFilter, broadcastCode);
+                Serial.print("high quality rejected: ");
+                Serial.println(static_cast<unsigned int>(result));
+                broadcastFilter.required_quality = PublicBroadcastQuality::standard;
+                scheduleRecovery();
+            }
         }
     }
 
@@ -149,20 +175,27 @@ void loop()
         Serial.println(selectedInfo.encrypted ? "yes" : "no");
     }
 
-    if (listening && (audioSink.stage() == BroadcastStage::failed))
+    if (listening && automaticRecovery && !recoveryPending &&
+        (audioSink.stage() == BroadcastStage::failed))
     {
         Serial.print("public audio sync failed: ");
         Serial.print(audioSink.nativeCode());
         Serial.print(" step=");
         Serial.println(static_cast<unsigned int>(audioSink.lastStep()));
-        stopListening();
-        recoveryPending = true;
-        recoveryAt = millis() + 1000U;
+        scheduleRecovery();
     }
     if (recoveryPending &&
         (static_cast<std::int32_t>(millis() - recoveryAt) >= 0))
     {
-        static_cast<void>(startListening(broadcastCode));
+        recoveryPending = false;
+        if (listening && !stopListening())
+        {
+            scheduleRecovery();
+        }
+        else if (!startListening(broadcastCode))
+        {
+            scheduleRecovery();
+        }
     }
     if (audioSink.streaming() && !announcedStreaming)
     {

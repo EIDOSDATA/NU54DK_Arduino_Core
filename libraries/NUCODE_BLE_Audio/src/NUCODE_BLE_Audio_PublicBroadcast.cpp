@@ -107,15 +107,30 @@ namespace nucode::ble::audio
             native_code_ = acceptor_.nativeCode();
             return result;
         }
+        acceptor_started_ = true;
 
         result = sink_.startPublic(filter, broadcast_code);
         if (result != Error::none)
         {
             last_error_ = result;
             native_code_ = sink_.nativeCode();
-            (void)acceptor_.end();
-            return result;
+            const Error sink_cleanup = sink_.end();
+            sink_started_ = (sink_cleanup != Error::none) &&
+                            (sink_cleanup != Error::not_started);
+            if (!sink_started_)
+            {
+                const Error acceptor_cleanup = acceptor_.end();
+                acceptor_started_ = acceptor_cleanup != Error::none;
+                if (acceptor_started_)
+                {
+                    last_error_ = acceptor_cleanup;
+                    native_code_ = acceptor_.nativeCode();
+                }
+            }
+            started_ = sink_started_ || acceptor_started_;
+            return last_error_;
         }
+        sink_started_ = true;
 
         started_ = true;
         last_error_ = Error::none;
@@ -148,23 +163,29 @@ namespace nucode::ble::audio
             return last_error_;
         }
 
-        const Error sink_result = sink_.end();
-        const int sink_native_code = sink_.nativeCode();
-        const Error acceptor_result = acceptor_.end();
-        const int acceptor_native_code = acceptor_.nativeCode();
+        if (sink_started_)
+        {
+            const Error sink_result = sink_.end();
+            if (sink_result != Error::none)
+            {
+                last_error_ = sink_result;
+                native_code_ = sink_.nativeCode();
+                return last_error_;
+            }
+            sink_started_ = false;
+        }
+        if (acceptor_started_)
+        {
+            const Error acceptor_result = acceptor_.end();
+            if (acceptor_result != Error::none)
+            {
+                last_error_ = acceptor_result;
+                native_code_ = acceptor_.nativeCode();
+                return last_error_;
+            }
+            acceptor_started_ = false;
+        }
         started_ = false;
-        if (sink_result != Error::none)
-        {
-            last_error_ = sink_result;
-            native_code_ = sink_native_code;
-            return last_error_;
-        }
-        if (acceptor_result != Error::none)
-        {
-            last_error_ = acceptor_result;
-            native_code_ = acceptor_native_code;
-            return last_error_;
-        }
         last_error_ = Error::none;
         native_code_ = 0;
         return Error::none;
