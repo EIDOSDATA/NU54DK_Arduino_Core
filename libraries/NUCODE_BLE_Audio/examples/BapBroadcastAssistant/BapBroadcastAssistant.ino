@@ -51,6 +51,17 @@ namespace
     bool addPending = false;
     bool codePending = false;
     bool assistantStarted = false;
+    bool delegatorScanPending = false;
+    std::uint32_t delegatorScanAt = 0U;
+
+    /** @brief BASS service를 광고하는 Scan Delegator 검색을 시작합니다. */
+    bool startDelegatorScan()
+    {
+        scanTarget = ScanTarget::delegator;
+        return BLEScan.clearFilters() &&
+               BLEScan.filterServiceUuid(BLEUuid(0x184FU)) &&
+               BLEScan.start(true);
+    }
 
     /** @brief 현재 검색 단계에 맞는 Delegator 또는 Broadcast Source를 선택합니다. */
     void onScanResult(const BLEScanResult &result, void *context)
@@ -124,6 +135,13 @@ namespace
             }
             assistantStarted = false;
             delegatorConnection = BLEConnectionHandle();
+            delegatorFound = false;
+            sourceSelected = false;
+            sourceScanStarted = false;
+            addPending = false;
+            codePending = false;
+            delegatorScanPending = true;
+            delegatorScanAt = millis() + 100U;
             Serial.print("broadcast delegator disconnected reason=");
             Serial.println(event.reason);
         }
@@ -152,8 +170,7 @@ void setup()
     BLEDevice.onEventInfo(onBleEvent);
     BLEScan.onResult(onScanResult);
     if (!BLESecurity.begin(security) || !BLEDevice.begin("NU54-AUDIO-ASSISTANT") ||
-        !BLEScan.clearFilters() || !BLEScan.filterServiceUuid(BLEUuid(0x184FU)) ||
-        !BLEScan.start(true))
+        !startDelegatorScan())
     {
         Serial.println("broadcast assistant start failed");
     }
@@ -164,6 +181,22 @@ void loop()
 {
     BLEDevice.poll();
     BLESecurity.poll();
+
+    if (delegatorScanPending && !BLEConnection.connected() &&
+        !BLEConnection.connecting() &&
+        (static_cast<std::int32_t>(millis() - delegatorScanAt) >= 0))
+    {
+        if (startDelegatorScan())
+        {
+            delegatorScanPending = false;
+            Serial.println("broadcast delegator scan restarted");
+        }
+        else
+        {
+            delegatorScanAt = millis() + 1000U;
+            Serial.println("broadcast delegator scan restart failed");
+        }
+    }
 
     if (delegatorFound && !BLEConnection.connected() && !BLEConnection.connecting())
     {

@@ -27,6 +27,7 @@ namespace
     BroadcastSink audioSink;
     Lc3Codec codec;
     bool restartAdvertising = false;
+    std::uint32_t restartAdvertisingAt = 0U;
     bool announcedStreaming = false;
     std::uint32_t reportedAdds = 0U;
     std::uint32_t reportedModifications = 0U;
@@ -65,6 +66,7 @@ namespace
         else if (event.event == BLEEvent::disconnected)
         {
             restartAdvertising = true;
+            restartAdvertisingAt = millis() + 100U;
             Serial.print("broadcast assistant disconnected reason=");
             Serial.println(event.reason);
         }
@@ -111,11 +113,17 @@ void loop()
     BLESecurity.poll();
     audioSink.poll();
 
-    if (restartAdvertising && !BLEAdvertising.running())
+    if (restartAdvertising && !BLEAdvertising.running() &&
+        (static_cast<std::int32_t>(millis() - restartAdvertisingAt) >= 0))
     {
-        restartAdvertising = false;
-        if (!startAdvertising())
+        if (startAdvertising())
         {
+            restartAdvertising = false;
+            Serial.println("delegator advertising restarted");
+        }
+        else
+        {
+            restartAdvertisingAt = millis() + 1000U;
             Serial.print("delegator advertising restart failed error=");
             Serial.print(static_cast<unsigned int>(BLEDevice.lastError()));
             Serial.print(" driver=");
