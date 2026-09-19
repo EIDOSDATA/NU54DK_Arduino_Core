@@ -7,12 +7,16 @@ import importlib.util
 import errno
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tests/host"))
+from host_compiler import compiler_command, run_executable
+
 SPEC = importlib.util.spec_from_file_location(
     "m31_example_audit_test", ROOT / "tools/ci/m31_example_audit.py"
 )
@@ -20,97 +24,6 @@ assert SPEC is not None and SPEC.loader is not None
 AUDIT = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = AUDIT
 SPEC.loader.exec_module(AUDIT)
-
-
-class CallbackDrivenBootstrap:
-    """! @brief notification/read 경쟁을 재현하는 작은 callback 상태기입니다. """
-
-    def __init__(self, steps: tuple[str, ...], maximum_retries: int = 8) -> None:
-        self.steps = steps
-        self.index = 0
-        self.maximum_retries = maximum_retries
-        self.retries = 0
-        self.read_accepted = False
-        self.retry_pending = False
-        self.stage = "discovering"
-        self.snapshot: dict[str, int] = {}
-
-    @property
-    def current(self) -> str:
-        """! @brief 현재 bootstrap 단계를 반환합니다. """
-        return self.steps[self.index]
-
-    def start(self, result: int) -> None:
-        """! @brief mock SDK read 시작 결과를 상태기에 전달합니다. """
-        self.read_accepted = False
-        self.retry_pending = False
-        if result == 0:
-            self.read_accepted = True
-        elif result == -errno.EBUSY and self.retries < self.maximum_retries:
-            self.retries += 1
-            self.retry_pending = True
-        else:
-            self.stage = "failed"
-
-    def callback(self, step: str, value: int, error: int = 0) -> bool:
-        """! @brief callback snapshot을 반영하고 다음 read 필요 여부를 반환합니다. """
-        self.snapshot[step] = value
-        if self.stage != "discovering":
-            return False
-        if error != 0:
-            self.stage = "failed"
-            return False
-        if step != self.current or not self.read_accepted:
-            return False
-        self.index += 1
-        self.read_accepted = False
-        self.retries = 0
-        if self.index == len(self.steps):
-            self.stage = "ready"
-            return False
-        return True
-
-    def timeout(self) -> None:
-        """! @brief 전체 bootstrap deadline 만료를 재현합니다. """
-        if self.stage == "discovering":
-            self.stage = "failed"
-
-
-class CallbackEpochBackend:
-    """! @brief end/begin 경계의 callback epoch와 in-flight drain을 재현합니다. """
-
-    def __init__(self) -> None:
-        self.generation = 0
-        self.inflight = 0
-        self.owner = False
-
-    def begin(self) -> bool:
-        """! @brief in-flight callback이 없을 때만 새 owner를 결합합니다. """
-        if self.owner or self.inflight != 0:
-            return False
-        self.generation += 1
-        self.owner = True
-        return True
-
-    def enter_callback(self) -> int:
-        """! @brief callback ingress 시점의 epoch를 고정합니다. """
-        if not self.owner:
-            return 0
-        self.inflight += 1
-        return self.generation
-
-    def end(self) -> None:
-        """! @brief owner를 해제하고 이후 stale callback을 무효화합니다. """
-        self.owner = False
-        self.generation += 1
-
-    def accepts(self, epoch: int) -> bool:
-        """! @brief callback epoch가 현재 owner에 속하는지 반환합니다. """
-        return self.owner and epoch == self.generation
-
-    def leave_callback(self) -> None:
-        """! @brief in-flight callback 하나를 drain합니다. """
-        self.inflight -= 1
 
 
 class ServerImageRebind:
@@ -329,7 +242,10 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         self.assertIn("K_MUTEX_DEFINE(microphoneControllerBackendMutex)", source)
         self.assertIn("retiredVolumeConnectionActive()", source)
         self.assertIn("retiredMicrophoneConnectionActive()", source)
-        self.assertGreaterEqual(source.count("retired_connection = active != nullptr"), 2)
+        self.assertGreaterEqual(source.count("bt_conn_ref(expected_connection);"), 7)
+        self.assertIn("bt_vcp_vol_ctlr_conn_get(controller, &bound)", source)
+        self.assertIn("bt_micp_mic_ctlr_conn_get(controller, &bound)", source)
+        self.assertIn("bt_aics_client_conn_get(input_service, &bound)", source)
 
     def test_audio_control_bootstrap_reads_actual_remote_state(self) -> None:
         """! @brief discovery 뒤 실제 VCP·VOCS·AICS·MICP 상태를 모두 읽는지 검사합니다. """
@@ -339,15 +255,17 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         for token in (
             "startVolumeBootstrap(",
-            "bt_vcp_vol_ctlr_read_state(controller)",
-            "bt_vcp_vol_ctlr_read_flags(controller)",
-            "bt_vocs_state_get(output_service)",
-            "bt_vocs_location_get(output_service)",
-            "bt_aics_gain_setting_get(input_service)",
-            "bt_aics_type_get(input_service)",
-            "bt_aics_status_get(input_service)",
+            "controller->state_handle",
+            "controller->vol_flag_handle",
+            "struct bt_vocs_client, vocs)->state_handle",
+            "struct bt_vocs_client, vocs)->location_handle",
+            "input_service->cli.gain_handle",
+            "input_service->cli.type_handle",
+            "input_service->cli.status_handle",
+            "bt_gatt_read(connection, &volumeBackend.bootstrap_read)",
             "startMicrophoneBootstrap(",
-            "bt_micp_mic_ctlr_mute_get(controller)",
+            "controller->mute_handle",
+            "&microphoneControllerBackend.bootstrap_read",
         ):
             self.assertIn(token, source)
 
@@ -364,72 +282,74 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         microphone_end = source.index("void serviceMicrophoneBootstrap", microphone_start)
         microphone_bootstrap = source[microphone_start:microphone_end]
         for call in (
-            "bt_micp_mic_ctlr_mute_get(controller)",
-            "bt_aics_state_get(input_service)",
-            "bt_aics_status_get(input_service)",
-            "bt_aics_gain_setting_get(input_service)",
-            "bt_aics_type_get(input_service)",
+            "controller->mute_handle",
+            "input_service->cli.state_handle",
+            "input_service->cli.status_handle",
+            "input_service->cli.gain_handle",
+            "input_service->cli.type_handle",
         ):
             self.assertIn(call, microphone_bootstrap)
 
-    def test_audio_control_bootstrap_drains_notification_read_race(self) -> None:
-        """! @brief notification 선행 EBUSY를 drain 뒤 재시도하고 실제 read로 끝냅니다. """
-        bootstrap = CallbackDrivenBootstrap(("state", "status", "type"))
-        bootstrap.start(0)
-
-        self.assertTrue(bootstrap.callback("state", 11))
-        bootstrap.start(-errno.EBUSY)
-        self.assertTrue(bootstrap.retry_pending)
-        self.assertEqual(bootstrap.stage, "discovering")
-
-        self.assertFalse(bootstrap.callback("status", 22))
-        self.assertEqual(bootstrap.current, "status")
-        self.assertFalse(bootstrap.callback("state", 12))
-        bootstrap.start(0)
-        self.assertTrue(bootstrap.callback("status", 23))
-        bootstrap.start(0)
-        self.assertFalse(bootstrap.callback("type", 24))
-        self.assertEqual(bootstrap.stage, "ready")
-        self.assertEqual(bootstrap.snapshot["status"], 23)
+    def test_audio_control_lifecycle_runtime_interleavings(self) -> None:
+        """! @brief notification/read/end/begin 경쟁을 C++ stub 실행으로 검사합니다. """
+        compiler = compiler_command()
+        self.assertIsNotNone(compiler)
+        with tempfile.TemporaryDirectory(prefix="nu54-m31-audio-control-") as temporary:
+            binary = Path(temporary) / "audio-control-lifecycle.exe"
+            command = [
+                *compiler,
+                "-std=c++17",
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                str(ROOT / "tests/host/m31_audio_control_lifecycle_main.cpp"),
+                "-o",
+                str(binary),
+            ]
+            result = subprocess.run(command, capture_output=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
+            result = run_executable([str(binary)], capture_output=True, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
 
         source = (
             ROOT
             / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
         ).read_text(encoding="utf-8")
-        self.assertIn("maximumBootstrapRetries = 8U", source)
         self.assertIn("bootstrapTimeoutMs = 5000U", source)
+        self.assertIn("maximumBootstrapRetryIntervalMs = 160U", source)
         self.assertIn("result == -EBUSY", source)
-        self.assertIn("bootstrap_read_accepted", source)
+        self.assertIn("volumeBootstrapReadComplete", source)
+        self.assertIn("microphoneBootstrapReadComplete", source)
+        self.assertIn("bt_gatt_cancel(connection, &volumeBackend.bootstrap_read)", source)
+        self.assertIn(
+            "bt_gatt_cancel(connection, &microphoneControllerBackend.bootstrap_read)", source
+        )
         self.assertIn("serviceVolumeBootstrap(generation_)", source)
         self.assertIn("serviceMicrophoneBootstrap(generation_)", source)
+        self.assertIn("NUCODE_VOLUME_CONTROLLER_READ_REQUEST(read_volume", source)
+        self.assertIn("NUCODE_MIC_CONTROLLER_READ_REQUEST(", source)
+        for ambiguous_read in (
+            "bt_vcp_vol_ctlr_read_state(",
+            "bt_vocs_state_get(",
+            "bt_aics_state_get(",
+            "bt_micp_mic_ctlr_mute_get(",
+        ):
+            self.assertNotIn(ambiguous_read, source)
 
     def test_audio_control_bootstrap_busy_and_timeout_are_bounded(self) -> None:
-        """! @brief SDK busy와 callback 유실이 무한 discovering으로 남지 않는지 검사합니다. """
-        bootstrap = CallbackDrivenBootstrap(("state",), maximum_retries=2)
-        bootstrap.start(-errno.EBUSY)
-        self.assertEqual(bootstrap.stage, "discovering")
-        bootstrap.start(-errno.EBUSY)
-        self.assertEqual(bootstrap.stage, "discovering")
-        bootstrap.start(-errno.EBUSY)
-        self.assertEqual(bootstrap.stage, "failed")
-
-        lost_callback = CallbackDrivenBootstrap(("state",))
-        lost_callback.start(0)
-        lost_callback.timeout()
-        self.assertEqual(lost_callback.stage, "failed")
+        """! @brief busy 재시도가 조기 횟수 제한 없이 전체 deadline을 따르는지 검사합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("maximumBootstrapRetries", source)
+        self.assertGreaterEqual(source.count("deadlineReached(now,"), 4)
+        self.assertGreaterEqual(source.count("bootstrapRetryInterval("), 3)
+        self.assertIn("failVolumeBootstrap(generation, -ETIMEDOUT)", source)
+        self.assertIn("failMicrophoneBootstrap(generation, -ETIMEDOUT)", source)
 
     def test_audio_control_late_callback_keeps_ingress_epoch(self) -> None:
         """! @brief end 뒤 늦은 callback이 새 owner generation에 적용되지 않는지 검사합니다. """
-        backend = CallbackEpochBackend()
-        self.assertTrue(backend.begin())
-        old_epoch = backend.enter_callback()
-        backend.end()
-        self.assertFalse(backend.begin())
-        self.assertFalse(backend.accepts(old_epoch))
-        backend.leave_callback()
-        self.assertTrue(backend.begin())
-        self.assertFalse(backend.accepts(old_epoch))
-
         source = (
             ROOT
             / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
@@ -437,6 +357,9 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         self.assertIn("struct VolumeCallbackEpoch", source)
         self.assertIn("struct MicrophoneCallbackEpoch", source)
         self.assertIn("callbacks_inflight", source)
+        self.assertIn("bt_conn_ref(expected_connection);", source)
+        self.assertIn("volumeBackend.callbacks_inflight == 0U", source)
+        self.assertIn("microphoneControllerBackend.callbacks_inflight == 0U", source)
 
     def test_audio_control_device_rebind_is_consistent(self) -> None:
         """! @brief image-lifetime service 재소유가 immutable 불일치와 stale cache를 거부합니다. """
