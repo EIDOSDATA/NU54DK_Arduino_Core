@@ -200,6 +200,157 @@ namespace
             assert(public_sink.end() == Error::none);
         }
     }
+
+    /** @brief scan 전환의 일시 오류를 절대 제한 시간 안에서 다시 시도합니다. */
+    void testScanningCleanupRetry()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+        pbp_stub::scan_stop_results = {
+            -EAGAIN,
+            -EBUSY,
+            -EAGAIN,
+            -EAGAIN,
+            -EAGAIN,
+            0,
+        };
+        assert(public_sink.end() == Error::none);
+        assert(pbp_stub::scan_stop_calls == 6U);
+        assert(!sink_state.scanning);
+        assert(atomic_get(&sink_state.active) == 0);
+    }
+
+    /** @brief found source에서 PA create로 넘어갈 때도 scan stop을 backoff합니다. */
+    void testFoundScanRetryBeforePeriodicCreate()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+        sink_state.broadcaster.address[0] = 0x31U;
+        sink_state.sid = 2U;
+        sink_state.periodic_interval = 80U;
+        atomic_set(&sink_state.found, 1);
+        pbp_stub::scan_stop_results = {
+            -EAGAIN,
+            -EBUSY,
+            -EAGAIN,
+            -EAGAIN,
+            -EAGAIN,
+            0,
+        };
+
+        public_sink.poll();
+        assert(public_sink.stage() == BroadcastStage::synchronizing);
+        assert(pbp_stub::scan_stop_calls == 6U);
+        assert(currentPeriodicSync() != nullptr);
+        assert(public_sink.end() == Error::none);
+    }
+
+    /** @brief pending PA cancel을 먼저 끝낸 뒤 explicit scan을 중단합니다. */
+    void testPendingPeriodicCleanup()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x42U;
+        parameters.sid = 3U;
+        sink_state.broadcaster = parameters.addr;
+        sink_state.sid = parameters.sid;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        atomic_ptr_set(&sink_state.periodic_sync, sync);
+        pbp_stub::periodic_delete_results = {
+            -EAGAIN,
+            -EBUSY,
+            -EAGAIN,
+            -EAGAIN,
+            -EAGAIN,
+            0,
+        };
+        pbp_stub::scan_stop_results = {
+            -EAGAIN,
+            -EBUSY,
+            -EAGAIN,
+            -EAGAIN,
+            -EAGAIN,
+            0,
+        };
+
+        assert(public_sink.end() == Error::none);
+        assert(pbp_stub::periodic_delete_calls == 6U);
+        assert(pbp_stub::periodic_lookup_calls >= 2U);
+        assert(pbp_stub::scan_stop_calls == 6U);
+        assert(currentPeriodicSync() == nullptr);
+        assert(!sink_state.scanning);
+        const auto released = std::find(
+            pbp_stub::cleanup_events.begin(), pbp_stub::cleanup_events.end(),
+            pbp_stub::CleanupEvent::periodic_released);
+        const auto scan_stopped = std::find(
+            pbp_stub::cleanup_events.begin(), pbp_stub::cleanup_events.end(),
+            pbp_stub::CleanupEvent::scan_stop);
+        assert(released != pbp_stub::cleanup_events.end());
+        assert(scan_stopped != pbp_stub::cleanup_events.end());
+        assert(released < scan_stopped);
+    }
+
+    /** @brief synchronous·late term callback 모두 semaphore reset 뒤 안전하게 소비합니다. */
+    void testPeriodicTerminationCallbackTiming()
+    {
+        for (const pbp_stub::PeriodicDeleteMode mode : {
+                 pbp_stub::PeriodicDeleteMode::synchronous,
+                 pbp_stub::PeriodicDeleteMode::late,
+             })
+        {
+            pbp_stub::resetCleanupState();
+            pbp_stub::periodic_delete_mode = mode;
+            BroadcastSink public_sink;
+            const PublicBroadcastFilter filter = {};
+            assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+            bt_le_per_adv_sync_param parameters = {};
+            parameters.addr.address[0] = 0x24U;
+            parameters.sid = 5U;
+            sink_state.broadcaster = parameters.addr;
+            sink_state.sid = parameters.sid;
+            bt_le_per_adv_sync *sync = nullptr;
+            assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+            atomic_ptr_set(&sink_state.periodic_sync, sync);
+            atomic_set(&sink_state.periodic_synced, 1);
+
+            assert(public_sink.end() == Error::none);
+            assert(pbp_stub::periodic_delete_calls == 1U);
+            assert(currentPeriodicSync() == nullptr);
+        }
+    }
+
+    /** @brief retry 소진 뒤 상태를 보존하고 다음 end와 rebegin으로 복구합니다. */
+    void testRepeatedCleanupAndRebegin()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+        pbp_stub::scan_stop_default_result = -EAGAIN;
+        assert(public_sink.end() == Error::stack_error);
+        assert(public_sink.stage() == BroadcastStage::failed);
+        assert(public_sink.lastStep() == BroadcastSinkStep::cleanup_callbacks);
+        assert(sink_state.scanning);
+        assert(atomic_get(&sink_state.active) == 1);
+        assert(atomic_get(&sink_state.stopping) == 1);
+
+        pbp_stub::scan_stop_default_result = 0;
+        assert(public_sink.end() == Error::none);
+        assert(!sink_state.scanning);
+        assert(atomic_get(&sink_state.active) == 0);
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+        assert(public_sink.end() == Error::none);
+    }
 } // namespace
 
 /** @brief 모든 실제 sink callback 회귀 시나리오를 실행합니다. */
@@ -208,5 +359,10 @@ int main()
     testBaseSelection();
     testRecoveryErrors();
     testCallbackDrainAndRebegin();
+    testScanningCleanupRetry();
+    testFoundScanRetryBeforePeriodicCreate();
+    testPendingPeriodicCleanup();
+    testPeriodicTerminationCallbackTiming();
+    testRepeatedCleanupAndRebegin();
     return 0;
 }

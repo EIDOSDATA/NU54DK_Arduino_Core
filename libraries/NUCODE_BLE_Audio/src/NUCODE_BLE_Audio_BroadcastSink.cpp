@@ -39,6 +39,10 @@ namespace nucode::ble::audio
         constexpr std::size_t maximum_public_broadcast_name = 128U;
         constexpr std::size_t maximum_program_info = 64U;
         constexpr std::uint32_t periodic_timeout_ratio = 20U;
+        constexpr std::uint32_t cleanup_retry_timeout_ms = 2000U;
+        constexpr std::int32_t cleanup_retry_delay_ms = 5;
+        constexpr std::int32_t cleanup_retry_max_delay_ms = 100;
+        constexpr std::uint32_t periodic_release_timeout_ms = 2000U;
 
         K_MSGQ_DEFINE(receive_queue, frame_octets, 8, 4);
         K_SEM_DEFINE(sink_stopped, 0, 1);
@@ -915,6 +919,125 @@ namespace nucode::ble::audio
                                                     BT_GAP_PER_ADV_MAX_TIMEOUT));
         }
 
+        /** @brief scan/PA 전환 중 다시 시도할 수 있는 일시 오류인지 확인합니다. */
+        bool transientCleanupError(int error) noexcept
+        {
+            return (error == -EAGAIN) || (error == -EBUSY);
+        }
+
+        /** @brief explicit scan user 제거를 제한 시간 동안 backoff하며 다시 시도합니다. */
+        int stopScanWithRetry() noexcept
+        {
+            if (!sink_state.scanning)
+            {
+                return 0;
+            }
+            int result = 0;
+            std::int32_t retry_delay_ms = cleanup_retry_delay_ms;
+            const std::uint32_t deadline =
+                k_uptime_get_32() + cleanup_retry_timeout_ms;
+            for (;;)
+            {
+                result = bt_le_scan_stop();
+                if ((result == 0) || (result == -EALREADY))
+                {
+                    sink_state.scanning = false;
+                    return 0;
+                }
+                if (!transientCleanupError(result))
+                {
+                    return result;
+                }
+                const std::int32_t remaining_ms = static_cast<std::int32_t>(
+                    deadline - k_uptime_get_32());
+                if (remaining_ms <= 0)
+                {
+                    return result;
+                }
+                const std::int32_t sleep_ms =
+                    retry_delay_ms < remaining_ms ? retry_delay_ms : remaining_ms;
+                (void)k_msleep(sleep_ms);
+                retry_delay_ms =
+                    retry_delay_ms < (cleanup_retry_max_delay_ms / 2)
+                        ? retry_delay_ms * 2
+                        : cleanup_retry_max_delay_ms;
+            }
+        }
+
+        /** @brief PA create 취소 event가 native slot을 반환할 때까지 제한 시간만 기다립니다. */
+        int waitForPendingPeriodicRelease(bt_le_per_adv_sync *sync) noexcept
+        {
+            const std::uint32_t deadline =
+                k_uptime_get_32() + periodic_release_timeout_ms;
+            while (bt_le_per_adv_sync_lookup_addr(&sink_state.broadcaster,
+                                                  sink_state.sid) == sync)
+            {
+                if (static_cast<std::int32_t>(k_uptime_get_32() - deadline) >= 0)
+                {
+                    return -ETIMEDOUT;
+                }
+                (void)k_msleep(1);
+            }
+            (void)atomic_ptr_cas(&sink_state.periodic_sync, sync, nullptr);
+            atomic_set(&sink_state.periodic_synced, 0);
+            return 0;
+        }
+
+        /** @brief pending create와 established sync를 구분해 PA 자원을 안전하게 반환합니다. */
+        int deletePeriodicSyncForCleanup() noexcept
+        {
+            bt_le_per_adv_sync *const sync = currentPeriodicSync();
+            if (sync == nullptr)
+            {
+                return 0;
+            }
+            const bool synchronized = atomic_get(&sink_state.periodic_synced) != 0;
+            k_sem_reset(&periodic_stopped);
+            int result = 0;
+            std::int32_t retry_delay_ms = cleanup_retry_delay_ms;
+            const std::uint32_t deadline =
+                k_uptime_get_32() + cleanup_retry_timeout_ms;
+            for (;;)
+            {
+                result = bt_le_per_adv_sync_delete(sync);
+                if (result == 0)
+                {
+                    break;
+                }
+                if (!transientCleanupError(result))
+                {
+                    return result;
+                }
+                const std::int32_t remaining_ms = static_cast<std::int32_t>(
+                    deadline - k_uptime_get_32());
+                if (remaining_ms <= 0)
+                {
+                    return result;
+                }
+                const std::int32_t sleep_ms =
+                    retry_delay_ms < remaining_ms ? retry_delay_ms : remaining_ms;
+                (void)k_msleep(sleep_ms);
+                retry_delay_ms =
+                    retry_delay_ms < (cleanup_retry_max_delay_ms / 2)
+                        ? retry_delay_ms * 2
+                        : cleanup_retry_max_delay_ms;
+            }
+            if (currentPeriodicSync() != sync)
+            {
+                return 0;
+            }
+            if (synchronized)
+            {
+                const int wait_result = k_sem_take(&periodic_stopped, K_SECONDS(2));
+                if (wait_result != 0)
+                {
+                    return wait_result;
+                }
+                return currentPeriodicSync() == sync ? -EBUSY : 0;
+            }
+            return waitForPendingPeriodicRelease(sync);
+        }
+
         /** @brief 새 상태 게시를 막고 이미 실행 중인 scan/BASS callback을 기다립니다. */
         int drainStateCallbacks() noexcept
         {
@@ -953,19 +1076,6 @@ namespace nucode::ble::audio
             {
                 sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
                 return first_error;
-            }
-            if (sink_state.scanning)
-            {
-                const int result = bt_le_scan_stop();
-                if ((result != 0) && (result != -EALREADY))
-                {
-                    first_error = result;
-                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
-                }
-                else
-                {
-                    sink_state.scanning = false;
-                }
             }
             if (sink_state.sink_created &&
                 (atomic_get(&sink_state.sync_requested) != 0))
@@ -1050,19 +1160,10 @@ namespace nucode::ble::audio
             }
             if (!sink_state.sink_created && (currentPeriodicSync() != nullptr))
             {
-                bt_le_per_adv_sync *const periodic_sync = currentPeriodicSync();
-                k_sem_reset(&periodic_stopped);
-                const int result = bt_le_per_adv_sync_delete(periodic_sync);
-                const int wait_result = (result == 0)
-                                            ? k_sem_take(&periodic_stopped, K_SECONDS(2))
-                                            : 0;
-                if ((result == 0) && (wait_result == 0))
+                const int result = deletePeriodicSyncForCleanup();
+                if ((result != 0) && (first_error == 0))
                 {
-                    atomic_ptr_clear(&sink_state.periodic_sync);
-                }
-                else if (first_error == 0)
-                {
-                    first_error = (result != 0) ? result : wait_result;
+                    first_error = result;
                     sink_state.cleanup_failure = BroadcastSinkStep::cleanup_periodic_sync;
                 }
             }
@@ -1071,6 +1172,18 @@ namespace nucode::ble::audio
             {
                 sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
                 return periodic_callback_result;
+            }
+            const int scan_result = stopScanWithRetry();
+            if ((scan_result != 0) && (first_error == 0))
+            {
+                first_error = scan_result;
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+            }
+            const int final_state_callback_result = drainStateCallbacks();
+            if (final_state_callback_result != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return final_state_callback_result;
             }
             const bool reception_released = !sink_state.scanning &&
                                              !sink_state.sink_created &&
@@ -1172,19 +1285,6 @@ namespace nucode::ble::audio
                 sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
                 return first_error;
             }
-            if (sink_state.scanning)
-            {
-                const int result = bt_le_scan_stop();
-                if ((result != 0) && (result != -EALREADY))
-                {
-                    first_error = result;
-                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
-                }
-                else
-                {
-                    sink_state.scanning = false;
-                }
-            }
             if (sink_state.sink_created &&
                 (atomic_get(&sink_state.sync_requested) != 0))
             {
@@ -1256,19 +1356,10 @@ namespace nucode::ble::audio
             }
             if (!sink_state.sink_created && (currentPeriodicSync() != nullptr))
             {
-                bt_le_per_adv_sync *const periodic_sync = currentPeriodicSync();
-                k_sem_reset(&periodic_stopped);
-                const int result = bt_le_per_adv_sync_delete(periodic_sync);
-                const int wait_result = (result == 0)
-                                            ? k_sem_take(&periodic_stopped, K_SECONDS(2))
-                                            : 0;
-                if ((result == 0) && (wait_result == 0))
+                const int result = deletePeriodicSyncForCleanup();
+                if ((result != 0) && (first_error == 0))
                 {
-                    atomic_ptr_clear(&sink_state.periodic_sync);
-                }
-                else if (first_error == 0)
-                {
-                    first_error = (result != 0) ? result : wait_result;
+                    first_error = result;
                     sink_state.cleanup_failure = BroadcastSinkStep::cleanup_periodic_sync;
                 }
             }
@@ -1277,6 +1368,12 @@ namespace nucode::ble::audio
             {
                 sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
                 return periodic_callback_result;
+            }
+            const int scan_result = stopScanWithRetry();
+            if ((scan_result != 0) && (first_error == 0))
+            {
+                first_error = scan_result;
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
             }
             const int state_callback_result = drainStateCallbacks();
             if (state_callback_result != 0)
@@ -1570,14 +1667,13 @@ namespace nucode::ble::audio
         {
             if (sink_state.scanning)
             {
-                const int scan_result = bt_le_scan_stop();
-                if ((scan_result != 0) && (scan_result != -EALREADY))
+                const int scan_result = stopScanWithRetry();
+                if (scan_result != 0)
                 {
                     stage_ = BroadcastStage::failed;
                     (void)record(Error::stack_error, scan_result);
                     return;
                 }
-                sink_state.scanning = false;
             }
 
             const bt_le_per_adv_sync_param sync_param = {

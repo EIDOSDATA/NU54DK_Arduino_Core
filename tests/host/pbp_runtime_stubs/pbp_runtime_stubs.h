@@ -172,6 +172,20 @@ inline int k_mutex_unlock(k_mutex *mutex)
     return 0;
 }
 
+inline std::int32_t k_msleep(std::int32_t milliseconds)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+    return 0;
+}
+
+inline std::uint32_t k_uptime_get_32()
+{
+    static const auto started = std::chrono::steady_clock::now();
+    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now() - started);
+    return static_cast<std::uint32_t>(elapsed.count());
+}
+
 struct k_msgq
 {
     std::mutex mutex;
@@ -564,6 +578,57 @@ struct bt_le_per_adv_sync_cb
     void (*term)(bt_le_per_adv_sync *, const bt_le_per_adv_sync_term_info *) = nullptr;
 };
 
+namespace pbp_stub
+{
+    /** @brief PA 취소와 explicit scan 종료의 호출 순서를 기록합니다. */
+    enum class CleanupEvent : std::uint8_t
+    {
+        periodic_delete,
+        periodic_released,
+        scan_stop,
+    };
+
+    enum class PeriodicDeleteMode : std::uint8_t
+    {
+        pending,
+        synchronous,
+        late,
+    };
+
+    inline std::deque<int> scan_stop_results;
+    inline std::deque<int> periodic_delete_results;
+    inline int scan_stop_default_result = 0;
+    inline int periodic_delete_default_result = 0;
+    inline unsigned int scan_stop_calls = 0U;
+    inline unsigned int periodic_delete_calls = 0U;
+    inline unsigned int periodic_lookup_calls = 0U;
+    inline std::atomic<bool> periodic_present{false};
+    inline std::atomic<unsigned int> periodic_cancel_polls{0U};
+    inline PeriodicDeleteMode periodic_delete_mode = PeriodicDeleteMode::pending;
+    inline bt_le_per_adv_sync *periodic_instance = nullptr;
+    inline bt_le_per_adv_sync_cb *periodic_callbacks = nullptr;
+    inline bt_addr_le_t periodic_address = {};
+    inline std::uint8_t periodic_sid = 0U;
+    inline std::vector<CleanupEvent> cleanup_events;
+
+    /** @brief scan·PA cleanup stub 상태를 다음 시나리오 전에 초기화합니다. */
+    inline void resetCleanupState()
+    {
+        scan_stop_results.clear();
+        periodic_delete_results.clear();
+        scan_stop_default_result = 0;
+        periodic_delete_default_result = 0;
+        scan_stop_calls = 0U;
+        periodic_delete_calls = 0U;
+        periodic_lookup_calls = 0U;
+        periodic_present.store(false);
+        periodic_cancel_polls.store(0U);
+        periodic_delete_mode = PeriodicDeleteMode::pending;
+        periodic_instance = nullptr;
+        cleanup_events.clear();
+    }
+}
+
 struct bt_le_scan_recv_info
 {
     const bt_addr_le_t *addr = nullptr;
@@ -770,7 +835,15 @@ inline int bt_le_scan_start(int, void *)
 
 inline int bt_le_scan_stop()
 {
-    return 0;
+    ++pbp_stub::scan_stop_calls;
+    pbp_stub::cleanup_events.push_back(pbp_stub::CleanupEvent::scan_stop);
+    if (pbp_stub::scan_stop_results.empty())
+    {
+        return pbp_stub::scan_stop_default_result;
+    }
+    const int result = pbp_stub::scan_stop_results.front();
+    pbp_stub::scan_stop_results.pop_front();
+    return result;
 }
 
 inline int bt_le_scan_cb_register(bt_le_scan_cb *)
@@ -782,8 +855,9 @@ inline void bt_le_scan_cb_unregister(bt_le_scan_cb *)
 {
 }
 
-inline int bt_le_per_adv_sync_cb_register(bt_le_per_adv_sync_cb *)
+inline int bt_le_per_adv_sync_cb_register(bt_le_per_adv_sync_cb *callbacks)
 {
+    pbp_stub::periodic_callbacks = callbacks;
     return 0;
 }
 
@@ -792,17 +866,93 @@ inline int bt_le_per_adv_sync_cb_unregister(bt_le_per_adv_sync_cb *)
     return 0;
 }
 
-inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *,
+inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
                                      bt_le_per_adv_sync **sync)
 {
     static bt_le_per_adv_sync instance;
     *sync = &instance;
+    pbp_stub::periodic_instance = &instance;
+    pbp_stub::periodic_address = parameters->addr;
+    pbp_stub::periodic_sid = parameters->sid;
+    pbp_stub::periodic_present.store(true);
     return 0;
 }
 
-inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *)
+inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
 {
+    ++pbp_stub::periodic_delete_calls;
+    pbp_stub::cleanup_events.push_back(pbp_stub::CleanupEvent::periodic_delete);
+    if (!pbp_stub::periodic_delete_results.empty())
+    {
+        const int result = pbp_stub::periodic_delete_results.front();
+        pbp_stub::periodic_delete_results.pop_front();
+        if (result != 0)
+        {
+            return result;
+        }
+    }
+    else if (pbp_stub::periodic_delete_default_result != 0)
+    {
+        return pbp_stub::periodic_delete_default_result;
+    }
+    if (pbp_stub::periodic_delete_mode ==
+        pbp_stub::PeriodicDeleteMode::pending)
+    {
+        pbp_stub::periodic_cancel_polls.store(2U);
+        return 0;
+    }
+    if (pbp_stub::periodic_delete_mode ==
+        pbp_stub::PeriodicDeleteMode::synchronous)
+    {
+        pbp_stub::periodic_present.store(false);
+        if ((pbp_stub::periodic_callbacks != nullptr) &&
+            (pbp_stub::periodic_callbacks->term != nullptr))
+        {
+            const bt_le_per_adv_sync_term_info information = {
+                .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+            };
+            pbp_stub::periodic_callbacks->term(sync, &information);
+        }
+        return 0;
+    }
+    std::thread([sync]()
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        pbp_stub::periodic_present.store(false);
+        if ((pbp_stub::periodic_callbacks != nullptr) &&
+            (pbp_stub::periodic_callbacks->term != nullptr))
+        {
+            const bt_le_per_adv_sync_term_info information = {
+                .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+            };
+            pbp_stub::periodic_callbacks->term(sync, &information);
+        }
+    }).detach();
     return 0;
+}
+
+inline bt_le_per_adv_sync *bt_le_per_adv_sync_lookup_addr(
+    const bt_addr_le_t *address, std::uint8_t sid)
+{
+    ++pbp_stub::periodic_lookup_calls;
+    unsigned int polls = pbp_stub::periodic_cancel_polls.load();
+    if (polls != 0U)
+    {
+        polls = pbp_stub::periodic_cancel_polls.fetch_sub(1U);
+        if (polls == 1U)
+        {
+            pbp_stub::periodic_present.store(false);
+            pbp_stub::cleanup_events.push_back(
+                pbp_stub::CleanupEvent::periodic_released);
+        }
+    }
+    if (!pbp_stub::periodic_present.load() ||
+        (bt_addr_le_cmp(address, &pbp_stub::periodic_address) != 0) ||
+        (sid != pbp_stub::periodic_sid))
+    {
+        return nullptr;
+    }
+    return pbp_stub::periodic_instance;
 }
 
 struct bt_le_ext_adv
