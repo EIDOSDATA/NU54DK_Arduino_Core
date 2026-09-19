@@ -12,6 +12,7 @@
 
 | 기록 | 용도 |
 | --- | --- |
+| [201 — M31-W03 Arduino BAP broadcast 비암호화와 재가입](201_M31_W03_Arduino_BAP_broadcast_비암호화와_재가입.md) | clean 공개 source/sink LC3 방송과 stop/restart 재가입 20/20, Broadcast Code·강제 sync loss 잔여 |
 | [196 — M31-W02 공개 CIS→BIS 세 보드 사용자 SDU 실기](196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md) | clean 세 역할 20/20·2,000/2,000 CIS 수신→BIS 전달·수신, 자원 반환 20/20, 공개 ISO 예제 감사 0건 |
 | [195 — M31-W02 공개 BIS 시각 동기 사용자 SDU 실기](195_M31_W02_공개_BIS_시각동기_사용자_SDU_실기.md) | clean 시간 동기 두 역할 20/20·2,000/2,000, HCI·수신 시각 유효·단조 0오류, W02 공개 예제 3개 진행 중 |
 | [194 — M31-W02 공개 암호화 BIS 사용자 SDU 실기](194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md) | clean 암호화 두 역할 20/20·2,000/2,000, 잘못된 Code MIC 거부·유효 SDU 0, W02 공개 예제 5개 진행 중 |
