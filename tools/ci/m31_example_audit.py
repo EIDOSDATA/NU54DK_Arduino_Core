@@ -114,6 +114,31 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC_COUNT=2",
                 "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "BapBroadcastSource":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>", "BroadcastSource", "Lc3Codec",
+                "BLEDevice.begin(", "audioSource.begin(",
+                "audioSource.sendFrame(", "codec.encode(", "audioSource.end(",
+            )
+            options = (
+                "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                "CONFIG_BT_BAP_BROADCAST_SRC_STREAM_COUNT=1",
+                "CONFIG_BT_BAP_BROADCAST_SRC_SUBGROUP_COUNT=1",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "BapBroadcastSink":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>", "BroadcastSink", "Lc3Codec",
+                "BLEDevice.begin(", "audioSink.begin(", "audioSink.poll(",
+                "audioSink.readFrame(", "codec.decode(", "audioSink.end(",
+            )
+            options = (
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                "CONFIG_BT_BAP_BROADCAST_SNK_STREAM_COUNT=1",
+                "CONFIG_BT_PER_ADV_SYNC=y", "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name in {"BapUnicastSource", "BapUnicastCycle"}:
             required = (
                 "#include <NUCODE_BLE.h>",

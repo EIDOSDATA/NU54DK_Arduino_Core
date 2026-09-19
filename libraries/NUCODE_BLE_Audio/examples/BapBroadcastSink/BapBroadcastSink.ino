@@ -1,0 +1,124 @@
+/**
+ * @file BapBroadcastSink.ino
+ * @brief BAP broadcast source를 찾아 LC3 frame을 수신하고 decode합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <NUCODE_BLE.h>
+#include <NUCODE_BLE_Audio.h>
+
+using nucode::ble::audio::BroadcastSink;
+using nucode::ble::audio::BroadcastStage;
+using nucode::ble::audio::Error;
+using nucode::ble::audio::Lc3Codec;
+
+namespace
+{
+    constexpr const char *broadcastName = "NU54-AUDIO-BROADCAST";
+    BroadcastSink audioSink;
+    Lc3Codec codec;
+    bool announcedStreaming = false;
+    bool reportedFailure = false;
+
+    /** @brief 공개 API로 방송 검색을 시작하고 결과를 Serial에 기록합니다. */
+    bool startListening()
+    {
+        const Error result = audioSink.begin(broadcastName);
+        if (result != Error::none)
+        {
+            Serial.print("broadcast sink start failed: ");
+            Serial.println(audioSink.nativeCode());
+            return false;
+        }
+        announcedStreaming = false;
+        reportedFailure = false;
+        Serial.println("broadcast sink scanning");
+        return true;
+    }
+
+    /** @brief PCM frame의 절대값 합으로 실제 decode 결과를 확인합니다. */
+    std::uint32_t frameEnergy(const std::int16_t (&pcm)[160])
+    {
+        std::uint32_t energy = 0U;
+        for (const std::int16_t sample : pcm)
+        {
+            const std::int32_t value = sample;
+            energy += static_cast<std::uint32_t>(value < 0 ? -value : value);
+        }
+        return energy;
+    }
+} // namespace
+
+/** @brief Bluetooth, LC3 codec, BAP broadcast sink를 순서대로 시작합니다. */
+void setup()
+{
+    Serial.begin(115200);
+    if (!BLEDevice.begin("NU54-AUDIO-SINK"))
+    {
+        Serial.println("Bluetooth start failed");
+        return;
+    }
+    if (codec.begin() != Error::none)
+    {
+        Serial.println("LC3 codec start failed");
+        return;
+    }
+    static_cast<void>(startListening());
+}
+
+/** @brief 동기화 단계를 진행하고 수신 LC3 frame을 PCM으로 decode합니다. */
+void loop()
+{
+    BLEDevice.poll();
+    audioSink.poll();
+
+    while (Serial.available() > 0)
+    {
+        const char command = static_cast<char>(Serial.read());
+        if (command == 's')
+        {
+            const Error result = audioSink.end();
+            Serial.print("broadcast sink stopped: ");
+            Serial.println(static_cast<unsigned int>(result));
+        }
+        else if (command == 'r')
+        {
+            static_cast<void>(startListening());
+        }
+    }
+
+    if ((audioSink.stage() == BroadcastStage::failed) && !reportedFailure)
+    {
+        reportedFailure = true;
+        Serial.print("broadcast sync failed: ");
+        Serial.println(audioSink.nativeCode());
+    }
+    if (audioSink.streaming() && !announcedStreaming)
+    {
+        announcedStreaming = true;
+        Serial.println("broadcast sink streaming");
+    }
+
+    std::uint8_t frame[40] = {};
+    while (audioSink.readFrame(frame))
+    {
+        std::int16_t pcm[160] = {};
+        if (codec.decode(frame, sizeof(frame), pcm, 160U) != Error::none)
+        {
+            Serial.println("LC3 decode failed");
+            continue;
+        }
+        const std::uint32_t count = audioSink.receivedFrames();
+        if ((count % 100U) == 0U)
+        {
+            Serial.print("broadcast received=");
+            Serial.print(count);
+            Serial.print(" energy=");
+            Serial.print(frameEnergy(pcm));
+            Serial.print(" dropped=");
+            Serial.println(audioSink.droppedFrames());
+        }
+    }
+    delay(1);
+}

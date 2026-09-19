@@ -285,6 +285,129 @@ namespace nucode::ble::audio
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };
+
+    /** @brief broadcast audio 객체의 공개 비동기 단계입니다. */
+    enum class BroadcastStage : std::uint8_t
+    {
+        idle,
+        scanning,
+        synchronizing,
+        streaming,
+        stopping,
+        failed,
+    };
+
+    /**
+     * @brief mono LC3 frame을 BAP broadcast stream으로 송신합니다.
+     *
+     * BLEDevice.begin() 뒤 begin()을 호출합니다. 객체는 16 kHz, 10 ms,
+     * 40-byte LC3 frame 한 개를 담는 BIS를 만들고 extended/periodic 광고와
+     * BASE를 함께 게시합니다. PCM 변환은 공개 Lc3Codec으로 수행합니다.
+     */
+    class BroadcastSource final
+    {
+      public:
+        BroadcastSource() = default;
+
+        ~BroadcastSource()
+        {
+            (void)end();
+        }
+
+        BroadcastSource(const BroadcastSource &) = delete;
+        BroadcastSource &operator=(const BroadcastSource &) = delete;
+        BroadcastSource(BroadcastSource &&) = delete;
+        BroadcastSource &operator=(BroadcastSource &&) = delete;
+
+        /** @brief 주어진 방송 이름으로 BASE와 BIS 광고를 시작합니다. */
+        Error begin(const char *broadcast_name = "NU54-AUDIO-BROADCAST") noexcept;
+
+        /** @brief 방송을 중단하고 광고와 고정 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief BIS가 LC3 frame 전송 가능한 상태인지 반환합니다. */
+        [[nodiscard]] bool streaming() const noexcept;
+
+        /** @brief BIS로 LC3 frame 하나를 비차단 전송합니다. */
+        Error sendFrame(const std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief controller에 수락된 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t sentFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Host/controller 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /**
+     * @brief BAP broadcast source를 찾고 mono LC3 frame을 수신합니다.
+     *
+     * BLEDevice.begin() 뒤 begin()을 호출하고 loop()에서 poll()을 반복합니다.
+     * 광고 이름이 일치하는 source의 periodic advertising과 BIS 1에 동기화하며,
+     * 수신 frame의 복호화는 공개 Lc3Codec으로 Arduino loop에서 수행합니다.
+     */
+    class BroadcastSink final
+    {
+      public:
+        BroadcastSink() = default;
+
+        ~BroadcastSink()
+        {
+            (void)end();
+        }
+
+        BroadcastSink(const BroadcastSink &) = delete;
+        BroadcastSink &operator=(const BroadcastSink &) = delete;
+        BroadcastSink(BroadcastSink &&) = delete;
+        BroadcastSink &operator=(BroadcastSink &&) = delete;
+
+        /** @brief 방송 이름을 선택하고 extended advertising 검색을 시작합니다. */
+        Error begin(const char *broadcast_name = "NU54-AUDIO-BROADCAST") noexcept;
+
+        /** @brief callback 결과를 Arduino 문맥에서 다음 동기화 단계로 진행합니다. */
+        void poll() noexcept;
+
+        /** @brief BIS와 periodic advertising 동기화를 끊고 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief BIS가 LC3 frame 수신 가능한 상태인지 반환합니다. */
+        [[nodiscard]] bool streaming() const noexcept;
+
+        /** @brief 수신한 LC3 frame 하나를 복사하고 queue에서 제거합니다. */
+        [[nodiscard]] bool readFrame(std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief 현재 검색 또는 동기화 단계를 반환합니다. */
+        [[nodiscard]] BroadcastStage stage() const noexcept;
+
+        /** @brief 유효하게 수신한 LC3 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t receivedFrames() const noexcept;
+
+        /** @brief queue가 가득 차서 버린 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t droppedFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Host/controller 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        BroadcastStage stage_ = BroadcastStage::idle;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
 } // namespace nucode::ble::audio
 
 #endif

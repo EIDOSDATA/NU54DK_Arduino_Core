@@ -70,6 +70,30 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
                              "PUBLIC_AUDIO_API_FLOW_MISSING")
 
+    def test_broadcast_audio_sketches_must_keep_public_data_flow(self) -> None:
+        """! @brief 방송 예제가 공개 BAP 송수신 흐름을 유지하는지 검사합니다. """
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            library = Path(temporary) / "NUCODE_BLE_Audio"
+            for name, token in (
+                ("BapBroadcastSource", "audioSource.sendFrame("),
+                ("BapBroadcastSink", "audioSink.readFrame("),
+            ):
+                source = ROOT / "libraries/NUCODE_BLE_Audio/examples" / name
+                sketch = library / "examples" / name / f"{name}.ino"
+                sketch.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source / f"{name}.ino", sketch)
+                shutil.copy2(source / "prj.conf", sketch.parent / "prj.conf")
+                with self.subTest(name=name, state="valid"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "VISIBLE_CODE")
+                sketch.write_text(
+                    sketch.read_text(encoding="utf-8").replace(token, token.replace("(", "Fake(")),
+                    encoding="utf-8",
+                )
+                with self.subTest(name=name, state="mutated"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "PUBLIC_AUDIO_API_FLOW_MISSING")
+
     def test_direction_finding_sketch_must_keep_public_control_flow(self) -> None:
         """! @brief CTE 송신 예제의 공개 start/stop 호출과 Kconfig를 검사합니다. """
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
