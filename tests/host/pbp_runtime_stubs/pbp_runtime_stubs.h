@@ -28,8 +28,7 @@
 #define CONFIG_BT_CONN_TX_USER_DATA_SIZE 0
 
 #define ARRAY_SIZE(value) (sizeof(value) / sizeof((value)[0]))
-#define CLAMP(value, low, high) \
-    ((value) < (low) ? (low) : ((value) > (high) ? (high) : (value)))
+#define CLAMP(value, low, high) ((value) < (low) ? (low) : ((value) > (high) ? (high) : (value)))
 #define K_FOREVER (-1)
 #define K_NO_WAIT 0
 #define K_SECONDS(value) (value)
@@ -45,7 +44,7 @@ namespace pbp_stub
     inline const atomic_t *blocked_atomic = nullptr;
     inline bool atomic_entered = false;
     inline bool release_atomic = false;
-}
+} // namespace pbp_stub
 
 inline atomic_val_t atomic_get(const atomic_t *target)
 {
@@ -54,10 +53,11 @@ inline atomic_val_t atomic_get(const atomic_t *target)
         std::unique_lock<std::mutex> lock(pbp_stub::atomic_mutex);
         pbp_stub::atomic_entered = true;
         pbp_stub::atomic_changed.notify_all();
-        pbp_stub::atomic_changed.wait(lock, []()
-        {
-            return pbp_stub::release_atomic;
-        });
+        pbp_stub::atomic_changed.wait(lock,
+                                      []()
+                                      {
+                                          return pbp_stub::release_atomic;
+                                      });
     }
     return __atomic_load_n(target, __ATOMIC_SEQ_CST);
 }
@@ -77,11 +77,10 @@ inline atomic_val_t atomic_dec(atomic_t *target)
     return __atomic_fetch_sub(target, 1, __ATOMIC_SEQ_CST);
 }
 
-inline bool atomic_cas(atomic_t *target, atomic_val_t old_value,
-                       atomic_val_t new_value)
+inline bool atomic_cas(atomic_t *target, atomic_val_t old_value, atomic_val_t new_value)
 {
-    return __atomic_compare_exchange_n(target, &old_value, new_value, false,
-                                       __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+    return __atomic_compare_exchange_n(target, &old_value, new_value, false, __ATOMIC_SEQ_CST,
+                                       __ATOMIC_SEQ_CST);
 }
 
 inline void *atomic_ptr_get(const atomic_ptr_t *target)
@@ -101,8 +100,8 @@ inline void atomic_ptr_clear(atomic_ptr_t *target)
 
 inline bool atomic_ptr_cas(atomic_ptr_t *target, void *old_value, void *new_value)
 {
-    return __atomic_compare_exchange_n(target, &old_value, new_value, false,
-                                       __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+    return __atomic_compare_exchange_n(target, &old_value, new_value, false, __ATOMIC_SEQ_CST,
+                                       __ATOMIC_SEQ_CST);
 }
 
 struct k_sem
@@ -154,7 +153,7 @@ inline int k_sem_take(k_sem *semaphore, int timeout_seconds)
     return 0;
 }
 
-#define K_SEM_DEFINE(name, initial, maximum) \
+#define K_SEM_DEFINE(name, initial, maximum)                                                       \
     k_sem name = {std::mutex(), std::condition_variable(), initial, maximum}
 
 using k_mutex = std::recursive_mutex;
@@ -194,7 +193,7 @@ struct k_msgq
     std::deque<std::vector<std::uint8_t>> elements;
 };
 
-#define K_MSGQ_DEFINE(name, element_size_value, capacity_value, alignment) \
+#define K_MSGQ_DEFINE(name, element_size_value, capacity_value, alignment)                         \
     k_msgq name = {std::mutex(), element_size_value, capacity_value, {}}
 
 inline int k_msgq_put(k_msgq *queue, const void *data, int)
@@ -241,8 +240,8 @@ struct net_buf_simple
     std::uint8_t *data = nullptr;
 };
 
-#define NET_BUF_SIMPLE_DEFINE(name, capacity) \
-    std::uint8_t name##_storage[capacity] = {}; \
+#define NET_BUF_SIMPLE_DEFINE(name, capacity)                                                      \
+    std::uint8_t name##_storage[capacity] = {};                                                    \
     net_buf_simple name = {0U, capacity, name##_storage}
 #define NET_BUF_POOL_FIXED_DEFINE(name, count, size, user_size, destroy) int name = 0
 #define BT_ISO_SDU_BUF_SIZE(value) (value)
@@ -344,9 +343,15 @@ constexpr std::uint8_t BT_AUDIO_METADATA_TYPE_STREAM_CONTEXT = 2U;
 #define BT_AUDIO_CODEC_CAP_FREQ_16KHZ 1
 #define BT_AUDIO_CODEC_CAP_DURATION_10 1
 #define BT_AUDIO_CODEC_CAP_CHAN_COUNT_SUPPORT(value) (value)
-#define BT_AUDIO_CODEC_CAP_LC3(...) bt_audio_codec_cap{}
-#define BT_AUDIO_CODEC_LC3_CONFIG(freq, duration, location, octets, blocks, context) \
-    bt_audio_codec_cfg{BT_HCI_CODING_FORMAT_LC3, freq, duration, octets, blocks, location}
+#define BT_AUDIO_CODEC_CAP_LC3(...)                                                                \
+    bt_audio_codec_cap                                                                             \
+    {                                                                                              \
+    }
+#define BT_AUDIO_CODEC_LC3_CONFIG(freq, duration, location, octets, blocks, context)               \
+    bt_audio_codec_cfg                                                                             \
+    {                                                                                              \
+        BT_HCI_CODING_FORMAT_LC3, freq, duration, octets, blocks, location                         \
+    }
 
 inline int bt_audio_codec_cfg_get_freq(const bt_audio_codec_cfg *codec)
 {
@@ -369,7 +374,7 @@ inline int bt_audio_codec_cfg_get_frame_blocks_per_sdu(const bt_audio_codec_cfg 
 }
 
 inline int bt_audio_codec_cfg_get_chan_allocation(const bt_audio_codec_cfg *codec,
-                                                   bt_audio_location *location, bool)
+                                                  bt_audio_location *location, bool)
 {
     *location = codec->location;
     return 0;
@@ -380,8 +385,7 @@ inline std::uint8_t bt_audio_get_chan_count(bt_audio_location location)
     return static_cast<std::uint8_t>(__builtin_popcount(location));
 }
 
-inline int bt_audio_codec_cfg_set_val(bt_audio_codec_cfg *codec,
-                                      bt_audio_codec_cfg_type type,
+inline int bt_audio_codec_cfg_set_val(bt_audio_codec_cfg *codec, bt_audio_codec_cfg_type type,
                                       const std::uint8_t *data, std::size_t length)
 {
     if ((data == nullptr) || (length != 1U))
@@ -390,23 +394,23 @@ inline int bt_audio_codec_cfg_set_val(bt_audio_codec_cfg *codec,
     }
     switch (type)
     {
-        case 1U:
-            codec->frequency = data[0];
-            break;
-        case 2U:
-            codec->duration = data[0];
-            break;
-        case 3U:
-            codec->octets = data[0];
-            break;
-        case 4U:
-            codec->blocks = data[0];
-            break;
-        case 5U:
-            codec->location = data[0];
-            break;
-        default:
-            return -ENOTSUP;
+    case 1U:
+        codec->frequency = data[0];
+        break;
+    case 2U:
+        codec->duration = data[0];
+        break;
+    case 3U:
+        codec->octets = data[0];
+        break;
+    case 4U:
+        codec->blocks = data[0];
+        break;
+    case 5U:
+        codec->location = data[0];
+        break;
+    default:
+        return -ENOTSUP;
     }
     return 0;
 }
@@ -462,7 +466,7 @@ namespace pbp_stub
     inline bool block_base = false;
     inline bool base_entered = false;
     inline bool release_base = false;
-}
+} // namespace pbp_stub
 
 inline int bt_bap_base_get_size(const bt_bap_base *base)
 {
@@ -470,15 +474,16 @@ inline int bt_bap_base_get_size(const bt_bap_base *base)
 }
 
 inline int bt_bap_base_subgroup_codec_to_codec_cfg(const bt_bap_base_subgroup *subgroup,
-                                                    bt_audio_codec_cfg *codec)
+                                                   bt_audio_codec_cfg *codec)
 {
     *codec = subgroup->codec;
     return 0;
 }
 
-inline int bt_bap_base_subgroup_foreach_bis(
-    const bt_bap_base_subgroup *subgroup,
-    bool (*callback)(const bt_bap_base_subgroup_bis *, void *), void *user_data)
+inline int bt_bap_base_subgroup_foreach_bis(const bt_bap_base_subgroup *subgroup,
+                                            bool (*callback)(const bt_bap_base_subgroup_bis *,
+                                                             void *),
+                                            void *user_data)
 {
     for (const auto &bis : subgroup->bis)
     {
@@ -490,19 +495,20 @@ inline int bt_bap_base_subgroup_foreach_bis(
     return 0;
 }
 
-inline int bt_bap_base_foreach_subgroup(
-    const bt_bap_base *base,
-    bool (*callback)(const bt_bap_base_subgroup *, void *), void *user_data)
+inline int bt_bap_base_foreach_subgroup(const bt_bap_base *base,
+                                        bool (*callback)(const bt_bap_base_subgroup *, void *),
+                                        void *user_data)
 {
     if (pbp_stub::block_base)
     {
         std::unique_lock<std::mutex> lock(pbp_stub::base_mutex);
         pbp_stub::base_entered = true;
         pbp_stub::base_changed.notify_all();
-        pbp_stub::base_changed.wait(lock, []()
-        {
-            return pbp_stub::release_base;
-        });
+        pbp_stub::base_changed.wait(lock,
+                                    []()
+                                    {
+                                        return pbp_stub::release_base;
+                                    });
     }
     for (const auto &subgroup : base->subgroups)
     {
@@ -529,8 +535,7 @@ struct bt_bap_stream
     const bt_bap_stream_ops *callbacks = nullptr;
 };
 
-inline void bt_bap_stream_cb_register(bt_bap_stream *stream,
-                                      const bt_bap_stream_ops *callbacks)
+inline void bt_bap_stream_cb_register(bt_bap_stream *stream, const bt_bap_stream_ops *callbacks)
 {
     stream->callbacks = callbacks;
 }
@@ -605,6 +610,8 @@ namespace pbp_stub
         normal,
         synced_before_return,
         terminated_before_return,
+        stale_zero_terminated_before_return,
+        stale_mutated_terminated_before_return,
         foreign_terminated_before_return,
     };
 
@@ -624,6 +631,11 @@ namespace pbp_stub
     inline bool reuse_same_identity_before_term = false;
     inline bool reuse_same_identity_during_lookup = false;
     inline bool foreign_periodic = false;
+    inline bool block_periodic_delete_entry = false;
+    inline bool periodic_delete_entry_entered = false;
+    inline bool allow_periodic_delete_entry = false;
+    inline std::mutex periodic_delete_entry_mutex;
+    inline std::condition_variable periodic_delete_entry_changed;
     inline PeriodicCreateMode periodic_create_mode = PeriodicCreateMode::normal;
     inline PeriodicDeleteMode periodic_delete_mode = PeriodicDeleteMode::pending;
     inline bt_le_per_adv_sync *periodic_instance = nullptr;
@@ -649,6 +661,9 @@ namespace pbp_stub
         reuse_same_identity_before_term = false;
         reuse_same_identity_during_lookup = false;
         foreign_periodic = false;
+        block_periodic_delete_entry = false;
+        periodic_delete_entry_entered = false;
+        allow_periodic_delete_entry = false;
         periodic_create_mode = PeriodicCreateMode::normal;
         periodic_delete_mode = PeriodicDeleteMode::pending;
         periodic_instance = nullptr;
@@ -664,7 +679,7 @@ namespace pbp_stub
         foreign_periodic = true;
         periodic_present.store(true);
     }
-}
+} // namespace pbp_stub
 
 struct bt_le_scan_recv_info
 {
@@ -769,14 +784,13 @@ inline int utf8_count_chars(const char *text)
     return static_cast<int>(strlen(text));
 }
 
-inline int bt_pbp_parse_announcement(bt_data *, bt_pbp_announcement_feature *,
-                                     std::uint8_t **)
+inline int bt_pbp_parse_announcement(bt_data *, bt_pbp_announcement_feature *, std::uint8_t **)
 {
     return -ENOTSUP;
 }
 
-inline int bt_pbp_get_announcement(const std::uint8_t *, std::size_t,
-                                   bt_pbp_announcement_feature, net_buf_simple *)
+inline int bt_pbp_get_announcement(const std::uint8_t *, std::size_t, bt_pbp_announcement_feature,
+                                   net_buf_simple *)
 {
     return 0;
 }
@@ -794,8 +808,8 @@ inline int bt_bap_broadcast_sink_create(bt_le_per_adv_sync *, std::uint32_t,
     return 0;
 }
 
-inline int bt_bap_broadcast_sink_sync(bt_bap_broadcast_sink *, std::uint32_t,
-                                      bt_bap_stream **, const std::uint8_t *)
+inline int bt_bap_broadcast_sink_sync(bt_bap_broadcast_sink *, std::uint32_t, bt_bap_stream **,
+                                      const std::uint8_t *)
 {
     return 0;
 }
@@ -916,15 +930,18 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
     pbp_stub::periodic_instance = &instance;
     pbp_stub::foreign_periodic = false;
     pbp_stub::periodic_present.store(true);
-    if (pbp_stub::periodic_create_mode !=
-        pbp_stub::PeriodicCreateMode::terminated_before_return)
+    const bool zero_identity_callback =
+        (pbp_stub::periodic_create_mode ==
+         pbp_stub::PeriodicCreateMode::terminated_before_return) ||
+        (pbp_stub::periodic_create_mode ==
+         pbp_stub::PeriodicCreateMode::stale_zero_terminated_before_return);
+    if (!zero_identity_callback)
     {
         pbp_stub::periodic_address = requested_address;
         pbp_stub::periodic_sid = requested_sid;
     }
     if ((pbp_stub::periodic_callbacks != nullptr) &&
-        (pbp_stub::periodic_create_mode ==
-         pbp_stub::PeriodicCreateMode::synced_before_return) &&
+        (pbp_stub::periodic_create_mode == pbp_stub::PeriodicCreateMode::synced_before_return) &&
         (pbp_stub::periodic_callbacks->synced != nullptr))
     {
         bt_le_per_adv_sync_synced_info information = {
@@ -933,9 +950,7 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
         };
         pbp_stub::periodic_callbacks->synced(*sync, &information);
     }
-    else if ((pbp_stub::periodic_callbacks != nullptr) &&
-             (pbp_stub::periodic_create_mode ==
-              pbp_stub::PeriodicCreateMode::terminated_before_return) &&
+    else if ((pbp_stub::periodic_callbacks != nullptr) && zero_identity_callback &&
              (pbp_stub::periodic_callbacks->term != nullptr))
     {
         /* locked scan.c는 slot을 free한 뒤 callback을 부르고, create 함수의
@@ -947,7 +962,23 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
             .sid = pbp_stub::periodic_sid,
             .reason = 0x08U,
         };
-        pbp_stub::periodic_present.store(false);
+        if (pbp_stub::periodic_create_mode ==
+            pbp_stub::PeriodicCreateMode::terminated_before_return)
+        {
+            pbp_stub::periodic_present.store(false);
+        }
+        pbp_stub::periodic_callbacks->term(*sync, &information);
+    }
+    else if ((pbp_stub::periodic_callbacks != nullptr) &&
+             (pbp_stub::periodic_create_mode ==
+              pbp_stub::PeriodicCreateMode::stale_mutated_terminated_before_return) &&
+             (pbp_stub::periodic_callbacks->term != nullptr))
+    {
+        const bt_le_per_adv_sync_term_info information = {
+            .addr = &pbp_stub::periodic_address,
+            .sid = pbp_stub::periodic_sid,
+            .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+        };
         pbp_stub::periodic_callbacks->term(*sync, &information);
     }
     else if ((pbp_stub::periodic_callbacks != nullptr) &&
@@ -972,6 +1003,20 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
 
 inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
 {
+    {
+        std::unique_lock<std::mutex> lock(pbp_stub::periodic_delete_entry_mutex);
+        if (pbp_stub::block_periodic_delete_entry)
+        {
+            pbp_stub::periodic_delete_entry_entered = true;
+            pbp_stub::periodic_delete_entry_changed.notify_all();
+            pbp_stub::periodic_delete_entry_changed.wait(
+                lock,
+                []()
+                {
+                    return pbp_stub::allow_periodic_delete_entry;
+                });
+        }
+    }
     ++pbp_stub::periodic_delete_calls;
     if (pbp_stub::foreign_periodic)
     {
@@ -987,8 +1032,7 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
             if (pbp_stub::reuse_same_identity_before_term)
             {
                 pbp_stub::reuse_same_identity_before_term = false;
-                const bt_addr_le_t terminated_address =
-                    pbp_stub::periodic_address;
+                const bt_addr_le_t terminated_address = pbp_stub::periodic_address;
                 const std::uint8_t terminated_sid = pbp_stub::periodic_sid;
                 pbp_stub::periodic_present.store(false);
                 pbp_stub::reusePeriodicSlot(terminated_address, terminated_sid);
@@ -1006,8 +1050,7 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
             else if (pbp_stub::reuse_after_transient_delete)
             {
                 pbp_stub::reuse_after_transient_delete = false;
-                const bt_addr_le_t terminated_address =
-                    pbp_stub::periodic_address;
+                const bt_addr_le_t terminated_address = pbp_stub::periodic_address;
                 const std::uint8_t terminated_sid = pbp_stub::periodic_sid;
                 pbp_stub::periodic_present.store(false);
                 if ((pbp_stub::periodic_callbacks != nullptr) &&
@@ -1031,19 +1074,16 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
     {
         return pbp_stub::periodic_delete_default_result;
     }
-    if (pbp_stub::periodic_delete_mode ==
-        pbp_stub::PeriodicDeleteMode::pending)
+    if (pbp_stub::periodic_delete_mode == pbp_stub::PeriodicDeleteMode::pending)
     {
         pbp_stub::periodic_cancel_polls.store(2U);
         return 0;
     }
-    if (pbp_stub::periodic_delete_mode ==
-        pbp_stub::PeriodicDeleteMode::pending_stalled)
+    if (pbp_stub::periodic_delete_mode == pbp_stub::PeriodicDeleteMode::pending_stalled)
     {
         return 0;
     }
-    if (pbp_stub::periodic_delete_mode ==
-        pbp_stub::PeriodicDeleteMode::synchronous)
+    if (pbp_stub::periodic_delete_mode == pbp_stub::PeriodicDeleteMode::synchronous)
     {
         pbp_stub::periodic_present.store(false);
         if ((pbp_stub::periodic_callbacks != nullptr) &&
@@ -1060,30 +1100,31 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
     }
     const bt_addr_le_t terminated_address = pbp_stub::periodic_address;
     const std::uint8_t terminated_sid = pbp_stub::periodic_sid;
-    std::thread([sync, terminated_address, terminated_sid]()
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-        pbp_stub::periodic_present.store(false);
-        if ((pbp_stub::periodic_callbacks != nullptr) &&
-            (pbp_stub::periodic_callbacks->term != nullptr))
+    std::thread(
+        [sync, terminated_address, terminated_sid]()
         {
-            const bt_le_per_adv_sync_term_info information = {
-                .addr = &terminated_address,
-                .sid = terminated_sid,
-                .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
-            };
-            pbp_stub::periodic_callbacks->term(sync, &information);
-        }
-    }).detach();
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            pbp_stub::periodic_present.store(false);
+            if ((pbp_stub::periodic_callbacks != nullptr) &&
+                (pbp_stub::periodic_callbacks->term != nullptr))
+            {
+                const bt_le_per_adv_sync_term_info information = {
+                    .addr = &terminated_address,
+                    .sid = terminated_sid,
+                    .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+                };
+                pbp_stub::periodic_callbacks->term(sync, &information);
+            }
+        })
+        .detach();
     return 0;
 }
 
-inline bt_le_per_adv_sync *bt_le_per_adv_sync_lookup_addr(
-    const bt_addr_le_t *address, std::uint8_t sid)
+inline bt_le_per_adv_sync *bt_le_per_adv_sync_lookup_addr(const bt_addr_le_t *address,
+                                                          std::uint8_t sid)
 {
     ++pbp_stub::periodic_lookup_calls;
-    if (pbp_stub::reuse_same_identity_during_lookup &&
-        pbp_stub::periodic_present.load() &&
+    if (pbp_stub::reuse_same_identity_during_lookup && pbp_stub::periodic_present.load() &&
         (bt_addr_le_cmp(address, &pbp_stub::periodic_address) == 0) &&
         (sid == pbp_stub::periodic_sid))
     {
@@ -1099,8 +1140,7 @@ inline bt_le_per_adv_sync *bt_le_per_adv_sync_lookup_addr(
                 .sid = terminated_sid,
                 .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
             };
-            pbp_stub::periodic_callbacks->term(
-                pbp_stub::periodic_instance, &information);
+            pbp_stub::periodic_callbacks->term(pbp_stub::periodic_instance, &information);
         }
         pbp_stub::reusePeriodicSlot(terminated_address, terminated_sid);
     }
@@ -1111,8 +1151,7 @@ inline bt_le_per_adv_sync *bt_le_per_adv_sync_lookup_addr(
         if (polls == 1U)
         {
             pbp_stub::periodic_present.store(false);
-            pbp_stub::cleanup_events.push_back(
-                pbp_stub::CleanupEvent::periodic_released);
+            pbp_stub::cleanup_events.push_back(pbp_stub::CleanupEvent::periodic_released);
         }
     }
     if (!pbp_stub::periodic_present.load() ||
@@ -1194,12 +1233,10 @@ constexpr int BT_PBP_MIN_PBA_SIZE = 3;
 constexpr int BT_LE_EXT_ADV_START_DEFAULT = 0;
 #define BT_BAP_ADV_PARAM_BROADCAST_FAST nullptr
 #define BT_BAP_PER_ADV_PARAM_BROADCAST_FAST nullptr
-#define BT_BYTES_LIST_LE16(value) \
-    static_cast<std::uint8_t>((value) & 0xffU), \
-        static_cast<std::uint8_t>(((value) >> 8U) & 0xffU)
+#define BT_BYTES_LIST_LE16(value)                                                                  \
+    static_cast<std::uint8_t>((value) & 0xffU), static_cast<std::uint8_t>(((value) >> 8U) & 0xffU)
 
-inline void bt_cap_stream_ops_register(bt_cap_stream *stream,
-                                       const bt_bap_stream_ops *callbacks)
+inline void bt_cap_stream_ops_register(bt_cap_stream *stream, const bt_bap_stream_ops *callbacks)
 {
     stream->bap_stream.callbacks = callbacks;
 }
@@ -1214,8 +1251,8 @@ inline int bt_cap_initiator_unregister_cb(bt_cap_initiator_cb *)
     return 0;
 }
 
-inline int bt_cap_initiator_broadcast_audio_create(
-    const bt_cap_initiator_broadcast_create_param *, bt_cap_broadcast_source **source)
+inline int bt_cap_initiator_broadcast_audio_create(const bt_cap_initiator_broadcast_create_param *,
+                                                   bt_cap_broadcast_source **source)
 {
     static bt_cap_broadcast_source instance;
     *source = &instance;
@@ -1237,8 +1274,8 @@ inline int bt_cap_initiator_broadcast_audio_delete(bt_cap_broadcast_source *)
     return 0;
 }
 
-inline int bt_cap_initiator_broadcast_audio_update(bt_cap_broadcast_source *,
-                                                   const std::uint8_t *, std::size_t)
+inline int bt_cap_initiator_broadcast_audio_update(bt_cap_broadcast_source *, const std::uint8_t *,
+                                                   std::size_t)
 {
     return 0;
 }
@@ -1260,8 +1297,8 @@ inline int bt_le_ext_adv_create(const void *, void *, bt_le_ext_adv **advertisin
     return 0;
 }
 
-inline int bt_le_ext_adv_set_data(bt_le_ext_adv *, const bt_data *, std::size_t,
-                                  const bt_data *, std::size_t)
+inline int bt_le_ext_adv_set_data(bt_le_ext_adv *, const bt_data *, std::size_t, const bt_data *,
+                                  std::size_t)
 {
     return 0;
 }
@@ -1309,7 +1346,7 @@ inline int bt_rand(void *data, std::size_t length)
 
 class BleDeviceStub
 {
-public:
+  public:
     bool initialized() const noexcept
     {
         return true;

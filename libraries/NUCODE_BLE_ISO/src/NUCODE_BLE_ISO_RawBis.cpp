@@ -16,6 +16,8 @@
      defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE) || \
      defined(CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER))
 
+#include "../../../cores/arduino/internal/BLEPeriodicSyncLease.h"
+
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gap.h>
 #include <zephyr/bluetooth/hci_types.h>
@@ -71,6 +73,9 @@ namespace
     std::uint8_t broadcast_code[session_length] = {};
     struct bt_le_ext_adv *advertiser = nullptr;
     struct bt_le_per_adv_sync *periodic_sync = nullptr;
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    std::uint8_t periodic_sync_owner_token = 0U;
+#endif
     struct bt_iso_big *big = nullptr;
     struct bt_iso_chan channel = {};
     struct bt_iso_chan_io_qos transmit_qos = {};
@@ -84,6 +89,9 @@ namespace
     bool sync_requested = false;
     bool big_requested = false;
     bool big_disconnected = true;
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    bool periodic_delete_pending = false;
+#endif
     std::int64_t stop_started_ms = 0;
     std::uint16_t next_sequence = 0U;
     atomic_t channel_ready = ATOMIC_INIT(0);
@@ -288,7 +296,21 @@ namespace
             .skip = 0U,
             .timeout = 100U,
         };
-        recordError(bt_le_per_adv_sync_create(&parameter, &periodic_sync));
+        struct bt_le_per_adv_sync *created = nullptr;
+        const int result = bt_le_per_adv_sync_create(&parameter, &created);
+        if (result != 0)
+        {
+            recordError(result);
+            return;
+        }
+        if ((created == nullptr) ||
+            (bt_le_per_adv_sync_lookup_addr(&parameter.addr, parameter.sid) != created))
+        {
+            recordError(-ECONNRESET);
+            return;
+        }
+        periodic_sync = created;
+        periodic_delete_pending = false;
     }
 
     /** @brief peer의 BIG 정보가 기존 periodic sync에 속하는지 검사합니다. */
@@ -314,8 +336,13 @@ namespace
                             const struct bt_le_per_adv_sync_term_info *information)
     {
         static_cast<void>(information);
-        if (started && !stopping && sync == periodic_sync &&
-            atomic_get(&peer_ended) == 0)
+        if (sync != periodic_sync)
+        {
+            return;
+        }
+        periodic_sync = nullptr;
+        periodic_delete_pending = false;
+        if (started && !stopping && atomic_get(&peer_ended) == 0)
         {
             recordError(-ENOLINK);
         }
@@ -368,8 +395,24 @@ namespace
         }
         if (periodic_sync != nullptr)
         {
-            (void)bt_le_per_adv_sync_delete(periodic_sync);
-            periodic_sync = nullptr;
+            if (!periodic_delete_pending)
+            {
+                const int result = bt_le_per_adv_sync_delete(periodic_sync);
+                if (result == 0)
+                {
+                    periodic_delete_pending = true;
+                }
+                else
+                {
+                    recordError(result);
+                }
+            }
+        }
+        if (periodic_sync == nullptr)
+        {
+            periodic_delete_pending = false;
+            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                &periodic_sync_owner_token);
         }
 #endif
 #if defined(CONFIG_BT_ISO_BROADCASTER)
@@ -379,6 +422,12 @@ namespace
             (void)bt_le_ext_adv_stop(advertiser);
             (void)bt_le_ext_adv_delete(advertiser);
             advertiser = nullptr;
+        }
+#endif
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        if (periodic_sync != nullptr)
+        {
+            return;
         }
 #endif
         started = false;
@@ -423,13 +472,25 @@ namespace
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         if (periodic_sync != nullptr)
         {
-            const int result = bt_le_per_adv_sync_delete(periodic_sync);
-            if (result != 0)
+            if (!periodic_delete_pending)
             {
-                recordError(result);
-                return Error::transport_failure;
+                const int result = bt_le_per_adv_sync_delete(periodic_sync);
+                if (result != 0)
+                {
+                    recordError(result);
+                    return Error::transport_failure;
+                }
+                periodic_delete_pending = true;
             }
-            periodic_sync = nullptr;
+            if (periodic_sync != nullptr)
+            {
+                if (k_uptime_get() - stop_started_ms > 30000)
+                {
+                    recordError(-ETIMEDOUT);
+                    return Error::transport_failure;
+                }
+                return Error::busy;
+            }
         }
 #endif
         k_msgq_purge(&receive_queue);
@@ -442,6 +503,10 @@ namespace
         atomic_set(&peer_ended, 0);
 #if defined(CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE)
         atomic_set(&tx_sync_available, 0);
+#endif
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+            &periodic_sync_owner_token);
 #endif
         return Error::none;
     }
@@ -476,6 +541,13 @@ namespace nucode::ble::iso
         {
             return Error::busy;
         }
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        if (!nucode::arduino::internal::claimBLEPeriodicSyncLease(
+                &periodic_sync_owner_token))
+        {
+            return Error::busy;
+        }
+#endif
         owner = this;
         memcpy(session_id, requested_id, session_length);
         if (encrypted_role)
@@ -495,6 +567,9 @@ namespace nucode::ble::iso
         sync_requested = false;
         big_requested = false;
         big_disconnected = true;
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        periodic_delete_pending = false;
+#endif
         memset(&channel, 0, sizeof(channel));
         memset(&qos, 0, sizeof(qos));
         channel.ops = &operations;
@@ -507,6 +582,10 @@ namespace nucode::ble::iso
                 recordError(result);
                 owner = nullptr;
                 memset(broadcast_code, 0, sizeof(broadcast_code));
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+                nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                    &periodic_sync_owner_token);
+#endif
                 return Error::transport_failure;
             }
             bluetooth_enabled = true;

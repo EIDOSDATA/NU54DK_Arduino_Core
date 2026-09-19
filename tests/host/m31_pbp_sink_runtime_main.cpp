@@ -43,11 +43,11 @@ namespace
     }
 
     /** @brief 시험 PA pointer를 주소·SID·세대가 결합된 현재 소유권으로 설치합니다. */
-    void bindPeriodicOwnership(bt_le_per_adv_sync *sync,
-                               const bt_addr_le_t &address,
-                               std::uint8_t sid,
-                               bool synchronized = false)
+    void bindPeriodicOwnership(bt_le_per_adv_sync *sync, const bt_addr_le_t &address,
+                               std::uint8_t sid, bool synchronized = false)
     {
+        assert(nucode::arduino::internal::claimBLEPeriodicSyncLease(
+            &periodic_sync_owner_token));
         sink_state.broadcaster = address;
         sink_state.sid = sid;
         sink_state.periodic_owner_address = address;
@@ -55,9 +55,11 @@ namespace
         atomic_set(&sink_state.periodic_cancel_issued, 0);
         atomic_set(&sink_state.periodic_delete_issued, 0);
         atomic_set(&sink_state.periodic_terminated, 0);
+        atomic_ptr_clear(&sink_state.periodic_create_term_candidate);
+        atomic_ptr_clear(&sink_state.periodic_create_synced_candidate);
+        atomic_set(&sink_state.periodic_create_term_reason, 0);
         const std::uint32_t session = nextPeriodicSession();
-        atomic_set(&sink_state.periodic_session,
-                   static_cast<atomic_val_t>(session));
+        atomic_set(&sink_state.periodic_session, static_cast<atomic_val_t>(session));
         atomic_set(&sink_state.periodic_create_session, 0);
         atomic_ptr_set(&sink_state.periodic_sync, sync);
         atomic_set(&sink_state.periodic_synced, synchronized ? 1 : 0);
@@ -73,24 +75,24 @@ namespace
         baseReceived(&shared_sink, &malformed_size, 4U);
         assert(atomic_get(&sink_state.error) == -EBADMSG);
 
-        const std::uint8_t override_frequency[] = {2U, 1U,
-                                                    BT_AUDIO_CODEC_CFG_FREQ_16KHZ};
+        const std::uint8_t override_frequency[] = {2U, 1U, BT_AUDIO_CODEC_CFG_FREQ_16KHZ};
         bt_audio_codec_cfg unsupported = standardCodec();
         unsupported.frequency = 9;
         bt_bap_base multi = {
             .encoded_size = 12,
-            .subgroups = {
+            .subgroups =
                 {
-                    .codec = unsupported,
-                    .bis = {{.index = 1U}},
+                    {
+                        .codec = unsupported,
+                        .bis = {{.index = 1U}},
+                    },
+                    {
+                        .codec = unsupported,
+                        .bis = {{.index = 3U,
+                                 .data = override_frequency,
+                                 .data_len = sizeof(override_frequency)}},
+                    },
                 },
-                {
-                    .codec = unsupported,
-                    .bis = {{.index = 3U,
-                             .data = override_frequency,
-                             .data_len = sizeof(override_frequency)}},
-                },
-            },
         };
         beginGeneration();
         baseReceived(&shared_sink, &multi, 12U);
@@ -104,9 +106,7 @@ namespace
             .encoded_size = 3,
             .subgroups = {{
                 .codec = standardCodec(),
-                .bis = {{.index = 1U,
-                         .data = malformed_ltv,
-                         .data_len = sizeof(malformed_ltv)}},
+                .bis = {{.index = 1U, .data = malformed_ltv, .data_len = sizeof(malformed_ltv)}},
             }},
         };
         beginGeneration();
@@ -181,25 +181,28 @@ namespace
                 pbp_stub::base_entered = false;
                 pbp_stub::release_base = false;
             }
-            std::thread callback([&]()
-            {
-                baseReceived(&shared_sink, &base, 4U);
-            });
+            std::thread callback(
+                [&]()
+                {
+                    baseReceived(&shared_sink, &base, 4U);
+                });
             {
                 std::unique_lock<std::mutex> lock(pbp_stub::base_mutex);
-                pbp_stub::base_changed.wait(lock, []()
-                {
-                    return pbp_stub::base_entered;
-                });
+                pbp_stub::base_changed.wait(lock,
+                                            []()
+                                            {
+                                                return pbp_stub::base_entered;
+                                            });
             }
 
             std::atomic<bool> teardown_done = false;
             int teardown_result = -1;
-            std::thread teardown([&]()
-            {
-                teardown_result = static_cast<int>(public_sink.end());
-                teardown_done.store(true);
-            });
+            std::thread teardown(
+                [&]()
+                {
+                    teardown_result = static_cast<int>(public_sink.end());
+                    teardown_done.store(true);
+                });
             std::this_thread::sleep_for(std::chrono::milliseconds(20));
             assert(!teardown_done.load());
             {
@@ -234,12 +237,7 @@ namespace
         const PublicBroadcastFilter filter = {};
         assert(public_sink.startPublic(filter, nullptr) == Error::none);
         pbp_stub::scan_stop_results = {
-            -EAGAIN,
-            -EBUSY,
-            -EAGAIN,
-            -EAGAIN,
-            -EAGAIN,
-            0,
+            -EAGAIN, -EBUSY, -EAGAIN, -EAGAIN, -EAGAIN, 0,
         };
         assert(public_sink.end() == Error::none);
         assert(pbp_stub::scan_stop_calls == 6U);
@@ -259,12 +257,7 @@ namespace
         sink_state.periodic_interval = 80U;
         atomic_set(&sink_state.found, 1);
         pbp_stub::scan_stop_results = {
-            -EAGAIN,
-            -EBUSY,
-            -EAGAIN,
-            -EAGAIN,
-            -EAGAIN,
-            0,
+            -EAGAIN, -EBUSY, -EAGAIN, -EAGAIN, -EAGAIN, 0,
         };
 
         public_sink.poll();
@@ -291,20 +284,10 @@ namespace
         assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
         bindPeriodicOwnership(sync, parameters.addr, parameters.sid);
         pbp_stub::periodic_delete_results = {
-            -EAGAIN,
-            -EBUSY,
-            -EAGAIN,
-            -EAGAIN,
-            -EAGAIN,
-            0,
+            -EAGAIN, -EBUSY, -EAGAIN, -EAGAIN, -EAGAIN, 0,
         };
         pbp_stub::scan_stop_results = {
-            -EAGAIN,
-            -EBUSY,
-            -EAGAIN,
-            -EAGAIN,
-            -EAGAIN,
-            0,
+            -EAGAIN, -EBUSY, -EAGAIN, -EAGAIN, -EAGAIN, 0,
         };
 
         assert(public_sink.end() == Error::none);
@@ -313,12 +296,12 @@ namespace
         assert(pbp_stub::scan_stop_calls == 6U);
         assert(currentPeriodicSync() == nullptr);
         assert(!sink_state.scanning);
-        const auto released = std::find(
-            pbp_stub::cleanup_events.begin(), pbp_stub::cleanup_events.end(),
-            pbp_stub::CleanupEvent::periodic_released);
-        const auto scan_stopped = std::find(
-            pbp_stub::cleanup_events.begin(), pbp_stub::cleanup_events.end(),
-            pbp_stub::CleanupEvent::scan_stop);
+        const auto released =
+            std::find(pbp_stub::cleanup_events.begin(), pbp_stub::cleanup_events.end(),
+                      pbp_stub::CleanupEvent::periodic_released);
+        const auto scan_stopped =
+            std::find(pbp_stub::cleanup_events.begin(), pbp_stub::cleanup_events.end(),
+                      pbp_stub::CleanupEvent::scan_stop);
         assert(released != pbp_stub::cleanup_events.end());
         assert(scan_stopped != pbp_stub::cleanup_events.end());
         assert(released < scan_stopped);
@@ -383,13 +366,14 @@ namespace
         for (const pbp_stub::PeriodicCreateMode mode : {
                  pbp_stub::PeriodicCreateMode::synced_before_return,
                  pbp_stub::PeriodicCreateMode::terminated_before_return,
+                 pbp_stub::PeriodicCreateMode::stale_zero_terminated_before_return,
+                 pbp_stub::PeriodicCreateMode::stale_mutated_terminated_before_return,
                  pbp_stub::PeriodicCreateMode::foreign_terminated_before_return,
              })
         {
             pbp_stub::resetCleanupState();
             pbp_stub::periodic_create_mode = mode;
-            pbp_stub::periodic_delete_mode =
-                pbp_stub::PeriodicDeleteMode::synchronous;
+            pbp_stub::periodic_delete_mode = pbp_stub::PeriodicDeleteMode::synchronous;
             BroadcastSink public_sink;
             const PublicBroadcastFilter filter = {};
             assert(public_sink.startPublic(filter, nullptr) == Error::none);
@@ -416,6 +400,68 @@ namespace
             assert(public_sink.end() == Error::none);
             assert(atomic_get(&sink_state.periodic_session) == 0);
         }
+    }
+
+    /** @brief create 반환 sync는 callback drain 실패에서도 exact delete로 반환합니다. */
+    void testCreateDrainFailureReleasesReturnedSync()
+    {
+        pbp_stub::resetCleanupState();
+        pbp_stub::periodic_delete_mode = pbp_stub::PeriodicDeleteMode::synchronous;
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+        sink_state.broadcaster.address[0] = 0x75U;
+        sink_state.sid = 14U;
+        sink_state.periodic_interval = 80U;
+        atomic_set(&sink_state.found, 1);
+        atomic_set(&transport_callbacks_in_flight, 1);
+
+        std::thread callback_release(
+            []()
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(2100));
+                atomic_set(&transport_callbacks_in_flight, 0);
+                k_sem_give(&transport_callbacks_drained);
+            });
+        public_sink.poll();
+        callback_release.join();
+
+        assert(public_sink.stage() == BroadcastStage::failed);
+        assert(pbp_stub::periodic_delete_calls == 1U);
+        assert(!pbp_stub::periodic_present.load());
+        assert(currentPeriodicSync() == nullptr);
+        assert(!nucode::arduino::internal::ownsBLEPeriodicSyncLease(
+            &periodic_sync_owner_token));
+        assert(public_sink.end() == Error::none);
+    }
+
+    /** @brief 다른 backend의 image-wide lease를 침범하지 않고 busy로 거부합니다. */
+    void testForeignPeriodicLeaseFailsClosed()
+    {
+        pbp_stub::resetCleanupState();
+        std::uint8_t foreign_owner_token = 0U;
+        assert(nucode::arduino::internal::claimBLEPeriodicSyncLease(
+            &foreign_owner_token));
+        assert(!nucode::arduino::internal::claimBLEPeriodicSyncLease(
+            &foreign_owner_token));
+
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+        sink_state.broadcaster.address[0] = 0x76U;
+        sink_state.sid = 15U;
+        sink_state.periodic_interval = 80U;
+        atomic_set(&sink_state.found, 1);
+        public_sink.poll();
+
+        assert(public_sink.stage() == BroadcastStage::failed);
+        assert(public_sink.lastError() == Error::busy);
+        assert(currentPeriodicSync() == nullptr);
+        assert(nucode::arduino::internal::ownsBLEPeriodicSyncLease(
+            &foreign_owner_token));
+        assert(public_sink.end() == Error::none);
+        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+            &foreign_owner_token);
     }
 
     /** @brief 같은 pointer·주소·SID 재사용 뒤 늦은 old term이 foreign sync를 보존합니다. */
@@ -466,12 +512,82 @@ namespace
         assert(atomic_get(&sink_state.periodic_session) == 0);
     }
 
+    /** @brief final ownership 검사 뒤 foreign reuse가 native delete를 앞지르지 못하게 합니다. */
+    void testFinalCheckDeleteGate()
+    {
+        pbp_stub::resetCleanupState();
+        pbp_stub::periodic_delete_mode = pbp_stub::PeriodicDeleteMode::synchronous;
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x74U;
+        parameters.sid = 12U;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid, true);
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::periodic_delete_entry_mutex);
+            pbp_stub::block_periodic_delete_entry = true;
+        }
+
+        Error end_result = Error::stack_error;
+        std::thread ending(
+            [&]()
+            {
+                end_result = public_sink.end();
+            });
+        {
+            std::unique_lock<std::mutex> lock(pbp_stub::periodic_delete_entry_mutex);
+            pbp_stub::periodic_delete_entry_changed.wait(
+                lock,
+                []()
+                {
+                    return pbp_stub::periodic_delete_entry_entered;
+                });
+        }
+
+        std::atomic<bool> foreign_gate_entered{false};
+        std::uint8_t foreign_owner_token = 0U;
+        std::thread foreign_reuse(
+            [&]()
+            {
+                while (!nucode::arduino::internal::claimBLEPeriodicSyncLease(
+                    &foreign_owner_token))
+                {
+                    std::this_thread::yield();
+                }
+                foreign_gate_entered.store(true);
+                bt_addr_le_t foreign_address = {};
+                foreign_address.address[0] = 0xc4U;
+                pbp_stub::reusePeriodicSlot(foreign_address, 13U);
+            });
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        assert(!foreign_gate_entered.load());
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::periodic_delete_entry_mutex);
+            pbp_stub::allow_periodic_delete_entry = true;
+        }
+        pbp_stub::periodic_delete_entry_changed.notify_all();
+        ending.join();
+        foreign_reuse.join();
+
+        assert(end_result == Error::none);
+        assert(pbp_stub::periodic_delete_calls == 1U);
+        assert(pbp_stub::foreign_periodic_delete_calls == 0U);
+        assert(pbp_stub::periodic_present.load());
+        assert(currentPeriodicSync() == nullptr);
+        assert(atomic_get(&sink_state.periodic_session) == 0);
+        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+            &foreign_owner_token);
+    }
+
     /** @brief pending cancel timeout 뒤 재사용된 slot은 lookup으로만 격리 해제합니다. */
     void testPendingCancelQuarantineReuse()
     {
         pbp_stub::resetCleanupState();
-        pbp_stub::periodic_delete_mode =
-            pbp_stub::PeriodicDeleteMode::pending_stalled;
+        pbp_stub::periodic_delete_mode = pbp_stub::PeriodicDeleteMode::pending_stalled;
         BroadcastSink public_sink;
         const PublicBroadcastFilter filter = {};
         assert(public_sink.startPublic(filter, nullptr) == Error::none);
@@ -485,8 +601,7 @@ namespace
 
         assert(public_sink.end() == Error::stack_error);
         assert(public_sink.stage() == BroadcastStage::failed);
-        assert(public_sink.lastStep() ==
-               BroadcastSinkStep::cleanup_periodic_sync);
+        assert(public_sink.lastStep() == BroadcastSinkStep::cleanup_periodic_sync);
         assert(pbp_stub::periodic_delete_calls == 1U);
         assert(atomic_get(&sink_state.periodic_cancel_issued) == 1);
 
@@ -541,8 +656,11 @@ int main()
     testPeriodicTerminationCallbackTiming();
     testTransientDeleteOwnerChange();
     testCallbackBeforeCreateReturn();
+    testCreateDrainFailureReleasesReturnedSync();
+    testForeignPeriodicLeaseFailsClosed();
     testSameIdentityDelayedTermination();
     testLookupDeleteReuseRace();
+    testFinalCheckDeleteGate();
     testPendingCancelQuarantineReuse();
     testRepeatedCleanupAndRebegin();
     assert(pbp_stub::periodic_callback_register_calls == 1U);

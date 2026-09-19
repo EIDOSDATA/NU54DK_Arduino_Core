@@ -3,6 +3,7 @@
  */
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 #include "GapInternal.h"
+#include "../../../../../cores/arduino/internal/BLEPeriodicSyncLease.h"
 namespace nucode::ble::internal::gap
 {
     namespace
@@ -58,6 +59,11 @@ namespace nucode::ble::internal::gap
 #endif
 
 #if defined(CONFIG_BT_PER_ADV_SYNC)
+        std::uint8_t periodic_sync_owner_token = 0U;
+        atomic_t periodic_sync_create_armed = ATOMIC_INIT(0);
+        atomic_t periodic_sync_delete_armed = ATOMIC_INIT(0);
+        atomic_t periodic_sync_term_seen = ATOMIC_INIT(0);
+
         /** @brief callback의 PAST sender link가 명시적으로 구독된 현재 handle인지 확인합니다. */
         bool pastTransferSubscribed(struct bt_conn *connection) noexcept
         {
@@ -132,7 +138,9 @@ namespace nucode::ble::internal::gap
                 k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
                 PeriodicSyncContext &context = gapState().periodic_sync;
                 if (context.instance == nullptr &&
-                    pastTransferSubscribed(information->conn))
+                    pastTransferSubscribed(information->conn) &&
+                    nucode::arduino::internal::claimBLEPeriodicSyncLease(
+                        &periodic_sync_owner_token))
                 {
                     context.instance = instance;
                     context.generation = nextPeriodicSyncGeneration();
@@ -163,6 +171,17 @@ namespace nucode::ble::internal::gap
             std::uint32_t device_generation = 0U;
             if (!currentPeriodicHandle(instance, handle, device_generation))
             {
+                if (nucode::arduino::internal::ownsBLEPeriodicSyncLease(
+                        &periodic_sync_owner_token))
+                {
+                    atomic_set(&periodic_sync_term_seen, 1);
+                }
+                if ((atomic_get(&periodic_sync_create_armed) == 0) &&
+                    (atomic_get(&periodic_sync_delete_armed) == 0))
+                {
+                    nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                        &periodic_sync_owner_token);
+                }
                 return;
             }
             k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
@@ -174,8 +193,15 @@ namespace nucode::ble::internal::gap
             context.sid = 0xffU;
             atomic_set(&context.synchronized, 0);
             k_spin_unlock(&gapState().configuration_lock, key);
+            atomic_set(&periodic_sync_term_seen, 1);
             queueEvent(BLEEvent::periodic_sync_terminated, {}, BLELinkRole::none,
                        device_generation, {}, handle);
+            if ((atomic_get(&periodic_sync_create_armed) == 0) &&
+                (atomic_get(&periodic_sync_delete_armed) == 0))
+            {
+                nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                    &periodic_sync_owner_token);
+            }
         }
 
         /** @brief controller report를 generation이 결합된 고정 queue value로 복사합니다. */
@@ -297,18 +323,35 @@ namespace nucode::ble::internal::gap
 #endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
         struct bt_le_per_adv_sync *sync = nullptr;
-        k_spinlock_key_t sync_key = k_spin_lock(&gapState().configuration_lock);
-        sync = gapState().periodic_sync.instance;
-        gapState().periodic_sync.instance = nullptr;
-        gapState().periodic_sync.generation = 0U;
-        gapState().periodic_sync.device_generation = 0U;
-        gapState().periodic_sync.address = BLEAddress{};
-        gapState().periodic_sync.sid = 0xffU;
-        atomic_set(&gapState().periodic_sync.synchronized, 0);
-        k_spin_unlock(&gapState().configuration_lock, sync_key);
-        if (sync != nullptr)
+        if (atomic_cas(&periodic_sync_delete_armed, 0, 1))
         {
-            static_cast<void>(bt_le_per_adv_sync_delete(sync));
+            k_spinlock_key_t sync_key = k_spin_lock(&gapState().configuration_lock);
+            sync = gapState().periodic_sync.instance;
+            k_spin_unlock(&gapState().configuration_lock, sync_key);
+            if (sync != nullptr)
+            {
+                const int result = bt_le_per_adv_sync_delete(sync);
+                if (result == 0)
+                {
+                    sync_key = k_spin_lock(&gapState().configuration_lock);
+                    if (gapState().periodic_sync.instance == sync)
+                    {
+                        gapState().periodic_sync.instance = nullptr;
+                        gapState().periodic_sync.generation = 0U;
+                        gapState().periodic_sync.device_generation = 0U;
+                        gapState().periodic_sync.address = BLEAddress{};
+                        gapState().periodic_sync.sid = 0xffU;
+                        atomic_set(&gapState().periodic_sync.synchronized, 0);
+                    }
+                    k_spin_unlock(&gapState().configuration_lock, sync_key);
+                }
+            }
+            atomic_set(&periodic_sync_delete_armed, 0);
+            if (atomic_get(&periodic_sync_term_seen) != 0)
+            {
+                nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                    &periodic_sync_owner_token);
+            }
         }
 #endif
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
@@ -561,12 +604,32 @@ namespace nucode::ble
         parameters.options = filter_duplicates ? BT_LE_PER_ADV_SYNC_OPT_FILTER_DUPLICATE
                                                : BT_LE_PER_ADV_SYNC_OPT_NONE;
         struct bt_le_per_adv_sync *instance = nullptr;
+        if (!nucode::arduino::internal::claimBLEPeriodicSyncLease(
+                &periodic_sync_owner_token))
+        {
+            internal::recordError(BLEError::busy, -EBUSY, true);
+            return false;
+        }
+        atomic_set(&periodic_sync_term_seen, 0);
+        atomic_set(&periodic_sync_create_armed, 1);
         const int result = bt_le_per_adv_sync_create(&parameters, &instance);
+        atomic_set(&periodic_sync_create_armed, 0);
         if (result < 0)
         {
+            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                &periodic_sync_owner_token);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
+        if ((instance == nullptr) ||
+            (bt_le_per_adv_sync_lookup_addr(&parameters.addr, parameters.sid) != instance))
+        {
+            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                &periodic_sync_owner_token);
+            internal::recordError(BLEError::driver_error, -ECONNRESET, true);
+            return false;
+        }
+        atomic_set(&periodic_sync_term_seen, 0);
         const std::uint32_t generation = nextPeriodicSyncGeneration();
         const std::uint32_t device_generation = static_cast<std::uint32_t>(
             atomic_get(&gapState().device_session_generation));
@@ -600,16 +663,28 @@ namespace nucode::ble
             return false;
         }
 #if defined(CONFIG_BT_PER_ADV_SYNC)
+        if (!atomic_cas(&periodic_sync_delete_armed, 0, 1))
+        {
+            internal::recordError(BLEError::busy, -EBUSY, true);
+            return false;
+        }
         struct bt_le_per_adv_sync *instance = nullptr;
         std::uint32_t device_generation = 0U;
         if (!lookupPeriodicSync(sync, instance, device_generation))
         {
+            atomic_set(&periodic_sync_delete_armed, 0);
             internal::recordError(BLEError::wrong_state, -ENOENT, true);
             return false;
         }
         const int result = bt_le_per_adv_sync_delete(instance);
+        atomic_set(&periodic_sync_delete_armed, 0);
         if (result < 0)
         {
+            if (atomic_get(&periodic_sync_term_seen) != 0)
+            {
+                nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                    &periodic_sync_owner_token);
+            }
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
@@ -624,6 +699,11 @@ namespace nucode::ble
             atomic_set(&gapState().periodic_sync.synchronized, 0);
         }
         k_spin_unlock(&gapState().configuration_lock, key);
+        if (atomic_get(&periodic_sync_term_seen) != 0)
+        {
+            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                &periodic_sync_owner_token);
+        }
         queueEvent(BLEEvent::periodic_sync_deleted, {}, BLELinkRole::none,
                    device_generation, {}, sync);
         return true;

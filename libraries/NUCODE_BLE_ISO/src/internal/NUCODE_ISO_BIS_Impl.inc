@@ -7,6 +7,7 @@
  */
 
 #include <Arduino.h>
+#include "../../../../cores/arduino/internal/BLEPeriodicSyncLease.h"
 
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gap.h>
@@ -52,6 +53,7 @@ namespace
     bool bluetooth_enabled = false;
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
     bool callbacks_registered = false;
+    bool periodic_delete_pending = false;
 #endif
     bool rx_end_printed = false;
     bool sync_requested = false;
@@ -90,6 +92,9 @@ namespace
     uint32_t seen[(sdu_count + 31U) / 32U] = {};
     struct bt_le_ext_adv *advertiser = nullptr;
     struct bt_le_per_adv_sync *periodic_sync = nullptr;
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+    uint8_t periodic_sync_owner_token = 0U;
+#endif
     struct bt_iso_big *big = nullptr;
     struct bt_iso_chan iso_channel = {};
 #if defined(CONFIG_BT_ISO_BROADCASTER)
@@ -525,11 +530,21 @@ namespace
             .skip = 0U,
             .timeout = 100U,
         };
-        const int result = bt_le_per_adv_sync_create(&parameter, &periodic_sync);
+        struct bt_le_per_adv_sync *created = nullptr;
+        const int result = bt_le_per_adv_sync_create(&parameter, &created);
         if (result != 0)
         {
             fail("pa_sync_create", result);
+            return;
         }
+        if ((created == nullptr) ||
+            (bt_le_per_adv_sync_lookup_addr(&parameter.addr, parameter.sid) != created))
+        {
+            fail("pa_sync_create", -ECONNRESET);
+            return;
+        }
+        periodic_sync = created;
+        periodic_delete_pending = false;
     }
 
     /** @brief periodic advertising이 붙은 동일 peer만 BIG 정보를 받습니다. */
@@ -549,11 +564,17 @@ namespace
     void periodicTerminated(struct bt_le_per_adv_sync *sync,
                             const struct bt_le_per_adv_sync_term_info *information)
     {
-        (void)sync;
         (void)information;
+        if (sync != periodic_sync)
+        {
+            return;
+        }
+        const bool expected_sync_loss = expect_sync_loss;
+        periodic_sync = nullptr;
+        periodic_delete_pending = false;
         if (started && !stopping && !finished)
         {
-            if (expect_sync_loss && sync == periodic_sync)
+            if (expected_sync_loss)
             {
                 Serial.print("M31BIS|1|SYNC_LOST|nonce=");
                 Serial.println(nonce);
@@ -752,6 +773,7 @@ namespace
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         expect_sync_loss = false;
         receiver_negative_session = false;
+        periodic_delete_pending = false;
 #endif
 #if defined(NUCODE_BLE_ISO_BIS_ENCRYPTED) && defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         wrong_code_active = wrong_code_next;
@@ -798,12 +820,27 @@ namespace
         Serial.print(NUCODE_NCS_REVISION);
         Serial.print("|zephyr=");
         Serial.println(NUCODE_ZEPHYR_REVISION);
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+        if (!source_role && !nucode::arduino::internal::claimBLEPeriodicSyncLease(
+                                &periodic_sync_owner_token))
+        {
+            fail("pa_sync_busy", -EBUSY);
+            return;
+        }
+#endif
         if (!bluetooth_enabled)
         {
             const int result = bt_enable(nullptr);
             if (result != 0)
             {
                 fail("bt_enable", result);
+#if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
+                if (!source_role)
+                {
+                    nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                        &periodic_sync_owner_token);
+                }
+#endif
                 return;
             }
             bluetooth_enabled = true;
@@ -990,19 +1027,32 @@ namespace
 #if defined(CONFIG_BT_ISO_SYNC_RECEIVER)
         if (!source_role && periodic_sync != nullptr)
         {
-            const int result = bt_le_per_adv_sync_delete(periodic_sync);
-            if (result != 0)
+            if (!periodic_delete_pending)
             {
-                Serial.print("M31BIS|1|FAIL|nonce=");
-                Serial.print(nonce);
-                Serial.print("|role=");
-                Serial.print(role_name);
-                Serial.print("|stage=pa_release|code=");
-                Serial.println(result);
-                stopping = false;
+                const int result = bt_le_per_adv_sync_delete(periodic_sync);
+                if (result != 0)
+                {
+                    Serial.print("M31BIS|1|FAIL|nonce=");
+                    Serial.print(nonce);
+                    Serial.print("|role=");
+                    Serial.print(role_name);
+                    Serial.print("|stage=pa_release|code=");
+                    Serial.println(result);
+                    stopping = false;
+                    return;
+                }
+                periodic_delete_pending = true;
+            }
+            if (periodic_sync != nullptr)
+            {
                 return;
             }
-            periodic_sync = nullptr;
+        }
+        if (!source_role)
+        {
+            periodic_delete_pending = false;
+            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                &periodic_sync_owner_token);
         }
 #endif
         Serial.print("M31BIS|1|STOPPED|nonce=");
