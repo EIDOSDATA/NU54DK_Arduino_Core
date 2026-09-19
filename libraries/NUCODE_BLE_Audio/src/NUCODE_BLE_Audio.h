@@ -569,6 +569,225 @@ namespace nucode::ble::audio
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };
+
+    /** @brief Common Audio Profile 객체의 공개 비동기 단계입니다. */
+    enum class CapStage : std::uint8_t
+    {
+        idle,
+        discovering,
+        ready,
+        operating,
+        streaming,
+        stopping,
+        failed,
+    };
+
+    /** @brief 마지막 CAP Commander 작업을 나타냅니다. */
+    enum class CapCommanderStep : std::uint8_t
+    {
+        none,
+        common_audio_service,
+        broadcast_assistant,
+        select_source,
+        start_reception,
+        distribute_code,
+        stop_reception,
+        remove_source,
+        cleanup,
+    };
+
+    /**
+     * @brief CAP 절차로 mono LC3 broadcast stream을 시작합니다.
+     *
+     * BLEDevice.begin() 뒤 begin()을 호출합니다. 객체는 Common Audio Profile
+     * Initiator 절차로 16 kHz, 10 ms, 40-byte LC3 BIS를 만들고 게시합니다.
+     */
+    class CapInitiator final
+    {
+      public:
+        CapInitiator() = default;
+
+        ~CapInitiator()
+        {
+            (void)end();
+        }
+
+        CapInitiator(const CapInitiator &) = delete;
+        CapInitiator &operator=(const CapInitiator &) = delete;
+        CapInitiator(CapInitiator &&) = delete;
+        CapInitiator &operator=(CapInitiator &&) = delete;
+
+        /** @brief 주어진 방송 이름으로 CAP broadcast를 시작합니다. */
+        Error begin(const char *broadcast_name = "NU54-CAP-BROADCAST") noexcept;
+
+        /** @brief 주어진 16-byte code로 암호화한 CAP broadcast를 시작합니다. */
+        Error begin(const char *broadcast_name,
+                    const BroadcastCode &broadcast_code) noexcept;
+
+        /** @brief CAP broadcast와 광고를 중단하고 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief BIS가 LC3 frame 전송 가능한 상태인지 반환합니다. */
+        [[nodiscard]] bool streaming() const noexcept;
+
+        /** @brief BIS로 LC3 frame 하나를 비차단 전송합니다. */
+        Error sendFrame(const std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief 실행 중인 broadcast의 16-bit audio context metadata를 갱신합니다. */
+        Error updateContext(std::uint16_t context) noexcept;
+
+        /** @brief 현재 CAP Initiator 단계를 반환합니다. */
+        [[nodiscard]] CapStage stage() const noexcept;
+
+        /** @brief controller에 수락된 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t sentFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Host/controller 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error start(const char *broadcast_name,
+                    const std::uint8_t *broadcast_code) noexcept;
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        CapStage stage_ = CapStage::idle;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /**
+     * @brief 이 장치를 Common Audio Profile Acceptor로 준비합니다.
+     *
+     * 고정 image에 포함된 Common Audio Service 준비 상태를 공개 API로 확인합니다.
+     * 실제 audio 역할은 같은 sketch의 BAP server 또는 broadcast sink가 담당합니다.
+     */
+    class CapAcceptor final
+    {
+      public:
+        CapAcceptor() = default;
+
+        ~CapAcceptor()
+        {
+            (void)end();
+        }
+
+        CapAcceptor(const CapAcceptor &) = delete;
+        CapAcceptor &operator=(const CapAcceptor &) = delete;
+        CapAcceptor(CapAcceptor &&) = delete;
+        CapAcceptor &operator=(CapAcceptor &&) = delete;
+
+        /** @brief 정적으로 등록된 Common Audio Service를 사용할 준비를 마칩니다. */
+        Error begin() noexcept;
+
+        /** @brief 공개 객체의 Acceptor 수명을 종료합니다. */
+        Error end() noexcept;
+
+        /** @brief Common Audio Service를 검색할 수 있는 상태인지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 현재 CAP Acceptor 단계를 반환합니다. */
+        [[nodiscard]] CapStage stage() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Host 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        CapStage stage_ = CapStage::idle;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /**
+     * @brief CAP Acceptor의 broadcast 수신 절차를 제어합니다.
+     *
+     * 연결된 peer의 Common Audio Service와 Broadcast Audio Scan Service를 검색한 뒤,
+     * scan 결과로 선택한 source의 수신 시작·code 배포·수신 중단 절차를 실행합니다.
+     */
+    class CapCommander final
+    {
+      public:
+        CapCommander() = default;
+
+        ~CapCommander()
+        {
+            (void)end();
+        }
+
+        CapCommander(const CapCommander &) = delete;
+        CapCommander &operator=(const CapCommander &) = delete;
+        CapCommander(CapCommander &&) = delete;
+        CapCommander &operator=(CapCommander &&) = delete;
+
+        /** @brief 연결된 Acceptor의 CAS와 BASS를 차례로 검색합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief Broadcast Audio announcement가 든 scan 결과를 선택합니다. */
+        Error selectSource(const BLEScanResult &result) noexcept;
+
+        /** @brief 선택한 source의 PA와 BIS 1 수신 시작을 요청합니다. */
+        Error startReception() noexcept;
+
+        /** @brief 현재 source에 16-byte Broadcast Code를 배포합니다. */
+        Error distributeBroadcastCode(const BroadcastCode &broadcast_code) noexcept;
+
+        /** @brief 현재 source의 PA와 BIS 수신 중단을 요청합니다. */
+        Error stopReception() noexcept;
+
+        /** @brief 중단된 receive state source를 Acceptor에서 제거합니다. */
+        Error removeSource() noexcept;
+
+        /** @brief callback과 연결 참조를 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 현재 CAP Commander 단계를 반환합니다. */
+        [[nodiscard]] CapStage stage() const noexcept;
+
+        /** @brief 마지막 CAP Commander 작업을 반환합니다. */
+        [[nodiscard]] CapCommanderStep lastStep() const noexcept;
+
+        /** @brief CAS와 BASS 검색이 모두 완료되었는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 유효한 receive state source가 있는지 반환합니다. */
+        [[nodiscard]] bool hasSource() const noexcept;
+
+        /** @brief 마지막 receive state source ID를 반환합니다. */
+        [[nodiscard]] std::uint8_t sourceId() const noexcept;
+
+        /** @brief 마지막 receive state가 PA synchronized인지 반환합니다. */
+        [[nodiscard]] bool periodicSynchronized() const noexcept;
+
+        /** @brief 마지막 receive state가 BIS 1 synchronized인지 반환합니다. */
+        [[nodiscard]] bool bisSynchronized() const noexcept;
+
+        /** @brief 수신한 receive state 통지 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 CAP/BASS/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        CapStage stage_ = CapStage::idle;
+        CapCommanderStep last_step_ = CapCommanderStep::none;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
 } // namespace nucode::ble::audio
 
 #endif

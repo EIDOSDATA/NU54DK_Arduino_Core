@@ -182,6 +182,65 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_PACS_SUPPORTED_CONTEXT_NOTIFIABLE=y",
                 "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "CapInitiator":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>", "CapInitiator",
+                "BroadcastCode", "broadcastCode", "Lc3Codec",
+                "BLEDevice.begin(", "initiator.begin(",
+                "initiator.sendFrame(", "initiator.updateContext(",
+                "initiator.end(", "codec.encode(",
+            )
+            options = (
+                "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                "CONFIG_BT_BAP_BROADCAST_SRC_STREAM_COUNT=1",
+                "CONFIG_BT_BAP_BROADCAST_SRC_SUBGROUP_COUNT=1",
+                "CONFIG_BT_AUDIO_CODEC_CFG_MAX_METADATA_SIZE=4",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "CapAcceptor":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "CapAcceptor", "BroadcastSink", "Lc3Codec",
+                "BLESecurity.begin(", "BLEAdvertising.addServiceUuid(",
+                "acceptor.begin(", "audioSink.beginDelegated(",
+                "audioSink.poll(", "audioSink.readFrame(", "codec.decode(",
+                "audioSink.delegatedAdds(",
+                "audioSink.delegatedModifications(",
+                "audioSink.delegatedRemovals(",
+            )
+            options = (
+                "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                "CONFIG_BT_BAP_BROADCAST_SNK_STREAM_COUNT=1",
+                "CONFIG_BT_BAP_BASS_MAX_SUBGROUPS=1",
+                "CONFIG_BT_AUDIO_CODEC_CFG_MAX_METADATA_SIZE=4",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "CapCommander":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "CapCommander", "BroadcastCode", "broadcastCode",
+                "BLESecurity.begin(", "BLEScan.start(",
+                "BLEConnection.connect(", "commander.begin(",
+                "commander.selectSource(", "commander.startReception(",
+                "commander.distributeBroadcastCode(",
+                "commander.stopReception(", "commander.removeSource(",
+            )
+            options = (
+                "CONFIG_BT_CAP_COMMANDER=y",
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_ASSISTANT=y",
+                "CONFIG_BT_BAP_BROADCAST_ASSISTANT_RECV_STATE_COUNT=1",
+                "CONFIG_BT_BAP_BASS_MAX_SUBGROUPS=1",
+            )
         elif sketch.parent.name in {"BapUnicastSource", "BapUnicastCycle"}:
             required = (
                 "#include <NUCODE_BLE.h>",
