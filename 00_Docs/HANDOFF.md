@@ -120,8 +120,9 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 3. 현재 기준선은 **M31-W01·W02 완료 2/8**입니다. W01 원장과 W02 공개 ISO 11역할을 재구현하거나
    기존 PC의 임시 package·HEX 경로를 결과물로 가정하지 않습니다. 신규 변경은 새 PC에서 clean source,
    설치 예제 build, 보드 역할별 runtime을 같은 revision으로 결합해 검증합니다.
-4. 다음 우선순위는 W03의 미완료 LC3/LE Audio profile 행입니다. W03-02 BAP unicast는 완료 근거를
-   보존하고 §3의 W03-01 잔여와 W03-03~W03-11을 차례로 판정합니다. W04 raw IQ RX와 W05 CS의
+4. 다음 우선순위는 W03-05 CAP의 미완료 unicast·cancel/부분 실패·handover와 W03-06~W03-11입니다.
+   W03-02 BAP unicast, W03-03 broadcast, W03-04 BASS와 W03-05 CAP broadcast 3역할 완료 근거를
+   보존합니다. W04 raw IQ RX와 W05 CS의
    미해결 오류는 실제 register/log 근거로 조사하며 W06~W08은 아직 미착수입니다.
 5. 실제 보드 시험 직전에 현재 CMSIS-DAP V2 probe SHA-256 identity·COM/serial·role·firmware를
    다시 확인합니다. 이전 PC mapping을 자동 재사용하지 않습니다. 공개 `.ino`는 의미 있는 사용자

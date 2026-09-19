@@ -239,22 +239,23 @@
       "id": "W03-05",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "source_status": "verified",
+      "target_applicability": "arduino_cap_broadcast_three_role_confirmed_unicast_handover_pending",
       "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "HOLD",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
+      },
+      "support_reason": "clean bfe69aec 공개 Arduino Initiator/Acceptor/Commander 3역할의 CAP broadcast 절차에서 stop·restart·code 102/102, invalid source·duplicate start 거부 각각 20/20, Initiator hardware-reset peer loss 복구 20/20과 185초 LC3 수신 18,000 frame·drop 0을 확인했다. CAP unicast group procedure, cancel·부분 실패와 handover 적용성은 잔여이므로 전체 functional HIL은 HOLD다."
     },
     {
       "id": "W03-06",
@@ -766,30 +767,30 @@
     },
     {
       "id": "W03-05:initiator",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
+      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
     },
     {
       "id": "W03-05:acceptor",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
+      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
     },
     {
       "id": "W03-05:commander",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino",
+      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
     },
     {
       "id": "W03-06:coordinator",
@@ -1345,8 +1346,9 @@
           "development_blocker": true,
           "release_blocker": true,
           "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
+          "partial_status": "CAP broadcast PASS; unicast, cancel/partial failure and handover pending"
         },
         {
           "id": "M31-AUDIO-01:W03-06",

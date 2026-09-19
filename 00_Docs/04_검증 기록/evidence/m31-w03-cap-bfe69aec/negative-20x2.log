@@ -1,0 +1,44 @@
+00000.409|ACCEPTOR|CAP received=4800 energy=1170552 dropped=0
+00001.218|COMMANDER|CAP invalid source: 1 native=0
+00001.260|COMMANDER|CAP reception restart: 2 native=0
+00001.315|COMMANDER|CAP invalid source: 1 native=0
+00001.359|COMMANDER|CAP reception restart: 2 native=0
+00001.404|COMMANDER|CAP invalid source: 1 native=0
+00001.426|ACCEPTOR|CAP received=4900 energy=1091892 dropped=0
+00001.448|COMMANDER|CAP reception restart: 2 native=0
+00001.500|COMMANDER|CAP invalid source: 1 native=0
+00001.548|COMMANDER|CAP reception restart: 2 native=0
+00001.589|COMMANDER|CAP invalid source: 1 native=0
+00001.644|COMMANDER|CAP reception restart: 2 native=0
+00001.689|COMMANDER|CAP invalid source: 1 native=0
+00001.740|COMMANDER|CAP reception restart: 2 native=0
+00001.789|COMMANDER|CAP invalid source: 1 native=0
+00001.840|COMMANDER|CAP reception restart: 2 native=0
+00001.890|COMMANDER|CAP invalid source: 1 native=0
+00001.948|COMMANDER|CAP reception restart: 2 native=0
+00002.006|COMMANDER|CAP invalid source: 1 native=0
+00002.060|COMMANDER|CAP reception restart: 2 native=0
+00002.107|COMMANDER|CAP invalid source: 1 native=0
+00002.165|COMMANDER|CAP reception restart: 2 native=0
+00002.206|COMMANDER|CAP invalid source: 1 native=0
+00002.267|COMMANDER|CAP reception restart: 2 native=0
+00002.316|COMMANDER|CAP invalid source: 1 native=0
+00002.365|COMMANDER|CAP reception restart: 2 native=0
+00002.408|COMMANDER|CAP invalid source: 1 native=0
+00002.434|ACCEPTOR|CAP received=5000 energy=919203 dropped=0
+00002.448|COMMANDER|CAP reception restart: 2 native=0
+00002.503|COMMANDER|CAP invalid source: 1 native=0
+00002.549|COMMANDER|CAP reception restart: 2 native=0
+00002.596|COMMANDER|CAP invalid source: 1 native=0
+00002.648|COMMANDER|CAP reception restart: 2 native=0
+00002.707|COMMANDER|CAP invalid source: 1 native=0
+00002.758|COMMANDER|CAP reception restart: 2 native=0
+00002.809|COMMANDER|CAP invalid source: 1 native=0
+00002.861|COMMANDER|CAP reception restart: 2 native=0
+00002.907|COMMANDER|CAP invalid source: 1 native=0
+00002.956|COMMANDER|CAP reception restart: 2 native=0
+00003.007|COMMANDER|CAP invalid source: 1 native=0
+00003.060|COMMANDER|CAP reception restart: 2 native=0
+00003.112|COMMANDER|CAP invalid source: 1 native=0
+00003.157|COMMANDER|CAP reception restart: 2 native=0
+00003.442|ACCEPTOR|CAP received=5100 energy=1015534 dropped=0
