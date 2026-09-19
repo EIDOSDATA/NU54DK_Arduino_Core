@@ -124,7 +124,8 @@ namespace
             }
             assistantStarted = false;
             delegatorConnection = BLEConnectionHandle();
-            Serial.println("broadcast delegator disconnected");
+            Serial.print("broadcast delegator disconnected reason=");
+            Serial.println(event.reason);
         }
     }
 
@@ -237,10 +238,6 @@ void loop()
         {
             reportRequest("BASS remove source", assistant.removeSource());
             codePending = false;
-        }
-        else if (command == 'q')
-        {
-            reportRequest("BASS read state", assistant.readState());
         }
         else if (command == 'x')
         {

@@ -153,7 +153,7 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "BLEScan.start(", "BLEConnection.connect(", "assistant.begin(",
                 "assistant.selectSource(", "assistant.addSource(",
                 "assistant.modifySource(", "assistant.setBroadcastCode(",
-                "assistant.removeSource(", "assistant.readState(",
+                "assistant.removeSource(",
             )
             options = (
                 "CONFIG_BT_BAP_BROADCAST_ASSISTANT=y",

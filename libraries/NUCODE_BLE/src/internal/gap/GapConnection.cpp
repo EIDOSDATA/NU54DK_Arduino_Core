@@ -390,7 +390,6 @@ namespace nucode::ble::internal::gap
         /** @brief disconnect에서 exact slot handle과 reference를 먼저 무효화합니다. */
         void connectionDisconnected(struct bt_conn *connection, std::uint8_t reason) noexcept
         {
-            ARG_UNUSED(reason);
             bool owns_connection = false;
             BLEConnectionHandle handle;
             BLELinkRole role = BLELinkRole::none;
@@ -426,7 +425,8 @@ namespace nucode::ble::internal::gap
             refreshConnectionFlags();
             if (atomic_get(&gapState().device_initialized) != 0)
             {
-                queueEvent(BLEEvent::disconnected, handle, role, device_generation);
+                queueEvent(BLEEvent::disconnected, handle, role, device_generation,
+                           {}, {}, reason);
             }
         }
 

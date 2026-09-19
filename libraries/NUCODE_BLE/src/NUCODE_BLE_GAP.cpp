@@ -54,7 +54,8 @@ namespace nucode::ble::internal::gap
     void queueEvent(BLEEvent event, BLEConnectionHandle connection, BLELinkRole role,
                     std::uint32_t device_generation,
                     BLEAdvertisingSetHandle advertising_set,
-                    BLEPeriodicSyncHandle periodic_sync) noexcept
+                    BLEPeriodicSyncHandle periodic_sync,
+                    std::uint8_t reason) noexcept
     {
         const std::uint32_t current_generation =
             static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation));
@@ -66,6 +67,7 @@ namespace nucode::ble::internal::gap
                     .advertising_set = advertising_set,
                     .periodic_sync = periodic_sync,
                     .role = role,
+                    .reason = reason,
                 },
             .device_generation =
                 device_generation == 0U ? current_generation : device_generation,

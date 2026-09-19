@@ -450,32 +450,6 @@ namespace nucode::ble::audio
         return record(Error::none);
     }
 
-    /** @brief 첫 receive state를 다시 읽습니다. */
-    Error BroadcastAssistant::readState() noexcept
-    {
-        if (!started_)
-        {
-            return record(Error::not_started);
-        }
-        if (assistant_state.receive_state_count == 0U)
-        {
-            return record(Error::not_ready);
-        }
-        if (!beginOperation(BroadcastAssistantStep::read_state))
-        {
-            return record(Error::busy);
-        }
-        last_step_ = BroadcastAssistantStep::read_state;
-        const int result = bt_bap_broadcast_assistant_read_recv_state(
-            assistant_state.connection, 0U);
-        if (result != 0)
-        {
-            completeOperation(assistant_state.connection, result);
-            return record(Error::stack_error, result);
-        }
-        return record(Error::none);
-    }
-
     /** @brief BASS callback과 connection reference를 반환합니다. */
     Error BroadcastAssistant::end() noexcept
     {
@@ -600,11 +574,6 @@ namespace nucode::ble::audio
     }
 
     Error BroadcastAssistant::removeSource() noexcept
-    {
-        return record(Error::not_ready);
-    }
-
-    Error BroadcastAssistant::readState() noexcept
     {
         return record(Error::not_ready);
     }

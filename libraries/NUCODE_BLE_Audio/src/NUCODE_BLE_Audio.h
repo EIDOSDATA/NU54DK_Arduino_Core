@@ -346,7 +346,6 @@ namespace nucode::ble::audio
         modify_source,
         broadcast_code,
         remove_source,
-        read_state,
         cleanup,
     };
 
@@ -527,9 +526,6 @@ namespace nucode::ble::audio
 
         /** @brief 현재 receive state source를 Scan Delegator에서 제거합니다. */
         Error removeSource() noexcept;
-
-        /** @brief 첫 receive state를 다시 읽어 통지 상태와 대조합니다. */
-        Error readState() noexcept;
 
         /** @brief callback과 연결 참조를 반환합니다. */
         Error end() noexcept;

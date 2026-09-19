@@ -65,7 +65,8 @@ namespace
         else if (event.event == BLEEvent::disconnected)
         {
             restartAdvertising = true;
-            Serial.println("broadcast assistant disconnected");
+            Serial.print("broadcast assistant disconnected reason=");
+            Serial.println(event.reason);
         }
     }
 
@@ -115,7 +116,10 @@ void loop()
         restartAdvertising = false;
         if (!startAdvertising())
         {
-            Serial.println("delegator advertising restart failed");
+            Serial.print("delegator advertising restart failed error=");
+            Serial.print(static_cast<unsigned int>(BLEDevice.lastError()));
+            Serial.print(" driver=");
+            Serial.println(BLEDevice.lastDriverError());
         }
     }
 

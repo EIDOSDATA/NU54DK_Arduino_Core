@@ -56,6 +56,7 @@ namespace nucode::ble::audio
             atomic_t received = 0;
             atomic_t dropped = 0;
             atomic_t error = 0;
+            atomic_t stopping = 0;
             atomic_t delegated_start = 0;
             atomic_t delegated_cleanup = 0;
             atomic_t delegated_adds = 0;
@@ -174,6 +175,7 @@ namespace nucode::ble::audio
                 atomic_set(&sink_state.periodic_synced, 0);
                 atomic_set(&sink_state.streaming, 0);
                 if ((sink_state.owner != nullptr) &&
+                    (atomic_get(&sink_state.stopping) == 0) &&
                     (info->reason != BT_HCI_ERR_LOCALHOST_TERM_CONN))
                 {
                     atomic_set(&sink_state.error, -ECONNRESET);
@@ -233,6 +235,7 @@ namespace nucode::ble::audio
             {
                 atomic_set(&sink_state.streaming, 0);
                 if ((sink_state.owner != nullptr) && sink_state.sync_requested &&
+                    (atomic_get(&sink_state.stopping) == 0) &&
                     (reason != BT_HCI_ERR_LOCALHOST_TERM_CONN))
                 {
                     atomic_set(&sink_state.error, -static_cast<int>(reason));
@@ -440,6 +443,7 @@ namespace nucode::ble::audio
         int releaseSink() noexcept
         {
             int first_error = 0;
+            atomic_set(&sink_state.stopping, 1);
             if (sink_state.scanning)
             {
                 const int result = bt_le_scan_stop();
@@ -531,6 +535,7 @@ namespace nucode::ble::audio
                 sink_state.pacs_registered = false;
             }
             atomic_set(&sink_state.streaming, 0);
+            atomic_set(&sink_state.stopping, 0);
             k_msgq_purge(&receive_queue);
             return first_error;
         }
@@ -539,12 +544,15 @@ namespace nucode::ble::audio
         int releaseDelegatedReception() noexcept
         {
             int first_error = 0;
+            atomic_set(&sink_state.stopping, 1);
+            sink_state.cleanup_failure = BroadcastSinkStep::cleanup;
             if (sink_state.scanning)
             {
                 const int result = bt_le_scan_stop();
                 if ((result != 0) && (result != -EALREADY))
                 {
                     first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
                 }
                 sink_state.scanning = false;
             }
@@ -559,6 +567,18 @@ namespace nucode::ble::audio
                 else if ((result != -EALREADY) && (first_error == 0))
                 {
                     first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_sink_stop;
+                }
+            }
+            if (sink_state.delegated_source &&
+                (sink_state.delegated_source_id != 0xffU))
+            {
+                const int result = bt_bap_scan_delegator_set_pa_state(
+                    sink_state.delegated_source_id, BT_BAP_PA_STATE_NOT_SYNCED);
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
                 }
             }
             if (sink_state.sink_created)
@@ -567,6 +587,7 @@ namespace nucode::ble::audio
                 if ((result != 0) && (first_error == 0))
                 {
                     first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_sink_delete;
                 }
             }
             sink_state.sink = nullptr;
@@ -577,6 +598,7 @@ namespace nucode::ble::audio
                 if ((result != 0) && (first_error == 0))
                 {
                     first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_periodic_sync;
                 }
             }
             sink_state.periodic_sync = nullptr;
@@ -587,6 +609,7 @@ namespace nucode::ble::audio
             atomic_set(&sink_state.base_received, 0);
             atomic_set(&sink_state.syncable, 0);
             atomic_set(&sink_state.streaming, 0);
+            atomic_set(&sink_state.stopping, 0);
             k_msgq_purge(&receive_queue);
             return first_error;
         }
@@ -759,6 +782,7 @@ namespace nucode::ble::audio
             if (cleanup_result != 0)
             {
                 stage_ = BroadcastStage::failed;
+                last_step_ = sink_state.cleanup_failure;
                 (void)record(Error::stack_error, cleanup_result);
                 return;
             }
@@ -775,6 +799,7 @@ namespace nucode::ble::audio
                 if (cleanup_result != 0)
                 {
                     stage_ = BroadcastStage::failed;
+                    last_step_ = sink_state.cleanup_failure;
                     (void)record(Error::stack_error, cleanup_result);
                     return;
                 }

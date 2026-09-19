@@ -195,6 +195,8 @@ namespace nucode::ble
         BLEAdvertisingSetHandle advertising_set;
         BLEPeriodicSyncHandle periodic_sync;
         BLELinkRole role = BLELinkRole::none;
+        /** @brief disconnected event의 HCI reason이며 다른 event에서는 0입니다. */
+        std::uint8_t reason = 0U;
     };
 
     /** @brief BLEDevice.poll() 문맥에서만 호출되는 link 식별 가능 callback입니다. */
