@@ -44,6 +44,7 @@ namespace nucode::ble::audio
         K_SEM_DEFINE(sink_stopped, 0, 1);
         K_SEM_DEFINE(periodic_stopped, 0, 1);
         K_SEM_DEFINE(state_callbacks_drained, 0, 1);
+        K_SEM_DEFINE(transport_callbacks_drained, 0, 1);
         K_MUTEX_DEFINE(sink_state_mutex);
 
         /** @brief callback과 Arduino 문맥의 복합 상태 접근을 직렬화합니다. */
@@ -116,6 +117,7 @@ namespace nucode::ble::audio
         SinkState sink_state;
         bool sink_callback_registered = false;
         atomic_t state_callbacks_in_flight = 0;
+        atomic_t transport_callbacks_in_flight = 0;
 
         /** @brief lock 밖의 parsing까지 teardown이 기다릴 수 있도록 callback을 셉니다. */
         class StateCallbackFlight final
@@ -137,6 +139,28 @@ namespace nucode::ble::audio
 
             StateCallbackFlight(const StateCallbackFlight &) = delete;
             StateCallbackFlight &operator=(const StateCallbackFlight &) = delete;
+        };
+
+        /** @brief PA/BAP/ISO callback 수명을 delete 경계까지 추적합니다. */
+        class TransportCallbackFlight final
+        {
+        public:
+            TransportCallbackFlight() noexcept
+            {
+                atomic_inc(&transport_callbacks_in_flight);
+            }
+
+            ~TransportCallbackFlight() noexcept
+            {
+                if ((atomic_dec(&transport_callbacks_in_flight) == 1) &&
+                    (atomic_get(&sink_state.stopping) != 0))
+                {
+                    k_sem_give(&transport_callbacks_drained);
+                }
+            }
+
+            TransportCallbackFlight(const TransportCallbackFlight &) = delete;
+            TransportCallbackFlight &operator=(const TransportCallbackFlight &) = delete;
         };
 
         constexpr bt_audio_context contexts = BT_AUDIO_CONTEXT_TYPE_MEDIA;
@@ -382,7 +406,9 @@ namespace nucode::ble::audio
                             bt_le_per_adv_sync_synced_info *info)
         {
             static_cast<void>(info);
+            const TransportCallbackFlight flight;
             if ((atomic_get(&sink_state.active) != 0) &&
+                (atomic_get(&sink_state.stopping) == 0) &&
                 (sync == currentPeriodicSync()))
             {
                 atomic_set(&sink_state.periodic_synced, 1);
@@ -393,6 +419,7 @@ namespace nucode::ble::audio
         void periodicTerminated(bt_le_per_adv_sync *sync,
                                 const bt_le_per_adv_sync_term_info *info)
         {
+            const TransportCallbackFlight flight;
             if (atomic_ptr_cas(&sink_state.periodic_sync, sync, nullptr))
             {
                 atomic_set(&sink_state.periodic_synced, 0);
@@ -528,7 +555,9 @@ namespace nucode::ble::audio
         void baseReceived(bt_bap_broadcast_sink *sink, const bt_bap_base *base,
                           std::size_t base_size)
         {
+            const TransportCallbackFlight flight;
             if ((atomic_get(&sink_state.active) == 0) ||
+                (atomic_get(&sink_state.stopping) != 0) ||
                 (sink != currentSink()) ||
                 (base == nullptr) || (atomic_get(&sink_state.base_received) != 0))
             {
@@ -550,18 +579,28 @@ namespace nucode::ble::audio
                 const int error = selection.error != 0
                                       ? selection.error
                                       : ((result != 0) ? result : -ENOTSUP);
-                atomic_set(&sink_state.error, error);
+                if ((atomic_get(&sink_state.stopping) == 0) &&
+                    (sink == currentSink()))
+                {
+                    atomic_set(&sink_state.error, error);
+                }
                 return;
             }
-            atomic_set(&sink_state.selected_bis,
-                       static_cast<atomic_val_t>(selection.bis));
-            atomic_set(&sink_state.base_received, 1);
+            if ((atomic_get(&sink_state.stopping) == 0) &&
+                (sink == currentSink()))
+            {
+                atomic_set(&sink_state.selected_bis,
+                           static_cast<atomic_val_t>(selection.bis));
+                atomic_set(&sink_state.base_received, 1);
+            }
         }
 
         /** @brief BIGInfo와 제공된 Broadcast Code를 동기화 조건으로 확인합니다. */
         void sinkSyncable(bt_bap_broadcast_sink *sink, const bt_iso_biginfo *biginfo)
         {
+            const TransportCallbackFlight flight;
             if ((atomic_get(&sink_state.active) == 0) ||
+                (atomic_get(&sink_state.stopping) != 0) ||
                 (sink != currentSink()))
             {
                 return;
@@ -589,7 +628,9 @@ namespace nucode::ble::audio
         /** @brief BIG 동기화 완료를 공개 streaming 상태로 표시합니다. */
         void sinkStarted(bt_bap_broadcast_sink *sink)
         {
+            const TransportCallbackFlight flight;
             if ((atomic_get(&sink_state.active) != 0) &&
+                (atomic_get(&sink_state.stopping) == 0) &&
                 (sink == currentSink()))
             {
                 atomic_set(&sink_state.streaming, 1);
@@ -599,6 +640,7 @@ namespace nucode::ble::audio
         /** @brief BIG 중단을 공개 상태와 종료 대기에 반영합니다. */
         void sinkStopped(bt_bap_broadcast_sink *sink, std::uint8_t reason)
         {
+            const TransportCallbackFlight flight;
             if (sink == currentSink())
             {
                 atomic_set(&sink_state.streaming, 0);
@@ -630,7 +672,9 @@ namespace nucode::ble::audio
         void streamReceived(bt_bap_stream *stream, const bt_iso_recv_info *info,
                             net_buf *buffer)
         {
+            const TransportCallbackFlight flight;
             if (!activeStream(stream) ||
+                (atomic_get(&sink_state.stopping) != 0) ||
                 ((info->flags & BT_ISO_FLAGS_VALID) == 0U))
             {
                 return;
@@ -650,7 +694,9 @@ namespace nucode::ble::audio
         /** @brief BIS 수신 시작을 공개 상태에 반영합니다. */
         void streamStarted(bt_bap_stream *stream)
         {
-            if (activeStream(stream))
+            const TransportCallbackFlight flight;
+            if (activeStream(stream) &&
+                (atomic_get(&sink_state.stopping) == 0))
             {
                 atomic_set(&sink_state.streaming, 1);
             }
@@ -659,6 +705,7 @@ namespace nucode::ble::audio
         /** @brief BIS 수신 중단 시 queue와 공개 상태를 정리합니다. */
         void streamStopped(bt_bap_stream *stream, std::uint8_t reason)
         {
+            const TransportCallbackFlight flight;
             if (activeStream(stream))
             {
                 atomic_set(&sink_state.streaming, 0);
@@ -880,11 +927,28 @@ namespace nucode::ble::audio
             return k_sem_take(&state_callbacks_drained, K_SECONDS(2));
         }
 
+        /** @brief PA/BAP/ISO callback이 stack 자원 사용을 끝낼 때까지 기다립니다. */
+        int drainTransportCallbacks() noexcept
+        {
+            k_sem_reset(&transport_callbacks_drained);
+            if (atomic_get(&transport_callbacks_in_flight) == 0)
+            {
+                return 0;
+            }
+            return k_sem_take(&transport_callbacks_drained, K_SECONDS(2));
+        }
+
         /** @brief 진행 중인 검색과 동기화 자원을 역순으로 반환합니다. */
         int releaseSink() noexcept
         {
             int first_error = drainStateCallbacks();
             sink_state.cleanup_failure = BroadcastSinkStep::cleanup;
+            if (first_error != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return first_error;
+            }
+            first_error = drainTransportCallbacks();
             if (first_error != 0)
             {
                 sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
@@ -960,6 +1024,12 @@ namespace nucode::ble::audio
                     sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
                 }
             }
+            const int sink_callback_result = drainTransportCallbacks();
+            if (sink_callback_result != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return sink_callback_result;
+            }
             if (sink_state.sink_created &&
                 (atomic_get(&sink_state.sync_requested) == 0))
             {
@@ -995,6 +1065,12 @@ namespace nucode::ble::audio
                     first_error = (result != 0) ? result : wait_result;
                     sink_state.cleanup_failure = BroadcastSinkStep::cleanup_periodic_sync;
                 }
+            }
+            const int periodic_callback_result = drainTransportCallbacks();
+            if (periodic_callback_result != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return periodic_callback_result;
             }
             const bool reception_released = !sink_state.scanning &&
                                              !sink_state.sink_created &&
@@ -1059,6 +1135,12 @@ namespace nucode::ble::audio
                     sink_state.cleanup_failure = BroadcastSinkStep::cleanup_pacs;
                 }
             }
+            const int state_callback_result = drainStateCallbacks();
+            if (state_callback_result != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return state_callback_result;
+            }
             if ((first_error == 0) && reception_released &&
                 !sink_state.periodic_callback_registered &&
                 !sink_state.scan_delegator_registered &&
@@ -1079,6 +1161,12 @@ namespace nucode::ble::audio
         {
             int first_error = drainStateCallbacks();
             sink_state.cleanup_failure = BroadcastSinkStep::cleanup;
+            if (first_error != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return first_error;
+            }
+            first_error = drainTransportCallbacks();
             if (first_error != 0)
             {
                 sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
@@ -1127,6 +1215,12 @@ namespace nucode::ble::audio
                     first_error = result;
                     sink_state.cleanup_failure = BroadcastSinkStep::cleanup_sink_stop;
                 }
+            }
+            const int sink_callback_result = drainTransportCallbacks();
+            if (sink_callback_result != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return sink_callback_result;
             }
             const atomic_val_t delegated_source_id =
                 atomic_get(&sink_state.delegated_source_id);
@@ -1177,6 +1271,18 @@ namespace nucode::ble::audio
                     first_error = (result != 0) ? result : wait_result;
                     sink_state.cleanup_failure = BroadcastSinkStep::cleanup_periodic_sync;
                 }
+            }
+            const int periodic_callback_result = drainTransportCallbacks();
+            if (periodic_callback_result != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return periodic_callback_result;
+            }
+            const int state_callback_result = drainStateCallbacks();
+            if (state_callback_result != 0)
+            {
+                sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                return state_callback_result;
             }
             if ((first_error == 0) && !sink_state.scanning &&
                 !sink_state.sink_created && (currentPeriodicSync() == nullptr))
