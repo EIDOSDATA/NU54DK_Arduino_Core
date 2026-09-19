@@ -297,6 +297,31 @@ namespace nucode::ble::audio
         failed,
     };
 
+    /** @brief 마지막 broadcast sink 작업을 나타냅니다. */
+    enum class BroadcastSinkStep : std::uint8_t
+    {
+        none,
+        pacs,
+        capability,
+        location,
+        supported_contexts,
+        available_contexts,
+        scan_delegator,
+        callbacks,
+        scan,
+        periodic_sync,
+        sink_create,
+        bis_sync,
+        cleanup,
+        cleanup_sink_stop,
+        cleanup_sink_delete,
+        cleanup_periodic_sync,
+        cleanup_callbacks,
+        cleanup_scan_delegator,
+        cleanup_capability,
+        cleanup_pacs,
+    };
+
     /**
      * @brief mono LC3 frame을 BAP broadcast stream으로 송신합니다.
      *
@@ -388,6 +413,9 @@ namespace nucode::ble::audio
         /** @brief 현재 검색 또는 동기화 단계를 반환합니다. */
         [[nodiscard]] BroadcastStage stage() const noexcept;
 
+        /** @brief 마지막 Host 요청 또는 오류가 발생한 작업을 반환합니다. */
+        [[nodiscard]] BroadcastSinkStep lastStep() const noexcept;
+
         /** @brief 유효하게 수신한 LC3 frame 수를 반환합니다. */
         [[nodiscard]] std::uint32_t receivedFrames() const noexcept;
 
@@ -405,6 +433,7 @@ namespace nucode::ble::audio
 
         bool started_ = false;
         BroadcastStage stage_ = BroadcastStage::idle;
+        BroadcastSinkStep last_step_ = BroadcastSinkStep::none;
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };

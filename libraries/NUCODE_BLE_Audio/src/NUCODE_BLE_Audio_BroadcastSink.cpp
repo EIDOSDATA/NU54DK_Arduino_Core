@@ -12,6 +12,8 @@
 #include <NUCODE_BLE.h>
 
 #include <zephyr/bluetooth/audio/bap.h>
+#include <zephyr/bluetooth/audio/lc3.h>
+#include <zephyr/bluetooth/audio/pacs.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/bluetooth/iso.h>
@@ -53,8 +55,12 @@ namespace nucode::ble::audio
             atomic_t received = 0;
             atomic_t dropped = 0;
             atomic_t error = 0;
+            BroadcastSinkStep cleanup_failure = BroadcastSinkStep::cleanup;
             bool scan_callback_registered = false;
             bool periodic_callback_registered = false;
+            bool pacs_registered = false;
+            bool capability_registered = false;
+            bool scan_delegator_registered = false;
             bool scanning = false;
             bool sink_created = false;
             bool sync_requested = false;
@@ -62,6 +68,16 @@ namespace nucode::ble::audio
 
         SinkState sink_state;
         bool sink_callback_registered = false;
+
+        constexpr bt_audio_context contexts = BT_AUDIO_CONTEXT_TYPE_MEDIA;
+        const bt_audio_codec_cap codec_cap = BT_AUDIO_CODEC_CAP_LC3(
+            BT_AUDIO_CODEC_CAP_FREQ_16KHZ, BT_AUDIO_CODEC_CAP_DURATION_10,
+            BT_AUDIO_CODEC_CAP_CHAN_COUNT_SUPPORT(1), frame_octets, frame_octets, 1U,
+            contexts);
+        bt_pacs_cap pac_sink = {
+            .codec_cap = &codec_cap,
+        };
+        bt_bap_scan_delegator_cb scan_delegator_callbacks = {};
 
         /** @brief 한 광고 packet에서 BAP announcement와 방송 이름을 수집합니다. */
         struct AdvertisementMatch
@@ -264,11 +280,17 @@ namespace nucode::ble::audio
         }
 
         /** @brief 진행 중인 검색과 동기화 자원을 역순으로 반환합니다. */
-        void releaseSink() noexcept
+        int releaseSink() noexcept
         {
+            int first_error = 0;
             if (sink_state.scanning)
             {
-                (void)bt_le_scan_stop();
+                const int result = bt_le_scan_stop();
+                if ((result != 0) && (result != -EALREADY))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                }
                 sink_state.scanning = false;
             }
             if (sink_state.sink_created && sink_state.sync_requested)
@@ -279,16 +301,31 @@ namespace nucode::ble::audio
                 {
                     (void)k_sem_take(&sink_stopped, K_SECONDS(2));
                 }
+                else if ((result != -EALREADY) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_sink_stop;
+                }
             }
             if (sink_state.sink_created)
             {
-                (void)bt_bap_broadcast_sink_delete(sink_state.sink);
+                const int result = bt_bap_broadcast_sink_delete(sink_state.sink);
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_sink_delete;
+                }
                 sink_state.sink = nullptr;
                 sink_state.sink_created = false;
             }
             if (sink_state.periodic_sync != nullptr)
             {
-                (void)bt_le_per_adv_sync_delete(sink_state.periodic_sync);
+                const int result = bt_le_per_adv_sync_delete(sink_state.periodic_sync);
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_periodic_sync;
+                }
                 sink_state.periodic_sync = nullptr;
             }
             if (sink_state.scan_callback_registered)
@@ -298,11 +335,47 @@ namespace nucode::ble::audio
             }
             if (sink_state.periodic_callback_registered)
             {
-                (void)bt_le_per_adv_sync_cb_unregister(&periodic_callbacks);
+                const int result = bt_le_per_adv_sync_cb_unregister(&periodic_callbacks);
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_callbacks;
+                }
                 sink_state.periodic_callback_registered = false;
+            }
+            if (sink_state.scan_delegator_registered)
+            {
+                const int result = bt_bap_scan_delegator_unregister();
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_scan_delegator;
+                }
+                sink_state.scan_delegator_registered = false;
+            }
+            if (sink_state.capability_registered)
+            {
+                const int result = bt_pacs_cap_unregister(BT_AUDIO_DIR_SINK, &pac_sink);
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_capability;
+                }
+                sink_state.capability_registered = false;
+            }
+            if (sink_state.pacs_registered)
+            {
+                const int result = bt_pacs_unregister();
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                    sink_state.cleanup_failure = BroadcastSinkStep::cleanup_pacs;
+                }
+                sink_state.pacs_registered = false;
             }
             atomic_set(&sink_state.streaming, 0);
             k_msgq_purge(&receive_queue);
+            return first_error;
         }
     } // namespace
 
@@ -343,9 +416,44 @@ namespace nucode::ble::audio
         k_msgq_purge(&receive_queue);
         k_sem_reset(&sink_stopped);
 
-        int result = 0;
-        if (!sink_callback_registered)
+        const bt_pacs_register_param pacs_config = {
+            .snk_pac = true,
+            .snk_loc = true,
+        };
+        last_step_ = BroadcastSinkStep::pacs;
+        int result = bt_pacs_register(&pacs_config);
+        sink_state.pacs_registered = result == 0;
+        if (result == 0)
         {
+            last_step_ = BroadcastSinkStep::capability;
+            result = bt_pacs_cap_register(BT_AUDIO_DIR_SINK, &pac_sink);
+            sink_state.capability_registered = result == 0;
+        }
+        if (result == 0)
+        {
+            last_step_ = BroadcastSinkStep::location;
+            result = bt_pacs_set_location(BT_AUDIO_DIR_SINK,
+                                          BT_AUDIO_LOCATION_FRONT_LEFT);
+        }
+        if (result == 0)
+        {
+            last_step_ = BroadcastSinkStep::supported_contexts;
+            result = bt_pacs_set_supported_contexts(BT_AUDIO_DIR_SINK, contexts);
+        }
+        if (result == 0)
+        {
+            last_step_ = BroadcastSinkStep::available_contexts;
+            result = bt_pacs_set_available_contexts(BT_AUDIO_DIR_SINK, contexts);
+        }
+        if (result == 0)
+        {
+            last_step_ = BroadcastSinkStep::scan_delegator;
+            result = bt_bap_scan_delegator_register(&scan_delegator_callbacks);
+            sink_state.scan_delegator_registered = result == 0;
+        }
+        if ((result == 0) && !sink_callback_registered)
+        {
+            last_step_ = BroadcastSinkStep::callbacks;
             result = bt_bap_broadcast_sink_register_cb(&sink_callbacks);
             if (result == 0)
             {
@@ -354,22 +462,25 @@ namespace nucode::ble::audio
         }
         if (result == 0)
         {
+            last_step_ = BroadcastSinkStep::callbacks;
             result = bt_le_scan_cb_register(&scan_callbacks);
             sink_state.scan_callback_registered = result == 0;
         }
         if (result == 0)
         {
+            last_step_ = BroadcastSinkStep::callbacks;
             result = bt_le_per_adv_sync_cb_register(&periodic_callbacks);
             sink_state.periodic_callback_registered = result == 0;
         }
         if (result == 0)
         {
+            last_step_ = BroadcastSinkStep::scan;
             result = bt_le_scan_start(BT_LE_SCAN_ACTIVE, nullptr);
             sink_state.scanning = result == 0;
         }
         if (result != 0)
         {
-            releaseSink();
+            (void)releaseSink();
             sink_state.owner = nullptr;
             return record(Error::stack_error, result);
         }
@@ -417,6 +528,7 @@ namespace nucode::ble::audio
                 .skip = 5U,
                 .timeout = periodicTimeout(sink_state.periodic_interval),
             };
+            last_step_ = BroadcastSinkStep::periodic_sync;
             const int result = bt_le_per_adv_sync_create(&sync_param,
                                                          &sink_state.periodic_sync);
             if (result != 0)
@@ -432,6 +544,7 @@ namespace nucode::ble::audio
             (atomic_get(&sink_state.periodic_synced) != 0) &&
             !sink_state.sink_created)
         {
+            last_step_ = BroadcastSinkStep::sink_create;
             const int result = bt_bap_broadcast_sink_create(sink_state.periodic_sync,
                                                             sink_state.broadcast_id,
                                                             &sink_state.sink);
@@ -450,6 +563,7 @@ namespace nucode::ble::audio
             (atomic_get(&sink_state.syncable) != 0))
         {
             bt_bap_stream *streams[] = {&sink_state.stream};
+            last_step_ = BroadcastSinkStep::bis_sync;
             const int result = bt_bap_broadcast_sink_sync(
                 sink_state.sink, BT_ISO_BIS_INDEX_BIT(1U), streams, nullptr);
             if (result != 0)
@@ -476,10 +590,16 @@ namespace nucode::ble::audio
             return record(Error::not_started);
         }
         stage_ = BroadcastStage::stopping;
-        releaseSink();
+        last_step_ = BroadcastSinkStep::cleanup;
+        const int result = releaseSink();
         sink_state.owner = nullptr;
         started_ = false;
         stage_ = BroadcastStage::idle;
+        if (result != 0)
+        {
+            last_step_ = sink_state.cleanup_failure;
+            return record(Error::stack_error, result);
+        }
         return record(Error::none);
     }
 
@@ -499,6 +619,12 @@ namespace nucode::ble::audio
     BroadcastStage BroadcastSink::stage() const noexcept
     {
         return stage_;
+    }
+
+    /** @brief 마지막 Host 요청 또는 오류 작업을 반환합니다. */
+    BroadcastSinkStep BroadcastSink::lastStep() const noexcept
+    {
+        return last_step_;
     }
 
     /** @brief 유효한 BIS frame 수를 반환합니다. */
@@ -565,6 +691,12 @@ namespace nucode::ble::audio
     BroadcastStage BroadcastSink::stage() const noexcept
     {
         return stage_;
+    }
+
+    /** @brief 기능이 없는 image는 요청한 작업이 없습니다. */
+    BroadcastSinkStep BroadcastSink::lastStep() const noexcept
+    {
+        return last_step_;
     }
 
     /** @brief 기능이 없는 image의 수신 수는 0입니다. */

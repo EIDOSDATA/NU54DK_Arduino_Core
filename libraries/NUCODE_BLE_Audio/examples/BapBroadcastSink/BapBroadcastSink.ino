@@ -28,7 +28,9 @@ namespace
         if (result != Error::none)
         {
             Serial.print("broadcast sink start failed: ");
-            Serial.println(audioSink.nativeCode());
+            Serial.print(audioSink.nativeCode());
+            Serial.print(" step=");
+            Serial.println(static_cast<unsigned int>(audioSink.lastStep()));
             return false;
         }
         announcedStreaming = false;
@@ -80,7 +82,11 @@ void loop()
         {
             const Error result = audioSink.end();
             Serial.print("broadcast sink stopped: ");
-            Serial.println(static_cast<unsigned int>(result));
+            Serial.print(static_cast<unsigned int>(result));
+            Serial.print(" native=");
+            Serial.print(audioSink.nativeCode());
+            Serial.print(" step=");
+            Serial.println(static_cast<unsigned int>(audioSink.lastStep()));
         }
         else if (command == 'r')
         {
@@ -92,7 +98,9 @@ void loop()
     {
         reportedFailure = true;
         Serial.print("broadcast sync failed: ");
-        Serial.println(audioSink.nativeCode());
+        Serial.print(audioSink.nativeCode());
+        Serial.print(" step=");
+        Serial.println(static_cast<unsigned int>(audioSink.lastStep()));
     }
     if (audioSink.streaming() && !announcedStreaming)
     {

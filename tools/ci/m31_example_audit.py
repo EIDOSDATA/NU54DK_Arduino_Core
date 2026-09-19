@@ -137,7 +137,10 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
             options = (
                 "CONFIG_BT_BAP_BROADCAST_SINK=y",
                 "CONFIG_BT_BAP_BROADCAST_SNK_STREAM_COUNT=1",
-                "CONFIG_BT_PER_ADV_SYNC=y", "CONFIG_LIBLC3=y",
+                "CONFIG_BT_PAC_SNK_NOTIFIABLE=y",
+                "CONFIG_BT_PACS_SUPPORTED_CONTEXT_NOTIFIABLE=y",
+                "CONFIG_BT_PER_ADV_SYNC=y",
+                "CONFIG_LIBLC3=y",
             )
         elif sketch.parent.name in {"BapUnicastSource", "BapUnicastCycle"}:
             required = (
