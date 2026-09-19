@@ -246,7 +246,8 @@ void loop()
             lossRemovePending = true;
         }
     }
-    if (lossRemovePending && commander.ready())
+    if (lossRemovePending && commander.ready() &&
+        !commander.periodicSynchronized() && !commander.bisSynchronized())
     {
         const Error result = commander.removeSource();
         reportRequest("CAP recovery remove", result);
