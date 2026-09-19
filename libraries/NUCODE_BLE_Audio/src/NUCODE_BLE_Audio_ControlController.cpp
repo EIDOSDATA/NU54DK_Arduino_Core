@@ -223,12 +223,15 @@ namespace nucode::ble::audio
             std::uint32_t bootstrap_retry_at = 0U;
             std::uint32_t bootstrap_operation_counter = 0U;
             std::uint32_t bootstrap_operation = 0U;
+            std::uint32_t read_generation = 0U;
+            std::uint32_t read_operation = 0U;
             std::uint32_t read_update_epoch = 0U;
             std::uint32_t update_epochs[volumeBootstrapStepCount] = {};
             std::uint16_t callbacks_inflight = 0U;
             std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
             bool retired_connection = false;
+            bool read_pending = false;
             bool bootstrap_retry_pending = false;
             VolumeBootstrapStep bootstrap = VolumeBootstrapStep::none;
             AudioControlStep direct_read = AudioControlStep::none;
@@ -236,6 +239,9 @@ namespace nucode::ble::audio
             VolumeOffsetState offset = {};
             AudioInputState input = {};
             struct bt_gatt_read_params bootstrap_read = {};
+            struct bt_conn *read_connection = nullptr;
+            struct bt_conn *retired_native_connection = nullptr;
+            std::uint32_t retired_generation = 0U;
             atomic_t stage = ATOMIC_INIT(static_cast<atomic_val_t>(AudioControlStage::idle));
             atomic_t step = ATOMIC_INIT(static_cast<atomic_val_t>(AudioControlStep::none));
             atomic_t busy = ATOMIC_INIT(0);
@@ -251,6 +257,29 @@ namespace nucode::ble::audio
             const std::size_t index = static_cast<std::size_t>(step);
             volumeBackend.update_epochs[index] = nextToken(volumeBackend.update_epochs[index]);
             ++volumeBackend.updates;
+        }
+
+        /** @brief 현재 generation에 전용 raw read parameter 수명을 결합합니다. */
+        void bindVolumeReadLocked(struct bt_conn *connection, std::uint32_t generation,
+                                  std::uint32_t operation) noexcept
+        {
+            volumeBackend.read_connection = connection;
+            volumeBackend.read_generation = generation;
+            volumeBackend.read_operation = operation;
+            volumeBackend.read_pending = true;
+        }
+
+        /** @brief 즉시 시작 실패 또는 drain 완료 뒤 raw read 결합을 해제합니다. */
+        void clearVolumeReadLocked(std::uint32_t generation, std::uint32_t operation) noexcept
+        {
+            if (volumeBackend.read_pending && (volumeBackend.read_generation == generation) &&
+                (volumeBackend.read_operation == operation))
+            {
+                volumeBackend.read_pending = false;
+                volumeBackend.read_connection = nullptr;
+                volumeBackend.read_generation = 0U;
+                volumeBackend.read_operation = 0U;
+            }
         }
 
         /** @brief callback ingress에서 고정한 generation과 in-flight 수명을 관리합니다. */
@@ -302,8 +331,9 @@ namespace nucode::ble::audio
         /**
          * @brief 이전 callback이 남을 수 있는 active 연결의 재소유를 차단합니다.
          *
-         * active handle이 사라지고 각 SDK client가 connection을 해제했으며 ingress callback도
-         * 모두 반환한 시점만 static client pool의 재사용 barrier로 인정합니다.
+         * active handle과 VCP/AICS 결합이 사라지고 ingress callback이 모두 반환해야 합니다.
+         * 고정 SDK의 VOCS는 disconnect 뒤에도 exact inactive connection을 다음 discovery까지
+         * 보존하므로 그 결합만 rediscovery-safe 상태로 인정합니다.
          */
         bool retiredVolumeConnectionActive() noexcept
         {
@@ -314,6 +344,8 @@ namespace nucode::ble::audio
             struct bt_vcp_vol_ctlr *controller = volumeBackend.controller;
             struct bt_vocs *offset_service = volumeBackend.offset_service;
             struct bt_aics *input_service = volumeBackend.input_service;
+            struct bt_conn *retired_native = volumeBackend.retired_native_connection;
+            const std::uint32_t retired_generation = volumeBackend.retired_generation;
             k_mutex_unlock(&volumeBackendMutex);
             if (callback_active)
             {
@@ -330,26 +362,44 @@ namespace nucode::ble::audio
                 return true;
             }
             struct bt_conn *bound = nullptr;
-            if (((controller != nullptr) && (bt_vcp_vol_ctlr_conn_get(controller, &bound) == 0) &&
-                 (bound != nullptr)) ||
-                ((offset_service != nullptr) &&
-                 (bt_vocs_client_conn_get(offset_service, &bound) == 0) && (bound != nullptr)) ||
-                ((input_service != nullptr) &&
-                 (bt_aics_client_conn_get(input_service, &bound) == 0) && (bound != nullptr)))
+            if ((controller != nullptr) && (bt_vcp_vol_ctlr_conn_get(controller, &bound) == 0) &&
+                (bound != nullptr))
             {
                 return true;
             }
+            if ((input_service != nullptr) &&
+                (bt_aics_client_conn_get(input_service, &bound) == 0) && (bound != nullptr))
+            {
+                return true;
+            }
+            if ((offset_service != nullptr) &&
+                (bt_vocs_client_conn_get(offset_service, &bound) == 0) && (bound != nullptr) &&
+                ((bound != retired_native) || internal::activeConnection(bound)))
+            {
+                return true;
+            }
+            struct bt_conn *release_connection = nullptr;
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             if (volumeBackend.retired_connection && (volumeBackend.handle == handle) &&
+                (volumeBackend.retired_native_connection == retired_native) &&
+                (volumeBackend.retired_generation == retired_generation) &&
                 (volumeBackend.callbacks_inflight == 0U))
             {
+                clearVolumeReadLocked(retired_generation, volumeBackend.read_operation);
                 volumeBackend.retired_connection = false;
                 volumeBackend.controller = nullptr;
                 volumeBackend.offset_service = nullptr;
                 volumeBackend.input_service = nullptr;
+                volumeBackend.retired_generation = 0U;
+                release_connection = volumeBackend.retired_native_connection;
+                volumeBackend.retired_native_connection = nullptr;
             }
             const bool still_retired = volumeBackend.retired_connection;
             k_mutex_unlock(&volumeBackendMutex);
+            if (release_connection != nullptr)
+            {
+                bt_conn_unref(release_connection);
+            }
             return still_retired;
         }
 
@@ -492,16 +542,17 @@ namespace nucode::ble::audio
                                                        struct bt_gatt_read_params *params) noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
-            if ((volumeBackend.owner == nullptr) || (connection == nullptr) ||
-                (connection != volumeBackend.connection) ||
-                (params != &volumeBackend.bootstrap_read) ||
-                (volumeBackend.bootstrap_operation == 0U))
+            if ((connection == nullptr) || (params != &volumeBackend.bootstrap_read) ||
+                !volumeBackend.read_pending ||
+                (connection != volumeBackend.read_connection) ||
+                (volumeBackend.read_generation == 0U) || (volumeBackend.read_operation == 0U))
             {
                 k_mutex_unlock(&volumeBackendMutex);
                 return {};
             }
-            const std::uint32_t generation = volumeBackend.generation;
-            const std::uint32_t operation = volumeBackend.bootstrap_operation;
+            const std::uint32_t generation = volumeBackend.read_generation;
+            const std::uint32_t operation = volumeBackend.read_operation;
+            clearVolumeReadLocked(generation, operation);
             bt_conn_ref(connection);
             ++volumeBackend.callbacks_inflight;
             k_mutex_unlock(&volumeBackendMutex);
@@ -640,6 +691,7 @@ namespace nucode::ble::audio
             volumeBackend.bootstrap_read.single.handle = handle;
             volumeBackend.bootstrap_read.single.offset = 0U;
             struct bt_conn *connection = volumeBackend.connection;
+            bindVolumeReadLocked(connection, generation, operation);
             bt_conn_ref(connection);
             k_mutex_unlock(&volumeBackendMutex);
 
@@ -663,6 +715,7 @@ namespace nucode::ble::audio
             bt_conn_unref(connection);
             const std::uint32_t now = k_uptime_get_32();
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
+            clearVolumeReadLocked(generation, operation);
             if ((volumeBackend.owner == nullptr) || (volumeBackend.generation != generation) ||
                 (volumeBackend.bootstrap != step) ||
                 (volumeBackend.bootstrap_operation != operation) ||
@@ -940,7 +993,6 @@ namespace nucode::ble::audio
                     {
                         const auto *state = static_cast<const struct bt_aics_state *>(data);
                         volumeBackend.input_service->cli.change_counter = state->change_counter;
-                        volumeBackend.input_service->cli.gain_mode = state->gain_mode;
                         volumeBackend.input.gain = state->gain;
                         volumeBackend.input.muted = state->mute == BT_AICS_STATE_MUTED;
                         volumeBackend.input.mute_disabled =
@@ -1452,9 +1504,13 @@ namespace nucode::ble::audio
         volumeBackend.bootstrap_retry_at = 0U;
         volumeBackend.bootstrap_retries = 0U;
         volumeBackend.bootstrap_operation = 0U;
+        volumeBackend.read_generation = 0U;
+        volumeBackend.read_operation = 0U;
         volumeBackend.read_update_epoch = 0U;
         (void)memset(volumeBackend.update_epochs, 0, sizeof(volumeBackend.update_epochs));
         volumeBackend.bootstrap_retry_pending = false;
+        volumeBackend.read_pending = false;
+        volumeBackend.read_connection = nullptr;
         volumeBackend.direct_read = AudioControlStep::none;
         atomic_set(&volumeBackend.error, 0);
         atomic_set(&volumeBackend.busy, 1);
@@ -1527,9 +1583,6 @@ namespace nucode::ble::audio
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             if (ownsVolumeControllerLocked(this, generation_) && (volumeBackend.handle == handle))
             {
-                volumeBackend.controller = nullptr;
-                volumeBackend.offset_service = nullptr;
-                volumeBackend.input_service = nullptr;
                 atomic_set(&volumeBackend.error, -ENOTCONN);
                 atomic_set(&volumeBackend.busy, 0);
                 atomic_set(&volumeBackend.stage,
@@ -1553,8 +1606,15 @@ namespace nucode::ble::audio
         {
             const BLEConnectionHandle handle = volumeBackend.handle;
             struct bt_conn *connection = volumeBackend.connection;
-            const bool cancel_bootstrap = volumeBackend.bootstrap_operation != 0U;
+            const bool cancel_bootstrap = volumeBackend.read_pending &&
+                                          (volumeBackend.read_generation == generation_);
+            if (connection != nullptr)
+            {
+                bt_conn_ref(connection);
+            }
             volumeBackend.retired_connection = true;
+            volumeBackend.retired_native_connection = connection;
+            volumeBackend.retired_generation = generation_;
             volumeBackend.owner = nullptr;
             ++volumeBackend.generation;
             volumeBackend.pending_generation = 0U;
@@ -1634,6 +1694,7 @@ namespace nucode::ble::audio
         volumeBackend.bootstrap_read.single.handle = read_handle;                                  \
         volumeBackend.bootstrap_read.single.offset = 0U;                                           \
         struct bt_conn *read_connection = volumeBackend.connection;                                \
+        bindVolumeReadLocked(read_connection, call_generation, read_operation);                    \
         bt_conn_ref(read_connection);                                                              \
         k_mutex_unlock(&volumeBackendMutex);                                                       \
         const int result = read_handle == 0U                                                       \
@@ -1653,6 +1714,9 @@ namespace nucode::ble::audio
             return record(Error::none);                                                            \
         }                                                                                          \
         bt_conn_unref(read_connection);                                                            \
+        k_mutex_lock(&volumeBackendMutex, K_FOREVER);                                              \
+        clearVolumeReadLocked(call_generation, read_operation);                                    \
+        k_mutex_unlock(&volumeBackendMutex);                                                       \
         finishVolumeDirectRead(call_generation, read_operation, result);                           \
         return record(mapNativeError(result), result);                                             \
     } while (false)
@@ -2027,18 +2091,24 @@ namespace nucode::ble::audio
             std::uint32_t bootstrap_retry_at = 0U;
             std::uint32_t bootstrap_operation_counter = 0U;
             std::uint32_t bootstrap_operation = 0U;
+            std::uint32_t read_generation = 0U;
+            std::uint32_t read_operation = 0U;
             std::uint32_t read_update_epoch = 0U;
             std::uint32_t update_epochs[microphoneBootstrapStepCount] = {};
             std::uint16_t callbacks_inflight = 0U;
             std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
             bool retired_connection = false;
+            bool read_pending = false;
             bool bootstrap_retry_pending = false;
             MicrophoneBootstrapStep bootstrap = MicrophoneBootstrapStep::none;
             AudioControlStep direct_read = AudioControlStep::none;
             MicrophoneState microphone = {};
             AudioInputState input = {};
             struct bt_gatt_read_params bootstrap_read = {};
+            struct bt_conn *read_connection = nullptr;
+            struct bt_conn *retired_native_connection = nullptr;
+            std::uint32_t retired_generation = 0U;
             atomic_t stage = ATOMIC_INIT(static_cast<atomic_val_t>(AudioControlStage::idle));
             atomic_t step = ATOMIC_INIT(static_cast<atomic_val_t>(AudioControlStep::none));
             atomic_t busy = ATOMIC_INIT(0);
@@ -2055,6 +2125,31 @@ namespace nucode::ble::audio
             microphoneControllerBackend.update_epochs[index] =
                 nextToken(microphoneControllerBackend.update_epochs[index]);
             ++microphoneControllerBackend.updates;
+        }
+
+        /** @brief 현재 generation에 MICP raw read parameter 수명을 결합합니다. */
+        void bindMicrophoneReadLocked(struct bt_conn *connection, std::uint32_t generation,
+                                      std::uint32_t operation) noexcept
+        {
+            microphoneControllerBackend.read_connection = connection;
+            microphoneControllerBackend.read_generation = generation;
+            microphoneControllerBackend.read_operation = operation;
+            microphoneControllerBackend.read_pending = true;
+        }
+
+        /** @brief 즉시 시작 실패 또는 drain 완료 뒤 MICP raw read 결합을 해제합니다. */
+        void clearMicrophoneReadLocked(std::uint32_t generation,
+                                       std::uint32_t operation) noexcept
+        {
+            if (microphoneControllerBackend.read_pending &&
+                (microphoneControllerBackend.read_generation == generation) &&
+                (microphoneControllerBackend.read_operation == operation))
+            {
+                microphoneControllerBackend.read_pending = false;
+                microphoneControllerBackend.read_connection = nullptr;
+                microphoneControllerBackend.read_generation = 0U;
+                microphoneControllerBackend.read_operation = 0U;
+            }
         }
 
         /** @brief MICP callback ingress에서 고정한 generation 수명을 관리합니다. */
@@ -2117,6 +2212,10 @@ namespace nucode::ble::audio
             const bool callback_active = microphoneControllerBackend.callbacks_inflight != 0U;
             struct bt_micp_mic_ctlr *controller = microphoneControllerBackend.controller;
             struct bt_aics *input_service = microphoneControllerBackend.input_service;
+            struct bt_conn *retired_native =
+                microphoneControllerBackend.retired_native_connection;
+            const std::uint32_t retired_generation =
+                microphoneControllerBackend.retired_generation;
             k_mutex_unlock(&microphoneControllerBackendMutex);
             if (callback_active)
             {
@@ -2140,17 +2239,29 @@ namespace nucode::ble::audio
             {
                 return true;
             }
+            struct bt_conn *release_connection = nullptr;
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             if (microphoneControllerBackend.retired_connection &&
                 (microphoneControllerBackend.handle == handle) &&
+                (microphoneControllerBackend.retired_native_connection == retired_native) &&
+                (microphoneControllerBackend.retired_generation == retired_generation) &&
                 (microphoneControllerBackend.callbacks_inflight == 0U))
             {
+                clearMicrophoneReadLocked(retired_generation,
+                                          microphoneControllerBackend.read_operation);
                 microphoneControllerBackend.retired_connection = false;
                 microphoneControllerBackend.controller = nullptr;
                 microphoneControllerBackend.input_service = nullptr;
+                microphoneControllerBackend.retired_generation = 0U;
+                release_connection = microphoneControllerBackend.retired_native_connection;
+                microphoneControllerBackend.retired_native_connection = nullptr;
             }
             const bool still_retired = microphoneControllerBackend.retired_connection;
             k_mutex_unlock(&microphoneControllerBackendMutex);
+            if (release_connection != nullptr)
+            {
+                bt_conn_unref(release_connection);
+            }
             return still_retired;
         }
 
@@ -2194,16 +2305,19 @@ namespace nucode::ble::audio
                                        struct bt_gatt_read_params *params) noexcept
         {
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
-            if ((microphoneControllerBackend.owner == nullptr) || (connection == nullptr) ||
-                (connection != microphoneControllerBackend.connection) ||
+            if ((connection == nullptr) ||
                 (params != &microphoneControllerBackend.bootstrap_read) ||
-                (microphoneControllerBackend.bootstrap_operation == 0U))
+                !microphoneControllerBackend.read_pending ||
+                (connection != microphoneControllerBackend.read_connection) ||
+                (microphoneControllerBackend.read_generation == 0U) ||
+                (microphoneControllerBackend.read_operation == 0U))
             {
                 k_mutex_unlock(&microphoneControllerBackendMutex);
                 return {};
             }
-            const std::uint32_t generation = microphoneControllerBackend.generation;
-            const std::uint32_t operation = microphoneControllerBackend.bootstrap_operation;
+            const std::uint32_t generation = microphoneControllerBackend.read_generation;
+            const std::uint32_t operation = microphoneControllerBackend.read_operation;
+            clearMicrophoneReadLocked(generation, operation);
             bt_conn_ref(connection);
             ++microphoneControllerBackend.callbacks_inflight;
             k_mutex_unlock(&microphoneControllerBackendMutex);
@@ -2418,6 +2532,7 @@ namespace nucode::ble::audio
             microphoneControllerBackend.bootstrap_read.single.handle = handle;
             microphoneControllerBackend.bootstrap_read.single.offset = 0U;
             struct bt_conn *connection = microphoneControllerBackend.connection;
+            bindMicrophoneReadLocked(connection, generation, operation);
             bt_conn_ref(connection);
             k_mutex_unlock(&microphoneControllerBackendMutex);
 
@@ -2443,6 +2558,7 @@ namespace nucode::ble::audio
             bt_conn_unref(connection);
             const std::uint32_t now = k_uptime_get_32();
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
+            clearMicrophoneReadLocked(generation, operation);
             if ((microphoneControllerBackend.owner == nullptr) ||
                 (microphoneControllerBackend.generation != generation) ||
                 (microphoneControllerBackend.bootstrap != step) ||
@@ -2678,8 +2794,6 @@ namespace nucode::ble::audio
                         const auto *state = static_cast<const struct bt_aics_state *>(data);
                         microphoneControllerBackend.input_service->cli.change_counter =
                             state->change_counter;
-                        microphoneControllerBackend.input_service->cli.gain_mode =
-                            state->gain_mode;
                         microphoneControllerBackend.input.gain = state->gain;
                         microphoneControllerBackend.input.muted =
                             state->mute == BT_AICS_STATE_MUTED;
@@ -3077,10 +3191,14 @@ namespace nucode::ble::audio
         microphoneControllerBackend.bootstrap_retry_at = 0U;
         microphoneControllerBackend.bootstrap_retries = 0U;
         microphoneControllerBackend.bootstrap_operation = 0U;
+        microphoneControllerBackend.read_generation = 0U;
+        microphoneControllerBackend.read_operation = 0U;
         microphoneControllerBackend.read_update_epoch = 0U;
         (void)memset(microphoneControllerBackend.update_epochs, 0,
                      sizeof(microphoneControllerBackend.update_epochs));
         microphoneControllerBackend.bootstrap_retry_pending = false;
+        microphoneControllerBackend.read_pending = false;
+        microphoneControllerBackend.read_connection = nullptr;
         microphoneControllerBackend.direct_read = AudioControlStep::none;
         atomic_set(&microphoneControllerBackend.error, 0);
         atomic_set(&microphoneControllerBackend.busy, 1);
@@ -3158,8 +3276,6 @@ namespace nucode::ble::audio
             if (ownsMicrophoneControllerLocked(this, generation_) &&
                 (microphoneControllerBackend.handle == handle))
             {
-                microphoneControllerBackend.controller = nullptr;
-                microphoneControllerBackend.input_service = nullptr;
                 atomic_set(&microphoneControllerBackend.error, -ENOTCONN);
                 atomic_set(&microphoneControllerBackend.busy, 0);
                 atomic_set(&microphoneControllerBackend.stage,
@@ -3183,8 +3299,16 @@ namespace nucode::ble::audio
         {
             const BLEConnectionHandle handle = microphoneControllerBackend.handle;
             struct bt_conn *connection = microphoneControllerBackend.connection;
-            const bool cancel_bootstrap = microphoneControllerBackend.bootstrap_operation != 0U;
+            const bool cancel_bootstrap = microphoneControllerBackend.read_pending &&
+                                          (microphoneControllerBackend.read_generation ==
+                                           generation_);
+            if (connection != nullptr)
+            {
+                bt_conn_ref(connection);
+            }
             microphoneControllerBackend.retired_connection = true;
+            microphoneControllerBackend.retired_native_connection = connection;
+            microphoneControllerBackend.retired_generation = generation_;
             microphoneControllerBackend.owner = nullptr;
             ++microphoneControllerBackend.generation;
             microphoneControllerBackend.pending_generation = 0U;
@@ -3270,6 +3394,7 @@ namespace nucode::ble::audio
         microphoneControllerBackend.bootstrap_read.single.handle = read_handle;                    \
         microphoneControllerBackend.bootstrap_read.single.offset = 0U;                             \
         struct bt_conn *read_connection = microphoneControllerBackend.connection;                  \
+        bindMicrophoneReadLocked(read_connection, call_generation, read_operation);                \
         bt_conn_ref(read_connection);                                                              \
         k_mutex_unlock(&microphoneControllerBackendMutex);                                         \
         const int result =                                                                         \
@@ -3291,6 +3416,9 @@ namespace nucode::ble::audio
             return record(Error::none);                                                            \
         }                                                                                          \
         bt_conn_unref(read_connection);                                                            \
+        k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);                                \
+        clearMicrophoneReadLocked(call_generation, read_operation);                                \
+        k_mutex_unlock(&microphoneControllerBackendMutex);                                         \
         finishMicrophoneDirectRead(call_generation, read_operation, result);                       \
         return record(mapNativeError(result), result);                                             \
     } while (false)

@@ -339,6 +339,8 @@ namespace audio_control_stub
     inline bt_micp_mic_ctlr_cb *microphone_callbacks = nullptr;
     inline bt_gatt_read_params *pending_read = nullptr;
     inline bt_conn *pending_connection = nullptr;
+    inline bt_gatt_read_params *delayed_read = nullptr;
+    inline bt_conn *delayed_connection = nullptr;
     inline std::uint32_t cancel_callbacks = 0U;
     inline int next_read_result = 0;
 
@@ -379,6 +381,8 @@ namespace audio_control_stub
         microphone_input.cli.status_handle = 0x0214U;
         pending_read = nullptr;
         pending_connection = nullptr;
+        delayed_read = nullptr;
+        delayed_connection = nullptr;
         cancel_callbacks = 0U;
         next_read_result = 0;
     }
@@ -393,6 +397,28 @@ namespace audio_control_stub
         if ((parameters != nullptr) && (parameters->func != nullptr))
         {
             parameters->func(read_connection, error, parameters, data, length);
+        }
+    }
+
+    /** @brief cancel lookup이 놓친 callback을 재현하도록 pending read를 분리합니다. */
+    inline void detachReadForLateCallback() noexcept
+    {
+        delayed_read = pending_read;
+        delayed_connection = pending_connection;
+        pending_read = nullptr;
+        pending_connection = nullptr;
+    }
+
+    /** @brief 분리한 old read callback을 지정한 시점에 전달합니다. */
+    inline void completeLateRead(std::uint8_t error = BT_ATT_ERR_UNLIKELY) noexcept
+    {
+        bt_gatt_read_params *parameters = delayed_read;
+        bt_conn *read_connection = delayed_connection;
+        delayed_read = nullptr;
+        delayed_connection = nullptr;
+        if ((parameters != nullptr) && (parameters->func != nullptr))
+        {
+            parameters->func(read_connection, error, parameters, nullptr, 0U);
         }
     }
 }
