@@ -22,7 +22,10 @@ namespace
     UnicastServer audioSink;
     Lc3Codec codec;
     bool restartAdvertising = false;
+    bool setupReady = false;
+    const char *statusMessage = "starting";
     std::uint32_t decodedFrames = 0U;
+    std::uint32_t lastStatusAt = 0U;
 
     /** @brief 연결 해제 뒤 다음 Initiator를 받을 광고를 예약합니다. */
     void onBleEvent(const BLEEventInfo &event, void *context)
@@ -53,14 +56,41 @@ namespace
 void setup()
 {
     Serial.begin(115200);
+    Serial.println("CAP Acceptor starting");
     BLEDevice.onEventInfo(onBleEvent);
-    if (!BLEDevice.begin("NU54-CAP-UNICAST-SINK") || (acceptor.begin() != Error::none) ||
-        (audioSink.begin() != Error::none) || (codec.begin() != Error::none))
+    if (!BLEDevice.begin("NU54-CAP-UNICAST-SINK"))
     {
-        Serial.print("CAP Acceptor setup failed: ");
+        statusMessage = "BLE start failed";
+        Serial.println("CAP Acceptor BLE start failed");
+        return;
+    }
+    Serial.println("CAP Acceptor BLE ready");
+
+    if (acceptor.begin() != Error::none)
+    {
+        statusMessage = "service registration failed";
+        Serial.print("CAP service registration failed: ");
+        Serial.println(acceptor.nativeCode());
+        return;
+    }
+    Serial.println("CAP service ready");
+
+    if (audioSink.begin() != Error::none)
+    {
+        statusMessage = "unicast server failed";
+        Serial.print("CAP unicast server failed: ");
         Serial.println(audioSink.nativeCode());
         return;
     }
+    Serial.println("CAP unicast server ready");
+
+    if (codec.begin() != Error::none)
+    {
+        statusMessage = "codec failed";
+        Serial.println("CAP codec failed");
+        return;
+    }
+    Serial.println("CAP codec ready");
 
     constexpr std::uint8_t announcement[] = {1U, 0x03U, 0x00U, 0x00U, 0x00U, 0U};
     if (!BLEAdvertising.clear() || !BLEAdvertising.setConnectable(true) ||
@@ -69,15 +99,31 @@ void setup()
         !BLEAdvertising.setServiceData(BLEUuid(0x184EU), announcement, sizeof(announcement)) ||
         !BLEAdvertising.start())
     {
+        statusMessage = "advertising failed";
         Serial.println("CAP Acceptor advertising failed");
         return;
     }
+    setupReady = true;
+    statusMessage = "waiting for Initiator";
     Serial.println("CAP unicast Acceptor ready");
 }
 
 /** @brief 수신 LC3 frame을 공개 codec으로 복호화하고 통계를 출력합니다. */
 void loop()
 {
+    const std::uint32_t now = millis();
+    if ((now - lastStatusAt) >= 2000U)
+    {
+        lastStatusAt = now;
+        Serial.print("CAP Acceptor status: ");
+        Serial.println(statusMessage);
+    }
+    if (!setupReady)
+    {
+        delay(1U);
+        return;
+    }
+
     BLEDevice.poll();
     if (restartAdvertising && !BLEConnection.connected())
     {

@@ -34,6 +34,7 @@ namespace
     bool cancellationReported = false;
     std::uint32_t completedSessions = 0U;
     std::uint32_t lastFrameAt = 0U;
+    std::uint32_t lastStatusAt = 0U;
     std::uint16_t wavePosition = 0U;
 
     /** @brief CAS를 광고하는 첫 연결 가능한 Acceptor를 선택합니다. */
@@ -123,6 +124,19 @@ void loop()
 {
     BLEDevice.poll();
     initiator.poll();
+    const std::uint32_t now = millis();
+    if ((now - lastStatusAt) >= 2000U)
+    {
+        lastStatusAt = now;
+        Serial.print("CAP Initiator status found=");
+        Serial.print(peerFound ? 1 : 0);
+        Serial.print(" connected=");
+        Serial.print(BLEConnection.connected() ? 1 : 0);
+        Serial.print(" connecting=");
+        Serial.print(BLEConnection.connecting() ? 1 : 0);
+        Serial.print(" stage=");
+        Serial.println(static_cast<unsigned int>(initiator.stage()));
+    }
 
     if (peerFound && !BLEConnection.connected() && !BLEConnection.connecting())
     {
@@ -195,7 +209,6 @@ void loop()
         return;
     }
 
-    const std::uint32_t now = millis();
     if ((now - lastFrameAt) < 10U)
     {
         delay(1U);
