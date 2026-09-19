@@ -144,6 +144,44 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_PER_ADV_SYNC=y",
                 "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "BapBroadcastAssistant":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "BroadcastAssistant", "BroadcastCode", "BLESecurity.begin(",
+                "BLEScan.start(", "BLEConnection.connect(", "assistant.begin(",
+                "assistant.selectSource(", "assistant.addSource(",
+                "assistant.modifySource(", "assistant.setBroadcastCode(",
+                "assistant.removeSource(", "assistant.readState(",
+            )
+            options = (
+                "CONFIG_BT_BAP_BROADCAST_ASSISTANT=y",
+                "CONFIG_BT_BAP_BROADCAST_ASSISTANT_RECV_STATE_COUNT=1",
+                "CONFIG_BT_BAP_BASS_MAX_SUBGROUPS=1",
+                "CONFIG_BT_PER_ADV_SYNC=y", "CONFIG_BT_ISO_SYNC_RECEIVER=y",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "BapBroadcastDelegatorSink":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "BroadcastSink", "Lc3Codec", "BLESecurity.begin(",
+                "BLEAdvertising.addServiceUuid(", "audioSink.beginDelegated(",
+                "audioSink.poll(", "audioSink.readFrame(", "codec.decode(",
+                "audioSink.delegatedAdds(", "audioSink.delegatedModifications(",
+                "audioSink.delegatedRemovals(",
+            )
+            options = (
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                "CONFIG_BT_BAP_BROADCAST_SNK_STREAM_COUNT=1",
+                "CONFIG_BT_BAP_BASS_MAX_SUBGROUPS=1",
+                "CONFIG_BT_PAC_SNK_NOTIFIABLE=y",
+                "CONFIG_BT_PACS_SUPPORTED_CONTEXT_NOTIFIABLE=y",
+                "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name in {"BapUnicastSource", "BapUnicastCycle"}:
             required = (
                 "#include <NUCODE_BLE.h>",

@@ -56,6 +56,11 @@ namespace nucode::ble::audio
             atomic_t received = 0;
             atomic_t dropped = 0;
             atomic_t error = 0;
+            atomic_t delegated_start = 0;
+            atomic_t delegated_cleanup = 0;
+            atomic_t delegated_adds = 0;
+            atomic_t delegated_modifications = 0;
+            atomic_t delegated_removals = 0;
             BroadcastSinkStep cleanup_failure = BroadcastSinkStep::cleanup;
             bool scan_callback_registered = false;
             bool periodic_callback_registered = false;
@@ -67,6 +72,9 @@ namespace nucode::ble::audio
             bool sync_requested = false;
             bool has_broadcast_code = false;
             bool encrypted = false;
+            bool delegated = false;
+            bool delegated_source = false;
+            std::uint8_t delegated_source_id = 0xffU;
         };
 
         SinkState sink_state;
@@ -123,7 +131,12 @@ namespace nucode::ble::audio
             net_buf_simple copy;
             net_buf_simple_clone(advertising_data, &copy);
             bt_data_parse(&copy, inspectData, &match);
-            if (!match.service || !match.name)
+            const bool exact_source = !sink_state.delegated ||
+                                      (bt_addr_le_cmp(info->addr,
+                                                      &sink_state.broadcaster) == 0 &&
+                                       info->sid == sink_state.sid &&
+                                       match.broadcast_id == sink_state.broadcast_id);
+            if (!match.service || (!sink_state.delegated && !match.name) || !exact_source)
             {
                 return;
             }
@@ -195,7 +208,10 @@ namespace nucode::ble::audio
             sink_state.encrypted = biginfo->encryption;
             if (sink_state.encrypted && !sink_state.has_broadcast_code)
             {
-                atomic_set(&sink_state.error, -EACCES);
+                if (!sink_state.delegated)
+                {
+                    atomic_set(&sink_state.error, -EACCES);
+                }
                 return;
             }
             atomic_set(&sink_state.syncable, 1);
@@ -273,6 +289,139 @@ namespace nucode::ble::audio
             .stopped = streamStopped,
             .recv = streamReceived,
         };
+
+        /** @brief Assistant가 요청한 source의 주소와 ID를 동기화 대상으로 복사합니다. */
+        void selectDelegatedSource(const bt_bap_scan_delegator_recv_state *state,
+                                   std::uint16_t periodic_interval) noexcept
+        {
+            bt_addr_le_copy(&sink_state.broadcaster, &state->addr);
+            sink_state.sid = state->adv_sid;
+            sink_state.broadcast_id = state->broadcast_id;
+            sink_state.periodic_interval = periodic_interval;
+            sink_state.delegated_source_id = state->src_id;
+            sink_state.delegated_source = true;
+        }
+
+        /** @brief BASS Add Source 요청을 한 receive state 슬롯으로 제한해 수락합니다. */
+        int delegatedAdd(bt_conn *connection,
+                         const bt_bap_scan_delegator_recv_state *state) noexcept
+        {
+            static_cast<void>(connection);
+            if (!sink_state.delegated || (state == nullptr) ||
+                sink_state.delegated_source || (state->num_subgroups != 1U))
+            {
+                return -EINVAL;
+            }
+            selectDelegatedSource(state, 0U);
+            atomic_inc(&sink_state.delegated_adds);
+            return 0;
+        }
+
+        /** @brief 현재 source에 대한 BASS Modify Source 요청만 수락합니다. */
+        int delegatedModify(bt_conn *connection,
+                            const bt_bap_scan_delegator_recv_state *state) noexcept
+        {
+            static_cast<void>(connection);
+            if (!sink_state.delegated || (state == nullptr) ||
+                !sink_state.delegated_source ||
+                (state->src_id != sink_state.delegated_source_id) ||
+                (state->num_subgroups != 1U))
+            {
+                return -EINVAL;
+            }
+            atomic_inc(&sink_state.delegated_modifications);
+            return 0;
+        }
+
+        /** @brief 현재 source에 대한 BASS Remove Source 요청을 main thread에 전달합니다. */
+        int delegatedRemove(bt_conn *connection, std::uint8_t source_id) noexcept
+        {
+            static_cast<void>(connection);
+            if (!sink_state.delegated || !sink_state.delegated_source ||
+                (source_id != sink_state.delegated_source_id))
+            {
+                return -EINVAL;
+            }
+            atomic_inc(&sink_state.delegated_removals);
+            atomic_set(&sink_state.delegated_cleanup, 1);
+            sink_state.delegated_source = false;
+            return 0;
+        }
+
+        /** @brief Assistant의 PA sync 요청을 Arduino poll 문맥으로 전달합니다. */
+        int delegatedPaSync(bt_conn *connection,
+                            const bt_bap_scan_delegator_recv_state *state,
+                            bool past_available, std::uint16_t periodic_interval) noexcept
+        {
+            static_cast<void>(connection);
+            static_cast<void>(past_available);
+            if (!sink_state.delegated || (state == nullptr) ||
+                (state->src_id != sink_state.delegated_source_id))
+            {
+                return -EINVAL;
+            }
+            selectDelegatedSource(state, periodic_interval);
+            atomic_set(&sink_state.delegated_start, 1);
+            return 0;
+        }
+
+        /** @brief Assistant의 PA sync 해제 요청을 Arduino poll 문맥으로 전달합니다. */
+        int delegatedPaTerminate(bt_conn *connection,
+                                 const bt_bap_scan_delegator_recv_state *state) noexcept
+        {
+            static_cast<void>(connection);
+            if (!sink_state.delegated || (state == nullptr) ||
+                (state->src_id != sink_state.delegated_source_id))
+            {
+                return -EINVAL;
+            }
+            atomic_set(&sink_state.delegated_cleanup, 1);
+            return 0;
+        }
+
+        /** @brief Assistant가 전달한 Broadcast Code를 BIS sync에 사용합니다. */
+        void delegatedCode(bt_conn *connection,
+                           const bt_bap_scan_delegator_recv_state *state,
+                           const std::uint8_t broadcast_code[BT_ISO_BROADCAST_CODE_SIZE]) noexcept
+        {
+            static_cast<void>(connection);
+            if (!sink_state.delegated || (state == nullptr) ||
+                (state->src_id != sink_state.delegated_source_id))
+            {
+                return;
+            }
+            memcpy(sink_state.broadcast_code, broadcast_code,
+                   sizeof(sink_state.broadcast_code));
+            sink_state.has_broadcast_code = true;
+            if (sink_state.encrypted)
+            {
+                atomic_set(&sink_state.syncable, 1);
+            }
+        }
+
+        /** @brief BIS 1 또는 no-preference 요청만 수락하고 해제 요청을 전달합니다. */
+        int delegatedBisSync(
+            bt_conn *connection, const bt_bap_scan_delegator_recv_state *state,
+            const std::uint32_t bis_sync[BT_BAP_BASS_MAX_SUBGROUPS]) noexcept
+        {
+            static_cast<void>(connection);
+            if (!sink_state.delegated || (state == nullptr) ||
+                (state->src_id != sink_state.delegated_source_id))
+            {
+                return -EINVAL;
+            }
+            const std::uint32_t requested = bis_sync[0];
+            if ((requested != 0U) && (requested != BT_BAP_BIS_SYNC_NO_PREF) &&
+                ((requested & ~BT_ISO_BIS_INDEX_BIT(1U)) != 0U))
+            {
+                return -EINVAL;
+            }
+            if (requested == 0U)
+            {
+                atomic_set(&sink_state.delegated_cleanup, 1);
+            }
+            return 0;
+        }
 
         /** @brief 광고 주기에서 안전한 PA sync timeout을 계산합니다. */
         std::uint16_t periodicTimeout(std::uint16_t interval) noexcept
@@ -385,6 +534,62 @@ namespace nucode::ble::audio
             k_msgq_purge(&receive_queue);
             return first_error;
         }
+
+        /** @brief BASS/PACS 등록은 유지하고 현재 방송 수신 자원만 반환합니다. */
+        int releaseDelegatedReception() noexcept
+        {
+            int first_error = 0;
+            if (sink_state.scanning)
+            {
+                const int result = bt_le_scan_stop();
+                if ((result != 0) && (result != -EALREADY))
+                {
+                    first_error = result;
+                }
+                sink_state.scanning = false;
+            }
+            if (sink_state.sink_created && sink_state.sync_requested)
+            {
+                k_sem_reset(&sink_stopped);
+                const int result = bt_bap_broadcast_sink_stop(sink_state.sink);
+                if (result == 0)
+                {
+                    (void)k_sem_take(&sink_stopped, K_SECONDS(2));
+                }
+                else if ((result != -EALREADY) && (first_error == 0))
+                {
+                    first_error = result;
+                }
+            }
+            if (sink_state.sink_created)
+            {
+                const int result = bt_bap_broadcast_sink_delete(sink_state.sink);
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                }
+            }
+            sink_state.sink = nullptr;
+            sink_state.sink_created = false;
+            if (sink_state.periodic_sync != nullptr)
+            {
+                const int result = bt_le_per_adv_sync_delete(sink_state.periodic_sync);
+                if ((result != 0) && (first_error == 0))
+                {
+                    first_error = result;
+                }
+            }
+            sink_state.periodic_sync = nullptr;
+            sink_state.sync_requested = false;
+            sink_state.encrypted = false;
+            atomic_set(&sink_state.found, 0);
+            atomic_set(&sink_state.periodic_synced, 0);
+            atomic_set(&sink_state.base_received, 0);
+            atomic_set(&sink_state.syncable, 0);
+            atomic_set(&sink_state.streaming, 0);
+            k_msgq_purge(&receive_queue);
+            return first_error;
+        }
     } // namespace
 
     /** @brief 마지막 공개 오류와 원본 stack 오류를 기록합니다. */
@@ -408,6 +613,12 @@ namespace nucode::ble::audio
         return start(broadcast_name, broadcast_code);
     }
 
+    /** @brief BASS Assistant가 지정할 source를 기다리는 Scan Delegator를 시작합니다. */
+    Error BroadcastSink::beginDelegated() noexcept
+    {
+        return start(nullptr, nullptr);
+    }
+
     /** @brief 선택한 code와 함께 검색·PACS·BASS 자원을 구성합니다. */
     Error BroadcastSink::start(const char *broadcast_name,
                                const std::uint8_t *broadcast_code) noexcept
@@ -424,15 +635,20 @@ namespace nucode::ble::audio
         {
             return record(Error::busy);
         }
-        if ((broadcast_name == nullptr) || (broadcast_name[0] == '\0') ||
-            (strlen(broadcast_name) > maximum_broadcast_name))
+        if ((broadcast_name != nullptr) &&
+            ((broadcast_name[0] == '\0') ||
+             (strlen(broadcast_name) > maximum_broadcast_name)))
         {
             return record(Error::invalid_argument);
         }
 
         sink_state = {};
         sink_state.owner = this;
-        memcpy(sink_state.target_name, broadcast_name, strlen(broadcast_name) + 1U);
+        sink_state.delegated = broadcast_name == nullptr;
+        if (broadcast_name != nullptr)
+        {
+            memcpy(sink_state.target_name, broadcast_name, strlen(broadcast_name) + 1U);
+        }
         if (broadcast_code != nullptr)
         {
             memcpy(sink_state.broadcast_code, broadcast_code,
@@ -443,6 +659,15 @@ namespace nucode::ble::audio
         bt_bap_stream_cb_register(&sink_state.stream, &stream_callbacks);
         k_msgq_purge(&receive_queue);
         k_sem_reset(&sink_stopped);
+        scan_delegator_callbacks.recv_state_updated = nullptr;
+        scan_delegator_callbacks.pa_sync_req = delegatedPaSync;
+        scan_delegator_callbacks.pa_sync_term_req = delegatedPaTerminate;
+        scan_delegator_callbacks.broadcast_code = delegatedCode;
+        scan_delegator_callbacks.bis_sync_req = delegatedBisSync;
+        scan_delegator_callbacks.scanning_state = nullptr;
+        scan_delegator_callbacks.add_source = delegatedAdd;
+        scan_delegator_callbacks.modify_source = delegatedModify;
+        scan_delegator_callbacks.remove_source = delegatedRemove;
 
         const bt_pacs_register_param pacs_config = {
             .snk_pac = true,
@@ -500,7 +725,7 @@ namespace nucode::ble::audio
             result = bt_le_per_adv_sync_cb_register(&periodic_callbacks);
             sink_state.periodic_callback_registered = result == 0;
         }
-        if (result == 0)
+        if ((result == 0) && !sink_state.delegated)
         {
             last_step_ = BroadcastSinkStep::scan;
             result = bt_le_scan_start(BT_LE_SCAN_ACTIVE, nullptr);
@@ -514,7 +739,7 @@ namespace nucode::ble::audio
         }
 
         started_ = true;
-        stage_ = BroadcastStage::scanning;
+        stage_ = sink_state.delegated ? BroadcastStage::idle : BroadcastStage::scanning;
         return record(Error::none);
     }
 
@@ -524,6 +749,46 @@ namespace nucode::ble::audio
         if (!started_ || (stage_ == BroadcastStage::failed))
         {
             return;
+        }
+
+        if (sink_state.delegated &&
+            atomic_cas(&sink_state.delegated_cleanup, 1, 0))
+        {
+            stage_ = BroadcastStage::stopping;
+            const int cleanup_result = releaseDelegatedReception();
+            if (cleanup_result != 0)
+            {
+                stage_ = BroadcastStage::failed;
+                (void)record(Error::stack_error, cleanup_result);
+                return;
+            }
+            stage_ = BroadcastStage::idle;
+            (void)record(Error::none);
+        }
+
+        if (sink_state.delegated &&
+            atomic_cas(&sink_state.delegated_start, 1, 0))
+        {
+            if (stage_ != BroadcastStage::idle)
+            {
+                const int cleanup_result = releaseDelegatedReception();
+                if (cleanup_result != 0)
+                {
+                    stage_ = BroadcastStage::failed;
+                    (void)record(Error::stack_error, cleanup_result);
+                    return;
+                }
+            }
+            last_step_ = BroadcastSinkStep::scan;
+            const int scan_result = bt_le_scan_start(BT_LE_SCAN_ACTIVE, nullptr);
+            if (scan_result != 0)
+            {
+                stage_ = BroadcastStage::failed;
+                (void)record(Error::stack_error, scan_result);
+                return;
+            }
+            sink_state.scanning = true;
+            stage_ = BroadcastStage::scanning;
         }
 
         const int callback_error = atomic_get(&sink_state.error);
@@ -588,7 +853,8 @@ namespace nucode::ble::audio
         if ((stage_ == BroadcastStage::synchronizing) && sink_state.sink_created &&
             !sink_state.sync_requested &&
             (atomic_get(&sink_state.base_received) != 0) &&
-            (atomic_get(&sink_state.syncable) != 0))
+            (atomic_get(&sink_state.syncable) != 0) &&
+            (!sink_state.encrypted || sink_state.has_broadcast_code))
         {
             bt_bap_stream *streams[] = {&sink_state.stream};
             last_step_ = BroadcastSinkStep::bis_sync;
@@ -681,6 +947,30 @@ namespace nucode::ble::audio
         const int callback_error = atomic_get(&sink_state.error);
         return callback_error != 0 ? callback_error : native_code_;
     }
+
+    /** @brief 수락한 BASS Add Source 요청 수를 반환합니다. */
+    std::uint32_t BroadcastSink::delegatedAdds() const noexcept
+    {
+        return started_
+                   ? static_cast<std::uint32_t>(atomic_get(&sink_state.delegated_adds))
+                   : 0U;
+    }
+
+    /** @brief 수락한 BASS Modify Source 요청 수를 반환합니다. */
+    std::uint32_t BroadcastSink::delegatedModifications() const noexcept
+    {
+        return started_ ? static_cast<std::uint32_t>(
+                              atomic_get(&sink_state.delegated_modifications))
+                        : 0U;
+    }
+
+    /** @brief 수락한 BASS Remove Source 요청 수를 반환합니다. */
+    std::uint32_t BroadcastSink::delegatedRemovals() const noexcept
+    {
+        return started_
+                   ? static_cast<std::uint32_t>(atomic_get(&sink_state.delegated_removals))
+                   : 0U;
+    }
 } // namespace nucode::ble::audio
 
 #else
@@ -695,6 +985,12 @@ namespace nucode::ble::audio
 
     /** @brief 기능이 없는 image에서는 암호화 broadcast 검색도 거부합니다. */
     Error BroadcastSink::begin(const char *, const BroadcastCode &) noexcept
+    {
+        return record(Error::not_ready);
+    }
+
+    /** @brief 기능이 없는 image에서는 delegated sink 시작도 거부합니다. */
+    Error BroadcastSink::beginDelegated() noexcept
     {
         return record(Error::not_ready);
     }
@@ -757,6 +1053,21 @@ namespace nucode::ble::audio
     int BroadcastSink::nativeCode() const noexcept
     {
         return 0;
+    }
+
+    std::uint32_t BroadcastSink::delegatedAdds() const noexcept
+    {
+        return 0U;
+    }
+
+    std::uint32_t BroadcastSink::delegatedModifications() const noexcept
+    {
+        return 0U;
+    }
+
+    std::uint32_t BroadcastSink::delegatedRemovals() const noexcept
+    {
+        return 0U;
     }
 
     /** @brief 마지막 공개 오류를 기록합니다. */

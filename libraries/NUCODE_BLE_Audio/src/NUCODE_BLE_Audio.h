@@ -16,6 +16,7 @@
 namespace nucode::ble
 {
     class BLEConnectionHandle;
+    struct BLEScanResult;
 }
 
 namespace nucode::ble::audio
@@ -325,6 +326,30 @@ namespace nucode::ble::audio
         cleanup_pacs,
     };
 
+    /** @brief Broadcast Assistant의 공개 비동기 단계입니다. */
+    enum class BroadcastAssistantStage : std::uint8_t
+    {
+        idle,
+        discovering,
+        ready,
+        operating,
+        failed,
+    };
+
+    /** @brief 마지막 Broadcast Assistant 작업을 나타냅니다. */
+    enum class BroadcastAssistantStep : std::uint8_t
+    {
+        none,
+        discover,
+        select_source,
+        add_source,
+        modify_source,
+        broadcast_code,
+        remove_source,
+        read_state,
+        cleanup,
+    };
+
     /**
      * @brief mono LC3 frame을 BAP broadcast stream으로 송신합니다.
      *
@@ -409,6 +434,9 @@ namespace nucode::ble::audio
         /** @brief 방송 이름과 16-byte code로 암호화된 BIS 검색을 시작합니다. */
         Error begin(const char *broadcast_name, const BroadcastCode &broadcast_code) noexcept;
 
+        /** @brief Broadcast Assistant가 지정할 source를 기다리는 Scan Delegator를 시작합니다. */
+        Error beginDelegated() noexcept;
+
         /** @brief callback 결과를 Arduino 문맥에서 다음 동기화 단계로 진행합니다. */
         void poll() noexcept;
 
@@ -439,6 +467,15 @@ namespace nucode::ble::audio
         /** @brief 마지막 Host/controller 오류를 반환합니다. */
         [[nodiscard]] int nativeCode() const noexcept;
 
+        /** @brief Assistant가 수락시킨 source add 요청 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t delegatedAdds() const noexcept;
+
+        /** @brief Assistant가 수락시킨 source modify 요청 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t delegatedModifications() const noexcept;
+
+        /** @brief Assistant가 수락시킨 source remove 요청 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t delegatedRemovals() const noexcept;
+
       private:
         Error start(const char *broadcast_name,
                     const std::uint8_t *broadcast_code) noexcept;
@@ -447,6 +484,92 @@ namespace nucode::ble::audio
         bool started_ = false;
         BroadcastStage stage_ = BroadcastStage::idle;
         BroadcastSinkStep last_step_ = BroadcastSinkStep::none;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /**
+     * @brief BASS server를 제어해 Broadcast Source를 위임하는 Assistant입니다.
+     *
+     * BLEConnection이 만든 Scan Delegator 연결로 BASS를 검색합니다. Sketch가
+     * BLEScanResult에서 source를 선택하면 add/modify/code/remove control point를
+     * 비동기로 실행하고 receive state 통지를 고정 크기 상태로 보존합니다.
+     */
+    class BroadcastAssistant final
+    {
+      public:
+        BroadcastAssistant() = default;
+
+        ~BroadcastAssistant()
+        {
+            (void)end();
+        }
+
+        BroadcastAssistant(const BroadcastAssistant &) = delete;
+        BroadcastAssistant &operator=(const BroadcastAssistant &) = delete;
+        BroadcastAssistant(BroadcastAssistant &&) = delete;
+        BroadcastAssistant &operator=(BroadcastAssistant &&) = delete;
+
+        /** @brief 연결된 Scan Delegator의 BASS와 receive state를 검색합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief Broadcast Audio announcement가 든 scan 결과를 위임 대상으로 선택합니다. */
+        Error selectSource(const BLEScanResult &result) noexcept;
+
+        /** @brief 선택한 source의 PA와 BIS 1 동기화를 Scan Delegator에 요청합니다. */
+        Error addSource() noexcept;
+
+        /** @brief 기존 source의 PA와 BIS 1 동기화 요청을 갱신합니다. */
+        Error modifySource(bool synchronize = true) noexcept;
+
+        /** @brief 암호화 source에 사용할 16-byte Broadcast Code를 전달합니다. */
+        Error setBroadcastCode(const BroadcastCode &broadcast_code) noexcept;
+
+        /** @brief 현재 receive state source를 Scan Delegator에서 제거합니다. */
+        Error removeSource() noexcept;
+
+        /** @brief 첫 receive state를 다시 읽어 통지 상태와 대조합니다. */
+        Error readState() noexcept;
+
+        /** @brief callback과 연결 참조를 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 현재 비동기 단계를 반환합니다. */
+        [[nodiscard]] BroadcastAssistantStage stage() const noexcept;
+
+        /** @brief 마지막 요청 작업을 반환합니다. */
+        [[nodiscard]] BroadcastAssistantStep lastStep() const noexcept;
+
+        /** @brief BASS 검색에서 확인한 receive state 개수를 반환합니다. */
+        [[nodiscard]] std::uint8_t receiveStateCount() const noexcept;
+
+        /** @brief 통지에서 확인한 source ID가 있는지 반환합니다. */
+        [[nodiscard]] bool hasSource() const noexcept;
+
+        /** @brief 마지막 receive state의 source ID를 반환합니다. */
+        [[nodiscard]] std::uint8_t sourceId() const noexcept;
+
+        /** @brief 마지막 receive state가 PA synchronized인지 반환합니다. */
+        [[nodiscard]] bool periodicSynchronized() const noexcept;
+
+        /** @brief 마지막 receive state가 BIS 1 synchronized인지 반환합니다. */
+        [[nodiscard]] bool bisSynchronized() const noexcept;
+
+        /** @brief 수신한 receive state 통지 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 BASS/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        BroadcastAssistantStage stage_ = BroadcastAssistantStage::idle;
+        BroadcastAssistantStep last_step_ = BroadcastAssistantStep::none;
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };

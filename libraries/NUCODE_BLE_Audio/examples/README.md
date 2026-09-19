@@ -103,6 +103,27 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
   dropped=...`가 100 frame마다 출력된다. `s`와 `r`로 BIS/PA 동기화 중단과 재시작을
   반복할 수 있다. `w`는 한 byte가 다른 code로 다시 동기화해 거부 경로를 확인한다.
 
+## `BapBroadcastDelegatorSink`
+
+- 세 보드 중 Delegator-Sink 보드에 올린다. `BroadcastSink::beginDelegated()`가 BASS와
+  PACS를 제공하고, 연결 광고는 공개 `BLEAdvertising`으로 BASS/PACS UUID를 게시한다.
+- Assistant가 source를 추가하면 주소·SID·Broadcast ID가 모두 일치하는 광고만 선택해
+  PA, BASE, BIG, BIS 1 순서로 동기화한다. 암호화 code도 Assistant가 BASS로 전달한다.
+- Serial은 add/modify/remove 수락 수와 실제 LC3 decode frame·energy·drop을 출력한다.
+  remove 뒤에는 수신 자원만 반환하고 BASS/PACS와 연결 광고는 유지해 새 add를 받을 수 있다.
+- 공개 예제의 RAM 사용량은 약 87%다. 추가 stream이나 큰 queue를 합치기 전에 빌드의
+  RAM 수치를 다시 확인한다.
+
+## `BapBroadcastAssistant`
+
+- 세 보드 중 Assistant 보드에 올린다. BASS UUID를 광고하는 Delegator에 연결하고 공개
+  `BLESecurity`로 encrypted ACL을 만든 뒤 `BroadcastAssistant`로 BASS를 검색한다.
+- 공개 `BLEScan` 결과에서 Broadcast Audio announcement를 선택해 add와 Broadcast Code를
+  전달한다. receive state 통지의 source ID, PA sync, BIS sync 상태를 Serial에 출력한다.
+- `m`은 PA/BIS 해제 modify, `d`는 해제된 source remove, `r`은 resume 또는 re-add,
+  `a`는 duplicate add, `x`는 올바른 announcement가 없는 source 선택 거부, `q`는 receive
+  state 재읽기다. remove는 먼저 `m`으로 PA/BIS를 해제한 뒤 실행한다.
+
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는
 외장 I/O 예제에서 별도로 다룬다.
@@ -110,5 +131,6 @@ Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S c
 ## 출처와 라이선스
 
 LC3 frame 계약은 고정 NCS v3.4.0의 `samples/bluetooth/bap_unicast_client`,
-`bap_unicast_server`, `bap_broadcast_source`를 기준으로 확인했다. 이 라이브러리 코드는 MIT이고,
-고정 SDK의 원본 sample과 liblc3는 각 원본 라이선스를 따른다.
+`bap_unicast_server`, `bap_broadcast_source`, `bap_broadcast_sink`,
+`bap_broadcast_assistant`를 기준으로 확인했다. 이 라이브러리 코드는 MIT이고, 고정 SDK의
+원본 sample과 liblc3는 각 원본 라이선스를 따른다.
