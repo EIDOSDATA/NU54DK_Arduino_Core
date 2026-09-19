@@ -78,6 +78,7 @@ namespace nucode::ble::audio
             atomic_ptr_t periodic_sync = nullptr;
             bt_bap_stream stream = {};
             bt_addr_le_t broadcaster = {};
+            bt_addr_le_t periodic_owner_address = {};
             char target_name[maximum_public_broadcast_name + 1U] = {};
             PublicBroadcastInfo public_info = {};
             std::uint32_t broadcast_id = 0U;
@@ -106,6 +107,8 @@ namespace nucode::ble::audio
             atomic_t has_broadcast_code = 0;
             atomic_t delegated_source = 0;
             atomic_t delegated_source_id = 0xff;
+            atomic_t periodic_session = 0;
+            atomic_t periodic_cancel_issued = 0;
             BroadcastSinkStep cleanup_failure = BroadcastSinkStep::cleanup;
             bool scan_callback_registered = false;
             bool periodic_callback_registered = false;
@@ -116,12 +119,29 @@ namespace nucode::ble::audio
             bool sink_created = false;
             bool delegated = false;
             bool public_broadcast = false;
+            std::uint8_t periodic_owner_sid = 0xffU;
         };
 
         SinkState sink_state;
         bool sink_callback_registered = false;
         atomic_t state_callbacks_in_flight = 0;
         atomic_t transport_callbacks_in_flight = 0;
+        atomic_t next_periodic_session = 0;
+
+        /** @brief 0을 제외한 PA sync 소유권 세대를 발급합니다. */
+        std::uint32_t nextPeriodicSession() noexcept
+        {
+            std::uint32_t session = static_cast<std::uint32_t>(
+                                        atomic_inc(&next_periodic_session)) +
+                                    1U;
+            if (session == 0U)
+            {
+                session = static_cast<std::uint32_t>(
+                              atomic_inc(&next_periodic_session)) +
+                          1U;
+            }
+            return session;
+        }
 
         /** @brief lock 밖의 parsing까지 teardown이 기다릴 수 있도록 callback을 셉니다. */
         class StateCallbackFlight final
@@ -196,6 +216,58 @@ namespace nucode::ble::audio
         {
             return static_cast<bt_le_per_adv_sync *>(
                 atomic_ptr_get(&sink_state.periodic_sync));
+        }
+
+        /** @brief PA sync가 현재 sink 세대와 주소·SID에 속하는지 확인합니다. */
+        bool currentPeriodicOwnership(bt_le_per_adv_sync *sync,
+                                      std::uint32_t session) noexcept
+        {
+            return (sync != nullptr) && (session != 0U) &&
+                   (currentPeriodicSync() == sync) &&
+                   (static_cast<std::uint32_t>(
+                        atomic_get(&sink_state.periodic_session)) == session);
+        }
+
+        /** @brief callback이 현재 PA sync의 주소·SID에서 왔는지 확인합니다. */
+        bool currentPeriodicIdentity(bt_le_per_adv_sync *sync,
+                                     const bt_addr_le_t *address,
+                                     std::uint8_t sid,
+                                     std::uint32_t session) noexcept
+        {
+            return currentPeriodicOwnership(sync, session) &&
+                   (address != nullptr) &&
+                   (bt_addr_le_cmp(address,
+                                   &sink_state.periodic_owner_address) == 0) &&
+                   (sid == sink_state.periodic_owner_sid);
+        }
+
+        /** @brief 현재 세대가 아직 같은 native 주소·SID slot을 소유하는지 확인합니다. */
+        bool nativePeriodicOwnership(bt_le_per_adv_sync *sync,
+                                     std::uint32_t session) noexcept
+        {
+            return currentPeriodicOwnership(sync, session) &&
+                   (bt_le_per_adv_sync_lookup_addr(
+                        &sink_state.periodic_owner_address,
+                        sink_state.periodic_owner_sid) == sync);
+        }
+
+        /** @brief 정확한 세대의 PA sync 소유권만 원자적으로 반환합니다. */
+        bool releasePeriodicOwnership(bt_le_per_adv_sync *sync,
+                                      std::uint32_t session) noexcept
+        {
+            if (!currentPeriodicOwnership(sync, session) ||
+                !atomic_ptr_cas(&sink_state.periodic_sync, sync, nullptr))
+            {
+                return false;
+            }
+            if (static_cast<std::uint32_t>(
+                    atomic_get(&sink_state.periodic_session)) == session)
+            {
+                atomic_set(&sink_state.periodic_session, 0);
+                atomic_set(&sink_state.periodic_cancel_issued, 0);
+            }
+            atomic_set(&sink_state.periodic_synced, 0);
+            return true;
         }
 
         /** @brief 한 광고 packet에서 BAP announcement와 방송 이름을 수집합니다. */
@@ -409,11 +481,13 @@ namespace nucode::ble::audio
         void periodicSynced(bt_le_per_adv_sync *sync,
                             bt_le_per_adv_sync_synced_info *info)
         {
-            static_cast<void>(info);
             const TransportCallbackFlight flight;
+            const std::uint32_t session = static_cast<std::uint32_t>(
+                atomic_get(&sink_state.periodic_session));
             if ((atomic_get(&sink_state.active) != 0) &&
                 (atomic_get(&sink_state.stopping) == 0) &&
-                (sync == currentPeriodicSync()))
+                (info != nullptr) &&
+                currentPeriodicIdentity(sync, info->addr, info->sid, session))
             {
                 atomic_set(&sink_state.periodic_synced, 1);
             }
@@ -424,9 +498,10 @@ namespace nucode::ble::audio
                                 const bt_le_per_adv_sync_term_info *info)
         {
             const TransportCallbackFlight flight;
-            if (atomic_ptr_cas(&sink_state.periodic_sync, sync, nullptr))
+            const std::uint32_t session = static_cast<std::uint32_t>(
+                atomic_get(&sink_state.periodic_session));
+            if ((info != nullptr) && releasePeriodicOwnership(sync, session))
             {
-                atomic_set(&sink_state.periodic_synced, 0);
                 atomic_set(&sink_state.streaming, 0);
                 if ((atomic_get(&sink_state.active) != 0) &&
                     (atomic_get(&sink_state.stopping) == 0) &&
@@ -965,12 +1040,15 @@ namespace nucode::ble::audio
         }
 
         /** @brief PA create 취소 event가 native slot을 반환할 때까지 제한 시간만 기다립니다. */
-        int waitForPendingPeriodicRelease(bt_le_per_adv_sync *sync) noexcept
+        int waitForPendingPeriodicRelease(bt_le_per_adv_sync *sync,
+                                          std::uint32_t session) noexcept
         {
             const std::uint32_t deadline =
                 k_uptime_get_32() + periodic_release_timeout_ms;
-            while (bt_le_per_adv_sync_lookup_addr(&sink_state.broadcaster,
-                                                  sink_state.sid) == sync)
+            while (currentPeriodicOwnership(sync, session) &&
+                   (bt_le_per_adv_sync_lookup_addr(
+                        &sink_state.periodic_owner_address,
+                        sink_state.periodic_owner_sid) == sync))
             {
                 if (static_cast<std::int32_t>(k_uptime_get_32() - deadline) >= 0)
                 {
@@ -978,8 +1056,7 @@ namespace nucode::ble::audio
                 }
                 (void)k_msleep(1);
             }
-            (void)atomic_ptr_cas(&sink_state.periodic_sync, sync, nullptr);
-            atomic_set(&sink_state.periodic_synced, 0);
+            (void)releasePeriodicOwnership(sync, session);
             return 0;
         }
 
@@ -991,6 +1068,16 @@ namespace nucode::ble::audio
             {
                 return 0;
             }
+            const std::uint32_t session = static_cast<std::uint32_t>(
+                atomic_get(&sink_state.periodic_session));
+            if (!currentPeriodicOwnership(sync, session))
+            {
+                return 0;
+            }
+            if (atomic_get(&sink_state.periodic_cancel_issued) != 0)
+            {
+                return waitForPendingPeriodicRelease(sync, session);
+            }
             const bool synchronized = atomic_get(&sink_state.periodic_synced) != 0;
             k_sem_reset(&periodic_stopped);
             int result = 0;
@@ -999,6 +1086,11 @@ namespace nucode::ble::audio
                 k_uptime_get_32() + cleanup_retry_timeout_ms;
             for (;;)
             {
+                if (!nativePeriodicOwnership(sync, session))
+                {
+                    (void)releasePeriodicOwnership(sync, session);
+                    return 0;
+                }
                 result = bt_le_per_adv_sync_delete(sync);
                 if (result == 0)
                 {
@@ -1022,7 +1114,7 @@ namespace nucode::ble::audio
                         ? retry_delay_ms * 2
                         : cleanup_retry_max_delay_ms;
             }
-            if (currentPeriodicSync() != sync)
+            if (!currentPeriodicOwnership(sync, session))
             {
                 return 0;
             }
@@ -1033,9 +1125,10 @@ namespace nucode::ble::audio
                 {
                     return wait_result;
                 }
-                return currentPeriodicSync() == sync ? -EBUSY : 0;
+                return currentPeriodicOwnership(sync, session) ? -EBUSY : 0;
             }
-            return waitForPendingPeriodicRelease(sync);
+            atomic_set(&sink_state.periodic_cancel_issued, 1);
+            return waitForPendingPeriodicRelease(sync, session);
         }
 
         /** @brief 새 상태 게시를 막고 이미 실행 중인 scan/BASS callback을 기다립니다. */
@@ -1693,6 +1786,11 @@ namespace nucode::ble::audio
                 (void)record(Error::stack_error, result);
                 return;
             }
+            sink_state.periodic_owner_address = sink_state.broadcaster;
+            sink_state.periodic_owner_sid = sink_state.sid;
+            atomic_set(&sink_state.periodic_cancel_issued, 0);
+            atomic_set(&sink_state.periodic_session,
+                       static_cast<atomic_val_t>(nextPeriodicSession()));
             atomic_ptr_set(&sink_state.periodic_sync, periodic_sync);
             stage_ = BroadcastStage::synchronizing;
         }

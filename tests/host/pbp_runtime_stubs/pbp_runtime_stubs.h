@@ -565,10 +565,14 @@ struct bt_le_per_adv_sync
 
 struct bt_le_per_adv_sync_synced_info
 {
+    const bt_addr_le_t *addr = nullptr;
+    std::uint8_t sid = 0U;
 };
 
 struct bt_le_per_adv_sync_term_info
 {
+    const bt_addr_le_t *addr = nullptr;
+    std::uint8_t sid = 0U;
     std::uint8_t reason = 0U;
 };
 
@@ -591,6 +595,7 @@ namespace pbp_stub
     enum class PeriodicDeleteMode : std::uint8_t
     {
         pending,
+        pending_stalled,
         synchronous,
         late,
     };
@@ -602,8 +607,11 @@ namespace pbp_stub
     inline unsigned int scan_stop_calls = 0U;
     inline unsigned int periodic_delete_calls = 0U;
     inline unsigned int periodic_lookup_calls = 0U;
+    inline unsigned int foreign_periodic_delete_calls = 0U;
     inline std::atomic<bool> periodic_present{false};
     inline std::atomic<unsigned int> periodic_cancel_polls{0U};
+    inline bool reuse_after_transient_delete = false;
+    inline bool foreign_periodic = false;
     inline PeriodicDeleteMode periodic_delete_mode = PeriodicDeleteMode::pending;
     inline bt_le_per_adv_sync *periodic_instance = nullptr;
     inline bt_le_per_adv_sync_cb *periodic_callbacks = nullptr;
@@ -621,11 +629,24 @@ namespace pbp_stub
         scan_stop_calls = 0U;
         periodic_delete_calls = 0U;
         periodic_lookup_calls = 0U;
+        foreign_periodic_delete_calls = 0U;
         periodic_present.store(false);
         periodic_cancel_polls.store(0U);
+        reuse_after_transient_delete = false;
+        foreign_periodic = false;
         periodic_delete_mode = PeriodicDeleteMode::pending;
         periodic_instance = nullptr;
         cleanup_events.clear();
+    }
+
+    /** @brief 취소된 slot을 다른 주소·SID의 외부 PA sync로 재사용합니다. */
+    inline void reusePeriodicSlot(const bt_addr_le_t &address, std::uint8_t sid)
+    {
+        periodic_cancel_polls.store(0U);
+        periodic_address = address;
+        periodic_sid = sid;
+        foreign_periodic = true;
+        periodic_present.store(true);
     }
 }
 
@@ -874,6 +895,7 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
     pbp_stub::periodic_instance = &instance;
     pbp_stub::periodic_address = parameters->addr;
     pbp_stub::periodic_sid = parameters->sid;
+    pbp_stub::foreign_periodic = false;
     pbp_stub::periodic_present.store(true);
     return 0;
 }
@@ -881,6 +903,10 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
 inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
 {
     ++pbp_stub::periodic_delete_calls;
+    if (pbp_stub::foreign_periodic)
+    {
+        ++pbp_stub::foreign_periodic_delete_calls;
+    }
     pbp_stub::cleanup_events.push_back(pbp_stub::CleanupEvent::periodic_delete);
     if (!pbp_stub::periodic_delete_results.empty())
     {
@@ -888,6 +914,27 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
         pbp_stub::periodic_delete_results.pop_front();
         if (result != 0)
         {
+            if (pbp_stub::reuse_after_transient_delete)
+            {
+                pbp_stub::reuse_after_transient_delete = false;
+                const bt_addr_le_t terminated_address =
+                    pbp_stub::periodic_address;
+                const std::uint8_t terminated_sid = pbp_stub::periodic_sid;
+                pbp_stub::periodic_present.store(false);
+                if ((pbp_stub::periodic_callbacks != nullptr) &&
+                    (pbp_stub::periodic_callbacks->term != nullptr))
+                {
+                    const bt_le_per_adv_sync_term_info information = {
+                        .addr = &terminated_address,
+                        .sid = terminated_sid,
+                        .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+                    };
+                    pbp_stub::periodic_callbacks->term(sync, &information);
+                }
+                bt_addr_le_t foreign_address = {};
+                foreign_address.address[0] = 0xa5U;
+                pbp_stub::reusePeriodicSlot(foreign_address, 0x0eU);
+            }
             return result;
         }
     }
@@ -902,6 +949,11 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
         return 0;
     }
     if (pbp_stub::periodic_delete_mode ==
+        pbp_stub::PeriodicDeleteMode::pending_stalled)
+    {
+        return 0;
+    }
+    if (pbp_stub::periodic_delete_mode ==
         pbp_stub::PeriodicDeleteMode::synchronous)
     {
         pbp_stub::periodic_present.store(false);
@@ -909,13 +961,17 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
             (pbp_stub::periodic_callbacks->term != nullptr))
         {
             const bt_le_per_adv_sync_term_info information = {
+                .addr = &pbp_stub::periodic_address,
+                .sid = pbp_stub::periodic_sid,
                 .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
             };
             pbp_stub::periodic_callbacks->term(sync, &information);
         }
         return 0;
     }
-    std::thread([sync]()
+    const bt_addr_le_t terminated_address = pbp_stub::periodic_address;
+    const std::uint8_t terminated_sid = pbp_stub::periodic_sid;
+    std::thread([sync, terminated_address, terminated_sid]()
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
         pbp_stub::periodic_present.store(false);
@@ -923,6 +979,8 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
             (pbp_stub::periodic_callbacks->term != nullptr))
         {
             const bt_le_per_adv_sync_term_info information = {
+                .addr = &terminated_address,
+                .sid = terminated_sid,
                 .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
             };
             pbp_stub::periodic_callbacks->term(sync, &information);

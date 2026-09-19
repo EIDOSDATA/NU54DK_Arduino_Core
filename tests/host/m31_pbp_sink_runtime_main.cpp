@@ -42,6 +42,23 @@ namespace
         atomic_ptr_set(&sink_state.callback_sink, &shared_sink);
     }
 
+    /** @brief 시험 PA pointer를 주소·SID·세대가 결합된 현재 소유권으로 설치합니다. */
+    void bindPeriodicOwnership(bt_le_per_adv_sync *sync,
+                               const bt_addr_le_t &address,
+                               std::uint8_t sid,
+                               bool synchronized = false)
+    {
+        sink_state.broadcaster = address;
+        sink_state.sid = sid;
+        sink_state.periodic_owner_address = address;
+        sink_state.periodic_owner_sid = sid;
+        atomic_set(&sink_state.periodic_cancel_issued, 0);
+        atomic_set(&sink_state.periodic_session,
+                   static_cast<atomic_val_t>(nextPeriodicSession()));
+        atomic_ptr_set(&sink_state.periodic_sync, sync);
+        atomic_set(&sink_state.periodic_synced, synchronized ? 1 : 0);
+    }
+
     /** @brief malformed BASE와 multi-BIS codec 선택을 실제 callback으로 검사합니다. */
     void testBaseSelection()
     {
@@ -119,9 +136,13 @@ namespace
 
         beginGeneration();
         bt_le_per_adv_sync periodic = {};
-        atomic_ptr_set(&sink_state.periodic_sync, &periodic);
+        bt_addr_le_t periodic_address = {};
+        periodic_address.address[0] = 0x08U;
+        bindPeriodicOwnership(&periodic, periodic_address, 1U);
         atomic_set(&sink_state.streaming, 1);
         const bt_le_per_adv_sync_term_info lost = {
+            .addr = &periodic_address,
+            .sid = 1U,
             .reason = 0x08U,
         };
         periodicTerminated(&periodic, &lost);
@@ -264,7 +285,7 @@ namespace
         sink_state.sid = parameters.sid;
         bt_le_per_adv_sync *sync = nullptr;
         assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
-        atomic_ptr_set(&sink_state.periodic_sync, sync);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid);
         pbp_stub::periodic_delete_results = {
             -EAGAIN,
             -EBUSY,
@@ -320,13 +341,75 @@ namespace
             sink_state.sid = parameters.sid;
             bt_le_per_adv_sync *sync = nullptr;
             assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
-            atomic_ptr_set(&sink_state.periodic_sync, sync);
-            atomic_set(&sink_state.periodic_synced, 1);
+            bindPeriodicOwnership(sync, parameters.addr, parameters.sid, true);
 
             assert(public_sink.end() == Error::none);
             assert(pbp_stub::periodic_delete_calls == 1U);
             assert(currentPeriodicSync() == nullptr);
         }
+    }
+
+    /** @brief transient backoff 중 해제·재사용된 외부 PA slot을 삭제하지 않습니다. */
+    void testTransientDeleteOwnerChange()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x51U;
+        parameters.sid = 6U;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid, true);
+        pbp_stub::periodic_delete_results = {-EBUSY};
+        pbp_stub::reuse_after_transient_delete = true;
+
+        assert(public_sink.end() == Error::none);
+        assert(pbp_stub::periodic_delete_calls == 1U);
+        assert(pbp_stub::foreign_periodic_delete_calls == 0U);
+        assert(pbp_stub::periodic_present.load());
+        assert(currentPeriodicSync() == nullptr);
+    }
+
+    /** @brief pending cancel timeout 뒤 재사용된 slot은 lookup으로만 격리 해제합니다. */
+    void testPendingCancelQuarantineReuse()
+    {
+        pbp_stub::resetCleanupState();
+        pbp_stub::periodic_delete_mode =
+            pbp_stub::PeriodicDeleteMode::pending_stalled;
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x62U;
+        parameters.sid = 7U;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid);
+
+        assert(public_sink.end() == Error::stack_error);
+        assert(public_sink.stage() == BroadcastStage::failed);
+        assert(public_sink.lastStep() ==
+               BroadcastSinkStep::cleanup_periodic_sync);
+        assert(pbp_stub::periodic_delete_calls == 1U);
+        assert(atomic_get(&sink_state.periodic_cancel_issued) == 1);
+
+        bt_addr_le_t foreign_address = {};
+        foreign_address.address[0] = 0xb7U;
+        pbp_stub::reusePeriodicSlot(foreign_address, 8U);
+        assert(public_sink.end() == Error::none);
+        assert(pbp_stub::periodic_delete_calls == 1U);
+        assert(pbp_stub::foreign_periodic_delete_calls == 0U);
+        assert(pbp_stub::periodic_present.load());
+        assert(currentPeriodicSync() == nullptr);
+        assert(atomic_get(&sink_state.periodic_session) == 0);
+
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+        assert(public_sink.end() == Error::none);
+        assert(pbp_stub::periodic_present.load());
     }
 
     /** @brief retry 소진 뒤 상태를 보존하고 다음 end와 rebegin으로 복구합니다. */
@@ -363,6 +446,8 @@ int main()
     testFoundScanRetryBeforePeriodicCreate();
     testPendingPeriodicCleanup();
     testPeriodicTerminationCallbackTiming();
+    testTransientDeleteOwnerChange();
+    testPendingCancelQuarantineReuse();
     testRepeatedCleanupAndRebegin();
     return 0;
 }
