@@ -52,6 +52,19 @@ namespace
     bool commanderStarted = false;
     bool acceptorScanPending = false;
     std::uint32_t acceptorScanAt = 0U;
+    bool streamWasSynchronized = false;
+    bool lossStopPending = false;
+    bool lossRemovePending = false;
+
+    /** @brief 현재 source 선택을 비우고 새 broadcast 광고 검색을 준비합니다. */
+    void prepareSourceScan()
+    {
+        sourceSelected = false;
+        sourceScanStarted = false;
+        startPending = false;
+        codePending = false;
+        streamWasSynchronized = false;
+    }
 
     /** @brief Common Audio Service를 광고하는 Acceptor 검색을 시작합니다. */
     bool startAcceptorScan()
@@ -139,10 +152,9 @@ namespace
             commanderStarted = false;
             acceptorConnection = BLEConnectionHandle();
             acceptorFound = false;
-            sourceSelected = false;
-            sourceScanStarted = false;
-            startPending = false;
-            codePending = false;
+            prepareSourceScan();
+            lossStopPending = false;
+            lossRemovePending = false;
             acceptorScanPending = true;
             acceptorScanAt = millis() + 100U;
             Serial.print("CAP acceptor disconnected reason=");
@@ -221,6 +233,27 @@ void loop()
         Serial.print(" native=");
         Serial.println(commander.nativeCode());
     }
+    if (lossStopPending && commander.ready())
+    {
+        const Error result = commander.stopReception();
+        reportRequest("CAP recovery stop", result);
+        if (result == Error::none)
+        {
+            lossStopPending = false;
+            lossRemovePending = true;
+        }
+    }
+    if (lossRemovePending && commander.ready())
+    {
+        const Error result = commander.removeSource();
+        reportRequest("CAP recovery remove", result);
+        if ((result == Error::none) || (result == Error::not_ready))
+        {
+            lossRemovePending = false;
+            prepareSourceScan();
+            Serial.println("CAP recovery source rescan pending");
+        }
+    }
     if (commanderStarted && commander.ready() && !sourceScanStarted &&
         !sourceSelected)
     {
@@ -252,12 +285,19 @@ void loop()
         const char command = static_cast<char>(Serial.read());
         if (command == 's')
         {
+            streamWasSynchronized = false;
+            lossStopPending = false;
+            lossRemovePending = false;
             reportRequest("CAP reception stop", commander.stopReception());
         }
         else if (command == 'd')
         {
-            reportRequest("CAP source remove", commander.removeSource());
-            codePending = false;
+            const Error result = commander.removeSource();
+            reportRequest("CAP source remove", result);
+            if ((result == Error::none) || (result == Error::not_ready))
+            {
+                prepareSourceScan();
+            }
         }
         else if (command == 'r')
         {
@@ -287,6 +327,16 @@ void loop()
         Serial.print(commander.periodicSynchronized() ? 1 : 0);
         Serial.print(" bis=");
         Serial.println(commander.bisSynchronized() ? 1 : 0);
+        if (commander.bisSynchronized())
+        {
+            streamWasSynchronized = true;
+        }
+        else if (streamWasSynchronized && commander.hasSource())
+        {
+            streamWasSynchronized = false;
+            lossStopPending = true;
+            Serial.println("CAP source loss detected");
+        }
     }
     delay(1U);
 }
