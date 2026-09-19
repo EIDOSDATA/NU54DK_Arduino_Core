@@ -1663,10 +1663,12 @@ namespace nucode::ble::audio
         /**
          * @brief CSIS service를 주어진 key·size·rank로 등록합니다.
          * @note lockable service는 rank 1..size, non-lockable service는 rank 0만 허용합니다.
+         * @note 첫 등록 뒤 service instance는 image 수명 동안 유지됩니다.
+         * @note end 뒤 재시작은 이전 lock timeout과의 경합을 막기 위해 재부팅 전까지 unsupported입니다.
          */
         Error begin(const CsipMemberConfig &configuration) noexcept;
 
-        /** @brief 등록한 CSIS service를 해제합니다. */
+        /** @brief 공개 소유권과 승인을 영구 해제하고 image-lifetime service를 휴면 상태로 둡니다. */
         Error end() noexcept;
 
         /** @brief 광고에 넣을 6-byte RSI를 새로 생성합니다. */
@@ -1692,7 +1694,7 @@ namespace nucode::ble::audio
         /** @brief 현재 service 속성을 caller 복사본으로 반환합니다. */
         Error info(CsipMemberInfo &information) const noexcept;
 
-        /** @brief CSIS service가 등록됐는지 반환합니다. */
+        /** @brief 현재 facade가 image-lifetime CSIS service를 소유하는지 반환합니다. */
         [[nodiscard]] bool active() const noexcept;
 
         /** @brief 마지막으로 확인한 잠금 상태를 반환합니다. */
@@ -1708,7 +1710,7 @@ namespace nucode::ble::audio
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:
-        /** @brief unregister 실패 시 callback owner를 안전하게 격리합니다. */
+        /** @brief end 실패 시 callback owner를 안전하게 격리합니다. */
         void abandon() noexcept;
     };
 
@@ -1733,7 +1735,11 @@ namespace nucode::ble::audio
         /** @brief 검색할 key와 필요한 member 수를 설정합니다. */
         Error begin(const CsipSetKey &key, std::uint8_t expected_members = 2U) noexcept;
 
-        /** @brief 활성 연결과 검색 결과를 버리고 객체 소유권을 반환합니다. */
+        /**
+         * @brief 활성 연결과 검색 결과를 버리고 객체 소유권을 반환합니다.
+         * @return 잠금 해제 또는 cleanup이 진행 중이면 busy이며 poll 뒤 다시 호출해야 합니다.
+         * @note cleanup은 시작 뒤 최대 120초로 제한되며 객체는 end 성공까지 살아 있어야 합니다.
+         */
         Error end() noexcept;
 
         /** @brief scan 결과의 RSI가 설정된 key와 일치하는지 확인합니다. */

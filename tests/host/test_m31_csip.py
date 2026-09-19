@@ -72,7 +72,6 @@ class CsipContractTests(unittest.TestCase):
             "invalidateCoordinatorMember(snapshot",
             "aggregate_locked",
             "member_context.transitioning",
-            "bt_csip_set_member_unregister(instance)",
             "acquireMemberOperation(this, operation)",
             "releaseMemberOperation(this, operation, result)",
             "member_context.quarantined",
@@ -90,6 +89,10 @@ class CsipContractTests(unittest.TestCase):
             "coordinatorCleanupCurrentLocked",
             "coordinator_cleanup_max_attempts",
             "coordinator_context.cleanup.pending",
+            "coordinator_context.cleanup.identity == cleanup_identity",
+            "coordinatorCleanupCurrentLocked()",
+            "failCoordinatorOperationStart(this, operation_session, operation_identity, result)",
+            "coordinator_context.cleanup_exhausted",
             "current.set_size == set_size",
             "current.rank == rank ? 0 : -ENOTSUP",
             "current.lockable ? rank != 0U && rank <= set_size",
@@ -98,7 +101,13 @@ class CsipContractTests(unittest.TestCase):
             self.assertIn(token, text)
         self.assertEqual(text.count("coordinatorSetInfoCurrentLocked(set_info)"), 1)
         self.assertNotIn("set_info != coordinator_context.operation.set_info", text)
+        self.assertNotIn("bt_csip_set_member_unregister(", text)
         self.assertNotIn("TEST_SAMPLE_DATA", text)
+        retired_begin = text[
+            text.index("if (member_context.quarantined)") :
+            text.index("member_context.owner = this", text.index("if (member_context.quarantined)"))
+        ]
+        self.assertIn("return Error::unsupported;", retired_begin)
 
     def test_examples_require_physical_sirk_approval_and_recover_discovery(self) -> None:
         """! @brief 기본 거부·명시 승인·새 RSI·실패 session 재시작 흐름을 고정합니다. """
@@ -136,6 +145,8 @@ class CsipContractTests(unittest.TestCase):
             "SecurityEvent::pairing_failed",
             "Set coordinator progress timeout",
             "progressDeadlineMs",
+            "waiting for bounded lock cleanup",
+            "recoveryRetryIntervalMs",
         ):
             self.assertIn(token, coordinator)
 
@@ -181,6 +192,17 @@ class CsipContractTests(unittest.TestCase):
         )
         self.assertIn("if (!svc_inst->lockable && rank != 0U)", member)
         self.assertIn("if (svc_inst->lockable && !IN_RANGE(rank, 1U, size))", member)
+        unregister = member[
+            member.index("int bt_csip_set_member_unregister(") :
+            member.index("int bt_csip_set_member_sirk(")
+        ]
+        self.assertIn("k_work_cancel_delayable(&svc_inst->set_lock_timer)", unregister)
+        self.assertNotIn("k_work_cancel_delayable_sync", unregister)
+        force_release = member[
+            member.index("if (!lock && force)") :
+            len(member)
+        ]
+        self.assertNotIn("k_work_cancel_delayable", force_release)
         size_guard = member.index("if (svc_inst->set_size == size)")
         rank_write = member.index("svc_inst->rank = svc_inst->lockable ? rank : 0U;")
         self.assertLess(size_guard, rank_write)

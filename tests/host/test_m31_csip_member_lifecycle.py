@@ -55,6 +55,12 @@ class CsipMemberLifecycleTests(unittest.TestCase):
             self.assertEqual(
                 result.returncode, 0, result.stderr.decode(errors="replace")
             )
+            result = run_executable(
+                [str(binary), "--non-lockable"], capture_output=True, timeout=10
+            )
+            self.assertEqual(
+                result.returncode, 0, result.stderr.decode(errors="replace")
+            )
 
 
 if __name__ == "__main__":

@@ -19,15 +19,32 @@ namespace
     bool candidateReady = false;
     bool scanPending = false;
     bool recoveryPending = false;
+    bool cleanupWaitReported = false;
     std::uint32_t progressDeadlineMs = 0U;
+    std::uint32_t recoveryRetryMs = 0U;
 
     constexpr std::uint32_t securityTimeoutMs = 30000U;
     constexpr std::uint32_t discoveryTimeoutMs = 15000U;
+    constexpr std::uint32_t recoveryRetryIntervalMs = 250U;
 
     /** @brief 이 고정 키는 로컬 상호운용 시험 전용이며 제품에는 고유 비밀을 주입해야 합니다. */
     constexpr nucode::ble::audio::CsipSetKey setKey = {{
-        0x91U, 0x72U, 0x44U, 0x13U, 0xa8U, 0x5cU, 0x2dU, 0xe1U,
-        0x0bU, 0x6fU, 0xc3U, 0x39U, 0x57U, 0x8aU, 0xd4U, 0x20U,
+        0x91U,
+        0x72U,
+        0x44U,
+        0x13U,
+        0xa8U,
+        0x5cU,
+        0x2dU,
+        0xe1U,
+        0x0bU,
+        0x6fU,
+        0xc3U,
+        0x39U,
+        0x57U,
+        0x8aU,
+        0xd4U,
+        0x20U,
     }};
 
     /** @brief 실패 단계를 출력하고 불완전한 실행을 막습니다. */
@@ -181,6 +198,10 @@ namespace
     /** @brief 검색 실패 session을 폐기하고 exact link를 끊은 뒤 새 검색을 시작합니다. */
     void recoverDiscovery()
     {
+        if (static_cast<std::int32_t>(millis() - recoveryRetryMs) < 0)
+        {
+            return;
+        }
         if (BLEScan.running() && !BLEScan.stop())
         {
             Serial.println("Set recovery scan stop failed");
@@ -188,7 +209,12 @@ namespace
         }
         if (coordinator.end() != nucode::ble::audio::Error::none)
         {
-            Serial.println("Set recovery end busy");
+            if (!cleanupWaitReported)
+            {
+                Serial.println("Set recovery waiting for bounded lock cleanup");
+                cleanupWaitReported = true;
+            }
+            recoveryRetryMs = millis() + recoveryRetryIntervalMs;
             return;
         }
         for (std::size_t index = 0U; index < linkCount; ++index)
@@ -203,6 +229,8 @@ namespace
         reportedMembers = 0U;
         candidateReady = false;
         progressDeadlineMs = 0U;
+        recoveryRetryMs = 0U;
+        cleanupWaitReported = false;
         require(coordinator.begin(setKey, 2U) == nucode::ble::audio::Error::none,
                 "coordinator-rebegin");
         require(BLEScan.start(true), "coordinator-rescan");
@@ -237,8 +265,7 @@ void loop()
     BLESecurity.poll();
     coordinator.poll();
 
-    if (progressDeadlineMs != 0U &&
-        static_cast<std::int32_t>(millis() - progressDeadlineMs) >= 0)
+    if (progressDeadlineMs != 0U && static_cast<std::int32_t>(millis() - progressDeadlineMs) >= 0)
     {
         Serial.println("Set coordinator progress timeout");
         progressDeadlineMs = 0U;
