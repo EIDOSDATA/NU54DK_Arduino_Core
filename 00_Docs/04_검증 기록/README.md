@@ -12,7 +12,7 @@
 
 | 기록 | 용도 |
 | --- | --- |
-| [205 — M31-W03 Arduino CAP unicast 반복 실기](205_M31_W03_Arduino_CAP_unicast_반복_실기.md) | exact 공개 API start/stop 23회, cancel 22회, 재연결 48회, LC3 decode 1,800 frame·drop 0; 원격 완료 실패 callback 잔여 |
+| [205 — M31-W03 Arduino CAP unicast 반복 실기](205_M31_W03_Arduino_CAP_unicast_반복_실기.md) | exact 공개 API start/stop 23회, cancel 22회, 재연결 48회, LC3 decode 1,800 frame·drop 0; 원격 완료 실패 20/20와 정상 image 복구 |
 | [204 — M31-W03 Arduino CAP 3역할과 broadcast 복구](204_M31_W03_Arduino_CAP_3역할과_broadcast_복구.md) | CAP broadcast 제어 102/102, negative 20×2, peer loss 복구 20/20, 185초 drop 0 |
 | [203 — M31-W03 Arduino BASS 3역할과 복구](203_M31_W03_Arduino_BASS_3역할과_복구.md) | BASS 제어 100/100, invalid/duplicate 20×2, peer loss 20/20, 180초 drop 0 |
 | [202 — M31-W03 Arduino BAP broadcast 암호화와 negative 완료](202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md) | clean 암호화 LC3, restart 20/20, wrong code 거부·복구 20/20, hardware-reset sync loss 재가입 20/20 |
