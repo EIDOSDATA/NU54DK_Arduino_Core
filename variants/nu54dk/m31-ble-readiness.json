@@ -217,22 +217,23 @@
       "id": "W03-04",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "source_status": "verified",
+      "target_applicability": "arduino_bass_three_role_control_stream_and_recovery_confirmed",
       "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/bass-exact.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
+      },
+      "support_reason": "clean a318c7ba 공개 Arduino source/assistant/scan-delegator-sink 3역할에서 stop·remove·re-add·Broadcast Code·복구 frame 100/100, 잘못된 source와 중복 source 거부 각각 20/20, Delegator hardware-reset peer loss 복구 20/20을 확인했다. 이후 180초 연속 수신에서 LC3 17,500 frame 증가, PCM energy 양수 176회, drop 0, Assistant disconnect 0이었다."
     },
     {
       "id": "W03-05",
@@ -528,7 +529,7 @@
         "assistant"
       ],
       "minimum_boards": 3,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-05",
@@ -1311,9 +1312,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-05",

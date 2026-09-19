@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "scope": "M31-W03-04 BASS diagnostic history and exact-boundary audit",
+  "accepted_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+  "development_findings": [
+    {
+      "finding": "manual_receive_state_read_rejected",
+      "observation": "ATT error 0x07 followed by stale source cache and re-add -EINVAL",
+      "cause_boundary": "fixed SDK read parameter union retained a previous write offset and the cached source survived removal",
+      "resolution": "removed the manual read API and command; receive-state notifications remain the public state path",
+      "promoted_to_pass": false
+    },
+    {
+      "finding": "rapid_periodic_sync_reuse",
+      "observation": "development control run passed 16 cycles then re-add did not reach PA/BIS sync while the source advanced from 93300 to 94300 frames",
+      "resolution": "wait for the periodic termination callback before reusing the controller resource",
+      "promoted_to_pass": false
+    },
+    {
+      "finding": "delegated_stop_race",
+      "observation": "development run passed 10 cycles then reported receive state pa=0 bis=1 and native=-104 at step=11",
+      "resolution": "mark accepted PA/BIS termination requests as stopping before Arduino poll, preserve the HCI reason, and use the SDK reference timeout ratio 20",
+      "promoted_to_pass": false
+    },
+    {
+      "finding": "host_runner_process_fault",
+      "observation": "clean target run completed 13 cycles then a child Python process exited with Windows status 0xC0000005 before target output",
+      "target_observation": "source advanced 11200 to 12600 and delegator advanced 8900 to 10300 with dropped=0",
+      "resolution": "keep both COM ports open in one bounded process and join reader threads before closing handles",
+      "promoted_to_pass": false
+    }
+  ],
+  "exact_acceptance": {
+    "control_cycles": "20/20",
+    "valid_operations": "100/100",
+    "invalid_source_rejected": "20/20",
+    "duplicate_source_rejected": "20/20",
+    "peer_loss_recovered": "20/20",
+    "continuous_stream_seconds": 180,
+    "dropped_frames": 0,
+    "state_mismatch": 0,
+    "invalid_accept": 0
+  },
+  "raw_probe_uid_recorded": false,
+  "result": "PASS"
+}
