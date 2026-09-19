@@ -18,6 +18,9 @@
 #if !defined(CONFIG_NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE)
 #define CONFIG_NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE 8
 #endif
+#if !defined(CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS)
+#define CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS 1
+#endif
 namespace nucode::ble::internal
 {
     /** @brief 공개 handle의 token 표현을 GAP 내부에만 개방합니다. */
@@ -75,6 +78,10 @@ namespace nucode::ble::internal::gap
     inline constexpr std::size_t maximum_connection_slots = 2U;
     inline constexpr std::size_t central_connection_slot = 0U;
     inline constexpr std::size_t peripheral_connection_slot = 1U;
+    inline constexpr std::size_t central_connection_slots =
+        CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS;
+    static_assert(central_connection_slots >= 1U &&
+                  central_connection_slots <= maximum_connection_slots);
     inline constexpr std::size_t maximum_mtu_exchange_contexts = 4U;
     inline constexpr std::size_t maximum_service_uuids = 4U;
     inline constexpr std::size_t maximum_ad_field_data = 29U;
@@ -252,7 +259,11 @@ namespace nucode::ble::internal::gap
         struct k_spinlock configuration_lock;
         ConnectionSlot connection_slots[maximum_connection_slots] = {
             ConnectionSlot(BLELinkRole::central),
+#if CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS == 2
+            ConnectionSlot(BLELinkRole::central),
+#else
             ConnectionSlot(BLELinkRole::peripheral),
+#endif
         };
         atomic_t next_connection_generation = ATOMIC_INIT(1);
 
