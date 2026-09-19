@@ -37,9 +37,9 @@ namespace nucode::ble::audio
             output_state,
             output_location,
             input_state,
+            input_status,
             input_gain_setting,
             input_type,
-            input_status,
             complete,
         };
 
@@ -49,13 +49,22 @@ namespace nucode::ble::audio
             none,
             microphone_state,
             input_state,
+            input_status,
             input_gain_setting,
             input_type,
-            input_status,
             complete,
         };
 
         constexpr std::size_t maximumDescriptionLength = 31U;
+        constexpr std::uint8_t maximumBootstrapRetries = 8U;
+        constexpr std::uint32_t bootstrapRetryIntervalMs = 10U;
+        constexpr std::uint32_t bootstrapTimeoutMs = 5000U;
+
+        /** @brief 32-bit uptime deadline이 지났는지 wrap-safe하게 확인합니다. */
+        bool deadlineReached(std::uint32_t now, std::uint32_t deadline) noexcept
+        {
+            return static_cast<std::int32_t>(now - deadline) >= 0;
+        }
 
         /** @brief 바이트 길이가 정해진 문자열의 UTF-8 well-formed 여부를 검사합니다. */
         bool validUtf8(const char *text, std::size_t length) noexcept
@@ -183,8 +192,14 @@ namespace nucode::ble::audio
             std::uint32_t generation = 0U;
             std::uint32_t pending_generation = 0U;
             std::uint32_t updates = 0U;
+            std::uint32_t bootstrap_deadline = 0U;
+            std::uint32_t bootstrap_retry_at = 0U;
+            std::uint16_t callbacks_inflight = 0U;
+            std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
             bool retired_connection = false;
+            bool bootstrap_read_accepted = false;
+            bool bootstrap_retry_pending = false;
             VolumeBootstrapStep bootstrap = VolumeBootstrapStep::none;
             VolumeState volume = {};
             VolumeOffsetState offset = {};
@@ -198,13 +213,57 @@ namespace nucode::ble::audio
         VolumeControllerBackend volumeBackend;
         K_MUTEX_DEFINE(volumeBackendMutex);
 
-        /** @brief 이전 callback이 남을 수 있는 active 연결의 재소유를 차단합니다. */
+        /** @brief callback ingress에서 고정한 generation과 in-flight 수명을 관리합니다. */
+        struct VolumeCallbackEpoch
+        {
+            std::uint32_t generation = 0U;
+
+            VolumeCallbackEpoch() noexcept = default;
+
+            explicit VolumeCallbackEpoch(std::uint32_t value) noexcept : generation(value)
+            {
+            }
+
+            VolumeCallbackEpoch(const VolumeCallbackEpoch &) = delete;
+            VolumeCallbackEpoch &operator=(const VolumeCallbackEpoch &) = delete;
+
+            VolumeCallbackEpoch(VolumeCallbackEpoch &&other) noexcept : generation(other.generation)
+            {
+                other.generation = 0U;
+            }
+
+            ~VolumeCallbackEpoch()
+            {
+                if (generation != 0U)
+                {
+                    k_mutex_lock(&volumeBackendMutex, K_FOREVER);
+                    if (volumeBackend.callbacks_inflight != 0U)
+                    {
+                        --volumeBackend.callbacks_inflight;
+                    }
+                    k_mutex_unlock(&volumeBackendMutex);
+                }
+            }
+        };
+
+        /**
+         * @brief 이전 callback이 남을 수 있는 active 연결의 재소유를 차단합니다.
+         *
+         * Zephyr GATT은 disconnect 처리에서 volatile subscription과 pending request를
+         * 정리하므로, activeConnection()이 false가 된 뒤 ingress in-flight가 0인 시점을
+         * callback pool 재사용 barrier로 사용합니다.
+         */
         bool retiredVolumeConnectionActive() noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             const bool retired = volumeBackend.retired_connection;
             const BLEConnectionHandle handle = volumeBackend.handle;
+            const bool callback_active = volumeBackend.callbacks_inflight != 0U;
             k_mutex_unlock(&volumeBackendMutex);
+            if (callback_active)
+            {
+                return true;
+            }
             if (!retired)
             {
                 return false;
@@ -228,14 +287,14 @@ namespace nucode::ble::audio
         }
 
         /** @brief callback instance가 현재 active 연결과 generation에 속하는지 확인합니다. */
-        std::uint32_t currentVolumeController(struct bt_vcp_vol_ctlr *controller) noexcept
+        VolumeCallbackEpoch currentVolumeController(struct bt_vcp_vol_ctlr *controller) noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             if ((volumeBackend.owner == nullptr) || (controller == nullptr) ||
                 (controller != volumeBackend.controller) || (volumeBackend.connection == nullptr))
             {
                 k_mutex_unlock(&volumeBackendMutex);
-                return 0U;
+                return {};
             }
             struct bt_conn *expected_connection = volumeBackend.connection;
             const std::uint32_t generation = volumeBackend.generation;
@@ -244,19 +303,23 @@ namespace nucode::ble::audio
             if ((bt_vcp_vol_ctlr_conn_get(controller, &connection) != 0) ||
                 (connection != expected_connection) || !internal::activeConnection(connection))
             {
-                return 0U;
+                return {};
             }
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             const bool current = (volumeBackend.owner != nullptr) &&
                                  (volumeBackend.controller == controller) &&
                                  (volumeBackend.connection == expected_connection) &&
                                  (volumeBackend.generation == generation);
+            if (current)
+            {
+                ++volumeBackend.callbacks_inflight;
+            }
             k_mutex_unlock(&volumeBackendMutex);
-            return current ? generation : 0U;
+            return current ? VolumeCallbackEpoch(generation) : VolumeCallbackEpoch();
         }
 
         /** @brief discovery callback의 controller를 현재 연결에 원자적으로 결합합니다. */
-        std::uint32_t currentVolumeDiscovery(struct bt_vcp_vol_ctlr *controller) noexcept
+        VolumeCallbackEpoch currentVolumeDiscovery(struct bt_vcp_vol_ctlr *controller) noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             if ((volumeBackend.owner == nullptr) || (controller == nullptr) ||
@@ -267,7 +330,7 @@ namespace nucode::ble::audio
                  AudioControlStage::discovering))
             {
                 k_mutex_unlock(&volumeBackendMutex);
-                return 0U;
+                return {};
             }
             struct bt_conn *expected_connection = volumeBackend.connection;
             const std::uint32_t generation = volumeBackend.generation;
@@ -277,7 +340,7 @@ namespace nucode::ble::audio
             if ((bt_vcp_vol_ctlr_conn_get(controller, &connection) != 0) ||
                 (connection != expected_connection) || !internal::activeConnection(connection))
             {
-                return 0U;
+                return {};
             }
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             const bool current = (volumeBackend.owner != nullptr) &&
@@ -288,20 +351,21 @@ namespace nucode::ble::audio
             if (current)
             {
                 volumeBackend.controller = controller;
+                ++volumeBackend.callbacks_inflight;
             }
             k_mutex_unlock(&volumeBackendMutex);
-            return current ? generation : 0U;
+            return current ? VolumeCallbackEpoch(generation) : VolumeCallbackEpoch();
         }
 
         /** @brief VOCS callback instance가 현재 active 연결에 속하는지 확인합니다. */
-        std::uint32_t currentOffsetService(struct bt_vocs *instance) noexcept
+        VolumeCallbackEpoch currentOffsetService(struct bt_vocs *instance) noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             if ((volumeBackend.owner == nullptr) || (instance == nullptr) ||
                 (instance != volumeBackend.offset_service) || (volumeBackend.connection == nullptr))
             {
                 k_mutex_unlock(&volumeBackendMutex);
-                return 0U;
+                return {};
             }
             struct bt_conn *expected_connection = volumeBackend.connection;
             const std::uint32_t generation = volumeBackend.generation;
@@ -310,26 +374,30 @@ namespace nucode::ble::audio
             if ((bt_vocs_client_conn_get(instance, &connection) != 0) ||
                 (connection != expected_connection) || !internal::activeConnection(connection))
             {
-                return 0U;
+                return {};
             }
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             const bool current = (volumeBackend.owner != nullptr) &&
                                  (volumeBackend.offset_service == instance) &&
                                  (volumeBackend.connection == expected_connection) &&
                                  (volumeBackend.generation == generation);
+            if (current)
+            {
+                ++volumeBackend.callbacks_inflight;
+            }
             k_mutex_unlock(&volumeBackendMutex);
-            return current ? generation : 0U;
+            return current ? VolumeCallbackEpoch(generation) : VolumeCallbackEpoch();
         }
 
         /** @brief AICS callback instance가 현재 active 연결에 속하는지 확인합니다. */
-        std::uint32_t currentVolumeInput(struct bt_aics *instance) noexcept
+        VolumeCallbackEpoch currentVolumeInput(struct bt_aics *instance) noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             if ((volumeBackend.owner == nullptr) || (instance == nullptr) ||
                 (instance != volumeBackend.input_service) || (volumeBackend.connection == nullptr))
             {
                 k_mutex_unlock(&volumeBackendMutex);
-                return 0U;
+                return {};
             }
             struct bt_conn *expected_connection = volumeBackend.connection;
             const std::uint32_t generation = volumeBackend.generation;
@@ -338,15 +406,19 @@ namespace nucode::ble::audio
             if ((bt_aics_client_conn_get(instance, &connection) != 0) ||
                 (connection != expected_connection) || !internal::activeConnection(connection))
             {
-                return 0U;
+                return {};
             }
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             const bool current = (volumeBackend.owner != nullptr) &&
                                  (volumeBackend.input_service == instance) &&
                                  (volumeBackend.connection == expected_connection) &&
                                  (volumeBackend.generation == generation);
+            if (current)
+            {
+                ++volumeBackend.callbacks_inflight;
+            }
             k_mutex_unlock(&volumeBackendMutex);
-            return current ? generation : 0U;
+            return current ? VolumeCallbackEpoch(generation) : VolumeCallbackEpoch();
         }
 
         /** @brief 현재 pending 작업을 결과와 함께 종료합니다. */
@@ -377,6 +449,8 @@ namespace nucode::ble::audio
                 atomic_set(&volumeBackend.busy, 0);
                 atomic_set(&volumeBackend.stage,
                            static_cast<atomic_val_t>(AudioControlStage::failed));
+                volumeBackend.bootstrap_read_accepted = false;
+                volumeBackend.bootstrap_retry_pending = false;
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -396,6 +470,8 @@ namespace nucode::ble::audio
             struct bt_vcp_vol_ctlr *controller = volumeBackend.controller;
             struct bt_vocs *output_service = volumeBackend.offset_service;
             struct bt_aics *input_service = volumeBackend.input_service;
+            volumeBackend.bootstrap_read_accepted = false;
+            volumeBackend.bootstrap_retry_pending = false;
             k_mutex_unlock(&volumeBackendMutex);
 
             int result = -EINVAL;
@@ -428,9 +504,76 @@ namespace nucode::ble::audio
             default:
                 break;
             }
-            if (result != 0)
+            if (result == 0)
             {
-                failVolumeBootstrap(generation, result);
+                k_mutex_lock(&volumeBackendMutex, K_FOREVER);
+                if ((volumeBackend.owner != nullptr) && (volumeBackend.generation == generation) &&
+                    (volumeBackend.bootstrap == step) &&
+                    (static_cast<AudioControlStage>(atomic_get(&volumeBackend.stage)) ==
+                     AudioControlStage::discovering))
+                {
+                    volumeBackend.bootstrap_read_accepted = true;
+                }
+                k_mutex_unlock(&volumeBackendMutex);
+                return;
+            }
+            if (result == -EBUSY)
+            {
+                const std::uint32_t now = k_uptime_get_32();
+                k_mutex_lock(&volumeBackendMutex, K_FOREVER);
+                if ((volumeBackend.owner != nullptr) && (volumeBackend.generation == generation) &&
+                    (volumeBackend.bootstrap == step) &&
+                    (static_cast<AudioControlStage>(atomic_get(&volumeBackend.stage)) ==
+                     AudioControlStage::discovering))
+                {
+                    if (deadlineReached(now, volumeBackend.bootstrap_deadline) ||
+                        (volumeBackend.bootstrap_retries >= maximumBootstrapRetries))
+                    {
+                        atomic_set(&volumeBackend.error, -ETIMEDOUT);
+                        atomic_set(&volumeBackend.busy, 0);
+                        atomic_set(&volumeBackend.stage,
+                                   static_cast<atomic_val_t>(AudioControlStage::failed));
+                    }
+                    else
+                    {
+                        ++volumeBackend.bootstrap_retries;
+                        volumeBackend.bootstrap_retry_pending = true;
+                        volumeBackend.bootstrap_retry_at = now + bootstrapRetryIntervalMs;
+                    }
+                }
+                k_mutex_unlock(&volumeBackendMutex);
+                return;
+            }
+            failVolumeBootstrap(generation, result);
+        }
+
+        /** @brief poll에서 EBUSY drain retry와 전체 bootstrap timeout을 처리합니다. */
+        void serviceVolumeBootstrap(std::uint32_t generation) noexcept
+        {
+            VolumeBootstrapStep retry = VolumeBootstrapStep::none;
+            bool timed_out = false;
+            const std::uint32_t now = k_uptime_get_32();
+            k_mutex_lock(&volumeBackendMutex, K_FOREVER);
+            if ((volumeBackend.owner != nullptr) && (volumeBackend.generation == generation) &&
+                (static_cast<AudioControlStage>(atomic_get(&volumeBackend.stage)) ==
+                 AudioControlStage::discovering))
+            {
+                timed_out = deadlineReached(now, volumeBackend.bootstrap_deadline);
+                if (!timed_out && volumeBackend.bootstrap_retry_pending &&
+                    deadlineReached(now, volumeBackend.bootstrap_retry_at))
+                {
+                    retry = volumeBackend.bootstrap;
+                    volumeBackend.bootstrap_retry_pending = false;
+                }
+            }
+            k_mutex_unlock(&volumeBackendMutex);
+            if (timed_out)
+            {
+                failVolumeBootstrap(generation, -ETIMEDOUT);
+            }
+            else if (retry != VolumeBootstrapStep::none)
+            {
+                startVolumeBootstrap(generation, retry);
             }
         }
 
@@ -441,9 +584,26 @@ namespace nucode::ble::audio
             VolumeBootstrapStep next = VolumeBootstrapStep::none;
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             if ((volumeBackend.owner == nullptr) || (volumeBackend.generation != generation) ||
-                (volumeBackend.bootstrap != completed) ||
                 (static_cast<AudioControlStage>(atomic_get(&volumeBackend.stage)) !=
                  AudioControlStage::discovering))
+            {
+                k_mutex_unlock(&volumeBackendMutex);
+                return;
+            }
+            if (volumeBackend.bootstrap != completed)
+            {
+                if (error != 0)
+                {
+                    atomic_set(&volumeBackend.error, error);
+                    atomic_set(&volumeBackend.busy, 0);
+                    atomic_set(&volumeBackend.stage,
+                               static_cast<atomic_val_t>(AudioControlStage::failed));
+                    volumeBackend.bootstrap_retry_pending = false;
+                }
+                k_mutex_unlock(&volumeBackendMutex);
+                return;
+            }
+            if (!volumeBackend.bootstrap_read_accepted)
             {
                 k_mutex_unlock(&volumeBackendMutex);
                 return;
@@ -460,6 +620,9 @@ namespace nucode::ble::audio
 
             next = static_cast<VolumeBootstrapStep>(static_cast<std::uint8_t>(completed) + 1U);
             volumeBackend.bootstrap = next;
+            volumeBackend.bootstrap_read_accepted = false;
+            volumeBackend.bootstrap_retry_pending = false;
+            volumeBackend.bootstrap_retries = 0U;
             if (next == VolumeBootstrapStep::complete)
             {
                 atomic_set(&volumeBackend.error, 0);
@@ -478,7 +641,8 @@ namespace nucode::ble::audio
         void volumeDiscovered(struct bt_vcp_vol_ctlr *controller, int error,
                               std::uint8_t offset_count, std::uint8_t input_count) noexcept
         {
-            const std::uint32_t generation = currentVolumeDiscovery(controller);
+            const VolumeCallbackEpoch callback = currentVolumeDiscovery(controller);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -518,6 +682,9 @@ namespace nucode::ble::audio
             volumeBackend.offset_service = included.vocs[0];
             volumeBackend.input_service = included.aics[0];
             volumeBackend.bootstrap = VolumeBootstrapStep::volume_state;
+            volumeBackend.bootstrap_read_accepted = false;
+            volumeBackend.bootstrap_retry_pending = false;
+            volumeBackend.bootstrap_retries = 0U;
             k_mutex_unlock(&volumeBackendMutex);
             startVolumeBootstrap(generation, VolumeBootstrapStep::volume_state);
         }
@@ -526,7 +693,8 @@ namespace nucode::ble::audio
         void volumeStateChanged(struct bt_vcp_vol_ctlr *controller, int error, std::uint8_t volume,
                                 std::uint8_t mute) noexcept
         {
-            const std::uint32_t generation = currentVolumeController(controller);
+            const VolumeCallbackEpoch callback = currentVolumeController(controller);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -560,7 +728,8 @@ namespace nucode::ble::audio
         void volumeFlagsChanged(struct bt_vcp_vol_ctlr *controller, int error,
                                 std::uint8_t flags) noexcept
         {
-            const std::uint32_t generation = currentVolumeController(controller);
+            const VolumeCallbackEpoch callback = currentVolumeController(controller);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -584,7 +753,8 @@ namespace nucode::ble::audio
         /** @brief VCS control point 작업 완료를 기록합니다. */
         void volumeWriteComplete(struct bt_vcp_vol_ctlr *controller, int error) noexcept
         {
-            const std::uint32_t generation = currentVolumeController(controller);
+            const VolumeCallbackEpoch callback = currentVolumeController(controller);
+            const std::uint32_t generation = callback.generation;
             if (generation != 0U)
             {
                 finishVolumeOperation(generation, error);
@@ -594,7 +764,8 @@ namespace nucode::ble::audio
         /** @brief VOCS offset read 또는 notification을 공개 상태에 반영합니다. */
         void offsetStateChanged(struct bt_vocs *instance, int error, std::int16_t offset) noexcept
         {
-            const std::uint32_t generation = currentOffsetService(instance);
+            const VolumeCallbackEpoch callback = currentOffsetService(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -627,7 +798,8 @@ namespace nucode::ble::audio
         void offsetLocationChanged(struct bt_vocs *instance, int error,
                                    std::uint32_t location) noexcept
         {
-            const std::uint32_t generation = currentOffsetService(instance);
+            const VolumeCallbackEpoch callback = currentOffsetService(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -651,7 +823,8 @@ namespace nucode::ble::audio
         /** @brief VOCS description read 또는 notification 결과를 기록합니다. */
         void offsetDescriptionChanged(struct bt_vocs *instance, int error, char *) noexcept
         {
-            const std::uint32_t generation = currentOffsetService(instance);
+            const VolumeCallbackEpoch callback = currentOffsetService(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -673,7 +846,8 @@ namespace nucode::ble::audio
         /** @brief VOCS control point 작업 완료를 기록합니다. */
         void offsetWriteComplete(struct bt_vocs *instance, int error) noexcept
         {
-            const std::uint32_t generation = currentOffsetService(instance);
+            const VolumeCallbackEpoch callback = currentOffsetService(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation != 0U)
             {
                 finishVolumeOperation(generation, error);
@@ -684,7 +858,8 @@ namespace nucode::ble::audio
         void volumeInputStateChanged(struct bt_aics *instance, int error, std::int8_t gain,
                                      std::uint8_t mute, std::uint8_t mode) noexcept
         {
-            const std::uint32_t generation = currentVolumeInput(instance);
+            const VolumeCallbackEpoch callback = currentVolumeInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -720,7 +895,8 @@ namespace nucode::ble::audio
         void volumeInputGainSetting(struct bt_aics *instance, int error, std::uint8_t units,
                                     std::int8_t minimum, std::int8_t maximum) noexcept
         {
-            const std::uint32_t generation = currentVolumeInput(instance);
+            const VolumeCallbackEpoch callback = currentVolumeInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -746,7 +922,8 @@ namespace nucode::ble::audio
         /** @brief VCP 포함 AICS type을 공개 상태에 반영합니다. */
         void volumeInputType(struct bt_aics *instance, int error, std::uint8_t type) noexcept
         {
-            const std::uint32_t generation = currentVolumeInput(instance);
+            const VolumeCallbackEpoch callback = currentVolumeInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -770,7 +947,8 @@ namespace nucode::ble::audio
         /** @brief VCP 포함 AICS active 상태를 공개 상태에 반영합니다. */
         void volumeInputStatus(struct bt_aics *instance, int error, bool active) noexcept
         {
-            const std::uint32_t generation = currentVolumeInput(instance);
+            const VolumeCallbackEpoch callback = currentVolumeInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -794,7 +972,8 @@ namespace nucode::ble::audio
         /** @brief VCP 포함 AICS 설명 변경 결과를 기록합니다. */
         void volumeInputDescription(struct bt_aics *instance, int error, char *) noexcept
         {
-            const std::uint32_t generation = currentVolumeInput(instance);
+            const VolumeCallbackEpoch callback = currentVolumeInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -816,7 +995,8 @@ namespace nucode::ble::audio
         /** @brief VCP 포함 AICS control point 작업 완료를 기록합니다. */
         void volumeInputWriteComplete(struct bt_aics *instance, int error) noexcept
         {
-            const std::uint32_t generation = currentVolumeInput(instance);
+            const VolumeCallbackEpoch callback = currentVolumeInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation != 0U)
             {
                 finishVolumeOperation(generation, error);
@@ -928,6 +1108,11 @@ namespace nucode::ble::audio
         volumeBackend.offset = {};
         volumeBackend.input = {};
         volumeBackend.bootstrap = VolumeBootstrapStep::none;
+        volumeBackend.bootstrap_deadline = k_uptime_get_32() + bootstrapTimeoutMs;
+        volumeBackend.bootstrap_retry_at = 0U;
+        volumeBackend.bootstrap_retries = 0U;
+        volumeBackend.bootstrap_read_accepted = false;
+        volumeBackend.bootstrap_retry_pending = false;
         atomic_set(&volumeBackend.error, 0);
         atomic_set(&volumeBackend.busy, 1);
         atomic_set(&volumeBackend.step, static_cast<atomic_val_t>(AudioControlStep::discover));
@@ -992,6 +1177,7 @@ namespace nucode::ble::audio
         {
             return;
         }
+        serviceVolumeBootstrap(generation_);
         struct bt_conn *current = internal::referenceConnection(handle);
         if (current == nullptr)
         {
@@ -1031,6 +1217,8 @@ namespace nucode::ble::audio
             volumeBackend.controller = nullptr;
             volumeBackend.offset_service = nullptr;
             volumeBackend.input_service = nullptr;
+            volumeBackend.bootstrap_read_accepted = false;
+            volumeBackend.bootstrap_retry_pending = false;
             atomic_set(&volumeBackend.busy, 0);
             atomic_set(&volumeBackend.stage, static_cast<atomic_val_t>(AudioControlStage::idle));
             volumeBackend.connection = nullptr;
@@ -1209,12 +1397,8 @@ namespace nucode::ble::audio
 
     Error VolumeController::setInputDescription(const char *description) noexcept
     {
-        if (!validDescription(description))
-        {
-            return record(Error::invalid_argument);
-        }
-        NUCODE_VOLUME_CONTROLLER_REQUEST(set_input_description,
-                                         bt_aics_description_set(input_service, description), true);
+        static_cast<void>(description);
+        return record(Error::unsupported, -ENOTSUP);
     }
 
 #undef NUCODE_VOLUME_CONTROLLER_REQUEST
@@ -1427,8 +1611,14 @@ namespace nucode::ble::audio
             std::uint32_t generation = 0U;
             std::uint32_t pending_generation = 0U;
             std::uint32_t updates = 0U;
+            std::uint32_t bootstrap_deadline = 0U;
+            std::uint32_t bootstrap_retry_at = 0U;
+            std::uint16_t callbacks_inflight = 0U;
+            std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
             bool retired_connection = false;
+            bool bootstrap_read_accepted = false;
+            bool bootstrap_retry_pending = false;
             MicrophoneBootstrapStep bootstrap = MicrophoneBootstrapStep::none;
             MicrophoneState microphone = {};
             AudioInputState input = {};
@@ -1441,13 +1631,57 @@ namespace nucode::ble::audio
         MicrophoneControllerBackend microphoneControllerBackend;
         K_MUTEX_DEFINE(microphoneControllerBackendMutex);
 
-        /** @brief 이전 callback이 남을 수 있는 active 연결의 재소유를 차단합니다. */
+        /** @brief MICP callback ingress에서 고정한 generation 수명을 관리합니다. */
+        struct MicrophoneCallbackEpoch
+        {
+            std::uint32_t generation = 0U;
+
+            MicrophoneCallbackEpoch() noexcept = default;
+
+            explicit MicrophoneCallbackEpoch(std::uint32_t value) noexcept : generation(value)
+            {
+            }
+
+            MicrophoneCallbackEpoch(const MicrophoneCallbackEpoch &) = delete;
+            MicrophoneCallbackEpoch &operator=(const MicrophoneCallbackEpoch &) = delete;
+
+            MicrophoneCallbackEpoch(MicrophoneCallbackEpoch &&other) noexcept
+                : generation(other.generation)
+            {
+                other.generation = 0U;
+            }
+
+            ~MicrophoneCallbackEpoch()
+            {
+                if (generation != 0U)
+                {
+                    k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
+                    if (microphoneControllerBackend.callbacks_inflight != 0U)
+                    {
+                        --microphoneControllerBackend.callbacks_inflight;
+                    }
+                    k_mutex_unlock(&microphoneControllerBackendMutex);
+                }
+            }
+        };
+
+        /**
+         * @brief 이전 callback이 남을 수 있는 active 연결의 재소유를 차단합니다.
+         *
+         * Zephyr GATT disconnect 정리와 ingress in-flight drain이 모두 끝나기 전에는
+         * 동일한 static controller pool을 새 generation에 결합하지 않습니다.
+         */
         bool retiredMicrophoneConnectionActive() noexcept
         {
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             const bool retired = microphoneControllerBackend.retired_connection;
             const BLEConnectionHandle handle = microphoneControllerBackend.handle;
+            const bool callback_active = microphoneControllerBackend.callbacks_inflight != 0U;
             k_mutex_unlock(&microphoneControllerBackendMutex);
+            if (callback_active)
+            {
+                return true;
+            }
             if (!retired)
             {
                 return false;
@@ -1471,7 +1705,8 @@ namespace nucode::ble::audio
         }
 
         /** @brief MICP callback instance가 현재 active 연결에 속하는지 확인합니다. */
-        std::uint32_t currentMicrophoneController(struct bt_micp_mic_ctlr *controller) noexcept
+        MicrophoneCallbackEpoch
+        currentMicrophoneController(struct bt_micp_mic_ctlr *controller) noexcept
         {
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             if ((microphoneControllerBackend.owner == nullptr) || (controller == nullptr) ||
@@ -1479,7 +1714,7 @@ namespace nucode::ble::audio
                 (microphoneControllerBackend.connection == nullptr))
             {
                 k_mutex_unlock(&microphoneControllerBackendMutex);
-                return 0U;
+                return {};
             }
             struct bt_conn *expected_connection = microphoneControllerBackend.connection;
             const std::uint32_t generation = microphoneControllerBackend.generation;
@@ -1488,19 +1723,24 @@ namespace nucode::ble::audio
             if ((bt_micp_mic_ctlr_conn_get(controller, &connection) != 0) ||
                 (connection != expected_connection) || !internal::activeConnection(connection))
             {
-                return 0U;
+                return {};
             }
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             const bool current = (microphoneControllerBackend.owner != nullptr) &&
                                  (microphoneControllerBackend.controller == controller) &&
                                  (microphoneControllerBackend.connection == expected_connection) &&
                                  (microphoneControllerBackend.generation == generation);
+            if (current)
+            {
+                ++microphoneControllerBackend.callbacks_inflight;
+            }
             k_mutex_unlock(&microphoneControllerBackendMutex);
-            return current ? generation : 0U;
+            return current ? MicrophoneCallbackEpoch(generation) : MicrophoneCallbackEpoch();
         }
 
         /** @brief discovery callback의 controller를 현재 연결에 원자적으로 결합합니다. */
-        std::uint32_t currentMicrophoneDiscovery(struct bt_micp_mic_ctlr *controller) noexcept
+        MicrophoneCallbackEpoch
+        currentMicrophoneDiscovery(struct bt_micp_mic_ctlr *controller) noexcept
         {
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             if ((microphoneControllerBackend.owner == nullptr) || (controller == nullptr) ||
@@ -1511,7 +1751,7 @@ namespace nucode::ble::audio
                  AudioControlStage::discovering))
             {
                 k_mutex_unlock(&microphoneControllerBackendMutex);
-                return 0U;
+                return {};
             }
             struct bt_conn *expected_connection = microphoneControllerBackend.connection;
             const std::uint32_t generation = microphoneControllerBackend.generation;
@@ -1521,7 +1761,7 @@ namespace nucode::ble::audio
             if ((bt_micp_mic_ctlr_conn_get(controller, &connection) != 0) ||
                 (connection != expected_connection) || !internal::activeConnection(connection))
             {
-                return 0U;
+                return {};
             }
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             const bool current = (microphoneControllerBackend.owner != nullptr) &&
@@ -1532,13 +1772,14 @@ namespace nucode::ble::audio
             if (current)
             {
                 microphoneControllerBackend.controller = controller;
+                ++microphoneControllerBackend.callbacks_inflight;
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
-            return current ? generation : 0U;
+            return current ? MicrophoneCallbackEpoch(generation) : MicrophoneCallbackEpoch();
         }
 
         /** @brief MICP 포함 AICS callback이 현재 active 연결에 속하는지 확인합니다. */
-        std::uint32_t currentMicrophoneInput(struct bt_aics *instance) noexcept
+        MicrophoneCallbackEpoch currentMicrophoneInput(struct bt_aics *instance) noexcept
         {
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             if ((microphoneControllerBackend.owner == nullptr) || (instance == nullptr) ||
@@ -1546,7 +1787,7 @@ namespace nucode::ble::audio
                 (microphoneControllerBackend.connection == nullptr))
             {
                 k_mutex_unlock(&microphoneControllerBackendMutex);
-                return 0U;
+                return {};
             }
             struct bt_conn *expected_connection = microphoneControllerBackend.connection;
             const std::uint32_t generation = microphoneControllerBackend.generation;
@@ -1555,15 +1796,19 @@ namespace nucode::ble::audio
             if ((bt_aics_client_conn_get(instance, &connection) != 0) ||
                 (connection != expected_connection) || !internal::activeConnection(connection))
             {
-                return 0U;
+                return {};
             }
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             const bool current = (microphoneControllerBackend.owner != nullptr) &&
                                  (microphoneControllerBackend.input_service == instance) &&
                                  (microphoneControllerBackend.connection == expected_connection) &&
                                  (microphoneControllerBackend.generation == generation);
+            if (current)
+            {
+                ++microphoneControllerBackend.callbacks_inflight;
+            }
             k_mutex_unlock(&microphoneControllerBackendMutex);
-            return current ? generation : 0U;
+            return current ? MicrophoneCallbackEpoch(generation) : MicrophoneCallbackEpoch();
         }
 
         /** @brief 현재 MICP pending 작업을 종료합니다. */
@@ -1597,6 +1842,8 @@ namespace nucode::ble::audio
                 atomic_set(&microphoneControllerBackend.busy, 0);
                 atomic_set(&microphoneControllerBackend.stage,
                            static_cast<atomic_val_t>(AudioControlStage::failed));
+                microphoneControllerBackend.bootstrap_read_accepted = false;
+                microphoneControllerBackend.bootstrap_retry_pending = false;
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
         }
@@ -1617,6 +1864,8 @@ namespace nucode::ble::audio
             }
             struct bt_micp_mic_ctlr *controller = microphoneControllerBackend.controller;
             struct bt_aics *input_service = microphoneControllerBackend.input_service;
+            microphoneControllerBackend.bootstrap_read_accepted = false;
+            microphoneControllerBackend.bootstrap_retry_pending = false;
             k_mutex_unlock(&microphoneControllerBackendMutex);
 
             int result = -EINVAL;
@@ -1640,9 +1889,80 @@ namespace nucode::ble::audio
             default:
                 break;
             }
-            if (result != 0)
+            if (result == 0)
             {
-                failMicrophoneBootstrap(generation, result);
+                k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
+                if ((microphoneControllerBackend.owner != nullptr) &&
+                    (microphoneControllerBackend.generation == generation) &&
+                    (microphoneControllerBackend.bootstrap == step) &&
+                    (static_cast<AudioControlStage>(atomic_get(
+                         &microphoneControllerBackend.stage)) == AudioControlStage::discovering))
+                {
+                    microphoneControllerBackend.bootstrap_read_accepted = true;
+                }
+                k_mutex_unlock(&microphoneControllerBackendMutex);
+                return;
+            }
+            if (result == -EBUSY)
+            {
+                const std::uint32_t now = k_uptime_get_32();
+                k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
+                if ((microphoneControllerBackend.owner != nullptr) &&
+                    (microphoneControllerBackend.generation == generation) &&
+                    (microphoneControllerBackend.bootstrap == step) &&
+                    (static_cast<AudioControlStage>(atomic_get(
+                         &microphoneControllerBackend.stage)) == AudioControlStage::discovering))
+                {
+                    if (deadlineReached(now, microphoneControllerBackend.bootstrap_deadline) ||
+                        (microphoneControllerBackend.bootstrap_retries >= maximumBootstrapRetries))
+                    {
+                        atomic_set(&microphoneControllerBackend.error, -ETIMEDOUT);
+                        atomic_set(&microphoneControllerBackend.busy, 0);
+                        atomic_set(&microphoneControllerBackend.stage,
+                                   static_cast<atomic_val_t>(AudioControlStage::failed));
+                    }
+                    else
+                    {
+                        ++microphoneControllerBackend.bootstrap_retries;
+                        microphoneControllerBackend.bootstrap_retry_pending = true;
+                        microphoneControllerBackend.bootstrap_retry_at =
+                            now + bootstrapRetryIntervalMs;
+                    }
+                }
+                k_mutex_unlock(&microphoneControllerBackendMutex);
+                return;
+            }
+            failMicrophoneBootstrap(generation, result);
+        }
+
+        /** @brief poll에서 MICP EBUSY drain retry와 timeout을 처리합니다. */
+        void serviceMicrophoneBootstrap(std::uint32_t generation) noexcept
+        {
+            MicrophoneBootstrapStep retry = MicrophoneBootstrapStep::none;
+            bool timed_out = false;
+            const std::uint32_t now = k_uptime_get_32();
+            k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
+            if ((microphoneControllerBackend.owner != nullptr) &&
+                (microphoneControllerBackend.generation == generation) &&
+                (static_cast<AudioControlStage>(atomic_get(&microphoneControllerBackend.stage)) ==
+                 AudioControlStage::discovering))
+            {
+                timed_out = deadlineReached(now, microphoneControllerBackend.bootstrap_deadline);
+                if (!timed_out && microphoneControllerBackend.bootstrap_retry_pending &&
+                    deadlineReached(now, microphoneControllerBackend.bootstrap_retry_at))
+                {
+                    retry = microphoneControllerBackend.bootstrap;
+                    microphoneControllerBackend.bootstrap_retry_pending = false;
+                }
+            }
+            k_mutex_unlock(&microphoneControllerBackendMutex);
+            if (timed_out)
+            {
+                failMicrophoneBootstrap(generation, -ETIMEDOUT);
+            }
+            else if (retry != MicrophoneBootstrapStep::none)
+            {
+                startMicrophoneBootstrap(generation, retry);
             }
         }
 
@@ -1654,9 +1974,26 @@ namespace nucode::ble::audio
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             if ((microphoneControllerBackend.owner == nullptr) ||
                 (microphoneControllerBackend.generation != generation) ||
-                (microphoneControllerBackend.bootstrap != completed) ||
                 (static_cast<AudioControlStage>(atomic_get(&microphoneControllerBackend.stage)) !=
                  AudioControlStage::discovering))
+            {
+                k_mutex_unlock(&microphoneControllerBackendMutex);
+                return;
+            }
+            if (microphoneControllerBackend.bootstrap != completed)
+            {
+                if (error != 0)
+                {
+                    atomic_set(&microphoneControllerBackend.error, error);
+                    atomic_set(&microphoneControllerBackend.busy, 0);
+                    atomic_set(&microphoneControllerBackend.stage,
+                               static_cast<atomic_val_t>(AudioControlStage::failed));
+                    microphoneControllerBackend.bootstrap_retry_pending = false;
+                }
+                k_mutex_unlock(&microphoneControllerBackendMutex);
+                return;
+            }
+            if (!microphoneControllerBackend.bootstrap_read_accepted)
             {
                 k_mutex_unlock(&microphoneControllerBackendMutex);
                 return;
@@ -1673,6 +2010,9 @@ namespace nucode::ble::audio
 
             next = static_cast<MicrophoneBootstrapStep>(static_cast<std::uint8_t>(completed) + 1U);
             microphoneControllerBackend.bootstrap = next;
+            microphoneControllerBackend.bootstrap_read_accepted = false;
+            microphoneControllerBackend.bootstrap_retry_pending = false;
+            microphoneControllerBackend.bootstrap_retries = 0U;
             if (next == MicrophoneBootstrapStep::complete)
             {
                 atomic_set(&microphoneControllerBackend.error, 0);
@@ -1691,7 +2031,8 @@ namespace nucode::ble::audio
         void microphoneDiscovered(struct bt_micp_mic_ctlr *controller, int error,
                                   std::uint8_t input_count) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneDiscovery(controller);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneDiscovery(controller);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -1729,6 +2070,9 @@ namespace nucode::ble::audio
             }
             microphoneControllerBackend.input_service = included.aics[0];
             microphoneControllerBackend.bootstrap = MicrophoneBootstrapStep::microphone_state;
+            microphoneControllerBackend.bootstrap_read_accepted = false;
+            microphoneControllerBackend.bootstrap_retry_pending = false;
+            microphoneControllerBackend.bootstrap_retries = 0U;
             k_mutex_unlock(&microphoneControllerBackendMutex);
             startMicrophoneBootstrap(generation, MicrophoneBootstrapStep::microphone_state);
         }
@@ -1737,7 +2081,8 @@ namespace nucode::ble::audio
         void microphoneStateChanged(struct bt_micp_mic_ctlr *controller, int error,
                                     std::uint8_t mute) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneController(controller);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneController(controller);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -1773,7 +2118,8 @@ namespace nucode::ble::audio
         /** @brief MICS control point 작업 완료를 기록합니다. */
         void microphoneWriteComplete(struct bt_micp_mic_ctlr *controller, int error) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneController(controller);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneController(controller);
+            const std::uint32_t generation = callback.generation;
             if (generation != 0U)
             {
                 finishMicrophoneOperation(generation, error);
@@ -1784,7 +2130,8 @@ namespace nucode::ble::audio
         void microphoneControllerInputState(struct bt_aics *instance, int error, std::int8_t gain,
                                             std::uint8_t mute, std::uint8_t mode) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneInput(instance);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -1823,7 +2170,8 @@ namespace nucode::ble::audio
                                              std::uint8_t units, std::int8_t minimum,
                                              std::int8_t maximum) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneInput(instance);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -1851,7 +2199,8 @@ namespace nucode::ble::audio
         void microphoneControllerInputType(struct bt_aics *instance, int error,
                                            std::uint8_t type) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneInput(instance);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -1876,7 +2225,8 @@ namespace nucode::ble::audio
         void microphoneControllerInputStatus(struct bt_aics *instance, int error,
                                              bool active) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneInput(instance);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -1901,7 +2251,8 @@ namespace nucode::ble::audio
         void microphoneControllerInputDescription(struct bt_aics *instance, int error,
                                                   char *) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneInput(instance);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation == 0U)
             {
                 return;
@@ -1923,7 +2274,8 @@ namespace nucode::ble::audio
         /** @brief MICP 포함 AICS control point 작업 완료를 기록합니다. */
         void microphoneControllerInputWrite(struct bt_aics *instance, int error) noexcept
         {
-            const std::uint32_t generation = currentMicrophoneInput(instance);
+            const MicrophoneCallbackEpoch callback = currentMicrophoneInput(instance);
+            const std::uint32_t generation = callback.generation;
             if (generation != 0U)
             {
                 finishMicrophoneOperation(generation, error);
@@ -2022,6 +2374,11 @@ namespace nucode::ble::audio
         microphoneControllerBackend.microphone = {};
         microphoneControllerBackend.input = {};
         microphoneControllerBackend.bootstrap = MicrophoneBootstrapStep::none;
+        microphoneControllerBackend.bootstrap_deadline = k_uptime_get_32() + bootstrapTimeoutMs;
+        microphoneControllerBackend.bootstrap_retry_at = 0U;
+        microphoneControllerBackend.bootstrap_retries = 0U;
+        microphoneControllerBackend.bootstrap_read_accepted = false;
+        microphoneControllerBackend.bootstrap_retry_pending = false;
         atomic_set(&microphoneControllerBackend.error, 0);
         atomic_set(&microphoneControllerBackend.busy, 1);
         atomic_set(&microphoneControllerBackend.step,
@@ -2090,6 +2447,7 @@ namespace nucode::ble::audio
         {
             return;
         }
+        serviceMicrophoneBootstrap(generation_);
         struct bt_conn *current = internal::referenceConnection(handle);
         if (current == nullptr)
         {
@@ -2128,6 +2486,8 @@ namespace nucode::ble::audio
             microphoneControllerBackend.pending_generation = 0U;
             microphoneControllerBackend.controller = nullptr;
             microphoneControllerBackend.input_service = nullptr;
+            microphoneControllerBackend.bootstrap_read_accepted = false;
+            microphoneControllerBackend.bootstrap_retry_pending = false;
             atomic_set(&microphoneControllerBackend.busy, 0);
             atomic_set(&microphoneControllerBackend.stage,
                        static_cast<atomic_val_t>(AudioControlStage::idle));
@@ -2261,12 +2621,8 @@ namespace nucode::ble::audio
 
     Error MicrophoneController::setInputDescription(const char *description) noexcept
     {
-        if (!validDescription(description))
-        {
-            return record(Error::invalid_argument);
-        }
-        NUCODE_MIC_CONTROLLER_REQUEST(set_input_description,
-                                      bt_aics_description_set(input_service, description), true);
+        static_cast<void>(description);
+        return record(Error::unsupported, -ENOTSUP);
     }
 
 #undef NUCODE_MIC_CONTROLLER_REQUEST

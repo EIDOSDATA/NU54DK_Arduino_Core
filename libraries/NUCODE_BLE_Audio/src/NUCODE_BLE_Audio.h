@@ -1034,7 +1034,9 @@ namespace nucode::ble::audio
         /** @brief 원격 input gain mode를 manual 또는 automatic으로 설정합니다. */
         Error setInputMode(AudioInputMode mode) noexcept;
 
-        /** @brief 원격 input 설명을 UTF-8 31바이트 이하로 설정합니다. */
+        /**
+         * @brief 잠긴 SDK가 AICS client busy를 복구하지 못하므로 unsupported를 반환합니다.
+         */
         Error setInputDescription(const char *description) noexcept;
 
         /** @brief discovery와 실제 상태 bootstrap read가 모두 끝났는지 반환합니다. */
@@ -1208,7 +1210,9 @@ namespace nucode::ble::audio
         /** @brief 원격 input gain mode를 manual 또는 automatic으로 설정합니다. */
         Error setInputMode(AudioInputMode mode) noexcept;
 
-        /** @brief 원격 input 설명을 UTF-8 31바이트 이하로 설정합니다. */
+        /**
+         * @brief 잠긴 SDK가 AICS client busy를 복구하지 못하므로 unsupported를 반환합니다.
+         */
         Error setInputDescription(const char *description) noexcept;
 
         /** @brief discovery와 실제 상태 bootstrap read가 모두 끝났는지 반환합니다. */

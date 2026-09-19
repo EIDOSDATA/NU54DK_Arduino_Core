@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import errno
 from pathlib import Path
 import shutil
 import sys
@@ -19,6 +20,146 @@ assert SPEC is not None and SPEC.loader is not None
 AUDIT = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = AUDIT
 SPEC.loader.exec_module(AUDIT)
+
+
+class CallbackDrivenBootstrap:
+    """! @brief notification/read 경쟁을 재현하는 작은 callback 상태기입니다. """
+
+    def __init__(self, steps: tuple[str, ...], maximum_retries: int = 8) -> None:
+        self.steps = steps
+        self.index = 0
+        self.maximum_retries = maximum_retries
+        self.retries = 0
+        self.read_accepted = False
+        self.retry_pending = False
+        self.stage = "discovering"
+        self.snapshot: dict[str, int] = {}
+
+    @property
+    def current(self) -> str:
+        """! @brief 현재 bootstrap 단계를 반환합니다. """
+        return self.steps[self.index]
+
+    def start(self, result: int) -> None:
+        """! @brief mock SDK read 시작 결과를 상태기에 전달합니다. """
+        self.read_accepted = False
+        self.retry_pending = False
+        if result == 0:
+            self.read_accepted = True
+        elif result == -errno.EBUSY and self.retries < self.maximum_retries:
+            self.retries += 1
+            self.retry_pending = True
+        else:
+            self.stage = "failed"
+
+    def callback(self, step: str, value: int, error: int = 0) -> bool:
+        """! @brief callback snapshot을 반영하고 다음 read 필요 여부를 반환합니다. """
+        self.snapshot[step] = value
+        if self.stage != "discovering":
+            return False
+        if error != 0:
+            self.stage = "failed"
+            return False
+        if step != self.current or not self.read_accepted:
+            return False
+        self.index += 1
+        self.read_accepted = False
+        self.retries = 0
+        if self.index == len(self.steps):
+            self.stage = "ready"
+            return False
+        return True
+
+    def timeout(self) -> None:
+        """! @brief 전체 bootstrap deadline 만료를 재현합니다. """
+        if self.stage == "discovering":
+            self.stage = "failed"
+
+
+class CallbackEpochBackend:
+    """! @brief end/begin 경계의 callback epoch와 in-flight drain을 재현합니다. """
+
+    def __init__(self) -> None:
+        self.generation = 0
+        self.inflight = 0
+        self.owner = False
+
+    def begin(self) -> bool:
+        """! @brief in-flight callback이 없을 때만 새 owner를 결합합니다. """
+        if self.owner or self.inflight != 0:
+            return False
+        self.generation += 1
+        self.owner = True
+        return True
+
+    def enter_callback(self) -> int:
+        """! @brief callback ingress 시점의 epoch를 고정합니다. """
+        if not self.owner:
+            return 0
+        self.inflight += 1
+        return self.generation
+
+    def end(self) -> None:
+        """! @brief owner를 해제하고 이후 stale callback을 무효화합니다. """
+        self.owner = False
+        self.generation += 1
+
+    def accepts(self, epoch: int) -> bool:
+        """! @brief callback epoch가 현재 owner에 속하는지 반환합니다. """
+        return self.owner and epoch == self.generation
+
+    def leave_callback(self) -> None:
+        """! @brief in-flight callback 하나를 drain합니다. """
+        self.inflight -= 1
+
+
+class ServerImageRebind:
+    """! @brief image-lifetime immutable/mutable rebind 계약을 재현합니다. """
+
+    def __init__(self) -> None:
+        self.immutable: tuple[int, ...] | None = None
+        self.state: dict[str, int] = {}
+
+    def begin(self, immutable: tuple[int, ...], mutable: dict[str, int]) -> bool:
+        """! @brief immutable 일치 시에만 mutable 상태를 모두 다시 적용합니다. """
+        if self.immutable is None:
+            self.immutable = immutable
+        elif self.immutable != immutable:
+            return False
+        self.state = dict(mutable)
+        return True
+
+
+class ProfileRecoveryWatchdog:
+    """! @brief 보안 요청 실패와 profile deadline 복구를 재현합니다. """
+
+    def __init__(self) -> None:
+        self.phase = "idle"
+        self.recoveries = 0
+
+    def connected(self, security_request_ok: bool) -> None:
+        """! @brief 연결 직후 보안 요청의 동기 결과를 처리합니다. """
+        self.phase = "securing"
+        if not security_request_ok:
+            self.recover()
+
+    def secured(self) -> None:
+        """! @brief 보안 성공 뒤 volume discovery watchdog을 시작합니다. """
+        self.phase = "volume_discovery"
+
+    def volume_ready(self) -> None:
+        """! @brief volume 성공 뒤 microphone discovery watchdog을 시작합니다. """
+        self.phase = "microphone_discovery"
+
+    def timeout(self) -> None:
+        """! @brief 준비 중인 단계만 bounded recovery로 전환합니다. """
+        if self.phase in {"securing", "volume_discovery", "microphone_discovery"}:
+            self.recover()
+
+    def recover(self) -> None:
+        """! @brief profile recovery 횟수와 phase를 갱신합니다. """
+        self.recoveries += 1
+        self.phase = "recovering"
 
 
 class M31ExamplePublicBoundaryTests(unittest.TestCase):
@@ -210,6 +351,93 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         ):
             self.assertIn(token, source)
 
+        microphone_order = (
+            "microphone_state",
+            "input_state",
+            "input_status",
+            "input_gain_setting",
+            "input_type",
+        )
+        for step in microphone_order:
+            self.assertIn(f"MicrophoneBootstrapStep::{step}", source)
+        microphone_start = source.index("void startMicrophoneBootstrap")
+        microphone_end = source.index("void serviceMicrophoneBootstrap", microphone_start)
+        microphone_bootstrap = source[microphone_start:microphone_end]
+        for call in (
+            "bt_micp_mic_ctlr_mute_get(controller)",
+            "bt_aics_state_get(input_service)",
+            "bt_aics_status_get(input_service)",
+            "bt_aics_gain_setting_get(input_service)",
+            "bt_aics_type_get(input_service)",
+        ):
+            self.assertIn(call, microphone_bootstrap)
+
+    def test_audio_control_bootstrap_drains_notification_read_race(self) -> None:
+        """! @brief notification 선행 EBUSY를 drain 뒤 재시도하고 실제 read로 끝냅니다. """
+        bootstrap = CallbackDrivenBootstrap(("state", "status", "type"))
+        bootstrap.start(0)
+
+        self.assertTrue(bootstrap.callback("state", 11))
+        bootstrap.start(-errno.EBUSY)
+        self.assertTrue(bootstrap.retry_pending)
+        self.assertEqual(bootstrap.stage, "discovering")
+
+        self.assertFalse(bootstrap.callback("status", 22))
+        self.assertEqual(bootstrap.current, "status")
+        self.assertFalse(bootstrap.callback("state", 12))
+        bootstrap.start(0)
+        self.assertTrue(bootstrap.callback("status", 23))
+        bootstrap.start(0)
+        self.assertFalse(bootstrap.callback("type", 24))
+        self.assertEqual(bootstrap.stage, "ready")
+        self.assertEqual(bootstrap.snapshot["status"], 23)
+
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertIn("maximumBootstrapRetries = 8U", source)
+        self.assertIn("bootstrapTimeoutMs = 5000U", source)
+        self.assertIn("result == -EBUSY", source)
+        self.assertIn("bootstrap_read_accepted", source)
+        self.assertIn("serviceVolumeBootstrap(generation_)", source)
+        self.assertIn("serviceMicrophoneBootstrap(generation_)", source)
+
+    def test_audio_control_bootstrap_busy_and_timeout_are_bounded(self) -> None:
+        """! @brief SDK busy와 callback 유실이 무한 discovering으로 남지 않는지 검사합니다. """
+        bootstrap = CallbackDrivenBootstrap(("state",), maximum_retries=2)
+        bootstrap.start(-errno.EBUSY)
+        self.assertEqual(bootstrap.stage, "discovering")
+        bootstrap.start(-errno.EBUSY)
+        self.assertEqual(bootstrap.stage, "discovering")
+        bootstrap.start(-errno.EBUSY)
+        self.assertEqual(bootstrap.stage, "failed")
+
+        lost_callback = CallbackDrivenBootstrap(("state",))
+        lost_callback.start(0)
+        lost_callback.timeout()
+        self.assertEqual(lost_callback.stage, "failed")
+
+    def test_audio_control_late_callback_keeps_ingress_epoch(self) -> None:
+        """! @brief end 뒤 늦은 callback이 새 owner generation에 적용되지 않는지 검사합니다. """
+        backend = CallbackEpochBackend()
+        self.assertTrue(backend.begin())
+        old_epoch = backend.enter_callback()
+        backend.end()
+        self.assertFalse(backend.begin())
+        self.assertFalse(backend.accepts(old_epoch))
+        backend.leave_callback()
+        self.assertTrue(backend.begin())
+        self.assertFalse(backend.accepts(old_epoch))
+
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertIn("struct VolumeCallbackEpoch", source)
+        self.assertIn("struct MicrophoneCallbackEpoch", source)
+        self.assertIn("callbacks_inflight", source)
+
     def test_audio_control_device_rebind_is_consistent(self) -> None:
         """! @brief image-lifetime service 재소유가 immutable 불일치와 stale cache를 거부합니다. """
         source = (
@@ -228,6 +456,15 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         ):
             self.assertIn(token, source)
 
+        image = ServerImageRebind()
+        immutable = (1, 1, 1)
+        self.assertTrue(image.begin(immutable, {"volume": 10, "gain": 2}))
+        before = dict(image.state)
+        self.assertFalse(image.begin((1, 0, 1), {"volume": 99, "gain": 9}))
+        self.assertEqual(image.state, before)
+        self.assertTrue(image.begin(immutable, {"volume": 20, "gain": 4}))
+        self.assertEqual(image.state, {"volume": 20, "gain": 4})
+
     def test_audio_control_controller_has_bounded_failure_recovery(self) -> None:
         """! @brief async discovery 실패가 bounded disconnect·rescan으로 복구되는지 검사합니다. """
         source = (
@@ -239,6 +476,49 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         self.assertIn("scheduleProfileRecovery();", source)
         self.assertIn("BLEConnection.disconnect(peerConnection)", source)
         self.assertIn("scanPending = true;", source)
+        self.assertIn("scheduleProfileRecovery();", source[source.index(
+            "if (!BLESecurity.requestSecurity(peerConnection))"
+        ):])
+        self.assertIn("SecurityEvent::pairing_failed", source)
+        self.assertIn("securityTimeoutMs = 10000U", source)
+        self.assertIn("profileTimeoutMs = 10000U", source)
+        self.assertIn("Audio control phase timeout", source)
+
+        synchronous_failure = ProfileRecoveryWatchdog()
+        synchronous_failure.connected(False)
+        self.assertEqual(synchronous_failure.phase, "recovering")
+        self.assertEqual(synchronous_failure.recoveries, 1)
+
+        profile_timeout = ProfileRecoveryWatchdog()
+        profile_timeout.connected(True)
+        profile_timeout.secured()
+        profile_timeout.timeout()
+        self.assertEqual(profile_timeout.phase, "recovering")
+        self.assertEqual(profile_timeout.recoveries, 1)
+
+    def test_audio_control_client_description_write_is_fail_closed(self) -> None:
+        """! @brief 잠긴 SDK의 AICS description write를 호출하지 않고 상태를 보존합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
+        ).read_text(encoding="utf-8")
+        starts = []
+        offset = 0
+        needle = "Error VolumeController::setInputDescription"
+        starts.append(source.index(needle, offset))
+        needle = "Error MicrophoneController::setInputDescription"
+        starts.append(source.index(needle, starts[0] + 1))
+        for start in starts:
+            end = source.index("\n    }", start) + len("\n    }")
+            method = source[start:end]
+            self.assertIn("return record(Error::unsupported, -ENOTSUP);", method)
+            self.assertNotIn("bt_aics_description_set", method)
+
+        state = {"stage": "ready", "busy": False, "updates": 7}
+        before = dict(state)
+        result = -errno.ENOTSUP
+        self.assertEqual(result, -errno.ENOTSUP)
+        self.assertEqual(state, before)
 
     def test_audio_control_instance_counts_are_exact(self) -> None:
         """! @brief 두 역할 image의 포함 service pool 합계를 고정합니다. """
@@ -256,6 +536,8 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             "CONFIG_BT_MICP_MIC_DEV_AICS_INSTANCE_COUNT=1",
             "CONFIG_BT_VOCS_MAX_INSTANCE_COUNT=1",
             "CONFIG_BT_VCP_VOL_REND_VOCS_INSTANCE_COUNT=1",
+            "CONFIG_BT_AICS_MAX_INPUT_DESCRIPTION_SIZE=32",
+            "CONFIG_BT_VOCS_MAX_OUTPUT_DESCRIPTION_SIZE=32",
         ):
             self.assertIn(token, device)
         for token in (
@@ -266,6 +548,20 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             "CONFIG_BT_VCP_VOL_CTLR_MAX_VOCS_INST=1",
         ):
             self.assertIn(token, controller)
+
+        merged = {}
+        for line in device.splitlines():
+            if line.startswith("CONFIG_") and "=" in line:
+                key, value = line.split("=", 1)
+                merged[key] = value
+        self.assertGreaterEqual(int(merged["CONFIG_BT_AICS_MAX_INPUT_DESCRIPTION_SIZE"]), 32)
+        self.assertGreaterEqual(int(merged["CONFIG_BT_VOCS_MAX_OUTPUT_DESCRIPTION_SIZE"]), 32)
+
+        backend = (
+            ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlDevice.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertIn("static_assert(CONFIG_BT_AICS_MAX_INPUT_DESCRIPTION_SIZE", backend)
+        self.assertIn("static_assert(CONFIG_BT_VOCS_MAX_OUTPUT_DESCRIPTION_SIZE", backend)
 
     def test_cap_delegated_sink_must_cleanup_failed_reception(self) -> None:
         """! @brief peer loss 오류 뒤 예약된 BASS cleanup이 먼저 실행되는지 검사합니다. """

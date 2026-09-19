@@ -29,6 +29,17 @@ using nucode::ble::audio::VolumeController;
 
 namespace
 {
+    /** @brief 연결 뒤 보안과 두 profile 준비 단계를 추적합니다. */
+    enum class ConnectionPhase : std::uint8_t
+    {
+        idle,
+        securing,
+        volume_discovery,
+        microphone_discovery,
+        ready,
+        recovering,
+    };
+
     VolumeController volumeController;
     MicrophoneController microphoneController;
     BLEAddress peerAddress;
@@ -40,10 +51,14 @@ namespace
     std::uint32_t scanAt = 0U;
     constexpr std::uint8_t maximumProfileRecoveries = 3U;
     constexpr std::uint8_t maximumDisconnectAttempts = 3U;
+    constexpr std::uint32_t securityTimeoutMs = 10000U;
+    constexpr std::uint32_t profileTimeoutMs = 10000U;
     std::uint8_t profileRecoveries = 0U;
     std::uint8_t disconnectAttempts = 0U;
     bool profileRecoveryPending = false;
     std::uint32_t disconnectAt = 0U;
+    ConnectionPhase connectionPhase = ConnectionPhase::idle;
+    std::uint32_t phaseDeadline = 0U;
 
     void scheduleProfileRecovery();
 
@@ -84,6 +99,8 @@ namespace
             if (result == Error::none)
             {
                 volumeStarted = true;
+                connectionPhase = ConnectionPhase::volume_discovery;
+                phaseDeadline = millis() + profileTimeoutMs;
                 Serial.println("Volume discovery started");
             }
             else
@@ -92,6 +109,16 @@ namespace
                 Serial.println(volumeController.nativeCode());
                 scheduleProfileRecovery();
             }
+        }
+        else if (((event.event == SecurityEvent::pairing_failed) ||
+                  (event.event == SecurityEvent::pairing_cancelled) ||
+                  (event.event == SecurityEvent::timeout) ||
+                  (event.event == SecurityEvent::error)) &&
+                 (event.connection == peerConnection))
+        {
+            Serial.print("Audio control security failed reason=");
+            Serial.println(event.reason);
+            scheduleProfileRecovery();
         }
     }
 
@@ -102,9 +129,12 @@ namespace
         if ((event.event == BLEEvent::connected) && (event.role == BLELinkRole::central))
         {
             peerConnection = event.connection;
+            connectionPhase = ConnectionPhase::securing;
+            phaseDeadline = millis() + securityTimeoutMs;
             if (!BLESecurity.requestSecurity(peerConnection))
             {
                 Serial.println("Audio control security request failed");
+                scheduleProfileRecovery();
             }
         }
         else if ((event.event == BLEEvent::disconnected) && (event.connection == peerConnection))
@@ -123,6 +153,8 @@ namespace
             peerConnection = BLEConnectionHandle();
             profileRecoveryPending = false;
             disconnectAttempts = 0U;
+            connectionPhase = ConnectionPhase::idle;
+            phaseDeadline = 0U;
             if (profileRecoveries < maximumProfileRecoveries)
             {
                 scanPending = true;
@@ -193,6 +225,7 @@ namespace
         ++profileRecoveries;
         disconnectAttempts = 0U;
         profileRecoveryPending = true;
+        connectionPhase = ConnectionPhase::recovering;
         disconnectAt = millis();
     }
 } // namespace
@@ -277,6 +310,8 @@ void loop()
         if (result == Error::none)
         {
             microphoneStarted = true;
+            connectionPhase = ConnectionPhase::microphone_discovery;
+            phaseDeadline = millis() + profileTimeoutMs;
             Serial.println("Microphone discovery started");
         }
         else
@@ -289,6 +324,18 @@ void loop()
     if (volumeController.ready() && microphoneController.ready())
     {
         profileRecoveries = 0U;
+        connectionPhase = ConnectionPhase::ready;
+        phaseDeadline = 0U;
+    }
+
+    if (!profileRecoveryPending && BLEConnection.connected() &&
+        ((connectionPhase == ConnectionPhase::securing) ||
+         (connectionPhase == ConnectionPhase::volume_discovery) ||
+         (connectionPhase == ConnectionPhase::microphone_discovery)) &&
+        (static_cast<std::int32_t>(millis() - phaseDeadline) >= 0))
+    {
+        Serial.println("Audio control phase timeout");
+        scheduleProfileRecovery();
     }
 
     while (volumeController.ready() && microphoneController.ready() && (Serial.available() > 0))

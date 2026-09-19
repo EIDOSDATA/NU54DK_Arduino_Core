@@ -198,9 +198,11 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
             options = (
                 "CONFIG_BT_VCP_VOL_REND=y", "CONFIG_BT_MICP_MIC_DEV=y",
                 "CONFIG_BT_AICS_MAX_INSTANCE_COUNT=2",
+                "CONFIG_BT_AICS_MAX_INPUT_DESCRIPTION_SIZE=32",
                 "CONFIG_BT_VCP_VOL_REND_AICS_INSTANCE_COUNT=1",
                 "CONFIG_BT_MICP_MIC_DEV_AICS_INSTANCE_COUNT=1",
                 "CONFIG_BT_VOCS_MAX_INSTANCE_COUNT=1",
+                "CONFIG_BT_VOCS_MAX_OUTPUT_DESCRIPTION_SIZE=32",
                 "CONFIG_BT_VCP_VOL_REND_VOCS_INSTANCE_COUNT=1",
             )
         elif sketch.parent.name == "AudioControlController":
@@ -218,6 +220,8 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "microphoneController.mute(",
                 "microphoneController.setInputGain(",
                 "scheduleProfileRecovery(", "BLEConnection.disconnect(",
+                "SecurityEvent::pairing_failed", "securityTimeoutMs",
+                "profileTimeoutMs", "Audio control phase timeout",
             )
             options = (
                 "CONFIG_BT_VCP_VOL_CTLR=y", "CONFIG_BT_MICP_MIC_CTLR=y",

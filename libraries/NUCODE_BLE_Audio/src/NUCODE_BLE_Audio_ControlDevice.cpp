@@ -27,6 +27,15 @@ namespace nucode::ble::audio
     {
         constexpr std::size_t maximumDescriptionLength = 31U;
 
+#if defined(CONFIG_BT_AICS)
+        static_assert(CONFIG_BT_AICS_MAX_INPUT_DESCRIPTION_SIZE >= (maximumDescriptionLength + 1U),
+                      "AICS input description buffer must preserve 31 UTF-8 bytes");
+#endif
+#if defined(CONFIG_BT_VOCS)
+        static_assert(CONFIG_BT_VOCS_MAX_OUTPUT_DESCRIPTION_SIZE >= (maximumDescriptionLength + 1U),
+                      "VOCS output description buffer must preserve 31 UTF-8 bytes");
+#endif
+
         /** @brief 바이트 길이가 정해진 문자열의 UTF-8 well-formed 여부를 검사합니다. */
         bool validUtf8(const char *text, std::size_t length) noexcept
         {
