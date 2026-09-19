@@ -38,6 +38,14 @@ namespace
     bool microphoneStarted = false;
     bool scanPending = false;
     std::uint32_t scanAt = 0U;
+    constexpr std::uint8_t maximumProfileRecoveries = 3U;
+    constexpr std::uint8_t maximumDisconnectAttempts = 3U;
+    std::uint8_t profileRecoveries = 0U;
+    std::uint8_t disconnectAttempts = 0U;
+    bool profileRecoveryPending = false;
+    std::uint32_t disconnectAt = 0U;
+
+    void scheduleProfileRecovery();
 
     /** @brief Volume Control Service를 광고하는 장치를 검색합니다. */
     bool startScan()
@@ -82,6 +90,7 @@ namespace
             {
                 Serial.print("Volume discovery failed native=");
                 Serial.println(volumeController.nativeCode());
+                scheduleProfileRecovery();
             }
         }
     }
@@ -112,8 +121,18 @@ namespace
             volumeStarted = false;
             peerFound = false;
             peerConnection = BLEConnectionHandle();
-            scanPending = true;
-            scanAt = millis() + 100U;
+            profileRecoveryPending = false;
+            disconnectAttempts = 0U;
+            if (profileRecoveries < maximumProfileRecoveries)
+            {
+                scanPending = true;
+                scanAt = millis() + 100U;
+            }
+            else
+            {
+                scanPending = false;
+                Serial.println("Audio control recovery limit reached");
+            }
             Serial.print("Audio control device disconnected reason=");
             Serial.println(event.reason);
         }
@@ -149,6 +168,32 @@ namespace
         Serial.print(microphone.muted ? 1 : 0);
         Serial.print(" microphone_gain=");
         Serial.println(microphoneInput.gain);
+    }
+
+    /** @brief 실패한 profile을 정리하고 bounded reconnect를 예약합니다. */
+    void scheduleProfileRecovery()
+    {
+        if (profileRecoveryPending || (profileRecoveries >= maximumProfileRecoveries))
+        {
+            return;
+        }
+        Serial.print("Audio control profile recovery attempt=");
+        Serial.println(profileRecoveries + 1U);
+        if (microphoneStarted)
+        {
+            static_cast<void>(microphoneController.end());
+        }
+        if (volumeStarted)
+        {
+            static_cast<void>(volumeController.end());
+        }
+        microphoneStarted = false;
+        volumeStarted = false;
+        peerFound = false;
+        ++profileRecoveries;
+        disconnectAttempts = 0U;
+        profileRecoveryPending = true;
+        disconnectAt = millis();
     }
 } // namespace
 
@@ -201,6 +246,31 @@ void loop()
         }
     }
 
+    if (profileRecoveryPending && BLEConnection.connected() &&
+        (static_cast<std::int32_t>(millis() - disconnectAt) >= 0))
+    {
+        if (disconnectAttempts < maximumDisconnectAttempts)
+        {
+            ++disconnectAttempts;
+            static_cast<void>(BLEConnection.disconnect(peerConnection));
+            disconnectAt = millis() + 2000U;
+        }
+        else
+        {
+            profileRecoveryPending = false;
+            Serial.println("Audio control disconnect recovery stopped");
+        }
+    }
+    else if (profileRecoveryPending && !BLEConnection.connected() && !BLEConnection.connecting())
+    {
+        profileRecoveryPending = false;
+        if (profileRecoveries < maximumProfileRecoveries)
+        {
+            scanPending = true;
+            scanAt = millis() + 100U;
+        }
+    }
+
     if (volumeStarted && volumeController.ready() && !microphoneStarted)
     {
         const Error result = microphoneController.begin(peerConnection);
@@ -209,10 +279,16 @@ void loop()
             microphoneStarted = true;
             Serial.println("Microphone discovery started");
         }
-        else if (result != Error::busy)
+        else
         {
             report("Microphone discovery", result, microphoneController.nativeCode());
+            scheduleProfileRecovery();
         }
+    }
+
+    if (volumeController.ready() && microphoneController.ready())
+    {
+        profileRecoveries = 0U;
     }
 
     while (volumeController.ready() && microphoneController.ready() && (Serial.available() > 0))
@@ -291,14 +367,14 @@ void loop()
         printState();
     }
 
-    if ((volumeController.stage() == AudioControlStage::failed) ||
-        (microphoneController.stage() == AudioControlStage::failed))
+    if (!profileRecoveryPending && ((volumeController.stage() == AudioControlStage::failed) ||
+                                    (microphoneController.stage() == AudioControlStage::failed)))
     {
         Serial.print("Audio control profile failed volume=");
         Serial.print(volumeController.nativeCode());
         Serial.print(" microphone=");
         Serial.println(microphoneController.nativeCode());
-        delay(1000U);
+        scheduleProfileRecovery();
     }
     delay(1U);
 }

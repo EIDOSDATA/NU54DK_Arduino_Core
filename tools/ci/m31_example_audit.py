@@ -217,6 +217,7 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "volumeController.setInputGain(",
                 "microphoneController.mute(",
                 "microphoneController.setInputGain(",
+                "scheduleProfileRecovery(", "BLEConnection.disconnect(",
             )
             options = (
                 "CONFIG_BT_VCP_VOL_CTLR=y", "CONFIG_BT_MICP_MIC_CTLR=y",

@@ -819,7 +819,7 @@ namespace nucode::ble::audio
         bool mute_disabled = false;
     };
 
-    /** @brief 포함할 Volume Offset Control Service의 초기 설정입니다. */
+    /** @brief 포함할 Volume Offset Control Service의 초기 설정입니다. 설명은 UTF-8 31바이트 이하입니다. */
     struct VolumeOffsetConfig
     {
         std::int16_t offset = 0;
@@ -829,7 +829,7 @@ namespace nucode::ble::audio
         const char *description = "Speaker";
     };
 
-    /** @brief 포함할 Audio Input Control Service의 초기 설정입니다. */
+    /** @brief 포함할 Audio Input Control Service의 초기 설정입니다. 설명은 UTF-8 31바이트 이하입니다. */
     struct AudioInputConfig
     {
         std::int8_t gain = 0;
@@ -866,6 +866,8 @@ namespace nucode::ble::audio
      *
      * BLEDevice.begin() 뒤 광고를 시작하기 전에 begin()을 호출합니다. service는
      * image 수명 동안 유지되며 end()는 공개 객체의 소유권만 반환합니다.
+     * 다시 begin()할 때 instance 수·gain 범위·쓰기 권한 같은 immutable 설정은 최초값과
+     * 같아야 하며, mutable 설정은 실제 service에 다시 적용됩니다.
      */
     class VolumeRenderer final
     {
@@ -909,7 +911,7 @@ namespace nucode::ble::audio
         /** @brief 포함된 output의 audio location을 설정합니다. */
         Error setOutputLocation(std::uint32_t location) noexcept;
 
-        /** @brief 포함된 output 설명을 설정합니다. */
+        /** @brief 포함된 output 설명을 UTF-8 31바이트 이하로 설정합니다. */
         Error setOutputDescription(const char *description) noexcept;
 
         /** @brief 포함된 input gain을 설정합니다. */
@@ -924,7 +926,7 @@ namespace nucode::ble::audio
         /** @brief 포함된 input gain mode를 설정합니다. */
         Error setInputMode(AudioInputMode mode) noexcept;
 
-        /** @brief 포함된 input 설명을 설정합니다. */
+        /** @brief 포함된 input 설명을 UTF-8 31바이트 이하로 설정합니다. */
         Error setInputDescription(const char *description) noexcept;
 
         /** @brief service와 공개 facade가 준비되었는지 반환합니다. */
@@ -957,7 +959,12 @@ namespace nucode::ble::audio
         int native_code_ = 0;
     };
 
-    /** @brief 원격 Volume Renderer의 VCP·VOCS·AICS를 제어합니다. */
+    /**
+     * @brief 원격 Volume Renderer의 VCP·VOCS·AICS를 제어합니다.
+     *
+     * snapshot getter의 값은 ready()가 true가 된 뒤 유효합니다. begin()은 discovery 뒤
+     * 원격 VCS·VOCS·AICS의 실제 상태와 설정을 모두 읽은 다음 ready 상태가 됩니다.
+     */
     class VolumeController final
     {
       public:
@@ -982,32 +989,82 @@ namespace nucode::ble::audio
         /** @brief 연결 참조와 facade 소유권을 반환합니다. */
         Error end() noexcept;
 
+        /** @brief 원격 volume과 mute 상태를 다시 읽습니다. */
         Error readVolume() noexcept;
+
+        /** @brief 원격 volume을 절대값으로 설정합니다. */
         Error setVolume(std::uint8_t volume) noexcept;
+
+        /** @brief 원격 volume을 한 step 올립니다. */
         Error volumeUp() noexcept;
+
+        /** @brief 원격 volume을 한 step 내립니다. */
         Error volumeDown() noexcept;
+
+        /** @brief 원격 volume 출력을 mute합니다. */
         Error mute() noexcept;
+
+        /** @brief 원격 volume 출력을 unmute합니다. */
         Error unmute() noexcept;
+
+        /** @brief 원격 output offset을 다시 읽습니다. */
         Error readOffset() noexcept;
+
+        /** @brief 원격 output offset을 설정합니다. */
         Error setOffset(std::int16_t offset) noexcept;
+
+        /** @brief 원격 output audio location을 설정합니다. */
         Error setOutputLocation(std::uint32_t location) noexcept;
+
+        /** @brief 원격 output 설명을 UTF-8 31바이트 이하로 설정합니다. */
         Error setOutputDescription(const char *description) noexcept;
+
+        /** @brief 원격 input gain·mute·mode를 다시 읽습니다. */
         Error readInput() noexcept;
+
+        /** @brief 원격 input gain을 검색된 범위 안에서 설정합니다. */
         Error setInputGain(std::int8_t gain) noexcept;
+
+        /** @brief 원격 input을 mute합니다. */
         Error muteInput() noexcept;
+
+        /** @brief 원격 input을 unmute합니다. */
         Error unmuteInput() noexcept;
+
+        /** @brief 원격 input gain mode를 manual 또는 automatic으로 설정합니다. */
         Error setInputMode(AudioInputMode mode) noexcept;
+
+        /** @brief 원격 input 설명을 UTF-8 31바이트 이하로 설정합니다. */
         Error setInputDescription(const char *description) noexcept;
 
+        /** @brief discovery와 실제 상태 bootstrap read가 모두 끝났는지 반환합니다. */
         [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief discovery 또는 한 비동기 요청이 진행 중인지 반환합니다. */
         [[nodiscard]] bool busy() const noexcept;
+
+        /** @brief 현재 discovery·ready·operation·failure 단계를 반환합니다. */
         [[nodiscard]] AudioControlStage stage() const noexcept;
+
+        /** @brief 마지막으로 시작한 공개 작업을 반환합니다. */
         [[nodiscard]] AudioControlStep lastStep() const noexcept;
+
+        /** @brief 마지막으로 읽거나 통지받은 원격 volume 상태를 반환합니다. */
         [[nodiscard]] VolumeState state() const noexcept;
+
+        /** @brief 마지막으로 읽거나 통지받은 원격 output 상태를 반환합니다. */
         [[nodiscard]] VolumeOffsetState offsetState() const noexcept;
+
+        /** @brief 마지막으로 읽거나 통지받은 원격 input 상태를 반환합니다. */
         [[nodiscard]] AudioInputState inputState() const noexcept;
+
+        /** @brief 현재 session에서 수락한 상태 callback 수를 반환합니다. */
         [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+
+        /** @brief 마지막 공개 오류 또는 비동기 profile 오류를 반환합니다. */
         [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 profile 원본 오류를 반환합니다. */
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:
@@ -1019,7 +1076,12 @@ namespace nucode::ble::audio
         int native_code_ = 0;
     };
 
-    /** @brief microphone mute와 포함 audio input을 제공하는 Microphone Device입니다. */
+    /**
+     * @brief microphone mute와 포함 audio input을 제공하는 Microphone Device입니다.
+     *
+     * service는 image 수명 동안 유지됩니다. 다시 begin()할 때 gain 범위·입력 형식·쓰기
+     * 권한은 최초값과 같아야 하며, mutable 설정은 실제 service에 다시 적용됩니다.
+     */
     class MicrophoneDevice final
     {
       public:
@@ -1035,21 +1097,52 @@ namespace nucode::ble::audio
         MicrophoneDevice(MicrophoneDevice &&) = delete;
         MicrophoneDevice &operator=(MicrophoneDevice &&) = delete;
 
+        /** @brief Microphone Device와 포함 AICS 한 개를 준비합니다. */
         Error begin(const MicrophoneDeviceConfig &config = {}) noexcept;
+
+        /** @brief image-lifetime service를 유지하고 facade 소유권만 반환합니다. */
         Error end() noexcept;
+
+        /** @brief microphone을 mute합니다. */
         Error mute() noexcept;
+
+        /** @brief microphone을 unmute합니다. */
         Error unmute() noexcept;
+
+        /** @brief 이 image 수명 동안 microphone mute 변경을 비활성화합니다. */
         Error disableMute() noexcept;
+
+        /** @brief 포함된 input gain을 설정합니다. */
         Error setInputGain(std::int8_t gain) noexcept;
+
+        /** @brief 포함된 input을 mute합니다. */
         Error muteInput() noexcept;
+
+        /** @brief 포함된 input을 unmute합니다. */
         Error unmuteInput() noexcept;
+
+        /** @brief 포함된 input gain mode를 설정합니다. */
         Error setInputMode(AudioInputMode mode) noexcept;
+
+        /** @brief 포함된 input 설명을 UTF-8 31바이트 이하로 설정합니다. */
         Error setInputDescription(const char *description) noexcept;
+
+        /** @brief service와 facade가 준비되었는지 반환합니다. */
         [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 마지막으로 관찰한 microphone 상태를 반환합니다. */
         [[nodiscard]] MicrophoneState state() const noexcept;
+
+        /** @brief 마지막으로 관찰한 input 상태를 반환합니다. */
         [[nodiscard]] AudioInputState inputState() const noexcept;
+
+        /** @brief local 또는 remote 상태 변경 callback 수를 반환합니다. */
         [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
         [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 profile 원본 오류를 반환합니다. */
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:
@@ -1061,7 +1154,12 @@ namespace nucode::ble::audio
         int native_code_ = 0;
     };
 
-    /** @brief 원격 Microphone Device의 MICP와 포함 AICS를 제어합니다. */
+    /**
+     * @brief 원격 Microphone Device의 MICP와 포함 AICS를 제어합니다.
+     *
+     * snapshot getter의 값은 ready()가 true가 된 뒤 유효합니다. begin()은 discovery 뒤
+     * 원격 MICS·AICS의 실제 상태와 설정을 모두 읽은 다음 ready 상태가 됩니다.
+     */
     class MicrophoneController final
     {
       public:
@@ -1077,26 +1175,67 @@ namespace nucode::ble::audio
         MicrophoneController(MicrophoneController &&) = delete;
         MicrophoneController &operator=(MicrophoneController &&) = delete;
 
+        /** @brief 연결된 peer에서 MICP와 포함 AICS를 검색합니다. */
         Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief 연결 소실과 callback 결과를 공개 상태에 반영합니다. */
         void poll() noexcept;
+
+        /** @brief 연결 참조와 facade 소유권을 반환합니다. */
         Error end() noexcept;
+
+        /** @brief 원격 microphone mute 상태를 다시 읽습니다. */
         Error readMicrophone() noexcept;
+
+        /** @brief 원격 microphone을 mute합니다. */
         Error mute() noexcept;
+
+        /** @brief 원격 microphone을 unmute합니다. */
         Error unmute() noexcept;
+
+        /** @brief 원격 input gain·mute·mode를 다시 읽습니다. */
         Error readInput() noexcept;
+
+        /** @brief 원격 input gain을 검색된 범위 안에서 설정합니다. */
         Error setInputGain(std::int8_t gain) noexcept;
+
+        /** @brief 원격 input을 mute합니다. */
         Error muteInput() noexcept;
+
+        /** @brief 원격 input을 unmute합니다. */
         Error unmuteInput() noexcept;
+
+        /** @brief 원격 input gain mode를 manual 또는 automatic으로 설정합니다. */
         Error setInputMode(AudioInputMode mode) noexcept;
+
+        /** @brief 원격 input 설명을 UTF-8 31바이트 이하로 설정합니다. */
         Error setInputDescription(const char *description) noexcept;
+
+        /** @brief discovery와 실제 상태 bootstrap read가 모두 끝났는지 반환합니다. */
         [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief discovery 또는 한 비동기 요청이 진행 중인지 반환합니다. */
         [[nodiscard]] bool busy() const noexcept;
+
+        /** @brief 현재 discovery·ready·operation·failure 단계를 반환합니다. */
         [[nodiscard]] AudioControlStage stage() const noexcept;
+
+        /** @brief 마지막으로 시작한 공개 작업을 반환합니다. */
         [[nodiscard]] AudioControlStep lastStep() const noexcept;
+
+        /** @brief 마지막으로 읽거나 통지받은 원격 microphone 상태를 반환합니다. */
         [[nodiscard]] MicrophoneState state() const noexcept;
+
+        /** @brief 마지막으로 읽거나 통지받은 원격 input 상태를 반환합니다. */
         [[nodiscard]] AudioInputState inputState() const noexcept;
+
+        /** @brief 현재 session에서 수락한 상태 callback 수를 반환합니다. */
         [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+
+        /** @brief 마지막 공개 오류 또는 비동기 profile 오류를 반환합니다. */
         [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 profile 원본 오류를 반환합니다. */
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:

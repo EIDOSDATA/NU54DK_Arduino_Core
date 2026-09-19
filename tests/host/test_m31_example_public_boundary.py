@@ -179,14 +179,66 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             ROOT
             / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
         ).read_text(encoding="utf-8")
-        self.assertIn("pending_generation != volumeBackend.generation", source)
-        self.assertIn("pending_generation !=\n                 microphoneControllerBackend.generation", source)
+        self.assertIn("volumeBackend.pending_generation != generation", source)
+        self.assertIn("microphoneControllerBackend.pending_generation != generation", source)
         self.assertIn("atomic_cas(&volumeBackend.busy, 0, 1)", source)
         self.assertIn("atomic_cas(&microphoneControllerBackend.busy, 0, 1)", source)
         self.assertIn("internal::activeConnection(connection)", source)
+        self.assertIn("K_MUTEX_DEFINE(volumeBackendMutex)", source)
+        self.assertIn("K_MUTEX_DEFINE(microphoneControllerBackendMutex)", source)
         self.assertIn("retiredVolumeConnectionActive()", source)
         self.assertIn("retiredMicrophoneConnectionActive()", source)
         self.assertGreaterEqual(source.count("retired_connection = active != nullptr"), 2)
+
+    def test_audio_control_bootstrap_reads_actual_remote_state(self) -> None:
+        """! @brief discovery 뒤 실제 VCP·VOCS·AICS·MICP 상태를 모두 읽는지 검사합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "startVolumeBootstrap(",
+            "bt_vcp_vol_ctlr_read_state(controller)",
+            "bt_vcp_vol_ctlr_read_flags(controller)",
+            "bt_vocs_state_get(output_service)",
+            "bt_vocs_location_get(output_service)",
+            "bt_aics_gain_setting_get(input_service)",
+            "bt_aics_type_get(input_service)",
+            "bt_aics_status_get(input_service)",
+            "startMicrophoneBootstrap(",
+            "bt_micp_mic_ctlr_mute_get(controller)",
+        ):
+            self.assertIn(token, source)
+
+    def test_audio_control_device_rebind_is_consistent(self) -> None:
+        """! @brief image-lifetime service 재소유가 immutable 불일치와 stale cache를 거부합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlDevice.cpp"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "K_MUTEX_DEFINE(rendererBackendMutex)",
+            "K_MUTEX_DEFINE(microphoneBackendMutex)",
+            "rendererImmutableConfigMatches(config)",
+            "microphoneImmutableConfigMatches(config)",
+            "bt_vocs_location_set(output_service, config.output.location)",
+            "setServerInputMode(input_service, config.input.mode)",
+            "bt_aics_status_get(input_service)",
+            "validUtf8(description, length)",
+        ):
+            self.assertIn(token, source)
+
+    def test_audio_control_controller_has_bounded_failure_recovery(self) -> None:
+        """! @brief async discovery 실패가 bounded disconnect·rescan으로 복구되는지 검사합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino"
+        ).read_text(encoding="utf-8")
+        self.assertIn("maximumProfileRecoveries = 3U", source)
+        self.assertIn("maximumDisconnectAttempts = 3U", source)
+        self.assertIn("scheduleProfileRecovery();", source)
+        self.assertIn("BLEConnection.disconnect(peerConnection)", source)
+        self.assertIn("scanPending = true;", source)
 
     def test_audio_control_instance_counts_are_exact(self) -> None:
         """! @brief 두 역할 image의 포함 service pool 합계를 고정합니다. """

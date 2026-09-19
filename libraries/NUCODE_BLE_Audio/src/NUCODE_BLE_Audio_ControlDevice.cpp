@@ -16,6 +16,7 @@
 #include <zephyr/bluetooth/audio/micp.h>
 #include <zephyr/bluetooth/audio/vcp.h>
 #include <zephyr/bluetooth/audio/vocs.h>
+#include <zephyr/kernel.h>
 
 #include <errno.h>
 #include <string.h>
@@ -25,6 +26,67 @@ namespace nucode::ble::audio
     namespace
     {
         constexpr std::size_t maximumDescriptionLength = 31U;
+
+        /** @brief 바이트 길이가 정해진 문자열의 UTF-8 well-formed 여부를 검사합니다. */
+        bool validUtf8(const char *text, std::size_t length) noexcept
+        {
+            std::size_t index = 0U;
+            while (index < length)
+            {
+                const auto first = static_cast<std::uint8_t>(text[index]);
+                if (first <= 0x7fU)
+                {
+                    ++index;
+                    continue;
+                }
+
+                std::size_t continuation_count = 0U;
+                std::uint32_t code_point = 0U;
+                std::uint32_t minimum = 0U;
+                if ((first & 0xe0U) == 0xc0U)
+                {
+                    continuation_count = 1U;
+                    code_point = first & 0x1fU;
+                    minimum = 0x80U;
+                }
+                else if ((first & 0xf0U) == 0xe0U)
+                {
+                    continuation_count = 2U;
+                    code_point = first & 0x0fU;
+                    minimum = 0x800U;
+                }
+                else if ((first & 0xf8U) == 0xf0U)
+                {
+                    continuation_count = 3U;
+                    code_point = first & 0x07U;
+                    minimum = 0x10000U;
+                }
+                else
+                {
+                    return false;
+                }
+                if (index + continuation_count >= length)
+                {
+                    return false;
+                }
+                for (std::size_t offset = 1U; offset <= continuation_count; ++offset)
+                {
+                    const auto next = static_cast<std::uint8_t>(text[index + offset]);
+                    if ((next & 0xc0U) != 0x80U)
+                    {
+                        return false;
+                    }
+                    code_point = (code_point << 6U) | (next & 0x3fU);
+                }
+                if ((code_point < minimum) || (code_point > 0x10ffffU) ||
+                    ((code_point >= 0xd800U) && (code_point <= 0xdfffU)))
+                {
+                    return false;
+                }
+                index += continuation_count + 1U;
+            }
+            return true;
+        }
 
         /** @brief profile 원본 반환값을 공개 오류로 변환합니다. */
         Error mapNativeError(int error) noexcept
@@ -59,9 +121,12 @@ namespace nucode::ble::audio
         /** @brief service가 복사할 수 있는 bounded UTF-8 설명인지 확인합니다. */
         bool validDescription(const char *description) noexcept
         {
-            return (description != nullptr) &&
-                   (strnlen(description, maximumDescriptionLength + 1U) <=
-                    maximumDescriptionLength);
+            if (description == nullptr)
+            {
+                return false;
+            }
+            const std::size_t length = strnlen(description, maximumDescriptionLength + 1U);
+            return (length <= maximumDescriptionLength) && validUtf8(description, length);
         }
 
         /** @brief AICS 초기 설정의 범위와 enum 값을 확인합니다. */
@@ -111,6 +176,9 @@ namespace nucode::ble::audio
             std::uint32_t generation = 0U;
             std::uint32_t updates = 0U;
             bool registered = false;
+            bool output_location_writable = false;
+            bool output_description_writable = false;
+            bool input_description_writable = false;
             int error = 0;
             VolumeState volume = {};
             VolumeOffsetState offset = {};
@@ -119,13 +187,30 @@ namespace nucode::ble::audio
         };
 
         RendererBackend rendererBackend;
+        K_MUTEX_DEFINE(rendererBackendMutex);
+
+        /** @brief 재등록할 수 없는 Volume Renderer 설정이 최초 등록값과 같은지 검사합니다. */
+        bool rendererImmutableConfigMatches(const VolumeRendererConfig &config) noexcept
+        {
+            return (rendererBackend.output_location_writable == config.output.location_writable) &&
+                   (rendererBackend.output_description_writable ==
+                    config.output.description_writable) &&
+                   (rendererBackend.input.minimum_gain == config.input.minimum_gain) &&
+                   (rendererBackend.input.maximum_gain == config.input.maximum_gain) &&
+                   (rendererBackend.input.units == config.input.units) &&
+                   (rendererBackend.input.type == config.input.type) &&
+                   (rendererBackend.input_description_writable ==
+                    config.input.description_writable);
+        }
 
         /** @brief VCS state read 또는 변경을 bounded 공개 상태에 반영합니다. */
         void rendererVolumeState(struct bt_conn *, int error, std::uint8_t volume,
                                  std::uint8_t mute) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if (rendererBackend.owner == nullptr)
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -135,13 +220,16 @@ namespace nucode::ble::audio
                 rendererBackend.volume.muted = mute == BT_VCP_STATE_MUTED;
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief VCS flags read 또는 변경을 공개 상태에 반영합니다. */
         void rendererFlags(struct bt_conn *, int error, std::uint8_t flags) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if (rendererBackend.owner == nullptr)
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -150,15 +238,18 @@ namespace nucode::ble::audio
                 rendererBackend.volume.flags = flags;
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 VOCS offset 변경을 공개 상태에 반영합니다. */
         void rendererOffsetState(struct bt_vocs *instance, int error, std::int16_t offset) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.vocs != nullptr) &&
                  (instance != rendererBackend.included.vocs[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -167,16 +258,19 @@ namespace nucode::ble::audio
                 rendererBackend.offset.offset = offset;
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 VOCS location 변경을 공개 상태에 반영합니다. */
         void rendererOffsetLocation(struct bt_vocs *instance, int error,
                                     std::uint32_t location) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.vocs != nullptr) &&
                  (instance != rendererBackend.included.vocs[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -185,15 +279,18 @@ namespace nucode::ble::audio
                 rendererBackend.offset.location = location;
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 VOCS 설명 변경 결과를 기록합니다. */
         void rendererOffsetDescription(struct bt_vocs *instance, int error, char *) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.vocs != nullptr) &&
                  (instance != rendererBackend.included.vocs[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -201,16 +298,19 @@ namespace nucode::ble::audio
             {
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 AICS state 변경을 공개 상태에 반영합니다. */
         void rendererInputState(struct bt_aics *instance, int error, std::int8_t gain,
                                 std::uint8_t mute, std::uint8_t mode) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.aics != nullptr) &&
                  (instance != rendererBackend.included.aics[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -222,16 +322,19 @@ namespace nucode::ble::audio
                 rendererBackend.input.mode = static_cast<AudioInputMode>(mode);
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 AICS gain 범위를 공개 상태에 반영합니다. */
         void rendererInputGainSetting(struct bt_aics *instance, int error, std::uint8_t units,
                                       std::int8_t minimum, std::int8_t maximum) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.aics != nullptr) &&
                  (instance != rendererBackend.included.aics[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -242,15 +345,18 @@ namespace nucode::ble::audio
                 rendererBackend.input.maximum_gain = maximum;
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 AICS 입력 형식을 공개 상태에 반영합니다. */
         void rendererInputType(struct bt_aics *instance, int error, std::uint8_t type) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.aics != nullptr) &&
                  (instance != rendererBackend.included.aics[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -259,15 +365,18 @@ namespace nucode::ble::audio
                 rendererBackend.input.type = static_cast<AudioInputType>(type);
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 AICS active 상태를 공개 상태에 반영합니다. */
         void rendererInputStatus(struct bt_aics *instance, int error, bool active) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.aics != nullptr) &&
                  (instance != rendererBackend.included.aics[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -276,15 +385,18 @@ namespace nucode::ble::audio
                 rendererBackend.input.active = active;
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         /** @brief 포함 AICS 설명 변경 결과를 기록합니다. */
         void rendererInputDescription(struct bt_aics *instance, int error, char *) noexcept
         {
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
             if ((rendererBackend.owner == nullptr) ||
                 ((rendererBackend.included.aics != nullptr) &&
                  (instance != rendererBackend.included.aics[0])))
             {
+                k_mutex_unlock(&rendererBackendMutex);
                 return;
             }
             rendererBackend.error = error;
@@ -292,6 +404,7 @@ namespace nucode::ble::audio
             {
                 ++rendererBackend.updates;
             }
+            k_mutex_unlock(&rendererBackendMutex);
         }
 
         struct bt_vcp_vol_rend_cb rendererCallbacks = {
@@ -314,7 +427,7 @@ namespace nucode::ble::audio
         };
 
         /** @brief 현재 facade가 Volume Renderer backend를 소유하는지 확인합니다. */
-        bool ownsRenderer(const VolumeRenderer *owner, std::uint32_t generation) noexcept
+        bool ownsRendererLocked(const VolumeRenderer *owner, std::uint32_t generation) noexcept
         {
             return rendererBackend.registered && (rendererBackend.owner == owner) &&
                    (rendererBackend.generation == generation);
@@ -323,7 +436,10 @@ namespace nucode::ble::audio
 
     Error VolumeRenderer::begin(const VolumeRendererConfig &config) noexcept
     {
-        if (started_)
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const bool object_started = started_;
+        k_mutex_unlock(&rendererBackendMutex);
+        if (object_started)
         {
             return record(Error::already_started);
         }
@@ -331,14 +447,40 @@ namespace nucode::ble::audio
         {
             return record(Error::not_ready);
         }
-        if ((rendererBackend.owner != nullptr) || (config.step == 0U) ||
-            (config.output.offset < BT_VOCS_MIN_OFFSET) ||
+        if ((config.step == 0U) || (config.output.offset < BT_VOCS_MIN_OFFSET) ||
             (config.output.offset > BT_VOCS_MAX_OFFSET) ||
             !validDescription(config.output.description) || !validInputConfig(config.input))
         {
-            return record(rendererBackend.owner != nullptr ? Error::busy : Error::invalid_argument);
+            return record(Error::invalid_argument);
         }
 
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        if (rendererBackend.owner != nullptr)
+        {
+            k_mutex_unlock(&rendererBackendMutex);
+            return record(Error::busy);
+        }
+        if (rendererBackend.registered && !rendererImmutableConfigMatches(config))
+        {
+            k_mutex_unlock(&rendererBackendMutex);
+            return record(Error::invalid_argument, -EINVAL);
+        }
+        if (rendererBackend.registered && rendererBackend.input.mute_disabled)
+        {
+            k_mutex_unlock(&rendererBackendMutex);
+            return record(Error::unsupported, -ENOTSUP);
+        }
+        if (rendererBackend.registered && ((rendererBackend.included.vocs_cnt != 1U) ||
+                                           (rendererBackend.included.aics_cnt != 1U) ||
+                                           (rendererBackend.included.vocs == nullptr) ||
+                                           (rendererBackend.included.aics == nullptr) ||
+                                           (rendererBackend.included.vocs[0] == nullptr) ||
+                                           (rendererBackend.included.aics[0] == nullptr)))
+        {
+            k_mutex_unlock(&rendererBackendMutex);
+            return record(Error::unsupported, -ENODEV);
+        }
+        const bool already_registered = rendererBackend.registered;
         ++rendererBackend.generation;
         if (rendererBackend.generation == 0U)
         {
@@ -347,18 +489,15 @@ namespace nucode::ble::audio
         rendererBackend.owner = this;
         rendererBackend.error = 0;
         rendererBackend.updates = 0U;
-        rendererBackend.volume = {config.volume, config.muted, 0U};
-        rendererBackend.offset = {config.output.offset, config.output.location};
-        rendererBackend.input = {
-            config.input.gain,         config.input.minimum_gain,
-            config.input.maximum_gain, config.input.units,
-            config.input.mode,         config.input.type,
-            config.input.muted,        false,
-            config.input.active,
-        };
+        const std::uint32_t generation = rendererBackend.generation;
+        struct bt_vocs *output_service =
+            already_registered ? rendererBackend.included.vocs[0] : nullptr;
+        struct bt_aics *input_service =
+            already_registered ? rendererBackend.included.aics[0] : nullptr;
+        k_mutex_unlock(&rendererBackendMutex);
 
         int result = 0;
-        if (!rendererBackend.registered)
+        if (!already_registered)
         {
             struct bt_vcp_vol_rend_register_param parameter = {};
             parameter.step = config.step;
@@ -387,23 +526,38 @@ namespace nucode::ble::audio
             result = bt_vcp_vol_rend_register(&parameter);
             if (result == 0)
             {
-                result = bt_vcp_vol_rend_included_get(&rendererBackend.included);
-            }
-            if ((result == 0) && ((rendererBackend.included.vocs_cnt != 1U) ||
-                                  (rendererBackend.included.aics_cnt != 1U) ||
-                                  (rendererBackend.included.vocs == nullptr) ||
-                                  (rendererBackend.included.aics == nullptr) ||
-                                  (rendererBackend.included.vocs[0] == nullptr) ||
-                                  (rendererBackend.included.aics[0] == nullptr)))
-            {
-                result = -ENODEV;
-            }
-            if (result == 0)
-            {
+                struct bt_vcp_included included = {};
+                result = bt_vcp_vol_rend_included_get(&included);
+                if ((result == 0) &&
+                    ((included.vocs_cnt != 1U) || (included.aics_cnt != 1U) ||
+                     (included.vocs == nullptr) || (included.aics == nullptr) ||
+                     (included.vocs[0] == nullptr) || (included.aics[0] == nullptr)))
+                {
+                    result = -ENODEV;
+                }
+                k_mutex_lock(&rendererBackendMutex, K_FOREVER);
                 rendererBackend.registered = true;
+                rendererBackend.output_location_writable = config.output.location_writable;
+                rendererBackend.output_description_writable = config.output.description_writable;
+                rendererBackend.input_description_writable = config.input.description_writable;
+                rendererBackend.input.minimum_gain = config.input.minimum_gain;
+                rendererBackend.input.maximum_gain = config.input.maximum_gain;
+                rendererBackend.input.units = config.input.units;
+                rendererBackend.input.type = config.input.type;
+                if (result == 0)
+                {
+                    rendererBackend.included = included;
+                }
+                k_mutex_unlock(&rendererBackendMutex);
+                if (result == 0)
+                {
+                    output_service = included.vocs[0];
+                    input_service = included.aics[0];
+                }
             }
         }
-        else
+
+        if (result == 0)
         {
             result = bt_vcp_vol_rend_set_step(config.step);
             if (result == 0)
@@ -416,75 +570,155 @@ namespace nucode::ble::audio
             }
             if (result == 0)
             {
-                result = bt_vocs_state_set(rendererBackend.included.vocs[0], config.output.offset);
+                result = bt_vocs_state_set(output_service, config.output.offset);
             }
             if (result == 0)
             {
-                result = bt_aics_gain_set(rendererBackend.included.aics[0], config.input.gain);
+                result = bt_vocs_location_set(output_service, config.output.location);
+            }
+            if (result == 0)
+            {
+                result = bt_vocs_description_set(output_service, config.output.description);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_gain_set(input_service, config.input.gain);
+            }
+            if (result == 0)
+            {
+                result = config.input.muted ? bt_aics_mute(input_service)
+                                            : bt_aics_unmute(input_service);
+            }
+            if (result == 0)
+            {
+                result = setServerInputMode(input_service, config.input.mode);
+            }
+            if (result == 0)
+            {
+                result = config.input.active ? bt_aics_activate(input_service)
+                                             : bt_aics_deactivate(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_description_set(input_service, config.input.description);
+            }
+            if (result == 0)
+            {
+                result = bt_vcp_vol_rend_get_state();
+            }
+            if (result == 0)
+            {
+                result = bt_vcp_vol_rend_get_flags();
+            }
+            if (result == 0)
+            {
+                result = bt_vocs_state_get(output_service);
+            }
+            if (result == 0)
+            {
+                result = bt_vocs_location_get(output_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_state_get(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_gain_setting_get(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_type_get(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_status_get(input_service);
             }
         }
         if (result != 0)
         {
-            rendererBackend.owner = nullptr;
-            rendererBackend.error = result;
+            k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+            if (ownsRendererLocked(this, generation))
+            {
+                rendererBackend.owner = nullptr;
+                rendererBackend.error = result;
+                ++rendererBackend.generation;
+            }
+            k_mutex_unlock(&rendererBackendMutex);
             return record(mapNativeError(result), result);
         }
 
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
         started_ = true;
-        generation_ = rendererBackend.generation;
+        generation_ = generation;
+        k_mutex_unlock(&rendererBackendMutex);
         return record(Error::none);
     }
 
     Error VolumeRenderer::end() noexcept
     {
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
         if (!started_)
         {
+            k_mutex_unlock(&rendererBackendMutex);
             return record(Error::not_started);
         }
-        if (ownsRenderer(this, generation_))
+        if (ownsRendererLocked(this, generation_))
         {
             rendererBackend.owner = nullptr;
             ++rendererBackend.generation;
         }
         started_ = false;
+        k_mutex_unlock(&rendererBackendMutex);
         return record(Error::none);
     }
 
-#define NUCODE_RENDERER_CALL(method, step_error)                                                   \
+#define NUCODE_RENDERER_CALL(method)                                                               \
     do                                                                                             \
     {                                                                                              \
-        if (!ownsRenderer(this, generation_))                                                      \
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);                                            \
+        if (!ownsRendererLocked(this, generation_))                                                \
         {                                                                                          \
+            k_mutex_unlock(&rendererBackendMutex);                                                 \
             return record(Error::not_started);                                                     \
         }                                                                                          \
+        struct bt_vocs *output_service = rendererBackend.included.vocs[0];                         \
+        struct bt_aics *input_service = rendererBackend.included.aics[0];                          \
+        const std::uint32_t call_generation = rendererBackend.generation;                          \
+        k_mutex_unlock(&rendererBackendMutex);                                                     \
         const int result = (method);                                                               \
-        rendererBackend.error = result;                                                            \
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);                                            \
+        if (ownsRendererLocked(this, call_generation))                                             \
+        {                                                                                          \
+            rendererBackend.error = result;                                                        \
+        }                                                                                          \
+        k_mutex_unlock(&rendererBackendMutex);                                                     \
         return record(mapNativeError(result), result == 0 ? 0 : result);                           \
     } while (false)
 
     Error VolumeRenderer::setVolume(std::uint8_t volume) noexcept
     {
-        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_set_vol(volume), set_volume);
+        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_set_vol(volume));
     }
 
     Error VolumeRenderer::volumeUp() noexcept
     {
-        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_vol_up(), volume_up);
+        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_vol_up());
     }
 
     Error VolumeRenderer::volumeDown() noexcept
     {
-        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_vol_down(), volume_down);
+        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_vol_down());
     }
 
     Error VolumeRenderer::mute() noexcept
     {
-        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_mute(), mute_volume);
+        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_mute());
     }
 
     Error VolumeRenderer::unmute() noexcept
     {
-        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_unmute(), unmute_volume);
+        NUCODE_RENDERER_CALL(bt_vcp_vol_rend_unmute());
     }
 
     Error VolumeRenderer::setOffset(std::int16_t offset) noexcept
@@ -493,14 +727,12 @@ namespace nucode::ble::audio
         {
             return record(Error::invalid_argument);
         }
-        NUCODE_RENDERER_CALL(bt_vocs_state_set(rendererBackend.included.vocs[0], offset),
-                             set_offset);
+        NUCODE_RENDERER_CALL(bt_vocs_state_set(output_service, offset));
     }
 
     Error VolumeRenderer::setOutputLocation(std::uint32_t location) noexcept
     {
-        NUCODE_RENDERER_CALL(bt_vocs_location_set(rendererBackend.included.vocs[0], location),
-                             set_output_location);
+        NUCODE_RENDERER_CALL(bt_vocs_location_set(output_service, location));
     }
 
     Error VolumeRenderer::setOutputDescription(const char *description) noexcept
@@ -509,35 +741,35 @@ namespace nucode::ble::audio
         {
             return record(Error::invalid_argument);
         }
-        NUCODE_RENDERER_CALL(bt_vocs_description_set(rendererBackend.included.vocs[0], description),
-                             set_output_description);
+        NUCODE_RENDERER_CALL(bt_vocs_description_set(output_service, description));
     }
 
     Error VolumeRenderer::setInputGain(std::int8_t gain) noexcept
     {
-        if ((gain < rendererBackend.input.minimum_gain) ||
-            (gain > rendererBackend.input.maximum_gain))
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const bool valid_gain = (gain >= rendererBackend.input.minimum_gain) &&
+                                (gain <= rendererBackend.input.maximum_gain);
+        k_mutex_unlock(&rendererBackendMutex);
+        if (!valid_gain)
         {
             return record(Error::invalid_argument);
         }
-        NUCODE_RENDERER_CALL(bt_aics_gain_set(rendererBackend.included.aics[0], gain),
-                             set_input_gain);
+        NUCODE_RENDERER_CALL(bt_aics_gain_set(input_service, gain));
     }
 
     Error VolumeRenderer::muteInput() noexcept
     {
-        NUCODE_RENDERER_CALL(bt_aics_mute(rendererBackend.included.aics[0]), mute_input);
+        NUCODE_RENDERER_CALL(bt_aics_mute(input_service));
     }
 
     Error VolumeRenderer::unmuteInput() noexcept
     {
-        NUCODE_RENDERER_CALL(bt_aics_unmute(rendererBackend.included.aics[0]), unmute_input);
+        NUCODE_RENDERER_CALL(bt_aics_unmute(input_service));
     }
 
     Error VolumeRenderer::setInputMode(AudioInputMode mode) noexcept
     {
-        NUCODE_RENDERER_CALL(setServerInputMode(rendererBackend.included.aics[0], mode),
-                             set_input_mode);
+        NUCODE_RENDERER_CALL(setServerInputMode(input_service, mode));
     }
 
     Error VolumeRenderer::setInputDescription(const char *description) noexcept
@@ -546,52 +778,79 @@ namespace nucode::ble::audio
         {
             return record(Error::invalid_argument);
         }
-        NUCODE_RENDERER_CALL(bt_aics_description_set(rendererBackend.included.aics[0], description),
-                             set_input_description);
+        NUCODE_RENDERER_CALL(bt_aics_description_set(input_service, description));
     }
 
 #undef NUCODE_RENDERER_CALL
 
     bool VolumeRenderer::ready() const noexcept
     {
-        return started_ && ownsRenderer(this, generation_);
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const bool value = started_ && ownsRendererLocked(this, generation_);
+        k_mutex_unlock(&rendererBackendMutex);
+        return value;
     }
 
     VolumeState VolumeRenderer::state() const noexcept
     {
-        return ready() ? rendererBackend.volume : VolumeState{};
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const VolumeState value =
+            ownsRendererLocked(this, generation_) ? rendererBackend.volume : VolumeState{};
+        k_mutex_unlock(&rendererBackendMutex);
+        return value;
     }
 
     VolumeOffsetState VolumeRenderer::offsetState() const noexcept
     {
-        return ready() ? rendererBackend.offset : VolumeOffsetState{};
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const VolumeOffsetState value =
+            ownsRendererLocked(this, generation_) ? rendererBackend.offset : VolumeOffsetState{};
+        k_mutex_unlock(&rendererBackendMutex);
+        return value;
     }
 
     AudioInputState VolumeRenderer::inputState() const noexcept
     {
-        return ready() ? rendererBackend.input : AudioInputState{};
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const AudioInputState value =
+            ownsRendererLocked(this, generation_) ? rendererBackend.input : AudioInputState{};
+        k_mutex_unlock(&rendererBackendMutex);
+        return value;
     }
 
     std::uint32_t VolumeRenderer::stateUpdates() const noexcept
     {
-        return ready() ? rendererBackend.updates : 0U;
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const std::uint32_t value =
+            ownsRendererLocked(this, generation_) ? rendererBackend.updates : 0U;
+        k_mutex_unlock(&rendererBackendMutex);
+        return value;
     }
 
     Error VolumeRenderer::lastError() const noexcept
     {
-        return (ready() && (rendererBackend.error != 0)) ? mapNativeError(rendererBackend.error)
-                                                         : last_error_;
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const int error = ownsRendererLocked(this, generation_) ? rendererBackend.error : 0;
+        const Error fallback = last_error_;
+        k_mutex_unlock(&rendererBackendMutex);
+        return error != 0 ? mapNativeError(error) : fallback;
     }
 
     int VolumeRenderer::nativeCode() const noexcept
     {
-        return (ready() && (rendererBackend.error != 0)) ? rendererBackend.error : native_code_;
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
+        const int error = ownsRendererLocked(this, generation_) ? rendererBackend.error : 0;
+        const int fallback = native_code_;
+        k_mutex_unlock(&rendererBackendMutex);
+        return error != 0 ? error : fallback;
     }
 
     Error VolumeRenderer::record(Error error, int native_code) noexcept
     {
+        k_mutex_lock(&rendererBackendMutex, K_FOREVER);
         last_error_ = error;
         native_code_ = native_code;
+        k_mutex_unlock(&rendererBackendMutex);
         return error;
     }
 
@@ -677,6 +936,7 @@ namespace nucode::ble::audio
             std::uint32_t generation = 0U;
             std::uint32_t updates = 0U;
             bool registered = false;
+            bool input_description_writable = false;
             int error = 0;
             MicrophoneState microphone = {};
             AudioInputState input = {};
@@ -684,28 +944,45 @@ namespace nucode::ble::audio
         };
 
         MicrophoneBackend microphoneBackend;
+        K_MUTEX_DEFINE(microphoneBackendMutex);
+
+        /** @brief 재등록할 수 없는 Microphone Device 설정이 최초 등록값과 같은지 검사합니다. */
+        bool microphoneImmutableConfigMatches(const MicrophoneDeviceConfig &config) noexcept
+        {
+            return (microphoneBackend.input.minimum_gain == config.input.minimum_gain) &&
+                   (microphoneBackend.input.maximum_gain == config.input.maximum_gain) &&
+                   (microphoneBackend.input.units == config.input.units) &&
+                   (microphoneBackend.input.type == config.input.type) &&
+                   (microphoneBackend.input_description_writable ==
+                    config.input.description_writable);
+        }
 
         /** @brief MICS mute 변경을 공개 상태에 반영합니다. */
         void microphoneMuteState(std::uint8_t mute) noexcept
         {
+            k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
             if (microphoneBackend.owner == nullptr)
             {
+                k_mutex_unlock(&microphoneBackendMutex);
                 return;
             }
             microphoneBackend.microphone.muted = mute == BT_MICP_MUTE_MUTED;
             microphoneBackend.microphone.mute_disabled = mute == BT_MICP_MUTE_DISABLED;
             microphoneBackend.error = 0;
             ++microphoneBackend.updates;
+            k_mutex_unlock(&microphoneBackendMutex);
         }
 
         /** @brief MICP 포함 AICS state 변경을 공개 상태에 반영합니다. */
         void microphoneInputState(struct bt_aics *instance, int error, std::int8_t gain,
                                   std::uint8_t mute, std::uint8_t mode) noexcept
         {
+            k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
             if ((microphoneBackend.owner == nullptr) ||
                 ((microphoneBackend.included.aics != nullptr) &&
                  (instance != microphoneBackend.included.aics[0])))
             {
+                k_mutex_unlock(&microphoneBackendMutex);
                 return;
             }
             microphoneBackend.error = error;
@@ -717,16 +994,19 @@ namespace nucode::ble::audio
                 microphoneBackend.input.mode = static_cast<AudioInputMode>(mode);
                 ++microphoneBackend.updates;
             }
+            k_mutex_unlock(&microphoneBackendMutex);
         }
 
         /** @brief MICP 포함 AICS gain 범위를 공개 상태에 반영합니다. */
         void microphoneInputGainSetting(struct bt_aics *instance, int error, std::uint8_t units,
                                         std::int8_t minimum, std::int8_t maximum) noexcept
         {
+            k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
             if ((microphoneBackend.owner == nullptr) ||
                 ((microphoneBackend.included.aics != nullptr) &&
                  (instance != microphoneBackend.included.aics[0])))
             {
+                k_mutex_unlock(&microphoneBackendMutex);
                 return;
             }
             microphoneBackend.error = error;
@@ -737,15 +1017,18 @@ namespace nucode::ble::audio
                 microphoneBackend.input.maximum_gain = maximum;
                 ++microphoneBackend.updates;
             }
+            k_mutex_unlock(&microphoneBackendMutex);
         }
 
         /** @brief MICP 포함 AICS type을 공개 상태에 반영합니다. */
         void microphoneInputType(struct bt_aics *instance, int error, std::uint8_t type) noexcept
         {
+            k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
             if ((microphoneBackend.owner == nullptr) ||
                 ((microphoneBackend.included.aics != nullptr) &&
                  (instance != microphoneBackend.included.aics[0])))
             {
+                k_mutex_unlock(&microphoneBackendMutex);
                 return;
             }
             microphoneBackend.error = error;
@@ -754,15 +1037,18 @@ namespace nucode::ble::audio
                 microphoneBackend.input.type = static_cast<AudioInputType>(type);
                 ++microphoneBackend.updates;
             }
+            k_mutex_unlock(&microphoneBackendMutex);
         }
 
         /** @brief MICP 포함 AICS active 상태를 공개 상태에 반영합니다. */
         void microphoneInputStatus(struct bt_aics *instance, int error, bool active) noexcept
         {
+            k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
             if ((microphoneBackend.owner == nullptr) ||
                 ((microphoneBackend.included.aics != nullptr) &&
                  (instance != microphoneBackend.included.aics[0])))
             {
+                k_mutex_unlock(&microphoneBackendMutex);
                 return;
             }
             microphoneBackend.error = error;
@@ -771,15 +1057,18 @@ namespace nucode::ble::audio
                 microphoneBackend.input.active = active;
                 ++microphoneBackend.updates;
             }
+            k_mutex_unlock(&microphoneBackendMutex);
         }
 
         /** @brief MICP 포함 AICS 설명 변경 결과를 기록합니다. */
         void microphoneInputDescription(struct bt_aics *instance, int error, char *) noexcept
         {
+            k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
             if ((microphoneBackend.owner == nullptr) ||
                 ((microphoneBackend.included.aics != nullptr) &&
                  (instance != microphoneBackend.included.aics[0])))
             {
+                k_mutex_unlock(&microphoneBackendMutex);
                 return;
             }
             microphoneBackend.error = error;
@@ -787,6 +1076,7 @@ namespace nucode::ble::audio
             {
                 ++microphoneBackend.updates;
             }
+            k_mutex_unlock(&microphoneBackendMutex);
         }
 
         struct bt_micp_mic_dev_cb microphoneCallbacks = {
@@ -802,7 +1092,7 @@ namespace nucode::ble::audio
         };
 
         /** @brief 현재 facade가 Microphone Device backend를 소유하는지 확인합니다. */
-        bool ownsMicrophone(const MicrophoneDevice *owner, std::uint32_t generation) noexcept
+        bool ownsMicrophoneLocked(const MicrophoneDevice *owner, std::uint32_t generation) noexcept
         {
             return microphoneBackend.registered && (microphoneBackend.owner == owner) &&
                    (microphoneBackend.generation == generation);
@@ -811,7 +1101,10 @@ namespace nucode::ble::audio
 
     Error MicrophoneDevice::begin(const MicrophoneDeviceConfig &config) noexcept
     {
-        if (started_)
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const bool object_started = started_;
+        k_mutex_unlock(&microphoneBackendMutex);
+        if (object_started)
         {
             return record(Error::already_started);
         }
@@ -819,12 +1112,36 @@ namespace nucode::ble::audio
         {
             return record(Error::not_ready);
         }
-        if ((microphoneBackend.owner != nullptr) || !validInputConfig(config.input))
+        if (!validInputConfig(config.input))
         {
-            return record(microphoneBackend.owner != nullptr ? Error::busy
-                                                             : Error::invalid_argument);
+            return record(Error::invalid_argument);
         }
 
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        if (microphoneBackend.owner != nullptr)
+        {
+            k_mutex_unlock(&microphoneBackendMutex);
+            return record(Error::busy);
+        }
+        if (microphoneBackend.registered && !microphoneImmutableConfigMatches(config))
+        {
+            k_mutex_unlock(&microphoneBackendMutex);
+            return record(Error::invalid_argument, -EINVAL);
+        }
+        if (microphoneBackend.registered &&
+            (microphoneBackend.microphone.mute_disabled || microphoneBackend.input.mute_disabled))
+        {
+            k_mutex_unlock(&microphoneBackendMutex);
+            return record(Error::unsupported, -ENOTSUP);
+        }
+        if (microphoneBackend.registered && ((microphoneBackend.included.aics_cnt != 1U) ||
+                                             (microphoneBackend.included.aics == nullptr) ||
+                                             (microphoneBackend.included.aics[0] == nullptr)))
+        {
+            k_mutex_unlock(&microphoneBackendMutex);
+            return record(Error::unsupported, -ENODEV);
+        }
+        const bool already_registered = microphoneBackend.registered;
         ++microphoneBackend.generation;
         if (microphoneBackend.generation == 0U)
         {
@@ -833,17 +1150,13 @@ namespace nucode::ble::audio
         microphoneBackend.owner = this;
         microphoneBackend.error = 0;
         microphoneBackend.updates = 0U;
-        microphoneBackend.microphone = {config.muted, false};
-        microphoneBackend.input = {
-            config.input.gain,         config.input.minimum_gain,
-            config.input.maximum_gain, config.input.units,
-            config.input.mode,         config.input.type,
-            config.input.muted,        false,
-            config.input.active,
-        };
+        const std::uint32_t generation = microphoneBackend.generation;
+        struct bt_aics *input_service =
+            already_registered ? microphoneBackend.included.aics[0] : nullptr;
+        k_mutex_unlock(&microphoneBackendMutex);
 
         int result = 0;
-        if (!microphoneBackend.registered)
+        if (!already_registered)
         {
             struct bt_micp_mic_dev_register_param parameter = {};
             parameter.cb = &microphoneCallbacks;
@@ -863,64 +1176,135 @@ namespace nucode::ble::audio
             result = bt_micp_mic_dev_register(&parameter);
             if (result == 0)
             {
-                result = bt_micp_mic_dev_included_get(&microphoneBackend.included);
-            }
-            if ((result == 0) && ((microphoneBackend.included.aics_cnt != 1U) ||
-                                  (microphoneBackend.included.aics == nullptr) ||
-                                  (microphoneBackend.included.aics[0] == nullptr)))
-            {
-                result = -ENODEV;
-            }
-            if (result == 0)
-            {
+                struct bt_micp_included included = {};
+                result = bt_micp_mic_dev_included_get(&included);
+                if ((result == 0) && ((included.aics_cnt != 1U) || (included.aics == nullptr) ||
+                                      (included.aics[0] == nullptr)))
+                {
+                    result = -ENODEV;
+                }
+                k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
                 microphoneBackend.registered = true;
-                result = config.muted ? bt_micp_mic_dev_mute() : bt_micp_mic_dev_unmute();
+                microphoneBackend.input_description_writable = config.input.description_writable;
+                microphoneBackend.input.minimum_gain = config.input.minimum_gain;
+                microphoneBackend.input.maximum_gain = config.input.maximum_gain;
+                microphoneBackend.input.units = config.input.units;
+                microphoneBackend.input.type = config.input.type;
+                if (result == 0)
+                {
+                    microphoneBackend.included = included;
+                }
+                k_mutex_unlock(&microphoneBackendMutex);
+                if (result == 0)
+                {
+                    input_service = included.aics[0];
+                }
             }
         }
-        else
+
+        if (result == 0)
         {
             result = config.muted ? bt_micp_mic_dev_mute() : bt_micp_mic_dev_unmute();
             if (result == 0)
             {
-                result = bt_aics_gain_set(microphoneBackend.included.aics[0], config.input.gain);
+                result = bt_aics_gain_set(input_service, config.input.gain);
+            }
+            if (result == 0)
+            {
+                result = config.input.muted ? bt_aics_mute(input_service)
+                                            : bt_aics_unmute(input_service);
+            }
+            if (result == 0)
+            {
+                result = setServerInputMode(input_service, config.input.mode);
+            }
+            if (result == 0)
+            {
+                result = config.input.active ? bt_aics_activate(input_service)
+                                             : bt_aics_deactivate(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_description_set(input_service, config.input.description);
+            }
+            if (result == 0)
+            {
+                result = bt_micp_mic_dev_mute_get();
+            }
+            if (result == 0)
+            {
+                result = bt_aics_state_get(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_gain_setting_get(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_type_get(input_service);
+            }
+            if (result == 0)
+            {
+                result = bt_aics_status_get(input_service);
             }
         }
         if (result != 0)
         {
-            microphoneBackend.owner = nullptr;
-            microphoneBackend.error = result;
+            k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+            if (ownsMicrophoneLocked(this, generation))
+            {
+                microphoneBackend.owner = nullptr;
+                microphoneBackend.error = result;
+                ++microphoneBackend.generation;
+            }
+            k_mutex_unlock(&microphoneBackendMutex);
             return record(mapNativeError(result), result);
         }
 
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
         started_ = true;
-        generation_ = microphoneBackend.generation;
+        generation_ = generation;
+        k_mutex_unlock(&microphoneBackendMutex);
         return record(Error::none);
     }
 
     Error MicrophoneDevice::end() noexcept
     {
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
         if (!started_)
         {
+            k_mutex_unlock(&microphoneBackendMutex);
             return record(Error::not_started);
         }
-        if (ownsMicrophone(this, generation_))
+        if (ownsMicrophoneLocked(this, generation_))
         {
             microphoneBackend.owner = nullptr;
             ++microphoneBackend.generation;
         }
         started_ = false;
+        k_mutex_unlock(&microphoneBackendMutex);
         return record(Error::none);
     }
 
 #define NUCODE_MIC_DEVICE_CALL(method)                                                             \
     do                                                                                             \
     {                                                                                              \
-        if (!ownsMicrophone(this, generation_))                                                    \
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);                                          \
+        if (!ownsMicrophoneLocked(this, generation_))                                              \
         {                                                                                          \
+            k_mutex_unlock(&microphoneBackendMutex);                                               \
             return record(Error::not_started);                                                     \
         }                                                                                          \
+        struct bt_aics *input_service = microphoneBackend.included.aics[0];                        \
+        const std::uint32_t call_generation = microphoneBackend.generation;                        \
+        k_mutex_unlock(&microphoneBackendMutex);                                                   \
         const int result = (method);                                                               \
-        microphoneBackend.error = result;                                                          \
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);                                          \
+        if (ownsMicrophoneLocked(this, call_generation))                                           \
+        {                                                                                          \
+            microphoneBackend.error = result;                                                      \
+        }                                                                                          \
+        k_mutex_unlock(&microphoneBackendMutex);                                                   \
         return record(mapNativeError(result), result == 0 ? 0 : result);                           \
     } while (false)
 
@@ -941,27 +1325,30 @@ namespace nucode::ble::audio
 
     Error MicrophoneDevice::setInputGain(std::int8_t gain) noexcept
     {
-        if ((gain < microphoneBackend.input.minimum_gain) ||
-            (gain > microphoneBackend.input.maximum_gain))
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const bool valid_gain = (gain >= microphoneBackend.input.minimum_gain) &&
+                                (gain <= microphoneBackend.input.maximum_gain);
+        k_mutex_unlock(&microphoneBackendMutex);
+        if (!valid_gain)
         {
             return record(Error::invalid_argument);
         }
-        NUCODE_MIC_DEVICE_CALL(bt_aics_gain_set(microphoneBackend.included.aics[0], gain));
+        NUCODE_MIC_DEVICE_CALL(bt_aics_gain_set(input_service, gain));
     }
 
     Error MicrophoneDevice::muteInput() noexcept
     {
-        NUCODE_MIC_DEVICE_CALL(bt_aics_mute(microphoneBackend.included.aics[0]));
+        NUCODE_MIC_DEVICE_CALL(bt_aics_mute(input_service));
     }
 
     Error MicrophoneDevice::unmuteInput() noexcept
     {
-        NUCODE_MIC_DEVICE_CALL(bt_aics_unmute(microphoneBackend.included.aics[0]));
+        NUCODE_MIC_DEVICE_CALL(bt_aics_unmute(input_service));
     }
 
     Error MicrophoneDevice::setInputMode(AudioInputMode mode) noexcept
     {
-        NUCODE_MIC_DEVICE_CALL(setServerInputMode(microphoneBackend.included.aics[0], mode));
+        NUCODE_MIC_DEVICE_CALL(setServerInputMode(input_service, mode));
     }
 
     Error MicrophoneDevice::setInputDescription(const char *description) noexcept
@@ -970,47 +1357,71 @@ namespace nucode::ble::audio
         {
             return record(Error::invalid_argument);
         }
-        NUCODE_MIC_DEVICE_CALL(
-            bt_aics_description_set(microphoneBackend.included.aics[0], description));
+        NUCODE_MIC_DEVICE_CALL(bt_aics_description_set(input_service, description));
     }
 
 #undef NUCODE_MIC_DEVICE_CALL
 
     bool MicrophoneDevice::ready() const noexcept
     {
-        return started_ && ownsMicrophone(this, generation_);
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const bool value = started_ && ownsMicrophoneLocked(this, generation_);
+        k_mutex_unlock(&microphoneBackendMutex);
+        return value;
     }
 
     MicrophoneState MicrophoneDevice::state() const noexcept
     {
-        return ready() ? microphoneBackend.microphone : MicrophoneState{};
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const MicrophoneState value = ownsMicrophoneLocked(this, generation_)
+                                          ? microphoneBackend.microphone
+                                          : MicrophoneState{};
+        k_mutex_unlock(&microphoneBackendMutex);
+        return value;
     }
 
     AudioInputState MicrophoneDevice::inputState() const noexcept
     {
-        return ready() ? microphoneBackend.input : AudioInputState{};
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const AudioInputState value =
+            ownsMicrophoneLocked(this, generation_) ? microphoneBackend.input : AudioInputState{};
+        k_mutex_unlock(&microphoneBackendMutex);
+        return value;
     }
 
     std::uint32_t MicrophoneDevice::stateUpdates() const noexcept
     {
-        return ready() ? microphoneBackend.updates : 0U;
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const std::uint32_t value =
+            ownsMicrophoneLocked(this, generation_) ? microphoneBackend.updates : 0U;
+        k_mutex_unlock(&microphoneBackendMutex);
+        return value;
     }
 
     Error MicrophoneDevice::lastError() const noexcept
     {
-        return (ready() && (microphoneBackend.error != 0)) ? mapNativeError(microphoneBackend.error)
-                                                           : last_error_;
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const int error = ownsMicrophoneLocked(this, generation_) ? microphoneBackend.error : 0;
+        const Error fallback = last_error_;
+        k_mutex_unlock(&microphoneBackendMutex);
+        return error != 0 ? mapNativeError(error) : fallback;
     }
 
     int MicrophoneDevice::nativeCode() const noexcept
     {
-        return (ready() && (microphoneBackend.error != 0)) ? microphoneBackend.error : native_code_;
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
+        const int error = ownsMicrophoneLocked(this, generation_) ? microphoneBackend.error : 0;
+        const int fallback = native_code_;
+        k_mutex_unlock(&microphoneBackendMutex);
+        return error != 0 ? error : fallback;
     }
 
     Error MicrophoneDevice::record(Error error, int native_code) noexcept
     {
+        k_mutex_lock(&microphoneBackendMutex, K_FOREVER);
         last_error_ = error;
         native_code_ = native_code;
+        k_mutex_unlock(&microphoneBackendMutex);
         return error;
     }
 
