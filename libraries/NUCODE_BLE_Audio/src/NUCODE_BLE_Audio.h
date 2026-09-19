@@ -722,6 +722,392 @@ namespace nucode::ble::audio
         int native_code_ = 0;
     };
 
+    /** @brief 오디오 입력 gain 제어 방식을 나타냅니다. */
+    enum class AudioInputMode : std::uint8_t
+    {
+        manual_only = 0U,
+        automatic_only = 1U,
+        manual = 2U,
+        automatic = 3U,
+    };
+
+    /** @brief 오디오 입력의 용도를 나타냅니다. */
+    enum class AudioInputType : std::uint8_t
+    {
+        unspecified = 0U,
+        bluetooth = 1U,
+        microphone = 2U,
+        analog = 3U,
+        digital = 4U,
+        radio = 5U,
+        streaming = 6U,
+        ambient = 7U,
+    };
+
+    /** @brief 오디오 제어 객체의 공개 비동기 단계입니다. */
+    enum class AudioControlStage : std::uint8_t
+    {
+        idle,
+        discovering,
+        ready,
+        operating,
+        failed,
+        disconnected,
+    };
+
+    /** @brief 마지막 오디오 제어 작업을 나타냅니다. */
+    enum class AudioControlStep : std::uint8_t
+    {
+        none,
+        discover,
+        read_volume,
+        set_volume,
+        volume_up,
+        volume_down,
+        mute_volume,
+        unmute_volume,
+        read_offset,
+        set_offset,
+        set_output_location,
+        set_output_description,
+        read_input,
+        set_input_gain,
+        mute_input,
+        unmute_input,
+        set_input_mode,
+        set_input_description,
+        read_microphone,
+        mute_microphone,
+        unmute_microphone,
+        disable_microphone_mute,
+        cleanup,
+    };
+
+    /** @brief Volume Renderer의 현재 volume과 mute 상태입니다. */
+    struct VolumeState
+    {
+        std::uint8_t volume = 0U;
+        bool muted = false;
+        std::uint8_t flags = 0U;
+    };
+
+    /** @brief Volume Offset Control Service의 현재 상태입니다. */
+    struct VolumeOffsetState
+    {
+        std::int16_t offset = 0;
+        std::uint32_t location = 0U;
+    };
+
+    /** @brief Audio Input Control Service의 현재 상태와 허용 범위입니다. */
+    struct AudioInputState
+    {
+        std::int8_t gain = 0;
+        std::int8_t minimum_gain = -100;
+        std::int8_t maximum_gain = 100;
+        std::uint8_t units = 1U;
+        AudioInputMode mode = AudioInputMode::manual;
+        AudioInputType type = AudioInputType::unspecified;
+        bool muted = false;
+        bool mute_disabled = false;
+        bool active = true;
+    };
+
+    /** @brief Microphone Control Service의 현재 mute 상태입니다. */
+    struct MicrophoneState
+    {
+        bool muted = false;
+        bool mute_disabled = false;
+    };
+
+    /** @brief 포함할 Volume Offset Control Service의 초기 설정입니다. */
+    struct VolumeOffsetConfig
+    {
+        std::int16_t offset = 0;
+        std::uint32_t location = 0U;
+        bool location_writable = true;
+        bool description_writable = true;
+        const char *description = "Speaker";
+    };
+
+    /** @brief 포함할 Audio Input Control Service의 초기 설정입니다. */
+    struct AudioInputConfig
+    {
+        std::int8_t gain = 0;
+        std::int8_t minimum_gain = -100;
+        std::int8_t maximum_gain = 100;
+        std::uint8_t units = 1U;
+        AudioInputMode mode = AudioInputMode::manual;
+        AudioInputType type = AudioInputType::unspecified;
+        bool muted = false;
+        bool active = true;
+        bool description_writable = true;
+        const char *description = "Input";
+    };
+
+    /** @brief Volume Renderer와 포함 service의 초기 설정입니다. */
+    struct VolumeRendererConfig
+    {
+        std::uint8_t volume = 100U;
+        std::uint8_t step = 5U;
+        bool muted = false;
+        VolumeOffsetConfig output = {};
+        AudioInputConfig input = {};
+    };
+
+    /** @brief Microphone Device와 포함 input의 초기 설정입니다. */
+    struct MicrophoneDeviceConfig
+    {
+        bool muted = false;
+        AudioInputConfig input = {};
+    };
+
+    /**
+     * @brief volume, mute, offset과 audio input을 제공하는 Volume Renderer입니다.
+     *
+     * BLEDevice.begin() 뒤 광고를 시작하기 전에 begin()을 호출합니다. service는
+     * image 수명 동안 유지되며 end()는 공개 객체의 소유권만 반환합니다.
+     */
+    class VolumeRenderer final
+    {
+      public:
+        VolumeRenderer() = default;
+
+        ~VolumeRenderer()
+        {
+            (void)end();
+        }
+
+        VolumeRenderer(const VolumeRenderer &) = delete;
+        VolumeRenderer &operator=(const VolumeRenderer &) = delete;
+        VolumeRenderer(VolumeRenderer &&) = delete;
+        VolumeRenderer &operator=(VolumeRenderer &&) = delete;
+
+        /** @brief Volume Renderer와 VOCS·AICS 각 한 개를 준비합니다. */
+        Error begin(const VolumeRendererConfig &config = {}) noexcept;
+
+        /** @brief 공개 facade 소유권을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief volume을 절대값으로 설정합니다. */
+        Error setVolume(std::uint8_t volume) noexcept;
+
+        /** @brief 설정된 step만큼 volume을 올립니다. */
+        Error volumeUp() noexcept;
+
+        /** @brief 설정된 step만큼 volume을 내립니다. */
+        Error volumeDown() noexcept;
+
+        /** @brief volume 출력을 mute합니다. */
+        Error mute() noexcept;
+
+        /** @brief volume 출력을 unmute합니다. */
+        Error unmute() noexcept;
+
+        /** @brief 포함된 output의 volume offset을 설정합니다. */
+        Error setOffset(std::int16_t offset) noexcept;
+
+        /** @brief 포함된 output의 audio location을 설정합니다. */
+        Error setOutputLocation(std::uint32_t location) noexcept;
+
+        /** @brief 포함된 output 설명을 설정합니다. */
+        Error setOutputDescription(const char *description) noexcept;
+
+        /** @brief 포함된 input gain을 설정합니다. */
+        Error setInputGain(std::int8_t gain) noexcept;
+
+        /** @brief 포함된 input을 mute합니다. */
+        Error muteInput() noexcept;
+
+        /** @brief 포함된 input을 unmute합니다. */
+        Error unmuteInput() noexcept;
+
+        /** @brief 포함된 input gain mode를 설정합니다. */
+        Error setInputMode(AudioInputMode mode) noexcept;
+
+        /** @brief 포함된 input 설명을 설정합니다. */
+        Error setInputDescription(const char *description) noexcept;
+
+        /** @brief service와 공개 facade가 준비되었는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 마지막으로 관찰한 volume 상태를 반환합니다. */
+        [[nodiscard]] VolumeState state() const noexcept;
+
+        /** @brief 마지막으로 관찰한 offset 상태를 반환합니다. */
+        [[nodiscard]] VolumeOffsetState offsetState() const noexcept;
+
+        /** @brief 마지막으로 관찰한 input 상태를 반환합니다. */
+        [[nodiscard]] AudioInputState inputState() const noexcept;
+
+        /** @brief local 또는 remote 상태 변경 callback 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 profile 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        std::uint32_t generation_ = 0U;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief 원격 Volume Renderer의 VCP·VOCS·AICS를 제어합니다. */
+    class VolumeController final
+    {
+      public:
+        VolumeController() = default;
+
+        ~VolumeController()
+        {
+            (void)end();
+        }
+
+        VolumeController(const VolumeController &) = delete;
+        VolumeController &operator=(const VolumeController &) = delete;
+        VolumeController(VolumeController &&) = delete;
+        VolumeController &operator=(VolumeController &&) = delete;
+
+        /** @brief 연결된 peer에서 VCP와 포함 VOCS·AICS를 검색합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief 연결 소실과 callback 결과를 공개 상태에 반영합니다. */
+        void poll() noexcept;
+
+        /** @brief 연결 참조와 facade 소유권을 반환합니다. */
+        Error end() noexcept;
+
+        Error readVolume() noexcept;
+        Error setVolume(std::uint8_t volume) noexcept;
+        Error volumeUp() noexcept;
+        Error volumeDown() noexcept;
+        Error mute() noexcept;
+        Error unmute() noexcept;
+        Error readOffset() noexcept;
+        Error setOffset(std::int16_t offset) noexcept;
+        Error setOutputLocation(std::uint32_t location) noexcept;
+        Error setOutputDescription(const char *description) noexcept;
+        Error readInput() noexcept;
+        Error setInputGain(std::int8_t gain) noexcept;
+        Error muteInput() noexcept;
+        Error unmuteInput() noexcept;
+        Error setInputMode(AudioInputMode mode) noexcept;
+        Error setInputDescription(const char *description) noexcept;
+
+        [[nodiscard]] bool ready() const noexcept;
+        [[nodiscard]] bool busy() const noexcept;
+        [[nodiscard]] AudioControlStage stage() const noexcept;
+        [[nodiscard]] AudioControlStep lastStep() const noexcept;
+        [[nodiscard]] VolumeState state() const noexcept;
+        [[nodiscard]] VolumeOffsetState offsetState() const noexcept;
+        [[nodiscard]] AudioInputState inputState() const noexcept;
+        [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+        [[nodiscard]] Error lastError() const noexcept;
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        std::uint32_t generation_ = 0U;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief microphone mute와 포함 audio input을 제공하는 Microphone Device입니다. */
+    class MicrophoneDevice final
+    {
+      public:
+        MicrophoneDevice() = default;
+
+        ~MicrophoneDevice()
+        {
+            (void)end();
+        }
+
+        MicrophoneDevice(const MicrophoneDevice &) = delete;
+        MicrophoneDevice &operator=(const MicrophoneDevice &) = delete;
+        MicrophoneDevice(MicrophoneDevice &&) = delete;
+        MicrophoneDevice &operator=(MicrophoneDevice &&) = delete;
+
+        Error begin(const MicrophoneDeviceConfig &config = {}) noexcept;
+        Error end() noexcept;
+        Error mute() noexcept;
+        Error unmute() noexcept;
+        Error disableMute() noexcept;
+        Error setInputGain(std::int8_t gain) noexcept;
+        Error muteInput() noexcept;
+        Error unmuteInput() noexcept;
+        Error setInputMode(AudioInputMode mode) noexcept;
+        Error setInputDescription(const char *description) noexcept;
+        [[nodiscard]] bool ready() const noexcept;
+        [[nodiscard]] MicrophoneState state() const noexcept;
+        [[nodiscard]] AudioInputState inputState() const noexcept;
+        [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+        [[nodiscard]] Error lastError() const noexcept;
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        std::uint32_t generation_ = 0U;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief 원격 Microphone Device의 MICP와 포함 AICS를 제어합니다. */
+    class MicrophoneController final
+    {
+      public:
+        MicrophoneController() = default;
+
+        ~MicrophoneController()
+        {
+            (void)end();
+        }
+
+        MicrophoneController(const MicrophoneController &) = delete;
+        MicrophoneController &operator=(const MicrophoneController &) = delete;
+        MicrophoneController(MicrophoneController &&) = delete;
+        MicrophoneController &operator=(MicrophoneController &&) = delete;
+
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+        void poll() noexcept;
+        Error end() noexcept;
+        Error readMicrophone() noexcept;
+        Error mute() noexcept;
+        Error unmute() noexcept;
+        Error readInput() noexcept;
+        Error setInputGain(std::int8_t gain) noexcept;
+        Error muteInput() noexcept;
+        Error unmuteInput() noexcept;
+        Error setInputMode(AudioInputMode mode) noexcept;
+        Error setInputDescription(const char *description) noexcept;
+        [[nodiscard]] bool ready() const noexcept;
+        [[nodiscard]] bool busy() const noexcept;
+        [[nodiscard]] AudioControlStage stage() const noexcept;
+        [[nodiscard]] AudioControlStep lastStep() const noexcept;
+        [[nodiscard]] MicrophoneState state() const noexcept;
+        [[nodiscard]] AudioInputState inputState() const noexcept;
+        [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+        [[nodiscard]] Error lastError() const noexcept;
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        std::uint32_t generation_ = 0U;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
     /** @brief Common Audio Profile 객체의 공개 비동기 단계입니다. */
     enum class CapStage : std::uint8_t
     {

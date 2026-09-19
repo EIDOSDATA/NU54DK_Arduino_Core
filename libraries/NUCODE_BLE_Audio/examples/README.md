@@ -124,6 +124,30 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
   `a`는 duplicate add, `x`는 올바른 announcement가 없는 source 선택 거부, `q`는 receive
   state 재읽기다. remove는 먼저 `m`으로 PA/BIS를 해제한 뒤 실행한다.
 
+## `AudioControlDevice`
+
+- `VolumeRenderer`와 `MicrophoneDevice`가 VCP·MICP service를 제공한다. Volume Renderer에는
+  output offset용 VOCS 한 개와 program input용 AICS 한 개가 포함되고, Microphone Device에는
+  microphone gain용 AICS 한 개가 별도로 포함된다.
+- 광고 전에 초기 volume·step·offset·input gain과 설명을 일반 C++ config로 지정한다. `loop()`의
+  Serial 명령은 local volume, offset, 두 input gain과 microphone mute를 공개 API로 바꾸며 원격
+  Controller의 변경도 `stateUpdates()`와 snapshot으로 확인한다.
+- service는 image 수명 동안 유지된다. 연결이 끊기면 profile을 재등록하지 않고 같은 VCS·MICS UUID
+  광고를 다시 시작한다.
+
+## `AudioControlController`
+
+- VCS UUID를 광고하는 장치를 검색해 연결하고 encrypted link가 된 뒤 `VolumeController`로 VCP와
+  포함 VOCS·AICS를 검색한다. 이 검색이 끝난 다음 `MicrophoneController`로 MICP와 별도 AICS를
+  검색하므로 한 연결의 GATT discovery를 겹치지 않는다.
+- Serial 명령으로 volume up/down/mute, offset, program input gain, microphone mute와 microphone
+  input gain을 변경한다. 각 요청은 완료 callback 전까지 busy이며 범위 밖 값, 쓰기 권한 거부와
+  연결 소실의 원본 오류를 `nativeCode()`로 확인할 수 있다.
+- 연결이 끊기면 두 controller facade를 종료하고 새 handle에서 보안과 discovery를 다시 수행한다.
+  이전 generation의 callback은 새 session 상태로 수락하지 않는다.
+- active 연결에서 facade를 먼저 종료하면 이전 callback을 새 소유자와 구분할 수 없으므로, 같은 profile
+  client는 그 연결이 끊길 때까지 새 facade의 `begin()`을 `busy`로 거부한다.
+
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는
 외장 I/O 예제에서 별도로 다룬다.

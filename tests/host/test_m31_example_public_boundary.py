@@ -147,6 +147,74 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
                     self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
                                      "PUBLIC_AUDIO_API_FLOW_MISSING")
 
+    def test_audio_control_sketches_keep_roles_and_state_flow(self) -> None:
+        """! @brief VCP·VOCS·AICS·MICP 예제의 공개 상태 흐름을 검사합니다. """
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            library = Path(temporary) / "NUCODE_BLE_Audio"
+            for name, token in (
+                ("AudioControlDevice", "renderer.setOffset("),
+                ("AudioControlController", "microphoneController.setInputGain("),
+            ):
+                source = ROOT / "libraries/NUCODE_BLE_Audio/examples" / name
+                sketch = library / "examples" / name / f"{name}.ino"
+                sketch.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source / f"{name}.ino", sketch)
+                shutil.copy2(source / "prj.conf", sketch.parent / "prj.conf")
+                with self.subTest(name=name, state="valid"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "VISIBLE_CODE")
+                sketch.write_text(
+                    sketch.read_text(encoding="utf-8").replace(
+                        token, token.replace("(", "Fake(")
+                    ),
+                    encoding="utf-8",
+                )
+                with self.subTest(name=name, state="mutated"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "PUBLIC_AUDIO_API_FLOW_MISSING")
+
+    def test_audio_control_backend_keeps_generation_and_fail_closed_busy(self) -> None:
+        """! @brief controller callback가 stale owner와 중첩 작업을 거부하는지 검사합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_ControlController.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertIn("pending_generation != volumeBackend.generation", source)
+        self.assertIn("pending_generation !=\n                 microphoneControllerBackend.generation", source)
+        self.assertIn("atomic_cas(&volumeBackend.busy, 0, 1)", source)
+        self.assertIn("atomic_cas(&microphoneControllerBackend.busy, 0, 1)", source)
+        self.assertIn("internal::activeConnection(connection)", source)
+        self.assertIn("retiredVolumeConnectionActive()", source)
+        self.assertIn("retiredMicrophoneConnectionActive()", source)
+        self.assertGreaterEqual(source.count("retired_connection = active != nullptr"), 2)
+
+    def test_audio_control_instance_counts_are_exact(self) -> None:
+        """! @brief 두 역할 image의 포함 service pool 합계를 고정합니다. """
+        device = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/prj.conf"
+        ).read_text(encoding="utf-8")
+        controller = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/examples/AudioControlController/prj.conf"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "CONFIG_BT_AICS_MAX_INSTANCE_COUNT=2",
+            "CONFIG_BT_VCP_VOL_REND_AICS_INSTANCE_COUNT=1",
+            "CONFIG_BT_MICP_MIC_DEV_AICS_INSTANCE_COUNT=1",
+            "CONFIG_BT_VOCS_MAX_INSTANCE_COUNT=1",
+            "CONFIG_BT_VCP_VOL_REND_VOCS_INSTANCE_COUNT=1",
+        ):
+            self.assertIn(token, device)
+        for token in (
+            "CONFIG_BT_AICS_CLIENT_MAX_INSTANCE_COUNT=2",
+            "CONFIG_BT_VCP_VOL_CTLR_MAX_AICS_INST=1",
+            "CONFIG_BT_MICP_MIC_CTLR_MAX_AICS_INST=1",
+            "CONFIG_BT_VOCS_CLIENT_MAX_INSTANCE_COUNT=1",
+            "CONFIG_BT_VCP_VOL_CTLR_MAX_VOCS_INST=1",
+        ):
+            self.assertIn(token, controller)
+
     def test_cap_delegated_sink_must_cleanup_failed_reception(self) -> None:
         """! @brief peer loss 오류 뒤 예약된 BASS cleanup이 먼저 실행되는지 검사합니다. """
         source = (

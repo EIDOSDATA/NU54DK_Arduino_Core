@@ -182,6 +182,50 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_PACS_SUPPORTED_CONTEXT_NOTIFIABLE=y",
                 "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "AudioControlDevice":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "VolumeRenderer", "MicrophoneDevice",
+                "VolumeRendererConfig", "MicrophoneDeviceConfig",
+                "BLESecurity.begin(", "BLEAdvertising.addServiceUuid(",
+                "renderer.begin(", "microphone.begin(",
+                "renderer.volumeUp(", "renderer.setOffset(",
+                "renderer.setInputGain(", "microphone.mute(",
+                "microphone.setInputGain(",
+            )
+            options = (
+                "CONFIG_BT_VCP_VOL_REND=y", "CONFIG_BT_MICP_MIC_DEV=y",
+                "CONFIG_BT_AICS_MAX_INSTANCE_COUNT=2",
+                "CONFIG_BT_VCP_VOL_REND_AICS_INSTANCE_COUNT=1",
+                "CONFIG_BT_MICP_MIC_DEV_AICS_INSTANCE_COUNT=1",
+                "CONFIG_BT_VOCS_MAX_INSTANCE_COUNT=1",
+                "CONFIG_BT_VCP_VOL_REND_VOCS_INSTANCE_COUNT=1",
+            )
+        elif sketch.parent.name == "AudioControlController":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "VolumeController", "MicrophoneController",
+                "BLESecurity.begin(", "BLEScan.filterServiceUuid(",
+                "BLEConnection.connect(", "volumeController.begin(",
+                "microphoneController.begin(", "volumeController.poll(",
+                "microphoneController.poll(", "volumeController.volumeUp(",
+                "volumeController.setOffset(",
+                "volumeController.setInputGain(",
+                "microphoneController.mute(",
+                "microphoneController.setInputGain(",
+            )
+            options = (
+                "CONFIG_BT_VCP_VOL_CTLR=y", "CONFIG_BT_MICP_MIC_CTLR=y",
+                "CONFIG_BT_AICS_CLIENT_MAX_INSTANCE_COUNT=2",
+                "CONFIG_BT_VCP_VOL_CTLR_MAX_AICS_INST=1",
+                "CONFIG_BT_MICP_MIC_CTLR_MAX_AICS_INST=1",
+                "CONFIG_BT_VOCS_CLIENT_MAX_INSTANCE_COUNT=1",
+                "CONFIG_BT_VCP_VOL_CTLR_MAX_VOCS_INST=1",
+            )
         elif sketch.parent.name == "CapInitiator":
             required = (
                 "#include <NUCODE_BLE.h>",
