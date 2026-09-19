@@ -117,7 +117,8 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         elif sketch.parent.name == "BapBroadcastSource":
             required = (
                 "#include <NUCODE_BLE.h>",
-                "#include <NUCODE_BLE_Audio.h>", "BroadcastSource", "Lc3Codec",
+                "#include <NUCODE_BLE_Audio.h>", "BroadcastSource", "BroadcastCode",
+                "broadcastCode", "Lc3Codec",
                 "BLEDevice.begin(", "audioSource.begin(",
                 "audioSource.sendFrame(", "codec.encode(", "audioSource.end(",
             )
@@ -130,7 +131,8 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
         elif sketch.parent.name == "BapBroadcastSink":
             required = (
                 "#include <NUCODE_BLE.h>",
-                "#include <NUCODE_BLE_Audio.h>", "BroadcastSink", "Lc3Codec",
+                "#include <NUCODE_BLE_Audio.h>", "BroadcastSink", "BroadcastCode",
+                "broadcastCode", "alternateBroadcastCode", "Lc3Codec",
                 "BLEDevice.begin(", "audioSink.begin(", "audioSink.poll(",
                 "audioSink.readFrame(", "codec.decode(", "audioSink.end(",
             )

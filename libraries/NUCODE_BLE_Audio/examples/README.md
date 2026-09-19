@@ -88,7 +88,8 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 
 - BAP Broadcast Audio announcement와 BASE를 extended/periodic advertising으로 게시하고,
   16 kHz·10 ms·40-byte LC3 frame 한 개를 BIS 1로 보낸다. 공개 `BroadcastSource`와
-  `Lc3Codec`만 사용하며 `loop()`가 일반 C++로 합성 PCM을 생성한다.
+  `BroadcastCode`, `Lc3Codec`만 사용하며 `loop()`가 일반 C++로 합성 PCM을 생성한다.
+  예제의 16-byte `broadcastCode`를 바꾸면 암호화 code를 직접 선택할 수 있다.
 - 정상 동작이면 `broadcast source streaming` 뒤 `broadcast sent frames=...`가 100 frame마다
   출력된다. `s`는 방송과 광고를 정리하고 `r`은 같은 객체로 다시 시작한다.
 
@@ -96,10 +97,11 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 
 - 이름이 `NU54-AUDIO-BROADCAST`인 Broadcast Audio source를 검색한 뒤 periodic advertising,
   BASE, BIGInfo, BIS 1 순서로 동기화한다. 공개 `BroadcastSink::poll()`이 비동기 단계를
-  진행하며 `readFrame()`으로 받은 LC3 frame을 `Lc3Codec`으로 decode한다.
+  진행하며 `readFrame()`으로 받은 LC3 frame을 `Lc3Codec`으로 decode한다. source와 같은
+  `broadcastCode`를 사용해야 암호화 BIS를 수신한다.
 - 정상 동작이면 `broadcast sink streaming` 뒤 `broadcast received=... energy=...
   dropped=...`가 100 frame마다 출력된다. `s`와 `r`로 BIS/PA 동기화 중단과 재시작을
-  반복할 수 있다.
+  반복할 수 있다. `w`는 한 byte가 다른 code로 다시 동기화해 거부 경로를 확인한다.
 
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는

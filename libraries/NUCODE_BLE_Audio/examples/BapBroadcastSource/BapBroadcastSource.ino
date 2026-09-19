@@ -9,12 +9,17 @@
 #include <NUCODE_BLE_Audio.h>
 
 using nucode::ble::audio::BroadcastSource;
+using nucode::ble::audio::BroadcastCode;
 using nucode::ble::audio::Error;
 using nucode::ble::audio::Lc3Codec;
 
 namespace
 {
     constexpr const char *broadcastName = "NU54-AUDIO-BROADCAST";
+    constexpr BroadcastCode broadcastCode = {
+        0x4e, 0x55, 0x35, 0x34, 0x2d, 0x41, 0x55, 0x44,
+        0x49, 0x4f, 0x2d, 0x43, 0x4f, 0x44, 0x45, 0x31,
+    };
     BroadcastSource audioSource;
     Lc3Codec codec;
     std::uint32_t lastFrameAt = 0U;
@@ -37,7 +42,7 @@ namespace
     /** @brief 공개 API로 방송을 시작하고 결과를 Serial에 기록합니다. */
     bool startBroadcast()
     {
-        const Error result = audioSource.begin(broadcastName);
+        const Error result = audioSource.begin(broadcastName, broadcastCode);
         if (result != Error::none)
         {
             Serial.print("broadcast source start failed: ");

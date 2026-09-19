@@ -47,6 +47,7 @@ namespace nucode::ble::audio
             std::uint32_t broadcast_id = 0U;
             std::uint16_t periodic_interval = 0U;
             std::uint8_t sid = 0U;
+            BroadcastCode broadcast_code = {};
             atomic_t found = 0;
             atomic_t periodic_synced = 0;
             atomic_t base_received = 0;
@@ -64,6 +65,8 @@ namespace nucode::ble::audio
             bool scanning = false;
             bool sink_created = false;
             bool sync_requested = false;
+            bool has_broadcast_code = false;
+            bool encrypted = false;
         };
 
         SinkState sink_state;
@@ -182,14 +185,15 @@ namespace nucode::ble::audio
             }
         }
 
-        /** @brief BIGInfo가 확인된 비암호화 방송만 동기화 대상으로 표시합니다. */
+        /** @brief BIGInfo와 제공된 Broadcast Code를 동기화 조건으로 확인합니다. */
         void sinkSyncable(bt_bap_broadcast_sink *sink, const bt_iso_biginfo *biginfo)
         {
             if ((sink_state.owner == nullptr) || (sink != sink_state.sink))
             {
                 return;
             }
-            if (biginfo->encryption)
+            sink_state.encrypted = biginfo->encryption;
+            if (sink_state.encrypted && !sink_state.has_broadcast_code)
             {
                 atomic_set(&sink_state.error, -EACCES);
                 return;
@@ -209,10 +213,14 @@ namespace nucode::ble::audio
         /** @brief BIG 중단을 공개 상태와 종료 대기에 반영합니다. */
         void sinkStopped(bt_bap_broadcast_sink *sink, std::uint8_t reason)
         {
-            static_cast<void>(reason);
             if (sink == sink_state.sink)
             {
                 atomic_set(&sink_state.streaming, 0);
+                if ((sink_state.owner != nullptr) && sink_state.sync_requested &&
+                    (reason != BT_HCI_ERR_LOCALHOST_TERM_CONN))
+                {
+                    atomic_set(&sink_state.error, -static_cast<int>(reason));
+                }
                 k_sem_give(&sink_stopped);
             }
         }
@@ -390,6 +398,20 @@ namespace nucode::ble::audio
     /** @brief BAP broadcast source 검색과 callback 집합을 시작합니다. */
     Error BroadcastSink::begin(const char *broadcast_name) noexcept
     {
+        return start(broadcast_name, nullptr);
+    }
+
+    /** @brief Broadcast Code가 필요한 source 검색을 시작합니다. */
+    Error BroadcastSink::begin(const char *broadcast_name,
+                               const BroadcastCode &broadcast_code) noexcept
+    {
+        return start(broadcast_name, broadcast_code);
+    }
+
+    /** @brief 선택한 code와 함께 검색·PACS·BASS 자원을 구성합니다. */
+    Error BroadcastSink::start(const char *broadcast_name,
+                               const std::uint8_t *broadcast_code) noexcept
+    {
         if (started_)
         {
             return record(Error::already_started);
@@ -411,6 +433,12 @@ namespace nucode::ble::audio
         sink_state = {};
         sink_state.owner = this;
         memcpy(sink_state.target_name, broadcast_name, strlen(broadcast_name) + 1U);
+        if (broadcast_code != nullptr)
+        {
+            memcpy(sink_state.broadcast_code, broadcast_code,
+                   sizeof(sink_state.broadcast_code));
+            sink_state.has_broadcast_code = true;
+        }
         memset(&sink_state.stream, 0, sizeof(sink_state.stream));
         bt_bap_stream_cb_register(&sink_state.stream, &stream_callbacks);
         k_msgq_purge(&receive_queue);
@@ -564,8 +592,10 @@ namespace nucode::ble::audio
         {
             bt_bap_stream *streams[] = {&sink_state.stream};
             last_step_ = BroadcastSinkStep::bis_sync;
+            const std::uint8_t *broadcast_code =
+                sink_state.encrypted ? sink_state.broadcast_code : nullptr;
             const int result = bt_bap_broadcast_sink_sync(
-                sink_state.sink, BT_ISO_BIS_INDEX_BIT(1U), streams, nullptr);
+                sink_state.sink, BT_ISO_BIS_INDEX_BIT(1U), streams, broadcast_code);
             if (result != 0)
             {
                 stage_ = BroadcastStage::failed;
@@ -659,6 +689,12 @@ namespace nucode::ble::audio
 {
     /** @brief broadcast sink 기능이 없는 image에서는 시작을 거부합니다. */
     Error BroadcastSink::begin(const char *) noexcept
+    {
+        return record(Error::not_ready);
+    }
+
+    /** @brief 기능이 없는 image에서는 암호화 broadcast 검색도 거부합니다. */
+    Error BroadcastSink::begin(const char *, const BroadcastCode &) noexcept
     {
         return record(Error::not_ready);
     }

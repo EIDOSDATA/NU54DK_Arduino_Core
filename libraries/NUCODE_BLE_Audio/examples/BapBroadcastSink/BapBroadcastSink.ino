@@ -9,6 +9,7 @@
 #include <NUCODE_BLE_Audio.h>
 
 using nucode::ble::audio::BroadcastSink;
+using nucode::ble::audio::BroadcastCode;
 using nucode::ble::audio::BroadcastStage;
 using nucode::ble::audio::Error;
 using nucode::ble::audio::Lc3Codec;
@@ -16,15 +17,23 @@ using nucode::ble::audio::Lc3Codec;
 namespace
 {
     constexpr const char *broadcastName = "NU54-AUDIO-BROADCAST";
+    constexpr BroadcastCode broadcastCode = {
+        0x4e, 0x55, 0x35, 0x34, 0x2d, 0x41, 0x55, 0x44,
+        0x49, 0x4f, 0x2d, 0x43, 0x4f, 0x44, 0x45, 0x31,
+    };
+    constexpr BroadcastCode alternateBroadcastCode = {
+        0x4f, 0x55, 0x35, 0x34, 0x2d, 0x41, 0x55, 0x44,
+        0x49, 0x4f, 0x2d, 0x43, 0x4f, 0x44, 0x45, 0x31,
+    };
     BroadcastSink audioSink;
     Lc3Codec codec;
     bool announcedStreaming = false;
     bool reportedFailure = false;
 
     /** @brief 공개 API로 방송 검색을 시작하고 결과를 Serial에 기록합니다. */
-    bool startListening()
+    bool startListening(const BroadcastCode &code)
     {
-        const Error result = audioSink.begin(broadcastName);
+        const Error result = audioSink.begin(broadcastName, code);
         if (result != Error::none)
         {
             Serial.print("broadcast sink start failed: ");
@@ -66,7 +75,7 @@ void setup()
         Serial.println("LC3 codec start failed");
         return;
     }
-    static_cast<void>(startListening());
+    static_cast<void>(startListening(broadcastCode));
 }
 
 /** @brief 동기화 단계를 진행하고 수신 LC3 frame을 PCM으로 decode합니다. */
@@ -90,7 +99,15 @@ void loop()
         }
         else if (command == 'r')
         {
-            static_cast<void>(startListening());
+            static_cast<void>(startListening(broadcastCode));
+        }
+        else if (command == 'w')
+        {
+            const Error stopped = audioSink.end();
+            if (stopped == Error::none)
+            {
+                static_cast<void>(startListening(alternateBroadcastCode));
+            }
         }
     }
 

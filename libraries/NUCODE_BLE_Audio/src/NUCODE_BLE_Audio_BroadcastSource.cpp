@@ -170,6 +170,20 @@ namespace nucode::ble::audio
     /** @brief 단일 subgroup/BIS의 BASE와 extended/periodic 광고를 시작합니다. */
     Error BroadcastSource::begin(const char *broadcast_name) noexcept
     {
+        return start(broadcast_name, nullptr);
+    }
+
+    /** @brief Broadcast Code를 적용한 subgroup/BIS 광고를 시작합니다. */
+    Error BroadcastSource::begin(const char *broadcast_name,
+                                 const BroadcastCode &broadcast_code) noexcept
+    {
+        return start(broadcast_name, broadcast_code);
+    }
+
+    /** @brief 선택한 암호화 설정으로 source 자원과 광고를 구성합니다. */
+    Error BroadcastSource::start(const char *broadcast_name,
+                                 const std::uint8_t *broadcast_code) noexcept
+    {
         if (started_)
         {
             return record(Error::already_started);
@@ -217,8 +231,13 @@ namespace nucode::ble::audio
             .params = &subgroup_param,
             .qos = &preset.qos,
             .packing = BT_ISO_PACKING_SEQUENTIAL,
-            .encryption = false,
+            .encryption = broadcast_code != nullptr,
         };
+        if (broadcast_code != nullptr)
+        {
+            memcpy(create_param.broadcast_code, broadcast_code,
+                   sizeof(create_param.broadcast_code));
+        }
         result = bt_bap_broadcast_source_create(&create_param, &source_state.source);
         if (result != 0)
         {
@@ -381,6 +400,12 @@ namespace nucode::ble::audio
 {
     /** @brief broadcast source 기능이 없는 image에서는 시작을 거부합니다. */
     Error BroadcastSource::begin(const char *) noexcept
+    {
+        return record(Error::not_ready);
+    }
+
+    /** @brief 기능이 없는 image에서는 암호화 broadcast 시작도 거부합니다. */
+    Error BroadcastSource::begin(const char *, const BroadcastCode &) noexcept
     {
         return record(Error::not_ready);
     }

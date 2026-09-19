@@ -20,6 +20,9 @@ namespace nucode::ble
 
 namespace nucode::ble::audio
 {
+    /** @brief 암호화 broadcast stream에 사용하는 16-byte 코드입니다. */
+    using BroadcastCode = std::uint8_t[16];
+
     /** @brief LC3 codec API의 안정된 오류 분류입니다. */
     enum class Error : std::uint8_t
     {
@@ -347,6 +350,9 @@ namespace nucode::ble::audio
         /** @brief 주어진 방송 이름으로 BASE와 BIS 광고를 시작합니다. */
         Error begin(const char *broadcast_name = "NU54-AUDIO-BROADCAST") noexcept;
 
+        /** @brief 주어진 16-byte code로 암호화한 BASE와 BIS 광고를 시작합니다. */
+        Error begin(const char *broadcast_name, const BroadcastCode &broadcast_code) noexcept;
+
         /** @brief 방송을 중단하고 광고와 고정 자원을 반환합니다. */
         Error end() noexcept;
 
@@ -366,6 +372,8 @@ namespace nucode::ble::audio
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:
+        Error start(const char *broadcast_name,
+                    const std::uint8_t *broadcast_code) noexcept;
         Error record(Error error, int native_code = 0) noexcept;
 
         bool started_ = false;
@@ -398,6 +406,9 @@ namespace nucode::ble::audio
         /** @brief 방송 이름을 선택하고 extended advertising 검색을 시작합니다. */
         Error begin(const char *broadcast_name = "NU54-AUDIO-BROADCAST") noexcept;
 
+        /** @brief 방송 이름과 16-byte code로 암호화된 BIS 검색을 시작합니다. */
+        Error begin(const char *broadcast_name, const BroadcastCode &broadcast_code) noexcept;
+
         /** @brief callback 결과를 Arduino 문맥에서 다음 동기화 단계로 진행합니다. */
         void poll() noexcept;
 
@@ -429,6 +440,8 @@ namespace nucode::ble::audio
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:
+        Error start(const char *broadcast_name,
+                    const std::uint8_t *broadcast_code) noexcept;
         Error record(Error error, int native_code = 0) noexcept;
 
         bool started_ = false;
