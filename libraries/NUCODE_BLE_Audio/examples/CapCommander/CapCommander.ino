@@ -55,6 +55,7 @@ namespace
     bool streamWasSynchronized = false;
     bool lossStopPending = false;
     bool lossRemovePending = false;
+    bool sourceRescanPending = false;
 
     /** @brief 현재 source 선택을 비우고 새 broadcast 광고 검색을 준비합니다. */
     void prepareSourceScan()
@@ -64,6 +65,7 @@ namespace
         startPending = false;
         codePending = false;
         streamWasSynchronized = false;
+        sourceRescanPending = false;
     }
 
     /** @brief Common Audio Service를 광고하는 Acceptor 검색을 시작합니다. */
@@ -155,6 +157,7 @@ namespace
             prepareSourceScan();
             lossStopPending = false;
             lossRemovePending = false;
+            sourceRescanPending = false;
             acceptorScanPending = true;
             acceptorScanAt = millis() + 100U;
             Serial.print("CAP acceptor disconnected reason=");
@@ -250,9 +253,21 @@ void loop()
         if ((result == Error::none) || (result == Error::not_ready))
         {
             lossRemovePending = false;
-            prepareSourceScan();
-            Serial.println("CAP recovery source rescan pending");
+            if (result == Error::none)
+            {
+                sourceRescanPending = true;
+            }
+            else
+            {
+                prepareSourceScan();
+                Serial.println("CAP recovery source rescan pending");
+            }
         }
+    }
+    if (sourceRescanPending && commander.ready() && !commander.hasSource())
+    {
+        prepareSourceScan();
+        Serial.println("CAP recovery source rescan pending");
     }
     if (commanderStarted && commander.ready() && !sourceScanStarted &&
         !sourceSelected)
@@ -288,6 +303,7 @@ void loop()
             streamWasSynchronized = false;
             lossStopPending = false;
             lossRemovePending = false;
+            sourceRescanPending = false;
             reportRequest("CAP reception stop", commander.stopReception());
         }
         else if (command == 'd')
@@ -296,7 +312,14 @@ void loop()
             reportRequest("CAP source remove", result);
             if ((result == Error::none) || (result == Error::not_ready))
             {
-                prepareSourceScan();
+                if (result == Error::none)
+                {
+                    sourceRescanPending = true;
+                }
+                else
+                {
+                    prepareSourceScan();
+                }
             }
         }
         else if (command == 'r')
