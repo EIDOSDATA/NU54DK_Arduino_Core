@@ -66,6 +66,10 @@ namespace nucode::ble::audio
         constexpr std::uint32_t bootstrapRetryIntervalMs = 10U;
         constexpr std::uint32_t maximumBootstrapRetryIntervalMs = 160U;
         constexpr std::uint32_t bootstrapTimeoutMs = 5000U;
+        constexpr std::size_t volumeBootstrapStepCount =
+            static_cast<std::size_t>(VolumeBootstrapStep::complete) + 1U;
+        constexpr std::size_t microphoneBootstrapStepCount =
+            static_cast<std::size_t>(MicrophoneBootstrapStep::complete) + 1U;
 
         /** @brief 32-bit uptime deadline이 지났는지 wrap-safe하게 확인합니다. */
         bool deadlineReached(std::uint32_t now, std::uint32_t deadline) noexcept
@@ -219,6 +223,8 @@ namespace nucode::ble::audio
             std::uint32_t bootstrap_retry_at = 0U;
             std::uint32_t bootstrap_operation_counter = 0U;
             std::uint32_t bootstrap_operation = 0U;
+            std::uint32_t read_update_epoch = 0U;
+            std::uint32_t update_epochs[volumeBootstrapStepCount] = {};
             std::uint16_t callbacks_inflight = 0U;
             std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
@@ -238,6 +244,14 @@ namespace nucode::ble::audio
 
         VolumeControllerBackend volumeBackend;
         K_MUTEX_DEFINE(volumeBackendMutex);
+
+        /** @brief 한 VCP/VOCS/AICS 특성의 관측 epoch과 전체 update 수를 함께 전진합니다. */
+        void markVolumeUpdate(VolumeBootstrapStep step) noexcept
+        {
+            const std::size_t index = static_cast<std::size_t>(step);
+            volumeBackend.update_epochs[index] = nextToken(volumeBackend.update_epochs[index]);
+            ++volumeBackend.updates;
+        }
 
         /** @brief callback ingress에서 고정한 generation과 in-flight 수명을 관리합니다. */
         struct VolumeCallbackEpoch
@@ -587,6 +601,8 @@ namespace nucode::ble::audio
                 nextToken(volumeBackend.bootstrap_operation_counter);
             volumeBackend.bootstrap_operation = volumeBackend.bootstrap_operation_counter;
             const std::uint32_t operation = volumeBackend.bootstrap_operation;
+            volumeBackend.read_update_epoch =
+                volumeBackend.update_epochs[static_cast<std::size_t>(step)];
             volumeBackend.bootstrap_retry_pending = false;
             uint16_t handle = 0U;
             switch (step)
@@ -820,12 +836,58 @@ namespace nucode::ble::audio
             }
             if (result == 0)
             {
+                const std::size_t completed_index = static_cast<std::size_t>(completed);
+                const bool notification_preceded =
+                    (completed_index < volumeBootstrapStepCount) &&
+                    (volumeBackend.update_epochs[completed_index] !=
+                     volumeBackend.read_update_epoch);
+                bool valid_length = false;
+                switch (completed)
+                {
+                case VolumeBootstrapStep::volume_state:
+                    valid_length = length == sizeof(struct vcs_state);
+                    break;
+                case VolumeBootstrapStep::volume_flags:
+                case VolumeBootstrapStep::input_type:
+                case VolumeBootstrapStep::input_status:
+                    valid_length = length == sizeof(std::uint8_t);
+                    break;
+                case VolumeBootstrapStep::output_state:
+                    valid_length = length == sizeof(struct bt_vocs_state);
+                    break;
+                case VolumeBootstrapStep::output_location:
+                    valid_length = length == sizeof(std::uint32_t);
+                    break;
+                case VolumeBootstrapStep::input_state:
+                    valid_length = length == sizeof(struct bt_aics_state);
+                    break;
+                case VolumeBootstrapStep::input_gain_setting:
+                    valid_length = length == sizeof(struct bt_aics_gain_settings);
+                    break;
+                default:
+                    break;
+                }
+                if (notification_preceded && valid_length)
+                {
+                    k_mutex_unlock(&volumeBackendMutex);
+                    if (bootstrap_read)
+                    {
+                        advanceVolumeBootstrap(callback.generation, completed, callback.operation,
+                                               0);
+                    }
+                    else
+                    {
+                        finishVolumeDirectRead(callback.generation, callback.operation, 0);
+                    }
+                    return BT_GATT_ITER_STOP;
+                }
                 switch (completed)
                 {
                 case VolumeBootstrapStep::volume_state:
                     if (length == sizeof(struct vcs_state))
                     {
                         const auto *state = static_cast<const struct vcs_state *>(data);
+                        (void)memcpy(&volumeBackend.controller->state, state, sizeof(*state));
                         volumeBackend.volume.volume = state->volume;
                         volumeBackend.volume.muted = state->mute == BT_VCP_STATE_MUTED;
                     }
@@ -838,6 +900,7 @@ namespace nucode::ble::audio
                     if (length == sizeof(std::uint8_t))
                     {
                         volumeBackend.volume.flags = *static_cast<const std::uint8_t *>(data);
+                        volumeBackend.controller->vol_flags = volumeBackend.volume.flags;
                     }
                     else
                     {
@@ -848,7 +911,11 @@ namespace nucode::ble::audio
                     if (length == sizeof(struct bt_vocs_state))
                     {
                         const auto *state = static_cast<const struct bt_vocs_state *>(data);
-                        volumeBackend.offset.offset = state->offset;
+                        struct bt_vocs_client *client =
+                            CONTAINER_OF(volumeBackend.offset_service, struct bt_vocs_client, vocs);
+                        (void)memcpy(&client->state, state, sizeof(*state));
+                        volumeBackend.offset.offset = static_cast<std::int16_t>(
+                            sys_get_le16(static_cast<const std::uint8_t *>(data)));
                     }
                     else
                     {
@@ -860,6 +927,8 @@ namespace nucode::ble::audio
                     {
                         volumeBackend.offset.location =
                             sys_get_le32(static_cast<const std::uint8_t *>(data));
+                        CONTAINER_OF(volumeBackend.offset_service, struct bt_vocs_client, vocs)
+                            ->location = volumeBackend.offset.location;
                     }
                     else
                     {
@@ -870,6 +939,8 @@ namespace nucode::ble::audio
                     if (length == sizeof(struct bt_aics_state))
                     {
                         const auto *state = static_cast<const struct bt_aics_state *>(data);
+                        volumeBackend.input_service->cli.change_counter = state->change_counter;
+                        volumeBackend.input_service->cli.gain_mode = state->gain_mode;
                         volumeBackend.input.gain = state->gain;
                         volumeBackend.input.muted = state->mute == BT_AICS_STATE_MUTED;
                         volumeBackend.input.mute_disabled =
@@ -923,7 +994,7 @@ namespace nucode::ble::audio
                 }
                 if (result == 0)
                 {
-                    ++volumeBackend.updates;
+                    markVolumeUpdate(completed);
                 }
             }
             k_mutex_unlock(&volumeBackendMutex);
@@ -1011,7 +1082,7 @@ namespace nucode::ble::audio
             {
                 volumeBackend.volume.volume = volume;
                 volumeBackend.volume.muted = mute == BT_VCP_STATE_MUTED;
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::volume_state);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1036,7 +1107,7 @@ namespace nucode::ble::audio
             if (error == 0)
             {
                 volumeBackend.volume.flags = flags;
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::volume_flags);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1071,7 +1142,7 @@ namespace nucode::ble::audio
             if (error == 0)
             {
                 volumeBackend.offset.offset = offset;
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::output_state);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1096,7 +1167,7 @@ namespace nucode::ble::audio
             if (error == 0)
             {
                 volumeBackend.offset.location = location;
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::output_location);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1158,7 +1229,7 @@ namespace nucode::ble::audio
                 volumeBackend.input.muted = mute == BT_AICS_STATE_MUTED;
                 volumeBackend.input.mute_disabled = mute == BT_AICS_STATE_MUTE_DISABLED;
                 volumeBackend.input.mode = static_cast<AudioInputMode>(mode);
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::input_state);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1185,7 +1256,7 @@ namespace nucode::ble::audio
                 volumeBackend.input.units = units;
                 volumeBackend.input.minimum_gain = minimum;
                 volumeBackend.input.maximum_gain = maximum;
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::input_gain_setting);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1209,7 +1280,7 @@ namespace nucode::ble::audio
             if (error == 0)
             {
                 volumeBackend.input.type = static_cast<AudioInputType>(type);
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::input_type);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1233,7 +1304,7 @@ namespace nucode::ble::audio
             if (error == 0)
             {
                 volumeBackend.input.active = active;
-                ++volumeBackend.updates;
+                markVolumeUpdate(VolumeBootstrapStep::input_status);
             }
             k_mutex_unlock(&volumeBackendMutex);
         }
@@ -1381,6 +1452,8 @@ namespace nucode::ble::audio
         volumeBackend.bootstrap_retry_at = 0U;
         volumeBackend.bootstrap_retries = 0U;
         volumeBackend.bootstrap_operation = 0U;
+        volumeBackend.read_update_epoch = 0U;
+        (void)memset(volumeBackend.update_epochs, 0, sizeof(volumeBackend.update_epochs));
         volumeBackend.bootstrap_retry_pending = false;
         volumeBackend.direct_read = AudioControlStep::none;
         atomic_set(&volumeBackend.error, 0);
@@ -1486,6 +1559,7 @@ namespace nucode::ble::audio
             ++volumeBackend.generation;
             volumeBackend.pending_generation = 0U;
             volumeBackend.bootstrap_operation = 0U;
+            volumeBackend.read_update_epoch = 0U;
             volumeBackend.bootstrap_retry_pending = false;
             volumeBackend.direct_read = AudioControlStep::none;
             atomic_set(&volumeBackend.busy, 0);
@@ -1545,6 +1619,9 @@ namespace nucode::ble::audio
         volumeBackend.bootstrap_operation_counter =                                                \
             nextToken(volumeBackend.bootstrap_operation_counter);                                  \
         volumeBackend.bootstrap_operation = volumeBackend.bootstrap_operation_counter;             \
+        volumeBackend.read_update_epoch =                                                          \
+            volumeBackend.update_epochs[static_cast<std::size_t>(                                  \
+                VolumeBootstrapStep::bootstrap_value)];                                            \
         const std::uint32_t read_operation = volumeBackend.bootstrap_operation;                    \
         const std::uint32_t call_generation = volumeBackend.generation;                            \
         atomic_set(&volumeBackend.step, static_cast<atomic_val_t>(AudioControlStep::step_value));  \
@@ -1950,6 +2027,8 @@ namespace nucode::ble::audio
             std::uint32_t bootstrap_retry_at = 0U;
             std::uint32_t bootstrap_operation_counter = 0U;
             std::uint32_t bootstrap_operation = 0U;
+            std::uint32_t read_update_epoch = 0U;
+            std::uint32_t update_epochs[microphoneBootstrapStepCount] = {};
             std::uint16_t callbacks_inflight = 0U;
             std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
@@ -1968,6 +2047,15 @@ namespace nucode::ble::audio
 
         MicrophoneControllerBackend microphoneControllerBackend;
         K_MUTEX_DEFINE(microphoneControllerBackendMutex);
+
+        /** @brief 한 MICP/AICS 특성의 관측 epoch과 전체 update 수를 함께 전진합니다. */
+        void markMicrophoneUpdate(MicrophoneBootstrapStep step) noexcept
+        {
+            const std::size_t index = static_cast<std::size_t>(step);
+            microphoneControllerBackend.update_epochs[index] =
+                nextToken(microphoneControllerBackend.update_epochs[index]);
+            ++microphoneControllerBackend.updates;
+        }
 
         /** @brief MICP callback ingress에서 고정한 generation 수명을 관리합니다. */
         struct MicrophoneCallbackEpoch
@@ -2299,6 +2387,8 @@ namespace nucode::ble::audio
             microphoneControllerBackend.bootstrap_operation =
                 microphoneControllerBackend.bootstrap_operation_counter;
             const std::uint32_t operation = microphoneControllerBackend.bootstrap_operation;
+            microphoneControllerBackend.read_update_epoch =
+                microphoneControllerBackend.update_epochs[static_cast<std::size_t>(step)];
             microphoneControllerBackend.bootstrap_retry_pending = false;
             uint16_t handle = 0U;
             switch (step)
@@ -2531,6 +2621,42 @@ namespace nucode::ble::audio
             }
             if (result == 0)
             {
+                const std::size_t completed_index = static_cast<std::size_t>(completed);
+                const bool notification_preceded =
+                    (completed_index < microphoneBootstrapStepCount) &&
+                    (microphoneControllerBackend.update_epochs[completed_index] !=
+                     microphoneControllerBackend.read_update_epoch);
+                bool valid_length = false;
+                switch (completed)
+                {
+                case MicrophoneBootstrapStep::microphone_state:
+                case MicrophoneBootstrapStep::input_type:
+                case MicrophoneBootstrapStep::input_status:
+                    valid_length = length == sizeof(std::uint8_t);
+                    break;
+                case MicrophoneBootstrapStep::input_state:
+                    valid_length = length == sizeof(struct bt_aics_state);
+                    break;
+                case MicrophoneBootstrapStep::input_gain_setting:
+                    valid_length = length == sizeof(struct bt_aics_gain_settings);
+                    break;
+                default:
+                    break;
+                }
+                if (notification_preceded && valid_length)
+                {
+                    k_mutex_unlock(&microphoneControllerBackendMutex);
+                    if (bootstrap_read)
+                    {
+                        advanceMicrophoneBootstrap(callback.generation, completed,
+                                                   callback.operation, 0);
+                    }
+                    else
+                    {
+                        finishMicrophoneDirectRead(callback.generation, callback.operation, 0);
+                    }
+                    return BT_GATT_ITER_STOP;
+                }
                 switch (completed)
                 {
                 case MicrophoneBootstrapStep::microphone_state:
@@ -2550,6 +2676,10 @@ namespace nucode::ble::audio
                     if (length == sizeof(struct bt_aics_state))
                     {
                         const auto *state = static_cast<const struct bt_aics_state *>(data);
+                        microphoneControllerBackend.input_service->cli.change_counter =
+                            state->change_counter;
+                        microphoneControllerBackend.input_service->cli.gain_mode =
+                            state->gain_mode;
                         microphoneControllerBackend.input.gain = state->gain;
                         microphoneControllerBackend.input.muted =
                             state->mute == BT_AICS_STATE_MUTED;
@@ -2605,7 +2735,7 @@ namespace nucode::ble::audio
                 }
                 if (result == 0)
                 {
-                    ++microphoneControllerBackend.updates;
+                    markMicrophoneUpdate(completed);
                 }
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
@@ -2693,7 +2823,7 @@ namespace nucode::ble::audio
                 microphoneControllerBackend.microphone.muted = mute == BT_MICP_MUTE_MUTED;
                 microphoneControllerBackend.microphone.mute_disabled =
                     mute == BT_MICP_MUTE_DISABLED;
-                ++microphoneControllerBackend.updates;
+                markMicrophoneUpdate(MicrophoneBootstrapStep::microphone_state);
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
         }
@@ -2733,7 +2863,7 @@ namespace nucode::ble::audio
                 microphoneControllerBackend.input.mute_disabled =
                     mute == BT_AICS_STATE_MUTE_DISABLED;
                 microphoneControllerBackend.input.mode = static_cast<AudioInputMode>(mode);
-                ++microphoneControllerBackend.updates;
+                markMicrophoneUpdate(MicrophoneBootstrapStep::input_state);
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
         }
@@ -2761,7 +2891,7 @@ namespace nucode::ble::audio
                 microphoneControllerBackend.input.units = units;
                 microphoneControllerBackend.input.minimum_gain = minimum;
                 microphoneControllerBackend.input.maximum_gain = maximum;
-                ++microphoneControllerBackend.updates;
+                markMicrophoneUpdate(MicrophoneBootstrapStep::input_gain_setting);
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
         }
@@ -2786,7 +2916,7 @@ namespace nucode::ble::audio
             if (error == 0)
             {
                 microphoneControllerBackend.input.type = static_cast<AudioInputType>(type);
-                ++microphoneControllerBackend.updates;
+                markMicrophoneUpdate(MicrophoneBootstrapStep::input_type);
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
         }
@@ -2811,7 +2941,7 @@ namespace nucode::ble::audio
             if (error == 0)
             {
                 microphoneControllerBackend.input.active = active;
-                ++microphoneControllerBackend.updates;
+                markMicrophoneUpdate(MicrophoneBootstrapStep::input_status);
             }
             k_mutex_unlock(&microphoneControllerBackendMutex);
         }
@@ -2947,6 +3077,9 @@ namespace nucode::ble::audio
         microphoneControllerBackend.bootstrap_retry_at = 0U;
         microphoneControllerBackend.bootstrap_retries = 0U;
         microphoneControllerBackend.bootstrap_operation = 0U;
+        microphoneControllerBackend.read_update_epoch = 0U;
+        (void)memset(microphoneControllerBackend.update_epochs, 0,
+                     sizeof(microphoneControllerBackend.update_epochs));
         microphoneControllerBackend.bootstrap_retry_pending = false;
         microphoneControllerBackend.direct_read = AudioControlStep::none;
         atomic_set(&microphoneControllerBackend.error, 0);
@@ -3056,6 +3189,7 @@ namespace nucode::ble::audio
             ++microphoneControllerBackend.generation;
             microphoneControllerBackend.pending_generation = 0U;
             microphoneControllerBackend.bootstrap_operation = 0U;
+            microphoneControllerBackend.read_update_epoch = 0U;
             microphoneControllerBackend.bootstrap_retry_pending = false;
             microphoneControllerBackend.direct_read = AudioControlStep::none;
             atomic_set(&microphoneControllerBackend.busy, 0);
@@ -3118,6 +3252,9 @@ namespace nucode::ble::audio
             nextToken(microphoneControllerBackend.bootstrap_operation_counter);                    \
         microphoneControllerBackend.bootstrap_operation =                                          \
             microphoneControllerBackend.bootstrap_operation_counter;                               \
+        microphoneControllerBackend.read_update_epoch =                                             \
+            microphoneControllerBackend.update_epochs[static_cast<std::size_t>(                     \
+                MicrophoneBootstrapStep::bootstrap_value)];                                         \
         const std::uint32_t read_operation = microphoneControllerBackend.bootstrap_operation;      \
         const std::uint32_t call_generation = microphoneControllerBackend.generation;              \
         atomic_set(&microphoneControllerBackend.step,                                              \

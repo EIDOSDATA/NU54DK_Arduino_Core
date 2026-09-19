@@ -148,6 +148,19 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
                     self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
                                      "PUBLIC_AUDIO_API_FLOW_MISSING")
 
+        controller_sketch = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino"
+        ).read_text(encoding="utf-8")
+        for public_read in (
+            "volumeController.readVolume()",
+            "volumeController.readOffset()",
+            "volumeController.readInput()",
+            "microphoneController.readMicrophone()",
+            "microphoneController.readInput()",
+        ):
+            self.assertIn(public_read, controller_sketch)
+
     def test_cap_sketches_must_keep_public_profile_flow(self) -> None:
         """! @brief CAP 역할 예제의 공개 절차와 역할 Kconfig를 검사합니다. """
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
@@ -298,10 +311,21 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             binary = Path(temporary) / "audio-control-lifecycle.exe"
             command = [
                 *compiler,
-                "-std=c++17",
+                "-std=gnu++20",
                 "-Wall",
                 "-Wextra",
                 "-Werror",
+                "-Wno-unused-variable",
+                "-pthread",
+                "-include",
+                str(
+                    ROOT
+                    / "tests/host/audio_control_runtime_stubs/audio_control_runtime_stubs.h"
+                ),
+                "-I",
+                str(ROOT / "tests/host/audio_control_runtime_stubs/include"),
+                "-I",
+                str(ROOT / "libraries/NUCODE_BLE_Audio/src"),
                 str(ROOT / "tests/host/m31_audio_control_lifecycle_main.cpp"),
                 "-o",
                 str(binary),
@@ -328,6 +352,11 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         self.assertIn("serviceMicrophoneBootstrap(generation_)", source)
         self.assertIn("NUCODE_VOLUME_CONTROLLER_READ_REQUEST(read_volume", source)
         self.assertIn("NUCODE_MIC_CONTROLLER_READ_REQUEST(", source)
+        self.assertIn("read_update_epoch", source)
+        self.assertIn("markVolumeUpdate", source)
+        self.assertIn("markMicrophoneUpdate", source)
+        self.assertIn("volumeBackend.controller->state", source)
+        self.assertIn("input_service->cli.change_counter", source)
         for ambiguous_read in (
             "bt_vcp_vol_ctlr_read_state(",
             "bt_vocs_state_get(",

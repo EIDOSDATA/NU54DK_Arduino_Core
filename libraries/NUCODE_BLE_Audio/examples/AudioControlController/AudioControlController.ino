@@ -246,6 +246,8 @@ void setup()
     {
         Serial.println("Audio control controller start failed");
     }
+    Serial.println(
+        "Commands: r=volume f=offset i=speaker input k=microphone l=microphone input s=state");
 }
 
 /** @brief discovery와 사용자가 선택한 원격 상태 변경을 순서대로 진행합니다. */
@@ -397,6 +399,26 @@ void loop()
         else if (command == 'r')
         {
             report("Read volume", volumeController.readVolume(), volumeController.nativeCode());
+        }
+        else if (command == 'f')
+        {
+            report("Read output offset", volumeController.readOffset(),
+                   volumeController.nativeCode());
+        }
+        else if (command == 'i')
+        {
+            report("Read program input", volumeController.readInput(),
+                   volumeController.nativeCode());
+        }
+        else if (command == 'k')
+        {
+            report("Read microphone", microphoneController.readMicrophone(),
+                   microphoneController.nativeCode());
+        }
+        else if (command == 'l')
+        {
+            report("Read microphone input", microphoneController.readInput(),
+                   microphoneController.nativeCode());
         }
         else if (command == 's')
         {
