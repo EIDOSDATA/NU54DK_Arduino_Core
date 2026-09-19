@@ -60,6 +60,8 @@ class CsipContractTests(unittest.TestCase):
             "instance->info.set_size != coordinator_context.expected_members",
             "coordinator_context.members[index].information.rank == instance->info.rank",
             "!BLEConnection.connected(snapshot[index - 1U].connection)",
+            "!BLEConnection.connected(pending_connection)",
+            "release_remaining = release_remaining || coordinator_context.locked",
             "internal::handleForActiveConnection(connection)",
         ):
             self.assertIn(token, text)
