@@ -121,6 +121,11 @@ namespace
             (event.role == BLELinkRole::central))
         {
             delegatorConnection = event.connection;
+            if (!BLEConnection.requestParameters(delegatorConnection, 24U, 40U,
+                                                  0U, 2000U))
+            {
+                Serial.println("delegator parameter request failed");
+            }
             if (!BLESecurity.requestSecurity(delegatorConnection))
             {
                 Serial.println("delegator security request failed");
