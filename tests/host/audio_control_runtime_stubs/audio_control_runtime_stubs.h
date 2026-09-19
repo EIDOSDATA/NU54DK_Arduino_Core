@@ -366,6 +366,7 @@ namespace audio_control_stub
     inline std::uint32_t cancel_callbacks = 0U;
     inline int next_read_result = 0;
     inline bool vocs_reference_held = false;
+    inline bool volume_aics_reference_held = false;
 
     /** @brief 한 connection pool slot에 controller client 포인터를 다시 결합합니다. */
     inline void bindControllerClients() noexcept
@@ -374,10 +375,11 @@ namespace audio_control_stub
         volume_offset.conn = nullptr;
         volume_offset.state_handle = 0x0111U;
         volume_offset.location_handle = 0x0112U;
-        volume_input.cli.conn = &connection;
+        volume_input.cli.conn = nullptr;
         microphone_controller.conn = &connection;
         microphone_input.cli.conn = &connection;
         vocs_reference_held = false;
+        volume_aics_reference_held = false;
     }
 
     inline void reset() noexcept
@@ -419,6 +421,23 @@ namespace audio_control_stub
         next_read_result = 0;
     }
 
+    /** @brief top-level VCP callback 전 포함 VOCS/AICS discovery의 conn ref 획득을 재현합니다. */
+    inline void reachVolumeIncludedDiscovery() noexcept
+    {
+        if (!vocs_reference_held && (volume_controller.conn != nullptr))
+        {
+            volume_offset.conn = volume_controller.conn;
+            bt_conn_ref(volume_controller.conn);
+            vocs_reference_held = true;
+        }
+        if (!volume_aics_reference_held && (volume_controller.conn != nullptr))
+        {
+            volume_input.cli.conn = volume_controller.conn;
+            bt_conn_ref(volume_controller.conn);
+            volume_aics_reference_held = true;
+        }
+    }
+
     /** @brief locked host의 disconnect와 non-sticky profile ref 해제를 재현합니다. */
     inline void disconnectSingleConnection() noexcept
     {
@@ -428,7 +447,16 @@ namespace audio_control_stub
         }
         connection.active = false;
         volume_controller.conn = nullptr;
-        volume_input.cli.conn = nullptr;
+        if (volume_aics_reference_held && (volume_input.cli.conn == &connection))
+        {
+            volume_input.cli.conn = nullptr;
+            volume_aics_reference_held = false;
+            bt_conn_unref(&connection);
+        }
+        else
+        {
+            volume_input.cli.conn = nullptr;
+        }
         microphone_controller.conn = nullptr;
         microphone_input.cli.conn = nullptr;
         bt_conn_unref(&connection);
@@ -539,12 +567,7 @@ inline int bt_micp_mic_ctlr_discover(bt_conn *, bt_micp_mic_ctlr **controller) n
 inline int bt_vcp_vol_ctlr_included_get(bt_vcp_vol_ctlr *controller,
                                          bt_vcp_included *included) noexcept
 {
-    if (!audio_control_stub::vocs_reference_held && (controller->conn != nullptr))
-    {
-        audio_control_stub::volume_offset.conn = controller->conn;
-        bt_conn_ref(controller->conn);
-        audio_control_stub::vocs_reference_held = true;
-    }
+    audio_control_stub::reachVolumeIncludedDiscovery();
     included->vocs_cnt = controller->vocs_inst_cnt;
     included->vocs = controller->vocs;
     included->aics_cnt = controller->aics_inst_cnt;

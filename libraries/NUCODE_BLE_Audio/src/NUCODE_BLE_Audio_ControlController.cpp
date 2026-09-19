@@ -332,12 +332,26 @@ namespace nucode::ble::audio
         /** @brief 고정 SDK의 disconnect 뒤 남는 exact VOCS client 결합을 해제합니다. */
         struct bt_conn *releaseDisconnectedVocsLocked(struct bt_conn *connection) noexcept
         {
-            if ((volumeBackend.offset_service == nullptr) || (connection == nullptr))
+            if (connection == nullptr)
+            {
+                return nullptr;
+            }
+            struct bt_vocs *offset_service = volumeBackend.offset_service;
+            if ((offset_service == nullptr) && (volumeBackend.controller != nullptr))
+            {
+                /*
+                 * VCP는 top-level discover callback 전에 포함 VOCS가 conn ref를 잡습니다.
+                 * controller와 그 image-lifetime child 배열은 generation drain까지 유지되므로,
+                 * facade publish 전 실패에서도 exact child를 회수할 수 있습니다.
+                 */
+                offset_service = volumeBackend.controller->vocs[0];
+            }
+            if (offset_service == nullptr)
             {
                 return nullptr;
             }
             struct bt_vocs_client *client =
-                CONTAINER_OF(volumeBackend.offset_service, struct bt_vocs_client, vocs);
+                CONTAINER_OF(offset_service, struct bt_vocs_client, vocs);
             if (client->conn != connection)
             {
                 return nullptr;
@@ -394,9 +408,19 @@ namespace nucode::ble::audio
         bool retiredVolumeConnectionActive() noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
+            struct bt_conn *release_vocs = nullptr;
+            if (volumeBackend.native_disconnected)
+            {
+                release_vocs =
+                    releaseDisconnectedVocsLocked(volumeBackend.retired_native_connection);
+            }
             struct bt_conn *release_connection = finalizeRetiredVolumeLocked();
             const bool still_retired = volumeBackend.retired_connection;
             k_mutex_unlock(&volumeBackendMutex);
+            if (release_vocs != nullptr)
+            {
+                bt_conn_unref(release_vocs);
+            }
             if (release_connection != nullptr)
             {
                 bt_conn_unref(release_connection);

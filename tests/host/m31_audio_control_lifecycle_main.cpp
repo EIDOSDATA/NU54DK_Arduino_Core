@@ -257,6 +257,65 @@ namespace
         assert(audio_control_stub::allocateSingleConnection());
     }
 
+    /** @brief top-level 실패 전 포함 service ref가 disconnect에서 모두 해제되는지 검사합니다. */
+    void partialDiscoveryFailureReconnect(const BLEConnectionHandle &handle) noexcept
+    {
+        VolumeController controller;
+        assert(controller.begin(handle) == Error::none);
+        audio_control_stub::reachVolumeIncludedDiscovery();
+        assert(audio_control_stub::volume_offset.conn == &audio_control_stub::connection);
+        assert(audio_control_stub::volume_input.cli.conn == &audio_control_stub::connection);
+        assert(nucode::ble::audio::volumeBackend.offset_service == nullptr);
+
+        audio_control_stub::volume_callbacks->discover(&audio_control_stub::volume_controller,
+                                                       -ECONNRESET, 0U, 0U);
+        assert(controller.stage() == AudioControlStage::failed);
+        disconnectControllerLink();
+        assert(audio_control_stub::volume_offset.conn == nullptr);
+        assert(audio_control_stub::volume_input.cli.conn == nullptr);
+        assert(!audio_control_stub::allocateSingleConnection());
+        assert(controller.end() == Error::none);
+        assert(audio_control_stub::connection.references == 0U);
+        assert(audio_control_stub::allocateSingleConnection());
+    }
+
+    /** @brief top-level callback 전 end와 ATT error가 와도 child ref를 격리하는지 검사합니다. */
+    void endBeforeTopLevelDiscoveryCallback(const BLEConnectionHandle &handle) noexcept
+    {
+        VolumeController controller;
+        assert(controller.begin(handle) == Error::none);
+        audio_control_stub::reachVolumeIncludedDiscovery();
+        assert(nucode::ble::audio::volumeBackend.offset_service == nullptr);
+        assert(controller.end() == Error::none);
+
+        audio_control_stub::volume_callbacks->discover(&audio_control_stub::volume_controller,
+                                                       -ECONNRESET, 0U, 0U);
+        disconnectControllerLink();
+        assert(audio_control_stub::volume_offset.conn == nullptr);
+        assert(audio_control_stub::volume_input.cli.conn == nullptr);
+        assert(audio_control_stub::connection.references == 0U);
+        assert(audio_control_stub::allocateSingleConnection());
+    }
+
+    /** @brief disconnect callback 뒤 controller publish가 끝난 경우에도 VOCS ref를 회수합니다. */
+    void controllerPublishAfterDisconnect(const BLEConnectionHandle &handle) noexcept
+    {
+        VolumeController controller;
+        assert(controller.begin(handle) == Error::none);
+        audio_control_stub::reachVolumeIncludedDiscovery();
+        struct bt_vcp_vol_ctlr *native_controller =
+            nucode::ble::audio::volumeBackend.controller;
+        nucode::ble::audio::volumeBackend.controller = nullptr;
+
+        disconnectControllerLink();
+        assert(audio_control_stub::volume_offset.conn == &audio_control_stub::connection);
+        nucode::ble::audio::volumeBackend.controller = native_controller;
+        assert(controller.end() == Error::none);
+        assert(audio_control_stub::volume_offset.conn == nullptr);
+        assert(audio_control_stub::connection.references == 0U);
+        assert(audio_control_stub::allocateSingleConnection());
+    }
+
     /** @brief synchronous cancel, timeout, retired barrier와 end/rebegin을 검사합니다. */
     void timeoutEndRebegin(const BLEConnectionHandle &handle) noexcept
     {
@@ -329,6 +388,9 @@ int main()
     callbackInflightEnd(handle);
     cancelNoFindLateCallback(handle);
     pollBeforeEndStickyVocs(handle);
+    partialDiscoveryFailureReconnect(handle);
+    endBeforeTopLevelDiscoveryCallback(handle);
+    controllerPublishAfterDisconnect(handle);
     timeoutEndRebegin(handle);
     return 0;
 }
