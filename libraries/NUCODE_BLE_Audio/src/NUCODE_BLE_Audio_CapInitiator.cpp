@@ -48,6 +48,7 @@ namespace nucode::ble::audio
         {
             CapInitiator *owner = nullptr;
             bt_cap_broadcast_source *source = nullptr;
+            atomic_ptr_t callback_source = nullptr;
             bt_le_ext_adv *advertising = nullptr;
             bt_cap_stream stream = {};
             atomic_t streaming = 0;
@@ -55,10 +56,11 @@ namespace nucode::ble::audio
             atomic_t sequence = 0;
             atomic_t error = 0;
             atomic_t stopping = 0;
+            atomic_t active = 0;
+            atomic_t source_started = 0;
             bool callbacks_registered = false;
             bool extended_started = false;
             bool periodic_started = false;
-            bool source_started = false;
         };
 
         CapSourceState cap_source_state;
@@ -82,7 +84,7 @@ namespace nucode::ble::audio
         /** @brief CAP BIS가 시작되면 공개 송신 가능 상태로 표시합니다. */
         void streamStarted(bt_bap_stream *stream)
         {
-            if ((cap_source_state.owner != nullptr) &&
+            if ((atomic_get(&cap_source_state.active) != 0) &&
                 (stream == &cap_source_state.stream.bap_stream))
             {
                 atomic_set(&cap_source_state.streaming, 1);
@@ -95,7 +97,7 @@ namespace nucode::ble::audio
             if (stream == &cap_source_state.stream.bap_stream)
             {
                 atomic_set(&cap_source_state.streaming, 0);
-                if ((cap_source_state.owner != nullptr) &&
+                if ((atomic_get(&cap_source_state.active) != 0) &&
                     (atomic_get(&cap_source_state.stopping) == 0))
                 {
                     atomic_set(&cap_source_state.error,
@@ -114,22 +116,22 @@ namespace nucode::ble::audio
         /** @brief CAP broadcast 시작 완료를 객체 상태에 반영합니다. */
         void broadcastStarted(bt_cap_broadcast_source *source)
         {
-            if ((cap_source_state.owner != nullptr) &&
+            if ((atomic_get(&cap_source_state.active) != 0) &&
                 (atomic_get(&cap_source_state.stopping) == 0) &&
-                (source == cap_source_state.source))
+                (source == atomic_ptr_get(&cap_source_state.callback_source)))
             {
-                cap_source_state.source_started = true;
+                atomic_set(&cap_source_state.source_started, 1);
             }
         }
 
         /** @brief CAP broadcast 중단 완료를 대기 중인 Arduino 문맥에 알립니다. */
         void broadcastStopped(bt_cap_broadcast_source *source, std::uint8_t reason)
         {
-            if (source == cap_source_state.source)
+            if (source == atomic_ptr_get(&cap_source_state.callback_source))
             {
-                cap_source_state.source_started = false;
+                atomic_set(&cap_source_state.source_started, 0);
                 atomic_set(&cap_source_state.streaming, 0);
-                if ((cap_source_state.owner != nullptr) &&
+                if ((atomic_get(&cap_source_state.active) != 0) &&
                     (atomic_get(&cap_source_state.stopping) == 0))
                 {
                     atomic_set(&cap_source_state.error,
@@ -154,7 +156,8 @@ namespace nucode::ble::audio
         {
             int first_error = 0;
             atomic_set(&cap_source_state.stopping, 1);
-            if ((cap_source_state.source != nullptr) && cap_source_state.source_started)
+            if ((cap_source_state.source != nullptr) &&
+                (atomic_get(&cap_source_state.source_started) != 0))
             {
                 k_sem_reset(&cap_source_stopped);
                 const int result =
@@ -165,16 +168,21 @@ namespace nucode::ble::audio
                         k_sem_take(&cap_source_stopped, K_SECONDS(2));
                     if (wait_result == 0)
                     {
-                        cap_source_state.source_started = false;
+                        atomic_set(&cap_source_state.source_started, 0);
                     }
                     else
                     {
                         first_error = wait_result;
                     }
                 }
-                else if (result == -EALREADY)
+                else if ((result == -EALREADY) ||
+                         ((result == -EBADMSG) &&
+                          (atomic_get(&cap_source_state.source_started) == 0)))
                 {
-                    cap_source_state.source_started = false;
+                    /* 고정 Zephyr는 모든 BIS disconnected/stopped callback 뒤에
+                     * CAP broadcast_stopped를 전달합니다. 이미 멈춘 상태도 drain이
+                     * 끝난 것으로 보고 delete 단계로 진행합니다. */
+                    atomic_set(&cap_source_state.source_started, 0);
                 }
                 else
                 {
@@ -182,13 +190,15 @@ namespace nucode::ble::audio
                 }
             }
             if ((cap_source_state.source != nullptr) &&
-                !cap_source_state.source_started)
+                (atomic_get(&cap_source_state.source_started) == 0))
             {
+                /* delete 성공은 모든 stream을 동기적으로 분리한 뒤 반환됩니다. */
                 const int result = bt_cap_initiator_broadcast_audio_delete(
                     cap_source_state.source);
                 if (result == 0)
                 {
                     cap_source_state.source = nullptr;
+                    atomic_ptr_clear(&cap_source_state.callback_source);
                 }
                 else if (first_error == 0)
                 {
@@ -260,6 +270,7 @@ namespace nucode::ble::audio
             {
                 atomic_set(&cap_source_state.streaming, 0);
                 atomic_set(&cap_source_state.stopping, 0);
+                atomic_set(&cap_source_state.active, 0);
             }
             return first_error;
         }
@@ -358,6 +369,7 @@ namespace nucode::ble::audio
 
         cap_source_state = {};
         cap_source_state.owner = this;
+        atomic_set(&cap_source_state.active, 1);
         k_sem_reset(&cap_source_stopped);
         memset(&cap_source_state.stream, 0, sizeof(cap_source_state.stream));
         bt_cap_stream_ops_register(&cap_source_state.stream, &cap_stream_callbacks);
@@ -365,6 +377,7 @@ namespace nucode::ble::audio
         int result = bt_cap_initiator_register_cb(&cap_initiator_callbacks);
         if (result != 0)
         {
+            atomic_set(&cap_source_state.active, 0);
             cap_source_state.owner = nullptr;
             stage_ = CapStage::failed;
             return record(Error::stack_error, result);
@@ -405,12 +418,21 @@ namespace nucode::ble::audio
         {
             result = bt_cap_initiator_broadcast_audio_create(
                 &create_param, &cap_source_state.source);
+            if (result == 0)
+            {
+                atomic_ptr_set(&cap_source_state.callback_source,
+                               cap_source_state.source);
+            }
         }
         if (result == 0)
         {
+            atomic_set(&cap_source_state.source_started, 1);
             result = bt_cap_initiator_broadcast_audio_start(
                 cap_source_state.source, cap_source_state.advertising);
-            cap_source_state.source_started = result == 0;
+            if (result != 0)
+            {
+                atomic_set(&cap_source_state.source_started, 0);
+            }
         }
 
         std::uint32_t broadcast_id = 0U;

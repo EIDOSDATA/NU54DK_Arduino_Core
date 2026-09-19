@@ -648,7 +648,7 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         self.assertIn("bt_pbp_get_announcement(", source)
         self.assertIn("BT_PBP_ANNOUNCEMENT_FEATURE_STANDARD_QUALITY", source)
         self.assertIn("bt_pbp_parse_announcement(", sink)
-        self.assertIn("sink_state.encrypted != sink_state.advertised_encrypted", sink)
+        self.assertIn("atomic_get(&sink_state.advertised_encrypted) != 0", sink)
         self.assertIn("Error::unsupported", source)
         self.assertIn("Error::unsupported", sink)
         self.assertIn("PublicBroadcastQuality::standard", wrapper)
@@ -662,12 +662,13 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         compact = " ".join(sink.split())
 
         self.assertIn(
-            "match.encrypted == sink_state.has_broadcast_code", compact
+            "match.encrypted == match.has_broadcast_code",
+            compact,
         )
         self.assertIn("BT_GAP_ADV_PROP_CONNECTABLE", sink)
         self.assertGreaterEqual(sink.count("memchr("), 2)
-        self.assertIn("data->data_len == strlen(sink_state.target_name)", compact)
-        self.assertIn("memcmp(data->data, sink_state.target_name", compact)
+        self.assertIn("data->data_len == strlen(match->target_name)", compact)
+        self.assertIn("memcmp(data->data, match->target_name", compact)
 
     def test_public_audio_base_selects_supported_bis(self) -> None:
         """! @brief BASE codec를 검사한 BIS만 sync 호출에 전달하는지 검사합니다. """
@@ -683,7 +684,8 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             "BT_AUDIO_CODEC_CFG_DURATION_10",
             "bt_audio_codec_cfg_get_octets_per_frame(",
             "bt_audio_codec_cfg_get_frame_blocks_per_sdu(",
-            "sink_state.selected_bis, streams",
+            "atomic_get(&sink_state.selected_bis)",
+            "streams, broadcast_code",
             "atomic_set(&sink_state.error, -EMSGSIZE);",
         ):
             self.assertIn(token, sink)
@@ -703,12 +705,40 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_PublicBroadcast.cpp"
         ).read_text(encoding="utf-8")
 
-        self.assertIn("stream_generation_slots", sink)
+        self.assertIn("BaseSelection selection = {};", sink)
+        self.assertNotIn("stream_generation_slots", sink)
+        self.assertIn("atomic_ptr_t callback_sink", sink)
+        self.assertIn("atomic_ptr_t periodic_sync", sink)
+        self.assertIn("atomic_t selected_bis", sink)
+        self.assertIn("atomic_t sync_requested", sink)
+        self.assertIn("atomic_t delegated_source", sink)
+        self.assertIn("atomic_cas(&sink_state.found, 0, -1)", sink)
+        self.assertIn("atomic_t state_callbacks_in_flight", sink)
+        self.assertIn("int drainStateCallbacks() noexcept", sink)
+        self.assertIn("K_MUTEX_DEFINE(sink_state_mutex)", sink)
+        self.assertIn("stream 목록이 이미 비어 있다는 뜻입니다", sink)
         self.assertIn("const int wait_result = k_sem_take(&sink_stopped", sink)
         self.assertIn("stage_ = BroadcastStage::failed;", sink)
+        wait = sink.index("const int wait_result = k_sem_take(&sink_stopped")
+        delete = sink.index("bt_bap_broadcast_sink_delete(", wait)
+        deactivate = sink.index("atomic_set(&sink_state.active, 0);", delete)
+        self.assertLess(wait, delete)
+        self.assertLess(delete, deactivate)
         self.assertIn("int releaseCapSource() noexcept", source)
         self.assertIn("const int wait_result =", source)
         self.assertIn("atomic_get(&cap_source_state.stopping) == 0", source)
+        self.assertIn("atomic_ptr_t callback_source", source)
+        self.assertIn("atomic_t source_started", source)
+        self.assertIn("atomic_t active", source)
+        source_wait = source.index("k_sem_take(&cap_source_stopped")
+        source_delete = source.index(
+            "bt_cap_initiator_broadcast_audio_delete(", source_wait
+        )
+        source_deactivate = source.index(
+            "atomic_set(&cap_source_state.active, 0);", source_delete
+        )
+        self.assertLess(source_wait, source_delete)
+        self.assertLess(source_delete, source_deactivate)
         self.assertIn("return CapStage::failed;", source)
         self.assertIn("sink_started_ = false;", wrapper)
         self.assertIn("acceptor_started_ = false;", wrapper)
