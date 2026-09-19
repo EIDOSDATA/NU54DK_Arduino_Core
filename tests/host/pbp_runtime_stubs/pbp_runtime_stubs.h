@@ -44,6 +44,12 @@ namespace pbp_stub
     inline const atomic_t *blocked_atomic = nullptr;
     inline bool atomic_entered = false;
     inline bool release_atomic = false;
+    inline atomic_t *blocked_cas_target = nullptr;
+    inline atomic_val_t blocked_cas_old = 0;
+    inline atomic_val_t blocked_cas_new = 0;
+    inline bool block_cas_once = false;
+    inline bool cas_entered = false;
+    inline bool release_cas = false;
 } // namespace pbp_stub
 
 inline atomic_val_t atomic_get(const atomic_t *target)
@@ -79,8 +85,27 @@ inline atomic_val_t atomic_dec(atomic_t *target)
 
 inline bool atomic_cas(atomic_t *target, atomic_val_t old_value, atomic_val_t new_value)
 {
-    return __atomic_compare_exchange_n(target, &old_value, new_value, false, __ATOMIC_SEQ_CST,
-                                       __ATOMIC_SEQ_CST);
+    const atomic_val_t requested_old = old_value;
+    const bool result = __atomic_compare_exchange_n(target, &old_value, new_value, false,
+                                                     __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+    if ((target == pbp_stub::blocked_cas_target) &&
+        (requested_old == pbp_stub::blocked_cas_old) &&
+        (new_value == pbp_stub::blocked_cas_new))
+    {
+        std::unique_lock<std::mutex> lock(pbp_stub::atomic_mutex);
+        if (pbp_stub::block_cas_once)
+        {
+            pbp_stub::block_cas_once = false;
+            pbp_stub::cas_entered = true;
+            pbp_stub::atomic_changed.notify_all();
+            pbp_stub::atomic_changed.wait(lock,
+                                          []()
+                                          {
+                                              return pbp_stub::release_cas;
+                                          });
+        }
+    }
+    return result;
 }
 
 inline void *atomic_ptr_get(const atomic_ptr_t *target)

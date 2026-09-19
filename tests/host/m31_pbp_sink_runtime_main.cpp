@@ -668,6 +668,78 @@ namespace
             &foreign_owner_token);
     }
 
+    /** @brief guard 종료의 두 CAS 사이 callback도 pending lease를 반드시 반환합니다. */
+    void testDestructorPendingReleaseRace()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x76U;
+        parameters.sid = 14U;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid, true);
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::blocked_cas_target = &periodic_native_operation_state;
+            pbp_stub::blocked_cas_old = periodic_operation_release_pending;
+            pbp_stub::blocked_cas_new = periodic_operation_releasing;
+            pbp_stub::block_cas_once = true;
+            pbp_stub::cas_entered = false;
+            pbp_stub::release_cas = false;
+        }
+
+        std::thread operation(
+            []()
+            {
+                const PeriodicNativeOperationGuard native_operation;
+            });
+        {
+            std::unique_lock<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::atomic_changed.wait(
+                lock,
+                []()
+                {
+                    return pbp_stub::cas_entered;
+                });
+        }
+
+        pbp_stub::periodic_present.store(false);
+        const bt_le_per_adv_sync_term_info information = {
+            .addr = &parameters.addr,
+            .sid = parameters.sid,
+            .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+        };
+        periodicTerminated(sync, &information);
+        assert(atomic_get(&periodic_native_operation_state) ==
+               periodic_operation_release_pending);
+        assert(nucode::arduino::internal::ownsBLEPeriodicSyncLease(
+            &periodic_sync_owner_token));
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::release_cas = true;
+        }
+        pbp_stub::atomic_changed.notify_all();
+        operation.join();
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::blocked_cas_target = nullptr;
+        }
+
+        assert(atomic_get(&periodic_native_operation_state) == periodic_operation_idle);
+        assert(!nucode::arduino::internal::ownsBLEPeriodicSyncLease(
+            &periodic_sync_owner_token));
+        std::uint8_t foreign_owner_token = 0U;
+        assert(nucode::arduino::internal::claimBLEPeriodicSyncLease(
+            &foreign_owner_token));
+        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+            &foreign_owner_token);
+        assert(public_sink.end() == Error::none);
+    }
+
     /** @brief pending cancel timeout 뒤 재사용된 slot은 lookup으로만 격리 해제합니다. */
     void testPendingCancelQuarantineReuse()
     {
@@ -747,6 +819,7 @@ int main()
     testLookupDeleteReuseRace();
     testFinalCheckDeleteGate();
     testPreDeleteCallbackLeaseBarrier();
+    testDestructorPendingReleaseRace();
     testPendingCancelQuarantineReuse();
     testRepeatedCleanupAndRebegin();
     assert(pbp_stub::periodic_callback_register_calls == 1U);

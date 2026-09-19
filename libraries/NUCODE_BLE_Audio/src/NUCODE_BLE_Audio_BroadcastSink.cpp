@@ -142,20 +142,31 @@ namespace nucode::ble::audio
             {
                 if (owns_release_barrier_)
                 {
-                    if (atomic_cas(&periodic_native_operation_state,
-                                   periodic_operation_release_pending,
-                                   periodic_operation_releasing))
+                    for (;;)
                     {
-                        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
-                            &periodic_sync_owner_token);
-                        atomic_set(&periodic_native_operation_state,
-                                   periodic_operation_idle);
-                    }
-                    else
-                    {
-                        (void)atomic_cas(&periodic_native_operation_state,
-                                         periodic_operation_active,
-                                         periodic_operation_idle);
+                        if (atomic_cas(&periodic_native_operation_state,
+                                       periodic_operation_release_pending,
+                                       periodic_operation_releasing))
+                        {
+                            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                                &periodic_sync_owner_token);
+                            atomic_set(&periodic_native_operation_state,
+                                       periodic_operation_idle);
+                            break;
+                        }
+                        if (atomic_cas(&periodic_native_operation_state,
+                                       periodic_operation_active,
+                                       periodic_operation_idle))
+                        {
+                            break;
+                        }
+                        const atomic_val_t state =
+                            atomic_get(&periodic_native_operation_state);
+                        if ((state == periodic_operation_idle) ||
+                            (state == periodic_operation_releasing))
+                        {
+                            break;
+                        }
                     }
                 }
                 (void)k_mutex_unlock(&periodic_native_operation_gate);
