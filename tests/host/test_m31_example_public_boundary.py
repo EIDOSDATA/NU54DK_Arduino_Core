@@ -121,6 +121,24 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
                     self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
                                      "PUBLIC_AUDIO_API_FLOW_MISSING")
 
+    def test_cap_delegated_sink_must_cleanup_failed_reception(self) -> None:
+        """! @brief peer loss 오류 뒤 예약된 BASS cleanup이 먼저 실행되는지 검사합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_BroadcastSink.cpp"
+        ).read_text(encoding="utf-8")
+        poll_start = source.index("void BroadcastSink::poll() noexcept")
+        cleanup = source.index("atomic_cas(&sink_state.delegated_cleanup", poll_start)
+        failed_return = source.index(
+            "if (stage_ == BroadcastStage::failed)", poll_start
+        )
+        self.assertLess(cleanup, failed_return)
+
+        release_start = source.index("int releaseDelegatedReception() noexcept")
+        release_end = source.index("} // namespace", release_start)
+        release = source[release_start:release_end]
+        self.assertIn("atomic_set(&sink_state.error, 0);", release)
+
     def test_direction_finding_sketch_must_keep_public_control_flow(self) -> None:
         """! @brief CTE 송신 예제의 공개 start/stop 호출과 Kconfig를 검사합니다. """
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:

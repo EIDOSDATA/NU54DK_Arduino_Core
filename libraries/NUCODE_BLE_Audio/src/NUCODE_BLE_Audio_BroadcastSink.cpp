@@ -644,6 +644,7 @@ namespace nucode::ble::audio
             atomic_set(&sink_state.base_received, 0);
             atomic_set(&sink_state.syncable, 0);
             atomic_set(&sink_state.streaming, 0);
+            atomic_set(&sink_state.error, 0);
             atomic_set(&sink_state.stopping, 0);
             k_msgq_purge(&receive_queue);
             return first_error;
@@ -804,7 +805,7 @@ namespace nucode::ble::audio
     /** @brief 검색 결과를 PA/BASE/BIG/BIS 동기화 단계로 진행합니다. */
     void BroadcastSink::poll() noexcept
     {
-        if (!started_ || (stage_ == BroadcastStage::failed))
+        if (!started_)
         {
             return;
         }
@@ -823,6 +824,11 @@ namespace nucode::ble::audio
             }
             stage_ = BroadcastStage::idle;
             (void)record(Error::none);
+        }
+
+        if (stage_ == BroadcastStage::failed)
+        {
+            return;
         }
 
         if (sink_state.delegated &&
