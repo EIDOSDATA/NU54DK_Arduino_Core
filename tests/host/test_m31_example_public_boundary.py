@@ -139,6 +139,17 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         release = source[release_start:release_end]
         self.assertIn("atomic_set(&sink_state.error, 0);", release)
 
+    def test_cap_commander_detects_loss_only_while_idle(self) -> None:
+        """! @brief 의도한 CAP stop 알림을 peer loss로 오인하지 않는지 검사합니다. """
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "streamWasSynchronized && commander.hasSource() && commander.ready()",
+            source,
+        )
+
     def test_direction_finding_sketch_must_keep_public_control_flow(self) -> None:
         """! @brief CTE 송신 예제의 공개 start/stop 호출과 Kconfig를 검사합니다. """
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:

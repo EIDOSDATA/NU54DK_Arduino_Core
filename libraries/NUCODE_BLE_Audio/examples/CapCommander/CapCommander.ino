@@ -371,7 +371,7 @@ void loop()
         {
             streamWasSynchronized = true;
         }
-        else if (streamWasSynchronized && commander.hasSource())
+        else if (streamWasSynchronized && commander.hasSource() && commander.ready())
         {
             streamWasSynchronized = false;
             lossStopPending = true;
