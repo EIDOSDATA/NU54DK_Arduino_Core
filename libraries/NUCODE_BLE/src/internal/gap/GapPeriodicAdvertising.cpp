@@ -63,6 +63,7 @@ namespace nucode::ble::internal::gap
         atomic_t periodic_sync_create_armed = ATOMIC_INIT(0);
         atomic_t periodic_sync_delete_armed = ATOMIC_INIT(0);
         atomic_t periodic_sync_term_seen = ATOMIC_INIT(0);
+        atomic_ptr_t rejected_periodic_transfer = nullptr;
 
         /** @brief callback의 PAST sender link가 명시적으로 구독된 현재 handle인지 확인합니다. */
         bool pastTransferSubscribed(struct bt_conn *connection) noexcept
@@ -86,6 +87,16 @@ namespace nucode::ble::internal::gap
                 }
             }
             return false;
+        }
+
+        /** @brief 소유권을 얻지 못한 PAST sync를 고정 slot에서 즉시 반환합니다. */
+        void rejectPeriodicTransfer(struct bt_le_per_adv_sync *instance) noexcept
+        {
+            atomic_ptr_set(&rejected_periodic_transfer, instance);
+            const int result = bt_le_per_adv_sync_delete(instance);
+            (void)atomic_ptr_cas(&rejected_periodic_transfer, instance, nullptr);
+            internal::recordError(result < 0 ? BLEError::driver_error : BLEError::busy,
+                                  result < 0 ? result : -EBUSY, true);
         }
 
         /** @brief handle이 현재 periodic sync generation인지 검사합니다. */
@@ -135,12 +146,21 @@ namespace nucode::ble::internal::gap
             std::uint32_t device_generation = 0U;
             if (!currentPeriodicHandle(instance, handle, device_generation))
             {
+                if ((instance == nullptr) || (information == nullptr) ||
+                    (information->addr == nullptr) ||
+                    !pastTransferSubscribed(information->conn))
+                {
+                    return;
+                }
+                if (!nucode::arduino::internal::claimBLEPeriodicSyncLease(
+                        &periodic_sync_owner_token))
+                {
+                    rejectPeriodicTransfer(instance);
+                    return;
+                }
                 k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
                 PeriodicSyncContext &context = gapState().periodic_sync;
-                if (context.instance == nullptr &&
-                    pastTransferSubscribed(information->conn) &&
-                    nucode::arduino::internal::claimBLEPeriodicSyncLease(
-                        &periodic_sync_owner_token))
+                if (context.instance == nullptr)
                 {
                     context.instance = instance;
                     context.generation = nextPeriodicSyncGeneration();
@@ -154,6 +174,9 @@ namespace nucode::ble::internal::gap
                 k_spin_unlock(&gapState().configuration_lock, key);
                 if (!handle.valid())
                 {
+                    rejectPeriodicTransfer(instance);
+                    nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                        &periodic_sync_owner_token);
                     return;
                 }
             }
@@ -167,6 +190,10 @@ namespace nucode::ble::internal::gap
                                 const struct bt_le_per_adv_sync_term_info *information) noexcept
         {
             ARG_UNUSED(information);
+            if (atomic_ptr_get(&rejected_periodic_transfer) == instance)
+            {
+                return;
+            }
             BLEPeriodicSyncHandle handle;
             std::uint32_t device_generation = 0U;
             if (!currentPeriodicHandle(instance, handle, device_generation))

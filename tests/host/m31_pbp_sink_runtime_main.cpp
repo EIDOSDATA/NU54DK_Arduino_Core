@@ -583,6 +583,91 @@ namespace
             &foreign_owner_token);
     }
 
+    /** @brief native delete 진입 전 종료 callback이 와도 foreign 재사용을 지연합니다. */
+    void testPreDeleteCallbackLeaseBarrier()
+    {
+        pbp_stub::resetCleanupState();
+        pbp_stub::periodic_delete_mode = pbp_stub::PeriodicDeleteMode::synchronous;
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x75U;
+        parameters.sid = 13U;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid, true);
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::blocked_atomic = &sink_state.periodic_synced;
+            pbp_stub::atomic_entered = false;
+            pbp_stub::release_atomic = false;
+        }
+
+        Error end_result = Error::stack_error;
+        std::thread ending(
+            [&]()
+            {
+                end_result = public_sink.end();
+            });
+        {
+            std::unique_lock<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::atomic_changed.wait(
+                lock,
+                []()
+                {
+                    return pbp_stub::atomic_entered;
+                });
+        }
+
+        pbp_stub::periodic_present.store(false);
+        const bt_le_per_adv_sync_term_info information = {
+            .addr = &parameters.addr,
+            .sid = parameters.sid,
+            .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+        };
+        periodicTerminated(sync, &information);
+
+        std::atomic<bool> foreign_gate_entered{false};
+        std::uint8_t foreign_owner_token = 0U;
+        std::thread foreign_reuse(
+            [&]()
+            {
+                while (!nucode::arduino::internal::claimBLEPeriodicSyncLease(
+                    &foreign_owner_token))
+                {
+                    std::this_thread::yield();
+                }
+                foreign_gate_entered.store(true);
+                bt_addr_le_t foreign_address = {};
+                foreign_address.address[0] = 0xc5U;
+                pbp_stub::reusePeriodicSlot(foreign_address, 14U);
+            });
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        assert(!foreign_gate_entered.load());
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::release_atomic = true;
+        }
+        pbp_stub::atomic_changed.notify_all();
+        ending.join();
+        foreign_reuse.join();
+        {
+            const std::lock_guard<std::mutex> lock(pbp_stub::atomic_mutex);
+            pbp_stub::blocked_atomic = nullptr;
+        }
+
+        assert(end_result == Error::none);
+        assert(pbp_stub::periodic_delete_calls == 1U);
+        assert(pbp_stub::foreign_periodic_delete_calls == 0U);
+        assert(pbp_stub::periodic_present.load());
+        assert(currentPeriodicSync() == nullptr);
+        assert(atomic_get(&sink_state.periodic_session) == 0);
+        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+            &foreign_owner_token);
+    }
+
     /** @brief pending cancel timeout 뒤 재사용된 slot은 lookup으로만 격리 해제합니다. */
     void testPendingCancelQuarantineReuse()
     {
@@ -661,6 +746,7 @@ int main()
     testSameIdentityDelayedTermination();
     testLookupDeleteReuseRace();
     testFinalCheckDeleteGate();
+    testPreDeleteCallbackLeaseBarrier();
     testPendingCancelQuarantineReuse();
     testRepeatedCleanupAndRebegin();
     assert(pbp_stub::periodic_callback_register_calls == 1U);

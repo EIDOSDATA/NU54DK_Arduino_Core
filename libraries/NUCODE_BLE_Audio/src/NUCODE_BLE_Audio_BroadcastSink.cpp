@@ -53,6 +53,46 @@ namespace nucode::ble::audio
         K_MUTEX_DEFINE(sink_state_mutex);
         K_MUTEX_DEFINE(periodic_native_operation_gate);
         std::uint8_t periodic_sync_owner_token = 0U;
+        constexpr atomic_val_t periodic_operation_idle = 0;
+        constexpr atomic_val_t periodic_operation_active = 1;
+        constexpr atomic_val_t periodic_operation_release_pending = 2;
+        constexpr atomic_val_t periodic_operation_releasing = 3;
+        atomic_t periodic_native_operation_state = periodic_operation_idle;
+
+        /** @brief native operation 중에는 lease 반환을 operation 종료까지 지연합니다. */
+        void releasePeriodicSyncLease() noexcept
+        {
+            for (;;)
+            {
+                const atomic_val_t state = atomic_get(&periodic_native_operation_state);
+                if (state == periodic_operation_idle)
+                {
+                    if (atomic_cas(&periodic_native_operation_state,
+                                   periodic_operation_idle,
+                                   periodic_operation_releasing))
+                    {
+                        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                            &periodic_sync_owner_token);
+                        atomic_set(&periodic_native_operation_state,
+                                   periodic_operation_idle);
+                        return;
+                    }
+                    continue;
+                }
+                if ((state == periodic_operation_release_pending) ||
+                    (state == periodic_operation_releasing))
+                {
+                    return;
+                }
+                if ((state == periodic_operation_active) &&
+                    atomic_cas(&periodic_native_operation_state,
+                               periodic_operation_active,
+                               periodic_operation_release_pending))
+                {
+                    return;
+                }
+            }
+        }
 
         /** @brief callback과 Arduino 문맥의 복합 상태 접근을 직렬화합니다. */
         class SinkStateGuard final
@@ -79,15 +119,53 @@ namespace nucode::ble::audio
             PeriodicNativeOperationGuard() noexcept
             {
                 (void)k_mutex_lock(&periodic_native_operation_gate, K_FOREVER);
+                for (;;)
+                {
+                    const atomic_val_t state = atomic_get(&periodic_native_operation_state);
+                    if (state == periodic_operation_releasing)
+                    {
+                        continue;
+                    }
+                    owns_release_barrier_ =
+                        (state == periodic_operation_idle) &&
+                        atomic_cas(&periodic_native_operation_state,
+                                   periodic_operation_idle,
+                                   periodic_operation_active);
+                    if (owns_release_barrier_ || (state != periodic_operation_idle))
+                    {
+                        break;
+                    }
+                }
             }
 
             ~PeriodicNativeOperationGuard() noexcept
             {
+                if (owns_release_barrier_)
+                {
+                    if (atomic_cas(&periodic_native_operation_state,
+                                   periodic_operation_release_pending,
+                                   periodic_operation_releasing))
+                    {
+                        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+                            &periodic_sync_owner_token);
+                        atomic_set(&periodic_native_operation_state,
+                                   periodic_operation_idle);
+                    }
+                    else
+                    {
+                        (void)atomic_cas(&periodic_native_operation_state,
+                                         periodic_operation_active,
+                                         periodic_operation_idle);
+                    }
+                }
                 (void)k_mutex_unlock(&periodic_native_operation_gate);
             }
 
             PeriodicNativeOperationGuard(const PeriodicNativeOperationGuard &) = delete;
             PeriodicNativeOperationGuard &operator=(const PeriodicNativeOperationGuard &) = delete;
+
+          private:
+            bool owns_release_barrier_ = false;
         };
 
         /** @brief 한 Arduino 객체가 소유하는 broadcast sink 상태입니다. */
@@ -350,8 +428,7 @@ namespace nucode::ble::audio
                              static_cast<atomic_val_t>(session), 0);
             atomic_set(&sink_state.periodic_synced, 0);
             k_sem_give(&periodic_stopped);
-            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
-                &periodic_sync_owner_token);
+            releasePeriodicSyncLease();
             return true;
         }
 
@@ -370,8 +447,7 @@ namespace nucode::ble::audio
             atomic_set(&sink_state.periodic_cancel_issued, 0);
             atomic_set(&sink_state.periodic_delete_issued, 0);
             atomic_set(&sink_state.periodic_terminated, 0);
-            nucode::arduino::internal::releaseBLEPeriodicSyncLease(
-                &periodic_sync_owner_token);
+            releasePeriodicSyncLease();
         }
 
         /** @brief 한 광고 packet에서 BAP announcement와 방송 이름을 수집합니다. */
@@ -1874,8 +1950,7 @@ namespace nucode::ble::audio
                                  static_cast<atomic_val_t>(periodic_session), 0);
                 (void)drainTransportCallbacks();
                 clearPeriodicCreateCandidates();
-                nucode::arduino::internal::releaseBLEPeriodicSyncLease(
-                    &periodic_sync_owner_token);
+                releasePeriodicSyncLease();
                 stage_ = BroadcastStage::failed;
                 (void)record(Error::stack_error, result);
                 return;
@@ -1886,8 +1961,7 @@ namespace nucode::ble::audio
                 atomic_set(&sink_state.periodic_create_session, 0);
                 (void)drainTransportCallbacks();
                 clearPeriodicCreateCandidates();
-                nucode::arduino::internal::releaseBLEPeriodicSyncLease(
-                    &periodic_sync_owner_token);
+                releasePeriodicSyncLease();
                 stage_ = BroadcastStage::failed;
                 (void)record(Error::stack_error, -EIO);
                 return;
@@ -1920,8 +1994,7 @@ namespace nucode::ble::audio
                 }
                 else
                 {
-                    nucode::arduino::internal::releaseBLEPeriodicSyncLease(
-                        &periodic_sync_owner_token);
+                    releasePeriodicSyncLease();
                 }
                 stage_ = BroadcastStage::failed;
                 (void)record(Error::stack_error,

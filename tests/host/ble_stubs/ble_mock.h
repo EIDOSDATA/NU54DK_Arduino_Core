@@ -566,6 +566,8 @@ inline int mock_past_error = 0;
 inline unsigned mock_past_transfer_count = 0U;
 inline unsigned mock_past_subscribe_count = 0U;
 inline unsigned mock_past_unsubscribe_count = 0U;
+inline unsigned mock_periodic_sync_delete_count = 0U;
+inline bt_le_per_adv_sync *mock_last_periodic_sync_deleted = nullptr;
 inline unsigned mock_pawr_subevent_data_count = 0U;
 inline unsigned mock_pawr_scanner_config_count = 0U;
 inline unsigned mock_pawr_response_data_count = 0U;
@@ -633,8 +635,30 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
     {
         return mock_periodic_sync_delete_error;
     }
+    ++mock_periodic_sync_delete_count;
+    mock_last_periodic_sync_deleted = sync;
     sync->deleted = true;
+    if ((mock_periodic_sync_callbacks != nullptr) &&
+        (mock_periodic_sync_callbacks->term != nullptr))
+    {
+        const bt_le_per_adv_sync_term_info information{
+            &mock_periodic_sync_parameters.addr, mock_periodic_sync_parameters.sid, 0x16U};
+        mock_periodic_sync_callbacks->term(sync, &information);
+    }
     return 0;
+}
+inline bt_le_per_adv_sync *bt_le_per_adv_sync_lookup_addr(const bt_addr_le_t *address,
+                                                          std::uint8_t sid)
+{
+    if ((mock_periodic_sync_count == 0U) ||
+        (sid != mock_periodic_sync_parameters.sid) ||
+        (std::memcmp(address, &mock_periodic_sync_parameters.addr,
+                     sizeof(*address)) != 0))
+    {
+        return nullptr;
+    }
+    bt_le_per_adv_sync *const sync = &mock_periodic_syncs[mock_periodic_sync_count - 1U];
+    return sync->deleted ? nullptr : sync;
 }
 inline int bt_le_per_adv_sync_transfer(const bt_le_per_adv_sync *, const bt_conn *,
                                        std::uint16_t)
