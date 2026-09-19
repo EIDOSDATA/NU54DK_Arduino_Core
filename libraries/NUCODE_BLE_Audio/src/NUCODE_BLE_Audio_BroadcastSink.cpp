@@ -11,9 +11,13 @@
 
 #include <NUCODE_BLE.h>
 
+#include <zephyr/bluetooth/assigned_numbers.h>
 #include <zephyr/bluetooth/audio/bap.h>
 #include <zephyr/bluetooth/audio/lc3.h>
 #include <zephyr/bluetooth/audio/pacs.h>
+#if defined(CONFIG_BT_PBP)
+#include <zephyr/bluetooth/audio/pbp.h>
+#endif
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/bluetooth/iso.h>
@@ -21,6 +25,7 @@
 #include <zephyr/net_buf.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/byteorder.h>
+#include <zephyr/sys/util_utf8.h>
 
 #include <errno.h>
 #include <string.h>
@@ -31,6 +36,8 @@ namespace nucode::ble::audio
     {
         constexpr std::size_t frame_octets = 40U;
         constexpr std::size_t maximum_broadcast_name = 31U;
+        constexpr std::size_t maximum_public_broadcast_name = 128U;
+        constexpr std::size_t maximum_program_info = 64U;
         constexpr std::uint32_t periodic_timeout_ratio = 20U;
 
         K_MSGQ_DEFINE(receive_queue, frame_octets, 8, 4);
@@ -45,7 +52,8 @@ namespace nucode::ble::audio
             bt_le_per_adv_sync *periodic_sync = nullptr;
             bt_bap_stream stream = {};
             bt_addr_le_t broadcaster = {};
-            char target_name[maximum_broadcast_name + 1U] = {};
+            char target_name[maximum_public_broadcast_name + 1U] = {};
+            PublicBroadcastInfo public_info = {};
             std::uint32_t broadcast_id = 0U;
             std::uint16_t periodic_interval = 0U;
             std::uint8_t sid = 0U;
@@ -77,6 +85,8 @@ namespace nucode::ble::audio
             bool encrypted = false;
             bool delegated = false;
             bool delegated_source = false;
+            bool public_broadcast = false;
+            bool advertised_encrypted = false;
             std::uint8_t delegated_source_id = 0xffU;
         };
 
@@ -98,8 +108,46 @@ namespace nucode::ble::audio
         {
             bool service = false;
             bool name = false;
+            bool public_announcement = false;
+            bool standard_quality = false;
+            bool high_quality = false;
+            bool encrypted = false;
+            char broadcast_name[maximum_public_broadcast_name + 1U] = {};
+            char program_info[maximum_program_info + 1U] = {};
             std::uint32_t broadcast_id = 0U;
         };
+
+        /** @brief PBA metadata에서 Program Info를 고정 크기 문자열로 복사합니다. */
+        bool parseProgramInfo(const std::uint8_t *metadata, std::size_t metadata_length,
+                              char (&program_info)[maximum_program_info + 1U])
+        {
+            std::size_t offset = 0U;
+            while (offset < metadata_length)
+            {
+                const std::size_t field_length = metadata[offset];
+                if ((field_length == 0U) ||
+                    ((offset + field_length + 1U) > metadata_length))
+                {
+                    return false;
+                }
+                if (metadata[offset + 1U] == BT_AUDIO_METADATA_TYPE_PROGRAM_INFO)
+                {
+                    const std::size_t value_length = field_length - 1U;
+                    if (value_length > maximum_program_info)
+                    {
+                        return false;
+                    }
+                    memcpy(program_info, &metadata[offset + 2U], value_length);
+                    program_info[value_length] = '\0';
+                    if (utf8_count_chars(program_info) < 0)
+                    {
+                        return false;
+                    }
+                }
+                offset += field_length + 1U;
+            }
+            return true;
+        }
 
         /** @brief Service Data와 Broadcast Name AD element를 해석합니다. */
         bool inspectData(bt_data *data, void *user_data)
@@ -112,12 +160,64 @@ namespace nucode::ble::audio
                 match->service = true;
                 match->broadcast_id = sys_get_le24(data->data + BT_UUID_SIZE_16);
             }
-            else if ((data->type == BT_DATA_BROADCAST_NAME) &&
-                     (data->data_len == strlen(sink_state.target_name)) &&
-                     (memcmp(data->data, sink_state.target_name, data->data_len) == 0))
+            else if (data->type == BT_DATA_BROADCAST_NAME)
             {
-                match->name = true;
+                if (sink_state.public_broadcast)
+                {
+                    if ((data->data_len >= BT_AUDIO_BROADCAST_NAME_LEN_MIN) &&
+                        (data->data_len <= BT_AUDIO_BROADCAST_NAME_LEN_MAX))
+                    {
+                        memcpy(match->broadcast_name, data->data, data->data_len);
+                        match->broadcast_name[data->data_len] = '\0';
+                        const int character_count =
+                            utf8_count_chars(match->broadcast_name);
+                        const bool valid_name =
+                            (character_count >= static_cast<int>(
+                                 BT_AUDIO_BROADCAST_NAME_LEN_MIN)) &&
+                            (character_count <= 32);
+                        const bool matches_filter =
+                            (sink_state.target_name[0] == '\0') ||
+                            (strcmp(match->broadcast_name,
+                                    sink_state.target_name) == 0);
+                        match->name = valid_name && matches_filter;
+                    }
+                }
+                else if ((data->data_len == strlen(sink_state.target_name)) &&
+                         (memcmp(data->data, sink_state.target_name,
+                                 data->data_len) == 0))
+                {
+                    match->name = true;
+                }
             }
+#if defined(CONFIG_BT_PBP)
+            else if ((data->type == BT_DATA_SVC_DATA16) &&
+                     (data->data_len >= BT_UUID_SIZE_16) &&
+                     (sys_get_le16(data->data) == BT_UUID_PBA_VAL))
+            {
+                bt_pbp_announcement_feature features = {};
+                std::uint8_t *metadata = nullptr;
+                const int metadata_length =
+                    bt_pbp_parse_announcement(data, &features, &metadata);
+                if ((metadata_length >= 0) &&
+                    parseProgramInfo(metadata,
+                                     static_cast<std::size_t>(metadata_length),
+                                     match->program_info))
+                {
+                    const std::uint8_t feature_bits =
+                        static_cast<std::uint8_t>(features);
+                    match->public_announcement = true;
+                    match->standard_quality =
+                        (feature_bits &
+                         BT_PBP_ANNOUNCEMENT_FEATURE_STANDARD_QUALITY) != 0U;
+                    match->high_quality =
+                        (feature_bits &
+                         BT_PBP_ANNOUNCEMENT_FEATURE_HIGH_QUALITY) != 0U;
+                    match->encrypted =
+                        (feature_bits &
+                         BT_PBP_ANNOUNCEMENT_FEATURE_ENCRYPTION) != 0U;
+                }
+            }
+#endif
             return true;
         }
 
@@ -139,16 +239,36 @@ namespace nucode::ble::audio
                                                       &sink_state.broadcaster) == 0 &&
                                        info->sid == sink_state.sid &&
                                        match.broadcast_id == sink_state.broadcast_id);
-            if (!match.service || (!sink_state.delegated && !match.name) || !exact_source)
+            const bool public_match = !sink_state.public_broadcast ||
+                                      (match.public_announcement &&
+                                       match.standard_quality && match.name);
+            if (!match.service || (!sink_state.delegated && !match.name) ||
+                !public_match || !exact_source)
             {
                 return;
             }
-            if (atomic_cas(&sink_state.found, 0, 1))
+            if (atomic_get(&sink_state.found) == 0)
             {
                 bt_addr_le_copy(&sink_state.broadcaster, info->addr);
                 sink_state.sid = info->sid;
                 sink_state.periodic_interval = info->interval;
                 sink_state.broadcast_id = match.broadcast_id;
+                if (sink_state.public_broadcast)
+                {
+                    memcpy(sink_state.public_info.broadcast_name,
+                           match.broadcast_name,
+                           sizeof(sink_state.public_info.broadcast_name));
+                    memcpy(sink_state.public_info.program_info,
+                           match.program_info,
+                           sizeof(sink_state.public_info.program_info));
+                    sink_state.public_info.broadcast_id = match.broadcast_id;
+                    sink_state.public_info.encrypted = match.encrypted;
+                    sink_state.public_info.standard_quality =
+                        match.standard_quality;
+                    sink_state.public_info.high_quality = match.high_quality;
+                    sink_state.advertised_encrypted = match.encrypted;
+                }
+                atomic_set(&sink_state.found, 1);
             }
         }
 
@@ -212,6 +332,12 @@ namespace nucode::ble::audio
                 return;
             }
             sink_state.encrypted = biginfo->encryption;
+            if (sink_state.public_broadcast &&
+                (sink_state.encrypted != sink_state.advertised_encrypted))
+            {
+                atomic_set(&sink_state.error, -EBADMSG);
+                return;
+            }
             if (sink_state.encrypted && !sink_state.has_broadcast_code)
             {
                 if (!sink_state.delegated)
@@ -678,9 +804,47 @@ namespace nucode::ble::audio
         return start(nullptr, nullptr);
     }
 
-    /** @brief 선택한 code와 함께 검색·PACS·BASS 자원을 구성합니다. */
+    /** @brief 일반 BAP broadcast 설정을 기존 경로로 전달합니다. */
     Error BroadcastSink::start(const char *broadcast_name,
                                const std::uint8_t *broadcast_code) noexcept
+    {
+        return startConfigured(broadcast_name, broadcast_code, false);
+    }
+
+    /** @brief Standard Quality 공개 방송 검색 조건을 적용합니다. */
+    Error BroadcastSink::startPublic(const PublicBroadcastFilter &filter,
+                                     const std::uint8_t *broadcast_code) noexcept
+    {
+#if defined(CONFIG_BT_PBP)
+        if (filter.required_quality != PublicBroadcastQuality::standard)
+        {
+            return record(Error::unsupported);
+        }
+        if (filter.broadcast_name != nullptr)
+        {
+            const std::size_t name_bytes = strlen(filter.broadcast_name);
+            const int name_characters = utf8_count_chars(filter.broadcast_name);
+            if ((name_bytes < BT_AUDIO_BROADCAST_NAME_LEN_MIN) ||
+                (name_bytes > BT_AUDIO_BROADCAST_NAME_LEN_MAX) ||
+                (name_characters < static_cast<int>(
+                     BT_AUDIO_BROADCAST_NAME_LEN_MIN)) ||
+                (name_characters > 32))
+            {
+                return record(Error::invalid_argument);
+            }
+        }
+        return startConfigured(filter.broadcast_name, broadcast_code, true);
+#else
+        static_cast<void>(filter);
+        static_cast<void>(broadcast_code);
+        return record(Error::unsupported);
+#endif
+    }
+
+    /** @brief 선택한 code와 함께 검색·PACS·BASS 자원을 구성합니다. */
+    Error BroadcastSink::startConfigured(const char *broadcast_name,
+                                         const std::uint8_t *broadcast_code,
+                                         bool public_broadcast) noexcept
     {
         if (started_)
         {
@@ -694,7 +858,7 @@ namespace nucode::ble::audio
         {
             return record(Error::busy);
         }
-        if ((broadcast_name != nullptr) &&
+        if (!public_broadcast && (broadcast_name != nullptr) &&
             ((broadcast_name[0] == '\0') ||
              (strlen(broadcast_name) > maximum_broadcast_name)))
         {
@@ -703,7 +867,8 @@ namespace nucode::ble::audio
 
         sink_state = {};
         sink_state.owner = this;
-        sink_state.delegated = broadcast_name == nullptr;
+        sink_state.public_broadcast = public_broadcast;
+        sink_state.delegated = !public_broadcast && (broadcast_name == nullptr);
         if (broadcast_name != nullptr)
         {
             memcpy(sink_state.target_name, broadcast_name, strlen(broadcast_name) + 1U);
@@ -977,6 +1142,18 @@ namespace nucode::ble::audio
         return started_ && (k_msgq_get(&receive_queue, frame, K_NO_WAIT) == 0);
     }
 
+    /** @brief 선택된 공개 방송 announcement 정보를 복사합니다. */
+    bool BroadcastSink::selectedPublic(PublicBroadcastInfo &info) const noexcept
+    {
+        if (!started_ || !sink_state.public_broadcast ||
+            (atomic_get(&sink_state.found) == 0))
+        {
+            return false;
+        }
+        info = sink_state.public_info;
+        return true;
+    }
+
     /** @brief 현재 비동기 단계를 반환합니다. */
     BroadcastStage BroadcastSink::stage() const noexcept
     {
@@ -1061,6 +1238,23 @@ namespace nucode::ble::audio
         return record(Error::not_ready);
     }
 
+    Error BroadcastSink::start(const char *, const std::uint8_t *) noexcept
+    {
+        return record(Error::not_ready);
+    }
+
+    Error BroadcastSink::startPublic(const PublicBroadcastFilter &,
+                                     const std::uint8_t *) noexcept
+    {
+        return record(Error::unsupported);
+    }
+
+    Error BroadcastSink::startConfigured(const char *, const std::uint8_t *,
+                                         bool) noexcept
+    {
+        return record(Error::not_ready);
+    }
+
     /** @brief 기능이 없는 image에서는 진행할 동기화 단계가 없습니다. */
     void BroadcastSink::poll() noexcept
     {
@@ -1082,6 +1276,11 @@ namespace nucode::ble::audio
     bool BroadcastSink::readFrame(std::uint8_t (&frame)[40]) noexcept
     {
         static_cast<void>(frame);
+        return false;
+    }
+
+    bool BroadcastSink::selectedPublic(PublicBroadcastInfo &) const noexcept
+    {
         return false;
     }
 

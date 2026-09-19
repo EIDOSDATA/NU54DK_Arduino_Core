@@ -176,6 +176,67 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             source,
         )
 
+    def test_public_audio_broadcast_sketches_keep_profile_flow(self) -> None:
+        """! @brief 공개 방송 source/sink 예제의 품질·송수신 흐름을 검사합니다. """
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            library = Path(temporary) / "NUCODE_BLE_Audio"
+            for name, token in (
+                ("PublicAudioBroadcastSource", "audioSource.sendFrame("),
+                ("PublicAudioBroadcastSink", "audioSink.selected("),
+            ):
+                source = ROOT / "libraries/NUCODE_BLE_Audio/examples" / name
+                sketch = library / "examples" / name / f"{name}.ino"
+                sketch.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source / f"{name}.ino", sketch)
+                shutil.copy2(source / "prj.conf", sketch.parent / "prj.conf")
+                with self.subTest(name=name, state="valid"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "VISIBLE_CODE")
+                sketch.write_text(
+                    sketch.read_text(encoding="utf-8").replace(
+                        token, token.replace("(", "Fake(")
+                    ),
+                    encoding="utf-8",
+                )
+                with self.subTest(name=name, state="mutated"):
+                    self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
+                                     "PUBLIC_AUDIO_API_FLOW_MISSING")
+
+    def test_public_audio_broadcast_backend_is_profile_bounded(self) -> None:
+        """! @brief PBA 생성·해석과 Standard 전용 실패 경계를 검사합니다. """
+        header = (
+            ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.h"
+        ).read_text(encoding="utf-8")
+        source = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_CapInitiator.cpp"
+        ).read_text(encoding="utf-8")
+        sink = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_BroadcastSink.cpp"
+        ).read_text(encoding="utf-8")
+        wrapper = (
+            ROOT
+            / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_PublicBroadcast.cpp"
+        ).read_text(encoding="utf-8")
+
+        for declaration in (
+            "enum class PublicBroadcastQuality",
+            "struct PublicBroadcastSourceConfig",
+            "struct PublicBroadcastFilter",
+            "struct PublicBroadcastInfo",
+            "class PublicAudioBroadcastSource final",
+            "class PublicAudioBroadcastSink final",
+        ):
+            self.assertIn(declaration, header)
+        self.assertIn("bt_pbp_get_announcement(", source)
+        self.assertIn("BT_PBP_ANNOUNCEMENT_FEATURE_STANDARD_QUALITY", source)
+        self.assertIn("bt_pbp_parse_announcement(", sink)
+        self.assertIn("sink_state.encrypted != sink_state.advertised_encrypted", sink)
+        self.assertIn("Error::unsupported", source)
+        self.assertIn("Error::unsupported", sink)
+        self.assertIn("PublicBroadcastQuality::standard", wrapper)
+
     def test_direction_finding_sketch_must_keep_public_control_flow(self) -> None:
         """! @brief CTE 송신 예제의 공개 start/stop 호출과 Kconfig를 검사합니다. """
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:

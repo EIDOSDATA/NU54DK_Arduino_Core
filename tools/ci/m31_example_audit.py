@@ -199,6 +199,39 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_AUDIO_CODEC_CFG_MAX_METADATA_SIZE=4",
                 "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "PublicAudioBroadcastSource":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "PublicAudioBroadcastSource", "PublicBroadcastSourceConfig",
+                "PublicBroadcastQuality::standard", "BroadcastCode", "Lc3Codec",
+                "BLEDevice.begin(", "audioSource.begin(",
+                "audioSource.sendFrame(", "audioSource.end(", "codec.encode(",
+            )
+            options = (
+                "CONFIG_BT_PBP=y", "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                "CONFIG_BT_BAP_BROADCAST_SRC_STREAM_COUNT=1",
+                "CONFIG_BT_BAP_BROADCAST_SRC_SUBGROUP_COUNT=1",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "PublicAudioBroadcastSink":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "PublicAudioBroadcastSink", "PublicBroadcastFilter",
+                "PublicBroadcastInfo", "PublicBroadcastQuality::standard",
+                "BroadcastCode", "Lc3Codec", "BLEDevice.begin(",
+                "audioSink.begin(", "audioSink.poll(", "audioSink.selected(",
+                "audioSink.readFrame(", "audioSink.end(", "codec.decode(",
+            )
+            options = (
+                "CONFIG_BT_PBP=y", "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                "CONFIG_BT_BAP_BROADCAST_SNK_STREAM_COUNT=1",
+                "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name == "CapAcceptor":
             required = (
                 "#include <NUCODE_BLE.h>",

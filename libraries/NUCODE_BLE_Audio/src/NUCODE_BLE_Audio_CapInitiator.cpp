@@ -12,15 +12,20 @@
 
 #include <NUCODE_BLE.h>
 
+#include <zephyr/bluetooth/assigned_numbers.h>
 #include <zephyr/bluetooth/audio/bap.h>
 #include <zephyr/bluetooth/audio/bap_lc3_preset.h>
 #include <zephyr/bluetooth/audio/cap.h>
+#if defined(CONFIG_BT_PBP)
+#include <zephyr/bluetooth/audio/pbp.h>
+#endif
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/iso.h>
 #include <zephyr/kernel.h>
 #include <zephyr/net_buf.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/byteorder.h>
+#include <zephyr/sys/util_utf8.h>
 
 #include <errno.h>
 #include <string.h>
@@ -31,6 +36,7 @@ namespace nucode::ble::audio
     {
         constexpr std::size_t frame_octets = 40U;
         constexpr std::size_t maximum_broadcast_name = 31U;
+        constexpr std::size_t maximum_program_info = 64U;
 
         NET_BUF_POOL_FIXED_DEFINE(cap_source_tx_pool, 4,
                                   BT_ISO_SDU_BUF_SIZE(CONFIG_BT_ISO_TX_MTU),
@@ -185,9 +191,56 @@ namespace nucode::ble::audio
         return start(broadcast_name, broadcast_code);
     }
 
-    /** @brief 선택한 암호화 설정으로 CAP source와 광고를 구성합니다. */
+    /** @brief 일반 CAP broadcast 설정을 기존 경로로 전달합니다. */
     Error CapInitiator::start(const char *broadcast_name,
                               const std::uint8_t *broadcast_code) noexcept
+    {
+        return startConfigured(broadcast_name, nullptr, broadcast_code, false);
+    }
+
+    /** @brief Standard Quality 공개 방송 설정을 CAP source에 적용합니다. */
+    Error CapInitiator::startPublic(const PublicBroadcastSourceConfig &config,
+                                    const std::uint8_t *broadcast_code) noexcept
+    {
+#if defined(CONFIG_BT_PBP)
+        if (config.quality != PublicBroadcastQuality::standard)
+        {
+            return record(Error::unsupported);
+        }
+        if ((config.broadcast_name == nullptr) ||
+            (config.program_info == nullptr))
+        {
+            return record(Error::invalid_argument);
+        }
+
+        const std::size_t name_bytes = strlen(config.broadcast_name);
+        const int name_characters = utf8_count_chars(config.broadcast_name);
+        const std::size_t program_info_bytes = strlen(config.program_info);
+        const int program_info_characters = utf8_count_chars(config.program_info);
+        if ((name_bytes < BT_AUDIO_BROADCAST_NAME_LEN_MIN) ||
+            (name_bytes > BT_AUDIO_BROADCAST_NAME_LEN_MAX) ||
+            (name_characters < static_cast<int>(BT_AUDIO_BROADCAST_NAME_LEN_MIN)) ||
+            (name_characters > 32) ||
+            (program_info_bytes > maximum_program_info) ||
+            (program_info_characters < 0))
+        {
+            return record(Error::invalid_argument);
+        }
+
+        return startConfigured(config.broadcast_name, config.program_info,
+                               broadcast_code, true);
+#else
+        static_cast<void>(config);
+        static_cast<void>(broadcast_code);
+        return record(Error::unsupported);
+#endif
+    }
+
+    /** @brief 선택한 암호화 설정으로 CAP source와 광고를 구성합니다. */
+    Error CapInitiator::startConfigured(const char *broadcast_name,
+                                        const char *program_info,
+                                        const std::uint8_t *broadcast_code,
+                                        bool public_broadcast) noexcept
     {
         if (started_)
         {
@@ -202,7 +255,8 @@ namespace nucode::ble::audio
             return record(Error::busy);
         }
         if ((broadcast_name == nullptr) || (broadcast_name[0] == '\0') ||
-            (strlen(broadcast_name) > maximum_broadcast_name))
+            (!public_broadcast &&
+             (strlen(broadcast_name) > maximum_broadcast_name)))
         {
             return record(Error::invalid_argument);
         }
@@ -276,21 +330,76 @@ namespace nucode::ble::audio
         {
             net_buf_simple_add_le16(&announcement, BT_UUID_BROADCAST_AUDIO_VAL);
             net_buf_simple_add_le24(&announcement, broadcast_id);
-            const bt_data advertising_data[] = {
-                {
-                    .type = BT_DATA_SVC_DATA16,
-                    .data_len = static_cast<std::uint8_t>(announcement.len),
-                    .data = announcement.data,
-                },
-                {
-                    .type = BT_DATA_BROADCAST_NAME,
-                    .data_len = static_cast<std::uint8_t>(strlen(broadcast_name)),
-                    .data = reinterpret_cast<const std::uint8_t *>(broadcast_name),
-                },
+            const bt_data broadcast_announcement = {
+                .type = BT_DATA_SVC_DATA16,
+                .data_len = static_cast<std::uint8_t>(announcement.len),
+                .data = announcement.data,
             };
-            result = bt_le_ext_adv_set_data(cap_source_state.advertising,
-                                            advertising_data,
-                                            ARRAY_SIZE(advertising_data), nullptr, 0U);
+            const bt_data broadcast_name_data = {
+                .type = BT_DATA_BROADCAST_NAME,
+                .data_len = static_cast<std::uint8_t>(strlen(broadcast_name)),
+                .data = reinterpret_cast<const std::uint8_t *>(broadcast_name),
+            };
+
+#if defined(CONFIG_BT_PBP)
+            if (public_broadcast)
+            {
+                std::uint8_t metadata[maximum_program_info + 2U] = {};
+                const std::size_t program_info_length = strlen(program_info);
+                metadata[0] = static_cast<std::uint8_t>(program_info_length + 1U);
+                metadata[1] = BT_AUDIO_METADATA_TYPE_PROGRAM_INFO;
+                memcpy(&metadata[2], program_info, program_info_length);
+
+                NET_BUF_SIMPLE_DEFINE(public_announcement,
+                                      maximum_program_info + 2U +
+                                          BT_PBP_MIN_PBA_SIZE);
+                std::uint8_t feature_bits =
+                    BT_PBP_ANNOUNCEMENT_FEATURE_STANDARD_QUALITY;
+                if (broadcast_code != nullptr)
+                {
+                    feature_bits |= BT_PBP_ANNOUNCEMENT_FEATURE_ENCRYPTION;
+                }
+                result = bt_pbp_get_announcement(
+                    metadata, program_info_length + 2U,
+                    static_cast<bt_pbp_announcement_feature>(feature_bits),
+                    &public_announcement);
+                if (result == 0)
+                {
+                    const std::uint8_t appearance[] = {
+                        BT_BYTES_LIST_LE16(
+                            BT_APPEARANCE_AUDIO_SOURCE_BROADCASTING_DEVICE),
+                    };
+                    const bt_data advertising_data[] = {
+                        {
+                            .type = BT_DATA_GAP_APPEARANCE,
+                            .data_len = sizeof(appearance),
+                            .data = appearance,
+                        },
+                        broadcast_name_data,
+                        broadcast_announcement,
+                        {
+                            .type = BT_DATA_SVC_DATA16,
+                            .data_len = static_cast<std::uint8_t>(
+                                public_announcement.len),
+                            .data = public_announcement.data,
+                        },
+                    };
+                    result = bt_le_ext_adv_set_data(
+                        cap_source_state.advertising, advertising_data,
+                        ARRAY_SIZE(advertising_data), nullptr, 0U);
+                }
+            }
+            else
+#endif
+            {
+                const bt_data advertising_data[] = {
+                    broadcast_announcement,
+                    broadcast_name_data,
+                };
+                result = bt_le_ext_adv_set_data(
+                    cap_source_state.advertising, advertising_data,
+                    ARRAY_SIZE(advertising_data), nullptr, 0U);
+            }
         }
 
         NET_BUF_SIMPLE_DEFINE(base, 128U);
@@ -500,6 +609,18 @@ namespace nucode::ble::audio
     }
 
     Error CapInitiator::start(const char *, const std::uint8_t *) noexcept
+    {
+        return record(Error::not_ready);
+    }
+
+    Error CapInitiator::startPublic(const PublicBroadcastSourceConfig &,
+                                    const std::uint8_t *) noexcept
+    {
+        return record(Error::unsupported);
+    }
+
+    Error CapInitiator::startConfigured(const char *, const char *,
+                                        const std::uint8_t *, bool) noexcept
     {
         return record(Error::not_ready);
     }

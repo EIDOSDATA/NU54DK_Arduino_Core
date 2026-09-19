@@ -437,6 +437,39 @@ namespace nucode::ble::audio
         cleanup_pacs,
     };
 
+    /** @brief 공개 방송이 제공하는 오디오 품질 등급입니다. */
+    enum class PublicBroadcastQuality : std::uint8_t
+    {
+        standard,
+        high,
+    };
+
+    /** @brief 공개 오디오 방송의 게시 설정입니다. */
+    struct PublicBroadcastSourceConfig
+    {
+        const char *broadcast_name = "NU54-PUBLIC-AUDIO";
+        const char *program_info = "NUCODE public audio";
+        PublicBroadcastQuality quality = PublicBroadcastQuality::standard;
+    };
+
+    /** @brief 공개 오디오 방송을 찾을 때 적용할 조건입니다. */
+    struct PublicBroadcastFilter
+    {
+        const char *broadcast_name = nullptr;
+        PublicBroadcastQuality required_quality = PublicBroadcastQuality::standard;
+    };
+
+    /** @brief 검색으로 선택한 공개 오디오 방송의 고정 크기 정보입니다. */
+    struct PublicBroadcastInfo
+    {
+        char broadcast_name[129] = {};
+        char program_info[65] = {};
+        std::uint32_t broadcast_id = 0U;
+        bool encrypted = false;
+        bool standard_quality = false;
+        bool high_quality = false;
+    };
+
     /** @brief Broadcast Assistant의 공개 비동기 단계입니다. */
     enum class BroadcastAssistantStage : std::uint8_t
     {
@@ -587,8 +620,16 @@ namespace nucode::ble::audio
         [[nodiscard]] std::uint32_t delegatedRemovals() const noexcept;
 
       private:
+        friend class PublicAudioBroadcastSink;
+
         Error start(const char *broadcast_name,
                     const std::uint8_t *broadcast_code) noexcept;
+        Error startPublic(const PublicBroadcastFilter &filter,
+                          const std::uint8_t *broadcast_code) noexcept;
+        Error startConfigured(const char *broadcast_name,
+                              const std::uint8_t *broadcast_code,
+                              bool public_broadcast) noexcept;
+        bool selectedPublic(PublicBroadcastInfo &info) const noexcept;
         Error record(Error error, int native_code = 0) noexcept;
 
         bool started_ = false;
@@ -760,8 +801,16 @@ namespace nucode::ble::audio
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:
+        friend class PublicAudioBroadcastSource;
+
         Error start(const char *broadcast_name,
                     const std::uint8_t *broadcast_code) noexcept;
+        Error startPublic(const PublicBroadcastSourceConfig &config,
+                          const std::uint8_t *broadcast_code) noexcept;
+        Error startConfigured(const char *broadcast_name,
+                              const char *program_info,
+                              const std::uint8_t *broadcast_code,
+                              bool public_broadcast) noexcept;
         Error record(Error error, int native_code = 0) noexcept;
 
         bool started_ = false;
@@ -816,6 +865,121 @@ namespace nucode::ble::audio
         CapStage stage_ = CapStage::idle;
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
+    };
+
+    /** @brief Standard Quality 공개 오디오 방송을 송신합니다. */
+    class PublicAudioBroadcastSource final
+    {
+      public:
+        PublicAudioBroadcastSource() = default;
+
+        ~PublicAudioBroadcastSource()
+        {
+            (void)end();
+        }
+
+        PublicAudioBroadcastSource(const PublicAudioBroadcastSource &) = delete;
+        PublicAudioBroadcastSource &operator=(const PublicAudioBroadcastSource &) = delete;
+        PublicAudioBroadcastSource(PublicAudioBroadcastSource &&) = delete;
+        PublicAudioBroadcastSource &operator=(PublicAudioBroadcastSource &&) = delete;
+
+        /** @brief 암호화하지 않은 공개 오디오 방송을 시작합니다. */
+        Error begin(const PublicBroadcastSourceConfig &config = {}) noexcept;
+
+        /** @brief 16-byte code로 암호화한 공개 오디오 방송을 시작합니다. */
+        Error begin(const PublicBroadcastSourceConfig &config,
+                    const BroadcastCode &broadcast_code) noexcept;
+
+        /** @brief 방송과 광고를 중단하고 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief BIS가 LC3 frame 전송 가능한 상태인지 반환합니다. */
+        [[nodiscard]] bool streaming() const noexcept;
+
+        /** @brief BIS로 Standard Quality LC3 frame 하나를 전송합니다. */
+        Error sendFrame(const std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief 현재 공개 방송 단계를 반환합니다. */
+        [[nodiscard]] CapStage stage() const noexcept;
+
+        /** @brief controller에 수락된 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t sentFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Host/controller 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        CapInitiator initiator_;
+    };
+
+    /** @brief Standard Quality 공개 오디오 방송을 검색하고 수신합니다. */
+    class PublicAudioBroadcastSink final
+    {
+      public:
+        PublicAudioBroadcastSink() = default;
+
+        ~PublicAudioBroadcastSink()
+        {
+            (void)end();
+        }
+
+        PublicAudioBroadcastSink(const PublicAudioBroadcastSink &) = delete;
+        PublicAudioBroadcastSink &operator=(const PublicAudioBroadcastSink &) = delete;
+        PublicAudioBroadcastSink(PublicAudioBroadcastSink &&) = delete;
+        PublicAudioBroadcastSink &operator=(PublicAudioBroadcastSink &&) = delete;
+
+        /** @brief 조건에 맞는 암호화하지 않은 공개 방송 검색을 시작합니다. */
+        Error begin(const PublicBroadcastFilter &filter = {}) noexcept;
+
+        /** @brief 조건과 16-byte code로 암호화된 공개 방송 검색을 시작합니다. */
+        Error begin(const PublicBroadcastFilter &filter,
+                    const BroadcastCode &broadcast_code) noexcept;
+
+        /** @brief callback 결과를 다음 동기화 단계로 진행합니다. */
+        void poll() noexcept;
+
+        /** @brief BIS와 periodic advertising 동기화를 끊고 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 조건에 맞아 선택한 공개 방송 정보를 복사합니다. */
+        [[nodiscard]] bool selected(PublicBroadcastInfo &info) const noexcept;
+
+        /** @brief BIS가 LC3 frame 수신 가능한 상태인지 반환합니다. */
+        [[nodiscard]] bool streaming() const noexcept;
+
+        /** @brief 수신한 LC3 frame 하나를 복사하고 queue에서 제거합니다. */
+        [[nodiscard]] bool readFrame(std::uint8_t (&frame)[40]) noexcept;
+
+        /** @brief 현재 검색 또는 동기화 단계를 반환합니다. */
+        [[nodiscard]] BroadcastStage stage() const noexcept;
+
+        /** @brief 마지막 Host 요청 또는 오류가 발생한 작업을 반환합니다. */
+        [[nodiscard]] BroadcastSinkStep lastStep() const noexcept;
+
+        /** @brief 유효하게 수신한 LC3 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t receivedFrames() const noexcept;
+
+        /** @brief queue 포화로 폐기한 LC3 frame 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t droppedFrames() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Host/controller 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error start(const PublicBroadcastFilter &filter,
+                    const std::uint8_t *broadcast_code) noexcept;
+
+        CapAcceptor acceptor_;
+        BroadcastSink sink_;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+        bool started_ = false;
     };
 
     /**
