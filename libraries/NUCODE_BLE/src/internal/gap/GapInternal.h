@@ -85,6 +85,7 @@ namespace nucode::ble::internal::gap
     inline constexpr std::size_t maximum_mtu_exchange_contexts = 4U;
     inline constexpr std::size_t maximum_service_uuids = 4U;
     inline constexpr std::size_t maximum_ad_field_data = 29U;
+    inline constexpr std::uint8_t resolvable_set_identifier_ad_type = 0x2eU;
     inline constexpr std::uint16_t minimum_advertising_interval = 0x0020U;
     inline constexpr std::uint16_t maximum_advertising_interval = 0x4000U;
     inline constexpr std::uint16_t default_advertising_interval_min = 0x00a0U;
@@ -218,6 +219,8 @@ namespace nucode::ble::internal::gap
         BLEUuid service_data_uuid;
         std::uint8_t service_data[maximum_ad_field_data] = {};
         std::size_t service_data_length = 0U;
+        bool has_resolvable_set_identifier = false;
+        std::uint8_t resolvable_set_identifier[6] = {};
     };
 
     /** @brief software scan filter의 bounded 복사본입니다. */

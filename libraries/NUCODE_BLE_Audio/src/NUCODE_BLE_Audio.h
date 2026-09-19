@@ -1449,6 +1449,178 @@ namespace nucode::ble::audio
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };
+
+    /** @brief Coordinated Set을 식별하는 16-byte 비밀 키입니다. */
+    struct CsipSetKey
+    {
+        std::uint8_t bytes[16] = {};
+    };
+
+    /** @brief Set Member service의 공개 설정입니다. */
+    struct CsipMemberConfig
+    {
+        CsipSetKey key;
+        std::uint8_t set_size = 2U;
+        std::uint8_t rank = 1U;
+        bool lockable = true;
+    };
+
+    /** @brief 한 Coordinated Set member에서 확인한 속성입니다. */
+    struct CsipMemberInfo
+    {
+        std::uint8_t set_size = 0U;
+        std::uint8_t rank = 0U;
+        bool lockable = false;
+        bool locked = false;
+    };
+
+    /** @brief Set Coordinator 비동기 절차의 현재 단계입니다. */
+    enum class CsipStage : std::uint8_t
+    {
+        idle,
+        discovering,
+        ready,
+        operating,
+        locked,
+        failed,
+    };
+
+    /** @brief 마지막 Set Coordinator 절차입니다. */
+    enum class CsipStep : std::uint8_t
+    {
+        none,
+        discover,
+        ordered_access,
+        lock,
+        release,
+        cleanup,
+    };
+
+    /** @brief CSIS service와 RSI를 제공하는 Coordinated Set Member입니다. */
+    class CsipSetMember final
+    {
+      public:
+        CsipSetMember() = default;
+
+        ~CsipSetMember()
+        {
+            (void)end();
+        }
+
+        CsipSetMember(const CsipSetMember &) = delete;
+        CsipSetMember &operator=(const CsipSetMember &) = delete;
+        CsipSetMember(CsipSetMember &&) = delete;
+        CsipSetMember &operator=(CsipSetMember &&) = delete;
+
+        /** @brief CSIS service를 주어진 key·size·rank로 등록합니다. */
+        Error begin(const CsipMemberConfig &configuration) noexcept;
+
+        /** @brief 등록한 CSIS service를 해제합니다. */
+        Error end() noexcept;
+
+        /** @brief 광고에 넣을 6-byte RSI를 새로 생성합니다. */
+        Error generateRsi(std::uint8_t (&rsi)[6]) noexcept;
+
+        /** @brief 등록된 service의 SIRK를 변경합니다. */
+        Error setKey(const CsipSetKey &key) noexcept;
+
+        /** @brief size 변경과 함께 rank를 원자적으로 갱신합니다. */
+        Error setSizeAndRank(std::uint8_t set_size, std::uint8_t rank) noexcept;
+
+        /** @brief 잠금 소유자와 무관하게 local CSIS 잠금을 해제합니다. */
+        Error forceRelease() noexcept;
+
+        /** @brief 현재 service 속성을 caller 복사본으로 반환합니다. */
+        Error info(CsipMemberInfo &information) const noexcept;
+
+        /** @brief CSIS service가 등록됐는지 반환합니다. */
+        [[nodiscard]] bool active() const noexcept;
+
+        /** @brief 마지막으로 확인한 잠금 상태를 반환합니다. */
+        [[nodiscard]] bool locked() const noexcept;
+
+        /** @brief service 수명 동안 관찰한 잠금 변경 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t lockChanges() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 CSIS 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+    };
+
+    /** @brief 최대 두 bonded peer의 Coordinated Set을 검색하고 잠급니다. */
+    class CsipSetCoordinator final
+    {
+      public:
+        static constexpr std::size_t maximum_members = 2U;
+
+        CsipSetCoordinator() = default;
+
+        ~CsipSetCoordinator()
+        {
+            (void)end();
+        }
+
+        CsipSetCoordinator(const CsipSetCoordinator &) = delete;
+        CsipSetCoordinator &operator=(const CsipSetCoordinator &) = delete;
+        CsipSetCoordinator(CsipSetCoordinator &&) = delete;
+        CsipSetCoordinator &operator=(CsipSetCoordinator &&) = delete;
+
+        /** @brief 검색할 key와 필요한 member 수를 설정합니다. */
+        Error begin(const CsipSetKey &key, std::uint8_t expected_members = 2U) noexcept;
+
+        /** @brief 활성 연결과 검색 결과를 버리고 객체 소유권을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief scan 결과의 RSI가 설정된 key와 일치하는지 확인합니다. */
+        [[nodiscard]] bool matches(const BLEScanResult &result) const noexcept;
+
+        /** @brief 지정 연결에서 CSIS service와 set 속성을 비동기 검색합니다. */
+        Error discover(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief 끊긴 exact handle을 제거하고 재검색 가능한 상태로 갱신합니다. */
+        void poll() noexcept;
+
+        /** @brief 모든 member의 lock 상태를 읽고 rank 순서를 준비합니다. */
+        Error prepareOrderedAccess() noexcept;
+
+        /** @brief bonded member를 낮은 rank부터 잠급니다. */
+        Error lock() noexcept;
+
+        /** @brief 잠긴 member를 높은 rank부터 해제합니다. */
+        Error release() noexcept;
+
+        /** @brief 현재 발견된 member 수를 반환합니다. */
+        [[nodiscard]] std::size_t memberCount() const noexcept;
+
+        /** @brief 발견된 member의 속성을 caller 복사본으로 반환합니다. */
+        Error member(std::size_t index, CsipMemberInfo &information) const noexcept;
+
+        /** @brief 마지막 ordered access에서 rank 순으로 정렬된 연결을 반환합니다. */
+        [[nodiscard]] BLEConnectionHandle orderedMember(std::size_t index) const noexcept;
+
+        /** @brief 필요한 member를 모두 검색했는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief set 전체 잠금 완료 여부를 반환합니다. */
+        [[nodiscard]] bool locked() const noexcept;
+
+        /** @brief 현재 coordinator 단계를 반환합니다. */
+        [[nodiscard]] CsipStage stage() const noexcept;
+
+        /** @brief 마지막 coordinator 절차를 반환합니다. */
+        [[nodiscard]] CsipStep lastStep() const noexcept;
+
+        /** @brief peer가 보낸 lock 상태 변경 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t lockChanges() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 CSIP/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+    };
 } // namespace nucode::ble::audio
 
 #endif

@@ -367,6 +367,36 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
             if sketch.parent.name == "BapUnicastCycle":
                 required += ("audioSource.stop(", "completed cycles=",
                              "invalid transition rejected")
+        elif sketch.parent.name == "CsipSetMember":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "CsipSetMember", "CsipMemberConfig", "chooseRank(",
+                "setMember.begin(", "setMember.generateRsi(",
+                "BLEAdvertising.setResolvableSetIdentifier(",
+                "setMember.forceRelease(",
+            )
+            options = (
+                "CONFIG_BT_CSIP_SET_MEMBER=y",
+                "CONFIG_BT_CSIP_SET_MEMBER_ENC_SIRK_SUPPORT=y",
+                "CONFIG_BT_CSIP_SET_MEMBER_SIZE_NOTIFIABLE=y",
+            )
+        elif sketch.parent.name == "CsipSetCoordinator":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "CsipSetCoordinator", "coordinator.matches(",
+                "BLEConnection.connect(", "coordinator.discover(",
+                "coordinator.prepareOrderedAccess(", "coordinator.lock(",
+                "coordinator.release(", "coordinator.poll(",
+            )
+            options = (
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0",
+                "CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS=2",
+            )
         else:
             required = (
                 "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",

@@ -420,6 +420,9 @@ namespace nucode::ble
         [[nodiscard]] bool setServiceData(const BLEUuid &uuid, const void *data,
                                           std::size_t length) noexcept;
 
+        /** @brief 6-byte Coordinated Set RSI를 표준 AD field로 설정합니다. */
+        [[nodiscard]] bool setResolvableSetIdentifier(const std::uint8_t (&rsi)[6]) noexcept;
+
         /** @brief local name을 scan response에 포함할지 선택합니다. */
         [[nodiscard]] bool setScanResponseName(bool enabled) noexcept;
 

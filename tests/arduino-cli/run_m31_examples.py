@@ -20,7 +20,7 @@ EXAMPLES = (
     "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
     "CISToBISReceiver",
 )
-AUDIO_EXAMPLES = ("Lc3SyntheticLoopback",)
+AUDIO_EXAMPLES = ("Lc3SyntheticLoopback", "CsipSetMember", "CsipSetCoordinator")
 DF_EXAMPLES = ("CteBeacon",)
 SUITES = {
     "iso": ("NUCODE_BLE_ISO", "m31_iso_revisions", "m31-arduino-build-manifest.json", EXAMPLES),
