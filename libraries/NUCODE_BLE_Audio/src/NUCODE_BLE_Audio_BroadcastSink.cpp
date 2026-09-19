@@ -108,6 +108,7 @@ namespace nucode::ble::audio
             atomic_t delegated_source = 0;
             atomic_t delegated_source_id = 0xff;
             atomic_t periodic_session = 0;
+            atomic_t periodic_create_session = 0;
             atomic_t periodic_cancel_issued = 0;
             atomic_t periodic_delete_issued = 0;
             atomic_t periodic_terminated = 0;
@@ -255,6 +256,35 @@ namespace nucode::ble::audio
             return owned == sync;
         }
 
+        /** @brief locked SDK의 create 반환 전 무식별 term을 armed 세대에만 귀속합니다. */
+        bool claimArmedPeriodicTermination(bt_le_per_adv_sync *sync,
+                                           const bt_addr_le_t *address,
+                                           std::uint8_t sid,
+                                           std::uint32_t session) noexcept
+        {
+            const bt_addr_le_t uninitialized_address = {};
+            if ((sync == nullptr) || (address == nullptr) || (sid != 0U) ||
+                (bt_addr_le_cmp(address, &uninitialized_address) != 0) ||
+                (session == 0U) ||
+                (static_cast<std::uint32_t>(
+                     atomic_get(&sink_state.periodic_session)) != session) ||
+                (static_cast<std::uint32_t>(
+                     atomic_get(&sink_state.periodic_create_session)) != session) ||
+                (atomic_get(&sink_state.periodic_terminated) != 0) ||
+                (atomic_get(&sink_state.active) == 0) ||
+                (atomic_get(&sink_state.stopping) != 0))
+            {
+                return false;
+            }
+            bt_le_per_adv_sync *owned = currentPeriodicSync();
+            if ((owned == nullptr) &&
+                atomic_ptr_cas(&sink_state.periodic_sync, nullptr, sync))
+            {
+                owned = sync;
+            }
+            return owned == sync;
+        }
+
         /** @brief 정확한 세대의 PA 종료를 게시하되 세대 번호는 drain까지 보존합니다. */
         bool terminatePeriodicOwnership(bt_le_per_adv_sync *sync,
                                         std::uint32_t session) noexcept
@@ -265,6 +295,8 @@ namespace nucode::ble::audio
                 return false;
             }
             (void)atomic_ptr_cas(&sink_state.periodic_sync, sync, nullptr);
+            (void)atomic_cas(&sink_state.periodic_create_session,
+                             static_cast<atomic_val_t>(session), 0);
             atomic_set(&sink_state.periodic_synced, 0);
             k_sem_give(&periodic_stopped);
             return true;
@@ -280,6 +312,7 @@ namespace nucode::ble::audio
                 return;
             }
             atomic_set(&sink_state.periodic_session, 0);
+            atomic_set(&sink_state.periodic_create_session, 0);
             atomic_set(&sink_state.periodic_cancel_issued, 0);
             atomic_set(&sink_state.periodic_delete_issued, 0);
             atomic_set(&sink_state.periodic_terminated, 0);
@@ -505,6 +538,8 @@ namespace nucode::ble::audio
                 claimPeriodicOwnership(sync, info->addr, info->sid, session))
             {
                 atomic_set(&sink_state.periodic_synced, 1);
+                (void)atomic_cas(&sink_state.periodic_create_session,
+                                 static_cast<atomic_val_t>(session), 0);
                 if (atomic_get(&sink_state.periodic_terminated) != 0)
                 {
                     atomic_set(&sink_state.periodic_synced, 0);
@@ -519,8 +554,14 @@ namespace nucode::ble::audio
             const TransportCallbackFlight flight;
             const std::uint32_t session = static_cast<std::uint32_t>(
                 atomic_get(&sink_state.periodic_session));
-            if ((info != nullptr) &&
-                claimPeriodicOwnership(sync, info->addr, info->sid, session) &&
+            const bool identified =
+                (info != nullptr) &&
+                claimPeriodicOwnership(sync, info->addr, info->sid, session);
+            const bool armed_unidentified =
+                !identified && (info != nullptr) &&
+                claimArmedPeriodicTermination(sync, info->addr, info->sid,
+                                              session);
+            if ((identified || armed_unidentified) &&
                 terminatePeriodicOwnership(sync, session))
             {
                 atomic_set(&sink_state.streaming, 0);
@@ -1118,6 +1159,8 @@ namespace nucode::ble::audio
             {
                 return 0;
             }
+            (void)atomic_cas(&sink_state.periodic_create_session,
+                             static_cast<atomic_val_t>(session), 0);
             if (atomic_get(&sink_state.periodic_delete_issued) != 0)
             {
                 if (atomic_get(&sink_state.periodic_cancel_issued) != 0)
@@ -1846,6 +1889,8 @@ namespace nucode::ble::audio
              * 세대를 이미 볼 수 있도록 session을 API 호출 전에 마지막으로 게시합니다. */
             atomic_set(&sink_state.periodic_session,
                        static_cast<atomic_val_t>(periodic_session));
+            atomic_set(&sink_state.periodic_create_session,
+                       static_cast<atomic_val_t>(periodic_session));
             bt_le_per_adv_sync *periodic_sync = nullptr;
             const int result = bt_le_per_adv_sync_create(&sync_param,
                                                          &periodic_sync);
@@ -1858,6 +1903,8 @@ namespace nucode::ble::audio
                 {
                     atomic_set(&sink_state.periodic_session, 0);
                 }
+                (void)atomic_cas(&sink_state.periodic_create_session,
+                                 static_cast<atomic_val_t>(periodic_session), 0);
                 stage_ = BroadcastStage::failed;
                 (void)record(Error::stack_error, result);
                 return;

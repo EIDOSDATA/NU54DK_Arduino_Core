@@ -605,6 +605,7 @@ namespace pbp_stub
         normal,
         synced_before_return,
         terminated_before_return,
+        foreign_terminated_before_return,
     };
 
     inline std::deque<int> scan_stop_results;
@@ -908,12 +909,19 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
                                      bt_le_per_adv_sync **sync)
 {
     static bt_le_per_adv_sync instance;
+    const bt_addr_le_t requested_address = parameters->addr;
+    const std::uint8_t requested_sid = parameters->sid;
+    instance = {};
     *sync = &instance;
     pbp_stub::periodic_instance = &instance;
-    pbp_stub::periodic_address = parameters->addr;
-    pbp_stub::periodic_sid = parameters->sid;
     pbp_stub::foreign_periodic = false;
     pbp_stub::periodic_present.store(true);
+    if (pbp_stub::periodic_create_mode !=
+        pbp_stub::PeriodicCreateMode::terminated_before_return)
+    {
+        pbp_stub::periodic_address = requested_address;
+        pbp_stub::periodic_sid = requested_sid;
+    }
     if ((pbp_stub::periodic_callbacks != nullptr) &&
         (pbp_stub::periodic_create_mode ==
          pbp_stub::PeriodicCreateMode::synced_before_return) &&
@@ -930,6 +938,10 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
               pbp_stub::PeriodicCreateMode::terminated_before_return) &&
              (pbp_stub::periodic_callbacks->term != nullptr))
     {
+        /* locked scan.c는 slot을 free한 뒤 callback을 부르고, create 함수의
+         * 마지막에서야 객체 주소와 SID를 기록합니다. */
+        pbp_stub::periodic_address = {};
+        pbp_stub::periodic_sid = 0U;
         const bt_le_per_adv_sync_term_info information = {
             .addr = &pbp_stub::periodic_address,
             .sid = pbp_stub::periodic_sid,
@@ -938,6 +950,23 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
         pbp_stub::periodic_present.store(false);
         pbp_stub::periodic_callbacks->term(*sync, &information);
     }
+    else if ((pbp_stub::periodic_callbacks != nullptr) &&
+             (pbp_stub::periodic_create_mode ==
+              pbp_stub::PeriodicCreateMode::foreign_terminated_before_return) &&
+             (pbp_stub::periodic_callbacks->term != nullptr))
+    {
+        static bt_le_per_adv_sync foreign_instance;
+        bt_addr_le_t foreign_address = {};
+        foreign_address.address[0] = 0xa4U;
+        const bt_le_per_adv_sync_term_info information = {
+            .addr = &foreign_address,
+            .sid = 0x0eU,
+            .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+        };
+        pbp_stub::periodic_callbacks->term(&foreign_instance, &information);
+    }
+    pbp_stub::periodic_address = requested_address;
+    pbp_stub::periodic_sid = requested_sid;
     return 0;
 }
 

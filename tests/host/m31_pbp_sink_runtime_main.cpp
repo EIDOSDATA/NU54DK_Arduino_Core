@@ -55,8 +55,10 @@ namespace
         atomic_set(&sink_state.periodic_cancel_issued, 0);
         atomic_set(&sink_state.periodic_delete_issued, 0);
         atomic_set(&sink_state.periodic_terminated, 0);
+        const std::uint32_t session = nextPeriodicSession();
         atomic_set(&sink_state.periodic_session,
-                   static_cast<atomic_val_t>(nextPeriodicSession()));
+                   static_cast<atomic_val_t>(session));
+        atomic_set(&sink_state.periodic_create_session, 0);
         atomic_ptr_set(&sink_state.periodic_sync, sync);
         atomic_set(&sink_state.periodic_synced, synchronized ? 1 : 0);
     }
@@ -381,6 +383,7 @@ namespace
         for (const pbp_stub::PeriodicCreateMode mode : {
                  pbp_stub::PeriodicCreateMode::synced_before_return,
                  pbp_stub::PeriodicCreateMode::terminated_before_return,
+                 pbp_stub::PeriodicCreateMode::foreign_terminated_before_return,
              })
         {
             pbp_stub::resetCleanupState();
@@ -396,17 +399,19 @@ namespace
             atomic_set(&sink_state.found, 1);
 
             public_sink.poll();
-            if (mode == pbp_stub::PeriodicCreateMode::synced_before_return)
+            if (mode != pbp_stub::PeriodicCreateMode::terminated_before_return)
             {
                 assert(public_sink.stage() == BroadcastStage::synchronizing);
                 assert(currentPeriodicSync() == pbp_stub::periodic_instance);
-                assert(atomic_get(&sink_state.periodic_synced) == 1);
+                assert(atomic_get(&sink_state.periodic_synced) ==
+                       (mode == pbp_stub::PeriodicCreateMode::synced_before_return ? 1 : 0));
             }
             else
             {
                 assert(public_sink.stage() == BroadcastStage::failed);
                 assert(currentPeriodicSync() == nullptr);
                 assert(atomic_get(&sink_state.periodic_terminated) == 1);
+                assert(atomic_get(&sink_state.periodic_create_session) == 0);
             }
             assert(public_sink.end() == Error::none);
             assert(atomic_get(&sink_state.periodic_session) == 0);
