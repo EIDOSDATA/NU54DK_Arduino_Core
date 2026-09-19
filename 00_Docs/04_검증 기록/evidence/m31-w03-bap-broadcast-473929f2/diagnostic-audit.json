@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "excluded_attempts": [
+    {
+      "condition": "source_public_end",
+      "observed": "sink did not report a fault",
+      "reason": "정상 BIG 종료는 강제 sync loss가 아니므로 분자에서 제외했습니다."
+    },
+    {
+      "condition": "source_hardware_reset_callback_order",
+      "observed": [
+        "HCI timeout -8",
+        "periodic sync reset -104"
+      ],
+      "reason": "동일 reset에서 먼저 poll된 callback만 공개 오류가 되며 둘 다 실제 손실 후에만 허용했습니다."
+    },
+    {
+      "condition": "serial_before_fresh_boot_markers",
+      "observed": "previous-session counters and disconnect line",
+      "reason": "새 source preparing과 sink scanning 앞의 buffered line을 exact transcript에서 제외했습니다."
+    }
+  ],
+  "guessed_errors": false,
+  "result": "PASS"
+}

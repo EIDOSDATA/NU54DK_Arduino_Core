@@ -196,22 +196,22 @@
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
       "source_status": "verified",
-      "target_applicability": "arduino_plain_broadcast_and_restart_confirmed_encryption_pending",
+      "target_applicability": "arduino_encrypted_broadcast_wrong_code_and_sync_loss_confirmed",
       "native_build": "NOT_RUN",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-6e22c2d2/manifest.json",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json",
       "nu54dk_build": "PASS",
-      "source_revision": "6e22c2d26828a614fc4ca88746d140abe71cbb9f",
+      "source_revision": "473929f20d6c71503ae460c933d413268ec35222",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-6e22c2d2/manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-6e22c2d2/manifest.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-6e22c2d2/broadcast-plain-rejoin.json",
-        "functional_hil": null
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/broadcast-encrypted-exact.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json"
       },
-      "support_reason": "clean 6e22c2d2 공개 Arduino BroadcastSource/BroadcastSink의 비암호화 LC3 2,000 frame, PCM energy 양수, drop 0과 stop/restart 재가입 20/20을 확인했다. Broadcast Code positive, wrong code 거부, 예기치 않은 sync loss 뒤 rejoin이 남아 있어 functional_hil은 NOT_RUN이다."
+      "support_reason": "clean 473929f2 공개 Arduino BroadcastSource/BroadcastSink의 암호화 LC3 2,000 frame 이상, PCM energy 양수, drop 0과 stop/restart 20/20을 확인했다. wrong Broadcast Code는 HCI MIC Failure로 20/20 거부되고 유효 frame 0, 정상 code 복구 20/20이다. source hardware reset sync loss도 20/20 탐지하고 3.422~3.783초에 LC3 100 frame으로 재가입했다."
     },
     {
       "id": "W03-04",
@@ -1279,9 +1279,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "473929f20d6c71503ae460c933d413268ec35222",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-04",
