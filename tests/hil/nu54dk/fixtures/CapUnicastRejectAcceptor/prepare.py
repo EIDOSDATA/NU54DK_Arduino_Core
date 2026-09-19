@@ -13,6 +13,8 @@ ZEPHYR_REVISION = "bf801e4e3d19e1ffa76164346480cb7734dd2800"
 SOURCE_HASHES = {
     "CMakeLists.txt": "f2d60560b08ee0ed26cd8b721852b6424ab3357ce9af02f43e029f6ab93df165",
     "prj.conf": "8916dbd7f222c49155e8a070c78c86bcefadad77ab5d64a9a2a4a91092cbe5f5",
+    "src/cap_acceptor.h":
+        "316cf4a55329f554878be958525bf616df2a1ac3caa13b28fb1a4e6ca8e68251",
     "src/cap_acceptor_unicast.c":
         "26f6a42543d203879c671b0037edd1a86e07638882ceb2634f9bae4a8d146356",
     "src/main.c": "da698ad281a56ad4cebb25735abaadf70c114429cead3338de98977de626c1f6",
@@ -66,6 +68,15 @@ def prepare(source: Path, destination: Path) -> dict[str, object]:
         raise FileExistsError(destination)
 
     shutil.copytree(source, destination)
+    header_path = destination / "src/cap_acceptor.h"
+    header = header_path.read_text(encoding="utf-8")
+    header = replace_once(
+        header,
+        "#define SINK_CONTEXT        BT_AUDIO_CONTEXT_TYPE_UNSPECIFIED\n",
+        "#define SINK_CONTEXT        BT_AUDIO_CONTEXT_TYPE_MEDIA\n",
+    )
+    header_path.write_text(header, encoding="utf-8", newline="\n")
+
     unicast_path = destination / "src/cap_acceptor_unicast.c"
     unicast = unicast_path.read_text(encoding="utf-8")
     unicast = replace_once(
@@ -133,6 +144,7 @@ def prepare(source: Path, destination: Path) -> dict[str, object]:
             "response_reason": 2,
             "initiator_native_error": -77,
             "initiator_failed_on_peer": True,
+            "sink_context": "media",
         },
     }
 
