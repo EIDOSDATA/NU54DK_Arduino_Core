@@ -53,6 +53,8 @@ namespace
         sink_state.periodic_owner_address = address;
         sink_state.periodic_owner_sid = sid;
         atomic_set(&sink_state.periodic_cancel_issued, 0);
+        atomic_set(&sink_state.periodic_delete_issued, 0);
+        atomic_set(&sink_state.periodic_terminated, 0);
         atomic_set(&sink_state.periodic_session,
                    static_cast<atomic_val_t>(nextPeriodicSession()));
         atomic_ptr_set(&sink_state.periodic_sync, sync);
@@ -373,6 +375,92 @@ namespace
         assert(currentPeriodicSync() == nullptr);
     }
 
+    /** @brief create 반환 전 synced/term callback을 pre-arm 세대에 귀속합니다. */
+    void testCallbackBeforeCreateReturn()
+    {
+        for (const pbp_stub::PeriodicCreateMode mode : {
+                 pbp_stub::PeriodicCreateMode::synced_before_return,
+                 pbp_stub::PeriodicCreateMode::terminated_before_return,
+             })
+        {
+            pbp_stub::resetCleanupState();
+            pbp_stub::periodic_create_mode = mode;
+            pbp_stub::periodic_delete_mode =
+                pbp_stub::PeriodicDeleteMode::synchronous;
+            BroadcastSink public_sink;
+            const PublicBroadcastFilter filter = {};
+            assert(public_sink.startPublic(filter, nullptr) == Error::none);
+            sink_state.broadcaster.address[0] = 0x71U;
+            sink_state.sid = 9U;
+            sink_state.periodic_interval = 80U;
+            atomic_set(&sink_state.found, 1);
+
+            public_sink.poll();
+            if (mode == pbp_stub::PeriodicCreateMode::synced_before_return)
+            {
+                assert(public_sink.stage() == BroadcastStage::synchronizing);
+                assert(currentPeriodicSync() == pbp_stub::periodic_instance);
+                assert(atomic_get(&sink_state.periodic_synced) == 1);
+            }
+            else
+            {
+                assert(public_sink.stage() == BroadcastStage::failed);
+                assert(currentPeriodicSync() == nullptr);
+                assert(atomic_get(&sink_state.periodic_terminated) == 1);
+            }
+            assert(public_sink.end() == Error::none);
+            assert(atomic_get(&sink_state.periodic_session) == 0);
+        }
+    }
+
+    /** @brief 같은 pointer·주소·SID 재사용 뒤 늦은 old term이 foreign sync를 보존합니다. */
+    void testSameIdentityDelayedTermination()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x72U;
+        parameters.sid = 10U;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid, true);
+        pbp_stub::periodic_delete_results = {-EAGAIN};
+        pbp_stub::reuse_same_identity_before_term = true;
+
+        assert(public_sink.end() == Error::none);
+        assert(pbp_stub::periodic_delete_calls == 1U);
+        assert(pbp_stub::foreign_periodic_delete_calls == 0U);
+        assert(pbp_stub::periodic_present.load());
+        assert(currentPeriodicSync() == nullptr);
+        assert(atomic_get(&sink_state.periodic_session) == 0);
+    }
+
+    /** @brief ownership lookup과 delete 사이 재사용 callback을 재검사로 차단합니다. */
+    void testLookupDeleteReuseRace()
+    {
+        pbp_stub::resetCleanupState();
+        BroadcastSink public_sink;
+        const PublicBroadcastFilter filter = {};
+        assert(public_sink.startPublic(filter, nullptr) == Error::none);
+
+        bt_le_per_adv_sync_param parameters = {};
+        parameters.addr.address[0] = 0x73U;
+        parameters.sid = 11U;
+        bt_le_per_adv_sync *sync = nullptr;
+        assert(bt_le_per_adv_sync_create(&parameters, &sync) == 0);
+        bindPeriodicOwnership(sync, parameters.addr, parameters.sid, true);
+        pbp_stub::reuse_same_identity_during_lookup = true;
+
+        assert(public_sink.end() == Error::none);
+        assert(pbp_stub::periodic_delete_calls == 0U);
+        assert(pbp_stub::foreign_periodic_delete_calls == 0U);
+        assert(pbp_stub::periodic_present.load());
+        assert(atomic_get(&sink_state.periodic_session) == 0);
+    }
+
     /** @brief pending cancel timeout 뒤 재사용된 slot은 lookup으로만 격리 해제합니다. */
     void testPendingCancelQuarantineReuse()
     {
@@ -447,7 +535,12 @@ int main()
     testPendingPeriodicCleanup();
     testPeriodicTerminationCallbackTiming();
     testTransientDeleteOwnerChange();
+    testCallbackBeforeCreateReturn();
+    testSameIdentityDelayedTermination();
+    testLookupDeleteReuseRace();
     testPendingCancelQuarantineReuse();
     testRepeatedCleanupAndRebegin();
+    assert(pbp_stub::periodic_callback_register_calls == 1U);
+    assert(pbp_stub::periodic_callback_unregister_calls == 0U);
     return 0;
 }

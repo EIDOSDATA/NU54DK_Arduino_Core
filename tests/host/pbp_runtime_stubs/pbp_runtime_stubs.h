@@ -600,6 +600,13 @@ namespace pbp_stub
         late,
     };
 
+    enum class PeriodicCreateMode : std::uint8_t
+    {
+        normal,
+        synced_before_return,
+        terminated_before_return,
+    };
+
     inline std::deque<int> scan_stop_results;
     inline std::deque<int> periodic_delete_results;
     inline int scan_stop_default_result = 0;
@@ -608,10 +615,15 @@ namespace pbp_stub
     inline unsigned int periodic_delete_calls = 0U;
     inline unsigned int periodic_lookup_calls = 0U;
     inline unsigned int foreign_periodic_delete_calls = 0U;
+    inline unsigned int periodic_callback_register_calls = 0U;
+    inline unsigned int periodic_callback_unregister_calls = 0U;
     inline std::atomic<bool> periodic_present{false};
     inline std::atomic<unsigned int> periodic_cancel_polls{0U};
     inline bool reuse_after_transient_delete = false;
+    inline bool reuse_same_identity_before_term = false;
+    inline bool reuse_same_identity_during_lookup = false;
     inline bool foreign_periodic = false;
+    inline PeriodicCreateMode periodic_create_mode = PeriodicCreateMode::normal;
     inline PeriodicDeleteMode periodic_delete_mode = PeriodicDeleteMode::pending;
     inline bt_le_per_adv_sync *periodic_instance = nullptr;
     inline bt_le_per_adv_sync_cb *periodic_callbacks = nullptr;
@@ -633,7 +645,10 @@ namespace pbp_stub
         periodic_present.store(false);
         periodic_cancel_polls.store(0U);
         reuse_after_transient_delete = false;
+        reuse_same_identity_before_term = false;
+        reuse_same_identity_during_lookup = false;
         foreign_periodic = false;
+        periodic_create_mode = PeriodicCreateMode::normal;
         periodic_delete_mode = PeriodicDeleteMode::pending;
         periodic_instance = nullptr;
         cleanup_events.clear();
@@ -878,12 +893,14 @@ inline void bt_le_scan_cb_unregister(bt_le_scan_cb *)
 
 inline int bt_le_per_adv_sync_cb_register(bt_le_per_adv_sync_cb *callbacks)
 {
+    ++pbp_stub::periodic_callback_register_calls;
     pbp_stub::periodic_callbacks = callbacks;
     return 0;
 }
 
 inline int bt_le_per_adv_sync_cb_unregister(bt_le_per_adv_sync_cb *)
 {
+    ++pbp_stub::periodic_callback_unregister_calls;
     return 0;
 }
 
@@ -897,6 +914,30 @@ inline int bt_le_per_adv_sync_create(const bt_le_per_adv_sync_param *parameters,
     pbp_stub::periodic_sid = parameters->sid;
     pbp_stub::foreign_periodic = false;
     pbp_stub::periodic_present.store(true);
+    if ((pbp_stub::periodic_callbacks != nullptr) &&
+        (pbp_stub::periodic_create_mode ==
+         pbp_stub::PeriodicCreateMode::synced_before_return) &&
+        (pbp_stub::periodic_callbacks->synced != nullptr))
+    {
+        bt_le_per_adv_sync_synced_info information = {
+            .addr = &pbp_stub::periodic_address,
+            .sid = pbp_stub::periodic_sid,
+        };
+        pbp_stub::periodic_callbacks->synced(*sync, &information);
+    }
+    else if ((pbp_stub::periodic_callbacks != nullptr) &&
+             (pbp_stub::periodic_create_mode ==
+              pbp_stub::PeriodicCreateMode::terminated_before_return) &&
+             (pbp_stub::periodic_callbacks->term != nullptr))
+    {
+        const bt_le_per_adv_sync_term_info information = {
+            .addr = &pbp_stub::periodic_address,
+            .sid = pbp_stub::periodic_sid,
+            .reason = 0x08U,
+        };
+        pbp_stub::periodic_present.store(false);
+        pbp_stub::periodic_callbacks->term(*sync, &information);
+    }
     return 0;
 }
 
@@ -914,7 +955,26 @@ inline int bt_le_per_adv_sync_delete(bt_le_per_adv_sync *sync)
         pbp_stub::periodic_delete_results.pop_front();
         if (result != 0)
         {
-            if (pbp_stub::reuse_after_transient_delete)
+            if (pbp_stub::reuse_same_identity_before_term)
+            {
+                pbp_stub::reuse_same_identity_before_term = false;
+                const bt_addr_le_t terminated_address =
+                    pbp_stub::periodic_address;
+                const std::uint8_t terminated_sid = pbp_stub::periodic_sid;
+                pbp_stub::periodic_present.store(false);
+                pbp_stub::reusePeriodicSlot(terminated_address, terminated_sid);
+                if ((pbp_stub::periodic_callbacks != nullptr) &&
+                    (pbp_stub::periodic_callbacks->term != nullptr))
+                {
+                    const bt_le_per_adv_sync_term_info information = {
+                        .addr = &pbp_stub::periodic_address,
+                        .sid = pbp_stub::periodic_sid,
+                        .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+                    };
+                    pbp_stub::periodic_callbacks->term(sync, &information);
+                }
+            }
+            else if (pbp_stub::reuse_after_transient_delete)
             {
                 pbp_stub::reuse_after_transient_delete = false;
                 const bt_addr_le_t terminated_address =
@@ -993,6 +1053,28 @@ inline bt_le_per_adv_sync *bt_le_per_adv_sync_lookup_addr(
     const bt_addr_le_t *address, std::uint8_t sid)
 {
     ++pbp_stub::periodic_lookup_calls;
+    if (pbp_stub::reuse_same_identity_during_lookup &&
+        pbp_stub::periodic_present.load() &&
+        (bt_addr_le_cmp(address, &pbp_stub::periodic_address) == 0) &&
+        (sid == pbp_stub::periodic_sid))
+    {
+        pbp_stub::reuse_same_identity_during_lookup = false;
+        const bt_addr_le_t terminated_address = pbp_stub::periodic_address;
+        const std::uint8_t terminated_sid = pbp_stub::periodic_sid;
+        pbp_stub::periodic_present.store(false);
+        if ((pbp_stub::periodic_callbacks != nullptr) &&
+            (pbp_stub::periodic_callbacks->term != nullptr))
+        {
+            const bt_le_per_adv_sync_term_info information = {
+                .addr = &terminated_address,
+                .sid = terminated_sid,
+                .reason = BT_HCI_ERR_LOCALHOST_TERM_CONN,
+            };
+            pbp_stub::periodic_callbacks->term(
+                pbp_stub::periodic_instance, &information);
+        }
+        pbp_stub::reusePeriodicSlot(terminated_address, terminated_sid);
+    }
     unsigned int polls = pbp_stub::periodic_cancel_polls.load();
     if (polls != 0U)
     {
