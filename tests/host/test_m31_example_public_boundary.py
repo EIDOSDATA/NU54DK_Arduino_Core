@@ -33,18 +33,18 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
             sketch.parent.mkdir(parents=True)
             shutil.copy2(source / "examples/CISCentral/CISCentral.ino", sketch)
             shutil.copy2(source / "examples/CISCentral/prj.conf", sketch.parent / "prj.conf")
-            backend = library / "src/internal/NUCODE_ISO_CIS_Impl.inc"
+            backend = library / "src/NUCODE_BLE_ISO_RawCis.cpp"
             backend.parent.mkdir(parents=True)
-            shutil.copy2(source / "src/internal/NUCODE_ISO_CIS_Impl.inc", backend)
+            shutil.copy2(source / "src/NUCODE_BLE_ISO_RawCis.cpp", backend)
             original = sketch.read_text(encoding="utf-8")
             self.assertEqual(AUDIT.inspect_sketch(library, sketch)["status"],
-                             "VISIBLE_VERIFIED_BACKEND")
+                             "VISIBLE_CODE")
 
             mutations = (
                 (original.replace("Role::cis_central", "Role::cis_peripheral"),
-                 "PUBLIC_ISO_API_FLOW_MISSING"),
-                (original.replace("isoProgram.poll();", "// isoProgram.poll();"),
-                 "PUBLIC_ISO_API_FLOW_MISSING"),
+                 "PUBLIC_ISO_DATA_FLOW_MISSING"),
+                (original.replace("cis.poll();", "// cis.poll();"),
+                 "PUBLIC_ISO_DATA_FLOW_MISSING"),
                 (original + "\n#define M31_TEST_ROLE 1\n", "PUBLIC_MILESTONE_IDENTIFIER"),
                 (original + "\nvoid test() { bt_enable(nullptr); }\n",
                  "PUBLIC_ZEPHYR_DIRECT_USE"),
