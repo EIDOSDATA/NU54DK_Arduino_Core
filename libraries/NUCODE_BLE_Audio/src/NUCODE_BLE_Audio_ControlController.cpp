@@ -231,6 +231,7 @@ namespace nucode::ble::audio
             std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
             bool retired_connection = false;
+            bool native_disconnected = false;
             bool read_pending = false;
             bool bootstrap_retry_pending = false;
             VolumeBootstrapStep bootstrap = VolumeBootstrapStep::none;
@@ -328,72 +329,72 @@ namespace nucode::ble::audio
             }
         };
 
+        /** @brief 고정 SDK의 disconnect 뒤 남는 exact VOCS client 결합을 해제합니다. */
+        struct bt_conn *releaseDisconnectedVocsLocked(struct bt_conn *connection) noexcept
+        {
+            if ((volumeBackend.offset_service == nullptr) || (connection == nullptr))
+            {
+                return nullptr;
+            }
+            struct bt_vocs_client *client =
+                CONTAINER_OF(volumeBackend.offset_service, struct bt_vocs_client, vocs);
+            if (client->conn != connection)
+            {
+                return nullptr;
+            }
+
+            /*
+             * 고정 NCS v3.4의 vocs_client_reset()과 같은 wire/discovery 상태만 초기화합니다.
+             * callback과 ACTIVE flag는 image 수명이라 유지합니다. 이 함수는 ATT disconnect
+             * drain 뒤의 exact bt_conn callback에서만 호출되므로 old GATT ingress가 없습니다.
+             */
+            (void)memset(&client->state, 0, sizeof(client->state));
+            atomic_clear_bit(client->flags, BT_VOCS_CLIENT_FLAG_LOC_WRITABLE);
+            atomic_clear_bit(client->flags, BT_VOCS_CLIENT_FLAG_DESC_WRITABLE);
+            atomic_clear_bit(client->flags, BT_VOCS_CLIENT_FLAG_CP_RETRIED);
+            client->location = 0U;
+            client->start_handle = 0U;
+            client->end_handle = 0U;
+            client->state_handle = 0U;
+            client->location_handle = 0U;
+            client->control_handle = 0U;
+            client->desc_handle = 0U;
+            client->conn = nullptr;
+            return connection;
+        }
+
+        /** @brief drain이 끝난 disconnected generation의 facade 보유 ref를 해제합니다. */
+        struct bt_conn *finalizeRetiredVolumeLocked() noexcept
+        {
+            if (!volumeBackend.retired_connection || !volumeBackend.native_disconnected ||
+                (volumeBackend.callbacks_inflight != 0U))
+            {
+                return nullptr;
+            }
+            clearVolumeReadLocked(volumeBackend.retired_generation,
+                                  volumeBackend.read_operation);
+            volumeBackend.retired_connection = false;
+            volumeBackend.native_disconnected = false;
+            volumeBackend.controller = nullptr;
+            volumeBackend.offset_service = nullptr;
+            volumeBackend.input_service = nullptr;
+            volumeBackend.retired_generation = 0U;
+            struct bt_conn *connection = volumeBackend.retired_native_connection;
+            volumeBackend.retired_native_connection = nullptr;
+            return connection;
+        }
+
         /**
          * @brief 이전 callback이 남을 수 있는 active 연결의 재소유를 차단합니다.
          *
-         * active handle과 VCP/AICS 결합이 사라지고 ingress callback이 모두 반환해야 합니다.
-         * 고정 SDK의 VOCS는 disconnect 뒤에도 exact inactive connection을 다음 discovery까지
-         * 보존하므로 그 결합만 rediscovery-safe 상태로 인정합니다.
+         * 고정 host는 L2CAP/ATT request를 모두 drain한 뒤 bt_conn disconnected callback을
+         * 호출합니다. 따라서 exact callback 확인 전에는 static parameter를 격리하고, 확인 뒤
+         * in-flight가 0일 때만 facade ref를 해제합니다.
          */
         bool retiredVolumeConnectionActive() noexcept
         {
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
-            const bool retired = volumeBackend.retired_connection;
-            const BLEConnectionHandle handle = volumeBackend.handle;
-            const bool callback_active = volumeBackend.callbacks_inflight != 0U;
-            struct bt_vcp_vol_ctlr *controller = volumeBackend.controller;
-            struct bt_vocs *offset_service = volumeBackend.offset_service;
-            struct bt_aics *input_service = volumeBackend.input_service;
-            struct bt_conn *retired_native = volumeBackend.retired_native_connection;
-            const std::uint32_t retired_generation = volumeBackend.retired_generation;
-            k_mutex_unlock(&volumeBackendMutex);
-            if (callback_active)
-            {
-                return true;
-            }
-            if (!retired)
-            {
-                return false;
-            }
-            struct bt_conn *connection = internal::referenceConnection(handle);
-            if (connection != nullptr)
-            {
-                bt_conn_unref(connection);
-                return true;
-            }
-            struct bt_conn *bound = nullptr;
-            if ((controller != nullptr) && (bt_vcp_vol_ctlr_conn_get(controller, &bound) == 0) &&
-                (bound != nullptr))
-            {
-                return true;
-            }
-            if ((input_service != nullptr) &&
-                (bt_aics_client_conn_get(input_service, &bound) == 0) && (bound != nullptr))
-            {
-                return true;
-            }
-            if ((offset_service != nullptr) &&
-                (bt_vocs_client_conn_get(offset_service, &bound) == 0) && (bound != nullptr) &&
-                ((bound != retired_native) || internal::activeConnection(bound)))
-            {
-                return true;
-            }
-            struct bt_conn *release_connection = nullptr;
-            k_mutex_lock(&volumeBackendMutex, K_FOREVER);
-            if (volumeBackend.retired_connection && (volumeBackend.handle == handle) &&
-                (volumeBackend.retired_native_connection == retired_native) &&
-                (volumeBackend.retired_generation == retired_generation) &&
-                (volumeBackend.callbacks_inflight == 0U))
-            {
-                clearVolumeReadLocked(retired_generation, volumeBackend.read_operation);
-                volumeBackend.retired_connection = false;
-                volumeBackend.controller = nullptr;
-                volumeBackend.offset_service = nullptr;
-                volumeBackend.input_service = nullptr;
-                volumeBackend.retired_generation = 0U;
-                release_connection = volumeBackend.retired_native_connection;
-                volumeBackend.retired_native_connection = nullptr;
-            }
+            struct bt_conn *release_connection = finalizeRetiredVolumeLocked();
             const bool still_retired = volumeBackend.retired_connection;
             k_mutex_unlock(&volumeBackendMutex);
             if (release_connection != nullptr)
@@ -401,6 +402,30 @@ namespace nucode::ble::audio
                 bt_conn_unref(release_connection);
             }
             return still_retired;
+        }
+
+        /** @brief exact bt_conn disconnect에서 VOCS와 retired facade ref를 정리합니다. */
+        void volumeConnectionDisconnected(struct bt_conn *connection) noexcept
+        {
+            struct bt_conn *release_vocs = nullptr;
+            struct bt_conn *release_retired = nullptr;
+            k_mutex_lock(&volumeBackendMutex, K_FOREVER);
+            if ((volumeBackend.connection == connection) ||
+                (volumeBackend.retired_native_connection == connection))
+            {
+                volumeBackend.native_disconnected = true;
+                release_vocs = releaseDisconnectedVocsLocked(connection);
+                release_retired = finalizeRetiredVolumeLocked();
+            }
+            k_mutex_unlock(&volumeBackendMutex);
+            if (release_vocs != nullptr)
+            {
+                bt_conn_unref(release_vocs);
+            }
+            if (release_retired != nullptr)
+            {
+                bt_conn_unref(release_retired);
+            }
         }
 
         /** @brief callback instance가 현재 active 연결과 generation에 속하는지 확인합니다. */
@@ -993,6 +1018,7 @@ namespace nucode::ble::audio
                     {
                         const auto *state = static_cast<const struct bt_aics_state *>(data);
                         volumeBackend.input_service->cli.change_counter = state->change_counter;
+                        volumeBackend.input_service->cli.gain_mode = state->gain_mode;
                         volumeBackend.input.gain = state->gain;
                         volumeBackend.input.muted = state->mute == BT_AICS_STATE_MUTED;
                         volumeBackend.input.mute_disabled =
@@ -1277,6 +1303,7 @@ namespace nucode::ble::audio
             atomic_set(&volumeBackend.error, error);
             if (error == 0)
             {
+                instance->cli.gain_mode = mode;
                 volumeBackend.input.gain = gain;
                 volumeBackend.input.muted = mute == BT_AICS_STATE_MUTED;
                 volumeBackend.input.mute_disabled = mute == BT_AICS_STATE_MUTE_DISABLED;
@@ -1491,6 +1518,7 @@ namespace nucode::ble::audio
         volumeBackend.owner = this;
         volumeBackend.handle = connection;
         volumeBackend.connection = native;
+        volumeBackend.native_disconnected = false;
         volumeBackend.controller = nullptr;
         volumeBackend.offset_service = nullptr;
         volumeBackend.input_service = nullptr;
@@ -1574,6 +1602,7 @@ namespace nucode::ble::audio
         k_mutex_unlock(&volumeBackendMutex);
         if (!owned)
         {
+            (void)retiredVolumeConnectionActive();
             return;
         }
         serviceVolumeBootstrap(generation_);
@@ -1604,7 +1633,6 @@ namespace nucode::ble::audio
         }
         if (ownsVolumeControllerLocked(this, generation_))
         {
-            const BLEConnectionHandle handle = volumeBackend.handle;
             struct bt_conn *connection = volumeBackend.connection;
             const bool cancel_bootstrap = volumeBackend.read_pending &&
                                           (volumeBackend.read_generation == generation_);
@@ -1631,11 +1659,6 @@ namespace nucode::ble::audio
             {
                 bt_gatt_cancel(connection, &volumeBackend.bootstrap_read);
             }
-            struct bt_conn *active = internal::referenceConnection(handle);
-            if (active != nullptr)
-            {
-                bt_conn_unref(active);
-            }
             if (connection != nullptr)
             {
                 bt_conn_unref(connection);
@@ -1643,6 +1666,7 @@ namespace nucode::ble::audio
             k_mutex_lock(&volumeBackendMutex, K_FOREVER);
             started_ = false;
             k_mutex_unlock(&volumeBackendMutex);
+            (void)retiredVolumeConnectionActive();
             return record(Error::none);
         }
         started_ = false;
@@ -2099,6 +2123,7 @@ namespace nucode::ble::audio
             std::uint8_t bootstrap_retries = 0U;
             bool callbacks_registered = false;
             bool retired_connection = false;
+            bool native_disconnected = false;
             bool read_pending = false;
             bool bootstrap_retry_pending = false;
             MicrophoneBootstrapStep bootstrap = MicrophoneBootstrapStep::none;
@@ -2198,64 +2223,35 @@ namespace nucode::ble::audio
             }
         };
 
+        /** @brief drain이 끝난 disconnected generation의 MICP facade ref를 해제합니다. */
+        struct bt_conn *finalizeRetiredMicrophoneLocked() noexcept
+        {
+            if (!microphoneControllerBackend.retired_connection ||
+                !microphoneControllerBackend.native_disconnected ||
+                (microphoneControllerBackend.callbacks_inflight != 0U))
+            {
+                return nullptr;
+            }
+            clearMicrophoneReadLocked(microphoneControllerBackend.retired_generation,
+                                      microphoneControllerBackend.read_operation);
+            microphoneControllerBackend.retired_connection = false;
+            microphoneControllerBackend.native_disconnected = false;
+            microphoneControllerBackend.controller = nullptr;
+            microphoneControllerBackend.input_service = nullptr;
+            microphoneControllerBackend.retired_generation = 0U;
+            struct bt_conn *connection =
+                microphoneControllerBackend.retired_native_connection;
+            microphoneControllerBackend.retired_native_connection = nullptr;
+            return connection;
+        }
+
         /**
-         * @brief 이전 callback이 남을 수 있는 active 연결의 재소유를 차단합니다.
-         *
-         * active handle이 사라지고 각 SDK client가 connection을 해제했으며 ingress callback도
-         * 모두 반환한 뒤에만 동일한 static controller pool을 새 generation에 결합합니다.
+         * @brief exact bt_conn disconnect와 ingress drain 전 static parameter 재사용을 막습니다.
          */
         bool retiredMicrophoneConnectionActive() noexcept
         {
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
-            const bool retired = microphoneControllerBackend.retired_connection;
-            const BLEConnectionHandle handle = microphoneControllerBackend.handle;
-            const bool callback_active = microphoneControllerBackend.callbacks_inflight != 0U;
-            struct bt_micp_mic_ctlr *controller = microphoneControllerBackend.controller;
-            struct bt_aics *input_service = microphoneControllerBackend.input_service;
-            struct bt_conn *retired_native =
-                microphoneControllerBackend.retired_native_connection;
-            const std::uint32_t retired_generation =
-                microphoneControllerBackend.retired_generation;
-            k_mutex_unlock(&microphoneControllerBackendMutex);
-            if (callback_active)
-            {
-                return true;
-            }
-            if (!retired)
-            {
-                return false;
-            }
-            struct bt_conn *connection = internal::referenceConnection(handle);
-            if (connection != nullptr)
-            {
-                bt_conn_unref(connection);
-                return true;
-            }
-            struct bt_conn *bound = nullptr;
-            if (((controller != nullptr) && (bt_micp_mic_ctlr_conn_get(controller, &bound) == 0) &&
-                 (bound != nullptr)) ||
-                ((input_service != nullptr) &&
-                 (bt_aics_client_conn_get(input_service, &bound) == 0) && (bound != nullptr)))
-            {
-                return true;
-            }
-            struct bt_conn *release_connection = nullptr;
-            k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
-            if (microphoneControllerBackend.retired_connection &&
-                (microphoneControllerBackend.handle == handle) &&
-                (microphoneControllerBackend.retired_native_connection == retired_native) &&
-                (microphoneControllerBackend.retired_generation == retired_generation) &&
-                (microphoneControllerBackend.callbacks_inflight == 0U))
-            {
-                clearMicrophoneReadLocked(retired_generation,
-                                          microphoneControllerBackend.read_operation);
-                microphoneControllerBackend.retired_connection = false;
-                microphoneControllerBackend.controller = nullptr;
-                microphoneControllerBackend.input_service = nullptr;
-                microphoneControllerBackend.retired_generation = 0U;
-                release_connection = microphoneControllerBackend.retired_native_connection;
-                microphoneControllerBackend.retired_native_connection = nullptr;
-            }
+            struct bt_conn *release_connection = finalizeRetiredMicrophoneLocked();
             const bool still_retired = microphoneControllerBackend.retired_connection;
             k_mutex_unlock(&microphoneControllerBackendMutex);
             if (release_connection != nullptr)
@@ -2263,6 +2259,24 @@ namespace nucode::ble::audio
                 bt_conn_unref(release_connection);
             }
             return still_retired;
+        }
+
+        /** @brief exact bt_conn disconnect에서 MICP retired facade ref를 정리합니다. */
+        void microphoneConnectionDisconnected(struct bt_conn *connection) noexcept
+        {
+            struct bt_conn *release_connection = nullptr;
+            k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
+            if ((microphoneControllerBackend.connection == connection) ||
+                (microphoneControllerBackend.retired_native_connection == connection))
+            {
+                microphoneControllerBackend.native_disconnected = true;
+                release_connection = finalizeRetiredMicrophoneLocked();
+            }
+            k_mutex_unlock(&microphoneControllerBackendMutex);
+            if (release_connection != nullptr)
+            {
+                bt_conn_unref(release_connection);
+            }
         }
 
         /** @brief MICP callback instance가 현재 active 연결에 속하는지 확인합니다. */
@@ -2794,6 +2808,8 @@ namespace nucode::ble::audio
                         const auto *state = static_cast<const struct bt_aics_state *>(data);
                         microphoneControllerBackend.input_service->cli.change_counter =
                             state->change_counter;
+                        microphoneControllerBackend.input_service->cli.gain_mode =
+                            state->gain_mode;
                         microphoneControllerBackend.input.gain = state->gain;
                         microphoneControllerBackend.input.muted =
                             state->mute == BT_AICS_STATE_MUTED;
@@ -2972,6 +2988,7 @@ namespace nucode::ble::audio
             atomic_set(&microphoneControllerBackend.error, error);
             if (error == 0)
             {
+                instance->cli.gain_mode = mode;
                 microphoneControllerBackend.input.gain = gain;
                 microphoneControllerBackend.input.muted = mute == BT_AICS_STATE_MUTED;
                 microphoneControllerBackend.input.mute_disabled =
@@ -3180,6 +3197,7 @@ namespace nucode::ble::audio
         microphoneControllerBackend.owner = this;
         microphoneControllerBackend.handle = connection;
         microphoneControllerBackend.connection = native;
+        microphoneControllerBackend.native_disconnected = false;
         microphoneControllerBackend.controller = nullptr;
         microphoneControllerBackend.input_service = nullptr;
         microphoneControllerBackend.pending_generation = microphoneControllerBackend.generation;
@@ -3266,6 +3284,7 @@ namespace nucode::ble::audio
         k_mutex_unlock(&microphoneControllerBackendMutex);
         if (!owned)
         {
+            (void)retiredMicrophoneConnectionActive();
             return;
         }
         serviceMicrophoneBootstrap(generation_);
@@ -3297,7 +3316,6 @@ namespace nucode::ble::audio
         }
         if (ownsMicrophoneControllerLocked(this, generation_))
         {
-            const BLEConnectionHandle handle = microphoneControllerBackend.handle;
             struct bt_conn *connection = microphoneControllerBackend.connection;
             const bool cancel_bootstrap = microphoneControllerBackend.read_pending &&
                                           (microphoneControllerBackend.read_generation ==
@@ -3326,11 +3344,6 @@ namespace nucode::ble::audio
             {
                 bt_gatt_cancel(connection, &microphoneControllerBackend.bootstrap_read);
             }
-            struct bt_conn *active = internal::referenceConnection(handle);
-            if (active != nullptr)
-            {
-                bt_conn_unref(active);
-            }
             if (connection != nullptr)
             {
                 bt_conn_unref(connection);
@@ -3338,6 +3351,7 @@ namespace nucode::ble::audio
             k_mutex_lock(&microphoneControllerBackendMutex, K_FOREVER);
             started_ = false;
             k_mutex_unlock(&microphoneControllerBackendMutex);
+            (void)retiredMicrophoneConnectionActive();
             return record(Error::none);
         }
         started_ = false;
@@ -3706,6 +3720,36 @@ namespace nucode::ble::audio
         return error;
     }
 
+#endif
+
+#if (defined(CONFIG_BT_VCP_VOL_CTLR) && (CONFIG_BT_VCP_VOL_CTLR_MAX_VOCS_INST == 1) &&             \
+     (CONFIG_BT_VCP_VOL_CTLR_MAX_AICS_INST == 1)) ||                                               \
+    (defined(CONFIG_BT_MICP_MIC_CTLR) && (CONFIG_BT_MICP_MIC_CTLR_MAX_AICS_INST == 1))
+    namespace
+    {
+        /**
+         * @brief ATT drain 뒤 exact controller generation의 connection ref를 정리합니다.
+         *
+         * 고정 host는 bt_l2cap_disconnected()에서 ATT request callback을 모두 반환시킨 다음
+         * bt_conn callback을 호출합니다. 이 경계를 이용해 parameter 재사용 안전성을 지키면서
+         * CONFIG_BT_MAX_CONN=1 pool이 다시 ref 0을 볼 수 있게 합니다.
+         */
+        void audioControlConnectionDisconnected(struct bt_conn *connection,
+                                                std::uint8_t) noexcept
+        {
+#if defined(CONFIG_BT_VCP_VOL_CTLR) && (CONFIG_BT_VCP_VOL_CTLR_MAX_VOCS_INST == 1) &&              \
+    (CONFIG_BT_VCP_VOL_CTLR_MAX_AICS_INST == 1)
+            volumeConnectionDisconnected(connection);
+#endif
+#if defined(CONFIG_BT_MICP_MIC_CTLR) && (CONFIG_BT_MICP_MIC_CTLR_MAX_AICS_INST == 1)
+            microphoneConnectionDisconnected(connection);
+#endif
+        }
+
+        BT_CONN_CB_DEFINE(nucode_audio_control_connection_callbacks) = {
+            .disconnected = audioControlConnectionDisconnected,
+        };
+    } // namespace
 #endif
 
 } // namespace nucode::ble::audio

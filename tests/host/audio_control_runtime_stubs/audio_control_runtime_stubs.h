@@ -69,6 +69,11 @@ inline bool atomic_cas(atomic_t *target, atomic_val_t old_value, atomic_val_t ne
     return true;
 }
 
+inline void atomic_clear_bit(atomic_t *target, unsigned int bit) noexcept
+{
+    *target &= ~(static_cast<atomic_t>(1U) << bit);
+}
+
 struct k_mutex
 {
     std::recursive_mutex native;
@@ -115,6 +120,13 @@ struct bt_conn
     std::uint32_t references = 0U;
     bool active = false;
 };
+
+struct bt_conn_cb
+{
+    void (*disconnected)(bt_conn *, std::uint8_t) = nullptr;
+};
+
+#define BT_CONN_CB_DEFINE(name) static bt_conn_cb name
 
 inline bt_conn *bt_conn_ref(bt_conn *connection) noexcept
 {
@@ -264,6 +276,16 @@ struct bt_vocs_client
     std::uint16_t control_handle = 0U;
     std::uint16_t desc_handle = 0U;
     bt_conn *conn = nullptr;
+    atomic_t flags[1] = {};
+};
+
+enum bt_vocs_client_flag
+{
+    BT_VOCS_CLIENT_FLAG_BUSY,
+    BT_VOCS_CLIENT_FLAG_CP_RETRIED,
+    BT_VOCS_CLIENT_FLAG_DESC_WRITABLE,
+    BT_VOCS_CLIENT_FLAG_LOC_WRITABLE,
+    BT_VOCS_CLIENT_FLAG_ACTIVE,
 };
 
 struct bt_aics_client
@@ -343,6 +365,20 @@ namespace audio_control_stub
     inline bt_conn *delayed_connection = nullptr;
     inline std::uint32_t cancel_callbacks = 0U;
     inline int next_read_result = 0;
+    inline bool vocs_reference_held = false;
+
+    /** @brief 한 connection pool slot에 controller client 포인터를 다시 결합합니다. */
+    inline void bindControllerClients() noexcept
+    {
+        volume_controller.conn = &connection;
+        volume_offset.conn = nullptr;
+        volume_offset.state_handle = 0x0111U;
+        volume_offset.location_handle = 0x0112U;
+        volume_input.cli.conn = &connection;
+        microphone_controller.conn = &connection;
+        microphone_input.cli.conn = &connection;
+        vocs_reference_held = false;
+    }
 
     inline void reset() noexcept
     {
@@ -355,26 +391,22 @@ namespace audio_control_stub
         volume_controller = {};
         microphone_input = {};
         microphone_controller = {};
-        volume_controller.conn = &connection;
+        bindControllerClients();
         volume_controller.state_handle = 0x0101U;
         volume_controller.vol_flag_handle = 0x0102U;
         volume_controller.vocs_inst_cnt = 1U;
         volume_controller.vocs[0] = &volume_offset.vocs;
         volume_controller.aics_inst_cnt = 1U;
         volume_controller.aics[0] = &volume_input;
-        volume_offset.conn = &connection;
         volume_offset.state_handle = 0x0111U;
         volume_offset.location_handle = 0x0112U;
-        volume_input.cli.conn = &connection;
         volume_input.cli.state_handle = 0x0121U;
         volume_input.cli.gain_handle = 0x0122U;
         volume_input.cli.type_handle = 0x0123U;
         volume_input.cli.status_handle = 0x0124U;
-        microphone_controller.conn = &connection;
         microphone_controller.mute_handle = 0x0201U;
         microphone_controller.aics_inst_cnt = 1U;
         microphone_controller.aics[0] = &microphone_input;
-        microphone_input.cli.conn = &connection;
         microphone_input.cli.state_handle = 0x0211U;
         microphone_input.cli.gain_handle = 0x0212U;
         microphone_input.cli.type_handle = 0x0213U;
@@ -385,6 +417,34 @@ namespace audio_control_stub
         delayed_connection = nullptr;
         cancel_callbacks = 0U;
         next_read_result = 0;
+    }
+
+    /** @brief locked host의 disconnect와 non-sticky profile ref 해제를 재현합니다. */
+    inline void disconnectSingleConnection() noexcept
+    {
+        if (!connection.active)
+        {
+            return;
+        }
+        connection.active = false;
+        volume_controller.conn = nullptr;
+        volume_input.cli.conn = nullptr;
+        microphone_controller.conn = nullptr;
+        microphone_input.cli.conn = nullptr;
+        bt_conn_unref(&connection);
+    }
+
+    /** @brief ref가 0인 경우에만 CONFIG_BT_MAX_CONN=1 slot을 재할당합니다. */
+    inline bool allocateSingleConnection() noexcept
+    {
+        if (connection.references != 0U)
+        {
+            return false;
+        }
+        connection.references = 1U;
+        connection.active = true;
+        bindControllerClients();
+        return true;
     }
 
     inline void completeRead(const void *data, std::uint16_t length,
@@ -477,8 +537,14 @@ inline int bt_micp_mic_ctlr_discover(bt_conn *, bt_micp_mic_ctlr **controller) n
 }
 
 inline int bt_vcp_vol_ctlr_included_get(bt_vcp_vol_ctlr *controller,
-                                        bt_vcp_included *included) noexcept
+                                         bt_vcp_included *included) noexcept
 {
+    if (!audio_control_stub::vocs_reference_held && (controller->conn != nullptr))
+    {
+        audio_control_stub::volume_offset.conn = controller->conn;
+        bt_conn_ref(controller->conn);
+        audio_control_stub::vocs_reference_held = true;
+    }
     included->vocs_cnt = controller->vocs_inst_cnt;
     included->vocs = controller->vocs;
     included->aics_cnt = controller->aics_inst_cnt;

@@ -256,9 +256,10 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         self.assertIn("retiredVolumeConnectionActive()", source)
         self.assertIn("retiredMicrophoneConnectionActive()", source)
         self.assertGreaterEqual(source.count("bt_conn_ref(expected_connection);"), 7)
-        self.assertIn("bt_vcp_vol_ctlr_conn_get(controller, &bound)", source)
-        self.assertIn("bt_micp_mic_ctlr_conn_get(controller, &bound)", source)
-        self.assertIn("bt_aics_client_conn_get(input_service, &bound)", source)
+        self.assertIn("volumeBackend.native_disconnected = true", source)
+        self.assertIn("microphoneControllerBackend.native_disconnected = true", source)
+        self.assertIn("releaseDisconnectedVocsLocked(connection)", source)
+        self.assertIn("BT_CONN_CB_DEFINE(nucode_audio_control_connection_callbacks)", source)
 
     def test_audio_control_bootstrap_reads_actual_remote_state(self) -> None:
         """! @brief discovery 뒤 실제 VCP·VOCS·AICS·MICP 상태를 모두 읽는지 검사합니다. """
