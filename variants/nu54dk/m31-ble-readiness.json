@@ -303,22 +303,23 @@
       "id": "W03-08",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "source_status": "verified",
+      "target_applicability": "arduino_vcp_vocs_aics_micp_two_board_confirmed_physical_audio_external",
       "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/w08-control-119c3bd7-functional-v3.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
+      },
+      "support_reason": "clean 119c3bd7 공개 Arduino controller/device 2역할에서 VCP/VOCS/AICS와 MICP write 8·async read 5·notification 5종, 276 control report를 확인했다. volume 255 포화와 offset 256·VCP/MICP input 101 거부의 상태 불변을 확인했고, device hardware-reset peer loss 뒤 VCP/MICP 재발견·재연결을 20/20회 각 6.950~23.517초에 복구했다."
     },
     {
       "id": "W03-09",
@@ -573,7 +574,7 @@
         "microphone"
       ],
       "minimum_boards": 2,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-09",
@@ -839,30 +840,30 @@
     },
     {
       "id": "W03-08:controller",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino",
+      "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
     },
     {
       "id": "W03-08:renderer",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino",
+      "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
     },
     {
       "id": "W03-08:microphone",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino",
+      "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
     },
     {
       "id": "W03-09:controller",
@@ -1441,9 +1442,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-09",

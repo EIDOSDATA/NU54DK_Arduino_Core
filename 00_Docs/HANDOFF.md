@@ -121,8 +121,9 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
    기존 PC의 임시 package·HEX 경로를 결과물로 가정하지 않습니다. 신규 변경은 새 PC에서 clean source,
    설치 예제 build, 보드 역할별 runtime을 같은 revision으로 결합해 검증합니다.
 4. W03-05 CAP은 broadcast와 unicast, cancel·원격 완료 실패·handover 및 정상 image 복구까지
-   완료했습니다. 다음 우선순위는 독립 리뷰 결함을 수정 중인 W03-06 CSIP·W03-08 control과
-   HIL 잔여, 이어서 W03-09~W03-11입니다. W03-02~W03-05와 W03-07 PBP source 근거를
+   완료했습니다. W03-08 VCP/VOCS/AICS/MICP도 276 control report, invalid range 상태 불변과
+   peer loss 복구 20/20으로 완료했습니다. 다음 우선순위는 W03-06 CSIP·W03-07 PBP의 최종
+   HIL, 이어서 W03-09~W03-11입니다. W03-02~W03-05와 W03-08 완료 근거를
    보존합니다. W04 raw IQ RX와 W05 CS의
    미해결 오류는 실제 register/log 근거로 조사하며 W06~W08은 아직 미착수입니다.
 5. 실제 보드 시험 직전에 현재 CMSIS-DAP V2 probe SHA-256 identity·COM/serial·role·firmware를
