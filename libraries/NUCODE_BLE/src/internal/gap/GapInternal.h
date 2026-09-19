@@ -21,6 +21,17 @@
 #if !defined(CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS)
 #define CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS 1
 #endif
+#if CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS == 2
+#if !defined(CONFIG_BT_MAX_CONN) || CONFIG_BT_MAX_CONN < 2
+#error "Two central slots require CONFIG_BT_MAX_CONN >= 2"
+#endif
+#if !defined(CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT) || CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT != 0
+#error "Two central slots require CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0"
+#endif
+#if defined(CONFIG_BT_PERIPHERAL) && CONFIG_BT_PERIPHERAL != 0
+#error "Two central slots require a central-only Bluetooth Host"
+#endif
+#endif
 namespace nucode::ble::internal
 {
     /** @brief 공개 handle의 token 표현을 GAP 내부에만 개방합니다. */
@@ -108,6 +119,7 @@ namespace nucode::ble::internal::gap
 
         struct bt_conn *active = nullptr;
         struct bt_conn *pending = nullptr;
+        bool reserved = false;
         std::uint32_t generation = 0U;
         std::uint32_t device_generation = 0U;
         BLEAddress peer_address;

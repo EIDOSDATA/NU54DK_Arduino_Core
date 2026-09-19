@@ -33,6 +33,7 @@ class CsipContractTests(unittest.TestCase):
             "struct CsipMemberInfo",
             "class CsipSetMember final",
             "generateRsi",
+            "authorizeSirkRead",
             "setSizeAndRank",
             "forceRelease",
             "class CsipSetCoordinator final",
@@ -63,9 +64,47 @@ class CsipContractTests(unittest.TestCase):
             "!BLEConnection.connected(pending_connection)",
             "release_remaining = release_remaining || coordinator_context.locked",
             "internal::handleForActiveConnection(connection)",
+            "BT_CSIP_READ_SIRK_REQ_RSP_REJECT",
+            "bt_le_bond_exists(information.id, information.le.dst)",
+            "bt_addr_le_eq(information.le.dst, &authorized_identity)",
+            "struct CoordinatorOperation",
+            "operation.session == coordinator_context.session",
+            "invalidateCoordinatorOperationLocked()",
+            "invalidateCoordinatorMember(instance",
+            "aggregate_locked",
+            "member_context.transitioning",
+            "bt_csip_set_member_unregister(instance)",
         ):
             self.assertIn(token, text)
         self.assertNotIn("TEST_SAMPLE_DATA", text)
+
+    def test_examples_require_physical_sirk_approval_and_recover_discovery(self) -> None:
+        """! @brief 기본 거부·명시 승인·새 RSI·실패 session 재시작 흐름을 고정합니다. """
+
+        member = (EXAMPLES / "CsipSetMember/CsipSetMember.ino").read_text(encoding="utf-8")
+        coordinator = (EXAMPLES / "CsipSetCoordinator/CsipSetCoordinator.ino").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "physically verify the controller, then send a",
+            "setMember.authorizeSirkRead(authorizationCandidate)",
+            "Bonded controller identity authorized",
+            "Set SIRK read authorization failed",
+            "startMemberAdvertising()",
+            "setMember.generateRsi(rsi)",
+            "로컬 상호운용 시험 전용",
+            "고유 비밀",
+        ):
+            self.assertIn(token, member)
+        for token in (
+            "recoverDiscovery()",
+            "coordinator.end()",
+            "BLEConnection.disconnect(links[index])",
+            "coordinator.begin(setKey, 2U)",
+            "BLEScan.start(true)",
+            "CsipStage::failed",
+        ):
+            self.assertIn(token, coordinator)
 
     def test_examples_pass_public_boundary_audit(self) -> None:
         """! @brief 두 역할 sketch가 공개 NUCODE API와 역할 Kconfig를 유지합니다. """

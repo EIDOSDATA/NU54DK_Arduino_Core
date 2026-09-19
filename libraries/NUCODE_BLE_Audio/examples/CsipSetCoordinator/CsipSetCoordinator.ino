@@ -18,7 +18,9 @@ namespace
     std::size_t reportedMembers = 0U;
     bool candidateReady = false;
     bool scanPending = false;
+    bool recoveryPending = false;
 
+    /** @brief 이 고정 키는 로컬 상호운용 시험 전용이며 제품에는 고유 비밀을 주입해야 합니다. */
     constexpr nucode::ble::audio::CsipSetKey setKey = {{
         0x91U, 0x72U, 0x44U, 0x13U, 0xa8U, 0x5cU, 0x2dU, 0xe1U,
         0x0bU, 0x6fU, 0xc3U, 0x39U, 0x57U, 0x8aU, 0xd4U, 0x20U,
@@ -119,6 +121,7 @@ namespace
             if (coordinator.discover(record.connection) != nucode::ble::audio::Error::none)
             {
                 Serial.println("Set member discovery failed to start");
+                recoveryPending = true;
             }
         }
     }
@@ -137,6 +140,37 @@ namespace
                 Serial.println(member.set_size);
             }
         }
+    }
+
+    /** @brief 검색 실패 session을 폐기하고 exact link를 끊은 뒤 새 검색을 시작합니다. */
+    void recoverDiscovery()
+    {
+        if (BLEScan.running() && !BLEScan.stop())
+        {
+            Serial.println("Set recovery scan stop failed");
+            return;
+        }
+        if (coordinator.end() != nucode::ble::audio::Error::none)
+        {
+            Serial.println("Set recovery end busy");
+            return;
+        }
+        for (std::size_t index = 0U; index < linkCount; ++index)
+        {
+            if (BLEConnection.connected(links[index]))
+            {
+                static_cast<void>(BLEConnection.disconnect(links[index]));
+            }
+            links[index] = {};
+        }
+        linkCount = 0U;
+        reportedMembers = 0U;
+        candidateReady = false;
+        require(coordinator.begin(setKey, 2U) == nucode::ble::audio::Error::none,
+                "coordinator-rebegin");
+        require(BLEScan.start(true), "coordinator-rescan");
+        recoveryPending = false;
+        scanPending = false;
     }
 } // namespace
 
@@ -166,7 +200,16 @@ void loop()
     BLESecurity.poll();
     coordinator.poll();
 
-    if (candidateReady && !BLEConnection.connecting())
+    if (coordinator.stage() == nucode::ble::audio::CsipStage::failed)
+    {
+        recoveryPending = true;
+    }
+    if (recoveryPending && !BLEConnection.connecting())
+    {
+        recoverDiscovery();
+    }
+
+    if (!recoveryPending && candidateReady && !BLEConnection.connecting())
     {
         candidateReady = false;
         nucode::ble::BLEConnectionHandle connection;

@@ -12,8 +12,10 @@
 namespace
 {
     nucode::ble::audio::CsipSetMember setMember;
+    nucode::ble::BLEConnectionHandle authorizationCandidate;
     std::uint32_t reportedLockChanges = 0U;
 
+    /** @brief 이 고정 키는 로컬 상호운용 시험 전용이며 제품에는 고유 비밀을 주입해야 합니다. */
     constexpr nucode::ble::audio::CsipSetKey setKey = {{
         0x91U, 0x72U, 0x44U, 0x13U, 0xa8U, 0x5cU, 0x2dU, 0xe1U,
         0x0bU, 0x6fU, 0xc3U, 0x39U, 0x57U, 0x8aU, 0xd4U, 0x20U,
@@ -32,6 +34,16 @@ namespace
         {
             delay(1000U);
         }
+    }
+
+    /** @brief 매 광고 시작마다 새 RSI로 payload를 교체합니다. */
+    bool startMemberAdvertising()
+    {
+        std::uint8_t rsi[6] = {};
+        return setMember.generateRsi(rsi) == nucode::ble::audio::Error::none &&
+               BLEAdvertising.clear() &&
+               BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x1846U)) &&
+               BLEAdvertising.setResolvableSetIdentifier(rsi) && BLEAdvertising.start();
     }
 
     /** @brief 두 member가 같은 sketch에서 서로 다른 rank를 선택하게 합니다. */
@@ -65,7 +77,11 @@ namespace
         }
         else if (information.event == nucode::ble::BLEEvent::disconnected)
         {
-            if (!BLEAdvertising.running() && !BLEAdvertising.start())
+            if (authorizationCandidate == information.connection)
+            {
+                authorizationCandidate = {};
+            }
+            if (!BLEAdvertising.running() && !startMemberAdvertising())
             {
                 Serial.println("Set member advertising restart failed");
             }
@@ -86,7 +102,8 @@ namespace
         else if (record.event == nucode::ble::SecurityEvent::paired ||
                  record.event == nucode::ble::SecurityEvent::bond_verified)
         {
-            Serial.println("Set member bonded");
+            authorizationCandidate = record.connection;
+            Serial.println("Set member bonded; physically verify the controller, then send a");
         }
     }
 } // namespace
@@ -113,13 +130,9 @@ void setup()
     member.lockable = true;
     require(setMember.begin(member) == nucode::ble::audio::Error::none, "member");
 
-    std::uint8_t rsi[6] = {};
-    require(setMember.generateRsi(rsi) == nucode::ble::audio::Error::none, "rsi");
-    require(BLEAdvertising.clear(), "advertising-clear");
-    require(BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x1846U)), "service-uuid");
-    require(BLEAdvertising.setResolvableSetIdentifier(rsi), "rsi-advertising");
-    require(BLEAdvertising.start(), "advertising-start");
-    Serial.println("Set member ready; send f to force-release its lock");
+    require(startMemberAdvertising(), "advertising-start");
+    Serial.println("Set member ready; send a to authorize SIRK read, f to force-release");
+    Serial.println("Provision a unique secret before using this outside a local test setup");
 }
 
 void loop()
@@ -132,9 +145,23 @@ void loop()
         reportedLockChanges = setMember.lockChanges();
         Serial.println(setMember.locked() ? "Set locked" : "Set released");
     }
-    if (Serial.available() != 0 && Serial.read() == 'f')
+    if (Serial.available() != 0)
     {
-        if (setMember.forceRelease() != nucode::ble::audio::Error::none)
+        const int command = Serial.read();
+        if (command == 'a' && authorizationCandidate.valid())
+        {
+            if (setMember.authorizeSirkRead(authorizationCandidate) !=
+                nucode::ble::audio::Error::none)
+            {
+                Serial.println("Set SIRK read authorization failed");
+            }
+            else
+            {
+                Serial.println("Bonded controller identity authorized");
+            }
+        }
+        else if (command == 'f' &&
+                 setMember.forceRelease() != nucode::ble::audio::Error::none)
         {
             Serial.println("Set force release failed");
         }

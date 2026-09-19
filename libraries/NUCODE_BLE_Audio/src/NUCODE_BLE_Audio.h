@@ -1660,6 +1660,10 @@ namespace nucode::ble::audio
         /** @brief 광고에 넣을 6-byte RSI를 새로 생성합니다. */
         Error generateRsi(std::uint8_t (&rsi)[6]) noexcept;
 
+        /** @brief 연결에서 확인한 bonded identity의 encrypted SIRK 읽기 권한을 설정합니다. */
+        Error authorizeSirkRead(const BLEConnectionHandle &connection,
+                                bool authorized = true) noexcept;
+
         /** @brief 등록된 service의 SIRK를 변경합니다. */
         Error setKey(const CsipSetKey &key) noexcept;
 

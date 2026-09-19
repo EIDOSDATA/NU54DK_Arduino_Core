@@ -375,6 +375,7 @@ namespace nucode::ble
             pending[index] = slot.pending;
             slot.active = nullptr;
             slot.pending = nullptr;
+            slot.reserved = false;
             slot.generation = 0U;
             slot.device_generation = 0U;
             slot.peer_address = BLEAddress{};
