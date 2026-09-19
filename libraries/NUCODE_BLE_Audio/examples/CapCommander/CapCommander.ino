@@ -236,6 +236,22 @@ void loop()
         Serial.print(" native=");
         Serial.println(commander.nativeCode());
     }
+    if ((stage == CapStage::failed) &&
+        (lossStopPending || lossRemovePending || sourceRescanPending))
+    {
+        if (BLEConnection.disconnect(acceptorConnection))
+        {
+            lossStopPending = false;
+            lossRemovePending = false;
+            sourceRescanPending = false;
+            streamWasSynchronized = false;
+            Serial.println("CAP recovery link restart");
+        }
+        else
+        {
+            Serial.println("CAP recovery link restart failed");
+        }
+    }
     if (lossStopPending && commander.ready())
     {
         const Error result = commander.stopReception();
