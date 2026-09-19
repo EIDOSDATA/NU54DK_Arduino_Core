@@ -1,7 +1,7 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29·M30 완료, M31 1/8 진행**입니다. M29와 M30은 각각
+**v0.4.1**, 개발 상태는 **M28·M29·M30 완료, M31 2/8 진행**입니다. M29와 M30은 각각
 작업 묶음 **8/8**, test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
@@ -12,6 +12,9 @@
 
 | 기록 | 용도 |
 | --- | --- |
+| [205 — M31-W03 Arduino CAP unicast 반복 실기](205_M31_W03_Arduino_CAP_unicast_반복_실기.md) | exact 공개 API start/stop 23회, cancel 22회, 재연결 48회, LC3 decode 1,800 frame·drop 0; 원격 완료 실패 callback 잔여 |
+| [204 — M31-W03 Arduino CAP 3역할과 broadcast 복구](204_M31_W03_Arduino_CAP_3역할과_broadcast_복구.md) | CAP broadcast 제어 102/102, negative 20×2, peer loss 복구 20/20, 185초 drop 0 |
+| [203 — M31-W03 Arduino BASS 3역할과 복구](203_M31_W03_Arduino_BASS_3역할과_복구.md) | BASS 제어 100/100, invalid/duplicate 20×2, peer loss 20/20, 180초 drop 0 |
 | [202 — M31-W03 Arduino BAP broadcast 암호화와 negative 완료](202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md) | clean 암호화 LC3, restart 20/20, wrong code 거부·복구 20/20, hardware-reset sync loss 재가입 20/20 |
 | [201 — M31-W03 Arduino BAP broadcast 비암호화와 재가입](201_M31_W03_Arduino_BAP_broadcast_비암호화와_재가입.md) | clean 공개 source/sink LC3 방송과 stop/restart 재가입 20/20, Broadcast Code·강제 sync loss 잔여 |
 | [196 — M31-W02 공개 CIS→BIS 세 보드 사용자 SDU 실기](196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md) | clean 세 역할 20/20·2,000/2,000 CIS 수신→BIS 전달·수신, 자원 반환 20/20, 공개 ISO 예제 감사 0건 |
