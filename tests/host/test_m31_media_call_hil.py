@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 
@@ -20,6 +22,43 @@ from m31_media_call import (  # noqa: E402
     parse_transcript,
     validate_evidence_envelope,
 )
+import m31_media_call_run as RUNNER  # noqa: E402
+
+
+def write_arduino_manifest(image: Path, core_revision: str, board_revision: str,
+                           image_sha256: str | None = None) -> Path:
+    """! @brief W03-09 인접 Arduino build manifest fixture를 기록합니다. """
+    record = image.with_suffix(".nu54-build.json")
+    document = {
+        "artifacts": {
+            "hex": {
+                "path": image.resolve().as_posix(),
+                "sha256": image_sha256 or hashlib.sha256(image.read_bytes()).hexdigest(),
+                "size": image.stat().st_size,
+            }
+        },
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "cache": {
+            "input_manifest": {
+                "toolchain": {
+                    "bundle_id": "dcbdc366a1",
+                    "compiler": "arm-zephyr-eabi-g++.exe 14.3.0",
+                }
+            }
+        },
+        "source_inputs": {
+            "m31_audio_revisions": {
+                "NUCODE_CORE_REVISION": core_revision,
+                "NUCODE_BOARD_REVISION": board_revision,
+                "NUCODE_NCS_REVISION":
+                    "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+                "NUCODE_ZEPHYR_REVISION":
+                    "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+            }
+        },
+    }
+    record.write_text(json.dumps(document), encoding="utf-8")
+    return record
 
 
 def media_transcript() -> bytes:
@@ -172,6 +211,51 @@ class MediaCallHilContractTests(unittest.TestCase):
             self.assertIn(token, text)
         self.assertNotIn('parser.add_argument("--uid"', text)
         self.assertNotIn('"uid": board["uid"]', text)
+
+    def test_runner_separates_source_and_image_revision_provenance(self) -> None:
+        """! @brief 실행 source와 과거 exact image revision을 독립적으로 받습니다. """
+        options = {
+            option
+            for action in RUNNER.build_parser()._actions
+            for option in action.option_strings
+        }
+        source = (HIL / "m31_media_call_run.py").read_text(encoding="utf-8")
+        self.assertIn("--expected-core-revision", options)
+        self.assertIn("--image-core-revision", options)
+        self.assertIn("validate_build_record(", source)
+        self.assertIn('"build_record": build_record', source)
+        self.assertIn('"image_core_revision": image_core_revision', source)
+        self.assertIn("validate_image_unchanged(", source)
+
+    def test_adjacent_arduino_manifest_binds_w09_hex_and_revisions(self) -> None:
+        """! @brief 실제 HEX byte와 full revision이 일치하는 인접 manifest만 승인합니다. """
+        core_revision = "a" * 40
+        board_revision = "b" * 40
+        with tempfile.TemporaryDirectory(prefix="nu54-w03-09-build-record-") as directory:
+            root = Path(directory) / "MediaControlPlayer"
+            root.mkdir()
+            image = root / "MediaControlPlayer.ino.hex"
+            image.write_bytes(b":00000001FF\n")
+            record = write_arduino_manifest(image, core_revision, board_revision)
+
+            result = RUNNER.validate_build_record(
+                image, core_revision, board_revision, root
+            )
+
+            self.assertEqual(result["record_name"], record.name)
+            self.assertEqual(result["record_format"], "nu54-build-json")
+            self.assertEqual(result["hex_sha256"], hashlib.sha256(image.read_bytes()).hexdigest())
+
+    def test_adjacent_arduino_manifest_rejects_stale_w09_hex(self) -> None:
+        """! @brief manifest digest와 현재 HEX가 다르면 flash 전에 거부합니다. """
+        with tempfile.TemporaryDirectory(prefix="nu54-w03-09-build-record-") as directory:
+            root = Path(directory)
+            image = root / "MediaControlClient.ino.hex"
+            image.write_bytes(b":00000001FF\n")
+            write_arduino_manifest(image, "a" * 40, "b" * 40, "0" * 64)
+
+            with self.assertRaises(RuntimeError):
+                RUNNER.validate_build_record(image, "a" * 40, "b" * 40, root)
 
     def test_public_examples_expose_negative_and_notification_oracles(self) -> None:
         """! @brief HIL이 Zephyr가 아닌 공개 Serial/API 흐름만 사용함을 고정합니다. """

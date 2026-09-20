@@ -19,7 +19,14 @@ REPOSITORY = HIL.parents[2]
 if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
-from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from ble_pair_hil_common import (  # noqa: E402
+    BOARD_ROOT,
+    flash_image_pyocd,
+    git_revision,
+    validate_build_record,
+    validate_hex_image,
+    validate_image_unchanged,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m31_ble_capability import ExpectedIdentity  # noqa: E402
 from m31_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -49,6 +56,16 @@ CONFIG_REQUIREMENTS = {
         "client": ("CONFIG_BT_CCP_CALL_CONTROL_CLIENT=y", "CONFIG_BT_TBS_CLIENT_GTBS=y"),
     },
 }
+EXAMPLE_ROOTS = {
+    "media": {
+        "provider": REPOSITORY / "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer",
+        "client": REPOSITORY / "libraries/NUCODE_BLE_Audio/examples/MediaControlClient",
+    },
+    "call": {
+        "provider": REPOSITORY / "libraries/NUCODE_BLE_Audio/examples/CallControlServer",
+        "client": REPOSITORY / "libraries/NUCODE_BLE_Audio/examples/CallControlClient",
+    },
+}
 
 
 class MediaCallExecutionFailure(RuntimeError):
@@ -64,6 +81,22 @@ def _sanitize(message: str) -> str:
     """! @brief 오류에 섞일 수 있는 raw probe identity를 제거합니다. """
     message = re.sub(r"(?i)(?:uid|probe_id|unique id)=[^\s,;]+", "uid=<redacted>", message)
     return IDENTITY_PATTERN.sub("<redacted-identity>", message)[:500]
+
+
+def _resolve_image_revision(revision: str) -> str:
+    """! @brief image source revision을 현재 checkout과 독립된 full commit으로 해석합니다. """
+    result = subprocess.run(
+        ("git", "-C", str(REPOSITORY), "rev-parse", "--verify", f"{revision}^{{commit}}"),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    resolved = result.stdout.strip()
+    if result.returncode != 0 or not re.fullmatch(r"[0-9a-f]{40}", resolved):
+        raise MediaCallExecutionFailure("image core revision을 commit으로 해석할 수 없습니다")
+    return resolved
 
 
 class SerialSession:
@@ -325,7 +358,8 @@ def execute(args: argparse.Namespace) -> dict:
     lock = json.loads((REPOSITORY / "tools/ci/ncs-3.4.0.lock.json").read_text(encoding="utf-8"))
     sdk = args.sdk_root.resolve()
     identity = ExpectedIdentity(
-        git_revision(REPOSITORY), git_revision(BOARD_ROOT), git_revision(sdk / "nrf"),
+        git_revision(REPOSITORY, args.expected_core_revision),
+        git_revision(BOARD_ROOT), git_revision(sdk / "nrf"),
         git_revision(sdk / "zephyr"),
     )
     if identity.board != lock["board"]["revision"] or identity.ncs != lock["ncs"]["revision"] or (
@@ -340,29 +374,41 @@ def execute(args: argparse.Namespace) -> dict:
     ).stdout.strip()
     if dirty and not args.development:
         raise MediaCallExecutionFailure("exact HIL에는 clean source commit이 필요합니다")
+    image_core_revision = identity.core
+    if args.image_core_revision:
+        image_core_revision = _resolve_image_revision(args.image_core_revision)
 
     role_names = ("player", "client") if args.profile == "media" else ("server", "client")
     inputs = {
         role_names[0]: (args.probe_provider_sha256, args.provider_image.resolve(),
-                        args.provider_config.resolve(), "provider"),
+                        args.provider_config.resolve(), "provider",
+                        EXAMPLE_ROOTS[args.profile]["provider"]),
         "client": (args.probe_client_sha256, args.client_image.resolve(),
-                   args.client_config.resolve(), "client"),
+                   args.client_config.resolve(), "client",
+                   EXAMPLE_ROOTS[args.profile]["client"]),
     }
     serial_module, list_ports = import_pyserial()
     boards = {}
-    for role, (probe_hash, image, config, config_role) in inputs.items():
-        if not image.is_file() or image.suffix.lower() != ".hex" or not config.is_file():
+    for role, (probe_hash, image_path, config, config_role, example_root) in inputs.items():
+        if not config.is_file():
             raise MediaCallExecutionFailure(f"{role} image/config missing")
+        image = validate_hex_image(str(image_path))
         _verify_config(args.profile, config_role, config)
+        build_record = validate_build_record(
+            image, image_core_revision, identity.board, example_root
+        )
         uid, volume, vcom = discover(probe_hash, list_ports)
         boards[role] = {
             "uid": uid,
             "image": image,
+            "config": config,
             "probe_sha256": probe_hash,
             "volume": volume,
             "vcom": vcom,
             "image_sha256": _hash(image),
+            "image_size": image.stat().st_size,
             "config_sha256": _hash(config),
+            "build_record": build_record,
         }
     if boards[role_names[0]]["uid"] == boards["client"]["uid"] or (
         boards[role_names[0]]["vcom"] == boards["client"]["vcom"]
@@ -420,6 +466,19 @@ def execute(args: argparse.Namespace) -> dict:
                 _reconnect_campaign(session, boards["client"]["uid"], args.profile)
                 transcript = ("\n".join(session.transcript) + "\n").encode("ascii")
                 measurement = parse_transcript(args.profile, transcript, soak_elapsed)
+                for board in boards.values():
+                    validate_image_unchanged(
+                        board["image"], board["image_size"], board["image_sha256"]
+                    )
+                    if _hash(board["config"]) != board["config_sha256"]:
+                        raise MediaCallExecutionFailure("시험 중 config byte가 변경됐습니다")
+                ending_identity = ExpectedIdentity(
+                    git_revision(REPOSITORY, args.expected_core_revision),
+                    git_revision(BOARD_ROOT), git_revision(sdk / "nrf"),
+                    git_revision(sdk / "zephyr"),
+                )
+                if ending_identity != identity:
+                    raise MediaCallExecutionFailure("시험 중 source/SDK revision이 변경됐습니다")
                 status = "PASS_CANDIDATE" if dirty else "PASS"
             finally:
                 for port in ports.values():
@@ -428,7 +487,11 @@ def execute(args: argparse.Namespace) -> dict:
         reason = f"{type(error).__name__}: {_sanitize(str(error))}"
 
     public_boards = {
-        role: {key: value for key, value in board.items() if key not in {"uid", "image"}}
+        role: {
+            key: value
+            for key, value in board.items()
+            if key not in {"uid", "image", "config"}
+        }
         for role, board in boards.items()
     }
     transcript_lines = session.transcript if session is not None else []
@@ -440,6 +503,7 @@ def execute(args: argparse.Namespace) -> dict:
         "scope": "two_board_public_serial_profile_contract",
         "source_clean": not bool(dirty),
         "identity": vars(identity),
+        "image_core_revision": image_core_revision,
         "boards": public_boards,
         "normal_operations": 100,
         "negative_iterations_per_case": 20,
@@ -459,8 +523,8 @@ def execute(args: argparse.Namespace) -> dict:
     return evidence
 
 
-def main() -> int:
-    """! @brief raw UID 없이 두 probe SHA-256과 role artifact만 받습니다. """
+def build_parser() -> argparse.ArgumentParser:
+    """! @brief raw UID 없이 source와 image revision을 분리한 CLI를 정의합니다. """
     parser = argparse.ArgumentParser()
     parser.add_argument("--profile", choices=("media", "call"), required=True)
     parser.add_argument("--probe-provider-sha256", required=True)
@@ -470,10 +534,18 @@ def main() -> int:
     parser.add_argument("--provider-config", required=True, type=Path)
     parser.add_argument("--client-config", required=True, type=Path)
     parser.add_argument("--sdk-root", required=True, type=Path)
+    parser.add_argument("--expected-core-revision", required=True)
+    parser.add_argument("--image-core-revision")
     parser.add_argument("--output-prefix", required=True, type=Path)
     parser.add_argument("--soak-seconds", type=float, default=180.0)
     parser.add_argument("--flash-timeout", type=float, default=300.0)
     parser.add_argument("--development", action="store_true")
+    return parser
+
+
+def main() -> int:
+    """! @brief raw UID 없이 두 probe SHA-256과 role artifact만 받습니다. """
+    parser = build_parser()
     args = parser.parse_args()
     if args.soak_seconds < 180.0:
         parser.error("--soak-seconds는 180 이상이어야 합니다")
