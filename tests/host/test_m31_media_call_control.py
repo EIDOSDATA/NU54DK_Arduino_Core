@@ -93,6 +93,12 @@ class MediaCallControlContractTests(unittest.TestCase):
         ):
             self.assertIn(token, call_client)
 
+    def test_media_player_reserves_all_mock_player_objects(self) -> None:
+        """! @brief 고정 SDK의 20개 MPL 객체가 기본 5개 pool에 잘리지 않게 합니다. """
+        config = (EXAMPLES / "MediaControlPlayer/prj.conf").read_text(encoding="utf-8")
+        self.assertIn("CONFIG_BT_OTS_MAX_OBJ_CNT=0x14", config)
+        self.assertNotIn("CONFIG_BT_OTS_MAX_INST_CNT=2", config)
+
     def test_fixed_sdk_sources_and_metadata_are_present(self) -> None:
         """! @brief 고정 checkout의 source와 nRF54 allowlist 부재를 정확히 유지합니다. """
         required = (
