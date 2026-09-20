@@ -14,6 +14,7 @@ namespace
     nucode::ble::audio::CsipSetCoordinator coordinator;
     nucode::ble::BLEAddress candidateAddress;
     nucode::ble::BLEConnectionHandle links[2] = {};
+    bool discoveryStarted[2] = {};
     std::size_t linkCount = 0U;
     std::size_t reportedMembers = 0U;
     bool candidateReady = false;
@@ -114,7 +115,9 @@ namespace
         {
             if (linkCount < 2U)
             {
-                links[linkCount++] = information.connection;
+                links[linkCount] = information.connection;
+                discoveryStarted[linkCount] = false;
+                ++linkCount;
             }
             if (!BLESecurity.requestSecurity(information.connection))
             {
@@ -134,7 +137,9 @@ namespace
                 if (links[index] == information.connection)
                 {
                     links[index] = links[linkCount - 1U];
+                    discoveryStarted[index] = discoveryStarted[linkCount - 1U];
                     links[--linkCount] = {};
+                    discoveryStarted[linkCount] = false;
                     break;
                 }
             }
@@ -156,16 +161,27 @@ namespace
             }
         }
         else if (record.event == nucode::ble::SecurityEvent::paired ||
-                 record.event == nucode::ble::SecurityEvent::bond_verified)
+                 record.event == nucode::ble::SecurityEvent::bond_verified ||
+                 (record.event == nucode::ble::SecurityEvent::security_changed &&
+                  BLESecurity.paired(record.connection)))
         {
-            if (coordinator.discover(record.connection) != nucode::ble::audio::Error::none)
+            for (std::size_t index = 0U; index < linkCount; ++index)
             {
-                Serial.println("Set member discovery failed to start");
-                recoveryPending = true;
-            }
-            else
-            {
-                progressDeadlineMs = millis() + discoveryTimeoutMs;
+                if (links[index] != record.connection || discoveryStarted[index])
+                {
+                    continue;
+                }
+                if (coordinator.discover(record.connection) != nucode::ble::audio::Error::none)
+                {
+                    Serial.println("Set member discovery failed to start");
+                    recoveryPending = true;
+                }
+                else
+                {
+                    discoveryStarted[index] = true;
+                    progressDeadlineMs = millis() + discoveryTimeoutMs;
+                }
+                break;
             }
         }
         else if (currentLink(record.connection) &&
@@ -224,6 +240,7 @@ namespace
                 static_cast<void>(BLEConnection.disconnect(links[index]));
             }
             links[index] = {};
+            discoveryStarted[index] = false;
         }
         linkCount = 0U;
         reportedMembers = 0U;
