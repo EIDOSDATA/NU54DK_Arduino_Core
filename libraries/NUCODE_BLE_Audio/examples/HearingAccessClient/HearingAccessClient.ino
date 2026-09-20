@@ -167,7 +167,7 @@ void setup()
     {
         Serial.println("Hearing Access client start failed");
     }
-    Serial.println("Commands: 1/5/8=select n=next p=previous r=read s=state");
+    Serial.println("Commands: 1/5/8=select n=next p=previous r=read x=invalid y=sync s=state");
 }
 
 /** @brief discovery와 사용자가 선택한 원격 preset 절차를 진행합니다. */
@@ -237,11 +237,32 @@ void loop()
         {
             report("Read presets", hearingAccess.readPresets());
         }
+        else if (command == 'x')
+        {
+            report("Invalid preset", hearingAccess.setActivePreset(0U));
+        }
+        else if (command == 'y')
+        {
+            report("Synchronized preset", hearingAccess.setActivePreset(5U, true));
+        }
         else if (command == 's')
         {
             printPresets();
         }
     }
+
+    static HearingAccessStage previousStage = HearingAccessStage::idle;
+    const HearingAccessStage currentStage = hearingAccess.stage();
+    if ((currentStage == HearingAccessStage::failed) && (currentStage != previousStage))
+    {
+        Serial.print("Hearing Access operation rejected step=");
+        Serial.print(static_cast<unsigned int>(hearingAccess.lastStep()));
+        Serial.print(" error=");
+        Serial.print(static_cast<unsigned int>(hearingAccess.lastError()));
+        Serial.print(" native=");
+        Serial.println(hearingAccess.nativeCode());
+    }
+    previousStage = currentStage;
 
     static std::uint32_t updates = 0U;
     if (updates != hearingAccess.stateUpdates())

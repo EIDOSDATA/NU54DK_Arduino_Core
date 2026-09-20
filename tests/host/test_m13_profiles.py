@@ -199,6 +199,8 @@ class M13ProfileContractTests(unittest.TestCase):
                 "AudioControlDevice",
                 "ExternalPdmMicrophoneSource",
                 "ExternalI2sSpeakerSink",
+                "HearingAccessClient",
+                "HearingAccessServer",
             },
         )
         for sketch in examples:

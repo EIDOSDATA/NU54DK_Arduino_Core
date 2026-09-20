@@ -86,6 +86,18 @@ class HearingAccessContractTests(unittest.TestCase):
         self.assertIn("CONFIG_LIBLC3=y", client)
         self.assertNotIn("CONFIG_BT_HAS=y", client)
 
+    def test_client_exposes_invalid_and_synchronized_negative_commands(self) -> None:
+        """! @brief 실제 peer에서 index와 동기 선택 거부를 재현할 수 있습니다. """
+        sketch = (EXAMPLES / "HearingAccessClient/HearingAccessClient.ino").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "hearingAccess.setActivePreset(0U)",
+            "hearingAccess.setActivePreset(5U, true)",
+            "Hearing Access operation rejected",
+        ):
+            self.assertIn(token, sketch)
+
     def test_readiness_keeps_runtime_not_run_until_hil_evidence_exists(self) -> None:
         """! @brief 구현만으로 W03-11 실기 상태를 PASS로 올리지 않습니다. """
         document = json.loads(READINESS.read_text(encoding="utf-8"))
