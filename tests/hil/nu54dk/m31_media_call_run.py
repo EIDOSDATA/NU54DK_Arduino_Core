@@ -251,7 +251,9 @@ def _media_campaign(session: SerialSession, soak_seconds: float) -> float:
     session.send("client", b"s")
     _wait_state(session, "player=")
     for _attempt in range(20):
-        _negative_operation(session, b"k", "MEDIA_NEG_OPCODE", "player=")
+        _negative_operation(
+            session, b"k", "MEDIA_NEG_OPCODE", "player=", expect_submission=False
+        )
     for _attempt in range(20):
         _negative_operation(
             session, b"z", "MEDIA_NEG_STALE_OBJECT", "player=", expect_submission=False

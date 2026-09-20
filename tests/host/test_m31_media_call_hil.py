@@ -74,8 +74,6 @@ def media_transcript() -> bytes:
         lines.append(f"client: {label} complete=1 normal_ops={index + 1}")
     for case in ("OPCODE", "STALE_OBJECT"):
         for _attempt in range(20):
-            if case == "OPCODE":
-                lines.append(f"client: MEDIA_NEG_{case} submitted=1")
             lines.append(f"client: MEDIA_NEG_{case} rejected=1 result=9 native=-95")
             lines.append("client: MEDIA_RECOVERY result=0 native=0")
     lines.append("client: player=Player0 track=Track id=256 position=0 duration=100 state=1 updates=300 notifications=25")
@@ -150,16 +148,17 @@ class MediaCallHilContractTests(unittest.TestCase):
         with self.assertRaises(MediaCallFailure):
             parse_transcript("call", call_transcript(), 179.999)
 
-    def test_parser_rejects_stale_object_that_reached_remote_stack(self) -> None:
-        """! @brief 미관찰 object ID는 MCC 제출 전에 동기 거부되어야 합니다. """
-        transcript = media_transcript().replace(
-            b"client: MEDIA_NEG_STALE_OBJECT rejected=1",
-            b"client: MEDIA_NEG_STALE_OBJECT submitted=1\n"
-            b"client: MEDIA_NEG_STALE_OBJECT rejected=1",
-            1,
-        )
-        with self.assertRaises(MediaCallFailure):
-            parse_transcript("media", transcript, 180.0)
+    def test_parser_rejects_media_negative_that_reached_remote_stack(self) -> None:
+        """! @brief 잘못된 opcode와 미관찰 object ID는 제출 전에 동기 거부되어야 합니다. """
+        for case in (b"OPCODE", b"STALE_OBJECT"):
+            marker = b"client: MEDIA_NEG_" + case + b" rejected=1"
+            transcript = media_transcript().replace(
+                marker,
+                b"client: MEDIA_NEG_" + case + b" submitted=1\n" + marker,
+                1,
+            )
+            with self.assertRaises(MediaCallFailure):
+                parse_transcript("media", transcript, 180.0)
 
     def test_evidence_binds_hashes_registers_and_full_revisions(self) -> None:
         """! @brief artifact SHA-256과 DP/AP register를 clean full revision에 결합합니다. """

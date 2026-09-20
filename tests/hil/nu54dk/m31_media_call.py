@@ -124,9 +124,7 @@ def parse_transcript(profile: str, transcript: bytes, soak_seconds: float) -> Me
             for line in lines
             if (matched := MEDIA_NEGATIVE_PATTERN.fullmatch(line)) is not None
         )
-        if submitted != normal + Counter({
-            "MEDIA_NEG_OPCODE": 20,
-        }):
+        if submitted != normal:
             raise MediaCallFailure("media remote 제출·완료 분모 불일치")
         recovery_marker = "client: MEDIA_RECOVERY result=0 native=0"
         normal_total = len(normal_sequence)
