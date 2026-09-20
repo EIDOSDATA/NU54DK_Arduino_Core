@@ -139,6 +139,13 @@ class HearingAccessContractTests(unittest.TestCase):
         ):
             self.assertIn(token, runner)
 
+    def test_hil_records_source_and_image_revisions_separately(self) -> None:
+        """! @brief 후속 수정 뒤 실행해도 exact image revision을 별도로 보존합니다. """
+        runner = HIL_RUNNER.read_text(encoding="utf-8")
+        self.assertIn('parser.add_argument("--image-core-revision", required=True)', runner)
+        self.assertIn('"image_core_revision": image_revision', runner)
+        self.assertIn('f"{args.image_core_revision}^{{commit}}"', runner)
+
     def test_exact_build_runner_includes_both_examples(self) -> None:
         """! @brief 공개 Hearing Access 두 역할을 exact build 목록에 고정합니다. """
         runner = BUILD_RUNNER.read_text(encoding="utf-8")

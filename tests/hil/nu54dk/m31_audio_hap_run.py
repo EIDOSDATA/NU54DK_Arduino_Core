@@ -168,6 +168,7 @@ def main() -> int:
     parser.add_argument("--client-config", required=True, type=Path)
     parser.add_argument("--server-config", required=True, type=Path)
     parser.add_argument("--core-revision", required=True)
+    parser.add_argument("--image-core-revision", required=True)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--operations", type=int, default=100)
     parser.add_argument("--negative-iterations", type=int, default=20)
@@ -180,6 +181,13 @@ def main() -> int:
         parser.error("client and server probe hashes must differ")
     if args.source_clean:
         verify_clean(args.core_revision)
+    image_revision = subprocess.check_output(
+        ("git", "rev-parse", "--verify", f"{args.image_core_revision}^{{commit}}"),
+        cwd=ROOT,
+        text=True,
+    ).strip()
+    if re.fullmatch(r"[0-9a-f]{40}", image_revision) is None:
+        raise RuntimeError("image core revision is not a full commit")
 
     serial, ports = import_pyserial()
     client_uid, client_volume, client_port = discover(args.client_probe_sha256, ports)
@@ -192,6 +200,7 @@ def main() -> int:
         "test": "arduino_hearing_access_profiles",
         "source_clean": args.source_clean,
         "core_revision": args.core_revision,
+        "image_core_revision": image_revision,
         "client_probe_sha256": args.client_probe_sha256,
         "server_probe_sha256": args.server_probe_sha256,
         "client_port": client_port,
