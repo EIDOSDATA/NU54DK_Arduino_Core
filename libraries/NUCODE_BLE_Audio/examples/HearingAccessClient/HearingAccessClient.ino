@@ -34,6 +34,7 @@ namespace
     bool peerFound = false;
     bool profileStarted = false;
     bool presetsRequested = false;
+    std::uint32_t presetsReadAt = 0U;
     bool scanPending = false;
     std::uint32_t scanAt = 0U;
     std::uint32_t profileDeadline = 0U;
@@ -109,6 +110,7 @@ namespace
             peerFound = false;
             profileStarted = false;
             presetsRequested = false;
+            presetsReadAt = 0U;
             scanPending = true;
             scanAt = millis() + 100U;
             Serial.print("Hearing Access server disconnected reason=");
@@ -200,7 +202,12 @@ void loop()
         }
     }
 
-    if (profileStarted && hearingAccess.ready() && !presetsRequested)
+    if (profileStarted && hearingAccess.ready() && !presetsRequested && (presetsReadAt == 0U))
+    {
+        presetsReadAt = millis() + 500U;
+    }
+    if (profileStarted && hearingAccess.ready() && !presetsRequested && (presetsReadAt != 0U) &&
+        (static_cast<std::int32_t>(millis() - presetsReadAt) >= 0))
     {
         const Error result = hearingAccess.readPresets();
         report("Read presets", result);

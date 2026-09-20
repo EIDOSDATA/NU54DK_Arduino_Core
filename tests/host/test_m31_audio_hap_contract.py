@@ -98,6 +98,7 @@ class HearingAccessContractTests(unittest.TestCase):
             "Hearing Access operation rejected",
             "Hearing Access recovery requested",
             "BLEConnection.disconnect(peerConnection)",
+            "presetsReadAt = millis() + 500U",
         ):
             self.assertIn(token, sketch)
 
