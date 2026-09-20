@@ -200,6 +200,7 @@ def main() -> int:
                     10.0,
                     "preset rename notification",
                 )
+                time.sleep(1.0)
                 server.write(b"a")
                 server.flush()
                 wait_for(
