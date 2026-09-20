@@ -168,6 +168,36 @@ class CsipContractTests(unittest.TestCase):
             "rememberDiscoveredMember();",
         ):
             self.assertIn(token, coordinator)
+        discovery_start = coordinator.index("if (coordinator.discover(record.connection)")
+        discovery_end = coordinator.index("break;", discovery_start)
+        discovery_block = coordinator[discovery_start:discovery_end]
+        self.assertLess(
+            discovery_block.index("discoveryStarted[index] = true;"),
+            discovery_block.index("discoveryConnection = record.connection;"),
+        )
+        member_update_start = coordinator.index(
+            "const std::size_t memberCount = coordinator.memberCount();"
+        )
+        member_update_end = coordinator.index("printMembers();", member_update_start)
+        member_update = coordinator[member_update_start:member_update_end]
+        self.assertLess(
+            member_update.index("if (memberAdded)"),
+            member_update.index("rememberDiscoveredMember();"),
+        )
+        disconnect_start = coordinator.index(
+            "information.event == nucode::ble::BLEEvent::disconnected"
+        )
+        disconnect_end = coordinator.index("void onSecurityEvent", disconnect_start)
+        self.assertIn(
+            "discoveryConnection = {};",
+            coordinator[disconnect_start:disconnect_end],
+        )
+        recovery_start = coordinator.index("void recoverDiscovery()")
+        recovery_end = coordinator.index("} // namespace", recovery_start)
+        self.assertIn(
+            "discoveryConnection = {};",
+            coordinator[recovery_start:recovery_end],
+        )
 
     def test_only_coordinator_initiates_fresh_pairing_security(self) -> None:
         """! @brief fresh pairing에서 양쪽의 동시 보안 요청을 금지합니다. """
