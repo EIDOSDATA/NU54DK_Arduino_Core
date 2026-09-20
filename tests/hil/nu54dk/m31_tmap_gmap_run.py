@@ -437,6 +437,9 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     validate_clean_source()
     sdk_root = args.sdk_root.resolve()
     revisions = validate_revisions(sdk_root, args.expected_core_revision)
+    image_core_revision = git_revision(
+        REPOSITORY, args.image_core_revision or revisions["core"]
+    )
     source_image = validate_hex_image(str(args.source_image.resolve()))
     sink_image = validate_hex_image(str(args.sink_image.resolve()))
     image_state = {
@@ -444,10 +447,10 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "sink": (sink_image.stat().st_size, file_sha256(sink_image)),
     }
     build_records = {
-        "source": validate_build_record(source_image, revisions["core"], revisions["board"],
-                                        scenario.source_root),
-        "sink": validate_build_record(sink_image, revisions["core"], revisions["board"],
-                                      scenario.sink_root),
+        "source": validate_build_record(source_image, image_core_revision, revisions["board"],
+                                         scenario.source_root),
+        "sink": validate_build_record(sink_image, image_core_revision, revisions["board"],
+                                       scenario.sink_root),
     }
     configs = {
         "source": validate_config(args.source_config, scenario.required_source_config),
@@ -508,6 +511,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "scenario": scenario.name,
         "source_clean": True,
         "identity": revisions,
+        "image_core_revision": image_core_revision,
         "sdk_lock_sha256": file_sha256(REPOSITORY / "tools/ci/ncs-3.4.0.lock.json"),
         "roles": {
             "source": {"role_bits": f"0x{scenario.source_role:02x}", "service": scenario.service,
@@ -552,6 +556,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--sink-config", type=Path, required=True)
     parser.add_argument("--sdk-root", type=Path, default=Path("C:/ncs/v3.4.0"))
     parser.add_argument("--expected-core-revision", required=True)
+    parser.add_argument("--image-core-revision")
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--soak-seconds", type=float, default=180.0)
