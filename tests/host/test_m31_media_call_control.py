@@ -108,6 +108,19 @@ class MediaCallControlContractTests(unittest.TestCase):
         self.assertIn("CONFIG_BT_ATT_TX_COUNT=12", config)
         self.assertNotIn("CONFIG_BT_OTS_MAX_INST_CNT=2", config)
 
+    def test_media_refresh_clears_previous_native_error(self) -> None:
+        """! @brief 성공한 refresh가 직전 음수 명령의 원본 오류를 남기지 않습니다. """
+        source = MEDIA.read_text(encoding="utf-8")
+        refresh = source[
+            source.index("Error MediaControlClient::refresh() noexcept"):
+            source.index("Error MediaControlClient::command(MediaCommand")
+        ]
+        self.assertIn("mediaClient.error = 0;", refresh)
+        self.assertLess(
+            refresh.index("mediaClient.error = 0;"),
+            refresh.index("return record(Error::none);")
+        )
+
     def test_fixed_sdk_sources_and_metadata_are_present(self) -> None:
         """! @brief 고정 checkout의 source와 nRF54 allowlist 부재를 정확히 유지합니다. """
         required = (

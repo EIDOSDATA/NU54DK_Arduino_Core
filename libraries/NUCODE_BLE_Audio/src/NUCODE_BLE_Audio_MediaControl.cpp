@@ -693,6 +693,7 @@ namespace nucode::ble::audio
         }
         mediaClient.read_step = MediaReadStep::player_name;
         mediaClient.stage = RemoteControlStage::reading;
+        mediaClient.error = 0;
         k_mutex_unlock(&mediaClientMutex);
         return record(Error::none);
     }
