@@ -58,6 +58,14 @@ class MediaCallControlContractTests(unittest.TestCase):
             self.assertIn(token, text)
         self.assertIn("BT_TBS_RESULT_CODE_STATE_MISMATCH", text)
 
+    def test_call_server_normalizes_single_uri_scheme_for_fixed_sdk(self) -> None:
+        """! @brief 고정 SDK가 단일 URI scheme도 검색하도록 종단 구분자를 보장합니다. """
+        text = CALL.read_text(encoding="utf-8")
+        self.assertIn("void copySchemeList(", text)
+        self.assertIn("destination[length - 1U] != ','", text)
+        self.assertIn("copySchemeList(callServer.schemes, uri_schemes);", text)
+        self.assertIn("char schemes[maximumSchemeLength + 2U]", text)
+
     def test_role_examples_have_user_visible_commands_and_profiles(self) -> None:
         """! @brief 네 역할의 Arduino 흐름과 Kconfig를 함께 검사합니다. """
         expectations = {

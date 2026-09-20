@@ -105,6 +105,19 @@ namespace nucode::ble::audio
             (void)strncpy(destination, source, Size - 1U);
             destination[Size - 1U] = '\0';
         }
+
+        /** @brief URI scheme 목록을 고정 SDK가 검색할 수 있는 종단 구분자 형식으로 복사합니다. */
+        template <std::size_t Size>
+        void copySchemeList(char (&destination)[Size], const char *source) noexcept
+        {
+            copyText(destination, source);
+            const std::size_t length = strlen(destination);
+            if ((length > 0U) && (destination[length - 1U] != ',') && (length + 1U < Size))
+            {
+                destination[length] = ',';
+                destination[length + 1U] = '\0';
+            }
+        }
     } // namespace
 
 #if defined(CONFIG_BT_CCP_CALL_CONTROL_SERVER)
@@ -117,7 +130,7 @@ namespace nucode::ble::audio
             struct bt_ccp_call_control_server_bearer *bearer = nullptr;
             CallSnapshot snapshot = {};
             char provider[maximumProviderLength + 1U] = {};
-            char schemes[maximumSchemeLength + 1U] = {};
+            char schemes[maximumSchemeLength + 2U] = {};
             bool callbacks_registered = false;
         };
 
@@ -253,7 +266,7 @@ namespace nucode::ble::audio
             return record(started_ ? Error::already_started : Error::busy);
         }
         copyText(callServer.provider, provider_name);
-        copyText(callServer.schemes, uri_schemes);
+        copySchemeList(callServer.schemes, uri_schemes);
         callServer.owner = this;
         callServer.snapshot = {};
         if (!callServer.callbacks_registered)
