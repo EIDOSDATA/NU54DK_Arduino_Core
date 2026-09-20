@@ -164,19 +164,26 @@ def wait_state(
     )
 
 
-def wait_active(client, server, record: dict[str, object], expected: int,
-                timeout: float = 30.0) -> str:
-    """! @brief reconnect 뒤 preset 재읽기와 독립적으로 active index 복구를 확인합니다. """
-    return wait_for(
-        client,
-        server,
-        record,
-        lambda role, line: role == "client"
-        and (match := STATE_PATTERN.search(line)) is not None
-        and int(match.group(1)) == expected,
-        timeout,
-        f"active preset {expected}",
-    )
+def wait_stable_state(client, server, record: dict[str, object], expected: int,
+                      timeout: float = 45.0, settle: float = 2.0) -> str:
+    """! @brief reconnect 뒤 세 preset이 복원되고 연결이 안정된 상태를 확인합니다. """
+    deadline = time.monotonic() + timeout
+    stable_at: float | None = None
+    state_line = ""
+    while time.monotonic() < deadline:
+        for role, line in read_available(client, server, record):
+            if (role == "client") and ("Hearing Access server disconnected" in line):
+                stable_at = None
+                state_line = ""
+                continue
+            match = STATE_PATTERN.search(line) if role == "client" else None
+            if ((match is not None) and (int(match.group(1)) == expected) and
+                (int(match.group(2)) == 3)):
+                stable_at = time.monotonic()
+                state_line = line
+        if (stable_at is not None) and ((time.monotonic() - stable_at) >= settle):
+            return state_line
+    raise RuntimeError(f"stable active preset {expected} timeout")
 
 
 def main() -> int:
@@ -363,7 +370,7 @@ def main() -> int:
                         15.0,
                         "server disconnect",
                     )
-                    wait_active(client, server, record, 1, 30.0)
+                    wait_stable_state(client, server, record, 1)
                     elapsed = round(time.monotonic() - started, 3)
                     cast_times = record["recovery_seconds"]
                     if isinstance(cast_times, list):

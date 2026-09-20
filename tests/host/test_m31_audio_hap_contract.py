@@ -149,6 +149,10 @@ class HearingAccessContractTests(unittest.TestCase):
             "target.read_memory_block8",
             '"readback_verified": True',
             'board_id, "[redacted]"',
+            "def wait_stable_state(",
+            '"Hearing Access server disconnected" in line',
+            "int(match.group(2)) == 3",
+            "wait_stable_state(client, server, record, 1)",
         ):
             self.assertIn(token, runner)
 
