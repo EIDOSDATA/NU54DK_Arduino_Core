@@ -33,11 +33,14 @@ namespace
     BLEConnectionHandle peerConnection;
     bool peerFound = false;
     bool profileStarted = false;
+    bool profileAttempted = false;
     bool presetsRequested = false;
     std::uint32_t presetsReadAt = 0U;
+    std::uint32_t profileStartAt = 0U;
     bool scanPending = false;
     std::uint32_t scanAt = 0U;
     std::uint32_t profileDeadline = 0U;
+    constexpr std::uint32_t securitySettlingMs = 100U;
     constexpr std::uint32_t profileTimeoutMs = 10000U;
 
     /** @brief Hearing Access Service UUID를 광고하는 장치를 검색합니다. */
@@ -60,29 +63,13 @@ namespace
         }
     }
 
-    /** @brief 암호화 완료 뒤 HAS discovery를 시작합니다. */
+    /** @brief Just Works pairing 요청을 승인합니다. */
     void onSecurityEvent(const SecurityEventRecord &event, void *context)
     {
         static_cast<void>(context);
         if (event.event == SecurityEvent::pairing_requested)
         {
             static_cast<void>(BLESecurity.acceptPairing(event.connection, true));
-        }
-        else if ((event.event == SecurityEvent::security_changed) &&
-                 (event.connection == peerConnection) && !profileStarted)
-        {
-            const Error result = hearingAccess.begin(peerConnection);
-            if (result == Error::none)
-            {
-                profileStarted = true;
-                profileDeadline = millis() + profileTimeoutMs;
-                Serial.println("Hearing Access discovery started");
-            }
-            else
-            {
-                Serial.print("Hearing Access discovery failed native=");
-                Serial.println(hearingAccess.nativeCode());
-            }
         }
     }
 
@@ -93,6 +80,8 @@ namespace
         if ((event.event == BLEEvent::connected) && (event.role == BLELinkRole::central))
         {
             peerConnection = event.connection;
+            profileAttempted = false;
+            profileStartAt = 0U;
             if (!BLESecurity.requestSecurity(peerConnection))
             {
                 Serial.println("Hearing Access security request failed");
@@ -107,8 +96,10 @@ namespace
             peerConnection = BLEConnectionHandle();
             peerFound = false;
             profileStarted = false;
+            profileAttempted = false;
             presetsRequested = false;
             presetsReadAt = 0U;
+            profileStartAt = 0U;
             scanPending = true;
             scanAt = millis() + 100U;
             Serial.print("Hearing Access server disconnected reason=");
@@ -176,6 +167,35 @@ void loop()
     BLEDevice.poll();
     BLESecurity.poll();
     hearingAccess.poll();
+
+    if (peerConnection.valid() && !profileStarted && !profileAttempted &&
+        (BLESecurity.currentLevel(peerConnection) >= SecurityLevel::encrypted))
+    {
+        if (profileStartAt == 0U)
+        {
+            profileStartAt = millis() + securitySettlingMs;
+        }
+        else if (static_cast<std::int32_t>(millis() - profileStartAt) >= 0)
+        {
+            profileAttempted = true;
+            const Error result = hearingAccess.begin(peerConnection);
+            if (result == Error::none)
+            {
+                profileStarted = true;
+                profileDeadline = millis() + profileTimeoutMs;
+                Serial.println("Hearing Access discovery started");
+            }
+            else
+            {
+                Serial.print("Hearing Access discovery failed native=");
+                Serial.println(hearingAccess.nativeCode());
+                if (BLEConnection.disconnect(peerConnection))
+                {
+                    Serial.println("Hearing Access recovery requested");
+                }
+            }
+        }
+    }
 
     if (scanPending && !BLEConnection.connected() && !BLEConnection.connecting() &&
         (static_cast<std::int32_t>(millis() - scanAt) >= 0))

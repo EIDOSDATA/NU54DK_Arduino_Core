@@ -95,13 +95,15 @@ class HearingAccessContractTests(unittest.TestCase):
         for token in (
             "hearingAccess.setActivePreset(0U)",
             "hearingAccess.setActivePreset(5U, true)",
-            "event.event == SecurityEvent::security_changed",
+            "BLESecurity.currentLevel(peerConnection) >= SecurityLevel::encrypted",
+            "securitySettlingMs = 100U",
             "Hearing Access operation rejected",
             "Hearing Access recovery requested",
             "BLEConnection.disconnect(peerConnection)",
             "presetsReadAt = millis() + 500U",
         ):
             self.assertIn(token, sketch)
+        self.assertNotIn("event.event == SecurityEvent::security_changed", sketch)
         self.assertNotIn("event.event == SecurityEvent::paired", sketch)
         self.assertNotIn("event.event == SecurityEvent::bond_verified", sketch)
 
