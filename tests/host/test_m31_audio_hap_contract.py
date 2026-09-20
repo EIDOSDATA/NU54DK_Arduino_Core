@@ -15,6 +15,7 @@ BACKEND = ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_HearingAccess.
 EXAMPLES = ROOT / "libraries/NUCODE_BLE_Audio/examples"
 BUILD_RUNNER = ROOT / "tests/arduino-cli/run_m31_examples.py"
 READINESS = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+HIL_RUNNER = ROOT / "tests/hil/nu54dk/m31_audio_hap_run.py"
 
 
 class HearingAccessContractTests(unittest.TestCase):
@@ -106,6 +107,37 @@ class HearingAccessContractTests(unittest.TestCase):
         self.assertNotIn("event.event == SecurityEvent::security_changed", sketch)
         self.assertNotIn("event.event == SecurityEvent::paired", sketch)
         self.assertNotIn("event.event == SecurityEvent::bond_verified", sketch)
+
+    def test_server_exposes_deterministic_bond_cleanup_command(self) -> None:
+        """! @brief server가 공개 Security API로 저장 bond와 남은 수를 보고합니다. """
+        sketch = (EXAMPLES / "HearingAccessServer/HearingAccessServer.ino").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "command == 'c'",
+            "BLESecurity.eraseAllBonds()",
+            "BLESecurity.bondCount()",
+            'Serial.print("Hearing bond cleanup result=")',
+            'Serial.print(" remaining=")',
+        ):
+            self.assertIn(token, sketch)
+
+    def test_hil_clears_server_bonds_before_client_flash(self) -> None:
+        """! @brief HIL이 server cleanup 증거를 남긴 뒤 client를 flash합니다. """
+        runner = HIL_RUNNER.read_text(encoding="utf-8")
+        server_flash = runner.index('record["server_flash"] = flash_image_pyocd(')
+        cleanup = runner.index("clear_server_bonds(serial, server_port, server_uid, record)")
+        client_flash = runner.index('record["client_flash"] = flash_image_pyocd(')
+        self.assertLess(server_flash, cleanup)
+        self.assertLess(cleanup, client_flash)
+        for token in (
+            'CLEANUP_PATTERN = re.compile(r"Hearing bond cleanup result=(0|1) remaining=(\\d+)")',
+            "BOND_CLEANUP_TIMEOUT_SECONDS = 20.0",
+            'record["server_bond_cleanup"]',
+            '"line": cleanup_line',
+            '"remaining": remaining',
+        ):
+            self.assertIn(token, runner)
 
     def test_exact_build_runner_includes_both_examples(self) -> None:
         """! @brief 공개 Hearing Access 두 역할을 exact build 목록에 고정합니다. """

@@ -124,7 +124,7 @@ void setup()
         Serial.println(hearingAccess.nativeCode());
         return;
     }
-    Serial.println("Commands: 1/5/8=select n=rename 8 a=toggle 5 s=state");
+    Serial.println("Commands: 1/5/8=select n=rename 8 a=toggle 5 c=clear bonds s=state");
     printPresets();
 }
 
@@ -173,6 +173,15 @@ void loop()
                 }
             }
             report("Toggle preset availability", hearingAccess.setPresetAvailable(5U, !available));
+        }
+        else if (command == 'c')
+        {
+            const bool accepted = BLESecurity.eraseAllBonds();
+            const std::size_t remaining = BLESecurity.bondCount();
+            Serial.print("Hearing bond cleanup result=");
+            Serial.print(accepted ? 1 : 0);
+            Serial.print(" remaining=");
+            Serial.println(remaining);
         }
         else if (command == 's')
         {

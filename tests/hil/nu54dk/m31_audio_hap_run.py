@@ -25,6 +25,8 @@ from v04_protocol import ProbeLocks  # noqa: E402
 
 ADDRESS_PATTERN = re.compile(r"\b[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5}\b")
 STATE_PATTERN = re.compile(r"active=(\d+) presets=(\d+)")
+CLEANUP_PATTERN = re.compile(r"Hearing bond cleanup result=(0|1) remaining=(\d+)")
+BOND_CLEANUP_TIMEOUT_SECONDS = 20.0
 
 
 def file_hash(path: Path) -> str:
@@ -40,21 +42,79 @@ def verify_clean(revision: str) -> None:
         raise RuntimeError("exact HIL requires clean source and full HEAD revision")
 
 
+def read_port(port, role: str, record: dict[str, object]) -> str | None:
+    """! @brief 한 UART의 bounded line을 읽고 주소를 익명화합니다. """
+    raw = port.readline().decode("utf-8", errors="replace").strip()
+    if not raw:
+        return None
+    line = ADDRESS_PATTERN.sub("<bt-address>", raw[:400])
+    if any(token in line for token in ("Stack overflow", "*****", "FATAL")):
+        raise RuntimeError(f"{role} fatal fault: {line}")
+    cast_lines = record[f"{role}_lines"]
+    if isinstance(cast_lines, list) and len(cast_lines) < 4000:
+        cast_lines.append(line)
+    return line
+
+
 def read_available(client, server, record: dict[str, object]) -> list[tuple[str, str]]:
-    """! @brief 두 UART에서 bounded line을 읽고 주소를 익명화합니다. """
+    """! @brief 두 UART에서 bounded line을 읽습니다. """
     lines: list[tuple[str, str]] = []
     for port, role in ((client, "client"), (server, "server")):
-        raw = port.readline().decode("utf-8", errors="replace").strip()
-        if not raw:
-            continue
-        line = ADDRESS_PATTERN.sub("<bt-address>", raw[:400])
-        if any(token in line for token in ("Stack overflow", "*****", "FATAL")):
-            raise RuntimeError(f"{role} fatal fault: {line}")
-        cast_lines = record[f"{role}_lines"]
-        if isinstance(cast_lines, list) and len(cast_lines) < 4000:
-            cast_lines.append(line)
-        lines.append((role, line))
+        line = read_port(port, role, record)
+        if line is not None:
+            lines.append((role, line))
     return lines
+
+
+def wait_server_line(server, record: dict[str, object], predicate, timeout: float,
+                     name: str) -> str:
+    """! @brief server UART의 sanitized line을 제한 시간 안에 기다립니다. """
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        line = read_port(server, "server", record)
+        if (line is not None) and predicate(line):
+            return line
+    raise RuntimeError(f"{name} timeout")
+
+
+def clear_server_bonds(serial, server_port: str, server_uid: str,
+                       record: dict[str, object]) -> None:
+    """! @brief client flash 전에 server의 저장 bond를 공개 명령으로 비웁니다. """
+    with serial.Serial(server_port, 115200, timeout=0.03) as server:
+        server.reset_input_buffer()
+        hardware_reset(server_uid)
+        wait_server_line(
+            server,
+            record,
+            lambda line: line.startswith("Commands:"),
+            BOND_CLEANUP_TIMEOUT_SECONDS,
+            "fresh server boot banner",
+        )
+        server.write(b"c")
+        server.flush()
+        cleanup_line = wait_server_line(
+            server,
+            record,
+            lambda line: CLEANUP_PATTERN.fullmatch(line) is not None,
+            BOND_CLEANUP_TIMEOUT_SECONDS,
+            "server bond cleanup",
+        )
+    match = CLEANUP_PATTERN.fullmatch(cleanup_line)
+    if match is None:
+        raise RuntimeError("server bond cleanup line mismatch")
+    accepted = int(match.group(1))
+    remaining = int(match.group(2))
+    record["server_bond_cleanup"] = {
+        "status": "PASS" if accepted == 1 and remaining == 0 else "FAIL",
+        "line": cleanup_line,
+        "accepted": accepted,
+        "remaining": remaining,
+        "timeout_seconds": BOND_CLEANUP_TIMEOUT_SECONDS,
+    }
+    if accepted != 1 or remaining != 0:
+        raise RuntimeError(
+            f"server bond cleanup failed: accepted={accepted} remaining={remaining}"
+        )
 
 
 def wait_for(client, server, record: dict[str, object], predicate, timeout: float, name: str) -> str:
@@ -157,6 +217,7 @@ def main() -> int:
             record["server_flash"] = flash_image_pyocd(
                 "hearing_server", server_uid, args.server_image, 300.0, hardware_reset=True
             )
+            clear_server_bonds(serial, server_port, server_uid, record)
             record["client_flash"] = flash_image_pyocd(
                 "hearing_client", client_uid, args.client_image, 300.0, hardware_reset=True
             )
