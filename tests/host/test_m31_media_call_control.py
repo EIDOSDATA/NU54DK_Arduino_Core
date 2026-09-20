@@ -121,6 +121,19 @@ class MediaCallControlContractTests(unittest.TestCase):
             refresh.index("return record(Error::none);")
         )
 
+    def test_call_refresh_clears_previous_native_error(self) -> None:
+        """! @brief 성공한 call refresh가 직전 원격 거부 오류를 남기지 않습니다. """
+        source = CALL.read_text(encoding="utf-8")
+        refresh = source[
+            source.index("Error CallControlClient::refresh() noexcept"):
+            source.index("Error CallControlClient::originate(const char *uri)")
+        ]
+        self.assertIn("callClient.error = 0;", refresh)
+        self.assertLess(
+            refresh.index("callClient.error = 0;"),
+            refresh.index("return record(Error::none);")
+        )
+
     def test_fixed_sdk_sources_and_metadata_are_present(self) -> None:
         """! @brief 고정 checkout의 source와 nRF54 allowlist 부재를 정확히 유지합니다. """
         required = (

@@ -723,6 +723,7 @@ namespace nucode::ble::audio
         }
         callClient.refresh_pending = true;
         callClient.stage = RemoteControlStage::ready;
+        callClient.error = 0;
         k_mutex_unlock(&callClientMutex);
         return record(Error::none);
     }
