@@ -16,9 +16,9 @@ namespace
     const nucode::ble::BLEUuid serviceUuid("8e7e2970-7d8c-4c1a-9d2d-8b6519f77410");
     const nucode::ble::BLEUuid signedValueUuid("8e7e2971-7d8c-4c1a-9d2d-8b6519f77410");
     nucode::ble::BLEService signingService(serviceUuid);
-    nucode::ble::BLECharacteristic signedValue(
-        signedValueUuid, nucode::ble::BLEProperty::authenticated_signed_write,
-        nucode::ble::BLEPermission::write, 32U);
+    nucode::ble::BLECharacteristic signedValue(signedValueUuid,
+                                               nucode::ble::BLEProperty::authenticated_signed_write,
+                                               nucode::ble::BLEPermission::write, 32U);
     bool securityPending = false;
     bool restartAdvertising = false;
 
@@ -61,8 +61,7 @@ namespace
 
     /** @brief counter 영속화까지 끝난 signed value와 상태를 출력합니다. */
     void onSignedValue(nucode::ble::BLECharacteristic &characteristic,
-                       const nucode::ble::BLECharacteristicEventInfo &information,
-                       void *context)
+                       const nucode::ble::BLECharacteristicEventInfo &information, void *context)
     {
         static_cast<void>(context);
         if (&characteristic != &signedValue ||

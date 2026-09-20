@@ -81,19 +81,19 @@ namespace
     {
         if (nodeRole == NodeRole::peripheral)
         {
-            return "NU54-M29-UP";
+            return "NU54-GATT-UP";
         }
         if (nodeRole == NodeRole::mixed)
         {
-            return "NU54-M29-MIX";
+            return "NU54-GATT-MIX";
         }
-        return "NU54-M29-C";
+        return "NU54-GATT-C";
     }
 
     /** @brief client role이 검색할 upstream 이름을 반환합니다. */
     const char *peerName()
     {
-        return nodeRole == NodeRole::mixed ? "NU54-M29-UP" : "NU54-M29-MIX";
+        return nodeRole == NodeRole::mixed ? "NU54-GATT-UP" : "NU54-GATT-MIX";
     }
 
     /** @brief payload에 기록할 local role marker를 반환합니다. */
@@ -110,7 +110,7 @@ namespace
             return;
         }
         stopped = true;
-        Serial.print("M29 mixed example stopped: ");
+        Serial.print("Mixed GATT/CoC example stopped: ");
         Serial.print(stage);
         Serial.print(", error=");
         Serial.println(BLEDevice.lastDriverError());
@@ -368,7 +368,7 @@ void setup()
         fail("radio start");
         return;
     }
-    Serial.print("M29 mixed example ready, role=");
+    Serial.print("Mixed GATT/CoC example ready, role=");
     Serial.println(localName());
 }
 

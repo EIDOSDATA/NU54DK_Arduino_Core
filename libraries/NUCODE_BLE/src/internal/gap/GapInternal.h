@@ -18,6 +18,23 @@
 #if !defined(CONFIG_NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE)
 #define CONFIG_NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE 8
 #endif
+#if !defined(CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS)
+#define CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS 1
+#endif
+#if CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS == 2
+#if !defined(CONFIG_BT_CENTRAL) || CONFIG_BT_CENTRAL == 0
+#error "Two central slots require CONFIG_BT_CENTRAL=y"
+#endif
+#if !defined(CONFIG_BT_MAX_CONN) || CONFIG_BT_MAX_CONN < 2
+#error "Two central slots require CONFIG_BT_MAX_CONN >= 2"
+#endif
+#if !defined(CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT) || CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT != 0
+#error "Two central slots require CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0"
+#endif
+#if defined(CONFIG_BT_PERIPHERAL) && CONFIG_BT_PERIPHERAL != 0
+#error "Two central slots require a central-only Bluetooth Host"
+#endif
+#endif
 namespace nucode::ble::internal
 {
     /** @brief 공개 handle의 token 표현을 GAP 내부에만 개방합니다. */
@@ -75,9 +92,14 @@ namespace nucode::ble::internal::gap
     inline constexpr std::size_t maximum_connection_slots = 2U;
     inline constexpr std::size_t central_connection_slot = 0U;
     inline constexpr std::size_t peripheral_connection_slot = 1U;
+    inline constexpr std::size_t central_connection_slots =
+        CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS;
+    static_assert(central_connection_slots >= 1U &&
+                  central_connection_slots <= maximum_connection_slots);
     inline constexpr std::size_t maximum_mtu_exchange_contexts = 4U;
     inline constexpr std::size_t maximum_service_uuids = 4U;
     inline constexpr std::size_t maximum_ad_field_data = 29U;
+    inline constexpr std::uint8_t resolvable_set_identifier_ad_type = 0x2eU;
     inline constexpr std::uint16_t minimum_advertising_interval = 0x0020U;
     inline constexpr std::uint16_t maximum_advertising_interval = 0x4000U;
     inline constexpr std::uint16_t default_advertising_interval_min = 0x00a0U;
@@ -100,6 +122,7 @@ namespace nucode::ble::internal::gap
 
         struct bt_conn *active = nullptr;
         struct bt_conn *pending = nullptr;
+        bool reserved = false;
         std::uint32_t generation = 0U;
         std::uint32_t device_generation = 0U;
         BLEAddress peer_address;
@@ -211,6 +234,8 @@ namespace nucode::ble::internal::gap
         BLEUuid service_data_uuid;
         std::uint8_t service_data[maximum_ad_field_data] = {};
         std::size_t service_data_length = 0U;
+        bool has_resolvable_set_identifier = false;
+        std::uint8_t resolvable_set_identifier[6] = {};
     };
 
     /** @brief software scan filter의 bounded 복사본입니다. */
@@ -252,7 +277,11 @@ namespace nucode::ble::internal::gap
         struct k_spinlock configuration_lock;
         ConnectionSlot connection_slots[maximum_connection_slots] = {
             ConnectionSlot(BLELinkRole::central),
+#if CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS == 2
+            ConnectionSlot(BLELinkRole::central),
+#else
             ConnectionSlot(BLELinkRole::peripheral),
+#endif
         };
         atomic_t next_connection_generation = ATOMIC_INIT(1);
 
@@ -309,7 +338,8 @@ namespace nucode::ble::internal::gap
                     BLELinkRole role = BLELinkRole::none,
                     std::uint32_t device_generation = 0U,
                     BLEAdvertisingSetHandle advertising_set = {},
-                    BLEPeriodicSyncHandle periodic_sync = {}) noexcept;
+                    BLEPeriodicSyncHandle periodic_sync = {},
+                    std::uint8_t reason = 0U) noexcept;
 
     /** @brief local name의 UTF-8이 well-formed인지 동적 할당 없이 검증합니다. */
     inline bool validUtf8(const char *text, std::size_t length) noexcept

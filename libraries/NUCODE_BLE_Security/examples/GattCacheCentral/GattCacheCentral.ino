@@ -81,8 +81,7 @@ namespace
     }
 
     /** @brief cache 저장·복원·무효화와 비동기 GATT 결과를 처리합니다. */
-    void onClientEvent(const nucode::ble::BLEGattClientEventInfo &information,
-                       void *context)
+    void onClientEvent(const nucode::ble::BLEGattClientEventInfo &information, void *context)
     {
         static_cast<void>(context);
         if (information.connection != peerConnection)
@@ -180,8 +179,7 @@ void loop()
     if (cachePending && !BLEClient.busy(peerConnection))
     {
         cachePending = false;
-        if (!BLEClient.discoverCached(peerConnection, serviceUuid, valueUuid,
-                                      cacheSchemaVersion))
+        if (!BLEClient.discoverCached(peerConnection, serviceUuid, valueUuid, cacheSchemaVersion))
         {
             Serial.println("GATT cache synchronization failed");
         }

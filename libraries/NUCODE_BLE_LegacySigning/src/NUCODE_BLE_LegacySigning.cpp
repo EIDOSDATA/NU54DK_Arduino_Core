@@ -30,8 +30,8 @@ namespace
             return nullptr;
         }
         struct bt_conn_info information = {};
-        if (bt_conn_get_info(connection, &information) < 0 ||
-            information.type != BT_CONN_TYPE_LE || information.le.dst == nullptr)
+        if (bt_conn_get_info(connection, &information) < 0 || information.type != BT_CONN_TYPE_LE ||
+            information.le.dst == nullptr)
         {
             return nullptr;
         }
@@ -54,9 +54,8 @@ extern "C" int nucode_ble_signing_persist(struct bt_conn *connection)
 }
 
 /** @brief W07 target이 저장 전후 counter를 정량 검증하도록 현재 값을 복사합니다. */
-extern "C" int nucode_ble_signing_counters(struct bt_conn *connection,
-                                             std::uint32_t *local_counter,
-                                             std::uint32_t *remote_counter)
+extern "C" int nucode_ble_signing_counters(struct bt_conn *connection, std::uint32_t *local_counter,
+                                           std::uint32_t *remote_counter)
 {
     if (local_counter == nullptr || remote_counter == nullptr)
     {

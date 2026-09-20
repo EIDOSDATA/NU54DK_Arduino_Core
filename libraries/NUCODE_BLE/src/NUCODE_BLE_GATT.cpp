@@ -57,26 +57,7 @@ namespace nucode::ble::internal::gatt
 
     BLEConnectionHandle handleForConnection(struct bt_conn *connection) noexcept
     {
-        constexpr BLELinkRole roles[] = {
-            BLELinkRole::central,
-            BLELinkRole::peripheral,
-        };
-        for (BLELinkRole role : roles)
-        {
-            const BLEConnectionHandle handle = BLEConnection.handle(role);
-            struct bt_conn *candidate = nucode::ble::internal::referenceConnection(handle);
-            if (candidate == nullptr)
-            {
-                continue;
-            }
-            const bool matches = candidate == connection;
-            bt_conn_unref(candidate);
-            if (matches)
-            {
-                return handle;
-            }
-        }
-        return BLEConnectionHandle{};
+        return nucode::ble::internal::handleForActiveConnection(connection);
     }
 
     SessionState &sessionState() noexcept

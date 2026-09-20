@@ -7,6 +7,90 @@ config NUCODE_BLE_NUS
 	  공식 NCS NUS service/client를 하나의 Arduino Stream으로 노출합니다.
 	  callback 데이터는 고정 queue를 거쳐 Sketch의 poll 문맥에서 전달됩니다.
 
+config NUCODE_BLE_ISO
+	bool "NUCODE BLE ISO API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  Arduino 공개 API를 통해 CIS, BIS와 CIS-BIS bridge 프로그램을 실행합니다.
+	  실제 Zephyr ISO 객체와 callback은 라이브러리 구현 안에 유지됩니다.
+
+choice NUCODE_BLE_ISO_MODE
+	prompt "NUCODE BLE ISO 실행 역할"
+	depends on NUCODE_BLE_ISO
+
+config NUCODE_BLE_ISO_MODE_CIS_CENTRAL
+	bool "CIS central"
+
+config NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL
+	bool "CIS peripheral"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER
+	bool "CIS-to-BIS peer"
+
+config NUCODE_BLE_ISO_MODE_BIS_SOURCE
+	bool "BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_RECEIVER
+	bool "BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE
+	bool "암호화 BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER
+	bool "암호화 BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE
+	bool "timestamp BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER
+	bool "timestamp BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE
+	bool "CIS-to-BIS bridge"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER
+	bool "CIS-to-BIS receiver"
+
+endchoice
+
+config NUCODE_BLE_DF_BEACON
+	bool "NUCODE BLE 기본 안테나 AoA CTE beacon API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT_DF_CONNECTIONLESS_CTE_TX
+	help
+	  공개 Arduino Beacon 객체에서 connectionless AoA CTE 송신을 제어합니다.
+	  Zephyr 광고 set과 callback은 라이브러리 구현 내부에 유지합니다.
+
+config NUCODE_BLE_DF_RESPONDER
+	bool "NUCODE BLE 연결 기반 AoA CTE 응답 API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_DF_CONNECTION_CTE_RSP
+	help
+	  공개 연결 handle을 받아 기본 안테나 CTE 응답을 시작·중단합니다.
+	  Zephyr 연결 객체와 방향 탐지 호출은 라이브러리 구현 내부에 둡니다.
+
+config NUCODE_BLE_CS_REFLECTOR
+	bool "NUCODE BLE Ranging Service reflector API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_CHANNEL_SOUNDING && BT_RAS_RRSP
+	help
+	  공개 BLE 연결 handle에 CS reflector 역할을 결합합니다.
+	  Zephyr CS 호출과 연결 객체는 라이브러리 구현 내부에 둡니다.
+
+config NUCODE_BLE_CS_INITIATOR
+	bool "NUCODE BLE Ranging Service initiator API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_CHANNEL_SOUNDING && BT_RAS_RREQ
+	help
+	  공개 BLE 연결 handle로 RAS GATT 탐색과 CS procedure를 실행합니다.
+	  Zephyr 호출과 raw step 버퍼는 라이브러리 구현 내부에 둡니다.
+
 config NUCODE_BLE_CORE
 	bool "NUCODE BLE Core/GAP 활성화"
 	default n
@@ -15,6 +99,16 @@ config NUCODE_BLE_CORE
 	help
 	  Bluetooth once-init, local name, legacy advertising, bounded scan과
 	  단일 connection lifecycle을 Arduino main-thread event로 노출합니다.
+
+config NUCODE_BLE_CENTRAL_CONNECTION_SLOTS
+	int "NUCODE BLE outgoing central connection slot 수"
+	default 1
+	range 1 2
+	depends on NUCODE_BLE_CORE
+	help
+	  기본값 1은 central 1개와 peripheral 1개의 기존 구성을 유지합니다.
+	  central-only image는 2를 선택하고 controller peripheral count를 0으로
+	  맞춰 두 outgoing connection을 사용할 수 있습니다.
 
 config NUCODE_BLE_CORE_EVENT_QUEUE_SIZE
 	int "NUCODE BLE Core/GAP event queue 항목 수"

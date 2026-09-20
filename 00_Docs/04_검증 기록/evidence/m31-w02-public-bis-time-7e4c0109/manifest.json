@@ -1,0 +1,50 @@
+{
+  "core_revision": "7e4c0109d0f292c32257a3f0dfeb5bbbb5353da9",
+  "source_clean_at_hil": true,
+  "accepted": [
+    "time-positive.json"
+  ],
+  "diagnostics_excluded": [
+    "diagnostic-sequence-assumption.json",
+    "diagnostic-startup-loss.json",
+    "diagnostic-candidate-pass.json"
+  ],
+  "roles": {
+    "source": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino",
+      "config_sha256": "52dd5915db694fcc2e7fa0c63b24ac059d2dc8c40ec72cc588a7b77527fd361e",
+      "hex_sha256": "c7f63d61f72e852ef0f0b163048270b1df64a2a37f935ab6c2ee0990e1b1b2e2",
+      "program_bytes": 228216,
+      "ram_bytes": 107389
+    },
+    "receiver": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino",
+      "config_sha256": "ec8549abf29dc14c7d0cec36f0610bce165438c092bd5fd93662b9db336a1384",
+      "hex_sha256": "5002c3dd68cd0e4a5168033f36389de5bf8578ce24c43b989ae923bf525244b1",
+      "program_bytes": 195888,
+      "ram_bytes": 106484
+    }
+  },
+  "runner": {
+    "path": "tests/hil/nu54dk/m31_iso_public_bis_pair_run.py",
+    "sha256": "008adeb536c515fd01138445207218b65aca712d52c12be3de0a3bc0faca386f"
+  },
+  "artifacts": [
+    {
+      "path": "time-positive.json",
+      "sha256": "89361fce2b10d46412fa0d099ef28a4b2baf0a1de594c0e77b199560a124e944"
+    },
+    {
+      "path": "diagnostic-sequence-assumption.json",
+      "sha256": "5700a68da6cc257455ebffc85f495304ee05a0a9025f81900c3101bd7771ddfd"
+    },
+    {
+      "path": "diagnostic-startup-loss.json",
+      "sha256": "80be75f1b231039d14a1dc4a35587ac441926e0bfa8243fe2ac1bee7b9fe3f6b"
+    },
+    {
+      "path": "diagnostic-candidate-pass.json",
+      "sha256": "05168e667d7a78c6e405b75abbe4ad7531644ca6c9d835e9b07d37823e0ff3e8"
+    }
+  ]
+}

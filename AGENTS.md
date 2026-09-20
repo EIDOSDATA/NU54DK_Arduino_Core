@@ -22,6 +22,18 @@
   HOST-W04~HOST-W08은 남아 있습니다.
   개발 기능을 v0.4.1 설치본의 지원으로 안내하지 않습니다. 재개 지점은 [HANDOFF](00_Docs/HANDOFF.md),
   후속 순서·중단 경계는 [v0.5.0 TODO](00_Docs/TODO_v0.5.0.md)와 최신 사용자 요청을 따릅니다.
+- M31~M33 구현 전에는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
+  해당 [M31](00_Docs/TODO_M31.md)·[M32](00_Docs/TODO_M32.md)·[M33](00_Docs/TODO_M33.md) TODO를 읽습니다.
+  계획 분모는 8·12·8이고 문서 개정은 구현 완료가 아닙니다. 2026-09-16 사용자 결정에 따라 보드 기반
+  기능 HIL과 NCS 예제의 Arduino 제공을 목표로 하며 정밀 RF·음질·거리/각도 보정은 필수 gate 밖입니다.
+  Apple/Google 등 외부 peer와 마이크·스피커·외장 장치는 사용 가능한 구현·예제·설정/연결 안내·자동
+  가능한 검사를 제공하되, 실제 운용·실물 검증은 사용자 후속입니다. 그 NOT RUN은 v0.5.0 개발·공개
+  차단 조건이 아니며 검증된 상호운용으로 표시하지 않습니다. Ubuntu/macOS 실물 Host 검증은 사용자가
+  최종 릴리스 단계에서 수행하고 중간 개발의 선행조건으로 요구하지 않습니다. ARF-01은 M32-W04가 소유합니다.
+- DF 원시 IQ 수집에 안테나 배열을 일괄 요구하지 않습니다. 기본 SDC는 DF CTE TX만 제공하고,
+  고정 Zephyr LL의 RX는 NU54DK build/runtime 미검증 후보입니다. 배열 없는 수신 경로를 먼저
+  조사·build하고 적용되면 2보드로 검증합니다. 실제 각도 산출·안테나 전환과 원시 IQ 수집을 구분하고,
+  SDC 미지원이나 source 존재를 SoC 전체 불가능 또는 runtime PASS로 확대하지 않습니다.
 - T13 S는 **56 PASS + 2조건 제외 / 58**, UARTE00은 4-net 결선 검사·180초 통신·flow 200회·취소 400회 완료입니다.
   완료한 S/U, C05 1시간 soak와 사용자 제외 항목을 새 요청 없이 다시 예약하지 않습니다.
 - **QDEC20/21은 공개 지원**합니다. 기본 정·역회전과 SAMPLE/REPORT event 경로가 근거이며,
@@ -40,7 +52,9 @@
   원본 보관은 [106번 기록](<00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)을 따릅니다.
 - TODO는 완료 상태와 증거를 찾는 진입점으로 보관합니다. 삭제·이관은 문서의 보관 조건을 따릅니다.
 - 진행 보고에는 완료 범위·현재 항목·남은 항목·진행률을 적습니다. 문서 정비 진행률과 S 실기 분모 58을 혼합하지 않습니다.
-- 커밋·푸시를 수행했다면 해당 exact SHA의 CI 결과를 확인합니다. 실행 중인 검사는 성공으로 기록하지 않습니다.
+- 커밋·푸시를 수행했다면 해당 exact SHA의 CI 결과를 확인하되, 최신 사용자의 명시적 생략 지시가
+  있으면 따릅니다. 이번 문서 인계는 커밋·푸시까지만 수행하며 CI/CD 실행 요청·조회·대기는 하지 않습니다.
+  생략·실행 중인 검사를 성공으로 기록하지 않습니다.
 
 ## 실물 보드 작업을 새로 요청받았을 때
 
@@ -59,3 +73,20 @@
 한국어 Doxygen 주석, BSD/Allman 중괄호, 들여쓰기와 탭 폭 4칸을 사용합니다.
 제어문 본문은 한 줄이어도 중괄호를 생략하지 않습니다.
 [.clang-format](.clang-format)과 [정렬 도구 안내](tools/format/README.md)를 따릅니다.
+
+## 공개 Arduino 예제와 backend 경계
+
+- 공개 `.ino`에는 일반 C/C++과 해당 library의 `NUCODE_*` 공개 API를 사용한 의미 있는
+  `setup()`/`loop()` 흐름을 둡니다. 구현 전체를 헤더 하나에 숨긴 include-only sketch는 금지합니다.
+- 데이터 송수신 예제는 사용자가 payload 생성·전송과 수신 데이터 처리·오류·종료 흐름을 `.ino`에서
+  읽고 바꿀 수 있어야 합니다. `begin()`/`poll()`만 호출하고 고정 시험 payload·세션을 library
+  내부에서 실행하는 sketch는 공개 예제 완료로 세지 않습니다.
+- 공개 `.ino`에서 Zephyr header·type과 `bt_*`, `k_*`, `device_*` API를 직접 호출하지 않습니다.
+  Zephyr/NCS 직접 구현은 library `.cpp` 또는 `src/internal`이 소유합니다.
+- `M31`, `M32` 같은 개발 마일스톤 식별자를 공개 API, class, macro, 예제, 광고 이름과 사용자
+  출력에 넣지 않습니다. 시험 ID와 증거 protocol은 `tests`와 검증 도구 내부에만 둡니다.
+- 역할·기능 선택은 공개 enum/config와 검증된 Kconfig feature로 표현합니다. Sketch-local 개발용
+  `#define`으로 backend 역할을 고르지 않습니다.
+- 예제 변경은 `tools/ci/m31_example_audit.py`의 공개 경계 검사와 해당 예제 build를 통과해야 합니다.
+- HIL UART oracle·nonce·고정 count·마일스톤 출력은 `tests`의 전용 시험 image에만 둡니다.
+  공개 library에서 시험 backend를 재사용할 때는 사용자 데이터 API와 출력 경계를 별도로 검증합니다.

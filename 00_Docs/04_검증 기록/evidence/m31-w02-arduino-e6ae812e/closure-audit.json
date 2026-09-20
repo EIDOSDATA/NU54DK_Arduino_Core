@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W02",
+  "status": "PASS",
+  "source_clean": true,
+  "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "package_version": "0.5.0-rc.1",
+  "arduino_builds": {
+    "passed": 11,
+    "total": 11
+  },
+  "installed_example_audit": {
+    "libraries": 13,
+    "examples": 72,
+    "issues": 0
+  },
+  "hil": {
+    "status": "PASS",
+    "cases": 7,
+    "cis": {
+      "cycles": 20,
+      "sent": 2000,
+      "received": 2000,
+      "minimum_received": 100
+    },
+    "bis": {
+      "cycles": 20,
+      "sent": 2000,
+      "received": 1996,
+      "minimum_received": 99
+    },
+    "encrypted_bis": {
+      "cycles": 20,
+      "sent": 2000,
+      "received": 1999,
+      "minimum_received": 99
+    },
+    "wrong_broadcast_code": {
+      "rejected_payloads": 0,
+      "recovery_received": 100
+    },
+    "sync_loss": {
+      "rejected_payloads": 0,
+      "recovery_received": 100
+    },
+    "time_sync": {
+      "received": 2000,
+      "monotonic": 2000,
+      "timestamped_sent": 1980,
+      "stale_callback": 0
+    },
+    "combined": {
+      "cycles": 20,
+      "peer_sent": 2000,
+      "cis_received": 2000,
+      "bis_forwarded": 2000,
+      "bis_received": 2000,
+      "minimum_cis_received": 100,
+      "minimum_bis_received": 100
+    }
+  },
+  "dfu_example": {
+    "status": "PASS",
+    "example": "SecureDfuPeripheral",
+    "profile": "secure_ble_dfu",
+    "scope": "separate_example_quality"
+  },
+  "host_gate": "PASS",
+  "failed_attempts_preserved": 1,
+  "raw_probe_identity_preserved": false,
+  "mass_erase_or_recover": false,
+  "children": [
+    {
+      "path": "SecureDfuPeripheral.build.log.gz",
+      "bytes": 512142,
+      "sha256": "23dc70963caba81027aea077cacf70d860e146db387e41aacedc1d68079c1ae5"
+    },
+    {
+      "path": "SecureDfuPeripheral.ino.nu54-build.json",
+      "bytes": 35351,
+      "sha256": "37532a66021e5afa6d1afdd58c9c22411ee9b4ec4339d346d89aad9fdb78d769"
+    },
+    {
+      "path": "failed-f50a-combined.json",
+      "bytes": 3354,
+      "sha256": "fe4745dfd7e5f408af402d61900369787c5944e169925902716382d79e44d923"
+    },
+    {
+      "path": "failed-f50a-combined.transcript.log",
+      "bytes": 57736,
+      "sha256": "4d97aaeb2b51fec798cd55f901e99e24d75535771841e214aaf3c44527c827af"
+    },
+    {
+      "path": "m31-arduino-build-manifest.json",
+      "bytes": 11615,
+      "sha256": "62db16c90f70baab08536b3bf7be35ccee0491afd543eb011ea750eaebaa1ffc"
+    },
+    {
+      "path": "m31-dfu-example-build-manifest.json",
+      "bytes": 618,
+      "sha256": "932a1bef7d823f475811c5bcee72ecb6d2d48da1758241b57b7f26c09779e065"
+    },
+    {
+      "path": "m31-docs-gate.log.gz",
+      "bytes": 86,
+      "sha256": "75a67fdc988b6d6290ebb9622c13480cff3daf24f380070e629207ccc50dae38"
+    },
+    {
+      "path": "m31-example-audit.json",
+      "bytes": 25482,
+      "sha256": "9b23d5d5b1be22fb5360a39250f114b7185dc9e93c6bedce1a6f77e0b62966b6"
+    },
+    {
+      "path": "m31-host-gate.log.gz",
+      "bytes": 63557,
+      "sha256": "2fc2f740243d575b9be87e4cf4881c59a7468e452a2632b3ac1c55813011d31f"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-01.json",
+      "bytes": 2802,
+      "sha256": "070b47ffe0007150ff2ed5bf70519c262e937cb515278ec2a88e27852133eb74"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-01.transcript.log",
+      "bytes": 30106,
+      "sha256": "9ff619cbb809511d57db23292fabbc7132636102da43e9f622b01c349be617f4"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-encrypted-01.json",
+      "bytes": 2802,
+      "sha256": "46cc31093b4098d60b24e8696db33b27246ebf725dbb87bb9e2cb7f2a3df1885"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-encrypted-01.transcript.log",
+      "bytes": 30112,
+      "sha256": "bbc3478182e391ca40e898fa06b40556eeaa0d5e9b26bb0635974f1a57715561"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-sync-loss-01.json",
+      "bytes": 2124,
+      "sha256": "5a44ead439afeaa7e0ff07043facd81fcccdce1e9e9afcdc212c7be8400f0217"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-sync-loss-01.transcript.log",
+      "bytes": 2943,
+      "sha256": "b0d412b1fc8fcf0851548672694fa7d48fcbbbf2b0717febc5fc33f2f43e8733"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-wrong-code-01.json",
+      "bytes": 2146,
+      "sha256": "61cb9ad59d44fadd0bcd0d08dba02cf9e64b26ace1b211398d27d53d51875573"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-bis-wrong-code-01.transcript.log",
+      "bytes": 3187,
+      "sha256": "56d0ff7a987e6541f0687e9a6fcab24e65bef0a5dce58e91315c91903d06d7fd"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-cis-01.json",
+      "bytes": 2782,
+      "sha256": "d0f93393311b522b48b416987d71688eb5fe4bb40761334ad41a7293ea734705"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-cis-01.transcript.log",
+      "bytes": 41020,
+      "sha256": "458dd9c0ae3550f6530fa4d67795ff612a69ac2a48d92f6f29856d9781bdbf39"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-combined-01.json",
+      "bytes": 3534,
+      "sha256": "f19407205c2bf5a2dd4a1730f2e25d1e590cb05c59ee227c408b9b330f1bf804"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-combined-01.transcript.log",
+      "bytes": 57736,
+      "sha256": "388dc9b9c4a87b0a1e63a1e1f69a04c5121487ad6b887d6f684327e5af754210"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-time-01.json",
+      "bytes": 2851,
+      "sha256": "d607a024c413b7b6b730a83037b9b50e2ed8227f8c768417816bb744bc8462c6"
+    },
+    {
+      "path": "m31-iso-arduino-e6ae-time-01.transcript.log",
+      "bytes": 34864,
+      "sha256": "8f08c266d8a46abcf0062be0faa1d3be629ca3942a6f46e9ebd1fa23eb4292d8"
+    },
+    {
+      "path": "nucode-nu54dk-zephyr-0.5.0-rc.1.CHECKSUMS.sha256",
+      "bytes": 572,
+      "sha256": "8019602e59f5503abd122a32e0277558149e761031556b301bb19048dd99e9d7"
+    },
+    {
+      "path": "nucode-nu54dk-zephyr-0.5.0-rc.1.release-manifest.json",
+      "bytes": 183968,
+      "sha256": "8e2a57bf42958a91d899ef4cfb715d8b4f0cc3a62753dad61d0afacb8073609f"
+    }
+  ],
+  "docs_gate": "PASS"
+}

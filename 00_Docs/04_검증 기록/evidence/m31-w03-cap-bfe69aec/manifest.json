@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W03",
+  "subcase_id": "W03-05",
+  "scope": "cap_broadcast_three_role_partial",
+  "status": "PASS",
+  "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+  "branch": "m31-w01",
+  "source_state": {
+    "head_matches_origin": true,
+    "tracked_files_clean_at_build": true,
+    "untracked_evidence_only": true
+  },
+  "fixed_environment": {
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "roles": [
+    {
+      "role": "initiator",
+      "sketch": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "target_com": "COM10",
+      "aux_com": "COM11",
+      "flash_bytes": 498088,
+      "ram_bytes": 223212,
+      "ram_percent": 85,
+      "hex_sha256": "f65ba38f896d5032aeba5bd2d6f305b5c5171c324f2912584b0a03686e192c3d",
+      "hex_size": 1401188,
+      "programmed_bytes": 499712,
+      "flash_mode": "sector",
+      "reset_mode": "hardware",
+      "build_status": "PASS",
+      "flash_status": "PASS"
+    },
+    {
+      "role": "acceptor",
+      "sketch": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "target_com": "COM14",
+      "aux_com": "COM15",
+      "flash_bytes": 500552,
+      "ram_bytes": 229724,
+      "ram_percent": 87,
+      "hex_sha256": "84f2ead6e43175ba676add42a9b5c4cc784da052fd95003a4611e89dcdde3748",
+      "hex_size": 1408105,
+      "programmed_bytes": 503808,
+      "flash_mode": "sector",
+      "reset_mode": "hardware",
+      "build_status": "PASS",
+      "flash_status": "PASS"
+    },
+    {
+      "role": "commander",
+      "sketch": "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "target_com": "COM13",
+      "aux_com": "COM12",
+      "flash_bytes": 420552,
+      "ram_bytes": 219889,
+      "ram_percent": 83,
+      "hex_sha256": "aa56a1a88e5d89deb66c18bf3500d78f3350a23f213c54246a829723405da746",
+      "hex_size": 1183101,
+      "programmed_bytes": 421888,
+      "flash_mode": "sector",
+      "reset_mode": "hardware",
+      "build_status": "PASS",
+      "flash_status": "PASS"
+    }
+  ],
+  "hil": {
+    "control": {
+      "cycles": 34,
+      "successful_operations": 102,
+      "minimum_recovery_seconds": 2.022,
+      "maximum_recovery_seconds": 3.197,
+      "native_failure_lines": 0,
+      "status": "PASS"
+    },
+    "negative": {
+      "invalid_source_rejected": 20,
+      "duplicate_start_rejected": 20,
+      "unexpected_acceptance": 0,
+      "drop_max": 0,
+      "status": "PASS"
+    },
+    "peer_loss": {
+      "hardware_reset_repetitions": 20,
+      "recovered": 20,
+      "minimum_recovery_seconds": 4.525,
+      "maximum_recovery_seconds": 5.305,
+      "fallback_reconnects": 0,
+      "status": "PASS"
+    },
+    "stream": {
+      "duration_seconds": 185,
+      "sent_delta": 18100,
+      "received_delta": 18000,
+      "drop_max": 0,
+      "failure_count": 0,
+      "status": "PASS"
+    }
+  },
+  "host_validation": {
+    "m31_tests_passed": 55,
+    "m31_tests_failed": 0,
+    "library_count": 16,
+    "example_count": 89,
+    "example_audit_issues": 0
+  },
+  "artifacts": [
+    {
+      "path": "control-102ops-summary.json",
+      "sha256": "1c1d6fd7ced5f86d1cb7d839b8ef9ee2237492587775eda87111c4e2db2e6719"
+    },
+    {
+      "path": "control-102ops.log",
+      "sha256": "38c9c1a5a17af323bb2583e7b1dd7ded2aac3b766385eac5b925ba1582c56516"
+    },
+    {
+      "path": "negative-20x2-summary.json",
+      "sha256": "54e0720b1a42ab39362aee2ec28fec27eaa7629f610136c31a1423154fa75d51"
+    },
+    {
+      "path": "negative-20x2.log",
+      "sha256": "e2e5495a94fda3d21e2cd4ecb3cfc1f893847ce997c441922de42a0bda0a487a"
+    },
+    {
+      "path": "peer-loss-20-summary.json",
+      "sha256": "6d013459ec08b48b1e397416086dd3f51826c9fc46c8125bae10421e1e87ef73"
+    },
+    {
+      "path": "peer-loss-20.log",
+      "sha256": "eeb8648075e6c07ff72f3170b36e2732803f13b00e718fc0c01cf4a55a0e3e7f"
+    },
+    {
+      "path": "stream-185s-summary.json",
+      "sha256": "3c210bfda28984e6a2f91e17bf42cd62a69bc4987607a138bd3142a9d6970208"
+    },
+    {
+      "path": "stream-185s.log",
+      "sha256": "288f796f543b4b2c16b6178a3fa6d30568379f8951da2e2538b028fad9442276"
+    }
+  ],
+  "diagnostic_history": {
+    "superseded_revision": "a751ddee4b5b55316813c8c1071b41f1fc554ff5",
+    "observation": "의도한 stop 중 peer-loss 경로가 겹쳐 Acceptor -EAGAIN이 1회 발생했습니다.",
+    "resolution": "Commander가 유휴일 때만 BIS 손실을 peer loss로 판정하도록 수정했습니다.",
+    "accepted_as_pass": false
+  },
+  "remaining_scope": [
+    "CAP unicast group procedure",
+    "CAP procedure cancel and partial failure",
+    "CAP handover applicability and callback coverage"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "scope": "post_attempt_read_only_register_query",
+  "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "source": "pinned nrf54l15_global.h and nrf54l15_types.h",
+  "register": "NRF_RESET_S.RESETREAS",
+  "address": "0x5010e600",
+  "value": "0x00000001",
+  "decoded_bits": ["RESETPIN"],
+  "interpretation": "initial pyOCD hardware reset is already sufficient to set this bit; the register value does not identify the later reboot cause",
+  "nonsecure_alias": "0x4010e600",
+  "nonsecure_alias_result": "SWD memory transfer fault",
+  "operation": "pyOCD commander attach/read32; no register writes"
+}

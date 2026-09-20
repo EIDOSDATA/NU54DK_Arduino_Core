@@ -1,6 +1,6 @@
 /**
  * @file LongGattPeripheral.ino
- * @brief 512-byte characteristic를 광고하는 M29 long read peripheral 예제입니다.
+ * @brief 512-byte characteristic를 광고하는 long read peripheral 예제입니다.
  */
 
 #include <NUCODE_BLE.h>

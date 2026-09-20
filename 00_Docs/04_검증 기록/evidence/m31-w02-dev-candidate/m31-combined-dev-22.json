@@ -1,0 +1,77 @@
+{
+  "test_id": "M31-ISO-01:bis_cis_combined",
+  "scope": "three_board_cis_receive_bis_forward_twenty_cycles",
+  "status": "FAIL",
+  "source_clean": false,
+  "identity": {
+    "core": "64c6b5fcaad3b0330f181d5b5f814b00a14e41bf",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "peer": {
+      "volume": "D:/",
+      "vcom": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "a0df2bd63bb6a4e6b3eb32788acd8cf392d84f8d450126e3c2236dd9efe8e797",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "217088"
+    },
+    "combined": {
+      "volume": "F:/",
+      "vcom": "COM7",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_sha256": "9e854a99e476b7828eabed5647b47a2898b2608ddf243997555d611b7be7f5cc",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "237568"
+    },
+    "receiver": {
+      "volume": "E:/",
+      "vcom": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "bdaa21e226caee2f4b3162013177a550023b549b321d20696a1caefed340dabb",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "139264"
+    }
+  },
+  "nonces": [
+    "c002163018c9b900c8ae0d43f66f3147",
+    "20c59645624ba1c838d67a2e726fbaaf",
+    "e125314bb904cc113181d60448423689",
+    "01b5938e8827d30962fc4bcab0034536",
+    "07e6f38f2150664d730dbb7ecb54e052",
+    "0afc5a2419d271df8751dc92f2b02f0f",
+    "dc81e4dc1a5a33d843c6577ea74eb8b4",
+    "0214ce0bcfff8f3cda47ea20ad30cd9f"
+  ],
+  "cycles": 20,
+  "reason": "CombinedFailure: combined serial line timeout",
+  "measurement": null,
+  "transcript_sha256": "ef9b5cf9a1dff9ba897e79089709dcf965b25c5cb1878b2f63a5eba7833c6259",
+  "observed_utc": "2026-09-15T21:35:50.701216+00:00"
+}

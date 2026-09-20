@@ -1,0 +1,99 @@
+{
+  "test_id": "M31-ISO-01:bis_cis_combined",
+  "scope": "three_board_cis_receive_bis_forward_twenty_cycles",
+  "status": "PASS",
+  "source_clean": true,
+  "identity": {
+    "core": "9e49bee2f3eab012654c97943d6d865162db6df4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "peer": {
+      "volume": "D:/",
+      "vcom": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "1b01758ce725ea271f1e5c0b624d1a1c715303165bcaf603b3b6c233a4913340",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "217088"
+    },
+    "combined": {
+      "volume": "F:/",
+      "vcom": "COM7",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_sha256": "e4d44b44dd5cdf672857423e2d27199bcba6fe3adbe8099e3d77b8ddfe93d43c",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "237568"
+    },
+    "receiver": {
+      "volume": "E:/",
+      "vcom": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "fa049d4126ee71247d5b9d92665ee486244c68034bf4216d52757ccdfc589443",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "139264"
+    }
+  },
+  "nonces": [
+    "b02ee45a140eac4e7911253999e63f45",
+    "ca527c239bafc313df96ba90df1e741f",
+    "9095dccc55ec6bcf876f0d2e7802bb4a",
+    "9378128589a985eac8fa49ae7dbb936d",
+    "daf62d31d68487bdbaecd6db184abe1d",
+    "4d67f1823934a19ef5fb6d2724488428",
+    "e48831f142980b6146232b198c171099",
+    "2a285162ccf2dc46a4057e8c83bc42ab",
+    "12aef2f54963c5e30cf7fa7adab0da66",
+    "4e9eb0d80314c026e7a68f70ce112ef9",
+    "041c7e5a61967e9a72201748b80b7e90",
+    "76d75b7c844cdd21e659ba4fbb28f833",
+    "d938fd5d524f490fa344c8fb486a01b3",
+    "492974415db0a69f46264275be9a3ad7",
+    "e0ed4031ebe8d7927bdb18f1efe7d7ba",
+    "c947f036534623583a56a3ee4c6dc2cf",
+    "d988fe97a669dae27860da85b2118596",
+    "cf347c6baff7227cf557014a63b91796",
+    "68a4664bdad2d80a7867985dc52bf373",
+    "f6eb1e0c2b04b1d9bd9f27b260e3bc8c"
+  ],
+  "cycles": 20,
+  "reason": null,
+  "measurement": {
+    "cycles": 20,
+    "peer_sent": 2000,
+    "cis_received": 2000,
+    "bis_forwarded": 2000,
+    "bis_received": 2000,
+    "minimum_cis_received": 100,
+    "minimum_bis_received": 100,
+    "cis_empty_slots": 622,
+    "bis_empty_slots": 180
+  },
+  "transcript_sha256": "828c6e37160e9fca83ecd61990de19b2e2ea488ad72d70b394651ad542bd062b",
+  "observed_utc": "2026-09-15T21:56:30.914303+00:00"
+}

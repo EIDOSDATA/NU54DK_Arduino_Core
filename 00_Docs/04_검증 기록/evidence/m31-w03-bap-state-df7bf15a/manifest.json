@@ -1,0 +1,13 @@
+{
+  "source_revision": "df7bf15a58dc0e853efdb8b83b9532c7b767ca0b",
+  "files": {
+    ".gitattributes": "eb5175e19efffe27edd41e565ae5ac2d318878903c029821d4b07d3c8dc13a98",
+    "build-summary.json": "4ee990dcbb5acac8ed9e239f4a9aaebeb3e6e35e2e4935ec024437d69822beae",
+    "fixture-prepare.json": "2e7332a47ed78a657983692f4f3607a7e13d936bc9707f705af58fdd165f1d35",
+    "state-build.log.gz": "b654afc01b68f9b807a51c3b17a2c3f95dcd7e27943e59a63fcead166e8947fe",
+    "state-exact.json": "d2fb96473306c7ba4034484683fea862a25c9cea24c3a08bacda874687160acc",
+    "state-flash-candidate.json": "5c1756ba721cbad2d39e1473264801e293d2151db3ef707db4961735ffcf5d51",
+    "state.config.gz": "99fa764d64a14eac4584b45bce789737870014c51a5b52005f6f0a1d8e500034",
+    "state.hex.gz": "6fd29bb10f839481e75e046328dcd190e50748299d38a589d2731fe1df8cd929"
+  }
+}

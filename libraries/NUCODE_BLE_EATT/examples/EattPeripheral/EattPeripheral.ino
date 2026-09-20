@@ -13,10 +13,10 @@ namespace
     const nucode::ble::BLEUuid serviceUuid("8e7e2980-7d8c-4c1a-9d2d-8b6519f77410");
     const nucode::ble::BLEUuid valueUuid("8e7e2981-7d8c-4c1a-9d2d-8b6519f77410");
     nucode::ble::BLEService eattService(serviceUuid);
-    nucode::ble::BLECharacteristic eattValue(
-        valueUuid, nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write,
-        nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write,
-        sizeof(std::uint32_t));
+    nucode::ble::BLECharacteristic
+        eattValue(valueUuid, nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write,
+                  nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write,
+                  sizeof(std::uint32_t));
     bool securityPending = false;
     bool restartAdvertising = false;
 
@@ -49,8 +49,7 @@ namespace
 
     /** @brief 쓰인 sequence를 읽기 경로가 즉시 확인할 수 있게 보고합니다. */
     void onValue(nucode::ble::BLECharacteristic &characteristic,
-                 const nucode::ble::BLECharacteristicEventInfo &information,
-                 void *context)
+                 const nucode::ble::BLECharacteristicEventInfo &information, void *context)
     {
         static_cast<void>(context);
         if (&characteristic == &eattValue &&

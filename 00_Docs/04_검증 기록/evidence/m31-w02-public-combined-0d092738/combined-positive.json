@@ -1,0 +1,1064 @@
+{
+  "status": "PASS",
+  "test": "arduino_public_cis_to_bis_three_board",
+  "core_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
+  "source_clean": true,
+  "probe_sha256": {
+    "peer": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "bridge": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "receiver": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+  },
+  "ports": {
+    "peer": "COM5",
+    "bridge": "COM7",
+    "receiver": "COM3"
+  },
+  "image_sha256": {
+    "peer": "b4c10a715723805fec4774c9bfab8de9e93013bfbf06af97e4c7954728d23f7b",
+    "bridge": "1e9184271ce9b3db8cd126c78bd849ac288a4cb7486257683940fc7222609b1c",
+    "receiver": "63b2d9cbc146d2a2fccd9a528a7819e649fbf21118e5465ce01f53487c039b4c"
+  },
+  "flash": {
+    "receiver": [
+      "pyocd-sector-hw-reset",
+      "196608"
+    ],
+    "bridge": [
+      "pyocd-sector-hw-reset",
+      "299008"
+    ],
+    "peer": [
+      "pyocd-sector-hw-reset",
+      "274432"
+    ]
+  },
+  "requested_cycles": 20,
+  "completed_cycles": {
+    "peer": 20,
+    "bridge": 20,
+    "receiver": 20
+  },
+  "stopped_cycles": {
+    "peer": 20,
+    "bridge": 20,
+    "receiver": 20
+  },
+  "payload_frames": 2000,
+  "missing_frames": 0,
+  "allowed_missing": 20,
+  "image_revision_confirmed": {
+    "peer": true,
+    "bridge": true,
+    "receiver": true
+  },
+  "excluded_pre_boot_lines": {
+    "peer": 3,
+    "bridge": 3,
+    "receiver": 2
+  },
+  "failed_lines": [],
+  "lines": {
+    "peer": [
+      {
+        "at_s": 0.434,
+        "text": "CIS peer core revision=0d092738b56397d4cdd6b67d30a24be01da705fb"
+      },
+      {
+        "at_s": 0.434,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 3.301,
+        "text": "CIS peer core revision=0d092738b56397d4cdd6b67d30a24be01da705fb"
+      },
+      {
+        "at_s": 3.301,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 9.998,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 10.318,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 11.278,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 16.736,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 16.736,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 18.015,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 23.497,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 23.497,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 24.456,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 30.205,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 30.205,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 31.166,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 36.929,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 36.929,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 37.891,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 43.357,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 43.678,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 44.625,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 50.374,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 50.375,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 51.324,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 56.75,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 57.07,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 58.019,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 63.458,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 63.458,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 64.739,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 70.223,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 70.223,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 71.182,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 76.898,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 76.898,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 77.851,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 83.603,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 83.603,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 84.563,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 90.047,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 90.363,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 91.332,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 96.726,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 97.045,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 98.006,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 103.448,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 103.768,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 104.715,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 110.189,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 110.189,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 111.465,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 116.893,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 116.893,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 117.854,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 123.592,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 123.592,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 124.55,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 130.339,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 130.339,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 131.3,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 137.07,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 137.383,
+        "text": "CIS peer stopped"
+      }
+    ],
+    "bridge": [
+      {
+        "at_s": 0.535,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 3.408,
+        "text": "CIS bridge timeout received=0 forwarded=0"
+      },
+      {
+        "at_s": 4.663,
+        "text": "CIS bridge core revision=0d092738b56397d4cdd6b67d30a24be01da705fb"
+      },
+      {
+        "at_s": 4.663,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 4.982,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 10.111,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 10.111,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 11.385,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 11.385,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 16.842,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 16.842,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 17.801,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 18.12,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 23.603,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 23.603,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 24.565,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 24.885,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 30.0,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 30.315,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 31.266,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 31.579,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 36.715,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 37.035,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 38.002,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 38.316,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 43.464,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 43.464,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 44.731,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 45.052,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 50.16,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 50.16,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 51.427,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 51.427,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 56.859,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 56.859,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 57.805,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 58.123,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 63.566,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 63.566,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 64.53,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 64.846,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 70.008,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 70.329,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 71.289,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 71.595,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 76.698,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 76.999,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 77.958,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 78.278,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 83.388,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 83.708,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 84.667,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 84.988,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 90.149,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 90.149,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 91.123,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 91.432,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 96.832,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 96.832,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 97.793,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 98.112,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 103.557,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 103.557,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 104.822,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 105.142,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 110.298,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 110.298,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 111.251,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 111.571,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 117.001,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 117.001,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 117.96,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 118.283,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 123.699,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 123.699,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 124.656,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 124.977,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 130.125,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 130.448,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 131.406,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 131.726,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 136.848,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 137.173,
+        "text": "CIS bridge stopped"
+      }
+    ],
+    "receiver": [
+      {
+        "at_s": 0.954,
+        "text": "CIS BIS receiver synchronized ms=12595"
+      },
+      {
+        "at_s": 4.769,
+        "text": "�����������������������������������������������������CIS BIS core revision=0d092738b56397d4cdd6b67d30a24be01da705fb"
+      },
+      {
+        "at_s": 4.769,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 5.401,
+        "text": "CIS BIS receiver synchronized ms=782"
+      },
+      {
+        "at_s": 7.33,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 9.237,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 9.237,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 10.531,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 12.132,
+        "text": "CIS BIS receiver synchronized ms=1608"
+      },
+      {
+        "at_s": 14.071,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 15.991,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 15.991,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 16.949,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 18.548,
+        "text": "CIS BIS receiver synchronized ms=1473"
+      },
+      {
+        "at_s": 20.828,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 22.749,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 22.749,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 23.711,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 25.631,
+        "text": "CIS BIS receiver synchronized ms=1951"
+      },
+      {
+        "at_s": 27.55,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 29.459,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 29.459,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 30.424,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 32.007,
+        "text": "CIS BIS receiver synchronized ms=1485"
+      },
+      {
+        "at_s": 33.914,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 36.173,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 36.173,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 37.142,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 38.757,
+        "text": "CIS BIS receiver synchronized ms=1685"
+      },
+      {
+        "at_s": 40.69,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 42.61,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 42.61,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 43.894,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 45.481,
+        "text": "CIS BIS receiver synchronized ms=1648"
+      },
+      {
+        "at_s": 47.399,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 49.325,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 49.325,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 50.587,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 52.182,
+        "text": "CIS BIS receiver synchronized ms=1678"
+      },
+      {
+        "at_s": 54.081,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 56.002,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 56.003,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 57.283,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 58.55,
+        "text": "CIS BIS receiver synchronized ms=1417"
+      },
+      {
+        "at_s": 60.791,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 62.712,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 62.712,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 63.675,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 65.292,
+        "text": "CIS BIS receiver synchronized ms=1616"
+      },
+      {
+        "at_s": 67.541,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 69.476,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 69.476,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 70.435,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 72.022,
+        "text": "CIS BIS receiver synchronized ms=1724"
+      },
+      {
+        "at_s": 73.938,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 76.172,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 76.172,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 77.104,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 78.704,
+        "text": "CIS BIS receiver synchronized ms=1499"
+      },
+      {
+        "at_s": 80.626,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 82.854,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 82.854,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 83.811,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 85.415,
+        "text": "CIS BIS receiver synchronized ms=1542"
+      },
+      {
+        "at_s": 87.365,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 89.282,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 89.282,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 90.59,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 92.177,
+        "text": "CIS BIS receiver synchronized ms=1605"
+      },
+      {
+        "at_s": 94.098,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 95.978,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 95.978,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 96.939,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 98.854,
+        "text": "CIS BIS receiver synchronized ms=1637"
+      },
+      {
+        "at_s": 100.767,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 102.701,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 102.701,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 103.662,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 105.249,
+        "text": "CIS BIS receiver synchronized ms=1502"
+      },
+      {
+        "at_s": 107.477,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 109.438,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 109.438,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 110.399,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 111.985,
+        "text": "CIS BIS receiver synchronized ms=1541"
+      },
+      {
+        "at_s": 114.226,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 116.146,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 116.146,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 117.106,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 119.011,
+        "text": "CIS BIS receiver synchronized ms=1800"
+      },
+      {
+        "at_s": 120.935,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 122.843,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 122.843,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 123.805,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 125.723,
+        "text": "CIS BIS receiver synchronized ms=1975"
+      },
+      {
+        "at_s": 127.644,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 129.579,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 129.579,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 130.554,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 132.153,
+        "text": "CIS BIS receiver synchronized ms=1600"
+      },
+      {
+        "at_s": 134.063,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 136.303,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 136.303,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 137.274,
+        "text": "CIS BIS receiver scanning"
+      }
+    ]
+  }
+}

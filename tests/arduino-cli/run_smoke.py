@@ -39,6 +39,7 @@ ARDUINO_TESTS = (
     "m29",
     "m30",
     "m30secure",
+    "m31",
     "ac02b",
     "ac03",
     "examples",
@@ -48,7 +49,7 @@ ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
-    "v0.5.0": ("m29", "m30", "m30secure"),
+    "v0.5.0": ("m29", "m30", "m30secure", "m31"),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
@@ -1680,6 +1681,114 @@ def test_m30_secure_example(
     if "nucode.ble.security" not in secure_features:
         raise SmokeFailure("M30 secure profile did not select BLE security feature")
 
+    dfu_sketch = (
+        repository / "libraries" / "NUCODE_BLE_DFU" / "examples" /
+        "SecureDfuPeripheral"
+    )
+    dfu_build = root / "build-secure-ble-dfu-peripheral"
+    dfu_command = list(compile_command(cli, config, dfu_build, dfu_sketch))
+    dfu_command[-1:-1] = ("--board-options", "feature_set=secure_ble_dfu")
+    run(dfu_command)
+    dfu_context = assert_m30_secure_build(
+        dfu_build, "SecureDfuPeripheral.ino", signing_key
+    )
+    dfu_features = {
+        item.get("id")
+        for item in dfu_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if not {"nucode.ble.security", "nucode.ble.dfu"}.issubset(dfu_features):
+        raise SmokeFailure("DFU example did not select secure BLE DFU features")
+
+
+## @brief M31의 실제 ISO 역할 예제를 Arduino 설치 source에서 전수 compile합니다.
+def test_m31_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    del repository
+    library = root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" / "NUCODE_BLE_ISO"
+    example_names = (
+        "CISCentral", "CISPeripheral", "BISSource", "BISReceiver",
+        "BISEncryptedSource", "BISEncryptedReceiver", "BISTimeSource",
+        "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
+        "CISToBISReceiver",
+    )
+    for example_name in example_names:
+        sketch = library / "examples" / example_name
+        if not (sketch / f"{example_name}.ino").is_file() or not (sketch / "prj.conf").is_file():
+            raise SmokeFailure(f"incomplete M31 ISO role example: {sketch}")
+        build = root / f"build-m31-{example_name.casefold()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(command)
+        context = assert_build(build, f"{example_name}.ino")
+        if context.get("profile") != "ble":
+            raise SmokeFailure(f"M31 ISO BLE profile missing: {example_name}")
+        features = {
+            item.get("id") for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if "nucode.ble.iso" not in features:
+            raise SmokeFailure(f"M31 ISO feature missing: {example_name}")
+        configuration = (Path(context["zephyr_build_dir"]) / "zephyr" / ".config").read_text(encoding="utf-8")
+        required = {"CONFIG_BT"}
+        if example_name.startswith("CIS"):
+            required.add("CONFIG_BT_ISO_PERIPHERAL" if example_name.endswith(("Peripheral", "Peer")) else "CONFIG_BT_ISO_CENTRAL")
+        if example_name.startswith("BIS") or example_name == "CISToBISReceiver":
+            required.add("CONFIG_BT_ISO_SYNC_RECEIVER" if example_name.endswith("Receiver") else "CONFIG_BT_ISO_BROADCASTER")
+        if example_name == "CISToBISBridge":
+            required.update(("CONFIG_BT_ISO_CENTRAL", "CONFIG_BT_ISO_BROADCASTER"))
+        for symbol in required:
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(f"M31 ISO symbol disabled: {example_name}: {symbol}")
+        print(f"M31_ISO_ARDUINO_BUILD_PASS={example_name}", flush=True)
+
+    audio_library = root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" / "NUCODE_BLE_Audio"
+    audio_name = "Lc3SyntheticLoopback"
+    audio_sketch = audio_library / "examples" / audio_name
+    if not (audio_sketch / f"{audio_name}.ino").is_file() or not (audio_sketch / "prj.conf").is_file():
+        raise SmokeFailure(f"incomplete M31 Audio role example: {audio_sketch}")
+    audio_build = root / "build-m31-lc3syntheticloopback"
+    audio_command = list(compile_command(cli, config, audio_build, audio_sketch))
+    audio_command[-1:-1] = ("--board-options", "feature_set=ble")
+    run(audio_command)
+    audio_context = assert_build(audio_build, f"{audio_name}.ino")
+    audio_features = {
+        item.get("id") for item in audio_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if audio_context.get("profile") != "ble" or "nucode.ble.audio" not in audio_features:
+        raise SmokeFailure("M31 Audio BLE profile 또는 feature가 없습니다")
+    audio_configuration = (
+        Path(audio_context["zephyr_build_dir"]) / "zephyr" / ".config"
+    ).read_text(encoding="utf-8")
+    for symbol in ("CONFIG_LIBLC3", "CONFIG_FPU"):
+        if not read_kconfig_boolean(audio_configuration, symbol):
+            raise SmokeFailure(f"M31 Audio symbol disabled: {audio_name}: {symbol}")
+    print(f"M31_AUDIO_ARDUINO_BUILD_PASS={audio_name}", flush=True)
+
+    df_library = root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" / "NUCODE_BLE_DirectionFinding"
+    df_name = "CteBeacon"
+    df_sketch = df_library / "examples" / df_name
+    if not (df_sketch / f"{df_name}.ino").is_file() or not (df_sketch / "prj.conf").is_file():
+        raise SmokeFailure(f"incomplete M31 Direction Finding example: {df_sketch}")
+    df_build = root / "build-m31-ctebeacon"
+    df_command = list(compile_command(cli, config, df_build, df_sketch))
+    df_command[-1:-1] = ("--board-options", "feature_set=ble")
+    run(df_command)
+    df_context = assert_build(df_build, f"{df_name}.ino")
+    df_features = {
+        item.get("id") for item in df_context.get("selected_features", [])
+        if isinstance(item, dict)
+    }
+    if df_context.get("profile") != "ble" or "nucode.ble.direction_finding" not in df_features:
+        raise SmokeFailure("M31 Direction Finding BLE profile 또는 feature가 없습니다")
+    df_configuration = (
+        Path(df_context["zephyr_build_dir"]) / "zephyr" / ".config"
+    ).read_text(encoding="utf-8")
+    for symbol in ("CONFIG_BT_DF_CONNECTIONLESS_CTE_TX", "CONFIG_NUCODE_BLE_DF_BEACON"):
+        if not read_kconfig_boolean(df_configuration, symbol):
+            raise SmokeFailure(f"M31 Direction Finding symbol disabled: {df_name}: {symbol}")
+    print(f"M31_DF_ARDUINO_BUILD_PASS={df_name}", flush=True)
+
 
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
@@ -1754,6 +1863,15 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "SecureKeyboard",
             "SecureMouse",
         },
+        "NUCODE BLE Secure DFU": {"SecureDfuPeripheral"},
+        "NUCODE BLE ISO": {
+            "CISCentral", "CISPeripheral", "BISSource", "BISReceiver",
+            "BISEncryptedSource", "BISEncryptedReceiver", "BISTimeSource",
+            "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
+            "CISToBISReceiver",
+        },
+        "NUCODE BLE Audio": {"Lc3SyntheticLoopback"},
+        "NUCODE BLE Direction Finding": {"CteBeacon"},
     }
     discovered: dict[str, set[str]] = {}
     for record in records:
@@ -1932,6 +2050,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m29": test_m29_examples,
                 "m30": test_m30_examples,
                 "m30secure": test_m30_secure_example,
+                "m31": test_m31_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

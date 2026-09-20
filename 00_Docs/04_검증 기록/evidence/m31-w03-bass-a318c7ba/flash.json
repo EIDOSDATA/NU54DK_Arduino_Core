@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "core_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+  "source_clean": true,
+  "flash_mode": "pyocd-sector-hw-reset",
+  "target": "nrf54l",
+  "frequency_hz": 500000,
+  "roles": [
+    {
+      "role": "encrypted_broadcast_source",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "target_com": "COM10",
+      "aux_com": "COM11",
+      "image_sha256": "911f87c9b67d4a753017f12790c5760d94bff143041f47e3d8c88d62dee82beb",
+      "programmed_bytes": 499712,
+      "sector_flash": "PASS",
+      "hardware_reset": "PASS"
+    },
+    {
+      "role": "broadcast_assistant",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "target_com": "COM13",
+      "aux_com": "COM12",
+      "image_sha256": "6c34e962898aa22dfdb41010ebc59cfa3ed3052d15d729c02162578594fc7827",
+      "programmed_bytes": 417792,
+      "sector_flash": "PASS",
+      "hardware_reset": "PASS"
+    },
+    {
+      "role": "broadcast_scan_delegator_sink",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "target_com": "COM14",
+      "aux_com": "COM15",
+      "image_sha256": "b4a0e5852697e7355fff238f89b73cf4a251f18881a9a36364010b977c34b1d7",
+      "programmed_bytes": 503808,
+      "sector_flash": "PASS",
+      "hardware_reset": "PASS"
+    }
+  ],
+  "raw_probe_uid_recorded": false,
+  "result": "PASS"
+}

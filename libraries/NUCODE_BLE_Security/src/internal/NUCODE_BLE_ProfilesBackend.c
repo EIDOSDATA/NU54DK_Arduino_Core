@@ -59,8 +59,8 @@ int nucode_ble_ess_set_temperature(int16_t hundredths_celsius)
 {
     atomic_set(&ess_temperature, (atomic_val_t)hundredths_celsius);
     const uint16_t encoded = sys_cpu_to_le16((uint16_t)hundredths_celsius);
-    const int result = bt_gatt_notify(NULL, &nucode_ess_service.attrs[1], &encoded,
-                                      sizeof(encoded));
+    const int result =
+        bt_gatt_notify(NULL, &nucode_ess_service.attrs[1], &encoded, sizeof(encoded));
     return result == -ENOTCONN ? 0 : result;
 }
 
@@ -73,8 +73,8 @@ int nucode_ble_ess_set_humidity(uint16_t hundredths_percent)
 {
     atomic_set(&ess_humidity, (atomic_val_t)hundredths_percent);
     const uint16_t encoded = sys_cpu_to_le16(hundredths_percent);
-    const int result = bt_gatt_notify(NULL, &nucode_ess_service.attrs[4], &encoded,
-                                      sizeof(encoded));
+    const int result =
+        bt_gatt_notify(NULL, &nucode_ess_service.attrs[4], &encoded, sizeof(encoded));
     return result == -ENOTCONN ? 0 : result;
 }
 

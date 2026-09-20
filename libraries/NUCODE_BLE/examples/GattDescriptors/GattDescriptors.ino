@@ -1,6 +1,6 @@
 /**
  * @file GattDescriptors.ino
- * @brief 네 descriptor를 찾고 한 ATT Read Multiple로 읽는 M29 central 예제입니다.
+ * @brief 네 descriptor를 찾고 한 ATT Read Multiple로 읽는 central 예제입니다.
  */
 
 #include <NUCODE_BLE.h>

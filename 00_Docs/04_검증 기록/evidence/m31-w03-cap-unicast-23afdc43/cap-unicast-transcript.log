@@ -1,0 +1,612 @@
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+ACCEPTOR|CAP Initiator disconnected reason=19
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+ACCEPTOR|CAP Acceptor starting
+ACCEPTOR|CAP Acceptor BLE ready
+ACCEPTOR|CAP service ready
+ACCEPTOR|CAP unicast server ready
+ACCEPTOR|CAP codec ready
+ACCEPTOR|CAP unicast Acceptor ready
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|\xfc\xdc\xfe\xef\xe2>\xff\x8f\xfc\xff\xfc\xcc\xea\xff\xe1\xff\xa0>\xff\xff\xff\xe6\xbf\u0680\xfc\xff\xf4\xff\x9c>\xec\xf7\xff\xffx\xef\xff\xff\xf0\xf4\xff\xff\xff\xbf\xef\xbf\xff\xfcCAP Acceptor scan started
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP sent frames=100
+ACCEPTOR|CAP decoded frames=100 energy=941215 dropped=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=1
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+ACCEPTOR|CAP decoded frames=200 energy=981486 dropped=0
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=3
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+ACCEPTOR|CAP decoded frames=300 energy=1159410 dropped=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=5
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP completed sessions=7
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=9
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+ACCEPTOR|CAP decoded frames=400 energy=1115194 dropped=0
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=11
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+ACCEPTOR|CAP decoded frames=500 energy=941215 dropped=0
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+ACCEPTOR|CAP decoded frames=600 energy=981486 dropped=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP completed sessions=13
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP Initiator status found=0 connected=0 connecting=1 stage=0
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP sent frames=100
+ACCEPTOR|CAP decoded frames=700 energy=1159410 dropped=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=15
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP decoded frames=800 energy=1115188 dropped=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=7
+INITIATOR|CAP completed sessions=17
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP decoded frames=900 energy=941229 dropped=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=7
+INITIATOR|CAP completed sessions=19
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP decoded frames=1000 energy=981493 dropped=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=7
+INITIATOR|CAP completed sessions=21
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=23
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=25
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP decoded frames=1100 energy=1159410 dropped=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+ACCEPTOR|CAP decoded frames=1200 energy=1115188 dropped=0
+INITIATOR|CAP completed sessions=27
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+ACCEPTOR|CAP decoded frames=1300 energy=941229 dropped=0
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=29
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+ACCEPTOR|CAP decoded frames=1400 energy=981493 dropped=0
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=31
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+ACCEPTOR|CAP Initiator disconnected reason=19
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=8
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=8
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=33
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+ACCEPTOR|CAP decoded frames=1500 energy=941229 dropped=0
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=35
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=37
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=7
+INITIATOR|CAP completed sessions=39
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+ACCEPTOR|CAP decoded frames=1600 energy=981486 dropped=0
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=41
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+INITIATOR|CAP sent frames=100
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=7
+INITIATOR|CAP completed sessions=43
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|CAP decoded frames=1700 energy=941215 dropped=0
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+ACCEPTOR|CAP decoded frames=1800 energy=981486 dropped=0
+INITIATOR|CAP completed sessions=45
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator

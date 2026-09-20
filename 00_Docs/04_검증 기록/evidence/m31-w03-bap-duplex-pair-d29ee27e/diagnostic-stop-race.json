@@ -1,0 +1,37 @@
+{
+  "status": "FAIL",
+  "test": "arduino_bap_duplex_stop_release_cycles",
+  "core_revision": "d55ff98ee8ed3b7a09f1abd69057ae95af16b8e0",
+  "source_clean": false,
+  "client_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "server_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "client_port": "COM7",
+  "server_port": "COM5",
+  "client_image_sha256": "f17d1dfacdb363e082e7e45eff3d192015f988cc985afae64ce966b395205381",
+  "server_image_sha256": "adf5a9258c40d9bbd867dc9f2aa675a4110a3a1a0448f1c13ab6b4025f646714",
+  "client_flash_record_sha256": "360c879690a1a4899f9253c691ae69a77ea64b7b5932ebbcdb66ed763248e70b",
+  "server_flash_record_sha256": "783c7c3f56d0caec7b0620cfd8f3118a8b81e38e6c6f7a6250949601082e8670",
+  "requested_cycles": 1,
+  "completed_cycles": 0,
+  "cycle_seconds": [],
+  "client_lines": [
+    "LE Audio duplex server found",
+    "LE Audio connected; preparing",
+    "LE Audio peer disconnected",
+    "LE Audio scan restarted",
+    "LE Audio duplex server found",
+    "LE Audio connected; preparing",
+    "LE Audio duplex client streaming",
+    "LE Audio duplex received=100 energy=911919 dropped=0",
+    "LE Audio duplex sent frames=100"
+  ],
+  "server_lines": [
+    "LE Audio duplex peer disconnected",
+    "LE Audio duplex peer disconnected",
+    "LE Audio duplex sent=100",
+    "LE Audio duplex received=100 energy=941215 dropped=0",
+    "LE Audio duplex send failed: 8 native=0"
+  ],
+  "failure_class": "RuntimeError",
+  "failure_detail": "server error in cycle 1: LE Audio duplex send failed: 8 native=0"
+}

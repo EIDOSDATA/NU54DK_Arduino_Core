@@ -1,0 +1,59 @@
+{
+  "test_id": "M31-DF-01:connectionless_cte_tx:controller_acceptance",
+  "status": "PASS_CONTROL",
+  "source_clean": true,
+  "identity": {
+    "core": "53399559daa748b07539025c1ab64bb6464c7788",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "probe_nonce": "ff654abf94652a6f26b3aa2e06786f06",
+  "nonces": [
+    "675619a0eb9092881969e2d915980f4c",
+    "098413f99233e9004cb408637e3a415c",
+    "f227ec688e1a4d34cfe1135f5867ea48",
+    "b450beffc7dac7957bbe84dff6941046",
+    "eb7e13252a5902d0e475e49cc9999b8f",
+    "9811b3d3117f5668e11962d01cd63732",
+    "e28f8189a2fdbccf754cb188843a4287",
+    "ed63e598276b86ff03c9773a58032514",
+    "b84a9eb04a1dc14b018bb2ee5d5a8342",
+    "0b80617db8f5be2e26e61ece3756de29",
+    "7e0cbda19161a5be72738672877bc7f2",
+    "6b06c1527b051c9e19185470263c7032",
+    "545ae786911f0ab9ec67e4a51f5a5770",
+    "65777a612928dc6a6e12ad278dd92f84",
+    "16a21e1274ecf8304fdfb1bf8ec2f691",
+    "436d18f25680694b8ed2f49bf3dfa40b",
+    "4331e2833f518b3fcad94a70b3e455f7",
+    "f82de2a955b0d52383889fbb2df28f2c",
+    "6d6fcadf72bbd7090155904a3e4997cf",
+    "0518dc554adacf79d7895c3334885dcb"
+  ],
+  "board": {
+    "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "volume": "F:/",
+    "vcom": "COM7",
+    "image_sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+    "registers": {
+      "dp_idcode": "0x6ba02477",
+      "dp_targetid_observed": "0xf0000f40",
+      "ahb_ap_idr": "0x84770001",
+      "ahb_ap_csw": "0x03800052",
+      "ctrl_ap_idr": "0x32880000",
+      "approtect_status": "0x00000000"
+    },
+    "flash_mode": "pyocd-sector-hw-reset",
+    "flash_bytes": "184320"
+  },
+  "measured": {
+    "cycles": 20,
+    "starts": 20,
+    "stops": 20,
+    "invalid_rejected": 20
+  },
+  "transcript_sha256": "e74e7d8aab0ca439b21746feac0d33afe27701595405f5280649374360030f89",
+  "observed_utc": "2026-09-16T08:07:18.382586+00:00",
+  "scope": "controller_acceptance_only_no_over_air_iq_proof"
+}

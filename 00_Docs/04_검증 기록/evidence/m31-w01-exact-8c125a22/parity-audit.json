@@ -1,0 +1,20 @@
+{
+  "test_id": "M31-PARITY-01:all_upstream",
+  "status": "PASS",
+  "scope": "source_inventory_owner_and_status_only",
+  "source_clean": true,
+  "source_revision": "f5619f235a6a4bd2347e8ba41d8bc5e76221228c",
+  "parity_path": "variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json",
+  "parity_sha256": "24004a758cac6d03b72289d028a6b649e628fade901cd77e9e47b18852056206",
+  "counts": {
+    "samples": 190,
+    "source_only_features": 39,
+    "variants": 474
+  },
+  "acceptance": {
+    "mapped": 703,
+    "duplicate": 0,
+    "invalid_pass": 0
+  },
+  "target_builds_and_functional_hil": "NOT_RUN_BY_INVENTORY"
+}

@@ -259,6 +259,40 @@ int main(int argc, char **argv)
         assert(mock_connections[2].disconnects == 1);
         assert(BLEConnection.count() == 1U);
     }
+#if CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS == 2
+    else if (std::strcmp(scenario, "two_central") == 0)
+    {
+        const BLEConnectionHandle first = connect(0);
+        const BLEConnectionHandle second = connect(1);
+        assert(first.valid() && second.valid() && first != second);
+        assert(BLEConnection.count() == 2U);
+        assert(BLEConnection.handle(BLELinkRole::central) == first);
+        assert(BLEConnection.role(first) == BLELinkRole::central);
+        assert(BLEConnection.role(second) == BLELinkRole::central);
+
+        assert(BLEConnection.disconnect(first));
+        mock_conn_callbacks->disconnected(&mock_connections[0], 0x13);
+        mock_next_connection = &mock_connections[2];
+        BLEConnectionHandle replacement;
+        assert(BLEConnection.connect(
+            BLEAddress("02:03:04:05:06:07", BLEAddress::Type::public_address), replacement));
+        mock_conn_callbacks->connected(&mock_connections[2], 0);
+        assert(replacement.valid() && replacement != first && replacement != second);
+        assert(BLEConnection.count() == 2U);
+
+        mock_conn_callbacks->disconnected(&mock_connections[0], 0x13);
+        assert(BLEConnection.count() == 2U);
+        assert(BLEConnection.connected(replacement) && BLEConnection.connected(second));
+        assert(!BLEConnection.connected(first));
+
+        assert(BLEConnection.disconnect(second));
+        mock_conn_callbacks->disconnected(&mock_connections[1], 0x13);
+        assert(BLEConnection.count() == 1U);
+        assert(BLEConnection.disconnect(replacement));
+        mock_conn_callbacks->disconnected(&mock_connections[2], 0x13);
+        assert(BLEConnection.count() == 0U);
+    }
+#endif
     else if (std::strcmp(scenario, "role_callback_guard") == 0)
     {
         assert(BLEAdvertising.clear() && BLEAdvertising.start());

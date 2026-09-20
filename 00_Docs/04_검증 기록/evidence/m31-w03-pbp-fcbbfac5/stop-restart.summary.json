@@ -1,0 +1,2039 @@
+{
+  "schema": "nucode.m31.pbp-hil.v2",
+  "status": "PASS",
+  "mode": "stop-restart",
+  "started_at": "2026-09-20T06:34:48.607304+00:00",
+  "finished_at": "2026-09-20T06:35:43.803095+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "source_clean": true,
+  "public_example_sha256": {
+    "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+    "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+  },
+  "runner": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_hil_final.py",
+    "sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e"
+  },
+  "debug_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "raw_probe_identifiers_recorded": false
+  },
+  "flash_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\flash_by_probe_hash.py",
+    "sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "outer_timeout_seconds": 165.0
+  },
+  "flash_receipts": {
+    "source": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\stop-restart-source-flash.json",
+      "sha256": "5a2aa9f418b728dc4f00749301c58f259ec6f93b1c0621e33180a9381dc0439a",
+      "programmed_bytes": 503808,
+      "status": "PASS"
+    },
+    "sink": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\stop-restart-sink-flash.json",
+      "sha256": "65604b980bd229d6f6cde5e0bae139f8135612ac4aa943abeadb6048b00a0237",
+      "programmed_bytes": 491520,
+      "status": "PASS"
+    }
+  },
+  "final_provenance": {
+    "verified": true,
+    "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+    "public_example_sha256": {
+      "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+      "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+    },
+    "image_sha256": {
+      "source": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e",
+      "sink": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    },
+    "debug_helper_sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "flash_helper_sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "runner_sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e",
+    "flash_receipt_sha256": {
+      "source": "5a2aa9f418b728dc4f00749301c58f259ec6f93b1c0621e33180a9381dc0439a",
+      "sink": "65604b980bd229d6f6cde5e0bae139f8135612ac4aa943abeadb6048b00a0237"
+    }
+  },
+  "probe_preflight": {
+    "connected_probe_count": 3,
+    "expected_hash_matches": {
+      "source": 1,
+      "sink": 1
+    }
+  },
+  "usb_port_preflight": {
+    "required_port_count": 4,
+    "roles": {
+      "source": {
+        "target_port": "COM10",
+        "aux_port": "COM11",
+        "serial_sha256": "f419aa19cc41d8d2c8c85339a81b8f2c0e1ada5bf91f0ff04200513fc6aba69f"
+      },
+      "sink": {
+        "target_port": "COM14",
+        "aux_port": "COM15",
+        "serial_sha256": "a68185c274fd83f93c9520f99fb418184395f9548a52e306449733c3c9f39b46"
+      }
+    },
+    "raw_usb_serials_recorded": false
+  },
+  "board_map": {
+    "source": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w07-source-fcbbfac5\\PublicAudioBroadcastSource.ino.hex",
+      "image_sha256": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e"
+    },
+    "sink": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w07-sink-fcbbfac5\\PublicAudioBroadcastSink.ino.hex",
+      "image_sha256": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    }
+  },
+  "runner_behavior": {
+    "flashes_devices": true,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "time_contract": {
+    "positive_stream_duration_seconds": 180.0,
+    "non_positive_campaign_timeout_seconds": 180.0,
+    "recovery_timeout_seconds": 30.0,
+    "cycles": 20
+  },
+  "transcript": {
+    "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\stop-restart.transcript.log",
+    "sha256": "22dcbd4f0e7114f1c5a00f863b237b3b4f51a5021396b55f0cb0aa85647abb5b",
+    "event_count": 313
+  },
+  "result": {
+    "initial": {
+      "source_preparing_sequence": 3,
+      "source_streaming_sequence": 4,
+      "sink_scanning_sequence": 6,
+      "announcement_sequence": 7,
+      "sink_streaming_sequence": 8,
+      "baseline_sample_sequence": 10,
+      "baseline": {
+        "frames": 100,
+        "energy": 1100263,
+        "dropped": 0
+      }
+    },
+    "cycles": 20,
+    "passed": 20,
+    "recovery_seconds": [
+      2.474,
+      2.612,
+      2.425,
+      2.628,
+      2.435,
+      2.604,
+      2.904,
+      2.431,
+      2.675,
+      2.433,
+      2.855,
+      2.553,
+      2.493,
+      3.333,
+      2.592,
+      2.496,
+      2.602,
+      2.483,
+      2.964,
+      2.544
+    ],
+    "campaign_elapsed_seconds": 55.029
+  },
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 0.041,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 1,
+      "at_s": 0.096,
+      "role": "source",
+      "text": "public audio sent frames=3300"
+    },
+    {
+      "sequence": 2,
+      "at_s": 0.221,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 3,
+      "at_s": 0.289,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 4,
+      "at_s": 0.294,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 5,
+      "at_s": 0.417,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 6,
+      "at_s": 0.422,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 7,
+      "at_s": 0.436,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 8,
+      "at_s": 1.265,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 9,
+      "at_s": 1.305,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 10,
+      "at_s": 2.277,
+      "role": "sink",
+      "text": "public audio received=100 energy=1100263 dropped=0"
+    },
+    {
+      "sequence": 11,
+      "at_s": 2.323,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 12,
+      "at_s": 2.448,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 13,
+      "at_s": 2.453,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 14,
+      "at_s": 2.575,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 15,
+      "at_s": 2.642,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 16,
+      "at_s": 2.765,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 17,
+      "at_s": 2.774,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 18,
+      "at_s": 2.775,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 19,
+      "at_s": 2.895,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 20,
+      "at_s": 2.9,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 21,
+      "at_s": 2.915,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 22,
+      "at_s": 3.746,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 23,
+      "at_s": 3.797,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 24,
+      "at_s": 4.761,
+      "role": "sink",
+      "text": "public audio received=100 energy=1179427 dropped=0"
+    },
+    {
+      "sequence": 25,
+      "at_s": 4.761,
+      "role": "runner",
+      "text": "stop-restart cycle=1/20 elapsed=2.474s pass"
+    },
+    {
+      "sequence": 26,
+      "at_s": 4.81,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 27,
+      "at_s": 4.935,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 28,
+      "at_s": 4.94,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 29,
+      "at_s": 5.064,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 30,
+      "at_s": 5.138,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 31,
+      "at_s": 5.262,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 32,
+      "at_s": 5.271,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 33,
+      "at_s": 5.271,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 34,
+      "at_s": 5.395,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 35,
+      "at_s": 5.399,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 36,
+      "at_s": 5.427,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 37,
+      "at_s": 6.288,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 38,
+      "at_s": 6.36,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 39,
+      "at_s": 7.3,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 40,
+      "at_s": 7.372,
+      "role": "sink",
+      "text": "public audio received=100 energy=983379 dropped=0"
+    },
+    {
+      "sequence": 41,
+      "at_s": 7.373,
+      "role": "runner",
+      "text": "stop-restart cycle=2/20 elapsed=2.612s pass"
+    },
+    {
+      "sequence": 42,
+      "at_s": 7.495,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 43,
+      "at_s": 7.5,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 44,
+      "at_s": 7.622,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 45,
+      "at_s": 7.692,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 46,
+      "at_s": 7.812,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 47,
+      "at_s": 7.822,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 48,
+      "at_s": 7.822,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 49,
+      "at_s": 7.945,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 50,
+      "at_s": 7.95,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 51,
+      "at_s": 7.974,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 52,
+      "at_s": 8.793,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 53,
+      "at_s": 8.847,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 54,
+      "at_s": 9.798,
+      "role": "sink",
+      "text": "public audio received=100 energy=1150664 dropped=0"
+    },
+    {
+      "sequence": 55,
+      "at_s": 9.798,
+      "role": "runner",
+      "text": "stop-restart cycle=3/20 elapsed=2.425s pass"
+    },
+    {
+      "sequence": 56,
+      "at_s": 9.86,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 57,
+      "at_s": 9.986,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 58,
+      "at_s": 9.991,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 59,
+      "at_s": 10.114,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 60,
+      "at_s": 10.187,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 61,
+      "at_s": 10.31,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 62,
+      "at_s": 10.319,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 63,
+      "at_s": 10.319,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 64,
+      "at_s": 10.442,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 65,
+      "at_s": 10.447,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 66,
+      "at_s": 10.529,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 67,
+      "at_s": 11.335,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 68,
+      "at_s": 11.412,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 69,
+      "at_s": 12.352,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 70,
+      "at_s": 12.425,
+      "role": "sink",
+      "text": "public audio received=100 energy=912670 dropped=0"
+    },
+    {
+      "sequence": 71,
+      "at_s": 12.425,
+      "role": "runner",
+      "text": "stop-restart cycle=4/20 elapsed=2.628s pass"
+    },
+    {
+      "sequence": 72,
+      "at_s": 12.548,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 73,
+      "at_s": 12.553,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 74,
+      "at_s": 12.674,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 75,
+      "at_s": 12.753,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 76,
+      "at_s": 12.876,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 77,
+      "at_s": 12.885,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 78,
+      "at_s": 12.885,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 79,
+      "at_s": 13.008,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 80,
+      "at_s": 13.013,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 81,
+      "at_s": 13.027,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 82,
+      "at_s": 13.855,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 83,
+      "at_s": 13.896,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 84,
+      "at_s": 14.86,
+      "role": "sink",
+      "text": "public audio received=100 energy=1079595 dropped=0"
+    },
+    {
+      "sequence": 85,
+      "at_s": 14.86,
+      "role": "runner",
+      "text": "stop-restart cycle=5/20 elapsed=2.435s pass"
+    },
+    {
+      "sequence": 86,
+      "at_s": 14.913,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 87,
+      "at_s": 15.037,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 88,
+      "at_s": 15.042,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 89,
+      "at_s": 15.165,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 90,
+      "at_s": 15.236,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 91,
+      "at_s": 15.358,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 92,
+      "at_s": 15.368,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 93,
+      "at_s": 15.368,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 94,
+      "at_s": 15.49,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 95,
+      "at_s": 15.495,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 96,
+      "at_s": 15.578,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 97,
+      "at_s": 16.373,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 98,
+      "at_s": 16.459,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 99,
+      "at_s": 17.379,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 100,
+      "at_s": 17.463,
+      "role": "sink",
+      "text": "public audio received=100 energy=1072873 dropped=0"
+    },
+    {
+      "sequence": 101,
+      "at_s": 17.464,
+      "role": "runner",
+      "text": "stop-restart cycle=6/20 elapsed=2.604s pass"
+    },
+    {
+      "sequence": 102,
+      "at_s": 17.585,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 103,
+      "at_s": 17.59,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 104,
+      "at_s": 17.711,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 105,
+      "at_s": 17.78,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 106,
+      "at_s": 17.902,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 107,
+      "at_s": 17.912,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 108,
+      "at_s": 17.912,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 109,
+      "at_s": 18.033,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 110,
+      "at_s": 18.037,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 111,
+      "at_s": 18.063,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 112,
+      "at_s": 18.93,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 113,
+      "at_s": 19.362,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 114,
+      "at_s": 19.946,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 115,
+      "at_s": 20.367,
+      "role": "sink",
+      "text": "public audio received=100 energy=1010947 dropped=0"
+    },
+    {
+      "sequence": 116,
+      "at_s": 20.368,
+      "role": "runner",
+      "text": "stop-restart cycle=7/20 elapsed=2.904s pass"
+    },
+    {
+      "sequence": 117,
+      "at_s": 20.49,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 118,
+      "at_s": 20.496,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 119,
+      "at_s": 20.62,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 120,
+      "at_s": 20.695,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 121,
+      "at_s": 20.817,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 122,
+      "at_s": 20.826,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 123,
+      "at_s": 20.827,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 124,
+      "at_s": 20.951,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 125,
+      "at_s": 20.957,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 126,
+      "at_s": 20.971,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 127,
+      "at_s": 21.798,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 128,
+      "at_s": 21.84,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 129,
+      "at_s": 22.798,
+      "role": "sink",
+      "text": "public audio received=100 energy=1155707 dropped=0"
+    },
+    {
+      "sequence": 130,
+      "at_s": 22.798,
+      "role": "runner",
+      "text": "stop-restart cycle=8/20 elapsed=2.431s pass"
+    },
+    {
+      "sequence": 131,
+      "at_s": 22.856,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 132,
+      "at_s": 22.98,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 133,
+      "at_s": 22.989,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 134,
+      "at_s": 23.11,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 135,
+      "at_s": 23.181,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 136,
+      "at_s": 23.301,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 137,
+      "at_s": 23.311,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 138,
+      "at_s": 23.311,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 139,
+      "at_s": 23.435,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 140,
+      "at_s": 23.441,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 141,
+      "at_s": 23.571,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 142,
+      "at_s": 24.328,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 143,
+      "at_s": 24.464,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 144,
+      "at_s": 25.352,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 145,
+      "at_s": 25.473,
+      "role": "sink",
+      "text": "public audio received=100 energy=910423 dropped=0"
+    },
+    {
+      "sequence": 146,
+      "at_s": 25.473,
+      "role": "runner",
+      "text": "stop-restart cycle=9/20 elapsed=2.675s pass"
+    },
+    {
+      "sequence": 147,
+      "at_s": 25.595,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 148,
+      "at_s": 25.6,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 149,
+      "at_s": 25.72,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 150,
+      "at_s": 25.791,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 151,
+      "at_s": 25.911,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 152,
+      "at_s": 25.922,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 153,
+      "at_s": 25.922,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 154,
+      "at_s": 26.043,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 155,
+      "at_s": 26.048,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 156,
+      "at_s": 26.072,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 157,
+      "at_s": 26.891,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 158,
+      "at_s": 26.945,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 159,
+      "at_s": 27.906,
+      "role": "sink",
+      "text": "public audio received=100 energy=1172020 dropped=0"
+    },
+    {
+      "sequence": 160,
+      "at_s": 27.906,
+      "role": "runner",
+      "text": "stop-restart cycle=10/20 elapsed=2.433s pass"
+    },
+    {
+      "sequence": 161,
+      "at_s": 27.967,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 162,
+      "at_s": 28.091,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 163,
+      "at_s": 28.096,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 164,
+      "at_s": 28.218,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 165,
+      "at_s": 28.295,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 166,
+      "at_s": 28.419,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 167,
+      "at_s": 28.433,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 168,
+      "at_s": 28.433,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 169,
+      "at_s": 28.556,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 170,
+      "at_s": 28.561,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 171,
+      "at_s": 28.575,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 172,
+      "at_s": 29.441,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 173,
+      "at_s": 29.758,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 174,
+      "at_s": 30.455,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 175,
+      "at_s": 30.761,
+      "role": "sink",
+      "text": "public audio received=100 energy=1015523 dropped=0"
+    },
+    {
+      "sequence": 176,
+      "at_s": 30.761,
+      "role": "runner",
+      "text": "stop-restart cycle=11/20 elapsed=2.855s pass"
+    },
+    {
+      "sequence": 177,
+      "at_s": 30.884,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 178,
+      "at_s": 30.89,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 179,
+      "at_s": 31.012,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 180,
+      "at_s": 31.081,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 181,
+      "at_s": 31.203,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 182,
+      "at_s": 31.212,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 183,
+      "at_s": 31.212,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 184,
+      "at_s": 31.335,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 185,
+      "at_s": 31.341,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 186,
+      "at_s": 31.359,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 187,
+      "at_s": 32.24,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 188,
+      "at_s": 32.305,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 189,
+      "at_s": 33.253,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 190,
+      "at_s": 33.315,
+      "role": "sink",
+      "text": "public audio received=100 energy=1072873 dropped=0"
+    },
+    {
+      "sequence": 191,
+      "at_s": 33.315,
+      "role": "runner",
+      "text": "stop-restart cycle=12/20 elapsed=2.553s pass"
+    },
+    {
+      "sequence": 192,
+      "at_s": 33.438,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 193,
+      "at_s": 33.443,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 194,
+      "at_s": 33.566,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 195,
+      "at_s": 33.633,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 196,
+      "at_s": 33.754,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 197,
+      "at_s": 33.765,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 198,
+      "at_s": 33.765,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 199,
+      "at_s": 33.886,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 200,
+      "at_s": 33.891,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 201,
+      "at_s": 33.905,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 202,
+      "at_s": 34.774,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 203,
+      "at_s": 34.793,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 204,
+      "at_s": 35.795,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 205,
+      "at_s": 35.808,
+      "role": "sink",
+      "text": "public audio received=100 energy=1091030 dropped=0"
+    },
+    {
+      "sequence": 206,
+      "at_s": 35.808,
+      "role": "runner",
+      "text": "stop-restart cycle=13/20 elapsed=2.493s pass"
+    },
+    {
+      "sequence": 207,
+      "at_s": 35.931,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 208,
+      "at_s": 35.936,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 209,
+      "at_s": 36.057,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 210,
+      "at_s": 36.128,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 211,
+      "at_s": 36.249,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 212,
+      "at_s": 36.259,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 213,
+      "at_s": 36.259,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 214,
+      "at_s": 36.382,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 215,
+      "at_s": 36.388,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 216,
+      "at_s": 36.527,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 217,
+      "at_s": 37.279,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 218,
+      "at_s": 38.131,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 219,
+      "at_s": 38.304,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 220,
+      "at_s": 39.141,
+      "role": "sink",
+      "text": "public audio received=100 energy=1050856 dropped=0"
+    },
+    {
+      "sequence": 221,
+      "at_s": 39.141,
+      "role": "runner",
+      "text": "stop-restart cycle=14/20 elapsed=3.333s pass"
+    },
+    {
+      "sequence": 222,
+      "at_s": 39.264,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 223,
+      "at_s": 39.27,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 224,
+      "at_s": 39.315,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 225,
+      "at_s": 39.443,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 226,
+      "at_s": 39.511,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 227,
+      "at_s": 39.632,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 228,
+      "at_s": 39.642,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 229,
+      "at_s": 39.642,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 230,
+      "at_s": 39.765,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 231,
+      "at_s": 39.771,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 232,
+      "at_s": 39.907,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 233,
+      "at_s": 40.649,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 234,
+      "at_s": 40.734,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 235,
+      "at_s": 41.668,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 236,
+      "at_s": 41.733,
+      "role": "sink",
+      "text": "public audio received=100 energy=964355 dropped=0"
+    },
+    {
+      "sequence": 237,
+      "at_s": 41.734,
+      "role": "runner",
+      "text": "stop-restart cycle=15/20 elapsed=2.592s pass"
+    },
+    {
+      "sequence": 238,
+      "at_s": 41.857,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 239,
+      "at_s": 41.862,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 240,
+      "at_s": 41.984,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 241,
+      "at_s": 42.053,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 242,
+      "at_s": 42.176,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 243,
+      "at_s": 42.186,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 244,
+      "at_s": 42.187,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 245,
+      "at_s": 42.309,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 246,
+      "at_s": 42.314,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 247,
+      "at_s": 42.333,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 248,
+      "at_s": 43.2,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 249,
+      "at_s": 43.219,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 250,
+      "at_s": 44.215,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 251,
+      "at_s": 44.229,
+      "role": "sink",
+      "text": "public audio received=100 energy=981493 dropped=0"
+    },
+    {
+      "sequence": 252,
+      "at_s": 44.229,
+      "role": "runner",
+      "text": "stop-restart cycle=16/20 elapsed=2.496s pass"
+    },
+    {
+      "sequence": 253,
+      "at_s": 44.352,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 254,
+      "at_s": 44.358,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 255,
+      "at_s": 44.478,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 256,
+      "at_s": 44.548,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 257,
+      "at_s": 44.669,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 258,
+      "at_s": 44.678,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 259,
+      "at_s": 44.679,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 260,
+      "at_s": 44.802,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 261,
+      "at_s": 44.807,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 262,
+      "at_s": 44.886,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 263,
+      "at_s": 45.7,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 264,
+      "at_s": 45.828,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 265,
+      "at_s": 46.715,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 266,
+      "at_s": 46.831,
+      "role": "sink",
+      "text": "public audio received=100 energy=1173685 dropped=0"
+    },
+    {
+      "sequence": 267,
+      "at_s": 46.831,
+      "role": "runner",
+      "text": "stop-restart cycle=17/20 elapsed=2.602s pass"
+    },
+    {
+      "sequence": 268,
+      "at_s": 46.954,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 269,
+      "at_s": 46.959,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 270,
+      "at_s": 47.083,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 271,
+      "at_s": 47.149,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 272,
+      "at_s": 47.273,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 273,
+      "at_s": 47.283,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 274,
+      "at_s": 47.283,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 275,
+      "at_s": 47.403,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 276,
+      "at_s": 47.408,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 277,
+      "at_s": 47.427,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 278,
+      "at_s": 48.284,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 279,
+      "at_s": 48.313,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 280,
+      "at_s": 49.3,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 281,
+      "at_s": 49.314,
+      "role": "sink",
+      "text": "public audio received=100 energy=1059809 dropped=0"
+    },
+    {
+      "sequence": 282,
+      "at_s": 49.314,
+      "role": "runner",
+      "text": "stop-restart cycle=18/20 elapsed=2.483s pass"
+    },
+    {
+      "sequence": 283,
+      "at_s": 49.437,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 284,
+      "at_s": 49.443,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 285,
+      "at_s": 49.564,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 286,
+      "at_s": 49.632,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 287,
+      "at_s": 49.753,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 288,
+      "at_s": 49.768,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 289,
+      "at_s": 49.768,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 290,
+      "at_s": 49.889,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 291,
+      "at_s": 49.894,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 292,
+      "at_s": 49.979,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 293,
+      "at_s": 50.79,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 294,
+      "at_s": 51.275,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 295,
+      "at_s": 51.799,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 296,
+      "at_s": 52.278,
+      "role": "sink",
+      "text": "public audio received=100 energy=1163586 dropped=0"
+    },
+    {
+      "sequence": 297,
+      "at_s": 52.278,
+      "role": "runner",
+      "text": "stop-restart cycle=19/20 elapsed=2.964s pass"
+    },
+    {
+      "sequence": 298,
+      "at_s": 52.398,
+      "role": "runner",
+      "text": "command board=F value=s"
+    },
+    {
+      "sequence": 299,
+      "at_s": 52.403,
+      "role": "sink",
+      "text": "public audio sink stopped"
+    },
+    {
+      "sequence": 300,
+      "at_s": 52.524,
+      "role": "runner",
+      "text": "command board=G value=s"
+    },
+    {
+      "sequence": 301,
+      "at_s": 52.596,
+      "role": "source",
+      "text": "public audio source stopped"
+    },
+    {
+      "sequence": 302,
+      "at_s": 52.719,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 303,
+      "at_s": 52.728,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 304,
+      "at_s": 52.728,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 305,
+      "at_s": 52.849,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 306,
+      "at_s": 52.854,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 307,
+      "at_s": 52.888,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 308,
+      "at_s": 53.745,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 309,
+      "at_s": 53.822,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 310,
+      "at_s": 54.754,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 311,
+      "at_s": 54.822,
+      "role": "sink",
+      "text": "public audio received=100 energy=983379 dropped=0"
+    },
+    {
+      "sequence": 312,
+      "at_s": 54.822,
+      "role": "runner",
+      "text": "stop-restart cycle=20/20 elapsed=2.544s pass"
+    }
+  ],
+  "error": null
+}
