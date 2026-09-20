@@ -376,7 +376,7 @@ def execute(args: argparse.Namespace) -> dict:
             for role, board in boards.items():
                 board["probe_registers"] = collect_register_identity(board["uid"], board["volume"])
                 board["flash_mode"], board["flash_bytes"] = flash_image_pyocd(
-                    role, board["uid"], board["image"], 120.0, hardware_reset=True
+                    role, board["uid"], board["image"], args.flash_timeout, hardware_reset=True
                 )
             ports = {
                 role: serial_module.Serial(board["vcom"], 115200, timeout=0.03)
@@ -466,10 +466,13 @@ def main() -> int:
     parser.add_argument("--sdk-root", required=True, type=Path)
     parser.add_argument("--output-prefix", required=True, type=Path)
     parser.add_argument("--soak-seconds", type=float, default=180.0)
+    parser.add_argument("--flash-timeout", type=float, default=300.0)
     parser.add_argument("--development", action="store_true")
     args = parser.parse_args()
     if args.soak_seconds < 180.0:
         parser.error("--soak-seconds는 180 이상이어야 합니다")
+    if not 30.0 <= args.flash_timeout <= 300.0:
+        parser.error("--flash-timeout은 30..300초여야 합니다")
     if args.probe_provider_sha256 == args.probe_client_sha256:
         parser.error("provider/client probe SHA-256은 달라야 합니다")
     try:

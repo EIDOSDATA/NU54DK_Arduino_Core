@@ -207,10 +207,30 @@ def main() -> int:
                     client,
                     server,
                     record,
-                        lambda role, line: role == "client"
-                        and "preset index=5 available=0" in line,
+                    lambda role, line: role == "server"
+                    and "Toggle preset availability result=0" in line,
                     10.0,
-                    "preset availability notification",
+                    "preset availability change",
+                )
+                time.sleep(1.0)
+                client.write(b"r")
+                client.flush()
+                wait_for(
+                    client,
+                    server,
+                    record,
+                    lambda role, line: role == "client" and "Read presets result=0" in line,
+                    10.0,
+                    "preset availability refresh",
+                )
+                wait_for(
+                    client,
+                    server,
+                    record,
+                    lambda role, line: role == "client"
+                    and "preset index=5 available=0" in line,
+                    10.0,
+                    "preset availability result",
                 )
 
                 for cycle in range(1, args.recovery_cycles + 1):

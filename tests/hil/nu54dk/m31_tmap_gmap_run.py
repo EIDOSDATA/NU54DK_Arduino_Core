@@ -556,7 +556,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--soak-seconds", type=float, default=180.0)
     parser.add_argument("--minimum-soak-frames", type=int, default=17500)
     parser.add_argument("--step-timeout", type=float, default=45.0)
-    parser.add_argument("--flash-timeout", type=float, default=120.0)
+    parser.add_argument("--flash-timeout", type=float, default=300.0)
     return parser
 
 
