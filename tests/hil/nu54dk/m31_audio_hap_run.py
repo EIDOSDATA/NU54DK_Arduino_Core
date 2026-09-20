@@ -84,6 +84,21 @@ def wait_state(
     )
 
 
+def wait_active(client, server, record: dict[str, object], expected: int,
+                timeout: float = 30.0) -> str:
+    """! @brief reconnect 뒤 preset 재읽기와 독립적으로 active index 복구를 확인합니다. """
+    return wait_for(
+        client,
+        server,
+        record,
+        lambda role, line: role == "client"
+        and (match := STATE_PATTERN.search(line)) is not None
+        and int(match.group(1)) == expected,
+        timeout,
+        f"active preset {expected}",
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--client-probe-sha256", required=True)
@@ -257,7 +272,7 @@ def main() -> int:
                         15.0,
                         "server disconnect",
                     )
-                    wait_state(client, server, record, 1, 30.0)
+                    wait_active(client, server, record, 1, 30.0)
                     elapsed = round(time.monotonic() - started, 3)
                     cast_times = record["recovery_seconds"]
                     if isinstance(cast_times, list):
