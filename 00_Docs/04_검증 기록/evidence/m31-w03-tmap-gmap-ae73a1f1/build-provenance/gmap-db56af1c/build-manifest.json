@@ -1,0 +1,92 @@
+{
+  "revision": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+  "source_clean": true,
+  "images": {
+    "GamingAudioGateway": {
+      "hex": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioGateway\\GamingAudioGateway.ino.hex",
+      "sha256": "542a3b753744e03c3a97a353c5b1819c4f4543c574e29970522b307c27c20f37",
+      "context": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioGateway\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-db56-w10\\GamingAudioGateway.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioGateway\\GamingAudioGateway.ino.nu54-build.json",
+      "artifact_manifest_sha256": "a56d6c8069a4ca385610af13fe44b8037807f6085472f219c70793ce42698aeb",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 524712,
+      "ram_bytes": 236576,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    },
+    "GamingAudioTerminal": {
+      "hex": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioTerminal\\GamingAudioTerminal.ino.hex",
+      "sha256": "1abc97ad8a7a3bc0797bb1eb45d08d4abaf21a1761a886442bda66551ff3988b",
+      "context": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioTerminal\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-db56-w10\\GamingAudioTerminal.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioTerminal\\GamingAudioTerminal.ino.nu54-build.json",
+      "artifact_manifest_sha256": "815e85d5b4d4864dd1b23da4158f51d359e218d1a39c4ed179565f128984643f",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 493136,
+      "ram_bytes": 230718,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    },
+    "GamingAudioBroadcaster": {
+      "hex": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioBroadcaster\\GamingAudioBroadcaster.ino.hex",
+      "sha256": "a0556f399a95640ce39fe53eaf8e67565cf19095066c19bbd2282604feda316e",
+      "context": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioBroadcaster\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-db56-w10\\GamingAudioBroadcaster.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioBroadcaster\\GamingAudioBroadcaster.ino.nu54-build.json",
+      "artifact_manifest_sha256": "273a7d13dd55f11e66f61ef00ef287662353be500fd96a426cb43d8d5847e9af",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 503344,
+      "ram_bytes": 223964,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio"
+      ]
+    },
+    "GamingAudioReceiver": {
+      "hex": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioReceiver\\GamingAudioReceiver.ino.hex",
+      "sha256": "2dc84c2ade89fbb5cb77576c2f6ecbece5ef13e8f2b38311fb49657e1079a74e",
+      "context": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioReceiver\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-db56-w10\\GamingAudioReceiver.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-db56-w10\\build\\GamingAudioReceiver\\GamingAudioReceiver.ino.nu54-build.json",
+      "artifact_manifest_sha256": "c0428b0633666716fa061b66a659a4bcb697452e22602a5557830c6fe452f4f2",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 488400,
+      "ram_bytes": 224004,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio"
+      ]
+    }
+  }
+}
