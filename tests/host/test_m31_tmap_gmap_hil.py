@@ -102,6 +102,16 @@ class TmapGmapHilContractTest(unittest.TestCase):
         self.assertIn(b"<redacted-probe>", sanitized)
         self.assertIn(b"<redacted-ble-address>", sanitized)
 
+    def test_boot_binary_prefix_recovers_only_exact_public_line(self) -> None:
+        """! @brief CMSIS-DAP VCOM 부팅 잔여에서 공개 줄만 엄격히 복원합니다. """
+        self.assertEqual(
+            MODULE.decode_public_line(b"\xff\x00<DAPLink:Overflow>\x81TMAP local roles=0x5 service=TMAS\r"),
+            "TMAP local roles=0x5 service=TMAS",
+        )
+        self.assertIsNone(MODULE.decode_public_line(b"\xff\x00<DAPLink:Overflow>\x81"))
+        with self.assertRaises(MODULE.HilFailure):
+            MODULE.decode_public_line(b"\xffFATAL fault\x00TMAP local roles=0x5 service=TMAS")
+
     def test_post_flash_boot_clears_uart_and_resets_sink_before_source(self) -> None:
         """! @brief flash noise 제거와 sink 선행 부팅을 harness 생성 전에 고정합니다. """
         events = []

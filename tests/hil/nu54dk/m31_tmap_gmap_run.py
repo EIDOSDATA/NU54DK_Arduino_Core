@@ -44,6 +44,8 @@ from v04_protocol import ProbeLocks  # noqa: E402
 MAX_TRANSCRIPT_BYTES = 512 * 1024
 PROBE_HASH = re.compile(r"^[0-9a-f]{64}$")
 BLE_ADDRESS = re.compile(rb"(?i)\b[0-9a-f]{2}(?::[0-9a-f]{2}){5}\b")
+PUBLIC_LINE_PREFIXES = (b"TMAP ", b"GMAP ", b"Gaming ", b"Invalid ", b"Unsupported ")
+FATAL_UART_MARKERS = (b"fatal", b"assert", b"hardfault", b"busfault", b"stack overflow")
 
 
 class HilFailure(RuntimeError):
@@ -287,6 +289,26 @@ def sanitize_transcript(raw: bytes, forbidden: tuple[str, ...]) -> bytes:
     return sanitized
 
 
+def decode_public_line(raw_line: bytes) -> str | None:
+    """! @brief 부팅 binary prefix 뒤의 정확한 공개 프로토콜 줄만 복원합니다. """
+    line = raw_line.rstrip(b"\r")
+    folded = line.lower()
+    if any(marker in folded for marker in FATAL_UART_MARKERS):
+        raise HilFailure("공개 Serial에서 target fatal 문자열을 관측했습니다")
+    if all(0x20 <= value <= 0x7e for value in line):
+        return line.decode("ascii") if line else None
+
+    starts = [line.rfind(prefix) for prefix in PUBLIC_LINE_PREFIXES]
+    start = max(starts)
+    if start < 0:
+        return None
+    candidate = line[start:]
+    end = next((index for index, value in enumerate(candidate)
+                if not 0x20 <= value <= 0x7e), len(candidate))
+    candidate = candidate[:end]
+    return candidate.decode("ascii") if candidate else None
+
+
 class SerialHarness:
     """! @brief 두 COM의 공개 줄을 bounded transcript와 oracle에 전달합니다. """
 
@@ -317,8 +339,8 @@ class SerialHarness:
             while b"\n" in self.pending[role]:
                 raw_line, _, remainder = self.pending[role].partition(b"\n")
                 self.pending[role] = bytearray(remainder)
-                line = raw_line.rstrip(b"\r").decode("utf-8", errors="replace")
-                if line:
+                line = decode_public_line(raw_line)
+                if line is not None:
                     self.observation.ingest(role, line)
         if not progressed:
             time.sleep(0.01)
