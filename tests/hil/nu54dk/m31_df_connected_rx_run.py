@@ -112,7 +112,8 @@ def classify(record):
                          if "DF_CONN|RAW_RX_PARAM|" in line), "")
     raw_request = next((line for line in record["receiver_lines"]
                         if "DF_CONN|RAW_REQUEST|" in line), "")
-    if "DF_CONN|CONNECTED|error=0" not in record["receiver_lines"]:
+    if not any("DF_CONN|CONNECTED|error=0" in line
+               for line in record["receiver_lines"]):
         raise RuntimeError("receiver did not connect")
     if not any("CTE responses enabled on connected peer" in line
                for line in record["responder_lines"]):
