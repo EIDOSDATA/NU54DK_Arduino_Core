@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
+import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 
@@ -111,6 +114,95 @@ class TmapGmapHilContractTest(unittest.TestCase):
         self.assertNotIn("--probe-id", options)
         self.assertIn("--source-probe-sha256", options)
         self.assertIn("--sink-probe-sha256", options)
+
+    def test_adjacent_arduino_build_manifest_is_preferred_and_bound_to_hex(self) -> None:
+        core_revision = "a" * 40
+        board_revision = "b" * 40
+        with tempfile.TemporaryDirectory(prefix="nu54-w03-10-build-record-") as directory:
+            root = Path(directory) / "build" / "TelephonyMediaGateway"
+            root.mkdir(parents=True)
+            image = root / "TelephonyMediaGateway.ino.hex"
+            image.write_bytes(b":00000001FF\n")
+            record = image.with_suffix(".nu54-build.json")
+            document = {
+                "artifacts": {
+                    "hex": {
+                        "path": image.resolve().as_posix(),
+                        "sha256": hashlib.sha256(image.read_bytes()).hexdigest(),
+                        "size": image.stat().st_size,
+                    }
+                },
+                "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+                "cache": {
+                    "input_manifest": {
+                        "toolchain": {
+                            "bundle_id": "dcbdc366a1",
+                            "compiler": "arm-zephyr-eabi-g++.exe 14.3.0",
+                        }
+                    }
+                },
+                "source_inputs": {
+                    "m31_audio_revisions": {
+                        "NUCODE_CORE_REVISION": core_revision,
+                        "NUCODE_BOARD_REVISION": board_revision,
+                        "NUCODE_NCS_REVISION":
+                            "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+                        "NUCODE_ZEPHYR_REVISION":
+                            "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+                    }
+                },
+            }
+            record.write_text(json.dumps(document), encoding="utf-8")
+            (root.parent / "nucode_arduino_core_build.yml").write_text(
+                "invalid legacy record", encoding="utf-8"
+            )
+
+            result = MODULE.validate_build_record(
+                image, core_revision, board_revision, root
+            )
+
+            self.assertEqual(result["record_name"], record.name)
+            self.assertEqual(result["record_format"], "nu54-build-json")
+            self.assertEqual(result["hex_sha256"], document["artifacts"]["hex"]["sha256"])
+
+    def test_adjacent_arduino_build_manifest_rejects_stale_hex_digest(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="nu54-w03-10-build-record-") as directory:
+            root = Path(directory)
+            image = root / "TelephonyMediaGateway.ino.hex"
+            image.write_bytes(b":00000001FF\n")
+            record = image.with_suffix(".nu54-build.json")
+            document = {
+                "artifacts": {
+                    "hex": {
+                        "path": image.resolve().as_posix(),
+                        "sha256": "0" * 64,
+                        "size": image.stat().st_size,
+                    }
+                },
+                "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+                "cache": {
+                    "input_manifest": {
+                        "toolchain": {
+                            "bundle_id": "dcbdc366a1",
+                            "compiler": "arm-zephyr-eabi-g++.exe 14.3.0",
+                        }
+                    }
+                },
+                "source_inputs": {
+                    "m31_audio_revisions": {
+                        "NUCODE_CORE_REVISION": "a" * 40,
+                        "NUCODE_BOARD_REVISION": "b" * 40,
+                        "NUCODE_NCS_REVISION":
+                            "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+                        "NUCODE_ZEPHYR_REVISION":
+                            "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+                    }
+                },
+            }
+            record.write_text(json.dumps(document), encoding="utf-8")
+
+            with self.assertRaises(RuntimeError):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
 
     @staticmethod
     def _frame_lines(name: str, count: int) -> tuple[str, str]:
