@@ -210,10 +210,15 @@ void loop()
         (static_cast<std::int32_t>(millis() - profileDeadline) >= 0) &&
         (hearingAccess.stage() != HearingAccessStage::operating))
     {
+        const HearingAccessStage stage = hearingAccess.stage();
         Serial.print("Hearing Access profile timeout stage=");
-        Serial.print(static_cast<unsigned int>(hearingAccess.stage()));
+        Serial.print(static_cast<unsigned int>(stage));
         Serial.print(" native=");
         Serial.println(hearingAccess.nativeCode());
+        if ((stage == HearingAccessStage::failed) && BLEConnection.disconnect(peerConnection))
+        {
+            Serial.println("Hearing Access recovery requested");
+        }
         profileDeadline = millis() + profileTimeoutMs;
     }
 
