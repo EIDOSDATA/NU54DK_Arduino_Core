@@ -93,10 +93,11 @@ class MediaCallControlContractTests(unittest.TestCase):
         ):
             self.assertIn(token, call_client)
 
-    def test_media_player_reserves_all_mock_player_objects(self) -> None:
-        """! @brief 고정 SDK의 20개 MPL 객체가 기본 5개 pool에 잘리지 않게 합니다. """
+    def test_media_player_reserves_objects_and_notification_buffers(self) -> None:
+        """! @brief MPL 객체와 연속 상태·명령 통지에 필요한 pool을 확보합니다. """
         config = (EXAMPLES / "MediaControlPlayer/prj.conf").read_text(encoding="utf-8")
         self.assertIn("CONFIG_BT_OTS_MAX_OBJ_CNT=0x14", config)
+        self.assertIn("CONFIG_BT_ATT_TX_COUNT=12", config)
         self.assertNotIn("CONFIG_BT_OTS_MAX_INST_CNT=2", config)
 
     def test_fixed_sdk_sources_and_metadata_are_present(self) -> None:
