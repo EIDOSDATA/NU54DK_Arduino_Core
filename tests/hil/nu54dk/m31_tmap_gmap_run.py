@@ -36,6 +36,7 @@ from m31_ble_capability_run import (  # noqa: E402
     collect_register_identity,
     discover,
 )
+from m31_cs_ras_pair_run import hardware_reset  # noqa: E402
 from m6_serial_echo import import_pyserial  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
@@ -331,6 +332,17 @@ class SerialHarness:
         raise HilFailure(f"{label} timeout")
 
 
+def create_fresh_serial_harness(source: Any, sink: Any, source_uid: str, sink_uid: str,
+                                observation: Observation) -> SerialHarness:
+    """! @brief flash 잔여 UART를 버리고 sink 우선의 새 부팅 순서를 만듭니다. """
+    source.reset_input_buffer()
+    sink.reset_input_buffer()
+    hardware_reset(sink_uid)
+    time.sleep(1.0)
+    hardware_reset(source_uid)
+    return SerialHarness(source, sink, observation)
+
+
 def run_protocol(harness: SerialHarness, scenario: Scenario, soak_seconds: float,
                  minimum_soak_frames: int, cycles: int, step_timeout: float) -> dict[str, Any]:
     """! @brief role/service/stream/negative/recovery 계약을 공개 Serial로 수행합니다. """
@@ -478,14 +490,14 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         }
         with serial_module.Serial(source_port, 115200, timeout=0.02) as source_serial, \
              serial_module.Serial(sink_port, 115200, timeout=0.02) as sink_serial:
-            source_serial.reset_input_buffer()
-            sink_serial.reset_input_buffer()
             sink_flash = flash_image_pyocd("sink", sink_uid, sink_image, args.flash_timeout,
                                           hardware_reset=True)
             source_flash = flash_image_pyocd("source", source_uid, source_image, args.flash_timeout,
                                             hardware_reset=True)
             observation = Observation(scenario)
-            harness = SerialHarness(source_serial, sink_serial, observation)
+            harness = create_fresh_serial_harness(
+                source_serial, sink_serial, source_uid, sink_uid, observation
+            )
             try:
                 result = run_protocol(harness, scenario, args.soak_seconds,
                                       args.minimum_soak_frames, args.cycles, args.step_timeout)

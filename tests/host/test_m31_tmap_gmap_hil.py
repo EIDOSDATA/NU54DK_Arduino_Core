@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -100,6 +101,60 @@ class TmapGmapHilContractTest(unittest.TestCase):
         self.assertNotIn(b"AA:BB:CC:DD:EE:FF", sanitized)
         self.assertIn(b"<redacted-probe>", sanitized)
         self.assertIn(b"<redacted-ble-address>", sanitized)
+
+    def test_post_flash_boot_clears_uart_and_resets_sink_before_source(self) -> None:
+        """! @brief flash noise 제거와 sink 선행 부팅을 harness 생성 전에 고정합니다. """
+        events = []
+
+        class FakePort:
+            """! @brief input buffer clear 순서만 기록하는 fake serial입니다. """
+
+            def __init__(self, role: str) -> None:
+                self.role = role
+
+            def reset_input_buffer(self) -> None:
+                events.append(("clear", self.role))
+
+        source = FakePort("source")
+        sink = FakePort("sink")
+        expected_harness = object()
+
+        def reset(uid: str) -> None:
+            events.append(("reset", uid))
+
+        def wait(seconds: float) -> None:
+            events.append(("wait", seconds))
+
+        def create(_source, _sink, _observation):
+            events.append(("harness",))
+            return expected_harness
+
+        with patch.object(MODULE, "hardware_reset", side_effect=reset), \
+             patch.object(MODULE.time, "sleep", side_effect=wait), \
+             patch.object(MODULE, "SerialHarness", side_effect=create):
+            harness = MODULE.create_fresh_serial_harness(
+                source, sink, "source-probe", "sink-probe", object()
+            )
+
+        self.assertIs(harness, expected_harness)
+        self.assertEqual(
+            events,
+            [
+                ("clear", "source"),
+                ("clear", "sink"),
+                ("reset", "sink-probe"),
+                ("wait", 1.0),
+                ("reset", "source-probe"),
+                ("harness",),
+            ],
+        )
+        runner_source = RUNNER.read_text(encoding="utf-8")
+        execute_source = runner_source[runner_source.index("def execute("):]
+        sink_flash = execute_source.index('sink_flash = flash_image_pyocd("sink"')
+        source_flash = execute_source.index('source_flash = flash_image_pyocd("source"')
+        fresh_boot = execute_source.index("harness = create_fresh_serial_harness(")
+        self.assertLess(sink_flash, source_flash)
+        self.assertLess(source_flash, fresh_boot)
 
     def test_completion_limits_are_fail_closed(self) -> None:
         source = RUNNER.read_text(encoding="utf-8")
