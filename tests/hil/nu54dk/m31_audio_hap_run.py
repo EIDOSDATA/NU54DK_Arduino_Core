@@ -188,20 +188,6 @@ def main() -> int:
                     )
                     record["invalid_index_rejected"] = iteration + 1
 
-                for iteration in range(args.negative_iterations):
-                    client.write(b"y")
-                    client.flush()
-                    wait_for(
-                        client,
-                        server,
-                        record,
-                        lambda role, line: role == "client" and
-                        "Hearing Access operation rejected" in line,
-                        10.0,
-                        "synchronized preset rejection",
-                    )
-                    record["synchronized_request_rejected"] = iteration + 1
-
                 server.write(b"n")
                 server.flush()
                 wait_for(
@@ -225,6 +211,18 @@ def main() -> int:
                 )
 
                 for cycle in range(1, args.recovery_cycles + 1):
+                    client.write(b"y")
+                    client.flush()
+                    wait_for(
+                        client,
+                        server,
+                        record,
+                        lambda role, line: role == "client"
+                        and "Synchronized preset result=7 native=-95" in line,
+                        10.0,
+                        "synchronized preset rejection",
+                    )
+                    record["synchronized_request_rejected"] = cycle
                     started = time.monotonic()
                     hardware_reset(server_uid)
                     wait_for(
