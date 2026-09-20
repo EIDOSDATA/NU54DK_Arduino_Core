@@ -10,6 +10,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 MODULE_PATH = ROOT / "tests/hil/nu54dk/m31_ble_capability.py"
+RUNNER_PATH = ROOT / "tests/hil/nu54dk/m31_ble_capability_run.py"
 SPEC = importlib.util.spec_from_file_location("m31_ble_capability_test", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -58,6 +59,12 @@ class M31CapabilityParserTests(unittest.TestCase):
         self.assertTrue(result.controller_bits["channel_sounding"])
         self.assertFalse(result.controller_bits["raw_iq_rx"])
         self.assertFalse(any(result.host_config.values()))
+
+    def test_register_query_timeout_is_bounded_for_three_probe_runs(self) -> None:
+        """! @brief 병렬 빌드 중에도 DP/AP 조회 시간을 제한된 60초로 확보합니다. """
+        runner = RUNNER_PATH.read_text(encoding="utf-8")
+        self.assertIn("REGISTER_QUERY_TIMEOUT_SECONDS = 60", runner)
+        self.assertIn("timeout=REGISTER_QUERY_TIMEOUT_SECONDS", runner)
 
     def test_wrong_nonce_and_revision_are_rejected(self) -> None:
         """! @brief 다른 attempt/source의 serial 출력을 재사용하지 않습니다. """

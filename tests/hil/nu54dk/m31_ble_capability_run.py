@@ -43,6 +43,9 @@ class ExecutionFailure(RuntimeError):
     """! @brief flash·serial·mapping·증거 단계의 제한된 실패를 나타냅니다. """
 
 
+REGISTER_QUERY_TIMEOUT_SECONDS = 60
+
+
 def sha256_bytes(payload: bytes) -> str:
     """! @brief probe 원문 대신 artifact byte의 SHA-256을 계산합니다. """
     return hashlib.sha256(payload).hexdigest()
@@ -99,8 +102,14 @@ def collect_register_identity(raw_uid: str, volume: str) -> dict[str, str]:
         "readdp 0x0\nreaddp 0x24\nreadap 0 0xfc\nreadap 0 0x00\n"
         "readap 2 0xfc\nreadap 2 0x14\nexit\n"
     )
-    result = subprocess.run(command, input=read_commands, text=True,
-                            capture_output=True, timeout=30, check=False)
+    result = subprocess.run(
+        command,
+        input=read_commands,
+        text=True,
+        capture_output=True,
+        timeout=REGISTER_QUERY_TIMEOUT_SECONDS,
+        check=False,
+    )
     if result.returncode != 0:
         raise ExecutionFailure("CMSIS-DAP V2 DP/AP register query failure")
     output = result.stdout + "\n" + result.stderr
