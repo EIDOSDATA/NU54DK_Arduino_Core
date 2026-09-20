@@ -31,6 +31,9 @@ W05는 wrong-key negative와 flash 전환 반복 분모가 남아 **진행 중**
 [두 번째 실행 원본](evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json)을
 별도로 생성했다. 이 실행도 flash·pair reset 직후 raw procedure 100개를 27.570초에
 수신했고 stop/restart 20/20, disconnect/reconnect 20/20과 최종 STOP을 모두 PASS했다.
+빌드의 전역 메모리는 initiator 232,399/262,144 byte(88%), reflector
+220,839/262,144 byte(84%)여서 low-memory 경고가 발생했다. 이는 W05 기능 FAIL은 아니지만
+W06 통합 자원 예산에서 반드시 다시 판정할 위험으로 남긴다.
 
 따라서 동일 image의 독립적인 두 번의 flash 실행은 모두 성공했다. 과거 실패 원본은
 보존하며, 두 번의 성공만으로 간헐 중단의 단일 원인을 확정하지 않는다. wrong-key

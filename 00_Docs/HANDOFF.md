@@ -64,7 +64,8 @@ Squash는 개발 커밋을 묶는 이력 정리입니다. 증거에 기록된 �
    원인을 확정하지 않습니다. wrong-key는 양쪽을 정상 bonding한 뒤 reflector bond만 공개
    `eraseAllBonds()`로 지우고, 재연결 repair pairing을 거부하는 one-sided stale-key 시험이
    최소 범위입니다. 이는 임의의 서로 다른 LTK 직접 주입 PASS로 확대하지 않습니다.
-   RTT 출력은 비보정이므로 거리 정확도는 NOT RUN입니다.
+   RTT 출력은 비보정이므로 거리 정확도는 NOT RUN입니다. 현재 공개 CS build의 전역
+   메모리는 initiator 88%, reflector 84%이므로 W06 통합 전에 자원 예산을 다시 확인합니다.
 5. 실제 보드 시험 직전에 CMSIS-DAP V2 probe의 SHA-256 identity·COM·role·firmware를 다시 결합합니다.
    과거 세 보드 mapping이나 임시 HEX 경로를 새 PC 결과물로 가정하지 않습니다.
 6. 공개 `.ino`는 사용자가 읽고 수정할 수 있는 C++/NUCODE API 흐름을 유지합니다.
