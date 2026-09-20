@@ -182,6 +182,14 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "PublicAudioBroadcastSink",
                 "AudioControlController",
                 "AudioControlDevice",
+                "ExternalPdmMicrophoneSource",
+                "ExternalI2sSpeakerSink",
+                "HearingAccessServer",
+                "HearingAccessClient",
+                "MediaControlPlayer",
+                "MediaControlClient",
+                "CallControlServer",
+                "CallControlClient",
             )
         }
         later_ble_examples |= {

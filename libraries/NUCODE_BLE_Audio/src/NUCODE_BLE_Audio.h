@@ -1971,6 +1971,300 @@ namespace nucode::ble::audio
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };
+    /** @brief Media Control Service가 보고하는 재생 상태입니다. */
+    enum class MediaState : std::uint8_t
+    {
+        inactive,
+        playing,
+        paused,
+        seeking,
+    };
+
+    /** @brief Media Control Point에 전달할 사용자 명령입니다. */
+    enum class MediaCommand : std::uint8_t
+    {
+        play,
+        pause,
+        fast_rewind,
+        fast_forward,
+        stop,
+        previous_track,
+        next_track,
+    };
+
+    /** @brief media/call client가 공유하는 비동기 검색 단계입니다. */
+    enum class RemoteControlStage : std::uint8_t
+    {
+        idle,
+        discovering,
+        reading,
+        ready,
+        operating,
+        failed,
+    };
+
+    /** @brief 원격 Media Control Service에서 읽은 고정 크기 snapshot입니다. */
+    struct MediaSnapshot
+    {
+        char player_name[32] = {};
+        char track_title[48] = {};
+        std::int32_t track_duration = 0;
+        std::int32_t track_position = 0;
+        std::uint64_t current_track_id = 0U;
+        std::uint32_t supported_commands = 0U;
+        std::uint32_t updates = 0U;
+        std::uint8_t content_control_id = 0U;
+        MediaState state = MediaState::inactive;
+    };
+
+    /**
+     * @brief 고정 SDK의 합성 media player와 Media Control Service를 제공합니다.
+     *
+     * @note player와 service는 image 수명 자원입니다. end() 뒤 같은 image에서 재등록하지 않습니다.
+     */
+    class MediaControlPlayer final
+    {
+      public:
+        MediaControlPlayer() = default;
+
+        ~MediaControlPlayer()
+        {
+            (void)end();
+        }
+
+        MediaControlPlayer(const MediaControlPlayer &) = delete;
+        MediaControlPlayer &operator=(const MediaControlPlayer &) = delete;
+
+        /** @brief 합성 track/object와 MCS를 등록합니다. */
+        Error begin() noexcept;
+
+        /** @brief 공개 소유권을 해제하고 image-lifetime service를 휴면 상태로 둡니다. */
+        Error end() noexcept;
+
+        /** @brief MCS가 원격 controller 요청을 받을 준비가 되었는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 Media Proxy 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief 원격 Media Control Service를 검색하고 track과 재생 상태를 제어합니다. */
+    class MediaControlClient final
+    {
+      public:
+        MediaControlClient() = default;
+
+        ~MediaControlClient()
+        {
+            (void)end();
+        }
+
+        MediaControlClient(const MediaControlClient &) = delete;
+        MediaControlClient &operator=(const MediaControlClient &) = delete;
+
+        /** @brief 암호화된 연결에서 MCS 검색과 상태 구독을 시작합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief callback 결과에 따라 다음 특성 읽기를 진행합니다. */
+        void poll() noexcept;
+
+        /** @brief 원격 player 상태를 처음부터 다시 읽습니다. */
+        Error refresh() noexcept;
+
+        /** @brief 지원되는 Media Control Point 명령을 보냅니다. */
+        Error command(MediaCommand command) noexcept;
+
+        /** @brief 확장 또는 negative 검증용 Media Control Point opcode를 보냅니다. */
+        Error commandOpcode(std::uint8_t opcode) noexcept;
+
+        /** @brief 현재 track 안에서 상대 위치 이동 명령을 보냅니다. */
+        Error moveRelative(std::int32_t hundredths) noexcept;
+
+        /** @brief 현재 track 위치를 1/100초 단위로 설정합니다. */
+        Error setTrackPosition(std::int32_t hundredths) noexcept;
+
+        /** @brief OTS의 48-bit track object를 현재 track으로 선택합니다. */
+        Error selectTrack(std::uint64_t object_id) noexcept;
+
+        /** @brief 연결 참조와 비동기 작업을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 검색과 초기 snapshot 읽기가 완료되었는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 현재 비동기 단계를 반환합니다. */
+        [[nodiscard]] RemoteControlStage stage() const noexcept;
+
+        /** @brief 마지막 원격 snapshot 복사본을 반환합니다. */
+        [[nodiscard]] MediaSnapshot snapshot() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 MCC/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        std::uint32_t generation_ = 0U;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief Telephone Bearer Service가 보고하는 통화 상태입니다. */
+    enum class CallState : std::uint8_t
+    {
+        none,
+        incoming,
+        dialing,
+        alerting,
+        active,
+        locally_held,
+        remotely_held,
+        locally_and_remotely_held,
+    };
+
+    /** @brief 마지막으로 관찰한 합성 통화 상태입니다. */
+    struct CallSnapshot
+    {
+        std::uint32_t updates = 0U;
+        std::uint8_t call_index = 0U;
+        std::uint8_t result_code = 0U;
+        CallState state = CallState::none;
+    };
+
+    /** @brief 합성 통화와 Generic Telephone Bearer Service를 제공합니다. */
+    class CallControlServer final
+    {
+      public:
+        CallControlServer() = default;
+
+        ~CallControlServer()
+        {
+            (void)end();
+        }
+
+        CallControlServer(const CallControlServer &) = delete;
+        CallControlServer &operator=(const CallControlServer &) = delete;
+
+        /** @brief GTBS를 등록합니다. */
+        Error begin(const char *provider_name = "NUCODE Call",
+                    const char *uri_schemes = "tel") noexcept;
+
+        /** @brief 원격 caller가 시작한 합성 incoming call을 게시합니다. */
+        Error incoming(const char *to, const char *from, const char *friendly_name) noexcept;
+
+        /** @brief 현재 outgoing call이 원격에서 응답됐음을 게시합니다. */
+        Error remoteAnswer(std::uint8_t call_index) noexcept;
+
+        /** @brief 원격 party의 hold 상태를 게시합니다. */
+        Error remoteHold(std::uint8_t call_index) noexcept;
+
+        /** @brief 원격 party가 hold를 해제했음을 게시합니다. */
+        Error remoteRetrieve(std::uint8_t call_index) noexcept;
+
+        /** @brief 원격 party가 통화를 끝냈음을 게시합니다. */
+        Error remoteTerminate(std::uint8_t call_index) noexcept;
+
+        /** @brief GTBS service를 등록 해제하고 자원을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief GTBS가 등록됐는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 마지막 server 통화 상태를 반환합니다. */
+        [[nodiscard]] CallSnapshot snapshot() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 TBS 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief 원격 Generic Telephone Bearer Service를 검색하고 통화를 제어합니다. */
+    class CallControlClient final
+    {
+      public:
+        CallControlClient() = default;
+
+        ~CallControlClient()
+        {
+            (void)end();
+        }
+
+        CallControlClient(const CallControlClient &) = delete;
+        CallControlClient &operator=(const CallControlClient &) = delete;
+
+        /** @brief 암호화된 연결에서 GTBS/TBS 검색과 상태 구독을 시작합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief 완료 callback 뒤 필요한 상태 재읽기를 진행합니다. */
+        void poll() noexcept;
+
+        /** @brief 원격 call-state characteristic를 다시 읽습니다. */
+        Error refresh() noexcept;
+
+        /** @brief 새 outgoing call을 요청합니다. */
+        Error originate(const char *uri) noexcept;
+
+        /** @brief incoming call 수락을 요청합니다. */
+        Error accept(std::uint8_t call_index) noexcept;
+
+        /** @brief active call hold를 요청합니다. */
+        Error hold(std::uint8_t call_index) noexcept;
+
+        /** @brief held call 복귀를 요청합니다. */
+        Error retrieve(std::uint8_t call_index) noexcept;
+
+        /** @brief 지정 call 종료를 요청합니다. */
+        Error terminate(std::uint8_t call_index) noexcept;
+
+        /** @brief 연결 참조와 비동기 작업을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief GTBS discovery가 완료됐는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 현재 비동기 단계를 반환합니다. */
+        [[nodiscard]] RemoteControlStage stage() const noexcept;
+
+        /** @brief 마지막 client 통화 상태를 반환합니다. */
+        [[nodiscard]] CallSnapshot snapshot() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 TBS client/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        std::uint32_t generation_ = 0U;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
 } // namespace nucode::ble::audio
 
 #endif

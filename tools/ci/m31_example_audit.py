@@ -210,6 +210,80 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_PACS_SUPPORTED_CONTEXT_NOTIFIABLE=y",
                 "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "MediaControlPlayer":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "MediaControlPlayer", "BLESecurity.begin(",
+                "BLEAdvertising.addServiceUuid(", "player.begin(",
+                "player.ready(", "player.end(",
+            )
+            options = (
+                "CONFIG_BT_MPL=y", "CONFIG_BT_MCS=y",
+                "CONFIG_BT_MPL_OBJECTS=y", "CONFIG_BT_OTS=y",
+                "CONFIG_BT_OTS_SECONDARY_SVC=y",
+                "CONFIG_MCTL_LOCAL_PLAYER_REMOTE_CONTROL=y", "CONFIG_FPU=y",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "MediaControlClient":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "MediaControlClient", "MediaCommand::play",
+                "BLEScan.filterServiceUuid(", "BLEConnection.connect(",
+                "controller.begin(", "controller.poll(",
+                "controller.command(", "controller.moveRelative(",
+                "controller.commandOpcode(", "controller.selectTrack(",
+                "controller.refresh(", "MEDIA_NEG_OPCODE", "MEDIA_NEG_STALE_OBJECT",
+                "complete=1 normal_ops=", "rejected=1",
+            )
+            options = (
+                "CONFIG_BT_MCC=y", "CONFIG_BT_MCC_OTS=y",
+                "CONFIG_BT_OTS_CLIENT=y",
+                "CONFIG_BT_MCC_SET_MEDIA_CONTROL_POINT=y",
+                "CONFIG_FPU=y", "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "CallControlServer":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "CallControlServer", "BLESecurity.begin(",
+                "BLEAdvertising.addServiceUuid(", "callServer.begin(",
+                "callServer.incoming(", "callServer.remoteAnswer(",
+                "callServer.remoteHold(", "callServer.remoteRetrieve(",
+                "callServer.remoteTerminate(",
+            )
+            options = (
+                "CONFIG_BT_CCP_CALL_CONTROL_SERVER=y",
+                "CONFIG_BT_TBS=y", "CONFIG_BT_TBS_MAX_CALLS=2",
+                "CONFIG_FPU=y", "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "CallControlClient":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "CallControlClient", "BLEScan.filterServiceUuid(",
+                "BLEConnection.connect(", "callClient.begin(",
+                "callClient.poll(", "callClient.originate(",
+                "callClient.accept(", "callClient.hold(",
+                "callClient.retrieve(", "callClient.terminate(",
+                "callClient.refresh(", "CALL_NEG_STALE_INDEX",
+                "CALL_NEG_INVALID_TRANSITION", "complete=1 normal_ops=", "rejected=1",
+            )
+            options = (
+                "CONFIG_BT_CCP_CALL_CONTROL_CLIENT=y",
+                "CONFIG_BT_TBS_CLIENT_GTBS=y",
+                "CONFIG_BT_TBS_CLIENT_ORIGINATE_CALL=y",
+                "CONFIG_BT_TBS_CLIENT_ACCEPT_CALL=y",
+                "CONFIG_BT_TBS_CLIENT_HOLD_CALL=y",
+                "CONFIG_BT_TBS_CLIENT_RETRIEVE_CALL=y",
+                "CONFIG_BT_TBS_CLIENT_TERMINATE_CALL=y",
+                "CONFIG_FPU=y", "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name == "AudioControlDevice":
             required = (
                 "#include <NUCODE_BLE.h>",

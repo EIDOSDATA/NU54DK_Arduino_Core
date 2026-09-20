@@ -24,6 +24,7 @@ AUDIO_EXAMPLES = (
     "Lc3SyntheticLoopback", "CsipSetMember", "CsipSetCoordinator",
     "ExternalPdmMicrophoneSource", "ExternalI2sSpeakerSink",
     "HearingAccessServer", "HearingAccessClient",
+    "MediaControlPlayer", "MediaControlClient", "CallControlServer", "CallControlClient",
 )
 AUDIO_PROFILES = {
     "ExternalPdmMicrophoneSource": "ble_audio_io",

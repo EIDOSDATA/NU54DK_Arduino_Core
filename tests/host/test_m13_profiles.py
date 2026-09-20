@@ -201,6 +201,10 @@ class M13ProfileContractTests(unittest.TestCase):
                 "ExternalI2sSpeakerSink",
                 "HearingAccessClient",
                 "HearingAccessServer",
+                "MediaControlPlayer",
+                "MediaControlClient",
+                "CallControlServer",
+                "CallControlClient",
             },
         )
         for sketch in examples:

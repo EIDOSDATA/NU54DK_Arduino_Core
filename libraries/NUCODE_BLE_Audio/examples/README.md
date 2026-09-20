@@ -199,6 +199,39 @@ EasyDMA와 IRQ를 `StreamFabric`이 직접 소유하도록 표준 Serial·Wire·
 외부 장치의 전압·clock 방식·증폭기 요구사항은 부품 datasheet가 우선한다. 위 경로는 실제 연결용
 구현과 build 가능한 예제이며, 특정 microphone/codec/speaker의 음질·전기적 호환성 실물 검증을
 대신하지 않는다.
+## `MediaControlPlayer` / `MediaControlClient`
+
+- Player는 고정 Zephyr `BT_MPL` 합성 player와 `BT_MCS`를 등록한다. 실제 음원 없이도 track title,
+  duration/position, 재생 상태, 지원 opcode와 OTS 48-bit track object를 실제 GATT characteristic으로
+  읽고 Media Control Point 명령을 전달할 수 있다.
+- Client는 MCS UUID를 검색하고 encrypted ACL에서 `MediaControlClient::begin()`을 호출한다. `poll()`이
+  player name → track title → duration/position → media state → opcode → CCID → object ID를 순차로
+  읽는다. Serial `p/u/x/n/b/+`는 play/pause/stop/next/previous/move-relative 명령이고 `i`는 현재
+  object ID 선택, `r`은 전체 snapshot 재읽기다. `k`는 지원하지 않는 opcode, `z`는 존재하지 않는
+  object ID를 보내 negative 경로와 자동 복구를 확인한다.
+- `0` 또는 48-bit 범위 밖 object ID, discovery 전 명령, 완료 전 중복 명령은 공개 오류로 거부한다.
+  연결이 끊기면 old handle을 폐기하고 새 encrypted 연결에서 discovery를 다시 수행한다.
+- Player service는 image 수명 자원이다. `end()`는 공개 소유권만 해제하며 같은 부팅에서 service를
+  다시 등록하지 않는다. 실제 media engine 연결은 이 예제의 합성 player 범위 밖이며 필요하지 않다.
+
+## `CallControlServer` / `CallControlClient`
+
+- Server는 `BT_CCP_CALL_CONTROL_SERVER`와 GTBS 한 개를 등록한다. Serial `i`는 `tel:` URI의 합성
+  incoming call을 만들고 `a/h/r/x`는 remote answer/hold/retrieve/terminate 상태를 실제 TBS
+  characteristic과 notification에 반영한다.
+- Client는 GTBS UUID를 검색하고 encrypted ACL에서 discovery와 call-state 구독을 시작한다. Serial
+  `o/a/h/r/x`는 originate/accept/hold/retrieve/terminate control point를 사용하고 `q`는 상태를
+  다시 읽는다. `j`는 stale call index, `v`는 현재 상태와 맞지 않는 retrieve 전이를 요청한다.
+  거부 결과는 `*_NEG_* rejected=1`로, 정상 완료 누계는 `complete=1 normal_ops=N`으로 출력한다.
+- 각 예제는 한 연결, 최대 두 call과 12 ATT TX buffer를 고정한다. 실제 전화망·휴대전화·음향 경로는
+  사용하지 않으며 합성 URI와 call state로 server/client 명령·통지·복구를 재현한다.
+
+MCP/MCS 구현 근거는 고정 Zephyr의 `subsys/bluetooth/audio/mpl.c`, `mcs.c`, `mcc.c`와
+`samples/bluetooth/tmap_central`, `tmap_peripheral`이다. CCP/TBS 근거는
+`samples/bluetooth/ccp_call_control_server`, `ccp_call_control_client`이다. 두 CCP sample의
+upstream `sample.yaml`은 nRF5340/QEMU를 명시하고 nRF54L15를 allowlist에 넣지 않으므로,
+NU54DK Arduino build와 실제 보드 실행은 별도 판정한다. 라이브러리 코드는 MIT이고 고정 SDK
+원본은 Apache-2.0을 따른다.
 
 ## 출처와 라이선스
 
