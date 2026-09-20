@@ -32,7 +32,8 @@ M28~M31 개발 결과는 v0.4.1 설치본에 추가된 기능이나 v0.5.0 공�
 | --- | --- |
 | 기준 main | `8b20157d33f1d216620726d92d88f65c25491b4d` |
 | 작업·재개 브랜치 | `m31-w04-dev` / 원격과 fast-forward 동기 상태 확인 후 계속 |
-| 최근 검증 묶음 | `ea23636426acbd5d0c6b5c9051a74d7e2071ad8d` |
+| 최근 실기 검증 묶음 | `47ad7bdb813c15d077b358bf1d9d4677e716427e` |
+| W04 source 경계 진단 | `994a4b064177c61d8a9c34651c55df0d99196e07` |
 | Target | nRF54L15 CPUAPP / `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | NCS | v3.4.0 / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
 | Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
