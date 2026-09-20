@@ -3,12 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **W01·W02 완료, W03·W04·W05 진행 중 / 완료 2/8 작업 묶음** |
+| 현재 상태 | **W01~W03 완료, W04·W05 진행 중 / 완료 3/8 작업 묶음** |
 | 선행 완료 | M30 W01~W08 8/8, test ID 10/10, 실제 전원 차단 4지점 × 3회 = 12/12 |
 | 병행 Host 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 잔여; M31과 독립된 8개 작업 분모 |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, 고정 lock revision |
 | 기능 검증 장비 | 사용자 확인 NU54DK 3개; 실제 시험 직전 SHA-256 probe identity·serial·role·firmware 재대조 |
-| 최종 갱신일 | 2026-09-20 |
+| 최종 갱신일 | 2026-09-21 |
 
 M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF·connected Channel Sounding
 기능과 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것**이다. 고수준 Arduino facade,
@@ -19,7 +19,7 @@ M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF
 예제 판정 규칙은 [NCS Bluetooth 전체 기능·예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
 기능별 목표는 [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>),
 Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
-계획 개정 자체는 구현 증거가 아니다. W01·W02 완료와 W03 이후 미완료 범위는
+계획 개정 자체는 구현 증거가 아니다. W01~W03 완료와 W04 이후 미완료 범위는
 [착수 계약](<01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md>)과
 [W02 최종 완료 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)에서 구분한다.
 
@@ -64,7 +64,7 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | --- | --- | --- | --- |
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
 | M31-W02 raw ISO 기반 | **완료** | 공개 `RawCis`/`RawBis` 기반 **11개 역할**의 사용자 payload와 정지·재시작을 각 20회 실기 PASS. 잘못된 Broadcast Code의 유효 SDU 유출 0, 같은 image의 정상 Code 복구 100/100, 강제 sync loss 후 새 session 100/100. 독립 Sketchbook 개발 package 485파일 무결성·고정 prerequisite·11/11 예제 발견·빌드와 같은 revision의 두/세 보드 11역할 실기 20회씩 PASS. 공개 예제 감사 82개 중 0건 | [W02 최종 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)·[완료 audit](<04_검증 기록/evidence/m31-w02-installed-examples-b47aaf40/closure-audit.json>)·[오류 후 복구](<04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)·[sync loss 재시작](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)·[이전 고정 시험 audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
-| M31-W03 전체 LE Audio profile | **진행 중** | Arduino LC3 내부 loopback, native BAP unicast 양방향 ISO, 공개 Arduino source→sink의 LC3 1,000 frame 전송·복호화·drop 0, sink 재시작 뒤 새 연결·LC3 100 frame 복구 20/20, 공개 API stop/release·재연결 20/20과 중단 중 잘못된 상태 전이 거부 40/40, 원격 unsupported codec·invalid QoS 각각 20/20 및 idle ASE Release 잘못된 상태 20/20 거부 확인. W03-02 양방향 client↔server 1,000 frame 및 종료·재연결 20/20, 기존 단방향 20/20 회귀 완료. W03-03 암호화 broadcast LC3, stop/restart 20/20, wrong code 거부·복구 20/20, 강제 sync loss 재가입 20/20 완료. W03-04 BASS 3역할의 100/100 제어, invalid/duplicate 거부 각 20/20, peer loss 복구 20/20, 180초 drop 0 완료. W03-05 CAP broadcast 3역할은 102/102 제어, invalid/duplicate 20/20, peer loss 20/20, 185초 drop 0 완료. CAP unicast는 start/stop 23회, cancel 22회, 재연결 48회, LC3 decode 1,800 frame·drop 0, 원격 완료 실패 20/20와 정상 image 복구까지 완료했다. W03-06 CSIP 7/7 scenario·valid report 101건·peer loss 복구 20/20, W03-07 PBP 180초 stream·stop/restart·wrong code·quality·sync loss 5/5, W03-08 control 276 report·invalid range 상태 불변·peer loss 복구 20/20을 완료했다. W03-09~11은 후속 착수 전이다. CAP 역할 RAM 83~87% | profile·role별 예제와 build/runtime 상태, 기능 HIL·negative, 자원 예산·외부 I/O 경계; [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[Arduino sink](<04_검증 기록/182_M31_W03_Arduino_BAP_unicast_LC3_sink_실기.md>)·[Arduino source→sink](<04_검증 기록/183_M31_W03_Arduino_BAP_unicast_LC3_두_역할_실기.md>)·[재시작 복구 20회](<04_검증 기록/184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md>)·[stop/release 20회](<04_검증 기록/185_M31_W03_Arduino_BAP_stop_release_20회.md>)·[잘못된 상태 거부 40회](<04_검증 기록/186_M31_W03_Arduino_BAP_잘못된_상태_거부_40회.md>)·[원격 codec/QoS 거부 각 20회](<04_검증 기록/187_M31_W03_Arduino_BAP_원격_codec_QoS_거부_각_20회.md>)·[원격 idle ASE 상태 거부 20회](<04_검증 기록/188_M31_W03_Arduino_BAP_원격_잘못된_ASE_상태_거부_20회.md>)·[Arduino 양방향 서버](<04_검증 기록/189_M31_W03_Arduino_BAP_양방향_서버_실기.md>)·[Arduino 양방향 client/server와 회귀](<04_검증 기록/190_M31_W03_Arduino_BAP_양방향_클라이언트_및_회귀.md>)·[Arduino broadcast 부분 실기](<04_검증 기록/201_M31_W03_Arduino_BAP_broadcast_비암호화와_재가입.md>)·[Arduino broadcast 완료](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)·[Arduino BASS 3역할 완료](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>)·[Arduino CAP broadcast 3역할](<04_검증 기록/204_M31_W03_Arduino_CAP_3역할과_broadcast_복구.md>)·[Arduino CAP unicast 반복](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)·[Arduino Audio Control 완료](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>)·[Arduino CSIP 완료](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)·[Arduino PBP 완료](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>) |
+| M31-W03 전체 LE Audio profile | **완료** | W03-01~11의 공개 Arduino 역할과 적용 가능한 native 기반을 모두 닫았다. BAP unicast/broadcast·BASS·CAP·CSIP·PBP·VCP/VOCS/AICS/MICP, MCP/MCS·CCP/TBS, TMAP/GMAP, HAP/HAS의 build/runtime·negative·peer-loss 복구와 합성 PCM RF data path를 실제 2~3보드에서 확인했다. Media/Call은 각 100/100·negative 각 20/20·reconnect 20/20·180초 soak, TMAP/GMAP은 각 180초·stop/restart 20/20·drop 0, HAP/HAS는 preset 100/100·두 negative 각 20/20·복구 20/20이다. 외장 audio·상용 peer·qualification·의료/음향 성능은 사용자 후속 비차단 `NOT RUN`이며 M31 전체는 W04~W08 잔여로 `not_completed`다 | [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[BAP broadcast](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)·[BASS](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>)·[CAP](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)·[Audio Control](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>)·[CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)·[PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)·[Media/Call](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>)·[TMAP/GMAP](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>)·[HAP/HAS](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>)·[W03 완료 감사](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)·[exact closure](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
 | M31-W04 Direction Finding | **진행 중** | connectionless AoA CTE TX 20회, Zephyr LL connected AoA CTE 응답 stop/restart 20회 확인; 기본 안테나 raw IQ RX는 실패·미완료. 연결 RX Host는 1안테나에서 `-EINVAL`, 직접 HCI 두 명령은 수락됐으나 IQ 미확인. SDC AoD 미지원; 안테나 전환·각도 계산 확장 경로 별도 구현/판정 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분; [CTE 송신](<04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md>), [연결 응답](<04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md>), [IQ 수신 진단](<04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md>), [Host/controller 경계](<04_검증 기록/178_M31_W04_연결_AoA_수신_Host_Controller_경계.md>) |
 | M31-W05 connected Channel Sounding | **진행 중** | Arduino initiator·reflector의 secure ACL·CS procedure·RAS raw 결과 100개, stop/restart 20회와 disconnect/reconnect 20회 확인; 동일 이름·다른 광고 서비스의 3보드 peer 분리, Ranging UUID 위장/GATT 서비스 부재 거부 20회, 미암호화 RAS Features read의 ATT 15 거부 20회 확인. flash 직후 간헐 중단 원인·같은 ACL 반복 read 중단·wrong-key negative는 잔여 | 비보정 RTT 거리 출력의 수치 정확도를 보증하지 않으며 전체 W05 완료로 승격하지 않음; [착수 기록](<04_검증 기록/171_M31_W05_CS_native_2보드_착수.md>)·[RAS native](<04_검증 기록/173_M31_W05_RAS_native_100회_진단.md>)·[Arduino reflector](<04_검증 기록/175_M31_W05_Arduino_RAS_reflector_100회_진단.md>)·[Arduino initiator](<04_검증 기록/176_M31_W05_Arduino_RAS_initiator_100회와_재시작_진단.md>)·[복구/3보드](<04_검증 기록/177_M31_W05_RAS_재연결과_3보드_peer_분리_진단.md>)·[위장 GATT 거부](<04_검증 기록/179_M31_W05_RAS_UUID_위장_peer_거부_20회.md>)·[미암호화 read 거부](<04_검증 기록/180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md>) |
 | M31-W06 통합·회귀 | **미착수** | M31-A/B/C 선택 조합의 자원 충돌·link 격리, M19~M30 영향 회귀, stale callback·disconnect·재연결 | 통합 runner, RAM/RRAM·stream/connection 예산, 오류·복구 증거와 명시적 동시 조합 |
@@ -88,34 +88,35 @@ LC3 각 방향 1,000 frame과 stop/release·재연결 20/20까지 완료했다.
 source hardware-reset sync loss와 재가입을 각각 20/20 확인했다. `W03-04`는 source,
 Broadcast Assistant, Scan Delegator sink 3역할의 add/modify/remove, receive-state notification,
 invalid/duplicate 거부, peer loss 복구와 180초 연속 stream을 완료했다. W03-05 CAP,
-W03-06 CSIP, W03-07 PBP, W03-08 VCP/VOCS/AICS/MICP도 완료했고 W03-09~11은 착수 전이다.
+W03-06 CSIP, W03-07 PBP, W03-08 VCP/VOCS/AICS/MICP, W03-09 Media/Call Control,
+W03-10 TMAP/GMAP, W03-11 HAP/HAS까지 모두 완료했다.
 각 행은 source·target·Arduino build·runtime·negative
 상태를 독립적으로 가진다. role 이름만 제공하는 빈 예제나 단일 BAP 성공으로 전체 profile을
 완료하지 않는다. 고정 SDK에서 nRF54L15 지원성이 불명확한 profile은 source candidate부터 검증한다.
 
 | 하위 작업 | 구현할 기능과 역할 | Arduino 예제·실제 기능 판정 |
 | --- | --- | --- |
-| W03-01 LC3·stream data | 적용 가능한 LC3 encode/decode, codec capability·configuration, frame/sample rate/SDU/buffer 계약, 합성 PCM과 encoded source/sink | 합성 신호 → encode → ISO → decode의 frame 길이·수신 수·decoder 상태; lossy codec에 원본 PCM byte 동일성을 요구하지 않음 |
+| W03-01 LC3·stream data | **완료.** LC3 encode/decode, codec capability·configuration, frame/sample rate/SDU/buffer 계약, 합성 PCM과 encoded source/sink | 합성 신호 → encode → ISO → decode, source→sink 1,000 frame·drop 0, peer 재시작 복구 20/20; lossy codec에 원본 PCM byte 동일성을 요구하지 않음 |
 | W03-02 BAP unicast·PACS/ASCS | Unicast Client/Server, 양 역할의 Audio Source/Sink, PACS capability/context·ASCS ASE 상태와 제어, 단방향·양방향 구성 | client/server 역할별 예제, discovery → codec/QoS → enable/start → stream → stop/release, 잘못된 ASE 상태/codec/QoS 거부 |
-| W03-03 BAP broadcast | Broadcast Source/Sink, BIG/BIS 선택·sync·metadata, broadcast code와 암호화, 재동기 | source + sink 1개/2개 예제; 실제 payload/sequence, wrong code·sync loss·rejoin |
+| W03-03 BAP broadcast | **완료.** Broadcast Source/Sink, BIG/BIS 선택·sync·metadata, broadcast code와 암호화, 재동기 | [source](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino) / [sink](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastSink/BapBroadcastSink.ino); LC3 stream·wrong code 거부·sync loss 재가입 20/20, [완료 기록](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>) |
 | W03-04 BASS | **완료.** Broadcast Audio Scan Service, Scan Delegator, Broadcast Assistant, receive state notification·source add/modify/remove. 공개 3역할 제어 100/100, invalid/duplicate 각 20/20 거부, Delegator hardware-reset 복구 20/20, 180초 LC3 17,500 frame 증가·drop 0 | [source](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino) / [assistant](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastAssistant/BapBroadcastAssistant.ino) / [delegator-sink](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino); [완료 기록](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>) |
-| W03-05 CAP | Initiator/Acceptor/Commander, unicast/broadcast 절차, 적용 가능한 handover | 역할별 예제, discovery·start/update/stop와 coordinated procedure 완료/실패 callback; 필요한 역할 수와 자원 계약 명시 |
+| W03-05 CAP | **완료.** Initiator/Acceptor/Commander, broadcast와 single-member unicast, cancel·원격 완료 실패·handover | broadcast 102/102, unicast start/stop 23회·cancel 22회·재연결 48회·LC3 1,800 frame·drop 0, 원격 완료 실패 20/20와 정상 image 복구; [CAP unicast 기록](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>) |
 | W03-06 CSIP | **완료.** Coordinated Set Member/Coordinator, set discovery·membership·rank·lock/release. 세 보드 7/7 scenario, valid state/operation report 101건, wrong rank/SIRK/state·security·watchdog fail-closed, member hardware-reset 재가입·lock/release 20/20 | [coordinator](../libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino) / [member](../libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino); [완료 기록](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>) |
 | W03-07 PBP | **완료.** Public Broadcast Profile source/sink, public announcement·metadata·broadcast discovery/selection. 180.003초·17,700 frame 증가·drop 0, stop/restart·wrong code·unsupported quality·sync loss 20/20 | [source](../libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSource/PublicAudioBroadcastSource.ino) / [sink](../libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSink/PublicAudioBroadcastSink.ino); Auracast 명칭 승인·qualification·상용 peer 상호운용은 미주장. [완료 기록](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>) |
 | W03-08 VCP·VOCS·AICS·MICP | **완료.** Volume Controller/Renderer, volume offset, Audio Input Control, Microphone Controller/Device. 정상 control report 273건, invalid range 3종 상태 불변, device hardware-reset 복구 20/20·각 30초 이내 | [controller](../libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino) / [renderer·microphone device](../libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino); 실제 음향·상용 peer·qualification은 별도. [완료 기록](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>) |
-| W03-09 MCP/MCS·CCP/TBS | Media Control Profile/Service, Call Control Profile/Telephone Bearer Service의 client/server 역할 | 합성 player/통화 상태 예제, 명령·상태 통지·object/index·지원 opcode·invalid transition 검증; 실제 미디어/전화 연결 불필요 |
-| W03-10 TMAP·GMAP | Telephony and Media Audio Profile, Gaming Audio Profile의 고정 SDK 역할·feature 조합 | 지원 role별 capability·discovery·stream 조합 예제, 역할/품질 설정 불일치 negative; 실제 전화기·게임 제품 상호운용은 외부 peer 행 |
-| W03-11 HAP/HAS | Hearing Access Profile/Service client/server, preset 조회·선택·변경/알림과 적용 coordinated operation | 합성 preset·보청기 역할 예제, index·동기 preset·권한·연결 끊김 검증; 의료·음향 성능이나 실제 보청기 상호운용 보증 없음 |
+| W03-09 MCP/MCS·CCP/TBS | **완료.** Media Control과 Call Control client/server 공개 예제 | 각 profile 정상 100/100, negative 각 20/20, recovery 40, reconnect 20/20, 180초 soak와 notification 확인; 실제 미디어/전화 연결은 미주장. [완료 기록](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>) |
+| W03-10 TMAP·GMAP | **완료.** TMAP·GMAP unicast/broadcast 역할·feature 조합 | synthetic PCM 각 180초, stop/restart 20/20, unicast reconnect 20/20, 역할·품질 불일치 거부·drop 0; 실제 전화기·게임 제품 상호운용은 외부 peer 행. [완료 기록](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>) |
+| W03-11 HAP/HAS | **완료.** Hearing Access client/server preset 조회·선택·변경/알림과 coordinated operation | preset 100/100, invalid index·동기 요청 거부 각 20/20, bond 초기화 뒤 복구 20/20; 의료·음향 성능이나 실제 보청기 상호운용은 미주장. [완료 기록](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>) |
 
-각 행에는 다음 TODO를 적용한다.
+각 행의 다음 점검 항목을 완료했다.
 
-- [ ] 고정 upstream sample 경로·test ID·Kconfig·nRF54L15 allow/integration/build-only와 license 기록
-- [ ] 필요한 controller·Host feature·RAM/RRAM·link/ASE/BIS/codec 자원을 profile별로 고정
-- [ ] `wrapper`, `direct`, `profile`, `template` 중 제공 경로 선정; 미지원은 근거·후속 소유자 기록
-- [ ] 최소 시작 예제와 역할별 상대 예제, 오류·해제·재시작 예제를 만들고 Arduino 설치 목록에 등록
-- [ ] Serial로 role/command를 제어해 버튼·물리 audio 입력 없는 재현 경로와 예상 출력을 문서화
-- [ ] Host semantic/negative → native/Arduino build → 적용 가능한 2~3보드 기능 HIL 순서로 판정
-- [ ] 외부 mic/codec/speaker, 상용 phone/headset 등 원래 sample의 확장 경로를 실제 구현하고 예제·설정/연결 안내·가능한 자동 검사를 제공; 실물 운용/검증은 사용자 후속 `NOT RUN`, 개발·릴리스 비차단으로 명시
+- [x] 고정 upstream sample 경로·test ID·Kconfig·nRF54L15 allow/integration/build-only와 license 기록
+- [x] 필요한 controller·Host feature·RAM/RRAM·link/ASE/BIS/codec 자원을 profile별로 고정
+- [x] `wrapper`, `direct`, `profile`, `template` 중 제공 경로 선정; 미지원은 근거·후속 소유자 기록
+- [x] 최소 시작 예제와 역할별 상대 예제, 오류·해제·재시작 예제를 만들고 Arduino 설치 목록에 등록
+- [x] Serial로 role/command를 제어해 버튼·물리 audio 입력 없는 재현 경로와 예상 출력을 문서화
+- [x] Host semantic/negative → native/Arduino build → 적용 가능한 2~3보드 기능 HIL 순서로 판정
+- [x] 외부 mic/codec/speaker, 상용 phone/headset 확장 경로의 구현·예제·설정/연결 안내·가능한 자동 검사와 사용자 후속 실물 `NOT RUN` 경계를 기록
 
 ## 4. W01에서 먼저 구현할 산출물과 실행 순서
 
@@ -209,7 +210,7 @@ GPIO·전원 차단을 실행하지 않는다. M30의 4지점 × 3회 정책과 
 
 ## 8. 고정 test family와 W01 수치 확정 TODO
 
-다음 **10개 test family는 기능 식별자**다. 작업 분모 8과 다르며 현재 CAP·PARITY·ISO 3/10 PASS다.
+다음 **10개 test family는 기능 식별자**다. 작업 분모 8과 다르며 현재 CAP·PARITY·ISO·AUDIO 4/10 PASS다.
 각 family 아래 역할·profile별 subcase를 W01 원장에 전수 열거하고 그 분모를 함께 고정한다.
 아래 시간·반복은 기능 검증의 계획 기준이며 제품 성능 보증이 아니다. SDU/codec/PHY·허용 손실과
 구체 자원 상한은 고정 sample 기본값·board budget을 대조해 첫 시험 전에 계약과 JSON에 확정한다.

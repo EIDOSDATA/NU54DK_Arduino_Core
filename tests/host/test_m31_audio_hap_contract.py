@@ -16,6 +16,10 @@ EXAMPLES = ROOT / "libraries/NUCODE_BLE_Audio/examples"
 BUILD_RUNNER = ROOT / "tests/arduino-cli/run_m31_examples.py"
 READINESS = ROOT / "variants/nu54dk/m31-ble-readiness.json"
 HIL_RUNNER = ROOT / "tests/hil/nu54dk/m31_audio_hap_run.py"
+HIL_EVIDENCE_PATH = (
+    "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
+)
+HIL_EVIDENCE = ROOT / HIL_EVIDENCE_PATH
 
 
 class HearingAccessContractTests(unittest.TestCase):
@@ -169,15 +173,33 @@ class HearingAccessContractTests(unittest.TestCase):
         self.assertIn('"HearingAccessServer"', runner)
         self.assertIn('"HearingAccessClient"', runner)
 
-    def test_readiness_keeps_runtime_not_run_until_hil_evidence_exists(self) -> None:
-        """! @brief 구현만으로 W03-11 실기 상태를 PASS로 올리지 않습니다. """
+    def test_readiness_records_exact_hil_pass_evidence(self) -> None:
+        """! @brief W03-11 PASS가 exact HIL 결과와 역할 근거를 가리킵니다. """
         document = json.loads(READINESS.read_text(encoding="utf-8"))
         row = next(item for item in document["audio_groups"] if item["id"] == "W03-11")
-        self.assertEqual(row["status"], "NOT_RUN")
+        self.assertEqual(row["status"], "PASS")
         roles = [item for item in document["example_roles"]
                  if item["id"].startswith("W03-11:")]
         self.assertEqual(len(roles), 2)
-        self.assertTrue(all(item["runtime_status"] == "NOT_RUN" for item in roles))
+        self.assertTrue(all(item["build_status"] == "PASS" for item in roles))
+        self.assertTrue(all(item["runtime_status"] == "PASS" for item in roles))
+        self.assertTrue(all(item["evidence"] == HIL_EVIDENCE_PATH
+                            for item in roles))
+        capability = next(item for item in document["capabilities"]
+                          if item["id"] == "W03-11")
+        self.assertEqual(capability["functional_hil"], "PASS")
+        self.assertEqual(capability["evidence"], HIL_EVIDENCE_PATH)
+
+        evidence = json.loads(HIL_EVIDENCE.read_text(encoding="utf-8"))
+        self.assertEqual(evidence["work_id"], "M31-W03")
+        self.assertEqual(evidence["subcase"], "W03-11")
+        self.assertEqual(evidence["status"], "PASS")
+        self.assertTrue(evidence["source_clean"])
+        result = evidence["result"]
+        self.assertEqual(result["completed_operations"], 100)
+        self.assertEqual(result["invalid_index_rejected"], 20)
+        self.assertEqual(result["synchronized_request_rejected"], 20)
+        self.assertEqual(result["completed_recovery_cycles"], 20)
 
     def test_doxygen_and_control_flow_style(self) -> None:
         """! @brief 추가 public 구현의 Doxygen과 중괄호 규칙을 검사합니다. """

@@ -1,4 +1,4 @@
-# 개발 인계 — M30 완료, M31-W01·W02 완료·W03~W05 진행 중
+# 개발 인계 — M30 완료, M31-W01~W03 완료·W04/W05 진행 중
 
 현재 설치·지원 배포는 **v0.4.1 하나**이고 개발 소스는 **0.4.1-dev**입니다.
 M28과 M29는 각각 W01~W08을 완료했지만 v0.5.0 공개·Bluetooth qualification 또는 모든
@@ -29,8 +29,8 @@ clean package/image로 다시 통과했습니다. 다만 공개 ISO 예제의 �
 100/100 SDU로 확인했습니다. 공개 ISO 예제 감사는 82개 중 0건이며,
 독립 개발 package에서 ISO 11개를 전수 빌드하고 같은 revision의 11역할을
 두·세 보드에서 다시 20회씩 실행했습니다. [199번 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)에
-따라 **W02를 완료**했습니다.
-Audio·DF·CS, HOST-W04도 잔여입니다.
+따라 **W02를 완료**했습니다. 이어서 W03-01~11의 LE Audio profile 공개 예제와
+실제 2~3보드 HIL을 닫아 **W03도 완료**했습니다. DF·CS와 HOST-W04 이후는 잔여입니다.
 2026-09-16에 [전체 기능·예제 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)으로
 M31~M33 계획을 재배치했습니다. 목표는 고정 NCS의 nRF54L15 예제를 Arduino에서 사용하는 것이며,
 보드 기반 기능 검증을 수행하고 정밀 RF·음질·거리/각도 보정은 필수 gate에서 제외합니다.
@@ -46,7 +46,7 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 
 | 항목 | 상태 |
 | --- | --- |
-| Branch | `m31-w03-dev` — W03-06·07·08 완료 checkpoint; W03-09~11 후속 재개 branch |
+| Branch | `m31-w03-dev` — W03-01~11 완료 checkpoint; W04/W05 후속 재개 branch |
 | 공개 배포 | v0.4.1 단독 지원 |
 | 개발 소스 | 0.4.1-dev |
 | M28 | W01~W08 **8/8**, test ID 9/9 PASS |
@@ -68,8 +68,8 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 | M30 계약 | [`17_M30_BLE_Security_Profile_DFU_착수_계약.md`](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) |
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 순서 | [M31 TODO](TODO_M31.md) |
-| M31 / M32 / M33 구현 진도 | **2/8 · 0/12 · 0/8**; M31-W01·W02 완료·W03~W05 진행, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
-| 현재 개발 지점 | M30 완료. [W02 독립 package·11역할 실기 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) 보존. W03-06 CSIP·07 PBP·08 Audio Control 완료, W03-09~11·W04 DF·W05 CS 진행·잔여 |
+| M31 / M32 / M33 구현 진도 | **3/8 · 0/12 · 0/8**; M31-W01~W03 완료·W04/W05 진행·W06~W08 미착수, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
+| 현재 개발 지점 | M30 완료. [W02 독립 package·11역할 실기 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)를 보존하고 [W03 LE Audio profile 완료](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)까지 닫았다. 다음은 W04 DF·W05 CS이며 W06~W08은 미착수다 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
 | Host 구현 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 미착수 |
 
@@ -118,16 +118,16 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
    [W02 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
    [M31 readiness](../variants/nu54dk/m31-ble-readiness.json)을 대조합니다. Board submodule을
    초기화하고 §2의 고정 revision 및 SDK/toolchain lock을 확인합니다.
-3. 현재 기준선은 **M31-W01·W02 완료 2/8**입니다. W01 원장과 W02 공개 ISO 11역할을 재구현하거나
+3. 현재 기준선은 **M31-W01~W03 완료 3/8**입니다. W01 원장, W02 공개 ISO 11역할과 W03 LE Audio를 재구현하거나
    기존 PC의 임시 package·HEX 경로를 결과물로 가정하지 않습니다. 신규 변경은 새 PC에서 clean source,
    설치 예제 build, 보드 역할별 runtime을 같은 revision으로 결합해 검증합니다.
-4. W03-05 CAP은 broadcast와 unicast, cancel·원격 완료 실패·handover 및 정상 image 복구까지
-   완료했습니다. [W03-06 CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)은 7/7
-   scenario·valid report 101건·member loss 복구 20/20, [W03-07 PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)는
-   180초 stream·negative/recovery 5/5로 완료했습니다. W03-08 VCP/VOCS/AICS/MICP도
-   276 control report, invalid range 상태 불변과 peer loss 복구 20/20으로 완료했습니다.
-   다음 우선순위는 W03-09~W03-11입니다. W03-02~W03-08 완료 근거를 보존합니다.
-   W04 raw IQ RX와 W05 CS의
+4. W03-01~11은 [완료 기록](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)과
+   [exact closure](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>)로 닫았습니다.
+   W03-09 Media/Call Control, W03-10 TMAP/GMAP, W03-11 HAP/HAS의 build/runtime·negative·복구
+   증거도 각각 [211번](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>),
+   [212번](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>),
+   [213번](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>)에 고정했습니다.
+   다음 우선순위는 W04 raw IQ RX와 W05 CS이며,
    미해결 오류는 실제 register/log 근거로 조사하며 W06~W08은 아직 미착수입니다.
 5. 실제 보드 시험 직전에 현재 CMSIS-DAP V2 probe SHA-256 identity·COM/serial·role·firmware를
    다시 확인합니다. 이전 PC mapping을 자동 재사용하지 않습니다. 공개 `.ino`는 의미 있는 사용자
@@ -158,7 +158,8 @@ CI/CD 실행 요청·조회·대기는 생략합니다. PR 생성·main 병합·
 2026-09-16 당시에는 M31/M32/M33을 2/8·0/12·0/8로 기록했으나,
 2026-09-17 공개 Arduino 데이터 예제 재점검으로 W02 완료 판정을 철회했다.
 이후 공개 사용자 SDU 11역할, 오류 후 복구와 독립 개발 package 실기를 완료했다.
-현행 분자는 **2/8·0/12·0/8**이다. W03 이후 작업과 HOST-W04가 남아 있다.
+이후 W03-01~11 LE Audio profile까지 완료했다. 현행 분자는 **3/8·0/12·0/8**이다.
+W04/W05와 W06~W08, HOST-W04 이후가 남아 있다.
 
 ## 5. 재검증 규칙
 

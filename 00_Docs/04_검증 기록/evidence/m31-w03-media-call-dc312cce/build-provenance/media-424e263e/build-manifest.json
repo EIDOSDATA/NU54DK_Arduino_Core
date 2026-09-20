@@ -1,0 +1,50 @@
+{
+  "revision": "424e263e7a984c5260d6d93109d5785377f6af80",
+  "source_clean": true,
+  "images": {
+    "MediaControlPlayer": {
+      "hex": "C:\\w\\m31-final-424e-w09\\build\\MediaControlPlayer\\MediaControlPlayer.ino.hex",
+      "sha256": "fe8b237fa4346037a5efef4ffd006b61178984777986f0098c4037234e30a74b",
+      "context": "C:\\w\\m31-final-424e-w09\\build\\MediaControlPlayer\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-424e-w09\\MediaControlPlayer.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-424e-w09\\build\\MediaControlPlayer\\MediaControlPlayer.ino.nu54-build.json",
+      "artifact_manifest_sha256": "6923250d337c4223771393d10e49d4d5ef85e32ce5c2d6503eea352514765f0e",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "424e263e7a984c5260d6d93109d5785377f6af80",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 407804,
+      "ram_bytes": 220236,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    },
+    "MediaControlClient": {
+      "hex": "C:\\w\\m31-final-424e-w09\\build\\MediaControlClient\\MediaControlClient.ino.hex",
+      "sha256": "e12eda220c0b0a20de29db1a8e504f63ae61292f3cfba227a20415b5264092e8",
+      "context": "C:\\w\\m31-final-424e-w09\\build\\MediaControlClient\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-424e-w09\\MediaControlClient.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-424e-w09\\build\\MediaControlClient\\MediaControlClient.ino.nu54-build.json",
+      "artifact_manifest_sha256": "a602487592ac23b6436d0ea7a7154e986b8af27d8ffcb624dbbd71bf912f7e59",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "424e263e7a984c5260d6d93109d5785377f6af80",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 401912,
+      "ram_bytes": 217660,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    }
+  }
+}

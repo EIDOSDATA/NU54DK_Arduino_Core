@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W03",
+  "subcase": "W03-09",
+  "status": "PASS",
+  "source_clean": true,
+  "scope": "arduino_media_call_control_exact_two_board_hil",
+  "source_revisions": {
+    "media": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+    "call": "56612730d0518f0d75ffab2a2a81a74ba589ce97"
+  },
+  "image_core_revisions": {
+    "media": "424e263e7a984c5260d6d93109d5785377f6af80",
+    "call": "8a07ca4f065db73d3581644212ad118884c61c51"
+  },
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "board_mapping": {
+    "media_player_call_server": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "target_vcom": "COM13",
+      "register_snapshot": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "media_client_call_client": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "target_vcom": "COM14",
+      "register_snapshot": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "profiles": {
+    "media": {
+      "status": "PASS",
+      "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+      "image_core_revision": "424e263e7a984c5260d6d93109d5785377f6af80",
+      "build_manifest": "build-provenance/media-424e263e/build-manifest.json",
+      "build_manifest_sha256": "aa546700f9aec4f72b5e8b5d8cb1064db64291816dbaa38e280c5ce0ee81f53f",
+      "result": "results/media-final5.json",
+      "result_sha256": "4c9fc2cad0c4c98929d5f1ca15c58e715249575123cf3fc79cf3b4623b2e727b",
+      "normal_operations": 100,
+      "negative_opcode_rejected": 20,
+      "negative_stale_object_rejected": 20,
+      "recoveries": 40,
+      "reconnects": 20,
+      "state_notifications": 30,
+      "soak_seconds": 180.0
+    },
+    "call": {
+      "status": "PASS",
+      "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+      "image_core_revision": "8a07ca4f065db73d3581644212ad118884c61c51",
+      "build_manifest": "build-provenance/call-8a07ca4f/build-manifest.json",
+      "build_manifest_sha256": "2cabf56f21ad96a9ab3c146450ec305e4b788d86bc30c2b857a5589e6a69f619",
+      "result": "results/call-final2.json",
+      "result_sha256": "524622c0bf22dce38413fef7a7b4ae1050e53cf7482abacad7448e9192eb2271",
+      "normal_operations": 100,
+      "negative_stale_index_rejected": 20,
+      "negative_invalid_transition_rejected": 20,
+      "recoveries": 40,
+      "reconnects": 20,
+      "state_notifications": 160,
+      "soak_seconds": 180.015
+    }
+  },
+  "images": {
+    "media_player": {
+      "sha256": "fe8b237fa4346037a5efef4ffd006b61178984777986f0098c4037234e30a74b",
+      "config_sha256": "85711b5c4b3aa5452dfc27966182c7c1c9b20bf8ee9ff473df07c0b5b9ac2123",
+      "config": "build-provenance/media-424e263e/MediaControlPlayer.config",
+      "build_record": "build-provenance/media-424e263e/MediaControlPlayer.nu54-build.json"
+    },
+    "media_client": {
+      "sha256": "e12eda220c0b0a20de29db1a8e504f63ae61292f3cfba227a20415b5264092e8",
+      "config_sha256": "a39282e48c3e20b0e49b3987312b652dfe544eba8871b6a6d4dd2b5ad88e0696",
+      "config": "build-provenance/media-424e263e/MediaControlClient.config",
+      "build_record": "build-provenance/media-424e263e/MediaControlClient.nu54-build.json"
+    },
+    "call_server": {
+      "sha256": "f4d8c8b90783f3d76eb702a47a743e22e389e0e7f0f7f91baf5c9cc0e5eda68f",
+      "config_sha256": "1ddfeee51455f701256049101b1eafe5f67453078b17a2ba8cc3957000a04689",
+      "config": "build-provenance/call-8a07ca4f/CallControlServer.config",
+      "build_record": "build-provenance/call-8a07ca4f/CallControlServer.nu54-build.json"
+    },
+    "call_client": {
+      "sha256": "817d4eab146199501a1774278dab70d0025979c5b9289f97599096264f7a3ff0",
+      "config_sha256": "1cb03bdea4824fe1027c68732121cf7a947ce5f0a399095396a9d4427b3d6a17",
+      "config": "build-provenance/call-8a07ca4f/CallControlClient.config",
+      "build_record": "build-provenance/call-8a07ca4f/CallControlClient.nu54-build.json"
+    }
+  },
+  "diagnostic_history": [
+    {
+      "path": "diagnostic-history/media-final2-register-fail.json",
+      "status": "FAIL",
+      "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+      "image_core_revision": "b09347ab803f0f5023589685865b92d76a7c63b6",
+      "reason": "CMSIS-DAP V2 DP/AP register query failure",
+      "counted_in_pass": false
+    },
+    {
+      "path": "diagnostic-history/media-final3-stale-accepted-fail.json",
+      "status": "FAIL",
+      "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+      "image_core_revision": "b09347ab803f0f5023589685865b92d76a7c63b6",
+      "reason": "stale track object request accepted",
+      "counted_in_pass": false
+    },
+    {
+      "path": "diagnostic-history/media-final4-runner-boundary-fail.json",
+      "status": "FAIL",
+      "source_revision": "f5a278321eecfb7fd65d69e6fac1a50317a3596c",
+      "image_core_revision": "424e263e7a984c5260d6d93109d5785377f6af80",
+      "reason": "negative opcode runner submission boundary mismatch",
+      "counted_in_pass": false
+    },
+    {
+      "path": "diagnostic-history/call-final-0d7c-recovery-timeout-fail.json",
+      "status": "FAIL",
+      "source_revision": "b09347ab803f0f5023589685865b92d76a7c63b6",
+      "image_core_revision": "0d7cffbaba952c3efc3c8f4afebd86cc478791bf",
+      "reason": "stale index recovery UART timeout",
+      "counted_in_pass": false
+    },
+    {
+      "path": "diagnostic-history/call-final-4186-originate-rejected-fail.json",
+      "status": "FAIL",
+      "source_revision": "894e32b020f180425f0de2971a57ab288957a7dc",
+      "image_core_revision": "4186e2f829f941bc5d934ada9a7f65b6b69424e4",
+      "reason": "normal originate operation rejected",
+      "counted_in_pass": false
+    }
+  ],
+  "files": [
+    {"path":"build-provenance/call-8a07ca4f/build-manifest.json","size":2455,"sha256":"2cabf56f21ad96a9ab3c146450ec305e4b788d86bc30c2b857a5589e6a69f619"},
+    {"path":"build-provenance/call-8a07ca4f/CallControlClient.build.log.gz","size":567116,"sha256":"8ec7b6a1f893351fd9760614657a6568945ff650b30d5db3d912b17ca59add02","uncompressed_size":3952577,"uncompressed_sha256":"895ef772a0db1c9e1172dcc0a6ad4a24d7ab8dfa61b2807a2bd88ec4f69ae6dc"},
+    {"path":"build-provenance/call-8a07ca4f/CallControlClient.config","size":91039,"sha256":"1cb03bdea4824fe1027c68732121cf7a947ce5f0a399095396a9d4427b3d6a17"},
+    {"path":"build-provenance/call-8a07ca4f/CallControlClient.nu54-build.json","size":42707,"sha256":"5a18043cfd188119e020fb7579dd5e25b41dc06766f1419c3eed09fa4a8470af"},
+    {"path":"build-provenance/call-8a07ca4f/CallControlServer.build.log.gz","size":567356,"sha256":"0c666b929979d277839100e825b756936d050ad1e3a7087ffe49ff9da67ca431","uncompressed_size":3954560,"uncompressed_sha256":"00af15371eae5974764599bc42bbdf06ba2df0e3fc97260ddbe51456991ba65b"},
+    {"path":"build-provenance/call-8a07ca4f/CallControlServer.config","size":89985,"sha256":"1ddfeee51455f701256049101b1eafe5f67453078b17a2ba8cc3957000a04689"},
+    {"path":"build-provenance/call-8a07ca4f/CallControlServer.nu54-build.json","size":42688,"sha256":"10f7a863c97903167ce8af2b8658b502c171238b361f639c9ff9ca933c962b28"},
+    {"path":"build-provenance/media-424e263e/build-manifest.json","size":2469,"sha256":"aa546700f9aec4f72b5e8b5d8cb1064db64291816dbaa38e280c5ce0ee81f53f"},
+    {"path":"build-provenance/media-424e263e/MediaControlClient.build.log.gz","size":568213,"sha256":"a20ba490665d5da69a6df439a0ebbfaceb8f66396af8cc05e1f157369e1d8d1a","uncompressed_size":3970929,"uncompressed_sha256":"19511da27594c44a1031cf9f7f0b07d4067ebd940e0ba9f0b5f408641c80a3c2"},
+    {"path":"build-provenance/media-424e263e/MediaControlClient.config","size":91438,"sha256":"a39282e48c3e20b0e49b3987312b652dfe544eba8871b6a6d4dd2b5ad88e0696"},
+    {"path":"build-provenance/media-424e263e/MediaControlClient.nu54-build.json","size":46325,"sha256":"a602487592ac23b6436d0ea7a7154e986b8af27d8ffcb624dbbd71bf912f7e59"},
+    {"path":"build-provenance/media-424e263e/MediaControlPlayer.build.log.gz","size":568553,"sha256":"015c606f7b1f1bdb8660d4e09a6834a8b49ed16f99380985216966a090d4d507","uncompressed_size":3973275,"uncompressed_sha256":"dcb112679e4b492f3bb76b563a9b6cf61aeead178e15a9c70217f4d3a8e05bac"},
+    {"path":"build-provenance/media-424e263e/MediaControlPlayer.config","size":90695,"sha256":"85711b5c4b3aa5452dfc27966182c7c1c9b20bf8ee9ff473df07c0b5b9ac2123"},
+    {"path":"build-provenance/media-424e263e/MediaControlPlayer.nu54-build.json","size":46306,"sha256":"6923250d337c4223771393d10e49d4d5ef85e32ce5c2d6503eea352514765f0e"},
+    {"path":"diagnostic-history/call-final-0d7c-recovery-timeout-fail.json","size":3984,"sha256":"1a1522fc714b693237f0d7a2e3272d0288be4fc990a03622e7da28bc91413f01"},
+    {"path":"diagnostic-history/call-final-0d7c-recovery-timeout-fail.transcript.log","size":22093,"sha256":"26543709c5f22a1684f9b1c88c77c2c1280b419c87cfbbdbdb6f1c8fb9aa827d"},
+    {"path":"diagnostic-history/call-final-4186-originate-rejected-fail.json","size":3982,"sha256":"0f608c9780c20af6d412efb862d037c724f001d36ed17e6a93f11cddb51ff5fc"},
+    {"path":"diagnostic-history/call-final-4186-originate-rejected-fail.transcript.log","size":12337,"sha256":"872f74a35f7e613e464ae6d6655e2d555a29e8febe6b9c42b729835930e7ef30"},
+    {"path":"diagnostic-history/media-final2-register-fail.json","size":3271,"sha256":"452a8254a7bf04ddb4b119dabe0b3fd6d6547c81195c09fedf61774b5c15bc65"},
+    {"path":"diagnostic-history/media-final2-register-fail.transcript.log","size":1,"sha256":"01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"},
+    {"path":"diagnostic-history/media-final3-stale-accepted-fail.json","size":3993,"sha256":"9c8e275a8294e2db4f560dd170a347ee8fdca689266c701d481c56eb7f372e2b"},
+    {"path":"diagnostic-history/media-final3-stale-accepted-fail.transcript.log","size":27019,"sha256":"4912e2c6547abc62dadd79c7899fa06897a6ed9f67f0d412cdd8bf80cad2d2b2"},
+    {"path":"diagnostic-history/media-final4-runner-boundary-fail.json","size":3990,"sha256":"ffe20e5888ab3d21ff27735cf6fe6af7d6e064440dc3981be6cfcd1864afe723"},
+    {"path":"diagnostic-history/media-final4-runner-boundary-fail.transcript.log","size":22310,"sha256":"16e513a4135f354a798ab7f958fdba96e6b43101c59ca1fe664681cd4c4b636d"},
+    {"path":"results/call-final2.json","size":4391,"sha256":"524622c0bf22dce38413fef7a7b4ae1050e53cf7482abacad7448e9192eb2271"},
+    {"path":"results/call-final2.transcript.log","size":47861,"sha256":"fd15f7f193b473c89f9cf97c01d9789ea73cdef4f6eaaed3bf2eea2a325ddb1b"},
+    {"path":"results/media-final5.json","size":4389,"sha256":"4c9fc2cad0c4c98929d5f1ca15c58e715249575123cf3fc79cf3b4623b2e727b"},
+    {"path":"results/media-final5.transcript.log","size":41090,"sha256":"f0ef3465288633830caa938ee4bdd7c50ef8ab1eebb772daaec4a24ebd7fd61f"}
+  ],
+  "limits": {
+    "physical_audio_io": "not-used-synthetic-control-state",
+    "commercial_peer_interoperability": "NOT_RUN_user_follow_up_nonblocking",
+    "bluetooth_qualification": "not-claimed"
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W03",
+  "status": "PASS",
+  "source_clean": true,
+  "closure_source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1",
+    "sdk_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3"
+  },
+  "counts": {
+    "subcases_total": 11,
+    "pass": 11,
+    "fail": 0,
+    "not_run": 0
+  },
+  "subcases": [
+    {
+      "id": "W03-01",
+      "scope": "LC3 and stream data",
+      "status": "PASS",
+      "source_revisions": [
+        "b28631df3cdc4bcf1c4926730e81eea377f7ef47",
+        "1f560fed1bb889b5def834e88c62d18939db2e4e"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
+          "sha256": "dd169ce8a27db1f8c9f8f66536f5ea3fe36f6553a3b11513bcfd9591fa4dec41",
+          "declared_status": "NATIVE_BAP_LC3_1000_SDU_PASS"
+        },
+        {
+          "path": "../m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
+          "sha256": "a89fb8a7d542d1055c46377cd6506c853fccb114a5f48a32d53e643d01837f69",
+          "declared_status": "PASS_BY_INDEXED_RESULTS"
+        },
+        {
+          "path": "../m31-w03-bap-arduino-recovery-1f560fed/pair-exact.json",
+          "sha256": "c32208ecbd181a3657cad67669f5609ba48ce631844680e1e5057d7ae2554c1e",
+          "declared_status": "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS"
+        },
+        {
+          "path": "../m31-w03-bap-arduino-recovery-1f560fed/recovery-exact.json",
+          "sha256": "3c5caa0f65860f3a9291e07dfe426e102c97b278a692acf40fd3fb0d97573fe1",
+          "declared_status": "ARDUINO_BAP_LC3_20_RESTART_RECOVERY_PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-02",
+      "scope": "BAP unicast, PACS and ASCS",
+      "status": "PASS",
+      "source_revisions": [
+        "d29ee27e61acf600b6792282be8d0c3d3bf50a1c",
+        "860a3eedac5625ec34d33a179c20fe284e19af5c",
+        "9084063b42e2a63fcb360e8feb75203ea43e5bcf",
+        "db99597094da758628445f8fb23e780b5e9f3b5a",
+        "df7bf15a58dc0e853efdb8b83b9532c7b767ca0b"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-bap-duplex-pair-d29ee27e/manifest.json",
+          "sha256": "6ab10ddba652e3aafed92fbad82ff221ff8f9dbedd8b6ff8e4c81215253d29a6",
+          "declared_status": "PASS_BY_INDEXED_RESULTS"
+        },
+        {
+          "path": "../m31-w03-bap-duplex-pair-d29ee27e/duplex-pair-exact.json",
+          "sha256": "acd81ab02637e934c747c86bdc5521277c19a963bf2ca4fe77276fc8982754cc",
+          "declared_status": "ARDUINO_BAP_DUPLEX_PAIR_1000_FRAME_PASS"
+        },
+        {
+          "path": "../m31-w03-bap-duplex-pair-d29ee27e/duplex-cycle-exact.json",
+          "sha256": "eb92ed15beeb8140616756bfe32d3ce41912b448dcd09b075ab334bb42e280be",
+          "declared_status": "ARDUINO_BAP_DUPLEX_STOP_RELEASE_PASS"
+        },
+        {
+          "path": "../m31-w03-bap-duplex-pair-d29ee27e/source-sink-exact.json",
+          "sha256": "01d858f931d75d64771a1b7d9fbf3feb277a6a39831bba67893b4c7ae7848eb8",
+          "declared_status": "ARDUINO_BAP_LC3_PAIR_1000_FRAME_PASS"
+        },
+        {
+          "path": "../m31-w03-bap-duplex-pair-d29ee27e/source-cycle-exact.json",
+          "sha256": "55af094bbbed998780aa294819e234cb76bb0990a39868ced4c080747e8dd7a2",
+          "declared_status": "ARDUINO_BAP_LC3_20_STOP_RELEASE_PASS"
+        },
+        {
+          "path": "../m31-w03-bap-stop-release-860a3eed/manifest.json",
+          "sha256": "af30add8c8b5ef66c487169bc9913f3f99e1ded2b4e883e4ace8cd3cd6f7232e",
+          "declared_status": "PASS_BY_INDEXED_RESULTS"
+        },
+        {
+          "path": "../m31-w03-bap-invalid-state-9084063b/manifest.json",
+          "sha256": "4441f087ced8c416dd07b95d9f7def0723caece241e7fb545eade7a99d3d9ba3",
+          "declared_status": "PASS_BY_INDEXED_RESULTS"
+        },
+        {
+          "path": "../m31-w03-bap-remote-negative-db995970/manifest.json",
+          "sha256": "2784e7aa6b84d757a2980e944c1a34df18154c0cacf1932f06cb783abeb3ecbe",
+          "declared_status": "PASS_BY_INDEXED_RESULTS"
+        },
+        {
+          "path": "../m31-w03-bap-state-df7bf15a/manifest.json",
+          "sha256": "925359d132c10451e4bb4b1a25f0976beca2e35449ee24813bc413125bc7426c",
+          "declared_status": "PASS_BY_INDEXED_RESULTS"
+        }
+      ]
+    },
+    {
+      "id": "W03-03",
+      "scope": "BAP broadcast",
+      "status": "PASS",
+      "source_revisions": [
+        "473929f20d6c71503ae460c933d413268ec35222"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-bap-broadcast-473929f2/manifest.json",
+          "sha256": "55beeabae7f5c00bffeec0dea114117ac6569ad4883db7d81d297ebf42e70872",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-04",
+      "scope": "BASS",
+      "status": "PASS",
+      "source_revisions": [
+        "a318c7ba9b5fa84d586c35fadab88c1675163100"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-bass-a318c7ba/manifest.json",
+          "sha256": "0098d4c183ae2f47d018e6ad6da1018528b52282d8ef2fac8d92d815279d64ff",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-05",
+      "scope": "CAP",
+      "status": "PASS",
+      "source_revisions": [
+        "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+        "23afdc432d43f42fc23c29d282caa5d5407d5401",
+        "cc9d66fe4a7b72821ae233e9f6a71b442cac4913"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-cap-bfe69aec/manifest.json",
+          "sha256": "561f5cc3eee6fa323c0dae2e8a8785aaafd13d9f21bd5f7608300e8da4850da5",
+          "declared_status": "PASS"
+        },
+        {
+          "path": "../m31-w03-cap-unicast-23afdc43/manifest.json",
+          "sha256": "1f3f0cc303489123f119d46ff170e4b603831cfeee9d1c00bc9b4f629fe665d3",
+          "declared_status": "PASS"
+        },
+        {
+          "path": "../m31-w03-cap-unicast-remote-failure-cc9d66fe/manifest.json",
+          "sha256": "777b6d1067b94f38459225d4e4bf9aa28ce5b46fe49f28a64ea602b6834dffed",
+          "declared_status": "PASS"
+        },
+        {
+          "path": "../m31-w03-cap-unicast-recovery-cc9d66fe/manifest.json",
+          "sha256": "4b21cba0bbab74d40bf3cf6db36283f95f72ebf114dff232a77094e7e507db73",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-06",
+      "scope": "CSIP",
+      "status": "PASS",
+      "source_revisions": [
+        "fcbbfac5fe348c51be0fb4e30f2b8415099b8758"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-csip-fcbbfac5/manifest.json",
+          "sha256": "2235d019f1b307ed7d139cfed0ad5bc3b36e5ae53afed280e0ff4251337702b1",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-07",
+      "scope": "PBP",
+      "status": "PASS",
+      "source_revisions": [
+        "fcbbfac5fe348c51be0fb4e30f2b8415099b8758"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-pbp-fcbbfac5/manifest.json",
+          "sha256": "63e210b8224567c10177e9411460abdeb5962444ad6d29145e6c67c7dd87b69c",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-08",
+      "scope": "VCP, VOCS, AICS and MICP",
+      "status": "PASS",
+      "source_revisions": [
+        "119c3bd7a2a87b9c0827691ee2092793d531a788"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-control-119c3bd7/manifest.json",
+          "sha256": "542b9696c801ab7abf2c16ba230febcf97d0d406a532066e38a2183937f8c1f8",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-09",
+      "scope": "MCP, MCS, CCP and TBS",
+      "status": "PASS",
+      "source_revisions": [
+        "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+        "56612730d0518f0d75ffab2a2a81a74ba589ce97"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-media-call-dc312cce/manifest.json",
+          "sha256": "6ca4f1c03334e95639d9813fcd8c894082ea0b47eca0cca0b47546e7192321e7",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-10",
+      "scope": "TMAP and GMAP",
+      "status": "PASS",
+      "source_revisions": [
+        "c24cb42e9dfdec6bb3adf9e79660fc00daf855fb",
+        "2f257b163615c2455385e7a01de2c6f5c5abc502",
+        "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+          "sha256": "8dc95b350ad59fc273cccdd6a4bd11f3b38b18cd525ba7d893d419d018b6517e",
+          "declared_status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "W03-11",
+      "scope": "HAP and HAS",
+      "status": "PASS",
+      "source_revisions": [
+        "56612730d0518f0d75ffab2a2a81a74ba589ce97"
+      ],
+      "evidence": [
+        {
+          "path": "../m31-w03-hap-56612730/manifest.json",
+          "sha256": "d005cd510b50f47b2698b63142451679e2221d92fd7113d43fcf83c3cadeb053",
+          "declared_status": "PASS"
+        }
+      ]
+    }
+  ],
+  "nonblocking_follow_up": {
+    "physical_audio_io": {
+      "status": "NOT_RUN",
+      "scope": "external PDM microphone and I2S speaker or codec"
+    },
+    "commercial_peer_interoperability": {
+      "status": "NOT_RUN",
+      "scope": "phone, headset, hearing aid and gaming product peers"
+    }
+  }
+}

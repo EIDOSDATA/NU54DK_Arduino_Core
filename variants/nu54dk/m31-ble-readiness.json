@@ -28,8 +28,8 @@
     {
       "id": "M31-W03",
       "title": "full_le_audio",
-      "status": "in_progress",
-      "exact_evidence": null
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json"
     },
     {
       "id": "M31-W04",
@@ -156,7 +156,7 @@
       "native_build": "PASS",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
+      "functional_hil": "PASS",
       "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
       "nu54dk_build": "PASS",
       "source_revision": "1f560fed1bb889b5def834e88c62d18939db2e4e",
@@ -165,9 +165,9 @@
         "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
         "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json",
         "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json",
-        "functional_hil": null
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json"
       },
-      "support_reason": "Arduino LC3 내부 loopback과 clean 1f560fed Arduino source→sink LC3 CIS frame 1000개 encode/decode·drop 0·PCM energy 양수, sink 재시작 뒤 새 LC3 100 frame 복구 20/20 확인. 양방향 Arduino stream·negative는 미완료. Native 양방향 증거: m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json"
+      "support_reason": "Arduino LC3 내부 loopback과 clean 1f560fed Arduino source→sink LC3 CIS frame 1000개 encode/decode·drop 0·PCM energy 양수, sink 재시작 뒤 새 LC3 100 frame 복구 20/20을 확인했다. Native 양방향 증거: m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json"
     },
     {
       "id": "W03-02",
@@ -240,22 +240,22 @@
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
       "source_status": "verified",
-      "target_applicability": "arduino_cap_broadcast_three_role_confirmed_unicast_handover_pending",
+      "target_applicability": "arduino_cap_broadcast_and_single_member_unicast_cancel_remote_failure_handover_confirmed",
       "native_build": "NOT_RUN",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
-      "functional_hil": "HOLD",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
       "nu54dk_build": "PASS",
-      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+      "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
-        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
       },
-      "support_reason": "clean bfe69aec 공개 Arduino Initiator/Acceptor/Commander 3역할의 CAP broadcast 절차에서 stop·restart·code 102/102, invalid source·duplicate start 거부 각각 20/20, Initiator hardware-reset peer loss 복구 20/20과 185초 LC3 수신 18,000 frame·drop 0을 확인했다. CAP unicast group procedure, cancel·부분 실패와 handover 적용성은 잔여이므로 전체 functional HIL은 HOLD다."
+      "support_reason": "공개 Arduino Initiator/Acceptor/Commander의 CAP broadcast 절차에서 stop·restart·code 102/102, invalid source·duplicate start 거부 각각 20/20, peer loss 복구 20/20과 185초 LC3 수신 18,000 frame·drop 0을 확인했다. single-member unicast start/stop 23회, cancel 22회, 재연결 48회, LC3 decode 1,800 frame·drop 0, 원격 완료 실패 20/20와 정상 image 복구, broadcast↔unicast handover도 확인했다."
     },
     {
       "id": "W03-06",
@@ -327,64 +327,67 @@
       "id": "W03-09",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
-      "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "source_status": "verified",
+      "target_applicability": "arduino_media_and_call_control_two_board_confirmed",
+      "native_build": "PASS",
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
       "stage_evidence": {
-        "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-native-ncs340/audio-native-build-manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json"
+      },
+      "support_reason": "공개 Arduino Media Control과 Call Control client/server 두 역할에서 각 profile 정상 100/100, 두 negative class 각 20/20, 복구 40회, 재연결 20/20, 180초 soak와 상태 notification을 확인했다."
     },
     {
       "id": "W03-10",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
-      "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "source_status": "verified",
+      "target_applicability": "arduino_tmap_gmap_unicast_and_broadcast_confirmed",
+      "native_build": "PASS",
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
       "stage_evidence": {
-        "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-native-ncs340/audio-native-build-manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
+      },
+      "support_reason": "공개 Arduino TMAP·GMAP의 unicast와 broadcast 역할 조합에서 각 180초 synthetic PCM stream, stop/restart 20/20, unicast peer 재연결 20/20, 역할·품질 불일치 거부와 drop 0을 확인했다."
     },
     {
       "id": "W03-11",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
-      "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "source_status": "verified",
+      "target_applicability": "arduino_hap_has_preset_negative_and_recovery_confirmed",
+      "native_build": "PASS",
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
       "stage_evidence": {
-        "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w03-native-ncs340/audio-native-build-manifest.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
+      },
+      "support_reason": "공개 Arduino Hearing Access client/server에서 preset operation 100/100, invalid index와 synchronized request 거부 각 20/20, bond storage 초기화 뒤 재연결·복구 20/20을 30초 제한 안에 확인했다."
     },
     {
       "id": "connectionless_cte_tx",
@@ -502,7 +505,7 @@
         "codec"
       ],
       "minimum_boards": 1,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-02",
@@ -522,7 +525,7 @@
         "sink"
       ],
       "minimum_boards": 2,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-04",
@@ -544,7 +547,7 @@
         "commander"
       ],
       "minimum_boards": 3,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-06",
@@ -586,7 +589,7 @@
         "server"
       ],
       "minimum_boards": 2,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-10",
@@ -597,7 +600,7 @@
         "broadcast"
       ],
       "minimum_boards": 3,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-11",
@@ -607,7 +610,7 @@
         "hearing_server"
       ],
       "minimum_boards": 2,
-      "status": "NOT_RUN"
+      "status": "PASS"
     }
   ],
   "example_roles": [
@@ -725,75 +728,77 @@
     },
     {
       "id": "W03-03:source",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino",
+      "source_revision": "473929f20d6c71503ae460c933d413268ec35222",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json"
     },
     {
       "id": "W03-03:sink",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSink/BapBroadcastSink.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSink/BapBroadcastSink.ino",
+      "source_revision": "473929f20d6c71503ae460c933d413268ec35222",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json"
     },
     {
       "id": "W03-04:source",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino",
+      "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
     },
     {
       "id": "W03-04:scan_delegator",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino",
+      "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
     },
     {
       "id": "W03-04:assistant",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastAssistant/BapBroadcastAssistant.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastAssistant/BapBroadcastAssistant.ino",
+      "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
     },
     {
       "id": "W03-05:initiator",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
-      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CapUnicastInitiator/CapUnicastInitiator.ino"],
+      "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
     },
     {
       "id": "W03-05:acceptor",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
-      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CapUnicastAcceptor/CapUnicastAcceptor.ino"],
+      "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
     },
     {
       "id": "W03-05:commander",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino",
-      "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+      "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
     },
     {
       "id": "W03-06:coordinator",
@@ -869,66 +874,71 @@
     },
     {
       "id": "W03-09:controller",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlClient/MediaControlClient.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlClient/MediaControlClient.ino",
+      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CallControlClient/CallControlClient.ino"],
+      "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json"
     },
     {
       "id": "W03-09:server",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer/MediaControlPlayer.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer/MediaControlPlayer.ino",
+      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CallControlServer/CallControlServer.ino"],
+      "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json"
     },
     {
       "id": "W03-10:central",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaGateway/TelephonyMediaGateway.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaGateway/TelephonyMediaGateway.ino",
+      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/GamingAudioGateway/GamingAudioGateway.ino"],
+      "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
     },
     {
       "id": "W03-10:peripheral",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaTerminal/TelephonyMediaTerminal.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaTerminal/TelephonyMediaTerminal.ino",
+      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/GamingAudioTerminal/GamingAudioTerminal.ino"],
+      "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
     },
     {
       "id": "W03-10:broadcast",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaBroadcaster/TelephonyMediaBroadcaster.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaBroadcaster/TelephonyMediaBroadcaster.ino",
+      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/TelephonyMediaReceiver/TelephonyMediaReceiver.ino", "libraries/NUCODE_BLE_Audio/examples/GamingAudioBroadcaster/GamingAudioBroadcaster.ino", "libraries/NUCODE_BLE_Audio/examples/GamingAudioReceiver/GamingAudioReceiver.ino"],
+      "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
     },
     {
       "id": "W03-11:hearing_client",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/HearingAccessClient/HearingAccessClient.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/HearingAccessClient/HearingAccessClient.ino",
+      "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
     },
     {
       "id": "W03-11:hearing_server",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/HearingAccessServer/HearingAccessServer.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/HearingAccessServer/HearingAccessServer.ino",
+      "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
     },
     {
       "id": "cte_beacon",
@@ -1222,9 +1232,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "1f560fed1bb889b5def834e88c62d18939db2e4e",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-arduino-recovery-1f560fed/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-02",
@@ -1348,10 +1358,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
-          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-cap-bfe69aec/manifest.json",
-          "partial_status": "CAP broadcast PASS; unicast, cancel/partial failure and handover pending"
+          "status": "PASS",
+          "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
         },
         {
           "id": "M31-AUDIO-01:W03-06",
@@ -1475,9 +1484,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-10",
@@ -1507,9 +1516,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-11",
@@ -1538,9 +1547,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
         }
       ]
     },
@@ -1924,9 +1933,9 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 2,
+    "work_completed": 3,
     "test_family_total": 10,
-    "test_family_passed": 3,
+    "test_family_passed": 4,
     "audio_group_total": 11,
     "example_role_total": 43,
     "parity_rows": 703,
