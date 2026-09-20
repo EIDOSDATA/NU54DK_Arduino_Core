@@ -106,7 +106,7 @@ void setup()
 
     SecurityConfig security;
     security.minimum_level = SecurityLevel::encrypted;
-    security.bonding = false;
+    security.bonding = true;
     security.io_capability = SecurityIoCapability::no_input_output;
     BLESecurity.onEvent(onSecurityEvent);
     BLEDevice.onEventInfo(onBleEvent);

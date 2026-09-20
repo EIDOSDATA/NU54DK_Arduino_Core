@@ -25,8 +25,8 @@ from v04_protocol import ProbeLocks  # noqa: E402
 
 ADDRESS_PATTERN = re.compile(r"\b[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5}\b")
 STATE_PATTERN = re.compile(r"active=(\d+) presets=(\d+)")
-CLEANUP_PATTERN = re.compile(r"Hearing bond cleanup result=(0|1) remaining=(\d+)")
-BOND_CLEANUP_TIMEOUT_SECONDS = 20.0
+STORAGE_OFFSET = 0x174000
+STORAGE_SIZE = 0x9000
 
 
 def file_hash(path: Path) -> str:
@@ -66,59 +66,75 @@ def read_available(client, server, record: dict[str, object]) -> list[tuple[str,
     return lines
 
 
-def wait_server_line(server, record: dict[str, object], predicate, timeout: float,
-                     name: str) -> str:
-    """! @brief server UART의 sanitized line을 제한 시간 안에 기다립니다. """
-    deadline = time.monotonic() + timeout
-    while time.monotonic() < deadline:
-        line = read_port(server, "server", record)
-        if (line is not None) and predicate(line):
-            return line
-    raise RuntimeError(f"{name} timeout")
+def reset_bond_storage(board_id: str, timeout_seconds: float) -> dict[str, object]:
+    """! @brief RRAM storage exact 범위를 0xff로 기록하고 readback으로 검증합니다. """
+    program = f"""
+import sys
+from pyocd.core.helpers import ConnectHelper
 
-
-def clear_server_bonds(serial, server_port: str, server_uid: str,
-                       record: dict[str, object]) -> None:
-    """! @brief client flash 전에 server의 저장 bond를 공개 명령으로 비웁니다. """
-    with serial.Serial(server_port, 115200, timeout=0.03) as server:
-        server.reset_input_buffer()
-        hardware_reset(server_uid)
-        time.sleep(1.0)
-        server.reset_input_buffer()
-        hardware_reset(server_uid)
-        wait_server_line(
-            server,
-            record,
-            lambda line: line.startswith("Commands:"),
-            BOND_CLEANUP_TIMEOUT_SECONDS,
-            "fresh server boot banner",
+session = ConnectHelper.session_with_chosen_probe(
+    unique_id=sys.argv[1],
+    target_override="nrf54l",
+    frequency=500000,
+    connect_mode="under-reset",
+    options={{
+        "auto_unlock": False,
+        "cmsis_dap.limit_packets": True,
+        "cmsis_dap.prefer_v1": False,
+        "hide_programming_progress": True,
+    }},
+)
+if session is None:
+    raise RuntimeError("exact probe session을 열 수 없습니다.")
+with session:
+    target = session.target
+    target.reset_and_halt()
+    region = target.memory_map.get_region_for_address(
+        {STORAGE_OFFSET}, target.selected_core.node_name
+    )
+    if region is None or region.flash is None:
+        raise RuntimeError("storage flash algorithm을 찾을 수 없습니다.")
+    try:
+        flash = region.flash
+        flash.init(flash.Operation.PROGRAM)
+        try:
+            for address in range(
+                {STORAGE_OFFSET}, {STORAGE_OFFSET + STORAGE_SIZE}, {0x1000}
+            ):
+                flash.program_page(address, bytes([255]) * {0x1000})
+        finally:
+            flash.cleanup()
+        observed = target.read_memory_block8({STORAGE_OFFSET}, {STORAGE_SIZE})
+    finally:
+        target.reset()
+    if len(observed) != {STORAGE_SIZE} or any(value != 255 for value in observed):
+        raise RuntimeError("storage 0xff readback 검증에 실패했습니다.")
+print("HAP_STORAGE_RESET_PASS={STORAGE_SIZE}")
+"""
+    command = (sys.executable, "-I", "-c", program, board_id)
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
         )
-        time.sleep(0.1)
-        server.write(b"c")
-        server.flush()
-        cleanup_line = wait_server_line(
-            server,
-            record,
-            lambda line: CLEANUP_PATTERN.fullmatch(line) is not None,
-            BOND_CLEANUP_TIMEOUT_SECONDS,
-            "server bond cleanup",
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise RuntimeError(f"bond storage exact reset 실패: {error}") from error
+    output = result.stdout + result.stderr
+    marker = f"HAP_STORAGE_RESET_PASS={STORAGE_SIZE}".encode()
+    if result.returncode != 0 or marker not in output:
+        safe_output = output.decode("utf-8", errors="backslashreplace").replace(
+            board_id, "[redacted]"
         )
-    match = CLEANUP_PATTERN.fullmatch(cleanup_line)
-    if match is None:
-        raise RuntimeError("server bond cleanup line mismatch")
-    accepted = int(match.group(1))
-    remaining = int(match.group(2))
-    record["server_bond_cleanup"] = {
-        "status": "PASS" if accepted == 1 and remaining == 0 else "FAIL",
-        "line": cleanup_line,
-        "accepted": accepted,
-        "remaining": remaining,
-        "timeout_seconds": BOND_CLEANUP_TIMEOUT_SECONDS,
+        raise RuntimeError(f"bond storage exact reset 실패: {safe_output}")
+    return {
+        "status": "PASS",
+        "offset": f"0x{STORAGE_OFFSET:06x}",
+        "size": STORAGE_SIZE,
+        "fill": "0xff",
+        "readback_verified": True,
     }
-    if accepted != 1 or remaining != 0:
-        raise RuntimeError(
-            f"server bond cleanup failed: accepted={accepted} remaining={remaining}"
-        )
 
 
 def wait_for(client, server, record: dict[str, object], predicate, timeout: float, name: str) -> str:
@@ -227,10 +243,11 @@ def main() -> int:
         with ProbeLocks([client_uid, server_uid]):
             record["client_registers"] = collect_register_identity(client_uid, client_volume)
             record["server_registers"] = collect_register_identity(server_uid, server_volume)
+            record["client_storage_reset"] = reset_bond_storage(client_uid, 60.0)
+            record["server_storage_reset"] = reset_bond_storage(server_uid, 60.0)
             record["server_flash"] = flash_image_pyocd(
                 "hearing_server", server_uid, args.server_image, 300.0, hardware_reset=True
             )
-            clear_server_bonds(serial, server_port, server_uid, record)
             record["client_flash"] = flash_image_pyocd(
                 "hearing_client", client_uid, args.client_image, 300.0, hardware_reset=True
             )

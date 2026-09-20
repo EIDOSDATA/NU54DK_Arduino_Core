@@ -149,7 +149,7 @@ void setup()
 
     SecurityConfig security;
     security.minimum_level = SecurityLevel::encrypted;
-    security.bonding = false;
+    security.bonding = true;
     security.io_capability = SecurityIoCapability::no_input_output;
     BLESecurity.onEvent(onSecurityEvent);
     BLEDevice.onEventInfo(onBleEvent);
@@ -158,7 +158,8 @@ void setup()
     {
         Serial.println("Hearing Access client start failed");
     }
-    Serial.println("Commands: 1/5/8=select n=next p=previous r=read x=invalid y=sync s=state");
+    Serial.println(
+        "Commands: 1/5/8=select n=next p=previous r=read x=invalid y=sync c=clear bonds s=state");
 }
 
 /** @brief discovery와 사용자가 선택한 원격 preset 절차를 진행합니다. */
@@ -274,6 +275,15 @@ void loop()
         else if (command == 'y')
         {
             report("Synchronized preset", hearingAccess.setActivePreset(5U, true));
+        }
+        else if (command == 'c')
+        {
+            const bool accepted = BLESecurity.eraseAllBonds();
+            const std::size_t remaining = BLESecurity.bondCount();
+            Serial.print("Hearing bond cleanup result=");
+            Serial.print(accepted ? 1 : 0);
+            Serial.print(" remaining=");
+            Serial.println(remaining);
         }
         else if (command == 's')
         {

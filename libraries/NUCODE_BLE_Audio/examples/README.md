@@ -160,12 +160,13 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 
 ## `HearingAccessClient`
 
-- HAS UUID를 검색해 encrypted link를 만든 뒤 `HearingAccessClient`로 service와 notification을
+- HAS UUID를 검색해 bonded encrypted link를 만든 뒤 `HearingAccessClient`로 service와 notification을
   찾는다. 준비되면 공개 `readPresets()`로 index·availability·writable·name을 Arduino 메모리에
   복사한다.
 - `1`, `5`, `8`은 특정 preset, `n`과 `p`는 다음·이전 preset을 선택한다. `r`은 목록을 다시
   읽고 `s`는 active index와 cache를 출력한다. 지원되지 않는 index는 원격 ATT/HAS 오류로
   거부되며 연결 해제 뒤 새 handle에서 검색을 다시 시작한다.
+- 두 예제의 `c` 명령은 각 장치에 저장된 bond를 공개 Security API로 지우고 남은 수를 출력한다.
 ## TMAP 역할 예제
 
 `TelephonyMediaGateway`와 `TelephonyMediaTerminal`은 각각 CG+UMS와 CT+UMR 역할을

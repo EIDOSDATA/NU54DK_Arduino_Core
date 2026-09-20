@@ -87,6 +87,9 @@ class HearingAccessContractTests(unittest.TestCase):
         self.assertIn("CONFIG_FPU=y", client)
         self.assertIn("CONFIG_LIBLC3=y", client)
         self.assertNotIn("CONFIG_BT_HAS=y", client)
+        for name in ("HearingAccessServer", "HearingAccessClient"):
+            sketch = (EXAMPLES / name / f"{name}.ino").read_text(encoding="utf-8")
+            self.assertIn("security.bonding = true", sketch)
 
     def test_client_exposes_invalid_and_synchronized_negative_commands(self) -> None:
         """! @brief 실제 peer에서 index와 동기 선택 거부를 재현할 수 있습니다. """
@@ -102,6 +105,8 @@ class HearingAccessContractTests(unittest.TestCase):
             "Hearing Access recovery requested",
             "BLEConnection.disconnect(peerConnection)",
             "presetsReadAt = millis() + 500U",
+            "BLESecurity.eraseAllBonds()",
+            "BLESecurity.bondCount()",
         ):
             self.assertIn(token, sketch)
         self.assertNotIn("event.event == SecurityEvent::security_changed", sketch)
@@ -122,30 +127,30 @@ class HearingAccessContractTests(unittest.TestCase):
         ):
             self.assertIn(token, sketch)
 
-    def test_hil_clears_server_bonds_before_client_flash(self) -> None:
-        """! @brief HIL이 server cleanup 증거를 남긴 뒤 client를 flash합니다. """
+    def test_hil_resets_both_exact_storage_ranges_before_flash(self) -> None:
+        """! @brief HIL이 양쪽 settings 범위를 readback 검증한 뒤 image를 flash합니다. """
         runner = HIL_RUNNER.read_text(encoding="utf-8")
+        client_reset = runner.index(
+            'record["client_storage_reset"] = reset_bond_storage(client_uid, 60.0)'
+        )
+        server_reset = runner.index(
+            'record["server_storage_reset"] = reset_bond_storage(server_uid, 60.0)'
+        )
         server_flash = runner.index('record["server_flash"] = flash_image_pyocd(')
-        cleanup = runner.index("clear_server_bonds(serial, server_port, server_uid, record)")
         client_flash = runner.index('record["client_flash"] = flash_image_pyocd(')
-        self.assertLess(server_flash, cleanup)
-        self.assertLess(cleanup, client_flash)
+        self.assertLess(client_reset, server_reset)
+        self.assertLess(server_reset, server_flash)
+        self.assertLess(server_flash, client_flash)
         for token in (
-            'CLEANUP_PATTERN = re.compile(r"Hearing bond cleanup result=(0|1) remaining=(\\d+)")',
-            "BOND_CLEANUP_TIMEOUT_SECONDS = 20.0",
-            'record["server_bond_cleanup"]',
-            '"line": cleanup_line',
-            '"remaining": remaining',
+            "STORAGE_OFFSET = 0x174000",
+            "STORAGE_SIZE = 0x9000",
+            "target.reset_and_halt()",
+            "flash.program_page(address, bytes([255])",
+            "target.read_memory_block8",
+            '"readback_verified": True',
+            'board_id, "[redacted]"',
         ):
             self.assertIn(token, runner)
-        cleanup_block = runner[
-            runner.index("def clear_server_bonds("):runner.index("def wait_for(")
-        ]
-        self.assertEqual(cleanup_block.count("hardware_reset(server_uid)"), 2)
-        first_reset = cleanup_block.index("hardware_reset(server_uid)")
-        clear_after_reset = cleanup_block.index("server.reset_input_buffer()", first_reset)
-        second_reset = cleanup_block.index("hardware_reset(server_uid)", first_reset + 1)
-        self.assertLess(clear_after_reset, second_reset)
 
     def test_hil_records_source_and_image_revisions_separately(self) -> None:
         """! @brief 후속 수정 뒤 실행해도 exact image revision을 별도로 보존합니다. """
