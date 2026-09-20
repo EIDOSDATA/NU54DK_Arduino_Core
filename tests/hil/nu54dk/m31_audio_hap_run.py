@@ -151,6 +151,8 @@ def main() -> int:
             ):
                 client.reset_input_buffer()
                 server.reset_input_buffer()
+                hardware_reset(client_uid)
+                time.sleep(1.0)
                 hardware_reset(server_uid)
                 time.sleep(1.0)
                 client.reset_input_buffer()
