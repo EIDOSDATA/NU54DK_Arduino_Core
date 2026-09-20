@@ -18,7 +18,7 @@ M31-W04 Direction Finding과 M31-W05 Channel Sounding을 병행 중이며 둘 �
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번 완료 기록](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>), [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
 | M31-W04 | controller IQ event 102건, Host gate 폐기 확인; raw sample 0으로 HOLD | [216번 진단](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) |
-| M31-W05 | 동일 ACL read 20/20, flash 직후 raw RAS 100·복구 20/20 PASS; wrong-key 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>), [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
+| M31-W05 | 동일 ACL read 20/20, flash 직후 raw RAS 100·복구 20/20을 두 번 PASS; wrong-key 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>), [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
 | M31-W06~W08 | 미착수 | 통합·회귀·예제·최종 인계 |
 | M32 / M33 | 0/12 · 0/8, 미착수 | [M32 TODO](TODO_M32.md), [M33 TODO](TODO_M33.md) |
 | Host | W01~W03 완료 3/8, W04~W08 보류 | [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -57,9 +57,13 @@ Squash는 개발 커밋을 묶는 이력 정리입니다. 증거에 기록된 �
 3. W04는 controller IQ event가 Host까지 오지만 raw HCI 우회가 Host의 RX enable/type
    상태를 설정하지 않아 callback 전에 폐기되는 경계부터 계속합니다. sample 수신·안테나
    전환·각도는 HOLD/NOT RUN이며 CTE 송신 성공을 RX/각도 PASS로 쓰지 않습니다.
-4. W05는 wrong-key negative와 flash 전환 반복 재현성부터 계속합니다. 동일 ACL 비암호화
-   read는 ATT 5로 20/20 PASS했고, 현재 exact flash 직후 secure RAS 100·stop/restart 20·
-   disconnect/reconnect 20은 PASS했습니다. RTT 출력은 비보정이므로 거리 정확도는 NOT RUN입니다.
+4. W05는 wrong-key negative와 flash 간헐 중단의 원인 분리부터 계속합니다. 동일 ACL
+   비암호화 read는 ATT 5로 20/20 PASS했고, exact flash 직후 secure RAS 100·stop/restart
+   20·disconnect/reconnect 20은 두 번 PASS했습니다. 두 번의 성공으로 과거 중단의 단일
+   원인을 확정하지 않습니다. wrong-key는 양쪽을 정상 bonding한 뒤 reflector bond만 공개
+   `eraseAllBonds()`로 지우고, 재연결 repair pairing을 거부하는 one-sided stale-key 시험이
+   최소 범위입니다. 이는 임의의 서로 다른 LTK 직접 주입 PASS로 확대하지 않습니다.
+   RTT 출력은 비보정이므로 거리 정확도는 NOT RUN입니다.
 5. 실제 보드 시험 직전에 CMSIS-DAP V2 probe의 SHA-256 identity·COM·role·firmware를 다시 결합합니다.
    과거 세 보드 mapping이나 임시 HEX 경로를 새 PC 결과물로 가정하지 않습니다.
 6. 공개 `.ino`는 사용자가 읽고 수정할 수 있는 C++/NUCODE API 흐름을 유지합니다.

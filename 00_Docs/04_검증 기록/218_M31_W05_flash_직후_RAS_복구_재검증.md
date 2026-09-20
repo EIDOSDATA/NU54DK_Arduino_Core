@@ -23,3 +23,15 @@ sector flash와 hardware reset만 사용했으며 unlock, recover, mass erase는
 PASS는 현재 image가 flash 직후에도 성공할 수 있음을 증명하지만, 간헐 실패의 단일
 원인을 확정하거나 반복 재현성 분모를 닫지는 않는다. 이전 실패 원본은 그대로 유지한다.
 W05는 wrong-key negative와 flash 전환 반복 분모가 남아 **진행 중**이다.
+
+## 같은 image의 두 번째 flash 반복
+
+후속 clean source `a4ff62fff9b78493dbbf941a3a189512ab4d2119`에서 두 공개 예제를
+다시 빌드했다. image SHA-256은 첫 실행과 같았고, 현재 mapping과 register를 다시 읽은 뒤
+[두 번째 실행 원본](evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json)을
+별도로 생성했다. 이 실행도 flash·pair reset 직후 raw procedure 100개를 27.570초에
+수신했고 stop/restart 20/20, disconnect/reconnect 20/20과 최종 STOP을 모두 PASS했다.
+
+따라서 동일 image의 독립적인 두 번의 flash 실행은 모두 성공했다. 과거 실패 원본은
+보존하며, 두 번의 성공만으로 간헐 중단의 단일 원인을 확정하지 않는다. wrong-key
+negative와 정밀 거리 정확도는 계속 `NOT RUN`이다.
