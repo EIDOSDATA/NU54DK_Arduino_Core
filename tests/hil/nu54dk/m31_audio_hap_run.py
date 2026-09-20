@@ -140,10 +140,10 @@ def main() -> int:
             record["client_registers"] = collect_register_identity(client_uid, client_volume)
             record["server_registers"] = collect_register_identity(server_uid, server_volume)
             record["server_flash"] = flash_image_pyocd(
-                "hearing_server", server_uid, args.server_image, 120.0, hardware_reset=True
+                "hearing_server", server_uid, args.server_image, 300.0, hardware_reset=True
             )
             record["client_flash"] = flash_image_pyocd(
-                "hearing_client", client_uid, args.client_image, 120.0, hardware_reset=True
+                "hearing_client", client_uid, args.client_image, 300.0, hardware_reset=True
             )
             with (
                 serial.Serial(client_port, 115200, timeout=0.03) as client,
