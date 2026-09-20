@@ -22,6 +22,7 @@ namespace
     BroadcastSource audioSource;
     Lc3Codec codec;
     std::uint32_t lastFrameAt = 0U;
+    std::uint32_t sentFrames = 0U;
     std::uint16_t wavePosition = 0U;
 
     /** @brief 16 kHz의 bounded 삼각파 PCM frame 하나를 생성합니다. */
@@ -74,6 +75,7 @@ void setup()
     require(BLEDevice.begin("NU54-GAME-BROADCASTER"), "device");
     require(profile.begin(GamingAudioRole::broadcast_game_sender, features) == Error::none,
             "roles");
+    Serial.println("GMAP local roles=0x4 service=GMAS features=ugg:0x0,ugt:0x0,bgs:0x0,bgr:0x0");
     require(codec.begin() == Error::none, "codec");
     require(startBroadcast(), "broadcast");
 }
@@ -107,6 +109,15 @@ void loop()
         }
         else if (command == 'q')
         {
+            Lc3Codec incompatibleCodec;
+            nucode::ble::audio::Lc3Config incompatibleQuality;
+            incompatibleQuality.frame_duration_us = 5000U;
+            Serial.println(incompatibleCodec.begin(incompatibleQuality) == Error::invalid_argument
+                               ? "Gaming quality mismatch rejected"
+                               : "Gaming quality mismatch unexpectedly accepted");
+        }
+        else if (command == 'f')
+        {
             GamingAudioRoles invalidProfile;
             GamingAudioFeatures invalidFeatures;
             invalidFeatures.broadcast_sender = 0x80U;
@@ -139,7 +150,16 @@ void loop()
         return;
     }
     const Error sent = audioSource.sendFrame(frame);
-    if ((sent != Error::none) && (sent != Error::busy))
+    if (sent == Error::none)
+    {
+        sentFrames++;
+        if ((sentFrames % 100U) == 0U)
+        {
+            Serial.print("Gaming broadcast sent=");
+            Serial.println(sentFrames);
+        }
+    }
+    else if (sent != Error::busy)
     {
         Serial.print("Gaming broadcast send failed native=");
         Serial.println(audioSource.nativeCode());

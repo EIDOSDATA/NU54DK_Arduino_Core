@@ -27,8 +27,10 @@ namespace
     bool candidateReady = false;
     bool restartScan = false;
     bool audioStarted = false;
+    bool reportedStreaming = false;
     bool reportedFailure = false;
     std::uint32_t lastFrameAt = 0U;
+    std::uint32_t sentFrames = 0U;
     std::uint16_t wavePosition = 0U;
 
     constexpr TelephonyMediaRole localRoles =
@@ -68,6 +70,7 @@ namespace
             candidateReady = false;
             restartScan = true;
             audioStarted = false;
+            reportedStreaming = false;
             reportedFailure = false;
         }
     }
@@ -133,6 +136,7 @@ void setup()
     require(BLEDevice.begin("NU54-TMAP-GATEWAY"), "device");
     require(codec.begin() == Error::none, "codec");
     require(profile.begin(localRoles) == Error::none, "roles");
+    Serial.println("TMAP local roles=0x5 service=TMAS");
     require(BLEScan.clearFilters(), "scan clear");
     require(BLEScan.filterServiceUuid(nucode::ble::BLEUuid(0x1855U)), "TMAS filter");
     require(BLEScan.start(true), "scan");
@@ -194,6 +198,15 @@ void loop()
                                ? "Invalid TMAP peer rejected"
                                : "Invalid TMAP peer unexpectedly accepted");
         }
+        else if (command == 'q')
+        {
+            Lc3Codec incompatibleCodec;
+            nucode::ble::audio::Lc3Config incompatibleQuality;
+            incompatibleQuality.frame_duration_us = 5000U;
+            Serial.println(incompatibleCodec.begin(incompatibleQuality) == Error::invalid_argument
+                               ? "TMAP quality mismatch rejected"
+                               : "TMAP quality mismatch unexpectedly accepted");
+        }
         else if (command == 's')
         {
             const Error result = audioSource.stop();
@@ -213,6 +226,11 @@ void loop()
         delay(1U);
         return;
     }
+    if (!reportedStreaming)
+    {
+        reportedStreaming = true;
+        Serial.println("TMAP unicast streaming");
+    }
 
     const std::uint32_t now = millis();
     if ((now - lastFrameAt) < 10U)
@@ -231,7 +249,16 @@ void loop()
         return;
     }
     const Error sent = audioSource.sendFrame(frame);
-    if ((sent != Error::none) && (sent != Error::busy))
+    if (sent == Error::none)
+    {
+        sentFrames++;
+        if ((sentFrames % 100U) == 0U)
+        {
+            Serial.print("TMAP sent frames=");
+            Serial.println(sentFrames);
+        }
+    }
+    else if (sent != Error::busy)
     {
         Serial.print("TMAP send failed native=");
         Serial.println(audioSource.nativeCode());

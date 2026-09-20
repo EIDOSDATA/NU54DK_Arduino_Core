@@ -21,6 +21,7 @@ namespace
     BroadcastSource audioSource;
     Lc3Codec codec;
     std::uint32_t lastFrameAt = 0U;
+    std::uint32_t sentFrames = 0U;
     std::uint16_t wavePosition = 0U;
 
     /** @brief 16 kHz의 bounded 삼각파 PCM frame 하나를 생성합니다. */
@@ -70,6 +71,7 @@ void setup()
     Serial.begin(115200);
     require(BLEDevice.begin("NU54-TMAP-BROADCASTER"), "device");
     require(profile.begin(TelephonyMediaRole::broadcast_media_sender) == Error::none, "roles");
+    Serial.println("TMAP local roles=0x10 service=TMAS");
     require(codec.begin() == Error::none, "codec");
     require(startBroadcast(), "broadcast");
 }
@@ -100,6 +102,15 @@ void loop()
                                ? "Unsupported TMAP role rejected"
                                : "Unsupported TMAP role unexpectedly accepted");
         }
+        else if (command == 'q')
+        {
+            Lc3Codec incompatibleCodec;
+            nucode::ble::audio::Lc3Config incompatibleQuality;
+            incompatibleQuality.frame_duration_us = 5000U;
+            Serial.println(incompatibleCodec.begin(incompatibleQuality) == Error::invalid_argument
+                               ? "TMAP quality mismatch rejected"
+                               : "TMAP quality mismatch unexpectedly accepted");
+        }
     }
 
     if (!audioSource.streaming())
@@ -124,7 +135,16 @@ void loop()
         return;
     }
     const Error sent = audioSource.sendFrame(frame);
-    if ((sent != Error::none) && (sent != Error::busy))
+    if (sent == Error::none)
+    {
+        sentFrames++;
+        if ((sentFrames % 100U) == 0U)
+        {
+            Serial.print("TMAP broadcast sent=");
+            Serial.println(sentFrames);
+        }
+    }
+    else if (sent != Error::busy)
     {
         Serial.print("TMAP broadcast send failed native=");
         Serial.println(audioSource.nativeCode());

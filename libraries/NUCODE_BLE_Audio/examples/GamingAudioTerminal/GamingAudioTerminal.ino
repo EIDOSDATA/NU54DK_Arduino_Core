@@ -91,6 +91,7 @@ void setup()
     require(BLEDevice.begin("NU54-GAME-TERMINAL"), "device");
     require(profile.begin(GamingAudioRole::unicast_game_terminal, features) == Error::none,
             "roles");
+    Serial.println("GMAP local roles=0x2 service=GMAS features=ugg:0x0,ugt:0x4,bgs:0x0,bgr:0x0");
     require(audioSink.begin() == Error::none, "unicast server");
     require(codec.begin() == Error::none, "codec");
     require(startAdvertising(), "advertising");
@@ -128,6 +129,15 @@ void loop()
                                : "Unsupported GMAP role unexpectedly accepted");
         }
         else if (command == 'q')
+        {
+            Lc3Codec incompatibleCodec;
+            nucode::ble::audio::Lc3Config incompatibleQuality;
+            incompatibleQuality.frame_duration_us = 5000U;
+            Serial.println(incompatibleCodec.begin(incompatibleQuality) == Error::invalid_argument
+                               ? "Gaming quality mismatch rejected"
+                               : "Gaming quality mismatch unexpectedly accepted");
+        }
+        else if (command == 'f')
         {
             GamingAudioRoles invalidProfile;
             GamingAudioFeatures invalidFeatures;

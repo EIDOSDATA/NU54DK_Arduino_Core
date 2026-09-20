@@ -89,6 +89,7 @@ void setup()
     require(BLESecurity.begin(security), "security");
     require(BLEDevice.begin("NU54-TMAP-TERMINAL"), "device");
     require(profile.begin(localRoles) == Error::none, "roles");
+    Serial.println("TMAP local roles=0xA service=TMAS");
     require(audioSink.begin() == Error::none, "unicast server");
     require(codec.begin() == Error::none, "codec");
     require(startAdvertising(), "advertising");
@@ -123,6 +124,15 @@ void loop()
                                    Error::unsupported
                                ? "Unsupported TMAP role rejected"
                                : "Unsupported TMAP role unexpectedly accepted");
+        }
+        else if (command == 'q')
+        {
+            Lc3Codec incompatibleCodec;
+            nucode::ble::audio::Lc3Config incompatibleQuality;
+            incompatibleQuality.frame_duration_us = 5000U;
+            Serial.println(incompatibleCodec.begin(incompatibleQuality) == Error::invalid_argument
+                               ? "TMAP quality mismatch rejected"
+                               : "TMAP quality mismatch unexpectedly accepted");
         }
         else if (command == 's')
         {

@@ -29,8 +29,10 @@ namespace
     bool candidateReady = false;
     bool restartScan = false;
     bool audioStarted = false;
+    bool reportedStreaming = false;
     bool reportedFailure = false;
     std::uint32_t lastFrameAt = 0U;
+    std::uint32_t sentFrames = 0U;
     std::uint16_t wavePosition = 0U;
 
     /** @brief GMAS 광고 하나를 선택합니다. */
@@ -65,6 +67,7 @@ namespace
             candidateReady = false;
             restartScan = true;
             audioStarted = false;
+            reportedStreaming = false;
             reportedFailure = false;
         }
     }
@@ -131,6 +134,7 @@ void setup()
     require(BLEDevice.begin("NU54-GAME-GATEWAY"), "device");
     require(codec.begin() == Error::none, "codec");
     require(profile.begin(GamingAudioRole::unicast_game_gateway, features) == Error::none, "roles");
+    Serial.println("GMAP local roles=0x1 service=GMAS features=ugg:0x0,ugt:0x0,bgs:0x0,bgr:0x0");
     require(BLEScan.clearFilters(), "scan clear");
     require(BLEScan.filterServiceUuid(nucode::ble::BLEUuid(0x1858U)), "GMAS filter");
     require(BLEScan.start(true), "scan");
@@ -164,6 +168,14 @@ void loop()
         {
             Serial.print("GMAP peer roles=0x");
             Serial.println(information.roles, HEX);
+            Serial.print("GMAP peer features=ugg:0x");
+            Serial.print(information.features.unicast_gateway, HEX);
+            Serial.print(",ugt:0x");
+            Serial.print(information.features.unicast_terminal, HEX);
+            Serial.print(",bgs:0x");
+            Serial.print(information.features.broadcast_sender, HEX);
+            Serial.print(",bgr:0x");
+            Serial.println(information.features.broadcast_receiver, HEX);
         }
         if ((readResult != Error::none) ||
             !profile.peerSupports(GamingAudioRole::unicast_game_terminal))
@@ -200,6 +212,15 @@ void loop()
         }
         else if (command == 'q')
         {
+            Lc3Codec incompatibleCodec;
+            nucode::ble::audio::Lc3Config incompatibleQuality;
+            incompatibleQuality.frame_duration_us = 5000U;
+            Serial.println(incompatibleCodec.begin(incompatibleQuality) == Error::invalid_argument
+                               ? "Gaming quality mismatch rejected"
+                               : "Gaming quality mismatch unexpectedly accepted");
+        }
+        else if (command == 'f')
+        {
             GamingAudioRoles invalidProfile;
             GamingAudioFeatures invalidFeatures;
             invalidFeatures.unicast_gateway = 0x80U;
@@ -227,6 +248,11 @@ void loop()
         delay(1U);
         return;
     }
+    if (!reportedStreaming)
+    {
+        reportedStreaming = true;
+        Serial.println("Gaming unicast streaming");
+    }
 
     const std::uint32_t now = millis();
     if ((now - lastFrameAt) < 10U)
@@ -245,7 +271,16 @@ void loop()
         return;
     }
     const Error sent = audioSource.sendFrame(frame);
-    if ((sent != Error::none) && (sent != Error::busy))
+    if (sent == Error::none)
+    {
+        sentFrames++;
+        if ((sentFrames % 100U) == 0U)
+        {
+            Serial.print("Gaming sent frames=");
+            Serial.println(sentFrames);
+        }
+    }
+    else if (sent != Error::busy)
     {
         Serial.print("Gaming send failed native=");
         Serial.println(audioSource.nativeCode());
