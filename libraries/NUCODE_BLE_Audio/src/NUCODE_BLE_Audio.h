@@ -2094,7 +2094,12 @@ namespace nucode::ble::audio
         /** @brief 현재 track 위치를 1/100초 단위로 설정합니다. */
         Error setTrackPosition(std::int32_t hundredths) noexcept;
 
-        /** @brief OTS의 48-bit track object를 현재 track으로 선택합니다. */
+        /**
+         * @brief 가장 최근 원격 읽기·통지로 관찰한 48-bit track object를 선택합니다.
+         *
+         * @note 고정 SDK가 존재하지 않는 object도 성공으로 응답하므로 미관찰 ID는 전송 전에
+         *       거부합니다.
+         */
         Error selectTrack(std::uint64_t object_id) noexcept;
 
         /** @brief 연결 참조와 비동기 작업을 반환합니다. */

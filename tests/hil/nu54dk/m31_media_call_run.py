@@ -188,18 +188,25 @@ def _client_operation(session: SerialSession, command: bytes, label: str,
 
 
 def _negative_operation(session: SerialSession, command: bytes, label: str,
-                        state_prefix: str) -> None:
+                        state_prefix: str, expect_submission: bool = True) -> None:
     """! @brief remote reject와 공개 refresh recovery, 새 snapshot을 한 묶음으로 확인합니다. """
+    submitted = False
     rejected = False
     recovered = False
     state_updates = 0
     required_updates = 1 if label.startswith("MEDIA_") else 2
 
     def result(role: str, line: str) -> bool:
-        nonlocal rejected, recovered, state_updates
+        nonlocal submitted, rejected, recovered, state_updates
         if role != "client":
             return False
-        if line.startswith(f"{label} rejected=1 result="):
+        if line == f"{label} submitted=1":
+            if not expect_submission:
+                raise MediaCallExecutionFailure(f"{label} reached remote stack")
+            submitted = True
+        elif line.startswith(f"{label} rejected=1 result="):
+            if expect_submission != submitted:
+                raise MediaCallExecutionFailure(f"{label} submission boundary mismatch")
             rejected = True
         elif line == ("MEDIA_RECOVERY result=0 native=0" if label.startswith("MEDIA_") else
                       "CALL_RECOVERY result=0 native=0"):
@@ -246,7 +253,9 @@ def _media_campaign(session: SerialSession, soak_seconds: float) -> float:
     for _attempt in range(20):
         _negative_operation(session, b"k", "MEDIA_NEG_OPCODE", "player=")
     for _attempt in range(20):
-        _negative_operation(session, b"z", "MEDIA_NEG_STALE_OBJECT", "player=")
+        _negative_operation(
+            session, b"z", "MEDIA_NEG_STALE_OBJECT", "player=", expect_submission=False
+        )
     return elapsed
 
 

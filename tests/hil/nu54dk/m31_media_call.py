@@ -126,7 +126,6 @@ def parse_transcript(profile: str, transcript: bytes, soak_seconds: float) -> Me
         )
         if submitted != normal + Counter({
             "MEDIA_NEG_OPCODE": 20,
-            "MEDIA_NEG_STALE_OBJECT": 20,
         }):
             raise MediaCallFailure("media remote 제출·완료 분모 불일치")
         recovery_marker = "client: MEDIA_RECOVERY result=0 native=0"

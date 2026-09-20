@@ -41,6 +41,7 @@ class MediaCallControlContractTests(unittest.TestCase):
             "internal::referenceConnection(connection)", "BT_CONN_CB_DEFINE",
         ):
             self.assertIn(token, text)
+        self.assertIn("object_id < 0x000000000100ULL", text)
         self.assertIn("object_id > 0xffffffffffffULL", text)
 
     def test_call_backend_uses_ccp_server_and_tbs_client(self) -> None:
@@ -158,7 +159,21 @@ class MediaCallControlContractTests(unittest.TestCase):
         """! @brief stale/invalid object와 call index가 stack 호출 전에 거부됩니다. """
         media = MEDIA.read_text(encoding="utf-8")
         call = CALL.read_text(encoding="utf-8")
-        self.assertIn("(object_id == 0U)", media)
+        select = media[
+            media.index("Error MediaControlClient::selectTrack"):
+            media.index("Error MediaControlClient::end()")
+        ]
+        callback = media[
+            media.index("void mediaSetTrack"):
+            media.index("void mediaCommandSent")
+        ]
+        self.assertIn("observed_track_id_valid", select)
+        self.assertIn("mediaClient.observed_track_id != object_id", select)
+        self.assertLess(
+            select.index("mediaClient.observed_track_id != object_id"),
+            select.index("bt_mcc_set_current_track_obj_id"),
+        )
+        self.assertNotIn("snapshot.current_track_id", callback)
         self.assertIn("if (call_index == 0U)", call)
         self.assertIn("maximumUriLength", call)
         self.assertIn("RemoteControlStage::operating", media)

@@ -229,6 +229,7 @@ namespace nucode::ble::audio
             BLEConnectionHandle handle = {};
             struct bt_conn *connection = nullptr;
             MediaSnapshot snapshot = {};
+            std::uint64_t observed_track_id = 0U;
             std::uint32_t generation = 0U;
             RemoteControlStage stage = RemoteControlStage::idle;
             MediaReadStep read_step = MediaReadStep::none;
@@ -236,6 +237,7 @@ namespace nucode::ble::audio
             bool callbacks_registered = false;
             bool pending = false;
             bool refresh_pending = false;
+            bool observed_track_id_valid = false;
         };
 
         MediaClientBackend mediaClient;
@@ -397,6 +399,8 @@ namespace nucode::ble::audio
             if (currentMediaConnection(connection) && (error == 0))
             {
                 mediaClient.snapshot.current_track_id = identifier;
+                mediaClient.observed_track_id = identifier;
+                mediaClient.observed_track_id_valid = true;
             }
             k_mutex_unlock(&mediaClientMutex);
             finishMediaRead(connection, error, MediaReadStep::complete);
@@ -435,13 +439,7 @@ namespace nucode::ble::audio
 #if defined(CONFIG_BT_OTS_CLIENT)
         void mediaSetTrack(struct bt_conn *connection, int error, std::uint64_t identifier) noexcept
         {
-            k_mutex_lock(&mediaClientMutex, K_FOREVER);
-            if (currentMediaConnection(connection) && (error == 0))
-            {
-                mediaClient.snapshot.current_track_id = identifier;
-                ++mediaClient.snapshot.updates;
-            }
-            k_mutex_unlock(&mediaClientMutex);
+            static_cast<void>(identifier);
             finishMediaOperation(connection, error);
         }
 #endif
@@ -511,6 +509,8 @@ namespace nucode::ble::audio
                 mediaClient.connection = nullptr;
                 mediaClient.owner = nullptr;
                 mediaClient.pending = false;
+                mediaClient.observed_track_id = 0U;
+                mediaClient.observed_track_id_valid = false;
                 mediaClient.stage = RemoteControlStage::idle;
                 ++mediaClient.generation;
             }
@@ -565,6 +565,8 @@ namespace nucode::ble::audio
         mediaClient.handle = connection;
         mediaClient.connection = native;
         mediaClient.snapshot = {};
+        mediaClient.observed_track_id = 0U;
+        mediaClient.observed_track_id_valid = false;
         mediaClient.error = 0;
         mediaClient.pending = true;
         mediaClient.refresh_pending = false;
@@ -815,7 +817,7 @@ namespace nucode::ble::audio
         static_cast<void>(object_id);
         return record(Error::unsupported, -ENOTSUP);
 #else
-        if ((object_id == 0U) || (object_id > 0xffffffffffffULL))
+        if ((object_id < 0x000000000100ULL) || (object_id > 0xffffffffffffULL))
         {
             return record(Error::invalid_argument, -EINVAL);
         }
@@ -826,6 +828,12 @@ namespace nucode::ble::audio
             const Error failure = mediaClient.pending ? Error::busy : Error::not_ready;
             k_mutex_unlock(&mediaClientMutex);
             return record(failure, failure == Error::busy ? -EBUSY : 0);
+        }
+        if (!mediaClient.observed_track_id_valid || mediaClient.refresh_pending ||
+            (mediaClient.observed_track_id != object_id))
+        {
+            k_mutex_unlock(&mediaClientMutex);
+            return record(Error::invalid_argument, -EINVAL);
         }
         struct bt_conn *connection = mediaClient.connection;
         mediaClient.pending = true;
@@ -854,6 +862,8 @@ namespace nucode::ble::audio
         mediaClient.owner = nullptr;
         mediaClient.pending = false;
         mediaClient.refresh_pending = false;
+        mediaClient.observed_track_id = 0U;
+        mediaClient.observed_track_id_valid = false;
         mediaClient.stage = RemoteControlStage::idle;
         ++mediaClient.generation;
         started_ = false;
