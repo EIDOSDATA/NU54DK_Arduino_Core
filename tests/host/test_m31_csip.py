@@ -124,7 +124,7 @@ class CsipContractTests(unittest.TestCase):
             "startMemberAdvertising()",
             "setMember.generateRsi(rsi)",
             "setMember.authorizeSirkRead(information.connection, false)",
-            "requestConnectionRecovery(information.connection)",
+            "requestConnectionRecovery(record.connection)",
             "SecurityEvent::pairing_failed",
             "Set member security failed",
             "Set member security timeout",
@@ -149,6 +149,16 @@ class CsipContractTests(unittest.TestCase):
             "recoveryRetryIntervalMs",
         ):
             self.assertIn(token, coordinator)
+
+    def test_only_coordinator_initiates_fresh_pairing_security(self) -> None:
+        """! @brief fresh pairing에서 양쪽의 동시 보안 요청을 금지합니다. """
+
+        member = (EXAMPLES / "CsipSetMember/CsipSetMember.ino").read_text(encoding="utf-8")
+        coordinator = (EXAMPLES / "CsipSetCoordinator/CsipSetCoordinator.ino").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("BLESecurity.requestSecurity(", member)
+        self.assertIn("BLESecurity.requestSecurity(information.connection)", coordinator)
 
     @unittest.skipUnless(Path("C:/ncs/v3.4.0").is_dir(), "locked SDK unavailable")
     def test_locked_sdk_callback_identity_constraints_are_explicit(self) -> None:

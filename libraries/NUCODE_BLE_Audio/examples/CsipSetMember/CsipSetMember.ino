@@ -86,7 +86,7 @@ namespace
         }
     }
 
-    /** @brief 새 central link에 bonded encryption을 요청합니다. */
+    /** @brief coordinator가 시작하는 bonded encryption을 bounded wait합니다. */
     void onBleEvent(const nucode::ble::BLEEventInfo &information, void *context)
     {
         static_cast<void>(context);
@@ -97,15 +97,7 @@ namespace
             recoveryPending = false;
             disconnectPending = false;
             advertisingRestartPending = false;
-            if (!BLESecurity.requestSecurity(information.connection))
-            {
-                Serial.println("Set member security request failed");
-                requestConnectionRecovery(information.connection);
-            }
-            else
-            {
-                securityDeadlineMs = millis() + securityTimeoutMs;
-            }
+            securityDeadlineMs = millis() + securityTimeoutMs;
         }
         else if (information.event == nucode::ble::BLEEvent::disconnected)
         {
