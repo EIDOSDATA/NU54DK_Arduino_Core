@@ -95,12 +95,15 @@ class HearingAccessContractTests(unittest.TestCase):
         for token in (
             "hearingAccess.setActivePreset(0U)",
             "hearingAccess.setActivePreset(5U, true)",
+            "event.event == SecurityEvent::security_changed",
             "Hearing Access operation rejected",
             "Hearing Access recovery requested",
             "BLEConnection.disconnect(peerConnection)",
             "presetsReadAt = millis() + 500U",
         ):
             self.assertIn(token, sketch)
+        self.assertNotIn("event.event == SecurityEvent::paired", sketch)
+        self.assertNotIn("event.event == SecurityEvent::bond_verified", sketch)
 
     def test_exact_build_runner_includes_both_examples(self) -> None:
         """! @brief 공개 Hearing Access 두 역할을 exact build 목록에 고정합니다. """

@@ -68,9 +68,7 @@ namespace
         {
             static_cast<void>(BLESecurity.acceptPairing(event.connection, true));
         }
-        else if (((event.event == SecurityEvent::paired) ||
-                  (event.event == SecurityEvent::bond_verified) ||
-                  (event.event == SecurityEvent::security_changed)) &&
+        else if ((event.event == SecurityEvent::security_changed) &&
                  (event.connection == peerConnection) && !profileStarted)
         {
             const Error result = hearingAccess.begin(peerConnection);

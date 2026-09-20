@@ -54,10 +54,6 @@ namespace
         if (event.event == BLEEvent::connected)
         {
             Serial.println("Hearing client connected");
-            if (!BLESecurity.requestSecurity(event.connection))
-            {
-                Serial.println("Hearing Access security request failed");
-            }
         }
         else if (event.event == BLEEvent::disconnected)
         {
