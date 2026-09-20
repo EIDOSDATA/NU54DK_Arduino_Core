@@ -26,6 +26,7 @@ namespace
     bool readInFlight = false;
     bool done = false;
     unsigned int rejected = 0U;
+    unsigned int connections = 0U;
 
     /** @brief 광고된 Ranging UUID를 기준으로 peer를 고릅니다. */
     void onScanResult(const BLEScanResult &result, void *context)
@@ -48,13 +49,17 @@ namespace
         {
             peer = information.connection;
             discoveryPending = true;
-            Serial.println("CS insecure peer connected");
+            ++connections;
+            Serial.print("CS insecure peer connected count=");
+            Serial.println(connections);
         }
         else if ((information.event == BLEEvent::disconnected) &&
                  (information.connection == peer))
         {
             done = true;
-            Serial.println("CS insecure peer disconnected");
+            Serial.print("CS insecure peer disconnected reason=");
+            Serial.println(information.reason);
+            peer = BLEConnectionHandle();
         }
     }
 
@@ -96,7 +101,9 @@ namespace
             }
             ++rejected;
             Serial.print("CS insecure read rejected att=15 count=");
-            Serial.println(rejected);
+            Serial.print(rejected);
+            Serial.print(" ms=");
+            Serial.println(millis());
             done = true;
         }
     }
@@ -116,10 +123,41 @@ void setup()
     }
 }
 
-/** @brief 공개 GATT API로 Ranging Features를 한 번 읽어 봅니다. */
+/** @brief 공개 GATT API로 Ranging Features 읽기와 반복·중단 명령을 처리합니다. */
 void loop()
 {
     BLEDevice.poll();
+    if (Serial.available() > 0)
+    {
+        const int command = Serial.read();
+        if ((command == 'r') && done && !readInFlight && !readPending &&
+            peer.valid() && BLEConnection.connected(peer) &&
+            !BLEClient.busy(peer) && (rejected < 20U))
+        {
+            done = false;
+            readPending = true;
+            Serial.println("CS insecure retry requested");
+        }
+        else if (command == 'r')
+        {
+            Serial.println("CS insecure retry rejected");
+        }
+        else if ((command == 's') && peer.valid())
+        {
+            if (BLEConnection.disconnect(peer))
+            {
+                Serial.println("CS insecure stop requested");
+            }
+            else
+            {
+                Serial.println("CS insecure stop failed");
+            }
+        }
+        else if (command == 's')
+        {
+            Serial.println("CS insecure stop complete");
+        }
+    }
     if (done)
     {
         delay(1);
