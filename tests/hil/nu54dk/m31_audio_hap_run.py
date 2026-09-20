@@ -153,7 +153,17 @@ def main() -> int:
                 server.reset_input_buffer()
                 hardware_reset(server_uid)
                 time.sleep(1.0)
+                client.reset_input_buffer()
+                server.reset_input_buffer()
                 hardware_reset(client_uid)
+                wait_for(
+                    client,
+                    server,
+                    record,
+                    lambda role, line: role == "client" and line.startswith("Commands:"),
+                    20.0,
+                    "fresh client boot banner",
+                )
                 wait_state(client, server, record, 1, 45.0)
 
                 commands = ((b"5", 5), (b"8", 8), (b"1", 1), (b"n", 5), (b"p", 1))
