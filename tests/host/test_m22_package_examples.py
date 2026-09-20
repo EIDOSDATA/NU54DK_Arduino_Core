@@ -190,6 +190,14 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "MediaControlClient",
                 "CallControlServer",
                 "CallControlClient",
+                "TelephonyMediaGateway",
+                "TelephonyMediaTerminal",
+                "TelephonyMediaBroadcaster",
+                "TelephonyMediaReceiver",
+                "GamingAudioGateway",
+                "GamingAudioTerminal",
+                "GamingAudioBroadcaster",
+                "GamingAudioReceiver",
             )
         }
         later_ble_examples |= {

@@ -25,6 +25,10 @@ AUDIO_EXAMPLES = (
     "ExternalPdmMicrophoneSource", "ExternalI2sSpeakerSink",
     "HearingAccessServer", "HearingAccessClient",
     "MediaControlPlayer", "MediaControlClient", "CallControlServer", "CallControlClient",
+    "TelephonyMediaGateway", "TelephonyMediaTerminal",
+    "TelephonyMediaBroadcaster", "TelephonyMediaReceiver",
+    "GamingAudioGateway", "GamingAudioTerminal",
+    "GamingAudioBroadcaster", "GamingAudioReceiver",
 )
 AUDIO_PROFILES = {
     "ExternalPdmMicrophoneSource": "ble_audio_io",

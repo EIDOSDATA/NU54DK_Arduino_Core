@@ -205,6 +205,14 @@ class M13ProfileContractTests(unittest.TestCase):
                 "MediaControlClient",
                 "CallControlServer",
                 "CallControlClient",
+                "TelephonyMediaGateway",
+                "TelephonyMediaTerminal",
+                "TelephonyMediaBroadcaster",
+                "TelephonyMediaReceiver",
+                "GamingAudioGateway",
+                "GamingAudioTerminal",
+                "GamingAudioBroadcaster",
+                "GamingAudioReceiver",
             },
         )
         for sketch in examples:

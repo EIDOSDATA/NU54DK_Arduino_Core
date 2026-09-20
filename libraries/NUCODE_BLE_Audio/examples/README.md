@@ -166,6 +166,44 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 - `1`, `5`, `8`은 특정 preset, `n`과 `p`는 다음·이전 preset을 선택한다. `r`은 목록을 다시
   읽고 `s`는 active index와 cache를 출력한다. 지원되지 않는 index는 원격 ATT/HAS 오류로
   거부되며 연결 해제 뒤 새 handle에서 검색을 다시 시작한다.
+## TMAP 역할 예제
+
+`TelephonyMediaGateway`와 `TelephonyMediaTerminal`은 각각 CG+UMS와 CT+UMR 역할을
+게시한다. Gateway는 TMAS(`0x1855`)를 검색해 encrypted 연결을 만든 뒤 실제 TMAP Role
+characteristic을 읽고 CT+UMR bit가 모두 있는지 검사한다. 역할이 맞으면 `UnicastClient`가
+PACS/ASCS 절차를 시작하고 합성 PCM을 LC3로 encode해 보낸다. Terminal의 `UnicastServer`는
+frame을 읽어 PCM으로 decode한다. `s`는 stream 또는 server를 중단하고 `r`은 새 session을
+시작하며 `x`는 유효하지 않은 handle 또는 image에 없는 역할이 거부되는지 확인한다.
+
+`TelephonyMediaBroadcaster`와 `TelephonyMediaReceiver`는 BMS와 BMR을 각각 게시한다.
+Broadcaster는 `BroadcastSource`로 LC3 BIS를 보내고 Receiver는 `BroadcastSink`로 frame을
+읽어 decode한다. Serial `s`는 방송을 종료하고 `r`은 공개 API로 같은 방송을 다시 시작한다.
+`x`는 image에 없는 반대 역할 요청을 거부한다. 각 `prj.conf`는 역할별 CAP/BAP/VCP/MCS/TBS
+의존성과 ISO buffer/channel 수를 고정한다.
+
+## GMAP 역할 예제
+
+`GamingAudioGateway`와 `GamingAudioTerminal`은 UGG와 UGT 역할을 제공한다. Gateway는
+encrypted GMAS(`0x1858`) 검색으로 역할·feature characteristic을 읽고 UGT를 검사한다.
+Terminal은 sink feature를 게시한다. 역할 확인 뒤 Gateway의 `UnicastClient`가 LC3 frame을
+보내고 Terminal의 `UnicastServer`가 이를 읽어 decode한다. Serial `s`는 stream을 중단하고
+`r`은 disconnect/광고 재시작 경로이며 `x`는 stale/invalid peer 또는 image에 없는 역할
+요청의 fail-closed 경로다.
+
+`GamingAudioBroadcaster`와 `GamingAudioReceiver`는 BGS와 BGR을 각각 게시한다. 실제 공개
+facade가 사용하지 않는 96 kbps·multiplex 선택 feature는 주장하지 않는다. 네 GMAP 예제의
+`q` 명령은 예약 feature bit를 거부하는 품질 설정 불일치 경로다. 방송 두 예제는
+`BroadcastSource`/`BroadcastSink`로 LC3 BIS를 실제로 보내고 읽으며 `s`/`r`로
+중단·재시작한다. 이 예제는 역할·필수 service 조합과 stream procedure를 제공하지만
+지연·음질·상용 게임 제품 상호운용을 보증하지 않는다.
+
+네 TMAP 예제는 고정 Zephyr의 `samples/bluetooth/tmap_central`, `tmap_peripheral`,
+`tmap_bms`, `tmap_bmr`와 `subsys/bluetooth/audio/tmap.c`를 기준으로 구성했다. GMAP은 같은
+revision의 `include/zephyr/bluetooth/audio/gmap.h`, `gmap_server.c`, `gmap_client.c`가
+원본이다. upstream 파일은 Apache-2.0, 이 Arduino library와 예제는 MIT를 따른다. upstream
+sample은 nRF54L15를 allowlist에 직접 열거하지 않으므로 NU54DK target build와 board runtime은
+별도로 판정한다. 실제 phone, headset, console 상호운용은 사용자 후속 `NOT RUN`이며 개발
+기능의 build/board 검증과 합산하지 않는다.
 
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는

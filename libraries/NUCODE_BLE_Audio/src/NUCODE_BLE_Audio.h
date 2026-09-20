@@ -2265,6 +2265,214 @@ namespace nucode::ble::audio
         Error last_error_ = Error::not_started;
         int native_code_ = 0;
     };
+    /** @brief TMAP Role characteristic의 공개 역할 bit입니다. */
+    enum class TelephonyMediaRole : std::uint16_t
+    {
+        call_gateway = 1U << 0U,
+        call_terminal = 1U << 1U,
+        unicast_media_sender = 1U << 2U,
+        unicast_media_receiver = 1U << 3U,
+        broadcast_media_sender = 1U << 4U,
+        broadcast_media_receiver = 1U << 5U,
+    };
+
+    /** @brief 여러 TMAP 역할을 하나의 안전한 bit set으로 결합합니다. */
+    constexpr TelephonyMediaRole operator|(TelephonyMediaRole left,
+                                           TelephonyMediaRole right) noexcept
+    {
+        return static_cast<TelephonyMediaRole>(static_cast<std::uint16_t>(left) |
+                                               static_cast<std::uint16_t>(right));
+    }
+
+    /** @brief TMAP service 등록과 peer 역할 검색 단계를 나타냅니다. */
+    enum class TelephonyMediaStage : std::uint8_t
+    {
+        idle,
+        ready,
+        discovering,
+        discovered,
+        failed,
+    };
+
+    /**
+     * @brief TMAP 역할을 게시하고 연결된 peer의 역할 조합을 검색합니다.
+     *
+     * 역할별 PACS/ASCS, VCP, MCP 또는 CCP service는 선택한 Arduino profile의
+     * Kconfig와 해당 공개 facade가 소유합니다. 이 객체는 실제 TMAS Role
+     * characteristic만 등록·검색하며 지원되지 않는 역할 조합을 fail-closed로 거부합니다.
+     */
+    class TelephonyMediaRoles final
+    {
+      public:
+        TelephonyMediaRoles() = default;
+
+        ~TelephonyMediaRoles()
+        {
+            (void)end();
+        }
+
+        TelephonyMediaRoles(const TelephonyMediaRoles &) = delete;
+        TelephonyMediaRoles &operator=(const TelephonyMediaRoles &) = delete;
+        TelephonyMediaRoles(TelephonyMediaRoles &&) = delete;
+        TelephonyMediaRoles &operator=(TelephonyMediaRoles &&) = delete;
+
+        /** @brief image가 제공하는 TMAP 역할 bit를 등록합니다. */
+        Error begin(TelephonyMediaRole roles) noexcept;
+
+        /** @brief 지정 연결에서 TMAS와 TMAP Role characteristic을 검색합니다. */
+        Error discover(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief 연결 소실을 확인하고 stale 검색 결과를 폐기합니다. */
+        void poll() noexcept;
+
+        /** @brief 현재 객체의 검색 session 소유권을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief local image가 게시하는 역할 bit를 반환합니다. */
+        [[nodiscard]] std::uint16_t localRoles() const noexcept;
+
+        /** @brief 마지막으로 검색한 peer 역할 bit를 반환합니다. */
+        [[nodiscard]] std::uint16_t peerRoles() const noexcept;
+
+        /** @brief peer가 요청한 역할을 모두 게시했는지 확인합니다. */
+        [[nodiscard]] bool peerSupports(TelephonyMediaRole roles) const noexcept;
+
+        /** @brief 현재 비동기 검색 단계를 반환합니다. */
+        [[nodiscard]] TelephonyMediaStage stage() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 TMAP/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+    };
+
+    /** @brief GMAP service가 게시하는 역할 bit입니다. */
+    enum class GamingAudioRole : std::uint8_t
+    {
+        unicast_game_gateway = 1U << 0U,
+        unicast_game_terminal = 1U << 1U,
+        broadcast_game_sender = 1U << 2U,
+        broadcast_game_receiver = 1U << 3U,
+    };
+
+    /** @brief 여러 GMAP 역할을 하나의 안전한 bit set으로 결합합니다. */
+    constexpr GamingAudioRole operator|(GamingAudioRole left, GamingAudioRole right) noexcept
+    {
+        return static_cast<GamingAudioRole>(static_cast<std::uint8_t>(left) |
+                                            static_cast<std::uint8_t>(right));
+    }
+
+    /** @brief Unicast Game Gateway가 게시할 수 있는 feature bit입니다. */
+    enum class GamingGatewayFeature : std::uint8_t
+    {
+        multiplex = 1U << 0U,
+        source_96_kbps = 1U << 1U,
+        multiple_sinks = 1U << 2U,
+    };
+
+    /** @brief Unicast Game Terminal이 게시할 수 있는 feature bit입니다. */
+    enum class GamingTerminalFeature : std::uint8_t
+    {
+        source = 1U << 0U,
+        source_80_kbps = 1U << 1U,
+        sink = 1U << 2U,
+        sink_64_kbps = 1U << 3U,
+        multiplex = 1U << 4U,
+        multiple_sinks = 1U << 5U,
+        multiple_sources = 1U << 6U,
+    };
+
+    /** @brief Broadcast Game Sender가 게시할 수 있는 feature bit입니다. */
+    enum class GamingBroadcastSenderFeature : std::uint8_t
+    {
+        source_96_kbps = 1U << 0U,
+    };
+
+    /** @brief Broadcast Game Receiver가 게시할 수 있는 feature bit입니다. */
+    enum class GamingBroadcastReceiverFeature : std::uint8_t
+    {
+        multiple_sinks = 1U << 0U,
+        multiplex = 1U << 1U,
+    };
+
+    /** @brief GMAP 역할별 feature characteristic 값을 지정합니다. */
+    struct GamingAudioFeatures
+    {
+        std::uint8_t unicast_gateway = 0U;
+        std::uint8_t unicast_terminal = 0U;
+        std::uint8_t broadcast_sender = 0U;
+        std::uint8_t broadcast_receiver = 0U;
+    };
+
+    /** @brief 원격 GMAP 역할과 역할별 feature 검색 결과입니다. */
+    struct GamingAudioPeer
+    {
+        std::uint8_t roles = 0U;
+        GamingAudioFeatures features;
+    };
+
+    /** @brief GMAP service 등록과 peer 역할 검색 단계를 나타냅니다. */
+    enum class GamingAudioStage : std::uint8_t
+    {
+        idle,
+        ready,
+        discovering,
+        discovered,
+        failed,
+    };
+
+    /**
+     * @brief GMAP 역할·feature를 게시하고 연결된 peer의 GMAS를 검색합니다.
+     *
+     * 실제 unicast/broadcast stream은 BAP/CAP 공개 facade가 소유합니다. begin()은
+     * 선택한 역할의 필수 service와 stream 자원이 Kconfig에 없으면 등록을 거부합니다.
+     */
+    class GamingAudioRoles final
+    {
+      public:
+        GamingAudioRoles() = default;
+
+        ~GamingAudioRoles()
+        {
+            (void)end();
+        }
+
+        GamingAudioRoles(const GamingAudioRoles &) = delete;
+        GamingAudioRoles &operator=(const GamingAudioRoles &) = delete;
+        GamingAudioRoles(GamingAudioRoles &&) = delete;
+        GamingAudioRoles &operator=(GamingAudioRoles &&) = delete;
+
+        /** @brief image가 제공하는 GMAP 역할과 feature를 등록합니다. */
+        Error begin(GamingAudioRole roles, const GamingAudioFeatures &features = {}) noexcept;
+
+        /** @brief 지정 연결에서 GMAS 역할과 feature characteristic을 검색합니다. */
+        Error discover(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief 연결 소실을 확인하고 stale 검색 결과를 폐기합니다. */
+        void poll() noexcept;
+
+        /** @brief 현재 객체의 검색 session 소유권을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief local image가 게시하는 역할 bit를 반환합니다. */
+        [[nodiscard]] std::uint8_t localRoles() const noexcept;
+
+        /** @brief 마지막 원격 역할·feature 검색 결과를 복사합니다. */
+        Error peer(GamingAudioPeer &information) const noexcept;
+
+        /** @brief peer가 요청한 역할을 모두 게시했는지 확인합니다. */
+        [[nodiscard]] bool peerSupports(GamingAudioRole roles) const noexcept;
+
+        /** @brief 현재 비동기 검색 단계를 반환합니다. */
+        [[nodiscard]] GamingAudioStage stage() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 GMAP/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+    };
 } // namespace nucode::ble::audio
 
 #endif

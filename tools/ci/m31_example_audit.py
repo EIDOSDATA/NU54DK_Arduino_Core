@@ -542,6 +542,118 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0",
                 "CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS=2",
             )
+        elif sketch.parent.name in {
+            "TelephonyMediaGateway", "TelephonyMediaTerminal",
+            "TelephonyMediaBroadcaster", "TelephonyMediaReceiver",
+        }:
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "TelephonyMediaRoles", "TelephonyMediaRole::",
+                "profile.begin(", "profile.poll(",
+            )
+            options = ("CONFIG_BT_TMAP=y",)
+            if sketch.parent.name == "TelephonyMediaGateway":
+                required += (
+                    "BLEScan.filterServiceUuid(", "BLEConnection.connect(",
+                    "profile.peerSupports(", "profile.discover(",
+                    "UnicastClient", "Lc3Codec", "audioSource.begin(",
+                    "audioSource.poll(", "codec.encode(", "audioSource.sendFrame(",
+                    "audioSource.stop(",
+                )
+                options += (
+                    "CONFIG_BT_TMAP=y", "CONFIG_BT_CAP_INITIATOR=y",
+                    "CONFIG_BT_BAP_UNICAST_CLIENT=y", "CONFIG_BT_VCP_VOL_CTLR=y",
+                    "CONFIG_BT_MCS=y", "CONFIG_BT_TBS=y",
+                )
+            elif sketch.parent.name == "TelephonyMediaTerminal":
+                required += (
+                    "BLEAdvertising.addServiceUuid(", "startAdvertising(",
+                    "Unsupported TMAP role rejected", "UnicastServer", "Lc3Codec",
+                    "audioSink.begin(", "audioSink.readFrame(", "codec.decode(",
+                    "audioSink.end(",
+                )
+                options += (
+                    "CONFIG_BT_CAP_ACCEPTOR=y", "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                    "CONFIG_BT_VCP_VOL_REND=y", "CONFIG_BT_MCC=y",
+                )
+            elif sketch.parent.name == "TelephonyMediaBroadcaster":
+                required += (
+                    "TelephonyMediaRole::broadcast_media_sender", "BroadcastSource",
+                    "Lc3Codec", "audioSource.begin(", "codec.encode(",
+                    "audioSource.sendFrame(", "audioSource.end(",
+                    "Unsupported TMAP role rejected",
+                )
+                options += (
+                    "CONFIG_BT_CAP_INITIATOR=y", "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                )
+            else:
+                required += (
+                    "TelephonyMediaRole::broadcast_media_receiver", "BroadcastSink",
+                    "Lc3Codec", "audioSink.begin(", "audioSink.poll(",
+                    "audioSink.readFrame(", "codec.decode(", "audioSink.end(",
+                    "Unsupported TMAP role rejected",
+                )
+                options += (
+                    "CONFIG_BT_CAP_ACCEPTOR=y", "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                    "CONFIG_BT_VCP_VOL_REND=y",
+                )
+        elif sketch.parent.name in {
+            "GamingAudioGateway", "GamingAudioTerminal",
+            "GamingAudioBroadcaster", "GamingAudioReceiver",
+        }:
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "GamingAudioRoles", "GamingAudioRole::", "GamingAudioFeatures",
+                "profile.begin(", "profile.poll(", "Invalid GMAP feature rejected",
+                "Error::invalid_argument", "'q'",
+            )
+            options = ("CONFIG_BT_GMAP=y",)
+            if sketch.parent.name == "GamingAudioGateway":
+                required += (
+                    "BLEScan.filterServiceUuid(", "BLEConnection.connect(",
+                    "profile.peer(", "profile.peerSupports(", "profile.discover(",
+                    "UnicastClient", "Lc3Codec", "audioSource.begin(",
+                    "audioSource.poll(", "codec.encode(", "audioSource.sendFrame(",
+                    "audioSource.stop(",
+                )
+                options += (
+                    "CONFIG_BT_CAP_INITIATOR=y", "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                    "CONFIG_BT_VCP_VOL_CTLR=y",
+                )
+            elif sketch.parent.name == "GamingAudioTerminal":
+                required += (
+                    "BLEAdvertising.addServiceUuid(", "startAdvertising(",
+                    "Unsupported GMAP role rejected", "UnicastServer", "Lc3Codec",
+                    "audioSink.begin(", "audioSink.readFrame(", "codec.decode(",
+                    "audioSink.end(",
+                )
+                options += (
+                    "CONFIG_BT_CAP_ACCEPTOR=y", "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                )
+            elif sketch.parent.name == "GamingAudioBroadcaster":
+                required += (
+                    "GamingAudioRole::broadcast_game_sender", "BroadcastSource",
+                    "Lc3Codec", "audioSource.begin(", "codec.encode(",
+                    "audioSource.sendFrame(", "audioSource.end(",
+                    "Unsupported GMAP role rejected",
+                )
+                options += (
+                    "CONFIG_BT_CAP_INITIATOR=y", "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                    "CONFIG_BT_BAP_BROADCAST_ASSISTANT=y",
+                )
+            else:
+                required += (
+                    "GamingAudioRole::broadcast_game_receiver", "BroadcastSink",
+                    "Lc3Codec", "audioSink.begin(", "audioSink.poll(",
+                    "audioSink.readFrame(", "codec.decode(", "audioSink.end(",
+                    "Unsupported GMAP role rejected",
+                )
+                options += (
+                    "CONFIG_BT_CAP_ACCEPTOR=y", "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                    "CONFIG_BT_VCP_VOL_REND=y",
+                )
         else:
             required = (
                 "#include <NUCODE_BLE_Audio.h>", "Lc3Codec", ".begin(",
