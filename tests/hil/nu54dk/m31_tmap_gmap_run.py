@@ -437,9 +437,17 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     validate_clean_source()
     sdk_root = args.sdk_root.resolve()
     revisions = validate_revisions(sdk_root, args.expected_core_revision)
-    image_core_revision = git_revision(
-        REPOSITORY, args.image_core_revision or revisions["core"]
-    )
+    image_core_revision = revisions["core"]
+    if args.image_core_revision:
+        resolved_image_revision = subprocess.run(
+            ("git", "-C", str(REPOSITORY), "rev-parse", "--verify",
+             f"{args.image_core_revision}^{{commit}}"),
+            capture_output=True, text=True, encoding="utf-8", errors="replace", check=False,
+        )
+        image_core_revision = resolved_image_revision.stdout.strip()
+        if resolved_image_revision.returncode != 0 or not re.fullmatch(
+                r"[0-9a-f]{40}", image_core_revision):
+            raise HilFailure("image core revision을 commit으로 해석할 수 없습니다")
     source_image = validate_hex_image(str(args.source_image.resolve()))
     sink_image = validate_hex_image(str(args.sink_image.resolve()))
     image_state = {
