@@ -84,7 +84,7 @@ class MediaCallControlContractTests(unittest.TestCase):
         )
         for token in (
             "MEDIA_NEG_OPCODE", "MEDIA_NEG_STALE_OBJECT", "complete=1 normal_ops=",
-            "rejected=1",
+            "rejected=1", 'report("MEDIA_RECOVERY", controller.refresh())',
         ):
             self.assertIn(token, media_client)
         for token in (
