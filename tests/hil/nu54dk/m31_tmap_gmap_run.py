@@ -427,9 +427,16 @@ def run_protocol(harness: SerialHarness, scenario: Scenario, soak_seconds: float
             )
 
     final_source_stop = harness.observation.source_stop_count
+    final_sink_stop = harness.observation.sink_stop_count
+    if scenario.transport == "broadcast":
+        harness.command("sink", "s")
     harness.command("source", "s")
-    harness.wait(lambda: harness.observation.source_stop_count > final_source_stop,
-                 step_timeout, "final stop")
+    harness.wait(
+        lambda: (harness.observation.source_stop_count > final_source_stop and
+                 (scenario.transport == "unicast" or
+                  harness.observation.sink_stop_count > final_sink_stop)),
+        step_timeout, "final stop",
+    )
     return {
         "advertised_discovered_role_feature_service": "PASS",
         "stream_start_send_read_stop": "PASS",

@@ -186,6 +186,16 @@ class TmapGmapHilContractTest(unittest.TestCase):
         self.assertIn("--source-probe-sha256", options)
         self.assertIn("--sink-probe-sha256", options)
 
+    def test_broadcast_final_stop_disarms_sink_before_source(self) -> None:
+        """! @brief 최종 broadcaster 종료가 정상 receiver 종료 뒤에만 실행됩니다. """
+        source = RUNNER.read_text(encoding="utf-8")
+        start = source.index("final_source_stop =")
+        block = source[start:source.index("    return {", start)]
+        sink_stop = block.index('harness.command("sink", "s")')
+        source_stop = block.index('harness.command("source", "s")')
+        self.assertLess(sink_stop, source_stop)
+        self.assertIn("harness.observation.sink_stop_count > final_sink_stop", block)
+
     def test_adjacent_arduino_build_manifest_is_preferred_and_bound_to_hex(self) -> None:
         core_revision = "a" * 40
         board_revision = "b" * 40
