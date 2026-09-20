@@ -83,6 +83,9 @@ def clear_server_bonds(serial, server_port: str, server_uid: str,
     with serial.Serial(server_port, 115200, timeout=0.03) as server:
         server.reset_input_buffer()
         hardware_reset(server_uid)
+        time.sleep(1.0)
+        server.reset_input_buffer()
+        hardware_reset(server_uid)
         wait_server_line(
             server,
             record,
@@ -90,6 +93,7 @@ def clear_server_bonds(serial, server_port: str, server_uid: str,
             BOND_CLEANUP_TIMEOUT_SECONDS,
             "fresh server boot banner",
         )
+        time.sleep(0.1)
         server.write(b"c")
         server.flush()
         cleanup_line = wait_server_line(

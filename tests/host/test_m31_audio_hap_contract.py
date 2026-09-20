@@ -138,6 +138,14 @@ class HearingAccessContractTests(unittest.TestCase):
             '"remaining": remaining',
         ):
             self.assertIn(token, runner)
+        cleanup_block = runner[
+            runner.index("def clear_server_bonds("):runner.index("def wait_for(")
+        ]
+        self.assertEqual(cleanup_block.count("hardware_reset(server_uid)"), 2)
+        first_reset = cleanup_block.index("hardware_reset(server_uid)")
+        clear_after_reset = cleanup_block.index("server.reset_input_buffer()", first_reset)
+        second_reset = cleanup_block.index("hardware_reset(server_uid)", first_reset + 1)
+        self.assertLess(clear_after_reset, second_reset)
 
     def test_hil_records_source_and_image_revisions_separately(self) -> None:
         """! @brief 후속 수정 뒤 실행해도 exact image revision을 별도로 보존합니다. """
