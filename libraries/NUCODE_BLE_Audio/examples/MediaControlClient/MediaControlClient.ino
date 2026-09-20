@@ -135,10 +135,6 @@ namespace
         Serial.print(static_cast<unsigned int>(result));
         Serial.print(" native=");
         Serial.println(controller.nativeCode());
-        if (negative)
-        {
-            report("MEDIA_RECOVERY", controller.refresh());
-        }
     }
 
     /** @brief 비동기 명령 제출 상태를 자동 검증 가능한 형식으로 기록합니다. */
@@ -158,6 +154,10 @@ namespace
         Serial.print(static_cast<unsigned int>(result));
         Serial.print(" native=");
         Serial.println(controller.nativeCode());
+        if (negative)
+        {
+            report("MEDIA_RECOVERY", controller.refresh());
+        }
     }
 
     /** @brief 원격 완료·거부 결과를 출력하고 negative 뒤 snapshot 읽기를 복구합니다. */
