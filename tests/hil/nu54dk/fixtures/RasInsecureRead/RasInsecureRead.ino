@@ -92,7 +92,8 @@ namespace
                 return;
             }
             readInFlight = false;
-            if (information.att_error != 15U)
+            if ((information.att_error != 5U) &&
+                (information.att_error != 15U))
             {
                 done = true;
                 Serial.print("CS insecure unexpected att=");
@@ -100,7 +101,9 @@ namespace
                 return;
             }
             ++rejected;
-            Serial.print("CS insecure read rejected att=15 count=");
+            Serial.print("CS insecure read rejected att=");
+            Serial.print(information.att_error);
+            Serial.print(" count=");
             Serial.print(rejected);
             Serial.print(" ms=");
             Serial.println(millis());

@@ -108,9 +108,12 @@ def main():
         "mode": "same_acl" if args.same_acl else "separate_acl",
         "same_acl": args.same_acl,
         "connections": 0,
+        "connection_events_observed": 0,
+        "discovery_events_observed": 0,
         "disconnect_reasons": [],
         "unexpected_disconnects": 0,
         "stop_confirmed": False,
+        "att_errors": [],
         "read_timestamps_ms": [],
         "cycles": [],
         "client_lines": [],
@@ -143,7 +146,8 @@ def main():
                 started = time.monotonic()
                 campaign_deadline = started + 600.0
                 pattern = re.compile(
-                    r"CS insecure read rejected att=15 count=(\d+) ms=(\d+)"
+                    r"CS insecure read rejected att=(\d+) "
+                    r"count=(\d+) ms=(\d+)"
                 )
                 disconnect_pattern = re.compile(
                     r"CS insecure peer disconnected reason=(\d+)"
@@ -200,7 +204,19 @@ def main():
                                 match = pattern.search(line)
                                 if match is not None:
                                     expected = cycle + 1 if args.same_acl else 1
-                                    count, timestamp = map(int, match.groups())
+                                    att_error, count, timestamp = map(
+                                        int, match.groups()
+                                    )
+                                    if att_error not in (5, 15):
+                                        raise RuntimeError(
+                                            "unexpected plaintext ATT error"
+                                        )
+                                    if (args.same_acl and
+                                            record["att_errors"] and
+                                            att_error != record["att_errors"][0]):
+                                        raise RuntimeError(
+                                            "same-ACL ATT error changed"
+                                        )
                                     if count != expected:
                                         raise RuntimeError("read counter mismatch")
                                     if (args.same_acl and
@@ -214,6 +230,7 @@ def main():
                                     record["read_timestamps_ms"].append(
                                         timestamp
                                     )
+                                    record["att_errors"].append(att_error)
                                     found = True
                         recent = record["client_lines"][first_line:]
                         if not found:
@@ -249,16 +266,40 @@ def main():
                     raise run_error
                 if not record["stop_confirmed"]:
                     raise RuntimeError("insecure client STOP incomplete")
-                record["connections"] = sum(
-                    "CS insecure peer connected count=" in line
+                connection_counts = [
+                    int(line.rsplit("=", 1)[1])
                     for line in record["client_lines"]
+                    if "CS insecure peer connected count=" in line
+                ]
+                record["connection_events_observed"] = len(
+                    connection_counts
+                )
+                record["connections"] = max(
+                    connection_counts, default=0
+                )
+                discovery_indices = [
+                    index
+                    for index, line in enumerate(record["client_lines"])
+                    if "CS insecure RAS discovered" in line
+                ]
+                record["discovery_events_observed"] = len(
+                    discovery_indices
                 )
                 if args.same_acl:
                     if record["connections"] != 1:
                         raise RuntimeError("same-ACL connection count mismatch")
-                    if sum("CS insecure RAS discovered" in line
-                           for line in record["client_lines"]) != 1:
+                    if not discovery_indices:
                         raise RuntimeError("same-ACL discovery count mismatch")
+                    first_read_index = next(
+                        index
+                        for index, line in enumerate(record["client_lines"])
+                        if "CS insecure read rejected att=" in line
+                    )
+                    if any(index > first_read_index
+                           for index in discovery_indices):
+                        raise RuntimeError(
+                            "same-ACL service was rediscovered"
+                        )
                 record["elapsed_s"] = round(time.monotonic() - started, 3)
                 if any("CS reflector secure L2" in line
                        for line in record["reflector_lines"]):
