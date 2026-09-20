@@ -148,6 +148,25 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 - active 연결에서 facade를 먼저 종료하면 이전 callback을 새 소유자와 구분할 수 없으므로, 같은 profile
   client는 그 연결이 끊길 때까지 새 facade의 `begin()`을 `busy`로 거부한다.
 
+## `HearingAccessServer`
+
+- `HearingAccessServer`가 HAS를 광고 전에 등록하고 Universal·Outdoor·Noisy room preset을
+  고정 메모리에 게시한다. `1`, `5`, `8` 명령으로 local active index를 바꾸며 연결된 client에도
+  변경을 알린다.
+- `n`은 writable preset의 이름을 바꾸고 `a`는 preset availability를 전환한다. 범위 밖 index,
+  빈 이름, unavailable preset 선택은 공개 오류와 `nativeCode()`로 구분한다.
+- HAS service 자체는 image 수명 동안 유지된다. `end()`는 preset과 facade 소유권만 반환하므로
+  같은 image에서 다시 시작할 때 최초 보청기 형식을 유지한다.
+
+## `HearingAccessClient`
+
+- HAS UUID를 검색해 encrypted link를 만든 뒤 `HearingAccessClient`로 service와 notification을
+  찾는다. 준비되면 공개 `readPresets()`로 index·availability·writable·name을 Arduino 메모리에
+  복사한다.
+- `1`, `5`, `8`은 특정 preset, `n`과 `p`는 다음·이전 preset을 선택한다. `r`은 목록을 다시
+  읽고 `s`는 active index와 cache를 출력한다. 지원되지 않는 index는 원격 ATT/HAS 오류로
+  거부되며 연결 해제 뒤 새 handle에서 검색을 다시 시작한다.
+
 Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다. 115200 baud
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는
 외장 I/O 예제에서 별도로 다룬다.
@@ -156,5 +175,6 @@ Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S c
 
 LC3 frame 계약은 고정 NCS v3.4.0의 `samples/bluetooth/bap_unicast_client`,
 `bap_unicast_server`, `bap_broadcast_source`, `bap_broadcast_sink`,
-`bap_broadcast_assistant`를 기준으로 확인했다. 이 라이브러리 코드는 MIT이고, 고정 SDK의
+`bap_broadcast_assistant`, Zephyr `hap_ha`와 HAS client test를 기준으로 확인했다.
+이 라이브러리 코드는 MIT이고, 고정 SDK의
 원본 sample과 liblc3는 각 원본 라이선스를 따른다.

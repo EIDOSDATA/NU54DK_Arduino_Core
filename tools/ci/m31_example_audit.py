@@ -231,6 +231,44 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_VOCS_CLIENT_MAX_INSTANCE_COUNT=1",
                 "CONFIG_BT_VCP_VOL_CTLR_MAX_VOCS_INST=1",
             )
+        elif sketch.parent.name == "HearingAccessServer":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "HearingAccessServer", "HearingAccessServerConfig",
+                "BLESecurity.begin(", "BLEAdvertising.addServiceUuid(",
+                "hearingAccess.begin(", "hearingAccess.addPreset(",
+                "hearingAccess.setActivePreset(",
+                "hearingAccess.setPresetAvailable(",
+                "hearingAccess.renamePreset(", "hearingAccess.preset(",
+            )
+            options = (
+                "CONFIG_BT_HAS=y", "CONFIG_BT_HAS_PRESET_COUNT=4",
+                "CONFIG_BT_HAS_PRESET_NAME_DYNAMIC=y",
+                "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                "CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT=1", "CONFIG_FPU=y",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "HearingAccessClient":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_BLE_Security.h>",
+                "HearingAccessClient", "BLESecurity.begin(",
+                "BLEScan.filterServiceUuid(", "BLEConnection.connect(",
+                "hearingAccess.begin(", "hearingAccess.poll(",
+                "hearingAccess.readPresets(",
+                "hearingAccess.setActivePreset(",
+                "hearingAccess.nextPreset(",
+                "hearingAccess.previousPreset(", "hearingAccess.preset(",
+            )
+            options = (
+                "CONFIG_BT_HAS_CLIENT=y", "CONFIG_BT_GATT_CLIENT=y",
+                "CONFIG_BT_GATT_AUTO_DISCOVER_CCC=y",
+                "CONFIG_BT_GATT_AUTO_UPDATE_MTU=y", "CONFIG_FPU=y",
+                "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name == "CapInitiator":
             required = (
                 "#include <NUCODE_BLE.h>",

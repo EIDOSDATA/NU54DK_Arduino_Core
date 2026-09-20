@@ -17,7 +17,7 @@ namespace nucode::ble
 {
     class BLEConnectionHandle;
     struct BLEScanResult;
-}
+} // namespace nucode::ble
 
 namespace nucode::ble::audio
 {
@@ -540,8 +540,7 @@ namespace nucode::ble::audio
         [[nodiscard]] int nativeCode() const noexcept;
 
       private:
-        Error start(const char *broadcast_name,
-                    const std::uint8_t *broadcast_code) noexcept;
+        Error start(const char *broadcast_name, const std::uint8_t *broadcast_code) noexcept;
         Error record(Error error, int native_code = 0) noexcept;
 
         bool started_ = false;
@@ -622,12 +621,10 @@ namespace nucode::ble::audio
       private:
         friend class PublicAudioBroadcastSink;
 
-        Error start(const char *broadcast_name,
-                    const std::uint8_t *broadcast_code) noexcept;
+        Error start(const char *broadcast_name, const std::uint8_t *broadcast_code) noexcept;
         Error startPublic(const PublicBroadcastFilter &filter,
                           const std::uint8_t *broadcast_code) noexcept;
-        Error startConfigured(const char *broadcast_name,
-                              const std::uint8_t *broadcast_code,
+        Error startConfigured(const char *broadcast_name, const std::uint8_t *broadcast_code,
                               bool public_broadcast) noexcept;
         bool selectedPublic(PublicBroadcastInfo &info) const noexcept;
         Error record(Error error, int native_code = 0) noexcept;
@@ -1302,8 +1299,7 @@ namespace nucode::ble::audio
         Error begin(const char *broadcast_name = "NU54-CAP-BROADCAST") noexcept;
 
         /** @brief 주어진 16-byte code로 암호화한 CAP broadcast를 시작합니다. */
-        Error begin(const char *broadcast_name,
-                    const BroadcastCode &broadcast_code) noexcept;
+        Error begin(const char *broadcast_name, const BroadcastCode &broadcast_code) noexcept;
 
         /** @brief CAP broadcast와 광고를 중단하고 자원을 반환합니다. */
         Error end() noexcept;
@@ -1332,14 +1328,11 @@ namespace nucode::ble::audio
       private:
         friend class PublicAudioBroadcastSource;
 
-        Error start(const char *broadcast_name,
-                    const std::uint8_t *broadcast_code) noexcept;
+        Error start(const char *broadcast_name, const std::uint8_t *broadcast_code) noexcept;
         Error startPublic(const PublicBroadcastSourceConfig &config,
                           const std::uint8_t *broadcast_code) noexcept;
-        Error startConfigured(const char *broadcast_name,
-                              const char *program_info,
-                              const std::uint8_t *broadcast_code,
-                              bool public_broadcast) noexcept;
+        Error startConfigured(const char *broadcast_name, const char *program_info,
+                              const std::uint8_t *broadcast_code, bool public_broadcast) noexcept;
         Error record(Error error, int native_code = 0) noexcept;
 
         bool started_ = false;
@@ -1789,6 +1782,194 @@ namespace nucode::ble::audio
 
         /** @brief 마지막 CSIP/GATT 원본 오류를 반환합니다. */
         [[nodiscard]] int nativeCode() const noexcept;
+    };
+
+    /** @brief Hearing Access Service가 게시하는 보청기 형식입니다. */
+    enum class HearingAidType : std::uint8_t
+    {
+        binaural,
+        monaural,
+        banded,
+    };
+
+    /** @brief Hearing Access client 비동기 절차의 현재 단계입니다. */
+    enum class HearingAccessStage : std::uint8_t
+    {
+        idle,
+        discovering,
+        ready,
+        operating,
+        disconnected,
+        failed,
+    };
+
+    /** @brief 마지막 Hearing Access client 절차입니다. */
+    enum class HearingAccessStep : std::uint8_t
+    {
+        none,
+        discover,
+        read_presets,
+        set_active,
+        next,
+        previous,
+        cleanup,
+    };
+
+    /** @brief 하나의 Hearing Access preset을 caller 소유 메모리로 표현합니다. */
+    struct HearingPreset
+    {
+        static constexpr std::size_t maximum_name_bytes = 40U;
+
+        std::uint8_t index = 0U;
+        bool available = false;
+        bool writable = false;
+        char name[maximum_name_bytes + 1U] = {};
+    };
+
+    /** @brief Hearing Access server의 고정 service 설정입니다. */
+    struct HearingAccessServerConfig
+    {
+        HearingAidType type = HearingAidType::monaural;
+        bool preset_synchronization = false;
+        bool independent_presets = false;
+    };
+
+    /** @brief HAS와 preset database를 제공하는 Hearing Access server입니다. */
+    class HearingAccessServer final
+    {
+      public:
+        HearingAccessServer() = default;
+
+        ~HearingAccessServer()
+        {
+            (void)end();
+        }
+
+        HearingAccessServer(const HearingAccessServer &) = delete;
+        HearingAccessServer &operator=(const HearingAccessServer &) = delete;
+        HearingAccessServer(HearingAccessServer &&) = delete;
+        HearingAccessServer &operator=(HearingAccessServer &&) = delete;
+
+        /** @brief 광고 전에 HAS service를 등록하고 이 객체가 소유하게 합니다. */
+        Error begin(const HearingAccessServerConfig &config = {}) noexcept;
+
+        /** @brief 등록한 preset을 해제하고 공개 소유권을 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 고유 index와 이름을 가진 preset을 추가합니다. */
+        Error addPreset(std::uint8_t index, const char *name, bool writable = true,
+                        bool available = true) noexcept;
+
+        /** @brief local preset을 활성화하고 연결된 client에 알립니다. */
+        Error setActivePreset(std::uint8_t index) noexcept;
+
+        /** @brief preset 선택 가능 상태를 변경하고 연결된 client에 알립니다. */
+        Error setPresetAvailable(std::uint8_t index, bool available) noexcept;
+
+        /** @brief writable preset의 이름을 변경하고 연결된 client에 알립니다. */
+        Error renamePreset(std::uint8_t index, const char *name) noexcept;
+
+        /** @brief 현재 활성 preset index를 반환하며 없으면 0을 반환합니다. */
+        [[nodiscard]] std::uint8_t activePreset() const noexcept;
+
+        /** @brief 현재 등록된 preset 수를 반환합니다. */
+        [[nodiscard]] std::size_t presetCount() const noexcept;
+
+        /** @brief 위치 순서의 preset을 caller 복사본으로 반환합니다. */
+        Error preset(std::size_t position, HearingPreset &value) const noexcept;
+
+        /** @brief local 또는 원격 선택 요청으로 바뀐 횟수를 반환합니다. */
+        [[nodiscard]] std::uint32_t selectionChanges() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 HAS 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
+    };
+
+    /** @brief 원격 HAS를 검색하고 preset을 읽고 선택하는 Hearing Access client입니다. */
+    class HearingAccessClient final
+    {
+      public:
+        HearingAccessClient() = default;
+
+        ~HearingAccessClient()
+        {
+            (void)end();
+        }
+
+        HearingAccessClient(const HearingAccessClient &) = delete;
+        HearingAccessClient &operator=(const HearingAccessClient &) = delete;
+        HearingAccessClient(HearingAccessClient &&) = delete;
+        HearingAccessClient &operator=(HearingAccessClient &&) = delete;
+
+        /** @brief 암호화된 연결에서 HAS 검색을 시작합니다. */
+        Error begin(const BLEConnectionHandle &connection) noexcept;
+
+        /** @brief 연결 해제와 callback 결과를 Arduino 문맥에서 반영합니다. */
+        void poll() noexcept;
+
+        /** @brief 연결 참조와 검색 결과를 반환합니다. */
+        Error end() noexcept;
+
+        /** @brief 지정 index부터 bounded preset 목록을 비동기로 읽습니다. */
+        Error readPresets(std::uint8_t start_index = 1U,
+                          std::uint8_t maximum_count = 0xffU) noexcept;
+
+        /** @brief 지정 preset을 활성화하도록 요청합니다. */
+        Error setActivePreset(std::uint8_t index, bool synchronize = false) noexcept;
+
+        /** @brief 다음 사용 가능한 preset을 활성화하도록 요청합니다. */
+        Error nextPreset(bool synchronize = false) noexcept;
+
+        /** @brief 이전 사용 가능한 preset을 활성화하도록 요청합니다. */
+        Error previousPreset(bool synchronize = false) noexcept;
+
+        /** @brief HAS 검색과 subscription이 완료됐는지 반환합니다. */
+        [[nodiscard]] bool ready() const noexcept;
+
+        /** @brief 비동기 요청이 callback을 기다리는지 반환합니다. */
+        [[nodiscard]] bool busy() const noexcept;
+
+        /** @brief 현재 client 단계를 반환합니다. */
+        [[nodiscard]] HearingAccessStage stage() const noexcept;
+
+        /** @brief 마지막 client 절차를 반환합니다. */
+        [[nodiscard]] HearingAccessStep lastStep() const noexcept;
+
+        /** @brief 원격 장치가 보고한 활성 preset index를 반환합니다. */
+        [[nodiscard]] std::uint8_t activePreset() const noexcept;
+
+        /** @brief 마지막 read에서 복사한 preset 수를 반환합니다. */
+        [[nodiscard]] std::size_t presetCount() const noexcept;
+
+        /** @brief 위치 순서의 원격 preset을 caller 복사본으로 반환합니다. */
+        Error preset(std::size_t position, HearingPreset &value) const noexcept;
+
+        /** @brief discovery·preset 알림으로 갱신된 횟수를 반환합니다. */
+        [[nodiscard]] std::uint32_t stateUpdates() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] Error lastError() const noexcept;
+
+        /** @brief 마지막 HAS/GATT 원본 오류를 반환합니다. */
+        [[nodiscard]] int nativeCode() const noexcept;
+
+      private:
+        Error record(Error error, int native_code = 0) noexcept;
+
+        bool started_ = false;
+        std::uint32_t generation_ = 0U;
+        Error last_error_ = Error::not_started;
+        int native_code_ = 0;
     };
 } // namespace nucode::ble::audio
 
