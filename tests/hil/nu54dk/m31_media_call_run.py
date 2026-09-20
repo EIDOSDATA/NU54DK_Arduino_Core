@@ -84,7 +84,7 @@ class SerialSession:
         self.ports[role].write(command)
         self.ports[role].flush()
 
-    def _events(self):
+    def _events(self, tolerate_non_ascii: bool = False):
         for role, port in self.ports.items():
             payload = port.readline()
             if not payload:
@@ -94,6 +94,8 @@ class SerialSession:
             try:
                 line = payload.decode("ascii").strip()
             except UnicodeDecodeError as error:
+                if tolerate_non_ascii:
+                    continue
                 raise MediaCallExecutionFailure(f"{role} non-ASCII UART") from error
             if not line:
                 continue
@@ -107,11 +109,12 @@ class SerialSession:
                 raise MediaCallExecutionFailure(f"{role} fatal UART: {line}")
             yield role, line
 
-    def wait(self, predicate, timeout: float, description: str) -> tuple[str, str]:
+    def wait(self, predicate, timeout: float, description: str,
+             tolerate_non_ascii: bool = False) -> tuple[str, str]:
         """! @brief predicate가 실제 UART line에서 닫힐 때까지만 대기합니다. """
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            for role, line in self._events():
+            for role, line in self._events(tolerate_non_ascii):
                 if predicate(role, line):
                     return role, line
         raise MediaCallExecutionFailure(f"{description} UART timeout")
@@ -294,7 +297,7 @@ def _reconnect_campaign(session: SerialSession, client_uid: str, profile: str) -
                     snapshot_ready = True
             return disconnected and connected and discovered and snapshot_ready
 
-        session.wait(complete, 45.0, f"reconnect {attempt}")
+        session.wait(complete, 45.0, f"reconnect {attempt}", tolerate_non_ascii=True)
         session.marker(f"HIL|1|RECONNECT_OK|attempt={attempt}")
 
 
@@ -389,24 +392,27 @@ def execute(args: argparse.Namespace) -> dict:
                 hardware_reset(boards[role_names[0]]["uid"])
                 time.sleep(2.0)
                 hardware_reset(boards["client"]["uid"])
+                client_booted = False
                 provider_connected = False
                 client_discovered = False
 
                 def initialized(role: str, line: str) -> bool:
-                    nonlocal provider_connected, client_discovered
+                    nonlocal client_booted, provider_connected, client_discovered
                     if role == role_names[0]:
                         expected = "Media controller connected" if args.profile == "media" else (
                             "Call controller connected"
                         )
                         provider_connected |= line == expected
                     elif role == "client":
+                        client_booted |= line.startswith("Commands:")
                         expected = "Media discovery result=0" if args.profile == "media" else (
                             "Call discovery result=0"
                         )
                         client_discovered |= line == expected
-                    return provider_connected and client_discovered
+                    return client_booted and provider_connected and client_discovered
 
-                session.wait(initialized, 45.0, "initial profile discovery")
+                session.wait(initialized, 45.0, "initial profile discovery",
+                             tolerate_non_ascii=True)
                 _wait_state(session, "player=" if args.profile == "media" else "call index=")
                 soak_elapsed = _media_campaign(session, args.soak_seconds) if (
                     args.profile == "media"
