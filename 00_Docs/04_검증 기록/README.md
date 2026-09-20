@@ -1,14 +1,46 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29·M30 완료, M31 2/8 진행**입니다. M29와 M30은 각각
-작업 묶음 **8/8**, test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다.
+**v0.4.1**이고, 개발 소스는 **M28·M29·M30 완료, M31 3/8**입니다. M31-W03 LE Audio
+profile은 **11/11 PASS**로 닫았으며 W04~W08은 완료가 아닙니다. HOST-W01~W03은 완료했고
+HOST-W04~W08은 사용자 보류 상태입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
 진행률·미실행·다음 작업은 각 기록 작성 시점의 상태입니다.
 
-## 최근 확인할 기록
+## 현재 상태
+
+| 구분 | 상태 | 기준 문서 |
+| --- | --- | --- |
+| 설치·지원 | `v0.4.1`만 지원 | [v0.4.1 유지보수 기록](129_v0.4.1_설치기_유지보수_릴리스.md) |
+| 개발 소스 | M28·M29·M30 완료, M31 3/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
+| M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
+| M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
+| M31-W04·W05 | 부분 실기와 실패 진단 보존·완료 아님 | [W04 IQ 경계](178_M31_W04_연결_AoA_수신_Host_Controller_경계.md) · [W05 미암호화 거부](180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md) |
+| M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
+| HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
+
+지원 중인 `v0.4.1`과 개발 브랜치의 M31 결과는 서로 다른 범위입니다. M31 PASS를 설치본의
+지원 기능이나 `v0.5.0` 공개 완료로 읽지 않습니다.
+
+## 최근 완료·재개 기록
+
+| 기록 | 용도 |
+| --- | --- |
+| [215 — W03 이력·문서 정비](215_M31_W03_이력과_문서_정비.md) | 개발 이력 squash, 문서 전수 검토, main 반영과 원본 이력 보존 |
+| [214 — M31-W03 LE Audio profile 종료](214_M31_W03_LE_Audio_Profile_완료.md) | W03-01~W03-11 11/11 PASS, 고정 source·SDK와 비차단 후속 범위 |
+| [211 — Media·Call control](211_M31_W03_Arduino_Media_Call_Control_완료.md) | MCP/MCS·CCP/TBS 정상·negative·복구·reconnect·soak 최종 PASS |
+| [212 — TMAP·GMAP](212_M31_W03_Arduino_TMAP_GMAP_완료.md) | unicast·broadcast 네 역할, LC3 soak와 role·quality·feature negative PASS |
+| [213 — HAP·HAS](213_M31_W03_Arduino_HAP_HAS_완료.md) | preset 100/100, invalid·synchronized request 거부, reconnect 20/20 PASS |
+| [208 — Audio control](208_M31_W03_Arduino_Audio_Control_완료.md) | VCP·VOCS·AICS·MICP 완료 |
+| [209 — CSIP](209_M31_W03_Arduino_CSIP_완료.md) | 일곱 scenario와 member loss·lock/release 완료 |
+| [210 — PBP](210_M31_W03_Arduino_PBP_완료.md) | 180초 stream과 다섯 campaign 완료 |
+| [199 — M31-W02 설치 ISO 완료](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) | 설치본 ISO 11예제·11역할 build와 공개 사용자 SDU 실기 근거 |
+| [200 — 다른 PC 작업 인계](200_M31_다른_PC_작업_인계.md) | 작성 당시 장치·lock·재개 경계의 역사 snapshot |
+
+<details>
+<summary>이전 주요 기록 펼치기</summary>
 
 | 기록 | 용도 |
 | --- | --- |
@@ -53,6 +85,8 @@
 | [140 — M28-W07 2·3보드 HIL과 W08 완료](140_M28_W07_3보드_HIL과_W08_완료.md) | M28 8/8 완료·9개 test ID PASS, 시험별 보드 수·범위·증거 |
 | [129 — v0.4.1 설치기 유지보수 릴리스](129_v0.4.1_설치기_유지보수_릴리스.md) | 현재 지원 배포의 공개·설치 수명주기·30/30 예제 build PASS |
 | [125 — v0.4.0 정식 릴리스 공개와 T24/T25 마감](125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md) | v0.4.1이 유지하는 기능 기준선의 최종 공개·설치 결과 |
+
+</details>
 
 ## 주제별 찾아가기
 
@@ -155,6 +189,60 @@
 - [166 — M31-W02 세 보드 CIS→BIS 기능 실기](<166_M31_W02_3보드_CIS_BIS_통합_실기.md>) — **20회×100 CIS→BIS 2,000/2,000 PASS, 설치 예제 잔여**
 - [167 — M31-W02 설치 Arduino ISO 예제 당시 기록](<167_M31_W02_설치_Arduino_ISO_예제_완료.md>) — **설치 sketch 11/11 build·7개 실제 보드 case PASS; 191에서 W02 완료 판정 정정**
 - [191 — M31-W02 공개 ISO 예제 재점검](<191_M31_W02_공개_ISO_예제_재점검.md>) — **사용자 payload API 없는 11개 예제 재작업, M31 1/8**
+
+</details>
+
+<details>
+<summary>M31 작업 기록 — 168~214</summary>
+
+작성 시점의 진행·FAIL·HOLD는 그대로 보존합니다. W02의 최종 판정은 199번, W03의 최종 판정은
+214번이 소유하며 W04·W05의 부분 결과를 전체 완료로 승격하지 않습니다.
+
+- [168 — W03 LC3 공개 API 실기 진행](<168_M31_W03_LC3_공개_API_실기_진행.md>)
+- [169 — W03 NCS Audio sample NU54DK build](<169_M31_W03_NCS_Audio_샘플_NU54DK_빌드.md>)
+- [170 — W04 DF CTE 송신 진행](<170_M31_W04_DF_CTE_송신_진행.md>)
+- [171 — W05 CS native 두 보드 착수](<171_M31_W05_CS_native_2보드_착수.md>)
+- [172 — W04 기본 안테나 IQ 수신 진단](<172_M31_W04_DF_기본안테나_IQ_수신_진단.md>) — **기능 HIL FAIL·미완료 보존**
+- [173 — W05 RAS native 100회 진단](<173_M31_W05_RAS_native_100회_진단.md>)
+- [174 — W04 연결 CTE 응답 실기](<174_M31_W04_연결_CTE_응답_실기.md>)
+- [175 — W05 Arduino RAS reflector 100회 진단](<175_M31_W05_Arduino_RAS_reflector_100회_진단.md>)
+- [176 — W05 Arduino RAS initiator 100회와 재시작 진단](<176_M31_W05_Arduino_RAS_initiator_100회와_재시작_진단.md>)
+- [177 — W05 RAS 재연결과 세 보드 peer 분리 진단](<177_M31_W05_RAS_재연결과_3보드_peer_분리_진단.md>)
+- [178 — W04 연결 AoA 수신 Host/controller 경계](<178_M31_W04_연결_AoA_수신_Host_Controller_경계.md>) — **IQ report 0건·미완료 보존**
+- [179 — W05 RAS UUID 위장 peer 거부 20회](<179_M31_W05_RAS_UUID_위장_peer_거부_20회.md>)
+- [180 — W05 미암호화 RAS Features 읽기 거부 20회](<180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md>)
+- [181 — W03 native BAP LC3 실제 무선 전송](<181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)
+- [182 — W03 Arduino BAP unicast LC3 sink 실기](<182_M31_W03_Arduino_BAP_unicast_LC3_sink_실기.md>)
+- [183 — W03 Arduino BAP unicast LC3 두 역할 실기](<183_M31_W03_Arduino_BAP_unicast_LC3_두_역할_실기.md>)
+- [184 — W03 Arduino BAP unicast 재시작 복구 20회](<184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md>)
+- [185 — W03 Arduino BAP stop/release 20회](<185_M31_W03_Arduino_BAP_stop_release_20회.md>)
+- [186 — W03 Arduino BAP 잘못된 상태 거부 40회](<186_M31_W03_Arduino_BAP_잘못된_상태_거부_40회.md>)
+- [187 — W03 Arduino BAP 원격 codec·QoS 거부 각 20회](<187_M31_W03_Arduino_BAP_원격_codec_QoS_거부_각_20회.md>)
+- [188 — W03 Arduino BAP 원격 잘못된 ASE 상태 거부 20회](<188_M31_W03_Arduino_BAP_원격_잘못된_ASE_상태_거부_20회.md>)
+- [189 — W03 Arduino BAP 양방향 서버 실기](<189_M31_W03_Arduino_BAP_양방향_서버_실기.md>)
+- [190 — W03 Arduino BAP 양방향 클라이언트와 회귀](<190_M31_W03_Arduino_BAP_양방향_클라이언트_및_회귀.md>)
+- [191 — W02 공개 ISO 예제 재점검](<191_M31_W02_공개_ISO_예제_재점검.md>) — **당시 완료 판정 취소·재작업 시작**
+- [192 — W02 공개 CIS 사용자 SDU 실기](<192_M31_W02_공개_CIS_사용자_SDU_실기.md>)
+- [193 — W02 공개 BIS 사용자 SDU 실기](<193_M31_W02_공개_BIS_사용자_SDU_실기.md>)
+- [194 — W02 공개 암호화 BIS 사용자 SDU 실기](<194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md>)
+- [195 — W02 공개 BIS 시각 동기 사용자 SDU 실기](<195_M31_W02_공개_BIS_시각동기_사용자_SDU_실기.md>)
+- [196 — W02 공개 CIS·BIS 세 보드 사용자 SDU 실기](<196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md>)
+- [197 — W02 공개 API 암호화 BIS 오류 후 복구](<197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)
+- [198 — W02 공개 BIS sync loss 재시작 복구](<198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)
+- [199 — W02 격리 설치본 ISO 11예제 완료](<199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) — **W02 최종 완료**
+- [200 — M31 다른 PC 작업 인계](<200_M31_다른_PC_작업_인계.md>) — **작성 당시 snapshot**
+- [201 — W03 Arduino BAP broadcast 비암호화와 재가입](<201_M31_W03_Arduino_BAP_broadcast_비암호화와_재가입.md>)
+- [202 — W03 Arduino BAP broadcast 암호화와 negative 완료](<202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)
+- [203 — W03 Arduino BASS 세 역할과 복구](<203_M31_W03_Arduino_BASS_3역할과_복구.md>)
+- [204 — W03 Arduino CAP 세 역할과 broadcast 복구](<204_M31_W03_Arduino_CAP_3역할과_broadcast_복구.md>)
+- [205 — W03 Arduino CAP unicast 반복 실기](<205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)
+- [208 — W03 Arduino Audio Control 완료](<208_M31_W03_Arduino_Audio_Control_완료.md>)
+- [209 — W03 Arduino CSIP 완료](<209_M31_W03_Arduino_CSIP_완료.md>)
+- [210 — W03 Arduino PBP 완료](<210_M31_W03_Arduino_PBP_완료.md>)
+- [211 — W03 Arduino Media·Call Control 완료](<211_M31_W03_Arduino_Media_Call_Control_완료.md>)
+- [212 — W03 Arduino TMAP·GMAP 완료](<212_M31_W03_Arduino_TMAP_GMAP_완료.md>)
+- [213 — W03 Arduino HAP·HAS 완료](<213_M31_W03_Arduino_HAP_HAS_완료.md>)
+- [214 — W03 LE Audio profile 완료](<214_M31_W03_LE_Audio_Profile_완료.md>) — **W03-01~11 11/11 PASS·M31 3/8**
 
 </details>
 

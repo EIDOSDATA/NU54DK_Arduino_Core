@@ -12,6 +12,8 @@
 함께 Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 지원하는 것이 목표이며 구현·검증 순서는
 [다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다. 검증 전 Linux/macOS
 명령을 현재 설치 절차로 추정하지 않는다.
+현재 Host는 W01~W03 3/8 완료 상태에서 사용자 지시로 보류했다. 아래 v0.5.0 prerequisite 설명은
+재개 후 달성할 계약이며, Linux/macOS 배포 자산 준비·실물 검증이 완료됐다는 뜻이 아니다.
 
 ## Stable index와 설치
 

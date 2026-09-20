@@ -174,7 +174,7 @@ deprecated/experimental 등급을 안정 기능으로 바꾸지 않는다.
 후속 통합은 exact `16eb8fce…`에서 3보드 `M29-MULTI-01`·`M29-REG-01`을 PASS했고,
 exact `a964ae20…`에서 Windows WinRT peer 교차 제조사 GATT 상호운용을 PASS했다.
 이로써 M29는 작업 묶음 8/8(100%), test ID 10/10을 완료했다. 후속 M30도 8/8·10/10과
-실제 전원 차단 12/12를 완료했다. 현재 M31 착수 순서는 [M31 TODO](../TODO_M31.md)를 따른다.
+실제 전원 차단 12/12를 완료했다. M31은 W01~W03 완료 3/8이며 잔여 범위는 [M31 TODO](../TODO_M31.md)를 따른다.
 세부 API·자원과 단계별·완료 exact 원본은
 [M29 계약](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
 [147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>),

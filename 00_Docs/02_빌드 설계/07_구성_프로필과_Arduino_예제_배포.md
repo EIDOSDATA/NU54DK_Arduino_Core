@@ -51,6 +51,9 @@ libraries/<Library>/
 공개 예제의 단일 원본은 `libraries/*/examples`다. 문서나 별도 root examples에 같은 sketch를
 복사하지 않는다. 예제 폴더와 주 `.ino` 파일 이름은 정확히 같아야 한다.
 
+공개 `.ino`에는 사용자가 읽고 수정할 수 있는 C++/`NUCODE_*` API의 설정·송수신·오류·종료 흐름을 둔다.
+Zephyr 직접 호출은 library 구현 내부가 소유하며 개발 마일스톤 이름이나 시험 전용 oracle을 노출하지 않는다.
+
 `profile.json`과 `feature.yml`은 확장자와 무관하게 strict JSON 문법을 사용한다. 중복 key,
 알 수 없는 field, 절대 경로, 상위 경로 탈출과 허용 목록 밖 feature ID는 거부한다.
 
@@ -205,7 +208,12 @@ v0.4.1 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30
 
 ### 개발 `main`의 추가 예제
 
-2026-09-15 검토한 `8c311d9a…`의 `0.4.1-dev` 소스 트리에는 12개 library와 60개 `.ino`가 있다.
+2026-09-21 정비 기준 개발 소스는 **library 16개·`.ino` 113개**다. 이는 source 발견 수이며,
+각 예제의 build/runtime 완료는 별도로 집계한다. M31-W02는 설치본 ISO 11예제·11역할,
+W03은 Audio 11개 묶음을 완료했고 DF·CS는 미완료다. 실제 경로와 단계별 증거는
+[M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)와 [M31 TODO](../TODO_M31.md)를 따른다.
+
+이전 2026-09-15 검토한 `8c311d9a…`의 `0.4.1-dev` 소스 트리에는 12개 library와 60개 `.ino`가 있었다.
 정식 v0.4.1 예제 30개에 M28 11개, M29 15개, M30 profile 예제 4개가 추가된 snapshot이다.
 `NUCODE_BLE_DFU`는 별도 library이며 새 `.ino`를 더하지 않는다. 이 수를 v0.4.1 설치본의 제공 수로
 표시하지 않는다. M28·M29·M30은 완료했지만 v0.5.0 package 공개는 아직 아니다.
@@ -230,15 +238,15 @@ signing/EATT를 강제로 켜지 않는다. M29의 실제 예제명과 완료·�
 
 ### v0.5.0 이후 예제 구현·검증 TODO
 
-현재 공개 30개와 개발 snapshot 수치는 위의 고정 시점 기준이다. 다음 표는 **신규 예제 구현 계획**이며
-이미 설치 가능한 예제 목록이 아니다. 상세 feature·role은
+현재 공개 30개와 개발 snapshot 수치는 위의 고정 시점 기준이다. 다음 표는 단계별 예제 계약이다.
+M31-W02/W03은 완료했고 나머지는 진행 중 또는 계획이며 공개 v0.4.1 설치 목록과 구분한다. 상세 feature·role은
 [전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
 
 | 소유 단계 | 반드시 제공/판정할 예제 묶음 |
 | --- | --- |
-| M31-W02 | CIS central/peripheral, BIS broadcaster/receiver, combined ISO·time sync·recovery |
-| M31-W03 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP 역할 |
+| M31-W02 — 완료 | CIS central/peripheral, BIS broadcaster/receiver, combined ISO·time sync·recovery; [설치본 11예제·11역할 증거](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
+| M31-W03 — 완료 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP; [11/11 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
 | M31-W04~W05 | AoA CTE TX의 connected/connectionless 예제, DF RX/IQ 적용성, CS initiator/reflector·RAS·복구 |
 | M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
 | M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
@@ -263,7 +271,7 @@ signing/EATT를 강제로 켜지 않는다. M29의 실제 예제명과 완료·�
 - [ ] Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
   실패 증거 수집 안내를 제공하고 마지막 릴리스 단계로 인계한다.
 
-향후 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
+M31-W01에서 구현한 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
 upstream case를 포괄하면 대응 case 전부를 명시하고, 발견 개수·적용 개수·build/runtime PASS 개수를
 별도 집계한다. 예제 수를 늘리기 위한 내용 중복이나 빈 role template는 완료 산출물로 세지 않는다.
 

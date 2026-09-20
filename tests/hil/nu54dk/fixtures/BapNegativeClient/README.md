@@ -19,4 +19,5 @@ QoS SDU `code=7 reason=6`, idle Release `code=4 reason=0`을 구분한다.
 매 반복에서 두 보드를 함께 hardware
 reset하고 시험 client의 bonding flag를 끄므로 이전 연결의 휘발성 bond가
 다음 회차의 보안 절차에 영향을 주지 않는다. 한 회차의 거부만으로 전체
-W03-02를 완료로 판정하지 않으며, Arduino 양방향 stream은 별도 시험이 필요하다.
+W03-02를 완료로 판정하지 않는다. W03-02와 전체 W03은 별도의 Arduino 양방향 stream·역할별
+실기까지 완료했으며, 현재 판정은 [M31 TODO](../../../../../00_Docs/TODO_M31.md)를 따른다.

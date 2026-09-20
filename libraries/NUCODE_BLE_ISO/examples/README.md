@@ -1,5 +1,10 @@
 # NUCODE BLE ISO 예제
 
+이 11개 역할 예제는 개발 소스 `0.4.1-dev`의 격리 설치본 build와 실제 보드
+실행을 완료했다. 현재 설치·지원 package는 `v0.4.1`이며 이 개발 예제들이 그
+공개 ZIP에 포함됐다는 뜻은 아니다. 설치본 범위와 exact 증거는
+[검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
+
 `CISCentral`과 `CISPeripheral`은 `RawCis` 공개 API로 `.ino`에서 8-byte payload를
 만들고 검사하는 예제다. 두 보드의 16-byte `sessionId`를 같게 두고 각각 NU54DK Zephyr /
 BLE로 빌드한다. Central은 100 frame을 전송하고 Peripheral은 받은 내용과 순서를

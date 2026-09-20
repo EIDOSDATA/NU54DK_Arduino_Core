@@ -4,6 +4,14 @@
 실행한다. `.ino`에는 일반 C++로 PCM 생성, codec 설정, encode/decode, 결과 검사와 오류 처리를
 보여 준다. liblc3와 Zephyr Audio 객체는 라이브러리 구현 내부에 있다.
 
+이 예제 집합은 개발 소스 `0.4.1-dev`의 LE Audio 표면이다. 완료 감사에 채택된
+profile·역할 예제는 build와 합성 PCM/payload의 보드 간 데이터·제어·복구 경로를
+검증했다. `ExternalPdmMicrophoneSource`와 `ExternalI2sSpeakerSink`는 build 가능한 실제
+연결 예제이지만, 외장 PDM/I2S 장치의 실물 입출력·음질·전기적 호환성은
+사용자 후속 `NOT RUN`이다. 현재 설치·지원 package는 `v0.4.1`이며 이 개발
+예제들이 그 공개 ZIP에 포함됐다는 뜻은 아니다. 세부 판정은
+[검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
+
 ## `Lc3SyntheticLoopback`
 
 - `Lc3Codec::begin()`으로 16 kHz, 10 ms, 40-byte LC3 frame을 구성한다.
@@ -167,6 +175,7 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
   읽고 `s`는 active index와 cache를 출력한다. 지원되지 않는 index는 원격 ATT/HAS 오류로
   거부되며 연결 해제 뒤 새 handle에서 검색을 다시 시작한다.
 - 두 예제의 `c` 명령은 각 장치에 저장된 bond를 공개 Security API로 지우고 남은 수를 출력한다.
+
 ## TMAP 역할 예제
 
 `TelephonyMediaGateway`와 `TelephonyMediaTerminal`은 각각 CG+UMS와 CT+UMR 역할을
@@ -238,6 +247,7 @@ EasyDMA와 IRQ를 `StreamFabric`이 직접 소유하도록 표준 Serial·Wire·
 외부 장치의 전압·clock 방식·증폭기 요구사항은 부품 datasheet가 우선한다. 위 경로는 실제 연결용
 구현과 build 가능한 예제이며, 특정 microphone/codec/speaker의 음질·전기적 호환성 실물 검증을
 대신하지 않는다.
+
 ## `MediaControlPlayer` / `MediaControlClient`
 
 - Player는 고정 Zephyr `BT_MPL` 합성 player와 `BT_MCS`를 등록한다. 실제 음원 없이도 track title,

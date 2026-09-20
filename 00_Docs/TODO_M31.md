@@ -5,10 +5,13 @@
 | 대상 제품선 | `v0.5.0` |
 | 현재 상태 | **W01~W03 완료, W04·W05 진행 중 / 완료 3/8 작업 묶음** |
 | 선행 완료 | M30 W01~W08 8/8, test ID 10/10, 실제 전원 차단 4지점 × 3회 = 12/12 |
-| 병행 Host 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 잔여; M31과 독립된 8개 작업 분모 |
+| 병행 Host 상태 | HOST-W01~HOST-W03 완료 3/8, HOST-W04~HOST-W08 사용자 지시로 보류; M31과 독립 집계 |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, 고정 lock revision |
 | 기능 검증 장비 | 사용자 확인 NU54DK 3개; 실제 시험 직전 SHA-256 probe identity·serial·role·firmware 재대조 |
 | 최종 갱신일 | 2026-09-21 |
+
+W03 완료 후 기능 개발은 멈춘 상태다. 아래 W04/W05의 **진행 중**은 구현이 일부 남았다는
+원장 상태이며 현재 실행 중이라는 뜻이 아니다. 새 기능 작업과 Host 작업은 재개 지시를 따른다.
 
 M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF·connected Channel Sounding
 기능과 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것**이다. 고수준 Arduino facade,
@@ -21,7 +24,8 @@ M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF
 Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
 계획 개정 자체는 구현 증거가 아니다. W01~W03 완료와 W04 이후 미완료 범위는
 [착수 계약](<01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md>)과
-[W02 최종 완료 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)에서 구분한다.
+[W02 최종 완료 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>),
+[W03 최종 완료 기록](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 구분한다.
 
 ## 1. 착수 원칙과 지원 판정
 
@@ -49,7 +53,7 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 7. 고정 stack에서 적용 가능하다고 판정한 필수 board-only 기능은 실제 HIL이 있어야 닫는다. 메모리
    부족·build 실패·SDK 제약은 원인과 해결 또는 profile 분리 TODO를 남긴다. 계획을 적었다는 이유로
    지원 판정이나 작업 묶음을 완료 처리하지 않는다.
-8. HOST-W04~HOST-W06 구현·가능한 자동 검사를 병행한다. Ubuntu/macOS의 실제 설치·USB upload·
+8. HOST-W04~HOST-W06은 재개 지시 후 독립적으로 구현·자동 검사를 진행한다. Ubuntu/macOS의 실제 설치·USB upload·
    serial/debug·수명주기 검증은 **사용자가 최종 릴리스 단계에서 수행**하고 HOST 원장과 M33 release
    gate에 결과를 인계한다. 이 사용자 최종 검증은 M31 firmware 개발의 선행 차단이 아니다.
 9. **Apple/Google 기능과 mic/speaker/codec 등 외장 장치 경로는 담당 마일스톤에서 사용 가능한 구현·
@@ -76,7 +80,7 @@ M32-A는 modern LE controller/Host·Nordic 확장, M32-B는 Mesh와 Mesh 1.1, M3
 interval, 다중 advertising/identity, EAD, LLPM/QoS 등은 전체 원장에 등록하고 M32-A로 연결한다.
 추가 GATT service·Fast Pair/Apple peer·DTM/HCI 예제의 catalog와 패키징은 M33에 인계한다.
 
-## 3. W03 세부 구현·예제 TODO
+## 3. W03 세부 완료 상태 — 11/11
 
 아래 `W03-01`은 Arduino codec 내부 loopback과 Arduino source→sink의 실제 ISO LC3
 encode/decode까지, `W03-02`는 native unicast 양방향 ISO 및 Arduino source/sink
@@ -97,7 +101,7 @@ W03-10 TMAP/GMAP, W03-11 HAP/HAS까지 모두 완료했다.
 | 하위 작업 | 구현할 기능과 역할 | Arduino 예제·실제 기능 판정 |
 | --- | --- | --- |
 | W03-01 LC3·stream data | **완료.** LC3 encode/decode, codec capability·configuration, frame/sample rate/SDU/buffer 계약, 합성 PCM과 encoded source/sink | 합성 신호 → encode → ISO → decode, source→sink 1,000 frame·drop 0, peer 재시작 복구 20/20; lossy codec에 원본 PCM byte 동일성을 요구하지 않음 |
-| W03-02 BAP unicast·PACS/ASCS | Unicast Client/Server, 양 역할의 Audio Source/Sink, PACS capability/context·ASCS ASE 상태와 제어, 단방향·양방향 구성 | client/server 역할별 예제, discovery → codec/QoS → enable/start → stream → stop/release, 잘못된 ASE 상태/codec/QoS 거부 |
+| W03-02 BAP unicast·PACS/ASCS | **완료.** Unicast Client/Server의 Audio Source/Sink, PACS·ASCS, 단방향·양방향 구성 | 양방향 각 1,000 frame, stop/release·재연결 20/20, 잘못된 ASE 상태/codec/QoS 거부; [190번 기록](<04_검증 기록/190_M31_W03_Arduino_BAP_양방향_클라이언트_및_회귀.md>) |
 | W03-03 BAP broadcast | **완료.** Broadcast Source/Sink, BIG/BIS 선택·sync·metadata, broadcast code와 암호화, 재동기 | [source](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino) / [sink](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastSink/BapBroadcastSink.ino); LC3 stream·wrong code 거부·sync loss 재가입 20/20, [완료 기록](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>) |
 | W03-04 BASS | **완료.** Broadcast Audio Scan Service, Scan Delegator, Broadcast Assistant, receive state notification·source add/modify/remove. 공개 3역할 제어 100/100, invalid/duplicate 각 20/20 거부, Delegator hardware-reset 복구 20/20, 180초 LC3 17,500 frame 증가·drop 0 | [source](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino) / [assistant](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastAssistant/BapBroadcastAssistant.ino) / [delegator-sink](../libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino); [완료 기록](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>) |
 | W03-05 CAP | **완료.** Initiator/Acceptor/Commander, broadcast와 single-member unicast, cancel·원격 완료 실패·handover | broadcast 102/102, unicast start/stop 23회·cancel 22회·재연결 48회·LC3 1,800 frame·drop 0, 원격 완료 실패 20/20와 정상 image 복구; [CAP unicast 기록](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>) |
@@ -118,7 +122,10 @@ W03-10 TMAP/GMAP, W03-11 HAP/HAS까지 모두 완료했다.
 - [x] Host semantic/negative → native/Arduino build → 적용 가능한 2~3보드 기능 HIL 순서로 판정
 - [x] 외부 mic/codec/speaker, 상용 phone/headset 확장 경로의 구현·예제·설정/연결 안내·가능한 자동 검사와 사용자 후속 실물 `NOT RUN` 경계를 기록
 
-## 4. W01에서 먼저 구현할 산출물과 실행 순서
+## 4. 기존 착수 순서와 재개 기준
+
+W01~W03은 이 순서로 완료했다. 1~7번의 원장·기준선은 보존하며 재구현하지 않는다.
+후속 기능 개발 재개 시 8번과 §2의 W04/W05 잔여를 대조한다.
 
 1. 저장소·branch·HEAD·미커밋 변경·board submodule·SDK/toolchain lock과 변경 전 전체 Host 기준선을
    기록한다. 다른 작업의 변경 소유권과 실행 중 검사를 보존한다. CI/CD 조회·대기는 최신 사용자
@@ -153,7 +160,7 @@ W03-10 TMAP/GMAP, W03-11 HAP/HAS까지 모두 완료했다.
 8. W04 DF와 W05 CS는 controller 적용성에 맞춰 병행할 수 있다. W04는 W01의 RX build와 mapping이
    확인되면 기본 안테나 두 보드로 raw IQ report 수신 HIL을 수행한다. 수신 sample count·형식·status·
    start/stop·복구를 검사하며 안테나 배열과 정밀 각도 oracle을 요구하지 않는다. W06 전까지 실패 원인과
-   profile별 자원을 분리한다. HOST-W04 Ubuntu prerequisite·resolver·launcher도 독립 진행한다.
+   profile별 자원을 분리한다. HOST-W04 Ubuntu prerequisite·resolver·launcher는 현재 보류 상태다.
 
 ## 5. 예제 품질과 설치 계약
 
@@ -170,9 +177,11 @@ M33은 M31/M32가 전달한 예제와 추가 GATT/profile·특수 template의 �
 세 Host 설치 후 전체 예제 compile·대표 runtime를 마감한다. M31에서는 해당 기능의 Arduino
 사용 가능성과 역할별 예제 검증까지 완료해야 한다.
 
-## 6. HOST-W04~HOST-W06 병행 TODO
+## 6. HOST-W04~HOST-W06 TODO — 사용자 지시로 보류
 
-| Host 작업 | 상태 | 바로 할 일 | 증거 경계 |
+아래는 재개 후 수행할 계획이다. W04~W08의 구현 상태는 미착수이며 현재 실행하지 않는다.
+
+| Host 작업 | 구현 상태 | 재개 후 할 일 | 증거 경계 |
 | --- | --- | --- | --- |
 | HOST-W04 prerequisite | **미착수** | Ubuntu 24.04+ AMD64부터 OS/arch별 nRF Util·sdk-manager·NCS·Zephyr·toolchain·Arduino CLI URL/hash/revision manifest; Linux resolver·launcher·실행 권한·serial/USB path·udev 조건과 negative | 정적/Ubuntu CI/unit와 실제 PC clean 설치·USB upload·serial/debug를 별도 칸으로 기록 |
 | HOST-W05 portable path/cache | **미착수** | 경로 구분자·executable 탐색·XDG cache, lock·case sensitivity·symlink·execute bit·공백·한글·긴 경로·atomic replace·권한 실패 | 해당 OS native CI/build 증거와 실제 사용자 Host 설치·권한 증거 분리 |

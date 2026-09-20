@@ -7,12 +7,16 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | W01 완료 1/8; ISO 고정 시험 sketch 11/11 build와 7개 실제 보드 case PASS. 공개 CIS·일반/암호화 BIS 여섯 역할 새 payload API 실기 PASS, 나머지 5개 ISO 예제 재작업과 W03 전체 LE Audio 진행 |
+| 현 단계 | **W01~W03 완료 3/8**; W02 설치본 ISO 11예제·11역할과 W03 Audio 11/11 완료. W04 DF·W05 CS는 진행 중·미완료, W06~W08은 미착수 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각
 판정한다. M30의 8/8·10/10·전원 차단 12/12 완료 판정은 그대로 보존한다. 고정 lock이나
 기본 controller를 임의로 교체하지 않는다.
+
+현재 완료 근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
+[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다. 남은 기능·검증과 재개 범위는
+[M31 TODO](../TODO_M31.md)와 [HANDOFF](../HANDOFF.md)를 따른다. HOST-W04 이후는 사용자 지시로 보류 중이다.
 
 ## 원장과 수집 범위
 
@@ -35,10 +39,10 @@ parity 원장은 기능 예제의 계획·실제 Sketch, controller, role, 외�
 
 | 구성 | 현행 관찰 | 다음 기능 판정 |
 | --- | --- | --- |
-| 기본 SDC | 기본 설정 HCI LE feature에는 ISO·DF·CS가 활성화되지 않는다. ISO·CS·DF TX opt-in target 3종을 분리 빌드했고 각 HCI bit와 Host 설정을 실기 query했다. | CIS/BIS payload, CS procedure, CTE 송신은 기능별 HIL 필요 |
+| 기본 SDC | 기본 설정 HCI LE feature에는 ISO·DF·CS가 활성화되지 않는다. ISO·CS·DF TX opt-in target 3종을 분리 빌드했고 각 HCI bit와 Host 설정을 실기 query했다. | W02 CIS/BIS 기능 HIL 완료. W04 CTE TX·W05 CS procedure의 부분 결과와 미완료 negative·복구는 TODO에서 개별 관리 |
 | Zephyr LL IQ 후보 | `bt-ll-sw-split`와 기본 1개 안테나, TX/RX 안테나 전환 없는 구성을 NU54DK에 build했다. HCI connectionless CTE RX bit 20과 Host 설정은 확인했고 안테나 정보는 1개다. | raw IQ report 수신·형식·stop/restart를 W04에서 실제 두 보드로 검증 |
 | 기본 SDC DF | opt-in `CONFIG_BT_CTLR_DF=y`에서 connectionless CTE TX bit 19를 확인했다. SDC AoD bit와 IQ RX bit는 제공되지 않는다. | TX 예제/실기와 LL RX 후보를 구분; 칩 전체 IQ 불가 판정 금지 |
-| LE Audio profile | 11개 W03 기능 묶음의 source 후보·역할 분모를 등록했다. | profile별 opt-in·target/Arduino build·합성 PCM/payload·role HIL 필요 |
+| LE Audio profile | 11개 W03 기능 묶음의 공개 역할·build·합성 PCM/payload·제어·negative·복구 HIL을 완료했다. | 외장 I/O·상용 peer·qualification은 사용자 후속 `NOT RUN`; 보드 기능 PASS를 상호운용·음향 성능으로 확대하지 않음 |
 
 Zephyr Host AoA API는 안테나 2개 이상 및 ANT_SWITCH_RX를 검사하므로 현재 1안테나
 구성에서 고수준 AoA API를 바로 사용하면 거부된다. 이 사실은 HCI raw CTE RX bit와 별도이며,
@@ -48,7 +52,7 @@ W04의 직접 raw IQ 가능성은 실제 report 수신 전까지 `source_candida
 ## 유한 시험과 증거 형식
 
 readiness의 10개 family·28개 subcase가 검증 분모다. W03의 11개 Audio 묶음과 설치
-예제 role 42개는 별도 분모로 유지한다. `M31-CAP-01`은 한 보드에서 7개 HCI LE feature와
+예제 role 43개는 별도 분모로 유지한다. `M31-CAP-01`은 한 보드에서 7개 HCI LE feature와
 Host 설정, 4개 revision, controller variant, 동일 nonce/image hash를 대조한다.
 `M31-PARITY-01`은 703개 원장의 owner·중복·status 경계를 검사한다.
 `M31-ISO-01:cis`는 중앙/주변 두 보드에서 20회 START→100개 SDU→STOP, 매회
@@ -70,7 +74,7 @@ IDENTITY/결과/STOPPED의 누락·중복·잘못된 nonce/role/feature·절단�
 `user/final_release`, 개발 blocker `false`, 릴리스 blocker `true`다. 제품 사용 가능한
 외장 연결 경로·예제·설정 안내와 가능한 자동 검사는 별도의 필수 개발 case다.
 
-## 현재 개발 시도와 후속 판정
+## 개발 시도와 후속 판정 이력
 
 한 보드 capability의 5개 구성은 local target build와 HCI query 개발 시도에서 통과했다.
 원본은 [M31-W01 후보 증거](<../04_검증 기록/evidence/m31-w01-dev-candidate>)에 있으며
@@ -94,19 +98,22 @@ sync loss 뒤 각 100/100 새 BIG 복구를 확인해 `M31-ISO-01:bis`를 PASS�
 native combined 기능을 닫았다. 최종 clean `e6ae812e…` package에서는 설치 ISO sketch
 11개를 모두 빌드하고 CIS·BIS·암호화·두 negative·time sync·combined를 새 image로 다시
 실행했다. [W02 closure audit](<../04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>)로
-W02를 완료했으며 M31 작업 묶음은 2/8이다.
+W02를 완료했다고 판정했으며 당시 M31 작업 묶음은 2/8이었다.
 이 문장은 2026-09-16 당시 판정이다. [191번 재점검](<../04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md>)에서
-공개 payload 예제 결함으로 W02 완료를 철회해 현행 분자는 **1/8**이다.
+공개 payload 예제 결함으로 W02 완료를 철회해 당시 분자는 **1/8**로 내려갔다.
 [192번 공개 CIS](<../04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md>)와
 [193번 공개 BIS](<../04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md>)의
 네 역할은 새 clean 실기 PASS다. 후속
 [194번 공개 암호화 BIS](<../04_검증 기록/194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md>)
-두 역할도 PASS이며, 나머지 5개 공개 ISO 역할은 진행 중이다.
+두 역할도 PASS했고, 나머지 5개 공개 ISO 역할을 후속 구현·검증했다. 최종적으로
+[199번 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)에서 공개 payload 흐름,
+설치본 ISO 11예제 build와 11역할 실기를 닫아 W02를 다시 완료했다.
 clean `504badeec81723f4949879611b0b19371389b56d`의
 [ISO time sync exact manifest](<../04_검증 기록/evidence/m31-w02-exact-504badee/time-manifest.json>)는
 20회×100 receiver timestamp와 양 BIG 해제·재시작을 PASS로 판정했다. 첫 clean
 99/100 실패는 [원본 감사](<../04_검증 기록/evidence/m31-w02-exact-0c7849c2/time-failure-audit.json>)로 보존한다.
-Audio/DF raw IQ·CS procedure와 해당 역할 예제 기능 단계는 별도로 판정한다.
+Audio는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 W03-01~11을
+완료했다. DF raw IQ·CS 잔여 negative/복구와 W06~W08은 별도로 판정한다.
 [W01 clean 감사 결과](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>)는
 parity 703행, Host 오류 입력 20/20 거부, 전체 Host 회귀를 확인해 W01만 완료했다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.

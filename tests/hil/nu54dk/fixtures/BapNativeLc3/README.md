@@ -6,4 +6,5 @@
 `CONFIG_FPU=y`는 고정 SDK의 `CONFIG_LIBLC3=y` 의존성을 만족시킨다.
 
 이 설정은 upstream native 샘플의 실제 LC3 encode/서버 decode와 ISO 전송
-적용성을 조사한다. Arduino 공개 API나 설치 예제를 대신하지 않는다.
+적용성을 조사한다. Arduino 공개 API나 설치 예제를 대신하지 않는다. 이 fixture가 담당한
+native 적용성은 W03 완료 근거의 일부이며, fixture build 하나를 W03 전체 PASS로 계산하지 않는다.

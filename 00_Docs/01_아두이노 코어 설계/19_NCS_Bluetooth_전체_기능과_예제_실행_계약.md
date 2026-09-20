@@ -4,11 +4,11 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | 개발 source `0.4.1-dev`에서 구현하는 `v0.5.0` M31~M33 및 M34~M45로 인계할 의존성 |
-| 현재 상태 | **M31 구현·검증 진행 중**. W01 완료, W02 무선 기능 HIL 통과·공개 ISO API/예제 재작업 중, W03-02 기능 HIL 완료를 [M31 TODO](../TODO_M31.md) 및 readiness 원장에 기록했다 |
+| 현재 상태 | **M31 W01~W03 완료 3/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11 완료. W04 DF·W05 CS는 진행 중·미완료, W06~W08과 M32·M33은 미착수 |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
-| 최종 갱신일 | 2026-09-17 |
+| 최종 갱신일 | 2026-09-21 |
 
 전체 번호·제품선은 [제품 로드맵](02_구현_로드맵.md), 작업 묶음은 [M31 TODO](../TODO_M31.md),
 [M32 TODO](../TODO_M32.md), [M33 TODO](../TODO_M33.md), 현재 상태는
@@ -16,6 +16,10 @@
 계약을 소유한다. 기존 [NCS API matrix](06_NCS_3.4.0_기능과_예제_지원_매트릭스.md)는 현재 공개 지원표이며
 이 계획 문서와 상태를 구분한다. `coverage/generated` 등 생성 문서는 해당 원본·생성기를 갱신하고
 재생성하며 생성 Markdown을 수작업으로 수정하지 않는다.
+
+완료 근거는 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)와
+[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다. Host는 W01~W03 완료
+3/8이고 **W04 이후는 사용자 지시로 보류**다. 아래 범위·병행 계획은 재개 지시 후 적용한다.
 
 ### 2026-09-16 최종 사용자 결정 — 구현 책임과 실물 검증 gate
 
@@ -165,17 +169,22 @@ W02는 clean `e6ae812e…` private package에서 설치 sketch 11개를 11/11 �
 CIS·BIS·암호화·wrong code·sync loss·time sync·세 보드 CIS→BIS 무선 시험을 통과했다.
 하지만 2026-09-17 공개 예제 점검에서 11개 sketch가 `Program::begin()`/`poll()`만
 호출하고 시험용 고정 SDU·Serial protocol을 library backend에 맡기는 결함을 확인했다.
-따라서 W02 작업 묶음은 공개 ISO 데이터 API와 사용자 편집 가능한 송수신 예제를 구현·재검증할
-때까지 **진행 중**으로 재개한다. 이전 무선 시험의 역할별 경로와 image·transcript hash는
+이에 W02를 **진행 중**으로 되돌려 공개 ISO 데이터 API와 사용자 편집 가능한 송수신 예제를
+구현·재검증했다. 이전 무선 시험의 역할별 경로와 image·transcript hash는
 [W02 closure audit](<../04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>)가 소유한다.
 그 audit는 현재 공개 예제 완료 판정의 근거가 아니다. 계획 예제 이름은 기능 계약이며
 실제 설치 이름은 readiness의 `actual_sketch`가 기준이다.
 
+현재 W02는 [199번 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)의
+설치본 11/11 build·11역할 실기, wrong code 거부 후 복구와 sync loss 재시작까지 완료했다.
+이전 실패·완료 철회 기록은 당시 판정으로 보존한다.
+
 ### M31-W03 LE Audio 하위 계약
 
-아래 11개 묶음의 source는 개별 nRF54L15 target build 전까지 candidate다. nRF5340·simulation만
-나열한 sample의 결과를 NU54DK로 복사하지 않는다. 모든 role의 최소 동작 예제와 권장 profile를
-원장에 등록하며, 지원 가능한 역할을 임의로 생략하지 않는다.
+아래 11개 묶음은 [214번 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서
+공개 역할별 build·기능·negative·복구 검증을 닫았다. 표는 각 묶음의 기능 계약을 유지하며 실제 Sketch와
+source별 증거는 readiness가 소유한다. nRF5340·simulation의 결과를 NU54DK로 복사하지 않고,
+지원 가능한 역할을 임의로 생략하지 않는다.
 
 | 묶음 | 반드시 명시·구현할 기능 | 고정 source 근거 | Arduino 경로·계획 예제 | 검증·장비 |
 | --- | --- | --- | --- | --- |
@@ -204,7 +213,7 @@ timestamp에 근거한 소프트웨어 관측 지연과 외부 계측 end-to-end
 | --- | --- | --- | --- |
 | M31-W04 connectionless AoA CTE TX | SDC CTE advertising, `N:direction_finding_connectionless_tx` nRF54L15 metadata. NCS maturity는 experimental | `profile/direct`: `DirectionFindingCteBeacon` | 1보드 capability/start/stop; CTE 실제 수신 확인은 지원 RX peer 필요. 보드 3개 보유만으로 IQ RX를 가정하지 않음 |
 | M31-W04 connected AoA CTE response TX | SDC Connection CTE Response, `N:direction_finding_peripheral` nRF54L15 metadata. experimental | `profile/direct`: `DirectionFindingCtePeripheral` | 2역할; 요청·응답 기능은 적용 가능한 requester가 있어야 HIL. unsupported command·재연결 |
-| M31-W04 원시 AoA RX/IQ | 기본 SDC는 DF TX 범위이며 RX 미제공. Zephyr LL의 RX 코드·nRF54L15 DTS `dfe-supported`는 후보 근거이나 해당 RX sample metadata에 nRF54L15 없음 | `profile/direct` 후보 `DirectionFindingIqReceiver`; 기본 안테나로 수집 가능한 별도 구성부터 조사·build | 1보드 target 판정 → 적용 가능 시 2보드 실제 IQ·count/형식/수명주기 HIL. 현재 build/runtime 미확인; 배열을 raw IQ의 선행조건으로 두지 않음 |
+| M31-W04 원시 AoA RX/IQ | 기본 SDC는 DF TX 범위이며 RX 미제공. Zephyr LL의 RX 코드·nRF54L15 DTS `dfe-supported`는 후보 근거이나 해당 RX sample metadata에 nRF54L15 없음 | `profile/direct` 후보 `DirectionFindingIqReceiver`; 기본 안테나의 별도 RX target build·HCI query 확인 | 실제 IQ report 수신은 실패·미완료. Host/controller 경계·수신 오류를 진단하며 배열을 raw IQ의 선행조건으로 두지 않음 |
 | M31-W04 실제 AoA 각도·antenna switching | 공간적 위상차를 이용한 각도 계산과 외장 antenna 제어는 원시 IQ 수집과 다른 경로 | 적용 가능한 설정·예제·연결 안내를 별도 제공 | 실물 안테나 구성의 운용·검증은 사용자 후속·릴리스 비차단 `NOT_RUN`; 정밀 각도 보정·정확도 보증은 범위 제외 |
 | M31-W04 AoD | 고정 SDC의 connectionless/connected CTE는 AoD 미지원 | 기본 SDC `excluded`; 명확한 오류·capability 예제로 표시 | Unsupported negative. 다른 controller가 필요하면 별도 영향 평가; 자동 전환하지 않음 |
 | M31-W05 CS initiator/reflector | `BT_CHANNEL_SOUNDING`; `N:channel_sounding/ras_initiator`, `ras_reflector` nRF54L15 metadata·`build_only` 존재, initiator의 `A1_B1`은 양쪽 안테나 1개 | `wrapper/profile`: `ChannelSoundingInitiator`, `ChannelSoundingReflector` | 기본 안테나의 2보드; ACL→security→capability/config→procedure→result→stop. 안테나 배열을 요구하지 않음 |

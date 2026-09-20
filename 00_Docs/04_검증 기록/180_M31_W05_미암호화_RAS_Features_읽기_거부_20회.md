@@ -1,6 +1,6 @@
 # M31-W05 미암호화 RAS Features 읽기 거부 20회
 
-공개 Arduino `RasReflector`와 [내부 미암호화 GATT client fixture](../../../tests/hil/nu54dk/fixtures/RasInsecureRead/RasInsecureRead.ino)를
+공개 Arduino `RasReflector`와 [내부 미암호화 GATT client fixture](../../tests/hil/nu54dk/fixtures/RasInsecureRead/RasInsecureRead.ino)를
 NU54DK 두 대에서 실행했다. Client는 `CONFIG_BT_SMP=n`이며 보안 요청을 하지 않는다.
 광고의 Ranging UUID `0x185B`로 연결하고 공개 `BLEClient` API로
 Ranging Features characteristic `0x2C14`를 찾은 뒤 읽는다.

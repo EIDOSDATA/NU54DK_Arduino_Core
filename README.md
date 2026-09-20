@@ -26,18 +26,19 @@
 | 구분 | 상태 | 사용할 때의 기준 |
 | --- | --- | --- |
 | 설치·지원 배포판 | **v0.4.1** | Boards Manager에서 제공하는 유일한 지원 버전. 아래 지원 기능·설치 예제의 기준 |
-| 현재 M31 개발 브랜치 | `m31-w01`, 소스 식별자 `0.4.1-dev` | v0.5.0을 목표로 BLE 확장 개발 중. 배포판에 없는 API·예제가 포함됨 |
+| 개발 소스 | `main`, 소스 식별자 `0.4.1-dev` | v0.5.0을 목표로 BLE 확장 개발 중. 배포판에 없는 API·예제가 포함됨 |
 | M28 GAP·Link·Privacy | **8/8 완료** | 두·세 NU54DK 실기 완료. 개발 브랜치에 반영됐으며 v0.4.1에는 미포함 |
 | M29 ATT/GATT·L2CAP | **8/8 완료** | 10/10 test ID, 세 보드 통합·회귀와 Windows/Intel GATT 상호운용 PASS |
 | M30 보안·profile·최소 DFU | **8/8 완료** | 10/10 test ID, 실제 전원 차단 4지점 × 3회(12/12), 복구 실패·invalid image boot 0 |
-| M31 ISO·Audio·DF·CS | **2/8 완료** | W01 원장·capability와 W02 raw ISO 완료. W03~W05 구현 중, W06~W08 잔여 |
-| v0.5.0 다중 Host | 기반 구현 진행 | HOST-W01~HOST-W03 공통 backend·resolver·launcher 완료. M33에서 Windows·Ubuntu·macOS 지원 판정 |
+| M31 ISO·Audio·DF·CS | **3/8 완료** | W01 원장·capability, W02 raw ISO, W03 LE Audio 11/11 완료. W04 DF·W05 CS 미완료, W06~W08 미착수 |
+| v0.5.0 다중 Host | **3/8 완료, 후속 보류** | HOST-W01~HOST-W03 공통 backend·resolver·launcher 완료. HOST-W04 이후는 사용자 지시로 보류 |
 | v0.5.0 릴리스 | 미공개 | M31~M33 구현·검증·릴리스 절차가 필요 |
 
-현재 개발 체크포인트는 **M31-W01·W02 완료, W03~W05 진행 중**입니다. W02의 공개
+현재 개발 체크포인트는 **M31-W01~W03 완료**입니다. W02의 공개
 ISO 예제 11개는 독립 개발 package에서 전수 빌드하고 같은 image로 두·세 보드
 역할별 실기를 통과했습니다. [W02 완료 기록](<00_Docs/04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
-[M31 TODO](00_Docs/TODO_M31.md)에서 남은 Audio·DF·CS 및 통합 작업을 확인할 수 있습니다.
+[W03 완료 기록](<00_Docs/04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 ISO·LE Audio의
+완료 범위를, [M31 TODO](00_Docs/TODO_M31.md)에서 남은 DF·CS 및 통합 작업을 확인할 수 있습니다.
 신규 범위는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)에
 따라 M31 8개·M32 12개·M33 8개 작업으로 관리합니다.
 최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
@@ -159,7 +160,7 @@ QDEC는 기본 정·역회전과 SAMPLE/REPORT event 경로를 지원합니다.
 
 ## 개발 중인 기능
 
-아래는 **`m31-w01` 브랜치의 v0.5.0 개발 범위**입니다. Boards Manager의 v0.4.1 지원표와 구분해서 읽어주세요.
+아래는 **`main`의 v0.5.0 개발 범위**입니다. Boards Manager의 v0.4.1 지원표와 구분해서 읽어주세요.
 PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·OS peer 전체에 대한 보증은 아닙니다.
 
 | 단계 | 구현·검증한 기능 | 남은 범위 |
@@ -167,7 +168,7 @@ PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·O
 | M28 — 완료 | Central 최대 1개 + Peripheral 최대 1개, 총 2-link. Generation handle, 확장 광고·스캔, periodic 광고·sync·PAST, PAwR, privacy/RPA, link별 제어 | 해당 개발 계약 완료. OS별 상호운용·Bluetooth qualification·v0.5.0 공개는 별도 |
 | M29 — 완료 | 512-byte long/reliable GATT, descriptor·authorization·read multiple, robust cache, LE CoC, Signed Write·EATT opt-in | 10/10 test ID와 세 보드 mixed-link·M19~M21/M28 회귀 PASS. Windows/Intel GATT 외 OS·adapter 전체는 미검증 |
 | M30 — 완료 | link별 security·pairing, 유선 OOB·bond/privacy, profile 7개, MCUboot·secure BLE DFU, 세 보드 secure multi-link | W01~W08·10/10 test ID와 실제 전원 차단 12/12 PASS. NFC RF는 결정된 범위대로 NOT RUN |
-| M31 — 2/8 완료 | W01 원장·capability와 W02 raw ISO 11역할 공개 예제·실기 완료 | 전체 LE Audio profile·DF raw IQ·CS 잔여, W06~W08 통합·회귀·마감 |
+| M31 — 3/8 완료 | W01 원장·capability, W02 raw ISO 11역할, W03 LE Audio 11개 하위 작업 완료 | DF raw IQ·CS 미완료, W06~W08 통합·회귀·마감 미착수 |
 | M32 — 계획 0/12 | 최신 LE 링크/광고·Nordic 확장, Mesh 1.1·DFU, 최소 radio·공존 | 기능·자원 preset·예제·2/3보드 HIL; HOST-W07 도구·절차 준비 |
 | M33 — 계획 0/8 | 표준 service·beacon·ecosystem·HCI/DTM 예제, 전수 parity·Host·상호운용·릴리스 | 전체 예제 설치/build·실행 상태, 세 Host 증거·공개 gate |
 
@@ -202,7 +203,7 @@ Bluetooth 상호운용·qualification 완료로 해석하지 않습니다.
 v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에 보존합니다.
 예제 build 통과와 각 주변장치의 실기 검증 범위는 별개로 기록합니다.
 
-`m31-w01`에는 다음 개발 예제도 있습니다. 소스에서 개발할 때 사용하며 v0.4.1 설치 예제에는 포함되지 않습니다.
+`main`에는 다음 개발 예제도 있습니다. 소스에서 개발할 때 사용하며 v0.4.1 설치 예제에는 포함되지 않습니다.
 
 | 개발 기능 | 예제 진입점 |
 | --- | --- |
@@ -212,6 +213,8 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | Cache·LE CoC | [GattCacheCentral](libraries/NUCODE_BLE_Security/examples/GattCacheCentral), [L2capCocClient](libraries/NUCODE_BLE/examples/L2capCocClient) |
 | 세 보드 mixed GATT·CoC | [MixedGattCocLinks](libraries/NUCODE_BLE/examples/MixedGattCocLinks) — 같은 Sketch의 role을 바꿔 세 보드에 업로드 |
 | 선택 Signed Write·EATT | [LegacySignedWriteCentral](libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWriteCentral), [EattCentral](libraries/NUCODE_BLE_EATT/examples/EattCentral) |
+| Raw ISO | [ISO 예제와 역할 안내](libraries/NUCODE_BLE_ISO/examples/README.md) — CIS·BIS·암호화·시각 동기·combined 11역할 |
+| LE Audio | [Audio 예제와 역할 안내](libraries/NUCODE_BLE_Audio/examples/README.md) — LC3·BAP·CAP·CSIP·PBP·제어 profile·TMAP/GMAP·HAP |
 
 송신/수신 역할에 맞는 짝 예제와 보드 수는 각 Sketch 주석과
 [프로필·전체 예제 목록](<00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)을 따릅니다.
@@ -226,7 +229,8 @@ M31의 기본 수락은 보드 간 실제 프로토콜·합성 Audio 데이터·
 해당 미실행은 v0.5.0 개발·릴리스 차단이 아니며, 실물 호환성이 검증됐다고 표시하지 않습니다.
 Ubuntu/macOS 실제 설치·USB·serial·debug는 최종 릴리스 단계에서 사용자가 검증합니다.
 DF 원시 IQ는 안테나 배열 확보를 선행조건으로 삼지 않고 고정 controller별 수신 경로의 적용성부터
-확인합니다. 현재 Zephyr LL 수신 후보의 NU54DK build/runtime은 미검증이며 실제 각도 산출과 별개입니다.
+확인합니다. Zephyr LL 수신 구성은 build와 보드 진단까지 수행했지만 raw IQ 수신은 미확인입니다.
+원인·잔여 범위는 [M31 TODO](00_Docs/TODO_M31.md)에 기록하며 실제 각도 산출과 구분합니다.
 
 ## 사용 전 확인
 
@@ -247,7 +251,7 @@ DF 원시 IQ는 안테나 배열 확보를 선행조건으로 삼지 않고 고�
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
 | v0.5.0 Windows·Ubuntu·macOS 계획 | [다중 Host 지원 착수 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
-| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01·W02 완료, W03~W05 진행 |
+| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01~W03 완료, 후속 개발 대기 |
 | 이후 Bluetooth 전체 구현·예제 | [전체 기능 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) · [M32 TODO](00_Docs/TODO_M32.md) · [M33 TODO](00_Docs/TODO_M33.md) |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
