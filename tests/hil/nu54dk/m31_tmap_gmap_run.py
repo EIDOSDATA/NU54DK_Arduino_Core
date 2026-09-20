@@ -356,12 +356,17 @@ class SerialHarness:
 
 def create_fresh_serial_harness(source: Any, sink: Any, source_uid: str, sink_uid: str,
                                 observation: Observation) -> SerialHarness:
-    """! @brief flash 잔여 UART를 버리고 sink 우선의 새 부팅 순서를 만듭니다. """
+    """! @brief flash 잔여 UART를 버리고 transport에 맞는 새 부팅 순서를 만듭니다. """
     source.reset_input_buffer()
     sink.reset_input_buffer()
-    hardware_reset(sink_uid)
-    time.sleep(1.0)
-    hardware_reset(source_uid)
+    if observation.scenario.transport == "broadcast":
+        hardware_reset(source_uid)
+        time.sleep(1.0)
+        hardware_reset(sink_uid)
+    else:
+        hardware_reset(sink_uid)
+        time.sleep(1.0)
+        hardware_reset(source_uid)
     return SerialHarness(source, sink, observation)
 
 

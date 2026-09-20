@@ -112,9 +112,8 @@ class TmapGmapHilContractTest(unittest.TestCase):
         with self.assertRaises(MODULE.HilFailure):
             MODULE.decode_public_line(b"\xffFATAL fault\x00TMAP local roles=0x5 service=TMAS")
 
-    def test_post_flash_boot_clears_uart_and_resets_sink_before_source(self) -> None:
-        """! @brief flash noise 제거와 sink 선행 부팅을 harness 생성 전에 고정합니다. """
-        events = []
+    def test_post_flash_boot_order_matches_transport(self) -> None:
+        """! @brief unicast와 broadcast의 안정적인 peer 부팅 순서를 고정합니다. """
 
         class FakePort:
             """! @brief input buffer clear 순서만 기록하는 fake serial입니다. """
@@ -125,39 +124,46 @@ class TmapGmapHilContractTest(unittest.TestCase):
             def reset_input_buffer(self) -> None:
                 events.append(("clear", self.role))
 
-        source = FakePort("source")
-        sink = FakePort("sink")
-        expected_harness = object()
+        for scenario_name, first, second in (
+            ("tmap-unicast", "sink-probe", "source-probe"),
+            ("tmap-broadcast", "source-probe", "sink-probe"),
+        ):
+            with self.subTest(scenario=scenario_name):
+                events = []
+                source = FakePort("source")
+                sink = FakePort("sink")
+                expected_harness = object()
+                observation = MODULE.Observation(MODULE.SCENARIOS[scenario_name])
 
-        def reset(uid: str) -> None:
-            events.append(("reset", uid))
+                def reset(uid: str) -> None:
+                    events.append(("reset", uid))
 
-        def wait(seconds: float) -> None:
-            events.append(("wait", seconds))
+                def wait(seconds: float) -> None:
+                    events.append(("wait", seconds))
 
-        def create(_source, _sink, _observation):
-            events.append(("harness",))
-            return expected_harness
+                def create(_source, _sink, _observation):
+                    events.append(("harness",))
+                    return expected_harness
 
-        with patch.object(MODULE, "hardware_reset", side_effect=reset), \
-             patch.object(MODULE.time, "sleep", side_effect=wait), \
-             patch.object(MODULE, "SerialHarness", side_effect=create):
-            harness = MODULE.create_fresh_serial_harness(
-                source, sink, "source-probe", "sink-probe", object()
-            )
+                with patch.object(MODULE, "hardware_reset", side_effect=reset), \
+                     patch.object(MODULE.time, "sleep", side_effect=wait), \
+                     patch.object(MODULE, "SerialHarness", side_effect=create):
+                    harness = MODULE.create_fresh_serial_harness(
+                        source, sink, "source-probe", "sink-probe", observation
+                    )
 
-        self.assertIs(harness, expected_harness)
-        self.assertEqual(
-            events,
-            [
-                ("clear", "source"),
-                ("clear", "sink"),
-                ("reset", "sink-probe"),
-                ("wait", 1.0),
-                ("reset", "source-probe"),
-                ("harness",),
-            ],
-        )
+                self.assertIs(harness, expected_harness)
+                self.assertEqual(
+                    events,
+                    [
+                        ("clear", "source"),
+                        ("clear", "sink"),
+                        ("reset", first),
+                        ("wait", 1.0),
+                        ("reset", second),
+                        ("harness",),
+                    ],
+                )
         runner_source = RUNNER.read_text(encoding="utf-8")
         execute_source = runner_source[runner_source.index("def execute("):]
         sink_flash = execute_source.index('sink_flash = flash_image_pyocd("sink"')
