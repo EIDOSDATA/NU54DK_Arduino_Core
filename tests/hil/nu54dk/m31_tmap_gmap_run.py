@@ -27,6 +27,7 @@ from ble_pair_hil_common import (  # noqa: E402
     file_sha256,
     flash_image_pyocd,
     git_revision,
+    validate_board_revision,
     validate_build_record,
     validate_hex_image,
     validate_image_unchanged,
