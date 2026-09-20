@@ -99,15 +99,14 @@ namespace nucode::ble::internal::security
                 return false;
             }
             const std::uint16_t schema = sys_get_le16(&record[4]);
-            const std::size_t crc_offset =
-                schema == legacy_metadata_schema ? 16U : 18U;
+            const std::size_t crc_offset = schema == legacy_metadata_schema ? 16U : 18U;
             if ((schema == legacy_metadata_schema && length != legacy_metadata_bytes) ||
                 (schema == current_metadata_schema && length != current_metadata_bytes) ||
                 (schema != legacy_metadata_schema && schema != current_metadata_schema) ||
                 sys_get_le32(&record[crc_offset]) != metadataCrc(record, crc_offset) ||
                 (record[6] != BT_ADDR_LE_PUBLIC && record[6] != BT_ADDR_LE_RANDOM) ||
-                record[13] != 16U || record[14] < BT_SECURITY_L2 ||
-                record[14] > BT_SECURITY_L4 || (record[15] & metadata_flag_sc) == 0U)
+                record[13] != 16U || record[14] < BT_SECURITY_L2 || record[14] > BT_SECURITY_L4 ||
+                (record[15] & metadata_flag_sc) == 0U)
             {
                 return false;
             }
@@ -193,9 +192,8 @@ namespace nucode::ble::internal::security
                 bool duplicate = false;
                 for (std::size_t previous = 0U; previous < index; ++previous)
                 {
-                    duplicate = duplicate ||
-                                (loaded[previous].valid &&
-                                 samePeer(loaded[previous].peer, loaded[index].peer));
+                    duplicate = duplicate || (loaded[previous].valid &&
+                                              samePeer(loaded[previous].peer, loaded[index].peer));
                 }
                 if (duplicate)
                 {
@@ -217,8 +215,8 @@ namespace nucode::ble::internal::security
                     }
                     atomic_inc(&bondStorage().migration_count);
                     const bt_addr_le_t migrated_peer = nativeAddress(loaded[index].peer);
-                    queueEvent(makePeerEvent(SecurityEvent::bond_metadata_migrated,
-                                             &migrated_peer, BondState::none));
+                    queueEvent(makePeerEvent(SecurityEvent::bond_metadata_migrated, &migrated_peer,
+                                             BondState::none));
                 }
             }
 
@@ -247,11 +245,11 @@ namespace nucode::ble::internal::security
                 static_cast<void>(bt_unpair(BT_ID_DEFAULT, &peer));
                 removeStartupBond(&peer);
                 atomic_inc(&bondStorage().rejected_count);
-                queueEvent(makePeerEvent(SecurityEvent::bond_metadata_rejected, &peer,
-                                         BondState::none));
+                queueEvent(
+                    makePeerEvent(SecurityEvent::bond_metadata_rejected, &peer, BondState::none));
             }
         }
-    }
+    } // namespace
     /** @brief 공개 가능한 현재 bond 상태 snapshot을 반환합니다. */
     BondState currentBondState() noexcept
     {
@@ -813,8 +811,7 @@ namespace nucode::ble
                          BondState::removal_requested, false);
         if (connection != nullptr)
         {
-            setBondLifecycle(connection,
-                             link_previous.peer_valid ? &link_previous.peer : nullptr,
+            setBondLifecycle(connection, link_previous.peer_valid ? &link_previous.peer : nullptr,
                              BondState::removal_requested, false);
         }
         const int result = bt_unpair(BT_ID_DEFAULT, BT_ADDR_LE_ANY);

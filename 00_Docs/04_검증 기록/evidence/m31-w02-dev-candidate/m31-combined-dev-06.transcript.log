@@ -1,0 +1,14 @@
+peer: M31ISO|1|READY|role=peripheral
+combined: M31COMB|1|READY|role=combined
+receiver: M31BIS|1|READY|role=receiver
+combined: M31COMB|1|BEGIN|nonce=5fad1109d6835e55fe1a60afb862748a|role=combined
+combined: M31COMB|1|IDENTITY|nonce=5fad1109d6835e55fe1a60afb862748a|core=64c6b5fcaad3b0330f181d5b5f814b00a14e41bf|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+combined: M31COMB|1|ACL_CONNECTED|nonce=5fad1109d6835e55fe1a60afb862748a
+combined: M31COMB|1|BIG_SYNCED|nonce=5fad1109d6835e55fe1a60afb862748a
+combined: M31COMB|1|CIS_CONNECTED|nonce=5fad1109d6835e55fe1a60afb862748a
+peer: M31ISO|1|BEGIN|nonce=5fad1109d6835e55fe1a60afb862748a|role=peripheral
+peer: M31ISO|1|IDENTITY|nonce=5fad1109d6835e55fe1a60afb862748a|core=64c6b5fcaad3b0330f181d5b5f814b00a14e41bf|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+peer: M31ISO|1|ACL_CONNECTED|nonce=5fad1109d6835e55fe1a60afb862748a
+peer: HCI_SETUP_ISO_PATH_STATUS|status=07
+peer: HCI_SETUP_ISO_PATH_STATUS|status=07
+peer: M31ISO|1|FAIL|nonce=5fad1109d6835e55fe1a60afb862748a|role=peripheral|stage=iso_data_path|code=-5

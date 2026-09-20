@@ -8,6 +8,7 @@ from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
 import hashlib
+import json
 import re
 import secrets
 import shutil
@@ -202,6 +203,94 @@ def current_source_digests(application_root: Path) -> dict[str, str]:
     }
 
 
+## @brief Arduino build artifact 옆의 JSON manifest를 fail-closed 방식으로 읽습니다.
+def validate_arduino_build_manifest(
+    image: Path,
+    record_path: Path,
+    core_revision: str,
+    board_revision: str,
+) -> dict[str, str]:
+    try:
+        if record_path.stat().st_size > 1024 * 1024:
+            raise BlePairHilFailure("NUCODE Arduino build manifest 크기가 허용 범위를 넘었습니다.")
+        document = json.loads(record_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise BlePairHilFailure(
+            f"Arduino build manifest를 읽지 못했습니다: {record_path}: {error}"
+        ) from error
+    if not isinstance(document, dict):
+        raise BlePairHilFailure("Arduino build manifest 최상위 값이 object가 아닙니다.")
+
+    def nested(*keys: str) -> Any:
+        value: Any = document
+        for key in keys:
+            if not isinstance(value, dict) or key not in value:
+                raise BlePairHilFailure(
+                    f"Arduino build manifest 필드가 없습니다: {'.'.join(keys)}"
+                )
+            value = value[key]
+        return value
+
+    revisions = nested("source_inputs", "m31_audio_revisions")
+    if not isinstance(revisions, dict):
+        raise BlePairHilFailure("Arduino build manifest의 audio revision 형식이 잘못됐습니다.")
+    expected_revisions = {
+        "NUCODE_CORE_REVISION": core_revision,
+        "NUCODE_BOARD_REVISION": board_revision,
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    }
+    for key, expected in expected_revisions.items():
+        actual = revisions.get(key)
+        if actual != expected:
+            raise BlePairHilFailure(
+                f"Arduino build manifest revision 불일치: {key}={actual}, expected={expected}"
+            )
+
+    image_artifact = nested("artifacts", "hex")
+    if not isinstance(image_artifact, dict):
+        raise BlePairHilFailure("Arduino build manifest의 HEX artifact 형식이 잘못됐습니다.")
+    image_digest = file_sha256(image)
+    expected_artifact = {
+        "path": image.resolve().as_posix(),
+        "sha256": image_digest,
+        "size": image.stat().st_size,
+    }
+    for key, expected in expected_artifact.items():
+        actual = image_artifact.get(key)
+        if key == "path" and isinstance(actual, str):
+            actual = Path(actual).resolve().as_posix()
+        if actual != expected:
+            raise BlePairHilFailure(
+                f"Arduino build manifest HEX 불일치: {key}={actual}, expected={expected}"
+            )
+
+    board = nested("board")
+    if board != "nrf54l15dk/nrf54l15/cpuapp/nu54dk":
+        raise BlePairHilFailure(f"Arduino build manifest board 불일치: {board}")
+    bundle = nested("cache", "input_manifest", "toolchain", "bundle_id")
+    if bundle != "dcbdc366a1":
+        raise BlePairHilFailure(f"Arduino build manifest toolchain bundle 불일치: {bundle}")
+    compiler = nested("cache", "input_manifest", "toolchain", "compiler")
+    if not isinstance(compiler, str) or "14.3.0" not in compiler:
+        raise BlePairHilFailure(f"Arduino build manifest C++ compiler 불일치: {compiler}")
+
+    return {
+        "core_revision": core_revision,
+        "board_revision": board_revision,
+        "ncs_revision": expected_revisions["NUCODE_NCS_REVISION"],
+        "zephyr_revision": expected_revisions["NUCODE_ZEPHYR_REVISION"],
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": bundle,
+        "cxx_compiler": compiler,
+        "hex_sha256": image_digest,
+        "record_format": "nu54-build-json",
+        "record_name": record_path.name,
+        "record_sha256": file_sha256(record_path),
+    }
+
+
 ## @brief HEX build record를 exact revision·target·source byte와 결합합니다.
 def validate_build_record(
     image: Path,
@@ -209,6 +298,11 @@ def validate_build_record(
     board_revision: str,
     application_root: Path,
 ) -> dict[str, str]:
+    arduino_record_path = image.with_suffix(".nu54-build.json")
+    if arduino_record_path.is_file():
+        return validate_arduino_build_manifest(
+            image, arduino_record_path, core_revision, board_revision
+        )
     record_path = image.parent.parent / "nucode_arduino_core_build.yml"
     try:
         if record_path.stat().st_size > 16384:
@@ -325,6 +419,8 @@ def flash_image_pyocd(
     board_id: str,
     image: Path,
     timeout_seconds: float,
+    *,
+    hardware_reset: bool = False,
 ) -> tuple[str, str]:
     if timeout_seconds <= 0:
         raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
@@ -356,6 +452,8 @@ def flash_image_pyocd(
         "hex",
         str(image),
     )
+    if hardware_reset:
+        command = command[:-1] + ("--no-reset", command[-1])
     try:
         result = subprocess.run(
             command,
@@ -374,6 +472,46 @@ def flash_image_pyocd(
     match = re.search(rb"programmed\s+(\d+)\s+bytes", output)
     if match is None:
         raise BlePairHilFailure(f"{role} pyOCD programmed byte 증거가 없습니다.")
+    if hardware_reset:
+        ## @brief nRF54 ISO 앱 시작 전 CMSIS-DAP의 비파괴 hardware reset을 분리합니다.
+        reset_command = (
+            sys.executable,
+            "-I",
+            "-m",
+            "pyocd",
+            "reset",
+            "--uid",
+            board_id,
+            "--target",
+            "nrf54l",
+            "--frequency",
+            "500000",
+            "--connect",
+            "under-reset",
+            "-O",
+            "cmsis_dap.limit_packets=true",
+            "-O",
+            "cmsis_dap.prefer_v1=false",
+            "-O",
+            "auto_unlock=false",
+            "--method",
+            "hw",
+        )
+        try:
+            reset_result = subprocess.run(
+                reset_command,
+                capture_output=True,
+                timeout=min(timeout_seconds, 30.0),
+                check=False,
+            )
+        except subprocess.TimeoutExpired as error:
+            raise BlePairHilFailure(f"{role} pyOCD hardware reset timeout") from error
+        if reset_result.returncode != 0:
+            raise BlePairHilFailure(
+                f"{role} pyOCD hardware reset 실패: "
+                f"{(reset_result.stdout + reset_result.stderr).decode('utf-8', errors='backslashreplace')}"
+            )
+        return "pyocd-sector-hw-reset", match.group(1).decode("ascii")
     return "pyocd-sector", match.group(1).decode("ascii")
 
 

@@ -5,5 +5,5 @@
   "conf": ["peripheral-fabric.conf"],
   "overlays": [],
   "conflicts": ["arduino.serial", "arduino.wire", "arduino.spi", "arduino.adc", "arduino.pwm", "arduino.interrupts"],
-  "compatible_profiles": ["fabric"]
+  "compatible_profiles": ["fabric", "ble_audio_io"]
 }

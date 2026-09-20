@@ -13,3 +13,15 @@ coverage/ncs-v3.4.0/** text eol=lf
 
 # 공개 stable index는 Windows checkout에서도 승인된 SHA-256의 LF 바이트를 유지합니다.
 /package_nucode_nu54dk_index.json text eol=lf
+
+# 실기 UART 원본은 증거 JSON의 byte SHA-256과 checkout 후에도 같아야 합니다.
+**/*.transcript.log text eol=lf
+
+# 증거 JSON의 byte hash는 Windows/Linux checkout에서 동일한 CRLF 원본을 사용합니다.
+**/evidence/**/*.json text eol=crlf
+
+# M31 ISO 설치 예제의 검증 source·공개 header가 checkout 후에도 LF byte로 일치합니다.
+tests/zephyr/m31_iso_cis_hil/src/main.cpp text eol=lf
+tests/zephyr/m31_iso_bis_hil/src/main.cpp text eol=lf
+tests/zephyr/m31_iso_combined_hil/src/main.cpp text eol=lf
+libraries/NUCODE_BLE_ISO/** text eol=lf

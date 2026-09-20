@@ -1,0 +1,15 @@
+diff --git a/libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino b/libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino
+index e20377d6..440cde46 100644
+--- a/libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino
++++ b/libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino
+@@ -27,8 +27,9 @@ namespace
+     constexpr std::uint32_t recoveryRetryMsValue = 250U;
+ 
+     /** @brief 이 고정 키는 로컬 상호운용 시험 전용이며 제품에는 고유 비밀을 주입해야 합니다. */
++    /** @brief NUCODE_CSIP_FAULT_WRONG_SIRK 시험용으로 첫 key byte를 다르게 둡니다. */
+     constexpr nucode::ble::audio::CsipSetKey setKey = {{
+-        0x91U, 0x72U, 0x44U, 0x13U, 0xa8U, 0x5cU, 0x2dU, 0xe1U,
++        0x90U, 0x72U, 0x44U, 0x13U, 0xa8U, 0x5cU, 0x2dU, 0xe1U,
+         0x0bU, 0x6fU, 0xc3U, 0x39U, 0x57U, 0x8aU, 0xd4U, 0x20U,
+     }};
+ 

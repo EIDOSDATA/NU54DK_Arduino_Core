@@ -35,6 +35,10 @@ class M13ProfileContractTests(unittest.TestCase):
             {MODULE.load_library_feature(ROOT, name)["id"] for name in MODULE.FEATURE_ALLOWLIST},
             {
                 "nucode.ble.nus",
+                "nucode.ble.iso",
+                "nucode.ble.audio",
+                "nucode.ble.direction_finding",
+                "nucode.ble.dfu",
                 "nucode.ble.security",
                 "nucode.ble.legacy_signing",
                 "nucode.ble.eatt",
@@ -70,7 +74,13 @@ class M13ProfileContractTests(unittest.TestCase):
 
     def test_canonical_examples_have_no_zephyr_sidecars(self) -> None:
         """! @brief 공개 예제가 ino만으로 탐색 가능한지 확인합니다. """
-        examples = sorted(ROOT.glob("libraries/*/examples/*/*.ino"))
+        examples = sorted(
+            sketch for sketch in ROOT.glob("libraries/*/examples/*/*.ino")
+            if sketch.parent.parent.parent.name not in {
+                "NUCODE_BLE_ISO", "NUCODE_BLE_Audio",
+                "NUCODE_BLE_DirectionFinding", "NUCODE_BLE_ChannelSounding"
+            }
+        )
         self.assertEqual(
             {sketch.parent.name for sketch in examples},
             {
@@ -133,12 +143,84 @@ class M13ProfileContractTests(unittest.TestCase):
                 "SecureConsumerControl",
                 "SecureKeyboard",
                 "SecureMouse",
+                "SecureDfuPeripheral",
                 "FabricCapabilities",
             },
         )
         for sketch in examples:
             self.assertFalse((sketch.parent / "prj.conf").exists())
             self.assertFalse((sketch.parent / "app.overlay").exists())
+
+    def test_m31_advanced_iso_examples_have_role_configuration(self) -> None:
+        """! @brief 직접 ISO API 예제의 역할별 Kconfig와 탐색 가능한 ino를 확인합니다. """
+        examples = sorted(ROOT.glob("libraries/NUCODE_BLE_ISO/examples/*/*.ino"))
+        self.assertEqual(
+            {sketch.parent.name for sketch in examples},
+            {
+                "CISCentral", "CISPeripheral", "BISSource", "BISReceiver",
+                "BISEncryptedSource", "BISEncryptedReceiver", "BISTimeSource",
+                "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
+                "CISToBISReceiver",
+            },
+        )
+        for sketch in examples:
+            self.assertTrue((sketch.parent / "prj.conf").is_file())
+            self.assertFalse((sketch.parent / "app.overlay").exists())
+            source = sketch.read_text(encoding="utf-8")
+            self.assertRegex(source, r"\bvoid\s+setup\s*\(")
+            self.assertRegex(source, r"\bvoid\s+loop\s*\(")
+
+    def test_m31_advanced_audio_examples_have_role_configuration(self) -> None:
+        """! @brief 직접 Audio API 예제의 역할별 Kconfig와 탐색 가능한 ino를 확인합니다. """
+        examples = sorted(ROOT.glob("libraries/NUCODE_BLE_Audio/examples/*/*.ino"))
+        self.assertEqual(
+            {sketch.parent.name for sketch in examples},
+            {
+                "Lc3SyntheticLoopback",
+                "BapUnicastSink",
+                "BapUnicastSource",
+                "BapUnicastCycle",
+                "BapUnicastDuplexClient",
+                "BapUnicastDuplexServer",
+                "BapBroadcastSource",
+                "BapBroadcastSink",
+                "BapBroadcastAssistant",
+                "BapBroadcastDelegatorSink",
+                "CapInitiator",
+                "CapAcceptor",
+                "CapCommander",
+                "CapUnicastInitiator",
+                "CapUnicastAcceptor",
+                "CsipSetCoordinator",
+                "CsipSetMember",
+                "PublicAudioBroadcastSource",
+                "PublicAudioBroadcastSink",
+                "AudioControlController",
+                "AudioControlDevice",
+                "ExternalPdmMicrophoneSource",
+                "ExternalI2sSpeakerSink",
+                "HearingAccessClient",
+                "HearingAccessServer",
+                "MediaControlPlayer",
+                "MediaControlClient",
+                "CallControlServer",
+                "CallControlClient",
+                "TelephonyMediaGateway",
+                "TelephonyMediaTerminal",
+                "TelephonyMediaBroadcaster",
+                "TelephonyMediaReceiver",
+                "GamingAudioGateway",
+                "GamingAudioTerminal",
+                "GamingAudioBroadcaster",
+                "GamingAudioReceiver",
+            },
+        )
+        for sketch in examples:
+            self.assertTrue((sketch.parent / "prj.conf").is_file())
+            self.assertFalse((sketch.parent / "app.overlay").exists())
+            source = sketch.read_text(encoding="utf-8")
+            self.assertRegex(source, r"\bvoid\s+setup\s*\(")
+            self.assertRegex(source, r"\bvoid\s+loop\s*\(")
 
     def test_only_selected_bundled_library_is_resolved(self) -> None:
         """! @brief 실제 source record에 등장한 bundled library만 선택합니다. """
@@ -151,6 +233,19 @@ class M13ProfileContractTests(unittest.TestCase):
         self.assertEqual(MODULE.selected_bundled_libraries(paths, records), ["Wire"])
         profile = MODULE.load_configuration_profile(ROOT, "standard")
         self.assertEqual([item["id"] for item in MODULE.resolve_library_features(ROOT, profile, ["Wire", "Unknown"])], ["nucode.wire"])
+
+    def test_dfu_requires_selected_security_feature(self) -> None:
+        """! @brief DFU feature가 선택된 보안 library를 요구함을 검증합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "secure_ble_dfu")
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_FEATURE_REQUIREMENT.*nucode.ble.security"):
+            MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_DFU"])
+        selected = MODULE.resolve_library_features(
+            ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_DFU", "NUCODE_BLE_Security"]
+        )
+        self.assertEqual(
+            {item["id"] for item in selected},
+            {"nucode.ble.dfu", "nucode.ble.security", "nucode.ble.nus"},
+        )
 
     def test_schema_path_conflict_and_cache_key_contract(self) -> None:
         """! @brief 잘못된 manifest를 거부하고 feature 집합이 cache key를 바꾸는지 확인합니다. """

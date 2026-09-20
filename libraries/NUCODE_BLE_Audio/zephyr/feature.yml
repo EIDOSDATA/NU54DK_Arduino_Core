@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "nucode.ble.audio",
+  "requires": ["ble"],
+  "conf": [],
+  "overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["ble", "ble_audio_io"]
+}

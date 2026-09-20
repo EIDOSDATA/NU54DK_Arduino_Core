@@ -1,0 +1,1358 @@
+{
+  "schema": "nucode.m31.pbp-hil.v2",
+  "status": "FAIL",
+  "mode": "sync-loss",
+  "started_at": "2026-09-20T06:06:57.228022+00:00",
+  "finished_at": "2026-09-20T06:08:06.403353+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "source_clean": true,
+  "public_example_sha256": {
+    "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+    "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+  },
+  "runner": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_hil_final.py",
+    "sha256": "da0068d63b1cda696f11ce9c2d0c1d414baa4b4a50d1fdf334ddcd9e693c3c11"
+  },
+  "debug_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "raw_probe_identifiers_recorded": false
+  },
+  "flash_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\flash_by_probe_hash.py",
+    "sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "outer_timeout_seconds": 165.0
+  },
+  "flash_receipts": {
+    "source": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\sync-loss-source-flash.json",
+      "sha256": "07e798af0f8fbf6485faf2dfec001b9686b369c44e7ff07e6dc485057a87a3c2",
+      "programmed_bytes": 503808,
+      "status": "PASS"
+    },
+    "sink": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\sync-loss-sink-flash.json",
+      "sha256": "ec04d46834d2b8f9e7878e57050557973345d6819c3c1042da9e87b437015570",
+      "programmed_bytes": 491520,
+      "status": "PASS"
+    }
+  },
+  "final_provenance": {
+    "verified": true,
+    "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+    "public_example_sha256": {
+      "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+      "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+    },
+    "image_sha256": {
+      "source": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e",
+      "sink": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    },
+    "debug_helper_sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "flash_helper_sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "runner_sha256": "da0068d63b1cda696f11ce9c2d0c1d414baa4b4a50d1fdf334ddcd9e693c3c11",
+    "flash_receipt_sha256": {
+      "source": "07e798af0f8fbf6485faf2dfec001b9686b369c44e7ff07e6dc485057a87a3c2",
+      "sink": "ec04d46834d2b8f9e7878e57050557973345d6819c3c1042da9e87b437015570"
+    }
+  },
+  "probe_preflight": {
+    "connected_probe_count": 3,
+    "expected_hash_matches": {
+      "source": 1,
+      "sink": 1
+    }
+  },
+  "usb_port_preflight": {
+    "required_port_count": 4,
+    "roles": {
+      "source": {
+        "target_port": "COM10",
+        "aux_port": "COM11",
+        "serial_sha256": "f419aa19cc41d8d2c8c85339a81b8f2c0e1ada5bf91f0ff04200513fc6aba69f"
+      },
+      "sink": {
+        "target_port": "COM14",
+        "aux_port": "COM15",
+        "serial_sha256": "a68185c274fd83f93c9520f99fb418184395f9548a52e306449733c3c9f39b46"
+      }
+    },
+    "raw_usb_serials_recorded": false
+  },
+  "board_map": {
+    "source": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w07-source-fcbbfac5\\PublicAudioBroadcastSource.ino.hex",
+      "image_sha256": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e"
+    },
+    "sink": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w07-sink-fcbbfac5\\PublicAudioBroadcastSink.ino.hex",
+      "image_sha256": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    }
+  },
+  "runner_behavior": {
+    "flashes_devices": true,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "time_contract": {
+    "positive_stream_duration_seconds": 180.0,
+    "non_positive_campaign_timeout_seconds": 180.0,
+    "recovery_timeout_seconds": 30.0,
+    "cycles": 20
+  },
+  "transcript": {
+    "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\sync-loss.transcript.log",
+    "sha256": "cc182e90515f78e17a02bfd3f42b4aead25d84c2af8c3e399a0ba44e6d20b3ee",
+    "event_count": 206
+  },
+  "result": {},
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 0.043,
+      "role": "source",
+      "text": "public audio sent frames=3300"
+    },
+    {
+      "sequence": 1,
+      "at_s": 0.167,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 2,
+      "at_s": 0.196,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 3,
+      "at_s": 0.247,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 4,
+      "at_s": 0.247,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 5,
+      "at_s": 0.37,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 6,
+      "at_s": 0.379,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 7,
+      "at_s": 0.403,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 8,
+      "at_s": 1.274,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 9,
+      "at_s": 1.337,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 10,
+      "at_s": 2.287,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 11,
+      "at_s": 2.352,
+      "role": "sink",
+      "text": "public audio received=100 energy=1026887 dropped=0"
+    },
+    {
+      "sequence": 12,
+      "at_s": 2.475,
+      "role": "runner",
+      "text": "error-window name=sync-loss-1 state=armed"
+    },
+    {
+      "sequence": 13,
+      "at_s": 5.372,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 14,
+      "at_s": 5.372,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 15,
+      "at_s": 5.372,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 16,
+      "at_s": 5.372,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 17,
+      "at_s": 5.372,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 18,
+      "at_s": 5.372,
+      "role": "sink",
+      "text": "public audio received=200 energy=1174713 dropped=0"
+    },
+    {
+      "sequence": 19,
+      "at_s": 5.372,
+      "role": "sink",
+      "text": "public audio received=300 energy=1071216 dropped=0"
+    },
+    {
+      "sequence": 20,
+      "at_s": 5.372,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 21,
+      "at_s": 5.372,
+      "role": "runner",
+      "text": "error-window name=sync-loss-1 state=disarmed"
+    },
+    {
+      "sequence": 22,
+      "at_s": 6.088,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 23,
+      "at_s": 6.202,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 24,
+      "at_s": 6.4,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 25,
+      "at_s": 7.096,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 26,
+      "at_s": 7.606,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 27,
+      "at_s": 8.114,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 28,
+      "at_s": 8.621,
+      "role": "sink",
+      "text": "public audio received=100 energy=1010947 dropped=0"
+    },
+    {
+      "sequence": 29,
+      "at_s": 8.621,
+      "role": "runner",
+      "text": "sync-loss cycle=1/20 elapsed=6.268s pass"
+    },
+    {
+      "sequence": 30,
+      "at_s": 8.743,
+      "role": "runner",
+      "text": "error-window name=sync-loss-2 state=armed"
+    },
+    {
+      "sequence": 31,
+      "at_s": 11.634,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 32,
+      "at_s": 11.634,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 33,
+      "at_s": 11.634,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 34,
+      "at_s": 11.634,
+      "role": "source",
+      "text": "public audio sent frames=600"
+    },
+    {
+      "sequence": 35,
+      "at_s": 11.634,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 36,
+      "at_s": 11.634,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 37,
+      "at_s": 11.634,
+      "role": "sink",
+      "text": "public audio received=200 energy=925153 dropped=0"
+    },
+    {
+      "sequence": 38,
+      "at_s": 11.635,
+      "role": "sink",
+      "text": "public audio received=300 energy=1172020 dropped=0"
+    },
+    {
+      "sequence": 39,
+      "at_s": 11.635,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 40,
+      "at_s": 11.635,
+      "role": "runner",
+      "text": "error-window name=sync-loss-2 state=disarmed"
+    },
+    {
+      "sequence": 41,
+      "at_s": 12.356,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 42,
+      "at_s": 12.473,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 43,
+      "at_s": 12.605,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 44,
+      "at_s": 13.37,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 45,
+      "at_s": 13.632,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 46,
+      "at_s": 14.387,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 47,
+      "at_s": 14.636,
+      "role": "sink",
+      "text": "public audio received=100 energy=1177583 dropped=0"
+    },
+    {
+      "sequence": 48,
+      "at_s": 14.636,
+      "role": "runner",
+      "text": "sync-loss cycle=2/20 elapsed=6.015s pass"
+    },
+    {
+      "sequence": 49,
+      "at_s": 14.758,
+      "role": "runner",
+      "text": "error-window name=sync-loss-3 state=armed"
+    },
+    {
+      "sequence": 50,
+      "at_s": 17.721,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 51,
+      "at_s": 17.722,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 52,
+      "at_s": 17.722,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 53,
+      "at_s": 17.722,
+      "role": "source",
+      "text": "\\xfepublic audio source preparing"
+    },
+    {
+      "sequence": 54,
+      "at_s": 17.723,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 55,
+      "at_s": 17.723,
+      "role": "sink",
+      "text": "public audio received=200 energy=1059809 dropped=0"
+    },
+    {
+      "sequence": 56,
+      "at_s": 17.723,
+      "role": "sink",
+      "text": "public audio received=300 energy=909880 dropped=0"
+    },
+    {
+      "sequence": 57,
+      "at_s": 17.723,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 58,
+      "at_s": 17.723,
+      "role": "runner",
+      "text": "error-window name=sync-loss-3 state=disarmed"
+    },
+    {
+      "sequence": 59,
+      "at_s": 18.416,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 60,
+      "at_s": 18.529,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 61,
+      "at_s": 18.661,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 62,
+      "at_s": 19.431,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 63,
+      "at_s": 19.509,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 64,
+      "at_s": 20.449,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 65,
+      "at_s": 20.535,
+      "role": "sink",
+      "text": "public audio received=100 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 66,
+      "at_s": 20.535,
+      "role": "runner",
+      "text": "sync-loss cycle=3/20 elapsed=5.899s pass"
+    },
+    {
+      "sequence": 67,
+      "at_s": 20.658,
+      "role": "runner",
+      "text": "error-window name=sync-loss-4 state=armed"
+    },
+    {
+      "sequence": 68,
+      "at_s": 23.739,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 69,
+      "at_s": 23.739,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 70,
+      "at_s": 23.739,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 71,
+      "at_s": 23.739,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 72,
+      "at_s": 23.739,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 73,
+      "at_s": 23.739,
+      "role": "sink",
+      "text": "public audio received=200 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 74,
+      "at_s": 23.739,
+      "role": "sink",
+      "text": "public audio received=300 energy=1150664 dropped=0"
+    },
+    {
+      "sequence": 75,
+      "at_s": 23.739,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 76,
+      "at_s": 23.739,
+      "role": "runner",
+      "text": "error-window name=sync-loss-4 state=disarmed"
+    },
+    {
+      "sequence": 77,
+      "at_s": 24.46,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 78,
+      "at_s": 24.574,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 79,
+      "at_s": 25.014,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 80,
+      "at_s": 25.48,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 81,
+      "at_s": 25.982,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 82,
+      "at_s": 26.5,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 83,
+      "at_s": 26.994,
+      "role": "sink",
+      "text": "public audio received=100 energy=1140289 dropped=0"
+    },
+    {
+      "sequence": 84,
+      "at_s": 26.994,
+      "role": "runner",
+      "text": "sync-loss cycle=4/20 elapsed=6.459s pass"
+    },
+    {
+      "sequence": 85,
+      "at_s": 27.115,
+      "role": "runner",
+      "text": "error-window name=sync-loss-5 state=armed"
+    },
+    {
+      "sequence": 86,
+      "at_s": 30.06,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 87,
+      "at_s": 30.06,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 88,
+      "at_s": 30.06,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 89,
+      "at_s": 30.06,
+      "role": "source",
+      "text": "public audio sent frames=600"
+    },
+    {
+      "sequence": 90,
+      "at_s": 30.06,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 91,
+      "at_s": 30.06,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 92,
+      "at_s": 30.06,
+      "role": "sink",
+      "text": "public audio received=200 energy=983379 dropped=0"
+    },
+    {
+      "sequence": 93,
+      "at_s": 30.06,
+      "role": "sink",
+      "text": "public audio received=300 energy=1091298 dropped=0"
+    },
+    {
+      "sequence": 94,
+      "at_s": 30.06,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 95,
+      "at_s": 30.061,
+      "role": "runner",
+      "text": "error-window name=sync-loss-5 state=disarmed"
+    },
+    {
+      "sequence": 96,
+      "at_s": 30.74,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 97,
+      "at_s": 30.836,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 98,
+      "at_s": 31.146,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 99,
+      "at_s": 31.75,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 100,
+      "at_s": 32.006,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 101,
+      "at_s": 32.76,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 102,
+      "at_s": 33.007,
+      "role": "sink",
+      "text": "public audio received=100 energy=1177583 dropped=0"
+    },
+    {
+      "sequence": 103,
+      "at_s": 33.007,
+      "role": "runner",
+      "text": "sync-loss cycle=5/20 elapsed=6.013s pass"
+    },
+    {
+      "sequence": 104,
+      "at_s": 33.13,
+      "role": "runner",
+      "text": "error-window name=sync-loss-6 state=armed"
+    },
+    {
+      "sequence": 105,
+      "at_s": 36.049,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 106,
+      "at_s": 36.049,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 107,
+      "at_s": 36.049,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 108,
+      "at_s": 36.049,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 109,
+      "at_s": 36.049,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 110,
+      "at_s": 36.05,
+      "role": "sink",
+      "text": "public audio received=200 energy=1059809 dropped=0"
+    },
+    {
+      "sequence": 111,
+      "at_s": 36.05,
+      "role": "sink",
+      "text": "public audio received=300 energy=909880 dropped=0"
+    },
+    {
+      "sequence": 112,
+      "at_s": 36.05,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 113,
+      "at_s": 36.05,
+      "role": "runner",
+      "text": "error-window name=sync-loss-6 state=disarmed"
+    },
+    {
+      "sequence": 114,
+      "at_s": 36.751,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 115,
+      "at_s": 36.855,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 116,
+      "at_s": 37.233,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 117,
+      "at_s": 37.76,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 118,
+      "at_s": 38.505,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 119,
+      "at_s": 38.775,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 120,
+      "at_s": 39.538,
+      "role": "sink",
+      "text": "public audio received=100 energy=964355 dropped=0"
+    },
+    {
+      "sequence": 121,
+      "at_s": 39.538,
+      "role": "runner",
+      "text": "sync-loss cycle=6/20 elapsed=6.530s pass"
+    },
+    {
+      "sequence": 122,
+      "at_s": 39.662,
+      "role": "runner",
+      "text": "error-window name=sync-loss-7 state=armed"
+    },
+    {
+      "sequence": 123,
+      "at_s": 42.608,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 124,
+      "at_s": 42.608,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 125,
+      "at_s": 42.608,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 126,
+      "at_s": 42.608,
+      "role": "source",
+      "text": "public audio sent frames=600"
+    },
+    {
+      "sequence": 127,
+      "at_s": 42.608,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 128,
+      "at_s": 42.608,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 129,
+      "at_s": 42.608,
+      "role": "sink",
+      "text": "public audio received=200 energy=1139185 dropped=0"
+    },
+    {
+      "sequence": 130,
+      "at_s": 42.609,
+      "role": "sink",
+      "text": "public audio received=300 energy=1126438 dropped=0"
+    },
+    {
+      "sequence": 131,
+      "at_s": 42.609,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 132,
+      "at_s": 42.609,
+      "role": "runner",
+      "text": "error-window name=sync-loss-7 state=disarmed"
+    },
+    {
+      "sequence": 133,
+      "at_s": 43.29,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 134,
+      "at_s": 43.409,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 135,
+      "at_s": 43.418,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 136,
+      "at_s": 44.308,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 137,
+      "at_s": 44.331,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 138,
+      "at_s": 45.325,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 139,
+      "at_s": 45.343,
+      "role": "sink",
+      "text": "public audio received=100 energy=1134738 dropped=0"
+    },
+    {
+      "sequence": 140,
+      "at_s": 45.343,
+      "role": "runner",
+      "text": "sync-loss cycle=7/20 elapsed=5.805s pass"
+    },
+    {
+      "sequence": 141,
+      "at_s": 45.466,
+      "role": "runner",
+      "text": "error-window name=sync-loss-8 state=armed"
+    },
+    {
+      "sequence": 142,
+      "at_s": 48.413,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 143,
+      "at_s": 48.413,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 144,
+      "at_s": 48.413,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 145,
+      "at_s": 48.413,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 146,
+      "at_s": 48.413,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 147,
+      "at_s": 48.413,
+      "role": "sink",
+      "text": "public audio received=200 energy=968233 dropped=0"
+    },
+    {
+      "sequence": 148,
+      "at_s": 48.413,
+      "role": "sink",
+      "text": "public audio received=300 energy=956409 dropped=0"
+    },
+    {
+      "sequence": 149,
+      "at_s": 48.413,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 150,
+      "at_s": 48.413,
+      "role": "runner",
+      "text": "error-window name=sync-loss-8 state=disarmed"
+    },
+    {
+      "sequence": 151,
+      "at_s": 49.112,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 152,
+      "at_s": 49.237,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 153,
+      "at_s": 49.732,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 154,
+      "at_s": 50.126,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 155,
+      "at_s": 50.697,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 156,
+      "at_s": 51.132,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 157,
+      "at_s": 51.699,
+      "role": "sink",
+      "text": "public audio received=100 energy=937513 dropped=0"
+    },
+    {
+      "sequence": 158,
+      "at_s": 51.699,
+      "role": "runner",
+      "text": "sync-loss cycle=8/20 elapsed=6.356s pass"
+    },
+    {
+      "sequence": 159,
+      "at_s": 51.822,
+      "role": "runner",
+      "text": "error-window name=sync-loss-9 state=armed"
+    },
+    {
+      "sequence": 160,
+      "at_s": 54.762,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 161,
+      "at_s": 54.762,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 162,
+      "at_s": 54.762,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 163,
+      "at_s": 54.762,
+      "role": "source",
+      "text": "public audio sent frames=600"
+    },
+    {
+      "sequence": 164,
+      "at_s": 54.762,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 165,
+      "at_s": 54.762,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 166,
+      "at_s": 54.762,
+      "role": "sink",
+      "text": "public audio received=200 energy=1114743 dropped=0"
+    },
+    {
+      "sequence": 167,
+      "at_s": 54.762,
+      "role": "sink",
+      "text": "public audio received=300 energy=1151325 dropped=0"
+    },
+    {
+      "sequence": 168,
+      "at_s": 54.762,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 169,
+      "at_s": 54.762,
+      "role": "runner",
+      "text": "error-window name=sync-loss-9 state=disarmed"
+    },
+    {
+      "sequence": 170,
+      "at_s": 55.463,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 171,
+      "at_s": 55.58,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 172,
+      "at_s": 55.891,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 173,
+      "at_s": 56.468,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 174,
+      "at_s": 56.861,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 175,
+      "at_s": 57.469,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 176,
+      "at_s": 57.866,
+      "role": "sink",
+      "text": "public audio received=100 energy=1174609 dropped=0"
+    },
+    {
+      "sequence": 177,
+      "at_s": 57.866,
+      "role": "runner",
+      "text": "sync-loss cycle=9/20 elapsed=6.166s pass"
+    },
+    {
+      "sequence": 178,
+      "at_s": 57.986,
+      "role": "runner",
+      "text": "error-window name=sync-loss-10 state=armed"
+    },
+    {
+      "sequence": 179,
+      "at_s": 60.97,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 180,
+      "at_s": 60.97,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 181,
+      "at_s": 60.97,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 182,
+      "at_s": 60.97,
+      "role": "source",
+      "text": "public audio sent frames=600"
+    },
+    {
+      "sequence": 183,
+      "at_s": 60.97,
+      "role": "source",
+      "text": "\\xfc\\xfe\\xff\\xff\\xfc\\xffpublic audio source preparing"
+    },
+    {
+      "sequence": 184,
+      "at_s": 60.97,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 185,
+      "at_s": 60.97,
+      "role": "sink",
+      "text": "public audio received=200 energy=1071412 dropped=0"
+    },
+    {
+      "sequence": 186,
+      "at_s": 60.97,
+      "role": "sink",
+      "text": "public audio received=300 energy=912221 dropped=0"
+    },
+    {
+      "sequence": 187,
+      "at_s": 60.97,
+      "role": "sink",
+      "text": "public audio sync failed: -8 step=11"
+    },
+    {
+      "sequence": 188,
+      "at_s": 60.97,
+      "role": "runner",
+      "text": "error-window name=sync-loss-10 state=disarmed"
+    },
+    {
+      "sequence": 189,
+      "at_s": 61.668,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 190,
+      "at_s": 61.783,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 191,
+      "at_s": 61.921,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 192,
+      "at_s": 62.674,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 193,
+      "at_s": 62.83,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 194,
+      "at_s": 63.689,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 195,
+      "at_s": 63.83,
+      "role": "sink",
+      "text": "public audio received=100 energy=986938 dropped=0"
+    },
+    {
+      "sequence": 196,
+      "at_s": 64.708,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 197,
+      "at_s": 64.852,
+      "role": "sink",
+      "text": "public audio received=200 energy=1163319 dropped=0"
+    },
+    {
+      "sequence": 198,
+      "at_s": 65.713,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 199,
+      "at_s": 65.853,
+      "role": "sink",
+      "text": "public audio received=300 energy=1107647 dropped=0"
+    },
+    {
+      "sequence": 200,
+      "at_s": 66.718,
+      "role": "source",
+      "text": "public audio sent frames=600"
+    },
+    {
+      "sequence": 201,
+      "at_s": 66.852,
+      "role": "sink",
+      "text": "public audio received=400 energy=935732 dropped=0"
+    },
+    {
+      "sequence": 202,
+      "at_s": 67.725,
+      "role": "source",
+      "text": "public audio sent frames=700"
+    },
+    {
+      "sequence": 203,
+      "at_s": 67.87,
+      "role": "sink",
+      "text": "public audio received=500 energy=986915 dropped=0"
+    },
+    {
+      "sequence": 204,
+      "at_s": 68.744,
+      "role": "source",
+      "text": "public audio sent frames=800"
+    },
+    {
+      "sequence": 205,
+      "at_s": 68.881,
+      "role": "sink",
+      "text": "public audio received=600 energy=1163739 dropped=0"
+    }
+  ],
+  "error": "timeout: source:public audio source preparing; recent=source:public audio sent frames=300 | sink:public audio received=100 energy=986938 dropped=0 | source:public audio sent frames=400 | sink:public audio received=200 energy=1163319 dropped=0 | source:public audio sent frames=500 | sink:public audio received=300 energy=1107647 dropped=0 | source:public audio sent frames=600 | sink:public audio received=400 energy=935732 dropped=0 | source:public audio sent frames=700 | sink:public audio received=500 energy=986915 dropped=0 | source:public audio sent frames=800 | sink:public audio received=600 energy=1163739 dropped=0"
+}

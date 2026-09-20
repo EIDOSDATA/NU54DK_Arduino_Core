@@ -1,0 +1,178 @@
+{
+  "revision": "6d51a259988f25f656806b8a627a3bf990e37c49",
+  "source_clean": true,
+  "images": {
+    "TelephonyMediaGateway": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaGateway\\TelephonyMediaGateway.ino.hex",
+      "sha256": "efbac74379e0171323880cf040dccf99bf9a56c4b340aab056c7f5de24e08d1f",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaGateway\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\TelephonyMediaGateway.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaGateway\\TelephonyMediaGateway.ino.nu54-build.json",
+      "artifact_manifest_sha256": "e0806f6896206210cc6291a4d90c2a57460db1e30c7c1948d8d7399f8182bb5c",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 523696,
+      "ram_bytes": 253324,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    },
+    "TelephonyMediaTerminal": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaTerminal\\TelephonyMediaTerminal.ino.hex",
+      "sha256": "d7957ccf7972c6753c7953c4f197a273e0933035d3f90ca7e6983c0c39a891ca",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaTerminal\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\TelephonyMediaTerminal.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaTerminal\\TelephonyMediaTerminal.ino.nu54-build.json",
+      "artifact_manifest_sha256": "d3f5cdcad2c4469b28dfca95f46869d4c5aeb5e0e321b6949bedecda809ef61f",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 493648,
+      "ram_bytes": 244647,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    },
+    "TelephonyMediaBroadcaster": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaBroadcaster\\TelephonyMediaBroadcaster.ino.hex",
+      "sha256": "1b1203c4afbec962b203fe3b9e0886a026a8dea8fe49f06a9dc5790f1cd3cdf1",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaBroadcaster\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\TelephonyMediaBroadcaster.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaBroadcaster\\TelephonyMediaBroadcaster.ino.nu54-build.json",
+      "artifact_manifest_sha256": "5796253c56ed01b0da7b6065d3453d8ef0ff6f1f5a449b60991d75d04515442a",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 498232,
+      "ram_bytes": 223300,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio"
+      ]
+    },
+    "TelephonyMediaReceiver": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaReceiver\\TelephonyMediaReceiver.ino.hex",
+      "sha256": "cba5f41098840b94514f06eaaa192d53a6d629c8f4dec4e2295a68db158bfc4c",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaReceiver\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\TelephonyMediaReceiver.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\TelephonyMediaReceiver\\TelephonyMediaReceiver.ino.nu54-build.json",
+      "artifact_manifest_sha256": "6b372cd553c2d634c948a4a5abb7bfdf4e28994053c0c4204a98099709173043",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 488148,
+      "ram_bytes": 233196,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio"
+      ]
+    },
+    "GamingAudioGateway": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioGateway\\GamingAudioGateway.ino.hex",
+      "sha256": "65b5a631ccce09951327c84509c670b501ed01624774575bee94dc8d93a89d2c",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioGateway\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\GamingAudioGateway.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioGateway\\GamingAudioGateway.ino.nu54-build.json",
+      "artifact_manifest_sha256": "216ba4ad961e807c1e50ebc054c0676799db5f480ab4d6b30e46f7e8d49ff96a",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 520424,
+      "ram_bytes": 234288,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    },
+    "GamingAudioTerminal": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioTerminal\\GamingAudioTerminal.ino.hex",
+      "sha256": "1abc97ad8a7a3bc0797bb1eb45d08d4abaf21a1761a886442bda66551ff3988b",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioTerminal\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\GamingAudioTerminal.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioTerminal\\GamingAudioTerminal.ino.nu54-build.json",
+      "artifact_manifest_sha256": "7d0a29569af2166e1d86317a0c34e77c0fa231de42a0326ba346d0438d527562",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 493136,
+      "ram_bytes": 230718,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio",
+        "nucode.ble.security"
+      ]
+    },
+    "GamingAudioBroadcaster": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioBroadcaster\\GamingAudioBroadcaster.ino.hex",
+      "sha256": "a0556f399a95640ce39fe53eaf8e67565cf19095066c19bbd2282604feda316e",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioBroadcaster\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\GamingAudioBroadcaster.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioBroadcaster\\GamingAudioBroadcaster.ino.nu54-build.json",
+      "artifact_manifest_sha256": "e0e1c2e9e1b5e7619c5035b1a97657813feadf77bc089e9fbf736875cd540949",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 503344,
+      "ram_bytes": 223964,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio"
+      ]
+    },
+    "GamingAudioReceiver": {
+      "hex": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioReceiver\\GamingAudioReceiver.ino.hex",
+      "sha256": "8a88ba1c2cc28c74759562019091338ea89aa0e1d0bb736266b1150d10dbd2b6",
+      "context": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioReceiver\\nu54-zephyr\\context.json",
+      "log": "C:\\w\\m31-final-6d51-w10\\GamingAudioReceiver.build.log",
+      "artifact_manifest": "C:\\w\\m31-final-6d51-w10\\build\\GamingAudioReceiver\\GamingAudioReceiver.ino.nu54-build.json",
+      "artifact_manifest_sha256": "d380d1889db61b83025f3a1dadf2dc080fcb5e39b378d013f6b91d6f52a80fa0",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 463784,
+      "ram_bytes": 220836,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.nus",
+        "nucode.ble.audio"
+      ]
+    }
+  }
+}

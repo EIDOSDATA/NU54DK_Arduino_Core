@@ -1,0 +1,27 @@
+{
+  "schema": "nucode.m31.csip-fault-build.v1",
+  "mode": "wrong-sirk",
+  "role": "member_two",
+  "mutation_id": "wrong_sirk_key",
+  "required_source_marker": "NUCODE_CSIP_FAULT_WRONG_SIRK",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "public_example_sha256": "68bc8eb82a0b4753f73c80e9e15517517d412bdb75fb79b9f337284a3f726f68",
+  "fault_source_path": "C:\\w\\m31w06-wrong-sirk-fcbbfac5\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetMember\\CsipSetMember.ino",
+  "fault_source_sha256": "274694529fa871a88bd6c3878374f31fc771c0395049a6d4f844403a3cc70336",
+  "patch_path": "wrong-sirk.patch",
+  "patch_sha256": "8c5ab83539fc04a5cb258df19bca0a0215f42657201bb5eb54b89c26700d33b1",
+  "baseline_manifest_path": "..\\baseline-member.json",
+  "baseline_image_path": "C:\\w\\m31w06-member-fcbbfac5\\CsipSetMember.ino.hex",
+  "baseline_image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32",
+  "build_path": "C:\\w\\m31w06-fault-wrong-sirk-fcbbfac5",
+  "image_path": "C:\\w\\m31w06-fault-wrong-sirk-fcbbfac5\\CsipSetMember.ino.hex",
+  "image_sha256": "2495bbb9a86e5fcf22f3cf0200e09454bc322ff16555ab70ac9fbf09f9cfbcf3",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "build_command": [
+    "C:\\Program Files\\Arduino CLI\\arduino-cli.exe", "compile", "--config-file",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\arduino-dev\\arduino-cli.yaml",
+    "--fqbn", "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd", "--clean", "--build-path",
+    "C:\\w\\m31w06-fault-wrong-sirk-fcbbfac5",
+    "C:\\w\\m31w06-wrong-sirk-fcbbfac5\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetMember"
+  ]
+}

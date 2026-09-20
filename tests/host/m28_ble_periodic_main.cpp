@@ -1,6 +1,7 @@
 /** @file @brief W04 periodic advertising·sync·PAST production lifecycle을 검증합니다. */
 #include <NUCODE_BLE_GAP.h>
 #include <ble_mock.h>
+#include "../../cores/arduino/internal/BLEPeriodicSyncLease.h"
 #include <array>
 #include <cstring>
 #include <iostream>
@@ -165,6 +166,33 @@ int main(int argc, char **argv)
         assert(mock_past_subscribe_count == 1U);
         assert(mock_past_unsubscribe_count == 1U);
         assert(mock_connections[0].refs == 1);
+    }
+    else if (std::strcmp(scenario, "past_lease_busy") == 0)
+    {
+        const BLEConnectionHandle connection = connectPeer();
+        assert(BLEPeriodicAdvertising.subscribeTransfers(connection, 1U, 100U));
+        std::uint8_t foreign_owner_token = 0U;
+        assert(nucode::arduino::internal::claimBLEPeriodicSyncLease(
+            &foreign_owner_token));
+
+        bt_le_per_adv_sync *const transferred_sync = &mock_periodic_syncs[0];
+        transferred_sync->deleted = false;
+        const bt_addr_le_t zephyr_address{
+            BT_ADDR_LE_RANDOM, {{0x66, 0x55, 0x44, 0x33, 0x22, 0x11}}};
+        bt_le_per_adv_sync_synced_info transferred_information{
+            &zephyr_address, 7U, 80U, BT_GAP_LE_PHY_1M, true, 0x9999U,
+            &mock_connections[0]};
+        mock_periodic_sync_callbacks->synced(transferred_sync,
+                                             &transferred_information);
+
+        assert(transferred_sync->deleted);
+        assert(mock_periodic_sync_delete_count == 1U);
+        assert(mock_last_periodic_sync_deleted == transferred_sync);
+        assert(nucode::arduino::internal::ownsBLEPeriodicSyncLease(
+            &foreign_owner_token));
+        assert(BLEPeriodicAdvertising.unsubscribeTransfers(connection));
+        nucode::arduino::internal::releaseBLEPeriodicSyncLease(
+            &foreign_owner_token);
     }
     else if (std::strcmp(scenario, "end_cleanup") == 0)
     {

@@ -1,0 +1,83 @@
+{
+  "work_package": "M31-W02",
+  "work_id": "M31-W02",
+  "status": "PASS",
+  "core_revision": "b47aaf40df6fd5f73d132508e06b2bf7da9364f6",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "source_clean": true,
+  "isolated_sketchbook_package": {
+    "platform_file_count": 485,
+    "platform_integrity_mismatches": 0,
+    "library_file_count": 32,
+    "source_and_installed_library_sha256_equal": true,
+    "prerequisites_verified": true,
+    "examples_discovered": 11,
+    "examples_built": 11,
+    "failed_builds": 0
+  },
+  "same_revision_package_hil": {
+    "role_count": 11,
+    "role_cycles_completed": 220,
+    "cis": {
+      "roles": 2,
+      "cycles_each": 20,
+      "sent_frames": 2000,
+      "received_frames": 2000,
+      "corrupt_frames": 0
+    },
+    "bis_plain": {
+      "roles": 2,
+      "cycles_each": 20,
+      "sent_frames": 2000,
+      "received_frames": 1998,
+      "allowed_missing": 20,
+      "missing_frames": 2,
+      "errors": 0
+    },
+    "bis_encrypted": {
+      "roles": 2,
+      "cycles_each": 20,
+      "sent_frames": 2000,
+      "received_frames": 1998,
+      "allowed_missing": 20,
+      "missing_frames": 2,
+      "errors": 0
+    },
+    "bis_time": {
+      "roles": 2,
+      "cycles_each": 20,
+      "sent_frames": 2000,
+      "received_frames": 2000,
+      "valid_hci_times": true,
+      "errors": 0
+    },
+    "cis_to_bis": {
+      "roles": 3,
+      "cycles_each": 20,
+      "peer_sent_frames": 2000,
+      "bridge_forwarded_frames": 2000,
+      "receiver_frames": 2000,
+      "missing_frames": 0,
+      "stopped_cycles_each": 20,
+      "errors": 0
+    }
+  },
+  "public_api_negative_and_recovery": {
+    "wrong_code_mic_rejected": true,
+    "wrong_code_valid_sdu_leaked": 0,
+    "same_image_correct_code_recovered_frames": 100,
+    "sync_loss_injected": true,
+    "sync_loss_new_session_recovered_frames": 100,
+    "runtime_source_changes_since_negative_evidence": 0
+  },
+  "public_example_audit": {
+    "all_library_examples": 82,
+    "issues": 0
+  },
+  "prior_negative_evidence": [
+    "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-recovery-54c90bac/recovery-positive.json",
+    "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-sync-loss-41a56627/sync-loss-positive.json"
+  ],
+  "prior_fixed_backend_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json",
+  "remaining_m31": ["M31-W03", "M31-W04", "M31-W05", "M31-W06", "M31-W07", "M31-W08"]
+}

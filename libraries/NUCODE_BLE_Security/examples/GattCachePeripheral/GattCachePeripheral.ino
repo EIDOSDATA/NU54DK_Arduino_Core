@@ -15,11 +15,11 @@ namespace
     const nucode::ble::BLEUuid serviceUuid("8e7e2950-7d8c-4c1a-9d2d-8b6519f77410");
     const nucode::ble::BLEUuid valueUuid("8e7e2951-7d8c-4c1a-9d2d-8b6519f77410");
     nucode::ble::BLEService cacheService(serviceUuid);
-    nucode::ble::BLECharacteristic cacheValue(
-        valueUuid,
-        nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write |
-            nucode::ble::BLEProperty::notify,
-        nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 32U);
+    nucode::ble::BLECharacteristic
+        cacheValue(valueUuid,
+                   nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write |
+                       nucode::ble::BLEProperty::notify,
+                   nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 32U);
     bool securityRequestPending = false;
 
     /** @brief pairing 요청은 main thread에서 명시적으로 승인합니다. */
@@ -61,9 +61,9 @@ namespace
     }
 
     /** @brief peer write를 cached value와 notification에 반영합니다. */
-    void onCharacteristicEvent(
-        nucode::ble::BLECharacteristic &characteristic,
-        const nucode::ble::BLECharacteristicEventInfo &information, void *context)
+    void onCharacteristicEvent(nucode::ble::BLECharacteristic &characteristic,
+                               const nucode::ble::BLECharacteristicEventInfo &information,
+                               void *context)
     {
         static_cast<void>(context);
         if (&characteristic == &cacheValue &&

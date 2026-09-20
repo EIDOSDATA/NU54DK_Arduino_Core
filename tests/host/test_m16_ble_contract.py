@@ -183,7 +183,9 @@ class M16BleNusContractTests(unittest.TestCase):
         self.assertEqual(feature["schema_version"], 1)
         self.assertEqual(feature["id"], "nucode.ble.nus")
         self.assertIn("ble", feature["requires"])
-        self.assertEqual(feature["compatible_profiles"], ["ble", "secure_ble_dfu"])
+        self.assertEqual(
+            feature["compatible_profiles"], ["ble", "ble_audio_io", "secure_ble_dfu"]
+        )
         self.assertTrue(feature["conf"])
 
         boards = (REPOSITORY / "boards.txt").read_text(encoding="utf-8")

@@ -1,0 +1,410 @@
+00002.907|runner|debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00006.040|runner|debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00008.839|runner|debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00008.839|runner|pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true
+00012.012|runner|debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00012.014|runner|pre-reset UART quarantine board=E observed_bytes=1 input_buffer_purged=true
+00015.082|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nSuccessfully resumed device\nCOMMANDER_RC=0
+00015.082|runner|pre-reset UART quarantine board=G observed_bytes=2994 input_buffer_purged=true
+00018.139|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00018.140|coordinator|<reset-uart-noise chars=2196>Searching for two set members
+00018.140|member_one|Enter this member rank (1 or 2):
+00018.140|member_two|Enter this member rank (1 or 2):
+00018.140|runner|command board=F value=1
+00018.208|runner|command board=E value=2
+00018.236|member_one|Set member ready; send a to authorize SIRK read, f to force-release
+00018.236|member_one|Provision a unique secret before using this outside a local test setup
+00018.300|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00018.300|member_two|Provision a unique secret before using this outside a local test setup
+00019.514|member_one|Set member bonded; physically verify the controller, then send a
+00019.538|runner|authorize board=F controller=G mapping=preverified
+00019.759|runner|command board=F value=a
+00019.784|member_one|Bonded controller identity authorized
+00020.803|coordinator|Member rank 1 of 2
+00022.101|member_two|Set member bonded; physically verify the controller, then send a
+00022.101|runner|authorize board=E controller=G mapping=preverified
+00022.325|runner|command board=E value=a
+00022.372|member_two|Bonded controller identity authorized
+00023.273|coordinator|Member rank 1 of 2
+00023.273|coordinator|Member rank 2 of 2
+00023.273|coordinator|Set ready; send o to order, l to lock, u to release
+00026.667|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00026.716|member_two|Enter this member rank (1 or 2):
+00026.717|runner|command board=E value=2
+00026.776|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00026.776|member_two|Provision a unique secret before using this outside a local test setup
+00027.983|member_two|Set member bonded; physically verify the controller, then send a
+00027.983|runner|authorize board=E controller=G mapping=preverified
+00028.234|runner|command board=E value=a
+00028.296|member_two|Bonded controller identity authorized
+00029.336|coordinator|Member rank 1 of 2
+00029.336|coordinator|Member rank 2 of 2
+00029.336|coordinator|Set ready; send o to order, l to lock, u to release
+00029.636|runner|command board=G value=l
+00029.734|member_one|Set locked
+00029.809|member_two|Set locked
+00030.040|runner|command board=G value=u
+00030.168|member_two|Set released
+00030.202|member_one|Set released
+00030.300|runner|recovery cycle=1/20 ranks=[1, 2] seconds=6.967 operations=2
+00033.476|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00033.516|member_two|Enter this member rank (1 or 2):
+00033.517|runner|command board=E value=2
+00033.575|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00033.575|member_two|Provision a unique secret before using this outside a local test setup
+00034.876|member_two|Set member bonded; physically verify the controller, then send a
+00034.876|runner|authorize board=E controller=G mapping=preverified
+00035.126|runner|command board=E value=a
+00035.183|member_two|Bonded controller identity authorized
+00036.197|coordinator|Member rank 1 of 2
+00036.197|coordinator|Member rank 2 of 2
+00036.197|coordinator|Set ready; send o to order, l to lock, u to release
+00036.526|runner|command board=G value=l
+00036.617|member_one|Set locked
+00036.617|member_two|Set locked
+00036.941|runner|command board=G value=u
+00036.992|member_two|Set released
+00037.108|member_one|Set released
+00037.206|runner|recovery cycle=2/20 ranks=[1, 2] seconds=6.906 operations=2
+00040.384|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00040.436|member_two|Enter this member rank (1 or 2):
+00040.436|runner|command board=E value=2
+00040.502|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00040.502|member_two|Provision a unique secret before using this outside a local test setup
+00041.115|member_two|Set member bonded; physically verify the controller, then send a
+00041.116|runner|authorize board=E controller=G mapping=preverified
+00041.360|runner|command board=E value=a
+00041.424|member_two|Bonded controller identity authorized
+00042.448|coordinator|Member rank 1 of 2
+00042.452|coordinator|Member rank 2 of 2
+00042.452|coordinator|Set ready; send o to order, l to lock, u to release
+00042.735|runner|command board=G value=l
+00042.766|member_one|Set locked
+00042.842|member_two|Set locked
+00043.102|runner|command board=G value=u
+00043.156|member_two|Set released
+00043.258|member_one|Set released
+00043.359|runner|recovery cycle=3/20 ranks=[1, 2] seconds=6.153 operations=2
+00046.550|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00046.608|member_two|Enter this member rank (1 or 2):
+00046.609|runner|command board=E value=2
+00046.659|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00046.659|member_two|Provision a unique secret before using this outside a local test setup
+00047.238|member_two|Set member bonded; physically verify the controller, then send a
+00047.238|runner|authorize board=E controller=G mapping=preverified
+00047.483|runner|command board=E value=a
+00047.533|member_two|Bonded controller identity authorized
+00048.613|coordinator|Member rank 1 of 2
+00048.613|coordinator|Member rank 2 of 2
+00048.613|coordinator|Set ready; send o to order, l to lock, u to release
+00048.922|runner|command board=G value=l
+00048.956|member_one|Set locked
+00049.031|member_two|Set locked
+00049.290|runner|command board=G value=u
+00049.341|member_two|Set released
+00049.459|member_one|Set released
+00049.568|runner|recovery cycle=4/20 ranks=[1, 2] seconds=6.209 operations=2
+00052.773|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00052.827|member_two|Enter this member rank (1 or 2):
+00052.828|runner|command board=E value=2
+00052.891|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00052.891|member_two|Provision a unique secret before using this outside a local test setup
+00053.783|member_two|Set member bonded; physically verify the controller, then send a
+00053.783|runner|authorize board=E controller=G mapping=preverified
+00054.026|runner|command board=E value=a
+00054.085|member_two|Bonded controller identity authorized
+00055.149|coordinator|Member rank 1 of 2
+00055.149|coordinator|Member rank 2 of 2
+00055.149|coordinator|Set ready; send o to order, l to lock, u to release
+00055.484|runner|command board=G value=l
+00055.508|member_one|Set locked
+00055.666|member_two|Set locked
+00055.924|runner|command board=G value=u
+00055.984|member_two|Set released
+00056.109|member_one|Set released
+00056.213|runner|recovery cycle=5/20 ranks=[1, 2] seconds=6.645 operations=2
+00059.463|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00059.508|member_two|Enter this member rank (1 or 2):
+00059.509|runner|command board=E value=2
+00059.560|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00059.560|member_two|Provision a unique secret before using this outside a local test setup
+00060.925|member_two|Set member bonded; physically verify the controller, then send a
+00060.925|runner|authorize board=E controller=G mapping=preverified
+00061.208|runner|command board=E value=a
+00061.258|member_two|Bonded controller identity authorized
+00062.214|coordinator|Member rank 1 of 2
+00062.214|coordinator|Member rank 2 of 2
+00062.270|coordinator|Set ready; send o to order, l to lock, u to release
+00062.581|runner|command board=G value=l
+00062.610|member_one|Set locked
+00062.684|member_two|Set locked
+00062.936|runner|command board=G value=u
+00062.985|member_two|Set released
+00063.100|member_one|Set released
+00063.200|runner|recovery cycle=6/20 ranks=[1, 2] seconds=6.987 operations=2
+00066.443|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00066.496|member_two|Enter this member rank (1 or 2):
+00066.497|runner|command board=E value=2
+00066.549|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00066.549|member_two|Provision a unique secret before using this outside a local test setup
+00067.122|member_two|Set member bonded; physically verify the controller, then send a
+00067.122|runner|authorize board=E controller=G mapping=preverified
+00067.382|runner|command board=E value=a
+00067.440|member_two|Bonded controller identity authorized
+00068.551|coordinator|Member rank 1 of 2
+00068.551|coordinator|Member rank 2 of 2
+00068.551|coordinator|Set ready; send o to order, l to lock, u to release
+00068.875|runner|command board=G value=l
+00068.907|member_one|Set locked
+00068.996|member_two|Set locked
+00069.227|runner|command board=G value=u
+00069.274|member_two|Set released
+00069.385|member_one|Set released
+00069.499|runner|recovery cycle=7/20 ranks=[1, 2] seconds=6.299 operations=2
+00072.746|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00072.796|member_two|Enter this member rank (1 or 2):
+00072.796|runner|command board=E value=2
+00072.845|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00072.846|member_two|Provision a unique secret before using this outside a local test setup
+00073.559|member_two|Set member bonded; physically verify the controller, then send a
+00073.560|runner|authorize board=E controller=G mapping=preverified
+00073.800|runner|command board=E value=a
+00073.851|member_two|Bonded controller identity authorized
+00074.940|coordinator|Member rank 1 of 2
+00074.940|coordinator|Member rank 2 of 2
+00074.941|coordinator|Set ready; send o to order, l to lock, u to release
+00075.267|runner|command board=G value=l
+00075.352|member_one|Set locked
+00075.401|member_two|Set locked
+00075.637|runner|command board=G value=u
+00075.691|member_two|Set released
+00075.801|member_one|Set released
+00075.912|runner|recovery cycle=8/20 ranks=[1, 2] seconds=6.413 operations=2
+00079.080|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nSuccessfully resumed device\nCOMMANDER_RC=0
+00079.121|member_two|Enter this member rank (1 or 2):
+00079.121|runner|command board=E value=2
+00079.174|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00079.174|member_two|Provision a unique secret before using this outside a local test setup
+00080.216|member_two|Set member bonded; physically verify the controller, then send a
+00080.216|runner|authorize board=E controller=G mapping=preverified
+00080.472|runner|command board=E value=a
+00080.525|member_two|Bonded controller identity authorized
+00081.513|coordinator|Member rank 1 of 2
+00081.513|coordinator|Member rank 2 of 2
+00081.513|coordinator|Set ready; send o to order, l to lock, u to release
+00081.825|runner|command board=G value=l
+00081.850|member_one|Set locked
+00081.925|member_two|Set locked
+00082.163|runner|command board=G value=u
+00082.257|member_two|Set released
+00082.341|member_one|Set released
+00082.454|runner|recovery cycle=9/20 ranks=[1, 2] seconds=6.542 operations=2
+00085.652|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00085.699|member_two|Enter this member rank (1 or 2):
+00085.699|runner|command board=E value=2
+00085.766|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00085.766|member_two|Provision a unique secret before using this outside a local test setup
+00086.324|member_two|Set member bonded; physically verify the controller, then send a
+00086.325|runner|authorize board=E controller=G mapping=preverified
+00086.567|runner|command board=E value=a
+00086.624|member_two|Bonded controller identity authorized
+00087.752|coordinator|Member rank 1 of 2
+00087.752|coordinator|Member rank 2 of 2
+00087.752|coordinator|Set ready; send o to order, l to lock, u to release
+00088.017|runner|command board=G value=l
+00088.101|member_one|Set locked
+00088.160|member_two|Set locked
+00088.408|runner|command board=G value=u
+00088.461|member_two|Set released
+00088.591|member_one|Set released
+00088.704|runner|recovery cycle=10/20 ranks=[1, 2] seconds=6.25 operations=2
+00091.798|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00091.859|member_two|Enter this member rank (1 or 2):
+00091.860|runner|command board=E value=2
+00091.912|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00091.912|member_two|Provision a unique secret before using this outside a local test setup
+00092.611|member_two|Set member bonded; physically verify the controller, then send a
+00092.612|runner|authorize board=E controller=G mapping=preverified
+00092.857|runner|command board=E value=a
+00092.922|member_two|Bonded controller identity authorized
+00093.912|coordinator|Member rank 1 of 2
+00093.912|coordinator|Member rank 2 of 2
+00093.912|coordinator|Set ready; send o to order, l to lock, u to release
+00094.183|runner|command board=G value=l
+00094.204|member_one|Set locked
+00094.286|member_two|Set locked
+00094.517|runner|command board=G value=u
+00094.573|member_two|Set released
+00094.686|member_one|Set released
+00094.788|runner|recovery cycle=11/20 ranks=[1, 2] seconds=6.083 operations=2
+00098.041|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nSuccessfully resumed device\nCOMMANDER_RC=0
+00098.090|member_two|Enter this member rank (1 or 2):
+00098.090|runner|command board=E value=2
+00098.154|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00098.154|member_two|Provision a unique secret before using this outside a local test setup
+00098.765|member_two|Set member bonded; physically verify the controller, then send a
+00098.765|runner|authorize board=E controller=G mapping=preverified
+00099.040|runner|command board=E value=a
+00099.106|member_two|Bonded controller identity authorized
+00100.079|coordinator|Member rank 1 of 2
+00100.079|coordinator|Member rank 2 of 2
+00100.079|coordinator|Set ready; send o to order, l to lock, u to release
+00100.426|runner|command board=G value=l
+00100.450|member_one|Set locked
+00100.542|member_two|Set locked
+00100.811|runner|command board=G value=u
+00100.866|member_two|Set released
+00100.992|member_one|Set released
+00101.123|runner|recovery cycle=12/20 ranks=[1, 2] seconds=6.336 operations=2
+00104.069|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00104.130|member_two|Enter this member rank (1 or 2):
+00104.130|runner|command board=E value=2
+00104.183|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00104.183|member_two|Provision a unique secret before using this outside a local test setup
+00104.891|member_two|Set member bonded; physically verify the controller, then send a
+00104.891|runner|authorize board=E controller=G mapping=preverified
+00105.122|runner|command board=E value=a
+00105.181|member_two|Bonded controller identity authorized
+00106.238|coordinator|Member rank 1 of 2
+00106.238|coordinator|Member rank 2 of 2
+00106.238|coordinator|Set ready; send o to order, l to lock, u to release
+00106.583|runner|command board=G value=l
+00106.609|member_one|Set locked
+00106.675|member_two|Set locked
+00106.940|runner|command board=G value=u
+00107.007|member_two|Set released
+00107.107|member_one|Set released
+00107.232|runner|recovery cycle=13/20 ranks=[1, 2] seconds=6.108 operations=2
+00110.186|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00110.233|member_two|Enter this member rank (1 or 2):
+00110.234|runner|command board=E value=2
+00110.300|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00110.301|member_two|Provision a unique secret before using this outside a local test setup
+00111.273|member_two|Set member bonded; physically verify the controller, then send a
+00111.275|runner|authorize board=E controller=G mapping=preverified
+00111.564|runner|command board=E value=a
+00111.621|member_two|Bonded controller identity authorized
+00112.696|coordinator|Member rank 1 of 2
+00112.696|coordinator|Member rank 2 of 2
+00112.696|coordinator|Set ready; send o to order, l to lock, u to release
+00113.052|runner|command board=G value=l
+00113.148|member_one|Set locked
+00113.205|member_two|Set locked
+00113.492|runner|command board=G value=u
+00113.563|member_two|Set released
+00113.651|member_one|Set released
+00113.757|runner|recovery cycle=14/20 ranks=[1, 2] seconds=6.524 operations=2
+00116.719|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00116.774|member_two|Enter this member rank (1 or 2):
+00116.774|runner|command board=E value=2
+00116.848|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00116.848|member_two|Provision a unique secret before using this outside a local test setup
+00117.724|member_two|Set member bonded; physically verify the controller, then send a
+00117.724|runner|authorize board=E controller=G mapping=preverified
+00118.015|runner|command board=E value=a
+00118.080|member_two|Bonded controller identity authorized
+00119.098|coordinator|Member rank 1 of 2
+00119.098|coordinator|Member rank 2 of 2
+00119.098|coordinator|Set ready; send o to order, l to lock, u to release
+00119.414|runner|command board=G value=l
+00119.447|member_one|Set locked
+00119.542|member_two|Set locked
+00119.792|runner|command board=G value=u
+00119.843|member_two|Set released
+00119.959|member_one|Set released
+00120.082|runner|recovery cycle=15/20 ranks=[1, 2] seconds=6.325 operations=2
+00122.959|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00123.016|member_two|Enter this member rank (1 or 2):
+00123.016|runner|command board=E value=2
+00123.074|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00123.074|member_two|Provision a unique secret before using this outside a local test setup
+00124.173|member_two|Set member bonded; physically verify the controller, then send a
+00124.173|runner|authorize board=E controller=G mapping=preverified
+00124.474|runner|command board=E value=a
+00124.532|member_two|Bonded controller identity authorized
+00125.537|coordinator|Member rank 1 of 2
+00125.537|coordinator|Member rank 2 of 2
+00125.537|coordinator|Set ready; send o to order, l to lock, u to release
+00125.875|runner|command board=G value=l
+00125.907|member_one|Set locked
+00126.001|member_two|Set locked
+00126.290|runner|command board=G value=u
+00126.347|member_two|Set released
+00126.440|member_one|Set released
+00126.554|runner|recovery cycle=16/20 ranks=[1, 2] seconds=6.472 operations=2
+00129.470|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00129.530|member_two|Enter this member rank (1 or 2):
+00129.531|runner|command board=E value=2
+00129.591|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00129.591|member_two|Provision a unique secret before using this outside a local test setup
+00130.305|member_two|Set member bonded; physically verify the controller, then send a
+00130.305|runner|authorize board=E controller=G mapping=preverified
+00130.588|runner|command board=E value=a
+00130.658|member_two|Bonded controller identity authorized
+00131.660|coordinator|Member rank 1 of 2
+00131.660|coordinator|Member rank 2 of 2
+00131.660|coordinator|Set ready; send o to order, l to lock, u to release
+00132.007|runner|command board=G value=l
+00132.109|member_one|Set locked
+00132.109|member_two|Set locked
+00132.508|runner|command board=G value=u
+00132.558|member_two|Set released
+00132.691|member_one|Set released
+00132.806|runner|recovery cycle=17/20 ranks=[1, 2] seconds=6.252 operations=2
+00135.693|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00135.748|member_two|Enter this member rank (1 or 2):
+00135.748|runner|command board=E value=2
+00135.828|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00135.828|member_two|Provision a unique secret before using this outside a local test setup
+00136.598|member_two|Set member bonded; physically verify the controller, then send a
+00136.598|runner|authorize board=E controller=G mapping=preverified
+00136.857|runner|command board=E value=a
+00136.923|member_two|Bonded controller identity authorized
+00137.862|coordinator|Member rank 1 of 2
+00137.862|coordinator|Member rank 2 of 2
+00137.862|coordinator|Set ready; send o to order, l to lock, u to release
+00138.192|runner|command board=G value=l
+00138.304|member_one|Set locked
+00138.390|member_two|Set locked
+00138.655|runner|command board=G value=u
+00138.705|member_two|Set released
+00138.826|member_one|Set released
+00138.957|runner|recovery cycle=18/20 ranks=[1, 2] seconds=6.151 operations=2
+00141.938|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00142.000|member_two|Enter this member rank (1 or 2):
+00142.001|runner|command board=E value=2
+00142.063|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00142.064|member_two|Provision a unique secret before using this outside a local test setup
+00142.957|member_two|Set member bonded; physically verify the controller, then send a
+00142.958|runner|authorize board=E controller=G mapping=preverified
+00143.223|runner|command board=E value=a
+00143.287|member_two|Bonded controller identity authorized
+00144.370|coordinator|Member rank 1 of 2
+00144.370|coordinator|Member rank 2 of 2
+00144.370|coordinator|Set ready; send o to order, l to lock, u to release
+00144.684|runner|command board=G value=l
+00144.707|member_one|Set locked
+00144.797|member_two|Set locked
+00145.074|runner|command board=G value=u
+00145.126|member_two|Set released
+00145.247|member_one|Set released
+00145.358|runner|recovery cycle=19/20 ranks=[1, 2] seconds=6.401 operations=2
+00148.259|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00148.313|member_two|Enter this member rank (1 or 2):
+00148.314|runner|command board=E value=2
+00148.366|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00148.366|member_two|Provision a unique secret before using this outside a local test setup
+00149.357|member_two|Set member bonded; physically verify the controller, then send a
+00149.357|runner|authorize board=E controller=G mapping=preverified
+00149.630|runner|command board=E value=a
+00149.690|member_two|Bonded controller identity authorized
+00150.770|coordinator|Member rank 1 of 2
+00150.770|coordinator|Member rank 2 of 2
+00150.770|coordinator|Set ready; send o to order, l to lock, u to release
+00151.104|runner|command board=G value=l
+00151.215|member_one|Set locked
+00151.215|member_two|Set locked
+00151.591|runner|command board=G value=u
+00151.656|member_two|Set released
+00151.746|member_one|Set released
+00151.865|runner|recovery cycle=20/20 ranks=[1, 2] seconds=6.506 operations=2

@@ -46,18 +46,17 @@ namespace nucode::ble::internal::gap
                    (slot.active != nullptr || (allow_pending && slot.pending != nullptr));
         }
 
-        /** @brief aggregate legacy 상태를 두 slot의 현재 값으로 갱신합니다. */
-        void refreshConnectionFlags() noexcept
+        /** @brief connection lock 안에서 aggregate legacy 상태를 현재 slot 값으로 갱신합니다. */
+        void refreshConnectionFlagsLocked() noexcept
         {
             bool active = false;
             bool connecting = false;
-            k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
             for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
             {
                 active = active || gapState().connection_slots[index].active != nullptr;
-                connecting = connecting || gapState().connection_slots[index].pending != nullptr;
+                connecting = connecting || gapState().connection_slots[index].pending != nullptr ||
+                             gapState().connection_slots[index].reserved;
             }
-            k_spin_unlock(&gapState().connection_lock, key);
             atomic_set(&gapState().connection_active, active ? 1 : 0);
             atomic_set(&gapState().connection_connecting, connecting ? 1 : 0);
         }
@@ -254,8 +253,6 @@ namespace nucode::ble::internal::gap
             std::uint8_t native_role = 0xffU;
             bool native_role_valid = false;
             std::uint32_t device_generation = 0U;
-            const std::uint32_t current_device_generation = static_cast<std::uint32_t>(
-                atomic_get(&gapState().device_session_generation));
             const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
             const BLEAddress peer_address =
                 peer == nullptr ? BLEAddress{} : fromZephyrAddress(*peer);
@@ -269,8 +266,12 @@ namespace nucode::ble::internal::gap
                                     identity_resolved);
             }
 
+            lockGapLifecycle();
+            const std::uint32_t current_device_generation = static_cast<std::uint32_t>(
+                atomic_get(&gapState().device_session_generation));
             k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
-            ConnectionSlot &central = gapState().connection_slots[central_connection_slot];
+            ConnectionSlot *central = nullptr;
+            std::size_t central_slot_index = maximum_connection_slots;
             for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
             {
                 if (gapState().connection_slots[index].active == connection)
@@ -278,44 +279,54 @@ namespace nucode::ble::internal::gap
                     duplicate_connection = true;
                     break;
                 }
+                if (gapState().connection_slots[index].role == BLELinkRole::central &&
+                    gapState().connection_slots[index].pending == connection)
+                {
+                    central = &gapState().connection_slots[index];
+                    central_slot_index = index;
+                }
             }
             if (duplicate_connection)
             {
                 k_spin_unlock(&gapState().connection_lock, key);
+                unlockGapLifecycle();
                 return;
             }
-            if (central.pending == connection)
+            if (central != nullptr)
             {
                 handles_current_attempt =
-                    central.device_generation == current_device_generation &&
+                    central->device_generation == current_device_generation &&
                     atomic_get(&gapState().device_initialized) != 0;
-                handle = makeHandle(central_connection_slot, central.generation);
-                role = central.role;
-                device_generation = central.device_generation;
-                if (error == 0U && handles_current_attempt && central.active == nullptr &&
+                handle = makeHandle(central_slot_index, central->generation);
+                role = central->role;
+                device_generation = central->device_generation;
+                if (error == 0U && handles_current_attempt && central->active == nullptr &&
                     native_role_valid && native_role == BT_CONN_ROLE_CENTRAL)
                 {
-                    central.active = central.pending;
-                    central.pending = nullptr;
-                    central.peer_address = identity_address;
-                    central.connection_address = connection_address;
-                    central.identity_resolved = identity_resolved;
+                    central->active = central->pending;
+                    central->pending = nullptr;
+                    central->reserved = false;
+                    central->peer_address = identity_address;
+                    central->connection_address = connection_address;
+                    central->identity_resolved = identity_resolved;
                     owns_connection = true;
                 }
                 else
                 {
-                    release_connection = central.pending;
-                    central.pending = nullptr;
-                    central.generation = 0U;
-                    central.device_generation = 0U;
-                    central.peer_address = BLEAddress{};
-                    central.connection_address = BLEAddress{};
-                    central.identity_resolved = false;
+                    release_connection = central->pending;
+                    central->pending = nullptr;
+                    central->reserved = false;
+                    central->generation = 0U;
+                    central->device_generation = 0U;
+                    central->peer_address = BLEAddress{};
+                    central->connection_address = BLEAddress{};
+                    central->identity_resolved = false;
                 }
             }
             else if (error == 0U)
             {
-                if (native_role_valid && native_role == BT_CONN_ROLE_PERIPHERAL &&
+                if (central_connection_slots < maximum_connection_slots &&
+                    native_role_valid && native_role == BT_CONN_ROLE_PERIPHERAL &&
                     atomic_get(&gapState().device_initialized) != 0 &&
                     acceptsIncomingConnection())
                 {
@@ -344,6 +355,7 @@ namespace nucode::ble::internal::gap
                     reject_connection = true;
                 }
             }
+            refreshConnectionFlagsLocked();
             k_spin_unlock(&gapState().connection_lock, key);
 
             if (release_connection != nullptr)
@@ -359,23 +371,31 @@ namespace nucode::ble::internal::gap
             {
                 static_cast<void>(bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             }
-            refreshConnectionFlags();
-
             if (!owns_connection && !(handles_current_attempt && error != 0U))
             {
+                unlockGapLifecycle();
                 return;
             }
             if (error != 0U)
             {
                 nucode::ble::internal::recordError(BLEError::driver_error, -static_cast<int>(error),
                                                    true);
+                unlockGapLifecycle();
                 return;
             }
-            if (atomic_get(&gapState().device_initialized) == 0 ||
-                device_generation != static_cast<std::uint32_t>(
-                                         atomic_get(&gapState().device_session_generation)))
+            bool current = false;
+            key = k_spin_lock(&gapState().connection_lock);
+            std::size_t current_slot = 0U;
+            current = atomic_get(&gapState().device_initialized) != 0 &&
+                      device_generation == static_cast<std::uint32_t>(
+                                               atomic_get(&gapState().device_session_generation)) &&
+                      matchesSlotLocked(handle, current_slot, false) &&
+                      gapState().connection_slots[current_slot].active == connection;
+            k_spin_unlock(&gapState().connection_lock, key);
+            if (!current)
             {
                 static_cast<void>(bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                unlockGapLifecycle();
                 return;
             }
             if (role == BLELinkRole::peripheral)
@@ -385,12 +405,12 @@ namespace nucode::ble::internal::gap
             nucode::ble::internal::gattConnected(connection, handle);
             nucode::ble::internal::securityConnected(connection, handle);
             queueEvent(BLEEvent::connected, handle, role, device_generation);
+            unlockGapLifecycle();
         }
 
         /** @brief disconnect에서 exact slot handle과 reference를 먼저 무효화합니다. */
         void connectionDisconnected(struct bt_conn *connection, std::uint8_t reason) noexcept
         {
-            ARG_UNUSED(reason);
             bool owns_connection = false;
             BLEConnectionHandle handle;
             BLELinkRole role = BLELinkRole::none;
@@ -406,6 +426,7 @@ namespace nucode::ble::internal::gap
                     role = slot.role;
                     device_generation = slot.device_generation;
                     slot.active = nullptr;
+                    slot.reserved = false;
                     slot.generation = 0U;
                     slot.device_generation = 0U;
                     slot.peer_address = BLEAddress{};
@@ -414,6 +435,7 @@ namespace nucode::ble::internal::gap
                     break;
                 }
             }
+            refreshConnectionFlagsLocked();
             k_spin_unlock(&gapState().connection_lock, key);
             if (!owns_connection)
             {
@@ -423,10 +445,10 @@ namespace nucode::ble::internal::gap
             nucode::ble::internal::gattDisconnected(connection, handle);
             nucode::ble::internal::securityDisconnected(connection, handle);
             bt_conn_unref(connection);
-            refreshConnectionFlags();
             if (atomic_get(&gapState().device_initialized) != 0)
             {
-                queueEvent(BLEEvent::disconnected, handle, role, device_generation);
+                queueEvent(BLEEvent::disconnected, handle, role, device_generation,
+                           {}, {}, reason);
             }
         }
 
@@ -648,28 +670,9 @@ namespace nucode::ble
         {
             return false;
         }
-        if (atomic_get(&gapState().device_initialized) == 0)
-        {
-            internal::recordError(BLEError::not_initialized, -EPERM, true);
-            return false;
-        }
         if (!address.valid())
         {
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
-            return false;
-        }
-
-        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
-        const ConnectionSlot &central = gapState().connection_slots[central_connection_slot];
-        const bool central_busy = central.active != nullptr || central.pending != nullptr;
-        k_spin_unlock(&gapState().connection_lock, key);
-        if (central_busy)
-        {
-            internal::recordError(BLEError::already_started, -EALREADY, true);
-            return false;
-        }
-        if (atomic_get(&gapState().scanning_active) != 0 && !BLEScan.stop())
-        {
             return false;
         }
 
@@ -679,41 +682,110 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        struct bt_conn *connection = nullptr;
-        const int result =
-            bt_conn_le_create(&peer, BT_CONN_LE_CREATE_CONN, BT_LE_CONN_PARAM_DEFAULT, &connection);
-        if (result < 0)
+
+        lockGapLifecycle();
+        if (atomic_get(&gapState().device_initialized) == 0)
         {
-            internal::recordError(BLEError::driver_error, result, true);
+            internal::recordError(BLEError::not_initialized, -EPERM, true);
+            unlockGapLifecycle();
+            return false;
+        }
+        if (atomic_get(&gapState().scanning_active) != 0 && !BLEScan.stop())
+        {
+            unlockGapLifecycle();
             return false;
         }
 
         const std::uint32_t generation = nextConnectionGeneration();
         const std::uint32_t device_generation = static_cast<std::uint32_t>(
             atomic_get(&gapState().device_session_generation));
-        key = k_spin_lock(&gapState().connection_lock);
-        ConnectionSlot &slot = gapState().connection_slots[central_connection_slot];
-        if (slot.active != nullptr || slot.pending != nullptr)
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        std::size_t central_slot_index = maximum_connection_slots;
+        for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
         {
+            const ConnectionSlot &slot = gapState().connection_slots[index];
+            if (slot.role == BLELinkRole::central && slot.active == nullptr &&
+                slot.pending == nullptr && !slot.reserved)
+            {
+                central_slot_index = index;
+                break;
+            }
+        }
+        if (central_slot_index >= maximum_connection_slots)
+        {
+            k_spin_unlock(&gapState().connection_lock, key);
+            internal::recordError(BLEError::already_started, -EALREADY, true);
+            unlockGapLifecycle();
+            return false;
+        }
+        ConnectionSlot &reserved_slot = gapState().connection_slots[central_slot_index];
+        reserved_slot.reserved = true;
+        reserved_slot.generation = generation;
+        reserved_slot.device_generation = device_generation;
+        reserved_slot.peer_address = address;
+        reserved_slot.connection_address = address;
+        reserved_slot.identity_resolved = address.type() != BLEAddress::Type::random_address ||
+                                          (address.data()[5] & 0xc0U) != 0x40U;
+        gapState().last_central_address = address;
+        connection_handle = makeHandle(central_slot_index, generation);
+        refreshConnectionFlagsLocked();
+        k_spin_unlock(&gapState().connection_lock, key);
+
+        struct bt_conn *connection = nullptr;
+        const int result =
+            bt_conn_le_create(&peer, BT_CONN_LE_CREATE_CONN, BT_LE_CONN_PARAM_DEFAULT, &connection);
+        if (result < 0)
+        {
+            key = k_spin_lock(&gapState().connection_lock);
+            ConnectionSlot &slot = gapState().connection_slots[central_slot_index];
+            if (slot.reserved && slot.generation == generation &&
+                slot.device_generation == device_generation)
+            {
+                slot.reserved = false;
+                slot.generation = 0U;
+                slot.device_generation = 0U;
+                slot.peer_address = BLEAddress{};
+                slot.connection_address = BLEAddress{};
+                slot.identity_resolved = false;
+            }
+            refreshConnectionFlagsLocked();
+            k_spin_unlock(&gapState().connection_lock, key);
+            connection_handle = BLEConnectionHandle{};
+            internal::recordError(BLEError::driver_error, result, true);
+            unlockGapLifecycle();
+            return false;
+        }
+
+        key = k_spin_lock(&gapState().connection_lock);
+        ConnectionSlot &slot = gapState().connection_slots[central_slot_index];
+        if (!slot.reserved || slot.generation != generation ||
+            slot.device_generation != device_generation || slot.active != nullptr ||
+            slot.pending != nullptr || atomic_get(&gapState().device_initialized) == 0 ||
+            device_generation != static_cast<std::uint32_t>(
+                                     atomic_get(&gapState().device_session_generation)))
+        {
+            slot.reserved = false;
+            slot.generation = 0U;
+            slot.device_generation = 0U;
+            slot.peer_address = BLEAddress{};
+            slot.connection_address = BLEAddress{};
+            slot.identity_resolved = false;
+            refreshConnectionFlagsLocked();
             k_spin_unlock(&gapState().connection_lock, key);
             static_cast<void>(bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
             bt_conn_unref(connection);
+            connection_handle = BLEConnectionHandle{};
             internal::recordError(BLEError::busy, -EBUSY, true);
+            unlockGapLifecycle();
             return false;
         }
         slot.pending = connection;
-        slot.generation = generation;
-        slot.device_generation = device_generation;
-        slot.peer_address = address;
-        slot.connection_address = address;
-        slot.identity_resolved = address.type() != BLEAddress::Type::random_address ||
-                                 (address.data()[5] & 0xc0U) != 0x40U;
-        gapState().last_central_address = address;
-        connection_handle = makeHandle(central_connection_slot, generation);
+        slot.reserved = false;
+        refreshConnectionFlagsLocked();
         k_spin_unlock(&gapState().connection_lock, key);
-        refreshConnectionFlags();
         queueEvent(BLEEvent::connecting, connection_handle, BLELinkRole::central,
                    device_generation);
+        unlockGapLifecycle();
         return true;
     }
 

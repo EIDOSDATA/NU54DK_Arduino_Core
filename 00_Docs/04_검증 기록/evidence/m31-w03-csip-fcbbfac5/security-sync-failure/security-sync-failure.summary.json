@@ -1,0 +1,312 @@
+{
+  "schema": "nucode.m31.csip-hil.v1",
+  "status": "PASS",
+  "mode": "security-sync-failure",
+  "started_at": "2026-09-20T05:29:25.901615+00:00",
+  "finished_at": "2026-09-20T05:29:47.206883+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "source_clean": true,
+  "pre_reset_uart_quarantine": {
+    "member_one": {
+      "observed_bytes": 0,
+      "input_buffer_purged": true
+    },
+    "member_two": {
+      "observed_bytes": 0,
+      "input_buffer_purged": true
+    },
+    "coordinator": {
+      "observed_bytes": 4467,
+      "input_buffer_purged": true
+    }
+  },
+  "public_example_sha256": {
+    "coordinator": "b7f12a192da55f6dc7bd2c072776dbe9cd99ad7a4319e1ccb6581d2c56299fb7",
+    "member": "68bc8eb82a0b4753f73c80e9e15517517d412bdb75fb79b9f337284a3f726f68"
+  },
+  "runner_behavior": {
+    "flashes_devices": false,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "debug_control_enabled": true,
+    "debug_control": "SHA-256 helper reset/halt/go",
+    "debug_helper_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "debug_helper_sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "board_map": {
+    "coordinator": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w06-fault-security-sync-fcbbfac5\\CsipSetCoordinator.ino.hex",
+      "image_sha256": "b98ee10bcbd8bcca90503870a6e7ae3bffe5de9551aa24aa6711f32c5010320e"
+    },
+    "member_one": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w06-member-fcbbfac5\\CsipSetMember.ino.hex",
+      "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32"
+    },
+    "member_two": {
+      "board": "E",
+      "port": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_path": "C:\\w\\m31w06-member-fcbbfac5\\CsipSetMember.ino.hex",
+      "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32"
+    }
+  },
+  "fault_image_sha256": "b98ee10bcbd8bcca90503870a6e7ae3bffe5de9551aa24aa6711f32c5010320e",
+  "fault_role": "coordinator",
+  "fault_build_manifest": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\csip-artifacts-fcbbfac5\\security-sync-failure\\manifest.json",
+    "sha256": "fe94deb138528690a12c091292441adbffc279cf804f344ab40c64a66d07e236",
+    "mode": "security-sync-failure",
+    "role": "coordinator",
+    "mutation_id": "security_request_invalid_handle",
+    "fault_source_sha256": "313072dc6a511dabb9fe3a0cd5b574166dbf39ea8f29c6cfdd33bc5c20c829cd",
+    "patch_sha256": "015aaa0acfbf52890d17bc4ec63e761f0ac29ab17f8a26a64e320dd02b939cb5",
+    "baseline_image_sha256": "841cd72d4728050e3e4baa1e6c6eecf7f9def2d1874465125442bcd963746663",
+    "baseline_manifest_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\csip-artifacts-fcbbfac5\\baseline-coordinator.json",
+    "baseline_manifest_sha256": "7584c10164ae3d03ab38ca8759b93e5917165b12c7aaa71d03cba23ab29564a5"
+  },
+  "time_contract": {
+    "campaign_timeout_seconds": 180.0,
+    "recovery_timeout_seconds": 30.0
+  },
+  "expected_tokens": {
+    "coordinator_search": "Searching for two set members",
+    "coordinator_ready": "Set ready; send o to order, l to lock, u to release",
+    "operation_rejected": "Set operation rejected",
+    "member_rank_one": "Member rank 1 of 2",
+    "member_rank_two": "Member rank 2 of 2",
+    "member_rank_prompt": "Enter this member rank (1 or 2):",
+    "member_ready": "Set member ready; send a to authorize SIRK read, f to force-release",
+    "authorization_prompt": "Set member bonded; physically verify the controller, then send a",
+    "authorization_success": "Bonded controller identity authorized",
+    "locked": "Set locked",
+    "released": "Set released",
+    "security_sync_failure": "Set coordinator security request failed",
+    "security_async_failure": "Set coordinator security failed",
+    "watchdog": "Set coordinator progress timeout"
+  },
+  "result": {
+    "boot_debug_actions": [
+      {
+        "board": "F",
+        "action": "halt",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "E",
+        "action": "halt",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "G",
+        "action": "halt",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "F",
+        "action": "reset-and-go",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "E",
+        "action": "reset-and-go",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "G",
+        "action": "reset-and-go",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+      }
+    ],
+    "expected_log": "Set coordinator security request failed",
+    "observed": true,
+    "at_s": 18.861,
+    "ready_after_fault": false,
+    "campaign_elapsed_seconds": 21.13
+  },
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 3.05,
+      "role": "runner",
+      "text": "debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 1,
+      "at_s": 6.29,
+      "role": "runner",
+      "text": "debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 2,
+      "at_s": 9.376,
+      "role": "runner",
+      "text": "debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 3,
+      "at_s": 9.376,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true"
+    },
+    {
+      "sequence": 4,
+      "at_s": 12.478,
+      "role": "runner",
+      "text": "debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 5,
+      "at_s": 12.478,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=E observed_bytes=0 input_buffer_purged=true"
+    },
+    {
+      "sequence": 6,
+      "at_s": 15.535,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 7,
+      "at_s": 15.535,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=G observed_bytes=4467 input_buffer_purged=true"
+    },
+    {
+      "sequence": 8,
+      "at_s": 18.651,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 9,
+      "at_s": 18.652,
+      "role": "coordinator",
+      "text": "<reset-uart-noise chars=2929>Searching for two set members"
+    },
+    {
+      "sequence": 10,
+      "at_s": 18.652,
+      "role": "member_one",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 11,
+      "at_s": 18.652,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 12,
+      "at_s": 18.652,
+      "role": "runner",
+      "text": "command board=F value=1"
+    },
+    {
+      "sequence": 13,
+      "at_s": 18.715,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 14,
+      "at_s": 18.748,
+      "role": "member_one",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 15,
+      "at_s": 18.748,
+      "role": "member_one",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 16,
+      "at_s": 18.806,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 17,
+      "at_s": 18.806,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 18,
+      "at_s": 18.861,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 19,
+      "at_s": 18.997,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 20,
+      "at_s": 19.444,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 21,
+      "at_s": 19.585,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 22,
+      "at_s": 19.973,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 23,
+      "at_s": 20.119,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 24,
+      "at_s": 20.402,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 25,
+      "at_s": 20.68,
+      "role": "coordinator",
+      "text": "Set coordinator security request failed"
+    },
+    {
+      "sequence": 26,
+      "at_s": 20.736,
+      "role": "coordinator",
+      "text": "Set member connection failed"
+    },
+    {
+      "sequence": 27,
+      "at_s": 20.802,
+      "role": "coordinator",
+      "text": "Set member connection failed"
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,28 @@
+SOURCE|RESET=PASS
+SINK|RESET=PASS
+SOURCE|broadcast source preparing
+SOURCE|broadcast source streaming
+SINK|broadcast sink scanning
+SINK|broadcast sink streaming
+SOURCE|broadcast sent frames=2000
+SINK|broadcast received=1800 energy=972087 dropped=0
+CYCLE=1;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1105003;dropped=0
+CYCLE=2;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1174609;dropped=0
+CYCLE=3;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1150664;dropped=0
+CYCLE=4;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1010947;dropped=0
+CYCLE=5;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=995245;dropped=0
+CYCLE=6;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1170186;dropped=0
+CYCLE=7;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1139756;dropped=0
+CYCLE=8;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=995245;dropped=0
+CYCLE=9;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1084422;dropped=0
+CYCLE=10;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=920947;dropped=0
+CYCLE=11;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=935728;dropped=0
+CYCLE=12;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1174747;dropped=0
+CYCLE=13;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=949585;dropped=0
+CYCLE=14;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1174747;dropped=0
+CYCLE=15;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1002911;dropped=0
+CYCLE=16;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1050734;dropped=0
+CYCLE=17;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1023285;dropped=0
+CYCLE=18;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1010070;dropped=0
+CYCLE=19;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1002932;dropped=0
+CYCLE=20;source_stop=0;sink_stop=0;source_streaming=1;sink_streaming=1;broadcast;received=100;energy=1050856;dropped=0

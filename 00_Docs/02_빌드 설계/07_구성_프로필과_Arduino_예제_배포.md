@@ -228,6 +228,47 @@ signing/EATT를 강제로 켜지 않는다. M29의 실제 예제명과 완료·�
 
 ## 7. 관련 구현과 기록
 
+### v0.5.0 이후 예제 구현·검증 TODO
+
+현재 공개 30개와 개발 snapshot 수치는 위의 고정 시점 기준이다. 다음 표는 **신규 예제 구현 계획**이며
+이미 설치 가능한 예제 목록이 아니다. 상세 feature·role은
+[전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
+[M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
+
+| 소유 단계 | 반드시 제공/판정할 예제 묶음 |
+| --- | --- |
+| M31-W02 | CIS central/peripheral, BIS broadcaster/receiver, combined ISO·time sync·recovery |
+| M31-W03 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP 역할 |
+| M31-W04~W05 | AoA CTE TX의 connected/connectionless 예제, DF RX/IQ 적용성, CS initiator/reflector·RAS·복구 |
+| M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
+| M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
+| M33-W02~W04 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
+| M33-W05~W08 | 전체 role 예제·ARF-04A·CI/설치·제공 경로/제한·release catalog 마감 |
+
+- [ ] 예제명·폴더·주 `.ino` 이름, upstream path/test ID·license·작성 역할과 제공 route를 원장에 고정한다.
+- [ ] 입문용 최소 예제 → 상대 역할 예제 → 오류/종료/복구 예제를 연결한다. 한 sketch의 role 선택 방식도 허용한다.
+- [ ] 목표·보드 수·profile/FQBN·설정·실행 순서·예상 Serial 출력·실험적 제한을 예제 README에 적는다.
+- [ ] 공개 wrapper 예제는 검증된 feature/profile으로 설정하고, 고급 direct/template의 sidecar는 명시적으로
+  opt-in한다. v0.4.1의 기존 30개 sidecar-free 계약과 새 고급 template 계약을 혼합하지 않는다.
+- [ ] `setup()/loop()` 사용·buffer 수명·timeout·error 처리·STOP/해제와 한국어 Doxygen/Allman/4칸 스타일을 검증한다.
+- [ ] 자동 실행 경로는 버튼 입력을 Serial 명령/역할 설정으로 재현한다. GPIO 전기 동작이 본질인 예제는
+  실제 연결 route·설정·사용법을 구현하고 실물 검증을 사용자 후속으로 남긴다. 단순 Serial 대체로 물리 PASS를 주장하지 않는다.
+- [ ] source/native target/Arduino compile·설치 discovery·role runtime·negative·외부 peer 상태를 각각 기록한다.
+- [ ] 설치 archive 안의 예제 집합·설정·upstream provenance와 원장 집합이 일치해야 M33을 완료한다.
+- [ ] NU54DK의 board-only 기능은 합성 payload/PCM과 실제 무선 결과로 검증한다. Apple/Google 및
+  mic/speaker/외장 장치는 사용 가능한 구현·예제·설정/연결 안내와 자동 가능한 검사를 필수로 제공한다.
+  실제 운용·상호운용은 사용자 후속 NOT RUN이며 v0.5.0 개발·공개 차단이 아님을 예제/원장에 명시한다.
+- [ ] DF 원시 IQ는 배열 없는 수신 후보를 먼저 조사·build하고 적용되면 2보드 수신을 검증한다.
+  실제 각도 산출·안테나 전환 예제는 별도 외장 경로로 설명한다. 단일 안테나 IQ를 각도 검증으로 쓰지 않는다.
+- [ ] Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
+  실패 증거 수집 안내를 제공하고 마지막 릴리스 단계로 인계한다.
+
+향후 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
+upstream case를 포괄하면 대응 case 전부를 명시하고, 발견 개수·적용 개수·build/runtime PASS 개수를
+별도 집계한다. 예제 수를 늘리기 위한 내용 중복이나 빈 role template는 완료 산출물로 세지 않는다.
+
+### 기존 구현 링크
+
 - [`boards.txt`](../../boards.txt)
 - [`standard` profile](../../variants/nu54dk/profiles/standard/profile.json)
 - [`ble` profile](../../variants/nu54dk/profiles/ble/profile.json)

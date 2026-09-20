@@ -1,0 +1,118 @@
+{
+  "core_revision": "dab7fe28c5455b2a7e1fec795a1db48572416e62",
+  "source_clean": true,
+  "probe_sha256": {
+    "central": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "peripheral": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "ports": {
+    "central": "COM7",
+    "peripheral": "COM5"
+  },
+  "image_sha256": {
+    "central": "1176932e3d85c82aeb745af3d7b7c132fcf97f940fb87c58ef0205b9412f7b64",
+    "peripheral": "fb1a43ea466ada5e4b5aad48c5bb538e283d53d54a39107157c109905dea7a4b"
+  },
+  "flash": {
+    "peripheral": [
+      "pyocd-sector-hw-reset",
+      "274432"
+    ],
+    "central": [
+      "pyocd-sector-hw-reset",
+      "274432"
+    ]
+  },
+  "lines": {
+    "central": [
+      "CIS central scanning",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100",
+      "CIS central scanning",
+      "CIS sent frames=100"
+    ],
+    "peripheral": [
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0",
+      "CIS peripheral advertising",
+      "CIS received frames=100 errors=0"
+    ]
+  },
+  "status": "PASS",
+  "completed_cycles": {
+    "central": 20,
+    "peripheral": 20
+  }
+}

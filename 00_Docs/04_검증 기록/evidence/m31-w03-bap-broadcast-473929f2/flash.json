@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "core_revision": "473929f20d6c71503ae460c933d413268ec35222",
+  "source_clean": true,
+  "flash_mode": "pyocd-sector-hw-reset",
+  "pyocd_version": "0.45.1",
+  "target": "nrf54l",
+  "frequency_hz": 500000,
+  "roles": [
+    {
+      "role": "encrypted_broadcast_source",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "target_com": "COM10",
+      "aux_com": "COM11",
+      "image_sha256": "f67962c2f56d8e2745dea279e447b8cb4dcdb7f3ec9b4b7da0b1bdf034a2c60c",
+      "programmed_bytes": 499712,
+      "sector_flash": "PASS",
+      "hardware_reset": "PASS"
+    },
+    {
+      "role": "encrypted_broadcast_sink",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "target_com": "COM14",
+      "aux_com": "COM15",
+      "image_sha256": "08c2cbca980e83e17bfec3955deadac2baee6a8a7b548d10d0742d23a64341c7",
+      "programmed_bytes": 479232,
+      "sector_flash": "PASS",
+      "hardware_reset": "PASS"
+    }
+  ],
+  "raw_probe_uid_recorded": false,
+  "result": "PASS"
+}

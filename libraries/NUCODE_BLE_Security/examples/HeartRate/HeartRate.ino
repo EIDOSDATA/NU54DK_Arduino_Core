@@ -30,14 +30,13 @@ namespace
 void setup()
 {
     Serial.begin(115200);
-    const nucode::ble::SecurityConfig security = {
-        nucode::ble::SecurityLevel::encrypted, true, 30000U};
+    const nucode::ble::SecurityConfig security = {nucode::ble::SecurityLevel::encrypted, true,
+                                                  30000U};
     require(BLESecurity.begin(security), "security");
     require(BLEDevice.begin("NU54-Heart-Rate"), "device");
     require(BLEAdvertising.clear(), "advertising-clear");
     require(BLEAdvertising.setConnectable(true), "advertising-connectable");
-    require(BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x180dU)),
-            "advertising-hrs");
+    require(BLEAdvertising.addServiceUuid(nucode::ble::BLEUuid(0x180dU)), "advertising-hrs");
     require(BLEAdvertising.setScanResponseName(true), "advertising-name");
     require(BLEAdvertising.start(), "advertising-start");
 }

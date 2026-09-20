@@ -139,6 +139,18 @@ Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공하며, �
 [저장소 구조와 소유권](../01_아두이노%20코어%20설계/01_저장소_폴더_구조.md)과 각 library의
 `examples` 디렉터리를 따른다.
 
+공개 Arduino 예제의 소스 경계는 다음을 지킨다.
+
+- `.ino`는 일반 C/C++과 기능 library의 공개 `NUCODE_*` API를 사용해 초기화, 설정, 오류 처리와
+  반복 실행 흐름을 보여 준다. include-only sketch나 개발 검증 source 전체를 공개 header에 넣는
+  방식은 사용자 예제로 인정하지 않는다.
+- Zephyr header·type과 `bt_*`, `k_*`, `device_*` 직접 호출은 library `.cpp` 또는
+  `src/internal`에 둔다. Zephyr/NCS 직접 사용이 필요한 전문가는 별도 direct/native 경로를 사용한다.
+- 개발 마일스톤 번호는 공개 API·macro·class·예제 이름·광고 이름·사용자 출력에 포함하지 않는다.
+  역할은 공개 enum/config와 검증된 Kconfig feature로 선택한다.
+- release gate는 위 경계, `setup()`/`loop()` 존재, 공개 API 호출과 예제별 역할 Kconfig를 정적으로
+  검사하고 실제 Arduino build로 연결한다.
+
 ---
 
 ## 6. 결과와 검증 원칙

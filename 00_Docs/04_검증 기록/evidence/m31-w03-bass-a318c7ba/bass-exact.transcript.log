@@ -1,0 +1,22 @@
+source_revision=a318c7ba9b5fa84d586c35fadab88c1675163100 source_clean=true
+cycle=01 result=PASS
+cycle=02 result=PASS
+cycle=03 result=PASS
+cycle=04 result=PASS
+cycle=05 result=PASS
+cycle=06 result=PASS
+cycle=07 result=PASS
+cycle=08 result=PASS
+cycle=09 result=PASS
+cycle=10 result=PASS
+cycle=11 result=PASS
+cycle=12 result=PASS
+cycle=13 result=PASS
+cycle=14 result=PASS
+cycle=15 result=PASS
+cycle=16 result=PASS
+cycle=17 result=PASS
+cycle=18 result=PASS
+cycle=19 result=PASS
+cycle=20 result=PASS
+summary passed=20 invalid_rejected=20 duplicate_rejected=20 stop_states=20 removed_states=20 readd_requests=20 code_requests=20 recovered_states=20 zero_drop_observations=20

@@ -54,7 +54,8 @@ namespace nucode::ble::internal::gap
     void queueEvent(BLEEvent event, BLEConnectionHandle connection, BLELinkRole role,
                     std::uint32_t device_generation,
                     BLEAdvertisingSetHandle advertising_set,
-                    BLEPeriodicSyncHandle periodic_sync) noexcept
+                    BLEPeriodicSyncHandle periodic_sync,
+                    std::uint8_t reason) noexcept
     {
         const std::uint32_t current_generation =
             static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation));
@@ -66,6 +67,7 @@ namespace nucode::ble::internal::gap
                     .advertising_set = advertising_set,
                     .periodic_sync = periodic_sync,
                     .role = role,
+                    .reason = reason,
                 },
             .device_generation =
                 device_generation == 0U ? current_generation : device_generation,
@@ -101,22 +103,18 @@ namespace nucode::ble::internal
     }
     struct bt_conn *referenceConnection(BLELinkRole role) noexcept
     {
-        const std::size_t slot_index =
-            role == BLELinkRole::central
-                ? central_connection_slot
-                : role == BLELinkRole::peripheral ? peripheral_connection_slot
-                                                  : maximum_connection_slots;
         struct bt_conn *connection = nullptr;
         k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
-        if (slot_index < maximum_connection_slots)
+        for (std::size_t slot_index = 0U; slot_index < maximum_connection_slots; ++slot_index)
         {
             const ConnectionSlot &slot = gapState().connection_slots[slot_index];
-            if (slot.active != nullptr && slot.generation != 0U &&
+            if (slot.role == role && slot.active != nullptr && slot.generation != 0U &&
                 slot.device_generation == static_cast<std::uint32_t>(
                                               atomic_get(&gapState().device_session_generation)))
             {
                 connection = slot.active;
                 bt_conn_ref(connection);
+                break;
             }
         }
         k_spin_unlock(&gapState().connection_lock, key);
@@ -377,6 +375,7 @@ namespace nucode::ble
             pending[index] = slot.pending;
             slot.active = nullptr;
             slot.pending = nullptr;
+            slot.reserved = false;
             slot.generation = 0U;
             slot.device_generation = 0U;
             slot.peer_address = BLEAddress{};

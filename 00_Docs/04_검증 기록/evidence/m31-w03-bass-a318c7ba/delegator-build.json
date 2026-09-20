@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "role": "broadcast_scan_delegator_sink",
+  "source_clean": true,
+  "branch": "m31-w01",
+  "core_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "toolchain_bundle": "dcbdc366a1",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino",
+  "built_at": "2026-09-19T21:01:05.433771+09:00",
+  "flash_used_bytes": 500600,
+  "bin_size": 500608,
+  "ram_used_bytes": 229716,
+  "hex_size": 1408253,
+  "hex_sha256": "b4a0e5852697e7355fff238f89b73cf4a251f18881a9a36364010b977c34b1d7",
+  "bin_sha256": "3de89adb90fdc26a260fb022b69adbc9d47b4aec4e363c2fb6a69558d56bf33e",
+  "elf_sha256": "d3bff694924e346a8769a8c1ce6eee4c44fc7fe05cecc19cbb54b6f995554e27",
+  "configuration_fingerprint": "eea23f2e687e9ad81a69bdea2b1aac91d847c60b44f47f723f6a437b142de34a",
+  "result": "PASS"
+}

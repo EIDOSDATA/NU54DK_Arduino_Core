@@ -1,0 +1,35 @@
+{
+  "case": "M31-AUDIO-01 W03-01/02 partial native LC3 BAP unicast",
+  "status": "NATIVE_BAP_LC3_1000_SDU_PASS",
+  "source_clean": true,
+  "core_revision": "b28631df3cdc4bcf1c4926730e81eea377f7ef47",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "client_flash_bytes": 361904,
+  "client_ram_bytes": 72592,
+  "server_flash_bytes": 355456,
+  "server_ram_bytes": 76353,
+  "client_image_sha256": "8b0e801b1b13e3ec2f62e328f83227ae1144220fb50b839cc48ed945037d3a50",
+  "server_image_sha256": "4ee802007d69a75a5a6ffef96e32eb0050d2feafd25a387c7a49f5d7e08079a3",
+  "client_config_sha256": "4903c78cce6efe09f0c38111c90a3877b12394da91f595ff4614d42654a65c6d",
+  "server_config_sha256": "5ec8dbd2c161d2f6368600a9bdc951acdff8799dfa35b565352fa5ffc42eea85",
+  "client_tx_streams": {
+    "0x20009840": 1000,
+    "0x20009868": 1000
+  },
+  "server_tx_streams": {
+    "0x2000a584": 1000
+  },
+  "client_rx_sdus": 1000,
+  "server_rx_sdus": 1000,
+  "server_plc_count": 24,
+  "elapsed_s": 20.734,
+  "files": {
+    "bap-lc3-exact.json": "2f469e0e8741603d12b93a4a065d6bcc220ff1aca49a405fd1951adc31fae60c",
+    "client-build.log.gz": "495558f1c332ac0feaf4148b944dc7e3903241f4341dd0a70a6cee7dd0df4628",
+    "client.hex.gz": "91f3477f22f5028e1bb36160704f8193fc4300277432e8bf9c364c4f30ed9109",
+    "server-build.log.gz": "c5efcf14a4529a4c721e907bec73290a14d68fdb504b9117979aac99baf6dd28",
+    "server.hex.gz": "201c4422e2560b1798cf1f18859258f7b7679e7d978465986d86e0ee1a0e204b"
+  }
+}

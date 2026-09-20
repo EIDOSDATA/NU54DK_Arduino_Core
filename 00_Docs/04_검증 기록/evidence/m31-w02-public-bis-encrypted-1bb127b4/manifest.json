@@ -1,0 +1,111 @@
+{
+  "core_revision": "1bb127b4d211c0a7b85da16cb3de8dc8e130b4dc",
+  "source_clean_at_hil": true,
+  "accepted": [
+    "encrypted-positive.json",
+    "wrong-code-negative.json",
+    "plain-regression.json"
+  ],
+  "diagnostics_excluded": [
+    "diagnostic-positive-candidate.json",
+    "diagnostic-negative-candidate.json"
+  ],
+  "roles": {
+    "encrypted_source": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino",
+      "config_sha256": "b8ae0cfaf66f78d36387ad80b1a40387559a13a63d1e832c30c99856c6933ea1",
+      "hex_sha256": "127118f58b9365344db1de75b7c53ff6526fd8a35695545e5b201afb716c1359",
+      "build_manifest": "encrypted-source-build.json",
+      "build_manifest_sha256": "970812dee0f5d26eb045c65e61f09f1357d41e304a2e6585ff9893481482d456",
+      "program_bytes": 226968,
+      "ram_bytes": 107354,
+      "flash_bytes": 229376
+    },
+    "encrypted_receiver": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino",
+      "config_sha256": "93e0387f17c1dd24b70e119e07e805c016feb9c040dc54298b027a7c95cadc26",
+      "hex_sha256": "dda51ab8c4dac27e924b5ed0e550a7d4f89f68e259d8073b3ecf9bf932c80f01",
+      "build_manifest": "encrypted-receiver-build.json",
+      "build_manifest_sha256": "c815bfd7ab088bc812be77645e9d83c1b4be1cc4bed4fb06b96daad3468c09ed",
+      "program_bytes": 195992,
+      "ram_bytes": 106483,
+      "flash_bytes": 196608
+    },
+    "wrong_code_receiver": {
+      "sketch": "tests/hil/nu54dk/fixtures/bis_encrypted_wrong_code/bis_encrypted_wrong_code.ino",
+      "config_sha256": "93e0387f17c1dd24b70e119e07e805c016feb9c040dc54298b027a7c95cadc26",
+      "hex_sha256": "742bc0dc19b75f6826efda3c9c2685189fd8356bc5e94a1f85fa403047ed038c",
+      "build_manifest": "wrong-code-build.json",
+      "build_manifest_sha256": "d93af0a16952ac1d8f92b46bb291e4f193b09d7a3026efc7cdc09d37d526e901",
+      "program_bytes": 195280,
+      "ram_bytes": 106472,
+      "flash_bytes": 196608
+    },
+    "plain_source": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
+      "config_sha256": "690c92c1c0d08e1f2b42257670c5c1e195949aec134c8d707ab80f344e9f1b8b",
+      "hex_sha256": "48e4af43532f17c666a4a800f59a093c011ed8117326daad97b63f7f4ed8c7da",
+      "build_manifest": "plain-source-build.json",
+      "build_manifest_sha256": "7a3fc21272026a683be9d31bedaccf4be49f1308459cc621391911bd796ef6e6",
+      "program_bytes": 226896,
+      "ram_bytes": 107354,
+      "flash_bytes": 229376
+    },
+    "plain_receiver": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
+      "config_sha256": "3d8dfcdb827338629c710e24f9db3829e94fcaab959d23838ebe9bd1e6faf014",
+      "hex_sha256": "a34d4be97f45481204c1bccbc313420615be5d1b594ad28475dffcb14d1f8eb7",
+      "build_manifest": "plain-receiver-build.json",
+      "build_manifest_sha256": "65d97be67ce6d9970ac9cbadd06207ef6de9df4e86467564a5865b3188a0ab4d",
+      "program_bytes": 195904,
+      "ram_bytes": 106483,
+      "flash_bytes": 196608
+    }
+  },
+  "runner": {
+    "path": "tests/hil/nu54dk/m31_iso_public_bis_pair_run.py",
+    "sha256": "1782c6f86f42e7ae25aada0aeca66c111ad5eb1af25d91872c4376bdb3399968"
+  },
+  "artifacts": [
+    {
+      "path": "encrypted-positive.json",
+      "sha256": "aeb2f89185ada2cca3e0a60aa1d9b6432b63dba6381c9fbe35f96111610be9bb"
+    },
+    {
+      "path": "wrong-code-negative.json",
+      "sha256": "7430726433d310b6b75acabddd961aa5cd72082972bc18670d44c8b47b6b312b"
+    },
+    {
+      "path": "plain-regression.json",
+      "sha256": "c7cbeb93e6415f76c79579a01e1dcfc39eb350fc2afb442f2e2857e51e24bcb8"
+    },
+    {
+      "path": "diagnostic-positive-candidate.json",
+      "sha256": "f65e0b4c520dd477d77a55cc50bbcc41677718a7085c1b796e635ebdc74f8b48"
+    },
+    {
+      "path": "diagnostic-negative-candidate.json",
+      "sha256": "bc3c40380030c094e17cee4cdb6c38b30cccf5aa27630ed743961f3a4c70d512"
+    },
+    {
+      "path": "encrypted-source-build.json",
+      "sha256": "970812dee0f5d26eb045c65e61f09f1357d41e304a2e6585ff9893481482d456"
+    },
+    {
+      "path": "encrypted-receiver-build.json",
+      "sha256": "c815bfd7ab088bc812be77645e9d83c1b4be1cc4bed4fb06b96daad3468c09ed"
+    },
+    {
+      "path": "wrong-code-build.json",
+      "sha256": "d93af0a16952ac1d8f92b46bb291e4f193b09d7a3026efc7cdc09d37d526e901"
+    },
+    {
+      "path": "plain-source-build.json",
+      "sha256": "7a3fc21272026a683be9d31bedaccf4be49f1308459cc621391911bd796ef6e6"
+    },
+    {
+      "path": "plain-receiver-build.json",
+      "sha256": "65d97be67ce6d9970ac9cbadd06207ef6de9df4e86467564a5865b3188a0ab4d"
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # CI/CD와 재현 빌드 — v0.4.1 지원과 개발 main 회귀
 
+2026-09-16 이번 문서·다른 PC 인계 작업은 사용자 지시에 따라 **로컬 검증·커밋·푸시까지만 수행하고
+CI/CD 실행 요청·상태 조회·완료 대기를 생략한다.** 아래 내용은 기존 workflow의 설계·운영 계약이며,
+이번 생략으로 workflow·trigger·검사 범위를 변경하거나 미확인 CI를 PASS로 기록하지 않는다.
+
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
 | Software gates | GitHub-hosted Ubuntu/Windows | 계약, M23 inventory, unit, 문서, package, 예제 discovery |
@@ -13,8 +17,10 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 현재 Linux container target build는 Linux Arduino 사용자 Host 지원이 아니며 Windows job 결과도
 macOS 지원을 뜻하지 않는다. `v0.5.0`은
 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 M31에서 Windows·Ubuntu·
-Apple Silicon macOS package/build matrix를 추가하고 M32에서 각 실제 Host upload/lifecycle을
-분리해 검증한다.
+Apple Silicon macOS package/build matrix를 준비하고 M32에서는 Host 도구·자동 검사·최종 실물 검증
+절차와 Windows 회귀를 준비·수행한다. Ubuntu/macOS 설치·USB upload·serial·debug·수명주기 실기는
+사용자가 M33 최종 릴리스 단계에서 검증한다. 중간 개발/HOST-W07에서 PC 연결을 요구하며 중단하지
+않고, 해당 OS 정식 지원의 최종 실물 gate는 유지한다.
 
 ---
 
@@ -279,7 +285,9 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 | Host별 HIL | 명시적 UID upload, Blink·Serial·BLE 대표 runtime, lifecycle | 모든 BLE RF 기능을 OS마다 반복한 결과 |
 
 새 OS 행은 먼저 `candidate`로 추가한다. 정적 job만 통과해 `supported`로 바꾸지 않고 실제 Host의
-clean install·upload 증거와 release 문서 갱신까지 완료한다.
+clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu/macOS의 해당 실물 증거는
+사용자가 최종 릴리스 단계에서 제공하며, 그 전의 `NOT_RUN`은 중간 개발 차단이 아니라 최종 OS 지원
+gate 미완료를 뜻한다. Windows 자동 회귀와 나머지 구현·package 준비는 계속 진행한다.
 
 ---
 

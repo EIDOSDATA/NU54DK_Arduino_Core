@@ -1,0 +1,694 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/~/dfu-e6ae/build/SecureDfuPeripheral.ino.bin",
+      "sha256": "6ecf4233abf54c1b1301b8ac041ef6da23889bbf47eb5155a3d65148b01f2698",
+      "size": 406984
+    },
+    "boot.hex": {
+      "path": "C:/~/dfu-e6ae/build/SecureDfuPeripheral.ino.boot.hex",
+      "sha256": "4d159ebc32f30e529ce6c468121aa7d87c20346dc1cdb40e84ef99c4de41f9ff",
+      "size": 95660
+    },
+    "elf": {
+      "path": "C:/~/dfu-e6ae/build/SecureDfuPeripheral.ino.elf",
+      "sha256": "8522bd3701b83cdcf5b74bf813a2d72d9df81b4bb7031de9340f5413f75d5d84",
+      "size": 5856012
+    },
+    "hex": {
+      "path": "C:/~/dfu-e6ae/build/SecureDfuPeripheral.ino.hex",
+      "sha256": "7e135ab713143550924f4988cc56a88c53c3b8e1b9171abc94ac022a84a685ce",
+      "size": 1144779
+    },
+    "map": {
+      "path": "C:/~/dfu-e6ae/build/SecureDfuPeripheral.ino.map",
+      "sha256": "31efce62255105b23db04d2dd6f2a40801111108a51dbec2cbc8d4fd8fcaa6c9",
+      "size": 2292433
+    },
+    "update.bin": {
+      "path": "C:/~/dfu-e6ae/build/SecureDfuPeripheral.ino.update.bin",
+      "sha256": "6ecf4233abf54c1b1301b8ac041ef6da23889bbf47eb5155a3d65148b01f2698",
+      "size": 406984
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-16T05:23:37.852359+00:00",
+  "cache": {
+    "cache_dir": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:4b1b1150b7314829aba0978c58914ec05728b52b25f3bd9847054318a3867e6c",
+        "platform_root": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:d7c53a705c331c9c0137d421adaf1079cc7177e791c641df20588da95db97849",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:c0bec7801481b8f664e9125ef7e45ffa7a8e702cecda39439414f9e95f3640cb",
+          "id": "secure_ble_dfu",
+          "manifest": "sha256:81cc614a16f6e3542f434c8e3c672cf2f8cc6a09f715a62038057f09683d843f",
+          "overlay": "sha256:42caa736a97bf7b52f5ab49aef435c7ec33410eca3bcf5cf946003638af9b9de",
+          "signing_key_sha256": "48446f5f148b4c17154a014e94b9d627ecda9bfd6293970457e4964fd7625e5d",
+          "sysbuild": true,
+          "sysbuild_files": [
+            "sha256:a14c2437a6b598569537a63dd47bee3865e7d9a9fdfe17f6b1f5137af643de7d",
+            "sha256:a14f02ae6de555de70bd0876d0eee99699d07946acb628de499e057488e983d2",
+            "sha256:e6f90e6078e44b7a66361fd518b4e9ac30eae6f76d2bc3776805ce4e88f26cc8"
+          ]
+        },
+        "selected_features": [
+          {
+            "conf": [
+              "sha256:a4b1876ad0358c5c097e058c56ae172c15294265cbb6c2ff7dda0c0f30e7c96b"
+            ],
+            "id": "nucode.ble.nus",
+            "manifest": "sha256:3948d38e8e4193a961f719ffe5404433a211cadb3a2fdf782f42c69c1aca2ff1",
+            "overlays": []
+          },
+          {
+            "conf": [
+              "sha256:cb3766b60b2a68c9b7755db53856fcba3203522bc94ed5968250ddff5cd89ab6"
+            ],
+            "id": "nucode.ble.dfu",
+            "manifest": "sha256:446747466df8c4098de229ad4bc69faccd37f847c6963b8c1a090d8f0cbab6c1",
+            "overlays": []
+          },
+          {
+            "conf": [
+              "sha256:528dc46c9ff2d8a01dab5ae756a54068fa51d2bb37c7845d7c1c4ae0e097755e"
+            ],
+            "id": "nucode.ble.security",
+            "manifest": "sha256:7d55aad530c1d2ff3a20b670c3e40eac5a2b2aee94c94272edbb19175f2393b1",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/Users/eidos/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "missing",
+        "root": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_DFU/examples/SecureDfuPeripheral"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=secure_ble_dfu",
+        "profile": "secure_ble_dfu",
+        "sysbuild": true
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "4c6258bf3b97b22a2e547fefbd64c1b5f2629c6db71e7666c06fb9f719047cba",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:7fef06a897b64e536ae78e31086887e1430db142dcacf7b22793e2f1051f875c"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 146.955661,
+    "build_path": "C:/~/dfu-e6ae/build",
+    "cache_dir": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5",
+    "cache_key": "4c6258bf3b97b22a2e547fefbd64c1b5f2629c6db71e7666c06fb9f719047cba",
+    "cache_reused": false,
+    "cache_root": "C:/~/pkg-w02-23138b-localappdata/NU54/c",
+    "cache_schema_version": 1,
+    "ccache": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/~/pkg-w02-23138b-localappdata/NU54/c/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 19222,
+      "cache_size_kibibyte": 438356,
+      "called_for_link": 5432,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 1,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 63,
+      "direct_cache_miss": 19224,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 38399,
+      "internal_error": 0,
+      "local_storage_hit": 63,
+      "local_storage_miss": 19222,
+      "local_storage_read_hit": 126,
+      "local_storage_read_miss": 38447,
+      "local_storage_write": 38444,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 2654,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 19223,
+      "preprocessor_error": 1,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789536216,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 18624,
+      "cache_size_kibibyte": 424660,
+      "called_for_link": 5266,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 1,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 61,
+      "direct_cache_miss": 18626,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 37204,
+      "internal_error": 0,
+      "local_storage_hit": 61,
+      "local_storage_miss": 18624,
+      "local_storage_read_hit": 122,
+      "local_storage_read_miss": 37251,
+      "local_storage_write": 37248,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 2573,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 18625,
+      "preprocessor_error": 1,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789535723,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 598,
+      "cache_size_kibibyte": 13696,
+      "called_for_link": 166,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 2,
+      "direct_cache_miss": 598,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 1195,
+      "internal_error": 0,
+      "local_storage_hit": 2,
+      "local_storage_miss": 598,
+      "local_storage_read_hit": 4,
+      "local_storage_read_miss": 1196,
+      "local_storage_write": 1196,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 81,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 598,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 493,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:4c6258bf3b97b22a2e547fefbd64c1b5f2629c6db71e7666c06fb9f719047cba",
+    "configure_duration_seconds": 51.972441,
+    "configure_mode": "cmake-only",
+    "configure_reason": "selected-features",
+    "configure_skipped": false,
+    "cxx_compiler": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=secure_ble_dfu",
+    "input_manifest": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5/input-manifest.json",
+    "link_configure_duration_seconds": 40.888809,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 794624,
+      "flash_origin": 65536,
+      "flash_size": 729088
+    },
+    "ncs_root": "C:/Users/eidos/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr",
+    "platform_root": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr",
+    "pristine_configure_count": 1,
+    "product_identity": {
+      "package_version": "0.5.0-rc.1",
+      "source_version": "0.4.1-dev"
+    },
+    "profile": "secure_ble_dfu",
+    "provisional_cache_key": "b579f550534c60db2c05339fe0d9625ff465bf3b0cd9bc241c8a38bb3cf99b5c",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [
+          "sha256:a4b1876ad0358c5c097e058c56ae172c15294265cbb6c2ff7dda0c0f30e7c96b"
+        ],
+        "id": "nucode.ble.nus",
+        "manifest": "sha256:3948d38e8e4193a961f719ffe5404433a211cadb3a2fdf782f42c69c1aca2ff1",
+        "overlays": []
+      },
+      {
+        "conf": [
+          "sha256:cb3766b60b2a68c9b7755db53856fcba3203522bc94ed5968250ddff5cd89ab6"
+        ],
+        "id": "nucode.ble.dfu",
+        "manifest": "sha256:446747466df8c4098de229ad4bc69faccd37f847c6963b8c1a090d8f0cbab6c1",
+        "overlays": []
+      },
+      {
+        "conf": [
+          "sha256:528dc46c9ff2d8a01dab5ae756a54068fa51d2bb37c7845d7c1c4ae0e097755e"
+        ],
+        "id": "nucode.ble.security",
+        "manifest": "sha256:7d55aad530c1d2ff3a20b670c3e40eac5a2b2aee94c94272edbb19175f2393b1",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "NUCODE_BLE",
+      "NUCODE_BLE_DFU",
+      "NUCODE_BLE_Security"
+    ],
+    "size_tool": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_DFU/examples/SecureDfuPeripheral",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": true,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/Users/eidos/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-16T05:23:37.846834+00:00",
+    "zephyr_build_dir": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=secure_ble_dfu",
+  "metrics": {
+    "build_seconds": 146.955661,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 598,
+      "cache_size_kibibyte": 13696,
+      "called_for_link": 166,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 2,
+      "direct_cache_miss": 598,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 1195,
+      "internal_error": 0,
+      "local_storage_hit": 2,
+      "local_storage_miss": 598,
+      "local_storage_read_hit": 4,
+      "local_storage_read_miss": 1196,
+      "local_storage_write": 1196,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 81,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 0,
+      "preprocessed_cache_miss": 598,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 493,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 40.888809
+  },
+  "product_identity": {
+    "package_version": "0.5.0-rc.1",
+    "source_version": "0.4.1-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:87d79648d450b31fdc5d3c14ef146ef1d61265c022f2d5366cf4f6a37c93a13d",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_DFU/examples/SecureDfuPeripheral"
+      },
+      {
+        "content_sha256": "sha256:d6d5eb16147c7a991598bdfee6161a739d439db949998b9c3f6741ce8cc50705",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:6c7530f905cd1a5d8abe0e72124157700f777bc33a3959ce688e5a17ca00fe3c",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:0bf01dad315df31e4da451ecaa41e5d8b994e36c16dff4be34163c19f24df777",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_DFU/src"
+      },
+      {
+        "content_sha256": "sha256:e29d838c6272acfb34e3e37db803404b3b0f6e9bf6841866177cf4ab40554bd2",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src"
+      },
+      {
+        "content_sha256": "sha256:47be1e1086bb047c88f816dfa790207eb60d10d717fb41344361e08e4a6fa294",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src"
+      },
+      {
+        "content_sha256": "sha256:7390df2ccba61ef35cd5a51afa69548a26486e393b460cd0297d65a41142b7dd",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal"
+      },
+      {
+        "content_sha256": "sha256:ab6df89b373e7c6d8343e62fab59c8f69be73fb6e5554b20a9a1c7cbcbed8dde",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security"
+      },
+      {
+        "content_sha256": "sha256:29ecd048d926f6bcb5238f626d437ebdca5c4c4fc785d26882261f7efa66f14f",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal"
+      },
+      {
+        "content_sha256": "sha256:8fb6b191b9839a91565939e4572df9784022b0b17eca7bae7e0c8d921cf4b7ae",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap"
+      },
+      {
+        "content_sha256": "sha256:509f4a3e0886e9d703079c19371d1ab44bf4cb771c0f520c27de94af62a03291",
+        "path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt"
+      },
+      {
+        "content_sha256": "sha256:e2ffd2084a42ea2af24c428ab7c945cd2bc3cdd4cb7a167ed5e0e684fcab07ad",
+        "path": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5/build/app/nucode_arduino_core_build.yml",
+      "sha256": "70b4b671ab696f3c067cd0ef538feb7563f859fc72f8e5228f2d6f76fd577fdf"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/~/pkg-w02-23138b-localappdata/NU54/c/v1/4c/4c6258bf3b97b22a2e547fefbd64c1b5/app/generated-sources/sketch/SecureDfuPeripheral.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/SecureDfuPeripheral.ino.cpp",
+        "sha256": "2b53d040d33ea1a057a660d62e34e73988691469b2193b395fc4b9160de1506a",
+        "source_path": "C:/~/dfu-e6ae/build/sketch/SecureDfuPeripheral.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.cpp",
+        "sha256": "4357dd439fc27d797ef241172b63c8cbd5dfa4affcd0fc05e2f3f8978568776a",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+        "sha256": "6c08cd2ec9b25787f5ed93548df9cf69f2aa374130bfcad5ad5780a30361c346",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c",
+        "sha256": "047f1b521255388a076a49c4fa2ddb187184b1ecba769e2820c6c0d7ae239503",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.c",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.c",
+        "sha256": "dcb49f9c82db4c912fe631a71233da274b89a5df7e9ddca27c960061649e1370",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.c"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp",
+        "sha256": "fc17ba5dc4b107fd95fa3f8b3af685b1dd8195690e9bd382bcb41649bc67afe8",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+        "sha256": "3f365772186fb853228fc4b4e5b1c83a5af9f3e0d39e3be71a7f1ac09b06828e",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp",
+        "sha256": "6a80dfef4a42f4a13758ea8c11ca45a6bd65e1cc0e506feafd995599fac06fa5",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp",
+        "sha256": "6a369517955a19098da1c6d105ee03a1d31c89ec2241f2b1885a1d801bf483d3",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp",
+        "sha256": "f00fc108e69adb0304e47552d2ca84880ff2be91d768c5527867858efa12bf6c",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp",
+        "sha256": "db034d4cada0793cb70bff1e2ca57b796c097ef418af9bc3f05df8d997402160",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityProfiles.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Security/src/internal/security/SecurityProfiles.cpp",
+        "sha256": "c907ce6cb238a881f5bb83e30d18bb7d485663020a038e94e701f197e81e8d19",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityProfiles.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+        "sha256": "b00bc57a041ee64a6177012bf9d8accb94ae77aa511e66b8f5b31c34e219cd19",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+        "sha256": "202154d0889ec8909e18797542e80d4c4f51cd23ccd533dbb5549dc7b01873ba",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "sha256": "3ca34d3509cc00d32c08a2802275c52d231c5465023228b668e8064e03baceeb",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+        "sha256": "32b46e2c6cd5ad368b3d972011720bbdb8b91d263d0526cf5ae0ccd7cba86b9c",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+        "sha256": "57910a5d985a319860ba99c8f2c1e5b305842d866c87b07d1d63c1022eb43cf5",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+        "sha256": "44d3cf864f08cbf06fa54adc7cb6080cad163842c4b7dc990aabec443d0ed702",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "sha256": "d19eb76b428b6e257baf4f734726a6958a6f349dc4e1b5786e9d592c04ede02f",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "sha256": "04d13af18ad5bf89003d9f76bf504402f85d96a96715b5a667464524cdb0295d",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+        "sha256": "8a7964023460b27df05ef5475f5335ec2510d0f649d6210666b1b5d85edf3baf",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+        "sha256": "987e7f8cf242ce132408737551835c81b8b8d12ee50701af7d745db20ef0357b",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+        "sha256": "c8299f2b53b046fe498702cb864746cf47d9cf5ed76a41c337199d3843fc61ca",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+        "sha256": "63abfb1375549aa7767dd4d8a49fc8d4cb73b66c0e32a8890dfa4c46d8d49875",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp",
+        "sha256": "83a2c8b0e3292b29d47881eb45f2aa94bb0a58c5d700530c7c46e4659584ce16",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+        "sha256": "b182190eeae1eb8a44e77d11a1256a6faf35dd30e965110c0bb838ab58ad5685",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+        "sha256": "3bec774313d3405883cb58eff4800cf715928b11fbfd89305d21f1c47a379aa6",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp"
+      },
+      {
+        "compiled_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+        "sha256": "728b1e39a2a790b9c447c8192e32dcf52837d24bad71e3a275f481eb03ddc19c",
+        "source_path": "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/~/dfu-e6ae/build/sketch/SecureDfuPeripheral.ino.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.c",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE_Security/src/internal/security/SecurityProfiles.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+    "C:/~/dfu-e6ae/user/hardware/nucode/zephyr/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp"
+  ],
+  "sysbuild": true
+}

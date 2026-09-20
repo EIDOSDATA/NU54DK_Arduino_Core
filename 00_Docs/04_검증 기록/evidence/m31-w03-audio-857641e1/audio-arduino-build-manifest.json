@@ -1,0 +1,26 @@
+{
+  "revision": "857641e1caa28a22508a470b82168850b3275dd2",
+  "source_clean": true,
+  "images": {
+    "Lc3SyntheticLoopback": {
+      "hex": "C:\\~\\ae-w03-audio-exact-857\\build\\Lc3SyntheticLoopback\\Lc3SyntheticLoopback.ino.hex",
+      "sha256": "8f6b52a46286f6fd6b43ab1eafa3f6566c9131c9fb56381420210c5f7d67aaa6",
+      "context": "C:\\~\\ae-w03-audio-exact-857\\build\\Lc3SyntheticLoopback\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-w03-audio-exact-857\\Lc3SyntheticLoopback.build.log",
+      "artifact_manifest": "C:\\~\\ae-w03-audio-exact-857\\build\\Lc3SyntheticLoopback\\Lc3SyntheticLoopback.ino.nu54-build.json",
+      "artifact_manifest_sha256": "d5d35152e69b939d5fa716633f735ea4cd1b79639f8bbcde99c361016c03127d",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "857641e1caa28a22508a470b82168850b3275dd2",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 219928,
+      "ram_bytes": 94520,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.audio"
+      ]
+    }
+  }
+}

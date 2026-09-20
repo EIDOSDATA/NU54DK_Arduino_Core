@@ -1,6 +1,6 @@
 /**
  * @file LongGattCentral.ino
- * @brief generation handle로 512-byte value를 읽는 M29 long read central 예제입니다.
+ * @brief generation handle로 512-byte value를 읽는 long read central 예제입니다.
  */
 
 #include <NUCODE_BLE.h>

@@ -1,0 +1,26 @@
+{
+  "status": "DIAGNOSTIC_EXCLUDED",
+  "core_revision": "214293c6912bd9e1b6ad13580df272aed3b698ab",
+  "method": "CMSIS-DAP V2 attach, halt, read ELF symbol memory and PC, resume",
+  "central_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "peripheral_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "central": {
+    "scan_active_low_byte": 0,
+    "acl_pointer": "0x00000000",
+    "channel_ready": 0,
+    "native_error": 0,
+    "started": 1,
+    "stopping": 0,
+    "pc": "0x000306e4"
+  },
+  "peripheral": {
+    "advertising_active_low_byte": 1,
+    "acl_pointer": "0x00000000",
+    "channel_ready": 0,
+    "native_error": 0,
+    "started": 1,
+    "stopping": 0,
+    "pc": "0x00030560"
+  },
+  "interpretation": "central scan stopped after connection attempt, ACL released, no native error; Arduino loop had no failure signal to restart"
+}

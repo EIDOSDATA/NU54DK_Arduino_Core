@@ -1,0 +1,32 @@
+{
+  "test_id": "M31-ISO-01:time_sync",
+  "status": "PASS",
+  "scope": "two_board_bis_iso_timestamp_twenty_cycles",
+  "source_clean": true,
+  "source_revision": "504badeec81723f4949879611b0b19371389b56d",
+  "target_build": {
+    "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-504badee/time-build-twister.json",
+    "sha256": "5f3a59f4b2152ccf6de8d557f55a8e9487ad231f90f0d5ce293dfb916cc0006a",
+    "build_only_count": 2,
+    "scenarios": [
+      "nucode.m31.iso_time.sender",
+      "nucode.m31.iso_time.receiver"
+    ]
+  },
+  "result_path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-504badee/time-hil-01.json",
+  "result_sha256": "21c6d3e3c10788693f5fba0159265a7434c1c58b110135ba2b9aec71dfbd91c7",
+  "transcript_sha256": "8819ddd3264d3e023f814f03e16f109f48f05251555cfa25dd5eeb91aac1e844",
+  "measurement": {
+    "cycles": 20,
+    "total_sent": 2000,
+    "total_received": 2000,
+    "valid_monotonic": 2000,
+    "stale_callback": 0,
+    "timestamped_sent": 1980,
+    "hci_read_iso_tx_sync_queries": 1980
+  },
+  "interval_tolerance_us": 1000,
+  "timing_accuracy_claim": false,
+  "previous_failure": "00_Docs/04_검증 기록/evidence/m31-w02-exact-0c7849c2/time-failure-audit.json",
+  "combined": "NOT_RUN"
+}

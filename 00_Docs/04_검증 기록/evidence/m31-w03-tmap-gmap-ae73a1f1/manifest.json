@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W03",
+  "subcase": "W03-10",
+  "status": "PASS",
+  "source_clean": true,
+  "scope": "arduino_tmap_gmap_unicast_broadcast_exact_hil",
+  "support_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1",
+    "sdk_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3"
+  },
+  "board_mapping": {
+    "source": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "target_vcom": "COM10"
+    },
+    "sink": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "target_vcom": "COM14"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "tmap-unicast",
+      "status": "PASS",
+      "source_revision": "c24cb42e9dfdec6bb3adf9e79660fc00daf855fb",
+      "image_core_revision": "960ec93dec59a2ab661f83aefc739c95297fa576",
+      "result": "results/tmap-unicast.json",
+      "source_frames": 20000,
+      "decoded_frames": 20000,
+      "dropped_frames": 0,
+      "soak_seconds": 180.0,
+      "stop_restart": "20/20",
+      "disconnect_reconnect": "20/20",
+      "negative_role": "PASS",
+      "negative_quality": "PASS",
+      "negative_feature": "not-applicable"
+    },
+    {
+      "id": "tmap-broadcast",
+      "status": "PASS",
+      "source_revision": "2f257b163615c2455385e7a01de2c6f5c5abc502",
+      "image_core_revision": "6d51a259988f25f656806b8a627a3bf990e37c49",
+      "result": "results/tmap-broadcast.json",
+      "source_frames": 22700,
+      "decoded_frames": 19500,
+      "dropped_frames": 0,
+      "soak_seconds": 180.0,
+      "stop_restart": "20/20",
+      "disconnect_reconnect": "not-applicable-broadcast",
+      "negative_role": "PASS",
+      "negative_quality": "PASS",
+      "negative_feature": "not-applicable"
+    },
+    {
+      "id": "gmap-unicast",
+      "status": "PASS",
+      "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+      "image_core_revision": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+      "result": "results/gmap-unicast.json",
+      "source_frames": 19900,
+      "decoded_frames": 19900,
+      "dropped_frames": 0,
+      "soak_seconds": 180.0,
+      "stop_restart": "20/20",
+      "disconnect_reconnect": "20/20",
+      "negative_role": "PASS",
+      "negative_quality": "PASS",
+      "negative_feature": "PASS"
+    },
+    {
+      "id": "gmap-broadcast",
+      "status": "PASS",
+      "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+      "image_core_revision": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+      "result": "results/gmap-broadcast.json",
+      "source_frames": 22900,
+      "decoded_frames": 19500,
+      "dropped_frames": 0,
+      "soak_seconds": 180.0,
+      "stop_restart": "20/20",
+      "disconnect_reconnect": "not-applicable-broadcast",
+      "negative_role": "PASS",
+      "negative_quality": "PASS",
+      "negative_feature": "PASS"
+    }
+  ],
+  "build_provenance": {
+    "tmap_unicast_exact_records": "build-provenance/tmap-unicast-960ec93d",
+    "tmap_byte_identical_rebuild": "build-provenance/tmap-6d51a259",
+    "gmap_exact_build": "build-provenance/gmap-db56af1c",
+    "note": "TMAP unicast HIL is bound to the 960ec93d records. The 6d51a259 clean rebuild produced byte-identical gateway and terminal HEX images and retained the adjacent logs."
+  },
+  "files": [
+    {"path":"build-provenance/gmap-db56af1c/build-manifest.json","size":4807,"sha256":"000b959b759cd7924ff34f1e700ce986deed276d942c9603c8a989f14e2eccc8"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioBroadcaster.build.log.gz","size":372314,"sha256":"3ef6effba555ae7adc0faf77126526ec1a7f824e8ef01d33398ae4a289a439fe","uncompressed_size":2677432,"uncompressed_sha256":"bc3f936cd5bef2212774ea780711756236be172d7fd4cfc6c246d8871352e911"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioBroadcaster.nu54-build.json","size":38827,"sha256":"273a7d13dd55f11e66f61ef00ef287662353be500fd96a426cb43d8d5847e9af"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioGateway.build.log.gz","size":570511,"sha256":"8a35b32eba666e5442f30ff607d09d39dd571d698eb7ec4761bf89a1c6761b7f","uncompressed_size":4020611,"uncompressed_sha256":"dea75d0ab9e6f5c57aa0d4d065a6fdaad5f0c7482690f50298026722653a3714"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioGateway.nu54-build.json","size":46472,"sha256":"a56d6c8069a4ca385610af13fe44b8037807f6085472f219c70793ce42698aeb"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioReceiver.build.log.gz","size":372070,"sha256":"32f353e86c4bca1f1af3f49ef91526e46104151e455bff4d2392ca2641cd8527","uncompressed_size":2635961,"uncompressed_sha256":"f1d0a6f4160ec400b8d0eff9df851c0a620d48810134abb5a13d86a8c66457a7"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioReceiver.nu54-build.json","size":38769,"sha256":"c0428b0633666716fa061b66a659a4bcb697452e22602a5557830c6fe452f4f2"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioTerminal.build.log.gz","size":569823,"sha256":"149152d276e806597b4bdcd0d9846597208f14fdcd7b435c80e10b072e9ed4be","uncompressed_size":3994612,"uncompressed_sha256":"bff7e0aa90a901abea9beec8e8b341b9b58344a602c22bcf232ff5334fc08445"},
+    {"path":"build-provenance/gmap-db56af1c/GamingAudioTerminal.nu54-build.json","size":46491,"sha256":"815e85d5b4d4864dd1b23da4158f51d359e218d1a39c4ed179565f128984643f"},
+    {"path":"build-provenance/tmap-6d51a259/build-manifest.json","size":9589,"sha256":"14aa049c205ffa1d15614789052f647aebdc3b2b5f9ee7f98ceb3adff0e950ec"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaBroadcaster.build.log.gz","size":371171,"sha256":"93e5c78c12e22719798dc2140593ae30a293c999a54d63daabcd8605da34cf95","uncompressed_size":2655207,"uncompressed_sha256":"995dc8e45bf47a33480cfa6f4e6aadf318239906af2db4df064082b3014469c6"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaBroadcaster.nu54-build.json","size":38879,"sha256":"5796253c56ed01b0da7b6065d3453d8ef0ff6f1f5a449b60991d75d04515442a"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaGateway.build.log.gz","size":571355,"sha256":"a7dcdd9705dae391d5c42e39dfe730c261ab759b66d316bfa2eaaf98b0741bc3","uncompressed_size":4028212,"uncompressed_sha256":"c2a2089aa1f0b84d08dedc40357f4c49404d489ded6ff0cfd2114266d3ffe3af"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaGateway.nu54-build.json","size":46541,"sha256":"e0806f6896206210cc6291a4d90c2a57460db1e30c7c1948d8d7399f8182bb5c"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaReceiver.build.log.gz","size":372465,"sha256":"4bc5f8b38f720e5ccf0fe233f8612a1600848d014f2747c8998ef92ff90a5476","uncompressed_size":2640867,"uncompressed_sha256":"d2f802f0f834954b81679c7830398081ad999040c182f8fadd35d6804aa3ca9b"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaReceiver.nu54-build.json","size":38828,"sha256":"6b372cd553c2d634c948a4a5abb7bfdf4e28994053c0c4204a98099709173043"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaTerminal.build.log.gz","size":570267,"sha256":"be36d630a92828577c5a37446b422f431d4a8adc83737d444d7332853712b199","uncompressed_size":4000058,"uncompressed_sha256":"26969afb091ca12143ab67fb11bbf8f6dd89fdf635ce22281d98acc4357a04db"},
+    {"path":"build-provenance/tmap-6d51a259/TelephonyMediaTerminal.nu54-build.json","size":46555,"sha256":"d3f5cdcad2c4469b28dfca95f46869d4c5aeb5e0e321b6949bedecda809ef61f"},
+    {"path":"build-provenance/tmap-unicast-960ec93d/TelephonyMediaGateway.nu54-build.json","size":46545,"sha256":"961bc09bb6f613e12f5930244a155828b5b3dda8c304df0d61b3e6d05a93662a"},
+    {"path":"build-provenance/tmap-unicast-960ec93d/TelephonyMediaTerminal.nu54-build.json","size":46559,"sha256":"3b71f29258424e1241d6e0d9d81494de19a93940a2ee1c1c7afaae3636798a4d"},
+    {"path":"results/gmap-broadcast.json","size":5284,"sha256":"715d9da032b5b1d92bdb76ba0bd6df9988bf771f1c2699ce58571f1c23750c1c"},
+    {"path":"results/gmap-broadcast.sink.transcript.log","size":10353,"sha256":"b8158116f87537fb8926fde698132cd61076dd495672f2a752540a7d5627bbb8"},
+    {"path":"results/gmap-broadcast.source.transcript.log","size":16496,"sha256":"3347307a468c7b87babfb268b2ee3f972d6197b842871a89ff36f1c5ac502476"},
+    {"path":"results/gmap-unicast.json","size":5249,"sha256":"1f4d3d8387a044aa88e1ac779a698686258c06ffb196452b9983433e6b4fc9f3"},
+    {"path":"results/gmap-unicast.sink.transcript.log","size":7867,"sha256":"1b08b3f682efdc670ab85f2acc5db7ac7d101ef0d46a966f4602fab7d71eba8e"},
+    {"path":"results/gmap-unicast.source.transcript.log","size":16551,"sha256":"08a9b40231a7df9021017ae1443ffacb2b85221defde0001023c41187b8af286"},
+    {"path":"results/tmap-broadcast.json","size":5307,"sha256":"262e3ab0ca6733817b11a289f0ab6e8b12be4bf22a73f017a4e8e9531939ae49"},
+    {"path":"results/tmap-broadcast.sink.transcript.log","size":9786,"sha256":"44de183a04beab50883cd7b6acb59bbf4a64aae4e10e826416aa58c5372e9824"},
+    {"path":"results/tmap-broadcast.source.transcript.log","size":15912,"sha256":"5f1459df3ed0a2a5075f209bf1e8573f15f31eab336e51bca98cd0428fba2618"},
+    {"path":"results/tmap-unicast.json","size":5272,"sha256":"c3c93efc2d3bf8394a759c85d9112a6fc29284dae1633d7948a1f4886fa28eae"},
+    {"path":"results/tmap-unicast.sink.transcript.log","size":7430,"sha256":"dfe1d6e0955679814ad894341c41e5f6df64c110f597f01939fe870e6fecad49"},
+    {"path":"results/tmap-unicast.source.transcript.log","size":14796,"sha256":"2e9c3044b24f1ad622779695a595eb34cd8eb161cf6528df5bfe045692cf0f3d"}
+  ],
+  "limits": {
+    "physical_audio_io": "not-used-synthetic-pcm",
+    "commercial_peer_interoperability": "NOT_RUN_user_follow_up_nonblocking",
+    "bluetooth_qualification": "not-claimed"
+  }
+}

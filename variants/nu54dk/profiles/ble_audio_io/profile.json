@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "id": "ble_audio_io",
+  "display_name": "BLE Audio external I/O (DAP UART disconnected)",
+  "board": "nucode:zephyr:nu54dk",
+  "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_version": "v3.4.0",
+  "conf": "prj.conf",
+  "overlay": "app.overlay",
+  "sysbuild": false,
+  "sysbuild_files": [],
+  "signing_key_env": null,
+  "features": ["gpio", "time", "ble", "peripheral_fabric"],
+  "conflicts": [],
+  "requires_hil": ["ble", "stream_fabric", "external_audio_io"]
+}

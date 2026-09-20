@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "scope": "M31-W03-04 Arduino BASS three-role exact completion evidence",
+  "core_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+  "source_clean": true,
+  "verdict": "PASS",
+  "files": [
+    {
+      "path": "assistant-build.json",
+      "sha256": "0fb8d05035d8dc3b4c2a0586eb212d9517195a0879d2c387b9b3b1b9a05c3dd0"
+    },
+    {
+      "path": "bass-exact.json",
+      "sha256": "04d3d76ac910d310ca97f650d2d55fda6798df89f4d9145d940963f62a477803"
+    },
+    {
+      "path": "bass-exact.transcript.log",
+      "sha256": "5fc95cf1d923041dfbaf9d462108e5212833d845979e563fcc95117faa52fa01"
+    },
+    {
+      "path": "delegator-build.json",
+      "sha256": "1b43b8d4e2241d3ccf7df5ee55a9a3e334c012b7d904e43d7bfa70ca2e0fd359"
+    },
+    {
+      "path": "diagnostic-audit.json",
+      "sha256": "97c7749ec48416ef29370eb31b78fc0ff95ba46eb5ab826be71f224824c87333"
+    },
+    {
+      "path": "flash.json",
+      "sha256": "820ef1d593e47c9a7a77ae8973f8615e6f47e8fea34009ef7a770caabed18042"
+    },
+    {
+      "path": "host-audit.log",
+      "sha256": "a1a36f657588faec8eec0d063b868fc82fe81efa509370cf1b142ad0522d294a"
+    },
+    {
+      "path": "peer-loss-exact.transcript.log",
+      "sha256": "3624789d12d21153c1e26cd9d0a42d1e8bd2ea64108a0eda4b8687bd42f9cbb7"
+    },
+    {
+      "path": "soak-exact.transcript.log",
+      "sha256": "3881874b52778369c46c4cf9a516a1aa5dbd3835eb52208bfa32ee970de41408"
+    },
+    {
+      "path": "source-build.json",
+      "sha256": "e79572a245e0593a96c49b3566c2045a1f06100239bce6fe0e6316277dcca031"
+    }
+  ],
+  "raw_probe_uid_recorded": false,
+  "result": "PASS"
+}

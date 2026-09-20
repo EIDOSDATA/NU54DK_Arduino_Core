@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29·M30 완료**입니다. M29와 M30은 각각 작업 묶음 **8/8**,
-test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다.
+**v0.4.1**, 개발 상태는 **M28·M29·M30 완료, M31 2/8 진행**입니다. M29와 M30은 각각
+작업 묶음 **8/8**, test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
@@ -12,6 +12,27 @@ test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다
 
 | 기록 | 용도 |
 | --- | --- |
+| [205 — M31-W03 Arduino CAP unicast 반복 실기](205_M31_W03_Arduino_CAP_unicast_반복_실기.md) | exact 공개 API start/stop 23회, cancel 22회, 재연결 48회, LC3 decode 1,800 frame·drop 0; 원격 완료 실패 20/20와 정상 image 복구 |
+| [204 — M31-W03 Arduino CAP 3역할과 broadcast 복구](204_M31_W03_Arduino_CAP_3역할과_broadcast_복구.md) | CAP broadcast 제어 102/102, negative 20×2, peer loss 복구 20/20, 185초 drop 0 |
+| [203 — M31-W03 Arduino BASS 3역할과 복구](203_M31_W03_Arduino_BASS_3역할과_복구.md) | BASS 제어 100/100, invalid/duplicate 20×2, peer loss 20/20, 180초 drop 0 |
+| [202 — M31-W03 Arduino BAP broadcast 암호화와 negative 완료](202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md) | clean 암호화 LC3, restart 20/20, wrong code 거부·복구 20/20, hardware-reset sync loss 재가입 20/20 |
+| [201 — M31-W03 Arduino BAP broadcast 비암호화와 재가입](201_M31_W03_Arduino_BAP_broadcast_비암호화와_재가입.md) | clean 공개 source/sink LC3 방송과 stop/restart 재가입 20/20, Broadcast Code·강제 sync loss 잔여 |
+| [196 — M31-W02 공개 CIS→BIS 세 보드 사용자 SDU 실기](196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md) | clean 세 역할 20/20·2,000/2,000 CIS 수신→BIS 전달·수신, 자원 반환 20/20, 공개 ISO 예제 감사 0건 |
+| [195 — M31-W02 공개 BIS 시각 동기 사용자 SDU 실기](195_M31_W02_공개_BIS_시각동기_사용자_SDU_실기.md) | clean 시간 동기 두 역할 20/20·2,000/2,000, HCI·수신 시각 유효·단조 0오류, W02 공개 예제 3개 진행 중 |
+| [194 — M31-W02 공개 암호화 BIS 사용자 SDU 실기](194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md) | clean 암호화 두 역할 20/20·2,000/2,000, 잘못된 Code MIC 거부·유효 SDU 0, W02 공개 예제 5개 진행 중 |
+| [193 — M31-W02 공개 BIS 사용자 SDU 실기](193_M31_W02_공개_BIS_사용자_SDU_실기.md) | clean 공개 `RawBis` source/receiver 20/20, 1,999/2,000 수신·회차별 최소 99, W02 공개 예제 7개 진행 중 |
+| [192 — M31-W02 공개 CIS 사용자 SDU 실기](192_M31_W02_공개_CIS_사용자_SDU_실기.md) | clean 공개 `RawCis` 두 역할 20회×100 송수신·payload 오류 0, W02 나머지 9개 예제 진행 중 |
+| [188 — M31-W03 Arduino BAP 원격 잘못된 ASE 상태 거부 20회](188_M31_W03_Arduino_BAP_원격_잘못된_ASE_상태_거부_20회.md) | clean 공개 Arduino server의 idle ASE 원격 Release가 20/20 `code=4 reason=0`으로 거부됨 |
+| [187 — M31-W03 Arduino BAP 원격 codec·QoS 거부 각 20회](187_M31_W03_Arduino_BAP_원격_codec_QoS_거부_각_20회.md) | clean 공개 Arduino server의 원격 ASCS unsupported codec·invalid QoS 각각 20/20 거부 |
+| [186 — M31-W03 Arduino BAP 잘못된 상태 거부 40회](186_M31_W03_Arduino_BAP_잘못된_상태_거부_40회.md) | clean 공개 API 중복 stop·정지 중 frame 전송 40/40 거부, LC3 2,400 frame과 재연결 20/20 |
+| [185 — M31-W03 Arduino BAP stop/release 20회](185_M31_W03_Arduino_BAP_stop_release_20회.md) | clean 공개 예제의 ASE disable·release·재연결 20/20과 LC3 2,400 frame, 정상 연결 해제 오류 교정 |
+| [184 — M31-W03 Arduino BAP 재시작 복구 20회](184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md) | clean source/sink 1,000 LC3 frame과 sink reset 복구 20/20 |
+| [191 — M31-W02 공개 ISO 예제 재점검](191_M31_W02_공개_ISO_예제_재점검.md) | 이전 무선 HIL 보존, 공개 payload API 부재로 W02 완료 판정 취소·재작업 |
+| [167 — M31-W02 설치 Arduino ISO 예제 당시 기록](167_M31_W02_설치_Arduino_ISO_예제_완료.md) | package sketch 11/11 build, CIS·BIS·암호화·negative·time·combined 실제 보드 PASS; 완료 판정은 191에서 정정 |
+| [166 — M31-W02 세 보드 CIS→BIS 기능 실기](166_M31_W02_3보드_CIS_BIS_통합_실기.md) | native 세 역할 build와 20회×100 CIS 수신→BIS 전달 PASS, 설치 예제 전 단계 |
+| [165 — M31-W01 완료와 W02 CIS/BIS 진행](165_M31_W01_착수와_W02_CIS_개발_후보.md) | W01 1/8 완료, CIS·BIS·time sync 개발·exact 시도와 실패 보존 |
+| [164 — 사용자 후속 검증 범위와 DF IQ 인계](164_사용자_후속_검증_범위와_DF_IQ_인계.md) | 구현·자동 검증 의무와 사용자 실물 검증 분리, DF raw IQ 후보 경계, 기존 m31-w01 재개·CI/CD 생략 |
+| [163 — Bluetooth 전체 기능·예제와 마일스톤 재배치](163_Bluetooth_전체_기능_예제와_마일스톤_재배치.md) | M31 8·M32 12·M33 8 작업, 전체 NCS 예제·기능 소유권, 보드 기반 자동화와 별도 Host 계약 |
 | [162 — 전체 문서 정비와 M31 TODO 확정](162_전체_문서_정비와_M31_TODO.md) | 308개 Markdown 전수 감사, 현재 계약·Host 표기 교정, M31-W01~W08 TODO와 재개 순서 |
 | [161 — M30-W08 실제 전원 HIL과 M30 완료](161_M30_W08_실제_전원_HIL과_M30_완료.md) | 네 지점 × 3회 실제 차단 12/12, recovery failure·invalid boot 0, M30 8/8·10/10 완료 |
 | [160 — 전체 문서 검토와 마일스톤 개정](160_전체_문서_검토와_마일스톤_개정.md) | 현황 모순 교정, 과거 준비/현재 재개 조건 분리, W08 내부 gate·M33 예제·후속 ARF 배치 |
@@ -57,7 +78,7 @@ test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29·M30 완료와 M31 준비 — 94~162</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29·M30 완료와 M31 진행 — 94~167</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -128,6 +149,12 @@ test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다
 - [160 — 전체 문서 검토와 마일스톤 개정](<160_전체_문서_검토와_마일스톤_개정.md>) — **현황 모순 교정과 W08·M33·후속 ARF 배치 확정**
 - [161 — M30-W08 실제 전원 HIL과 M30 완료](<161_M30_W08_실제_전원_HIL과_M30_완료.md>) — **네 지점 × 3회 실제 차단 12/12 PASS, M30 8/8·10/10 완료**
 - [162 — 전체 문서 정비와 M31 TODO 확정](<162_전체_문서_정비와_M31_TODO.md>) — **308개 Markdown 전수 감사·Host 표기 교정·M31 재개 순서 확정**
+- [163 — Bluetooth 전체 기능·예제와 마일스톤 재배치](<163_Bluetooth_전체_기능_예제와_마일스톤_재배치.md>) — **M31 8·M32 12·M33 8 작업·기능별 예제·보드 기반 자동화 계약**
+- [164 — 사용자 후속 검증 범위와 DF IQ 인계](<164_사용자_후속_검증_범위와_DF_IQ_인계.md>) — **실물 검증 책임·비차단/최종 Host gate·raw IQ 후보 경계·다른 PC 재개**
+- [165 — M31-W01 완료와 W02 CIS/BIS 진행](<165_M31_W01_착수와_W02_CIS_개발_후보.md>) — **W01 완료, CIS·BIS·time sync 단계별 exact와 실패 원본 보존**
+- [166 — M31-W02 세 보드 CIS→BIS 기능 실기](<166_M31_W02_3보드_CIS_BIS_통합_실기.md>) — **20회×100 CIS→BIS 2,000/2,000 PASS, 설치 예제 잔여**
+- [167 — M31-W02 설치 Arduino ISO 예제 당시 기록](<167_M31_W02_설치_Arduino_ISO_예제_완료.md>) — **설치 sketch 11/11 build·7개 실제 보드 case PASS; 191에서 W02 완료 판정 정정**
+- [191 — M31-W02 공개 ISO 예제 재점검](<191_M31_W02_공개_ISO_예제_재점검.md>) — **사용자 payload API 없는 11개 예제 재작업, M31 1/8**
 
 </details>
 

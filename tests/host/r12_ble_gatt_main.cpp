@@ -645,6 +645,23 @@ int main(int argc, char **argv)
                                 BT_GATT_WRITE_FLAG_EXECUTE) == 4);
         assert(attribute->write(connection, attribute, payload, 4, 510, 0) == -13);
     }
+#if CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS == 2
+    else if (std::strcmp(scenario, "dual_central_server_route") == 0)
+    {
+        const BLEConnectionHandle first = BLEConnection.handle(BLELinkRole::central);
+        mock_next_connection = &mock_connections[1];
+        BLEConnectionHandle second;
+        assert(BLEConnection.connect(
+            BLEAddress("02:03:04:05:06:07", BLEAddress::Type::public_address), second));
+        mock_conn_callbacks->connected(&mock_connections[1], 0U);
+        assert(first.valid() && second.valid() && first != second);
+        assert(BLEConnection.handle(BLELinkRole::central) == first);
+        assert(attribute->write(&mock_connections[1], attribute, payload, 4U, 0U, 0U) == 4);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::written)] == 1U);
+        assert(observed_server_connection == second);
+    }
+#endif
     else if (std::strcmp(scenario, "server_overflow") == 0 ||
              std::strcmp(scenario, "server_reentrant") == 0)
     {

@@ -1,0 +1,405 @@
+{
+  "status": "FAIL",
+  "test": "arduino_public_raw_bis_pair",
+  "core_revision": "772999fc6c2687cb9cc6cc5d1ff0ba04b6de7dc7",
+  "source_clean": true,
+  "probe_sha256": {
+    "source": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "receiver": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "ports": {
+    "source": "COM7",
+    "receiver": "COM5"
+  },
+  "image_sha256": {
+    "source": "2ad5757d0f5f98faab7780a57e5ff9d0f0d3f277ae213dc29994092ada97c840",
+    "receiver": "b92efb1a6619430a557a544a0ae51a0f359c83871832b760afb040cff239c159"
+  },
+  "flash": {
+    "receiver": [
+      "pyocd-sector-hw-reset",
+      "196608"
+    ],
+    "source": [
+      "pyocd-sector-hw-reset",
+      "229376"
+    ]
+  },
+  "requested_cycles": 20,
+  "completed_cycles": {
+    "source": 20,
+    "receiver": 20
+  },
+  "image_revision_confirmed": {
+    "source": true,
+    "receiver": true
+  },
+  "excluded_pre_boot_lines": {
+    "source": 3,
+    "receiver": 2
+  },
+  "failed_lines": [
+    {
+      "at_s": 44.266,
+      "text": "BIS error: -19"
+    }
+  ],
+  "lines": {
+    "source": [
+      {
+        "at_s": 0.109,
+        "text": "BIS core revision=772999fc6c2687cb9cc6cc5d1ff0ba04b6de7dc7"
+      },
+      {
+        "at_s": 0.109,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 0.328,
+        "text": "BIS core revision=772999fc6c2687cb9cc6cc5d1ff0ba04b6de7dc7"
+      },
+      {
+        "at_s": 0.328,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 4.984,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 6.062,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 10.531,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 11.594,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 16.047,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 17.125,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 21.781,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 22.859,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 27.328,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 28.391,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 32.859,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 33.922,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 38.594,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 39.641,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 44.156,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 45.219,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 49.672,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 50.75,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 55.266,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 56.344,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 60.844,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 61.906,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 66.609,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 67.687,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 72.203,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 73.281,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 77.719,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 78.781,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 83.234,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 84.297,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 88.937,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 90.0,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 94.469,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 95.516,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 100.187,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 101.266,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 105.812,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 106.875,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 111.422,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 112.5,
+        "text": "BIS source advertising"
+      }
+    ],
+    "receiver": [
+      {
+        "at_s": 0.219,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 0.219,
+        "text": "BIS core revision=772999fc6c2687cb9cc6cc5d1ff0ba04b6de7dc7"
+      },
+      {
+        "at_s": 0.437,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 4.453,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 5.531,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 10.016,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 11.062,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 15.547,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 16.578,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 21.266,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 22.328,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 26.797,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 27.859,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 32.328,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 33.391,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 38.062,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 39.125,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 44.266,
+        "text": "BIS error: -19"
+      },
+      {
+        "at_s": 45.109,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 49.141,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 50.219,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 54.734,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 55.797,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 60.531,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 61.375,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 66.062,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 66.937,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 71.672,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 72.734,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 77.187,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 78.25,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 82.937,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 83.766,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 88.406,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 89.469,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 94.156,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 94.984,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 99.641,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 100.719,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 105.25,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 106.344,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 110.859,
+        "text": "BIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 111.953,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 116.484,
+        "text": "BIS received frames=100 errors=0"
+      }
+    ]
+  }
+}

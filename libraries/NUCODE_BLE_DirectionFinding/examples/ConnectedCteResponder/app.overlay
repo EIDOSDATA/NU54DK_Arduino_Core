@@ -1,0 +1,20 @@
+/**
+ * @file app.overlay
+ * @brief 연결 기반 CTE 응답을 지원하는 Zephyr LL controller를 선택합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+&bt_hci_controller {
+    status = "okay";
+};
+
+&bt_hci_sdc {
+    status = "disabled";
+};
+
+/ {
+    chosen {
+        zephyr,bt-hci = &bt_hci_controller;
+    };
+};
