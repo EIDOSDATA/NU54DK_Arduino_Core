@@ -117,8 +117,14 @@ namespace
         Serial.print(state.track_position);
         Serial.print(" duration=");
         Serial.print(state.track_duration);
+        Serial.print(" opcodes=");
+        Serial.print(state.supported_commands);
         Serial.print(" state=");
-        Serial.println(static_cast<unsigned int>(state.state));
+        Serial.print(static_cast<unsigned int>(state.state));
+        Serial.print(" updates=");
+        Serial.print(state.updates);
+        Serial.print(" notifications=");
+        Serial.println(state.state_notifications);
     }
 
     /** @brief 공개 command 결과와 원본 MCC 오류를 출력합니다. */
@@ -279,7 +285,7 @@ void loop()
         }
         else if (command == 'r')
         {
-            report("Refresh", controller.refresh());
+            submitOperation("MEDIA_REFRESH", controller.refresh(), false);
         }
         else if (command == 's')
         {

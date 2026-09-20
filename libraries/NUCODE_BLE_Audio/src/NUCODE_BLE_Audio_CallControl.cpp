@@ -490,8 +490,9 @@ namespace nucode::ble::audio
             k_mutex_lock(&callClientMutex, K_FOREVER);
             if (currentCallConnection(connection))
             {
-                callClient.pending = false;
                 callClient.error = error;
+                const bool read_response =
+                    callClient.pending && (callClient.stage == RemoteControlStage::reading);
                 if (error == 0)
                 {
                     if ((count != 0U) && (states != nullptr))
@@ -505,10 +506,19 @@ namespace nucode::ble::audio
                         callClient.snapshot.state = CallState::none;
                     }
                     ++callClient.snapshot.updates;
-                    callClient.stage = RemoteControlStage::ready;
+                    if (read_response)
+                    {
+                        callClient.pending = false;
+                        callClient.stage = RemoteControlStage::ready;
+                    }
+                    else
+                    {
+                        ++callClient.snapshot.state_notifications;
+                    }
                 }
-                else
+                else if (read_response)
                 {
+                    callClient.pending = false;
                     callClient.stage = RemoteControlStage::failed;
                 }
             }

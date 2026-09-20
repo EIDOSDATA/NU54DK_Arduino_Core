@@ -110,7 +110,9 @@ namespace
         Serial.print(" result=");
         Serial.print(state.result_code);
         Serial.print(" updates=");
-        Serial.println(state.updates);
+        Serial.print(state.updates);
+        Serial.print(" notifications=");
+        Serial.println(state.state_notifications);
     }
 
     /** @brief 공개 call control 결과와 원본 TBS 오류를 출력합니다. */

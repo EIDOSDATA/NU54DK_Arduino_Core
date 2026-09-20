@@ -48,10 +48,16 @@ namespace
     void onBleEvent(const BLEEventInfo &event, void *context)
     {
         static_cast<void>(context);
-        if (event.event == BLEEvent::disconnected)
+        if (event.event == BLEEvent::connected)
+        {
+            Serial.println("Call controller connected");
+        }
+        else if (event.event == BLEEvent::disconnected)
         {
             restartAdvertising = true;
             restartAt = millis() + 100U;
+            Serial.print("Call controller disconnected reason=");
+            Serial.println(event.reason);
         }
     }
 
@@ -124,23 +130,23 @@ void loop()
         const std::uint8_t callIndex = callServer.snapshot().call_index;
         if (command == 'i')
         {
-            report("Incoming call", callServer.incoming("tel:1000", "tel:2000", "Synthetic peer"));
+            report("CALL_INCOMING", callServer.incoming("tel:1000", "tel:2000", "Synthetic peer"));
         }
         else if (command == 'a')
         {
-            report("Remote answer", callServer.remoteAnswer(callIndex));
+            report("CALL_REMOTE_ANSWER", callServer.remoteAnswer(callIndex));
         }
         else if (command == 'h')
         {
-            report("Remote hold", callServer.remoteHold(callIndex));
+            report("CALL_REMOTE_HOLD", callServer.remoteHold(callIndex));
         }
         else if (command == 'r')
         {
-            report("Remote retrieve", callServer.remoteRetrieve(callIndex));
+            report("CALL_REMOTE_RETRIEVE", callServer.remoteRetrieve(callIndex));
         }
         else if (command == 'x')
         {
-            report("Remote terminate", callServer.remoteTerminate(callIndex));
+            report("CALL_REMOTE_TERMINATE", callServer.remoteTerminate(callIndex));
         }
         else if (command == 's')
         {

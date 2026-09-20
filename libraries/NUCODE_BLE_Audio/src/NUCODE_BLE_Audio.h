@@ -2013,6 +2013,7 @@ namespace nucode::ble::audio
         std::uint64_t current_track_id = 0U;
         std::uint32_t supported_commands = 0U;
         std::uint32_t updates = 0U;
+        std::uint32_t state_notifications = 0U;
         std::uint8_t content_control_id = 0U;
         MediaState state = MediaState::inactive;
     };
@@ -2140,6 +2141,7 @@ namespace nucode::ble::audio
     struct CallSnapshot
     {
         std::uint32_t updates = 0U;
+        std::uint32_t state_notifications = 0U;
         std::uint8_t call_index = 0U;
         std::uint8_t result_code = 0U;
         CallState state = CallState::none;

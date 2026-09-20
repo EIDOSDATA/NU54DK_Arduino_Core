@@ -350,6 +350,11 @@ namespace nucode::ble::audio
             if (currentMediaConnection(connection) && (error == 0))
             {
                 mediaClient.snapshot.state = mediaState(state);
+                if ((mediaClient.stage != RemoteControlStage::reading) || !mediaClient.pending ||
+                    (mediaClient.read_step != MediaReadStep::media_state))
+                {
+                    ++mediaClient.snapshot.state_notifications;
+                }
             }
             k_mutex_unlock(&mediaClientMutex);
             finishMediaRead(connection, error, MediaReadStep::supported_commands);
