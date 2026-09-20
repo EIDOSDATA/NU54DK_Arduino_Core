@@ -261,43 +261,45 @@
       "id": "W03-06",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "source_status": "verified",
+      "target_applicability": "arduino_csip_three_board_seven_scenario_confirmed",
       "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/campaign.summary.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
+      },
+      "support_reason": "clean fcbbfac5 공개 Arduino coordinator와 두 member 3역할에서 positive, wrong rank, wrong SIRK, 동기·비동기 security failure, watchdog, recovery 7/7을 확인했다. recovery 20/20은 6.083~6.987초에 재가입·SIRK 승인·lock/release를 완료했고, Set ready 21·locked 40·released 40으로 유효 상태·동작 report 101개를 확인했다."
     },
     {
       "id": "W03-07",
       "owner_work_id": "M31-W03",
       "controller_variant": "audio_opt_in",
-      "source_status": "source_candidate",
-      "target_applicability": "unresolved",
+      "source_status": "verified",
+      "target_applicability": "arduino_pbp_two_board_five_mode_confirmed_auracast_qualification_external",
       "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "NOT_RUN",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": null,
+      "arduino_build": "PASS",
+      "runtime_query": "PASS",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json",
+      "nu54dk_build": "PASS",
+      "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
       "stage_evidence": {
         "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": null,
-        "functional_hil": null
-      }
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/campaign.summary.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json"
+      },
+      "support_reason": "clean fcbbfac5 공개 Arduino source/sink 2역할에서 positive 180.003초 동안 LC3 17,700 frame 증가·유효 report 177·drop 0, stop/restart 20/20, wrong Broadcast Code 거부·복구 20/20, unsupported source와 sink quality 거부·복구 각 20/20, sync loss 탐지·복구 20/20을 확인했다. Auracast 명칭·qualification과 상용 peer 상호운용은 주장하지 않는다."
     },
     {
       "id": "W03-08",
@@ -553,7 +555,7 @@
         "member_b"
       ],
       "minimum_boards": 3,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-07",
@@ -563,7 +565,7 @@
         "sink"
       ],
       "minimum_boards": 2,
-      "status": "NOT_RUN"
+      "status": "PASS"
     },
     {
       "id": "W03-08",
@@ -795,48 +797,48 @@
     },
     {
       "id": "W03-06:coordinator",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino",
+      "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
     },
     {
       "id": "W03-06:member_a",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino",
+      "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
     },
     {
       "id": "W03-06:member_b",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino",
+      "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
     },
     {
       "id": "W03-07:source",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSource/PublicAudioBroadcastSource.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSource/PublicAudioBroadcastSource.ino",
+      "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json"
     },
     {
       "id": "W03-07:sink",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSink/PublicAudioBroadcastSink.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSink/PublicAudioBroadcastSink.ino",
+      "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json"
     },
     {
       "id": "W03-08:controller",
@@ -1379,9 +1381,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-07",
@@ -1410,9 +1412,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json"
         },
         {
           "id": "M31-AUDIO-01:W03-08",

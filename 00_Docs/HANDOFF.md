@@ -46,7 +46,7 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 
 | 항목 | 상태 |
 | --- | --- |
-| Branch | `m31-w01` — M30 인계 `10f16eaa913f9b1d1906239fbe6ff98c53c73cd1` 포함; 현행 M31 작업은 이 브랜치에서 진행 |
+| Branch | `m31-w03-dev` — W03-06·07·08 완료 checkpoint; W03-09~11 후속 재개 branch |
 | 공개 배포 | v0.4.1 단독 지원 |
 | 개발 소스 | 0.4.1-dev |
 | M28 | W01~W08 **8/8**, test ID 9/9 PASS |
@@ -69,7 +69,7 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 | M30 기계 원장 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 순서 | [M31 TODO](TODO_M31.md) |
 | M31 / M32 / M33 구현 진도 | **2/8 · 0/12 · 0/8**; M31-W01·W02 완료·W03~W05 진행, [M32 TODO](TODO_M32.md)·[M33 TODO](TODO_M33.md) 미착수 |
-| 현재 개발 지점 | M30 완료. [W02 독립 package·11역할 실기 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) 후 W03 전체 LE Audio·W04 DF·W05 CS 구현 진행 |
+| 현재 개발 지점 | M30 완료. [W02 독립 package·11역할 실기 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) 보존. W03-06 CSIP·07 PBP·08 Audio Control 완료, W03-09~11·W04 DF·W05 CS 진행·잔여 |
 | v0.5.0 Host 목표 | Windows 10/11 x64 + Ubuntu 24.04 이상 AMD64 + macOS 26 이상 Apple Silicon |
 | Host 구현 상태 | HOST-W01~HOST-W03 완료, HOST-W04~HOST-W08 미착수 |
 
@@ -109,10 +109,11 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
 
 ## 4. 다른 컴퓨터에서 바로 할 일
 
-1. [200번 다른 PC 인계](<04_검증 기록/200_M31_다른_PC_작업_인계.md>)를 먼저 읽습니다. 실제 C drive
-   저장소의 `AGENTS.md`, branch·HEAD·미커밋 변경 소유권을 확인하고 `git fetch origin` 뒤
-   **기존 `m31-w01`을 이어받아** `git pull --ff-only`로 갱신합니다. 로컬 branch가 없을 때만
-   `git switch --track origin/m31-w01`로 만듭니다. Dirty/diverged 상태를 덮어쓰거나 강제 push하지 않습니다.
+1. [200번 다른 PC 인계](<04_검증 기록/200_M31_다른_PC_작업_인계.md>)는 이전 `m31-w01`
+   재개 기록으로 보존합니다. 신규 PC에서는 실제 C drive 저장소의 `AGENTS.md`,
+   branch·HEAD·미커밋 변경 소유권을 확인하고 `git fetch origin` 뒤 **`m31-w03-dev`를
+   이어받아** `git pull --ff-only`로 갱신합니다. Dirty/diverged 상태를 덮어쓰거나 강제
+   push하지 않습니다.
 2. 이 문서, [M31 TODO](TODO_M31.md), [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
    [W02 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
    [M31 readiness](../variants/nu54dk/m31-ble-readiness.json)을 대조합니다. Board submodule을
@@ -121,10 +122,12 @@ DF 원시 IQ는 배열 확보를 기다리지 않고 수신 구성의 코드·bu
    기존 PC의 임시 package·HEX 경로를 결과물로 가정하지 않습니다. 신규 변경은 새 PC에서 clean source,
    설치 예제 build, 보드 역할별 runtime을 같은 revision으로 결합해 검증합니다.
 4. W03-05 CAP은 broadcast와 unicast, cancel·원격 완료 실패·handover 및 정상 image 복구까지
-   완료했습니다. W03-08 VCP/VOCS/AICS/MICP도 276 control report, invalid range 상태 불변과
-   peer loss 복구 20/20으로 완료했습니다. 다음 우선순위는 W03-06 CSIP·W03-07 PBP의 최종
-   HIL, 이어서 W03-09~W03-11입니다. W03-02~W03-05와 W03-08 완료 근거를
-   보존합니다. W04 raw IQ RX와 W05 CS의
+   완료했습니다. [W03-06 CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)은 7/7
+   scenario·valid report 101건·member loss 복구 20/20, [W03-07 PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)는
+   180초 stream·negative/recovery 5/5로 완료했습니다. W03-08 VCP/VOCS/AICS/MICP도
+   276 control report, invalid range 상태 불변과 peer loss 복구 20/20으로 완료했습니다.
+   다음 우선순위는 W03-09~W03-11입니다. W03-02~W03-08 완료 근거를 보존합니다.
+   W04 raw IQ RX와 W05 CS의
    미해결 오류는 실제 register/log 근거로 조사하며 W06~W08은 아직 미착수입니다.
 5. 실제 보드 시험 직전에 현재 CMSIS-DAP V2 probe SHA-256 identity·COM/serial·role·firmware를
    다시 확인합니다. 이전 PC mapping을 자동 재사용하지 않습니다. 공개 `.ino`는 의미 있는 사용자
@@ -165,4 +168,4 @@ CI/CD 실행 요청·조회·대기는 생략합니다. PR 생성·main 병합·
   CMSIS-DAP으로 fault, SRAM, queue/buffer/credit와 peripheral 오류 register를 확보합니다.
 - 원인 분류 → 단일 수정 → 동일 조건 재검증을 지키고 무한 재시도로 PASS를 만들지 않습니다.
 - 과거 기록의 당시 판정과 원시 증거는 소급 수정하거나 삭제하지 않습니다.
-- 공개 v0.4.1 package와 개발 `m31-w01` branch의 API·예제·지원 상태를 항상 구분합니다.
+- 공개 v0.4.1 package와 개발 `m31-w03-dev` branch의 API·예제·지원 상태를 항상 구분합니다.

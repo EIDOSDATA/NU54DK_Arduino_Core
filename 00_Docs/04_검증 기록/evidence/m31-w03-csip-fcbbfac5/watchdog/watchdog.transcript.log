@@ -1,0 +1,24 @@
+00003.113|runner|debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00005.797|runner|debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.035|runner|debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.035|runner|pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true
+00012.252|runner|debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00012.254|runner|pre-reset UART quarantine board=E observed_bytes=0 input_buffer_purged=true
+00015.164|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00015.165|runner|pre-reset UART quarantine board=G observed_bytes=3720 input_buffer_purged=true
+00018.076|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00018.076|coordinator|<reset-uart-noise chars=2058>Searching for two set members
+00018.076|member_one|Enter this member rank (1 or 2):
+00018.076|member_two|<reset-uart-noise chars=4>Enter this member rank (1 or 2):
+00018.077|runner|command board=F value=1
+00018.133|runner|command board=E value=2
+00018.155|member_one|Set member ready; send a to authorize SIRK read, f to force-release
+00018.155|member_one|Provision a unique secret before using this outside a local test setup
+00018.218|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00018.218|member_two|Provision a unique secret before using this outside a local test setup
+00018.286|coordinator|Set coordinator progress timeout
+00018.742|coordinator|Set coordinator progress timeout
+00019.142|coordinator|Set coordinator progress timeout
+00019.285|coordinator|Set coordinator progress timeout
+00019.650|coordinator|Set coordinator progress timeout
+00020.066|coordinator|Set coordinator progress timeout

@@ -1,0 +1,27 @@
+{
+  "schema": "nucode.m31.csip-fault-build.v1",
+  "mode": "watchdog",
+  "role": "coordinator",
+  "mutation_id": "progress_deadline_forced_expiry",
+  "required_source_marker": "NUCODE_CSIP_FAULT_WATCHDOG",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "public_example_sha256": "b7f12a192da55f6dc7bd2c072776dbe9cd99ad7a4319e1ccb6581d2c56299fb7",
+  "fault_source_path": "C:\\w\\m31w06-watchdog-fcbbfac5\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetCoordinator\\CsipSetCoordinator.ino",
+  "fault_source_sha256": "62aae20495f18ebbdf188d50e3b95a8f51ea6c21ee089496b05059eb0310099b",
+  "patch_path": "watchdog.patch",
+  "patch_sha256": "d9ab3fd8a70d968fabb17537dfe0275894ba7dac21337a47aa616253825a944f",
+  "baseline_manifest_path": "..\\baseline-coordinator.json",
+  "baseline_image_path": "C:\\w\\m31w06-coordinator-fcbbfac5\\CsipSetCoordinator.ino.hex",
+  "baseline_image_sha256": "841cd72d4728050e3e4baa1e6c6eecf7f9def2d1874465125442bcd963746663",
+  "build_path": "C:\\w\\m31w06-fault-watchdog-fcbbfac5",
+  "image_path": "C:\\w\\m31w06-fault-watchdog-fcbbfac5\\CsipSetCoordinator.ino.hex",
+  "image_sha256": "7792913f2a38e0c7b6b66c0b2ae80f5956e2ab5f2fa344a31334352d596ceee8",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "build_command": [
+    "C:\\Program Files\\Arduino CLI\\arduino-cli.exe", "compile", "--config-file",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\arduino-dev\\arduino-cli.yaml",
+    "--fqbn", "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd", "--clean", "--build-path",
+    "C:\\w\\m31w06-fault-watchdog-fcbbfac5",
+    "C:\\w\\m31w06-watchdog-fcbbfac5\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetCoordinator"
+  ]
+}
