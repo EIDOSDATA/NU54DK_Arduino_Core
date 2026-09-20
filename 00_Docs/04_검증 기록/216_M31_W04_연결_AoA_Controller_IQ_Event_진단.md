@@ -29,3 +29,24 @@ LL controller는 실제 연결 IQ event를 Host까지 전달했다. 실패 지�
 출력이 수백 개 메시지를 drop시킨 것이 직접 원인이므로, 후속 image는 Host 오류를
 보존하는 `CONFIG_BT_LOG_LEVEL_ERR=y`만 사용한다. 후속 run은 같은 exact 역할에서
 요청 disable, sampling disable, ACL disconnect와 상대 disconnect를 모두 확인해야 한다.
+
+## 로그 축소 후 재실행
+
+`b5294c86da32a9ebde86db96ca3cff08b4a96859`의 clean source에서 Host 로그를
+오류 수준으로 제한하고 연결 수신 image를 다시 빌드했다. 공개 responder도 같은
+revision의 source manifest로 다시 빌드한 뒤 같은 현재 mapping에서 실행했다.
+[재실행 원본](evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json)은
+첫 실행 원본과 분리해 보존한다.
+
+| 판정 범위 | 결과 | 근거와 경계 |
+| --- | --- | --- |
+| exact image/source | PASS | clean core revision과 receiver/responder HEX SHA-256을 원본에 기록 |
+| controller HCI 명령 | PASS | RX parameter·CTE request enable과 두 disable 명령이 모두 `code=0` |
+| controller IQ event 존재 | PASS | 연결 IQ event가 Host 상태 게이트까지 102회 도달 |
+| Host raw IQ callback | HOLD | callback sample 0건, Host 상태 게이트 폐기 102건 |
+| STOP/cleanup | PASS | request disable, sampling disable, local disconnect, receiver stop, peer disconnect 확인 |
+| 각도 계산·외장 RF | NOT RUN | IQ sample·안테나 전환·보정·상용 peer 실물이 없음 |
+
+따라서 W04 연결 기반 기본 안테나 경로는 `CONTROLLER_IQ_EVENT_HOST_DROPPED`로
+재현 가능하게 좁혀졌지만, W04 전체와 `raw_iq_rx`는 여전히 **HOLD**다. controller
+event 존재를 IQ payload 수신 또는 각도 측정 PASS로 확대하지 않는다.
