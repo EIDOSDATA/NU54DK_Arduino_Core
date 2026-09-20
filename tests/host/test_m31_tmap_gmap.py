@@ -37,7 +37,7 @@ GMAP_EXAMPLES = {
     "GamingAudioGateway": (
         "unicast_game_gateway",
         ("CONFIG_BT_CAP_INITIATOR=y", "CONFIG_BT_BAP_UNICAST_CLIENT=y",
-         "CONFIG_BT_VCP_VOL_CTLR=y"),
+         "CONFIG_BT_CSIP_SET_COORDINATOR=y", "CONFIG_BT_VCP_VOL_CTLR=y"),
     ),
     "GamingAudioTerminal": (
         "unicast_game_terminal",
@@ -51,7 +51,7 @@ GMAP_EXAMPLES = {
     "GamingAudioReceiver": (
         "broadcast_game_receiver",
         ("CONFIG_BT_CAP_ACCEPTOR=y", "CONFIG_BT_BAP_BROADCAST_SINK=y",
-         "CONFIG_BT_VCP_VOL_REND=y"),
+         "CONFIG_BT_BAP_SCAN_DELEGATOR=y", "CONFIG_BT_VCP_VOL_REND=y"),
     ),
 }
 
