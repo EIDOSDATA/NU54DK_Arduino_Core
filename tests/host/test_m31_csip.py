@@ -116,6 +116,7 @@ class CsipContractTests(unittest.TestCase):
         coordinator = (EXAMPLES / "CsipSetCoordinator/CsipSetCoordinator.ino").read_text(
             encoding="utf-8"
         )
+        coordinator_compact = " ".join(coordinator.split())
         for token in (
             "physically verify the controller, then send a",
             "setMember.authorizeSirkRead(authorizationCandidate)",
@@ -150,6 +151,21 @@ class CsipContractTests(unittest.TestCase):
             "progressDeadlineMs",
             "waiting for bounded lock cleanup",
             "recoveryRetryIntervalMs",
+        ):
+            self.assertIn(token, coordinator)
+        self.assertIn(
+            "record.event == nucode::ble::SecurityEvent::security_changed && "
+            "BLESecurity.paired(record.connection) && knownMember(record.connection)",
+            coordinator_compact,
+        )
+        for token in (
+            "discoveryStarted[linkCount] = false;",
+            "discoveryStarted[index] = discoveryStarted[linkCount - 1U];",
+            "discoveryStarted[linkCount] = false;",
+            "discoveryStarted[index] = true;",
+            "discoveryStarted[index] = false;",
+            "knownMemberAddresses[knownMemberCount++] = address;",
+            "rememberDiscoveredMember();",
         ):
             self.assertIn(token, coordinator)
 

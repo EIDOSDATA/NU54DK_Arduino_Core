@@ -13,9 +13,12 @@ namespace
 {
     nucode::ble::audio::CsipSetCoordinator coordinator;
     nucode::ble::BLEAddress candidateAddress;
+    nucode::ble::BLEAddress knownMemberAddresses[2] = {};
+    nucode::ble::BLEConnectionHandle discoveryConnection;
     nucode::ble::BLEConnectionHandle links[2] = {};
     bool discoveryStarted[2] = {};
     std::size_t linkCount = 0U;
+    std::size_t knownMemberCount = 0U;
     std::size_t reportedMembers = 0U;
     bool candidateReady = false;
     bool scanPending = false;
@@ -90,6 +93,48 @@ namespace
         return false;
     }
 
+    /** @brief 이전에 CSIS 검색을 마친 member의 같은-boot 재연결인지 확인합니다. */
+    bool knownMember(const nucode::ble::BLEConnectionHandle &connection)
+    {
+        if (!BLEConnection.connected(connection))
+        {
+            return false;
+        }
+        const nucode::ble::BLEAddress address = BLEConnection.peerAddress(connection);
+        for (std::size_t index = 0U; index < knownMemberCount; ++index)
+        {
+            if (knownMemberAddresses[index] == address)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** @brief 성공한 CSIS 검색의 peer를 같은-boot 재연결 대상으로 기억합니다. */
+    void rememberDiscoveredMember()
+    {
+        if (!discoveryConnection.valid() || !BLEConnection.connected(discoveryConnection))
+        {
+            discoveryConnection = {};
+            return;
+        }
+        const nucode::ble::BLEAddress address = BLEConnection.peerAddress(discoveryConnection);
+        for (std::size_t index = 0U; index < knownMemberCount; ++index)
+        {
+            if (knownMemberAddresses[index] == address)
+            {
+                discoveryConnection = {};
+                return;
+            }
+        }
+        if (knownMemberCount < 2U)
+        {
+            knownMemberAddresses[knownMemberCount++] = address;
+        }
+        discoveryConnection = {};
+    }
+
     /** @brief RSI가 set key와 일치하는 connectable 광고를 선택합니다. */
     void onScanResult(const nucode::ble::BLEScanResult &result, void *context)
     {
@@ -140,6 +185,10 @@ namespace
                     discoveryStarted[index] = discoveryStarted[linkCount - 1U];
                     links[--linkCount] = {};
                     discoveryStarted[linkCount] = false;
+                    if (discoveryConnection == information.connection)
+                    {
+                        discoveryConnection = {};
+                    }
                     break;
                 }
             }
@@ -163,7 +212,7 @@ namespace
         else if (record.event == nucode::ble::SecurityEvent::paired ||
                  record.event == nucode::ble::SecurityEvent::bond_verified ||
                  (record.event == nucode::ble::SecurityEvent::security_changed &&
-                  BLESecurity.paired(record.connection)))
+                  BLESecurity.paired(record.connection) && knownMember(record.connection)))
         {
             for (std::size_t index = 0U; index < linkCount; ++index)
             {
@@ -179,6 +228,7 @@ namespace
                 else
                 {
                     discoveryStarted[index] = true;
+                    discoveryConnection = record.connection;
                     progressDeadlineMs = millis() + discoveryTimeoutMs;
                 }
                 break;
@@ -243,6 +293,7 @@ namespace
             discoveryStarted[index] = false;
         }
         linkCount = 0U;
+        discoveryConnection = {};
         reportedMembers = 0U;
         candidateReady = false;
         progressDeadlineMs = 0U;
@@ -308,10 +359,16 @@ void loop()
             scanPending = true;
         }
     }
-    if (coordinator.memberCount() != reportedMembers)
+    const std::size_t memberCount = coordinator.memberCount();
+    if (memberCount != reportedMembers)
     {
-        reportedMembers = coordinator.memberCount();
+        const bool memberAdded = memberCount > reportedMembers;
+        reportedMembers = memberCount;
         progressDeadlineMs = 0U;
+        if (memberAdded)
+        {
+            rememberDiscoveredMember();
+        }
         printMembers();
         if (!coordinator.ready() && !BLEScan.running() && !BLEConnection.connecting())
         {
