@@ -114,6 +114,34 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
                 "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC_COUNT=2",
                 "CONFIG_LIBLC3=y",
             )
+        elif sketch.parent.name == "ExternalPdmMicrophoneSource":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_Peripheral_Fabric.h>",
+                "PdmConfiguration", "UnicastServerMode::duplex",
+                "microphone->start(", "microphone->queueBuffer(",
+                "audioServer.sendFrame(", "codec.encode(",
+            )
+            options = (
+                "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                "CONFIG_BT_ASCS_MAX_ASE_SRC_COUNT=1",
+                "CONFIG_LIBLC3=y",
+            )
+        elif sketch.parent.name == "ExternalI2sSpeakerSink":
+            required = (
+                "#include <NUCODE_BLE.h>",
+                "#include <NUCODE_BLE_Audio.h>",
+                "#include <NUCODE_Peripheral_Fabric.h>",
+                "I2sConfiguration", "UnicastClientMode::duplex",
+                "speaker->start(", "speaker->queueBuffers(",
+                "audioClient.readFrame(", "codec.decode(",
+            )
+            options = (
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC_COUNT=2",
+                "CONFIG_LIBLC3=y",
+            )
         elif sketch.parent.name == "BapBroadcastSource":
             required = (
                 "#include <NUCODE_BLE.h>",

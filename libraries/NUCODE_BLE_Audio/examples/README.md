@@ -171,6 +171,35 @@ Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
 Serial의 frame 카운터는 실기 확인용이다. PDM/I2S microphone과 I2S codec/speaker 경로는
 외장 I/O 예제에서 별도로 다룬다.
 
+## 외부 microphone·codec·speaker 연결
+
+`ExternalPdmMicrophoneSource`와 `ExternalI2sSpeakerSink`는 **NU54DK Zephyr / BLE Audio
+external I/O (DAP UART disconnected)** feature set으로 빌드한다. 이 profile은 PDM/I2S의
+EasyDMA와 IRQ를 `StreamFabric`이 직접 소유하도록 표준 Serial·Wire·SPI·ADC·PWM을 끈다.
+두 예제는 Zephyr API를 직접 호출하지 않으며 공개 `NUCODE_BLE_Audio`와
+`NUCODE_Peripheral_Fabric` API만 사용한다.
+
+- 두 보드 모두 전원을 끈 상태에서 DAP UART routing을 분리한다. 이 profile에서는 P1.4~P1.7을
+  외부 audio에 사용하므로 같은 핀에 DAP VCOM이나 다른 출력이 연결된 채 실행하면 안 된다.
+- PDM microphone 보드는 P1.4를 `CLK`, P1.6을 `DATA`에 연결하고 3.3 V와 GND를 공유한다.
+  예제는 PDM20, 16 kHz mono, 160 sample(10 ms) double buffer를 사용한다. 1.8 V 전용 microphone은
+  직접 연결하지 말고 올바른 level shifter와 전원을 사용한다.
+- I2S speaker 보드는 P1.4를 `BCLK/SCK`, P1.5를 `LRCLK/WS`, P1.7을 `SDOUT/DIN`에 연결하고
+  GND를 공유한다. 예제는 NU54DK master, 16 kHz, 16-bit stereo를 사용하며 MCLK는 출력하지 않는다.
+  따라서 16 kHz BCLK 기반 동작을 지원하는 외부 codec/DAC·amplifier만 연결한다. passive speaker를
+  GPIO에 직접 연결하지 않는다.
+- microphone source의 LED는 source ASE가 streaming일 때, speaker sink의 LED는 client stream이
+  준비됐을 때 켜진다. DAP UART를 분리하므로 이 두 예제는 Serial 성공 문자열에 의존하지 않는다.
+- 먼저 source를 켜고 sink를 켠다. sink는 ASCS 광고를 찾아 연결하고, PDM PCM은 LC3 encode → CIS →
+  LC3 decode → I2S DMA 경로를 통과한다. 연결이 끊기면 source는 다시 광고하고 sink는 다시 검색한다.
+- 핀·sample rate·frame 크기를 바꾸려면 두 `.ino`의 `PdmConfiguration` 또는
+  `I2sConfiguration`과 `samplesPerFrame`, 양쪽 LC3 설정을 함께 바꾼다. DMA buffer는 함수 지역
+  임시 배열로 바꾸지 않는다.
+
+외부 장치의 전압·clock 방식·증폭기 요구사항은 부품 datasheet가 우선한다. 위 경로는 실제 연결용
+구현과 build 가능한 예제이며, 특정 microphone/codec/speaker의 음질·전기적 호환성 실물 검증을
+대신하지 않는다.
+
 ## 출처와 라이선스
 
 LC3 frame 계약은 고정 NCS v3.4.0의 `samples/bluetooth/bap_unicast_client`,

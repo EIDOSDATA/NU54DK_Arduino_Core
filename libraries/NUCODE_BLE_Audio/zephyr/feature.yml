@@ -5,5 +5,5 @@
   "conf": [],
   "overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["ble"]
+  "compatible_profiles": ["ble", "ble_audio_io"]
 }

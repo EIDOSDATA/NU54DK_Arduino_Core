@@ -20,7 +20,14 @@ EXAMPLES = (
     "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
     "CISToBISReceiver",
 )
-AUDIO_EXAMPLES = ("Lc3SyntheticLoopback", "CsipSetMember", "CsipSetCoordinator")
+AUDIO_EXAMPLES = (
+    "Lc3SyntheticLoopback", "CsipSetMember", "CsipSetCoordinator",
+    "ExternalPdmMicrophoneSource", "ExternalI2sSpeakerSink",
+)
+AUDIO_PROFILES = {
+    "ExternalPdmMicrophoneSource": "ble_audio_io",
+    "ExternalI2sSpeakerSink": "ble_audio_io",
+}
 DF_EXAMPLES = ("CteBeacon",)
 SUITES = {
     "iso": ("NUCODE_BLE_ISO", "m31_iso_revisions", "m31-arduino-build-manifest.json", EXAMPLES),
@@ -79,7 +86,8 @@ def build_examples(root: Path, names: tuple[str, ...], require_clean: bool, dire
         build = root / "build" / name
         build.mkdir(parents=True, exist_ok=True)
         command = compile_command(cli, config, build, sketch)
-        command[-1:-1] = ("--verbose", "--board-options", "feature_set=ble")
+        profile = AUDIO_PROFILES.get(name, "ble") if suite == "audio" else "ble"
+        command[-1:-1] = ("--verbose", "--board-options", f"feature_set={profile}")
         log = root / f"{name}.build.log"
         with log.open("w", encoding="utf-8", errors="replace") as output:
             result = subprocess.run(command, stdout=output, stderr=subprocess.STDOUT, text=True, check=False)
