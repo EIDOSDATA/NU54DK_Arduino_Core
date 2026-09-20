@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HEADER = ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.h"
 BACKEND = ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_HearingAccess.cpp"
 EXAMPLES = ROOT / "libraries/NUCODE_BLE_Audio/examples"
+BUILD_RUNNER = ROOT / "tests/arduino-cli/run_m31_examples.py"
 READINESS = ROOT / "variants/nu54dk/m31-ble-readiness.json"
 
 
@@ -97,6 +98,12 @@ class HearingAccessContractTests(unittest.TestCase):
             "Hearing Access operation rejected",
         ):
             self.assertIn(token, sketch)
+
+    def test_exact_build_runner_includes_both_examples(self) -> None:
+        """! @brief 공개 Hearing Access 두 역할을 exact build 목록에 고정합니다. """
+        runner = BUILD_RUNNER.read_text(encoding="utf-8")
+        self.assertIn('"HearingAccessServer"', runner)
+        self.assertIn('"HearingAccessClient"', runner)
 
     def test_readiness_keeps_runtime_not_run_until_hil_evidence_exists(self) -> None:
         """! @brief 구현만으로 W03-11 실기 상태를 PASS로 올리지 않습니다. """
