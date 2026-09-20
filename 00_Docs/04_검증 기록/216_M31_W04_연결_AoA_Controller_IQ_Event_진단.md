@@ -50,3 +50,25 @@ revision의 source manifest로 다시 빌드한 뒤 같은 현재 mapping에서 
 따라서 W04 연결 기반 기본 안테나 경로는 `CONTROLLER_IQ_EVENT_HOST_DROPPED`로
 재현 가능하게 좁혀졌지만, W04 전체와 `raw_iq_rx`는 여전히 **HOLD**다. controller
 event 존재를 IQ payload 수신 또는 각도 측정 PASS로 확대하지 않는다.
+
+## 고정 Zephyr source의 상태 경계
+
+고정 Zephyr revision의 `subsys/bluetooth/host/direction.c`를 controller event와 다시
+대조했다. `valid_cte_rx_common_params()`는 AoA 요청에서 controller antenna 수가 2보다
+작으면 false를 반환하므로, 기본 안테나 1개의 공개 Host API는 HCI 전송 전에
+`-EINVAL`로 종료된다. 반면 이번 진단의 raw HCI 우회는 controller 명령만 전송하므로,
+공개 API의 성공 경로가 수행하는 아래 Host 상태 변경을 건너뛴다.
+
+- `BT_CONN_CTE_RX_ENABLED` flag를 command state와 결합
+- 수락된 CTE type을 `conn->cte_types`에 저장
+- `BT_CONN_CTE_RX_PARAMS_SET` flag를 설정
+
+연결 IQ event handler는 sample을 채우기 전에 먼저 `BT_CONN_CTE_RX_ENABLED`를 검사하고,
+다음으로 event CTE type과 `conn->cte_types`를 대조한다. 따라서 102회의 동일 오류는
+controller가 IQ event를 생성하지 못한 결과가 아니라 raw HCI와 Host connection state가
+분리된 결과다. connectionless periodic sync 경로와 connected ACL 경로는 서로 다른 HCI
+command·state 객체를 사용하므로 이 결과를 connectionless AoA RX 판정으로 재사용하지 않는다.
+
+후속 시험은 공개 Arduino API가 아니라 전용 내부 HIL 진단에서만 Host 상태와 controller
+명령을 같은 수명으로 결합해야 한다. 그 진단으로 sample을 받아도 기본 안테나 RSSI/IQ
+원본 수신 범위일 뿐이며, 안테나 전환·각도 계산·외장 RF PASS가 되지는 않는다.
