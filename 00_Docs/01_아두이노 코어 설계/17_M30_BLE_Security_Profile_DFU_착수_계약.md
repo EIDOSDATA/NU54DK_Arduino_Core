@@ -107,12 +107,13 @@ Windows 전용 가정 inventory, W02는 OS/architecture·executable/path resolve
 backend를 호출하는 얇은 `.cmd`/`.sh` 진입점이다. Linux/macOS prerequisite asset과 실제 Host
 build/upload는 후속 HOST-W04~HOST-W07의 필수 `NOT RUN` 상태를 유지한다.
 
-위 문장은 M30 종료 시점의 미실행 상태다. 2026-09-16 사용자 결정에 따른 현재 후속 순서는
+위 문장은 M30 종료 시점의 미실행 상태다. 현재 후속 순서는
 [다중 Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과
 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)을 따른다.
-Ubuntu/macOS 구현·자동 검사·검증 절차는 개발 중 완성하고, 실제 설치·USB upload·serial·debug·
-수명주기는 사용자가 최종 릴리스 단계에서 검증한다. 중간 M31/M32 진행을 Host 장비 대기로
-멈추지 않으며, M30의 완료 수치·시험 정책은 변경하지 않는다.
+2026-09-21 결정으로 v0.5.0은 M31 완료 후 Windows 우선으로 릴리스한다. Ubuntu/macOS 구현·
+자동 검사·검증 절차는 후속 Host 확대 범위이며 실제 설치·USB upload·serial·debug·수명주기는
+해당 OS를 지원할 후속 릴리스 때 사용자가 검증한다. M31 Windows 공개는 이 장비를 기다리지
+않으며 M30의 완료 수치·시험 정책은 변경하지 않는다.
 
 이후 사용자 지시로 **Host 작업은 W01~W03 완료(3/8)에서 보류**했다. 위 구현 순서는 재개 시의
 계약이며 HOST-W04~W08 착수 허가가 아니다. 최신 작업 범위는 [HANDOFF](../HANDOFF.md)를 따른다.

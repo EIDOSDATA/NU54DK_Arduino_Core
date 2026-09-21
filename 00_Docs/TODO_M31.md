@@ -10,8 +10,10 @@
 | 기능 검증 장비 | 사용자 확인 NU54DK 3개; 실제 시험 직전 SHA-256 probe identity·serial·role·firmware 재대조 |
 | 최종 갱신일 | 2026-09-21 |
 
-W03 완료 후 기능 개발은 멈춘 상태다. 아래 W04/W05의 **진행 중**은 구현이 일부 남았다는
-원장 상태이며 현재 실행 중이라는 뜻이 아니다. 새 기능 작업과 Host 작업은 재개 지시를 따른다.
+2026-09-21 결정으로 **M31 완료 후 v0.5.0 Windows 릴리스**를 준비한다. 현재 요청은 문서 정비를
+`main`에 반영하고 **`M31-MEM-OPT`를 생성하는 데서 종료**한다. 다음 구현은 메모리 최적화부터
+진행하고 W04·W05 → W06 → W07 → W08로 이어간다. **진행 중**은 잔여가 있다는 원장 상태이며
+현재 시험 실행 중이라는 뜻이 아니다. Host는 보류한다. M32/M33은 후속 버전(미정)이다.
 
 M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF·connected Channel Sounding
 기능과 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것**이다. 고수준 Arduino facade,
@@ -53,9 +55,9 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 7. 고정 stack에서 적용 가능하다고 판정한 필수 board-only 기능은 실제 HIL이 있어야 닫는다. 메모리
    부족·build 실패·SDK 제약은 원인과 해결 또는 profile 분리 TODO를 남긴다. 계획을 적었다는 이유로
    지원 판정이나 작업 묶음을 완료 처리하지 않는다.
-8. HOST-W04~HOST-W06은 재개 지시 후 독립적으로 구현·자동 검사를 진행한다. Ubuntu/macOS의 실제 설치·USB upload·
-   serial/debug·수명주기 검증은 **사용자가 최종 릴리스 단계에서 수행**하고 HOST 원장과 M33 release
-   gate에 결과를 인계한다. 이 사용자 최종 검증은 M31 firmware 개발의 선행 차단이 아니다.
+8. HOST-W04~HOST-W06은 별도 재개 지시 후 진행한다. Ubuntu/macOS의 실제 설치·USB upload·
+   serial/debug·수명주기는 **해당 OS를 지원하는 후속 릴리스에서 사용자 검증**을 수행하고 HOST
+   원장과 M33에 인계한다. v0.5.0은 Windows-only이며 이 후속 gate를 기다리지 않는다.
 9. **Apple/Google 기능과 mic/speaker/codec 등 외장 장치 경로는 담당 마일스톤에서 사용 가능한 구현·
    예제·설정/연결 안내와 가능한 자동 검사가 필수**다. Apple/Google은 M33-W03, Audio 외장 경로는
    M31-W03이 소유한다. 실제 제품 운용·상호운용·물리 입출력 검증은 사용자 후속 책임이며
@@ -69,11 +71,11 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
 | M31-W02 raw ISO 기반 | **완료** | 공개 `RawCis`/`RawBis` 기반 **11개 역할**의 사용자 payload와 정지·재시작을 각 20회 실기 PASS. 잘못된 Broadcast Code의 유효 SDU 유출 0, 같은 image의 정상 Code 복구 100/100, 강제 sync loss 후 새 session 100/100. 독립 Sketchbook 개발 package 485파일 무결성·고정 prerequisite·11/11 예제 발견·빌드와 같은 revision의 두/세 보드 11역할 실기 20회씩 PASS. 공개 예제 감사 82개 중 0건 | [W02 최종 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)·[완료 audit](<04_검증 기록/evidence/m31-w02-installed-examples-b47aaf40/closure-audit.json>)·[오류 후 복구](<04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)·[sync loss 재시작](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)·[이전 고정 시험 audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
 | M31-W03 전체 LE Audio profile | **완료** | W03-01~11의 공개 Arduino 역할과 적용 가능한 native 기반을 모두 닫았다. BAP unicast/broadcast·BASS·CAP·CSIP·PBP·VCP/VOCS/AICS/MICP, MCP/MCS·CCP/TBS, TMAP/GMAP, HAP/HAS의 build/runtime·negative·peer-loss 복구와 합성 PCM RF data path를 실제 2~3보드에서 확인했다. Media/Call은 각 100/100·negative 각 20/20·reconnect 20/20·180초 soak, TMAP/GMAP은 각 180초·stop/restart 20/20·drop 0, HAP/HAS는 preset 100/100·두 negative 각 20/20·복구 20/20이다. 외장 audio·상용 peer·qualification·의료/음향 성능은 사용자 후속 비차단 `NOT RUN`이며 M31 전체는 W04~W08 잔여로 `not_completed`다 | [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[BAP broadcast](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)·[BASS](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>)·[CAP](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)·[Audio Control](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>)·[CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)·[PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)·[Media/Call](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>)·[TMAP/GMAP](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>)·[HAP/HAS](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>)·[W03 완료 감사](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)·[exact closure](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| M31-W04 Direction Finding | **진행 중** | connectionless AoA CTE TX 20회, Zephyr LL connected AoA CTE 응답 stop/restart 20회 확인. 기본 안테나 연결 RX에서 Host 공개 API는 1안테나 `-EINVAL`; 직접 HCI 두 명령은 수락되고 controller IQ event가 Host까지 102회 도달했지만 Host 상태 gate에서 폐기돼 sample 0건이다. SDC AoD 미지원; 안테나 전환·각도 계산·외장 RF는 별도 경계 | TX·raw IQ 예제·target/HCI/수신 evidence, controller별 build/runtime 판정, 외장 확장 구현·설정/연결 안내와 사용자 후속 실기 구분; [CTE 송신](<04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md>), [연결 응답](<04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md>), [IQ 수신 진단](<04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md>), [Host/controller 경계](<04_검증 기록/178_M31_W04_연결_AoA_수신_Host_Controller_경계.md>), [controller IQ event](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) |
+| M31-W04 Direction Finding | **진행 중** | connectionless AoA CTE TX 20회와 connected AoA CTE 응답 stop/restart 20회 확인. 최신 connected RX 내부 진단은 HCI 수락·Host 상태 동기화 뒤 valid IQ 4 report·328 sample이지만 최소 20 report·cleanup 미달로 전체 FAIL이다. 공개 Host API는 1안테나 `-EINVAL`; connectionless RX·공개 API 완료가 아니다. SDC AoD 미지원, 안테나 전환·각도·외장 RF는 별도 | [CTE 송신](<04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md>) · [연결 응답](<04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md>) · [초기 IQ 진단](<04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md>) · [Host/controller 경계](<04_검증 기록/178_M31_W04_연결_AoA_수신_Host_Controller_경계.md>) · [102 event·sample 0 원본](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [최신 실패 보존·STOP 인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) |
 | M31-W05 connected Channel Sounding | **진행 중** | Arduino initiator·reflector의 secure ACL·raw RAS 100개, stop/restart 20/20, disconnect/reconnect 20/20을 exact flash 직후 두 번 재확인했다. 같은 ACL 비암호화 Ranging Features read는 ATT 5로 20/20 거부됐고 중간 disconnect·재탐색은 0회다. 기존 3보드 peer 분리와 위장 UUID/GATT 부재 거부도 유지한다. flash 간헐 중단의 단일 원인과 wrong-key negative는 잔여 | 비보정 RTT 거리 출력의 수치 정확도를 보증하지 않으며 전체 W05 완료로 승격하지 않음; [착수 기록](<04_검증 기록/171_M31_W05_CS_native_2보드_착수.md>)·[RAS native](<04_검증 기록/173_M31_W05_RAS_native_100회_진단.md>)·[Arduino reflector](<04_검증 기록/175_M31_W05_Arduino_RAS_reflector_100회_진단.md>)·[Arduino initiator](<04_검증 기록/176_M31_W05_Arduino_RAS_initiator_100회와_재시작_진단.md>)·[복구/3보드](<04_검증 기록/177_M31_W05_RAS_재연결과_3보드_peer_분리_진단.md>)·[위장 GATT 거부](<04_검증 기록/179_M31_W05_RAS_UUID_위장_peer_거부_20회.md>)·[비암호화 동일 ACL](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>)·[flash 직후 복구](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
-| M31-W06 자원·수명주기·회귀 | **감사 완료·구현 미착수** | M31-A/B/C의 독립 role image별 RAM/RRAM·stack·buffer·stream/connection 예산, stop/disconnect 뒤 callback·link·radio 자원 회수, M19~M30 영향 회귀. Audio·CS·DF의 84~97% image에서 범용 GATT·pin state·미사용 route·advanced GAP/CoC 정적 예약을 확인 | [219번 메모리 감사·최적화 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)에 따라 W04·W05 exact 결과 보존 → 별도 최적화 branch → 핵심 HIL 재검증 → W06 manifest·회귀 순서. 네 기능 전체 동시 실행은 완료 조건이 아님 |
+| M31-W06 자원·수명주기·회귀 | **미착수(사전 메모리 감사만 완료)** | 독립 role image별 RAM/RRAM·stack·buffer·stream/connection 예산, stop/disconnect 뒤 callback·link·radio 자원 회수, M19~M30 영향 회귀. 고점유 image의 공통 정적 예약은 W04·W05 마감 전에 최적화 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>): main 문서 반영 → `M31-MEM-OPT` 최적화 → W04·W05 잔여·영향 재검증 → W06 manifest·회귀. 네 기능 전체 동시 실행은 완료 조건이 아님 |
 | M31-W07 기능 HIL·예제 실행 | **미착수** | 3보드 역할 재배치로 적용 가능한 모든 board-only subcase 유한 실행, Arduino 설치 예제의 실제 실행; 외부 peer 행 별도 관리 | exact image·익명 mapping·transcript·원본 hash, 기능/role별 PASS·FAIL·NOT RUN·UNSUPPORTED 근거 |
-| M31-W08 마감·M32/M33 인계 | **미착수** | API·예제·지원표·문서·원장 일치, Host/target 회귀, M32 modern controller·Mesh·공존과 M33 예제 catalog에 인계 | 완료 또는 정확한 잔여 목록, 판정별 분모, known limits·회귀 목록·M32/M33 dependency |
+| M31-W08 마감·Windows 릴리스 준비 | **미착수** | API·예제·지원표·문서·원장 일치, Host/target 회귀, M31 8/8 판정과 v0.5.0 Windows 패키지·설치·RC 준비. M32/M33은 후속 버전으로 인계 | 기능 완료와 공개 판정 별도. [v0.5.0 공개 gate](TODO_v0.5.0.md#6-결과공개-규칙), known limits·후속 dependency; 실제 공개는 별도 승인 |
 
 M32-A는 modern LE controller/Host·Nordic 확장, M32-B는 Mesh와 Mesh 1.1, M32-C는 최소 radio와
 공존을 맡는다. M31-W01에서 발견하는 Power Control/Path Loss, subrating, SCA/frame-space/shorter
@@ -140,7 +142,8 @@ W03-10 TMAP/GMAP, W03-11 HAP/HAS까지 모두 완료했다.
 ## 4. 기존 착수 순서와 재개 기준
 
 W01~W03은 이 순서로 완료했다. 1~7번의 원장·기준선은 보존하며 재구현하지 않는다.
-후속 기능 개발 재개 시 8번과 §2의 W04/W05 잔여를 대조한다.
+후속 기능 개발 재개 시 먼저 219번 메모리 최적화를 수행하고, 최적화 image로 8번과 §2의
+W04/W05 잔여를 대조한다. 과거 착수 절차를 현재 미완료 TODO로 다시 집계하지 않는다.
 
 1. 저장소·branch·HEAD·미커밋 변경·board submodule·SDK/toolchain lock과 변경 전 전체 Host 기준선을
    기록한다. 다른 작업의 변경 소유권과 실행 중 검사를 보존한다. CI/CD 조회·대기는 최신 사용자
@@ -155,7 +158,8 @@ W01~W03은 이 순서로 완료했다. 1~7번의 원장·기준선은 보존하�
    §3의 모든 Audio 행을 담는다. 현행 두 JSON의 구현 단계와 개별 미실행 상태는 원장에 기록한다.
    두 원장에 master 계약의 case별 `verification_owner`·`verification_stage`·`development_blocker`·
    `release_blocker`를 적용한다. Apple/Google·외장 실물은 `user`/`user_follow_up`/`false`/`false`,
-   Ubuntu/macOS 실물은 `user`/`final_release`/`false`/`true`로 구분한다. 구현·예제·자동 검사 case는
+   Ubuntu/macOS 실물은 `user`/`final_release`/`false`/`true`로 구분한다. 이 gate의 적용 범위는
+   해당 OS를 포함하는 후속 릴리스이며 Windows-only v0.5.0이 아니다. 구현·예제·자동 검사 case는
    필수이며 사용자 후속 실물 case와 합치지 않는다.
 4. Schema·capability protocol/parser와 Host unit/negative test를 구현한다. 누락·중복·미지 feature,
    malformed/truncated/noisy output, unknown role·invalid status, revision/image/nonce mismatch,
@@ -188,9 +192,9 @@ W01~W03은 이 순서로 완료했다. 1~7번의 원장·기준선은 보존하�
 - [ ] Kconfig profile과 build options를 코드 밖의 검증된 설정으로 제공하고 임의 SDK patch 요구 금지
 - [ ] 실험적·미지원·사용자 후속 실물 검증의 책임·비차단 범위를 example README와 parity 원장에 일치시킴
 
-M33은 M31/M32가 전달한 예제와 추가 GATT/profile·특수 template의 전체 catalog, package discovery,
-세 Host 설치 후 전체 예제 compile·대표 runtime를 마감한다. M31에서는 해당 기능의 Arduino
-사용 가능성과 역할별 예제 검증까지 완료해야 한다.
+M31-W07/W08은 v0.5.0에 채택한 M28~M31 예제의 Windows 설치·발견·compile·실행과 배포 준비를
+닫는다. M33은 후속 버전의 추가 GATT/profile·template와 전체 NCS catalog, 세 Host 확장 검증을
+맡는다. M31 예제 패키징을 M33으로 미뤄 v0.5.0 배포 gate를 생략하지 않는다.
 
 ## 6. HOST-W04~HOST-W06 TODO — 사용자 지시로 보류
 
@@ -204,9 +208,10 @@ M33은 M31/M32가 전달한 예제와 추가 GATT/profile·특수 template의 �
 
 HOST 전체는 **W01~W08의 독립 분모**를 유지한다. 현재 3/8 완료이며 “W04~W08 잔여”는
 HOST-W04~HOST-W08을 뜻한다. 실제 Ubuntu/macOS 설치·USB upload·serial/debug·lifecycle는
-사용자가 최종 릴리스 단계에서 수행한다. 그 전에는 해당 실물 행을 `NOT RUN`으로 남기며 M31의
+사용자가 해당 OS를 포함하는 후속 릴리스 단계에서 수행한다. 그 전에는 해당 실물 행을 `NOT RUN`으로 남기며 M31의
 필수 firmware gate에 합산하지 않는다. HOST-W07의 사용자 결과와 HOST-W08의 전체 Host 마감은
-M33 공개 조건으로 이어진다. Apple/Google 및 외장 I/O의 사용자 후속 검증은 이 최종 Host gate와 달리
+후속 M33 공개 조건으로 이어진다. Windows-only v0.5.0 공개에는 적용하지 않는다.
+Apple/Google 및 외장 I/O의 사용자 후속 검증은 이 최종 Host gate와 달리
 개발·릴리스 차단 조건이 아니다.
 
 ## 7. 보드 3개 자동화 범위와 다음 개입 지점
@@ -219,12 +224,13 @@ M33 공개 조건으로 이어진다. Apple/Google 및 외장 I/O의 사용자 �
 | W04 | 1개 CTE TX 설정·시작/중지·controller event; 기본 안테나 RX 조사·build 뒤 적용 가능하면 2개 raw IQ 수신 HIL | RX 미확인은 실제 software/controller 제약을 조사할 개발 항목; 배열 확보를 선행 요구하지 않음. 안테나 전환·실제 각도 계산의 외장 경로는 구현/안내 후 사용자 실기 |
 | W05 | 2개 CS initiator/reflector·RAS·raw 결과·거리 추정 출력·보안/복구, 3개 peer 분리 | cross-vendor CS peer 또는 별도로 요청한 정밀 거리/각도 시험 |
 | W06~W08 | 3개 역할을 순차 재배치한 기능 HIL, 독립 image별 자원·수명주기, 예제·회귀·원장·문서 인계 | 네 기능 전체 동시 실행은 요구하지 않음. 해결되지 않은 필수 board-only 결함·mapping/접근 문제는 미완료; 사용자 후속 외부 실물 검증은 비차단 |
-| HOST | 장비 독립 manifest·resolver·launcher·negative와 가능한 자동 검사 | Ubuntu/macOS 실제 설치·USB upload·serial/debug는 사용자 최종 릴리스 검증; 중간 개발 선행조건 아님 |
+| HOST | 별도 재개 지시 후 manifest·resolver·launcher·negative와 가능한 자동 검사 | Ubuntu/macOS 실제 설치·USB upload·serial/debug는 해당 OS 후속 릴리스의 사용자 gate; v0.5.0 범위 밖 |
 
 CTE TX 명령 수용·연결 peer 동작만 관찰했다면 그 범위만 기록한다. 수신 IQ 증거가 없는데 CTE
 수신이나 각도 측정 PASS로 기록하지 않는다. **IQ report 수신 PASS 역시 실제 AoA 각도 계산 PASS가
 아니다.** AoD는 고정 SDC `UNSUPPORTED`, 대체 controller의 raw IQ RX는 적용성 판정 전
-`source_candidate`다. 수신 구성의 실제 build/runtime 실패는 그 controller·profile에 한정해 기록하고
+`source_candidate`부터 검증 깊이를 기록한다. connected 내부 진단의 일부 수신과 connectionless RX를
+분리하며 최신 실패와 cleanup 잔여는 §2를 따른다. 수신 구성의 실제 build/runtime 실패는 그 controller·profile에 한정해 기록하고
 칩 전체 불가로 확대하지 않는다. nRF54L15 대상이 아닌 `nrf_dm`을 CS 대체 예제로 등록하지 않는다.
 
 실물 시험 전 SHA-256 probe identity·serial path·role·firmware revision을 다시 결합한다. 여러 probe
@@ -277,13 +283,16 @@ M31은 다음을 모두 만족해야 완료다.
 - [ ] M19~M30 영향 회귀와 자원·보안·disconnect recovery 오류 0; 과거 실패·HOLD·NOT RUN 원본 보존
 - [ ] 예제·지원 matrix·readiness·sample parity·검증 기록·HANDOFF의 상태/수치/링크 정합
 - [ ] M32-A modern controller·Nordic, M32-B Mesh, M32-C 공존에 필요한 자원/profile/예제 dependency 인계
-- [ ] M33 전체 sample catalog·추가 GATT/profile/template·Apple/Google 구현·사용자 후속 상호운용·
-  세 Host·release gate에 정확한 잔여 인계
+- [ ] M33 후속 버전의 전체 sample catalog·추가 GATT/profile/template·Apple/Google 구현·
+  사용자 후속 상호운용·세 Host·공개 gate에 정확한 잔여 인계
+- [ ] M31-W08 소유 v0.5.0 Windows 패키지·설치·RC 준비와 별도 공개 승인 조건을 정리
 
 근거 있는 `UNSUPPORTED`와 사용자 확정 범위 밖 행은 기능 PASS 수에 넣지 않고 판정 완료 수로
 별도 보고한다. 필수 board-only 기능의 `FAIL`/`HOLD`/`NOT RUN`이 남으면 해당 W는 미완료다.
 사용자에게 인계한 외부 실물 검증의 `NOT RUN`은 이유·사용자 책임·개발/릴리스 비차단을 명시하며
 필수 구현·예제·자동 검사의 완료와 구별한다. 범위 결정을 미완성 구현 또는 확정 결함의 면제로 쓰지 않는다.
 
-M31 완료는 v0.5.0 공개·Bluetooth qualification·실제 세 Host 완료가 아니다. 현재 공개·설치 지원은
-`v0.4.1`, 개발 소스는 `0.4.1-dev`이며, HOST의 실제 장비 증거와 공개 판정은 M33이 소유한다.
+M31 기능 8/8 완료와 v0.5.0 Windows 공개는 별도 판정이다. M31-W08이 준비하고
+[v0.5.0 TODO §6](TODO_v0.5.0.md#6-결과공개-규칙)의 배포 gate·별도 승인을 충족한 뒤 공개한다.
+현재 공개·설치 지원은 `v0.4.1`, 개발 소스는 `0.4.1-dev`다. 세 Host 확대·전체 NCS 예제·
+M32/M33은 후속 버전이며 Bluetooth qualification이나 실물 상호운용을 자동 완료하지 않는다.

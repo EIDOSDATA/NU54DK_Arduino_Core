@@ -7,7 +7,8 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
-진행률·미실행·다음 작업은 각 기록 작성 시점의 상태입니다.
+진행률·미실행·다음 작업·릴리스 시점은 각 기록 작성 시점의 상태입니다. 과거의 M33 v0.5.0·
+세 Host 계획을 현재 gate로 다시 적용하지 않습니다. 현행은 M31 완료 후 Windows v0.5.0입니다.
 
 ## 현재 상태
 
@@ -17,7 +18,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 개발 소스 | M28·M29·M30 완료, M31 3/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
-| M31-W04·W05 | 부분 실기와 실패 진단 보존·완료 아님 | [W04 IQ 경계](178_M31_W04_연결_AoA_수신_Host_Controller_경계.md) · [W05 미암호화 거부](180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md) |
+| M31-W04·W05 | 부분 실기와 실패 진단 보존·완료 아님 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 최신 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 
@@ -28,7 +29,11 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
-| [219 — M31-W06 메모리 감사·최적화 계약](219_M31_W06_메모리_점유_감사와_최적화_계약.md) | Audio·CS·DF 고점유 image의 공통 정적 RAM 원인, 역할별 lean fragment·pool·회귀 gate와 W04/W05→최적화→W06 순서 |
+| [220 — M31 릴리스 전환·문서 정비](220_M31_릴리스_전환과_문서_전수_정비.md) | v0.5.0 Windows·M31 공개 준비, 최적화 우선·main/M31-MEM-OPT 인계, 기존 W04 raw IQ 실패 원본 보존 |
+| [219 — M31-W06 메모리 감사·최적화 계약](219_M31_W06_메모리_점유_감사와_최적화_계약.md) | Audio·CS·DF 정적 RAM 원인, lean fragment·pool·회귀 gate. 최신 순서는 메모리 최적화→W04/W05→W06 |
+| [218 — W05 flash 직후 복구 재검증](218_M31_W05_flash_직후_RAS_복구_재검증.md) | 두 exact attempt의 raw RAS·stop/restart·disconnect/reconnect PASS, 과거 간헐 중단 원인 확정 아님 |
+| [217 — W05 동일 ACL ATT 오류 진단](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) | 비암호화 RAS read 20/20 거부, request 재사용 경계·회귀 |
+| [216 — W04 controller IQ event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) | 당시 controller event 102건·Host gate 폐기·sample 0. 최신 내부 callback 시도는 220에 별도 보존 |
 | [215 — W03 이력·문서 정비](215_M31_W03_이력과_문서_정비.md) | 개발 이력 squash, 문서 전수 검토, main 반영과 원본 이력 보존 |
 | [214 — M31-W03 LE Audio profile 종료](214_M31_W03_LE_Audio_Profile_완료.md) | W03-01~W03-11 11/11 PASS, 고정 source·SDK와 비차단 후속 범위 |
 | [211 — Media·Call control](211_M31_W03_Arduino_Media_Call_Control_완료.md) | MCP/MCS·CCP/TBS 정상·negative·복구·reconnect·soak 최종 PASS |
@@ -78,7 +83,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | [153 — M30-W02 link별 security와 IO 5종 완료](153_M30_W02_link별_security와_IO_5종_완료.md) | generation별 보안 상태·IO 5종 target 10/10·실제 pairing 50/50 PASS |
 | [154 — M30-W03 유선 OOB·bond/privacy·NFC adapter 완료](154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md) | 유선 OOB 20/20·bond reconnect 20/20·RPA 3·migration 1, NFC RF NOT RUN |
 | [151 — M30-W01 계약과 HOST-W01~W03 기반](151_M30_W01_계약과_HOST_W01_W03_기반.md) | 유선 OOB/NFC 비검증·secure DFU 계약, Host inventory·resolver·launcher와 Windows 회귀 |
-| [150 — v0.5.0 다중 Host 지원 계획 정비](150_v0.5.0_다중_Host_지원_계획_정비.md) | Windows·Ubuntu·macOS 지원 범위, M30 시작·M33 완료 계약 |
+| [150 — v0.5.0 다중 Host 지원 계획 정비](150_v0.5.0_다중_Host_지원_계획_정비.md) | 당시 M30 시작·M33 완료의 세 Host 계획. 현행 릴리스 범위는 v0.5.0 TODO 참조 |
 | [149 — M29-W07 3보드·회귀·상호운용과 W08 완료](149_M29_W07_3보드_회귀_상호운용과_W08_완료.md) | MULTI/REG, Windows/Intel GATT, 예제·리팩터링·M30 인계 |
 | [148 — 개발문서 전수 검토와 README 개선](148_개발문서_전수검토와_README_개선.md) | 지원 범위·개발 현황 안내, 중복 설명 정리와 문서 검사 |
 | [147 — M29-W07 Signed Write·EATT 2보드 완료](147_M29_W07_Signed_Write_EATT_HIL_준비.md) | exact `c71ef4a2…` SIGN/EATT PASS, MULTI/REG NOT RUN, 실패 진단부터 최종 증거까지 |

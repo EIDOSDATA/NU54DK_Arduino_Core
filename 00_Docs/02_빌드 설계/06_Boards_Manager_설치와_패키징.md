@@ -8,12 +8,11 @@
 | 이전 버전 | `0.4.1` 미만 stable·RC·preview 모두 지원·catalog 공급 종료 |
 | 공식 사용자 OS | Windows 10/11 x64 |
 
-이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.4.1` 계약이다. `v0.5.0`부터 Windows와
-함께 Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon을 지원하는 것이 목표이며 구현·검증 순서는
-[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다. 검증 전 Linux/macOS
-명령을 현재 설치 절차로 추정하지 않는다.
-현재 Host는 W01~W03 3/8 완료 상태에서 사용자 지시로 보류했다. 아래 v0.5.0 prerequisite 설명은
-재개 후 달성할 계약이며, Linux/macOS 배포 자산 준비·실물 검증이 완료됐다는 뜻이 아니다.
+이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.4.1` 계약이다. `v0.5.0`은 M31 완료 뒤
+Windows 10/11 x64 우선 릴리스로 준비한다. Ubuntu/macOS 확장은 버전 미정인 후속 제품선이며
+[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다.
+HOST-W01~W03은 3/8 완료, HOST-W04~W08은 사용자 재개 지시까지 보류다. 후속 OS의
+prerequisite·설치·실물 검증 gate는 유지하지만 M31 Windows 릴리스의 선행조건으로 두지 않는다.
 
 ## Stable index와 설치
 
@@ -59,7 +58,7 @@ NCS/Toolchain은 Core ZIP에 넣지 않고 현재 v0.4.1의 `post_install.bat`�
 사용자 영역에 준비합니다. 같은 exact 설치는 Core version 간 공유하며 uninstall 때 자동
 삭제하지 않습니다.
 
-v0.5.0은 OS·architecture별 공식 nRF Util 자산의 URL·SHA-256을 manifest에 고정하고 같은
+후속 다중 Host 제품선은 OS·architecture별 공식 nRF Util 자산의 URL·SHA-256을 manifest에 고정하고 같은
 prerequisite 검증 backend를 `.cmd`와 `.sh`에서 호출한다. Linux/macOS에서 system Python·Git이
 우연히 존재하는 것을 설치 성공 조건으로 삼지 않는다.
 

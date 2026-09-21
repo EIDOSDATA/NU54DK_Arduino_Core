@@ -7,7 +7,7 @@
 | FQBN | `nucode:zephyr:nu54dk` |
 | Zephyr target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
-| v0.5.0 Host 목표 | Windows 10/11 x64, Ubuntu 24.04+ AMD64, macOS 26+ Apple Silicon |
+| v0.5.0 Host 목표 | M31 완료 뒤 Windows 10/11 x64 우선; Ubuntu/macOS는 후속 제품선 |
 
 이 문서는 Arduino platform lifecycle과 NU54DK Build Adapter의 현재 연결을 설명한다. recipe의
 단일 원본은 `boards.txt`와 `platform.txt`이며, 실행 구현은
@@ -268,9 +268,10 @@ Adapter는 넘겨받은 source/include record를 검증하고 package allowlist 
 - AVR register/libc와 architecture 전용 assembly 호환성 미보장
 - 임의 linker script 주입 미지원
 - sysbuild, MCUboot, DFU, OTA와 LLEXT 미지원
-- Linux/macOS Boards Manager production 지원은 `v0.4.1`에 미제공. `v0.5.0`은
+- Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에 미제공.
   [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 Ubuntu AMD64·Apple Silicon
-  macOS 구현·실증 중 남은 HOST-W04~HOST-W08을 완료한 뒤 제공할 계획이다. 현재는 사용자 지시로
+  macOS 구현·실증 중 남은 HOST-W04~HOST-W08을 완료한 뒤 후속 제품선에서 제공할 계획이다.
+  버전은 미정이며 현재는 사용자 지시로
   HOST-W01~W03 3/8 완료 상태에서 보류했으며, 이 계획만으로 후속 구현을 시작하지 않는다.
 
 ## 9. 오류와 검증 기록
