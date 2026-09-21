@@ -2,9 +2,9 @@
   "schema_version": 2,
   "id": "nucode.board",
   "requires": ["gpio", "serial", "wire", "adc", "pwm"],
-  "capabilities": [],
+  "capabilities": ["arduino.gpio", "arduino.time", "arduino.wire", "nucode.storage"],
   "conf": ["board-system.conf"],
   "overlays": ["board-system.overlay"],
   "conflicts": [],
-  "compatible_profiles": ["standard", "ble", "secure_ble_dfu"]
+  "compatible_profiles": ["standard", "adaptive", "ble", "secure_ble_dfu"]
 }

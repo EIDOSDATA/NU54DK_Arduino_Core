@@ -128,7 +128,7 @@ class M15BoardSystemContractTests(unittest.TestCase):
         self.assertEqual(document["overlays"], ["board-system.overlay"])
         self.assertEqual(
             document["compatible_profiles"],
-            ["standard", "ble", "secure_ble_dfu"],
+            ["standard", "adaptive", "ble", "secure_ble_dfu"],
         )
 
         configuration = (LIBRARY / "zephyr" / "board-system.conf").read_text(

@@ -77,7 +77,7 @@ class AC03StorageContractTests(unittest.TestCase):
             self.assertEqual(feature["requires"], ["storage"])
             self.assertEqual(
                 feature["compatible_profiles"],
-                ["standard", "ble", "secure_ble_dfu"],
+                ["standard", "adaptive", "ble", "secure_ble_dfu"],
             )
 
     def test_builder_validates_the_effective_linker_partition(self) -> None:

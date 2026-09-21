@@ -34,8 +34,8 @@
       "id": "arduino.gpio",
       "requires": ["arduino.api", "arduino.io-ownership"],
       "conflicts": ["nucode.peripheral-fabric"],
-      "conf": ["CONFIG_NUCODE_ARDUINO_GPIO=y"],
-      "overlays": [],
+      "conf": ["CONFIG_GPIO=y", "CONFIG_NUCODE_ARDUINO_GPIO=y"],
+      "overlays": ["dts/nucode/nu54dk-arduino-connectors.dtsi"],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_GPIO"]
     },
     {
@@ -43,7 +43,7 @@
       "requires": ["arduino.api"],
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP=y"],
-      "overlays": [],
+      "overlays": ["dts/nucode/nu54dk-arduino-pins.dtsi"],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP"]
     },
     {
@@ -58,23 +58,28 @@
       "id": "arduino.adc",
       "requires": ["arduino.gpio"],
       "conflicts": ["nucode.peripheral-fabric"],
-      "conf": ["CONFIG_NUCODE_ARDUINO_ADC=y"],
-      "overlays": [],
+      "conf": ["CONFIG_ADC=y", "CONFIG_NUCODE_ARDUINO_ADC=y"],
+      "overlays": ["dts/nucode/nu54dk-arduino-adc.dtsi"],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_ADC"]
     },
     {
       "id": "arduino.pwm",
       "requires": ["arduino.gpio"],
       "conflicts": ["nucode.peripheral-fabric"],
-      "conf": ["CONFIG_NUCODE_ARDUINO_PWM=y"],
-      "overlays": [],
+      "conf": ["CONFIG_PWM=y", "CONFIG_NUCODE_ARDUINO_PWM=y"],
+      "overlays": ["dts/nucode/nu54dk-arduino-pwm.dtsi"],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_PWM"]
     },
     {
       "id": "arduino.serial",
       "requires": ["arduino.api"],
       "conflicts": ["nucode.peripheral-fabric"],
-      "conf": ["CONFIG_NUCODE_ARDUINO_SERIAL=y"],
+      "conf": [
+        "CONFIG_SERIAL=y",
+        "CONFIG_CONSOLE=y",
+        "CONFIG_UART_CONSOLE=y",
+        "CONFIG_NUCODE_ARDUINO_SERIAL=y"
+      ],
       "overlays": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_SERIAL"]
     },
@@ -83,24 +88,32 @@
       "requires": ["arduino.serial", "arduino.gpio"],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_NUCODE_ARDUINO_SERIAL1=y"],
-      "overlays": [],
+      "overlays": ["dts/nucode/nu54dk-arduino-serial1.dtsi"],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_SERIAL1"]
     },
     {
       "id": "arduino.wire",
       "requires": ["arduino.gpio"],
       "conflicts": ["nucode.peripheral-fabric"],
-      "conf": ["CONFIG_NUCODE_ARDUINO_WIRE=y"],
-      "overlays": [],
+      "conf": ["CONFIG_I2C=y", "CONFIG_NUCODE_ARDUINO_WIRE=y"],
+      "overlays": ["dts/nucode/nu54dk-arduino-wire.dtsi"],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_WIRE"]
     },
     {
       "id": "arduino.spi",
       "requires": ["arduino.gpio"],
       "conflicts": ["nucode.peripheral-fabric"],
-      "conf": ["CONFIG_NUCODE_ARDUINO_SPI=y"],
-      "overlays": [],
+      "conf": ["CONFIG_SPI=y", "CONFIG_NUCODE_ARDUINO_SPI=y"],
+      "overlays": ["dts/nucode/nu54dk-arduino-spi.dtsi"],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_SPI"]
+    },
+    {
+      "id": "nucode.storage",
+      "requires": ["arduino.api"],
+      "conflicts": [],
+      "conf": [],
+      "overlays": ["dts/nucode/nu54dk-arduino-storage.dtsi"],
+      "source_gates": []
     },
     {
       "id": "nucode.peripheral-fabric",

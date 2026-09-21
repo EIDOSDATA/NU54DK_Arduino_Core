@@ -1,5 +1,6 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
+  "capability_mode": "compatibility",
   "id": "ble_audio_io",
   "display_name": "BLE Audio external I/O (DAP UART disconnected)",
   "board": "nucode:zephyr:nu54dk",

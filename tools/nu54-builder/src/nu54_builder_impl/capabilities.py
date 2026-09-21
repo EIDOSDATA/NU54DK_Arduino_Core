@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from pathlib import PureWindowsPath
 from typing import Any
 from typing import Iterable
 from typing import Sequence
@@ -17,6 +18,7 @@ from .common import (
     DuplicateJsonKeyError,
     atomic_write_json,
     canonical_path,
+    is_within,
     strict_json_object,
 )
 
@@ -133,6 +135,18 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
                 pattern=SOURCE_GATE_PATTERN,
             ),
         }
+        for value in normalized["overlays"]:
+            overlay = canonical_path(platform_root / value)
+            if (
+                Path(value).is_absolute()
+                or PureWindowsPath(value).is_absolute()
+                or value.startswith(("\\\\", "//"))
+                or not is_within(overlay, platform_root)
+                or not overlay.is_file()
+            ):
+                raise AdapterError(
+                    f"[NU54:E_CAPABILITY_PATH] capability overlay가 없거나 root를 벗어납니다: {value}"
+                )
         capabilities[identifier] = normalized
 
     capacity_items = document.get("capacities")
@@ -472,6 +486,17 @@ def resolve_capabilities(
         overlays.extend(item["overlays"])
         source_gates.extend(item["source_gates"])
 
+    selected_conf_names = {line.split("=", 1)[0] for line in conf}
+    owned_boolean_conf = {
+        line.split("=", 1)[0]
+        for item in capabilities.values()
+        for line in item["conf"]
+        if line.endswith("=y")
+    }
+    disabled_conf = [
+        f"{name}=n" for name in sorted(owned_boolean_conf - selected_conf_names)
+    ]
+
     return {
         "schema_version": CAPABILITY_RESOLUTION_SCHEMA_VERSION,
         "registry": {
@@ -487,6 +512,7 @@ def resolve_capabilities(
         "capacities": _resolve_capacities(registry, selected_roles, declaration),
         "capabilities": resolved_capabilities,
         "generated": {
+            "disabled_conf": disabled_conf,
             "conf": list(dict.fromkeys(conf)),
             "overlays": list(dict.fromkeys(overlays)),
             "source_gates": list(dict.fromkeys(source_gates)),

@@ -2,9 +2,9 @@
   "schema_version": 2,
   "id": "nucode.eeprom",
   "requires": ["storage"],
-  "capabilities": [],
+  "capabilities": ["nucode.storage"],
   "conf": ["eeprom.conf"],
   "overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["standard", "ble", "secure_ble_dfu"]
+  "compatible_profiles": ["standard", "adaptive", "ble", "secure_ble_dfu"]
 }

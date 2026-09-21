@@ -29,6 +29,7 @@
     "tools/nu54-builder/src/nu54_builder.py",
     "tools/nu54-builder/src/nu54_builder_impl/__init__.py",
     "tools/nu54-builder/src/nu54_builder_impl/cache.py",
+    "tools/nu54-builder/src/nu54_builder_impl/capabilities.py",
     "tools/nu54-builder/src/nu54_builder_impl/common.py",
     "tools/nu54-builder/src/nu54_builder_impl/configuration.py",
     "tools/nu54-builder/src/nu54_builder_impl/environment.py",
@@ -81,7 +82,7 @@
     {
       "id": "HOST-INV-006",
       "category": "path_validation",
-      "sources": ["tools/nu54-builder/src/nu54_builder_impl/configuration.py"],
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/configuration.py", "tools/nu54-builder/src/nu54_builder_impl/capabilities.py"],
       "assumption": "Windows 절대 경로를 POSIX에서도 선언형 상대 경로로 오인할 수 있음",
       "disposition": "portable_security_check",
       "status": "retained"

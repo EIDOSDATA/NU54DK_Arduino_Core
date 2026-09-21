@@ -171,7 +171,7 @@ class M16BleNusContractTests(unittest.TestCase):
         profile = json.loads(
             (PROFILE_ROOT / "profile.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(profile["schema_version"], 2)
+        self.assertEqual(profile["schema_version"], 3)
         self.assertEqual(profile["id"], "ble")
         self.assertEqual(profile["board"], "nucode:zephyr:nu54dk")
         self.assertEqual(

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
@@ -43,8 +44,11 @@ ARDUINO_TESTS = (
     "ac02b",
     "ac03",
     "examples",
+    "adaptive",
 )
-DEFAULT_TESTS = tuple(test for test in ARDUINO_TESTS if test != "incremental")
+DEFAULT_TESTS = tuple(
+    test for test in ARDUINO_TESTS if test not in {"incremental", "adaptive"}
+)
 ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
     "v0.2.0": ("m15", "m16"),
@@ -1986,11 +1990,102 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
             raise SmokeFailure(f"M8 board upload property is missing: {expected}")
 
 
+## @brief P0 adaptive profile의 direct·include-only source/config 경계를 clean build로 검증합니다.
+def test_adaptive_capabilities(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    observations: dict[str, tuple[dict[str, object], bytes]] = {}
+    cases = (
+        (
+            "p0_serial_only",
+            {"arduino.api", "arduino.runtime", "arduino.serial"},
+            False,
+        ),
+        (
+            "p0_spi_include_only",
+            {"arduino.api", "arduino.runtime", "arduino.serial"},
+            False,
+        ),
+        (
+            "p0_serial_spi",
+            {
+                "arduino.api",
+                "arduino.gpio",
+                "arduino.io-ownership",
+                "arduino.runtime",
+                "arduino.serial",
+                "arduino.spi",
+            },
+            True,
+        ),
+    )
+    for name, expected, has_spi in cases:
+        sketch = repository / "tests" / "arduino-cli" / name
+        build = root / f"build-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        if context.get("profile") != "adaptive":
+            raise SmokeFailure(f"adaptive profile was not selected: {name}")
+        resolution_path = Path(context["app_dir"]) / "resolved-capabilities.json"
+        resolution_bytes = resolution_path.read_bytes()
+        resolution = json.loads(resolution_bytes.decode("utf-8"))
+        actual = {item["id"] for item in resolution.get("capabilities", [])}
+        if actual != expected:
+            raise SmokeFailure(
+                f"adaptive capability mismatch for {name}: "
+                f"expected={sorted(expected)}, actual={sorted(actual)}"
+            )
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(encoding="utf-8")
+        final_devicetree = (zephyr_build / "zephyr" / "zephyr.dts").read_text(
+            encoding="utf-8"
+        )
+        source_graph = (zephyr_build / "build.ninja").read_text(encoding="utf-8")
+        expected_config = "CONFIG_NUCODE_ARDUINO_SPI=y"
+        if (expected_config in final_config) != has_spi:
+            raise SmokeFailure(f"adaptive SPI Kconfig mismatch: {name}")
+        expected_chosen = "nucode,arduino-spi = &spi00;"
+        if (expected_chosen in final_devicetree) != has_spi:
+            raise SmokeFailure(f"adaptive SPI Devicetree mismatch: {name}")
+        normalized_graph = source_graph.replace("\\", "/")
+        if ("/cores/arduino/SPI.cpp" in normalized_graph) != has_spi:
+            raise SmokeFailure(f"adaptive SPI source gate mismatch: {name}")
+        observations[name] = (context, resolution_bytes)
+
+    repeat_build = root / "build-p0_serial_only-repeat"
+    repeat_command = compile_command(
+        cli,
+        config,
+        repeat_build,
+        repository / "tests" / "arduino-cli" / "p0_serial_only",
+    )
+    repeat_command[-1:-1] = ("--board-options", "feature_set=adaptive")
+    run(repeat_command)
+    repeat_context = assert_build(repeat_build, "p0_serial_only.ino")
+    original_context, original_resolution = observations["p0_serial_only"]
+    if repeat_context.get("cache_key") != original_context.get("cache_key"):
+        raise SmokeFailure("adaptive capability cache key is not reproducible")
+    if repeat_context.get("cache_reused") is not True:
+        raise SmokeFailure("adaptive repeated build did not reuse the capability cache")
+    repeat_resolution = (
+        Path(repeat_context["app_dir"]) / "resolved-capabilities.json"
+    ).read_bytes()
+    if repeat_resolution != original_resolution:
+        raise SmokeFailure("adaptive resolved-capabilities.json is not reproducible")
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cli", type=Path, default=default_cli())
     parser.add_argument("--evidence", type=Path)
+    parser.add_argument(
+        "--work-root",
+        type=Path,
+        help="실패 분석을 위해 삭제하지 않고 유지할 격리 작업 경로",
+    )
     parser.add_argument(
         "--platform-root",
         type=Path,
@@ -2013,8 +2108,14 @@ def main(arguments: Sequence[str] | None = None) -> int:
     if not cli.is_file():
         raise SmokeFailure(f"arduino-cli was not found: {cli}")
 
-    with tempfile.TemporaryDirectory(prefix="n54m5-") as temporary_name:
+    work_context = (
+        nullcontext(Path(os.path.abspath(args.work_root)))
+        if args.work_root is not None
+        else tempfile.TemporaryDirectory(prefix="n54m5-")
+    )
+    with work_context as temporary_name:
         root = Path(temporary_name)
+        root.mkdir(parents=True, exist_ok=True)
         previous_cache_root = os.environ.get("NUCODE_BUILD_CACHE_ROOT")
         os.environ["NUCODE_BUILD_CACHE_ROOT"] = str(root / "cache")
         user_root = root / "user"
@@ -2054,6 +2155,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,
+                "adaptive": test_adaptive_capabilities,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

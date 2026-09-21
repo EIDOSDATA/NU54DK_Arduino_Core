@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -150,7 +151,84 @@ extern "C" void sensorRead(void)
         gpio = next(item for item in result["capabilities"] if item["id"] == "arduino.gpio")
         self.assertEqual(spi["reasons"], ["compiler-probe"])
         self.assertEqual(gpio["reasons"], ["dependency:arduino.spi"])
+        self.assertIn("CONFIG_GPIO=y", result["generated"]["conf"])
+        self.assertIn("CONFIG_SPI=y", result["generated"]["conf"])
         self.assertIn("CONFIG_NUCODE_ARDUINO_SPI=y", result["generated"]["conf"])
+        self.assertIn("CONFIG_I2C=n", result["generated"]["disabled_conf"])
+        self.assertIn("CONFIG_NUCODE_ARDUINO_WIRE=n", result["generated"]["disabled_conf"])
+
+    def test_adaptive_profile_materializes_resolution_as_single_source(self) -> None:
+        """! @brief adaptive profile만 생성 config·overlay·resolution을 적용합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        self.assertEqual(profile["capability_mode"], "resolved")
+        features = MODULE.resolve_library_features(ROOT, profile, ["SPI"])
+        result = MODULE.resolve_capabilities(
+            self.registry, ["arduino.spi"], features, self.empty_declaration
+        )
+        with tempfile.TemporaryDirectory(prefix="n54-p0-materialize-") as temporary:
+            root = Path(temporary)
+            sketch = root / "sketch"
+            app = root / "app"
+            sketch.mkdir()
+            paths = {
+                "platform_root": ROOT,
+                "sketch_root": sketch,
+                "app": app,
+                "workspace": root,
+            }
+            MODULE.materialize_application(
+                paths,
+                mock.Mock(
+                    profile="adaptive",
+                    fqbn="nucode:zephyr:nu54dk",
+                    board=MODULE.DEFAULT_BOARD,
+                ),
+                ["SPI"],
+                result,
+            )
+            config = (app / "prj.conf").read_text(encoding="utf-8")
+            overlay = (app / "app.overlay").read_text(encoding="utf-8")
+            resolved = json.loads(
+                (app / "resolved-capabilities.json").read_text(encoding="utf-8")
+            )
+            self.assertLess(
+                config.index("CONFIG_NUCODE_ARDUINO_SPI=n"),
+                config.rindex("CONFIG_NUCODE_ARDUINO_SPI=y"),
+            )
+            self.assertIn("nu54dk-arduino-spi.dtsi", overlay)
+            self.assertNotIn("nu54dk-arduino-wire.dtsi", overlay)
+            self.assertEqual(resolved, result)
+
+    def test_final_kconfig_validation_rejects_expert_override(self) -> None:
+        """! @brief 필수 capability를 끈 expert override를 최종 .config에서 거부합니다. """
+        result = MODULE.resolve_capabilities(
+            self.registry, ["arduino.spi"], [], self.empty_declaration
+        )
+        with tempfile.TemporaryDirectory(prefix="n54-p0-final-config-") as temporary:
+            build = Path(temporary) / "build"
+            config_path = build / "zephyr" / ".config"
+            config_path.parent.mkdir(parents=True)
+            expected = [
+                *result["generated"]["disabled_conf"],
+                *result["generated"]["conf"],
+            ]
+            config_path.write_text("\n".join(expected) + "\n", encoding="utf-8")
+            MODULE.validate_resolved_configuration(
+                {"zephyr_build": build}, result
+            )
+            config_path.write_text(
+                config_path.read_text(encoding="utf-8").replace(
+                    "CONFIG_NUCODE_ARDUINO_SPI=y",
+                    "# CONFIG_NUCODE_ARDUINO_SPI is not set",
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                MODULE.AdapterError, "E_CAPABILITY_FINAL_CONFIG.*NUCODE_ARDUINO_SPI"
+            ):
+                MODULE.validate_resolved_configuration(
+                    {"zephyr_build": build}, result
+                )
 
     def test_library_requirement_is_transitive_without_sketch_reference(self) -> None:
         """! @brief library manifest의 간접 PWM 요구를 probe 결과와 합칩니다. """

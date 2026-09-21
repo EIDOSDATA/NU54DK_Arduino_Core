@@ -1,8 +1,8 @@
 {
   "schema_version": 3,
-  "capability_mode": "compatibility",
-  "id": "ble",
-  "display_name": "BLE NUS",
+  "capability_mode": "resolved",
+  "id": "adaptive",
+  "display_name": "Adaptive capabilities (experimental)",
   "board": "nucode:zephyr:nu54dk",
   "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
   "ncs_version": "v3.4.0",
@@ -11,7 +11,7 @@
   "sysbuild": false,
   "sysbuild_files": [],
   "signing_key_env": null,
-  "features": ["gpio", "serial", "wire", "spi", "adc", "pwm", "storage", "ble"],
+  "features": [],
   "conflicts": [],
-  "requires_hil": ["wire", "spi", "adc", "pwm", "storage", "ble"]
+  "requires_hil": []
 }

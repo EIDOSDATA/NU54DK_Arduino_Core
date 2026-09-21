@@ -72,6 +72,7 @@ def load_configuration_profile(
         raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] profile을 읽지 못했습니다: {path}: {error}") from error
     allowed = {
         "schema_version",
+        "capability_mode",
         "id",
         "display_name",
         "board",
@@ -88,9 +89,16 @@ def load_configuration_profile(
     }
     if not isinstance(document, dict) or set(document) != allowed or document.get("schema_version") != PROFILE_SCHEMA_VERSION:
         raise AdapterError("[NU54:E_PROFILE_SCHEMA] profile field/schema가 올바르지 않습니다.")
-    for field in ("id", "display_name", "board", "zephyr_board", "ncs_version", "conf", "overlay"):
+    for field in (
+        "id", "display_name", "board", "zephyr_board", "ncs_version", "conf", "overlay",
+        "capability_mode",
+    ):
         if not isinstance(document.get(field), str):
             raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] {field}는 문자열이어야 합니다.")
+    if document["capability_mode"] not in {"compatibility", "resolved"}:
+        raise AdapterError(
+            "[NU54:E_PROFILE_SCHEMA] capability_mode은 compatibility 또는 resolved여야 합니다."
+        )
     fqbn_parts = fqbn.split(":") if isinstance(fqbn, str) else []
     fqbn_board = ":".join(fqbn_parts[:3]) if len(fqbn_parts) >= 3 else ""
     if (
@@ -221,14 +229,23 @@ def resolve_library_features(
         for library_name in sorted(set(library_names), key=str.casefold)
         if (feature := load_library_feature(platform_root, library_name)) is not None
     ]
-    available_features = profile_features | {feature["id"] for feature in selected}
+    selected_feature_ids = {feature["id"] for feature in selected}
+    available_features = profile_features | selected_feature_ids
     conflict_owners = {
         resource: f"profile:{profile['id']}" for resource in profile["conflicts"]
     }
     for feature in selected:
         if profile["id"] not in feature["compatible_profiles"]:
             raise AdapterError(f"[NU54:E_FEATURE_PROFILE] {feature['id']}는 {profile['id']} profile과 호환되지 않습니다.")
-        missing = sorted(set(feature["requires"]) - available_features)
+        if profile["capability_mode"] == "resolved":
+            missing = sorted(
+                requirement
+                for requirement in feature["requires"]
+                if requirement.startswith("nucode.")
+                and requirement not in selected_feature_ids
+            )
+        else:
+            missing = sorted(set(feature["requires"]) - available_features)
         conflicts = sorted(set(feature["conflicts"]) & conflict_owners.keys())
         if missing:
             raise AdapterError(f"[NU54:E_FEATURE_REQUIREMENT] {feature['id']} 요구 기능이 없습니다: {missing}")
