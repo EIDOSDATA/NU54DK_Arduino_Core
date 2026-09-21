@@ -47,10 +47,13 @@ buffer 관리는 라이브러리 구현 내부에 있다. [재점검 기록](<..
 | `BISTimeSource` / `BISTimeReceiver` | 2 | timestamp를 포함한 BIS 송수신 |
 | `CISToBISPeer` / `CISToBISBridge` / `CISToBISReceiver` | 3 | CIS SDU를 BIS로 전달 |
 
-각 예제의 `prj.conf`는 한 역할을 `CONFIG_NUCODE_BLE_ISO_MODE_*` Kconfig로 선택한다.
-스케치의 `Role` 값과 image의 역할이 다르면 공개 객체의 `begin()`이
-`Error::configuration_mismatch`를 반환한다. Arduino IDE나 CLI에서 **NU54DK Zephyr / BLE**
-feature set을 선택해 빌드한다.
+각 예제의 `nucode-build.json`은 `adaptive` profile에서 검증된 공개 역할 preset을 선택한다.
+기존 `prj.conf`는 `ble` 호환 profile의 저수준 설정을 보존하지만 adaptive 해석의 단일 원본은 아니다.
+11개 역할은 별도의 저수준 설정 없는 fixture에서 capacity·최종 Kconfig와 CIS/BIS source 포함/부재를
+clean build로 검증했다. 스케치의 `Role` 값과 image의 역할이 다르면 공개 객체의 `begin()`이
+`Error::configuration_mismatch`를 반환한다. 선언 기반 경로는 Arduino IDE나 CLI에서
+**NU54DK Zephyr / Adaptive capabilities (experimental)** feature set을 선택해 빌드한다. 기존
+`prj.conf` 호환 경로는 **BLE NUS** feature set을 유지한다.
 
 이전 고정 시험 backend의 115200 baud Serial 명령 형식은 회귀 시험용 구현
 세부사항이며 Arduino 공개 API나 호환성 계약에는 포함되지 않는다. 현재 11개

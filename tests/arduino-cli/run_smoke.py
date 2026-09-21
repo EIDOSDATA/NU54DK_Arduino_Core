@@ -46,11 +46,12 @@ ARDUINO_TESTS = (
     "examples",
     "adaptive",
     "adaptive_ble",
+    "adaptive_iso",
 )
 DEFAULT_TESTS = tuple(
     test
     for test in ARDUINO_TESTS
-    if test not in {"incremental", "adaptive", "adaptive_ble"}
+    if test not in {"incremental", "adaptive", "adaptive_ble", "adaptive_iso"}
 )
 ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
@@ -2210,6 +2211,218 @@ def test_adaptive_ble_roles(
             raise SmokeFailure(f"adaptive BLE included unrelated SPI source: {name}")
 
 
+## @brief P0의 11개 ISO 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_iso_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    del repository
+    common_source = "NUCODE_BLE_ISO.cpp"
+    raw_cis = "NUCODE_BLE_ISO_RawCis.cpp"
+    raw_bis = "NUCODE_BLE_ISO_RawBis.cpp"
+    cases = (
+        (
+            "iso_cis_central",
+            "ble-iso-cis-central",
+            "CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL=y",
+            {"ble.connections": 2, "ble.iso-streams": 2},
+            (common_source, raw_cis),
+            (raw_bis,),
+        ),
+        (
+            "iso_cis_peripheral",
+            "ble-iso-cis-peripheral",
+            "CONFIG_NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL=y",
+            {"ble.connections": 2, "ble.iso-streams": 2},
+            (common_source, raw_cis),
+            (raw_bis,),
+        ),
+        (
+            "iso_cis_to_bis_peer",
+            "ble-iso-cis-to-bis-peer",
+            "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER=y",
+            {"ble.connections": 2, "ble.iso-streams": 2},
+            (common_source, raw_cis),
+            (raw_bis,),
+        ),
+        (
+            "iso_bis_source",
+            "ble-iso-bis-source",
+            "CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE=y",
+            {"ble.iso-streams": 1},
+            (common_source, raw_bis),
+            (raw_cis,),
+        ),
+        (
+            "iso_bis_receiver",
+            "ble-iso-bis-receiver",
+            "CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER=y",
+            {"ble.iso-streams": 1},
+            (common_source, raw_bis),
+            (raw_cis,),
+        ),
+        (
+            "iso_bis_encrypted_source",
+            "ble-iso-bis-encrypted-source",
+            "CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE=y",
+            {"ble.iso-streams": 1},
+            (common_source, raw_bis),
+            (raw_cis,),
+        ),
+        (
+            "iso_bis_encrypted_receiver",
+            "ble-iso-bis-encrypted-receiver",
+            "CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER=y",
+            {"ble.iso-streams": 1},
+            (common_source, raw_bis),
+            (raw_cis,),
+        ),
+        (
+            "iso_bis_time_source",
+            "ble-iso-bis-time-source",
+            "CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE=y",
+            {"ble.iso-streams": 1},
+            (common_source, raw_bis),
+            (raw_cis,),
+        ),
+        (
+            "iso_bis_time_receiver",
+            "ble-iso-bis-time-receiver",
+            "CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER=y",
+            {"ble.iso-streams": 1},
+            (common_source, raw_bis),
+            (raw_cis,),
+        ),
+        (
+            "iso_cis_to_bis_bridge",
+            "ble-iso-cis-to-bis-bridge",
+            "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE=y",
+            {"ble.connections": 1, "ble.iso-streams": 2},
+            (common_source, raw_cis, raw_bis),
+            (),
+        ),
+        (
+            "iso_cis_to_bis_receiver",
+            "ble-iso-cis-to-bis-receiver",
+            "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER=y",
+            {"ble.iso-streams": 1},
+            (common_source, raw_bis),
+            (raw_cis,),
+        ),
+    )
+    fixture_source = """/**
+ * @file {name}.ino
+ * @brief P0 adaptive ISO 역할의 저수준 설정 없는 build fixture입니다.
+ */
+
+#include <NUCODE_BLE_ISO.h>
+
+/** @brief 역할별 ISO source가 compile되는 최소 Arduino 진입점입니다. */
+void setup()
+{{
+    Serial.begin(115200);
+}}
+
+/** @brief build-only fixture의 반복 진입점입니다. */
+void loop()
+{{
+}}
+"""
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+    )
+    fixtures = root / "adaptive-iso-fixtures"
+    materialized_cases = []
+    for name, role, required_config, capacities, required_sources, forbidden_sources in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        (sketch / f"{name}.ino").write_text(
+            fixture_source.format(name=name), encoding="utf-8"
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        materialized_cases.append(
+            (
+                name,
+                sketch,
+                role,
+                required_config,
+                capacities,
+                required_sources,
+                forbidden_sources,
+            )
+        )
+    for (
+        name,
+        sketch,
+        role,
+        required_config,
+        capacities,
+        required_sources,
+        forbidden_sources,
+    ) in materialized_cases:
+        build = root / f"build-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive ISO role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != capacities:
+            raise SmokeFailure(
+                f"adaptive ISO capacity mismatch: {name}: {actual_capacities}"
+            )
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        if required_config not in final_config:
+            raise SmokeFailure(
+                f"adaptive ISO required Kconfig is missing: {name}: {required_config}"
+            )
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    f"adaptive ISO unrelated Kconfig is enabled: {name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(
+            encoding="utf-8"
+        )
+        for source in required_sources:
+            if source not in source_graph:
+                raise SmokeFailure(
+                    f"adaptive ISO required source is missing: {name}: {source}"
+                )
+        for source in forbidden_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    f"adaptive ISO unrelated source is present: {name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -2291,6 +2504,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "examples": test_example_discovery,
                 "adaptive": test_adaptive_capabilities,
                 "adaptive_ble": test_adaptive_ble_roles,
+                "adaptive_iso": test_adaptive_iso_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

@@ -323,6 +323,66 @@ extern "C" void sensorRead(void)
                 {"ble.connections": 2, "ble.iso-streams": 2},
             ),
             (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-cis-peripheral",
+                "CONFIG_NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL=y",
+                {"ble.connections": 2, "ble.iso-streams": 2},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-cis-to-bis-peer",
+                "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER=y",
+                {"ble.connections": 2, "ble.iso-streams": 2},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-bis-source",
+                "CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-bis-receiver",
+                "CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-bis-encrypted-source",
+                "CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-bis-encrypted-receiver",
+                "CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-bis-time-source",
+                "CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-bis-time-receiver",
+                "CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-cis-to-bis-bridge",
+                "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE=y",
+                {"ble.connections": 1, "ble.iso-streams": 2},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-cis-to-bis-receiver",
+                "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio"],
                 "ble-audio-unicast-source",
                 "CONFIG_BT_BAP_UNICAST_CLIENT=y",
@@ -373,6 +433,76 @@ extern "C" void sensorRead(void)
                     expected_capacities,
                 )
                 self.assertEqual(result["roles"], [role])
+
+    def test_iso_role_source_ownership_is_minimal(self) -> None:
+        """! @brief 11개 ISO 역할은 공통 facade와 필요한 CIS/BIS backend만 선택합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        features = MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE_ISO"])
+        common = "libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO.cpp"
+        raw_cis = "libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp"
+        raw_bis = "libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"
+        cases = {
+            "ble-iso-cis-central": {common, raw_cis},
+            "ble-iso-cis-peripheral": {common, raw_cis},
+            "ble-iso-cis-to-bis-peer": {common, raw_cis},
+            "ble-iso-bis-source": {common, raw_bis},
+            "ble-iso-bis-receiver": {common, raw_bis},
+            "ble-iso-bis-encrypted-source": {common, raw_bis},
+            "ble-iso-bis-encrypted-receiver": {common, raw_bis},
+            "ble-iso-bis-time-source": {common, raw_bis},
+            "ble-iso-bis-time-receiver": {common, raw_bis},
+            "ble-iso-cis-to-bis-bridge": {common, raw_cis, raw_bis},
+            "ble-iso-cis-to-bis-receiver": {common, raw_bis},
+        }
+        for role, expected_sources in cases.items():
+            with self.subTest(role=role):
+                declaration = copy.deepcopy(self.empty_declaration)
+                declaration["roles"] = [role]
+                result = MODULE.resolve_capabilities(
+                    self.registry, [], features, declaration
+                )
+                self.assertEqual(
+                    set(result["generated"]["sources"]), expected_sources
+                )
+
+    def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
+        """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
+        roles = list(self.registry["roles"])
+        self.assertEqual(len(roles), 20)
+        for index, first in enumerate(roles):
+            for second in roles[index + 1:]:
+                with self.subTest(first=first, second=second):
+                    declaration = copy.deepcopy(self.empty_declaration)
+                    declaration["roles"] = [first, second]
+                    with self.assertRaisesRegex(
+                        MODULE.AdapterError, "E_ROLE_CONFLICT"
+                    ):
+                        MODULE.resolve_capabilities(
+                            self.registry, [], [], declaration
+                        )
+
+    def test_all_iso_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 ISO 11예제가 각각 하나의 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "CISCentral": "ble-iso-cis-central",
+            "CISPeripheral": "ble-iso-cis-peripheral",
+            "CISToBISPeer": "ble-iso-cis-to-bis-peer",
+            "BISSource": "ble-iso-bis-source",
+            "BISReceiver": "ble-iso-bis-receiver",
+            "BISEncryptedSource": "ble-iso-bis-encrypted-source",
+            "BISEncryptedReceiver": "ble-iso-bis-encrypted-receiver",
+            "BISTimeSource": "ble-iso-bis-time-source",
+            "BISTimeReceiver": "ble-iso-bis-time-receiver",
+            "CISToBISBridge": "ble-iso-cis-to-bis-bridge",
+            "CISToBISReceiver": "ble-iso-cis-to-bis-receiver",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_ISO" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
 
     def test_ble_feature_without_role_and_role_combination_fail_closed(self) -> None:
         """! @brief BLE role 누락과 검증되지 않은 두 역할 조합을 모두 거부합니다. """

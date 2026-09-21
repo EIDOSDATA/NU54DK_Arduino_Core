@@ -213,11 +213,23 @@
     {
       "id": "nucode.ble.iso-api",
       "requires": ["arduino.api"],
-      "requires_any_role": ["ble-iso-cis-central"],
+      "requires_any_role": [
+        "ble-iso-cis-central",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source",
+        "ble-iso-bis-time-receiver",
+        "ble-iso-cis-to-bis-bridge",
+        "ble-iso-cis-to-bis-receiver"
+      ],
       "conflicts": [],
       "conf": ["CONFIG_BT=y", "CONFIG_NUCODE_BLE_ISO=y"],
       "overlays": [],
-      "sources": ["libraries/NUCODE_BLE_ISO/src"],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO.cpp"],
       "source_gates": ["CONFIG_NUCODE_BLE_ISO"]
     },
     {
@@ -371,6 +383,7 @@
       "conflicts": [],
       "conf": [
         "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_OBSERVER=y",
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_ISO_CENTRAL=y",
@@ -386,8 +399,251 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
-      "sources": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp"],
       "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL"]
+    },
+    {
+      "id": "nucode.ble.role.iso-cis-peripheral",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_ISO_CENTRAL=y",
+        "CONFIG_BT_ISO_PERIPHERAL=y",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_CTLR_SDC_ISO_TX_HCI_BUFFER_COUNT=4",
+        "CONFIG_BT_CTLR_CONN_ISO_STREAMS=2",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL=y",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096",
+        "CONFIG_MAIN_STACK_SIZE=8192"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL"]
+    },
+    {
+      "id": "nucode.ble.role.iso-cis-to-bis-peer",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_ISO_CENTRAL=y",
+        "CONFIG_BT_ISO_PERIPHERAL=y",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_CTLR_SDC_ISO_TX_HCI_BUFFER_COUNT=4",
+        "CONFIG_BT_CTLR_CONN_ISO_STREAMS=2",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER=y",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096",
+        "CONFIG_MAIN_STACK_SIZE=8192"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER"]
+    },
+    {
+      "id": "nucode.ble.role.iso-bis-source",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_CTLR_SDC_ISO_TX_HCI_BUFFER_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_ISO_BROADCASTER=y",
+        "CONFIG_BT_PER_ADV_SYNC=n",
+        "CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_BIS_SOURCE"]
+    },
+    {
+      "id": "nucode.ble.role.iso-bis-receiver",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_ISO_SYNC_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_BIS_RECEIVER"]
+    },
+    {
+      "id": "nucode.ble.role.iso-bis-encrypted-source",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_CTLR_SDC_ISO_TX_HCI_BUFFER_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_ISO_BROADCASTER=y",
+        "CONFIG_BT_PER_ADV_SYNC=n",
+        "CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE"]
+    },
+    {
+      "id": "nucode.ble.role.iso-bis-encrypted-receiver",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_ISO_SYNC_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER"]
+    },
+    {
+      "id": "nucode.ble.role.iso-bis-time-source",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_CTLR_SDC_ISO_TX_HCI_BUFFER_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_ISO_BROADCASTER=y",
+        "CONFIG_BT_PER_ADV_SYNC=n",
+        "CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE"]
+    },
+    {
+      "id": "nucode.ble.role.iso-bis-time-receiver",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_ISO_SYNC_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER"]
+    },
+    {
+      "id": "nucode.ble.role.iso-cis-to-bis-bridge",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_ISO_CENTRAL=y",
+        "CONFIG_BT_ISO_BROADCASTER=y",
+        "CONFIG_BT_EXT_ADV_MAX_ADV_SET=1",
+        "CONFIG_BT_ISO_MAX_CIG=1",
+        "CONFIG_BT_ISO_MAX_BIG=1",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_CTLR_SDC_ISO_TX_HCI_BUFFER_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_CTLR_SDC_CENTRAL_ACL_EVENT_SPACING_DEFAULT=10000",
+        "CONFIG_BT_CTLR_SDC_MAX_CONN_EVENT_LEN_DEFAULT=2500",
+        "CONFIG_BT_CTLR_SDC_BIG_RESERVED_TIME_US=5000",
+        "CONFIG_BT_CTLR_SDC_CIG_RESERVED_TIME_US=5000",
+        "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp",
+        "libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"
+      ],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE"]
+    },
+    {
+      "id": "nucode.ble.role.iso-cis-to-bis-receiver",
+      "requires": ["nucode.ble.iso-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_ISO_TX_BUF_COUNT=4",
+        "CONFIG_BT_ISO_TX_MTU=16",
+        "CONFIG_BT_ISO_RX_MTU=23",
+        "CONFIG_BT_ISO_SYNC_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER=y",
+        "CONFIG_MAIN_STACK_SIZE=8192",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=4096"
+      ],
+      "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"],
+      "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER"]
     },
     {
       "id": "nucode.ble.role.audio-unicast-source",
@@ -634,6 +890,230 @@
         "ble-df-connected-responder",
         "ble-cs-ras-initiator",
         "ble-cs-ras-reflector"
+      ]
+    },
+    {
+      "id": "ble-iso-cis-peripheral",
+      "capabilities": ["nucode.ble.role.iso-cis-peripheral"],
+      "capacities": {
+        "ble.connections": 2,
+        "ble.iso-streams": 2
+      },
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector"
+      ]
+    },
+    {
+      "id": "ble-iso-cis-to-bis-peer",
+      "capabilities": ["nucode.ble.role.iso-cis-to-bis-peer"],
+      "capacities": {
+        "ble.connections": 2,
+        "ble.iso-streams": 2
+      },
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral"
+      ]
+    },
+    {
+      "id": "ble-iso-bis-source",
+      "capabilities": ["nucode.ble.role.iso-bis-source"],
+      "capacities": {"ble.iso-streams": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer"
+      ]
+    },
+    {
+      "id": "ble-iso-bis-receiver",
+      "capabilities": ["nucode.ble.role.iso-bis-receiver"],
+      "capacities": {"ble.iso-streams": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source"
+      ]
+    },
+    {
+      "id": "ble-iso-bis-encrypted-source",
+      "capabilities": ["nucode.ble.role.iso-bis-encrypted-source"],
+      "capacities": {"ble.iso-streams": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver"
+      ]
+    },
+    {
+      "id": "ble-iso-bis-encrypted-receiver",
+      "capabilities": ["nucode.ble.role.iso-bis-encrypted-receiver"],
+      "capacities": {"ble.iso-streams": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source"
+      ]
+    },
+    {
+      "id": "ble-iso-bis-time-source",
+      "capabilities": ["nucode.ble.role.iso-bis-time-source"],
+      "capacities": {"ble.iso-streams": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver"
+      ]
+    },
+    {
+      "id": "ble-iso-bis-time-receiver",
+      "capabilities": ["nucode.ble.role.iso-bis-time-receiver"],
+      "capacities": {"ble.iso-streams": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source"
+      ]
+    },
+    {
+      "id": "ble-iso-cis-to-bis-bridge",
+      "capabilities": ["nucode.ble.role.iso-cis-to-bis-bridge"],
+      "capacities": {
+        "ble.connections": 1,
+        "ble.iso-streams": 2
+      },
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source",
+        "ble-iso-bis-time-receiver"
+      ]
+    },
+    {
+      "id": "ble-iso-cis-to-bis-receiver",
+      "capabilities": ["nucode.ble.role.iso-cis-to-bis-receiver"],
+      "capacities": {"ble.iso-streams": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source",
+        "ble-iso-bis-time-receiver",
+        "ble-iso-cis-to-bis-bridge"
       ]
     },
     {
