@@ -23,6 +23,9 @@ IQ_PATTERN = re.compile(
     r"sample_type=(\d+)\|slot=(\d+)\|event=(\d+)\|channel=(\d+)\|"
     r"i0=(-?\d+)\|q0=(-?\d+)\|rssi=(-?\d+)"
 )
+HOST_STATE_ARMED = "DF_CONN|HOST_RX_STATE|enabled=1|params=1|cte_types=1"
+HOST_STATE_DISARMED = "DF_CONN|HOST_RX_STATE|enabled=0|params=1|cte_types=0"
+VALID_PACKET_STATUSES = {0, 1, 2, 255}
 
 
 def append_line(port, key, record):
@@ -65,6 +68,8 @@ def stop_pair(receiver, responder, record, timeout=10.0):
         ),
         "receiver_stopped": any("DF_CONN|STOPPED" in line
                                 for line in record["receiver_lines"]),
+        "host_state_disarmed": any(HOST_STATE_DISARMED in line
+                                   for line in record["receiver_lines"]),
         "responder_stopped": any(
             "CTE responses stopped" in line
             for line in record["responder_lines"]
@@ -79,6 +84,7 @@ def stop_pair(receiver, responder, record, timeout=10.0):
         required = (
             "request_disabled",
             "sampling_disabled",
+            "host_state_disarmed",
             "disconnect_requested",
             "receiver_stopped",
             "responder_disconnected",
@@ -112,6 +118,38 @@ def classify(record):
                          if "DF_CONN|RAW_RX_PARAM|" in line), "")
     raw_request = next((line for line in record["receiver_lines"]
                         if "DF_CONN|RAW_REQUEST|" in line), "")
+    host_state_armed = any(HOST_STATE_ARMED in line
+                           for line in record["receiver_lines"])
+    command_accepted = (
+        ("code=0" in raw_receiver) and
+        ("code=0" in raw_request) and
+        host_state_armed
+    )
+    controller_events = (
+        record["host_iq_callbacks"] + record["host_gate_drops"]
+    )
+    record["controller_iq_events"] = controller_events
+    record["path_results"] = {
+        "connected_controller_commands": (
+            "PASS" if command_accepted else "HOLD"
+        ),
+        "connected_controller_iq_event": (
+            "PASS" if controller_events > 0 else "HOLD"
+        ),
+        "connected_host_callback": (
+            "PASS" if record["host_iq_callbacks"] > 0 else "HOLD"
+        ),
+        "connected_raw_iq_samples": (
+            "PASS" if record["iq_reports"] >= 20 else "HOLD"
+        ),
+        "connectionless_controller_commands": "NOT RUN",
+        "connectionless_controller_iq_event": "NOT RUN",
+        "connectionless_host_callback": "NOT RUN",
+        "connectionless_raw_iq_samples": "NOT RUN",
+        "antenna_switching": "NOT RUN",
+        "angle_measurement": "NOT RUN",
+        "external_rf_path": "NOT RUN",
+    }
     if not any("DF_CONN|CONNECTED|error=0" in line
                for line in record["receiver_lines"]):
         raise RuntimeError("receiver did not connect")
@@ -122,11 +160,15 @@ def classify(record):
         record["status"] = "PASS"
         record["outcome"] = "CONNECTED_RAW_IQ_OBSERVED"
         record["raw_iq_rx"] = "PASS"
+    elif record["host_iq_callbacks"] > 0:
+        record["status"] = "HOLD"
+        record["outcome"] = "HOST_CALLBACK_WITHOUT_20_VALID_IQ_REPORTS"
+        record["raw_iq_rx"] = "HOLD"
     elif record["host_gate_drops"] > 0:
         record["status"] = "HOLD"
         record["outcome"] = "CONTROLLER_IQ_EVENT_HOST_DROPPED"
         record["raw_iq_rx"] = "HOLD"
-    elif ("code=0" in raw_receiver) and ("code=0" in raw_request):
+    elif command_accepted:
         record["status"] = "HOLD"
         record["outcome"] = "COMMANDS_ACCEPTED_IQ_NOT_OBSERVED"
         record["raw_iq_rx"] = "HOLD"
@@ -140,6 +182,38 @@ def classify(record):
         record["raw_iq_rx"] = "HOLD"
     else:
         raise RuntimeError("unclassified connected CTE result")
+
+
+def record_iq_line(record, line):
+    """Validate one Host callback without upgrading unusable samples to PASS."""
+    match = IQ_PATTERN.search(line)
+    if match is None:
+        raise RuntimeError("malformed IQ report")
+    values = tuple(map(int, match.groups()))
+    (error, count, cte_type, status, sample_type, slot, event, channel,
+     first_i, first_q, rssi) = values
+    if error not in (0, 1, 2):
+        raise RuntimeError("invalid IQ callback error")
+    if error == 0 and (
+        cte_type != 1 or status not in VALID_PACKET_STATUSES or
+        sample_type != 0 or slot != 2 or not 0 <= channel <= 36 or
+        not -128 <= first_i <= 127 or not -128 <= first_q <= 127 or
+        not -1270 <= rssi <= 200
+    ):
+        raise RuntimeError("invalid IQ report")
+    if error == 0 and event in record["iq_event_counters"]:
+        raise RuntimeError("duplicate IQ event counter")
+
+    record["host_iq_callbacks"] += 1
+    status_key = str(status)
+    record["iq_packet_status_counts"][status_key] = (
+        record["iq_packet_status_counts"].get(status_key, 0) + 1
+    )
+    if error == 0:
+        record["iq_event_counters"].append(event)
+    if error == 0 and status == 0 and count > 0:
+        record["iq_reports"] += 1
+        record["iq_samples"] += count
 
 
 def main():
@@ -182,7 +256,10 @@ def main():
         "iq_reports": 0,
         "iq_samples": 0,
         "iq_event_counters": [],
+        "host_iq_callbacks": 0,
+        "controller_iq_events": 0,
         "host_gate_drops": 0,
+        "iq_packet_status_counts": {},
         "cleanup_confirmed": False,
         "receiver_lines": [],
         "responder_lines": [],
@@ -220,27 +297,7 @@ def main():
                             if key != "receiver_lines" or not line:
                                 continue
                             if "DF_CONN|IQ|" in line:
-                                match = IQ_PATTERN.search(line)
-                                if match is None:
-                                    raise RuntimeError("malformed IQ report")
-                                values = tuple(map(int, match.groups()))
-                                (error, count, cte_type, status, sample_type,
-                                 slot, event, channel, first_i, first_q,
-                                 rssi) = values
-                                if (error != 0 or count <= 0 or cte_type != 1 or
-                                        status != 0 or sample_type != 0 or
-                                        slot != 2 or not 0 <= channel <= 36 or
-                                        not -128 <= first_i <= 127 or
-                                        not -128 <= first_q <= 127 or
-                                        not -1270 <= rssi <= 200):
-                                    raise RuntimeError("invalid IQ report")
-                                if event in record["iq_event_counters"]:
-                                    raise RuntimeError(
-                                        "duplicate IQ event counter"
-                                    )
-                                record["iq_reports"] += 1
-                                record["iq_samples"] += count
-                                record["iq_event_counters"].append(event)
+                                record_iq_line(record, line)
                             if (
                                 "Received conn CTE report when CTE receive disabled"
                                 in line

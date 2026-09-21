@@ -22,6 +22,8 @@
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/sys/printk.h>
 
+#include "conn_internal.h"
+
 #define PEER_NAME "NU54-CTE-RSP"
 #define PEER_NAME_LENGTH (sizeof(PEER_NAME) - 1U)
 
@@ -29,6 +31,35 @@ static struct bt_conn *selected_connection;
 static bool connecting;
 static const uint8_t antenna_pattern[] = {0U, 0U};
 K_MUTEX_DEFINE(connection_mutex);
+
+/**
+ * @brief 원시 HCI 수신 설정과 Zephyr Host의 report gate 상태를 동기화합니다.
+ *
+ * 공개 API가 단일 안테나 capability를 이유로 HCI 전송 전에 거부한 경우에만
+ * 사용합니다. controller가 수락한 수신 설정의 수명만 Host 내부 상태에
+ * 반영하며, IQ event나 sample을 생성하지 않습니다.
+ */
+static void set_diagnostic_host_rx_state(struct bt_conn *connection,
+                                         bool enable)
+{
+    if (enable)
+    {
+        connection->cte_types = BT_DF_CTE_TYPE_AOA;
+        atomic_set_bit(connection->flags, BT_CONN_CTE_RX_PARAMS_SET);
+        atomic_set_bit(connection->flags, BT_CONN_CTE_RX_ENABLED);
+    }
+    else
+    {
+        atomic_clear_bit(connection->flags, BT_CONN_CTE_RX_ENABLED);
+        connection->cte_types = BT_DF_CTE_TYPE_NONE;
+    }
+
+    printk("DF_CONN|HOST_RX_STATE|enabled=%u|params=%u|cte_types=%u\n",
+           atomic_test_bit(connection->flags, BT_CONN_CTE_RX_ENABLED) ? 1U : 0U,
+           atomic_test_bit(connection->flags,
+                           BT_CONN_CTE_RX_PARAMS_SET) ? 1U : 0U,
+           connection->cte_types);
+}
 
 /** @brief 직접 HCI CTE 요청을 활성화하거나 중단합니다. */
 static int set_raw_cte_request(struct bt_conn *connection, bool enable)
@@ -103,8 +134,15 @@ static void diagnose_controller(struct bt_conn *connection)
         return;
     }
 
+    set_diagnostic_host_rx_state(connection, true);
     result = set_raw_cte_request(connection, true);
     printk("DF_CONN|RAW_REQUEST|code=%d\n", result);
+    if (result != 0)
+    {
+        set_diagnostic_host_rx_state(connection, false);
+        printk("DF_CONN|RAW_RX_ROLLBACK|code=%d\n",
+               set_raw_cte_reception(connection, false));
+    }
 }
 
 /** @brief scan 광고에서 CTE 응답자의 이름을 확인합니다. */
@@ -212,6 +250,7 @@ static void disconnected(struct bt_conn *connection, uint8_t reason)
     const bool selected = connection == selected_connection;
     if (selected)
     {
+        set_diagnostic_host_rx_state(connection, false);
         selected_connection = NULL;
         connecting = false;
     }
@@ -242,6 +281,7 @@ static void stop_diagnostic(void)
            set_raw_cte_request(connection, false));
     printk("DF_CONN|RAW_RX_STOP|code=%d\n",
            set_raw_cte_reception(connection, false));
+    set_diagnostic_host_rx_state(connection, false);
     printk("DF_CONN|DISCONNECT_REQUEST|code=%d\n",
            bt_conn_disconnect(connection,
                               BT_HCI_ERR_REMOTE_USER_TERM_CONN));
