@@ -23,7 +23,8 @@ OFF·선택 Kconfig·기능별 overlay·기존 CMake source gate를 합성합니
 fail-closed로 거부합니다. Serial-only·SPI include-only·Serial+SPI clean build에서 capability·Kconfig·
 Devicetree chosen·`SPI.cpp` 포함/부재와 동일 입력 cache 재사용을 확인했습니다. 기존 `standard`는
 기본 full 호환 profile이며 `adaptive`는 아직 실험 선택지입니다. BLE 역할/capacity와 역할별 ELF/map·
-RAM gate는 남아 있습니다.
+RAM gate는 남아 있습니다. 역할 capacity 집계값은 registry schema v2에서 `BT_MAX_CONN`·ISO channel·
+L2CAP TX MTU Kconfig로 생성되며 capability의 고정값과 충돌하면 resolver가 거부합니다.
 
 ## 1. 현재 상태
 

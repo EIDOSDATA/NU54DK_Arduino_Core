@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "probe_mapping_version": 1,
   "defaults": [
     "arduino.runtime",
@@ -152,21 +152,24 @@
       "aggregation": "maximum",
       "minimum": 1,
       "maximum": 8,
-      "unit": "connections"
+      "unit": "connections",
+      "conf": ["CONFIG_BT_MAX_CONN={value}"]
     },
     {
       "id": "ble.iso-streams",
       "aggregation": "sum",
       "minimum": 1,
       "maximum": 8,
-      "unit": "streams"
+      "unit": "streams",
+      "conf": ["CONFIG_BT_ISO_MAX_CHAN={value}"]
     },
     {
       "id": "ble.att-mtu",
       "aggregation": "identical",
       "minimum": 23,
       "maximum": 517,
-      "unit": "octets"
+      "unit": "octets",
+      "conf": ["CONFIG_BT_L2CAP_TX_MTU={value}"]
     }
   ],
   "probe_symbols": [

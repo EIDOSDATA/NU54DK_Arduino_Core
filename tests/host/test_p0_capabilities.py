@@ -311,6 +311,11 @@ extern "C" void sensorRead(void)
         self.assertEqual(capacities["ble.connections"]["value"], 2)
         self.assertEqual(capacities["ble.iso-streams"]["value"], 3)
         self.assertEqual(capacities["ble.att-mtu"]["value"], 247)
+        self.assertEqual(
+            capacities["ble.connections"]["conf"], ["CONFIG_BT_MAX_CONN=2"]
+        )
+        self.assertIn("CONFIG_BT_ISO_MAX_CHAN=3", result["generated"]["conf"])
+        self.assertIn("CONFIG_BT_L2CAP_TX_MTU=247", result["generated"]["conf"])
 
         registry["roles"]["role-b"]["capacities"]["ble.att-mtu"] = 517
         with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPACITY_CONFLICT"):
@@ -318,6 +323,27 @@ extern "C" void sensorRead(void)
         declaration["capacities"] = {"ble.connections": 9}
         registry["roles"]["role-b"]["capacities"]["ble.att-mtu"] = 247
         with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPACITY_RANGE"):
+            MODULE.resolve_capabilities(registry, [], [], declaration)
+
+    def test_capacity_kconfig_conflict_fails_closed(self) -> None:
+        """! @brief capability와 capacity가 같은 Kconfig에 다른 값을 요구하면 거부합니다. """
+        registry = copy.deepcopy(self.registry)
+        registry["roles"] = {
+            "role-a": {
+                "id": "role-a",
+                "capabilities": ["arduino.runtime"],
+                "capacities": {"ble.connections": 2},
+                "conflicts": [],
+            }
+        }
+        registry["capabilities"]["arduino.runtime"]["conf"].append(
+            "CONFIG_BT_MAX_CONN=1"
+        )
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = ["role-a"]
+        with self.assertRaisesRegex(
+            MODULE.AdapterError, "E_CAPABILITY_CONFIG_CONFLICT.*BT_MAX_CONN"
+        ):
             MODULE.resolve_capabilities(registry, [], [], declaration)
 
     def test_declaration_and_registry_schema_are_strict(self) -> None:

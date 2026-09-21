@@ -28,6 +28,7 @@ ROLE_ID_PATTERN = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*")
 CAPACITY_ID_PATTERN = re.compile(r"[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*")
 CONFIG_PATTERN = re.compile(r"CONFIG_[A-Z0-9_]+=(?:y|n|[0-9]+|\"[^\"\r\n]*\")")
 SOURCE_GATE_PATTERN = re.compile(r"CONFIG_[A-Z0-9_]+")
+CAPACITY_CONFIG_PATTERN = re.compile(r"CONFIG_[A-Z0-9_]+=\{value\}")
 
 
 ## @brief strict JSON object를 capability 오류로 변환하여 읽습니다.
@@ -153,7 +154,7 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
     if not isinstance(capacity_items, list):
         raise AdapterError("[NU54:E_CAPABILITY_SCHEMA] capacities는 배열이어야 합니다.")
     capacities: dict[str, dict[str, Any]] = {}
-    capacity_fields = {"id", "aggregation", "minimum", "maximum", "unit"}
+    capacity_fields = {"id", "aggregation", "minimum", "maximum", "unit", "conf"}
     for item in capacity_items:
         if not isinstance(item, dict) or set(item) != capacity_fields:
             raise AdapterError("[NU54:E_CAPABILITY_SCHEMA] capacity field가 올바르지 않습니다.")
@@ -162,6 +163,12 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
         minimum = item.get("minimum")
         maximum = item.get("maximum")
         unit = item.get("unit")
+        conf = _string_array(
+            item.get("conf"),
+            owner=str(identifier),
+            field="conf",
+            pattern=CAPACITY_CONFIG_PATTERN,
+        )
         if not isinstance(identifier, str) or CAPACITY_ID_PATTERN.fullmatch(identifier) is None:
             raise AdapterError(f"[NU54:E_CAPABILITY_SCHEMA] capacity ID가 잘못되었습니다: {identifier}")
         if identifier in capacities:
@@ -181,7 +188,7 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
             or not unit
         ):
             raise AdapterError(f"[NU54:E_CAPABILITY_SCHEMA] capacity 범위가 잘못되었습니다: {identifier}")
-        capacities[identifier] = dict(item)
+        capacities[identifier] = {**item, "conf": conf}
 
     role_items = document.get("roles")
     if not isinstance(role_items, list):
@@ -378,6 +385,7 @@ def _resolve_capacities(
                 "value": value,
                 "unit": definition["unit"],
                 "aggregation": definition["aggregation"],
+                "conf": [template.format(value=value) for template in definition["conf"]],
                 "sources": [
                     {"source": source, "value": contribution}
                     for contribution, source in sorted(values, key=lambda item: (item[1], item[0]))
@@ -486,7 +494,22 @@ def resolve_capabilities(
         overlays.extend(item["overlays"])
         source_gates.extend(item["source_gates"])
 
-    selected_conf_names = {line.split("=", 1)[0] for line in conf}
+    resolved_capacities = _resolve_capacities(registry, selected_roles, declaration)
+    for capacity in resolved_capacities:
+        conf.extend(capacity["conf"])
+
+    merged_conf: dict[str, str] = {}
+    for line in conf:
+        name, setting = line.split("=", 1)
+        previous = merged_conf.get(name)
+        if previous is not None and previous != setting:
+            raise AdapterError(
+                f"[NU54:E_CAPABILITY_CONFIG_CONFLICT] {name} 요구가 충돌합니다: "
+                f"{previous} != {setting}"
+            )
+        merged_conf[name] = setting
+
+    selected_conf_names = set(merged_conf)
     owned_boolean_conf = {
         line.split("=", 1)[0]
         for item in capabilities.values()
@@ -509,11 +532,11 @@ def resolve_capabilities(
             feature["id"] for feature in library_features if isinstance(feature.get("id"), str)
         ),
         "roles": selected_roles,
-        "capacities": _resolve_capacities(registry, selected_roles, declaration),
+        "capacities": resolved_capacities,
         "capabilities": resolved_capabilities,
         "generated": {
             "disabled_conf": disabled_conf,
-            "conf": list(dict.fromkeys(conf)),
+            "conf": [f"{name}={setting}" for name, setting in merged_conf.items()],
             "overlays": list(dict.fromkeys(overlays)),
             "source_gates": list(dict.fromkeys(source_gates)),
         },
