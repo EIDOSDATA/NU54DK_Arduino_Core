@@ -138,7 +138,7 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 | 1 / P0 | M31-W01 전체 source inventory·capability·실행 계약 | M28~M30 기준선, lock, 세 보드 role inventory | 전체 예제 parity 원장 후보와 M31 capability 원장·parser·target |
 | 2 / P0 | M31-A: W02 ISO → W03 Audio | controller capability·고정 stream/buffer | raw data/합성 PCM 예제, Audio role별 profile와 test |
 | 2 / P0 | M31-B W04 DF, M31-C W05 CS | W01 controller별 판정 | 실제 CTE TX·connected CS 예제; RX/AoD 경계 |
-| 3 / P0 | M31-W06~W08 통합·HIL·예제·인계 | 위 기능별 build/negative | M31 완료 또는 명시적 남은 행과 M32 자원 계약 |
+| 3 / P0 | M31-W06~W08 독립 image 자원·수명주기·회귀, HIL·예제·인계 | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | M31 완료 또는 명시적 남은 행과 M32 자원 계약 |
 | 4 / P0 | M32-A W01~W05 modern LE·Nordic 확장 | M31 W01 inventory와 기존 GAP | power/timing/광고/resource/diagnostic 예제 |
 | 5 / P0 | M32-B W06 Mesh 기반 → W07 Mesh 1.1 → W08 BLOB/DFU | 설정·보안·고정 memory budget | Mesh role/model·전송·update 예제 |
 | 5 / P0 | M32-C W09 단독 radio → W10 공존 | BLE/Mesh 단독 PASS, 최소 802.15.4/ESB profile | 지원 조합·중재·복구 예제; M38/M39 재사용 |
