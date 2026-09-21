@@ -24,6 +24,7 @@ from .common import (
     atomic_write_json,
     canonical_path,
     exact_git_revision,
+    file_sha256,
     git_or_release_revision,
     is_within,
     load_json_object,
@@ -31,7 +32,12 @@ from .common import (
     run_checked,
     tree_content_sha256,
 )
-from .configuration import declared_path, load_configuration_profile, resolve_library_features
+from .configuration import (
+    declared_path,
+    load_configuration_profile,
+    resolve_library_features,
+    resolve_profile_signing_key,
+)
 from .environment import compiler_version, tool_environment
 from .locking import build_lock, operating_system_lock
 from .installed_platform import requires_platform_copy
@@ -51,6 +57,8 @@ def cache_input_manifest(
         "release-manifest.json",
         "post_install.bat",
         "platform.txt",
+        "tools/nu54-builder/nu54-builder.cmd",
+        "tools/nu54-builder/nu54-builder.sh",
         "boards.txt",
         "programmers.txt",
         "cores",
@@ -83,6 +91,11 @@ def cache_input_manifest(
         else None
     )
     features = resolve_library_features(platform_root, profile, selected_library_names) if profile is not None else []
+    signing_key = (
+        resolve_profile_signing_key(platform_root, profile)
+        if profile is not None
+        else None
+    )
     manifest = {
         "schema_version": CACHE_SCHEMA_VERSION,
         "adapter": {
@@ -93,7 +106,7 @@ def cache_input_manifest(
         "target": {
             "fqbn": args.fqbn,
             "board": args.board,
-            "sysbuild": False,
+            "sysbuild": bool(profile and profile["sysbuild"]),
             "profile": profile_id,
         },
         "sketch": {
@@ -130,7 +143,19 @@ def cache_input_manifest(
     }
     if profile is not None:
         manifest["configuration"] = {
-            "profile": {"id": profile["id"], "manifest": optional_file_sha256(profile["path"]), "conf": optional_file_sha256(profile["conf_path"]), "overlay": optional_file_sha256(profile["overlay_path"])},
+            "profile": {
+                "id": profile["id"],
+                "manifest": optional_file_sha256(profile["path"]),
+                "conf": optional_file_sha256(profile["conf_path"]),
+                "overlay": optional_file_sha256(profile["overlay_path"]),
+                "sysbuild": profile["sysbuild"],
+                "sysbuild_files": [
+                    optional_file_sha256(path) for path in profile["sysbuild_paths"]
+                ],
+                "signing_key_sha256": (
+                    file_sha256(signing_key) if signing_key is not None else None
+                ),
+            },
             "selected_features": [{"id": item["id"], "manifest": optional_file_sha256(item["path"]), "conf": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["conf"]], "overlays": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["overlays"]]} for item in features],
         }
     elif hasattr(args, "profile"):

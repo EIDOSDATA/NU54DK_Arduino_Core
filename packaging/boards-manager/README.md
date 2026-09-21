@@ -9,7 +9,7 @@
 | Stable index | `package_nucode_nu54dk_index.json` |
 | Stable source·ZIP | [129번 공개 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)의 exact identity |
 
-현재 `main`의 version은 `0.4.1-dev`입니다. M28/M29 개발 결과는 공개 v0.4.1 ZIP에 자동으로
+현재 `main`의 version은 `0.4.1-dev`입니다. M28/M29/M30 개발 결과는 공개 v0.4.1 ZIP에 자동으로
 추가되지 않으며 v0.5.0 패키지는 아직 공개하지 않았습니다. 다음 제품선의 진행과 미완료 gate는
 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 따릅니다.
 
@@ -65,10 +65,16 @@ stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`
 | 보존된 비공개 `v0.4.0-rc.1` 후보 | [M27 prepare 절차 기록](../../tools/release/M27_README.md); 준비·검증 완료 |
 | 정식 `v0.4.0` | [완료 TODO](../../00_Docs/TODO_v0.4.0.md)와 [125번 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>); 공개 완료 |
 | 이미 공개한 stable | 아래 exact tag 감사 절차 |
+| 미공개 `v0.5.0` | M33에서 새 version의 기능·다중 Host·package·설치 gate를 마감; 이전 version에 고정된 릴리스 절차를 그대로 재사용하지 않음 |
 
 현재 `main`에서 이전 stable 이름으로 새 package를 만들지 않습니다. 이전 version은 위 고정
 source에서만 감사 가능한 공개 이력입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 version의
 공개는 이중 재현·Host·문서·package·lifecycle·HIL gate와 소유자의 최종 승인 뒤 별도 수행합니다.
+
+[개선 마일스톤](<../../00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)에서
+M33의 기존 API 예제 보강과 후속 ARF 공개 API 변경을 분리합니다. 후자의 배포 버전은 API·자원·
+HIL 비용과 기존 제품 계획에 미치는 영향을 확정한 뒤 결정하며, `v0.5.1` 또는 `v0.6.0`으로
+미리 배정하지 않습니다. 이 계획 문서 자체는 package 생성·게시나 기존 자산 교체의 승인이 아닙니다.
 
 ## 공개 stable 감사
 

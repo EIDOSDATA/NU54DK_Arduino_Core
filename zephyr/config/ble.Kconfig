@@ -97,6 +97,16 @@ config NUCODE_BLE_L2CAP_EVENT_QUEUE_SIZE
 	help
 	  stack callback과 BLEDevice.poll() 사이의 작은 고정 event record 수입니다.
 
+config NUCODE_BLE_NFC_OOB_ADAPTER
+	bool "NUCODE BLE NFC OOB NDEF adapter 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_SMP
+	help
+	  유선 경로와 같은 canonical LE Secure Connections OOB record를
+	  Bluetooth LE OOB MIME NDEF record로 변환합니다. 이 옵션만으로
+	  NFCT pin이나 antenna를 활성화하지 않으며 RF 지원을 의미하지 않습니다.
+
 config NUCODE_BLE_RX_BUFFER_SIZE
 	int "NUCODE BLE NUS RX queue byte 수"
 	default 512

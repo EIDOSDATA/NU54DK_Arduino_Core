@@ -5,5 +5,5 @@
   "conf": ["littlefs.conf"],
   "overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["standard", "ble"]
+  "compatible_profiles": ["standard", "ble", "secure_ble_dfu"]
 }

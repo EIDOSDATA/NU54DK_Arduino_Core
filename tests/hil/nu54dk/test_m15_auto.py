@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import io
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -270,7 +271,13 @@ class M15AutoHilTests(unittest.TestCase):
         self.assertNotIn("NUCODE_M15_AUTO_SYSTEM_OFF", source)
         self.assertNotIn("timed_wake_wait", source)
         self.assertIn("protocol_schema = 2U", source)
-        self.assertIn(MODULE.SCOPE_TOKEN.decode("ascii"), source.replace('"\n\t\t"', ""))
+        scope = re.search(
+            r'constexpr char scope_pass_token\[\]\s*=\s*((?:"[^"]*"\s*)+);',
+            source,
+        )
+        self.assertIsNotNone(scope)
+        literal = "".join(re.findall(r'"([^"]*)"', scope.group(1)))
+        self.assertEqual(literal, MODULE.SCOPE_TOKEN.decode("ascii"))
 
     def test_target_fail_or_token_after_final_is_rejected(self) -> None:
         """! @brief target FAIL과 최종 token 뒤 위조 성공 line을 허용하지 않습니다. """

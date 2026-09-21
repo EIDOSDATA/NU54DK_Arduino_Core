@@ -1,0 +1,53 @@
+{
+  "attempt": 3,
+  "core_revision": "ae5186f7790a748641fb04128c16156519ee1017",
+  "cycle": {
+    "absent_after_seconds": 12.082,
+    "absent_stable_seconds": 0.792,
+    "restored_after_seconds": 26.546
+  },
+  "dfu_retry": {
+    "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+    "requests": 1311
+  },
+  "flash_results": {
+    "central_bootloader": [
+      "daplink-msd",
+      "90624"
+    ],
+    "central_primary": [
+      "daplink-msd",
+      "706560"
+    ],
+    "peripheral_bootloader": [
+      "daplink-msd",
+      "94208"
+    ],
+    "peripheral_primary": [
+      "daplink-msd",
+      "737280"
+    ]
+  },
+  "link_recovery_timeout_seconds": 120.0,
+  "manifest_sha256": "a7747ef70c3ae0eb4e094244ae23ecedc260b04f1144edc4fd1e89f2db3e0994",
+  "physical_power_cuts": 1,
+  "plan_ordinal": 9,
+  "point": "mcuboot_test_swap",
+  "recovered_version": [
+    40,
+    0,
+    0,
+    0
+  ],
+  "schema_version": 1,
+  "scope": "user-directed single selected injection",
+  "settings": {
+    "bond_count": 1,
+    "bonded": 1,
+    "rejected_bonds": 0,
+    "settings_valid": 1
+  },
+  "status": "passed",
+  "test_id": "M30-POWER-01-SELECTED",
+  "timestamp_utc": "2026-09-15T13:18:47.361082+00:00"
+}

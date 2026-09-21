@@ -8,6 +8,7 @@ v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 �
 | --- | --- | --- |
 | M28 GAP/Link/Privacy | W01~W08 완료, 9/9 test ID PASS | [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
 | M29 ATT/GATT/L2CAP | W01~W08 완료, 10/10 test ID와 Windows/Intel GATT 상호운용 PASS | [149번 기록](<../../../00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
+| M30 Security/Profile/DFU | W01~W08 완료, 10/10 test ID PASS. 실제 전원 차단 12/12 | [161번 완료 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
 
 이는 개발 소스의 검증 상태이며 공개 v0.4.1 패키지에 BLE 확장이 포함됐다는 뜻이 아닙니다.
 
@@ -34,6 +35,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
 | M29 ATT/GATT | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil) |
 | M29 cache·CoC·W07 | [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil), [W06 LE CoC·negative](#m29-w06-두-보드-le-cocnegative-hil), [W07 Signed Write·EATT](#m29-w07-두-보드-signed-writeeatt-hil), [W07 통합·회귀·Windows](#m29-w07-세-보드-통합회귀와-windows-상호운용) |
+| M30 secure multi-link·전원 | [W07 세 보드](#m30-w07-세-보드-secure-multi-link-hil), [W08 실제 전원 차단 완료](#m30-w08-실제-전원-차단-hil-완료) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -71,6 +73,15 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m29_ble_multi.py` | M29W07D/1 mixed DUT의 두 link GATT·CoC traffic strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m29_ble_regression.py` | M19/M20/M21/M28 네 raw evidence와 정확히 세 UID를 묶는 회귀 aggregate | 장치 재조작 없이 같은 실행 묶음의 네 증거를 검사 |
 | `m29_ble_windows_gatt.py` | WinRT central의 read/write/notify/indicate·재연결 상호운용 검증 | NU54DK 한 대와 Windows Intel Bluetooth, 추가 배선 없음 |
+| `m30_ble_capability.py` | 보안·OOB·profile·DFU capability와 exact identity 검증 | NU54DK 한 대, USB/DAPLink UART |
+| `m30_ble_pair.py` | IO capability 5종 각각 10회 pairing 검증 | NU54DK 두 대, 독립 DAP/UART |
+| `m30_ble_bond.py` | bond migration·privacy·stale key 거부 검증 | NU54DK 두 대, 독립 DAP/UART |
+| `m30_ble_oob.py` | Host가 VCOM으로 교환한 SC OOB record의 20회 pairing·mismatch 거부 검증 | NU54DK 두 대, 독립 DAP/UART; 유선 OOB이며 NFC RF 시험 아님 |
+| `m30_ble_profile.py` | 일곱 BLE profile의 두 보드 검증 | NU54DK 두 대, 독립 DAP/UART |
+| `m30_mcuboot.py` | MCUboot 서명 image·부정 image 부팅 검증 | NU54DK 한 대, exact bootloader·서명 image·DAP/UART |
+| `m30_ble_dfu.py` | 인증 BLE DFU·부정 image·rollback 검증 | NU54DK 두 대, exact bootloader·서명 image·독립 DAP/UART |
+| `m30_ble_multi.py` | generation handle별 security operation과 cross-link 격리 strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m30_power_loss.py` | 별도 준비 mode와 실제 전원 차단 4지점×3회 주입·복구 판정 | NU54DK 두 대, DUT 물리 전원 차단 필요; exact `ae5186f7…` 12/12 PASS |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -105,6 +116,57 @@ T12 PWM capture의 초기 240조건은 [97번](<../../../00_Docs/04_검증 기�
 - 실기 PASS는 해당 commit, artifact hash와 fixture 조건을 검증 기록에 연결합니다.
 - M15 운영 절차에서는 고정된 NCS Ubuntu container를 사용하는 clean GitHub Actions build
   artifact만 사용합니다. 로컬 Windows build를 M15 검증 증적으로 대체하지 않습니다.
+
+## M30-W07 세 보드 secure multi-link HIL
+
+W07은 Peripheral, Mixed, Central NU54DK 세 대와 독립 DAPLink target UART 세 경로를 사용한다.
+Runner는 UID와 DAPLink volume을 exact role에 결합하고 `auto`에서 interface 3 UART만 선택한다.
+여러 포트 중 낮은 COM 번호나 이전 실행의 번호를 임의로 재사용하지 않는다. 보드 사이 추가 GPIO·
+전원 배선은 필요하지 않다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Commit = git -C $CoreRoot rev-parse HEAD
+
+py -3 -I -B "$CoreRoot\tests\hil\nu54dk\m30_ble_multi.py" `
+  --peripheral-hex "<peripheral zephyr.hex>" `
+  --mixed-hex "<mixed zephyr.hex>" `
+  --central-hex "<central zephyr.hex>" `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" --peripheral-volume "<volume>" `
+  --mixed-board-id "<mixed CMSIS-DAP UID>" --mixed-volume "<volume>" `
+  --central-board-id "<central CMSIS-DAP UID>" --central-volume "<volume>" `
+  --peripheral-port auto --mixed-port auto --central-port auto `
+  --flash-backend pyocd-sector --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m30-w07\m30-multi-evidence.json"
+```
+
+Protocol은 같은 128-bit nonce와 full Core revision을 세 UART·두 RF link에 묶는다. Mixed upstream
+link가 L2·16-byte가 된 뒤 downstream advertising을 시작하고, 세 role의 LINK가 모두 확인된 뒤에만
+RUN을 보낸다. Peripheral server 100회, Mixed client/server 각 100회, Central client 100회의
+generation-handle security 요청·현재 level·실제 key size가 모두 맞아야 PASS한다. Cross-link event,
+security 오류, key-size 오류와 callback context 위반은 하나라도 있으면 즉시 실패한다.
+
+Exact `d94f5ec3…`에서 세 role build와 실제 `M30-MULTI-01`이 PASS했다. 당시 E 보드의 COM12는
+보조 VCOM이어서 응답하지 않았고 자동 탐색한 interface 3 COM13이 target UART였다. Reset 진단은
+실제 전원 차단 증거로 계산하지 않았다. 이후 W08은 별도 runner로 완료했으며 W07 결과를 전원 HIL
+근거로 대체하지 않았다.
+
+## M30-W08 실제 전원 차단 HIL 완료
+
+`M30-POWER-01`은 exact `ae5186f7790a748641fb04128c16156519ee1017`에서 네 주입 지점마다
+실제 DUT 전원 차단·복구를 3회씩 수행해 **12/12 PASS**했다. 배터리·별도 전원·역급전 없이
+Peripheral DUT target USB만 분리했고 Central USB는 유지했다. Reset, USB/COM disappearance 또는
+과거 System OFF PASS로 실제 전원 상실을 대체하지 않았다.
+
+각 복구에서 confirmed image만 유효하게 부팅하고 bond/settings가 유지되며 전체 v42 DFU 재시도가
+가능함을 확인했다. Recovery failure와 invalid image boot는 0이다. MCUboot 60초 관찰 훅과 Host
+복구 timeout이 겹친 제외 시도는 원본 journal과 감사 파일로 별도 보존했고, Host 복구 한도를
+120초로 늘린 뒤 같은 지점을 재검증했다. 최종 근거는
+[161번 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
+[`m30-ble-readiness.json`](../../../variants/nu54dk/m30-ble-readiness.json)이다.
+
+유선 OOB는 W03 완료 범위를 유지하며 NFC adapter의 Host/build 결과를 NFC RF PASS로 올리지 않는다.
 
 ## M29-W02 두 보드 long read HIL
 

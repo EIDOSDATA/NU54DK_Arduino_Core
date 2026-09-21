@@ -7,6 +7,7 @@ from pathlib import PureWindowsPath
 from typing import Any
 from typing import Sequence
 import json
+import os
 import re
 from .common import (
     AdapterError,
@@ -69,7 +70,22 @@ def load_configuration_profile(
         raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] {error}") from error
     except (OSError, json.JSONDecodeError) as error:
         raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] profile을 읽지 못했습니다: {path}: {error}") from error
-    allowed = {"schema_version", "id", "display_name", "board", "zephyr_board", "ncs_version", "conf", "overlay", "features", "conflicts", "requires_hil"}
+    allowed = {
+        "schema_version",
+        "id",
+        "display_name",
+        "board",
+        "zephyr_board",
+        "ncs_version",
+        "conf",
+        "overlay",
+        "sysbuild",
+        "sysbuild_files",
+        "signing_key_env",
+        "features",
+        "conflicts",
+        "requires_hil",
+    }
     if not isinstance(document, dict) or set(document) != allowed or document.get("schema_version") != PROFILE_SCHEMA_VERSION:
         raise AdapterError("[NU54:E_PROFILE_SCHEMA] profile field/schema가 올바르지 않습니다.")
     for field in ("id", "display_name", "board", "zephyr_board", "ncs_version", "conf", "overlay"):
@@ -87,11 +103,69 @@ def load_configuration_profile(
     for field in ("features", "conflicts", "requires_hil"):
         if not isinstance(document[field], list) or not all(isinstance(item, str) for item in document[field]):
             raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] {field}는 문자열 배열이어야 합니다.")
+    if not isinstance(document["sysbuild"], bool):
+        raise AdapterError("[NU54:E_PROFILE_SCHEMA] sysbuild는 boolean이어야 합니다.")
+    if not isinstance(document["sysbuild_files"], list) or not all(
+        isinstance(item, str) for item in document["sysbuild_files"]
+    ):
+        raise AdapterError("[NU54:E_PROFILE_SCHEMA] sysbuild_files는 문자열 배열이어야 합니다.")
+    signing_key_env = document["signing_key_env"]
+    if signing_key_env is not None and not isinstance(signing_key_env, str):
+        raise AdapterError("[NU54:E_PROFILE_SCHEMA] signing_key_env는 문자열 또는 null이어야 합니다.")
+    if document["sysbuild"]:
+        if (
+            not document["sysbuild_files"]
+            or "sysbuild.conf" not in document["sysbuild_files"]
+            or not isinstance(signing_key_env, str)
+            or not re.fullmatch(r"[A-Z][A-Z0-9_]*", signing_key_env)
+        ):
+            raise AdapterError("[NU54:E_PROFILE_SCHEMA] sysbuild profile의 파일·서명 키 환경 계약이 없습니다.")
+    elif document["sysbuild_files"] or signing_key_env is not None:
+        raise AdapterError("[NU54:E_PROFILE_SCHEMA] loaderless profile에 sysbuild 입력이 선언되었습니다.")
     conf = declared_path(root, document["conf"], "E_PROFILE_PATH")
     overlay = declared_path(root, document["overlay"], "E_PROFILE_PATH")
     if not conf.is_file() or not overlay.is_file():
         raise AdapterError("[NU54:E_PROFILE_PATH] profile fragment가 없습니다.")
-    return {**document, "root": root, "path": path, "conf_path": conf, "overlay_path": overlay}
+    sysbuild_paths = [
+        declared_path(root, value, "E_PROFILE_PATH")
+        for value in document["sysbuild_files"]
+    ]
+    if not all(item.is_file() for item in sysbuild_paths):
+        raise AdapterError("[NU54:E_PROFILE_PATH] sysbuild profile fragment가 없습니다.")
+    return {
+        **document,
+        "root": root,
+        "path": path,
+        "conf_path": conf,
+        "overlay_path": overlay,
+        "sysbuild_paths": sysbuild_paths,
+    }
+
+
+## @brief sysbuild profile의 저장소 외부 private signing key를 검증합니다.
+def resolve_profile_signing_key(
+    platform_root: Path, profile: dict[str, Any]
+) -> Path | None:
+    if not profile["sysbuild"]:
+        return None
+    variable = profile["signing_key_env"]
+    value = os.environ.get(variable, "").strip()
+    if not value:
+        raise AdapterError(
+            f"[NU54:E_DFU_SIGNING_KEY] {variable}에 저장소 외부 ECDSA P-256 private key를 지정하십시오."
+        )
+    key = canonical_path(value)
+    if is_within(key, platform_root):
+        raise AdapterError("[NU54:E_DFU_SIGNING_KEY_REPOSITORY] DFU private key는 저장소 안에 둘 수 없습니다.")
+    if not key.is_file() or key.suffix.casefold() != ".pem":
+        raise AdapterError("[NU54:E_DFU_SIGNING_KEY] DFU signing key PEM 파일을 찾을 수 없습니다.")
+    try:
+        header = key.read_text(encoding="ascii")[:80]
+    except (OSError, UnicodeError) as error:
+        raise AdapterError("[NU54:E_DFU_SIGNING_KEY] DFU signing key PEM을 읽을 수 없습니다.") from error
+    if "-----BEGIN " not in header or "PRIVATE KEY-----" not in header:
+        raise AdapterError("[NU54:E_DFU_SIGNING_KEY] private key PEM header가 올바르지 않습니다.")
+    return key
 
 
 ## @brief bundled library의 선언형 feature manifest만 allowlist로 읽습니다.

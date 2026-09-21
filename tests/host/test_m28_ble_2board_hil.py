@@ -219,7 +219,10 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         command = run.call_args.args[0]
         self.assertEqual("a" * 32, command[command.index("--uid") + 1])
         self.assertEqual("500000", command[command.index("--frequency") + 1])
+        self.assertEqual("under-reset", command[command.index("--connect") + 1])
         self.assertIn("cmsis_dap.limit_packets=true", command)
+        self.assertIn("cmsis_dap.prefer_v1=false", command)
+        self.assertIn("smart_flash=false", command)
         self.assertIn("auto_unlock=false", command)
         self.assertEqual("sector", command[command.index("--erase") + 1])
         self.assertNotIn("chip", command)

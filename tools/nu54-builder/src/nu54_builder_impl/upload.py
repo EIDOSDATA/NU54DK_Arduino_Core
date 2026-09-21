@@ -15,6 +15,7 @@ from .artifacts import validate_flash_manifest
 from .build import load_context
 from .common import AdapterError, CONTEXT_DIRECTORY, ChildCommandError, canonical_path, path_key
 from .environment import tool_environment
+from .host import canonical_host_os, resolve_toolchain_executable
 from .locking import build_lock, probe_lock
 from .paths import adapter_paths, paths_from_context
 
@@ -103,14 +104,22 @@ def select_pyocd_probe(requested: str | None, discovered: Sequence[str] | None =
 
 ## @brief 설치된 SEGGER J-Link 실행 directory를 찾습니다.
 def discover_jlink_directory(environment: dict[str, str]) -> Path:
+    host_os = canonical_host_os("windows" if os.name == "nt" else os.uname().sysname)
+    executable_name = "JLink.exe" if host_os == "windows" else "JLinkExe"
+    server_name = "JLinkGDBServerCL.exe" if host_os == "windows" else "JLinkGDBServerCLExe"
     candidates: list[Path] = []
     configured = os.environ.get("NUCODE_JLINK_ROOT")
     if configured:
         candidates.append(canonical_path(configured))
-    executable = shutil.which("JLink.exe", path=environment.get("PATH"))
+    executable = shutil.which(executable_name, path=environment.get("PATH"))
     if executable:
         candidates.append(canonical_path(executable).parent)
-    for root in (Path("C:/Program Files/SEGGER"), Path("C:/Program Files (x86)/SEGGER")):
+    roots = (
+        (Path("C:/Program Files/SEGGER"), Path("C:/Program Files (x86)/SEGGER"))
+        if host_os == "windows"
+        else (Path("/opt/SEGGER"), Path("/Applications/SEGGER"))
+    )
+    for root in roots:
         if root.is_dir():
             candidates.extend(sorted(root.glob("JLink_*"), reverse=True))
     visited: set[str] = set()
@@ -119,7 +128,7 @@ def discover_jlink_directory(environment: dict[str, str]) -> Path:
         if key in visited:
             continue
         visited.add(key)
-        if (candidate / "JLink.exe").is_file() and (candidate / "JLinkGDBServerCL.exe").is_file():
+        if (candidate / executable_name).is_file() and (candidate / server_name).is_file():
             return candidate.resolve()
     raise AdapterError(
         "[NU54:E_RUNNER_JLINK_UNAVAILABLE] SEGGER J-Link Software를 찾지 못했습니다. "
@@ -133,9 +142,7 @@ def flash_environment(tools: dict[str, Any], runner: str) -> dict[str, str]:
     environment["PYTHONUTF8"] = "1"
     environment["PYTHONIOENCODING"] = "utf-8"
     if runner == "pyocd":
-        pyocd = tools["toolchain_root"] / "opt" / "bin" / "Scripts" / "pyocd.exe"
-        if not pyocd.is_file():
-            raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] pyOCD 실행 파일이 없습니다: {pyocd}")
+        resolve_toolchain_executable(tools["toolchain_root"], "pyocd")
     elif runner == "jlink":
         jlink_directory = discover_jlink_directory(environment)
         environment["PATH"] = str(jlink_directory) + os.pathsep + environment.get("PATH", "")
@@ -253,7 +260,8 @@ def flash(args: argparse.Namespace) -> None:
                 raise AdapterError(
                     "[NU54:E_FLASH_CONTEXT] session context가 artifact manifest와 다릅니다."
                 )
-            validate_runner_configuration(inputs["zephyr_build"], args.runner)
+            for runner_build in inputs.get("runner_builds", [inputs["zephyr_build"]]):
+                validate_runner_configuration(runner_build, args.runner)
             if args.runner == "pyocd":
                 probe_id = select_pyocd_probe(args.probe_id)
             else:

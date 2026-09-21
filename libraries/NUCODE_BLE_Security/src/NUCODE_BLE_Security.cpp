@@ -19,6 +19,40 @@ namespace nucode::ble::internal::security
         constexpr std::size_t security_event_capacity = 24U;
         K_MSGQ_DEFINE(security_event_queue, sizeof(SecurityEventRecord), security_event_capacity,
                       alignof(SecurityEventRecord));
+
+        /** @brief connection lock을 보유한 호출자에게 exact link slot을 반환합니다. */
+        SecurityLinkState *linkForConnectionLocked(struct bt_conn *connection) noexcept
+        {
+            for (std::size_t index = 0U; index < maximum_security_links; ++index)
+            {
+                SecurityLinkState &link = securityState().links[index];
+                if (link.connection == connection)
+                {
+                    return &link;
+                }
+            }
+            return nullptr;
+        }
+
+        /** @brief connection lock을 보유한 호출자에게 generation link slot을 반환합니다. */
+        SecurityLinkState *linkForHandleLocked(BLEConnectionHandle handle) noexcept
+        {
+            for (std::size_t index = 0U; index < maximum_security_links; ++index)
+            {
+                SecurityLinkState &link = securityState().links[index];
+                if (link.connection != nullptr && link.handle == handle)
+                {
+                    return &link;
+                }
+            }
+            return nullptr;
+        }
+
+        /** @brief legacy facade가 가리키는 link인지 확인합니다. */
+        bool isLegacyConnectionLocked(struct bt_conn *connection) noexcept
+        {
+            return connection != nullptr && securityState().active_connection == connection;
+        }
     } // namespace
     k_msgq &securityEventQueue() noexcept
     {
@@ -50,6 +84,7 @@ namespace nucode::ble::internal::security
     {
         SecurityEventRecord record = {};
         record.event = event;
+        record.connection = securityHandle(connection);
         record.level =
             connection == nullptr
                 ? static_cast<SecurityLevel>(atomic_get(&securityState().current_level_value))
@@ -57,7 +92,8 @@ namespace nucode::ble::internal::security
         record.peer = publicAddress(connection == nullptr ? nullptr : bt_conn_get_dst(connection));
         record.passkey = passkey;
         record.reason = reason;
-        record.bond_state = currentBondState();
+        record.bond_state =
+            connection == nullptr ? currentBondState() : currentBondState(connection);
         record.bonded = record.bond_state == BondState::verified;
         return record;
     }
@@ -87,15 +123,38 @@ namespace nucode::ble::internal::security
     /** @brief identity가 준비된 같은 연결 수준을 security_changed로 한 번만 전달합니다. */
     void queueSecurityChangedIfNew(struct bt_conn *connection, bt_security_t level) noexcept
     {
-        if (isResolvablePrivateAddress(connection == nullptr ? nullptr
-                                                             : bt_conn_get_dst(connection)))
+        if (connection == nullptr)
         {
-            atomic_set(&securityState().pending_security_event, 1);
             return;
         }
-        atomic_set(&securityState().pending_security_event, 0);
-        const atomic_val_t published =
-            atomic_set(&securityState().published_level_value, static_cast<atomic_val_t>(level));
+        bool legacy = false;
+        SecurityLinkState *link = nullptr;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        link = linkForConnectionLocked(connection);
+        legacy = isLegacyConnectionLocked(connection);
+        k_spin_unlock(&securityState().connection_lock, key);
+        if (link == nullptr)
+        {
+            return;
+        }
+        if (isResolvablePrivateAddress(bt_conn_get_dst(connection)))
+        {
+            atomic_set(&link->pending_security_event, 1);
+            if (legacy)
+            {
+                atomic_set(&securityState().pending_security_event, 1);
+            }
+            return;
+        }
+        atomic_set(&link->pending_security_event, 0);
+        const atomic_val_t published = atomic_set(&link->published_level_value,
+                                                  static_cast<atomic_val_t>(level));
+        if (legacy)
+        {
+            atomic_set(&securityState().pending_security_event, 0);
+            atomic_set(&securityState().published_level_value,
+                       static_cast<atomic_val_t>(level));
+        }
         if (published != static_cast<atomic_val_t>(level))
         {
             queueEvent(makeEvent(SecurityEvent::security_changed, connection));
@@ -115,7 +174,7 @@ namespace nucode::ble::internal::security
         {
             return false;
         }
-        atomic_set(&securityState().current_level_value, static_cast<atomic_val_t>(level));
+        setLinkLevel(connection, level);
         verifySecureBond(connection, level);
         queueSecurityChangedIfNew(connection, level);
         return true;
@@ -134,36 +193,119 @@ namespace nucode::ble::internal::security
         return connection;
     }
 
+    /** @brief 지정 generation 보안 link에 호출자 수명 동안 reference를 얻습니다. */
+    struct bt_conn *referenceConnection(BLEConnectionHandle handle) noexcept
+    {
+        struct bt_conn *connection = nullptr;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        SecurityLinkState *const link = linkForHandleLocked(handle);
+        if (link != nullptr)
+        {
+            connection = bt_conn_ref(link->connection);
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        return connection;
+    }
+
     /** @brief callback connection이 현재 API가 소유한 exact connection인지 확인합니다. */
     bool isActiveConnection(struct bt_conn *connection) noexcept
     {
-        struct bt_conn *active = referenceActiveConnection();
-        const bool matches = active != nullptr && active == connection;
-        if (active != nullptr)
-        {
-            bt_conn_unref(active);
-        }
+        bool matches = false;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        matches = linkForConnectionLocked(connection) != nullptr;
+        k_spin_unlock(&securityState().connection_lock, key);
         return matches;
+    }
+
+    /** @brief generation과 native connection이 같은 active slot인지 확인합니다. */
+    bool isActiveConnection(BLEConnectionHandle handle, struct bt_conn *connection) noexcept
+    {
+        bool matches = false;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        SecurityLinkState *const link = linkForHandleLocked(handle);
+        matches = link != nullptr && link->connection == connection;
+        k_spin_unlock(&securityState().connection_lock, key);
+        return matches;
+    }
+
+    /** @brief native connection을 보안 계층이 보존한 generation handle로 변환합니다. */
+    BLEConnectionHandle securityHandle(struct bt_conn *connection) noexcept
+    {
+        BLEConnectionHandle handle;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        SecurityLinkState *const link = linkForConnectionLocked(connection);
+        if (link != nullptr)
+        {
+            handle = link->handle;
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        return handle;
+    }
+
+    /** @brief generation link의 공개 상태를 한 lock 구간에서 복사합니다. */
+    bool copyLinkState(BLEConnectionHandle handle, bool &paired, SecurityLevel &level,
+                       BondState &bond_state) noexcept
+    {
+        bool found = false;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        SecurityLinkState *const link = linkForHandleLocked(handle);
+        if (link != nullptr)
+        {
+            paired = atomic_get(&link->paired_value) != 0;
+            level = static_cast<SecurityLevel>(atomic_get(&link->current_level_value));
+            bond_state = link->bond_lifecycle.state;
+            found = true;
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        return found;
+    }
+
+    /** @brief exact link의 pairing 결과와 legacy mirror를 함께 갱신합니다. */
+    void setLinkPaired(struct bt_conn *connection, bool paired) noexcept
+    {
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        SecurityLinkState *const link = linkForConnectionLocked(connection);
+        if (link != nullptr)
+        {
+            atomic_set(&link->paired_value, paired ? 1 : 0);
+            if (isLegacyConnectionLocked(connection))
+            {
+                atomic_set(&securityState().paired_value, paired ? 1 : 0);
+            }
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+    }
+
+    /** @brief exact link의 security level과 legacy mirror를 함께 갱신합니다. */
+    void setLinkLevel(struct bt_conn *connection, bt_security_t level) noexcept
+    {
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        SecurityLinkState *const link = linkForConnectionLocked(connection);
+        if (link != nullptr)
+        {
+            atomic_set(&link->current_level_value, static_cast<atomic_val_t>(level));
+            if (isLegacyConnectionLocked(connection))
+            {
+                atomic_set(&securityState().current_level_value,
+                           static_cast<atomic_val_t>(level));
+            }
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
     }
 
     /** @brief active connection이 지정 peer인지 확인하고 제거합니다. */
     bool releaseActiveConnection(struct bt_conn *matching) noexcept
     {
-        struct bt_conn *released = nullptr;
+        bool released = false;
         k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
         if (securityState().active_connection != nullptr &&
             securityState().active_connection == matching)
         {
-            released = securityState().active_connection;
             securityState().active_connection = nullptr;
+            released = true;
         }
         k_spin_unlock(&securityState().connection_lock, key);
-        if (released != nullptr)
-        {
-            bt_conn_unref(released);
-            return true;
-        }
-        return false;
+        return released;
     }
 
 } // namespace nucode::ble::internal::security
@@ -181,7 +323,8 @@ namespace nucode::ble
         if (level < static_cast<unsigned int>(SecurityLevel::encrypted) ||
             level > static_cast<unsigned int>(SecurityLevel::secure_connections) ||
             io_capability > static_cast<unsigned int>(SecurityIoCapability::keyboard_display) ||
-            config.response_timeout_ms < 1000U || config.response_timeout_ms > 300000U)
+            config.response_timeout_ms < 1000U || config.response_timeout_ms > 300000U ||
+            config.bond_database_revision == 0U)
         {
             recordSecurityError(SecurityError::invalid_argument, -EINVAL);
             return false;
@@ -198,9 +341,36 @@ namespace nucode::ble
         bondStorage().startup_bond_count = 0U;
         k_spin_unlock(&bondStorage().startup_bond_lock, startup_key);
         atomic_set(&bondStorage().startup_bond_snapshot_ready, 0);
+        atomic_set(&bondStorage().migration_count, 0);
+        atomic_set(&bondStorage().rejected_count, 0);
+        k_spinlock_key_t metadata_key = k_spin_lock(&bondStorage().bond_lock);
+        for (std::size_t index = 0U; index < maximum_bond_records; ++index)
+        {
+            bondStorage().metadata[index] = {};
+        }
+        k_spin_unlock(&bondStorage().bond_lock, metadata_key);
         atomic_set(&securityState().paired_value, 0);
+        atomic_set(&securityState().current_level_value,
+                   static_cast<atomic_val_t>(SecurityLevel::none));
+        atomic_set(&securityState().published_level_value, 0);
         atomic_set(&securityState().pending_security_event, 0);
+        k_spinlock_key_t connection_key = k_spin_lock(&securityState().connection_lock);
+        securityState().active_connection = nullptr;
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            SecurityLinkState &link = securityState().links[index];
+            link.handle = {};
+            link.connection = nullptr;
+            atomic_set(&link.paired_value, 0);
+            atomic_set(&link.current_level_value,
+                       static_cast<atomic_val_t>(SecurityLevel::none));
+            atomic_set(&link.published_level_value, 0);
+            atomic_set(&link.pending_security_event, 0);
+            link.bond_lifecycle = {};
+        }
+        k_spin_unlock(&securityState().connection_lock, connection_key);
         setBondLifecycle(nullptr, BondState::none, false);
+        resetOobState();
         prepareAuthenticationCallbacks(config.io_capability);
         int result = bt_conn_auth_cb_register(&pairingState().authentication_callbacks);
         if (result == 0)
@@ -231,16 +401,29 @@ namespace nucode::ble
         }
         processPendingTimeout();
 
-        if (atomic_get(&securityState().pending_security_event) != 0)
+        struct PendingSecuritySnapshot
         {
-            struct bt_conn *connection = referenceActiveConnection();
-            if (connection != nullptr)
+            struct bt_conn *connection = nullptr;
+            bt_security_t level = BT_SECURITY_L1;
+        } pending[maximum_security_links] = {};
+        std::size_t pending_count = 0U;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_security_links; ++index)
+        {
+            SecurityLinkState &link = securityState().links[index];
+            if (link.connection != nullptr && atomic_get(&link.pending_security_event) != 0)
             {
-                const bt_security_t level = static_cast<bt_security_t>(
-                    atomic_get(&securityState().current_level_value));
-                queueSecurityChangedIfNew(connection, level);
-                bt_conn_unref(connection);
+                pending[pending_count].connection = bt_conn_ref(link.connection);
+                pending[pending_count].level =
+                    static_cast<bt_security_t>(atomic_get(&link.current_level_value));
+                ++pending_count;
             }
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        for (std::size_t index = 0U; index < pending_count; ++index)
+        {
+            queueSecurityChangedIfNew(pending[index].connection, pending[index].level);
+            bt_conn_unref(pending[index].connection);
         }
 
         SecurityEventRecord event = {};
@@ -295,9 +478,59 @@ namespace nucode::ble
         return true;
     }
 
+    bool SecurityManager::requestSecurity(BLEConnectionHandle handle) noexcept
+    {
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (atomic_get(&securityState().security_initialized) == 0)
+        {
+            recordSecurityError(SecurityError::not_initialized, -EACCES);
+            return false;
+        }
+        struct bt_conn *connection = internal::security::referenceConnection(handle);
+        if (connection == nullptr)
+        {
+            recordSecurityError(SecurityError::not_connected, -ENOTCONN);
+            return false;
+        }
+        const bt_security_t required_level =
+            static_cast<bt_security_t>(securityState().security_config.minimum_level);
+        if (synchronizeSatisfiedSecurity(connection, required_level))
+        {
+            bt_conn_unref(connection);
+            recordSecurityError(SecurityError::none);
+            return true;
+        }
+        const int result = bt_conn_set_security(connection, required_level);
+        if (result >= 0)
+        {
+            static_cast<void>(synchronizeSatisfiedSecurity(connection, required_level));
+        }
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordSecurityError(
+                result == -EBUSY ? SecurityError::busy : SecurityError::driver_error, result);
+            return false;
+        }
+        recordSecurityError(SecurityError::none);
+        return true;
+    }
+
     bool SecurityManager::paired() const noexcept
     {
         return atomic_get(&securityState().paired_value) != 0;
+    }
+
+    bool SecurityManager::paired(BLEConnectionHandle connection) const noexcept
+    {
+        bool paired_value = false;
+        SecurityLevel level = SecurityLevel::none;
+        BondState state = BondState::none;
+        static_cast<void>(copyLinkState(connection, paired_value, level, state));
+        return paired_value;
     }
 
     bool SecurityManager::bonded() const noexcept
@@ -305,14 +538,37 @@ namespace nucode::ble
         return currentBondState() == BondState::verified;
     }
 
+    bool SecurityManager::bonded(BLEConnectionHandle connection) const noexcept
+    {
+        return bondState(connection) == BondState::verified;
+    }
+
     BondState SecurityManager::bondState() const noexcept
     {
         return currentBondState();
     }
 
+    BondState SecurityManager::bondState(BLEConnectionHandle connection) const noexcept
+    {
+        bool paired_value = false;
+        SecurityLevel level = SecurityLevel::none;
+        BondState state = BondState::none;
+        static_cast<void>(copyLinkState(connection, paired_value, level, state));
+        return state;
+    }
+
     SecurityLevel SecurityManager::currentLevel() const noexcept
     {
         return static_cast<SecurityLevel>(atomic_get(&securityState().current_level_value));
+    }
+
+    SecurityLevel SecurityManager::currentLevel(BLEConnectionHandle connection) const noexcept
+    {
+        bool paired_value = false;
+        SecurityLevel level = SecurityLevel::none;
+        BondState state = BondState::none;
+        static_cast<void>(copyLinkState(connection, paired_value, level, state));
+        return level;
     }
 
     void SecurityManager::onEvent(SecurityEventCallback callback, void *context) noexcept
@@ -339,18 +595,40 @@ namespace nucode::ble
 namespace nucode::ble::internal
 {
     using namespace security;
-    void securityConnected(struct bt_conn *connection) noexcept
+    void securityConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
-        if (connection == nullptr)
+        if (connection == nullptr || !handle.valid())
         {
             return;
         }
         bool inserted = false;
+        bool legacy = false;
         k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
-        if (securityState().active_connection == nullptr)
+        if (linkForConnectionLocked(connection) == nullptr && linkForHandleLocked(handle) == nullptr)
         {
-            securityState().active_connection = bt_conn_ref(connection);
-            inserted = true;
+            for (std::size_t index = 0U; index < maximum_security_links; ++index)
+            {
+                SecurityLinkState &link = securityState().links[index];
+                if (link.connection != nullptr)
+                {
+                    continue;
+                }
+                link.handle = handle;
+                link.connection = bt_conn_ref(connection);
+                atomic_set(&link.paired_value, 0);
+                atomic_set(&link.current_level_value,
+                           static_cast<atomic_val_t>(bt_conn_get_security(connection)));
+                atomic_set(&link.published_level_value, 0);
+                atomic_set(&link.pending_security_event, 0);
+                link.bond_lifecycle = {};
+                if (securityState().active_connection == nullptr)
+                {
+                    securityState().active_connection = connection;
+                    legacy = true;
+                }
+                inserted = true;
+                break;
+            }
         }
         k_spin_unlock(&securityState().connection_lock, key);
         if (!inserted)
@@ -358,21 +636,23 @@ namespace nucode::ble::internal
             return;
         }
         const bt_security_t level = bt_conn_get_security(connection);
-        atomic_set(&securityState().current_level_value, static_cast<atomic_val_t>(level));
-        atomic_set(&securityState().published_level_value, 0);
-        atomic_set(&securityState().pending_security_event, 0);
-        atomic_set(&securityState().paired_value, 0);
+        setLinkLevel(connection, level);
+        if (legacy)
+        {
+            atomic_set(&securityState().published_level_value, 0);
+            atomic_set(&securityState().pending_security_event, 0);
+            atomic_set(&securityState().paired_value, 0);
+        }
         captureStartupBonds();
         const bt_addr_le_t *const peer = bt_conn_get_dst(connection);
         if (isStartupBond(peer))
         {
-            setBondLifecycle(peer, BondState::restored_candidate, false);
-            queueEvent(makePeerEvent(SecurityEvent::bond_restored_candidate, peer,
-                                     BondState::restored_candidate));
+            setBondLifecycle(connection, peer, BondState::restored_candidate, false);
+            queueEvent(makeEvent(SecurityEvent::bond_restored_candidate, connection));
         }
         else
         {
-            setBondLifecycle(nullptr, BondState::none, false);
+            setBondLifecycle(connection, nullptr, BondState::none, false);
         }
         verifySecureBond(connection, level);
         if (level >= BT_SECURITY_L2)
@@ -391,9 +671,14 @@ namespace nucode::ble::internal
         }
     }
 
-    void securityDisconnected(struct bt_conn *connection) noexcept
+    void securityConnected(struct bt_conn *connection) noexcept
     {
-        if (connection == nullptr)
+        securityConnected(connection, handleForActiveConnection(connection));
+    }
+
+    void securityDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
+    {
+        if (connection == nullptr || !handle.valid())
         {
             return;
         }
@@ -407,14 +692,69 @@ namespace nucode::ble::internal
                 recordHidError(SecurityError::driver_error, result);
             }
         }
-        clearPending(connection);
-        if (releaseActiveConnection(connection))
+        clearPending(handle);
+        struct bt_conn *released = nullptr;
+        struct bt_conn *promoted = nullptr;
+        BondLifecycleState promoted_bond = {};
+        bool was_legacy = false;
+        k_spinlock_key_t key = k_spin_lock(&securityState().connection_lock);
+        SecurityLinkState *const link = linkForHandleLocked(handle);
+        if (link != nullptr && link->connection == connection)
         {
-            if (bondLifecycleMatches(bt_conn_get_dst(connection)) &&
-                currentBondState() != BondState::removal_requested)
+            released = link->connection;
+            was_legacy = securityState().active_connection == connection;
+            link->handle = {};
+            link->connection = nullptr;
+            atomic_set(&link->paired_value, 0);
+            atomic_set(&link->current_level_value,
+                       static_cast<atomic_val_t>(SecurityLevel::none));
+            atomic_set(&link->published_level_value, 0);
+            atomic_set(&link->pending_security_event, 0);
+            link->bond_lifecycle = {};
+            if (was_legacy)
+            {
+                securityState().active_connection = nullptr;
+                for (std::size_t index = 0U; index < maximum_security_links; ++index)
+                {
+                    SecurityLinkState &candidate = securityState().links[index];
+                    if (candidate.connection != nullptr)
+                    {
+                        promoted = candidate.connection;
+                        promoted_bond = candidate.bond_lifecycle;
+                        securityState().active_connection = promoted;
+                        atomic_set(&securityState().paired_value,
+                                   atomic_get(&candidate.paired_value));
+                        atomic_set(&securityState().current_level_value,
+                                   atomic_get(&candidate.current_level_value));
+                        atomic_set(&securityState().published_level_value,
+                                   atomic_get(&candidate.published_level_value));
+                        atomic_set(&securityState().pending_security_event,
+                                   atomic_get(&candidate.pending_security_event));
+                        break;
+                    }
+                }
+            }
+        }
+        k_spin_unlock(&securityState().connection_lock, key);
+        if (released != nullptr)
+        {
+            bt_conn_unref(released);
+        }
+        if (was_legacy)
+        {
+            if (promoted != nullptr)
+            {
+                setBondLifecycle(promoted_bond.peer_valid ? &promoted_bond.peer : nullptr,
+                                 promoted_bond.state,
+                                 promoted_bond.paired_this_connection);
+            }
+            else if (currentBondState() != BondState::removal_requested)
             {
                 setBondLifecycle(nullptr, BondState::none, false);
             }
+        }
+        if (was_legacy && promoted == nullptr)
+        {
             atomic_set(&securityState().paired_value, 0);
             atomic_set(&securityState().current_level_value,
                        static_cast<atomic_val_t>(SecurityLevel::none));
@@ -423,39 +763,39 @@ namespace nucode::ble::internal
         }
     }
 
-    void securityChanged(struct bt_conn *connection, bt_security_t level,
-                         enum bt_security_err error) noexcept
+    void securityDisconnected(struct bt_conn *connection) noexcept
     {
-        if (connection == nullptr)
-        {
-            return;
-        }
-        struct bt_conn *active = referenceActiveConnection();
-        const bool is_active = active == connection;
-        if (active != nullptr)
-        {
-            bt_conn_unref(active);
-        }
-        if (!is_active)
+        securityDisconnected(connection, securityHandle(connection));
+    }
+
+    void securityChanged(struct bt_conn *connection, BLEConnectionHandle handle,
+                         bt_security_t level, enum bt_security_err error) noexcept
+    {
+        if (connection == nullptr || !isActiveConnection(handle, connection))
         {
             return;
         }
         if (error != BT_SECURITY_ERR_SUCCESS)
         {
-            if (bondLifecycleMatches(bt_conn_get_dst(connection)))
+            if (bondLifecycleMatches(connection, bt_conn_get_dst(connection)))
             {
-                setBondLifecycle(nullptr, BondState::none, false);
+                setBondLifecycle(connection, nullptr, BondState::none, false);
             }
-            atomic_set(&securityState().paired_value, 0);
-            atomic_set(&securityState().pending_security_event, 0);
+            setLinkPaired(connection, false);
             recordSecurityError(SecurityError::driver_error, -static_cast<int>(error));
             queueEvent(
                 makeEvent(SecurityEvent::error, connection, 0U, static_cast<std::uint8_t>(error)));
             return;
         }
-        atomic_set(&securityState().current_level_value, static_cast<atomic_val_t>(level));
+        setLinkLevel(connection, level);
         verifySecureBond(connection, level);
         queueSecurityChangedIfNew(connection, level);
+    }
+
+    void securityChanged(struct bt_conn *connection, bt_security_t level,
+                         enum bt_security_err error) noexcept
+    {
+        securityChanged(connection, securityHandle(connection), level, error);
     }
 
 } // namespace nucode::ble::internal

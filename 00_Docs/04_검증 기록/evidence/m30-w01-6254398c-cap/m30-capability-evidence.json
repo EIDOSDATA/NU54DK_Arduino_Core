@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "protocol": "M30CAP/1",
+  "test_id": "M30-CAP-01",
+  "status": "passed",
+  "created_at_utc": "2026-09-14T07:44:20.005093+00:00",
+  "identity": {
+    "core": "6254398c1ea4e7320b1905014dce1c2a405a53fc",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "nonce": "62764f6e4f4591bec13743b8b24fd524",
+  "board": {
+    "daplink_uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "msd_root": "F:\\",
+    "uart_port": "COM14"
+  },
+  "image": {
+    "name": "zephyr.hex",
+    "size": 630919,
+    "sha256": "2f8f43661b7f2ac076ccb64a5b7ae482a3c412dc3cd578d32f8717804d52096e",
+    "build_record": {
+      "core_revision": "6254398c1ea4",
+      "core_source_sha256": "b2e6190d8afefb18d5b21927c59683af53e221ac4eefd701208a07f8234e693f",
+      "application_source_sha256": "0d21de264ac6d16c36109a2ff05cf2acfe9bd4b688d2e5689674e6647eb7b381",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "db692c8267d517610793c6a6aed833830bb0ae04a10e87271526202619c8fdb1"
+    },
+    "flash_sequence": "3",
+    "flash_bytes": "631296"
+  },
+  "transcript": {
+    "name": "m30-capability-evidence.transcript.log",
+    "size": 1831,
+    "sha256": "1ed6ef2c87af5218818a658ba08a20daa3ed1f214eb135f717e3f6c2f944b4ad"
+  },
+  "result": {
+    "nonce": "62764f6e4f4591bec13743b8b24fd524",
+    "identity": {
+      "core": "6254398c1ea4e7320b1905014dce1c2a405a53fc",
+      "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "host": {
+      "bt_max_conn": 2,
+      "smp": 1,
+      "sc_pair_only": 1,
+      "min_key_bytes": 16,
+      "max_paired": 4,
+      "privacy": 1,
+      "app_pairing": 1,
+      "mcumgr_bt": 1,
+      "mcumgr_authen": 1
+    },
+    "probe": {
+      "auth_callbacks": 1,
+      "oob_local": 1,
+      "profile_service": 1,
+      "mcumgr_service": 1
+    },
+    "contract": {
+      "security_contexts": 2,
+      "pairing_slots": 2,
+      "oob_records": 2,
+      "oob_frame_bytes": 192,
+      "bond_records": 4,
+      "profile_entries": 7,
+      "dfu_slots": 2
+    },
+    "capabilities": [
+      "smp_io_capabilities",
+      "le_secure_connections_oob",
+      "bond_privacy_migration",
+      "adopted_profiles",
+      "mcuboot_signed_image",
+      "mcumgr_ble_transport",
+      "dfu_rollback_recovery"
+    ]
+  },
+  "source_capability_status": "candidate-preserved-separately",
+  "nfc_oob_rf_validation": "not_run_by_scope",
+  "safety": {
+    "external_gpio_wiring_required": false,
+    "mass_erase_requested": false,
+    "recover_requested": false,
+    "power_cut_injected": false
+  }
+}

@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**, 개발 상태는 **M28·M29 완료, 다음 M30**입니다. M29는 작업 묶음 **8/8**,
-test ID **10/10 PASS**입니다.
+**v0.4.1**, 개발 상태는 **M28·M29·M30 완료**입니다. M29와 M30은 각각 작업 묶음 **8/8**,
+test ID **10/10 PASS**이고 M30 실제 전원 차단은 **12/12 PASS**입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
 [v0.5.0 TODO](../TODO_v0.5.0.md)와 [인계 문서](../HANDOFF.md)를 확인하세요. 아래 기록의
@@ -12,6 +12,19 @@ test ID **10/10 PASS**입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [162 — 전체 문서 정비와 M31 TODO 확정](162_전체_문서_정비와_M31_TODO.md) | 308개 Markdown 전수 감사, 현재 계약·Host 표기 교정, M31-W01~W08 TODO와 재개 순서 |
+| [161 — M30-W08 실제 전원 HIL과 M30 완료](161_M30_W08_실제_전원_HIL과_M30_완료.md) | 네 지점 × 3회 실제 차단 12/12, recovery failure·invalid boot 0, M30 8/8·10/10 완료 |
+| [160 — 전체 문서 검토와 마일스톤 개정](160_전체_문서_검토와_마일스톤_개정.md) | 현황 모순 교정, 과거 준비/현재 재개 조건 분리, W08 내부 gate·M33 예제·후속 ARF 배치 |
+| [159 — M30-W08 전원 HIL 주입 직전 준비](159_M30_W08_전원_HIL_주입_직전_준비.md) | 세 role build·두 보드 preflight PASS, 네 지점 × 3회 계획, 실제 전원 차단 0회 |
+| [158 — M30-W07 3보드 secure multi-link 완료](158_M30_W07_3보드_secure_multi_link_완료.md) | 동시 두 link·handle별 보안 연산 총 400회·cross-link/security/key-size 오류 0 |
+| [157 — M30-W06 secure BLE DFU·negative·rollback 완료](157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md) | 인증 BLE update 10/10·negative 5×20·invalid/rollback accept 0 |
+| [156 — M30-W05 MCUboot layout·서명 완료](156_M30_W05_MCUboot_layout_signing_완료.md) | 별도 secure profile·외부 ECDSA P-256, signed boot 20/20·unsigned/wrong-key accept 0 |
+| [155 — M30-W04 일곱 BLE profile 완료](155_M30_W04_7개_BLE_profile_완료.md) | BAS·DIS·HID 3종·HRS·ESS, 두 보드 서비스별 100회·오류 0 PASS |
+| [152 — M30-W01 capability 실기 완료](152_M30_W01_capability_실기_완료.md) | Host parser·target build·1보드 보안/OOB/profile/DFU capability 7/7 PASS |
+| [153 — M30-W02 link별 security와 IO 5종 완료](153_M30_W02_link별_security와_IO_5종_완료.md) | generation별 보안 상태·IO 5종 target 10/10·실제 pairing 50/50 PASS |
+| [154 — M30-W03 유선 OOB·bond/privacy·NFC adapter 완료](154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md) | 유선 OOB 20/20·bond reconnect 20/20·RPA 3·migration 1, NFC RF NOT RUN |
+| [151 — M30-W01 계약과 HOST-W01~W03 기반](151_M30_W01_계약과_HOST_W01_W03_기반.md) | 유선 OOB/NFC 비검증·secure DFU 계약, Host inventory·resolver·launcher와 Windows 회귀 |
+| [150 — v0.5.0 다중 Host 지원 계획 정비](150_v0.5.0_다중_Host_지원_계획_정비.md) | Windows·Ubuntu·macOS 지원 범위, M30 시작·M33 완료 계약 |
 | [149 — M29-W07 3보드·회귀·상호운용과 W08 완료](149_M29_W07_3보드_회귀_상호운용과_W08_완료.md) | MULTI/REG, Windows/Intel GATT, 예제·리팩터링·M30 인계 |
 | [148 — 개발문서 전수 검토와 README 개선](148_개발문서_전수검토와_README_개선.md) | 지원 범위·개발 현황 안내, 중복 설명 정리와 문서 검사 |
 | [147 — M29-W07 Signed Write·EATT 2보드 완료](147_M29_W07_Signed_Write_EATT_HIL_준비.md) | exact `c71ef4a2…` SIGN/EATT PASS, MULTI/REG NOT RUN, 실패 진단부터 최종 증거까지 |
@@ -44,7 +57,7 @@ test ID **10/10 PASS**입니다.
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29 완료 — 94~149</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29·M30 완료와 M31 준비 — 94~162</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -102,6 +115,19 @@ test ID **10/10 PASS**입니다.
 - [147 — M29-W07 Signed Write·EATT HIL 준비와 2보드 완료](<147_M29_W07_Signed_Write_EATT_HIL_준비.md>) — **Host/parser·target과 실제 SIGN/EATT PASS, MULTI/REG NOT RUN**
 - [148 — 개발문서 전수 검토와 README 개선](<148_개발문서_전수검토와_README_개선.md>) — 지원 배포·개발 상태 구분, 문서 가독성과 탐색 경로 정비
 - [149 — M29-W07 3보드·회귀·Windows 상호운용과 W08 완료](<149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) — **M29 8/8·test ID 10/10 PASS, M30 인계**
+- [150 — v0.5.0 다중 Host 지원 계획 정비](<150_v0.5.0_다중_Host_지원_계획_정비.md>) — **M30 시작·M33 완료의 세 Host 구현·검증 계약**
+- [151 — M30-W01 계약과 HOST-W01~W03 기반](<151_M30_W01_계약과_HOST_W01_W03_기반.md>) — **유선 OOB·NFC 비검증·secure DFU·Host 공통 기반 계약**
+- [152 — M30-W01 capability 실기 완료](<152_M30_W01_capability_실기_완료.md>) — **parser 13/13·target 1/1·실제 capability 7/7 PASS, M30 1/8**
+- [153 — M30-W02 link별 security와 IO 5종 완료](<153_M30_W02_link별_security와_IO_5종_완료.md>) — **target 10/10·실제 pairing 50/50 PASS, M30 2/8**
+- [154 — M30-W03 유선 OOB·bond/privacy·NFC adapter 완료](<154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md>) — **OOB·BOND 실기 PASS, NFC RF NOT RUN, M30 3/8**
+- [155 — M30-W04 일곱 BLE profile 완료](<155_M30_W04_7개_BLE_profile_완료.md>) — **catalog 7/7·서비스별 100회·오류 0, M30 4/8**
+- [156 — M30-W05 MCUboot layout·서명 완료](<156_M30_W05_MCUboot_layout_signing_완료.md>) — **signed boot 20/20·unsigned/wrong-key accept 0, M30 5/8**
+- [157 — M30-W06 secure BLE DFU·negative·rollback 완료](<157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md>) — **update 10/10·negative 5×20·invalid/rollback accept 0, M30 6/8**
+- [158 — M30-W07 3보드 secure multi-link 완료](<158_M30_W07_3보드_secure_multi_link_완료.md>) — **동시 2-link·handle별 보안 연산 총 400회·오류 0, M30 7/8**
+- [159 — M30-W08 전원 HIL 주입 직전 준비](<159_M30_W08_전원_HIL_주입_직전_준비.md>) — **세 role build·두 보드 preflight PASS, 실제 전원 차단 0회, M30 7/8 유지**
+- [160 — 전체 문서 검토와 마일스톤 개정](<160_전체_문서_검토와_마일스톤_개정.md>) — **현황 모순 교정과 W08·M33·후속 ARF 배치 확정**
+- [161 — M30-W08 실제 전원 HIL과 M30 완료](<161_M30_W08_실제_전원_HIL과_M30_완료.md>) — **네 지점 × 3회 실제 차단 12/12 PASS, M30 8/8·10/10 완료**
+- [162 — 전체 문서 정비와 M31 TODO 확정](<162_전체_문서_정비와_M31_TODO.md>) — **308개 Markdown 전수 감사·Host 표기 교정·M31 재개 순서 확정**
 
 </details>
 

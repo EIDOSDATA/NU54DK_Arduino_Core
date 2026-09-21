@@ -107,12 +107,22 @@ namespace nucode::ble::internal
     /** @brief M21 security 계층에 새 connection reference를 관찰용으로 전달합니다. */
     void securityConnected(struct bt_conn *connection) noexcept;
 
+    /** @brief M30 security 계층에 exact generation 연결을 전달합니다. */
+    void securityConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept;
+
     /** @brief M21 security 계층에 disconnect를 전달합니다. */
     void securityDisconnected(struct bt_conn *connection) noexcept;
+
+    /** @brief M30 security 계층에 무효화 직전 exact generation을 전달합니다. */
+    void securityDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept;
 
     /** @brief M21 security 계층에 실제 link security 변경 결과를 전달합니다. */
     void securityChanged(struct bt_conn *connection, bt_security_t level,
                          enum bt_security_err error) noexcept;
+
+    /** @brief M30 security 계층에 exact generation의 보안 변경을 전달합니다. */
+    void securityChanged(struct bt_conn *connection, BLEConnectionHandle handle,
+                         bt_security_t level, enum bt_security_err error) noexcept;
 
     /** @brief schema registry를 Device::addService에 연결합니다. */
     bool addGattService(BLEService &service) noexcept;

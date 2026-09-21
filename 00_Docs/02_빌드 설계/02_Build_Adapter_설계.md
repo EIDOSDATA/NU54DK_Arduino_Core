@@ -7,6 +7,7 @@
 | 다음 목표 버전 | `v0.5.0` |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
+| v0.5.0 Host 목표 | Windows 10/11 x64, Ubuntu 24.04+ AMD64, macOS 26+ Apple Silicon |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
 
 Build Adapter는 Arduino의 전처리·library discovery lifecycle을 보존하면서 실제 컴파일과 최종
@@ -203,19 +204,21 @@ v0.3.0 RC3에서 도입해 v0.4.1에서도 유지하는 메모리 계약은 load
 `app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
 구성은 지원하지 않는다.
 
-### 4.1 향후 update profile의 인계 경계
+### 4.1 개발 update profile과 후속 인계 경계
 
-`v0.5.0` M30은 BLE DFU용 최소 secure-update 기반을 설계·검증하는 계획이다. 착수 시 제한된
-고정 layout, MCUboot 최초 설치와 서명 update 산출물의 생성·검증·업로드 경로를 정하고,
-Build Adapter 통합과 별도 application template 중 제공 방식을 선택한다. 현재 Adapter의
-`--no-sysbuild` 단일 image 및 native Zephyr 산출물 계약을 옵션 하나로 우회하지 않는다.
-새 경로는 image·layout·서명 정책을 식별하는 manifest와 cache 계약을 함께 정의해야 한다.
+`v0.5.0` 개발 M30은 별도 `secure_ble_dfu` profile로 제한된 고정 layout, MCUboot 최초 설치,
+외부 키 서명과 BLE update 경로를 구현했다. 개발 `boards.txt`에서 이 profile은 sysbuild와
+maximum size `729088` byte를 선택한다. 위 본문의 설치·지원 `v0.4.1` 단일 image 계약과 구분하며,
+image·layout·서명 정책을 식별하는 별도 manifest·cache·upload 검증을 적용한다.
 
 `v0.6.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
 hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
 제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
-두 단계 모두 미착수이며, 현재 `v0.4.1`의 지원 범위와 기본 loaderless layout은 바뀌지 않는다.
-M30의 결정 항목과 완료 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
+M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단 12/12를 완료했고 M36은 미착수다.
+현재 `v0.4.1`의 지원 범위와 기본 loaderless layout은 유지한다. 완료 근거와 후속 경계는
+[161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
+[v0.5.0 착수 계획](../TODO_v0.5.0.md)과
+[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
 
 ## 5. 경로와 상태
 
@@ -273,7 +276,8 @@ Arduino build path의 생성 source만 cache mirror로 옮긴다.
 - sysbuild/multi-image, MCUboot, DFU와 OTA
 - LLEXT 또는 Loader ABI
 - remote/distributed cache와 network cache
-- Linux/macOS Boards Manager production 지원
+- Linux/macOS Boards Manager production 지원은 `v0.4.1`에 포함되지 않는다. `v0.5.0`에서는
+  [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 M30부터 구현하고 M33에서 판정한다.
 - Arduino IDE Debug 버튼 자동 구성
 - 자동 recover 또는 mass erase
 

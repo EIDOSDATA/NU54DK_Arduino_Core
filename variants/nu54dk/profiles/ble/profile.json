@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "ble",
   "display_name": "BLE NUS",
   "board": "nucode:zephyr:nu54dk",
@@ -7,6 +7,9 @@
   "ncs_version": "v3.4.0",
   "conf": "prj.conf",
   "overlay": "app.overlay",
+  "sysbuild": false,
+  "sysbuild_files": [],
+  "signing_key_env": null,
   "features": ["gpio", "serial", "wire", "spi", "adc", "pwm", "storage", "ble"],
   "conflicts": [],
   "requires_hil": ["wire", "spi", "adc", "pwm", "storage", "ble"]

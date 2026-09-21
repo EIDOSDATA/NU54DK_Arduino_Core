@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.7 |
+| 문서 개정 | 4.8 |
 | 문서 상태 | `v0.4.1` 정식 singleton·Fabric 계약 |
-| 최종 갱신일 | 2026-09-14 |
+| 최종 갱신일 | 2026-09-15 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -210,7 +210,8 @@ controller 의미를 합성하지 않고 unsupported, `SPI1`과 automatic chip-s
 - `PIN_AIN0..7`은 SAADC channel 0..7의 물리 핀 별칭이다. Arduino `A0..A7`은 기존 호환 ID를
   유지하므로 같은 번호의 AIN과 일치하지 않는다. `A0=AIN5`, `A1..A5=AIN0..AIN4`,
   `A6=AIN6`, `A7=AIN7`이며 정확한 대응은 아래 표를 따른다.
-- `analogReadResolution()`은 8/10/12/14 bit만 허용하며 결과 범위를 software scaling한다.
+- `analogReadResolution()`은 8/10/12/14 bit만 허용하며 실제 ADC sequence의 resolution에 적용한다.
+  반환값은 해당 해상도의 범위로 제한한다. 전압 환산에는 DTS 기본값이 아닌 이 runtime 해상도를 사용한다.
 - 오류는 `-1`과 Analog subsystem 진단으로 보고한다.
 - `analogReference()`는 `AR_DEFAULT`와 같은 의미의 `AR_INTERNAL`만 허용한다.
 - Reference/gain/channel은 Devicetree 계약이며 runtime에서 바꾸지 않는다.

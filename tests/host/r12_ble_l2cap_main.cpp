@@ -64,13 +64,26 @@ namespace nucode::ble::internal
     {
     }
 
+    void securityConnected(struct bt_conn *, BLEConnectionHandle) noexcept
+    {
+    }
+
     /** @brief LE CoC 단독 시험에서 Security 해제 통지를 소비합니다. */
     void securityDisconnected(struct bt_conn *) noexcept
     {
     }
 
+    void securityDisconnected(struct bt_conn *, BLEConnectionHandle) noexcept
+    {
+    }
+
     /** @brief LE CoC 단독 시험에서 Security 변경 통지를 소비합니다. */
     void securityChanged(struct bt_conn *, bt_security_t, enum bt_security_err) noexcept
+    {
+    }
+
+    void securityChanged(struct bt_conn *, BLEConnectionHandle, bt_security_t,
+                         enum bt_security_err) noexcept
     {
     }
 

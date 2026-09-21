@@ -2,6 +2,11 @@ set(NUCODE_BUILD_RECORD
   "${CMAKE_BINARY_DIR}/nucode_arduino_core_build.yml"
 )
 
+if(CONFIG_NUCODE_M30_POWER_HIL_MCUBOOT)
+  zephyr_library_named(nucode_m30_power_hil_mcuboot)
+  zephyr_library_sources(m30_power_mcuboot_hook.c)
+endif()
+
 if(CONFIG_NUCODE_ARDUINO_CORE)
   get_filename_component(NUCODE_ARDUINO_CORE_ROOT
     "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE

@@ -10,6 +10,12 @@ CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 �
 artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)과
 [M17 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)에 보존한다.
 
+현재 Linux container target build는 Linux Arduino 사용자 Host 지원이 아니며 Windows job 결과도
+macOS 지원을 뜻하지 않는다. `v0.5.0`은
+[다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 M31에서 Windows·Ubuntu·
+Apple Silicon macOS package/build matrix를 추가하고 M32에서 각 실제 Host upload/lifecycle을
+분리해 검증한다.
+
 ---
 
 ## 1. Software gates
@@ -80,9 +86,9 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 | `v0.2.0` | 10 | M14 Core/variant, M15 Board/System, M16 BLE NUS, M17 direct sensor |
 | `v0.3.0` | 19 | M19 GAP, M20 GATT, M21 Security, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
 | `v0.4.0` | 35 | R01 구성, pair/T13 HIL build, M23 inventory, M24 Serial, M25 Analog/Event/Stream, M26 System, T16 Fabric profile |
-| `v0.5.0` | 36 | M28 capability·GAP/link·두/세 보드 image, M29 capability·W02~W07-C 두 보드 image·W07-D 세 보드 image |
+| `v0.5.0` | 61 | M28·M29 36개와 M30 capability·pairing·OOB·bond·profile·MCUboot·DFU·power·multi-link 25개 |
 
-2026-09-14의 `tools/ci/run_zephyr_build.py` 기준 104개 시나리오가 위 다섯 그룹에 속한다.
+2026-09-15 검토한 `8c311d9a…`의 `tools/ci/run_zephyr_build.py` 기준 129개 시나리오가 위 다섯 그룹에 속한다.
 증감 시에는 이 표가 아니라 runner의 `SUITE_GROUPS`를 실행 목록의 원본으로 사용한다. Matrix의
 `fail-fast: false` 때문에 한 그룹이 실패해도 나머지 그룹은 끝까지 실행되어 영향 범위를 한 번에
 알 수 있다. 각 `twister.json`과 `m12-build-evidence.json`은 group 이름, 실제 시나리오와 내부
@@ -105,14 +111,15 @@ Arduino runtime 정식 지원을 뜻하지 않는다.
 | `v0.2.0` | `m15`, `m16` | Board/System과 BLE NUS 예제 회귀 |
 | `v0.3.0-ble` | `m19m20`, `m21` | GAP/GATT와 BLE security/profile 회귀 |
 | `v0.3.0-compat` | `ac02b`, `ac03`, `examples` | Peripheral/analog, storage와 catalog 회귀 |
-| `v0.5.0` | `m29` | GATT·descriptor·cache·CoC·선택형 Signed Write/EATT 예제 14개 |
+| `v0.5.0` | `m29`, `m30`, `m30secure` | M29 예제 15개, M30 profile 예제 4개와 기존 HeartRate의 secure DFU 조건: 총 20 build 조건 |
 
 `v0.3.0-ble`와 `v0.3.0-compat`는 하나의 `v0.3.0` 릴리스 도입 범위를 wall time 때문에 둘로
 나눈 하위 job이다. `run_smoke.py --group v0.3.0`은 두 하위 범위를 합쳐 로컬에서 한 번에 실행한다.
 
-M28 예제 11개는 `run_smoke.py --tests m28`로 별도 실행한다. 현재 `v0.5.0` Arduino matrix group은
-`m29`만 선택하므로 M28 예제 compile까지 포함한다고 해석하지 않는다. 소스 트리의 예제 수와
-정식 v0.4.1의 30개 설치 목록도 구분한다.
+M28 예제 11개는 `run_smoke.py --tests m28`로 별도 실행한다. 위 snapshot의 `v0.5.0` Arduino matrix
+group은 `m29`, `m30`, `m30secure`를 선택하므로 M28 예제 compile까지 포함한다고 해석하지 않는다.
+`m30secure`는 저장소 밖 signing key를 명시해야 한다. 소스 트리의 예제 수, profile을 바꾼 build
+조건 수와 정식 v0.4.1의 30개 설치 목록은 구분한다.
 
 각 예제 시작 직전에 `SMOKE_TEST_START=<group>/<test>`를 출력한다. 따라서 실패 log의 마지막 start
 표식과 error를 보면 어느 그룹의 어느 예제에서 실패했는지 바로 알 수 있다.
@@ -261,6 +268,18 @@ artifact identity와 함께 검증 기록으로 승격한다. 과거 run ID나 �
 
 Workflow는 package를 검증하지만 tag 생성, stable index 변경, GitHub Release 공개 또는
 latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람 승인과 릴리스 절차가 필요하다.
+
+### v0.5.0 다중 Host CI 승격 조건
+
+| CI/HIL 행 | 자동화할 범위 | CI만으로 증명하지 않는 것 |
+| --- | --- | --- |
+| Windows 10/11 x64 | Host unit, prerequisite, 전체 예제 package build | 모든 Windows adapter·실물 board runtime |
+| Ubuntu 24.04+ AMD64 | 지원 release별 clean install·build·artifact 비교 | container 밖 USB 권한·실물 upload |
+| macOS 26+ Apple Silicon | native ARM64 install·build·artifact 비교 | Intel/Rosetta·실물 upload |
+| Host별 HIL | 명시적 UID upload, Blink·Serial·BLE 대표 runtime, lifecycle | 모든 BLE RF 기능을 OS마다 반복한 결과 |
+
+새 OS 행은 먼저 `candidate`로 추가한다. 정적 job만 통과해 `supported`로 바꾸지 않고 실제 Host의
+clean install·upload 증거와 release 문서 갱신까지 완료한다.
 
 ---
 

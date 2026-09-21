@@ -36,8 +36,8 @@ from m14_pin_hil import (  # noqa: E402
     CORE_SOURCE_SCOPES,
     build_record_value,
     file_sha256,
-    files_digest,
     git_revision,
+    source_files_digest,
     validate_board_revision,
 )
 
@@ -131,9 +131,10 @@ def validate_source_clean(
     """! @brief runner가 직접 import하는 추가 source까지 exact clean 상태로 묶습니다. """
 
     core_paths = (
+        "platform.txt",
         "cores/arduino",
         "dts",
-        "libraries/NUCODE_BLE",
+        "libraries",
         "third_party/ArduinoCore-API",
         "third_party/ArduinoCore-API.provenance.yml",
         "variants/nu54dk",
@@ -193,11 +194,11 @@ def validate_source_clean(
 def current_source_digests(application_root: Path) -> dict[str, str]:
     board_scope = BOARD_ROOT / "boards" / "nucode" / "nu54dk"
     return {
-        "core_source_sha256": files_digest(REPOSITORY, CORE_SOURCE_SCOPES),
-        "application_source_sha256": files_digest(
+        "core_source_sha256": source_files_digest(REPOSITORY, CORE_SOURCE_SCOPES),
+        "application_source_sha256": source_files_digest(
             application_root, (application_root,)
         ),
-        "board_source_sha256": files_digest(BOARD_ROOT, (board_scope,)),
+        "board_source_sha256": source_files_digest(BOARD_ROOT, (board_scope,)),
     }
 
 
@@ -228,6 +229,9 @@ def validate_build_record(
         "zephyr_revision",
         "board",
         "board_qualifiers",
+        "toolchain_variant",
+        "toolchain_path",
+        "cxx_compiler",
     )
     values = {key: build_record_value(record_text, key) for key in keys}
     expected = {
@@ -237,12 +241,23 @@ def validate_build_record(
         "zephyr_revision": "bf801e4e3d19",
         "board": "nrf54l15dk",
         "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_variant": "zephyr",
     }
     for key, expected_value in expected.items():
         if values[key] != expected_value:
             raise BlePairHilFailure(
                 f"build record 불일치: {key}={values[key]}, expected={expected_value}"
             )
+    toolchain_path = values["toolchain_path"].replace("\\", "/").casefold()
+    expected_toolchain_suffix = "/toolchains/dcbdc366a1/opt/zephyr-sdk"
+    if not toolchain_path.endswith(expected_toolchain_suffix):
+        raise BlePairHilFailure(
+            f"build record toolchain bundle 불일치: {values['toolchain_path']}"
+        )
+    if values["cxx_compiler"] != "GNU 14.3.0":
+        raise BlePairHilFailure(
+            f"build record C++ compiler 불일치: {values['cxx_compiler']}"
+        )
     for key, expected_digest in current_source_digests(application_root).items():
         if not re.fullmatch(r"[0-9a-f]{64}", values[key]):
             raise BlePairHilFailure(f"build record digest 형식 오류: {key}")
@@ -325,8 +340,14 @@ def flash_image_pyocd(
         "nrf54l",
         "--frequency",
         "500000",
+        "--connect",
+        "under-reset",
         "-O",
         "cmsis_dap.limit_packets=true",
+        "-O",
+        "cmsis_dap.prefer_v1=false",
+        "-O",
+        "smart_flash=false",
         "-O",
         "auto_unlock=false",
         "--erase",

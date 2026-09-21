@@ -22,6 +22,7 @@ REPOSITORY = HIL_DIRECTORY.parents[2]
 BOARD_ROOT = REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS"
 APPLICATION_SOURCE_ROOT = REPOSITORY / "tests" / "zephyr" / "m14_pin_hil"
 CORE_SOURCE_SCOPES = (
+    REPOSITORY / "platform.txt",
     REPOSITORY / "cores" / "arduino",
     REPOSITORY / "dts",
     REPOSITORY / "libraries",
@@ -29,6 +30,30 @@ CORE_SOURCE_SCOPES = (
     REPOSITORY / "third_party" / "ArduinoCore-API.provenance.yml",
     REPOSITORY / "variants" / "nu54dk",
     REPOSITORY / "zephyr",
+)
+BUILD_INPUT_SUFFIXES = frozenset(
+    {
+        ".asm",
+        ".c",
+        ".cc",
+        ".cmake",
+        ".conf",
+        ".cpp",
+        ".cxx",
+        ".dts",
+        ".dtsi",
+        ".h",
+        ".hh",
+        ".hpp",
+        ".impl",
+        ".inc",
+        ".inl",
+        ".ld",
+        ".overlay",
+        ".s",
+        ".yaml",
+        ".yml",
+    }
 )
 BOARD_SOURCE_SCOPE = BOARD_ROOT / "boards" / "nucode" / "nu54dk"
 if str(HIL_DIRECTORY) not in sys.path:
@@ -209,16 +234,54 @@ def files_digest(base_directory: Path, scopes: Sequence[Path]) -> str:
     return hashlib.sha256(digest_input.encode("utf-8")).hexdigest()
 
 
+## @brief firmware 생성에 영향을 주는 source·설정 파일인지 판정합니다.
+def is_build_input(path: Path) -> bool:
+    name = path.name.casefold()
+    if name in ("cmakelists.txt", "library.properties", "platform.txt") or name == "kconfig":
+        return True
+    if name.startswith("kconfig."):
+        return True
+    return path.suffix.casefold() in BUILD_INPUT_SUFFIXES
+
+
+## @brief 문서·예제·readiness 원장을 제외한 실제 build 입력 byte를 digest합니다.
+def source_files_digest(base_directory: Path, scopes: Sequence[Path]) -> str:
+    input_files: list[Path] = []
+    for scope in scopes:
+        if scope.is_file() and is_build_input(scope):
+            input_files.append(scope)
+        elif scope.is_dir():
+            input_files.extend(
+                path
+                for path in scope.rglob("*")
+                if path.is_file() and is_build_input(path)
+            )
+
+    input_files.sort(key=lambda path: path.as_posix())
+    if not input_files:
+        raise PinHilFailure(f"source digest 입력 파일이 없습니다: {base_directory}")
+
+    digest_input = "".join(
+        f"{path.relative_to(base_directory).as_posix()}:{file_sha256(path)}\n"
+        for path in input_files
+    )
+    return hashlib.sha256(digest_input.encode("utf-8")).hexdigest()
+
+
 ## @brief 공식 clean Ubuntu CI artifact를 소비할 때 HEAD blob byte로 digest합니다.
 def git_committed_files_digest(
     repository: Path, base_directory: Path, scopes: Sequence[Path]
 ) -> str:
     input_files: list[Path] = []
     for scope in scopes:
-        if scope.is_file():
+        if scope.is_file() and is_build_input(scope):
             input_files.append(scope)
         elif scope.is_dir():
-            input_files.extend(path for path in scope.rglob("*") if path.is_file())
+            input_files.extend(
+                path
+                for path in scope.rglob("*")
+                if path.is_file() and is_build_input(path)
+            )
 
     input_files.sort(key=lambda path: path.as_posix())
     if not input_files:
@@ -254,11 +317,11 @@ def git_committed_files_digest(
 ## @brief 현재 Core·M14 application·board tree의 build record digest를 계산합니다.
 def current_source_digests() -> dict[str, str]:
     return {
-        "core_source_sha256": files_digest(REPOSITORY, CORE_SOURCE_SCOPES),
-        "application_source_sha256": files_digest(
+        "core_source_sha256": source_files_digest(REPOSITORY, CORE_SOURCE_SCOPES),
+        "application_source_sha256": source_files_digest(
             APPLICATION_SOURCE_ROOT, (APPLICATION_SOURCE_ROOT,)
         ),
-        "board_source_sha256": files_digest(BOARD_ROOT, (BOARD_SOURCE_SCOPE,)),
+        "board_source_sha256": source_files_digest(BOARD_ROOT, (BOARD_SOURCE_SCOPE,)),
     }
 
 

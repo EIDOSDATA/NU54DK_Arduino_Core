@@ -5,5 +5,5 @@
   "conf": ["ble-legacy-signing.conf"],
   "overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["ble"]
+  "compatible_profiles": ["ble", "secure_ble_dfu"]
 }
