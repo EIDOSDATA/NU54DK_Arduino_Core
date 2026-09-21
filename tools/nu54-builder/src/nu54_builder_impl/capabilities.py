@@ -106,7 +106,15 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
     if not isinstance(capability_items, list):
         raise AdapterError("[NU54:E_CAPABILITY_SCHEMA] capabilities는 배열이어야 합니다.")
     capabilities: dict[str, dict[str, Any]] = {}
-    capability_fields = {"id", "requires", "conflicts", "conf", "overlays", "source_gates"}
+    capability_fields = {
+        "id",
+        "requires",
+        "requires_any_role",
+        "conflicts",
+        "conf",
+        "overlays",
+        "source_gates",
+    }
     for item in capability_items:
         if not isinstance(item, dict) or set(item) != capability_fields:
             raise AdapterError(
@@ -121,6 +129,12 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
             "id": identifier,
             "requires": _string_array(
                 item.get("requires"), owner=identifier, field="requires", pattern=CAPABILITY_ID_PATTERN
+            ),
+            "requires_any_role": _string_array(
+                item.get("requires_any_role"),
+                owner=identifier,
+                field="requires_any_role",
+                pattern=ROLE_ID_PATTERN,
             ),
             "conflicts": _string_array(
                 item.get("conflicts"), owner=identifier, field="conflicts", pattern=CAPABILITY_ID_PATTERN
@@ -253,6 +267,7 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
     for item in capabilities.values():
         unknown_capabilities.update(set(item["requires"]) - capability_ids)
         unknown_capabilities.update(set(item["conflicts"]) - capability_ids)
+        unknown_roles.update(set(item["requires_any_role"]) - role_ids)
     for item in roles.values():
         unknown_capabilities.update(set(item["capabilities"]) - capability_ids)
         unknown_capacities.update(set(item["capacities"]) - capacity_ids)
@@ -471,6 +486,13 @@ def resolve_capabilities(
 
     selected = set(states)
     for identifier in sorted(selected):
+        allowed_roles = set(capabilities[identifier]["requires_any_role"])
+        if allowed_roles and not allowed_roles.intersection(selected_role_set):
+            raise AdapterError(
+                f"[NU54:E_ROLE_REQUIRED] {identifier}에는 다음 role 중 하나가 필요합니다: "
+                f"{sorted(allowed_roles)}"
+            )
+    for identifier in sorted(selected):
         conflicts = sorted(set(capabilities[identifier]["conflicts"]) & selected)
         if conflicts:
             raise AdapterError(
@@ -488,6 +510,7 @@ def resolve_capabilities(
                 "id": identifier,
                 "reasons": sorted(reasons.get(identifier, set())),
                 "requires": list(item["requires"]),
+                "requires_any_role": list(item["requires_any_role"]),
             }
         )
         conf.extend(item["conf"])

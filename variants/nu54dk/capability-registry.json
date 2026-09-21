@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "probe_mapping_version": 1,
   "defaults": [
     "arduino.runtime",
@@ -9,6 +9,7 @@
     {
       "id": "arduino.runtime",
       "requires": [],
+      "requires_any_role": [],
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_RUNTIME=y"],
       "overlays": [],
@@ -17,6 +18,7 @@
     {
       "id": "arduino.api",
       "requires": ["arduino.runtime"],
+      "requires_any_role": [],
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_API=y"],
       "overlays": [],
@@ -25,6 +27,7 @@
     {
       "id": "arduino.time",
       "requires": ["arduino.api"],
+      "requires_any_role": [],
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_TIME=y"],
       "overlays": [],
@@ -33,6 +36,7 @@
     {
       "id": "arduino.gpio",
       "requires": ["arduino.api", "arduino.io-ownership"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_GPIO=y", "CONFIG_NUCODE_ARDUINO_GPIO=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-connectors.dtsi"],
@@ -41,6 +45,7 @@
     {
       "id": "arduino.io-ownership",
       "requires": ["arduino.api"],
+      "requires_any_role": [],
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-pins.dtsi"],
@@ -49,6 +54,7 @@
     {
       "id": "arduino.interrupt",
       "requires": ["arduino.gpio"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_NUCODE_ARDUINO_INTERRUPTS=y"],
       "overlays": [],
@@ -57,6 +63,7 @@
     {
       "id": "arduino.adc",
       "requires": ["arduino.gpio"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_ADC=y", "CONFIG_NUCODE_ARDUINO_ADC=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-adc.dtsi"],
@@ -65,6 +72,7 @@
     {
       "id": "arduino.pwm",
       "requires": ["arduino.gpio"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_PWM=y", "CONFIG_NUCODE_ARDUINO_PWM=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-pwm.dtsi"],
@@ -73,6 +81,7 @@
     {
       "id": "arduino.serial",
       "requires": ["arduino.api"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": [
         "CONFIG_SERIAL=y",
@@ -86,6 +95,7 @@
     {
       "id": "arduino.serial1",
       "requires": ["arduino.serial", "arduino.gpio"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_NUCODE_ARDUINO_SERIAL1=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-serial1.dtsi"],
@@ -94,6 +104,7 @@
     {
       "id": "arduino.wire",
       "requires": ["arduino.gpio"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_I2C=y", "CONFIG_NUCODE_ARDUINO_WIRE=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-wire.dtsi"],
@@ -102,6 +113,7 @@
     {
       "id": "arduino.spi",
       "requires": ["arduino.gpio"],
+      "requires_any_role": [],
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_SPI=y", "CONFIG_NUCODE_ARDUINO_SPI=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-spi.dtsi"],
@@ -110,6 +122,7 @@
     {
       "id": "nucode.storage",
       "requires": ["arduino.api"],
+      "requires_any_role": [],
       "conflicts": [],
       "conf": [],
       "overlays": ["dts/nucode/nu54dk-arduino-storage.dtsi"],
@@ -118,6 +131,7 @@
     {
       "id": "nucode.peripheral-fabric",
       "requires": ["arduino.api", "arduino.time"],
+      "requires_any_role": [],
       "conflicts": [
         "arduino.gpio",
         "arduino.interrupt",

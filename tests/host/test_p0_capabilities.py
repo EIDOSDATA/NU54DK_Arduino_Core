@@ -260,6 +260,63 @@ extern "C" void sensorRead(void)
         with self.assertRaisesRegex(MODULE.AdapterError, "E_ROLE_UNKNOWN"):
             MODULE.resolve_capabilities(self.registry, [], [], declaration)
 
+    def test_capability_requires_one_verified_role(self) -> None:
+        """! @brief 역할 종속 capability는 허용 목록 중 하나가 없으면 거부합니다. """
+        registry = copy.deepcopy(self.registry)
+        registry["roles"] = {
+            "role-a": {
+                "id": "role-a",
+                "capabilities": [],
+                "capacities": {},
+                "conflicts": [],
+            },
+            "role-b": {
+                "id": "role-b",
+                "capabilities": [],
+                "capacities": {},
+                "conflicts": [],
+            },
+        }
+        registry["capabilities"]["arduino.runtime"]["requires_any_role"] = [
+            "role-a",
+            "role-b",
+        ]
+        with self.assertRaisesRegex(
+            MODULE.AdapterError, "E_ROLE_REQUIRED.*arduino.runtime.*role-a.*role-b"
+        ):
+            MODULE.resolve_capabilities(registry, [], [], self.empty_declaration)
+
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = ["role-b"]
+        result = MODULE.resolve_capabilities(registry, [], [], declaration)
+        runtime = next(
+            item for item in result["capabilities"] if item["id"] == "arduino.runtime"
+        )
+        self.assertEqual(runtime["requires_any_role"], ["role-a", "role-b"])
+
+    def test_registry_rejects_unknown_required_role_reference(self) -> None:
+        """! @brief capability의 역할 허용 목록도 registry 참조 무결성에 포함합니다. """
+        with tempfile.TemporaryDirectory(prefix="n54-p0-role-ref-") as temporary:
+            root = Path(temporary)
+            registry_path = root / "variants" / "nu54dk" / "capability-registry.json"
+            registry_path.parent.mkdir(parents=True)
+            document = json.loads(
+                (ROOT / "variants" / "nu54dk" / "capability-registry.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            document["capabilities"][0]["requires_any_role"] = ["missing-role"]
+            registry_path.write_text(json.dumps(document), encoding="utf-8")
+            for capability in document["capabilities"]:
+                for overlay in capability["overlays"]:
+                    overlay_path = root / overlay
+                    overlay_path.parent.mkdir(parents=True, exist_ok=True)
+                    overlay_path.write_text("", encoding="utf-8")
+            with self.assertRaisesRegex(
+                MODULE.AdapterError, "E_CAPABILITY_REFERENCE.*missing-role"
+            ):
+                MODULE.load_capability_registry(root)
+
     def test_dependency_cycle_is_rejected_with_trace(self) -> None:
         """! @brief 순환 의존성의 전체 경로를 진단합니다. """
         registry = copy.deepcopy(self.registry)
