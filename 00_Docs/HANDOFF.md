@@ -65,7 +65,11 @@ Squash는 개발 커밋을 묶는 이력 정리입니다. 증거에 기록된 �
    `eraseAllBonds()`로 지우고, 재연결 repair pairing을 거부하는 one-sided stale-key 시험이
    최소 범위입니다. 이는 임의의 서로 다른 LTK 직접 주입 PASS로 확대하지 않습니다.
    RTT 출력은 비보정이므로 거리 정확도는 NOT RUN입니다. 현재 공개 CS build의 전역
-   메모리는 initiator 88%, reflector 84%이므로 W06의 CS role image 자원 예산에서 다시 확인합니다.
+   메모리는 initiator 88%, reflector 84%이며 단순 CS 고유 비용이 아닙니다. 범용 GATT 45 KiB,
+   32-pin state 26 KiB, 미사용 Serial1/Wire/SPI/PWM route 25 KiB와 종합 BLE feature가 포함된
+   구조를 [219번 메모리 감사·최적화 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)에
+   따라 W04·W05 exact 결과 보존 뒤 별도 branch에서 최적화하고, 핵심 HIL 재검증 후 W06 자원
+   예산과 M19~M30 회귀를 수행합니다.
 5. W06은 ISO·Audio·DF·CS 네 기능을 한 MCU image에서 동시에 실행하지 않습니다. Audio-over-ISO는
    기존 결합 경로를 유지하고 DF·CS는 독립 controller/profile image로 둡니다. image별 자원 상한,
    STOP·disconnect·재시작 뒤 상태 정리와 M19~M30 회귀가 완료 조건입니다. 별도 제품 요구와

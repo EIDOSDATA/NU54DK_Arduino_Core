@@ -28,6 +28,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [219 — M31-W06 메모리 감사·최적화 계약](219_M31_W06_메모리_점유_감사와_최적화_계약.md) | Audio·CS·DF 고점유 image의 공통 정적 RAM 원인, 역할별 lean fragment·pool·회귀 gate와 W04/W05→최적화→W06 순서 |
 | [215 — W03 이력·문서 정비](215_M31_W03_이력과_문서_정비.md) | 개발 이력 squash, 문서 전수 검토, main 반영과 원본 이력 보존 |
 | [214 — M31-W03 LE Audio profile 종료](214_M31_W03_LE_Audio_Profile_완료.md) | W03-01~W03-11 11/11 PASS, 고정 source·SDK와 비차단 후속 범위 |
 | [211 — Media·Call control](211_M31_W03_Arduino_Media_Call_Control_완료.md) | MCP/MCS·CCP/TBS 정상·negative·복구·reconnect·soak 최종 PASS |
