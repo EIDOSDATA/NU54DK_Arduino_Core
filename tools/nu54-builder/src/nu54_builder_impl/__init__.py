@@ -36,6 +36,7 @@ from .common import (
     CAPABILITY_REGISTRY_SCHEMA_VERSION,
     CAPABILITY_DECLARATION_SCHEMA_VERSION,
     CAPABILITY_RESOLUTION_SCHEMA_VERSION,
+    CAPABILITY_PROBE_SCHEMA_VERSION,
     FEATURE_ALLOWLIST,
     CONTEXT_DIRECTORY,
     CACHE_SCHEMA_VERSION,
@@ -68,6 +69,8 @@ from .capabilities import (
     resolve_capabilities,
     write_resolved_capabilities,
 )
+from . import capability_probe
+from .capability_probe import run_capability_probe
 from . import build
 from .build import (
     configure_command,
@@ -246,6 +249,7 @@ __all__ = [
     'CAPABILITY_REGISTRY_SCHEMA_VERSION',
     'CAPABILITY_DECLARATION_SCHEMA_VERSION',
     'CAPABILITY_RESOLUTION_SCHEMA_VERSION',
+    'CAPABILITY_PROBE_SCHEMA_VERSION',
     'FEATURE_ALLOWLIST',
     'CONTEXT_DIRECTORY',
     'CACHE_SCHEMA_VERSION',
@@ -267,6 +271,7 @@ __all__ = [
     'parse_undefined_symbols',
     'resolve_capabilities',
     'write_resolved_capabilities',
+    'run_capability_probe',
     'load_product_identity',
     'canonical_path',
     'path_key',

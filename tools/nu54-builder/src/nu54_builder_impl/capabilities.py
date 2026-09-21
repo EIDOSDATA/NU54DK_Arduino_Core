@@ -317,6 +317,8 @@ def parse_undefined_symbols(output: str) -> list[str]:
         fields = line.strip().split()
         if len(fields) >= 2 and fields[-2] in {"U", "w", "v"}:
             symbols.add(fields[-1])
+        elif len(fields) == 2 and fields[1] in {"U", "w", "v"}:
+            symbols.add(fields[0])
     return sorted(symbols)
 
 

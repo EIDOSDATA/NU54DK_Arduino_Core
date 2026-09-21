@@ -17,8 +17,10 @@ M32/M33과 Ubuntu/macOS 지원은 후속 버전(미정)이며 HOST-W04~W08은 �
 일반 Core API는 compiler-assisted capability probe로 도달 가능한 참조를 판정하고, library의 간접
 의존성과 공개 BLE role/capacity 선언을 합쳐 `prj.conf`·overlay·source/init를 생성하는 설계입니다.
 따라서 최종 목표에서 `SPI.begin()`은 수동 `prj.conf` 없이 SPI 준비로 연결됩니다. 현재 P0-1의
-capability registry·공개 declaration schema·library 요구·transitive resolver와 Host 10건은
-구현됐습니다. 실제 compiler-assisted probe link와 최종 Zephyr 구성 합성은 아직 완료하지 않았습니다.
+capability registry·공개 declaration schema·library 요구·transitive resolver와 compiler-assisted
+probe engine까지 구현됐습니다. 실제 Arduino header를 사용한 Host 11건에서 direct·indirect·runtime
+branch·전역 생성자·dead/include-only 경계를 확인했습니다. builder link/cache 연결과 최종 Zephyr
+구성 합성은 아직 완료하지 않았습니다.
 
 ## 1. 현재 상태
 
@@ -29,7 +31,7 @@ capability registry·공개 declaration schema·library 요구·transitive resol
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | P0-1 capability 계약·resolver 완료. probe link·최종 구성 생성은 진행 전 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
+| 메모리 최적화 | P0-1 resolver·P0-2a probe engine 완료. builder/cache 연결·최종 구성 생성은 진행 전 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
 | M31-W04 DF | 미완료. connected RX 내부 진단 4 valid IQ report·328 sample, 전체 FAIL·raw IQ 안정성 HOLD | [216번 초기 경계](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [220번 보존·인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) |
 | M31-W05 CS | 미완료. 같은 ACL 비암호화 read 거부 20/20, flash 직후 raw RAS 100·복구 20/20 두 번 PASS. wrong-key 실기·과거 중단 원인 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |

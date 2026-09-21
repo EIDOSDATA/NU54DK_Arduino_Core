@@ -49,6 +49,87 @@ class P0CapabilityContractTests(unittest.TestCase):
             ["arduino.pwm", "arduino.spi", "arduino.wire"],
         )
 
+    def test_compiler_probe_keeps_reachable_runtime_and_constructor_references(self) -> None:
+        """! @brief GC link가 dead call은 버리고 간접·runtime·전역 생성자 요구는 남깁니다. """
+        try:
+            tools = MODULE.tool_environment(ROOT)
+        except MODULE.AdapterError as error:
+            self.skipTest(f"고정 cross compiler를 사용할 수 없습니다: {error}")
+        with tempfile.TemporaryDirectory(prefix="n54-p0-probe-") as temporary:
+            root = Path(temporary)
+            sketch = root / "sketch"
+            state = root / "build" / "nu54-zephyr"
+            sketch.mkdir(parents=True)
+            state.mkdir(parents=True)
+            main_source = sketch / "main.cpp"
+            library_source = sketch / "sensor.cpp"
+            main_source.write_text(
+                """
+#include <Arduino.h>
+
+extern "C" void sensorRead(void);
+volatile bool enabled = false;
+struct Startup
+{
+    Startup()
+    {
+        Serial1.begin(115200);
+    }
+};
+Startup startup;
+void deadPath()
+{
+    Wire.begin();
+}
+extern "C" void setup(void)
+{
+    digitalWrite(1, HIGH);
+    sensorRead();
+    if (enabled)
+    {
+        analogWrite(2, 3);
+    }
+}
+extern "C" void loop(void)
+{
+}
+""",
+                encoding="utf-8",
+            )
+            library_source.write_text(
+                """
+#include <Arduino.h>
+
+extern "C" void sensorRead(void)
+{
+    SPI.begin();
+}
+""",
+                encoding="utf-8",
+            )
+            records = [
+                {
+                    "source": source.as_posix(),
+                    "language": "cxx",
+                    "include_dirs": [sketch.as_posix()],
+                }
+                for source in (main_source, library_source)
+            ]
+            paths = {
+                "platform_root": ROOT,
+                "build_path": root / "build",
+                "state_root": state,
+                "sketch_root": sketch,
+            }
+            result = MODULE.run_capability_probe(paths, records, tools, self.registry)
+            self.assertEqual(
+                result["capabilities"],
+                ["arduino.gpio", "arduino.pwm", "arduino.serial1", "arduino.spi"],
+            )
+            self.assertNotIn("Wire", result["undefined_symbols"])
+            self.assertEqual(result["link_mode"], "executable-section-gc")
+            self.assertTrue(Path(result["map"]).is_file())
+
     def test_direct_probe_requirement_adds_transitive_dependencies(self) -> None:
         """! @brief SPI 요구가 GPIO·소유권·API·runtime까지 폐쇄됩니다. """
         result = MODULE.resolve_capabilities(
