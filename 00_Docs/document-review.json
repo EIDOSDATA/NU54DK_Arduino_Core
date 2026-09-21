@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "review_date": "2026-09-21",
-  "purpose": "기존 릴리스·이력 감사는 보존하고 두 메모리 최적화 설명을 현재 소스와 대조해 통합 설계로 정정한다. 최신 사용자 목표는 동등 기능 nRF native + 공개 API의 최소 필수 비용인 선언 기반 기본 경로다. 문서 6개 수정·설계 1개 추가의 범위 감사이며 구현·브랜치 생성·HIL·공개 작업은 아니다.",
+  "purpose": "두 메모리 최적화 설명을 하나의 구현안으로 확정한다. 2번은 1번의 Core/source/pool 분리를 포함하며 compiler-assisted capability probe, library dependency와 공개 role/capacity 선언으로 prj.conf·overlay·source/init를 자동 생성한다. main 4683d825 기준 관련 문서 5개를 정합화했으며 구현·브랜치 생성·HIL·공개 작업은 아니다.",
   "previous_review": {
     "commit": "8b20157d33f1d216620726d92d88f65c25491b4d",
     "path": "00_Docs/document-review.json",
@@ -41,7 +41,7 @@
       "00_Docs/04_검증 기록/221_main_마일스톤별_이력_정리.md",
       "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md"
     ],
-    "review_method": "전체 Markdown inventory·현행/역사/외부 원본 분류, release/Host/milestone/branch/메모리 순서 관련 문구와 현행 계약 대조, 역할별 병렬 검토, 전체 UTF-8/local-link 및 정규화 hash 검사. 과거 raw evidence의 모든 시험을 재실행한 감사는 아니다. 후속 main 이력 정리는 이전 전수 감사 380개와 hash를 대조해 변경된 인계 4개 및 신규 221번을 검토한 추가 감사이며 381개 전체 기능을 다시 검증한 것이 아니다. 이번 메모리 설계 개정은 main 122fdec6의 381개 inventory 중 변경 6개와 신규 설계 1개를 검토하고 나머지 375개의 정규화 hash 보존을 대조한 범위 감사다. 최적화 구현이나 382개 전체의 기능 재검증이 아니다.",
+    "review_method": "전체 Markdown inventory·현행/역사/외부 원본 분류, release/Host/milestone/branch/메모리 순서 관련 문구와 현행 계약 대조, 역할별 병렬 검토, 전체 UTF-8/local-link 및 정규화 hash 검사. 과거 raw evidence의 모든 시험을 재실행한 감사는 아니다. 후속 main 이력 정리는 이전 전수 감사 380개와 hash를 대조해 변경된 인계 4개 및 신규 221번을 검토한 추가 감사이며 381개 전체 기능을 다시 검증한 것이 아니다. 메모리 통합 설계의 최초 개정은 381개 inventory 중 변경 6개와 신규 설계 1개를 검토했다. 이번 확정 개정은 main 4683d825의 382개 inventory 중 관련 문서 5개를 검토하고 나머지 377개의 정규화 hash 보존을 대조한 범위 감사다. 최적화 구현이나 382개 전체의 기능 재검증이 아니다.",
     "hash_method": "UTF-8 본문, CRLF/CR -> LF 정규화, SHA-256. Markdown만 대상으로 하며 이 JSON 자체는 제외한다."
   },
   "release_plan": {
@@ -102,6 +102,11 @@
       "result": "PASS: 376 main-repository Markdown files; exit 0"
     },
     {
+      "name": "현재 profile/feature/cache 계약",
+      "command": "py -3 tests/host/test_m13_profiles.py -v",
+      "result": "PASS: 13 tests, 1 package-install prerequisite SKIP; exit 0; 후속 capability probe 구현 시험이 아님"
+    },
+    {
       "name": "M31 readiness schema",
       "command": "py -3 tools/bluetooth/m31_contract.py --check",
       "result": "PASS: M31_CONTRACT_OK; exit 0; readiness unchanged"
@@ -114,12 +119,12 @@
     {
       "name": "audit integrity",
       "command": "PowerShell UTF-8 LF-normalized SHA-256 comparison against the 381-document audit at main 122fdec6",
-      "result": "PASS: 6 existing Markdown files changed and 1 design added; other 375 unchanged, including all 6 board Markdown files"
+      "result": "PASS: main 4683d825의 382-document inventory에서 관련 Markdown 5개만 변경; 나머지 377개와 board Markdown 6개 불변"
     },
     {
       "name": "whitespace and changed-file boundary",
       "command": "git diff --check; git status --short",
-      "result": "PASS: documentation only; no code, SDK, board, readiness or raw evidence edits"
+      "result": "PASS: 문서 5개와 감사 JSON만 변경; code·SDK·board·readiness·raw evidence 변경 없음"
     },
     {
       "name": "firmware build, physical HIL and full Host regression",
@@ -201,6 +206,28 @@
     "commit_and_push": "not performed in this documentation-only task",
     "review_boundary": "targeted review of 6 changed Markdown files plus 1 new design; cumulative actions/counts from the earlier full audit are preserved",
     "existing_measurements_and_hil": "unchanged; no new savings or physical PASS"
+  },
+  "memory_design_resolution_update": {
+    "baseline_commit": "4683d825eb43638ffa9445992b4dfe9a97f93f11",
+    "baseline_documents": 382,
+    "changed_markdown": [
+      "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
+      "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
+      "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
+      "00_Docs/HANDOFF.md",
+      "00_Docs/TODO_M31.md"
+    ],
+    "unmodified_prior_markdown": 377,
+    "decision": "2번은 1번을 포함하는 단일 구현안",
+    "automatic_core_api_selection": "compiler-assisted probe compile/link의 도달 가능한 public API symbol/requirement",
+    "automatic_library_selection": "Arduino source graph와 신뢰된 feature manifest의 transitive dependency",
+    "role_and_capacity_selection": "검증된 공개 role preset 또는 sketch build declaration; 사용자 저수준 prj.conf 수동 조립 불필요",
+    "generated_single_source": "resolved-capabilities.json -> prj.conf, overlay, source/init, cache identity",
+    "spi_contract": "도달 가능한 SPI.begin()은 arduino.spi requirement로 연결; include-only는 별도 dependency가 없으면 backend 제외",
+    "failure_policy": "판정 불가·누락·충돌은 fail-closed; silent feature removal과 full-profile fallback 금지",
+    "implementation_status": "not_started",
+    "branch_operations": "none",
+    "firmware_build_and_hil": "NOT RUN"
   },
   "documents": [
     {
@@ -431,9 +458,9 @@
       "path": "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
       "action": "added",
       "classification": "신규",
-      "reason": "두 설명의 source/link/static/절감량 단정을 정정하고 사용자 선언 기반 native+API 목표, 기능 선택·정적 pool·계측·호환·검증 순서를 통합했다. 구현 완료 기록이 아니다.",
+      "reason": "2번이 1번을 포함하는 단일 구현안임을 확정하고 compiler-assisted Core API probe, library dependency, role/capacity 선언에서 generated config/source/resource gate까지의 실행 순서를 고정했다. 구현 완료 기록이 아니다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "1e6168623dac3c91fdec81959bd94925647ec002e7f9b9f67e2be18ef051377b"
+      "sha256_utf8_lf": "e5e4af86142e21b99c2089554760d30f3291771e53f24a1a9cf5a8b0a7ce877e"
     },
     {
       "path": "00_Docs/02_빌드 설계/01_West_Native_Blink_PoC.md",
@@ -447,15 +474,15 @@
       "path": "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 Build Adapter 위에 compiler-assisted capability probe와 resolved-capabilities 기반 최종 설정·cache 흐름을 후속 목표로 고정했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "0f3deac9d2dbf881250ce21395a062d3460959a01d11416074bb0035f4dd56dc"
+      "sha256_utf8_lf": "2a6058cccc3dd3f330fd3d8a28c1739d385ecd55bfb9ed62cb2dd40eb40e318a"
     },
     {
       "path": "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 profile/feature 동작과 후속 선언 기반 기본 profile을 구분하고 SPI.begin·간접 dependency·BLE role/capacity 판정과 fail-closed 경계를 고정했다.",
       "external_read_only": false,
       "sha256_utf8_lf": "71e4d0f07d398cb2d036e9046818778180dab7724a9e5090dad0f2be40f24443"
     },
@@ -487,9 +514,9 @@
       "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 profile/feature 동작과 후속 선언 기반 기본 profile을 구분하고 SPI.begin·간접 dependency·BLE role/capacity 판정과 fail-closed 경계를 고정했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "f6a88978abf90228c85db2f25176ae70b88d9291012ea69e5f51133faabdda84"
+      "sha256_utf8_lf": "2379974ae4a66c3f649ab9c6b54f6da1aa8fcca3b0227d4007dec5a1e45c08f3"
     },
     {
       "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
@@ -2887,9 +2914,9 @@
       "path": "00_Docs/HANDOFF.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 이후 승인된 main squash의 원본 태그·새 이력·현재 main 재개 절차를 추가 대조했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
+      "reason": "기존 이력·상태를 보존하고 compiler-assisted API requirement, library dependency, public role/capacity에서 prj.conf/source를 생성하는 재개 지점을 추가했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "fabfd610371ea2a60d57eb83b74db3a109c0a274d16b67b8590bf5ae53bdc4f8"
+      "sha256_utf8_lf": "9a13e530c8e91c0da6be945cb2a74c260e6bb37afea4deac4039135186d1aed1"
     },
     {
       "path": "00_Docs/README.md",
@@ -2903,9 +2930,9 @@
       "path": "00_Docs/TODO_M31.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
+      "reason": "메모리 최적화 완료 조건에 Core API probe·feature manifest·public BLE role/capacity와 SPI.begin 무수동 prj.conf 계약을 연결했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "3fa3c47b279e84a6272d1cd9042aa7b52fb1dde17dec71f5f9774367a48d34ee"
+      "sha256_utf8_lf": "be825a461084dc44f19bc86f7bb0887b05376403110d73a5c72f1942be0feae5"
     },
     {
       "path": "00_Docs/TODO_M32.md",

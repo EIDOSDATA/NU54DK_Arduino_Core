@@ -202,6 +202,39 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 feature·source·pool 경계를 최적화할 계획이다. 구현과 대표 image 비교 전에는 절감량을 확정하지 않는다.
 범위와 판정은 [메모리 감사·최적화 계약](<../04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)을 따른다.
 
+### 4.1 선언 기반 최적화의 목표 build 흐름
+
+후속 `M31-MEM-OPT`에서는 현재 source record와 final cache 이관을 유지하면서 다음 단계를 추가한다.
+이는 아직 v0.4.1 builder의 완료 기능이 아니다.
+
+```text
+Arduino source/library discovery
+  → compiler-assisted capability probe compile/link
+  → 도달 가능한 public API requirement + library feature + role/capacity 선언
+  → transitive dependency/conflict/capacity resolver
+  → resolved-capabilities.json
+  → prj.conf + overlay + source/init 선택
+  → pristine final Zephyr build
+  → ELF/map/resource gate
+```
+
+probe는 source 정규식이 아니라 동일 compiler가 생성한 symbol reference와 전용 requirement
+section을 사용하고 `setup()`/`loop()`·전역 생성자·선택 library에서 도달 가능한 경로를 section
+GC 조건으로 판정한다. `SPI.begin()`은 `arduino.spi`, `Wire`는 `arduino.wire`, `Serial1`은
+`arduino.serial1`, `analogWrite()`는 `arduino.pwm` requirement로 연결한다. C++ mangled name은
+공개 feature ID가 아니며 고정 toolchain별 mapping과 Host fixture로 검증한다.
+
+외부/bundled library의 간접 요구는 신뢰된 manifest로 합친다. BLE role이나 연결·stream·ASE 수처럼
+API call만으로 안전하게 정할 수 없는 값은 저수준 Kconfig가 아니라 검증된 공개 role/capacity
+선언으로 입력한다. resolver가 판정할 수 없는 요구는 full 구성으로 조용히 확대하지 않고 오류로
+중단한다. 일반 사용자가 미사용 기능의 `=n` 목록이나 수동 `prj.conf`를 작성해야만 최소화된다면
+이 흐름은 완료가 아니다.
+
+probe/compiler identity, 최종 requirement 집합, role/capacity, 생성 config/overlay/source 선택을
+cache와 artifact provenance에 넣는다. 같은 source의 pristine build와 cache build가 같은 결과를
+만들어야 한다. 상세 구조·정정 사항·완료 gate는
+[M31 메모리 최적화 통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)가 소유한다.
+
 v0.3.0 RC3에서 도입해 v0.4.1에서도 유지하는 메모리 계약은 loaderless 단일 application
 1,490,944 byte와 끝단 영구 저장소
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
@@ -209,7 +242,7 @@ v0.3.0 RC3에서 도입해 v0.4.1에서도 유지하는 메모리 계약은 load
 `app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
 구성은 지원하지 않는다.
 
-### 4.1 개발 update profile과 후속 인계 경계
+### 4.2 개발 update profile과 후속 인계 경계
 
 `v0.5.0` 개발 M30은 별도 `secure_ble_dfu` profile로 제한된 고정 layout, MCUboot 최초 설치,
 외부 키 서명과 BLE update 경로를 구현했다. 개발 `boards.txt`에서 이 profile은 sysbuild와

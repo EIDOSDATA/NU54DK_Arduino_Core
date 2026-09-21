@@ -14,6 +14,9 @@ M32/M33과 Ubuntu/macOS 지원은 후속 버전(미정)이며 HOST-W04~W08은 �
 확정 절감량 주장을 정정했습니다. 이번 후속 개정은 문서만이며 구현·브랜치 생성은 하지 않습니다.
 최신 목표는 **동등 기능 nRF native + 우리 API의 최소 필수 비용**입니다. 선언 기반 최적화를
 차기 기본 경로로 만들고 full은 명시적 호환 선택지로 보존합니다. 실제 기본값 변경은 아직 하지 않았습니다.
+일반 Core API는 compiler-assisted capability probe로 도달 가능한 참조를 판정하고, library의 간접
+의존성과 공개 BLE role/capacity 선언을 합쳐 `prj.conf`·overlay·source/init를 생성하는 설계입니다.
+따라서 최종 목표에서 `SPI.begin()`은 수동 `prj.conf` 없이 SPI 준비로 연결되지만 현재 구현은 미착수입니다.
 
 ## 1. 현재 상태
 

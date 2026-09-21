@@ -137,11 +137,30 @@ BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
 아니다. `M31-MEM-OPT`는 실제 ELF/map 기준으로 미사용 Core route·pin state·GATT/BLE pool을
 감사하고 역할별 구성에 반영할 후속 구현이다. 현재의 설정 합성 기능과 최적화 완료를 구분한다.
 
+### 4.1 후속 선언 기반 기본 profile
+
+후속 최적화의 목표 기본 경로는 현재 `standard`/`ble`처럼 주변장치와 BLE 범용 기능을 먼저
+모두 켜는 구성이 아니다. compiler-assisted capability probe, 선택 library의 feature manifest와
+공개 role/capacity 선언의 합집합으로 최종 구성을 만든다.
+
+- `SPI.begin()`의 도달 가능한 사용은 SPI Kconfig·Devicetree·source·route를 활성화한다.
+- include-only이고 실제 SPI API 사용과 library dependency가 없으면 SPI backend를 넣지 않는다.
+- library 내부의 간접 SPI/Wire 요구는 해당 library manifest가 선언한다.
+- BLE umbrella header는 모든 GAP/GATT/L2CAP/PAwR·최대 pool을 켜는 신호가 아니다.
+- BLE 역할·connection/stream/ASE 상한은 검증된 공개 preset/declaration으로 보완한다.
+- 판정 불가·누락·충돌은 명확히 실패하며 full profile로 자동 후퇴하지 않는다.
+
+resolver 결과는 machine-readable `resolved-capabilities.json`으로 보존하고 생성 `prj.conf`, overlay,
+source/init 선택과 cache identity가 모두 이를 따라야 한다. 기존 full 동작은 명시적
+legacy/compatibility 선택지로 유지하되 차기 기본 경로의 완료 기준으로 쓰지 않는다. 공개 v0.4.1
+package와 archive는 소급 변경하지 않는다. 설계와 검증 순서는
+[M31 메모리 최적화 통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)를 따른다.
+
 Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로 허용한다. v0.4.1 공개 30개
 예제는 이 sidecar에 의존하지 않으며 profile/library 내부 설정만으로 compile해야 한다.
 임의 snippet, module 또는 CMake 주입은 공개 override 계약이 아니다.
 
-### 4.1 메모리 layout의 별도 선택 축
+### 4.2 메모리 layout의 별도 선택 축
 
 `v0.4.1`의 세 profile은 같은 loaderless 기본 layout을 사용한다. Application은
 `0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
