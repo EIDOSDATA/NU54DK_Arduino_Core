@@ -1,0 +1,114 @@
+{
+  "schema": "nucode.m31.pbp-evidence.v1",
+  "status": "PASS",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "sdk_lock": {
+    "ncs_nrf": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_package": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain": "dcbdc366a1"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "public_examples": {
+    "source": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSource/PublicAudioBroadcastSource.ino",
+      "sha256": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212"
+    },
+    "sink": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSink/PublicAudioBroadcastSink.ino",
+      "sha256": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+    }
+  },
+  "builds": {
+    "source": {
+      "program_bytes": 499812,
+      "ram_bytes": 223274,
+      "image_sha256": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e",
+      "manifest": "build-provenance/source.nu54-build.json",
+      "manifest_sha256": "f9f555227329fe48df0bab25f7c44d61e004c71a60cdaf746cae2e0e2eb8d079"
+    },
+    "sink": {
+      "program_bytes": 488776,
+      "ram_bytes": 225708,
+      "image_sha256": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb",
+      "manifest": "build-provenance/sink.nu54-build.json",
+      "manifest_sha256": "8ad171e13818e72ac231a0fa1dc7e594d8cfc910d634f05f7a1cd0676d495ad7"
+    }
+  },
+  "board_map": {
+    "source": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+    },
+    "sink": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    }
+  },
+  "campaign": {
+    "evidence": "campaign.summary.json",
+    "evidence_sha256": "19ec1992a05f5acd416525985560e632541154b95e44ddca2003e7163f79be61",
+    "runner": "tools/pbp_hil_final.py",
+    "runner_sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e",
+    "launcher": "tools/pbp_full_campaign.py",
+    "launcher_sha256": "954deb5cf46520d74159ed8751e4ee1db0f640dffc2bfbc4ae61c1053569ae1f",
+    "modes_passed": 5,
+    "modes_total": 5
+  },
+  "functional": {
+    "positive": {
+      "evidence": "positive.summary.json",
+      "evidence_sha256": "2194312f0337b1a289b02578b2ba475d9b19f5fc12e6a4188155c673d0894080",
+      "stream_seconds": 180.003,
+      "received_delta": 17700,
+      "valid_reports": 177,
+      "dropped": 0
+    },
+    "stop_restart": {
+      "evidence": "stop-restart.summary.json",
+      "evidence_sha256": "ed8a3fa534a7115710c7c4dad8e4ddbd690c6872baf51b611622a3b352abad23",
+      "completed_cycles": 20,
+      "maximum_recovery_seconds": 3.333
+    },
+    "wrong_code": {
+      "evidence": "wrong-code.summary.json",
+      "evidence_sha256": "8257b5692881a5a8e26a32e5d48a216f08e33635c3afa60ed017463b9a270af4",
+      "rejected_cycles": 20,
+      "recovered_cycles": 20,
+      "report_level_invalid_frame_lines": 0,
+      "maximum_recovery_seconds": 5.041
+    },
+    "quality": {
+      "evidence": "quality.summary.json",
+      "evidence_sha256": "2f5e76304afcb2dad9ba837f7391ea2dc755a1dc937d5b006401c204f3fc44df",
+      "source_rejected_cycles": 20,
+      "sink_rejected_cycles": 20,
+      "recovered_cycles": 20,
+      "maximum_recovery_seconds": 4.976
+    },
+    "sync_loss": {
+      "evidence": "sync-loss.summary.json",
+      "evidence_sha256": "c5b4f4da9694a7394c8cf649af56ef605d2397e8c1a1ad34b1df97054dfc821e",
+      "detected_cycles": 20,
+      "recovered_cycles": 20,
+      "maximum_recovery_seconds": 6.826,
+      "targeted_preflight": "targeted-sync-loss-preflight/sync-loss.summary.json"
+    }
+  },
+  "diagnostic_history": {
+    "path": "diagnostic-history",
+    "status": "PRESERVED_FAILURES",
+    "finding": "v1-v3 sync-loss 실패는 reset 경계 UART 잡음 정규화기가 과도하게 엄격했던 검증 도구 원인이며, 제한된 reset 경계 parser 수정과 self-test 후 v4 전체 캠페인으로 재검증함"
+  },
+  "privacy": {
+    "raw_probe_identifiers_recorded": false,
+    "probe_identity_form": "sha256"
+  },
+  "scope": {
+    "physical_audio": "NOT_RUN",
+    "commercial_peer_interoperability": "NOT_RUN",
+    "auracast_name_or_qualification_claim": false
+  }
+}

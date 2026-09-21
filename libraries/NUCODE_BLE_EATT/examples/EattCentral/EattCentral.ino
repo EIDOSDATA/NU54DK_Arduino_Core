@@ -188,8 +188,7 @@ void loop()
             Serial.println("EATT two-bearer connection failed");
         }
     }
-    if (BLEEatt.count(peer) == 2U && !writePending && !readPending &&
-        !BLEClient.busy(peer))
+    if (BLEEatt.count(peer) == 2U && !writePending && !readPending && !BLEClient.busy(peer))
     {
         writePending = true;
     }

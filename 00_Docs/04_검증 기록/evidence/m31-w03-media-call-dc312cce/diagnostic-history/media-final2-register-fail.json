@@ -1,0 +1,68 @@
+{
+  "test_id": "M31-AUDIO-MEDIA-CALL-01",
+  "status": "FAIL",
+  "profile": "media",
+  "scope": "two_board_public_serial_profile_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "image_core_revision": "b09347ab803f0f5023589685865b92d76a7c63b6",
+  "boards": {
+    "player": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "E:/",
+      "vcom": "COM13",
+      "image_sha256": "fe8b237fa4346037a5efef4ffd006b61178984777986f0098c4037234e30a74b",
+      "image_size": 1147236,
+      "config_sha256": "885a626c18dbdaf20e3b7dd768503946fa6605692f6f53a00044aa51fe4666c0",
+      "build_record": {
+        "core_revision": "b09347ab803f0f5023589685865b92d76a7c63b6",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "fe8b237fa4346037a5efef4ffd006b61178984777986f0098c4037234e30a74b",
+        "record_format": "nu54-build-json",
+        "record_name": "MediaControlPlayer.ino.nu54-build.json",
+        "record_sha256": "08c5b948121606679b131d13ff50fcfe6f27786e669e9c49e635ed4e2e2ee8cc"
+      }
+    },
+    "client": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "F:/",
+      "vcom": "COM14",
+      "image_sha256": "497d84e2aaebf9c28e4f51e26a955379c5d688cee2621fe7d5cf290a15a0bfaa",
+      "image_size": 1130657,
+      "config_sha256": "49742f1ed890f98ab038619f30e714a4b2d195a0c150cd6518771724bc230b13",
+      "build_record": {
+        "core_revision": "b09347ab803f0f5023589685865b92d76a7c63b6",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "497d84e2aaebf9c28e4f51e26a955379c5d688cee2621fe7d5cf290a15a0bfaa",
+        "record_format": "nu54-build-json",
+        "record_name": "MediaControlClient.ino.nu54-build.json",
+        "record_sha256": "7a73065708d1d85de106c4d9d4317dd1615f3a84dbebcfc33799354e08a47b24"
+      }
+    }
+  },
+  "normal_operations": 100,
+  "negative_iterations_per_case": 20,
+  "reconnects": 20,
+  "soak_seconds": 0.0,
+  "measurement": null,
+  "reason": "ExecutionFailure: CMSIS-DAP V2 DP/AP register query failure",
+  "transcript_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "observed_utc": "2026-09-20T16:27:22.210190+00:00"
+}

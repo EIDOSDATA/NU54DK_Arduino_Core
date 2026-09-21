@@ -1,0 +1,11 @@
+peripheral: M31ISO|1|READY|role=peripheral
+central: M31ISO|1|READY|role=central
+peripheral: M31ISO|1|BEGIN|nonce=2c961eaed9de90cc9b2ccc2cd9164bad|role=peripheral
+central: M31ISO|1|BEGIN|nonce=2c961eaed9de90cc9b2ccc2cd9164bad|role=central
+peripheral: M31ISO|1|IDENTITY|nonce=2c961eaed9de90cc9b2ccc2cd9164bad|core=10f16eaa913f9b1d1906239fbe6ff98c53c73cd1|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+central: M31ISO|1|IDENTITY|nonce=2c961eaed9de90cc9b2ccc2cd9164bad|core=10f16eaa913f9b1d1906239fbe6ff98c53c73cd1|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+peripheral: M31ISO|1|ACL_CONNECTED|nonce=2c961eaed9de90cc9b2ccc2cd9164bad
+central: M31ISO|1|ACL_CONNECTED|nonce=2c961eaed9de90cc9b2ccc2cd9164bad
+central: M31ISO|1|ISO_CONNECTED|nonce=2c961eaed9de90cc9b2ccc2cd9164bad
+peripheral: M31ISO|1|ISO_CONNECTED|nonce=2c961eaed9de90cc9b2ccc2cd9164bad
+peripheral: M31ISO|1|FAIL|nonce=2c961eaed9de90cc9b2ccc2cd9164bad|role=peripheral|stage=invalid_sdu|code=-77

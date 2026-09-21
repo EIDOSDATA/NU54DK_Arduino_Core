@@ -1,0 +1,70 @@
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=7
+INITIATOR|CAP completed sessions=5
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Initiator disconnected reason=19
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+ACCEPTOR|CAP Acceptor starting
+ACCEPTOR|CAP Acceptor BLE ready
+ACCEPTOR|CAP service ready
+ACCEPTOR|CAP unicast server ready
+ACCEPTOR|CAP codec ready
+ACCEPTOR|CAP unicast Acceptor ready
+INITIATOR|CAP Acceptor scan started
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=6
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP sent frames=100
+ACCEPTOR|CAP decoded frames=100 energy=941215 dropped=0
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=1
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+ACCEPTOR|CAP decoded frames=200 energy=981486 dropped=0
+INITIATOR|CAP sent frames=100
+INITIATOR|CAP stop result=0 duplicate=8
+INITIATOR|CAP completed sessions=3
+INITIATOR|CAP peer disconnected
+ACCEPTOR|CAP Initiator disconnected reason=19
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP Initiator status found=0 connected=0 connecting=1 stage=0
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|CAP Acceptor status: waiting for Initiator
+INITIATOR|CAP group start result=0
+INITIATOR|CAP in-flight cancel result=0
+INITIATOR|CAP procedure cancelled native=0

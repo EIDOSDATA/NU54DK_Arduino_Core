@@ -163,15 +163,12 @@ namespace nucode::ble::internal::security
 
         const PeerAddress local_address = publicAddress(connection_information.le.local);
         const PeerAddress remote_address = publicAddress(connection_information.le.remote);
-        const bool local_required =
-            information->lesc.oob_config !=
-            decltype(bt_conn_oob_info{}.lesc)::BT_CONN_OOB_REMOTE_ONLY;
-        const bool remote_required =
-            information->lesc.oob_config !=
-            decltype(bt_conn_oob_info{}.lesc)::BT_CONN_OOB_LOCAL_ONLY;
+        const bool local_required = information->lesc.oob_config !=
+                                    decltype(bt_conn_oob_info{}.lesc)::BT_CONN_OOB_REMOTE_ONLY;
+        const bool remote_required = information->lesc.oob_config !=
+                                     decltype(bt_conn_oob_info{}.lesc)::BT_CONN_OOB_LOCAL_ONLY;
         if (local_required &&
-            (!snapshot.local_valid ||
-             !sameAddress(snapshot.local.pairing_address, local_address)))
+            (!snapshot.local_valid || !sameAddress(snapshot.local.pairing_address, local_address)))
         {
             const std::uint8_t reason =
                 snapshot.local_valid &&
@@ -181,9 +178,8 @@ namespace nucode::ble::internal::security
             rejectOob(connection, -EACCES, reason);
             return;
         }
-        if (remote_required &&
-            (!snapshot.remote_valid ||
-             !sameAddress(snapshot.remote.pairing_address, remote_address)))
+        if (remote_required && (!snapshot.remote_valid ||
+                                !sameAddress(snapshot.remote.pairing_address, remote_address)))
         {
             const std::uint8_t reason =
                 snapshot.remote_valid &&
@@ -207,10 +203,8 @@ namespace nucode::ble::internal::security
         OobSlot &active = oobState().slots[roleIndex(role)];
         if (local_required)
         {
-            ::memcpy(active.native_local.r, snapshot.local.random,
-                     sizeof(active.native_local.r));
-            ::memcpy(active.native_local.c, snapshot.local.confirm,
-                     sizeof(active.native_local.c));
+            ::memcpy(active.native_local.r, snapshot.local.random, sizeof(active.native_local.r));
+            ::memcpy(active.native_local.c, snapshot.local.confirm, sizeof(active.native_local.c));
             local = &active.native_local;
         }
         if (remote_required)
@@ -289,8 +283,7 @@ namespace nucode::ble
         buffer[8] = record.identity.type;
         ::memcpy(&buffer[9], record.identity.value, sizeof(record.identity.value));
         buffer[15] = record.pairing_address.type;
-        ::memcpy(&buffer[16], record.pairing_address.value,
-                 sizeof(record.pairing_address.value));
+        ::memcpy(&buffer[16], record.pairing_address.value, sizeof(record.pairing_address.value));
         ::memcpy(&buffer[22], record.random, sizeof(record.random));
         ::memcpy(&buffer[38], record.confirm, sizeof(record.confirm));
         ::memcpy(&buffer[54], record.session_nonce, sizeof(record.session_nonce));
@@ -401,8 +394,7 @@ namespace nucode::ble
         return false;
 #else
         if (buffer == nullptr || length != ndef_record_bytes || buffer[0] != ndef_header ||
-            buffer[1] != sizeof(ndef_mime_type) - 1U ||
-            buffer[2] != ndef_payload_bytes ||
+            buffer[1] != sizeof(ndef_mime_type) - 1U || buffer[2] != ndef_payload_bytes ||
             ::memcmp(&buffer[3], ndef_mime_type, sizeof(ndef_mime_type) - 1U) != 0)
         {
             return false;
@@ -451,9 +443,8 @@ namespace nucode::ble
                 ::memcpy(random, value, sizeof(random));
                 random_seen = true;
             }
-            else if (type == ad_manufacturer &&
-                     value_length == 2U + OobFrameCodec::frame_bytes && !manufacturer_seen &&
-                     sys_get_le16(value) == nucode_company_id &&
+            else if (type == ad_manufacturer && value_length == 2U + OobFrameCodec::frame_bytes &&
+                     !manufacturer_seen && sys_get_le16(value) == nucode_company_id &&
                      OobFrameCodec::decode(&value[2], OobFrameCodec::frame_bytes, candidate))
             {
                 manufacturer_seen = true;
@@ -464,9 +455,8 @@ namespace nucode::ble
             }
             cursor += value_length;
         }
-        if (!address_seen || !role_seen || !confirm_seen || !random_seen ||
-            !manufacturer_seen || role != candidate.role ||
-            !sameAddress(address, candidate.pairing_address) ||
+        if (!address_seen || !role_seen || !confirm_seen || !random_seen || !manufacturer_seen ||
+            role != candidate.role || !sameAddress(address, candidate.pairing_address) ||
             ::memcmp(confirm, candidate.confirm, sizeof(confirm)) != 0 ||
             ::memcmp(random, candidate.random, sizeof(random)) != 0)
         {
@@ -509,8 +499,7 @@ namespace nucode::ble
         }
         if (result != 0 || identity_count != 1U)
         {
-            recordSecurityError(SecurityError::driver_error,
-                                result != 0 ? result : -ENOENT);
+            recordSecurityError(SecurityError::driver_error, result != 0 ? result : -ENOENT);
             return false;
         }
 
@@ -552,8 +541,8 @@ namespace nucode::ble
             recordSecurityError(SecurityError::not_initialized, -EACCES);
             return false;
         }
-        if (!securityState().security_config.secure_connections_oob ||
-            !validRole(local_role) || !validRecord(record) || record.role == local_role)
+        if (!securityState().security_config.secure_connections_oob || !validRole(local_role) ||
+            !validRecord(record) || record.role == local_role)
         {
             recordSecurityError(SecurityError::invalid_argument, -EINVAL);
             return false;
@@ -562,9 +551,8 @@ namespace nucode::ble
         bool accepted = false;
         k_spinlock_key_t key = k_spin_lock(&oobState().lock);
         OobSlot &slot = oobState().slots[roleIndex(local_role)];
-        if (slot.local_valid &&
-            ::memcmp(slot.local.session_nonce, record.session_nonce,
-                     sizeof(record.session_nonce)) == 0)
+        if (slot.local_valid && ::memcmp(slot.local.session_nonce, record.session_nonce,
+                                         sizeof(record.session_nonce)) == 0)
         {
             slot.remote = record;
             slot.remote_valid = true;

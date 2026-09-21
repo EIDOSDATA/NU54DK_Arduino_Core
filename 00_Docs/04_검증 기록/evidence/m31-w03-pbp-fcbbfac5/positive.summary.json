@@ -1,0 +1,2340 @@
+{
+  "schema": "nucode.m31.pbp-hil.v2",
+  "status": "PASS",
+  "mode": "positive",
+  "started_at": "2026-09-20T06:30:37.146438+00:00",
+  "finished_at": "2026-09-20T06:33:39.787749+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "source_clean": true,
+  "public_example_sha256": {
+    "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+    "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+  },
+  "runner": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_hil_final.py",
+    "sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e"
+  },
+  "debug_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "raw_probe_identifiers_recorded": false
+  },
+  "flash_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\flash_by_probe_hash.py",
+    "sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "outer_timeout_seconds": 165.0
+  },
+  "flash_receipts": {
+    "source": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\positive-source-flash.json",
+      "sha256": "89a2b22dadd5ad4828ce5276147ec0f125ba6182d17da890054cf619cdda76ce",
+      "programmed_bytes": 503808,
+      "status": "PASS"
+    },
+    "sink": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\positive-sink-flash.json",
+      "sha256": "c63cdf64f853b9ff5866366816cf9b5255991545fcc710adf79c5c04ccbdfe52",
+      "programmed_bytes": 491520,
+      "status": "PASS"
+    }
+  },
+  "final_provenance": {
+    "verified": true,
+    "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+    "public_example_sha256": {
+      "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+      "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+    },
+    "image_sha256": {
+      "source": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e",
+      "sink": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    },
+    "debug_helper_sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "flash_helper_sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "runner_sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e",
+    "flash_receipt_sha256": {
+      "source": "89a2b22dadd5ad4828ce5276147ec0f125ba6182d17da890054cf619cdda76ce",
+      "sink": "c63cdf64f853b9ff5866366816cf9b5255991545fcc710adf79c5c04ccbdfe52"
+    }
+  },
+  "probe_preflight": {
+    "connected_probe_count": 3,
+    "expected_hash_matches": {
+      "source": 1,
+      "sink": 1
+    }
+  },
+  "usb_port_preflight": {
+    "required_port_count": 4,
+    "roles": {
+      "source": {
+        "target_port": "COM10",
+        "aux_port": "COM11",
+        "serial_sha256": "f419aa19cc41d8d2c8c85339a81b8f2c0e1ada5bf91f0ff04200513fc6aba69f"
+      },
+      "sink": {
+        "target_port": "COM14",
+        "aux_port": "COM15",
+        "serial_sha256": "a68185c274fd83f93c9520f99fb418184395f9548a52e306449733c3c9f39b46"
+      }
+    },
+    "raw_usb_serials_recorded": false
+  },
+  "board_map": {
+    "source": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w07-source-fcbbfac5\\PublicAudioBroadcastSource.ino.hex",
+      "image_sha256": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e"
+    },
+    "sink": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w07-sink-fcbbfac5\\PublicAudioBroadcastSink.ino.hex",
+      "image_sha256": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    }
+  },
+  "runner_behavior": {
+    "flashes_devices": true,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "time_contract": {
+    "positive_stream_duration_seconds": 180.0,
+    "non_positive_campaign_timeout_seconds": 180.0,
+    "recovery_timeout_seconds": 30.0,
+    "cycles": 20
+  },
+  "transcript": {
+    "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\positive.transcript.log",
+    "sha256": "d026d0b2b518a1e1d94c616eb6c081dd252eb4734243652ec71a5532e6ace07a",
+    "event_count": 366
+  },
+  "result": {
+    "setup": {
+      "source_preparing_sequence": 2,
+      "source_streaming_sequence": 3,
+      "sink_scanning_sequence": 5,
+      "announcement_sequence": 6,
+      "sink_streaming_sequence": 7,
+      "baseline_sample_sequence": 9,
+      "baseline": {
+        "frames": 100,
+        "energy": 1170186,
+        "dropped": 0
+      }
+    },
+    "required_stream_duration_seconds": 180.0,
+    "observed_stream_duration_seconds": 180.003,
+    "baseline_received": 100,
+    "final_received": 17800,
+    "received_delta": 17700,
+    "valid_samples_after_baseline": 177,
+    "dropped": 0,
+    "campaign_elapsed_seconds": 182.51
+  },
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 0.135,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 1,
+      "at_s": 0.262,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 2,
+      "at_s": 0.34,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 3,
+      "at_s": 0.34,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 4,
+      "at_s": 0.462,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 5,
+      "at_s": 0.468,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 6,
+      "at_s": 0.482,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 7,
+      "at_s": 1.311,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 8,
+      "at_s": 1.353,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 9,
+      "at_s": 2.316,
+      "role": "sink",
+      "text": "public audio received=100 energy=1170186 dropped=0"
+    },
+    {
+      "sequence": 10,
+      "at_s": 2.366,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 11,
+      "at_s": 3.325,
+      "role": "sink",
+      "text": "public audio received=200 energy=1028111 dropped=0"
+    },
+    {
+      "sequence": 12,
+      "at_s": 3.37,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 13,
+      "at_s": 4.331,
+      "role": "sink",
+      "text": "public audio received=300 energy=914551 dropped=0"
+    },
+    {
+      "sequence": 14,
+      "at_s": 4.386,
+      "role": "source",
+      "text": "public audio sent frames=400"
+    },
+    {
+      "sequence": 15,
+      "at_s": 5.346,
+      "role": "sink",
+      "text": "public audio received=400 energy=1072902 dropped=0"
+    },
+    {
+      "sequence": 16,
+      "at_s": 5.4,
+      "role": "source",
+      "text": "public audio sent frames=500"
+    },
+    {
+      "sequence": 17,
+      "at_s": 6.366,
+      "role": "sink",
+      "text": "public audio received=500 energy=1170351 dropped=0"
+    },
+    {
+      "sequence": 18,
+      "at_s": 6.41,
+      "role": "source",
+      "text": "public audio sent frames=600"
+    },
+    {
+      "sequence": 19,
+      "at_s": 7.376,
+      "role": "sink",
+      "text": "public audio received=600 energy=1028134 dropped=0"
+    },
+    {
+      "sequence": 20,
+      "at_s": 7.427,
+      "role": "source",
+      "text": "public audio sent frames=700"
+    },
+    {
+      "sequence": 21,
+      "at_s": 8.385,
+      "role": "sink",
+      "text": "public audio received=700 energy=914491 dropped=0"
+    },
+    {
+      "sequence": 22,
+      "at_s": 8.435,
+      "role": "source",
+      "text": "public audio sent frames=800"
+    },
+    {
+      "sequence": 23,
+      "at_s": 9.392,
+      "role": "sink",
+      "text": "public audio received=800 energy=1072873 dropped=0"
+    },
+    {
+      "sequence": 24,
+      "at_s": 9.446,
+      "role": "source",
+      "text": "public audio sent frames=900"
+    },
+    {
+      "sequence": 25,
+      "at_s": 10.405,
+      "role": "sink",
+      "text": "public audio received=900 energy=1170186 dropped=0"
+    },
+    {
+      "sequence": 26,
+      "at_s": 10.453,
+      "role": "source",
+      "text": "public audio sent frames=1000"
+    },
+    {
+      "sequence": 27,
+      "at_s": 11.412,
+      "role": "sink",
+      "text": "public audio received=1000 energy=1028111 dropped=0"
+    },
+    {
+      "sequence": 28,
+      "at_s": 11.466,
+      "role": "source",
+      "text": "public audio sent frames=1100"
+    },
+    {
+      "sequence": 29,
+      "at_s": 12.425,
+      "role": "sink",
+      "text": "public audio received=1100 energy=914551 dropped=0"
+    },
+    {
+      "sequence": 30,
+      "at_s": 12.475,
+      "role": "source",
+      "text": "public audio sent frames=1200"
+    },
+    {
+      "sequence": 31,
+      "at_s": 13.431,
+      "role": "sink",
+      "text": "public audio received=1200 energy=1072902 dropped=0"
+    },
+    {
+      "sequence": 32,
+      "at_s": 13.486,
+      "role": "source",
+      "text": "public audio sent frames=1300"
+    },
+    {
+      "sequence": 33,
+      "at_s": 14.442,
+      "role": "sink",
+      "text": "public audio received=1300 energy=1170351 dropped=0"
+    },
+    {
+      "sequence": 34,
+      "at_s": 14.496,
+      "role": "source",
+      "text": "public audio sent frames=1400"
+    },
+    {
+      "sequence": 35,
+      "at_s": 15.453,
+      "role": "sink",
+      "text": "public audio received=1400 energy=1028134 dropped=0"
+    },
+    {
+      "sequence": 36,
+      "at_s": 15.507,
+      "role": "source",
+      "text": "public audio sent frames=1500"
+    },
+    {
+      "sequence": 37,
+      "at_s": 16.464,
+      "role": "sink",
+      "text": "public audio received=1500 energy=914491 dropped=0"
+    },
+    {
+      "sequence": 38,
+      "at_s": 16.516,
+      "role": "source",
+      "text": "public audio sent frames=1600"
+    },
+    {
+      "sequence": 39,
+      "at_s": 17.473,
+      "role": "sink",
+      "text": "public audio received=1600 energy=1072873 dropped=0"
+    },
+    {
+      "sequence": 40,
+      "at_s": 17.527,
+      "role": "source",
+      "text": "public audio sent frames=1700"
+    },
+    {
+      "sequence": 41,
+      "at_s": 18.482,
+      "role": "sink",
+      "text": "public audio received=1700 energy=1170186 dropped=0"
+    },
+    {
+      "sequence": 42,
+      "at_s": 18.536,
+      "role": "source",
+      "text": "public audio sent frames=1800"
+    },
+    {
+      "sequence": 43,
+      "at_s": 19.503,
+      "role": "sink",
+      "text": "public audio received=1800 energy=1028111 dropped=0"
+    },
+    {
+      "sequence": 44,
+      "at_s": 19.548,
+      "role": "source",
+      "text": "public audio sent frames=1900"
+    },
+    {
+      "sequence": 45,
+      "at_s": 20.511,
+      "role": "sink",
+      "text": "public audio received=1900 energy=914551 dropped=0"
+    },
+    {
+      "sequence": 46,
+      "at_s": 20.562,
+      "role": "source",
+      "text": "public audio sent frames=2000"
+    },
+    {
+      "sequence": 47,
+      "at_s": 21.524,
+      "role": "sink",
+      "text": "public audio received=2000 energy=1072902 dropped=0"
+    },
+    {
+      "sequence": 48,
+      "at_s": 21.575,
+      "role": "source",
+      "text": "public audio sent frames=2100"
+    },
+    {
+      "sequence": 49,
+      "at_s": 22.53,
+      "role": "sink",
+      "text": "public audio received=2100 energy=1170351 dropped=0"
+    },
+    {
+      "sequence": 50,
+      "at_s": 22.585,
+      "role": "source",
+      "text": "public audio sent frames=2200"
+    },
+    {
+      "sequence": 51,
+      "at_s": 23.565,
+      "role": "sink",
+      "text": "public audio received=2200 energy=909880 dropped=0"
+    },
+    {
+      "sequence": 52,
+      "at_s": 23.6,
+      "role": "source",
+      "text": "public audio sent frames=2300"
+    },
+    {
+      "sequence": 53,
+      "at_s": 24.562,
+      "role": "sink",
+      "text": "public audio received=2300 energy=1048195 dropped=0"
+    },
+    {
+      "sequence": 54,
+      "at_s": 24.603,
+      "role": "source",
+      "text": "public audio sent frames=2400"
+    },
+    {
+      "sequence": 55,
+      "at_s": 25.572,
+      "role": "sink",
+      "text": "public audio received=2400 energy=1176852 dropped=0"
+    },
+    {
+      "sequence": 56,
+      "at_s": 25.612,
+      "role": "source",
+      "text": "public audio sent frames=2500"
+    },
+    {
+      "sequence": 57,
+      "at_s": 26.58,
+      "role": "sink",
+      "text": "public audio received=2500 energy=1059838 dropped=0"
+    },
+    {
+      "sequence": 58,
+      "at_s": 26.626,
+      "role": "source",
+      "text": "public audio sent frames=2600"
+    },
+    {
+      "sequence": 59,
+      "at_s": 27.605,
+      "role": "sink",
+      "text": "public audio received=2600 energy=909890 dropped=0"
+    },
+    {
+      "sequence": 60,
+      "at_s": 27.646,
+      "role": "source",
+      "text": "public audio sent frames=2700"
+    },
+    {
+      "sequence": 61,
+      "at_s": 28.622,
+      "role": "sink",
+      "text": "public audio received=2700 energy=1048189 dropped=0"
+    },
+    {
+      "sequence": 62,
+      "at_s": 28.662,
+      "role": "source",
+      "text": "public audio sent frames=2800"
+    },
+    {
+      "sequence": 63,
+      "at_s": 29.632,
+      "role": "sink",
+      "text": "public audio received=2800 energy=1177583 dropped=0"
+    },
+    {
+      "sequence": 64,
+      "at_s": 29.668,
+      "role": "source",
+      "text": "public audio sent frames=2900"
+    },
+    {
+      "sequence": 65,
+      "at_s": 30.642,
+      "role": "sink",
+      "text": "public audio received=2900 energy=1059809 dropped=0"
+    },
+    {
+      "sequence": 66,
+      "at_s": 30.678,
+      "role": "source",
+      "text": "public audio sent frames=3000"
+    },
+    {
+      "sequence": 67,
+      "at_s": 31.651,
+      "role": "sink",
+      "text": "public audio received=3000 energy=909880 dropped=0"
+    },
+    {
+      "sequence": 68,
+      "at_s": 31.692,
+      "role": "source",
+      "text": "public audio sent frames=3100"
+    },
+    {
+      "sequence": 69,
+      "at_s": 32.665,
+      "role": "sink",
+      "text": "public audio received=3100 energy=1048195 dropped=0"
+    },
+    {
+      "sequence": 70,
+      "at_s": 32.706,
+      "role": "source",
+      "text": "public audio sent frames=3200"
+    },
+    {
+      "sequence": 71,
+      "at_s": 33.673,
+      "role": "sink",
+      "text": "public audio received=3200 energy=1176852 dropped=0"
+    },
+    {
+      "sequence": 72,
+      "at_s": 33.718,
+      "role": "source",
+      "text": "public audio sent frames=3300"
+    },
+    {
+      "sequence": 73,
+      "at_s": 34.693,
+      "role": "sink",
+      "text": "public audio received=3300 energy=1058665 dropped=0"
+    },
+    {
+      "sequence": 74,
+      "at_s": 34.73,
+      "role": "source",
+      "text": "public audio sent frames=3400"
+    },
+    {
+      "sequence": 75,
+      "at_s": 35.693,
+      "role": "sink",
+      "text": "public audio received=3400 energy=909890 dropped=0"
+    },
+    {
+      "sequence": 76,
+      "at_s": 35.735,
+      "role": "source",
+      "text": "public audio sent frames=3500"
+    },
+    {
+      "sequence": 77,
+      "at_s": 36.714,
+      "role": "sink",
+      "text": "public audio received=3500 energy=1048189 dropped=0"
+    },
+    {
+      "sequence": 78,
+      "at_s": 36.75,
+      "role": "source",
+      "text": "public audio sent frames=3600"
+    },
+    {
+      "sequence": 79,
+      "at_s": 37.731,
+      "role": "sink",
+      "text": "public audio received=3600 energy=1079595 dropped=0"
+    },
+    {
+      "sequence": 80,
+      "at_s": 37.759,
+      "role": "source",
+      "text": "public audio sent frames=3700"
+    },
+    {
+      "sequence": 81,
+      "at_s": 38.743,
+      "role": "sink",
+      "text": "public audio received=3700 energy=912670 dropped=0"
+    },
+    {
+      "sequence": 82,
+      "at_s": 38.774,
+      "role": "source",
+      "text": "public audio sent frames=3800"
+    },
+    {
+      "sequence": 83,
+      "at_s": 39.753,
+      "role": "sink",
+      "text": "public audio received=3800 energy=1023458 dropped=0"
+    },
+    {
+      "sequence": 84,
+      "at_s": 39.785,
+      "role": "source",
+      "text": "public audio sent frames=3900"
+    },
+    {
+      "sequence": 85,
+      "at_s": 40.769,
+      "role": "sink",
+      "text": "public audio received=3900 energy=1174489 dropped=0"
+    },
+    {
+      "sequence": 86,
+      "at_s": 40.802,
+      "role": "source",
+      "text": "public audio sent frames=4000"
+    },
+    {
+      "sequence": 87,
+      "at_s": 41.78,
+      "role": "sink",
+      "text": "public audio received=4000 energy=1079813 dropped=0"
+    },
+    {
+      "sequence": 88,
+      "at_s": 41.812,
+      "role": "source",
+      "text": "public audio sent frames=4100"
+    },
+    {
+      "sequence": 89,
+      "at_s": 42.801,
+      "role": "sink",
+      "text": "public audio received=4100 energy=995245 dropped=0"
+    },
+    {
+      "sequence": 90,
+      "at_s": 42.825,
+      "role": "source",
+      "text": "public audio sent frames=4200"
+    },
+    {
+      "sequence": 91,
+      "at_s": 43.804,
+      "role": "sink",
+      "text": "public audio received=4200 energy=1163503 dropped=0"
+    },
+    {
+      "sequence": 92,
+      "at_s": 43.827,
+      "role": "source",
+      "text": "public audio sent frames=4300"
+    },
+    {
+      "sequence": 93,
+      "at_s": 44.823,
+      "role": "sink",
+      "text": "public audio received=4300 energy=1100197 dropped=0"
+    },
+    {
+      "sequence": 94,
+      "at_s": 44.837,
+      "role": "source",
+      "text": "public audio sent frames=4400"
+    },
+    {
+      "sequence": 95,
+      "at_s": 45.829,
+      "role": "sink",
+      "text": "public audio received=4400 energy=928442 dropped=0"
+    },
+    {
+      "sequence": 96,
+      "at_s": 45.851,
+      "role": "source",
+      "text": "public audio sent frames=4500"
+    },
+    {
+      "sequence": 97,
+      "at_s": 46.85,
+      "role": "sink",
+      "text": "public audio received=4500 energy=1150783 dropped=0"
+    },
+    {
+      "sequence": 98,
+      "at_s": 46.864,
+      "role": "source",
+      "text": "public audio sent frames=4600"
+    },
+    {
+      "sequence": 99,
+      "at_s": 47.862,
+      "role": "sink",
+      "text": "public audio received=4600 energy=1123797 dropped=0"
+    },
+    {
+      "sequence": 100,
+      "at_s": 47.871,
+      "role": "source",
+      "text": "public audio sent frames=4700"
+    },
+    {
+      "sequence": 101,
+      "at_s": 48.87,
+      "role": "sink",
+      "text": "public audio received=4700 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 102,
+      "at_s": 48.879,
+      "role": "source",
+      "text": "public audio sent frames=4800"
+    },
+    {
+      "sequence": 103,
+      "at_s": 49.869,
+      "role": "sink",
+      "text": "public audio received=4800 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 104,
+      "at_s": 49.887,
+      "role": "source",
+      "text": "public audio sent frames=4900"
+    },
+    {
+      "sequence": 105,
+      "at_s": 50.878,
+      "role": "sink",
+      "text": "public audio received=4900 energy=1150664 dropped=0"
+    },
+    {
+      "sequence": 106,
+      "at_s": 50.896,
+      "role": "source",
+      "text": "public audio sent frames=5000"
+    },
+    {
+      "sequence": 107,
+      "at_s": 51.901,
+      "role": "sink",
+      "text": "public audio received=5000 energy=1123665 dropped=0"
+    },
+    {
+      "sequence": 108,
+      "at_s": 51.911,
+      "role": "source",
+      "text": "public audio sent frames=5100"
+    },
+    {
+      "sequence": 109,
+      "at_s": 52.922,
+      "role": "sink",
+      "text": "public audio received=5100 energy=949585 dropped=0"
+    },
+    {
+      "sequence": 110,
+      "at_s": 52.927,
+      "role": "source",
+      "text": "public audio sent frames=5200"
+    },
+    {
+      "sequence": 111,
+      "at_s": 53.929,
+      "role": "sink",
+      "text": "public audio received=5200 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 112,
+      "at_s": 53.942,
+      "role": "source",
+      "text": "public audio sent frames=5300"
+    },
+    {
+      "sequence": 113,
+      "at_s": 54.941,
+      "role": "sink",
+      "text": "public audio received=5300 energy=1150783 dropped=0"
+    },
+    {
+      "sequence": 114,
+      "at_s": 54.955,
+      "role": "source",
+      "text": "public audio sent frames=5400"
+    },
+    {
+      "sequence": 115,
+      "at_s": 55.961,
+      "role": "sink",
+      "text": "public audio received=5400 energy=1123797 dropped=0"
+    },
+    {
+      "sequence": 116,
+      "at_s": 55.965,
+      "role": "source",
+      "text": "public audio sent frames=5500"
+    },
+    {
+      "sequence": 117,
+      "at_s": 56.971,
+      "role": "sink",
+      "text": "public audio received=5500 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 118,
+      "at_s": 56.98,
+      "role": "source",
+      "text": "public audio sent frames=5600"
+    },
+    {
+      "sequence": 119,
+      "at_s": 57.98,
+      "role": "sink",
+      "text": "public audio received=5600 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 120,
+      "at_s": 57.984,
+      "role": "source",
+      "text": "public audio sent frames=5700"
+    },
+    {
+      "sequence": 121,
+      "at_s": 58.992,
+      "role": "sink",
+      "text": "public audio received=5700 energy=1150664 dropped=0"
+    },
+    {
+      "sequence": 122,
+      "at_s": 58.997,
+      "role": "source",
+      "text": "public audio sent frames=5800"
+    },
+    {
+      "sequence": 123,
+      "at_s": 59.999,
+      "role": "sink",
+      "text": "public audio received=5800 energy=1123665 dropped=0"
+    },
+    {
+      "sequence": 124,
+      "at_s": 60.008,
+      "role": "source",
+      "text": "public audio sent frames=5900"
+    },
+    {
+      "sequence": 125,
+      "at_s": 61.01,
+      "role": "sink",
+      "text": "public audio received=5900 energy=949585 dropped=0"
+    },
+    {
+      "sequence": 126,
+      "at_s": 61.014,
+      "role": "source",
+      "text": "public audio sent frames=6000"
+    },
+    {
+      "sequence": 127,
+      "at_s": 62.021,
+      "role": "sink",
+      "text": "public audio received=6000 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 128,
+      "at_s": 62.03,
+      "role": "source",
+      "text": "public audio sent frames=6100"
+    },
+    {
+      "sequence": 129,
+      "at_s": 63.029,
+      "role": "sink",
+      "text": "public audio received=6100 energy=1150660 dropped=0"
+    },
+    {
+      "sequence": 130,
+      "at_s": 63.043,
+      "role": "source",
+      "text": "public audio sent frames=6200"
+    },
+    {
+      "sequence": 131,
+      "at_s": 64.038,
+      "role": "sink",
+      "text": "public audio received=6200 energy=1123797 dropped=0"
+    },
+    {
+      "sequence": 132,
+      "at_s": 64.051,
+      "role": "source",
+      "text": "public audio sent frames=6300"
+    },
+    {
+      "sequence": 133,
+      "at_s": 65.047,
+      "role": "sink",
+      "text": "public audio received=6300 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 134,
+      "at_s": 65.057,
+      "role": "source",
+      "text": "public audio sent frames=6400"
+    },
+    {
+      "sequence": 135,
+      "at_s": 66.058,
+      "role": "sink",
+      "text": "public audio received=6400 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 136,
+      "at_s": 66.072,
+      "role": "source",
+      "text": "public audio sent frames=6500"
+    },
+    {
+      "sequence": 137,
+      "at_s": 67.071,
+      "role": "sink",
+      "text": "public audio received=6500 energy=1150664 dropped=0"
+    },
+    {
+      "sequence": 138,
+      "at_s": 67.08,
+      "role": "source",
+      "text": "public audio sent frames=6600"
+    },
+    {
+      "sequence": 139,
+      "at_s": 68.088,
+      "role": "sink",
+      "text": "public audio received=6600 energy=1123665 dropped=0"
+    },
+    {
+      "sequence": 140,
+      "at_s": 68.098,
+      "role": "source",
+      "text": "public audio sent frames=6700"
+    },
+    {
+      "sequence": 141,
+      "at_s": 69.097,
+      "role": "sink",
+      "text": "public audio received=6700 energy=949585 dropped=0"
+    },
+    {
+      "sequence": 142,
+      "at_s": 69.115,
+      "role": "source",
+      "text": "public audio sent frames=6800"
+    },
+    {
+      "sequence": 143,
+      "at_s": 70.11,
+      "role": "sink",
+      "text": "public audio received=6800 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 144,
+      "at_s": 70.123,
+      "role": "source",
+      "text": "public audio sent frames=6900"
+    },
+    {
+      "sequence": 145,
+      "at_s": 71.13,
+      "role": "sink",
+      "text": "public audio received=6900 energy=1150783 dropped=0"
+    },
+    {
+      "sequence": 146,
+      "at_s": 71.139,
+      "role": "source",
+      "text": "public audio sent frames=7000"
+    },
+    {
+      "sequence": 147,
+      "at_s": 72.14,
+      "role": "sink",
+      "text": "public audio received=7000 energy=1123797 dropped=0"
+    },
+    {
+      "sequence": 148,
+      "at_s": 72.154,
+      "role": "source",
+      "text": "public audio sent frames=7100"
+    },
+    {
+      "sequence": 149,
+      "at_s": 73.16,
+      "role": "sink",
+      "text": "public audio received=7100 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 150,
+      "at_s": 73.169,
+      "role": "source",
+      "text": "public audio sent frames=7200"
+    },
+    {
+      "sequence": 151,
+      "at_s": 74.168,
+      "role": "sink",
+      "text": "public audio received=7200 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 152,
+      "at_s": 74.178,
+      "role": "source",
+      "text": "public audio sent frames=7300"
+    },
+    {
+      "sequence": 153,
+      "at_s": 75.178,
+      "role": "sink",
+      "text": "public audio received=7300 energy=1150664 dropped=0"
+    },
+    {
+      "sequence": 154,
+      "at_s": 75.187,
+      "role": "source",
+      "text": "public audio sent frames=7400"
+    },
+    {
+      "sequence": 155,
+      "at_s": 76.186,
+      "role": "sink",
+      "text": "public audio received=7400 energy=1123665 dropped=0"
+    },
+    {
+      "sequence": 156,
+      "at_s": 76.195,
+      "role": "source",
+      "text": "public audio sent frames=7500"
+    },
+    {
+      "sequence": 157,
+      "at_s": 77.2,
+      "role": "sink",
+      "text": "public audio received=7500 energy=949585 dropped=0"
+    },
+    {
+      "sequence": 158,
+      "at_s": 77.21,
+      "role": "source",
+      "text": "public audio sent frames=7600"
+    },
+    {
+      "sequence": 159,
+      "at_s": 78.208,
+      "role": "sink",
+      "text": "public audio received=7600 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 160,
+      "at_s": 78.221,
+      "role": "source",
+      "text": "public audio sent frames=7700"
+    },
+    {
+      "sequence": 161,
+      "at_s": 79.218,
+      "role": "sink",
+      "text": "public audio received=7700 energy=1150783 dropped=0"
+    },
+    {
+      "sequence": 162,
+      "at_s": 79.232,
+      "role": "source",
+      "text": "public audio sent frames=7800"
+    },
+    {
+      "sequence": 163,
+      "at_s": 80.229,
+      "role": "sink",
+      "text": "public audio received=7800 energy=1123797 dropped=0"
+    },
+    {
+      "sequence": 164,
+      "at_s": 80.238,
+      "role": "source",
+      "text": "public audio sent frames=7900"
+    },
+    {
+      "sequence": 165,
+      "at_s": 81.24,
+      "role": "sink",
+      "text": "public audio received=7900 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 166,
+      "at_s": 81.253,
+      "role": "source",
+      "text": "public audio sent frames=8000"
+    },
+    {
+      "sequence": 167,
+      "at_s": 82.25,
+      "role": "sink",
+      "text": "public audio received=8000 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 168,
+      "at_s": 82.254,
+      "role": "source",
+      "text": "public audio sent frames=8100"
+    },
+    {
+      "sequence": 169,
+      "at_s": 83.258,
+      "role": "sink",
+      "text": "public audio received=8100 energy=1150664 dropped=0"
+    },
+    {
+      "sequence": 170,
+      "at_s": 83.267,
+      "role": "source",
+      "text": "public audio sent frames=8200"
+    },
+    {
+      "sequence": 171,
+      "at_s": 84.268,
+      "role": "sink",
+      "text": "public audio received=8200 energy=1123665 dropped=0"
+    },
+    {
+      "sequence": 172,
+      "at_s": 84.278,
+      "role": "source",
+      "text": "public audio sent frames=8300"
+    },
+    {
+      "sequence": 173,
+      "at_s": 85.276,
+      "role": "sink",
+      "text": "public audio received=8300 energy=949585 dropped=0"
+    },
+    {
+      "sequence": 174,
+      "at_s": 85.294,
+      "role": "source",
+      "text": "public audio sent frames=8400"
+    },
+    {
+      "sequence": 175,
+      "at_s": 86.297,
+      "role": "sink",
+      "text": "public audio received=8400 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 176,
+      "at_s": 86.307,
+      "role": "source",
+      "text": "public audio sent frames=8500"
+    },
+    {
+      "sequence": 177,
+      "at_s": 87.31,
+      "role": "sink",
+      "text": "public audio received=8500 energy=1150783 dropped=0"
+    },
+    {
+      "sequence": 178,
+      "at_s": 87.315,
+      "role": "source",
+      "text": "public audio sent frames=8600"
+    },
+    {
+      "sequence": 179,
+      "at_s": 88.317,
+      "role": "sink",
+      "text": "public audio received=8600 energy=1123797 dropped=0"
+    },
+    {
+      "sequence": 180,
+      "at_s": 88.326,
+      "role": "source",
+      "text": "public audio sent frames=8700"
+    },
+    {
+      "sequence": 181,
+      "at_s": 89.33,
+      "role": "sink",
+      "text": "public audio received=8700 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 182,
+      "at_s": 89.335,
+      "role": "source",
+      "text": "public audio sent frames=8800"
+    },
+    {
+      "sequence": 183,
+      "at_s": 90.338,
+      "role": "sink",
+      "text": "public audio received=8800 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 184,
+      "at_s": 90.348,
+      "role": "source",
+      "text": "public audio sent frames=8900"
+    },
+    {
+      "sequence": 185,
+      "at_s": 91.348,
+      "role": "sink",
+      "text": "public audio received=8900 energy=1150542 dropped=0"
+    },
+    {
+      "sequence": 186,
+      "at_s": 91.357,
+      "role": "source",
+      "text": "public audio sent frames=9000"
+    },
+    {
+      "sequence": 187,
+      "at_s": 92.355,
+      "role": "sink",
+      "text": "public audio received=9000 energy=1123665 dropped=0"
+    },
+    {
+      "sequence": 188,
+      "at_s": 92.368,
+      "role": "source",
+      "text": "public audio sent frames=9100"
+    },
+    {
+      "sequence": 189,
+      "at_s": 93.367,
+      "role": "sink",
+      "text": "public audio received=9100 energy=949585 dropped=0"
+    },
+    {
+      "sequence": 190,
+      "at_s": 93.372,
+      "role": "source",
+      "text": "public audio sent frames=9200"
+    },
+    {
+      "sequence": 191,
+      "at_s": 94.375,
+      "role": "sink",
+      "text": "public audio received=9200 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 192,
+      "at_s": 94.389,
+      "role": "source",
+      "text": "public audio sent frames=9300"
+    },
+    {
+      "sequence": 193,
+      "at_s": 95.386,
+      "role": "sink",
+      "text": "public audio received=9300 energy=1150783 dropped=0"
+    },
+    {
+      "sequence": 194,
+      "at_s": 95.405,
+      "role": "source",
+      "text": "public audio sent frames=9400"
+    },
+    {
+      "sequence": 195,
+      "at_s": 96.405,
+      "role": "sink",
+      "text": "public audio received=9400 energy=983480 dropped=0"
+    },
+    {
+      "sequence": 196,
+      "at_s": 96.41,
+      "role": "source",
+      "text": "public audio sent frames=9500"
+    },
+    {
+      "sequence": 197,
+      "at_s": 97.415,
+      "role": "sink",
+      "text": "public audio received=9500 energy=948306 dropped=0"
+    },
+    {
+      "sequence": 198,
+      "at_s": 97.42,
+      "role": "source",
+      "text": "public audio sent frames=9600"
+    },
+    {
+      "sequence": 199,
+      "at_s": 98.427,
+      "role": "sink",
+      "text": "public audio received=9600 energy=1121405 dropped=0"
+    },
+    {
+      "sequence": 200,
+      "at_s": 98.431,
+      "role": "source",
+      "text": "public audio sent frames=9700"
+    },
+    {
+      "sequence": 201,
+      "at_s": 99.435,
+      "role": "sink",
+      "text": "public audio received=9700 energy=1140289 dropped=0"
+    },
+    {
+      "sequence": 202,
+      "at_s": 99.44,
+      "role": "source",
+      "text": "public audio sent frames=9800"
+    },
+    {
+      "sequence": 203,
+      "at_s": 100.456,
+      "role": "source",
+      "text": "public audio sent frames=9900"
+    },
+    {
+      "sequence": 204,
+      "at_s": 100.456,
+      "role": "sink",
+      "text": "public audio received=9800 energy=983379 dropped=0"
+    },
+    {
+      "sequence": 205,
+      "at_s": 101.466,
+      "role": "sink",
+      "text": "public audio received=9900 energy=948352 dropped=0"
+    },
+    {
+      "sequence": 206,
+      "at_s": 101.47,
+      "role": "source",
+      "text": "public audio sent frames=10000"
+    },
+    {
+      "sequence": 207,
+      "at_s": 102.467,
+      "role": "sink",
+      "text": "public audio received=10000 energy=1121348 dropped=0"
+    },
+    {
+      "sequence": 208,
+      "at_s": 102.472,
+      "role": "source",
+      "text": "public audio sent frames=10100"
+    },
+    {
+      "sequence": 209,
+      "at_s": 103.484,
+      "role": "source",
+      "text": "public audio sent frames=10200"
+    },
+    {
+      "sequence": 210,
+      "at_s": 103.498,
+      "role": "sink",
+      "text": "public audio received=10100 energy=1011012 dropped=0"
+    },
+    {
+      "sequence": 211,
+      "at_s": 104.49,
+      "role": "source",
+      "text": "public audio sent frames=10300"
+    },
+    {
+      "sequence": 212,
+      "at_s": 104.508,
+      "role": "sink",
+      "text": "public audio received=10200 energy=925136 dropped=0"
+    },
+    {
+      "sequence": 213,
+      "at_s": 105.503,
+      "role": "source",
+      "text": "public audio sent frames=10400"
+    },
+    {
+      "sequence": 214,
+      "at_s": 105.516,
+      "role": "sink",
+      "text": "public audio received=10300 energy=1091030 dropped=0"
+    },
+    {
+      "sequence": 215,
+      "at_s": 106.52,
+      "role": "source",
+      "text": "public audio sent frames=10500"
+    },
+    {
+      "sequence": 216,
+      "at_s": 106.525,
+      "role": "sink",
+      "text": "public audio received=10400 energy=1155707 dropped=0"
+    },
+    {
+      "sequence": 217,
+      "at_s": 107.535,
+      "role": "source",
+      "text": "public audio sent frames=10600"
+    },
+    {
+      "sequence": 218,
+      "at_s": 107.544,
+      "role": "sink",
+      "text": "public audio received=10500 energy=1010947 dropped=0"
+    },
+    {
+      "sequence": 219,
+      "at_s": 108.544,
+      "role": "source",
+      "text": "public audio sent frames=10700"
+    },
+    {
+      "sequence": 220,
+      "at_s": 108.558,
+      "role": "sink",
+      "text": "public audio received=10600 energy=925153 dropped=0"
+    },
+    {
+      "sequence": 221,
+      "at_s": 109.551,
+      "role": "source",
+      "text": "public audio sent frames=10800"
+    },
+    {
+      "sequence": 222,
+      "at_s": 109.555,
+      "role": "sink",
+      "text": "public audio received=10700 energy=1091298 dropped=0"
+    },
+    {
+      "sequence": 223,
+      "at_s": 110.559,
+      "role": "source",
+      "text": "public audio sent frames=10900"
+    },
+    {
+      "sequence": 224,
+      "at_s": 110.564,
+      "role": "sink",
+      "text": "public audio received=10800 energy=1155689 dropped=0"
+    },
+    {
+      "sequence": 225,
+      "at_s": 111.568,
+      "role": "source",
+      "text": "public audio sent frames=11000"
+    },
+    {
+      "sequence": 226,
+      "at_s": 111.577,
+      "role": "sink",
+      "text": "public audio received=10900 energy=1011011 dropped=0"
+    },
+    {
+      "sequence": 227,
+      "at_s": 112.578,
+      "role": "source",
+      "text": "public audio sent frames=11100"
+    },
+    {
+      "sequence": 228,
+      "at_s": 112.587,
+      "role": "sink",
+      "text": "public audio received=11000 energy=925136 dropped=0"
+    },
+    {
+      "sequence": 229,
+      "at_s": 113.593,
+      "role": "source",
+      "text": "public audio sent frames=11200"
+    },
+    {
+      "sequence": 230,
+      "at_s": 113.608,
+      "role": "sink",
+      "text": "public audio received=11100 energy=1091030 dropped=0"
+    },
+    {
+      "sequence": 231,
+      "at_s": 114.61,
+      "role": "source",
+      "text": "public audio sent frames=11300"
+    },
+    {
+      "sequence": 232,
+      "at_s": 114.624,
+      "role": "sink",
+      "text": "public audio received=11200 energy=1155707 dropped=0"
+    },
+    {
+      "sequence": 233,
+      "at_s": 115.628,
+      "role": "source",
+      "text": "public audio sent frames=11400"
+    },
+    {
+      "sequence": 234,
+      "at_s": 115.637,
+      "role": "sink",
+      "text": "public audio received=11300 energy=1010947 dropped=0"
+    },
+    {
+      "sequence": 235,
+      "at_s": 116.642,
+      "role": "source",
+      "text": "public audio sent frames=11500"
+    },
+    {
+      "sequence": 236,
+      "at_s": 116.657,
+      "role": "sink",
+      "text": "public audio received=11400 energy=925153 dropped=0"
+    },
+    {
+      "sequence": 237,
+      "at_s": 117.655,
+      "role": "source",
+      "text": "public audio sent frames=11600"
+    },
+    {
+      "sequence": 238,
+      "at_s": 117.664,
+      "role": "sink",
+      "text": "public audio received=11500 energy=1091298 dropped=0"
+    },
+    {
+      "sequence": 239,
+      "at_s": 118.663,
+      "role": "source",
+      "text": "public audio sent frames=11700"
+    },
+    {
+      "sequence": 240,
+      "at_s": 118.677,
+      "role": "sink",
+      "text": "public audio received=11600 energy=1155689 dropped=0"
+    },
+    {
+      "sequence": 241,
+      "at_s": 119.667,
+      "role": "source",
+      "text": "public audio sent frames=11800"
+    },
+    {
+      "sequence": 242,
+      "at_s": 119.685,
+      "role": "sink",
+      "text": "public audio received=11700 energy=911746 dropped=0"
+    },
+    {
+      "sequence": 243,
+      "at_s": 120.675,
+      "role": "source",
+      "text": "public audio sent frames=11900"
+    },
+    {
+      "sequence": 244,
+      "at_s": 120.697,
+      "role": "sink",
+      "text": "public audio received=11800 energy=1065263 dropped=0"
+    },
+    {
+      "sequence": 245,
+      "at_s": 121.688,
+      "role": "source",
+      "text": "public audio sent frames=12000"
+    },
+    {
+      "sequence": 246,
+      "at_s": 121.702,
+      "role": "sink",
+      "text": "public audio received=11900 energy=1172290 dropped=0"
+    },
+    {
+      "sequence": 247,
+      "at_s": 122.702,
+      "role": "source",
+      "text": "public audio sent frames=12100"
+    },
+    {
+      "sequence": 248,
+      "at_s": 122.725,
+      "role": "sink",
+      "text": "public audio received=12000 energy=1036609 dropped=0"
+    },
+    {
+      "sequence": 249,
+      "at_s": 123.717,
+      "role": "source",
+      "text": "public audio sent frames=12200"
+    },
+    {
+      "sequence": 250,
+      "at_s": 123.734,
+      "role": "sink",
+      "text": "public audio received=12100 energy=911792 dropped=0"
+    },
+    {
+      "sequence": 251,
+      "at_s": 124.725,
+      "role": "source",
+      "text": "public audio sent frames=12300"
+    },
+    {
+      "sequence": 252,
+      "at_s": 124.745,
+      "role": "sink",
+      "text": "public audio received=12200 energy=1065459 dropped=0"
+    },
+    {
+      "sequence": 253,
+      "at_s": 125.741,
+      "role": "source",
+      "text": "public audio sent frames=12400"
+    },
+    {
+      "sequence": 254,
+      "at_s": 125.764,
+      "role": "sink",
+      "text": "public audio received=12300 energy=1172020 dropped=0"
+    },
+    {
+      "sequence": 255,
+      "at_s": 126.752,
+      "role": "source",
+      "text": "public audio sent frames=12500"
+    },
+    {
+      "sequence": 256,
+      "at_s": 126.766,
+      "role": "sink",
+      "text": "public audio received=12400 energy=1036670 dropped=0"
+    },
+    {
+      "sequence": 257,
+      "at_s": 127.76,
+      "role": "source",
+      "text": "public audio sent frames=12600"
+    },
+    {
+      "sequence": 258,
+      "at_s": 127.783,
+      "role": "sink",
+      "text": "public audio received=12500 energy=911748 dropped=0"
+    },
+    {
+      "sequence": 259,
+      "at_s": 128.772,
+      "role": "source",
+      "text": "public audio sent frames=12700"
+    },
+    {
+      "sequence": 260,
+      "at_s": 128.803,
+      "role": "sink",
+      "text": "public audio received=12600 energy=1179027 dropped=0"
+    },
+    {
+      "sequence": 261,
+      "at_s": 129.78,
+      "role": "source",
+      "text": "public audio sent frames=12800"
+    },
+    {
+      "sequence": 262,
+      "at_s": 129.813,
+      "role": "sink",
+      "text": "public audio received=12700 energy=1067209 dropped=0"
+    },
+    {
+      "sequence": 263,
+      "at_s": 130.792,
+      "role": "source",
+      "text": "public audio sent frames=12900"
+    },
+    {
+      "sequence": 264,
+      "at_s": 130.825,
+      "role": "sink",
+      "text": "public audio received=12800 energy=910419 dropped=0"
+    },
+    {
+      "sequence": 265,
+      "at_s": 131.8,
+      "role": "source",
+      "text": "public audio sent frames=13000"
+    },
+    {
+      "sequence": 266,
+      "at_s": 131.834,
+      "role": "sink",
+      "text": "public audio received=12900 energy=1037734 dropped=0"
+    },
+    {
+      "sequence": 267,
+      "at_s": 132.814,
+      "role": "source",
+      "text": "public audio sent frames=13100"
+    },
+    {
+      "sequence": 268,
+      "at_s": 132.845,
+      "role": "sink",
+      "text": "public audio received=13000 energy=1179448 dropped=0"
+    },
+    {
+      "sequence": 269,
+      "at_s": 133.827,
+      "role": "source",
+      "text": "public audio sent frames=13200"
+    },
+    {
+      "sequence": 270,
+      "at_s": 133.864,
+      "role": "sink",
+      "text": "public audio received=13100 energy=919231 dropped=0"
+    },
+    {
+      "sequence": 271,
+      "at_s": 134.837,
+      "role": "source",
+      "text": "public audio sent frames=13300"
+    },
+    {
+      "sequence": 272,
+      "at_s": 134.874,
+      "role": "sink",
+      "text": "public audio received=13200 energy=1015523 dropped=0"
+    },
+    {
+      "sequence": 273,
+      "at_s": 135.848,
+      "role": "source",
+      "text": "public audio sent frames=13400"
+    },
+    {
+      "sequence": 274,
+      "at_s": 135.883,
+      "role": "sink",
+      "text": "public audio received=13300 energy=1170552 dropped=0"
+    },
+    {
+      "sequence": 275,
+      "at_s": 136.863,
+      "role": "source",
+      "text": "public audio sent frames=13500"
+    },
+    {
+      "sequence": 276,
+      "at_s": 136.914,
+      "role": "sink",
+      "text": "public audio received=13400 energy=935728 dropped=0"
+    },
+    {
+      "sequence": 277,
+      "at_s": 137.881,
+      "role": "source",
+      "text": "public audio sent frames=13600"
+    },
+    {
+      "sequence": 278,
+      "at_s": 137.931,
+      "role": "sink",
+      "text": "public audio received=13500 energy=986938 dropped=0"
+    },
+    {
+      "sequence": 279,
+      "at_s": 138.889,
+      "role": "source",
+      "text": "public audio sent frames=13700"
+    },
+    {
+      "sequence": 280,
+      "at_s": 138.942,
+      "role": "sink",
+      "text": "public audio received=13600 energy=1163319 dropped=0"
+    },
+    {
+      "sequence": 281,
+      "at_s": 139.899,
+      "role": "source",
+      "text": "public audio sent frames=13800"
+    },
+    {
+      "sequence": 282,
+      "at_s": 139.955,
+      "role": "sink",
+      "text": "public audio received=13700 energy=1107647 dropped=0"
+    },
+    {
+      "sequence": 283,
+      "at_s": 140.905,
+      "role": "source",
+      "text": "public audio sent frames=13900"
+    },
+    {
+      "sequence": 284,
+      "at_s": 140.955,
+      "role": "sink",
+      "text": "public audio received=13800 energy=935732 dropped=0"
+    },
+    {
+      "sequence": 285,
+      "at_s": 141.92,
+      "role": "source",
+      "text": "public audio sent frames=14000"
+    },
+    {
+      "sequence": 286,
+      "at_s": 141.971,
+      "role": "sink",
+      "text": "public audio received=13900 energy=986915 dropped=0"
+    },
+    {
+      "sequence": 287,
+      "at_s": 142.927,
+      "role": "source",
+      "text": "public audio sent frames=14100"
+    },
+    {
+      "sequence": 288,
+      "at_s": 142.973,
+      "role": "sink",
+      "text": "public audio received=14000 energy=1163739 dropped=0"
+    },
+    {
+      "sequence": 289,
+      "at_s": 143.929,
+      "role": "source",
+      "text": "public audio sent frames=14200"
+    },
+    {
+      "sequence": 290,
+      "at_s": 143.985,
+      "role": "sink",
+      "text": "public audio received=14100 energy=1107631 dropped=0"
+    },
+    {
+      "sequence": 291,
+      "at_s": 144.944,
+      "role": "source",
+      "text": "public audio sent frames=14300"
+    },
+    {
+      "sequence": 292,
+      "at_s": 144.993,
+      "role": "sink",
+      "text": "public audio received=14200 energy=935728 dropped=0"
+    },
+    {
+      "sequence": 293,
+      "at_s": 145.959,
+      "role": "source",
+      "text": "public audio sent frames=14400"
+    },
+    {
+      "sequence": 294,
+      "at_s": 146.005,
+      "role": "sink",
+      "text": "public audio received=14300 energy=986938 dropped=0"
+    },
+    {
+      "sequence": 295,
+      "at_s": 146.965,
+      "role": "source",
+      "text": "public audio sent frames=14500"
+    },
+    {
+      "sequence": 296,
+      "at_s": 147.012,
+      "role": "sink",
+      "text": "public audio received=14400 energy=1163319 dropped=0"
+    },
+    {
+      "sequence": 297,
+      "at_s": 147.972,
+      "role": "source",
+      "text": "public audio sent frames=14600"
+    },
+    {
+      "sequence": 298,
+      "at_s": 148.024,
+      "role": "sink",
+      "text": "public audio received=14500 energy=1107647 dropped=0"
+    },
+    {
+      "sequence": 299,
+      "at_s": 148.988,
+      "role": "source",
+      "text": "public audio sent frames=14700"
+    },
+    {
+      "sequence": 300,
+      "at_s": 149.043,
+      "role": "sink",
+      "text": "public audio received=14600 energy=935732 dropped=0"
+    },
+    {
+      "sequence": 301,
+      "at_s": 149.998,
+      "role": "source",
+      "text": "public audio sent frames=14800"
+    },
+    {
+      "sequence": 302,
+      "at_s": 150.045,
+      "role": "sink",
+      "text": "public audio received=14700 energy=986915 dropped=0"
+    },
+    {
+      "sequence": 303,
+      "at_s": 151.001,
+      "role": "source",
+      "text": "public audio sent frames=14900"
+    },
+    {
+      "sequence": 304,
+      "at_s": 151.061,
+      "role": "sink",
+      "text": "public audio received=14800 energy=1126135 dropped=0"
+    },
+    {
+      "sequence": 305,
+      "at_s": 152.009,
+      "role": "source",
+      "text": "public audio sent frames=15000"
+    },
+    {
+      "sequence": 306,
+      "at_s": 152.085,
+      "role": "sink",
+      "text": "public audio received=14900 energy=936425 dropped=0"
+    },
+    {
+      "sequence": 307,
+      "at_s": 153.014,
+      "role": "source",
+      "text": "public audio sent frames=15100"
+    },
+    {
+      "sequence": 308,
+      "at_s": 153.082,
+      "role": "sink",
+      "text": "public audio received=15000 energy=1115146 dropped=0"
+    },
+    {
+      "sequence": 309,
+      "at_s": 154.021,
+      "role": "source",
+      "text": "public audio sent frames=15200"
+    },
+    {
+      "sequence": 310,
+      "at_s": 154.093,
+      "role": "sink",
+      "text": "public audio received=15100 energy=1151093 dropped=0"
+    },
+    {
+      "sequence": 311,
+      "at_s": 155.03,
+      "role": "source",
+      "text": "public audio sent frames=15300"
+    },
+    {
+      "sequence": 312,
+      "at_s": 155.1,
+      "role": "sink",
+      "text": "public audio received=15200 energy=989557 dropped=0"
+    },
+    {
+      "sequence": 313,
+      "at_s": 156.042,
+      "role": "source",
+      "text": "public audio sent frames=15400"
+    },
+    {
+      "sequence": 314,
+      "at_s": 156.114,
+      "role": "sink",
+      "text": "public audio received=15300 energy=937513 dropped=0"
+    },
+    {
+      "sequence": 315,
+      "at_s": 157.058,
+      "role": "source",
+      "text": "public audio sent frames=15500"
+    },
+    {
+      "sequence": 316,
+      "at_s": 157.124,
+      "role": "sink",
+      "text": "public audio received=15400 energy=1114743 dropped=0"
+    },
+    {
+      "sequence": 317,
+      "at_s": 158.073,
+      "role": "source",
+      "text": "public audio sent frames=15600"
+    },
+    {
+      "sequence": 318,
+      "at_s": 158.144,
+      "role": "sink",
+      "text": "public audio received=15500 energy=1151325 dropped=0"
+    },
+    {
+      "sequence": 319,
+      "at_s": 159.082,
+      "role": "source",
+      "text": "public audio sent frames=15700"
+    },
+    {
+      "sequence": 320,
+      "at_s": 159.152,
+      "role": "sink",
+      "text": "public audio received=15600 energy=989550 dropped=0"
+    },
+    {
+      "sequence": 321,
+      "at_s": 160.089,
+      "role": "source",
+      "text": "public audio sent frames=15800"
+    },
+    {
+      "sequence": 322,
+      "at_s": 160.162,
+      "role": "sink",
+      "text": "public audio received=15700 energy=937493 dropped=0"
+    },
+    {
+      "sequence": 323,
+      "at_s": 161.1,
+      "role": "source",
+      "text": "public audio sent frames=15900"
+    },
+    {
+      "sequence": 324,
+      "at_s": 161.173,
+      "role": "sink",
+      "text": "public audio received=15800 energy=1115146 dropped=0"
+    },
+    {
+      "sequence": 325,
+      "at_s": 162.112,
+      "role": "source",
+      "text": "public audio sent frames=16000"
+    },
+    {
+      "sequence": 326,
+      "at_s": 162.182,
+      "role": "sink",
+      "text": "public audio received=15900 energy=1151093 dropped=0"
+    },
+    {
+      "sequence": 327,
+      "at_s": 163.128,
+      "role": "source",
+      "text": "public audio sent frames=16100"
+    },
+    {
+      "sequence": 328,
+      "at_s": 163.192,
+      "role": "sink",
+      "text": "public audio received=16000 energy=989557 dropped=0"
+    },
+    {
+      "sequence": 329,
+      "at_s": 164.137,
+      "role": "source",
+      "text": "public audio sent frames=16200"
+    },
+    {
+      "sequence": 330,
+      "at_s": 164.212,
+      "role": "sink",
+      "text": "public audio received=16100 energy=937513 dropped=0"
+    },
+    {
+      "sequence": 331,
+      "at_s": 165.151,
+      "role": "source",
+      "text": "public audio sent frames=16300"
+    },
+    {
+      "sequence": 332,
+      "at_s": 165.222,
+      "role": "sink",
+      "text": "public audio received=16200 energy=1114743 dropped=0"
+    },
+    {
+      "sequence": 333,
+      "at_s": 166.164,
+      "role": "source",
+      "text": "public audio sent frames=16400"
+    },
+    {
+      "sequence": 334,
+      "at_s": 166.232,
+      "role": "sink",
+      "text": "public audio received=16300 energy=1151325 dropped=0"
+    },
+    {
+      "sequence": 335,
+      "at_s": 167.181,
+      "role": "source",
+      "text": "public audio sent frames=16500"
+    },
+    {
+      "sequence": 336,
+      "at_s": 167.254,
+      "role": "sink",
+      "text": "public audio received=16400 energy=989550 dropped=0"
+    },
+    {
+      "sequence": 337,
+      "at_s": 168.191,
+      "role": "source",
+      "text": "public audio sent frames=16600"
+    },
+    {
+      "sequence": 338,
+      "at_s": 168.259,
+      "role": "sink",
+      "text": "public audio received=16500 energy=937493 dropped=0"
+    },
+    {
+      "sequence": 339,
+      "at_s": 169.204,
+      "role": "source",
+      "text": "public audio sent frames=16700"
+    },
+    {
+      "sequence": 340,
+      "at_s": 169.292,
+      "role": "sink",
+      "text": "public audio received=16600 energy=1163586 dropped=0"
+    },
+    {
+      "sequence": 341,
+      "at_s": 170.215,
+      "role": "source",
+      "text": "public audio sent frames=16800"
+    },
+    {
+      "sequence": 342,
+      "at_s": 170.293,
+      "role": "sink",
+      "text": "public audio received=16700 energy=1022406 dropped=0"
+    },
+    {
+      "sequence": 343,
+      "at_s": 171.226,
+      "role": "source",
+      "text": "public audio sent frames=16900"
+    },
+    {
+      "sequence": 344,
+      "at_s": 171.312,
+      "role": "sink",
+      "text": "public audio received=16800 energy=914167 dropped=0"
+    },
+    {
+      "sequence": 345,
+      "at_s": 172.235,
+      "role": "source",
+      "text": "public audio sent frames=17000"
+    },
+    {
+      "sequence": 346,
+      "at_s": 172.311,
+      "role": "sink",
+      "text": "public audio received=16900 energy=1084422 dropped=0"
+    },
+    {
+      "sequence": 347,
+      "at_s": 173.249,
+      "role": "source",
+      "text": "public audio sent frames=17100"
+    },
+    {
+      "sequence": 348,
+      "at_s": 173.331,
+      "role": "sink",
+      "text": "public audio received=17000 energy=1163488 dropped=0"
+    },
+    {
+      "sequence": 349,
+      "at_s": 174.258,
+      "role": "source",
+      "text": "public audio sent frames=17200"
+    },
+    {
+      "sequence": 350,
+      "at_s": 174.372,
+      "role": "sink",
+      "text": "public audio received=17100 energy=1166001 dropped=0"
+    },
+    {
+      "sequence": 351,
+      "at_s": 175.267,
+      "role": "source",
+      "text": "public audio sent frames=17300"
+    },
+    {
+      "sequence": 352,
+      "at_s": 175.381,
+      "role": "sink",
+      "text": "public audio received=17200 energy=1100738 dropped=0"
+    },
+    {
+      "sequence": 353,
+      "at_s": 176.278,
+      "role": "source",
+      "text": "public audio sent frames=17400"
+    },
+    {
+      "sequence": 354,
+      "at_s": 176.39,
+      "role": "sink",
+      "text": "public audio received=17300 energy=920902 dropped=0"
+    },
+    {
+      "sequence": 355,
+      "at_s": 177.286,
+      "role": "source",
+      "text": "public audio sent frames=17500"
+    },
+    {
+      "sequence": 356,
+      "at_s": 177.393,
+      "role": "sink",
+      "text": "public audio received=17400 energy=1010092 dropped=0"
+    },
+    {
+      "sequence": 357,
+      "at_s": 178.286,
+      "role": "source",
+      "text": "public audio sent frames=17600"
+    },
+    {
+      "sequence": 358,
+      "at_s": 178.4,
+      "role": "sink",
+      "text": "public audio received=17500 energy=1165738 dropped=0"
+    },
+    {
+      "sequence": 359,
+      "at_s": 179.293,
+      "role": "source",
+      "text": "public audio sent frames=17700"
+    },
+    {
+      "sequence": 360,
+      "at_s": 179.401,
+      "role": "sink",
+      "text": "public audio received=17600 energy=1100653 dropped=0"
+    },
+    {
+      "sequence": 361,
+      "at_s": 180.308,
+      "role": "source",
+      "text": "public audio sent frames=17800"
+    },
+    {
+      "sequence": 362,
+      "at_s": 180.41,
+      "role": "sink",
+      "text": "public audio received=17700 energy=920947 dropped=0"
+    },
+    {
+      "sequence": 363,
+      "at_s": 181.313,
+      "role": "source",
+      "text": "public audio sent frames=17900"
+    },
+    {
+      "sequence": 364,
+      "at_s": 181.421,
+      "role": "sink",
+      "text": "public audio received=17800 energy=1010070 dropped=0"
+    },
+    {
+      "sequence": 365,
+      "at_s": 182.319,
+      "role": "runner",
+      "text": "positive stream_seconds=180.003 received_delta=17700 dropped=0"
+    }
+  ],
+  "error": null
+}

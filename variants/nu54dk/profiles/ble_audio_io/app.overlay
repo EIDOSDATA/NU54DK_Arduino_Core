@@ -1,0 +1,59 @@
+/**
+ * @file app.overlay
+ * @brief BLE Audio와 외부 PDM/I2S 장치가 P1.4~P1.7을 소유하도록 구성합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+#include <nucode/nu54dk-arduino-runtime.dtsi>
+
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        /delete-property/ zephyr,bt-c2h-uart;
+    };
+};
+
+&uart20 {
+    status = "disabled";
+};
+
+&uart30 {
+    status = "disabled";
+};
+
+/** @brief DAP UART 분리 뒤 P1.4~P1.7을 외부 audio 신호로 전환합니다. */
+#define NUCODE_AUDIO_IO_PIN_CAPS                                                                    \
+    (NUCODE_PIN_CAP_INPUT | NUCODE_PIN_CAP_OUTPUT | NUCODE_PIN_CAP_ANALOG |                         \
+     NUCODE_PIN_CAP_OPEN_DRAIN | NUCODE_PIN_CAP_INTERRUPT)
+
+&arduino_p1_04 {
+    nucode,capability-mask = <NUCODE_AUDIO_IO_PIN_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+&arduino_p1_05 {
+    nucode,capability-mask = <NUCODE_AUDIO_IO_PIN_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+&arduino_p1_06 {
+    nucode,capability-mask = <NUCODE_AUDIO_IO_PIN_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+&arduino_p1_07 {
+    nucode,capability-mask = <NUCODE_AUDIO_IO_PIN_CAPS>;
+    nucode,policy = <NUCODE_PIN_POLICY_CONDITIONAL_DAP_UART>;
+    nucode,ownership = <NUCODE_PIN_OWNER_CONDITIONAL>;
+};
+
+#undef NUCODE_AUDIO_IO_PIN_CAPS

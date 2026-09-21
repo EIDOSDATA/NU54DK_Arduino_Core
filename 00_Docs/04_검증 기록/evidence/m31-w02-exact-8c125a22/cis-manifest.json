@@ -1,0 +1,29 @@
+{
+  "test_id": "M31-ISO-01:cis",
+  "status": "PASS",
+  "scope": "two_board_cis_only",
+  "source_clean": true,
+  "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+  "target_build": {
+    "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-8c125a22/cis-build-twister.json",
+    "sha256": "96f7e8dc601b4bb026daf0190b4a134812d521f0262529794b43dc0efb89e724",
+    "build_only_count": 2,
+    "scenarios": [
+      "nucode.m31.iso_cis.central",
+      "nucode.m31.iso_cis.peripheral"
+    ]
+  },
+  "result_path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-8c125a22/m31-cis-clean-8c125a22-01.json",
+  "result_sha256": "229ab25a5774beecc98daa6efc835ddfb4f9abc66b065464c91b6ac4baa8abcc",
+  "transcript_sha256": "b325bd1abedf7e88971504ac1d006202d167028dbed9c3ccf4080086c8eec440",
+  "measurement": {
+    "cycles": 20,
+    "total_sent": 2000,
+    "total_received": 2000,
+    "minimum_received": 100,
+    "invalid_or_lost": 80
+  },
+  "bis": "NOT_RUN",
+  "combined": "NOT_RUN",
+  "time_sync": "NOT_RUN"
+}

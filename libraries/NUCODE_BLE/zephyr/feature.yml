@@ -5,6 +5,6 @@
   "conf": ["ble-nus.conf"],
   "overlays": [],
   "conflicts": ["radio"],
-  "compatible_profiles": ["ble", "secure_ble_dfu"]
+  "compatible_profiles": ["ble", "ble_audio_io", "secure_ble_dfu"]
 }
 

@@ -1,0 +1,28 @@
+{
+  "milestone": "M31",
+  "capability": "iso_time_sync",
+  "stage": "native_build",
+  "status": "PASS",
+  "scope": "fixed_nrf_sample_nu54dk_native_sysbuild_only",
+  "source_clean": true,
+  "source_revision": "4699bbb9682f2ecd6b83b5642c67698587ec9019",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_qualifier": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "sample": "nrf/samples/bluetooth/iso_time_sync",
+  "flash_used_bytes": 281236,
+  "ram_used_bytes": 69176,
+  "build_log": {
+    "path": "00_Docs/04_검증 기록/evidence/m31-w02-native-4699bbb9/time-native-build.log.gz",
+    "sha256": "f595d857c848958263867aaede0a9a23d3468b882da96bf22bc3df183b881827",
+    "original_sha256": "531d30a547e272b069b8a509cf095fee55445dbf080e7ad59cabd3dbb46e1c02",
+    "original_size": 41862
+  },
+  "image": {
+    "path": "00_Docs/04_검증 기록/evidence/m31-w02-native-4699bbb9/time-native-image.hex.gz",
+    "sha256": "a09d929d356bc4777c21b3b27f9c06d65389880ae6d3bf5cb5e1c0362f681785",
+    "original_sha256": "1923d5bceb51179baf6136e26119e355c34b0547dd5e9f7fb9573fd925fba86c",
+    "original_size": 791147
+  }
+}

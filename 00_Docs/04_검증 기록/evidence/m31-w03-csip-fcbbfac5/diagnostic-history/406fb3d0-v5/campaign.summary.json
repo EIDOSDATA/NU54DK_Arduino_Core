@@ -1,0 +1,39 @@
+{
+  "schema": "nucode.m31.csip-full-campaign.v3",
+  "status": "FAIL",
+  "core_revision": "406fb3d0e811f24d5440735cbc0a1595c9c893c6",
+  "requested_scenarios": [
+    "positive",
+    "wrong-rank",
+    "wrong-sirk",
+    "security-sync-failure",
+    "security-async-failure",
+    "watchdog",
+    "recovery"
+  ],
+  "completed_scenarios": [
+    "positive",
+    "wrong-rank",
+    "wrong-sirk",
+    "security-sync-failure",
+    "security-async-failure",
+    "watchdog"
+  ],
+  "failed_scenario": "recovery",
+  "failure_type": "RuntimeError",
+  "failure_detail": "recovery:hil failed rc=1",
+  "initial_tool_sha256": {
+    "runner": "7e13b9ddd6cd8dab6bb57f0d38c7ec3b819b8592d70ca756c04fc34069f11f60",
+    "eraser": "99174653a5e4204f505c37fb06d71ce06d430a2c65db0a9e322ee3cba23e78e4",
+    "flasher": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "debugger": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2"
+  },
+  "final_tool_sha256": {
+    "runner": "7e13b9ddd6cd8dab6bb57f0d38c7ec3b819b8592d70ca756c04fc34069f11f60",
+    "eraser": "99174653a5e4204f505c37fb06d71ce06d430a2c65db0a9e322ee3cba23e78e4",
+    "flasher": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "debugger": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2"
+  },
+  "initial_campaign_sha256": "b00812934779c585809bd03f915afed6641f3c73ca101f8d4d9686ae0b541848",
+  "final_campaign_sha256": "b00812934779c585809bd03f915afed6641f3c73ca101f8d4d9686ae0b541848"
+}

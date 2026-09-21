@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "role": "encrypted_broadcast_source",
+  "source_clean": true,
+  "branch": "m31-w01",
+  "core_revision": "473929f20d6c71503ae460c933d413268ec35222",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "toolchain_bundle": "dcbdc366a1",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "sketch": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino",
+  "built_at": "2026-09-19T18:58:37.675319+09:00",
+  "flash_used_bytes": 496832,
+  "bin_size": 496840,
+  "ram_used_bytes": 222759,
+  "hex_size": 1397649,
+  "hex_sha256": "f67962c2f56d8e2745dea279e447b8cb4dcdb7f3ec9b4b7da0b1bdf034a2c60c",
+  "bin_sha256": "81ca423f78b558e54a7914952d92b8688693911057c13914e938f45902db0b01",
+  "elf_sha256": "03b0a250b441791b6642c1ce843d6edc7bcb02117c62b42ac680195385eeb4c9",
+  "configuration_fingerprint": "b8b3865abde76b06a47802d4ec4a8cd0b79cddad5c8d9f9442360937208f2f7f",
+  "result": "PASS"
+}

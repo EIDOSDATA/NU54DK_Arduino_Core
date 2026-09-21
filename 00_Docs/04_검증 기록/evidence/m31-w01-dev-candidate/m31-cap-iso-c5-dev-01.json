@@ -1,0 +1,50 @@
+{
+  "test_id": "M31-CAP-01",
+  "status": "PASS",
+  "scope": "default_sdc_hci_capability_query_only",
+  "controller_variant": "default_sdc",
+  "source_clean": false,
+  "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "volume": "F:/",
+  "vcom": "COM7",
+  "role": "capability_probe",
+  "identity": {
+    "core": "10f16eaa913f9b1d1906239fbe6ff98c53c73cd1",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "image_sha256": "7ad198c42a2198c96f9ad2b89ca3473154e343fef451bc14253fadbeb4a5ba3e",
+  "transcript_sha256": "85fba4ea08199199d47c6d635a35cd8aef5fb089ef58fefb71b6393aa59222ce",
+  "controller_bits": {
+    "cis_central": true,
+    "cis_peripheral": true,
+    "bis_broadcaster": true,
+    "bis_receiver": true,
+    "cte_tx": false,
+    "raw_iq_rx": false,
+    "channel_sounding": false
+  },
+  "host_config": {
+    "cis_central": true,
+    "cis_peripheral": true,
+    "bis_broadcaster": true,
+    "bis_receiver": true,
+    "cte_tx": false,
+    "raw_iq_rx": false,
+    "channel_sounding": false
+  },
+  "raw_le_features_hex": "9d7100f411010000",
+  "probe_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "flash_mode": "pyocd-sector",
+  "flash_bytes": "249856",
+  "nonce": "ef27fe67f1a6b2bb3f205f185e96ed37",
+  "observed_utc": "2026-09-15T18:14:12.559989+00:00"
+}

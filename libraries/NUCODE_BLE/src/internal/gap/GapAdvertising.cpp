@@ -201,6 +201,22 @@ namespace nucode::ble
         return true;
     }
 
+    bool Advertising::setResolvableSetIdentifier(const std::uint8_t (&rsi)[6]) noexcept
+    {
+        if (!requireThreadContext() || running())
+        {
+            if (running())
+            {
+                internal::recordError(BLEError::busy, -EBUSY, true);
+            }
+            return false;
+        }
+        ::memcpy(advertising_configuration.resolvable_set_identifier, rsi,
+                 sizeof(advertising_configuration.resolvable_set_identifier));
+        advertising_configuration.has_resolvable_set_identifier = true;
+        return true;
+    }
+
     bool Advertising::start() noexcept
     {
         if (!requireThreadContext())
@@ -333,6 +349,16 @@ namespace nucode::ble
                 internal::recordError(BLEError::payload_overflow, -EMSGSIZE, true);
                 return false;
             }
+        }
+        if (configuration.has_resolvable_set_identifier &&
+            !appendAdvertisingField(advertising_fields, advertising_count,
+                                    ARRAY_SIZE(advertising_fields), advertising_size,
+                                    resolvable_set_identifier_ad_type,
+                                    configuration.resolvable_set_identifier,
+                                    sizeof(configuration.resolvable_set_identifier)))
+        {
+            internal::recordError(BLEError::payload_overflow, -EMSGSIZE, true);
+            return false;
         }
         if (configuration.scan_response_name)
         {

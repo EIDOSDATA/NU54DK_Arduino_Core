@@ -1,0 +1,22 @@
+{
+  "case": "M31-CS-01 unauthenticated RAS Features read rejection",
+  "status": "PARTIAL_INSECURE_READ_NEGATIVE_PASS",
+  "source_clean": true,
+  "runner_revision": "da5803415519823cbe489ed1616ee4889ef11a9d",
+  "client_hex_sha256": "53a9d324d4a075295ffb3b3b99902750fb5f9940a8ea638606ba06c766535aff",
+  "reflector_hex_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "client_flash_bytes": 332364,
+  "client_ram_bytes": 191364,
+  "client_smp": false,
+  "rejected": 20,
+  "elapsed_s": 112.938,
+  "candidate_repeat_read_failure_is_not_exact_pass": true,
+  "files": {
+    "candidate-after-fail-registers.json": "08f08f6a7c29c72987bc26a7dc3f5fd3fdd100a348a4ffdc6c3e4e3dc0079802",
+    "candidate-repeat-read-fail.json": "9e0dea747a01c434111cdab1d262de923f92f0efa33a6eafc4df6cffd60a1d5f",
+    "insecure-read-20-exact.json": "38c0d220842be47d0f29e9394a95ae69a98dcfd5c8371e648e09c1e06b494cb5",
+    "insecure-read-build-artifact.json": "cd3ee6ead2a6ab8c7e151e654ec4595de69aeb86f68b172a36dd6a7a97849dd8",
+    "insecure-read-build.log.gz": "64033335b3d4e6a8e270edf0e0cda950a663a7e97ed060f5d7dd0a4e718569df",
+    "insecure-read-da580341.hex.gz": "49299949c53e49da1dc9e731c4f27eb05d028a1dc4354ea066c0f86c79c1e448"
+  }
+}

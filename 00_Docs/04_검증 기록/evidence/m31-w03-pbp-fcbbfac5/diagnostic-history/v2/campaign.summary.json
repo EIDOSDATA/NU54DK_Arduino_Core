@@ -1,0 +1,84 @@
+{
+  "schema": "nucode.m31.pbp-campaign.v1",
+  "status": "FAIL",
+  "started_at": "2026-09-20T05:54:08.626912+00:00",
+  "finished_at": "2026-09-20T06:08:06.521684+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "campaign": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_full_campaign.py",
+    "sha256": "728ba8ba3fad384759afff1e152a7cf204bc11a1f35c042d36bb6f15e169dcb5"
+  },
+  "runner": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_hil_final.py",
+    "sha256": "da0068d63b1cda696f11ce9c2d0c1d414baa4b4a50d1fdf334ddcd9e693c3c11"
+  },
+  "debug_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2"
+  },
+  "flash_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\flash_by_probe_hash.py",
+    "sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16"
+  },
+  "storage_erase": {
+    "required": false,
+    "reason": "PBP는 bond 저장소를 사용하지 않음"
+  },
+  "images": {
+    "source": {
+      "path": "C:\\w\\m31w07-source-fcbbfac5\\PublicAudioBroadcastSource.ino.hex",
+      "sha256": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e"
+    },
+    "sink": {
+      "path": "C:\\w\\m31w07-sink-fcbbfac5\\PublicAudioBroadcastSink.ino.hex",
+      "sha256": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    }
+  },
+  "modes": [
+    "positive",
+    "stop-restart",
+    "wrong-code",
+    "quality",
+    "sync-loss"
+  ],
+  "results": [
+    {
+      "mode": "positive",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\positive.summary.json",
+      "bounded_output": "M31_PBP_POSITIVE=PASS;EVENTS=370;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\positive.summary.json"
+    },
+    {
+      "mode": "stop-restart",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\stop-restart.summary.json",
+      "bounded_output": "M31_PBP_STOP_RESTART=PASS;EVENTS=310;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\stop-restart.summary.json"
+    },
+    {
+      "mode": "wrong-code",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\wrong-code.summary.json",
+      "bounded_output": "M31_PBP_WRONG_CODE=PASS;EVENTS=320;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\wrong-code.summary.json"
+    },
+    {
+      "mode": "quality",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\quality.summary.json",
+      "bounded_output": "M31_PBP_QUALITY=PASS;EVENTS=470;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\quality.summary.json"
+    },
+    {
+      "mode": "sync-loss",
+      "status": "FAIL",
+      "returncode": 1,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\sync-loss.summary.json",
+      "bounded_output": "M31_PBP_SYNC_LOSS=FAIL;EVENTS=206;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v2\\sync-loss.summary.json\\ntimeout: source:public audio source preparing; recent=source:public audio sent frames=300 | sink:public audio received=100 energy=986938 dropped=0 | source:public audio sent frames=400 | sink:public audio received=200 energy=1163319 dropped=0 | source:public audio sent frames=500 | sink:public audio received=300 energy=1107647 dropped=0 | source:public audio sent frames=600 | sink:public audio received=400 energy=935732 dropped=0 | source:public audio sent frames=700 | sink:public audio received=500 energy=986915 dropped=0 | source:public audio sent frames=800 | sink:public audio received=600 energy=1163739 dropped=0"
+    }
+  ],
+  "error": "sync-loss runner 실패 rc=1",
+  "raw_probe_identifiers_recorded": false,
+  "existing_files_overwritten": false
+}

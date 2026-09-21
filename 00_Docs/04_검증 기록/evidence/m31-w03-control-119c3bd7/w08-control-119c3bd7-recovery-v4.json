@@ -1,0 +1,3024 @@
+{
+  "schema": "nucode.m31.audio-control-hil.v1",
+  "status": "PASS",
+  "scope": "recovery",
+  "started_at": "2026-09-19T22:52:51.500028+00:00",
+  "finished_at": "2026-09-19T22:55:49.635501+00:00",
+  "core_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
+  "source_clean": true,
+  "source_clean_at_start": true,
+  "public_example_sha256": {
+    "controller": "24c0291e4be23ab7879c17bbf62b0996c834b6880bc87597f22be1f65c91ae64",
+    "device": "e97559ddec2c4a01a193a8664497e0f3b4cea5558acf843c6bbf7847cf5e7db3"
+  },
+  "probe_preflight": {
+    "connected_probe_count": 3,
+    "expected_hash_matches": {
+      "controller": 1,
+      "device": 1
+    }
+  },
+  "runner_behavior": {
+    "flashes_devices": false,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "hardware_reset_enabled": true,
+    "reset_target": "device",
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "board_map": {
+    "controller": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w08-controller-119c3bd7\\AudioControlController.ino.hex",
+      "image_sha256": "493d00967cfca12e47be78abce3bb22f82b1a3dadefe8f254c6df4cc81381ae4"
+    },
+    "device": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w08-device-119c3bd7\\AudioControlDevice.ino.hex",
+      "image_sha256": "42b9175e1947530a3a507314de6e4a87af5538a4f3f0fad723a6ad4e9fdc1d74"
+    }
+  },
+  "criteria": {
+    "read_write_fields": 6,
+    "read_operations": 5,
+    "notification_classes": 5,
+    "invalid_range_classes": 3,
+    "device_reset_reconnect_cycles": 20
+  },
+  "expected_tokens": {
+    "controller_found": "Audio control device found",
+    "volume_discovery": "Volume discovery started",
+    "microphone_discovery": "Microphone discovery started",
+    "controller_disconnected": "Audio control device disconnected reason=",
+    "device_ready": "Audio control device ready",
+    "device_connected": "Audio controller connected",
+    "device_disconnected": "Audio controller disconnected reason=",
+    "advertising_restarted": "Audio control advertising restarted"
+  },
+  "result": {
+    "initial_ready": {
+      "state": {
+        "volume": 255,
+        "muted": 0,
+        "offset": 248,
+        "speaker_gain": 100,
+        "microphone_muted": 1,
+        "microphone_gain": 100
+      },
+      "state_sequences": {
+        "controller": 0,
+        "device": 1
+      },
+      "microphone_discovery_sequence": null
+    },
+    "reset_recovery": {
+      "status": "PASS",
+      "cycles": [
+        {
+          "cycle": 1,
+          "elapsed_s": 7.916,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 4,
+            "disconnect_sequence": 2,
+            "controller_found_sequence": 6,
+            "connect_sequence": 8,
+            "volume_discovery_sequence": 9,
+            "microphone_discovery_sequence": 17
+          }
+        },
+        {
+          "cycle": 2,
+          "elapsed_s": 10.812,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 26,
+            "disconnect_sequence": 24,
+            "controller_found_sequence": 29,
+            "connect_sequence": 30,
+            "volume_discovery_sequence": 31,
+            "microphone_discovery_sequence": 39
+          }
+        },
+        {
+          "cycle": 3,
+          "elapsed_s": 8.883,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 48,
+            "disconnect_sequence": 46,
+            "controller_found_sequence": 51,
+            "connect_sequence": 52,
+            "volume_discovery_sequence": 53,
+            "microphone_discovery_sequence": 61
+          }
+        },
+        {
+          "cycle": 4,
+          "elapsed_s": 7.625,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 70,
+            "disconnect_sequence": 68,
+            "controller_found_sequence": 71,
+            "connect_sequence": 74,
+            "volume_discovery_sequence": 75,
+            "microphone_discovery_sequence": 83
+          }
+        },
+        {
+          "cycle": 5,
+          "elapsed_s": 7.217,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 92,
+            "disconnect_sequence": 90,
+            "controller_found_sequence": 93,
+            "connect_sequence": 96,
+            "volume_discovery_sequence": 97,
+            "microphone_discovery_sequence": 105
+          }
+        },
+        {
+          "cycle": 6,
+          "elapsed_s": 6.95,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 114,
+            "disconnect_sequence": 112,
+            "controller_found_sequence": 116,
+            "connect_sequence": 118,
+            "volume_discovery_sequence": 119,
+            "microphone_discovery_sequence": 127
+          }
+        },
+        {
+          "cycle": 7,
+          "elapsed_s": 7.148,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 136,
+            "disconnect_sequence": 134,
+            "controller_found_sequence": 137,
+            "connect_sequence": 140,
+            "volume_discovery_sequence": 141,
+            "microphone_discovery_sequence": 149
+          }
+        },
+        {
+          "cycle": 8,
+          "elapsed_s": 7.172,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 158,
+            "disconnect_sequence": 156,
+            "controller_found_sequence": 160,
+            "connect_sequence": 162,
+            "volume_discovery_sequence": 163,
+            "microphone_discovery_sequence": 171
+          }
+        },
+        {
+          "cycle": 9,
+          "elapsed_s": 7.417,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 180,
+            "disconnect_sequence": 178,
+            "controller_found_sequence": 181,
+            "connect_sequence": 184,
+            "volume_discovery_sequence": 185,
+            "microphone_discovery_sequence": 193
+          }
+        },
+        {
+          "cycle": 10,
+          "elapsed_s": 7.437,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 202,
+            "disconnect_sequence": 200,
+            "controller_found_sequence": 204,
+            "connect_sequence": 206,
+            "volume_discovery_sequence": 207,
+            "microphone_discovery_sequence": 216
+          }
+        },
+        {
+          "cycle": 11,
+          "elapsed_s": 7.873,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 224,
+            "disconnect_sequence": 222,
+            "controller_found_sequence": 226,
+            "connect_sequence": 228,
+            "volume_discovery_sequence": 229,
+            "microphone_discovery_sequence": 237
+          }
+        },
+        {
+          "cycle": 12,
+          "elapsed_s": 11.987,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 246,
+            "disconnect_sequence": 244,
+            "controller_found_sequence": 249,
+            "connect_sequence": 250,
+            "volume_discovery_sequence": 251,
+            "microphone_discovery_sequence": 259
+          }
+        },
+        {
+          "cycle": 13,
+          "elapsed_s": 8.465,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 268,
+            "disconnect_sequence": 266,
+            "controller_found_sequence": 271,
+            "connect_sequence": 272,
+            "volume_discovery_sequence": 273,
+            "microphone_discovery_sequence": 281
+          }
+        },
+        {
+          "cycle": 14,
+          "elapsed_s": 8.319,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 290,
+            "disconnect_sequence": 288,
+            "controller_found_sequence": 293,
+            "connect_sequence": 296,
+            "volume_discovery_sequence": 297,
+            "microphone_discovery_sequence": 305
+          }
+        },
+        {
+          "cycle": 15,
+          "elapsed_s": 7.454,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 314,
+            "disconnect_sequence": 312,
+            "controller_found_sequence": 317,
+            "connect_sequence": 318,
+            "volume_discovery_sequence": 319,
+            "microphone_discovery_sequence": 327
+          }
+        },
+        {
+          "cycle": 16,
+          "elapsed_s": 7.726,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 336,
+            "disconnect_sequence": 334,
+            "controller_found_sequence": 339,
+            "connect_sequence": 340,
+            "volume_discovery_sequence": 341,
+            "microphone_discovery_sequence": 349
+          }
+        },
+        {
+          "cycle": 17,
+          "elapsed_s": 7.233,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 358,
+            "disconnect_sequence": 356,
+            "controller_found_sequence": 360,
+            "connect_sequence": 362,
+            "volume_discovery_sequence": 363,
+            "microphone_discovery_sequence": 371
+          }
+        },
+        {
+          "cycle": 18,
+          "elapsed_s": 7.23,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 380,
+            "disconnect_sequence": 378,
+            "controller_found_sequence": 381,
+            "connect_sequence": 384,
+            "volume_discovery_sequence": 385,
+            "microphone_discovery_sequence": 393
+          }
+        },
+        {
+          "cycle": 19,
+          "elapsed_s": 7.566,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 402,
+            "disconnect_sequence": 400,
+            "controller_found_sequence": 404,
+            "connect_sequence": 406,
+            "volume_discovery_sequence": 407,
+            "microphone_discovery_sequence": 415
+          }
+        },
+        {
+          "cycle": 20,
+          "elapsed_s": 23.517,
+          "reset": {
+            "returncode": 0
+          },
+          "recovery": {
+            "device_ready_sequence": 425,
+            "disconnect_sequence": 422,
+            "controller_found_sequence": 424,
+            "connect_sequence": 428,
+            "volume_discovery_sequence": 429,
+            "microphone_discovery_sequence": 437
+          }
+        }
+      ]
+    },
+    "campaign_elapsed_s": 178.128
+  },
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 0.226,
+      "role": "controller",
+      "text": "volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100"
+    },
+    {
+      "sequence": 1,
+      "at_s": 0.227,
+      "role": "device",
+      "text": "volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100"
+    },
+    {
+      "sequence": 2,
+      "at_s": 4.072,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 3,
+      "at_s": 4.072,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 4,
+      "at_s": 4.222,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 5,
+      "at_s": 4.222,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 6,
+      "at_s": 4.228,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 7,
+      "at_s": 4.238,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 8,
+      "at_s": 4.366,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 9,
+      "at_s": 5.33,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 10,
+      "at_s": 7.35,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 11,
+      "at_s": 7.444,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 12,
+      "at_s": 7.539,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 13,
+      "at_s": 7.683,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 14,
+      "at_s": 7.834,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 15,
+      "at_s": 7.956,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 16,
+      "at_s": 8.036,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 17,
+      "at_s": 8.167,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 18,
+      "at_s": 8.167,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 19,
+      "at_s": 14.598,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 20,
+      "at_s": 14.598,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 21,
+      "at_s": 14.598,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 22,
+      "at_s": 14.598,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 23,
+      "at_s": 14.598,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 24,
+      "at_s": 14.598,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 25,
+      "at_s": 14.598,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 26,
+      "at_s": 14.699,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 27,
+      "at_s": 14.72,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 28,
+      "at_s": 14.721,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 29,
+      "at_s": 15.04,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 30,
+      "at_s": 15.245,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 31,
+      "at_s": 16.297,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 32,
+      "at_s": 18.333,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 33,
+      "at_s": 18.425,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 34,
+      "at_s": 18.543,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 35,
+      "at_s": 18.65,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 36,
+      "at_s": 18.734,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 37,
+      "at_s": 18.825,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 38,
+      "at_s": 18.943,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 39,
+      "at_s": 19.025,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 40,
+      "at_s": 19.053,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 41,
+      "at_s": 23.711,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 42,
+      "at_s": 23.711,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 43,
+      "at_s": 23.711,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 44,
+      "at_s": 23.711,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 45,
+      "at_s": 23.711,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 46,
+      "at_s": 23.711,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 47,
+      "at_s": 23.711,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 48,
+      "at_s": 23.879,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 49,
+      "at_s": 23.908,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 50,
+      "at_s": 23.908,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 51,
+      "at_s": 24.121,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 52,
+      "at_s": 24.228,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 53,
+      "at_s": 25.235,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 54,
+      "at_s": 27.234,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 55,
+      "at_s": 27.332,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 56,
+      "at_s": 27.422,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 57,
+      "at_s": 27.515,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 58,
+      "at_s": 27.635,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 59,
+      "at_s": 27.73,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 60,
+      "at_s": 27.842,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 61,
+      "at_s": 27.937,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 62,
+      "at_s": 27.937,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 63,
+      "at_s": 31.593,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 64,
+      "at_s": 31.593,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 65,
+      "at_s": 31.593,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 66,
+      "at_s": 31.593,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 67,
+      "at_s": 31.593,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 68,
+      "at_s": 31.593,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 69,
+      "at_s": 31.593,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 70,
+      "at_s": 31.75,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 71,
+      "at_s": 31.756,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 72,
+      "at_s": 31.756,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 73,
+      "at_s": 31.779,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 74,
+      "at_s": 31.883,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 75,
+      "at_s": 32.919,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 76,
+      "at_s": 34.916,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 77,
+      "at_s": 35.009,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 78,
+      "at_s": 35.109,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 79,
+      "at_s": 35.209,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 80,
+      "at_s": 35.334,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 81,
+      "at_s": 35.422,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 82,
+      "at_s": 35.525,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 83,
+      "at_s": 35.615,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 84,
+      "at_s": 35.615,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 85,
+      "at_s": 38.889,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 86,
+      "at_s": 38.89,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 87,
+      "at_s": 38.89,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 88,
+      "at_s": 38.89,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 89,
+      "at_s": 38.89,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 90,
+      "at_s": 38.92,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 91,
+      "at_s": 38.92,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 92,
+      "at_s": 39.073,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 93,
+      "at_s": 39.079,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 94,
+      "at_s": 39.079,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 95,
+      "at_s": 39.106,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 96,
+      "at_s": 39.197,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 97,
+      "at_s": 40.201,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 98,
+      "at_s": 42.211,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 99,
+      "at_s": 42.295,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 100,
+      "at_s": 42.411,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 101,
+      "at_s": 42.5,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 102,
+      "at_s": 42.59,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 103,
+      "at_s": 42.708,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 104,
+      "at_s": 42.791,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 105,
+      "at_s": 42.891,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 106,
+      "at_s": 42.891,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 107,
+      "at_s": 45.852,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 108,
+      "at_s": 45.853,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 109,
+      "at_s": 45.853,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 110,
+      "at_s": 45.853,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 111,
+      "at_s": 45.853,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 112,
+      "at_s": 45.884,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 113,
+      "at_s": 45.919,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 114,
+      "at_s": 46.063,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 115,
+      "at_s": 46.063,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 116,
+      "at_s": 46.069,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 117,
+      "at_s": 46.069,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 118,
+      "at_s": 46.205,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 119,
+      "at_s": 47.2,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 120,
+      "at_s": 49.202,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 121,
+      "at_s": 49.282,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 122,
+      "at_s": 49.397,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 123,
+      "at_s": 49.482,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 124,
+      "at_s": 49.604,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 125,
+      "at_s": 49.689,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 126,
+      "at_s": 49.803,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 127,
+      "at_s": 49.89,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 128,
+      "at_s": 49.89,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 129,
+      "at_s": 52.891,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 130,
+      "at_s": 52.891,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 131,
+      "at_s": 52.891,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 132,
+      "at_s": 52.891,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 133,
+      "at_s": 52.891,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 134,
+      "at_s": 52.891,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 135,
+      "at_s": 52.891,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 136,
+      "at_s": 53.072,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 137,
+      "at_s": 53.078,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 138,
+      "at_s": 53.078,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 139,
+      "at_s": 53.11,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 140,
+      "at_s": 53.192,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 141,
+      "at_s": 54.21,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 142,
+      "at_s": 56.36,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 143,
+      "at_s": 56.442,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 144,
+      "at_s": 56.559,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 145,
+      "at_s": 56.647,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 146,
+      "at_s": 56.735,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 147,
+      "at_s": 56.857,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 148,
+      "at_s": 56.951,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 149,
+      "at_s": 57.086,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 150,
+      "at_s": 57.111,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 151,
+      "at_s": 60.097,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 152,
+      "at_s": 60.097,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 153,
+      "at_s": 60.097,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 154,
+      "at_s": 60.097,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 155,
+      "at_s": 60.097,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 156,
+      "at_s": 60.097,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 157,
+      "at_s": 60.097,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 158,
+      "at_s": 60.33,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 159,
+      "at_s": 60.33,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 160,
+      "at_s": 60.336,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 161,
+      "at_s": 60.336,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 162,
+      "at_s": 60.47,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 163,
+      "at_s": 61.459,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 164,
+      "at_s": 63.452,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 165,
+      "at_s": 63.563,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 166,
+      "at_s": 63.715,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 167,
+      "at_s": 63.909,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 168,
+      "at_s": 64.016,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 169,
+      "at_s": 64.112,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 170,
+      "at_s": 64.196,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 171,
+      "at_s": 64.293,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 172,
+      "at_s": 64.315,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 173,
+      "at_s": 67.658,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 174,
+      "at_s": 67.658,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 175,
+      "at_s": 67.658,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 176,
+      "at_s": 67.658,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 177,
+      "at_s": 67.658,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 178,
+      "at_s": 67.658,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 179,
+      "at_s": 67.658,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 180,
+      "at_s": 67.816,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 181,
+      "at_s": 67.823,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 182,
+      "at_s": 67.823,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 183,
+      "at_s": 67.845,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 184,
+      "at_s": 67.94,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 185,
+      "at_s": 68.946,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 186,
+      "at_s": 71.044,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 187,
+      "at_s": 71.124,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 188,
+      "at_s": 71.242,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 189,
+      "at_s": 71.341,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 190,
+      "at_s": 71.451,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 191,
+      "at_s": 71.529,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 192,
+      "at_s": 71.642,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 193,
+      "at_s": 71.726,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 194,
+      "at_s": 71.754,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 195,
+      "at_s": 75.103,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 196,
+      "at_s": 75.103,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 197,
+      "at_s": 75.103,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 198,
+      "at_s": 75.103,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 199,
+      "at_s": 75.103,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 200,
+      "at_s": 75.191,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 201,
+      "at_s": 75.191,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 202,
+      "at_s": 75.341,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 203,
+      "at_s": 75.341,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 204,
+      "at_s": 75.347,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 205,
+      "at_s": 75.372,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 206,
+      "at_s": 75.491,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 207,
+      "at_s": 76.475,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 208,
+      "at_s": 78.474,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 209,
+      "at_s": 78.563,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 210,
+      "at_s": 78.675,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 211,
+      "at_s": 78.759,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 212,
+      "at_s": 78.858,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 213,
+      "at_s": 78.975,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 214,
+      "at_s": 79.061,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 215,
+      "at_s": 79.188,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 216,
+      "at_s": 79.188,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 217,
+      "at_s": 83.042,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 218,
+      "at_s": 83.043,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 219,
+      "at_s": 83.043,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 220,
+      "at_s": 83.043,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 221,
+      "at_s": 83.043,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 222,
+      "at_s": 83.043,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 223,
+      "at_s": 83.043,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 224,
+      "at_s": 83.232,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 225,
+      "at_s": 83.232,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 226,
+      "at_s": 83.238,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 227,
+      "at_s": 83.238,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 228,
+      "at_s": 83.379,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 229,
+      "at_s": 84.373,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 230,
+      "at_s": 86.404,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 231,
+      "at_s": 86.517,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 232,
+      "at_s": 86.613,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 233,
+      "at_s": 86.7,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 234,
+      "at_s": 86.824,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 235,
+      "at_s": 86.908,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 236,
+      "at_s": 87.025,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 237,
+      "at_s": 87.109,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 238,
+      "at_s": 87.11,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 239,
+      "at_s": 95.167,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 240,
+      "at_s": 95.167,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 241,
+      "at_s": 95.167,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 242,
+      "at_s": 95.167,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 243,
+      "at_s": 95.167,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 244,
+      "at_s": 95.167,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 245,
+      "at_s": 95.167,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 246,
+      "at_s": 95.212,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 247,
+      "at_s": 95.212,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 248,
+      "at_s": 95.212,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 249,
+      "at_s": 95.316,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 250,
+      "at_s": 95.437,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 251,
+      "at_s": 96.417,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 252,
+      "at_s": 98.476,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 253,
+      "at_s": 98.555,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 254,
+      "at_s": 98.667,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 255,
+      "at_s": 98.748,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 256,
+      "at_s": 98.875,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 257,
+      "at_s": 98.959,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 258,
+      "at_s": 99.069,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 259,
+      "at_s": 99.157,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 260,
+      "at_s": 99.157,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 261,
+      "at_s": 103.441,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 262,
+      "at_s": 103.441,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 263,
+      "at_s": 103.441,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 264,
+      "at_s": 103.441,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 265,
+      "at_s": 103.441,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 266,
+      "at_s": 103.468,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 267,
+      "at_s": 103.468,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 268,
+      "at_s": 103.647,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 269,
+      "at_s": 103.647,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 270,
+      "at_s": 103.647,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 271,
+      "at_s": 103.749,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 272,
+      "at_s": 103.87,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 273,
+      "at_s": 104.876,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 274,
+      "at_s": 106.874,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 275,
+      "at_s": 107.075,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 276,
+      "at_s": 107.175,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 277,
+      "at_s": 107.266,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 278,
+      "at_s": 107.391,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 279,
+      "at_s": 107.467,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 280,
+      "at_s": 107.583,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 281,
+      "at_s": 107.667,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 282,
+      "at_s": 107.667,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 283,
+      "at_s": 110.942,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 284,
+      "at_s": 110.942,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 285,
+      "at_s": 110.942,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 286,
+      "at_s": 110.942,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 287,
+      "at_s": 110.942,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 288,
+      "at_s": 110.942,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 289,
+      "at_s": 110.942,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 290,
+      "at_s": 111.123,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 291,
+      "at_s": 111.123,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 292,
+      "at_s": 111.123,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 293,
+      "at_s": 111.659,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 294,
+      "at_s": 112.015,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=62"
+    },
+    {
+      "sequence": 295,
+      "at_s": 112.183,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 296,
+      "at_s": 112.294,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 297,
+      "at_s": 113.292,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 298,
+      "at_s": 115.334,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 299,
+      "at_s": 115.457,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 300,
+      "at_s": 115.541,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 301,
+      "at_s": 115.625,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 302,
+      "at_s": 115.74,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 303,
+      "at_s": 115.833,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 304,
+      "at_s": 115.924,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 305,
+      "at_s": 116.05,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 306,
+      "at_s": 116.05,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 307,
+      "at_s": 119.487,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 308,
+      "at_s": 119.487,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 309,
+      "at_s": 119.487,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 310,
+      "at_s": 119.487,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 311,
+      "at_s": 119.487,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 312,
+      "at_s": 119.487,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 313,
+      "at_s": 119.487,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 314,
+      "at_s": 119.648,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 315,
+      "at_s": 119.648,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 316,
+      "at_s": 119.648,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 317,
+      "at_s": 119.75,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 318,
+      "at_s": 119.856,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 319,
+      "at_s": 120.86,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 320,
+      "at_s": 122.858,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 321,
+      "at_s": 122.943,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 322,
+      "at_s": 123.07,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 323,
+      "at_s": 123.155,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 324,
+      "at_s": 123.257,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 325,
+      "at_s": 123.34,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 326,
+      "at_s": 123.458,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 327,
+      "at_s": 123.551,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 328,
+      "at_s": 123.551,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 329,
+      "at_s": 127.002,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 330,
+      "at_s": 127.002,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 331,
+      "at_s": 127.002,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 332,
+      "at_s": 127.002,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 333,
+      "at_s": 127.002,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 334,
+      "at_s": 127.002,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 335,
+      "at_s": 127.002,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 336,
+      "at_s": 127.17,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 337,
+      "at_s": 127.17,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 338,
+      "at_s": 127.17,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 339,
+      "at_s": 127.383,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 340,
+      "at_s": 127.487,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 341,
+      "at_s": 128.499,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 342,
+      "at_s": 130.59,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 343,
+      "at_s": 130.694,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 344,
+      "at_s": 130.777,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 345,
+      "at_s": 130.891,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 346,
+      "at_s": 130.974,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 347,
+      "at_s": 131.093,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 348,
+      "at_s": 131.251,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 349,
+      "at_s": 131.333,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 350,
+      "at_s": 131.334,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 351,
+      "at_s": 134.62,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 352,
+      "at_s": 134.62,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 353,
+      "at_s": 134.62,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 354,
+      "at_s": 134.62,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 355,
+      "at_s": 134.62,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 356,
+      "at_s": 134.62,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 357,
+      "at_s": 134.651,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 358,
+      "at_s": 134.795,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 359,
+      "at_s": 134.795,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 360,
+      "at_s": 134.801,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 361,
+      "at_s": 134.828,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 362,
+      "at_s": 134.904,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 363,
+      "at_s": 135.908,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 364,
+      "at_s": 137.925,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 365,
+      "at_s": 138.009,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 366,
+      "at_s": 138.132,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 367,
+      "at_s": 138.216,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 368,
+      "at_s": 138.309,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 369,
+      "at_s": 138.425,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 370,
+      "at_s": 138.527,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 371,
+      "at_s": 138.615,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 372,
+      "at_s": 138.615,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 373,
+      "at_s": 141.832,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 374,
+      "at_s": 141.833,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 375,
+      "at_s": 141.833,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 376,
+      "at_s": 141.833,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 377,
+      "at_s": 141.833,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 378,
+      "at_s": 141.86,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 379,
+      "at_s": 141.86,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 380,
+      "at_s": 142.026,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 381,
+      "at_s": 142.033,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 382,
+      "at_s": 142.033,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 383,
+      "at_s": 142.06,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 384,
+      "at_s": 142.168,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 385,
+      "at_s": 143.208,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 386,
+      "at_s": 145.202,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 387,
+      "at_s": 145.316,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 388,
+      "at_s": 145.395,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 389,
+      "at_s": 145.507,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 390,
+      "at_s": 145.6,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 391,
+      "at_s": 145.694,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 392,
+      "at_s": 145.808,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 393,
+      "at_s": 145.892,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 394,
+      "at_s": 145.918,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 395,
+      "at_s": 149.498,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 396,
+      "at_s": 149.498,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 397,
+      "at_s": 149.498,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 398,
+      "at_s": 149.498,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 399,
+      "at_s": 149.498,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 400,
+      "at_s": 149.498,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 401,
+      "at_s": 149.498,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 402,
+      "at_s": 149.656,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 403,
+      "at_s": 149.657,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 404,
+      "at_s": 149.663,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 405,
+      "at_s": 149.688,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 406,
+      "at_s": 149.803,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 407,
+      "at_s": 150.799,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 408,
+      "at_s": 152.796,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 409,
+      "at_s": 152.882,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 410,
+      "at_s": 152.984,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 411,
+      "at_s": 153.099,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 412,
+      "at_s": 153.193,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 413,
+      "at_s": 153.299,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 414,
+      "at_s": 153.382,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 415,
+      "at_s": 153.475,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 416,
+      "at_s": 153.505,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 417,
+      "at_s": 173.357,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 418,
+      "at_s": 173.357,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 419,
+      "at_s": 173.357,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 420,
+      "at_s": 173.358,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 421,
+      "at_s": 173.358,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 422,
+      "at_s": 173.358,
+      "role": "controller",
+      "text": "Audio control device disconnected reason=8"
+    },
+    {
+      "sequence": 423,
+      "at_s": 173.358,
+      "role": "controller",
+      "text": "volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 424,
+      "at_s": 173.358,
+      "role": "controller",
+      "text": "Audio control device found"
+    },
+    {
+      "sequence": 425,
+      "at_s": 173.358,
+      "role": "device",
+      "text": "Audio control device ready"
+    },
+    {
+      "sequence": 426,
+      "at_s": 173.358,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 427,
+      "at_s": 173.358,
+      "role": "device",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 428,
+      "at_s": 173.358,
+      "role": "device",
+      "text": "Audio controller connected"
+    },
+    {
+      "sequence": 429,
+      "at_s": 174.326,
+      "role": "controller",
+      "text": "Volume discovery started"
+    },
+    {
+      "sequence": 430,
+      "at_s": 176.325,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 431,
+      "at_s": 176.443,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 432,
+      "at_s": 176.524,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 433,
+      "at_s": 176.641,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 434,
+      "at_s": 176.723,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 435,
+      "at_s": 176.846,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 436,
+      "at_s": 176.939,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    },
+    {
+      "sequence": 437,
+      "at_s": 177.023,
+      "role": "controller",
+      "text": "Microphone discovery started"
+    },
+    {
+      "sequence": 438,
+      "at_s": 177.023,
+      "role": "controller",
+      "text": "volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0"
+    }
+  ],
+  "error": null
+}

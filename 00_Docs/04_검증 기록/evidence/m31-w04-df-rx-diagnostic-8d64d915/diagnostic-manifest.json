@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scope": "scratch_native_diagnostic_not_functional_pass",
+  "core_revision": "8d64d915",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "source_clean": false,
+  "attempts": {
+    "ll_original_filter": {
+      "file": "ll_original_filter.json",
+      "sha256": "be341e54becaeff5e856cd4078c506f5a6748f52f4b9574890e18b5b598c8c2e",
+      "recipe": "LL AoA sample + target-name log filter, original timeout",
+      "observation": "sync_timeout_and_bus_fault",
+      "tx_image_sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+      "rx_image_sha256": "14eae60e3c54ebc1c0944baff0f5d48d9faeb1248c145f006a1bd96fa073d634"
+    },
+    "ll_no_cte_sync_option": {
+      "file": "ll_no_cte_sync_option.json",
+      "sha256": "cf61ccacb70cef728585c4e699bd932eed5585ef9aae624686f3fe5e7d0ef4d2",
+      "recipe": "LL AoA sample + filter + no CTE sync option",
+      "observation": "sync_timeout_and_delete_error",
+      "tx_image_sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+      "rx_image_sha256": "b846bf88598229188588c3d03ea29843434ff2ad95bd483d4e2a7623906940c3"
+    },
+    "sdc_periodic_control": {
+      "file": "sdc_periodic_control.json",
+      "sha256": "f171a9084df7d26545934c5001ac96014e9c57c87d8a85e31181e3cd26270cae",
+      "recipe": "SDC periodic scanner, CTE enable call replaced with no-op",
+      "observation": "periodic_sync_observed_only",
+      "tx_image_sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+      "rx_image_sha256": "2c8e1efe955c1cdb693df0cba6fea9d7c98201762c6da718caf6fc56e151ffc6"
+    },
+    "ll_plain_periodic_control": {
+      "file": "ll_plain_periodic_control.json",
+      "sha256": "94e331b2562c4037b6f04797afa327ee25eb1d234c59abc2d389717a4f494b36",
+      "recipe": "LL periodic scanner without DF, CTE enable call replaced with no-op",
+      "observation": "periodic_sync_observed_after_retries",
+      "tx_image_sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+      "rx_image_sha256": "6a0849031f605fa1f5854f1a499bed8eeeff478357a3811148aab36cc40436a7"
+    },
+    "ll_timeout_unit_fix": {
+      "file": "ll_timeout_unit_fix.json",
+      "sha256": "e4516eb33c3381f1c1ef41610b22577561621cc562834014b0473323e62ca780",
+      "recipe": "LL AoA sample + filter + 10 ms sync timeout unit correction",
+      "observation": "sync_timeout_and_usage_fault",
+      "tx_image_sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+      "rx_image_sha256": "388061bf1aa6309b7d223eb3cec8ca4b9ac1fc5298607c9d9db0a388d09ccf2e"
+    },
+    "native_tx_ll_dual": {
+      "file": "native_tx_ll_dual.json",
+      "sha256": "ad6ea10104835eb5b7f45b5c1066a567d15a0448de98210f5e40e2ddae29b564",
+      "recipe": "upstream native AoA TX with controller DF enabled + LL AoA receiver, dual-name filter",
+      "observation": "extended_advertisement_seen_no_sync",
+      "tx_image_sha256": "a2403363643eb8ae7f445c0cc086b43ddb98b85212702dfbbfe1b0511cab1947",
+      "rx_image_sha256": "eb91e934ae0e4bb7033cf8aed8e759a02e01a79333314b0348303c6717d6cab2"
+    }
+  }
+}

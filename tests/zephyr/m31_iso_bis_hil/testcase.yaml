@@ -1,0 +1,37 @@
+common:
+  platform_allow:
+    - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+  build_only: true
+  tags:
+    - bluetooth
+    - m31
+    - bis
+tests:
+  nucode.m31.iso_bis.source:
+    extra_args:
+      - M31_BIS_ROLE=source
+      - EXTRA_CONF_FILE=source.conf
+  nucode.m31.iso_bis.receiver:
+    extra_args:
+      - M31_BIS_ROLE=receiver
+      - EXTRA_CONF_FILE=receiver.conf
+  nucode.m31.iso_time.sender:
+    extra_args:
+      - M31_BIS_ROLE=source
+      - M31_BIS_TIME_SYNC=1
+      - EXTRA_CONF_FILE=source.conf
+  nucode.m31.iso_time.receiver:
+    extra_args:
+      - M31_BIS_ROLE=receiver
+      - M31_BIS_TIME_SYNC=1
+      - EXTRA_CONF_FILE=receiver.conf
+  nucode.m31.iso_bis_encrypted.source:
+    extra_args:
+      - M31_BIS_ROLE=source
+      - M31_BIS_ENCRYPTED=1
+      - EXTRA_CONF_FILE=source.conf
+  nucode.m31.iso_bis_encrypted.receiver:
+    extra_args:
+      - M31_BIS_ROLE=receiver
+      - M31_BIS_ENCRYPTED=1
+      - EXTRA_CONF_FILE=receiver.conf

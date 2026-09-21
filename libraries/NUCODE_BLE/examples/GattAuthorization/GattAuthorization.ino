@@ -1,6 +1,6 @@
 /**
  * @file GattAuthorization.ino
- * @brief 동기 authorization으로 descriptor 접근을 여는 M29 peripheral 예제입니다.
+ * @brief 동기 authorization으로 descriptor 접근을 여는 peripheral 예제입니다.
  */
 
 #include <NUCODE_BLE.h>

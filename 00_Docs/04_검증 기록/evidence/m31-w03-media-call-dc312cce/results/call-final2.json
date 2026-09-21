@@ -1,0 +1,107 @@
+{
+  "test_id": "M31-AUDIO-MEDIA-CALL-01",
+  "status": "PASS",
+  "profile": "call",
+  "scope": "two_board_public_serial_profile_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "image_core_revision": "8a07ca4f065db73d3581644212ad118884c61c51",
+  "boards": {
+    "server": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "E:/",
+      "vcom": "COM13",
+      "image_sha256": "f4d8c8b90783f3d76eb702a47a743e22e389e0e7f0f7f91baf5c9cc0e5eda68f",
+      "image_size": 1122737,
+      "config_sha256": "1ddfeee51455f701256049101b1eafe5f67453078b17a2ba8cc3957000a04689",
+      "build_record": {
+        "core_revision": "8a07ca4f065db73d3581644212ad118884c61c51",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "f4d8c8b90783f3d76eb702a47a743e22e389e0e7f0f7f91baf5c9cc0e5eda68f",
+        "record_format": "nu54-build-json",
+        "record_name": "CallControlServer.ino.nu54-build.json",
+        "record_sha256": "10f7a863c97903167ce8af2b8658b502c171238b361f639c9ff9ca933c962b28"
+      },
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "401408"
+    },
+    "client": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "F:/",
+      "vcom": "COM14",
+      "image_sha256": "817d4eab146199501a1774278dab70d0025979c5b9289f97599096264f7a3ff0",
+      "image_size": 1110227,
+      "config_sha256": "1cb03bdea4824fe1027c68732121cf7a947ce5f0a399095396a9d4427b3d6a17",
+      "build_record": {
+        "core_revision": "8a07ca4f065db73d3581644212ad118884c61c51",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "817d4eab146199501a1774278dab70d0025979c5b9289f97599096264f7a3ff0",
+        "record_format": "nu54-build-json",
+        "record_name": "CallControlClient.ino.nu54-build.json",
+        "record_sha256": "5a18043cfd188119e020fb7579dd5e25b41dc06766f1419c3eed09fa4a8470af"
+      },
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "397312"
+    }
+  },
+  "normal_operations": 100,
+  "negative_iterations_per_case": 20,
+  "reconnects": 20,
+  "soak_seconds": 180.015,
+  "measurement": {
+    "profile": "call",
+    "normal_operations": 100,
+    "normal_by_operation": {
+      "CALL_ACCEPT": 12,
+      "CALL_HOLD": 22,
+      "CALL_RETRIEVE": 22,
+      "CALL_TERMINATE": 22,
+      "CALL_ORIGINATE": 10,
+      "CALL_INCOMING": 12
+    },
+    "negative_by_case": {
+      "STALE_INDEX": 20,
+      "INVALID_TRANSITION": 20
+    },
+    "recoveries": 40,
+    "reconnects": 20,
+    "state_notifications": 160,
+    "soak_seconds": 180.01500000001397
+  },
+  "reason": null,
+  "transcript_sha256": "fd15f7f193b473c89f9cf97c01d9789ea73cdef4f6eaaed3bf2eea2a325ddb1b",
+  "observed_utc": "2026-09-20T16:42:44.754838+00:00"
+}

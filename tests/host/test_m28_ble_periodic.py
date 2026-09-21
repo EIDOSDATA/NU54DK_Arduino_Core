@@ -65,7 +65,13 @@ class M28BlePeriodicTests(unittest.TestCase):
             ]
             result = subprocess.run(command + ["-o", str(binary)], capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
-            for scenario in ("advertiser", "sync_report", "past", "end_cleanup"):
+            for scenario in (
+                "advertiser",
+                "sync_report",
+                "past",
+                "past_lease_busy",
+                "end_cleanup",
+            ):
                 with self.subTest(scenario=scenario):
                     result = run_executable(
                         [str(binary), scenario], capture_output=True, timeout=10

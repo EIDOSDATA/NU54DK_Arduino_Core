@@ -1,6 +1,6 @@
 /**
  * @file ReliableWriteCentral.ino
- * @brief exact generation link로 512-byte reliable write를 수행하는 M29 central 예제입니다.
+ * @brief exact generation link로 512-byte reliable write를 수행하는 central 예제입니다.
  */
 
 #include <NUCODE_BLE.h>

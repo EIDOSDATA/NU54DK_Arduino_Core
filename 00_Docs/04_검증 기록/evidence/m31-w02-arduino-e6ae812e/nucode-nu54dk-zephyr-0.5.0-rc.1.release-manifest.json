@@ -1,0 +1,3990 @@
+{
+  "architecture": "zephyr",
+  "archive_file_name": "nucode-nu54dk-zephyr-0.5.0-rc.1.zip",
+  "archive_root": "nucode-nu54dk-zephyr-0.5.0-rc.1",
+  "board_repository": "https://github.com/Nucode01/NU54DK_Zephyr_DTS",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "core_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+  "file_count": 439,
+  "file_hashes": {
+    "LICENSE": "9c670bc406567c9a4b002537b1056cf63b7c60560451677a99bed7ff90ecdc6a",
+    "board_package/NU54DK_Zephyr_DTS/LICENSE": "d74a486179782720ac0d9bc6f13560110d5b03b7670c8dd00b410fdbd061141e",
+    "board_package/NU54DK_Zephyr_DTS/LICENSES/Apache-2.0.txt": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+    "board_package/NU54DK_Zephyr_DTS/NOTICE": "0d9f22ab8375a2aac3cd2a1231323edc30e6361ffd0f809a483043e1db82022e",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/Kconfig.nrf54l15dk": "a2b940d87a721fe5788d604d8fd244da77ecc3b90a2e8d53670b4a2ceaec0a56",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/board.cmake": "61d447fe8100a6897dd4c5342848f4fa39ff8d9bc2576ab4329d7b054446a0d2",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/board.yml": "77032c4b1d10e57e3c036bae7ed55b42a38a1d5b92d153865c2a18c93261703d",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts": "d88bf2fcff05893c91ac4cbdf602729703fbc117daa3b42722d44024634f5f99",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk.yaml": "08e7d2c8c2b9c9565918f1fdc4cdabde4b00e01be27170e84cd2f218ba43dede",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk_defconfig": "399a7e3cb64b5aafb98aa05627d7b85a9f8b14782ff0377f6b1994ed2edee3dd",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk-pinctrl.dtsi": "5ec7648319b0941753486e6895f2615c4a9728cd5256b0a27086a793cffc48e7",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_common.dtsi": "6b0d9b25d1a6ffeca5146a82ab3df6b2cde26fbd45ff24b61533c43619d569e5",
+    "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi": "bfb90dd8dad909a3e30d57043aa03b1aa9d4b1d7cf064430af1b542b6743c9c2",
+    "boards.txt": "dbddb1930c722f6e22a7617cbc381743aed5e1ff7197ae7f658cfdfb19c14300",
+    "cores/arduino/AnalogFabric.cpp": "7c4d71c5559b276cc49fe9f144be832c3ab0c959ff94916ecb21b0466dc17851",
+    "cores/arduino/Arduino.h": "e01c5bb4e91264de4dfded8dfa2e65f1775afa6d47e0c578f3c4d6bcf8670b2b",
+    "cores/arduino/EventFabric.cpp": "a8e68db226b6213e78544a23db6c2221459f03fc254716e724425f36f2090ac1",
+    "cores/arduino/HardwareSerial.cpp": "8a84f78c536bcb50305b2671bef95acd714bc0aed26e536f64c50a59ad25ca16",
+    "cores/arduino/HardwareSerial.h": "1dbaa167bc0f937db95054047bb8106e3b1ab59fe4d934b7e50b5c8ce9f21b09",
+    "cores/arduino/NUCODEPeripheral.h": "985c599f01725242900f0849b273a241297461631e5bc15ebc050951dc948bc7",
+    "cores/arduino/Print.h": "763904b25db762211afd61d77e9ce454dbfcfae8b218b7b8cc9f83f30597daba",
+    "cores/arduino/Printable.h": "4a53fa3ae6c34c6f52691875a357274dcc9b90c20159a09b996127cd344012a9",
+    "cores/arduino/SPI.cpp": "b3961de2de7b8764dd7e216976a360a3b0e08db5d6003a64e794a3be924a45a6",
+    "cores/arduino/SerialFabric.cpp": "48d663d04322361d64dcd867fed1022a052ba6b93f20106d04eedec1c2fd74cc",
+    "cores/arduino/SpimFabric.cpp": "5c0687f23e29f2d5dc3da9dbfa1b477c37ec5b70c848dcab5cbacfa6451bd263",
+    "cores/arduino/SpisFabric.cpp": "e901de2e09847e50cbf275e6b55a7c3fb7536efe1e54d52026459d23352e2deb",
+    "cores/arduino/Stream.h": "641457310256a0047bfad1eed98afe54dbeb6ab5e5f14a9efb20cb2c4de9a153",
+    "cores/arduino/StreamFabric.cpp": "3501a7ad5750a49490aa93102ce391c628ac7cd0e424621d112386b02820abe8",
+    "cores/arduino/SystemFabric.cpp": "b42a59ed2fa8baaf9f05fcdeb9340516d32ea844ab56a27a3ccd80f04b4727f1",
+    "cores/arduino/TwimFabric.cpp": "4cc0f7ed706b4be32682d6079cff41ad8e6328c1e976a6a97453ec93454980aa",
+    "cores/arduino/TwisFabric.cpp": "8c0ed0d21f00b420ead59a602179f478deacf8c9c10ebda64a1c3964de23627d",
+    "cores/arduino/UarteFabric.cpp": "83b1129c5444a0823e3967ffcd4ca62825c3ed273d15738aabcfde095f28428f",
+    "cores/arduino/WString.h": "b08fe82d701785518155a03b27e936b6cebf9edb2a0aa3e147d585a13f8be6c1",
+    "cores/arduino/Wire.cpp": "c90bbec5db143e16b0409c92f683cdfbe1cdcf322dcdddb8e8c25fff6fcb2c29",
+    "cores/arduino/api_compat.cpp": "904d6fadcc5df21c714bebe4a0baa4d215074e6c9b896244f5a6d1ce86e84f2b",
+    "cores/arduino/diagnostics.cpp": "0285295de3691ece2c9f54891cdb08749c5249293f2fab88efa1eb678b674a0b",
+    "cores/arduino/generated/PeripheralInventory.inc": "8e7b46f9c0283edda45c212618e3083df3410773e74d43db47849d4f58340224",
+    "cores/arduino/internal/AnalogBackend.h": "115bb58cd7955bde32309c0f1d0f5cc284425f0f6c39ef6d546af551320c992f",
+    "cores/arduino/internal/AnalogRuntimeMath.h": "11c5212179d52c72266f502d398df1cc657fa1e55fffc6808b0c2bd148cb189f",
+    "cores/arduino/internal/ArduinoRuntime.h": "354b3d3076a4ed7c6c3ea2d9f46f39498a3b0f6752733d42772f4379f93acf89",
+    "cores/arduino/internal/ArduinoUtility.h": "2bb7ad79ba07797e81fc54cfbdb9444f7af850516007a26bda4e48f4c522f8d9",
+    "cores/arduino/internal/CoreIdentity.h": "26366d922edb44eb9391e35a345a0b5acfca68ff1f21fa3480e590094a8af3e2",
+    "cores/arduino/internal/FabricSynchronization.h": "2c707024c42066fe27f9100f683130085fc80b0b0a749954bcece98aa460a9d8",
+    "cores/arduino/internal/IoResourceManager.h": "8ca34cd49baabd5a0b1afc07f465aba26d9c7385d6043d62fc456cbbd4cd9560",
+    "cores/arduino/internal/Nu54dkIoResources.h": "50aa969eccc2c83351043da4764bd904f8e40da9cbef1b717851f4b7068a974e",
+    "cores/arduino/internal/PinHandover.h": "af4b43b3bc3e3493560aa2d8ae326a89202cec314b63ee3c0e2eb37c48b0599d",
+    "cores/arduino/internal/PwmRuntime.cpp": "62172bddc7e1acbd6496cfcbaeba1552db4e165efba0269fc27dfa76d01a7d15",
+    "cores/arduino/internal/PwmRuntime.h": "4f85ebd8fcef3f6d75755cec6f7e65f34a418c67b57ac51ef91bfbd34e530977",
+    "cores/arduino/internal/RandomMath.h": "50c826aa3c969100b12c0e08f8b20b316b9538b6b01a45caff48a2fc143748f0",
+    "cores/arduino/internal/RuntimePeripheralRoute.cpp": "ce05675b544496dc82bba9eae3702ab2d1dee2574270bf5544b37475a7d79b69",
+    "cores/arduino/internal/RuntimePeripheralRoute.h": "1cf2d46c16756b5dc1fb056284f1804297e5791d50440946a482027726d64673",
+    "cores/arduino/internal/RuntimePeripheralRouteRecovery.cpp": "fd617bad9f686e16ea5810b15ec60fd1035021b60cd4d1fef1356431e026a821",
+    "cores/arduino/internal/SPIBackend.h": "e61d3e76c6a678bcfca44b13b2cff6b4bd9a51a690e5509e83dc8c15020aa8cb",
+    "cores/arduino/internal/SerialBackend.h": "87dd33a02009c9efb40d1df1e8230dba8bd21d555fe16cc921271f6be6436b9c",
+    "cores/arduino/internal/SerialFabricBackend.h": "e95a8686181115260b11bf9f4e19181accaf6bc6e74e444f1cdef357fe75e76d",
+    "cores/arduino/internal/SpiInterruptMask.h": "852ac79f0b50f1c202c7b7d6d663a21eeaa2bc2f06b9c44eba619910a531a1d3",
+    "cores/arduino/internal/TimeBackend.h": "f87fedd99d5747a247fe9d958df8de07cd5b1b63c36e556be883450616430e03",
+    "cores/arduino/internal/TimeMath.h": "0c0950a958fe74d06f56d0134e260bf8a1a46626e01646489da62a09d6d9aba5",
+    "cores/arduino/internal/WireBackend.h": "a99d742651ce3e9813b21b31dd6dd4b1d8adeb829f972bfd52c11447d0ef28ac",
+    "cores/arduino/internal/analog/AnalogFabricInternal.h": "2633bf48d81a8f4f5ddd01df59a1c135031be6092f66628fcdc4a024d1a6a00a",
+    "cores/arduino/internal/analog/PwmSequenceFabric.cpp": "2d697f6bb8fcdf1dc824f591480d469f782bc7f35f21da19fc916fc948b8eabb",
+    "cores/arduino/internal/analog/SaadcFabric.cpp": "8e4dd630bf458163725e88ec8b7f2b0c335f416ca07f99970f6be2b49e1666bb",
+    "cores/arduino/internal/dma_count.h": "34a7b643c8a5c4ca8d27744dd8c90e09c5dd99279533a95161bb96e3594a7c03",
+    "cores/arduino/internal/dma_memory.h": "495754605c1f49868db0eefea3e381e69a147f723eaccc5d173c3c238e246d03",
+    "cores/arduino/internal/event/DppiFabric.cpp": "b31c06a3bbd3bfc2c47313be68fe78350e755e355599151b7f8d765dad224811",
+    "cores/arduino/internal/event/EguFabric.cpp": "cb30c07faad02e41f33ebae2db290de5a789b7547cd15cf5fc2970fd7798d8b0",
+    "cores/arduino/internal/event/EventFabricInternal.h": "be7c09785c59e7fc6e79ddd32652df8edc7715da23961faf7079a7ab9c3cce31",
+    "cores/arduino/internal/event/EventFabricRegistry.cpp": "7cb93ea76e0e9dd98c35fc0349556e05844ff7791af1d0842a4f167934e6e85c",
+    "cores/arduino/internal/event/GpioteFabric.cpp": "347a5da475d4b8dd1d105d2c3feffd1935b3c1bb8bdc19e14ffcc924d5ef1f4a",
+    "cores/arduino/internal/event/PpibFabric.cpp": "6d42dcc83f02da0c99878ccfc759c07eba45d885d6e9da0794ae20efe2dff3da",
+    "cores/arduino/internal/event/TimerFabric.cpp": "402704f0d623e40fcb1932f29764b9b15591f9f14089ea1c126a81010fe8746c",
+    "cores/arduino/internal/io_resource_manager.cpp": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+    "cores/arduino/internal/pin_description.h": "9fecdb98b92827d1c938333b1d0521eb0c38dd4395fafb6d8a3e67d464d70f11",
+    "cores/arduino/internal/qdec_sampling.h": "d0da4f2c9ab1ef3b448007b53125067fd918f65fc4f83b12cf9b2880812e0061",
+    "cores/arduino/internal/resource/IoResourcePolicy.h": "56e7d5f60df0a8d08fd90b8e01d330e635cf6ca386b274880b0ac305eb26f454",
+    "cores/arduino/internal/resource/IoResourceTable.cpp": "d509b4aae7feda029bc7c0043be22894a74f9587229a955bd4d95e469dc4b635",
+    "cores/arduino/internal/resource/IoResourceTable.h": "72a46d1485a0027f8ea4f728b0dd219eb2d9fa85a518f13d02246ec25f8ecca8",
+    "cores/arduino/internal/runtime_scheduler.cpp": "343c9c73ca769923b8a4290813541929be3f194b1a623b64475399503e1f8e69",
+    "cores/arduino/internal/serial/SerialFabricInternal.h": "5fea33f8a39c1484033b7152768ca9d902c9d2bfee5c59cdbf68adbb8b2d90df",
+    "cores/arduino/internal/serial/SerialFabricLifecycle.cpp": "3fc5b49491acb7a0511c8167e085d2eb7337168c55fee1ea12a72f92b8d86a8a",
+    "cores/arduino/internal/serial/SerialFabricRegistry.cpp": "a68e83e848a0b5defbef98e4d3f8dfa547a318712b4034ffd4bc5a9868125e5c",
+    "cores/arduino/internal/spi/SpiBackendOperations.h": "9488ba5e66a439c77e8251ac474173efbb732f877e4862af095c246fcf27378b",
+    "cores/arduino/internal/spi/SpiZephyrBackend.cpp": "fd544070b0aaa038d526282b769d314be9326a8958d754e292f638058743e919",
+    "cores/arduino/internal/stream/I2sFabric.cpp": "192624b2d529f7002dd88fe7033848af1b96c14382d2fc406c976235ea90f385",
+    "cores/arduino/internal/stream/PdmFabric.cpp": "696e39692104f0afb8503b0672ffeb962ec5f4f12dc5d8190222782df765a228",
+    "cores/arduino/internal/stream/QdecFabric.cpp": "e3edc70a89a5564df84e5157003b80da2ca75da590c789e558eabfa9a8a57167",
+    "cores/arduino/internal/stream/StreamFabricInternal.h": "56b9218a8b87b367a4b50936454786cc50965cdf8711c9d170a0005ec0ac7f75",
+    "cores/arduino/internal/time_backend_nrf54.cpp": "102ba3a3a10a6148432aeddc37fb60dc25f8c6ea7399f968a6f88cabf8048012",
+    "cores/arduino/internal/timer_clock.h": "95aceebf2303ff9689075ae65985babe64a58534cdedb981faaf9e54cbff12f6",
+    "cores/arduino/main.cpp": "61fa7cd1233db7d913070e72718ee85376f8d34fde52fc6cac3c583f04b0b81c",
+    "cores/arduino/nucode/AnalogFabric.h": "7a170fd48d2e85172086c6af7e29419c475356a96c07237bb62c2d173eaca2ba",
+    "cores/arduino/nucode/Diagnostics.h": "7451ab2a11786605fb51fa5e9ae12bbad4ff18bb33e83eac05dcab418722e3ac",
+    "cores/arduino/nucode/EventFabric.h": "0489c435fd7510fcb2c6414e3742bad211eaa20a9a11dfba0705ae0ada06e3da",
+    "cores/arduino/nucode/PeripheralInventory.h": "dc2bf6de4e3d0f778d5ca9496fa355ef9d77bf16a9da20dfb05b837ead03dbda",
+    "cores/arduino/nucode/SerialFabric.h": "d504b9debef84d0142dd211cbbfb7b19fd153d2a0e23489dc94ca197a7a8c7ca",
+    "cores/arduino/nucode/StreamFabric.h": "a4e9afceab6908104225d7797a2e3e7cf95c61aa3c067510a4ef02bfb26e1c7e",
+    "cores/arduino/nucode/SystemFabric.h": "6b6a667b874c220987da0271bdbb7bb921e0897d03c78c79a1272d249805bc8d",
+    "cores/arduino/peripheral_inventory.cpp": "debd388f0212a6d82e36b930d22c316abf6f1c6d3b1965413d4e9a35e53609f3",
+    "cores/arduino/peripheral_stubs.cpp": "c72fbd5cf69a8f5759a66e3d925761e8ed900c627787c32a546856214d0f0d25",
+    "cores/arduino/wiring_analog.cpp": "1d15f35854023446578195aff38f847cb4c66f548aeb06ed2527aaf27f12a36b",
+    "cores/arduino/wiring_digital.cpp": "bff0603094fae7b4ababc5da4530d0ac8bcf5a2c4c607227e97acc8c595d4f4a",
+    "cores/arduino/wiring_interrupt.cpp": "b224bb114787c8a544617786d35faed7f29f93c2069e05a7804b601fcdc2d737",
+    "cores/arduino/wiring_pulse_shift.cpp": "41acc468fa4903d6a664ab96aea1c8f92c3dbc463374263d10495064ea7de355",
+    "cores/arduino/wiring_random.cpp": "97299ed51f0e339380bc708f367bae9a3fd65a38a95fbc9630d1889128e636ee",
+    "cores/arduino/wiring_time.cpp": "00b77138cd416d4a7a1ee85eaa6913b4e4afa849939daea3b3fa55ced7315e1b",
+    "dts/bindings/misc/nucode,arduino-adc-input.yaml": "0938950f4a41c483017ca1d4d5fcd61c1e06558e58d3355ad2787ee1cc93f883",
+    "dts/bindings/misc/nucode,arduino-connector-gpios.yaml": "5d50acd438d3e0f7cbe685bce4254a8fcbf604fdee3b10f8b6ba4b1b36c280ef",
+    "dts/bindings/misc/nucode,arduino-pin-map.yaml": "64ad9daf4f8962ef143d1e31a70a6c3dc3a01a2f5f99a5e2d9029e090966143d",
+    "dts/bindings/vendor-prefixes.txt": "e22e163b2dd153ea40abb5c0bc9aba64519d57bf965b79ebf45eac138f9990a6",
+    "dts/nucode/nu54dk-arduino-connectors.dtsi": "6b6a0c106ac71b71cb8f84de0cd3b51667ecce29efe1f13118ed37d443322d26",
+    "dts/nucode/nu54dk-arduino-pin-metadata.h": "6d0fa6c51d85ead79f43f6640255de7a5991c3db3eb3b9ca3d7b5b939d05fd4f",
+    "dts/nucode/nu54dk-arduino-pins.dtsi": "2f2b6add061b0c9c51c75e7790784155110ce5e9c88ababdd0fbd807a2b29a35",
+    "dts/nucode/nu54dk-arduino-runtime.dtsi": "77fc0a2e9cb99cb630f82950b3b7bbfceee57c68023dd0cf19ee5f9c92d9620e",
+    "dts/nucode/nu54dk-arduino-storage.dtsi": "c630280c6dd5fa3d5918e71ba1b1f10b152c07c4a41819190b093708eea4f776",
+    "dts/nucode/nu54dk-lfxo-external-caps.dtsi": "d372c73f07384fc87a0d6512f929ddab2a7689db214b0756ec9df4913c8661a1",
+    "libraries/EEPROM/examples/EEPROMPersistence/EEPROMPersistence.ino": "b2a2bbcfda19892832c74c56a05914c30880f77e28cef996fc68000ca26f80ba",
+    "libraries/EEPROM/library.properties": "43997c7f5e1d58dacdfa1b3ce8b6db4a0593384f214645b62c60f5d2fa023187",
+    "libraries/EEPROM/src/EEPROM.cpp": "2aedb4d386b6f49a4456498d0b924762660099ca285e83c61ceb416b35a44896",
+    "libraries/EEPROM/src/EEPROM.h": "84e2d528137e11e995aae3bfcfd0951f76c17426e7bd189c55dce6bf757b4e41",
+    "libraries/EEPROM/src/internal/EEPROMInternal.h": "142659aa92d8c607260423fdd56890261733702ece16a3c3ceaddedddbf0e0f1",
+    "libraries/EEPROM/src/internal/EEPROMRecord.cpp": "331381d455b8dd6e7c90355a9cd3351f46d0eaa4ab5a7767da75601eff05de6e",
+    "libraries/EEPROM/src/internal/EEPROMRecord.h": "d49b7b8f31bad15c1f9ac45911c2c32a118d98d8e8398e4cdaaed111da6f1ff3",
+    "libraries/EEPROM/src/internal/EEPROMSettings.cpp": "9a3f70e9b9908612e471f78212bb2d865db797be29fc3e306f5acc65e17c7e95",
+    "libraries/EEPROM/zephyr/eeprom.conf": "001adbe10c645707b41a5ed85827c11894554a2a2854a14b3a1a1f1752b6ae96",
+    "libraries/EEPROM/zephyr/feature.yml": "e6b5f4bab916d6e0873e32509b81dbea7dda196ccf2a9d17f6c371cec3626afc",
+    "libraries/LittleFS/examples/LittleFSPersistence/LittleFSPersistence.ino": "c10e339da7764d0a088777786239af1382a91fabd247e8b9b4b6c915ef9de5fd",
+    "libraries/LittleFS/library.properties": "7b7fcc139080a156e4c6ebe2cf97967064a6ab6075cd577d1f13f451e9de3ce1",
+    "libraries/LittleFS/src/FS.cpp": "ea2fa5de44e1ecee0bd4c18221ecee21b7acd88733373ab5e0757d4c1fa4be8c",
+    "libraries/LittleFS/src/FS.h": "4cb27b8dada86f519e040077b0963c6d2fccd3e5d5e062c642e5254378e9e620",
+    "libraries/LittleFS/src/LittleFS.cpp": "dfc5574593730dd8089990e8f41c6861174ffaeec9a7b6d046d2ae24fb27c466",
+    "libraries/LittleFS/src/LittleFS.h": "d85e28709f00fb04f9143ad1c8d04e08765b07fa5d357df70f356f14427429ac",
+    "libraries/LittleFS/src/internal/File.cpp": "4bd2b7d3e980504477f0141d792d3a58a3cc01aa69e553de232ddbe18d057b94",
+    "libraries/LittleFS/src/internal/FilePaths.cpp": "c04b04621d0b0a951cd5d46a41fac31538e443a1b54bff97393362d5ac43eb90",
+    "libraries/LittleFS/src/internal/FileSlots.cpp": "33f00720f0f2ad5696bcdf81b107a04ef962f1028a8b02fef11ef73f551ba0ed",
+    "libraries/LittleFS/src/internal/StorageInternal.h": "8be2ba3a6a78a301a471b7fe79a110f187e456cf4b17699f58d5cfccc1c6ecce",
+    "libraries/LittleFS/zephyr/feature.yml": "724eab4c49f9fa0e8fcb991afb54653fa35d164acb29ec0d0c79b9375d65a020",
+    "libraries/LittleFS/zephyr/littlefs.conf": "bd696219c9970a5749c4f14a1f6a00219d6785808d0e507cf5a190d1f36916f6",
+    "libraries/NUCODE_BLE/examples/CustomGattCentral/CustomGattCentral.ino": "9430699d2dbb9576d0db7a8fc1c31b2ac3ed19d3edb15bdf993e15e7214cd7a8",
+    "libraries/NUCODE_BLE/examples/CustomGattPeripheral/CustomGattPeripheral.ino": "651a361b2e0b61696194d8e6bbdc0fb571ec1ee4689ece0b4f862e789b52e003",
+    "libraries/NUCODE_BLE/examples/ExtendedAdvertising/ExtendedAdvertising.ino": "d0b3c45f1265d40cf92687475a962726a4af0d5de7ba1a9cf5dbc8633663a9b0",
+    "libraries/NUCODE_BLE/examples/ExtendedScanner/ExtendedScanner.ino": "9c937fd1307ac413e66ddb1dca953fbe3b3b4ad610c64243fffd04e9eecdf538",
+    "libraries/NUCODE_BLE/examples/GAPCentral/GAPCentral.ino": "7d738fd4f577fc955c630c535a92fa4e62a4b4e5f908139ec83f1a5f5d4b49ba",
+    "libraries/NUCODE_BLE/examples/GAPPeripheral/GAPPeripheral.ino": "b78251bdd7c41e738f3b5d8a71deb5cd8d3eb7a3adda1d63f67928ef3461cadc",
+    "libraries/NUCODE_BLE/examples/GattAuthorization/GattAuthorization.ino": "88b0552c7101fb2c623d39d2c5856c0981ddcef1e417eb54fa6a2333003ff583",
+    "libraries/NUCODE_BLE/examples/GattDescriptors/GattDescriptors.ino": "51cf09341093d9e9cb9b9e558fd6bba81fdffd87291d27bd58076e2bdfcc1682",
+    "libraries/NUCODE_BLE/examples/L2capCocClient/L2capCocClient.ino": "1b4454c9b29c96606485f97a87106af0510cdc4fc9524b77900816886a6f312e",
+    "libraries/NUCODE_BLE/examples/L2capCocServer/L2capCocServer.ino": "0209c7e0d0ac091a9a7438e51386830d8c02c0914533da81a7d926462680a78c",
+    "libraries/NUCODE_BLE/examples/LongGattCentral/LongGattCentral.ino": "ddf1efd2bb136b1d753b61fbe81d4a628b2688aefc8f8bb2ed76ab6078c7fe68",
+    "libraries/NUCODE_BLE/examples/LongGattPeripheral/LongGattPeripheral.ino": "6a9baf4a3e63524de0cb9680ce669af0cb9f687f933d12b1409beebab07c7b0a",
+    "libraries/NUCODE_BLE/examples/MixedGattCocLinks/MixedGattCocLinks.ino": "ac43cf47186f3f8d2e1a0cd8ff11a3a1eb06341143cf4db64e30d85fc5affaf3",
+    "libraries/NUCODE_BLE/examples/MixedGattCocLinks/MixedGattCocPayload.h": "bc6d7355aecc9daf85a416962b8d8b259345413185396103fbe3cdf3f04db716",
+    "libraries/NUCODE_BLE/examples/MixedRoleLinks/MixedRoleLinks.ino": "d9127f92eb3f07d991f507d325a49330ab2c49041525f660df3b8cbf1ea24718",
+    "libraries/NUCODE_BLE/examples/NUSCentral/NUSCentral.ino": "9f5af3b9b367c9799d637372937904eb96fb0d156c229a941148a278c7479771",
+    "libraries/NUCODE_BLE/examples/NUSPeripheral/NUSPeripheral.ino": "3aed24151858cd0d2dc3192281b93c85b47fabee7147cfe90754da213e349c4e",
+    "libraries/NUCODE_BLE/examples/PastReceiver/PastReceiver.ino": "cce8d7fac6036fb494411d91adce0593c8f902e861505858bd634e0db2788d62",
+    "libraries/NUCODE_BLE/examples/PastSender/PastSender.ino": "2bc689b4dcb5e67961f0f9eee54d3a7f83ad6967806c6e03e27bab21bfaf6af7",
+    "libraries/NUCODE_BLE/examples/PawrAdvertiser/PawrAdvertiser.ino": "02ce501cfa8f438c08368ed217d2b9c554c05b9328b9e046039ec9d944ab3669",
+    "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino": "9463d0c525307f3e042139d08c07f4d7a045ff50f8796117a143b341780065cf",
+    "libraries/NUCODE_BLE/examples/PerLinkControl/PerLinkControl.ino": "c05504bfc3259a6ed9c4647223fe063beaa5f9036e2a8d236a0e9bc8ef116bad",
+    "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino": "105a5fb7dd79ce6237de20aba8854ebcd82a7bd608aa26e35abda76ee5112469",
+    "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino": "4b5d33aac4b6cac08c0172d87a2588b420ea3faab28a3ab1c5adeba1405f152d",
+    "libraries/NUCODE_BLE/examples/PrivacyPeripheral/PrivacyPeripheral.ino": "e232b1b79c42fb96659ca45364318e5c686c17be7314afb905417712b6b4906e",
+    "libraries/NUCODE_BLE/examples/ReliableWriteCentral/ReliableWriteCentral.ino": "3e3245cbc25587dda380779a8cc3a3113f3d3217f45e02c5335f76a7c6cc39b4",
+    "libraries/NUCODE_BLE/examples/ReliableWritePeripheral/ReliableWritePeripheral.ino": "9edd4813a772b39315e4570c194f81b1f5142dc94f0c87a25dbf89ae9ef18a1b",
+    "libraries/NUCODE_BLE/library.properties": "4e03500aad5ed1a6d017cc39e262dc15299e58cd7d3e8ad87f3364168eda79e1",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE.cpp": "b00bc57a041ee64a6177012bf9d8accb94ae77aa511e66b8f5b31c34e219cd19",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE.h": "9b0fd5546f29978fe3a307b4ffcb774127a32a3befe4e8d59189aaf62aca7e21",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp": "202154d0889ec8909e18797542e80d4c4f51cd23ccd533dbb5549dc7b01873ba",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h": "2b63b4f986d473e80aee01f1983ff7186b163433a70ea8263e73b5d254d05760",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp": "3ca34d3509cc00d32c08a2802275c52d231c5465023228b668e8064e03baceeb",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.h": "2c7711606134a85ecbb921c90657a10eb03411fd213ada5768fb15dc4053f584",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp": "32b46e2c6cd5ad368b3d972011720bbdb8b91d263d0526cf5ae0ccd7cba86b9c",
+    "libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.h": "7d2be102e89dd21832dfdd4e9a0b3931a69d6232d1a9a67f8cba6ef50e6c13d8",
+    "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Internal.h": "5eea866bed27963b754fa23e3f76d297c7753f6c3e5b05bc67077fcda273f745",
+    "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp": "57910a5d985a319860ba99c8f2c1e5b305842d866c87b07d1d63c1022eb43cf5",
+    "libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp": "44d3cf864f08cbf06fa54adc7cb6080cad163842c4b7dc990aabec443d0ed702",
+    "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp": "d19eb76b428b6e257baf4f734726a6958a6f349dc4e1b5786e9d592c04ede02f",
+    "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp": "04d13af18ad5bf89003d9f76bf504402f85d96a96715b5a667464524cdb0295d",
+    "libraries/NUCODE_BLE/src/internal/gap/GapInternal.h": "091472ad86ebcc493226ccf0192b5c799684c53c23b93a33b0f895738f4d8259",
+    "libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp": "8a7964023460b27df05ef5475f5335ec2510d0f649d6210666b1b5d85edf3baf",
+    "libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp": "987e7f8cf242ce132408737551835c81b8b8d12ee50701af7d745db20ef0357b",
+    "libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp": "c8299f2b53b046fe498702cb864746cf47d9cf5ed76a41c337199d3843fc61ca",
+    "libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp": "63abfb1375549aa7767dd4d8a49fc8d4cb73b66c0e32a8890dfa4c46d8d49875",
+    "libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp": "83a2c8b0e3292b29d47881eb45f2aa94bb0a58c5d700530c7c46e4659584ce16",
+    "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp": "b182190eeae1eb8a44e77d11a1256a6faf35dd30e965110c0bb838ab58ad5685",
+    "libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp": "3bec774313d3405883cb58eff4800cf715928b11fbfd89305d21f1c47a379aa6",
+    "libraries/NUCODE_BLE/src/internal/gatt/GattInternal.h": "ca0a0699622449cf029f966c77cf51f343af645a98282b78219a5153b547b8cb",
+    "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp": "728b1e39a2a790b9c447c8192e32dcf52837d24bad71e3a275f481eb03ddc19c",
+    "libraries/NUCODE_BLE/zephyr/ble-nus.conf": "a4b1876ad0358c5c097e058c56ae172c15294265cbb6c2ff7dda0c0f30e7c96b",
+    "libraries/NUCODE_BLE/zephyr/feature.yml": "3948d38e8e4193a961f719ffe5404433a211cadb3a2fdf782f42c69c1aca2ff1",
+    "libraries/NUCODE_BLE_DFU/examples/README.md": "091f8a7c62e998e1d00c7a71a4df6d4a375d2eddd811f4f838898f8872639e20",
+    "libraries/NUCODE_BLE_DFU/examples/SecureDfuPeripheral/SecureDfuPeripheral.ino": "09d04163762b446b2e44bfcf777cb6e3c788d1325139cea16a0307dc8394fbdf",
+    "libraries/NUCODE_BLE_DFU/library.properties": "7b387068c9c5a96ab4eb0ad1ef15f3b81c218038d2cd8ea6b8e653e3705de3a6",
+    "libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.cpp": "4357dd439fc27d797ef241172b63c8cbd5dfa4affcd0fc05e2f3f8978568776a",
+    "libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.h": "4d49dff8173540ebca5b573e0be7d5ae89898dea64429e776e4ccb28de1a14a7",
+    "libraries/NUCODE_BLE_DFU/zephyr/ble-dfu.conf": "cb3766b60b2a68c9b7755db53856fcba3203522bc94ed5968250ddff5cd89ab6",
+    "libraries/NUCODE_BLE_DFU/zephyr/feature.yml": "446747466df8c4098de229ad4bc69faccd37f847c6963b8c1a090d8f0cbab6c1",
+    "libraries/NUCODE_BLE_EATT/examples/EattCentral/EattCentral.ino": "8bcccc8ea738e1d44dec24a009d3fa656909af6ba7f2ddde23fefbd5612568e8",
+    "libraries/NUCODE_BLE_EATT/examples/EattPeripheral/EattPeripheral.ino": "7f939d823e608b8a559ab8f5f6dd70023ac4f4265cebfa702e41055a563486e6",
+    "libraries/NUCODE_BLE_EATT/library.properties": "674a101fd1656a464d59ce13766fa897480027c17d78328a11580b7101683ef6",
+    "libraries/NUCODE_BLE_EATT/src/NUCODE_BLE_EATT.h": "c3ea0a98e8fcd19a417fec7bc7918e5a8c499cc9fa0038b813d45d3546de90ec",
+    "libraries/NUCODE_BLE_EATT/zephyr/ble-eatt.conf": "e7cb98fcbc21fb31d1fec8e1637f986a0d6f8da29275259ff47cf056ae338c4b",
+    "libraries/NUCODE_BLE_EATT/zephyr/feature.yml": "f2ea8bd581c6233d6222d6940e1ef86e9d269168ff3f48961e0b6cf105c0c7fd",
+    "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino": "478db36f6420d1c5e906a97354edd4c48291f205f9dfb5ac1d8eda13ac655727",
+    "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/prj.conf": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+    "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino": "4a4d149c9b9c272427e3a36dcf91bfd4b7cfc49612cd9afd1e31eaf04305c833",
+    "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/prj.conf": "aaf8366137010f5aed870ee7cdead0dab2956152f1c24a34bb7eb9e09651559d",
+    "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino": "0e74e848be024b15350cda6efcd10fe8f03ecbf585fcdb5ee6f6606f2e95f372",
+    "libraries/NUCODE_BLE_ISO/examples/BISReceiver/prj.conf": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+    "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino": "27b7db00e297ac827f00b7f2e853fb06b880dddf245d802ef41614bf5902c4b6",
+    "libraries/NUCODE_BLE_ISO/examples/BISSource/prj.conf": "aaf8366137010f5aed870ee7cdead0dab2956152f1c24a34bb7eb9e09651559d",
+    "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino": "56f71d7bb8deb0db3892a1337623a63f79cab92f6730ed3784e6572d527b84bb",
+    "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/prj.conf": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+    "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino": "1f2b04debc56ccf6b4288104732d2bb8ed99c462652dcbdb56c71dd15663d205",
+    "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/prj.conf": "aaf8366137010f5aed870ee7cdead0dab2956152f1c24a34bb7eb9e09651559d",
+    "libraries/NUCODE_BLE_ISO/examples/CISCentral/CISCentral.ino": "510bb85a1a5303c470894b3ec1aba458748065e818972c02c7d8d28284007db0",
+    "libraries/NUCODE_BLE_ISO/examples/CISCentral/prj.conf": "ca31c4aecf30fc13707d9775fd8806dd7569010cb49cb166cdb75ab8a61f0e13",
+    "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/CISPeripheral.ino": "dbf2f1dc98c7205361a9511b511946ef7bd8c2a390d5695b000e7831027795ae",
+    "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/prj.conf": "ca31c4aecf30fc13707d9775fd8806dd7569010cb49cb166cdb75ab8a61f0e13",
+    "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino": "1c624c2bb89221f44ad705749e29865a7a53f5a4fcae55dbd4799fd5187f138d",
+    "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/prj.conf": "7946c215b637c99736372c4386ced8705fe7840f12f279a5f33a6c88c7c4a44d",
+    "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino": "0b377face971a0feacd0b9722a4875f19b3020873c77450204ce5e5c52374d6d",
+    "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/prj.conf": "ca31c4aecf30fc13707d9775fd8806dd7569010cb49cb166cdb75ab8a61f0e13",
+    "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino": "9669a6450a10cda3ae40b7da6cd6c66d229d4d0778c48c386bb333cde11e000e",
+    "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/prj.conf": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+    "libraries/NUCODE_BLE_ISO/examples/README.md": "99840129a76b7d03e0854033ded04e1002612a9600f42e533042039ec2875869",
+    "libraries/NUCODE_BLE_ISO/library.properties": "6dcc9168c87033041961ebfa6676e2d634acfd1166d745fb213a3a36b931b165",
+    "libraries/NUCODE_BLE_ISO/src/NUCODE_ISO_BIS_Program.h": "2c037afb01cae683f1a640852cbaa3e6800d3706c9617dde4dc0ce18988a9bc8",
+    "libraries/NUCODE_BLE_ISO/src/NUCODE_ISO_CIS_Program.h": "fef7ffb1bd6b7ee357492696705663fa83fb839b943a969d766ee3499b834978",
+    "libraries/NUCODE_BLE_ISO/src/NUCODE_ISO_Combined_Program.h": "6ba9276f734784f353ddd85d7923f102ca18701ac04fe69e6917cf3b71911867",
+    "libraries/NUCODE_BLE_ISO/zephyr/feature.yml": "f9c0689bb3caeb58e1c4aa6114b814efaf446d787668941ed48b6fc875fc21cf",
+    "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWriteCentral/LegacySignedWriteCentral.ino": "c27f64fdc5082381db1a91ff4734d64f8a0071841ae286a29836a0a3c2104503",
+    "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWritePeripheral/LegacySignedWritePeripheral.ino": "5d01d1f8273f25d13d856cd1d1c2f7d28de3ca015e47eadc6c85385ef7941481",
+    "libraries/NUCODE_BLE_LegacySigning/library.properties": "016be7216ce2af5d4912370cada6081b305eac2aebd41cd6f228981cf34eacd6",
+    "libraries/NUCODE_BLE_LegacySigning/src/NUCODE_BLE_LegacySigning.cpp": "95d856c7103227d0bc12673c6e3b41e820b4d1f6719eded654a34efd5b588b75",
+    "libraries/NUCODE_BLE_LegacySigning/src/NUCODE_BLE_LegacySigning.h": "08b5dd93e25587c1b169c1f10733d1a8db93b4544479a310275ddaf6e6d17dbb",
+    "libraries/NUCODE_BLE_LegacySigning/zephyr/ble-legacy-signing.conf": "ff0ee782f96723e9934d7c350758887c07cf461c1861da26de45c0b539d34253",
+    "libraries/NUCODE_BLE_LegacySigning/zephyr/feature.yml": "be1109dbabe49def7754eff830f468493a96077a75f3f5e458f3877b578292b3",
+    "libraries/NUCODE_BLE_Security/examples/EnvironmentalSensing/EnvironmentalSensing.ino": "bfb6aeb0d156a4b05b7793e879595fe7baac81b576b13e2ae62d1d74a757d46e",
+    "libraries/NUCODE_BLE_Security/examples/GattCacheCentral/GattCacheCentral.ino": "581352cd8328c655fb9d9fe739bc268ea15b4e7c8ead20684a17daea49c9e79f",
+    "libraries/NUCODE_BLE_Security/examples/GattCachePeripheral/GattCachePeripheral.ino": "6c1d41dde3003c7d1f99dcae0efb6c1ef287e30af31351bd1fb2ad519d114560",
+    "libraries/NUCODE_BLE_Security/examples/HeartRate/HeartRate.ino": "7c4a6470146a92557479686b0899b912c58b794e3e0ba06d5855d4dca547fdf1",
+    "libraries/NUCODE_BLE_Security/examples/SecureConsumerControl/SecureConsumerControl.ino": "8a3bf0067cd4dd6ce6705553425d7a23afc6361fdd9fdb34e01b23e0123a6270",
+    "libraries/NUCODE_BLE_Security/examples/SecureKeyboard/SecureKeyboard.ino": "5cffd0a81674ae8990c01cc6e6171e9dc26648180f69d8847e77d750303e6904",
+    "libraries/NUCODE_BLE_Security/examples/SecureMouse/SecureMouse.ino": "e8a6a36d4042cc64c72bed6c5d4ac0db35bd698812c1c3f6504a135296e55a14",
+    "libraries/NUCODE_BLE_Security/library.properties": "61729742b21ca74154a5f50679571f2ac7bdbcdd9088457f13647628009bcfcc",
+    "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp": "6c08cd2ec9b25787f5ed93548df9cf69f2aa374130bfcad5ad5780a30361c346",
+    "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h": "88811c6d0bb7fe5a5d6b5548b9d06c6d705de1775c934ed2007990d92f5dd1ff",
+    "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c": "047f1b521255388a076a49c4fa2ddb187184b1ecba769e2820c6c0d7ae239503",
+    "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.h": "03fbfac5931faff2e32114fab74ebe1523f2d951bf4efdbef71c8e0dbd579001",
+    "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.c": "dcb49f9c82db4c912fe631a71233da274b89a5df7e9ddca27c960061649e1370",
+    "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.h": "1dc5018a29f3a107006112b607b631ea4e38ecd6f5614e7ce8d3097704639b5d",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp": "fc17ba5dc4b107fd95fa3f8b3af685b1dd8195690e9bd382bcb41649bc67afe8",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp": "3f365772186fb853228fc4b4e5b1c83a5af9f3e0d39e3be71a7f1ac09b06828e",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp": "6a80dfef4a42f4a13758ea8c11ca45a6bd65e1cc0e506feafd995599fac06fa5",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp": "6a369517955a19098da1c6d105ee03a1d31c89ec2241f2b1885a1d801bf483d3",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityInternal.h": "bb078ba7f36d37079ba9a6d65e0a1506fa2645e48cecb5876c6df952890beea5",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp": "f00fc108e69adb0304e47552d2ca84880ff2be91d768c5527867858efa12bf6c",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp": "db034d4cada0793cb70bff1e2ca57b796c097ef418af9bc3f05df8d997402160",
+    "libraries/NUCODE_BLE_Security/src/internal/security/SecurityProfiles.cpp": "c907ce6cb238a881f5bb83e30d18bb7d485663020a038e94e701f197e81e8d19",
+    "libraries/NUCODE_BLE_Security/zephyr/ble-security.conf": "528dc46c9ff2d8a01dab5ae756a54068fa51d2bb37c7845d7c1c4ae0e097755e",
+    "libraries/NUCODE_BLE_Security/zephyr/feature.yml": "7d55aad530c1d2ff3a20b670c3e40eac5a2b2aee94c94272edbb19175f2393b1",
+    "libraries/NUCODE_NU54DK/examples/AnalogChannels/AnalogChannels.ino": "0947873aecb8dd3653975a627727dbfa8f863b3fca6061e244c98aeadc4c1c97",
+    "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino": "01019eacbd08730e96ba672c3aa83ec8f7915ae51639ae298757faf5ff4526a7",
+    "libraries/NUCODE_NU54DK/examples/AnalogResolution/AnalogResolution.ino": "ec147faf2048adae61523f2622cbfcc436bf9192ac1b34e187e4351bdb83e414",
+    "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino": "f9b8100d21bdd4f0f595d972cf799e0692899aac115e639af10e21764420b21d",
+    "libraries/NUCODE_NU54DK/examples/BoardInfo/BoardInfo.ino": "b25cfe9b3f515f18f7e34e69b3ca2607ce429d146f8c0991b17798a284a160fa",
+    "libraries/NUCODE_NU54DK/examples/CounterAlarm/CounterAlarm.ino": "c427d8db85541c5217f655dd65c8ef6534e8819c1a3ef5e96c706d021826ba4e",
+    "libraries/NUCODE_NU54DK/examples/DynamicPWM/DynamicPWM.ino": "c6cd702abc7191bf5bcab6a9a07a629e531cdb560e9e4ad3f8539db723c527b6",
+    "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino": "c443737d5f2e385b7cbf31ad25128ec22a2388fa788750c7da0d3f7799204f65",
+    "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino": "73e26cf8a9fdbe599de2ed1ae48a590c2cfcd8246e82c1857592640d1b874f1b",
+    "libraries/NUCODE_NU54DK/examples/SPI00RuntimePins/SPI00RuntimePins.ino": "3365aec1ef0033dc49c8a7745631c762bc9da38612a8d62bb396d181deaf7551",
+    "libraries/NUCODE_NU54DK/examples/Serial1RuntimePins/Serial1RuntimePins.ino": "1c12debb70c86d0ead557e3d877f2110da392c51d59a03deab02b2b18593e9be",
+    "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino": "2437bb8e5f3ba2d679fd51a58c87e197f4dff869d2d4c9366246d1bb0c475cc0",
+    "libraries/NUCODE_NU54DK/examples/SettingsStorage/SettingsStorage.ino": "91525c8905ef7d64ad937bd34aafdd290a15ef900888c93e263c40a33560cb91",
+    "libraries/NUCODE_NU54DK/examples/SystemOffWake/SystemOffWake.ino": "f2d4aa56b9aeed5b83f1b21805d108793ef39336017156badac1c5b7d581b910",
+    "libraries/NUCODE_NU54DK/examples/ToneOutput/ToneOutput.ino": "6c7cc8ed68c2fc25b81817913b7a3a000adccf3f157c7f8d2e53e6fa872e208a",
+    "libraries/NUCODE_NU54DK/examples/WatchdogBasic/WatchdogBasic.ino": "e34c68175535dd3bfbf3d392392fa35854354fd89dce906b8e61f9a657d6f442",
+    "libraries/NUCODE_NU54DK/examples/WireRuntimePins/WireRuntimePins.ino": "311bf94257134454feaac402813fe06aa4d810ebce5b7c453751884734c4ead5",
+    "libraries/NUCODE_NU54DK/library.properties": "bf4ad04e79925c44af06a928ba50f13f8be7436e40e66666987035580d4e90d6",
+    "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp": "7a5fe7013f0a6d1de5799025edb5c19515bce39ff08249954b12bf7885973d2d",
+    "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.h": "5d4177745cb6e75875b199f197f4a5bd6a47dfef36f36bfb56a6ff6bc1a8a7c8",
+    "libraries/NUCODE_NU54DK/zephyr/board-system.conf": "e252ac422dd10289b04ad94ea4aee5c30a86c2885f0be208227eee0e278f0748",
+    "libraries/NUCODE_NU54DK/zephyr/board-system.overlay": "324fd33557f5fbcad4e9c9b83204b111d2a65835404cef0e1d11d631f1bcf881",
+    "libraries/NUCODE_NU54DK/zephyr/feature.yml": "04c11d03717f6fb1c32eb5557d569a59565006a5535381879bbc9c77081e997f",
+    "libraries/NUCODE_Peripheral_Fabric/examples/FabricCapabilities/FabricCapabilities.ino": "92d5da2844dd19bedbd36f71ecf6924f69e05d69b525238d091455d49e971db2",
+    "libraries/NUCODE_Peripheral_Fabric/library.properties": "5b1d7785d6ddd7fdd4b0302aec22ac77beb3ea5fbd9e3d35557ebe8747d67704",
+    "libraries/NUCODE_Peripheral_Fabric/src/NUCODE_Peripheral_Fabric.h": "84934420eafc6ec8a0ddd6b1ec01782c6e42dc62af3f35659c0bdea23173f613",
+    "libraries/NUCODE_Peripheral_Fabric/zephyr/feature.yml": "58a168c3b7fbe36b8c42079e7c42e8f18fb9671b85bec179d04adcbd852138dc",
+    "libraries/NUCODE_Peripheral_Fabric/zephyr/peripheral-fabric.conf": "a7afcb433e8e249da88c9450308f33c07f066bb3ca34e973acd76e39f0dd29ec",
+    "libraries/SPI/examples/SPITransaction/SPITransaction.ino": "8023515c96b42748cb17c7f5995be0f5d5fd2cc64c914162918f305eadd0cd13",
+    "libraries/SPI/library.properties": "e8c0295f6e865839a9ef0f2cac12a27ab6f948168f96de4525bc1749643ce29c",
+    "libraries/SPI/src/SPI.h": "1d7e568b5bda314a545bbe48ebd1a407d86874a37c5693d18581a1664df6742b",
+    "libraries/SPI/zephyr/feature.yml": "fdbe8670baf8a0d39ddad5bd1990b3492e096e3fb9252f3735d285338d12e008",
+    "libraries/Servo/examples/Sweep/Sweep.ino": "4ca1859334e58e248d1dfa5120d752be367bf4a66dc197a266eec766be3ff168",
+    "libraries/Servo/library.properties": "e1edc41fe4d6ebc5c3af6c7b998e671bd2eb08a5fce340788e940a62db1c387e",
+    "libraries/Servo/src/Servo.cpp": "926534b76589ff8126b0141bfb160d28eb3f55f0aa3b02d611bae8cf2c9cfd81",
+    "libraries/Servo/src/Servo.h": "b3ccc3816bd654543c1ed5d95710c68fdba9a796c2b0281e692c48709425a377",
+    "libraries/Servo/zephyr/feature.yml": "d8dd312854c5a1402b23dc3ba4b4c82db202e82beb423e051599250197b46676",
+    "libraries/Servo/zephyr/servo.conf": "e793b5044fc63e8c959c0214cede0f8a10b41f4fdffe24f045bc7a411c06845f",
+    "libraries/Wire/examples/WirePmicId/WirePmicId.ino": "6e874a592bddd13e50c70165392d68c0d119a0b993ab14d14f01a90215e1bb69",
+    "libraries/Wire/library.properties": "8a282c91c95ac32565b0f1461fb47c48c10ae0dc17c826c0ec34ef0b6fa62ac5",
+    "libraries/Wire/src/Wire.h": "7464e339719c87c5e4582d568883149aec90446e6239ce5ff8d1b26338aadac4",
+    "libraries/Wire/zephyr/feature.yml": "d027750c7af7ea86a4d77474872a433149abd6014bfad2c34ab25df84cf56187",
+    "platform.txt": "0413baea72a7fcb2b2a0fca3f69ad90b9840f5483a5fc601f3101dac9bd75a0d",
+    "post_install.bat": "1f0b3f91abd04240cc814d1f9fdaa2a9154d167e4080fce8176516f88793c1fa",
+    "third_party/ArduinoCore-API.provenance.yml": "54dca51ee3c0203e30a5cd21fe56edd61142a252cc11d8c4966467588859bccb",
+    "third_party/ArduinoCore-API/LICENSE": "5749785c8bdefafcb5d798270ed0a967036fe2ca63dcedade1627565dfef81d2",
+    "third_party/ArduinoCore-API/README.md": "2d9812d0e1ee222c73ba39ff959bb5e933b60c7b7b5b85b0ccc5d1ada97fd7a5",
+    "third_party/ArduinoCore-API/api/ArduinoAPI.h": "421b66ccbbf038cef50df9860f7da13a6b4e92358b0550e52202b0aaabfc84ec",
+    "third_party/ArduinoCore-API/api/Binary.h": "92fe847efe70c661249e7fc93f1701c0bdd9591989870705be418abcfbd3346a",
+    "third_party/ArduinoCore-API/api/CanMsg.cpp": "1f36a261a67240e79685ffe0a5b51fc62b1078a72c783ef79671a2ec88f9095c",
+    "third_party/ArduinoCore-API/api/CanMsg.h": "e7de957122f47bdae0efd0a2868a9a037d2e92684265f0b182c997bf9efa351b",
+    "third_party/ArduinoCore-API/api/CanMsgRingbuffer.cpp": "23bb98e631fd7a84e6f15c3eadba303cbe4384b0772376863966e067c0d2bcce",
+    "third_party/ArduinoCore-API/api/CanMsgRingbuffer.h": "ab3d456b25e898dd6d3c97db9de921bbba3bd44660ab226fcdeeabbf5c570747",
+    "third_party/ArduinoCore-API/api/Client.h": "93e0b67b2c576a24074016f98e5fba64edb5435f46992ca0f121e46eb9d85870",
+    "third_party/ArduinoCore-API/api/Common.cpp": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+    "third_party/ArduinoCore-API/api/Common.h": "a8db31c6b9c0d4c5415c2808464747664deac21db3b9388c67c3c70f9ac990b6",
+    "third_party/ArduinoCore-API/api/Compat.h": "a33643dd27aa927134c080a9d5b02f9549e5ebf84ed4562ee3f850d53e51d7f4",
+    "third_party/ArduinoCore-API/api/DMAPool.h": "88342c8084f40ed65256b50d8497218ff4c06f5ca190b6900153a663495465a4",
+    "third_party/ArduinoCore-API/api/HardwareCAN.h": "52a48eac32992037364fe18cf5cea44641a4b87e9a6a11d53e4feee13d2d985b",
+    "third_party/ArduinoCore-API/api/HardwareI2C.h": "bb2450c286743724a4231527e91331df4f32e7c513466740e9e5e1f94d34c103",
+    "third_party/ArduinoCore-API/api/HardwareSPI.h": "5290c1d30a8e9617624e72498720051ad11da1e5e4daffda3786008fa606e4b1",
+    "third_party/ArduinoCore-API/api/HardwareSerial.h": "094e6c3387a70c70f6ee9602141e6e4b265f02755066ce98b95c8bfdb93632e9",
+    "third_party/ArduinoCore-API/api/IPAddress.cpp": "33e095b28f3e455bbf36bf522da8a2dd660f2caed82d0d8d93f11fba9cbdd0ee",
+    "third_party/ArduinoCore-API/api/IPAddress.h": "9bb8266716e47b99eb1273cd3effa8bd3655e4dd04c1edb60847dbefff3a7cfc",
+    "third_party/ArduinoCore-API/api/Interrupts.h": "1d972d1b8953cbbb02291de67aedd823452dc8488d4c0e6d21354f3d67b33c43",
+    "third_party/ArduinoCore-API/api/PluggableUSB.cpp": "943994e3c204ee9aaafdade9509e7413a430cc74adb1212630d9f3f91b611aad",
+    "third_party/ArduinoCore-API/api/PluggableUSB.h": "01d852469db9688c65e83c57830814f60ca1585a80d133781f7027539177e774",
+    "third_party/ArduinoCore-API/api/Print.cpp": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+    "third_party/ArduinoCore-API/api/Print.h": "84a18af59e680ea90d7ea1169915ff00970c95892677ee8b969826dd2f58a3f1",
+    "third_party/ArduinoCore-API/api/Printable.h": "4d9ae05f5b90610c64faffa85c9ab976687a04b9f605e27d844cbac835d52db8",
+    "third_party/ArduinoCore-API/api/RingBuffer.h": "c7dbf877dea6e8b7eae66ea2da77c6447df829f27123c43b7e6a34d9a946c608",
+    "third_party/ArduinoCore-API/api/Server.h": "e5af55fced8a7c0888c2557bbdc7ddd3c4d495e5f522ab9ca23c11c53e13309e",
+    "third_party/ArduinoCore-API/api/Stream.cpp": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+    "third_party/ArduinoCore-API/api/Stream.h": "b26fe1f6ca11c585f9972884af593a05a765a61feab1bb0238c9af59eba58722",
+    "third_party/ArduinoCore-API/api/String.cpp": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+    "third_party/ArduinoCore-API/api/String.h": "4ab6b8f64515beecac95ec78ee59083331c1ef266630300e5df0db595b9a0600",
+    "third_party/ArduinoCore-API/api/USBAPI.h": "1d7f44cf2bce98fe0863f81cf4c2cef1389d8e7b3333cf143811c878d1597e37",
+    "third_party/ArduinoCore-API/api/Udp.h": "0a7787ab78cfec5ccb62a6da32165a4fd7f461a5508fa12bf196d934138c126a",
+    "third_party/ArduinoCore-API/api/WCharacter.h": "9aad7a7a778dc6cd4cedbb9521bfa49fb396ee2eccdfc69a2c5ac65849ad3b39",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.c.impl": "90a276235838028de5e1731eccbf2b62b4b35194cc76f98e2991372db476b58f",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.h": "38721988c73406b21c4787dbd112aa2646fd4dc188b6805e320dc550ebf65168",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/interrupt.h": "647a88260e4b0545fce33900845c7961224c9c65db0fcf0202ddca658992bea0",
+    "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/pgmspace.h": "0cf3bb8185f1ced6f8bc89b109a1d27855561165d001d64a34bb8984e8227041",
+    "third_party/ArduinoCore-API/api/deprecated/Client.h": "0bb98939b7198cac4af3b47b1d538b441b83e15e3a9eca6012a414e93212b629",
+    "third_party/ArduinoCore-API/api/deprecated/HardwareSerial.h": "8ec5e3ac0079e80549fa2821f06b6e2d38d9cb3091bfba1f6e57e3556ef5b255",
+    "third_party/ArduinoCore-API/api/deprecated/IPAddress.h": "125f6a3b78534697b9a734b6cf49c3a720f0facd0a44e0ed6dc6839e0903a665",
+    "third_party/ArduinoCore-API/api/deprecated/Print.h": "29e34cfcdd450bfe56a6a23b0d4820bc0ee639c73e15bc349f3af5e294fc641c",
+    "third_party/ArduinoCore-API/api/deprecated/Printable.h": "ce9ed695e3a5124bfcdaef956a11c62e4c86c56d5ace8dc69b8fcced04a2dba7",
+    "third_party/ArduinoCore-API/api/deprecated/Server.h": "c92556ba6523961f951f510d0897cd78abc6200e9c57e0db36d2647b1192b005",
+    "third_party/ArduinoCore-API/api/deprecated/Stream.h": "40502ab4119c4224f5d2c44d11fd2493f057ba235ad85e2543835a0450e4770a",
+    "third_party/ArduinoCore-API/api/deprecated/Udp.h": "a11a5afdea87cf5a834be5ab96557c672150878f6ebddeef3d75a6e581e7e1b7",
+    "third_party/ArduinoCore-API/api/deprecated/WString.h": "44d91a7f22cf368465af4c86234cf0f137c044b097f69ab562ccd7b5582e44b3",
+    "third_party/ArduinoCore-API/api/itoa.h": "3caabe265569bd355bd3ee9e311364c6ecea05c6879ef63dce72a622dce58a4f",
+    "third_party/THIRD_PARTY_NOTICES.md": "b9360db1689b4dec26b2ae5bfe73e64b0f0a397cbc7f1a2b8ba05d2431a2d757",
+    "tools/nu54-builder/host-portability-inventory.json": "247c574216d5657cd63c20950591070cefc417fa490b491365241c4619838ea4",
+    "tools/nu54-builder/nu54-builder.cmd": "0fef4ef0fc74383af7f66e714026becea15d549dc2753f263ac81cc3e4d0ca98",
+    "tools/nu54-builder/nu54-builder.sh": "74c58426f311701b8301134334ef09bd5d0a6f66735f8aa51f9c5b4c4f2aedb1",
+    "tools/nu54-builder/src/nu54_builder.py": "aaaf14d4bc091da24d9efabaa4d2b057d2ae8d387dbb007fb212faa920580315",
+    "tools/nu54-builder/src/nu54_builder_impl/__init__.py": "e7018aefe8b53377674f41aaf1325b80668edb7d27d25367cdcc455c81eabe31",
+    "tools/nu54-builder/src/nu54_builder_impl/artifacts.py": "758d0e2b1890bc593a8507f004050687e4adcd4e1f9639a9d4a22030f81307b1",
+    "tools/nu54-builder/src/nu54_builder_impl/build.py": "259d75e47dc1958f168292963cba87e076ff2f5373f98c2c7cea79f02877df75",
+    "tools/nu54-builder/src/nu54_builder_impl/cache.py": "04178e329add2a90f5bd63956d0c88ad0037f5b934a06baf603d0aa676162e1d",
+    "tools/nu54-builder/src/nu54_builder_impl/cli.py": "a1d2c7471388a619e67faa9f4b5e07635baf362904bcda98aa17d292ff19e755",
+    "tools/nu54-builder/src/nu54_builder_impl/common.py": "4f7671341e7671f67372fae305894fca1810fd93f9ddd95be8237fcee5503b55",
+    "tools/nu54-builder/src/nu54_builder_impl/configuration.py": "3c5b25b025441b4a4d1829f40a962cd6cf030ebaaede347ed4fda3a3b42bede2",
+    "tools/nu54-builder/src/nu54_builder_impl/environment.py": "d1f11271b77dd6291d459b83d626bfd79d3615358595680e6cfe02298d76b6e3",
+    "tools/nu54-builder/src/nu54_builder_impl/frontend.py": "4c001bd14f5cfbeee086a876d729641510214803c520c82ef39ab277698c5e7d",
+    "tools/nu54-builder/src/nu54_builder_impl/host.py": "931021a867f994dc06757cf1c611c6df260fb8bb092f1311dead9ad5bf475794",
+    "tools/nu54-builder/src/nu54_builder_impl/installed_platform.py": "454f13f608f985d9719761019b2592d43849cb52d4734b6f09bbab613526ddfb",
+    "tools/nu54-builder/src/nu54_builder_impl/locking.py": "4b6061e9d99d75cb9aed74749a074bc46c0db698d77705f37cbf676dbd3fa10c",
+    "tools/nu54-builder/src/nu54_builder_impl/models.py": "cbb1b5c88da85a1cbba06a8461b1ca81bf6457433205004fe130808864354adf",
+    "tools/nu54-builder/src/nu54_builder_impl/paths.py": "ab7d657f3005bc5a461ebc1d2b0c6d32688f4ef473aaa9ec416a2c27263f436b",
+    "tools/nu54-builder/src/nu54_builder_impl/source_graph.py": "b46cd99d8a5de75c6db14f67c76b35312477723c2040b6213bdc8a95c63348d1",
+    "tools/nu54-builder/src/nu54_builder_impl/upload.py": "735b839725904381cedf19c0649b3b1cef57d4969344a43fb35250c9eb62ec94",
+    "tools/nu54-builder/templates/zephyr-app/CMakeLists.txt": "81e7d9253ffcc33835464bfe00195b291b713a3002e365db88ce93eb95631840",
+    "tools/nu54-builder/templates/zephyr-app/app.overlay": "397a3d1b78b55ee0894864e7cc89dde27e23372c2a9fedba2374cfd261abd51f",
+    "tools/nu54-builder/templates/zephyr-app/prj.conf": "18d7d72b0ca4450ede2cf7e5bacd2fa327b7e2a7031e885bfabfeee7616871b5",
+    "tools/nu54-builder/templates/zephyr-app/sources.cmake": "827e9e9ac87a73cc21035c1fc81e861e0959b26d25cf43c3e648f8d383aecf06",
+    "tools/nu54-builder/templates/zephyr-app/src/bootstrap.cpp": "ee57a08380c56945ea6cb761a97227c1e8d37a405be95045174d5b2c277d549c",
+    "tools/nu54-prerequisites/README.md": "80fdb31c9b16c715a118d91c87661f8c740a8dd625994c840bbf1e9f66a1d1ba",
+    "tools/nu54-prerequisites/install-nordic.ps1": "e352111348f50aa4c23b462bcdbb4403baedd499dd554a5fc42463eae165c921",
+    "tools/nu54-prerequisites/nrfutil-requirements.json": "120762b796fbfe39e8e6cd8e6d6076a13e37d476ed0bd5c3a1003dcfdf3f097c",
+    "tools/nu54-prerequisites/pins.json": "c44583056721058d831f180e281abacb1a8333e298a36556ab272251117f5bde",
+    "tools/nu54-prerequisites/verify-nordic.ps1": "1c0d7d19e1529cdc8d0b12407e2c52b42586d4196179595dabc71b0163953bb8",
+    "variants/nu54dk/digital_pins.inc": "f3f5e3a42c6bdda05cecb18b602183100283efb8f22062da1d6a9373e1cf2904",
+    "variants/nu54dk/io_resource_registry.cpp": "cace6d83d5efd8feca18b0ff6d386fa2cfd926210afa113584f5c3961e161cb1",
+    "variants/nu54dk/m28-ble-readiness.json": "8f1e1e74b8282e2074f7c3c64884183dfe260384b5d7230c083c2ebb97797f94",
+    "variants/nu54dk/m29-ble-readiness.json": "c3ed5210f7b1d3fdd5fc9c8b0432d676e697170f05b12d5c5f02c25779a808e1",
+    "variants/nu54dk/m30-ble-readiness.json": "c096ca2af0b35cd85b17c8aeba3ecd313dd20451514cd8e4d2b00570e1774536",
+    "variants/nu54dk/m31-ble-readiness.json": "cd1706c766715780b82b55f124929fc30fc0047ab78bbbb5493b36e96714fad6",
+    "variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json": "3a0225255291b877e1e4a3508c2e7e2d00ec9942e8254e3f0e70ce381ceb79f2",
+    "variants/nu54dk/peripheral-manifest.json": "081890cfad0ed791a739c5a7bd655fcaaafb679fbff517f2bb0af5a28143e1b9",
+    "variants/nu54dk/peripheral_routes.cpp": "6f4c17fd1ee6698c42b34b56b55cf8ce0a7083e57a923c63742ef2fbe2deddcd",
+    "variants/nu54dk/peripheral_routes.h": "0c99ee875d1a91f23b49bda69919064134c9835f72659ceb5b10e3015b64ca4f",
+    "variants/nu54dk/profiles/ble/app.overlay": "80950b95f2e3dcc1926112705fca4dba6d959dbfe133a0ed38134bda02553507",
+    "variants/nu54dk/profiles/ble/prj.conf": "445d7d5fff89b0db707b04cf309d02cf01b644cb0b26e0d188ac6d106cea24da",
+    "variants/nu54dk/profiles/ble/profile.json": "6956493378eb1e7d32750050119b6416b7e0f52b19e09927d92003647376d912",
+    "variants/nu54dk/profiles/fabric/app.overlay": "9573fa3be85ebf00fc196081bb8d6227a44cae4b89b47b7d8e81ce6e53945cea",
+    "variants/nu54dk/profiles/fabric/prj.conf": "e4db9b8dec519cd6da6dffc3c3af672271225cc70333b9955a52493cfd6cc64e",
+    "variants/nu54dk/profiles/fabric/profile.json": "900d95744887b7f4ef2b601f83127245ad01c1bdfd33aaca38f290bc59e84908",
+    "variants/nu54dk/profiles/secure_ble_dfu/app.overlay": "42caa736a97bf7b52f5ab49aef435c7ec33410eca3bcf5cf946003638af9b9de",
+    "variants/nu54dk/profiles/secure_ble_dfu/prj.conf": "c0bec7801481b8f664e9125ef7e45ffa7a8e702cecda39439414f9e95f3640cb",
+    "variants/nu54dk/profiles/secure_ble_dfu/profile.json": "81cc614a16f6e3542f434c8e3c672cf2f8cc6a09f715a62038057f09683d843f",
+    "variants/nu54dk/profiles/secure_ble_dfu/sysbuild.conf": "a14c2437a6b598569537a63dd47bee3865e7d9a9fdfe17f6b1f5137af643de7d",
+    "variants/nu54dk/profiles/secure_ble_dfu/sysbuild/mcuboot.conf": "a14f02ae6de555de70bd0876d0eee99699d07946acb628de499e057488e983d2",
+    "variants/nu54dk/profiles/secure_ble_dfu/sysbuild/mcuboot.overlay": "e6f90e6078e44b7a66361fd518b4e9ac30eae6f76d2bc3776805ce4e88f26cc8",
+    "variants/nu54dk/profiles/standard/app.overlay": "f270dfade0eeb067dd6ad389825c7a4dcaa9f599fbf09459de2919849392e53c",
+    "variants/nu54dk/profiles/standard/prj.conf": "da22673694b88fa6b391ba92f87d214ecbe26e8417e92a1cf9cd2f6fb1363dff",
+    "variants/nu54dk/profiles/standard/profile.json": "87f8faa34c1cf8559ecfd5e63862d5ae1530af1879cfbd88b49ff5f5c96223e6",
+    "variants/nu54dk/pwm_runtime_routes.cpp": "58fd07a3ad1b51e05beddefb5bb7e72bb26fa2007dc6f09543b9da2506dec5be",
+    "variants/nu54dk/pwm_runtime_routes.h": "bd732ba343c6abe704656b70d6048874d95172f7df8e5ffc88f2669433244042",
+    "variants/nu54dk/serial-fabric-contract.json": "f641a40000b42f052ea9d57bc1a30cb6924d5bf3d42eed0263b03de23a50021e",
+    "variants/nu54dk/serial_fabric_routes.cpp": "3fc7d5d06a233045785c0ad62f70e3e5d8d3bde000f0daf0c1b5599a89ee1d97",
+    "variants/nu54dk/serial_fabric_routes.h": "e8565abaa2bcdb1cf5c545125700dcbd2ab220ed841859fdc158e9bc1edae0c8",
+    "variants/nu54dk/system-capability-contract.json": "6c8f75b99a8480f9fd1f14a5e66a13260da202a02b4f62705a0f08a9a73359cd",
+    "variants/nu54dk/v0.4.0-release-readiness.json": "c53d203b0cbb513854f7d3ab30f34996595e3f68789c1d78f4f5b0a0ae0d7e5d",
+    "variants/nu54dk/variant.cpp": "2a5d58142e72ac3527ff383658c536827c53fad1d164e3ea9feb22a482216f46",
+    "variants/nu54dk/variant.h": "e1225b6f9534fa2d6d02e7695236f15590d3ae94f54f72e833f7c81a09fa17f3",
+    "zephyr/CMakeLists.txt": "67d4ef588cb7a5b3496d7b98df98ce5deebcd869ccc53d7aff3403ec256175a2",
+    "zephyr/Kconfig": "fbc0ee7e4c8592ce4937dab978de61d2f9c37049d6040dfab30af4922a7e6a04",
+    "zephyr/cmake/build_record_target.cmake": "79003083839faf15f725f20601cc15bc24eacdd31d1686e8977bd668e1854288",
+    "zephyr/cmake/product_identity.cmake": "aa7e461ec99c6db457a9e5d837d5406f67fdb3495b9a70392a0bb9e33664ece4",
+    "zephyr/cmake/source_provenance.cmake": "dfab776cc268c7d76f19dd9bd53511972c64f7ef211ee53f0131b3396d378afc",
+    "zephyr/cmake/source_selection.cmake": "79049b8be2376f1caaee5fedc6851a048bde06e3188b060d5c7a411f772ae23c",
+    "zephyr/cmake/write_build_record.cmake": "8ddf278baa74568b502e03f9ff343bc3d309f8753da1a01ef2d374c01885dc60",
+    "zephyr/config/analog.Kconfig": "76d94be4572e246b23146cd083f5ba501ca55e3cfa2982fccc8e231e42bf4491",
+    "zephyr/config/analog_fabric.Kconfig": "80b849b59a702c6422c63e49b38c844ad7ef8adcf7481ba60c7fb2e61e320ae8",
+    "zephyr/config/ble.Kconfig": "48031adfe77633d23e6a1bc22a691bc36759d44d455d67b82f730383350c2d5e",
+    "zephyr/config/buses.Kconfig": "5aaa529f40a1916f197aaf872c38c0583176c08502550878f9b38ff62de2263d",
+    "zephyr/config/core.Kconfig": "5f50b0433f0ab302d702d155c53d0f1b137b2aaea13dccce08db275fad080b19",
+    "zephyr/config/event.Kconfig": "debe0f15546e75ae586bc4a494f46d80c18ef97de6ccc57605ce99d1de6f7d53",
+    "zephyr/config/scheduler.Kconfig": "8ba22465f1f93dcc28976ca4e2fdc39fb1c78952ddb96386cc91ceb2945b2cfd",
+    "zephyr/config/serial.Kconfig": "f2cf9df9d74370d325ab0cf5f2cb15cbfc92c242df561614b068cb0305512531",
+    "zephyr/config/stream.Kconfig": "5baf095084d8dac254f3eacdbe0d67b1b2dffcab05f022983aee2be30a964c58",
+    "zephyr/config/system.Kconfig": "293e8e8c250c2713987b1660af775f59ae8de979abd56c918e95425d4c20038b",
+    "zephyr/m30_power_mcuboot_hook.c": "efd94cc14a9f0a352d50268adb77d7116534872e9ce01ead122ddd6a5173e11c",
+    "zephyr/module.yml": "45da922e5e83f735f144e6b5e727b0380606199a5f0eba5781e7c0da109597f0"
+  },
+  "files": [
+    {
+      "git_object": "e49717d585505a540e7f5df63b5721181078b890",
+      "mode": "0644",
+      "origin": "core",
+      "path": "LICENSE",
+      "sha256": "9c670bc406567c9a4b002537b1056cf63b7c60560451677a99bed7ff90ecdc6a",
+      "size": 1073
+    },
+    {
+      "git_object": "45e0afd42fa264d6714be534ffbbc039929911ea",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/LICENSE",
+      "sha256": "d74a486179782720ac0d9bc6f13560110d5b03b7670c8dd00b410fdbd061141e",
+      "size": 1073
+    },
+    {
+      "git_object": "8dada3edaf50dbc082c9a125058f25def75e625a",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/LICENSES/Apache-2.0.txt",
+      "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+      "size": 11357
+    },
+    {
+      "git_object": "6bf804f119b8803609efe1ce3944bcfb3f738590",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/NOTICE",
+      "sha256": "0d9f22ab8375a2aac3cd2a1231323edc30e6361ffd0f809a483043e1db82022e",
+      "size": 494
+    },
+    {
+      "git_object": "6b7fabf150268c3e262059db9097807be1d447a5",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/Kconfig.nrf54l15dk",
+      "sha256": "a2b940d87a721fe5788d604d8fd244da77ecc3b90a2e8d53670b4a2ceaec0a56",
+      "size": 317
+    },
+    {
+      "git_object": "dd19321e0321cc3f979330949d35713fbd8c393d",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/board.cmake",
+      "sha256": "61d447fe8100a6897dd4c5342848f4fa39ff8d9bc2576ab4329d7b054446a0d2",
+      "size": 1942
+    },
+    {
+      "git_object": "5d5898e8e8a205677f4f0be5402710f3cb03262f",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/board.yml",
+      "sha256": "77032c4b1d10e57e3c036bae7ed55b42a38a1d5b92d153865c2a18c93261703d",
+      "size": 2120
+    },
+    {
+      "git_object": "a2d1ff6e0e3a09749b17699b89ce2c11eb4133bb",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk.dts",
+      "sha256": "d88bf2fcff05893c91ac4cbdf602729703fbc117daa3b42722d44024634f5f99",
+      "size": 630
+    },
+    {
+      "git_object": "bf3d43ed4b19d485e5fc7eb1b2cd125f981a90ec",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk.yaml",
+      "sha256": "08e7d2c8c2b9c9565918f1fdc4cdabde4b00e01be27170e84cd2f218ba43dede",
+      "size": 480
+    },
+    {
+      "git_object": "f03751e15a0c87323f201a48fe782043a7cc6c61",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nrf54l15dk_nrf54l15_cpuapp_nu54dk_defconfig",
+      "sha256": "399a7e3cb64b5aafb98aa05627d7b85a9f8b14782ff0377f6b1994ed2edee3dd",
+      "size": 306
+    },
+    {
+      "git_object": "7fb7465efbaf94e8a23464b030863f46a0cd1e7f",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk-pinctrl.dtsi",
+      "sha256": "5ec7648319b0941753486e6895f2615c4a9728cd5256b0a27086a793cffc48e7",
+      "size": 2501
+    },
+    {
+      "git_object": "1f4b812edfe9e973c2073d6af012d9f101685832",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_common.dtsi",
+      "sha256": "6b0d9b25d1a6ffeca5146a82ab3df6b2cde26fbd45ff24b61533c43619d569e5",
+      "size": 2289
+    },
+    {
+      "git_object": "24e678525007931a2d5f4cf59ff20a43c639c873",
+      "mode": "0644",
+      "origin": "board",
+      "path": "board_package/NU54DK_Zephyr_DTS/boards/nucode/nu54dk/nu54dk_cpuapp_common.dtsi",
+      "sha256": "bfb90dd8dad909a3e30d57043aa03b1aa9d4b1d7cf064430af1b542b6743c9c2",
+      "size": 2265
+    },
+    {
+      "git_object": "3543a9bb275c080f265e2dd08cfe10570f4cd4a4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "boards.txt",
+      "sha256": "dbddb1930c722f6e22a7617cbc381743aed5e1ff7197ae7f658cfdfb19c14300",
+      "size": 1501
+    },
+    {
+      "git_object": "1388d6284486c6b06c16d88ce8686f02eb378c57",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/AnalogFabric.cpp",
+      "sha256": "7c4d71c5559b276cc49fe9f144be832c3ab0c959ff94916ecb21b0466dc17851",
+      "size": 1844
+    },
+    {
+      "git_object": "48e6ff24cf3c8570b6daaed6a75e19c9911847ac",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/Arduino.h",
+      "sha256": "e01c5bb4e91264de4dfded8dfa2e65f1775afa6d47e0c578f3c4d6bcf8670b2b",
+      "size": 3821
+    },
+    {
+      "git_object": "611e4278878b641286203d65ee6f942a13f3a5c2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/EventFabric.cpp",
+      "sha256": "a8e68db226b6213e78544a23db6c2221459f03fc254716e724425f36f2090ac1",
+      "size": 2425
+    },
+    {
+      "git_object": "1492892bc8126e9e3a2dbee4cfa55364b6d477e2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/HardwareSerial.cpp",
+      "sha256": "8a84f78c536bcb50305b2671bef95acd714bc0aed26e536f64c50a59ad25ca16",
+      "size": 26093
+    },
+    {
+      "git_object": "1292cc50ce6395512d048907e03e3ae860a22370",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/HardwareSerial.h",
+      "sha256": "1dbaa167bc0f937db95054047bb8106e3b1ab59fe4d934b7e50b5c8ce9f21b09",
+      "size": 272
+    },
+    {
+      "git_object": "e1da5d71dfdb4b5ba6687f9f0d31fde8b8fda614",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/NUCODEPeripheral.h",
+      "sha256": "985c599f01725242900f0849b273a241297461631e5bc15ebc050951dc948bc7",
+      "size": 5309
+    },
+    {
+      "git_object": "285064492f55abe9afbc473c6ce6de394b78f0ee",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/Print.h",
+      "sha256": "763904b25db762211afd61d77e9ce454dbfcfae8b218b7b8cc9f83f30597daba",
+      "size": 403
+    },
+    {
+      "git_object": "37df7ec0cb7cae77c4d1c5d649be133ed9aa8b43",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/Printable.h",
+      "sha256": "4a53fa3ae6c34c6f52691875a357274dcc9b90c20159a09b996127cd344012a9",
+      "size": 283
+    },
+    {
+      "git_object": "b1d2847f249fd683562bdb03df0817535ecc5fce",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/SPI.cpp",
+      "sha256": "b3961de2de7b8764dd7e216976a360a3b0e08db5d6003a64e794a3be924a45a6",
+      "size": 24348
+    },
+    {
+      "git_object": "c236cc636dec21378b7613fe7d9a17f62b0a853c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/SerialFabric.cpp",
+      "sha256": "48d663d04322361d64dcd867fed1022a052ba6b93f20106d04eedec1c2fd74cc",
+      "size": 2650
+    },
+    {
+      "git_object": "c09e9535b25b6038dc06b15cbbd6e04f36d6896a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/SpimFabric.cpp",
+      "sha256": "5c0687f23e29f2d5dc3da9dbfa1b477c37ec5b70c848dcab5cbacfa6451bd263",
+      "size": 27242
+    },
+    {
+      "git_object": "aff6c80af582690dae159ae16d98875d011ae615",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/SpisFabric.cpp",
+      "sha256": "e901de2e09847e50cbf275e6b55a7c3fb7536efe1e54d52026459d23352e2deb",
+      "size": 29813
+    },
+    {
+      "git_object": "ccac8c3e8c6007f09c083e6935f7ad22bf7d463e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/Stream.h",
+      "sha256": "641457310256a0047bfad1eed98afe54dbeb6ab5e5f14a9efb20cb2c4de9a153",
+      "size": 265
+    },
+    {
+      "git_object": "a7f88d1646202280fd849e7f58a24f2d239600bd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/StreamFabric.cpp",
+      "sha256": "3501a7ad5750a49490aa93102ce391c628ac7cd0e424621d112386b02820abe8",
+      "size": 2282
+    },
+    {
+      "git_object": "5ee49913e88a0ff218ba6c85aafc3bac149bd984",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/SystemFabric.cpp",
+      "sha256": "b42a59ed2fa8baaf9f05fcdeb9340516d32ea844ab56a27a3ccd80f04b4727f1",
+      "size": 9696
+    },
+    {
+      "git_object": "585fa8469d352e8cd391c53cdfb3e0b291f32852",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/TwimFabric.cpp",
+      "sha256": "4cc0f7ed706b4be32682d6079cff41ad8e6328c1e976a6a97453ec93454980aa",
+      "size": 27045
+    },
+    {
+      "git_object": "b627e513caadeb2f6a4468bc1d1a1cdc115f74ca",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/TwisFabric.cpp",
+      "sha256": "8c0ed0d21f00b420ead59a602179f478deacf8c9c10ebda64a1c3964de23627d",
+      "size": 31400
+    },
+    {
+      "git_object": "c9b653bdcbe7f99035115ff10c0c1ca568a53c3a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/UarteFabric.cpp",
+      "sha256": "83b1129c5444a0823e3967ffcd4ca62825c3ed273d15738aabcfde095f28428f",
+      "size": 31850
+    },
+    {
+      "git_object": "68ea51abace54fafaa455956ffcda1151ec4c55d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/WString.h",
+      "sha256": "b08fe82d701785518155a03b27e936b6cebf9edb2a0aa3e147d585a13f8be6c1",
+      "size": 300
+    },
+    {
+      "git_object": "58c7126a44f4bc58a5122229a79d8771e3c6cb7f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/Wire.cpp",
+      "sha256": "c90bbec5db143e16b0409c92f683cdfbe1cdcf322dcdddb8e8c25fff6fcb2c29",
+      "size": 29463
+    },
+    {
+      "git_object": "562496b8d0a4a51aa57fc1ef1ecc3ba51bb5f4d9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/api_compat.cpp",
+      "sha256": "904d6fadcc5df21c714bebe4a0baa4d215074e6c9b896244f5a6d1ce86e84f2b",
+      "size": 4323
+    },
+    {
+      "git_object": "65c28b1a9b4fac7843c67d780698d4f3dce65ecb",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/diagnostics.cpp",
+      "sha256": "0285295de3691ece2c9f54891cdb08749c5249293f2fab88efa1eb678b674a0b",
+      "size": 17622
+    },
+    {
+      "git_object": "3087b2c03564b1985a746b888c846aa8094cfadf",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/generated/PeripheralInventory.inc",
+      "sha256": "8e7b46f9c0283edda45c212618e3083df3410773e74d43db47849d4f58340224",
+      "size": 34133
+    },
+    {
+      "git_object": "4e97c4b9a05267de81ce818effa961acd216839a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/AnalogBackend.h",
+      "sha256": "115bb58cd7955bde32309c0f1d0f5cc284425f0f6c39ef6d546af551320c992f",
+      "size": 1343
+    },
+    {
+      "git_object": "6c8da5bdea56462b0bf6375f9f32eb253a7cdd4f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/AnalogRuntimeMath.h",
+      "sha256": "11c5212179d52c72266f502d398df1cc657fa1e55fffc6808b0c2bd148cb189f",
+      "size": 3659
+    },
+    {
+      "git_object": "b2a36bb35bb07ff1b7837e6f321371a278dd9518",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/ArduinoRuntime.h",
+      "sha256": "354b3d3076a4ed7c6c3ea2d9f46f39498a3b0f6752733d42772f4379f93acf89",
+      "size": 666
+    },
+    {
+      "git_object": "42b9faf34d0084b557217b23ab83f18724d467f2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/ArduinoUtility.h",
+      "sha256": "2bb7ad79ba07797e81fc54cfbdb9444f7af850516007a26bda4e48f4c522f8d9",
+      "size": 1304
+    },
+    {
+      "git_object": "21a92e4cc74b37c421a66f28f4236233e89a8822",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/CoreIdentity.h",
+      "sha256": "26366d922edb44eb9391e35a345a0b5acfca68ff1f21fa3480e590094a8af3e2",
+      "size": 400
+    },
+    {
+      "git_object": "3368e88e586114523a7de74db694822b5f13424a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/FabricSynchronization.h",
+      "sha256": "2c707024c42066fe27f9100f683130085fc80b0b0a749954bcece98aa460a9d8",
+      "size": 3407
+    },
+    {
+      "git_object": "a704c8c8b58b7c1d3934b591ac3d9c2dfee4d232",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/IoResourceManager.h",
+      "sha256": "8ca34cd49baabd5a0b1afc07f465aba26d9c7385d6043d62fc456cbbd4cd9560",
+      "size": 10706
+    },
+    {
+      "git_object": "fc42af3831c3aa47b35eae8f5cd34dfa29b1a6e3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/Nu54dkIoResources.h",
+      "sha256": "50aa969eccc2c83351043da4764bd904f8e40da9cbef1b717851f4b7068a974e",
+      "size": 1129
+    },
+    {
+      "git_object": "2955a4904e0bdc5fc895213a5a65ed09c6a03693",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/PinHandover.h",
+      "sha256": "af4b43b3bc3e3493560aa2d8ae326a89202cec314b63ee3c0e2eb37c48b0599d",
+      "size": 4933
+    },
+    {
+      "git_object": "2f8456caf75e7e36f06220c5884deadbf1dd90d8",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/PwmRuntime.cpp",
+      "sha256": "62172bddc7e1acbd6496cfcbaeba1552db4e165efba0269fc27dfa76d01a7d15",
+      "size": 25326
+    },
+    {
+      "git_object": "ade631e3e993337cbf8c273edda46a03510edaa7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/PwmRuntime.h",
+      "sha256": "4f85ebd8fcef3f6d75755cec6f7e65f34a418c67b57ac51ef91bfbd34e530977",
+      "size": 5992
+    },
+    {
+      "git_object": "d21a821bdaa214c1808481a6f880fa78022debb2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/RandomMath.h",
+      "sha256": "50c826aa3c969100b12c0e08f8b20b316b9538b6b01a45caff48a2fc143748f0",
+      "size": 2087
+    },
+    {
+      "git_object": "17d3af96d8bf829ee6c57c4811b980662da7f9ed",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/RuntimePeripheralRoute.cpp",
+      "sha256": "ce05675b544496dc82bba9eae3702ab2d1dee2574270bf5544b37475a7d79b69",
+      "size": 9325
+    },
+    {
+      "git_object": "ef55cae18c36289ad9590b08022d55809e1271a5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/RuntimePeripheralRoute.h",
+      "sha256": "1cf2d46c16756b5dc1fb056284f1804297e5791d50440946a482027726d64673",
+      "size": 7218
+    },
+    {
+      "git_object": "777dd48f9112114d39bb76df3c0696ebdaf43ca3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/RuntimePeripheralRouteRecovery.cpp",
+      "sha256": "fd617bad9f686e16ea5810b15ec60fd1035021b60cd4d1fef1356431e026a821",
+      "size": 7054
+    },
+    {
+      "git_object": "ae9395e67a6a2b478a2fdc94122428be11dc7dc5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/SPIBackend.h",
+      "sha256": "e61d3e76c6a678bcfca44b13b2cff6b4bd9a51a690e5509e83dc8c15020aa8cb",
+      "size": 1580
+    },
+    {
+      "git_object": "aeec72fdd41d70db01ba0e313acd625937287ffd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/SerialBackend.h",
+      "sha256": "87dd33a02009c9efb40d1df1e8230dba8bd21d555fe16cc921271f6be6436b9c",
+      "size": 1864
+    },
+    {
+      "git_object": "45c969be104ad2384419b851596f508798feb908",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/SerialFabricBackend.h",
+      "sha256": "e95a8686181115260b11bf9f4e19181accaf6bc6e74e444f1cdef357fe75e76d",
+      "size": 4432
+    },
+    {
+      "git_object": "71b0594a07568e5ddc3c1ffeb95652e0ccb261ee",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/SpiInterruptMask.h",
+      "sha256": "852ac79f0b50f1c202c7b7d6d663a21eeaa2bc2f06b9c44eba619910a531a1d3",
+      "size": 1327
+    },
+    {
+      "git_object": "9fe321909289b36abcec3b834091df0d1ce91d47",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/TimeBackend.h",
+      "sha256": "f87fedd99d5747a247fe9d958df8de07cd5b1b63c36e556be883450616430e03",
+      "size": 1865
+    },
+    {
+      "git_object": "4325186a883480092727cf299bb7ef224fe425b2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/TimeMath.h",
+      "sha256": "0c0950a958fe74d06f56d0134e260bf8a1a46626e01646489da62a09d6d9aba5",
+      "size": 2674
+    },
+    {
+      "git_object": "c611829410ef725af2d487fc9208ce7b7caabb53",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/WireBackend.h",
+      "sha256": "a99d742651ce3e9813b21b31dd6dd4b1d8adeb829f972bfd52c11447d0ef28ac",
+      "size": 1646
+    },
+    {
+      "git_object": "dd0d3de1fc0b4e27c03cf7d41d38de3aaff8da66",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/analog/AnalogFabricInternal.h",
+      "sha256": "2633bf48d81a8f4f5ddd01df59a1c135031be6092f66628fcdc4a024d1a6a00a",
+      "size": 4426
+    },
+    {
+      "git_object": "a43980bb6d2402048520cb358c5004544f39efd9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/analog/PwmSequenceFabric.cpp",
+      "sha256": "2d697f6bb8fcdf1dc824f591480d469f782bc7f35f21da19fc916fc948b8eabb",
+      "size": 23607
+    },
+    {
+      "git_object": "ed6b8cba8886a34614b095f1c289d32948c99dd2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/analog/SaadcFabric.cpp",
+      "sha256": "8e4dd630bf458163725e88ec8b7f2b0c335f416ca07f99970f6be2b49e1666bb",
+      "size": 29955
+    },
+    {
+      "git_object": "902f0055abd9072da302310b9776aaad342e2674",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/dma_count.h",
+      "sha256": "34a7b643c8a5c4ca8d27744dd8c90e09c5dd99279533a95161bb96e3594a7c03",
+      "size": 844
+    },
+    {
+      "git_object": "52431a1ecdccd813b66a6ffa86bea48ea05ae92d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/dma_memory.h",
+      "sha256": "495754605c1f49868db0eefea3e381e69a147f723eaccc5d173c3c238e246d03",
+      "size": 1506
+    },
+    {
+      "git_object": "ffd8522018f1ebf9794a0cac0ee32b9431f0e8a3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/event/DppiFabric.cpp",
+      "sha256": "b31c06a3bbd3bfc2c47313be68fe78350e755e355599151b7f8d765dad224811",
+      "size": 12077
+    },
+    {
+      "git_object": "400b4ca3c9686765434b9b1277985a44dce94016",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/event/EguFabric.cpp",
+      "sha256": "cb30c07faad02e41f33ebae2db290de5a789b7547cd15cf5fc2970fd7798d8b0",
+      "size": 4063
+    },
+    {
+      "git_object": "7ec696dbeace4e1ae1275db49cf5aa308c157129",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/event/EventFabricInternal.h",
+      "sha256": "be7c09785c59e7fc6e79ddd32652df8edc7715da23961faf7079a7ab9c3cce31",
+      "size": 3596
+    },
+    {
+      "git_object": "c498c72d9083221775d6ede7ecfed8ba7d9a0108",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/event/EventFabricRegistry.cpp",
+      "sha256": "7cb93ea76e0e9dd98c35fc0349556e05844ff7791af1d0842a4f167934e6e85c",
+      "size": 5612
+    },
+    {
+      "git_object": "f7606b98f42e745a35c528ff98b0beb0549645c3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/event/GpioteFabric.cpp",
+      "sha256": "347a5da475d4b8dd1d105d2c3feffd1935b3c1bb8bdc19e14ffcc924d5ef1f4a",
+      "size": 10104
+    },
+    {
+      "git_object": "7a113da537308308cdd492969387b580584ccc97",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/event/PpibFabric.cpp",
+      "sha256": "6d42dcc83f02da0c99878ccfc759c07eba45d885d6e9da0794ae20efe2dff3da",
+      "size": 3278
+    },
+    {
+      "git_object": "56e2c9118741be67559e491a5d4779e5ec588f78",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/event/TimerFabric.cpp",
+      "sha256": "402704f0d623e40fcb1932f29764b9b15591f9f14089ea1c126a81010fe8746c",
+      "size": 10226
+    },
+    {
+      "git_object": "038a9c6901e3d424d512133167a369da3d500b3f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/io_resource_manager.cpp",
+      "sha256": "4206585b87a365db9ec89d608f904cd90405031f4473aa0f3c5d68ccfcdb0bb9",
+      "size": 5057
+    },
+    {
+      "git_object": "3032c58cae92ae0d3cc9ea610a40a8ddc97ae8ea",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/pin_description.h",
+      "sha256": "9fecdb98b92827d1c938333b1d0521eb0c38dd4395fafb6d8a3e67d464d70f11",
+      "size": 8998
+    },
+    {
+      "git_object": "827745048221e3e059f78393fc3618e2eec38844",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/qdec_sampling.h",
+      "sha256": "d0da4f2c9ab1ef3b448007b53125067fd918f65fc4f83b12cf9b2880812e0061",
+      "size": 999
+    },
+    {
+      "git_object": "6e0d442219345b3ca28cbf03a4b5f33310c9ac5f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/resource/IoResourcePolicy.h",
+      "sha256": "56e7d5f60df0a8d08fd90b8e01d330e635cf6ca386b274880b0ac305eb26f454",
+      "size": 3345
+    },
+    {
+      "git_object": "8126a3d9e441cc3e408dd8125d137cff5df4e268",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/resource/IoResourceTable.cpp",
+      "sha256": "d509b4aae7feda029bc7c0043be22894a74f9587229a955bd4d95e469dc4b635",
+      "size": 22356
+    },
+    {
+      "git_object": "d207d74fa18e0df8000aadc6b9af0abf4bf2b5ff",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/resource/IoResourceTable.h",
+      "sha256": "72a46d1485a0027f8ea4f728b0dd219eb2d9fa85a518f13d02246ec25f8ecca8",
+      "size": 3920
+    },
+    {
+      "git_object": "4c98d602e77d214c8a8ce625261cc9700bbd8378",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/runtime_scheduler.cpp",
+      "sha256": "343c9c73ca769923b8a4290813541929be3f194b1a623b64475399503e1f8e69",
+      "size": 513
+    },
+    {
+      "git_object": "4e381872248da1406397e1cff7463326f1648862",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/serial/SerialFabricInternal.h",
+      "sha256": "5fea33f8a39c1484033b7152768ca9d902c9d2bfee5c59cdbf68adbb8b2d90df",
+      "size": 3689
+    },
+    {
+      "git_object": "bcf13d53d5d67fc6c4c04b66127c99def9833255",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/serial/SerialFabricLifecycle.cpp",
+      "sha256": "3fc5b49491acb7a0511c8167e085d2eb7337168c55fee1ea12a72f92b8d86a8a",
+      "size": 22440
+    },
+    {
+      "git_object": "858a28b0442c06e34120e0655825edbb8816de88",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/serial/SerialFabricRegistry.cpp",
+      "sha256": "a68e83e848a0b5defbef98e4d3f8dfa547a318712b4034ffd4bc5a9868125e5c",
+      "size": 6740
+    },
+    {
+      "git_object": "92d0609a663738021d8a7047034f84fa4a4e86c0",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/spi/SpiBackendOperations.h",
+      "sha256": "9488ba5e66a439c77e8251ac474173efbb732f877e4862af095c246fcf27378b",
+      "size": 1978
+    },
+    {
+      "git_object": "ccd008a15e32d7c1718a66a2338ac8dee706bf77",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/spi/SpiZephyrBackend.cpp",
+      "sha256": "fd544070b0aaa038d526282b769d314be9326a8958d754e292f638058743e919",
+      "size": 10109
+    },
+    {
+      "git_object": "330d6379d36493b54020c66bd89691dfe9ba9277",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/stream/I2sFabric.cpp",
+      "sha256": "192624b2d529f7002dd88fe7033848af1b96c14382d2fc406c976235ea90f385",
+      "size": 21036
+    },
+    {
+      "git_object": "386f116bb1bcf87a0c71390b0295d9028b54282a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/stream/PdmFabric.cpp",
+      "sha256": "696e39692104f0afb8503b0672ffeb962ec5f4f12dc5d8190222782df765a228",
+      "size": 18714
+    },
+    {
+      "git_object": "4f919050e844b7e41b67490f9d02776b84d771a5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/stream/QdecFabric.cpp",
+      "sha256": "e3edc70a89a5564df84e5157003b80da2ca75da590c789e558eabfa9a8a57167",
+      "size": 12337
+    },
+    {
+      "git_object": "7aa6671d8c21187d446a165feb3736d4d7eb67de",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/stream/StreamFabricInternal.h",
+      "sha256": "56b9218a8b87b367a4b50936454786cc50965cdf8711c9d170a0005ec0ac7f75",
+      "size": 12407
+    },
+    {
+      "git_object": "39cb7d65728228191f5307ab540e6ae3733d830f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/time_backend_nrf54.cpp",
+      "sha256": "102ba3a3a10a6148432aeddc37fb60dc25f8c6ea7399f968a6f88cabf8048012",
+      "size": 1922
+    },
+    {
+      "git_object": "e4026835d0b01ecfbc67655091bb0aff12ef1df9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/internal/timer_clock.h",
+      "sha256": "95aceebf2303ff9689075ae65985babe64a58534cdedb981faaf9e54cbff12f6",
+      "size": 934
+    },
+    {
+      "git_object": "20ecc6ea2fb661b0a350790f7fb92c77874c176e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/main.cpp",
+      "sha256": "61fa7cd1233db7d913070e72718ee85376f8d34fde52fc6cac3c583f04b0b81c",
+      "size": 1218
+    },
+    {
+      "git_object": "8b4b763db1877e10afbdf140f3a8a21aebb00705",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/nucode/AnalogFabric.h",
+      "sha256": "7a170fd48d2e85172086c6af7e29419c475356a96c07237bb62c2d173eaca2ba",
+      "size": 8498
+    },
+    {
+      "git_object": "52c84f09667a9cfa004f905370cc21000b1ab89b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/nucode/Diagnostics.h",
+      "sha256": "7451ab2a11786605fb51fa5e9ae12bbad4ff18bb33e83eac05dcab418722e3ac",
+      "size": 3920
+    },
+    {
+      "git_object": "3172d296cf7fbd922603389caf69fe0587dfb384",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/nucode/EventFabric.h",
+      "sha256": "0489c435fd7510fcb2c6414e3742bad211eaa20a9a11dfba0705ae0ada06e3da",
+      "size": 8084
+    },
+    {
+      "git_object": "0149c1feba838aaab288cac0544ddefa934cbd5e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/nucode/PeripheralInventory.h",
+      "sha256": "dc2bf6de4e3d0f778d5ca9496fa355ef9d77bf16a9da20dfb05b837ead03dbda",
+      "size": 6351
+    },
+    {
+      "git_object": "3ee866c85979b139211dc6554261c901d819184e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/nucode/SerialFabric.h",
+      "sha256": "d504b9debef84d0142dd211cbbfb7b19fd153d2a0e23489dc94ca197a7a8c7ca",
+      "size": 16351
+    },
+    {
+      "git_object": "2e831c2821501bd6cdae2b13ee5bf92d5ce02e78",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/nucode/StreamFabric.h",
+      "sha256": "a4e9afceab6908104225d7797a2e3e7cf95c61aa3c067510a4ef02bfb26e1c7e",
+      "size": 9382
+    },
+    {
+      "git_object": "710f9a69b31d19645291f4b6a50641a29f4da368",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/nucode/SystemFabric.h",
+      "sha256": "6b6a667b874c220987da0271bdbb7bb921e0897d03c78c79a1272d249805bc8d",
+      "size": 2992
+    },
+    {
+      "git_object": "cf143485fb5bc93148eb0e32dee477ed532b912a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/peripheral_inventory.cpp",
+      "sha256": "debd388f0212a6d82e36b930d22c316abf6f1c6d3b1965413d4e9a35e53609f3",
+      "size": 7301
+    },
+    {
+      "git_object": "bd4eb5de43478364001fd294d6e620c69efc5166",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/peripheral_stubs.cpp",
+      "sha256": "c72fbd5cf69a8f5759a66e3d925761e8ed900c627787c32a546856214d0f0d25",
+      "size": 7577
+    },
+    {
+      "git_object": "c636355bd9427836c6f1661d13a7738073655889",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/wiring_analog.cpp",
+      "sha256": "1d15f35854023446578195aff38f847cb4c66f548aeb06ed2527aaf27f12a36b",
+      "size": 23014
+    },
+    {
+      "git_object": "7e19f3e094d4709750fb026b00d8d17aa94c688d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/wiring_digital.cpp",
+      "sha256": "bff0603094fae7b4ababc5da4530d0ac8bcf5a2c4c607227e97acc8c595d4f4a",
+      "size": 45184
+    },
+    {
+      "git_object": "4e73cf57bf3dfdd849f629624faa5e6789151f37",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/wiring_interrupt.cpp",
+      "sha256": "b224bb114787c8a544617786d35faed7f29f93c2069e05a7804b601fcdc2d737",
+      "size": 41955
+    },
+    {
+      "git_object": "37408eb90e608aff3fc045ff669142811185871e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/wiring_pulse_shift.cpp",
+      "sha256": "41acc468fa4903d6a664ab96aea1c8f92c3dbc463374263d10495064ea7de355",
+      "size": 11037
+    },
+    {
+      "git_object": "85c84616335251329a15ca8da614c0c0adaee18c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/wiring_random.cpp",
+      "sha256": "97299ed51f0e339380bc708f367bae9a3fd65a38a95fbc9630d1889128e636ee",
+      "size": 2297
+    },
+    {
+      "git_object": "6206133fa46288878b01183644879abad3917f7b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "cores/arduino/wiring_time.cpp",
+      "sha256": "00b77138cd416d4a7a1ee85eaa6913b4e4afa849939daea3b3fa55ced7315e1b",
+      "size": 1599
+    },
+    {
+      "git_object": "17442b0aa44116972339790a12e24292df048c3d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/bindings/misc/nucode,arduino-adc-input.yaml",
+      "sha256": "0938950f4a41c483017ca1d4d5fcd61c1e06558e58d3355ad2787ee1cc93f883",
+      "size": 297
+    },
+    {
+      "git_object": "526e6e3d851e53260c16fea67385f295617032dc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/bindings/misc/nucode,arduino-connector-gpios.yaml",
+      "sha256": "5d50acd438d3e0f7cbe685bce4254a8fcbf604fdee3b10f8b6ba4b1b36c280ef",
+      "size": 413
+    },
+    {
+      "git_object": "b20e09f6798501ae12ca3dfe70f81ed12e24f8c4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/bindings/misc/nucode,arduino-pin-map.yaml",
+      "sha256": "64ad9daf4f8962ef143d1e31a70a6c3dc3a01a2f5f99a5e2d9029e090966143d",
+      "size": 866
+    },
+    {
+      "git_object": "41fb5e1d5e123ab00825575746732b8e4baab6ef",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/bindings/vendor-prefixes.txt",
+      "sha256": "e22e163b2dd153ea40abb5c0bc9aba64519d57bf965b79ebf45eac138f9990a6",
+      "size": 46
+    },
+    {
+      "git_object": "66964919a6fa84f8212630d6f0dfec689f879c34",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/nucode/nu54dk-arduino-connectors.dtsi",
+      "sha256": "6b6a0c106ac71b71cb8f84de0cd3b51667ecce29efe1f13118ed37d443322d26",
+      "size": 625
+    },
+    {
+      "git_object": "000a9e6a33aa5fa07d31513ccf5680afe43088a8",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/nucode/nu54dk-arduino-pin-metadata.h",
+      "sha256": "6d0fa6c51d85ead79f43f6640255de7a5991c3db3eb3b9ca3d7b5b939d05fd4f",
+      "size": 1943
+    },
+    {
+      "git_object": "ba52ecf74168db36fd1bb715d62c5f4b66678a06",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/nucode/nu54dk-arduino-pins.dtsi",
+      "sha256": "2f2b6add061b0c9c51c75e7790784155110ce5e9c88ababdd0fbd807a2b29a35",
+      "size": 11626
+    },
+    {
+      "git_object": "c4bcffae1e49311b12e1b0617eb2cfda8460f2a5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/nucode/nu54dk-arduino-runtime.dtsi",
+      "sha256": "77fc0a2e9cb99cb630f82950b3b7bbfceee57c68023dd0cf19ee5f9c92d9620e",
+      "size": 4254
+    },
+    {
+      "git_object": "de43aacb73af761ab6aab153be0faa7ffa8db8b6",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/nucode/nu54dk-arduino-storage.dtsi",
+      "sha256": "c630280c6dd5fa3d5918e71ba1b1f10b152c07c4a41819190b093708eea4f776",
+      "size": 825
+    },
+    {
+      "git_object": "d75c8e4325bc49a3733959cf1c14aaf5800dbdda",
+      "mode": "0644",
+      "origin": "core",
+      "path": "dts/nucode/nu54dk-lfxo-external-caps.dtsi",
+      "sha256": "d372c73f07384fc87a0d6512f929ddab2a7689db214b0756ec9df4913c8661a1",
+      "size": 263
+    },
+    {
+      "git_object": "619df44113be5716738005ba1f304ab4cd8a6754",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/examples/EEPROMPersistence/EEPROMPersistence.ino",
+      "sha256": "b2a2bbcfda19892832c74c56a05914c30880f77e28cef996fc68000ca26f80ba",
+      "size": 803
+    },
+    {
+      "git_object": "3f667afd1cccd3eb925f1ed356ea0da6de5de3aa",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/library.properties",
+      "sha256": "43997c7f5e1d58dacdfa1b3ce8b6db4a0593384f214645b62c60f5d2fa023187",
+      "size": 402
+    },
+    {
+      "git_object": "823c9bc42e1b637aff58a7076fe3b2750f0a2176",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/src/EEPROM.cpp",
+      "sha256": "2aedb4d386b6f49a4456498d0b924762660099ca285e83c61ceb416b35a44896",
+      "size": 6796
+    },
+    {
+      "git_object": "557720b2013fcd3bd2d86d27cf95944d815432a5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/src/EEPROM.h",
+      "sha256": "84e2d528137e11e995aae3bfcfd0951f76c17426e7bd189c55dce6bf757b4e41",
+      "size": 5908
+    },
+    {
+      "git_object": "f7a018ebed43a4dc6c1fd18f1e6454a216a3e388",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/src/internal/EEPROMInternal.h",
+      "sha256": "142659aa92d8c607260423fdd56890261733702ece16a3c3ceaddedddbf0e0f1",
+      "size": 1059
+    },
+    {
+      "git_object": "44e190986390d90b9b000ef13239ea4e2e78a523",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/src/internal/EEPROMRecord.cpp",
+      "sha256": "331381d455b8dd6e7c90355a9cd3351f46d0eaa4ab5a7767da75601eff05de6e",
+      "size": 803
+    },
+    {
+      "git_object": "2b695da88952d34b253253be297b46a4bc24a416",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/src/internal/EEPROMRecord.h",
+      "sha256": "d49b7b8f31bad15c1f9ac45911c2c32a118d98d8e8398e4cdaaed111da6f1ff3",
+      "size": 1292
+    },
+    {
+      "git_object": "937ae72a41a092d6fb8d048e7d7908c6cc040f7c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/src/internal/EEPROMSettings.cpp",
+      "sha256": "9a3f70e9b9908612e471f78212bb2d865db797be29fc3e306f5acc65e17c7e95",
+      "size": 6585
+    },
+    {
+      "git_object": "273675ccb895ac6685f26e632de0b103efc6b2cd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/zephyr/eeprom.conf",
+      "sha256": "001adbe10c645707b41a5ed85827c11894554a2a2854a14b3a1a1f1752b6ae96",
+      "size": 368
+    },
+    {
+      "git_object": "fe89729979acbde35eb28f9762eb0f4c0844c618",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/EEPROM/zephyr/feature.yml",
+      "sha256": "e6b5f4bab916d6e0873e32509b81dbea7dda196ccf2a9d17f6c371cec3626afc",
+      "size": 206
+    },
+    {
+      "git_object": "fdc1e229782f9e29b28e314d247c9f51a55cdde7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/examples/LittleFSPersistence/LittleFSPersistence.ino",
+      "sha256": "c10e339da7764d0a088777786239af1382a91fabd247e8b9b4b6c915ef9de5fd",
+      "size": 1182
+    },
+    {
+      "git_object": "4f16e56516ddcbe80083ee772e4a29bc34329b98",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/library.properties",
+      "sha256": "7b7fcc139080a156e4c6ebe2cf97967064a6ab6075cd577d1f13f451e9de3ce1",
+      "size": 429
+    },
+    {
+      "git_object": "48154811bacea72c1d961999d3711b11a3a77247",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/FS.cpp",
+      "sha256": "ea2fa5de44e1ecee0bd4c18221ecee21b7acd88733373ab5e0757d4c1fa4be8c",
+      "size": 5939
+    },
+    {
+      "git_object": "50c04b94e46361b914e2f36fe420e519d94f2654",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/FS.h",
+      "sha256": "4cb27b8dada86f519e040077b0963c6d2fccd3e5d5e062c642e5254378e9e620",
+      "size": 5769
+    },
+    {
+      "git_object": "78d92a9bc4990630f608e7e060458c2a663ab0ee",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/LittleFS.cpp",
+      "sha256": "dfc5574593730dd8089990e8f41c6861174ffaeec9a7b6d046d2ae24fb27c466",
+      "size": 7295
+    },
+    {
+      "git_object": "439d404e54df1f1cd110f1a4198f8cc55ae21ace",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/LittleFS.h",
+      "sha256": "d85e28709f00fb04f9143ad1c8d04e08765b07fa5d357df70f356f14427429ac",
+      "size": 1453
+    },
+    {
+      "git_object": "75ca07c33839fb1cbe79601ba9a1c316671952fe",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/internal/File.cpp",
+      "sha256": "4bd2b7d3e980504477f0141d792d3a58a3cc01aa69e553de232ddbe18d057b94",
+      "size": 9277
+    },
+    {
+      "git_object": "445d60f914803052eb543bb01e4405680b408b0d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/internal/FilePaths.cpp",
+      "sha256": "c04b04621d0b0a951cd5d46a41fac31538e443a1b54bff97393362d5ac43eb90",
+      "size": 3445
+    },
+    {
+      "git_object": "c00996158ea7d807a78aee829f57eaa4ab21287c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/internal/FileSlots.cpp",
+      "sha256": "33f00720f0f2ad5696bcdf81b107a04ef962f1028a8b02fef11ef73f551ba0ed",
+      "size": 4236
+    },
+    {
+      "git_object": "970668c0cf4e5f3ca5150006cb9dc40bb59aec7b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/src/internal/StorageInternal.h",
+      "sha256": "8be2ba3a6a78a301a471b7fe79a110f187e456cf4b17699f58d5cfccc1c6ecce",
+      "size": 2020
+    },
+    {
+      "git_object": "0f77bcab3f903bda7d97f8260b2aa87aeb94e498",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/zephyr/feature.yml",
+      "sha256": "724eab4c49f9fa0e8fcb991afb54653fa35d164acb29ec0d0c79b9375d65a020",
+      "size": 210
+    },
+    {
+      "git_object": "69e44beb319b26b51e2cf8d623288d5da1116198",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/LittleFS/zephyr/littlefs.conf",
+      "sha256": "bd696219c9970a5749c4f14a1f6a00219d6785808d0e507cf5a190d1f36916f6",
+      "size": 204
+    },
+    {
+      "git_object": "6de2d92ee636edf65ab4ba6741be9c78af6a2fcc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/CustomGattCentral/CustomGattCentral.ino",
+      "sha256": "9430699d2dbb9576d0db7a8fc1c31b2ac3ed19d3edb15bdf993e15e7214cd7a8",
+      "size": 2564
+    },
+    {
+      "git_object": "1da2539f147068edd053b316b87a9b896cadf06f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/CustomGattPeripheral/CustomGattPeripheral.ino",
+      "sha256": "651a361b2e0b61696194d8e6bbdc0fb571ec1ee4689ece0b4f862e789b52e003",
+      "size": 1960
+    },
+    {
+      "git_object": "5de2a85cf62c6a911b2dea9465d61694e57766d4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/ExtendedAdvertising/ExtendedAdvertising.ino",
+      "sha256": "d0b3c45f1265d40cf92687475a962726a4af0d5de7ba1a9cf5dbc8633663a9b0",
+      "size": 1202
+    },
+    {
+      "git_object": "3ed6e8810177efa45e1196d60ea62cd880c0f9f0",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/ExtendedScanner/ExtendedScanner.ino",
+      "sha256": "9c937fd1307ac413e66ddb1dca953fbe3b3b4ad610c64243fffd04e9eecdf538",
+      "size": 951
+    },
+    {
+      "git_object": "76888c4a2a18d7384f24cacc56d58499eace6742",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/GAPCentral/GAPCentral.ino",
+      "sha256": "7d738fd4f577fc955c630c535a92fa4e62a4b4e5f908139ec83f1a5f5d4b49ba",
+      "size": 1092
+    },
+    {
+      "git_object": "6e1fbceebc0be62ff829ed4f1a95293db54c5d95",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/GAPPeripheral/GAPPeripheral.ino",
+      "sha256": "b78251bdd7c41e738f3b5d8a71deb5cd8d3eb7a3adda1d63f67928ef3461cadc",
+      "size": 1254
+    },
+    {
+      "git_object": "c084d0f8d2eec7f400fdd08f9b2d5a688b6c3a1a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/GattAuthorization/GattAuthorization.ino",
+      "sha256": "88b0552c7101fb2c623d39d2c5856c0981ddcef1e417eb54fa6a2333003ff583",
+      "size": 5000
+    },
+    {
+      "git_object": "a8e48f48ea54e43c4e0de46c07bf62a3ddbd7ffa",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/GattDescriptors/GattDescriptors.ino",
+      "sha256": "51cf09341093d9e9cb9b9e558fd6bba81fdffd87291d27bd58076e2bdfcc1682",
+      "size": 5241
+    },
+    {
+      "git_object": "33f08f1ec483e5072c48dfe5eafed253b56d68d9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/L2capCocClient/L2capCocClient.ino",
+      "sha256": "1b4454c9b29c96606485f97a87106af0510cdc4fc9524b77900816886a6f312e",
+      "size": 4474
+    },
+    {
+      "git_object": "69a92d3e5bcca9bd0f660cd133892240f45f3bec",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/L2capCocServer/L2capCocServer.ino",
+      "sha256": "0209c7e0d0ac091a9a7438e51386830d8c02c0914533da81a7d926462680a78c",
+      "size": 2217
+    },
+    {
+      "git_object": "1bed382d08f07b334dafe1924e43ae0dde9d3c35",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/LongGattCentral/LongGattCentral.ino",
+      "sha256": "ddf1efd2bb136b1d753b61fbe81d4a628b2688aefc8f8bb2ed76ab6078c7fe68",
+      "size": 4599
+    },
+    {
+      "git_object": "0b3174b25f4e87ca27a3339e533a92b09e072a5e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/LongGattPeripheral/LongGattPeripheral.ino",
+      "sha256": "6a9baf4a3e63524de0cb9680ce669af0cb9f687f933d12b1409beebab07c7b0a",
+      "size": 2258
+    },
+    {
+      "git_object": "e7ea3a1093bcdf1e119d32772361d14ace74f56a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/MixedGattCocLinks/MixedGattCocLinks.ino",
+      "sha256": "ac43cf47186f3f8d2e1a0cd8ff11a3a1eb06341143cf4db64e30d85fc5affaf3",
+      "size": 12985
+    },
+    {
+      "git_object": "aad2156099e5b61033b1a4a8082a51c5acb33a7e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/MixedGattCocLinks/MixedGattCocPayload.h",
+      "sha256": "bc6d7355aecc9daf85a416962b8d8b259345413185396103fbe3cdf3f04db716",
+      "size": 1879
+    },
+    {
+      "git_object": "472833efaa633fa4b521d0cb3bae71468d572b37",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/MixedRoleLinks/MixedRoleLinks.ino",
+      "sha256": "d9127f92eb3f07d991f507d325a49330ab2c49041525f660df3b8cbf1ea24718",
+      "size": 2770
+    },
+    {
+      "git_object": "0a17bc0965e49ee6cd3dcf9e292f59cc4222a070",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/NUSCentral/NUSCentral.ino",
+      "sha256": "9f5af3b9b367c9799d637372937904eb96fb0d156c229a941148a278c7479771",
+      "size": 678
+    },
+    {
+      "git_object": "e37a9d23b4006c77fd9be6222e3ae8b31d7e4227",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/NUSPeripheral/NUSPeripheral.ino",
+      "sha256": "3aed24151858cd0d2dc3192281b93c85b47fabee7147cfe90754da213e349c4e",
+      "size": 1812
+    },
+    {
+      "git_object": "4cfa6bc1bf74c3e48dcaa382ce7b28312b092beb",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PastReceiver/PastReceiver.ino",
+      "sha256": "cce8d7fac6036fb494411d91adce0593c8f902e861505858bd634e0db2788d62",
+      "size": 2321
+    },
+    {
+      "git_object": "bec71509b0f37f4f4d1746245c6f024183a6a6c4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PastSender/PastSender.ino",
+      "sha256": "2bc689b4dcb5e67961f0f9eee54d3a7f83ad6967806c6e03e27bab21bfaf6af7",
+      "size": 3945
+    },
+    {
+      "git_object": "571622cc0836ee63bfc1b116d4d3283ec09f79d6",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PawrAdvertiser/PawrAdvertiser.ino",
+      "sha256": "02ce501cfa8f438c08368ed217d2b9c554c05b9328b9e046039ec9d944ab3669",
+      "size": 1688
+    },
+    {
+      "git_object": "e90b94d4d92ea18ea9b366c498db0bee06b65479",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino",
+      "sha256": "9463d0c525307f3e042139d08c07f4d7a045ff50f8796117a143b341780065cf",
+      "size": 2083
+    },
+    {
+      "git_object": "295f7d4c83df37e9fab0fa7783754e800d0f5461",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PerLinkControl/PerLinkControl.ino",
+      "sha256": "c05504bfc3259a6ed9c4647223fe063beaa5f9036e2a8d236a0e9bc8ef116bad",
+      "size": 2358
+    },
+    {
+      "git_object": "1144431bc0eb06303a66aab3464fa931a8e765cc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
+      "sha256": "105a5fb7dd79ce6237de20aba8854ebcd82a7bd608aa26e35abda76ee5112469",
+      "size": 1440
+    },
+    {
+      "git_object": "a79096de3a0aee4177aff006454b2490b584c75a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino",
+      "sha256": "4b5d33aac4b6cac08c0172d87a2588b420ea3faab28a3ab1c5adeba1405f152d",
+      "size": 1204
+    },
+    {
+      "git_object": "22741802378bfe487aaabb048754221c4ece6b0b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/PrivacyPeripheral/PrivacyPeripheral.ino",
+      "sha256": "e232b1b79c42fb96659ca45364318e5c686c17be7314afb905417712b6b4906e",
+      "size": 1161
+    },
+    {
+      "git_object": "a88a0505fdc02fd7cf956588e57eac246a3dac19",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/ReliableWriteCentral/ReliableWriteCentral.ino",
+      "sha256": "3e3245cbc25587dda380779a8cc3a3113f3d3217f45e02c5335f76a7c6cc39b4",
+      "size": 4664
+    },
+    {
+      "git_object": "043e8b3a0e58bde9e9691837ef9332c4695681e0",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/examples/ReliableWritePeripheral/ReliableWritePeripheral.ino",
+      "sha256": "9edd4813a772b39315e4570c194f81b1f5142dc94f0c87a25dbf89ae9ef18a1b",
+      "size": 2783
+    },
+    {
+      "git_object": "6cb334bd3ac2c9fb6aff6be19c43854d6c04b0d3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/library.properties",
+      "sha256": "4e03500aad5ed1a6d017cc39e262dc15299e58cd7d3e8ad87f3364168eda79e1",
+      "size": 458
+    },
+    {
+      "git_object": "4ac1b81bb57c4354d7d2abeda94dbb7a6a7b99d7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+      "sha256": "b00bc57a041ee64a6177012bf9d8accb94ae77aa511e66b8f5b31c34e219cd19",
+      "size": 31042
+    },
+    {
+      "git_object": "47931d10d57a37f45a6704f62aa747f3d27f111e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE.h",
+      "sha256": "9b0fd5546f29978fe3a307b4ffcb774127a32a3befe4e8d59189aaf62aca7e21",
+      "size": 4195
+    },
+    {
+      "git_object": "fba1330dd19c97ea10ddb119610f80565f8aa976",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+      "sha256": "202154d0889ec8909e18797542e80d4c4f51cd23ccd533dbb5549dc7b01873ba",
+      "size": 17446
+    },
+    {
+      "git_object": "77273f04d3cf99729083935d5656ca0129a3fbdf",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+      "sha256": "2b63b4f986d473e80aee01f1983ff7186b163433a70ea8263e73b5d254d05760",
+      "size": 37194
+    },
+    {
+      "git_object": "e72b4bf72087e6d925966e582e4513c85a62b4ce",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+      "sha256": "3ca34d3509cc00d32c08a2802275c52d231c5465023228b668e8064e03baceeb",
+      "size": 17745
+    },
+    {
+      "git_object": "70926c2b05ea2dbec92a3741d5cab6f31d080aa5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.h",
+      "sha256": "2c7711606134a85ecbb921c90657a10eb03411fd213ada5768fb15dc4053f584",
+      "size": 28154
+    },
+    {
+      "git_object": "e1e1a068b0e67015a35aaae93d2ce65cc2ca88cc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+      "sha256": "32b46e2c6cd5ad368b3d972011720bbdb8b91d263d0526cf5ae0ccd7cba86b9c",
+      "size": 37856
+    },
+    {
+      "git_object": "b2fde9a45232ff3aa83307dc9c491aaaaa766ad6",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.h",
+      "sha256": "7d2be102e89dd21832dfdd4e9a0b3931a69d6232d1a9a67f8cba6ef50e6c13d8",
+      "size": 5120
+    },
+    {
+      "git_object": "fb8ed0eb30168d6cafbb29d5fab95ff5f89ac6f9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Internal.h",
+      "sha256": "5eea866bed27963b754fa23e3f76d297c7753f6c3e5b05bc67077fcda273f745",
+      "size": 5452
+    },
+    {
+      "git_object": "62cd4229afd4efafc62db3106acff48e357838a2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+      "sha256": "57910a5d985a319860ba99c8f2c1e5b305842d866c87b07d1d63c1022eb43cf5",
+      "size": 6837
+    },
+    {
+      "git_object": "bd2406058a4ac12b5a39eb565fb581625d322dc7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+      "sha256": "44d3cf864f08cbf06fa54adc7cb6080cad163842c4b7dc990aabec443d0ed702",
+      "size": 15289
+    },
+    {
+      "git_object": "e11569bca4b7685ef7b1ba115321efcc4434455e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+      "sha256": "d19eb76b428b6e257baf4f734726a6958a6f349dc4e1b5786e9d592c04ede02f",
+      "size": 49325
+    },
+    {
+      "git_object": "2b071df7d824cda7d83d75f372e5231b6068df16",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+      "sha256": "04d13af18ad5bf89003d9f76bf504402f85d96a96715b5a667464524cdb0295d",
+      "size": 22812
+    },
+    {
+      "git_object": "b28992b22fc018c5c06869c6cd837c86a836ac3e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapInternal.h",
+      "sha256": "091472ad86ebcc493226ccf0192b5c799684c53c23b93a33b0f895738f4d8259",
+      "size": 16292
+    },
+    {
+      "git_object": "95c06412da589bda9d9796a3c8abbc51c0ac3d03",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+      "sha256": "8a7964023460b27df05ef5475f5335ec2510d0f649d6210666b1b5d85edf3baf",
+      "size": 18176
+    },
+    {
+      "git_object": "b50833cfe0ddb08a0a7102de0ae619eeca61fafa",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+      "sha256": "987e7f8cf242ce132408737551835c81b8b8d12ee50701af7d745db20ef0357b",
+      "size": 34994
+    },
+    {
+      "git_object": "6a5c17f866026f2449fc22412d2ad46bf8ac6c56",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+      "sha256": "c8299f2b53b046fe498702cb864746cf47d9cf5ed76a41c337199d3843fc61ca",
+      "size": 19388
+    },
+    {
+      "git_object": "51f46953a9a4e5d84878b787c4de332a654a9070",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+      "sha256": "63abfb1375549aa7767dd4d8a49fc8d4cb73b66c0e32a8890dfa4c46d8d49875",
+      "size": 7166
+    },
+    {
+      "git_object": "e45b5c80118a725575a50fb8dc5aec3aa648a202",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp",
+      "sha256": "83a2c8b0e3292b29d47881eb45f2aa94bb0a58c5d700530c7c46e4659584ce16",
+      "size": 64006
+    },
+    {
+      "git_object": "9933e21bb0f2b136710c9914ff2158b783fe0113",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+      "sha256": "b182190eeae1eb8a44e77d11a1256a6faf35dd30e965110c0bb838ab58ad5685",
+      "size": 68422
+    },
+    {
+      "git_object": "370efe55c1ecc774ce23b78f64401de9cdb002b0",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+      "sha256": "3bec774313d3405883cb58eff4800cf715928b11fbfd89305d21f1c47a379aa6",
+      "size": 18520
+    },
+    {
+      "git_object": "e07ea7be684ddf6f5f000734e153e34ee1df8d92",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gatt/GattInternal.h",
+      "sha256": "ca0a0699622449cf029f966c77cf51f343af645a98282b78219a5153b547b8cb",
+      "size": 33688
+    },
+    {
+      "git_object": "1192103d70ea7458f9c8e78230cbe624d0bdd090",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+      "sha256": "728b1e39a2a790b9c447c8192e32dcf52837d24bad71e3a275f481eb03ddc19c",
+      "size": 40405
+    },
+    {
+      "git_object": "e6005d3c1855b593d75aac9608efd540aa738a78",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/zephyr/ble-nus.conf",
+      "sha256": "a4b1876ad0358c5c097e058c56ae172c15294265cbb6c2ff7dda0c0f30e7c96b",
+      "size": 2362
+    },
+    {
+      "git_object": "7eb9934f4714271fd2c411724c899ff29e72fed7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE/zephyr/feature.yml",
+      "sha256": "3948d38e8e4193a961f719ffe5404433a211cadb3a2fdf782f42c69c1aca2ff1",
+      "size": 200
+    },
+    {
+      "git_object": "747484b26adaa6455d583835a2362a4937340bc2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_DFU/examples/README.md",
+      "sha256": "091f8a7c62e998e1d00c7a71a4df6d4a375d2eddd811f4f838898f8872639e20",
+      "size": 1793
+    },
+    {
+      "git_object": "f61da21f2f14e897b8bebb7084f0cffa3a102aa2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_DFU/examples/SecureDfuPeripheral/SecureDfuPeripheral.ino",
+      "sha256": "09d04163762b446b2e44bfcf777cb6e3c788d1325139cea16a0307dc8394fbdf",
+      "size": 8875
+    },
+    {
+      "git_object": "f490a7d265ddf8d13aa8a6114603a5f778c004c1",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_DFU/library.properties",
+      "sha256": "7b387068c9c5a96ab4eb0ad1ef15f3b81c218038d2cd8ea6b8e653e3705de3a6",
+      "size": 480
+    },
+    {
+      "git_object": "aa2ea98d0bbde963150de6ce0c4f20cae6902686",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.cpp",
+      "sha256": "4357dd439fc27d797ef241172b63c8cbd5dfa4affcd0fc05e2f3f8978568776a",
+      "size": 2442
+    },
+    {
+      "git_object": "8954e9f77f0bff6ef320a64984e33e5c6ee6dcc8",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_DFU/src/NUCODE_BLE_DFU.h",
+      "sha256": "4d49dff8173540ebca5b573e0be7d5ae89898dea64429e776e4ccb28de1a14a7",
+      "size": 2617
+    },
+    {
+      "git_object": "7ba08ac15ce93b67aa63e5f4fd1494a453365e31",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_DFU/zephyr/ble-dfu.conf",
+      "sha256": "cb3766b60b2a68c9b7755db53856fcba3203522bc94ed5968250ddff5cd89ab6",
+      "size": 637
+    },
+    {
+      "git_object": "a760e15407ce08496c3767218bc0047f61535f87",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_DFU/zephyr/feature.yml",
+      "sha256": "446747466df8c4098de229ad4bc69faccd37f847c6963b8c1a090d8f0cbab6c1",
+      "size": 208
+    },
+    {
+      "git_object": "21427df4b4080d727ce7321c7dfa3bfc9982f65b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_EATT/examples/EattCentral/EattCentral.ino",
+      "sha256": "8bcccc8ea738e1d44dec24a009d3fa656909af6ba7f2ddde23fefbd5612568e8",
+      "size": 7148
+    },
+    {
+      "git_object": "58aafd4f549ea92960cc77016c1cd194ba442b4b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_EATT/examples/EattPeripheral/EattPeripheral.ino",
+      "sha256": "7f939d823e608b8a559ab8f5f6dd70023ac4f4265cebfa702e41055a563486e6",
+      "size": 4300
+    },
+    {
+      "git_object": "a72ac6e425e2dae661e970304fd6a6f2e4627d92",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_EATT/library.properties",
+      "sha256": "674a101fd1656a464d59ce13766fa897480027c17d78328a11580b7101683ef6",
+      "size": 446
+    },
+    {
+      "git_object": "ab0c4f00682f44235d8e0e35da5d30f3896f32e7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_EATT/src/NUCODE_BLE_EATT.h",
+      "sha256": "c3ea0a98e8fcd19a417fec7bc7918e5a8c499cc9fa0038b813d45d3546de90ec",
+      "size": 659
+    },
+    {
+      "git_object": "98b042a1db4a93e0d9fb40f52408eca3d6a0d2ca",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_EATT/zephyr/ble-eatt.conf",
+      "sha256": "e7cb98fcbc21fb31d1fec8e1637f986a0d6f8da29275259ff47cf056ae338c4b",
+      "size": 269
+    },
+    {
+      "git_object": "c48668f77352c0c6fa43d4b36ffeae1b9fbe2e7e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_EATT/zephyr/feature.yml",
+      "sha256": "f2ea8bd581c6233d6222d6940e1ef86e9d269168ff3f48961e0b6cf105c0c7fd",
+      "size": 194
+    },
+    {
+      "git_object": "c86d94749115544b64fa32e219a00f0167cbcb85",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino",
+      "sha256": "478db36f6420d1c5e906a97354edd4c48291f205f9dfb5ac1d8eda13ac655727",
+      "size": 259
+    },
+    {
+      "git_object": "26e5021358f646fe168ab2c1433d63e0f510a044",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/prj.conf",
+      "sha256": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+      "size": 673
+    },
+    {
+      "git_object": "f8bc559914e95dd7563a7a4f29756565b56ea264",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino",
+      "sha256": "4a4d149c9b9c272427e3a36dcf91bfd4b7cfc49612cd9afd1e31eaf04305c833",
+      "size": 253
+    },
+    {
+      "git_object": "7281672e348515be4381dd6c6bf69cb4d81be335",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/prj.conf",
+      "sha256": "aaf8366137010f5aed870ee7cdead0dab2956152f1c24a34bb7eb9e09651559d",
+      "size": 715
+    },
+    {
+      "git_object": "91df77d5acb10ffac26b1625c0b11c0c19e2abc0",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
+      "sha256": "0e74e848be024b15350cda6efcd10fe8f03ecbf585fcdb5ee6f6606f2e95f372",
+      "size": 215
+    },
+    {
+      "git_object": "26e5021358f646fe168ab2c1433d63e0f510a044",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/prj.conf",
+      "sha256": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+      "size": 673
+    },
+    {
+      "git_object": "e499dc11d12dc0e53a7a29d26d55c06f4b78e3d1",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
+      "sha256": "27b7db00e297ac827f00b7f2e853fb06b880dddf245d802ef41614bf5902c4b6",
+      "size": 209
+    },
+    {
+      "git_object": "7281672e348515be4381dd6c6bf69cb4d81be335",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISSource/prj.conf",
+      "sha256": "aaf8366137010f5aed870ee7cdead0dab2956152f1c24a34bb7eb9e09651559d",
+      "size": 715
+    },
+    {
+      "git_object": "1d031a87f0a09f9be5c616e9f03bf6012aad924d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino",
+      "sha256": "56f71d7bb8deb0db3892a1337623a63f79cab92f6730ed3784e6572d527b84bb",
+      "size": 249
+    },
+    {
+      "git_object": "26e5021358f646fe168ab2c1433d63e0f510a044",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/prj.conf",
+      "sha256": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+      "size": 673
+    },
+    {
+      "git_object": "daa71241577b662c71a2e256228f08cfd513601b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino",
+      "sha256": "1f2b04debc56ccf6b4288104732d2bb8ed99c462652dcbdb56c71dd15663d205",
+      "size": 243
+    },
+    {
+      "git_object": "7281672e348515be4381dd6c6bf69cb4d81be335",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/prj.conf",
+      "sha256": "aaf8366137010f5aed870ee7cdead0dab2956152f1c24a34bb7eb9e09651559d",
+      "size": 715
+    },
+    {
+      "git_object": "5b82a676d4ba9a7293c4dc4af586a56607e0e025",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISCentral/CISCentral.ino",
+      "sha256": "510bb85a1a5303c470894b3ec1aba458748065e818972c02c7d8d28284007db0",
+      "size": 212
+    },
+    {
+      "git_object": "721d2333028a77b289ae6cc40214a13cd27fa38b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISCentral/prj.conf",
+      "sha256": "ca31c4aecf30fc13707d9775fd8806dd7569010cb49cb166cdb75ab8a61f0e13",
+      "size": 731
+    },
+    {
+      "git_object": "e39fd29e6eec7a8604f98447b00ebf54ada4c8cc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/CISPeripheral.ino",
+      "sha256": "dbf2f1dc98c7205361a9511b511946ef7bd8c2a390d5695b000e7831027795ae",
+      "size": 221
+    },
+    {
+      "git_object": "721d2333028a77b289ae6cc40214a13cd27fa38b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/prj.conf",
+      "sha256": "ca31c4aecf30fc13707d9775fd8806dd7569010cb49cb166cdb75ab8a61f0e13",
+      "size": 731
+    },
+    {
+      "git_object": "b8fbf52504c019ddb3a598b9e95615b0f737bff5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino",
+      "sha256": "1c624c2bb89221f44ad705749e29865a7a53f5a4fcae55dbd4799fd5187f138d",
+      "size": 194
+    },
+    {
+      "git_object": "399eabd7c4d317915153eb6a34db5dbca7fdb8df",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/prj.conf",
+      "sha256": "7946c215b637c99736372c4386ced8705fe7840f12f279a5f33a6c88c7c4a44d",
+      "size": 979
+    },
+    {
+      "git_object": "3f505c1a6608a95e1e233cfa3b5fdd4f9e97fb64",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino",
+      "sha256": "0b377face971a0feacd0b9722a4875f19b3020873c77450204ce5e5c52374d6d",
+      "size": 249
+    },
+    {
+      "git_object": "721d2333028a77b289ae6cc40214a13cd27fa38b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/prj.conf",
+      "sha256": "ca31c4aecf30fc13707d9775fd8806dd7569010cb49cb166cdb75ab8a61f0e13",
+      "size": 731
+    },
+    {
+      "git_object": "a688c1568b2235a61da9593ff65a8dfefd7fca45",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino",
+      "sha256": "9669a6450a10cda3ae40b7da6cd6c66d229d4d0778c48c386bb333cde11e000e",
+      "size": 225
+    },
+    {
+      "git_object": "26e5021358f646fe168ab2c1433d63e0f510a044",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/prj.conf",
+      "sha256": "c5cfc40c5e4f38319214231a51d169dbcbbe9565f245e9fdb267ff48244b00cd",
+      "size": 673
+    },
+    {
+      "git_object": "ba9a2595aa8ffc6284790a378b8a42c53eeade38",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/examples/README.md",
+      "sha256": "99840129a76b7d03e0854033ded04e1002612a9600f42e533042039ec2875869",
+      "size": 4267
+    },
+    {
+      "git_object": "8620d2234186535a66b1103b381434ec9aee58e2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/library.properties",
+      "sha256": "6dcc9168c87033041961ebfa6676e2d634acfd1166d745fb213a3a36b931b165",
+      "size": 523
+    },
+    {
+      "git_object": "7eb83cce6919067d0815c18268d157a7ec009c67",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/src/NUCODE_ISO_BIS_Program.h",
+      "sha256": "2c037afb01cae683f1a640852cbaa3e6800d3706c9617dde4dc0ce18988a9bc8",
+      "size": 38445
+    },
+    {
+      "git_object": "caee85c645a039dcaff31d5b5ec71558f0e645fb",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/src/NUCODE_ISO_CIS_Program.h",
+      "sha256": "fef7ffb1bd6b7ee357492696705663fa83fb839b943a969d766ee3499b834978",
+      "size": 26308
+    },
+    {
+      "git_object": "5ddcb7057dbc595cc2b5537c10586f2f580bc02b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/src/NUCODE_ISO_Combined_Program.h",
+      "sha256": "6ba9276f734784f353ddd85d7923f102ca18701ac04fe69e6917cf3b71911867",
+      "size": 26550
+    },
+    {
+      "git_object": "bae93ead9a50f858706bbf872ef50bc05e01c68b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_ISO/zephyr/feature.yml",
+      "sha256": "f9c0689bb3caeb58e1c4aa6114b814efaf446d787668941ed48b6fc875fc21cf",
+      "size": 167
+    },
+    {
+      "git_object": "f1935b5ab045486e383a21d7ab98561ee721dd8e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWriteCentral/LegacySignedWriteCentral.ino",
+      "sha256": "c27f64fdc5082381db1a91ff4734d64f8a0071841ae286a29836a0a3c2104503",
+      "size": 5977
+    },
+    {
+      "git_object": "49d1e25d2146e56cfaa1065aed3c1c5c55c1ce94",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWritePeripheral/LegacySignedWritePeripheral.ino",
+      "sha256": "5d01d1f8273f25d13d856cd1d1c2f7d28de3ca015e47eadc6c85385ef7941481",
+      "size": 5145
+    },
+    {
+      "git_object": "7926765aa5c3fd020088ed209609a9fa9a8229dc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_LegacySigning/library.properties",
+      "sha256": "016be7216ce2af5d4912370cada6081b305eac2aebd41cd6f228981cf34eacd6",
+      "size": 481
+    },
+    {
+      "git_object": "ffe466bf3d6f3b12ef262307bc04256f0f01f760",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_LegacySigning/src/NUCODE_BLE_LegacySigning.cpp",
+      "sha256": "95d856c7103227d0bc12673c6e3b41e820b4d1f6719eded654a34efd5b588b75",
+      "size": 1984
+    },
+    {
+      "git_object": "26cd18ca162bffa91de1d261e187d9732376d668",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_LegacySigning/src/NUCODE_BLE_LegacySigning.h",
+      "sha256": "08b5dd93e25587c1b169c1f10733d1a8db93b4544479a310275ddaf6e6d17dbb",
+      "size": 636
+    },
+    {
+      "git_object": "1a5bb1c4250446f2b0890112363ff044124c0402",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_LegacySigning/zephyr/ble-legacy-signing.conf",
+      "sha256": "ff0ee782f96723e9934d7c350758887c07cf461c1861da26de45c0b539d34253",
+      "size": 304
+    },
+    {
+      "git_object": "91aa2b3c41577274b1d59e9df23cce2cf7177e5d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_LegacySigning/zephyr/feature.yml",
+      "sha256": "be1109dbabe49def7754eff830f468493a96077a75f3f5e458f3877b578292b3",
+      "size": 214
+    },
+    {
+      "git_object": "f82fd70c569b130ebcde65704622ef4bad0d0fc5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/examples/EnvironmentalSensing/EnvironmentalSensing.ino",
+      "sha256": "bfb6aeb0d156a4b05b7793e879595fe7baac81b576b13e2ae62d1d74a757d46e",
+      "size": 1695
+    },
+    {
+      "git_object": "06b2d180c33c16885c381947d16165e90e1a03ab",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/examples/GattCacheCentral/GattCacheCentral.ino",
+      "sha256": "581352cd8328c655fb9d9fe739bc268ea15b4e7c8ead20684a17daea49c9e79f",
+      "size": 6378
+    },
+    {
+      "git_object": "a6f273882334b2a29edd10c016e829f60c7f9008",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/examples/GattCachePeripheral/GattCachePeripheral.ino",
+      "sha256": "6c1d41dde3003c7d1f99dcae0efb6c1ef287e30af31351bd1fb2ad519d114560",
+      "size": 4923
+    },
+    {
+      "git_object": "f050a6398073cd2e67cb6ffaa3122d10552bce02",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/examples/HeartRate/HeartRate.ino",
+      "sha256": "7c4a6470146a92557479686b0899b912c58b794e3e0ba06d5855d4dca547fdf1",
+      "size": 1435
+    },
+    {
+      "git_object": "8bf6909178ea1aa62477776161205976c0ec3711",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/examples/SecureConsumerControl/SecureConsumerControl.ino",
+      "sha256": "8a3bf0067cd4dd6ce6705553425d7a23afc6361fdd9fdb34e01b23e0123a6270",
+      "size": 1717
+    },
+    {
+      "git_object": "4663fac64b4adaae8078ce922e627b76d853fc87",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/examples/SecureKeyboard/SecureKeyboard.ino",
+      "sha256": "5cffd0a81674ae8990c01cc6e6171e9dc26648180f69d8847e77d750303e6904",
+      "size": 4471
+    },
+    {
+      "git_object": "aba3e7cbead68b458e665b2a48c935817c615cb4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/examples/SecureMouse/SecureMouse.ino",
+      "sha256": "e8a6a36d4042cc64c72bed6c5d4ac0db35bd698812c1c3f6504a135296e55a14",
+      "size": 1575
+    },
+    {
+      "git_object": "8f6b9b6a6381e4004949839b8a00afe9e70fccfd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/library.properties",
+      "sha256": "61729742b21ca74154a5f50679571f2ac7bdbcdd9088457f13647628009bcfcc",
+      "size": 511
+    },
+    {
+      "git_object": "013a297862992045c361c22c8fb79d27f2b02628",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+      "sha256": "6c08cd2ec9b25787f5ed93548df9cf69f2aa374130bfcad5ad5780a30361c346",
+      "size": 31262
+    },
+    {
+      "git_object": "727081b6376b20a54834ac86bc995678efe509b1",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.h",
+      "sha256": "88811c6d0bb7fe5a5d6b5548b9d06c6d705de1775c934ed2007990d92f5dd1ff",
+      "size": 21833
+    },
+    {
+      "git_object": "45e4671993cdb5fa0a9c08198ab7e22290ba7570",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.c",
+      "sha256": "047f1b521255388a076a49c4fa2ddb187184b1ecba769e2820c6c0d7ae239503",
+      "size": 3346
+    },
+    {
+      "git_object": "f80e7968ceccecdf011d06a3fd1f9278ee59d784",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_HidsBackend.h",
+      "sha256": "03fbfac5931faff2e32114fab74ebe1523f2d951bf4efdbef71c8e0dbd579001",
+      "size": 1696
+    },
+    {
+      "git_object": "9e0b34b3f31b459f6b5467593fca683393b33319",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.c",
+      "sha256": "dcb49f9c82db4c912fe631a71233da274b89a5df7e9ddca27c960061649e1370",
+      "size": 3365
+    },
+    {
+      "git_object": "05112366fac4b6bb6c286443f74c93872d479baa",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/NUCODE_BLE_ProfilesBackend.h",
+      "sha256": "1dc5018a29f3a107006112b607b631ea4e38ecd6f5614e7ce8d3097704639b5d",
+      "size": 931
+    },
+    {
+      "git_object": "56b361cca8b65514861b40c304aea91ecead527f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp",
+      "sha256": "fc17ba5dc4b107fd95fa3f8b3af685b1dd8195690e9bd382bcb41649bc67afe8",
+      "size": 1616
+    },
+    {
+      "git_object": "513187bd46b77044779e6d855d4d91e34d01b336",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+      "sha256": "3f365772186fb853228fc4b4e5b1c83a5af9f3e0d39e3be71a7f1ac09b06828e",
+      "size": 33547
+    },
+    {
+      "git_object": "4d3e0578680bdf414abe8f9e6a79182f6fceabab",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityDeviceInformation.cpp",
+      "sha256": "6a80dfef4a42f4a13758ea8c11ca45a6bd65e1cc0e506feafd995599fac06fa5",
+      "size": 3749
+    },
+    {
+      "git_object": "de9f94514e12c331a8e1a68c47add98c17f2c822",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp",
+      "sha256": "6a369517955a19098da1c6d105ee03a1d31c89ec2241f2b1885a1d801bf483d3",
+      "size": 20760
+    },
+    {
+      "git_object": "0ea8495ae47a76e5035a4d4d48bf2436f741f5d1",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityInternal.h",
+      "sha256": "bb078ba7f36d37079ba9a6d65e0a1506fa2645e48cecb5876c6df952890beea5",
+      "size": 12921
+    },
+    {
+      "git_object": "fe88ab31537728c33d7476e159a3b2e7aa5a9577",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp",
+      "sha256": "f00fc108e69adb0304e47552d2ca84880ff2be91d768c5527867858efa12bf6c",
+      "size": 24042
+    },
+    {
+      "git_object": "00c492db2846b00fd5f306e9f46b4aab5c15e2f4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp",
+      "sha256": "db034d4cada0793cb70bff1e2ca57b796c097ef418af9bc3f05df8d997402160",
+      "size": 23260
+    },
+    {
+      "git_object": "78589585f893b7a4f8897c0fb6c409ceb2470ff8",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/src/internal/security/SecurityProfiles.cpp",
+      "sha256": "c907ce6cb238a881f5bb83e30d18bb7d485663020a038e94e701f197e81e8d19",
+      "size": 3876
+    },
+    {
+      "git_object": "5a35405532d77df7b2d2628c5094c3e34b28f089",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/zephyr/ble-security.conf",
+      "sha256": "528dc46c9ff2d8a01dab5ae756a54068fa51d2bb37c7845d7c1c4ae0e097755e",
+      "size": 1261
+    },
+    {
+      "git_object": "a6f95c565fb373292571861ec2950aea3e7dedb4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_BLE_Security/zephyr/feature.yml",
+      "sha256": "7d55aad530c1d2ff3a20b670c3e40eac5a2b2aee94c94272edbb19175f2393b1",
+      "size": 202
+    },
+    {
+      "git_object": "f45f8dc7bc8dfce611fa162f2057f9f23f2862db",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/AnalogChannels/AnalogChannels.ino",
+      "sha256": "0947873aecb8dd3653975a627727dbfa8f863b3fca6061e244c98aeadc4c1c97",
+      "size": 880
+    },
+    {
+      "git_object": "d5c06cd71c058d795e536ee41b89470562233084",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
+      "sha256": "01019eacbd08730e96ba672c3aa83ec8f7915ae51639ae298757faf5ff4526a7",
+      "size": 567
+    },
+    {
+      "git_object": "7b97a23d0fc467e436da0550631f667f113e020f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/AnalogResolution/AnalogResolution.ino",
+      "sha256": "ec147faf2048adae61523f2622cbfcc436bf9192ac1b34e187e4351bdb83e414",
+      "size": 462
+    },
+    {
+      "git_object": "044e16bf38ea84dc874d9f881a3c399b08014436",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
+      "sha256": "f9b8100d21bdd4f0f595d972cf799e0692899aac115e639af10e21764420b21d",
+      "size": 654
+    },
+    {
+      "git_object": "6f20c0752ba922366bec5d97def58de3289df9e0",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/BoardInfo/BoardInfo.ino",
+      "sha256": "b25cfe9b3f515f18f7e34e69b3ca2607ce429d146f8c0991b17798a284a160fa",
+      "size": 1368
+    },
+    {
+      "git_object": "e42b19b0d4f3014b99065fa41ec9cbb181fc71bd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/CounterAlarm/CounterAlarm.ino",
+      "sha256": "c427d8db85541c5217f655dd65c8ef6534e8819c1a3ef5e96c706d021826ba4e",
+      "size": 1178
+    },
+    {
+      "git_object": "37371c77e332d623ac2515aaa2a8fda332bb8fe6",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/DynamicPWM/DynamicPWM.ino",
+      "sha256": "c6cd702abc7191bf5bcab6a9a07a629e531cdb560e9e4ad3f8539db723c527b6",
+      "size": 452
+    },
+    {
+      "git_object": "71787f4de6e243df2e61a0cc4be55d3ccbada841",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino",
+      "sha256": "c443737d5f2e385b7cbf31ad25128ec22a2388fa788750c7da0d3f7799204f65",
+      "size": 1163
+    },
+    {
+      "git_object": "a8376cc79f528173115585d7e69ddfdad2a67484",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino",
+      "sha256": "73e26cf8a9fdbe599de2ed1ae48a590c2cfcd8246e82c1857592640d1b874f1b",
+      "size": 613
+    },
+    {
+      "git_object": "67fb7c0dee489d9a05d1117eb8eac6e96f69fa5c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/SPI00RuntimePins/SPI00RuntimePins.ino",
+      "sha256": "3365aec1ef0033dc49c8a7745631c762bc9da38612a8d62bb396d181deaf7551",
+      "size": 625
+    },
+    {
+      "git_object": "4c43423fd16b92f687e2d8b49c8619b9cc2158ca",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/Serial1RuntimePins/Serial1RuntimePins.ino",
+      "sha256": "1c12debb70c86d0ead557e3d877f2110da392c51d59a03deab02b2b18593e9be",
+      "size": 634
+    },
+    {
+      "git_object": "70c40c0ecbcc7d0d8fc64b9faacfa1db3ae57b36",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino",
+      "sha256": "2437bb8e5f3ba2d679fd51a58c87e197f4dff869d2d4c9366246d1bb0c475cc0",
+      "size": 2073
+    },
+    {
+      "git_object": "a25981332283ca2c2b100f49e3c2da50e7a86501",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/SettingsStorage/SettingsStorage.ino",
+      "sha256": "91525c8905ef7d64ad937bd34aafdd290a15ef900888c93e263c40a33560cb91",
+      "size": 1207
+    },
+    {
+      "git_object": "4d184059a83ea69cef24b0d953e1d05138c79538",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/SystemOffWake/SystemOffWake.ino",
+      "sha256": "f2d4aa56b9aeed5b83f1b21805d108793ef39336017156badac1c5b7d581b910",
+      "size": 2530
+    },
+    {
+      "git_object": "63bd3097384e5bca026e0a3db62fc4cbb2a470f2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/ToneOutput/ToneOutput.ino",
+      "sha256": "6c7cc8ed68c2fc25b81817913b7a3a000adccf3f157c7f8d2e53e6fa872e208a",
+      "size": 304
+    },
+    {
+      "git_object": "c8dd2e709d6d2d1ea4d2468de581c88284c992a2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/WatchdogBasic/WatchdogBasic.ino",
+      "sha256": "e34c68175535dd3bfbf3d392392fa35854354fd89dce906b8e61f9a657d6f442",
+      "size": 921
+    },
+    {
+      "git_object": "94c52e0364738f559edc098a6e415189d0376a87",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/examples/WireRuntimePins/WireRuntimePins.ino",
+      "sha256": "311bf94257134454feaac402813fe06aa4d810ebce5b7c453751884734c4ead5",
+      "size": 500
+    },
+    {
+      "git_object": "424c3daf7822d67b89ea974695e9cfeb85f0e6ca",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/library.properties",
+      "sha256": "bf4ad04e79925c44af06a928ba50f13f8be7436e40e66666987035580d4e90d6",
+      "size": 446
+    },
+    {
+      "git_object": "01798c8b4a2f07042ae3c483c14022eb90d71af8",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.cpp",
+      "sha256": "7a5fe7013f0a6d1de5799025edb5c19515bce39ff08249954b12bf7885973d2d",
+      "size": 37689
+    },
+    {
+      "git_object": "1ba7407747b81b2959fd8f3bf5a405233b5c9d16",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/src/NUCODE_NU54DK.h",
+      "sha256": "5d4177745cb6e75875b199f197f4a5bd6a47dfef36f36bfb56a6ff6bc1a8a7c8",
+      "size": 11718
+    },
+    {
+      "git_object": "984ae05e457b4f6e85b96c1b6d9a9168dd01d65d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/zephyr/board-system.conf",
+      "sha256": "e252ac422dd10289b04ad94ea4aee5c30a86c2885f0be208227eee0e278f0748",
+      "size": 511
+    },
+    {
+      "git_object": "451d4988f5dc1d0c922faf8f1d3d773408e6c88e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/zephyr/board-system.overlay",
+      "sha256": "324fd33557f5fbcad4e9c9b83204b111d2a65835404cef0e1d11d631f1bcf881",
+      "size": 183
+    },
+    {
+      "git_object": "ee880d43312cf70bf342513711284934514009f2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_NU54DK/zephyr/feature.yml",
+      "sha256": "04c11d03717f6fb1c32eb5557d569a59565006a5535381879bbc9c77081e997f",
+      "size": 262
+    },
+    {
+      "git_object": "4c6ab3fa2f54f691e0e36e7444d7128ec1c628e9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/FabricCapabilities/FabricCapabilities.ino",
+      "sha256": "92d5da2844dd19bedbd36f71ecf6924f69e05d69b525238d091455d49e971db2",
+      "size": 1642
+    },
+    {
+      "git_object": "463d692b6e500668125f4e3d0fb4170e0ae41624",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_Peripheral_Fabric/library.properties",
+      "sha256": "5b1d7785d6ddd7fdd4b0302aec22ac77beb3ea5fbd9e3d35557ebe8747d67704",
+      "size": 463
+    },
+    {
+      "git_object": "2f24eda45f138138c3b76ee69210b75218c47d3d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_Peripheral_Fabric/src/NUCODE_Peripheral_Fabric.h",
+      "sha256": "84934420eafc6ec8a0ddd6b1ec01782c6e42dc62af3f35659c0bdea23173f613",
+      "size": 1877
+    },
+    {
+      "git_object": "57884e298838366802e7c714359883f4fcb698d3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_Peripheral_Fabric/zephyr/feature.yml",
+      "sha256": "58a168c3b7fbe36b8c42079e7c42e8f18fb9671b85bec179d04adcbd852138dc",
+      "size": 310
+    },
+    {
+      "git_object": "ca90c4141944d02374db26fc3cc90d5b1090d013",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/NUCODE_Peripheral_Fabric/zephyr/peripheral-fabric.conf",
+      "sha256": "a7afcb433e8e249da88c9450308f33c07f066bb3ca34e973acd76e39f0dd29ec",
+      "size": 542
+    },
+    {
+      "git_object": "97185061c2234c3810054854d50e47e25ac9541a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/SPI/examples/SPITransaction/SPITransaction.ino",
+      "sha256": "8023515c96b42748cb17c7f5995be0f5d5fd2cc64c914162918f305eadd0cd13",
+      "size": 864
+    },
+    {
+      "git_object": "d5a9b81df012000a638f22abb9a37be7cc421e8b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/SPI/library.properties",
+      "sha256": "e8c0295f6e865839a9ef0f2cac12a27ab6f948168f96de4525bc1749643ce29c",
+      "size": 332
+    },
+    {
+      "git_object": "54f5e698c2e70cd5cebfc42391509b237b980ed9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/SPI/src/SPI.h",
+      "sha256": "1d7e568b5bda314a545bbe48ebd1a407d86874a37c5693d18581a1664df6742b",
+      "size": 229
+    },
+    {
+      "git_object": "cd5b196a8179406cbdb54ca349d097233de927dd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/SPI/zephyr/feature.yml",
+      "sha256": "fdbe8670baf8a0d39ddad5bd1990b3492e096e3fb9252f3735d285338d12e008",
+      "size": 186
+    },
+    {
+      "git_object": "e2437acd2f6ceaa331a5b98edd6cbcccde4f9f1c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Servo/examples/Sweep/Sweep.ino",
+      "sha256": "4ca1859334e58e248d1dfa5120d752be367bf4a66dc197a266eec766be3ff168",
+      "size": 546
+    },
+    {
+      "git_object": "cbfbd44e4c35e71c15d7665ae6b2393055525bac",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Servo/library.properties",
+      "sha256": "e1edc41fe4d6ebc5c3af6c7b998e671bd2eb08a5fce340788e940a62db1c387e",
+      "size": 426
+    },
+    {
+      "git_object": "f0c0c2f7f434432748ca222c79e3b4a4ca2b4b64",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Servo/src/Servo.cpp",
+      "sha256": "926534b76589ff8126b0141bfb160d28eb3f55f0aa3b02d611bae8cf2c9cfd81",
+      "size": 6842
+    },
+    {
+      "git_object": "48f77970558725611f204555bd6415a3d392834e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Servo/src/Servo.h",
+      "sha256": "b3ccc3816bd654543c1ed5d95710c68fdba9a796c2b0281e692c48709425a377",
+      "size": 2298
+    },
+    {
+      "git_object": "6dcb769cfd1c921b6c8b730b7929fbe79ab0dee4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Servo/zephyr/feature.yml",
+      "sha256": "d8dd312854c5a1402b23dc3ba4b4c82db202e82beb423e051599250197b46676",
+      "size": 195
+    },
+    {
+      "git_object": "af2a0602362e3f5ba99db190bbdda0444078d091",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Servo/zephyr/servo.conf",
+      "sha256": "e793b5044fc63e8c959c0214cede0f8a10b41f4fdffe24f045bc7a411c06845f",
+      "size": 58
+    },
+    {
+      "git_object": "5237cc207afa526330a7b9ff3daaf5f17570182d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Wire/examples/WirePmicId/WirePmicId.ino",
+      "sha256": "6e874a592bddd13e50c70165392d68c0d119a0b993ab14d14f01a90215e1bb69",
+      "size": 4053
+    },
+    {
+      "git_object": "7f1cbbe69d868e165470eb9a0dd2ad2c4d98dc69",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Wire/library.properties",
+      "sha256": "8a282c91c95ac32565b0f1461fb47c48c10ae0dc17c826c0ec34ef0b6fa62ac5",
+      "size": 312
+    },
+    {
+      "git_object": "663edec606feda82d7bc89fdeb766e40062b35ee",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Wire/src/Wire.h",
+      "sha256": "7464e339719c87c5e4582d568883149aec90446e6239ce5ff8d1b26338aadac4",
+      "size": 233
+    },
+    {
+      "git_object": "cc85427166d62fa340542f857039d120e6998d39",
+      "mode": "0644",
+      "origin": "core",
+      "path": "libraries/Wire/zephyr/feature.yml",
+      "sha256": "d027750c7af7ea86a4d77474872a433149abd6014bfad2c34ab25df84cf56187",
+      "size": 188
+    },
+    {
+      "git_object": "ebfccb8e0482eeb5e887ce63afa381a88f941939",
+      "mode": "0644",
+      "origin": "core",
+      "path": "platform.txt",
+      "sha256": "0413baea72a7fcb2b2a0fca3f69ad90b9840f5483a5fc601f3101dac9bd75a0d",
+      "size": 4978,
+      "transformation": "platform-version"
+    },
+    {
+      "git_object": "1e4489e122ec17b9a1c17de882c67fe5d00ba619",
+      "mode": "0644",
+      "origin": "core",
+      "path": "post_install.bat",
+      "sha256": "1f0b3f91abd04240cc814d1f9fdaa2a9154d167e4080fce8176516f88793c1fa",
+      "size": 618,
+      "transformation": "windows-crlf"
+    },
+    {
+      "git_object": "396e108aa86393994c95560086d575c404abaf90",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API.provenance.yml",
+      "sha256": "54dca51ee3c0203e30a5cd21fe56edd61142a252cc11d8c4966467588859bccb",
+      "size": 1314
+    },
+    {
+      "git_object": "c6487f4fdf701640ac0f559eb0130cdf76c5d3f4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/LICENSE",
+      "sha256": "5749785c8bdefafcb5d798270ed0a967036fe2ca63dcedade1627565dfef81d2",
+      "size": 26001
+    },
+    {
+      "git_object": "506569a8bac14fa91476508a29138d4af056e465",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/README.md",
+      "sha256": "2d9812d0e1ee222c73ba39ff959bb5e933b60c7b7b5b85b0ccc5d1ada97fd7a5",
+      "size": 5882
+    },
+    {
+      "git_object": "a7d8c0b8b1d4ef87dddd21918a718a612fe7c276",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/ArduinoAPI.h",
+      "sha256": "421b66ccbbf038cef50df9860f7da13a6b4e92358b0550e52202b0aaabfc84ec",
+      "size": 1468
+    },
+    {
+      "git_object": "bb5a1b08b3fe4637b303780300b803d953c0a259",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Binary.h",
+      "sha256": "92fe847efe70c661249e7fc93f1701c0bdd9591989870705be418abcfbd3346a",
+      "size": 22611
+    },
+    {
+      "git_object": "f6511a695ac6a7ae8e5b449fd41055423264413a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/CanMsg.cpp",
+      "sha256": "1f36a261a67240e79685ffe0a5b51fc62b1078a72c783ef79671a2ec88f9095c",
+      "size": 1851
+    },
+    {
+      "git_object": "3bd74b9174b17fc5c263355af4f4718da86322c1",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/CanMsg.h",
+      "sha256": "e7de957122f47bdae0efd0a2868a9a037d2e92684265f0b182c997bf9efa351b",
+      "size": 5240
+    },
+    {
+      "git_object": "8ad9e30c836759894fa3a5b886dca45768a3894f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/CanMsgRingbuffer.cpp",
+      "sha256": "23bb98e631fd7a84e6f15c3eadba303cbe4384b0772376863966e067c0d2bcce",
+      "size": 2440
+    },
+    {
+      "git_object": "0f445796fcca6bc5ed50cb9a8febf8adebcac086",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/CanMsgRingbuffer.h",
+      "sha256": "ab3d456b25e898dd6d3c97db9de921bbba3bd44660ab226fcdeeabbf5c570747",
+      "size": 2518
+    },
+    {
+      "git_object": "702b80961bfbafac23121745228a7944f9aeb796",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Client.h",
+      "sha256": "93e0b67b2c576a24074016f98e5fba64edb5435f46992ca0f121e46eb9d85870",
+      "size": 1608
+    },
+    {
+      "git_object": "390556573ec5092ef716520acfb4a7fe56afbae2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Common.cpp",
+      "sha256": "1382df4deef885c82ffcab78cbcaa9757ea61028b9a22210e9b047bcdbec5066",
+      "size": 1132
+    },
+    {
+      "git_object": "18abd324f407154c39d0ee9bcb7233dafa612b6c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Common.h",
+      "sha256": "a8db31c6b9c0d4c5415c2808464747664deac21db3b9388c67c3c70f9ac990b6",
+      "size": 5344
+    },
+    {
+      "git_object": "0aa1353d068f2cee5489c80909e372a8153fba8b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Compat.h",
+      "sha256": "a33643dd27aa927134c080a9d5b02f9549e5ebf84ed4562ee3f850d53e51d7f4",
+      "size": 1146
+    },
+    {
+      "git_object": "fc6782e4e9e40a09dc10deb63bd4f9aa0ddb430f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/DMAPool.h",
+      "sha256": "88342c8084f40ed65256b50d8497218ff4c06f5ca190b6900153a663495465a4",
+      "size": 9774
+    },
+    {
+      "git_object": "7b197e149e579a46d79467f76e4384bb37a696ff",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/HardwareCAN.h",
+      "sha256": "52a48eac32992037364fe18cf5cea44641a4b87e9a6a11d53e4feee13d2d985b",
+      "size": 4333
+    },
+    {
+      "git_object": "749c5d4be24c213de3f73a2f6b61230b41cc4a20",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/HardwareI2C.h",
+      "sha256": "bb2450c286743724a4231527e91331df4f32e7c513466740e9e5e1f94d34c103",
+      "size": 1577
+    },
+    {
+      "git_object": "54987d5112437ee6afb9b2ecafccef5fe3549423",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/HardwareSPI.h",
+      "sha256": "5290c1d30a8e9617624e72498720051ad11da1e5e4daffda3786008fa606e4b1",
+      "size": 4890
+    },
+    {
+      "git_object": "89b216e26edae9a87d0c432d791afba076f49001",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/HardwareSerial.h",
+      "sha256": "094e6c3387a70c70f6ee9602141e6e4b265f02755066ce98b95c8bfdb93632e9",
+      "size": 5227
+    },
+    {
+      "git_object": "7f503e32d5c1cde5da411f8df5b1c0949b8ff59a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/IPAddress.cpp",
+      "sha256": "33e095b28f3e455bbf36bf522da8a2dd660f2caed82d0d8d93f11fba9cbdd0ee",
+      "size": 12225
+    },
+    {
+      "git_object": "cf2aaafa5ce184cc780443ab1e6a9027adbba90d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/IPAddress.h",
+      "sha256": "9bb8266716e47b99eb1273cd3effa8bd3655e4dd04c1edb60847dbefff3a7cfc",
+      "size": 4444
+    },
+    {
+      "git_object": "4726dfb4e3e3674fbcce6e9ca4060cb657b8834f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Interrupts.h",
+      "sha256": "1d972d1b8953cbbb02291de67aedd823452dc8488d4c0e6d21354f3d67b33c43",
+      "size": 2210
+    },
+    {
+      "git_object": "c9fe6860aca9f555b9072958b39611f60c683231",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/PluggableUSB.cpp",
+      "sha256": "943994e3c204ee9aaafdade9509e7413a430cc74adb1212630d9f3f91b611aad",
+      "size": 2418
+    },
+    {
+      "git_object": "222ccf3077cc0f257829bbd1ad6110e4b6184010",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/PluggableUSB.h",
+      "sha256": "01d852469db9688c65e83c57830814f60ca1585a80d133781f7027539177e774",
+      "size": 2464
+    },
+    {
+      "git_object": "fa2d00015e2104a49c06126bf4247fed575ca3ad",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Print.cpp",
+      "sha256": "948c4ad05b6dc76539ad321ceb782d511a4049e5e32f1eca44d015c158efe826",
+      "size": 8527
+    },
+    {
+      "git_object": "11e9e11f83d1c7be805af832c27434d1453d5612",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Print.h",
+      "sha256": "84a18af59e680ea90d7ea1169915ff00970c95892677ee8b969826dd2f58a3f1",
+      "size": 3356
+    },
+    {
+      "git_object": "fbd48cd1220b4b79956f22831df759d8da6efbba",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Printable.h",
+      "sha256": "4d9ae05f5b90610c64faffa85c9ab976687a04b9f605e27d844cbac835d52db8",
+      "size": 1360
+    },
+    {
+      "git_object": "3190405394ccc5f29c95703431be7644ac395114",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/RingBuffer.h",
+      "sha256": "c7dbf877dea6e8b7eae66ea2da77c6447df829f27123c43b7e6a34d9a946c608",
+      "size": 3505
+    },
+    {
+      "git_object": "ea8ce19e24f1990d4a44545ac072d933eae9dfa5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Server.h",
+      "sha256": "e5af55fced8a7c0888c2557bbdc7ddd3c4d495e5f522ab9ca23c11c53e13309e",
+      "size": 980
+    },
+    {
+      "git_object": "5edaf5d2173e9271bbf04e3a33bd48e71c67e87b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Stream.cpp",
+      "sha256": "d5ad632508b4df5ec1ec64036417c3a0015b9f75aa5d2b288297a0d3f0f6ca52",
+      "size": 9865
+    },
+    {
+      "git_object": "be6d8801dc7c6a9de3ea16b2b99780f9d8ec502e",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Stream.h",
+      "sha256": "b26fe1f6ca11c585f9972884af593a05a765a61feab1bb0238c9af59eba58722",
+      "size": 6739
+    },
+    {
+      "git_object": "cf94dedff67190825bd51c8219bde63c50c5e7a5",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/String.cpp",
+      "sha256": "3d41737c3e00ea748c65334d3cacbb10c6857beeec098dcd7e4cd065fb0baa22",
+      "size": 18034
+    },
+    {
+      "git_object": "f2413e14b26734005f1cc50e21d9f5b458587421",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/String.h",
+      "sha256": "4ab6b8f64515beecac95ec78ee59083331c1ef266630300e5df0db595b9a0600",
+      "size": 11211
+    },
+    {
+      "git_object": "67754b255b85134f3a62894a0e0a07b0340e9229",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/USBAPI.h",
+      "sha256": "1d7f44cf2bce98fe0863f81cf4c2cef1389d8e7b3333cf143811c878d1597e37",
+      "size": 2148
+    },
+    {
+      "git_object": "008bec04990f39d3dc6fdb99df3de6dd6684e16a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/Udp.h",
+      "sha256": "0a7787ab78cfec5ccb62a6da32165a4fd7f461a5508fa12bf196d934138c126a",
+      "size": 4713
+    },
+    {
+      "git_object": "d407dbfa0b675299656ab15deac0384082545b24",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/WCharacter.h",
+      "sha256": "9aad7a7a778dc6cd4cedbb9521bfa49fb396ee2eccdfc69a2c5ac65849ad3b39",
+      "size": 4937
+    },
+    {
+      "git_object": "f410886c17e9874f61117c3d2268f4882ffd6927",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.c.impl",
+      "sha256": "90a276235838028de5e1731eccbf2b62b4b35194cc76f98e2991372db476b58f",
+      "size": 1470
+    },
+    {
+      "git_object": "1a6a7b6ecc2f18810dbd7aa51c749e477bb77b21",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/dtostrf.h",
+      "sha256": "38721988c73406b21c4787dbd112aa2646fd4dc188b6805e320dc550ebf65168",
+      "size": 1048
+    },
+    {
+      "git_object": "a2873cf96c8219b8fa8e77bc71924bebc4634675",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/interrupt.h",
+      "sha256": "647a88260e4b0545fce33900845c7961224c9c65db0fcf0202ddca658992bea0",
+      "size": 909
+    },
+    {
+      "git_object": "6505616b8573e0ccdd71073400c237ecf9bedab4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated-avr-comp/avr/pgmspace.h",
+      "sha256": "0cf3bb8185f1ced6f8bc89b109a1d27855561165d001d64a34bb8984e8227041",
+      "size": 5212
+    },
+    {
+      "git_object": "bad638f395a86d60a36822c2cfdfae2835f220cc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/Client.h",
+      "sha256": "0bb98939b7198cac4af3b47b1d538b441b83e15e3a9eca6012a414e93212b629",
+      "size": 994
+    },
+    {
+      "git_object": "d9cf646c089251501c8be9b642e7c4a141b7eca2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/HardwareSerial.h",
+      "sha256": "8ec5e3ac0079e80549fa2821f06b6e2d38d9cb3091bfba1f6e57e3556ef5b255",
+      "size": 1010
+    },
+    {
+      "git_object": "f18c435c3a5621c87defd78e4a8cebc6e64b57de",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/IPAddress.h",
+      "sha256": "125f6a3b78534697b9a734b6cf49c3a720f0facd0a44e0ed6dc6839e0903a665",
+      "size": 1000
+    },
+    {
+      "git_object": "ae788d437b9508b6777dda994c02e7a5e2ef520d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/Print.h",
+      "sha256": "29e34cfcdd450bfe56a6a23b0d4820bc0ee639c73e15bc349f3af5e294fc641c",
+      "size": 992
+    },
+    {
+      "git_object": "2c941eb3bf1202fdadc6a31eda30b20eeec627bc",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/Printable.h",
+      "sha256": "ce9ed695e3a5124bfcdaef956a11c62e4c86c56d5ace8dc69b8fcced04a2dba7",
+      "size": 1000
+    },
+    {
+      "git_object": "5b7643a8ef7c768aac8fc1274239f4ec6324621b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/Server.h",
+      "sha256": "c92556ba6523961f951f510d0897cd78abc6200e9c57e0db36d2647b1192b005",
+      "size": 994
+    },
+    {
+      "git_object": "a3fb6519193b22cee16840c4a191c6ca9df12d41",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/Stream.h",
+      "sha256": "40502ab4119c4224f5d2c44d11fd2493f057ba235ad85e2543835a0450e4770a",
+      "size": 994
+    },
+    {
+      "git_object": "29d6fbe9c60331332c23ac3eaf0fdae5a4780e9c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/Udp.h",
+      "sha256": "a11a5afdea87cf5a834be5ab96557c672150878f6ebddeef3d75a6e581e7e1b7",
+      "size": 988
+    },
+    {
+      "git_object": "15a40bb1e910626cca7e0269d034bb9f5537d063",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/deprecated/WString.h",
+      "sha256": "44d91a7f22cf368465af4c86234cf0f137c044b097f69ab562ccd7b5582e44b3",
+      "size": 993
+    },
+    {
+      "git_object": "eaa2b8e42e01f601a8f8a158b466cd29b7bcf73b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/ArduinoCore-API/api/itoa.h",
+      "sha256": "3caabe265569bd355bd3ee9e311364c6ecea05c6879ef63dce72a622dce58a4f",
+      "size": 1340
+    },
+    {
+      "git_object": "43bff2228363372146a5e1eb45057de40c9b48b6",
+      "mode": "0644",
+      "origin": "core",
+      "path": "third_party/THIRD_PARTY_NOTICES.md",
+      "sha256": "b9360db1689b4dec26b2ae5bfe73e64b0f0a397cbc7f1a2b8ba05d2431a2d757",
+      "size": 1493
+    },
+    {
+      "git_object": "341c2f701da1a0598c01762fc0b64a0726a86177",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/host-portability-inventory.json",
+      "sha256": "247c574216d5657cd63c20950591070cefc417fa490b491365241c4619838ea4",
+      "size": 5515
+    },
+    {
+      "git_object": "f692b3691ca2ad2a858ae135a0dfde037aec79ce",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/nu54-builder.cmd",
+      "sha256": "0fef4ef0fc74383af7f66e714026becea15d549dc2753f263ac81cc3e4d0ca98",
+      "size": 1359,
+      "transformation": "windows-crlf"
+    },
+    {
+      "git_object": "a888639e9935c0bd4e70654e192ec58e62dbd467",
+      "mode": "0755",
+      "origin": "core",
+      "path": "tools/nu54-builder/nu54-builder.sh",
+      "sha256": "74c58426f311701b8301134334ef09bd5d0a6f66735f8aa51f9c5b4c4f2aedb1",
+      "size": 1320
+    },
+    {
+      "git_object": "6c53c7db070706669eb9504ea183649ad1166070",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder.py",
+      "sha256": "aaaf14d4bc091da24d9efabaa4d2b057d2ae8d387dbb007fb212faa920580315",
+      "size": 1268
+    },
+    {
+      "git_object": "ac137a2b0d35f153d3213f8a6ab289b57b9a6daf",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/__init__.py",
+      "sha256": "e7018aefe8b53377674f41aaf1325b80668edb7d27d25367cdcc455c81eabe31",
+      "size": 8720
+    },
+    {
+      "git_object": "6940c1963c9597be7c2e9857781aaf1158da04b9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/artifacts.py",
+      "sha256": "758d0e2b1890bc593a8507f004050687e4adcd4e1f9639a9d4a22030f81307b1",
+      "size": 25344
+    },
+    {
+      "git_object": "7c7d1fab48e83e633932023bf899327af3b669a2",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/build.py",
+      "sha256": "259d75e47dc1958f168292963cba87e076ff2f5373f98c2c7cea79f02877df75",
+      "size": 35218
+    },
+    {
+      "git_object": "0caea2f9aa516ef573515d3b7f25883f1d7cf1b7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/cache.py",
+      "sha256": "04178e329add2a90f5bd63956d0c88ad0037f5b934a06baf603d0aa676162e1d",
+      "size": 22757
+    },
+    {
+      "git_object": "b4a148b0d7f723f9d5c40e044d860083cebb0ca3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/cli.py",
+      "sha256": "a1d2c7471388a619e67faa9f4b5e07635baf362904bcda98aa17d292ff19e755",
+      "size": 7078
+    },
+    {
+      "git_object": "20a4b06c3f18ee39164772978a87bd94c5f6eba1",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/common.py",
+      "sha256": "4f7671341e7671f67372fae305894fca1810fd93f9ddd95be8237fcee5503b55",
+      "size": 11358
+    },
+    {
+      "git_object": "04ab9ca1330e90bcc7ae99c712c886952f3ed6c1",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/configuration.py",
+      "sha256": "3c5b25b025441b4a4d1829f40a962cd6cf030ebaaede347ed4fda3a3b42bede2",
+      "size": 11733
+    },
+    {
+      "git_object": "7f060ade68e769b106e25e702e6135366f178cca",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/environment.py",
+      "sha256": "d1f11271b77dd6291d459b83d626bfd79d3615358595680e6cfe02298d76b6e3",
+      "size": 15113
+    },
+    {
+      "git_object": "8c670c3a5f4a04e77436151ea854111b121a35dd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/frontend.py",
+      "sha256": "4c001bd14f5cfbeee086a876d729641510214803c520c82ef39ab277698c5e7d",
+      "size": 7430
+    },
+    {
+      "git_object": "3f9ebf47f016fd788fd26e3e55bc3dd18e49c636",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/host.py",
+      "sha256": "931021a867f994dc06757cf1c611c6df260fb8bb092f1311dead9ad5bf475794",
+      "size": 9918
+    },
+    {
+      "git_object": "c976dacef16e173583d18dc6ae1e25505f55bb80",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/installed_platform.py",
+      "sha256": "454f13f608f985d9719761019b2592d43849cb52d4734b6f09bbab613526ddfb",
+      "size": 4066
+    },
+    {
+      "git_object": "7edf824e59d0562bdfeba1ee3af51b993e4f2d69",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/locking.py",
+      "sha256": "4b6061e9d99d75cb9aed74749a074bc46c0db698d77705f37cbf676dbd3fa10c",
+      "size": 7608
+    },
+    {
+      "git_object": "f01c3d880119e150f641061f30a09896bf3206aa",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/models.py",
+      "sha256": "cbb1b5c88da85a1cbba06a8461b1ca81bf6457433205004fe130808864354adf",
+      "size": 2566
+    },
+    {
+      "git_object": "75eedf0d0c3316c0a3474039d5b1461c0aaeac71",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/paths.py",
+      "sha256": "ab7d657f3005bc5a461ebc1d2b0c6d32688f4ef473aaa9ec416a2c27263f436b",
+      "size": 4778
+    },
+    {
+      "git_object": "1501420b95d1a8aefb6eca97b84b3695b866dd00",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/source_graph.py",
+      "sha256": "b46cd99d8a5de75c6db14f67c76b35312477723c2040b6213bdc8a95c63348d1",
+      "size": 10950
+    },
+    {
+      "git_object": "6a5e499ac153382f590de694c210a2d5f93aed20",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/src/nu54_builder_impl/upload.py",
+      "sha256": "735b839725904381cedf19c0649b3b1cef57d4969344a43fb35250c9eb62ec94",
+      "size": 12898
+    },
+    {
+      "git_object": "c17950f54841a081b3f7f8c9c48266ba678654c7",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/templates/zephyr-app/CMakeLists.txt",
+      "sha256": "81e7d9253ffcc33835464bfe00195b291b713a3002e365db88ce93eb95631840",
+      "size": 1050
+    },
+    {
+      "git_object": "4ee7eb005fb0780291431cf6192596e8a3e82c47",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/templates/zephyr-app/app.overlay",
+      "sha256": "397a3d1b78b55ee0894864e7cc89dde27e23372c2a9fedba2374cfd261abd51f",
+      "size": 277
+    },
+    {
+      "git_object": "9d9daef6803b5a18f5c361f6737cf2e536a75ba9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/templates/zephyr-app/prj.conf",
+      "sha256": "18d7d72b0ca4450ede2cf7e5bacd2fa327b7e2a7031e885bfabfeee7616871b5",
+      "size": 397
+    },
+    {
+      "git_object": "71db79dc0308a997fe2fa11d1b01a1fae94da239",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/templates/zephyr-app/sources.cmake",
+      "sha256": "827e9e9ac87a73cc21035c1fc81e861e0959b26d25cf43c3e648f8d383aecf06",
+      "size": 165
+    },
+    {
+      "git_object": "3567ac45a8a5620b65082c6647b6286134000366",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-builder/templates/zephyr-app/src/bootstrap.cpp",
+      "sha256": "ee57a08380c56945ea6cb761a97227c1e8d37a405be95045174d5b2c277d549c",
+      "size": 360
+    },
+    {
+      "git_object": "6be0b3d71150c2b6bd698bd3020d628c326860f8",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-prerequisites/README.md",
+      "sha256": "80fdb31c9b16c715a118d91c87661f8c740a8dd625994c840bbf1e9f66a1d1ba",
+      "size": 2626
+    },
+    {
+      "git_object": "30e763d964de5eed3cea932296e962741c21bb57",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-prerequisites/install-nordic.ps1",
+      "sha256": "e352111348f50aa4c23b462bcdbb4403baedd499dd554a5fc42463eae165c921",
+      "size": 15019
+    },
+    {
+      "git_object": "cd64697c1e0eedbf4f48b1786c7740a6fa943813",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-prerequisites/nrfutil-requirements.json",
+      "sha256": "120762b796fbfe39e8e6cd8e6d6076a13e37d476ed0bd5c3a1003dcfdf3f097c",
+      "size": 71
+    },
+    {
+      "git_object": "750f1237a5585f883c86fb1b4cba1ac23124df88",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-prerequisites/pins.json",
+      "sha256": "c44583056721058d831f180e281abacb1a8333e298a36556ab272251117f5bde",
+      "size": 556
+    },
+    {
+      "git_object": "57c79837625e6317ed39a5bd3cc3248b8c1db456",
+      "mode": "0644",
+      "origin": "core",
+      "path": "tools/nu54-prerequisites/verify-nordic.ps1",
+      "sha256": "1c0d7d19e1529cdc8d0b12407e2c52b42586d4196179595dabc71b0163953bb8",
+      "size": 9505
+    },
+    {
+      "git_object": "33052704ed5a963c897252f3c3d8bd23d8865a53",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/digital_pins.inc",
+      "sha256": "f3f5e3a42c6bdda05cecb18b602183100283efb8f22062da1d6a9373e1cf2904",
+      "size": 1949
+    },
+    {
+      "git_object": "1417ca408b0827e7e058fbf3f666a79e36fd6bef",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/io_resource_registry.cpp",
+      "sha256": "cace6d83d5efd8feca18b0ff6d386fa2cfd926210afa113584f5c3961e161cb1",
+      "size": 6826
+    },
+    {
+      "git_object": "fc4ac88ea7d5cb7d327fd140c6aa4982ee6b6fef",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/m28-ble-readiness.json",
+      "sha256": "8f1e1e74b8282e2074f7c3c64884183dfe260384b5d7230c083c2ebb97797f94",
+      "size": 17793
+    },
+    {
+      "git_object": "a6f0bfeee21fadeeba9e9d1d3253151484dd0df8",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/m29-ble-readiness.json",
+      "sha256": "c3ed5210f7b1d3fdd5fc9c8b0432d676e697170f05b12d5c5f02c25779a808e1",
+      "size": 15508
+    },
+    {
+      "git_object": "bb34b74ae4d3b053b4b61981f7043856d2dee3da",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/m30-ble-readiness.json",
+      "sha256": "c096ca2af0b35cd85b17c8aeba3ecd313dd20451514cd8e4d2b00570e1774536",
+      "size": 17623
+    },
+    {
+      "git_object": "a96c6ef04a8512463bab380f596c8d81cd2775aa",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/m31-ble-readiness.json",
+      "sha256": "cd1706c766715780b82b55f124929fc30fc0047ab78bbbb5493b36e96714fad6",
+      "size": 55589
+    },
+    {
+      "git_object": "74d9e24c634b320968ad1d960cbeeb4be7758dfb",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json",
+      "sha256": "3a0225255291b877e1e4a3508c2e7e2d00ec9942e8254e3f0e70ce381ceb79f2",
+      "size": 2831145
+    },
+    {
+      "git_object": "2675be9d8e5b48cad38bd92819fa1d015d748fab",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/peripheral-manifest.json",
+      "sha256": "081890cfad0ed791a739c5a7bd655fcaaafb679fbff517f2bb0af5a28143e1b9",
+      "size": 62825
+    },
+    {
+      "git_object": "f860ce50e6de032f9f14ac003d11a743ff4e52d3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/peripheral_routes.cpp",
+      "sha256": "6f4c17fd1ee6698c42b34b56b55cf8ce0a7083e57a923c63742ef2fbe2deddcd",
+      "size": 16739
+    },
+    {
+      "git_object": "058dfb05b62a8817e43b7bfeb53265331774d201",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/peripheral_routes.h",
+      "sha256": "0c99ee875d1a91f23b49bda69919064134c9835f72659ceb5b10e3015b64ca4f",
+      "size": 2853
+    },
+    {
+      "git_object": "d3d1ffeee972d8cad6c8aaca2946aad20949c5b3",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/ble/app.overlay",
+      "sha256": "80950b95f2e3dcc1926112705fca4dba6d959dbfe133a0ed38134bda02553507",
+      "size": 450
+    },
+    {
+      "git_object": "cc874f988223d8a1a9e5f1551705111662c41f74",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/ble/prj.conf",
+      "sha256": "445d7d5fff89b0db707b04cf309d02cf01b644cb0b26e0d188ac6d106cea24da",
+      "size": 208
+    },
+    {
+      "git_object": "269905e5eaf304898304ce46a7a62c72a182f125",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/ble/profile.json",
+      "sha256": "6956493378eb1e7d32750050119b6416b7e0f52b19e09927d92003647376d912",
+      "size": 476
+    },
+    {
+      "git_object": "4d20ec1674d980922c0e987d81db6d6364fd9e3b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/fabric/app.overlay",
+      "sha256": "9573fa3be85ebf00fc196081bb8d6227a44cae4b89b47b7d8e81ce6e53945cea",
+      "size": 2413
+    },
+    {
+      "git_object": "ce5175c659226c4e4c72c56fbe6261de5d1e901d",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/fabric/prj.conf",
+      "sha256": "e4db9b8dec519cd6da6dffc3c3af672271225cc70333b9955a52493cfd6cc64e",
+      "size": 662
+    },
+    {
+      "git_object": "fba8e6f3c90a3161306cbd093e31ce1e2aa59be4",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/fabric/profile.json",
+      "sha256": "900d95744887b7f4ef2b601f83127245ad01c1bdfd33aaca38f290bc59e84908",
+      "size": 522
+    },
+    {
+      "git_object": "0a311a6d26ec0c3709841b30571a39ce3f452eef",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/secure_ble_dfu/app.overlay",
+      "sha256": "42caa736a97bf7b52f5ab49aef435c7ec33410eca3bcf5cf946003638af9b9de",
+      "size": 417
+    },
+    {
+      "git_object": "378d5b95ed6af7a8c5bbdc6be5bfc92793d8307b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/secure_ble_dfu/prj.conf",
+      "sha256": "c0bec7801481b8f664e9125ef7e45ffa7a8e702cecda39439414f9e95f3640cb",
+      "size": 957
+    },
+    {
+      "git_object": "f339e83b9d78793c30b113fc72582be1d3a0d604",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/secure_ble_dfu/profile.json",
+      "sha256": "81cc614a16f6e3542f434c8e3c672cf2f8cc6a09f715a62038057f09683d843f",
+      "size": 621
+    },
+    {
+      "git_object": "006c8fd6179b632fb8bd84a94c615e0204340a36",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/secure_ble_dfu/sysbuild.conf",
+      "sha256": "a14c2437a6b598569537a63dd47bee3865e7d9a9fdfe17f6b1f5137af643de7d",
+      "size": 147
+    },
+    {
+      "git_object": "54120f8eaa91e2abae8d6073c336ccf88d95b874",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/secure_ble_dfu/sysbuild/mcuboot.conf",
+      "sha256": "a14f02ae6de555de70bd0876d0eee99699d07946acb628de499e057488e983d2",
+      "size": 315
+    },
+    {
+      "git_object": "e3c0094466c3727ed832cf692b9e9630167077e9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/secure_ble_dfu/sysbuild/mcuboot.overlay",
+      "sha256": "e6f90e6078e44b7a66361fd518b4e9ac30eae6f76d2bc3776805ce4e88f26cc8",
+      "size": 208
+    },
+    {
+      "git_object": "19435d79bbba04ea6ab6f2484231516779e8880f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/standard/app.overlay",
+      "sha256": "f270dfade0eeb067dd6ad389825c7a4dcaa9f599fbf09459de2919849392e53c",
+      "size": 435
+    },
+    {
+      "git_object": "54a1763f3cadb12ead4aa9bfb77fee815baa03ec",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/standard/prj.conf",
+      "sha256": "da22673694b88fa6b391ba92f87d214ecbe26e8417e92a1cf9cd2f6fb1363dff",
+      "size": 207
+    },
+    {
+      "git_object": "3a9a440c808545c72d24649f711aeb83f8fd5b6a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/profiles/standard/profile.json",
+      "sha256": "87f8faa34c1cf8559ecfd5e63862d5ae1530af1879cfbd88b49ff5f5c96223e6",
+      "size": 480
+    },
+    {
+      "git_object": "5387383189e43ec81ae3ee700007a1b94ec114ef",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/pwm_runtime_routes.cpp",
+      "sha256": "58fd07a3ad1b51e05beddefb5bb7e72bb26fa2007dc6f09543b9da2506dec5be",
+      "size": 20438
+    },
+    {
+      "git_object": "62ee3f9df0665efcdc82fdccd25714c93fd22037",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/pwm_runtime_routes.h",
+      "sha256": "bd732ba343c6abe704656b70d6048874d95172f7df8e5ffc88f2669433244042",
+      "size": 943
+    },
+    {
+      "git_object": "2774c6005cebe7a28e4b690a9e86e2969d511002",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/serial-fabric-contract.json",
+      "sha256": "f641a40000b42f052ea9d57bc1a30cb6924d5bf3d42eed0263b03de23a50021e",
+      "size": 29547
+    },
+    {
+      "git_object": "8b21522cc4faaa2c9c9a44ad1ca8302f7704cfad",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/serial_fabric_routes.cpp",
+      "sha256": "3fc7d5d06a233045785c0ad62f70e3e5d8d3bde000f0daf0c1b5599a89ee1d97",
+      "size": 20673
+    },
+    {
+      "git_object": "a14abf390a824176565251b326d0e7d280982399",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/serial_fabric_routes.h",
+      "sha256": "e8565abaa2bcdb1cf5c545125700dcbd2ab220ed841859fdc158e9bc1edae0c8",
+      "size": 1278
+    },
+    {
+      "git_object": "8ef28b161dfe65b015706783424665dec350b2ac",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/system-capability-contract.json",
+      "sha256": "6c8f75b99a8480f9fd1f14a5e66a13260da202a02b4f62705a0f08a9a73359cd",
+      "size": 9407
+    },
+    {
+      "git_object": "1d3ad15060db159b0491117c1fbf6da320150505",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/v0.4.0-release-readiness.json",
+      "sha256": "c53d203b0cbb513854f7d3ab30f34996595e3f68789c1d78f4f5b0a0ae0d7e5d",
+      "size": 7643
+    },
+    {
+      "git_object": "ded499ae9e42028547956fa60220d5951301360a",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/variant.cpp",
+      "sha256": "2a5d58142e72ac3527ff383658c536827c53fad1d164e3ea9feb22a482216f46",
+      "size": 5565
+    },
+    {
+      "git_object": "d4f541ec857c78cc85db7670e95fd82fee7c8f3c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "variants/nu54dk/variant.h",
+      "sha256": "e1225b6f9534fa2d6d02e7695236f15590d3ae94f54f72e833f7c81a09fa17f3",
+      "size": 8937
+    },
+    {
+      "git_object": "01e2eb0485238686968e80b8947d4902574c30d9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/CMakeLists.txt",
+      "sha256": "67d4ef588cb7a5b3496d7b98df98ce5deebcd869ccc53d7aff3403ec256175a2",
+      "size": 2105
+    },
+    {
+      "git_object": "3ea18d582de1969b8f5c3444b6535a5423a95611",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/Kconfig",
+      "sha256": "fbc0ee7e4c8592ce4937dab978de61d2f9c37049d6040dfab30af4922a7e6a04",
+      "size": 1630
+    },
+    {
+      "git_object": "6b6a8bf46d112277edb4440311b798fff81f0f99",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/cmake/build_record_target.cmake",
+      "sha256": "79003083839faf15f725f20601cc15bc24eacdd31d1686e8977bd668e1854288",
+      "size": 1010
+    },
+    {
+      "git_object": "92ff3ad03914085918f8e5ae120e6a63689113aa",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/cmake/product_identity.cmake",
+      "sha256": "aa7e461ec99c6db457a9e5d837d5406f67fdb3495b9a70392a0bb9e33664ece4",
+      "size": 1550
+    },
+    {
+      "git_object": "9a8022de05cb2fb48a716a214e091e810ea58eac",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/cmake/source_provenance.cmake",
+      "sha256": "dfab776cc268c7d76f19dd9bd53511972c64f7ef211ee53f0131b3396d378afc",
+      "size": 8427
+    },
+    {
+      "git_object": "584f868fe5d7b1f4eeabc8e1fb2cae6cc2edeeb0",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/cmake/source_selection.cmake",
+      "sha256": "79049b8be2376f1caaee5fedc6851a048bde06e3188b060d5c7a411f772ae23c",
+      "size": 6723
+    },
+    {
+      "git_object": "92d535795cecd889ec09c0387ff1412652ed5816",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/cmake/write_build_record.cmake",
+      "sha256": "8ddf278baa74568b502e03f9ff343bc3d309f8753da1a01ef2d374c01885dc60",
+      "size": 8198
+    },
+    {
+      "git_object": "8b473cbd3182f6623dda6e8c5fe41d360c6df34c",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/analog.Kconfig",
+      "sha256": "76d94be4572e246b23146cd083f5ba501ca55e3cfa2982fccc8e231e42bf4491",
+      "size": 1222
+    },
+    {
+      "git_object": "096b7cb77bbea109758d4e0ab1f2a91442250bd9",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/analog_fabric.Kconfig",
+      "sha256": "80b849b59a702c6422c63e49b38c844ad7ef8adcf7481ba60c7fb2e61e320ae8",
+      "size": 701
+    },
+    {
+      "git_object": "450a0b375d344b832a1800e9397f61fed4d00e28",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/ble.Kconfig",
+      "sha256": "48031adfe77633d23e6a1bc22a691bc36759d44d455d67b82f730383350c2d5e",
+      "size": 3816
+    },
+    {
+      "git_object": "1750c375a72e17b4b4edc29683ffdbea2c4f276b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/buses.Kconfig",
+      "sha256": "5aaa529f40a1916f197aaf872c38c0583176c08502550878f9b38ff62de2263d",
+      "size": 1135
+    },
+    {
+      "git_object": "f08a18c6d89ae886b9422376d167a0392fe6ae24",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/core.Kconfig",
+      "sha256": "5f50b0433f0ab302d702d155c53d0f1b137b2aaea13dccce08db275fad080b19",
+      "size": 3769
+    },
+    {
+      "git_object": "8863f373b6a19c9748164bcbd3a9d7a04515ae99",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/event.Kconfig",
+      "sha256": "debe0f15546e75ae586bc4a494f46d80c18ef97de6ccc57605ce99d1de6f7d53",
+      "size": 561
+    },
+    {
+      "git_object": "a2a9de0089dcccf15e9df9df85dd24624a3c381f",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/scheduler.Kconfig",
+      "sha256": "8ba22465f1f93dcc28976ca4e2fdc39fb1c78952ddb96386cc91ceb2945b2cfd",
+      "size": 1006
+    },
+    {
+      "git_object": "6d9f63b6442c5c73ff2e31445a51bd2f854b807b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/serial.Kconfig",
+      "sha256": "f2cf9df9d74370d325ab0cf5f2cb15cbfc92c242df561614b068cb0305512531",
+      "size": 4532
+    },
+    {
+      "git_object": "12a34ff5f66580b6a3580c86bc92a2a46f499077",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/stream.Kconfig",
+      "sha256": "5baf095084d8dac254f3eacdbe0d67b1b2dffcab05f022983aee2be30a964c58",
+      "size": 635
+    },
+    {
+      "git_object": "7de530449a172bf0f0a3cfcf112c94fd361256cd",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/config/system.Kconfig",
+      "sha256": "293e8e8c250c2713987b1660af775f59ae8de979abd56c918e95425d4c20038b",
+      "size": 471
+    },
+    {
+      "git_object": "709bb471d556af6a59d9fef462bb05f90cc3bc4b",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/m30_power_mcuboot_hook.c",
+      "sha256": "efd94cc14a9f0a352d50268adb77d7116534872e9ce01ead122ddd6a5173e11c",
+      "size": 580
+    },
+    {
+      "git_object": "e5881902c79d96904880325049eefdfdeb6f54ee",
+      "mode": "0644",
+      "origin": "core",
+      "path": "zephyr/module.yml",
+      "sha256": "45da922e5e83f735f144e6b5e727b0380606199a5f0eba5781e7c0da109597f0",
+      "size": 103
+    }
+  ],
+  "generated_metadata": [
+    "release-manifest.json",
+    "sbom.spdx.json",
+    "license-inventory.json",
+    "THIRD_PARTY_NOTICES.md",
+    "CHECKSUMS.sha256"
+  ],
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "ncs_version": "v3.4.0",
+  "package_name": "NUCODE NU54DK Zephyr Boards",
+  "prerequisites_pins_sha256": "c44583056721058d831f180e281abacb1a8333e298a36556ab272251117f5bde",
+  "release_tag": "v0.5.0-rc.1",
+  "release_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.1/nucode-nu54dk-zephyr-0.5.0-rc.1.zip",
+  "runtime_payload_sha256": "d45d3f517eb5cf1cc8f4cfd919936e6256c019236afaf3cc3be4ff54eef46c73",
+  "schema_version": 1,
+  "source_policy": "exact-commit-plus-declared-platform-version-and-windows-crlf-rewrites",
+  "source_repository": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core",
+  "toolchain_bundle_id": "dcbdc366a1",
+  "total_size": 5777717,
+  "vendor": "nucode",
+  "version": "0.5.0-rc.1",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "zephyr_version": "4.4.0"
+}

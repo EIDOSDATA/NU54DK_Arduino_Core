@@ -195,6 +195,8 @@ namespace nucode::ble
         BLEAdvertisingSetHandle advertising_set;
         BLEPeriodicSyncHandle periodic_sync;
         BLELinkRole role = BLELinkRole::none;
+        /** @brief disconnected event의 HCI reason이며 다른 event에서는 0입니다. */
+        std::uint8_t reason = 0U;
     };
 
     /** @brief BLEDevice.poll() 문맥에서만 호출되는 link 식별 가능 callback입니다. */
@@ -417,6 +419,9 @@ namespace nucode::ble
         /** @brief UUID와 bounded service data를 설정합니다. */
         [[nodiscard]] bool setServiceData(const BLEUuid &uuid, const void *data,
                                           std::size_t length) noexcept;
+
+        /** @brief 6-byte Coordinated Set RSI를 표준 AD field로 설정합니다. */
+        [[nodiscard]] bool setResolvableSetIdentifier(const std::uint8_t (&rsi)[6]) noexcept;
 
         /** @brief local name을 scan response에 포함할지 선택합니다. */
         [[nodiscard]] bool setScanResponseName(bool enabled) noexcept;

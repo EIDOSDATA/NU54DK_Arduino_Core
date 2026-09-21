@@ -1,6 +1,6 @@
 /**
  * @file ReliableWritePeripheral.ino
- * @brief 512-byte prepare/execute write를 원자적으로 받는 M29 peripheral 예제입니다.
+ * @brief 512-byte prepare/execute write를 원자적으로 받는 peripheral 예제입니다.
  */
 
 #include <NUCODE_BLE.h>

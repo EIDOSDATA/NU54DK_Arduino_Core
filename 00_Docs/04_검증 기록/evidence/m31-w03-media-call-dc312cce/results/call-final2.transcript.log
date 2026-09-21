@@ -1,0 +1,922 @@
+server: Commands: i=incoming a=remote answer h=remote hold r=remote retrieve x=remote end s=state
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller connected
+client: Call discovery result=0
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=1 state=1 result=0 updates=1
+client: call index=1 state=1 result=0 updates=2 notifications=1
+client: CALL_ACCEPT submitted=1
+server: call index=1 state=4 result=0 updates=2
+client: CALL_ACCEPT complete=1 normal_ops=1
+client: call index=1 state=4 result=0 updates=5 notifications=2
+client: CALL_HOLD submitted=1
+server: call index=1 state=5 result=0 updates=3
+client: CALL_HOLD complete=1 normal_ops=2
+client: call index=1 state=5 result=0 updates=8 notifications=3
+server: call index=1 state=4 result=0 updates=4
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=3
+client: call index=1 state=4 result=0 updates=11 notifications=4
+client: CALL_TERMINATE submitted=1
+server: call index=1 state=0 result=6 updates=5
+client: CALL_TERMINATE complete=1 normal_ops=4
+client: call index=0 state=0 result=0 updates=15 notifications=5
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=2 state=1 result=0 updates=6
+client: call index=2 state=1 result=0 updates=16 notifications=6
+server: call index=2 state=4 result=0 updates=7
+client: CALL_ACCEPT submitted=1
+client: CALL_ACCEPT complete=1 normal_ops=5
+client: call index=2 state=4 result=0 updates=19 notifications=7
+server: call index=2 state=5 result=0 updates=8
+client: CALL_HOLD submitted=1
+client: CALL_HOLD complete=1 normal_ops=6
+client: call index=2 state=5 result=0 updates=22 notifications=8
+server: call index=2 state=4 result=0 updates=9
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=7
+client: call index=2 state=4 result=0 updates=25 notifications=9
+server: call index=2 state=0 result=6 updates=10
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=8
+client: call index=0 state=0 result=0 updates=29 notifications=10
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=3 state=1 result=0 updates=11
+client: call index=3 state=1 result=0 updates=30 notifications=11
+client: CALL_ACCEPT submitted=1
+server: call index=3 state=4 result=0 updates=12
+client: CALL_ACCEPT complete=1 normal_ops=9
+client: call index=3 state=4 result=0 updates=33 notifications=12
+client: CALL_HOLD submitted=1
+server: call index=3 state=5 result=0 updates=13
+client: CALL_HOLD complete=1 normal_ops=10
+client: call index=3 state=5 result=0 updates=36 notifications=13
+client: CALL_RETRIEVE submitted=1
+server: call index=3 state=4 result=0 updates=14
+client: CALL_RETRIEVE complete=1 normal_ops=11
+client: call index=3 state=4 result=0 updates=39 notifications=14
+client: CALL_TERMINATE submitted=1
+server: call index=3 state=0 result=6 updates=15
+client: CALL_TERMINATE complete=1 normal_ops=12
+client: call index=0 state=0 result=0 updates=43 notifications=15
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=4 state=1 result=0 updates=16
+client: call index=4 state=1 result=0 updates=44 notifications=16
+client: CALL_ACCEPT submitted=1
+server: call index=4 state=4 result=0 updates=17
+client: CALL_ACCEPT complete=1 normal_ops=13
+client: call index=4 state=4 result=0 updates=47 notifications=17
+client: CALL_HOLD submitted=1
+server: call index=4 state=5 result=0 updates=18
+client: CALL_HOLD complete=1 normal_ops=14
+client: call index=4 state=5 result=0 updates=50 notifications=18
+client: CALL_RETRIEVE submitted=1
+server: call index=4 state=4 result=0 updates=19
+client: CALL_RETRIEVE complete=1 normal_ops=15
+client: call index=4 state=4 result=0 updates=53 notifications=19
+client: CALL_TERMINATE submitted=1
+server: call index=4 state=0 result=6 updates=20
+client: CALL_TERMINATE complete=1 normal_ops=16
+client: call index=0 state=0 result=0 updates=57 notifications=20
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=5 state=1 result=0 updates=21
+client: call index=5 state=1 result=0 updates=58 notifications=21
+client: CALL_ACCEPT submitted=1
+server: call index=5 state=4 result=0 updates=22
+client: CALL_ACCEPT complete=1 normal_ops=17
+client: call index=5 state=4 result=0 updates=61 notifications=22
+client: CALL_HOLD submitted=1
+server: call index=5 state=5 result=0 updates=23
+client: CALL_HOLD complete=1 normal_ops=18
+client: call index=5 state=5 result=0 updates=64 notifications=23
+client: CALL_RETRIEVE submitted=1
+server: call index=5 state=4 result=0 updates=24
+client: CALL_RETRIEVE complete=1 normal_ops=19
+client: call index=5 state=4 result=0 updates=67 notifications=24
+server: call index=5 state=0 result=6 updates=25
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=20
+client: call index=0 state=0 result=0 updates=71 notifications=25
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=6 state=1 result=0 updates=26
+client: call index=6 state=1 result=0 updates=72 notifications=26
+client: CALL_ACCEPT submitted=1
+server: call index=6 state=4 result=0 updates=27
+client: CALL_ACCEPT complete=1 normal_ops=21
+client: call index=6 state=4 result=0 updates=75 notifications=27
+server: call index=6 state=5 result=0 updates=28
+client: CALL_HOLD submitted=1
+client: CALL_HOLD complete=1 normal_ops=22
+client: call index=6 state=5 result=0 updates=78 notifications=28
+client: CALL_RETRIEVE submitted=1
+server: call index=6 state=4 result=0 updates=29
+client: CALL_RETRIEVE complete=1 normal_ops=23
+client: call index=6 state=4 result=0 updates=81 notifications=29
+client: CALL_TERMINATE submitted=1
+server: call index=6 state=0 result=6 updates=30
+client: CALL_TERMINATE complete=1 normal_ops=24
+client: call index=0 state=0 result=0 updates=85 notifications=30
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=7 state=1 result=0 updates=31
+client: call index=7 state=1 result=0 updates=86 notifications=31
+client: CALL_ACCEPT submitted=1
+server: call index=7 state=4 result=0 updates=32
+client: CALL_ACCEPT complete=1 normal_ops=25
+client: call index=7 state=4 result=0 updates=89 notifications=32
+server: call index=7 state=5 result=0 updates=33
+client: CALL_HOLD submitted=1
+client: CALL_HOLD complete=1 normal_ops=26
+client: call index=7 state=5 result=0 updates=92 notifications=33
+client: CALL_RETRIEVE submitted=1
+server: call index=7 state=4 result=0 updates=34
+client: CALL_RETRIEVE complete=1 normal_ops=27
+client: call index=7 state=4 result=0 updates=95 notifications=34
+client: CALL_TERMINATE submitted=1
+server: call index=7 state=0 result=6 updates=35
+client: CALL_TERMINATE complete=1 normal_ops=28
+client: call index=0 state=0 result=0 updates=99 notifications=35
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=8 state=1 result=0 updates=36
+client: call index=8 state=1 result=0 updates=100 notifications=36
+client: CALL_ACCEPT submitted=1
+server: call index=8 state=4 result=0 updates=37
+client: CALL_ACCEPT complete=1 normal_ops=29
+client: call index=8 state=4 result=0 updates=103 notifications=37
+server: call index=8 state=5 result=0 updates=38
+client: CALL_HOLD submitted=1
+client: CALL_HOLD complete=1 normal_ops=30
+client: call index=8 state=5 result=0 updates=106 notifications=38
+server: call index=8 state=4 result=0 updates=39
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=31
+client: call index=8 state=4 result=0 updates=109 notifications=39
+client: CALL_TERMINATE submitted=1
+server: call index=8 state=0 result=6 updates=40
+client: CALL_TERMINATE complete=1 normal_ops=32
+client: call index=0 state=0 result=0 updates=113 notifications=40
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=9 state=1 result=0 updates=41
+client: call index=9 state=1 result=0 updates=114 notifications=41
+client: CALL_ACCEPT submitted=1
+server: call index=9 state=4 result=0 updates=42
+client: CALL_ACCEPT complete=1 normal_ops=33
+client: call index=9 state=4 result=0 updates=117 notifications=42
+server: call index=9 state=5 result=0 updates=43
+client: CALL_HOLD submitted=1
+client: CALL_HOLD complete=1 normal_ops=34
+client: call index=9 state=5 result=0 updates=120 notifications=43
+client: CALL_RETRIEVE submitted=1
+server: call index=9 state=4 result=0 updates=44
+client: CALL_RETRIEVE complete=1 normal_ops=35
+client: call index=9 state=4 result=0 updates=123 notifications=44
+client: CALL_TERMINATE submitted=1
+server: call index=9 state=0 result=6 updates=45
+client: CALL_TERMINATE complete=1 normal_ops=36
+client: call index=0 state=0 result=0 updates=127 notifications=45
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=10 state=1 result=0 updates=46
+client: call index=10 state=1 result=0 updates=128 notifications=46
+server: call index=10 state=4 result=0 updates=47
+client: CALL_ACCEPT submitted=1
+client: CALL_ACCEPT complete=1 normal_ops=37
+client: call index=10 state=4 result=0 updates=131 notifications=47
+server: call index=10 state=5 result=0 updates=48
+client: CALL_HOLD submitted=1
+client: CALL_HOLD complete=1 normal_ops=38
+client: call index=10 state=5 result=0 updates=134 notifications=48
+client: CALL_RETRIEVE submitted=1
+server: call index=10 state=4 result=0 updates=49
+client: CALL_RETRIEVE complete=1 normal_ops=39
+client: call index=10 state=4 result=0 updates=137 notifications=49
+client: CALL_TERMINATE submitted=1
+server: call index=10 state=0 result=6 updates=50
+client: CALL_TERMINATE complete=1 normal_ops=40
+client: call index=0 state=0 result=0 updates=141 notifications=50
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=11 state=1 result=0 updates=51
+client: call index=11 state=1 result=0 updates=142 notifications=51
+client: CALL_ACCEPT submitted=1
+server: call index=11 state=4 result=0 updates=52
+client: CALL_ACCEPT complete=1 normal_ops=41
+client: call index=11 state=4 result=0 updates=145 notifications=52
+server: call index=11 state=5 result=0 updates=53
+client: CALL_HOLD submitted=1
+client: CALL_HOLD complete=1 normal_ops=42
+client: call index=11 state=5 result=0 updates=148 notifications=53
+client: CALL_RETRIEVE submitted=1
+server: call index=11 state=4 result=0 updates=54
+client: CALL_RETRIEVE complete=1 normal_ops=43
+client: call index=11 state=4 result=0 updates=151 notifications=54
+client: CALL_TERMINATE submitted=1
+server: call index=11 state=0 result=6 updates=55
+client: CALL_TERMINATE complete=1 normal_ops=44
+client: call index=0 state=0 result=0 updates=155 notifications=55
+host: HIL|1|CALL_INCOMING|counted=1
+server: CALL_INCOMING result=0 native=0
+server: call index=12 state=1 result=0 updates=56
+client: call index=12 state=1 result=0 updates=156 notifications=56
+client: CALL_ACCEPT submitted=1
+server: call index=12 state=4 result=0 updates=57
+client: CALL_ACCEPT complete=1 normal_ops=45
+client: call index=12 state=4 result=0 updates=159 notifications=57
+client: CALL_HOLD submitted=1
+server: call index=12 state=5 result=0 updates=58
+client: CALL_HOLD complete=1 normal_ops=46
+client: call index=12 state=5 result=0 updates=162 notifications=58
+server: call index=12 state=4 result=0 updates=59
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=47
+client: call index=12 state=4 result=0 updates=165 notifications=59
+client: CALL_TERMINATE submitted=1
+server: call index=12 state=0 result=6 updates=60
+client: CALL_TERMINATE complete=1 normal_ops=48
+client: call index=0 state=0 result=0 updates=169 notifications=60
+server: call index=13 state=3 result=0 updates=61
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=49
+client: call index=13 state=3 result=0 updates=173 notifications=62
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=13 state=4 result=0 updates=62
+client: call index=13 state=4 result=0 updates=174 notifications=63
+client: CALL_HOLD submitted=1
+server: call index=13 state=5 result=0 updates=63
+client: CALL_HOLD complete=1 normal_ops=50
+client: call index=13 state=5 result=0 updates=177 notifications=64
+client: CALL_RETRIEVE submitted=1
+server: call index=13 state=4 result=0 updates=64
+client: CALL_RETRIEVE complete=1 normal_ops=51
+client: call index=13 state=4 result=0 updates=180 notifications=65
+server: call index=13 state=0 result=6 updates=65
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=52
+client: call index=0 state=0 result=0 updates=184 notifications=66
+server: call index=14 state=3 result=0 updates=66
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=53
+client: call index=14 state=3 result=0 updates=188 notifications=68
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=14 state=4 result=0 updates=67
+client: call index=14 state=4 result=0 updates=189 notifications=69
+client: CALL_HOLD submitted=1
+server: call index=14 state=5 result=0 updates=68
+client: CALL_HOLD complete=1 normal_ops=54
+client: call index=14 state=5 result=0 updates=192 notifications=70
+server: call index=14 state=4 result=0 updates=69
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=55
+client: call index=14 state=4 result=0 updates=195 notifications=71
+server: call index=14 state=0 result=6 updates=70
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=56
+client: call index=0 state=0 result=0 updates=199 notifications=72
+server: call index=15 state=3 result=0 updates=71
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=57
+client: call index=15 state=3 result=0 updates=203 notifications=74
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=15 state=4 result=0 updates=72
+client: call index=15 state=4 result=0 updates=204 notifications=75
+client: CALL_HOLD submitted=1
+server: call index=15 state=5 result=0 updates=73
+client: CALL_HOLD complete=1 normal_ops=58
+client: call index=15 state=5 result=0 updates=207 notifications=76
+server: call index=15 state=4 result=0 updates=74
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=59
+client: call index=15 state=4 result=0 updates=210 notifications=77
+client: CALL_TERMINATE submitted=1
+server: call index=15 state=0 result=6 updates=75
+client: CALL_TERMINATE complete=1 normal_ops=60
+client: call index=0 state=0 result=0 updates=214 notifications=78
+server: call index=16 state=3 result=0 updates=76
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=61
+client: call index=16 state=3 result=0 updates=218 notifications=80
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=16 state=4 result=0 updates=77
+client: call index=16 state=4 result=0 updates=219 notifications=81
+client: CALL_HOLD submitted=1
+server: call index=16 state=5 result=0 updates=78
+client: CALL_HOLD complete=1 normal_ops=62
+client: call index=16 state=5 result=0 updates=222 notifications=82
+client: CALL_RETRIEVE submitted=1
+server: call index=16 state=4 result=0 updates=79
+client: CALL_RETRIEVE complete=1 normal_ops=63
+client: call index=16 state=4 result=0 updates=225 notifications=83
+client: CALL_TERMINATE submitted=1
+server: call index=16 state=0 result=6 updates=80
+client: CALL_TERMINATE complete=1 normal_ops=64
+client: call index=0 state=0 result=0 updates=229 notifications=84
+server: call index=17 state=3 result=0 updates=81
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=65
+client: call index=17 state=3 result=0 updates=233 notifications=86
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=17 state=4 result=0 updates=82
+client: call index=17 state=4 result=0 updates=234 notifications=87
+client: CALL_HOLD submitted=1
+server: call index=17 state=5 result=0 updates=83
+client: CALL_HOLD complete=1 normal_ops=66
+client: call index=17 state=5 result=0 updates=237 notifications=88
+client: CALL_RETRIEVE submitted=1
+server: call index=17 state=4 result=0 updates=84
+client: CALL_RETRIEVE complete=1 normal_ops=67
+client: call index=17 state=4 result=0 updates=240 notifications=89
+server: call index=17 state=0 result=6 updates=85
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=68
+client: call index=0 state=0 result=0 updates=244 notifications=90
+server: call index=18 state=3 result=0 updates=86
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=69
+client: call index=18 state=3 result=0 updates=248 notifications=92
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=18 state=4 result=0 updates=87
+client: call index=18 state=4 result=0 updates=249 notifications=93
+client: CALL_HOLD submitted=1
+server: call index=18 state=5 result=0 updates=88
+client: CALL_HOLD complete=1 normal_ops=70
+client: call index=18 state=5 result=0 updates=252 notifications=94
+server: call index=18 state=4 result=0 updates=89
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=71
+client: call index=18 state=4 result=0 updates=255 notifications=95
+server: call index=18 state=0 result=6 updates=90
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=72
+client: call index=0 state=0 result=0 updates=259 notifications=96
+client: CALL_ORIGINATE submitted=1
+server: call index=19 state=3 result=0 updates=91
+client: CALL_ORIGINATE complete=1 normal_ops=73
+client: call index=19 state=3 result=0 updates=263 notifications=98
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=19 state=4 result=0 updates=92
+client: call index=19 state=4 result=0 updates=264 notifications=99
+client: CALL_HOLD submitted=1
+server: call index=19 state=5 result=0 updates=93
+client: CALL_HOLD complete=1 normal_ops=74
+client: call index=19 state=5 result=0 updates=267 notifications=100
+server: call index=19 state=4 result=0 updates=94
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=75
+client: call index=19 state=4 result=0 updates=270 notifications=101
+server: call index=19 state=0 result=6 updates=95
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=76
+client: call index=0 state=0 result=0 updates=274 notifications=102
+server: call index=20 state=3 result=0 updates=96
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=77
+client: call index=20 state=3 result=0 updates=278 notifications=104
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=20 state=4 result=0 updates=97
+client: call index=20 state=4 result=0 updates=279 notifications=105
+client: CALL_HOLD submitted=1
+server: call index=20 state=5 result=0 updates=98
+client: CALL_HOLD complete=1 normal_ops=78
+client: call index=20 state=5 result=0 updates=282 notifications=106
+server: call index=20 state=4 result=0 updates=99
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=79
+client: call index=20 state=4 result=0 updates=285 notifications=107
+client: CALL_TERMINATE submitted=1
+server: call index=20 state=0 result=6 updates=100
+client: CALL_TERMINATE complete=1 normal_ops=80
+client: call index=0 state=0 result=0 updates=289 notifications=108
+server: call index=21 state=3 result=0 updates=101
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=81
+client: call index=21 state=3 result=0 updates=293 notifications=110
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=21 state=4 result=0 updates=102
+client: call index=21 state=4 result=0 updates=294 notifications=111
+client: CALL_HOLD submitted=1
+server: call index=21 state=5 result=0 updates=103
+client: CALL_HOLD complete=1 normal_ops=82
+client: call index=21 state=5 result=0 updates=297 notifications=112
+server: call index=21 state=4 result=0 updates=104
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=83
+client: call index=21 state=4 result=0 updates=300 notifications=113
+server: call index=21 state=0 result=6 updates=105
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=84
+client: call index=0 state=0 result=0 updates=304 notifications=114
+server: call index=22 state=3 result=0 updates=106
+client: CALL_ORIGINATE submitted=1
+client: CALL_ORIGINATE complete=1 normal_ops=85
+client: call index=22 state=3 result=0 updates=308 notifications=116
+server: CALL_REMOTE_ANSWER result=0 native=0
+server: call index=22 state=4 result=0 updates=107
+client: call index=22 state=4 result=0 updates=309 notifications=117
+client: CALL_HOLD submitted=1
+server: call index=22 state=5 result=0 updates=108
+client: CALL_HOLD complete=1 normal_ops=86
+client: call index=22 state=5 result=0 updates=312 notifications=118
+server: call index=22 state=4 result=0 updates=109
+client: CALL_RETRIEVE submitted=1
+client: CALL_RETRIEVE complete=1 normal_ops=87
+client: call index=22 state=4 result=0 updates=315 notifications=119
+server: call index=22 state=0 result=6 updates=110
+client: CALL_TERMINATE submitted=1
+client: CALL_TERMINATE complete=1 normal_ops=88
+client: call index=0 state=0 result=0 updates=319 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=320 notifications=120
+client: call index=0 state=0 result=3 updates=321 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=322 notifications=120
+client: call index=0 state=0 result=3 updates=323 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=324 notifications=120
+client: call index=0 state=0 result=3 updates=325 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=326 notifications=120
+client: call index=0 state=0 result=3 updates=327 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=328 notifications=120
+client: call index=0 state=0 result=3 updates=329 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=330 notifications=120
+client: call index=0 state=0 result=3 updates=331 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=332 notifications=120
+client: call index=0 state=0 result=3 updates=333 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=334 notifications=120
+client: call index=0 state=0 result=3 updates=335 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=336 notifications=120
+client: call index=0 state=0 result=3 updates=337 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=338 notifications=120
+client: call index=0 state=0 result=3 updates=339 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=340 notifications=120
+client: call index=0 state=0 result=3 updates=341 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=342 notifications=120
+client: call index=0 state=0 result=3 updates=343 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=344 notifications=120
+client: call index=0 state=0 result=3 updates=345 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=346 notifications=120
+client: call index=0 state=0 result=3 updates=347 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=348 notifications=120
+client: call index=0 state=0 result=3 updates=349 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=350 notifications=120
+client: call index=0 state=0 result=3 updates=351 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=352 notifications=120
+client: call index=0 state=0 result=3 updates=353 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=354 notifications=120
+client: call index=0 state=0 result=3 updates=355 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=356 notifications=120
+client: call index=0 state=0 result=3 updates=357 notifications=120
+client: CALL_NEG_STALE_INDEX submitted=1
+client: CALL_NEG_STALE_INDEX rejected=1 result=1 native=3
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=0 result=3 updates=358 notifications=120
+client: call index=0 state=0 result=3 updates=359 notifications=120
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=23 state=1 result=0 updates=111
+client: call index=23 state=1 result=3 updates=360 notifications=121
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=361 notifications=121
+client: call index=23 state=1 result=4 updates=362 notifications=121
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=23 state=0 result=0 updates=112
+client: call index=23 state=0 result=2 updates=364 notifications=122
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=24 state=1 result=0 updates=113
+client: call index=24 state=1 result=2 updates=365 notifications=123
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=366 notifications=123
+client: call index=24 state=1 result=4 updates=367 notifications=123
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=24 state=0 result=0 updates=114
+client: call index=24 state=0 result=2 updates=369 notifications=124
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=25 state=1 result=0 updates=115
+client: call index=25 state=1 result=2 updates=370 notifications=125
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=371 notifications=125
+client: call index=25 state=1 result=4 updates=372 notifications=125
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=25 state=0 result=0 updates=116
+client: call index=0 state=0 result=4 updates=373 notifications=126
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=26 state=1 result=0 updates=117
+client: call index=25 state=0 result=2 updates=374 notifications=126
+client: call index=26 state=1 result=2 updates=375 notifications=127
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=376 notifications=127
+client: call index=26 state=1 result=4 updates=377 notifications=127
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=26 state=0 result=0 updates=118
+client: call index=26 state=0 result=2 updates=379 notifications=128
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=27 state=1 result=0 updates=119
+client: call index=27 state=1 result=2 updates=380 notifications=129
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=381 notifications=129
+client: call index=27 state=1 result=4 updates=382 notifications=129
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=27 state=0 result=0 updates=120
+client: call index=27 state=0 result=2 updates=384 notifications=130
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=28 state=1 result=0 updates=121
+client: call index=28 state=1 result=2 updates=385 notifications=131
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=386 notifications=131
+client: call index=28 state=1 result=4 updates=387 notifications=131
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=28 state=0 result=0 updates=122
+client: call index=0 state=0 result=4 updates=388 notifications=132
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=29 state=1 result=0 updates=123
+client: call index=28 state=0 result=2 updates=389 notifications=132
+client: call index=29 state=1 result=2 updates=390 notifications=133
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=391 notifications=133
+client: call index=29 state=1 result=4 updates=392 notifications=133
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=29 state=0 result=0 updates=124
+client: call index=29 state=0 result=2 updates=394 notifications=134
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=30 state=1 result=0 updates=125
+client: call index=30 state=1 result=2 updates=395 notifications=135
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=396 notifications=135
+client: call index=30 state=1 result=4 updates=397 notifications=135
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=30 state=0 result=0 updates=126
+client: call index=30 state=0 result=2 updates=399 notifications=136
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=31 state=1 result=0 updates=127
+client: call index=31 state=1 result=2 updates=400 notifications=137
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=401 notifications=137
+client: call index=31 state=1 result=4 updates=402 notifications=137
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=31 state=0 result=0 updates=128
+client: call index=31 state=0 result=2 updates=404 notifications=138
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=32 state=1 result=0 updates=129
+client: call index=32 state=1 result=2 updates=405 notifications=139
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=406 notifications=139
+client: call index=32 state=1 result=4 updates=407 notifications=139
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=32 state=0 result=0 updates=130
+client: call index=32 state=0 result=2 updates=409 notifications=140
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=33 state=1 result=0 updates=131
+client: call index=33 state=1 result=2 updates=410 notifications=141
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=411 notifications=141
+client: call index=33 state=1 result=4 updates=412 notifications=141
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=33 state=0 result=0 updates=132
+client: call index=33 state=0 result=2 updates=414 notifications=142
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=34 state=1 result=0 updates=133
+client: call index=34 state=1 result=2 updates=415 notifications=143
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=416 notifications=143
+client: call index=34 state=1 result=4 updates=417 notifications=143
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=34 state=0 result=0 updates=134
+client: call index=34 state=0 result=2 updates=419 notifications=144
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=35 state=1 result=0 updates=135
+client: call index=35 state=1 result=2 updates=420 notifications=145
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=421 notifications=145
+client: call index=35 state=1 result=4 updates=422 notifications=145
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=35 state=0 result=0 updates=136
+client: call index=35 state=0 result=2 updates=424 notifications=146
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=36 state=1 result=0 updates=137
+client: call index=36 state=1 result=2 updates=425 notifications=147
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=426 notifications=147
+client: call index=36 state=1 result=4 updates=427 notifications=147
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=36 state=0 result=0 updates=138
+client: call index=36 state=0 result=2 updates=429 notifications=148
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=37 state=1 result=0 updates=139
+client: call index=37 state=1 result=2 updates=430 notifications=149
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=431 notifications=149
+client: call index=37 state=1 result=4 updates=432 notifications=149
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=37 state=0 result=0 updates=140
+client: call index=37 state=0 result=2 updates=434 notifications=150
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=38 state=1 result=0 updates=141
+client: call index=38 state=1 result=2 updates=435 notifications=151
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=436 notifications=151
+client: call index=38 state=1 result=4 updates=437 notifications=151
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=38 state=0 result=0 updates=142
+client: call index=38 state=0 result=2 updates=439 notifications=152
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=39 state=1 result=0 updates=143
+client: call index=39 state=1 result=2 updates=440 notifications=153
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=441 notifications=153
+client: call index=39 state=1 result=4 updates=442 notifications=153
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=39 state=0 result=0 updates=144
+client: call index=39 state=0 result=2 updates=444 notifications=154
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=40 state=1 result=0 updates=145
+client: call index=40 state=1 result=2 updates=445 notifications=155
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=446 notifications=155
+client: call index=40 state=1 result=4 updates=447 notifications=155
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=40 state=0 result=0 updates=146
+client: call index=0 state=0 result=4 updates=448 notifications=156
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=41 state=1 result=0 updates=147
+client: call index=40 state=0 result=2 updates=449 notifications=156
+client: call index=41 state=1 result=2 updates=450 notifications=157
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=451 notifications=157
+client: call index=41 state=1 result=4 updates=452 notifications=157
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=41 state=0 result=0 updates=148
+client: call index=41 state=0 result=2 updates=454 notifications=158
+host: HIL|1|CALL_INCOMING|counted=0
+server: CALL_INCOMING result=0 native=0
+server: call index=42 state=1 result=0 updates=149
+client: call index=42 state=1 result=2 updates=455 notifications=159
+client: CALL_NEG_INVALID_TRANSITION submitted=1
+client: CALL_NEG_INVALID_TRANSITION rejected=1 result=8 native=4
+client: CALL_RECOVERY result=0 native=0
+client: call index=0 state=1 result=4 updates=456 notifications=159
+client: call index=42 state=1 result=4 updates=457 notifications=159
+server: CALL_REMOTE_TERMINATE result=0 native=0
+server: call index=42 state=0 result=0 updates=150
+client: call index=42 state=0 result=2 updates=459 notifications=160
+host: HIL|1|RECONNECT|attempt=1
+server: Call controller disconnected reason=8
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=1
+host: HIL|1|RECONNECT|attempt=2
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=2
+host: HIL|1|RECONNECT|attempt=3
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=3
+host: HIL|1|RECONNECT|attempt=4
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=4
+host: HIL|1|RECONNECT|attempt=5
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=5
+host: HIL|1|RECONNECT|attempt=6
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=6
+host: HIL|1|RECONNECT|attempt=7
+server: Call controller disconnected reason=8
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=7
+host: HIL|1|RECONNECT|attempt=8
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=8
+host: HIL|1|RECONNECT|attempt=9
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=9
+host: HIL|1|RECONNECT|attempt=10
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=10
+host: HIL|1|RECONNECT|attempt=11
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=11
+host: HIL|1|RECONNECT|attempt=12
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=12
+host: HIL|1|RECONNECT|attempt=13
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=13
+host: HIL|1|RECONNECT|attempt=14
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=14
+host: HIL|1|RECONNECT|attempt=15
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=15
+host: HIL|1|RECONNECT|attempt=16
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=16
+host: HIL|1|RECONNECT|attempt=17
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=17
+host: HIL|1|RECONNECT|attempt=18
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=18
+host: HIL|1|RECONNECT|attempt=19
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=19
+host: HIL|1|RECONNECT|attempt=20
+client: Commands: o=originate a=accept h=hold r=retrieve x=terminate j=stale-index v=invalid-transition q=refresh s=state
+server: Call controller disconnected reason=8
+server: Call controller connected
+client: Call discovery result=0
+client: call index=0 state=0 result=0 updates=1 notifications=0
+host: HIL|1|RECONNECT_OK|attempt=20
