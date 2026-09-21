@@ -1,9 +1,9 @@
-# 구성 프로필과 Arduino 예제 배포 — v0.4.0 정식
+# 구성 프로필과 Arduino 예제 배포 — v0.4.1 정식
 
 | 항목 | 현재 계약 |
 | --- | --- |
-| `v0.4.0` 정식 profile | `standard`, `ble`, `fabric` |
-| `v0.4.0` 정식 사용자 예제 | 9개 library, 총 30개; Standard 22 / BLE 7 / Fabric 1 |
+| `v0.4.1` 정식 profile | `standard`, `ble`, `fabric` |
+| `v0.4.1` 정식 사용자 예제 | 9개 library, 총 30개; Standard 22 / BLE 7 / Fabric 1 |
 | 이전 `v0.3.0` | `standard`, `ble`; 8개 library·예제 29개 |
 | 기본 profile | `standard` |
 | BLE feature ID | `nucode.ble.nus` |
@@ -57,7 +57,7 @@ libraries/<Library>/
 | --- | --- | --- | --- |
 | `standard` | Standard peripherals | GPIO, Serial, Wire, SPI, ADC, PWM | 일반 Arduino sketch |
 | `ble` | BLE NUS | standard 기능 + BLE | NUS, GAP/GATT, 보안·표준 profile |
-| `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0 고급 주변장치 API |
+| `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0에서 도입해 v0.4.1에 유지한 고급 주변장치 API |
 
 세 profile 모두 board `nrf54l15dk/nrf54l15/cpuapp/nu54dk`, NCS `v3.4.0`과 각 profile의
 `prj.conf`, `app.overlay`를 고정한다. `boards.txt`의 `도구 → Feature set` 메뉴가
@@ -69,7 +69,7 @@ feature_set=ble      → ble
 feature_set=fabric   → fabric
 ~~~
 
-`fabric`은 v0.4.0 정식 profile입니다. 직접 nrfx IRQ와 peripheral block을 소유하므로 standard
+`fabric`은 v0.4.0에서 도입해 v0.4.1에 유지한 정식 profile입니다. 직접 nrfx IRQ와 peripheral block을 소유하므로 standard
 singleton을 함께 활성화하지 않습니다. P1.4~P1.7을 route로 쓰려면 보드의 DAP UART가 물리적으로
 분리돼 있어야 합니다.
 
@@ -89,7 +89,7 @@ singleton을 함께 활성화하지 않습니다. P1.4~P1.7을 route로 쓰려�
 | `LittleFS` | `nucode.littlefs` | `littlefs.conf`, overlay 없음 | `standard`, `ble` |
 | `NUCODE_Peripheral_Fabric` | `nucode.peripheral.fabric` | `peripheral-fabric.conf`, overlay 없음 | `fabric`만 |
 
-정식 `v0.4.0`은 위 아홉 feature를 제공합니다. `NUCODE_Peripheral_Fabric`은 T16에서 추가한
+정식 `v0.4.1`은 위 아홉 feature를 제공합니다. `NUCODE_Peripheral_Fabric`은 T16에서 추가한
 정식 경로이며 이전 v0.3.0의 여덟 feature와 archive는 소급 변경하지 않습니다.
 `v0.2.0` archive가 앞의 네 항목만 가졌다는 사실도 해당 버전의 역사 기록으로 유지합니다.
 BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
@@ -125,13 +125,13 @@ BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
 사용하지 않은 library의 feature는 build에 들어가지 않는다. 동일한 profile이라도 선택 feature가
 다르면 final cache identity가 다르다.
 
-Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로 허용한다. v0.4.0 공개 30개
+Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로 허용한다. v0.4.1 공개 30개
 예제는 이 sidecar에 의존하지 않으며 profile/library 내부 설정만으로 compile해야 한다.
 임의 snippet, module 또는 CMake 주입은 공개 override 계약이 아니다.
 
 ### 4.1 메모리 layout의 별도 선택 축
 
-`v0.4.0`의 세 profile은 같은 loaderless 기본 layout을 사용한다. Application은
+`v0.4.1`의 세 profile은 같은 loaderless 기본 layout을 사용한다. Application은
 `0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
 32 KiB와 36 KiB다. Feature set 선택은 메모리 layout을 암묵적으로 바꾸지 않는다.
 
@@ -148,7 +148,7 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 
 ---
 
-## 5. v0.4.0 사용자 예제 30개
+## 5. v0.4.1 사용자 예제 30개
 
 | Library | 예제 |
 | --- | --- |
@@ -174,7 +174,7 @@ Wire target/callback/no-STOP, `Wire1`, `SPI1`은 profile을 선택해도 활성�
 
 ## 6. 배포와 자동 검증
 
-정식 `v0.4.0` Boards Manager ZIP은 profile 세 개, feature manifest 아홉 개와 예제 30개를
+정식 `v0.4.1` Boards Manager ZIP은 profile 세 개, feature manifest 아홉 개와 예제 30개를
 같은 상대 경로로 보존한다. Arduino IDE/CLI가 설치된 Core에서 library별 예제를 같은 이름으로
 열거해야 한다.
 
@@ -189,7 +189,7 @@ Wire target/callback/no-STOP, `Wire1`, `SPI1`은 profile을 선택해도 활성�
 이전 v0.2.0의 14개와 v0.3.0의 29개 예제 결과는 각 버전의 역사 기록으로 남는다.
 AC-03 두 예제는 `standard`와 `ble` profile build 입력을 각각 별도 smoke로 검사한다.
 
-v0.4.0 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30개입니다. 이 예제는
+v0.4.1 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30개입니다. 이 예제는
 `fabric` profile만 사용하고 sidecar 없이 빌드됩니다. QDEC20/21은 capability에서 `supported`이며,
 연속 카운트에는 SAMPLE/REPORT event 경로를 사용합니다. T20/T21과 공개 후 T24에서 30개 전체
 설치 package 검증을 완료했습니다.

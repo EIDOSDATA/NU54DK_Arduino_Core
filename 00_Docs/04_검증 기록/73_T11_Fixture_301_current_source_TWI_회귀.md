@@ -19,7 +19,7 @@ catalog revision 2, 두 UID SHA·role·exact source·HEX hash와 스위치·전�
 30분 유효 시간 안에 실행했으며 확인 시각을 갱신하지 않았다. 배선은 사용자 확인이며 전기 계측 결과는 아니다.
 
 위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
-펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 | 신호 | A/DUT | B/peer |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ checkout·board·SDK·작업 프로세스 종료 점검은 최종 작업 산출�
 
 ## 당시 다음: Fixture 401 PWM→AIN0
 
-이 절은 T11 종료 당시의 안내다. 현재 결선 변경 지시가 아니며 후속 T12/S/U 진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+이 절은 T11 종료 당시의 안내다. 현재 결선 변경 지시가 아니며 후속 T12/S/U 진행은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 **두 USB 전원을 모두 분리한 뒤 신호 한 선과 GND만 연결한다.**
 [다음 결선 감사](evidence/t11-fixture301-9a63251/next-wiring-audit.json)에서 catalog와 사용자 확정 connector pinmap을 대조했다.

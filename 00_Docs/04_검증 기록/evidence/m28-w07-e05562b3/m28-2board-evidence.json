@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "gate": "m28-two-board-hil",
+  "status": "passed",
+  "created_at_utc": "2026-09-12T14:46:30.179892+00:00",
+  "core_revision": "e05562b3ea494559e13e41ec9f877c7b7e4a8594",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "flash_backend": "pyocd-sector",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "1cb130069888a0393fe484b1c2425d6f",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "5415360300052840d9e1e32cc887aaf1",
+      "msd_root": "F:\\",
+      "uart_port": "COM14"
+    },
+    "central": {
+      "daplink_uid": "54153603000528402aae46c5e8e3712a",
+      "msd_root": "G:\\",
+      "uart_port": "COM10"
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 824322,
+      "sha256": "1bc5341d97fd3249a3bf64df28cc91596079507aa89fd8659571afcd20c4053e",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "0",
+      "build_record": {
+        "core_revision": "e05562b3ea49",
+        "core_source_sha256": "fd9bfc2fbfe3c71664b8df583310ed0a9ab9ba6942f2e57f0649cc0b3b420d9b",
+        "application_source_sha256": "26307f6fbe3b837716128feaa1675cbd822b34246dba82183fe9a9277c2e8591",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "271aefa2d7f1db940d89c3067e55caf10fb790ef7a96f5f5c4366c4416d96224"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 818581,
+      "sha256": "b81a0e64fc2e79bfbd5a9d18db1b616e24df045bd83a7613f0c91320a50382f4",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "253952",
+      "build_record": {
+        "core_revision": "e05562b3ea49",
+        "core_source_sha256": "fd9bfc2fbfe3c71664b8df583310ed0a9ab9ba6942f2e57f0649cc0b3b420d9b",
+        "application_source_sha256": "26307f6fbe3b837716128feaa1675cbd822b34246dba82183fe9a9277c2e8591",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "271aefa2d7f1db940d89c3067e55caf10fb790ef7a96f5f5c4366c4416d96224"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "m28-2board-evidence.peripheral.transcript.log",
+      "size": 836,
+      "sha256": "a2cc2ef672f190b9ba66b6ba55333f1f82a220fd0000a18dc272a84005842d22"
+    },
+    "central": {
+      "name": "m28-2board-evidence.central.transcript.log",
+      "size": 17175,
+      "sha256": "cc23df088831eb2d39f03e6361da7f6d8406432ec27b6df89438a261bec7195b"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "advertising_reports": 110,
+      "advertising_payload_bytes": 255,
+      "pawr_responses": 100,
+      "pawr_subevent_mask": 15,
+      "pawr_slot_mask": 15,
+      "rpa_rotations": 3,
+      "connections": 21,
+      "reconnects": 20,
+      "pairing_events": 1,
+      "bond_count": 1,
+      "identity_mismatches": 0,
+      "stale_events": 0
+    },
+    "central": {
+      "role": "central",
+      "advertising_reports": 100,
+      "advertising_payload_bytes": 255,
+      "pawr_responses": 100,
+      "pawr_subevent_mask": 15,
+      "pawr_slot_mask": 15,
+      "rpa_rotations": 3,
+      "connections": 21,
+      "reconnects": 20,
+      "pairing_events": 1,
+      "bond_count": 1,
+      "identity_mismatches": 0,
+      "stale_events": 0
+    }
+  },
+  "coverage": {
+    "test_ids": [
+      "M28-ADV-01",
+      "M28-PAWR-01",
+      "M28-PRIV-01"
+    ],
+    "extended_payload_bytes": 255,
+    "extended_reports": 100,
+    "pawr_subevents": 4,
+    "pawr_response_slots": 4,
+    "pawr_minimum_valid_percent": 99,
+    "rpa_rotations": 3,
+    "bonded_reconnects": 20,
+    "cross_coverage": {
+      "bond_reboot_persistence": "M21 BLE security HIL",
+      "three_board_tests": [
+        "M28-LINK-01",
+        "M28-PER-01",
+        "M28-CTRL-01",
+        "M28-SOAK-01"
+      ]
+    }
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "pmic_write_executed": false
+  }
+}

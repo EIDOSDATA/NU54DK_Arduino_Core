@@ -1,36 +1,116 @@
 # v0.5.0 착수 계획 — BLE 확장과 지원 범위 판정
 
-현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선은 완료했다. 이 문서는 다음 제품선의 착수 순서와
-판정 산출물을 정의한다. **M28~M33은 모두 계획·구현 미착수**이며, 문서 정비를 구현 완료나
-새 물리 PASS로 세지 않는다. 현재 사용자의 v0.4.0 시험과 후속 개발은 별개다.
+현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
+유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
+**M28은 M28-W01~W08과 9개 test ID를 완료했다. 다음 작업은 M29이며 M29~M33은
+계획·구현 미착수**다. M28 완료는 v0.5.0 공개, mobile/desktop cross-vendor 상호운용 또는
+Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
 | 정보 | 단일 원본 |
 | --- | --- |
 | M28~M45 순서·전체 상태 | [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>) |
 | BLE 기능군별 목표·완료 조건 | [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>) |
 | v0.5.0 착수 체크·결정 상태 | 이 문서 |
+| M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
+| M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
-| 이번 계획 정비의 변경·검사 | [127번 기록](<04_검증 기록/127_후속_마일스톤_지원_경계와_착수_계획_정비.md>) |
+| W01 실제 HCI·실패 분류·증거 | [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>) |
+| W02 2-slot·generation 구현·검증 | [134번 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>) |
+| W03 확장 광고·스캔 구현·검증 | [135번 기록](<04_검증 기록/135_M28_W03_확장_광고와_스캔.md>) |
+| W04 periodic·PAST 구현·검증 | [136번 기록](<04_검증 기록/136_M28_W04_periodic_sync_PAST.md>) |
+| W05 PAwR 구현·검증 | [137번 기록](<04_검증 기록/137_M28_W05_PAwR_advertiser_scanner.md>) |
+| W06 privacy·link control 구현·검증 | [138번 기록](<04_검증 기록/138_M28_W06_privacy_RPA_link_control.md>) |
+| W07 HIL·W08 완료와 실패 진단 | [140번 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
 
 ## 1. 다음 착수 순서
 
-다음 구현 요청을 받으면 **P01의 source·환경 확인부터 시작**하고, M28의 첫 산출물로 P02 지원
-원장을 만든다. P01~P06은 별도 전역 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는
-P02/P03 결정이, 각 물리 시험 전에는 해당 P04/P05 조건이 확정되어야 한다.
+M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
+**M28-W01 capability, W02 고정 2-slot·generation handle, W03 확장 광고·스캔, W04
+periodic·PAST, W05 PAwR, W06 privacy·link control, W07 두/세 보드 HIL과 W08 문서·인계를
+완료했고, 다음은 M29**다. P01~P06은 별도 전역
+마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
+해당 P04/P05 조건이 확정되어야 한다.
 M31 전용 장비가 미확보라는 이유로 독립적인 M28 문서·Host 작업까지 차단하지 않는다.
 
 | 체크 | 상태 | 산출물·완료 조건 |
 | --- | --- | --- |
-| P01 기준선 확인 | 미착수 | 실제 Core/board/SDK/toolchain revision, branch·미커밋 변경, 재사용할 증거와 변경 영향 범위를 기록 |
-| P02 기능 지원 원장 | 미착수 | nRF54L15·선택 controller·host Kconfig·HCI feature를 대조하고 지원/조건부/미지원/미판정과 근거를 기능·역할별 기록 |
-| P03 공개 API·profile 경계 | 미착수 | 기존 API 회귀와 신규 API를 분리하고 per-link 상태·호환성, controller/profile별 자원·메모리·오류 계약을 결정 |
-| P04 장비·상호운용 matrix | 미착수 | 시험별 보드 수·peer/OS/version·RF/audio 구성·측정 수단과 확보 상태를 기록 |
-| P05 수치 합격 기준 | 미착수 | 아래 시험군별 입력·반복·시간·허용치·중단 조건·유한 진단 예산을 실행 전에 고정 |
-| P06 실행 목록 고정 | 미착수 | P02~P05를 test ID·필수/조건부 범위·명령·증거 위치와 결합하고 M28부터 실행할 목록을 확정 |
+| P01 기준선 확인 | **M28 완료** | v0.4.1, Core/board/NCS/Zephyr lock과 현재 2-link source 계약 대조 완료 |
+| P02 기능 지원 원장 | **M28 정적 완료 / W01 HCI 6/6 PASS** | 정적 `candidate`는 유지하고 실제 runtime HCI 판정만 별도 PASS |
+| P03 공개 API·profile 경계 | **M28 완료** | 기존 singleton symbol 호환, generation handle, 역할별 1개·총 2-link 고정 자원 계약 확정 |
+| P04 장비·상호운용 matrix | **M28 3보드·3 DAP/UART 확인** | receiver-validated packet sequence 사용, 외부 sniffer·OS peer 상호운용은 미검증 |
+| P05 수치 합격 기준 | **M28 완료** | `M28-CAP-01`~`M28-SOAK-01`의 반복·분모·timeout·오류 기준 고정 |
+| P06 실행 목록 고정 | **M28 완료** | `M28-W01`~`M28-W08`의 구현·검증 순서와 증거 경계 확정 |
 
-P02의 정적 SDK 조사와 실제 HCI 조회는 다른 증거다. 보드 조회를 하지 않았으면 HCI 확인은
-`NOT RUN`으로 남긴다. 미지원 판정에 controller 한계와 칩 자체 비적용을 혼동하지 않는다.
-미판정 항목을 지원 또는 범위 제외로 자동 승격하지 않는다.
+P02의 정적 SDK 조사와 실제 HCI 조회는 다른 증거다. `M28-CAP-01`은 exact `78078a42…`에서
+6개 기능군을 확인했지만, source 후보 자체와 W03~W08 implementation/RF HIL은 별도 상태다.
+미지원 판정에 controller 한계와 칩 자체 비적용을 혼동하지 않고 미판정 항목을 자동 승격하지 않는다.
+
+M28의 상세 상태·Kconfig·시험 수치는
+[`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json)을 기계 원본으로 사용하고,
+[M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서 사람이
+읽는 설계와 실행 순서를 설명한다. 현재 M28은 **8/8 작업 묶음, 100.0%**다.
+
+| 작업 묶음 | 현재 상태 | 다음 종료 조건 |
+| --- | --- | --- |
+| M28-W01 | **완료 — Host parser·target 1/1·실제 HCI 6/6 PASS** | exact `78078a42…` 증거와 정적 candidate/runtime HCI 분리 유지 |
+| M28-W02 | **완료 — Host 계약·target 1/1 PASS** | 고정 central/peripheral slot, generation handle, 상세 event, stale callback·end 회수 |
+| M28-W03 | **완료 — Host 계약·target 1/1 PASS** | generation set, 255-byte payload, SID/PHY scan metadata, 예제 2개 |
+| M28-W04 | **완료 — Host 계약·target 1/1 PASS** | 1 sync, 255-byte report, PAST sender/receiver, 예제 4개 |
+| M28-W05 | **완료 — Host 계약·target 1/1 PASS** | 4 subevent × 4 response slot, request/response window, 예제 2개 |
+| M28-W06 | **완료 — Host 계약·target 1/1 PASS** | RPA timeout/event, identity, DLE·parameter·remote-info link 격리, 예제 2개 |
+| M28-W07 | **완료 — parser 29/29·target 14/14·실기 9/9 PASS** | 2보드 REG/ADV/PAWR/PRIV, 3보드 LINK/PER/CTRL/SOAK exact evidence 보존 |
+| M28-W08 | **완료** | 지원 경계·실패 진단·M29 인계와 기계 원장 정합화 |
+
+W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
+HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로
+출력한다. Host parser는 noise·중복·누락·순서 변경·stale nonce·wrong revision·timeout과 raw HCI
+불일치를 모두 거부한다. exact `78078a42…`의 target build와 실제 HCI는 각각 PASS했으며 서로 다른
+증거로 유지한다. 상세 값과 hash는 [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)에 있다.
+
+W02는 `CONFIG_BT_MAX_CONN=2`와 SDC peripheral count 1을 production profile에 적용하고 central 0,
+peripheral 1의 역할 고정 slot을 구현했다. `BLEConnectionHandle`은 slot을 직접 공개하지 않고
+generation을 결합하며, `BLEEventInfo`가 link handle과 local 역할을 main-thread callback에 전달한다.
+기존 singleton과 기존 callback은 유지하며 handle 없는 link 제어는 central을 우선하고 없으면
+peripheral을 선택하는 결정적 호환 view다. 실제 production source를 링크한 Host 13개 시나리오,
+W02 source 계약 5개와 고정 NCS target 1/1 build가 PASS했다. RF·동시 2-link는 W07
+`M28-LINK-01`에서 PASS했다.
+
+W03은 generation이 포함된 `BLEAdvertisingSetHandle`과 고정 1-set storage를 추가했다. 확장 광고는
+길이 255 byte 이하의 raw AD TLV만 받고, 확장 스캔 결과는 최대 255 byte payload와 SID·TX power·
+periodic interval·primary/secondary PHY를 값으로 복사한다. 실제 production source를 링크한 Host
+수명 시나리오 4개와 정적 경계 검사, `nucode.m28.ble_extended_contract` target 1/1 build가 warning
+없이 PASS했다. `ExtendedAdvertising`과 `ExtendedScanner` 예제를 추가했으며 255-byte RF report
+100개는 W07 `M28-ADV-01`에서 PASS했다.
+
+W04는 기존 extended set에 결합하는 periodic advertiser와 generation 기반 한 개 sync를 추가했다.
+Periodic report는 최대 255 byte를 고정 8-entry queue로 복사하고, PAST sender/receiver는 반드시
+현재 generation connection handle을 받는다. 구독되지 않은 link의 이전 callback은 PAST sync로
+승격하지 않는다. Production Host 수명 시나리오 4개·정적 계약과 고정 NCS target 1/1이 PASS했고
+`PeriodicAdvertiser`·`PeriodicScanner`·`PastSender`·`PastReceiver` 예제를 추가했다. 3-node periodic report 1,000개와
+PAST 20/20은 W07 `M28-PER-01`에서 PASS했다.
+
+W05는 고정 4 subevent × 4 response slot과 249-byte payload 상한을 적용했다. Advertiser request와
+response, scanner response는 callback의 controller buffer를 보존하지 않고 각각 고정 storage·8-entry
+queue로 복사한다. 허용 범위를 벗어난 subevent·slot·offset·길이는 controller 호출 전에 거부한다.
+Production Host 시나리오 4개·정적 계약과 고정 NCS의 `nucode.m28.ble_pawr_contract` target 1/1이
+warning 없이 PASS했고 `PawrAdvertiser`·`PawrScanner` 예제를 추가했다. 실제 4 subevent × 4 slot
+RF 판정은 W07 `M28-PAWR-01`에서 PASS했다.
+
+W06은 local RPA timeout을 1~3600초로 제한하고 extended set의 RPA 만료를 generation event로
+전달한다. Link 설정에 사용한 remote 주소와 해석된 peer identity를 분리하며 identity callback은
+현재 active slot에만 적용한다. 실제 parameter snapshot, DLE 요청·송수신 값과 remote LL version·
+8-byte feature도 handle별로 조회한다. Production Host 시나리오 5개·정적 계약과 고정 NCS의
+`nucode.m28.privacy_control` target 1/1이 warning 없이 PASS했고 `PrivacyPeripheral`·
+`PerLinkControl` 예제를 추가했다. Privacy/bond는 `M28-PRIV-01`, 두 link 동시 제어는
+`M28-CTRL-01`에서 PASS했다.
+
+W07은 `M28B2`와 `M28B3` fixed protocol을 사용한다. 두 parser 29개는 누락·중복·재배치·
+stale nonce·잘못된 revision·수치 미달·예상 밖 token·target FAIL을 거부한다. 두 role target 2/2와
+세 role target 3/3은 warning 없이 build됐다. 2보드 `ADV/PAWR/PRIV`, 기존 M19~M21 `REG`, 3보드
+`LINK/PER/CTRL/SOAK`을 모두 실행해 9개 test ID가 PASS했다. LINK 재검증 과정에서 callback-only
+재연결 오판을 발견해 실제 GATT `LINK_UP` 확인과 object recycle 동기화를 추가했으며 실패 transcript와
+수정·동일 조건 재검증을 [140번 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에
+보존했다. 사용자용 예제 11개는 runtime 실패를 명시적으로 보고한다.
 
 ## 2. 현재 확인된 지원성 결정 항목
 
@@ -55,7 +135,7 @@ SDK를 바꾸거나 controller/profile을 바꾸면 해당 판정과 관련 회�
 
 | 단계 | 유지·회귀할 기존 기능 | 신규 설계·검증할 범위 |
 | --- | --- | --- |
-| M28 | 단일 링크 GAP, 기존 PHY 갱신·MTU 교환, 광고·스캔·연결 수명주기 | per-link handle/event·GATT/security 상태, multi-role/link, 확장·주기 광고·PAwR, privacy·지원 link control |
+| M28 | 단일 링크 GAP, 기존 PHY 갱신·MTU 교환, 광고·스캔·연결 수명주기 | per-link GAP handle/event/control, multi-role/link, 확장·주기 광고·PAwR, privacy |
 | M29 | 기존 GATT server/client·read/write/notify/indicate | long/reliable·descriptor/cache·CoC, 별도 정책을 정한 signed write/EATT |
 | M30 | 기존 IO capability·LE Secure Connections·pairing/bond API와 BAS/DIS/HID keyboard | OOB·key 정책·migration·추가 profile, 최소 BLE DFU·서명·복구 |
 
@@ -89,8 +169,9 @@ NU54DK의 외장 flash 미탑재와 factory-data partition 적용성은 설계 �
 
 ### 장비 확보 상태
 
-현재 장비 상태는 **미확인**이다. 과거 두 보드 시험이나 사용자의 현재 v0.4.0 테스트로 다음
-장비가 모두 확보됐다고 판단하지 않는다. 이 문서는 구매·연결 변경 지시가 아니다.
+**NU54DK 3개와 독립 DAP/UART 3경로를 2026-09-13 W07에서 확인**했다. M28 packet 분모는 세
+UART와 수신측 GATT/periodic sequence·payload hash를 같은 nonce로 결합했다. 외부 sniffer와
+Android/iOS/Windows/Linux cross-vendor matrix는 M28 PASS에 포함하지 않으며 후속 단계에서 판정한다.
 
 | 시험군 | 계획상 필요한 구성 | 착수 시 확인할 사항 |
 | --- | --- | --- |
@@ -106,9 +187,9 @@ Windows 외 OS로 확대하는 약속이 아니다. Peer 자체 미지원 기능
 
 ### 실행 전에 고정할 합격표
 
-아래 값은 아직 **미확정**이다. 임의 숫자를 제품 보증으로 채우지 않고, 선택 profile과 장비가
-결정되면 P05에서 숫자·단위·계산식·측정 수단을 채운다. 빈칸이나 `미확정`이 남은 해당 시험은
-정식 PASS 판정에 사용할 수 없다. `장시간`, `안정적`, `저지연`만으로 합격 기준을 대신하지 않는다.
+M28 GAP/multi-link 값은 9개 test ID로 확정·실행했다. 아래 나머지 마일스톤 값은 아직
+**미확정**이다. 임의 숫자를 제품 보증으로 채우지 않고, 선택 profile과 장비가 결정되면 P05에서
+숫자·단위·계산식·측정 수단을 채운다. `장시간`, `안정적`, `저지연`만으로 합격 기준을 대신하지 않는다.
 
 | 시험군 | 반드시 고정할 입력 | 수치·판정 항목 |
 | --- | --- | --- |
@@ -126,11 +207,12 @@ Windows 외 OS로 확대하는 약속이 아니다. Peer 자체 미지원 기능
 
 ## 6. 결과·공개 규칙
 
-- 이번 문서 작성으로 P01~P06 또는 M28~M33을 완료 처리하지 않는다.
+- M28의 P01~P06 준비, W01 실제 HCI, W02~W06 구현, W07 9개 실기와 W08 문서·인계를 완료했다.
+  현재 상태는 8/8이며 M29~M33과 v0.5.0 공개는 완료 처리하지 않는다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.
 - 문서상의 기능 계획과 Bluetooth/Matter 제품 인증 취득은 별개다.
-- v0.4.0 공개 승인은 v0.5.0 공개 승인이 아니다. M33에서 exact 결과·자산 기준으로 공개 범위를 확정한다.
+- v0.4.0·v0.4.1 공개 승인은 v0.5.0 공개 승인이 아니다. M33에서 exact 결과·자산 기준으로 공개 범위를 확정한다.
 - 다음 작업 보고에는 완료 범위·현재 항목·남은 항목과 **해당 작업의 분모**를 적는다.
   P 준비 체크, M28~M33의 6개 마일스톤, v0.4.0의 T13 분모 58을 섞지 않는다.

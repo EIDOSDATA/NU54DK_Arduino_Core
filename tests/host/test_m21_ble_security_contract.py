@@ -72,6 +72,20 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertNotRegex(text, r"#include\s*[<\"]zephyr/")
         self.assertNotRegex(text, r"#include\s*[<\"]bluetooth/")
 
+        internal = (
+            LIBRARY / "src" / "internal" / "security" / "SecurityInternal.h"
+        ).read_text(encoding="utf-8")
+        self.assertIn("address->type == BT_ADDR_LE_PUBLIC_ID", internal)
+        self.assertIn(
+            "result.type = public_type ? BT_ADDR_LE_PUBLIC : BT_ADDR_LE_RANDOM",
+            internal,
+        )
+        self.assertIn("atomic_t pending_security_event", internal)
+
+        source = security_source()
+        self.assertIn("isResolvablePrivateAddress", source)
+        self.assertIn("pending_security_event", source)
+
     def test_backend_reuses_common_stack_and_connection_hooks(self) -> None:
         """! @brief M21이 bt_enable이나 별도 connection callback을 만들지 못하게 합니다. """
 
@@ -311,6 +325,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
             "CONFIG_BT_DIS_SETTINGS=y",
             "CONFIG_BT_HIDS=y",
             "CONFIG_BT_HIDS_DEFAULT_PERM_RW_ENCRYPT=y",
+            "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=2048",
         ):
             self.assertIn(symbol, conf, symbol)
         self.assertNotIn("CONFIG_BT_FIXED_PASSKEY", conf)

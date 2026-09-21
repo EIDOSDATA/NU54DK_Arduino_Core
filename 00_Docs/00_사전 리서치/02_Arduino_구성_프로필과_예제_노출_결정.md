@@ -95,7 +95,7 @@ slot 비용을 기본으로 부과하지 않는다.
 
 향후 `v0.5.0` M30은 BLE DFU에 필요한 최소 MCUboot·signed update·rollback 기반을 먼저
 설계·검증한다. 이 단계에서 제한된 고정 layout과 제공 경로(profile 또는 application template)를
-선택하며, 현재 `v0.4.0` profile에 boot 영역이나 update slot을 추가한다는 뜻은 아니다.
+선택하며, 현재 `v0.4.1` profile에 boot 영역이나 update slot을 추가한다는 뜻은 아니다.
 
 `v0.6.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
 선택으로 확장하는 후속 계획이다. Layout 선택은 단순 Devicetree 조각이 아니라 code partition,

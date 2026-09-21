@@ -25,7 +25,10 @@ namespace nucode::ble::internal::gatt
     /** @brief GATT callback record를 bounded queue에 복사합니다. */
     bool queueGattEvent(const GattEventRecord &record) noexcept
     {
-        if (atomic_get(&sessionState().gatt_link_active) == 0 &&
+        const bool active = record.owner_kind == GattEventRecord::Owner::server
+                                ? nucode::ble::internal::hasActiveConnection()
+                                : atomic_get(&sessionState().gatt_link_active) != 0;
+        if (!active &&
             !(record.owner_kind == GattEventRecord::Owner::client &&
               record.client_event == BLEGattClientEvent::handles_invalidated))
         {

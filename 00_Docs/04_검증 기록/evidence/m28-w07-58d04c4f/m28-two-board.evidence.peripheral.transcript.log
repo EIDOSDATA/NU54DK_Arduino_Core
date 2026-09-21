@@ -1,0 +1,6 @@
+ÿÿÿÿÿÿÿWÿÿÿÿÿώÿKMÿÿ/ÿÿΟw―[/]•―-ÿ――Oϋomÿ·ΣΉ“»ÿ{ÿ/ÿoΏύ·oÿ[ÿώÿ_ÿÿ;k-οÿ‹[ονώWÿΏ·ÿ;ÿÿύ_ÿkÿ_χÿÿ*ÿξύ_ύ―ύÿ{ÿÿΏϋ]ϋÿϋÿUÿϋÿ»ÿώÿύοχÿÿ{ύU»χυÿώϋ{χ½ÿοÿ»ϋϋÿολ¥ϋÿÿίSÿ~ÿ%ύχUώ;ÿοÿύλύWώÿ¦ϋÿ2ÿϋυί5ύ―ÿλύΫmÿχόίÿονÿϋύ”ϊήϋoο{ώΝύÿίνχoύ_ÿ{ώνÿϋο#ÿÿίύΛÿύφÿZZÿν-	ÿÿ»ο§ύ	ώÿώΏΕΫέ­τύUÿ+ϋÿχ{m	φWχ[Mÿύÿύύ­ÿ{ώ½-ÿϋχ»›ÿoÿΉϊÿ*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M28B2_READY:role=peripheral
+NUCODE_M28B2_PERIPHERAL:ADVERTISE:PASS:nonce=fa915e26bc7d44b6312a0230d84aa0ec
+NUCODE_M28B2_PERIPHERAL:ADV:PASS:reports=110:payload=255:corrupt=0:stale=0:nonce=fa915e26bc7d44b6312a0230d84aa0ec
+NUCODE_M28B2_FAIL:role=peripheral:reason=protocol-timeout

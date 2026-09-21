@@ -281,7 +281,10 @@ class M12CiContractTests(unittest.TestCase):
         path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
         text = path.read_text(encoding="utf-8")
         linux_job, windows_job = text.split("\n  arduino-build:\n", 1)
-        self.assertIn("group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0]", linux_job)
+        self.assertIn(
+            "group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0]",
+            linux_job,
+        )
         self.assertIn(
             "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat]",
             windows_job,

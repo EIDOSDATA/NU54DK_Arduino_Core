@@ -201,21 +201,25 @@ inline int mock_notify_error = 0, mock_indicate_error = 0, mock_discover_error =
 inline int mock_read_error = 0, mock_write_error = 0, mock_subscribe_error = 0,
            mock_unsubscribe_error = 0;
 inline bt_gatt_notify_params mock_notification{};
+inline bt_conn *mock_notification_connection{};
 inline std::uint8_t mock_notification_data[244]{};
 inline bt_gatt_indicate_params *mock_indication{};
+inline bt_conn *mock_indication_connection{};
 inline bt_gatt_discover_params *mock_discovery{};
 inline bt_gatt_read_params *mock_read{};
 inline bt_gatt_write_params *mock_write{};
 inline bt_gatt_subscribe_params *mock_subscription{};
 inline void (*mock_command_callback)(bt_conn *, void *){};
-inline int bt_gatt_notify_cb(bt_conn *, bt_gatt_notify_params *p)
+inline int bt_gatt_notify_cb(bt_conn *connection, bt_gatt_notify_params *p)
 {
+    mock_notification_connection = connection;
     mock_notification = *p;
     std::memcpy(mock_notification_data, p->data, p->len);
     return mock_notify_error;
 }
-inline int bt_gatt_indicate(bt_conn *, bt_gatt_indicate_params *p)
+inline int bt_gatt_indicate(bt_conn *connection, bt_gatt_indicate_params *p)
 {
+    mock_indication_connection = connection;
     mock_indication = p;
     return mock_indicate_error;
 }

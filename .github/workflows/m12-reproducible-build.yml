@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0]
+        group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0]
     container:
       image: ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
     defaults:

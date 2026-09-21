@@ -1,0 +1,519 @@
+{
+  "schema_version": 2,
+  "milestone": "M28",
+  "product_target": "v0.5.0",
+  "phase": "verification_complete",
+  "milestone_status": "completed",
+  "baseline": {
+    "supported_release": "v0.4.1",
+    "source_version": "0.4.1-dev",
+    "ncs_tag": "v3.4.0",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1",
+    "profile": "ble",
+    "current_max_connections": 2,
+    "current_advertising_payload_bytes": 31,
+    "current_extended_advertising_payload_bytes": 255
+  },
+  "baseline_assertions": [
+    {
+      "path": "platform.txt",
+      "contains": [
+        "version=0.4.1-dev"
+      ]
+    },
+    {
+      "path": "libraries/NUCODE_BLE/zephyr/ble-nus.conf",
+      "contains": [
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_MAX_CONN=2",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_EXT_ADV_MAX_ADV_SET=1",
+        "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255",
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_BT_PER_ADV_SYNC_MAX=1",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y"
+      ]
+    },
+    {
+      "path": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+      "contains": [
+        "return 2U;",
+        "maximum_payload_length = 31U",
+        "maximum_payload_length = 255U",
+        "class BLEAdvertisingSetHandle final"
+      ]
+    },
+    {
+      "path": "libraries/NUCODE_BLE/src/internal/gap/GapInternal.h",
+      "contains": [
+        "ConnectionSlot connection_slots[maximum_connection_slots]",
+        "atomic_t next_connection_generation"
+      ]
+    }
+  ],
+  "source_capabilities": [
+    {
+      "id": "multi_role_multi_link",
+      "source_status": "candidate",
+      "runtime_hci_status": "passed",
+      "implementation_status": "host_target_hil_passed",
+      "required_kconfig": [
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_MAX_CONN=2",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1"
+      ],
+      "source_references": [
+        "nrf/subsys/bluetooth/controller/Kconfig:119",
+        "nrf/subsys/bluetooth/controller/Kconfig:128",
+        "nrfxlib/softdevice_controller/README.rst:12"
+      ]
+    },
+    {
+      "id": "extended_advertising_scanning",
+      "source_status": "candidate",
+      "runtime_hci_status": "passed",
+      "implementation_status": "host_target_hil_passed",
+      "required_kconfig": [
+        "CONFIG_BT_EXT_ADV=y",
+        "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=255"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/Kconfig.adv:7",
+        "zephyr/include/zephyr/bluetooth/bluetooth.h:1367",
+        "nrfxlib/softdevice_controller/README.rst:29"
+      ]
+    },
+    {
+      "id": "periodic_advertising_sync_past",
+      "source_status": "candidate",
+      "runtime_hci_status": "passed",
+      "implementation_status": "host_target_hil_passed",
+      "required_kconfig": [
+        "CONFIG_BT_PER_ADV=y",
+        "CONFIG_BT_PER_ADV_SYNC=y",
+        "CONFIG_BT_CTLR_SYNC_PERIODIC_ADV_LIST_SIZE=1",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER=y",
+        "CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=y"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/Kconfig:186",
+        "zephyr/subsys/bluetooth/Kconfig.adv:38",
+        "zephyr/include/zephyr/bluetooth/bluetooth.h:1629",
+        "nrfxlib/softdevice_controller/README.rst:31"
+      ]
+    },
+    {
+      "id": "pawr_advertiser_scanner",
+      "source_status": "candidate",
+      "runtime_hci_status": "passed",
+      "implementation_status": "host_target_hil_passed",
+      "required_kconfig": [
+        "CONFIG_BT_PER_ADV_RSP=y",
+        "CONFIG_BT_PER_ADV_SYNC_RSP=y",
+        "CONFIG_BT_CTLR_SDC_PAWR_ADV=y",
+        "CONFIG_BT_CTLR_SDC_PAWR_SYNC=y"
+      ],
+      "source_references": [
+        "nrf/subsys/bluetooth/controller/Kconfig:429",
+        "nrf/subsys/bluetooth/controller/Kconfig:483",
+        "zephyr/subsys/bluetooth/Kconfig.adv:46",
+        "nrfxlib/softdevice_controller/README.rst:51"
+      ]
+    },
+    {
+      "id": "privacy_rpa",
+      "source_status": "candidate",
+      "runtime_hci_status": "passed",
+      "implementation_status": "host_target_hil_passed",
+      "required_kconfig": [
+        "CONFIG_BT_PRIVACY=y",
+        "CONFIG_BT_SETTINGS=y"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/host/Kconfig:537",
+        "zephyr/subsys/bluetooth/controller/Kconfig:676"
+      ]
+    },
+    {
+      "id": "per_link_control",
+      "source_status": "candidate",
+      "runtime_hci_status": "passed",
+      "implementation_status": "host_target_hil_passed",
+      "required_kconfig": [
+        "CONFIG_BT_DATA_LEN_UPDATE=y",
+        "CONFIG_BT_REMOTE_INFO=y",
+        "CONFIG_BT_USER_PHY_UPDATE=y"
+      ],
+      "source_references": [
+        "zephyr/subsys/bluetooth/Kconfig:179",
+        "zephyr/subsys/bluetooth/host/Kconfig:495",
+        "zephyr/include/zephyr/bluetooth/conn.h:1452",
+        "zephyr/include/zephyr/bluetooth/conn.h:1684"
+      ]
+    }
+  ],
+  "public_contract": {
+    "target_max_connections": 2,
+    "target_peripheral_connections": 1,
+    "target_central_connections": 1,
+    "compatibility_symbols": [
+      "BLEDevice",
+      "BLEAdvertising",
+      "BLEScan",
+      "BLEConnection"
+    ],
+    "new_contracts": [
+      "generation이 포함된 불투명 per-link handle",
+      "link handle을 포함한 상세 event와 상태 조회",
+      "link별 GAP 연결 상태와 link-control 상태",
+      "고정 크기 advertising set, periodic sync와 connection slot"
+    ],
+    "forbidden_shortcuts": [
+      "CONFIG_BT_MAX_CONN만 늘리고 singleton 상태를 공유",
+      "Zephyr bt_conn 포인터를 공개 API에 노출",
+      "callback에서 사용자 callback 또는 heap 할당 수행",
+      "HCI 미조회 기능을 지원으로 표시"
+    ]
+  },
+  "equipment": {
+    "availability": "complete_for_m28",
+    "required": {
+      "nu54dk_boards": 3,
+      "independent_usb_dap_uart_paths": 3,
+      "packet_trace_receivers": 1
+    },
+    "observed": {
+      "nu54dk_boards": 3,
+      "independent_usb_dap_uart_paths": 3,
+      "packet_trace_receivers": "three_node_receiver_validated_sequence",
+      "observed_at_utc": "2026-09-12T21:01:26Z"
+    },
+    "interop_peers": [
+      "Android",
+      "iOS",
+      "Windows",
+      "Linux"
+    ]
+  },
+  "execution_plan": [
+    {
+      "id": "M28-CAP-01",
+      "kind": "hardware_capability",
+      "boards": 1,
+      "timeout_seconds": 180,
+      "criteria": {
+        "required_hci_features_recorded": 6,
+        "missing_required_features": 0,
+        "stale_nonce_tokens": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md"
+      ]
+    },
+    {
+      "id": "M28-REG-01",
+      "kind": "legacy_regression",
+      "boards": 2,
+      "timeout_seconds": 900,
+      "criteria": {
+        "required_existing_suites": 3,
+        "failed_existing_suites": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-10231641-reg-m19/m19-gap-evidence.json",
+        "00_Docs/04_검증 기록/evidence/m28-w07-10231641-reg-m20/m20-gatt-evidence.json",
+        "00_Docs/04_검증 기록/evidence/m28-w07-10231641-reg-m21/m21-security-evidence.json"
+      ]
+    },
+    {
+      "id": "M28-LINK-01",
+      "kind": "mixed_role_two_link",
+      "boards": 3,
+      "timeout_seconds": 1200,
+      "criteria": {
+        "simultaneous_connections": 2,
+        "central_connections": 1,
+        "peripheral_connections": 1,
+        "reconnect_cycles_per_link": 20,
+        "sequenced_payloads_per_link": 1000,
+        "payload_loss": 0,
+        "payload_corruption": 0,
+        "payload_duplicates": 0,
+        "stale_link_events": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-289e3d10-b3-link-final/m28-3board-evidence.json"
+      ]
+    },
+    {
+      "id": "M28-ADV-01",
+      "kind": "extended_advertising_scanning",
+      "boards": 2,
+      "timeout_seconds": 600,
+      "criteria": {
+        "payload_bytes": 255,
+        "reports": 100,
+        "payload_corruption": 0,
+        "stale_set_events": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-e05562b3/m28-2board-evidence.json"
+      ]
+    },
+    {
+      "id": "M28-PER-01",
+      "kind": "periodic_advertising_sync_past",
+      "boards": 3,
+      "timeout_seconds": 900,
+      "criteria": {
+        "periodic_reports": 1000,
+        "minimum_receive_percent": 99,
+        "payload_corruption": 0,
+        "past_transfers": 20,
+        "past_failures": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-bd66232e-b3-periodic/m28-3board-evidence.json"
+      ]
+    },
+    {
+      "id": "M28-PAWR-01",
+      "kind": "pawr_advertiser_scanner",
+      "boards": 2,
+      "timeout_seconds": 900,
+      "criteria": {
+        "periodic_events": 100,
+        "subevents": 4,
+        "response_slots": 4,
+        "minimum_valid_response_percent": 99,
+        "response_corruption": 0,
+        "out_of_window_responses": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-e05562b3/m28-2board-evidence.json"
+      ]
+    },
+    {
+      "id": "M28-PRIV-01",
+      "kind": "privacy_rpa",
+      "boards": 2,
+      "timeout_seconds": 900,
+      "criteria": {
+        "observed_rpa_rotations": 3,
+        "bonded_reconnect_cycles": 20,
+        "identity_mismatches": 0,
+        "unresolved_reconnects": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-e05562b3/m28-2board-evidence.json"
+      ]
+    },
+    {
+      "id": "M28-CTRL-01",
+      "kind": "per_link_control",
+      "boards": 3,
+      "timeout_seconds": 900,
+      "criteria": {
+        "requests_per_link": 20,
+        "links": 2,
+        "cross_link_state_leaks": 0,
+        "stale_link_events": 0,
+        "unreported_driver_errors": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-bd66232e-b3-control/m28-3board-evidence.json"
+      ]
+    },
+    {
+      "id": "M28-SOAK-01",
+      "kind": "mixed_role_soak",
+      "boards": 3,
+      "timeout_seconds": 2100,
+      "criteria": {
+        "run_seconds": 1800,
+        "sequenced_payloads_per_link": 10000,
+        "payload_loss": 0,
+        "payload_corruption": 0,
+        "unexpected_disconnects": 0,
+        "resource_recovery_failures": 0
+      },
+      "status": "passed",
+      "evidence_files": [
+        "00_Docs/04_검증 기록/evidence/m28-w07-bd66232e-b3-soak/m28-3board-evidence.json"
+      ]
+    }
+  ],
+  "work_packages": [
+    "M28-W01 capability image와 HCI 원장",
+    "M28-W02 per-link slot·handle·event 기반",
+    "M28-W03 extended advertising·scanning",
+    "M28-W04 periodic advertising·sync·PAST",
+    "M28-W05 PAwR advertiser·scanner",
+    "M28-W06 privacy·RPA·per-link control",
+    "M28-W07 Host·target·두/세 보드 HIL",
+    "M28-W08 문서·지원표·M29 인계"
+  ],
+  "work_package_status": [
+    {
+      "id": "M28-W01",
+      "status": "completed",
+      "completed": true,
+      "protocol": "M28CAP/1",
+      "host_parser_tests": "passed",
+      "target_build": "passed",
+      "physical_hci": "passed",
+      "tested_core_revision": "78078a422351cd373e0d153987add2c5b770acbb",
+      "paths": {
+        "application": "tests/zephyr/m28_ble_capability",
+        "host_parser": "tests/hil/nu54dk/m28_ble_capability.py",
+        "host_tests": "tests/host/test_m28_ble_capability.py",
+        "evidence_record": "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md"
+      }
+    },
+    {
+      "id": "M28-W02",
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "passed_by_M28-LINK-01",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "host_tests": "tests/host/test_m28_ble_links.py",
+        "runtime_tests": "tests/host/r12_ble_gap_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_link_contract",
+        "example": "libraries/NUCODE_BLE/examples/MixedRoleLinks/MixedRoleLinks.ino"
+      }
+    },
+    {
+      "id": "M28-W03",
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "passed_by_M28-ADV-01",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "host_tests": "tests/host/test_m28_ble_extended.py",
+        "runtime_tests": "tests/host/m28_ble_extended_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_extended_contract",
+        "advertiser_example": "libraries/NUCODE_BLE/examples/ExtendedAdvertising/ExtendedAdvertising.ino",
+        "scanner_example": "libraries/NUCODE_BLE/examples/ExtendedScanner/ExtendedScanner.ino"
+      }
+    },
+    {
+      "id": "M28-W04",
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "passed_by_M28-PER-01",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+        "host_tests": "tests/host/test_m28_ble_periodic.py",
+        "runtime_tests": "tests/host/m28_ble_periodic_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_periodic_contract",
+        "advertiser_example": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
+        "scanner_example": "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino",
+        "past_sender_example": "libraries/NUCODE_BLE/examples/PastSender/PastSender.ino",
+        "past_receiver_example": "libraries/NUCODE_BLE/examples/PastReceiver/PastReceiver.ino"
+      }
+    },
+    {
+      "id": "M28-W05",
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "passed_by_M28-PAWR-01",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "implementation": "libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+        "host_tests": "tests/host/test_m28_ble_pawr.py",
+        "runtime_tests": "tests/host/m28_ble_pawr_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_pawr_contract",
+        "advertiser_example": "libraries/NUCODE_BLE/examples/PawrAdvertiser/PawrAdvertiser.ino",
+        "scanner_example": "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino"
+      }
+    },
+    {
+      "id": "M28-W06",
+      "status": "completed",
+      "completed": true,
+      "host_contract_tests": "passed",
+      "target_build": "passed",
+      "physical_hil": "passed_by_M28-PRIV-01_and_M28-CTRL-01",
+      "paths": {
+        "public_api": "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.h",
+        "connection_implementation": "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "privacy_implementation": "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "host_tests": "tests/host/test_m28_ble_privacy_control.py",
+        "runtime_tests": "tests/host/m28_ble_privacy_control_main.cpp",
+        "target_application": "tests/zephyr/m28_ble_privacy_control_contract",
+        "privacy_example": "libraries/NUCODE_BLE/examples/PrivacyPeripheral/PrivacyPeripheral.ino",
+        "control_example": "libraries/NUCODE_BLE/examples/PerLinkControl/PerLinkControl.ino"
+      }
+    },
+    {
+      "id": "M28-W07",
+      "status": "completed",
+      "completed": true,
+      "host_parser_tests": "passed_29_of_29",
+      "target_build": "passed_14_of_14",
+      "legacy_regression_hil": "passed_3_of_3",
+      "two_board_hil": "passed_3_of_3",
+      "three_board_hil": "passed_4_of_4",
+      "paths": {
+        "two_board_host_parser_tests": "tests/host/test_m28_ble_2board_hil.py",
+        "three_board_host_parser_tests": "tests/host/test_m28_ble_3board_hil.py",
+        "two_board_hil_runner": "tests/hil/nu54dk/m28_ble_2board.py",
+        "three_board_hil_runner": "tests/hil/nu54dk/m28_ble_3board.py",
+        "two_board_target_application": "tests/zephyr/m28_ble_2board_hil",
+        "three_board_target_application": "tests/zephyr/m28_ble_3board_hil",
+        "completion_record": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md"
+      }
+    },
+    {
+      "id": "M28-W08",
+      "status": "completed",
+      "completed": true,
+      "paths": {
+        "design_contract": "00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md",
+        "current_plan": "00_Docs/TODO_v0.5.0.md",
+        "handoff": "00_Docs/HANDOFF.md",
+        "completion_record": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md"
+      }
+    }
+  ],
+  "progress": {
+    "completed_work_packages": 8,
+    "total_work_packages": 8,
+    "percent": 100.0,
+    "current_work_package": null,
+    "next_milestone": "M29"
+  },
+  "not_yet_claimed": [
+    "v0.5.0 release",
+    "mobile and desktop cross-vendor interoperability",
+    "Bluetooth qualification"
+  ]
+}

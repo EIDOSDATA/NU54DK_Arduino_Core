@@ -65,4 +65,4 @@ M23 manifest의 신규 19개 personality는 driver와 물리 gate 전까지 `abs
 cancel·restart와 errata 7을 구현한다. 이후 SPIM/SPIS, TWIM/TWIS adapter와 보드 자체 HIL을
 순서대로 연결한다.
 
-후속 구현 결과는 [36번 기록](36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md)에 보존한다. 현재 실행 범위와 우선순위는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+후속 구현 결과는 [36번 기록](36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md)에 보존한다. 현재 실행 범위와 우선순위는 [현재 TODO](../TODO_v0.5.0.md)를 따른다.

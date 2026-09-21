@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-SECURITY-001 |
-| 문서 개정 | 2.1 |
-| 문서 상태 | v0.4.0에서도 유지하는 정식 보안·표준 profile 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
+| 문서 개정 | 2.2 |
+| 문서 상태 | v0.4.1에서도 유지하는 정식 보안·표준 profile 계약 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile |
 | 최종 갱신일 | 2026-09-12 |
 | 대상 library | `NUCODE_BLE_Security` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
@@ -179,16 +179,20 @@ Windows 시험 절차는 다음과 같다.
 ## 8. 오류와 현재 제약
 
 - 모든 facade의 `lastError()`를 먼저 확인하고 필요한 경우 `lastDriverError()`로 NCS 오류를 진단한다.
-- 동시 BLE 연결은 1개이며 bond 저장 한도는 4개다.
+- 현재 설치·지원 v0.4.1의 BLE 연결과 security/profile active view는 1개이며 bond 저장 한도는 4개다.
 - HID는 keyboard input report만 제공한다. Consumer Control, mouse와 복합 HID는 현재 범위가 아니다.
 - 사용자 UI callback에서 Bluetooth API를 재진입하거나 무제한 block하지 않는다.
 - `no_input_output` Just Works는 수동 승인과 암호화·bonding을 제공하지만 MITM 보호가 필요한 제품의
   최종 보안 정책을 대신하지 않는다.
 - Windows 11 검증은 완료했지만 스마트폰별 HID 호환성은 별도 제품 호환성 시험 대상이다.
+- M28 개발 source는 총 GAP 2-link와 identity/RPA 관측을 검증했지만 동시 security/profile
+  active view 확대는 주장하지 않는다. Generation별 security/bond 정책과 추가 profile은 M30에서
+  별도 자원·상호운용 계약으로 검증한다.
 
 ## 9. 관련 문서
 
 - [BLE Core/GAP API](07_BLE_Core_GAP_API.md)
 - [BLE 범용 GATT API](08_BLE_범용_GATT_API.md)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
+- [M28 BLE GAP·Link·Privacy 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)
 - [v0.3.0 구현 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)

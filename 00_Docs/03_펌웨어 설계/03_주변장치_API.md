@@ -3,8 +3,8 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.5 |
-| 문서 상태 | `v0.4.0` 정식 singleton·Fabric 계약 |
+| 문서 개정 | 4.6 |
+| 문서 상태 | `v0.4.1` 정식 singleton·Fabric 계약 |
 | 최종 갱신일 | 2026-09-12 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
@@ -33,7 +33,7 @@ Production backend는 Devicetree chosen, alias와 profile overlay를 소비한�
 
 ## 3. 현재 자원과 ownership
 
-| 공개 객체/역할 | Devicetree source | `v0.4.0` stable ownership |
+| 공개 객체/역할 | Devicetree source | `v0.4.1` stable ownership |
 | --- | --- | --- |
 | `Serial` | `DT_CHOSEN(zephyr_console)` | 기존 console UART의 non-owning wrapper |
 | `Serial1` | UART30 runtime node | `begin/end`가 P0 RX/TX pad·UART30 block과 runtime PM을 소유 |

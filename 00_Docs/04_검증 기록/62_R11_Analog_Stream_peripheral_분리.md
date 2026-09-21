@@ -1,7 +1,7 @@
 # R11 Analog/Stream peripheral 분리
 
 당시 결과: software 완료. 시작 commit `f1501ed`; T12/T14 software 회귀.
-이 단계의 current-source T11 및 T12 실기는 미실행이었다. 후속 실기 진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+이 단계의 current-source T11 및 T12 실기는 미실행이었다. 후속 실기 진행은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 | 기존 책임 | 분리할 위치 | 보존할 경계 |
 | --- | --- | --- |

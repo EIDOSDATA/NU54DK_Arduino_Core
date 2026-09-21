@@ -1,0 +1,73 @@
+tests:
+  nucode.m28.b3.link.peripheral:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=link, M28_B3_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.link.mixed:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=link, M28_B3_ROLE=mixed]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.link.central:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=link, M28_B3_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.periodic.peripheral:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=periodic, M28_B3_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.periodic.mixed:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=periodic, M28_B3_ROLE=mixed]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.periodic.central:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=periodic, M28_B3_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.control.peripheral:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=control, M28_B3_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.control.mixed:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=control, M28_B3_ROLE=mixed]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.control.central:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=control, M28_B3_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.soak.peripheral:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=soak, M28_B3_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.soak.mixed:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=soak, M28_B3_ROLE=mixed]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m28.b3.soak.central:
+    tags: [nucode, arduino, m28, bluetooth, hil]
+    build_only: true
+    extra_args: [M28_B3_TEST=soak, M28_B3_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]

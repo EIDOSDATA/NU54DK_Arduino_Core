@@ -1,7 +1,8 @@
 # 검증 기록
 
 이곳은 시험 당시의 source·환경·조건·성공·실패와 원본을 보존합니다.
-현재 완료 상태는 [v0.4.0 완료 TODO](../TODO_v0.4.0.md)를 확인하세요.
+현재 설치·지원 상태는 [v0.4.1 TODO](../TODO_v0.4.1.md), M28 이후 개발 상태는
+[v0.5.0 착수 계획](../TODO_v0.5.0.md)을 확인하세요.
 
 v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기록으로 최종 결과를 확인하고,
 개별 source의 과정과 원본은 이어지는 전체 목차에서 찾을 수 있습니다.
@@ -10,6 +11,18 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 
 | 기록 | 용도 |
 | --- | --- |
+| [140 — M28-W07 2·3보드 HIL과 W08 완료](140_M28_W07_3보드_HIL과_W08_완료.md) | **9개 test ID·M28 8/8 PASS, CMSIS-DAP LINK 실패 진단·수정·M29 인계** |
+| [139 — M28-W07 2보드 HIL 자동화 준비](139_M28_W07_2보드_HIL_자동화_준비.md) | `M28B2` protocol/parser/runner·target 2/2, 실제 HIL NOT RUN |
+| [138 — M28-W06 privacy·RPA·link control](138_M28_W06_privacy_RPA_link_control.md) | identity/RPA·DLE·remote-info link 격리·Host/target·예제 |
+| [137 — M28-W05 PAwR advertiser·scanner](137_M28_W05_PAwR_advertiser_scanner.md) | 4 subevent × 4 slot·request/response queue·Host/target·예제 |
+| [136 — M28-W04 periodic sync·PAST](136_M28_W04_periodic_sync_PAST.md) | 1 sync·255-byte report queue·PAST link 경계·Host/target·예제 |
+| [135 — M28-W03 확장 광고와 스캔](135_M28_W03_확장_광고와_스캔.md) | generation set·255-byte payload·확장 scan metadata·Host/target·예제 |
+| [134 — M28-W02 고정 2-slot·generation link 기반](134_M28_W02_2-slot_generation_link_기반.md) | Host 2-slot·stale callback·target 1/1·예제, 2/3보드 HIL 비중복 경계 |
+| [133 — M28-W01 CI container revision 교정](133_M28_W01_CI_container_revision_교정.md) | Linux Git 소유권 CMake 수정·3보드 실기 직전 정지 경계 |
+| [132 — M28-W01 실제 HCI capability 완료](132_M28_W01_실제_HCI_capability_완료.md) | exact `78078a42…`, target 1/1·실제 HCI 6/6 PASS, W01 완료 1/8 |
+| [131 — M28-W01 Capability image와 Host·target 준비](131_M28_W01_Capability_image와_Host_target_준비.md) | `M28CAP/1`·fail-closed parser·고정 NCS target 1/1 PASS, 당시 실제 HCI NOT RUN |
+| [130 — 개발문서 전수 감사와 M28 착수 준비](130_개발문서_전수감사와_M28_착수_준비.md) | 현행 문서 교정·M28 정적 원장·API/자원/유한 시험 계약 |
+| [129 — v0.4.1 설치기 유지보수 릴리스](129_v0.4.1_설치기_유지보수_릴리스.md) | **v0.4.1 공개·설치 수명주기·30/30 예제 build PASS** |
 | [128 — Nordic 설치 복구 검증 로그 교정](128_Nordic_설치_복구_검증_로그_교정.md) | 초기 재사용 오류와 최종 실패 구분·격리 Windows 회귀 검사 |
 | [127 — 후속 마일스톤 지원 경계와 착수 계획 정비](127_후속_마일스톤_지원_경계와_착수_계획_정비.md) | M28 이후 지원성·선행 작업·장비/수치 기준의 결정 절차. 구현·실기 미착수 |
 | [126 — 정식 공개 후 문서 전수 정비](126_정식_공개_후_문서_전수_정비.md) | 문서 검토 범위·가독성 개선·현행/역사 안내 정리 |
@@ -30,7 +43,7 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 ## 전체 기록 목차
 
 <details>
-<summary>v0.4.0 최근 실기·인계·공개와 후속 유지보수 — 94~128</summary>
+<summary>v0.4.0 실기·공개, v0.4.1 유지보수와 M28 완료 — 94~140</summary>
 
 - [94 — T14 PWM 지연 시작 취소와 무점퍼 검증](<94_T14_PWM_지연_시작_취소와_무점퍼_검증.md>) — **PWM 미시작 STOP 문제 해결 완료**
 - [95 — T12 내부 ADC·TIMER·이벤트 무점퍼 검증](<95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md>)
@@ -67,6 +80,18 @@ v0.4.0은 T01~T25를 완료하고 정식 공개했습니다. 아래 핵심 기�
 - [126 — 정식 공개 후 문서 전수 정비](<126_정식_공개_후_문서_전수_정비.md>) — 문서 검토·가독성 개선·현행/역사 구분
 - [127 — 후속 마일스톤 지원 경계와 착수 계획 정비](<127_후속_마일스톤_지원_경계와_착수_계획_정비.md>) — 지원성 판정·선행 작업·v0.5.0 착수 체크
 - [128 — Nordic 설치 복구 검증 로그 교정](<128_Nordic_설치_복구_검증_로그_교정.md>) — 복구 안내·최종 실패 구분과 단계별 진단 로그
+- [129 — v0.4.1 설치기 유지보수 릴리스](<129_v0.4.1_설치기_유지보수_릴리스.md>) — **v0.4.1 공개·설치·30/30 예제 build PASS**
+- [130 — 개발문서 전수 감사와 M28 착수 준비](<130_개발문서_전수감사와_M28_착수_준비.md>) — 현행 문서 교정·정적 capability 원장·착수 계약
+- [131 — M28-W01 Capability image와 Host·target 준비](<131_M28_W01_Capability_image와_Host_target_준비.md>) — **고정 protocol·Host parser·target 1/1 PASS, 당시 실제 HCI NOT RUN**
+- [132 — M28-W01 실제 HCI capability 완료](<132_M28_W01_실제_HCI_capability_완료.md>) — **exact target 1/1·실제 HCI 6/6 PASS, W01 완료**
+- [133 — M28-W01 CI container revision 교정](<133_M28_W01_CI_container_revision_교정.md>) — **Linux Git 소유권 수정·3보드 실기 직전 정지 경계**
+- [134 — M28-W02 고정 2-slot·generation link 기반](<134_M28_W02_2-slot_generation_link_기반.md>) — **Host·target 2-slot/generation PASS, W02 완료**
+- [135 — M28-W03 확장 광고와 스캔](<135_M28_W03_확장_광고와_스캔.md>) — **Host·target 확장 GAP PASS, W03 완료**
+- [136 — M28-W04 periodic sync·PAST](<136_M28_W04_periodic_sync_PAST.md>) — **Host·target periodic/PAST PASS, W04 완료**
+- [137 — M28-W05 PAwR advertiser·scanner](<137_M28_W05_PAwR_advertiser_scanner.md>) — **Host·target PAwR PASS, W05 완료**
+- [138 — M28-W06 privacy·RPA·link control](<138_M28_W06_privacy_RPA_link_control.md>) — **Host·target privacy/control PASS, W06 완료**
+- [139 — M28-W07 2보드 HIL 자동화 준비](<139_M28_W07_2보드_HIL_자동화_준비.md>) — **Host parser 10/10·target 2/2 PASS, 실제 HIL NOT RUN**
+- [140 — M28-W07 2·3보드 HIL과 W08 완료](<140_M28_W07_3보드_HIL과_W08_완료.md>) — **9개 test ID·M28 8/8 PASS, LINK 재연결 진단·수정·M29 인계**
 
 </details>
 

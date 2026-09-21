@@ -12,6 +12,7 @@ import re
 import secrets
 import shutil
 import subprocess
+import sys
 import threading
 import time
 from typing import Any
@@ -297,6 +298,58 @@ def flash_image(
     )
 
 
+## @brief exact UID의 target sector만 CMSIS-DAP로 기록합니다.
+def flash_image_pyocd(
+    role: str,
+    board_id: str,
+    image: Path,
+    timeout_seconds: float,
+) -> tuple[str, str]:
+    if timeout_seconds <= 0:
+        raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
+    command = (
+        sys.executable,
+        "-I",
+        "-m",
+        "pyocd",
+        "flash",
+        "--uid",
+        board_id,
+        "--target",
+        "nrf54l",
+        "--frequency",
+        "500000",
+        "-O",
+        "cmsis_dap.limit_packets=true",
+        "-O",
+        "auto_unlock=false",
+        "--erase",
+        "sector",
+        "--format",
+        "hex",
+        str(image),
+    )
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise BlePairHilFailure(f"{role} pyOCD sector flash timeout") from error
+    output = result.stdout + result.stderr
+    if result.returncode != 0:
+        raise BlePairHilFailure(
+            f"{role} pyOCD sector flash 실패: "
+            f"{output.decode('utf-8', errors='backslashreplace')}"
+        )
+    match = re.search(rb"programmed\s+(\d+)\s+bytes", output)
+    if match is None:
+        raise BlePairHilFailure(f"{role} pyOCD programmed byte 증거가 없습니다.")
+    return "pyocd-sector", match.group(1).decode("ascii")
+
+
 ## @brief bounded UART capture에서 newline 하나를 읽습니다.
 def read_line(
     serial_port: Any,
@@ -430,11 +483,14 @@ def execute_pair(
     baud_rate: int,
     flash_timeout: float,
     result_timeout: float,
+    flash_backend: str = "daplink-msd",
 ) -> PairExecution:
     if baud_rate != DEFAULT_BAUD_RATE:
         raise BlePairHilFailure(f"기준선은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
     if not 30.0 <= result_timeout <= 600.0:
         raise BlePairHilFailure("--result-timeout은 30..600초여야 합니다.")
+    if flash_backend not in ("daplink-msd", "pyocd-sector"):
+        raise BlePairHilFailure(f"알 수 없는 flash backend입니다: {flash_backend}")
 
     captures = {"peripheral": bytearray(), "central": bytearray()}
     pending = {"peripheral": bytearray(), "central": bytearray()}
@@ -462,20 +518,38 @@ def execute_pair(
                 )
                 ports[role].reset_input_buffer()
 
-            flashes["peripheral"] = flash_image(
-                milestone,
-                "peripheral",
-                peripheral_endpoint.volume,
-                peripheral_image,
-                flash_timeout,
-            )
-            flashes["central"] = flash_image(
-                milestone,
-                "central",
-                central_endpoint.volume,
-                central_image,
-                flash_timeout,
-            )
+            if flash_backend == "pyocd-sector":
+                ports["peripheral"].reset_input_buffer()
+                flashes["peripheral"] = flash_image_pyocd(
+                    "peripheral",
+                    peripheral_endpoint.board_id,
+                    peripheral_image,
+                    flash_timeout,
+                )
+                ports["central"].reset_input_buffer()
+                flashes["central"] = flash_image_pyocd(
+                    "central",
+                    central_endpoint.board_id,
+                    central_image,
+                    flash_timeout,
+                )
+            else:
+                ports["peripheral"].reset_input_buffer()
+                flashes["peripheral"] = flash_image(
+                    milestone,
+                    "peripheral",
+                    peripheral_endpoint.volume,
+                    peripheral_image,
+                    flash_timeout,
+                )
+                ports["central"].reset_input_buffer()
+                flashes["central"] = flash_image(
+                    milestone,
+                    "central",
+                    central_endpoint.volume,
+                    central_image,
+                    flash_timeout,
+                )
             deadline = time.monotonic() + result_timeout
             for role in ("peripheral", "central"):
                 wait_ready(

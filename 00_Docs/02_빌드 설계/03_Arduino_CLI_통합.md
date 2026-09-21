@@ -1,4 +1,4 @@
-# Arduino CLI 및 IDE 통합 설계 — v0.4.0
+# Arduino CLI 및 IDE 통합 설계 — v0.4.1
 
 | 항목 | 내용 |
 | --- | --- |
@@ -127,7 +127,7 @@ NU54_FLASH_USED=<bytes>
 NU54_RAM_USED=<bytes>
 ```
 
-v0.4.0의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
+v0.4.1의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
 IDE가 표시하는 백분율은 위 FLASH used를 이 값으로 나눈 결과다. 이 숫자는 UI 장식이 아니라
 Devicetree `zephyr,code-partition`과 linker에 적용된 `0x000000..0x16c000` 범위와 일치해야
 한다. 세 값이 어긋나면 package/release gate가 실패해야 한다.
@@ -252,7 +252,7 @@ J-Link는 `upload_probe=jlink`와
 ### Serial Monitor와 Debug
 
 Serial Monitor는 target UART의 VCOM bridge이며 SWD probe ID와 별개다. Arduino IDE Debug 버튼의
-자동 toolchain/debugserver 구성은 v0.4.0 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
+자동 toolchain/debugserver 구성은 v0.4.1 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
 수동 west debug 경계는 [업로드와 디버그](./05_업로드와_디버그.md)를 따른다.
 
 ## 8. Library와 구성 경계

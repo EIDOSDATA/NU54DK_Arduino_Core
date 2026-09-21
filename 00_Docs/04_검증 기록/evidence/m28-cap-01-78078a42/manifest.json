@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "test_id": "M28-CAP-01",
+  "status": "passed",
+  "identity": {
+    "core_revision": "78078a422351cd373e0d153987add2c5b770acbb",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "target_build": {
+    "scenario": "nucode.m28.ble_capability",
+    "selected": 1,
+    "built": 1,
+    "failed": 0,
+    "warnings": 0,
+    "elapsed_seconds": 72.8
+  },
+  "raw_artifacts": [
+    {
+      "name": "zephyr.hex",
+      "storage": "regenerable-target-artifact",
+      "size": 757844,
+      "sha256": "65f531e6be6e0ecfa6e64139a860613d773f8ad8682626970ba5283d4de3b121"
+    },
+    {
+      "name": "m28-cap-01-78078a42.json",
+      "storage": "evidence.json",
+      "size": 2903,
+      "sha256": "8037f43780e1e993eb9c5a847936edfb4922e3950b0ff4615b0cdfcca01350cf"
+    },
+    {
+      "name": "m28-cap-01-78078a42.transcript.log",
+      "storage": "external-raw-crlf",
+      "size": 2014,
+      "sha256": "1aa891eaa7594db85f8d78f98571aaf2acd60b40320d29a2dcd762cba65d3347"
+    },
+    {
+      "name": "m28-cap-01-78078a42.normalized.log",
+      "storage": "git-lf-normalized-copy",
+      "size": 1999,
+      "sha256": "33bc36fa8903e4749da1e053024753430c684decbf92d508c7a201775e1f9b75"
+    }
+  ],
+  "result": {
+    "capabilities_passed": 6,
+    "capabilities_required": 6,
+    "maximum_advertising_data_length": 257,
+    "minimum_verified_advertising_sets": 1,
+    "minimum_verified_periodic_advertiser_list_entries": 1,
+    "resolving_list_size": 8,
+    "source_capability_status": "candidate",
+    "runtime_hci_status": "passed",
+    "production_implementation_status": "not_started"
+  },
+  "privacy": {
+    "raw_probe_uid_stored": false,
+    "probe_uid_sha256_only": true
+  }
+}

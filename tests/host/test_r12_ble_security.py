@@ -34,6 +34,9 @@ class BleSecurityTests(unittest.TestCase):
                         'libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp',
 
@@ -49,7 +52,9 @@ class BleSecurityTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
             for scenario in ['pairing_failure', 'pending_timeout', 'pending_duplicate', 'reentrant',
                              'late_callback', 'not_persisted', 'restored_bond', 'erase_failure',
-                             'driver_failure', 'queue_overflow', 'profiles', 'hid']:
+                             'driver_failure', 'identity_type_normalization',
+                             'deferred_rpa_identity',
+                             'queue_overflow', 'profiles', 'hid']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))

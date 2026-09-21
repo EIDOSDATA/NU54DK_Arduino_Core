@@ -196,7 +196,7 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 외부 library가 임의 `feature.yml`을 설치했다고 신뢰하지 않는다. profile, manifest와 fragment
 내용은 최종 cache identity와 artifact provenance에 포함한다.
 
-v0.3.0 RC3에서 도입해 v0.4.0에서도 유지하는 메모리 계약은 loaderless 단일 application
+v0.3.0 RC3에서 도입해 v0.4.1에서도 유지하는 메모리 계약은 loaderless 단일 application
 1,490,944 byte와 끝단 영구 저장소
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
 `boards.txt` maximum size가 모두 `0x000000..0x16c000`을 가리키는지 확인해야 한다. 전문가
@@ -214,7 +214,7 @@ Build Adapter 통합과 별도 application template 중 제공 방식을 선택�
 `v0.6.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
 hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
 제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
-두 단계 모두 미착수이며, 현재 `v0.4.0`의 지원 범위와 기본 loaderless layout은 바뀌지 않는다.
+두 단계 모두 미착수이며, 현재 `v0.4.1`의 지원 범위와 기본 loaderless layout은 바뀌지 않는다.
 M30의 결정 항목과 완료 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
 
 ## 5. 경로와 상태

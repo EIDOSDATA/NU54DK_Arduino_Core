@@ -92,7 +92,11 @@ namespace nucode::ble
         driver_error,
     };
 
-    /** @brief Zephyr type을 공개하지 않는 Bluetooth LE identity 주소입니다. */
+    /**
+     * @brief Zephyr type을 공개하지 않는 Bluetooth LE identity 주소입니다.
+     *
+     * type은 public identity를 0, random identity를 1로 정규화합니다.
+     */
     struct PeerAddress
     {
         std::uint8_t type = 0U;

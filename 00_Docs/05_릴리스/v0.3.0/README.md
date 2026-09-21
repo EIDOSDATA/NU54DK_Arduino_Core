@@ -71,8 +71,9 @@ Arduino maximum Sketch size, Devicetree code partition과 실제 linker FLASH �
 
 위 index 행은 최초 공개 당시 snapshot입니다. 2026-09-08 공급 종료 당시 catalog는
 1,126 byte, SHA-256 `97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며
-0.3.0만 제공했습니다. 이후 v0.4.0 공개로 현재 catalog는 `0.4.0`, `0.3.0`을 제공합니다.
-현재 index identity는 [125번 기록](<../../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.
+0.3.0만 제공했습니다. 이후 v0.4.0 공개 당시 catalog는 `0.4.0`, `0.3.0`을 제공했습니다.
+현재 stable catalog는 `0.4.1` 하나이며 index identity는
+[129번 기록](<../../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)을 따릅니다.
 v0.3.0 ZIP과 나머지 5개 sidecar는 변경하지 않았습니다.
 
 Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
