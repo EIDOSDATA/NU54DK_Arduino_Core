@@ -1,0 +1,19 @@
+tests:
+  nucode.m29.ble_multi_peripheral:
+    tags: [nucode, arduino, m29, bluetooth, gatt, l2cap, hil]
+    build_only: true
+    extra_args: [M29_MULTI_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m29.ble_multi_mixed:
+    tags: [nucode, arduino, m29, bluetooth, gatt, l2cap, hil]
+    build_only: true
+    extra_args: [M29_MULTI_ROLE=mixed]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m29.ble_multi_central:
+    tags: [nucode, arduino, m29, bluetooth, gatt, l2cap, hil]
+    build_only: true
+    extra_args: [M29_MULTI_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]

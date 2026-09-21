@@ -1,4 +1,4 @@
-# NU54DK Build Adapter 설계 — v0.4.0
+# NU54DK Build Adapter 설계 — v0.4.1
 
 | 항목 | 내용 |
 | --- | --- |

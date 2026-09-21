@@ -36,6 +36,7 @@ ARDUINO_TESTS = (
     "m19m20",
     "m21",
     "m28",
+    "m29",
     "ac02b",
     "ac03",
     "examples",
@@ -45,12 +46,14 @@ ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
+    "v0.5.0": ("m29",),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
     "v0.2.0": ARDUINO_GROUPS["v0.2.0"],
     "v0.3.0-ble": ("m19m20", "m21"),
     "v0.3.0-compat": ("ac02b", "ac03", "examples"),
+    "v0.5.0": ARDUINO_GROUPS["v0.5.0"],
 }
 ARDUINO_SELECTIONS = {**ARDUINO_GROUPS, **ARDUINO_MATRIX_GROUPS}
 CLI_BOOTSTRAP_RETRY_MARKERS = (
@@ -1416,6 +1419,93 @@ def test_m28_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
     )
 
 
+## @brief M29 GATT·CoC·cache와 선택형 signing/EATT 예제를 끝까지 빌드합니다.
+def test_m29_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    test_ble_examples(
+        cli,
+        config,
+        root,
+        repository,
+        (
+            "LongGattPeripheral",
+            "LongGattCentral",
+            "ReliableWritePeripheral",
+            "ReliableWriteCentral",
+            "GattDescriptors",
+            "GattAuthorization",
+            "L2capCocServer",
+            "L2capCocClient",
+            "MixedGattCocLinks",
+        ),
+    )
+    for example_name in ("GattCachePeripheral", "GattCacheCentral"):
+        security_sketch = (
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Security"
+            / "examples"
+            / example_name
+        )
+        if not (security_sketch / f"{example_name}.ino").is_file():
+            raise SmokeFailure(f"incomplete M29 GATT cache example: {security_sketch}")
+        security_build = root / f"build-ble-{example_name.lower()}"
+        security_command = list(
+            compile_command(cli, config, security_build, security_sketch)
+        )
+        security_command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(security_command)
+        security_context = assert_build(security_build, f"{example_name}.ino")
+        if security_context.get("profile") != "ble":
+            raise SmokeFailure(
+                f"M29 GATT cache example did not use BLE profile: {security_sketch}"
+            )
+        security_features = {
+            item.get("id")
+            for item in security_context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if "nucode.ble.security" not in security_features:
+            raise SmokeFailure(
+                f"BLE security feature was not selected: {security_sketch}"
+            )
+
+    optional_examples = (
+        (
+            "NUCODE_BLE_LegacySigning",
+            "nucode.ble.legacy_signing",
+            ("LegacySignedWritePeripheral", "LegacySignedWriteCentral"),
+        ),
+        (
+            "NUCODE_BLE_EATT",
+            "nucode.ble.eatt",
+            ("EattPeripheral", "EattCentral"),
+        ),
+    )
+    for library_name, feature_id, example_names in optional_examples:
+        for example_name in example_names:
+            sketch = repository / "libraries" / library_name / "examples" / example_name
+            if not (sketch / f"{example_name}.ino").is_file():
+                raise SmokeFailure(f"incomplete M29 optional example: {sketch}")
+            build = root / f"build-ble-{example_name.lower()}"
+            command = list(compile_command(cli, config, build, sketch))
+            command[-1:-1] = ("--board-options", "feature_set=ble")
+            run(command)
+            context = assert_build(build, f"{example_name}.ino")
+            if context.get("profile") != "ble":
+                raise SmokeFailure(
+                    f"M29 optional example did not use BLE profile: {sketch}"
+                )
+            features = {
+                item.get("id")
+                for item in context.get("selected_features", [])
+                if isinstance(item, dict)
+            }
+            if feature_id not in features:
+                raise SmokeFailure(
+                    f"M29 optional feature was not selected: {feature_id}: {sketch}"
+                )
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -1459,6 +1549,9 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "ExtendedScanner",
             "GAPCentral",
             "GAPPeripheral",
+            "LongGattCentral",
+            "LongGattPeripheral",
+            "MixedGattCocLinks",
             "MixedRoleLinks",
             "NUSCentral",
             "NUSPeripheral",
@@ -1470,8 +1563,18 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "PeriodicAdvertiser",
             "PeriodicScanner",
             "PrivacyPeripheral",
+            "ReliableWriteCentral",
+            "ReliableWritePeripheral",
+            "GattDescriptors",
+            "GattAuthorization",
+            "L2capCocClient",
+            "L2capCocServer",
         },
-        "NUCODE BLE Security": {"SecureKeyboard"},
+        "NUCODE BLE Security": {
+            "GattCacheCentral",
+            "GattCachePeripheral",
+            "SecureKeyboard",
+        },
     }
     discovered: dict[str, set[str]] = {}
     for record in records:
@@ -1647,6 +1750,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m19m20": test_m19_m20_examples,
                 "m21": test_m21_example,
                 "m28": test_m28_examples,
+                "m29": test_m29_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

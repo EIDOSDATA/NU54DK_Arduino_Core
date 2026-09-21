@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "gate": "m29-w06-coc-negative-pair-hil",
+  "status": "passed",
+  "created_at_utc": "2026-09-13T14:07:32.612136+00:00",
+  "core_revision": "767bb4af6f93cd390b139a2e5699830dcdd03262",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "03fdbe25a874446b41cba3c156cfb41c",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "54153603000528402aae46c5e8e3712a",
+      "msd_root": "G:\\",
+      "uart_port": "COM10"
+    },
+    "central": {
+      "daplink_uid": "5415360300052840fcd47678fd7d106d",
+      "msd_root": "E:\\",
+      "uart_port": "COM13"
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 704510,
+      "sha256": "cada6a132797fe4d18c168025e10ae70f98085ebd6167d243b09670eff1da7d1",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "8192",
+      "build_record": {
+        "core_revision": "767bb4af6f93",
+        "core_source_sha256": "c43d03893ae3cb57104b65f7e87f26880517d696ec8ac704eb42c625c2b3cdcf",
+        "application_source_sha256": "98bf99945eafde169c6d656c7c34b2b875bfc6b2022b50999141d73d7acd5518",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "54643e1b257ce4d910fd843e12c7a25176a7746cd2a1e2279887934886e50b38"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 706662,
+      "sha256": "39ab21ba764274266aededee566a64bf382979b393f5b7364c706cb2ff858ead",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "8192",
+      "build_record": {
+        "core_revision": "767bb4af6f93",
+        "core_source_sha256": "c43d03893ae3cb57104b65f7e87f26880517d696ec8ac704eb42c625c2b3cdcf",
+        "application_source_sha256": "98bf99945eafde169c6d656c7c34b2b875bfc6b2022b50999141d73d7acd5518",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "54643e1b257ce4d910fd843e12c7a25176a7746cd2a1e2279887934886e50b38"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "m29-w06-coc-evidence.peripheral.transcript.log",
+      "size": 1511,
+      "sha256": "61c225ce1c2a33fb690da711e4dc1c0fede3ff5340074a003ee21720ad83cb7d"
+    },
+    "central": {
+      "name": "m29-w06-coc-evidence.central.transcript.log",
+      "size": 1645,
+      "sha256": "c73eb050cbb73676a1fda063789f7a06114d1412eab48f81b9d29a3cee5556d6"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "channels": 2,
+      "sdu_bytes": 512,
+      "tx_per_channel": 1000,
+      "rx_per_channel": 1000,
+      "malformed_rejected": 0,
+      "offset_rejected": 20,
+      "execute_rejected": 20,
+      "psm_rejected": 0,
+      "credit_rejected": 0,
+      "unexpected_accepts": 0,
+      "recovery_failures": 0,
+      "stale_accepts": 0,
+      "cross_channel_events": 0,
+      "callback_context": "pass"
+    },
+    "central": {
+      "role": "central",
+      "channels": 2,
+      "sdu_bytes": 512,
+      "tx_per_channel": 1000,
+      "rx_per_channel": 1000,
+      "malformed_rejected": 20,
+      "offset_rejected": 0,
+      "execute_rejected": 0,
+      "psm_rejected": 20,
+      "credit_rejected": 20,
+      "unexpected_accepts": 0,
+      "recovery_failures": 0,
+      "stale_accepts": 0,
+      "cross_channel_events": 0,
+      "callback_context": "pass"
+    }
+  },
+  "coverage": {
+    "channels": 2,
+    "sdu_bytes": 512,
+    "sdus_per_channel_per_direction": 1000,
+    "payload_errors": 0,
+    "negative_iterations_per_class": 20,
+    "negative_classes": [
+      "malformed",
+      "offset",
+      "execute",
+      "psm",
+      "credit"
+    ],
+    "unexpected_accepts": 0,
+    "resource_recovery_failures": 0,
+    "m29_coc_01_status": "passed",
+    "m29_neg_01_status": "passed"
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "pmic_write_executed": false
+  }
+}

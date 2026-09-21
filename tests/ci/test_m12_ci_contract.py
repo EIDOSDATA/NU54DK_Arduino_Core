@@ -286,7 +286,7 @@ class M12CiContractTests(unittest.TestCase):
             linux_job,
         )
         self.assertIn(
-            "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat]",
+            "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0]",
             windows_job,
         )
         self.assertEqual(text.count("fail-fast: false"), 2)

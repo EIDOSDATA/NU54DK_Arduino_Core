@@ -71,11 +71,17 @@ namespace nucode::ble::internal
     /** @brief callback connection이 현재 두 slot 중 하나에 속하는지 확인합니다. */
     bool activeConnection(struct bt_conn *connection) noexcept;
 
+    /** @brief callback connection을 현재 generation 공개 handle로 변환합니다. */
+    BLEConnectionHandle handleForActiveConnection(struct bt_conn *connection) noexcept;
+
     /** @brief 현재 두 slot 중 하나라도 active인지 확인합니다. */
     bool hasActiveConnection() noexcept;
 
     /** @brief GATT database를 stack 시작 전 고정 자원에 등록합니다. */
     int prepareGattDatabase() noexcept;
+
+    /** @brief settings load 후 application revision·실제 database hash를 기록합니다. */
+    int recordGattDatabaseIdentity() noexcept;
 
     /** @brief generic GATT schema가 있는지 반환합니다. */
     bool hasGattSchema() noexcept;
@@ -84,13 +90,19 @@ namespace nucode::ble::internal
     void pollGatt() noexcept;
 
     /** @brief 새 generic connection을 GATT client lifecycle에 전달합니다. */
-    void gattConnected(struct bt_conn *connection, std::uint32_t generation) noexcept;
+    void gattConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept;
 
     /** @brief disconnect에서 remote handle과 subscription을 무효화합니다. */
-    void gattDisconnected(struct bt_conn *connection, std::uint32_t generation) noexcept;
+    void gattDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept;
 
     /** @brief Device::end에서 GATT session과 queue를 event 없이 폐기합니다. */
     void gattEnded() noexcept;
+
+    /** @brief LE CoC queued event를 Arduino main thread에서 전달합니다. */
+    void pollL2cap() noexcept;
+
+    /** @brief Device::end에서 LE CoC channel과 queue를 bounded 방식으로 폐기합니다. */
+    void l2capEnded() noexcept;
 
     /** @brief M21 security 계층에 새 connection reference를 관찰용으로 전달합니다. */
     void securityConnected(struct bt_conn *connection) noexcept;

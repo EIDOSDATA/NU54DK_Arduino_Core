@@ -19,7 +19,7 @@ from typing import Sequence
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 ZEPHYR_GROUPS = ("v0.1.0", "v0.2.0", "v0.3.0", "v0.4.0", "v0.5.0")
-ARDUINO_GROUPS = ("v0.1.0", "v0.2.0", "v0.3.0-ble", "v0.3.0-compat")
+ARDUINO_GROUPS = ("v0.1.0", "v0.2.0", "v0.3.0-ble", "v0.3.0-compat", "v0.5.0")
 SHORT_ZEPHYR_OUTDIRS = {
     "v0.1.0": "z1",
     "v0.2.0": "z2",

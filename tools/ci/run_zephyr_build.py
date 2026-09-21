@@ -126,6 +126,22 @@ SUITE_GROUPS = {
         ("m28_ble_3board_hil", "nucode.m28.b3.soak.peripheral"),
         ("m28_ble_3board_hil", "nucode.m28.b3.soak.mixed"),
         ("m28_ble_3board_hil", "nucode.m28.b3.soak.central"),
+        ("m29_ble_capability", "nucode.m29.ble_capability"),
+        ("m29_ble_long_hil", "nucode.m29.ble_long_peripheral"),
+        ("m29_ble_long_hil", "nucode.m29.ble_long_central"),
+        ("m29_ble_long_write_hil", "nucode.m29.ble_long_write_peripheral"),
+        ("m29_ble_long_write_hil", "nucode.m29.ble_long_write_central"),
+        ("m29_ble_descriptor_hil", "nucode.m29.ble_descriptor_peripheral"),
+        ("m29_ble_descriptor_hil", "nucode.m29.ble_descriptor_central"),
+        ("m29_ble_cache_hil", "nucode.m29.ble_cache_peripheral"),
+        ("m29_ble_cache_hil", "nucode.m29.ble_cache_central"),
+        ("m29_ble_coc_hil", "nucode.m29.ble_coc_peripheral"),
+        ("m29_ble_coc_hil", "nucode.m29.ble_coc_central"),
+        ("m29_ble_signed_eatt_hil", "nucode.m29.ble_signed_eatt_peripheral"),
+        ("m29_ble_signed_eatt_hil", "nucode.m29.ble_signed_eatt_central"),
+        ("m29_ble_multi_hil", "nucode.m29.ble_multi_peripheral"),
+        ("m29_ble_multi_hil", "nucode.m29.ble_multi_mixed"),
+        ("m29_ble_multi_hil", "nucode.m29.ble_multi_central"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)
@@ -378,7 +394,11 @@ def run_build(
     board_root = REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS"
     if LOCK_MODULE.git_revision(board_root) != lock["board"]["revision"]:
         raise BuildFailure("checkout된 board submodule이 M12 lock과 다릅니다.")
-    command: list[str | Path] = [sys.executable, workspace / "zephyr" / "scripts" / "twister"]
+    command: list[str | Path] = [
+        sys.executable,
+        "-I",
+        workspace / "zephyr" / "scripts" / "twister",
+    ]
     for directory, _scenario in suites_to_build:
         command.extend(("--testsuite-root", REPOSITORY / "tests" / "zephyr" / directory))
     command.extend(

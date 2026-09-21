@@ -1,9 +1,9 @@
 # v0.5.0 착수 계획 — BLE 확장과 지원 범위 판정
 
 현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
-유지보수는 완료했다. 이 문서는 다음 제품선의 착수 순서와 판정 산출물을 정의한다.
-**M28은 M28-W01~W08과 9개 test ID를 완료했다. 다음 작업은 M29이며 M29~M33은
-계획·구현 미착수**다. M28 완료는 v0.5.0 공개, mobile/desktop cross-vendor 상호운용 또는
+유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
+**M28은 W01~W08·9개 test ID, M29는 W01~W08·10개 test ID를 완료했다. M30~M33은
+계획·구현 미착수**다. M28·M29 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
 | 정보 | 단일 원본 |
@@ -13,6 +13,8 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | v0.5.0 착수 체크·결정 상태 | 이 문서 |
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
+| M29 API·정책·자원·시험 계약 | [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>) |
+| M29 기계 판정 원본 | [`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json) |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
 | W01 실제 HCI·실패 분류·증거 | [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>) |
 | W02 2-slot·generation 구현·검증 | [134번 기록](<04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md>) |
@@ -21,13 +23,22 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 | W05 PAwR 구현·검증 | [137번 기록](<04_검증 기록/137_M28_W05_PAwR_advertiser_scanner.md>) |
 | W06 privacy·link control 구현·검증 | [138번 기록](<04_검증 기록/138_M28_W06_privacy_RPA_link_control.md>) |
 | W07 HIL·W08 완료와 실패 진단 | [140번 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
+| M29 W01 capability | [141번 기록](<04_검증 기록/141_M29_W01_ATT_GATT_L2CAP_capability.md>) |
+| M29 W02 link별 long read | [142번 기록](<04_검증 기록/142_M29_W02_link별_GATT_long_read.md>) |
+| M29 W03 long/reliable write | [143번 기록](<04_검증 기록/143_M29_W03_long_reliable_write.md>) |
+| M29 W04 descriptor·authorization | [144번 기록](<04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>) |
+| M29 W05 robust GATT cache | [145번 기록](<04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>) |
+| M29 W06 LE CoC·negative | [146번 기록](<04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>) |
+| M29 W07 Signed Write·EATT 2보드 HIL | [147번 기록](<04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>) |
+| M29 W07 3보드·회귀·Windows와 W08 완료 | [149번 기록](<04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
 
 ## 1. 다음 착수 순서
 
 M28 준비는 P01 기준선과 정적 지원 원장부터 시작했으며, API·자원·유한 시험 계약까지 고정했다.
-**M28-W01 capability, W02 고정 2-slot·generation handle, W03 확장 광고·스캔, W04
-periodic·PAST, W05 PAwR, W06 privacy·link control, W07 두/세 보드 HIL과 W08 문서·인계를
-완료했고, 다음은 M29**다. P01~P06은 별도 전역
+M28-W01 capability부터 W08 문서·인계까지 완료했다. M29도 W01 capability, W02~W06
+GATT·cache·CoC 구현, W07 두/세 보드 HIL·회귀·Windows 상호운용과 W08을 완료했다.
+현재 개발 재개 지점은 **M30-W01 계약과 capability 판정**이다.
+P01~P06은 별도 전역
 마일스톤이 아닌 준비 체크다. 코드 작성 전에는 영향을 받는 P02/P03 결정이, 각 물리 시험 전에는
 해당 P04/P05 조건이 확정되어야 한다.
 M31 전용 장비가 미확보라는 이유로 독립적인 M28 문서·Host 작업까지 차단하지 않는다.
@@ -50,7 +61,7 @@ M28의 상세 상태·Kconfig·시험 수치는
 [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)에서 사람이
 읽는 설계와 실행 순서를 설명한다. 현재 M28은 **8/8 작업 묶음, 100.0%**다.
 
-| 작업 묶음 | 현재 상태 | 다음 종료 조건 |
+| 작업 묶음 | 현재 상태 | 완료 근거·남은 조건 |
 | --- | --- | --- |
 | M28-W01 | **완료 — Host parser·target 1/1·실제 HCI 6/6 PASS** | exact `78078a42…` 증거와 정적 candidate/runtime HCI 분리 유지 |
 | M28-W02 | **완료 — Host 계약·target 1/1 PASS** | 고정 central/peripheral slot, generation handle, 상세 event, stale callback·end 회수 |
@@ -61,66 +72,47 @@ M28의 상세 상태·Kconfig·시험 수치는
 | M28-W07 | **완료 — parser 29/29·target 14/14·실기 9/9 PASS** | 2보드 REG/ADV/PAWR/PRIV, 3보드 LINK/PER/CTRL/SOAK exact evidence 보존 |
 | M28-W08 | **완료** | 지원 경계·실패 진단·M29 인계와 기계 원장 정합화 |
 
-W01 protocol은 `M28CAP/1`이며 128-bit nonce, Core/board/NCS/Zephyr full revision, Host Kconfig,
-HCI version·64-byte supported commands·8-byte LE features와 controller 자원 상한을 고정 순서로
-출력한다. Host parser는 noise·중복·누락·순서 변경·stale nonce·wrong revision·timeout과 raw HCI
-불일치를 모두 거부한다. exact `78078a42…`의 target build와 실제 HCI는 각각 PASS했으며 서로 다른
-증거로 유지한다. 상세 값과 hash는 [132번 기록](<04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)에 있다.
+M29는 [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
+[`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json)을 기준으로 실행한다.
+Signed Write는 deprecated legacy opt-in, EATT는 experimental opt-in이며 둘 다 기본 profile에서는
+OFF다. W01은 고정 NCS capability image와 fail-closed protocol/parser의 실제 실행까지 완료했다.
 
-W02는 `CONFIG_BT_MAX_CONN=2`와 SDC peripheral count 1을 production profile에 적용하고 central 0,
-peripheral 1의 역할 고정 slot을 구현했다. `BLEConnectionHandle`은 slot을 직접 공개하지 않고
-generation을 결합하며, `BLEEventInfo`가 link handle과 local 역할을 main-thread callback에 전달한다.
-기존 singleton과 기존 callback은 유지하며 handle 없는 link 제어는 central을 우선하고 없으면
-peripheral을 선택하는 결정적 호환 view다. 실제 production source를 링크한 Host 13개 시나리오,
-W02 source 계약 5개와 고정 NCS target 1/1 build가 PASS했다. RF·동시 2-link는 W07
-`M28-LINK-01`에서 PASS했다.
+| 작업 묶음 | 현재 상태 | 완료 근거·남은 조건 |
+| --- | --- | --- |
+| M29-W01 | **완료 — parser 16/16·target 1/1·실제 capability 7/7 PASS** | exact `d604642b…` 증거와 peer-required 기능 분리 유지 |
+| M29-W02 | **완료 — Host 전체 gate·target 2/2·2보드 long read 100/100 PASS** | exact `dacf6341…`, MTU 247·512 byte·corrupt/stale 0 증거 유지 |
+| M29-W03 | **완료 — Host·target 2/2·2보드 reliable write 100/100 PASS** | exact `babba5a1…`, MTU 247·512 byte·corrupt/partial commit 0 증거 유지 |
+| M29-W04 | **완료 — Host·target 2/2·2보드 descriptor/read multiple 100/100 PASS** | exact `068a1765…`, descriptor 4개·authorization 오판 0 증거 유지 |
+| M29-W05 | **완료 — Host·target 2/2·2보드 cache migration PASS** | exact `e587c4fe…`, bonded reconnect 20·stale/corrupt accept 0 증거 유지 |
+| M29-W06 | **완료 — Host·target 2/2·2보드 CoC/negative PASS** | exact `767bb4af…`, 2-channel·512 byte·각 방향 1,000 SDU·5 negative class·복구 오류 0 증거 유지 |
+| M29-W07 | **완료 — SIGN/EATT·3보드 MULTI/REG·Windows GATT PASS** | exact `c71ef4a2…`·`16eb8fce…`·`a964ae20…` 원본 증거 유지 |
+| M29-W08 | **완료** | `MixedGattCocLinks`, 장문 target 분할, exact `ab3f85d3…` 3보드 재검증, 문서·지원표·M30 인계 |
 
-W03은 generation이 포함된 `BLEAdvertisingSetHandle`과 고정 1-set storage를 추가했다. 확장 광고는
-길이 255 byte 이하의 raw AD TLV만 받고, 확장 스캔 결과는 최대 255 byte payload와 SID·TX power·
-periodic interval·primary/secondary PHY를 값으로 복사한다. 실제 production source를 링크한 Host
-수명 시나리오 4개와 정적 경계 검사, `nucode.m28.ble_extended_contract` target 1/1 build가 warning
-없이 PASS했다. `ExtendedAdvertising`과 `ExtendedScanner` 예제를 추가했으며 255-byte RF report
-100개는 W07 `M28-ADV-01`에서 PASS했다.
+### 현재 재개 지점: M29 완료, 다음 M30
 
-W04는 기존 extended set에 결합하는 periodic advertiser와 generation 기반 한 개 sync를 추가했다.
-Periodic report는 최대 255 byte를 고정 8-entry queue로 복사하고, PAST sender/receiver는 반드시
-현재 generation connection handle을 받는다. 구독되지 않은 link의 이전 callback은 PAST sync로
-승격하지 않는다. Production Host 수명 시나리오 4개·정적 계약과 고정 NCS target 1/1이 PASS했고
-`PeriodicAdvertiser`·`PeriodicScanner`·`PastSender`·`PastReceiver` 예제를 추가했다. 3-node periodic report 1,000개와
-PAST 20/20은 W07 `M28-PER-01`에서 PASS했다.
+Exact `16eb8fce204f656beb6ed0a0d6f763cc7d492215`의 세 보드 `M29-MULTI-01`은 mixed DUT의
+두 link 각각 GATT·CoC 1,000회와 cross-link/payload/drop 오류 0을 확인했다. 같은 revision의
+`M29-REG-01`은 M19/M20/M21/M28 회귀 4/4·실패 0이다. exact
+`a964ae205e237d90149f6d2c0eb0ec6492492a33`의 Windows/Intel GATT는 discovery, read, 두 write,
+notify, indicate와 2회 재연결을 PASS했다. 원본 byte는 Base64 archive와 SHA-256 manifest로
+보존한다. W08 분할·예제 반영 뒤 exact `ab3f85d3cb505f8f82865becfbd8bd0fe8511f27`로 세 role을
+다시 build하고 같은 3보드 `M29-MULTI-01`을 재실행해 2-link와 오류 0을 재확인했다. 다음
+구현·장비 계약은 [HANDOFF](HANDOFF.md)의 M30 경계를 따른다.
 
-W05는 고정 4 subevent × 4 response slot과 249-byte payload 상한을 적용했다. Advertiser request와
-response, scanner response는 callback의 controller buffer를 보존하지 않고 각각 고정 storage·8-entry
-queue로 복사한다. 허용 범위를 벗어난 subevent·slot·offset·길이는 controller 호출 전에 거부한다.
-Production Host 시나리오 4개·정적 계약과 고정 NCS의 `nucode.m28.ble_pawr_contract` target 1/1이
-warning 없이 PASS했고 `PawrAdvertiser`·`PawrScanner` 예제를 추가했다. 실제 4 subevent × 4 slot
-RF 판정은 W07 `M28-PAWR-01`에서 PASS했다.
-
-W06은 local RPA timeout을 1~3600초로 제한하고 extended set의 RPA 만료를 generation event로
-전달한다. Link 설정에 사용한 remote 주소와 해석된 peer identity를 분리하며 identity callback은
-현재 active slot에만 적용한다. 실제 parameter snapshot, DLE 요청·송수신 값과 remote LL version·
-8-byte feature도 handle별로 조회한다. Production Host 시나리오 5개·정적 계약과 고정 NCS의
-`nucode.m28.privacy_control` target 1/1이 warning 없이 PASS했고 `PrivacyPeripheral`·
-`PerLinkControl` 예제를 추가했다. Privacy/bond는 `M28-PRIV-01`, 두 link 동시 제어는
-`M28-CTRL-01`에서 PASS했다.
-
-W07은 `M28B2`와 `M28B3` fixed protocol을 사용한다. 두 parser 29개는 누락·중복·재배치·
-stale nonce·잘못된 revision·수치 미달·예상 밖 token·target FAIL을 거부한다. 두 role target 2/2와
-세 role target 3/3은 warning 없이 build됐다. 2보드 `ADV/PAWR/PRIV`, 기존 M19~M21 `REG`, 3보드
-`LINK/PER/CTRL/SOAK`을 모두 실행해 9개 test ID가 PASS했다. LINK 재검증 과정에서 callback-only
-재연결 오판을 발견해 실제 GATT `LINK_UP` 확인과 object recycle 동기화를 추가했으며 실패 transcript와
-수정·동일 조건 재검증을 [140번 기록](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에
-보존했다. 사용자용 예제 11개는 runtime 실패를 명시적으로 보고한다.
+M28과 M29 각 단계의 구현·시험 수치는 위 작업표와 해당 계약에서 확인한다.
+시도별 실패·CMSIS-DAP 진단·수정·재검증 상세는 [140번](<04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)과
+[141~149번 검증 기록](<04_검증 기록/README.md>)에 보존하며 이 TODO에 중복하지 않는다.
+정적 SDK `candidate`, Host 시험, target build와 실기 PASS는 서로 다른 증거다.
 
 ## 2. 현재 확인된 지원성 결정 항목
 
-아래는 고정 NCS v3.4.0 source를 읽은 결과이며 새 NU54DK 실기 결과가 아니다.
-SDK를 바꾸거나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 다시 확인한다.
+아래 표는 고정 NCS v3.4.0의 source 상태와 프로젝트의 결정·실기 결과를 구분한다.
+SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 다시 확인한다.
 
-| 대상 | 확인된 사실 | 구현 전에 결정할 사항 |
+| 대상 | 고정 SDK의 상태 | 현재 결정·남은 사항 |
 | --- | --- | --- |
-| M29 signed write | Zephyr host `BT_SIGNING`은 `DEPRECATED` | 호환성 수요·보안 경계에 따라 legacy 선택 기능으로 제공할지 범위 개정을 할지 결정. 자동 제외하지 않음 |
-| M29 EATT | Zephyr host `BT_EATT`는 `EXPERIMENTAL` | 실험적 상태 표시, 적용 peer/profile과 추가 오류·상호운용 기준을 정한 뒤 공개 지원 여부 결정 |
+| M29 Signed Write | Zephyr host `BT_SIGNING`은 `DEPRECATED` | 기본 OFF의 `NUCODE_BLE_LegacySigning`, legacy opt-in으로 구현. CSRK/counter 영속화·replay 거부와 통합 회귀 PASS |
+| M29 EATT | Zephyr host `BT_EATT`는 `EXPERIMENTAL` | 기본 OFF의 `NUCODE_BLE_EATT`, experimental opt-in으로 구현. 암호화·2 bearer 부하와 통합 회귀 PASS; 안정 API로 승격하지 않음 |
 | M31 방향탐지 | 기본 SDC의 CTE 송신은 AoA 지원·AoD 미지원. 전체 RX/IQ 경로 지원을 뜻하지 않음 | 송신·수신·안테나 전환을 분리해 controller/profile 적용성 판정. 대체 Zephyr LL은 별도 후보이지 검증 완료 대안이 아님 |
 | M32 공존 | 802.15.4/ESB와 BLE 병행시험에는 동작하는 단독 radio 경로가 먼저 필요 | M32 안에서 최소 검증용 기반·단독 TX/RX를 확보하고, M38/M39는 공개 API·예제·일반 제품화 확장으로 연결 |
 
@@ -171,7 +163,8 @@ NU54DK의 외장 flash 미탑재와 factory-data partition 적용성은 설계 �
 
 **NU54DK 3개와 독립 DAP/UART 3경로를 2026-09-13 W07에서 확인**했다. M28 packet 분모는 세
 UART와 수신측 GATT/periodic sequence·payload hash를 같은 nonce로 결합했다. 외부 sniffer와
-Android/iOS/Windows/Linux cross-vendor matrix는 M28 PASS에 포함하지 않으며 후속 단계에서 판정한다.
+Android/iOS/Linux cross-vendor matrix는 M28/M29 PASS에 포함하지 않는다. Windows/Intel은 M29의
+기본 GATT 상호운용만 PASS했고 EATT·robust caching이나 모든 adapter 지원을 뜻하지 않는다.
 
 | 시험군 | 계획상 필요한 구성 | 착수 시 확인할 사항 |
 | --- | --- | --- |
@@ -187,8 +180,8 @@ Windows 외 OS로 확대하는 약속이 아니다. Peer 자체 미지원 기능
 
 ### 실행 전에 고정할 합격표
 
-M28 GAP/multi-link 값은 9개 test ID로 확정·실행했다. 아래 나머지 마일스톤 값은 아직
-**미확정**이다. 임의 숫자를 제품 보증으로 채우지 않고, 선택 profile과 장비가 결정되면 P05에서
+M28 GAP/multi-link 9개와 M29 ATT/GATT·L2CAP 10개 test ID를 모두 확정·실행했다.
+M30 이후의 수치는 아직 **미확정**이다. 임의 숫자를 제품 보증으로 채우지 않고, 선택 profile과 장비가 결정되면 P05에서
 숫자·단위·계산식·측정 수단을 채운다. `장시간`, `안정적`, `저지연`만으로 합격 기준을 대신하지 않는다.
 
 | 시험군 | 반드시 고정할 입력 | 수치·판정 항목 |
@@ -207,8 +200,8 @@ M28 GAP/multi-link 값은 9개 test ID로 확정·실행했다. 아래 나머지
 
 ## 6. 결과·공개 규칙
 
-- M28의 P01~P06 준비, W01 실제 HCI, W02~W06 구현, W07 9개 실기와 W08 문서·인계를 완료했다.
-  현재 상태는 8/8이며 M29~M33과 v0.5.0 공개는 완료 처리하지 않는다.
+- M28과 M29의 capability·구현·Host·target·유한 HIL·문서 인계를 완료했다.
+  M30~M33과 v0.5.0 공개는 완료 처리하지 않는다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.

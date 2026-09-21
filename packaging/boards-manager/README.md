@@ -7,7 +7,11 @@
 | --- | --- |
 | 현재 stable | `v0.4.1`만 제공 |
 | Stable index | `package_nucode_nu54dk_index.json` |
-| Stable source·ZIP | 129번 공개 기록의 exact identity |
+| Stable source·ZIP | [129번 공개 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)의 exact identity |
+
+현재 `main`의 version은 `0.4.1-dev`입니다. M28/M29 개발 결과는 공개 v0.4.1 ZIP에 자동으로
+추가되지 않으며 v0.5.0 패키지는 아직 공개하지 않았습니다. 다음 제품선의 진행과 미완료 gate는
+[v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 따릅니다.
 
 이 디렉터리의 도구는 지정한 Git commit과 board submodule을 입력으로 사용해 Arduino
 Boards Manager ZIP, index, checksum, release manifest, SPDX SBOM, license inventory와

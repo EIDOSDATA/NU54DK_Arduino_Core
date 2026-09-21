@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat]
+        group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0]
     env:
       NUCODE_NCS_INSTALL_ROOT: D:\ncs
       NUCODE_NCS_ROOT: D:\ncs\v3.4.0

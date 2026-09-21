@@ -16,6 +16,12 @@ namespace nucode::ble::internal
         return 0;
     }
 
+    /** @brief Security 단독 호스트 시험에는 기록할 GATT database identity가 없습니다. */
+    int recordGattDatabaseIdentity() noexcept
+    {
+        return 0;
+    }
+
     /** @brief Security 단독 호스트 시험에는 사용자 GATT schema가 없습니다. */
     bool hasGattSchema() noexcept
     {
@@ -27,13 +33,23 @@ namespace nucode::ble::internal
     {
     }
 
+    /** @brief Security 단독 호스트 시험에는 LE CoC main-thread 작업이 없습니다. */
+    void pollL2cap() noexcept
+    {
+    }
+
+    /** @brief Security 단독 호스트 시험에는 LE CoC 종료 작업이 없습니다. */
+    void l2capEnded() noexcept
+    {
+    }
+
     /** @brief Security 단독 호스트 시험에서 GATT 연결 통지를 소비합니다. */
-    void gattConnected(struct bt_conn *, std::uint32_t) noexcept
+    void gattConnected(struct bt_conn *, BLEConnectionHandle) noexcept
     {
     }
 
     /** @brief Security 단독 호스트 시험에서 GATT 해제 통지를 소비합니다. */
-    void gattDisconnected(struct bt_conn *, std::uint32_t) noexcept
+    void gattDisconnected(struct bt_conn *, BLEConnectionHandle) noexcept
     {
     }
 

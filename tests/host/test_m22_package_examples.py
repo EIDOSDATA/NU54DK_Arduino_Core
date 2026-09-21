@@ -109,6 +109,13 @@ class M22PackageExamplesTests(unittest.TestCase):
             for name in (
                 "ExtendedAdvertising",
                 "ExtendedScanner",
+                "LongGattCentral",
+                "LongGattPeripheral",
+                "ReliableWriteCentral",
+                "ReliableWritePeripheral",
+                "GattDescriptors",
+                "GattAuthorization",
+                "MixedGattCocLinks",
                 "MixedRoleLinks",
                 "PawrAdvertiser",
                 "PawrScanner",
@@ -119,6 +126,16 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "PastReceiver",
                 "PrivacyPeripheral",
             )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE", "L2capCocClient"),
+            ("NUCODE_BLE", "L2capCocServer"),
+            ("NUCODE_BLE_Security", "GattCacheCentral"),
+            ("NUCODE_BLE_Security", "GattCachePeripheral"),
+            ("NUCODE_BLE_LegacySigning", "LegacySignedWriteCentral"),
+            ("NUCODE_BLE_LegacySigning", "LegacySignedWritePeripheral"),
+            ("NUCODE_BLE_EATT", "EattCentral"),
+            ("NUCODE_BLE_EATT", "EattPeripheral"),
         }
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(

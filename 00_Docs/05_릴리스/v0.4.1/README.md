@@ -8,11 +8,18 @@
 | 항목 | 값 |
 | --- | --- |
 | 보드 | NU54DK v2, nRF54L15 application core |
+| Board/FQBN | `nucode:zephyr:nu54dk` |
+| 공식 사용자 OS | Windows 10/11 x64 |
 | SDK | nRF Connect SDK v3.4.0 |
 | Toolchain | `dcbdc366a1` |
 | 설치 channel | Stable Boards Manager index |
 | 지원 버전 | `0.4.1`만 지원 |
 | 기능 기준선 | v0.4.0과 동일 |
+
+공개 source·ZIP·checksum의 고정 identity와 설치 검증 결과는
+[129번 기록](<../../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에서 확인합니다.
+`main`의 `0.4.1-dev`에서 진행하는 M28/M29 BLE 확장은 이 설치 패키지에 포함되지 않습니다.
+개발 소스의 지원 범위와 v0.5.0 준비 상태는 [개발 TODO](../../TODO_v0.5.0.md)를 따릅니다.
 
 ## 설치
 

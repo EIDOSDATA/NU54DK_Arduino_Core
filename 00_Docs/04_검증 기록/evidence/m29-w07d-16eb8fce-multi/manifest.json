@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "archive_format": "base64-rfc4648",
+  "purpose": "M29-MULTI-01 exact raw HIL evidence",
+  "core_revision": "16eb8fce204f656beb6ed0a0d6f763cc7d492215",
+  "files": [
+    {
+      "logical_name": "m29-w07d-16eb8fce.json",
+      "archive_file": "raw/m29-w07d-16eb8fce.json.b64",
+      "raw_size": 6508,
+      "raw_sha256": "7afd0e7a6b474209222c020214e0a757616c287d3b1171b6d5b0488ec742f8a0"
+    },
+    {
+      "logical_name": "m29-w07d-16eb8fce.peripheral.transcript.log",
+      "archive_file": "raw/m29-w07d-16eb8fce.peripheral.transcript.log.b64",
+      "raw_size": 2348,
+      "raw_sha256": "956d3b20c6983095ee2e829968aebe0dc169b27e554ee697eac891dd7504b7f3"
+    },
+    {
+      "logical_name": "m29-w07d-16eb8fce.mixed.transcript.log",
+      "archive_file": "raw/m29-w07d-16eb8fce.mixed.transcript.log.b64",
+      "raw_size": 2532,
+      "raw_sha256": "14c7ca19e63b4f66828f0816fa089ed892f6e69573082184563269e710aebab9"
+    },
+    {
+      "logical_name": "m29-w07d-16eb8fce.central.transcript.log",
+      "archive_file": "raw/m29-w07d-16eb8fce.central.transcript.log.b64",
+      "raw_size": 2276,
+      "raw_sha256": "f2f8193f31bf9369a1b56098611fd2fa42e04e3f6c3460f3a2cb13e78e5ee061"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "gate": "m29-w04-descriptor-authorization-pair-hil",
+  "status": "passed",
+  "created_at_utc": "2026-09-13T10:17:41.950069+00:00",
+  "core_revision": "068a1765f74e39c83cbf6e9e2f54de467c923441",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "bd06b30ecb255f7bd858668311bfa22a",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "5415360300052840d9e1e32cc887aaf1",
+      "msd_root": "F:\\",
+      "uart_port": "COM14"
+    },
+    "central": {
+      "daplink_uid": "54153603000528402aae46c5e8e3712a",
+      "msd_root": "G:\\",
+      "uart_port": "COM10"
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 575818,
+      "sha256": "983ce2f8ed84ae4eb9272645d460abb093bada5352cd6956e3e1eb0514caafb2",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "4096",
+      "build_record": {
+        "core_revision": "068a1765f74e",
+        "core_source_sha256": "3ecf1a27f90b6fadfbb8c1a1e41979600e2245c2ccc7116558e3a1255b4510c7",
+        "application_source_sha256": "8d1938dd1d298d9e754ed2dae9cecf543e410dd89dc3363d49ad9777a2900ac8",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "9baaec32f483c52f844c4d7dac7c0776a757fc7b45c73cedcd589c01a0e376a9"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 585080,
+      "sha256": "0cd0d85367ece67f7413d3ddf2564884ca5d252cc7f6bd1c55719cc80fa91c81",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "131072",
+      "build_record": {
+        "core_revision": "068a1765f74e",
+        "core_source_sha256": "3ecf1a27f90b6fadfbb8c1a1e41979600e2245c2ccc7116558e3a1255b4510c7",
+        "application_source_sha256": "8d1938dd1d298d9e754ed2dae9cecf543e410dd89dc3363d49ad9777a2900ac8",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "9baaec32f483c52f844c4d7dac7c0776a757fc7b45c73cedcd589c01a0e376a9"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "m29-w04-descriptor-evidence.peripheral.transcript.log",
+      "size": 816,
+      "sha256": "ef5fd801853f5f154bb084d03de40260205d0a95485c95e6cb6aa687254505d6"
+    },
+    "central": {
+      "name": "m29-w04-descriptor-evidence.central.transcript.log",
+      "size": 793,
+      "sha256": "63f12e85af1f4ef69d8d80dbad8057e998945ff859f412de91ed7c8f2f6cf446"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "mtu": 247,
+      "descriptors": 4,
+      "reads": 0,
+      "handles": 0,
+      "payload_bytes": 0,
+      "authorization_checks": 402,
+      "authorization_allowed": 401,
+      "authorization_denied": 1,
+      "expected_denials": 0,
+      "authorization_errors": 0,
+      "descriptor_writes": 0,
+      "corrupt_values": 0,
+      "stale_events": 0,
+      "callback_context": "pass"
+    },
+    "central": {
+      "role": "central",
+      "mtu": 247,
+      "descriptors": 4,
+      "reads": 100,
+      "handles": 4,
+      "payload_bytes": 16,
+      "authorization_checks": 0,
+      "authorization_allowed": 0,
+      "authorization_denied": 0,
+      "expected_denials": 1,
+      "authorization_errors": 0,
+      "descriptor_writes": 0,
+      "corrupt_values": 0,
+      "stale_events": 0,
+      "callback_context": "pass"
+    }
+  },
+  "coverage": {
+    "att_mtu": 247,
+    "descriptors": 4,
+    "read_multiple_handles": 4,
+    "read_multiple_iterations": 100,
+    "authorization_expected_denials": 1,
+    "authorization_errors": 0,
+    "payload_corruption": 0,
+    "m29_desc_01_status": "passed",
+    "link_notify_indicate": "host-tested-target-built"
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "pmic_write_executed": false
+  }
+}

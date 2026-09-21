@@ -1,0 +1,14 @@
+M29CAP|1|READY
+M29CAP|1|BEGIN|nonce=b0a32c88bf92e812ad32e393f2eca7ae
+M29CAP|1|IDENTITY|nonce=b0a32c88bf92e812ad32e393f2eca7ae|core=d604642b1b439fda2840f613f7f157672d801597|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+M29CAP|1|HOST|nonce=b0a32c88bf92e812ad32e393f2eca7ae|bt_max_conn=2|gatt_client=1|dynamic_db=1|read_multiple=1|service_changed=1|caching=1|l2cap_dynamic=1|signing=1|eatt=1|eatt_max=2|att_tx_count=8|prepare_count=8|l2cap_tx_mtu=512|l2cap_tx_buffers=4
+M29CAP|1|PROBE|nonce=b0a32c88bf92e812ad32e393f2eca7ae|gatt_service=1|l2cap_server=1|l2cap_psm=128
+M29CAP|1|CONTRACT|nonce=b0a32c88bf92e812ad32e393f2eca7ae|client_contexts=2|value_bytes=512|prepare_per_link=1|descriptors=4|read_multiple_handles=4|coc_channels=2|coc_sdu_bytes=512|eatt_bearers=2
+M29CAP|1|CAP|nonce=b0a32c88bf92e812ad32e393f2eca7ae|id=gatt_long_reliable|sdk=stable|config=pass|probe=gatt_registered
+M29CAP|1|CAP|nonce=b0a32c88bf92e812ad32e393f2eca7ae|id=gatt_read_multiple|sdk=stable|config=pass|probe=gatt_registered
+M29CAP|1|CAP|nonce=b0a32c88bf92e812ad32e393f2eca7ae|id=service_changed|sdk=stable|config=pass|probe=gatt_registered
+M29CAP|1|CAP|nonce=b0a32c88bf92e812ad32e393f2eca7ae|id=robust_caching|sdk=stable|config=pass|probe=gatt_registered
+M29CAP|1|CAP|nonce=b0a32c88bf92e812ad32e393f2eca7ae|id=le_coc|sdk=stable|config=pass|probe=server_registered
+M29CAP|1|CAP|nonce=b0a32c88bf92e812ad32e393f2eca7ae|id=signed_write_legacy|sdk=deprecated|config=pass|probe=peer_required
+M29CAP|1|CAP|nonce=b0a32c88bf92e812ad32e393f2eca7ae|id=eatt_experimental|sdk=experimental|config=pass|probe=peer_required
+M29CAP|1|END|records=11|capabilities=7|nonce=b0a32c88bf92e812ad32e393f2eca7ae

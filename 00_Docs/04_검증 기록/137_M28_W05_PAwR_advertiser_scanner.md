@@ -1,5 +1,9 @@
 # 137 — M28-W05 PAwR advertiser·scanner
 
+> M28 진행 당시의 기록입니다. 아래 진행률·미실행·장비 부족·다음 작업은 작성 시점의 상태이며,
+> 후속 2·3보드 HIL과 M28 최종 완료 결과는 [140번 기록](140_M28_W07_3보드_HIL과_W08_완료.md)에 있습니다.
+> 현재 개발 상태와 다음 작업은 [v0.5.0 TODO](../TODO_v0.5.0.md)를 따릅니다.
+
 ## 결론
 
 M28-W05의 Host·target 범위를 완료했다. PAwR advertiser와 scanner는 고정 4 subevent × 4 response

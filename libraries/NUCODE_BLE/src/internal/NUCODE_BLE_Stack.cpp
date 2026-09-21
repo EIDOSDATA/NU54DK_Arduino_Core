@@ -114,6 +114,12 @@ namespace nucode::ble::internal
         return 0;
     }
 
+    /** @brief M29 GATT cache가 링크되기 전에는 database identity를 기록하지 않습니다. */
+    __weak int recordGattDatabaseIdentity() noexcept
+    {
+        return 0;
+    }
+
     /** @brief M20이 링크되기 전에는 custom GATT schema가 없습니다. */
     __weak bool hasGattSchema() noexcept
     {
@@ -126,21 +132,31 @@ namespace nucode::ble::internal
     }
 
     /** @brief M20이 링크되기 전에는 generic GATT connection 관찰을 생략합니다. */
-    __weak void gattConnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    __weak void gattConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
         ARG_UNUSED(connection);
-        ARG_UNUSED(generation);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M20이 링크되기 전에는 generic GATT disconnect 관찰을 생략합니다. */
-    __weak void gattDisconnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    __weak void gattDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
         ARG_UNUSED(connection);
-        ARG_UNUSED(generation);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M20이 링크되기 전에는 GATT 종료 정리가 없습니다. */
     __weak void gattEnded() noexcept
+    {
+    }
+
+    /** @brief M29 LE CoC가 링크되기 전에는 main-thread 작업이 없습니다. */
+    __weak void pollL2cap() noexcept
+    {
+    }
+
+    /** @brief M29 LE CoC가 링크되기 전에는 channel 종료 작업이 없습니다. */
+    __weak void l2capEnded() noexcept
     {
     }
 

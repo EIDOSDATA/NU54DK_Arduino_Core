@@ -144,6 +144,28 @@ namespace nucode::ble::internal
         k_spin_unlock(&gapState().connection_lock, key);
         return active;
     }
+    BLEConnectionHandle handleForActiveConnection(struct bt_conn *connection) noexcept
+    {
+        BLEConnectionHandle handle;
+        if (connection == nullptr)
+        {
+            return handle;
+        }
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[index];
+            if (slot.active == connection && slot.generation != 0U &&
+                slot.device_generation == static_cast<std::uint32_t>(
+                                              atomic_get(&gapState().device_session_generation)))
+            {
+                handle = BLEConnectionHandleAccess::make(index, slot.generation);
+                break;
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return handle;
+    }
     bool hasActiveConnection() noexcept
     {
         bool active = false;
@@ -201,6 +223,10 @@ namespace nucode::ble
         if (result == 0)
         {
             result = internal::ensureStack();
+        }
+        if (result == 0)
+        {
+            result = internal::recordGattDatabaseIdentity();
         }
         if (result == 0)
         {
@@ -281,6 +307,7 @@ namespace nucode::ble
             }
         }
         internal::pollGatt();
+        internal::pollL2cap();
         BLEPeriodicReportCallback periodic_callback = gapState().periodic_report_callback;
         if (periodic_callback != nullptr)
         {
@@ -338,6 +365,7 @@ namespace nucode::ble
         endPawr();
         endPeriodicAdvertising();
         endExtendedAdvertising();
+        nucode::ble::internal::l2capEnded();
 
         struct bt_conn *active[maximum_connection_slots] = {};
         struct bt_conn *pending[maximum_connection_slots] = {};

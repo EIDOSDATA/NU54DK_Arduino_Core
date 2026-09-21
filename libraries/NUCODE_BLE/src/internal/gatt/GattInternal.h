@@ -81,6 +81,88 @@ namespace nucode::ble::internal
             }
         }
 
+        static bool authorize(BLECharacteristic &characteristic,
+                              const BLEGattAuthorizationRequest &request) noexcept
+        {
+            return characteristic.authorization_callback_ == nullptr ||
+                   characteristic.authorization_callback_(
+                       request, characteristic.authorization_context_);
+        }
+
+        static bool hasAuthorization(const BLECharacteristic &characteristic) noexcept
+        {
+            return characteristic.authorization_callback_ != nullptr;
+        }
+
+        static std::size_t descriptorCount(const BLECharacteristic &characteristic) noexcept
+        {
+            return characteristic.descriptor_count_;
+        }
+
+        static BLEDescriptor *descriptor(BLECharacteristic &characteristic,
+                                         std::size_t index) noexcept
+        {
+            return characteristic.descriptors_[index];
+        }
+
+        static BLEUuid &uuid(BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.uuid_;
+        }
+
+        static BLEPermission permissions(const BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.permissions_;
+        }
+
+        static std::uint8_t *value(BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.value_;
+        }
+
+        static const std::uint8_t *value(const BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.value_;
+        }
+
+        static std::size_t capacity(const BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.capacity_;
+        }
+
+        static std::size_t length(const BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.value_length_;
+        }
+
+        static void setLength(BLEDescriptor &descriptor, std::size_t length) noexcept
+        {
+            descriptor.value_length_ = length;
+        }
+
+        static bool registered(const BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.registered_;
+        }
+
+        static void setRegistered(BLEDescriptor &descriptor, bool registered) noexcept
+        {
+            descriptor.registered_ = registered;
+        }
+
+        static bool authorize(BLEDescriptor &descriptor,
+                              const BLEGattAuthorizationRequest &request) noexcept
+        {
+            return descriptor.authorization_callback_ == nullptr ||
+                   descriptor.authorization_callback_(request,
+                                                       descriptor.authorization_context_);
+        }
+
+        static bool hasAuthorization(const BLEDescriptor &descriptor) noexcept
+        {
+            return descriptor.authorization_callback_ != nullptr;
+        }
+
         static BLEUuid &uuid(BLEService &service) noexcept
         {
             return service.uuid_;
@@ -149,6 +231,27 @@ namespace nucode::ble::internal
         {
             characteristic.ccc_handle_ = handle;
         }
+
+        static std::uint16_t declarationHandle(
+            const BLERemoteCharacteristic &characteristic) noexcept
+        {
+            return characteristic.declaration_handle_;
+        }
+
+        static void clear(BLERemoteDescriptor &descriptor) noexcept
+        {
+            descriptor.uuid_ = BLEUuid{};
+            descriptor.handle_ = 0U;
+            descriptor.valid_ = false;
+        }
+
+        static void set(BLERemoteDescriptor &descriptor, const BLEUuid &uuid,
+                        std::uint16_t handle) noexcept
+        {
+            descriptor.uuid_ = uuid;
+            descriptor.handle_ = handle;
+            descriptor.valid_ = true;
+        }
     };
 
 } // namespace nucode::ble::internal
@@ -158,20 +261,32 @@ namespace nucode::ble::internal::gatt
     using nucode::ble::BLECharacteristic;
     using nucode::ble::BLECharacteristicEvent;
     using nucode::ble::BLECharacteristicEventInfo;
+    using nucode::ble::BLEAddress;
+    using nucode::ble::BLEDescriptor;
     using nucode::ble::BLEError;
+    using nucode::ble::BLEGattCacheState;
+    using nucode::ble::BLEGattCacheStatistics;
+    using nucode::ble::BLEGattAuthorizationOperation;
+    using nucode::ble::BLEGattAuthorizationRequest;
+    using nucode::ble::BLEGattBearer;
     using nucode::ble::BLEGattClientCallback;
     using nucode::ble::BLEGattClientEvent;
+    using nucode::ble::BLEGattClientInfoCallback;
     using nucode::ble::BLEPermission;
     using nucode::ble::BLEProperty;
     using nucode::ble::BLERemoteCharacteristic;
+    using nucode::ble::BLERemoteDescriptor;
     using nucode::ble::BLERemoteService;
     using nucode::ble::BLEService;
     using nucode::ble::BLEUuid;
+    using nucode::ble::GattDatabase;
     using nucode::ble::internal::GattAccess;
 
     inline constexpr std::size_t maximum_services = CONFIG_NUCODE_BLE_GATT_MAX_SERVICES;
     inline constexpr std::size_t maximum_characteristics = BLEService::maximum_characteristics;
-    inline constexpr std::size_t maximum_attributes = 1U + maximum_characteristics * 3U;
+    inline constexpr std::size_t maximum_descriptors = BLECharacteristic::maximum_descriptors;
+    inline constexpr std::size_t maximum_attributes =
+        1U + maximum_characteristics * (3U + maximum_descriptors);
     inline constexpr std::size_t maximum_value_length = BLECharacteristic::maximum_value_length;
 
     static_assert(maximum_services > 0U, "GATT service slot이 하나 이상 필요합니다.");
@@ -218,12 +333,15 @@ namespace nucode::ble::internal::gatt
         BLEService *owner = nullptr;
         ZephyrUuid service_uuid;
         ZephyrUuid characteristic_uuids[maximum_characteristics] = {};
+        ZephyrUuid descriptor_uuids[maximum_characteristics][maximum_descriptors] = {};
         struct bt_gatt_service service = {};
         struct bt_gatt_attr attributes[maximum_attributes] = {};
         struct bt_gatt_chrc declarations[maximum_characteristics] = {};
         struct bt_gatt_ccc_managed_user_data ccc[maximum_characteristics] = {};
         BLECharacteristic *characteristics[maximum_characteristics] = {};
+        BLEDescriptor *descriptors[maximum_characteristics][maximum_descriptors] = {};
         NotificationContext notifications[maximum_characteristics] = {};
+        std::uint8_t notification_data[maximum_characteristics][maximum_value_length] = {};
         atomic_t notification_active[maximum_characteristics] = {};
         struct bt_gatt_indicate_params indications[maximum_characteristics] = {};
         std::uint8_t indication_data[maximum_characteristics][maximum_value_length] = {};
@@ -232,6 +350,8 @@ namespace nucode::ble::internal::gatt
         std::uint32_t indication_generations[maximum_characteristics] = {};
         std::size_t value_attribute_index[maximum_characteristics] = {};
         std::size_t ccc_attribute_index[maximum_characteristics] = {};
+        std::size_t descriptor_attribute_index[maximum_characteristics][maximum_descriptors] = {};
+        std::size_t descriptor_count[maximum_characteristics] = {};
         std::size_t characteristic_count = 0U;
     };
 
@@ -244,12 +364,18 @@ namespace nucode::ble::internal::gatt
             client,
         } owner_kind;
         std::uint32_t generation;
+        BLEConnectionHandle connection;
         BLECharacteristic *characteristic;
+        BLEDescriptor *descriptor;
         BLECharacteristicEvent server_event;
+        BLEGattAuthorizationOperation authorization_operation;
         BLEGattClientEvent client_event;
         std::uint16_t length;
         std::uint16_t offset;
         bool without_response;
+        bool persist_signing;
+        std::uint8_t att_error;
+        BLEGattBearer bearer;
         int status;
         std::uint8_t data[maximum_value_length];
     };
@@ -267,6 +393,35 @@ namespace nucode::ble::internal::gatt
         ready,
     };
 
+    /** @brief robust cache 동기화의 고정 비동기 단계입니다. */
+    enum class CacheStage : atomic_val_t
+    {
+        idle,
+        discovering_gatt_service,
+        gatt_service_found,
+        discovering_service_changed,
+        service_changed_found,
+        discovering_service_changed_ccc,
+        service_changed_ccc_found,
+        subscribing_service_changed,
+        service_changed_subscribed,
+        discovering_client_features,
+        client_features_found,
+        writing_client_features,
+        client_features_written,
+        discovering_database_hash,
+        database_hash_found,
+        reading_database_hash,
+        database_hash_read,
+        discovering_target_service,
+        target_service_found,
+        discovering_target_characteristic,
+        target_characteristic_found,
+        discovering_target_ccc,
+        target_ccc_found,
+        rediscovery_pending,
+    };
+
     /** @brief database의 고정 schema·slot 상태입니다. */
     struct DatabaseState
     {
@@ -278,20 +433,48 @@ namespace nucode::ble::internal::gatt
     /** @brief 사용된 server 경로만 slot 저장소를 참조하도록 별도로 소유합니다. */
     using ServiceSlots = ServiceSlot[maximum_services];
     ServiceSlots &serviceSlots() noexcept;
+    inline constexpr std::size_t maximum_prepare_transactions = 2U;
+
+    /** @brief link 하나의 long write prepare 범위를 고정 상태로 소유합니다. */
+    struct PrepareTransaction
+    {
+        struct bt_conn *connection = nullptr;
+        BLECharacteristic *characteristic = nullptr;
+        std::uint32_t generation = 0U;
+        std::uint16_t length = 0U;
+    };
+
     /** @brief server 값 snapshot lock 상태입니다. */
     struct ServerState
     {
         struct k_spinlock characteristic_value_lock;
+        PrepareTransaction prepare_transactions[maximum_prepare_transactions] = {};
     };
     ServerState &serverState() noexcept;
-    /** @brief GATT session generation·link 상태입니다. */
+
+    /** @brief 해제된 link의 prepare transaction을 상수 시간에 폐기합니다. */
+    void clearServerTransaction(struct bt_conn *connection) noexcept;
+
+    /** @brief image session의 모든 prepare transaction을 폐기합니다. */
+    void clearServerTransactions() noexcept;
+    /** @brief GATT image session generation 상태입니다. */
     struct SessionState
     {
         atomic_t gatt_session_generation = ATOMIC_INIT(1);
-        atomic_t gatt_link_active = ATOMIC_INIT(0);
     };
     SessionState &sessionState() noexcept;
-    /** @brief client handle·operation·subscription token 상태입니다. */
+    inline constexpr std::size_t maximum_client_contexts = 2U;
+
+    /** @brief 공개 client callback은 두 link가 공유하고 event가 link를 식별합니다. */
+    struct ClientCallbacks
+    {
+        BLEGattClientCallback legacy = nullptr;
+        void *legacy_context = nullptr;
+        BLEGattClientInfoCallback detailed = nullptr;
+        void *detailed_context = nullptr;
+    };
+
+    /** @brief link 하나의 handle·operation·subscription 고정 상태입니다. */
     struct ClientState
     {
         struct k_spinlock client_state_lock;
@@ -301,18 +484,55 @@ namespace nucode::ble::internal::gatt
         atomic_t client_subscribed = ATOMIC_INIT(0);
         atomic_t client_subscription_value = ATOMIC_INIT(0);
         atomic_t client_last_att_error = ATOMIC_INIT(0);
+        atomic_t client_operation_bearer =
+            ATOMIC_INIT(static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
+        atomic_t client_signed_write = ATOMIC_INIT(0);
+        atomic_t descriptor_boundary_ready = ATOMIC_INIT(0);
+        atomic_t cache_state =
+            ATOMIC_INIT(static_cast<atomic_val_t>(BLEGattCacheState::idle));
+        atomic_t cache_stage = ATOMIC_INIT(static_cast<atomic_val_t>(CacheStage::idle));
         BLERemoteService remote_service;
         BLERemoteCharacteristic remote_characteristic;
-        BLEGattClientCallback client_callback = nullptr;
-        void *client_context = nullptr;
+        BLERemoteDescriptor remote_descriptors[maximum_descriptors] = {};
+        std::size_t remote_descriptor_count = 0U;
+        BLEConnectionHandle connection_handle;
+        BLEUuid target_service_uuid;
+        BLEUuid target_characteristic_uuid;
+        ZephyrUuid target_service_zephyr_uuid;
+        ZephyrUuid target_characteristic_zephyr_uuid;
+        BLEUuid target_descriptor_uuid;
+        ZephyrUuid target_descriptor_zephyr_uuid;
+        struct bt_gatt_discover_params discovery_parameters = {};
+        struct bt_gatt_read_params read_parameters = {};
+        struct bt_gatt_write_params write_parameters = {};
+        struct bt_gatt_subscribe_params subscribe_parameters = {};
+        struct bt_gatt_discover_params cache_discovery_parameters = {};
+        struct bt_gatt_read_params cache_read_parameters = {};
+        struct bt_gatt_write_params cache_write_parameters = {};
+        struct bt_gatt_subscribe_params cache_subscribe_parameters = {};
+        std::uint8_t read_data[maximum_value_length] = {};
+        std::uint8_t remote_database_hash[GattDatabase::hash_length] = {};
+        std::uint8_t client_features_value = 1U;
+        std::uint16_t read_handles[maximum_descriptors] = {};
+        std::uint16_t cache_schema_version = 0U;
+        std::uint16_t gatt_service_start_handle = 0U;
+        std::uint16_t gatt_service_end_handle = 0U;
+        std::uint16_t service_changed_value_handle = 0U;
+        std::uint16_t service_changed_ccc_handle = 0U;
+        std::uint16_t client_features_handle = 0U;
+        std::uint16_t database_hash_handle = 0U;
+        std::uint16_t descriptor_end_handle = 0U;
+        std::uint8_t write_data[maximum_value_length] = {};
+        std::size_t read_length = 0U;
+        bool read_multiple = false;
         struct bt_conn *client_operation_connection = nullptr;
         struct bt_conn *client_subscription_connection = nullptr;
+        struct bt_conn *cache_subscription_connection = nullptr;
         struct bt_conn *gatt_connection = nullptr;
-        std::uint32_t client_operation_generation = 0U;
-        std::uint32_t client_subscription_generation = 0U;
-        std::uint32_t gatt_connection_generation = 0U;
     };
-    ClientState &clientState() noexcept;
+    using ClientStates = ClientState[maximum_client_contexts];
+    ClientStates &clientStates() noexcept;
+    ClientCallbacks &clientCallbacks() noexcept;
     /** @brief enum bit가 설정되었는지 검사합니다. */
     inline bool hasProperty(BLEProperty value, BLEProperty bit) noexcept
     {
@@ -349,6 +569,10 @@ namespace nucode::ble::internal::gatt
         {
             result |= BT_GATT_CHRC_INDICATE;
         }
+        if (hasProperty(properties, BLEProperty::authenticated_signed_write))
+        {
+            result |= 0x40U;
+        }
         return result;
     }
 
@@ -376,6 +600,10 @@ namespace nucode::ble::internal::gatt
         {
             result = result | BLEProperty::indicate;
         }
+        if ((properties & 0x40U) != 0U)
+        {
+            result = result | BLEProperty::authenticated_signed_write;
+        }
         return result;
     }
 
@@ -389,7 +617,7 @@ namespace nucode::ble::internal::gatt
         }
         if (hasPermission(permissions, BLEPermission::write))
         {
-            result |= BT_GATT_PERM_WRITE;
+            result |= BT_GATT_PERM_WRITE | BT_GATT_PERM_PREPARE_WRITE;
         }
         return result;
     }
@@ -411,9 +639,24 @@ namespace nucode::ble::internal::gatt
         }
         const bool readable = hasProperty(properties, BLEProperty::read);
         const bool writable = hasProperty(properties, BLEProperty::write) ||
-                              hasProperty(properties, BLEProperty::write_without_response);
+                              hasProperty(properties, BLEProperty::write_without_response) ||
+                              hasProperty(properties,
+                                          BLEProperty::authenticated_signed_write);
         return readable == hasPermission(permissions, BLEPermission::read) &&
                writable == hasPermission(permissions, BLEPermission::write);
+    }
+
+    /** @brief descriptor schema의 UUID·permission·buffer 일관성을 검사합니다. */
+    inline bool validDescriptor(const BLEDescriptor &descriptor) noexcept
+    {
+        const BLEPermission permissions = GattAccess::permissions(descriptor);
+        return GattAccess::uuid(const_cast<BLEDescriptor &>(descriptor)).valid() &&
+               GattAccess::uuid(const_cast<BLEDescriptor &>(descriptor)).type() !=
+                   BLEUuid::Type::uuid32 &&
+               GattAccess::value(const_cast<BLEDescriptor &>(descriptor)) != nullptr &&
+               GattAccess::capacity(descriptor) != 0U &&
+               GattAccess::capacity(descriptor) <= BLEDescriptor::maximum_value_length &&
+               permissions != BLEPermission::none;
     }
 
     /** @brief 내부 module 간 호출이며 공개 Arduino API가 아닙니다. */
@@ -421,30 +664,51 @@ namespace nucode::ble::internal::gatt
     void queueServerEvent(BLECharacteristic &characteristic, BLECharacteristicEvent event,
                           const void *data = nullptr, std::size_t length = 0U,
                           std::size_t offset = 0U, bool without_response = false,
-                          int status = 0) noexcept;
-    void queueClientEvent(BLEGattClientEvent event, const void *data = nullptr,
-                          std::size_t length = 0U, int status = 0) noexcept;
+                          int status = 0, struct bt_conn *connection = nullptr,
+                          BLEDescriptor *descriptor = nullptr,
+                          BLEGattAuthorizationOperation authorization_operation =
+                              BLEGattAuthorizationOperation::read) noexcept;
+    bool queueClientEvent(ClientState &state, BLEGattClientEvent event,
+                          const void *data = nullptr, std::size_t length = 0U,
+                          std::size_t offset = 0U, int status = 0,
+                          std::uint8_t att_error = 0U) noexcept;
+    void queueInvalidatedEvent(BLEConnectionHandle connection) noexcept;
+    BLEConnectionHandle handleForConnection(struct bt_conn *connection) noexcept;
     bool findCharacteristic(BLECharacteristic &owner, ServiceSlot *&slot,
                             std::size_t &characteristic_index) noexcept;
     std::size_t copyCachedValue(const BLECharacteristic &characteristic, void *output,
                                 std::size_t capacity) noexcept;
-    void copyRemoteHandles(BLERemoteService &service,
-                           BLERemoteCharacteristic &characteristic) noexcept;
-    BLERemoteService copyRemoteService() noexcept;
-    BLERemoteCharacteristic copyRemoteCharacteristic() noexcept;
-    bool currentGattConnection(struct bt_conn *connection) noexcept;
-    void setClientOperationToken(struct bt_conn *connection) noexcept;
-    bool validClientOperation(struct bt_conn *connection) noexcept;
-    void clearClientOperationToken() noexcept;
-    void setClientSubscriptionToken(struct bt_conn *connection) noexcept;
-    bool validClientSubscription(struct bt_conn *connection) noexcept;
-    void clearClientSubscriptionToken() noexcept;
+    std::size_t copyDescriptorValue(const BLEDescriptor &descriptor, void *output,
+                                    std::size_t capacity) noexcept;
+    void copyRemoteHandles(ClientState &state, BLERemoteService &service,
+                            BLERemoteCharacteristic &characteristic) noexcept;
+    BLERemoteService copyRemoteService(ClientState &state) noexcept;
+    BLERemoteCharacteristic copyRemoteCharacteristic(ClientState &state) noexcept;
+    BLERemoteDescriptor copyRemoteDescriptor(ClientState &state, std::size_t index) noexcept;
+    ClientState *findClientState(BLEConnectionHandle connection) noexcept;
+    ClientState *legacyClientState() noexcept;
+    ClientState *findDiscoveryState(struct bt_gatt_discover_params *parameters) noexcept;
+    ClientState *findReadState(struct bt_gatt_read_params *parameters) noexcept;
+    ClientState *findWriteState(struct bt_gatt_write_params *parameters) noexcept;
+    ClientState *findSubscriptionState(struct bt_gatt_subscribe_params *parameters) noexcept;
+    bool currentGattConnection(ClientState &state, struct bt_conn *connection) noexcept;
+    void setClientOperationToken(ClientState &state, struct bt_conn *connection) noexcept;
+    bool validClientOperation(ClientState &state, struct bt_conn *connection) noexcept;
+    void clearClientOperationToken(ClientState &state) noexcept;
+    void setClientSubscriptionToken(ClientState &state, struct bt_conn *connection) noexcept;
+    bool validClientSubscription(ClientState &state, struct bt_conn *connection) noexcept;
+    void clearClientSubscriptionToken(ClientState &state) noexcept;
     BLECharacteristic *findCccOwner(const struct bt_gatt_attr *attribute) noexcept;
     ssize_t serverRead(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                        void *buffer, std::uint16_t length, std::uint16_t offset) noexcept;
     ssize_t serverWrite(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                         const void *buffer, std::uint16_t length, std::uint16_t offset,
                         std::uint8_t flags) noexcept;
+    ssize_t descriptorRead(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
+                           void *buffer, std::uint16_t length, std::uint16_t offset) noexcept;
+    ssize_t descriptorWrite(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
+                            const void *buffer, std::uint16_t length, std::uint16_t offset,
+                            std::uint8_t flags) noexcept;
     void cccChanged(const struct bt_gatt_attr *attribute, std::uint16_t value) noexcept;
     void notificationCompleted(struct bt_conn *connection, void *user_data) noexcept;
     bool findIndication(struct bt_gatt_indicate_params *parameters, ServiceSlot *&slot,
@@ -452,7 +716,7 @@ namespace nucode::ble::internal::gatt
     void indicationCompleted(struct bt_conn *connection, struct bt_gatt_indicate_params *parameters,
                              std::uint8_t error) noexcept;
     void indicationDestroyed(struct bt_gatt_indicate_params *parameters) noexcept;
-    void failClient(int driver_error, std::uint8_t att_error = 0U) noexcept;
+    void failClient(ClientState &state, int driver_error, std::uint8_t att_error = 0U) noexcept;
     std::uint8_t serviceDiscovered(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                                    struct bt_gatt_discover_params *parameters) noexcept;
     std::uint8_t characteristicDiscovered(struct bt_conn *connection,
@@ -460,6 +724,12 @@ namespace nucode::ble::internal::gatt
                                           struct bt_gatt_discover_params *parameters) noexcept;
     std::uint8_t cccDiscovered(struct bt_conn *connection, const struct bt_gatt_attr *attribute,
                                struct bt_gatt_discover_params *parameters) noexcept;
+    std::uint8_t descriptorBoundaryDiscovered(
+        struct bt_conn *connection, const struct bt_gatt_attr *attribute,
+        struct bt_gatt_discover_params *parameters) noexcept;
+    std::uint8_t descriptorDiscovered(struct bt_conn *connection,
+                                      const struct bt_gatt_attr *attribute,
+                                      struct bt_gatt_discover_params *parameters) noexcept;
     std::uint8_t clientReadCompleted(struct bt_conn *connection, std::uint8_t error,
                                      struct bt_gatt_read_params *parameters, const void *data,
                                      std::uint16_t length) noexcept;
@@ -471,11 +741,26 @@ namespace nucode::ble::internal::gatt
     std::uint8_t clientNotification(struct bt_conn *connection,
                                     struct bt_gatt_subscribe_params *parameters, const void *data,
                                     std::uint16_t length) noexcept;
-    void continueCharacteristicDiscovery() noexcept;
-    void continueCccDiscovery() noexcept;
+    void continueCharacteristicDiscovery(ClientState &state) noexcept;
+    void continueCccDiscovery(ClientState &state) noexcept;
+    void continueDescriptorDiscovery(ClientState &state) noexcept;
     void progressClientDiscovery() noexcept;
-    bool validClientPayload(std::size_t length) noexcept;
-    bool startSubscription(std::uint16_t value) noexcept;
+    int prepareGattCacheDatabase() noexcept;
+    void rollbackGattCacheDatabase() noexcept;
+    int recordGattDatabaseIdentity() noexcept;
+    bool setGattDatabaseRevision(std::uint32_t revision) noexcept;
+    std::uint32_t gattDatabaseRevision() noexcept;
+    bool readGattDatabaseHash(std::uint8_t output[GattDatabase::hash_length]) noexcept;
+    bool startCachedDiscovery(BLEConnectionHandle connection, const BLEUuid &service_uuid,
+                              const BLEUuid &characteristic_uuid,
+                              std::uint16_t schema_version) noexcept;
+    BLEGattCacheState clientCacheState(BLEConnectionHandle connection) noexcept;
+    bool invalidateClientCache(BLEConnectionHandle connection) noexcept;
+    BLEGattCacheStatistics clientCacheStatistics() noexcept;
+    void clearClientCacheState(ClientState &state) noexcept;
+    void progressGattCache() noexcept;
+    bool validClientPayload(ClientState &state, std::size_t length) noexcept;
+    bool startSubscription(ClientState &state, std::uint16_t value) noexcept;
     k_msgq &gattEventQueue() noexcept;
     void lockGattSchema() noexcept;
     void unlockGattSchema() noexcept;
