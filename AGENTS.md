@@ -21,7 +21,9 @@
   M30-W08 실제 전원 차단 4지점 × 3회(12/12)를 통과했습니다. HOST-W01~HOST-W03은 완료했고
   HOST-W04~HOST-W08은 사용자 지시로 보류 중입니다. M31은 W01~W03 완료 **3/8**이며,
   W03 LE Audio는 **11/11**입니다. W04 DF·W05 CS는 미완료, W06~W08은 미착수입니다.
-  개발 재개 기준은 `main`과 [M31 readiness](variants/nu54dk/m31-ble-readiness.json)입니다.
+  문서 정비를 `main`에 반영한 뒤 `M31-MEM-OPT`에서 메모리 최적화 → W04·W05 → W06~W08
+  순서로 이어갑니다. 현재 요청 범위는 문서·main 반영·브랜치 생성까지이며 구현·실기는 재개하지 않습니다.
+  기능 판정 원본은 [M31 readiness](variants/nu54dk/m31-ble-readiness.json)입니다.
   개발 기능을 v0.4.1 설치본의 지원으로 안내하지 않습니다. 재개 지점은 [HANDOFF](00_Docs/HANDOFF.md),
   후속 순서·중단 경계는 [v0.5.0 TODO](00_Docs/TODO_v0.5.0.md)와 최신 사용자 요청을 따릅니다.
 - M31~M33 구현 전에는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
@@ -30,10 +32,16 @@
   기능 HIL과 NCS 예제의 Arduino 제공을 목표로 하며 정밀 RF·음질·거리/각도 보정은 필수 gate 밖입니다.
   Apple/Google 등 외부 peer와 마이크·스피커·외장 장치는 사용 가능한 구현·예제·설정/연결 안내·자동
   가능한 검사를 제공하되, 실제 운용·실물 검증은 사용자 후속입니다. 그 NOT RUN은 v0.5.0 개발·공개
-  차단 조건이 아니며 검증된 상호운용으로 표시하지 않습니다. Ubuntu/macOS 실물 Host 검증은 사용자가
-  최종 릴리스 단계에서 수행하고 중간 개발의 선행조건으로 요구하지 않습니다. ARF-01은 M32-W04가 소유합니다.
+  차단 조건이 아니며 검증된 상호운용으로 표시하지 않습니다. M32/M33 기능은 후속 버전(미정)이며
+  v0.5.0 범위에 합산하지 않습니다. Ubuntu/macOS 실물 Host 검증은 해당 OS를 지원하는 후속 릴리스의
+  사용자 gate이며 v0.5.0 Windows 릴리스의 선행조건이 아닙니다. ARF-01은 M32-W04가 소유합니다.
+- **2026-09-21 결정: v0.5.0은 M31 완료 후 Windows 10/11 x64 범위로 릴리스합니다.**
+  M31 8/8 기능 완료와 패키지·clean 설치·예제·업로드·수명주기·RC·공개 승인 gate를 별도로 판정합니다.
+  M31-W08이 배포 준비를 소유하며 M32/M33·다중 Host 확장 완료를 기다리지 않습니다.
+  문서·main 업데이트 허가는 release/tag 공개나 이력 squash 허가가 아닙니다.
 - DF 원시 IQ 수집에 안테나 배열을 일괄 요구하지 않습니다. 기본 SDC는 DF CTE TX만 제공하고,
-  고정 Zephyr LL의 RX는 NU54DK build·보드 진단을 수행했으나 raw IQ 수신은 미확인입니다.
+  고정 Zephyr LL의 connected RX 진단에서는 유효 IQ report 4건·328 sample을 관찰했으나
+  반복 안정성·cleanup 기준 미달로 전체 FAIL입니다. 공개 API·connectionless RX 완료가 아닙니다.
   재개 시 W04의 실패 근거부터 대조합니다. 실제 각도 산출·안테나 전환과 원시 IQ 수집을 구분하고,
   SDC 미지원이나 source 존재를 SoC 전체 불가능 또는 runtime PASS로 확대하지 않습니다.
 - T13 S는 **56 PASS + 2조건 제외 / 58**, UARTE00은 4-net 결선 검사·180초 통신·flow 200회·취소 400회 완료입니다.

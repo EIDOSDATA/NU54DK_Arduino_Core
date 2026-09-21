@@ -1,8 +1,8 @@
-# M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.5.0 릴리스
+# M33 실행 TODO — NCS Bluetooth 예제 완성과 후속 릴리스
 
 | 항목 | 내용 |
 | --- | --- |
-| 대상 제품선 | `v0.5.0` Bluetooth LE Complete |
+| 대상 제품선 | M31 `v0.5.0` 이후 Bluetooth 확장 제품선; 버전 미정 |
 | 현재 구현 상태 | **계획 — 0/8 작업 묶음** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
 | 병행 Host 계획 | HOST-W08; 현재 W01~W03 완료 3/8, W04 이후 사용자 보류, 재개 후 별도 분모 유지 |
@@ -15,8 +15,13 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 전체 기능·upstream 대응·제공 방식은
 [NCS Bluetooth 전체 기능과 예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
 기능 구현은 [M31 TODO](TODO_M31.md)·[M32 TODO](TODO_M32.md), 제품선 진행은
-[v0.5.0 TODO](TODO_v0.5.0.md)가 소유한다. 현재 M31은 W01~W03 완료 3/8이며 M32·M33은 미착수다.
+[제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W03 완료 3/8이며 M32·M33은 미착수다.
 아래 항목은 모두 구현·검증 예정이며 완료 실적이 아니다. Host 병행 계획은 별도 재개 지시 이후에 적용한다.
+
+2026-09-21 사용자 결정에 따라 `v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다.
+그 버전의 재현 package·Windows 설치 수명주기·RC·공개 승인/게시·공개 설치 gate는
+[M31-W08](TODO_M31.md)이 소유한다. M33-W07~W08은 추가 기능과 다중 Host를 포함하는
+후속 릴리스의 gate로 유지한다. M33 0/8이나 HOST 3/8을 완료로 올리거나 M31 출시에 합산하지 않는다.
 
 ## 1. Catalog와 지원 원칙
 
@@ -31,7 +36,7 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 5. Apple/Google·외부 제품 기능과 microphone/speaker/codec/외장 장치는 사용 가능한 구현·예제·설정/연결
    안내·자동 가능한 검사까지 필수다. 실제 운용·제품 상호운용·외장 실물 검증은 사용자 후속이며
    개발·릴리스 필수 gate에서 제외한다. 해당 실제 결과는 `NOT_RUN`·상호운용 미검증으로 유지한다.
-   Ubuntu/macOS 실물 Host는 사용자가 최종 릴리스 때 검증하며 해당 OS 지원 gate는 유지한다.
+   Ubuntu/macOS 실물 Host는 해당 OS를 포함하는 후속 릴리스 때 사용자가 검증하며 해당 OS 지원 gate는 유지한다.
 6. 문서에 등록한 예제, source candidate, build PASS, 실제 기능 PASS, 외부 ecosystem 인증은 독립 상태다.
    M33 공개 시 지원한다고 표시할 필수 행은 증거가 필요하며, 미검증 행은 지원 선언에서 구분한다.
 
@@ -49,8 +54,8 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 | M33-W04 | DTM/HCI와 특수 진단 application template | 미착수 |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | 미착수 |
 | M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | 미착수 |
-| M33-W07 | HOST-W08·재현 package·release candidate | 미착수 |
-| M33-W08 | Exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
+| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
+| M33-W08 | 후속 버전 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
 W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한다. W05에서 한 catalog로
 합치고 W06~W08에서 실제 배포 입력을 고정한다. HOST-W08은 M33의 8개 작업에 합산하지 않는다.
@@ -72,7 +77,8 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
   template·실험 기능의 공개 정책 및 test case 분모를 고정한다.
 - [ ] Master schema의 `verification_owner`·`verification_stage`·`development_blocker`·`release_blocker`를
   case별로 적용한다. Apple/Google·외장 I/O 실제 case는 `user`/`user_follow_up`/`false`/`false`,
-  Ubuntu/macOS 실물은 `user`/`final_release`/`false`/`true`로 구분한다. 구현·예제·자동 검사 case는
+  Ubuntu/macOS 실물은 해당 OS 후속 지원에 대해 `user`/`final_release`/`false`/`true`로 구분한다.
+  이 gate는 M31 Windows 릴리스에 적용하지 않는다. 구현·예제·자동 검사 case는
   필수로 남기며 사용자 후속 실제 case와 합치지 않는다. 이 정책은 현재 원장에 구현 완료된 것이 아니다.
 - [ ] `M33-INV-01`의 inventory drift·누락·중복·잘못된 지원 승격 negative를 구현한다.
   사용자 후속 실물 `NOT_RUN`의 재차단/PASS 승격, 필수 구현을 후속으로 숨김, 최종 Host gate 면제도 거부한다.
@@ -159,14 +165,18 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
 - [ ] Bluetooth qualification의 Host/controller/Mesh 적용성·component 근거·제품별 추가 절차를 조사해
   별도 문서에 적는다. Component 자격과 제품 자격·예제 사용 가능성을 서로 구분한다.
 
-### M33-W07 — HOST-W08와 release candidate
+### M33-W07 — 후속 Host 확대·HOST-W08와 release candidate
+
+M31 Windows 릴리스에서 완료할 package·설치 gate의 절차와 증거를 재사용하되, 후속 기능·Host·
+exact source가 바뀐 범위는 새 package와 해당 Host에서 검증한다. M31 공개를 위해 이 작업의
+전체 catalog나 세 Host 완료를 기다리지 않는다.
 
 - [ ] [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)에 따라 Windows 10/11 x64,
   Ubuntu 24.04 이상 AMD64, macOS 26 이상 Apple Silicon의 지원 version matrix를 release 시점에 고정한다.
 - [ ] HOST-W04~HOST-W07의 prerequisite/path/cache/package·자동 검사 결과와 최종 사용자 USB·serial·
   debug 검증 절차를 exact 입력과 대조한다. 중간 단계에서 Ubuntu/macOS PC 연결을 요구하지 않는다.
 - [ ] HOST-W08의 clean 설치·전체 예제 compile·대표 실제 upload/runtime·upgrade/reinstall/uninstall을
-  실제 각 Host에서 마감한다. Ubuntu/macOS는 사용자가 최종 릴리스 단계에서 실행하며 설치·USB upload·
+  실제 각 Host에서 마감한다. Ubuntu/macOS는 해당 OS를 포함하는 후속 릴리스 단계에서 사용자가 실행하며 설치·USB upload·
   serial·debug·수명주기 증거를 인계받는다. 그때까지 해당 행은 `NOT_RUN`이고 해당 OS 정식 지원 공개
   gate는 미완료다. Windows의 가능한 자동 회귀와 나머지 개발·RC 준비는 계속한다.
 - [ ] Release candidate의 source/board/SDK/toolchain·profile/catalog·version·hash를 고정하고 package를
@@ -178,11 +188,11 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
   외장 장치의 사용자 후속 실물 행은 지원 제한으로 남기되 개발·릴리스 blocker로 사용하지 않는다.
   최종 사용자 장비 검증 gate는 Ubuntu/macOS이며 공개 승인·제품 인증은 별도 절차다.
 
-### M33-W08 — 공개·최종 인계
+### M33-W08 — 후속 버전 공개·최종 인계
 
 - [ ] 적용 필수 기능·예제·Host·package·회귀의 exact 증거와 남은 외부 행을 전수 검토한다.
 - [ ] 공개 대상 지원 범위·source·package plan과 자산 hash에 대한 프로젝트 소유자의 승인을 확보한다.
-  이 TODO 작성과 과거 v0.4.1 공개 승인을 새 v0.5.0 tag/Release/index 게시 승인으로 사용하지 않는다.
+  이 TODO 작성과 과거 버전의 공개 승인을 후속 버전 tag/Release/index 게시 승인으로 사용하지 않는다.
 - [ ] 승인된 exact plan으로 tag·Release·asset·stable index를 게시하고 기존 공개 자산을 보존한다.
 - [ ] 공개 URL의 hash·격리 설치·예제·대표 upload/runtime·수명주기를 검증한다.
 - [ ] `M33-RELEASE-01`에 승인·공개·공개 설치를 독립 결과로 남긴다. Exact push commit의 CI 확인은
@@ -226,5 +236,5 @@ timeout·packet/object 분모·허용 loss/latency·복구 한계·즉시 중단
   firmware revision을 시험 직전 대조한다. 여러 probe 임의 선택·자동 mass erase/recover·전체 flash
   초기화·임의 GPIO·전원 차단을 하지 않는다.
 - 실패/HOLD/NOT RUN 원본과 과거 tag/Release/asset은 보존한다. 후속 성공을 같은 원본에 덮어쓰지 않는다.
-- M33 계획은 v0.5.0 공개 승인이 아니다. 승인 가능한 exact 결과가 준비되면 공개 범위를 확정하고,
+- M33 계획은 후속 버전 공개 승인이 아니다. 승인 가능한 exact 결과가 준비되면 공개 범위를 확정하고,
   세 Host 정식 지원에 필요한 실제 Host 행이 비어 있으면 해당 공개 gate를 미완료로 유지한다.

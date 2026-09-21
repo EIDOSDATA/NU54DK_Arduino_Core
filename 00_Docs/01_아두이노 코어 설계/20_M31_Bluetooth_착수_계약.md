@@ -2,7 +2,7 @@
 
 | 항목 | 고정값 |
 | --- | --- |
-| 제품선 | `v0.5.0`; M31-W01~W08 8개 작업 묶음 |
+| 제품선 | M31 완료 후 `v0.5.0` Windows 우선 릴리스; M31-W01~W08 8개 작업 묶음 |
 | source 기준 | NCS nrf `99553055607b2e9885fbc80ccd11fa9da81c2df0`, Zephyr `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
@@ -17,6 +17,15 @@ source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부
 현재 완료 근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
 [W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다. 남은 기능·검증과 재개 범위는
 [M31 TODO](../TODO_M31.md)와 [HANDOFF](../HANDOFF.md)를 따른다. HOST-W04 이후는 사용자 지시로 보류 중이다.
+
+2026-09-21 릴리스 범위 개정으로 M31-W08이 v0.5.0의 Windows 재현 package·설치 수명주기·
+RC·지원표·공개 승인/게시·공개 설치 검증을 소유한다. M31 기능 8/8과 릴리스 gate는 별도 상태로
+판정한다. M32·M33 및 Ubuntu/macOS 확대는 버전 미정 후속 범위이며 M31 공개의 선행조건이 아니다.
+현재 공개 `v0.4.1`과 source `0.4.1-dev`를 유지하고 문서 결정만으로 버전·지원 상태를 올리지 않는다.
+
+다음 실행 순서는 [219번 메모리 계약](<../04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의
+최적화 → W04·W05 기능/복구 검증 → W06~W08이다. 이번 문서 작업은 main 반영과
+`M31-MEM-OPT` 생성까지이며 구현·HIL·릴리스 실행을 포함하지 않는다.
 
 ## 원장과 수집 범위
 
@@ -46,7 +55,8 @@ parity 원장은 기능 예제의 계획·실제 Sketch, controller, role, 외�
 
 Zephyr Host AoA API는 안테나 2개 이상 및 ANT_SWITCH_RX를 검사하므로 현재 1안테나
 구성에서 고수준 AoA API를 바로 사용하면 거부된다. 이 사실은 HCI raw CTE RX bit와 별도이며,
-W04의 직접 raw IQ 가능성은 실제 report 수신 전까지 `source_candidate`로 둔다.
+W04의 raw HCI 진단에서 일부 유효 IQ report를 확인했지만 반복 수신·cleanup은 미완료다.
+진단 fixture의 일부 수신을 공개 수신 API 또는 전체 W04 완료로 승격하지 않는다.
 안테나 배열·정밀 각도·정밀 거리·음질 측정은 기본 데이터 경로 검증의 선행 gate가 아니다.
 
 ## W06 자원·수명주기·회귀 경계
@@ -83,7 +93,9 @@ IDENTITY/결과/STOPPED의 누락·중복·잘못된 nonce/role/feature·절단�
 구현·자동 검사 case는 `developer/development`와 개발·릴리스 blocker를 가진다.
 외부 mic/speaker/codec·안테나 확장의 물리 운용은 `user/user_follow_up`, 양 blocker
 `false`의 `NOT_RUN`으로 남긴다. Ubuntu/macOS 실제 설치·USB·serial·debug는
-`user/final_release`, 개발 blocker `false`, 릴리스 blocker `true`다. 제품 사용 가능한
+`user/final_release`, 개발 blocker `false`, 릴리스 blocker `true`다. 이 gate는 해당 OS를 지원할
+후속 릴리스에 적용하며 M31 Windows 공개를 차단하지 않는다. 현행 원장의 해당 값은 보존하고,
+릴리스 판정은 제품선·Host 범위를 먼저 선택한 뒤 수행한다. 제품 사용 가능한
 외장 연결 경로·예제·설정 안내와 가능한 자동 검사는 별도의 필수 개발 case다.
 
 ## 개발 시도와 후속 판정 이력

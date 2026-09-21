@@ -10,9 +10,9 @@
 | BLE config | `ble-nus.conf` |
 
 위 수치는 현재 stable `v0.4.1`의 Windows 설치본 계약이다. `v0.5.0` 공개 전에는 새 BLE 예제를
-포함한 최종 공개 예제 목록을 고정하고, [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의
-모든 지원 OS 행에서 목록 discovery와 독립 compile을 수행한다. 한 Host의 compile 결과를 다른
-Host의 PASS로 합산하지 않는다.
+포함한 최종 공개 예제 목록을 고정하고 Windows 10/11 x64 지원 행에서 목록 discovery와 독립
+compile을 수행한다. Ubuntu/macOS는 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에
+따라 후속 제품선에서 검증한다. 한 Host의 compile 결과를 다른 Host의 PASS로 합산하지 않는다.
 
 Profile은 사용자가 먼저 선택하는 보드 수준 구성이고 feature는 Arduino가 실제 선택한 bundled
 library에서 자동 해석하는 추가 구성이다. 실행 결과와 실기 증거는
@@ -133,6 +133,10 @@ BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
 사용하지 않은 library의 feature는 build에 들어가지 않는다. 동일한 profile이라도 선택 feature가
 다르면 final cache identity가 다르다.
 
+단, 선택된 공통 profile/library 내부의 모든 기능과 정적 pool이 사용량에 맞게 제거된다는 뜻은
+아니다. `M31-MEM-OPT`는 실제 ELF/map 기준으로 미사용 Core route·pin state·GATT/BLE pool을
+감사하고 역할별 구성에 반영할 후속 구현이다. 현재의 설정 합성 기능과 최적화 완료를 구분한다.
+
 Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로 허용한다. v0.4.1 공개 30개
 예제는 이 sidecar에 의존하지 않으며 profile/library 내부 설정만으로 compile해야 한다.
 임의 snippet, module 또는 CMake 주입은 공개 override 계약이 아니다.
@@ -236,22 +240,25 @@ signing/EATT를 강제로 켜지 않는다. M29의 실제 예제명과 완료·�
 
 ## 7. 관련 구현과 기록
 
-### v0.5.0 이후 예제 구현·검증 TODO
+### M31 v0.5.0과 후속 제품선의 예제 구현·검증 TODO
 
 현재 공개 30개와 개발 snapshot 수치는 위의 고정 시점 기준이다. 다음 표는 단계별 예제 계약이다.
 M31-W02/W03은 완료했고 나머지는 진행 중 또는 계획이며 공개 v0.4.1 설치 목록과 구분한다. 상세 feature·role은
 [전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
+M31-W08까지의 예제 정합화와 Windows package·설치·RC gate를 v0.5.0에서 마감한다.
+M32·M33의 추가 기능·예제와 Ubuntu/macOS 지원은 후속 제품선이며 배포 버전은 미정이다.
 
 | 소유 단계 | 반드시 제공/판정할 예제 묶음 |
 | --- | --- |
 | M31-W02 — 완료 | CIS central/peripheral, BIS broadcaster/receiver, combined ISO·time sync·recovery; [설치본 11예제·11역할 증거](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 — 완료 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP; [11/11 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
 | M31-W04~W05 | AoA CTE TX의 connected/connectionless 예제, DF RX/IQ 적용성, CS initiator/reflector·RAS·복구 |
+| M31-W07~W08 및 v0.5.0 공개 gate | M31까지의 설치 role 예제·제공 경로/제한·Windows package·설치·RC 마감 |
 | M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
 | M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
 | M33-W02~W04 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
-| M33-W05~W08 | 전체 role 예제·ARF-04A·CI/설치·제공 경로/제한·release catalog 마감 |
+| M33-W05~W08 — 후속 제품선 | 추가 role 예제·ARF-04A·후속 기능 회귀·설치·지원표 마감 |
 
 - [ ] 예제명·폴더·주 `.ino` 이름, upstream path/test ID·license·작성 역할과 제공 route를 원장에 고정한다.
 - [ ] 입문용 최소 예제 → 상대 역할 예제 → 오류/종료/복구 예제를 연결한다. 한 sketch의 role 선택 방식도 허용한다.
@@ -262,14 +269,15 @@ M31-W02/W03은 완료했고 나머지는 진행 중 또는 계획이며 공개 v
 - [ ] 자동 실행 경로는 버튼 입력을 Serial 명령/역할 설정으로 재현한다. GPIO 전기 동작이 본질인 예제는
   실제 연결 route·설정·사용법을 구현하고 실물 검증을 사용자 후속으로 남긴다. 단순 Serial 대체로 물리 PASS를 주장하지 않는다.
 - [ ] source/native target/Arduino compile·설치 discovery·role runtime·negative·외부 peer 상태를 각각 기록한다.
-- [ ] 설치 archive 안의 예제 집합·설정·upstream provenance와 원장 집합이 일치해야 M33을 완료한다.
-- [ ] NU54DK의 board-only 기능은 합성 payload/PCM과 실제 무선 결과로 검증한다. Apple/Google 및
-  mic/speaker/외장 장치는 사용 가능한 구현·예제·설정/연결 안내와 자동 가능한 검사를 필수로 제공한다.
-  실제 운용·상호운용은 사용자 후속 NOT RUN이며 v0.5.0 개발·공개 차단이 아님을 예제/원장에 명시한다.
+- [ ] M31-W08과 v0.5.0 공개 gate에서 설치 archive의 예제 집합·설정·upstream provenance를
+  이번 릴리스 원장과 대조한다. M32/M33의 추가 예제는 후속 원장과 별도 검증한다.
+- [ ] NU54DK의 board-only 기능은 합성 payload/PCM과 실제 무선 결과로 검증한다. 외장 Audio는
+  M31, Apple/Google 신규 기능은 후속 M33의 채택 범위에서 구현·예제·설정/연결 안내·자동 검사를
+  제공한다. 실물 운용·상호운용은 각 담당 제품선의 사용자 후속 NOT RUN·비차단으로 명시한다.
 - [ ] DF 원시 IQ는 배열 없는 수신 후보를 먼저 조사·build하고 적용되면 2보드 수신을 검증한다.
   실제 각도 산출·안테나 전환 예제는 별도 외장 경로로 설명한다. 단일 안테나 IQ를 각도 검증으로 쓰지 않는다.
 - [ ] Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
-  실패 증거 수집 안내를 제공하고 마지막 릴리스 단계로 인계한다.
+  실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W04~W08은 보류다.
 
 M31-W01에서 구현한 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
 upstream case를 포괄하면 대응 case 전부를 명시하고, 발견 개수·적용 개수·build/runtime PASS 개수를

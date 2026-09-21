@@ -7,7 +7,7 @@
 | 다음 목표 버전 | `v0.5.0` |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
-| v0.5.0 Host 목표 | Windows 10/11 x64, Ubuntu 24.04+ AMD64, macOS 26+ Apple Silicon |
+| v0.5.0 Host 목표 | M31 완료 뒤 Windows 10/11 x64 우선; Ubuntu/macOS는 후속 제품선 |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
 
 Build Adapter는 Arduino의 전처리·library discovery lifecycle을 보존하면서 실제 컴파일과 최종
@@ -197,6 +197,11 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 외부 library가 임의 `feature.yml`을 설치했다고 신뢰하지 않는다. profile, manifest와 fragment
 내용은 최종 cache identity와 artifact provenance에 포함한다.
 
+역할별 `prj.conf` 합성은 공통 Core의 미사용 정적 저장소까지 제거했다는 증거가 아니다. 현재
+개발 BLE image의 과도한 정적 RAM은 ELF/map의 실제 symbol·참조 경로로 감사하고, `M31-MEM-OPT`에서
+feature·source·pool 경계를 최적화할 계획이다. 구현과 대표 image 비교 전에는 절감량을 확정하지 않는다.
+범위와 판정은 [메모리 감사·최적화 계약](<../04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)을 따른다.
+
 v0.3.0 RC3에서 도입해 v0.4.1에서도 유지하는 메모리 계약은 loaderless 단일 application
 1,490,944 byte와 끝단 영구 저장소
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
@@ -276,8 +281,9 @@ Arduino build path의 생성 source만 cache mirror로 옮긴다.
 - sysbuild/multi-image, MCUboot, DFU와 OTA
 - LLEXT 또는 Loader ABI
 - remote/distributed cache와 network cache
-- Linux/macOS Boards Manager production 지원은 `v0.4.1`에 포함되지 않는다. `v0.5.0`에서는
-  [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 M33에서 판정할 계획이다.
+- Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에
+  포함하지 않는다. [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 해당 OS를
+  추가할 후속 릴리스에서 판정한다. 버전은 미정이며 HOST-W04~HOST-W08은 보류 상태다.
   현재 HOST-W01~W03 3/8을 완료했으며 이후 구현은 사용자 지시로 보류했다.
 - Arduino IDE Debug 버튼 자동 구성
 - 자동 recover 또는 mass erase

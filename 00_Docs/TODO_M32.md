@@ -2,7 +2,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 대상 제품선 | `v0.5.0` |
+| 대상 제품선 | M31 `v0.5.0` 이후 후속 제품선; 버전 미정 |
 | 현재 구현 상태 | **계획 — 0/12 작업 묶음** |
 | 하위 gate | M32-A Controller/Host·Nordic 확장, M32-B Mesh, M32-C 최소 radio·공존 |
 | 선행·병행 계획 | M31의 controller/resource 계약 인계; HOST-W07은 Host 트랙 재개 후 독립 진행 |
@@ -12,11 +12,15 @@
 
 기능·upstream 예제·제공 방식의 상세 원본은
 [NCS Bluetooth 전체 기능과 예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)이다.
-이 문서는 그 범위를 구현 순서·체크리스트·예정 시험 ID에 배정한다. 전체 순서는
-[제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>), 제품선 상태는
-[v0.5.0 TODO](TODO_v0.5.0.md), 앞뒤 인계는 [M31 TODO](TODO_M31.md)와 [M33 TODO](TODO_M33.md)를 따른다.
+이 문서는 그 범위를 구현 순서·체크리스트·예정 시험 ID에 배정한다. 전체 순서·제품선은
+[제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>), 앞뒤 인계는
+[M31 TODO](TODO_M31.md)와 [M33 TODO](TODO_M33.md)를 따른다.
 문서 작성은 구현·build·HIL 완료 수에 포함하지 않는다. 현재 M31은 W01~W03 완료 3/8이고,
 M32는 미착수다. Host W04 이후는 사용자 지시로 보류했으며 아래 병행 계획은 재개 이후에 적용한다.
+
+2026-09-21 사용자 결정에 따라 `v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다.
+M32의 12개 작업은 후속 범위로 유지하며 M31 릴리스의 선행조건이 아니다. M32 추가 기능과
+Host 확대의 배포 버전은 별도 착수 때 확정한다.
 
 ## 1. 착수 경계
 
@@ -37,7 +41,8 @@ M32는 미착수다. Host W04 이후는 사용자 지시로 보류했으며 아�
 - [전체 계약의 최종 사용자 결정](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)에
   따라 외장 장치·Apple/Google 등 제품의 실제 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate에서
   제외한다. 실제 연결해서 사용할 구현·예제·설정/연결 안내·자동 가능한 검사는 반드시 제공한다.
-  Ubuntu/macOS 실물 설치·USB·serial·debug는 사용자가 최종 릴리스 때 검증하며 중간 작업을 차단하지 않는다.
+  Ubuntu/macOS 실물 설치·USB·serial·debug는 해당 OS 지원을 추가하는 후속 릴리스 때 사용자가
+  검증한다. M31 Windows 릴리스의 gate에는 포함하지 않는다.
 
 ## 2. 작업 배치
 
@@ -72,7 +77,8 @@ HOST-W07의 자동 검사·최종 인계 절차는 준비하되 Ubuntu/macOS PC�
   interop 상태를 독립 필드로 정의하고 unknown·누락·중복·revision mismatch를 거부한다.
 - [ ] Master 원장의 case별 검증 책임·시점·개발/릴리스 blocker 필드를 연결한다. 사용자 후속 외장 실물
   case와 필수 구현/자동 검사를 분리하고 외장 실물 `NOT_RUN`을 PASS 또는 릴리스 차단으로 바꾸지 않는다.
-  Ubuntu/macOS 실제 Host는 사용자 최종 릴리스 gate로 연결하며 중간 개발 blocker로 사용하지 않는다.
+  Ubuntu/macOS 실제 Host는 해당 OS를 지원할 후속 릴리스의 사용자 gate로 연결하며 중간 개발
+  blocker 또는 M31 Windows 릴리스 blocker로 사용하지 않는다.
 - [ ] Capability parser, 정상/negative Host test, capability target image와 build matrix를 구현한다.
 - [ ] 기능별 연결·광고 set·identity·sync·Mesh node·buffer·RAM/RRAM 상한과 profile 충돌표를 고정한다.
 - [ ] 이 문서의 예정 test ID별 board role·반복/packet 분모·timeout·허용 손실·복구 상한·유한 재검증
@@ -175,7 +181,7 @@ HOST-W07의 자동 검사·최종 인계 절차는 준비하되 Ubuntu/macOS PC�
 - [ ] M30의 서명·image/key·rollback 계약을 재사용하고 Mesh transport의 인증·배포 권한·metadata·version·
   hash 검증·부분 image·잘못된 target/키·미확인 image 복귀를 추가 검증한다.
 - [ ] Transport cancel·peer loss·다시 시작·정상 재부팅 복구를 자동화한다. 새로운 실제 전원 차단 확장은
-  M36 후속으로 인계하며 M32/v0.5.0의 추가 필수 사용자 gate로 만들지 않는다. 별도 정책·장치·사용자
+  M36 후속으로 인계하며 M32 후속 제품선의 추가 필수 사용자 gate로 만들지 않는다. 별도 정책·장치·사용자
   요청 없이 실행하지 않고, reset 시험으로 전원 차단 PASS를 기록하지 않는다.
 - [ ] `M32-BLOB-01`, `M32-MDFU-01`의 role image·object/image hash·분모·negative 결과를 보존한다.
 - [ ] M36으로 partition·배포 transport·복구 경계·남은 외장 storage variant를 인계한다.
@@ -218,7 +224,7 @@ HOST-W07의 자동 검사·최종 인계 절차는 준비하되 Ubuntu/macOS PC�
 - [ ] M33에 설치용 예제·profile·known limitation·cross-vendor NOT RUN 목록을 인계한다.
 - [ ] M36에 Mesh update/storage, M38/M39에 최소 radio/public 확장, M40/M42에 적용 공존 조합을 인계한다.
 - [ ] HOST-W07 자동 검사 결과와 사용자용 최종 실물 검증 절차를 별도 표로 연결한다. Ubuntu/macOS
-  설치·USB·serial·debug 실기는 사용자가 최종 릴리스 때 수행한다. 그때까지 `NOT_RUN`으로 유지하되
+  설치·USB·serial·debug 실기는 해당 OS를 포함할 후속 릴리스 때 사용자가 수행한다. 그때까지 `NOT_RUN`으로 유지하되
   중간 PC 연결을 요구하거나 M32 완료를 차단하지 않는다. 해당 OS 최종 지원 gate는 유지한다.
 
 ## 6. 예정 test ID와 판정 입력
@@ -245,7 +251,7 @@ HOST-W07의 자동 검사·최종 인계 절차는 준비하되 Ubuntu/macOS PC�
 
 각 case는 최소한 `iterations`, `timeout_s`, payload/packet 분모, 허용 loss/latency,
 `recovery_timeout_s`, 즉시 중단 오류와 유한 재검증 정책을 가진다. 누락되면 실행을 차단한다.
-실제 power cut을 수행하는 새로운 case는 M36 후속 범위다. 현재 M32/v0.5.0 개발·릴리스는 그
+실제 power cut을 수행하는 새로운 case는 M36 후속 범위다. M31 v0.5.0 및 M32 후속 개발·릴리스는 그
 새 시험의 사용자 실행을 기다리지 않는다. 후속 실행 시 별도 정책·fixture를 기록하고
 M30-POWER-01의 고정 4지점 × 3회 완료 이력과 합치지 않는다.
 
@@ -265,4 +271,4 @@ M30-POWER-01의 고정 4지점 × 3회 완료 이력과 합치지 않는다.
   판정한다. 필수 구현·예제·자동 검증과 사용자 후속 외장 실물 행의 분모를 분리한다. 사용자 후속
   실물 미검증은 PASS가 아니지만 M32 개발·릴리스 blocker도 아니다. SDK 제약·미지원은 근거 없이
   사용자 후속으로 넘기지 않는다. Ubuntu/macOS 실물은 최종 사용자 Host 지원 gate이며,
-  v0.5.0 공개 승인·qualification은 자동화 장비 조건과 독립된 절차다.
+  각 후속 버전의 공개 승인·qualification은 자동화 장비 조건과 독립된 절차다.

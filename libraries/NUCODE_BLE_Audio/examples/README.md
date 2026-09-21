@@ -12,6 +12,10 @@ profile·역할 예제는 build와 합성 PCM/payload의 보드 간 데이터·�
 예제들이 그 공개 ZIP에 포함됐다는 뜻은 아니다. 세부 판정은
 [검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
 
+RAM 사용량은 선택한 역할·Core revision·buffer 설정에 따라 달라진다. 빌드가 표시하는 정적
+RAM에는 Audio buffer뿐 아니라 공통 Core 저장소도 포함되므로 Audio 기능만의 요구량으로
+해석하지 않는다. 기능을 추가하기 전에 해당 ELF/map과 최종 `.config`로 자원 예산을 확인한다.
+
 ## `Lc3SyntheticLoopback`
 
 - `Lc3Codec::begin()`으로 16 kHz, 10 ms, 40-byte LC3 frame을 구성한다.
@@ -37,8 +41,8 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
   남은 bond를 변경하거나 지우지 않으면서 새 상대와 L2 연결을 시험하기 위한 선택이다.
 - 연결이 끊기면 광고를 다시 시작한다. Source는 새 sink 광고를 검색해 새 LC3
   stream을 연다. 보드 재시작 뒤 새 연결의 frame 수를 확인할 수 있다.
-- 현 빌드는 RAM 약 86%를 사용한다. 외장 mic/speaker나 추가 stream을 이 설정에
-  바로 합치지 말고 자원 예산을 다시 계산해야 한다.
+- 외장 mic/speaker나 추가 stream을 합치기 전에 해당 build의 RAM 여유와 buffer 예산을
+  다시 계산해야 한다.
 
 ## `BapUnicastSource`
 
@@ -66,8 +70,8 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
   보낸다. 정상 동작이면 115200 baud Serial에 `duplex received=... energy=...
   dropped=0`과 `duplex sent=...`가 각각 100 frame마다 나타난다.
 - `prj.conf`는 sink/source ASE 각 1개, 양방향 ISO channel 2개, LC3와 비영속
-  L2 pairing을 고정한다. RAM 사용량은 약 88%이므로 추가 buffer/stream과 외장
-  audio I/O를 합치기 전에 자원 예산을 다시 측정한다.
+  L2 pairing을 고정한다. 추가 buffer/stream과 외장 audio I/O를 합치기 전에 해당 build의
+  RAM 여유와 자원 예산을 다시 측정한다.
 
 ## `BapUnicastDuplexClient`
 
@@ -119,8 +123,7 @@ CLI에서 **NU54DK Zephyr / BLE** feature set으로 빌드한다.
   PA, BASE, BIG, BIS 1 순서로 동기화한다. 암호화 code도 Assistant가 BASS로 전달한다.
 - Serial은 add/modify/remove 수락 수와 실제 LC3 decode frame·energy·drop을 출력한다.
   remove 뒤에는 수신 자원만 반환하고 BASS/PACS와 연결 광고는 유지해 새 add를 받을 수 있다.
-- 공개 예제의 RAM 사용량은 약 87%다. 추가 stream이나 큰 queue를 합치기 전에 빌드의
-  RAM 수치를 다시 확인한다.
+- 추가 stream이나 큰 queue를 합치기 전에 해당 build의 RAM 여유와 자원 예산을 확인한다.
 
 ## `BapBroadcastAssistant`
 

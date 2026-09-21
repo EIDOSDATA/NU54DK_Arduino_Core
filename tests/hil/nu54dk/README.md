@@ -12,6 +12,10 @@ v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 �
 | M31 ISO/LE Audio/DF/CS | W01~W03 완료(3/8), W03 profile 11/11 완료. W04·W05 진행 중, W06~W08 미착수 | [M31 TODO](../../../00_Docs/TODO_M31.md) |
 
 이는 `0.4.1-dev` 개발 소스의 검증 상태이며 공개 v0.4.1 패키지에 BLE 확장이 포함됐다는 뜻이 아닙니다.
+v0.5.0은 M31 완료 뒤 Windows 우선 릴리스로 준비합니다. 다음 구현 순서는 `M31-MEM-OPT`의
+메모리 최적화 → W04·W05 → W06~W08입니다. W06은 독립 ISO·Audio·DF·CS image의 자원·
+수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
+실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
 
 빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
