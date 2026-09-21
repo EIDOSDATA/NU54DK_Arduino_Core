@@ -395,6 +395,48 @@ extern "C" void sensorRead(void)
                 {"ble.connections": 1, "ble.iso-streams": 1},
             ),
             (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-unicast-cycle",
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-unicast-duplex-client",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC_COUNT=2",
+                {"ble.connections": 1, "ble.iso-streams": 2},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-unicast-duplex-server",
+                "CONFIG_BT_ASCS_MAX_ASE_SRC_COUNT=1",
+                {"ble.connections": 1, "ble.iso-streams": 2},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-broadcast-source",
+                "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                {"ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-broadcast-sink",
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-broadcast-delegator-sink",
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-broadcast-assistant",
+                "CONFIG_BT_BAP_BROADCAST_ASSISTANT=y",
+                {"ble.connections": 1},
+            ),
+            (
                 ["NUCODE_BLE_DirectionFinding"],
                 "ble-df-cte-beacon",
                 "CONFIG_NUCODE_BLE_DF_BEACON=y",
@@ -465,10 +507,50 @@ extern "C" void sensorRead(void)
                     set(result["generated"]["sources"]), expected_sources
                 )
 
+    def test_audio_bap_role_source_ownership_is_minimal(self) -> None:
+        """! @brief 9개 BAP 역할은 공통 facade와 필요한 backend만 선택합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        features = MODULE.resolve_library_features(
+            ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio"]
+        )
+        root = "libraries/NUCODE_BLE_Audio/src"
+        common = f"{root}/NUCODE_BLE_Audio.cpp"
+        client = f"{root}/NUCODE_BLE_Audio_UnicastClient.cpp"
+        server = f"{root}/NUCODE_BLE_Audio_UnicastServer.cpp"
+        broadcast_source = f"{root}/NUCODE_BLE_Audio_BroadcastSource.cpp"
+        broadcast_sink = f"{root}/NUCODE_BLE_Audio_BroadcastSink.cpp"
+        assistant = f"{root}/NUCODE_BLE_Audio_BroadcastAssistant.cpp"
+        cases = {
+            "ble-audio-unicast-source": {common, client},
+            "ble-audio-unicast-sink": {common, server},
+            "ble-audio-unicast-cycle": {common, client},
+            "ble-audio-unicast-duplex-client": {common, client},
+            "ble-audio-unicast-duplex-server": {common, server},
+            "ble-audio-broadcast-source": {common, broadcast_source},
+            "ble-audio-broadcast-sink": {common, broadcast_sink},
+            "ble-audio-broadcast-delegator-sink": {common, broadcast_sink},
+            "ble-audio-broadcast-assistant": {common, assistant},
+        }
+        for role, expected_sources in cases.items():
+            with self.subTest(role=role):
+                declaration = copy.deepcopy(self.empty_declaration)
+                declaration["roles"] = [role]
+                result = MODULE.resolve_capabilities(
+                    self.registry, [], features, declaration
+                )
+                self.assertEqual(
+                    {
+                        source
+                        for source in result["generated"]["sources"]
+                        if source.startswith(root)
+                    },
+                    expected_sources,
+                )
+
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 20)
+        self.assertEqual(len(roles), 27)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):
@@ -497,6 +579,27 @@ extern "C" void sensorRead(void)
             "CISToBISReceiver": "ble-iso-cis-to-bis-receiver",
         }
         root = ROOT / "libraries" / "NUCODE_BLE_ISO" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
+
+    def test_audio_bap_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 BAP 9예제가 각각 하나의 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "BapUnicastSource": "ble-audio-unicast-source",
+            "BapUnicastSink": "ble-audio-unicast-sink",
+            "BapUnicastCycle": "ble-audio-unicast-cycle",
+            "BapUnicastDuplexClient": "ble-audio-unicast-duplex-client",
+            "BapUnicastDuplexServer": "ble-audio-unicast-duplex-server",
+            "BapBroadcastSource": "ble-audio-broadcast-source",
+            "BapBroadcastSink": "ble-audio-broadcast-sink",
+            "BapBroadcastDelegatorSink": "ble-audio-broadcast-delegator-sink",
+            "BapBroadcastAssistant": "ble-audio-broadcast-assistant",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
         for example, role in examples.items():
             with self.subTest(example=example):
                 declaration = MODULE.load_capability_declaration(root / example)

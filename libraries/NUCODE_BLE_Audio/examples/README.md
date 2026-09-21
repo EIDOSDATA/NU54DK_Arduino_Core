@@ -16,6 +16,13 @@ RAM 사용량은 선택한 역할·Core revision·buffer 설정에 따라 달라
 RAM에는 Audio buffer뿐 아니라 공통 Core 저장소도 포함되므로 Audio 기능만의 요구량으로
 해석하지 않는다. 기능을 추가하기 전에 해당 ELF/map과 최종 `.config`로 자원 예산을 확인한다.
 
+BAP 예제 9개(`BapUnicastSource`, `BapUnicastSink`, `BapUnicastCycle`, duplex client/server,
+broadcast source/sink/delegator sink/assistant)는 각각 공개 `nucode-build.json` role 선언을 제공한다.
+실험적 **NU54DK Zephyr / Adaptive** feature set에서는 이 선언으로 연결 수·ISO stream 수와 필수
+Kconfig를 생성하고, 공통 `NUCODE_BLE_Audio.cpp`와 선택 역할의 unicast/broadcast backend만 빌드한다.
+예제의 저수준 `prj.conf` 목록을 adaptive 역할 해석의 단일 원본으로 사용하지 않으며, 현재 기본
+`standard`와 BLE 호환 profile의 동작은 바꾸지 않는다.
+
 ## `Lc3SyntheticLoopback`
 
 - `Lc3Codec::begin()`으로 16 kHz, 10 ms, 40-byte LC3 frame을 구성한다.

@@ -47,11 +47,19 @@ ARDUINO_TESTS = (
     "adaptive",
     "adaptive_ble",
     "adaptive_iso",
+    "adaptive_audio_bap",
 )
 DEFAULT_TESTS = tuple(
     test
     for test in ARDUINO_TESTS
-    if test not in {"incremental", "adaptive", "adaptive_ble", "adaptive_iso"}
+    if test
+    not in {
+        "incremental",
+        "adaptive",
+        "adaptive_ble",
+        "adaptive_iso",
+        "adaptive_audio_bap",
+    }
 )
 ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
@@ -2423,6 +2431,202 @@ void loop()
                 )
 
 
+## @brief P0의 9개 Audio BAP 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_audio_bap_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    del repository
+    common_source = "NUCODE_BLE_Audio.cpp"
+    client = "NUCODE_BLE_Audio_UnicastClient.cpp"
+    server = "NUCODE_BLE_Audio_UnicastServer.cpp"
+    broadcast_source = "NUCODE_BLE_Audio_BroadcastSource.cpp"
+    broadcast_sink = "NUCODE_BLE_Audio_BroadcastSink.cpp"
+    assistant = "NUCODE_BLE_Audio_BroadcastAssistant.cpp"
+    role_sources = (client, server, broadcast_source, broadcast_sink, assistant)
+    cases = (
+        (
+            "audio_unicast_source",
+            "ble-audio-unicast-source",
+            "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            client,
+        ),
+        (
+            "audio_unicast_sink",
+            "ble-audio-unicast-sink",
+            "CONFIG_BT_BAP_UNICAST_SERVER=y",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            server,
+        ),
+        (
+            "audio_unicast_cycle",
+            "ble-audio-unicast-cycle",
+            "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            client,
+        ),
+        (
+            "audio_unicast_duplex_client",
+            "ble-audio-unicast-duplex-client",
+            "CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC_COUNT=2",
+            {"ble.connections": 1, "ble.iso-streams": 2},
+            client,
+        ),
+        (
+            "audio_unicast_duplex_server",
+            "ble-audio-unicast-duplex-server",
+            "CONFIG_BT_ASCS_MAX_ASE_SRC_COUNT=1",
+            {"ble.connections": 1, "ble.iso-streams": 2},
+            server,
+        ),
+        (
+            "audio_broadcast_source",
+            "ble-audio-broadcast-source",
+            "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+            {"ble.iso-streams": 1},
+            broadcast_source,
+        ),
+        (
+            "audio_broadcast_sink",
+            "ble-audio-broadcast-sink",
+            "CONFIG_BT_BAP_BROADCAST_SINK=y",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            broadcast_sink,
+        ),
+        (
+            "audio_broadcast_delegator_sink",
+            "ble-audio-broadcast-delegator-sink",
+            "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            broadcast_sink,
+        ),
+        (
+            "audio_broadcast_assistant",
+            "ble-audio-broadcast-assistant",
+            "CONFIG_BT_BAP_BROADCAST_ASSISTANT=y",
+            {"ble.connections": 1},
+            assistant,
+        ),
+    )
+    fixture_source = """/**
+ * @file {name}.ino
+ * @brief P0 adaptive Audio BAP 역할의 저수준 설정 없는 build fixture입니다.
+ */
+
+#include <NUCODE_BLE.h>
+#include <NUCODE_BLE_Audio.h>
+
+/** @brief 역할별 Audio BAP source가 compile되는 최소 Arduino 진입점입니다. */
+void setup()
+{{
+    Serial.begin(115200);
+}}
+
+/** @brief build-only fixture의 반복 진입점입니다. */
+void loop()
+{{
+}}
+"""
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+    )
+    fixtures = root / "adaptive-audio-bap-fixtures"
+    materialized_cases = []
+    for name, role, required_config, capacities, role_source in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        (sketch / f"{name}.ino").write_text(
+            fixture_source.format(name=name), encoding="utf-8"
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        materialized_cases.append(
+            (
+                name,
+                sketch,
+                role,
+                required_config,
+                capacities,
+                (common_source, role_source),
+                tuple(source for source in role_sources if source != role_source),
+            )
+        )
+    for (
+        name,
+        sketch,
+        role,
+        required_config,
+        capacities,
+        required_sources,
+        forbidden_sources,
+    ) in materialized_cases:
+        build = root / f"build-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive Audio BAP role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != capacities:
+            raise SmokeFailure(
+                f"adaptive Audio BAP capacity mismatch: {name}: {actual_capacities}"
+            )
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        if required_config not in final_config:
+            raise SmokeFailure(
+                "adaptive Audio BAP required Kconfig is missing: "
+                f"{name}: {required_config}"
+            )
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    "adaptive Audio BAP unrelated Kconfig is enabled: "
+                    f"{name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(
+            encoding="utf-8"
+        )
+        for source in required_sources:
+            if source not in source_graph:
+                raise SmokeFailure(
+                    "adaptive Audio BAP required source is missing: "
+                    f"{name}: {source}"
+                )
+        for source in forbidden_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    "adaptive Audio BAP unrelated source is present: "
+                    f"{name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -2505,6 +2709,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive": test_adaptive_capabilities,
                 "adaptive_ble": test_adaptive_ble_roles,
                 "adaptive_iso": test_adaptive_iso_roles,
+                "adaptive_audio_bap": test_adaptive_audio_bap_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

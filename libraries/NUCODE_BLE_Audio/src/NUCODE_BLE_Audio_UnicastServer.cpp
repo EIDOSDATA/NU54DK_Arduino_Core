@@ -415,8 +415,12 @@ namespace nucode::ble::audio
         const bt_pacs_register_param pacs_config = {
             .snk_pac = true,
             .snk_loc = true,
+#if defined(CONFIG_BT_PAC_SRC)
             .src_pac = server.source_enabled,
+#endif
+#if defined(CONFIG_BT_PAC_SRC_LOC)
             .src_loc = server.source_enabled,
+#endif
         };
         int result = bt_pacs_register(&pacs_config);
         if (result != 0)
