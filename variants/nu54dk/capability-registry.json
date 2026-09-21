@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "probe_mapping_version": 1,
+  "defaults": [
+    "arduino.runtime",
+    "arduino.api"
+  ],
+  "capabilities": [
+    {
+      "id": "arduino.runtime",
+      "requires": [],
+      "conflicts": [],
+      "conf": ["CONFIG_NUCODE_ARDUINO_RUNTIME=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_RUNTIME"]
+    },
+    {
+      "id": "arduino.api",
+      "requires": ["arduino.runtime"],
+      "conflicts": [],
+      "conf": ["CONFIG_NUCODE_ARDUINO_API=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_API"]
+    },
+    {
+      "id": "arduino.time",
+      "requires": ["arduino.api"],
+      "conflicts": [],
+      "conf": ["CONFIG_NUCODE_ARDUINO_TIME=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_TIME"]
+    },
+    {
+      "id": "arduino.gpio",
+      "requires": ["arduino.api", "arduino.io-ownership"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_GPIO=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_GPIO"]
+    },
+    {
+      "id": "arduino.io-ownership",
+      "requires": ["arduino.api"],
+      "conflicts": [],
+      "conf": ["CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP"]
+    },
+    {
+      "id": "arduino.interrupt",
+      "requires": ["arduino.gpio"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_INTERRUPTS=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_INTERRUPTS"]
+    },
+    {
+      "id": "arduino.adc",
+      "requires": ["arduino.gpio"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_ADC=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_ADC"]
+    },
+    {
+      "id": "arduino.pwm",
+      "requires": ["arduino.gpio"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_PWM=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_PWM"]
+    },
+    {
+      "id": "arduino.serial",
+      "requires": ["arduino.api"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_SERIAL=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_SERIAL"]
+    },
+    {
+      "id": "arduino.serial1",
+      "requires": ["arduino.serial", "arduino.gpio"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_SERIAL1=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_SERIAL1"]
+    },
+    {
+      "id": "arduino.wire",
+      "requires": ["arduino.gpio"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_WIRE=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_WIRE"]
+    },
+    {
+      "id": "arduino.spi",
+      "requires": ["arduino.gpio"],
+      "conflicts": ["nucode.peripheral-fabric"],
+      "conf": ["CONFIG_NUCODE_ARDUINO_SPI=y"],
+      "overlays": [],
+      "source_gates": ["CONFIG_NUCODE_ARDUINO_SPI"]
+    },
+    {
+      "id": "nucode.peripheral-fabric",
+      "requires": ["arduino.api", "arduino.time"],
+      "conflicts": [
+        "arduino.gpio",
+        "arduino.interrupt",
+        "arduino.adc",
+        "arduino.pwm",
+        "arduino.serial",
+        "arduino.serial1",
+        "arduino.wire",
+        "arduino.spi"
+      ],
+      "conf": [
+        "CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC=y",
+        "CONFIG_NUCODE_ARDUINO_ANALOG_FABRIC=y",
+        "CONFIG_NUCODE_ARDUINO_EVENT_FABRIC=y",
+        "CONFIG_NUCODE_ARDUINO_STREAM_FABRIC=y",
+        "CONFIG_NUCODE_ARDUINO_SYSTEM_FABRIC=y"
+      ],
+      "overlays": [],
+      "source_gates": [
+        "CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC",
+        "CONFIG_NUCODE_ARDUINO_ANALOG_FABRIC",
+        "CONFIG_NUCODE_ARDUINO_EVENT_FABRIC",
+        "CONFIG_NUCODE_ARDUINO_STREAM_FABRIC",
+        "CONFIG_NUCODE_ARDUINO_SYSTEM_FABRIC"
+      ]
+    }
+  ],
+  "roles": [],
+  "capacities": [
+    {
+      "id": "ble.connections",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 8,
+      "unit": "connections"
+    },
+    {
+      "id": "ble.iso-streams",
+      "aggregation": "sum",
+      "minimum": 1,
+      "maximum": 8,
+      "unit": "streams"
+    },
+    {
+      "id": "ble.att-mtu",
+      "aggregation": "identical",
+      "minimum": 23,
+      "maximum": 517,
+      "unit": "octets"
+    }
+  ],
+  "probe_symbols": [
+    {"symbol": "Serial", "capability": "arduino.serial"},
+    {"symbol": "Serial1", "capability": "arduino.serial1"},
+    {"symbol": "Wire", "capability": "arduino.wire"},
+    {"symbol": "SPI", "capability": "arduino.spi"},
+    {"symbol": "pinMode", "capability": "arduino.gpio"},
+    {"symbol": "digitalWrite", "capability": "arduino.gpio"},
+    {"symbol": "digitalRead", "capability": "arduino.gpio"},
+    {"symbol": "pulseIn", "capability": "arduino.gpio"},
+    {"symbol": "pulseInLong", "capability": "arduino.gpio"},
+    {"symbol": "shiftOut", "capability": "arduino.gpio"},
+    {"symbol": "shiftIn", "capability": "arduino.gpio"},
+    {"symbol": "attachInterrupt", "capability": "arduino.interrupt"},
+    {"symbol": "attachInterruptParam", "capability": "arduino.interrupt"},
+    {"symbol": "detachInterrupt", "capability": "arduino.interrupt"},
+    {"symbol": "analogRead", "capability": "arduino.adc"},
+    {"symbol": "analogReadResolution", "capability": "arduino.adc"},
+    {"symbol": "analogWrite", "capability": "arduino.pwm"},
+    {"symbol": "analogWriteResolution", "capability": "arduino.pwm"},
+    {"symbol": "analogWriteFrequency", "capability": "arduino.pwm"},
+    {"symbol": "millis", "capability": "arduino.time"},
+    {"symbol": "micros", "capability": "arduino.time"},
+    {"symbol": "delay", "capability": "arduino.time"},
+    {"symbol": "delayMicroseconds", "capability": "arduino.time"}
+  ]
+}

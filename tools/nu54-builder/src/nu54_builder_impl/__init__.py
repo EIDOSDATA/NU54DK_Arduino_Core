@@ -33,6 +33,9 @@ from .common import (
     DEFAULT_PROFILE,
     PROFILE_SCHEMA_VERSION,
     FEATURE_SCHEMA_VERSION,
+    CAPABILITY_REGISTRY_SCHEMA_VERSION,
+    CAPABILITY_DECLARATION_SCHEMA_VERSION,
+    CAPABILITY_RESOLUTION_SCHEMA_VERSION,
     FEATURE_ALLOWLIST,
     CONTEXT_DIRECTORY,
     CACHE_SCHEMA_VERSION,
@@ -55,6 +58,15 @@ from .artifacts import (
     validate_manifest_artifact,
     validate_flash_manifest,
     verify_artifact,
+)
+from . import capabilities
+from .capabilities import (
+    load_capability_registry,
+    load_capability_declaration,
+    capabilities_for_probe_symbols,
+    parse_undefined_symbols,
+    resolve_capabilities,
+    write_resolved_capabilities,
 )
 from . import build
 from .build import (
@@ -231,6 +243,9 @@ __all__ = [
     'DEFAULT_PROFILE',
     'PROFILE_SCHEMA_VERSION',
     'FEATURE_SCHEMA_VERSION',
+    'CAPABILITY_REGISTRY_SCHEMA_VERSION',
+    'CAPABILITY_DECLARATION_SCHEMA_VERSION',
+    'CAPABILITY_RESOLUTION_SCHEMA_VERSION',
     'FEATURE_ALLOWLIST',
     'CONTEXT_DIRECTORY',
     'CACHE_SCHEMA_VERSION',
@@ -246,6 +261,12 @@ __all__ = [
     'DuplicateJsonKeyError',
     'ChildCommandError',
     'CacheBusyError',
+    'load_capability_registry',
+    'load_capability_declaration',
+    'capabilities_for_probe_symbols',
+    'parse_undefined_symbols',
+    'resolve_capabilities',
+    'write_resolved_capabilities',
     'load_product_identity',
     'canonical_path',
     'path_key',

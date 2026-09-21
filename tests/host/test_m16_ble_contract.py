@@ -180,7 +180,7 @@ class M16BleNusContractTests(unittest.TestCase):
         self.assertIn("ble", profile["features"])
 
         feature = json.loads(FEATURE.read_text(encoding="utf-8"))
-        self.assertEqual(feature["schema_version"], 1)
+        self.assertEqual(feature["schema_version"], 2)
         self.assertEqual(feature["id"], "nucode.ble.nus")
         self.assertIn("ble", feature["requires"])
         self.assertEqual(

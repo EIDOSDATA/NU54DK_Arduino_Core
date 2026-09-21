@@ -1,7 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "nucode.spi",
   "requires": ["spi"],
+  "capabilities": [],
   "conf": [],
   "overlays": [],
   "conflicts": [],

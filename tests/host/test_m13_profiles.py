@@ -301,8 +301,8 @@ class M13ProfileContractTests(unittest.TestCase):
             shutil.copytree(ROOT / "libraries", fixture / "libraries")
             feature_path = fixture / "libraries" / "Wire" / "zephyr" / "feature.yml"
             feature_path.write_text(
-                '{"schema_version":1,"schema_version":1,"id":"nucode.wire",'
-                '"requires":[],"conf":[],"overlays":[],"conflicts":[],'
+                '{"schema_version":2,"schema_version":2,"id":"nucode.wire",'
+                '"requires":[],"capabilities":[],"conf":[],"overlays":[],"conflicts":[],'
                 '"compatible_profiles":["standard"]}',
                 encoding="utf-8",
             )

@@ -1,0 +1,204 @@
+#!/usr/bin/env python3
+"""! @brief P0 compiler probe mapping과 capability resolver 계약을 검증합니다. """
+
+from __future__ import annotations
+
+import copy
+import importlib.util
+import json
+from pathlib import Path
+import tempfile
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[2]
+MODULE_PATH = ROOT / "tools" / "nu54-builder" / "src" / "nu54_builder.py"
+SPEC = importlib.util.spec_from_file_location("nu54_builder_p0", MODULE_PATH)
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError(f"Builder를 불러올 수 없습니다: {MODULE_PATH}")
+MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(MODULE)
+
+
+class P0CapabilityContractTests(unittest.TestCase):
+    """! @brief 공개 ID·의존성·충돌·capacity의 fail-closed 경계를 검증합니다. """
+
+    def setUp(self) -> None:
+        """! @brief 저장소의 실제 registry를 각 시험의 기준으로 읽습니다. """
+        self.registry = MODULE.load_capability_registry(ROOT)
+        self.empty_declaration = {
+            "schema_version": MODULE.CAPABILITY_DECLARATION_SCHEMA_VERSION,
+            "capabilities": [],
+            "roles": [],
+            "capacities": {},
+            "path": None,
+        }
+
+    def test_probe_symbol_mapping_uses_stable_capability_ids(self) -> None:
+        """! @brief compiler symbol은 공개 capability ID로만 외부화합니다. """
+        output = """
+                 U SPI
+        probe.o: U Wire
+                 U analogWrite
+                 U unrelatedSymbol
+        """
+        symbols = MODULE.parse_undefined_symbols(output)
+        self.assertEqual(symbols, ["SPI", "Wire", "analogWrite", "unrelatedSymbol"])
+        self.assertEqual(
+            MODULE.capabilities_for_probe_symbols(self.registry, symbols),
+            ["arduino.pwm", "arduino.spi", "arduino.wire"],
+        )
+
+    def test_direct_probe_requirement_adds_transitive_dependencies(self) -> None:
+        """! @brief SPI 요구가 GPIO·소유권·API·runtime까지 폐쇄됩니다. """
+        result = MODULE.resolve_capabilities(
+            self.registry, ["arduino.spi"], [], self.empty_declaration
+        )
+        identifiers = {item["id"] for item in result["capabilities"]}
+        self.assertEqual(
+            identifiers,
+            {
+                "arduino.runtime",
+                "arduino.api",
+                "arduino.io-ownership",
+                "arduino.gpio",
+                "arduino.spi",
+            },
+        )
+        spi = next(item for item in result["capabilities"] if item["id"] == "arduino.spi")
+        gpio = next(item for item in result["capabilities"] if item["id"] == "arduino.gpio")
+        self.assertEqual(spi["reasons"], ["compiler-probe"])
+        self.assertEqual(gpio["reasons"], ["dependency:arduino.spi"])
+        self.assertIn("CONFIG_NUCODE_ARDUINO_SPI=y", result["generated"]["conf"])
+
+    def test_library_requirement_is_transitive_without_sketch_reference(self) -> None:
+        """! @brief library manifest의 간접 PWM 요구를 probe 결과와 합칩니다. """
+        result = MODULE.resolve_capabilities(
+            self.registry,
+            [],
+            [{"id": "fixture.sensor", "capabilities": ["arduino.pwm"]}],
+            self.empty_declaration,
+        )
+        pwm = next(item for item in result["capabilities"] if item["id"] == "arduino.pwm")
+        self.assertEqual(pwm["reasons"], ["library:fixture.sensor"])
+
+    def test_missing_declaration_has_no_role_or_capacity(self) -> None:
+        """! @brief sidecar가 없으면 임의 BLE 역할·용량을 추론하지 않습니다. """
+        with tempfile.TemporaryDirectory(prefix="n54-p0-declaration-") as temporary:
+            declaration = MODULE.load_capability_declaration(Path(temporary))
+        result = MODULE.resolve_capabilities(self.registry, [], [], declaration)
+        self.assertEqual(result["roles"], [])
+        self.assertEqual(result["capacities"], [])
+
+    def test_unknown_requirement_and_role_fail_closed(self) -> None:
+        """! @brief 모르는 요구를 full profile로 되돌리지 않고 중단합니다. """
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPABILITY_UNKNOWN"):
+            MODULE.resolve_capabilities(
+                self.registry, ["arduino.unknown"], [], self.empty_declaration
+            )
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = ["unknown-role"]
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_ROLE_UNKNOWN"):
+            MODULE.resolve_capabilities(self.registry, [], [], declaration)
+
+    def test_dependency_cycle_is_rejected_with_trace(self) -> None:
+        """! @brief 순환 의존성의 전체 경로를 진단합니다. """
+        registry = copy.deepcopy(self.registry)
+        registry["capabilities"]["arduino.runtime"]["requires"] = ["arduino.api"]
+        with self.assertRaisesRegex(
+            MODULE.AdapterError,
+            r"E_CAPABILITY_CYCLE.*arduino\.api -> arduino\.runtime -> arduino\.api",
+        ):
+            MODULE.resolve_capabilities(registry, [], [], self.empty_declaration)
+
+    def test_conflicting_capabilities_are_rejected(self) -> None:
+        """! @brief fabric과 Arduino SPI의 자원 충돌을 양방향 선언과 무관하게 거부합니다. """
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["capabilities"] = ["nucode.peripheral-fabric"]
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPABILITY_CONFLICT"):
+            MODULE.resolve_capabilities(
+                self.registry, ["arduino.spi"], [], declaration
+            )
+
+    def test_capacity_aggregation_is_explicit_and_bounded(self) -> None:
+        """! @brief maximum·sum·identical 의미와 검증 범위를 각각 적용합니다. """
+        registry = copy.deepcopy(self.registry)
+        registry["roles"] = {
+            "role-a": {
+                "id": "role-a",
+                "capabilities": [],
+                "capacities": {
+                    "ble.connections": 1,
+                    "ble.iso-streams": 1,
+                    "ble.att-mtu": 247,
+                },
+                "conflicts": [],
+            },
+            "role-b": {
+                "id": "role-b",
+                "capabilities": [],
+                "capacities": {
+                    "ble.connections": 2,
+                    "ble.iso-streams": 2,
+                    "ble.att-mtu": 247,
+                },
+                "conflicts": [],
+            },
+        }
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = ["role-a", "role-b"]
+        result = MODULE.resolve_capabilities(registry, [], [], declaration)
+        capacities = {item["id"]: item for item in result["capacities"]}
+        self.assertEqual(capacities["ble.connections"]["value"], 2)
+        self.assertEqual(capacities["ble.iso-streams"]["value"], 3)
+        self.assertEqual(capacities["ble.att-mtu"]["value"], 247)
+
+        registry["roles"]["role-b"]["capacities"]["ble.att-mtu"] = 517
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPACITY_CONFLICT"):
+            MODULE.resolve_capabilities(registry, [], [], declaration)
+        declaration["capacities"] = {"ble.connections": 9}
+        registry["roles"]["role-b"]["capacities"]["ble.att-mtu"] = 247
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPACITY_RANGE"):
+            MODULE.resolve_capabilities(registry, [], [], declaration)
+
+    def test_declaration_and_registry_schema_are_strict(self) -> None:
+        """! @brief 중복 key·추가 field·잘못된 참조를 모두 거부합니다. """
+        with tempfile.TemporaryDirectory(prefix="n54-p0-schema-") as temporary:
+            root = Path(temporary)
+            declaration_path = root / "nucode-build.json"
+            declaration_path.write_text(
+                '{"schema_version":1,"schema_version":1,"capabilities":[],"roles":[],"capacities":{}}',
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPABILITY_DECLARATION"):
+                MODULE.load_capability_declaration(root)
+            declaration_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "capabilities": [],
+                        "roles": [],
+                        "capacities": {},
+                        "kconfig": ["CONFIG_BT=y"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPABILITY_DECLARATION"):
+                MODULE.load_capability_declaration(root)
+
+    def test_resolved_document_is_deterministic_and_atomic(self) -> None:
+        """! @brief 같은 입력은 byte가 같은 단일 원본을 만들고 변경 없음을 반환합니다. """
+        result = MODULE.resolve_capabilities(
+            self.registry, ["arduino.serial", "arduino.time"], [], self.empty_declaration
+        )
+        with tempfile.TemporaryDirectory(prefix="n54-p0-result-") as temporary:
+            path = Path(temporary) / "resolved-capabilities.json"
+            self.assertTrue(MODULE.write_resolved_capabilities(path, result))
+            first = path.read_bytes()
+            self.assertFalse(MODULE.write_resolved_capabilities(path, result))
+            self.assertEqual(first, path.read_bytes())
+
+
+if __name__ == "__main__":
+    unittest.main()

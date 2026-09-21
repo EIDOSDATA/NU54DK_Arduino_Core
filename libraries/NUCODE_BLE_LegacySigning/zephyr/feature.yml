@@ -1,7 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "nucode.ble.legacy_signing",
   "requires": ["ble"],
+  "capabilities": [],
   "conf": ["ble-legacy-signing.conf"],
   "overlays": [],
   "conflicts": [],

@@ -1,7 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "nucode.ble.dfu",
   "requires": ["ble", "nucode.ble.security"],
+  "capabilities": [],
   "conf": ["ble-dfu.conf"],
   "overlays": [],
   "conflicts": [],

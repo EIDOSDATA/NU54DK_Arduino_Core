@@ -181,10 +181,26 @@ def load_library_feature(platform_root: Path, library_name: str) -> dict[str, An
         raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] {error}") from error
     except (OSError, json.JSONDecodeError) as error:
         raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] feature manifest를 읽지 못했습니다: {path}: {error}") from error
-    allowed = {"schema_version", "id", "requires", "conf", "overlays", "conflicts", "compatible_profiles"}
+    allowed = {
+        "schema_version",
+        "id",
+        "requires",
+        "capabilities",
+        "conf",
+        "overlays",
+        "conflicts",
+        "compatible_profiles",
+    }
     if not isinstance(document, dict) or set(document) != allowed or document.get("schema_version") != FEATURE_SCHEMA_VERSION or document.get("id") != expected_id:
         raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] allowlist feature 계약이 잘못되었습니다: {library_name}")
-    for field in ("requires", "conf", "overlays", "conflicts", "compatible_profiles"):
+    for field in (
+        "requires",
+        "capabilities",
+        "conf",
+        "overlays",
+        "conflicts",
+        "compatible_profiles",
+    ):
         if not isinstance(document[field], list) or not all(isinstance(item, str) for item in document[field]):
             raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] {field}는 문자열 배열이어야 합니다.")
     for field in ("conf", "overlays"):
