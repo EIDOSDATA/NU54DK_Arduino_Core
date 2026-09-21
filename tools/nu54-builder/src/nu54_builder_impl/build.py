@@ -201,7 +201,7 @@ def materialize_application(
             "[NU54:E_CAPABILITY_RESULT] resolved profile의 library 요구사항이 확정되지 않았습니다."
         )
     for feature in features:
-        for relative in feature["conf"]:
+        for relative in feature["active_conf"]:
             base_config += "\n# Library feature: " + feature["id"] + "\n" + declared_path(feature["root"], relative, "E_FEATURE_PATH").read_text(encoding="utf-8").rstrip() + "\n"
     sketch_config = sketch_root / "prj.conf"
     if sketch_config.is_file():
@@ -228,7 +228,7 @@ def materialize_application(
                 + "\n"
             )
     for feature in features:
-        for relative in feature["overlays"]:
+        for relative in feature["active_overlays"]:
             base_overlay += "\n/** @brief 허용된 bundled library feature overlay입니다. */\n" + declared_path(feature["root"], relative, "E_FEATURE_PATH").read_text(encoding="utf-8").rstrip() + "\n"
     sketch_overlay = sketch_root / "app.overlay"
     if sketch_overlay.is_file():

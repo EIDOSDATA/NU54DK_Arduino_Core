@@ -301,8 +301,9 @@ class M13ProfileContractTests(unittest.TestCase):
             shutil.copytree(ROOT / "libraries", fixture / "libraries")
             feature_path = fixture / "libraries" / "Wire" / "zephyr" / "feature.yml"
             feature_path.write_text(
-                '{"schema_version":2,"schema_version":2,"id":"nucode.wire",'
+                '{"schema_version":3,"schema_version":3,"id":"nucode.wire",'
                 '"requires":[],"capabilities":[],"conf":[],"overlays":[],"conflicts":[],'
+                '"resolved_conf":[],"resolved_overlays":[],'
                 '"compatible_profiles":["standard"]}',
                 encoding="utf-8",
             )
@@ -379,6 +380,45 @@ class M13ProfileContractTests(unittest.TestCase):
             overlay = (paths["app"] / "app.overlay").read_text(encoding="utf-8")
             self.assertLess(conf.index("CONFIG_M13_FEATURE=y"), conf.index("CONFIG_M13_EXPERT=y"))
             self.assertLess(overlay.index("feature overlay"), overlay.index("expert overlay"))
+
+    def test_feature_fragments_are_selected_by_capability_mode(self) -> None:
+        """! @brief compatibility와 resolved fragment 집합을 서로 섞지 않습니다. """
+        with tempfile.TemporaryDirectory(prefix="n54-m13-feature-mode-") as temporary:
+            fixture = Path(temporary)
+            shutil.copytree(ROOT / "variants", fixture / "variants")
+            shutil.copytree(ROOT / "libraries", fixture / "libraries")
+            feature_path = fixture / "libraries" / "Wire" / "zephyr" / "feature.yml"
+            feature = json.loads(feature_path.read_text(encoding="utf-8"))
+            feature["conf"] = ["compat.conf"]
+            feature["overlays"] = ["compat.overlay"]
+            feature["resolved_conf"] = ["resolved.conf"]
+            feature["resolved_overlays"] = ["resolved.overlay"]
+            feature_path.write_text(json.dumps(feature), encoding="utf-8")
+            for fragment in (
+                "compat.conf",
+                "compat.overlay",
+                "resolved.conf",
+                "resolved.overlay",
+            ):
+                (feature_path.parent / fragment).write_text("", encoding="utf-8")
+
+            standard = MODULE.load_configuration_profile(fixture, "standard")
+            standard_feature = MODULE.resolve_library_features(
+                fixture, standard, ["Wire"]
+            )[0]
+            self.assertEqual(standard_feature["active_conf"], ["compat.conf"])
+            self.assertEqual(
+                standard_feature["active_overlays"], ["compat.overlay"]
+            )
+
+            adaptive = MODULE.load_configuration_profile(fixture, "adaptive")
+            adaptive_feature = MODULE.resolve_library_features(
+                fixture, adaptive, ["Wire"]
+            )[0]
+            self.assertEqual(adaptive_feature["active_conf"], ["resolved.conf"])
+            self.assertEqual(
+                adaptive_feature["active_overlays"], ["resolved.overlay"]
+            )
 
     def test_feature_configure_failure_marks_cache_failed(self) -> None:
         """! @brief 최종 configure 실패를 failed/configure-failed 상태로 보존합니다. """

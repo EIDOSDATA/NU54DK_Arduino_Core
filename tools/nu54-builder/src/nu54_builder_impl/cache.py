@@ -162,7 +162,7 @@ def cache_input_manifest(
                     file_sha256(signing_key) if signing_key is not None else None
                 ),
             },
-            "selected_features": [{"id": item["id"], "manifest": optional_file_sha256(item["path"]), "conf": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["conf"]], "overlays": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["overlays"]]} for item in features],
+            "selected_features": [{"id": item["id"], "manifest": optional_file_sha256(item["path"]), "conf": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["active_conf"]], "overlays": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["active_overlays"]]} for item in features],
         }
         if profile["capability_mode"] == "resolved":
             if (capability_resolution is None) != (capability_probe is None):

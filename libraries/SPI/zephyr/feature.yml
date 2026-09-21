@@ -1,10 +1,12 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "nucode.spi",
   "requires": ["spi"],
   "capabilities": [],
   "conf": [],
   "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
   "conflicts": [],
   "compatible_profiles": ["standard", "adaptive", "ble", "secure_ble_dfu"]
 }

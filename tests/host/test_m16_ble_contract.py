@@ -180,13 +180,14 @@ class M16BleNusContractTests(unittest.TestCase):
         self.assertIn("ble", profile["features"])
 
         feature = json.loads(FEATURE.read_text(encoding="utf-8"))
-        self.assertEqual(feature["schema_version"], 2)
+        self.assertEqual(feature["schema_version"], 3)
         self.assertEqual(feature["id"], "nucode.ble.nus")
         self.assertIn("ble", feature["requires"])
         self.assertEqual(
             feature["compatible_profiles"], ["ble", "ble_audio_io", "secure_ble_dfu"]
         )
         self.assertTrue(feature["conf"])
+        self.assertEqual(feature["resolved_conf"], [])
 
         boards = (REPOSITORY / "boards.txt").read_text(encoding="utf-8")
         self.assertRegex(boards, r"(?m)^nu54dk\.menu\.feature_set\.ble=.+$")

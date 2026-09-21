@@ -196,6 +196,8 @@ def load_library_feature(platform_root: Path, library_name: str) -> dict[str, An
         "capabilities",
         "conf",
         "overlays",
+        "resolved_conf",
+        "resolved_overlays",
         "conflicts",
         "compatible_profiles",
     }
@@ -206,12 +208,14 @@ def load_library_feature(platform_root: Path, library_name: str) -> dict[str, An
         "capabilities",
         "conf",
         "overlays",
+        "resolved_conf",
+        "resolved_overlays",
         "conflicts",
         "compatible_profiles",
     ):
         if not isinstance(document[field], list) or not all(isinstance(item, str) for item in document[field]):
             raise AdapterError(f"[NU54:E_FEATURE_SCHEMA] {field}는 문자열 배열이어야 합니다.")
-    for field in ("conf", "overlays"):
+    for field in ("conf", "overlays", "resolved_conf", "resolved_overlays"):
         for value in document[field]:
             if not declared_path(root, value, "E_FEATURE_PATH").is_file():
                 raise AdapterError(f"[NU54:E_FEATURE_PATH] feature fragment가 없습니다: {value}")
@@ -257,5 +261,17 @@ def resolve_library_features(
             raise AdapterError(f"[NU54:E_FEATURE_CONFLICT] 충돌 자원: {detail}")
         for resource in feature["conflicts"]:
             conflict_owners[resource] = feature["id"]
-        resolved.append(feature)
+        if profile["capability_mode"] == "resolved":
+            active_conf = feature["resolved_conf"]
+            active_overlays = feature["resolved_overlays"]
+        else:
+            active_conf = feature["conf"]
+            active_overlays = feature["overlays"]
+        resolved.append(
+            {
+                **feature,
+                "active_conf": list(active_conf),
+                "active_overlays": list(active_overlays),
+            }
+        )
     return resolved

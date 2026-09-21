@@ -28,6 +28,9 @@ L2CAP TX MTU Kconfig로 생성되며 capability의 고정값과 충돌하면 res
 `requires_any_role`은 역할 종속 capability에 허용된 role이 하나도 없거나 registry가 정의되지 않은
 role을 참조하면 중단합니다. 따라서 BLE library를 role 없이 adaptive 구성에 넣는 경로를 이후 preset
 연결 단계에서 조용한 full fallback 없이 차단할 수 있습니다.
+feature schema v3는 기존 호환 profile에서 `conf`·`overlays`를 사용하고 resolved profile에서는 별도의
+`resolved_conf`·`resolved_overlays`만 사용합니다. BLE의 기존 broad fragment는 호환 경로에 보존되며
+adaptive 경로로 자동 유입되지 않습니다. 선택된 mode의 fragment hash만 cache 입력에 기록합니다.
 
 ## 1. 현재 상태
 

@@ -1,10 +1,12 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "nucode.littlefs",
   "requires": ["storage"],
   "capabilities": ["nucode.storage"],
   "conf": ["littlefs.conf"],
   "overlays": [],
+  "resolved_conf": ["littlefs.conf"],
+  "resolved_overlays": [],
   "conflicts": [],
   "compatible_profiles": ["standard", "adaptive", "ble", "secure_ble_dfu"]
 }
