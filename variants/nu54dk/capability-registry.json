@@ -1,9 +1,16 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "probe_mapping_version": 1,
   "defaults": [
     "arduino.runtime",
     "arduino.api"
+  ],
+  "source_roots": [
+    "libraries/NUCODE_BLE/src",
+    "libraries/NUCODE_BLE_ISO/src",
+    "libraries/NUCODE_BLE_Audio/src",
+    "libraries/NUCODE_BLE_DirectionFinding/src",
+    "libraries/NUCODE_BLE_ChannelSounding/src"
   ],
   "capabilities": [
     {
@@ -13,6 +20,7 @@
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_RUNTIME=y"],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_RUNTIME"]
     },
     {
@@ -22,6 +30,7 @@
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_API=y"],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_API"]
     },
     {
@@ -31,6 +40,7 @@
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_TIME=y"],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_TIME"]
     },
     {
@@ -40,6 +50,7 @@
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_GPIO=y", "CONFIG_NUCODE_ARDUINO_GPIO=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-connectors.dtsi"],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_GPIO"]
     },
     {
@@ -49,6 +60,7 @@
       "conflicts": [],
       "conf": ["CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-pins.dtsi"],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_IO_OWNERSHIP"]
     },
     {
@@ -58,6 +70,7 @@
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_NUCODE_ARDUINO_INTERRUPTS=y"],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_INTERRUPTS"]
     },
     {
@@ -67,6 +80,7 @@
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_ADC=y", "CONFIG_NUCODE_ARDUINO_ADC=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-adc.dtsi"],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_ADC"]
     },
     {
@@ -76,6 +90,7 @@
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_PWM=y", "CONFIG_NUCODE_ARDUINO_PWM=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-pwm.dtsi"],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_PWM"]
     },
     {
@@ -90,6 +105,7 @@
         "CONFIG_NUCODE_ARDUINO_SERIAL=y"
       ],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_SERIAL"]
     },
     {
@@ -99,6 +115,7 @@
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_NUCODE_ARDUINO_SERIAL1=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-serial1.dtsi"],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_SERIAL1"]
     },
     {
@@ -108,6 +125,7 @@
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_I2C=y", "CONFIG_NUCODE_ARDUINO_WIRE=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-wire.dtsi"],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_WIRE"]
     },
     {
@@ -117,6 +135,7 @@
       "conflicts": ["nucode.peripheral-fabric"],
       "conf": ["CONFIG_SPI=y", "CONFIG_NUCODE_ARDUINO_SPI=y"],
       "overlays": ["dts/nucode/nu54dk-arduino-spi.dtsi"],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_ARDUINO_SPI"]
     },
     {
@@ -126,6 +145,7 @@
       "conflicts": [],
       "conf": [],
       "overlays": ["dts/nucode/nu54dk-arduino-storage.dtsi"],
+      "sources": [],
       "source_gates": []
     },
     {
@@ -150,6 +170,7 @@
         "CONFIG_NUCODE_ARDUINO_SYSTEM_FABRIC=y"
       ],
       "overlays": [],
+      "sources": [],
       "source_gates": [
         "CONFIG_NUCODE_ARDUINO_SERIAL_FABRIC",
         "CONFIG_NUCODE_ARDUINO_ANALOG_FABRIC",
@@ -172,8 +193,21 @@
         "ble-cs-ras-reflector"
       ],
       "conflicts": [],
-      "conf": ["CONFIG_BT=y", "CONFIG_NUCODE_BLE_CORE=y"],
+      "conf": [
+        "CONFIG_BT=y",
+        "CONFIG_BT_DEVICE_NAME_DYNAMIC=y",
+        "CONFIG_BT_DEVICE_NAME_MAX=32",
+        "CONFIG_NUCODE_BLE_CORE=y"
+      ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+        "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+        "libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+        "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+        "libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp"
+      ],
       "source_gates": ["CONFIG_NUCODE_BLE_CORE"]
     },
     {
@@ -183,6 +217,7 @@
       "conflicts": [],
       "conf": ["CONFIG_BT=y", "CONFIG_NUCODE_BLE_ISO=y"],
       "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_ISO/src"],
       "source_gates": ["CONFIG_NUCODE_BLE_ISO"]
     },
     {
@@ -195,6 +230,7 @@
       "conflicts": [],
       "conf": ["CONFIG_BT_AUDIO=y"],
       "overlays": [],
+      "sources": ["libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp"],
       "source_gates": ["CONFIG_BT_AUDIO"]
     },
     {
@@ -207,6 +243,7 @@
       "conflicts": [],
       "conf": ["CONFIG_BT=y", "CONFIG_BT_DF=y"],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_BT_DF"]
     },
     {
@@ -219,6 +256,7 @@
       "conflicts": [],
       "conf": ["CONFIG_BT_CHANNEL_SOUNDING=y", "CONFIG_BT_RAS=y"],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_BT_CHANNEL_SOUNDING"]
     },
     {
@@ -229,6 +267,7 @@
       "conf": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_DEVICE_NAME_DYNAMIC=y",
         "CONFIG_BT_DEVICE_NAME_MAX=32",
         "CONFIG_BT_GATT_CLIENT=y",
@@ -245,6 +284,7 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": ["libraries/NUCODE_BLE/src/NUCODE_BLE.cpp"],
       "source_gates": ["CONFIG_NUCODE_BLE_NUS"]
     },
     {
@@ -255,6 +295,7 @@
       "conf": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_DEVICE_NAME_DYNAMIC=y",
         "CONFIG_BT_DEVICE_NAME_MAX=32",
         "CONFIG_BT_GATT_CLIENT=y",
@@ -275,6 +316,11 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+        "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "libraries/NUCODE_BLE/src/internal/gatt"
+      ],
       "source_gates": ["CONFIG_NUCODE_BLE_GATT"]
     },
     {
@@ -285,6 +331,7 @@
       "conf": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
         "CONFIG_BT_DEVICE_NAME_DYNAMIC=y",
         "CONFIG_BT_DEVICE_NAME_MAX=32",
@@ -310,6 +357,11 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+        "libraries/NUCODE_BLE/src/internal/gatt"
+      ],
       "source_gates": ["CONFIG_NUCODE_BLE_GATT", "CONFIG_NUCODE_BLE_L2CAP"]
     },
     {
@@ -320,6 +372,7 @@
       "conf": [
         "CONFIG_BT_CENTRAL=y",
         "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_ISO_CENTRAL=y",
         "CONFIG_BT_ISO_PERIPHERAL=y",
         "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
@@ -333,6 +386,7 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [],
       "source_gates": ["CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL"]
     },
     {
@@ -360,6 +414,9 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastClient.cpp"
+      ],
       "source_gates": ["CONFIG_BT_BAP_UNICAST_CLIENT"]
     },
     {
@@ -370,10 +427,12 @@
       "conf": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_SMP=y",
+        "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_SETTINGS=n",
         "CONFIG_UTF8=y",
         "CONFIG_BT_ISO_PERIPHERAL=y",
         "CONFIG_BT_GATT_DYNAMIC_DB=y",
+        "CONFIG_BT_ATT_PREPARE_COUNT=1",
         "CONFIG_BT_BAP_UNICAST_SERVER=y",
         "CONFIG_BT_ASCS=y",
         "CONFIG_BT_PAC_SNK=y",
@@ -386,6 +445,9 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastServer.cpp"
+      ],
       "source_gates": ["CONFIG_BT_BAP_UNICAST_SERVER"]
     },
     {
@@ -406,6 +468,9 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding.cpp"
+      ],
       "source_gates": ["CONFIG_NUCODE_BLE_DF_BEACON"]
     },
     {
@@ -415,7 +480,7 @@
       "conflicts": [],
       "conf": [
         "CONFIG_BT_PERIPHERAL=y",
-        "CONFIG_BT_LL_SW_SPLIT=y",
+        "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_CTLR_DF=y",
         "CONFIG_BT_CTLR_DF_CONN_CTE_RSP=y",
         "CONFIG_BT_CTLR_DF_ADV_CTE_TX=n",
@@ -425,7 +490,6 @@
         "CONFIG_BT_CTLR_DF_ANT_SWITCH_TX=n",
         "CONFIG_BT_CTLR_DF_ANT_SWITCH_RX=n",
         "CONFIG_BT_CTLR_TIFS_HW=n",
-        "CONFIG_BT_CTLR_ADV_DATA_LEN_MAX=191",
         "CONFIG_BT_CTLR_SDC_PAWR_ADV=n",
         "CONFIG_BT_CTLR_SDC_PAWR_SYNC=n",
         "CONFIG_NUCODE_BLE_DF_RESPONDER=y",
@@ -433,6 +497,9 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding_Connected.cpp"
+      ],
       "source_gates": ["CONFIG_NUCODE_BLE_DF_RESPONDER"]
     },
     {
@@ -464,6 +531,9 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_ChannelSounding/src/NUCODE_BLE_ChannelSounding_Initiator.cpp"
+      ],
       "source_gates": ["CONFIG_NUCODE_BLE_CS_INITIATOR"]
     },
     {
@@ -474,6 +544,7 @@
       "conf": [
         "CONFIG_BT_PERIPHERAL=y",
         "CONFIG_BT_SMP=y",
+        "CONFIG_BT_BROADCASTER=y",
         "CONFIG_BT_RAS_RRSP=y",
         "CONFIG_BT_RAS_MODE_3_SUPPORTED=n",
         "CONFIG_BT_RAS_MAX_ANTENNA_PATHS=1",
@@ -488,6 +559,9 @@
         "CONFIG_MAIN_STACK_SIZE=8192"
       ],
       "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_ChannelSounding/src/NUCODE_BLE_ChannelSounding_Reflector.cpp"
+      ],
       "source_gates": ["CONFIG_NUCODE_BLE_CS_REFLECTOR"]
     }
   ],

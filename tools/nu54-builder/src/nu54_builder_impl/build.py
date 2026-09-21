@@ -701,7 +701,11 @@ def link(args: argparse.Namespace) -> None:
                 materialize_installed_platform(paths)
                 validate_platform_copy(paths, current_input)
                 sources, source_provenance, manifest_changed = write_source_manifest(
-                    paths, records, selected_libraries, current_input
+                    paths,
+                    records,
+                    selected_libraries,
+                    current_input,
+                    capability_resolution,
                 )
                 if not sources:
                     raise AdapterError(

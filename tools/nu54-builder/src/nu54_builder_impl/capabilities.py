@@ -81,6 +81,7 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
         "schema_version",
         "probe_mapping_version",
         "defaults",
+        "source_roots",
         "capabilities",
         "roles",
         "capacities",
@@ -102,6 +103,21 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
         field="defaults",
         pattern=CAPABILITY_ID_PATTERN,
     )
+    source_roots = _string_array(
+        document.get("source_roots"), owner="registry", field="source_roots"
+    )
+    for value in source_roots:
+        source_root = canonical_path(platform_root / value)
+        if (
+            Path(value).is_absolute()
+            or PureWindowsPath(value).is_absolute()
+            or value.startswith(("\\\\", "//"))
+            or not is_within(source_root, platform_root)
+            or not source_root.is_dir()
+        ):
+            raise AdapterError(
+                f"[NU54:E_CAPABILITY_PATH] source root가 없거나 platform을 벗어납니다: {value}"
+            )
     capability_items = document.get("capabilities")
     if not isinstance(capability_items, list):
         raise AdapterError("[NU54:E_CAPABILITY_SCHEMA] capabilities는 배열이어야 합니다.")
@@ -113,6 +129,7 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
         "conflicts",
         "conf",
         "overlays",
+        "sources",
         "source_gates",
     }
     for item in capability_items:
@@ -143,6 +160,7 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
                 item.get("conf"), owner=identifier, field="conf", pattern=CONFIG_PATTERN
             ),
             "overlays": _string_array(item.get("overlays"), owner=identifier, field="overlays"),
+            "sources": _string_array(item.get("sources"), owner=identifier, field="sources"),
             "source_gates": _string_array(
                 item.get("source_gates"),
                 owner=identifier,
@@ -161,6 +179,18 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
             ):
                 raise AdapterError(
                     f"[NU54:E_CAPABILITY_PATH] capability overlay가 없거나 root를 벗어납니다: {value}"
+                )
+        for value in normalized["sources"]:
+            source = canonical_path(platform_root / value)
+            if (
+                Path(value).is_absolute()
+                or PureWindowsPath(value).is_absolute()
+                or value.startswith(("\\\\", "//"))
+                or not is_within(source, platform_root)
+                or not source.exists()
+            ):
+                raise AdapterError(
+                    f"[NU54:E_CAPABILITY_PATH] capability source가 없거나 root를 벗어납니다: {value}"
                 )
         capabilities[identifier] = normalized
 
@@ -283,6 +313,7 @@ def load_capability_registry(platform_root: Path) -> dict[str, Any]:
         "schema_version": document["schema_version"],
         "probe_mapping_version": mapping_version,
         "defaults": defaults,
+        "source_roots": source_roots,
         "capabilities": capabilities,
         "roles": roles,
         "capacities": capacities,
@@ -503,6 +534,7 @@ def resolve_capabilities(
     conf: list[str] = []
     overlays: list[str] = []
     source_gates: list[str] = []
+    sources: list[str] = []
     for identifier in sorted(selected):
         item = capabilities[identifier]
         resolved_capabilities.append(
@@ -516,6 +548,7 @@ def resolve_capabilities(
         conf.extend(item["conf"])
         overlays.extend(item["overlays"])
         source_gates.extend(item["source_gates"])
+        sources.extend(item["sources"])
 
     resolved_capacities = _resolve_capacities(registry, selected_roles, declaration)
     for capacity in resolved_capacities:
@@ -562,6 +595,8 @@ def resolve_capabilities(
             "conf": [f"{name}={setting}" for name, setting in merged_conf.items()],
             "overlays": list(dict.fromkeys(overlays)),
             "source_gates": list(dict.fromkeys(source_gates)),
+            "source_roots": list(registry["source_roots"]),
+            "sources": list(dict.fromkeys(sources)),
         },
     }
 

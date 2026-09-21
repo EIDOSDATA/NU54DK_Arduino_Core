@@ -45,9 +45,12 @@ ARDUINO_TESTS = (
     "ac03",
     "examples",
     "adaptive",
+    "adaptive_ble",
 )
 DEFAULT_TESTS = tuple(
-    test for test in ARDUINO_TESTS if test not in {"incremental", "adaptive"}
+    test
+    for test in ARDUINO_TESTS
+    if test not in {"incremental", "adaptive", "adaptive_ble"}
 )
 ARDUINO_GROUPS = {
     "v0.1.0": ("blink", "m6", "m7"),
@@ -2076,6 +2079,137 @@ def test_adaptive_capabilities(
         raise SmokeFailure("adaptive resolved-capabilities.json is not reproducible")
 
 
+## @brief P0 BLE role preset의 clean build·최종 Kconfig·source 경계를 검증합니다.
+def test_adaptive_ble_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    cases = (
+        (
+            "p0_ble_gap_nus",
+            "ble-gap-nus-dual-role",
+            ("CONFIG_NUCODE_BLE_NUS=y",),
+            {"ble.connections": 1},
+            "NUCODE_BLE_GAP.cpp",
+        ),
+        (
+            "p0_ble_gatt",
+            "ble-gatt-nus-dual-role",
+            ("CONFIG_NUCODE_BLE_GATT=y",),
+            {"ble.connections": 1},
+            "NUCODE_BLE_GATT.cpp",
+        ),
+        (
+            "p0_ble_l2cap",
+            "ble-l2cap-coc-dual-role",
+            ("CONFIG_NUCODE_BLE_L2CAP=y",),
+            {"ble.connections": 2, "ble.att-mtu": 512},
+            "NUCODE_BLE_L2CAP.cpp",
+        ),
+        (
+            "p0_ble_iso_cis",
+            "ble-iso-cis-central",
+            ("CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL=y",),
+            {"ble.connections": 2, "ble.iso-streams": 2},
+            "NUCODE_BLE_ISO.cpp",
+        ),
+        (
+            "p0_ble_audio_source",
+            "ble-audio-unicast-source",
+            ("CONFIG_BT_BAP_UNICAST_CLIENT=y",),
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            "NUCODE_BLE_Audio_UnicastClient.cpp",
+        ),
+        (
+            "p0_ble_audio_sink",
+            "ble-audio-unicast-sink",
+            ("CONFIG_BT_BAP_UNICAST_SERVER=y",),
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            "NUCODE_BLE_Audio_UnicastServer.cpp",
+        ),
+        (
+            "p0_ble_df_beacon",
+            "ble-df-cte-beacon",
+            ("CONFIG_NUCODE_BLE_DF_BEACON=y",),
+            {},
+            "NUCODE_BLE_DirectionFinding.cpp",
+        ),
+        (
+            "p0_ble_df_responder",
+            "ble-df-connected-responder",
+            ("CONFIG_NUCODE_BLE_DF_RESPONDER=y",),
+            {"ble.connections": 1},
+            "NUCODE_BLE_DirectionFinding_Connected.cpp",
+        ),
+        (
+            "p0_ble_cs_initiator",
+            "ble-cs-ras-initiator",
+            ("CONFIG_NUCODE_BLE_CS_INITIATOR=y",),
+            {"ble.connections": 1, "ble.att-mtu": 498},
+            "NUCODE_BLE_ChannelSounding_Initiator.cpp",
+        ),
+        (
+            "p0_ble_cs_reflector",
+            "ble-cs-ras-reflector",
+            ("CONFIG_NUCODE_BLE_CS_REFLECTOR=y",),
+            {"ble.connections": 1},
+            "NUCODE_BLE_ChannelSounding_Reflector.cpp",
+        ),
+    )
+    forbidden = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+    )
+    for name, role, required, capacities, required_source in cases:
+        sketch = repository / "tests" / "arduino-cli" / name
+        build = root / f"build-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        if context.get("profile") != "adaptive":
+            raise SmokeFailure(f"adaptive BLE profile was not selected: {name}")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive BLE role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != capacities:
+            raise SmokeFailure(
+                f"adaptive BLE capacity mismatch: {name}: {actual_capacities}"
+            )
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        for setting in required:
+            if setting not in final_config:
+                raise SmokeFailure(
+                    f"adaptive BLE required Kconfig is missing: {name}: {setting}"
+                )
+        for setting in forbidden:
+            if setting in final_config:
+                raise SmokeFailure(
+                    f"adaptive BLE unrelated Kconfig is enabled: {name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(
+            encoding="utf-8"
+        )
+        if required_source not in source_graph:
+            raise SmokeFailure(
+                f"adaptive BLE required source is missing: {name}: {required_source}"
+            )
+        if "/cores/arduino/SPI.cpp" in source_graph.replace("\\", "/"):
+            raise SmokeFailure(f"adaptive BLE included unrelated SPI source: {name}")
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -2156,6 +2290,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,
                 "adaptive": test_adaptive_capabilities,
+                "adaptive_ble": test_adaptive_ble_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

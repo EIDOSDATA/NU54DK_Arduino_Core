@@ -391,6 +391,87 @@ extern "C" void sensorRead(void)
         with self.assertRaisesRegex(MODULE.AdapterError, "E_ROLE_CONFLICT"):
             MODULE.resolve_capabilities(self.registry, [], features, declaration)
 
+    def test_resolved_sources_filter_unselected_bundled_translation_units(self) -> None:
+        """! @brief 선택 역할 밖의 bundled source를 제외하고 provenance를 결정적으로 남깁니다. """
+        with tempfile.TemporaryDirectory(prefix="n54-p0-source-filter-") as temporary:
+            root = Path(temporary)
+            platform = root / "platform"
+            source_root = platform / "libraries" / "Fixture" / "src"
+            sketch = root / "sketch"
+            app = root / "app"
+            build = root / "build"
+            source_root.mkdir(parents=True)
+            sketch.mkdir()
+            selected = source_root / "Selected.cpp"
+            excluded_a = source_root / "ExcludedA.cpp"
+            excluded_b = source_root / "ExcludedB.cpp"
+            for source in (selected, excluded_a, excluded_b):
+                source.write_text(f"int {source.stem} = 1;\n", encoding="utf-8")
+            records = [
+                {
+                    "source": source.as_posix(),
+                    "include_dirs": [source_root.as_posix()],
+                }
+                for source in (excluded_b, selected, excluded_a)
+            ]
+            paths = {
+                "build_path": build,
+                "sketch_root": sketch,
+                "platform_root": platform,
+                "app": app,
+            }
+            resolution = {
+                "generated": {
+                    "source_roots": ["libraries/Fixture/src"],
+                    "sources": ["libraries/Fixture/src/Selected.cpp"],
+                }
+            }
+            sources, provenance, _ = MODULE.write_source_manifest(
+                paths, records, capability_resolution=resolution
+            )
+            self.assertEqual(sources, [selected.resolve()])
+            self.assertEqual(
+                [item["logical_identity"] for item in provenance["excluded_sources"]],
+                [
+                    "platform:libraries/Fixture/src/ExcludedA.cpp",
+                    "platform:libraries/Fixture/src/ExcludedB.cpp",
+                ],
+            )
+            manifest = (app / "sources.cmake").read_text(encoding="utf-8")
+            self.assertIn("Selected.cpp", manifest)
+            self.assertNotIn("ExcludedA.cpp", manifest)
+            self.assertNotIn("ExcludedB.cpp", manifest)
+            self.assertIn(
+                source_root.resolve(),
+                [Path(item["path"]).resolve() for item in provenance["include_roots"]],
+            )
+
+    def test_resolved_source_paths_fail_closed(self) -> None:
+        """! @brief 손상된 source 해석 결과의 형식과 platform 이탈 경로를 거부합니다. """
+        with tempfile.TemporaryDirectory(prefix="n54-p0-source-path-") as temporary:
+            root = Path(temporary)
+            platform = root / "platform"
+            source_root = platform / "libraries" / "Fixture" / "src"
+            sketch = root / "sketch"
+            source_root.mkdir(parents=True)
+            sketch.mkdir()
+            paths = {
+                "build_path": root / "build",
+                "sketch_root": sketch,
+                "platform_root": platform,
+                "app": root / "app",
+            }
+            invalid_results = (
+                {"generated": {"source_roots": "libraries/Fixture/src", "sources": []}},
+                {"generated": {"source_roots": ["../outside"], "sources": []}},
+            )
+            for resolution in invalid_results:
+                with self.subTest(resolution=resolution):
+                    with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPABILITY_RESULT"):
+                        MODULE.write_source_manifest(
+                            paths, [], capability_resolution=resolution
+                        )
+
     def test_registry_rejects_unknown_required_role_reference(self) -> None:
         """! @brief capability의 역할 허용 목록도 registry 참조 무결성에 포함합니다. """
         with tempfile.TemporaryDirectory(prefix="n54-p0-role-ref-") as temporary:
@@ -404,11 +485,20 @@ extern "C" void sensorRead(void)
             )
             document["capabilities"][0]["requires_any_role"] = ["missing-role"]
             registry_path.write_text(json.dumps(document), encoding="utf-8")
+            for source_root in document["source_roots"]:
+                (root / source_root).mkdir(parents=True, exist_ok=True)
             for capability in document["capabilities"]:
                 for overlay in capability["overlays"]:
                     overlay_path = root / overlay
                     overlay_path.parent.mkdir(parents=True, exist_ok=True)
                     overlay_path.write_text("", encoding="utf-8")
+                for source in capability["sources"]:
+                    source_path = root / source
+                    if (ROOT / source).is_dir():
+                        source_path.mkdir(parents=True, exist_ok=True)
+                    else:
+                        source_path.parent.mkdir(parents=True, exist_ok=True)
+                        source_path.write_text("", encoding="utf-8")
             with self.assertRaisesRegex(
                 MODULE.AdapterError, "E_CAPABILITY_REFERENCE.*missing-role"
             ):
