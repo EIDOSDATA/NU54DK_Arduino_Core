@@ -1,0 +1,65 @@
+{
+  "status": "FAIL",
+  "test": "unencrypted_ranging_features_read_20",
+  "source_clean": true,
+  "core_revision": "bdea52ba5466f9b4fd9a66327dd391a91e560a02",
+  "client_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "client_port": "COM14",
+  "reflector_port": "COM13",
+  "client_image_sha256": "51f2c3df68b6cc9570010208ae1a21e431feaec6fd6968fa94772ce7aa7b67b3",
+  "reflector_image_sha256": "6e9fd045a6f2b7f8c37260a2672989c205caeeedef7819f1dc27fc6304f23362",
+  "cycles_expected": 20,
+  "rejected": 0,
+  "mode": "same_acl",
+  "same_acl": true,
+  "connections": 0,
+  "disconnect_reasons": [
+    22
+  ],
+  "unexpected_disconnects": 0,
+  "stop_confirmed": true,
+  "read_timestamps_ms": [],
+  "cycles": [],
+  "client_lines": [
+    "CS insecure peer connected count=1",
+    "CS insecure peer connected count=1",
+    "CS insecure RAS discovered",
+    "CS insecure unexpected att=5",
+    "CS insecure stop requested",
+    "CS insecure peer disconnected reason=22"
+  ],
+  "reflector_lines": [
+    "CS reflector advertising",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected"
+  ],
+  "client_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "425984"
+  ],
+  "client_flash": [
+    "pyocd-sector-hw-reset",
+    "335872"
+  ],
+  "failure_class": "RuntimeError",
+  "failure_detail": "insecure client failed expected rejection"
+}

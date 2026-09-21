@@ -8,7 +8,10 @@ W04는 아직 완료되지 않았으며 이 앱의 build나 HCI 명령 수락만
 고정 NCS v3.4.0 Zephyr Host의 `bt_df_conn_cte_rx_enable()` 결과를 기록한다.
 Host가 거부하면 같은 연결에서 controller HCI의 수신 파라미터와 CTE 요청
 명령 수락 여부를 따로 기록한다. 원시 HCI 명령이 성공해도 Host의 연결 상태
-검사를 우회하므로 IQ callback이나 AoA 수신 성공으로 해석하지 않는다.
+검사를 우회한다. 이 내부 fixture는 controller가 수락한 수신 설정의 수명에만
+`BT_CONN_CTE_RX_ENABLED`, `BT_CONN_CTE_RX_PARAMS_SET`, `cte_types`를 동기화해
+Host가 실제 controller event를 IQ callback으로 전달하도록 한다. 이 동기화는
+IQ event나 sample을 생성하지 않으며 공개 API·Arduino 예제에는 포함하지 않는다.
 
 `bt-ll-sw-split` snippet, `nrf54l15dk/nrf54l15/cpuapp/nu54dk` target,
 저장소의 `board_package/NU54DK_Zephyr_DTS` board root로 빌드한다.
@@ -16,6 +19,7 @@ Host가 거부하면 같은 연결에서 controller HCI의 수신 파라미터�
 sector flash, hardware reset, UART 결과를 JSON으로 기록한다. 원본 probe
 UID와 Bluetooth 주소는 기록하지 않는다.
 
-출력 태그 `AOA_RX_ENABLE`, `RAW_RX_PARAM`, `RAW_REQUEST`, `IQ`를 별도로
-해석한다. `CONTROLLER_ACCEPTED_HOST_REJECTED`는 HCI 명령 두 개의 수락과
-Host API 거부만 뜻하며, 실제 IQ 보고서 미확인을 그대로 유지한다.
+출력 태그 `AOA_RX_ENABLE`, `RAW_RX_PARAM`, `HOST_RX_STATE`, `RAW_REQUEST`,
+`IQ`를 별도로 해석한다. HCI 명령 수락, controller IQ event 도달, Host callback,
+양수 sample 수신은 각각 독립 판정한다. 연결 기반 결과를 connectionless AoA나
+각도 측정, 안테나 전환, 외장 RF 경로의 PASS로 확대하지 않는다.

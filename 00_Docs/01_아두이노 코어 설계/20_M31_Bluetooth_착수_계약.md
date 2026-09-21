@@ -49,6 +49,18 @@ Zephyr Host AoA API는 안테나 2개 이상 및 ANT_SWITCH_RX를 검사하므�
 W04의 직접 raw IQ 가능성은 실제 report 수신 전까지 `source_candidate`로 둔다.
 안테나 배열·정밀 각도·정밀 거리·음질 측정은 기본 데이터 경로 검증의 선행 gate가 아니다.
 
+## W06 자원·수명주기·회귀 경계
+
+M31-W06은 ISO·Audio·DF·CS 네 기능 전체를 단일 MCU image에서 동시에 실행하는 작업이 아니다.
+Audio가 ISO transport를 사용하는 것처럼 기능 정의상 결합된 경로는 W02/W03의 role별 image와
+근거를 사용한다. DF와 CS는 controller/profile이 다른 독립 image로 유지하고, 각각의 RAM/RRAM·
+stack·buffer·connection 예산과 STOP·disconnect·재시작 뒤 callback·link·radio 자원 회수를
+확인한다. 이어 공통 Core 변경이 M19~M30 기준선을 깨뜨리지 않는지 회귀한다.
+
+동시 실행 subcase는 실제 제품 요구, controller 지원과 자원 예산이 먼저 명시된 조합에만 추가한다.
+그런 조합이 없으면 W06 완료 조건은 독립 image의 자원·수명주기와 회귀 증거로 닫는다. 별도 host
+processor나 확장 가속 자원을 전제로 한 네 기능 전체 동시 운용을 NU54DK MCU 완료 조건으로 만들지 않는다.
+
 ## 유한 시험과 증거 형식
 
 readiness의 10개 family·28개 subcase가 검증 분모다. W03의 11개 Audio 묶음과 설치

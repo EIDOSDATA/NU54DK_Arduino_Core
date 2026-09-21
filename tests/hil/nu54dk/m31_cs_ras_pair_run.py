@@ -99,6 +99,7 @@ def main():
     parser.add_argument("--reflector-image", type=Path, required=True)
     parser.add_argument("--core-revision", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--source-clean", action="store_true")
     parser.add_argument("--flash", action="store_true")
     parser.add_argument("--post-flash-reset", action="store_true")
     parser.add_argument("--disconnect-cycles", type=int, default=0)
@@ -114,6 +115,18 @@ def main():
         parser.error("procedure timeout must be within 600 seconds")
     if args.post_flash_reset and not args.flash:
         parser.error("post-flash reset requires flash")
+    if args.output.exists():
+        parser.error("refusing to overwrite existing evidence")
+    if args.source_clean:
+        root = Path(__file__).resolve().parents[3]
+        revision = subprocess.check_output(
+            ("git", "rev-parse", "HEAD"), cwd=root, text=True
+        ).strip()
+        changed = subprocess.check_output(
+            ("git", "status", "--porcelain"), cwd=root, text=True
+        ).strip()
+        if changed or args.core_revision != revision:
+            parser.error("exact HIL requires clean source and full HEAD revision")
     serial, ports = import_pyserial()
     init_uid, init_volume, init_port = discover(args.initiator_probe_sha256, ports)
     refl_uid, refl_volume, refl_port = discover(args.reflector_probe_sha256, ports)
@@ -121,6 +134,7 @@ def main():
         raise RuntimeError("role mapping overlap")
     record = {
         "status": "FAIL",
+        "source_clean": args.source_clean,
         "core_revision": args.core_revision,
         "initiator_probe_sha256": args.initiator_probe_sha256,
         "reflector_probe_sha256": args.reflector_probe_sha256,
@@ -133,6 +147,9 @@ def main():
         "procedures": 0,
         "stop_restart_cycles": 0,
         "disconnect_reconnect_cycles": 0,
+        "raw_ras": "NOT RUN",
+        "distance_accuracy": "NOT RUN",
+        "cleanup_confirmed": False,
         "initiator_lines": [],
         "reflector_lines": [],
     }
@@ -166,64 +183,84 @@ def main():
                     hardware_reset(refl_uid)
                     hardware_reset(init_uid)
                 started = time.monotonic()
+                run_error = None
                 try:
-                    read_procedures(initiator, reflector, record,
-                                    args.procedures, args.procedure_timeout)
-                except RuntimeError as error:
-                    if str(error) == "procedure count timeout" and args.diagnose_timeout:
+                    try:
+                        read_procedures(initiator, reflector, record,
+                                        args.procedures,
+                                        args.procedure_timeout)
+                    except RuntimeError as error:
+                        if (str(error) == "procedure count timeout" and
+                                args.diagnose_timeout):
+                            initiator.write(b"s")
+                            initiator.flush()
+                            record["timeout_stop_confirmed"] = collect_until(
+                                initiator, reflector, record,
+                                [("i", "CS procedures stop requested"),
+                                 ("r", "CS procedures disabled")], 8.0
+                            )
+                            if record["timeout_stop_confirmed"]:
+                                initiator.write(b"r")
+                                initiator.flush()
+                                record["timeout_restart_raw_confirmed"] = \
+                                    collect_until(
+                                        initiator, reflector, record,
+                                        [("i", "CS procedures restart requested"),
+                                         ("r", "CS procedures enabled"),
+                                         ("i", "CS_RAW counter=")], 10.0
+                                    )
+                        raise
+                    record["raw_ras"] = "PASS"
+                    record["procedure_elapsed_s"] = round(
+                        time.monotonic() - started, 3
+                    )
+                    for cycle in range(20):
                         initiator.write(b"s")
                         initiator.flush()
-                        record["timeout_stop_confirmed"] = collect_until(
+                        if not collect_until(
                             initiator, reflector, record,
                             [("i", "CS procedures stop requested"),
                              ("r", "CS procedures disabled")], 8.0
-                        )
-                        if record["timeout_stop_confirmed"]:
-                            initiator.write(b"r")
-                            initiator.flush()
-                            record["timeout_restart_raw_confirmed"] = collect_until(
-                                initiator, reflector, record,
-                                [("i", "CS procedures restart requested"),
-                                 ("r", "CS procedures enabled"),
-                                 ("i", "CS_RAW counter=")], 10.0
-                            )
-                    raise
-                record["procedure_elapsed_s"] = round(
-                    time.monotonic() - started, 3
-                )
-                for cycle in range(20):
+                        ):
+                            raise RuntimeError("stop confirmation timeout")
+                        initiator.write(b"r")
+                        initiator.flush()
+                        if not collect_until(
+                            initiator, reflector, record,
+                            [("i", "CS procedures restart requested"),
+                             ("r", "CS procedures enabled"),
+                             ("i", "CS_RAW counter=")], 8.0
+                        ):
+                            raise RuntimeError("restart confirmation timeout")
+                        record["stop_restart_cycles"] = cycle + 1
+                    for cycle in range(args.disconnect_cycles):
+                        initiator.write(b"d")
+                        initiator.flush()
+                        if not collect_until(
+                            initiator, reflector, record,
+                            [("i", "CS disconnect requested"),
+                             ("i", "CS initiator disconnected"),
+                             ("r", "CS reflector disconnected"),
+                             ("i", "CS initiator connected; securing"),
+                             ("r", "CS reflector connected"),
+                             ("i", "CS_RAW counter=")], 30.0
+                        ):
+                            raise RuntimeError("disconnect recovery timeout")
+                        record["disconnect_reconnect_cycles"] = cycle + 1
+                except Exception as error:
+                    run_error = error
+                finally:
                     initiator.write(b"s")
                     initiator.flush()
-                    if not collect_until(
+                    record["cleanup_confirmed"] = collect_until(
                         initiator, reflector, record,
                         [("i", "CS procedures stop requested"),
                          ("r", "CS procedures disabled")], 8.0
-                    ):
-                        raise RuntimeError("stop confirmation timeout")
-                    initiator.write(b"r")
-                    initiator.flush()
-                    if not collect_until(
-                        initiator, reflector, record,
-                        [("i", "CS procedures restart requested"),
-                         ("r", "CS procedures enabled"),
-                         ("i", "CS_RAW counter=")], 8.0
-                    ):
-                        raise RuntimeError("restart confirmation timeout")
-                    record["stop_restart_cycles"] = cycle + 1
-                for cycle in range(args.disconnect_cycles):
-                    initiator.write(b"d")
-                    initiator.flush()
-                    if not collect_until(
-                        initiator, reflector, record,
-                        [("i", "CS disconnect requested"),
-                         ("i", "CS initiator disconnected"),
-                         ("r", "CS reflector disconnected"),
-                         ("i", "CS initiator connected; securing"),
-                         ("r", "CS reflector connected"),
-                         ("i", "CS_RAW counter=")], 30.0
-                    ):
-                        raise RuntimeError("disconnect recovery timeout")
-                    record["disconnect_reconnect_cycles"] = cycle + 1
+                    )
+                if run_error is not None:
+                    raise run_error
+                if not record["cleanup_confirmed"]:
+                    raise RuntimeError("CS cleanup STOP incomplete")
                 record["status"] = "PASS"
     except Exception as error:
         record["failure_class"] = type(error).__name__

@@ -35,13 +35,13 @@
       "id": "M31-W04",
       "title": "direction_finding",
       "status": "in_progress",
-      "exact_evidence": null
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json"
     },
     {
       "id": "M31-W05",
       "title": "channel_sounding",
       "status": "in_progress",
-      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json"
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json"
     },
     {
       "id": "M31-W06",
@@ -436,20 +436,20 @@
       "owner_work_id": "M31-W04",
       "controller_variant": "zephyr_ll_candidate",
       "source_status": "source_candidate",
-      "target_applicability": "host_single_antenna_rejected_hci_commands_accepted_iq_unproven",
+      "target_applicability": "controller_iq_event_reaches_host_but_host_state_gate_drops_samples",
       "native_build": "PASS",
       "arduino_build": "NOT_RUN",
       "runtime_query": "PASS",
-      "functional_hil": "FAIL",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/diagnostic-manifest.json",
+      "functional_hil": "HOLD",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
       "nu54dk_build": "PASS",
-      "source_revision": "8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb",
+      "source_revision": "b5294c86da32a9ebde86db96ca3cff08b4a96859",
       "stage_evidence": {
-        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/diagnostic-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/diagnostic-manifest.json",
+        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
         "arduino_build": null,
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/connected-aoa-host-controller-diagnostic.json",
-        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/connected-aoa-host-controller-diagnostic.json"
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json"
       }
     },
     {
@@ -479,22 +479,22 @@
       "owner_work_id": "M31-W05",
       "controller_variant": "default_sdc",
       "source_status": "verified",
-      "target_applicability": "arduino_ras_100_procedures_20_control_20_reconnect_3board_wrong_service_20_missing_gatt_20_insecure_read_rejections_partial",
+      "target_applicability": "arduino_ras_100_procedures_20_control_20_reconnect_same_acl_insecure_rejection_wrong_key_pending",
       "native_build": "PASS",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-recovery-1c28428c/ras-recovery-manifest.json",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json",
       "nu54dk_build": "PASS",
-      "source_revision": "907ab2f7493cf5f866d7690ffc35fef00da1b192",
+      "source_revision": "a4ff62fff9b78493dbbf941a3a189512ab4d2119",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
         "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-recovery-1c28428c/ras-recovery-manifest.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-cs-clean-8c125a22-01.json",
-        "functional_hil": null
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json"
       },
-      "support_reason": "Arduino 양쪽 역할의 100 procedure·20 stop/restart·20 disconnect/reconnect, 3보드 동일 이름/다른 서비스 peer 분리, 위장 RAS UUID/GATT 서비스 부재 거부 20회, 미암호화 RAS Features read의 ATT 15 거부 20회는 부분 PASS. 위장 서비스의 잘못된 속성/권한·CS 절차 미인증·wrong-key negative와 flash 직후 간헐 연결 중단 및 같은 ACL 반복 read 중단 원인은 미완료. 추가 증거: 00_Docs/04_검증 기록/evidence/m31-w05-missing-ras-add22762/missing-service-manifest.json; 00_Docs/04_검증 기록/evidence/m31-w05-insecure-ras-da580341/insecure-read-manifest.json"
+      "support_reason": "Exact flash 직후 Arduino 양쪽 역할의 raw RAS 100건·20 stop/restart·20 disconnect/reconnect와 최종 STOP을 독립적으로 두 번 확인했다. 같은 ACL 비암호화 Ranging Features read는 ATT 5로 20/20 거부되고 재연결·재탐색 0회였다. 기존 3보드 peer 분리와 위장 RAS UUID/GATT 서비스 부재 거부 20회도 유지한다. wrong-key negative와 flash 간헐 중단 단일 원인은 미완료이며 RTT 거리는 비보정이라 정확도를 주장하지 않는다. 이전 flash 증거: 00_Docs/04_검증 기록/evidence/m31-w05-ras-013a1274/pair-postflash-100-20-20.json; 비암호화 증거: 00_Docs/04_검증 기록/evidence/m31-w04-w05-98f22d5a/cs-insecure-same-acl-02.json"
     }
   ],
   "audio_groups": [
@@ -1632,9 +1632,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "FAIL",
-          "source_revision": "8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb",
-          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-rx-8bcb3e04/connected-aoa-host-controller-diagnostic.json"
+          "status": "HOLD",
+          "source_revision": "b5294c86da32a9ebde86db96ca3cff08b4a96859",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json"
         },
         {
           "id": "M31-DF-01:sdc_aod_unsupported",
@@ -1658,9 +1658,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "UNSUPPORTED",
+          "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-default-clean-8c125a22-01.json"
         }
       ]
     },
@@ -1695,9 +1695,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "a4ff62fff9b78493dbbf941a3a189512ab4d2119",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json"
         },
         {
           "id": "M31-CS-01:restart",
@@ -1722,9 +1722,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "a4ff62fff9b78493dbbf941a3a189512ab4d2119",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json"
         }
       ]
     },
@@ -1935,7 +1935,7 @@
     "work_total": 8,
     "work_completed": 3,
     "test_family_total": 10,
-    "test_family_passed": 4,
+    "test_family_passed": 5,
     "audio_group_total": 11,
     "example_role_total": 43,
     "parity_rows": 703,

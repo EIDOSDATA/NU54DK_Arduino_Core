@@ -1,9 +1,10 @@
-# 개발 인계 — M31 W03 완료, 후속 개발 대기
+# 개발 인계 — M31 W04·W05 병행 진단 진행 중
 
-현재 설치·지원 배포는 **v0.4.1**, 개발 소스는 **main / 0.4.1-dev**입니다.
+현재 설치·지원 배포는 **v0.4.1**, 개발 소스는 **m31-w04-dev / 0.4.1-dev**입니다.
 M31은 W01~W03 **3/8 완료**, W03 LE Audio는 **11/11 PASS**입니다.
-사용자 지시에 따라 W03에서 개발을 멈췄으며 **HOST-W04 이후도 보류**했습니다.
-이번 후속 작업은 이력 squash·문서 정비·main 반영입니다. 기능 개발 재개는 다음 지시를 따릅니다.
+M31-W04 Direction Finding과 M31-W05 Channel Sounding을 병행 중이며 둘 다 아직
+**진행 중**입니다. **HOST-W04 이후는 계속 보류**합니다. main 반영·squash·release는
+사용자의 별도 지시 전까지 수행하지 않습니다.
 
 ## 1. 현재 상태와 원본
 
@@ -16,8 +17,9 @@ M31은 W01~W03 **3/8 완료**, W03 LE Audio는 **11/11 PASS**입니다.
 | M31-W01 | 원장·capability 완료 | [M31 readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번 완료 기록](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>), [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| M31-W04 / W05 | DF·CS 미완료, 후속 개발 대기 | 실패·부분 성공·잔여는 [M31 TODO](TODO_M31.md) |
-| M31-W06~W08 | 미착수 | 통합·회귀·예제·최종 인계 |
+| M31-W04 | controller IQ event 102건, Host gate 폐기 확인; raw sample 0으로 HOLD | [216번 진단](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) |
+| M31-W05 | 동일 ACL read 20/20, flash 직후 raw RAS 100·복구 20/20을 두 번 PASS; wrong-key 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>), [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
+| M31-W06~W08 | 미착수 | 독립 image 자원·수명주기·회귀, 예제·최종 인계. 네 기능 전체 동시 실행은 요구하지 않음 |
 | M32 / M33 | 0/12 · 0/8, 미착수 | [M32 TODO](TODO_M32.md), [M33 TODO](TODO_M33.md) |
 | Host | W01~W03 완료 3/8, W04~W08 보류 | [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 
@@ -28,7 +30,10 @@ M28~M31 개발 결과는 v0.4.1 설치본에 추가된 기능이나 v0.5.0 공�
 
 | 항목 | 값 |
 | --- | --- |
-| 재개 브랜치 | `main` |
+| 기준 main | `8b20157d33f1d216620726d92d88f65c25491b4d` |
+| 작업·재개 브랜치 | `m31-w04-dev` / 원격과 fast-forward 동기 상태 확인 후 계속 |
+| 최근 실기 검증 묶음 | `47ad7bdb813c15d077b358bf1d9d4677e716427e` |
+| W04 source 경계 진단 | `994a4b064177c61d8a9c34651c55df0d99196e07` |
 | Target | nRF54L15 CPUAPP / `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | NCS | v3.4.0 / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
 | Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
@@ -46,18 +51,30 @@ Squash는 개발 커밋을 묶는 이력 정리입니다. 증거에 기록된 �
 ## 3. 다른 PC에서 재개할 때
 
 1. 실제 저장소의 [AGENTS.md](../AGENTS.md), branch·HEAD·미커밋 변경 소유권을 확인합니다.
-   `git fetch origin --tags` 후 clean 상태에서 `main`을 선택하고 `git pull --ff-only`로 갱신합니다.
-   Dirty/diverged 상태를 덮어쓰지 않습니다.
+   `git fetch origin --tags` 후 clean 상태에서 `m31-w04-dev`와 `origin/m31-w04-dev`를
+   대조하고 fast-forward로만 갱신합니다. Dirty/diverged 상태를 덮어쓰지 않습니다.
 2. 이 문서와 [M31 TODO](TODO_M31.md), [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
    readiness를 대조하고 board submodule·SDK lock을 확인합니다.
-3. 새 기능 작업이 지시되면 W04 raw IQ 수신과 W05 CS의 실패 로그·잔여 항목부터 검토합니다.
-   기본 안테나 RX의 build·보드 진단은 수행했으나 IQ 수신은 미확인입니다. 배열 부재만으로
-   RX 불가를 단정하거나 CTE 송신 성공을 RX/각도 측정 PASS로 쓰지 않습니다.
-4. 실제 보드 시험 직전에 CMSIS-DAP V2 probe의 SHA-256 identity·COM·role·firmware를 다시 결합합니다.
+3. W04는 controller IQ event가 Host까지 오지만 raw HCI 우회가 Host의 RX enable/type
+   상태를 설정하지 않아 callback 전에 폐기되는 경계부터 계속합니다. sample 수신·안테나
+   전환·각도는 HOLD/NOT RUN이며 CTE 송신 성공을 RX/각도 PASS로 쓰지 않습니다.
+4. W05는 wrong-key negative와 flash 간헐 중단의 원인 분리부터 계속합니다. 동일 ACL
+   비암호화 read는 ATT 5로 20/20 PASS했고, exact flash 직후 secure RAS 100·stop/restart
+   20·disconnect/reconnect 20은 두 번 PASS했습니다. 두 번의 성공으로 과거 중단의 단일
+   원인을 확정하지 않습니다. wrong-key는 양쪽을 정상 bonding한 뒤 reflector bond만 공개
+   `eraseAllBonds()`로 지우고, 재연결 repair pairing을 거부하는 one-sided stale-key 시험이
+   최소 범위입니다. 이는 임의의 서로 다른 LTK 직접 주입 PASS로 확대하지 않습니다.
+   RTT 출력은 비보정이므로 거리 정확도는 NOT RUN입니다. 현재 공개 CS build의 전역
+   메모리는 initiator 88%, reflector 84%이므로 W06의 CS role image 자원 예산에서 다시 확인합니다.
+5. W06은 ISO·Audio·DF·CS 네 기능을 한 MCU image에서 동시에 실행하지 않습니다. Audio-over-ISO는
+   기존 결합 경로를 유지하고 DF·CS는 독립 controller/profile image로 둡니다. image별 자원 상한,
+   STOP·disconnect·재시작 뒤 상태 정리와 M19~M30 회귀가 완료 조건입니다. 별도 제품 요구와
+   controller 지원 근거가 없는 동시 조합을 새 완료 분모로 만들지 않습니다.
+6. 실제 보드 시험 직전에 CMSIS-DAP V2 probe의 SHA-256 identity·COM·role·firmware를 다시 결합합니다.
    과거 세 보드 mapping이나 임시 HEX 경로를 새 PC 결과물로 가정하지 않습니다.
-5. 공개 `.ino`는 사용자가 읽고 수정할 수 있는 C++/NUCODE API 흐름을 유지합니다.
+7. 공개 `.ino`는 사용자가 읽고 수정할 수 있는 C++/NUCODE API 흐름을 유지합니다.
    Zephyr 직접 호출과 개발 마일스톤 이름은 공개 예제에 노출하지 않습니다.
-6. HOST-W04 이후는 별도 재개 지시까지 보류합니다. 이번 문서 정리를 Host 구현 실적으로 계산하지 않습니다.
+8. HOST-W04 이후는 별도 재개 지시까지 보류합니다. 이번 문서 정리를 Host 구현 실적으로 계산하지 않습니다.
 
 ## 4. 검증·지원 경계
 
@@ -78,7 +95,7 @@ Squash는 개발 커밋을 묶는 이력 정리입니다. 증거에 기록된 �
 
 ## 5. 이번 작업의 종료 범위
 
-사용자는 **커밋 squash, 전체 문서 검토·정리, main 업데이트**를 요청했습니다.
-원본 이력 보존 태그와 정리된 개발 브랜치를 원격에 반영하고 main을 fast-forward합니다.
-v0.5.0 tag/Release/stable index 공개와 후속 기능 개발은 포함하지 않습니다.
-기존 지시대로 CI/CD 실행 요청·조회·대기는 생략하고 실제 수행한 로컬 검사만 기록합니다.
+이번 묶음은 `m31-w04-dev`에서 W04/W05 진단 runner·fixture와 실기 원본을 보강하고
+안정 단위마다 커밋·push합니다. main 반영, squash, branch/worktree 대량 정리,
+release/tag 공개는 하지 않습니다. CI/CD 실행 요청·조회·대기도 생략하고 로컬 build·
+host test·실기 HIL만 기록합니다.

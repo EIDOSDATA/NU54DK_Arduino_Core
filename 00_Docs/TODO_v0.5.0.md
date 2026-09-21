@@ -41,7 +41,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
-| M31 | **3/8** | W01 원장·capability, W02 공개 ISO 11역할, W03 LE Audio 11/11 완료. W04 DF·W05 CS 미완료 → W06~W08 통합·마감 |
+| M31 | **3/8** | W01 원장·capability, W02 공개 ISO 11역할, W03 LE Audio 11/11 완료. W04 DF·W05 CS 미완료 → W06 독립 image 자원·수명주기·회귀, W07~W08 예제·마감. 네 기능 전체 동시 실행은 요구하지 않음 |
 | M32 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
 | M33 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 Host·RC·공개 |
 | Host | **3/8, 보류** | HOST-W01~HOST-W03 완료. 재개 후 HOST-W04 prerequisite·HOST-W05 path/cache부터 진행 |
@@ -215,7 +215,8 @@ v0.4.0의 범위 제외는 그대로 보존한다.
   독립 개발 package의 설치 Arduino ISO 11예제 빌드·역할별 실기도 완료했다.
   [W02 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
   [W03 LE Audio 11/11](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)까지 완료했다.
-  DF·CS 및 통합·회귀·예제·마감은 잔여다.
+  DF·CS 및 독립 image별 자원·수명주기·회귀·예제·마감은 잔여다. ISO·Audio·DF·CS 네 기능
+  전체를 한 MCU에서 동시에 실행하는 것은 M31 완료 조건이 아니다.
 - Apple/Google 및 외장 장치의 실제 운용·검증을 사용자 후속으로 확정한 결정은 v0.5.0 개발·공개
   gate에서 적용한다. 구현·예제·가능한 자동 검사는 필수이며, 사용자 후속 NOT RUN은 PASS가 아니다.
   원장의 구현 요구·검증 책임·개발/공개 차단 여부를 독립 필드로 구현해 이 구분을 검사한다.
