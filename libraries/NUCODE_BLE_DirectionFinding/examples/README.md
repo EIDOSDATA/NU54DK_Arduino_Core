@@ -1,8 +1,13 @@
 # NUCODE BLE Direction Finding 예제
 
-`CteBeacon`은 기본 안테나에서 connectionless AoA CTE를 송신하는 공개 Arduino 예제다.
-`.ino`는 일반 C++로 `BeaconConfig`를 설정하고 `Beacon::begin()`, `start()`, `stop()`을
-호출한다. Zephyr 광고 set과 Direction Finding API는 라이브러리 `.cpp`에만 있다.
+이 예제는 개발 소스 `0.4.1-dev`의 Direction Finding 범위이며 수신·IQ 경로는
+아직 완료되지 않았다. 현재 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그
+공개 ZIP에 포함됐다는 뜻은 아니다.
+
+[`CteBeacon.ino`](CteBeacon/CteBeacon.ino)는 기본 안테나에서 connectionless AoA CTE를
+송신하는 공개 Arduino 예제다. 일반 C++로 `BeaconConfig`를 설정하고 `Beacon::begin()`,
+`start()`, `stop()`을 호출한다. Zephyr 광고 set과 Direction Finding 직접 호출은
+[`NUCODE_BLE_DirectionFinding.cpp`](../src/NUCODE_BLE_DirectionFinding.cpp)에만 있다.
 
 Arduino IDE 또는 CLI에서 **NU54DK Zephyr / BLE** feature set을 선택한다. 115200 baud
 Serial에서 `PROBE`, `START`, `STOP`, `INVALID`를 한 줄씩 보낸다. `START` 뒤

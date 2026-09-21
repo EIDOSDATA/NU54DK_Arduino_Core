@@ -5,11 +5,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.11 |
+| 문서 개정 | 1.12 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.4.1` stable 이후 `main` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-16 |
+| 최종 갱신일 | 2026-09-21 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -20,9 +20,10 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 이 절차는 현재 `v0.4.1`과 개발 `main`의 Windows 환경 기준이다. M30은 W01~W08 8/8·test ID
 10/10·실제 전원 차단 12/12를 완료했고 HOST-W01~HOST-W03도 완료했다. `v0.5.0`부터 추가할 Ubuntu AMD64·Apple Silicon macOS는
 [다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 남은 HOST-W04~HOST-W08 구현·
-자동 검사·사용자 절차를 준비한다. Ubuntu/macOS의 실제 설치·USB upload·serial·debug·수명주기는
+자동 검사·사용자 절차가 남아 있다. **현재 HOST-W04 이후는 사용자 지시로 보류 중**이다.
+Ubuntu/macOS의 실제 설치·USB upload·serial·debug·수명주기는
 사용자가 최종 릴리스 단계에서 검증한다. 중간 개발/HOST-W07을 해당 PC 연결 대기로 차단하지 않으며,
-정식 지원의 최종 실물 gate는 유지한다. 다음 Host 작업은 [M31 TODO](../TODO_M31.md)의
+정식 지원의 최종 실물 gate는 유지한다. Host 재개 후에는 [M31 TODO](../TODO_M31.md)의
 HOST-W04~HOST-W06 실행 순서를 따른다. 이번 문서·인계 작업의 CI/CD 생략은
 [CI/CD 계약의 현행 예외](08_M12_CI_CD와_재현_빌드.md)를 따른다.
 
@@ -400,13 +401,15 @@ Get-Command cmake.exe, ninja.exe | Select-Object Source
 성공 표식은 `M23_INVENTORY_PASS=instances:75`다. Manifest를 의도적으로 바꾼 경우에만 먼저
 `--write`로 C++ table과 Markdown matrix를 다시 생성하고, 생성 diff를 함께 검토한다.
 
-Source 전체 Arduino compile은 고정 Nordic 설치가 끝난 뒤 다음처럼 격리된 임시 Arduino
+대표 Arduino compile은 고정 Nordic 설치가 끝난 뒤 다음처럼 격리된 임시 Arduino
 hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸리며 실제 build를 수행한다.
+아래 명령은 모든 개발 예제·모든 역할의 전수 compile이 아니다. 특히 W03 LE Audio의 전체
+설치본·실기 결과는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)을 따른다.
 
 ```powershell
 & $Python .\tests\arduino-cli\run_smoke.py `
   --cli $ArduinoCli `
-  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 m28 m29 m30 ac02b ac03 examples
+  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 m28 m29 m30 m31 ac02b ac03 examples
 ```
 
 릴리스에서 도입한 기능군별로 원인을 빠르게 나누려면 `--tests` 대신 `--group`을 쓴다.
@@ -435,6 +438,8 @@ Evidence 경로는 실행 전에 없어야 한다.
 M28 예제 11개는 `--tests m28`로 따로 실행한다. `m30secure` 단독 또는 이를 포함하는 v0.5.0 group은
 `NUCODE_DFU_SIGNING_KEY`로 저장소 밖 signing key 파일을 지정해야 한다. 위 개별 `--tests` 명령에는
 키를 요구하는 `m30secure`를 포함하지 않았으므로 secure profile 검증 완료로 해석하지 않는다.
+현재 `v0.5.0` group에는 `m31`도 추가되어 ISO 11예제와 LC3 loopback·CTE beacon을 검사한다.
+위 2026-09-15 snapshot의 build 조건 수를 현재 runner의 전체 수로 사용하지 않는다.
 
 Windows의 Zephyr build는 Nordic Toolchain Python으로 직접 runner를 시작한다. 현재 Twister
 outdir는 전체 절대경로가 4자 이하여야 하므로 `C:\z`처럼 사용하지 않는 짧은 경로를 선택한다.

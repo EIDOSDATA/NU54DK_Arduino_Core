@@ -1,5 +1,9 @@
 # Secure BLE DFU 예제
 
+이 예제는 개발 소스 `0.4.1-dev`의 secure BLE DFU 검증 범위다. 현재 설치·지원 package는 `v0.4.1`이며
+이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다. Build 성공과 인증 BLE DFU·rollback의
+실제 보드 판정은 서로 구분한다.
+
 `SecureDfuPeripheral`은 `secure_ble_dfu` Arduino board profile에서 빌드한다. 이 profile은
 MCUboot sysbuild, ECDSA P-256 image 서명, MCUmgr SMP over BLE, 인증된 GATT 접근을 함께
 선택한다. 빌드에는 외부 signing key 경로인 `NUCODE_DFU_SIGNING_KEY`가 필요하다. private key

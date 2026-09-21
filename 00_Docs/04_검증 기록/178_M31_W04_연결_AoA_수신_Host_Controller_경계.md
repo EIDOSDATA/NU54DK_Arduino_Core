@@ -1,6 +1,6 @@
 # M31-W04 연결 AoA 수신의 Host·controller 경계
 
-고정 NCS v3.4.0의 Zephyr LL로 [저장소 소유 진단 앱](../../../tests/zephyr/m31_df_connected_receiver/README.md)을
+고정 NCS v3.4.0의 Zephyr LL로 [저장소 소유 진단 앱](../../tests/zephyr/m31_df_connected_receiver/README.md)을
 `8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb`에서 clean build했다.
 NU54DK 두 대의 CMSIS-DAP V2 SHA-256 역할 매핑과 DP/AP register identity를 확인하고
 sector flash·hardware reset만 실행했다. 수신 앱은 FLASH 125920 B, RAM 29712 B였으며

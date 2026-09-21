@@ -11,12 +11,12 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 4.1 |
-| 문서 상태 | 고정 source 비교, M23~M30 완료와 M31~M33 계획 |
+| 문서 개정 | 4.2 |
+| 문서 상태 | 고정 source 비교, M23~M30 완료·M31 3/8과 M32~M33 계획 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.4.1` stable / release source `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-16 |
+| 최종 갱신일 | 2026-09-21 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을
@@ -39,7 +39,8 @@ Ubuntu/macOS 실제 설치·USB upload·serial·debug는 사용자가 최종 릴
 기다리지 않으며 M33의 최종 세 Host 증거 gate는 유지한다.
 
 M28은 **W01~W08·9개 test ID**, M29와 M30은 각각 **W01~W08·10개 test ID를 완료**했다.
-M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31~M33은 **계획·구현 미착수**다. M28~M30의 기능 지원성·
+M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31은 **W01~W03 완료 3/8**,
+W04·W05 진행 중·미완료, W06~W08 미착수다. M32·M33은 각각 0/12·0/8로 미착수다. M28~M30의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 준비 문서를 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
@@ -467,23 +468,25 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M31 — ISO·LE Audio·Direction Finding·Channel Sounding
 
-M31-W01~W08 **8개 작업**은 [M31 TODO](../TODO_M31.md)에서 관리한다. W01에서 고정 NCS의
-Bluetooth sample/test ID 전체를 수집하는 parity 원장과 capability parser·target을 구현한다.
-HOST-W04~HOST-W06은 별도 트랙으로 병행하며 실제 Host 지원의 최종 수락은 M33이 소유한다.
+M31-W01~W08 **8개 작업**은 [M31 TODO](../TODO_M31.md)에서 관리한다. W01의 고정 NCS
+parity 원장·capability, W02 설치본 ISO 11예제·11역할과 W03 Audio 11/11을 완료했다.
+근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
+[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다.
+HOST는 독립 3/8 완료이며 W04 이후는 사용자 지시로 보류한다. 최종 Host 수락은 M33이 소유한다.
 Ubuntu/macOS 실제 Host 운용은 사용자 최종 릴리스 검증이며 M31 완료를 위한 중간 대기가 아니다.
 
 | 하위 gate | 계획 범위 | 선행 결정·완료 증거 |
 | --- | --- | --- |
 | M31-A ISO·LE Audio | CIS/CIG·BIS/BIG·combined/time sync, LC3, BAP/CAP, PACS/ASCS, BASS assistant/delegator, CSIP, PBP, VCP/VOCS/AICS, MICP, MCP/MCS, CCP/TBS, TMAP/GMAP/HAP/HAS | 역할별 source/build 적용성, 고정 buffer·stream 예산, 합성 PCM·SDU 실제 전송·codec·제어·오류 복구, 역할별 Arduino 예제 |
-| M31-B Direction Finding | AoA CTE advertising/response TX, Zephyr LL raw IQ RX 후보, AoD·antenna switching 판정 | W01 controller/board 조사·build 후 W04 가능한 2보드 TX/raw IQ RX HIL; SDC TX-only·AoD unsupported와 RX build/runtime 미확인 구분, 배열을 raw IQ의 필수 장비로 삼지 않음 |
+| M31-B Direction Finding | AoA CTE advertising/response TX, Zephyr LL raw IQ RX 후보, AoD·antenna switching 판정 | CTE TX 부분 실기·RX target/HCI 확인, 실제 IQ 수신 실패·미완료. SDC TX-only·AoD unsupported와 RX 후보 구분; 배열을 raw IQ 필수 장비로 삼지 않음 |
 | M31-C connected Channel Sounding | DF와 별도 A1_B1의 두 역할, 보안 ACL initiator/reflector, capability·procedure·RAS, raw 결과·거리 산출 | 기본 2보드 자동 HIL의 실제 procedure·결과·peer loss/reconnect·security negative, 정밀 거리 정확도 보증 제외 |
 
 기본 NCS SDC의 CTE Advertising/Response는 **AoA용 CTE 송신을 지원하지만 AoD는 지원하지 않는다**.
 SDC의 해당 경로를 AoA 각도 산출이나 IQ 수신 전체 지원으로 해석하지 않는다. nRF54L DTS의 DFE 존재와
 controller 지원은 별개이므로, 칩에 방향탐지 hardware가 없다고 단정하지도 않는다.
 M31-B는 SDC의 실제 지원 범위와 고정 Zephyr LL source candidate의 RX·IQ 경로를 먼저 판정한다.
-nRF54L15의 실제 RX build/runtime은 미확인이므로 W01 조사·build와 W04의 가능한 2보드 raw IQ
-수신을 수행한다. Raw IQ 수집 자체에는 안테나 배열을 일괄 필수로 요구하지 않는다. 안테나 전환·
+NU54DK RX target build·HCI query는 확인했지만 실제 IQ report 수신은 실패·미완료다. W04는
+Host/controller 경계와 수신 실패를 진단한다. Raw IQ 수집에는 안테나 배열을 일괄 필수로 요구하지 않는다. 안테나 전환·
 각도 산출·정밀 교정은 별도 사용자 외장 후속이며, 이 절차가 기본 controller/SDK의 자동 교체를 뜻하지 않는다.
 별도 후보 profile는 자원 충돌·callback/buffer·회귀 계약을 확정한 뒤 검증한다.
 
@@ -542,7 +545,7 @@ Mesh DFU의 최소 layout·transfer·서명·복구는 M32 범위다. 저장소 
 [v0.5.0 다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
 M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
-M30-W08 실제 전원 차단은 12/12를 통과했다. M31~M33은 계획이다. M28 결과와
+M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 3/8 완료·전체 미완료이고 M32·M33은 계획이다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은

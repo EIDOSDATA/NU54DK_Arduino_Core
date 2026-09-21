@@ -1,6 +1,6 @@
 # CI/CD와 재현 빌드 — v0.4.1 지원과 개발 main 회귀
 
-2026-09-16 이번 문서·다른 PC 인계 작업은 사용자 지시에 따라 **로컬 검증·커밋·푸시까지만 수행하고
+2026-09-21 문서·이력 정리 작업도 사용자 지시에 따라 **로컬 검증·커밋·푸시까지만 수행하고
 CI/CD 실행 요청·상태 조회·완료 대기를 생략한다.** 아래 내용은 기존 workflow의 설계·운영 계약이며,
 이번 생략으로 workflow·trigger·검사 범위를 변경하거나 미확인 CI를 PASS로 기록하지 않는다.
 
@@ -21,6 +21,8 @@ Apple Silicon macOS package/build matrix를 준비하고 M32에서는 Host 도�
 절차와 Windows 회귀를 준비·수행한다. Ubuntu/macOS 설치·USB upload·serial·debug·수명주기 실기는
 사용자가 M33 최종 릴리스 단계에서 검증한다. 중간 개발/HOST-W07에서 PC 연결을 요구하며 중단하지
 않고, 해당 OS 정식 지원의 최종 실물 gate는 유지한다.
+다만 현재 Host 구현은 W01~W03 완료(3/8)에서 사용자 지시로 보류했다. 위 단계는 재개 후의
+검증 계약이며 새 Host 작업·CI 실행·상태 조회를 허가하는 지시가 아니다.
 
 ---
 
@@ -92,9 +94,11 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 | `v0.2.0` | 10 | M14 Core/variant, M15 Board/System, M16 BLE NUS, M17 direct sensor |
 | `v0.3.0` | 19 | M19 GAP, M20 GATT, M21 Security, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
 | `v0.4.0` | 35 | R01 구성, pair/T13 HIL build, M23 inventory, M24 Serial, M25 Analog/Event/Stream, M26 System, T16 Fabric profile |
-| `v0.5.0` | 61 | M28·M29 36개와 M30 capability·pairing·OOB·bond·profile·MCUboot·DFU·power·multi-link 25개 |
+| `v0.5.0` | 77 | M28·M29 36개, M30 25개, M31 capability·DF IQ 후보·ISO 역할 16개 |
 
-2026-09-15 검토한 `8c311d9a…`의 `tools/ci/run_zephyr_build.py` 기준 129개 시나리오가 위 다섯 그룹에 속한다.
+2026-09-21 검토한 `tools/ci/run_zephyr_build.py` 기준 145개 시나리오가 위 다섯 그룹에 속한다.
+2026-09-15 `8c311d9a…` snapshot의 129개에서 M31 16개가 추가됐다. 이는 runner에 등록된 build
+시나리오 수이며 현재 source에서 전체 build·HIL 또는 CI를 다시 실행했다는 의미가 아니다.
 증감 시에는 이 표가 아니라 runner의 `SUITE_GROUPS`를 실행 목록의 원본으로 사용한다. Matrix의
 `fail-fast: false` 때문에 한 그룹이 실패해도 나머지 그룹은 끝까지 실행되어 영향 범위를 한 번에
 알 수 있다. 각 `twister.json`과 `m12-build-evidence.json`은 group 이름, 실제 시나리오와 내부
@@ -117,13 +121,15 @@ Arduino runtime 정식 지원을 뜻하지 않는다.
 | `v0.2.0` | `m15`, `m16` | Board/System과 BLE NUS 예제 회귀 |
 | `v0.3.0-ble` | `m19m20`, `m21` | GAP/GATT와 BLE security/profile 회귀 |
 | `v0.3.0-compat` | `ac02b`, `ac03`, `examples` | Peripheral/analog, storage와 catalog 회귀 |
-| `v0.5.0` | `m29`, `m30`, `m30secure` | M29 예제 15개, M30 profile 예제 4개와 기존 HeartRate의 secure DFU 조건: 총 20 build 조건 |
+| `v0.5.0` | `m29`, `m30`, `m30secure`, `m31` | M29·M30과 M31의 설치 source smoke; 정확한 build 조건은 각 runner 함수가 소유 |
 
 `v0.3.0-ble`와 `v0.3.0-compat`는 하나의 `v0.3.0` 릴리스 도입 범위를 wall time 때문에 둘로
 나눈 하위 job이다. `run_smoke.py --group v0.3.0`은 두 하위 범위를 합쳐 로컬에서 한 번에 실행한다.
 
-M28 예제 11개는 `run_smoke.py --tests m28`로 별도 실행한다. 위 snapshot의 `v0.5.0` Arduino matrix
-group은 `m29`, `m30`, `m30secure`를 선택하므로 M28 예제 compile까지 포함한다고 해석하지 않는다.
+M28 예제 11개는 `run_smoke.py --tests m28`로 별도 실행한다. 현재 `v0.5.0` Arduino matrix
+group에도 M28 예제 compile이 포함된다고 해석하지 않는다. `m31`은 ISO 11예제,
+`Lc3SyntheticLoopback`, `CteBeacon`을 검사하며 W03 LE Audio 전체 역할의 완료 검증을 대체하지 않는다.
+W03 전체 설치본·실기 증거는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)을 따른다.
 `m30secure`는 저장소 밖 signing key를 명시해야 한다. 소스 트리의 예제 수, profile을 바꾼 build
 조건 수와 정식 v0.4.1의 30개 설치 목록은 구분한다.
 
@@ -287,7 +293,7 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 새 OS 행은 먼저 `candidate`로 추가한다. 정적 job만 통과해 `supported`로 바꾸지 않고 실제 Host의
 clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu/macOS의 해당 실물 증거는
 사용자가 최종 릴리스 단계에서 제공하며, 그 전의 `NOT_RUN`은 중간 개발 차단이 아니라 최종 OS 지원
-gate 미완료를 뜻한다. Windows 자동 회귀와 나머지 구현·package 준비는 계속 진행한다.
+gate 미완료를 뜻한다. Windows 자동 회귀와 나머지 구현·package 준비는 Host 작업 재개 뒤 진행한다.
 
 ---
 

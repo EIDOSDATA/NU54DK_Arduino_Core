@@ -37,10 +37,13 @@ readiness/HIL/public 지원 수준을 올리지 않는다.
 
 후속 BLE 작업은 별도 [M28 readiness](../../variants/nu54dk/m28-ble-readiness.json),
 [M29 readiness](../../variants/nu54dk/m29-ble-readiness.json),
-[M30 readiness](../../variants/nu54dk/m30-ble-readiness.json)에서 작업 묶음·test ID·실행 증거를
-관리한다. 다중 Host의 범위·단계는
+[M30 readiness](../../variants/nu54dk/m30-ble-readiness.json),
+[M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)에서 작업 묶음·test ID·실행 증거를
+관리한다. 현재 M31은 W01~W03 완료(3/8), W04·W05 미완료이며 문서나 생성기 실행만으로 상태를
+승격하지 않는다. 다중 Host의 범위·단계는
 [Host 계약](<../../00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
-M27 PASS는 후속 BLE·Host 시험을 대신하지 않으며, 현재 진행률은
+HOST-W04~HOST-W08은 사용자 보류 상태이며 구현 착수로 간주하지 않는다. M27 PASS는 후속 BLE·Host
+시험을 대신하지 않으며, 현재 진행률은
 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 따른다.
 
 [개선 마일스톤](<../../00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의

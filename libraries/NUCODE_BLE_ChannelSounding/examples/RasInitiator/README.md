@@ -1,5 +1,9 @@
 # Ranging Service initiator
 
+이 예제는 개발 소스 `0.4.1-dev`의 Channel Sounding 범위이며 전체 검증은 아직 완료되지 않았다. 현재
+설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다.
+아래 출력은 구현된 비보정 RTT 경로의 의미이며 전체 기능 완료나 거리 정확도 보증이 아니다.
+
 이 스케치는 Ranging Service UUID를 광고하는 reflector를 검색해 연결합니다. 공개
 `RasInitiator` API가 L2 보안, Ranging Service 탐색, CS capability·config·보안
 절차를 진행합니다. 준비가 되면 CS 절차를 시작하고 같은 counter의 로컬·상대

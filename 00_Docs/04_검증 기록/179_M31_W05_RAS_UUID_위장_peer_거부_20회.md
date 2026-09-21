@@ -2,7 +2,7 @@
 
 공개 Arduino `RasInitiator`가 Ranging Service UUID `0x185B`를 광고하지만
 실제 GATT Ranging Service가 없는 peer를 거부하는지 시험했다. 시험 peer는
-[저장소 내부 fixture](../../../tests/hil/nu54dk/fixtures/RasMissingService/RasMissingService.ino)이며
+[저장소 내부 fixture](../../tests/hil/nu54dk/fixtures/RasMissingService/RasMissingService.ino)이며
 정상 `RasReflector`는 이번 시험에 참여하지 않았다. CMSIS-DAP V2 SHA-256
 역할 매핑과 DP/AP register identity를 재확인하고 sector flash·hardware reset만
 사용했다. 원본 probe UID와 Bluetooth 주소는 증거에 남기지 않았다.

@@ -1,7 +1,10 @@
 # 연결 기반 CTE 수신 진단
 
 이 앱은 M31-W04의 **내부 Zephyr 진단용**이다. 공개 Arduino 예제가 아니다.
-`ConnectedCteResponder` 예제가 올라간 두 번째 NU54DK에 연결한 뒤,
+W04는 아직 완료되지 않았으며 이 앱의 build나 HCI 명령 수락만으로 완료 처리하지 않는다.
+공개 [`ConnectedCteResponder.ino`](../../../libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/ConnectedCteResponder.ino)와
+그 backend [`NUCODE_BLE_DirectionFinding_Connected.cpp`](../../../libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding_Connected.cpp)가
+올라간 두 번째 NU54DK에 연결한 뒤,
 고정 NCS v3.4.0 Zephyr Host의 `bt_df_conn_cte_rx_enable()` 결과를 기록한다.
 Host가 거부하면 같은 연결에서 controller HCI의 수신 파라미터와 CTE 요청
 명령 수락 여부를 따로 기록한다. 원시 HCI 명령이 성공해도 Host의 연결 상태

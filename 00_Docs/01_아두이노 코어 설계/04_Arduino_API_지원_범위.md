@@ -5,9 +5,9 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 6.5 |
+| 문서 개정 | 6.6 |
 | 대상 | 지원 stable `v0.4.1` (v0.4.0 기능 기준선 유지) |
-| 최종 갱신일 | 2026-09-15 |
+| 최종 갱신일 | 2026-09-21 |
 | 상태 | **v0.4.1 단독 설치·지원** |
 
 ## 판정 기준
@@ -20,6 +20,8 @@ BLE 확장은 아래 정식 설치본 지원표에 소급하지 않습니다. �
 [M28 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md)과
 [M29 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md),
 [M30 계약](17_M30_BLE_Security_Profile_DFU_착수_계약.md)에서 별도로 확인합니다.
+M31은 W01~W03 3/8을 완료했으며 ISO·LE Audio의 개발 완료도 아래 stable 지원표에 소급하지
+않습니다. DF·CS의 미완료 범위와 이후 작업은 [M31 TODO](../TODO_M31.md)를 따릅니다.
 
 | 상태 | 의미 |
 | --- | --- |
@@ -230,6 +232,9 @@ GPIO, Serial, Wire, SPI와 Analog backend의 `invalid_context`, `invalid_argumen
 Full Zephyr 구조이므로 expert Sketch가 공개 Zephyr/NCS API를 직접 사용할 수 있지만 portable
 Arduino 계약은 아닙니다. 외부 sensor library compile, crypto sample build와
 802.15.4/OpenThread/Matter feasibility 결과도 runtime 지원으로 확대하지 않습니다.
+공개 배포 `.ino`는 사용자가 읽고 수정할 수 있는 C++/NUCODE API 흐름을 제공하며, Zephyr 직접
+호출과 개발 마일스톤 표시는 내부 구현·시험에 둡니다. 전문가 override의 존재와 공개 예제의
+작성 규칙은 별개입니다.
 
 ## 명시적 미지원 범위
 

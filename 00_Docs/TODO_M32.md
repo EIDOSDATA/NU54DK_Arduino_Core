@@ -5,17 +5,18 @@
 | 대상 제품선 | `v0.5.0` |
 | 현재 구현 상태 | **계획 — 0/12 작업 묶음** |
 | 하위 gate | M32-A Controller/Host·Nordic 확장, M32-B Mesh, M32-C 최소 radio·공존 |
-| 선행·병행 | M31의 controller/resource 계약 인계, HOST-W07 자동 검사·최종 사용자 검증 절차 준비 독립 병행 |
+| 선행·병행 계획 | M31의 controller/resource 계약 인계; HOST-W07은 Host 트랙 재개 후 독립 진행 |
 | 고정 기준 | NCS `v3.4.0`, [CI lock](../tools/ci/ncs-3.4.0.lock.json)의 Zephyr·toolchain revision |
 | 사용자 장비 조건 | NU54DK 3개 연결, 외부 RF·audio 계측 장비 없음; 실행 직전 실제 mapping 재확인 |
-| 최종 갱신일 | 2026-09-16 |
+| 최종 갱신일 | 2026-09-21 |
 
 기능·upstream 예제·제공 방식의 상세 원본은
 [NCS Bluetooth 전체 기능과 예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)이다.
 이 문서는 그 범위를 구현 순서·체크리스트·예정 시험 ID에 배정한다. 전체 순서는
 [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>), 제품선 상태는
 [v0.5.0 TODO](TODO_v0.5.0.md), 앞뒤 인계는 [M31 TODO](TODO_M31.md)와 [M33 TODO](TODO_M33.md)를 따른다.
-문서 작성은 구현·build·HIL 완료 수에 포함하지 않는다.
+문서 작성은 구현·build·HIL 완료 수에 포함하지 않는다. 현재 M31은 W01~W03 완료 3/8이고,
+M32는 미착수다. Host W04 이후는 사용자 지시로 보류했으며 아래 병행 계획은 재개 이후에 적용한다.
 
 ## 1. 착수 경계
 
@@ -63,7 +64,7 @@ HOST-W07의 자동 검사·최종 인계 절차는 준비하되 Ubuntu/macOS PC�
 
 ### M32-W01 — Capability와 실행 계약
 
-- [ ] M31-W01에서 만드는 `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`의 M32 소유 행을
+- [ ] M31-W01에서 확정한 `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`의 M32 소유 행을
   고정 SDK와 다시 대조한다. 공식 nRF54L15 target·일반 Host sample·미적용 sample을 모두 추적한다.
 - [ ] `variants/nu54dk/m32-ble-readiness.json`과 M32 착수 계약을 구현한다. 기능별 controller/Host
   Kconfig·API·upstream sample·Arduino 제공 경로·resource profile·예정 test ID를 연결한다.
