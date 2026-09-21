@@ -29,6 +29,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [221 — main 마일스톤별 이력 정리](221_main_마일스톤별_이력_정리.md) | 공개 v0.4.1 마감 뒤 189커밋→7묶음, 원격 archive 원본 보존·tree 동일성·새 checkout 인계 |
 | [220 — M31 릴리스 전환·문서 정비](220_M31_릴리스_전환과_문서_전수_정비.md) | v0.5.0 Windows·M31 공개 준비, 최적화 우선·main/M31-MEM-OPT 인계, 기존 W04 raw IQ 실패 원본 보존 |
 | [219 — M31-W06 메모리 감사·최적화 계약](219_M31_W06_메모리_점유_감사와_최적화_계약.md) | Audio·CS·DF 정적 RAM 원인, lean fragment·pool·회귀 gate. 최신 순서는 메모리 최적화→W04/W05→W06 |
 | [218 — W05 flash 직후 복구 재검증](218_M31_W05_flash_직후_RAS_복구_재검증.md) | 두 exact attempt의 raw RAS·stop/restart·disconnect/reconnect PASS, 과거 간헐 중단 원인 확정 아님 |

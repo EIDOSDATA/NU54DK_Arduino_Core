@@ -4,8 +4,16 @@
 2026-09-21 사용자 결정으로 **M31 완료 후 v0.5.0 Windows 릴리스**를 준비합니다.
 M32/M33과 Ubuntu/macOS 지원은 후속 버전(미정)이며 HOST-W04~W08은 계속 보류합니다.
 
-이번 요청의 종료점은 문서 정비 → 기존 개발 이력을 보존한 main 반영 → **M31-MEM-OPT**
-생성·푸시입니다. 최적화·새 build/HIL·Host 구현·tag/Release 공개는 이번 작업에 포함하지 않습니다.
+문서 정비 후 별도 사용자 요청으로 **main의 미공개 개발 이력을 마일스톤별로 정리**했습니다.
+현재 재개 기준은 `main`입니다. 다음 개발 브랜치 이름은 **`M31-MEM-OPT`**이며, 이번 이력 정리
+직전에는 로컬·원격 모두 존재하지 않아 재생성하거나 다른 브랜치를 삭제하지 않았습니다.
+최적화·새 build/HIL·Host 구현·Release 공개는 수행하지 않았습니다.
+
+후속 설명 통합 요청은 [메모리 최적화 통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)로
+문서화했습니다. 링크 GC만으로 모든 자원을 제거한다는 해석, local static의 lazy allocation 표현과
+확정 절감량 주장을 정정했습니다. 이번 후속 개정은 문서만이며 구현·브랜치 생성은 하지 않습니다.
+최신 목표는 **동등 기능 nRF native + 우리 API의 최소 필수 비용**입니다. 선언 기반 최적화를
+차기 기본 경로로 만들고 full은 명시적 호환 선택지로 보존합니다. 실제 기본값 변경은 아직 하지 않았습니다.
 
 ## 1. 현재 상태
 
@@ -32,7 +40,10 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
 | --- | --- |
 | 이번 문서 정비 전 main | `8b20157d33f1d216620726d92d88f65c25491b4d` |
 | 문서 정비 전 개발 HEAD | `51bfa1686c1a67b6d9f8f4e79c2623854b73dc11` (`m31-w04-dev`) |
-| 다음 개발 브랜치 | **`M31-MEM-OPT`**, 문서 정비를 반영한 main에서 분기 |
+| 이력 정리 전 main | `4dce513ee135512f66a36e936fde1baca2017115` |
+| 7개 묶음으로 정리한 기준 | `ab0a54c536de560648b34dd7ec647ad6b774d149`와 그 뒤 이력 인계 문서 커밋; 현재 `origin/main` 확인 |
+| 전체 원본 보존 태그 | `archive/main-before-milestone-squash-4dce513e` |
+| 다음 개발 브랜치 | **`M31-MEM-OPT`**, 후속 작업에서 이력 정리된 main 기준으로 분기 |
 | 최근 W04 raw IQ source | `22ff349c5996f8bb7b140fb427b744ecafe3d01c` |
 | Target | nRF54L15 CPUAPP / `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | NCS | v3.4.0 / `99553055607b2e9885fbc80ccd11fa9da81c2df0` |
@@ -45,17 +56,22 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
 | Squash 전 원본 | `dac8ea8a85b8d2e1a84aa4299529a37e10f6c0f7` |
 | 보존 태그 | `archive/m31-w03-before-squash-dac8ea8a` |
 
-이번에는 이력을 다시 squash하지 않습니다. 과거 source/image SHA도 바꾸지 않습니다.
+2026-09-21 후속 요청으로 공개 v0.4.1 마감 이후 189개 커밋을 7개 의미 단위로 정리하고
+인계 기록을 별도 커밋했습니다. 기존 W03 squash 단위는 다른 내용과 합치지 않았지만
+부모 이력 변경으로 새 SHA `96be7f3a0fecd0546b65794ddbe0c7448c58a5d5`를 갖습니다.
+기존 SHA와 과거 source/image 증거는 원본 태그에서 그대로 조회합니다.
 [215번](<04_검증 기록/215_M31_W03_이력과_문서_정비.md>)은 이전 이력 정리의 실행 기록이며,
 [200번](<04_검증 기록/200_M31_다른_PC_작업_인계.md>)의 branch·COM mapping은 당시 snapshot입니다.
-이번 변경 범위와 문서 감사는 [220번](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>)을 따릅니다.
+이전 릴리스 방향·문서 감사는 [220번](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>),
+최신 이력 정리와 old/new 대응은 [221번](<04_검증 기록/221_main_마일스톤별_이력_정리.md>)을 따릅니다.
 
 ## 3. 다음 구현 순서
 
 1. **메모리 최적화부터** 진행합니다. full profile의 API·capacity를 보존하고 lean role의
    미사용 feature/source를 제거한 뒤 GATT·pin/route pool을 right-size합니다. final
    `.config`·ELF/map·절대 byte·headroom을 비교하고 stack/heap은 high-water 측정 뒤 조정합니다.
-   [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 P0~P2·회귀 gate가 기준입니다.
+   [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 측정·회귀 gate와
+   [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 기능 선택·정정·구현 체크리스트가 기준입니다.
 2. 최적화 image에서 **W04·W05 잔여와 변경 영향**을 닫습니다. 독립 코드·분석은 병행하되
    같은 probe나 보드를 동시에 점유하지 않습니다. 현재 실패/성공 원본을 보존합니다.
 3. **W06**은 독립 role image별 RAM/RRAM·stack·buffer와 STOP/disconnect/restart 수명주기,
@@ -90,8 +106,10 @@ negative가 최소 범위이며, 서로 다른 LTK 직접 주입 시험으로 �
 ## 4. 다른 PC에서 재개하기
 
 1. 실제 저장소의 [AGENTS.md](../AGENTS.md)를 읽고 branch·HEAD·미커밋 변경을 확인합니다.
-   `git fetch origin` 후 `M31-MEM-OPT`와 `origin/M31-MEM-OPT`를 대조합니다.
-   clean/non-diverged 상태에서만 fast-forward하며 다른 사람의 변경을 덮어쓰지 않습니다.
+   `git fetch origin --tags` 후 현재 `origin/main`과 원본 보존 태그를 대조합니다.
+   이번 main은 비-fast-forward로 재작성됐으므로 이전 checkout을 무작정 pull/merge하지 않습니다.
+   로컬 변경·독자 커밋을 먼저 보존하고 새 main 기준 checkout에서 후속 브랜치를 만듭니다.
+   Dirty/diverged 상태를 reset으로 덮어쓰거나 오래된 이력을 main에 다시 merge하지 않습니다.
 2. 위 SDK lock hash·NCS/Zephyr/toolchain·board gitlink를 직접 대조합니다. 현재 장치나
    임시 HEX가 이전 PC와 같다고 가정하지 않습니다.
 3. 보드 시험 직전 exact probe UID의 SHA-256 identity·COM·role·image hash를 다시 결합합니다.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "review_date": "2026-09-21",
-  "purpose": "사용자 결정에 따른 M31 완료 후 v0.5.0 Windows 릴리스 방향 문서 전수 검토·main fast-forward 반영·M31-MEM-OPT 생성. 최적화 구현·실기·Host 작업·release 공개는 이번 범위가 아니다.",
+  "purpose": "기존 릴리스·이력 감사는 보존하고 두 메모리 최적화 설명을 현재 소스와 대조해 통합 설계로 정정한다. 최신 사용자 목표는 동등 기능 nRF native + 공개 API의 최소 필수 비용인 선언 기반 기본 경로다. 문서 6개 수정·설계 1개 추가의 범위 감사이며 구현·브랜치 생성·HIL·공개 작업은 아니다.",
   "previous_review": {
     "commit": "8b20157d33f1d216620726d92d88f65c25491b4d",
     "path": "00_Docs/document-review.json",
@@ -10,27 +10,38 @@
     "note": "이전 감사·검사 결과는 해당 commit의 원본으로 보존하며 이번 실행 결과로 재사용하지 않는다."
   },
   "history": {
-    "main_before": "8b20157d33f1d216620726d92d88f65c25491b4d",
-    "development_before": "51bfa1686c1a67b6d9f8f4e79c2623854b73dc11",
-    "integration": "existing 16 development commits plus a separate documentation commit; fast-forward, no history rewrite",
-    "next_branch": "M31-MEM-OPT",
-    "preservation_tag": "archive/m31-w03-before-squash-dac8ea8a",
-    "preserved_original": "dac8ea8a85b8d2e1a84aa4299529a37e10f6c0f7",
-    "existing_squash_commit": "d18309a1a9c64cbb4941efefb7189c8d99fcedf6",
-    "squash_repeated": false
+    "main_before": "4dce513ee135512f66a36e936fde1baca2017115",
+    "preserved_cutoff": "1e0bf4a636e1799b890b51ea7da00bca31e48b03",
+    "archive_tag": "archive/main-before-milestone-squash-4dce513e",
+    "archive_pushed_before_main_rewrite": true,
+    "squash_tip": "ab0a54c536de560648b34dd7ec647ad6b774d149",
+    "old_and_new_tree": "bb0dc9a100874e75c823603dabc90a23ea42d254",
+    "original_development_commits": 189,
+    "replacement_commits": 7,
+    "original_main_commits": 332,
+    "squashed_main_commits": 150,
+    "main_commits_with_handoff": 151,
+    "mapping": "00_Docs/04_검증 기록/evidence/main-history-squash-20260921/history-map.json",
+    "public_release_refs": "unchanged",
+    "original_m31_w03": "unit/tree preserved; original d18309a1 retained through archive; rewritten-parent SHA 96be7f3a0fecd0546b65794ddbe0c7448c58a5d5",
+    "remote_main_update_policy": "force-with-lease only, expecting 4dce513ee135512f66a36e936fde1baca2017115",
+    "current_branch": "main",
+    "memory_branch": "M31-MEM-OPT absent at local/remote preflight; not recreated"
   },
   "scope": {
     "baseline_tracked_markdown": 373,
     "additional_board_submodule_markdown": 6,
-    "reviewed_documents": 380,
+    "reviewed_documents": 382,
     "updated_existing_documents": 35,
-    "added_markdown_documents": 1,
+    "added_markdown_documents": 3,
     "preserved_documents": 344,
     "deleted_documents": 0,
     "new_records": [
-      "00_Docs/04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md"
+      "00_Docs/04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md",
+      "00_Docs/04_검증 기록/221_main_마일스톤별_이력_정리.md",
+      "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md"
     ],
-    "review_method": "전체 Markdown inventory·현행/역사/외부 원본 분류, release/Host/milestone/branch/메모리 순서 관련 문구와 현행 계약 대조, 역할별 병렬 검토, 전체 UTF-8/local-link 및 정규화 hash 검사. 과거 raw evidence의 모든 시험을 재실행한 감사는 아니다.",
+    "review_method": "전체 Markdown inventory·현행/역사/외부 원본 분류, release/Host/milestone/branch/메모리 순서 관련 문구와 현행 계약 대조, 역할별 병렬 검토, 전체 UTF-8/local-link 및 정규화 hash 검사. 과거 raw evidence의 모든 시험을 재실행한 감사는 아니다. 후속 main 이력 정리는 이전 전수 감사 380개와 hash를 대조해 변경된 인계 4개 및 신규 221번을 검토한 추가 감사이며 381개 전체 기능을 다시 검증한 것이 아니다. 이번 메모리 설계 개정은 main 122fdec6의 381개 inventory 중 변경 6개와 신규 설계 1개를 검토하고 나머지 375개의 정규화 hash 보존을 대조한 범위 감사다. 최적화 구현이나 382개 전체의 기능 재검증이 아니다.",
     "hash_method": "UTF-8 본문, CRLF/CR -> LF 정규화, SHA-256. Markdown만 대상으로 하며 이 JSON 자체는 제외한다."
   },
   "release_plan": {
@@ -86,24 +97,59 @@
   },
   "checks": [
     {
-      "name": "local contract gate",
-      "command": "py -3 tools/ci/run_m12_gate.py contract",
-      "result": "PASS: 46 tests; exit 0"
+      "name": "Markdown UTF-8/local links",
+      "command": "py -3 tools/ci/run_m12_gate.py docs",
+      "result": "PASS: 376 main-repository Markdown files; exit 0"
     },
     {
-      "name": "local inventory and generated contracts",
-      "command": "py -3 tools/ci/run_m12_gate.py inventory",
-      "result": "PASS: 5 generated outputs/4 generators; product identity and M23/M24/M26/release contracts; publication_allowed=0; exit 0"
+      "name": "M31 readiness schema",
+      "command": "py -3 tools/bluetooth/m31_contract.py --check",
+      "result": "PASS: M31_CONTRACT_OK; exit 0; readiness unchanged"
     },
     {
       "name": "M31 readiness unit",
       "command": "py -3 tests/host/test_m31_readiness_contract.py -v",
-      "result": "PASS: 7 tests; exit 0"
+      "result": "PASS: 7 tests; exit 0; no physical verification"
     },
     {
-      "name": "M31 inventory unit",
-      "command": "py -3 tests/host/test_m31_inventory_contract.py -v",
-      "result": "PASS: 5 tests; exit 0"
+      "name": "audit integrity",
+      "command": "PowerShell UTF-8 LF-normalized SHA-256 comparison against the 381-document audit at main 122fdec6",
+      "result": "PASS: 6 existing Markdown files changed and 1 design added; other 375 unchanged, including all 6 board Markdown files"
+    },
+    {
+      "name": "whitespace and changed-file boundary",
+      "command": "git diff --check; git status --short",
+      "result": "PASS: documentation only; no code, SDK, board, readiness or raw evidence edits"
+    },
+    {
+      "name": "firmware build, physical HIL and full Host regression",
+      "result": "NOT RUN: documentation-only task; memory optimization not_started"
+    },
+    {
+      "name": "remote CI/CD",
+      "result": "NOT REQUESTED / NOT QUERIED / NOT WAITED: user instruction"
+    }
+  ],
+  "history_maintenance_checks": [
+    {
+      "name": "squash endpoint contents",
+      "command": "git rev-parse <old-tip>^{tree} <new-commit>^{tree>; git diff --quiet <old-tip> <new-commit>",
+      "result": "PASS: all 7 endpoint trees match exactly; final original/current tree bb0dc9a100874e75c823603dabc90a23ea42d254 before documentation handoff"
+    },
+    {
+      "name": "archive reachability and public refs",
+      "command": "git cat-file -e for original 189 commits; git merge-base --is-ancestor; git for-each-ref; git ls-remote archive tag",
+      "result": "PASS: original 189 commits accessible, cutoff remains ancestor, public and prior archive refs unchanged; new archive pushed before rewrite"
+    },
+    {
+      "name": "Git object connectivity",
+      "command": "git fsck --connectivity-only --no-dangling",
+      "result": "PASS: exit 0"
+    },
+    {
+      "name": "Markdown UTF-8/local links",
+      "command": "py -3 tools/ci/run_m12_gate.py docs",
+      "result": "PASS: 375 main-repository Markdown files; exit 0"
     },
     {
       "name": "M31 readiness schema",
@@ -111,53 +157,51 @@
       "result": "PASS: M31_CONTRACT_OK; exit 0"
     },
     {
-      "name": "public example boundary",
-      "command": "py -3 tools/ci/m31_example_audit.py",
-      "result": "PASS: 16 libraries, 113 examples, ISSUES=0; exit 0"
+      "name": "M31 readiness unit",
+      "command": "py -3 tests/host/test_m31_readiness_contract.py -v",
+      "result": "PASS: 7 tests; exit 0; no physical verification"
     },
     {
-      "name": "prior W05 diagnostic unit",
-      "command": "py -3 tests/host/test_m31_cs_stale_key.py -v",
-      "result": "PASS: 4 tests; exit 0; not physical HIL"
+      "name": "audit integrity",
+      "command": "PowerShell UTF-8 LF-normalized SHA-256 comparison against prior 380-document audit and current 381-document inventory",
+      "result": "PASS: exactly 4 prior Markdown files changed plus 1 new history record; other 376 unchanged, including board Markdown"
     },
     {
-      "name": "prior W04 diagnostic unit",
-      "command": "py -3 tests/host/test_m31_df_connected_rx.py -v",
-      "result": "PASS: 3 tests; exit 0; not physical HIL"
+      "name": "whitespace and changed-file boundary",
+      "command": "git diff --check; git diff --name-only <archive>",
+      "result": "PASS before staging: only history/handoff documentation and mapping; no runtime, SDK, board or old evidence edits"
     },
     {
-      "name": "Markdown UTF-8 and local links",
-      "command": "py -3 tools/ci/run_m12_gate.py docs",
-      "result": "PASS: 374 main-repository Markdown files; exit 0"
-    },
-    {
-      "name": "board submodule Markdown",
-      "command": "Reuse run_m12_gate.run_docs_gate with the six git-tracked board Markdown paths",
-      "result": "PASS: 6 files; exit 0; no board edits"
-    },
-    {
-      "name": "documentation audit integrity",
-      "command": "PowerShell UTF-8 LF-normalized SHA-256 inventory comparison and duplicate grouping",
-      "result": "PASS: all 380 document hashes match; 0 duplicate body groups; 35 updated, 1 added, 344 preserved, 0 deleted"
-    },
-    {
-      "name": "whitespace, Git and pin preservation",
-      "command": "git diff --check; git fetch origin; git merge-base --is-ancestor origin/main HEAD; git submodule status/status --porcelain; Get-FileHash SDK lock",
-      "result": "PASS: fetched main remains 8b20157d and is ancestor of development HEAD; board clean and pinned; SDK lock unchanged; preservation tag dereferences to original dac8ea8a"
-    },
-    {
-      "name": "firmware builds and physical HIL",
-      "result": "NOT RUN: documentation/branch task; existing failed W04 evidence preserved without rerun"
-    },
-    {
-      "name": "full host regression",
-      "result": "NOT RUN: targeted documentation, contract, inventory and diagnostic unit suites only"
+      "name": "firmware build, physical HIL and full Host regression",
+      "result": "NOT RUN: history and documentation maintenance only"
     },
     {
       "name": "remote CI/CD",
       "result": "NOT REQUESTED / NOT QUERIED / NOT WAITED: user instruction"
     }
   ],
+  "memory_design_maintenance": {
+    "baseline_commit": "122fdec6f0b3aeb2e114b558ddbd9370440984d8",
+    "baseline_documents": 381,
+    "changed_markdown": [
+      "00_Docs/01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md",
+      "00_Docs/04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md",
+      "00_Docs/HANDOFF.md",
+      "00_Docs/README.md",
+      "00_Docs/TODO_M31.md",
+      "00_Docs/TODO_v0.5.0.md"
+    ],
+    "added_markdown": "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
+    "unmodified_prior_markdown": 375,
+    "goal": "declaration-based optimized default; equivalent native workload plus minimum necessary public API overhead",
+    "compatibility": "preserve existing full behavior/capacity as an explicit compatibility choice; released v0.4.1 unchanged",
+    "automatic_selection": "design contract only; current builder does not infer every Core API usage",
+    "implementation_status": "not_started",
+    "branch_operations": "none",
+    "commit_and_push": "not performed in this documentation-only task",
+    "review_boundary": "targeted review of 6 changed Markdown files plus 1 new design; cumulative actions/counts from the earlier full audit are preserved",
+    "existing_measurements_and_hil": "unchanged; no new savings or physical PASS"
+  },
   "documents": [
     {
       "path": "00_Docs/00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md",
@@ -379,9 +423,17 @@
       "path": "00_Docs/01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "53403ff14a7cded15fce2b4be71bcd70c35c5fdd7b8357c6bc1f3b1b0f8d4d07"
+      "sha256_utf8_lf": "5bd8d7fd3f0d4bacc20eb7311c7f95b708f6577a7e7fb405001799098c58a2f5"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
+      "action": "added",
+      "classification": "신규",
+      "reason": "두 설명의 source/link/static/절감량 단정을 정정하고 사용자 선언 기반 native+API 목표, 기능 선택·정적 pool·계측·호환·검증 순서를 통합했다. 구현 완료 기록이 아니다.",
+      "external_read_only": false,
+      "sha256_utf8_lf": "1e6168623dac3c91fdec81959bd94925647ec002e7f9b9f67e2be18ef051377b"
     },
     {
       "path": "00_Docs/02_빌드 설계/01_West_Native_Blink_PoC.md",
@@ -1651,9 +1703,9 @@
       "path": "00_Docs/04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "메모리 최적화를 W04/W05 마감 전으로 이동하고 branch를 M31-MEM-OPT로 고정. 원래 수치는 보존하고 static/region 해석을 보강했다.",
+      "reason": "메모리 최적화를 W04/W05 마감 전으로 이동하고 branch를 M31-MEM-OPT로 고정. 원래 수치는 보존하고 static/region 해석을 보강했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "bb00da0738c3322b32c9eb1500782e58cfdad0150f942fa85f890d9615b3414d"
+      "sha256_utf8_lf": "57f01ab73dd1ab184229f636371fef740a7f073fbfa84e23a6db8cce2891f1dc"
     },
     {
       "path": "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md",
@@ -1670,6 +1722,14 @@
       "reason": "M31 Windows 릴리스 결정·문서 정비·main/다음 branch 인계와 기존 W04 실패 evidence 보존을 기록한다.",
       "external_read_only": false,
       "sha256_utf8_lf": "a92ef1f54ed89a034c0316afbb53df7469ee8723a339b6c0a7eaf734a36e71da"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/221_main_마일스톤별_이력_정리.md",
+      "sha256_utf8_lf": "2407d720cbd5439a1d2d005c0337fcd33faab98b2e48178cb11b942d9559ec46",
+      "action": "added",
+      "classification": "신규이력기록",
+      "reason": "별도 사용자 요청의 main 189커밋→7묶음 이력 정리·원본 보존·tree 동일성·새 checkout 인계를 기록한다.",
+      "external_read_only": false
     },
     {
       "path": "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md",
@@ -2299,9 +2359,9 @@
       "path": "00_Docs/04_검증 기록/README.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 이후 승인된 main squash의 원본 태그·새 이력·현재 main 재개 절차를 추가 대조했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "9063655c8d8074526b6a73082a68e5372423c6b30b439a418759d513b602cb2f"
+      "sha256_utf8_lf": "1a8d7dc4475f2578295a835346d095ce63f8204a5054cbd97fc3bf7ba0b4ad13"
     },
     {
       "path": "00_Docs/05_릴리스/README.md",
@@ -2827,25 +2887,25 @@
       "path": "00_Docs/HANDOFF.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 이후 승인된 main squash의 원본 태그·새 이력·현재 main 재개 절차를 추가 대조했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "1eefe9daee07f6509b6fcbe4a7474f793b46aae64f2d3b42a4e5d16f907b8b9e"
+      "sha256_utf8_lf": "fabfd610371ea2a60d57eb83b74db3a109c0a274d16b67b8590bf5ae53bdc4f8"
     },
     {
       "path": "00_Docs/README.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 이후 승인된 main squash의 원본 태그·새 이력·현재 main 재개 절차를 추가 대조했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "9b7f610e58b15dbea2c8b957bd1439e6634a6103b977519a7108e5f8c805ba17"
+      "sha256_utf8_lf": "4d2d4fe24a972871a1d0713b372ec4b17986cbbc205f417a7609409d0d7880d9"
     },
     {
       "path": "00_Docs/TODO_M31.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "076479a0d554a8fa47390478803996d92d0269f39bbccb5e804da795d2924119"
+      "sha256_utf8_lf": "3fa3c47b279e84a6272d1cd9042aa7b52fb1dde17dec71f5f9774367a48d34ee"
     },
     {
       "path": "00_Docs/TODO_M32.md",
@@ -2883,17 +2943,17 @@
       "path": "00_Docs/TODO_v0.5.0.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 후속 메모리 통합 설계의 선언 기반 native+API 목표·정정·문서-only 상태를 연결했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "11fc8bb9b2f4e0718dca928f80cbf785c787121b68fbd27a84a825c9ad1e9470"
+      "sha256_utf8_lf": "f738ed71542814d2db66ae76afefe9636376b6b5861ec8d83b95ed8ff6b7fdae"
     },
     {
       "path": "AGENTS.md",
       "action": "updated",
       "classification": "검토후수정",
-      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다.",
+      "reason": "현행 릴리스 소유권·제품선·Host 검증 경계·메모리 우선 순서를 대조하고 중복·오래된 안내와 연결 문구를 정리했다. 이후 승인된 main squash의 원본 태그·새 이력·현재 main 재개 절차를 추가 대조했다.",
       "external_read_only": false,
-      "sha256_utf8_lf": "9c5296d457f5450c1308bc9c01b5863760177bd657d37e5ef95abea0b1f4ed81"
+      "sha256_utf8_lf": "35a49a390581c1b6fa82c1ff47d200c60e3234c8ab37beb81db1262e5510badd"
     },
     {
       "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/01_BOARD_DEVELOPMENT.md",
@@ -3198,6 +3258,107 @@
       "reason": "현행/역사 분류·릴리스/Host/실행 순서 관련 문구·링크를 검토했으며 이번 범위에서 수정할 모순이나 삭제 가능한 중복을 찾지 못했다.",
       "external_read_only": false,
       "sha256_utf8_lf": "d6620858ca0ef57d24bcdb0ba40bf602cb684feb19a98b7b87e928859d425a3e"
+    }
+  ],
+  "previous_full_review": {
+    "commit": "4dce513ee135512f66a36e936fde1baca2017115",
+    "path": "00_Docs/document-review.json",
+    "record": "00_Docs/04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md",
+    "reviewed_documents": 380
+  },
+  "release_documentation_history": {
+    "main_before": "8b20157d33f1d216620726d92d88f65c25491b4d",
+    "development_before": "51bfa1686c1a67b6d9f8f4e79c2623854b73dc11",
+    "integration": "existing 16 development commits plus a separate documentation commit; fast-forward, no history rewrite",
+    "next_branch": "M31-MEM-OPT",
+    "preservation_tag": "archive/m31-w03-before-squash-dac8ea8a",
+    "preserved_original": "dac8ea8a85b8d2e1a84aa4299529a37e10f6c0f7",
+    "existing_squash_commit": "d18309a1a9c64cbb4941efefb7189c8d99fcedf6",
+    "squash_repeated": false
+  },
+  "history_maintenance": {
+    "changed_markdown_since_full_review": [
+      "00_Docs/04_검증 기록/README.md",
+      "00_Docs/HANDOFF.md",
+      "00_Docs/README.md",
+      "AGENTS.md"
+    ],
+    "added_markdown": "00_Docs/04_검증 기록/221_main_마일스톤별_이력_정리.md",
+    "unmodified_prior_markdown": 376,
+    "classification_actions": "documents의 action과 scope 집계는 220번 시작 기준 누적(기존35 수정·신규2·보존344). 이번 이력 유지보수 delta는 수정4·신규1이다."
+  },
+  "release_documentation_checks": [
+    {
+      "name": "local contract gate",
+      "command": "py -3 tools/ci/run_m12_gate.py contract",
+      "result": "PASS: 46 tests; exit 0"
+    },
+    {
+      "name": "local inventory and generated contracts",
+      "command": "py -3 tools/ci/run_m12_gate.py inventory",
+      "result": "PASS: 5 generated outputs/4 generators; product identity and M23/M24/M26/release contracts; publication_allowed=0; exit 0"
+    },
+    {
+      "name": "M31 readiness unit",
+      "command": "py -3 tests/host/test_m31_readiness_contract.py -v",
+      "result": "PASS: 7 tests; exit 0"
+    },
+    {
+      "name": "M31 inventory unit",
+      "command": "py -3 tests/host/test_m31_inventory_contract.py -v",
+      "result": "PASS: 5 tests; exit 0"
+    },
+    {
+      "name": "M31 readiness schema",
+      "command": "py -3 tools/bluetooth/m31_contract.py --check",
+      "result": "PASS: M31_CONTRACT_OK; exit 0"
+    },
+    {
+      "name": "public example boundary",
+      "command": "py -3 tools/ci/m31_example_audit.py",
+      "result": "PASS: 16 libraries, 113 examples, ISSUES=0; exit 0"
+    },
+    {
+      "name": "prior W05 diagnostic unit",
+      "command": "py -3 tests/host/test_m31_cs_stale_key.py -v",
+      "result": "PASS: 4 tests; exit 0; not physical HIL"
+    },
+    {
+      "name": "prior W04 diagnostic unit",
+      "command": "py -3 tests/host/test_m31_df_connected_rx.py -v",
+      "result": "PASS: 3 tests; exit 0; not physical HIL"
+    },
+    {
+      "name": "Markdown UTF-8 and local links",
+      "command": "py -3 tools/ci/run_m12_gate.py docs",
+      "result": "PASS: 374 main-repository Markdown files; exit 0"
+    },
+    {
+      "name": "board submodule Markdown",
+      "command": "Reuse run_m12_gate.run_docs_gate with the six git-tracked board Markdown paths",
+      "result": "PASS: 6 files; exit 0; no board edits"
+    },
+    {
+      "name": "documentation audit integrity",
+      "command": "PowerShell UTF-8 LF-normalized SHA-256 inventory comparison and duplicate grouping",
+      "result": "PASS: all 380 document hashes match; 0 duplicate body groups; 35 updated, 1 added, 344 preserved, 0 deleted"
+    },
+    {
+      "name": "whitespace, Git and pin preservation",
+      "command": "git diff --check; git fetch origin; git merge-base --is-ancestor origin/main HEAD; git submodule status/status --porcelain; Get-FileHash SDK lock",
+      "result": "PASS: fetched main remains 8b20157d and is ancestor of development HEAD; board clean and pinned; SDK lock unchanged; preservation tag dereferences to original dac8ea8a"
+    },
+    {
+      "name": "firmware builds and physical HIL",
+      "result": "NOT RUN: documentation/branch task; existing failed W04 evidence preserved without rerun"
+    },
+    {
+      "name": "full host regression",
+      "result": "NOT RUN: targeted documentation, contract, inventory and diagnostic unit suites only"
+    },
+    {
+      "name": "remote CI/CD",
+      "result": "NOT REQUESTED / NOT QUERIED / NOT WAITED: user instruction"
     }
   ]
 }
