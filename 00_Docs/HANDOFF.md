@@ -31,6 +31,11 @@ role을 참조하면 중단합니다. 따라서 BLE library를 role 없이 adapt
 feature schema v3는 기존 호환 profile에서 `conf`·`overlays`를 사용하고 resolved profile에서는 별도의
 `resolved_conf`·`resolved_overlays`만 사용합니다. BLE의 기존 broad fragment는 호환 경로에 보존되며
 adaptive 경로로 자동 유입되지 않습니다. 선택된 mode의 fragment hash만 cache 입력에 기록합니다.
+기존 검증 설정에서 GAP/NUS·GATT/NUS·LE CoC·CIS central·Audio unicast source/sink·DF beacon/responder·
+CS RAS initiator/reflector 10개 초기 role preset을 registry에 연결했습니다. 이 preset들은 서로의 임의
+동시 선택을 거부하고 connection·ISO stream·ATT MTU capacity를 생성합니다. Channel Sounding library도
+누락됐던 builder allowlist에 추가했습니다. Host resolver 계약은 통과했으며 clean build와 나머지
+ISO/Audio 역할 확장은 후속 작업입니다.
 
 ## 1. 현재 상태
 

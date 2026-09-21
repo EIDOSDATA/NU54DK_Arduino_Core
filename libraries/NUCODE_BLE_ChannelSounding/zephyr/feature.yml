@@ -2,11 +2,11 @@
   "schema_version": 3,
   "id": "nucode.ble.channel_sounding",
   "requires": ["ble"],
-  "capabilities": [],
+  "capabilities": ["nucode.ble.channel-sounding-api"],
   "conf": [],
   "overlays": [],
   "resolved_conf": [],
   "resolved_overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["ble"]
+  "compatible_profiles": ["adaptive", "ble"]
 }

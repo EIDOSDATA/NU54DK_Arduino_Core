@@ -37,6 +37,7 @@ class M13ProfileContractTests(unittest.TestCase):
                 "nucode.ble.nus",
                 "nucode.ble.iso",
                 "nucode.ble.audio",
+                "nucode.ble.channel_sounding",
                 "nucode.ble.direction_finding",
                 "nucode.ble.dfu",
                 "nucode.ble.security",

@@ -184,7 +184,8 @@ class M16BleNusContractTests(unittest.TestCase):
         self.assertEqual(feature["id"], "nucode.ble.nus")
         self.assertIn("ble", feature["requires"])
         self.assertEqual(
-            feature["compatible_profiles"], ["ble", "ble_audio_io", "secure_ble_dfu"]
+            feature["compatible_profiles"],
+            ["adaptive", "ble", "ble_audio_io", "secure_ble_dfu"],
         )
         self.assertTrue(feature["conf"])
         self.assertEqual(feature["resolved_conf"], [])

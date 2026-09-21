@@ -294,6 +294,103 @@ extern "C" void sensorRead(void)
         )
         self.assertEqual(runtime["requires_any_role"], ["role-a", "role-b"])
 
+    def test_verified_ble_role_presets_resolve_exact_features(self) -> None:
+        """! @brief 대표 BLE 계열은 검증된 역할과 capacity로만 adaptive 설정됩니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        cases = (
+            (
+                ["NUCODE_BLE"],
+                "ble-gap-nus-dual-role",
+                "CONFIG_NUCODE_BLE_NUS=y",
+                {"ble.connections": 1},
+            ),
+            (
+                ["NUCODE_BLE"],
+                "ble-gatt-nus-dual-role",
+                "CONFIG_NUCODE_BLE_GATT=y",
+                {"ble.connections": 1},
+            ),
+            (
+                ["NUCODE_BLE"],
+                "ble-l2cap-coc-dual-role",
+                "CONFIG_NUCODE_BLE_L2CAP=y",
+                {"ble.connections": 2, "ble.att-mtu": 512},
+            ),
+            (
+                ["NUCODE_BLE_ISO"],
+                "ble-iso-cis-central",
+                "CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL=y",
+                {"ble.connections": 2, "ble.iso-streams": 2},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-unicast-source",
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-unicast-sink",
+                "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE_DirectionFinding"],
+                "ble-df-cte-beacon",
+                "CONFIG_NUCODE_BLE_DF_BEACON=y",
+                {},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_DirectionFinding"],
+                "ble-df-connected-responder",
+                "CONFIG_NUCODE_BLE_DF_RESPONDER=y",
+                {"ble.connections": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_ChannelSounding"],
+                "ble-cs-ras-initiator",
+                "CONFIG_NUCODE_BLE_CS_INITIATOR=y",
+                {"ble.connections": 1, "ble.att-mtu": 498},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_ChannelSounding"],
+                "ble-cs-ras-reflector",
+                "CONFIG_NUCODE_BLE_CS_REFLECTOR=y",
+                {"ble.connections": 1},
+            ),
+        )
+        for libraries, role, required_conf, expected_capacities in cases:
+            with self.subTest(role=role):
+                declaration = copy.deepcopy(self.empty_declaration)
+                declaration["roles"] = [role]
+                features = MODULE.resolve_library_features(ROOT, profile, libraries)
+                result = MODULE.resolve_capabilities(
+                    self.registry, [], features, declaration
+                )
+                self.assertIn(required_conf, result["generated"]["conf"])
+                self.assertEqual(
+                    {item["id"]: item["value"] for item in result["capacities"]},
+                    expected_capacities,
+                )
+                self.assertEqual(result["roles"], [role])
+
+    def test_ble_feature_without_role_and_role_combination_fail_closed(self) -> None:
+        """! @brief BLE role 누락과 검증되지 않은 두 역할 조합을 모두 거부합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        features = MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE"])
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_ROLE_REQUIRED"):
+            MODULE.resolve_capabilities(
+                self.registry, [], features, self.empty_declaration
+            )
+
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = [
+            "ble-gap-nus-dual-role",
+            "ble-gatt-nus-dual-role",
+        ]
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_ROLE_CONFLICT"):
+            MODULE.resolve_capabilities(self.registry, [], features, declaration)
+
     def test_registry_rejects_unknown_required_role_reference(self) -> None:
         """! @brief capability의 역할 허용 목록도 registry 참조 무결성에 포함합니다. """
         with tempfile.TemporaryDirectory(prefix="n54-p0-role-ref-") as temporary:
