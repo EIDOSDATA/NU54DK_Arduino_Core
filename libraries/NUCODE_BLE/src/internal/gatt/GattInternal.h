@@ -283,7 +283,8 @@ namespace nucode::ble::internal::gatt
     using nucode::ble::internal::GattAccess;
 
     inline constexpr std::size_t maximum_services = CONFIG_NUCODE_BLE_GATT_MAX_SERVICES;
-    inline constexpr std::size_t maximum_characteristics = BLEService::maximum_characteristics;
+    inline constexpr std::size_t maximum_characteristics =
+        CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE;
     inline constexpr std::size_t maximum_descriptors = BLECharacteristic::maximum_descriptors;
     inline constexpr std::size_t maximum_attributes =
         1U + maximum_characteristics * (3U + maximum_descriptors);

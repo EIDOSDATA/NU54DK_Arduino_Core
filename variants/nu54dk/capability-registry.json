@@ -457,8 +457,6 @@
         "CONFIG_NUCODE_BLE_GATT=y",
         "CONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24",
         "CONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8",
-        "CONFIG_NUCODE_BLE_GATT_MAX_SERVICES=4",
-        "CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=8",
         "CONFIG_NUCODE_BLE_GATT_EVENT_QUEUE_SIZE=16",
         "CONFIG_HEAP_MEM_POOL_SIZE=4096",
         "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=2048",
@@ -3920,6 +3918,22 @@
       "maximum": 8,
       "unit": "peers",
       "conf": ["CONFIG_BT_MAX_PAIRED={value}"]
+    },
+    {
+      "id": "ble.gatt-services",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 8,
+      "unit": "services",
+      "conf": ["CONFIG_NUCODE_BLE_GATT_MAX_SERVICES={value}"]
+    },
+    {
+      "id": "ble.gatt-characteristics-per-service",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 8,
+      "unit": "characteristics",
+      "conf": ["CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE={value}"]
     }
   ],
   "probe_symbols": [

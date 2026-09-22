@@ -171,7 +171,7 @@ config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
 	range 4 32
 	depends on NUCODE_BLE_GATT
 	help
-	  server write·CCC·전송 완료와 client payload를 최대 244 byte까지
+	  server write·CCC·전송 완료와 client payload를 최대 512 byte까지
 	  복사해 BLEDevice.poll()로 전달하는 고정 record 개수입니다.
 
 config NUCODE_BLE_L2CAP

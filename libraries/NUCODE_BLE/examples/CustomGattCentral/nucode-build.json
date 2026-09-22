@@ -2,5 +2,8 @@
   "schema_version": 1,
   "capabilities": [],
   "roles": ["ble-gatt-nus-dual-role"],
-  "capacities": {}
+  "capacities": {
+    "ble.gatt-services": 1,
+    "ble.gatt-characteristics-per-service": 1
+  }
 }

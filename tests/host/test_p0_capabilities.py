@@ -785,6 +785,35 @@ extern "C" void sensorRead(void)
         )
         self.assertFalse(any("/internal/gatt" in source for source in sources))
 
+    def test_gatt_storage_capacities_generate_internal_array_limits(self) -> None:
+        """! @brief GATT service/characteristic 선언은 내부 고정 배열 Kconfig를 생성합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        features = MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE"])
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = ["ble-gatt-nus-dual-role"]
+        declaration["capacities"] = {
+            "ble.gatt-services": 1,
+            "ble.gatt-characteristics-per-service": 2,
+        }
+        result = MODULE.resolve_capabilities(
+            self.registry, [], features, declaration
+        )
+
+        configuration = set(result["generated"]["conf"])
+        self.assertIn("CONFIG_NUCODE_BLE_GATT_MAX_SERVICES=1", configuration)
+        self.assertIn(
+            "CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=2",
+            configuration,
+        )
+        self.assertEqual(
+            {item["id"]: item["value"] for item in result["capacities"]},
+            {
+                "ble.connections": 1,
+                "ble.gatt-services": 1,
+                "ble.gatt-characteristics-per-service": 2,
+            },
+        )
+
     def test_central_capabilities_explicitly_enable_observer(self) -> None:
         """! @brief Central Kconfig를 선택한 capability는 최종 Kconfig와 같은 Observer를 명시합니다. """
         for capability in self.registry["capabilities"].values():

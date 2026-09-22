@@ -92,8 +92,9 @@ Serial-only/include-only/SPI
 clean/reuse build에서도 이 감사를 확인했습니다. M31 인접 Host 147건과 P0/builder Host 40건,
 총 187건이 PASS했습니다. 전체 Host suite는 1,472건 PASS(2 skip)입니다. 55개 image의
 fresh build·금지 symbol 0건·역할별 RAM 상한까지 완료해 P0를 닫았습니다. P1에서는 pin/route/table
-right-size 뒤 CoC-only 역할의 불필요한 범용 GATT facade도 분리했습니다. 다음은 실제 GATT 사용
-역할의 고정 저장소와 server/client 경계입니다. 동적 high-water는 P2 경계로 남깁니다.
+right-size, CoC-only 역할의 범용 GATT 분리, GATT schema capacity의 실제 server 배열 연결까지
+완료했습니다. 다음은 GATT server/client 방향과 shared payload 수명 경계입니다. 동적 high-water는
+P2 경계로 남깁니다.
 장치에는 접근하지 않았습니다.
 
 ## 1. 현재 상태
@@ -105,7 +106,7 @@ right-size 뒤 CoC-only 역할의 불필요한 범용 GATT facade도 분리했�
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | **P0 완료, P1 진행.** Core SPI는 pin 상태·boot lease·runtime route·48-slot table layout right-size로 50,877→20,589 B, 30,288 B(59.5%) 줄였고 22,000 B 상한과 전체 Host 1,475 PASS(2 skip)를 고정했습니다. CoC-only 역할에서는 NUCODE 범용 GATT facade/dynamic DB를 분리해 91,037→70,081 B, 20,956 B 줄이고 72,000 B 상한·초기 BLE 10/10·실제 `L2capCocClient` compile을 통과했습니다. 다음은 GATT 사용 역할의 queue/state와 server/client 저장소입니다. | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [222번 P0 완료](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [223번 P1 GPIO](<04_검증 기록/223_M31_메모리_최적화_P1_GPIO_상태_절감.md>) · [224번 P1 UART20](<04_검증 기록/224_M31_메모리_최적화_P1_UART20_lease_절감.md>) · [225번 P1 route](<04_검증 기록/225_M31_메모리_최적화_P1_Runtime_Route_절감.md>) · [226번 P1 table](<04_검증 기록/226_M31_메모리_최적화_P1_Resource_Table_정렬.md>) · [227번 P1 CoC/GATT 분리](<04_검증 기록/227_M31_메모리_최적화_P1_CoC_GATT_분리.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
+| 메모리 최적화 | **P0 완료, P1 진행.** Core SPI는 50,877→20,589 B, CoC-only는 범용 GATT 분리로 91,037→70,081 B가 됐습니다. GATT server는 schema capacity를 실제 배열에 연결해 동일 1×1 fixture를 113,218→69,426 B로 줄였고 service slot은 45,248→1,468 B가 됐습니다. Core/GATT/CoC 상한은 22,000/71,000/72,000 B이며 초기 BLE 10/10과 실제 `CustomGattPeripheral`·`CustomGattCentral`·`L2capCocClient` compile을 통과했습니다. 다음은 GATT server/client 방향과 shared payload 수명입니다. | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [222번 P0 완료](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [223번 P1 GPIO](<04_검증 기록/223_M31_메모리_최적화_P1_GPIO_상태_절감.md>) · [224번 P1 UART20](<04_검증 기록/224_M31_메모리_최적화_P1_UART20_lease_절감.md>) · [225번 P1 route](<04_검증 기록/225_M31_메모리_최적화_P1_Runtime_Route_절감.md>) · [226번 P1 table](<04_검증 기록/226_M31_메모리_최적화_P1_Resource_Table_정렬.md>) · [227번 P1 CoC/GATT 분리](<04_검증 기록/227_M31_메모리_최적화_P1_CoC_GATT_분리.md>) · [228번 P1 GATT capacity](<04_검증 기록/228_M31_메모리_최적화_P1_GATT_Schema_Capacity.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
 | M31-W04 DF | 미완료. connected RX 내부 진단 4 valid IQ report·328 sample, 전체 FAIL·raw IQ 안정성 HOLD | [216번 초기 경계](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [220번 보존·인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) |
 | M31-W05 CS | 미완료. 같은 ACL 비암호화 read 거부 20/20, flash 직후 raw RAS 100·복구 20/20 두 번 PASS. wrong-key 실기·과거 중단 원인 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |
@@ -149,8 +150,8 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
 ## 3. 다음 구현 순서
 
 1. **메모리 최적화 P1부터** 진행합니다. P0에서 full profile의 API·capacity를 보존하고 lean role의
-   미사용 feature/source를 제거했습니다. Core pin/route와 CoC-only의 범용 GATT 분리는 완료했으며,
-   실제 GATT 사용 역할의 server/client 저장소와 queue/pool을 이어서 right-size합니다. final
+   미사용 feature/source를 제거했습니다. Core pin/route, CoC-only의 범용 GATT 분리와 GATT schema
+   capacity의 실제 배열 연결은 완료했으며, server/client 방향과 queue/pool 수명을 이어서 다룹니다. final
    `.config`·ELF/map·절대 byte·headroom을 비교하고 stack/heap은 high-water 측정 뒤 조정합니다.
    [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 측정·회귀 gate와
    [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 기능 선택·정정·구현 체크리스트가 기준입니다.
