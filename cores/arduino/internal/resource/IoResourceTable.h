@@ -53,10 +53,10 @@ namespace nucode::arduino::internal::io_resource_detail
         struct ResourceSlot
         {
             IoResourceId resource{};
-            IoResourceOwner owner{};
-            IoResourceState state{IoResourceState::free};
             std::uint64_t generation{0U};
             std::uint64_t reservation_token{0U};
+            IoResourceOwner owner{};
+            IoResourceState state{IoResourceState::free};
             bool occupied{false};
         };
 

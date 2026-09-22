@@ -148,7 +148,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
     ## @brief P1 Core RAM 절감이 역할 없는 adaptive SPI 예제에서도 회귀하지 않습니다.
     def test_adaptive_core_ram_ceiling_is_enforced(self) -> None:
         ceiling = ARDUINO.ADAPTIVE_CORE_RAM_CEILINGS["p0_serial_spi"]
-        self.assertEqual(ceiling, 22500)
+        self.assertEqual(ceiling, 22000)
         ARDUINO.assert_static_ram_ceiling(
             {"resource_audit": {"ram": {"used_bytes": ceiling}}},
             "p0_serial_spi",

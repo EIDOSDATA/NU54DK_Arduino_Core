@@ -597,8 +597,8 @@ namespace nucode::arduino::internal::io_resource_detail
             if (created[index])
             {
                 const auto generation = allocateGeneration();
-                *selected[index] = {resources[index], owner, IoResourceState::active,
-                                    generation,       0U,    true};
+                *selected[index] = {resources[index], generation, 0U, owner,
+                                    IoResourceState::active, true};
                 token.entries[index].generation = generation;
             }
         }

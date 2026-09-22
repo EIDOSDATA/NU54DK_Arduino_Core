@@ -126,10 +126,10 @@ namespace nucode::arduino::internal
     struct IoResourceLeaseEntry
     {
         IoResourceId resource{};
-        IoResourceOwner previous_owner{};
-        IoResourceState previous_state{IoResourceState::free};
         std::uint64_t previous_generation{0U};
         std::uint64_t generation{0U};
+        IoResourceOwner previous_owner{};
+        IoResourceState previous_state{IoResourceState::free};
         bool changed{false};
     };
 
