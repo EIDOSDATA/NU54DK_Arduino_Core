@@ -3942,6 +3942,14 @@
       "maximum": 512,
       "unit": "octets",
       "conf": ["CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE={value}"]
+    },
+    {
+      "id": "ble.gatt-tx-payload",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 512,
+      "unit": "octets",
+      "conf": ["CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE={value}"]
     }
   ],
   "probe_symbols": [

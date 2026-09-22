@@ -56,6 +56,27 @@ class BleGattTests(unittest.TestCase):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
 
+            capacity_binary = Path(folder) / 'gatt-tx-capacity.exe'
+            capacity_result = subprocess.run(
+                command + ['-DCONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=64',
+                           '-o', str(capacity_binary)],
+                capture_output=True,
+                timeout=60,
+            )
+            self.assertEqual(
+                capacity_result.returncode,
+                0,
+                capacity_result.stderr.decode(errors='replace'),
+            )
+            capacity_run = run_executable(
+                [str(capacity_binary), 'tx_capacity'], capture_output=True, timeout=10
+            )
+            self.assertEqual(
+                capacity_run.returncode,
+                0,
+                capacity_run.stderr.decode(errors='replace'),
+            )
+
 
 if __name__ == '__main__':
     unittest.main()

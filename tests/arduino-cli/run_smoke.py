@@ -105,7 +105,7 @@ CLI_BOOTSTRAP_ATTEMPTS = 3
 ## @brief 고정 adaptive 예제별 clean-build 정적 RAM 회귀 상한입니다.
 ADAPTIVE_EXAMPLE_RAM_CEILINGS = {
     "p0_ble_gap_nus": 51500,
-    "p0_ble_gatt": 62000,
+    "p0_ble_gatt": 61000,
     "p0_ble_l2cap": 72000,
     "p0_ble_iso_cis": 53000,
     "p0_ble_audio_source": 59000,
@@ -2256,12 +2256,14 @@ def test_adaptive_ble_roles(
                 "CONFIG_NUCODE_BLE_GATT_MAX_SERVICES=1",
                 "CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=1",
                 "CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE=64",
+                "CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=64",
             ),
             {
                 "ble.connections": 1,
                 "ble.gatt-services": 1,
                 "ble.gatt-characteristics-per-service": 1,
                 "ble.gatt-event-payload": 64,
+                "ble.gatt-tx-payload": 64,
             },
             "NUCODE_BLE_GATT.cpp",
         ),
@@ -2412,6 +2414,18 @@ def test_adaptive_ble_roles(
                 raise SmokeFailure(
                     "adaptive GATT event queue does not match 64-byte payload: "
                     f"{queue_symbols}"
+                )
+            slot_symbols = [
+                item
+                for item in context["resource_audit"]["top_ram_symbols"]
+                if str(item.get("name", "")).endswith(
+                    "gatt::(anonymous namespace)::slots"
+                )
+            ]
+            if len(slot_symbols) != 1 or slot_symbols[0].get("size") != 572:
+                raise SmokeFailure(
+                    "adaptive GATT service slot does not match 64-byte TX payload: "
+                    f"{slot_symbols}"
                 )
         if "/cores/arduino/SPI.cpp" in source_graph.replace("\\", "/"):
             raise SmokeFailure(f"adaptive BLE included unrelated SPI source: {name}")

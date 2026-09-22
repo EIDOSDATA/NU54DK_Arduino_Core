@@ -20,6 +20,10 @@
 #define CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE 512
 #endif
 
+#if !defined(CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE)
+#define CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE 512
+#endif
+
 namespace nucode::ble::internal
 {
 
@@ -293,9 +297,14 @@ namespace nucode::ble::internal::gatt
     inline constexpr std::size_t maximum_value_length = BLECharacteristic::maximum_value_length;
     inline constexpr std::size_t maximum_event_payload_length =
         CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE;
+    inline constexpr std::size_t maximum_tx_payload_length =
+        CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE;
     static_assert(maximum_event_payload_length >= 1U &&
                       maximum_event_payload_length <= maximum_value_length,
                   "GATT event payload 크기가 공개 값 범위를 벗어났습니다.");
+    static_assert(maximum_tx_payload_length >= 1U &&
+                      maximum_tx_payload_length <= maximum_value_length,
+                  "GATT TX payload 크기가 공개 값 범위를 벗어났습니다.");
     inline constexpr std::size_t maximum_attributes =
         1U + maximum_characteristics * (3U + maximum_descriptors);
 
@@ -351,10 +360,10 @@ namespace nucode::ble::internal::gatt
         BLECharacteristic *characteristics[maximum_characteristics] = {};
         BLEDescriptor *descriptors[maximum_characteristics][maximum_descriptors] = {};
         NotificationContext notifications[maximum_characteristics] = {};
-        std::uint8_t notification_data[maximum_characteristics][maximum_value_length] = {};
+        std::uint8_t notification_data[maximum_characteristics][maximum_tx_payload_length] = {};
         atomic_t notification_active[maximum_characteristics] = {};
         struct bt_gatt_indicate_params indications[maximum_characteristics] = {};
-        std::uint8_t indication_data[maximum_characteristics][maximum_value_length] = {};
+        std::uint8_t indication_data[maximum_characteristics][maximum_tx_payload_length] = {};
         atomic_t indication_active[maximum_characteristics] = {};
         struct bt_conn *indication_connections[maximum_characteristics] = {};
         std::uint32_t indication_generations[maximum_characteristics] = {};

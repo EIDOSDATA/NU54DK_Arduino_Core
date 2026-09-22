@@ -91,6 +91,26 @@ namespace nucode::ble::internal::gatt
         return copy_length;
     }
 
+    /** @brief cached characteristic 값이 전송 buffer에 맞을 때만 온전히 복사합니다. */
+    bool copyCachedValueForTransmission(const BLECharacteristic &characteristic, void *output,
+                                        std::size_t capacity,
+                                        std::size_t &length) noexcept
+    {
+        k_spinlock_key_t key = k_spin_lock(&serverState().characteristic_value_lock);
+        length = GattAccess::length(characteristic);
+        if (length > capacity)
+        {
+            k_spin_unlock(&serverState().characteristic_value_lock, key);
+            return false;
+        }
+        if (length != 0U && output != nullptr)
+        {
+            ::memcpy(output, GattAccess::value(characteristic), length);
+        }
+        k_spin_unlock(&serverState().characteristic_value_lock, key);
+        return true;
+    }
+
     std::size_t copyDescriptorValue(const BLEDescriptor &descriptor, void *output,
                                     std::size_t capacity) noexcept
     {
@@ -868,8 +888,15 @@ namespace nucode::ble
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
-        const std::size_t snapshot_length =
-            copyCachedValue(*this, slot->notification_data[index], maximum_value_length);
+        std::size_t snapshot_length = 0U;
+        if (!copyCachedValueForTransmission(*this, slot->notification_data[index],
+                                            maximum_tx_payload_length, snapshot_length))
+        {
+            bt_conn_unref(connection);
+            atomic_set(&slot->notification_active[index], 0);
+            internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
+            return false;
+        }
         if (mtu < 3U || snapshot_length > mtu - 3U)
         {
             bt_conn_unref(connection);
@@ -973,8 +1000,15 @@ namespace nucode::ble
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
-        const std::size_t snapshot_length =
-            copyCachedValue(*this, slot->indication_data[index], maximum_value_length);
+        std::size_t snapshot_length = 0U;
+        if (!copyCachedValueForTransmission(*this, slot->indication_data[index],
+                                            maximum_tx_payload_length, snapshot_length))
+        {
+            bt_conn_unref(connection);
+            atomic_set(&slot->indication_active[index], 0);
+            internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
+            return false;
+        }
         if (mtu < 3U || snapshot_length > mtu - 3U)
         {
             bt_conn_unref(connection);

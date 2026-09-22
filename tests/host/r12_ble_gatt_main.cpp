@@ -696,6 +696,15 @@ int main(int argc, char **argv)
         assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::notification_sent)] ==
                1);
     }
+    else if (std::strcmp(scenario, "tx_capacity") == 0)
+    {
+        std::array<std::uint8_t, 65> oversized{};
+        assert(characteristic.setValue(oversized.data(), oversized.size()));
+        assert(!characteristic.notify());
+        assert(BLEDevice.lastError() == BLEError::value_overflow);
+        assert(!characteristic.indicate());
+        assert(BLEDevice.lastError() == BLEError::value_overflow);
+    }
     else if (std::strcmp(scenario, "indication") == 0)
     {
         assert(characteristic.setValue(payload, 4));

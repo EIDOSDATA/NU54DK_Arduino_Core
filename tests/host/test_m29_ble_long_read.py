@@ -100,6 +100,26 @@ class M29BleLongReadTests(unittest.TestCase):
         ):
             self.assertIn(token, notification, token)
 
+    def test_declared_tx_payload_fails_closed_without_truncation(self):
+        """! @brief 선언 TX payload를 넘는 전송 snapshot은 잘라 보내지 않습니다. """
+
+        internal = INTERNAL.read_text(encoding="utf-8")
+        server = (ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "notification_data[maximum_characteristics][maximum_tx_payload_length]",
+            internal,
+        )
+        self.assertIn(
+            "indication_data[maximum_characteristics][maximum_tx_payload_length]",
+            internal,
+        )
+        self.assertIn("maximum_tx_payload_length <= maximum_value_length", internal)
+        self.assertGreaterEqual(server.count("copyCachedValueForTransmission("), 3)
+        self.assertIn("if (length > capacity)", server)
+        self.assertGreaterEqual(server.count("BLEError::value_overflow, -EMSGSIZE"), 2)
+
     def test_disconnect_is_link_local_and_generation_checked(self):
         """! @brief 한 link 해제가 다른 context queue를 purge하거나 초기화하면 안 됩니다. """
 
