@@ -80,10 +80,16 @@ Terminal과 Gateway의 `GapContext`는 2,224 byte에서 320 byte로 줄었고 �
 68,603 byte와 76,167 byte가 됐습니다. `EXT_ADV+PER_ADV_SYNC`가 필요한 Receiver는 912 byte,
 `EXT_ADV+PER_ADV+PER_ADV_SYNC`가 필요한 Broadcaster는 1,184 byte의 context를 유지하며 정적
 RAM은 각각 75,810 byte와 77,743 byte입니다. 네 역할 모두 금지 symbol은 0건입니다. 새
+TMAP 4역할은 62,020~83,546 byte, 초기 BLE/ISO/Audio/DF/CS 대표 10역할은
+35,576~91,037 byte의 정적 RAM으로 fresh build를 통과했고 모두 금지 symbol 0건입니다.
+이 18개 핵심 역할에 검증값보다 약 1~2 KiB 높은 clean-example RAM 상한을 smoke gate로
+고정했습니다. 금지 symbol은 advanced GAP queue에서 NUS·GATT·CoC·Security 전용 저장소까지
+확대했습니다. fresh 검증에서 Central 역할이면 최종 Kconfig가 강제하는 Observer를 GAP/NUS·
+GATT/NUS·CoC·CS initiator declaration이 명시하도록 누락도 보정했습니다. 새
 Serial-only/include-only/SPI
-clean/reuse build에서도 이 감사를 확인했습니다. M31 인접 Host 147건과 P0/builder Host 38건,
-총 185건이 PASS했습니다. 전체 Host suite는 1,470건 PASS(2 skip)입니다. 더 넓은 역할별 금지
-symbol·기준선과 동적 high-water 검증은 남아 있습니다.
+clean/reuse build에서도 이 감사를 확인했습니다. M31 인접 Host 147건과 P0/builder Host 40건,
+총 187건이 PASS했습니다. 전체 Host suite는 1,472건 PASS(2 skip)입니다. 나머지 역할별
+기준선과 동적 high-water 검증은 남아 있습니다.
 장치에는 접근하지 않았습니다.
 
 ## 1. 현재 상태

@@ -108,6 +108,34 @@ class P0CapabilityContractTests(unittest.TestCase):
             [],
         )
 
+    def test_resource_audit_rejects_disabled_ble_library_storage(self) -> None:
+        """! @brief 비활성 NUS·GATT·CoC·Security 저장소와 text symbol을 구분합니다. """
+        output = (
+            "536900000 00001024 b (anonymous namespace)::_k_fifo_buf_ble_rx_queue\n"
+            "536901024 00000512 b (anonymous namespace)::_k_fifo_buf_ble_event_queue\n"
+            "536901536 00000960 b nucode::ble::internal::gatt::"
+            "(anonymous namespace)::_k_fifo_buf_gatt_event_queue\n"
+            "536902496 00004096 b nucode::ble::internal::l2cap::"
+            "(anonymous namespace)::net_buf_data_rx_pool\n"
+            "536906592 00000768 b nucode::ble::internal::security::"
+            "(anonymous namespace)::_k_fifo_buf_security_event_queue\n"
+            "00120000 00000128 T nucode::ble::internal::l2cap::"
+            "(anonymous namespace)::channelConnected(bt_l2cap_chan*)\n"
+        )
+        findings = MODULE.forbidden_resource_symbols("CONFIG_BT=y\n", output)
+        self.assertEqual(len(findings), 5)
+        self.assertFalse(any("channelConnected" in item for item in findings))
+        self.assertEqual(
+            MODULE.forbidden_resource_symbols(
+                "CONFIG_NUCODE_BLE_NUS=y\n"
+                "CONFIG_NUCODE_BLE_GATT=y\n"
+                "CONFIG_NUCODE_BLE_L2CAP=y\n"
+                "CONFIG_BT_SMP=y\n",
+                output,
+            ),
+            [],
+        )
+
     def test_resource_audit_applies_exact_ram_budget_boundaries(self) -> None:
         """! @brief 반올림 전 실제 예약률로 75% 경고와 85% 실패 경계를 판정합니다. """
         self.assertEqual(MODULE.resource_budget_status(749_999, 1_000_000), "pass")
@@ -714,6 +742,14 @@ extern "C" void sensorRead(void)
                     self.registry, [], features, declaration
                 )
                 self.assertIn(required_conf, result["generated"]["conf"])
+                if role in {
+                    "ble-gap-nus-dual-role",
+                    "ble-gatt-nus-dual-role",
+                    "ble-l2cap-coc-dual-role",
+                }:
+                    self.assertIn(
+                        "CONFIG_BT_OBSERVER=y", result["generated"]["conf"]
+                    )
                 self.assertEqual(
                     {item["id"]: item["value"] for item in result["capacities"]},
                     expected_capacities,
@@ -725,6 +761,13 @@ extern "C" void sensorRead(void)
                         result["generated"]["conf"],
                     )
                 self.assertEqual(result["roles"], [role])
+
+    def test_central_capabilities_explicitly_enable_observer(self) -> None:
+        """! @brief Central Kconfig를 선택한 capability는 최종 Kconfig와 같은 Observer를 명시합니다. """
+        for capability in self.registry["capabilities"].values():
+            conf = capability["conf"]
+            if "CONFIG_BT_CENTRAL=y" in conf:
+                self.assertIn("CONFIG_BT_OBSERVER=y", conf, capability["id"])
 
     def test_iso_role_source_ownership_is_minimal(self) -> None:
         """! @brief 11개 ISO 역할은 공통 facade와 필요한 CIS/BIS backend만 선택합니다. """
