@@ -160,10 +160,14 @@ namespace nucode::ble::internal::gap
 
     bool extendedAdvertisingExists() noexcept
     {
+#if defined(CONFIG_BT_EXT_ADV)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
         const bool exists = gapState().extended_advertising.instance != nullptr;
         k_spin_unlock(&gapState().configuration_lock, key);
         return exists;
+#else
+        return false;
+#endif
     }
 
     bool currentAdvertisingSet(BLEAdvertisingSetHandle handle,
@@ -468,9 +472,12 @@ namespace nucode::ble
             internal::recordError(BLEError::wrong_state, -ENOENT, true);
             return false;
         }
-        if (atomic_get(&gapState().extended_advertising.active) != 0 ||
-            (periodicAdvertisingUsesSet(advertising_set) &&
-             atomic_get(&gapState().periodic_advertising.active) != 0))
+        bool busy = atomic_get(&gapState().extended_advertising.active) != 0;
+#if defined(CONFIG_BT_PER_ADV)
+        busy = busy || (periodicAdvertisingUsesSet(advertising_set) &&
+                        atomic_get(&gapState().periodic_advertising.active) != 0);
+#endif
+        if (busy)
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
@@ -517,8 +524,13 @@ namespace nucode::ble
 
     bool ExtendedAdvertising::running(BLEAdvertisingSetHandle advertising_set) const noexcept
     {
+#if defined(CONFIG_BT_EXT_ADV)
         return exists(advertising_set) &&
                atomic_get(&gapState().extended_advertising.active) != 0;
+#else
+        ARG_UNUSED(advertising_set);
+        return false;
+#endif
     }
 
     bool Privacy::supported() const noexcept

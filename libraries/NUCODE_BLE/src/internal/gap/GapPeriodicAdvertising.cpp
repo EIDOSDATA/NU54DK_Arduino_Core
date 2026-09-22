@@ -315,15 +315,21 @@ namespace nucode::ble::internal::gap
 
     bool periodicAdvertisingUsesSet(BLEAdvertisingSetHandle handle) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
         const bool matches = gapState().periodic_advertising.configured != 0 &&
                              gapState().periodic_advertising.advertising_set == handle;
         k_spin_unlock(&gapState().configuration_lock, key);
         return matches;
+#else
+        ARG_UNUSED(handle);
+        return false;
+#endif
     }
 
     void releasePeriodicAdvertisingSet(BLEAdvertisingSetHandle handle) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
         if (gapState().periodic_advertising.advertising_set == handle &&
             atomic_get(&gapState().periodic_advertising.active) == 0)
@@ -333,6 +339,9 @@ namespace nucode::ble::internal::gap
             atomic_set(&gapState().periodic_advertising.configured, 0);
         }
         k_spin_unlock(&gapState().configuration_lock, key);
+#else
+        ARG_UNUSED(handle);
+#endif
     }
 
     void endPeriodicAdvertising() noexcept
@@ -381,16 +390,22 @@ namespace nucode::ble::internal::gap
             }
         }
 #endif
+#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
+#if defined(CONFIG_BT_PER_ADV)
         gapState().periodic_advertising.advertising_set = {};
         gapState().periodic_advertising.length = 0U;
         atomic_set(&gapState().periodic_advertising.configured, 0);
         atomic_set(&gapState().periodic_advertising.active, 0);
+#endif
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
         {
             gapState().past_subscriptions[index] = {};
         }
+#endif
         k_spin_unlock(&gapState().configuration_lock, key);
+#endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
         k_msgq_purge(&periodicReportQueue());
 #endif
@@ -592,8 +607,13 @@ namespace nucode::ble
 
     bool PeriodicAdvertising::running(BLEAdvertisingSetHandle advertising_set) const noexcept
     {
+#if defined(CONFIG_BT_PER_ADV)
         return periodicAdvertisingUsesSet(advertising_set) &&
                atomic_get(&gapState().periodic_advertising.active) != 0;
+#else
+        ARG_UNUSED(advertising_set);
+        return false;
+#endif
     }
 
     bool PeriodicAdvertising::createSync(const BLEAddress &address, std::uint8_t sid,
@@ -757,7 +777,12 @@ namespace nucode::ble
 
     bool PeriodicAdvertising::synchronized(BLEPeriodicSyncHandle sync) const noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         return exists(sync) && atomic_get(&gapState().periodic_sync.synchronized) != 0;
+#else
+        ARG_UNUSED(sync);
+        return false;
+#endif
     }
 
     int PeriodicAdvertising::available() const noexcept

@@ -138,20 +138,24 @@ namespace nucode::ble::internal::gap
 
     void releasePawrSet(BLEAdvertisingSetHandle handle) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_RSP)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
         if (gapState().pawr.advertising_set == handle)
         {
             gapState().pawr = PawrContext{};
         }
         k_spin_unlock(&gapState().configuration_lock, key);
+#else
+        ARG_UNUSED(handle);
+#endif
     }
 
     void endPawr() noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_RSP)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
         gapState().pawr = PawrContext{};
         k_spin_unlock(&gapState().configuration_lock, key);
-#if defined(CONFIG_BT_PER_ADV_RSP)
         k_msgq_purge(&pawrResponseQueue());
 #endif
     }

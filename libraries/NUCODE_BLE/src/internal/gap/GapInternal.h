@@ -294,17 +294,29 @@ namespace nucode::ble::internal::gap
         void *event_info_context = nullptr;
         BLEScanCallback scan_callback = nullptr;
         void *scan_context = nullptr;
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         BLEPeriodicReportCallback periodic_report_callback = nullptr;
         void *periodic_report_context = nullptr;
         BLEConnectionHandle past_subscriptions[maximum_connection_slots] = {};
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
         BLEPawrResponseCallback pawr_response_callback = nullptr;
         void *pawr_response_context = nullptr;
+#endif
 
         MtuExchangeContext mtu_exchange_contexts[maximum_mtu_exchange_contexts] = {};
+#if defined(CONFIG_BT_EXT_ADV)
         ExtendedAdvertisingContext extended_advertising;
+#endif
+#if defined(CONFIG_BT_PER_ADV)
         PeriodicAdvertisingContext periodic_advertising;
+#endif
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         PeriodicSyncContext periodic_sync;
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
         PawrContext pawr;
+#endif
     };
     GapContext &gapState() noexcept;
     k_msgq &gapEventQueue() noexcept;

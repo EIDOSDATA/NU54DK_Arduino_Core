@@ -74,7 +74,13 @@ headroom·상위 RAM symbol 32개를 artifact manifest에 기록합니다. adapt
 실패 정책과 비활성 scan/periodic/PAwR queue 금지 symbol gate를 적용합니다. 후속 감사에서는 Observer가
 꺼진 GMAP Terminal에 scan 결과 queue 2,540 byte가 남는 것을 검출해 같은 Kconfig 경계로 옮겼고,
 정적 RAM은 73,047 byte에서 70,507 byte로 줄었습니다. Observer가 필요한 다른 GMAP 3역할은 queue와
-기능을 유지했습니다. 새 Serial-only/include-only/SPI
+기능을 유지했습니다. 그 다음은 `GapContext`의 extended advertising·periodic advertising·periodic
+sync·PAwR 상태를 각 Kconfig에 맞춰 조건부로 배치했습니다. 새 GMAP 4역할 clean build에서
+Terminal과 Gateway의 `GapContext`는 2,224 byte에서 320 byte로 줄었고 정적 RAM은 각각
+68,603 byte와 76,167 byte가 됐습니다. `EXT_ADV+PER_ADV_SYNC`가 필요한 Receiver는 912 byte,
+`EXT_ADV+PER_ADV+PER_ADV_SYNC`가 필요한 Broadcaster는 1,184 byte의 context를 유지하며 정적
+RAM은 각각 75,810 byte와 77,743 byte입니다. 네 역할 모두 금지 symbol은 0건입니다. 새
+Serial-only/include-only/SPI
 clean/reuse build에서도 이 감사를 확인했습니다. M31 인접 Host 147건과 P0/builder Host 38건,
 총 185건이 PASS했습니다. 전체 Host suite는 1,470건 PASS(2 skip)입니다. 더 넓은 역할별 금지
 symbol·기준선과 동적 high-water 검증은 남아 있습니다.
