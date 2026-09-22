@@ -191,6 +191,7 @@ def run_capability_probe(
         "-Wl,-u,setup",
         "-Wl,-u,loop",
         "-Wl,--unresolved-symbols=ignore-all",
+        "-Wl,--defsym=__dso_handle=0",
         f"-Wl,-Map={map_path.as_posix()}",
         "-o",
         linked,

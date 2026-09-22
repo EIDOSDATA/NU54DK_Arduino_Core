@@ -9,6 +9,7 @@
     "libraries/NUCODE_BLE/src",
     "libraries/NUCODE_BLE_ISO/src",
     "libraries/NUCODE_BLE_Audio/src",
+    "libraries/NUCODE_BLE_Security/src",
     "libraries/NUCODE_BLE_DirectionFinding/src",
     "libraries/NUCODE_BLE_ChannelSounding/src"
   ],
@@ -195,6 +196,8 @@
         "ble-audio-broadcast-sink",
         "ble-audio-broadcast-delegator-sink",
         "ble-audio-broadcast-assistant",
+        "ble-audio-hearing-access-server",
+        "ble-audio-hearing-access-client",
         "ble-df-connected-responder",
         "ble-cs-ras-initiator",
         "ble-cs-ras-reflector"
@@ -212,6 +215,7 @@
         "libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
         "libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
         "libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
         "libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
         "libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp"
       ],
@@ -251,13 +255,47 @@
         "ble-audio-broadcast-source",
         "ble-audio-broadcast-sink",
         "ble-audio-broadcast-delegator-sink",
-        "ble-audio-broadcast-assistant"
+        "ble-audio-broadcast-assistant",
+        "ble-audio-hearing-access-server",
+        "ble-audio-hearing-access-client"
       ],
       "conflicts": [],
       "conf": ["CONFIG_BT_AUDIO=y"],
       "overlays": [],
       "sources": ["libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp"],
       "source_gates": ["CONFIG_BT_AUDIO"]
+    },
+    {
+      "id": "nucode.ble.security-api",
+      "requires": ["nucode.ble.core-api"],
+      "requires_any_role": [
+        "ble-audio-hearing-access-server",
+        "ble-audio-hearing-access-client"
+      ],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_SMP=y",
+        "CONFIG_BT_SMP_APP_PAIRING_ACCEPT=y",
+        "CONFIG_BT_BONDABLE=y",
+        "CONFIG_BT_MAX_PAIRED=4",
+        "CONFIG_BT_SETTINGS=y",
+        "CONFIG_BT_SMP_SC_PAIR_ONLY=n",
+        "CONFIG_SETTINGS=y",
+        "CONFIG_SETTINGS_RUNTIME=y",
+        "CONFIG_SETTINGS_ZMS=y",
+        "CONFIG_SETTINGS_ZMS_LOAD_SUBTREE_PATH=y",
+        "CONFIG_FLASH=y",
+        "CONFIG_FLASH_MAP=y",
+        "CONFIG_ZMS=y"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp",
+        "libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp",
+        "libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp",
+        "libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp"
+      ],
+      "source_gates": ["CONFIG_BT_SMP"]
     },
     {
       "id": "nucode.ble.direction-finding-api",
@@ -894,6 +932,62 @@
         "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_BroadcastAssistant.cpp"
       ],
       "source_gates": ["CONFIG_BT_BAP_BROADCAST_ASSISTANT"]
+    },
+    {
+      "id": "nucode.ble.role.audio-hearing-access-server",
+      "requires": ["nucode.ble.audio-api", "nucode.ble.security-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_ISO_PERIPHERAL=y",
+        "CONFIG_BT_GATT_DYNAMIC_DB=y",
+        "CONFIG_BT_ATT_PREPARE_COUNT=1",
+        "CONFIG_UTF8=y",
+        "CONFIG_BT_BAP_UNICAST_SERVER=y",
+        "CONFIG_BT_ASCS=y",
+        "CONFIG_BT_PAC_SNK=y",
+        "CONFIG_BT_PAC_SNK_LOC=y",
+        "CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT=1",
+        "CONFIG_BT_ASCS_MAX_ASE_SRC_COUNT=0",
+        "CONFIG_BT_HAS=y",
+        "CONFIG_BT_HAS_PRESET_COUNT=4",
+        "CONFIG_BT_HAS_PRESET_NAME_DYNAMIC=y",
+        "CONFIG_FPU=y",
+        "CONFIG_LIBLC3=y",
+        "CONFIG_MAIN_STACK_SIZE=4096",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=3072"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_HearingAccess.cpp"
+      ],
+      "source_gates": ["CONFIG_BT_HAS"]
+    },
+    {
+      "id": "nucode.ble.role.audio-hearing-access-client",
+      "requires": ["nucode.ble.audio-api", "nucode.ble.security-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_GATT_CLIENT=y",
+        "CONFIG_BT_GATT_AUTO_DISCOVER_CCC=y",
+        "CONFIG_BT_GATT_AUTO_UPDATE_MTU=y",
+        "CONFIG_UTF8=y",
+        "CONFIG_BT_HAS_CLIENT=y",
+        "CONFIG_FPU=y",
+        "CONFIG_LIBLC3=y",
+        "CONFIG_MAIN_STACK_SIZE=4096",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=3072"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_HearingAccess.cpp"
+      ],
+      "source_gates": ["CONFIG_BT_HAS_CLIENT"]
     },
     {
       "id": "nucode.ble.role.df-cte-beacon",
@@ -1566,6 +1660,78 @@
         "ble-audio-broadcast-source",
         "ble-audio-broadcast-sink",
         "ble-audio-broadcast-delegator-sink"
+      ]
+    },
+    {
+      "id": "ble-audio-hearing-access-server",
+      "capabilities": ["nucode.ble.role.audio-hearing-access-server"],
+      "capacities": {
+        "ble.connections": 1,
+        "ble.iso-streams": 1
+      },
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source",
+        "ble-iso-bis-time-receiver",
+        "ble-iso-cis-to-bis-bridge",
+        "ble-iso-cis-to-bis-receiver",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-audio-unicast-cycle",
+        "ble-audio-unicast-duplex-client",
+        "ble-audio-unicast-duplex-server",
+        "ble-audio-broadcast-source",
+        "ble-audio-broadcast-sink",
+        "ble-audio-broadcast-delegator-sink",
+        "ble-audio-broadcast-assistant",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector"
+      ]
+    },
+    {
+      "id": "ble-audio-hearing-access-client",
+      "capabilities": ["nucode.ble.role.audio-hearing-access-client"],
+      "capacities": {"ble.connections": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source",
+        "ble-iso-bis-time-receiver",
+        "ble-iso-cis-to-bis-bridge",
+        "ble-iso-cis-to-bis-receiver",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-audio-unicast-cycle",
+        "ble-audio-unicast-duplex-client",
+        "ble-audio-unicast-duplex-server",
+        "ble-audio-broadcast-source",
+        "ble-audio-broadcast-sink",
+        "ble-audio-broadcast-delegator-sink",
+        "ble-audio-broadcast-assistant",
+        "ble-audio-hearing-access-server",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector"
       ]
     },
     {

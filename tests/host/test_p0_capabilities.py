@@ -76,6 +76,9 @@ struct Startup
     {
         Serial1.begin(115200);
     }
+    ~Startup()
+    {
+    }
 };
 Startup startup;
 void deadPath()
@@ -437,6 +440,18 @@ extern "C" void sensorRead(void)
                 {"ble.connections": 1},
             ),
             (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-hearing-access-server",
+                "CONFIG_BT_HAS=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-hearing-access-client",
+                "CONFIG_BT_HAS_CLIENT=y",
+                {"ble.connections": 1},
+            ),
+            (
                 ["NUCODE_BLE_DirectionFinding"],
                 "ble-df-cte-beacon",
                 "CONFIG_NUCODE_BLE_DF_BEACON=y",
@@ -507,8 +522,8 @@ extern "C" void sensorRead(void)
                     set(result["generated"]["sources"]), expected_sources
                 )
 
-    def test_audio_bap_role_source_ownership_is_minimal(self) -> None:
-        """! @brief 9개 BAP 역할은 공통 facade와 필요한 backend만 선택합니다. """
+    def test_audio_role_source_ownership_is_minimal(self) -> None:
+        """! @brief 11개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio"]
@@ -520,6 +535,7 @@ extern "C" void sensorRead(void)
         broadcast_source = f"{root}/NUCODE_BLE_Audio_BroadcastSource.cpp"
         broadcast_sink = f"{root}/NUCODE_BLE_Audio_BroadcastSink.cpp"
         assistant = f"{root}/NUCODE_BLE_Audio_BroadcastAssistant.cpp"
+        hearing_access = f"{root}/NUCODE_BLE_Audio_HearingAccess.cpp"
         cases = {
             "ble-audio-unicast-source": {common, client},
             "ble-audio-unicast-sink": {common, server},
@@ -530,8 +546,46 @@ extern "C" void sensorRead(void)
             "ble-audio-broadcast-sink": {common, broadcast_sink},
             "ble-audio-broadcast-delegator-sink": {common, broadcast_sink},
             "ble-audio-broadcast-assistant": {common, assistant},
+            "ble-audio-hearing-access-server": {common, hearing_access},
+            "ble-audio-hearing-access-client": {common, hearing_access},
         }
         for role, expected_sources in cases.items():
+            with self.subTest(role=role):
+                declaration = copy.deepcopy(self.empty_declaration)
+                declaration["roles"] = [role]
+                libraries = ["NUCODE_BLE", "NUCODE_BLE_Audio"]
+                if "hearing-access" in role:
+                    libraries.append("NUCODE_BLE_Security")
+                features = MODULE.resolve_library_features(ROOT, profile, libraries)
+                result = MODULE.resolve_capabilities(
+                    self.registry, [], features, declaration
+                )
+                self.assertEqual(
+                    {
+                        source
+                        for source in result["generated"]["sources"]
+                        if source.startswith(root)
+                    },
+                    expected_sources,
+                )
+
+    def test_hearing_access_security_source_ownership_is_minimal(self) -> None:
+        """! @brief HAP 역할은 pairing·bond backend만 선택하고 부가 profile을 제외합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        features = MODULE.resolve_library_features(
+            ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"]
+        )
+        root = "libraries/NUCODE_BLE_Security/src"
+        expected_sources = {
+            f"{root}/NUCODE_BLE_Security.cpp",
+            f"{root}/internal/security/SecurityBond.cpp",
+            f"{root}/internal/security/SecurityOob.cpp",
+            f"{root}/internal/security/SecurityPairing.cpp",
+        }
+        for role in (
+            "ble-audio-hearing-access-server",
+            "ble-audio-hearing-access-client",
+        ):
             with self.subTest(role=role):
                 declaration = copy.deepcopy(self.empty_declaration)
                 declaration["roles"] = [role]
@@ -550,7 +604,7 @@ extern "C" void sensorRead(void)
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 27)
+        self.assertEqual(len(roles), 29)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):
@@ -598,6 +652,20 @@ extern "C" void sensorRead(void)
             "BapBroadcastSink": "ble-audio-broadcast-sink",
             "BapBroadcastDelegatorSink": "ble-audio-broadcast-delegator-sink",
             "BapBroadcastAssistant": "ble-audio-broadcast-assistant",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
+
+    def test_audio_hap_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 HAP 2예제가 각각 하나의 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "HearingAccessServer": "ble-audio-hearing-access-server",
+            "HearingAccessClient": "ble-audio-hearing-access-client",
         }
         root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
         for example, role in examples.items():

@@ -23,6 +23,12 @@ Kconfig를 생성하고, 공통 `NUCODE_BLE_Audio.cpp`와 선택 역할의 unica
 예제의 저수준 `prj.conf` 목록을 adaptive 역할 해석의 단일 원본으로 사용하지 않으며, 현재 기본
 `standard`와 BLE 호환 profile의 동작은 바꾸지 않는다.
 
+`HearingAccessServer`와 `HearingAccessClient`도 각각 공개 role 선언을 제공한다. Adaptive
+feature set은 HAS server/client 설정과 연결·ISO capacity를 생성하고, Audio 공통 facade와
+`NUCODE_BLE_Audio_HearingAccess.cpp`만 선택한다. 두 예제의 `NUCODE_BLE_Security` 의존성은
+pairing·bond·ZMS settings backend만 포함하며, 사용하지 않는 BAS·DIS·HID·HRS source와 Kconfig는
+제외한다.
+
 ## `Lc3SyntheticLoopback`
 
 - `Lc3Codec::begin()`으로 16 kHz, 10 ms, 40-byte LC3 frame을 구성한다.
