@@ -54,6 +54,7 @@ ARDUINO_TESTS = (
     "adaptive_audio_call",
     "adaptive_audio_cap",
     "adaptive_audio_csip",
+    "adaptive_audio_pbp",
 )
 DEFAULT_TESTS = tuple(
     test
@@ -71,6 +72,7 @@ DEFAULT_TESTS = tuple(
         "adaptive_audio_call",
         "adaptive_audio_cap",
         "adaptive_audio_csip",
+        "adaptive_audio_pbp",
     }
 )
 ARDUINO_GROUPS = {
@@ -3647,6 +3649,168 @@ def test_adaptive_audio_csip_roles(
                 )
 
 
+## @brief P0의 2개 Public Broadcast Profile 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_audio_pbp_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    common_source = "NUCODE_BLE_Audio.cpp"
+    public_source = "NUCODE_BLE_Audio_PublicBroadcast.cpp"
+    backend_sources = (
+        "NUCODE_BLE_Audio_CapInitiator.cpp",
+        "NUCODE_BLE_Audio_CapAcceptor.cpp",
+        "NUCODE_BLE_Audio_BroadcastSink.cpp",
+        "NUCODE_BLE_Audio_UnicastClient.cpp",
+        "NUCODE_BLE_Audio_UnicastServer.cpp",
+        "NUCODE_BLE_Audio_BroadcastSource.cpp",
+        "NUCODE_BLE_Audio_BroadcastAssistant.cpp",
+        "NUCODE_BLE_Audio_HearingAccess.cpp",
+        "NUCODE_BLE_Audio_ControlController.cpp",
+        "NUCODE_BLE_Audio_ControlDevice.cpp",
+        "NUCODE_BLE_Audio_MediaControl.cpp",
+        "NUCODE_BLE_Audio_CallControl.cpp",
+        "NUCODE_BLE_Audio_CapCommander.cpp",
+        "NUCODE_BLE_Audio_CapUnicastInitiator.cpp",
+        "NUCODE_BLE_Audio_Csip.cpp",
+        "NUCODE_BLE_Audio_ProfileRoles.cpp",
+    )
+    security_sources = (
+        "NUCODE_BLE_Security.cpp",
+        "SecurityBond.cpp",
+        "SecurityOob.cpp",
+        "SecurityPairing.cpp",
+        "NUCODE_BLE_HidsBackend.c",
+        "NUCODE_BLE_ProfilesBackend.c",
+        "SecurityBattery.cpp",
+        "SecurityDeviceInformation.cpp",
+        "SecurityHid.cpp",
+        "SecurityProfiles.cpp",
+    )
+    cases = (
+        (
+            "PublicAudioBroadcastSource",
+            "ble-audio-public-broadcast-source",
+            {"ble.iso-streams": 1},
+            ("NUCODE_BLE_Audio_CapInitiator.cpp",),
+            (
+                "CONFIG_BT_PBP=y",
+                "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                "CONFIG_BT_ISO_MAX_CHAN=1",
+                "CONFIG_BT_ISO_TX_BUF_COUNT=6",
+            ),
+        ),
+        (
+            "PublicAudioBroadcastSink",
+            "ble-audio-public-broadcast-sink",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            (
+                "NUCODE_BLE_Audio_CapAcceptor.cpp",
+                "NUCODE_BLE_Audio_BroadcastSink.cpp",
+            ),
+            (
+                "CONFIG_BT_PBP=y",
+                "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BONDABLE=y",
+                "CONFIG_BT_PAC_SNK_LOC=y",
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                "CONFIG_BT_ISO_MAX_CHAN=1",
+                "CONFIG_BT_ISO_RX_BUF_COUNT=8",
+            ),
+        ),
+    )
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+        "CONFIG_BT_SETTINGS=y",
+        "CONFIG_BT_BAS=y",
+        "CONFIG_BT_DIS=y",
+        "CONFIG_BT_HIDS=y",
+        "CONFIG_BT_HRS=y",
+    )
+    fixtures = root / "adaptive-audio-pbp-fixtures"
+    for name, role, capacities, expected_backends, required_configs in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Audio"
+            / "examples"
+            / name
+            / f"{name}.ino",
+            sketch / f"{name}.ino",
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        build = root / f"build-adaptive-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive PBP role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != capacities:
+            raise SmokeFailure(
+                f"adaptive PBP capacity mismatch: {name}: {actual_capacities}"
+            )
+        if "nucode.ble.security" in resolution.get("library_features", []):
+            raise SmokeFailure(f"adaptive PBP security feature is unexpected: {name}")
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        for required_config in required_configs:
+            if required_config not in final_config:
+                raise SmokeFailure(
+                    f"adaptive PBP required Kconfig is missing: {name}: {required_config}"
+                )
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    f"adaptive PBP unrelated Kconfig is enabled: {name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(encoding="utf-8")
+        for source in (common_source, public_source, *expected_backends):
+            if source not in source_graph:
+                raise SmokeFailure(
+                    f"adaptive PBP required source is missing: {name}: {source}"
+                )
+        for source in backend_sources:
+            if (source not in expected_backends) and (source in source_graph):
+                raise SmokeFailure(
+                    f"adaptive PBP unrelated backend is present: {name}: {source}"
+                )
+        for source in security_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    f"adaptive PBP security source is present: {name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -3736,6 +3900,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive_audio_call": test_adaptive_audio_call_roles,
                 "adaptive_audio_cap": test_adaptive_audio_cap_roles,
                 "adaptive_audio_csip": test_adaptive_audio_csip_roles,
+                "adaptive_audio_pbp": test_adaptive_audio_pbp_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]
