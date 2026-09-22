@@ -476,6 +476,18 @@ extern "C" void sensorRead(void)
                 {"ble.connections": 1},
             ),
             (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-call-server",
+                "CONFIG_BT_CCP_CALL_CONTROL_SERVER=y",
+                {"ble.connections": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-call-client",
+                "CONFIG_BT_CCP_CALL_CONTROL_CLIENT=y",
+                {"ble.connections": 1},
+            ),
+            (
                 ["NUCODE_BLE_DirectionFinding"],
                 "ble-df-cte-beacon",
                 "CONFIG_NUCODE_BLE_DF_BEACON=y",
@@ -547,7 +559,7 @@ extern "C" void sensorRead(void)
                 )
 
     def test_audio_role_source_ownership_is_minimal(self) -> None:
-        """! @brief 15개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
+        """! @brief 17개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio"]
@@ -563,6 +575,7 @@ extern "C" void sensorRead(void)
         control_device = f"{root}/NUCODE_BLE_Audio_ControlDevice.cpp"
         control_controller = f"{root}/NUCODE_BLE_Audio_ControlController.cpp"
         media_control = f"{root}/NUCODE_BLE_Audio_MediaControl.cpp"
+        call_control = f"{root}/NUCODE_BLE_Audio_CallControl.cpp"
         cases = {
             "ble-audio-unicast-source": {common, client},
             "ble-audio-unicast-sink": {common, server},
@@ -579,6 +592,8 @@ extern "C" void sensorRead(void)
             "ble-audio-control-controller": {common, control_controller},
             "ble-audio-media-player": {common, media_control},
             "ble-audio-media-client": {common, media_control},
+            "ble-audio-call-server": {common, call_control},
+            "ble-audio-call-client": {common, call_control},
         }
         for role, expected_sources in cases.items():
             with self.subTest(role=role):
@@ -589,6 +604,7 @@ extern "C" void sensorRead(void)
                     ("hearing-access" in role)
                     or ("audio-control" in role)
                     or ("audio-media" in role)
+                    or ("audio-call" in role)
                 ):
                     libraries.append("NUCODE_BLE_Security")
                 features = MODULE.resolve_library_features(ROOT, profile, libraries)
@@ -624,6 +640,8 @@ extern "C" void sensorRead(void)
             "ble-audio-control-controller",
             "ble-audio-media-player",
             "ble-audio-media-client",
+            "ble-audio-call-server",
+            "ble-audio-call-client",
         ):
             with self.subTest(role=role):
                 declaration = copy.deepcopy(self.empty_declaration)
@@ -643,7 +661,7 @@ extern "C" void sensorRead(void)
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 33)
+        self.assertEqual(len(roles), 35)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):
@@ -733,6 +751,20 @@ extern "C" void sensorRead(void)
         examples = {
             "MediaControlPlayer": "ble-audio-media-player",
             "MediaControlClient": "ble-audio-media-client",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
+
+    def test_audio_call_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 Call Control 2예제가 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "CallControlServer": "ble-audio-call-server",
+            "CallControlClient": "ble-audio-call-client",
         }
         root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
         for example, role in examples.items():

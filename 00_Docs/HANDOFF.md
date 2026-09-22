@@ -52,8 +52,10 @@ Audio Control device/controller 2개 preset도 추가해 총 31개 preset을 연
 저수준 설정 없는 clean smoke에서 VCP·MICP, AICS 2개, VOCS 1개, connection capacity와 역할별 backend만
 남는 것을 확인했습니다. Media Control player/client 2개 preset도 추가해 총 33개 preset을 연결했고,
 공개 `.ino`의 저수준 설정 없는 clean smoke에서 MPL/MCS·MCC/OTS와 역할별 backend만 남는 것을
-확인했습니다. M31 인접 Host 147건과 P0/builder Host 29건, 총 176건이 PASS했습니다. 나머지 Audio
-profile 역할 확장과 ELF/map·RAM gate는 후속 작업입니다. 전체 Host suite는 1,461건 PASS(2 skip)이며 장치에는 접근하지
+확인했습니다. Call Control server/client 2개 preset을 더해 총 35개 preset을 연결했고, 공개 `.ino`의
+저수준 설정 없는 clean smoke에서 CCP/TBS와 Call Control backend만 남는 것을 확인했습니다. M31 인접
+Host 147건과 P0/builder Host 30건, 총 177건이 PASS했습니다. 나머지 Audio profile 역할 확장과
+ELF/map·RAM gate는 후속 작업입니다. 전체 Host suite는 1,462건 PASS(2 skip)이며 장치에는 접근하지
 않았습니다.
 
 ## 1. 현재 상태
@@ -65,7 +67,7 @@ profile 역할 확장과 ELF/map·RAM gate는 후속 작업입니다. 전체 Hos
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | P0-1 resolver·P0-2 probe/cache·P0-3a Core adaptive 생성/clean-build 완료. P0-3b capacity·strict role gate·총 33개 preset source filter/clean-build 완료(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2), 나머지 Audio profile 역할·ELF/map/RAM gate 진행 중 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
+| 메모리 최적화 | P0-1 resolver·P0-2 probe/cache·P0-3a Core adaptive 생성/clean-build 완료. P0-3b capacity·strict role gate·총 35개 preset source filter/clean-build 완료(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2, Call Control 2/2), 나머지 Audio profile 역할·ELF/map/RAM gate 진행 중 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
 | M31-W04 DF | 미완료. connected RX 내부 진단 4 valid IQ report·328 sample, 전체 FAIL·raw IQ 안정성 HOLD | [216번 초기 경계](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [220번 보존·인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) |
 | M31-W05 CS | 미완료. 같은 ACL 비암호화 read 거부 20/20, flash 직후 raw RAS 100·복구 20/20 두 번 PASS. wrong-key 실기·과거 중단 원인 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |

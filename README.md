@@ -217,10 +217,10 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | Raw ISO | [ISO 예제와 역할 안내](libraries/NUCODE_BLE_ISO/examples/README.md) — CIS·BIS·암호화·시각 동기·combined 11역할 |
 | LE Audio | [Audio 예제와 역할 안내](libraries/NUCODE_BLE_Audio/examples/README.md) — LC3·BAP·CAP·CSIP·PBP·제어 profile·TMAP/GMAP·HAP |
 
-개발용 `adaptive` profile은 현재 총 33개 preset을 제공하며, ISO 11역할, Audio BAP 7역할,
-HAP 2역할, Audio Control 2역할과 Media Control player/client 2역할을 역할별 최소 설정·소스로 해석합니다.
-Media Control 공개 예제도 검증된 `nucode-build.json` sidecar를 제공하며, 기본 `standard` profile은
-계속 full 호환 경로로 유지합니다.
+개발용 `adaptive` profile은 현재 총 35개 preset을 제공하며, ISO 11역할, Audio BAP 7역할,
+HAP 2역할, Audio Control 2역할, Media Control player/client 2역할과 Call Control
+server/client 2역할을 역할별 최소 설정·소스로 해석합니다. Media·Call Control 공개 예제도 검증된
+`nucode-build.json` sidecar를 제공하며, 기본 `standard` profile은 계속 full 호환 경로로 유지합니다.
 
 송신/수신 역할에 맞는 짝 예제와 보드 수는 각 Sketch 주석과
 [프로필·전체 예제 목록](<00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md>)을 따릅니다.
