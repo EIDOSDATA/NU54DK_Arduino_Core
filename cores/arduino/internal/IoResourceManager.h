@@ -133,20 +133,23 @@ namespace nucode::arduino::internal
         bool changed{false};
     };
 
-    /**
-     * @brief 여러 자원의 원자적 소유권 변경을 나타내는 고정 크기 lease입니다.
-     *
-     * 호출자는 driver 또는 pinctrl 변경 전에 reserve하고, 성공하면 commit,
-     * 실패하면 rollback해야 합니다. 동적 메모리는 사용하지 않습니다.
-     */
-    struct IoResourceLease
+    /** @brief 용도에 맞는 entry 수로 원자적 소유권 변경을 보존하는 lease입니다. */
+    template <std::size_t Capacity> struct FixedIoResourceLease
     {
+        static_assert(Capacity > 0U, "lease capacity는 1 이상이어야 합니다.");
+        static constexpr std::size_t capacity = Capacity;
         IoResourceOwner owner{};
         IoLeasePhase phase{IoLeasePhase::empty};
         std::uint64_t manager_epoch{0U};
         std::size_t count{0U};
-        IoResourceLeaseEntry entries[io_resource_lease_capacity]{};
+        IoResourceLeaseEntry entries[Capacity]{};
     };
+
+    /** @brief 최대 16개 자원의 범용 원자적 transaction lease입니다. */
+    using IoResourceLease = FixedIoResourceLease<io_resource_lease_capacity>;
+
+    /** @brief GPIO pad나 peripheral block 한 개만 다루는 저메모리 transaction lease입니다. */
+    using IoResourceSingleLease = FixedIoResourceLease<1U>;
 
     /** @brief 즉시 commit한 최대 두 자원을 보존하는 저메모리 token입니다. */
     inline constexpr std::size_t io_resource_token_capacity = 2U;
@@ -243,6 +246,12 @@ namespace nucode::arduino::internal
                        IoAcquirePolicy policy, IoResourceLease &lease,
                        IoResourceSnapshot *conflict = nullptr) noexcept;
 
+    /** @brief 단일 자원을 범용 16-entry 저장소 없이 예약합니다. */
+    [[nodiscard]] IoResourceResult
+    reserveIoResources(IoResourceOwner owner, const IoResourceId *resources, std::size_t count,
+                       IoAcquirePolicy policy, IoResourceSingleLease &lease,
+                       IoResourceSnapshot *conflict = nullptr) noexcept;
+
     /**
      * @brief 예상한 active owner의 자원을 새 owner에게 원자적으로 전환 예약합니다.
      *
@@ -255,14 +264,30 @@ namespace nucode::arduino::internal
                         const IoResourceId *resources, std::size_t count, IoResourceLease &lease,
                         IoResourceSnapshot *conflict = nullptr) noexcept;
 
+    /** @brief 단일 active 자원을 다른 owner에게 전환 예약합니다. */
+    [[nodiscard]] IoResourceResult
+    transferIoResources(IoResourceOwner expected_owner, IoResourceOwner new_owner,
+                        const IoResourceId *resources, std::size_t count,
+                        IoResourceSingleLease &lease,
+                        IoResourceSnapshot *conflict = nullptr) noexcept;
+
     /** @brief 예약한 자원 변경을 활성 상태로 확정합니다. */
     [[nodiscard]] IoResourceResult commitIoResources(IoResourceLease &lease) noexcept;
+
+    /** @brief 단일 자원 lease를 확정합니다. */
+    [[nodiscard]] IoResourceResult commitIoResources(IoResourceSingleLease &lease) noexcept;
 
     /** @brief driver 전환 실패 후 예약 전 상태를 원자적으로 복구합니다. */
     [[nodiscard]] IoResourceResult rollbackIoResources(IoResourceLease &lease) noexcept;
 
+    /** @brief 단일 자원 lease를 이전 상태로 되돌립니다. */
+    [[nodiscard]] IoResourceResult rollbackIoResources(IoResourceSingleLease &lease) noexcept;
+
     /** @brief 확정된 lease가 새로 획득한 자원을 반환합니다. */
     [[nodiscard]] IoResourceResult releaseIoResources(IoResourceLease &lease) noexcept;
+
+    /** @brief 단일 자원 lease의 commit된 소유권을 반환합니다. */
+    [[nodiscard]] IoResourceResult releaseIoResources(IoResourceSingleLease &lease) noexcept;
 
     /** @brief 최대 두 자원을 reserve·commit 한 연산으로 획득합니다. */
     [[nodiscard]] IoResourceResult

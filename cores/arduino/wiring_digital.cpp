@@ -766,7 +766,7 @@ namespace nucode::arduino::internal
         }
 
         const IoResourceId resource = gpioIoResource(description->gpio);
-        IoResourceLease restore_lease{};
+        IoResourceSingleLease restore_lease{};
         const IoResourceResult reserve_result =
             transferIoResources(handover.target_owner, gpio_owner, &resource, 1U, restore_lease);
         if (reserve_result != IoResourceResult::success)

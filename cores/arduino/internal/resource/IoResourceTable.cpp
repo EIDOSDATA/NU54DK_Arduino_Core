@@ -72,13 +72,15 @@ namespace nucode::arduino::internal::io_resource_detail
     }
 
     /** @brief lease가 현재 manager epoch의 요청 단계인지 확인합니다. */
-    bool IoResourceTable::validLeaseEpoch(const IoResourceLease &lease) noexcept
+    template <typename Lease>
+    bool IoResourceTable::validLeaseEpoch(const Lease &lease) noexcept
     {
         return lease.manager_epoch == manager_epoch;
     }
 
     /** @brief reserve 단계의 변경·차용 entry가 모두 유효한지 검사합니다. */
-    bool IoResourceTable::validateReservedEntries(const IoResourceLease &lease) noexcept
+    template <typename Lease>
+    bool IoResourceTable::validateReservedEntries(const Lease &lease) noexcept
     {
         for (std::size_t index = 0U; index < lease.count; ++index)
         {
@@ -109,7 +111,8 @@ namespace nucode::arduino::internal::io_resource_detail
     }
 
     /** @brief commit된 lease의 변경 entry가 반환 가능한지 검사합니다. */
-    IoResourceResult IoResourceTable::validateReleaseEntries(const IoResourceLease &lease) noexcept
+    template <typename Lease>
+    IoResourceResult IoResourceTable::validateReleaseEntries(const Lease &lease) noexcept
     {
         for (std::size_t index = 0U; index < lease.count; ++index)
         {
@@ -152,13 +155,12 @@ namespace nucode::arduino::internal::io_resource_detail
         return findSlot(resource);
     }
 
-    IoResourceResult IoResourceTable::reserveIoResources(IoResourceOwner owner,
-                                                         const IoResourceId *resources,
-                                                         std::size_t count, IoAcquirePolicy policy,
-                                                         IoResourceLease &lease,
-                                                         IoResourceSnapshot *conflict) noexcept
+    template <typename Lease>
+    IoResourceResult IoResourceTable::reserveIoResourcesImpl(
+        IoResourceOwner owner, const IoResourceId *resources, std::size_t count,
+        IoAcquirePolicy policy, Lease &lease, IoResourceSnapshot *conflict) noexcept
     {
-        if ((resources == nullptr) || (count == 0U) || (count > io_resource_lease_capacity) ||
+        if ((resources == nullptr) || (count == 0U) || (count > Lease::capacity) ||
             (owner.kind == IoOwnerKind::none) || (policy != IoAcquirePolicy::exclusive))
         {
             return IoResourceResult::invalid_argument;
@@ -184,8 +186,8 @@ namespace nucode::arduino::internal::io_resource_detail
             }
         }
 
-        ResourceSlot *selected[io_resource_lease_capacity]{};
-        bool selected_new[io_resource_lease_capacity]{};
+        ResourceSlot *selected[Lease::capacity]{};
+        bool selected_new[Lease::capacity]{};
 
         for (std::size_t index = 0U; index < count; ++index)
         {
@@ -266,13 +268,28 @@ namespace nucode::arduino::internal::io_resource_detail
         return IoResourceResult::success;
     }
 
-    IoResourceResult IoResourceTable::transferIoResources(IoResourceOwner expected_owner,
-                                                          IoResourceOwner new_owner,
-                                                          const IoResourceId *resources,
-                                                          std::size_t count, IoResourceLease &lease,
-                                                          IoResourceSnapshot *conflict) noexcept
+    IoResourceResult IoResourceTable::reserveIoResources(
+        IoResourceOwner owner, const IoResourceId *resources, std::size_t count,
+        IoAcquirePolicy policy, IoResourceLease &lease, IoResourceSnapshot *conflict) noexcept
     {
-        if ((resources == nullptr) || (count == 0U) || (count > io_resource_lease_capacity) ||
+        return reserveIoResourcesImpl(owner, resources, count, policy, lease, conflict);
+    }
+
+    IoResourceResult IoResourceTable::reserveIoResources(
+        IoResourceOwner owner, const IoResourceId *resources, std::size_t count,
+        IoAcquirePolicy policy, IoResourceSingleLease &lease,
+        IoResourceSnapshot *conflict) noexcept
+    {
+        return reserveIoResourcesImpl(owner, resources, count, policy, lease, conflict);
+    }
+
+    template <typename Lease>
+    IoResourceResult IoResourceTable::transferIoResourcesImpl(
+        IoResourceOwner expected_owner, IoResourceOwner new_owner,
+        const IoResourceId *resources, std::size_t count, Lease &lease,
+        IoResourceSnapshot *conflict) noexcept
+    {
+        if ((resources == nullptr) || (count == 0U) || (count > Lease::capacity) ||
             (expected_owner.kind == IoOwnerKind::none) || (new_owner.kind == IoOwnerKind::none) ||
             sameOwner(expected_owner, new_owner))
         {
@@ -298,7 +315,7 @@ namespace nucode::arduino::internal::io_resource_detail
             }
         }
 
-        ResourceSlot *selected[io_resource_lease_capacity]{};
+        ResourceSlot *selected[Lease::capacity]{};
         for (std::size_t index = 0U; index < count; ++index)
         {
             ResourceSlot *const slot = findSlot(resources[index]);
@@ -338,7 +355,26 @@ namespace nucode::arduino::internal::io_resource_detail
         return IoResourceResult::success;
     }
 
-    IoResourceResult IoResourceTable::commitIoResources(IoResourceLease &lease) noexcept
+    IoResourceResult IoResourceTable::transferIoResources(
+        IoResourceOwner expected_owner, IoResourceOwner new_owner,
+        const IoResourceId *resources, std::size_t count, IoResourceLease &lease,
+        IoResourceSnapshot *conflict) noexcept
+    {
+        return transferIoResourcesImpl(expected_owner, new_owner, resources, count, lease,
+                                       conflict);
+    }
+
+    IoResourceResult IoResourceTable::transferIoResources(
+        IoResourceOwner expected_owner, IoResourceOwner new_owner,
+        const IoResourceId *resources, std::size_t count, IoResourceSingleLease &lease,
+        IoResourceSnapshot *conflict) noexcept
+    {
+        return transferIoResourcesImpl(expected_owner, new_owner, resources, count, lease,
+                                       conflict);
+    }
+
+    template <typename Lease>
+    IoResourceResult IoResourceTable::commitIoResourcesImpl(Lease &lease) noexcept
     {
         if (lease.phase != IoLeasePhase::reserved)
         {
@@ -375,7 +411,18 @@ namespace nucode::arduino::internal::io_resource_detail
         return IoResourceResult::success;
     }
 
-    IoResourceResult IoResourceTable::rollbackIoResources(IoResourceLease &lease) noexcept
+    IoResourceResult IoResourceTable::commitIoResources(IoResourceLease &lease) noexcept
+    {
+        return commitIoResourcesImpl(lease);
+    }
+
+    IoResourceResult IoResourceTable::commitIoResources(IoResourceSingleLease &lease) noexcept
+    {
+        return commitIoResourcesImpl(lease);
+    }
+
+    template <typename Lease>
+    IoResourceResult IoResourceTable::rollbackIoResourcesImpl(Lease &lease) noexcept
     {
         if (lease.phase != IoLeasePhase::reserved)
         {
@@ -419,7 +466,18 @@ namespace nucode::arduino::internal::io_resource_detail
         return IoResourceResult::success;
     }
 
-    IoResourceResult IoResourceTable::releaseIoResources(IoResourceLease &lease) noexcept
+    IoResourceResult IoResourceTable::rollbackIoResources(IoResourceLease &lease) noexcept
+    {
+        return rollbackIoResourcesImpl(lease);
+    }
+
+    IoResourceResult IoResourceTable::rollbackIoResources(IoResourceSingleLease &lease) noexcept
+    {
+        return rollbackIoResourcesImpl(lease);
+    }
+
+    template <typename Lease>
+    IoResourceResult IoResourceTable::releaseIoResourcesImpl(Lease &lease) noexcept
     {
         if (lease.phase != IoLeasePhase::committed)
         {
@@ -454,6 +512,16 @@ namespace nucode::arduino::internal::io_resource_detail
         lease.phase = IoLeasePhase::released;
 
         return IoResourceResult::success;
+    }
+
+    IoResourceResult IoResourceTable::releaseIoResources(IoResourceLease &lease) noexcept
+    {
+        return releaseIoResourcesImpl(lease);
+    }
+
+    IoResourceResult IoResourceTable::releaseIoResources(IoResourceSingleLease &lease) noexcept
+    {
+        return releaseIoResourcesImpl(lease);
     }
 
     IoResourceResult IoResourceTable::acquireIoResources(IoResourceOwner owner,

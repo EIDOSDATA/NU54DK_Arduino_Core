@@ -16,14 +16,26 @@ namespace nucode::arduino::internal::io_resource_detail
                                             std::size_t count, IoAcquirePolicy policy,
                                             IoResourceLease &lease,
                                             IoResourceSnapshot *conflict) noexcept;
+        IoResourceResult reserveIoResources(IoResourceOwner owner, const IoResourceId *resources,
+                                            std::size_t count, IoAcquirePolicy policy,
+                                            IoResourceSingleLease &lease,
+                                            IoResourceSnapshot *conflict) noexcept;
         IoResourceResult transferIoResources(IoResourceOwner expected_owner,
                                              IoResourceOwner new_owner,
                                              const IoResourceId *resources, std::size_t count,
                                              IoResourceLease &lease,
                                              IoResourceSnapshot *conflict) noexcept;
+        IoResourceResult transferIoResources(IoResourceOwner expected_owner,
+                                             IoResourceOwner new_owner,
+                                             const IoResourceId *resources, std::size_t count,
+                                             IoResourceSingleLease &lease,
+                                             IoResourceSnapshot *conflict) noexcept;
         IoResourceResult commitIoResources(IoResourceLease &lease) noexcept;
+        IoResourceResult commitIoResources(IoResourceSingleLease &lease) noexcept;
         IoResourceResult rollbackIoResources(IoResourceLease &lease) noexcept;
+        IoResourceResult rollbackIoResources(IoResourceSingleLease &lease) noexcept;
         IoResourceResult releaseIoResources(IoResourceLease &lease) noexcept;
+        IoResourceResult releaseIoResources(IoResourceSingleLease &lease) noexcept;
         /** @brief 최대 두 자원의 즉시 획득을 큰 임시 lease 없이 원자적으로 처리합니다. */
         IoResourceResult acquireIoResources(IoResourceOwner owner, const IoResourceId *resources,
                                             std::size_t count, IoAcquirePolicy policy,
@@ -53,10 +65,30 @@ namespace nucode::arduino::internal::io_resource_detail
         [[nodiscard]] ResourceSlot *findConflictingSlot(const IoResourceId &resource) noexcept;
         [[nodiscard]] ResourceSlot *findEmptySlot(ResourceSlot *const *selected,
                                                   std::size_t selected_count) noexcept;
-        [[nodiscard]] bool validLeaseEpoch(const IoResourceLease &lease) noexcept;
-        [[nodiscard]] bool validateReservedEntries(const IoResourceLease &lease) noexcept;
-        [[nodiscard]] IoResourceResult
-        validateReleaseEntries(const IoResourceLease &lease) noexcept;
+        template <typename Lease>
+        [[nodiscard]] bool validLeaseEpoch(const Lease &lease) noexcept;
+        template <typename Lease>
+        [[nodiscard]] bool validateReservedEntries(const Lease &lease) noexcept;
+        template <typename Lease>
+        [[nodiscard]] IoResourceResult validateReleaseEntries(const Lease &lease) noexcept;
+        template <typename Lease>
+        IoResourceResult reserveIoResourcesImpl(IoResourceOwner owner,
+                                                const IoResourceId *resources,
+                                                std::size_t count, IoAcquirePolicy policy,
+                                                Lease &lease,
+                                                IoResourceSnapshot *conflict) noexcept;
+        template <typename Lease>
+        IoResourceResult transferIoResourcesImpl(IoResourceOwner expected_owner,
+                                                 IoResourceOwner new_owner,
+                                                 const IoResourceId *resources,
+                                                 std::size_t count, Lease &lease,
+                                                 IoResourceSnapshot *conflict) noexcept;
+        template <typename Lease>
+        IoResourceResult commitIoResourcesImpl(Lease &lease) noexcept;
+        template <typename Lease>
+        IoResourceResult rollbackIoResourcesImpl(Lease &lease) noexcept;
+        template <typename Lease>
+        IoResourceResult releaseIoResourcesImpl(Lease &lease) noexcept;
         void fillSnapshot(const ResourceSlot *slot, IoResourceSnapshot &snapshot) noexcept;
         [[nodiscard]] const ResourceSlot *findSlot(const IoResourceId &resource, int) noexcept;
         ResourceSlot resource_slots[CONFIG_NUCODE_ARDUINO_IO_RESOURCE_SLOTS]{};

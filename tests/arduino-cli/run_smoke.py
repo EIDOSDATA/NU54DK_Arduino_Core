@@ -163,7 +163,7 @@ ADAPTIVE_EXAMPLE_RAM_CEILINGS = {
 
 ## @brief 역할 선언이 없는 adaptive Core 고정 예제의 정적 RAM 회귀 상한입니다.
 ADAPTIVE_CORE_RAM_CEILINGS = {
-    "p0_serial_spi": 26000,
+    "p0_serial_spi": 22500,
 }
 
 

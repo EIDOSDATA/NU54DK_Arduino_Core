@@ -63,7 +63,7 @@ namespace nucode::arduino::internal
         std::size_t requested_pin{0U};
         std::size_t canonical_pin{0U};
         IoResourceOwner target_owner{};
-        IoResourceLease ownership_lease{};
+        IoResourceSingleLease ownership_lease{};
         PinInterruptHandoverState interrupt{};
         std::uint8_t previous_mode{0U};
         bool previous_output_latch{false};
