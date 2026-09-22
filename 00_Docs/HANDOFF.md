@@ -24,7 +24,7 @@ fail-closed로 거부합니다. Serial-only·SPI include-only·Serial+SPI clean 
 Devicetree chosen·`SPI.cpp` 포함/부재와 동일 입력 cache 재사용을 확인했습니다. 기존 `standard`는
 기본 full 호환 profile이며 `adaptive`는 아직 실험 선택지입니다. BLE 역할/capacity와 역할별 ELF/map·
 RAM gate는 남아 있습니다. 역할 capacity 집계값은 registry schema v4에서 `BT_MAX_CONN`·ISO channel·
-L2CAP TX MTU Kconfig로 생성되며 capability의 고정값과 충돌하면 resolver가 거부합니다.
+L2CAP TX MTU·`BT_MAX_PAIRED` Kconfig로 생성되며 capability의 고정값과 충돌하면 resolver가 거부합니다.
 `requires_any_role`은 역할 종속 capability에 허용된 role이 하나도 없거나 registry가 정의되지 않은
 role을 참조하면 중단합니다. 따라서 BLE library를 role 없이 adaptive 구성에 넣는 경로를 이후 preset
 연결 단계에서 조용한 full fallback 없이 차단할 수 있습니다.
@@ -58,8 +58,11 @@ CAP acceptor/commander/initiator와 unicast acceptor/initiator 5개 preset도 �
 연결했습니다. 실제 공개 CAP `.ino`의 저수준 설정 없는 clean smoke에서 역할별 CAP backend와 필요한
 broadcast sink 또는 unicast server backend만 남는 것을 확인했습니다. broadcaster-only CAP initiator가
 불필요한 GATT를 요구하지 않도록 `BLEDevice.begin()`의 GATT callback 등록도 연결 기능에 한정했습니다.
-M31 인접 Host 147건과 P0/builder Host 31건, 총 178건이 PASS했습니다. 나머지 Audio profile 역할 확장과
-ELF/map·RAM gate는 후속 작업입니다. 전체 Host suite는 1,463건 PASS(2 skip)이며 장치에는 접근하지
+CSIP set member/coordinator 2개 preset도 추가해 총 42개 preset을 연결했습니다. 실제 공개 CSIP `.ino`의
+저수준 설정 없는 clean smoke에서 역할별 CSIP backend와 Security source만 남고 member 1개·coordinator
+2개의 connection/bond capacity가 생성되는 것을 확인했습니다. M31 인접 Host 147건과 P0/builder Host
+32건, 총 179건이 PASS했습니다. 나머지 Audio profile 역할 확장과 ELF/map·RAM gate는 후속 작업입니다.
+전체 Host suite는 1,464건 PASS(2 skip)이며 장치에는 접근하지
 않았습니다.
 
 ## 1. 현재 상태
@@ -71,7 +74,7 @@ ELF/map·RAM gate는 후속 작업입니다. 전체 Host suite는 1,463건 PASS(
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | P0-1 resolver·P0-2 probe/cache·P0-3a Core adaptive 생성/clean-build 완료. P0-3b capacity·strict role gate·총 40개 preset source filter/clean-build 완료(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2, Call Control 2/2, CAP 5/5), 나머지 Audio profile 역할·ELF/map/RAM gate 진행 중 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
+| 메모리 최적화 | P0-1 resolver·P0-2 probe/cache·P0-3a Core adaptive 생성/clean-build 완료. P0-3b capacity·strict role gate·총 42개 preset source filter/clean-build 완료(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2, Call Control 2/2, CAP 5/5, CSIP 2/2), 나머지 Audio profile 역할·ELF/map/RAM gate 진행 중 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
 | M31-W04 DF | 미완료. connected RX 내부 진단 4 valid IQ report·328 sample, 전체 FAIL·raw IQ 안정성 HOLD | [216번 초기 경계](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [220번 보존·인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) |
 | M31-W05 CS | 미완료. 같은 ACL 비암호화 read 거부 20/20, flash 직후 raw RAS 100·복구 20/20 두 번 PASS. wrong-key 실기·과거 중단 원인 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |

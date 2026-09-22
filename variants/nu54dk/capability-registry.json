@@ -209,6 +209,8 @@
         "ble-audio-cap-initiator",
         "ble-audio-cap-unicast-acceptor",
         "ble-audio-cap-unicast-initiator",
+        "ble-audio-csip-member",
+        "ble-audio-csip-coordinator",
         "ble-df-connected-responder",
         "ble-cs-ras-initiator",
         "ble-cs-ras-reflector"
@@ -279,7 +281,9 @@
         "ble-audio-cap-commander",
         "ble-audio-cap-initiator",
         "ble-audio-cap-unicast-acceptor",
-        "ble-audio-cap-unicast-initiator"
+        "ble-audio-cap-unicast-initiator",
+        "ble-audio-csip-member",
+        "ble-audio-csip-coordinator"
       ],
       "conflicts": [],
       "conf": ["CONFIG_BT_AUDIO=y"],
@@ -300,14 +304,15 @@
         "ble-audio-call-server",
         "ble-audio-call-client",
         "ble-audio-cap-acceptor",
-        "ble-audio-cap-commander"
+        "ble-audio-cap-commander",
+        "ble-audio-csip-member",
+        "ble-audio-csip-coordinator"
       ],
       "conflicts": [],
       "conf": [
         "CONFIG_BT_SMP=y",
         "CONFIG_BT_SMP_APP_PAIRING_ACCEPT=y",
         "CONFIG_BT_BONDABLE=y",
-        "CONFIG_BT_MAX_PAIRED=4",
         "CONFIG_BT_SETTINGS=y",
         "CONFIG_BT_SMP_SC_PAIR_ONLY=n",
         "CONFIG_SETTINGS=y",
@@ -1390,6 +1395,64 @@
       "source_gates": ["CONFIG_BT_CAP_INITIATOR", "CONFIG_BT_BAP_UNICAST_CLIENT"]
     },
     {
+      "id": "nucode.ble.role.audio-csip-member",
+      "requires": ["nucode.ble.audio-api", "nucode.ble.security-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_UTF8=y",
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_GATT_DYNAMIC_DB=y",
+        "CONFIG_BT_CSIP_SET_MEMBER=y",
+        "CONFIG_BT_CSIP_SET_MEMBER_ENC_SIRK_SUPPORT=y",
+        "CONFIG_BT_CSIP_SET_MEMBER_SIZE_NOTIFIABLE=y",
+        "CONFIG_FPU=y",
+        "CONFIG_LIBLC3=y",
+        "CONFIG_MAIN_STACK_SIZE=4096",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=3072"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_Csip.cpp"
+      ],
+      "source_gates": ["CONFIG_BT_CSIP_SET_MEMBER"]
+    },
+    {
+      "id": "nucode.ble.role.audio-csip-coordinator",
+      "requires": ["nucode.ble.audio-api", "nucode.ble.security-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_UTF8=y",
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_PERIPHERAL=n",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_EXT_ADV=n",
+        "CONFIG_BT_PER_ADV=n",
+        "CONFIG_BT_PER_ADV_RSP=n",
+        "CONFIG_BT_CTLR_SDC_PAWR_ADV=n",
+        "CONFIG_BT_AUTO_PHY_PERIPHERAL_NONE=n",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0",
+        "CONFIG_BT_GATT_CLIENT=y",
+        "CONFIG_BT_GATT_AUTO_DISCOVER_CCC=y",
+        "CONFIG_BT_GATT_DYNAMIC_DB=y",
+        "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+        "CONFIG_BT_CSIP_SET_COORDINATOR_ENC_SIRK_SUPPORT=y",
+        "CONFIG_BT_CSIP_SET_COORDINATOR_MAX_CSIS_INSTANCES=1",
+        "CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS=2",
+        "CONFIG_FPU=y",
+        "CONFIG_LIBLC3=y",
+        "CONFIG_MAIN_STACK_SIZE=4096",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=3072"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_Csip.cpp"
+      ],
+      "source_gates": ["CONFIG_BT_CSIP_SET_COORDINATOR"]
+    },
+    {
       "id": "nucode.ble.role.df-cte-beacon",
       "requires": ["nucode.ble.direction-finding-api"],
       "requires_any_role": [],
@@ -2067,7 +2130,8 @@
       "capabilities": ["nucode.ble.role.audio-hearing-access-server"],
       "capacities": {
         "ble.connections": 1,
-        "ble.iso-streams": 1
+        "ble.iso-streams": 1,
+        "ble.paired-peers": 1
       },
       "conflicts": [
         "ble-gap-nus-dual-role",
@@ -2102,7 +2166,7 @@
     {
       "id": "ble-audio-hearing-access-client",
       "capabilities": ["nucode.ble.role.audio-hearing-access-client"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2137,7 +2201,7 @@
     {
       "id": "ble-audio-control-device",
       "capabilities": ["nucode.ble.role.audio-control-device"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2173,7 +2237,7 @@
     {
       "id": "ble-audio-control-controller",
       "capabilities": ["nucode.ble.role.audio-control-controller"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2210,7 +2274,7 @@
     {
       "id": "ble-audio-media-player",
       "capabilities": ["nucode.ble.role.audio-media-player"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2248,7 +2312,7 @@
     {
       "id": "ble-audio-media-client",
       "capabilities": ["nucode.ble.role.audio-media-client"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2287,7 +2351,7 @@
     {
       "id": "ble-audio-call-server",
       "capabilities": ["nucode.ble.role.audio-call-server"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2327,7 +2391,7 @@
     {
       "id": "ble-audio-call-client",
       "capabilities": ["nucode.ble.role.audio-call-client"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2368,7 +2432,11 @@
     {
       "id": "ble-audio-cap-acceptor",
       "capabilities": ["nucode.ble.role.audio-cap-acceptor"],
-      "capacities": {"ble.connections": 1, "ble.iso-streams": 1},
+      "capacities": {
+        "ble.connections": 1,
+        "ble.iso-streams": 1,
+        "ble.paired-peers": 1
+      },
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2410,7 +2478,7 @@
     {
       "id": "ble-audio-cap-commander",
       "capabilities": ["nucode.ble.role.audio-cap-commander"],
-      "capacities": {"ble.connections": 1},
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
       "conflicts": [
         "ble-gap-nus-dual-role",
         "ble-gatt-nus-dual-role",
@@ -2586,6 +2654,101 @@
       ]
     },
     {
+      "id": "ble-audio-csip-member",
+      "capabilities": ["nucode.ble.role.audio-csip-member"],
+      "capacities": {"ble.connections": 1, "ble.paired-peers": 1},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source",
+        "ble-iso-bis-time-receiver",
+        "ble-iso-cis-to-bis-bridge",
+        "ble-iso-cis-to-bis-receiver",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-audio-unicast-cycle",
+        "ble-audio-unicast-duplex-client",
+        "ble-audio-unicast-duplex-server",
+        "ble-audio-broadcast-source",
+        "ble-audio-broadcast-sink",
+        "ble-audio-broadcast-delegator-sink",
+        "ble-audio-broadcast-assistant",
+        "ble-audio-hearing-access-server",
+        "ble-audio-hearing-access-client",
+        "ble-audio-control-device",
+        "ble-audio-control-controller",
+        "ble-audio-media-player",
+        "ble-audio-media-client",
+        "ble-audio-call-server",
+        "ble-audio-call-client",
+        "ble-audio-cap-acceptor",
+        "ble-audio-cap-commander",
+        "ble-audio-cap-initiator",
+        "ble-audio-cap-unicast-acceptor",
+        "ble-audio-cap-unicast-initiator",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector"
+      ]
+    },
+    {
+      "id": "ble-audio-csip-coordinator",
+      "capabilities": ["nucode.ble.role.audio-csip-coordinator"],
+      "capacities": {"ble.connections": 2, "ble.paired-peers": 2},
+      "conflicts": [
+        "ble-gap-nus-dual-role",
+        "ble-gatt-nus-dual-role",
+        "ble-l2cap-coc-dual-role",
+        "ble-iso-cis-central",
+        "ble-iso-cis-peripheral",
+        "ble-iso-cis-to-bis-peer",
+        "ble-iso-bis-source",
+        "ble-iso-bis-receiver",
+        "ble-iso-bis-encrypted-source",
+        "ble-iso-bis-encrypted-receiver",
+        "ble-iso-bis-time-source",
+        "ble-iso-bis-time-receiver",
+        "ble-iso-cis-to-bis-bridge",
+        "ble-iso-cis-to-bis-receiver",
+        "ble-audio-unicast-source",
+        "ble-audio-unicast-sink",
+        "ble-audio-unicast-cycle",
+        "ble-audio-unicast-duplex-client",
+        "ble-audio-unicast-duplex-server",
+        "ble-audio-broadcast-source",
+        "ble-audio-broadcast-sink",
+        "ble-audio-broadcast-delegator-sink",
+        "ble-audio-broadcast-assistant",
+        "ble-audio-hearing-access-server",
+        "ble-audio-hearing-access-client",
+        "ble-audio-control-device",
+        "ble-audio-control-controller",
+        "ble-audio-media-player",
+        "ble-audio-media-client",
+        "ble-audio-call-server",
+        "ble-audio-call-client",
+        "ble-audio-cap-acceptor",
+        "ble-audio-cap-commander",
+        "ble-audio-cap-initiator",
+        "ble-audio-cap-unicast-acceptor",
+        "ble-audio-cap-unicast-initiator",
+        "ble-audio-csip-member",
+        "ble-df-cte-beacon",
+        "ble-df-connected-responder",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector"
+      ]
+    },
+    {
       "id": "ble-df-cte-beacon",
       "capabilities": ["nucode.ble.role.df-cte-beacon"],
       "capacities": {},
@@ -2677,6 +2840,14 @@
       "maximum": 517,
       "unit": "octets",
       "conf": ["CONFIG_BT_L2CAP_TX_MTU={value}"]
+    },
+    {
+      "id": "ble.paired-peers",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 8,
+      "unit": "peers",
+      "conf": ["CONFIG_BT_MAX_PAIRED={value}"]
     }
   ],
   "probe_symbols": [

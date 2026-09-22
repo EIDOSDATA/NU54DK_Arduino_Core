@@ -443,61 +443,69 @@ extern "C" void sensorRead(void)
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-hearing-access-server",
                 "CONFIG_BT_HAS=y",
-                {"ble.connections": 1, "ble.iso-streams": 1},
+                {
+                    "ble.connections": 1,
+                    "ble.iso-streams": 1,
+                    "ble.paired-peers": 1,
+                },
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-hearing-access-client",
                 "CONFIG_BT_HAS_CLIENT=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-control-device",
                 "CONFIG_BT_VCP_VOL_REND=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-control-controller",
                 "CONFIG_BT_VCP_VOL_CTLR=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-media-player",
                 "CONFIG_BT_MCS=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-media-client",
                 "CONFIG_BT_MCC=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-call-server",
                 "CONFIG_BT_CCP_CALL_CONTROL_SERVER=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-call-client",
                 "CONFIG_BT_CCP_CALL_CONTROL_CLIENT=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-cap-acceptor",
                 "CONFIG_BT_CAP_ACCEPTOR=y",
-                {"ble.connections": 1, "ble.iso-streams": 1},
+                {
+                    "ble.connections": 1,
+                    "ble.iso-streams": 1,
+                    "ble.paired-peers": 1,
+                },
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
                 "ble-audio-cap-commander",
                 "CONFIG_BT_CAP_COMMANDER=y",
-                {"ble.connections": 1},
+                {"ble.connections": 1, "ble.paired-peers": 1},
             ),
             (
                 ["NUCODE_BLE", "NUCODE_BLE_Audio"],
@@ -516,6 +524,18 @@ extern "C" void sensorRead(void)
                 "ble-audio-cap-unicast-initiator",
                 "CONFIG_BT_BAP_UNICAST_CLIENT=y",
                 {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-csip-member",
+                "CONFIG_BT_CSIP_SET_MEMBER=y",
+                {"ble.connections": 1, "ble.paired-peers": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-csip-coordinator",
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                {"ble.connections": 2, "ble.paired-peers": 2},
             ),
             (
                 ["NUCODE_BLE_DirectionFinding"],
@@ -555,6 +575,12 @@ extern "C" void sensorRead(void)
                     {item["id"]: item["value"] for item in result["capacities"]},
                     expected_capacities,
                 )
+                if "ble.paired-peers" in expected_capacities:
+                    self.assertIn(
+                        "CONFIG_BT_MAX_PAIRED="
+                        f"{expected_capacities['ble.paired-peers']}",
+                        result["generated"]["conf"],
+                    )
                 self.assertEqual(result["roles"], [role])
 
     def test_iso_role_source_ownership_is_minimal(self) -> None:
@@ -589,7 +615,7 @@ extern "C" void sensorRead(void)
                 )
 
     def test_audio_role_source_ownership_is_minimal(self) -> None:
-        """! @brief 22개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
+        """! @brief 24개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio"]
@@ -610,6 +636,7 @@ extern "C" void sensorRead(void)
         cap_commander = f"{root}/NUCODE_BLE_Audio_CapCommander.cpp"
         cap_initiator = f"{root}/NUCODE_BLE_Audio_CapInitiator.cpp"
         cap_unicast_initiator = f"{root}/NUCODE_BLE_Audio_CapUnicastInitiator.cpp"
+        csip = f"{root}/NUCODE_BLE_Audio_Csip.cpp"
         cases = {
             "ble-audio-unicast-source": {common, client},
             "ble-audio-unicast-sink": {common, server},
@@ -633,6 +660,8 @@ extern "C" void sensorRead(void)
             "ble-audio-cap-initiator": {common, cap_initiator},
             "ble-audio-cap-unicast-acceptor": {common, cap_acceptor, server},
             "ble-audio-cap-unicast-initiator": {common, cap_unicast_initiator},
+            "ble-audio-csip-member": {common, csip},
+            "ble-audio-csip-coordinator": {common, csip},
         }
         for role, expected_sources in cases.items():
             with self.subTest(role=role):
@@ -644,6 +673,7 @@ extern "C" void sensorRead(void)
                     or ("audio-control" in role)
                     or ("audio-media" in role)
                     or ("audio-call" in role)
+                    or ("audio-csip" in role)
                     or (
                         role
                         in {"ble-audio-cap-acceptor", "ble-audio-cap-commander"}
@@ -687,6 +717,8 @@ extern "C" void sensorRead(void)
             "ble-audio-call-client",
             "ble-audio-cap-acceptor",
             "ble-audio-cap-commander",
+            "ble-audio-csip-member",
+            "ble-audio-csip-coordinator",
         ):
             with self.subTest(role=role):
                 declaration = copy.deepcopy(self.empty_declaration)
@@ -706,7 +738,7 @@ extern "C" void sensorRead(void)
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 40)
+        self.assertEqual(len(roles), 42)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):
@@ -827,6 +859,20 @@ extern "C" void sensorRead(void)
             "CapInitiator": "ble-audio-cap-initiator",
             "CapUnicastAcceptor": "ble-audio-cap-unicast-acceptor",
             "CapUnicastInitiator": "ble-audio-cap-unicast-initiator",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
+
+    def test_audio_csip_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 CSIP 2예제가 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "CsipSetMember": "ble-audio-csip-member",
+            "CsipSetCoordinator": "ble-audio-csip-coordinator",
         }
         root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
         for example, role in examples.items():
@@ -996,6 +1042,7 @@ extern "C" void sensorRead(void)
                     "ble.connections": 1,
                     "ble.iso-streams": 1,
                     "ble.att-mtu": 247,
+                    "ble.paired-peers": 1,
                 },
                 "conflicts": [],
             },
@@ -1006,6 +1053,7 @@ extern "C" void sensorRead(void)
                     "ble.connections": 2,
                     "ble.iso-streams": 2,
                     "ble.att-mtu": 247,
+                    "ble.paired-peers": 2,
                 },
                 "conflicts": [],
             },
@@ -1017,11 +1065,13 @@ extern "C" void sensorRead(void)
         self.assertEqual(capacities["ble.connections"]["value"], 2)
         self.assertEqual(capacities["ble.iso-streams"]["value"], 3)
         self.assertEqual(capacities["ble.att-mtu"]["value"], 247)
+        self.assertEqual(capacities["ble.paired-peers"]["value"], 2)
         self.assertEqual(
             capacities["ble.connections"]["conf"], ["CONFIG_BT_MAX_CONN=2"]
         )
         self.assertIn("CONFIG_BT_ISO_MAX_CHAN=3", result["generated"]["conf"])
         self.assertIn("CONFIG_BT_L2CAP_TX_MTU=247", result["generated"]["conf"])
+        self.assertIn("CONFIG_BT_MAX_PAIRED=2", result["generated"]["conf"])
 
         registry["roles"]["role-b"]["capacities"]["ble.att-mtu"] = 517
         with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPACITY_CONFLICT"):

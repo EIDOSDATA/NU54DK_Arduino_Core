@@ -53,6 +53,7 @@ ARDUINO_TESTS = (
     "adaptive_audio_media",
     "adaptive_audio_call",
     "adaptive_audio_cap",
+    "adaptive_audio_csip",
 )
 DEFAULT_TESTS = tuple(
     test
@@ -69,6 +70,7 @@ DEFAULT_TESTS = tuple(
         "adaptive_audio_media",
         "adaptive_audio_call",
         "adaptive_audio_cap",
+        "adaptive_audio_csip",
     }
 )
 ARDUINO_GROUPS = {
@@ -2682,13 +2684,17 @@ def test_adaptive_audio_hap_roles(
                 "CONFIG_BT_ASCS_MAX_ASE_SRC_COUNT=0",
                 "CONFIG_BT_SETTINGS=y",
             ),
-            {"ble.connections": 1, "ble.iso-streams": 1},
+            {
+                "ble.connections": 1,
+                "ble.iso-streams": 1,
+                "ble.paired-peers": 1,
+            },
         ),
         (
             "HearingAccessClient",
             "ble-audio-hearing-access-client",
             ("CONFIG_BT_HAS_CLIENT=y", "CONFIG_BT_SETTINGS=y"),
-            {"ble.connections": 1},
+            {"ble.connections": 1, "ble.paired-peers": 1},
         ),
     )
     forbidden_settings = (
@@ -2900,7 +2906,7 @@ def test_adaptive_audio_control_roles(
         actual_capacities = {
             item["id"]: item["value"] for item in resolution.get("capacities", [])
         }
-        if actual_capacities != {"ble.connections": 1}:
+        if actual_capacities != {"ble.connections": 1, "ble.paired-peers": 1}:
             raise SmokeFailure(
                 f"adaptive Audio Control capacity mismatch: {name}: {actual_capacities}"
             )
@@ -3058,7 +3064,7 @@ def test_adaptive_audio_media_roles(
         actual_capacities = {
             item["id"]: item["value"] for item in resolution.get("capacities", [])
         }
-        if actual_capacities != {"ble.connections": 1}:
+        if actual_capacities != {"ble.connections": 1, "ble.paired-peers": 1}:
             raise SmokeFailure(
                 f"adaptive Media Control capacity mismatch: {name}: {actual_capacities}"
             )
@@ -3216,7 +3222,7 @@ def test_adaptive_audio_call_roles(
         actual_capacities = {
             item["id"]: item["value"] for item in resolution.get("capacities", [])
         }
-        if actual_capacities != {"ble.connections": 1}:
+        if actual_capacities != {"ble.connections": 1, "ble.paired-peers": 1}:
             raise SmokeFailure(
                 f"adaptive Call Control capacity mismatch: {name}: {actual_capacities}"
             )
@@ -3289,7 +3295,11 @@ def test_adaptive_audio_cap_roles(
         (
             "CapAcceptor",
             "ble-audio-cap-acceptor",
-            {"ble.connections": 1, "ble.iso-streams": 1},
+            {
+                "ble.connections": 1,
+                "ble.iso-streams": 1,
+                "ble.paired-peers": 1,
+            },
             (
                 "NUCODE_BLE_Audio_CapAcceptor.cpp",
                 "NUCODE_BLE_Audio_BroadcastSink.cpp",
@@ -3307,7 +3317,7 @@ def test_adaptive_audio_cap_roles(
         (
             "CapCommander",
             "ble-audio-cap-commander",
-            {"ble.connections": 1},
+            {"ble.connections": 1, "ble.paired-peers": 1},
             ("NUCODE_BLE_Audio_CapCommander.cpp",),
             True,
             (
@@ -3486,6 +3496,157 @@ def test_adaptive_audio_cap_roles(
                 )
 
 
+## @brief P0의 2개 CSIP 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_audio_csip_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    common_source = "NUCODE_BLE_Audio.cpp"
+    csip_source = "NUCODE_BLE_Audio_Csip.cpp"
+    security_sources = (
+        "NUCODE_BLE_Security.cpp",
+        "SecurityBond.cpp",
+        "SecurityOob.cpp",
+        "SecurityPairing.cpp",
+    )
+    unrelated_sources = (
+        "NUCODE_BLE_Audio_UnicastClient.cpp",
+        "NUCODE_BLE_Audio_UnicastServer.cpp",
+        "NUCODE_BLE_Audio_BroadcastSource.cpp",
+        "NUCODE_BLE_Audio_BroadcastSink.cpp",
+        "NUCODE_BLE_Audio_BroadcastAssistant.cpp",
+        "NUCODE_BLE_Audio_HearingAccess.cpp",
+        "NUCODE_BLE_Audio_ControlController.cpp",
+        "NUCODE_BLE_Audio_ControlDevice.cpp",
+        "NUCODE_BLE_Audio_MediaControl.cpp",
+        "NUCODE_BLE_Audio_CallControl.cpp",
+        "NUCODE_BLE_Audio_CapAcceptor.cpp",
+        "NUCODE_BLE_Audio_CapCommander.cpp",
+        "NUCODE_BLE_Audio_CapInitiator.cpp",
+        "NUCODE_BLE_Audio_CapUnicastInitiator.cpp",
+        "NUCODE_BLE_Audio_ProfileRoles.cpp",
+        "NUCODE_BLE_Audio_PublicBroadcast.cpp",
+        "NUCODE_BLE_HidsBackend.c",
+        "NUCODE_BLE_ProfilesBackend.c",
+        "SecurityBattery.cpp",
+        "SecurityDeviceInformation.cpp",
+        "SecurityHid.cpp",
+        "SecurityProfiles.cpp",
+    )
+    cases = (
+        (
+            "CsipSetMember",
+            "ble-audio-csip-member",
+            {"ble.connections": 1, "ble.paired-peers": 1},
+            (
+                "CONFIG_BT_CSIP_SET_MEMBER=y",
+                "CONFIG_BT_CSIP_SET_MEMBER_ENC_SIRK_SUPPORT=y",
+                "CONFIG_BT_CSIP_SET_MEMBER_SIZE_NOTIFIABLE=y",
+                "CONFIG_BT_MAX_CONN=1",
+                "CONFIG_BT_MAX_PAIRED=1",
+            ),
+        ),
+        (
+            "CsipSetCoordinator",
+            "ble-audio-csip-coordinator",
+            {"ble.connections": 2, "ble.paired-peers": 2},
+            (
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                "CONFIG_BT_CSIP_SET_COORDINATOR_ENC_SIRK_SUPPORT=y",
+                "CONFIG_BT_CSIP_SET_COORDINATOR_MAX_CSIS_INSTANCES=1",
+                "CONFIG_BT_MAX_CONN=2",
+                "CONFIG_BT_MAX_PAIRED=2",
+                "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0",
+                "CONFIG_NUCODE_BLE_CENTRAL_CONNECTION_SLOTS=2",
+                "# CONFIG_BT_PERIPHERAL is not set",
+            ),
+        ),
+    )
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+        "CONFIG_BT_BAS=y",
+        "CONFIG_BT_DIS=y",
+        "CONFIG_BT_HIDS=y",
+        "CONFIG_BT_HRS=y",
+    )
+    fixtures = root / "adaptive-audio-csip-fixtures"
+    for name, role, capacities, required_configs in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Audio"
+            / "examples"
+            / name
+            / f"{name}.ino",
+            sketch / f"{name}.ino",
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        build = root / f"build-adaptive-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive CSIP role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != capacities:
+            raise SmokeFailure(
+                f"adaptive CSIP capacity mismatch: {name}: {actual_capacities}"
+            )
+        if "nucode.ble.security" not in resolution.get("library_features", []):
+            raise SmokeFailure(f"adaptive CSIP security feature is missing: {name}")
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        for required_config in (*required_configs, "CONFIG_BT_SETTINGS=y"):
+            if required_config not in final_config:
+                raise SmokeFailure(
+                    f"adaptive CSIP required Kconfig is missing: {name}: {required_config}"
+                )
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    f"adaptive CSIP unrelated Kconfig is enabled: {name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(encoding="utf-8")
+        for source in (common_source, csip_source, *security_sources):
+            if source not in source_graph:
+                raise SmokeFailure(
+                    f"adaptive CSIP required source is missing: {name}: {source}"
+                )
+        for source in unrelated_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    f"adaptive CSIP unrelated source is present: {name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -3574,6 +3735,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive_audio_media": test_adaptive_audio_media_roles,
                 "adaptive_audio_call": test_adaptive_audio_call_roles,
                 "adaptive_audio_cap": test_adaptive_audio_cap_roles,
+                "adaptive_audio_csip": test_adaptive_audio_csip_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]
