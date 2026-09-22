@@ -762,6 +762,29 @@ extern "C" void sensorRead(void)
                     )
                 self.assertEqual(result["roles"], [role])
 
+    def test_l2cap_only_role_excludes_generic_gatt_facade(self) -> None:
+        """! @brief CoC 전용 역할은 사용하지 않는 범용 GATT queue/state를 선택하지 않습니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        features = MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE"])
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = ["ble-l2cap-coc-dual-role"]
+        result = MODULE.resolve_capabilities(
+            self.registry, [], features, declaration
+        )
+
+        configuration = set(result["generated"]["conf"])
+        sources = set(result["generated"]["sources"])
+        self.assertIn("CONFIG_NUCODE_BLE_L2CAP=y", configuration)
+        self.assertNotIn("CONFIG_NUCODE_BLE_GATT=y", configuration)
+        self.assertNotIn("CONFIG_BT_GATT_DYNAMIC_DB=y", configuration)
+        self.assertIn(
+            "libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp", sources
+        )
+        self.assertNotIn(
+            "libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp", sources
+        )
+        self.assertFalse(any("/internal/gatt" in source for source in sources))
+
     def test_central_capabilities_explicitly_enable_observer(self) -> None:
         """! @brief Central Kconfig를 선택한 capability는 최종 Kconfig와 같은 Observer를 명시합니다. """
         for capability in self.registry["capabilities"].values():

@@ -106,7 +106,7 @@ CLI_BOOTSTRAP_ATTEMPTS = 3
 ADAPTIVE_EXAMPLE_RAM_CEILINGS = {
     "p0_ble_gap_nus": 51500,
     "p0_ble_gatt": 64000,
-    "p0_ble_l2cap": 93000,
+    "p0_ble_l2cap": 72000,
     "p0_ble_iso_cis": 53000,
     "p0_ble_audio_source": 59000,
     "p0_ble_audio_sink": 57000,
@@ -2362,6 +2362,21 @@ def test_adaptive_ble_roles(
             raise SmokeFailure(
                 f"adaptive BLE required source is missing: {name}: {required_source}"
             )
+        if name == "p0_ble_l2cap":
+            for setting in (
+                "CONFIG_NUCODE_BLE_GATT=y",
+                "CONFIG_BT_GATT_DYNAMIC_DB=y",
+            ):
+                if setting in final_config:
+                    raise SmokeFailure(
+                        f"adaptive L2CAP-only role enabled generic GATT: {setting}"
+                    )
+            normalized_graph = source_graph.replace("\\", "/")
+            for source in ("NUCODE_BLE_GATT.cpp", "/internal/gatt/"):
+                if source in normalized_graph:
+                    raise SmokeFailure(
+                        f"adaptive L2CAP-only role included generic GATT source: {source}"
+                    )
         if "/cores/arduino/SPI.cpp" in source_graph.replace("\\", "/"):
             raise SmokeFailure(f"adaptive BLE included unrelated SPI source: {name}")
 

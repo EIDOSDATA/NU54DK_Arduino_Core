@@ -265,7 +265,7 @@ DF 원시 IQ는 안테나 배열 확보를 선행조건으로 삼지 않고 고�
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
 | v0.5.0 Windows 릴리스·후속 Host 확장 | [v0.5.0 계획](00_Docs/TODO_v0.5.0.md) · [다중 Host 지원 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
-| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01~W03 완료, 다음은 `M31-MEM-OPT` 메모리 최적화 |
+| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01~W03 완료, `M31-MEM-OPT` P0 완료·P1 진행 |
 | 이후 Bluetooth 전체 구현·예제 | [전체 기능 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) · [M32 TODO](00_Docs/TODO_M32.md) · [M33 TODO](00_Docs/TODO_M33.md) |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 

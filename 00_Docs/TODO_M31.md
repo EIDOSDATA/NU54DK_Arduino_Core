@@ -103,7 +103,10 @@ Arduino peripheral route와 pin ownership state를 포함하는 구조를 먼저
 최신 사용자 목표는 동등 기능 nRF native에 우리 API의 최소 필수 비용만 더하는 선언 기반 기본 경로다.
 기존 full은 명시적 호환 선택지로 보존하며 일부 BLE 예제만 작게 만드는 것으로 전체 최적화를 닫지 않는다.
 Core API는 compiler-assisted capability probe, library 간접 요구는 feature manifest, BLE 역할·용량은
-공개 preset/declaration으로 판정해 생성 config/overlay/source에 연결한다. `SPI.begin()` 사용자가
+공개 preset/declaration으로 판정해 생성 config/overlay/source에 연결한다. P1은 Core SPI를
+50,877→20,589 B로 줄였고, CoC-only 역할에서 NUCODE 범용 GATT facade를 분리해
+91,037→70,081 B로 줄였다. 실제 GATT 사용 역할의 배열·queue/pool 최적화는 계속 진행한다.
+`SPI.begin()` 사용자가
 SPI용 `prj.conf`를 직접 작성해야 하는 상태는 최적화 완료가 아니다.
 
 ## 3. W03 세부 완료 상태 — 11/11
