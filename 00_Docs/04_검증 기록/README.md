@@ -18,7 +18,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 개발 소스 | M28·M29·M30 완료, M31 3/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
-| M31 메모리 최적화 | P0 완료, P1 GPIO 상태 25,472 B 절감·후속 고정 저장소 진행 | [P0 완료](222_M31_메모리_최적화_P0_완료.md) · [P1 GPIO](223_M31_메모리_최적화_P1_GPIO_상태_절감.md) |
+| M31 메모리 최적화 | P0 완료, P1 GPIO·UART20 누적 26,264 B 절감·route/GATT 진행 | [P0 완료](222_M31_메모리_최적화_P0_완료.md) · [P1 GPIO](223_M31_메모리_최적화_P1_GPIO_상태_절감.md) · [P1 UART20](224_M31_메모리_최적화_P1_UART20_lease_절감.md) |
 | M31-W04·W05 | 부분 실기와 실패 진단 보존·완료 아님 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 최신 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -30,6 +30,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [224 — M31 메모리 최적화 P1 UART20 lease 절감](224_M31_메모리_최적화_P1_UART20_lease_절감.md) | boot 등록 transaction 지역화, adaptive SPI RAM 25,405→24,613 B, 누적 26,264 B 절감과 26,000 B 상한 |
 | [223 — M31 메모리 최적화 P1 GPIO 상태 절감](223_M31_메모리_최적화_P1_GPIO_상태_절감.md) | pin별 transaction lease 중복 제거, adaptive SPI RAM 50,877→25,405 B, Core RAM 상한과 ownership target 회귀 |
 | [222 — M31 메모리 최적화 P0 완료](222_M31_메모리_최적화_P0_완료.md) | compiler probe·resolver·52 preset·55 image의 config/source/ELF/RAM 상한과 금지 symbol gate, P1 인계 |
 | [221 — main 마일스톤별 이력 정리](221_main_마일스톤별_이력_정리.md) | 공개 v0.4.1 마감 뒤 189커밋→7묶음, 원격 archive 원본 보존·tree 동일성·새 checkout 인계 |
