@@ -145,6 +145,20 @@ class BuildMatrixRunnerTests(unittest.TestCase):
         self.assertTrue(set(flattened).issubset(set(ARDUINO.ARDUINO_TESTS)))
         self.assertEqual(MATRIX.ARDUINO_GROUPS, tuple(ARDUINO.ARDUINO_MATRIX_GROUPS))
 
+    ## @brief P1 Core RAM 절감이 역할 없는 adaptive SPI 예제에서도 회귀하지 않습니다.
+    def test_adaptive_core_ram_ceiling_is_enforced(self) -> None:
+        ceiling = ARDUINO.ADAPTIVE_CORE_RAM_CEILINGS["p0_serial_spi"]
+        self.assertEqual(ceiling, 27000)
+        ARDUINO.assert_static_ram_ceiling(
+            {"resource_audit": {"ram": {"used_bytes": ceiling}}},
+            "p0_serial_spi",
+        )
+        with self.assertRaises(ARDUINO.SmokeFailure):
+            ARDUINO.assert_static_ram_ceiling(
+                {"resource_audit": {"ram": {"used_bytes": ceiling + 1}}},
+                "p0_serial_spi",
+            )
+
     ## @brief 로컬 Zephyr matrix가 짧고 서로 다른 outdir와 group 인자를 만듭니다.
     def test_zephyr_plan_uses_short_isolated_outdirs(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

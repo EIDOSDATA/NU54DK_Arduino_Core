@@ -161,6 +161,11 @@ ADAPTIVE_EXAMPLE_RAM_CEILINGS = {
     "GamingAudioReceiver": 77000,
 }
 
+## @brief 역할 선언이 없는 adaptive Core 고정 예제의 정적 RAM 회귀 상한입니다.
+ADAPTIVE_CORE_RAM_CEILINGS = {
+    "p0_serial_spi": 27000,
+}
+
 
 ## @brief NU54DK 보드 공통 예제 라이브러리의 저장소 경로를 반환합니다.
 def board_examples(repository: Path) -> Path:
@@ -434,14 +439,17 @@ def assert_build(build_path: Path, project_name: str) -> dict:
             raise SmokeFailure("adaptive resource audit has no capability resolution")
         resolution_path = Path(str(resolution_record.get("path", "")))
         resolution = json.loads(resolution_path.read_text(encoding="utf-8"))
-        if resolution.get("roles"):
-            assert_static_ram_ceiling(context, Path(project_name).stem)
+        label = Path(project_name).stem
+        if resolution.get("roles") or label in ADAPTIVE_CORE_RAM_CEILINGS:
+            assert_static_ram_ceiling(context, label)
     return context
 
 
 ## @brief 고정 adaptive 예제의 정적 RAM이 검증된 역할별 상한을 넘지 않는지 확인합니다.
 def assert_static_ram_ceiling(context: dict, label: str) -> None:
     ceiling_bytes = ADAPTIVE_EXAMPLE_RAM_CEILINGS.get(label)
+    if ceiling_bytes is None:
+        ceiling_bytes = ADAPTIVE_CORE_RAM_CEILINGS.get(label)
     if ceiling_bytes is None:
         raise SmokeFailure(f"adaptive static RAM ceiling is missing: {label}")
     resource_audit = context.get("resource_audit", {})

@@ -212,6 +212,22 @@ class Ac02bAnalogContractTests(unittest.TestCase):
             self.assertIn(token, interrupt)
         self.assertGreaterEqual(spi.count("spi_interrupt_mask_faulted || hasActiveSpiInterruptToken()"), 3)
 
+    def test_gpio_runtime_does_not_retain_transaction_lease_per_pin(self) -> None:
+        """! @brief commit 뒤 rollback snapshot을 논리 pin마다 중복 보존하지 않습니다. """
+        digital = (ROOT / "cores" / "arduino" / "wiring_digital.cpp").read_text(
+            encoding="utf-8"
+        )
+        state_start = digital.index("struct PinRuntimeState")
+        state_end = digital.index("K_MUTEX_DEFINE(gpio_transition_mutex)", state_start)
+        state = digital[state_start:state_end]
+
+        self.assertNotIn("IoResourceLease", state)
+        self.assertNotIn("ownership_lease", state)
+        self.assertNotIn("runtime.ownership_lease", digital)
+        self.assertNotIn("state->ownership_lease", digital)
+        self.assertIn("commitIoResources(ownership_lease)", digital)
+        self.assertIn("rollbackIoResources(ownership_lease)", digital)
+
     def test_examples_exist(self) -> None:
         expected = (
             ROOT / "libraries" / "NUCODE_NU54DK" / "examples" / "AnalogChannels" / "AnalogChannels.ino",
