@@ -85,10 +85,15 @@ nRF Connect for Desktop/VS Code, 별도 Git·Python 설치는 필수가 아닙�
 | Feature set | 용도 |
 | --- | --- |
 | `Standard peripherals` | GPIO, Serial, Wire, SPI, ADC, PWM, Storage 등 일반 Arduino Sketch |
+| `Adaptive capabilities (experimental)` | 실제 API·library·역할 선언으로 필요한 설정·소스만 선택하는 개발 경로 |
 | `BLE NUS` | NUS와 GAP/GATT·보안·표준 BLE profile 예제 |
 | `Peripheral Fabric (DAP UART disconnected)` | 인스턴스·DMA를 직접 제어하는 고급 API. DAP UART 분리 조건 준수 |
 
-일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 작성할 필요가 없습니다.
+일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 작성할 필요가 없습니다. 고급 사용자는 Sketch
+폴더에 `prj.conf`와 `app.overlay`를 두어 마지막 override로 사용할 수 있지만, 선택한 기능의 필수
+의존성·검증된 capacity·메모리 partition 경계를 깨는 설정은 허용되지 않습니다. 향후 Feature set에는
+`자동(adaptive)`과 별도로 BLE/802.15.4/동시 사용 같은 상위 radio 정책 preset을 제공할 수 있으며,
+세부 기능·소스 선택은 계속 resolver가 담당합니다.
 CLI의 기본 FQBN은 `nucode:zephyr:nu54dk`입니다.
 
 ### 3. Blink 업로드
@@ -217,9 +222,10 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | Raw ISO | [ISO 예제와 역할 안내](libraries/NUCODE_BLE_ISO/examples/README.md) — CIS·BIS·암호화·시각 동기·combined 11역할 |
 | LE Audio | [Audio 예제와 역할 안내](libraries/NUCODE_BLE_Audio/examples/README.md) — LC3·BAP·CAP·CSIP·PBP·제어 profile·TMAP/GMAP·HAP |
 
-개발용 `adaptive` profile은 현재 총 48개 preset을 제공하며, ISO 11역할, Audio BAP 7역할,
+개발용 `adaptive` profile은 현재 총 52개 preset을 제공하며, ISO 11역할, Audio BAP 7역할,
 HAP 2역할, Audio Control 2역할, Media Control player/client 2역할, Call Control
-server/client 2역할, CAP 5역할, CSIP member/coordinator 2역할, PBP source/sink 2역할과 TMAP 4역할을 역할별 최소 설정·소스로 해석합니다. Media·Call Control·CAP·CSIP·PBP·TMAP 공개 예제도 검증된
+server/client 2역할, CAP 5역할, CSIP member/coordinator 2역할, PBP source/sink 2역할,
+TMAP 4역할과 GMAP 4역할을 역할별 최소 설정·소스로 해석합니다. Media·Call Control·CAP·CSIP·PBP·TMAP·GMAP 공개 예제도 검증된
 `nucode-build.json` sidecar를 제공하며, 기본 `standard` profile은 계속 full 호환 경로로 유지합니다.
 
 송신/수신 역할에 맞는 짝 예제와 보드 수는 각 Sketch 주석과

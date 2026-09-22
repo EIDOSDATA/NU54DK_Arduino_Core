@@ -582,6 +582,38 @@ extern "C" void sensorRead(void)
                 {"ble.connections": 1, "ble.iso-streams": 2},
             ),
             (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-gaming-gateway",
+                "CONFIG_BT_GMAP=y",
+                {
+                    "ble.connections": 1,
+                    "ble.iso-streams": 2,
+                    "ble.paired-peers": 1,
+                },
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-gaming-terminal",
+                "CONFIG_BT_GMAP=y",
+                {
+                    "ble.connections": 1,
+                    "ble.iso-streams": 1,
+                    "ble.paired-peers": 1,
+                },
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-gaming-broadcaster",
+                "CONFIG_BT_GMAP=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-gaming-receiver",
+                "CONFIG_BT_GMAP=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
                 ["NUCODE_BLE_DirectionFinding"],
                 "ble-df-cte-beacon",
                 "CONFIG_NUCODE_BLE_DF_BEACON=y",
@@ -659,7 +691,7 @@ extern "C" void sensorRead(void)
                 )
 
     def test_audio_role_source_ownership_is_minimal(self) -> None:
-        """! @brief 30개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
+        """! @brief 34개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio"]
@@ -731,6 +763,18 @@ extern "C" void sensorRead(void)
                 profile_roles,
                 broadcast_sink,
             },
+            "ble-audio-gaming-gateway": {common, profile_roles, client},
+            "ble-audio-gaming-terminal": {common, profile_roles, server},
+            "ble-audio-gaming-broadcaster": {
+                common,
+                profile_roles,
+                broadcast_source,
+            },
+            "ble-audio-gaming-receiver": {
+                common,
+                profile_roles,
+                broadcast_sink,
+            },
         }
         for role, expected_sources in cases.items():
             with self.subTest(role=role):
@@ -748,6 +792,8 @@ extern "C" void sensorRead(void)
                         in {
                             "ble-audio-telephony-gateway",
                             "ble-audio-telephony-terminal",
+                            "ble-audio-gaming-gateway",
+                            "ble-audio-gaming-terminal",
                         }
                     )
                     or (
@@ -820,6 +866,8 @@ extern "C" void sensorRead(void)
         for role in (
             "ble-audio-telephony-gateway",
             "ble-audio-telephony-terminal",
+            "ble-audio-gaming-gateway",
+            "ble-audio-gaming-terminal",
         ):
             with self.subTest(role=role):
                 declaration = copy.deepcopy(self.empty_declaration)
@@ -845,7 +893,7 @@ extern "C" void sensorRead(void)
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 48)
+        self.assertEqual(len(roles), 52)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):
@@ -1010,6 +1058,22 @@ extern "C" void sensorRead(void)
             "TelephonyMediaTerminal": "ble-audio-telephony-terminal",
             "TelephonyMediaBroadcaster": "ble-audio-telephony-broadcaster",
             "TelephonyMediaReceiver": "ble-audio-telephony-receiver",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
+
+    def test_audio_gmap_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 GMAP 4예제가 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "GamingAudioGateway": "ble-audio-gaming-gateway",
+            "GamingAudioTerminal": "ble-audio-gaming-terminal",
+            "GamingAudioBroadcaster": "ble-audio-gaming-broadcaster",
+            "GamingAudioReceiver": "ble-audio-gaming-receiver",
         }
         root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
         for example, role in examples.items():

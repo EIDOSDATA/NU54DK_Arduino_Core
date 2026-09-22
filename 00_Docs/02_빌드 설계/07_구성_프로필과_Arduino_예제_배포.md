@@ -64,15 +64,17 @@ Zephyr 직접 호출은 library 구현 내부가 소유하며 개발 마일스�
 | ID | 메뉴 표시 | 기능 집합 | 용도 |
 | --- | --- | --- | --- |
 | `standard` | Standard peripherals | GPIO, Serial, Wire, SPI, ADC, PWM | 일반 Arduino sketch |
+| `adaptive` | Adaptive capabilities (experimental) | compiler probe·library manifest·role declaration의 합집합 | 기능별 최소 설정·소스 개발 경로 |
 | `ble` | BLE NUS | standard 기능 + BLE | NUS, GAP/GATT, 보안·표준 profile |
 | `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0에서 도입해 v0.4.1에 유지한 고급 주변장치 API |
 
-세 profile 모두 board `nrf54l15dk/nrf54l15/cpuapp/nu54dk`, NCS `v3.4.0`과 각 profile의
+모든 profile은 board `nrf54l15dk/nrf54l15/cpuapp/nu54dk`, NCS `v3.4.0`과 각 profile의
 `prj.conf`, `app.overlay`를 고정한다. `boards.txt`의 `도구 → Feature set` 메뉴가
 `build.nu54_profile`을 다음처럼 설정한다.
 
 ~~~text
 feature_set=standard → standard
+feature_set=adaptive → adaptive
 feature_set=ble      → ble
 feature_set=fabric   → fabric
 ~~~
@@ -160,7 +162,38 @@ Sketch root의 `prj.conf`와 `app.overlay`는 전문가용 마지막 override로
 예제는 이 sidecar에 의존하지 않으며 profile/library 내부 설정만으로 compile해야 한다.
 임의 snippet, module 또는 CMake 주입은 공개 override 계약이 아니다.
 
-### 4.2 메모리 layout의 별도 선택 축
+### 4.2 상위 정책 preset과 전문가 직접 지정
+
+사용자 선택은 다음 세 층으로 구분한다.
+
+| 층 | 대상 사용자 | 입력 | 책임 |
+| --- | --- | --- | --- |
+| 자동 구성 | 일반 사용자 | `Adaptive capabilities` + Sketch/API/library/role 선언 | resolver가 Kconfig·Devicetree·source·capacity를 최소 합성 |
+| 상위 정책 preset | 기능 조합을 명시하려는 사용자 | 향후 `Radio disabled`, `BLE`, `802.15.4`, `BLE + 802.15.4`와 controller/안테나 같은 Tools 메뉴 | 서로 배타적인 전역 정책과 검증된 조합을 선택하고, 세부 구성은 resolver에 위임 |
+| 전문가 override | Zephyr/NCS 설정을 직접 조정하는 사용자 | Sketch root의 `prj.conf`, 필요할 때 `app.overlay` | 자동 결과 뒤에 명시 설정을 병합하되 최종 gate를 통과해야 함 |
+
+상위 정책 preset은 `.conf`·overlay 조각을 무조건 넓게 켜는 두 번째 full profile이 아니다. 예를 들어
+`BLE`은 radio family와 controller 정책을 고정할 뿐 central/peripheral/observer/broadcaster, GATT,
+SMP, Audio 역할을 모두 켜지 않는다. 실제 API와 role이 요구한 세부 capability만 resolver가 추가한다.
+`BLE + 802.15.4`도 공존 가능 controller·메모리·clock 조합이 검증된 뒤에만 메뉴로 공개한다.
+
+전문가 경로는 현재 구현돼 있다. Sketch 주 `.ino`와 같은 폴더의 `prj.conf`는 template → profile →
+선택 library/capability fragment 다음, 마지막 Kconfig 입력으로 합쳐진다. 같은 위치의 `app.overlay`도
+생성 overlay 뒤에 합쳐진다. 두 파일의 내용 hash는 cache identity와 build provenance에 포함되므로
+변경 뒤 이전 cache를 같은 구성으로 재사용하지 않는다.
+
+마지막 입력이라는 것은 안전 검사를 우회한다는 뜻이 아니다. `adaptive`에서 resolver가 요구한 필수
+Kconfig를 `n`으로 바꾸거나 연결·ISO stream·bond 같은 검증된 capacity를 낮추면 최종 `.config`
+대조에서 명시적으로 실패해야 한다. Kconfig dependency가 거부한 조합, 지원하지 않는 controller/role,
+board에서 사용할 수 없는 장치, code/storage partition 침범도 실패한다. 임의 CMake·source/module 주입,
+검증되지 않은 partition 숫자 변경은 이 공개 고급 계약에 포함하지 않는다.
+
+따라서 직접 지정의 권장 용도는 로그 수준, 검증된 buffer 상한의 상향, application 고유 Zephyr option,
+허용된 장치 property처럼 자동 판정에 없는 추가 요구다. 자동으로 선택된 필수 기능을 강제로 끄거나
+검증되지 않은 자원 축소로 빌드만 통과시키는 용도가 아니다. 최종 artifact에는 자동 판정과 override의
+출처, 최종 `.config`·Devicetree hash를 함께 남긴다.
+
+### 4.3 메모리 layout의 별도 선택 축
 
 `v0.4.1`의 세 profile은 같은 loaderless 기본 layout을 사용한다. Application은
 `0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
