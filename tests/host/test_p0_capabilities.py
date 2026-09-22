@@ -785,8 +785,8 @@ extern "C" void sensorRead(void)
         )
         self.assertFalse(any("/internal/gatt" in source for source in sources))
 
-    def test_gatt_storage_capacities_generate_internal_array_limits(self) -> None:
-        """! @brief GATT service/characteristic 선언은 내부 고정 배열 Kconfig를 생성합니다. """
+    def test_gatt_fixed_capacities_generate_internal_array_limits(self) -> None:
+        """! @brief GATT schema/payload 선언은 내부 고정 배열 Kconfig를 생성합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE"])
         declaration = copy.deepcopy(self.empty_declaration)
@@ -794,6 +794,7 @@ extern "C" void sensorRead(void)
         declaration["capacities"] = {
             "ble.gatt-services": 1,
             "ble.gatt-characteristics-per-service": 2,
+            "ble.gatt-event-payload": 64,
         }
         result = MODULE.resolve_capabilities(
             self.registry, [], features, declaration
@@ -805,12 +806,16 @@ extern "C" void sensorRead(void)
             "CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=2",
             configuration,
         )
+        self.assertIn(
+            "CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE=64", configuration
+        )
         self.assertEqual(
             {item["id"]: item["value"] for item in result["capacities"]},
             {
                 "ble.connections": 1,
                 "ble.gatt-services": 1,
                 "ble.gatt-characteristics-per-service": 2,
+                "ble.gatt-event-payload": 64,
             },
         )
 

@@ -96,7 +96,7 @@ namespace nucode::ble::internal::gatt
                           BLEDescriptor *descriptor,
                           BLEGattAuthorizationOperation authorization_operation) noexcept
     {
-        if (length > maximum_value_length)
+        if (length > maximum_event_payload_length)
         {
             nucode::ble::internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return;
@@ -141,7 +141,7 @@ namespace nucode::ble::internal::gatt
                           std::size_t length, std::size_t offset, int status,
                           std::uint8_t att_error) noexcept
     {
-        if (length > maximum_value_length)
+        if (length > maximum_event_payload_length)
         {
             nucode::ble::internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;

@@ -67,6 +67,8 @@ class M29BleLongReadTests(unittest.TestCase):
         callback = text[start:end]
         for token in (
             "state->read_length + length > maximum_value_length",
+            "state->read_length + length > maximum_event_payload_length",
+            "completed_length > maximum_event_payload_length",
             "::memcpy(state->read_data + state->read_length, data, length)",
             "return BT_GATT_ITER_CONTINUE",
             "data != nullptr",
@@ -74,6 +76,29 @@ class M29BleLongReadTests(unittest.TestCase):
         ):
             self.assertIn(token, callback, token)
         self.assertLess(callback.index("data != nullptr"), callback.index("read_complete"))
+
+    def test_declared_event_payload_fails_closed_at_ingress(self):
+        """! @brief 선언 payload를 넘는 server write와 client notification을 거부합니다. """
+
+        internal = INTERNAL.read_text(encoding="utf-8")
+        server = (ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp").read_text(
+            encoding="utf-8"
+        )
+        client = CLIENT.read_text(encoding="utf-8")
+        self.assertIn("data[maximum_event_payload_length]", internal)
+        self.assertIn("maximum_event_payload_length <= maximum_value_length", internal)
+        self.assertGreaterEqual(
+            server.count("length > maximum_event_payload_length"), 2
+        )
+        start = client.index("std::uint8_t clientNotification(")
+        end = client.index("void continueCharacteristicDiscovery(")
+        notification = client[start:end]
+        for token in (
+            "const bool queued = queueClientEvent(",
+            "clearClientSubscriptionToken(*state)",
+            "return BT_GATT_ITER_STOP",
+        ):
+            self.assertIn(token, notification, token)
 
     def test_disconnect_is_link_local_and_generation_checked(self):
         """! @brief 한 link 해제가 다른 context queue를 purge하거나 초기화하면 안 됩니다. """

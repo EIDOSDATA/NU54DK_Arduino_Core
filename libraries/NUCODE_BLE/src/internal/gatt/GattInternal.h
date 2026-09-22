@@ -16,6 +16,10 @@
 #include <errno.h>
 #include <string.h>
 
+#if !defined(CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE)
+#define CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE 512
+#endif
+
 namespace nucode::ble::internal
 {
 
@@ -286,9 +290,14 @@ namespace nucode::ble::internal::gatt
     inline constexpr std::size_t maximum_characteristics =
         CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE;
     inline constexpr std::size_t maximum_descriptors = BLECharacteristic::maximum_descriptors;
+    inline constexpr std::size_t maximum_value_length = BLECharacteristic::maximum_value_length;
+    inline constexpr std::size_t maximum_event_payload_length =
+        CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE;
+    static_assert(maximum_event_payload_length >= 1U &&
+                      maximum_event_payload_length <= maximum_value_length,
+                  "GATT event payload 크기가 공개 값 범위를 벗어났습니다.");
     inline constexpr std::size_t maximum_attributes =
         1U + maximum_characteristics * (3U + maximum_descriptors);
-    inline constexpr std::size_t maximum_value_length = BLECharacteristic::maximum_value_length;
 
     static_assert(maximum_services > 0U, "GATT service slot이 하나 이상 필요합니다.");
     static_assert(CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE <=
@@ -378,7 +387,7 @@ namespace nucode::ble::internal::gatt
         std::uint8_t att_error;
         BLEGattBearer bearer;
         int status;
-        std::uint8_t data[maximum_value_length];
+        std::uint8_t data[maximum_event_payload_length];
     };
 
     /** @brief generic client discovery의 bounded 비동기 단계입니다. */

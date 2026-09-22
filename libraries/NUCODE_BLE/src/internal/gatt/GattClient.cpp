@@ -445,7 +445,8 @@ namespace nucode::ble::internal::gatt
         }
         if (data != nullptr)
         {
-            if (length == 0U || state->read_length + length > maximum_value_length)
+            if (length == 0U || state->read_length + length > maximum_value_length ||
+                state->read_length + length > maximum_event_payload_length)
             {
                 failClient(*state, -EMSGSIZE);
                 return BT_GATT_ITER_STOP;
@@ -456,6 +457,11 @@ namespace nucode::ble::internal::gatt
         }
         const std::size_t completed_length = state->read_length;
         const bool read_multiple = state->read_multiple;
+        if (completed_length > maximum_event_payload_length)
+        {
+            failClient(*state, -EMSGSIZE);
+            return BT_GATT_ITER_STOP;
+        }
         state->read_length = 0U;
         state->read_multiple = false;
         clearClientOperationToken(*state);
@@ -574,12 +580,21 @@ namespace nucode::ble::internal::gatt
             queueClientEvent(*state, BLEGattClientEvent::unsubscribed);
             return BT_GATT_ITER_STOP;
         }
-        queueClientEvent(*state,
-                         atomic_get(&state->client_subscription_value) == BT_GATT_CCC_INDICATE
-                             ? BLEGattClientEvent::indication_received
-                             : BLEGattClientEvent::notification_received,
-                         data, length);
-        return BT_GATT_ITER_CONTINUE;
+        const bool queued = queueClientEvent(
+            *state,
+            atomic_get(&state->client_subscription_value) == BT_GATT_CCC_INDICATE
+                ? BLEGattClientEvent::indication_received
+                : BLEGattClientEvent::notification_received,
+            data, length);
+        if (queued)
+        {
+            return BT_GATT_ITER_CONTINUE;
+        }
+        atomic_set(&state->client_subscribed, 0);
+        atomic_set(&state->client_subscription_value, 0);
+        clearClientSubscriptionToken(*state);
+        atomic_set(&state->client_busy_value, 0);
+        return BT_GATT_ITER_STOP;
     }
 
     void continueCharacteristicDiscovery(ClientState &state) noexcept

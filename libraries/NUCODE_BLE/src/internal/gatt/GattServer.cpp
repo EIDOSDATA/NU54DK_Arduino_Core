@@ -244,6 +244,11 @@ namespace nucode::ble::internal::gatt
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
         }
+        if (length > maximum_event_payload_length)
+        {
+            clearServerTransaction(connection);
+            return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+        }
         if (!internal::activeConnection(connection))
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
@@ -421,6 +426,10 @@ namespace nucode::ble::internal::gatt
             !internal::activeConnection(connection))
         {
             return BT_GATT_ERR(BT_ATT_ERR_UNLIKELY);
+        }
+        if (length > maximum_event_payload_length)
+        {
+            return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
         }
         if ((flags & (BT_GATT_WRITE_FLAG_PREPARE | BT_GATT_WRITE_FLAG_EXECUTE)) != 0U)
         {

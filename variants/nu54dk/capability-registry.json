@@ -3934,6 +3934,14 @@
       "maximum": 8,
       "unit": "characteristics",
       "conf": ["CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE={value}"]
+    },
+    {
+      "id": "ble.gatt-event-payload",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 512,
+      "unit": "octets",
+      "conf": ["CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE={value}"]
     }
   ],
   "probe_symbols": [

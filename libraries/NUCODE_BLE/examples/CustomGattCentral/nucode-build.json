@@ -4,6 +4,7 @@
   "roles": ["ble-gatt-nus-dual-role"],
   "capacities": {
     "ble.gatt-services": 1,
-    "ble.gatt-characteristics-per-service": 1
+    "ble.gatt-characteristics-per-service": 1,
+    "ble.gatt-event-payload": 64
   }
 }

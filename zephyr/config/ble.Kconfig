@@ -165,13 +165,22 @@ config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE
 	range 1 8
 	depends on NUCODE_BLE_GATT
 
+config NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE
+	int "NUCODE GATT callback event 최대 payload 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  server write와 client read·notification callback이 main thread로 복사하는
+	  단일 event payload의 최대 byte 수입니다.
+
 config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
 	int "NUCODE GATT callback event queue 항목 수"
 	default 8
 	range 4 32
 	depends on NUCODE_BLE_GATT
 	help
-	  server write·CCC·전송 완료와 client payload를 최대 512 byte까지
+	  server write·CCC·전송 완료와 client payload를 선택한 최대 크기까지
 	  복사해 BLEDevice.poll()로 전달하는 고정 record 개수입니다.
 
 config NUCODE_BLE_L2CAP
