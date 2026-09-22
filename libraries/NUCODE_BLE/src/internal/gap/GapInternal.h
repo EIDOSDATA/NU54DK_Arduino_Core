@@ -308,7 +308,9 @@ namespace nucode::ble::internal::gap
     };
     GapContext &gapState() noexcept;
     k_msgq &gapEventQueue() noexcept;
+#if defined(CONFIG_BT_OBSERVER)
     k_msgq &scanResultQueue() noexcept;
+#endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
     k_msgq &periodicReportQueue() noexcept;
 #endif

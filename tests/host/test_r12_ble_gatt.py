@@ -16,6 +16,7 @@ class BleGattTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='nu54-r12-gatt-') as folder:
             binary = Path(folder) / 'gatt.exe'
             command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                       '-DCONFIG_BT_OBSERVER=1',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
                        '-DCONFIG_NUCODE_BLE_GATT_MAX_SERVICES=2', '-DCONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=8',

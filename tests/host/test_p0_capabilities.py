@@ -81,8 +81,10 @@ class P0CapabilityContractTests(unittest.TestCase):
         self.assertEqual([item["name"] for item in symbols], ["sdc_mempool", "context"])
 
     def test_resource_audit_rejects_disabled_advanced_gap_queues(self) -> None:
-        """! @brief 비활성 periodic/PAwR queue가 실제 ELF에 남으면 금지 symbol로 판정합니다. """
+        """! @brief 비활성 scan/periodic/PAwR queue가 실제 ELF에 남으면 금지 symbol로 판정합니다. """
         output = (
+            "536936364 00002496 b nucode::ble::internal::gap::"
+            "(anonymous namespace)::_k_fifo_buf_scan_result_queue\n"
             "536938904 00002144 b nucode::ble::internal::gap::"
             "(anonymous namespace)::_k_fifo_buf_pawr_response_queue\n"
             "536941048 00002240 b nucode::ble::internal::gap::"
@@ -93,12 +95,15 @@ class P0CapabilityContractTests(unittest.TestCase):
             "# CONFIG_BT_PER_ADV_RSP is not set\n",
             output,
         )
-        self.assertEqual(len(findings), 2)
+        self.assertEqual(len(findings), 3)
+        self.assertTrue(any("scan_result_queue" in item for item in findings))
         self.assertTrue(any("periodic_report_queue" in item for item in findings))
         self.assertTrue(any("pawr_response_queue" in item for item in findings))
         self.assertEqual(
             MODULE.forbidden_resource_symbols(
-                "CONFIG_BT_PER_ADV_SYNC=y\nCONFIG_BT_PER_ADV_RSP=y\n", output
+                "CONFIG_BT_OBSERVER=y\nCONFIG_BT_PER_ADV_SYNC=y\n"
+                "CONFIG_BT_PER_ADV_RSP=y\n",
+                output,
             ),
             [],
         )

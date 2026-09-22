@@ -10,8 +10,10 @@ namespace nucode::ble::internal::gap
     {
         K_MSGQ_DEFINE(gap_event_queue, sizeof(GapEventRecord),
                       CONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE, alignof(GapEventRecord));
+#if defined(CONFIG_BT_OBSERVER)
         K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
                       CONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE, alignof(BLEScanResult));
+#endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
         K_MSGQ_DEFINE(periodic_report_queue, sizeof(PeriodicReportRecord),
                       CONFIG_NUCODE_BLE_PERIODIC_REPORT_QUEUE_SIZE,
@@ -34,10 +36,12 @@ namespace nucode::ble::internal::gap
     {
         return gap_event_queue;
     }
+#if defined(CONFIG_BT_OBSERVER)
     k_msgq &scanResultQueue() noexcept
     {
         return scan_result_queue;
     }
+#endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
     k_msgq &periodicReportQueue() noexcept
     {
@@ -247,7 +251,9 @@ namespace nucode::ble
         }
 
         k_msgq_purge(&gapEventQueue());
+#if defined(CONFIG_BT_OBSERVER)
         k_msgq_purge(&scanResultQueue());
+#endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
         k_msgq_purge(&periodicReportQueue());
 #endif
@@ -305,6 +311,7 @@ namespace nucode::ble
             }
         }
 
+#if defined(CONFIG_BT_OBSERVER)
         BLEScanCallback result_callback = gapState().scan_callback;
         if (result_callback != nullptr)
         {
@@ -318,6 +325,7 @@ namespace nucode::ble
                 }
             }
         }
+#endif
         internal::pollGatt();
         internal::pollL2cap();
 #if defined(CONFIG_BT_PER_ADV_SYNC)
@@ -368,12 +376,16 @@ namespace nucode::ble
         atomic_set(&gapState().device_initialized, 0);
         atomic_inc(&gapState().device_session_generation);
 
+#if defined(CONFIG_BT_OBSERVER)
         const bool stop_scan = atomic_cas(&gapState().scanning_active, 1, 0);
+#endif
         const bool stop_advertising = atomic_cas(&gapState().advertising_active, 1, 0);
+#if defined(CONFIG_BT_OBSERVER)
         if (stop_scan)
         {
             static_cast<void>(bt_le_scan_stop());
         }
+#endif
         if (stop_advertising)
         {
             static_cast<void>(bt_le_adv_stop());
@@ -408,7 +420,9 @@ namespace nucode::ble
         atomic_set(&gapState().mtu_exchange_active, 0);
         atomic_set(&gapState().rpa_expiration_count, 0);
         k_msgq_purge(&gapEventQueue());
+#if defined(CONFIG_BT_OBSERVER)
         k_msgq_purge(&scanResultQueue());
+#endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
         k_msgq_purge(&periodicReportQueue());
 #endif

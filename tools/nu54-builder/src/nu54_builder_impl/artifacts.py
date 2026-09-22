@@ -286,6 +286,8 @@ def nm_tool_for_size(size_tool: Path) -> Path:
 ## @brief 비활성 advanced GAP 기능의 전용 정적 queue가 ELF에 남았는지 검사합니다.
 def forbidden_resource_symbols(configuration: str, nm_output: str) -> list[str]:
     checks = (
+        ("CONFIG_BT_OBSERVER=y", "scan_result_queue"),
+        ("CONFIG_BT_OBSERVER=y", "scanResultQueue()"),
         ("CONFIG_BT_PER_ADV_SYNC=y", "periodic_report_queue"),
         ("CONFIG_BT_PER_ADV_SYNC=y", "periodicReportQueue()"),
         ("CONFIG_BT_PER_ADV_RSP=y", "pawr_response_queue"),
