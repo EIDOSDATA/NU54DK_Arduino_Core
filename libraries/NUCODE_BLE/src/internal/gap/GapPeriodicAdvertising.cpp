@@ -391,7 +391,9 @@ namespace nucode::ble::internal::gap
             gapState().past_subscriptions[index] = {};
         }
         k_spin_unlock(&gapState().configuration_lock, key);
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         k_msgq_purge(&periodicReportQueue());
+#endif
     }
 } // namespace nucode::ble::internal::gap
 
@@ -760,11 +762,16 @@ namespace nucode::ble
 
     int PeriodicAdvertising::available() const noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         return static_cast<int>(k_msgq_num_used_get(&periodicReportQueue()));
+#else
+        return 0;
+#endif
     }
 
     bool PeriodicAdvertising::read(BLEPeriodicReport &report) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         PeriodicReportRecord record = {};
         while (k_msgq_get(&periodicReportQueue(), &record, K_NO_WAIT) == 0)
         {
@@ -776,13 +783,22 @@ namespace nucode::ble
             }
         }
         return false;
+#else
+        ARG_UNUSED(report);
+        return false;
+#endif
     }
 
     void PeriodicAdvertising::onReport(BLEPeriodicReportCallback callback,
                                        void *context) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         gapState().periodic_report_callback = callback;
         gapState().periodic_report_context = context;
+#else
+        ARG_UNUSED(callback);
+        ARG_UNUSED(context);
+#endif
     }
 
     std::uint32_t PeriodicAdvertising::droppedReports() const noexcept

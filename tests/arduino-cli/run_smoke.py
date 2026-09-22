@@ -294,6 +294,45 @@ def assert_build(build_path: Path, project_name: str) -> dict:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("cache", {}).get("key") != cache_key:
         raise SmokeFailure("artifact manifest cache key does not match the session context")
+    resource_audit = manifest.get("resource_audit")
+    if not isinstance(resource_audit, dict) or resource_audit.get("schema_version") != 1:
+        raise SmokeFailure("artifact manifest has no resource audit")
+    if context.get("resource_audit") != resource_audit:
+        raise SmokeFailure("build context resource audit does not match the artifact manifest")
+    budget = resource_audit.get("budget", {})
+    ram = resource_audit.get("ram", {})
+    if (
+        not isinstance(ram.get("used_bytes"), int)
+        or ram.get("used_bytes", 0) <= 0
+        or ram.get("region_bytes") != 262144
+        or ram.get("headroom_bytes") != ram.get("region_bytes") - ram.get("used_bytes")
+    ):
+        raise SmokeFailure(f"artifact RAM audit is invalid: {ram}")
+    if context.get("profile") == "adaptive":
+        if budget.get("enforced") is not True or budget.get("status") == "fail":
+            raise SmokeFailure(f"adaptive resource budget gate is invalid: {budget}")
+        if resource_audit.get("forbidden_symbols") != []:
+            raise SmokeFailure(
+                "adaptive artifact contains forbidden ELF symbols: "
+                f"{resource_audit.get('forbidden_symbols')}"
+            )
+    if not resource_audit.get("top_ram_symbols"):
+        raise SmokeFailure("artifact resource audit has no top RAM symbols")
+    resource_inputs = resource_audit.get("inputs", {})
+    if not isinstance(resource_inputs, dict) or not resource_inputs:
+        raise SmokeFailure("artifact resource audit has no input provenance")
+    for input_record in resource_inputs.values():
+        if not isinstance(input_record, dict):
+            raise SmokeFailure(
+                f"resource audit input provenance is invalid: {input_record}"
+            )
+        input_path = Path(str(input_record.get("path", "")))
+        if (
+            not input_path.is_file()
+            or hashlib.sha256(input_path.read_bytes()).hexdigest()
+            != input_record.get("sha256")
+        ):
+            raise SmokeFailure(f"resource audit input provenance mismatch: {input_record}")
     input_manifest = json.loads((cache_dir / "input-manifest.json").read_text(encoding="utf-8"))
     canonical_input = json.dumps(
         input_manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")

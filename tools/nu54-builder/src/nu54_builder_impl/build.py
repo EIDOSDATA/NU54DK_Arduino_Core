@@ -13,7 +13,11 @@ import json
 import re
 import sys
 import time
-from .artifacts import publish_artifact_generation, validate_linked_code_partition
+from .artifacts import (
+    collect_resource_audit,
+    publish_artifact_generation,
+    validate_linked_code_partition,
+)
 from .capabilities import (
     load_capability_declaration,
     load_capability_registry,
@@ -764,6 +768,18 @@ def link(args: argparse.Namespace) -> None:
                     else paths["zephyr_build"] / "zephyr"
                 )
                 memory_layout = validate_linked_code_partition(zephyr_output)
+                resource_audit = collect_resource_audit(
+                    zephyr_output,
+                    tools["size"],
+                    tools["environment"],
+                    enforce_budget=profile["capability_mode"] == "resolved",
+                    source_manifest=paths["app"] / "sources.cmake",
+                    resolution_manifest=(
+                        paths["app"] / "resolved-capabilities.json"
+                        if capability_resolution is not None
+                        else None
+                    ),
+                )
             except Exception as error:
                 transition_cache_state(
                     paths["workspace"],
@@ -823,36 +839,42 @@ def link(args: argparse.Namespace) -> None:
                             "ccache_stats_after": ccache_after,
                             "ccache_stats_delta": ccache_delta(ccache_before, ccache_after),
                             "memory_layout": memory_layout,
+                            "resource_audit": resource_audit,
                             "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
                         }
                     )
                     atomic_write_json(paths["context"], context)
                     manifest: ArtifactManifest = {
-                    "schema_version": ARTIFACT_MANIFEST_SCHEMA_VERSION,
-                    "adapter_version": ADAPTER_VERSION,
-                    "product_identity": load_product_identity(paths["platform_root"]),
-                    "fqbn": args.fqbn,
-                    "board": args.board,
-                    "sysbuild": profile["sysbuild"],
-                    "cache": {
-                        "schema_version": CACHE_SCHEMA_VERSION,
-                        "key": cache_key,
-                        "input_manifest": current_input,
-                        "cache_dir": paths["workspace"].as_posix(),
-                        "source_manifest_sha256": optional_file_sha256(
-                            paths["app"] / "sources.cmake"
+                        "schema_version": ARTIFACT_MANIFEST_SCHEMA_VERSION,
+                        "adapter_version": ADAPTER_VERSION,
+                        "product_identity": load_product_identity(
+                            paths["platform_root"]
                         ),
-                    },
-                    "metrics": {
-                        "configure_seconds": round(configure_seconds, 6),
-                        "build_seconds": round(build_seconds, 6),
-                        "ccache_delta": ccache_delta(ccache_before, ccache_after),
-                    },
-                    "context": context,
-                    "sources": [path.as_posix() for path in sources],
-                    "source_inputs": source_provenance,
-                    "artifacts": exported,
-                    "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+                        "fqbn": args.fqbn,
+                        "board": args.board,
+                        "sysbuild": profile["sysbuild"],
+                        "cache": {
+                            "schema_version": CACHE_SCHEMA_VERSION,
+                            "key": cache_key,
+                            "input_manifest": current_input,
+                            "cache_dir": paths["workspace"].as_posix(),
+                            "source_manifest_sha256": optional_file_sha256(
+                                paths["app"] / "sources.cmake"
+                            ),
+                        },
+                        "metrics": {
+                            "configure_seconds": round(configure_seconds, 6),
+                            "build_seconds": round(build_seconds, 6),
+                            "ccache_delta": ccache_delta(ccache_before, ccache_after),
+                        },
+                        "context": context,
+                        "sources": [path.as_posix() for path in sources],
+                        "source_inputs": source_provenance,
+                        "artifacts": exported,
+                        "resource_audit": resource_audit,
+                        "built_at_utc": dt.datetime.now(
+                            dt.timezone.utc
+                        ).isoformat(),
                     }
                     # Artifact와 context가 모두 완성된 뒤 manifest를 마지막으로 공개합니다.
                     atomic_write_json(output_manifest, manifest)

@@ -50,6 +50,68 @@ class P0CapabilityContractTests(unittest.TestCase):
             ["arduino.pwm", "arduino.spi", "arduino.wire"],
         )
 
+    def test_resource_audit_parses_static_memory_and_top_ram_symbols(self) -> None:
+        """! @brief ELF size/map/nm 입력을 결정적인 정적 RAM 증거로 변환합니다. """
+        summary = MODULE.parse_size_summary(
+            "text data bss dec hex filename\n338288 11764 70779 420831 66bdf app.elf\n"
+        )
+        self.assertEqual(
+            summary,
+            {
+                "text": 338288,
+                "data": 11764,
+                "bss": 70779,
+                "flash": 350052,
+                "ram": 82543,
+            },
+        )
+        regions = MODULE.parse_memory_regions(
+            "Memory Configuration\n"
+            "FLASH 0x00010000 0x000b2000 xr\n"
+            "RAM 0x20000000 0x00040000 xw\n"
+        )
+        self.assertEqual(regions["ram"]["size"], 262144)
+        symbols = MODULE.parse_ram_symbols(
+            "536871216 00002224 d context\n"
+            "536890952 00008187 b sdc_mempool\n"
+            "00355292 00004096 R flash_table\n",
+            regions["ram"]["origin"],
+            regions["ram"]["size"],
+        )
+        self.assertEqual([item["name"] for item in symbols], ["sdc_mempool", "context"])
+
+    def test_resource_audit_rejects_disabled_advanced_gap_queues(self) -> None:
+        """! @brief 비활성 periodic/PAwR queue가 실제 ELF에 남으면 금지 symbol로 판정합니다. """
+        output = (
+            "536938904 00002144 b nucode::ble::internal::gap::"
+            "(anonymous namespace)::_k_fifo_buf_pawr_response_queue\n"
+            "536941048 00002240 b nucode::ble::internal::gap::"
+            "(anonymous namespace)::_k_fifo_buf_periodic_report_queue\n"
+        )
+        findings = MODULE.forbidden_resource_symbols(
+            "# CONFIG_BT_PER_ADV_SYNC is not set\n"
+            "# CONFIG_BT_PER_ADV_RSP is not set\n",
+            output,
+        )
+        self.assertEqual(len(findings), 2)
+        self.assertTrue(any("periodic_report_queue" in item for item in findings))
+        self.assertTrue(any("pawr_response_queue" in item for item in findings))
+        self.assertEqual(
+            MODULE.forbidden_resource_symbols(
+                "CONFIG_BT_PER_ADV_SYNC=y\nCONFIG_BT_PER_ADV_RSP=y\n", output
+            ),
+            [],
+        )
+
+    def test_resource_audit_applies_exact_ram_budget_boundaries(self) -> None:
+        """! @brief 반올림 전 실제 예약률로 75% 경고와 85% 실패 경계를 판정합니다. """
+        self.assertEqual(MODULE.resource_budget_status(749_999, 1_000_000), "pass")
+        self.assertEqual(MODULE.resource_budget_status(750_000, 1_000_000), "warning")
+        self.assertEqual(MODULE.resource_budget_status(849_999, 1_000_000), "warning")
+        self.assertEqual(MODULE.resource_budget_status(850_000, 1_000_000), "fail")
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_RESOURCE_BUDGET"):
+            MODULE.resource_budget_status(1, 0)
+
     def test_compiler_probe_keeps_reachable_runtime_and_constructor_references(self) -> None:
         """! @brief GC link가 dead call은 버리고 간접·runtime·전역 생성자 요구는 남깁니다. """
         try:

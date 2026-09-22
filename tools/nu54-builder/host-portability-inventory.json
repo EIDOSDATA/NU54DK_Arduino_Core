@@ -28,6 +28,7 @@
     "tools/nu54-builder/nu54-builder.sh",
     "tools/nu54-builder/src/nu54_builder.py",
     "tools/nu54-builder/src/nu54_builder_impl/__init__.py",
+    "tools/nu54-builder/src/nu54_builder_impl/artifacts.py",
     "tools/nu54-builder/src/nu54_builder_impl/cache.py",
     "tools/nu54-builder/src/nu54_builder_impl/capabilities.py",
     "tools/nu54-builder/src/nu54_builder_impl/common.py",
@@ -59,7 +60,7 @@
     {
       "id": "HOST-INV-003",
       "category": "executable",
-      "sources": ["tools/nu54-builder/src/nu54_builder_impl/environment.py", "tools/nu54-builder/src/nu54_builder_impl/host.py"],
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/artifacts.py", "tools/nu54-builder/src/nu54_builder_impl/environment.py", "tools/nu54-builder/src/nu54_builder_impl/host.py"],
       "assumption": "python/west/git/compiler/size/ccache가 .exe와 Windows bundle layout에 고정됨",
       "disposition": "central_host_resolver",
       "status": "resolved"

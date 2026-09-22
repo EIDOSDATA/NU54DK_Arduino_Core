@@ -191,7 +191,10 @@ board에서 사용할 수 없는 장치, code/storage partition 침범도 실패
 따라서 직접 지정의 권장 용도는 로그 수준, 검증된 buffer 상한의 상향, application 고유 Zephyr option,
 허용된 장치 property처럼 자동 판정에 없는 추가 요구다. 자동으로 선택된 필수 기능을 강제로 끄거나
 검증되지 않은 자원 축소로 빌드만 통과시키는 용도가 아니다. 최종 artifact에는 자동 판정과 override의
-출처, 최종 `.config`·Devicetree hash를 함께 남긴다.
+출처, 최종 `.config`·Devicetree hash를 함께 남긴다. builder의 정적 자원 감사에는 source manifest·
+ELF·linker map·adaptive capability 결과 hash, FLASH/RAM 사용량과 headroom, 상위 RAM symbol 32개도
+포함된다. adaptive image는 75%에서 경고하고 85% 이상을 실패 처리하며, 비활성 기능 전용 queue처럼
+명시된 금지 symbol이 ELF에 남아도 실패한다. 이 검사는 사용자 override에도 동일하게 적용된다.
 
 ### 4.3 메모리 layout의 별도 선택 축
 

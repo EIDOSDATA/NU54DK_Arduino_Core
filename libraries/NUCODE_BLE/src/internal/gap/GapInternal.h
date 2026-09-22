@@ -309,8 +309,12 @@ namespace nucode::ble::internal::gap
     GapContext &gapState() noexcept;
     k_msgq &gapEventQueue() noexcept;
     k_msgq &scanResultQueue() noexcept;
+#if defined(CONFIG_BT_PER_ADV_SYNC)
     k_msgq &periodicReportQueue() noexcept;
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
     k_msgq &pawrResponseQueue() noexcept;
+#endif
     void lockGapLifecycle() noexcept;
     void unlockGapLifecycle() noexcept;
     bt_gatt_cb &gattCallbacks() noexcept;
