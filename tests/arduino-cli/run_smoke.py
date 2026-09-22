@@ -52,6 +52,7 @@ ARDUINO_TESTS = (
     "adaptive_audio_control",
     "adaptive_audio_media",
     "adaptive_audio_call",
+    "adaptive_audio_cap",
 )
 DEFAULT_TESTS = tuple(
     test
@@ -67,6 +68,7 @@ DEFAULT_TESTS = tuple(
         "adaptive_audio_control",
         "adaptive_audio_media",
         "adaptive_audio_call",
+        "adaptive_audio_cap",
     }
 )
 ARDUINO_GROUPS = {
@@ -3253,6 +3255,237 @@ def test_adaptive_audio_call_roles(
                 )
 
 
+## @brief P0의 5개 CAP 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_audio_cap_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    common_source = "NUCODE_BLE_Audio.cpp"
+    security_sources = (
+        "NUCODE_BLE_Security.cpp",
+        "SecurityBond.cpp",
+        "SecurityOob.cpp",
+        "SecurityPairing.cpp",
+    )
+    backend_sources = (
+        "NUCODE_BLE_Audio_CapAcceptor.cpp",
+        "NUCODE_BLE_Audio_CapCommander.cpp",
+        "NUCODE_BLE_Audio_CapInitiator.cpp",
+        "NUCODE_BLE_Audio_CapUnicastInitiator.cpp",
+        "NUCODE_BLE_Audio_UnicastClient.cpp",
+        "NUCODE_BLE_Audio_UnicastServer.cpp",
+        "NUCODE_BLE_Audio_BroadcastSource.cpp",
+        "NUCODE_BLE_Audio_BroadcastSink.cpp",
+        "NUCODE_BLE_Audio_BroadcastAssistant.cpp",
+        "NUCODE_BLE_Audio_HearingAccess.cpp",
+        "NUCODE_BLE_Audio_ControlController.cpp",
+        "NUCODE_BLE_Audio_ControlDevice.cpp",
+        "NUCODE_BLE_Audio_MediaControl.cpp",
+        "NUCODE_BLE_Audio_CallControl.cpp",
+        "NUCODE_BLE_Audio_Csip.cpp",
+        "NUCODE_BLE_Audio_ProfileRoles.cpp",
+        "NUCODE_BLE_Audio_PublicBroadcast.cpp",
+    )
+    cases = (
+        (
+            "CapAcceptor",
+            "ble-audio-cap-acceptor",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            (
+                "NUCODE_BLE_Audio_CapAcceptor.cpp",
+                "NUCODE_BLE_Audio_BroadcastSink.cpp",
+            ),
+            True,
+            (
+                "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                "CONFIG_BT_PAC_SNK_LOC=y",
+                "CONFIG_BT_AUDIO_CODEC_CFG_MAX_METADATA_SIZE=4",
+                "CONFIG_BT_ISO_MAX_CHAN=1",
+            ),
+        ),
+        (
+            "CapCommander",
+            "ble-audio-cap-commander",
+            {"ble.connections": 1},
+            ("NUCODE_BLE_Audio_CapCommander.cpp",),
+            True,
+            (
+                "CONFIG_BT_CAP_COMMANDER=y",
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_ASSISTANT=y",
+                "CONFIG_BT_BUF_ACL_RX_SIZE=255",
+                "CONFIG_BT_BUF_ACL_TX_SIZE=251",
+            ),
+        ),
+        (
+            "CapInitiator",
+            "ble-audio-cap-initiator",
+            {"ble.iso-streams": 1},
+            ("NUCODE_BLE_Audio_CapInitiator.cpp",),
+            False,
+            (
+                "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                "CONFIG_BT_ISO_TX_BUF_COUNT=6",
+                "CONFIG_BT_ISO_MAX_CHAN=1",
+            ),
+        ),
+        (
+            "CapUnicastAcceptor",
+            "ble-audio-cap-unicast-acceptor",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            (
+                "NUCODE_BLE_Audio_CapAcceptor.cpp",
+                "NUCODE_BLE_Audio_UnicastServer.cpp",
+            ),
+            False,
+            (
+                "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                "CONFIG_BT_ASCS=y",
+                "CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT=1",
+                "CONFIG_BT_ISO_MAX_CHAN=1",
+            ),
+        ),
+        (
+            "CapUnicastInitiator",
+            "ble-audio-cap-unicast-initiator",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            ("NUCODE_BLE_Audio_CapUnicastInitiator.cpp",),
+            False,
+            (
+                "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                "CONFIG_BT_BAP_UNICAST_CLIENT_GROUP_STREAM_COUNT=1",
+                "CONFIG_BT_ISO_MAX_CHAN=1",
+            ),
+        ),
+    )
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+        "CONFIG_BT_BAS=y",
+        "CONFIG_BT_DIS=y",
+        "CONFIG_BT_HIDS=y",
+        "CONFIG_BT_HRS=y",
+    )
+    unrelated_security_sources = (
+        "NUCODE_BLE_HidsBackend.c",
+        "NUCODE_BLE_ProfilesBackend.c",
+        "SecurityBattery.cpp",
+        "SecurityDeviceInformation.cpp",
+        "SecurityHid.cpp",
+        "SecurityProfiles.cpp",
+    )
+    fixtures = root / "adaptive-audio-cap-fixtures"
+    for (
+        name,
+        role,
+        capacities,
+        expected_backend_sources,
+        uses_security,
+        required_configs,
+    ) in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Audio"
+            / "examples"
+            / name
+            / f"{name}.ino",
+            sketch / f"{name}.ino",
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        build = root / f"build-adaptive-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive CAP role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != capacities:
+            raise SmokeFailure(
+                f"adaptive CAP capacity mismatch: {name}: {actual_capacities}"
+            )
+        has_security = "nucode.ble.security" in resolution.get("library_features", [])
+        if has_security != uses_security:
+            raise SmokeFailure(f"adaptive CAP security feature mismatch: {name}")
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        for required_config in required_configs:
+            if required_config not in final_config:
+                raise SmokeFailure(
+                    f"adaptive CAP required Kconfig is missing: {name}: {required_config}"
+                )
+        if uses_security:
+            if "CONFIG_BT_SETTINGS=y" not in final_config:
+                raise SmokeFailure(f"adaptive CAP settings support is missing: {name}")
+        elif "CONFIG_BT_SETTINGS=y" in final_config:
+            raise SmokeFailure(f"adaptive CAP settings support is unexpected: {name}")
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    f"adaptive CAP unrelated Kconfig is enabled: {name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(
+            encoding="utf-8"
+        )
+        for source in (common_source, *expected_backend_sources):
+            if source not in source_graph:
+                raise SmokeFailure(
+                    f"adaptive CAP required source is missing: {name}: {source}"
+                )
+        for source in backend_sources:
+            if (source not in expected_backend_sources) and (source in source_graph):
+                raise SmokeFailure(
+                    f"adaptive CAP unrelated backend is present: {name}: {source}"
+                )
+        for source in security_sources:
+            if uses_security and (source not in source_graph):
+                raise SmokeFailure(
+                    f"adaptive CAP security source is missing: {name}: {source}"
+                )
+            if (not uses_security) and (source in source_graph):
+                raise SmokeFailure(
+                    f"adaptive CAP security source is unexpected: {name}: {source}"
+                )
+        for source in unrelated_security_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    f"adaptive CAP unrelated security source is present: {name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -3340,6 +3573,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive_audio_control": test_adaptive_audio_control_roles,
                 "adaptive_audio_media": test_adaptive_audio_media_roles,
                 "adaptive_audio_call": test_adaptive_audio_call_roles,
+                "adaptive_audio_cap": test_adaptive_audio_cap_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

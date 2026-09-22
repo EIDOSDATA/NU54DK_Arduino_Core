@@ -249,10 +249,12 @@ namespace nucode::ble
         atomic_set(&gapState().mtu_exchange_active, 0);
         atomic_set(&gapState().rpa_expiration_count, 0);
         ::memcpy(gapState().local_name, name, length + 1U);
+#if defined(CONFIG_BT_CONN)
         if (atomic_cas(&gapState().gatt_callback_registered, 0, 1))
         {
             bt_gatt_cb_register(&gattCallbacks());
         }
+#endif
         atomic_set(&gapState().device_initialized, 1);
         internal::recordError(BLEError::none, 0, false);
         unlockGapLifecycle();
