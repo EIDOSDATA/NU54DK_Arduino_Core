@@ -50,6 +50,7 @@ ARDUINO_TESTS = (
     "adaptive_audio_bap",
     "adaptive_audio_hap",
     "adaptive_audio_control",
+    "adaptive_audio_media",
 )
 DEFAULT_TESTS = tuple(
     test
@@ -63,6 +64,7 @@ DEFAULT_TESTS = tuple(
         "adaptive_audio_bap",
         "adaptive_audio_hap",
         "adaptive_audio_control",
+        "adaptive_audio_media",
     }
 )
 ARDUINO_GROUPS = {
@@ -2938,6 +2940,159 @@ def test_adaptive_audio_control_roles(
                 )
 
 
+## @brief P0의 2개 Media Control 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_audio_media_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    common_source = "NUCODE_BLE_Audio.cpp"
+    media_source = "NUCODE_BLE_Audio_MediaControl.cpp"
+    security_sources = (
+        "NUCODE_BLE_Security.cpp",
+        "SecurityBond.cpp",
+        "SecurityOob.cpp",
+        "SecurityPairing.cpp",
+    )
+    cases = (
+        (
+            "MediaControlPlayer",
+            "ble-audio-media-player",
+            (
+                "CONFIG_BT_MPL=y",
+                "CONFIG_BT_L2CAP_DYNAMIC_CHANNEL=y",
+                "CONFIG_BT_MCS=y",
+                "CONFIG_BT_OTS_MAX_OBJ_CNT=20",
+                "CONFIG_BT_ATT_TX_COUNT=12",
+            ),
+        ),
+        (
+            "MediaControlClient",
+            "ble-audio-media-client",
+            (
+                "CONFIG_BT_MCC=y",
+                "CONFIG_BT_L2CAP_DYNAMIC_CHANNEL=y",
+                "CONFIG_BT_GATT_DYNAMIC_DB=y",
+                "CONFIG_BT_OTS_CLIENT=y",
+                "CONFIG_BT_MCC_OTC_OBJ_BUF_SIZE=256",
+                "CONFIG_BT_MCC_TOTAL_OBJ_CONTENT_MEM=256",
+            ),
+        ),
+    )
+    unrelated_sources = (
+        "NUCODE_BLE_Audio_UnicastClient.cpp",
+        "NUCODE_BLE_Audio_UnicastServer.cpp",
+        "NUCODE_BLE_Audio_BroadcastSource.cpp",
+        "NUCODE_BLE_Audio_BroadcastSink.cpp",
+        "NUCODE_BLE_Audio_BroadcastAssistant.cpp",
+        "NUCODE_BLE_Audio_HearingAccess.cpp",
+        "NUCODE_BLE_Audio_ControlController.cpp",
+        "NUCODE_BLE_Audio_ControlDevice.cpp",
+        "NUCODE_BLE_Audio_CallControl.cpp",
+        "NUCODE_BLE_Audio_CapAcceptor.cpp",
+        "NUCODE_BLE_Audio_CapCommander.cpp",
+        "NUCODE_BLE_Audio_CapInitiator.cpp",
+        "NUCODE_BLE_Audio_CapUnicastInitiator.cpp",
+        "NUCODE_BLE_Audio_Csip.cpp",
+        "NUCODE_BLE_Audio_ProfileRoles.cpp",
+        "NUCODE_BLE_Audio_PublicBroadcast.cpp",
+        "NUCODE_BLE_HidsBackend.c",
+        "NUCODE_BLE_ProfilesBackend.c",
+        "SecurityBattery.cpp",
+        "SecurityDeviceInformation.cpp",
+        "SecurityHid.cpp",
+        "SecurityProfiles.cpp",
+    )
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+        "CONFIG_BT_BAS=y",
+        "CONFIG_BT_DIS=y",
+        "CONFIG_BT_HIDS=y",
+        "CONFIG_BT_HRS=y",
+    )
+    fixtures = root / "adaptive-audio-media-fixtures"
+    for name, role, required_configs in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Audio"
+            / "examples"
+            / name
+            / f"{name}.ino",
+            sketch / f"{name}.ino",
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        build = root / f"build-adaptive-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive Media Control role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != {"ble.connections": 1}:
+            raise SmokeFailure(
+                f"adaptive Media Control capacity mismatch: {name}: {actual_capacities}"
+            )
+        if "nucode.ble.security" not in resolution.get("library_features", []):
+            raise SmokeFailure(f"adaptive Media Control security feature is missing: {name}")
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        for required_config in (*required_configs, "CONFIG_BT_SETTINGS=y"):
+            if required_config not in final_config:
+                raise SmokeFailure(
+                    "adaptive Media Control required Kconfig is missing: "
+                    f"{name}: {required_config}"
+                )
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    "adaptive Media Control unrelated Kconfig is enabled: "
+                    f"{name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(
+            encoding="utf-8"
+        )
+        for source in (common_source, media_source, *security_sources):
+            if source not in source_graph:
+                raise SmokeFailure(
+                    "adaptive Media Control required source is missing: "
+                    f"{name}: {source}"
+                )
+        for source in unrelated_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    "adaptive Media Control unrelated source is present: "
+                    f"{name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -3023,6 +3178,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive_audio_bap": test_adaptive_audio_bap_roles,
                 "adaptive_audio_hap": test_adaptive_audio_hap_roles,
                 "adaptive_audio_control": test_adaptive_audio_control_roles,
+                "adaptive_audio_media": test_adaptive_audio_media_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]
