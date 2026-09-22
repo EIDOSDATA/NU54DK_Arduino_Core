@@ -77,6 +77,27 @@ class BleGattTests(unittest.TestCase):
                 capacity_run.stderr.decode(errors='replace'),
             )
 
+            inline_binary = Path(folder) / 'gatt-inline-capacity.exe'
+            inline_result = subprocess.run(
+                command + ['-DCONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE=64',
+                           '-o', str(inline_binary)],
+                capture_output=True,
+                timeout=60,
+            )
+            self.assertEqual(
+                inline_result.returncode,
+                0,
+                inline_result.stderr.decode(errors='replace'),
+            )
+            inline_run = run_executable(
+                [str(inline_binary), 'inline_capacity'], capture_output=True, timeout=10
+            )
+            self.assertEqual(
+                inline_run.returncode,
+                0,
+                inline_run.stderr.decode(errors='replace'),
+            )
+
 
 if __name__ == '__main__':
     unittest.main()

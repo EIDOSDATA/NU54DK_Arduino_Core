@@ -3950,6 +3950,14 @@
       "maximum": 512,
       "unit": "octets",
       "conf": ["CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE={value}"]
+    },
+    {
+      "id": "ble.gatt-inline-value-payload",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 512,
+      "unit": "octets",
+      "conf": ["CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE={value}"]
     }
   ],
   "probe_symbols": [

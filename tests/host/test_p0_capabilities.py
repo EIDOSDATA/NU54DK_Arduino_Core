@@ -796,6 +796,7 @@ extern "C" void sensorRead(void)
             "ble.gatt-characteristics-per-service": 2,
             "ble.gatt-event-payload": 64,
             "ble.gatt-tx-payload": 96,
+            "ble.gatt-inline-value-payload": 128,
         }
         result = MODULE.resolve_capabilities(
             self.registry, [], features, declaration
@@ -813,6 +814,9 @@ extern "C" void sensorRead(void)
         self.assertIn(
             "CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=96", configuration
         )
+        self.assertIn(
+            "CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE=128", configuration
+        )
         self.assertEqual(
             {item["id"]: item["value"] for item in result["capacities"]},
             {
@@ -821,6 +825,7 @@ extern "C" void sensorRead(void)
                 "ble.gatt-characteristics-per-service": 2,
                 "ble.gatt-event-payload": 64,
                 "ble.gatt-tx-payload": 96,
+                "ble.gatt-inline-value-payload": 128,
             },
         )
 

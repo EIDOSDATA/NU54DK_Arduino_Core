@@ -48,6 +48,8 @@ class M20BleGattContractTests(unittest.TestCase):
         self.assertNotIn("#include <zephyr/", text)
         self.assertNotIn("struct bt_", text)
         self.assertIn("maximum_value_length = 512U", text)
+        self.assertIn("maximum_inline_value_length", text)
+        self.assertIn("internal_value_[maximum_inline_value_length]", text)
         self.assertIn("BLERemoteService remoteService() const", text)
         self.assertIn("BLERemoteCharacteristic remoteCharacteristic() const", text)
         self.assertIn("image 수명 동안 유효", text)
@@ -97,6 +99,7 @@ class M20BleGattContractTests(unittest.TestCase):
             "characteristic_value_lock",
             "copyCachedValue(*characteristic, snapshot",
             "copyCachedValueForTransmission(*this, slot->notification_data[index]",
+            "capacity <= maximum_inline_value_length ? internal_value_ : nullptr",
         ):
             self.assertIn(token, source, token)
         server_write = source[source.index("ssize_t serverWrite(") : source.index(

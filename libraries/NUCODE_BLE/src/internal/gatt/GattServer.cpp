@@ -607,8 +607,8 @@ namespace nucode::ble
     BLEDescriptor::BLEDescriptor(const BLEUuid &uuid, BLEPermission permissions,
                                  std::size_t capacity) noexcept
         : uuid_(uuid), permissions_(permissions),
-          value_(capacity <= maximum_value_length ? internal_value_ : nullptr),
-          capacity_(capacity <= maximum_value_length ? capacity : 0U)
+          value_(capacity <= maximum_inline_value_length ? internal_value_ : nullptr),
+          capacity_(capacity <= maximum_inline_value_length ? capacity : 0U)
     {
     }
 
@@ -687,8 +687,8 @@ namespace nucode::ble
     BLECharacteristic::BLECharacteristic(const BLEUuid &uuid, BLEProperty properties,
                                          BLEPermission permissions, std::size_t capacity) noexcept
         : uuid_(uuid), properties_(properties), permissions_(permissions),
-          value_(capacity <= maximum_value_length ? internal_value_ : nullptr),
-          capacity_(capacity <= maximum_value_length ? capacity : 0U)
+          value_(capacity <= maximum_inline_value_length ? internal_value_ : nullptr),
+          capacity_(capacity <= maximum_inline_value_length ? capacity : 0U)
     {
     }
 

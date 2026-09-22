@@ -183,6 +183,15 @@ config NUCODE_BLE_GATT_TX_PAYLOAD_SIZE
 	  server notification과 indication의 비동기 전송 수명 동안 보존하는
 	  단일 snapshot payload의 최대 byte 수입니다.
 
+config NUCODE_BLE_GATT_INLINE_VALUE_SIZE
+	int "NUCODE GATT inline cached value 최대 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  caller-owned buffer를 지정하지 않은 characteristic과 descriptor 객체가
+	  내부에 보존하는 cached value의 최대 byte 수입니다.
+
 config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
 	int "NUCODE GATT callback event queue 항목 수"
 	default 8

@@ -64,12 +64,19 @@ namespace nucode::ble::internal
 constexpr BLEProperty properties = BLEProperty::read | BLEProperty::write |
                                    BLEProperty::write_without_response | BLEProperty::notify |
                                    BLEProperty::indicate;
+#if CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE == 64
+constexpr std::size_t local_characteristic_capacity = 64U;
+#else
+constexpr std::size_t local_characteristic_capacity = 512U;
+#endif
 BLEService service(BLEUuid(std::uint16_t{0x180A}));
 BLEService second_service(BLEUuid(std::uint16_t{0x180F}));
 BLECharacteristic characteristic(BLEUuid(std::uint16_t{0x2A29}), properties,
-                                 BLEPermission::read | BLEPermission::write, 512);
+                                 BLEPermission::read | BLEPermission::write,
+                                 local_characteristic_capacity);
 BLECharacteristic alternate_characteristic(BLEUuid(std::uint16_t{0x2A24}), BLEProperty::write,
-                                           BLEPermission::write, 512);
+                                           BLEPermission::write,
+                                           local_characteristic_capacity);
 BLECharacteristic second_characteristic(BLEUuid(std::uint16_t{0x2A19}), BLEProperty::read,
                                          BLEPermission::read, 20);
 BLEDescriptor descriptors[] = {
@@ -705,6 +712,24 @@ int main(int argc, char **argv)
         assert(!characteristic.indicate());
         assert(BLEDevice.lastError() == BLEError::value_overflow);
     }
+#if CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE == 64
+    else if (std::strcmp(scenario, "inline_capacity") == 0)
+    {
+        static_assert(BLECharacteristic::maximum_value_length == 512U);
+        static_assert(BLECharacteristic::maximum_inline_value_length == 64U);
+        std::array<std::uint8_t, 65> value{};
+        assert(characteristic.capacity() == 64U);
+        assert(characteristic.setValue(value.data(), 64U));
+        assert(!characteristic.setValue(value.data(), value.size()));
+
+        std::array<std::uint8_t, 512> external_buffer{};
+        BLECharacteristic external(BLEUuid(std::uint16_t{0x2A25}), BLEProperty::read,
+                                   BLEPermission::read, external_buffer.data(),
+                                   external_buffer.size());
+        assert(external.capacity() == BLECharacteristic::maximum_value_length);
+        assert(external.setValue(value.data(), value.size()));
+    }
+#endif
     else if (std::strcmp(scenario, "indication") == 0)
     {
         assert(characteristic.setValue(payload, 4));
