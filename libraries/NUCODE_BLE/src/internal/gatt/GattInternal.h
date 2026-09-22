@@ -464,7 +464,14 @@ namespace nucode::ble::internal::gatt
         atomic_t gatt_session_generation = ATOMIC_INIT(1);
     };
     SessionState &sessionState() noexcept;
+    /** @brief 동시 GATT client 상태를 실제 Bluetooth 연결 상한과 공개 2-link 상한 중 작게 잡습니다. */
+#if defined(CONFIG_BT_MAX_CONN)
+    inline constexpr std::size_t maximum_client_contexts =
+        CONFIG_BT_MAX_CONN < 2 ? CONFIG_BT_MAX_CONN : 2U;
+#else
     inline constexpr std::size_t maximum_client_contexts = 2U;
+#endif
+    static_assert(maximum_client_contexts >= 1U, "GATT client context가 하나 이상 필요합니다.");
 
     /** @brief 공개 client callback은 두 link가 공유하고 event가 link를 식별합니다. */
     struct ClientCallbacks

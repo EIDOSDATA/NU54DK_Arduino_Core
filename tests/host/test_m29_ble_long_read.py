@@ -36,12 +36,15 @@ class M29BleLongReadTests(unittest.TestCase):
             self.assertIn(token, text, token)
         self.assertIn("[[nodiscard]] bool read() noexcept;", text)
 
-    def test_two_contexts_own_all_async_parameters(self):
-        """! @brief 두 link가 Zephyr async parameter와 payload를 공유하지 않아야 합니다. """
+    def test_connection_bounded_contexts_own_all_async_parameters(self):
+        """! @brief 연결 상한까지 각 link가 async parameter와 payload를 독립 소유해야 합니다. """
 
         text = INTERNAL.read_text(encoding="utf-8")
         for token in (
+            "defined(CONFIG_BT_MAX_CONN)",
+            "CONFIG_BT_MAX_CONN < 2 ? CONFIG_BT_MAX_CONN : 2U",
             "maximum_client_contexts = 2U",
+            "maximum_client_contexts >= 1U",
             "using ClientStates = ClientState[maximum_client_contexts]",
             "struct bt_gatt_discover_params discovery_parameters",
             "struct bt_gatt_read_params read_parameters",
