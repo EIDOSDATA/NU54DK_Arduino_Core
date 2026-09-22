@@ -29,6 +29,11 @@ feature set은 HAS server/client 설정과 연결·ISO capacity를 생성하고,
 pairing·bond·ZMS settings backend만 포함하며, 사용하지 않는 BAS·DIS·HID·HRS source와 Kconfig는
 제외한다.
 
+`AudioControlDevice`와 `AudioControlController`는 VCP·MICP server/client 조합을 각각 하나의
+검증된 role로 선언한다. Adaptive feature set은 각 역할에 필요한 AICS 2개와 VOCS 1개의 상한,
+연결 1개, device/controller backend를 선택한다. 이 두 역할도 HAP와 같은 최소 보안 source 경계를
+사용하며 다른 Audio backend와 보안 부가 profile은 포함하지 않는다.
+
 ## `Lc3SyntheticLoopback`
 
 - `Lc3Codec::begin()`으로 16 kHz, 10 ms, 40-byte LC3 frame을 구성한다.

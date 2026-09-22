@@ -49,6 +49,7 @@ ARDUINO_TESTS = (
     "adaptive_iso",
     "adaptive_audio_bap",
     "adaptive_audio_hap",
+    "adaptive_audio_control",
 )
 DEFAULT_TESTS = tuple(
     test
@@ -61,6 +62,7 @@ DEFAULT_TESTS = tuple(
         "adaptive_iso",
         "adaptive_audio_bap",
         "adaptive_audio_hap",
+        "adaptive_audio_control",
     }
 )
 ARDUINO_GROUPS = {
@@ -2775,6 +2777,167 @@ def test_adaptive_audio_hap_roles(
                 )
 
 
+## @brief P0의 2개 Audio Control 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_audio_control_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    common_source = "NUCODE_BLE_Audio.cpp"
+    security_sources = (
+        "NUCODE_BLE_Security.cpp",
+        "SecurityBond.cpp",
+        "SecurityOob.cpp",
+        "SecurityPairing.cpp",
+    )
+    cases = (
+        (
+            "AudioControlDevice",
+            "ble-audio-control-device",
+            "NUCODE_BLE_Audio_ControlDevice.cpp",
+            (
+                "CONFIG_BT_VCP_VOL_REND=y",
+                "CONFIG_BT_MICP_MIC_DEV=y",
+                "CONFIG_BT_AICS_MAX_INSTANCE_COUNT=2",
+                "CONFIG_BT_VOCS_MAX_INSTANCE_COUNT=1",
+            ),
+        ),
+        (
+            "AudioControlController",
+            "ble-audio-control-controller",
+            "NUCODE_BLE_Audio_ControlController.cpp",
+            (
+                "CONFIG_BT_VCP_VOL_CTLR=y",
+                "CONFIG_BT_MICP_MIC_CTLR=y",
+                "CONFIG_BT_AICS_CLIENT_MAX_INSTANCE_COUNT=2",
+                "CONFIG_BT_VOCS_CLIENT_MAX_INSTANCE_COUNT=1",
+            ),
+        ),
+    )
+    role_sources = (
+        "NUCODE_BLE_Audio_ControlDevice.cpp",
+        "NUCODE_BLE_Audio_ControlController.cpp",
+    )
+    unrelated_audio_sources = (
+        "NUCODE_BLE_Audio_UnicastClient.cpp",
+        "NUCODE_BLE_Audio_UnicastServer.cpp",
+        "NUCODE_BLE_Audio_BroadcastSource.cpp",
+        "NUCODE_BLE_Audio_BroadcastSink.cpp",
+        "NUCODE_BLE_Audio_BroadcastAssistant.cpp",
+        "NUCODE_BLE_Audio_HearingAccess.cpp",
+        "NUCODE_BLE_Audio_CallControl.cpp",
+        "NUCODE_BLE_Audio_CapAcceptor.cpp",
+        "NUCODE_BLE_Audio_CapCommander.cpp",
+        "NUCODE_BLE_Audio_CapInitiator.cpp",
+        "NUCODE_BLE_Audio_CapUnicastInitiator.cpp",
+        "NUCODE_BLE_Audio_Csip.cpp",
+        "NUCODE_BLE_Audio_MediaControl.cpp",
+        "NUCODE_BLE_Audio_ProfileRoles.cpp",
+        "NUCODE_BLE_Audio_PublicBroadcast.cpp",
+    )
+    unrelated_security_sources = (
+        "NUCODE_BLE_HidsBackend.c",
+        "NUCODE_BLE_ProfilesBackend.c",
+        "SecurityBattery.cpp",
+        "SecurityDeviceInformation.cpp",
+        "SecurityHid.cpp",
+        "SecurityProfiles.cpp",
+    )
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+        "CONFIG_BT_BAS=y",
+        "CONFIG_BT_DIS=y",
+        "CONFIG_BT_HIDS=y",
+        "CONFIG_BT_HRS=y",
+    )
+    fixtures = root / "adaptive-audio-control-fixtures"
+    for name, role, role_source, required_configs in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Audio"
+            / "examples"
+            / name
+            / f"{name}.ino",
+            sketch / f"{name}.ino",
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        build = root / f"build-adaptive-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive Audio Control role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != {"ble.connections": 1}:
+            raise SmokeFailure(
+                f"adaptive Audio Control capacity mismatch: {name}: {actual_capacities}"
+            )
+        if "nucode.ble.security" not in resolution.get("library_features", []):
+            raise SmokeFailure(f"adaptive Audio Control security feature is missing: {name}")
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        for required_config in (*required_configs, "CONFIG_BT_SETTINGS=y"):
+            if required_config not in final_config:
+                raise SmokeFailure(
+                    "adaptive Audio Control required Kconfig is missing: "
+                    f"{name}: {required_config}"
+                )
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    "adaptive Audio Control unrelated Kconfig is enabled: "
+                    f"{name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(
+            encoding="utf-8"
+        )
+        for source in (common_source, role_source, *security_sources):
+            if source not in source_graph:
+                raise SmokeFailure(
+                    "adaptive Audio Control required source is missing: "
+                    f"{name}: {source}"
+                )
+        forbidden_sources = (
+            *(source for source in role_sources if source != role_source),
+            *unrelated_audio_sources,
+            *unrelated_security_sources,
+        )
+        for source in forbidden_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    "adaptive Audio Control unrelated source is present: "
+                    f"{name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -2859,6 +3022,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive_iso": test_adaptive_iso_roles,
                 "adaptive_audio_bap": test_adaptive_audio_bap_roles,
                 "adaptive_audio_hap": test_adaptive_audio_hap_roles,
+                "adaptive_audio_control": test_adaptive_audio_control_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

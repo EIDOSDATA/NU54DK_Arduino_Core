@@ -452,6 +452,18 @@ extern "C" void sensorRead(void)
                 {"ble.connections": 1},
             ),
             (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-control-device",
+                "CONFIG_BT_VCP_VOL_REND=y",
+                {"ble.connections": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-control-controller",
+                "CONFIG_BT_VCP_VOL_CTLR=y",
+                {"ble.connections": 1},
+            ),
+            (
                 ["NUCODE_BLE_DirectionFinding"],
                 "ble-df-cte-beacon",
                 "CONFIG_NUCODE_BLE_DF_BEACON=y",
@@ -523,7 +535,7 @@ extern "C" void sensorRead(void)
                 )
 
     def test_audio_role_source_ownership_is_minimal(self) -> None:
-        """! @brief 11개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
+        """! @brief 13개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio"]
@@ -536,6 +548,8 @@ extern "C" void sensorRead(void)
         broadcast_sink = f"{root}/NUCODE_BLE_Audio_BroadcastSink.cpp"
         assistant = f"{root}/NUCODE_BLE_Audio_BroadcastAssistant.cpp"
         hearing_access = f"{root}/NUCODE_BLE_Audio_HearingAccess.cpp"
+        control_device = f"{root}/NUCODE_BLE_Audio_ControlDevice.cpp"
+        control_controller = f"{root}/NUCODE_BLE_Audio_ControlController.cpp"
         cases = {
             "ble-audio-unicast-source": {common, client},
             "ble-audio-unicast-sink": {common, server},
@@ -548,13 +562,15 @@ extern "C" void sensorRead(void)
             "ble-audio-broadcast-assistant": {common, assistant},
             "ble-audio-hearing-access-server": {common, hearing_access},
             "ble-audio-hearing-access-client": {common, hearing_access},
+            "ble-audio-control-device": {common, control_device},
+            "ble-audio-control-controller": {common, control_controller},
         }
         for role, expected_sources in cases.items():
             with self.subTest(role=role):
                 declaration = copy.deepcopy(self.empty_declaration)
                 declaration["roles"] = [role]
                 libraries = ["NUCODE_BLE", "NUCODE_BLE_Audio"]
-                if "hearing-access" in role:
+                if ("hearing-access" in role) or ("audio-control" in role):
                     libraries.append("NUCODE_BLE_Security")
                 features = MODULE.resolve_library_features(ROOT, profile, libraries)
                 result = MODULE.resolve_capabilities(
@@ -569,8 +585,8 @@ extern "C" void sensorRead(void)
                     expected_sources,
                 )
 
-    def test_hearing_access_security_source_ownership_is_minimal(self) -> None:
-        """! @brief HAP 역할은 pairing·bond backend만 선택하고 부가 profile을 제외합니다. """
+    def test_audio_security_source_ownership_is_minimal(self) -> None:
+        """! @brief 보안 Audio 역할은 pairing·bond backend만 선택하고 부가 profile을 제외합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"]
@@ -585,6 +601,8 @@ extern "C" void sensorRead(void)
         for role in (
             "ble-audio-hearing-access-server",
             "ble-audio-hearing-access-client",
+            "ble-audio-control-device",
+            "ble-audio-control-controller",
         ):
             with self.subTest(role=role):
                 declaration = copy.deepcopy(self.empty_declaration)
@@ -604,7 +622,7 @@ extern "C" void sensorRead(void)
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 29)
+        self.assertEqual(len(roles), 31)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):
@@ -666,6 +684,20 @@ extern "C" void sensorRead(void)
         examples = {
             "HearingAccessServer": "ble-audio-hearing-access-server",
             "HearingAccessClient": "ble-audio-hearing-access-client",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
+
+    def test_audio_control_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 Audio Control 2예제가 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "AudioControlDevice": "ble-audio-control-device",
+            "AudioControlController": "ble-audio-control-controller",
         }
         root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
         for example, role in examples.items():
