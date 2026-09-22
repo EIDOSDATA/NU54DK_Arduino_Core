@@ -55,6 +55,7 @@ ARDUINO_TESTS = (
     "adaptive_audio_cap",
     "adaptive_audio_csip",
     "adaptive_audio_pbp",
+    "adaptive_audio_tmap",
 )
 DEFAULT_TESTS = tuple(
     test
@@ -73,6 +74,7 @@ DEFAULT_TESTS = tuple(
         "adaptive_audio_cap",
         "adaptive_audio_csip",
         "adaptive_audio_pbp",
+        "adaptive_audio_tmap",
     }
 )
 ARDUINO_GROUPS = {
@@ -3811,6 +3813,237 @@ def test_adaptive_audio_pbp_roles(
                 )
 
 
+## @brief P0의 4개 Telephony and Media Audio Profile 역할을 저수준 prj.conf 없이 clean build합니다.
+def test_adaptive_audio_tmap_roles(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    common_source = "NUCODE_BLE_Audio.cpp"
+    profile_source = "NUCODE_BLE_Audio_ProfileRoles.cpp"
+    backend_sources = (
+        "NUCODE_BLE_Audio_UnicastClient.cpp",
+        "NUCODE_BLE_Audio_UnicastServer.cpp",
+        "NUCODE_BLE_Audio_BroadcastSource.cpp",
+        "NUCODE_BLE_Audio_BroadcastSink.cpp",
+        "NUCODE_BLE_Audio_BroadcastAssistant.cpp",
+        "NUCODE_BLE_Audio_HearingAccess.cpp",
+        "NUCODE_BLE_Audio_ControlController.cpp",
+        "NUCODE_BLE_Audio_ControlDevice.cpp",
+        "NUCODE_BLE_Audio_MediaControl.cpp",
+        "NUCODE_BLE_Audio_CallControl.cpp",
+        "NUCODE_BLE_Audio_CapAcceptor.cpp",
+        "NUCODE_BLE_Audio_CapCommander.cpp",
+        "NUCODE_BLE_Audio_CapInitiator.cpp",
+        "NUCODE_BLE_Audio_CapUnicastInitiator.cpp",
+        "NUCODE_BLE_Audio_Csip.cpp",
+        "NUCODE_BLE_Audio_PublicBroadcast.cpp",
+    )
+    security_sources = (
+        "NUCODE_BLE_Security.cpp",
+        "SecurityBond.cpp",
+        "SecurityOob.cpp",
+        "SecurityPairing.cpp",
+    )
+    unrelated_security_sources = (
+        "NUCODE_BLE_HidsBackend.c",
+        "NUCODE_BLE_ProfilesBackend.c",
+        "SecurityBattery.cpp",
+        "SecurityDeviceInformation.cpp",
+        "SecurityHid.cpp",
+        "SecurityProfiles.cpp",
+    )
+    cases = (
+        (
+            "TelephonyMediaGateway",
+            "ble-audio-telephony-gateway",
+            {
+                "ble.connections": 1,
+                "ble.iso-streams": 2,
+                "ble.paired-peers": 1,
+            },
+            ("NUCODE_BLE_Audio_UnicastClient.cpp",),
+            True,
+            (
+                "CONFIG_BT_TMAP=y",
+                "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_CAP_COMMANDER=y",
+                "CONFIG_BT_CSIP_SET_COORDINATOR=y",
+                "CONFIG_BT_BAP_UNICAST_CLIENT=y",
+                "CONFIG_BT_MAX_CONN=1",
+                "CONFIG_BT_ISO_MAX_CHAN=2",
+                "CONFIG_BT_MAX_PAIRED=1",
+            ),
+        ),
+        (
+            "TelephonyMediaTerminal",
+            "ble-audio-telephony-terminal",
+            {
+                "ble.connections": 1,
+                "ble.iso-streams": 2,
+                "ble.paired-peers": 1,
+            },
+            ("NUCODE_BLE_Audio_UnicastServer.cpp",),
+            True,
+            (
+                "CONFIG_BT_TMAP=y",
+                "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BAP_UNICAST_SERVER=y",
+                "CONFIG_BT_PAC_SNK=y",
+                "CONFIG_BT_PAC_SNK_LOC=y",
+                "CONFIG_BT_PAC_SRC=y",
+                "CONFIG_BT_PAC_SRC_LOC=y",
+                "CONFIG_BT_VCP_VOL_REND=y",
+                "CONFIG_BT_MCC=y",
+                "CONFIG_BT_MCC_MINIMAL=y",
+                "CONFIG_BT_TBS_CLIENT_GTBS=y",
+                "CONFIG_BT_MAX_CONN=1",
+                "CONFIG_BT_ISO_MAX_CHAN=2",
+                "CONFIG_BT_MAX_PAIRED=1",
+            ),
+        ),
+        (
+            "TelephonyMediaBroadcaster",
+            "ble-audio-telephony-broadcaster",
+            {"ble.connections": 1, "ble.iso-streams": 1},
+            ("NUCODE_BLE_Audio_BroadcastSource.cpp",),
+            False,
+            (
+                "CONFIG_BT_TMAP=y",
+                "CONFIG_BT_CAP_INITIATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+                "CONFIG_BT_ISO_BROADCASTER=y",
+                "CONFIG_BT_MAX_CONN=1",
+                "CONFIG_BT_ISO_MAX_CHAN=1",
+            ),
+        ),
+        (
+            "TelephonyMediaReceiver",
+            "ble-audio-telephony-receiver",
+            {"ble.connections": 1, "ble.iso-streams": 2},
+            ("NUCODE_BLE_Audio_BroadcastSink.cpp",),
+            False,
+            (
+                "CONFIG_BT_TMAP=y",
+                "CONFIG_BT_CAP_ACCEPTOR=y",
+                "CONFIG_BT_BONDABLE=y",
+                "CONFIG_BT_BAP_SCAN_DELEGATOR=y",
+                "CONFIG_BT_BAP_BROADCAST_SINK=y",
+                "CONFIG_BT_PAC_SNK_LOC=y",
+                "CONFIG_BT_MAX_CONN=1",
+                "CONFIG_BT_ISO_MAX_CHAN=2",
+            ),
+        ),
+    )
+    forbidden_settings = (
+        "CONFIG_NUCODE_ARDUINO_SPI=y",
+        "CONFIG_NUCODE_ARDUINO_WIRE=y",
+        "CONFIG_NUCODE_ARDUINO_PWM=y",
+        "CONFIG_NUCODE_ARDUINO_ADC=y",
+        "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
+        "CONFIG_BT_SETTINGS=y",
+        "CONFIG_BT_BAS=y",
+        "CONFIG_BT_DIS=y",
+        "CONFIG_BT_HIDS=y",
+        "CONFIG_BT_HRS=y",
+    )
+    fixtures = root / "adaptive-audio-tmap-fixtures"
+    for (
+        name,
+        role,
+        capacities,
+        expected_backends,
+        uses_security,
+        required_configs,
+    ) in cases:
+        sketch = fixtures / name
+        sketch.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            repository
+            / "libraries"
+            / "NUCODE_BLE_Audio"
+            / "examples"
+            / name
+            / f"{name}.ino",
+            sketch / f"{name}.ino",
+        )
+        (sketch / "nucode-build.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "capabilities": [],
+                    "roles": [role],
+                    "capacities": {},
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        build = root / f"build-adaptive-{name}"
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", "feature_set=adaptive")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        resolution = json.loads(
+            (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        if resolution.get("roles") != [role]:
+            raise SmokeFailure(f"adaptive TMAP role mismatch: {name}")
+        actual_capacities = {
+            item["id"]: item["value"] for item in resolution.get("capacities", [])
+        }
+        if actual_capacities != capacities:
+            raise SmokeFailure(
+                f"adaptive TMAP capacity mismatch: {name}: {actual_capacities}"
+            )
+        has_security = "nucode.ble.security" in resolution.get(
+            "library_features", []
+        )
+        if has_security != uses_security:
+            raise SmokeFailure(f"adaptive TMAP security feature mismatch: {name}")
+        zephyr_build = Path(context["zephyr_build_dir"])
+        final_config = (zephyr_build / "zephyr" / ".config").read_text(
+            encoding="utf-8"
+        )
+        for required_config in required_configs:
+            if required_config not in final_config:
+                raise SmokeFailure(
+                    f"adaptive TMAP required Kconfig is missing: {name}: {required_config}"
+                )
+        for setting in forbidden_settings:
+            if setting in final_config:
+                raise SmokeFailure(
+                    f"adaptive TMAP unrelated Kconfig is enabled: {name}: {setting}"
+                )
+        source_graph = (zephyr_build / "build.ninja").read_text(encoding="utf-8")
+        for source in (common_source, profile_source, *expected_backends):
+            if source not in source_graph:
+                raise SmokeFailure(
+                    f"adaptive TMAP required source is missing: {name}: {source}"
+                )
+        for source in backend_sources:
+            if (source not in expected_backends) and (source in source_graph):
+                raise SmokeFailure(
+                    f"adaptive TMAP unrelated backend is present: {name}: {source}"
+                )
+        for source in security_sources:
+            if uses_security and (source not in source_graph):
+                raise SmokeFailure(
+                    f"adaptive TMAP security source is missing: {name}: {source}"
+                )
+            if (not uses_security) and (source in source_graph):
+                raise SmokeFailure(
+                    f"adaptive TMAP security source is unexpected: {name}: {source}"
+                )
+        for source in unrelated_security_sources:
+            if source in source_graph:
+                raise SmokeFailure(
+                    f"adaptive TMAP unrelated security source is present: {name}: {source}"
+                )
+
+
 ## @brief 선택된 M5~M9 smoke test를 격리된 hardware와 cache root에서 실행합니다.
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
@@ -3901,6 +4134,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive_audio_cap": test_adaptive_audio_cap_roles,
                 "adaptive_audio_csip": test_adaptive_audio_csip_roles,
                 "adaptive_audio_pbp": test_adaptive_audio_pbp_roles,
+                "adaptive_audio_tmap": test_adaptive_audio_tmap_roles,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

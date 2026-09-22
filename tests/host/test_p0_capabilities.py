@@ -550,6 +550,38 @@ extern "C" void sensorRead(void)
                 {"ble.connections": 1, "ble.iso-streams": 1},
             ),
             (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-telephony-gateway",
+                "CONFIG_BT_TMAP=y",
+                {
+                    "ble.connections": 1,
+                    "ble.iso-streams": 2,
+                    "ble.paired-peers": 1,
+                },
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio", "NUCODE_BLE_Security"],
+                "ble-audio-telephony-terminal",
+                "CONFIG_BT_TMAP=y",
+                {
+                    "ble.connections": 1,
+                    "ble.iso-streams": 2,
+                    "ble.paired-peers": 1,
+                },
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-telephony-broadcaster",
+                "CONFIG_BT_TMAP=y",
+                {"ble.connections": 1, "ble.iso-streams": 1},
+            ),
+            (
+                ["NUCODE_BLE", "NUCODE_BLE_Audio"],
+                "ble-audio-telephony-receiver",
+                "CONFIG_BT_TMAP=y",
+                {"ble.connections": 1, "ble.iso-streams": 2},
+            ),
+            (
                 ["NUCODE_BLE_DirectionFinding"],
                 "ble-df-cte-beacon",
                 "CONFIG_NUCODE_BLE_DF_BEACON=y",
@@ -627,7 +659,7 @@ extern "C" void sensorRead(void)
                 )
 
     def test_audio_role_source_ownership_is_minimal(self) -> None:
-        """! @brief 26개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
+        """! @brief 30개 Audio 역할은 공통 facade와 필요한 backend만 선택합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT, profile, ["NUCODE_BLE", "NUCODE_BLE_Audio"]
@@ -650,6 +682,7 @@ extern "C" void sensorRead(void)
         cap_unicast_initiator = f"{root}/NUCODE_BLE_Audio_CapUnicastInitiator.cpp"
         csip = f"{root}/NUCODE_BLE_Audio_Csip.cpp"
         public_broadcast = f"{root}/NUCODE_BLE_Audio_PublicBroadcast.cpp"
+        profile_roles = f"{root}/NUCODE_BLE_Audio_ProfileRoles.cpp"
         cases = {
             "ble-audio-unicast-source": {common, client},
             "ble-audio-unicast-sink": {common, server},
@@ -686,6 +719,18 @@ extern "C" void sensorRead(void)
                 cap_acceptor,
                 broadcast_sink,
             },
+            "ble-audio-telephony-gateway": {common, profile_roles, client},
+            "ble-audio-telephony-terminal": {common, profile_roles, server},
+            "ble-audio-telephony-broadcaster": {
+                common,
+                profile_roles,
+                broadcast_source,
+            },
+            "ble-audio-telephony-receiver": {
+                common,
+                profile_roles,
+                broadcast_sink,
+            },
         }
         for role, expected_sources in cases.items():
             with self.subTest(role=role):
@@ -698,6 +743,13 @@ extern "C" void sensorRead(void)
                     or ("audio-media" in role)
                     or ("audio-call" in role)
                     or ("audio-csip" in role)
+                    or (
+                        role
+                        in {
+                            "ble-audio-telephony-gateway",
+                            "ble-audio-telephony-terminal",
+                        }
+                    )
                     or (
                         role
                         in {"ble-audio-cap-acceptor", "ble-audio-cap-commander"}
@@ -730,7 +782,7 @@ extern "C" void sensorRead(void)
             f"{root}/internal/security/SecurityOob.cpp",
             f"{root}/internal/security/SecurityPairing.cpp",
         }
-        for role in (
+        persistent_roles = (
             "ble-audio-hearing-access-server",
             "ble-audio-hearing-access-client",
             "ble-audio-control-device",
@@ -743,6 +795,31 @@ extern "C" void sensorRead(void)
             "ble-audio-cap-commander",
             "ble-audio-csip-member",
             "ble-audio-csip-coordinator",
+        )
+        for role in persistent_roles:
+            with self.subTest(role=role):
+                declaration = copy.deepcopy(self.empty_declaration)
+                declaration["roles"] = [role]
+                result = MODULE.resolve_capabilities(
+                    self.registry, [], features, declaration
+                )
+                self.assertEqual(
+                    {
+                        source
+                        for source in result["generated"]["sources"]
+                        if source.startswith(root)
+                    },
+                    expected_sources,
+                )
+                self.assertIn("CONFIG_BT_SETTINGS=y", result["generated"]["conf"])
+                self.assertIn(
+                    "nucode.ble.security-persistence",
+                    {item["id"] for item in result["capabilities"]},
+                )
+
+        for role in (
+            "ble-audio-telephony-gateway",
+            "ble-audio-telephony-terminal",
         ):
             with self.subTest(role=role):
                 declaration = copy.deepcopy(self.empty_declaration)
@@ -758,11 +835,17 @@ extern "C" void sensorRead(void)
                     },
                     expected_sources,
                 )
+                self.assertIn("CONFIG_BT_SETTINGS=n", result["generated"]["conf"])
+                self.assertNotIn("CONFIG_BT_SETTINGS=y", result["generated"]["conf"])
+                self.assertNotIn(
+                    "nucode.ble.security-persistence",
+                    {item["id"] for item in result["capabilities"]},
+                )
 
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 44)
+        self.assertEqual(len(roles), 48)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):
@@ -911,6 +994,22 @@ extern "C" void sensorRead(void)
         examples = {
             "PublicAudioBroadcastSource": "ble-audio-public-broadcast-source",
             "PublicAudioBroadcastSink": "ble-audio-public-broadcast-sink",
+        }
+        root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
+        for example, role in examples.items():
+            with self.subTest(example=example):
+                declaration = MODULE.load_capability_declaration(root / example)
+                self.assertEqual(declaration["roles"], [role])
+                self.assertEqual(declaration["capabilities"], [])
+                self.assertEqual(declaration["capacities"], {})
+
+    def test_audio_tmap_examples_publish_verified_role_declarations(self) -> None:
+        """! @brief 공개 TMAP 4예제가 검증된 role sidecar를 제공합니다. """
+        examples = {
+            "TelephonyMediaGateway": "ble-audio-telephony-gateway",
+            "TelephonyMediaTerminal": "ble-audio-telephony-terminal",
+            "TelephonyMediaBroadcaster": "ble-audio-telephony-broadcaster",
+            "TelephonyMediaReceiver": "ble-audio-telephony-receiver",
         }
         root = ROOT / "libraries" / "NUCODE_BLE_Audio" / "examples"
         for example, role in examples.items():

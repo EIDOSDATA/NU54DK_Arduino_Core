@@ -11,6 +11,43 @@ namespace nucode::ble::internal::security
     namespace
     {
         BondStorage state{};
+
+        /** @brief settings 비활성 구성에서는 저장 record가 없는 것으로 처리합니다. */
+        ssize_t loadSetting(const char *key, void *value, std::size_t capacity) noexcept
+        {
+#if defined(CONFIG_BT_SETTINGS)
+            return settings_load_one(key, value, capacity);
+#else
+            static_cast<void>(key);
+            static_cast<void>(value);
+            static_cast<void>(capacity);
+            return -ENOENT;
+#endif
+        }
+
+        /** @brief settings 비활성 구성에서는 영속 저장을 지원하지 않음을 반환합니다. */
+        int saveSetting(const char *key, const void *value, std::size_t length) noexcept
+        {
+#if defined(CONFIG_BT_SETTINGS)
+            return settings_save_one(key, value, length);
+#else
+            static_cast<void>(key);
+            static_cast<void>(value);
+            static_cast<void>(length);
+            return -ENOTSUP;
+#endif
+        }
+
+        /** @brief settings 비활성 구성에서는 삭제할 영속 record가 없는 것으로 처리합니다. */
+        int deleteSetting(const char *key) noexcept
+        {
+#if defined(CONFIG_BT_SETTINGS)
+            return settings_delete(key);
+#else
+            static_cast<void>(key);
+            return 0;
+#endif
+        }
     }
     BondStorage &bondStorage() noexcept
     {
@@ -173,7 +210,7 @@ namespace nucode::ble::internal::security
                 {
                     continue;
                 }
-                const ssize_t length = settings_load_one(key, record, sizeof(record));
+                const ssize_t length = loadSetting(key, record, sizeof(record));
                 if (length == 0 || length == -ENOENT)
                 {
                     continue;
@@ -185,7 +222,7 @@ namespace nucode::ble::internal::security
                                     loaded[index], legacy) ||
                     !startupContains(loaded[index].peer))
                 {
-                    static_cast<void>(settings_delete(key));
+                    static_cast<void>(deleteSetting(key));
                     atomic_inc(&bondStorage().rejected_count);
                     continue;
                 }
@@ -198,7 +235,7 @@ namespace nucode::ble::internal::security
                 if (duplicate)
                 {
                     loaded[index] = {};
-                    static_cast<void>(settings_delete(key));
+                    static_cast<void>(deleteSetting(key));
                     atomic_inc(&bondStorage().rejected_count);
                     continue;
                 }
@@ -206,10 +243,10 @@ namespace nucode::ble::internal::security
                 {
                     std::uint8_t migrated[current_metadata_bytes] = {};
                     encodeMetadata(loaded[index], migrated);
-                    if (settings_save_one(key, migrated, sizeof(migrated)) != 0)
+                    if (saveSetting(key, migrated, sizeof(migrated)) != 0)
                     {
                         loaded[index] = {};
-                        static_cast<void>(settings_delete(key));
+                        static_cast<void>(deleteSetting(key));
                         atomic_inc(&bondStorage().rejected_count);
                         continue;
                     }
@@ -558,7 +595,7 @@ namespace nucode::ble::internal::security
             return false;
         }
         encodeMetadata(metadata, record);
-        if (settings_save_one(settings_key, record, sizeof(record)) != 0)
+        if (saveSetting(settings_key, record, sizeof(record)) != 0)
         {
             return false;
         }
@@ -592,7 +629,7 @@ namespace nucode::ble::internal::security
                 char settings_key[40] = {};
                 if (metadataKey(index, settings_key, sizeof(settings_key)))
                 {
-                    static_cast<void>(settings_delete(settings_key));
+                    static_cast<void>(deleteSetting(settings_key));
                 }
             }
         }
@@ -606,7 +643,7 @@ namespace nucode::ble::internal::security
             char settings_key[40] = {};
             if (metadataKey(index, settings_key, sizeof(settings_key)))
             {
-                static_cast<void>(settings_delete(settings_key));
+                static_cast<void>(deleteSetting(settings_key));
             }
         }
         k_spinlock_key_t key = k_spin_lock(&bondStorage().bond_lock);

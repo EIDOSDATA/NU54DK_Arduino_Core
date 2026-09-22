@@ -61,10 +61,12 @@ broadcast sink 또는 unicast server backend만 남는 것을 확인했습니다
 CSIP set member/coordinator 2개 preset도 추가해 총 42개 preset을 연결했습니다. 실제 공개 CSIP `.ino`의
 저수준 설정 없는 clean smoke에서 역할별 CSIP backend와 Security source만 남고 member 1개·coordinator
 2개의 connection/bond capacity가 생성되는 것을 확인했습니다. PBP source/sink 2개 preset을 추가해
-총 44개 preset을 연결했고, 실제 공개 `.ino` clean smoke에서 Public Broadcast 조합 backend와 필요한
-CAP/Broadcast backend만 남는 것을 확인했습니다. M31 인접 Host 147건과 P0/builder Host 33건, 총
-180건이 PASS했습니다. 나머지 Audio profile 역할 확장과 ELF/map·RAM gate는 후속 작업입니다.
-전체 Host suite는 1,465건 PASS(2 skip)이며 장치에는 접근하지
+Public Broadcast 조합 backend와 필요한 CAP/Broadcast backend만 남는 것을 확인했습니다. TMAP
+gateway/terminal/broadcaster/receiver 4개 preset까지 총 48개 preset을 연결했고, 실제 공개 `.ino` clean
+smoke에서 역할별 unicast/broadcast backend만 남는 것을 확인했습니다. gateway/terminal의 pairing API는
+비영구 구성으로 분리해 settings/ZMS/flash를 제외했습니다. M31 인접 Host 147건과 P0/builder Host 34건,
+총 181건이 PASS했습니다. 나머지 Audio profile 역할 확장과 ELF/map·RAM gate는 후속 작업입니다.
+전체 Host suite는 1,466건 PASS(2 skip)이며 장치에는 접근하지
 않았습니다.
 
 ## 1. 현재 상태
@@ -76,7 +78,7 @@ CAP/Broadcast backend만 남는 것을 확인했습니다. M31 인접 Host 147�
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | P0-1 resolver·P0-2 probe/cache·P0-3a Core adaptive 생성/clean-build 완료. P0-3b capacity·strict role gate·총 44개 preset source filter/clean-build 완료(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2, Call Control 2/2, CAP 5/5, CSIP 2/2, PBP 2/2), 나머지 Audio profile 역할·ELF/map/RAM gate 진행 중 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
+| 메모리 최적화 | P0-1 resolver·P0-2 probe/cache·P0-3a Core adaptive 생성/clean-build 완료. P0-3b capacity·strict role gate·총 48개 preset source filter/clean-build 완료(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2, Call Control 2/2, CAP 5/5, CSIP 2/2, PBP 2/2, TMAP 4/4), 나머지 Audio profile 역할·ELF/map/RAM gate 진행 중 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
 | M31-W04 DF | 미완료. connected RX 내부 진단 4 valid IQ report·328 sample, 전체 FAIL·raw IQ 안정성 HOLD | [216번 초기 경계](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [220번 보존·인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) |
 | M31-W05 CS | 미완료. 같은 ACL 비암호화 read 거부 20/20, flash 직후 raw RAS 100·복구 20/20 두 번 PASS. wrong-key 실기·과거 중단 원인 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |
