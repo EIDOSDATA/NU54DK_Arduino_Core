@@ -82,14 +82,17 @@ Terminal과 Gateway의 `GapContext`는 2,224 byte에서 320 byte로 줄었고 �
 RAM은 각각 75,810 byte와 77,743 byte입니다. 네 역할 모두 금지 symbol은 0건입니다. 새
 TMAP 4역할은 62,020~83,546 byte, 초기 BLE/ISO/Audio/DF/CS 대표 10역할은
 35,576~91,037 byte의 정적 RAM으로 fresh build를 통과했고 모두 금지 symbol 0건입니다.
-이 18개 핵심 역할에 검증값보다 약 1~2 KiB 높은 clean-example RAM 상한을 smoke gate로
-고정했습니다. 금지 symbol은 advanced GAP queue에서 NUS·GATT·CoC·Security 전용 저장소까지
+초기 10개, ISO 11개, BAP 9개, HAP·Control·Media·Call 8개, CAP 5개, CSIP·PBP 4개,
+TMAP·GMAP 8개를 합친 55개 고정 image에 검증값보다 약 1~2 KiB 높은 clean-example RAM
+상한을 smoke gate로 고정했습니다. 금지 symbol은 advanced GAP queue에서
+NUS·GATT·CoC·Security 전용 저장소까지
 확대했습니다. fresh 검증에서 Central 역할이면 최종 Kconfig가 강제하는 Observer를 GAP/NUS·
 GATT/NUS·CoC·CS initiator declaration이 명시하도록 누락도 보정했습니다. 새
 Serial-only/include-only/SPI
 clean/reuse build에서도 이 감사를 확인했습니다. M31 인접 Host 147건과 P0/builder Host 40건,
-총 187건이 PASS했습니다. 전체 Host suite는 1,472건 PASS(2 skip)입니다. 나머지 역할별
-기준선과 동적 high-water 검증은 남아 있습니다.
+총 187건이 PASS했습니다. 전체 Host suite는 1,472건 PASS(2 skip)입니다. 55개 image의
+fresh build·금지 symbol 0건·역할별 RAM 상한까지 완료해 P0를 닫았고, 다음은 P1의 pin/route와
+GATT 고정 저장소 right-size입니다. 동적 high-water는 P2 경계로 남깁니다.
 장치에는 접근하지 않았습니다.
 
 ## 1. 현재 상태
@@ -101,7 +104,7 @@ clean/reuse build에서도 이 감사를 확인했습니다. M31 인접 Host 147
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | P0-1 resolver·P0-2 probe/cache·P0-3a Core adaptive 생성/clean-build 완료. P0-3b capacity·strict role gate·총 52개 preset source filter/clean-build 완료(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2, Call Control 2/2, CAP 5/5, CSIP 2/2, PBP 2/2, TMAP 4/4, GMAP 4/4). 최종 config/DTS/source/ELF/map 정적 자원 manifest·75/85% RAM gate·scan/periodic/PAwR 금지 queue gate 완료, 역할별 기준선·금지 항목 확대 진행 중 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
+| 메모리 최적화 | **P0 완료.** resolver·probe/cache·Core adaptive 생성, capacity·strict role gate·총 52개 preset source filter와 55개 고정 image clean-build를 완료했습니다(ISO 11/11, Audio BAP 9/9, HAP 2/2, Audio Control 2/2, Media Control 2/2, Call Control 2/2, CAP 5/5, CSIP 2/2, PBP 2/2, TMAP 4/4, GMAP 4/4). 최종 config/DTS/source/ELF/map 정적 자원 manifest, 75/85% RAM gate, 비활성 GAP/NUS/GATT/CoC/Security 저장소 금지 gate와 image별 RAM 상한을 고정했습니다. 다음은 P1 pin/route·GATT 고정 저장소 right-size입니다. | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [222번 P0 완료](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [통합 설계 §5.0](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#50-구현-진행-기록>) |
 | M31-W04 DF | 미완료. connected RX 내부 진단 4 valid IQ report·328 sample, 전체 FAIL·raw IQ 안정성 HOLD | [216번 초기 경계](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [220번 보존·인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) |
 | M31-W05 CS | 미완료. 같은 ACL 비암호화 read 거부 20/20, flash 직후 raw RAS 100·복구 20/20 두 번 PASS. wrong-key 실기·과거 중단 원인 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |
@@ -144,8 +147,8 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
 
 ## 3. 다음 구현 순서
 
-1. **메모리 최적화부터** 진행합니다. full profile의 API·capacity를 보존하고 lean role의
-   미사용 feature/source를 제거한 뒤 GATT·pin/route pool을 right-size합니다. final
+1. **메모리 최적화 P1부터** 진행합니다. P0에서 full profile의 API·capacity를 보존하고 lean role의
+   미사용 feature/source를 제거했습니다. 이제 GATT·pin/route pool을 right-size합니다. final
    `.config`·ELF/map·절대 byte·headroom을 비교하고 stack/heap은 high-water 측정 뒤 조정합니다.
    [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 측정·회귀 gate와
    [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 기능 선택·정정·구현 체크리스트가 기준입니다.

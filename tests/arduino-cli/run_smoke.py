@@ -102,6 +102,65 @@ CLI_BOOTSTRAP_RETRY_MARKERS = (
 )
 CLI_BOOTSTRAP_ATTEMPTS = 3
 
+## @brief 고정 adaptive 예제별 clean-build 정적 RAM 회귀 상한입니다.
+ADAPTIVE_EXAMPLE_RAM_CEILINGS = {
+    "p0_ble_gap_nus": 51500,
+    "p0_ble_gatt": 64000,
+    "p0_ble_l2cap": 93000,
+    "p0_ble_iso_cis": 53000,
+    "p0_ble_audio_source": 59000,
+    "p0_ble_audio_sink": 57000,
+    "p0_ble_df_beacon": 37000,
+    "p0_ble_df_responder": 44500,
+    "p0_ble_cs_initiator": 72000,
+    "p0_ble_cs_reflector": 61000,
+    "iso_cis_central": 53000,
+    "iso_cis_peripheral": 53000,
+    "iso_cis_to_bis_peer": 53000,
+    "iso_bis_source": 44500,
+    "iso_bis_receiver": 43000,
+    "iso_bis_encrypted_source": 44500,
+    "iso_bis_encrypted_receiver": 43000,
+    "iso_bis_time_source": 44500,
+    "iso_bis_time_receiver": 43000,
+    "iso_cis_to_bis_bridge": 59000,
+    "iso_cis_to_bis_receiver": 43000,
+    "audio_unicast_source": 59000,
+    "audio_unicast_sink": 57000,
+    "audio_unicast_cycle": 59000,
+    "audio_unicast_duplex_client": 62500,
+    "audio_unicast_duplex_server": 62000,
+    "audio_broadcast_source": 46500,
+    "audio_broadcast_sink": 60000,
+    "audio_broadcast_delegator_sink": 60000,
+    "audio_broadcast_assistant": 55500,
+    "HearingAccessServer": 55500,
+    "HearingAccessClient": 48000,
+    "AudioControlDevice": 49500,
+    "AudioControlController": 51000,
+    "MediaControlPlayer": 57000,
+    "MediaControlClient": 56000,
+    "CallControlServer": 52000,
+    "CallControlClient": 60500,
+    "CapAcceptor": 78500,
+    "CapCommander": 68000,
+    "CapInitiator": 57000,
+    "CapUnicastAcceptor": 68500,
+    "CapUnicastInitiator": 73000,
+    "CsipSetMember": 45500,
+    "CsipSetCoordinator": 51000,
+    "PublicAudioBroadcastSource": 57000,
+    "PublicAudioBroadcastSink": 77500,
+    "TelephonyMediaGateway": 85000,
+    "TelephonyMediaTerminal": 80000,
+    "TelephonyMediaBroadcaster": 63000,
+    "TelephonyMediaReceiver": 81500,
+    "GamingAudioGateway": 77500,
+    "GamingAudioTerminal": 70000,
+    "GamingAudioBroadcaster": 79000,
+    "GamingAudioReceiver": 77000,
+}
+
 
 ## @brief NU54DK 보드 공통 예제 라이브러리의 저장소 경로를 반환합니다.
 def board_examples(repository: Path) -> Path:
@@ -369,11 +428,22 @@ def assert_build(build_path: Path, project_name: str) -> dict:
         != build_record.get("sha256")
     ):
         raise SmokeFailure("live build record provenance hash mismatch")
+    if context.get("profile") == "adaptive":
+        resolution_record = resource_inputs.get("capability_resolution")
+        if not isinstance(resolution_record, dict):
+            raise SmokeFailure("adaptive resource audit has no capability resolution")
+        resolution_path = Path(str(resolution_record.get("path", "")))
+        resolution = json.loads(resolution_path.read_text(encoding="utf-8"))
+        if resolution.get("roles"):
+            assert_static_ram_ceiling(context, Path(project_name).stem)
     return context
 
 
 ## @brief 고정 adaptive 예제의 정적 RAM이 검증된 역할별 상한을 넘지 않는지 확인합니다.
-def assert_static_ram_ceiling(context: dict, label: str, ceiling_bytes: int) -> None:
+def assert_static_ram_ceiling(context: dict, label: str) -> None:
+    ceiling_bytes = ADAPTIVE_EXAMPLE_RAM_CEILINGS.get(label)
+    if ceiling_bytes is None:
+        raise SmokeFailure(f"adaptive static RAM ceiling is missing: {label}")
     resource_audit = context.get("resource_audit", {})
     ram = resource_audit.get("ram", {})
     used_bytes = ram.get("used_bytes")
@@ -2168,7 +2238,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_NUS=y",),
             {"ble.connections": 1},
             "NUCODE_BLE_GAP.cpp",
-            51500,
         ),
         (
             "p0_ble_gatt",
@@ -2176,7 +2245,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_GATT=y",),
             {"ble.connections": 1},
             "NUCODE_BLE_GATT.cpp",
-            64000,
         ),
         (
             "p0_ble_l2cap",
@@ -2184,7 +2252,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_L2CAP=y",),
             {"ble.connections": 2, "ble.att-mtu": 512},
             "NUCODE_BLE_L2CAP.cpp",
-            93000,
         ),
         (
             "p0_ble_iso_cis",
@@ -2192,7 +2259,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_ISO_MODE_CIS_CENTRAL=y",),
             {"ble.connections": 2, "ble.iso-streams": 2},
             "NUCODE_BLE_ISO.cpp",
-            53000,
         ),
         (
             "p0_ble_audio_source",
@@ -2200,7 +2266,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_BT_BAP_UNICAST_CLIENT=y",),
             {"ble.connections": 1, "ble.iso-streams": 1},
             "NUCODE_BLE_Audio_UnicastClient.cpp",
-            59000,
         ),
         (
             "p0_ble_audio_sink",
@@ -2208,7 +2273,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_BT_BAP_UNICAST_SERVER=y",),
             {"ble.connections": 1, "ble.iso-streams": 1},
             "NUCODE_BLE_Audio_UnicastServer.cpp",
-            57000,
         ),
         (
             "p0_ble_df_beacon",
@@ -2216,7 +2280,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_DF_BEACON=y",),
             {},
             "NUCODE_BLE_DirectionFinding.cpp",
-            37000,
         ),
         (
             "p0_ble_df_responder",
@@ -2224,7 +2287,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_DF_RESPONDER=y",),
             {"ble.connections": 1},
             "NUCODE_BLE_DirectionFinding_Connected.cpp",
-            44500,
         ),
         (
             "p0_ble_cs_initiator",
@@ -2232,7 +2294,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_CS_INITIATOR=y",),
             {"ble.connections": 1, "ble.att-mtu": 498},
             "NUCODE_BLE_ChannelSounding_Initiator.cpp",
-            72000,
         ),
         (
             "p0_ble_cs_reflector",
@@ -2240,7 +2301,6 @@ def test_adaptive_ble_roles(
             ("CONFIG_NUCODE_BLE_CS_REFLECTOR=y",),
             {"ble.connections": 1},
             "NUCODE_BLE_ChannelSounding_Reflector.cpp",
-            61000,
         ),
     )
     forbidden = (
@@ -2250,14 +2310,13 @@ def test_adaptive_ble_roles(
         "CONFIG_NUCODE_ARDUINO_ADC=y",
         "CONFIG_NUCODE_ARDUINO_INTERRUPTS=y",
     )
-    for name, role, required, capacities, required_source, ram_ceiling_bytes in cases:
+    for name, role, required, capacities, required_source in cases:
         sketch = repository / "tests" / "arduino-cli" / name
         build = root / f"build-{name}"
         command = compile_command(cli, config, build, sketch)
         command[-1:-1] = ("--board-options", "feature_set=adaptive")
         run(command)
         context = assert_build(build, f"{name}.ino")
-        assert_static_ram_ceiling(context, name, ram_ceiling_bytes)
         if context.get("profile") != "adaptive":
             raise SmokeFailure(f"adaptive BLE profile was not selected: {name}")
         resolution = json.loads(
@@ -3936,7 +3995,6 @@ def test_adaptive_audio_tmap_roles(
                 "CONFIG_BT_ISO_MAX_CHAN=2",
                 "CONFIG_BT_MAX_PAIRED=1",
             ),
-            85000,
         ),
         (
             "TelephonyMediaTerminal",
@@ -3964,7 +4022,6 @@ def test_adaptive_audio_tmap_roles(
                 "CONFIG_BT_ISO_MAX_CHAN=2",
                 "CONFIG_BT_MAX_PAIRED=1",
             ),
-            80000,
         ),
         (
             "TelephonyMediaBroadcaster",
@@ -3980,7 +4037,6 @@ def test_adaptive_audio_tmap_roles(
                 "CONFIG_BT_MAX_CONN=1",
                 "CONFIG_BT_ISO_MAX_CHAN=1",
             ),
-            63000,
         ),
         (
             "TelephonyMediaReceiver",
@@ -3998,7 +4054,6 @@ def test_adaptive_audio_tmap_roles(
                 "CONFIG_BT_MAX_CONN=1",
                 "CONFIG_BT_ISO_MAX_CHAN=2",
             ),
-            81500,
         ),
     )
     forbidden_settings = (
@@ -4021,7 +4076,6 @@ def test_adaptive_audio_tmap_roles(
         expected_backends,
         uses_security,
         required_configs,
-        ram_ceiling_bytes,
     ) in cases:
         sketch = fixtures / name
         sketch.mkdir(parents=True, exist_ok=True)
@@ -4053,7 +4107,6 @@ def test_adaptive_audio_tmap_roles(
         command[-1:-1] = ("--board-options", "feature_set=adaptive")
         run(command)
         context = assert_build(build, f"{name}.ino")
-        assert_static_ram_ceiling(context, name, ram_ceiling_bytes)
         resolution = json.loads(
             (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
                 encoding="utf-8"
@@ -4172,7 +4225,6 @@ def test_adaptive_audio_gmap_roles(
                 "CONFIG_BT_ISO_MAX_CHAN=2",
                 "CONFIG_BT_MAX_PAIRED=1",
             ),
-            77500,
         ),
         (
             "GamingAudioTerminal",
@@ -4193,7 +4245,6 @@ def test_adaptive_audio_gmap_roles(
                 "CONFIG_BT_ISO_MAX_CHAN=1",
                 "CONFIG_BT_MAX_PAIRED=1",
             ),
-            70000,
         ),
         (
             "GamingAudioBroadcaster",
@@ -4211,7 +4262,6 @@ def test_adaptive_audio_gmap_roles(
                 "CONFIG_BT_MAX_CONN=1",
                 "CONFIG_BT_ISO_MAX_CHAN=1",
             ),
-            79000,
         ),
         (
             "GamingAudioReceiver",
@@ -4229,7 +4279,6 @@ def test_adaptive_audio_gmap_roles(
                 "CONFIG_BT_MAX_CONN=1",
                 "CONFIG_BT_ISO_MAX_CHAN=1",
             ),
-            77000,
         ),
     )
     forbidden_settings = (
@@ -4252,7 +4301,6 @@ def test_adaptive_audio_gmap_roles(
         expected_backends,
         uses_security,
         required_configs,
-        ram_ceiling_bytes,
     ) in cases:
         sketch = fixtures / name
         sketch.mkdir(parents=True, exist_ok=True)
@@ -4284,7 +4332,6 @@ def test_adaptive_audio_gmap_roles(
         command[-1:-1] = ("--board-options", "feature_set=adaptive")
         run(command)
         context = assert_build(build, f"{name}.ino")
-        assert_static_ram_ceiling(context, name, ram_ceiling_bytes)
         resolution = json.loads(
             (Path(context["app_dir"]) / "resolved-capabilities.json").read_text(
                 encoding="utf-8"
