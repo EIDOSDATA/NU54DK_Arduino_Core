@@ -50,8 +50,8 @@ class M29BleLongReadTests(unittest.TestCase):
             "struct bt_gatt_read_params read_parameters",
             "struct bt_gatt_write_params write_parameters",
             "struct bt_gatt_subscribe_params subscribe_parameters",
-            "std::uint8_t read_data[maximum_value_length]",
-            "std::uint8_t write_data[maximum_value_length]",
+            "std::uint8_t read_data[maximum_event_payload_length]",
+            "std::uint8_t write_data[maximum_tx_payload_length]",
             "BLEConnectionHandle connection_handle",
         ):
             self.assertIn(token, text, token)

@@ -125,7 +125,7 @@ config NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE
 	range 2 32
 	depends on NUCODE_BLE_CORE
 	help
-	  callback 밖 수명을 보장하는 31-byte bounded scan 결과 개수입니다.
+	  callback 밖 수명을 보장하는 최대 255-byte payload scan 결과 개수입니다.
 
 config NUCODE_BLE_PERIODIC_REPORT_QUEUE_SIZE
 	int "NUCODE BLE periodic report queue 항목 수"
@@ -194,13 +194,13 @@ config NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE
 	  단일 event payload의 최대 byte 수입니다.
 
 config NUCODE_BLE_GATT_TX_PAYLOAD_SIZE
-	int "NUCODE GATT server TX 최대 payload 크기"
+	int "NUCODE GATT TX 최대 payload 크기"
 	default 512
 	range 1 512
 	depends on NUCODE_BLE_GATT
 	help
-	  server notification과 indication의 비동기 전송 수명 동안 보존하는
-	  단일 snapshot payload의 최대 byte 수입니다.
+	  server notification·indication 및 client write의 비동기 전송 수명
+	  동안 보존하는 단일 snapshot payload의 최대 byte 수입니다.
 
 config NUCODE_BLE_GATT_TX_CONTEXT_COUNT
 	int "NUCODE GATT server 동시 TX context 수"

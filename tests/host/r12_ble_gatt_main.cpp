@@ -19,6 +19,12 @@ static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::operation_failed) ==
               "기존 client event ordinal을 유지해야 합니다.");
 static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::read_multiple_complete) == 11U,
               "W04 client event ordinal을 유지해야 합니다.");
+static_assert(sizeof(decltype(nucode::ble::internal::gatt::ClientState::read_data)) ==
+                  CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE,
+              "client read snapshot은 선언한 event payload 크기를 사용해야 합니다.");
+static_assert(sizeof(decltype(nucode::ble::internal::gatt::ClientState::write_data)) ==
+                  CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE,
+              "client write snapshot은 선언한 TX payload 크기를 사용해야 합니다.");
 
 namespace nucode::ble::internal
 {
@@ -459,6 +465,7 @@ int main(int argc, char **argv)
         std::strcmp(scenario, "m29_long_write") == 0 ||
         std::strcmp(scenario, "m29_signed_write") == 0 ||
         std::strcmp(scenario, "m29_signed_overflow") == 0 ||
+        std::strcmp(scenario, "client_signed_capacity") == 0 ||
         std::strcmp(scenario, "m29_eatt") == 0 ||
         std::strcmp(scenario, "client_reentrant_end") == 0)
     {
@@ -1121,6 +1128,18 @@ int main(int argc, char **argv)
             assert(detailed_events[0][static_cast<unsigned>(
                        BLEGattClientEvent::signed_write_complete)] == 0U);
         }
+        else if (std::strcmp(scenario, "client_signed_capacity") == 0)
+        {
+            observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+            discoverSigned();
+            std::array<std::uint8_t, 65> capacity_payload{};
+            assert(!BLEClient.writeSigned(capacity_payload.data(), capacity_payload.size()));
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(BLEClient.writeSigned(capacity_payload.data(), 64U));
+            mock_command_callback(connection, mock_command_user_data);
+            BLEDevice.poll();
+            assert(!BLEClient.busy());
+        }
         else if (std::strcmp(scenario, "m29_eatt") == 0)
         {
             observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
@@ -1157,6 +1176,7 @@ int main(int argc, char **argv)
         }
         if (std::strcmp(scenario, "m29_signed_write") == 0 ||
             std::strcmp(scenario, "m29_signed_overflow") == 0 ||
+            std::strcmp(scenario, "client_signed_capacity") == 0 ||
             std::strcmp(scenario, "m29_eatt") == 0)
         {
         }
@@ -1182,6 +1202,36 @@ int main(int argc, char **argv)
             mock_write->func(connection, 0, mock_write);
             assert(!BLEClient.busy());
             assert(BLEClient.writeWithoutResponse(payload, 4));
+            mock_command_callback(connection, mock_command_user_data);
+            assert(!BLEClient.busy());
+        }
+        else if (std::strcmp(scenario, "client_capacity") == 0)
+        {
+            std::array<std::uint8_t, 65> capacity_payload{};
+            capacity_payload.fill(0x5AU);
+            assert(BLEClient.read());
+            assert(mock_read->func(connection, 0U, mock_read, capacity_payload.data(),
+                                   static_cast<std::uint16_t>(capacity_payload.size())) ==
+                   BT_GATT_ITER_STOP);
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(!BLEClient.busy());
+            BLEDevice.poll();
+            assert(BLEClient.read());
+            assert(mock_read->func(connection, 0U, mock_read, capacity_payload.data(), 64U) ==
+                   BT_GATT_ITER_CONTINUE);
+            assert(mock_read->func(connection, 0U, mock_read, nullptr, 0U) == BT_GATT_ITER_STOP);
+            BLEDevice.poll();
+            assert(observed_length == 64U && observed_data[63] == 0x5AU);
+
+            assert(!BLEClient.write(capacity_payload.data(), capacity_payload.size()));
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(BLEClient.write(capacity_payload.data(), 64U));
+            mock_write->func(connection, 0U, mock_write);
+            assert(!BLEClient.busy());
+            assert(!BLEClient.writeWithoutResponse(capacity_payload.data(),
+                                                   capacity_payload.size()));
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(BLEClient.writeWithoutResponse(capacity_payload.data(), 64U));
             mock_command_callback(connection, mock_command_user_data);
             assert(!BLEClient.busy());
         }

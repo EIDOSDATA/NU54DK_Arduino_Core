@@ -60,7 +60,8 @@ class BleGattTests(unittest.TestCase):
 
             capacity_binary = Path(folder) / 'gatt-tx-capacity.exe'
             capacity_result = subprocess.run(
-                command + ['-DCONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=64',
+                command + ['-DCONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE=64',
+                           '-DCONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=64',
                            '-DCONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT=1',
                            '-o', str(capacity_binary)],
                 capture_output=True,
@@ -71,7 +72,8 @@ class BleGattTests(unittest.TestCase):
                 0,
                 capacity_result.stderr.decode(errors='replace'),
             )
-            for scenario in ('tx_capacity', 'tx_pool'):
+            for scenario in ('tx_capacity', 'tx_pool', 'client_capacity',
+                             'client_signed_capacity'):
                 capacity_run = run_executable(
                     [str(capacity_binary), scenario], capture_output=True, timeout=10
                 )

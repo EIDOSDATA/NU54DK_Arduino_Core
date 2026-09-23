@@ -159,6 +159,10 @@ generic GATT는 용도에 따라 `ble-gatt-server-peripheral` 또는
 server notification·indication의 최대 동시 전송 수는 adaptive declaration의
 `ble.gatt-tx-contexts`(1~128)로 지정한다. 두 종류가 하나의 bounded pool을 공유하고,
 가득 차면 `busy`로 거부한다. 값을 생략한 호환 구성은 64개를 예약한다.
+`ble.gatt-event-payload`는 client read 누적 버퍼와 callback event payload를,
+`ble.gatt-tx-payload`는 server 전송 snapshot과 client write snapshot을 함께 제한한다.
+선언보다 큰 read/write는 잘라내지 않고 `value_overflow`로 실패하며, 선언을 생략한
+full 호환 구성은 두 payload 모두 512 B를 유지한다.
 
 resolver 결과는 machine-readable `resolved-capabilities.json`으로 보존하고 생성 `prj.conf`, overlay,
 source/init 선택과 cache identity가 모두 이를 따라야 한다. 기존 full 동작은 명시적

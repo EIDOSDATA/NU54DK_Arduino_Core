@@ -762,7 +762,7 @@ namespace nucode::ble::internal::gatt
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
         bt_conn_unref(connection);
-        if (length > maximum_value_length || mtu < 3U || length > mtu - 3U)
+        if (length > maximum_tx_payload_length || mtu < 3U || length > mtu - 3U)
         {
             nucode::ble::internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
@@ -1324,7 +1324,7 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        if (length > maximum_value_length)
+        if (length > maximum_tx_payload_length)
         {
             internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
@@ -1507,7 +1507,7 @@ namespace nucode::ble
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
-        if (length > maximum_value_length || mtu < 15U || length > mtu - 15U)
+        if (length > maximum_tx_payload_length || mtu < 15U || length > mtu - 15U)
         {
             bt_conn_unref(connection);
             atomic_set(&state->client_busy_value, 0);

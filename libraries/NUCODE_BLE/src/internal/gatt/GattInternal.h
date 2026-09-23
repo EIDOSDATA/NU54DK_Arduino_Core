@@ -557,7 +557,7 @@ namespace nucode::ble::internal::gatt
         struct bt_gatt_read_params cache_read_parameters = {};
         struct bt_gatt_write_params cache_write_parameters = {};
         struct bt_gatt_subscribe_params cache_subscribe_parameters = {};
-        std::uint8_t read_data[maximum_value_length] = {};
+        std::uint8_t read_data[maximum_event_payload_length] = {};
         std::uint8_t remote_database_hash[GattDatabase::hash_length] = {};
         std::uint8_t client_features_value = 1U;
         std::uint16_t read_handles[maximum_descriptors] = {};
@@ -569,7 +569,7 @@ namespace nucode::ble::internal::gatt
         std::uint16_t client_features_handle = 0U;
         std::uint16_t database_hash_handle = 0U;
         std::uint16_t descriptor_end_handle = 0U;
-        std::uint8_t write_data[maximum_value_length] = {};
+        std::uint8_t write_data[maximum_tx_payload_length] = {};
         std::size_t read_length = 0U;
         bool read_multiple = false;
         struct bt_conn *client_operation_connection = nullptr;
