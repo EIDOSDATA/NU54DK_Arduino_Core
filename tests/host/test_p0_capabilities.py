@@ -136,6 +136,36 @@ class P0CapabilityContractTests(unittest.TestCase):
             [],
         )
 
+    def test_resource_audit_rejects_wrong_direction_and_cs_step_pool(self) -> None:
+        """! @brief GATT 반대 방향과 CS reflector에 initiator 전용 저장소가 남지 않아야 합니다. """
+        output = (
+            "536900000 00000392 b nucode::ble::internal::gatt::"
+            "(anonymous namespace)::slots\n"
+            "536900392 00000680 b nucode::ble::internal::gatt::"
+            "(anonymous namespace)::states\n"
+            "536901072 00004352 b nucode::ble::cs::"
+            "(anonymous namespace)::net_buf_data_local_steps\n"
+        )
+        findings = MODULE.forbidden_resource_symbols("CONFIG_BT=y\n", output)
+        self.assertEqual(len(findings), 3)
+        self.assertEqual(
+            MODULE.forbidden_resource_symbols(
+                "CONFIG_NUCODE_BLE_GATT_SERVER=y\n"
+                "CONFIG_NUCODE_BLE_CS_INITIATOR=y\n",
+                output,
+            ),
+            ["nucode::ble::internal::gatt::(anonymous namespace)::states"],
+        )
+        self.assertEqual(
+            MODULE.forbidden_resource_symbols(
+                "CONFIG_NUCODE_BLE_GATT_SERVER=y\n"
+                "CONFIG_NUCODE_BLE_GATT_CLIENT=y\n"
+                "CONFIG_NUCODE_BLE_CS_INITIATOR=y\n",
+                output,
+            ),
+            [],
+        )
+
     def test_resource_audit_applies_exact_ram_budget_boundaries(self) -> None:
         """! @brief 반올림 전 실제 예약률로 75% 경고와 85% 실패 경계를 판정합니다. """
         self.assertEqual(MODULE.resource_budget_status(749_999, 1_000_000), "pass")

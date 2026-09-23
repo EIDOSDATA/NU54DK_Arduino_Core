@@ -111,7 +111,10 @@ server-only/client-only role로 분리해 동일 server fixture를 48,653 B, 실
 48,835 B, Central을 53,478 B로 줄였다. 이어 shared TX pool을 선언 용량에 연결해
 server fixture를 48,581 B, Peripheral을 48,763 B로 줄였다. GATT client read/write
 버퍼도 선언 용량에 연결해 실제 Central의 RAM을 53,478→52,582 B로 줄였다.
-P1의 GAP·L2CAP·ISO·CS 잔여 고정 저장소와 역할별 포함 여부를 계속 점검한다.
+P1의 GAP·L2CAP·ISO·CS 잔여 고정 저장소와 역할별 포함 여부까지 감사하고
+GATT 방향·CS 전용 pool의 ELF 회귀 문턱을 추가했다. P1 정적 구조는 완료했으며,
+stack/heap/controller pool과 burst queue depth는 P2 실물 high-water 및 오류·복구
+부하를 측정한 뒤에만 조정한다.
 `SPI.begin()` 사용자가
 SPI용 `prj.conf`를 직접 작성해야 하는 상태는 최적화 완료가 아니다.
 

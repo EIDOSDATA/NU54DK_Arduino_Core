@@ -293,8 +293,20 @@ def forbidden_resource_symbols(configuration: str, nm_output: str) -> list[str]:
         ("CONFIG_NUCODE_BLE_NUS=y", "ble_event_queue"),
         ("CONFIG_NUCODE_BLE_GATT=y", "gatt_event_queue"),
         (
+            "CONFIG_NUCODE_BLE_GATT_SERVER=y",
+            "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+        ),
+        (
+            "CONFIG_NUCODE_BLE_GATT_CLIENT=y",
+            "nucode::ble::internal::gatt::(anonymous namespace)::states",
+        ),
+        (
             "CONFIG_NUCODE_BLE_L2CAP=y",
             "nucode::ble::internal::l2cap::(anonymous namespace)",
+        ),
+        (
+            "CONFIG_NUCODE_BLE_CS_INITIATOR=y",
+            "nucode::ble::cs::(anonymous namespace)::net_buf_data_local_steps",
         ),
         ("CONFIG_BT_SMP=y", "security_event_queue"),
         (
