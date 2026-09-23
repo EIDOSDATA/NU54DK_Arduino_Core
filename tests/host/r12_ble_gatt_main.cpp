@@ -78,7 +78,10 @@ BLECharacteristic alternate_characteristic(BLEUuid(std::uint16_t{0x2A24}), BLEPr
                                            BLEPermission::write,
                                            local_characteristic_capacity);
 BLECharacteristic second_characteristic(BLEUuid(std::uint16_t{0x2A19}), BLEProperty::read,
-                                         BLEPermission::read, 20);
+                                          BLEPermission::read, 20);
+BLECharacteristic tx_peer_characteristic(BLEUuid(std::uint16_t{0x2A26}),
+                                         BLEProperty::read | BLEProperty::notify,
+                                         BLEPermission::read, 20U);
 BLEDescriptor descriptors[] = {
     BLEDescriptor(BLEUuid(std::uint16_t{0x2901}), BLEPermission::read | BLEPermission::write, 4U),
     BLEDescriptor(BLEUuid(std::uint16_t{0x2904}), BLEPermission::read | BLEPermission::write, 4U),
@@ -417,6 +420,12 @@ int main(int argc, char **argv)
     }
     assert(service.addCharacteristic(characteristic));
     assert(service.addCharacteristic(alternate_characteristic));
+    if (std::strcmp(scenario, "tx_pool_parallel") == 0)
+    {
+        assert(second_service.addCharacteristic(tx_peer_characteristic));
+        tx_peer_characteristic.onEvent(serverObserved, nullptr);
+        assert(BLEDevice.addService(second_service));
+    }
     assert(BLEDevice.addService(service));
     const bool cache_scenario = std::strncmp(scenario, "m29_cache_", 10U) == 0;
     if (cache_scenario)
@@ -712,6 +721,63 @@ int main(int argc, char **argv)
         assert(!characteristic.indicate());
         assert(BLEDevice.lastError() == BLEError::value_overflow);
     }
+#if CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT == 1
+    else if (std::strcmp(scenario, "tx_pool") == 0)
+    {
+        assert(characteristic.setValue(payload, sizeof(payload)));
+        assert(characteristic.notify());
+        assert(!characteristic.indicate());
+        assert(BLEDevice.lastError() == BLEError::busy);
+        auto notification = mock_notification;
+        notification.func(connection, notification.user_data);
+
+        assert(characteristic.indicate());
+        auto *indication = mock_indication;
+        indication->func(connection, indication, 0U);
+        assert(!characteristic.notify());
+        assert(BLEDevice.lastError() == BLEError::busy);
+        indication->destroy(indication);
+
+        assert(characteristic.notify());
+        notification = mock_notification;
+        notification.func(connection, notification.user_data);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::notification_sent)] ==
+               2U);
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::indication_confirmed)] ==
+               1U);
+    }
+#endif
+#if CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT == 2
+    else if (std::strcmp(scenario, "tx_pool_parallel") == 0)
+    {
+        const std::uint8_t peer_payload[]{0x41U, 0x42U, 0x43U, 0x44U};
+        assert(characteristic.setValue(payload, sizeof(payload)));
+        assert(tx_peer_characteristic.setValue(peer_payload, sizeof(peer_payload)));
+        assert(characteristic.notify());
+        const auto first_notification = mock_notification;
+        assert(tx_peer_characteristic.notify());
+        const auto second_notification = mock_notification;
+        assert(first_notification.data != second_notification.data);
+        assert(std::memcmp(first_notification.data, payload, sizeof(payload)) == 0);
+        assert(std::memcmp(second_notification.data, peer_payload, sizeof(peer_payload)) == 0);
+        assert(!characteristic.indicate());
+        assert(BLEDevice.lastError() == BLEError::busy);
+
+        first_notification.func(connection, first_notification.user_data);
+        assert(std::memcmp(second_notification.data, peer_payload, sizeof(peer_payload)) == 0);
+        assert(characteristic.indicate());
+        auto *indication = mock_indication;
+        second_notification.func(connection, second_notification.user_data);
+        indication->func(connection, indication, 0U);
+        indication->destroy(indication);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::notification_sent)] ==
+               2U);
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::indication_confirmed)] ==
+               1U);
+    }
+#endif
 #if CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE == 64
     else if (std::strcmp(scenario, "inline_capacity") == 0)
     {

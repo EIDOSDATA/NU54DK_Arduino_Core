@@ -156,6 +156,9 @@ generic GATT는 용도에 따라 `ble-gatt-server-peripheral` 또는
 `ble-gatt-client-central`을 선언한다. 전자는 client discovery/cache source와 Zephyr GATT client를,
 후자는 local dynamic database/server source를 제외한다. server/client와 NUS를 한 image에서
 모두 사용하는 호환 구성은 `ble-gatt-nus-dual-role`을 명시적으로 선택한다.
+server notification·indication의 최대 동시 전송 수는 adaptive declaration의
+`ble.gatt-tx-contexts`(1~128)로 지정한다. 두 종류가 하나의 bounded pool을 공유하고,
+가득 차면 `busy`로 거부한다. 값을 생략한 호환 구성은 64개를 예약한다.
 
 resolver 결과는 machine-readable `resolved-capabilities.json`으로 보존하고 생성 `prj.conf`, overlay,
 source/init 선택과 cache identity가 모두 이를 따라야 한다. 기존 full 동작은 명시적

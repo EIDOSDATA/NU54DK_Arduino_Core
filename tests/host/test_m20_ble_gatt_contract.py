@@ -99,7 +99,7 @@ class M20BleGattContractTests(unittest.TestCase):
             "GattAccess::dispatch(*record.characteristic, event)",
             "characteristic_value_lock",
             "copyCachedValue(*characteristic, snapshot",
-            "copyCachedValueForTransmission(*this, slot->notification_data[index]",
+            "copyCachedValueForTransmission(*this, context->data",
             "capacity <= maximum_inline_value_length ? internal_value_ : nullptr",
         ):
             self.assertIn(token, source, token)
@@ -138,8 +138,8 @@ class M20BleGattContractTests(unittest.TestCase):
             "setClientSubscriptionToken(state, connection)",
             "validClientSubscription(*state, connection)",
             "client_subscription_value",
-            "NotificationContext",
-            "indication_generations",
+            "ServerTxContext",
+            "context->generation",
         ):
             self.assertIn(token, source, token)
         subscribe = source[source.index("bool startSubscription(") : source.index(
@@ -207,6 +207,7 @@ class M20BleGattContractTests(unittest.TestCase):
             "config NUCODE_BLE_GATT_MAX_SERVICES",
             "config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE",
             "config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE",
+            "config NUCODE_BLE_GATT_TX_CONTEXT_COUNT",
         ):
             self.assertIn(symbol, kconfig, symbol)
         self.assertIn("CONFIG_BT_GATT_DYNAMIC_DB=y", feature_conf)

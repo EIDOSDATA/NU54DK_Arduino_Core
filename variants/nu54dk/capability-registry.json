@@ -4140,6 +4140,14 @@
       "conf": ["CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE={value}"]
     },
     {
+      "id": "ble.gatt-tx-contexts",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 128,
+      "unit": "contexts",
+      "conf": ["CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT={value}"]
+    },
+    {
       "id": "ble.gatt-inline-value-payload",
       "aggregation": "maximum",
       "minimum": 1,

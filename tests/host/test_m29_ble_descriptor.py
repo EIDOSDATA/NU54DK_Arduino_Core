@@ -81,8 +81,8 @@ class M29BleDescriptorTests(unittest.TestCase):
         self.assertIn("notify(BLEConnectionHandle connection)", self.public)
         self.assertIn("indicate(BLEConnectionHandle connection)", self.public)
         self.assertIn("internal::referenceConnection(connection_handle)", self.server)
-        self.assertIn("notification_data[maximum_characteristics]", self.internal)
-        self.assertIn("slot->notification_data[index]", self.server)
+        self.assertIn("tx_contexts[maximum_server_tx_contexts]", self.internal)
+        self.assertIn("acquireServerTxContext(*this, ServerTxKind::notification)", self.server)
         self.assertIn("CONFIG_BT_GATT_READ_MULTIPLE=y", self.profile)
 
     def test_target_and_runner_bind_exact_w04_protocol(self) -> None:

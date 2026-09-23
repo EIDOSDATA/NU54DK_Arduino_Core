@@ -50,6 +50,74 @@ namespace nucode::ble::internal::gatt
             }
             return nullptr;
         }
+
+        /** @brief TX lock을 잡은 상태에서 context 소유권을 해제합니다. */
+        void resetServerTxContext(ServerTxContext &context) noexcept
+        {
+            context.characteristic = nullptr;
+            context.connection = nullptr;
+            context.generation = 0U;
+            ::memset(&context.indication, 0, sizeof(context.indication));
+            atomic_set(&context.active, 0);
+        }
+
+        /** @brief stack callback이 끝난 shared TX context를 재사용 가능 상태로 돌립니다. */
+        void releaseServerTxContext(ServerTxContext &context) noexcept
+        {
+            k_spinlock_key_t key = k_spin_lock(&serverState().tx_context_lock);
+            resetServerTxContext(context);
+            k_spin_unlock(&serverState().tx_context_lock, key);
+        }
+
+        /** @brief 동일 characteristic·전송 종류의 중복을 막고 빈 shared TX context를 확보합니다. */
+        ServerTxContext *acquireServerTxContext(BLECharacteristic &characteristic,
+                                                ServerTxKind kind) noexcept
+        {
+            k_spinlock_key_t key = k_spin_lock(&serverState().tx_context_lock);
+            for (ServerTxContext &context : serverState().tx_contexts)
+            {
+                if (atomic_get(&context.active) != 0 && context.characteristic == &characteristic &&
+                    context.kind == kind)
+                {
+                    k_spin_unlock(&serverState().tx_context_lock, key);
+                    return nullptr;
+                }
+            }
+            for (ServerTxContext &context : serverState().tx_contexts)
+            {
+                if (atomic_cas(&context.active, 0, 1))
+                {
+                    context.kind = kind;
+                    context.characteristic = &characteristic;
+                    context.connection = nullptr;
+                    context.generation = static_cast<std::uint32_t>(
+                        atomic_get(&sessionState().gatt_session_generation));
+                    k_spin_unlock(&serverState().tx_context_lock, key);
+                    return &context;
+                }
+            }
+            k_spin_unlock(&serverState().tx_context_lock, key);
+            return nullptr;
+        }
+
+        /** @brief indication params를 소유한 활성 shared TX context를 찾습니다. */
+        ServerTxContext *findIndicationContext(
+            struct bt_gatt_indicate_params *parameters) noexcept
+        {
+            k_spinlock_key_t key = k_spin_lock(&serverState().tx_context_lock);
+            for (ServerTxContext &context : serverState().tx_contexts)
+            {
+                if (atomic_get(&context.active) != 0 &&
+                    context.kind == ServerTxKind::indication &&
+                    &context.indication == parameters)
+                {
+                    k_spin_unlock(&serverState().tx_context_lock, key);
+                    return &context;
+                }
+            }
+            k_spin_unlock(&serverState().tx_context_lock, key);
+            return nullptr;
+        }
     } // namespace
 
     void clearServerTransaction(struct bt_conn *connection) noexcept
@@ -513,89 +581,61 @@ namespace nucode::ble::internal::gatt
     /** @brief notification local TX 완료를 main-thread event로 변환합니다. */
     void notificationCompleted(struct bt_conn *connection, void *user_data) noexcept
     {
-        NotificationContext *notification = static_cast<NotificationContext *>(user_data);
-        if (notification == nullptr || notification->characteristic == nullptr)
+        ServerTxContext *context = static_cast<ServerTxContext *>(user_data);
+        if (context == nullptr)
         {
             return;
         }
-        ServiceSlot *slot = nullptr;
-        std::size_t index = 0U;
-        if (!findCharacteristic(*notification->characteristic, slot, index))
+        k_spinlock_key_t key = k_spin_lock(&serverState().tx_context_lock);
+        if (atomic_get(&context->active) == 0 ||
+            context->kind != ServerTxKind::notification || context->characteristic == nullptr)
         {
+            k_spin_unlock(&serverState().tx_context_lock, key);
             return;
         }
-        struct bt_conn *token_connection = notification->connection;
-        const std::uint32_t token_generation = notification->generation;
-        atomic_set(&slot->notification_active[index], 0);
-        notification->connection = nullptr;
-        notification->generation = 0U;
+        BLECharacteristic *characteristic = context->characteristic;
+        struct bt_conn *token_connection = context->connection;
+        const std::uint32_t token_generation = context->generation;
+        resetServerTxContext(*context);
+        k_spin_unlock(&serverState().tx_context_lock, key);
         if (token_connection == connection &&
             token_generation ==
                 static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation)) &&
             internal::activeConnection(connection))
         {
-            queueServerEvent(*notification->characteristic,
-                             BLECharacteristicEvent::notification_sent, nullptr, 0U, 0U, false, 0,
-                             connection);
+            queueServerEvent(*characteristic, BLECharacteristicEvent::notification_sent, nullptr,
+                             0U, 0U, false, 0, connection);
         }
-    }
-
-    /** @brief indication params가 소유한 characteristic 위치를 찾습니다. */
-    bool findIndication(struct bt_gatt_indicate_params *parameters, ServiceSlot *&slot,
-                        std::size_t &index) noexcept
-    {
-        for (std::size_t service_index = 0U;
-             service_index < databaseState().registered_service_count; ++service_index)
-        {
-            ServiceSlot &candidate = serviceSlots()[service_index];
-            for (std::size_t characteristic_index = 0U;
-                 characteristic_index < candidate.characteristic_count; ++characteristic_index)
-            {
-                if (&candidate.indications[characteristic_index] == parameters)
-                {
-                    slot = &candidate;
-                    index = characteristic_index;
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /** @brief indication confirmation 또는 ATT 오류를 main thread에 전달합니다. */
     void indicationCompleted(struct bt_conn *connection, struct bt_gatt_indicate_params *parameters,
                              std::uint8_t error) noexcept
     {
-        ARG_UNUSED(connection);
-        ServiceSlot *slot = nullptr;
-        std::size_t index = 0U;
-        if (!findIndication(parameters, slot, index))
+        ServerTxContext *context = findIndicationContext(parameters);
+        if (context == nullptr || context->characteristic == nullptr)
         {
             return;
         }
-        if (slot->indication_connections[index] != connection ||
-            slot->indication_generations[index] !=
+        if (context->connection != connection || context->generation !=
                 static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation)) ||
             !internal::activeConnection(connection))
         {
             return;
         }
-        queueServerEvent(*slot->characteristics[index],
-                          error == 0U ? BLECharacteristicEvent::indication_confirmed
-                                      : BLECharacteristicEvent::indication_failed,
-                          nullptr, 0U, 0U, false, -static_cast<int>(error), connection);
+        queueServerEvent(*context->characteristic,
+                         error == 0U ? BLECharacteristicEvent::indication_confirmed
+                                     : BLECharacteristicEvent::indication_failed,
+                         nullptr, 0U, 0U, false, -static_cast<int>(error), connection);
     }
 
     /** @brief stack이 indication 수명을 해제한 뒤 slot 재사용을 허용합니다. */
     void indicationDestroyed(struct bt_gatt_indicate_params *parameters) noexcept
     {
-        ServiceSlot *slot = nullptr;
-        std::size_t index = 0U;
-        if (findIndication(parameters, slot, index))
+        ServerTxContext *context = findIndicationContext(parameters);
+        if (context != nullptr)
         {
-            atomic_set(&slot->indication_active[index], 0);
-            slot->indication_connections[index] = nullptr;
-            slot->indication_generations[index] = 0U;
+            releaseServerTxContext(*context);
         }
     }
 
@@ -868,7 +908,8 @@ namespace nucode::ble
             internal::recordError(BLEError::wrong_state, -EPERM, true);
             return false;
         }
-        if (!atomic_cas(&slot->notification_active[index], 0, 1))
+        ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::notification);
+        if (context == nullptr)
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
@@ -883,47 +924,41 @@ namespace nucode::ble
             {
                 bt_conn_unref(connection);
             }
-            atomic_set(&slot->notification_active[index], 0);
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
         std::size_t snapshot_length = 0U;
-        if (!copyCachedValueForTransmission(*this, slot->notification_data[index],
-                                            maximum_tx_payload_length, snapshot_length))
+        if (!copyCachedValueForTransmission(*this, context->data, maximum_tx_payload_length,
+                                            snapshot_length))
         {
             bt_conn_unref(connection);
-            atomic_set(&slot->notification_active[index], 0);
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
         }
         if (mtu < 3U || snapshot_length > mtu - 3U)
         {
             bt_conn_unref(connection);
-            atomic_set(&slot->notification_active[index], 0);
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
         }
-        NotificationContext &notification = slot->notifications[index];
-        notification.characteristic = this;
-        notification.connection = connection;
-        notification.generation =
-            static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
+        context->connection = connection;
         struct bt_gatt_notify_params parameters = {
             .uuid = nullptr,
             .attr = attribute,
-            .data = slot->notification_data[index],
+            .data = context->data,
             .len = static_cast<std::uint16_t>(snapshot_length),
             .func = notificationCompleted,
-            .user_data = &notification,
+            .user_data = context,
         };
         const int result = bt_gatt_notify_cb(connection, &parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            atomic_set(&slot->notification_active[index], 0);
-            notification.connection = nullptr;
-            notification.generation = 0U;
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
@@ -980,7 +1015,8 @@ namespace nucode::ble
             internal::recordError(BLEError::wrong_state, -EPERM, true);
             return false;
         }
-        if (!atomic_cas(&slot->indication_active[index], 0, 1))
+        ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::indication);
+        if (context == nullptr)
         {
             internal::recordError(BLEError::busy, -EBUSY, true);
             return false;
@@ -995,44 +1031,40 @@ namespace nucode::ble
             {
                 bt_conn_unref(connection);
             }
-            atomic_set(&slot->indication_active[index], 0);
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
         std::size_t snapshot_length = 0U;
-        if (!copyCachedValueForTransmission(*this, slot->indication_data[index],
-                                            maximum_tx_payload_length, snapshot_length))
+        if (!copyCachedValueForTransmission(*this, context->data, maximum_tx_payload_length,
+                                            snapshot_length))
         {
             bt_conn_unref(connection);
-            atomic_set(&slot->indication_active[index], 0);
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
         }
         if (mtu < 3U || snapshot_length > mtu - 3U)
         {
             bt_conn_unref(connection);
-            atomic_set(&slot->indication_active[index], 0);
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
         }
-        struct bt_gatt_indicate_params &parameters = slot->indications[index];
+        struct bt_gatt_indicate_params &parameters = context->indication;
         ::memset(&parameters, 0, sizeof(parameters));
         parameters.attr = attribute;
         parameters.func = indicationCompleted;
         parameters.destroy = indicationDestroyed;
-        parameters.data = slot->indication_data[index];
+        parameters.data = context->data;
         parameters.len = static_cast<std::uint16_t>(snapshot_length);
-        slot->indication_connections[index] = connection;
-        slot->indication_generations[index] =
-            static_cast<std::uint32_t>(atomic_get(&sessionState().gatt_session_generation));
+        context->connection = connection;
         const int result = bt_gatt_indicate(connection, &parameters);
         bt_conn_unref(connection);
         if (result < 0)
         {
-            atomic_set(&slot->indication_active[index], 0);
-            slot->indication_connections[index] = nullptr;
-            slot->indication_generations[index] = 0U;
+            releaseServerTxContext(*context);
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }

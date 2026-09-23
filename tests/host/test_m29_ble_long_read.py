@@ -107,15 +107,12 @@ class M29BleLongReadTests(unittest.TestCase):
         server = (ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp").read_text(
             encoding="utf-8"
         )
-        self.assertIn(
-            "notification_data[maximum_characteristics][maximum_tx_payload_length]",
-            internal,
-        )
-        self.assertIn(
-            "indication_data[maximum_characteristics][maximum_tx_payload_length]",
-            internal,
-        )
+        self.assertIn("ServerTxContext tx_contexts[maximum_server_tx_contexts]", internal)
+        self.assertIn("std::uint8_t data[maximum_tx_payload_length]", internal)
+        self.assertNotIn("notification_data[maximum_characteristics]", internal)
+        self.assertNotIn("indication_data[maximum_characteristics]", internal)
         self.assertIn("maximum_tx_payload_length <= maximum_value_length", internal)
+        self.assertIn("maximum_server_tx_contexts <= 128U", internal)
         self.assertGreaterEqual(server.count("copyCachedValueForTransmission("), 3)
         self.assertIn("if (length > capacity)", server)
         self.assertGreaterEqual(server.count("BLEError::value_overflow, -EMSGSIZE"), 2)

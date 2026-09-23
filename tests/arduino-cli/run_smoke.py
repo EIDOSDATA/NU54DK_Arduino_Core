@@ -2257,6 +2257,7 @@ def test_adaptive_ble_roles(
                 "CONFIG_NUCODE_BLE_GATT_MAX_SERVICES=1",
                 "CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=1",
                 "CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE=64",
+                "CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT=1",
                 "CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=64",
                 "CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE=64",
             ),
@@ -2266,6 +2267,7 @@ def test_adaptive_ble_roles(
                 "ble.gatt-characteristics-per-service": 1,
                 "ble.gatt-event-payload": 64,
                 "ble.gatt-tx-payload": 64,
+                "ble.gatt-tx-contexts": 1,
                 "ble.gatt-inline-value-payload": 64,
             },
             "NUCODE_BLE_GATT.cpp",
@@ -2434,10 +2436,23 @@ def test_adaptive_ble_roles(
                     "gatt::(anonymous namespace)::slots"
                 )
             ]
-            if len(slot_symbols) != 1 or slot_symbols[0].get("size") != 572:
+            if len(slot_symbols) != 1 or slot_symbols[0].get("size") != 392:
                 raise SmokeFailure(
-                    "adaptive GATT service slot does not match 64-byte TX payload: "
+                    "adaptive GATT service slot retained per-characteristic TX state: "
                     f"{slot_symbols}"
+                )
+            tx_state_symbols = [
+                item
+                for item in context["resource_audit"]["top_ram_symbols"]
+                if str(item.get("name", "")).endswith(
+                    "gatt::(anonymous namespace)::state"
+                )
+                and item.get("size") == 144
+            ]
+            if len(tx_state_symbols) != 1:
+                raise SmokeFailure(
+                    "adaptive GATT shared TX context does not match one 64-byte entry: "
+                    f"{tx_state_symbols}"
                 )
         if "/cores/arduino/SPI.cpp" in source_graph.replace("\\", "/"):
             raise SmokeFailure(f"adaptive BLE included unrelated SPI source: {name}")

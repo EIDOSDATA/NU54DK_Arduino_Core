@@ -61,6 +61,7 @@ class BleGattTests(unittest.TestCase):
             capacity_binary = Path(folder) / 'gatt-tx-capacity.exe'
             capacity_result = subprocess.run(
                 command + ['-DCONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=64',
+                           '-DCONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT=1',
                            '-o', str(capacity_binary)],
                 capture_output=True,
                 timeout=60,
@@ -70,13 +71,35 @@ class BleGattTests(unittest.TestCase):
                 0,
                 capacity_result.stderr.decode(errors='replace'),
             )
-            capacity_run = run_executable(
-                [str(capacity_binary), 'tx_capacity'], capture_output=True, timeout=10
+            for scenario in ('tx_capacity', 'tx_pool'):
+                capacity_run = run_executable(
+                    [str(capacity_binary), scenario], capture_output=True, timeout=10
+                )
+                self.assertEqual(
+                    capacity_run.returncode,
+                    0,
+                    capacity_run.stderr.decode(errors='replace'),
+                )
+
+            parallel_binary = Path(folder) / 'gatt-tx-parallel.exe'
+            parallel_result = subprocess.run(
+                command + ['-DCONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT=2',
+                           '-o', str(parallel_binary)],
+                capture_output=True,
+                timeout=60,
             )
             self.assertEqual(
-                capacity_run.returncode,
+                parallel_result.returncode,
                 0,
-                capacity_run.stderr.decode(errors='replace'),
+                parallel_result.stderr.decode(errors='replace'),
+            )
+            parallel_run = run_executable(
+                [str(parallel_binary), 'tx_pool_parallel'], capture_output=True, timeout=10
+            )
+            self.assertEqual(
+                parallel_run.returncode,
+                0,
+                parallel_run.stderr.decode(errors='replace'),
             )
 
             inline_binary = Path(folder) / 'gatt-inline-capacity.exe'

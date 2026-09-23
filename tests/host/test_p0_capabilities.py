@@ -845,6 +845,7 @@ extern "C" void sensorRead(void)
             "ble.gatt-characteristics-per-service": 2,
             "ble.gatt-event-payload": 64,
             "ble.gatt-tx-payload": 96,
+            "ble.gatt-tx-contexts": 3,
             "ble.gatt-inline-value-payload": 128,
         }
         result = MODULE.resolve_capabilities(
@@ -864,6 +865,9 @@ extern "C" void sensorRead(void)
             "CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=96", configuration
         )
         self.assertIn(
+            "CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT=3", configuration
+        )
+        self.assertIn(
             "CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE=128", configuration
         )
         self.assertEqual(
@@ -874,6 +878,7 @@ extern "C" void sensorRead(void)
                 "ble.gatt-characteristics-per-service": 2,
                 "ble.gatt-event-payload": 64,
                 "ble.gatt-tx-payload": 96,
+                "ble.gatt-tx-contexts": 3,
                 "ble.gatt-inline-value-payload": 128,
             },
         )
