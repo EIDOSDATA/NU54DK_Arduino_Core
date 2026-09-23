@@ -152,6 +152,11 @@ BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
 - BLE 역할·connection/stream/ASE 상한은 검증된 공개 preset/declaration으로 보완한다.
 - 판정 불가·누락·충돌은 명확히 실패하며 full profile로 자동 후퇴하지 않는다.
 
+generic GATT는 용도에 따라 `ble-gatt-server-peripheral` 또는
+`ble-gatt-client-central`을 선언한다. 전자는 client discovery/cache source와 Zephyr GATT client를,
+후자는 local dynamic database/server source를 제외한다. server/client와 NUS를 한 image에서
+모두 사용하는 호환 구성은 `ble-gatt-nus-dual-role`을 명시적으로 선택한다.
+
 resolver 결과는 machine-readable `resolved-capabilities.json`으로 보존하고 생성 `prj.conf`, overlay,
 source/init 선택과 cache identity가 모두 이를 따라야 한다. 기존 full 동작은 명시적
 legacy/compatibility 선택지로 유지하되 차기 기본 경로의 완료 기준으로 쓰지 않는다. 공개 v0.4.1

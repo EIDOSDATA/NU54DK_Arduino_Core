@@ -410,6 +410,18 @@ extern "C" void sensorRead(void)
             ),
             (
                 ["NUCODE_BLE"],
+                "ble-gatt-server-peripheral",
+                "CONFIG_NUCODE_BLE_GATT_SERVER=y",
+                {"ble.connections": 1},
+            ),
+            (
+                ["NUCODE_BLE"],
+                "ble-gatt-client-central",
+                "CONFIG_NUCODE_BLE_GATT_CLIENT=y",
+                {"ble.connections": 1},
+            ),
+            (
+                ["NUCODE_BLE"],
                 "ble-l2cap-coc-dual-role",
                 "CONFIG_NUCODE_BLE_L2CAP=y",
                 {"ble.connections": 2, "ble.att-mtu": 512},
@@ -785,6 +797,43 @@ extern "C" void sensorRead(void)
         )
         self.assertFalse(any("/internal/gatt" in source for source in sources))
 
+    def test_gatt_direction_roles_select_only_required_translation_units(self) -> None:
+        """! @brief GATT server/client role은 반대 방향의 상태 소스를 제외합니다. """
+        profile = MODULE.load_configuration_profile(ROOT, "adaptive")
+        features = MODULE.resolve_library_features(ROOT, profile, ["NUCODE_BLE"])
+        cases = (
+            (
+                "ble-gatt-server-peripheral",
+                "CONFIG_NUCODE_BLE_GATT_SERVER=y",
+                "CONFIG_NUCODE_BLE_GATT_CLIENT=n",
+                "GattServer.cpp",
+                "GattClient.cpp",
+            ),
+            (
+                "ble-gatt-client-central",
+                "CONFIG_NUCODE_BLE_GATT_CLIENT=y",
+                "CONFIG_NUCODE_BLE_GATT_SERVER=n",
+                "GattClient.cpp",
+                "GattServer.cpp",
+            ),
+        )
+        for role, enabled, disabled, included, excluded in cases:
+            with self.subTest(role=role):
+                declaration = copy.deepcopy(self.empty_declaration)
+                declaration["roles"] = [role]
+                result = MODULE.resolve_capabilities(
+                    self.registry, [], features, declaration
+                )
+                configuration = set(result["generated"]["conf"])
+                sources = set(result["generated"]["sources"])
+                self.assertIn(enabled, configuration)
+                self.assertIn(disabled, configuration)
+                self.assertTrue(any(source.endswith(included) for source in sources))
+                self.assertFalse(any(source.endswith(excluded) for source in sources))
+                self.assertFalse(
+                    any(source.endswith("NUCODE_BLE.cpp") for source in sources)
+                )
+
     def test_gatt_fixed_capacities_generate_internal_array_limits(self) -> None:
         """! @brief GATT schema/payload 선언은 내부 고정 배열 Kconfig를 생성합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
@@ -1070,7 +1119,7 @@ extern "C" void sensorRead(void)
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """
         roles = list(self.registry["roles"])
-        self.assertEqual(len(roles), 52)
+        self.assertEqual(len(roles), 54)
         for index, first in enumerate(roles):
             for second in roles[index + 1:]:
                 with self.subTest(first=first, second=second):

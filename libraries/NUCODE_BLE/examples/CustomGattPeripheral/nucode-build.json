@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "capabilities": [],
-  "roles": ["ble-gatt-nus-dual-role"],
+  "roles": ["ble-gatt-server-peripheral"],
   "capacities": {
     "ble.gatt-services": 1,
     "ble.gatt-characteristics-per-service": 1,

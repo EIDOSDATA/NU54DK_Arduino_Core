@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import unittest
 from ble_source_contracts import gap_source, gatt_source
@@ -201,6 +202,8 @@ class M20BleGattContractTests(unittest.TestCase):
         )
         for symbol in (
             "config NUCODE_BLE_GATT",
+            "config NUCODE_BLE_GATT_SERVER",
+            "config NUCODE_BLE_GATT_CLIENT",
             "config NUCODE_BLE_GATT_MAX_SERVICES",
             "config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE",
             "config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE",
@@ -208,11 +211,19 @@ class M20BleGattContractTests(unittest.TestCase):
             self.assertIn(symbol, kconfig, symbol)
         self.assertIn("CONFIG_BT_GATT_DYNAMIC_DB=y", feature_conf)
         self.assertIn("CONFIG_NUCODE_BLE_GATT=y", feature_conf)
-        for name in ("CustomGattPeripheral", "CustomGattCentral"):
+        roles = {
+            "CustomGattPeripheral": "ble-gatt-server-peripheral",
+            "CustomGattCentral": "ble-gatt-client-central",
+        }
+        for name, role in roles.items():
             example = LIBRARY / "examples" / name / f"{name}.ino"
             self.assertTrue(example.is_file(), example)
             self.assertFalse((example.parent / "prj.conf").exists())
             self.assertFalse((example.parent / "app.overlay").exists())
+            declaration = json.loads(
+                (example.parent / "nucode-build.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(declaration["roles"], [role])
         self.assertTrue((REPOSITORY / "tests" / "zephyr" / "m19_ble_gap_contract").is_dir())
         self.assertTrue((REPOSITORY / "tests" / "zephyr" / "m20_ble_gatt_contract").is_dir())
 

@@ -96,6 +96,8 @@ class CsipGapTests(unittest.TestCase):
                 "-DCONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=0",
                 "-DCONFIG_BT_PERIPHERAL=0",
                 "-DCONFIG_BT_USER_PHY_UPDATE=1",
+                "-DCONFIG_NUCODE_BLE_GATT_SERVER=1",
+                "-DCONFIG_NUCODE_BLE_GATT_CLIENT=1",
                 "-DCONFIG_NUCODE_BLE_GATT_MAX_SERVICES=2",
                 "-DCONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=8",
                 "-DCONFIG_NUCODE_BLE_GATT_EVENT_QUEUE_SIZE=24",

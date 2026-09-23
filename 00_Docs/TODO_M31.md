@@ -106,8 +106,9 @@ Core API는 compiler-assisted capability probe, library 간접 요구는 feature
 공개 preset/declaration으로 판정해 생성 config/overlay/source에 연결한다. P1은 Core SPI를
 50,877→20,589 B로 줄였고, CoC-only 역할에서 NUCODE 범용 GATT facade를 분리해
 91,037→70,081 B로 줄였다. 동일 1×1 fixture의 GATT schema·client context·event/TX/inline value를
-실제 선언 용량에 연결해 113,218→59,338 B로
-줄였다. server/client 방향·shared TX pool 최적화는 계속 진행한다.
+실제 선언 용량에 연결해 113,218→59,338 B로 줄였다. 이어 generic GATT를
+server-only/client-only role로 분리해 동일 server fixture를 48,653 B, 실제 Peripheral을
+48,835 B, Central을 53,478 B로 줄였다. shared TX pool 수명 최적화는 계속 진행한다.
 `SPI.begin()` 사용자가
 SPI용 `prj.conf`를 직접 작성해야 하는 상태는 최적화 완료가 아니다.
 

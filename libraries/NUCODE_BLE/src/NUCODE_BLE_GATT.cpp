@@ -19,6 +19,7 @@ namespace nucode::ble::internal::gatt
         K_MSGQ_DEFINE(gatt_event_queue, sizeof(GattEventRecord),
                       CONFIG_NUCODE_BLE_GATT_EVENT_QUEUE_SIZE, alignof(GattEventRecord));
 
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         /** @brief link context의 remote handle과 operation 상태를 고정 초기화합니다. */
         bool clearClientState(ClientState &client) noexcept
         {
@@ -52,6 +53,7 @@ namespace nucode::ble::internal::gatt
             clearClientCacheState(client);
             return had_handles;
         }
+#endif
 
     } // namespace
 
@@ -72,12 +74,21 @@ namespace nucode::ble::internal::gatt
 
     bool queueGattEvent(const GattEventRecord &record) noexcept
     {
-        const bool active = record.owner_kind == GattEventRecord::Owner::server
-                                ? nucode::ble::internal::hasActiveConnection()
-                                : findClientState(record.connection) != nullptr;
-        const bool invalidation = record.owner_kind == GattEventRecord::Owner::client &&
-                                  record.client_event ==
-                                      BLEGattClientEvent::handles_invalidated;
+        bool active = false;
+        bool invalidation = false;
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
+        if (record.owner_kind == GattEventRecord::Owner::server)
+        {
+            active = nucode::ble::internal::hasActiveConnection();
+        }
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
+        if (record.owner_kind == GattEventRecord::Owner::client)
+        {
+            active = findClientState(record.connection) != nullptr;
+            invalidation = record.client_event == BLEGattClientEvent::handles_invalidated;
+        }
+#endif
         if (!active && !invalidation)
         {
             return false;
@@ -90,6 +101,7 @@ namespace nucode::ble::internal::gatt
         return false;
     }
 
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
     void queueServerEvent(BLECharacteristic &characteristic, BLECharacteristicEvent event,
                           const void *data, std::size_t length, std::size_t offset,
                           bool without_response, int status, struct bt_conn *connection,
@@ -136,7 +148,9 @@ namespace nucode::ble::internal::gatt
             }
         }
     }
+#endif
 
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
     bool queueClientEvent(ClientState &client, BLEGattClientEvent event, const void *data,
                           std::size_t length, std::size_t offset, int status,
                           std::uint8_t att_error) noexcept
@@ -201,6 +215,7 @@ namespace nucode::ble::internal::gatt
         bt_conn_unref(current);
         return matches;
     }
+#endif
 
 } // namespace nucode::ble::internal::gatt
 
@@ -218,6 +233,7 @@ namespace nucode::ble::internal
             {
                 continue;
             }
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
             if (record.owner_kind == GattEventRecord::Owner::server &&
                 record.characteristic != nullptr)
             {
@@ -255,6 +271,8 @@ namespace nucode::ble::internal
                 GattAccess::dispatch(*record.characteristic, event);
                 continue;
             }
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
             if (record.owner_kind != GattEventRecord::Owner::client)
             {
                 continue;
@@ -326,13 +344,17 @@ namespace nucode::ble::internal
                 };
                 callbacks.detailed(information, callbacks.detailed_context);
             }
+#endif
         }
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         progressClientDiscovery();
         progressGattCache();
+#endif
     }
 
     void gattConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         if (connection == nullptr || !handle.valid())
         {
             return;
@@ -364,11 +386,18 @@ namespace nucode::ble::internal
         available->connection_handle = handle;
         available->gatt_connection = connection;
         k_spin_unlock(&available->client_token_lock, key);
+#else
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
+#endif
     }
 
     void gattDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
         clearServerTransaction(connection);
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         ClientState *matched = nullptr;
         for (ClientState &client : clientStates())
         {
@@ -398,13 +427,20 @@ namespace nucode::ble::internal
         {
             queueInvalidatedEvent(handle);
         }
+#else
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
+#endif
     }
 
     void gattEnded() noexcept
     {
         atomic_inc(&sessionState().gatt_session_generation);
         k_msgq_purge(&gattEventQueue());
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
         clearServerTransactions();
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         for (ClientState &client : clientStates())
         {
             static_cast<void>(clearClientState(client));
@@ -413,6 +449,7 @@ namespace nucode::ble::internal
             client.gatt_connection = nullptr;
             k_spin_unlock(&client.client_token_lock, key);
         }
+#endif
     }
 
 } // namespace nucode::ble::internal

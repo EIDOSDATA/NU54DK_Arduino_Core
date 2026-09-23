@@ -105,7 +105,7 @@ CLI_BOOTSTRAP_ATTEMPTS = 3
 ## @brief 고정 adaptive 예제별 clean-build 정적 RAM 회귀 상한입니다.
 ADAPTIVE_EXAMPLE_RAM_CEILINGS = {
     "p0_ble_gap_nus": 51500,
-    "p0_ble_gatt": 60000,
+    "p0_ble_gatt": 50000,
     "p0_ble_l2cap": 72000,
     "p0_ble_iso_cis": 53000,
     "p0_ble_audio_source": 59000,
@@ -2249,10 +2249,11 @@ def test_adaptive_ble_roles(
         ),
         (
             "p0_ble_gatt",
-            "ble-gatt-nus-dual-role",
+            "ble-gatt-server-peripheral",
             (
                 "CONFIG_BT_MAX_CONN=1",
                 "CONFIG_NUCODE_BLE_GATT=y",
+                "CONFIG_NUCODE_BLE_GATT_SERVER=y",
                 "CONFIG_NUCODE_BLE_GATT_MAX_SERVICES=1",
                 "CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=1",
                 "CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE=64",
@@ -2400,11 +2401,20 @@ def test_adaptive_ble_roles(
                     "gatt::(anonymous namespace)::states"
                 )
             ]
-            if len(state_symbols) != 1 or state_symbols[0].get("size") != 1576:
+            if state_symbols:
                 raise SmokeFailure(
-                    "adaptive GATT client state does not match one connection: "
+                    "adaptive GATT server role retained client state: "
                     f"{state_symbols}"
                 )
+            if "CONFIG_BT_GATT_CLIENT=y" in final_config:
+                raise SmokeFailure("adaptive GATT server role enabled Zephyr GATT client")
+            normalized_graph = source_graph.replace("\\", "/")
+            for source in ("GattClient.cpp", "/NUCODE_BLE.cpp"):
+                if source in normalized_graph:
+                    raise SmokeFailure(
+                        "adaptive GATT server role included client/NUS source: "
+                        f"{source}"
+                    )
             queue_symbols = [
                 item
                 for item in context["resource_audit"]["top_ram_symbols"]

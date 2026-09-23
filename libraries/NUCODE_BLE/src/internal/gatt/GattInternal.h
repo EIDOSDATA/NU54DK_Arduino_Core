@@ -384,17 +384,25 @@ namespace nucode::ble::internal::gatt
         } owner_kind;
         std::uint32_t generation;
         BLEConnectionHandle connection;
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
         BLECharacteristic *characteristic;
         BLEDescriptor *descriptor;
         BLECharacteristicEvent server_event;
         BLEGattAuthorizationOperation authorization_operation;
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         BLEGattClientEvent client_event;
+#endif
         std::uint16_t length;
         std::uint16_t offset;
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
         bool without_response;
         bool persist_signing;
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         std::uint8_t att_error;
         BLEGattBearer bearer;
+#endif
         int status;
         std::uint8_t data[maximum_event_payload_length];
     };
