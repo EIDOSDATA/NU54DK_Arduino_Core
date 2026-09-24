@@ -15,7 +15,8 @@ GATT 계측을 기록했다. [239번](<04_검증 기록/239_M31_메모리_최적
 controller sync abort와 정상 완료 후 누락을 분리하고 abort 정리·늦은 RAS 보호를
 수정했다. 수정 image의 500 raw 두 번은 연속 PASS했지만 관찰 배열 없는
 1,000 raw와 후속 subevent abort 분리 image의 1,000 raw에는 counter 누락이
-남아 전체 CS 연속성은 여전히 HOLD다.
+남아 전체 CS 연속성은 여전히 HOLD다. 로컬 버퍼를 두 개로 늘린 실험도
+RAM 4,380 B 증가에도 누락 두 곳이 남아 소스 변경을 되돌렸다.
 [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
 CIS·BIS 기본 payload 각 100 SDU × 20세션을 PASS했다.
 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
