@@ -29,3 +29,10 @@ UID와 Bluetooth 주소는 기록하지 않는다.
 `IQ`를 별도로 해석한다. HCI 명령 수락, controller IQ event 도달, Host callback,
 양수 sample 수신은 각각 독립 판정한다. 연결 기반 결과를 connectionless AoA나
 각도 측정, 안테나 전환, 외장 RF 경로의 PASS로 확대하지 않는다.
+
+P2 계측 구성은 `CONFIG_THREAD_ANALYZER`와 heap runtime stats를 켠다.
+`s`로 수신과 연결을 종료한 뒤 `P2_STACK`·`P2_MALLOC`·`P2_KHEAP`을
+출력한다. 이는 내부 LL 진단 image의 관찰값이며 Arduino/SDC RX의
+high-water나 controller 내부 pool 사용량이 아니다.
+[246번 계측 기록](<../../../00_Docs/04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>)에서
+실기 원본과 판정 경계를 확인할 수 있다.

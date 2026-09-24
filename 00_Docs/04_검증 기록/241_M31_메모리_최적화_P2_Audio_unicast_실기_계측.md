@@ -12,6 +12,7 @@
 | 시험 | 결과 | 원본 |
 | --- | --- | --- |
 | source→sink LC3 unicast | **PASS**. source 1,000 frame 송신, sink 1,000 frame decode, drop 0, 확인한 PCM energy 모두 양수, 종료 직전 총 1,002/1,002, 양측 STOP | [최종 실기 UART·image/probe hash](evidence/m31-p2-audio-bdd0be53/unicast-lc3-1000-filtered.json) |
+| 동일 image의 연속 10,000 frame | **국소 PASS**. 100-frame 간격의 송신·복호화가 각각 10,000까지 연속 증가하고 drop 0·energy 양수. STOP 시 총 10,003/10,003, 양측 종료 확인 | [장기 실기 UART·image/probe hash](evidence/m31-p2-audio-bdd0be53/unicast-lc3-10000.json) |
 
 첫 [FAIL 원본](evidence/m31-p2-audio-bdd0be53/unicast-lc3-1000.json)은
 새 부팅 전에 남은 source `frames=800` UART 줄을 같은 실행으로 집계한
@@ -37,15 +38,18 @@ FLASH 분모는 loaderless 1,490,944 B, RAM 분모는 262,144 B다. 정적
 RAM에는 아래 stack·heap 예약이 포함된다. 독립 CIS/BIS image 또는
 native image와 설정·payload가 달라 단순 차감으로 절감률을 만들지 않는다.
 
-| Thread/ISR | source used/reserved B | sink used/reserved B |
+아래 사용 최고치는 동일 HEX의 1,000/10,000 frame 두 실행에서 각 항목의
+더 큰 값을 취했다. 하나의 동시 peak 합계가 아니다.
+
+| Thread/ISR | source 최대 used/reserved B | sink 최대 used/reserved B |
 | --- | ---: | ---: |
-| BT RX WQ | 1520/3200 | 1232/3200 |
+| BT RX WQ | 1520/3200 | 1248/3200 |
 | BT TX processor | 704/3200 | 404/3200 |
 | BT LW WQ | 936/2104 | 1168/2104 |
-| sysworkq | 280/4096 | 400/4096 |
+| sysworkq | 288/4096 | 400/4096 |
 | MPSL Work | 356/1024 | 712/1024 |
 | main | 3192/8192 | 2976/8192 |
-| ISR0 | 544/2048 | 504/2048 |
+| ISR0 | 544/2048 | 572/2048 |
 
 양쪽 libc malloc 정지 시점은 `free=8108`, `allocated=0`, 관찰 peak
 0 B였다. `sdc_mempool` 값은 정적 예약이지 controller 내부 high-water가

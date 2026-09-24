@@ -43,9 +43,11 @@
   일반 문서·main 업데이트 허가는 release/tag 공개나 이력 squash 허가가 아닙니다.
   이번 squash는 별도 사용자 요청에 따른 221번 한정 작업이며 향후 반복 허가가 아닙니다.
 - DF 원시 IQ 수집에 안테나 배열을 일괄 요구하지 않습니다. 기본 SDC는 DF CTE TX만 제공하고,
-  고정 Zephyr LL의 connected RX 진단에서는 유효 IQ report 4건·328 sample을 관찰했으나
-  반복 안정성·cleanup 기준 미달로 전체 FAIL입니다. 공개 API·connectionless RX 완료가 아닙니다.
-  재개 시 W04의 실패 근거부터 대조합니다. 실제 각도 산출·안테나 전환과 원시 IQ 수집을 구분하고,
+  고정 Zephyr LL의 connected RX 내부 진단은 후속 실행에서 유효 IQ report 20건·1,640 sample과
+  cleanup을 국소 PASS했습니다. 이전 4 report·328 sample/cleanup FAIL은 보존합니다.
+  공개 Arduino/SDC API·connectionless RX 완료가 아닙니다. [244번](<00_Docs/04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)과
+  [247번 connectionless 재진단](<00_Docs/04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>)의
+  sync 실패·cleanup fault를 함께 대조합니다. 실제 각도 산출·안테나 전환과 원시 IQ 수집을 구분하고,
   SDC 미지원이나 source 존재를 SoC 전체 불가능 또는 runtime PASS로 확대하지 않습니다.
 - T13 S는 **56 PASS + 2조건 제외 / 58**, UARTE00은 4-net 결선 검사·180초 통신·flow 200회·취소 400회 완료입니다.
   완료한 S/U, C05 1시간 soak와 사용자 제외 항목을 새 요청 없이 다시 예약하지 않습니다.

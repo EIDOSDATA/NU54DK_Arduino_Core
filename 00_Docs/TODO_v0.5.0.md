@@ -11,8 +11,9 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 M32/M33의 추가 기능·전체 catalog와 Ubuntu/macOS 지원은 후속 버전(미정)으로 분리한다.
 M31 기능 완료만으로 공개하지 않으며 §6의 패키지·설치·RC·공개 승인 gate를 별도로 충족해야 한다.
 
-main 이력 정리 이후의 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 후속 최적화 설명 통합은
-문서화만이며 브랜치 생성·구현을 재개하지 않는다. 다음 구현 브랜치 이름은 **`M31-MEM-OPT`**다.
+main 이력 정리 이후의 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 최적화 설명 통합은
+당시 문서-only 변경이었고, 현재 구현은 **`M31-MEM-OPT`**에서 P0·P1을 마친 뒤
+P2 실기와 오류 진단을 진행 중이다. 현재 P2 결과·잔여 조건은 [M31 TODO](TODO_M31.md)에 기록한다.
 이후 구현 순서는 **메모리 최적화 → W04·W05 → W06 → W07 → W08·Windows 릴리스 준비**다.
 **HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 이번 문서 작업에서 재개하지 않는다.
 
@@ -177,7 +178,7 @@ Android/iOS/Linux cross-vendor matrix는 M28/M29 PASS에 포함하지 않는다.
 | --- | --- | --- |
 | BLE 기본·multi-link | NU54DK 2~3개와 수신측 sequence/hash | probe SHA-256·serial·role·revision; OS peer는 별도 M33 행 |
 | ISO/LE Audio | 2보드 송수신, 3보드 source/sink/assistant 또는 broadcast; 합성 PCM/LC3 | 실제 SDU·codec·제어·buffer/복구, 외부 microphone/speaker/codec는 별도 미검증 행 |
-| Direction Finding | CTE TX 1보드; 기본 안테나의 raw IQ 수신 적용 가능한 2보드 | SDC RX 미제공. Zephyr LL connected 내부 진단 4 report·328 sample이나 전체 FAIL; connectionless RX·공개 API·각도/전환은 별도 판정 |
+| Direction Finding | CTE TX 1보드와 내부 Zephyr LL 연결 IQ 20 report·1,640 sample은 국소 확인 | SDC 공개 RX는 미제공. Connectionless LL은 연속 CTE 송신에도 sync 미수립·IQ 0이며 cleanup fault를 보존했다. 공개 API·각도/전환은 별도. [연결형 244](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [connectionless 247](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>) |
 | Channel Sounding | CS initiator/reflector 2보드, 선택 3번째 peer | procedure/RAS·결과·보안·재연결 기능; 정밀 거리·방향 보정 요구 없음 |
 | Mesh/coexistence | 승인 topology의 2~3노드, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수·단독 통신·조합·부하·서비스 지연; 새 power-loss 확장은 M36 후속이며 v0.5.0 추가 필수 gate 아님 |
 

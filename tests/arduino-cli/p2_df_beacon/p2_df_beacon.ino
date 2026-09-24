@@ -83,6 +83,14 @@ void loop()
         running = true;
         startedMs = millis();
     }
+    /** @brief connectionless 동기화 진단 image에서만 광고를 연속 유지합니다. */
+#if defined(NUCODE_P2_DF_CONTINUOUS)
+    if (running)
+    {
+        delay(1);
+        return;
+    }
+#endif
     if (running && millis() - startedMs >= 2000U)
     {
         if (beacon.stop() != Error::none)

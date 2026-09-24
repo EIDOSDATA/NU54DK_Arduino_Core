@@ -328,14 +328,16 @@ namespace nucode::ble::cs
             {
                 return;
             }
-            if ((error != 0) || (counter != state.local_counter))
+            if (counter != state.local_counter)
+            {
+                /** @note 늦게 도착한 이전 RAS가 현재 절차의 로컬 step을 지우지 않게 합니다. */
+                return;
+            }
+            if (error != 0)
             {
                 net_buf_simple_reset(&local_steps);
                 atomic_set(&state.local_busy, 0);
-                if (error != 0)
-                {
-                    fail(error);
-                }
+                fail(error);
                 return;
             }
             if (local_steps.len == 0U)
@@ -389,8 +391,23 @@ namespace nucode::ble::cs
                 }
                 state.local_counter = counter;
             }
-            if ((result->header.subevent_done_status != BT_CONN_LE_CS_SUBEVENT_ABORTED) &&
-                (result->step_data_buf != nullptr))
+            if (result->header.procedure_done_status == BT_CONN_LE_CS_PROCEDURE_ABORTED)
+            {
+                /** @note 중단된 절차에는 RAS 통지가 없을 수 있으므로 잠금을 반환합니다. */
+                net_buf_simple_reset(&local_steps);
+                atomic_set(&state.local_busy, 0);
+                state.dropped_counter = counter;
+                return;
+            }
+            if (result->header.subevent_done_status == BT_CONN_LE_CS_SUBEVENT_ABORTED)
+            {
+                /** @note 같은 절차의 다음 subevent는 유효할 수 있으므로 다시 수집합니다. */
+                net_buf_simple_reset(&local_steps);
+                atomic_set(&state.local_busy, 0);
+                state.local_counter = -1;
+                return;
+            }
+            if (result->step_data_buf != nullptr)
             {
                 const std::uint16_t length = result->step_data_buf->len;
                 if (length > net_buf_simple_tailroom(&local_steps))
@@ -405,11 +422,6 @@ namespace nucode::ble::cs
                 net_buf_simple_add_mem(&local_steps, bytes, length);
             }
             state.dropped_counter = -1;
-            if (result->header.procedure_done_status == BT_CONN_LE_CS_PROCEDURE_ABORTED)
-            {
-                net_buf_simple_reset(&local_steps);
-                atomic_set(&state.local_busy, 0);
-            }
         }
 
         BT_CONN_CB_DEFINE(nucode_ras_initiator_callbacks) = {

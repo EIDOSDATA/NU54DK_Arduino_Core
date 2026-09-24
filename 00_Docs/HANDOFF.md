@@ -4,29 +4,43 @@
 2026-09-21 사용자 결정으로 **M31 완료 후 v0.5.0 Windows 릴리스**를 준비합니다.
 M32/M33과 Ubuntu/macOS 지원은 후속 버전(미정)이며 HOST-W04~W08은 계속 보류합니다.
 
-2026-09-24 현재 작업 브랜치는 `M31-MEM-OPT`다. P0·P1 정적 최적화는 닫았고,
+2026-09-25 현재 작업 브랜치는 `M31-MEM-OPT`다. P0·P1 정적 최적화는 닫았고,
 P2의 두 보드 generic GATT 512 B write/read·재연결 20회는 adaptive 선언만으로
 PASS했다. loaderless adaptive partition과 큰 GATT payload의 ATT transport 생성도
 실기에서 발견한 결함을 정정했다. [238번 원본](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
 GATT 계측을 기록했다. [239번](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
 두 채널 CoC 512 B/100 echo는 PASS다. CS 100 raw는 앞선 실행에서 counter
 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며 간헐 원인은 HOLD다.
+[245번 CS 장기 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)에서
+controller sync abort와 정상 완료 후 누락을 분리하고 abort 정리·늦은 RAS 보호를
+수정했다. 수정 image의 500 raw 두 번은 연속 PASS했지만 관찰 배열 없는
+1,000 raw와 후속 subevent abort 분리 image의 1,000 raw에는 counter 누락이
+남아 전체 CS 연속성은 여전히 HOLD다.
 [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
 CIS·BIS 기본 payload 각 100 SDU × 20세션을 PASS했다.
 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
-Audio unicast PCM/LC3/CIS 1,000 frame도 국소 PASS다.
+Audio unicast PCM/LC3/CIS 1,000 frame과 동일 image의 연속 10,000 frame도
+drop 0·양측 STOP으로 국소 PASS다.
 [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)의
 DF beacon TX 20회도 PASS지만 IQ RX는 아니다. [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)의
 암호화 broadcast Audio 1,000 frame은 최종 image에서 8/8회 국소 PASS했으며,
 최초 sink 동기화 실패의 원인은 미확인이다. 다른 Audio 방향·복구,
-DF RX, controller pool 등은 P2 HOLD이므로 기존 크기를 줄이지 않는다. 아래 과거 인계 문장은 당시
-snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
+공개 DF RX, controller pool 등은 P2 HOLD이므로 기존 크기를 줄이지 않는다.
+[246번 내부 DF RX 메모리 계측](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>)은
+연결형 LL 수신자의 정상 종료 stack 사용량만 확인했다.
+[247번 connectionless 재진단](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>)은
+연속 CTE 송신에도 sync 미수립·IQ 0과 cleanup fault를 보존했다. 수신 보드는
+검증된 image로 복구해 종료를, 송신 보드는 시험 STOP을 확인했다.
+connectionless RX는 HOLD다.
+[248번 SDC pool 감사](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>)는
+SDK 계산·정렬 예약과 초기화 요구량 검사를 확인했다. 내부 high-water는
+노출되지 않으므로 pool을 임의 축소하지 않는다. 아래 과거 인계 문장은
+당시 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
 
-아래는 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을
-마일스톤별로 정리**했고, 당시 재개 기준은 `main`이었다. 후속 브랜치로 정한
-`M31-MEM-OPT`는 그 이력 정리 직전에는 로컬·원격 모두 존재하지 않았으므로
-재생성하거나 다른 브랜치를 삭제하지 않았다. 현재 작업 위치는 위 P2 문단을 따른다.
-이후 실제 `M31-MEM-OPT`에서 P0 구현을 시작했습니다. Release 공개는 수행하지 않았습니다.
+다음은 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을
+마일스톤별로 정리**했으며, 당시 재개 기준은 `main`이었다. 그 시점에는 후속 브랜치
+`M31-MEM-OPT`가 로컬·원격 모두에 없었다. 이후 실제 브랜치에서 P0 구현을 시작했다.
+현재 작업 위치는 위 P2 문단을 따르며, 릴리스 공개는 수행하지 않았다.
 
 후속 설명 통합 요청은 [메모리 최적화 통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)로
 문서화했습니다. 링크 GC만으로 모든 자원을 제거한다는 해석, local static의 lazy allocation 표현과
@@ -127,9 +141,9 @@ fresh build와 실제 Peripheral/Central adaptive·full compile을 통과했습�
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | **P0 완료, P1 정적 구조 완료, P2 실기 진행 중.** Core SPI는 50,877→20,589 B, CoC-only는 91,037→70,081 B가 됐습니다. GATT 1×1/64 B server fixture는 113,218→48,581 B입니다. 실제 `CustomGattPeripheral`은 비교 기준 59,519→48,763 B, `CustomGattCentral`은 59,214→52,582 B입니다. Core/GATT-server/CoC 상한은 22,000/50,000/72,000 B입니다. P2의 GATT·CoC·ISO·Audio·DF TX 국소 실기와 내부 LL 연결 IQ 수신은 진행됐지만 전체 high-water·native 동등 비교는 잔여입니다. | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [222번 P0 완료](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [227번 P1 CoC/GATT 분리](<04_검증 기록/227_M31_메모리_최적화_P1_CoC_GATT_분리.md>) · [228~232번 P1 GATT capacity](<04_검증 기록/232_M31_메모리_최적화_P1_GATT_Inline_Value.md>) · [233~235번 GATT 최적화](<04_검증 기록/235_M31_메모리_최적화_P1_GATT_Client_Payload_Buffer.md>) · [236번 역할별 pool 감사](<04_검증 기록/236_M31_메모리_최적화_P1_역할별_잔여_Pool_감사.md>) · [237번 P1 완료](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2 세부](TODO_M31.md) |
-| M31-W04 DF | 미완료. 이전 연결 RX 4 report·328 sample/cleanup FAIL은 보존. 후속 Zephyr LL 내부 진단은 연결형 raw IQ 20 report·1,640 sample·cleanup 국소 PASS. 공개 Arduino/SDC RX, connectionless RX와 각도 계산은 미검증 | [216번 초기 경계](<04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>) · [220번 보존·인계](<04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md>) · [244번 후속 진단](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) |
-| M31-W05 CS | 미완료. 같은 ACL 비암호화 read 거부 20/20, flash 직후 raw RAS 100·복구 20/20 두 번 PASS. wrong-key 실기·과거 중단 원인 잔여 | [217번](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [218번](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) |
+| 메모리 최적화 | **P0·P1 완료, P2 진행 중.** 정적 예약은 Core SPI 50,877→20,589 B, CoC-only 91,037→70,081 B, GATT 1×1 server fixture 113,218→48,581 B로 줄었다. P2 국소 실기는 진행됐지만 최악 부하·전체 high-water·native 동등 비교는 잔여다. | [계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2 세부](TODO_M31.md) |
+| M31-W04 DF | 미완료. 내부 LL 연결형 IQ 20 report·1,640 sample과 cleanup은 국소 PASS다. connectionless 재진단은 sync 실패·IQ 0 및 cleanup fault를 보존했다. 공개 Arduino/SDC RX·각도는 미검증이다. | [연결형 244](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [메모리 246](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [connectionless 247](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>) |
+| M31-W05 CS | 미완료. secure raw RAS 100개·stop/restart·재연결 20/20은 확인했으나 장기 1,000건에는 counter 누락이 남는다. wrong-key·최대 procedure·fragmented RAS는 잔여다. | [비암호화 거부 217](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [복구 218](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [장기 245](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |
 | M32 / M33 | 0/12 · 0/8, 후속 버전 | [M32 TODO](TODO_M32.md) · [M33 TODO](TODO_M33.md) |
 | Host | W01~W03 완료 3/8, W04~W08 보류 | [후속 다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -178,11 +192,14 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
    GATT 512 B 두 보드 실기는 [238번](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>),
    CoC 512 B 두 채널은 [239번](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)에서
    PASS했습니다. CIS·BIS 기본 payload는 [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
-   각각 20세션 PASS했습니다. unicast Audio 1,000 frame은 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)에서
+   각각 20세션 PASS했습니다. unicast Audio 1,000·10,000 frame은 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)에서
    국소 PASS했습니다. DF beacon TX 20회도 [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
-   PASS했습니다. CS 간헐 누락 원인과 다른 Audio/DF RX의 미계측은 HOLD입니다.
+   PASS했습니다. CS 장기 counter 누락, 공개 DF RX와 다른 Audio 부하는 HOLD입니다.
    암호화 broadcast Audio는 [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)에서
-   1,000 frame·drop 0을 최종 image로 8/8회 통과했으나 최초 동기화 실패 원인은 HOLD입니다.
+   1,000 frame·drop 0을 최종 image로 8/8회, 연속 10,000 frame을 한 번 통과했으나
+   최초 동기화 실패 원인은 HOLD입니다. CS·DF의 최신 실패 경계는 각각
+   [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)·
+   [247번](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>)을 따릅니다.
    [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 측정·회귀 gate와
    [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 기능 선택·정정·구현 체크리스트가 기준입니다.
 2. 최적화 image에서 **W04·W05 잔여와 변경 영향**을 닫습니다. 독립 코드·분석은 병행하되
@@ -195,7 +212,7 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
    Windows 패키지·clean 설치·예제·업로드·수명주기·RC·공개 승인 gate는
    [v0.5.0 TODO §6](TODO_v0.5.0.md#6-결과공개-규칙)에 따라 별도 판정합니다.
 
-### W04 재개 시 놓치지 않을 실패 경계
+### W04 재개 시 놓치지 않을 과거 실패 경계
 
 원본 [connected-raw-iq.json](<04_검증 기록/evidence/m31-w04-connected-rx-22ff349c/connected-raw-iq.json>)에서
 공개 Host API는 `-EINVAL`, 내부 HCI 두 명령은 수락, Host 상태 동기화 뒤 유효 report는
@@ -203,8 +220,10 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
 반복 ANT_INFO/SCANNING/연결 시작과 최종 disconnect가 관찰됐으나 재시작 원인은 미확정입니다.
 RX STOPPED·Host disarm 일부는 확인됐지만 TX STOPPED 등 양쪽 cleanup은 확인되지 않았습니다.
 
-따라서 **다음 실기 전에 양쪽 STOP·clock 해제·GPIO 반환을 실제 확인**해야 합니다.
-이번 문서 작업에서 보드 상태를 변경하거나 cleanup 성공을 추정하지 않습니다.
+이 단락은 당시 실패의 원본 경계다. 후속 연결형 내부 진단과 connectionless 재진단의
+판정은 위 최신 문단과 [246번](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>)·
+[247번](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>)을 우선한다.
+다음 실기 전에도 **양쪽 STOP·clock 해제·GPIO 반환을 실제 확인**해야 한다.
 Connected와 connectionless RX, controller별 source/build/HCI/IQ report, 공개 API와 내부 진단을
 분리합니다. SDC AoD 미지원·안테나 전환·각도 계산·외장 RF를 raw IQ와 합치지 않습니다.
 

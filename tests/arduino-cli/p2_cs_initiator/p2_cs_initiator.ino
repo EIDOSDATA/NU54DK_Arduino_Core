@@ -9,6 +9,16 @@
 #include <NUCODE_BLE_ChannelSounding.h>
 #include <P2MemoryTelemetry.h>
 
+#if defined(NUCODE_P2_CS_DIAGNOSTICS) && \
+    !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE) && !defined(NUCODE_CAPABILITY_PROBE)
+extern "C"
+{
+#include <bluetooth/services/ras.h>
+#include <zephyr/bluetooth/conn.h>
+#include <zephyr/sys/atomic.h>
+}
+#endif
+
 using nucode::ble::BLEAddress;
 using nucode::ble::BLEConnectionHandle;
 using nucode::ble::BLEEvent;
@@ -24,6 +34,102 @@ bool p2StopRequested = false;
 
 namespace
 {
+#if defined(NUCODE_P2_CS_DIAGNOSTICS) && \
+    !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE) && !defined(NUCODE_CAPABILITY_PROBE)
+    constexpr std::size_t diagnosticCounterLimit = 1024U;
+    atomic_t controllerFlags[diagnosticCounterLimit] = {};
+    atomic_t controllerCallbacks[diagnosticCounterLimit] = {};
+    atomic_t controllerProcedureStatus[diagnosticCounterLimit] = {};
+    atomic_t controllerSubeventStatus[diagnosticCounterLimit] = {};
+    atomic_t controllerReportedSteps[diagnosticCounterLimit] = {};
+    atomic_t controllerProcedureAbortReason[diagnosticCounterLimit] = {};
+    atomic_t controllerSubeventAbortReason[diagnosticCounterLimit] = {};
+    bool deliveredCounters[diagnosticCounterLimit] = {};
+    bool anyDeliveredCounter = false;
+    std::uint16_t highestDeliveredCounter = 0U;
+
+    /** @brief Arduino 읽기 queue와 독립적으로 controller CS 상태를 관찰합니다. */
+    void observeCsSubevent(bt_conn *connection,
+                           bt_conn_le_cs_subevent_result *result)
+    {
+        static_cast<void>(connection);
+        if (result == nullptr)
+        {
+            return;
+        }
+        const std::uint16_t counter = bt_ras_rreq_get_ranging_counter(
+            result->header.procedure_counter);
+        if (counter >= diagnosticCounterLimit)
+        {
+            return;
+        }
+        atomic_or(&controllerFlags[counter], 1);
+        atomic_inc(&controllerCallbacks[counter]);
+        atomic_set(&controllerProcedureStatus[counter],
+                   result->header.procedure_done_status);
+        atomic_set(&controllerSubeventStatus[counter],
+                   result->header.subevent_done_status);
+        atomic_set(&controllerReportedSteps[counter],
+                   result->header.num_steps_reported);
+        if (result->header.procedure_done_status ==
+            BT_CONN_LE_CS_PROCEDURE_ABORTED)
+        {
+            atomic_or(&controllerFlags[counter], 2);
+            atomic_set(&controllerProcedureAbortReason[counter],
+                       result->header.procedure_abort_reason);
+        }
+        if (result->header.subevent_done_status ==
+            BT_CONN_LE_CS_SUBEVENT_ABORTED)
+        {
+            atomic_or(&controllerFlags[counter], 4);
+            atomic_set(&controllerSubeventAbortReason[counter],
+                       result->header.subevent_abort_reason);
+        }
+        if ((result->step_data_buf == nullptr) ||
+            (result->step_data_buf->len == 0U))
+        {
+            atomic_or(&controllerFlags[counter], 8);
+        }
+    }
+
+    BT_CONN_CB_DEFINE(p2_cs_controller_observer) = {
+        .le_cs_subevent_data_available = observeCsSubevent,
+    };
+
+    /** @brief Controller가 보았으나 Arduino 읽기로 전달되지 않은 counter를 출력합니다. */
+    void reportMissingCounters()
+    {
+        if (!anyDeliveredCounter)
+        {
+            return;
+        }
+        for (std::uint16_t counter = 0U;
+             counter <= highestDeliveredCounter; counter++)
+        {
+            if (deliveredCounters[counter])
+            {
+                continue;
+            }
+            Serial.print("P2_CS_MISSING counter=");
+            Serial.print(counter);
+            Serial.print(" flags=");
+            Serial.print(atomic_get(&controllerFlags[counter]));
+            Serial.print(" callbacks=");
+            Serial.print(atomic_get(&controllerCallbacks[counter]));
+            Serial.print(" procedure_status=");
+            Serial.print(atomic_get(&controllerProcedureStatus[counter]));
+            Serial.print(" subevent_status=");
+            Serial.print(atomic_get(&controllerSubeventStatus[counter]));
+            Serial.print(" steps=");
+            Serial.print(atomic_get(&controllerReportedSteps[counter]));
+            Serial.print(" procedure_abort_reason=");
+            Serial.print(atomic_get(&controllerProcedureAbortReason[counter]));
+            Serial.print(" subevent_abort_reason=");
+            Serial.println(atomic_get(&controllerSubeventAbortReason[counter]));
+        }
+    }
+#endif
+
     RasInitiator initiator;
     BLEAddress peerAddress;
     BLEConnectionHandle peer;
@@ -137,6 +243,18 @@ void loop()
     RasReading reading;
     while (initiator.read(reading))
     {
+#if defined(NUCODE_P2_CS_DIAGNOSTICS) && \
+    !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE) && !defined(NUCODE_CAPABILITY_PROBE)
+        if (reading.ranging_counter < diagnosticCounterLimit)
+        {
+            deliveredCounters[reading.ranging_counter] = true;
+            anyDeliveredCounter = true;
+            if (reading.ranging_counter > highestDeliveredCounter)
+            {
+                highestDeliveredCounter = reading.ranging_counter;
+            }
+        }
+#endif
         Serial.print("CS_RAW counter=");
         Serial.print(reading.ranging_counter);
         Serial.print(" local=");
@@ -168,6 +286,10 @@ void loop()
                 p2StopRequested = true;
                 Serial.print("P2_CS_STATS completed=");
                 Serial.println(initiator.completed());
+#if defined(NUCODE_P2_CS_DIAGNOSTICS) && \
+    !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE) && !defined(NUCODE_CAPABILITY_PROBE)
+                reportMissingCounters();
+#endif
                 nucode::test::reportMemory("stopped");
                 Serial.println("P2_STOP role=cs-initiator");
             }
