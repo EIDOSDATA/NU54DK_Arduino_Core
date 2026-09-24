@@ -913,6 +913,35 @@ extern "C" void sensorRead(void)
             },
         )
 
+    def test_large_gatt_payload_selects_att_transport(self) -> None:
+        """! @brief 512 B GATT 선언은 ATT MTU·ACL buffer·prepare write를 함께 요구합니다. """
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["roles"] = ["ble-gatt-server-peripheral"]
+        declaration["capacities"] = {
+            "ble.gatt-event-payload": 512,
+            "ble.gatt-tx-payload": 512,
+            "ble.gatt-inline-value-payload": 512,
+        }
+        result = MODULE.resolve_capabilities(self.registry, [], [], declaration)
+        configuration = set(result["generated"]["conf"])
+        self.assertTrue({
+            "CONFIG_BT_L2CAP_TX_MTU=512",
+            "CONFIG_BT_BUF_ACL_RX_SIZE=251",
+            "CONFIG_BT_BUF_ACL_TX_SIZE=251",
+            "CONFIG_BT_ATT_PREPARE_COUNT=6",
+        }.issubset(configuration))
+
+        declaration["capacities"]["ble.att-mtu"] = 247
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_CAPACITY_CONFLICT"):
+            MODULE.resolve_capabilities(self.registry, [], [], declaration)
+
+        declaration["capacities"]["ble.att-mtu"] = 517
+        configuration = set(MODULE.resolve_capabilities(
+            self.registry, [], [], declaration
+        )["generated"]["conf"])
+        self.assertIn("CONFIG_BT_L2CAP_TX_MTU=517", configuration)
+        self.assertNotIn("CONFIG_BT_L2CAP_TX_MTU=512", configuration)
+
     def test_central_capabilities_explicitly_enable_observer(self) -> None:
         """! @brief Central Kconfig를 선택한 capability는 최종 Kconfig와 같은 Observer를 명시합니다. """
         for capability in self.registry["capabilities"].values():

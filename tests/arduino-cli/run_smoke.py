@@ -345,6 +345,18 @@ def assert_build(build_path: Path, project_name: str) -> dict:
     if not isinstance(cache_key, str) or not re.fullmatch(r"[0-9a-f]{64}", cache_key):
         raise SmokeFailure("build context has no full M9 cache key")
     assert_external_lfxo(Path(context["zephyr_build_dir"]) / "zephyr" / "zephyr.dts")
+    zephyr_dir = Path(context["zephyr_build_dir"]) / "zephyr"
+    devicetree = (zephyr_dir / "zephyr.dts").read_text(encoding="utf-8")
+    if not re.search(
+        r'slot0_partition:\s+partition@0\s*\{.*?label = "image-0";'
+        r'.*?reg = < 0x0 0x16c000 >;',
+        devicetree,
+        re.DOTALL,
+    ):
+        raise SmokeFailure("loaderless image partition is not [0x0, 0x16c000)")
+    memory_map = (zephyr_dir / "zephyr.map").read_text(encoding="utf-8")
+    if not re.search(r"^FLASH\s+0x0+\s+0x0*16c000\s+xr\s*$", memory_map, re.MULTILINE):
+        raise SmokeFailure("linker FLASH region is not the loaderless image")
     if not cache_dir.is_dir():
         raise SmokeFailure(f"persistent cache directory is missing: {cache_dir}")
     for metadata in ("input-manifest.json", "state.json", "access.json"):

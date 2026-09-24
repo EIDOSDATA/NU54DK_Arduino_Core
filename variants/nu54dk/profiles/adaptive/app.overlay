@@ -3,3 +3,5 @@
  * @brief resolved capability가 필요한 장치만 뒤에 합성하는 최소 overlay입니다.
  * SPDX-License-Identifier: MIT
  */
+
+#include <nucode/nu54dk-arduino-storage.dtsi>

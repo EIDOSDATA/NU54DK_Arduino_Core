@@ -390,8 +390,12 @@ namespace nucode::ble
         {
             static_cast<void>(bt_le_adv_stop());
         }
+#if defined(CONFIG_BT_PER_ADV_RSP)
         endPawr();
+#endif
+#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)
         endPeriodicAdvertising();
+#endif
         endExtendedAdvertising();
         nucode::ble::internal::l2capEnded();
 

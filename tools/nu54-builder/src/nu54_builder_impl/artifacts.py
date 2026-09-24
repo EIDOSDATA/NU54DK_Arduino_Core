@@ -73,7 +73,9 @@ def generated_mapped_partition(
 
 
 ## @brief 선택한 code partition과 실제 linker FLASH 영역이 같은지 fail-closed로 검증합니다.
-def validate_linked_code_partition(zephyr_output: Path) -> dict[str, int | str]:
+def validate_linked_code_partition(
+    zephyr_output: Path, *, loaderless: bool = False
+) -> dict[str, int | str]:
     configuration_path = zephyr_output / ".config"
     devicetree_path = zephyr_output / "zephyr.dts"
     map_path = zephyr_output / "zephyr.map"
@@ -166,6 +168,16 @@ def validate_linked_code_partition(zephyr_output: Path) -> dict[str, int | str]:
             "[NU54:E_MEMORY_LAYOUT] linker FLASH 영역과 devicetree code partition이 다릅니다: "
             f"linker=0x{linker_start:x}+0x{linker_size:x}, "
             f"devicetree=0x{code_start:x}+0x{code_size:x}"
+        )
+    if loaderless and (
+        mcuboot
+        or code_label != "slot0_partition"
+        or (code_start, code_size) != (0, 0x16C000)
+    ):
+        raise AdapterError(
+            "[NU54:E_MEMORY_LAYOUT] loaderless profile은 "
+            "slot0_partition [0x0, 0x16c000)을 사용해야 합니다: "
+            f"{code_label}=0x{code_start:x}+0x{code_size:x}"
         )
     return {
         "code_partition": code_label,

@@ -767,7 +767,9 @@ def link(args: argparse.Namespace) -> None:
                     if profile["sysbuild"]
                     else paths["zephyr_build"] / "zephyr"
                 )
-                memory_layout = validate_linked_code_partition(zephyr_output)
+                memory_layout = validate_linked_code_partition(
+                    zephyr_output, loaderless=not profile["sysbuild"]
+                )
                 resource_audit = collect_resource_audit(
                     zephyr_output,
                     tools["size"],

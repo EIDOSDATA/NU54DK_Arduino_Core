@@ -554,6 +554,31 @@ def resolve_capabilities(
     for capacity in resolved_capacities:
         conf.extend(capacity["conf"])
 
+    capacity_values = {item["id"]: item["value"] for item in resolved_capacities}
+    gatt_payload = max(
+        (capacity_values.get(identifier, 0) for identifier in (
+            "ble.gatt-event-payload",
+            "ble.gatt-tx-payload",
+            "ble.gatt-inline-value-payload",
+        )),
+        default=0,
+    )
+    if gatt_payload > 244:
+        required_mtu = 512
+        declared_mtu = capacity_values.get("ble.att-mtu", required_mtu)
+        if declared_mtu < required_mtu:
+            raise AdapterError(
+                "[NU54:E_CAPACITY_CONFLICT] 245..512 B GATT payload에는 "
+                "ble.att-mtu >= 512가 필요합니다."
+            )
+        if "ble.att-mtu" not in capacity_values:
+            conf.append("CONFIG_BT_L2CAP_TX_MTU=512")
+        conf.extend((
+            "CONFIG_BT_BUF_ACL_RX_SIZE=251",
+            "CONFIG_BT_BUF_ACL_TX_SIZE=251",
+            "CONFIG_BT_ATT_PREPARE_COUNT=6",
+        ))
+
     merged_conf: dict[str, str] = {}
     for line in conf:
         name, setting = line.split("=", 1)
