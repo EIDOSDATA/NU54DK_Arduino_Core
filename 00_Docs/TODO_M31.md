@@ -120,8 +120,9 @@ P2 GATT 512 B는 두 보드에서 adaptive 선언만으로 write/read·재연결
 계측 분모와 실패 진단을 남겼다. 당시 미계측 역할과 controller pool은
 HOLD였다. 후속 [239번 기록](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
 CoC 두 채널 512 B echo 100건은 PASS다. [251번 재연결 계측](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>)은
-ACL disconnect/reconnect 20/20, 매회 두 채널 준비, 누적 echo 42건·양측 STOP을
-확인했다. peer loss·credit 고갈·다중 link 및 controller 내부 사용 최고치는
+ACL disconnect/reconnect 20/20과 서버 SWD reset 20/20, 각각 매회 두 채널
+준비·누적 echo 42건·양측 STOP을 확인했다. 물리 전원 차단·credit 고갈·다중
+link 및 controller 내부 사용 최고치는
 별도다. CS raw 100개는 계측 실행에서
 counter 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며
 간헐 누락 원인은 HOLD다. [245번 장기 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)에서
@@ -174,7 +175,7 @@ P2의 남은 gate는 다음처럼 분리한다.
 | DF RX | 연결형 Zephyr LL 내부 IQ callback·sample 20건과 정상 종료 뒤 stack high-water는 확인. connectionless sync는 CTE 전용 옵션을 써도 미수립·IQ 0이고 반복 시 fault·STOP 실패를 보존. Arduino/SDC RX 적용성, 오류/복구·장기 high-water는 잔여. Beacon TX로 대체 불가. [246번](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 | CS | 일부 누락은 controller의 `NO_CS_SYNC_RECEIVED`, 나머지는 정상 완료 뒤 RAS/단일 로컬 버퍼 결합 경로로 분리. Nordic native 계측 1,000 유효 RAS에서도 abort 2·busy 2·gap 4로 무조건 0-gap 판정은 부적절함을 확인. Arduino 정상 callback 뒤 누락의 정확한 원인, 최대 procedure·fragmented RAS·복구 경로의 용량/연속성은 잔여. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 | Audio/ISO | 다른 방향·다중 stream/ASE, sync loss·암호화 오류·재가입과 장기 부하의 역할별 최악값 |
-| CoC 복구 | ACL 명시적 disconnect/reconnect 20/20과 두 채널 512 B echo·stack/heap 관찰은 확인. 비정상 peer loss·credit 고갈·다중 link의 오류/복구와 최악 고점유는 별도. [251번](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
+| CoC 복구 | ACL 명시적 disconnect/reconnect 20/20과 서버 SWD reset 20/20, 두 채널 512 B echo·stack/heap 관찰은 확인. 물리 전원 차단·credit 고갈·다중 link의 오류/복구와 최악 고점유는 별도. [251번](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
 | SDC/stack/heap | SDK 계산·8-byte 정렬 pool과 초기화 요구량 검사 경계는 확인. controller 내부 high-water는 미노출이며 오류·최악 부하 stack/heap 안전 여유는 별도. [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) |
 | native 비교 | 고정 Nordic 원본/계측 sample을 동일 board에서 build하고 RAS gap 경로를 비교했으나 DSP·stack·malloc·로그·payload 조건이 달라 Arduino API 비용은 아직 산정 불가. 동일 기능·설정의 native 대비 FLASH/RAM 항목별 차이가 잔여. [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 

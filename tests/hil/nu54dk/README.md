@@ -88,7 +88,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m30_ble_multi.py` | generation handle별 security operation과 cross-link 격리 strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m30_power_loss.py` | 별도 준비 mode와 실제 전원 차단 4지점×3회 주입·복구 판정 | NU54DK 두 대, DUT 물리 전원 차단 필요; exact `ae5186f7…` 12/12 PASS |
 | `p2_cs_native_comparison_run.py` | 고정 Nordic RAS 계측 복사본의 유효 counter·abort/busy·양측 STOP 비교 | 두 exact NU54DK, [계측 fixture](fixtures/NordicRasComparison/README.md), [250번 기록](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
-| `p2_coc_recovery_memory_run.py` | 두 채널 512 B echo를 유지한 ACL disconnect/reconnect 20회·양측 STOP·stack/heap 고점유 검증 | 두 exact NU54DK, 현재 저장소 adaptive client/server image, [251번 기록](<../../../00_Docs/04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
+| `p2_coc_recovery_memory_run.py` | 두 채널 512 B echo를 유지한 ACL disconnect/reconnect 또는 서버 SWD reset 각 20회·양측 STOP·stack/heap 고점유 검증 | 두 exact NU54DK, 현재 저장소 adaptive client/server image, `--recovery-mode peer-reset`은 물리 전원 차단이 아님, [251번 기록](<../../../00_Docs/04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
 | `p2_df_connectionless_rx_run.py` | LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 | 현재 고정 SDK에서 IQ 0·재실행 fault; **PASS 경로가 아니며 반복 실행 금지**, [250번 실패 원본](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |

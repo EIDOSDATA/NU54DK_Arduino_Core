@@ -10,8 +10,9 @@ PASS했다. loaderless adaptive partition과 큰 GATT payload의 ATT transport �
 실기에서 발견한 결함을 정정했다. [238번 원본](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
 GATT 계측을 기록했다. [239번](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
 두 채널 CoC 512 B/100 echo는 PASS다. [251번 CoC 재연결](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>)에서
-명시적 ACL 재연결 20/20, 매회 두 채널 준비와 누적 echo 42건·양측 STOP도
-확인했다. 비정상 peer loss·credit 고갈·다중 link는 별도다. CS 100 raw는 앞선 실행에서 counter
+명시적 ACL 재연결 20/20과 서버 SWD reset 20/20, 각 실행에서 매회 두 채널
+준비와 누적 echo 42건·양측 STOP도 확인했다. 물리 전원 차단·credit 고갈·
+다중 link는 별도다. CS 100 raw는 앞선 실행에서 counter
 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며 간헐 원인은 HOLD다.
 [245번 CS 장기 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)에서
 controller sync abort와 정상 완료 후 누락을 분리하고 abort 정리·늦은 RAS 보호를

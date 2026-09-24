@@ -92,7 +92,8 @@ CS 간헐 누락 원인·다른 Audio/DF RX·controller pool·동등 조건 비�
 이 기록은 P2 전체 완료나 W04/W05/W06 완료가 아니다.
 
 후속 [251번 두 채널 CoC 재연결 계측](251_M31_P2_CoC_재연결_메모리_계측.md)은
-같은 512 B echo 부하에서 ACL disconnect/reconnect 20/20, 누적 echo 42건,
-매번 두 채널 재준비와 양측 STOP을 확인했다. 이 결과는 이 기록의 100 echo를
-대체하지 않으며 peer loss·credit 고갈·다중 link와 controller 내부 고점유를
+같은 512 B echo 부하에서 ACL disconnect/reconnect 20/20과 별도 server
+SWD reset 20/20, 각 실행 누적 echo 42건, 매번 두 채널 재준비와 양측 STOP을
+확인했다. 이 결과는 이 기록의 100 echo를 대체하지 않으며 물리 전원 차단·
+credit 고갈·다중 link와 controller 내부 고점유를
 포괄하지 않는다.

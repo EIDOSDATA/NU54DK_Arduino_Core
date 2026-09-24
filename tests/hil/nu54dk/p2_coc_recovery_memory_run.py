@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 두 채널 512 B CoC의 반복 ACL 복구와 메모리 고점을 검증합니다. """
+"""! @brief 두 채널 512 B CoC의 반복 ACL/peer reset 복구를 검증합니다. """
 
 from __future__ import annotations
 
@@ -59,7 +59,7 @@ def wait_for_echoes(streams: dict[str, serial.Serial],
 
 
 def run(arguments: argparse.Namespace) -> dict:
-    """! @brief exact 두 보드의 20회 disconnect/reconnect와 STOP을 기록합니다. """
+    """! @brief exact 두 보드의 반복 복구와 STOP을 기록합니다. """
 
     if arguments.cycles <= 0 or arguments.client_uid.lower() == arguments.server_uid.lower():
         raise ValueError("positive cycles and two distinct probes are required")
@@ -81,6 +81,7 @@ def run(arguments: argparse.Namespace) -> dict:
     evidence = {
         "schema_version": 1,
         "case": "m31-p2-coc-two-channel-512-recovery-memory",
+        "recovery_mode": arguments.recovery_mode,
         "cycles_target": arguments.cycles,
         "cycles_completed": 0,
         "image_sha256": {
@@ -99,6 +100,7 @@ def run(arguments: argparse.Namespace) -> dict:
             for role in ("client", "server")
         },
         "start": {},
+        "peer_restart": [],
         "lines": {"client": [], "server": []},
         "result": "FAIL",
     }
@@ -132,17 +134,27 @@ def run(arguments: argparse.Namespace) -> dict:
         for cycle in range(1, arguments.cycles + 1):
             client_start = len(lines["client"])
             server_start = len(lines["server"])
-            streams["client"].write(b"d")
+            if arguments.recovery_mode == "acl-disconnect":
+                streams["client"].write(b"d")
+                wait_for_prefix(streams, pending, lines, "client",
+                                "P2_COC_DISCONNECT_REQUESTED", client_start, 15.0)
+                wait_for_prefix(streams, pending, lines, "client",
+                                "P2_COC_DISCONNECTED", client_start, 20.0)
+                wait_for_prefix(streams, pending, lines, "server",
+                                "LE CoC disconnected", server_start, 20.0)
+            else:
+                evidence["peer_restart"].append(reset_halted_start(
+                    {"app": streams["server"], "aux": auxiliary["server"]},
+                    arguments.server_uid,
+                ))
+                wait_for_prefix(streams, pending, lines, "server",
+                                "P2_READY role=coc-server", server_start, 30.0)
+                wait_for_prefix(streams, pending, lines, "client",
+                                "P2_COC_DISCONNECTED", client_start, 30.0)
             wait_for_prefix(streams, pending, lines, "client",
-                            "P2_COC_DISCONNECT_REQUESTED", client_start, 15.0)
-            wait_for_prefix(streams, pending, lines, "client",
-                            "P2_COC_DISCONNECTED", client_start, 20.0)
-            wait_for_prefix(streams, pending, lines, "server",
-                            "LE CoC disconnected", server_start, 20.0)
-            wait_for_prefix(streams, pending, lines, "client",
-                            "LE CoC channel ready, count=2", client_start, 30.0)
+                            "LE CoC channel ready, count=2", client_start, 45.0)
             wait_for_echoes(streams, pending, lines, client_active_start,
-                            (cycle + 1) * 2, 30.0)
+                            (cycle + 1) * 2, 45.0)
             evidence["cycles_completed"] = cycle
 
         client_start = len(lines["client"])
@@ -158,6 +170,16 @@ def run(arguments: argparse.Namespace) -> dict:
                         "P2_STOP role=coc-server", server_start, 20.0)
         evidence["echo_count"] = sum(ECHO.fullmatch(line) is not None
                                      for line in lines["client"][client_active_start:])
+        expected_echoes = (arguments.cycles + 1) * 2
+        ready_channels = sum(line == "LE CoC channel ready, count=2"
+                             for line in lines["client"][client_active_start:])
+        if evidence["echo_count"] != expected_echoes or ready_channels != arguments.cycles + 1:
+            raise RuntimeError("CoC recovery completion count mismatch")
+        if arguments.recovery_mode == "peer-reset":
+            server_ready = sum(line == "P2_READY role=coc-server"
+                               for line in lines["server"])
+            if server_ready != arguments.cycles + 1 or len(evidence["peer_restart"]) != arguments.cycles:
+                raise RuntimeError("CoC peer restart count mismatch")
         evidence["result"] = "PASS"
     except Exception as error:
         evidence["failure_class"] = type(error).__name__
@@ -191,7 +213,8 @@ def run(arguments: argparse.Namespace) -> dict:
             ready = [index for index, line in enumerate(values)
                      if line == f"P2_READY role=coc-{role}"]
             if ready:
-                values = values[ready[-1]:]
+                first_active = ready[0] if arguments.recovery_mode == "peer-reset" else ready[-1]
+                values = values[first_active:]
             evidence["lines"][role] = [
                 re.sub(r"\b(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}\b", "<peer>", line)
                 for line in values
@@ -214,6 +237,8 @@ def main() -> None:
         parser.add_argument(f"--{role}-hex", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--cycles", type=int, default=20)
+    parser.add_argument("--recovery-mode", choices=("acl-disconnect", "peer-reset"),
+                        default="acl-disconnect")
     evidence = run(parser.parse_args())
     print(f"P2 CoC recovery HIL: {evidence['result']}")
 
