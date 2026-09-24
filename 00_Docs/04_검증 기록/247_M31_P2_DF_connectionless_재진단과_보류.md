@@ -46,3 +46,10 @@ Zephyr LL의 connectionless sync 실패·종료 경로를 별도 원인 조사�
 정상 STOP을 함께 입증해야 한다. 안테나 배열·각도 계산·외장 RF의
 사용자 후속 실물 범위와 기본 안테나 raw IQ 수신 적용성은 구별한다.
 이 HOLD는 P2 전체 또는 M31-W04 완료로 승격하지 않는다.
+
+[250번 후속 재진단](250_M31_P2_native_CS_비교와_DF_재진단.md)에서는
+Nordic locator sample의 CTE 전용 sync 옵션과 timeout 단위를 반영했지만
+sync는 수립되지 않았다. 첫 실행은 양측 STOP·IQ 0, 반복 실행은 timeout 뒤
+수신 usage fault·STOP 미확인으로 **FAIL**이다. fault 뒤 검증된 CS image를
+다시 기록하고 100건·양측 STOP으로 보드 복구를 확인했다. 따라서 이 옵션
+추가를 해결책이나 RX PASS로 기록하지 않는다.

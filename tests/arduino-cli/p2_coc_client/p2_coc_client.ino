@@ -21,6 +21,7 @@ std::size_t connectedChannels = 0U;
 std::size_t echoCount = 0U;
 std::size_t pendingEchoes = 0U;
 bool peerFound = false;
+bool restartScan = false;
 unsigned long p2LastReport = 0UL;
 bool p2Stopped = false;
 
@@ -58,6 +59,8 @@ void onBleEvent(const nucode::ble::BLEEventInfo &information, void *context)
         connectedChannels = 0U;
         pendingEchoes = 0U;
         peerConnection = nucode::ble::BLEConnectionHandle{};
+        restartScan = !p2Stopped;
+        Serial.println("P2_COC_DISCONNECTED");
     }
 }
 
@@ -135,6 +138,14 @@ void loop()
             Serial.println("BLE peer connect failed");
         }
     }
+    if (restartScan && !BLEConnection.connected() && !BLEConnection.connecting())
+    {
+        restartScan = false;
+        if (!BLEScan.start(true))
+        {
+            Serial.println("P2_FAIL stage=coc-scan-restart");
+        }
+    }
 
     const std::uint32_t now = millis();
     if (connectedChannels == channelCount && pendingEchoes == 0U &&
@@ -154,14 +165,29 @@ void loop()
             ++pendingEchoes;
         }
     }
-    if (Serial.available() > 0 && Serial.read() == 's')
+    if (Serial.available() > 0)
     {
-        BLEDevice.end();
-        nucode::test::reportMemory("stopped");
-        Serial.print("P2_STOP role=coc-client echoes=");
-        Serial.println(echoCount);
-        p2Stopped = true;
-        return;
+        const int command = Serial.read();
+        if ((command == 'd') && peerConnection.valid())
+        {
+            if (!BLEConnection.disconnect(peerConnection))
+            {
+                Serial.println("P2_FAIL stage=coc-disconnect");
+            }
+            else
+            {
+                Serial.println("P2_COC_DISCONNECT_REQUESTED");
+            }
+        }
+        else if (command == 's')
+        {
+            p2Stopped = true;
+            BLEDevice.end();
+            nucode::test::reportMemory("stopped");
+            Serial.print("P2_STOP role=coc-client echoes=");
+            Serial.println(echoCount);
+            return;
+        }
     }
     if (millis() - p2LastReport >= 10000UL)
     {

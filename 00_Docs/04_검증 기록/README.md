@@ -19,7 +19,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
 | M31 메모리 최적화 P0·P1 | 완료. P2의 동적 계측·안전 판정과 구별 | [P0](222_M31_메모리_최적화_P0_완료.md) · [P1](237_M31_메모리_최적화_P1_정적_저장소_완료.md) |
-| M31 메모리 최적화 P2 | GATT·CoC·ISO·Audio·DF TX·CS 단기 실행은 역할별 국소 PASS. 내부 LL 연결 IQ 20건과 정상 종료 stack을 관찰했다. CS 장기 누락·connectionless/공개 DF RX·최악 부하는 HOLD | [현재 범위·잔여 gate](../TODO_M31.md) · [최근 P2 기록](#최근-완료재개-기록) |
+| M31 메모리 최적화 P2 | GATT·CoC·ISO·Audio·DF TX·CS 단기 실행과 CoC 20회 재연결은 역할별 국소 PASS. 내부 LL 연결 IQ 20건과 정상 종료 stack을 관찰했다. CS 장기 누락·connectionless/공개 DF RX·최악 부하는 HOLD | [현재 범위·잔여 gate](../TODO_M31.md) · [최근 P2 기록](#최근-완료재개-기록) |
 | M31-W04·W05 | 연결형 내부 IQ 수신 국소 PASS, W04/W05 전체는 미완료·이전 실패 보존 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 이전 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W04 연결 IQ 후속](244_M31_P2_DF_연결_IQ_진단.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -31,6 +31,8 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [251 — P2 CoC 재연결 메모리 계측](251_M31_P2_CoC_재연결_메모리_계측.md) | 두 채널 512 B echo·ACL 재연결 20/20, 누적 echo 42건·양측 STOP, 역할별 stack/heap 고점유. controller 내부 pool과 다른 복구 경로는 별도 |
+| [250 — P2 native CS 비교·DF 재진단](250_M31_P2_native_CS_비교와_DF_재진단.md) | 고정 Nordic RAS 계측 1,000건의 gap·abort·busy 분모와 양측 STOP; DF CTE-only sync 재실패·fault 원본 및 복구. 전체 P2는 미완료 |
 | [249 — P2 문서 정합성 감사](249_M31_P2_문서_정합성_감사.md) | 현재 진입점·P2 기록 수치/링크/판정 분리, Markdown 404개 gate와 Host 회귀 경계 |
 | [248 — P2 SDC pool 정적 경계](248_M31_P2_SDC_pool_정적_경계_감사.md) | 8개 역할 ELF의 SDK 계산·8-byte 정렬 pool 예약과 초기화 요구량 검사 확인; 내부 high-water·임의 축소는 미주장 |
 | [247 — P2 DF connectionless 재진단](247_M31_P2_DF_connectionless_재진단과_보류.md) | 연속 CTE 송신에서도 LL periodic sync 미수립, IQ 0·cleanup fault 원본과 보드 복구 보존; P2 RX HOLD |

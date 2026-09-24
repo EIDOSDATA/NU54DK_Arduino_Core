@@ -119,7 +119,10 @@ P2 GATT 512 B는 두 보드에서 adaptive 선언만으로 write/read·재연결
 수신 20/20, STOP 20을 통과했다. [238번 기록](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
 계측 분모와 실패 진단을 남겼다. 당시 미계측 역할과 controller pool은
 HOLD였다. 후속 [239번 기록](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
-CoC 두 채널 512 B echo 100건은 PASS다. CS raw 100개는 계측 실행에서
+CoC 두 채널 512 B echo 100건은 PASS다. [251번 재연결 계측](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>)은
+ACL disconnect/reconnect 20/20, 매회 두 채널 준비, 누적 echo 42건·양측 STOP을
+확인했다. peer loss·credit 고갈·다중 link 및 controller 내부 사용 최고치는
+별도다. CS raw 100개는 계측 실행에서
 counter 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며
 간헐 누락 원인은 HOLD다. [245번 장기 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)에서
 controller의 CS sync abort와 정상 완료 후 결과 누락을 분리했다. abort 후
@@ -129,6 +132,10 @@ controller의 CS sync abort와 정상 완료 후 결과 누락을 분리했다. 
 추가 로컬 버퍼를 두 개로 늘린 1,000개 시험도 두 곳의 누락이 남고 정적 RAM이
 4,380 B 증가해 후보 변경을 되돌렸다. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)의
 counter별 RAS 도착 순서 진단이 우선이다.
+[250번 native 비교](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)에서
+고정 Nordic RAS 계측 복사본도 1,000개 유효 RAS에 gap 4건과 7건을 보였다.
+절대 0-gap은 양 경로의 무선·단일 버퍼 현실을 반영하지 못하지만, Arduino의
+정상 callback 뒤 누락·불완전 raw 및 동일 기능/설정 RAM 비교는 여전히 잔여다.
 [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
 CIS·BIS 기본 100 SDU × 20세션도 각각 PASS했다.
 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
@@ -150,6 +157,9 @@ Arduino/SDC 또는 connectionless RX를 대체하지 않는다.
 connectionless 재진단에서는 연속 송신으로 바꿔도 periodic sync가 성립하지 않아
 IQ 0건이었다. 종료 경로의 기존 종류 fault와 안전 복구를 보존했으며,
 connectionless 수신·그 역할의 high-water는 HOLD다.
+[250번 후속](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)의 CTE 전용 sync 옵션을
+넣은 재시험도 IQ 0, 반복 시 수신 usage fault·STOP 실패였다. 검증된 CS image
+복구 100건·양측 STOP 뒤에만 추가 시험을 했다.
 [248번 SDC pool 감사](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>)는
 8개 역할 ELF의 SDK 계산·정렬 예약과 초기화 요구량 검사 경계를 확인했다.
 이는 controller 내부 사용 최고치가 아니므로 pool을 임의 축소하지 않는다.
@@ -161,11 +171,12 @@ P2의 남은 gate는 다음처럼 분리한다.
 
 | 축 | 아직 필요한 증거 |
 | --- | --- |
-| DF RX | 연결형 Zephyr LL 내부 IQ callback·sample 20건과 정상 종료 뒤 stack high-water는 확인. connectionless sync는 재시험에도 미수립·IQ 0; Arduino/SDC RX 적용성, 오류/복구·장기 high-water는 잔여. Beacon TX로 대체 불가. [246번](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [247번](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>) |
-| CS | 일부 누락은 controller의 `NO_CS_SYNC_RECEIVED`, 나머지는 정상 완료 뒤 RAS/단일 로컬 버퍼 결합 경로로 분리. 장기 누락의 정확한 분모·원인, 최대 procedure·fragmented RAS·복구 경로의 용량/연속성은 잔여. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) |
+| DF RX | 연결형 Zephyr LL 내부 IQ callback·sample 20건과 정상 종료 뒤 stack high-water는 확인. connectionless sync는 CTE 전용 옵션을 써도 미수립·IQ 0이고 반복 시 fault·STOP 실패를 보존. Arduino/SDC RX 적용성, 오류/복구·장기 high-water는 잔여. Beacon TX로 대체 불가. [246번](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
+| CS | 일부 누락은 controller의 `NO_CS_SYNC_RECEIVED`, 나머지는 정상 완료 뒤 RAS/단일 로컬 버퍼 결합 경로로 분리. Nordic native 계측 1,000 유효 RAS에서도 abort 2·busy 2·gap 4로 무조건 0-gap 판정은 부적절함을 확인. Arduino 정상 callback 뒤 누락의 정확한 원인, 최대 procedure·fragmented RAS·복구 경로의 용량/연속성은 잔여. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 | Audio/ISO | 다른 방향·다중 stream/ASE, sync loss·암호화 오류·재가입과 장기 부하의 역할별 최악값 |
+| CoC 복구 | ACL 명시적 disconnect/reconnect 20/20과 두 채널 512 B echo·stack/heap 관찰은 확인. 비정상 peer loss·credit 고갈·다중 link의 오류/복구와 최악 고점유는 별도. [251번](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
 | SDC/stack/heap | SDK 계산·8-byte 정렬 pool과 초기화 요구량 검사 경계는 확인. controller 내부 high-water는 미노출이며 오류·최악 부하 stack/heap 안전 여유는 별도. [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) |
-| native 비교 | 동일 SDK/board/controller·기능·payload·로그·계측 조건의 기능 동등 native 대비 FLASH/RAM 항목별 차이 |
+| native 비교 | 고정 Nordic 원본/계측 sample을 동일 board에서 build하고 RAS gap 경로를 비교했으나 DSP·stack·malloc·로그·payload 조건이 달라 Arduino API 비용은 아직 산정 불가. 동일 기능·설정의 native 대비 FLASH/RAM 항목별 차이가 잔여. [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 
 ## 3. W03 세부 완료 상태 — 11/11
 

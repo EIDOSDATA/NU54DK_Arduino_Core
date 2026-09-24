@@ -12,8 +12,12 @@
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/direction.h>
 #include <zephyr/bluetooth/gap.h>
+#include <zephyr/debug/thread_analyzer.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/uart.h>
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
+#include <sys_malloc.h>
 
 #define PEER_NAME "NU54-CTE"
 #define PEER_NAME_LENGTH (sizeof(PEER_NAME) - 1U)
@@ -27,6 +31,31 @@ static uint16_t peer_interval;
 static bool peer_selected;
 static bool sync_established;
 static struct bt_le_per_adv_sync *periodic_sync;
+static uint32_t iq_reports;
+static uint32_t iq_samples;
+
+/** @brief 정지 뒤 thread별 stack 예약량과 최고 사용량을 출력합니다. */
+static void report_thread(struct thread_analyzer_info *info)
+{
+    printk("P2_STACK name=%s reserved=%u used=%u\n", info->name,
+           (unsigned int)info->stack_size, (unsigned int)info->stack_used);
+}
+
+/** @brief 성공·timeout 양쪽의 관찰 범위를 분리해 기록합니다. */
+static void report_memory(void)
+{
+    printk("DF_CL|STATS|reports=%u|samples=%u\n", iq_reports, iq_samples);
+    printk("P2_PHASE name=stopped\n");
+    thread_analyzer_run(report_thread, 0U);
+    struct sys_memory_stats stats = {0};
+    if (malloc_runtime_stats_get(&stats) == 0)
+    {
+        printk("P2_MALLOC free=%u allocated=%u peak=%u\n",
+               (unsigned int)stats.free_bytes,
+               (unsigned int)stats.allocated_bytes,
+               (unsigned int)stats.max_allocated_bytes);
+    }
+}
 
 /** @brief 광고 이름이 지정한 송신자와 일치하는지 확인합니다. */
 static bool inspect_data(struct bt_data *data, void *user_data)
@@ -89,6 +118,8 @@ static void on_iq(struct bt_le_per_adv_sync *sync,
                   const struct bt_df_per_adv_sync_iq_samples_report *report)
 {
     ARG_UNUSED(sync);
+    ++iq_reports;
+    iq_samples += report->sample_count;
     printk("M31_RX|1|IQ|count=%u|type=%u|status=%u|rssi=%d\n",
            report->sample_count, report->cte_type, report->packet_status, report->rssi);
 }
@@ -106,6 +137,7 @@ static struct bt_le_per_adv_sync_cb sync_callbacks = {
 /** @brief 송신 광고, periodic sync, 공개 AoA RX API를 차례로 확인합니다. */
 int main(void)
 {
+    const struct device *console = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
     int result = bt_enable(NULL);
     if (result != 0)
     {
@@ -128,6 +160,7 @@ int main(void)
         return 0;
     }
     printk("M31_RX|1|SCANNING\n");
+    printk("P2_READY role=df-connectionless-receiver\n");
 
     if (k_sem_take(&advertisement_found, K_SECONDS(30)) != 0)
     {
@@ -137,10 +170,12 @@ int main(void)
 
     struct bt_le_per_adv_sync_param sync_parameters = {};
     bt_addr_le_copy(&sync_parameters.addr, &peer_address);
+    sync_parameters.options = BT_LE_PER_ADV_SYNC_OPT_SYNC_ONLY_CONST_TONE_EXT;
     sync_parameters.sid = peer_sid;
     sync_parameters.skip = 0U;
     sync_parameters.timeout = (uint16_t)CLAMP(
-        (uint32_t)BT_GAP_PER_ADV_INTERVAL_TO_US(peer_interval) / 10000U * 7U,
+        BT_GAP_US_TO_PER_ADV_SYNC_TIMEOUT(
+            BT_GAP_PER_ADV_INTERVAL_TO_US(peer_interval)) * 7U,
         BT_GAP_PER_ADV_MIN_TIMEOUT, BT_GAP_PER_ADV_MAX_TIMEOUT);
     result = bt_le_per_adv_sync_create(&sync_parameters, &periodic_sync);
     printk("M31_RX|1|SYNC_CREATE|code=%d|timeout_10ms=%u\n",
@@ -153,22 +188,40 @@ int main(void)
         !sync_established)
     {
         printk("M31_RX|1|SYNC_TIMEOUT\n");
-        return 0;
     }
-
-    const uint8_t antennas[] = {1U, 2U};
-    const struct bt_df_per_adv_sync_cte_rx_param cte_parameters = {
-        .max_cte_count = 5U,
-        .cte_types = BT_DF_CTE_TYPE_AOA,
-        .slot_durations = BT_HCI_LE_ANTENNA_SWITCHING_SLOT_2US,
-        .num_ant_ids = ARRAY_SIZE(antennas),
-        .ant_ids = antennas,
-    };
-    result = bt_df_per_adv_sync_cte_rx_enable(periodic_sync, &cte_parameters);
-    printk("M31_RX|1|CTE_ENABLE|code=%d\n", result);
+    else
+    {
+        const uint8_t antennas[] = {1U, 2U};
+        const struct bt_df_per_adv_sync_cte_rx_param cte_parameters = {
+            .max_cte_count = 5U,
+            .cte_types = BT_DF_CTE_TYPE_AOA,
+            .slot_durations = BT_HCI_LE_ANTENNA_SWITCHING_SLOT_2US,
+            .num_ant_ids = ARRAY_SIZE(antennas),
+            .ant_ids = antennas,
+        };
+        result = bt_df_per_adv_sync_cte_rx_enable(periodic_sync, &cte_parameters);
+        printk("M31_RX|1|CTE_ENABLE|code=%d\n", result);
+    }
     while (true)
     {
-        k_sleep(K_SECONDS(1));
+        uint8_t command = 0U;
+        if ((uart_poll_in(console, &command) == 0) && (command == 's'))
+        {
+            int disable_result = 0;
+            int delete_result = 0;
+            if (sync_established)
+            {
+                disable_result = bt_df_per_adv_sync_cte_rx_disable(periodic_sync);
+                delete_result = bt_le_per_adv_sync_delete(periodic_sync);
+            }
+            const int scan_result = bt_le_scan_stop();
+            printk("DF_CL|CLEANUP|disable=%d|delete=%d|scan=%d\n",
+                   disable_result, delete_result, scan_result);
+            report_memory();
+            printk("P2_STOP role=df-connectionless-receiver\n");
+            break;
+        }
+        k_sleep(K_MSEC(10));
     }
     return 0;
 }

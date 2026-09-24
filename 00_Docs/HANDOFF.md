@@ -9,7 +9,9 @@ P2의 두 보드 generic GATT 512 B write/read·재연결 20회는 adaptive 선�
 PASS했다. loaderless adaptive partition과 큰 GATT payload의 ATT transport 생성도
 실기에서 발견한 결함을 정정했다. [238번 원본](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
 GATT 계측을 기록했다. [239번](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
-두 채널 CoC 512 B/100 echo는 PASS다. CS 100 raw는 앞선 실행에서 counter
+두 채널 CoC 512 B/100 echo는 PASS다. [251번 CoC 재연결](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>)에서
+명시적 ACL 재연결 20/20, 매회 두 채널 준비와 누적 echo 42건·양측 STOP도
+확인했다. 비정상 peer loss·credit 고갈·다중 link는 별도다. CS 100 raw는 앞선 실행에서 counter
 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며 간헐 원인은 HOLD다.
 [245번 CS 장기 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)에서
 controller sync abort와 정상 완료 후 누락을 분리하고 abort 정리·늦은 RAS 보호를
@@ -35,7 +37,13 @@ DF beacon TX 20회도 PASS지만 IQ RX는 아니다. [243번](<04_검증 기록/
 connectionless RX는 HOLD다.
 [248번 SDC pool 감사](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>)는
 SDK 계산·정렬 예약과 초기화 요구량 검사를 확인했다. 내부 high-water는
-노출되지 않으므로 pool을 임의 축소하지 않는다. 아래 과거 인계 문장은
+노출되지 않으므로 pool을 임의 축소하지 않는다.
+[250번 native 비교·DF 후속](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)에서는
+고정 Nordic RAS 계측 1,000건에도 abort/busy와 gap이 관찰돼 무조건 0-gap
+문턱이 부적절함을 확인했다. 다만 Arduino의 정상 callback 뒤 누락과 동일
+설정 native 대비 RAM 비용은 아직 닫지 못했다. DF CTE-only sync 재시험은
+IQ 0, 반복 시 usage fault·수신 STOP 실패였고, 검증된 CS image로 sector
+복구해 100건·양측 STOP을 확인했다. **P2 전체는 미완료**다. 아래 과거 인계 문장은
 당시 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
 
 다음은 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을
@@ -142,7 +150,7 @@ fresh build와 실제 Peripheral/Central adaptive·full compile을 통과했습�
 | M31-W01 | 원장·capability 완료 | [readiness](../variants/nu54dk/m31-ble-readiness.json) |
 | M31-W02 | 설치본 ISO 11예제·11역할 완료 | [199번](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| 메모리 최적화 | **P0·P1 완료, P2 진행 중.** 정적 예약은 Core SPI 50,877→20,589 B, CoC-only 91,037→70,081 B, GATT 1×1 server fixture 113,218→48,581 B로 줄었다. P2 국소 실기는 진행됐지만 최악 부하·전체 high-water·native 동등 비교는 잔여다. | [계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2 세부](TODO_M31.md) |
+| 메모리 최적화 | **P0·P1 완료, P2 진행 중.** 정적 예약은 Core SPI 50,877→20,589 B, CoC-only 91,037→70,081 B, GATT 1×1 server fixture 113,218→48,581 B로 줄었다. CoC 명시적 ACL 재연결 20/20까지 계측했지만 최악 부하·전체 high-water·native 동등 비교는 잔여다. | [계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2 세부](TODO_M31.md) |
 | M31-W04 DF | 미완료. 내부 LL 연결형 IQ 20 report·1,640 sample과 cleanup은 국소 PASS다. connectionless 재진단은 sync 실패·IQ 0 및 cleanup fault를 보존했다. 공개 Arduino/SDC RX·각도는 미검증이다. | [연결형 244](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [메모리 246](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [connectionless 247](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>) |
 | M31-W05 CS | 미완료. secure raw RAS 100개·stop/restart·재연결 20/20은 확인했으나 장기 1,000건에는 counter 누락이 남는다. wrong-key·최대 procedure·fragmented RAS는 잔여다. | [비암호화 거부 217](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [복구 218](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [장기 245](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |
