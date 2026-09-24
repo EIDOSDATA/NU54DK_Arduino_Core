@@ -11,10 +11,10 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from ble_pair_hil_common import flash_image_pyocd
 from m6_serial_echo import import_pyserial
 from m31_ble_capability_run import collect_register_identity, discover
-from m31_cs_ras_pair_run import hardware_reset
+from onboard_start import reset_halted_start
+from p2_gatt_memory_run import require_mapping
 from v04_protocol import ProbeLocks
 
 
@@ -26,6 +26,27 @@ IQ_PATTERN = re.compile(
 HOST_STATE_ARMED = "DF_CONN|HOST_RX_STATE|enabled=1|params=1|cte_types=1"
 HOST_STATE_DISARMED = "DF_CONN|HOST_RX_STATE|enabled=0|params=1|cte_types=0"
 VALID_PACKET_STATUSES = {0, 1, 2, 255}
+
+
+def flash_image_safe(role, uid, image):
+    """Auto unlock 없이 exact image를 sector flash하고 reset은 별도 제어합니다."""
+    command = (
+        sys.executable, "-X", "utf8", "-m", "pyocd", "load", "-W",
+        "-t", "nrf54l", "-u", uid, "-f", "1000000",
+        "-O", "auto_unlock=false", "-O", "smart_flash=false",
+        "-e", "sector", str(image),
+    )
+    result = subprocess.run(
+        command, capture_output=True, timeout=120.0, check=False
+    )
+    output = (result.stdout + result.stderr).decode(
+        "utf-8", errors="backslashreplace"
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"{role} sector flash failed: " + output.replace(uid, "<probe>")[-300:]
+        )
+    return {"method": "pyocd-load-sector-no-reset", "exit_code": 0}
 
 
 def append_line(port, key, record):
@@ -201,7 +222,8 @@ def record_iq_line(record, line):
         not -1270 <= rssi <= 200
     ):
         raise RuntimeError("invalid IQ report")
-    if error == 0 and event in record["iq_event_counters"]:
+    valid_report = error == 0 and status == 0 and count > 0
+    if valid_report and event in record["iq_event_counters"]:
         raise RuntimeError("duplicate IQ event counter")
 
     record["host_iq_callbacks"] += 1
@@ -209,9 +231,8 @@ def record_iq_line(record, line):
     record["iq_packet_status_counts"][status_key] = (
         record["iq_packet_status_counts"].get(status_key, 0) + 1
     )
-    if error == 0:
+    if valid_report:
         record["iq_event_counters"].append(event)
-    if error == 0 and status == 0 and count > 0:
         record["iq_reports"] += 1
         record["iq_samples"] += count
 
@@ -222,6 +243,8 @@ def main():
     parser.add_argument("--responder-probe-sha256", required=True)
     parser.add_argument("--receiver-image", type=Path, required=True)
     parser.add_argument("--responder-image", type=Path, required=True)
+    parser.add_argument("--receiver-aux", required=True)
+    parser.add_argument("--responder-aux", required=True)
     parser.add_argument("--core-revision", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--source-clean", action="store_true")
@@ -235,6 +258,11 @@ def main():
     tx_uid, tx_volume, tx_port = discover(args.responder_probe_sha256, ports)
     if rx_uid == tx_uid or rx_port == tx_port:
         raise RuntimeError("role mapping overlap")
+    if len({rx_port.upper(), tx_port.upper(), args.receiver_aux.upper(),
+            args.responder_aux.upper()}) != 4:
+        raise RuntimeError("app/aux port mapping overlap")
+    require_mapping(args.receiver_aux, rx_uid)
+    require_mapping(args.responder_aux, tx_uid)
     record = {
         "status": "FAIL",
         "outcome": "UNEXPECTED",
@@ -246,6 +274,8 @@ def main():
         "responder_probe_sha256": args.responder_probe_sha256,
         "receiver_port": rx_port,
         "responder_port": tx_port,
+        "receiver_aux": args.receiver_aux,
+        "responder_aux": args.responder_aux,
         "receiver_image_sha256": hashlib.sha256(
             args.receiver_image.read_bytes()
         ).hexdigest(),
@@ -272,20 +302,24 @@ def main():
             record["responder_registers"] = collect_register_identity(
                 tx_uid, tx_volume
             )
-            with serial.Serial(rx_port, 115200, timeout=0.05) as receiver, \
-                    serial.Serial(tx_port, 115200, timeout=0.05) as responder:
+            with (serial.Serial(rx_port, 115200, timeout=0.05) as receiver,
+                  serial.Serial(tx_port, 115200, timeout=0.05) as responder,
+                  serial.Serial(args.receiver_aux, 115200, timeout=0.05) as receiver_aux,
+                  serial.Serial(args.responder_aux, 115200, timeout=0.05) as responder_aux):
                 receiver.reset_input_buffer()
                 responder.reset_input_buffer()
-                record["responder_flash"] = flash_image_pyocd(
-                    "df_connected_responder", tx_uid, args.responder_image,
-                    120.0, hardware_reset=True
+                record["responder_flash"] = flash_image_safe(
+                    "df_connected_responder", tx_uid, args.responder_image
                 )
-                record["receiver_flash"] = flash_image_pyocd(
-                    "df_connected_receiver", rx_uid, args.receiver_image,
-                    120.0, hardware_reset=True
+                record["receiver_flash"] = flash_image_safe(
+                    "df_connected_receiver", rx_uid, args.receiver_image
                 )
-                hardware_reset(tx_uid)
-                hardware_reset(rx_uid)
+                record["responder_start"] = reset_halted_start(
+                    {"app": responder, "aux": responder_aux}, tx_uid
+                )
+                record["receiver_start"] = reset_halted_start(
+                    {"app": receiver, "aux": receiver_aux}, rx_uid
+                )
                 started = time.monotonic()
                 run_error = None
                 try:

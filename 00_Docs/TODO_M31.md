@@ -130,7 +130,10 @@ unicast PCM/LC3/CIS 1,000 frame도 국소 PASS지만 다른 Audio 방향·
 동일 image의 연속 10,000 frame도 drop 0·양측 STOP으로 국소 PASS했다.
 이 단일 장시간 실행으로 sync loss·재가입을 입증하지 않으며 최초 sink
 동기화 실패 원인은 미확인이다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
-DF beacon TX 20회는 국소 PASS했지만 IQ RX는 관찰하지 않았다.
+DF beacon TX 20회는 국소 PASS했지만 해당 실행에서 IQ RX는 관찰하지 않았다.
+후속 [244번](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)에서 Zephyr LL
+내부 연결형 IQ report 20건·1,640 sample과 cleanup을 확인했다. 이는
+Arduino/SDC 또는 connectionless RX와 RX 메모리 high-water를 대체하지 않는다.
 이 관찰값만으로 P2 전체를 완료 처리하거나
 stack/heap을 축소하지 않는다.
 `SPI.begin()` 사용자에게 SPI용 `prj.conf`를 수동 작성하게 하는 상태도
@@ -140,7 +143,7 @@ P2의 남은 gate는 다음처럼 분리한다.
 
 | 축 | 아직 필요한 증거 |
 | --- | --- |
-| DF RX | connectionless/connected의 실제 Host IQ callback·sample과 오류/종료 high-water; beacon TX로 대체 불가 |
+| DF RX | 연결형 Zephyr LL 내부 IQ callback·sample 20건은 확인. connectionless 및 Arduino/SDC RX 적용성, 오류/종료 high-water는 잔여; beacon TX로 대체 불가 |
 | CS | 간헐 counter 누락의 원인 분류, 최대 procedure·fragmented RAS·복구 경로의 용량/연속성 |
 | Audio/ISO | 다른 방향·다중 stream/ASE, sync loss·암호화 오류·재가입과 장기 부하의 역할별 최악값 |
 | SDC/stack/heap | SDK controller 구성 요구량과 정적 pool·정렬 검증, 관찰되지 않은 내부 사용을 여유로 오인하지 않는 안전 근거 |

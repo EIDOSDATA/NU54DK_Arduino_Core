@@ -15,8 +15,14 @@ IQ event나 sample을 생성하지 않으며 공개 API·Arduino 예제에는 �
 
 `bt-ll-sw-split` snippet, `nrf54l15dk/nrf54l15/cpuapp/nu54dk` target,
 저장소의 `board_package/NU54DK_Zephyr_DTS` board root로 빌드한다.
+자동 central PHY 변경 오류와 IQ 안정성을 분리하도록 이 진단은
+`CONFIG_BT_AUTO_PHY_CENTRAL_NONE=y`를 사용한다. 이는 이전 재부팅의
+원인이 PHY였다는 확정이 아니다. [244번 실기 기록](<../../../00_Docs/04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)의
+내부 연결형 IQ 20건은 공개 Arduino/SDC RX 지원을 뜻하지 않는다.
+
 `tests/hil/nu54dk/m31_df_connected_rx_run.py`는 probe SHA-256 역할 매핑,
-sector flash, hardware reset, UART 결과를 JSON으로 기록한다. 원본 probe
+exact app·aux COM, auto unlock 없는 sector flash, reset-halt-drain-resume,
+UART 결과를 JSON으로 기록한다. 원본 probe
 UID와 Bluetooth 주소는 기록하지 않는다.
 
 출력 태그 `AOA_RX_ENABLE`, `RAW_RX_PARAM`, `HOST_RX_STATE`, `RAW_REQUEST`,

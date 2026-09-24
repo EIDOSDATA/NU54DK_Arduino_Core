@@ -18,8 +18,8 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 개발 소스 | M28·M29·M30 완료, M31 3/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
-| M31 메모리 최적화 | P0·P1 완료, P2 GATT·CoC·CIS·BIS·unicast/broadcast Audio·DF beacon TX·CS 후속 실행 국소 PASS, CS 간헐 누락 원인·DF RX 등 HOLD | [P0 완료](222_M31_메모리_최적화_P0_완료.md) · [P1 완료](237_M31_메모리_최적화_P1_정적_저장소_완료.md) · [P2 GATT](238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md) · [P2 CoC/CS](239_M31_메모리_최적화_P2_CoC_CS_계측.md) · [P2 CIS/BIS](240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md) · [P2 unicast Audio](241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md) · [P2 DF TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md) · [P2 broadcast Audio](243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md) |
-| M31-W04·W05 | 부분 실기와 실패 진단 보존·완료 아님 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 최신 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
+| M31 메모리 최적화 | P0·P1 완료. P2 GATT·CoC·CIS·BIS·unicast/broadcast Audio·DF beacon TX·CS 후속 실행 국소 PASS, 내부 LL 연결 IQ 20건 PASS. CS 간헐 누락 원인·Arduino/SDC DF RX·최악 부하 등 HOLD | [P0 완료](222_M31_메모리_최적화_P0_완료.md) · [P1 완료](237_M31_메모리_최적화_P1_정적_저장소_완료.md) · [P2 GATT](238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md) · [P2 CoC/CS](239_M31_메모리_최적화_P2_CoC_CS_계측.md) · [P2 CIS/BIS](240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md) · [P2 unicast Audio](241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md) · [P2 DF TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md) · [P2 broadcast Audio](243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md) · [P2 내부 IQ](244_M31_P2_DF_연결_IQ_진단.md) |
+| M31-W04·W05 | 연결형 내부 IQ 수신 국소 PASS, W04/W05 전체는 미완료·이전 실패 보존 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 이전 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W04 연결 IQ 후속](244_M31_P2_DF_연결_IQ_진단.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 
@@ -30,7 +30,8 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
-| [243 — P2 Audio broadcast 실기](243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md) | 암호화 LC3/BIS 1,000 frame 최종 image 8/8·drop 0, 최초 동기화 실패 원본 보존, 정적 예약·stack high-water |
+| [244 — P2 DF 연결 IQ 내부 진단](244_M31_P2_DF_연결_IQ_진단.md) | Zephyr LL 내부 연결형 20 report·1,640 sample과 cleanup 국소 PASS; Arduino/SDC·connectionless·high-water 별도 |
+| [243 — P2 Audio broadcast 실기](243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md) | 암호화 LC3/BIS 1,000 frame 최종 image 8/8 및 연속 10,000 frame·drop 0, 최초 동기화 실패 원본 보존, 정적 예약·stack high-water |
 | [242 — P2 DF beacon TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md) | AoA CTE beacon 20회 TX start/stop·negative·high-water; IQ RX/각도는 HOLD |
 | [241 — P2 Audio unicast 실기](241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md) | 합성 PCM/LC3/CIS 1,000 frame 송신·복호화, drop 0, 양측 종료·high-water; 다른 Audio 조합은 별도 |
 | [240 — P2 CIS·BIS 실기](240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md) | 두 보드에서 각 100 SDU × 20세션, BIS 누락 0, 정적 예약·stack high-water; Audio 결합은 별도 |

@@ -4,6 +4,7 @@ import importlib.util
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -91,6 +92,39 @@ class ConnectedRawIqClassificationTest(unittest.TestCase):
         self.assertEqual("NOT RUN", record["path_results"][
             "angle_measurement"
         ])
+
+    def test_partial_and_valid_report_may_share_one_event(self):
+        """같은 event의 status=1 뒤 정상 report를 중복 정상 표본으로 세지 않습니다."""
+        record = base_record()
+        partial = (
+            "DF_CONN|IQ|error=0|count=12|type=1|status=1|sample_type=0|"
+            "slot=2|event=59|channel=5|i0=-15|q0=3|rssi=-610"
+        )
+        valid = (
+            "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|"
+            "slot=2|event=59|channel=5|i0=3|q0=-16|rssi=-610"
+        )
+        MODULE.record_iq_line(record, partial)
+        MODULE.record_iq_line(record, valid)
+        self.assertEqual(2, record["host_iq_callbacks"])
+        self.assertEqual([59], record["iq_event_counters"])
+        self.assertEqual(1, record["iq_reports"])
+        self.assertEqual(82, record["iq_samples"])
+
+    def test_flash_is_sector_only_and_never_unlocks(self):
+        """DF 재현 실행은 보호 해제·전체 삭제 없이 exact HEX만 씁니다."""
+        completed = type("Completed", (), {
+            "returncode": 0, "stdout": b"", "stderr": b""
+        })()
+        with patch.object(MODULE.subprocess, "run", return_value=completed) as run:
+            result = MODULE.flash_image_safe("receiver", "probe", Path("test.hex"))
+        command = run.call_args.args[0]
+        self.assertEqual("pyocd-load-sector-no-reset", result["method"])
+        self.assertIn("auto_unlock=false", command)
+        self.assertIn("smart_flash=false", command)
+        self.assertIn("sector", command)
+        self.assertNotIn("--recover", command)
+        self.assertNotIn("mass", command)
 
 
 if __name__ == "__main__":
