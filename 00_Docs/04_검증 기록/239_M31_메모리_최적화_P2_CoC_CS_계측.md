@@ -12,7 +12,7 @@
 | 역할·부하 | 결과 | 원본 |
 | --- | --- | --- |
 | LE CoC client/server, 두 채널 × 512 B, echo 100건, 양측 STOP | **PASS**. 두 채널 연결, remote MTU 512, echo count 1~100·내용 일치, client/server STOP. | [CoC 실기](evidence/m31-p2-coc-8f5f7cf8/coc-two-channel-512.json) |
-| CS RAS initiator/reflector, 보안 연결·raw 100건·양측 STOP | **계측 완료 / 연속성 HOLD**. firmware completed 100, 유효 raw 100, counter `6→8` 누락 1건. W05 기능 PASS로 승격하지 않음. | [CS 최종 계측](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-measured.json) |
+| CS RAS initiator/reflector, 보안 연결·raw 100건·양측 STOP | **재실행 국소 PASS / 간헐 누락 원인 HOLD**. 최신 실행에서 completed/raw 100, counter gap 0, 양측 STOP. 앞선 counter 누락을 없었던 일로 취급하지 않음. | [CS 재실행](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-followup.json) · [앞선 누락](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-measured.json) |
 
 CS 첫 계측은 flash 이전 UART에 남은 raw를 새 부팅 결과로 집계한 러너 오류로
 [FAIL](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw.json)이었다. 부팅 기준을
@@ -23,6 +23,11 @@ CS 첫 계측은 flash 이전 UART에 남은 raw를 새 부팅 결과로 집계�
 100과 UART raw 100은 일치했으므로, 최종 누락은 UART 수신 줄 자체의 손실로
 설명되지 않는다. controller/Host의 procedure abort, RAS 재조립 또는 별도
 링크 조건 중 어디서 빠졌는지는 추가 분류가 필요하다.
+
+동일 계측 HEX를 두 exact 보드에 다시 기록한 [후속 원본](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-followup.json)은
+completed 100, raw 100, counter gap 0, initiator/reflector STOP으로 **이번 실행 PASS**다.
+반복 가능한 정상 경로는 확인했으나 과거 누락의 발생 조건·복구 안전성은 아직
+미확인이다. 따라서 간헐 누락 원인을 해결했다고 선언하지 않는다.
 
 ## 관찰 high-water
 
@@ -78,6 +83,10 @@ CoC-only lifecycle의 결함을 닫지만 모든 periodic/PAwR 역할의 종료
 실기를 대체하지 않는다.
 
 CoC·CS의 stack, malloc arena, Zephyr heap, controller pool은 이번 측정만으로
-줄이지 않았다. CS counter 누락은 별도 원인 조사와 연속 100개 재검증이
-필요하다. ISO/Audio, DF, 보안·negative·장기 부하와 native 동등 조건
-비교도 아직 **HOLD**다. 이 기록은 P2 전체 완료나 W04/W05/W06 완료가 아니다.
+줄이지 않았다. CS 연속 100개는 후속 1회 PASS했지만 간헐 누락 원인·오류
+경로 재검증이 필요하다. 이 기록 시점에는 ISO/Audio, DF, 보안·negative·장기 부하와 native 동등 조건
+비교도 **HOLD**였다. 이후 [CIS·BIS 기본 payload](240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md),
+[unicast Audio](241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md),
+[DF beacon TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md)의 국소 계측은 추가됐지만
+CS 간헐 누락 원인·다른 Audio/DF RX·controller pool·동등 조건 비교는 여전히 열려 있다.
+이 기록은 P2 전체 완료나 W04/W05/W06 완료가 아니다.

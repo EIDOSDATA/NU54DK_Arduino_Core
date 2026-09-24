@@ -119,8 +119,15 @@ P2 GATT 512 B는 두 보드에서 adaptive 선언만으로 write/read·재연결
 수신 20/20, STOP 20을 통과했다. [238번 기록](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
 계측 분모와 실패 진단을 남겼다. 다른 역할의 실제 high-water와 controller pool은
 HOLD다. 후속 [239번 기록](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
-CoC 두 채널 512 B echo 100건은 PASS이고, CS raw 100개는 계측했지만 counter
-누락 1건으로 연속성 HOLD다. 이 관찰값만으로 P2 전체를 완료 처리하거나
+CoC 두 채널 512 B echo 100건은 PASS다. CS raw 100개는 계측 실행에서
+counter 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며
+간헐 누락 원인은 HOLD다. [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
+CIS·BIS 기본 100 SDU × 20세션도 각각 PASS했다.
+[241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
+unicast PCM/LC3/CIS 1,000 frame도 국소 PASS지만 다른 Audio 방향·
+broadcast와 DF RX는 별도다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
+DF beacon TX 20회는 국소 PASS했지만 IQ RX는 관찰하지 않았다.
+이 관찰값만으로 P2 전체를 완료 처리하거나
 stack/heap을 축소하지 않는다.
 `SPI.begin()` 사용자에게 SPI용 `prj.conf`를 수동 작성하게 하는 상태도
 최적화 완료가 아니다.

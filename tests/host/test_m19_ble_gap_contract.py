@@ -89,6 +89,17 @@ class M19BleGapContractTests(unittest.TestCase):
         self.assertIn("settings_load()", stack)
         self.assertIn("__weak void securityConnected", stack)
 
+    def test_role_specific_end_omits_unselected_advertising(self) -> None:
+        """! @brief central-only 역할의 종료가 광고·PAwR 구현을 링크하지 않습니다. """
+
+        source = SOURCE.read_text(encoding="utf-8")
+        body = source[source.index("void Device::end() noexcept"):
+                      source.index("nucode::ble::internal::l2capEnded();")]
+        self.assertIn("#if defined(CONFIG_BT_BROADCASTER)\n        if (stop_advertising)", body)
+        self.assertIn("#if defined(CONFIG_BT_PER_ADV_RSP)\n        endPawr();", body)
+        self.assertIn("#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)\n"
+                      "        endPeriodicAdvertising();", body)
+
     def test_stack_callbacks_only_enqueue_bounded_records(self) -> None:
         """! @brief Bluetooth callback에서 user callback·heap 사용을 금지합니다. """
 

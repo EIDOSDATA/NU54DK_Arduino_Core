@@ -379,17 +379,23 @@ namespace nucode::ble
 #if defined(CONFIG_BT_OBSERVER)
         const bool stop_scan = atomic_cas(&gapState().scanning_active, 1, 0);
 #endif
+#if defined(CONFIG_BT_BROADCASTER)
         const bool stop_advertising = atomic_cas(&gapState().advertising_active, 1, 0);
+#else
+        atomic_set(&gapState().advertising_active, 0);
+#endif
 #if defined(CONFIG_BT_OBSERVER)
         if (stop_scan)
         {
             static_cast<void>(bt_le_scan_stop());
         }
 #endif
+#if defined(CONFIG_BT_BROADCASTER)
         if (stop_advertising)
         {
             static_cast<void>(bt_le_adv_stop());
         }
+#endif
 #if defined(CONFIG_BT_PER_ADV_RSP)
         endPawr();
 #endif

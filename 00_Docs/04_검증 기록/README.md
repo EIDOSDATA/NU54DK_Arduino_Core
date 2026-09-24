@@ -18,7 +18,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 개발 소스 | M28·M29·M30 완료, M31 3/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
-| M31 메모리 최적화 | P0·P1 완료, P2 GATT·CoC 국소 PASS, CS 연속성·잔여 역할 HOLD | [P0 완료](222_M31_메모리_최적화_P0_완료.md) · [P1 완료](237_M31_메모리_최적화_P1_정적_저장소_완료.md) · [P2 GATT](238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md) · [P2 CoC/CS](239_M31_메모리_최적화_P2_CoC_CS_계측.md) |
+| M31 메모리 최적화 | P0·P1 완료, P2 GATT·CoC·CIS·BIS·unicast Audio·DF beacon TX·CS 후속 실행 국소 PASS, CS 간헐 누락 원인·DF RX 등 HOLD | [P0 완료](222_M31_메모리_최적화_P0_완료.md) · [P1 완료](237_M31_메모리_최적화_P1_정적_저장소_완료.md) · [P2 GATT](238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md) · [P2 CoC/CS](239_M31_메모리_최적화_P2_CoC_CS_계측.md) · [P2 CIS/BIS](240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md) · [P2 Audio](241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md) · [P2 DF TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md) |
 | M31-W04·W05 | 부분 실기와 실패 진단 보존·완료 아님 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 최신 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -30,7 +30,10 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
-| [239 — P2 CoC·CS 계측](239_M31_메모리_최적화_P2_CoC_CS_계측.md) | CoC 두 채널 512 B/100 echo PASS, CS raw 100개 계측·counter 누락 HOLD, 역할별 high-water |
+| [242 — P2 DF beacon TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md) | AoA CTE beacon 20회 TX start/stop·negative·high-water; IQ RX/각도는 HOLD |
+| [241 — P2 Audio unicast 실기](241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md) | 합성 PCM/LC3/CIS 1,000 frame 송신·복호화, drop 0, 양측 종료·high-water; 다른 Audio 조합은 별도 |
+| [240 — P2 CIS·BIS 실기](240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md) | 두 보드에서 각 100 SDU × 20세션, BIS 누락 0, 정적 예약·stack high-water; Audio 결합은 별도 |
+| [239 — P2 CoC·CS 계측](239_M31_메모리_최적화_P2_CoC_CS_계측.md) | CoC 두 채널 512 B/100 echo PASS, CS 후속 연속 100개 PASS·앞선 간헐 counter 누락 원인 HOLD, 역할별 high-water |
 | [238 — P2 GATT 512 B 실기](238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md) | adaptive loaderless·ATT transport 정정, 두 보드 20회 read/write·reconnect와 stack/heap 관찰; P2 다른 역할 HOLD |
 | [237 — P1 정적 저장소 완료](237_M31_메모리_최적화_P1_정적_저장소_완료.md) | 역할별 source·state·pool 분리와 선언 용량 연결, 전체 Host 1,481건; P2 실측은 별도 |
 | [226 — M31 메모리 최적화 P1 Resource Table 정렬](226_M31_메모리_최적화_P1_Resource_Table_정렬.md) | 48-slot·64-bit generation 유지, table 2,320→1,936 B, 누적 30,288 B 절감과 22,000 B 상한 |

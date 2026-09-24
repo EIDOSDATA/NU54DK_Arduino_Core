@@ -9,9 +9,15 @@ P2의 두 보드 generic GATT 512 B write/read·재연결 20회는 adaptive 선�
 PASS했다. loaderless adaptive partition과 큰 GATT payload의 ATT transport 생성도
 실기에서 발견한 결함을 정정했다. [238번 원본](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
 GATT 계측을 기록했다. [239번](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
-두 채널 CoC 512 B/100 echo는 PASS, CS 100 raw는 계측 완료이나 counter
-연속성 1건 누락으로 HOLD다. ISO/Audio·DF·controller pool 등은 아직 P2
-HOLD이므로 기존 크기를 줄이지 않는다. 아래 과거 인계 문장은 당시
+두 채널 CoC 512 B/100 echo는 PASS다. CS 100 raw는 앞선 실행에서 counter
+누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며 간헐 원인은 HOLD다.
+[240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
+CIS·BIS 기본 payload 각 100 SDU × 20세션을 PASS했다.
+[241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
+Audio unicast PCM/LC3/CIS 1,000 frame도 국소 PASS다.
+[242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)의
+DF beacon TX 20회도 PASS지만 IQ RX는 아니다. 다른 Audio 방향·broadcast,
+DF RX, controller pool 등은 P2 HOLD이므로 기존 크기를 줄이지 않는다. 아래 과거 인계 문장은 당시
 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
 
 아래는 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을
@@ -169,7 +175,10 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
    최악 부하에서 측정하고, 안전 여유가 확인된 항목만 조정합니다.
    GATT 512 B 두 보드 실기는 [238번](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>),
    CoC 512 B 두 채널은 [239번](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)에서
-   PASS했습니다. CS 연속성과 다른 역할의 미계측은 HOLD입니다.
+   PASS했습니다. CIS·BIS 기본 payload는 [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
+   각각 20세션 PASS했습니다. unicast Audio 1,000 frame은 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)에서
+   국소 PASS했습니다. DF beacon TX 20회도 [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
+   PASS했습니다. CS 간헐 누락 원인과 다른 Audio/DF RX의 미계측은 HOLD입니다.
    [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 측정·회귀 gate와
    [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 기능 선택·정정·구현 체크리스트가 기준입니다.
 2. 최적화 image에서 **W04·W05 잔여와 변경 영향**을 닫습니다. 독립 코드·분석은 병행하되
