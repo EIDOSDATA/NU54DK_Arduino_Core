@@ -44,7 +44,9 @@ SDK 계산·정렬 예약과 초기화 요구량 검사를 확인했다. 내부 
 문턱이 부적절함을 확인했다. 다만 Arduino의 정상 callback 뒤 누락과 동일
 설정 native 대비 RAM 비용은 아직 닫지 못했다. DF CTE-only sync 재시험은
 IQ 0, 반복 시 usage fault·수신 STOP 실패였고, 검증된 CS image로 sector
-복구해 100건·양측 STOP을 확인했다. **P2 전체는 미완료**다. 아래 과거 인계 문장은
+복구해 100건·양측 STOP을 확인했다. locator 원본의 active scan 단일
+재시험도 같은 timeout·IQ 0·수신 fault였고, 재실행 없이 native CS image로
+복구해 RAS 100건·양측 STOP을 확인했다. **P2 전체는 미완료**다. 아래 과거 인계 문장은
 당시 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
 
 다음은 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을

@@ -32,7 +32,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 기록 | 용도 |
 | --- | --- |
 | [251 — P2 CoC 재연결 메모리 계측](251_M31_P2_CoC_재연결_메모리_계측.md) | 두 채널 512 B echo·ACL 재연결 20/20과 서버 SWD reset 20/20, 각 실행 누적 echo 42건·양측 STOP, 역할별 stack/heap 고점유. 물리 전원 차단·controller 내부 pool은 별도 |
-| [250 — P2 native CS 비교·DF 재진단](250_M31_P2_native_CS_비교와_DF_재진단.md) | 고정 Nordic RAS 계측 1,000건의 gap·abort·busy 분모와 양측 STOP; DF CTE-only sync 재실패·fault 원본 및 복구. 전체 P2는 미완료 |
+| [250 — P2 native CS 비교·DF 재진단](250_M31_P2_native_CS_비교와_DF_재진단.md) | 고정 Nordic RAS 계측 1,000건의 gap·abort·busy 분모와 양측 STOP; DF CTE-only·active scan 각각 sync 실패·수신 fault 원본 및 정상 image 복구. 전체 P2는 미완료 |
 | [249 — P2 문서 정합성 감사](249_M31_P2_문서_정합성_감사.md) | 현재 진입점·P2 기록 수치/링크/판정 분리, Markdown 404개 gate와 Host 회귀 경계 |
 | [248 — P2 SDC pool 정적 경계](248_M31_P2_SDC_pool_정적_경계_감사.md) | 8개 역할 ELF의 SDK 계산·8-byte 정렬 pool 예약과 초기화 요구량 검사 확인; 내부 high-water·임의 축소는 미주장 |
 | [247 — P2 DF connectionless 재진단](247_M31_P2_DF_connectionless_재진단과_보류.md) | 연속 CTE 송신에서도 LL periodic sync 미수립, IQ 0·cleanup fault 원본과 보드 복구 보존; P2 RX HOLD |

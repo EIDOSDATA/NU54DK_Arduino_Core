@@ -92,11 +92,25 @@ PC `0x13412`는 `sys_dlist_remove`, LR `0x13461`은
 복구 실행에서 양측 STOP을 확인했다. 자동 unlock·mass erase·recover는
 사용하지 않았다.
 
-Zephyr upstream connectionless locator의 `sample.yaml`은 nRF54L15DK를
+Zephyr upstream connectionless locator와 beacon의 `sample.yaml`은 둘 다 nRF54L15DK를
 허용 플랫폼에 포함하지 않는다. 이 사실과 실패 HIL은 **현재 고정 SDK·이 보드
 조합의 지원 근거가 없다**는 뜻이지 칩 전체의 CTE RX 불가능 증명은 아니다.
 내부 Zephyr LL 연결형 IQ 20 report·1,640 sample의 [246번 PASS](246_M31_P2_DF_연결_IQ_메모리_계측.md)는
 별도이고, 이를 connectionless 또는 공개 Arduino/SDC RX PASS로 옮기지 않는다.
+
+후속으로 locator 원본의 **active scan** 설정까지 맞춘 별도 image를 빌드했다.
+고정 SDK·같은 보드의 target build는 `FLASH 89,788/RAM 47,100 B`로 PASS했고,
+receiver HEX SHA-256은
+`729e3be98337aed5188600a85bc3f688a1707a46ce83d59a8bdd18081755b357`다.
+연속 Arduino CTE beacon을 상대에 두고 **한 번** 실행했으나 광고 interval 960,
+RSSI -54 dBm, `SYNC_CREATE code=0` 다음 8.4초 timeout·IQ 0이었다.
+수신기에서 같은 `sys_dlist_remove` PC `0x13412` usage fault가 다시 발생해
+receiver STOP은 없었고 beacon STOP만 확인했다.
+[active-scan 실패 원본](evidence/m31-p2-native-comparison-2cf92933/df-connectionless-active-scan-01.json)은
+**FAIL**이며 active/passive scan 차이만으로 해결된다는 가설은 기각된다.
+실패한 image는 반복 실행하지 않았다. 두 보드를 이미 검증된 native CS
+image로 sector 복구한 뒤 [RAS 100건·gap 0·양측 STOP](evidence/m31-p2-native-comparison-2cf92933/native-ras-recovery-after-active-scan-100.json)을
+다시 확인했다. 이 복구 PASS는 DF 수신 성공을 의미하지 않는다.
 
 ## P2 잔여 판정
 

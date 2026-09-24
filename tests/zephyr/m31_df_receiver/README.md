@@ -14,6 +14,9 @@
 `z_abort_thread_timeout` usage fault가 발생했다. 이 fixture는 **실험용 FAIL
 재현 경로**이며 보드에 반복 실행하지 않는다. fault 시 자동 unlock·recover
 없이 확인된 image로 sector flash하고 별도 정상 종료를 검증한다.
+locator 원본처럼 active scan으로 바꾼 새 image의 단일 실기도 동일한 timeout·
+IQ 0·수신 usage fault였다. 이 구성 역시 **반복 실행 금지**다. fault 뒤
+검증된 native CS image의 100건·양측 STOP으로 보드를 복구했다.
 `CTE_ENABLE|code=0`만으로 IQ 수신을 판정하지 않는다. 1안테나 Host 제약 및
 판정 범위는 [W04 진단 기록](<../../../00_Docs/04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md>)과
 [250번 후속](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)에 둔다.

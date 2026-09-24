@@ -53,3 +53,7 @@ sync는 수립되지 않았다. 첫 실행은 양측 STOP·IQ 0, 반복 실행�
 수신 usage fault·STOP 미확인으로 **FAIL**이다. fault 뒤 검증된 CS image를
 다시 기록하고 100건·양측 STOP으로 보드 복구를 확인했다. 따라서 이 옵션
 추가를 해결책이나 RX PASS로 기록하지 않는다.
+추가 [250번 active-scan 단일 시험](250_M31_P2_native_CS_비교와_DF_재진단.md)도
+같은 timeout·IQ 0·수신 usage fault·STOP 실패였다. 즉 locator 원본의
+active scan으로 바꾸는 것만으로는 해결되지 않았고, 두 보드를 검증된 CS
+image로 복구해 RAS 100건·양측 STOP을 확인했다.

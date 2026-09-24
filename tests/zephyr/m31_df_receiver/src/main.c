@@ -148,7 +148,7 @@ int main(void)
     bt_le_scan_cb_register(&scan_callbacks);
     bt_le_per_adv_sync_cb_register(&sync_callbacks);
     const struct bt_le_scan_param scan_parameters = {
-        .type = BT_LE_SCAN_TYPE_PASSIVE,
+        .type = BT_LE_SCAN_TYPE_ACTIVE,
         .options = BT_LE_SCAN_OPT_FILTER_DUPLICATE,
         .interval = BT_GAP_SCAN_FAST_INTERVAL,
         .window = BT_GAP_SCAN_FAST_WINDOW,
