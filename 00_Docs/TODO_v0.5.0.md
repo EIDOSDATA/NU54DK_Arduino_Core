@@ -23,6 +23,9 @@ Arduino의 모든 누락과 DF connectionless fault가 해결된 것은 아니�
 [252번 CS 장절차](<04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>)는
 진단 image 두 가지에서 raw 각 10건을 통과했지만 실제 최대 98 step이라
 분할 RAS·256-step 용량 검증을 닫지 못했다.
+[253번 Audio broadcast 재가입](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
+source SWD reset 뒤 sink 명시적 재가입 20/20과 drop 0을 확인했으나
+최초 sync 실패와 다른 역할·부하의 최악값은 별도다.
 이후 구현 순서는 **메모리 최적화 → W04·W05 → W06 → W07 → W08·Windows 릴리스 준비**다.
 **HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 이번 문서 작업에서 재개하지 않는다.
 

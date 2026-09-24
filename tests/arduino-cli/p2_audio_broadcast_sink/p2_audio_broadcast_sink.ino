@@ -74,23 +74,54 @@ void loop()
     }
     BLEDevice.poll();
     audioSink.poll();
-    if (Serial.available() > 0 && Serial.read() == 's')
+    if (Serial.available() > 0)
     {
-        const std::uint32_t dropped = audioSink.droppedFrames();
-        const Error result = audioSink.end();
-        if ((result != Error::none) && (result != Error::not_started))
+        const int command = Serial.read();
+        if (command == 'm')
         {
-            Serial.println("P2_AUDIO_FAIL sink-end");
+            nucode::test::reportMemory("cycle");
+            Serial.print("P2_AUDIO_CYCLE_MEMORY decoded=");
+            Serial.print(decodedFrames);
+            Serial.print(" dropped=");
+            Serial.println(audioSink.droppedFrames());
         }
-        codec.end();
-        BLEDevice.end();
-        nucode::test::reportMemory("stopped");
-        Serial.print("P2_STOP role=audio-broadcast-sink decoded=");
-        Serial.print(decodedFrames);
-        Serial.print(" dropped=");
-        Serial.println(dropped);
-        finished = true;
-        return;
+        else if (command == 'r')
+        {
+            const Error stopped = audioSink.end();
+            if ((stopped != Error::none) && (stopped != Error::not_started))
+            {
+                Serial.println("P2_AUDIO_FAIL sink-rejoin-end");
+            }
+            else if (audioSink.begin(broadcastName, broadcastCode) != Error::none)
+            {
+                Serial.println("P2_AUDIO_FAIL sink-rejoin-begin");
+            }
+            else
+            {
+                announcedStreaming = false;
+                reportedFailure = false;
+                Serial.println("P2_AUDIO_REJOIN_REQUESTED");
+                nucode::test::reportMemory("rejoin");
+            }
+        }
+        else if (command == 's')
+        {
+            const std::uint32_t dropped = audioSink.droppedFrames();
+            const Error result = audioSink.end();
+            if ((result != Error::none) && (result != Error::not_started))
+            {
+                Serial.println("P2_AUDIO_FAIL sink-end");
+            }
+            codec.end();
+            BLEDevice.end();
+            nucode::test::reportMemory("stopped");
+            Serial.print("P2_STOP role=audio-broadcast-sink decoded=");
+            Serial.print(decodedFrames);
+            Serial.print(" dropped=");
+            Serial.println(dropped);
+            finished = true;
+            return;
+        }
     }
     if ((audioSink.stage() == BroadcastStage::failed) && !reportedFailure)
     {
@@ -123,6 +154,7 @@ void loop()
             Serial.print(audioSink.droppedFrames());
             Serial.print(" energy=");
             Serial.println(frameEnergy(pcm));
+            nucode::test::reportMemory("traffic");
         }
     }
     delay(1);

@@ -31,6 +31,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [253 — P2 Audio broadcast 재가입 메모리](253_M31_P2_Audio_broadcast_재가입_메모리_계측.md) | source SWD reset 뒤 sink 명시적 재가입 20/20·decode 2,107·drop 0·양측 STOP; 첫 sync 실패와 기존 session 상태 실패 보존, sink MPSL Work 여유 264 B |
 | [252 — P2 CS 장절차·반복 계수 경계](252_M31_P2_CS_장절차_반복계수_경계_진단.md) | 진단 image 두 종류의 raw 각 10건·양측 STOP, 실제 93~98 step으로 최대 256-step·RAS 분할 증거 미확보; 기본 image 100건 복구 |
 | [251 — P2 CoC 재연결 메모리 계측](251_M31_P2_CoC_재연결_메모리_계측.md) | 두 채널 512 B echo·ACL 재연결 20/20과 서버 SWD reset 20/20, 각 실행 누적 echo 42건·양측 STOP, 역할별 stack/heap 고점유. 물리 전원 차단·controller 내부 pool은 별도 |
 | [250 — P2 native CS 비교·DF 재진단](250_M31_P2_native_CS_비교와_DF_재진단.md) | 고정 Nordic RAS 계측 1,000건의 gap·abort·busy 분모와 양측 STOP; DF CTE-only·active scan 각각 sync 실패·수신 fault 원본 및 정상 image 복구. 전체 P2는 미완료 |

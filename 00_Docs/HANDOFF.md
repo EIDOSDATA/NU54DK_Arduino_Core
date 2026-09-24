@@ -28,7 +28,7 @@ drop 0·양측 STOP으로 국소 PASS다.
 [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)의
 DF beacon TX 20회도 PASS지만 IQ RX는 아니다. [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)의
 암호화 broadcast Audio 1,000 frame은 최종 image에서 8/8회 국소 PASS했으며,
-최초 sink 동기화 실패의 원인은 미확인이다. 다른 Audio 방향·복구,
+최초 sink 동기화 실패의 원인은 미확인이다. 다른 Audio 방향·다중 stream·오류 부하,
 공개 DF RX, controller pool 등은 P2 HOLD이므로 기존 크기를 줄이지 않는다.
 [246번 내부 DF RX 메모리 계측](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>)은
 연결형 LL 수신자의 정상 종료 stack 사용량만 확인했다.
@@ -51,6 +51,13 @@ IQ 0, 반복 시 usage fault·수신 STOP 실패였고, 검증된 CS image로 se
 최대 256-step·분할 RAS 검증은 아직 아니다. 기본 image 100건·양측 STOP으로
 되돌렸다. **P2 전체는 미완료**다. 아래 과거 인계 문장은
 당시 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
+
+[253번 Audio broadcast 재가입 계측](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
+source SWD reset 후 sink 공개 API 재가입 20/20, 누적 decode 2,107·drop 0,
+양측 STOP과 sink 한 수명의 stack high-water를 확인했다. 최초 sync 실패
+`native=-31`과 매 reset 뒤 기존 session의 `native=-8` 상태를 원본에서
+보존했다. sink MPSL Work의 관찰 여유가 264 B여서 stack을 줄이지 않았다.
+이 결과를 P2 전체·다중 stream·물리 전원 차단 PASS로 승격하지 않는다.
 
 다음은 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을
 마일스톤별로 정리**했으며, 당시 재개 기준은 `main`이었다. 그 시점에는 후속 브랜치
@@ -212,7 +219,9 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
    PASS했습니다. CS 장기 counter 누락, 공개 DF RX와 다른 Audio 부하는 HOLD입니다.
    암호화 broadcast Audio는 [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)에서
    1,000 frame·drop 0을 최종 image로 8/8회, 연속 10,000 frame을 한 번 통과했으나
-   최초 동기화 실패 원인은 HOLD입니다. CS·DF의 최신 실패 경계는 각각
+   최초 동기화 실패 원인은 HOLD입니다. 후속 [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
+   source SWD reset 뒤 재가입 20/20을 두 번 독립 확인했으나 다른 Audio 부하는 남습니다.
+   CS·DF의 최신 실패 경계는 각각
    [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)·
    [247번](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>)을 따릅니다.
    [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 측정·회귀 gate와

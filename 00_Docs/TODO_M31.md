@@ -150,7 +150,10 @@ drop 0·양측 STOP으로 국소 PASS지만 다른 Audio 방향·
 암호화 broadcast LC3/BIS 1,000 frame은 최종 image로 8/8회 국소 PASS했다.
 동일 image의 연속 10,000 frame도 drop 0·양측 STOP으로 국소 PASS했다.
 이 단일 장시간 실행으로 sync loss·재가입을 입증하지 않으며 최초 sink
-동기화 실패 원인은 미확인이다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
+동기화 실패 원인은 미확인이다. 후속 [253번 재가입 메모리 계측](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
+source SWD reset 뒤 sink 공개 API 재가입 20/20, 누적 LC3 decode 2,107·drop 0·양측
+STOP을 확인했다. 매 reset의 기존 sink session 실패 보고는 복구 성공과 구별한다.
+sink MPSL Work 관찰 여유는 264 B라 stack을 줄이지 않는다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
 DF beacon TX 20회는 국소 PASS했지만 해당 실행에서 IQ RX는 관찰하지 않았다.
 후속 [244번](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)에서 Zephyr LL
 내부 연결형 IQ report 20건·1,640 sample과 cleanup을 확인했다. 이는
@@ -181,7 +184,7 @@ P2의 남은 gate는 다음처럼 분리한다.
 | --- | --- |
 | DF RX | 연결형 Zephyr LL 내부 IQ callback·sample 20건과 정상 종료 뒤 stack high-water는 확인. connectionless sync는 CTE 전용 옵션·active scan을 써도 미수립·IQ 0이며 수신 fault·STOP 실패를 보존. Arduino/SDC RX 적용성, 오류/복구·장기 high-water는 잔여. Beacon TX로 대체 불가. [246번](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 | CS | 일부 누락은 controller의 `NO_CS_SYNC_RECEIVED`, 나머지는 정상 완료 뒤 RAS/단일 로컬 버퍼 결합 경로로 분리. Nordic native 계측 1,000 유효 RAS에서도 abort 2·busy 2·gap 4로 무조건 0-gap 판정은 부적절함을 확인. 장절차 진단은 실제 93~98 step이라 최대 256-step·분할 RAS 증거가 아니다. Arduino 정상 callback 뒤 누락의 정확한 원인, 최대 procedure·fragmented RAS·복구 경로의 용량/연속성은 잔여. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) · [252번](<04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>) |
-| Audio/ISO | 다른 방향·다중 stream/ASE, sync loss·암호화 오류·재가입과 장기 부하의 역할별 최악값 |
+| Audio/ISO | 암호화 broadcast source SWD reset 뒤 sink 공개 API 재가입 20/20·drop 0은 확인. 첫 sync 실패 원인은 미확인. 다른 방향·다중 stream/ASE, 암호화 오류·물리 전원 차단과 장기 부하의 역할별 최악값은 별도. [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) |
 | CoC 복구 | ACL 명시적 disconnect/reconnect 20/20과 서버 SWD reset 20/20, 두 채널 512 B echo·stack/heap 관찰은 확인. 물리 전원 차단·credit 고갈·다중 link의 오류/복구와 최악 고점유는 별도. [251번](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
 | SDC/stack/heap | SDK 계산·8-byte 정렬 pool과 초기화 요구량 검사 경계는 확인. controller 내부 high-water는 미노출이며 오류·최악 부하 stack/heap 안전 여유는 별도. [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) |
 | native 비교 | 고정 Nordic 원본/계측 sample을 동일 board에서 build하고 RAS gap 경로를 비교했으나 DSP·stack·malloc·로그·payload 조건이 달라 Arduino API 비용은 아직 산정 불가. 동일 기능·설정의 native 대비 FLASH/RAM 항목별 차이가 잔여. [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |

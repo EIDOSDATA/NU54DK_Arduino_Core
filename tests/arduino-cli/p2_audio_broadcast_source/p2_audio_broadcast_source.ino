@@ -72,20 +72,30 @@ void loop()
         return;
     }
     BLEDevice.poll();
-    if (Serial.available() > 0 && Serial.read() == 's')
+    if (Serial.available() > 0)
     {
-        const std::uint32_t sent = audioSource.sentFrames();
-        if (audioSource.end() != Error::none)
+        const int command = Serial.read();
+        if (command == 'm')
         {
-            Serial.println("P2_AUDIO_FAIL source-end");
+            nucode::test::reportMemory("cycle");
+            Serial.print("P2_AUDIO_CYCLE_MEMORY sent=");
+            Serial.println(audioSource.sentFrames());
         }
-        codec.end();
-        BLEDevice.end();
-        nucode::test::reportMemory("stopped");
-        Serial.print("P2_STOP role=audio-broadcast-source sent=");
-        Serial.println(sent);
-        finished = true;
-        return;
+        else if (command == 's')
+        {
+            const std::uint32_t sent = audioSource.sentFrames();
+            if (audioSource.end() != Error::none)
+            {
+                Serial.println("P2_AUDIO_FAIL source-end");
+            }
+            codec.end();
+            BLEDevice.end();
+            nucode::test::reportMemory("stopped");
+            Serial.print("P2_STOP role=audio-broadcast-source sent=");
+            Serial.println(sent);
+            finished = true;
+            return;
+        }
     }
     if (!audioSource.streaming())
     {

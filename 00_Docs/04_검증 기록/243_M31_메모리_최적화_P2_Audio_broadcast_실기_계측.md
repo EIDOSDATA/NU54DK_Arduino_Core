@@ -71,3 +71,8 @@ stack·heap·SDC pool을 줄이지 않았다. sync loss·재동기화·wrong cod
 다중 stream/ASE, 장기 부하와 native 동등 조건 비교는 별도다. W03의
 과거 기능 검증도 이 계측 image의 메모리 최악값을 대신하지 않는다.
 P2 전체와 W06은 계속 **HOLD**다.
+
+후속 [253번 source reset·sink 재가입 메모리 계측](253_M31_P2_Audio_broadcast_재가입_메모리_계측.md)은
+명시적 재가입 20/20·누적 decode 2,107·drop 0·양측 STOP을 확인했다.
+첫 sync 실패와 reset 시 기존 session의 실패 상태는 원본에서 그대로 보존한다.
+이는 이 기록의 단일 stream 정상 부하를 보완하지만 P2 전체 완료는 아니다.
