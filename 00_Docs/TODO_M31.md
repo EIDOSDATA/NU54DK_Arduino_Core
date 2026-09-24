@@ -117,20 +117,32 @@ stack/heap/controller pool과 burst queue depth는 P2 실물 high-water 및 오�
 부하를 측정한 뒤에만 조정한다.
 P2 GATT 512 B는 두 보드에서 adaptive 선언만으로 write/read·재연결 20/20,
 수신 20/20, STOP 20을 통과했다. [238번 기록](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
-계측 분모와 실패 진단을 남겼다. 다른 역할의 실제 high-water와 controller pool은
-HOLD다. 후속 [239번 기록](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
+계측 분모와 실패 진단을 남겼다. 당시 미계측 역할과 controller pool은
+HOLD였다. 후속 [239번 기록](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
 CoC 두 채널 512 B echo 100건은 PASS다. CS raw 100개는 계측 실행에서
 counter 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며
 간헐 누락 원인은 HOLD다. [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
 CIS·BIS 기본 100 SDU × 20세션도 각각 PASS했다.
 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
 unicast PCM/LC3/CIS 1,000 frame도 국소 PASS지만 다른 Audio 방향·
-broadcast와 DF RX는 별도다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
+복구와 DF RX는 별도다. [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)의
+암호화 broadcast LC3/BIS 1,000 frame은 최종 image로 8/8회 국소 PASS했으나
+최초 sink 동기화 실패 원인은 미확인이다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
 DF beacon TX 20회는 국소 PASS했지만 IQ RX는 관찰하지 않았다.
 이 관찰값만으로 P2 전체를 완료 처리하거나
 stack/heap을 축소하지 않는다.
 `SPI.begin()` 사용자에게 SPI용 `prj.conf`를 수동 작성하게 하는 상태도
 최적화 완료가 아니다.
+
+P2의 남은 gate는 다음처럼 분리한다.
+
+| 축 | 아직 필요한 증거 |
+| --- | --- |
+| DF RX | connectionless/connected의 실제 Host IQ callback·sample과 오류/종료 high-water; beacon TX로 대체 불가 |
+| CS | 간헐 counter 누락의 원인 분류, 최대 procedure·fragmented RAS·복구 경로의 용량/연속성 |
+| Audio/ISO | 다른 방향·다중 stream/ASE, sync loss·암호화 오류·재가입과 장기 부하의 역할별 최악값 |
+| SDC/stack/heap | SDK controller 구성 요구량과 정적 pool·정렬 검증, 관찰되지 않은 내부 사용을 여유로 오인하지 않는 안전 근거 |
+| native 비교 | 동일 SDK/board/controller·기능·payload·로그·계측 조건의 기능 동등 native 대비 FLASH/RAM 항목별 차이 |
 
 ## 3. W03 세부 완료 상태 — 11/11
 

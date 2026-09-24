@@ -16,7 +16,9 @@ CIS·BIS 기본 payload 각 100 SDU × 20세션을 PASS했다.
 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
 Audio unicast PCM/LC3/CIS 1,000 frame도 국소 PASS다.
 [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)의
-DF beacon TX 20회도 PASS지만 IQ RX는 아니다. 다른 Audio 방향·broadcast,
+DF beacon TX 20회도 PASS지만 IQ RX는 아니다. [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)의
+암호화 broadcast Audio 1,000 frame은 최종 image에서 8/8회 국소 PASS했으며,
+최초 sink 동기화 실패의 원인은 미확인이다. 다른 Audio 방향·복구,
 DF RX, controller pool 등은 P2 HOLD이므로 기존 크기를 줄이지 않는다. 아래 과거 인계 문장은 당시
 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
 
@@ -179,6 +181,8 @@ M31은 **3/8 · not_completed**입니다. W03 완료나 일부 IQ 수신을 W04/
    각각 20세션 PASS했습니다. unicast Audio 1,000 frame은 [241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)에서
    국소 PASS했습니다. DF beacon TX 20회도 [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
    PASS했습니다. CS 간헐 누락 원인과 다른 Audio/DF RX의 미계측은 HOLD입니다.
+   암호화 broadcast Audio는 [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)에서
+   1,000 frame·drop 0을 최종 image로 8/8회 통과했으나 최초 동기화 실패 원인은 HOLD입니다.
    [219번](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의 측정·회귀 gate와
    [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 기능 선택·정정·구현 체크리스트가 기준입니다.
 2. 최적화 image에서 **W04·W05 잔여와 변경 영향**을 닫습니다. 독립 코드·분석은 병행하되

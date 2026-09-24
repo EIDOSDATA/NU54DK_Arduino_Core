@@ -97,8 +97,9 @@ class M19BleGapContractTests(unittest.TestCase):
                       source.index("nucode::ble::internal::l2capEnded();")]
         self.assertIn("#if defined(CONFIG_BT_BROADCASTER)\n        if (stop_advertising)", body)
         self.assertIn("#if defined(CONFIG_BT_PER_ADV_RSP)\n        endPawr();", body)
+        self.assertIn("void endPeriodicAdvertising() noexcept __attribute__((weak));", source)
         self.assertIn("#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)\n"
-                      "        endPeriodicAdvertising();", body)
+                      "        if (endPeriodicAdvertising != nullptr)", body)
 
     def test_stack_callbacks_only_enqueue_bounded_records(self) -> None:
         """! @brief Bluetooth callback에서 user callback·heap 사용을 금지합니다. """

@@ -6,6 +6,10 @@
 #include "internal/gap/GapInternal.h"
 namespace nucode::ble::internal::gap
 {
+#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)
+    /** @brief 주기 광고 facade가 링크된 역할에서만 종료 hook을 제공합니다. */
+    void endPeriodicAdvertising() noexcept __attribute__((weak));
+#endif
     namespace
     {
         K_MSGQ_DEFINE(gap_event_queue, sizeof(GapEventRecord),
@@ -400,7 +404,10 @@ namespace nucode::ble
         endPawr();
 #endif
 #if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)
-        endPeriodicAdvertising();
+        if (endPeriodicAdvertising != nullptr)
+        {
+            endPeriodicAdvertising();
+        }
 #endif
         endExtendedAdvertising();
         nucode::ble::internal::l2capEnded();
