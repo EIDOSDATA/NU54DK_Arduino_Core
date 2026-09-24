@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief 암호화 broadcast LC3/BIS 1,000 frame과 메모리 high-water를 기록합니다. """
+"""! @brief 암호화 broadcast LC3/BIS frame과 메모리 high-water를 기록합니다. """
 
 from __future__ import annotations
 
@@ -25,9 +25,13 @@ SINK_STOP = re.compile(r"^P2_STOP role=audio-broadcast-sink decoded=(\d+) droppe
 
 
 def run(arguments: argparse.Namespace) -> dict:
-    """! @brief 두 exact 보드의 1,000 frame·drop 0·양쪽 종료를 검증합니다. """
+    """! @brief 두 exact 보드의 목표 frame·drop 0·양쪽 종료를 검증합니다. """
 
     roles = ("sink", "source")
+    if arguments.frames <= 0 or arguments.frames % 100 != 0:
+        raise ValueError("--frames must be a positive multiple of 100")
+    if arguments.timeout <= 0:
+        raise ValueError("--timeout must be positive")
     if arguments.sink_uid.lower() == arguments.source_uid.lower():
         raise RuntimeError("two distinct probes are required")
     for role in roles:
@@ -47,7 +51,9 @@ def run(arguments: argparse.Namespace) -> dict:
 
     evidence = {
         "schema_version": 1,
-        "case": "m31-p2-audio-broadcast-lc3-1000-frame-memory",
+        "case": f"m31-p2-audio-broadcast-lc3-{arguments.frames}-frame-memory",
+        "target_frames": arguments.frames,
+        "timeout_s": arguments.timeout,
         "image_sha256": {
             role: hashlib.sha256(getattr(arguments, f"{role}_hex").read_bytes()).hexdigest()
             for role in roles
@@ -99,7 +105,7 @@ def run(arguments: argparse.Namespace) -> dict:
         read_lines(streams, pending, lines)
         active_start["sink"] = len(lines["sink"])
 
-        deadline = time.monotonic() + 180.0
+        deadline = time.monotonic() + arguments.timeout
         while time.monotonic() < deadline:
             read_lines(streams, pending, lines)
             current = {role: lines[role][active_start[role]:] for role in roles}
@@ -121,13 +127,13 @@ def run(arguments: argparse.Namespace) -> dict:
                 raise RuntimeError("broadcast frame dropped or invalid PCM")
             evidence["sent"] = sent[-1] if sent else 0
             evidence["decoded"] = decoded[-1][0] if decoded else 0
-            if evidence["sent"] >= 1000 and evidence["decoded"] >= 1000:
+            if evidence["sent"] >= arguments.frames and evidence["decoded"] >= arguments.frames:
                 break
-            if evidence["sent"] >= 3000 and evidence["decoded"] < 1000:
+            if evidence["sent"] >= arguments.frames + 2000 and evidence["decoded"] < arguments.frames:
                 raise RuntimeError("broadcast sink did not keep up with source")
             time.sleep(0.02)
-        if evidence["sent"] < 1000 or evidence["decoded"] < 1000:
-            raise TimeoutError("1,000 broadcast LC3 frames were not observed")
+        if evidence["sent"] < arguments.frames or evidence["decoded"] < arguments.frames:
+            raise TimeoutError("target broadcast LC3 frames were not observed")
 
         sink_stop_index = len(lines["sink"])
         streams["sink"].write(b"s")
@@ -144,7 +150,8 @@ def run(arguments: argparse.Namespace) -> dict:
                      if (match := SINK_STOP.fullmatch(line))]
         if not source_stop or not sink_stop:
             raise RuntimeError("broadcast stop counters are missing")
-        if int(source_stop[-1]) < 1000 or int(sink_stop[-1][0]) < 1000:
+        if (int(source_stop[-1]) < arguments.frames or
+                int(sink_stop[-1][0]) < arguments.frames):
             raise RuntimeError("broadcast stop counters are below the load")
         evidence["dropped"] = int(sink_stop[-1][1])
         if evidence["dropped"] != 0:
@@ -184,6 +191,8 @@ def main() -> None:
         parser.add_argument(f"--{role}-aux", required=True)
         parser.add_argument(f"--{role}-hex", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--frames", type=int, default=1000)
+    parser.add_argument("--timeout", type=float, default=180.0)
     evidence = run(parser.parse_args())
     print(f"P2 Audio broadcast memory HIL: {evidence['result']}")
     if evidence["result"] != "PASS":

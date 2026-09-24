@@ -127,7 +127,9 @@ CIS·BIS 기본 100 SDU × 20세션도 각각 PASS했다.
 unicast PCM/LC3/CIS 1,000 frame도 국소 PASS지만 다른 Audio 방향·
 복구와 DF RX는 별도다. [243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)의
 암호화 broadcast LC3/BIS 1,000 frame은 최종 image로 8/8회 국소 PASS했으나
-최초 sink 동기화 실패 원인은 미확인이다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
+동일 image의 연속 10,000 frame도 drop 0·양측 STOP으로 국소 PASS했다.
+이 단일 장시간 실행으로 sync loss·재가입을 입증하지 않으며 최초 sink
+동기화 실패 원인은 미확인이다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
 DF beacon TX 20회는 국소 PASS했지만 IQ RX는 관찰하지 않았다.
 이 관찰값만으로 P2 전체를 완료 처리하거나
 stack/heap을 축소하지 않는다.

@@ -22,8 +22,9 @@ registry, adaptive overlay와 builder 핵심 파일은 실제 저장소와 줄 �
 | 첫 source/sink image | **FAIL 보존**. source는 송신을 시작했으나 sink가 `native=-31`을 보고하고 decode 0에서 멈췄다. 마지막 단계 정보가 없어 원인을 단정하지 않는다. | [최초 실패 UART·image/probe hash](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000.json) |
 | sink에 실패 단계 출력 추가 후 실행 | **국소 PASS**. source 1,000 frame 송신, sink 1,000 frame decode, drop 0, PCM energy 양수, 양측 STOP. | [첫 PASS UART·image/probe hash](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-step.json) |
 | 동일 최종 image 7회 추가 실행 | **7/7 국소 PASS**. 각 실행에서 source·sink 1,000 frame 이상, drop 0, 양측 STOP. 최종 image 합계 8/8. | [2회차](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-repeat.json) · [3회차](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-third.json) · [4회차](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-run-4.json) · [5회차](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-run-5.json) · [6회차](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-run-6.json) · [7회차](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-run-7.json) · [8회차](evidence/m31-p2-audio-7c918d79/broadcast-lc3-1000-run-8.json) |
+| 동일 최종 image 연속 10,000 frame | **국소 PASS**. source 최종 10,110 전송, sink 10,002 decode, drop 0, 양측 STOP. 100-frame 간격 계수는 100부터 10,000까지 누락·중복이 없었다. | [10,000 frame UART·image/probe hash](evidence/m31-p2-audio-2ae8ff1c/broadcast-lc3-10000.json) |
 
-첫 실패의 `-31`은 후속 8회 PASS로 소급해 삭제하지 않는다. sink
+첫 실패의 `-31`은 후속 8회 단기·1회 연속 부하 PASS로 소급해 삭제하지 않는다. sink
 실패 단계 출력 외 firmware 의도 변경은 없었지만 재플래시·시간·무선 환경도
 달라졌으므로 원인 규명이나 장기 안정성 PASS는 아니다. 최종 8회 종료
 직전 집계는 source 1,086~1,134, sink 1,000~1,002 frame이고 drop은 모두 0이다.
@@ -61,7 +62,11 @@ adaptive 최종 빌드와 Host 계약 테스트로 확인했으며, 호출하지
 
 libc malloc은 양쪽 모두 종료 시점 `free=8108`, `allocated=0`, 관찰
 peak 0 B다. `sdc_mempool`은 정적 예약이지 controller 내부 high-water가
-아니다. 암호화 방송 한 stream의 정상 수명 8회와 최초 실패 한 회만으로
+아니다. 후속 10,000-frame 실행에서도 위 표의 stack high-water를 넘지
+않았고 양쪽 malloc 종료 값이 같았다. 실행기는 기본 1,000 frame을 유지하되
+`--frames`(100의 양수 배수)와 `--timeout`으로 연속 부하를 명시한다.
+약 10,000 frame의 단일 연속 실행은 장기간 안정성·sync loss·재가입의
+증거가 아니다. 암호화 방송 한 stream의 정상 수명과 최초 실패 한 회만으로
 stack·heap·SDC pool을 줄이지 않았다. sync loss·재동기화·wrong code,
 다중 stream/ASE, 장기 부하와 native 동등 조건 비교는 별도다. W03의
 과거 기능 검증도 이 계측 image의 메모리 최악값을 대신하지 않는다.
