@@ -120,3 +120,5 @@ fragmented RAS, RF abort/peer loss 후 복구의 peak와 Arduino 정상 callback
 유지한다. Audio/ISO 다중 역할·오류/재가입·최악 부하와 동일 설정 native 비용
 비교가 끝나지 않았고 SDC 내부 실행 중 high-water는 노출되지 않는다.
 따라서 **P2 전체 완료와 stack/heap/controller pool 축소를 선언하지 않는다**.
+후속 [252번 장절차·반복 계수 진단](252_M31_P2_CS_장절차_반복계수_경계_진단.md)도
+실제 93~98 step에 머물러 최대 256-step·분할 RAS를 닫지 못했다.

@@ -46,7 +46,10 @@ SDK 계산·정렬 예약과 초기화 요구량 검사를 확인했다. 내부 
 IQ 0, 반복 시 usage fault·수신 STOP 실패였고, 검증된 CS image로 sector
 복구해 100건·양측 STOP을 확인했다. locator 원본의 active scan 단일
 재시험도 같은 timeout·IQ 0·수신 fault였고, 재실행 없이 native CS image로
-복구해 RAS 100건·양측 STOP을 확인했다. **P2 전체는 미완료**다. 아래 과거 인계 문장은
+복구해 RAS 100건·양측 STOP을 확인했다. [252번 CS 장절차 진단](<04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>)은
+두 진단 image에서 raw 각 10건을 통과했지만 실제 93~98 step에 머물러
+최대 256-step·분할 RAS 검증은 아직 아니다. 기본 image 100건·양측 STOP으로
+되돌렸다. **P2 전체는 미완료**다. 아래 과거 인계 문장은
 당시 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
 
 다음은 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을
@@ -155,7 +158,7 @@ fresh build와 실제 Peripheral/Central adaptive·full compile을 통과했습�
 | M31-W03 | LE Audio 11/11 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [closure audit](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
 | 메모리 최적화 | **P0·P1 완료, P2 진행 중.** 정적 예약은 Core SPI 50,877→20,589 B, CoC-only 91,037→70,081 B, GATT 1×1 server fixture 113,218→48,581 B로 줄었다. CoC 명시적 ACL 재연결 20/20까지 계측했지만 최악 부하·전체 high-water·native 동등 비교는 잔여다. | [계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2 세부](TODO_M31.md) |
 | M31-W04 DF | 미완료. 내부 LL 연결형 IQ 20 report·1,640 sample과 cleanup은 국소 PASS다. connectionless 재진단은 sync 실패·IQ 0 및 cleanup fault를 보존했다. 공개 Arduino/SDC RX·각도는 미검증이다. | [연결형 244](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [메모리 246](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [connectionless 247](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>) |
-| M31-W05 CS | 미완료. secure raw RAS 100개·stop/restart·재연결 20/20은 확인했으나 장기 1,000건에는 counter 누락이 남는다. wrong-key·최대 procedure·fragmented RAS는 잔여다. | [비암호화 거부 217](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [복구 218](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [장기 245](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) |
+| M31-W05 CS | 미완료. secure raw RAS 100개·stop/restart·재연결 20/20은 확인했으나 장기 1,000건에는 counter 누락이 남는다. 장절차 진단 두 종류도 실제 93~98 step이라 wrong-key·최대 256-step·fragmented RAS는 잔여다. | [비암호화 거부 217](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [복구 218](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [장기 245](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [장절차 252](<04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>) |
 | M31-W06~W08 | 미착수. 메모리 감사는 W06 기능 완료가 아님 | [M31 TODO](TODO_M31.md) |
 | M32 / M33 | 0/12 · 0/8, 후속 버전 | [M32 TODO](TODO_M32.md) · [M33 TODO](TODO_M33.md) |
 | Host | W01~W03 완료 3/8, W04~W08 보류 | [후속 다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
