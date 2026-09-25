@@ -91,6 +91,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `p2_cs_memory_run.py` | Arduino raw RAS 유효 step·counter 연속성·양측 STOP 판정 | 두 exact NU54DK, 252번 진단 빌드는 93~98 step으로 최대 256-step·RAS 분할 증거가 아님, [252번 기록](<../../../00_Docs/04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>) |
 | `p2_coc_recovery_memory_run.py` | 두 채널 512 B echo를 유지한 ACL disconnect/reconnect 또는 서버 SWD reset 각 20회·양측 STOP·stack/heap 고점유 검증 | 두 exact NU54DK, 현재 저장소 adaptive client/server image, `--recovery-mode peer-reset`은 물리 전원 차단이 아님, [251번 기록](<../../../00_Docs/04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
 | `p2_audio_broadcast_rejoin_memory_run.py` | 암호화 LC3/BIS source SWD reset 뒤 sink 공개 API 재가입·100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; initial sync 실패는 최대 3회만 명시적 재가입, [253번 기록](<../../../00_Docs/04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) |
+| `p2_audio_unicast_peer_reset_memory_run.py` | LC3/CIS source SWD reset 뒤 sink 지속 실행·공개 API 재연결·누적 100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; [254번 기록](<../../../00_Docs/04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) |
 | `p2_df_connectionless_rx_run.py` | LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 | 현재 고정 SDK에서 CTE-only·active scan 모두 IQ 0·수신 fault; **PASS 경로가 아니며 반복 실행 금지**, [250번 실패 원본](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |

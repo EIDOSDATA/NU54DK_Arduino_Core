@@ -150,7 +150,7 @@ void loop()
     if (restartScan && !BLEConnection.connected() && !BLEConnection.connecting())
     {
         restartScan = false;
-        if (!BLEScan.startExtended(true, false, false))
+        if (!BLEScan.running() && !BLEScan.start(true))
         {
             restartScan = true;
             Serial.println("CAP scan restart failed");

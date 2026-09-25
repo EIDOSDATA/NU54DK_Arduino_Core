@@ -26,6 +26,10 @@ Arduino의 모든 누락과 DF connectionless fault가 해결된 것은 아니�
 [253번 Audio broadcast 재가입](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
 source SWD reset 뒤 sink 명시적 재가입 20/20과 drop 0을 확인했으나
 최초 sync 실패와 다른 역할·부하의 최악값은 별도다.
+[254번 Audio unicast 재연결](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>)은
+adaptive source 재연결 scan 결함을 수정하고 source SWD reset 20/20,
+sink 누적 decode 2,933·drop 0을 확인했다. 앞선 실패 두 건과 다른
+방향·다중 ASE·최악 부하는 별도이므로 P2 완료로 승격하지 않는다.
 이후 구현 순서는 **메모리 최적화 → W04·W05 → W06 → W07 → W08·Windows 릴리스 준비**다.
 **HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 이번 문서 작업에서 재개하지 않는다.
 

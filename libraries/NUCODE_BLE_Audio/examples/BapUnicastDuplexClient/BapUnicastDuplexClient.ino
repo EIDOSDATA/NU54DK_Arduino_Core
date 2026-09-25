@@ -184,7 +184,7 @@ void loop()
     if (restartScan && !BLEConnection.connected() && !BLEConnection.connecting())
     {
         restartScan = false;
-        if (!BLEScan.startExtended(true, false, false))
+        if (!BLEScan.running() && !BLEScan.start(true))
         {
             Serial.println("LE Audio scan restart failed");
         }

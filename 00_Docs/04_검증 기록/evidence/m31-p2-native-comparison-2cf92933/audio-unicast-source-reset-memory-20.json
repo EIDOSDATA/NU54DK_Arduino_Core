@@ -1,0 +1,1089 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-audio-unicast-source-reset-sink-memory",
+  "cycles_target": 20,
+  "cycles_completed": 20,
+  "frames_per_session": 100,
+  "image_sha256": {
+    "sink": "25d8576233257bdaa74113ffc7065ad034360ff6812746f13eb1c0422a253a5e",
+    "source": "1fcd6f8cb37539c1edf6ce62db889ad31a7630d5a1507c0432180fd7e030981d"
+  },
+  "probe_uid_sha256": {
+    "sink": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "source": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "sink": {
+      "app": "COM10",
+      "aux": "COM11"
+    },
+    "source": {
+      "app": "COM13",
+      "aux": "COM12"
+    }
+  },
+  "start": {
+    "sink": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "source": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "source_restart": [
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  ],
+  "sessions": [
+    {
+      "decoded": 100,
+      "source_sent": 100
+    },
+    {
+      "decoded": 200,
+      "source_sent": 100
+    },
+    {
+      "decoded": 300,
+      "source_sent": 100
+    },
+    {
+      "decoded": 500,
+      "source_sent": 100
+    },
+    {
+      "decoded": 600,
+      "source_sent": 100
+    },
+    {
+      "decoded": 800,
+      "source_sent": 100
+    },
+    {
+      "decoded": 900,
+      "source_sent": 100
+    },
+    {
+      "decoded": 1000,
+      "source_sent": 100
+    },
+    {
+      "decoded": 1200,
+      "source_sent": 100
+    },
+    {
+      "decoded": 1300,
+      "source_sent": 100
+    },
+    {
+      "decoded": 1500,
+      "source_sent": 100
+    },
+    {
+      "decoded": 1600,
+      "source_sent": 100
+    },
+    {
+      "decoded": 1700,
+      "source_sent": 100
+    },
+    {
+      "decoded": 1900,
+      "source_sent": 100
+    },
+    {
+      "decoded": 2000,
+      "source_sent": 100
+    },
+    {
+      "decoded": 2200,
+      "source_sent": 100
+    },
+    {
+      "decoded": 2300,
+      "source_sent": 100
+    },
+    {
+      "decoded": 2400,
+      "source_sent": 100
+    },
+    {
+      "decoded": 2600,
+      "source_sent": 100
+    },
+    {
+      "decoded": 2700,
+      "source_sent": 100
+    },
+    {
+      "decoded": 2900,
+      "source_sent": 100
+    }
+  ],
+  "lines": {
+    "sink": [
+      "P2_READY role=audio-sink",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=1020",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_ADVERTISING role=sink",
+      "P2_AUDIO_DECODED frames=100 dropped=0 energy=941215",
+      "P2_AUDIO_DECODED frames=200 dropped=0 energy=912221",
+      "P2_AUDIO_DECODED frames=300 dropped=0 energy=1100738",
+      "P2_AUDIO_DECODED frames=400 dropped=0 energy=920902",
+      "P2_AUDIO_DECODED frames=500 dropped=0 energy=919231",
+      "P2_AUDIO_DECODED frames=600 dropped=0 energy=1107647",
+      "P2_AUDIO_DECODED frames=700 dropped=0 energy=935732",
+      "P2_AUDIO_DECODED frames=800 dropped=0 energy=1016634",
+      "P2_AUDIO_DECODED frames=900 dropped=0 energy=925136",
+      "P2_AUDIO_DECODED frames=1000 dropped=0 energy=914314",
+      "P2_AUDIO_DECODED frames=1100 dropped=0 energy=1084378",
+      "P2_AUDIO_DECODED frames=1200 dropped=0 energy=1151325",
+      "P2_AUDIO_DECODED frames=1300 dropped=0 energy=1170903",
+      "P2_AUDIO_DECODED frames=1400 dropped=0 energy=1091861",
+      "P2_AUDIO_DECODED frames=1500 dropped=0 energy=1163639",
+      "P2_AUDIO_DECODED frames=1600 dropped=0 energy=1065263",
+      "P2_AUDIO_DECODED frames=1700 dropped=0 energy=1070661",
+      "P2_AUDIO_DECODED frames=1800 dropped=0 energy=911746",
+      "P2_AUDIO_DECODED frames=1900 dropped=0 energy=986915",
+      "P2_AUDIO_DECODED frames=2000 dropped=0 energy=1037733",
+      "P2_AUDIO_DECODED frames=2100 dropped=0 energy=1179448",
+      "P2_AUDIO_DECODED frames=2200 dropped=0 energy=928519",
+      "P2_AUDIO_DECODED frames=2300 dropped=0 energy=1179427",
+      "P2_AUDIO_DECODED frames=2400 dropped=0 energy=971844",
+      "P2_AUDIO_DECODED frames=2500 dropped=0 energy=1150660",
+      "P2_AUDIO_DECODED frames=2600 dropped=0 energy=1002911",
+      "P2_AUDIO_DECODED frames=2700 dropped=0 energy=956409",
+      "P2_AUDIO_DECODED frames=2800 dropped=0 energy=1131139",
+      "P2_AUDIO_DECODED frames=2900 dropped=0 energy=1091298",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=1536",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=1180",
+      "P2_STACK name=sysworkq reserved=4096 used=432",
+      "P2_STACK name=MPSL Work reserved=1024 used=712",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=2976",
+      "P2_STACK name=ISR0 reserved=2048 used=504",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-sink decoded=2933 dropped=0"
+    ],
+    "source": [
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=231",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=1520",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=704",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=288",
+      "P2_STACK name=MPSL Work reserved=1024 used=356",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=3192",
+      "P2_STACK name=ISR0 reserved=2048 used=504",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-source sent=102"
+    ]
+  },
+  "result": "PASS",
+  "source_sent_last_session": 102,
+  "decoded_frames": 2933,
+  "dropped_frames": 0,
+  "memory_summary": {
+    "sink": {
+      "malloc_reports": 2,
+      "malloc_free_after_stop": 8108,
+      "malloc_allocated_after_stop": 0,
+      "malloc_peak": 0,
+      "stacks": {
+        "BT RX WQ": {
+          "reserved": 3200,
+          "used_peak": 1536
+        },
+        "bt_tx_processor": {
+          "reserved": 3200,
+          "used_peak": 404
+        },
+        "BT LW WQ": {
+          "reserved": 2104,
+          "used_peak": 1180
+        },
+        "sysworkq": {
+          "reserved": 4096,
+          "used_peak": 432
+        },
+        "MPSL Work": {
+          "reserved": 1024,
+          "used_peak": 712
+        },
+        "idle": {
+          "reserved": 320,
+          "used_peak": 64
+        },
+        "main": {
+          "reserved": 8192,
+          "used_peak": 2976
+        },
+        "ISR0": {
+          "reserved": 2048,
+          "used_peak": 504
+        }
+      }
+    },
+    "source": {
+      "malloc_reports": 22,
+      "malloc_free_after_stop": 8108,
+      "malloc_allocated_after_stop": 0,
+      "malloc_peak": 0,
+      "stacks": {
+        "BT RX WQ": {
+          "reserved": 3200,
+          "used_peak": 1520
+        },
+        "bt_tx_processor": {
+          "reserved": 3200,
+          "used_peak": 704
+        },
+        "BT LW WQ": {
+          "reserved": 2104,
+          "used_peak": 936
+        },
+        "sysworkq": {
+          "reserved": 4096,
+          "used_peak": 288
+        },
+        "MPSL Work": {
+          "reserved": 1024,
+          "used_peak": 356
+        },
+        "idle": {
+          "reserved": 320,
+          "used_peak": 64
+        },
+        "main": {
+          "reserved": 8192,
+          "used_peak": 3192
+        },
+        "ISR0": {
+          "reserved": 2048,
+          "used_peak": 504
+        }
+      }
+    }
+  }
+}

@@ -165,7 +165,10 @@ void loop()
     if (restartScan && !BLEConnection.connected() && !BLEConnection.connecting())
     {
         restartScan = false;
-        static_cast<void>(BLEScan.startExtended(true, false, false));
+        if (!BLEScan.running())
+        {
+            static_cast<void>(BLEScan.start(true));
+        }
     }
 
     const UnicastClientStage stage = audioClient.stage();

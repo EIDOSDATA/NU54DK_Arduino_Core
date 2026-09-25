@@ -58,3 +58,8 @@ arena, Zephyr heap, controller pool을 줄이지 않는다. 암호화/peer loss,
 다중 ASE·codec 방향·broadcast Audio, 장기 부하와 native 동등 조건
 비교는 별도다. 이 결과는 **unicast Audio 국소 PASS**이며 P2 전체,
 W04/W05/W06 또는 v0.5.0 공개 PASS가 아니다.
+
+후속 [254번 source 재시작·sink 재연결 계측](254_M31_P2_Audio_unicast_재연결_메모리_계측.md)은
+adaptive source의 재연결에서 확장 scan을 호출하는 결함을 발견·수정했다.
+수정 image의 source SWD reset 20/20, sink 누적 decode 2,933·drop 0,
+양측 STOP을 확인했다. 최초 및 guard-only 실패 원본도 보존했다.

@@ -59,6 +59,14 @@ source SWD reset 후 sink 공개 API 재가입 20/20, 누적 decode 2,107·drop 
 보존했다. sink MPSL Work의 관찰 여유가 264 B여서 stack을 줄이지 않았다.
 이 결과를 P2 전체·다중 stream·물리 전원 차단 PASS로 승격하지 않는다.
 
+[254번 Audio unicast 재연결 계측](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>)에서는
+adaptive source의 재연결에 잘못 쓰인 확장 scan을 일반 scan으로 맞췄다.
+최초와 scan guard-only image의 실패 두 건을 보존한 뒤 수정 image에서
+source SWD reset 20/20, 지속 실행한 sink의 누적 LC3 decode 2,933·drop 0,
+양측 STOP과 stack/heap high-water를 확인했다. 공개 source 예제도 adaptive
+빌드를 통과했다. 이 역시 단일 CIS·SWD reset의 국소 PASS이며 DF RX·CS
+장절차·native 동등 비교 등 P2 gate는 닫히지 않았다.
+
 다음은 이전 인계 시점의 이력이다. 별도 사용자 요청으로 **main의 미공개 개발 이력을
 마일스톤별로 정리**했으며, 당시 재개 기준은 `main`이었다. 그 시점에는 후속 브랜치
 `M31-MEM-OPT`가 로컬·원격 모두에 없었다. 이후 실제 브랜치에서 P0 구현을 시작했다.
