@@ -27,21 +27,24 @@ class M31CsStaleKeyTests(unittest.TestCase):
 
         initiator = STALE.parse_status_line(
             "initiator",
-            "CSKEY initiator status bonds=1 pairing_rejected=1 "
-            "l2=0 ready=0 raw=0 connected=0",
+            "CSKEY initiator status bonds=1 pairing_requests=0 pairing_rejected=0 "
+            "security_errors=0 security_reason=0 disconnects=1 "
+            "disconnect_reason=6 l2=0 ready=0 raw=0 connected=0",
         )
         reflector = STALE.parse_status_line(
             "reflector",
-            "CSKEY reflector status bonds=0 pairing_rejected=2 "
-            "l2=0 ready=0 active=0 connected=0",
+            "CSKEY reflector status bonds=0 pairing_requests=0 pairing_rejected=0 "
+            "security_errors=1 security_reason=4 disconnects=1 "
+            "disconnect_reason=5 l2=0 ready=0 active=0 connected=0",
         )
         self.assertEqual(initiator["bonds"], 1)
         self.assertEqual(reflector["active"], 0)
         self.assertIsNone(
             STALE.parse_status_line(
                 "initiator",
-                "CSKEY initiator status bonds=1 pairing_rejected=1 "
-                "l2=0 ready=0 raw=0 connected=0 trailing",
+                "CSKEY initiator status bonds=1 pairing_requests=0 pairing_rejected=0 "
+                "security_errors=0 security_reason=0 disconnects=1 "
+                "disconnect_reason=6 l2=0 ready=0 raw=0 connected=0 trailing",
             )
         )
 
@@ -50,7 +53,12 @@ class M31CsStaleKeyTests(unittest.TestCase):
 
         initiator = {
             "bonds": 1,
-            "pairing_rejected": 1,
+            "pairing_requests": 0,
+            "pairing_rejected": 0,
+            "security_errors": 0,
+            "security_reason": 0,
+            "disconnects": 1,
+            "disconnect_reason": 6,
             "l2": 0,
             "ready": 0,
             "raw": 0,
@@ -58,13 +66,21 @@ class M31CsStaleKeyTests(unittest.TestCase):
         }
         reflector = {
             "bonds": 0,
-            "pairing_rejected": 1,
+            "pairing_requests": 0,
+            "pairing_rejected": 0,
+            "security_errors": 1,
+            "security_reason": 4,
+            "disconnects": 1,
+            "disconnect_reason": 5,
             "l2": 0,
             "ready": 0,
             "active": 0,
             "connected": 0,
         }
-        STALE.validate_negative_snapshot(initiator, reflector)
+        self.assertEqual(
+            STALE.validate_negative_snapshot(initiator, reflector),
+            "controller_key_failure_disconnect",
+        )
         for role, field in (
             (initiator, "raw"),
             (initiator, "l2"),

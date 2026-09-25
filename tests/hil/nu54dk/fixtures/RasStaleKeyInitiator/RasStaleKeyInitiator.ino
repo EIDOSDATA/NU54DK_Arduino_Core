@@ -43,7 +43,12 @@ namespace
     bool disconnectSeen = false;
     bool primeReported = false;
     bool stopReported = false;
+    unsigned int negativePairingRequests = 0U;
     unsigned int negativePairingRejected = 0U;
+    unsigned int negativeSecurityErrors = 0U;
+    unsigned int negativeDisconnects = 0U;
+    unsigned int negativeSecurityReason = 0U;
+    unsigned int negativeDisconnectReason = 0U;
     unsigned int negativeSecurityL2 = 0U;
     unsigned int negativeReady = 0U;
     unsigned int negativeRaw = 0U;
@@ -85,6 +90,13 @@ namespace
         else if ((event.event == BLEEvent::disconnected) &&
                  (event.connection == peer))
         {
+            if (phase == Phase::negative)
+            {
+                ++negativeDisconnects;
+                negativeDisconnectReason = event.reason;
+                Serial.print("CSKEY initiator negative disconnected reason=");
+                Serial.println(negativeDisconnectReason);
+            }
             initiator.end();
             peer = BLEConnectionHandle();
             peerFound = false;
@@ -100,6 +112,10 @@ namespace
         if (record.event == SecurityEvent::pairing_requested)
         {
             const bool accept = phase == Phase::prime;
+            if (!accept)
+            {
+                ++negativePairingRequests;
+            }
             if (!BLESecurity.acceptPairing(record.connection, accept))
             {
                 Serial.println("CSKEY initiator pairing response failed");
@@ -132,6 +148,14 @@ namespace
             Serial.print("CSKEY initiator security rejected reason=");
             Serial.println(record.reason);
         }
+        else if ((phase == Phase::negative) &&
+                 (record.event == SecurityEvent::error))
+        {
+            ++negativeSecurityErrors;
+            negativeSecurityReason = record.reason;
+            Serial.print("CSKEY initiator security error reason=");
+            Serial.println(negativeSecurityReason);
+        }
     }
 
     /** @brief RAS service 대상 scan을 시작합니다. */
@@ -147,8 +171,18 @@ namespace
     {
         Serial.print("CSKEY initiator status bonds=");
         Serial.print(BLESecurity.bondCount());
+        Serial.print(" pairing_requests=");
+        Serial.print(negativePairingRequests);
         Serial.print(" pairing_rejected=");
         Serial.print(negativePairingRejected);
+        Serial.print(" security_errors=");
+        Serial.print(negativeSecurityErrors);
+        Serial.print(" security_reason=");
+        Serial.print(negativeSecurityReason);
+        Serial.print(" disconnects=");
+        Serial.print(negativeDisconnects);
+        Serial.print(" disconnect_reason=");
+        Serial.print(negativeDisconnectReason);
         Serial.print(" l2=");
         Serial.print(negativeSecurityL2);
         Serial.print(" ready=");
@@ -208,7 +242,12 @@ namespace
                  !BLEConnection.connected() && !BLEConnection.connecting())
         {
             phase = Phase::negative;
+            negativePairingRequests = 0U;
             negativePairingRejected = 0U;
+            negativeSecurityErrors = 0U;
+            negativeDisconnects = 0U;
+            negativeSecurityReason = 0U;
+            negativeDisconnectReason = 0U;
             negativeSecurityL2 = 0U;
             negativeReady = 0U;
             negativeRaw = 0U;
