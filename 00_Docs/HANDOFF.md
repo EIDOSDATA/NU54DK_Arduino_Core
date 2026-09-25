@@ -1,20 +1,21 @@
-# 개발 인계 — P2 완료와 M31 후속 순서
+# 개발 인계 — M31-W04 완료와 후속 순서
 
 최종 정리: **2026-09-25**. 작업 브랜치는 **`M31-MEM-OPT`**이며 메모리 최적화
-**P0·P1·P2를 완료**했다. P2의 오류·최악 부하, 최종 stack/heap 크기, 동등 Nordic native
-FLASH/RAM 비교 근거는 [262번 완료 기록](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 있다.
+**P0·P1·P2와 M31-W04를 완료**했다. W04의 지원 CTE TX·response 재검증과
+제품 SDC IQ RX·AoD `UNSUPPORTED` 경계는 [263번 완료 기록](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)이 소유한다.
+P2의 오류·최악 부하, 최종 stack/heap 크기, 동등 Nordic native FLASH/RAM 비교 근거는
+[262번 완료 기록](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 있다.
 다음 실행의 단일 체크리스트는 [M31 TODO](TODO_M31.md#2-작업-묶음--8개-유지)다.
 
 ## 1. 바로 이어서 할 작업
 
-P2를 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다. 순서는 **W04·W05 → W06 → W07 → W08**이다.
+P2와 W04를 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다. 순서는 **W05 → W06 → W07 → W08**이다.
 
 | 순서 | 작업 | 완료 결과 |
 | --- | --- | --- |
-| 1 | W04 Direction Finding 마감 | 제품 SDC에서 지원하는 CTE TX·response의 예제·지원표·원장 정합과 변경 영향 재검증. IQ RX·AoD `UNSUPPORTED` 경계 유지 |
-| 2 | W05 Channel Sounding 마감 | 기존 secure RAS·256-step·P2 peer-loss 근거와 별도로 wrong-key·flash 직후 경계를 기능 계약대로 닫음 |
-| 3 | W06 자원·수명주기·영향 회귀 | 독립 role image manifest, stop/disconnect 반환, M19~M30 변경 영향 회귀. 네 기능 전체 동시 실행은 요구하지 않음 |
-| 4 | W07·W08 | 적용 역할의 HIL·설치 예제, 원장/지원표/문서·Windows package/clean install/RC 준비. 공개는 별도 승인 |
+| 1 | W05 Channel Sounding 마감 | 기존 secure RAS·256-step·P2 peer-loss 근거와 별도로 wrong-key·flash 직후 경계를 기능 계약대로 닫음 |
+| 2 | W06 자원·수명주기·영향 회귀 | 독립 role image manifest, stop/disconnect 반환, M19~M30 변경 영향 회귀. 네 기능 전체 동시 실행은 요구하지 않음 |
+| 3 | W07·W08 | 적용 역할의 HIL·설치 예제, 원장/지원표/문서·Windows package/clean install/RC 준비. 공개는 별도 승인 |
 
 ### 다시 추가하지 않을 조건
 
@@ -38,7 +39,7 @@ P2를 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다. 순�
 | --- | --- | --- |
 | 공개 설치본 / 개발 소스 | v0.4.1 단독 지원 / 0.4.1-dev | [지원 안내](<05_릴리스/v0.4.1/README.md>) |
 | M28·M29·M30 | 각각 8/8 완료. M30 실제 전원 차단 12/12 | [v0.5.0 계획](TODO_v0.5.0.md) |
-| M31 | **W01~W03 완료 3/8**, W03 Audio 11/11. W04·W05 미완료, W06~W08 미착수 | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W02](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) · [W03](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
+| M31 | **W01~W04 완료 4/8**, W03 Audio 11/11·W04 DF 완료. W05 미완료, W06~W08 미착수 | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W03](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [W04](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
 | 메모리 P0 / P1 / P2 | **모두 완료**. adaptive는 실험적 선택지, standard/full 기본값과 기존 최종 크기 유지 | [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | P2 오류·최악 부하 | CoC peer credit 1 직접 고갈·4 SDU 복구, Audio 양방향 10,000 frame·wrong Code `-61` 후 100 frame 복구, CS 256-step 중 peer reset 뒤 raw 20개 복구 | [P2 원본](<04_검증 기록/evidence/m31-p2-three-axes-20260925/>) |
 | P2 최종 크기 / native | MPSL 최소 관찰 여유 264 B 등으로 기존 크기 유지. CoC와 암호화 Audio 두 동등 쌍의 ELF/map 비교 PASS | [메모리 판정](<04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json>) · [native 비교](<04_검증 기록/evidence/m31-p2-three-axes-20260925/native-memory-comparison.json>) |
@@ -51,8 +52,8 @@ P2 마감의 새 build·HIL·메모리/native 비교와 로컬 회귀는
 
 ## 3. P2 이후 순서 — P2 분모와 별개
 
-1. **M31-W04·W05**의 채택 기능·예제·지원표·기계 원장과 잔여 기능을 마감한다.
-   DF IQ RX 미지원을 수신 구현 의무로 바꾸지 않는다. W05 wrong-key/one-sided stale-key
+1. **M31-W05**의 잔여 기능을 마감한다. 완료한 W04의 제품 SDC IQ RX·AoD
+   `UNSUPPORTED` 경계를 수신 구현 의무로 바꾸지 않는다. W05 wrong-key/one-sided stale-key
    negative·과거 flash 직후 중단 경계는 [M31 TODO](TODO_M31.md)의 기능 계약에서 관리한다.
 2. **W06**은 독립 role image별 자원·수명주기와 M19~M30 영향 회귀다.
    ISO·Audio·DF·CS 네 기능을 단일 MCU에서 동시에 실행하는 요구가 아니다.
@@ -74,8 +75,9 @@ P2 마감의 새 build·HIL·메모리/native 비교와 로컬 회귀는
 
 - [AGENTS](../AGENTS.md)와 현재 TODO를 읽고 branch·HEAD·미커밋 변경·원격 ref·submodule을 직접 확인한다.
   과거 main 분기·squash 지시를 재실행하지 않으며 사용자 변경을 reset으로 덮어쓰지 않는다.
-- 마지막 실기 기록은 CS peer-loss 복구 뒤 두 보드가 STOP한 상태다. **현재 연결 상태의 보증이
-  아니다.** 다음 HIL 직전 probe SHA-256 identity·COM·role·image hash를 재대조한다.
+- 마지막 실기 기록은 W04 beacon STOP, 내부 connected receiver STOP, responder disconnect를
+  확인한 상태다. **현재 연결 상태의 보증이 아니다.** 다음 HIL 직전 probe SHA-256
+  identity·COM·role·image hash를 재대조한다.
 - probe lock·watchdog·명령 lease·양측 STOP·clock/핀 반환을 유지한다. 자동 mass erase/unlock/recover,
   임의 전원·USB·결선 변경을 하지 않는다. 원시 probe UID·인증 정보는 공개하지 않는다.
 - 과거 source·image·실패 JSON과 공개 자산은 보존한다. 이력 대응은 [215번](<04_검증 기록/215_M31_W03_이력과_문서_정비.md>)·

@@ -86,6 +86,25 @@ class M31ReadinessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "W02 public ISO example flow incomplete"):
             MODULE.validate(doc)
 
+    def test_w04_completion_requires_product_support_boundary(self) -> None:
+        """! @brief W04 완료 뒤 제품 SDC IQ RX를 임의 PASS로 승격하지 않습니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        raw_iq = next(entry for entry in doc["capabilities"] if entry["id"] == "raw_iq_rx")
+        raw_iq["target_applicability"] = "product_sdc_raw_iq_rx"
+        with self.assertRaisesRegex(ValueError, "W04 product SDC unsupported boundary mismatch"):
+            MODULE.validate(doc)
+
+    def test_w04_completion_requires_both_public_tx_examples(self) -> None:
+        """! @brief W04 완료에는 CTE beacon과 연결 응답 예제의 실기 PASS가 모두 필요합니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        responder = next(entry for entry in doc["example_roles"]
+                         if entry["id"] == "cte_peripheral")
+        responder["runtime_status"] = "FAIL"
+        with self.assertRaisesRegex(ValueError, "W04 public TX example incomplete"):
+            MODULE.validate(doc)
+
 
 if __name__ == "__main__":
     unittest.main()

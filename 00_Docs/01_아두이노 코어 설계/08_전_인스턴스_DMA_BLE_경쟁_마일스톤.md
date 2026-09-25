@@ -11,8 +11,8 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 5.0 |
-| 문서 상태 | 고정 source 비교, M23~M30 완료·M31 3/8과 M32~M33 계획 |
+| 문서 개정 | 5.1 |
+| 문서 상태 | 고정 source 비교, M23~M30 완료·M31 4/8과 M32~M33 계획 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.4.1` stable / release source `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -40,8 +40,8 @@ Ubuntu/macOS 확대는 버전 미정 후속 범위다. 해당 OS의 실제 설�
 후속 지원 공개 때 사용자가 검증하며 M33의 세 Host 증거 gate를 유지한다.
 
 M28은 **W01~W08·9개 test ID**, M29와 M30은 각각 **W01~W08·10개 test ID를 완료**했다.
-M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31은 **W01~W03 완료 3/8**,
-W04·W05 진행 중·미완료, W06~W08 미착수다. M32·M33은 각각 0/12·0/8로 미착수다. M28~M30의 기능 지원성·
+M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31은 **W01~W04 완료 4/8**,
+W05 진행 중·미완료, W06~W08 미착수다. M32·M33은 각각 0/12·0/8로 미착수다. M28~M30의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 준비 문서를 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
@@ -470,19 +470,19 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 ### M31 — ISO·LE Audio·Direction Finding·Channel Sounding
 
 M31-W01~W08 **8개 작업**은 [M31 TODO](../TODO_M31.md)에서 관리한다. W01의 고정 NCS
-parity 원장·capability, W02 설치본 ISO 11예제·11역할과 W03 Audio 11/11을 완료했다.
+parity 원장·capability, W02 설치본 ISO 11예제·11역할, W03 Audio 11/11과 W04 DF를 완료했다.
 근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
 [W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다.
 HOST는 독립 3/8 완료이며 W04 이후는 사용자 지시로 보류한다. Windows v0.5.0의 package·설치·
 RC·공개 gate는 M31-W08, 후속 다중 Host 확대의 최종 수락은 M33-W07~W08이 소유한다.
-메모리 최적화 P0·P1·P2를 완료했으며 다음 순서는 W04·W05 → W06~W08이다.
+메모리 최적화 P0·P1·P2와 W04를 완료했으며 다음 순서는 W05 → W06~W08이다.
 P2 세 축의 오류·최악 부하, 최종 크기와 Nordic native 비교는
 [262번](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)을 따른다.
 
 | 하위 gate | 계획 범위 | 선행 결정·완료 증거 |
 | --- | --- | --- |
 | M31-A ISO·LE Audio | CIS/CIG·BIS/BIG·combined/time sync, LC3, BAP/CAP, PACS/ASCS, BASS assistant/delegator, CSIP, PBP, VCP/VOCS/AICS, MICP, MCP/MCS, CCP/TBS, TMAP/GMAP/HAP/HAS | 역할별 source/build 적용성, 고정 buffer·stream 예산, 합성 PCM·SDU 실제 전송·codec·제어·오류 복구, 역할별 Arduino 예제 |
-| M31-B Direction Finding | AoA CTE TX와 별도 LL 연결 응답, 제품 IQ RX·AoD 미지원 판정 | TX 국소 PASS. 고정 NCS v3.4.0·nRF54L15 제품 SDC IQ RX는 `UNSUPPORTED`·P2 범위 제외. 과거 LL 내부 진단과 구분 |
+| M31-B Direction Finding | **W04 완료** — AoA CTE TX와 별도 LL 연결 응답, 제품 IQ RX·AoD 미지원 판정 | 현재 소스 TX·연결 응답 HIL PASS. 고정 NCS v3.4.0·nRF54L15 제품 SDC IQ RX·AoD는 `UNSUPPORTED`. [263번](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
 | M31-C connected Channel Sounding | DF와 별도 A1_B1의 두 역할, 보안 ACL initiator/reflector, capability·procedure·RAS, raw 결과·거리 산출 | 기본 2보드 자동 HIL의 실제 procedure·결과·peer loss/reconnect·security negative, 정밀 거리 정확도 보증 제외 |
 
 기본 NCS SDC의 AoA CTE 광고 송신은 국소 PASS지만 연결 응답 명령은 실제 image에서
@@ -559,7 +559,7 @@ M31 Windows v0.5.0은 M31-W08이 마감한다. M33의 추가 기능·전체 cata
 [다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
 M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
-M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 3/8 완료·전체 미완료이고 M32·M33은 계획이다. M28 결과와
+M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 4/8 완료·전체 미완료이고 M32·M33은 계획이다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은

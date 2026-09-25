@@ -34,8 +34,8 @@
     {
       "id": "M31-W04",
       "title": "direction_finding",
-      "status": "in_progress",
-      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json"
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/closure-audit.json"
     },
     {
       "id": "M31-W05",
@@ -394,85 +394,88 @@
       "owner_work_id": "M31-W04",
       "controller_variant": "default_sdc",
       "source_status": "verified",
-      "target_applicability": "controller_acceptance_verified_air_pending",
-      "native_build": "PASS",
+      "target_applicability": "product_sdc_connectionless_aoa_tx",
+      "native_build": "NOT_RUN",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-beacon-01.json",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json",
       "nu54dk_build": "PASS",
-      "source_revision": "53399559daa748b07539025c1ab64bb6464c7788",
+      "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "stage_evidence": {
-        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-native-build-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-build-twister.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-arduino-build-manifest.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-beacon-01.json",
-        "functional_hil": null
-      }
+        "native_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/build-manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/build-manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json"
+      },
+      "support_reason": "제품 SDC에서 공개 CteBeacon의 start/stop 20/20과 잘못된 CTE length 거부 20/20을 현재 소스로 재검증했다."
     },
     {
       "id": "connected_cte_response_tx",
       "owner_work_id": "M31-W04",
       "controller_variant": "zephyr_ll_candidate",
       "source_status": "verified",
-      "target_applicability": "response_command_control_only",
-      "native_build": "PASS",
+      "target_applicability": "zephyr_ll_opt_in_aoa_response",
+      "native_build": "NOT_RUN",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/arduino-20-cycle-pass.json",
+      "functional_hil": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json",
       "nu54dk_build": "PASS",
-      "source_revision": "426faf0e72bc3d34bf7ce198557869a4fa8dc55b",
+      "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "stage_evidence": {
-        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/ll-native-enabled.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/ll-native-enabled.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/arduino-20-cycle-pass.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-df-connected-426faf0e/arduino-20-cycle-pass.json",
-        "functional_hil": null
-      }
+        "native_build": null,
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/build-manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/build-manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json"
+      },
+      "support_reason": "별도 opt-in Zephyr LL의 공개 ConnectedCteResponder로 연결 CTE report 20건·IQ sample 1,640개·cleanup을 재검증했다. 이 결과는 제품 SDC IQ RX 지원이 아니다."
     },
     {
       "id": "raw_iq_rx",
       "owner_work_id": "M31-W04",
-      "controller_variant": "zephyr_ll_candidate",
-      "source_status": "source_candidate",
-      "target_applicability": "controller_iq_event_reaches_host_but_host_state_gate_drops_samples",
-      "native_build": "PASS",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "PASS",
-      "functional_hil": "HOLD",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
-      "nu54dk_build": "PASS",
-      "source_revision": "b5294c86da32a9ebde86db96ca3cff08b4a96859",
+      "controller_variant": "default_sdc",
+      "source_status": "verified_unsupported",
+      "target_applicability": "unsupported_nrf54l15_product_sdc_ncs_3_4_0",
+      "native_build": "UNSUPPORTED",
+      "arduino_build": "UNSUPPORTED",
+      "runtime_query": "UNSUPPORTED",
+      "functional_hil": "UNSUPPORTED",
+      "evidence": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+      "nu54dk_build": "UNSUPPORTED",
+      "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "stage_evidence": {
-        "native_build": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
-        "arduino_build": null,
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json",
-        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json"
-      }
+        "native_build": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "nu54dk_build": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "arduino_build": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "runtime_query": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "functional_hil": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md"
+      },
+      "support_reason": "NCS v3.4.0 nRF54L series Direction Finding 지원 경계는 AoA transmitter만 포함한다. 과거 Zephyr LL 내부 수신 진단은 제품 SDC RX로 승격하지 않는다."
     },
     {
       "id": "aod",
       "owner_work_id": "M31-W04",
       "controller_variant": "default_sdc",
-      "source_status": "source_candidate",
-      "target_applicability": "unsupported_default_sdc",
-      "native_build": "NOT_RUN",
-      "arduino_build": "NOT_RUN",
-      "runtime_query": "PASS",
-      "functional_hil": "NOT_RUN",
-      "evidence": null,
-      "nu54dk_build": "NOT_RUN",
-      "source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+      "source_status": "verified_unsupported",
+      "target_applicability": "unsupported_nrf54l15_product_sdc_ncs_3_4_0",
+      "native_build": "UNSUPPORTED",
+      "arduino_build": "UNSUPPORTED",
+      "runtime_query": "UNSUPPORTED",
+      "functional_hil": "UNSUPPORTED",
+      "evidence": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+      "nu54dk_build": "UNSUPPORTED",
+      "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "stage_evidence": {
-        "native_build": null,
-        "nu54dk_build": null,
-        "arduino_build": null,
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/m31-cap-default-clean-8c125a22-01.json",
-        "functional_hil": null
+        "native_build": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "nu54dk_build": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "arduino_build": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "runtime_query": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+        "functional_hil": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md"
       },
-      "support_reason": "기본 SDC HCI AoD bit 21 false; controller 범위만 판정"
+      "support_reason": "고정 NCS v3.4.0·nRF54L15 제품 SDC의 AoD는 지원 범위 밖이며 HCI AoD bit도 false다."
     },
     {
       "id": "connected_channel_sounding",
@@ -944,28 +947,28 @@
       "id": "cte_beacon",
       "planned_sketch": "libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon/CteBeacon.ino",
       "actual_sketch": "libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon/CteBeacon.ino",
-      "source_revision": "53399559daa748b07539025c1ab64bb6464c7788",
+      "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-df-53399559/df-beacon-01.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json"
     },
     {
       "id": "cte_peripheral",
-      "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "planned_sketch": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/ConnectedCteResponder.ino",
+      "actual_sketch": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/ConnectedCteResponder.ino",
+      "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json"
     },
     {
       "id": "raw_iq_receiver_candidate",
       "planned_sketch": null,
       "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+      "build_status": "UNSUPPORTED",
+      "runtime_status": "UNSUPPORTED",
+      "evidence": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md"
     },
     {
       "id": "external_angle_control",
@@ -1578,9 +1581,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json"
         },
         {
           "id": "M31-DF-01:connected_cte_response_tx",
@@ -1605,9 +1608,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json"
         },
         {
           "id": "M31-DF-01:raw_iq_rx_candidate",
@@ -1632,9 +1635,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "HOLD",
-          "source_revision": "b5294c86da32a9ebde86db96ca3cff08b4a96859",
-          "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-w05-b5294c86/connected-rx-diagnostic-02.json"
+          "status": "UNSUPPORTED",
+          "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+          "evidence": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md"
         },
         {
           "id": "M31-DF-01:sdc_aod_unsupported",
@@ -1933,7 +1936,7 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 3,
+    "work_completed": 4,
     "test_family_total": 10,
     "test_family_passed": 5,
     "audio_group_total": 11,

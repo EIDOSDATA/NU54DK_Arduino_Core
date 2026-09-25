@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**이고, 개발 소스는 **M28·M29·M30 완료, M31 3/8**입니다. M31-W03 LE Audio
-profile은 **11/11 PASS**로 닫았으며 W04~W08은 완료가 아닙니다. HOST-W01~W03은 완료했고
+**v0.4.1**이고, 개발 소스는 **M28·M29·M30 완료, M31 4/8**입니다. M31-W03 LE Audio
+profile은 **11/11 PASS**, W04 Direction Finding은 **PASS**로 닫았으며 W05~W08은 완료가 아닙니다. HOST-W01~W03은 완료했고
 HOST-W04~W08은 사용자 보류 상태입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
@@ -15,12 +15,13 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 구분 | 상태 | 기준 문서 |
 | --- | --- | --- |
 | 설치·지원 | `v0.4.1`만 지원 | [v0.4.1 유지보수 기록](129_v0.4.1_설치기_유지보수_릴리스.md) |
-| 개발 소스 | M28·M29·M30 완료, M31 3/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
+| 개발 소스 | M28·M29·M30 완료, M31 4/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
 | M31 메모리 최적화 P0·P1 | 완료. P2의 동적 계측·안전 판정과 구별 | [P0](222_M31_메모리_최적화_P0_완료.md) · [P1](237_M31_메모리_최적화_P1_정적_저장소_완료.md) |
 | M31 메모리 최적화 P2 | **완료**. 지원 범위 오류·최악 부하, stack/heap 여유·최종 크기, 동등 Nordic native FLASH/RAM 비교의 세 축 PASS | [262번 완료](262_M31_메모리_최적화_P2_세_축_완료.md) · [판정 경계](#p2-기록의-현행-판정-경계) |
-| M31-W04·W05 | 연결형 내부 IQ 수신 국소 PASS, W04/W05 전체는 미완료·이전 실패 보존 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 이전 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W04 연결 IQ 후속](244_M31_P2_DF_연결_IQ_진단.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
+| M31-W04 | **완료.** 제품 SDC beacon 20/20·invalid 20/20, opt-in LL connected response report 20건·1,640 sample·cleanup PASS. 제품 SDC IQ RX·AoD `UNSUPPORTED`, 이전 실패 원본 보존 | [W04 완료](263_M31_W04_Direction_Finding_완료.md) · [support boundary](259_M31_P2_DF_고정_SDK_지원_경계.md) · [exact audit](evidence/m31-w04-close-20260925/closure-audit.json) |
+| M31-W05 | secure RAS·256-step·peer-loss 국소 PASS, W05 전체는 미완료·이전 실패 보존 | [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 
@@ -46,12 +47,13 @@ PASS/FAIL/HOLD와 원본 JSON은 실행 당시 증거이며, 당시의 다음 �
 P2 기술 축인 **지원 범위의 오류·최악 부하 → stack/heap 여유·크기 결정 → 동등 Nordic native
 비용 비교**는 [262번](262_M31_메모리_최적화_P2_세_축_완료.md)에서 모두 PASS했다.
 기존 크기를 유지했으며 모든 물리 전원 차단·다중 link 조합을 추가하지 않았다.
-W04·W05 기능 마감과 W06~W08은 별도 M31 작업이다.
+W05 기능 마감과 W06~W08은 별도 M31 작업이다.
 
 ## 최근 완료·재개 기록
 
 | 기록 | 용도 |
 | --- | --- |
+| [263 — M31-W04 Direction Finding 완료](263_M31_W04_Direction_Finding_완료.md) | 제품 SDC connectionless AoA CTE TX와 별도 opt-in Zephyr LL connected response를 현재 소스로 재검증하고, 제품 SDC IQ RX·AoD `UNSUPPORTED` 경계를 고정. M31 4/8 |
 | [262 — P2 세 축 완료](262_M31_메모리_최적화_P2_세_축_완료.md) | CoC 상대 credit·Audio wrong Code·CS 256-step peer loss, 최종 stack/heap 유지, CoC/Audio 동등 native 비교 PASS. P0~P2 완료 |
 | [261 — P2 세 잔여 축·문서 전수 정비](261_P2_잔여_세_축_확정과_문서_전수_정비.md) | 현행 잔여 세 축과 제외 경계 확정, 문서 전수 검토·인계 정비; 신규 P2 실기 아님 |
 | [260 — P2 CS 256-step 장시간·판정 정정](260_M31_P2_CS_누락_분류와_256_step_장시간.md) | 1,000 유효 raw·양측 STOP 정상 부하 PASS. 간헐 gap은 비차단 관찰값으로만 기록 |

@@ -320,6 +320,64 @@ def validate(doc: dict) -> None:
             capability["nu54dk_build"] != "PASS" or capability["runtime_query"] != "PASS"
         ):
             raise ValueError("functional HIL promoted before build/query")
+    completed_work = {
+        package["id"] for package in doc["work_packages"] if package["status"] == "completed"
+    }
+    if "M31-W04" in completed_work:
+        capability_by_id = {entry["id"]: entry for entry in doc["capabilities"]}
+        required_capabilities = {
+            "connectionless_cte_tx", "connected_cte_response_tx", "raw_iq_rx", "aod",
+        }
+        if not required_capabilities.issubset(capability_by_id):
+            raise ValueError("W04 capability boundary missing")
+        connectionless = capability_by_id["connectionless_cte_tx"]
+        connected = capability_by_id["connected_cte_response_tx"]
+        if (connectionless["controller_variant"] != "default_sdc" or
+                connectionless["target_applicability"] != "product_sdc_connectionless_aoa_tx" or
+                any(connectionless[stage] != "PASS" for stage in (
+                    "nu54dk_build", "arduino_build", "runtime_query", "functional_hil"
+                ))):
+            raise ValueError("W04 product SDC CTE TX boundary mismatch")
+        if (connected["controller_variant"] != "zephyr_ll_candidate" or
+                connected["target_applicability"] != "zephyr_ll_opt_in_aoa_response" or
+                any(connected[stage] != "PASS" for stage in (
+                    "nu54dk_build", "arduino_build", "runtime_query", "functional_hil"
+                ))):
+            raise ValueError("W04 opt-in connected response boundary mismatch")
+        for identifier in ("raw_iq_rx", "aod"):
+            unsupported = capability_by_id[identifier]
+            if (unsupported["controller_variant"] != "default_sdc" or
+                    unsupported["target_applicability"] !=
+                    "unsupported_nrf54l15_product_sdc_ncs_3_4_0" or
+                    any(unsupported[stage] != "UNSUPPORTED" for stage in (
+                        "native_build", "nu54dk_build", "arduino_build", "runtime_query",
+                        "functional_hil"
+                    ))):
+                raise ValueError("W04 product SDC unsupported boundary mismatch")
+        example_by_id = {entry["id"]: entry for entry in doc["example_roles"]}
+        for identifier in ("cte_beacon", "cte_peripheral"):
+            if (identifier not in example_by_id or
+                    example_by_id[identifier]["build_status"] != "PASS" or
+                    example_by_id[identifier]["runtime_status"] != "PASS"):
+                raise ValueError("W04 public TX example incomplete")
+        receiver = example_by_id.get("raw_iq_receiver_candidate")
+        if (receiver is None or receiver["build_status"] != "UNSUPPORTED" or
+                receiver["runtime_status"] != "UNSUPPORTED"):
+            raise ValueError("W04 product SDC RX example boundary mismatch")
+        df_family = next((family for family in doc["test_families"]
+                          if family["id"] == "M31-DF-01"), None)
+        if df_family is None:
+            raise ValueError("W04 DF test family missing")
+        expected_case_status = {
+            "M31-DF-01:connectionless_cte_tx": "PASS",
+            "M31-DF-01:connected_cte_response_tx": "PASS",
+            "M31-DF-01:raw_iq_rx_candidate": "UNSUPPORTED",
+            "M31-DF-01:sdc_aod_unsupported": "UNSUPPORTED",
+        }
+        actual_case_status = {entry["id"]: entry["status"] for entry in df_family["cases"]}
+        if any(actual_case_status.get(identifier) != status
+               for identifier, status in expected_case_status.items()):
+            raise ValueError("W04 DF case boundary mismatch")
     for family in doc["test_families"]:
         for entry in family["cases"]:
             if entry["status"] == "PASS" and (not entry["source_revision"] or not entry["evidence"]):
