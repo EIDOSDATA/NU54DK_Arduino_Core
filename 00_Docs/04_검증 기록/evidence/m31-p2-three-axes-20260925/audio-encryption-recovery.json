@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-audio-supported-encrypted-bis-error-recovery-memory",
+  "contract": {
+    "role": "one encrypted LC3 BIS source and one sink",
+    "streams": 1,
+    "codec": "LC3 16 kHz mono, 40-byte/10-ms frame",
+    "security": "16-byte Broadcast Code; first code differs by one byte",
+    "expected_error": -61,
+    "recovery": "same source, correct code, at least 100 decoded frames",
+    "timeout_s": 180.0
+  },
+  "probe_uid_sha256": {
+    "source": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "sink": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "source": "COM10",
+    "sink": "COM13"
+  },
+  "image_sha256": {
+    "source": "e8beaf0804f00fecdb73f93fe8300dbe0d08bd2528cc3a6e00413f45dc03817e",
+    "sink": "267ad5e8972df68f00e395a79e030fa8918d58dc844f7c05a7bb0530f857532a"
+  },
+  "flash": {
+    "sink": [
+      "pyocd-sector",
+      "327680"
+    ],
+    "source": [
+      "pyocd-sector",
+      "249856"
+    ]
+  },
+  "start": {
+    "source": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "sink": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "source": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-broadcast-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=2048 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=784",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=240",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=976",
+      "P2_STACK name=ISR0 reserved=2048 used=392",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=broadcast-source",
+      "P2_AUDIO_SENT frames=100",
+      "P2_AUDIO_SENT frames=200",
+      "P2_AUDIO_SENT frames=300",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=2048 used=384",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=784",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=364",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=3192",
+      "P2_STACK name=ISR0 reserved=2048 used=520",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-broadcast-source sent=360"
+    ],
+    "sink": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-broadcast-error-sink",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=280",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=1284",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_ENCRYPTION_REJECTED native=-61 decoded=0 dropped=0",
+      "P2_PHASE name=wrong-code-rejected",
+      "P2_STACK name=BT RX WQ reserved=3200 used=704",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=696",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=1284",
+      "P2_STACK name=ISR0 reserved=2048 used=364",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_ENCRYPTION_RECOVERY_STARTED",
+      "P2_AUDIO_ENCRYPTION_RECOVERED frames=100 dropped=0 energy=911792",
+      "P2_PHASE name=encrypted-recovered",
+      "P2_STACK name=BT RX WQ reserved=3200 used=704",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=696",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=2868",
+      "P2_STACK name=ISR0 reserved=2048 used=480",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=704",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=696",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=2868",
+      "P2_STACK name=ISR0 reserved=2048 used=480",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-broadcast-error-sink decoded=104 dropped=0"
+    ]
+  },
+  "result": "PASS",
+  "observed": {
+    "expected_native_error": -61,
+    "frames_before_error": 0,
+    "recovered_frames": 100,
+    "dropped_frames": 0,
+    "nonzero_pcm_energy": true,
+    "both_stopped": true
+  }
+}

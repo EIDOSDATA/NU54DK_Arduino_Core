@@ -1,43 +1,43 @@
 {
   "schema_version": 2,
   "review_date": "2026-09-25",
-  "purpose": "P2의 기술적 잔여 작업을 합의한 세 축으로 고정하고, 고정 SDK 미지원·사용자 제외·관측 한계를 필수 gate와 분리한다. 현행 인계·TODO의 중복 경과를 정리하고 다음 작업·지원 경계·증거 링크를 통일한 문서 전수 감사 snapshot이다.",
+  "purpose": "P2의 세 기술 축인 지원 범위 오류·최악 부하, 메모리 안전 여유·최종 크기, 동등 Nordic native FLASH/RAM 비교를 실제 build·HIL·ELF/map 증거로 닫고, 현행 인계·TODO·설계·지원 경계와 전체 문서 hash를 완료 상태에 맞춘 전수 감사 snapshot이다.",
   "baseline": {
     "branch": "M31-MEM-OPT",
-    "commit": "b3ef5e9d2687cb5c3225a0b31b1709231530e5ae",
+    "commit": "46d4fb101513143d89b8533636e3ed671212fea4",
     "working_tree_at_start": "clean",
-    "record": "00_Docs/04_검증 기록/261_P2_잔여_세_축_확정과_문서_전수_정비.md"
+    "record": "00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md"
   },
   "previous_review": {
-    "commit": "b3ef5e9d2687cb5c3225a0b31b1709231530e5ae",
+    "commit": "46d4fb101513143d89b8533636e3ed671212fea4",
     "path": "00_Docs/document-review.json",
-    "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/b3ef5e9d2687cb5c3225a0b31b1709231530e5ae/00_Docs/document-review.json",
-    "note": "이전 감사의 382개 누적 원장·검사·이력 정리 상세는 이 exact commit의 원본으로 보존한다. 이전 검사를 이번 실행 결과로 복사하지 않는다."
+    "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/46d4fb101513143d89b8533636e3ed671212fea4/00_Docs/document-review.json",
+    "note": "이전 423개 감사 snapshot과 P2 미완료 시점의 범위·검사는 exact commit에 보존한다. 이번 build·HIL·회귀 결과만 새 완료 판정에 사용한다."
   },
   "scope": {
-    "baseline_main_repository_markdown": 416,
-    "current_main_repository_markdown": 417,
+    "baseline_main_repository_markdown": 417,
+    "current_main_repository_markdown": 420,
     "board_submodule_markdown": 6,
-    "reviewed_documents": 423,
-    "main_repository_maintained_documents": 416,
+    "reviewed_documents": 426,
+    "main_repository_maintained_documents": 419,
     "vendored_upstream_markdown": 1,
-    "updated_existing_markdown": 54,
-    "added_markdown": 1,
-    "preserved_markdown": 368,
+    "updated_existing_markdown": 38,
+    "added_markdown": 3,
+    "preserved_markdown": 385,
     "deleted_markdown": 0,
     "classification_counts": {
-      "current_reference": 83,
-      "generated_document": 5,
-      "historical_validation_record": 259,
-      "current_audit_record": 1,
-      "release_record": 65,
-      "completed_release_todo": 2,
       "board_submodule_reference": 6,
-      "vendored_upstream_reference": 1,
-      "third_party_notice": 1
+      "completed_release_todo": 2,
+      "current_audit_record": 1,
+      "current_reference": 85,
+      "generated_document": 5,
+      "historical_validation_record": 260,
+      "release_record": 65,
+      "third_party_notice": 1,
+      "vendored_upstream_reference": 1
     },
-    "review_method": "전체 Markdown inventory·strict UTF-8·로컬 링크 존재·LF 정규화 hash·동일 본문 중복·현행 상태 키워드를 검사하고, 영향을 받는 현행 계약·인계·후속 TODO와 관련 검증 기록을 의미 검토했다. 모든 역사 문장을 줄마다 수동 정독하거나 과거 기능·HIL·외부 URL을 재검증한 것은 아니다. 파일별 review_depth는 검사 깊이를 구분한다.",
-    "link_check_boundary": "Markdown inline 상대 링크의 대상 파일 존재를 검사한다. anchor의 의미, 외부 URL의 가용성, 기술적 진위 또는 물리 기능을 보증하지 않는다.",
+    "review_method": "전체 Markdown inventory·strict UTF-8·로컬 링크 존재·LF 정규화 hash·동일 본문 중복·현행 상태 키워드를 검사하고, P2로 변경한 현행 계약·인계·TODO·지원표·검증 기록과 새 재현 자산을 의미 검토했다. 역사적 결과는 당시 판정으로 보존하며 파일별 review_depth로 이번 검사 깊이를 구분한다.",
+    "link_check_boundary": "Markdown inline 상대 링크의 대상 파일 존재를 검사한다. anchor 의미, 외부 URL 가용성, 기술적 진위 또는 물리 기능은 별도 build·HIL 증거로 판정한다.",
     "hash_method": "UTF-8 본문을 strict decode하고 CRLF/CR을 LF로 정규화한 SHA-256. Markdown만 포함하며 이 JSON 자체는 제외한다.",
     "non_markdown_inventory": {
       "rst_documents": 0,
@@ -56,10 +56,10 @@
     "working_branch": "M31-MEM-OPT",
     "p0": "completed",
     "p1": "completed",
-    "p2": "incomplete; exactly three remaining technical axes",
+    "p2": "completed; all three agreed technical axes PASS",
     "m31": "W01-W03 completed: 3/8; overall not_completed",
     "m31_w03": "11/11 completed",
-    "m31_w04_w05": "not completed; functional milestone closure remains separate from P2",
+    "m31_w04_w05": "not completed; next functional work after P2",
     "m31_w06_w08": "not_started",
     "host": "HOST-W01-W03 completed: 3/8; HOST-W04-W08 paused by user",
     "m32": "0/12 not_started; future release, not a v0.5.0 prerequisite",
@@ -67,22 +67,30 @@
     "planned_release": "v0.5.0 after M31 completion; Windows 10/11 x64; package/install/RC/publication gates judged separately"
   },
   "p2_contract": {
-    "remaining_technical_axes": [
+    "completed_technical_axes": [
       {
         "id": 1,
         "name": "지원 범위의 미계측 오류·최악 부하",
-        "next_work": "CoC 상대 credit 고갈, Audio 지원 다중 stream·암호화 오류, CS 최대 절차 중 peer 이탈·복구의 적용 역할·용량·정량 조건을 고정하고 필요한 실측을 완료한다."
+        "result": "PASS: CoC 상대 credit 직접 고갈·복구, 지원 Audio 다중 stream과 암호화 오류·복구, CS 256-step 중 peer 이탈·복구 및 stack/heap 계측"
       },
       {
         "id": 2,
         "name": "Stack·heap 안전 여유와 최종 크기 판단",
-        "next_work": "해당 부하의 최고치·종료 후 반환·오류를 측정하고 안전 여유를 판정한다. 축소 근거가 없으면 기존 크기를 유지한다. SDC pool은 SDK 역할·개수별 요구 크기와 8-byte 정렬을 검증한다."
+        "result": "PASS: high-water·종료 반환·bounded pool 실패와 SDC 정적 계약을 대조했고 축소 근거가 없어 기존 크기를 유지"
       },
       {
         "id": 3,
         "name": "동등 Nordic native 대비 FLASH/RAM 비용",
-        "next_work": "동일 SDK·보드·controller·기능·역할·보안·MTU·로그·codec·stream 조건의 FLASH/RAM 비용을 비교하고 필수 Arduino API 비용과 불필요한 중복 비용을 분리한다."
+        "result": "PASS: CoC와 encrypted Audio 두 쌍을 동일 SDK·보드·SDC·기능·계측·linker 조건의 ELF/map으로 비교하고 API 비용 하한과 역할 차이를 분리"
       }
+    ],
+    "canonical_evidence": [
+      "00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md",
+      "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/coc-peer-credit-r2.json",
+      "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/audio-encryption-recovery.json",
+      "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/cs-peer-loss-recovery.json",
+      "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json",
+      "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/native-memory-comparison.json"
     ],
     "exclusions": {
       "sdk_controller_migration": "Not authorized or required for P2; NCS v3.4.0 remains fixed.",
@@ -92,9 +100,8 @@
       "unbounded_matrix": "Do not automatically add every power-cut, multi-link or simultaneous combination. Select cases needed for declared supported capacities and memory-safety claims."
     },
     "retained_checks": "Valid CS raw/step/count, completion and cleanup, fault detection, duplicate/backward counters, supported-role error recovery and resource safety remain applicable.",
-    "closeout": "Documentation, regression, evidence consistency and commit/push close the three axes; they are not a fourth technical axis.",
+    "closeout": "문서·회귀·증거·감사 원장·commit/push는 세 기술 축의 마감이며 별도 네 번째 축이 아니다.",
     "subsequent_order": [
-      "P2 closure",
       "M31-W04/W05 functional remaining work and change-impact revalidation",
       "M31-W06 independent-image resource/lifecycle and regression",
       "M31-W07 installed examples",
@@ -108,21 +115,20 @@
     ]
   },
   "preservation": {
-    "historical_records": "Historical results and original PASS/FAIL/HOLD/NOT_RUN evidence are preserved. Current-policy annotations do not rewrite old physical outcomes.",
+    "historical_records": "과거 PASS/FAIL/HOLD/NOT RUN 원본을 보존했다. 248~261번의 당시 미완료 문장은 262번 후속 완료 안내와 함께 역사적 문맥으로 유지한다.",
     "public_assets": "Existing tags, releases, catalogs and released package assets unchanged.",
-    "raw_evidence_and_readiness": "Unchanged; this review JSON is the only non-Markdown edited file.",
-    "runtime_sdk_controller": "No runtime source, SDK or controller changes.",
+    "runtime_sdk_controller": "Core/library runtime, fixed NCS and product SDC are unchanged. Test sketch, fixtures, HIL runners and offline comparison tools only were added or updated.",
     "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
     "board_submodule": "Unchanged and clean. Six Markdown hashes match the previous audit.",
-    "deleted_files": "No document files deleted. Redundant current-status paragraphs were condensed; the previous review JSON remains available at baseline commit.",
-    "branch_boundary": "No main rewrite, release/tag creation, firmware build, flash or HIL in this task."
+    "safety": "Exact sector flash and auto_unlock=false only; no mass erase, unlock, recover, wiring, power or USB changes. Raw probe identifiers are not published.",
+    "branch_boundary": "No main merge/squash, release/tag/catalog publication, W04-W08 implementation or remote CI/CD request."
   },
   "checks": [
     {
       "name": "Main Markdown UTF-8/local links",
       "command": "python tools/ci/run_m12_gate.py docs",
       "result": "PASS",
-      "details": "417 files; exit 0"
+      "details": "420 files; exit 0"
     },
     {
       "name": "Generated peripheral contracts",
@@ -149,10 +155,32 @@
       "details": "7 tests; exit 0; no physical verification"
     },
     {
-      "name": "Board Markdown preservation",
-      "command": "PowerShell strict UTF-8, relative-link existence and LF-normalized SHA-256 checks; git submodule revision/status",
+      "name": "Related P2 Host regression",
+      "command": "NCS Python: test_p2_cs_memory.py, test_p2_audio_broadcast_memory.py, test_p2_audio_unicast_memory.py; system Python: test_p2_audio_unicast_adaptive_scan.py",
       "result": "PASS",
-      "details": "6 files, 0 broken local links, 0 hash changes since previous audit; submodule clean"
+      "details": "13 tests total. First system-Python attempt for three serial-dependent modules FAIL: pyserial missing; rerun with fixed NCS PYTHONHOME passed 10/10. Adaptive scan 3/3."
+    },
+    {
+      "name": "New Python syntax",
+      "command": "python -m py_compile for three runners and two comparison/finalization tools",
+      "result": "PASS",
+      "details": "5 files; exit 0"
+    },
+    {
+      "name": "P2 error/load HIL",
+      "result": "PASS",
+      "details": "CoC direct peer-credit exhaustion/recovery, encrypted Audio wrong-code/recovery and CS 256-step peer reset/reconnect all PASS with memory checkpoints and both STOP. Initial CoC wrong-credit assumption remains a separate FAIL artifact."
+    },
+    {
+      "name": "Nordic native comparison builds",
+      "result": "PASS",
+      "details": "Comparable CoC and encrypted Audio native builds PASS; ELF/map and Arduino manifests captured. Initial Audio include-order and CMake backslash failures are documented."
+    },
+    {
+      "name": "Board Markdown preservation",
+      "command": "Independent strict UTF-8/LF-normalized hash and submodule revision/status checks",
+      "result": "PASS",
+      "details": "6 files, 0 hash changes since previous audit; submodule clean at fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
     },
     {
       "name": "Whitespace",
@@ -162,14 +190,9 @@
     },
     {
       "name": "Audit inventory and current-file hashes",
-      "command": "PowerShell independent inventory/path-set/LF-normalized SHA-256 comparison with document-review.json",
+      "command": "Independent inventory/path-set/LF-normalized SHA-256/duplicate comparison with document-review.json",
       "result": "PASS",
-      "details": "423 documents; 0 inventory differences, hash mismatches or duplicate paths/bodies. Actions: 54 updated, 1 added, 368 preserved. No out-of-scope changes."
-    },
-    {
-      "name": "Firmware build, HIL and full Host regression",
-      "result": "NOT_RUN",
-      "details": "Documentation-only changes; prior physical and full Host PASS results are not claimed as new runs."
+      "details": "426 documents; 0 inventory differences, hash mismatches, duplicate paths or duplicate bodies. Actions: 38 updated, 3 added, 385 preserved."
     },
     {
       "name": "Remote CI/CD",
@@ -197,8 +220,8 @@
     {
       "path": "00_Docs/01_아두이노 코어 설계/01_저장소_폴더_구조.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "ad2464b581c68ba93a27817d95d4d8c2f5b1fcfffeccd9c289b048473c59033f"
     },
@@ -208,7 +231,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "297e02d6123400452571e108a589fd910ae4b4b77044729e9d66309d555f62f6"
+      "sha256_utf8_lf": "41c17d64a65d14d2c93a783824a721ed0b8e1aed97a657f4b12ab5adead0d52a"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/03_핀과_Variant_설계.md",
@@ -240,7 +263,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "582492d361271e99aea2b5c56e05bfcdb98d7e5d8f8620fc3380767031214a7f"
+      "sha256_utf8_lf": "6efc5a1fd867f4e18f69b329c32d9fa0cbe563a3e817c7f863b8f7976621b881"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md",
@@ -256,7 +279,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "22cca7803cf4f409250ab0597307c24e1207193ce5158a563489e0113923e4cd"
+      "sha256_utf8_lf": "335f9b8934cfd8769c40fa84b7f50d2287739fddf994b2991770b28a9d2492d7"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md",
@@ -384,7 +407,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "8b5c2c99f6d015b3b71cb2edef980195fd0d1ed61b1277b4f2ff151085a06f5b"
+      "sha256_utf8_lf": "1f0953455c97fb09197dd9d1865048a71f1510f076d4229e31a9d2d194fcd7aa"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md",
@@ -392,7 +415,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "1c1c3f61bd6c4aab64ea602946cae765e18c0e7302c1534caeb74ee6f5361e8e"
+      "sha256_utf8_lf": "cbc10cc824248b7c84c0395c4d12bb7150143ded8079a4637b90b2537bc9a425"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md",
@@ -400,7 +423,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "3f6495ca0463a5109367ff40584b4d7ad4eca4362ff97841e283999da0650f70"
+      "sha256_utf8_lf": "d7df1f13b630d5f190e64e567a2b20079b1a2d2e6b460e8f763f67975ece0b14"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
@@ -408,7 +431,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "5b77388dcece6b7b3ea96fba2ef953e19848904943fa48bd9f3bba63d9992feb"
+      "sha256_utf8_lf": "6f944586c5dc6151f22b3797bfae1d0eb953c17057407df9565da923279c439f"
     },
     {
       "path": "00_Docs/02_빌드 설계/01_West_Native_Blink_PoC.md",
@@ -424,7 +447,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "aa0bbbfcc7bd97397eeb3f871475455dfe0ce31c7ac41f1c5ac32272a9e9e1ad"
+      "sha256_utf8_lf": "8df9d5ef44e03e3ad1595038bf5d18847c70f82d8c7645fb12b2e1a685d14442"
     },
     {
       "path": "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
@@ -461,8 +484,8 @@
     {
       "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "086f133668d4598032209a2c992f91d2e23c22f573939121f12bca38324fe92e"
     },
@@ -517,8 +540,8 @@
     {
       "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "b0543ca86edbe7426123850a0b16a3957aae5636c7664bce6d6840e73cf95fbe"
     },
@@ -643,14 +666,6 @@
       "sha256_utf8_lf": "d3d12e08729b92e54b6307fe9685e8d4f02faaac39af988ee21ab189904323ea"
     },
     {
-      "path": "00_Docs/04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md",
-      "classification": "historical_validation_record",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
-      "external_read_only": false,
-      "sha256_utf8_lf": "3d26df7f5f3b68862f11a14bd4bf93d998168de0b8eacc945d5b7e59d606b917"
-    },
-    {
       "path": "00_Docs/04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md",
       "classification": "historical_validation_record",
       "action": "preserved",
@@ -731,12 +746,12 @@
       "sha256_utf8_lf": "9e2b774ee27117a60bc755818ce5beffeff4223de1ad3547ac0d9aa3c19d88b0"
     },
     {
-      "path": "00_Docs/04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md",
+      "path": "00_Docs/04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "08b6170a9e45c4bc7bdf95ea14aec9bd7c23e9ac884674a6e0e037f941d3bf52"
+      "sha256_utf8_lf": "3d26df7f5f3b68862f11a14bd4bf93d998168de0b8eacc945d5b7e59d606b917"
     },
     {
       "path": "00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md",
@@ -819,12 +834,12 @@
       "sha256_utf8_lf": "4a36388d38d11ccc76f2da58d3573d6fe2ab723181f71ac8d8d217538dc19352"
     },
     {
-      "path": "00_Docs/04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md",
+      "path": "00_Docs/04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "8b2a9f6dd765a2846d3e708d18d3ea77bfca5fef88c0a23209a8715402b33eb0"
+      "sha256_utf8_lf": "08b6170a9e45c4bc7bdf95ea14aec9bd7c23e9ac884674a6e0e037f941d3bf52"
     },
     {
       "path": "00_Docs/04_검증 기록/120_T18_stable_공개_절차와_승인_차단.md",
@@ -907,12 +922,12 @@
       "sha256_utf8_lf": "b4fa7281cfbd63d103c58e5cf02ab081d8c68ae241786de9ce890d74fccd44b9"
     },
     {
-      "path": "00_Docs/04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md",
+      "path": "00_Docs/04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "014bd4476da3d54d918713334251f853fde8de2c5a86ec9f427524fc50ccd78d"
+      "sha256_utf8_lf": "8b2a9f6dd765a2846d3e708d18d3ea77bfca5fef88c0a23209a8715402b33eb0"
     },
     {
       "path": "00_Docs/04_검증 기록/130_개발문서_전수감사와_M28_착수_준비.md",
@@ -995,12 +1010,12 @@
       "sha256_utf8_lf": "f9c5d488f34532406003618a58d5480aad6506e32cea7c08fc8fc6da19da37f3"
     },
     {
-      "path": "00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md",
+      "path": "00_Docs/04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "36a418b438c751d746417d59ceb82dde29f2700e2f958fb77ef5ab5f86fa626f"
+      "sha256_utf8_lf": "014bd4476da3d54d918713334251f853fde8de2c5a86ec9f427524fc50ccd78d"
     },
     {
       "path": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md",
@@ -1083,12 +1098,12 @@
       "sha256_utf8_lf": "3f61460b0bdd37196db6c7d3229a7e3e01dc82de5c0f24a267a1cc84e3d1b925"
     },
     {
-      "path": "00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md",
+      "path": "00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "a779eded843b2c6b7be58ba6f139e59c7aa6f866d6da58dcc4c761ec364e5006"
+      "sha256_utf8_lf": "36a418b438c751d746417d59ceb82dde29f2700e2f958fb77ef5ab5f86fa626f"
     },
     {
       "path": "00_Docs/04_검증 기록/150_v0.5.0_다중_Host_지원_계획_정비.md",
@@ -1171,12 +1186,12 @@
       "sha256_utf8_lf": "9e4f4fdd9993d0423b7b1a4a3d612d71b8457e3f3bf863381fb6046f9a60007f"
     },
     {
-      "path": "00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md",
+      "path": "00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "efd19170f0605bd923a9cc79c9da5c7ab3144b8ac098bf4f766421408d817b7e"
+      "sha256_utf8_lf": "a779eded843b2c6b7be58ba6f139e59c7aa6f866d6da58dcc4c761ec364e5006"
     },
     {
       "path": "00_Docs/04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md",
@@ -1213,8 +1228,8 @@
     {
       "path": "00_Docs/04_검증 기록/164_사용자_후속_검증_범위와_DF_IQ_인계.md",
       "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "8410da8974f4c67edefbdf323256f8ccaa3325ead06585f8fd38fc3ea9699b4d"
     },
@@ -1259,12 +1274,12 @@
       "sha256_utf8_lf": "7af4f62473f5ae4ad8e86dd4cee7f41f8b4062149349ff6f555cf9014284e9d6"
     },
     {
-      "path": "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md",
+      "path": "00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "4f76fbd6cfeae8d9376def52df15d0ab52cebc3f21c8d02249908f79c08dcbef"
+      "sha256_utf8_lf": "efd19170f0605bd923a9cc79c9da5c7ab3144b8ac098bf4f766421408d817b7e"
     },
     {
       "path": "00_Docs/04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md",
@@ -1285,8 +1300,8 @@
     {
       "path": "00_Docs/04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md",
       "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "8652c64811bd13d2292b9c74f35b0c8dbdf8332ca53e898308cb45cebd5d0188"
     },
@@ -1333,8 +1348,8 @@
     {
       "path": "00_Docs/04_검증 기록/178_M31_W04_연결_AoA_수신_Host_Controller_경계.md",
       "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "6d9430bc0759b075b54faa2ed14bc93cbb969338a11a9bd4417aa2b20f8ad447"
     },
@@ -1347,12 +1362,12 @@
       "sha256_utf8_lf": "d5d58be0f68e910c4fab2a82e7f13e13437bd187cd825ce4cfac186e50215d9e"
     },
     {
-      "path": "00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md",
+      "path": "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "7364c54c25758b284b177b4fa9f115252b3ec7e068713067324d402889e90f94"
+      "sha256_utf8_lf": "4f76fbd6cfeae8d9376def52df15d0ab52cebc3f21c8d02249908f79c08dcbef"
     },
     {
       "path": "00_Docs/04_검증 기록/180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md",
@@ -1435,12 +1450,12 @@
       "sha256_utf8_lf": "d5f2018ca1d17cbf2d974499002ac247bd3414775e6773844acec257ea38b5e7"
     },
     {
-      "path": "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md",
+      "path": "00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "596814a68a2f5552873f5f129afceaf2dc0a1066a2bc0dca17160e864900099c"
+      "sha256_utf8_lf": "7364c54c25758b284b177b4fa9f115252b3ec7e068713067324d402889e90f94"
     },
     {
       "path": "00_Docs/04_검증 기록/190_M31_W03_Arduino_BAP_양방향_클라이언트_및_회귀.md",
@@ -1523,12 +1538,12 @@
       "sha256_utf8_lf": "fe298297545e47f1e89ae6d58d1a0ffaf2868e35dd9d1f943cc8da8298b20846"
     },
     {
-      "path": "00_Docs/04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md",
+      "path": "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "10daae17dd2031aa57611d6ff578ac3a8e4394da5f02d5bd2791bb0a34cdbe7d"
+      "sha256_utf8_lf": "596814a68a2f5552873f5f129afceaf2dc0a1066a2bc0dca17160e864900099c"
     },
     {
       "path": "00_Docs/04_검증 기록/200_M31_다른_PC_작업_인계.md",
@@ -1595,12 +1610,12 @@
       "sha256_utf8_lf": "20efef0c31c9abda1bfdb7191c7ea4c915133a281ebc67a659eadf2d90d710e6"
     },
     {
-      "path": "00_Docs/04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md",
+      "path": "00_Docs/04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "c8d8cf3107a3d92d0e49889e6941a7158f1887f4015a996fd47fb7007b87e3fc"
+      "sha256_utf8_lf": "10daae17dd2031aa57611d6ff578ac3a8e4394da5f02d5bd2791bb0a34cdbe7d"
     },
     {
       "path": "00_Docs/04_검증 기록/210_M31_W03_Arduino_PBP_완료.md",
@@ -1653,8 +1668,8 @@
     {
       "path": "00_Docs/04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md",
       "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "24e85390fff4b8c3023f56439c93ea5fe6d482d2e8356a4b81cce7e9660c1f8d"
     },
@@ -1680,15 +1695,15 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "c7e273f9248d25614d04b26365b247b30fbbf2860e205d3ddac733923094ba10"
+      "sha256_utf8_lf": "1f37ca42d358f34a638049ebbc553b109eb8ce17551fbbe6dbe88917194ba321"
     },
     {
-      "path": "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md",
+      "path": "00_Docs/04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "0e891ad3a8414a4c318000bd5ac666a2b0f1c6cf60c640d67f79b202c03049bd"
+      "sha256_utf8_lf": "c8d8cf3107a3d92d0e49889e6941a7158f1887f4015a996fd47fb7007b87e3fc"
     },
     {
       "path": "00_Docs/04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md",
@@ -1696,7 +1711,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "ba190d13d16055781b3071ea08fd595a2e863aa803f1841e65f376a172ceadc7"
+      "sha256_utf8_lf": "1c776f2f4caa8575c9ce9339598be08773bf3e5af0863f0e88e9f2bb358f57f4"
     },
     {
       "path": "00_Docs/04_검증 기록/221_main_마일스톤별_이력_정리.md",
@@ -1712,7 +1727,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "66122d0825922e76d0831ad0a98a9cc2bbb1962d9860acf070c720e4f24e6e67"
+      "sha256_utf8_lf": "a6f73e93f70876280377db0b25578e09355b62930888d4a413ccc8b32dd465de"
     },
     {
       "path": "00_Docs/04_검증 기록/223_M31_메모리_최적화_P1_GPIO_상태_절감.md",
@@ -1771,12 +1786,12 @@
       "sha256_utf8_lf": "f1fdc8477251835ebad7edb8b1ef7823762d865560587c70816c02be0aa1d2e0"
     },
     {
-      "path": "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md",
+      "path": "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md",
       "classification": "historical_validation_record",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
-      "sha256_utf8_lf": "c734035d57a8cdca8d96a6e4b53d27a0282a0c62addc55449df4faf3ad786343"
+      "sha256_utf8_lf": "0e891ad3a8414a4c318000bd5ac666a2b0f1c6cf60c640d67f79b202c03049bd"
     },
     {
       "path": "00_Docs/04_검증 기록/230_M31_메모리_최적화_P1_GATT_Event_Payload.md",
@@ -1837,16 +1852,16 @@
     {
       "path": "00_Docs/04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md",
       "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "f7242cd81357d7ac2214799d32b4a33a3c257c7527db187b71b74f0dfc4bb275"
     },
     {
       "path": "00_Docs/04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md",
       "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "2b535c52cc507b9d6f3e4784dd33a64756111003ba9718c2ffd5eaefa57bed54"
     },
@@ -1856,7 +1871,95 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "4f6cb4425862784a283f8aa92b0a05af9b653425a3df8270db31b7d4186c531f"
+      "sha256_utf8_lf": "c31595568ebd95168a643cfd172e3c972df7fc6d1f92f67270796ba736bb6388"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md",
+      "classification": "historical_validation_record",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "c734035d57a8cdca8d96a6e4b53d27a0282a0c62addc55449df4faf3ad786343"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md",
+      "classification": "historical_validation_record",
+      "action": "updated",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "3444f5e35daf597fdaad1d8a26c35d2cd4ff53ce85d9cf6a7dfc6964aab64cda"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md",
+      "classification": "historical_validation_record",
+      "action": "updated",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "3174f9729b1cacc7f8d160e9be8c2830b37169e43769f768ea321e957e4f40a9"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md",
+      "classification": "historical_validation_record",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "0a05bb95b3a0d43ac6905b361a48683cff31295aa8f4c24a465a9c0a72781b02"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md",
+      "classification": "historical_validation_record",
+      "action": "updated",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "179f847fc9292c9f97bd91f8bac226a25db7677412e777634c282092e5387d68"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md",
+      "classification": "historical_validation_record",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "f3c111f537839108a92b408829b27d9ac671f71f88178ad820cd308bd49f7fa3"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md",
+      "classification": "historical_validation_record",
+      "action": "updated",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "a9cf0f195428aa7f6275b46c2b80c9b4e9380bed2736cae1b958e72fcd235124"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md",
+      "classification": "historical_validation_record",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "5ca45c0b7ea335fe3a4b01f699d5c10ba70994c25d3dff597712050fb5d16d3b"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md",
+      "classification": "historical_validation_record",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "4de04941ef362aed734166e07972dd98ab607fef0e763069a935dd7318e25fe3"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md",
+      "classification": "historical_validation_record",
+      "action": "updated",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "c23437292b69fa5238a5c4a319b05847890189df6e5e00b4aacb8d6bd7d0b7b9"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/249_M31_P2_문서_정합성_감사.md",
+      "classification": "historical_validation_record",
+      "action": "updated",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "032d7d8088cc1549ea3a1aa72bcc37789eb3fcfff7fe0343395502f1d5a74e09"
     },
     {
       "path": "00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md",
@@ -1867,84 +1970,84 @@
       "sha256_utf8_lf": "4d8064b57bf431b631b1c986441b1c9e24149bd1972a36a6a26982e905623e9f"
     },
     {
-      "path": "00_Docs/04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md",
+      "path": "00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "e738f02f7de0246a8f2776d5604990becb3c0c8fdfc4aa10f33edd44daa474fb"
+      "sha256_utf8_lf": "5c0d336f933d70788cfbe17f730373c46481863e41278fdff2c4488e9ceca248"
     },
     {
-      "path": "00_Docs/04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md",
+      "path": "00_Docs/04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "70140b09f4ad7ef7e7a6960e71f2d4530df6a857574d7efb0f0c2ab3a634960f"
+      "sha256_utf8_lf": "5d46728a162b71ddb7e2d7bd5d948d2a5ef833a31f1bb88970d042c6cdcc45f5"
     },
     {
-      "path": "00_Docs/04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md",
+      "path": "00_Docs/04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "0a05bb95b3a0d43ac6905b361a48683cff31295aa8f4c24a465a9c0a72781b02"
+      "sha256_utf8_lf": "30a7dc5883fa9fbcc97adea7facb148b2e87f27d64f8e5debf5400d90e028ebb"
     },
     {
-      "path": "00_Docs/04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md",
+      "path": "00_Docs/04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "11fd28a8d4fa44250f952ac9d5e5c6d27e3a4da7f5ca9c101f1f997c8860942a"
+      "sha256_utf8_lf": "bac21db808aa11c2bc614bece3e3e0ee9e51cee1b4aaf889c84f4e8669469a4c"
     },
     {
-      "path": "00_Docs/04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md",
+      "path": "00_Docs/04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "f3c111f537839108a92b408829b27d9ac671f71f88178ad820cd308bd49f7fa3"
+      "sha256_utf8_lf": "7573efb0aaa08f2e18fae2097c216d38c3242c4de70b6c31e03a3732bc9b797f"
     },
     {
-      "path": "00_Docs/04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md",
+      "path": "00_Docs/04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "78aec3ee96ba88dfc49beac2b0d8cf8f4fc4f35bc9da12f47938187381fd88ed"
+      "sha256_utf8_lf": "ef32b2510e4105189581a20d659b45db25612f787389954f4e3b1b37c8ade87d"
     },
     {
-      "path": "00_Docs/04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md",
+      "path": "00_Docs/04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "5ca45c0b7ea335fe3a4b01f699d5c10ba70994c25d3dff597712050fb5d16d3b"
+      "sha256_utf8_lf": "9ad4d14dffb368cdadb2777812a4252508bb47089356c9fb24c43834abe77a48"
     },
     {
-      "path": "00_Docs/04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md",
+      "path": "00_Docs/04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "4de04941ef362aed734166e07972dd98ab607fef0e763069a935dd7318e25fe3"
+      "sha256_utf8_lf": "cb67d9cf63c01981da8ad815854da893c83169d79753bf231f9e3cff79fcc64c"
     },
     {
-      "path": "00_Docs/04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md",
+      "path": "00_Docs/04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "7aa1236a066cb86456a2e41c4ac2e3cf006feca5114cb043d82d2a65ebf8893f"
+      "sha256_utf8_lf": "e428184ef04dd34ca665042cf81afe9252aa0edefb7db60a76cfd392bef1dc15"
     },
     {
-      "path": "00_Docs/04_검증 기록/249_M31_P2_문서_정합성_감사.md",
+      "path": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "0edd4649e45a9516937cb2bd9fe58c22d624b0249507ee825ff330fe7d91909c"
+      "sha256_utf8_lf": "80b131c4a1b263b2d484a56379762ba5d390194ca16e203f3d072661fa968b06"
     },
     {
       "path": "00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md",
@@ -1955,84 +2058,28 @@
       "sha256_utf8_lf": "3d615609c1ed524dbc02f1451033709a4fbdc333c3c1036935ba47ce08894b11"
     },
     {
-      "path": "00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md",
+      "path": "00_Docs/04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "0cd19c1a568b748de8fbc08f66786f9b3dfb78e62db9682bc3375408fb6d72ab"
+      "sha256_utf8_lf": "c57ed2a5c558600a9dd5cb78a160ad40a875e9768a198279d12d3abae73b3b12"
     },
     {
-      "path": "00_Docs/04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md",
+      "path": "00_Docs/04_검증 기록/261_P2_잔여_세_축_확정과_문서_전수_정비.md",
       "classification": "historical_validation_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "f0d1d10d09668eb8a23eba9efc3528b70aa75dd99e563f50407d99ad3c31975b"
+      "sha256_utf8_lf": "0301ccdb506599b52f83ceb11ecb281c590630ba3293034be01f9905f1847ce3"
     },
     {
-      "path": "00_Docs/04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "path": "00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md",
+      "classification": "current_audit_record",
+      "action": "added",
+      "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "c33f5aba60f2cbd5af8570dcb23f525ab6cbdee1ba87fc4a0d0ec6620de33c20"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "411b4ab1eef68ed22c60474bcd68ea46a6630693ef7d0e600493e74e3154f7cf"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "843eaeb729d043e5c7b7eb0f00157988d41a8edec7b2bc1042cc1a61ecd41fd0"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md",
-      "classification": "historical_validation_record",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
-      "external_read_only": false,
-      "sha256_utf8_lf": "887db4c000aaf7779ba9b0cbee374fd3f7157f00161fd61af4a9c44a76f9e8dc"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "6f780476f08939ee193a8e436d40ab9e88cf555c31951f4fb6cf4e9a82832684"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "8058afcec657edbd738cd2f4e31f5738fdafa29eeea4a69015521221da608c5d"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "a32fa6ec057f70808a03e0107f7bf7ba71f97872132fd7148c234bd7daca5ba6"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "3bf08b39b142a3948902e8113ea4e7aec142d1126e5c8c796ae3bd17fc961822"
+      "sha256_utf8_lf": "b901db909fb20733dc576f170432104e533dbf2be392f72ba9c967aae8911a60"
     },
     {
       "path": "00_Docs/04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md",
@@ -2041,22 +2088,6 @@
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "7e5769125cd7292c2dbc0c62a01dd92acc78561bdd66960752418d54d0d12b1c"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md",
-      "classification": "historical_validation_record",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "8c4cfea662955f90f93b4e4da59770ac48207d6843ce295b2aae934c85d52829"
-    },
-    {
-      "path": "00_Docs/04_검증 기록/261_P2_잔여_세_축_확정과_문서_전수_정비.md",
-      "classification": "current_audit_record",
-      "action": "added",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "20171f538bc8fa14fb62e32f26a4ea905ba0b590f368cd540dbde22b7f67dbef"
     },
     {
       "path": "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md",
@@ -2643,6 +2674,14 @@
       "sha256_utf8_lf": "4af953680d3d571210607d3158f9037d338f2af231cb50373d054628d8c79160"
     },
     {
+      "path": "00_Docs/04_검증 기록/README.md",
+      "classification": "current_reference",
+      "action": "updated",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "771c04ed4e979adbbc843eaae656373c3d05cbc8337daf0afef4dce703bf5a71"
+    },
+    {
       "path": "00_Docs/04_검증 기록/evidence/m29-w07-08cc52d6-signed-eatt/diagnostic.md",
       "classification": "historical_validation_record",
       "action": "preserved",
@@ -2651,20 +2690,12 @@
       "sha256_utf8_lf": "48c22dc608269f165b089a6d4bf8acc103b314bbac0b9bcfc8e8c723e9a1a1fe"
     },
     {
-      "path": "00_Docs/04_검증 기록/README.md",
-      "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "393d0ae35fbad0dff8a69d986c209a7579200e0d22a084814c88efa6945ce908"
-    },
-    {
       "path": "00_Docs/05_릴리스/README.md",
       "classification": "release_record",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "2dad4cc3c33f011f57bafc90d08165c0b0f11618881d97eb13b58e95e2a45f47"
+      "sha256_utf8_lf": "735a134815f5efc305f6f1f98c007736f849c9018eb40b53e87970b52f938a2d"
     },
     {
       "path": "00_Docs/05_릴리스/v0.1.0-rc.1/KNOWN_ISSUES.md",
@@ -3184,7 +3215,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "66c229df12d4ab1d6f32c4722a9cd9a0c85af42a265bb11d98ace284529144ec"
+      "sha256_utf8_lf": "0aa9bf4e37b53b719b212776948e16511da1b56a1eb137947478efcf31d19a39"
     },
     {
       "path": "00_Docs/README.md",
@@ -3192,7 +3223,7 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "48569c199a7156d701eef526ac14f2725e56458898a5ab61374a70021648ebf8"
+      "sha256_utf8_lf": "7b16719a575928ea86fb4633d3127b66fd8b3bfb9893d6e388e319eafcd1bf4b"
     },
     {
       "path": "00_Docs/TODO_M31.md",
@@ -3200,13 +3231,13 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "88e626d7fd3f3d8ed013d74003a62cf10ee480bbabb846d0eb7693e3828871cc"
+      "sha256_utf8_lf": "5d5df4164aba1c2f6522f569c2077ab812cb1fbfd8d508f6ff18d0ebcc391d5b"
     },
     {
       "path": "00_Docs/TODO_M32.md",
       "classification": "current_reference",
       "action": "preserved",
-      "review_depth": "full_text_review_and_automated_checks",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "b805be754b46ac899041305319df04cf7b0a9892737e0bba1787777f09cb4663"
     },
@@ -3214,7 +3245,7 @@
       "path": "00_Docs/TODO_M33.md",
       "classification": "current_reference",
       "action": "preserved",
-      "review_depth": "full_text_review_and_automated_checks",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "3224f2f73fb580205d76c447c58977273d9e81f77a1188a3abba1e9baf5d5372"
     },
@@ -3222,7 +3253,7 @@
       "path": "00_Docs/TODO_v0.4.0.md",
       "classification": "completed_release_todo",
       "action": "preserved",
-      "review_depth": "full_text_review_and_automated_checks",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "5b07b0a00f339e5378d188aff46714c058c57a032ef4e2bdd0c877a2a8fab63b"
     },
@@ -3230,7 +3261,7 @@
       "path": "00_Docs/TODO_v0.4.1.md",
       "classification": "completed_release_todo",
       "action": "preserved",
-      "review_depth": "full_text_review_and_automated_checks",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "1a5b2c150c18c361f4ee16d369bd9863e45e0f6e5ea933b0c44065ffe5f73129"
     },
@@ -3240,15 +3271,23 @@
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "14500d5d178d23e99f6be5e3e006aa50276b07bcbc02b3f024916beaf15a7074"
+      "sha256_utf8_lf": "97c5b877ec73c63f545d375cbe7bcde78c2aaf720374d4a8e4380ae5ff88d75c"
     },
     {
       "path": "AGENTS.md",
       "classification": "current_reference",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "6dbb6aa483479f59217566a69dbab1f2f66d11f7a4be62976ebd307a3246cebc"
+    },
+    {
+      "path": "README.md",
+      "classification": "current_reference",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "6dbb6aa483479f59217566a69dbab1f2f66d11f7a4be62976ebd307a3246cebc"
+      "sha256_utf8_lf": "4c2c8caf0b85efc48064199bd6d02edda8332308f24cf9fefb899508700c5979"
     },
     {
       "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/01_BOARD_DEVELOPMENT.md",
@@ -3341,16 +3380,16 @@
     {
       "path": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "8ed7ead97210b6393fc00908c99759ce295e35b90ed69f3abfe08bbc04d0b66c"
     },
     {
       "path": "libraries/NUCODE_BLE_DirectionFinding/examples/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "3680e653c6d9763c2cc0cb5f7a2167bdb892c71bc494dcd3118dde32dcf8281d"
     },
@@ -3371,14 +3410,6 @@
       "sha256_utf8_lf": "c15fb69d8d78bb64ab2beab58783f4bc9d5dc11d4753aab8129602a9e8c09743"
     },
     {
-      "path": "README.md",
-      "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
-      "external_read_only": false,
-      "sha256_utf8_lf": "56bc31d8340870f14a7fae7430dcce8715e33d7aa29aa30af03a744afeaa6b92"
-    },
-    {
       "path": "tests/hil/nu54dk/COMMON_WIRING.md",
       "classification": "current_reference",
       "action": "preserved",
@@ -3387,36 +3418,12 @@
       "sha256_utf8_lf": "2f9eb40510a6fd24a175a10dce08d6e43de13d6bcf4583994144509c019c1767"
     },
     {
-      "path": "tests/hil/nu54dk/fixtures/BapNativeLc3/README.md",
-      "classification": "current_reference",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
-      "external_read_only": false,
-      "sha256_utf8_lf": "c1ae675f9ab2c7f5d44d1692b77f88072709eb2f6e37f70a3cb9574539ba6921"
-    },
-    {
-      "path": "tests/hil/nu54dk/fixtures/BapNegativeClient/README.md",
-      "classification": "current_reference",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
-      "external_read_only": false,
-      "sha256_utf8_lf": "53296c2cf689314ea28c09ece50051b045517951fbfff9dcae03f87b925644d0"
-    },
-    {
-      "path": "tests/hil/nu54dk/fixtures/NordicRasComparison/README.md",
-      "classification": "current_reference",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
-      "external_read_only": false,
-      "sha256_utf8_lf": "e52eb43a71107f0515546d707743961231b4db09ab7581d18c4dc115ae165fa7"
-    },
-    {
       "path": "tests/hil/nu54dk/README.md",
       "classification": "current_reference",
       "action": "updated",
       "review_depth": "targeted_semantic_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "122f257da18eb0a00ef81471d97945e66c8c141e51ac161b506f7c51c27e2984"
+      "sha256_utf8_lf": "dc130e6249088dcb914b85a574f8332e0cc5b5efcbf36b3245d2b54a3378c649"
     },
     {
       "path": "tests/hil/nu54dk/T13_PLAN.md",
@@ -3443,6 +3450,46 @@
       "sha256_utf8_lf": "c48507e088161e0a5796dbaf8297c1efa45dfe546181eb959e2406176a3c2ac0"
     },
     {
+      "path": "tests/hil/nu54dk/fixtures/BapNativeLc3/README.md",
+      "classification": "current_reference",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "c1ae675f9ab2c7f5d44d1692b77f88072709eb2f6e37f70a3cb9574539ba6921"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/BapNegativeClient/README.md",
+      "classification": "current_reference",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "53296c2cf689314ea28c09ece50051b045517951fbfff9dcae03f87b925644d0"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/NordicRasComparison/README.md",
+      "classification": "current_reference",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "e52eb43a71107f0515546d707743961231b4db09ab7581d18c4dc115ae165fa7"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/P2CocCreditPeer/README.md",
+      "classification": "current_reference",
+      "action": "added",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "62ad869280c3f86f7aa76b41defb21cfcdb7cae41c6a3ed4d2bbea28e5d9f7f9"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/P2NativeAudioComparison/README.md",
+      "classification": "current_reference",
+      "action": "added",
+      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "external_read_only": false,
+      "sha256_utf8_lf": "d57c605ecd64d6b69907a5f6e8371e0bc029a7b70b969a05a5800a8340eae9d8"
+    },
+    {
       "path": "tests/zephyr/m25_nojumper_hil/README.md",
       "classification": "current_reference",
       "action": "preserved",
@@ -3453,16 +3500,16 @@
     {
       "path": "tests/zephyr/m31_df_connected_receiver/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "d2c593e2f74dd3e0f85d397468560a070da0c419b92df5b4d48532611c5e241a"
     },
     {
       "path": "tests/zephyr/m31_df_receiver/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "targeted_semantic_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "b4fb252fc995c84e4a5751c6ed52662aa74cf119cc3094ad6e0c6195dc96a415"
     },
@@ -3478,7 +3525,7 @@
       "path": "third_party/THIRD_PARTY_NOTICES.md",
       "classification": "third_party_notice",
       "action": "preserved",
-      "review_depth": "full_text_review_and_automated_checks",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "b9360db1689b4dec26b2ae5bfe73e64b0f0a397cbc7f1a2b8ba05d2431a2d757"
     },
@@ -3547,20 +3594,20 @@
       "sha256_utf8_lf": "64761b35dbb44ab19159c15545a3ea73330ce7d7a100c02d24a082c2359d04c1"
     },
     {
-      "path": "tools/remote-windows/m10/README.md",
-      "classification": "current_reference",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
-      "external_read_only": false,
-      "sha256_utf8_lf": "814a11a90433dedc2b9d94150a8635c6359ca5e832e6615cd094146d4c01b2e0"
-    },
-    {
       "path": "tools/remote-windows/README.md",
       "classification": "current_reference",
       "action": "preserved",
       "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "d6620858ca0ef57d24bcdb0ba40bf602cb684feb19a98b7b87e928859d425a3e"
+    },
+    {
+      "path": "tools/remote-windows/m10/README.md",
+      "classification": "current_reference",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "814a11a90433dedc2b9d94150a8635c6359ca5e832e6615cd094146d4c01b2e0"
     }
   ]
 }

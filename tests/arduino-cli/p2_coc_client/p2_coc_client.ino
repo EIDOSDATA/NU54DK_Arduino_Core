@@ -28,6 +28,8 @@ bool burstActive = false;
 std::size_t burstStartEchoes = 0U;
 std::size_t burstSent = 0U;
 bool burstBackpressure = false;
+bool creditTestActive = false;
+bool creditRecoveryPending = false;
 
 /** @brief exact local-name scan 결과의 주소를 main thread에서 보존합니다. */
 void onScanResult(const nucode::ble::BLEScanResult &result, void *context)
@@ -93,6 +95,12 @@ void onL2capEvent(const nucode::ble::BLEL2capEventInfo &information, void *conte
         }
         Serial.print("LE CoC echo PASS, count=");
         Serial.println(echoCount);
+        if (creditRecoveryPending)
+        {
+            creditRecoveryPending = false;
+            Serial.println("P2_COC_CREDIT_RECOVERED echoes=1");
+            nucode::test::reportMemory("credit-recovered");
+        }
     }
 }
 
@@ -153,7 +161,7 @@ void loop()
 
     const std::uint32_t now = millis();
     if (connectedChannels == channelCount && pendingEchoes == 0U &&
-        !burstActive &&
+        !burstActive && !creditTestActive &&
         now - lastSendMs >= 1000U &&
         BLEL2cap.availableForWrite() >= channelCount)
     {
@@ -203,6 +211,65 @@ void loop()
                 Serial.print(burstSent);
                 Serial.print(" backpressure=");
                 Serial.println(burstBackpressure ? 1 : 0);
+            }
+        }
+        else if (command == 'c')
+        {
+            if ((connectedChannels != channelCount) || (pendingEchoes != 0U) ||
+                burstActive || creditTestActive ||
+                (BLEL2cap.availableForWrite() < nucode::ble::L2capCoc::transmit_buffers))
+            {
+                Serial.println("P2_COC_CREDIT_REJECTED");
+            }
+            else
+            {
+                preparePayload();
+                std::size_t accepted = 0U;
+                creditTestActive = true;
+                for (std::size_t index = 0U;
+                     index < nucode::ble::L2capCoc::transmit_buffers; ++index)
+                {
+                    if (!BLEL2cap.send(channels[0], payload, sizeof(payload)))
+                    {
+                        break;
+                    }
+                    ++accepted;
+                }
+                Serial.print("P2_COC_CREDIT_SENT accepted=");
+                Serial.println(accepted);
+            }
+        }
+        else if ((command == 'q') && creditTestActive)
+        {
+            const nucode::ble::BLEL2capStatistics statistics = BLEL2cap.statistics();
+            Serial.print("P2_COC_CREDIT_WAIT available=");
+            Serial.print(BLEL2cap.availableForWrite());
+            Serial.print(" sent=");
+            Serial.print(statistics.sent);
+            Serial.print(" received=");
+            Serial.println(statistics.received);
+            nucode::test::reportMemory("peer-credit-exhausted");
+        }
+        else if ((command == 'v') && creditTestActive)
+        {
+            if (BLEL2cap.availableForWrite() == 0U)
+            {
+                Serial.println("P2_COC_CREDIT_RECOVERY_REJECTED");
+            }
+            else
+            {
+                preparePayload();
+                if (!BLEL2cap.send(channels[0], payload, sizeof(payload)))
+                {
+                    Serial.println("P2_FAIL stage=coc-credit-recovery-send");
+                }
+                else
+                {
+                    pendingEchoes = 1U;
+                    creditRecoveryPending = true;
+                    creditTestActive = false;
+                    Serial.println("P2_COC_CREDIT_RECOVERY_SENT");
+                }
             }
         }
         else if ((command == 'd') && peerConnection.valid())

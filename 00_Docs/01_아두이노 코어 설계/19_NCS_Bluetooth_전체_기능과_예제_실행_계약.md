@@ -23,13 +23,13 @@
 
 ### 2026-09-21 릴리스 범위 결정
 
-`v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다. 메모리 최적화 → W04·W05 → W06~W08
+`v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다. W04·W05 → W06~W08
 순서로 기능을 검증하고, M31-W08에서 해당 버전의 재현 package·Windows 설치 수명주기·RC·
 공개 승인/게시·공개 설치 gate를 관리한다. M31 기능 8/8과 릴리스 판정은 별도 집계한다.
-현재 `M31-MEM-OPT`에서 메모리 최적화 P0·P1은 완료했고 P2는 미완료다.
-P2 잔여는 지원 범위의 오류·최악 부하, stack/heap 안전 여유·크기 결정,
-동일 조건 Nordic native 대비 FLASH/RAM 비교의 세 축이며 [M31 TODO](../TODO_M31.md)가 관리한다.
-문서·회귀·커밋은 마감 절차다. P2 완료를 위해 SDK/controller를 교체하지 않는다.
+현재 `M31-MEM-OPT`에서 메모리 최적화 P0·P1·P2를 완료했다. P2의 지원 범위 오류·최악 부하,
+stack/heap 안전 여유·최종 크기, 동일 조건 Nordic native FLASH/RAM 비교는
+[262번](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)이 소유한다.
+SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 
 M32·M33 추가 기능과 Ubuntu/macOS 확대는 버전 미정 후속 범위다. M33-W07~W08은 후속
 다중 Host·RC·공개를 계속 소유한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지

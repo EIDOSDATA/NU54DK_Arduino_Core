@@ -12,7 +12,7 @@
 
 2026-09-21 결정으로 **M31 완료 후 v0.5.0 Windows 릴리스**를 준비한다. main 이력 정리 이후의
 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 과거의 설명 통합 요청은 문서만 수정한
-시점의 이력이며, 현재는 `M31-MEM-OPT`에서 P0·P1을 완료하고 P2 실기·진단을 진행 중이다.
+시점의 이력이며, 현재는 `M31-MEM-OPT`에서 메모리 최적화 P0·P1·P2를 완료했다.
 이후 W04·W05 → W06 → W07 → W08로 이어간다. **진행 중**은 잔여가 있다는 원장 상태이며
 현재 시험 실행 중이라는 뜻이 아니다. Host는 보류한다. M32/M33은 후속 버전(미정)이다.
 
@@ -72,8 +72,8 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | M31-W02 raw ISO 기반 | **완료** | 공개 `RawCis`/`RawBis` 기반 **11개 역할**의 사용자 payload와 정지·재시작을 각 20회 실기 PASS. 잘못된 Broadcast Code의 유효 SDU 유출 0, 같은 image의 정상 Code 복구 100/100, 강제 sync loss 후 새 session 100/100. 독립 Sketchbook 개발 package 485파일 무결성·고정 prerequisite·11/11 예제 발견·빌드와 같은 revision의 두/세 보드 11역할 실기 20회씩 PASS. 공개 예제 감사 82개 중 0건 | [W02 최종 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)·[완료 audit](<04_검증 기록/evidence/m31-w02-installed-examples-b47aaf40/closure-audit.json>)·[오류 후 복구](<04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)·[sync loss 재시작](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)·[이전 고정 시험 audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
 | M31-W03 전체 LE Audio profile | **완료** | W03-01~11의 공개 Arduino 역할과 적용 가능한 native 기반을 모두 닫았다. BAP unicast/broadcast·BASS·CAP·CSIP·PBP·VCP/VOCS/AICS/MICP, MCP/MCS·CCP/TBS, TMAP/GMAP, HAP/HAS의 build/runtime·negative·peer-loss 복구와 합성 PCM RF data path를 실제 2~3보드에서 확인했다. Media/Call은 각 100/100·negative 각 20/20·reconnect 20/20·180초 soak, TMAP/GMAP은 각 180초·stop/restart 20/20·drop 0, HAP/HAS는 preset 100/100·두 negative 각 20/20·복구 20/20이다. 외장 audio·상용 peer·qualification·의료/음향 성능은 사용자 후속 비차단 `NOT RUN`이며 M31 전체는 W04~W08 잔여로 `not_completed`다 | [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[BAP broadcast](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)·[BASS](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>)·[CAP](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)·[Audio Control](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>)·[CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)·[PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)·[Media/Call](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>)·[TMAP/GMAP](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>)·[HAP/HAS](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>)·[W03 완료 감사](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)·[exact closure](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
 | M31-W04 Direction Finding | **진행 중** | 제품 SDC beacon TX 20/20·별도 LL 연결 응답 stop/restart 20회는 국소 PASS. 제품 SDC IQ RX·AoD는 고정 SDK 지원 밖으로 판정하며 P2에서 제외한다. LL 내부 IQ 성공·connectionless fault는 역사 증거다. 채택 TX 기능·예제·지원표·원장의 최종 정합과 변경 영향 재검증은 W04에서 마감한다. | [지원 경계 259](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) · [내부 진단 244](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [실패 원본 256](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>) |
-| M31-W05 connected Channel Sounding | **진행 중** | secure ACL·raw RAS 100개와 stop/restart·disconnect/reconnect 각 20/20, 실제 256-step·분할 RAS 유효 raw 1,000개·양측 STOP을 확인했다. 간헐 counter gap은 기록하되 합격 조건에서 제외한다. flash 직후 중단의 단일 원인·wrong-key negative와 최대 절차의 peer 이탈 뒤 오류·복구는 별도 잔여다. 비보정 RTT의 정확도는 미보증이다. | [비암호화 거부](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [flash 직후 복구](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [장기 누락 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [256-step 장시간](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) |
-| M31-W06 자원·수명주기·회귀 | **미착수(사전 메모리 감사만 완료)** | 독립 role image별 RAM/RRAM·stack·buffer·stream/connection 예산, stop/disconnect 뒤 callback·link·radio 자원 회수, M19~M30 영향 회귀. 고점유 image의 공통 정적 예약은 W04·W05 마감 전에 최적화 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>): main 문서 반영 → `M31-MEM-OPT` 최적화 → W04·W05 잔여·영향 재검증 → W06 manifest·회귀. 네 기능 전체 동시 실행은 완료 조건이 아님 |
+| M31-W05 connected Channel Sounding | **진행 중** | secure ACL·raw RAS 100개와 stop/restart·disconnect/reconnect 각 20/20, 실제 256-step·분할 RAS 유효 raw 1,000개·양측 STOP을 확인했다. 최대 절차 중 peer 이탈·자동 재연결 뒤 유효 raw 20개도 P2에서 PASS했다. 간헐 counter gap은 비차단 관찰값이다. W05 자체의 flash 직후 경계·wrong-key negative 마감은 남아 있다. 비보정 RTT의 정확도는 미보증이다. | [비암호화 거부](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [flash 직후 복구](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [256-step 장시간](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) · [P2 peer-loss](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| M31-W06 자원·수명주기·회귀 | **미착수(P0~P2 메모리 최적화 완료)** | 독립 role image별 RAM/RRAM·stack·buffer·stream/connection 예산, stop/disconnect 뒤 callback·link·radio 자원 회수, M19~M30 영향 회귀. P2 완료 수치를 입력으로 사용하되 W06 전체 회귀와 혼동하지 않음 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) · [P2 완료](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>). 네 기능 전체 동시 실행은 완료 조건이 아님 |
 | M31-W07 기능 HIL·예제 실행 | **미착수** | 3보드 역할 재배치로 적용 가능한 모든 board-only subcase 유한 실행, Arduino 설치 예제의 실제 실행; 외부 peer 행 별도 관리 | exact image·익명 mapping·transcript·원본 hash, 기능/role별 PASS·FAIL·NOT RUN·UNSUPPORTED 근거 |
 | M31-W08 마감·Windows 릴리스 준비 | **미착수** | API·예제·지원표·문서·원장 일치, Host/target 회귀, M31 8/8 판정과 v0.5.0 Windows 패키지·설치·RC 준비. M32/M33은 후속 버전으로 인계 | 기능 완료와 공개 판정 별도. [v0.5.0 공개 gate](TODO_v0.5.0.md#6-결과공개-규칙), known limits·후속 dependency; 실제 공개는 별도 승인 |
 
@@ -93,7 +93,7 @@ W06을 미완료로 두지 않는다.
 
 ### 메모리 최적화 현재 상태
 
-**P0·P1 완료, P2 미완료**다. 기본 `standard`/full 호환 경로를 유지하며 `adaptive`는 명시적
+**P0·P1·P2 완료**다. 기본 `standard`/full 호환 경로를 유지하며 `adaptive`는 명시적
 실험 선택지다. 실제 API 도달성·library manifest·공개 역할/용량 선언을 compiler-assisted probe와
 resolver로 해석한다. 일반 사용자에게 기능별 `prj.conf` 수동 OFF 목록을 요구하지 않는다.
 전문가 `prj.conf`/`app.overlay` override와 향후 상위 radio 정책 메뉴는
@@ -103,22 +103,23 @@ resolver로 해석한다. 일반 사용자에게 기능별 `prj.conf` 수동 OFF
 | --- | --- |
 | P0 기능 선택 / P1 정적 저장소 | [222번](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [237번](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>). Core SPI 50,877→20,589 B, CoC-only 91,037→70,081 B, GATT 1×1 server fixture 113,218→48,581 B. 각각의 같은 fixture 비교이며 합산 절감량이 아님 |
 | GATT / raw ISO | [238번](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>) GATT 512 B write/read·재연결 20/20. [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>) CIS/BIS 각 100 SDU×20세션 |
-| CoC | [257번](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) 두 채널 512 B, 로컬 송신 버퍼 4개 포화·다섯 번째 busy 뒤 ACL 재연결과 서버 SWD reset 각각 20/20. 상대 credit 고갈과 다름 |
-| Audio | [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) broadcast 재가입 20/20, [254번](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) unicast 재연결 20/20, [258번](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) 양방향 각 10,000 frame·drop 0·즉시 종료 20/20 |
+| CoC | [257번](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) 로컬 TX pool 4개 포화·다섯 번째 busy와 복구. [262번](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) peer 실제 초기 credit 1 직접 보유, 제출 4개 중 3개 대기·반환 뒤 진행·새 SDU 복구 |
+| Audio | [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) broadcast 재가입 20/20, [254번](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) unicast 재연결 20/20, [258번](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) 양방향 각 10,000 frame·drop 0. 262번 wrong Code `-61`·decode 0 뒤 올바른 Code 100 frame 복구 |
 | DF | [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) beacon TX 20/20. 제품 SDC IQ RX는 `UNSUPPORTED`이며 P2 비차단; Zephyr LL 진단은 제품 RX PASS가 아님 |
-| CS | [260번](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) 실제 256-step·분할 RAS 유효 raw 1,000건·양측 STOP. gap 3은 비차단 관찰값. 유효 RTT 없는 단편 결과를 완료 queue에서 제외 |
-| SDC / native 비교 준비 | [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) 8역할 SDK 계산·정렬 예약 감사. [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) Nordic RAS 진단은 조건이 달라 API 비용 비교의 완료 근거가 아님 |
+| CS | [260번](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) 실제 256-step·분할 RAS 유효 raw 1,000건·양측 STOP. gap 3은 비차단. 262번은 첫 raw 전 peer reset·disconnect·자동 재연결 뒤 유효 raw 20개·중복/역행 0 |
+| 최종 크기 / SDC | MPSL work의 최소 관찰 여유 264 B 등으로 stack·heap·SDC pool 기존 크기를 유지. SDC는 [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) SDK 계산·정렬 계약, 최종 표는 [memory JSON](<04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json>) |
+| Nordic native 비교 | CoC와 암호화 LC3 broadcast source 두 쌍의 동일 SDK/board/SDC/기능·보안·MTU/stream·로그·계측·linker 조건 비교 PASS. [비교 JSON](<04_검증 기록/evidence/m31-p2-three-axes-20260925/native-memory-comparison.json>). 조건이 다른 250번 RAS는 분모에서 제외 |
 
 각 결과는 해당 source·image·조건의 국소 PASS다. 정상 반복만으로 최악 메모리 안전성을 보장하지
 않으며, 과거 원본과 세부 시도는 [검증 기록 목차](<04_검증 기록/README.md>)에 보존한다.
 
-### P2 남은 작업 — 세 축
+### P2 완료 — 세 축
 
-| 번호 | 남은 기술 작업 | 완료 시 남길 근거 |
+| 번호 | 기술 축 | 완료 근거 |
 | --- | --- | --- |
-| 1 | **미계측 오류·최악 부하**: CoC 상대 credit 고갈, Audio 지원 다중 stream·암호화 오류, CS 최대 절차 중 peer 이탈 후 복구 | 지원하는 역할/선언 용량별 유한 입력·분모·timeout, 오류 거부·복구·양측 STOP, 같은 실행의 메모리 관찰값. 기존 W02/W03 기능 PASS와 최적화 image의 계측을 구분 |
-| 2 | **메모리 안전 여유·최종 크기**: 위 부하의 main/workqueue/BT stack 및 heap | 예약·관찰 최고치·여유·할당 실패/누수·계측 비용, 유지 또는 조정 이유. SDC는 SDK 역할/count별 요구량과 8-byte 정렬을 준수 |
-| 3 | **동등 조건 Nordic native 비용 비교** | 같은 SDK/board/controller·기능/보안/MTU·로그/계측·codec/stream 조건의 FLASH/RAM·ELF/map 차이. 최소 API 비용과 불필요한 중복 저장소를 분리하고 발견한 중복을 정리·검증 |
+| 1 | **지원 범위 오류·최악 부하** | CoC peer credit, Audio 다중 stream/wrong Code, CS 256-step peer 이탈·복구와 동시 메모리 계측 **PASS** |
+| 2 | **메모리 안전 여유·최종 크기** | stack/heap 반환·bounded allocation failure·계측 영향·SDC 계약 확인. 축소 근거가 없어 기존 크기 유지 **PASS** |
+| 3 | **동등 조건 Nordic native 비용 비교** | CoC·암호화 Audio의 ELF/map·상위 symbol과 API 비용 하한 비교, native 비팽창·중복 pool 0건 **PASS** |
 
 **범위 고정:** NCS v3.4.0·제품 SDC를 유지한다. DF IQ RX 구현/LL fault 해결,
 CS 간헐 RF/controller loss·counter gap 제거, SDC 내부 high-water 계측 API 확보는
@@ -129,16 +130,11 @@ SDC 내부 사용 최고치는 노출되지 않으므로 정적 symbol 크기를
 
 ### 다음 실행 순서
 
-1. CoC부터 상대 credit 부족을 직접 유발·관찰할 시험 경로와 복구 기준을 고정한다.
-   로컬 송신 포화 시험을 재실행하는 것만으로 대신하지 않는다.
-2. 현재 지원 capacity에 맞춰 Audio와 CS의 남은 오류·최악 부하를 고정하고, 장치/image/COM
-   재확인 뒤 유한 시험과 stack/heap 계측을 함께 수행한다. 최초 broadcast sync 실패 등 기존
-   오류 증거는 이 부하 축에서 안전 영향과 재현 조건을 판정하며 별도 네 번째 축으로 늘리지 않는다.
-3. 역할별 안전 여유·최종 예약 크기를 결정하고, 같은 조건의 native/Arduino 비교표를 작성한다.
-   조정이 있으면 그 변경에 필요한 build·Host·국소 HIL을 재검증한다.
-4. 세 축의 증거·한계·최종 판정과 문서를 갱신하고 커밋·푸시한다. **이 항목은 마감 절차**다.
-   P2 완료를 판정한 뒤 W04·W05 → W06 → W07 → W08로 이어간다.
-   W05 wrong-key·기존 flash 직후 중단 판정과 W06 전체 회귀는 별도 M31 작업이다.
+1. W04의 지원 CTE TX·response 기능, 예제·지원표·원장을 마감한다. 제품 SDC IQ RX·AoD는
+   `UNSUPPORTED`로 유지하고 LL RX 진단을 제품 대안으로 승격하지 않는다.
+2. W05의 wrong-key·기존 flash 직후 중단 경계를 기능 계약대로 닫는다. P2 peer-loss와 256-step
+   메모리 근거는 재사용하되 W05 전체 완료와 혼동하지 않는다.
+3. W06 독립 image 자원·수명주기·M19~M30 영향 회귀 → W07 → W08 순서로 진행한다.
 
 ## 3. W03 세부 완료 상태 — 11/11
 

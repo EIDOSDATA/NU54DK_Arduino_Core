@@ -1,0 +1,6 @@
+config P2_NATIVE_TELEMETRY
+	bool "P2 native 비교용 stack/heap 계측"
+	default n
+	help
+	  Nordic native 비교 image에 Arduino P2와 같은 thread analyzer 및
+	  libc/kernel heap 보고 코드를 포함합니다.

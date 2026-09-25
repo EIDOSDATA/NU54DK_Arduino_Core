@@ -199,8 +199,9 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 
 역할별 `prj.conf` 합성만으로 모든 미사용 정적 저장소가 제거됐다고 판정하지 않는다.
 `M31-MEM-OPT`의 P0·P1에서 capability·source·정적 pool 경계를 구현하고 ELF/map으로 검증했다.
-현재 P2는 지원 범위의 오류·최악 부하 계측, stack/heap 여유·크기 결정,
-동일 조건 Nordic native FLASH/RAM 비교가 남았다. [M31 TODO](../TODO_M31.md)의 현재 상태와
+P2에서는 지원 범위의 오류·최악 부하 계측, stack/heap 여유·최종 크기,
+동일 조건 Nordic native FLASH/RAM 비교를 완료했다. [262번 완료 기록](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>),
+[M31 TODO](../TODO_M31.md)의 현재 상태와
 [통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 구현 계약을 따른다.
 
 ### 4.1 개발 adaptive build 흐름

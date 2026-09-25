@@ -42,10 +42,10 @@ ISO 예제 11개는 독립 개발 package에서 전수 빌드하고 같은 image
 신규 범위는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)에
 따라 M31 8개·M32 12개·M33 8개 작업으로 관리합니다.
 최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
-메모리 최적화는 P0·P1을 마쳤지만 P2 실기·최악 안전 판정은 아직 진행 중이며,
-[P2 잔여 세 축](00_Docs/TODO_M31.md#p2-남은-작업--세-축)은 오류·최악 부하, stack/heap 안전 여유,
-동일 조건 Nordic native FLASH/RAM 비교입니다. 고정 NCS v3.4.0에서 제품 SDC DF IQ RX는
-지원 밖이며, CS 간헐 loss·counter gap과 SDC 내부 high-water 비노출은 P2 차단 조건이 아닙니다.
+메모리 최적화는 [P0·P1·P2를 완료](<00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)했습니다.
+P2의 오류·최악 부하, stack/heap 최종 유지 판정, 동일 조건 Nordic native FLASH/RAM 비교를 닫았고
+다음 순서는 W04·W05입니다. 고정 NCS v3.4.0에서 제품 SDC DF IQ RX는 지원 밖이며,
+CS 간헐 loss·counter gap과 SDC 내부 high-water 비노출은 P2 차단 조건이 아닙니다.
 위 CI 배지는 소프트웨어 검사 상태이며 보드 실기·상호운용·정식 릴리스 완료를 뜻하지 않습니다.
 
 ### 프로젝트의 구성
@@ -271,7 +271,7 @@ Ubuntu/macOS 실제 설치·USB·serial·debug는 해당 OS를 포함하는 후�
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
 | v0.5.0 Windows 릴리스·후속 Host 확장 | [v0.5.0 계획](00_Docs/TODO_v0.5.0.md) · [다중 Host 지원 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
-| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01~W03 완료, `M31-MEM-OPT` P0·P1 완료·P2 실기 진행 |
+| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01~W03와 `M31-MEM-OPT` P0·P1·P2 완료, 다음 W04·W05 |
 | 이후 Bluetooth 전체 구현·예제 | [전체 기능 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) · [M32 TODO](00_Docs/TODO_M32.md) · [M33 TODO](00_Docs/TODO_M33.md) |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 
