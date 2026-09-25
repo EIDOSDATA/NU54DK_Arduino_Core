@@ -125,6 +125,7 @@ def configure_command(
     if isinstance(ccache, Path) and ccache.is_file():
         command.extend(
             (
+                "-DUSE_CCACHE=0",
                 f"-DCMAKE_C_COMPILER_LAUNCHER={ccache.as_posix()}",
                 f"-DCMAKE_CXX_COMPILER_LAUNCHER={ccache.as_posix()}",
             )
