@@ -1,5 +1,9 @@
 # 250 — M31 P2 native RAS 비교·connectionless DF 재진단
 
+> 판정 갱신: 이 기록의 CS 잔여 목록은 당시 상태다. 후속 [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)에서
+> 256-step·분할 RAS 유효 raw 1,000건·양측 STOP을 확인했다. 간헐 gap과
+> gap별 원인 규명은 현행 P2 합격 조건에서 제외한다. DF 실패 원본은 그대로다.
+
 ## 범위와 판정
 
 고정 NCS `v3.4.0`·Zephyr `4.4.0`, 동일 NU54DK board definition과 두 exact

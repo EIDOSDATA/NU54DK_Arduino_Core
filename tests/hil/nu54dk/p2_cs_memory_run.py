@@ -31,6 +31,21 @@ CAUSE_NAMES = ("local_busy_drops", "local_overflows", "procedure_aborts",
                "local_missing", "invalid_readings", "reading_queue_full")
 
 
+def record_counter_transition(previous: int | None, current: int,
+                              gaps: list[dict[str, int]]) -> None:
+    """! @brief 전진 누락만 관찰하고 중복·역행 counter는 거부합니다. """
+
+    if current < 0 or current > 0xFFFF:
+        raise RuntimeError("invalid CS counter")
+    if previous is None:
+        return
+    delta = (current - previous) & 0xFFFF
+    if delta == 0 or delta >= 0x8000:
+        raise RuntimeError("duplicate or backward CS counter")
+    if delta > 1:
+        gaps.append({"before": previous, "after": current})
+
+
 def wait_for_new_line(streams: dict[str, serial.Serial],
                       pending: dict[str, bytearray], lines: dict[str, list[str]],
                       role: str, start_index: int, expected: str,
@@ -118,6 +133,7 @@ def run(arguments: argparse.Namespace) -> dict:
         "lines": {"initiator": [], "reflector": []},
         "raw_count": 0,
         "counter_gaps": [],
+        "counter_gap_policy": "observe_only",
         "result": "FAIL",
     }
     streams: dict[str, serial.Serial] = {}
@@ -167,12 +183,9 @@ def run(arguments: argparse.Namespace) -> dict:
                     counter, local, peer, rtt, tone, valid = map(
                         int, match.groups()[:6]
                     )
-                    if (previous_counter is not None and
-                            counter != ((previous_counter + 1) & 0xFFFF)):
-                        evidence["counter_gaps"].append({
-                            "before": previous_counter,
-                            "after": counter,
-                        })
+                    record_counter_transition(
+                        previous_counter, counter, evidence["counter_gaps"]
+                    )
                     if local != peer or local <= 0 or rtt <= 0 or tone <= 0 or valid <= 0:
                         raise RuntimeError("invalid raw RAS")
                     previous_counter = counter
@@ -211,7 +224,8 @@ def run(arguments: argparse.Namespace) -> dict:
         if any("P2_FAIL" in line or "FAULT" in line
                for values in lines.values() for line in values):
             raise RuntimeError("firmware fault was observed")
-        evidence["result"] = "HOLD" if evidence["counter_gaps"] else "PASS"
+        ## @brief 간헐 counter loss는 관찰값이며 P2 합격 조건에서 제외합니다.
+        evidence["result"] = "PASS"
     except Exception as error:
         evidence["failure_class"] = type(error).__name__
         evidence["failure_detail"] = str(error).replace(

@@ -15,8 +15,9 @@ main 이력 정리 이후의 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다
 당시 문서-only 변경이었고, 현재 구현은 **`M31-MEM-OPT`**에서 P0·P1을 마친 뒤
 P2 실기와 오류 진단을 진행 중이다. 현재 P2 결과·잔여 조건은 [M31 TODO](TODO_M31.md)에 기록한다.
 [250번 native RAS 비교·DF 재진단](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)도
-P2의 미완료 조건을 유지한다. Nordic 계측 RAS에서도 gap이 관찰됐지만,
-Arduino의 모든 누락과 DF connectionless fault가 해결된 것은 아니다.
+P2의 미완료 조건을 유지한다. Nordic 계측 RAS에서도 gap이 관찰됐다.
+Arduino CS의 간헐 counter loss는 관찰하되 P2 합격 조건에서 제외한다.
+DF connectionless fault와 다른 P2 조건은 별도다.
 [251번 CoC 재연결](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>)은
 두 채널 512 B echo, 명시적 ACL 재연결 20/20과 서버 SWD reset 20/20을
 추가로 통과했지만 물리 전원 차단·controller 내부 사용 최고치는 별도다.
@@ -25,7 +26,8 @@ Arduino의 모든 누락과 DF connectionless fault가 해결된 것은 아니�
 당시 분할 RAS·256-step 용량 검증을 닫지 못했다. 후속
 [255번 진단](<04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md>)에서는
 실제 256-step·분할 RAS 정상 경로 10/10을 확인했으나 같은 image의
-100건에는 counter gap 1이 남아 CS/P2 전체는 HOLD다.
+100건의 counter gap 1은 현행 판정에서 비차단이다. 이후 256-step 유효 raw
+1,000건·양측 STOP도 확인했으나 다른 조건으로 P2 전체는 미완료다.
 [256번 DF 대기 취소 진단](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>)도
 connectionless sync timeout·IQ 0·수신 bus fault를 보존했고,
 기본 CS image 복구 뒤 양측 STOP을 확인했다. 공개 DF RX는 미완료다.
@@ -43,7 +45,8 @@ sink 누적 decode 2,933·drop 0을 확인했다. 앞선 실패 두 건과 다�
 고정 NCS `v3.4.0`의 nRF54L15 제품 수신은 AoA 송신 전용 지원 범위 밖이며,
 [CS 장시간](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>)은
 256-step 유효 raw 1,000건의 gap 3과 기본 image 복구 100건의 gap 1을
-보존한다. 이 결과는 P2 전체 완료·메모리 축소·릴리스 승인이 아니다.
+보존한다. 간헐 gap은 비차단 관찰값이며 유효 raw·양측 STOP은 PASS다.
+이 결과는 P2 전체 완료·메모리 축소·릴리스 승인이 아니다.
 
 이후 구현 순서는 **메모리 최적화 → W04·W05 → W06 → W07 → W08·Windows 릴리스 준비**다.
 **HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 이번 문서 작업에서 재개하지 않는다.

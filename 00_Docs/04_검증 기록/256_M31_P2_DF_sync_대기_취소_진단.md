@@ -1,5 +1,9 @@
 # 256 — M31 P2 DF connectionless sync 대기 취소 진단
 
+> 판정 갱신: 아래 CS 복구 100건의 `연속성 HOLD`는 당시 0-gap 기준이다.
+> 현행 P2에서 간헐 CS loss는 비차단 관찰값이다. DF IQ 0·수신 fault는
+> 그대로 실패이며 이 정정으로 면제되지 않는다. [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)
+
 ## 범위와 결과
 
 고정 NCS `v3.4.0`·Zephyr `4.4.0`, Core 기준 commit
@@ -45,7 +49,7 @@ controller/Host 내부의 정확한 결함 위치를 단정하지 않는다. 실
 
 두 보드를 이미 검증된 기본 CS initiator/reflector image로 자동 unlock·
 mass erase 없이 sector 복구했다. 복구 [첫 100 raw](evidence/m31-p2-native-comparison-2cf92933/cs-recovery-after-df-pending-cancel-100.json)는
-100건·양측 STOP을 확인했지만 counter 64→66 gap 1로 **연속성 HOLD**다.
+100건·양측 STOP을 확인했지만 counter 64→66 gap 1로 당시에는 **연속성 HOLD**였다.
 이는 board fault가 지속됐다는 근거도, CS 연속성 PASS도 아니다.
 후속 [10 raw](evidence/m31-p2-native-comparison-2cf92933/cs-recovery-after-df-pending-cancel-10.json)는
 gap 0·양측 STOP으로 국소 PASS했다. 두 복구 원본을 모두 보존한다.

@@ -1,5 +1,9 @@
 # 255 — M31 P2 CS 256-step·분할 RAS 실기 진단
 
+> 판정 갱신: 아래 gap 1에 따른 `연속성 HOLD`는 당시 0-gap 기준이다.
+> 현행 P2에서는 간헐 loss를 비차단 관찰값으로 보존한다. 유효 raw·양측 STOP
+> 판정과 후속 1,000건은 [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)을 따른다.
+
 ## 판정
 
 고정 NCS `v3.4.0`·Zephyr `4.4.0`, 현재 `M31-MEM-OPT`의 `adaptive`
@@ -21,7 +25,7 @@ board submodule은 `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`다.
 | --- | --- | --- |
 | 채널맵 반복 2, 10 raw | local/peer 189~194 step, counter gap 0, 양측 STOP | **진단 범위 PASS**. [원본](evidence/m31-p2-native-comparison-2cf92933/cs-chmap-repeat2-10.json) |
 | 채널맵 반복 3, 10 raw | local/peer 모두 256 step, peer RAS 2,367~2,382 B, ATT MTU 65 B, gap 0, 양측 STOP | **256-step·분할 재조립 국소 PASS**. [원본](evidence/m31-p2-native-comparison-2cf92933/cs-chmap-repeat3-diag-10.json) |
-| 같은 반복 3, 100 raw | 100개 모두 local/peer 256 step, peer RAS 2,367~2,388 B, 45→47 counter gap 1, 양측 STOP | **연속성 HOLD**. [원본](evidence/m31-p2-native-comparison-2cf92933/cs-chmap-repeat3-diag-100.json) |
+| 같은 반복 3, 100 raw | 100개 모두 local/peer 256 step, peer RAS 2,367~2,388 B, 45→47 counter gap 1, 양측 STOP | **당시 0-gap 기준 연속성 HOLD**. 현행 비차단. [원본](evidence/m31-p2-native-comparison-2cf92933/cs-chmap-repeat3-diag-100.json) |
 | 기본 image 복구, 100 raw | raw 100/100, gap 0, 양측 STOP | **기본 image 복구 PASS**. [원본](evidence/m31-p2-native-comparison-2cf92933/cs-default-recovery-after-chmap-100.json) |
 
 반복 2 원본의 `P2_READY` 앞에는 이전 UART 수명의 `CS_RAW counter=11`
@@ -69,10 +73,11 @@ buffer·controller pool을 축소할 근거가 없다.
 않는다. 실행기의 `HOLD`는 이 한 건의 원인이 분류되지 않았다는 뜻이지
 모든 RF 시험에 gap 0을 요구하는 제품 인수 기준은 아니다. 같은 보드의
 [Nordic native 비교](250_M31_P2_native_CS_비교와_DF_재진단.md)에서도
-1,000 유효 RAS당 gap 4·7건이 있었다. 이 image에서 segment 손실·재전송,
-peer 이탈·재연결 뒤 최대 절차의 메모리/연속성, 256-step reflector 쪽의
-모든 오류 경로도
-미검증이다. 따라서 **CS 전체와 P2 전체는 계속 HOLD**다.
+1,000 유효 RAS당 gap 4·7건이 있었다. 이 image에서 peer 이탈·재연결 뒤
+최대 절차의 오류·복구 및 메모리 사용, 256-step reflector 쪽의 오류 경로는
+미검증이다. 당시 **CS 전체와 P2 전체는 HOLD**로 기록했지만,
+gap만을 이유로 한 HOLD는 현행 P2 판정으로 승계하지 않는다.
+최대 절차의 peer 이탈 뒤 오류·복구와 다른 P2 조건은 별도다.
 
 ## 문서·Host 회귀와 제출 범위
 

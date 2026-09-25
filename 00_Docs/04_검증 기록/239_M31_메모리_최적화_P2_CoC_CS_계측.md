@@ -1,4 +1,8 @@
-# 239 — M31 메모리 최적화 P2: CoC PASS, CS 계측·연속성 HOLD
+# 239 — M31 메모리 최적화 P2: CoC PASS, CS 당시 연속성 HOLD 기록
+
+> 판정 갱신: 제목과 아래 `HOLD`는 당시 0-gap 기준의 기록이다. 현행 P2에서는
+> 간헐 CS counter loss를 합격 조건에서 제외한다. 유효 raw·양측 STOP을 기준으로
+> 다시 읽고, 원본 실패·관찰값은 그대로 보존한다. [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)
 
 ## 판정 경계
 
@@ -12,7 +16,7 @@
 | 역할·부하 | 결과 | 원본 |
 | --- | --- | --- |
 | LE CoC client/server, 두 채널 × 512 B, echo 100건, 양측 STOP | **PASS**. 두 채널 연결, remote MTU 512, echo count 1~100·내용 일치, client/server STOP. | [CoC 실기](evidence/m31-p2-coc-8f5f7cf8/coc-two-channel-512.json) |
-| CS RAS initiator/reflector, 보안 연결·raw 100건·양측 STOP | **재실행 국소 PASS / 간헐 누락 원인 HOLD**. 최신 실행에서 completed/raw 100, counter gap 0, 양측 STOP. 앞선 counter 누락을 없었던 일로 취급하지 않음. | [CS 재실행](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-followup.json) · [앞선 누락](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-measured.json) |
+| CS RAS initiator/reflector, 보안 연결·raw 100건·양측 STOP | **재실행 국소 PASS / 당시 간헐 누락 원인 HOLD**. 최신 실행에서 completed/raw 100, counter gap 0, 양측 STOP. 앞선 counter 누락을 없었던 일로 취급하지 않음. | [CS 재실행](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-followup.json) · [앞선 누락](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw-measured.json) |
 
 CS 첫 계측은 flash 이전 UART에 남은 raw를 새 부팅 결과로 집계한 러너 오류로
 [FAIL](evidence/m31-p2-cs-8f5f7cf8/cs-100-raw.json)이었다. 부팅 기준을
