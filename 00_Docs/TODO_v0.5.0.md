@@ -26,6 +26,9 @@ Arduino의 모든 누락과 DF connectionless fault가 해결된 것은 아니�
 [255번 진단](<04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md>)에서는
 실제 256-step·분할 RAS 정상 경로 10/10을 확인했으나 같은 image의
 100건에는 counter gap 1이 남아 CS/P2 전체는 HOLD다.
+[256번 DF 대기 취소 진단](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>)도
+connectionless sync timeout·IQ 0·수신 bus fault를 보존했고,
+기본 CS image 복구 뒤 양측 STOP을 확인했다. 공개 DF RX는 미완료다.
 [253번 Audio broadcast 재가입](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
 source SWD reset 뒤 sink 명시적 재가입 20/20과 drop 0을 확인했으나
 최초 sync 실패와 다른 역할·부하의 최악값은 별도다.

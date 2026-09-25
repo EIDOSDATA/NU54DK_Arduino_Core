@@ -31,6 +31,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [256 — P2 DF pending sync 취소 진단](256_M31_P2_DF_sync_대기_취소_진단.md) | Zephyr LL connectionless 대기 취소를 적용해도 IQ 0·수신 bus fault; fixture 원복, 기본 CS image 복구 후 양측 STOP |
 | [255 — P2 CS 256-step·분할 RAS 진단](255_M31_P2_CS_256_step_분할_RAS_진단.md) | 진단 image의 실제 256-step·분할 RAS 10/10; 100건에는 gap 1로 연속성 HOLD, 기본 image 100건·양측 STOP 복구 |
 | [254 — P2 Audio unicast 재연결 메모리](254_M31_P2_Audio_unicast_재연결_메모리_계측.md) | adaptive 재연결 scan 결함 수정, source SWD reset 20/20·sink 누적 decode 2,933·drop 0·양측 STOP; 실패 원본 두 건 보존, P2 전체 HOLD |
 | [253 — P2 Audio broadcast 재가입 메모리](253_M31_P2_Audio_broadcast_재가입_메모리_계측.md) | source SWD reset 뒤 sink 명시적 재가입 20/20·decode 2,107·drop 0·양측 STOP; 첫 sync 실패와 기존 session 상태 실패 보존, sink MPSL Work 여유 264 B |

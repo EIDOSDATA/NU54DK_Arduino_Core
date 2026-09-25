@@ -52,6 +52,10 @@ IQ 0, 반복 시 usage fault·수신 STOP 실패였고, 검증된 CS image로 se
 되돌렸다. 후속 [255번 채널맵 반복 진단](<04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md>)은
 진단 image에서 실제 256-step·분할 RAS 10/10을 확인했다. 100건에는 counter
 gap 1이 남아 HOLD이며 기본 image 100건·양측 STOP으로 다시 복구했다.
+[256번 DF pending sync 취소 진단](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>)도
+sync timeout·IQ 0·수신 bus fault로 실패했다. fixture 변경은 원복하고
+기본 CS image로 두 보드를 복구해 raw 100건·양측 STOP(HOLD: gap 1),
+후속 10건·gap 0·양측 STOP(PASS)을 확인했다.
 **P2 전체는 미완료**다. 아래 과거 인계 문장은
 당시 snapshot이며 이 문단과 [M31 TODO](TODO_M31.md)가 최신 판정이다.
 

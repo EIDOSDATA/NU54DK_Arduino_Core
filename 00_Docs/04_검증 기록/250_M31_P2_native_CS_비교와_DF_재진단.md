@@ -125,3 +125,6 @@ fragmented RAS, RF abort/peer loss 후 복구의 peak와 Arduino 정상 callback
 후속 [255번 진단](255_M31_P2_CS_256_step_분할_RAS_진단.md)은
 다른 image에서 실제 256-step·분할 RAS 정상 수신을 확인했으나 100건
 연속성·오류 복구는 계속 HOLD다.
+후속 [256번 DF 진단](256_M31_P2_DF_sync_대기_취소_진단.md)은
+pending sync 취소를 시도해도 connectionless IQ 0·수신 fault를 해소하지
+못했다. 이 기록의 실패 원본과 별도로 보존한다.
