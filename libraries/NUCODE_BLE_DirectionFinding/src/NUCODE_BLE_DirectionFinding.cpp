@@ -90,7 +90,8 @@ namespace nucode::ble::df
             bt_le_per_adv_param periodic_parameters = {};
             periodic_parameters.interval_min = BT_GAP_PER_ADV_SLOW_INT_MIN;
             periodic_parameters.interval_max = BT_GAP_PER_ADV_SLOW_INT_MAX;
-            periodic_parameters.options = BT_LE_ADV_OPT_USE_TX_POWER;
+            /** @note 고정 SDC는 periodic TX Power 속성을 거부하므로 CTE에는 요구하지 않습니다. */
+            periodic_parameters.options = BT_LE_PER_ADV_OPT_NONE;
             result = bt_le_per_adv_set_param(advertisement, &periodic_parameters);
         }
         if (result != 0)

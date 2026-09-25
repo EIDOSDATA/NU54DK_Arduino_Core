@@ -18,6 +18,8 @@ from p2_gatt_memory_run import read_lines, require_mapping
 
 
 ECHO = re.compile(r"LE CoC echo PASS, count=(\d+)")
+BURST_START = re.compile(r"P2_COC_BURST_START sent=(\d+) backpressure=(\d+)")
+BURST_DONE = re.compile(r"P2_COC_BURST_DONE sent=(\d+) echoes=(\d+)")
 
 
 def wait_for_prefix(streams: dict[str, serial.Serial],
@@ -82,6 +84,7 @@ def run(arguments: argparse.Namespace) -> dict:
         "schema_version": 1,
         "case": "m31-p2-coc-two-channel-512-recovery-memory",
         "recovery_mode": arguments.recovery_mode,
+        "burst": arguments.burst,
         "cycles_target": arguments.cycles,
         "cycles_completed": 0,
         "image_sha256": {
@@ -130,6 +133,26 @@ def run(arguments: argparse.Namespace) -> dict:
                     if line == "P2_READY role=coc-client"
                 ) + 1
         wait_for_echoes(streams, pending, lines, client_active_start, 2, 30.0)
+        burst_sent = 0
+        if arguments.burst:
+            burst_start = len(lines["client"])
+            streams["client"].write(b"b")
+            wait_for_prefix(streams, pending, lines, "client",
+                            "P2_COC_BURST_START", burst_start, 15.0)
+            match = next((match for line in lines["client"][burst_start:]
+                          if (match := BURST_START.fullmatch(line))), None)
+            if match is None or int(match.group(1)) != 4 or int(match.group(2)) != 1:
+                raise RuntimeError("CoC transmit pool did not report four buffers and busy")
+            burst_sent = int(match.group(1))
+            wait_for_prefix(streams, pending, lines, "client",
+                            "P2_COC_BURST_DONE", burst_start, 30.0)
+            done = next((match for line in lines["client"][burst_start:]
+                         if (match := BURST_DONE.fullmatch(line))), None)
+            if done is None or tuple(map(int, done.groups())) != (burst_sent, burst_sent):
+                raise RuntimeError("CoC burst echo recovery is incomplete")
+            wait_for_echoes(streams, pending, lines, client_active_start,
+                            2 + burst_sent, 10.0)
+            evidence["burst_sent"] = burst_sent
 
         for cycle in range(1, arguments.cycles + 1):
             client_start = len(lines["client"])
@@ -154,7 +177,7 @@ def run(arguments: argparse.Namespace) -> dict:
             wait_for_prefix(streams, pending, lines, "client",
                             "LE CoC channel ready, count=2", client_start, 45.0)
             wait_for_echoes(streams, pending, lines, client_active_start,
-                            (cycle + 1) * 2, 45.0)
+                            (cycle + 1) * 2 + burst_sent, 45.0)
             evidence["cycles_completed"] = cycle
 
         client_start = len(lines["client"])
@@ -170,7 +193,7 @@ def run(arguments: argparse.Namespace) -> dict:
                         "P2_STOP role=coc-server", server_start, 20.0)
         evidence["echo_count"] = sum(ECHO.fullmatch(line) is not None
                                      for line in lines["client"][client_active_start:])
-        expected_echoes = (arguments.cycles + 1) * 2
+        expected_echoes = (arguments.cycles + 1) * 2 + burst_sent
         ready_channels = sum(line == "LE CoC channel ready, count=2"
                              for line in lines["client"][client_active_start:])
         if evidence["echo_count"] != expected_echoes or ready_channels != arguments.cycles + 1:
@@ -239,6 +262,7 @@ def main() -> None:
     parser.add_argument("--cycles", type=int, default=20)
     parser.add_argument("--recovery-mode", choices=("acl-disconnect", "peer-reset"),
                         default="acl-disconnect")
+    parser.add_argument("--burst", action="store_true")
     evidence = run(parser.parse_args())
     print(f"P2 CoC recovery HIL: {evidence['result']}")
 

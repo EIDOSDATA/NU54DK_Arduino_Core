@@ -192,14 +192,31 @@ CS image로 두 보드를 복구했다. 복구 100 raw는 gap 1·양측 STOP으�
 `SPI.begin()` 사용자에게 SPI용 `prj.conf`를 수동 작성하게 하는 상태도
 최적화 완료가 아니다.
 
+2026-09-25 추가 실기에서는 [257번 CoC 송신 버퍼 포화·복구](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>)가
+512 B SDU 네 개 전송 뒤 다섯 번째 `busy`, 네 echo 수신, ACL 재연결
+20/20과 server SWD reset 재연결 20/20을 통과했다.
+[258번 Audio 양방향](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>)은
+양방향 LC3/CIS 각 10,000 frame·drop 0과 즉시 종료 20/20을 통과했다.
+종료 경합에서 `-ENOTCONN`을 일반 오류로 남기는 결함은 수정하고 실패·성공
+원본을 모두 보존했다. [259번 DF 지원 경계](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)는
+고정 NCS `v3.4.0`의 nRF54L15 AoA **송신 전용** 지원 각주를 확인했다.
+제품 SDC IQ RX를 이 버전의 지원 기능으로 약속하지 않으며 Zephyr LL
+connectionless RX 실패도 여전히 실패로 기록한다.
+[260번 CS 누락 원인·256-step 장시간](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>)에서는
+기본 설정 1,000 raw의 gap 7과 256-step 1,000 유효 raw의 gap 3을
+집계 원인과 함께 분리했다. 유효 RTT 0인 단편 결과 1건을 완료 queue에서
+제외했고, 256-step 1,000건 모두 양쪽 256 step·양측 STOP이었다.
+집계 계수만으로 gap별 단일 원인을 단정하지 않으며 CS 연속성은 HOLD다.
+네 축의 추가 결과만으로 P2 전체를 완료 처리하거나 메모리를 축소하지 않는다.
+
 P2의 남은 gate는 다음처럼 분리한다.
 
 | 축 | 아직 필요한 증거 |
 | --- | --- |
-| DF RX | 연결형 Zephyr LL 내부 IQ callback·sample 20건과 정상 종료 뒤 stack high-water는 확인. connectionless sync는 CTE 전용 옵션·active scan·pending 취소를 써도 미수립·IQ 0이며 수신 usage/bus fault·STOP 실패를 보존. Arduino/SDC RX 적용성, 오류/복구·장기 high-water는 잔여. Beacon TX로 대체 불가. [246번](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [256번](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>) |
-| CS | 일부 누락은 controller의 `NO_CS_SYNC_RECEIVED`, 나머지는 정상 완료 뒤 RAS/단일 로컬 버퍼 결합 경로로 분리. Nordic native 계측 1,000 유효 RAS에서도 abort 2·busy 2·gap 4로 무조건 0-gap 판정은 부적절함을 확인. 진단 image의 실제 256-step·분할 RAS 정상 수신 10/10은 확인했으나 100건에서 gap 1이 남았다. Arduino 정상 callback 뒤 누락 원인과 최대 절차의 segment 손실·재전송·복구 및 장기 최악 부하의 용량/연속성은 잔여. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) · [255번](<04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md>) |
-| Audio/ISO | unicast source SWD reset 뒤 sink 재연결 20/20·drop 0, 암호화 broadcast source SWD reset 뒤 sink 공개 API 재가입 20/20·drop 0은 확인. broadcast 첫 sync 실패 원인은 미확인. 다른 방향·다중 stream/ASE, 암호화 오류·물리 전원 차단과 장기 부하의 역할별 최악값은 별도. [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) · [254번](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) |
-| CoC 복구 | ACL 명시적 disconnect/reconnect 20/20과 서버 SWD reset 20/20, 두 채널 512 B echo·stack/heap 관찰은 확인. 물리 전원 차단·credit 고갈·다중 link의 오류/복구와 최악 고점유는 별도. [251번](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
+| DF RX | 고정 NCS `v3.4.0`의 nRF54L15 DF는 Experimental·AoA 송신 전용. 따라서 제품 SDC RX는 현 버전 지원 밖이며 다른 SDK/controller 선택 없이는 완료 불가. 연결형 Zephyr LL 내부 IQ 20건·1,640 sample은 별개. connectionless LL sync 미수립·IQ 0과 수신 fault·STOP 실패를 보존한다. Beacon TX로 대체 불가. [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
+| CS | 기본 1,000 raw gap 7, 진단 설정 256-step 1,000 유효 raw gap 3과 원인 집계를 보존. 유효 RTT 0인 단편 완료 결과는 제외했다. Nordic native 1,000 유효 RAS에서도 gap 4가 있어 무조건 0-gap 인수 기준은 부적절하다. gap별 1:1 원인, segment 손실·재전송·peer 이탈 뒤 최대 절차 복구는 잔여. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) · [260번](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) |
+| Audio/ISO | unicast source SWD reset 뒤 sink 재연결 20/20, 암호화 broadcast 재가입 20/20, 양방향 LC3/CIS 각 10,000 frame·drop 0 및 즉시 종료 20/20을 확인. 단일 CIS를 넘어선 다중 stream/ASE, 물리 전원 차단·암호화 오류와 첫 broadcast sync 실패 원인은 별도. [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) · [254번](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) · [258번](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) |
+| CoC 복구 | ACL 재연결 20/20·서버 SWD reset 20/20과 각 실행의 두 채널 512 B echo를 확인. 네 SDU로 로컬 송신 버퍼를 채운 뒤 두 복구 모드도 각 20/20 통과. 상대 credit 고갈 직접 계측, 물리 전원 차단·다중 ACL/다른 MTU의 최악 부하는 별도. [251번](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) · [257번](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) |
 | SDC/stack/heap | SDK 계산·8-byte 정렬 pool과 초기화 요구량 검사 경계는 확인. controller 내부 high-water는 미노출이며 오류·최악 부하 stack/heap 안전 여유는 별도. [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) |
 | native 비교 | 고정 Nordic 원본/계측 sample을 동일 board에서 build하고 RAS gap 경로를 비교했으나 DSP·stack·malloc·로그·payload 조건이 달라 Arduino API 비용은 아직 산정 불가. 동일 기능·설정의 native 대비 FLASH/RAM 항목별 차이가 잔여. [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
 

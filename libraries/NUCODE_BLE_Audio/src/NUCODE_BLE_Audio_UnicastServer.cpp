@@ -11,6 +11,8 @@
 
 #include <NUCODE_BLE.h>
 
+#include <errno.h>
+
 #include <zephyr/bluetooth/audio/bap.h>
 #include <zephyr/bluetooth/audio/lc3.h>
 #include <zephyr/bluetooth/audio/pacs.h>
@@ -552,6 +554,12 @@ namespace nucode::ble::audio
         if (result != 0)
         {
             net_buf_unref(buffer);
+            if (result == -ENOTCONN)
+            {
+                /** @note 단절 callback보다 송신 실패가 먼저 올 수 있으므로 송신 상태를 즉시 닫습니다. */
+                atomic_set(&server.source_streaming, 0);
+                return record(Error::not_ready, result);
+            }
             return record(Error::stack_error, result);
         }
         atomic_inc(&server.sequence);

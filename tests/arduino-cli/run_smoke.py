@@ -2045,8 +2045,23 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "BISTimeReceiver", "CISToBISBridge", "CISToBISPeer",
             "CISToBISReceiver",
         },
-        "NUCODE BLE Audio": {"Lc3SyntheticLoopback"},
-        "NUCODE BLE Direction Finding": {"CteBeacon"},
+        "NUCODE BLE Audio": {
+            "AudioControlController", "AudioControlDevice", "BapBroadcastAssistant",
+            "BapBroadcastDelegatorSink", "BapBroadcastSink", "BapBroadcastSource",
+            "BapUnicastCycle", "BapUnicastDuplexClient", "BapUnicastDuplexServer",
+            "BapUnicastSink", "BapUnicastSource", "CallControlClient",
+            "CallControlServer", "CapAcceptor", "CapCommander", "CapInitiator",
+            "CapUnicastAcceptor", "CapUnicastInitiator", "CsipSetCoordinator",
+            "CsipSetMember", "ExternalI2sSpeakerSink", "ExternalPdmMicrophoneSource",
+            "GamingAudioBroadcaster", "GamingAudioGateway", "GamingAudioReceiver",
+            "GamingAudioTerminal", "HearingAccessClient", "HearingAccessServer",
+            "Lc3SyntheticLoopback", "MediaControlClient", "MediaControlPlayer",
+            "PublicAudioBroadcastSink", "PublicAudioBroadcastSource",
+            "TelephonyMediaBroadcaster", "TelephonyMediaGateway",
+            "TelephonyMediaReceiver", "TelephonyMediaTerminal",
+        },
+        "NUCODE BLE Direction Finding": {"ConnectedCteResponder", "CteBeacon"},
+        "NUCODE BLE Channel Sounding": {"RasInitiator", "RasReflector"},
     }
     discovered: dict[str, set[str]] = {}
     for record in records:

@@ -21,6 +21,14 @@ RAW_PATTERN = re.compile(
     r"^CS_RAW counter=(\d+) local=(\d+) peer=(\d+) rtt=(\d+) "
     r"tone=(\d+) valid_rtt=(\d+)(?: distance_m=([0-9.]+))?$"
 )
+CAUSES_PATTERN = re.compile(
+    r"P2_CS_CAUSES busy=(\d+) overflow=(\d+) procedure_abort=(\d+) "
+    r"subevent_abort=(\d+) mismatch=(\d+) ras_error=(\d+) "
+    r"local_missing=(\d+) invalid=(\d+) queue_full=(\d+)"
+)
+CAUSE_NAMES = ("local_busy_drops", "local_overflows", "procedure_aborts",
+               "subevent_aborts", "ras_counter_mismatches", "ras_errors",
+               "local_missing", "invalid_readings", "reading_queue_full")
 
 
 def wait_for_new_line(streams: dict[str, serial.Serial],
@@ -185,6 +193,12 @@ def run(arguments: argparse.Namespace) -> dict:
         if len(completed) != 1 or completed[0] < arguments.raw_target:
             raise RuntimeError("initiator completion count is incomplete")
         evidence["firmware_completed"] = completed[0]
+        causes = [match for line in lines["initiator"]
+                  if (match := CAUSES_PATTERN.fullmatch(line))]
+        if arguments.require_causes and len(causes) != 1:
+            raise RuntimeError("CS callback cause counters are missing")
+        if causes:
+            evidence["causes"] = dict(zip(CAUSE_NAMES, map(int, causes[-1].groups())))
         reflector_disconnect_index = len(lines["reflector"])
         streams["initiator"].write(b"d")
         wait_for_new_line(streams, pending, lines, "reflector",
@@ -272,6 +286,7 @@ def main() -> None:
         parser.add_argument(f"--{role}-hex", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--raw-target", type=int, default=100)
+    parser.add_argument("--require-causes", action="store_true")
     parser.add_argument("--timeout", type=float, default=600.0)
     evidence = run(parser.parse_args())
     print(f"P2 CS memory HIL: {evidence['result']}")

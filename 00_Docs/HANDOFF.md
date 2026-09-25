@@ -5,6 +5,20 @@
 M32/M33과 Ubuntu/macOS 지원은 후속 버전(미정)이며 HOST-W04~W08은 계속 보류합니다.
 
 2026-09-25 현재 작업 브랜치는 `M31-MEM-OPT`다. P0·P1 정적 최적화는 닫았고,
+P2 네 축의 최신 증거는 [257번 CoC 송신 버퍼 포화·복구](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>),
+[258번 Audio 양방향 10,000 frame·종료 경합](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>),
+[259번 DF 고정 SDK 지원 경계](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>),
+[260번 CS 256-step 1,000건·gap 분류](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>)에 있다.
+CoC 로컬 송신 버퍼 포화 뒤 두 복구 모드 각 20/20, Audio 양방향 각
+10,000 frame·drop 0와 즉시 종료 20/20은 국소 PASS다. CS는 유효 RTT 0
+단편 결과를 제외했어도 기본 1,000건 gap 7·256-step 1,000건 gap 3으로
+연속성 HOLD다. DF 제품 SDC IQ RX는 NCS `v3.4.0`의 AoA 송신 전용 지원
+범위 밖이며 LL connectionless RX 실패를 보존한다. controller pool 내부
+high-water·동등 조건 native 비교·물리 전원 차단/다중 link는 미완료다.
+따라서 **P2 전체는 아직 미완료이며 pool/stack 축소·릴리스는 하지 않는다.**
+
+이전 P2 경과는 아래에 보존한다.
+
 P2의 두 보드 generic GATT 512 B write/read·재연결 20회는 adaptive 선언만으로
 PASS했다. loaderless adaptive partition과 큰 GATT payload의 ATT transport 생성도
 실기에서 발견한 결함을 정정했다. [238번 원본](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에

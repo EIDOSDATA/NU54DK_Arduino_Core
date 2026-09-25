@@ -286,6 +286,25 @@ void loop()
                 p2StopRequested = true;
                 Serial.print("P2_CS_STATS completed=");
                 Serial.println(initiator.completed());
+                const nucode::ble::cs::RasStatistics causes = initiator.statistics();
+                Serial.print("P2_CS_CAUSES busy=");
+                Serial.print(causes.local_busy_drops);
+                Serial.print(" overflow=");
+                Serial.print(causes.local_overflows);
+                Serial.print(" procedure_abort=");
+                Serial.print(causes.procedure_aborts);
+                Serial.print(" subevent_abort=");
+                Serial.print(causes.subevent_aborts);
+                Serial.print(" mismatch=");
+                Serial.print(causes.ras_counter_mismatches);
+                Serial.print(" ras_error=");
+                Serial.print(causes.ras_errors);
+                Serial.print(" local_missing=");
+                Serial.print(causes.local_missing);
+                Serial.print(" invalid=");
+                Serial.print(causes.invalid_readings);
+                Serial.print(" queue_full=");
+                Serial.println(causes.reading_queue_full);
 #if defined(NUCODE_P2_CS_DIAGNOSTICS) && \
     !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE) && !defined(NUCODE_CAPABILITY_PROBE)
                 reportMissingCounters();

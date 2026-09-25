@@ -24,6 +24,10 @@ bool peerFound = false;
 bool restartScan = false;
 unsigned long p2LastReport = 0UL;
 bool p2Stopped = false;
+bool burstActive = false;
+std::size_t burstStartEchoes = 0U;
+std::size_t burstSent = 0U;
+bool burstBackpressure = false;
 
 /** @brief exact local-name scan 결과의 주소를 main thread에서 보존합니다. */
 void onScanResult(const nucode::ble::BLEScanResult &result, void *context)
@@ -149,6 +153,7 @@ void loop()
 
     const std::uint32_t now = millis();
     if (connectedChannels == channelCount && pendingEchoes == 0U &&
+        !burstActive &&
         now - lastSendMs >= 1000U &&
         BLEL2cap.availableForWrite() >= channelCount)
     {
@@ -168,7 +173,39 @@ void loop()
     if (Serial.available() > 0)
     {
         const int command = Serial.read();
-        if ((command == 'd') && peerConnection.valid())
+        if (command == 'b')
+        {
+            if ((connectedChannels != channelCount) || (pendingEchoes != 0U) ||
+                burstActive || (BLEL2cap.availableForWrite() < nucode::ble::L2capCoc::transmit_buffers))
+            {
+                Serial.println("P2_COC_BURST_REJECTED");
+            }
+            else
+            {
+                preparePayload();
+                burstStartEchoes = echoCount;
+                burstSent = 0U;
+                burstBackpressure = false;
+                burstActive = true;
+                for (std::size_t index = 0U;
+                     index <= nucode::ble::L2capCoc::transmit_buffers; ++index)
+                {
+                    if (!BLEL2cap.send(channels[0], payload, sizeof(payload)))
+                    {
+                        burstBackpressure =
+                            BLEDevice.lastError() == nucode::ble::BLEError::busy;
+                        break;
+                    }
+                    ++burstSent;
+                    ++pendingEchoes;
+                }
+                Serial.print("P2_COC_BURST_START sent=");
+                Serial.print(burstSent);
+                Serial.print(" backpressure=");
+                Serial.println(burstBackpressure ? 1 : 0);
+            }
+        }
+        else if ((command == 'd') && peerConnection.valid())
         {
             if (!BLEConnection.disconnect(peerConnection))
             {
@@ -188,6 +225,14 @@ void loop()
             Serial.println(echoCount);
             return;
         }
+    }
+    if (burstActive && (pendingEchoes == 0U))
+    {
+        burstActive = false;
+        Serial.print("P2_COC_BURST_DONE sent=");
+        Serial.print(burstSent);
+        Serial.print(" echoes=");
+        Serial.println(echoCount - burstStartEchoes);
     }
     if (millis() - p2LastReport >= 10000UL)
     {
