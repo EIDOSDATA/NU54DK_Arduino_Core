@@ -1180,8 +1180,8 @@ extern "C" void sensorRead(void)
                     {item["id"] for item in result["capabilities"]},
                 )
 
-    def test_cs_roles_accept_security_api_without_audio_role(self) -> None:
-        """! @brief CS 역할은 가짜 Audio 역할 없이 보안 API를 선택할 수 있습니다. """
+    def test_cs_roles_accept_persistent_security_without_audio_role(self) -> None:
+        """! @brief CS 역할은 가짜 Audio 역할 없이 bond 저장 계약을 선택합니다. """
         profile = MODULE.load_configuration_profile(ROOT, "adaptive")
         features = MODULE.resolve_library_features(
             ROOT,
@@ -1197,9 +1197,10 @@ extern "C" void sensorRead(void)
                 )
                 capabilities = {item["id"] for item in result["capabilities"]}
                 self.assertIn("nucode.ble.security-api", capabilities)
+                self.assertIn("nucode.ble.security-persistence", capabilities)
                 self.assertIn("CONFIG_BT_SMP=y", result["generated"]["conf"])
+                self.assertIn("CONFIG_BT_SETTINGS=y", result["generated"]["conf"])
                 self.assertNotIn("CONFIG_BT_AUDIO=y", result["generated"]["conf"])
-                self.assertNotIn("nucode.ble.security-persistence", capabilities)
 
     def test_verified_role_presets_are_pairwise_exclusive(self) -> None:
         """! @brief 독립 firmware 역할인 검증 preset의 임의 동시 선택을 거부합니다. """

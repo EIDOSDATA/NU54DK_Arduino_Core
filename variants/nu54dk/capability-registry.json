@@ -367,7 +367,9 @@
         "ble-audio-cap-acceptor",
         "ble-audio-cap-commander",
         "ble-audio-csip-member",
-        "ble-audio-csip-coordinator"
+        "ble-audio-csip-coordinator",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector"
       ],
       "conflicts": [],
       "conf": [
@@ -2092,7 +2094,10 @@
     },
     {
       "id": "nucode.ble.role.cs-ras-initiator",
-      "requires": ["nucode.ble.channel-sounding-api"],
+      "requires": [
+        "nucode.ble.channel-sounding-api",
+        "nucode.ble.security-persistence"
+      ],
       "requires_any_role": [],
       "conflicts": [],
       "conf": [
@@ -2127,7 +2132,10 @@
     },
     {
       "id": "nucode.ble.role.cs-ras-reflector",
-      "requires": ["nucode.ble.channel-sounding-api"],
+      "requires": [
+        "nucode.ble.channel-sounding-api",
+        "nucode.ble.security-persistence"
+      ],
       "requires_any_role": [],
       "conflicts": [],
       "conf": [
