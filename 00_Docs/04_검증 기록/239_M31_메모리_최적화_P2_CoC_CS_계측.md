@@ -3,6 +3,7 @@
 > 판정 갱신: 제목과 아래 `HOLD`는 당시 0-gap 기준의 기록이다. 현행 P2에서는
 > 간헐 CS counter loss를 합격 조건에서 제외한다. 유효 raw·양측 STOP을 기준으로
 > 다시 읽고, 원본 실패·관찰값은 그대로 보존한다. [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)
+> 아래 다른 잔여도 당시 상태이며 현재 세 축·제외 조건은 [현행 판정 경계](README.md#p2-기록의-현행-판정-경계)를 따른다.
 
 ## 판정 경계
 
@@ -76,7 +77,7 @@ peak는 0 B였다. CS reflector에서는 계측된 별도 `k_heap` 항목이 없
 malloc peak 0 B였다. 이 통계에 SDC controller 내부 pool은 포함되지
 않는다. 결과가 0이어도 pool 삭제·축소 근거가 아니다.
 
-## 실행 중 수정·남은 작업
+## 실행 중 수정·당시 남은 작업
 
 CoC-only adaptive image에서 `BLEDevice.end()`를 실제로 호출하자
 미선택 PAwR/periodic 구현의 `endPawr()`·`endPeriodicAdvertising()`를

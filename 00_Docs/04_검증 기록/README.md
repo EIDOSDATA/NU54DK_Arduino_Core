@@ -19,7 +19,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
 | M31 메모리 최적화 P0·P1 | 완료. P2의 동적 계측·안전 판정과 구별 | [P0](222_M31_메모리_최적화_P0_완료.md) · [P1](237_M31_메모리_최적화_P1_정적_저장소_완료.md) |
-| M31 메모리 최적화 P2 | GATT·CoC·ISO·Audio·DF TX와 CS 256-step 유효 raw 1,000건·양측 STOP은 역할별 정상 부하 PASS. CS 간헐 gap은 비차단 관찰값이다. 공개 DF RX·다른 오류/최악 부하·동등 native 비용은 미완료 | [현재 범위·잔여 gate](../TODO_M31.md) · [최근 P2 기록](#최근-완료재개-기록) |
+| M31 메모리 최적화 P2 | 미완료. 남은 기술 작업은 지원 범위의 오류·최악 부하, stack/heap 여유·크기 결정, 동등 Nordic native 대비 FLASH/RAM 비교의 세 축 | [현재 범위·다음 작업](../TODO_M31.md) · [판정 경계](#p2-기록의-현행-판정-경계) |
 | M31-W04·W05 | 연결형 내부 IQ 수신 국소 PASS, W04/W05 전체는 미완료·이전 실패 보존 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 이전 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W04 연결 IQ 후속](244_M31_P2_DF_연결_IQ_진단.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -27,14 +27,32 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 지원 중인 `v0.4.1`과 개발 브랜치의 M31 결과는 서로 다른 범위입니다. M31 PASS를 설치본의
 지원 기능이나 `v0.5.0` 공개 완료로 읽지 않습니다.
 
-## 최근 완료·재개 기록
+## P2 기록의 현행 판정 경계
 
-아래 각 기록의 `HOLD`는 작성 당시 판정이다. CS counter gap만을 이유로 한
-과거 `HOLD`는 [260번 판정 정정](260_M31_P2_CS_누락_분류와_256_step_장시간.md)에 따라
-현재 P2 합격 조건으로 승계하지 않는다. 원본 JSON과 실제 실패는 그대로 보존한다.
+2026-09-25 사용자 결정과 고정 SDK 지원 근거를 우선한다. 각 기록의 수치·image·
+PASS/FAIL/HOLD와 원본 JSON은 실행 당시 증거이며, 당시의 다음 작업을 새 필수 gate로
+다시 예약하지 않는다. 현행 잔여 목록은 [M31 TODO](../TODO_M31.md)가 소유한다.
+
+- NCS `v3.4.0`을 유지한다. nRF54L15 제품 SDC의 **DF IQ RX는 UNSUPPORTED·P2 비차단**이다.
+  Zephyr LL 진단의 IQ 수신·fault 이력은 별도이며 제품 RX PASS나 필수 재시도 근거가 아니다.
+  [259번 지원 경계](259_M31_P2_DF_고정_SDK_지원_경계.md)를 따른다.
+- CS의 간헐 RF/controller loss·counter gap은 **관찰값(`observe_only`)**이다. 과거 0-gap
+  정책의 HOLD를 승계하지 않는다. 유효 raw·step·목표 수·정상 종료와 중복/역행·fault 검사는
+  유지한다. [260번 판정 정정](260_M31_P2_CS_누락_분류와_256_step_장시간.md)을 따른다.
+- SDC 내부 high-water API의 부재는 추가 완료 조건이 아니다. SDK의 역할·count별 요구량,
+  8-byte 정렬·초기화 검사를 유지하고 축소 근거가 없으면 pool을 보존한다.
+  [248번 감사](248_M31_P2_SDC_pool_정적_경계_감사.md)를 따른다.
+
+P2 남은 기술 축은 **지원 범위의 오류·최악 부하 → stack/heap 여유·크기 결정 → 동등
+Nordic native 비용 비교**의 세 가지다. 문서·회귀·증거 정리·커밋·푸시는 그 마감 절차이며
+네 번째 기술 축이 아니다. 모든 물리 전원 차단·다중 link 조합을 추가로 요구하지 않는다.
+W04·W05 기능 마감과 W06~W08은 별도 M31 작업이며, 이 범위 정정으로 완료 처리하지 않는다.
+
+## 최근 완료·재개 기록
 
 | 기록 | 용도 |
 | --- | --- |
+| [261 — P2 세 잔여 축·문서 전수 정비](261_P2_잔여_세_축_확정과_문서_전수_정비.md) | 현행 잔여 세 축과 제외 경계 확정, 문서 전수 검토·인계 정비; 신규 P2 실기 아님 |
 | [260 — P2 CS 256-step 장시간·판정 정정](260_M31_P2_CS_누락_분류와_256_step_장시간.md) | 1,000 유효 raw·양측 STOP 정상 부하 PASS. 간헐 gap은 비차단 관찰값으로만 기록 |
 | [259 — P2 DF 고정 SDK 지원 경계](259_M31_P2_DF_고정_SDK_지원_경계.md) | nRF54L15 제품 SDC의 AoA 송신 전용 지원 경계와 실패한 LL 수신 경로 분리 |
 | [258 — P2 Audio 양방향 장시간](258_M31_P2_Audio_양방향_장시간과_종료_복구.md) | 양방향 LC3 각 10,000 frame·drop 0, 즉시 종료 20/20 |
@@ -44,16 +62,16 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | [254 — P2 Audio unicast 재연결 메모리](254_M31_P2_Audio_unicast_재연결_메모리_계측.md) | adaptive 재연결 scan 결함 수정, source SWD reset 20/20·sink 누적 decode 2,933·drop 0·양측 STOP; 실패 원본 두 건 보존, P2 전체 HOLD |
 | [253 — P2 Audio broadcast 재가입 메모리](253_M31_P2_Audio_broadcast_재가입_메모리_계측.md) | source SWD reset 뒤 sink 명시적 재가입 20/20·decode 2,107·drop 0·양측 STOP; 첫 sync 실패와 기존 session 상태 실패 보존, sink MPSL Work 여유 264 B |
 | [252 — P2 CS 장절차·반복 계수 경계](252_M31_P2_CS_장절차_반복계수_경계_진단.md) | 진단 image 두 종류의 raw 각 10건·양측 STOP, 실제 93~98 step으로 최대 256-step·RAS 분할 증거 미확보; 기본 image 100건 복구 |
-| [251 — P2 CoC 재연결 메모리 계측](251_M31_P2_CoC_재연결_메모리_계측.md) | 두 채널 512 B echo·ACL 재연결 20/20과 서버 SWD reset 20/20, 각 실행 누적 echo 42건·양측 STOP, 역할별 stack/heap 고점유. 물리 전원 차단·controller 내부 pool은 별도 |
+| [251 — P2 CoC 재연결 메모리 계측](251_M31_P2_CoC_재연결_메모리_계측.md) | 두 채널 512 B echo·ACL 재연결 20/20과 서버 SWD reset 20/20, 각 실행 누적 echo 42건·양측 STOP, 역할별 stack/heap 관찰값 |
 | [250 — P2 native CS 비교·DF 재진단](250_M31_P2_native_CS_비교와_DF_재진단.md) | 고정 Nordic RAS 계측 1,000건의 gap·abort·busy 분모와 양측 STOP; DF CTE-only·active scan 각각 sync 실패·수신 fault 원본 및 정상 image 복구. 전체 P2는 미완료 |
 | [249 — P2 문서 정합성 감사](249_M31_P2_문서_정합성_감사.md) | 현재 진입점·P2 기록 수치/링크/판정 분리, Markdown 404개 gate와 Host 회귀 경계 |
 | [248 — P2 SDC pool 정적 경계](248_M31_P2_SDC_pool_정적_경계_감사.md) | 8개 역할 ELF의 SDK 계산·8-byte 정렬 pool 예약과 초기화 요구량 검사 확인; 내부 high-water·임의 축소는 미주장 |
-| [247 — P2 DF connectionless 재진단](247_M31_P2_DF_connectionless_재진단과_보류.md) | 연속 CTE 송신에서도 LL periodic sync 미수립, IQ 0·cleanup fault 원본과 보드 복구 보존; P2 RX HOLD |
+| [247 — P2 DF connectionless 재진단](247_M31_P2_DF_connectionless_재진단과_보류.md) | 연속 CTE 송신에서도 LL periodic sync 미수립, IQ 0·cleanup fault 원본과 보드 복구 보존. 당시 RX HOLD는 현행 P2 비차단 |
 | [246 — P2 DF 연결 IQ 메모리 계측](246_M31_P2_DF_연결_IQ_메모리_계측.md) | Zephyr LL 내부 연결형 20 report·1,640 sample, cleanup과 역할별 stack high-water 국소 PASS; 공개 RX·controller pool 별도 |
 | [245 — P2 CS 장기 연속성 진단](245_M31_P2_CS_장기_연속성_진단.md) | controller sync abort와 단일 로컬 버퍼 경쟁을 분리; 500건 × 2 국소 PASS. 두 수정 image의 1,000건은 당시 0-gap 기준 HOLD, 현행 비차단 |
 | [244 — P2 DF 연결 IQ 내부 진단](244_M31_P2_DF_연결_IQ_진단.md) | Zephyr LL 내부 연결형 20 report·1,640 sample과 cleanup 국소 PASS; Arduino/SDC·connectionless·high-water 별도 |
 | [243 — P2 Audio broadcast 실기](243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md) | 암호화 LC3/BIS 1,000 frame 최종 image 8/8 및 연속 10,000 frame·drop 0, 최초 동기화 실패 원본 보존, 정적 예약·stack high-water |
-| [242 — P2 DF beacon TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md) | AoA CTE beacon 20회 TX start/stop·negative·high-water; IQ RX/각도는 HOLD |
+| [242 — P2 DF beacon TX](242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md) | AoA CTE beacon 20회 TX start/stop·negative·high-water. IQ RX/각도 수신 증거가 아니며 현행 지원 경계는 259번 |
 | [241 — P2 Audio unicast 실기](241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md) | 동일 image의 합성 PCM/LC3/CIS 1,000·연속 10,000 frame 송신·복호화, drop 0·양측 종료·high-water; 다른 조합은 별도 |
 | [240 — P2 CIS·BIS 실기](240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md) | 두 보드에서 각 100 SDU × 20세션, BIS 누락 0, 정적 예약·stack high-water; Audio 결합은 별도 |
 | [239 — P2 CoC·CS 계측](239_M31_메모리_최적화_P2_CoC_CS_계측.md) | CoC 두 채널 512 B/100 echo PASS, CS 후속 연속 100개 PASS·앞선 간헐 counter 누락은 현행 비차단 관찰값, 역할별 high-water |
@@ -152,6 +170,24 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 - 과거 문서의 “다음 작업”은 당시 계획입니다. 현재 지시는 TODO와 최신 사용자 요청이 우선입니다.
 
 ## 전체 기록 목차
+
+<details>
+<summary>P1 정적 저장소 중간 기록 — 227~236</summary>
+
+P0·P1 완료 요약은 위 222·237번을, 단계별 같은 image의 전후 비교는 다음 원본을 확인합니다.
+
+- [227 — CoC와 범용 GATT 분리](227_M31_메모리_최적화_P1_CoC_GATT_분리.md)
+- [228 — GATT schema 선언 용량](228_M31_메모리_최적화_P1_GATT_Schema_Capacity.md)
+- [229 — GATT client context 용량](229_M31_메모리_최적화_P1_GATT_Client_Context.md)
+- [230 — GATT event payload 용량](230_M31_메모리_최적화_P1_GATT_Event_Payload.md)
+- [231 — GATT TX payload 용량](231_M31_메모리_최적화_P1_GATT_TX_Payload.md)
+- [232 — GATT inline value 용량](232_M31_메모리_최적화_P1_GATT_Inline_Value.md)
+- [233 — GATT server/client 방향 분리](233_M31_메모리_최적화_P1_GATT_방향_분리.md)
+- [234 — GATT shared TX pool](234_M31_메모리_최적화_P1_GATT_Shared_TX_Pool.md)
+- [235 — GATT client payload buffer](235_M31_메모리_최적화_P1_GATT_Client_Payload_Buffer.md)
+- [236 — 역할별 잔여 pool 감사](236_M31_메모리_최적화_P1_역할별_잔여_Pool_감사.md)
+
+</details>
 
 <details>
 <summary>v0.4.0 실기·공개, v0.4.1 유지보수, M28·M29·M30 완료와 M31 진행 — 94~167</summary>

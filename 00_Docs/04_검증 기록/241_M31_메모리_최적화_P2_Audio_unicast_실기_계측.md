@@ -1,5 +1,8 @@
 # 241 — M31 메모리 최적화 P2: LE Audio unicast LC3 실기 계측
 
+> **역사 기록:** 아래 미계측 범위는 이 image의 증거 한계다. 후속 양방향·복구 결과와
+> 현재 P2 세 잔여 축은 [M31 TODO](../TODO_M31.md), 제외 조건은 [현행 판정 경계](README.md#p2-기록의-현행-판정-경계)를 따른다.
+
 ## 판정
 
 두 exact NU54DK에 고정 NCS v3.4.0 `adaptive` Audio unicast source/sink

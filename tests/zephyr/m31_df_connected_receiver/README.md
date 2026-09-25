@@ -2,6 +2,8 @@
 
 이 앱은 M31-W04의 **내부 Zephyr 진단용**이다. 공개 Arduino 예제가 아니다.
 W04는 아직 완료되지 않았으며 이 앱의 build나 HCI 명령 수락만으로 완료 처리하지 않는다.
+고정 NCS v3.4.0·nRF54L15 제품 SDC의 IQ RX는 `UNSUPPORTED`·P2 범위 제외다.
+이 앱의 결과는 과거 LL 진단으로 보존하며 P2 완료를 위해 자동 재실행하거나 controller를 교체하지 않는다.
 공개 [`ConnectedCteResponder.ino`](../../../libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/ConnectedCteResponder.ino)와
 그 backend [`NUCODE_BLE_DirectionFinding_Connected.cpp`](../../../libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding_Connected.cpp)가
 올라간 두 번째 NU54DK에 연결한 뒤,
@@ -18,7 +20,7 @@ IQ event나 sample을 생성하지 않으며 공개 API·Arduino 예제에는 �
 자동 central PHY 변경 오류와 IQ 안정성을 분리하도록 이 진단은
 `CONFIG_BT_AUTO_PHY_CENTRAL_NONE=y`를 사용한다. 이는 이전 재부팅의
 원인이 PHY였다는 확정이 아니다. [244번 실기 기록](<../../../00_Docs/04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)의
-내부 연결형 IQ 20건은 공개 Arduino/SDC RX 지원을 뜻하지 않는다.
+내부 연결형 IQ 20 report·1,640 sample·cleanup 국소 PASS는 공개 Arduino/SDC RX 지원을 뜻하지 않는다.
 
 `tests/hil/nu54dk/m31_df_connected_rx_run.py`는 probe SHA-256 역할 매핑,
 exact app·aux COM, auto unlock 없는 sector flash, reset-halt-drain-resume,

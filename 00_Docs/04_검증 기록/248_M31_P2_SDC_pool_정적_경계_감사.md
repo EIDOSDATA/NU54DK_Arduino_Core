@@ -38,9 +38,12 @@ clean-source 릴리스 판정을 대신하지 않는다.
 
 ## P2 판정
 
-controller pool은 SDK 계산·8-byte 정렬·초기화 시 상한 검사 경로를
-유지하며 임의로 축소하지 않는다. 이로써 임의 byte 축소를 하지 않는
-정적 안전 경계를 확인했지만, controller 내부 실행 중 high-water,
-CS 최대 procedure·fragmented RAS, ISO 다중 stream, DF RX 오류/복구의
-최악 요구량은 이 표로 입증하지 못한다. stack·heap 및 native 동등 조건
-비교도 별도다. **P2 전체는 HOLD**다.
+controller pool은 SDK 계산·8-byte 정렬·초기화 시 요구량 검사 경로를
+유지하며 임의로 축소하지 않는다. **SDC 내부 high-water 비노출은 추가 P2 gate가 아니다.**
+지원 역할·count를 바꿀 때는 SDK 요구량을 다시 산정하고, 안전한 축소 근거가
+없으면 현재 pool 크기를 유지한다. 내부 peak를 측정했다고 주장하지 않는다.
+
+이 정적 감사는 지원 범위의 오류·최악 부하와 stack/heap 여유를 대신하지 않는다.
+CS 최대 절차의 정상 256-step 결과는 후속 [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)에,
+DF 제품 IQ RX의 `UNSUPPORTED`·P2 비차단 경계는 [259번](259_M31_P2_DF_고정_SDK_지원_경계.md)에 있다.
+**P2 전체는 미완료**이며 남은 작업은 [M31 TODO](../TODO_M31.md)의 세 축으로 관리한다.

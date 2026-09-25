@@ -3,6 +3,8 @@
 > 판정 갱신: 이 기록의 CS 잔여 목록은 당시 상태다. 후속 [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)에서
 > 256-step·분할 RAS 유효 raw 1,000건·양측 STOP을 확인했다. 간헐 gap과
 > gap별 원인 규명은 현행 P2 합격 조건에서 제외한다. DF 실패 원본은 그대로다.
+> 제품 SDC IQ RX는 [259번](259_M31_P2_DF_고정_SDK_지원_경계.md)의 `UNSUPPORTED`·P2 비차단이며,
+> 다른 잔여와 SDC pool의 현행 기준은 [P2 판정 경계](README.md#p2-기록의-현행-판정-경계)를 따른다.
 
 ## 범위와 판정
 
@@ -116,7 +118,7 @@ receiver STOP은 없었고 beacon STOP만 확인했다.
 image로 sector 복구한 뒤 [RAS 100건·gap 0·양측 STOP](evidence/m31-p2-native-comparison-2cf92933/native-ras-recovery-after-active-scan-100.json)을
 다시 확인했다. 이 복구 PASS는 DF 수신 성공을 의미하지 않는다.
 
-## P2 잔여 판정
+## 당시 P2 잔여 판정과 후속 경과
 
 CS의 native 비교로 0-gap 문턱의 오류는 바로잡았지만 최대 procedure·step,
 fragmented RAS, RF abort/peer loss 후 복구의 peak와 Arduino 정상 callback

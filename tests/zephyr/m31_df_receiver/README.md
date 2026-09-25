@@ -1,6 +1,8 @@
 # 기본 안테나 CTE 수신 진단
 
-이 앱은 M31-W04의 내부 Zephyr 진단용이며 W04는 아직 완료되지 않았다. 공개
+이 앱은 M31-W04의 과거 내부 Zephyr 진단용이며 W04는 아직 완료되지 않았다.
+고정 NCS v3.4.0·nRF54L15 제품 SDC의 IQ RX는 `UNSUPPORTED`·P2 범위 제외다.
+아래 실패를 제품 SDC RX의 미해결 blocker로 승계하거나 P2 완료를 위해 재실행하지 않는다. 공개
 [`CteBeacon.ino`](../../../libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon/CteBeacon.ino)와
 그 backend [`NUCODE_BLE_DirectionFinding.cpp`](../../../libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding.cpp)가
 구성한 `NU54-CTE` 송신자를 고정 Zephyr LL controller에서 찾아 periodic sync와

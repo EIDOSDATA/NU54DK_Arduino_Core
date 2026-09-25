@@ -1,7 +1,8 @@
 # Connected CTE responder
 
-이 예제는 개발 소스 `0.4.1-dev`의 Direction Finding 진단 범위이며 수신·IQ
-경로는 아직 완료되지 않았다.
+이 예제는 개발 소스 `0.4.1-dev`의 별도 Zephyr LL 연결 CTE 응답 경로입니다.
+고정 NCS v3.4.0·nRF54L15 제품 SDC의 IQ RX는 미지원이며 P2 범위에서 제외합니다.
+이 송신 예제와 내부 LL 수신 진단은 제품 SDC RX 지원을 의미하지 않습니다.
 현재 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다.
 
 [`ConnectedCteResponder.ino`](ConnectedCteResponder.ino)는 `NU54-CTE-RSP`라는 이름으로

@@ -43,7 +43,9 @@ ISO 예제 11개는 독립 개발 package에서 전수 빌드하고 같은 image
 따라 M31 8개·M32 12개·M33 8개 작업으로 관리합니다.
 최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
 메모리 최적화는 P0·P1을 마쳤지만 P2 실기·최악 안전 판정은 아직 진행 중이며,
-[P2 잔여 gate](00_Docs/TODO_M31.md)는 완료되지 않았습니다.
+[P2 잔여 세 축](00_Docs/TODO_M31.md#p2-남은-작업--세-축)은 오류·최악 부하, stack/heap 안전 여유,
+동일 조건 Nordic native FLASH/RAM 비교입니다. 고정 NCS v3.4.0에서 제품 SDC DF IQ RX는
+지원 밖이며, CS 간헐 loss·counter gap과 SDC 내부 high-water 비노출은 P2 차단 조건이 아닙니다.
 위 CI 배지는 소프트웨어 검사 상태이며 보드 실기·상호운용·정식 릴리스 완료를 뜻하지 않습니다.
 
 ### 프로젝트의 구성
@@ -87,9 +89,11 @@ nRF Connect for Desktop/VS Code, 별도 Git·Python 설치는 필수가 아닙�
 | Feature set | 용도 |
 | --- | --- |
 | `Standard peripherals` | GPIO, Serial, Wire, SPI, ADC, PWM, Storage 등 일반 Arduino Sketch |
-| `Adaptive capabilities (experimental)` | 실제 API·library·역할 선언으로 필요한 설정·소스만 선택하는 개발 경로 |
 | `BLE NUS` | NUS와 GAP/GATT·보안·표준 BLE profile 예제 |
 | `Peripheral Fabric (DAP UART disconnected)` | 인스턴스·DMA를 직접 제어하는 고급 API. DAP UART 분리 조건 준수 |
+
+위 메뉴는 **v0.4.1 설치본 기준**입니다. 개발 브랜치에는 별도의
+`Adaptive capabilities (experimental)` 선택지가 있으며 설치본에는 없습니다.
 
 일반 사용자는 `prj.conf`나 Devicetree overlay를 직접 작성할 필요가 없습니다. 고급 사용자는 Sketch
 폴더에 `prj.conf`와 `app.overlay`를 두어 마지막 override로 사용할 수 있지만, 선택한 기능의 필수
@@ -224,7 +228,7 @@ v0.4.1 설치기·공개 package 회귀는 [v0.4.1 기록](<00_Docs/04_검증 �
 | Raw ISO | [ISO 예제와 역할 안내](libraries/NUCODE_BLE_ISO/examples/README.md) — CIS·BIS·암호화·시각 동기·combined 11역할 |
 | LE Audio | [Audio 예제와 역할 안내](libraries/NUCODE_BLE_Audio/examples/README.md) — LC3·BAP·CAP·CSIP·PBP·제어 profile·TMAP/GMAP·HAP |
 
-개발용 `adaptive` profile은 현재 총 52개 preset을 제공하며, ISO 11역할, Audio BAP 7역할,
+개발용 `adaptive` profile은 현재 총 54개 preset을 제공하며(GATT server/client 방향 2개 포함), ISO 11역할, Audio BAP 7역할,
 HAP 2역할, Audio Control 2역할, Media Control player/client 2역할, Call Control
 server/client 2역할, CAP 5역할, CSIP member/coordinator 2역할, PBP source/sink 2역할,
 TMAP 4역할과 GMAP 4역할을 역할별 최소 설정·소스로 해석합니다. Media·Call Control·CAP·CSIP·PBP·TMAP·GMAP 공개 예제도 검증된
@@ -243,10 +247,10 @@ M31의 기본 수락은 보드 간 실제 프로토콜·합성 Audio 데이터·
 해당 미실행은 v0.5.0 개발·릴리스 차단이 아니며, 실물 호환성이 검증됐다고 표시하지 않습니다.
 Apple/Google 기능의 신규 구현은 후속 M33 범위이며 v0.5.0에 포함됐다는 뜻이 아닙니다.
 Ubuntu/macOS 실제 설치·USB·serial·debug는 해당 OS를 포함하는 후속 릴리스 단계에서 사용자가 검증합니다.
-DF 원시 IQ는 안테나 배열 확보를 선행조건으로 삼지 않고 고정 controller별 수신 경로의 적용성부터
-확인합니다. Zephyr LL connected RX 내부 진단에서 raw IQ 일부를 관찰했지만 안정 수신·정지 검증은
-미완료입니다. 공개 API와 connectionless RX의 PASS로 확대하지 않습니다.
-원인·잔여 범위는 [M31 TODO](00_Docs/TODO_M31.md)에 기록하며 실제 각도 산출과 구분합니다.
+고정 NCS v3.4.0의 nRF54L15 제품 SDC는 DF AoA 송신만 지원하며 IQ RX는
+`UNSUPPORTED`입니다. P2 완료를 위해 SDK/controller를 변경하거나 IQ 수신을 구현하지 않습니다.
+과거 Zephyr LL 내부 연결형 IQ 20 report·1,640 sample과 connectionless 실패는 제품 수신 지원과
+구분해 [259번 지원 경계](<00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)에 보존합니다.
 
 ## 사용 전 확인
 

@@ -11,42 +11,16 @@ Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 �
 M32/M33의 추가 기능·전체 catalog와 Ubuntu/macOS 지원은 후속 버전(미정)으로 분리한다.
 M31 기능 완료만으로 공개하지 않으며 §6의 패키지·설치·RC·공개 승인 gate를 별도로 충족해야 한다.
 
-main 이력 정리 이후의 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 최적화 설명 통합은
-당시 문서-only 변경이었고, 현재 구현은 **`M31-MEM-OPT`**에서 P0·P1을 마친 뒤
-P2 실기와 오류 진단을 진행 중이다. 현재 P2 결과·잔여 조건은 [M31 TODO](TODO_M31.md)에 기록한다.
-[250번 native RAS 비교·DF 재진단](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)도
-P2의 미완료 조건을 유지한다. Nordic 계측 RAS에서도 gap이 관찰됐다.
-Arduino CS의 간헐 counter loss는 관찰하되 P2 합격 조건에서 제외한다.
-DF connectionless fault와 다른 P2 조건은 별도다.
-[251번 CoC 재연결](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>)은
-두 채널 512 B echo, 명시적 ACL 재연결 20/20과 서버 SWD reset 20/20을
-추가로 통과했지만 물리 전원 차단·controller 내부 사용 최고치는 별도다.
-[252번 CS 장절차](<04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>)는
-진단 image 두 가지에서 raw 각 10건을 통과했지만 실제 최대 98 step이라
-당시 분할 RAS·256-step 용량 검증을 닫지 못했다. 후속
-[255번 진단](<04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md>)에서는
-실제 256-step·분할 RAS 정상 경로 10/10을 확인했으나 같은 image의
-100건의 counter gap 1은 현행 판정에서 비차단이다. 이후 256-step 유효 raw
-1,000건·양측 STOP도 확인했으나 다른 조건으로 P2 전체는 미완료다.
-[256번 DF 대기 취소 진단](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>)도
-connectionless sync timeout·IQ 0·수신 bus fault를 보존했고,
-기본 CS image 복구 뒤 양측 STOP을 확인했다. 공개 DF RX는 미완료다.
-[253번 Audio broadcast 재가입](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
-source SWD reset 뒤 sink 명시적 재가입 20/20과 drop 0을 확인했으나
-최초 sync 실패와 다른 역할·부하의 최악값은 별도다.
-[254번 Audio unicast 재연결](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>)은
-adaptive source 재연결 scan 결함을 수정하고 source SWD reset 20/20,
-sink 누적 decode 2,933·drop 0을 확인했다. 앞선 실패 두 건과 다른
-방향·다중 ASE·최악 부하는 별도이므로 P2 완료로 승격하지 않는다.
-2026-09-25 후속 [CoC 송신 버퍼 포화](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>)는
-네 SDU 전송 뒤 `busy`와 복구 20/20×2를, [Audio 양방향](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>)은
-각 10,000 LC3 frame·drop 0과 즉시 종료 20/20을 확인했다.
-[DF 지원 경계](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)상
-고정 NCS `v3.4.0`의 nRF54L15 제품 수신은 AoA 송신 전용 지원 범위 밖이며,
-[CS 장시간](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>)은
-256-step 유효 raw 1,000건의 gap 3과 기본 image 복구 100건의 gap 1을
-보존한다. 간헐 gap은 비차단 관찰값이며 유효 raw·양측 STOP은 PASS다.
-이 결과는 P2 전체 완료·메모리 축소·릴리스 승인이 아니다.
+현재 브랜치는 **`M31-MEM-OPT`**다. 메모리 최적화 **P0·P1은 완료, P2는 미완료**이며
+실행별 경과는 [M31 TODO](TODO_M31.md#메모리-최적화-현재-상태)와 [HANDOFF](HANDOFF.md)에 모은다.
+P2 잔여 기술 작업은 **지원 범위 오류·최악 부하 / stack·heap 안전 여유·최종 크기 /
+동등 조건 Nordic native FLASH·RAM 비교**의 세 축이다. 문서·영향 회귀·커밋은 마감 절차다.
+
+**NCS v3.4.0을 유지한다.** 제품 SDC DF IQ RX는 [259번 근거](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)에
+따라 `UNSUPPORTED`·P2 범위 밖이다. CS 간헐 RF/controller loss·counter gap은 비차단 관찰값이며
+유효 raw·완료 수·STOP·fault·중복/역행 검사는 유지한다. SDC 내부 high-water 비노출도 추가 gate가
+아니다. SDK 역할/count별 요구량·8-byte 정렬을 준수하고 축소 근거가 없으면 pool을 유지한다.
+이 경계 정리는 P2 전체 완료나 W04/W05 마감·릴리스 승인이 아니다.
 
 이후 구현 순서는 **메모리 최적화 → W04·W05 → W06 → W07 → W08·Windows 릴리스 준비**다.
 **HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 이번 문서 작업에서 재개하지 않는다.
@@ -107,7 +81,7 @@ M31 8/8과 Host 3/8은 독립 집계하며, v0.5.0 Windows 릴리스 준비는 M
 | --- | --- | --- |
 | Apple/Google 등 외부 ecosystem/peer | 신규 기능·예제는 후속 M33-W03 소유. 채택 기능의 설정·credential·가능한 자동 검사는 담당 단계에서 필수 | 실물은 사용자 후속 NOT RUN. M33 기능을 v0.5.0 지원으로 안내하지 않으며 검증된 상호운용 주장 금지 |
 | 마이크·스피커·외장 장치 | 실제 연결해 사용할 API·설정·예제·연결 안내와 가능한 자동 검사; 합성 보드 경로 검증 | 외부 장치의 실제 운용·호환성은 사용자 후속. 개발·공개 차단 아님 |
-| DF 원시 IQ | 기본 SDC TX와 Zephyr LL RX 후보 구분, 배열 없이 수신 구성 조사·build·적용 가능한 2보드 HIL | 장비 대기가 아닌 소프트웨어 지원성/기능 판정. 각도 산출·실제 안테나 전환은 별도 외장 경로 |
+| DF 원시 IQ | 고정 NCS v3.4.0의 nRF54L15 제품 SDC IQ RX는 지원 밖. 지원표·예제·원장에 근거를 기록 | P2에서 제외하며 SDK/controller를 변경하지 않음. 과거 LL 연결형 성공·connectionless 실패는 내부 진단 이력; 제품 지원·각도 PASS 아님 |
 | Ubuntu/macOS 사용자 Host | 후속 Host 트랙에서 prerequisite·launcher/resolver·설치 도구·자동 검사와 검증 절차 구현; 현재 보류 | 해당 OS를 포함하는 후속 릴리스에서 사용자 실물 gate 유지. Windows-only v0.5.0을 차단하지 않음 |
 
 세 보드의 USB 접근·명확한 mapping을 전제로 추가 부품 연결을 중간 선행조건으로 요구하지 않는다.
@@ -141,7 +115,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | --- | --- | --- |
 | M29 Signed Write | Zephyr host `BT_SIGNING`은 `DEPRECATED` | 기본 OFF의 `NUCODE_BLE_LegacySigning`, legacy opt-in으로 구현. CSRK/counter 영속화·replay 거부와 통합 회귀 PASS |
 | M29 EATT | Zephyr host `BT_EATT`는 `EXPERIMENTAL` | 기본 OFF의 `NUCODE_BLE_EATT`, experimental opt-in으로 구현. 암호화·2 bearer 부하와 통합 회귀 PASS; 안정 API로 승격하지 않음 |
-| M31 방향탐지 | 기본 SDC의 CTE 송신은 AoA 지원·AoD 미지원. 전체 RX/IQ 경로 지원을 뜻하지 않음 | 송신·수신·안테나 전환을 분리해 controller/profile 적용성 판정. 대체 Zephyr LL은 별도 후보이지 검증 완료 대안이 아님 |
+| M31 방향탐지 | nRF54L15는 고정 NCS v3.4.0에서 Experimental·AoA 송신 전용. 제품 SDC IQ RX·AoD 미지원 | IQ RX는 P2 범위 밖. TX·미지원 경계를 문서/예제/원장에 일치시키고 W04 변경 영향을 검증. LL 진단을 제품 대안으로 승격하지 않음 |
 | M31 Audio 확장 | W03의 11개 profile/data 하위 작업을 공개 Arduino 예제와 보드 HIL로 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)의 역할별 적용성·한계 유지. 외장 audio·상용 peer 실물은 사용자 후속 NOT RUN |
 | M32-A 최신 LE | 고정 SDC의 power/path loss·subrating·SCA·frame space·shorter interval·extended feature set 및 Nordic 확장 | M28의 기존 6개 capability PASS와 구분해 W01~W05에 신규 구현·예제·negative 배정 |
 | M32-A EAD/coding·자원 | EAD Host source·광고 coding 설정, nRF54L15용 multi-set/identity 예제 존재 | EAD/coding은 적용 build·runtime 확인 전 candidate; 1 advertising set 기본값과 확장 preset 분리 |
@@ -176,7 +150,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M29 | GATT/CoC → signed write/EATT 정책 적용 → 오류·상호운용 | client/server·cache·credit·실험/legacy 제약과 시험 근거 |
 | M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 + HOST-W01~HOST-W03 | M34~M36이 재사용할 보안 계약과 Host 공통 backend·Windows 전용 가정 inventory |
 | M31-A | ISO/CIS/BIS·combined/time sync → LC3·전체 Audio profile → 합성 데이터/제어 HIL | stream/buffer·codec·역할별 짝 예제·미지원/외부 I/O 미검증 행 |
-| M31-B | controller 적용성 → CTE TX와 배열 없는 raw IQ 수신 후보 조사/build·적용 HIL; AoD 개별 판정 | TX/RX 증거 깊이, 고정 Zephyr LL 후보의 실제 결과, SDC AoD 미지원·각도/전환 후속 경로 |
+| M31-B | 고정 SDK 지원 CTE TX/response·예제·negative와 변경 영향 검증 | 제품 SDC IQ RX·AoD 미지원 근거, TX와 내부 LL 진단 이력 구분·원장 정합 |
 | M31-C | Connected ACL·CS/RAS·raw 결과/거리 산출 → security/peer loss/recovery | 기능 동작 근거; 정밀 거리 보정·정확도는 필수 밖 |
 | M32-A | power/path loss → timing/subrate → adv/EAD/identity/resource → Nordic LLPM/QoS/event | 새 자원 preset·실험적 opt-in·짝 예제·2/3보드 기능/negative |
 | M32-B | Mesh 기본 → Mesh 1.1 → BLOB/Mesh DFU/Distribution | node/model·key/settings·transfer·복구, 내부 RRAM/배포자 한계와 M36 인계 |
@@ -212,14 +186,14 @@ Android/iOS/Linux cross-vendor matrix는 M28/M29 PASS에 포함하지 않는다.
 | --- | --- | --- |
 | BLE 기본·multi-link | NU54DK 2~3개와 수신측 sequence/hash | probe SHA-256·serial·role·revision; OS peer는 별도 M33 행 |
 | ISO/LE Audio | 2보드 송수신, 3보드 source/sink/assistant 또는 broadcast; 합성 PCM/LC3 | 실제 SDU·codec·제어·buffer/복구, 외부 microphone/speaker/codec는 별도 미검증 행 |
-| Direction Finding | CTE TX 1보드와 내부 Zephyr LL 연결 IQ 20 report·1,640 sample은 국소 확인 | SDC 공개 RX는 미제공. Connectionless LL은 연속 CTE 송신에도 sync 미수립·IQ 0이며 cleanup fault를 보존했다. 공개 API·각도/전환은 별도. [연결형 244](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [connectionless 247](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>) |
+| Direction Finding | 지원 CTE TX 기능 기준. 제품 SDC IQ RX는 고정 SDK 지원 밖 | RX를 P2 실기 대기 항목으로 잡지 않음. [259번 지원 경계](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)와 과거 LL 성공/실패 원본을 구분 |
 | Channel Sounding | CS initiator/reflector 2보드, 선택 3번째 peer | procedure/RAS·결과·보안·재연결 기능; 정밀 거리·방향 보정 요구 없음 |
 | Mesh/coexistence | 승인 topology의 2~3노드, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수·단독 통신·조합·부하·서비스 지연; 새 power-loss 확장은 M36 후속이며 v0.5.0 추가 필수 gate 아님 |
 
 사용자가 제외한 정밀 계측은 `out_of_scope_by_user_decision`, 사용자 후속 외장/상호운용 실기는
-`NOT RUN`과 후속 책임·비차단 범위를 함께 기록한다. DF RX의 경로별 미완료·실패는
-별도 기술 상태이며 장비 부족 또는 `UNSUPPORTED`로 자동 분류하지 않는다. 고정 controller의
-실제 비지원은 근거와 함께 기록한다. 3보드 결과를 더 큰 topology의 PASS로 확대하지 않는다.
+`NOT RUN`과 후속 책임·비차단 범위를 함께 기록한다. 제품 SDC DF IQ RX는 공식 고정 SDK 근거로
+`UNSUPPORTED` 판정한다. 이는 과거 LL 경로의 실제 실패를 미지원으로 소급 변경하는 것이 아니다.
+3보드 결과를 더 큰 topology의 PASS로 확대하지 않는다.
 
 Android/iOS/Linux 항목은 **BLE 상대 장치 상호운용**이며 Arduino Core 개발·설치 Host matrix와
 서로 다른 시험이다. v0.5.0 Host 범위는 Windows 10/11 x64다. Ubuntu 24.04 이상 AMD64와

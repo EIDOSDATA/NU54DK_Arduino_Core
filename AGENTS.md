@@ -42,13 +42,17 @@
   M31-W08이 배포 준비를 소유하며 M32/M33·다중 Host 확장 완료를 기다리지 않습니다.
   일반 문서·main 업데이트 허가는 release/tag 공개나 이력 squash 허가가 아닙니다.
   이번 squash는 별도 사용자 요청에 따른 221번 한정 작업이며 향후 반복 허가가 아닙니다.
-- DF 원시 IQ 수집에 안테나 배열을 일괄 요구하지 않습니다. 기본 SDC는 DF CTE TX만 제공하고,
-  고정 Zephyr LL의 connected RX 내부 진단은 후속 실행에서 유효 IQ report 20건·1,640 sample과
-  cleanup을 국소 PASS했습니다. 이전 4 report·328 sample/cleanup FAIL은 보존합니다.
-  공개 Arduino/SDC API·connectionless RX 완료가 아닙니다. [244번](<00_Docs/04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)과
-  [247번 connectionless 재진단](<00_Docs/04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>)의
-  sync 실패·cleanup fault를 함께 대조합니다. 실제 각도 산출·안테나 전환과 원시 IQ 수집을 구분하고,
-  SDC 미지원이나 source 존재를 SoC 전체 불가능 또는 runtime PASS로 확대하지 않습니다.
+- **P2 잔여 기술 작업은 세 축**이다: 지원 범위 오류·최악 부하, stack/heap 안전 여유·최종 크기,
+  동등 조건 Nordic native FLASH/RAM 비용 비교. 문서·변경 영향 회귀·커밋·푸시는 마감 절차다.
+  세부 순서는 [M31 TODO](00_Docs/TODO_M31.md#p2-남은-작업--세-축)를 따른다.
+- **NCS v3.4.0·제품 SDC를 유지한다.** nRF54L15 제품 DF IQ RX·AoD는 공식 고정 SDK 근거로
+  `UNSUPPORTED`이며 IQ RX를 P2 필수 gate로 되살리지 않는다. [259번](<00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)을
+  따른다. Zephyr LL 연결형 내부 IQ 성공과 connectionless 실패·fault는 역사 증거로 보존하며
+  제품 수신 PASS나 SDK/controller 변경 허가로 확대하지 않는다.
+- CS 간헐 RF/controller loss·counter gap은 관찰값이며 P2 합격 조건에서 제외한다.
+  유효 raw·step·완료 수·STOP·fault·중복/역행 검사는 유지한다. SDC 내부 high-water 비노출도
+  추가 gate가 아니다. SDK 역할/count별 요구량과 8-byte 정렬을 준수하고 근거 없는 pool 축소를 금지한다.
+  물리 전원 차단·임의 다중 link·모든 조합을 새 필수 과제로 추가하지 않는다.
 - T13 S는 **56 PASS + 2조건 제외 / 58**, UARTE00은 4-net 결선 검사·180초 통신·flow 200회·취소 400회 완료입니다.
   완료한 S/U, C05 1시간 soak와 사용자 제외 항목을 새 요청 없이 다시 예약하지 않습니다.
 - **QDEC20/21은 공개 지원**합니다. 기본 정·역회전과 SAMPLE/REPORT event 경로가 근거이며,

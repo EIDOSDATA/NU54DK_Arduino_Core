@@ -17,6 +17,12 @@ v0.5.0은 M31 완료 뒤 Windows 우선 릴리스로 준비합니다. 다음 구
 수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
 실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
 
+P0·P1은 완료했습니다. P2의 남은 기술 작업은 **지원 범위 오류·최악 부하, stack/heap 안전 여유·크기
+결정, 동일 조건 Nordic native FLASH/RAM 비교** 세 축이며 [M31 TODO](../../../00_Docs/TODO_M31.md)에
+다음 순서를 기록합니다. 고정 NCS v3.4.0 제품 SDC의 DF IQ RX는 `UNSUPPORTED`·범위 제외입니다.
+CS 간헐 loss/counter gap과 SDC 내부 high-water 비노출을 추가 gate로 두지 않습니다.
+과거 실패·HOLD 원본은 보존하고, 지원 기능의 유효 결과·양측 STOP·fault·복구 검사는 유지합니다.
+
 빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
 [제외된 T13 System OFF 설계](T13_POWER.md) · [과거 T12 C 결선](COMMON_WIRING.md)
@@ -88,11 +94,12 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m30_ble_multi.py` | generation handle별 security operation과 cross-link 격리 strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m30_power_loss.py` | 별도 준비 mode와 실제 전원 차단 4지점×3회 주입·복구 판정 | NU54DK 두 대, DUT 물리 전원 차단 필요; exact `ae5186f7…` 12/12 PASS |
 | `p2_cs_native_comparison_run.py` | 고정 Nordic RAS 계측 복사본의 유효 counter·abort/busy·양측 STOP 비교 | 두 exact NU54DK, [계측 fixture](fixtures/NordicRasComparison/README.md), [250번 기록](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
-| `p2_cs_memory_run.py` | Arduino raw RAS 유효 step·counter 연속성·양측 STOP 판정 | 두 exact NU54DK, 252번 진단 빌드는 93~98 step으로 최대 256-step·RAS 분할 증거가 아님, [252번 기록](<../../../00_Docs/04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>) |
-| `p2_coc_recovery_memory_run.py` | 두 채널 512 B echo를 유지한 ACL disconnect/reconnect 또는 서버 SWD reset 각 20회·양측 STOP·stack/heap 고점유 검증 | 두 exact NU54DK, 현재 저장소 adaptive client/server image, `--recovery-mode peer-reset`은 물리 전원 차단이 아님, [251번 기록](<../../../00_Docs/04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) |
+| `p2_cs_memory_run.py` | Arduino raw RAS 유효 step·개수·양측 STOP 판정, 중복/역행 거부; gap은 `observe_only` | 두 exact NU54DK, 후속 256-step 유효 raw 1,000건·양측 STOP 확인. [260번 기록](<../../../00_Docs/04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) |
+| `p2_coc_recovery_memory_run.py` | 두 채널 512 B echo·ACL 재연결/서버 SWD reset 각 20회·양측 STOP·stack/heap, `--burst`로 로컬 TX pool 포화 후 복구 | `peer-reset`은 전원 차단이 아니며 로컬 pool 포화는 상대 credit 고갈과 다름. [257번 기록](<../../../00_Docs/04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) |
 | `p2_audio_broadcast_rejoin_memory_run.py` | 암호화 LC3/BIS source SWD reset 뒤 sink 공개 API 재가입·100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; initial sync 실패는 최대 3회만 명시적 재가입, [253번 기록](<../../../00_Docs/04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) |
 | `p2_audio_unicast_peer_reset_memory_run.py` | LC3/CIS source SWD reset 뒤 sink 지속 실행·공개 API 재연결·누적 100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; [254번 기록](<../../../00_Docs/04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) |
-| `p2_df_connectionless_rx_run.py` | LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 | 현재 고정 SDK에서 CTE-only·active scan 모두 IQ 0·수신 fault; **PASS 경로가 아니며 반복 실행 금지**, [250번 실패 원본](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
+| `p2_audio_duplex_memory_run.py` | 양방향 LC3/CIS frame·drop·즉시 종료와 stack/heap 계측 | 두 exact NU54DK, 양방향 각 10,000 frame·drop 0와 즉시 종료 20/20. [258번 기록](<../../../00_Docs/04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) |
+| `p2_df_connectionless_rx_run.py` | 과거 LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 진단 | IQ 0·수신 fault를 보존. **P2 범위 제외·반복 실행 금지**. [259번 지원 경계](<../../../00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |

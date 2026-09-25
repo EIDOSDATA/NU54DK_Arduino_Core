@@ -1,4 +1,4 @@
-# 구성 프로필과 Arduino 예제 배포 — v0.4.1 정식
+# 구성 프로필과 Arduino 예제 배포 — 정식 지원과 개발 경로
 
 | 항목 | 현재 계약 |
 | --- | --- |
@@ -68,6 +68,10 @@ Zephyr 직접 호출은 library 구현 내부가 소유하며 개발 마일스�
 | `ble` | BLE NUS | standard 기능 + BLE | NUS, GAP/GATT, 보안·표준 profile |
 | `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0에서 도입해 v0.4.1에 유지한 고급 주변장치 API |
 
+`adaptive` 행은 개발 `M31-MEM-OPT` 전용이며 공개 v0.4.1에는 없다. 현재 `boards.txt`의
+기본값은 `standard`이고 `adaptive`는 명시적으로 선택하는 실험적 최소 구성 경로다.
+개발 전용 `secure_ble_dfu`와 `ble_audio_io`는 각 DFU·Audio 계약을 따르는 별도 구성이다.
+
 모든 profile은 board `nrf54l15dk/nrf54l15/cpuapp/nu54dk`, NCS `v3.4.0`과 각 profile의
 `prj.conf`, `app.overlay`를 고정한다. `boards.txt`의 `도구 → Feature set` 메뉴가
 `build.nu54_profile`을 다음처럼 설정한다.
@@ -135,15 +139,16 @@ BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
 사용하지 않은 library의 feature는 build에 들어가지 않는다. 동일한 profile이라도 선택 feature가
 다르면 final cache identity가 다르다.
 
-단, 선택된 공통 profile/library 내부의 모든 기능과 정적 pool이 사용량에 맞게 제거된다는 뜻은
-아니다. `M31-MEM-OPT`는 실제 ELF/map 기준으로 미사용 Core route·pin state·GATT/BLE pool을
-감사하고 역할별 구성에 반영할 후속 구현이다. 현재의 설정 합성 기능과 최적화 완료를 구분한다.
+선택된 공통 profile/library 내부의 모든 기능과 정적 pool이 자동으로 제거되는 것은 아니다.
+`M31-MEM-OPT`의 P0·P1은 미사용 Core route·pin state·GATT/BLE pool을 실제 ELF/map으로
+감사하고 역할별 선언에 반영했다. P2의 오류·최악 부하, stack/heap 여유·크기 결정,
+동일 조건 Nordic native FLASH/RAM 비교는 미완료이며 [M31 TODO](../TODO_M31.md)가 관리한다.
 
-### 4.1 후속 선언 기반 기본 profile
+### 4.1 개발 adaptive profile
 
-후속 최적화의 목표 기본 경로는 현재 `standard`/`ble`처럼 주변장치와 BLE 범용 기능을 먼저
-모두 켜는 구성이 아니다. compiler-assisted capability probe, 선택 library의 feature manifest와
-공개 role/capacity 선언의 합집합으로 최종 구성을 만든다.
+개발 `adaptive`는 `standard`/`ble`의 범용 기능을 모두 켜지 않고 compiler-assisted
+capability probe, 선택 library의 feature manifest와 공개 role/capacity 선언의 합집합으로
+최종 구성을 만든다. 자동 구성은 구현됐지만 P2 전체 완료나 공개 기본값 전환을 뜻하지 않는다.
 
 - `SPI.begin()`의 도달 가능한 사용은 SPI Kconfig·Devicetree·source·route를 활성화한다.
 - include-only이고 실제 SPI API 사용과 library dependency가 없으면 SPI backend를 넣지 않는다.
@@ -299,8 +304,9 @@ W03은 Audio 11개 묶음을 완료했고 DF·CS는 미완료다. 실제 경로�
 | M30 profile 4개 | `NUCODE_BLE_Security`, `feature_set=ble` | `run_smoke.py --tests m30` |
 | M30 secure DFU build 조건 | 기존 `HeartRate` 예제, `feature_set=secure_ble_dfu` | `run_smoke.py --tests m30secure`; 저장소 밖 signing key 필요 |
 
-선택형 두 library는 모두 `ble` profile에서만 사용하며, header를 포함하지 않은 기본 BLE build에
-signing/EATT를 강제로 켜지 않는다. M29의 실제 예제명과 완료·잔여 상태는
+선택형 두 library는 `ble`과 개발 `secure_ble_dfu` profile에 호환되며, header를 포함하지 않은
+기본 BLE build에 signing/EATT를 강제로 켜지 않는다. `adaptive` 지원으로 확대하지 않는다.
+M29의 실제 예제명과 완료·잔여 상태는
 [M29 계약의 예제 목록](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md#8-개발-예제와-남은-예제>)을 따른다.
 
 ---
@@ -320,7 +326,7 @@ M32·M33의 추가 기능·예제와 Ubuntu/macOS 지원은 후속 제품선이�
 | --- | --- |
 | M31-W02 — 완료 | CIS central/peripheral, BIS broadcaster/receiver, combined ISO·time sync·recovery; [설치본 11예제·11역할 증거](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 — 완료 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP; [11/11 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
-| M31-W04~W05 | AoA CTE TX의 connected/connectionless 예제, DF RX/IQ 적용성, CS initiator/reflector·RAS·복구 |
+| M31-W04~W05 | AoA CTE 송신 예제와 controller 경계, 제품 SDC IQ RX 미지원 표시, CS initiator/reflector·RAS·복구 |
 | M31-W07~W08 및 v0.5.0 공개 gate | M31까지의 설치 role 예제·제공 경로/제한·Windows package·설치·RC 마감 |
 | M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
 | M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
@@ -341,8 +347,8 @@ M32·M33의 추가 기능·예제와 Ubuntu/macOS 지원은 후속 제품선이�
 - [ ] NU54DK의 board-only 기능은 합성 payload/PCM과 실제 무선 결과로 검증한다. 외장 Audio는
   M31, Apple/Google 신규 기능은 후속 M33의 채택 범위에서 구현·예제·설정/연결 안내·자동 검사를
   제공한다. 실물 운용·상호운용은 각 담당 제품선의 사용자 후속 NOT RUN·비차단으로 명시한다.
-- [ ] DF 원시 IQ는 배열 없는 수신 후보를 먼저 조사·build하고 적용되면 2보드 수신을 검증한다.
-  실제 각도 산출·안테나 전환 예제는 별도 외장 경로로 설명한다. 단일 안테나 IQ를 각도 검증으로 쓰지 않는다.
+- [ ] DF는 고정 NCS v3.4.0·nRF54L15 제품 SDC IQ RX의 `UNSUPPORTED`·P2 범위 제외와
+  송신 예제의 controller 경계를 명시한다. 과거 LL 내부 수신을 제품 지원이나 각도 검증으로 쓰지 않는다.
 - [ ] Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
   실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W04~W08은 보류다.
 

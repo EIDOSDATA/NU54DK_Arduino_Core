@@ -1,5 +1,8 @@
 # 240 — M31 메모리 최적화 P2: CIS·BIS 100 SDU × 20세션 실기 계측
 
+> **역사 기록:** 아래 미계측·HOLD는 이 image의 증거 경계다. 후속 결과와 현재 P2
+> 세 잔여 축·제외 조건은 [현행 판정 경계](README.md#p2-기록의-현행-판정-경계)를 따른다.
+
 ## CIS 판정과 재현 경계
 
 고정 NCS v3.4.0의 두 exact NU54DK에 `adaptive` CIS central/peripheral

@@ -1,5 +1,8 @@
 # 242 — M31 메모리 최적화 P2: AoA CTE beacon TX 계측
 
+> **후속 지원 판정:** 제품 SDC IQ RX는 고정 NCS `v3.4.0`에서 `UNSUPPORTED`·P2 비차단이다.
+> 아래 RX 미계측을 추가 완료 조건으로 적용하지 않는다. [259번](259_M31_P2_DF_고정_SDK_지원_경계.md)
+
 ## 국소 판정
 
 고정 NCS v3.4.0의 exact NU54DK 한 대에 `adaptive`

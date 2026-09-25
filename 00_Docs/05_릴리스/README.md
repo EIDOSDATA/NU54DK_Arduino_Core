@@ -7,14 +7,14 @@ Boards Manager 목록에서도 제공하지 않습니다. v0.4.1 유지보수 �
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | RELEASE-INDEX-001 |
-| 문서 개정 | 3.5 |
+| 문서 개정 | 3.6 |
 | 현재 정식 버전 | `v0.4.1` |
 | 설치 channel | Stable Boards Manager index |
 | 공식 사용자 OS | Windows 10/11 x64 |
 | v0.5.0 릴리스 목표 | M31 완료 뒤 Windows 10/11 x64 우선 |
 | 후속 제품선 | M32/M33 추가 기능, Ubuntu/macOS 지원; 버전 미정 |
 | 이전 버전 상태 | `v0.4.1` 미만 모두 지원·catalog 공급 종료, 원본 자산은 보존 |
-| 최종 갱신일 | 2026-09-21 |
+| 최종 갱신일 | 2026-09-25 |
 
 신규 설치와 지원 요청은 `v0.4.1` 문서를 사용합니다. 이전 stable과 RC 문서는
 당시 artifact, migration 경계와 검증 판단을 보존하는 역사 자료입니다.
@@ -44,6 +44,12 @@ W08 API·예제·지원표·readiness 마감 → Windows 최종 package·설치�
 W06은 ISO·Audio·DF·CS 전체 동시 실행을 요구하지 않으며 독립 image의 자원·수명주기를 검증합니다.
 M32·M33 추가 기능과 Ubuntu/macOS 지원을 이번 릴리스의 선행조건으로 두지 않습니다.
 릴리스 범위 변경은 개발 완료나 공개 승인이 아니므로 현재 version·stable index·공개 자산은 유지합니다.
+
+현재 `M31-MEM-OPT`의 P0·P1은 완료했고 P2는 세 축이 남았습니다. 지원 범위 오류·최악 부하,
+stack/heap 여유·크기 결정, 동일 조건 Nordic native FLASH/RAM 비교의 다음 작업은
+[M31 TODO](../TODO_M31.md)에 기록합니다. 제품 SDC DF IQ RX 미지원, CS 간헐 loss/gap과
+SDC 내부 high-water 비노출을 P2의 추가 차단 조건으로 두지 않습니다. 이 범위 정리만으로
+P2·W04·W05 또는 릴리스를 완료 처리하지 않습니다.
 
 문서 전면 검토 후의 실행 순서와 Adafruit 개선 과제는
 [개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따릅니다.

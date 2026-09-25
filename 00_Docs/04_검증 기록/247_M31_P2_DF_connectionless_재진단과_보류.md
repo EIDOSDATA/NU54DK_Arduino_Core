@@ -1,5 +1,8 @@
 # 247 — M31 P2 connectionless DF 수신 재진단과 보류
 
+> **후속 지원 판정:** 아래 LL 실패·HOLD는 원본 그대로 보존한다. 고정 NCS `v3.4.0`의
+> 제품 SDC IQ RX는 `UNSUPPORTED`·P2 비차단이며 이 실패 실험의 재시도는 P2 필수가 아니다. [259번](259_M31_P2_DF_고정_SDK_지원_경계.md)
+
 ## 판정
 
 고정 NCS v3.4.0·Zephyr 4.4.0의 `bt-ll-sw-split` 단일 안테나
@@ -39,7 +42,7 @@ connectionless image로 추가 시험을 이어가지 않았다.
 공개 Arduino API를 수정하지 않았고, mass erase·자동 unlock·recover는
 사용하지 않았다.
 
-## 잔여
+## 당시 진단 과제와 후속 경과
 
 Zephyr LL의 connectionless sync 실패·종료 경로를 별도 원인 조사하고,
 지원 가능한 구성이라면 controller IQ event→Host callback→양수 sample과

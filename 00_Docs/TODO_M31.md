@@ -37,12 +37,11 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 2. 고정 SDK의 Kconfig·header·sample 존재, nRF54L15 공식 sample target, NU54DK native build,
    Arduino build, runtime capability, 실제 기능 HIL을 각각 기록한다. nRF54L15DK용 build metadata가
    있는 예제는 우선 구현 대상이며, generic Host source만 있는 예제는 NU54DK 적용성 조사 대상이다.
-3. 기본 SoftDevice Controller(SDC)의 DF는 AoA CTE 송신 범위이며 RX/IQ와 AoD를 지원한다고
-   해석하지 않는다. **원시 IQ 수집과 안테나 전환·실제 AoA 각도 계산은 별도 기능**이다. 고정 Zephyr LL의
-   RX 코드와 nRF54L15 DTS의 `dfe-supported`는 대체 수신 구성의 조사 근거이지 NU54DK target
-   build/runtime PASS가 아니다. 고정 Zephyr connectionless RX 예제의 안테나 배열은 선택 사항이다.
-   따라서 추가 배열 확보를 기본 안테나 raw IQ 경로의 조사·build·가능한 HIL 선행조건으로 두지 않는다.
-   SDC RX 미제공만으로 nRF54L15 하드웨어 불가를 단정하거나, LL source만으로 동작을 확정하지 않는다.
+3. **고정 NCS v3.4.0의 nRF54L15 제품 SDC는 DF AoA 송신만 지원한다.** IQ RX와 AoD는
+   `UNSUPPORTED`로 기록하고 P2 필수 범위에서 제외한다. SDK/controller를 바꾸지 않는다.
+   [259번 지원 근거](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)와 Zephyr LL 내부 진단은
+   별개다. LL 연결형 IQ 국소 성공·connectionless 실패를 보존하되 제품 수신 지원이나 P2 재시험
+   의무로 확대하지 않는다. 원시 IQ·안테나 전환·각도 계산은 다른 기능이며 칩 전체의 불가 판정도 아니다.
 4. 안정 Arduino facade는 고정 자원·명시적 수명주기·fail-closed 오류를 사용하며 Zephyr 구조체를
    공개 facade에 직접 노출하지 않는다. 고급 직접 API는 별도 opt-in 경로에서 upstream 의존성과
    안정성 수준을 명시한다. M28~M30의 generation handle·link 격리·보안 계약을 유지한다.
@@ -72,7 +71,7 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
 | M31-W02 raw ISO 기반 | **완료** | 공개 `RawCis`/`RawBis` 기반 **11개 역할**의 사용자 payload와 정지·재시작을 각 20회 실기 PASS. 잘못된 Broadcast Code의 유효 SDU 유출 0, 같은 image의 정상 Code 복구 100/100, 강제 sync loss 후 새 session 100/100. 독립 Sketchbook 개발 package 485파일 무결성·고정 prerequisite·11/11 예제 발견·빌드와 같은 revision의 두/세 보드 11역할 실기 20회씩 PASS. 공개 예제 감사 82개 중 0건 | [W02 최종 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)·[완료 audit](<04_검증 기록/evidence/m31-w02-installed-examples-b47aaf40/closure-audit.json>)·[오류 후 복구](<04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)·[sync loss 재시작](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)·[이전 고정 시험 audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
 | M31-W03 전체 LE Audio profile | **완료** | W03-01~11의 공개 Arduino 역할과 적용 가능한 native 기반을 모두 닫았다. BAP unicast/broadcast·BASS·CAP·CSIP·PBP·VCP/VOCS/AICS/MICP, MCP/MCS·CCP/TBS, TMAP/GMAP, HAP/HAS의 build/runtime·negative·peer-loss 복구와 합성 PCM RF data path를 실제 2~3보드에서 확인했다. Media/Call은 각 100/100·negative 각 20/20·reconnect 20/20·180초 soak, TMAP/GMAP은 각 180초·stop/restart 20/20·drop 0, HAP/HAS는 preset 100/100·두 negative 각 20/20·복구 20/20이다. 외장 audio·상용 peer·qualification·의료/음향 성능은 사용자 후속 비차단 `NOT RUN`이며 M31 전체는 W04~W08 잔여로 `not_completed`다 | [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[BAP broadcast](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)·[BASS](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>)·[CAP](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)·[Audio Control](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>)·[CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)·[PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)·[Media/Call](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>)·[TMAP/GMAP](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>)·[HAP/HAS](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>)·[W03 완료 감사](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)·[exact closure](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
-| M31-W04 Direction Finding | **진행 중** | CTE TX 20회·연결 응답 stop/restart 20회와 내부 Zephyr LL 연결형 IQ 20 report·1,640 sample 및 cleanup을 국소 확인했다. connectionless sync는 CTE-only·active scan·대기 취소 진단에도 실패·IQ 0이며 수신 usage/bus fault를 보존한다. 공개 Arduino/SDC RX·각도 계산은 미완료다. | [연결형 IQ](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [연결형 메모리](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>) · [connectionless 실패](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>) · [대기 취소 후속](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>) |
+| M31-W04 Direction Finding | **진행 중** | 제품 SDC beacon TX 20/20·별도 LL 연결 응답 stop/restart 20회는 국소 PASS. 제품 SDC IQ RX·AoD는 고정 SDK 지원 밖으로 판정하며 P2에서 제외한다. LL 내부 IQ 성공·connectionless fault는 역사 증거다. 채택 TX 기능·예제·지원표·원장의 최종 정합과 변경 영향 재검증은 W04에서 마감한다. | [지원 경계 259](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) · [내부 진단 244](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>) · [실패 원본 256](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>) |
 | M31-W05 connected Channel Sounding | **진행 중** | secure ACL·raw RAS 100개와 stop/restart·disconnect/reconnect 각 20/20, 실제 256-step·분할 RAS 유효 raw 1,000개·양측 STOP을 확인했다. 간헐 counter gap은 기록하되 합격 조건에서 제외한다. flash 직후 중단의 단일 원인·wrong-key negative와 최대 절차의 peer 이탈 뒤 오류·복구는 별도 잔여다. 비보정 RTT의 정확도는 미보증이다. | [비암호화 거부](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [flash 직후 복구](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [장기 누락 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [256-step 장시간](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) |
 | M31-W06 자원·수명주기·회귀 | **미착수(사전 메모리 감사만 완료)** | 독립 role image별 RAM/RRAM·stack·buffer·stream/connection 예산, stop/disconnect 뒤 callback·link·radio 자원 회수, M19~M30 영향 회귀. 고점유 image의 공통 정적 예약은 W04·W05 마감 전에 최적화 | [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>): main 문서 반영 → `M31-MEM-OPT` 최적화 → W04·W05 잔여·영향 재검증 → W06 manifest·회귀. 네 기능 전체 동시 실행은 완료 조건이 아님 |
 | M31-W07 기능 HIL·예제 실행 | **미착수** | 3보드 역할 재배치로 적용 가능한 모든 board-only subcase 유한 실행, Arduino 설치 예제의 실제 실행; 외부 peer 행 별도 관리 | exact image·익명 mapping·transcript·원본 hash, 기능/role별 PASS·FAIL·NOT RUN·UNSUPPORTED 근거 |
@@ -92,138 +91,54 @@ disconnect 뒤 상태 정리, 공통 Core 변경의 M19~M30 회귀를 확인한�
 controller 지원 근거가 따로 고정된 조합에만 별도 subcase로 추가하며, 그런 조합이 없다는 이유로
 W06을 미완료로 두지 않는다.
 
-W06 자원 gate는 현재 고점유 수치를 기준선으로 승인하지 않는다. `NUCODE_BLE`의 종합
-feature fragment와 `ble` profile이 역할에 필요하지 않은 범용 GATT/L2CAP, advanced GAP,
-Arduino peripheral route와 pin ownership state를 포함하는 구조를 먼저 분리한다. full profile의
-공개 API 호환성은 유지하고 lean role image에서 source-level 제외와 right-sized pool을 검증한다.
-기존 수치·상위 회귀 gate는 [219번 기록](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>),
-두 설명의 정정과 실제 수정 순서·완료 체크리스트는
-[메모리 최적화 통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)를 따른다.
-링크 GC만으로 모든 미사용 자원이 제거되거나 CS 50~80KB/50~100KB 절감이 보장된 것으로 해석하지 않는다.
-최신 사용자 목표는 동등 기능 nRF native에 우리 API의 최소 필수 비용만 더하는 선언 기반 기본 경로다.
-기존 full은 명시적 호환 선택지로 보존하며 일부 BLE 예제만 작게 만드는 것으로 전체 최적화를 닫지 않는다.
-Core API는 compiler-assisted capability probe, library 간접 요구는 feature manifest, BLE 역할·용량은
-공개 preset/declaration으로 판정해 생성 config/overlay/source에 연결한다. P1은 Core SPI를
-50,877→20,589 B로 줄였고, CoC-only 역할에서 NUCODE 범용 GATT facade를 분리해
-91,037→70,081 B로 줄였다. 동일 1×1 fixture의 GATT schema·client context·event/TX/inline value를
-실제 선언 용량에 연결해 113,218→59,338 B로 줄였다. 이어 generic GATT를
-server-only/client-only role로 분리해 동일 server fixture를 48,653 B, 실제 Peripheral을
-48,835 B, Central을 53,478 B로 줄였다. 이어 shared TX pool을 선언 용량에 연결해
-server fixture를 48,581 B, Peripheral을 48,763 B로 줄였다. GATT client read/write
-버퍼도 선언 용량에 연결해 실제 Central의 RAM을 53,478→52,582 B로 줄였다.
-P1의 GAP·L2CAP·ISO·CS 잔여 고정 저장소와 역할별 포함 여부까지 감사하고
-GATT 방향·CS 전용 pool의 ELF 회귀 문턱을 추가했다. P1 정적 구조는 완료했으며,
-stack/heap/controller pool과 burst queue depth는 P2 실물 high-water 및 오류·복구
-부하를 측정한 뒤에만 조정한다.
-P2 GATT 512 B는 두 보드에서 adaptive 선언만으로 write/read·재연결 20/20,
-수신 20/20, STOP 20을 통과했다. [238번 기록](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)에
-계측 분모와 실패 진단을 남겼다. 당시 미계측 역할과 controller pool은
-HOLD였다. 후속 [239번 기록](<04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md>)의
-CoC 두 채널 512 B echo 100건은 PASS다. [251번 재연결 계측](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>)은
-ACL disconnect/reconnect 20/20과 서버 SWD reset 20/20, 각각 매회 두 채널
-준비·누적 echo 42건·양측 STOP을 확인했다. 물리 전원 차단·credit 고갈·다중
-link 및 controller 내부 사용 최고치는
-별도다. CS raw 100개는 계측 실행에서
-counter 누락이 있었으나 후속 연속 100개·양측 STOP은 국소 PASS이며
-간헐 누락은 현행 P2 합격 조건에서 제외한다. [245번 장기 진단](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)에서
-controller의 CS sync abort와 정상 완료 후 결과 누락을 분리했다. abort 후
-로컬 잠금 해제·늦은 RAS 보호 수정으로 500개 연속 실행 두 번은 PASS했지만,
-관찰 배열 없는 1,000개 실행에는 누락이 남았다. 후속 subevent abort 분리
-수정의 1,000개 실행에서도 두 곳의 누락이 남았다. 당시 0-gap 기준의
-HOLD를 현행 판정으로 승계하지 않는다.
-추가 로컬 버퍼를 두 개로 늘린 1,000개 시험도 두 곳의 누락이 남고 정적 RAM이
-4,380 B 증가해 후보 변경을 되돌렸다. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>)의
-counter별 RAS 도착 순서는 당시 원인 진단이며 현행 완료 조건이 아니다.
-[250번 native 비교](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)에서
-고정 Nordic RAS 계측 복사본도 1,000개 유효 RAS에 gap 4건과 7건을 보였다.
-절대 0-gap은 양 경로의 무선·단일 버퍼 현실을 반영하지 못하지만, Arduino의
-정상 callback 뒤 누락은 관찰값으로 보존한다. 불완전 raw 공개 방지와
-동일 기능/설정 RAM 비교는 별도 검증한다.
-[252번 장절차 경계](<04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>)의
-두 진단 image는 raw 각 10건을 통과했으나 실제 93~98 step이어서 최대
-256-step·분할 RAS 검증으로 승격하지 않는다. 기본 image 복구 100건·양측
-STOP도 별도로 확인했다.
-[255번 채널맵 반복 진단](<04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md>)에서는
-실제 256-step·분할 RAS 정상 수신 10/10을 처음 확인했다. 같은 진단 image의
-100건은 모두 256-step이고 기본 image 복구 100건·양측 STOP도 PASS였다.
-당시 gap 1로 HOLD라 적은 것은 구 0-gap 기준이다. 최대 절차에서 peer 이탈 후
-오류·복구와 장기 최악 메모리 부하는 별도다.
-[240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)에서
-CIS·BIS 기본 100 SDU × 20세션도 각각 PASS했다.
-[241번](<04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)의
-unicast PCM/LC3/CIS 1,000 frame과 동일 image의 연속 10,000 frame도
-drop 0·양측 STOP으로 국소 PASS했다. 정상 장기 부하와 별도로 수행한
-후속 [254번 재연결 계측](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>)은
-adaptive source의 재연결 scan 결함을 수정하고 source SWD reset 20/20,
-sink 누적 decode 2,933·drop 0·양측 STOP을 확인했다. 기존 실패 두 건은
-보존했으며 물리 전원 차단·다중 ASE 결과가 아니다.
-[243번](<04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)의
-암호화 broadcast LC3/BIS 1,000 frame은 최종 image로 8/8회 국소 PASS했다.
-동일 image의 연속 10,000 frame도 drop 0·양측 STOP으로 국소 PASS했다.
-이 단일 장시간 실행으로 sync loss·재가입을 입증하지 않으며 최초 sink
-동기화 실패 원인은 미확인이다. 후속 [253번 재가입 메모리 계측](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
-source SWD reset 뒤 sink 공개 API 재가입 20/20, 누적 LC3 decode 2,107·drop 0·양측
-STOP을 확인했다. 매 reset의 기존 sink session 실패 보고는 복구 성공과 구별한다.
-sink MPSL Work 관찰 여유는 264 B라 stack을 줄이지 않는다. [242번](<04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)에서
-DF beacon TX 20회는 국소 PASS했지만 해당 실행에서 IQ RX는 관찰하지 않았다.
-후속 [244번](<04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)에서 Zephyr LL
-내부 연결형 IQ report 20건·1,640 sample과 cleanup을 확인했다. 이는
-Arduino/SDC 또는 connectionless RX를 대체하지 않는다.
-[246번](<04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md>)에서 같은 내부 LL
-진단 경로의 역할별 stack high-water를 추가했지만 공개 RX·오류/장기 부하의
-메모리 안전 여유는 아직 확인하지 못했다.
-[247번](<04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md>)의
-connectionless 재진단에서는 연속 송신으로 바꿔도 periodic sync가 성립하지 않아
-IQ 0건이었다. 종료 경로의 기존 종류 fault와 안전 복구를 보존했으며,
-connectionless 수신·그 역할의 high-water는 HOLD다.
-[250번 후속](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>)의 CTE 전용 sync 옵션을
-넣은 재시험도 IQ 0, 반복 시 수신 usage fault·STOP 실패였다. 검증된 CS image
-복구 100건·양측 STOP 뒤에만 추가 시험을 했다.
-locator 원본의 active scan까지 맞춘 별도 image 단일 실기도 같은 timeout·IQ 0·
-수신 usage fault였다. 실패 image를 재실행하지 않고 sector 복구한 native CS
-image에서 RAS 100건·양측 STOP을 다시 확인했다.
-[256번 대기 취소 진단](<04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md>)은
-Zephyr API의 pending sync 취소를 fixture 종료에 일시 적용했으나 sync timeout·
-IQ 0과 수신 bus fault가 다시 발생했다. 실패 image는 재실행하지 않고 기본
-CS image로 두 보드를 복구했다. 복구 100 raw는 gap 1·양측 STOP이고,
-후속 10 raw는 gap 0·양측 STOP이다. 둘 다 현행 loss 제외 기준으로
-복구 기능 PASS다.
-수정은 소스에서 되돌렸다.
-[248번 SDC pool 감사](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>)는
-8개 역할 ELF의 SDK 계산·정렬 예약과 초기화 요구량 검사 경계를 확인했다.
-이는 controller 내부 사용 최고치가 아니므로 pool을 임의 축소하지 않는다.
-이 관찰값만으로 P2 전체를 완료 처리하거나 stack/heap을 축소하지 않는다.
-`SPI.begin()` 사용자에게 SPI용 `prj.conf`를 수동 작성하게 하는 상태도
-최적화 완료가 아니다.
+### 메모리 최적화 현재 상태
 
-2026-09-25 추가 실기에서는 [257번 CoC 송신 버퍼 포화·복구](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>)가
-512 B SDU 네 개 전송 뒤 다섯 번째 `busy`, 네 echo 수신, ACL 재연결
-20/20과 server SWD reset 재연결 20/20을 통과했다.
-[258번 Audio 양방향](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>)은
-양방향 LC3/CIS 각 10,000 frame·drop 0과 즉시 종료 20/20을 통과했다.
-종료 경합에서 `-ENOTCONN`을 일반 오류로 남기는 결함은 수정하고 실패·성공
-원본을 모두 보존했다. [259번 DF 지원 경계](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)는
-고정 NCS `v3.4.0`의 nRF54L15 AoA **송신 전용** 지원 각주를 확인했다.
-제품 SDC IQ RX를 이 버전의 지원 기능으로 약속하지 않으며 Zephyr LL
-connectionless RX 실패도 여전히 실패로 기록한다.
-[260번 CS 누락 원인·256-step 장시간](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>)에서는
-기본 설정 1,000 raw의 gap 7과 256-step 1,000 유효 raw의 gap 3을
-집계 원인과 함께 분리했다. 유효 RTT 0인 단편 결과 1건을 완료 queue에서
-제외했고, 256-step 1,000건 모두 양쪽 256 step·양측 STOP이었다.
-집계 계수만으로 gap별 단일 원인을 단정하지 않는다. 간헐 gap은 관찰값으로만
-기록하며 256-step 정상 부하 1,000건의 유효 raw·양측 STOP은 PASS다.
-네 축의 추가 결과만으로 P2 전체를 완료 처리하거나 메모리를 축소하지 않는다.
+**P0·P1 완료, P2 미완료**다. 기본 `standard`/full 호환 경로를 유지하며 `adaptive`는 명시적
+실험 선택지다. 실제 API 도달성·library manifest·공개 역할/용량 선언을 compiler-assisted probe와
+resolver로 해석한다. 일반 사용자에게 기능별 `prj.conf` 수동 OFF 목록을 요구하지 않는다.
+전문가 `prj.conf`/`app.overlay` override와 향후 상위 radio 정책 메뉴는
+[통합 설계 §4](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md#4-사용자-코드와-기능-선택의-계약>)에 구분한다.
 
-P2의 남은 gate는 다음처럼 분리한다.
-
-| 축 | 아직 필요한 증거 |
+| 완료·관찰 범위 | 증거와 해석 |
 | --- | --- |
-| DF RX | 고정 NCS `v3.4.0`의 nRF54L15 DF는 Experimental·AoA 송신 전용. 따라서 제품 SDC RX는 현 버전 지원 밖이며 다른 SDK/controller 선택 없이는 완료 불가. 연결형 Zephyr LL 내부 IQ 20건·1,640 sample은 별개. connectionless LL sync 미수립·IQ 0과 수신 fault·STOP 실패를 보존한다. Beacon TX로 대체 불가. [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
-| CS | 기본 1,000 raw와 256-step 1,000 유효 raw·양측 STOP은 정상 부하 PASS. gap 7/3은 관찰값이며 0-gap·원인 1:1 규명·loss 없는 재전송은 합격 조건이 아니다. 유효 RTT 0인 단편 완료 결과는 제외했다. 남은 별도 조건은 최대 절차의 peer 이탈 뒤 오류·복구와 해당 최악 부하 안전 여유다. [245번](<04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md>) · [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) · [260번](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) |
-| Audio/ISO | unicast source SWD reset 뒤 sink 재연결 20/20, 암호화 broadcast 재가입 20/20, 양방향 LC3/CIS 각 10,000 frame·drop 0 및 즉시 종료 20/20을 확인. 단일 CIS를 넘어선 다중 stream/ASE, 물리 전원 차단·암호화 오류와 첫 broadcast sync 실패 원인은 별도. [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) · [254번](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) · [258번](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) |
-| CoC 복구 | ACL 재연결 20/20·서버 SWD reset 20/20과 각 실행의 두 채널 512 B echo를 확인. 네 SDU로 로컬 송신 버퍼를 채운 뒤 두 복구 모드도 각 20/20 통과. 상대 credit 고갈 직접 계측, 물리 전원 차단·다중 ACL/다른 MTU의 최악 부하는 별도. [251번](<04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md>) · [257번](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) |
-| SDC/stack/heap | SDK 계산·8-byte 정렬 pool과 초기화 요구량 검사 경계는 확인. controller 내부 high-water는 미노출이며 오류·최악 부하 stack/heap 안전 여유는 별도. [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) |
-| native 비교 | 고정 Nordic 원본/계측 sample을 동일 board에서 build하고 RAS gap 경로를 비교했으나 DSP·stack·malloc·로그·payload 조건이 달라 Arduino API 비용은 아직 산정 불가. 동일 기능·설정의 native 대비 FLASH/RAM 항목별 차이가 잔여. [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
+| P0 기능 선택 / P1 정적 저장소 | [222번](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [237번](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>). Core SPI 50,877→20,589 B, CoC-only 91,037→70,081 B, GATT 1×1 server fixture 113,218→48,581 B. 각각의 같은 fixture 비교이며 합산 절감량이 아님 |
+| GATT / raw ISO | [238번](<04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>) GATT 512 B write/read·재연결 20/20. [240번](<04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>) CIS/BIS 각 100 SDU×20세션 |
+| CoC | [257번](<04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) 두 채널 512 B, 로컬 송신 버퍼 4개 포화·다섯 번째 busy 뒤 ACL 재연결과 서버 SWD reset 각각 20/20. 상대 credit 고갈과 다름 |
+| Audio | [253번](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) broadcast 재가입 20/20, [254번](<04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) unicast 재연결 20/20, [258번](<04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) 양방향 각 10,000 frame·drop 0·즉시 종료 20/20 |
+| DF | [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) beacon TX 20/20. 제품 SDC IQ RX는 `UNSUPPORTED`이며 P2 비차단; Zephyr LL 진단은 제품 RX PASS가 아님 |
+| CS | [260번](<04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) 실제 256-step·분할 RAS 유효 raw 1,000건·양측 STOP. gap 3은 비차단 관찰값. 유효 RTT 없는 단편 결과를 완료 queue에서 제외 |
+| SDC / native 비교 준비 | [248번](<04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md>) 8역할 SDK 계산·정렬 예약 감사. [250번](<04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) Nordic RAS 진단은 조건이 달라 API 비용 비교의 완료 근거가 아님 |
+
+각 결과는 해당 source·image·조건의 국소 PASS다. 정상 반복만으로 최악 메모리 안전성을 보장하지
+않으며, 과거 원본과 세부 시도는 [검증 기록 목차](<04_검증 기록/README.md>)에 보존한다.
+
+### P2 남은 작업 — 세 축
+
+| 번호 | 남은 기술 작업 | 완료 시 남길 근거 |
+| --- | --- | --- |
+| 1 | **미계측 오류·최악 부하**: CoC 상대 credit 고갈, Audio 지원 다중 stream·암호화 오류, CS 최대 절차 중 peer 이탈 후 복구 | 지원하는 역할/선언 용량별 유한 입력·분모·timeout, 오류 거부·복구·양측 STOP, 같은 실행의 메모리 관찰값. 기존 W02/W03 기능 PASS와 최적화 image의 계측을 구분 |
+| 2 | **메모리 안전 여유·최종 크기**: 위 부하의 main/workqueue/BT stack 및 heap | 예약·관찰 최고치·여유·할당 실패/누수·계측 비용, 유지 또는 조정 이유. SDC는 SDK 역할/count별 요구량과 8-byte 정렬을 준수 |
+| 3 | **동등 조건 Nordic native 비용 비교** | 같은 SDK/board/controller·기능/보안/MTU·로그/계측·codec/stream 조건의 FLASH/RAM·ELF/map 차이. 최소 API 비용과 불필요한 중복 저장소를 분리하고 발견한 중복을 정리·검증 |
+
+**범위 고정:** NCS v3.4.0·제품 SDC를 유지한다. DF IQ RX 구현/LL fault 해결,
+CS 간헐 RF/controller loss·counter gap 제거, SDC 내부 high-water 계측 API 확보는
+P2 필수 조건이 아니다. CS 유효 raw·step·완료 수·STOP·fault·중복/역행 counter 검사는 유지한다.
+물리 전원 차단·임의 다중 link·모든 조합을 별도 합의 없이 추가하지 않는다.
+SDC 내부 사용 최고치는 노출되지 않으므로 정적 symbol 크기를 실제 사용량으로 쓰지 않는다.
+안전한 축소 근거가 없으면 pool을 유지할 수 있으며 **무조건 축소해야 P2 완료인 것은 아니다**.
+
+### 다음 실행 순서
+
+1. CoC부터 상대 credit 부족을 직접 유발·관찰할 시험 경로와 복구 기준을 고정한다.
+   로컬 송신 포화 시험을 재실행하는 것만으로 대신하지 않는다.
+2. 현재 지원 capacity에 맞춰 Audio와 CS의 남은 오류·최악 부하를 고정하고, 장치/image/COM
+   재확인 뒤 유한 시험과 stack/heap 계측을 함께 수행한다. 최초 broadcast sync 실패 등 기존
+   오류 증거는 이 부하 축에서 안전 영향과 재현 조건을 판정하며 별도 네 번째 축으로 늘리지 않는다.
+3. 역할별 안전 여유·최종 예약 크기를 결정하고, 같은 조건의 native/Arduino 비교표를 작성한다.
+   조정이 있으면 그 변경에 필요한 build·Host·국소 HIL을 재검증한다.
+4. 세 축의 증거·한계·최종 판정과 문서를 갱신하고 커밋·푸시한다. **이 항목은 마감 절차**다.
+   P2 완료를 판정한 뒤 W04·W05 → W06 → W07 → W08로 이어간다.
+   W05 wrong-key·기존 flash 직후 중단 판정과 W06 전체 회귀는 별도 M31 작업이다.
 
 ## 3. W03 세부 완료 상태 — 11/11
 
@@ -304,10 +219,10 @@ W04/W05 잔여를 대조한다. 과거 착수 절차를 현재 미완료 TODO로
    capability HIL을 실행한다. 보드 또는 mapping 미확정이면 build 증거까지 남긴다.
 7. W01 판정 후 W02의 CIS 중앙/주변 역할과 BIS source/sink부터 구현한다. 2보드 기본 → 3보드 복수
    수신/적용 가능한 combined 역할 → ISO time sync 순으로 기능을 닫고 W03에 인계한다.
-8. W04 DF와 W05 CS는 controller 적용성에 맞춰 병행할 수 있다. W04는 W01의 RX build와 mapping이
-   확인되면 기본 안테나 두 보드로 raw IQ report 수신 HIL을 수행한다. 수신 sample count·형식·status·
-   start/stop·복구를 검사하며 안테나 배열과 정밀 각도 oracle을 요구하지 않는다. W06 전까지 실패 원인과
-   profile별 자원을 분리한다. HOST-W04 Ubuntu prerequisite·resolver·launcher는 현재 보류 상태다.
+8. W04 DF와 W05 CS는 최적화 image에서 채택 기능과 변경 영향을 재검증한다.
+   앞선 RX 후보 조사·HIL 계획은 [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)의
+   고정 SDK 지원 판정으로 대체됐다. 제품 SDC IQ RX는 `UNSUPPORTED`로 명시하고, 과거 LL
+   진단을 자동 재개하거나 SDK/controller를 변경하지 않는다. HOST-W04 이후는 계속 보류한다.
 
 ## 5. 예제 품질과 설치 계약
 
@@ -349,17 +264,17 @@ Apple/Google 및 외장 I/O의 사용자 후속 검증은 이 최종 Host gate�
 | W01 | source·원장·parser·target, 확인된 NU54DK 1개 capability HIL | probe/serial mapping 불일치·USB 접근 권한·board 미연결 |
 | W02 | 2개 CIS/BIS 기본, 3개 복수 receiver·적용 가능한 combined ISO·time sync | 고정 controller/자원 한계가 의도한 역할 조합을 허용하지 않을 때 별도 판정 |
 | W03 | 2~3개 합성 PCM/encoded payload와 Audio profile 제어·상태·실제 RF data path; 외장 I/O 구현·예제·설정 안내와 자동 검사 | 외부 mic/codec/speaker·상용 phone/headset의 실물 운용/상호운용은 사용자 후속 `NOT RUN`, 개발·릴리스 비차단 |
-| W04 | 1개 CTE TX 설정·시작/중지·controller event; 기본 안테나 RX 조사·build 뒤 적용 가능하면 2개 raw IQ 수신 HIL | RX 미확인은 실제 software/controller 제약을 조사할 개발 항목; 배열 확보를 선행 요구하지 않음. 안테나 전환·실제 각도 계산의 외장 경로는 구현/안내 후 사용자 실기 |
+| W04 | 지원되는 CTE TX·response 기능·예제·오류 및 변경 영향 재검증 | 제품 SDC IQ RX·AoD는 고정 SDK `UNSUPPORTED`. LL RX 진단 이력은 보존하고 P2에서 재개하지 않음. 정밀 각도·외장 안테나 실물은 별도 |
 | W05 | 2개 CS initiator/reflector·RAS·raw 결과·거리 추정 출력·보안/복구, 3개 peer 분리 | cross-vendor CS peer 또는 별도로 요청한 정밀 거리/각도 시험 |
 | W06~W08 | 3개 역할을 순차 재배치한 기능 HIL, 독립 image별 자원·수명주기, 예제·회귀·원장·문서 인계 | 네 기능 전체 동시 실행은 요구하지 않음. 해결되지 않은 필수 board-only 결함·mapping/접근 문제는 미완료; 사용자 후속 외부 실물 검증은 비차단 |
 | HOST | 별도 재개 지시 후 manifest·resolver·launcher·negative와 가능한 자동 검사 | Ubuntu/macOS 실제 설치·USB upload·serial/debug는 해당 OS 후속 릴리스의 사용자 gate; v0.5.0 범위 밖 |
 
 CTE TX 명령 수용·연결 peer 동작만 관찰했다면 그 범위만 기록한다. 수신 IQ 증거가 없는데 CTE
 수신이나 각도 측정 PASS로 기록하지 않는다. **IQ report 수신 PASS 역시 실제 AoA 각도 계산 PASS가
-아니다.** AoD는 고정 SDC `UNSUPPORTED`, 대체 controller의 raw IQ RX는 적용성 판정 전
-`source_candidate`부터 검증 깊이를 기록한다. connected 내부 진단의 일부 수신과 connectionless RX를
-분리하며 최신 실패와 cleanup 잔여는 §2를 따른다. 수신 구성의 실제 build/runtime 실패는 그 controller·profile에 한정해 기록하고
-칩 전체 불가로 확대하지 않는다. nRF54L15 대상이 아닌 `nrf_dm`을 CS 대체 예제로 등록하지 않는다.
+아니다.** 제품 SDC IQ RX·AoD는 고정 SDK `UNSUPPORTED`로 기록한다.
+연결형 LL 내부 진단의 일부 수신과 connectionless 실패는 경로별 역사 기록으로 보존하며,
+제품 RX 지원이나 칩 전체 불가로 확대하지 않는다. nRF54L15 대상이 아닌 `nrf_dm`을
+CS 대체 예제로 등록하지 않는다.
 
 실물 시험 전 SHA-256 probe identity·serial path·role·firmware revision을 다시 결합한다. 여러 probe
 중 임의 선택을 금지하며 raw probe UID는 채팅·문서·저장 로그에 남기지 않는다. 기존 배타 lock,
@@ -403,8 +318,8 @@ M31은 다음을 모두 만족해야 완료다.
 - [ ] M31-W01~W08 **8/8**과 10개 family 아래의 적용 가능한 필수 subcase가 계약대로 완료
 - [ ] M31-A/B/C와 §3 모든 Audio profile의 지원/실험적/조건부/미지원 판정·근거·제공 경로 확정
 - [ ] 고정 stack에서 적용 가능한 board-only 기능의 native/Arduino build·실제 기능 HIL·negative PASS
-- [ ] 기본 안테나 raw IQ RX의 source/controller·target build·runtime 적용성을 근거로 판정하고,
-  지원 가능하면 2보드 실제 IQ 수신까지 검증; 추가 배열 부재로 조사·build를 생략하지 않음
+- [ ] 고정 SDK 제품 SDC IQ RX·AoD의 미지원 근거를 지원표·예제·기계 원장에 일치시킴;
+  과거 LL 진단과 제품 지원을 구분하며 SDK/controller 변경이나 추가 RX HIL을 요구하지 않음
 - [ ] M31 소유 외부 audio I/O·외장 확장은 사용 가능한 구현·예제·설정/연결 안내·가능한 자동 검사를
   완료하고 실물 운용/검증은 사용자 후속 `NOT RUN`·개발/릴리스 비차단으로 기록; 정밀 RF/음질/각도/
   거리 정확도는 필수 gate 밖이고 기본 안테나 IQ 수신을 각도 계산 PASS로 확대하지 않음

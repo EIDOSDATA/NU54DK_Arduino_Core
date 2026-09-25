@@ -1,8 +1,9 @@
 # 256 — M31 P2 DF connectionless sync 대기 취소 진단
 
 > 판정 갱신: 아래 CS 복구 100건의 `연속성 HOLD`는 당시 0-gap 기준이다.
-> 현행 P2에서 간헐 CS loss는 비차단 관찰값이다. DF IQ 0·수신 fault는
-> 그대로 실패이며 이 정정으로 면제되지 않는다. [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)
+> 현행 P2에서 간헐 CS loss는 비차단 관찰값이다. [260번](260_M31_P2_CS_누락_분류와_256_step_장시간.md)
+> DF IQ 0·수신 fault는 LL 진단 실패로 보존하되, 제품 SDC IQ RX는 `UNSUPPORTED`·P2 비차단이다.
+> 이 실패 실험의 재시도는 P2 필수가 아니다. [259번 지원 경계](259_M31_P2_DF_고정_SDK_지원_경계.md)
 
 ## 범위와 결과
 
@@ -54,7 +55,7 @@ mass erase 없이 sector 복구했다. 복구 [첫 100 raw](evidence/m31-p2-nati
 후속 [10 raw](evidence/m31-p2-native-comparison-2cf92933/cs-recovery-after-df-pending-cancel-10.json)는
 gap 0·양측 STOP으로 국소 PASS했다. 두 복구 원본을 모두 보존한다.
 
-현재 고정 SDK·NU54DK의 connectionless IQ RX는 여전히 **FAIL/HOLD**다.
+이 진단의 고정 SDK·NU54DK·Zephyr LL connectionless IQ RX는 **FAIL/HOLD**다.
 연결형 내부 Zephyr LL IQ 수신 20 report·1,640 sample은 별개이고,
 공개 Arduino/SDC RX 성공으로 옮기지 않는다. 동일 실패 image의 반복
 플래시는 하지 않으며, P2 전체·DF RX 완료나 메모리 축소를 선언하지 않는다.

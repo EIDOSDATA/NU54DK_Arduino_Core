@@ -1,7 +1,9 @@
 # NUCODE BLE Direction Finding 예제
 
-이 예제는 개발 소스 `0.4.1-dev`의 Direction Finding 범위이며 수신·IQ 경로는
-아직 완료되지 않았다. 현재 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그
+이 예제는 개발 소스 `0.4.1-dev`의 Direction Finding 송신 범위다. 고정 NCS v3.4.0의
+nRF54L15 제품 SDC는 AoA 송신만 지원하며 IQ 수신은 `UNSUPPORTED`다.
+수신은 P2 완료 범위에서 제외하며 SDK/controller 변경을 요구하지 않는다.
+현재 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그
 공개 ZIP에 포함됐다는 뜻은 아니다.
 
 [`CteBeacon.ino`](CteBeacon/CteBeacon.ino)는 기본 안테나에서 connectionless AoA CTE를
@@ -9,7 +11,7 @@
 `start()`, `stop()`을 호출한다. Zephyr 광고 set과 Direction Finding 직접 호출은
 [`NUCODE_BLE_DirectionFinding.cpp`](../src/NUCODE_BLE_DirectionFinding.cpp)에만 있다.
 
-Arduino IDE 또는 CLI에서 **NU54DK Zephyr / BLE** feature set을 선택한다. 115200 baud
+Arduino IDE 또는 CLI에서 **Adaptive capabilities (experimental)** 또는 호환 **BLE NUS** feature set을 선택한다. 115200 baud
 Serial에서 `PROBE`, `START`, `STOP`, `INVALID`를 한 줄씩 보낸다. `START` 뒤
 `NUCODE_DF|1|STARTED`, `STOP` 뒤 `NUCODE_DF|1|STOPPED`, `INVALID` 뒤
 `NUCODE_DF|1|REJECTED`를 기대한다. `START`와 `STOP`을 반복해 자원 재사용을 확인한다.

@@ -58,9 +58,12 @@ PASS했다. 기본 `ble` profile 빌드도 `156,684/51,405 B`로 통과했다.
 ## P2 판정
 
 DF TX는 기존 실기와 최종 `NONE` 수정 image의 20회 실기에서 국소 PASS다.
-제품 SDC RX는 고정 NCS의 지원 범위 밖이므로 P2에서 **지원 불가 경계**로
-명시한다. 별도 Zephyr LL connectionless RX는 실기 FAIL/HOLD로 보존한다.
-SDK/controller 변경은 P2 메모리 최적화의 범위를 벗어나므로 자동으로
-수행하지 않는다. 공개 RX를 지원 기능으로 약속하려면 별도 버전·controller
-선정과 새 HIL 인수 계약이 필요하다. 이 판정으로 IQ RX를 TX 통과로 바꾸거나
-DF/전체 P2의 메모리 크기를 축소하지 않는다.
+제품 SDC IQ RX는 고정 NCS의 지원 범위 밖이므로 **UNSUPPORTED·P2 비차단**으로
+확정한다. P2 완료를 위해 수신을 구현하거나 SDK/controller를 변경할 필요는 없다.
+별도 Zephyr LL connectionless RX의 실기 FAIL/HOLD와 connected 내부 IQ 진단은
+그대로 보존하되, 이 실패 실험을 P2 필수 재시도·메모리 계측 목록에 넣지 않는다.
+
+NCS `v3.4.0`·제품 SDC 전제를 유지한다. 공개 RX를 지원 기능으로 약속하는 별도 확장은
+버전·controller 선정, 기존 ISO/Audio/CS 영향 검토와 새 HIL 인수 계약이 필요하며
+현재 P2에 합산하지 않는다. 이 범위 판정은 IQ RX의 기능 PASS, W04 전체 완료 또는
+메모리 축소 근거가 아니다. P2 잔여는 [M31 TODO](../TODO_M31.md)의 세 축이다.

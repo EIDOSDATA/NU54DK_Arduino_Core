@@ -25,8 +25,10 @@ RC·지원표·공개 승인/게시·공개 설치 검증을 소유한다. M31 �
 
 다음 실행 순서는 [219번 메모리 계약](<../04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)의
 최적화 → W04·W05 기능/복구 검증 → W06~W08이다. 구체적인 수정 방법과 이전 설명 정정은
-[메모리 최적화 통합 설계](21_M31_메모리_최적화_통합_설계.md)를 따른다. 후속 설명 통합은
-문서화만이며 브랜치 생성·구현·HIL·릴리스 실행을 포함하지 않는다. 다음 구현 브랜치는 `M31-MEM-OPT`다.
+[메모리 최적화 통합 설계](21_M31_메모리_최적화_통합_설계.md)를 따른다. 현재 `M31-MEM-OPT`에서
+P0·P1은 완료했고 P2가 남았다. P2 잔여는 지원 범위의 오류·최악 부하, stack/heap 여유와
+크기 결정, 동일 조건 Nordic native FLASH/RAM 비교의 세 축이다. 다음 실행의 세부 목록은
+[M31 TODO](../TODO_M31.md)에서 관리하며 문서 정비를 새 실기 PASS로 계산하지 않는다.
 
 ## 원장과 수집 범위
 
@@ -50,14 +52,16 @@ parity 원장은 기능 예제의 계획·실제 Sketch, controller, role, 외�
 | 구성 | 현행 관찰 | 다음 기능 판정 |
 | --- | --- | --- |
 | 기본 SDC | 기본 설정 HCI LE feature에는 ISO·DF·CS가 활성화되지 않는다. ISO·CS·DF TX opt-in target 3종을 분리 빌드했고 각 HCI bit와 Host 설정을 실기 query했다. | W02 CIS/BIS 기능 HIL 완료. W04 CTE TX·W05 CS procedure의 부분 결과와 미완료 negative·복구는 TODO에서 개별 관리 |
-| Zephyr LL IQ 후보 | `bt-ll-sw-split`와 기본 1개 안테나, TX/RX 안테나 전환 없는 구성을 NU54DK에 build했다. HCI connectionless CTE RX bit 20과 Host 설정은 확인했고 안테나 정보는 1개다. | raw IQ report 수신·형식·stop/restart를 W04에서 실제 두 보드로 검증 |
-| 기본 SDC DF | opt-in `CONFIG_BT_CTLR_DF=y`에서 connectionless CTE TX bit 19를 확인했다. SDC AoD bit와 IQ RX bit는 제공되지 않는다. | TX 예제/실기와 LL RX 후보를 구분; 칩 전체 IQ 불가 판정 금지 |
+| Zephyr LL IQ 내부 진단 | 별도 `bt-ll-sw-split` 구성에서 연결형 IQ 20 report·1,640 sample·cleanup을 국소 확인했다. connectionless IQ는 0·수신 fault였다. | 과거 진단 증거 보존. 제품 SDC RX 지원이나 현재 P2 필수 재시험으로 승계하지 않음 |
+| 기본 SDC DF | 고정 NCS v3.4.0의 nRF54L15는 AoA 송신만 지원. IQ RX·AoD는 `UNSUPPORTED`이며 beacon TX 20/20은 국소 PASS다. | 제품 IQ RX는 P2 범위 제외. SDK/controller 변경 요구 없음; 칩 전체 IQ 불가 판정 금지 |
 | LE Audio profile | 11개 W03 기능 묶음의 공개 역할·build·합성 PCM/payload·제어·negative·복구 HIL을 완료했다. | 외장 I/O·상용 peer·qualification은 사용자 후속 `NOT RUN`; 보드 기능 PASS를 상호운용·음향 성능으로 확대하지 않음 |
 
 Zephyr Host AoA API는 안테나 2개 이상 및 ANT_SWITCH_RX를 검사하므로 현재 1안테나
 구성에서 고수준 AoA API를 바로 사용하면 거부된다. 이 사실은 HCI raw CTE RX bit와 별도이며,
-W04의 raw HCI 진단에서 일부 유효 IQ report를 확인했지만 반복 수신·cleanup은 미완료다.
-진단 fixture의 일부 수신을 공개 수신 API 또는 전체 W04 완료로 승격하지 않는다.
+내부 Host 상태를 우회한 raw HCI 진단의 연결형 수신·cleanup 국소 PASS는
+[244번 기록](<../04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md>)에 보존한다.
+공개 API나 제품 SDC RX 지원 또는 전체 W04 완료로 승격하지 않는다. 제품 미지원 근거는
+[259번 지원 경계](<../04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)를 따른다.
 안테나 배열·정밀 각도·정밀 거리·음질 측정은 기본 데이터 경로 검증의 선행 gate가 아니다.
 
 ## W06 자원·수명주기·회귀 경계
@@ -138,7 +142,7 @@ clean `504badeec81723f4949879611b0b19371389b56d`의
 20회×100 receiver timestamp와 양 BIG 해제·재시작을 PASS로 판정했다. 첫 clean
 99/100 실패는 [원본 감사](<../04_검증 기록/evidence/m31-w02-exact-0c7849c2/time-failure-audit.json>)로 보존한다.
 Audio는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 W03-01~11을
-완료했다. DF raw IQ·CS 잔여 negative/복구와 W06~W08은 별도로 판정한다.
+완료했다. 제품 SDC DF IQ RX의 미지원 판정과 W04·W05 잔여 기능, W06~W08은 별도로 관리한다.
 [W01 clean 감사 결과](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>)는
 parity 703행, Host 오류 입력 20/20 거부, 전체 Host 회귀를 확인해 W01만 완료했다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.
