@@ -1,6 +1,6 @@
 # Ranging Service initiator
 
-이 예제는 개발 소스 `0.4.1-dev`의 M31-W05 Channel Sounding 검증을 완료했다. 현재
+이 예제는 개발 소스 `0.4.1-dev`의 Channel Sounding 검증을 완료했다. 현재
 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다.
 아래 출력은 구현된 비보정 RTT 경로의 의미이며 거리 정확도·cross-vendor 상호운용 보증이 아니다.
 
