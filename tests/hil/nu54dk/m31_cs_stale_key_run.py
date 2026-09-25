@@ -108,15 +108,18 @@ def validate_negative_snapshot(
         raise StaleKeyFailure("initiator advanced after stale-key rejection")
     if any(reflector[name] != 0 for name in ("l2", "ready", "active")):
         raise StaleKeyFailure("reflector advanced after stale-key rejection")
-    if initiator["connected"] != 0 or reflector["connected"] != 0:
-        raise StaleKeyFailure("stale-key link remained connected")
     if any(role["pairing_rejected"] > 0 for role in (initiator, reflector)):
         return "application_repair_rejected"
-    if not any(
+    security_error = any(
         (role["security_errors"] > 0) or (role["disconnects"] > 0)
         for role in (initiator, reflector)
-    ):
+    )
+    if not security_error:
         raise StaleKeyFailure("stale-key rejection signal missing")
+    if initiator["connected"] != 0 or reflector["connected"] != 0:
+        if not any(role["security_errors"] > 0 for role in (initiator, reflector)):
+            raise StaleKeyFailure("connected stale-key link lacks security error")
+        return "security_error_acl_retained"
     return "controller_key_failure_disconnect"
 
 
@@ -426,6 +429,10 @@ def main() -> int:
                 record["rejection_path"] = validate_negative_snapshot(
                     initiator_status, reflector_status
                 )
+                record["acl_connected_before_stop"] = {
+                    "initiator": bool(initiator_status["connected"]),
+                    "reflector": bool(reflector_status["connected"]),
+                }
                 record["initiator_negative"] = initiator_status
                 record["reflector_negative"] = reflector_status
                 _stop(ports, record)

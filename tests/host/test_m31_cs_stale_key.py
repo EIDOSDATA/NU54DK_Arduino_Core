@@ -95,6 +95,30 @@ class M31CsStaleKeyTests(unittest.TestCase):
                 else:
                     STALE.validate_negative_snapshot(initiator, changed)
 
+        retained_initiator = initiator.copy()
+        retained_reflector = reflector.copy()
+        retained_initiator["disconnects"] = 0
+        retained_initiator["disconnect_reason"] = 0
+        retained_initiator["security_errors"] = 1
+        retained_initiator["security_reason"] = 2
+        retained_initiator["connected"] = 1
+        retained_reflector["disconnects"] = 0
+        retained_reflector["disconnect_reason"] = 0
+        retained_reflector["security_errors"] = 0
+        retained_reflector["security_reason"] = 0
+        retained_reflector["connected"] = 1
+        self.assertEqual(
+            STALE.validate_negative_snapshot(retained_initiator, retained_reflector),
+            "security_error_acl_retained",
+        )
+
+        retained_initiator["security_errors"] = 0
+        retained_initiator["security_reason"] = 0
+        with self.assertRaisesRegex(
+            STALE.StaleKeyFailure, "stale-key rejection signal missing"
+        ):
+            STALE.validate_negative_snapshot(retained_initiator, retained_reflector)
+
     def test_only_reflector_has_one_sided_stale_erase_command(self) -> None:
         """! @brief 초기 clean 뒤 stale 단계에서는 reflector만 bond를 삭제합니다. """
 
