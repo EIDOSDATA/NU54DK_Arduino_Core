@@ -19,7 +19,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
 | M31 메모리 최적화 P0·P1 | 완료. P2의 동적 계측·안전 판정과 구별 | [P0](222_M31_메모리_최적화_P0_완료.md) · [P1](237_M31_메모리_최적화_P1_정적_저장소_완료.md) |
-| M31 메모리 최적화 P2 | GATT·CoC·ISO·Audio·DF TX·CS 단기 실행, CoC·Audio 재연결 각 20회는 역할별 국소 PASS. 내부 LL 연결 IQ 20건과 정상 종료 stack을 관찰했다. CS 장기 누락·connectionless/공개 DF RX·최악 부하는 HOLD | [현재 범위·잔여 gate](../TODO_M31.md) · [최근 P2 기록](#최근-완료재개-기록) |
+| M31 메모리 최적화 P2 | GATT·CoC·ISO·Audio·DF TX·CS 단기 실행, CoC·Audio 재연결 각 20회는 역할별 국소 PASS. 내부 LL 연결 IQ 20건과 CS 256-step·분할 RAS 정상 경로를 관찰했다. CS 장기 누락·connectionless/공개 DF RX·최악 부하는 HOLD | [현재 범위·잔여 gate](../TODO_M31.md) · [최근 P2 기록](#최근-완료재개-기록) |
 | M31-W04·W05 | 연결형 내부 IQ 수신 국소 PASS, W04/W05 전체는 미완료·이전 실패 보존 | [W04 102 event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) · [W04 이전 실패 인계](220_M31_릴리스_전환과_문서_전수_정비.md) · [W04 연결 IQ 후속](244_M31_P2_DF_연결_IQ_진단.md) · [W05 동일 ACL](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) · [W05 flash 직후](218_M31_W05_flash_직후_RAS_복구_재검증.md) |
 | M31-W06~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -31,6 +31,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 
 | 기록 | 용도 |
 | --- | --- |
+| [255 — P2 CS 256-step·분할 RAS 진단](255_M31_P2_CS_256_step_분할_RAS_진단.md) | 진단 image의 실제 256-step·분할 RAS 10/10; 100건에는 gap 1로 연속성 HOLD, 기본 image 100건·양측 STOP 복구 |
 | [254 — P2 Audio unicast 재연결 메모리](254_M31_P2_Audio_unicast_재연결_메모리_계측.md) | adaptive 재연결 scan 결함 수정, source SWD reset 20/20·sink 누적 decode 2,933·drop 0·양측 STOP; 실패 원본 두 건 보존, P2 전체 HOLD |
 | [253 — P2 Audio broadcast 재가입 메모리](253_M31_P2_Audio_broadcast_재가입_메모리_계측.md) | source SWD reset 뒤 sink 명시적 재가입 20/20·decode 2,107·drop 0·양측 STOP; 첫 sync 실패와 기존 session 상태 실패 보존, sink MPSL Work 여유 264 B |
 | [252 — P2 CS 장절차·반복 계수 경계](252_M31_P2_CS_장절차_반복계수_경계_진단.md) | 진단 image 두 종류의 raw 각 10건·양측 STOP, 실제 93~98 step으로 최대 256-step·RAS 분할 증거 미확보; 기본 image 100건 복구 |

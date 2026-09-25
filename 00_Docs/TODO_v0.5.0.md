@@ -22,7 +22,10 @@ Arduino의 모든 누락과 DF connectionless fault가 해결된 것은 아니�
 추가로 통과했지만 물리 전원 차단·controller 내부 사용 최고치는 별도다.
 [252번 CS 장절차](<04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md>)는
 진단 image 두 가지에서 raw 각 10건을 통과했지만 실제 최대 98 step이라
-분할 RAS·256-step 용량 검증을 닫지 못했다.
+당시 분할 RAS·256-step 용량 검증을 닫지 못했다. 후속
+[255번 진단](<04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md>)에서는
+실제 256-step·분할 RAS 정상 경로 10/10을 확인했으나 같은 image의
+100건에는 counter gap 1이 남아 CS/P2 전체는 HOLD다.
 [253번 Audio broadcast 재가입](<04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)은
 source SWD reset 뒤 sink 명시적 재가입 20/20과 drop 0을 확인했으나
 최초 sync 실패와 다른 역할·부하의 최악값은 별도다.

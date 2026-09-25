@@ -122,3 +122,6 @@ fragmented RAS, RF abort/peer loss 후 복구의 peak와 Arduino 정상 callback
 따라서 **P2 전체 완료와 stack/heap/controller pool 축소를 선언하지 않는다**.
 후속 [252번 장절차·반복 계수 진단](252_M31_P2_CS_장절차_반복계수_경계_진단.md)도
 실제 93~98 step에 머물러 최대 256-step·분할 RAS를 닫지 못했다.
+후속 [255번 진단](255_M31_P2_CS_256_step_분할_RAS_진단.md)은
+다른 image에서 실제 256-step·분할 RAS 정상 수신을 확인했으나 100건
+연속성·오류 복구는 계속 HOLD다.
