@@ -7,7 +7,7 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | **W01~W05 완료 5/8**; W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS 완료. W06~W08은 미착수 |
+| 현 단계 | **W01~W06 완료 6/8**; W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS·W06 자원/회귀 완료. W07~W08은 미착수 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각
@@ -23,7 +23,7 @@ RC·지원표·공개 승인/게시·공개 설치 검증을 소유한다. M31 �
 판정한다. M32·M33 및 Ubuntu/macOS 확대는 버전 미정 후속 범위이며 M31 공개의 선행조건이 아니다.
 현재 공개 `v0.4.1`과 source `0.4.1-dev`를 유지하고 문서 결정만으로 버전·지원 상태를 올리지 않는다.
 
-W04·W05를 완료했으며 다음 실행 순서는 W06 자원·수명주기·영향 회귀 → W07 → W08이다. 구체적인 수정 방법과 이전 설명 정정은
+W04~W06을 완료했으며 다음 실행 순서는 W07 설치 예제·역할 HIL → W08이다. 구체적인 수정 방법과 이전 설명 정정은
 [메모리 최적화 통합 설계](21_M31_메모리_최적화_통합_설계.md)를 따른다. 현재 `M31-MEM-OPT`에서
 P0·P1·P2를 완료했다. P2 세 축의 build·실기·최종 크기·native 비교는
 [262번](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>), 다음 실행의 세부 목록은
@@ -143,7 +143,7 @@ clean `504badeec81723f4949879611b0b19371389b56d`의
 Audio는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 W03-01~11을
 완료했다. 제품 SDC DF IQ RX·AoD의 미지원 판정과 지원 TX·연결 응답은
 [263번 기록](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)에서 W04로 닫았다.
-CS 지원·negative·복구는 [264번 기록](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>)에서 W05로 닫았고 W06~W08은 별도로 관리한다.
+CS 지원·negative·복구는 [264번 기록](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>)에서 W05로, 자원·수명주기·영향 회귀는 [265번](<../04_검증 기록/265_M31_W06_자원_수명주기와_영향_회귀_완료.md>)에서 W06으로 닫았고 W07~W08은 별도로 관리한다.
 [W01 clean 감사 결과](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>)는
 parity 703행, Host 오류 입력 20/20 거부, 전체 Host 회귀를 확인해 W01만 완료했다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.

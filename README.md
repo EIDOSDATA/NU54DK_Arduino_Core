@@ -30,21 +30,21 @@
 | M28 GAP·Link·Privacy | **8/8 완료** | 두·세 NU54DK 실기 완료. 개발 브랜치에 반영됐으며 v0.4.1에는 미포함 |
 | M29 ATT/GATT·L2CAP | **8/8 완료** | 10/10 test ID, 세 보드 통합·회귀와 Windows/Intel GATT 상호운용 PASS |
 | M30 보안·profile·최소 DFU | **8/8 완료** | 10/10 test ID, 실제 전원 차단 4지점 × 3회(12/12), 복구 실패·invalid image boot 0 |
-| M31 ISO·Audio·DF·CS | **5/8 완료** | W01 원장·capability, W02 raw ISO, W03 LE Audio 11/11, W04 DF와 W05 CS 완료. W06~W08 미착수 |
+| M31 ISO·Audio·DF·CS | **6/8 완료** | W01 원장·capability, W02 raw ISO, W03 LE Audio 11/11, W04 DF, W05 CS, W06 자원·수명주기·M19~M30 회귀 완료. W07~W08 미착수 |
 | 후속 다중 Host | **3/8 완료, 후속 보류** | HOST-W01~HOST-W03 공통 backend·resolver·launcher 완료. HOST-W04 이후는 사용자 지시로 보류 |
 | v0.5.0 릴리스 | 미공개 | 메모리 최적화·M31 8/8과 Windows 패키지·설치·RC·공개 승인 gate 필요. M32/M33은 후속 버전 |
 
-현재 개발 체크포인트는 **M31-W01~W03 완료**입니다. W02의 공개
+현재 개발 체크포인트는 **M31-W01~W06 완료**입니다. W02의 공개
 ISO 예제 11개는 독립 개발 package에서 전수 빌드하고 같은 image로 두·세 보드
 역할별 실기를 통과했습니다. [W02 완료 기록](<00_Docs/04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
 [W03 완료 기록](<00_Docs/04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 ISO·LE Audio의
-완료 범위를, [M31 TODO](00_Docs/TODO_M31.md)에서 남은 DF·CS 및 통합 작업을 확인할 수 있습니다.
+완료 범위를, [M31 TODO](00_Docs/TODO_M31.md)에서 완료한 DF·CS·자원 회귀와 남은 W07~W08을 확인할 수 있습니다.
 신규 범위는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)에
 따라 M31 8개·M32 12개·M33 8개 작업으로 관리합니다.
 최신 완료 조건과 증거는 [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md)에서 관리합니다.
 메모리 최적화는 [P0·P1·P2를 완료](<00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)했습니다.
 P2의 오류·최악 부하, stack/heap 최종 유지 판정, 동일 조건 Nordic native FLASH/RAM 비교를 닫았고
-다음 순서는 W06입니다. 고정 NCS v3.4.0에서 제품 SDC DF IQ RX는 지원 밖이며,
+다음 순서는 W07입니다. 고정 NCS v3.4.0에서 제품 SDC DF IQ RX는 지원 밖이며,
 CS 간헐 loss·counter gap과 SDC 내부 high-water 비노출은 P2 차단 조건이 아닙니다.
 위 CI 배지는 소프트웨어 검사 상태이며 보드 실기·상호운용·정식 릴리스 완료를 뜻하지 않습니다.
 
@@ -180,7 +180,7 @@ PASS는 명시한 NU54DK 시험 조건에서의 결과이며 다른 제조사·O
 | M28 — 완료 | Central 최대 1개 + Peripheral 최대 1개, 총 2-link. Generation handle, 확장 광고·스캔, periodic 광고·sync·PAST, PAwR, privacy/RPA, link별 제어 | 해당 개발 계약 완료. OS별 상호운용·Bluetooth qualification·v0.5.0 공개는 별도 |
 | M29 — 완료 | 512-byte long/reliable GATT, descriptor·authorization·read multiple, robust cache, LE CoC, Signed Write·EATT opt-in | 10/10 test ID와 세 보드 mixed-link·M19~M21/M28 회귀 PASS. Windows/Intel GATT 외 OS·adapter 전체는 미검증 |
 | M30 — 완료 | link별 security·pairing, 유선 OOB·bond/privacy, profile 7개, MCUboot·secure BLE DFU, 세 보드 secure multi-link | W01~W08·10/10 test ID와 실제 전원 차단 12/12 PASS. NFC RF는 결정된 범위대로 NOT RUN |
-| M31 — 5/8 완료 | W01 원장·capability, W02 raw ISO 11역할, W03 LE Audio 11개 하위 작업, W04 DF·W05 CS 완료 | 독립 image별 자원·수명주기·회귀 → 예제·마감·Windows 릴리스 gate |
+| M31 — 6/8 완료 | W01 원장·capability, W02 raw ISO 11역할, W03 LE Audio 11개 하위 작업, W04 DF·W05 CS, W06 독립 image 자원·수명주기·M19~M30 회귀 완료 | 설치 예제·역할 HIL → 마감·Windows 릴리스 gate |
 | M32 — 계획 0/12 | 최신 LE 링크/광고·Nordic 확장, Mesh 1.1·DFU, 최소 radio·공존 | 기능·자원 preset·예제·2/3보드 HIL; HOST-W07 도구·절차 준비 |
 | M33 — 계획 0/8 | 표준 service·beacon·ecosystem·HCI/DTM 예제, 전수 parity·Host·상호운용·릴리스 | 전체 예제 설치/build·실행 상태, 세 Host 증거·공개 gate |
 
@@ -271,7 +271,7 @@ Ubuntu/macOS 실제 설치·USB·serial·debug는 해당 OS를 포함하는 후�
 | 개발 환경·빌드 구조 | [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) · [Build Adapter](<00_Docs/02_빌드 설계/02_Build_Adapter_설계.md>) |
 | v0.5.0 Windows 릴리스·후속 Host 확장 | [v0.5.0 계획](00_Docs/TODO_v0.5.0.md) · [다중 Host 지원 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 릴리스·검증 | [v0.4.1 릴리스 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [유지보수 기록](00_Docs/TODO_v0.4.1.md) |
-| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01~W05와 `M31-MEM-OPT` P0·P1·P2 완료, 다음 W06 |
+| 현재 개발·다음 작업 | [M31 TODO](00_Docs/TODO_M31.md) · [v0.5.0 개발 계획](00_Docs/TODO_v0.5.0.md) · [개발 인계](00_Docs/HANDOFF.md) — M31-W01~W06과 `M31-MEM-OPT` P0·P1·P2 완료, 다음 W07 |
 | 이후 Bluetooth 전체 구현·예제 | [전체 기능 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) · [M32 TODO](00_Docs/TODO_M32.md) · [M33 TODO](00_Docs/TODO_M33.md) |
 | 문제 보고 | [GitHub Issues](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/issues) |
 

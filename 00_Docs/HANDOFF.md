@@ -1,7 +1,7 @@
-# 개발 인계 — M31-W04 완료와 후속 순서
+# 개발 인계 — M31-W06 완료와 후속 순서
 
-최종 정리: **2026-09-25**. 작업 브랜치는 **`M31-MEM-OPT`**이며 메모리 최적화
-**P0·P1·P2와 M31-W04를 완료**했다. W04의 지원 CTE TX·response 재검증과
+최종 정리: **2026-09-26**. 작업 브랜치는 **`M31-MEM-OPT`**이며 메모리 최적화
+**P0·P1·P2와 M31-W01~W06을 완료**했다. W04의 지원 CTE TX·response 재검증과
 제품 SDC IQ RX·AoD `UNSUPPORTED` 경계는 [263번 완료 기록](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)이 소유한다.
 P2의 오류·최악 부하, 최종 stack/heap 크기, 동등 Nordic native FLASH/RAM 비교 근거는
 [262번 완료 기록](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 있다.
@@ -9,13 +9,12 @@ P2의 오류·최악 부하, 최종 stack/heap 크기, 동등 Nordic native FLAS
 
 ## 1. 바로 이어서 할 작업
 
-P2와 W04·W05를 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다. 순서는 **W06 → W07 → W08**이다.
+P2와 W04~W06을 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다. 순서는 **W07 → W08**이다.
 
 | 순서 | 작업 | 완료 결과 |
 | --- | --- | --- |
-| 1 | W06 자원·수명주기·영향 회귀 | 독립 role image manifest, stop/disconnect 반환, M19~M30 변경 영향 회귀. 네 기능 전체 동시 실행은 요구하지 않음 |
-| 2 | W07 | 적용 역할의 HIL·설치 예제 실행과 역할 재배치 |
-| 3 | W08 | 원장/지원표/문서·Windows package/clean install/RC 준비. 공개는 별도 승인 |
+| 1 | W07 | 적용 역할의 HIL·설치 예제 실행과 역할 재배치 |
+| 2 | W08 | 원장/지원표/문서·Windows package/clean install/RC 준비. 공개는 별도 승인 |
 
 ### 다시 추가하지 않을 조건
 
@@ -39,26 +38,28 @@ P2와 W04·W05를 다시 열지 않고 M31의 미완료 작업 묶음을 이어�
 | --- | --- | --- |
 | 공개 설치본 / 개발 소스 | v0.4.1 단독 지원 / 0.4.1-dev | [지원 안내](<05_릴리스/v0.4.1/README.md>) |
 | M28·M29·M30 | 각각 8/8 완료. M30 실제 전원 차단 12/12 | [v0.5.0 계획](TODO_v0.5.0.md) |
-| M31 | **W01~W05 완료 5/8**, W03 Audio 11/11·W04 DF·W05 CS 완료. W06~W08 미착수 | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W04](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) · [W05](<04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
+| M31 | **W01~W06 완료 6/8**, W03 Audio 11/11·W04 DF·W05 CS·W06 자원/회귀 완료. W07~W08 미착수 | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W06](<04_검증 기록/265_M31_W06_자원_수명주기와_영향_회귀_완료.md>) |
 | 메모리 P0 / P1 / P2 | **모두 완료**. adaptive는 실험적 선택지, standard/full 기본값과 기존 최종 크기 유지 | [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | P2 오류·최악 부하 | CoC peer credit 1 직접 고갈·4 SDU 복구, Audio 양방향 10,000 frame·wrong Code `-61` 후 100 frame 복구, CS 256-step 중 peer reset 뒤 raw 20개 복구 | [P2 원본](<04_검증 기록/evidence/m31-p2-three-axes-20260925/>) |
 | P2 최종 크기 / native | MPSL 최소 관찰 여유 264 B 등으로 기존 크기 유지. CoC와 암호화 Audio 두 동등 쌍의 ELF/map 비교 PASS | [메모리 판정](<04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json>) · [native 비교](<04_검증 기록/evidence/m31-p2-three-axes-20260925/native-memory-comparison.json>) |
 | M32 / M33 / Host | 0/12 / 0/8; HOST-W01~W03 완료 3/8, W04~W08 사용자 보류 | [M32](TODO_M32.md) · [M33](TODO_M33.md) |
 
-이전 실행의 최근 전체 Host 기준선은 **1,499건 실행·2 skip·실패 0**이다.
-P2 마감의 새 build·HIL·메모리/native 비교와 로컬 회귀는
-[262번](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 분리했다.
-과거 Host 통과를 이번 재실행이나 새 HIL PASS로 표시하지 않는다.
+M29-W01~W08의 계약·상태는 [M29 착수 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
+[`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json), M30-W01~W08과
+`M30-POWER-01`은 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
+[`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)에 보존한다.
+
+W06 마감의 현재 전체 Host 기준선은 **1,508건 실행·2 skip·실패 0**이다.
+P2 build·HIL·메모리/native 비교는 [262번](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>),
+W06 current build·Host·회귀와 새 실물 `HOLD`는 [265번](<04_검증 기록/265_M31_W06_자원_수명주기와_영향_회귀_완료.md>)에 분리했다.
 
 ## 3. P2 이후 순서 — P2 분모와 별개
 
-1. 완료한 **M31-W05**의 secure RAS·one-sided stale-key·flash 직후 증거와 실패 원본을
-   다시 열지 않는다. W04 제품 SDC IQ RX·AoD `UNSUPPORTED` 경계도 수신 구현 의무로 바꾸지 않는다.
-2. **W06**은 독립 role image별 자원·수명주기와 M19~M30 영향 회귀다.
-   ISO·Audio·DF·CS 네 기능을 단일 MCU에서 동시에 실행하는 요구가 아니다.
-3. **W07**은 적용 역할의 보드 HIL과 Windows 설치 예제 실행, **W08**은 원장·지원표·문서 마감과
+1. 완료한 **M31-W04~W06**의 증거와 실패/HOLD 원본을 다시 열지 않는다. 제품 SDC IQ RX·AoD
+   `UNSUPPORTED` 경계도 수신 구현 의무로 바꾸지 않는다.
+2. **W07**은 적용 역할의 보드 HIL과 Windows 설치 예제 실행, **W08**은 원장·지원표·문서 마감과
    Windows package·clean 설치·RC 준비다.
-4. M31 **8/8 기능 완료**와 **v0.5.0 공개**는 별도다. tag/Release/catalog 공개는 별도 사용자
+3. M31 **8/8 기능 완료**와 **v0.5.0 공개**는 별도다. tag/Release/catalog 공개는 별도 사용자
    승인 후 수행한다. M32/M33·Ubuntu/macOS 확대와 보류한 Host 작업을 자동 재개하지 않는다.
 
 ## 4. 재개 전 확인과 고정 환경
@@ -74,8 +75,8 @@ P2 마감의 새 build·HIL·메모리/native 비교와 로컬 회귀는
 
 - [AGENTS](../AGENTS.md)와 현재 TODO를 읽고 branch·HEAD·미커밋 변경·원격 ref·submodule을 직접 확인한다.
   과거 main 분기·squash 지시를 재실행하지 않으며 사용자 변경을 reset으로 덮어쓰지 않는다.
-- 마지막 실기 기록은 W04 beacon STOP, 내부 connected receiver STOP, responder disconnect를
-  확인한 상태다. **현재 연결 상태의 보증이 아니다.** 다음 HIL 직전 probe SHA-256
+- W06 진단에서 한 보드만 명시적 STOP을 확인했고 두 보드는 debug protection 때문에 최종 상태를
+  확인하지 못해 `HOLD`다. 이 진단은 W06 PASS 분모가 아니다. 다음 HIL 직전 probe SHA-256
   identity·COM·role·image hash를 재대조한다.
 - probe lock·watchdog·명령 lease·양측 STOP·clock/핀 반환을 유지한다. 자동 mass erase/unlock/recover,
   임의 전원·USB·결선 변경을 하지 않는다. 원시 probe UID·인증 정보는 공개하지 않는다.

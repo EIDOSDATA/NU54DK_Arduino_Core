@@ -138,6 +138,54 @@ class M31ReadinessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "W05 public RAS example incomplete"):
             MODULE.validate(doc)
 
+    def test_w06_completion_requires_zero_resource_leaks(self) -> None:
+        """! @brief W06 완료 뒤 자원 누수 0 판정을 제거할 수 없습니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        package = next(item for item in doc["work_packages"] if item["id"] == "M31-W06")
+        audit_path = ROOT / package["exact_evidence"]
+        original = json.loads(audit_path.read_text(encoding="utf-8"))
+        changed = copy.deepcopy(original)
+        changed["resource_lifecycle"]["resource_leaks"] = 1
+        package["exact_evidence"] = (
+            "00_Docs/04_검증 기록/evidence/m31-w06-close-20260926/"
+            "test-invalid-resource-audit.json"
+        )
+        invalid = ROOT / package["exact_evidence"]
+        try:
+            invalid.write_text(
+                json.dumps(changed, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "W06 resource lifecycle evidence incomplete"):
+                MODULE.validate(doc)
+        finally:
+            invalid.unlink(missing_ok=True)
+
+    def test_w06_completion_requires_all_m19_m30_families(self) -> None:
+        """! @brief M19~M30 회귀 분모 12를 축소한 W06 완료를 거부합니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        package = next(item for item in doc["work_packages"] if item["id"] == "M31-W06")
+        audit_path = ROOT / package["exact_evidence"]
+        original = json.loads(audit_path.read_text(encoding="utf-8"))
+        changed = copy.deepcopy(original)
+        changed["m19_m30_regression"]["families"] = 11
+        package["exact_evidence"] = (
+            "00_Docs/04_검증 기록/evidence/m31-w06-close-20260926/"
+            "test-invalid-regression-audit.json"
+        )
+        invalid = ROOT / package["exact_evidence"]
+        try:
+            invalid.write_text(
+                json.dumps(changed, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "W06 M19-M30 regression evidence incomplete"):
+                MODULE.validate(doc)
+        finally:
+            invalid.unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()

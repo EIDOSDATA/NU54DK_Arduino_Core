@@ -9,11 +9,11 @@ v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 �
 | M28 GAP/Link/Privacy | W01~W08 완료, 9/9 test ID PASS | [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
 | M29 ATT/GATT/L2CAP | W01~W08 완료, 10/10 test ID와 Windows/Intel GATT 상호운용 PASS | [149번 기록](<../../../00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
 | M30 Security/Profile/DFU | W01~W08 완료, 10/10 test ID PASS. 실제 전원 차단 12/12 | [161번 완료 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
-| M31 ISO/LE Audio/DF/CS | W01~W03 완료(3/8), W03 profile 11/11 완료. W04·W05 진행 중, W06~W08 미착수 | [M31 TODO](../../../00_Docs/TODO_M31.md) |
+| M31 ISO/LE Audio/DF/CS | W01~W06 완료(6/8), W03 profile 11/11·W04 DF·W05 CS·W06 자원/회귀 완료. W07~W08 미착수 | [M31 TODO](../../../00_Docs/TODO_M31.md) |
 
 이는 `0.4.1-dev` 개발 소스의 검증 상태이며 공개 v0.4.1 패키지에 BLE 확장이 포함됐다는 뜻이 아닙니다.
 v0.5.0은 M31 완료 뒤 Windows 우선 릴리스로 준비합니다. `M31-MEM-OPT`의 메모리 최적화
-P0~P2를 완료했고 다음 구현 순서는 W04·W05 → W06~W08입니다. W06은 독립 ISO·Audio·DF·CS image의 자원·
+P0~P2와 W04~W06을 완료했고 다음 구현 순서는 W07 → W08입니다. W06은 독립 ISO·Audio·DF·CS image의 자원·
 수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
 실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
 

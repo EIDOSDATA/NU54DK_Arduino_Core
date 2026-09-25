@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "case": "M31-REG-01:m19_m30",
+  "status": "PASS",
+  "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+  "denominator": 12,
+  "families": 12,
+  "cross_link": 0,
+  "resource_leaks": 0,
+  "minimum_boards": 3,
+  "family_results": [
+    {
+      "id": "M19",
+      "status": "PASS",
+      "current_source_basis": "central and peripheral target builds plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md"
+    },
+    {
+      "id": "M20",
+      "status": "PASS",
+      "current_source_basis": "central and peripheral target builds plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md"
+    },
+    {
+      "id": "M21",
+      "status": "PASS",
+      "current_source_basis": "central and peripheral target builds plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md"
+    },
+    {
+      "id": "M22",
+      "status": "PASS",
+      "current_source_basis": "full Host package and metadata regression",
+      "physical_baseline": "00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md"
+    },
+    {
+      "id": "M23",
+      "status": "PASS",
+      "current_source_basis": "full Host ownership and resource regression",
+      "physical_baseline": "00_Docs/04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md"
+    },
+    {
+      "id": "M24",
+      "status": "PASS",
+      "current_source_basis": "onboard target build plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md"
+    },
+    {
+      "id": "M25",
+      "status": "PASS",
+      "current_source_basis": "onboard target build plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md"
+    },
+    {
+      "id": "M26",
+      "status": "PASS",
+      "current_source_basis": "onboard target build plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md"
+    },
+    {
+      "id": "M27",
+      "status": "PASS",
+      "current_source_basis": "full Host release and package regression",
+      "physical_baseline": "00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md"
+    },
+    {
+      "id": "M28",
+      "status": "PASS",
+      "current_source_basis": "peripheral, mixed and central three-role target builds plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md"
+    },
+    {
+      "id": "M29",
+      "status": "PASS",
+      "current_source_basis": "peripheral, mixed and central three-role target builds plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md"
+    },
+    {
+      "id": "M30",
+      "status": "PASS",
+      "current_source_basis": "peripheral, mixed and central secure three-role target builds plus full Host regression",
+      "physical_baseline": "00_Docs/04_검증 기록/158_M30_W07_3보드_secure_multi_link_완료.md"
+    }
+  ],
+  "current_builds": {
+    "status": "PASS",
+    "families": 9,
+    "images": 18,
+    "evidence": "build-manifest.json"
+  },
+  "host_regression": {
+    "status": "PASS",
+    "evidence": "host-regression.json"
+  },
+  "physical_reuse_policy": {
+    "status": "PASS",
+    "family_specific_denominators_reused": true,
+    "new_live_hil_hold_used": false,
+    "reason": "W06 contract explicitly permits each family's existing quantitative denominator; current builds and Host regression check source impact while exact physical originals remain authoritative."
+  }
+}

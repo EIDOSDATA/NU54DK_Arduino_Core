@@ -420,6 +420,93 @@ def validate(doc: dict) -> None:
             if (example is None or example["build_status"] != "PASS" or
                     example["runtime_status"] != "PASS"):
                 raise ValueError("W05 public RAS example incomplete")
+    if "M31-W06" in completed_work:
+        package = next(item for item in doc["work_packages"]
+                       if item["id"] == "M31-W06")
+        audit_path = CORE / package["exact_evidence"]
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        resource = audit.get("resource_lifecycle", {})
+        recovery = audit.get("target_recovery", {})
+        regression = audit.get("m19_m30_regression", {})
+        live_hil = audit.get("current_live_hil", {})
+        if (resource.get("status") != "PASS" or
+                resource.get("independent_feature_families") != 4 or
+                resource.get("simultaneous_all_features_required") is not False or
+                resource.get("final_size_decision") != "KEEP" or
+                resource.get("resource_leaks") != 0):
+            raise ValueError("W06 resource lifecycle evidence incomplete")
+        if (recovery.get("status") != "PASS" or
+                set(recovery.get("classes", [])) != {
+                    "peer_loss", "wrong_key", "resource_exhaustion"
+                } or recovery.get("iterations_per_class") != 20 or
+                recovery.get("completed_per_class") != 20 or
+                recovery.get("resource_leaks") != 0):
+            raise ValueError("W06 target recovery evidence incomplete")
+        if (regression.get("status") != "PASS" or
+                regression.get("families") != 12 or
+                regression.get("current_target_builds") != 18 or
+                regression.get("minimum_boards_in_reused_physical_baselines", 0) < 3 or
+                regression.get("cross_link") != 0 or
+                regression.get("resource_leaks") != 0):
+            raise ValueError("W06 M19-M30 regression evidence incomplete")
+        if (live_hil.get("status") == "HOLD" and
+                live_hil.get("used_for_pass") is not False):
+            raise ValueError("W06 diagnostic HOLD promoted to PASS evidence")
+        if live_hil.get("status") not in {"PASS", "HOLD"}:
+            raise ValueError("W06 live HIL status unknown")
+        evidence_names = {
+            "resource": resource.get("evidence"),
+            "recovery": recovery.get("evidence"),
+            "regression": regression.get("evidence"),
+            "live_hil": live_hil.get("evidence"),
+            "build": audit.get("build_evidence"),
+            "host": audit.get("host_evidence"),
+        }
+        evidence = {}
+        for name, relative in evidence_names.items():
+            if not isinstance(relative, str):
+                raise ValueError("W06 exact evidence name missing")
+            evidence_path = audit_path.parent / relative
+            if not evidence_path.is_file():
+                raise ValueError("W06 exact evidence file missing")
+            evidence[name] = json.loads(evidence_path.read_text(encoding="utf-8"))
+        resource_manifest = evidence["resource"]
+        if (resource_manifest.get("status") != "PASS" or
+                len(resource_manifest.get("independent_images", [])) != 4 or
+                resource_manifest.get("final_sizes", {}).get("decision") != "KEEP" or
+                resource_manifest.get("final_sizes", {}).get("resource_leaks") != 0 or
+                resource_manifest.get("current_regression_builds", {}).get(
+                    "maximum_ram_percent", 100
+                ) >= 85):
+            raise ValueError("W06 resource manifest incomplete")
+        recovery_manifest = evidence["recovery"]
+        recovery_classes = recovery_manifest.get("classes", [])
+        if (recovery_manifest.get("status") != "PASS" or
+                {entry.get("id") for entry in recovery_classes} != {
+                    "peer_loss", "wrong_key", "resource_exhaustion"
+                } or any(entry.get("status") != "PASS" or entry.get("completed") != 20 or
+                         entry.get("resource_leaks") != 0 for entry in recovery_classes)):
+            raise ValueError("W06 target recovery manifest incomplete")
+        regression_manifest = evidence["regression"]
+        family_results = regression_manifest.get("family_results", [])
+        if (regression_manifest.get("status") != "PASS" or
+                {entry.get("id") for entry in family_results} != {
+                    f"M{index}" for index in range(19, 31)
+                } or any(entry.get("status") != "PASS" for entry in family_results) or
+                regression_manifest.get("current_builds", {}).get("images") != 18):
+            raise ValueError("W06 M19-M30 regression manifest incomplete")
+        safety = evidence["live_hil"].get("safety", {})
+        if (evidence["live_hil"].get("status") == "HOLD" and
+                (evidence["live_hil"].get("used_for_w06_pass") is not False or
+                 safety.get("auto_unlock") is not False or
+                 safety.get("mass_erase") is not False or
+                 safety.get("recover") is not False)):
+            raise ValueError("W06 live HIL HOLD safety boundary incomplete")
+        if (evidence["build"].get("status") != "PASS" or
+                evidence["build"].get("summary", {}).get("images") != 18 or
+                evidence["host"].get("status") != "PASS" or
+                evidence["host"].get("failures") != 0):
+            raise ValueError("W06 build or Host regression evidence incomplete")
     for family in doc["test_families"]:
         for entry in family["cases"]:
             if entry["status"] == "PASS" and (not entry["source_revision"] or not entry["evidence"]):

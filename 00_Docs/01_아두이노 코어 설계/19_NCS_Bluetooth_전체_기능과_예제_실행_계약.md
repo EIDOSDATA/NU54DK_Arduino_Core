@@ -4,7 +4,7 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | 개발 source `0.4.1-dev`의 M31 `v0.5.0` Windows 릴리스와 M32·M33 후속 기능(버전 미정), M34~M45 인계 의존성 |
-| 현재 상태 | **M31 W01~W05 완료 5/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS 완료. W06~W08과 M32·M33은 미착수 |
+| 현재 상태 | **M31 W01~W06 완료 6/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS·W06 자원/회귀 완료. W07~W08과 M32·M33은 미착수 |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
@@ -23,7 +23,7 @@
 
 ### 2026-09-21 릴리스 범위 결정
 
-`v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다. 완료한 W04·W05 다음 W06 → W07 → W08
+`v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다. 완료한 W04~W06 다음 W07 → W08
 순서로 기능을 검증하고, M31-W08에서 해당 버전의 재현 package·Windows 설치 수명주기·RC·
 공개 승인/게시·공개 설치 gate를 관리한다. M31 기능 8/8과 릴리스 판정은 별도 집계한다.
 현재 `M31-MEM-OPT`에서 메모리 최적화 P0·P1·P2를 완료했다. P2의 지원 범위 오류·최악 부하,
@@ -34,7 +34,7 @@ SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 M32·M33 추가 기능과 Ubuntu/macOS 확대는 버전 미정 후속 범위다. M33-W07~W08은 후속
 다중 Host·RC·공개를 계속 소유한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-현재 설치·지원 `v0.4.1`, 개발 source `0.4.1-dev`, M31 5/8·M32 0/12·M33 0/8·HOST 3/8은 유지한다.
+현재 설치·지원 `v0.4.1`, 개발 source `0.4.1-dev`, M31 6/8·M32 0/12·M33 0/8·HOST 3/8은 유지한다.
 
 ### 구현 책임과 실물 검증 gate
 
@@ -157,7 +157,7 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 | 완료 / P0 | M31 메모리 최적화 | W01~W03 완료와 W04·W05 기존 성공/실패 원본 | P0~P2 완료, 최종 크기 유지; [262번 완료](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | 완료 / P0 | M31-B W04 DF | W01 controller별 판정과 최적화 image | 지원 CTE TX·연결 응답 PASS, 제품 SDC RX/AoD `UNSUPPORTED`; [263번 완료](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
 | 완료 / P0 | M31-C W05 CS | W01 controller별 판정과 최적화 image | connected CS 예제, negative·복구 완료; [264번](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
-| 2 / P0 | M31-W06~W08 독립 image 자원·수명주기·회귀, HIL·예제·릴리스 | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8 마감과 별도 Windows package·설치·RC·공개 gate; M32 자원 인계 |
+| 2 / P0 | 완료한 M31-W06 독립 image 자원·수명주기·회귀를 입력으로 W07~W08 HIL·예제·릴리스 준비 | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8 마감과 별도 Windows package·설치·RC·공개 gate; M32 자원 인계 |
 | 4 / P0 | M32-A W01~W05 modern LE·Nordic 확장 | M31 W01 inventory와 기존 GAP | power/timing/광고/resource/diagnostic 예제 |
 | 5 / P0 | M32-B W06 Mesh 기반 → W07 Mesh 1.1 → W08 BLOB/DFU | 설정·보안·고정 memory budget | Mesh role/model·전송·update 예제 |
 | 5 / P0 | M32-C W09 단독 radio → W10 공존 | BLE/Mesh 단독 PASS, 최소 802.15.4/ESB profile | 지원 조합·중재·복구 예제; M38/M39 재사용 |

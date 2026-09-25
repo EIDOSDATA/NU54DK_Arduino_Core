@@ -46,8 +46,8 @@
     {
       "id": "M31-W06",
       "title": "integration_regression",
-      "status": "not_started",
-      "exact_evidence": null
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w06-close-20260926/closure-audit.json"
     },
     {
       "id": "M31-W07",
@@ -1794,9 +1794,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w06-close-20260926/target-recovery.json"
         }
       ]
     },
@@ -1826,9 +1826,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w06-close-20260926/m19-m30-regression.json"
         }
       ]
     },
@@ -1936,9 +1936,9 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 5,
+    "work_completed": 6,
     "test_family_total": 10,
-    "test_family_passed": 5,
+    "test_family_passed": 7,
     "audio_group_total": 11,
     "example_role_total": 43,
     "parity_rows": 703,
