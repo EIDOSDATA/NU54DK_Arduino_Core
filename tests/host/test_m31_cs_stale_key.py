@@ -110,6 +110,16 @@ class M31CsStaleKeyTests(unittest.TestCase):
             self.assertEqual(manifest["capabilities"], [])
             self.assertEqual(manifest["capacities"], {})
 
+    def test_fixture_keeps_supported_security_mode(self) -> None:
+        """! @brief negative fixture가 제품 보안 API의 pairing mode를 덮어쓰지 않습니다. """
+
+        for fixture in ("RasStaleKeyInitiator", "RasStaleKeyReflector"):
+            configuration = (
+                HIL / f"fixtures/{fixture}/prj.conf"
+            ).read_text(encoding="utf-8")
+            self.assertNotIn("CONFIG_BT_SMP_SC_PAIR_ONLY=", configuration)
+            self.assertIn("CONFIG_BT_SMP_MIN_ENC_KEY_SIZE=16", configuration)
+
     def test_runner_labels_scope_without_arbitrary_ltk_claim(self) -> None:
         """! @brief 증적 명칭을 one-sided stale key로 한정하고 exact source를 요구할 수 있습니다. """
 
