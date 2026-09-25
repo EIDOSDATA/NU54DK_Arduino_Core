@@ -332,7 +332,9 @@
         "ble-audio-telephony-gateway",
         "ble-audio-telephony-terminal",
         "ble-audio-gaming-gateway",
-        "ble-audio-gaming-terminal"
+        "ble-audio-gaming-terminal",
+        "ble-cs-ras-initiator",
+        "ble-cs-ras-reflector"
       ],
       "conflicts": [],
       "conf": [
