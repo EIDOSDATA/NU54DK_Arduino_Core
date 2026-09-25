@@ -1,6 +1,7 @@
 """! @brief M31 CS one-sided stale-key fixture와 runner 계약을 검사합니다. """
 
 from importlib.util import module_from_spec, spec_from_file_location
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -91,6 +92,23 @@ class M31CsStaleKeyTests(unittest.TestCase):
         self.assertIn("CSKEY reflector stale erased bonds=", reflector)
         self.assertIn("BLESecurity.acceptPairing(record.connection, accept)", initiator)
         self.assertIn("BLESecurity.acceptPairing(record.connection, accept)", reflector)
+
+    def test_adaptive_build_roles_are_explicit(self) -> None:
+        """! @brief 내부 fixture도 CS 역할을 fail-closed manifest로 선언합니다. """
+
+        for fixture, role in (
+            ("RasStaleKeyInitiator", "ble-cs-ras-initiator"),
+            ("RasStaleKeyReflector", "ble-cs-ras-reflector"),
+        ):
+            manifest = json.loads(
+                (HIL / f"fixtures/{fixture}/nucode-build.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(manifest["schema_version"], 1)
+            self.assertEqual(manifest["roles"], [role])
+            self.assertEqual(manifest["capabilities"], [])
+            self.assertEqual(manifest["capacities"], {})
 
     def test_runner_labels_scope_without_arbitrary_ltk_claim(self) -> None:
         """! @brief 증적 명칭을 one-sided stale key로 한정하고 exact source를 요구할 수 있습니다. """
