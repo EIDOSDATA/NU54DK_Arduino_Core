@@ -7,15 +7,15 @@
 | board 기준 | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3`, 정확한 `nrf54l15dk/nrf54l15/cpuapp` qualifier |
 | 원장 | `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`, `variants/nu54dk/m31-ble-readiness.json` |
 | 기능 시험 | `M31-CAP-01`, `M31-PARITY-01`, `M31-ISO-01`, `M31-AUDIO-01`, `M31-DF-01`, `M31-CS-01`, `M31-NEG-01`, `M31-REG-01`, `M31-EXAMPLE-01`, `M31-CLOSE-01` |
-| 현 단계 | **W01~W04 완료 4/8**; W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF 완료. W05 CS는 진행 중·미완료, W06~W08은 미착수 |
+| 현 단계 | **W01~W05 완료 5/8**; W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS 완료. W06~W08은 미착수 |
 
 이 계약은 [전체 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)의
 source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부 상호운용을 각각
 판정한다. M30의 8/8·10/10·전원 차단 12/12 완료 판정은 그대로 보존한다. 고정 lock이나
 기본 controller를 임의로 교체하지 않는다.
 
-현재 완료 근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
-[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다. 남은 기능·검증과 재개 범위는
+현재 완료 근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>),
+[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>), [W04](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)와 [W05](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>)다. 남은 기능·검증과 재개 범위는
 [M31 TODO](../TODO_M31.md)와 [HANDOFF](../HANDOFF.md)를 따른다. HOST-W04 이후는 사용자 지시로 보류 중이다.
 
 2026-09-21 릴리스 범위 개정으로 M31-W08이 v0.5.0의 Windows 재현 package·설치 수명주기·
@@ -23,7 +23,7 @@ RC·지원표·공개 승인/게시·공개 설치 검증을 소유한다. M31 �
 판정한다. M32·M33 및 Ubuntu/macOS 확대는 버전 미정 후속 범위이며 M31 공개의 선행조건이 아니다.
 현재 공개 `v0.4.1`과 source `0.4.1-dev`를 유지하고 문서 결정만으로 버전·지원 상태를 올리지 않는다.
 
-W04를 완료했으며 다음 실행 순서는 W05 기능/복구 검증 → W06~W08이다. 구체적인 수정 방법과 이전 설명 정정은
+W04·W05를 완료했으며 다음 실행 순서는 W06 자원·수명주기·영향 회귀 → W07 → W08이다. 구체적인 수정 방법과 이전 설명 정정은
 [메모리 최적화 통합 설계](21_M31_메모리_최적화_통합_설계.md)를 따른다. 현재 `M31-MEM-OPT`에서
 P0·P1·P2를 완료했다. P2 세 축의 build·실기·최종 크기·native 비교는
 [262번](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>), 다음 실행의 세부 목록은
@@ -50,7 +50,7 @@ parity 원장은 기능 예제의 계획·실제 Sketch, controller, role, 외�
 
 | 구성 | 현행 관찰 | 다음 기능 판정 |
 | --- | --- | --- |
-| 기본 SDC | 기본 설정 HCI LE feature에는 ISO·DF·CS가 활성화되지 않는다. ISO·CS·DF TX opt-in target 3종을 분리 빌드했고 각 HCI bit와 Host 설정을 실기 query했다. | W02 CIS/BIS 기능 HIL과 W04 제품 SDC CTE TX를 완료. 제품 SDC IQ RX·AoD는 `UNSUPPORTED`; W05 CS procedure 잔여는 TODO에서 관리 |
+| 기본 SDC | 기본 설정 HCI LE feature에는 ISO·DF·CS가 활성화되지 않는다. ISO·CS·DF TX opt-in target 3종을 분리 빌드했고 각 HCI bit와 Host 설정을 실기 query했다. | W02 CIS/BIS 기능 HIL, W04 제품 SDC CTE TX와 W05 CS procedure·negative·복구를 완료. 제품 SDC IQ RX·AoD는 `UNSUPPORTED` |
 | Zephyr LL IQ 내부 진단 | 별도 `bt-ll-sw-split` 구성에서 연결형 IQ 20 report·1,640 sample·cleanup을 국소 확인했다. connectionless IQ는 0·수신 fault였다. | 과거 진단 증거 보존. 제품 SDC RX 지원이나 현재 P2 필수 재시험으로 승계하지 않음 |
 | 기본 SDC DF | 고정 NCS v3.4.0의 nRF54L15는 AoA 송신만 지원. IQ RX·AoD는 `UNSUPPORTED`이며 beacon TX 20/20은 국소 PASS다. | 제품 IQ RX는 P2 범위 제외. SDK/controller 변경 요구 없음; 칩 전체 IQ 불가 판정 금지 |
 | LE Audio profile | 11개 W03 기능 묶음의 공개 역할·build·합성 PCM/payload·제어·negative·복구 HIL을 완료했다. | 외장 I/O·상용 peer·qualification은 사용자 후속 `NOT RUN`; 보드 기능 PASS를 상호운용·음향 성능으로 확대하지 않음 |
@@ -143,7 +143,7 @@ clean `504badeec81723f4949879611b0b19371389b56d`의
 Audio는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 W03-01~11을
 완료했다. 제품 SDC DF IQ RX·AoD의 미지원 판정과 지원 TX·연결 응답은
 [263번 기록](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)에서 W04로 닫았다.
-W05 잔여 기능과 W06~W08은 별도로 관리한다.
+CS 지원·negative·복구는 [264번 기록](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>)에서 W05로 닫았고 W06~W08은 별도로 관리한다.
 [W01 clean 감사 결과](<../04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>)는
 parity 703행, Host 오류 입력 20/20 거부, 전체 Host 회귀를 확인해 W01만 완료했다.
 CI/CD 조회·실행은 이번 로컬 개발·커밋·푸시의 단계에 넣지 않는다.

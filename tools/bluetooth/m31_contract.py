@@ -378,6 +378,48 @@ def validate(doc: dict) -> None:
         if any(actual_case_status.get(identifier) != status
                for identifier, status in expected_case_status.items()):
             raise ValueError("W04 DF case boundary mismatch")
+    if "M31-W05" in completed_work:
+        capability_by_id = {entry["id"]: entry for entry in doc["capabilities"]}
+        channel_sounding = capability_by_id.get("connected_channel_sounding")
+        if (channel_sounding is None or
+                channel_sounding["controller_variant"] != "default_sdc" or
+                channel_sounding["target_applicability"] !=
+                "arduino_ras_supported_path_and_security_negative_complete" or
+                any(channel_sounding[stage] != "PASS" for stage in (
+                    "native_build", "nu54dk_build", "arduino_build", "runtime_query",
+                    "functional_hil"
+                ))):
+            raise ValueError("W05 product SDC CS boundary mismatch")
+        package = next(item for item in doc["work_packages"]
+                       if item["id"] == "M31-W05")
+        audit = json.loads((CORE / package["exact_evidence"]).read_text(encoding="utf-8"))
+        supported = audit.get("supported_path", {})
+        negative = audit.get("negative", {})
+        stale = negative.get("one_sided_stale_key", {})
+        flash_after = audit.get("flash_after", {})
+        if (supported.get("status") != "PASS" or
+                supported.get("raw_ras_results") != 100 or
+                supported.get("stop_restart") != "20/20" or
+                supported.get("disconnect_reconnect") != "20/20"):
+            raise ValueError("W05 supported RAS evidence incomplete")
+        if (negative.get("insecure_same_acl", {}).get("status") != "PASS" or
+                negative.get("wrong_peer_and_missing_service", {}).get("status") != "PASS" or
+                stale.get("status") != "PASS" or
+                stale.get("authenticated_ras_accepts") != 0 or
+                stale.get("automatic_repair_pairings") != 0 or
+                stale.get("negative_raw_reports") != 0 or
+                stale.get("stop_confirmed") is not True):
+            raise ValueError("W05 security negative evidence incomplete")
+        if (flash_after.get("status") != "PASS" or
+                flash_after.get("independent_passes", 0) < 2 or
+                flash_after.get("root_cause_claim") != "NOT_CLAIMED"):
+            raise ValueError("W05 flash-after evidence incomplete")
+        example_by_id = {entry["id"]: entry for entry in doc["example_roles"]}
+        for identifier in ("cs_initiator", "cs_reflector"):
+            example = example_by_id.get(identifier)
+            if (example is None or example["build_status"] != "PASS" or
+                    example["runtime_status"] != "PASS"):
+                raise ValueError("W05 public RAS example incomplete")
     for family in doc["test_families"]:
         for entry in family["cases"]:
             if entry["status"] == "PASS" and (not entry["source_revision"] or not entry["evidence"]):

@@ -1,8 +1,12 @@
 # Ranging Service reflector
 
-이 예제는 개발 소스 `0.4.1-dev`의 Channel Sounding 범위이며 전체 검증은 아직 완료되지 않았다. 현재
+이 예제는 개발 소스 `0.4.1-dev`의 M31-W05 Channel Sounding 검증을 완료했다. 현재
 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다.
-아래 준비 상태는 전체 기능 완료나 거리 정확도 보증이 아니다.
+아래 준비 상태는 거리 정확도·cross-vendor 상호운용 보증이 아니다.
+
+고정 NCS v3.4.0 제품 SDC에서 secure raw 100건, stop/restart·disconnect/reconnect 각 20/20,
+256-step 유효 raw 1,000건과 peer-loss 복구를 확인했다. reflector bond만 삭제한 negative에서는
+새 pairing·L2·ready·active·raw 없이 양쪽 STOP으로 정리됐다.
 
 이 스케치는 `NU54-CS-RSP` 이름과 Ranging Service UUID `0x185B`로 연결 가능한
 광고를 시작합니다. 중앙 장치가 연결되면 공개 `RasReflector` API가 기본 안테나의

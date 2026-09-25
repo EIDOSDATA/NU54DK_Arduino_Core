@@ -105,6 +105,39 @@ class M31ReadinessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "W04 public TX example incomplete"):
             MODULE.validate(doc)
 
+    def test_w05_completion_requires_stale_key_negative(self) -> None:
+        """! @brief W05 완료 뒤 one-sided stale-key 수용 0 근거를 제거할 수 없습니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        package = next(item for item in doc["work_packages"] if item["id"] == "M31-W05")
+        audit_path = ROOT / package["exact_evidence"]
+        original = json.loads(audit_path.read_text(encoding="utf-8"))
+        changed = copy.deepcopy(original)
+        changed["negative"]["one_sided_stale_key"]["authenticated_ras_accepts"] = 1
+        package["exact_evidence"] = "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/test-invalid-audit.json"
+        invalid = ROOT / package["exact_evidence"]
+        try:
+            invalid.write_text(
+                json.dumps(changed, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                ValueError, "W05 security negative evidence incomplete"
+            ):
+                MODULE.validate(doc)
+        finally:
+            invalid.unlink(missing_ok=True)
+
+    def test_w05_completion_requires_public_ras_pair(self) -> None:
+        """! @brief W05 완료에는 두 공개 RAS 역할의 build/runtime PASS가 모두 필요합니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        reflector = next(entry for entry in doc["example_roles"]
+                         if entry["id"] == "cs_reflector")
+        reflector["runtime_status"] = "FAIL"
+        with self.assertRaisesRegex(ValueError, "W05 public RAS example incomplete"):
+            MODULE.validate(doc)
+
 
 if __name__ == "__main__":
     unittest.main()

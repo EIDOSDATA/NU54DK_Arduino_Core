@@ -1,8 +1,12 @@
 # Ranging Service initiator
 
-이 예제는 개발 소스 `0.4.1-dev`의 Channel Sounding 범위이며 전체 검증은 아직 완료되지 않았다. 현재
+이 예제는 개발 소스 `0.4.1-dev`의 M31-W05 Channel Sounding 검증을 완료했다. 현재
 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다.
-아래 출력은 구현된 비보정 RTT 경로의 의미이며 전체 기능 완료나 거리 정확도 보증이 아니다.
+아래 출력은 구현된 비보정 RTT 경로의 의미이며 거리 정확도·cross-vendor 상호운용 보증이 아니다.
+
+고정 NCS v3.4.0 제품 SDC에서 secure raw 100건, stop/restart·disconnect/reconnect 각 20/20,
+256-step 유효 raw 1,000건과 peer-loss 복구를 확인했다. 비암호화·wrong peer·one-sided stale-key는
+secure RAS를 열지 않았고, stale-key 오류 때 ACL은 명시적 STOP까지 유지될 수 있다.
 
 이 스케치는 Ranging Service UUID를 광고하는 reflector를 검색해 연결합니다. 공개
 `RasInitiator` API가 L2 보안, Ranging Service 탐색, CS capability·config·보안

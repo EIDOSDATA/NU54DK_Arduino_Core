@@ -9,13 +9,13 @@ P2의 오류·최악 부하, 최종 stack/heap 크기, 동등 Nordic native FLAS
 
 ## 1. 바로 이어서 할 작업
 
-P2와 W04를 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다. 순서는 **W05 → W06 → W07 → W08**이다.
+P2와 W04·W05를 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다. 순서는 **W06 → W07 → W08**이다.
 
 | 순서 | 작업 | 완료 결과 |
 | --- | --- | --- |
-| 1 | W05 Channel Sounding 마감 | 기존 secure RAS·256-step·P2 peer-loss 근거와 별도로 wrong-key·flash 직후 경계를 기능 계약대로 닫음 |
-| 2 | W06 자원·수명주기·영향 회귀 | 독립 role image manifest, stop/disconnect 반환, M19~M30 변경 영향 회귀. 네 기능 전체 동시 실행은 요구하지 않음 |
-| 3 | W07·W08 | 적용 역할의 HIL·설치 예제, 원장/지원표/문서·Windows package/clean install/RC 준비. 공개는 별도 승인 |
+| 1 | W06 자원·수명주기·영향 회귀 | 독립 role image manifest, stop/disconnect 반환, M19~M30 변경 영향 회귀. 네 기능 전체 동시 실행은 요구하지 않음 |
+| 2 | W07 | 적용 역할의 HIL·설치 예제 실행과 역할 재배치 |
+| 3 | W08 | 원장/지원표/문서·Windows package/clean install/RC 준비. 공개는 별도 승인 |
 
 ### 다시 추가하지 않을 조건
 
@@ -39,7 +39,7 @@ P2와 W04를 다시 열지 않고 M31의 미완료 작업 묶음을 이어간다
 | --- | --- | --- |
 | 공개 설치본 / 개발 소스 | v0.4.1 단독 지원 / 0.4.1-dev | [지원 안내](<05_릴리스/v0.4.1/README.md>) |
 | M28·M29·M30 | 각각 8/8 완료. M30 실제 전원 차단 12/12 | [v0.5.0 계획](TODO_v0.5.0.md) |
-| M31 | **W01~W04 완료 4/8**, W03 Audio 11/11·W04 DF 완료. W05 미완료, W06~W08 미착수 | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W03](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) · [W04](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
+| M31 | **W01~W05 완료 5/8**, W03 Audio 11/11·W04 DF·W05 CS 완료. W06~W08 미착수 | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W04](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) · [W05](<04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
 | 메모리 P0 / P1 / P2 | **모두 완료**. adaptive는 실험적 선택지, standard/full 기본값과 기존 최종 크기 유지 | [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | P2 오류·최악 부하 | CoC peer credit 1 직접 고갈·4 SDU 복구, Audio 양방향 10,000 frame·wrong Code `-61` 후 100 frame 복구, CS 256-step 중 peer reset 뒤 raw 20개 복구 | [P2 원본](<04_검증 기록/evidence/m31-p2-three-axes-20260925/>) |
 | P2 최종 크기 / native | MPSL 최소 관찰 여유 264 B 등으로 기존 크기 유지. CoC와 암호화 Audio 두 동등 쌍의 ELF/map 비교 PASS | [메모리 판정](<04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json>) · [native 비교](<04_검증 기록/evidence/m31-p2-three-axes-20260925/native-memory-comparison.json>) |
@@ -52,9 +52,8 @@ P2 마감의 새 build·HIL·메모리/native 비교와 로컬 회귀는
 
 ## 3. P2 이후 순서 — P2 분모와 별개
 
-1. **M31-W05**의 잔여 기능을 마감한다. 완료한 W04의 제품 SDC IQ RX·AoD
-   `UNSUPPORTED` 경계를 수신 구현 의무로 바꾸지 않는다. W05 wrong-key/one-sided stale-key
-   negative·과거 flash 직후 중단 경계는 [M31 TODO](TODO_M31.md)의 기능 계약에서 관리한다.
+1. 완료한 **M31-W05**의 secure RAS·one-sided stale-key·flash 직후 증거와 실패 원본을
+   다시 열지 않는다. W04 제품 SDC IQ RX·AoD `UNSUPPORTED` 경계도 수신 구현 의무로 바꾸지 않는다.
 2. **W06**은 독립 role image별 자원·수명주기와 M19~M30 영향 회귀다.
    ISO·Audio·DF·CS 네 기능을 단일 MCU에서 동시에 실행하는 요구가 아니다.
 3. **W07**은 적용 역할의 보드 HIL과 Windows 설치 예제 실행, **W08**은 원장·지원표·문서 마감과

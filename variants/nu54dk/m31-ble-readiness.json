@@ -40,8 +40,8 @@
     {
       "id": "M31-W05",
       "title": "channel_sounding",
-      "status": "in_progress",
-      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json"
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json"
     },
     {
       "id": "M31-W06",
@@ -482,22 +482,22 @@
       "owner_work_id": "M31-W05",
       "controller_variant": "default_sdc",
       "source_status": "verified",
-      "target_applicability": "arduino_ras_100_procedures_20_control_20_reconnect_same_acl_insecure_rejection_wrong_key_pending",
+      "target_applicability": "arduino_ras_supported_path_and_security_negative_complete",
       "native_build": "PASS",
       "arduino_build": "PASS",
       "runtime_query": "PASS",
       "functional_hil": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json",
       "nu54dk_build": "PASS",
-      "source_revision": "a4ff62fff9b78493dbbf941a3a189512ab4d2119",
+      "source_revision": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
       "stage_evidence": {
         "native_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
-        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-native-96de07ba/native-ras-manifest.json",
-        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json",
-        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json",
-        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w05-ras-a4ff62ff/pair-postflash-repeat-100-20-20.json"
+        "nu54dk_build": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/build-manifest.json",
+        "arduino_build": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/build-manifest.json",
+        "runtime_query": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json",
+        "functional_hil": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json"
       },
-      "support_reason": "Exact flash 직후 Arduino 양쪽 역할의 raw RAS 100건·20 stop/restart·20 disconnect/reconnect와 최종 STOP을 독립적으로 두 번 확인했다. 같은 ACL 비암호화 Ranging Features read는 ATT 5로 20/20 거부되고 재연결·재탐색 0회였다. 기존 3보드 peer 분리와 위장 RAS UUID/GATT 서비스 부재 거부 20회도 유지한다. wrong-key negative와 flash 간헐 중단 단일 원인은 미완료이며 RTT 거리는 비보정이라 정확도를 주장하지 않는다. 이전 flash 증거: 00_Docs/04_검증 기록/evidence/m31-w05-ras-013a1274/pair-postflash-100-20-20.json; 비암호화 증거: 00_Docs/04_검증 기록/evidence/m31-w04-w05-98f22d5a/cs-insecure-same-acl-02.json"
+      "support_reason": "raw RAS 100건·20 stop/restart·20 disconnect/reconnect, 256-step 유효 raw 1,000건, peer-loss 복구 raw 20건을 유지한다. 같은 ACL 비암호화 read는 ATT 5로 20/20, wrong peer·service 부재는 20회 거부했다. one-sided stale bond 1:0에서 보안 오류 뒤 L2·ready·active·raw 수용 0과 양측 STOP을 확인했다. flash 직후 전체 경로는 독립 exact image 두 번 PASS했다. 간헐 loss/gap은 observe_only이고 RTT 거리는 비보정이다."
     }
   ],
   "audio_groups": [
@@ -982,20 +982,20 @@
     {
       "id": "cs_initiator",
       "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "actual_sketch": "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/RasInitiator.ino",
+      "source_revision": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json"
     },
     {
       "id": "cs_reflector",
       "planned_sketch": null,
-      "actual_sketch": null,
-      "source_revision": null,
-      "build_status": "NOT_RUN",
-      "runtime_status": "NOT_RUN",
-      "evidence": null
+      "actual_sketch": "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/RasReflector.ino",
+      "source_revision": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json"
     },
     {
       "id": "cs_result",
@@ -1936,7 +1936,7 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 4,
+    "work_completed": 5,
     "test_family_total": 10,
     "test_family_passed": 5,
     "audio_group_total": 11,
