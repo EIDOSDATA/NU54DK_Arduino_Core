@@ -5,17 +5,28 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.7 |
+| 문서 개정 | 1.14 |
 | 문서 상태 | 현재 source 개발 기준 |
-| 적용 제품 버전 | `v0.4.1` stable 이후 `main` |
+| 적용 제품 버전 | `v0.4.1` stable 이후 개발 소스·공개 `v0.5.0-rc.1` |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-12 |
+| 최종 갱신일 | 2026-09-27 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
 시험을 실행할 수 있는 환경을 준비하는 절차다. Arduino IDE에서 정식 Core를 설치해 Sketch만
 작성하려는 사용자는 저장소 개발 도구를 모두 설치할 필요가 없으며, 최상위
 [빠른 시작](../../README.md#빠른-시작)을 따르면 된다.
+
+이 절차는 현재 `v0.4.1`과 후속 개발 소스의 Windows 환경 기준이다. M30은 W01~W08 8/8·test ID
+10/10·실제 전원 차단 12/12를 완료했고 HOST-W01~HOST-W03도 완료했다. `v0.5.0`은 M31 완료 뒤
+Windows 10/11 x64 우선 릴리스다. 현재 공개 RC는 완료했고 stable 승격은 별도다.
+Ubuntu AMD64·Apple Silicon macOS는 버전 미정인 후속 제품선이며
+[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 HOST-W04~HOST-W08 구현·
+자동 검사·사용자 절차가 남아 있다. **현재 HOST-W04 이후는 사용자 지시로 보류 중**이다.
+Ubuntu/macOS의 실제 설치·USB upload·serial·debug·수명주기는 사용자가 해당 OS를 추가할 후속
+릴리스의 최종 단계에서 검증한다. 정식 지원의 최종 실물 gate는 유지한다.
+M31-W08의 Windows package·설치 예제·수명주기는 사용자 승인에 따라 GitHub Actions 병렬
+workflow로 검증했으며 [CI/CD 계약](08_M12_CI_CD와_재현_빌드.md)을 따른다.
 
 ---
 
@@ -391,13 +402,15 @@ Get-Command cmake.exe, ninja.exe | Select-Object Source
 성공 표식은 `M23_INVENTORY_PASS=instances:75`다. Manifest를 의도적으로 바꾼 경우에만 먼저
 `--write`로 C++ table과 Markdown matrix를 다시 생성하고, 생성 diff를 함께 검토한다.
 
-Source 전체 Arduino compile은 고정 Nordic 설치가 끝난 뒤 다음처럼 격리된 임시 Arduino
+대표 Arduino compile은 고정 Nordic 설치가 끝난 뒤 다음처럼 격리된 임시 Arduino
 hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸리며 실제 build를 수행한다.
+아래 명령은 모든 개발 예제·모든 역할의 전수 compile이 아니다. 특히 W03 LE Audio의 전체
+설치본·실기 결과는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)을 따른다.
 
 ```powershell
 & $Python .\tests\arduino-cli\run_smoke.py `
   --cli $ArduinoCli `
-  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 ac02b ac03 examples
+  --tests blink library config error parallel incremental m6 m7 m8 m9 m11 m15 m16 m19m20 m21 m28 m29 m30 m31 ac02b ac03 examples
 ```
 
 릴리스에서 도입한 기능군별로 원인을 빠르게 나누려면 `--tests` 대신 `--group`을 쓴다.
@@ -406,9 +419,10 @@ hardware 경로에서 실행할 수 있다. 이 시험은 시간이 오래 걸�
 & $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.1.0
 & $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.2.0
 & $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.3.0
+& $Python .\tests\arduino-cli\run_smoke.py --cli $ArduinoCli --group v0.5.0
 ```
 
-세 명령을 자동 병렬 실행하고 그룹별 log와 실패 요약 JSON을 남기려면 다음처럼 실행한다.
+그룹을 자동 병렬 실행하고 log와 실패 요약 JSON을 남기려면 다음처럼 실행한다.
 Evidence 경로는 실행 전에 없어야 한다.
 
 ```powershell
@@ -420,20 +434,27 @@ Evidence 경로는 실행 전에 없어야 한다.
 ```
 
 자동 matrix에서는 긴 `v0.3.0`을 `v0.3.0-ble`과 `v0.3.0-compat` 두 하위 작업으로 더 나눠
-총 네 작업을 배치한다. 수동 `--group v0.3.0` 명령의 검사 합집합과 정확히 같다.
+기존 네 작업과 `v0.5.0`을 합쳐 총 다섯 작업을 배치한다. 2026-09-15의 `8c311d9a…` snapshot에서
+`v0.5.0`은 M29 예제 15개, M30 profile 예제 4개와 기존 HeartRate의 secure DFU 조건을 검사한다.
+M28 예제 11개는 `--tests m28`로 따로 실행한다. `m30secure` 단독 또는 이를 포함하는 v0.5.0 group은
+`NUCODE_DFU_SIGNING_KEY`로 저장소 밖 signing key 파일을 지정해야 한다. 위 개별 `--tests` 명령에는
+키를 요구하는 `m30secure`를 포함하지 않았으므로 secure profile 검증 완료로 해석하지 않는다.
+현재 `v0.5.0` group에는 `m31`도 추가되어 ISO 11예제와 LC3 loopback·CTE beacon을 검사한다.
+위 2026-09-15 snapshot의 build 조건 수를 현재 runner의 전체 수로 사용하지 않는다.
 
-Exact NCS Zephyr 그룹도 같은 방식으로 실행할 수 있다. Windows에서는 모든 Twister outdir가
-8자 이하가 되도록 `--out-root C:\t`를 사용하고, Nordic Toolchain Python으로 runner를 시작한다.
+Windows의 Zephyr build는 Nordic Toolchain Python으로 직접 runner를 시작한다. 현재 Twister
+outdir는 전체 절대경로가 4자 이하여야 하므로 `C:\z`처럼 사용하지 않는 짧은 경로를 선택한다.
 
 ```powershell
-& $NcsPython .\tools\ci\run_build_matrix.py `
-  --runner zephyr `
+& $NcsPython .\tools\ci\run_zephyr_build.py `
   --workspace $NcsRoot `
-  --out-root C:\t `
-  --evidence-dir .\artifacts\zephyr-matrix `
-  --max-workers 2 `
+  --outdir C:\z `
+  --group v0.5.0 `
   --jobs 2
 ```
+
+다른 그룹은 `--group`과 빈 outdir를 함께 바꾼다. Matrix helper의 `z1`~`z5` 하위 경로는 현재
+Windows 제한보다 길어 Zephyr 병렬 실행에 사용하지 않는다. Arduino matrix에는 이 제한이 없다.
 
 이는 현재 `main`의 기능을 도입 릴리스별로 묶은 회귀 시험이다. 과거 `v0.1.0`·`v0.2.0` tag
 checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자세한 범위와 CI matrix는
@@ -470,6 +491,7 @@ gate와 해당 Zephyr target build를 다시 실행하고, 동작 설명 일반 
 
 - NU54DK 한 대: Blink, GPIO, 단일 보드 peripheral, upload/debug 시험
 - NU54DK 두 대: BLE Central/Peripheral pair와 일부 peripheral 동시 시험
+- NU54DK 세 대: M28 mixed-role·PAST·동시 link 제어·soak, M29 MULTI/REG 통합 시험
 - 보드별 USB data cable과 독립 CMSIS-DAP V2/UART 연결
 - HIL 문서가 지정한 jumper wire와 pin fixture
 - 외장 J-Link 경로를 시험할 때만 SEGGER J-Link Software와 외장 probe
@@ -506,7 +528,7 @@ exact Core/board revision, artifact hash, probe와 COM 선택, wiring 조건과 
 | `clang-format 22.1.8 필요` | 위 명령으로 정확한 사용자 범위 버전을 설치하고 `--clang-format`에 실제 경로 지정 |
 
 Prerequisite 설치 log는 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\logs`에 남는다. 정식
-Core 설치·빌드 문제는 [v0.4.0 문제 해결](../05_릴리스/v0.4.0/TROUBLESHOOTING.md)도 함께
+Core 설치·빌드 문제는 [v0.4.1 문제 해결](../05_릴리스/v0.4.1/TROUBLESHOOTING.md)도 함께
 확인한다.
 
 ## 12. 완료 점검표
@@ -529,5 +551,5 @@ Core 설치·빌드 문제는 [v0.4.0 문제 해결](../05_릴리스/v0.4.0/TROU
 - [Boards Manager 설치와 package](./06_Boards_Manager_설치와_패키징.md)
 - [CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)
 - [NU54DK HIL 시험](../../tests/hil/nu54dk/README.md)
-- [v0.4.0 설치와 시험](../05_릴리스/v0.4.0/TESTING.md)
-- [v0.4.0 문제 해결](../05_릴리스/v0.4.0/TROUBLESHOOTING.md)
+- [v0.4.1 설치와 시험](../05_릴리스/v0.4.1/TESTING.md)
+- [v0.4.1 문제 해결](../05_릴리스/v0.4.1/TROUBLESHOOTING.md)

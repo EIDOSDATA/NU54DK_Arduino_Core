@@ -1,0 +1,15 @@
+tests:
+  nucode.m28.ble_periodic_contract:
+    tags:
+      - nucode
+      - arduino
+      - m28
+      - bluetooth
+      - periodic
+      - past
+    build_only: true
+    sysbuild: false
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

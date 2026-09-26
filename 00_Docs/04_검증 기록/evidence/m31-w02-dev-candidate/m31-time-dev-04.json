@@ -1,0 +1,73 @@
+{
+  "test_id": "M31-ISO-01:time_sync",
+  "scope": "two_board_iso_timestamp_twenty_cycles",
+  "status": "FAIL",
+  "source_clean": false,
+  "identity": {
+    "core": "26270df3bcddd2cd39c866c346047bb170cd7df4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "source": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "F:/",
+      "vcom": "COM7",
+      "image_sha256": "4c74874ae349071672fe8ff618e38e3f84d7f2e1cc352ccf29d6c409a25baf79",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "172032"
+    },
+    "receiver": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "a6fa3f0a4c218513581e4e9101bc750caecc85d52a5a4406ec3dc276415ccf10",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "139264"
+    }
+  },
+  "nonces": [
+    "34b35711a6221735549e26ff1ff3541d",
+    "7dd17d2c1129d5f22c1bc73e1a6157a9",
+    "ca3cb8828f9d60cbafb98230ac33fd93",
+    "1a47f5dbe42342c40da410e1b576fe36",
+    "aadfb4636e430fc169f3d14b6362a469",
+    "33f8cfaa8fd52193ba83d67ce98cdfd9",
+    "40342e06e4e42062e4fa1b340c99d689",
+    "f30e493b97da17a9c980b9fa8eaa535e",
+    "652a16bf47d3be81659a36b029b69052",
+    "96a717d1f64133054e80c4f3cceeb5a1",
+    "8fa93d893a449486f9200e0073754880",
+    "8df8f1dd022082a592773d2dd15e58e4",
+    "08eecc7abbc2d74cbd476f40131071f6",
+    "8358066306681533b33818dd60ed692b",
+    "f3b1feb03365f5cee8bb68ace6e4eff7",
+    "d0ccbc813bef1b5a0141674056b9117c",
+    "94c4ae6a3bf8d4889d5035942ae0a9fd",
+    "46893161b70cbcaffcb22d762ccc6ea4",
+    "0ef54fdd5f85721849cbb3d9995429cd",
+    "1e5dba8340efe59cf26ab3509bba46c2"
+  ],
+  "cycles": 20,
+  "reason": "M31TimeFailure: 10ms \u00d7 99 timestamp \uad00\uacc4 \uc624\ub958",
+  "measurement": null,
+  "transcript_sha256": "ab91c64e5e0e5fe68687a786607a53158c13405090f1acf86db703c50d1ef981",
+  "observed_utc": "2026-09-15T19:41:01.663241+00:00"
+}

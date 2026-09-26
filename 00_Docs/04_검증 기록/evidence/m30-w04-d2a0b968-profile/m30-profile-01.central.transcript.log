@@ -1,0 +1,4 @@
+M30PROFILE|1|BOOT|role=central|catalog=7|core=d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283
+M30PROFILE|1|BEGIN|role=central|nonce=f35b24ab4493d51e07d23e6947fde890|core=d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283
+M30PROFILE|1|READY|role=central|catalog=7|dis_reads=100|nonce=f35b24ab4493d51e07d23e6947fde890|core=d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283
+M30PROFILE|1|RESULT|role=central|catalog=7|operations=100|bas=100|dis=100|keyboard=100|mouse=100|consumer=100|hrs=100|ess_temperature=100|ess_humidity=100|payload_errors=0|nonce=f35b24ab4493d51e07d23e6947fde890|core=d2a0b96888bd2f7c75d6ed02d46c0a3751e2d283

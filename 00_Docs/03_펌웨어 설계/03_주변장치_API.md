@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.5 |
-| 문서 상태 | `v0.4.0` 정식 singleton·Fabric 계약 |
-| 최종 갱신일 | 2026-09-12 |
+| 문서 개정 | 4.8 |
+| 문서 상태 | `v0.4.1` 정식 singleton·Fabric 계약 |
+| 최종 갱신일 | 2026-09-15 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -33,7 +33,7 @@ Production backend는 Devicetree chosen, alias와 profile overlay를 소비한�
 
 ## 3. 현재 자원과 ownership
 
-| 공개 객체/역할 | Devicetree source | `v0.4.0` stable ownership |
+| 공개 객체/역할 | Devicetree source | `v0.4.1` stable ownership |
 | --- | --- | --- |
 | `Serial` | `DT_CHOSEN(zephyr_console)` | 기존 console UART의 non-owning wrapper |
 | `Serial1` | UART30 runtime node | `begin/end`가 P0 RX/TX pad·UART30 block과 runtime PM을 소유 |
@@ -207,8 +207,11 @@ controller 의미를 합성하지 않고 unsupported, `SPI1`과 automatic chip-s
 
 ## 8. ADC와 `analogRead()`
 
-- `AIN0..7`과 `A0..A7` 이름은 SAADC channel 0..7에 일대일 대응한다.
-- `analogReadResolution()`은 8/10/12/14 bit만 허용하며 결과 범위를 software scaling한다.
+- `PIN_AIN0..7`은 SAADC channel 0..7의 물리 핀 별칭이다. Arduino `A0..A7`은 기존 호환 ID를
+  유지하므로 같은 번호의 AIN과 일치하지 않는다. `A0=AIN5`, `A1..A5=AIN0..AIN4`,
+  `A6=AIN6`, `A7=AIN7`이며 정확한 대응은 아래 표를 따른다.
+- `analogReadResolution()`은 8/10/12/14 bit만 허용하며 실제 ADC sequence의 resolution에 적용한다.
+  반환값은 해당 해상도의 범위로 제한한다. 전압 환산에는 DTS 기본값이 아닌 이 runtime 해상도를 사용한다.
 - 오류는 `-1`과 Analog subsystem 진단으로 보고한다.
 - `analogReference()`는 `AR_DEFAULT`와 같은 의미의 `AR_INTERNAL`만 허용한다.
 - Reference/gain/channel은 Devicetree 계약이며 runtime에서 바꾸지 않는다.
@@ -218,8 +221,8 @@ controller 의미를 합성하지 않고 unsupported, `SPI1`과 automatic chip-s
 | AIN0/A1~AIN3/A4 | P1.4~P1.7 | UART20 console/system 소유, 읽기 거부 |
 | AIN4/A5 | P1.11 | PMIC/system 입력 소유, 읽기 거부 |
 | AIN5/A0 | P1.12 | 공개 A0; GPIO input/output/open-drain·interrupt와 ADC/PWM 사이 transferable |
-| AIN6/A6 | P1.13 | 읽기 지원; SW0와 pull 회로의 부하를 사용자가 고려 |
-| AIN7/A7 | P1.14 | 읽기 지원; LED3 회로의 부하를 사용자가 고려 |
+| AIN6/A6 | P1.13 | 읽기 지원; 논리 `PIN_BUTTON0`(보드 SW1)과 pull 회로의 부하를 사용자가 고려 |
+| AIN7/A7 | P1.14 | 읽기 지원; 논리 `PIN_LED3`(보드 LED4) 회로의 부하를 사용자가 고려 |
 
 Nominal reference/gain을 pin의 절대최대 정격이나 측정 정확도로 해석하지 않는다. 전기적 입력
 범위는 nRF54L15와 NU54DK hardware 사양을 따른다.

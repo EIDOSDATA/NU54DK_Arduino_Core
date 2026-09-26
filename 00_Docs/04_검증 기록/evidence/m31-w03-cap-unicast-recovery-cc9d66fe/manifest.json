@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "test_id": "M31-AUDIO-01",
+  "work_item": "W03-05",
+  "scenario": "cap-unicast-post-remote-failure-recovery",
+  "verdict": "PASS",
+  "commit": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
+  "recorded_at_utc": "2026-09-19T16:56:15.989637+00:00",
+  "elapsed_seconds": 21.913,
+  "minimum_success": 2,
+  "minimum_decoded_frames": 100,
+  "artifacts": {
+    "initiator": {
+      "sha256": "2d5fd1ddec3b0222fa9686a6ef1597dd8c7472f0a49927e2ecb0bcbe9d760907",
+      "size": 1441294
+    },
+    "acceptor": {
+      "sha256": "79af4a0075fad61dbac0923a98f7ce527ef69789a002c2a62cfe939d99296bb0",
+      "size": 1338863
+    }
+  },
+  "devices": {
+    "initiator": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port_role": "target-uart",
+      "target": "nRF54L15",
+      "target_voltage": "3299 mV (present)",
+      "flash_result": "SUCCESS",
+      "flash_error": "None",
+      "flash_bytes": 1441294
+    },
+    "acceptor": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "port_role": "target-uart",
+      "target": "nRF54L15",
+      "target_voltage": "3295 mV (present)",
+      "flash_result": "SUCCESS",
+      "flash_error": "None",
+      "flash_bytes": 1338880
+    }
+  },
+  "ready": {
+    "initiator": true,
+    "acceptor": true
+  },
+  "results": {
+    "stream_sessions": 2,
+    "cancel_sessions": 2,
+    "duplicate_stop_rejections": 2,
+    "disconnects": 4,
+    "reconnections": 4,
+    "procedure_failures": 0,
+    "recoveries_after_failure": 0,
+    "max_completed_sessions": 3,
+    "max_decoded_frames": 200,
+    "max_dropped_frames": 0
+  },
+  "recovery_contract": {
+    "preceded_by": "../m31-w03-cap-unicast-remote-failure-cc9d66fe/manifest.json",
+    "replacement": "reject-acceptor-to-exact-public-acceptor",
+    "stream_sessions_after_replacement": 2,
+    "cancel_sessions_after_replacement": 2,
+    "procedure_failures_after_replacement": 0
+  },
+  "contracts": {
+    "cap_group_members": 1,
+    "lc3_frame_octets": 40,
+    "lc3_interval_us": 10000,
+    "physical_audio_io": "not-used-synthetic-pcm",
+    "multi_member_partial_failure": "not-applicable-to-fixed-single-member-api",
+    "handover": "disconnect-release-and-new-peer-reconnect"
+  },
+  "transcript": "cap-unicast-transcript.log"
+}

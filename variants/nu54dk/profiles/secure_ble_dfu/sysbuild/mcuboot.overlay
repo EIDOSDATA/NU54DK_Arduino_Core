@@ -1,0 +1,12 @@
+/*
+ * @file mcuboot.overlay
+ * @brief MCUboot image를 NU54DK 62 KiB boot partition에 연결합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/ {
+	chosen {
+		zephyr,code-partition = &boot_partition;
+	};
+};

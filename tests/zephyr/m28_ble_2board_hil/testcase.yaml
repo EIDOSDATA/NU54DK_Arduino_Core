@@ -1,0 +1,29 @@
+tests:
+  nucode.m28.b2p:
+    tags:
+      - nucode
+      - arduino
+      - m28
+      - bluetooth
+      - hil
+    build_only: true
+    extra_args:
+      - M28_B2_ROLE=peripheral
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+  nucode.m28.b2c:
+    tags:
+      - nucode
+      - arduino
+      - m28
+      - bluetooth
+      - hil
+    build_only: true
+    extra_args:
+      - M28_B2_ROLE=central
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

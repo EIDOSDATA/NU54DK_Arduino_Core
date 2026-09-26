@@ -1,0 +1,13 @@
+tests:
+  nucode.m30.bond.p:
+    tags: [nucode, arduino, m30, bluetooth, security, bond, privacy, hil]
+    build_only: true
+    extra_args: [M30_BOND_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.bond.c:
+    tags: [nucode, arduino, m30, bluetooth, security, bond, privacy, hil]
+    build_only: true
+    extra_args: [M30_BOND_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]

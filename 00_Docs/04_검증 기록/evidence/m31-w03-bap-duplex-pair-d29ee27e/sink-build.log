@@ -1,0 +1,15 @@
+Loading Zephyr default modules (Zephyr base).
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+Loading Zephyr default modules (Zephyr base).
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+Loading Zephyr default modules (Zephyr base (cached)).
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+Low memory available, stability problems may occur.
+Sketch uses 475168 bytes (31%) of program storage space. Maximum is 1490944 bytes.
+Global variables use 228620 bytes (87%) of dynamic memory, leaving 33524 bytes for local variables. Maximum is 262144 bytes.

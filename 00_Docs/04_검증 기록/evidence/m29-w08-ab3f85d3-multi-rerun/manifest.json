@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "archive_format": "base64-rfc4648",
+  "purpose": "M29-W08 refactored target exact three-board rerun evidence",
+  "core_revision": "ab3f85d3cb505f8f82865becfbd8bd0fe8511f27",
+  "files": [
+    {
+      "logical_name": "m29-w08-ab3f85d3.json",
+      "archive_file": "raw/m29-w08-ab3f85d3.json.b64",
+      "raw_size": 6511,
+      "raw_sha256": "9cb6eca60b7d22f81b5bce101feb0cf7146ad973c760a99e13c7c6e02ebbcfd2"
+    },
+    {
+      "logical_name": "m29-w08-ab3f85d3.peripheral.transcript.log",
+      "archive_file": "raw/m29-w08-ab3f85d3.peripheral.transcript.log.b64",
+      "raw_size": 2348,
+      "raw_sha256": "40399d5979bb6fadbda01bd8a911293f251c614c0f4486ce48c75a013dfb2a1b"
+    },
+    {
+      "logical_name": "m29-w08-ab3f85d3.mixed.transcript.log",
+      "archive_file": "raw/m29-w08-ab3f85d3.mixed.transcript.log.b64",
+      "raw_size": 2532,
+      "raw_sha256": "2c262c494e52b67dfa49e01aa7655ca6877ab9980dba3df8a3d359a79ccc0cc3"
+    },
+    {
+      "logical_name": "m29-w08-ab3f85d3.central.transcript.log",
+      "archive_file": "raw/m29-w08-ab3f85d3.central.transcript.log.b64",
+      "raw_size": 2276,
+      "raw_sha256": "546239f123d17bfdc75f835cda64749922f9ba6d9f19b5afa14ffb48d7ce1d64"
+    }
+  ]
+}

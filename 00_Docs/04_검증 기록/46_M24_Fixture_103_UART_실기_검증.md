@@ -1,7 +1,7 @@
 # M24 Fixture 103 UART 실기 검증
 
 > 리팩토링 이전 source의 실기 기록이다. 같은 fixture의 후속 회귀는 [69번 기록](69_T11_Fixture_103_current_source_UART_회귀.md)에 있으며,
-> 아래 수치·실패·판정은 이 기록의 exact source에만 적용한다. 현재 결선·실행 순서는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+> 아래 수치·실패·판정은 이 기록의 exact source에만 적용한다. 현재 결선·실행 순서는 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 | 항목 | 내용 |
 | --- | --- |

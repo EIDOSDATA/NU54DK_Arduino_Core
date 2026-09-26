@@ -110,6 +110,7 @@ class M8FlashContractTests(unittest.TestCase):
                 "state": "built",
                 "fqbn": "nucode:zephyr:nu54dk",
                 "board": MODULE.DEFAULT_BOARD,
+                "sysbuild": False,
                 "build_path": self.build.as_posix(),
                 "platform_root": self.platform.as_posix(),
                 "cache_root": self.cache_root.as_posix(),
@@ -193,12 +194,73 @@ class M8FlashContractTests(unittest.TestCase):
         with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_BOARD_MISMATCH"):
             MODULE.validate_flash_manifest(self.args)
 
-    def test_rejects_sysbuild_manifest(self) -> None:
-        """! @brief 아직 지원하지 않는 merged sysbuild artifact를 명확히 거부합니다. """
+    def test_rejects_non_boolean_sysbuild_manifest(self) -> None:
+        """! @brief 자유 형식 sysbuild manifest 값을 거부합니다. """
 
-        self.manifest["sysbuild"] = True
+        self.manifest["sysbuild"] = "true"
         self.write_manifest()
-        with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_SYSBUILD_UNSUPPORTED"):
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_SYSBUILD"):
+            MODULE.validate_flash_manifest(self.args)
+
+    def configure_sysbuild_fixture(self) -> None:
+        """! @brief MCUboot과 signed application domain fixture를 구성합니다. """
+
+        runners = (self.zephyr_build / "zephyr" / "runners.yaml").read_bytes()
+        application = self.zephyr_build / "app" / "zephyr"
+        bootloader = self.zephyr_build / "mcuboot" / "zephyr"
+        application.mkdir(parents=True)
+        bootloader.mkdir(parents=True)
+        (application / "zephyr.signed.hex").write_bytes(self.hex_content)
+        (application / "zephyr.elf").write_bytes(self.elf_content)
+        (application / "runners.yaml").write_bytes(runners)
+        boot_content = b":020000040001F9\n:00000001FF\n"
+        (bootloader / "zephyr.hex").write_bytes(boot_content)
+        (bootloader / "runners.yaml").write_bytes(runners)
+        exported_boot = self.build / "Blink.ino.boot.hex"
+        exported_update = self.build / "Blink.ino.update.bin"
+        exported_boot.write_bytes(boot_content)
+        exported_update.write_bytes(b"signed-update")
+        (self.zephyr_build / "domains.yaml").write_text(
+            f"default: app\n"
+            f"build_dir: {self.zephyr_build.as_posix()}\n"
+            "domains:\n"
+            "  - name: app\n"
+            f"    build_dir: {(self.zephyr_build / 'app').as_posix()}\n"
+            "  - name: mcuboot\n"
+            f"    build_dir: {(self.zephyr_build / 'mcuboot').as_posix()}\n"
+            "flash_order:\n"
+            "  - mcuboot\n"
+            "  - app\n",
+            encoding="utf-8",
+        )
+        self.manifest["sysbuild"] = True
+        self.manifest["context"]["sysbuild"] = True
+        self.manifest["artifacts"]["boot.hex"] = self.artifact_record(exported_boot)
+        self.manifest["artifacts"]["update.bin"] = self.artifact_record(exported_update)
+        self.write_manifest()
+
+    def test_accepts_matching_sysbuild_artifacts_and_flash_order(self) -> None:
+        """! @brief MCUboot 다음 signed application을 기록한 sysbuild를 승인합니다. """
+
+        self.configure_sysbuild_fixture()
+        result = MODULE.validate_flash_manifest(self.args)
+        self.assertEqual(
+            result["runner_builds"],
+            [self.zephyr_build / "mcuboot", self.zephyr_build / "app"],
+        )
+
+    def test_rejects_reversed_sysbuild_flash_order(self) -> None:
+        """! @brief application을 bootloader보다 먼저 기록하는 sysbuild를 거부합니다. """
+
+        self.configure_sysbuild_fixture()
+        domains = self.zephyr_build / "domains.yaml"
+        domains.write_text(
+            domains.read_text(encoding="utf-8").replace(
+                "  - mcuboot\n  - app\n", "  - app\n  - mcuboot\n"
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_SYSBUILD_DOMAINS"):
             MODULE.validate_flash_manifest(self.args)
 
     def test_validates_both_runner_contracts(self) -> None:
@@ -283,6 +345,7 @@ class M8FlashContractTests(unittest.TestCase):
         self.assertIn("--no-rebuild", command)
         self.assertIn("--dt-flash=n", command)
         self.assertIn("--tool-opt=-Osmart_flash=false", command)
+        self.assertIn("--tool-opt=-Oauto_unlock=false", command)
         probe_index = command.index("--dev-id")
         self.assertEqual(command[probe_index : probe_index + 2], ["--dev-id", "ABC123"])
         self.assertNotIn("--erase", command)

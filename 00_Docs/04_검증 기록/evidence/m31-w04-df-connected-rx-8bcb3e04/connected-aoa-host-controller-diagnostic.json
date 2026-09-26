@@ -1,0 +1,50 @@
+{
+  "status": "CONTROLLER_ACCEPTED_HOST_REJECTED",
+  "core_revision": "8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb",
+  "receiver_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "responder_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "receiver_port": "COM7",
+  "responder_port": "COM5",
+  "receiver_image_sha256": "f0c106266c8abdffe6243819073da4d3c19bbc5766b25fab95d310cda963639a",
+  "responder_image_sha256": "256f75eb0d334f66d8da8f34fdb85520b943cf71e235857df5748f0a20713b8f",
+  "receiver_lines": [
+    "DF_CONN|ANT_INFO|count=1|max_pattern=12|max_cte=20",
+    "DF_CONN|SCANNING|code=0",
+    "DF_CONN|SCAN_STOP|code=0",
+    "DF_CONN|CONNECT_REQUEST|code=0",
+    "DF_CONN|CONNECTED|error=0",
+    "DF_CONN|AOA_RX_ENABLE|code=-22",
+    "DF_CONN|RAW_RX_PARAM|code=0",
+    "DF_CONN|RAW_REQUEST|code=0"
+  ],
+  "responder_lines": [
+    "CTE responses enabled on connected peer",
+    "CTE peer disconnected",
+    "CTE responses enabled on connected peer"
+  ],
+  "receiver_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_flash": [
+    "pyocd-sector-hw-reset",
+    "364544"
+  ],
+  "receiver_flash": [
+    "pyocd-sector-hw-reset",
+    "126976"
+  ],
+  "elapsed_s": 0.266
+}

@@ -1,0 +1,567 @@
+{
+  "completed_attempts": [
+    {
+      "attempt": 1,
+      "cycle": {
+        "absent_after_seconds": 9.453,
+        "absent_stable_seconds": 0.844,
+        "restored_after_seconds": 14.828
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "point": "slot1_transfer",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 2,
+      "cycle": {
+        "absent_after_seconds": 22.703,
+        "absent_stable_seconds": 0.781,
+        "restored_after_seconds": 28.313
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "point": "slot1_transfer",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 3,
+      "cycle": {
+        "absent_after_seconds": 21.25,
+        "absent_stable_seconds": 0.797,
+        "restored_after_seconds": 28.359
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "point": "slot1_transfer",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 1,
+      "cycle": {
+        "absent_after_seconds": 24.094,
+        "absent_stable_seconds": 0.843,
+        "restored_after_seconds": 30.656
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "point": "image_validation_write",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 2,
+      "cycle": {
+        "absent_after_seconds": 14.64,
+        "absent_stable_seconds": 0.844,
+        "restored_after_seconds": 20.468
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "point": "image_validation_write",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 3,
+      "cycle": {
+        "absent_after_seconds": 13.844,
+        "absent_stable_seconds": 0.765,
+        "restored_after_seconds": 21.016
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "point": "image_validation_write",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 1,
+      "cycle": {
+        "absent_after_seconds": 24.341,
+        "absent_stable_seconds": 0.851,
+        "restored_after_seconds": 30.531
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "link_recovery_timeout_seconds": 120.0,
+      "point": "mcuboot_test_swap",
+      "recovered_version": [
+        40,
+        0,
+        0,
+        0
+      ],
+      "runtime_audit": "m30-power-selected-07.json",
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 2,
+      "cycle": {
+        "absent_after_seconds": 22.131,
+        "absent_stable_seconds": 0.856,
+        "restored_after_seconds": 38.847
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "link_recovery_timeout_seconds": 120.0,
+      "point": "mcuboot_test_swap",
+      "recovered_version": [
+        40,
+        0,
+        0,
+        0
+      ],
+      "runtime_audit": "m30-power-selected-08.json",
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 3,
+      "cycle": {
+        "absent_after_seconds": 12.082,
+        "absent_stable_seconds": 0.792,
+        "restored_after_seconds": 26.546
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "link_recovery_timeout_seconds": 120.0,
+      "point": "mcuboot_test_swap",
+      "recovered_version": [
+        40,
+        0,
+        0,
+        0
+      ],
+      "runtime_audit": "m30-power-selected-09.json",
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 1,
+      "cycle": {
+        "absent_after_seconds": 17.12,
+        "absent_stable_seconds": 0.755,
+        "restored_after_seconds": 22.822
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "link_recovery_timeout_seconds": 120.0,
+      "point": "new_image_first_boot",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "runtime_audit": "m30-power-selected-10.json",
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 2,
+      "cycle": {
+        "absent_after_seconds": 21.363,
+        "absent_stable_seconds": 0.752,
+        "restored_after_seconds": 26.905
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "link_recovery_timeout_seconds": 120.0,
+      "point": "new_image_first_boot",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "runtime_audit": "m30-power-selected-11.json",
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    },
+    {
+      "attempt": 3,
+      "cycle": {
+        "absent_after_seconds": 18.886,
+        "absent_stable_seconds": 0.767,
+        "restored_after_seconds": 33.236
+      },
+      "dfu_retry": {
+        "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+        "requests": 1311
+      },
+      "flash_results": {
+        "central_bootloader": [
+          "daplink-msd",
+          "90624"
+        ],
+        "central_primary": [
+          "daplink-msd",
+          "706560"
+        ],
+        "peripheral_bootloader": [
+          "daplink-msd",
+          "94208"
+        ],
+        "peripheral_primary": [
+          "daplink-msd",
+          "737280"
+        ]
+      },
+      "link_recovery_timeout_seconds": 120.0,
+      "point": "new_image_first_boot",
+      "recovered_version": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "runtime_audit": "m30-power-selected-12.json",
+      "settings": {
+        "bond_count": 1,
+        "bonded": 1,
+        "rejected_bonds": 0,
+        "settings_valid": 1
+      },
+      "status": "passed"
+    }
+  ],
+  "core_revision": "ae5186f7790a748641fb04128c16156519ee1017",
+  "current_attempt": null,
+  "excluded_harness_attempts": 1,
+  "execution_order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10,
+    11,
+    12,
+    8,
+    9
+  ],
+  "manifest_sha256": "a7747ef70c3ae0eb4e094244ae23ecedc260b04f1144edc4fd1e89f2db3e0994",
+  "observed_physical_cycles_total": 13,
+  "physical_cuts": 12,
+  "schema_version": 2,
+  "status": "passed",
+  "test_id": "M30-POWER-01"
+}

@@ -1,5 +1,9 @@
 # M20 범용 GATT server/client 검증
 
+> **역사적 M20 기준선:** 아래 단일 operation·peer와 long write 거부는 당시 source의 계약이다.
+> M29 개발 결과는 별도 증거로 관리하며 원래 명령·판정·PASS 범위를 소급 변경하지 않는다.
+> 현재 작업은 [v0.5.0 TODO](../TODO_v0.5.0.md), 설치·지원은 [v0.4.1 안내](../05_릴리스/v0.4.1/README.md)를 따른다.
+
 ## 판정
 
 | 항목 | 결과 |

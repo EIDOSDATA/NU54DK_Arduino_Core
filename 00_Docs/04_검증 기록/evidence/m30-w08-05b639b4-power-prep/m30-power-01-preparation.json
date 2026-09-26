@@ -1,0 +1,193 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": {
+    "central_relay": {
+      "board_id_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "daplink_git_sha": "unknown",
+      "daplink_version": "unknown",
+      "port": "COM10",
+      "target_detect": "nRF54L15",
+      "volume": "G:"
+    },
+    "peripheral_dut": {
+      "board_id_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "daplink_git_sha": "unknown",
+      "daplink_version": "unknown",
+      "port": "COM13",
+      "target_detect": "nRF54L15",
+      "volume": "E:"
+    }
+  },
+  "bootloader": {
+    "name": "zephyr.hex",
+    "sha256": "a445ddc342fe454db7d5351307a720139f1302598c5c76216c2a4bc60b0ba507",
+    "size": 93871,
+    "swap_observation_hook": true,
+    "window_seconds": 15
+  },
+  "build_records": {
+    "central": {
+      "application_source_sha256": "84d98bc2984c78dae3591bc381f0f60c15c2a8fca94eeeb6b21ae524f2424695",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "core_revision": "05b639b4d402",
+      "core_source_sha256": "79963324199cff16890b8cd8a38813321b05e315108c18e63cb5abf6ca8cadd3",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "15284fccf2c0848a1a35fca37dad392997f1466bf48692a08525e50acc641f9c",
+      "zephyr_revision": "bf801e4e3d19"
+    },
+    "confirmed": {
+      "application_source_sha256": "84d98bc2984c78dae3591bc381f0f60c15c2a8fca94eeeb6b21ae524f2424695",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "core_revision": "05b639b4d402",
+      "core_source_sha256": "79963324199cff16890b8cd8a38813321b05e315108c18e63cb5abf6ca8cadd3",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "15284fccf2c0848a1a35fca37dad392997f1466bf48692a08525e50acc641f9c",
+      "zephyr_revision": "bf801e4e3d19"
+    },
+    "unconfirmed": {
+      "application_source_sha256": "84d98bc2984c78dae3591bc381f0f60c15c2a8fca94eeeb6b21ae524f2424695",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "core_revision": "05b639b4d402",
+      "core_source_sha256": "79963324199cff16890b8cd8a38813321b05e315108c18e63cb5abf6ca8cadd3",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "15284fccf2c0848a1a35fca37dad392997f1466bf48692a08525e50acc641f9c",
+      "zephyr_revision": "bf801e4e3d19"
+    }
+  },
+  "central_image": {
+    "name": "zephyr.hex",
+    "sha256": "d78f37c243412d827467e4c35f4f0f8b0cb1415590eff8bf17e2048070534f5e",
+    "size": 697755
+  },
+  "core_revision": "05b639b4d402e9a7490648776b5bb5eb45a94916",
+  "criteria": {
+    "cuts_per_point": 3,
+    "injection_points": 4,
+    "invalid_image_boots": 0,
+    "recovery_failures": 0,
+    "total_physical_cuts": 12
+  },
+  "images": {
+    "confirmed": {
+      "image_hash": "fc82a37592ebc586be5dc9fddf81f894d9c6bd5122848d1dc8e09a21c580a9a7",
+      "name": "m30-power-confirmed-v40.bin",
+      "sha256": "3ad0b8b603987d79630bf2db9b18d7e3e72270ce3d1f0737d293f77bc20636d9",
+      "size": 261767,
+      "version": [
+        40,
+        0,
+        0,
+        0
+      ]
+    },
+    "retry": {
+      "image_hash": "4c3e48789f15295b5f74974e2a68e166c7694ddf890c8a3c07b793d58ad17730",
+      "name": "m30-power-retry-v42.bin",
+      "sha256": "f1f8eee1dd3013d5ce22325fc9fae17093fb9e751f0021ab40881c11e628ebc1",
+      "size": 261767,
+      "version": [
+        42,
+        0,
+        0,
+        0
+      ]
+    },
+    "unconfirmed": {
+      "image_hash": "38dff71913835a895415a4621872d34574a12d4ef720b7035cf8aad237184037",
+      "name": "m30-power-unconfirmed-v41.bin",
+      "sha256": "c76b7fa55c09df0ebf1cd20d1dc4ee62813d22fe5245a5325601a2a679ef9006",
+      "size": 261659,
+      "version": [
+        41,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "injection_plan": [
+    {
+      "cuts": 3,
+      "point": "slot1_transfer"
+    },
+    {
+      "cuts": 3,
+      "point": "image_validation_write"
+    },
+    {
+      "cuts": 3,
+      "point": "mcuboot_test_swap"
+    },
+    {
+      "cuts": 3,
+      "point": "new_image_first_boot"
+    }
+  ],
+  "next_action": "execute runner and physically disconnect DUT target USB at first armed window",
+  "power_hil": "not_run",
+  "preflight": {
+    "bond_storage_reset": {
+      "boards": 2,
+      "offset": 1523712,
+      "performed": true,
+      "size": 36864
+    },
+    "dfu_retry": {
+      "image_hash": "4c3e48789f15295b5f74974e2a68e166c7694ddf890c8a3c07b793d58ad17730",
+      "requests": 1309
+    },
+    "encryption_key_bytes": 16,
+    "flash_backend": "pyocd-exact-sector",
+    "flash_results": {
+      "central": [
+        "pyocd-sector",
+        "163840"
+      ],
+      "peripheral_bootloader": [
+        "pyocd-sector",
+        "0"
+      ],
+      "peripheral_primary": [
+        "pyocd-sector",
+        "172032"
+      ]
+    },
+    "physical_power_cuts": 0,
+    "security_level": 4,
+    "state": {
+      "bond_count": 1,
+      "bonded": 0,
+      "rejected_bonds": 0,
+      "settings_valid": 1
+    },
+    "status": "passed"
+  },
+  "runner": {
+    "name": "m30_power_loss.py",
+    "sha256": "0be99961c81d125106b25d23922fa0b2d216d10b69c2c33b0f43ae232cf062c1"
+  },
+  "safety": {
+    "mass_erase_or_recover": false,
+    "physical_power_cuts": 0,
+    "raw_probe_uids_stored": false,
+    "requires_msd_and_uart_absence": true,
+    "reset_substitution_allowed": false
+  },
+  "schema_version": 1,
+  "status": "blocked_human_power_cut",
+  "test_id": "M30-POWER-01",
+  "timestamp_utc": "2026-09-14T20:59:34.393162+00:00",
+  "trust_public_key_source_sha256": "e080e9cf050e5ad50fe0af483352120639e9e0adc53d38c1a38f0e18c766ea46"
+}

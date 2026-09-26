@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "core_revision": "b47aaf40df6fd5f73d132508e06b2bf7da9364f6",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "checked_files": 485,
+  "mismatches": [],
+  "runtime_manifest_sha256": "9b13784b5482b648769491404f7896da1c250899451f219cc84a25493ec959a8"
+}

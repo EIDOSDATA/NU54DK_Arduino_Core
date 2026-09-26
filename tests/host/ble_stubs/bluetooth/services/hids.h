@@ -36,7 +36,7 @@ struct bt_hids_init_param
         {
             uint8_t id;
             size_t size;
-        } reports[1];
+        } reports[3];
         size_t cnt;
     } inp_rep_group_init;
     bool is_kb;

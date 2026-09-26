@@ -194,6 +194,85 @@ namespace nucode::ble::internal
                         : nullptr;
                 value_attribute.user_data = characteristic;
 
+                slot.descriptor_count[index] = GattAccess::descriptorCount(*characteristic);
+                if (slot.descriptor_count[index] > maximum_descriptors)
+                {
+                    unlockGattSchema();
+                    return -ENOSPC;
+                }
+                for (std::size_t descriptor_index = 0U;
+                     descriptor_index < slot.descriptor_count[index]; ++descriptor_index)
+                {
+                    BLEDescriptor *descriptor =
+                        GattAccess::descriptor(*characteristic, descriptor_index);
+                    if (descriptor == nullptr || !validDescriptor(*descriptor) ||
+                        GattAccess::registered(*descriptor))
+                    {
+                        unlockGattSchema();
+                        return -EINVAL;
+                    }
+                    for (std::size_t prior_service = 0U;
+                         prior_service <= service_index; ++prior_service)
+                    {
+                        const std::size_t characteristic_limit =
+                            prior_service == service_index ? index
+                                                           : serviceSlots()[prior_service]
+                                                                 .characteristic_count;
+                        for (std::size_t prior_characteristic = 0U;
+                             prior_characteristic < characteristic_limit;
+                             ++prior_characteristic)
+                        {
+                            for (std::size_t prior_descriptor = 0U;
+                                 prior_descriptor <
+                                 serviceSlots()[prior_service]
+                                     .descriptor_count[prior_characteristic];
+                                 ++prior_descriptor)
+                            {
+                                if (serviceSlots()[prior_service]
+                                        .descriptors[prior_characteristic][prior_descriptor] ==
+                                    descriptor)
+                                {
+                                    unlockGattSchema();
+                                    return -EEXIST;
+                                }
+                            }
+                        }
+                    }
+                    for (std::size_t previous = 0U; previous < descriptor_index; ++previous)
+                    {
+                        if (GattAccess::uuid(*slot.descriptors[index][previous]) ==
+                            GattAccess::uuid(*descriptor))
+                        {
+                            unlockGattSchema();
+                            return -EEXIST;
+                        }
+                    }
+                    slot.descriptors[index][descriptor_index] = descriptor;
+                    const struct bt_uuid *descriptor_uuid =
+                        slot.descriptor_uuids[index][descriptor_index].assign(
+                            GattAccess::uuid(*descriptor));
+                    if (descriptor_uuid == nullptr)
+                    {
+                        unlockGattSchema();
+                        return -EINVAL;
+                    }
+                    slot.descriptor_attribute_index[index][descriptor_index] = attribute_index;
+                    struct bt_gatt_attr &descriptor_attribute =
+                        slot.attributes[attribute_index++];
+                    descriptor_attribute.uuid = descriptor_uuid;
+                    descriptor_attribute.perm =
+                        zephyrPermissions(GattAccess::permissions(*descriptor));
+                    descriptor_attribute.read =
+                        hasPermission(GattAccess::permissions(*descriptor), BLEPermission::read)
+                            ? descriptorRead
+                            : nullptr;
+                    descriptor_attribute.write =
+                        hasPermission(GattAccess::permissions(*descriptor), BLEPermission::write)
+                            ? descriptorWrite
+                            : nullptr;
+                    descriptor_attribute.user_data = descriptor;
+                }
+
                 if (hasProperty(GattAccess::properties(*characteristic), BLEProperty::notify) ||
                     hasProperty(GattAccess::properties(*characteristic), BLEProperty::indicate))
                 {
@@ -218,6 +297,13 @@ namespace nucode::ble::internal
             slot.service.attr_count = attribute_index;
         }
 
+        const int cache_result = prepareGattCacheDatabase();
+        if (cache_result < 0)
+        {
+            unlockGattSchema();
+            return cache_result;
+        }
+
         std::size_t registered_count = 0U;
         for (std::size_t service_index = 0U;
              service_index < databaseState().registered_service_count; ++service_index)
@@ -235,9 +321,18 @@ namespace nucode::ble::internal
                          index < serviceSlots()[rollback].characteristic_count; ++index)
                     {
                         GattAccess::setRegistered(*serviceSlots()[rollback].characteristics[index],
-                                                  false);
+                                                   false);
+                        for (std::size_t descriptor_index = 0U;
+                             descriptor_index < serviceSlots()[rollback].descriptor_count[index];
+                             ++descriptor_index)
+                        {
+                            GattAccess::setRegistered(
+                                *serviceSlots()[rollback].descriptors[index][descriptor_index],
+                                false);
+                        }
                     }
                 }
+                rollbackGattCacheDatabase();
                 unlockGattSchema();
                 return result;
             }
@@ -246,6 +341,11 @@ namespace nucode::ble::internal
             for (std::size_t index = 0U; index < slot.characteristic_count; ++index)
             {
                 GattAccess::setRegistered(*slot.characteristics[index], true);
+                for (std::size_t descriptor_index = 0U;
+                     descriptor_index < slot.descriptor_count[index]; ++descriptor_index)
+                {
+                    GattAccess::setRegistered(*slot.descriptors[index][descriptor_index], true);
+                }
             }
         }
         atomic_set(&databaseState().database_registered, 1);
@@ -257,6 +357,50 @@ namespace nucode::ble::internal
 namespace nucode::ble
 {
     using namespace internal::gatt;
+
+    bool BLECharacteristic::addDescriptor(BLEDescriptor &descriptor) noexcept
+    {
+        if (!internal::requireThreadContext())
+        {
+            return false;
+        }
+        if (registered_ || internal::stackReady())
+        {
+            internal::recordError(BLEError::wrong_state, -EPERM, true);
+            return false;
+        }
+        if (!validDescriptor(descriptor) || GattAccess::registered(descriptor))
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        for (std::size_t index = 0U; index < descriptor_count_; ++index)
+        {
+            if (descriptors_[index] == &descriptor || descriptors_[index]->uuid() == descriptor.uuid())
+            {
+                internal::recordError(BLEError::duplicate, -EEXIST, true);
+                return false;
+            }
+        }
+        if (descriptor_count_ >= maximum_descriptors)
+        {
+            internal::recordError(BLEError::schema_full, -ENOSPC, true);
+            return false;
+        }
+        descriptors_[descriptor_count_++] = &descriptor;
+        return true;
+    }
+
+    std::size_t BLECharacteristic::descriptorCount() const noexcept
+    {
+        return descriptor_count_;
+    }
+
+    BLEDescriptor *BLECharacteristic::descriptor(std::size_t index) const noexcept
+    {
+        return index < descriptor_count_ ? descriptors_[index] : nullptr;
+    }
+
     BLEService::BLEService(const BLEUuid &uuid) noexcept : uuid_(uuid)
     {
     }

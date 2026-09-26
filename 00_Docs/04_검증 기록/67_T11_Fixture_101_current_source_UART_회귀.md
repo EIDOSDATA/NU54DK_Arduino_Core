@@ -20,7 +20,7 @@ exact 이미지·catalog·두 UID SHA에 묶인 [확인서](evidence/t11-fixture
 이는 사용자 결선 확인이며 전기적 계측으로 배선을 증명했다는 뜻은 아니다.
 
 위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
-펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 두 보드는 D/COM5·COM6의 A/DUT와 E/COM7·COM8의 B/peer이며
 [USB 식별 결과](evidence/t11-fixture101-154324c/usb-inventory.json)에 UID SHA만 보존한다. DAP UART는 양쪽
@@ -99,7 +99,7 @@ canonical 명령·log hash를 연결한다. 이번 변경은 문서·증거뿐�
 
 ## 당시 다음 결선과 남은 범위
 
-이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 이번 PASS는 Fixture 101만이다. Current-source T11 전체 완료 표시는 보류하며 다음은
 Fixture 102, 이어서 103·201·202·203·301이다. T12~T15와 RC/공개 gate는 계속 대기한다.

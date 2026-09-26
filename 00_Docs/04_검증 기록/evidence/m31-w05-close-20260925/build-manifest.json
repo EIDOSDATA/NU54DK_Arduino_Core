@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_clean": true,
+  "source_revision": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=adaptive",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1",
+    "sdk_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3"
+  },
+  "arduino_examples": {
+    "RasInitiator": {
+      "flash_bytes": 256616,
+      "ram_bytes": 80337,
+      "hex_sha256": "227bff0f1594c4850fac9de84c86f934d26a448c57c065ff9edab8cf3741a59b",
+      "elf_sha256": "55590f16f2ca891072d1d2d504abeab7d3246f9fe510cd7456a94167825b7f81"
+    },
+    "RasReflector": {
+      "flash_bytes": 237604,
+      "ram_bytes": 62175,
+      "hex_sha256": "beb8c9a96f442962124c45ac1548612b2027bc51c52654674888eb95013a254c",
+      "elf_sha256": "3c6edfa8356167f9e03d5f52db0ecc2996c0c83ab3254cc74283715e8985b4db"
+    }
+  },
+  "stale_key_fixtures": {
+    "source_revision": "704120b1968c236d4809b5709b83cea7dc38b2fa",
+    "RasStaleKeyInitiator": {
+      "flash_bytes": 266224,
+      "ram_bytes": 79378,
+      "hex_sha256": "4b9794b95dec79cb307208bbc8769fbee2f3d526e1326bee03139659dd3a036f",
+      "elf_sha256": "1f6a169f39f3ba8206e53241a2476812549ff1702229214772a1dd67e696e9e1"
+    },
+    "RasStaleKeyReflector": {
+      "flash_bytes": 250312,
+      "ram_bytes": 61803,
+      "hex_sha256": "d3e450d92081f4e16d1a0baeb3c43d31625e2f262d113c333baac7779bb79208",
+      "elf_sha256": "3b6586d301fb1afa158ec103ede696290ad0fd0a18239cc1190538f6f013d7ca"
+    }
+  },
+  "preserved_attempts": "build-attempts.json"
+}

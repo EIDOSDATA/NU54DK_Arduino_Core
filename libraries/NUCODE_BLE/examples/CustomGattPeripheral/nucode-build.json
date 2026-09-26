@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "capabilities": [],
+  "roles": ["ble-gatt-server-peripheral"],
+  "capacities": {
+    "ble.gatt-services": 1,
+    "ble.gatt-characteristics-per-service": 1,
+    "ble.gatt-event-payload": 64,
+    "ble.gatt-tx-payload": 64,
+    "ble.gatt-tx-contexts": 1,
+    "ble.gatt-inline-value-payload": 64
+  }
+}

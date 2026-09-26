@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "HOLD",
+  "diagnostic_only": true,
+  "used_for_w06_pass": false,
+  "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+  "boards": [
+    {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "application_port": "COM10",
+      "access": "AVAILABLE",
+      "final_state": "STOP_CONFIRMED"
+    },
+    {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "application_port": "COM14",
+      "access": "APPROTECT_0x3",
+      "final_state": "UNKNOWN_HOLD"
+    },
+    {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "application_port": "COM13",
+      "access": "APPROTECT_0x3",
+      "final_state": "UNKNOWN_HOLD"
+    }
+  ],
+  "attempt": {
+    "requested_operation": "exact target sector flash after identity, COM, role and image binding",
+    "result": "HOLD before functional execution",
+    "initial_timeout_seconds": 45,
+    "follow_up_observation": "two targets exposed protected AHB access and no cores; one target remained accessible",
+    "functional_transcripts": 0
+  },
+  "safety": {
+    "auto_unlock": false,
+    "mass_erase": false,
+    "recover": false,
+    "wiring_changed": false,
+    "power_or_usb_changed": false,
+    "raw_probe_uid_persisted": false
+  },
+  "next_preflight": "Before W07 live HIL, physically reconnect or power-cycle the two protected targets, then repeat the SHA-256 identity, COM, role, image and access check. Unlock/recover remains separately prohibited unless explicitly authorized."
+}

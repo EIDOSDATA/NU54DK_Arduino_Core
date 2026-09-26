@@ -13,7 +13,18 @@ import json
 import re
 import sys
 import time
-from .artifacts import publish_artifact_generation, validate_linked_code_partition
+from .artifacts import (
+    collect_resource_audit,
+    publish_artifact_generation,
+    validate_linked_code_partition,
+)
+from .capabilities import (
+    load_capability_declaration,
+    load_capability_registry,
+    resolve_capabilities,
+    write_resolved_capabilities,
+)
+from .capability_probe import run_capability_probe
 from .cache import (
     cache_input_manifest,
     cache_key_for_manifest,
@@ -46,6 +57,7 @@ from .configuration import (
     declared_path,
     load_configuration_profile,
     load_product_identity,
+    resolve_profile_signing_key,
     resolve_library_features,
 )
 from .environment import tool_environment
@@ -79,13 +91,19 @@ def configure_command(
     build_platform = platform_build_root(paths)
     if build_platform != paths['platform_root']:
         board_root = build_platform / 'board_package' / 'NU54DK_Zephyr_DTS'
+    profile = load_configuration_profile(
+        paths["platform_root"],
+        getattr(args, "profile", DEFAULT_PROFILE),
+        fqbn=args.fqbn,
+        zephyr_board=args.board,
+    )
     command: list[str | Path] = [
         tools["west"],
         "-z",
         tools["zephyr_base"],
         "build",
         "--cmake-only",
-        "--no-sysbuild",
+        "--sysbuild" if profile["sysbuild"] else "--no-sysbuild",
     ]
     if pristine:
         command.append("--pristine=always")
@@ -107,6 +125,7 @@ def configure_command(
     if isinstance(ccache, Path) and ccache.is_file():
         command.extend(
             (
+                "-DUSE_CCACHE=0",
                 f"-DCMAKE_C_COMPILER_LAUNCHER={ccache.as_posix()}",
                 f"-DCMAKE_CXX_COMPILER_LAUNCHER={ccache.as_posix()}",
             )
@@ -114,6 +133,10 @@ def configure_command(
     overlay = paths["app"] / "app.overlay"
     if overlay.is_file():
         command.append(f"-DDTC_OVERLAY_FILE={overlay.as_posix()}")
+    if profile["sysbuild"]:
+        command.append(
+            f"-DSB_EXTRA_CONF_FILE={(paths['app'] / 'sysbuild' / 'signing-key.conf').as_posix()}"
+        )
     return command
 
 
@@ -133,6 +156,7 @@ def west_build_working_directory(paths: dict[str, Path]) -> Path:
 def materialize_application(
     paths: dict[str, Path], args: argparse.Namespace,
     selected_library_names: Sequence[str] = (),
+    capability_resolution: dict[str, Any] | None = None,
 ) -> None:
     platform_root = paths["platform_root"]
     sketch_root = paths["sketch_root"]
@@ -158,8 +182,31 @@ def materialize_application(
     features = resolve_library_features(platform_root, profile, selected_library_names)
     base_config = (template / "prj.conf").read_text(encoding="utf-8").rstrip() + "\n"
     base_config += "\n# Selected profile: " + profile["id"] + "\n" + profile["conf_path"].read_text(encoding="utf-8").rstrip() + "\n"
+    if capability_resolution is not None:
+        if profile["capability_mode"] != "resolved":
+            raise AdapterError(
+                "[NU54:E_CAPABILITY_PROFILE] compatibility profile에 resolution을 적용할 수 없습니다."
+            )
+        generated = capability_resolution.get("generated")
+        if not isinstance(generated, dict):
+            raise AdapterError("[NU54:E_CAPABILITY_RESULT] generated 설정이 없습니다.")
+        disabled_conf = generated.get("disabled_conf")
+        capability_conf = generated.get("conf")
+        if not isinstance(disabled_conf, list) or not isinstance(capability_conf, list):
+            raise AdapterError("[NU54:E_CAPABILITY_RESULT] 생성 Kconfig 목록이 잘못되었습니다.")
+        base_config += "\n# Resolved capability exclusions\n"
+        base_config += "\n".join(disabled_conf).rstrip() + "\n"
+        base_config += "\n# Resolved capabilities\n"
+        base_config += "\n".join(capability_conf).rstrip() + "\n"
+        write_resolved_capabilities(
+            app_root / "resolved-capabilities.json", capability_resolution
+        )
+    elif profile["capability_mode"] == "resolved" and selected_library_names:
+        raise AdapterError(
+            "[NU54:E_CAPABILITY_RESULT] resolved profile의 library 요구사항이 확정되지 않았습니다."
+        )
     for feature in features:
-        for relative in feature["conf"]:
+        for relative in feature["active_conf"]:
             base_config += "\n# Library feature: " + feature["id"] + "\n" + declared_path(feature["root"], relative, "E_FEATURE_PATH").read_text(encoding="utf-8").rstrip() + "\n"
     sketch_config = sketch_root / "prj.conf"
     if sketch_config.is_file():
@@ -169,8 +216,24 @@ def materialize_application(
     generated_overlay = app_root / "app.overlay"
     base_overlay = (template / "app.overlay").read_text(encoding="utf-8").rstrip() + "\n"
     base_overlay += "\n/** @brief 선택한 구성 profile의 overlay입니다. */\n" + profile["overlay_path"].read_text(encoding="utf-8").rstrip() + "\n"
+    if capability_resolution is not None:
+        generated = capability_resolution["generated"]
+        overlays = generated.get("overlays")
+        if not isinstance(overlays, list) or not all(isinstance(item, str) for item in overlays):
+            raise AdapterError("[NU54:E_CAPABILITY_RESULT] 생성 overlay 목록이 잘못되었습니다.")
+        for relative in overlays:
+            overlay = canonical_path(platform_root / relative)
+            if not is_within(overlay, platform_root) or not overlay.is_file():
+                raise AdapterError(
+                    f"[NU54:E_CAPABILITY_PATH] 생성 overlay를 찾을 수 없습니다: {relative}"
+                )
+            base_overlay += (
+                "\n/** @brief resolved capability가 선택한 overlay입니다. */\n"
+                + overlay.read_text(encoding="utf-8").rstrip()
+                + "\n"
+            )
     for feature in features:
-        for relative in feature["overlays"]:
+        for relative in feature["active_overlays"]:
             base_overlay += "\n/** @brief 허용된 bundled library feature overlay입니다. */\n" + declared_path(feature["root"], relative, "E_FEATURE_PATH").read_text(encoding="utf-8").rstrip() + "\n"
     sketch_overlay = sketch_root / "app.overlay"
     if sketch_overlay.is_file():
@@ -180,9 +243,76 @@ def materialize_application(
             + sketch_overlay.read_text(encoding="utf-8").rstrip()
             + "\n"
         )
-        atomic_write_text(generated_overlay, combined_overlay)
     else:
-        atomic_write_text(generated_overlay, base_overlay)
+        combined_overlay = base_overlay
+    atomic_write_text(generated_overlay, combined_overlay)
+
+    if profile["sysbuild"]:
+        signing_key = resolve_profile_signing_key(platform_root, profile)
+        for source in profile["sysbuild_paths"]:
+            relative = source.relative_to(profile["root"])
+            atomic_write_bytes_if_changed(app_root / relative, source.read_bytes())
+        signing_conf = app_root / "sysbuild" / "signing-key.conf"
+        atomic_write_text(
+            signing_conf,
+            "# Build Adapter가 저장소 외부 private key를 현재 cache에만 연결합니다.\n"
+            f'SB_CONFIG_BOOT_SIGNATURE_KEY_FILE="{signing_key.as_posix()}"\n',
+        )
+
+
+## @brief 최종 Kconfig가 resolved capability의 필수 enable/disable과 같은지 검증합니다.
+def validate_resolved_configuration(
+    paths: dict[str, Path], capability_resolution: dict[str, Any] | None
+) -> None:
+    if capability_resolution is None:
+        return
+    config_path = paths["zephyr_build"] / "zephyr" / ".config"
+    try:
+        lines = config_path.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeError) as error:
+        raise AdapterError(
+            f"[NU54:E_CAPABILITY_FINAL_CONFIG] 최종 .config를 읽을 수 없습니다: {config_path}"
+        ) from error
+    actual: dict[str, str] = {}
+    unset_pattern = re.compile(r"^# (CONFIG_[A-Z0-9_]+) is not set$")
+    for line in lines:
+        if line.startswith("CONFIG_") and "=" in line:
+            name, value = line.split("=", 1)
+            actual[name] = value
+            continue
+        match = unset_pattern.fullmatch(line)
+        if match is not None:
+            actual[match[1]] = "n"
+    generated = capability_resolution.get("generated")
+    if not isinstance(generated, dict):
+        raise AdapterError("[NU54:E_CAPABILITY_RESULT] generated 설정이 없습니다.")
+    expected: dict[str, str] = {}
+    for field in ("disabled_conf", "conf"):
+        values = generated.get(field)
+        if not isinstance(values, list) or not all(
+            isinstance(value, str) and "=" in value for value in values
+        ):
+            raise AdapterError(
+                f"[NU54:E_CAPABILITY_RESULT] generated.{field}가 잘못되었습니다."
+            )
+        for value in values:
+            name, setting = value.split("=", 1)
+            previous = expected.get(name)
+            if previous is not None and previous != setting:
+                raise AdapterError(
+                    f"[NU54:E_CAPABILITY_RESULT] 같은 Kconfig 요구가 충돌합니다: {name}"
+                )
+            expected[name] = setting
+    mismatches = [
+        {"symbol": name, "expected": value, "actual": actual.get(name, "missing")}
+        for name, value in sorted(expected.items())
+        if actual.get(name, "n") != value
+    ]
+    if mismatches:
+        raise AdapterError(
+            "[NU54:E_CAPABILITY_FINAL_CONFIG] 최종 Kconfig가 capability resolution과 다릅니다: "
+            + json.dumps(mismatches, ensure_ascii=False, sort_keys=True)
+        )
 
 
 ## @brief 현재 고정 입력으로 Zephyr configure-only를 수행하고 context를 기록합니다.
@@ -201,6 +331,10 @@ def prepare(args: argparse.Namespace) -> BuildContext:
     product_identity = load_product_identity(platform_root)
     tools = tool_environment(platform_root)
     input_manifest = cache_input_manifest(session_paths, args, tools)
+    target_manifest = input_manifest.get("target")
+    sysbuild = bool(
+        isinstance(target_manifest, dict) and target_manifest.get("sysbuild") is True
+    )
     cache_key = cache_key_for_manifest(input_manifest)
     workspace = cache_workspace(cache_key, root=cache_root)
     paths = add_workspace_paths(session_paths, workspace)
@@ -329,7 +463,7 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                 "fqbn": args.fqbn,
                 "board": args.board,
                 "profile": getattr(args, "profile", DEFAULT_PROFILE),
-                "sysbuild": False,
+                "sysbuild": sysbuild,
                 "ncs_version": NCS_VERSION,
                 "zephyr_version": "4.4.0",
                 "platform_root": platform_root.as_posix(),
@@ -407,15 +541,26 @@ def migrate_feature_workspace(
     session_paths: dict[str, Path], args: argparse.Namespace, tools: dict[str, Any],
     context: dict[str, Any], records: Sequence[dict[str, Any]],
     selected_libraries: Sequence[str], input_manifest: dict[str, Any],
+    capability_resolution: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Path], dict[str, Any], str]:
     cache_key = cache_key_for_manifest(input_manifest)
     if context.get("cache_key") == cache_key:
         context.update({
             "selected_libraries": list(selected_libraries),
             "selected_features": input_manifest.get("configuration", {}).get("selected_features", []),
+            "resolved_capabilities": (
+                [item["id"] for item in capability_resolution["capabilities"]]
+                if capability_resolution is not None
+                else []
+            ),
         })
+        current_paths = paths_from_context(session_paths, context)
+        materialize_application(
+            current_paths, args, selected_libraries, capability_resolution
+        )
+        validate_resolved_configuration(current_paths, capability_resolution)
         atomic_write_json(session_paths["context"], context)
-        return paths_from_context(session_paths, context), context, cache_key
+        return current_paths, context, cache_key
     cache_root = local_cache_root(str(context["cache_root"]))
     workspace = cache_workspace(cache_key, root=cache_root)
     paths = add_workspace_paths(session_paths, workspace)
@@ -431,7 +576,9 @@ def migrate_feature_workspace(
         if isinstance(stored_state_key, str) and re.fullmatch(r"[0-9a-f]{64}", stored_state_key) and stored_state_key != cache_key:
             raise AdapterError("[NU54:E_CACHE_KEY_COLLISION] feature cache state의 전체 SHA-256이 다릅니다.")
         reusable = bool(stored == input_manifest and state and state.get("cache_key") == cache_key and state.get("state") == "ready" and state.get("first_configure_complete") is True and (paths["zephyr_build"] / "CMakeCache.txt").is_file() and (paths["zephyr_build"] / "build.ninja").is_file())
-        materialize_application(paths, args, selected_libraries)
+        materialize_application(
+            paths, args, selected_libraries, capability_resolution
+        )
         validate_platform_copy(paths, input_manifest)
         atomic_write_json(input_path, input_manifest)
         configure_seconds = 0.0
@@ -449,6 +596,7 @@ def migrate_feature_workspace(
                 raise
             configure_seconds = time.perf_counter() - started
             transition_cache_state(workspace, cache_key, "ready", first_configure_complete=True, last_build_result="not-built", configure_reason="selected-features", configure_duration_seconds=round(configure_seconds, 6), pristine_configure_count=int((state or {}).get("pristine_configure_count", 0)) + 1)
+        validate_resolved_configuration(paths, capability_resolution)
     old_key = str(context["cache_key"])
     context.update({
         "cache_key": cache_key,
@@ -460,6 +608,11 @@ def migrate_feature_workspace(
         "configuration_fingerprint": f"sha256:{cache_key}",
         "selected_libraries": list(selected_libraries),
         "selected_features": input_manifest.get("configuration", {}).get("selected_features", []),
+        "resolved_capabilities": (
+            [item["id"] for item in capability_resolution["capabilities"]]
+            if capability_resolution is not None
+            else []
+        ),
         "provisional_cache_key": old_key,
         "configure_reason": "feature-cache-hit" if reusable else "selected-features",
         "configure_duration_seconds": round(configure_seconds, 6),
@@ -494,9 +647,43 @@ def link(args: argparse.Namespace) -> None:
         provisional_paths = paths_from_context(session_paths, context)
         records = records_for_objects(provisional_paths, args.objects, context)
         selected_libraries = selected_bundled_libraries(session_paths, records)
-        current_input = cache_input_manifest(session_paths, args, tools, selected_libraries)
+        profile = load_configuration_profile(
+            session_paths["platform_root"],
+            getattr(args, "profile", DEFAULT_PROFILE),
+            fqbn=args.fqbn,
+            zephyr_board=args.board,
+        )
+        capability_probe: dict[str, Any] | None = None
+        capability_resolution: dict[str, Any] | None = None
+        if profile["capability_mode"] == "resolved":
+            registry = load_capability_registry(session_paths["platform_root"])
+            capability_probe = run_capability_probe(
+                session_paths, records, tools, registry
+            )
+            declaration = load_capability_declaration(session_paths["sketch_root"])
+            features = resolve_library_features(
+                session_paths["platform_root"], profile, selected_libraries
+            )
+            capability_resolution = resolve_capabilities(
+                registry, capability_probe["capabilities"], features, declaration
+            )
+        current_input = cache_input_manifest(
+            session_paths,
+            args,
+            tools,
+            selected_libraries,
+            capability_resolution,
+            capability_probe,
+        )
         paths, context, cache_key = migrate_feature_workspace(
-            session_paths, args, tools, context, records, selected_libraries, current_input
+            session_paths,
+            args,
+            tools,
+            context,
+            records,
+            selected_libraries,
+            current_input,
+            capability_resolution,
         )
         with build_lock(paths["workspace"], operation="link-cache"):
             state_document = load_json_object(paths["workspace"] / "state.json", "E_CACHE_STATE")
@@ -519,7 +706,11 @@ def link(args: argparse.Namespace) -> None:
                 materialize_installed_platform(paths)
                 validate_platform_copy(paths, current_input)
                 sources, source_provenance, manifest_changed = write_source_manifest(
-                    paths, records
+                    paths,
+                    records,
+                    selected_libraries,
+                    current_input,
+                    capability_resolution,
                 )
                 if not sources:
                     raise AdapterError(
@@ -553,6 +744,7 @@ def link(args: argparse.Namespace) -> None:
                         environment=tools["environment"],
                     )
                     configure_seconds = time.perf_counter() - configure_started
+                validate_resolved_configuration(paths, capability_resolution)
                 run_checked(
                     [
                         tools["west"],
@@ -565,8 +757,31 @@ def link(args: argparse.Namespace) -> None:
                     cwd=west_build_working_directory(paths),
                     environment=tools["environment"],
                 )
+                profile = load_configuration_profile(
+                    paths["platform_root"],
+                    getattr(args, "profile", DEFAULT_PROFILE),
+                    fqbn=args.fqbn,
+                    zephyr_board=args.board,
+                )
+                zephyr_output = (
+                    paths["zephyr_build"] / "app" / "zephyr"
+                    if profile["sysbuild"]
+                    else paths["zephyr_build"] / "zephyr"
+                )
                 memory_layout = validate_linked_code_partition(
-                    paths["zephyr_build"] / "zephyr"
+                    zephyr_output, loaderless=not profile["sysbuild"]
+                )
+                resource_audit = collect_resource_audit(
+                    zephyr_output,
+                    tools["size"],
+                    tools["environment"],
+                    enforce_budget=profile["capability_mode"] == "resolved",
+                    source_manifest=paths["app"] / "sources.cmake",
+                    resolution_manifest=(
+                        paths["app"] / "resolved-capabilities.json"
+                        if capability_resolution is not None
+                        else None
+                    ),
                 )
             except Exception as error:
                 transition_cache_state(
@@ -580,13 +795,22 @@ def link(args: argparse.Namespace) -> None:
             build_seconds = time.perf_counter() - build_started
             try:
                 ccache_after = read_ccache_stats(tools)
-                zephyr_output = paths["zephyr_build"] / "zephyr"
-                artifacts = {
-                    "elf": zephyr_output / "zephyr.elf",
-                    "hex": zephyr_output / "zephyr.hex",
-                    "bin": zephyr_output / "zephyr.bin",
-                    "map": zephyr_output / "zephyr.map",
-                }
+                if profile["sysbuild"]:
+                    artifacts = {
+                        "elf": zephyr_output / "zephyr.elf",
+                        "hex": zephyr_output / "zephyr.signed.hex",
+                        "bin": zephyr_output / "zephyr.signed.bin",
+                        "map": zephyr_output / "zephyr.map",
+                        "boot.hex": paths["zephyr_build"] / "mcuboot" / "zephyr" / "zephyr.hex",
+                        "update.bin": zephyr_output / "zephyr.signed.bin",
+                    }
+                else:
+                    artifacts = {
+                        "elf": zephyr_output / "zephyr.elf",
+                        "hex": zephyr_output / "zephyr.hex",
+                        "bin": zephyr_output / "zephyr.bin",
+                        "map": zephyr_output / "zephyr.map",
+                    }
                 with publish_artifact_generation(
                     artifacts,
                     paths["build_path"],
@@ -595,7 +819,11 @@ def link(args: argparse.Namespace) -> None:
                     paths["context"],
                     rollback_context,
                 ) as exported:
-                    build_record = paths["zephyr_build"] / "nucode_arduino_core_build.yml"
+                    build_record = (
+                        paths["zephyr_build"]
+                        / ("app" if profile["sysbuild"] else "")
+                        / "nucode_arduino_core_build.yml"
+                    )
                     if not build_record.is_file():
                         raise AdapterError(
                             f"[NU54:E_BUILD_RECORD] live build record가 없습니다: {build_record}"
@@ -614,36 +842,42 @@ def link(args: argparse.Namespace) -> None:
                             "ccache_stats_after": ccache_after,
                             "ccache_stats_delta": ccache_delta(ccache_before, ccache_after),
                             "memory_layout": memory_layout,
+                            "resource_audit": resource_audit,
                             "updated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
                         }
                     )
                     atomic_write_json(paths["context"], context)
                     manifest: ArtifactManifest = {
-                    "schema_version": ARTIFACT_MANIFEST_SCHEMA_VERSION,
-                    "adapter_version": ADAPTER_VERSION,
-                    "product_identity": load_product_identity(paths["platform_root"]),
-                    "fqbn": args.fqbn,
-                    "board": args.board,
-                    "sysbuild": False,
-                    "cache": {
-                        "schema_version": CACHE_SCHEMA_VERSION,
-                        "key": cache_key,
-                        "input_manifest": current_input,
-                        "cache_dir": paths["workspace"].as_posix(),
-                        "source_manifest_sha256": optional_file_sha256(
-                            paths["app"] / "sources.cmake"
+                        "schema_version": ARTIFACT_MANIFEST_SCHEMA_VERSION,
+                        "adapter_version": ADAPTER_VERSION,
+                        "product_identity": load_product_identity(
+                            paths["platform_root"]
                         ),
-                    },
-                    "metrics": {
-                        "configure_seconds": round(configure_seconds, 6),
-                        "build_seconds": round(build_seconds, 6),
-                        "ccache_delta": ccache_delta(ccache_before, ccache_after),
-                    },
-                    "context": context,
-                    "sources": [path.as_posix() for path in sources],
-                    "source_inputs": source_provenance,
-                    "artifacts": exported,
-                    "built_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+                        "fqbn": args.fqbn,
+                        "board": args.board,
+                        "sysbuild": profile["sysbuild"],
+                        "cache": {
+                            "schema_version": CACHE_SCHEMA_VERSION,
+                            "key": cache_key,
+                            "input_manifest": current_input,
+                            "cache_dir": paths["workspace"].as_posix(),
+                            "source_manifest_sha256": optional_file_sha256(
+                                paths["app"] / "sources.cmake"
+                            ),
+                        },
+                        "metrics": {
+                            "configure_seconds": round(configure_seconds, 6),
+                            "build_seconds": round(build_seconds, 6),
+                            "ccache_delta": ccache_delta(ccache_before, ccache_after),
+                        },
+                        "context": context,
+                        "sources": [path.as_posix() for path in sources],
+                        "source_inputs": source_provenance,
+                        "artifacts": exported,
+                        "resource_audit": resource_audit,
+                        "built_at_utc": dt.datetime.now(
+                            dt.timezone.utc
+                        ).isoformat(),
                     }
                     # Artifact와 context가 모두 완성된 뒤 manifest를 마지막으로 공개합니다.
                     atomic_write_json(output_manifest, manifest)

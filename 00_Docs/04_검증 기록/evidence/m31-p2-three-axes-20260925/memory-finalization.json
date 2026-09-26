@@ -1,0 +1,618 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-final-stack-heap-margin-and-size-decision",
+  "result": "PASS",
+  "workloads": [
+    {
+      "path": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/coc-peer-credit-r2.json",
+      "sha256": "e0969b258ba7d0c030c010bb2983e122c829f88d6b65d39c79e4f3f1017e5e26",
+      "case": "m31-p2-coc-direct-peer-credit-exhaustion-recovery-memory",
+      "result": "PASS",
+      "observed": {
+        "initial_echoes": 2,
+        "held_credits": 1,
+        "dwell_ms": 2500,
+        "queued_echoes_after_credit_return": 3,
+        "new_sdu_echoes": 1,
+        "both_stopped": true
+      },
+      "roles": {
+        "client": {
+          "stack_high_water": {
+            "BT LW WQ": {
+              "reserved_bytes": 2104,
+              "used_bytes": 948,
+              "remaining_bytes": 1156
+            },
+            "BT RX WQ": {
+              "reserved_bytes": 3200,
+              "used_bytes": 960,
+              "remaining_bytes": 2240
+            },
+            "ISR0": {
+              "reserved_bytes": 2048,
+              "used_bytes": 388,
+              "remaining_bytes": 1660
+            },
+            "MPSL Work": {
+              "reserved_bytes": 1024,
+              "used_bytes": 332,
+              "remaining_bytes": 692
+            },
+            "bt_tx_processor": {
+              "reserved_bytes": 904,
+              "used_bytes": 548,
+              "remaining_bytes": 356
+            },
+            "idle": {
+              "reserved_bytes": 320,
+              "used_bytes": 64,
+              "remaining_bytes": 256
+            },
+            "main": {
+              "reserved_bytes": 8192,
+              "used_bytes": 1032,
+              "remaining_bytes": 7160
+            },
+            "sysworkq": {
+              "reserved_bytes": 4096,
+              "used_bytes": 304,
+              "remaining_bytes": 3792
+            }
+          },
+          "malloc": {
+            "minimum_free_bytes": 8108,
+            "maximum_allocated_bytes": 0,
+            "maximum_peak_bytes": 0,
+            "final": {
+              "free_bytes": 8108,
+              "allocated_bytes": 0,
+              "peak_bytes": 0
+            },
+            "returned_after_stop": true
+          },
+          "kernel_heaps": {
+            "0": {
+              "minimum_free_bytes": 8196,
+              "maximum_allocated_bytes": 0,
+              "maximum_peak_bytes": 0,
+              "final": {
+                "free_bytes": 8196,
+                "allocated_bytes": 0,
+                "peak_bytes": 0
+              },
+              "returned_after_stop": true
+            }
+          },
+          "unexpected_fault_lines": []
+        },
+        "peer": {
+          "stack_high_water": {
+            "BT LW WQ": {
+              "reserved_bytes": 2104,
+              "used_bytes": 976,
+              "remaining_bytes": 1128
+            },
+            "BT RX WQ": {
+              "reserved_bytes": 3200,
+              "used_bytes": 784,
+              "remaining_bytes": 2416
+            },
+            "ISR0": {
+              "reserved_bytes": 2048,
+              "used_bytes": 416,
+              "remaining_bytes": 1632
+            },
+            "MPSL Work": {
+              "reserved_bytes": 1024,
+              "used_bytes": 448,
+              "remaining_bytes": 576
+            },
+            "bt_tx_processor": {
+              "reserved_bytes": 904,
+              "used_bytes": 388,
+              "remaining_bytes": 516
+            },
+            "idle": {
+              "reserved_bytes": 320,
+              "used_bytes": 64,
+              "remaining_bytes": 256
+            },
+            "main": {
+              "reserved_bytes": 8192,
+              "used_bytes": 944,
+              "remaining_bytes": 7248
+            },
+            "sysworkq": {
+              "reserved_bytes": 4096,
+              "used_bytes": 912,
+              "remaining_bytes": 3184
+            }
+          },
+          "malloc": {
+            "minimum_free_bytes": 8108,
+            "maximum_allocated_bytes": 0,
+            "maximum_peak_bytes": 0,
+            "final": {
+              "free_bytes": 8108,
+              "allocated_bytes": 0,
+              "peak_bytes": 0
+            },
+            "returned_after_stop": true
+          },
+          "kernel_heaps": {
+            "0": {
+              "minimum_free_bytes": 8196,
+              "maximum_allocated_bytes": 0,
+              "maximum_peak_bytes": 0,
+              "final": {
+                "free_bytes": 8196,
+                "allocated_bytes": 0,
+                "peak_bytes": 0
+              },
+              "returned_after_stop": true
+            }
+          },
+          "unexpected_fault_lines": []
+        }
+      }
+    },
+    {
+      "path": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/audio-encryption-recovery.json",
+      "sha256": "f67d93c372734afe97357869ef2ca98ff49170aadade40072ae7d5c71b877514",
+      "case": "m31-p2-audio-supported-encrypted-bis-error-recovery-memory",
+      "result": "PASS",
+      "observed": {
+        "expected_native_error": -61,
+        "frames_before_error": 0,
+        "recovered_frames": 100,
+        "dropped_frames": 0,
+        "nonzero_pcm_energy": true,
+        "both_stopped": true
+      },
+      "roles": {
+        "source": {
+          "stack_high_water": {
+            "BT RX WQ": {
+              "reserved_bytes": 2048,
+              "used_bytes": 384,
+              "remaining_bytes": 1664
+            },
+            "ISR0": {
+              "reserved_bytes": 2048,
+              "used_bytes": 520,
+              "remaining_bytes": 1528
+            },
+            "MPSL Work": {
+              "reserved_bytes": 1024,
+              "used_bytes": 364,
+              "remaining_bytes": 660
+            },
+            "bt_tx_processor": {
+              "reserved_bytes": 3200,
+              "used_bytes": 784,
+              "remaining_bytes": 2416
+            },
+            "idle": {
+              "reserved_bytes": 320,
+              "used_bytes": 64,
+              "remaining_bytes": 256
+            },
+            "main": {
+              "reserved_bytes": 8192,
+              "used_bytes": 3192,
+              "remaining_bytes": 5000
+            },
+            "sysworkq": {
+              "reserved_bytes": 4096,
+              "used_bytes": 232,
+              "remaining_bytes": 3864
+            }
+          },
+          "malloc": {
+            "minimum_free_bytes": 8108,
+            "maximum_allocated_bytes": 0,
+            "maximum_peak_bytes": 0,
+            "final": {
+              "free_bytes": 8108,
+              "allocated_bytes": 0,
+              "peak_bytes": 0
+            },
+            "returned_after_stop": true
+          },
+          "kernel_heaps": {},
+          "unexpected_fault_lines": []
+        },
+        "sink": {
+          "stack_high_water": {
+            "BT LW WQ": {
+              "reserved_bytes": 2104,
+              "used_bytes": 936,
+              "remaining_bytes": 1168
+            },
+            "BT RX WQ": {
+              "reserved_bytes": 3200,
+              "used_bytes": 704,
+              "remaining_bytes": 2496
+            },
+            "ISR0": {
+              "reserved_bytes": 2048,
+              "used_bytes": 480,
+              "remaining_bytes": 1568
+            },
+            "MPSL Work": {
+              "reserved_bytes": 1024,
+              "used_bytes": 696,
+              "remaining_bytes": 328
+            },
+            "bt_tx_processor": {
+              "reserved_bytes": 904,
+              "used_bytes": 404,
+              "remaining_bytes": 500
+            },
+            "idle": {
+              "reserved_bytes": 320,
+              "used_bytes": 64,
+              "remaining_bytes": 256
+            },
+            "main": {
+              "reserved_bytes": 8192,
+              "used_bytes": 2868,
+              "remaining_bytes": 5324
+            },
+            "sysworkq": {
+              "reserved_bytes": 4096,
+              "used_bytes": 248,
+              "remaining_bytes": 3848
+            }
+          },
+          "malloc": {
+            "minimum_free_bytes": 8108,
+            "maximum_allocated_bytes": 0,
+            "maximum_peak_bytes": 0,
+            "final": {
+              "free_bytes": 8108,
+              "allocated_bytes": 0,
+              "peak_bytes": 0
+            },
+            "returned_after_stop": true
+          },
+          "kernel_heaps": {},
+          "unexpected_fault_lines": []
+        }
+      }
+    },
+    {
+      "path": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/cs-peer-loss-recovery.json",
+      "sha256": "9f9dcdfba935bd6174030c27dcbca4689368883f966fb977be3575f7e2f9faea",
+      "case": "m31-p2-cs-256-step-peer-loss-recovery-memory",
+      "result": "PASS",
+      "observed": {
+        "peer_loss_before_first_raw": true,
+        "initiator_disconnect": true,
+        "reflector_reboot_ready": true,
+        "recovered_raw_count": 20,
+        "recovered_first_counter": 0,
+        "recovered_last_counter": 19,
+        "duplicates": 0,
+        "both_stopped": true
+      },
+      "roles": {
+        "initiator": {
+          "stack_high_water": {
+            "BT GATT DM WQ": {
+              "reserved_bytes": 1304,
+              "used_bytes": 352,
+              "remaining_bytes": 952
+            },
+            "BT LW WQ": {
+              "reserved_bytes": 2104,
+              "used_bytes": 1160,
+              "remaining_bytes": 944
+            },
+            "BT RX WQ": {
+              "reserved_bytes": 3200,
+              "used_bytes": 1520,
+              "remaining_bytes": 1680
+            },
+            "ISR0": {
+              "reserved_bytes": 2048,
+              "used_bytes": 472,
+              "remaining_bytes": 1576
+            },
+            "MPSL Work": {
+              "reserved_bytes": 1024,
+              "used_bytes": 488,
+              "remaining_bytes": 536
+            },
+            "bt_tx_processor": {
+              "reserved_bytes": 3200,
+              "used_bytes": 744,
+              "remaining_bytes": 2456
+            },
+            "idle": {
+              "reserved_bytes": 320,
+              "used_bytes": 64,
+              "remaining_bytes": 256
+            },
+            "main": {
+              "reserved_bytes": 8192,
+              "used_bytes": 1104,
+              "remaining_bytes": 7088
+            },
+            "sysworkq": {
+              "reserved_bytes": 4096,
+              "used_bytes": 288,
+              "remaining_bytes": 3808
+            }
+          },
+          "malloc": {
+            "minimum_free_bytes": 8108,
+            "maximum_allocated_bytes": 0,
+            "maximum_peak_bytes": 0,
+            "final": {
+              "free_bytes": 8108,
+              "allocated_bytes": 0,
+              "peak_bytes": 0
+            },
+            "returned_after_stop": true
+          },
+          "kernel_heaps": {
+            "0": {
+              "minimum_free_bytes": 516,
+              "maximum_allocated_bytes": 0,
+              "maximum_peak_bytes": 264,
+              "final": {
+                "free_bytes": 516,
+                "allocated_bytes": 0,
+                "peak_bytes": 264
+              },
+              "returned_after_stop": true
+            }
+          },
+          "unexpected_fault_lines": []
+        },
+        "reflector": {
+          "stack_high_water": {
+            "BT LW WQ": {
+              "reserved_bytes": 2104,
+              "used_bytes": 1168,
+              "remaining_bytes": 936
+            },
+            "BT RAS RRSP WQ": {
+              "reserved_bytes": 1024,
+              "used_bytes": 428,
+              "remaining_bytes": 596
+            },
+            "BT RX WQ": {
+              "reserved_bytes": 3200,
+              "used_bytes": 1232,
+              "remaining_bytes": 1968
+            },
+            "ISR0": {
+              "reserved_bytes": 2048,
+              "used_bytes": 496,
+              "remaining_bytes": 1552
+            },
+            "MPSL Work": {
+              "reserved_bytes": 1024,
+              "used_bytes": 760,
+              "remaining_bytes": 264
+            },
+            "bt_tx_processor": {
+              "reserved_bytes": 904,
+              "used_bytes": 404,
+              "remaining_bytes": 500
+            },
+            "idle": {
+              "reserved_bytes": 320,
+              "used_bytes": 64,
+              "remaining_bytes": 256
+            },
+            "main": {
+              "reserved_bytes": 8192,
+              "used_bytes": 1032,
+              "remaining_bytes": 7160
+            },
+            "sysworkq": {
+              "reserved_bytes": 4096,
+              "used_bytes": 448,
+              "remaining_bytes": 3648
+            }
+          },
+          "malloc": {
+            "minimum_free_bytes": 8108,
+            "maximum_allocated_bytes": 0,
+            "maximum_peak_bytes": 0,
+            "final": {
+              "free_bytes": 8108,
+              "allocated_bytes": 0,
+              "peak_bytes": 0
+            },
+            "returned_after_stop": true
+          },
+          "kernel_heaps": {},
+          "unexpected_fault_lines": []
+        }
+      }
+    }
+  ],
+  "previous_supported_worst_loads": [
+    {
+      "record": "00_Docs/04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md",
+      "load": "supported bidirectional two-stream CIS, 10000 frames per direction and 20 teardown cycles",
+      "stack_high_water_bytes": {
+        "client": {
+          "BT RX WQ": [
+            1520,
+            3200
+          ],
+          "BT LW WQ": [
+            936,
+            2104
+          ],
+          "MPSL Work": [
+            400,
+            1024
+          ],
+          "main": [
+            3568,
+            8192
+          ]
+        },
+        "server": {
+          "BT RX WQ": [
+            1232,
+            3200
+          ],
+          "BT LW WQ": [
+            1168,
+            2104
+          ],
+          "MPSL Work": [
+            656,
+            1024
+          ],
+          "main": [
+            3560,
+            8192
+          ]
+        }
+      },
+      "malloc_allocated_peak_bytes": [
+        0,
+        0
+      ]
+    },
+    {
+      "record": "00_Docs/04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md",
+      "load": "1000 valid 256/256-step CS raw results",
+      "stack_high_water_bytes": {
+        "initiator": {
+          "BT RX WQ": [
+            1520,
+            3200
+          ],
+          "BT LW WQ": [
+            936,
+            2104
+          ],
+          "MPSL Work": [
+            504,
+            1024
+          ],
+          "main": [
+            1104,
+            8192
+          ]
+        },
+        "reflector": {
+          "BT RX WQ": [
+            1232,
+            3200
+          ],
+          "BT LW WQ": [
+            1168,
+            2104
+          ],
+          "MPSL Work": [
+            760,
+            1024
+          ],
+          "main": [
+            1032,
+            8192
+          ]
+        }
+      },
+      "malloc_allocated_peak_bytes": [
+        0,
+        0
+      ]
+    }
+  ],
+  "allocation_failure_and_return": {
+    "net_buf_pool": {
+      "result": "PASS",
+      "evidence": "257 record: four 512-byte CoC TX buffers accepted, fifth returned busy, all four echoed, reconnect recovery passed",
+      "classification": "bounded pool allocation failure; distinct from direct peer-credit exhaustion"
+    },
+    "libc_malloc_and_kernel_heap": {
+      "result": "PASS",
+      "evidence": "all reported final allocated values are zero; CoC and CS kernel-heap peaks returned to zero allocation",
+      "forced_failure_injection": "NOT RUN — measured paths did not allocate from libc malloc; synthetic exhaustion would not exercise a supported consumer"
+    },
+    "leak_or_unbounded_retry": {
+      "result": "PASS",
+      "evidence": "bounded timeouts, finite recovery actions, both STOP in all three new HIL cases"
+    }
+  },
+  "telemetry_impact": {
+    "result": "PASS",
+    "placement": "reports are emitted at ready/error/recovery/STOP checkpoints, outside the recovery acceptance counter",
+    "native_comparison": "the native pairs use the same analyzer and heap-stat configuration",
+    "timing": "all acceptance windows are wall-clock bounded; no cause-free retry can convert a failure to PASS"
+  },
+  "sdc_pool": {
+    "result": "PASS",
+    "record": "00_Docs/04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md",
+    "contract": "fixed NCS v3.4.0 role/count formula, initialization size check, 8-byte address alignment",
+    "interpretation": "static sdc_mempool symbol size is not runtime high-water",
+    "decision": "keep SDK-calculated sizes; internal high-water is not an additional gate"
+  },
+  "final_size_decisions": [
+    {
+      "item": "main stack",
+      "reserved_bytes": 8192,
+      "largest_observed_used_bytes": 3568,
+      "minimum_observed_margin_bytes": 4624,
+      "decision": "KEEP",
+      "reason": "maximum remains from supported two-stream Audio; cross-feature and instrumentation variance does not justify a profile-wide reduction"
+    },
+    {
+      "item": "system workqueue stack",
+      "reserved_bytes": 4096,
+      "largest_new_observed_used_bytes": 912,
+      "minimum_new_observed_margin_bytes": 3184,
+      "decision": "KEEP",
+      "reason": "shared system facility across standard/full and adaptive feature combinations"
+    },
+    {
+      "item": "BT RX workqueue stack",
+      "reserved_bytes": 3200,
+      "largest_observed_used_bytes": 1520,
+      "minimum_observed_margin_bytes": 1680,
+      "decision": "KEEP",
+      "reason": "same maximum occurs in Audio and CS supported workloads"
+    },
+    {
+      "item": "BT long workqueue stack",
+      "reserved_bytes": 2104,
+      "largest_observed_used_bytes": 1168,
+      "minimum_observed_margin_bytes": 936,
+      "decision": "KEEP",
+      "reason": "shared Bluetooth host path; no configuration-specific shrink proof"
+    },
+    {
+      "item": "MPSL work stack",
+      "reserved_bytes": 1024,
+      "largest_observed_used_bytes": 760,
+      "minimum_observed_margin_bytes": 264,
+      "decision": "KEEP",
+      "reason": "CS reflector leaves only 264 bytes in the observed maximum"
+    },
+    {
+      "item": "libc malloc arena",
+      "reserved_bytes": 8192,
+      "largest_observed_allocated_bytes": 0,
+      "decision": "KEEP",
+      "reason": "standard/full compatibility and optional codec/library paths remain; zero use in selected paths alone is not shrink proof"
+    },
+    {
+      "item": "feature kernel heap",
+      "decision": "KEEP CONFIGURED VALUES",
+      "reason": "CoC 8192-byte pool stayed free; CS small pool reached 264-byte peak and returned; Audio source intentionally keeps kernel heap disabled"
+    }
+  ],
+  "conclusion": "No supported workload shows overflow, leak, or unrecovered allocation failure. No size has sufficient evidence for reduction, so existing reservations remain final for P2."
+}

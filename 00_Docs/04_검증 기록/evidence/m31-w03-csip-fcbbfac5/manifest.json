@@ -1,0 +1,98 @@
+{
+  "schema": "nucode.m31.csip-evidence.v1",
+  "status": "PASS",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "sdk_lock": {
+    "ncs_nrf": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_package": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain": "dcbdc366a1"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "public_examples": {
+    "coordinator": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino",
+      "canonical_lf_sha256": "b7f12a192da55f6dc7bd2c072776dbe9cd99ad7a4319e1ccb6581d2c56299fb7"
+    },
+    "member": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino",
+      "canonical_lf_sha256": "68bc8eb82a0b4753f73c80e9e15517517d412bdb75fb79b9f337284a3f726f68"
+    }
+  },
+  "builds": {
+    "coordinator": {
+      "program_bytes": 311252,
+      "ram_bytes": 199544,
+      "image_sha256": "841cd72d4728050e3e4baa1e6c6eecf7f9def2d1874465125442bcd963746663",
+      "manifest": "build-provenance/coordinator.nu54-build.json",
+      "manifest_sha256": "09016bdac6a1aa5d8f7d69e2758dc6f164c9d11282cc0f1100fdb7cca8adff15"
+    },
+    "member": {
+      "program_bytes": 394816,
+      "ram_bytes": 210865,
+      "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32",
+      "manifest": "build-provenance/member.nu54-build.json",
+      "manifest_sha256": "d2d3717e1a70d07a2ee9b0ecc818cc9bba029adf83adb0f1a9a0909fdaf38aa1"
+    }
+  },
+  "board_map": {
+    "coordinator": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+    },
+    "member_one": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    },
+    "member_two": {
+      "board": "E",
+      "port": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+    }
+  },
+  "campaign": {
+    "evidence": "campaign.summary.json",
+    "evidence_sha256": "8991b0a980321d042c2a0e27df31927c0161b7670325396abf4dc6b04f678bae",
+    "runner": "tools/csip_full_campaign_fcbbfac5.py",
+    "runner_sha256": "ffe68afb7418ac307db21eede6675d11623c03e18428434a003b255e15a0660d",
+    "scenarios_passed": 7,
+    "scenarios_total": 7,
+    "scenarios": [
+      "positive",
+      "wrong-rank",
+      "wrong-sirk",
+      "security-sync-failure",
+      "security-async-failure",
+      "watchdog",
+      "recovery"
+    ]
+  },
+  "recovery": {
+    "evidence": "recovery/recovery.summary.json",
+    "evidence_sha256": "38c8d628e8d8253042b71300c44ed0dc0b438c22b68e055ae91d08ce086dd803",
+    "transcript": "recovery/recovery.transcript.log",
+    "transcript_sha256": "ae195357a6dfff652c36f58a3e6cd6df2547a9e702ca1e4a4ac323e45fa357da",
+    "completed_cycles": 20,
+    "minimum_cycle_seconds": 6.083,
+    "maximum_cycle_seconds": 6.987,
+    "exact_handle_authorization_each_rejoin": true,
+    "lock_release_each_cycle": true,
+    "valid_state_operation_reports": 101
+  },
+  "diagnostic_history": {
+    "path": "diagnostic-history/406fb3d0-v5",
+    "status": "PRESERVED_FAILURE",
+    "finding": "동일 부팅 세션 재연결에서 발견 순서와 알려진 피어 제한을 보강한 뒤 최종 캠페인으로 재검증함"
+  },
+  "privacy": {
+    "raw_probe_identifiers_recorded": false,
+    "probe_identity_form": "sha256"
+  },
+  "scope": {
+    "physical_audio": "NOT_RUN",
+    "external_peer_interoperability": "NOT_RUN",
+    "qualification_claim": false
+  }
+}

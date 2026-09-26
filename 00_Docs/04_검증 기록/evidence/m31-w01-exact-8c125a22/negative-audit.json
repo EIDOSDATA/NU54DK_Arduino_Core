@@ -1,0 +1,14 @@
+{
+  "test_id": "M31-NEG-01:host_parser",
+  "status": "PASS",
+  "scope": "twenty_distinct_bad_inputs",
+  "source_clean": true,
+  "source_revision": "f5619f235a6a4bd2347e8ba41d8bc5e76221228c",
+  "rejected": 20,
+  "unexpected_success": 0,
+  "test_file": "tests/host/test_m31_negative_matrix.py",
+  "test_sha256": "cba938d60e108f838a1af985df40a6ce381ebbe8e70ab9491281142b0f476c90",
+  "unittest_output_sha256": "353239c6a391a5fe2e900b988e30c68aa3a27170e16d3a962ba3592c634b44fa",
+  "full_host_raw_sha256": "b211967ca60354988d65e35c856c003da7b7b9db6f14f32847703a2ae16210e1",
+  "full_host_gzip_path": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/host-f5619f23.log.gz"
+}

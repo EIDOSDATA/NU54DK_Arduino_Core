@@ -4,6 +4,28 @@ v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 �
 계약을 보존하며 현재 보드의 결선 상태를 나타내지 않습니다. 최종 지원·검증 범위는
 [v0.4.0 완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 확인합니다.
 
+| 개발 범위 | 현재 실기·작업 상태 | 근거 |
+| --- | --- | --- |
+| M28 GAP/Link/Privacy | W01~W08 완료, 9/9 test ID PASS | [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
+| M29 ATT/GATT/L2CAP | W01~W08 완료, 10/10 test ID와 Windows/Intel GATT 상호운용 PASS | [149번 기록](<../../../00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
+| M30 Security/Profile/DFU | W01~W08 완료, 10/10 test ID PASS. 실제 전원 차단 12/12 | [161번 완료 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
+| M31 ISO/LE Audio/DF/CS | W01~W08 완료(8/8), W03 profile 11/11·W04 DF·W05 CS·W06 자원/회귀·W07 설치 예제/HIL·W08 Windows RC 준비 PASS | [M31 TODO](../../../00_Docs/TODO_M31.md) · [W08 완료](<../../../00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) |
+
+M28~M31의 채택 기능은 공개 후보 `v0.5.0-rc.1`에 포함됐으며 공개 다운로드·설치 smoke도
+[268번 기록](<../../../00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)에서 완료했습니다.
+정식 지원 v0.4.1의 패키지 범위와 구분하며, v0.5.0 stable 승격은 별도 후속입니다.
+메모리 최적화 P0~P2와 W04~W08을 완료했고 현재 작업 브랜치는 `0.5.0-RC1`입니다.
+W06은 독립 ISO·Audio·DF·CS image의 자원·
+수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
+실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
+
+P0·P1·P2는 완료했습니다. P2의 지원 범위 오류·최악 부하, stack/heap 최종 크기,
+동일 조건 Nordic native FLASH/RAM 비교 세 축은
+[262번](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 기록합니다.
+고정 NCS v3.4.0 제품 SDC의 DF IQ RX는 `UNSUPPORTED`·범위 제외입니다.
+CS 간헐 loss/counter gap과 SDC 내부 high-water 비노출을 추가 gate로 두지 않습니다.
+과거 실패·HOLD 원본은 보존하고, 지원 기능의 유효 결과·양측 STOP·fault·복구 검사는 유지합니다.
+
 빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
 [제외된 T13 System OFF 설계](T13_POWER.md) · [과거 T12 C 결선](COMMON_WIRING.md)
@@ -21,9 +43,14 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 찾을 내용 | 절 |
 | --- | --- |
 | 공통 실행 경계 | [실행 원칙](#실행-원칙) |
+| M31 ISO·Audio·DF·CS·P2 | [완료 근거와 실행기](#m31-isoaudiodfcs와-메모리-계측) |
 | 온보드 GPIO·버튼 | [M14 신규 핀](#m14-신규-핀-hil), [AC-01 loopback](#ac-01-p25p26-gpio-loopback-hil) |
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
+| M28 BLE 확장 | [W01 capability](#m28-w01-capability-hil), [W07 2보드](#m28-w07-두-보드-선행-hil), [W07 3보드](#m28-w07-세-보드-hil) |
+| M29 ATT/GATT | [W02 long read](#m29-w02-두-보드-long-read-hil), [W03 long/reliable write](#m29-w03-두-보드-longreliable-write-hil), [W04 descriptor·authorization](#m29-w04-두-보드-descriptorauthorization-hil) |
+| M29 cache·CoC·W07 | [W05 robust cache](#m29-w05-두-보드-robust-gatt-cache-hil), [W06 LE CoC·negative](#m29-w06-두-보드-le-cocnegative-hil), [W07 Signed Write·EATT](#m29-w07-두-보드-signed-writeeatt-hil), [W07 통합·회귀·Windows](#m29-w07-세-보드-통합회귀와-windows-상호운용) |
+| M30 secure multi-link·전원 | [W07 세 보드](#m30-w07-세-보드-secure-multi-link-hil), [W08 실제 전원 차단 완료](#m30-w08-실제-전원-차단-hil-완료) |
 | Peripheral Fabric | [M24~M26 온보드](#v040-m24m26-무배선-온보드-gate), [두 보드 완료 기준](#v040-두-보드-기능-fixture의-완료-기준) |
 | T13 진단 | [UART 첫 오류 이력](#t13-uart-첫-오류-진단), [복구 판정 안내](T13_RECOVERY.md) |
 
@@ -48,6 +75,39 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m20_ble_gatt.py` | 범용 GATT read/write/notify/indicate·재발견 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `m21_ble_security.py` | pairing·bond 복원/삭제/repair와 BAS/DIS/HID protocol 자동 검증 | NU54DK 두 대, 각 보드 USB/DAPLink UART, 추가 배선 없음 |
 | `ble_pair_hil_common.py` | M19~M21 exact image·두 UID·UART·evidence 공통 경계 | 직접 실행하지 않음 |
+| `m28_ble_capability.py` | M28CAP/1 HCI/Host 원장·revision·nonce·timeout strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
+| `m28_ble_2board.py` | M28B2 확장 광고·PAwR·RPA/bond/reconnect strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m28_ble_3board.py` | M28B3 mixed-role LINK·PER/PAST·CTRL·SOAK strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_capability.py` | M29CAP/1 ATT/GATT·L2CAP Host capability strict 검증 | NU54DK 한 대, USB/DAPLink UART, 추가 배선 없음 |
+| `m29_ble_long.py` | M29W02/1 MTU 247·512-byte long read 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_long_write.py` | M29W03/1 MTU 247·512-byte reliable write/read-back 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_descriptor.py` | M29W04/1 descriptor 4개·authorization·4-handle read multiple 100회 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_cache.py` | M29W05/1 bonded reconnect·Service Changed·database migration·corrupt cache strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_coc.py` | M29W06/1 동시 CoC 2채널·512-byte SDU·5종 negative·disconnect 복구 strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_signed_eatt.py` | M29W07/1 Signed Write·CSRK/counter persistence·replay 거부·EATT 2-bearer strict 검증 | NU54DK 두 대, 독립 DAP/UART, 추가 배선 없음; W07-C 범위 |
+| `m29_ble_multi.py` | M29W07D/1 mixed DUT의 두 link GATT·CoC traffic strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m29_ble_regression.py` | M19/M20/M21/M28 네 raw evidence와 정확히 세 UID를 묶는 회귀 aggregate | 장치 재조작 없이 같은 실행 묶음의 네 증거를 검사 |
+| `m29_ble_windows_gatt.py` | WinRT central의 read/write/notify/indicate·재연결 상호운용 검증 | NU54DK 한 대와 Windows Intel Bluetooth, 추가 배선 없음 |
+| `m30_ble_capability.py` | 보안·OOB·profile·DFU capability와 exact identity 검증 | NU54DK 한 대, USB/DAPLink UART |
+| `m30_ble_pair.py` | IO capability 5종 각각 10회 pairing 검증 | NU54DK 두 대, 독립 DAP/UART |
+| `m30_ble_bond.py` | bond migration·privacy·stale key 거부 검증 | NU54DK 두 대, 독립 DAP/UART |
+| `m30_ble_oob.py` | Host가 VCOM으로 교환한 SC OOB record의 20회 pairing·mismatch 거부 검증 | NU54DK 두 대, 독립 DAP/UART; 유선 OOB이며 NFC RF 시험 아님 |
+| `m30_ble_profile.py` | 일곱 BLE profile의 두 보드 검증 | NU54DK 두 대, 독립 DAP/UART |
+| `m30_mcuboot.py` | MCUboot 서명 image·부정 image 부팅 검증 | NU54DK 한 대, exact bootloader·서명 image·DAP/UART |
+| `m30_ble_dfu.py` | 인증 BLE DFU·부정 image·rollback 검증 | NU54DK 두 대, exact bootloader·서명 image·독립 DAP/UART |
+| `m30_ble_multi.py` | generation handle별 security operation과 cross-link 격리 strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
+| `m30_power_loss.py` | 별도 준비 mode와 실제 전원 차단 4지점×3회 주입·복구 판정 | NU54DK 두 대, DUT 물리 전원 차단 필요; exact `ae5186f7…` 12/12 PASS |
+| `p2_cs_native_comparison_run.py` | 고정 Nordic RAS 계측 복사본의 유효 counter·abort/busy·양측 STOP 비교 | 두 exact NU54DK, [계측 fixture](fixtures/NordicRasComparison/README.md), [250번 기록](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
+| `p2_cs_memory_run.py` | Arduino raw RAS 유효 step·개수·양측 STOP 판정, 중복/역행 거부; gap은 `observe_only` | 두 exact NU54DK, 후속 256-step 유효 raw 1,000건·양측 STOP 확인. [260번 기록](<../../../00_Docs/04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) |
+| `p2_coc_recovery_memory_run.py` | 두 채널 512 B echo·ACL 재연결/서버 SWD reset 각 20회·양측 STOP·stack/heap, `--burst`로 로컬 TX pool 포화 후 복구 | `peer-reset`은 전원 차단이 아니며 로컬 pool 포화는 상대 credit 고갈과 다름. [257번 기록](<../../../00_Docs/04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) |
+| `p2_coc_peer_credit_memory_run.py` | native peer가 실제 초기 credit 1을 보유해 Arduino client의 3개 SDU 대기·credit 반환·새 SDU 복구·메모리·STOP 판정 | [CoC peer fixture](fixtures/P2CocCreditPeer/README.md), [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| `p2_audio_broadcast_rejoin_memory_run.py` | 암호화 LC3/BIS source SWD reset 뒤 sink 공개 API 재가입·100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; initial sync 실패는 최대 3회만 명시적 재가입, [253번 기록](<../../../00_Docs/04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) |
+| `p2_audio_unicast_peer_reset_memory_run.py` | LC3/CIS source SWD reset 뒤 sink 지속 실행·공개 API 재연결·누적 100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; [254번 기록](<../../../00_Docs/04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) |
+| `p2_audio_duplex_memory_run.py` | 양방향 LC3/CIS frame·drop·즉시 종료와 stack/heap 계측 | 두 exact NU54DK, 양방향 각 10,000 frame·drop 0와 즉시 종료 20/20. [258번 기록](<../../../00_Docs/04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) |
+| `p2_audio_encryption_recovery_memory_run.py` | encrypted BIS wrong Code의 native `-61`·decode 0과 올바른 Code 100-frame 복구·메모리·STOP 판정 | 두 exact NU54DK, [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| `p2_cs_peer_loss_memory_run.py` | 256-step 첫 raw 전 reflector reset, initiator disconnect·자동 재연결·유효 raw 20개·메모리·STOP 판정 | SWD CPU reset이며 물리 전원 차단 아님. [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| `p2_df_connectionless_rx_run.py` | 과거 LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 진단 | IQ 0·수신 fault를 보존. **P2 범위 제외·반복 실행 금지**. [259번 지원 경계](<../../../00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
+| `m31_w07_hil_campaign.py` | W07 clean 설치 image의 preflight·ISO·Audio·DF·CS 역할 재배치, case별 lease·배타 lock·익명 evidence | NU54DK 3대, exact sector flash·`auto_unlock=false`; ISO를 마지막에 실행해 세 역할 STOP. [266번 기록](<../../../00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -82,6 +142,308 @@ T12 PWM capture의 초기 240조건은 [97번](<../../../00_Docs/04_검증 기�
 - 실기 PASS는 해당 commit, artifact hash와 fixture 조건을 검증 기록에 연결합니다.
 - M15 운영 절차에서는 고정된 NCS Ubuntu container를 사용하는 clean GitHub Actions build
   artifact만 사용합니다. 로컬 Windows build를 M15 검증 증적으로 대체하지 않습니다.
+
+## M31 ISO·Audio·DF·CS와 메모리 계측
+
+M31 기능 판정은 [M31 TODO](../../../00_Docs/TODO_M31.md)와
+[readiness](../../../variants/nu54dk/m31-ble-readiness.json)가 관리합니다. 아래는 완료한 시험의
+진입점입니다. 재실행할 때는 해당 기록의 역할·image·분모를 확인하고 공통 실행 원칙을 적용합니다.
+
+| 범위 | 실행기·fixture | 완료 근거 |
+| --- | --- | --- |
+| 공개 ISO 사용자 SDU | [CIS](m31_iso_public_cis_pair_run.py) · [BIS](m31_iso_public_bis_pair_run.py) · [세 보드 CIS→BIS](m31_iso_public_combined_run.py) | [199번](<../../../00_Docs/04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
+| LE Audio 오류·복구 | [BAP recovery](m31_audio_bap_recovery_run.py) · [원격 negative](m31_audio_bap_negative_run.py) · [TMAP/GMAP](m31_tmap_gmap_run.py) · [HAP](m31_audio_hap_run.py) | [214번](<../../../00_Docs/04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
+| Direction Finding | [CTE beacon](m31_df_beacon_run.py) · [내부 LL 연결형 진단](m31_df_connected_rx_run.py) | [263번](<../../../00_Docs/04_검증 기록/263_M31_W04_Direction_Finding_완료.md>); 제품 SDC IQ RX·AoD는 UNSUPPORTED |
+| Channel Sounding | [secure RAS pair](m31_cs_ras_pair_run.py) · [wrong peer](m31_cs_wrong_peer_run.py) · [stale key](m31_cs_stale_key_run.py) | [264번](<../../../00_Docs/04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
+| P2 오류 부하·메모리 | [상대 credit 고갈](p2_coc_peer_credit_memory_run.py) · [Audio 암호화 오류 복구](p2_audio_encryption_recovery_memory_run.py) · [CS peer loss](p2_cs_peer_loss_memory_run.py) | [262번](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| 최종 세 보드 역할 회귀 | [W07 campaign](m31_w07_hil_campaign.py) | [266번](<../../../00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) |
+
+Native RAS 진단은 [NordicRasComparison](fixtures/NordicRasComparison/README.md), 동등 조건
+메모리 비교는 [CoC](fixtures/P2CocCreditPeer/README.md)와
+[Audio](fixtures/P2NativeAudioComparison/README.md)를 확인합니다. 두 비교의 설정과 판정 목적을
+섞지 않습니다. 내부 LL connectionless FAIL 재현 경로는 자동 반복 실행 대상이 아닙니다.
+
+## M30-W07 세 보드 secure multi-link HIL
+
+W07은 Peripheral, Mixed, Central NU54DK 세 대와 독립 DAPLink target UART 세 경로를 사용한다.
+Runner는 UID와 DAPLink volume을 exact role에 결합하고 `auto`에서 interface 3 UART만 선택한다.
+여러 포트 중 낮은 COM 번호나 이전 실행의 번호를 임의로 재사용하지 않는다. 보드 사이 추가 GPIO·
+전원 배선은 필요하지 않다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Commit = git -C $CoreRoot rev-parse HEAD
+
+py -3 -I -B "$CoreRoot\tests\hil\nu54dk\m30_ble_multi.py" `
+  --peripheral-hex "<peripheral zephyr.hex>" `
+  --mixed-hex "<mixed zephyr.hex>" `
+  --central-hex "<central zephyr.hex>" `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" --peripheral-volume "<volume>" `
+  --mixed-board-id "<mixed CMSIS-DAP UID>" --mixed-volume "<volume>" `
+  --central-board-id "<central CMSIS-DAP UID>" --central-volume "<volume>" `
+  --peripheral-port auto --mixed-port auto --central-port auto `
+  --flash-backend pyocd-sector --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m30-w07\m30-multi-evidence.json"
+```
+
+Protocol은 같은 128-bit nonce와 full Core revision을 세 UART·두 RF link에 묶는다. Mixed upstream
+link가 L2·16-byte가 된 뒤 downstream advertising을 시작하고, 세 role의 LINK가 모두 확인된 뒤에만
+RUN을 보낸다. Peripheral server 100회, Mixed client/server 각 100회, Central client 100회의
+generation-handle security 요청·현재 level·실제 key size가 모두 맞아야 PASS한다. Cross-link event,
+security 오류, key-size 오류와 callback context 위반은 하나라도 있으면 즉시 실패한다.
+
+Exact `d94f5ec3…`에서 세 role build와 실제 `M30-MULTI-01`이 PASS했다. 당시 E 보드의 COM12는
+보조 VCOM이어서 응답하지 않았고 자동 탐색한 interface 3 COM13이 target UART였다. Reset 진단은
+실제 전원 차단 증거로 계산하지 않았다. 이후 W08은 별도 runner로 완료했으며 W07 결과를 전원 HIL
+근거로 대체하지 않았다.
+
+## M30-W08 실제 전원 차단 HIL 완료
+
+`M30-POWER-01`은 exact `ae5186f7790a748641fb04128c16156519ee1017`에서 네 주입 지점마다
+실제 DUT 전원 차단·복구를 3회씩 수행해 **12/12 PASS**했다. 배터리·별도 전원·역급전 없이
+Peripheral DUT target USB만 분리했고 Central USB는 유지했다. Reset, USB/COM disappearance 또는
+과거 System OFF PASS로 실제 전원 상실을 대체하지 않았다.
+
+각 복구에서 confirmed image만 유효하게 부팅하고 bond/settings가 유지되며 전체 v42 DFU 재시도가
+가능함을 확인했다. Recovery failure와 invalid image boot는 0이다. MCUboot 60초 관찰 훅과 Host
+복구 timeout이 겹친 제외 시도는 원본 journal과 감사 파일로 별도 보존했고, Host 복구 한도를
+120초로 늘린 뒤 같은 지점을 재검증했다. 최종 근거는
+[161번 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
+[`m30-ble-readiness.json`](../../../variants/nu54dk/m30-ble-readiness.json)이다.
+
+유선 OOB는 W03 완료 범위를 유지하며 NFC adapter의 Host/build 결과를 NFC RF PASS로 올리지 않는다.
+
+## M29-W02 두 보드 long read HIL
+
+W02는 peripheral과 central NU54DK 각 한 대, 독립 DAPLink target UART 두 경로를 사용하며 보드
+간 GPIO나 전원선을 연결하지 않는다. Runner는 현재 UID·MSD·UART를 함께 확인하고 exact clean
+Core·board·application source digest와 HEX 옆 build record를 검사한 뒤에만 flash한다. Peripheral
+광고 확인 전에는 central scan을 시작하지 않으며 두 role은 같은 128-bit nonce와 full Core SHA를
+사용한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_long_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_long_central의 zephyr.hex>"
+
+& $Python -I -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w02\long-read-evidence.json"
+```
+
+고정 parser는 READY·BEGIN·ADVERTISE/SCAN·LINK·RESULT·END 순서와 MTU 247, 512-byte read
+100/100, corrupt·stale 0, main-thread callback을 요구한다. W02 PASS는 long read 근거이며 W03의
+long/reliable write와 partial commit을 포함하지 않으므로 `M29-LONG-01` 전체 PASS가 아니다.
+
+## M29-W03 두 보드 long/reliable write HIL
+
+W03은 W02와 같은 두 NU54DK·독립 DAP/UART·무배선 RF 구성을 사용한다. Runner는 exact clean
+Core와 W03 application뿐 아니라 재사용하는 W02 공통 runner source도 digest 검사에 묶는다.
+Flash 뒤 UART input을 비우고 각 role에 `M29W03|1|READY?`를 보낸 뒤 고정 READY 한 줄만
+받으므로 DAPLink reset 시작 byte가 protocol record로 오인되지 않는다. 그 뒤 두 role은 같은
+128-bit nonce와 full Core SHA를 사용한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_long_write_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_long_write_central의 zephyr.hex>"
+
+& $Python -I -B "$CoreRoot\tests\hil\nu54dk\m29_ble_long_write.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w03\long-write-evidence.json"
+```
+
+고정 parser는 READY·BEGIN·ADVERTISE/SCAN·LINK·RESULT·END 순서, MTU 247, 512-byte reliable
+write와 read-back 각 100/100, corrupt·partial commit·stale 0, main-thread callback을 요구한다.
+Host negative는 cancel·offset·overflow·다른 characteristic 혼합·stale generation을 포함한다.
+exact `babba5a1…`에서 target 2/2와 두 보드 HIL이 PASS해 `M29-LONG-01`을 닫았다. 첫 exact
+`8629611e…` 실행은 READY 앞 raw `0x1c`를 fail-closed로 거부했으며, RF·GPIO·ATT를 시작하기 전의
+DAPLink UART 시작 noise로 분류했다. 실패와 수정 뒤 PASS transcript는 모두 143번 기록에 보존한다.
+
+## M29-W04 두 보드 descriptor·authorization HIL
+
+W04는 W02/W03과 같은 두 NU54DK·독립 DAP/UART·무배선 RF 구성을 사용한다. Peripheral은
+characteristic 하나에 4개 descriptor를 등록하고 characteristic write와 descriptor read를 동기
+authorization한다. Central은 exact UUID 4개를 현재 characteristic handle 범위에서 발견하고,
+잘못된 write가 ATT `0x08`로 거부되는지 확인한 뒤 nonce로 unlock하여 4-handle Read Multiple을
+100회 수행한다. Runner는 `M29W04|1`의 exact record 순서·full revision·128-bit nonce와 build
+record를 검사하며 noise·누락·중복·재배치·stale nonce·wrong revision·target FAIL을 거부한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Commit = git -C $CoreRoot rev-parse HEAD
+$BuildRoot = "C:\<아직 없는 한 글자 경로>"
+$Toolchain = "C:\ncs\toolchains\dcbdc366a1"
+$Python = "$Toolchain\opt\bin\python.exe"
+$env:PATH = "$Toolchain;$Toolchain\mingw64\bin;$Toolchain\bin;$Toolchain\opt\bin;$Toolchain\opt\bin\Scripts;$env:PATH"
+$env:PYTHONPATH = "$Toolchain\opt\bin;$Toolchain\opt\bin\Lib;$Toolchain\opt\bin\Lib\site-packages"
+$env:ZEPHYR_TOOLCHAIN_VARIANT = "zephyr/gnu"
+$env:ZEPHYR_SDK_INSTALL_DIR = "$Toolchain\opt\zephyr-sdk"
+
+& $Python -B tools/ci/run_zephyr_build.py `
+  --workspace C:\ncs\v3.4.0 --outdir $BuildRoot --group v0.5.0 --jobs 2 `
+  --suite nucode.m29.ble_descriptor_peripheral `
+  --suite nucode.m29.ble_descriptor_central
+
+& $Python -I -B "$CoreRoot\tests\hil\nu54dk\m29_ble_descriptor.py" `
+  --peripheral-hex "<nucode.m29.ble_descriptor_peripheral의 zephyr.hex>" `
+  --central-hex "<nucode.m29.ble_descriptor_central의 zephyr.hex>" `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --flash-backend pyocd-sector `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w04\descriptor-evidence.json"
+```
+
+Exact `068a1765…`에서 target 2/2 warning 0과 `M29-DESC-01`이 PASS했다. MTU 247,
+descriptor 4개, 4-handle Read Multiple 100/100, authorization 허용 401·예상 거부 1·오판 0,
+corrupt·stale 0을 확인했다. 첫 `34d24ea6…` 실기는 예상 authorization 거부의 전역 `-EIO`를
+상세 ATT event보다 먼저 실패로 오판했다. `rejecting` phase에서만 상세 `operation_failed`의 exact
+ATT `0x08`을 기다리도록 수정했고, 다른 phase의 전역 오류는 계속 즉시 실패한다. 실패와 PASS
+원본은 [144번 기록](<../../../00_Docs/04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md>)에
+보존한다.
+
+## M29-W05 두 보드 robust GATT cache HIL
+
+W05는 두 NU54DK·독립 DAP/UART·무배선 RF 구성을 사용한다. Runner는 exact clean Core·board·
+application과 build record를 검사하고 두 role의 persistent bond/cache/session을 RESET한 뒤 같은
+128-bit nonce로 시작한다. Peripheral의 실제 Service Changed, database hash 변경과 warm reboot,
+central의 bonded reconnect 20회, handle migration과 손상 cache 주입 뒤 재부팅을 한 bounded
+session에서 수행한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_cache_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_cache_central의 zephyr.hex>"
+
+py -3.14 -B "$CoreRoot\tests\hil\nu54dk\m29_ble_cache.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --flash-backend pyocd-sector `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w05\cache-evidence.json"
+```
+
+고정 parser는 READY·BEGIN·Service Changed·20회 restore·migration·corrupt cache 거부·RESULT·END
+순서와 full revision·nonce를 검사한다. Exact `e587c4fe…`에서 target 2/2 warning 0과
+`M29-CACHE-01`이 PASS했다. 첫 `8f1f167d…` 실패는 CMSIS-DAP/GDB가
+`startCacheDiscovery(start=20,end=19)` 호출을 포착해 Zephyr property bit 직접 cast 문제로
+확정했다. `publicProperties()`로 수정한 뒤 같은 두 보드 조건에서 PASS했으며 상세 근거는
+[145번 기록](<../../../00_Docs/04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md>)에 있다.
+
+## M29-W06 두 보드 LE CoC·negative HIL
+
+W06은 두 NU54DK·독립 DAP/UART·무배선 RF 구성을 사용한다. Peripheral은 동적 PSM `0x0080`의
+server를 열고 central은 generation handle 2개로 동시에 연결한다. Runner는 clean exact Core·
+board·application·공통 runner와 각 HEX 옆 build record를 검증하고, `M29W06|1` READY 뒤
+peripheral 광고를 먼저 확인한 다음 central을 시작한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_coc_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_coc_central의 zephyr.hex>"
+
+py -3.14 -B "$CoreRoot\tests\hil\nu54dk\m29_ble_coc.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --flash-backend pyocd-sector `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w06\coc-evidence.json"
+```
+
+고정 parser는 두 채널·local/remote MTU 512, 방향별 channel당 1,000 SDU, malformed·offset·execute·
+PSM·credit 각 20회 거부, disconnect 뒤 이전 handle 거부와 새 2채널 복구를 exact 순서·full
+revision·128-bit nonce로 검사한다. Exact `767bb4af…`에서 target 2/2 warning 0,
+`M29-COC-01`과 `M29-NEG-01`이 PASS했다. 첫 실행은 W06 광고의 `psm=128` 필드를 공통 runner가
+기대하지 않아 RF 시작 전 fail-closed 중단됐다. W02~W04 기본 계약은 유지하고 W06이 역할별 광고
+필드를 명시하도록 수정한 뒤 같은 두 보드 조건에서 PASS했다. 실패 transcript와 최종 근거는
+[146번 기록](<../../../00_Docs/04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
+
+## M29-W07 두 보드 Signed Write·EATT HIL
+
+W07의 `M29-SIGN-01`과 `M29-EATT-01`은 두 NU54DK·독립 DAP/UART·무배선 RF 구성이다.
+Peripheral·central은 먼저 bond/CSRK를 만들고 20회 재부팅 사이에서 sign counter가 각각 정확히
+증가하는지 검사한다. Runner는 실제 송신한 Signed Write ATT PDU를 한 번 더 전송해 receiver가
+두 번째 PDU를 적용하지 않는지 판정한다. EATT 단계는 암호화 전 연결·3개 bearer 요청을 거부하고,
+암호화 뒤 정확히 2 bearer에서 각각 1,000 ATT operation과 production read/write를 실행한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$CoreRoot = (Get-Location).Path
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+$Commit = git -C $CoreRoot rev-parse HEAD
+$PeripheralHex = "<nucode.m29.ble_signed_eatt_peripheral의 zephyr.hex>"
+$CentralHex = "<nucode.m29.ble_signed_eatt_central의 zephyr.hex>"
+
+& $Python -I "$CoreRoot\tests\hil\nu54dk\m29_ble_signed_eatt.py" `
+  --peripheral-hex $PeripheralHex `
+  --central-hex $CentralHex `
+  --peripheral-board-id "<peripheral CMSIS-DAP UID>" `
+  --central-board-id "<central CMSIS-DAP UID>" `
+  --peripheral-port auto --central-port auto `
+  --flash-backend pyocd-sector `
+  --expected-core-revision $Commit `
+  --evidence "$CoreRoot\build\m29-w07\signed-eatt-evidence.json"
+```
+
+Runner는 clean exact Core와 board revision, application·공통 runner source, 각 HEX 옆 build
+record를 flash 전에 검사한다. `M29W07|1` parser는 READY·CLEAR·PAIR·20 REBOOT/SIGN·REPLAY·EATT
+순서와 full revision·nonce·iteration·counter를 고정하며 noise·누락·중복·재배치·rollback·replay
+accept·bearer shortfall·timeout을 모두 거부한다. Dirty source target 2/2 build는 준비 근거일 뿐
+HIL PASS가 아니다. Clean exact `c71ef4a2…`의 target 2/2와 실제 두 보드 실행은 Signed Write
+20/20·replay 수락 0·EATT bearer별 1,000 operation·deadlock/starvation 0으로 PASS했다. 원본은
+[147번 기록](<../../../00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>)에 있다.
+
+### M29-W07 세 보드 통합·회귀와 Windows 상호운용
+
+W07-D `m29_ble_multi.py`는 peripheral·mixed·central용 HEX와 세 DAPLink UID/UART를 입력받는다.
+세 role을 flash한 뒤에만 UART를 열고 `M29W07D|1` READY·START·BEGIN·LINK·PROGRESS·RESULT·END의
+고정 순서를 검사한다. exact `16eb8fce…`에서 mixed 보드가 central 1-link와 peripheral 1-link를
+동시에 유지했고, link별 GATT와 CoC 각 1,000회, cross-link·payload·drop 오류 0으로
+`M29-MULTI-01`을 PASS했다.
+
+W07-E는 같은 revision에서 기존 runner를 새로 실행해 M19 GAP, M20 GATT, M21 security, M28
+extended advertising·PAwR·RPA·bond reconnect를 세 보드에 순환 배치했다. 각 원본의 revision,
+board, target, nonce, transcript SHA와 합격 수치를 `m29_ble_regression.py`가 다시 검사했고 정확히
+세 UID·4/4 회귀군·실패 0으로 `M29-REG-01`을 PASS했다. 두 시험의 exact raw evidence는 reset
+제어 byte를 잃지 않도록 Base64 archive와 SHA-256 manifest로 보존한다.
+
+Windows 상호운용은 `m29_ble_windows_gatt.py`와 Bleak WinRT backend로 실행한다. stale pair를
+해제하고 전체 GATT database를 탐색했으며 WinRT 객체 close 뒤 target DISCONNECTED까지 3.05초가
+걸리는 것을 측정해 round 간 대기를 5초로 고정했다. exact `a964ae20…`에서 Intel Bluetooth가
+M20 peripheral의 광고 service, GATT property, nonce read, 두 write 종류, notification 2회,
+indication 1회, connect/disconnect 2회를 확인했다. Android/iOS/Linux, 모든 Windows adapter,
+Windows EATT·robust caching을 이 결과에서 추정하지 않는다. 최종 결과와 실패 분류는
+[149번 기록](<../../../00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)에 있다.
 
 ## M15 공식 CI artifact 계약
 
@@ -347,6 +709,134 @@ M21은 128-bit nonce 전체를 Peripheral manufacturer data로 광고하고 Cent
 [M20 검증 기록](<../../../00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md>),
 [M21 검증 기록](<../../../00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)을 따릅니다.
 
+## M28-W01 capability HIL
+
+W01은 NU54DK 한 대에서 SDC가 실제 반환하는 HCI version·Supported Commands·LE Local Supported
+Features·최대 advertising data·resolving list 자원을 읽는다. 결합 Host/controller adapter에서
+application에 재노출하지 않는 advertising set 수와 periodic advertiser list 크기는 command bit와
+public Host API의 생성/삭제·add/remove 왕복으로 최소 한 slot을 확인한다. Host Kconfig는 target
+compile-time assert와 protocol record로 함께 확인한다. GPIO 점퍼는 필요 없고 USB/DAPLink UART 한
+경로만 사용한다.
+`DISABLE_SWD`와 `DISABLE_UART`는 모두 연결 상태여야 하며 자동 mass erase·recover는 사용하지 않는다.
+
+실행 전 Core 변경을 commit하고 같은 exact commit으로 `nucode.m28.ble_capability` image를 다시
+빌드해야 한다. Runner는 clean source, Core/board/NCS/Zephyr revision, source digest와 image byte를
+검사하므로 현재 working-tree build를 다른 commit의 HIL에 재사용하지 못한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$Commit = git rev-parse HEAD
+$Hex = "<nucode.m28.ble_capability의 zephyr.hex 절대 경로>"
+$Evidence = "<새 evidence JSON 절대 경로>"
+$Toolchain = "C:\ncs\toolchains\dcbdc366a1"
+$Python = "$Toolchain\opt\bin\python.exe"
+$env:PYTHONPATH = "$Toolchain\opt\bin;$Toolchain\opt\bin\Lib;$Toolchain\opt\bin\Lib\site-packages"
+
+& $Python -B tests/hil/nu54dk/m28_ble_capability.py `
+  --hex $Hex `
+  --board-id "<시험할 CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --evidence $Evidence
+```
+
+Runner는 flash/reset 구간 뒤 UART 입력을 비우고 exact `PROBE`로 검증 세션을 arm한다. 그 뒤
+180초 단일 deadline, 128-bit nonce와 고정 15줄 protocol을 적용한다. 세션 시작 뒤 HCI
+bit/resource가 부족하거나 noise·중복·누락·wrong revision·stale nonce·target FAIL이 있으면 해당
+실행을 실패로 종료한다. 실패를 무한 재시도하지 않고 USB/UART 연결을 먼저 대조한 뒤, 연결이 정상이면
+CMSIS-DAP으로 controller·GPIO·오류 상태를 확보해 원인 분류 후 동일 조건으로 재검증한다.
+
+2026-09-12 exact `78078a42…` 실행은 6개 기능군을 모두 통과했다. 실제 값·artifact hash와
+실패 분류는 [132번 기록](<../../../00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md>)에
+보존한다. 이 W01 결과를 W02 이후 production BLE·RF HIL PASS로 재사용하지 않는다.
+
+## M28-W07 두 보드 선행 HIL
+
+W07의 2보드 단계는 세 기능을 한 쌍의 role image로 순서대로 검증한다. 보드 간 GPIO 점퍼는
+사용하지 않으며 두 보드를 각각 USB에 연결하고 debug-control의 SWD/UART를 연결 상태로 둔다.
+
+1. `M28-ADV-01`: nonce가 결합된 255-byte extended report 100개
+2. `M28-PAWR-01`: 4 subevent × 4 response slot, valid response 99% 이상
+3. `M28-PRIV-01`: local RPA 만료 3회, 초기+회전 주소 4개, bond 1개와 재연결 20/20
+
+Runner는 두 UID·MSD·target UART, clean exact commit, source digest, 두 build record와 서로 다른
+role HEX를 확인한 뒤에만 flash한다. `M28B2` protocol의 누락·중복·순서 변경·stale nonce·FAIL,
+corrupt/out-of-window/drop, identity mismatch와 stale handle은 즉시 실패한다. 실제 실행 전 새 clean
+commit에서 아래 두 suite를 다시 build해야 한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$Commit = git rev-parse HEAD
+$BuildRoot = "C:\<아직 없는 한 글자 경로>"
+$Toolchain = "C:\ncs\toolchains\dcbdc366a1"
+$Python = "$Toolchain\opt\bin\python.exe"
+$env:PATH = "$Toolchain;$Toolchain\mingw64\bin;$Toolchain\bin;$Toolchain\opt\bin;$Toolchain\opt\bin\Scripts;$env:PATH"
+$env:PYTHONPATH = "$Toolchain\opt\bin;$Toolchain\opt\bin\Lib;$Toolchain\opt\bin\Lib\site-packages"
+$env:ZEPHYR_TOOLCHAIN_VARIANT = "zephyr/gnu"
+$env:ZEPHYR_SDK_INSTALL_DIR = "$Toolchain\opt\zephyr-sdk"
+
+& $Python -B tools/ci/run_zephyr_build.py `
+  --workspace C:\ncs\v3.4.0 --outdir $BuildRoot --group v0.5.0 --jobs 2 `
+  --suite nucode.m28.b2p --suite nucode.m28.b2c
+
+& $Python -B tests/hil/nu54dk/m28_ble_2board.py `
+  --peripheral-hex "<nucode.m28.b2p zephyr.hex>" `
+  --central-hex "<nucode.m28.b2c zephyr.hex>" `
+  --peripheral-board-id "<Peripheral CMSIS-DAP UID>" `
+  --central-board-id "<Central CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --evidence "<새 m28-two-board.evidence.json>"
+```
+
+Pairing 전 두 image는 자기 identity의 기존 bond만 지우며 factory reset·mass erase·recover를 하지
+않는다. M21의 재부팅 bond 복원은 `M28-REG-01`에서 재사용하고, 이 image는 같은 boot의 RPA 기반
+link 재연결 20회만 검증한다. 3보드 단계는 이 세 기능을 반복하지 않고 두 동시 link·PAST·link별
+제어·soak만 수행한다. 준비 결과는
+[139번 기록](<../../../00_Docs/04_검증 기록/139_M28_W07_2보드_HIL_자동화_준비.md>)을 따른다.
+
+실제 2보드 실행은 `M28-ADV-01`, `M28-PAWR-01`, `M28-PRIV-01` 3/3 PASS로 완료됐다. 기존
+M19 GAP·M20 GATT·M21 security 3/3도 별도 image로 회귀했다. Exact source와 evidence는
+[140번 완료 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 있다.
+
+## M28-W07 세 보드 HIL
+
+세 보드는 Peripheral peer, central 1 + peripheral 1을 동시에 갖는 mixed-role DUT, Central peer로
+고정한다. GPIO 점퍼나 보드 간 전원선은 연결하지 않고 각 보드의 USB/DAP/UART만 사용한다.
+
+| Test ID | 검증 조건 |
+| --- | --- |
+| `M28-LINK-01` | DUT 2-link, link당 reconnect 20회·GATT-confirmed sequence 1,000개 |
+| `M28-PER-01` | periodic report 1,000개와 PAST 20/20 |
+| `M28-CTRL-01` | 두 link별 parameter/PHY/DLE/remote-info 요청 20회 |
+| `M28-SOAK-01` | 1,800초와 link당 sequence 10,000개 |
+
+각 test는 별도의 세 role image를 사용한다. 전체 12개 target variant를 build하고 선택한 test의
+세 image·exact UID·UART·revision을 명시해 실행한다. 저장소 module shadowing을 막기 위해 고정
+NCS Python은 `-I`로 실행한다.
+
+```powershell
+Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
+$Commit = git rev-parse HEAD
+$Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
+
+& $Python -I tests/hil/nu54dk/m28_ble_3board.py `
+  --test-id M28-LINK-01 `
+  --peripheral-hex "<peripheral zephyr.hex>" `
+  --mixed-hex "<mixed zephyr.hex>" `
+  --central-hex "<central zephyr.hex>" `
+  --peripheral-board-id "<Peripheral CMSIS-DAP UID>" `
+  --mixed-board-id "<Mixed CMSIS-DAP UID>" `
+  --central-board-id "<Central CMSIS-DAP UID>" `
+  --expected-core-revision $Commit `
+  --evidence "<새 evidence 디렉터리>\m28-3board-evidence.json"
+```
+
+Runner는 세 role 모두 같은 test와 128-bit nonce를 사용했는지, role별 고정 record 순서와 수치,
+image/build record, DAP target·SWD IDCODE·전압을 확인한다. LINK는 callback 횟수가 아니라 discovery·
+subscription 뒤 상대가 수신한 GATT `LINK_UP`으로 재연결을 확정한다. HCI `UNKNOWN_CONN_ID`는
+object recycle 뒤 최대 3회만 재시도하며 초과, 누락, noise, stale generation과 target FAIL을 즉시
+거부한다. 세 보드 `LINK/PER/CTRL/SOAK` 4/4는 완료했으며 최종 결과와 실패 진단은
+[140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따른다.
+
 ## M15 System OFF 결합 HIL
 
 System OFF는 자동 HIL과 분리한 단일 수동 session에서 두 단계로 검증합니다.
@@ -437,25 +927,37 @@ debug-control `DISABLE_SWD`가 격리 위치이면 USB와 COM이 보이더라도
 $CoreRoot = (Get-Location).Path
 $Python = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe'
 $PyOcd = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\pyocd.exe'
-$BuildRoot = 'C:\nb\01' # 전체 8자 이하, 아직 없는 하위 경로
+$BuildRoot = 'C:\z' # 전체 4자 이하, 현재 존재하지 않는 전용 경로로 변경
 $EvidenceRoot = Join-Path $env:USERPROFILE 'Documents\NU54DK-evidence\v04-run01'
 $ProbeId = '<시험할 CMSIS-DAP UID>'
 
-if ((Get-Command python.exe).Source -ne $Python) {
-  throw 'NCS environment is required: pyocd.exe must select the bundled Python'
+if ((Get-Command python.exe).Source -ne $Python)
+{
+    throw 'NCS environment is required: pyocd.exe must select the bundled Python'
+}
+if (Test-Path -LiteralPath $BuildRoot)
+{
+    throw 'BuildRoot must be an unused path; do not overwrite existing build evidence'
 }
 & $Python -I -c 'import sys, pyocd; print(sys.executable); print(pyocd.__version__, pyocd.__file__)'
 
 & $Python tools\ci\run_zephyr_build.py `
   --workspace C:\ncs\v3.4.0 --outdir $BuildRoot --group v0.4.0 --jobs 4
-if ($LASTEXITCODE -ne 0) { throw 'v0.4.0 build failed' }
+if ($LASTEXITCODE -ne 0)
+{
+    throw 'v0.4.0 build failed'
+}
 
 $Runners = @('m24_uarte_onboard', 'm24_twim_onboard', 'm25_onboard', 'm26_onboard')
-foreach ($Runner in $Runners) {
-  & $Python "tests\hil\nu54dk\$Runner.py" `
-    --repository $CoreRoot --build-root $BuildRoot --probe-id $ProbeId --pyocd $PyOcd `
-    --evidence "$EvidenceRoot\$Runner.json"
-  if ($LASTEXITCODE -ne 0) { throw "$Runner failed; later gates were not run" }
+foreach ($Runner in $Runners)
+{
+    & $Python "tests\hil\nu54dk\$Runner.py" `
+        --repository $CoreRoot --build-root $BuildRoot --probe-id $ProbeId --pyocd $PyOcd `
+        --evidence "$EvidenceRoot\$Runner.json"
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "$Runner failed; later gates were not run"
+    }
 }
 ```
 

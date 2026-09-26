@@ -1,9 +1,12 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "id": "nucode.servo",
   "requires": [],
+  "capabilities": ["arduino.pwm"],
   "conf": ["servo.conf"],
   "overlays": [],
+  "resolved_conf": ["servo.conf"],
+  "resolved_overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["standard", "ble"]
+  "compatible_profiles": ["standard", "adaptive", "ble", "secure_ble_dfu"]
 }

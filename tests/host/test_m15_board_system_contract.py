@@ -121,12 +121,19 @@ class M15BoardSystemContractTests(unittest.TestCase):
         """! @brief Arduino library 선택이 Wire와 고정 conf·overlay를 자동 병합하는지 검사합니다. """
 
         document = json.loads(FEATURE.read_text(encoding="utf-8"))
-        self.assertEqual(document["schema_version"], 1)
+        self.assertEqual(document["schema_version"], 3)
         self.assertEqual(document["id"], "nucode.board")
         self.assertIn("wire", document["requires"])
         self.assertEqual(document["conf"], ["board-system.conf"])
         self.assertEqual(document["overlays"], ["board-system.overlay"])
-        self.assertEqual(document["compatible_profiles"], ["standard", "ble"])
+        self.assertEqual(document["resolved_conf"], ["board-system.conf"])
+        self.assertEqual(
+            document["resolved_overlays"], ["board-system.overlay"]
+        )
+        self.assertEqual(
+            document["compatible_profiles"],
+            ["standard", "adaptive", "ble", "secure_ble_dfu"],
+        )
 
         configuration = (LIBRARY / "zephyr" / "board-system.conf").read_text(
             encoding="utf-8"

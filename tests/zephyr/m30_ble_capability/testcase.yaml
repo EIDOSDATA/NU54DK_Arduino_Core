@@ -1,0 +1,16 @@
+tests:
+  nucode.m30.ble_capability:
+    tags:
+      - nucode
+      - arduino
+      - m30
+      - bluetooth
+      - security
+      - dfu
+      - capability
+      - hil
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0]
+        group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0]
     container:
       image: ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
     defaults:
@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat]
+        group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0]
     env:
       NUCODE_NCS_INSTALL_ROOT: D:\ncs
       NUCODE_NCS_ROOT: D:\ncs\v3.4.0
@@ -154,6 +154,14 @@ jobs:
           New-Item -ItemType Directory -Path $env:NUCODE_CI_TEMP -Force | Out-Null
           $env:TEMP = $env:NUCODE_CI_TEMP
           $env:TMP = $env:NUCODE_CI_TEMP
+          if ('${{ matrix.group }}' -eq 'v0.5.0') {
+            $keyRoot = Join-Path $env:NUCODE_CI_TEMP 'm30-signing'
+            New-Item -ItemType Directory -Path $keyRoot -Force | Out-Null
+            $env:NUCODE_DFU_SIGNING_KEY = Join-Path $keyRoot 'ephemeral-ecdsa-p256.pem'
+            $openssl = Join-Path $env:NUCODE_TOOLCHAIN_ROOT 'mingw64\bin\openssl.exe'
+            & $openssl ecparam -name prime256v1 -genkey -noout -out $env:NUCODE_DFU_SIGNING_KEY
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
           $cli = (Get-Command arduino-cli.exe).Source
           & $cli version 2>&1 | Tee-Object -FilePath (Join-Path $env:M12_EVIDENCE 'arduino-cli-version.txt')
           $previousErrorAction = $ErrorActionPreference

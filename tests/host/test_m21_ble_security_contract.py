@@ -72,6 +72,20 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertNotRegex(text, r"#include\s*[<\"]zephyr/")
         self.assertNotRegex(text, r"#include\s*[<\"]bluetooth/")
 
+        internal = (
+            LIBRARY / "src" / "internal" / "security" / "SecurityInternal.h"
+        ).read_text(encoding="utf-8")
+        self.assertIn("address->type == BT_ADDR_LE_PUBLIC_ID", internal)
+        self.assertIn(
+            "result.type = public_type ? BT_ADDR_LE_PUBLIC : BT_ADDR_LE_RANDOM",
+            internal,
+        )
+        self.assertIn("atomic_t pending_security_event", internal)
+
+        source = security_source()
+        self.assertIn("isResolvablePrivateAddress", source)
+        self.assertIn("pending_security_event", source)
+
     def test_backend_reuses_common_stack_and_connection_hooks(self) -> None:
         """! @brief M21이 bt_enable이나 별도 connection callback을 만들지 못하게 합니다. """
 
@@ -251,6 +265,17 @@ class M21BleSecurityContractTests(unittest.TestCase):
         self.assertIn("실제 영속 삭제 완료를 뜻하지 않습니다", header)
         self.assertNotIn("factoryReset", HEADER.read_text(encoding="utf-8"))
 
+    def test_missing_bond_metadata_slot_is_not_rejected(self) -> None:
+        """! @brief settings_load_one의 0-byte 미존재 결과를 손상 record로 계수하지 않습니다. """
+
+        source = security_source()
+        loader = function_body(source, "void loadBondMetadata")
+        self.assertIn("if (length == 0 || length == -ENOENT)", loader)
+        empty = loader.split("if (length == 0 || length == -ENOENT)", 1)[1]
+        empty = empty.split("bool legacy", 1)[0]
+        self.assertIn("continue;", empty)
+        self.assertNotIn("rejected_count", empty)
+
     def test_already_encrypted_restore_is_verified_without_duplicate_event(self) -> None:
         """! @brief connected 시점에 이미 L2인 bond 복원 race를 즉시 검증합니다. """
 
@@ -296,7 +321,10 @@ class M21BleSecurityContractTests(unittest.TestCase):
         feature = json.loads(FEATURE.read_text(encoding="utf-8"))
         self.assertEqual(feature["id"], "nucode.ble.security")
         self.assertEqual(feature["requires"], ["ble"])
-        self.assertEqual(feature["compatible_profiles"], ["ble"])
+        self.assertEqual(
+            feature["compatible_profiles"], ["adaptive", "ble", "secure_ble_dfu"]
+        )
+        self.assertEqual(feature["capabilities"], ["nucode.ble.security-api"])
         self.assertEqual(feature["conf"], ["ble-security.conf"])
 
         conf = CONF.read_text(encoding="utf-8")
@@ -311,6 +339,7 @@ class M21BleSecurityContractTests(unittest.TestCase):
             "CONFIG_BT_DIS_SETTINGS=y",
             "CONFIG_BT_HIDS=y",
             "CONFIG_BT_HIDS_DEFAULT_PERM_RW_ENCRYPT=y",
+            "CONFIG_BT_TX_PROCESSOR_STACK_SIZE=2048",
         ):
             self.assertIn(symbol, conf, symbol)
         self.assertNotIn("CONFIG_BT_FIXED_PASSKEY", conf)

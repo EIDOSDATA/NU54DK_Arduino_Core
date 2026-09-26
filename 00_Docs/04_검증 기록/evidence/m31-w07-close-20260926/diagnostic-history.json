@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "status": "PRESERVED",
+  "installed_build_failures": [
+    {
+      "revision": "422aaa3059f814b069010790bb6ba6db6716721d",
+      "primary": "build-422aaa30-primary-fail.json",
+      "bounded_retry": "build-422aaa30-bounded-retry-fail.json",
+      "status": "FAIL"
+    },
+    {
+      "revision": "92df552f8b20b16de806ab3c3bae85dfdc1774f2",
+      "primary": "build-92df552f-primary-fail.json",
+      "bounded_retry": "build-92df552f-bounded-retry-fail.json",
+      "status": "FAIL",
+      "diagnosis": "Audio public header did not expose its base BLE dependency"
+    }
+  ],
+  "resolved_by": [
+    "318b327f25d09f8d9f5a4ec4bf272b314b12bb81",
+    "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2"
+  ],
+  "final_build": "installed-examples.json",
+  "preflight_primary_failure": "preflight-primary-fail.json",
+  "preflight_bounded_retry": "preflight.json",
+  "historical_cs_primary_failure": "cs-422aaa30-primary-fail.json",
+  "historical_cs_bounded_retry": "cs-422aaa30-bounded-retry-pass.json",
+  "claim_limits": [
+    "실패 원본을 PASS로 덮어쓰지 않는다.",
+    "최종 PASS는 수정 뒤 clean fc1d3589 source의 49/49 build와 3보드 HIL이다."
+  ]
+}

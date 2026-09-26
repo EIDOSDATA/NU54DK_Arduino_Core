@@ -1,0 +1,196 @@
+{
+  "status": "CANDIDATE_PASS",
+  "test": "arduino_public_cis_to_bis_three_board",
+  "core_revision": "2aa3a65280e8e3b9949d25fe3920ba842da096e6",
+  "source_clean": false,
+  "probe_sha256": {
+    "peer": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "bridge": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "receiver": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+  },
+  "ports": {
+    "peer": "COM5",
+    "bridge": "COM7",
+    "receiver": "COM3"
+  },
+  "image_sha256": {
+    "peer": "2920b5f70cb773c6fc4e751c08658fbde546d569cb12f8f97c6c82c8009a2b7c",
+    "bridge": "bb5e742877dda0b6f6f66b86280af5cd23d2154580688ba578c303ca0a2c481f",
+    "receiver": "d4662b9f1fe0f1d2f87d58afe7eb0b1264538353ee8cf4fcee3ad2f175c9302c"
+  },
+  "flash": {
+    "receiver": [
+      "pyocd-sector-hw-reset",
+      "196608"
+    ],
+    "bridge": [
+      "pyocd-sector-hw-reset",
+      "299008"
+    ],
+    "peer": [
+      "pyocd-sector-hw-reset",
+      "274432"
+    ]
+  },
+  "requested_cycles": 2,
+  "completed_cycles": {
+    "peer": 2,
+    "bridge": 2,
+    "receiver": 2
+  },
+  "stopped_cycles": {
+    "peer": 2,
+    "bridge": 2,
+    "receiver": 2
+  },
+  "payload_frames": 200,
+  "missing_frames": 0,
+  "allowed_missing": 2,
+  "image_revision_confirmed": {
+    "peer": true,
+    "bridge": true,
+    "receiver": true
+  },
+  "excluded_pre_boot_lines": {
+    "peer": 3,
+    "bridge": 3,
+    "receiver": 1
+  },
+  "failed_lines": [],
+  "lines": {
+    "peer": [
+      {
+        "at_s": 0.438,
+        "text": "CIS peer core revision=2aa3a65280e8e3b9949d25fe3920ba842da096e6"
+      },
+      {
+        "at_s": 0.438,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 3.359,
+        "text": "CIS peer core revision=2aa3a65280e8e3b9949d25fe3920ba842da096e6"
+      },
+      {
+        "at_s": 3.359,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 10.083,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 10.403,
+        "text": "CIS peer stopped"
+      },
+      {
+        "at_s": 11.349,
+        "text": "CIS peer scanning"
+      },
+      {
+        "at_s": 16.778,
+        "text": "CIS peer sent frames=100"
+      },
+      {
+        "at_s": 16.778,
+        "text": "CIS peer stopped"
+      }
+    ],
+    "bridge": [
+      {
+        "at_s": 0.546,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 3.479,
+        "text": "CIS bridge timeout received=0 forwarded=0"
+      },
+      {
+        "at_s": 4.773,
+        "text": "CIS bridge core revision=2aa3a65280e8e3b9949d25fe3920ba842da096e6"
+      },
+      {
+        "at_s": 4.773,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 4.773,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 10.189,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 10.189,
+        "text": "CIS bridge stopped"
+      },
+      {
+        "at_s": 11.456,
+        "text": "CIS bridge scanning"
+      },
+      {
+        "at_s": 11.456,
+        "text": "CIS bridge broadcasting"
+      },
+      {
+        "at_s": 16.885,
+        "text": "CIS bridge received=100 forwarded=100 errors=0"
+      },
+      {
+        "at_s": 16.885,
+        "text": "CIS bridge stopped"
+      }
+    ],
+    "receiver": [
+      {
+        "at_s": 4.88,
+        "text": "��������������������������������������������������CIS BIS core revision=2aa3a65280e8e3b9949d25fe3920ba842da096e6"
+      },
+      {
+        "at_s": 4.88,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 5.514,
+        "text": "CIS BIS receiver synchronized ms=677"
+      },
+      {
+        "at_s": 7.455,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 9.341,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 9.341,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 10.615,
+        "text": "CIS BIS receiver scanning"
+      },
+      {
+        "at_s": 11.883,
+        "text": "CIS BIS receiver synchronized ms=1503"
+      },
+      {
+        "at_s": 14.124,
+        "text": "CIS BIS first frame=0"
+      },
+      {
+        "at_s": 16.04,
+        "text": "CIS BIS received frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 16.04,
+        "text": "CIS BIS stopped"
+      },
+      {
+        "at_s": 16.995,
+        "text": "CIS BIS receiver scanning"
+      }
+    ]
+  }
+}

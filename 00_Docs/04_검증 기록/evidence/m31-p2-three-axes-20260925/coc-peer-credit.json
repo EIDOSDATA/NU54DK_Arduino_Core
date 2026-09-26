@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-coc-direct-peer-credit-exhaustion-recovery-memory",
+  "contract": {
+    "role": "one Arduino central, one native peripheral",
+    "channels": 2,
+    "sdu_bytes": 512,
+    "held_credits": 4,
+    "dwell_ms": 2500,
+    "expected_error": "finite remote-credit wait; no synthetic PASS retry",
+    "recovery": "return all four credits and echo one new 512-byte SDU",
+    "timeout_s": 240.0
+  },
+  "probe_uid_sha256": {
+    "client": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "peer": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "client": "COM10",
+    "peer": "COM13"
+  },
+  "image_sha256": {
+    "client": "f3eb300e8705d176be36b6cf915d299e3df838c05827aa224cfce618bb1787b3",
+    "peer": "30d9fd2087ae4b2b14da33040d1c85bc343591c095b104c55afcf4195f6b91f0"
+  },
+  "flash": {
+    "peer": [
+      "pyocd-sector",
+      "172032"
+    ],
+    "client": [
+      "pyocd-sector",
+      "221184"
+    ]
+  },
+  "start": {
+    "peer": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "client": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "client": [
+      "LE CoC channel ready, count=1",
+      "LE CoC channel ready, count=2",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=coc-client",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=800",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=8196 allocated=0 peak=0",
+      "LE CoC channel ready, count=1",
+      "LE CoC channel ready, count=2",
+      "LE CoC echo PASS, count=1",
+      "LE CoC echo PASS, count=2",
+      "P2_COC_CREDIT_SENT accepted=4",
+      "P2_PHASE name=traffic",
+      "P2_STACK name=BT RX WQ reserved=3200 used=960",
+      "P2_STACK name=bt_tx_processor reserved=904 used=548",
+      "P2_STACK name=BT LW WQ reserved=2104 used=948",
+      "P2_STACK name=sysworkq reserved=4096 used=304",
+      "P2_STACK name=MPSL Work reserved=1024 used=332",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=464",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=8196 allocated=0 peak=0",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=960",
+      "P2_STACK name=bt_tx_processor reserved=904 used=548",
+      "P2_STACK name=BT LW WQ reserved=2104 used=948",
+      "P2_STACK name=sysworkq reserved=4096 used=304",
+      "P2_STACK name=MPSL Work reserved=1024 used=332",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=464",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=8196 allocated=0 peak=0",
+      "P2_STOP role=coc-client echoes=2"
+    ],
+    "peer": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "[00:00:38.038,532] \u001b[1;33m<wrn> bt_hci_core: Num of Controller's ACL packets != ACL bt_conn_tx contexts (3 != 8)\u001b[0m",
+      "P2_READY role=coc-credit-peer",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=388",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=352",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=944",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=8196 allocated=0 peak=0",
+      "P2_COC_PEER_CHANNEL count=1",
+      "P2_COC_PEER_CHANNEL count=2",
+      "P2_COC_PEER_HOLD_ARMED credits=4",
+      "P2_COC_PEER_CREDIT_HELD count=1",
+      "P2_COC_PEER_CREDITS_RELEASED count=1",
+      "P2_PHASE name=credit-released",
+      "P2_STACK name=BT RX WQ reserved=3200 used=784",
+      "P2_STACK name=bt_tx_processor reserved=904 used=388",
+      "P2_STACK name=BT LW WQ reserved=2104 used=976",
+      "P2_STACK name=sysworkq reserved=4096 used=648",
+      "P2_STACK name=MPSL Work reserved=1024 used=448",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=944",
+      "P2_STACK name=ISR0 resP2_COC_PEER_DISCONNECTED",
+      "P2_COC_PEER_DISCONNECTED",
+      "erved=2048 used=364",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=8196 allocated=0 peak=0",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=bt_tx_processor reserved=904 used=388",
+      "P2_STACK name=BT LW WQ reserved=2104 used=976",
+      "P2_STACK name=sysworkq reserved=4096 used=648",
+      "P2_STACK name=MPSL Work reserved=1024 used=448",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=944",
+      "P2_STACK name=ISR0 reserved=2048 used=364",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=8196 allocated=0 peak=0",
+      "P2_STOP role=coc-credit-peer bt_disable=0"
+    ]
+  },
+  "result": "FAIL",
+  "failure_class": "TimeoutError",
+  "failure_detail": "peer did not report P2_COC_PEER_CREDITS_EXHAUSTED held=4",
+  "cleanup_attempted": true
+}

@@ -1,5 +1,9 @@
 # M24 Serial Fabric 공통 backend 기준선
 
+> **역사적 M24 작업 2 기준선:** 아래 adapter·HIL 미구현과 작업 3 계획은 당시 상태다.
+> 원래 판정·증거를 보존하며 후속 결과는 [v0.4.0 완료 TODO](../TODO_v0.4.0.md)에 있다. 현재 작업은
+> [v0.5.0 TODO](../TODO_v0.5.0.md), 설치·지원은 [v0.4.1 안내](../05_릴리스/v0.4.1/README.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VERIFY-M24-SERIAL-FABRIC-002 |
@@ -65,4 +69,4 @@ M23 manifest의 신규 19개 personality는 driver와 물리 gate 전까지 `abs
 cancel·restart와 errata 7을 구현한다. 이후 SPIM/SPIS, TWIM/TWIS adapter와 보드 자체 HIL을
 순서대로 연결한다.
 
-후속 구현 결과는 [36번 기록](36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md)에 보존한다. 현재 실행 범위와 우선순위는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+후속 구현 결과는 [36번 기록](36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md)에 보존한다. 현재 실행 범위와 우선순위는 [현재 TODO](../TODO_v0.5.0.md)를 따른다.

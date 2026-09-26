@@ -3,12 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-STORAGE-001 |
-| 문서 개정 | 1.4 |
-| 적용 버전 | `v0.3.0`·`v0.4.0` stable 호환 계약 |
+| 문서 개정 | 1.6 |
+| 적용 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1` stable 호환 계약 |
 | 현재 정식 버전 | `v0.4.1` (v0.4.0 Storage 계약 유지) |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
-| 최종 갱신일 | 2026-09-12 |
+| 최종 갱신일 | 2026-09-15 |
 
 ## 1. 목적과 지원 경계
 
@@ -67,16 +67,17 @@ v0.4.0이 제공하는 layout은 RC3에서 도입한 위 loaderless 단일 appli
 4. LittleFS, Settings/ZMS와 update image의 겹침 검사
 5. Upgrade/downgrade, 복구와 package 시험 matrix
 
-향후 `v0.5.0` M30은 BLE DFU용 최소 MCUboot·signed update·rollback 기반을 먼저
-설계·검증한다. 제한된 고정 layout과 profile 또는 application template을 선택하고, boot와
-update 영역, 기존 저장소의 보존·migration, 서명 실패·전원 차단·복구 정책을 함께 확정해야 한다.
-현재 EEPROM/LittleFS HIL 결과는 새 layout의 update·power-fail 보증으로 재사용하지 않는다.
+`v0.5.0` 개발 M30은 제한된 고정 layout과 별도 `secure_ble_dfu` profile을 선택해 최소 MCUboot·
+signed update·BLE update·rollback 기반을 구현했다. Boot/update 영역과 기존 저장소의 보존 경계를
+함께 검증하며, 현재 EEPROM/LittleFS HIL 결과를 새 layout의 update·power-fail 보증으로 재사용하지 않는다.
 
 `v0.6.0` M36은 M30의 최소 기반을 여러 layout·update transport와 **고급 Memory layout 선택**으로
 확장하고 hardening한다. 기본 loaderless layout은 유지하며, MCUboot/DFU와 signed update·rollback이
 실제로 포함된 검증 경로에서만 boot 영역과 dual-slot layout을 노출한다. Arduino Tools에는 임의
 숫자 입력 대신 검증된 preset을 제공하고, 전문가 overlay는 같은 정적 검사와 linker assertion을
-통과할 때만 지원 대상으로 인정한다. M30과 M36 모두 아직 미착수이며, M30의 결정·인계 조건은
+통과할 때만 지원 대상으로 인정한다. M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단
+4지점 × 3회(12/12)를 완료했다. M36은 미착수다. M30의 완료 근거와 후속 인계는
+[161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
 [v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
 
 ## 3. EEPROM 계약
@@ -156,7 +157,7 @@ Sketch에서 `<EEPROM.h>` 또는 `<LittleFS.h>`를 include하면 Build Adapter�
 | EEPROM | `EEPROMPersistence` | `Standard peripherals` |
 | LittleFS | `LittleFSPersistence` | `Standard peripherals` |
 
-두 예제는 `v0.4.0` stable의 30개 설치 예제에 포함된다. BLE profile에서도 build 입력은
+두 예제는 `v0.4.1` stable의 30개 설치 예제에 포함된다. BLE profile에서도 build 입력은
 호환되지만, 예제 메뉴의 기본 사용 안내는 storage 동작만 분리해 보는 `Standard peripherals`다.
 
 ## 6. 실패 진단
@@ -196,5 +197,6 @@ exact image·commit·board identity가 없으면 실행하지 않는다. 실제 
 - directory iterator와 모든 ESP/Adafruit FS 확장 함수의 완전 호환
 - 파일 system 전체의 transaction/power-fail 원자성 보증
 - 임의 partition 크기를 입력하거나 사용자 overlay만으로 저장 layout을 교체하는 구성
-- MCUboot/DFU dual-slot과 update/rollback — M30의 최소 BLE DFU 기반과 M36의 다중 layout·transport 확장으로 계획; 현재 미지원
+- 설치·지원 v0.4.1의 MCUboot/DFU dual-slot과 update/rollback — M30 개발 profile의 최소 기반과
+  M36의 다중 layout·transport 확장은 위 2.2절의 별도 범위
 - 제품 수명 기준의 wear/endurance 보증

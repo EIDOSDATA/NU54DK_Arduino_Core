@@ -116,6 +116,26 @@ function(nucode_files_digest base_directory output_variable)
   set(${output_variable} "${digest}" PARENT_SCOPE)
 endfunction()
 
+# @brief 문서·예제·readiness 원장을 제외하고 firmware build 입력만 남깁니다.
+function(nucode_filter_build_inputs output_variable)
+  set(filtered_inputs)
+
+  foreach(input_file IN LISTS ARGN)
+    get_filename_component(input_name "${input_file}" NAME)
+    string(TOLOWER "${input_name}" input_name)
+    if(input_name STREQUAL "cmakelists.txt" OR
+       input_name STREQUAL "library.properties" OR
+       input_name STREQUAL "platform.txt" OR
+       input_name STREQUAL "kconfig" OR
+       input_name MATCHES "^kconfig\\." OR
+       input_name MATCHES "\\.(asm|c|cc|cmake|conf|cpp|cxx|dts|dtsi|h|hh|hpp|impl|inc|inl|ld|overlay|s|yaml|yml)$")
+      list(APPEND filtered_inputs "${input_file}")
+    endif()
+  endforeach()
+
+  set(${output_variable} "${filtered_inputs}" PARENT_SCOPE)
+endfunction()
+
 function(nucode_yaml_quote input output_variable)
   string(REPLACE "'" "''" quoted "${input}")
   set(${output_variable} "'${quoted}'" PARENT_SCOPE)
@@ -127,23 +147,29 @@ file(GLOB_RECURSE core_inputs
   "${NUCODE_CORE_ROOT}/dts/*"
   "${NUCODE_CORE_ROOT}/libraries/*"
   "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API/*"
-  "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
   "${NUCODE_CORE_ROOT}/variants/nu54dk/*"
   "${NUCODE_CORE_ROOT}/zephyr/*"
 )
+list(APPEND core_inputs
+  "${NUCODE_CORE_ROOT}/third_party/ArduinoCore-API.provenance.yml"
+  "${NUCODE_CORE_ROOT}/platform.txt"
+)
 list(SORT core_inputs)
+nucode_filter_build_inputs(core_inputs ${core_inputs})
 
 file(GLOB_RECURSE board_inputs
   LIST_DIRECTORIES FALSE
   "${NUCODE_BOARD_PACKAGE_ROOT}/boards/nucode/nu54dk/*"
 )
 list(SORT board_inputs)
+nucode_filter_build_inputs(board_inputs ${board_inputs})
 
 file(GLOB_RECURSE application_inputs
   LIST_DIRECTORIES FALSE
   "${NUCODE_APPLICATION_SOURCE_DIR}/*"
 )
 list(SORT application_inputs)
+nucode_filter_build_inputs(application_inputs ${application_inputs})
 
 nucode_git_revision(
   "${NUCODE_CORE_ROOT}" core_revision TRUE

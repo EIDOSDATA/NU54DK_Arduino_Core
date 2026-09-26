@@ -1,4 +1,4 @@
-# NU54DK Build Adapter 설계 — v0.4.0
+# NU54DK Build Adapter 설계 — v0.4.1
 
 | 항목 | 내용 |
 | --- | --- |
@@ -7,10 +7,14 @@
 | 다음 목표 버전 | `v0.5.0` |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
+| v0.5.0 Host 목표 | M31 완료 뒤 Windows 10/11 x64 우선; Ubuntu/macOS는 후속 제품선 |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
 
 Build Adapter는 Arduino의 전처리·library discovery lifecycle을 보존하면서 실제 컴파일과 최종
 링크를 Zephyr CMake/Ninja에 맡기는 중계 도구다. 현재 구현의 단일 원본은 다음 파일이다.
+
+본문의 기본 계약은 stable v0.4.1이며 §4.1·§4.2는 공개 RC에 포함된 확장이다.
+패키지별 현재 상태와 설치 경로는 [v0.5.0 RC 안내](../05_릴리스/v0.5.0-rc.1/README.md)를 따른다.
 
 - `platform.txt`
 - `tools/nu54-builder/nu54-builder.cmd`
@@ -196,26 +200,69 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 외부 library가 임의 `feature.yml`을 설치했다고 신뢰하지 않는다. profile, manifest와 fragment
 내용은 최종 cache identity와 artifact provenance에 포함한다.
 
-v0.3.0 RC3에서 도입해 v0.4.0에서도 유지하는 메모리 계약은 loaderless 단일 application
+역할별 `prj.conf` 합성만으로 모든 미사용 정적 저장소가 제거됐다고 판정하지 않는다.
+`M31-MEM-OPT`의 P0·P1에서 capability·source·정적 pool 경계를 구현하고 ELF/map으로 검증했다.
+P2에서는 지원 범위의 오류·최악 부하 계측, stack/heap 여유·최종 크기,
+동일 조건 Nordic native FLASH/RAM 비교를 완료했다. [262번 완료 기록](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>),
+[M31 TODO](../TODO_M31.md)의 현재 상태와
+[통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 구현 계약을 따른다.
+
+### 4.1 개발 adaptive build 흐름
+
+공개 `v0.5.0-rc.1`의 `adaptive` 선택은 source record와 final cache 이관을 유지하면서
+다음 단계를 실행한다. P0·P1·P2 완료 범위이며 v0.4.1 stable builder에는 포함되지 않는다.
+현재 메뉴 기본값은 `standard`다. 아래 최소 구성 경로를 사용하려면 `adaptive`를 명시적으로 선택한다.
+
+```text
+Arduino source/library discovery
+  → compiler-assisted capability probe compile/link
+  → 도달 가능한 public API requirement + library feature + role/capacity 선언
+  → transitive dependency/conflict/capacity resolver
+  → resolved-capabilities.json
+  → prj.conf + overlay + source/init 선택
+  → pristine final Zephyr build
+  → ELF/map/resource gate
+```
+
+probe는 source 정규식이 아니라 동일 compiler가 생성한 symbol reference와 전용 requirement
+section을 사용하고 `setup()`/`loop()`·전역 생성자·선택 library에서 도달 가능한 경로를 section
+GC 조건으로 판정한다. `SPI.begin()`은 `arduino.spi`, `Wire`는 `arduino.wire`, `Serial1`은
+`arduino.serial1`, `analogWrite()`는 `arduino.pwm` requirement로 연결한다. C++ mangled name은
+공개 feature ID가 아니며 고정 toolchain별 mapping과 Host fixture로 검증한다.
+
+외부/bundled library의 간접 요구는 신뢰된 manifest로 합친다. BLE role이나 연결·stream·ASE 수처럼
+API call만으로 안전하게 정할 수 없는 값은 저수준 Kconfig가 아니라 검증된 공개 role/capacity
+선언으로 입력한다. resolver가 판정할 수 없는 요구는 full 구성으로 조용히 확대하지 않고 오류로
+중단한다. 일반 사용자가 미사용 기능의 `=n` 목록이나 수동 `prj.conf`를 작성해야만 최소화된다면
+이 흐름은 완료가 아니다.
+
+probe/compiler identity, 최종 requirement 집합, role/capacity, 생성 config/overlay/source 선택을
+cache와 artifact provenance에 넣는다. 같은 source의 pristine build와 cache build가 같은 결과를
+만들어야 한다. 상세 구조·정정 사항·완료 gate는
+[M31 메모리 최적화 통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)가 소유한다.
+
+v0.3.0 RC3에서 도입해 v0.4.1에서도 유지하는 메모리 계약은 loaderless 단일 application
 1,490,944 byte와 끝단 영구 저장소
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
 `boards.txt` maximum size가 모두 `0x000000..0x16c000`을 가리키는지 확인해야 한다. 전문가
 `app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
 구성은 지원하지 않는다.
 
-### 4.1 향후 update profile의 인계 경계
+### 4.2 개발 update profile과 후속 인계 경계
 
-`v0.5.0` M30은 BLE DFU용 최소 secure-update 기반을 설계·검증하는 계획이다. 착수 시 제한된
-고정 layout, MCUboot 최초 설치와 서명 update 산출물의 생성·검증·업로드 경로를 정하고,
-Build Adapter 통합과 별도 application template 중 제공 방식을 선택한다. 현재 Adapter의
-`--no-sysbuild` 단일 image 및 native Zephyr 산출물 계약을 옵션 하나로 우회하지 않는다.
-새 경로는 image·layout·서명 정책을 식별하는 manifest와 cache 계약을 함께 정의해야 한다.
+`v0.5.0` 개발 M30은 별도 `secure_ble_dfu` profile로 제한된 고정 layout, MCUboot 최초 설치,
+외부 키 서명과 BLE update 경로를 구현했다. 개발 `boards.txt`에서 이 profile은 sysbuild와
+maximum size `729088` byte를 선택한다. 위 본문의 설치·지원 `v0.4.1` 단일 image 계약과 구분하며,
+image·layout·서명 정책을 식별하는 별도 manifest·cache·upload 검증을 적용한다.
 
 `v0.6.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
 hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
 제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
-두 단계 모두 미착수이며, 현재 `v0.4.0`의 지원 범위와 기본 loaderless layout은 바뀌지 않는다.
-M30의 결정 항목과 완료 조건은 [v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
+M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단 12/12를 완료했고 M36은 미착수다.
+현재 `v0.4.1`의 지원 범위와 기본 loaderless layout은 유지한다. 완료 근거와 후속 경계는
+[161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
+[v0.5.0 착수 계획](../TODO_v0.5.0.md)과
+[문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.
 
 ## 5. 경로와 상태
 
@@ -273,7 +320,10 @@ Arduino build path의 생성 source만 cache mirror로 옮긴다.
 - sysbuild/multi-image, MCUboot, DFU와 OTA
 - LLEXT 또는 Loader ABI
 - remote/distributed cache와 network cache
-- Linux/macOS Boards Manager production 지원
+- Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에
+  포함하지 않는다. [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 해당 OS를
+  추가할 후속 릴리스에서 판정한다. 버전은 미정이며 HOST-W04~HOST-W08은 보류 상태다.
+  현재 HOST-W01~W03 3/8을 완료했으며 이후 구현은 사용자 지시로 보류했다.
 - Arduino IDE Debug 버튼 자동 구성
 - 자동 recover 또는 mass erase
 

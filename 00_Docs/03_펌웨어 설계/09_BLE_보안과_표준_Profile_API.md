@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-SECURITY-001 |
-| 문서 개정 | 2.1 |
-| 문서 상태 | v0.4.0에서도 유지하는 정식 보안·표준 profile 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
-| 최종 갱신일 | 2026-09-12 |
+| 문서 개정 | 2.5 |
+| 문서 상태 | v0.4.1 stable 기준선 + 공개 v0.5.0 RC profile 계약 |
+| 적용 제품 버전 | `v0.3.0`~`v0.4.1`과 별도 표시한 `v0.5.0-rc.1`의 `ble` profile |
+| 최종 갱신일 | 2026-09-27 |
 | 대상 library | `NUCODE_BLE_Security` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
@@ -20,6 +20,8 @@
 - Battery Service(BAS)
 - Device Information Service(DIS)
 - 암호화된 BLE HID keyboard
+- v0.5.0 공개 RC의 암호화된 HID mouse·consumer-control
+- v0.5.0 공개 RC의 Heart Rate Service(HRS)·Environmental Sensing Service(ESS)
 
 library는 Zephyr type을 Sketch에 노출하지 않으며 별도의 `bt_enable()`, `settings_load()` 또는
 connection callback을 소유하지 않는다. 범용 advertising·connection·poll은 `NUCODE_BLE` API를
@@ -131,7 +133,7 @@ none
 재부팅 뒤 `bondCount()==0`과 이전 key 재연결 거부로 확인한다. 이 API는 mass erase나 factory reset을
 실행하지 않는다.
 
-## 6. BAS, DIS와 HID keyboard
+## 6. BAS, DIS와 표준 profile
 
 ### 6.1 Battery Service
 
@@ -160,6 +162,28 @@ if (BLEKeyboard.connected() && BLEKeyboard.press(0x04U))
 }
 ```
 
+### 6.4 HID mouse와 consumer-control
+
+v0.5.0 개발 source의 `BLEMouse`와 `BLEConsumerControl`은 keyboard와 하나의 정적 HIDS database를
+공유한다. report ID와 payload는 각각 keyboard 1/8 byte, mouse 2/4 byte, consumer-control
+3/2 byte로 고정된다. 각 facade는 별도로 `begin()`해야 하며 L2 이상 연결과 해당 report CCC 구독
+전에 전송하지 않는다. keyboard boot protocol에서는 mouse와 consumer-control을 거부한다.
+
+`BLEMouse.move()`는 5개 button bit와 signed X/Y/wheel 상대 이동을 보낸다.
+`BLEConsumerControl.press()`는 `0x0001`~`0x03ff` Consumer Page usage를 보내고 `release()`는 zero
+report를 보낸다.
+
+### 6.5 Heart Rate Service
+
+`BLEHeartRate.setRate()`는 1~240 bpm을 표준 HRS measurement notification으로 보낸다. 현재 값은
+`rate()`로 읽는다. measurement CCC write는 security profile에서 암호화 정책을 따른다.
+
+### 6.6 Environmental Sensing Service
+
+`BLEEnvironmentalSensing`은 표준 ESS `0x181A` 안에 0.01 °C 단위 signed temperature와 0.01 % 단위
+humidity characteristic을 제공한다. 습도는 0~10000만 허용한다. 두 characteristic의 read와 CCC
+write는 암호화된 연결에서만 허용한다.
+
 ## 7. SecureKeyboard 예제 사용 절차
 
 Arduino IDE에서 `NUCODE BLE Security → SecureKeyboard` 예제를 열고 `Feature set → BLE NUS`를
@@ -179,16 +203,34 @@ Windows 시험 절차는 다음과 같다.
 ## 8. 오류와 현재 제약
 
 - 모든 facade의 `lastError()`를 먼저 확인하고 필요한 경우 `lastDriverError()`로 NCS 오류를 진단한다.
-- 동시 BLE 연결은 1개이며 bond 저장 한도는 4개다.
-- HID는 keyboard input report만 제공한다. Consumer Control, mouse와 복합 HID는 현재 범위가 아니다.
+- 현재 설치·지원 v0.4.1의 BLE 연결과 security/profile active view는 1개이며 bond 저장 한도는 4개다.
+- 공개 v0.4.1 패키지는 keyboard input report만 제공한다. mouse·consumer-control·HRS·ESS는
+  실제 두 보드 HIL을 통과해 [v0.5.0 공개 RC](../05_릴리스/v0.5.0-rc.1/README.md)에 포함됐지만 아직 stable package 기능이 아니다.
 - 사용자 UI callback에서 Bluetooth API를 재진입하거나 무제한 block하지 않는다.
 - `no_input_output` Just Works는 수동 승인과 암호화·bonding을 제공하지만 MITM 보호가 필요한 제품의
   최종 보안 정책을 대신하지 않는다.
 - Windows 11 검증은 완료했지만 스마트폰별 HID 호환성은 별도 제품 호환성 시험 대상이다.
+- M28의 총 GAP 2-link PASS와 M30의 동시 security/profile 검증은 별도 증거다. M30-W07은
+  세 보드의 동시 두 secure link와 handle별 보안 연산을 검증했으며 임의 연결 수 확대는 포함하지 않는다.
+
+### M30 개발 완료 결과
+
+M30은 W01~W08 8/8·test ID 10/10 PASS다. Link별 security·IO capability 5종, 유선 OOB,
+bond/privacy, 일곱 profile, 별도 MCUboot·서명·BLE update·rollback과 secure multi-link의 결과를
+[M30 착수 계약](<../01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)에서 관리한다.
+NFC adapter는 구현·Host/target build 범위이며 NFC RF 검증은 사용자 결정대로 `NOT RUN`이다.
+
+W08은 actual power cut 네 지점 × 3회(12/12)를 통과했고 recovery failure와 invalid image boot는
+0이었다. Reset 대체나 mass erase는 사용하지 않았다. Exact 결과와 제외한 Host timeout 시도의
+판정 근거는 [161번 완료 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)에 보존한다.
+이 개발 결과는 설치·지원 v0.4.1의 보안 API·profile 범위를 바꾸지 않는다.
 
 ## 9. 관련 문서
 
 - [BLE Core/GAP API](07_BLE_Core_GAP_API.md)
 - [BLE 범용 GATT API](08_BLE_범용_GATT_API.md)
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
+- [M28 BLE GAP·Link·Privacy 착수 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)
+- [M30-W04 일곱 BLE profile 완료](<../04_검증 기록/155_M30_W04_7개_BLE_profile_완료.md>)
+- [M30-W08 실제 전원 HIL과 M30 완료](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)
 - [v0.3.0 구현 마일스톤](<../01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md>)

@@ -5,7 +5,7 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 상태 | **이전 stable·설치 가능** |
+| 상태 | **지원·catalog 공급 종료·역사 자료** |
 | Package | `nucode:zephyr@0.3.0` |
 | Board/FQBN | NU54DK / `nucode:zephyr:nu54dk` |
 | 공식 사용자 OS | Windows 10/11 x64 |
@@ -13,14 +13,18 @@
 | Board source | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 작성자 | Quantum / NUCODE |
 
-`v0.3.0`은 NU54DK용 loaderless Arduino Core의 이전 stable이며 전환·복구를 위해 stable index에
-보존합니다. 신규 설치와 지원 요청은 [v0.4.1](../v0.4.1/README.md)을 기준으로 합니다.
+`v0.3.0`은 NU54DK용 loaderless Arduino Core의 이전 stable입니다. 공개 당시 원본 자산만
+보존하며 현재 stable index에서는 제공하지 않습니다. 신규 설치와 지원 요청은
+[v0.4.1](../v0.4.1/README.md)을 기준으로 합니다.
 이 폴더의 버전별 문서는 공개 당시 기능·제약과 검증 판단을 보존합니다. 본문의 “현재 버전”이나
 지원 요청 기준을 오늘의 정책으로 적용하지 않습니다. Sketch와 선택한 Arduino
 library를 nRF Connect SDK v3.4.0/Zephyr 4.4.0의 전체 image로 빌드하며, 온보드
 CMSIS-DAP V2와 pyOCD를 기본 업로드 경로로 사용합니다.
 
-## 설치
+## 당시 설치 절차
+
+아래는 v0.3.0 공개 당시의 절차입니다. 현재 index에서는 `0.3.0`을 선택할 수 없으며,
+새 설치에는 [v0.4.1 설치 안내](../v0.4.1/README.md#설치)를 사용합니다.
 
 Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 다음 URL을 추가합니다.
 
@@ -71,8 +75,9 @@ Arduino maximum Sketch size, Devicetree code partition과 실제 linker FLASH �
 
 위 index 행은 최초 공개 당시 snapshot입니다. 2026-09-08 공급 종료 당시 catalog는
 1,126 byte, SHA-256 `97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며
-0.3.0만 제공했습니다. 이후 v0.4.0 공개로 현재 catalog는 `0.4.0`, `0.3.0`을 제공합니다.
-현재 index identity는 [125번 기록](<../../04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.
+0.3.0만 제공했습니다. 이후 v0.4.0 공개 당시 catalog는 `0.4.0`, `0.3.0`을 제공했습니다.
+현재 stable catalog는 `0.4.1` 하나이며 index identity는
+[129번 기록](<../../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)을 따릅니다.
 v0.3.0 ZIP과 나머지 5개 sidecar는 변경하지 않았습니다.
 
 Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은

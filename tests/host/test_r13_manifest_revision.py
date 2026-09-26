@@ -1,6 +1,7 @@
 """! @brief 실제 CMake로 Git-less package의 고정 revision 복원과 잘못된 값을 검증합니다. """
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -20,6 +21,57 @@ class ManifestRevisionTests(unittest.TestCase):
         self.assertIsNotNone(cmake)
         result = subprocess.run([cmake, *map(str, arguments)], capture_output=True, timeout=20)
         self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+
+    @staticmethod
+    def read_input_scope(path, collection, root_variable):
+        """! @brief GLOB과 APPEND에 나뉜 build 입력 범위를 읽습니다. """
+
+        text = path.read_text(encoding='utf-8')
+        glob = re.search(
+            rf'file\(GLOB_RECURSE\s+{re.escape(collection)}\b(.*?)\n\s*\)',
+            text,
+            re.DOTALL,
+        )
+        if glob is None:
+            raise AssertionError(f'입력 범위를 찾지 못했습니다: {path}: {collection}')
+        bodies = [glob.group(1)]
+        bodies.extend(
+            append.group(1)
+            for append in re.finditer(
+                rf'list\(APPEND\s+{re.escape(collection)}\b(.*?)\n\s*\)',
+                text,
+                re.DOTALL,
+            )
+        )
+        return set(
+            re.findall(
+                rf'"\$\{{{re.escape(root_variable)}\}}/([^\"]+)"',
+                '\n'.join(bodies),
+            )
+        )
+
+    def test_configure_and_live_build_input_scopes_match(self):
+        """! @brief configure와 live writer가 같은 firmware 입력을 해시하도록 고정합니다. """
+
+        configure = ROOT / 'zephyr/cmake/source_provenance.cmake'
+        live = ROOT / 'zephyr/cmake/write_build_record.cmake'
+        configure_scope = self.read_input_scope(
+            configure,
+            'NUCODE_CORE_BUILD_INPUTS',
+            'NUCODE_ARDUINO_CORE_ROOT',
+        )
+        live_scope = self.read_input_scope(live, 'core_inputs', 'NUCODE_CORE_ROOT')
+        self.assertEqual(configure_scope, live_scope)
+        self.assertIn('third_party/ArduinoCore-API.provenance.yml', configure_scope)
+        self.assertIn('platform.txt', configure_scope)
+        configure_text = configure.read_text(encoding='utf-8')
+        live_text = live.read_text(encoding='utf-8')
+        self.assertIn('input_name STREQUAL "library.properties"', configure_text)
+        self.assertIn('input_name STREQUAL "library.properties"', live_text)
+        self.assertIn(
+            'nucode_filter_build_inputs(NUCODE_CORE_BUILD_INPUTS ${NUCODE_CORE_BUILD_INPUTS})',
+            configure_text,
+        )
 
     def test_configure_and_live_parsers_validate_full_revision(self):
         """! @brief 40자리 대소문자 SHA와 길이·문자·JSON 오류를 두 실제 함수에서 검증합니다. """

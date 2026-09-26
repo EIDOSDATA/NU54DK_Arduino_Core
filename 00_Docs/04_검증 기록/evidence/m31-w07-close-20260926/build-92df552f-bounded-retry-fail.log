@@ -1,0 +1,21 @@
+
+Used library     Version Path
+NUCODE BLE Audio 0.5.0   C:\r31k\w07-92df552f\user\hardware\nucode\zephyr\libraries\NUCODE_BLE_Audio
+
+Used platform Version   Path
+nucode:zephyr 0.4.1-dev C:\r31k\w07-92df552f\user\hardware\nucode\zephyr
+Loading Zephyr default modules (Zephyr base).
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+Loading Zephyr default modules (Zephyr base).
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+Loading Zephyr default modules (Zephyr base (cached)).
+
+warning: Deprecated symbol NRF_PLATFORM_LUMOS is enabled.
+
+FATAL ERROR: command exited with status 1: 'C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\cmake.EXE' --build 'C:\Users\eidos\AppData\Local\NU54\c\v1\e4\e4586b46d9e5572bf911e62ea09d6ec8\build'
+nu54-builder: error: ������ ���� �ڵ� 1�� �����߽��ϴ�: 'C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\west.exe' -z 'C:\Users\eidos\ncs\v3.4.0\zephyr' build -d 'C:\Users\eidos\AppData\Local\NU54\c\v1\e4\e4586b46d9e5572bf911e62ea09d6ec8\build'
+Error during build: exit status 1

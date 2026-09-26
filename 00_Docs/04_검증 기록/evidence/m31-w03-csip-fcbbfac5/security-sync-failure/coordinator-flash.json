@@ -1,0 +1,29 @@
+{
+  "schema": "nucode.probe-flash-receipt.v1",
+  "status": "PASS",
+  "result": "image_programmed_and_left_halted",
+  "role": "source",
+  "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "image_path": "C:\\w\\m31w06-images-fcbbfac5\\security-sync.hex",
+  "image_sha256": "b98ee10bcbd8bcca90503870a6e7ae3bffe5de9551aa24aa6711f32c5010320e",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "helper_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\flash_by_probe_hash.py",
+  "helper_sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+  "started_at": "2026-09-20T05:29:02.213298+00:00",
+  "finished_at": "2026-09-20T05:29:22.320498+00:00",
+  "programmed_bytes": 311296,
+  "load": {
+    "returncode": 0,
+    "timeout_seconds": 120.0,
+    "diagnostic_failure": false
+  },
+  "reset": {
+    "performed": false,
+    "returncode": null,
+    "timeout_seconds": 20.0,
+    "diagnostic_failure": false,
+    "method": "none"
+  },
+  "raw_probe_identifiers_recorded": false,
+  "existing_files_overwritten": false
+}

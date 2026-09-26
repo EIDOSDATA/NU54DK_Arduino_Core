@@ -1,0 +1,323 @@
+{
+  "schema": "nucode.m31.csip-hil.v1",
+  "status": "FAIL",
+  "mode": "recovery",
+  "started_at": "2026-09-20T04:27:24.310570+00:00",
+  "finished_at": "2026-09-20T04:28:21.639198+00:00",
+  "core_revision": "406fb3d0e811f24d5440735cbc0a1595c9c893c6",
+  "source_clean": true,
+  "pre_reset_uart_quarantine": {
+    "member_one": {
+      "observed_bytes": 0,
+      "input_buffer_purged": true
+    },
+    "member_two": {
+      "observed_bytes": 1,
+      "input_buffer_purged": true
+    },
+    "coordinator": {
+      "observed_bytes": 1037,
+      "input_buffer_purged": true
+    }
+  },
+  "public_example_sha256": {
+    "coordinator": "95ff8012e59475a5180b6825311c561a480f597a4cbac355f8c19cd089077c91",
+    "member": "68bc8eb82a0b4753f73c80e9e15517517d412bdb75fb79b9f337284a3f726f68"
+  },
+  "runner_behavior": {
+    "flashes_devices": false,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "debug_control_enabled": true,
+    "debug_control": "SHA-256 helper reset/halt/go",
+    "debug_helper_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "debug_helper_sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "board_map": {
+    "coordinator": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w06-coordinator-406fb3d0\\CsipSetCoordinator.ino.hex",
+      "image_sha256": "1effb01807884da3861af65f88dcb4e39becea46d5ccec3ebfcd385ddb4843e5"
+    },
+    "member_one": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w06-member-406fb3d0\\CsipSetMember.ino.hex",
+      "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32"
+    },
+    "member_two": {
+      "board": "E",
+      "port": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_path": "C:\\w\\m31w06-member-406fb3d0\\CsipSetMember.ino.hex",
+      "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32"
+    }
+  },
+  "fault_image_sha256": null,
+  "fault_role": null,
+  "fault_build_manifest": null,
+  "time_contract": {
+    "campaign_timeout_seconds": 180.0,
+    "recovery_timeout_seconds": 30.0
+  },
+  "expected_tokens": {
+    "coordinator_search": "Searching for two set members",
+    "coordinator_ready": "Set ready; send o to order, l to lock, u to release",
+    "operation_rejected": "Set operation rejected",
+    "member_rank_one": "Member rank 1 of 2",
+    "member_rank_two": "Member rank 2 of 2",
+    "member_rank_prompt": "Enter this member rank (1 or 2):",
+    "member_ready": "Set member ready; send a to authorize SIRK read, f to force-release",
+    "authorization_prompt": "Set member bonded; physically verify the controller, then send a",
+    "authorization_success": "Bonded controller identity authorized",
+    "locked": "Set locked",
+    "released": "Set released",
+    "security_sync_failure": "Set coordinator security request failed",
+    "security_async_failure": "Set coordinator security failed",
+    "watchdog": "Set coordinator progress timeout"
+  },
+  "result": {},
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 2.598,
+      "role": "runner",
+      "text": "debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 1,
+      "at_s": 5.622,
+      "role": "runner",
+      "text": "debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 2,
+      "at_s": 8.736,
+      "role": "runner",
+      "text": "debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 3,
+      "at_s": 8.736,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true"
+    },
+    {
+      "sequence": 4,
+      "at_s": 12.108,
+      "role": "runner",
+      "text": "debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 5,
+      "at_s": 12.109,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=E observed_bytes=1 input_buffer_purged=true"
+    },
+    {
+      "sequence": 6,
+      "at_s": 15.119,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 7,
+      "at_s": 15.119,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=G observed_bytes=1037 input_buffer_purged=true"
+    },
+    {
+      "sequence": 8,
+      "at_s": 18.139,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 9,
+      "at_s": 18.139,
+      "role": "coordinator",
+      "text": "<reset-uart-noise chars=609>Searching for two set members"
+    },
+    {
+      "sequence": 10,
+      "at_s": 18.139,
+      "role": "member_one",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 11,
+      "at_s": 18.139,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 12,
+      "at_s": 18.14,
+      "role": "runner",
+      "text": "command board=F value=1"
+    },
+    {
+      "sequence": 13,
+      "at_s": 18.208,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 14,
+      "at_s": 18.24,
+      "role": "member_one",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 15,
+      "at_s": 18.24,
+      "role": "member_one",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 16,
+      "at_s": 18.292,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 17,
+      "at_s": 18.293,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 18,
+      "at_s": 19.496,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 19,
+      "at_s": 19.496,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 20,
+      "at_s": 19.752,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 21,
+      "at_s": 19.799,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 22,
+      "at_s": 20.779,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 23,
+      "at_s": 22.462,
+      "role": "member_one",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 24,
+      "at_s": 22.488,
+      "role": "runner",
+      "text": "authorize board=F controller=G mapping=preverified"
+    },
+    {
+      "sequence": 25,
+      "at_s": 22.718,
+      "role": "runner",
+      "text": "command board=F value=a"
+    },
+    {
+      "sequence": 26,
+      "at_s": 22.749,
+      "role": "member_one",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 27,
+      "at_s": 23.762,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 28,
+      "at_s": 23.762,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 29,
+      "at_s": 23.762,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 30,
+      "at_s": 27.107,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 31,
+      "at_s": 27.151,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 32,
+      "at_s": 27.151,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 33,
+      "at_s": 27.208,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 34,
+      "at_s": 27.208,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 35,
+      "at_s": 28.231,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 36,
+      "at_s": 28.231,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 37,
+      "at_s": 28.472,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 38,
+      "at_s": 28.528,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    }
+  ],
+  "error": "두 member가 ready가 되기 전에 승인/검색 timeout이 발생했습니다."
+}

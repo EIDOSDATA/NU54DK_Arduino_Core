@@ -1,0 +1,19 @@
+{
+  "status": "DIAGNOSTIC_ATTEMPTS_EXCLUDED",
+  "attempts": [
+    {
+      "file": "diagnostic-stale-serial.json",
+      "reason": "Pre-reset buffered Serial lines were read as the new cycle; no fresh streaming state was observed."
+    },
+    {
+      "file": "diagnostic-invalid-disconnect.json",
+      "reason": "An early startup disconnect was incorrectly counted as post-release disconnect despite a PASS label."
+    },
+    {
+      "file": "diagnostic-stop-race.json",
+      "reason": "Server sketch logged a normal not_ready transition during source ASE shutdown as a failure."
+    }
+  ],
+  "accepted_pair": "duplex-pair-exact.json",
+  "accepted_cycles": "duplex-cycle-exact.json"
+}

@@ -1,0 +1,228 @@
+{
+  "revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+  "source_clean": true,
+  "package_version": "0.5.0-rc.1",
+  "package_release_manifest_sha256": "8e2a57bf42958a91d899ef4cfb715d8b4f0cc3a62753dad61d0afacb8073609f",
+  "images": {
+    "CISCentral": {
+      "hex": "C:\\~\\ae-e6ae\\build\\CISCentral\\CISCentral.ino.hex",
+      "sha256": "dec2177f6db894e76d149c74cb7e00263345eae4e91874c24c3f6ec42a242a5a",
+      "context": "C:\\~\\ae-e6ae\\build\\CISCentral\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\CISCentral.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\CISCentral\\CISCentral.ino.nu54-build.json",
+      "artifact_manifest_sha256": "3a0657b386074ec6e3e2526017038abd15d46845e13bf863f333ef5705d18772",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 274428,
+      "ram_bytes": 115428,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "CISPeripheral": {
+      "hex": "C:\\~\\ae-e6ae\\build\\CISPeripheral\\CISPeripheral.ino.hex",
+      "sha256": "b90597b272629a268c90ee9b36124e305962918edcc5e1d8b601f65e80969669",
+      "context": "C:\\~\\ae-e6ae\\build\\CISPeripheral\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\CISPeripheral.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\CISPeripheral\\CISPeripheral.ino.nu54-build.json",
+      "artifact_manifest_sha256": "4ad9349fd149402ad3b01e93efd3b9234b1b3c906ea540071dbf5362a1ae4d21",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 274080,
+      "ram_bytes": 115428,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "BISSource": {
+      "hex": "C:\\~\\ae-e6ae\\build\\BISSource\\BISSource.ino.hex",
+      "sha256": "e72e394f8e5056e466d9276558d434ca3458fe1851e51cefad7d4feae9b0965d",
+      "context": "C:\\~\\ae-e6ae\\build\\BISSource\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\BISSource.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\BISSource\\BISSource.ino.nu54-build.json",
+      "artifact_manifest_sha256": "f35357f9de042d072529d8441d262e4f1d3748f4b88cf381158883ac6a52ec7d",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 228448,
+      "ram_bytes": 107208,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "BISReceiver": {
+      "hex": "C:\\~\\ae-e6ae\\build\\BISReceiver\\BISReceiver.ino.hex",
+      "sha256": "f34ad796945ac6f9afaf9dd2b11b6b9d59ea1f7daf03cfb573fac64032ffa595",
+      "context": "C:\\~\\ae-e6ae\\build\\BISReceiver\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\BISReceiver.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\BISReceiver\\BISReceiver.ino.nu54-build.json",
+      "artifact_manifest_sha256": "4d42b3f5e2026b10278bb431876002f0e45d6dc7fca9ab748643bf65fbb87327",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 196872,
+      "ram_bytes": 106292,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "BISEncryptedSource": {
+      "hex": "C:\\~\\ae-e6ae\\build\\BISEncryptedSource\\BISEncryptedSource.ino.hex",
+      "sha256": "82fa7f86d906d1c72b382b10e0628f109ee919ba0101cbaa11c5d482a9f031a6",
+      "context": "C:\\~\\ae-e6ae\\build\\BISEncryptedSource\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\BISEncryptedSource.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\BISEncryptedSource\\BISEncryptedSource.ino.nu54-build.json",
+      "artifact_manifest_sha256": "0a8d738dbd43036ee63df7cd40c866aead3311f08dafd64370eeb09b8d1775a5",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 228496,
+      "ram_bytes": 107208,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "BISEncryptedReceiver": {
+      "hex": "C:\\~\\ae-e6ae\\build\\BISEncryptedReceiver\\BISEncryptedReceiver.ino.hex",
+      "sha256": "c143f3a17e7f35d774381a21638353a01db6d3ff60c49f792ae7afe55b8057be",
+      "context": "C:\\~\\ae-e6ae\\build\\BISEncryptedReceiver\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\BISEncryptedReceiver.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\BISEncryptedReceiver\\BISEncryptedReceiver.ino.nu54-build.json",
+      "artifact_manifest_sha256": "35c2b6af3943b3b57bbf3d25678aef96837589707d2c160492c81f6c23e6f29a",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 197640,
+      "ram_bytes": 106292,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "BISTimeSource": {
+      "hex": "C:\\~\\ae-e6ae\\build\\BISTimeSource\\BISTimeSource.ino.hex",
+      "sha256": "f0aed9463d409843bf7f2d7400fb69479621ee396a312c3ed8b894cac0cd4526",
+      "context": "C:\\~\\ae-e6ae\\build\\BISTimeSource\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\BISTimeSource.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\BISTimeSource\\BISTimeSource.ino.nu54-build.json",
+      "artifact_manifest_sha256": "41b387b651f1b1d80342dc1e7b4c4cfcc4a1b9bc107ee3af898169d57ac550f7",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 229604,
+      "ram_bytes": 107240,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "BISTimeReceiver": {
+      "hex": "C:\\~\\ae-e6ae\\build\\BISTimeReceiver\\BISTimeReceiver.ino.hex",
+      "sha256": "43ffc0710107b8a1d22ed902035821c0ba95fbdd671fccd08ad03ec9f0c31d27",
+      "context": "C:\\~\\ae-e6ae\\build\\BISTimeReceiver\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\BISTimeReceiver.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\BISTimeReceiver\\BISTimeReceiver.ino.nu54-build.json",
+      "artifact_manifest_sha256": "41c10b68b881eae9bd88b3b9e224b9808c4a4a0da5c06b1517643c67af3b822c",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 197124,
+      "ram_bytes": 106300,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "CISToBISBridge": {
+      "hex": "C:\\~\\ae-e6ae\\build\\CISToBISBridge\\CISToBISBridge.ino.hex",
+      "sha256": "2146d688897af10886a642da98681c5d1c89882f8fc0d8c2fc3f1943bc61b224",
+      "context": "C:\\~\\ae-e6ae\\build\\CISToBISBridge\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\CISToBISBridge.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\CISToBISBridge\\CISToBISBridge.ino.nu54-build.json",
+      "artifact_manifest_sha256": "a0b10ecd2133172e297033b338d8e84fff2f6bb47ddba94e8e5e4a535999ef12",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 295068,
+      "ram_bytes": 120984,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "CISToBISPeer": {
+      "hex": "C:\\~\\ae-e6ae\\build\\CISToBISPeer\\CISToBISPeer.ino.hex",
+      "sha256": "fcc8fffa217149dfc963b54ba05195d74783d8454c9ae0ee8c85252ff7f1451c",
+      "context": "C:\\~\\ae-e6ae\\build\\CISToBISPeer\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\CISToBISPeer.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\CISToBISPeer\\CISToBISPeer.ino.nu54-build.json",
+      "artifact_manifest_sha256": "d1a9b7dca52cbb42a4f00890b535316390ad359c9e20479b73ace63fcc67ce67",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 274572,
+      "ram_bytes": 115420,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    },
+    "CISToBISReceiver": {
+      "hex": "C:\\~\\ae-e6ae\\build\\CISToBISReceiver\\CISToBISReceiver.ino.hex",
+      "sha256": "f34ad796945ac6f9afaf9dd2b11b6b9d59ea1f7daf03cfb573fac64032ffa595",
+      "context": "C:\\~\\ae-e6ae\\build\\CISToBISReceiver\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-e6ae\\CISToBISReceiver.build.log",
+      "artifact_manifest": "C:\\~\\ae-e6ae\\build\\CISToBISReceiver\\CISToBISReceiver.ino.nu54-build.json",
+      "artifact_manifest_sha256": "26cad626900a656faaf8d28d62af3b18559f8552d70acef46f18c56fc4697eda",
+      "identity_revisions": {
+        "M31_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "M31_CORE_REVISION": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+        "M31_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "M31_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 196872,
+      "ram_bytes": 106292,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.iso"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "source_revision": "1f560fed1bb889b5def834e88c62d18939db2e4e",
+  "files": {
+    ".gitattributes": "00914fde86857422778b8dbea4d70cd16bf60ff06ebe5fd9d65d00a2c992dd15",
+    "flash.json": "6b6b810b934450bafe231933ad21382427e5c3419d75ede440347fe6c08e37d6",
+    "pair-exact.json": "c32208ecbd181a3657cad67669f5609ba48ce631844680e1e5057d7ae2554c1e",
+    "recovery-exact.json": "3c5caa0f65860f3a9291e07dfe426e102c97b278a692acf40fd3fb0d97573fe1",
+    "sink-build.json": "9b97d834495eae774c6c53f5c9b3f42a813a21e0494d9076f1ed2e7c4284b299",
+    "sink.config.gz": "c1d562bdde659c9a65c191740350ecfe524406b1e7b4089de76ef25ae6b49409",
+    "sink.hex.gz": "7e4d1d39cda1cdfee19e6f4a3a2193e4e583b667c153f4e5be08c36e550dcc98",
+    "source-build.json": "f31b6d7a9a4c8736e9d4948b1e77d152c4e15ecaa32f24372917ed1d98e04ea6",
+    "source.config.gz": "161f0207ebe4cb0b329f5dd52fdb7f4a82b608806b493aa2a3e389d470949f24",
+    "source.hex.gz": "a342c804e1520e597f384041e488c572c8ea939d2ccc855839c57d69cebf282a"
+  }
+}

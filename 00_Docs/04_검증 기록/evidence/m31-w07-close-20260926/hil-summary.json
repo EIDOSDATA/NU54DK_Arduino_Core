@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+  "minimum_boards": 3,
+  "preflight": {
+    "primary_status": "FAIL",
+    "failure": "dp_targetid_observed_missing",
+    "bounded_retests": 1,
+    "readonly_diagnostic_boards": 3,
+    "final_status": "PASS",
+    "evidence": "preflight.json"
+  },
+  "families": {
+    "iso": {
+      "status": "PASS",
+      "cycles_per_role": 20,
+      "frames": 2000,
+      "missing_frames": 0,
+      "stopped_per_role": 20,
+      "evidence": "iso-combined.json"
+    },
+    "audio": {
+      "status": "PASS",
+      "duplex_stop_release_cycles": 20,
+      "evidence": "audio-duplex.json"
+    },
+    "direction_finding": {
+      "status": "PASS",
+      "cycles": 20,
+      "invalid_rejected": 20,
+      "evidence": "df-beacon.json"
+    },
+    "channel_sounding": {
+      "status": "PASS",
+      "procedures": 100,
+      "stop_restart": 20,
+      "disconnect_reconnect": 20,
+      "counter_gap_policy": "observe_only",
+      "counter_gaps": [
+        {
+          "before": 58,
+          "after": 60
+        }
+      ],
+      "evidence": "cs-ras.json"
+    }
+  },
+  "final_state": {
+    "all_three_iso_roles_stopped": true,
+    "clocks_and_pins": "released_by_role_stop_paths",
+    "faults": 0
+  },
+  "safety": {
+    "functional_flash_auto_unlock": false,
+    "functional_flash_erase": "sector_only",
+    "automatic_recover": false,
+    "raw_probe_uid_persisted": false
+  }
+}

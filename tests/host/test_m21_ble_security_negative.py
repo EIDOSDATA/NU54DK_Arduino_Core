@@ -38,8 +38,8 @@ class M21BleSecurityNegativeTests(unittest.TestCase):
     def test_rejects_hid_before_encryption_or_subscription(self) -> None:
         """! @brief L2 미만 link와 CCC 미구독 HID 전송을 PASS로 올리지 않습니다. """
 
-        send = SOURCE[SOURCE.index("bool HidKeyboard::sendReport") :]
-        send = send[: send.index("bool HidKeyboard::press")]
+        send = SOURCE[SOURCE.index("bool sendHidReport(std::uint8_t profile_mask") :]
+        send = send[: send.index("bool hidProfileConnected")]
         self.assertIn("bt_conn_get_security(connection) < BT_SECURITY_L2", send)
         self.assertIn("SecurityError::invalid_state", send)
         self.assertIn("SecurityError::not_subscribed", send)
@@ -87,7 +87,9 @@ class M21BleSecurityNegativeTests(unittest.TestCase):
         self.assertIn("bt_unpair(BT_ID_DEFAULT, BT_ADDR_LE_ANY)", SOURCE)
         self.assertNotRegex(HEADER + SOURCE, r"factory[_A-Z]?reset|mass[_A-Z]?erase")
         self.assertEqual(FEATURE["conflicts"], [])
-        self.assertEqual(FEATURE["compatible_profiles"], ["ble"])
+        self.assertEqual(
+            FEATURE["compatible_profiles"], ["adaptive", "ble", "secure_ble_dfu"]
+        )
 
     def test_no_fixed_passkey_secret_log_or_unencrypted_hids_config(self) -> None:
         """! @brief 고정 passkey·secret 로그·평문 HIDS 설정을 모두 금지합니다. """

@@ -1,0 +1,136 @@
+{
+  "test_id": "M31-W03-10-TMAP-GMAP-HIL",
+  "status": "PASS",
+  "scenario": "gmap-broadcast",
+  "source_clean": true,
+  "identity": {
+    "core": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "image_core_revision": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+  "sdk_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3",
+  "roles": {
+    "source": {
+      "role_bits": "0x04",
+      "service": "GMAS",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "vcom": "COM10"
+    },
+    "sink": {
+      "role_bits": "0x08",
+      "service": "GMAS",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "vcom": "COM14"
+    }
+  },
+  "artifacts": {
+    "source": {
+      "image_name": "GamingAudioBroadcaster.ino.hex",
+      "image_size": 1415945,
+      "image_sha256": "a0556f399a95640ce39fe53eaf8e67565cf19095066c19bbd2282604feda316e",
+      "config": {
+        "name": "prj.conf",
+        "size": 1389,
+        "sha256": "465230e5b6c7425053477ec8baef403d05e48d96c432f09161345c79afeefdf9",
+        "required": [
+          "CONFIG_BT_GMAP=y",
+          "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+          "CONFIG_LIBLC3=y"
+        ]
+      },
+      "build_record": {
+        "core_revision": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "a0556f399a95640ce39fe53eaf8e67565cf19095066c19bbd2282604feda316e",
+        "record_format": "nu54-build-json",
+        "record_name": "GamingAudioBroadcaster.ino.nu54-build.json",
+        "record_sha256": "273a7d13dd55f11e66f61ef00ef287662353be500fd96a426cb43d8d5847e9af"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "503808"
+    },
+    "sink": {
+      "image_name": "GamingAudioReceiver.ino.hex",
+      "image_size": 1373931,
+      "image_sha256": "2dc84c2ade89fbb5cb77576c2f6ecbece5ef13e8f2b38311fb49657e1079a74e",
+      "config": {
+        "name": "prj.conf",
+        "size": 1170,
+        "sha256": "9b7f4f6958617d33aed1ce31a5095c1d7042a3d000b0509513c39a0ef56e9164",
+        "required": [
+          "CONFIG_BT_GMAP=y",
+          "CONFIG_BT_BAP_BROADCAST_SINK=y",
+          "CONFIG_LIBLC3=y"
+        ]
+      },
+      "build_record": {
+        "core_revision": "db56af1c0cd5257cef366ec93b010f7119cf2c11",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "2dc84c2ade89fbb5cb77576c2f6ecbece5ef13e8f2b38311fb49657e1079a74e",
+        "record_format": "nu54-build-json",
+        "record_name": "GamingAudioReceiver.ino.nu54-build.json",
+        "record_sha256": "c0428b0633666716fa061b66a659a4bcb697452e22602a5557830c6fe452f4f2"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "491520"
+    }
+  },
+  "transcripts": {
+    "source": {
+      "name": "gmap-broadcast-final.source.transcript.log",
+      "size": 16496,
+      "sha256": "3347307a468c7b87babfb268b2ee3f972d6197b842871a89ff36f1c5ac502476"
+    },
+    "sink": {
+      "name": "gmap-broadcast-final.sink.transcript.log",
+      "size": 10353,
+      "sha256": "b8158116f87537fb8926fde698132cd61076dd495672f2a752540a7d5627bbb8"
+    }
+  },
+  "result": {
+    "advertised_discovered_role_feature_service": "PASS",
+    "stream_start_send_read_stop": "PASS",
+    "soak_seconds": 180.0,
+    "minimum_soak_frames": 17500,
+    "source_frames": 22900,
+    "decoded_frames": 19500,
+    "dropped_frames": 0,
+    "recovery_cycles": 20,
+    "stop_restart_pass": "20/20",
+    "disconnect_reconnect_pass": "not-applicable-broadcast",
+    "negative_role": "PASS",
+    "negative_quality": "PASS",
+    "negative_feature": "PASS"
+  },
+  "observed_utc": "2026-09-20T15:56:35.706289+00:00"
+}

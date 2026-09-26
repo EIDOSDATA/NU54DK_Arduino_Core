@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-df-cte-beacon-20-cycle-memory",
+  "image_sha256": "857e9cc17d3a4079f2490db39881e71a52c4094ec29f1a374dcb11409b3db603",
+  "probe_uid_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "com_mapping": {
+    "app": "COM10",
+    "aux": "COM11"
+  },
+  "start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "lines": {
+    "beacon": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=df-beacon",
+      "P2_DF_REJECTED cte-length",
+      "P2_DF_FAIL step=begin native=-5"
+    ]
+  },
+  "cycles": 0,
+  "result": "FAIL"
+}

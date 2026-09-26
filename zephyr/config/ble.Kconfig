@@ -7,6 +7,90 @@ config NUCODE_BLE_NUS
 	  공식 NCS NUS service/client를 하나의 Arduino Stream으로 노출합니다.
 	  callback 데이터는 고정 queue를 거쳐 Sketch의 poll 문맥에서 전달됩니다.
 
+config NUCODE_BLE_ISO
+	bool "NUCODE BLE ISO API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT
+	help
+	  Arduino 공개 API를 통해 CIS, BIS와 CIS-BIS bridge 프로그램을 실행합니다.
+	  실제 Zephyr ISO 객체와 callback은 라이브러리 구현 안에 유지됩니다.
+
+choice NUCODE_BLE_ISO_MODE
+	prompt "NUCODE BLE ISO 실행 역할"
+	depends on NUCODE_BLE_ISO
+
+config NUCODE_BLE_ISO_MODE_CIS_CENTRAL
+	bool "CIS central"
+
+config NUCODE_BLE_ISO_MODE_CIS_PERIPHERAL
+	bool "CIS peripheral"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_PEER
+	bool "CIS-to-BIS peer"
+
+config NUCODE_BLE_ISO_MODE_BIS_SOURCE
+	bool "BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_RECEIVER
+	bool "BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_SOURCE
+	bool "암호화 BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_ENCRYPTED_RECEIVER
+	bool "암호화 BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_BIS_TIME_SOURCE
+	bool "timestamp BIS source"
+
+config NUCODE_BLE_ISO_MODE_BIS_TIME_RECEIVER
+	bool "timestamp BIS receiver"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_BRIDGE
+	bool "CIS-to-BIS bridge"
+
+config NUCODE_BLE_ISO_MODE_CIS_TO_BIS_RECEIVER
+	bool "CIS-to-BIS receiver"
+
+endchoice
+
+config NUCODE_BLE_DF_BEACON
+	bool "NUCODE BLE 기본 안테나 AoA CTE beacon API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT_DF_CONNECTIONLESS_CTE_TX
+	help
+	  공개 Arduino Beacon 객체에서 connectionless AoA CTE 송신을 제어합니다.
+	  Zephyr 광고 set과 callback은 라이브러리 구현 내부에 유지합니다.
+
+config NUCODE_BLE_DF_RESPONDER
+	bool "NUCODE BLE 연결 기반 AoA CTE 응답 API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_DF_CONNECTION_CTE_RSP
+	help
+	  공개 연결 handle을 받아 기본 안테나 CTE 응답을 시작·중단합니다.
+	  Zephyr 연결 객체와 방향 탐지 호출은 라이브러리 구현 내부에 둡니다.
+
+config NUCODE_BLE_CS_REFLECTOR
+	bool "NUCODE BLE Ranging Service reflector API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_CHANNEL_SOUNDING && BT_RAS_RRSP
+	help
+	  공개 BLE 연결 handle에 CS reflector 역할을 결합합니다.
+	  Zephyr CS 호출과 연결 객체는 라이브러리 구현 내부에 둡니다.
+
+config NUCODE_BLE_CS_INITIATOR
+	bool "NUCODE BLE Ranging Service initiator API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_CHANNEL_SOUNDING && BT_RAS_RREQ
+	help
+	  공개 BLE 연결 handle로 RAS GATT 탐색과 CS procedure를 실행합니다.
+	  Zephyr 호출과 raw step 버퍼는 라이브러리 구현 내부에 둡니다.
+
 config NUCODE_BLE_CORE
 	bool "NUCODE BLE Core/GAP 활성화"
 	default n
@@ -15,6 +99,16 @@ config NUCODE_BLE_CORE
 	help
 	  Bluetooth once-init, local name, legacy advertising, bounded scan과
 	  단일 connection lifecycle을 Arduino main-thread event로 노출합니다.
+
+config NUCODE_BLE_CENTRAL_CONNECTION_SLOTS
+	int "NUCODE BLE outgoing central connection slot 수"
+	default 1
+	range 1 2
+	depends on NUCODE_BLE_CORE
+	help
+	  기본값 1은 central 1개와 peripheral 1개의 기존 구성을 유지합니다.
+	  central-only image는 2를 선택하고 controller peripheral count를 0으로
+	  맞춰 두 outgoing connection을 사용할 수 있습니다.
 
 config NUCODE_BLE_CORE_EVENT_QUEUE_SIZE
 	int "NUCODE BLE Core/GAP event queue 항목 수"
@@ -31,17 +125,52 @@ config NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE
 	range 2 32
 	depends on NUCODE_BLE_CORE
 	help
-	  callback 밖 수명을 보장하는 31-byte bounded scan 결과 개수입니다.
+	  callback 밖 수명을 보장하는 최대 255-byte payload scan 결과 개수입니다.
+
+config NUCODE_BLE_PERIODIC_REPORT_QUEUE_SIZE
+	int "NUCODE BLE periodic report queue 항목 수"
+	default 8
+	range 2 32
+	depends on NUCODE_BLE_CORE
+	help
+	  callback 밖 수명을 보장하는 255-byte bounded periodic report 개수입니다.
+
+config NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE
+	int "NUCODE BLE PAwR response queue 항목 수"
+	default 8
+	range 2 32
+	depends on NUCODE_BLE_CORE
+	help
+	  callback 밖 수명을 보장하는 bounded PAwR response 개수입니다.
 
 config NUCODE_BLE_GATT
 	bool "NUCODE 범용 GATT server/client 활성화"
 	default n
 	depends on NUCODE_BLE_CORE
-	depends on BT_GATT_CLIENT
+	depends on BT_GATT_CLIENT || BT_GATT_DYNAMIC_DB
+	help
+	  Bluetooth 시작 전 고정 schema 등록과 bounded generic client operation 중
+	  role이 요구하는 방향만 제공합니다.
+
+config NUCODE_BLE_GATT_SERVER
+	bool "NUCODE 범용 GATT server 활성화"
+	default y
+	depends on NUCODE_BLE_GATT
 	depends on BT_GATT_DYNAMIC_DB
 	help
-	  Bluetooth 시작 전 고정 schema 등록, cached server value와 한 번에
-	  하나의 bounded generic client operation을 제공합니다.
+	  고정 service schema, cached value, write, notify와 indicate server 상태를
+	  포함합니다. server를 사용하지 않는 role은 이 옵션을 끄고 저장소를
+	  link 대상에서 제외합니다.
+
+config NUCODE_BLE_GATT_CLIENT
+	bool "NUCODE 범용 GATT client 활성화"
+	default y
+	depends on NUCODE_BLE_GATT
+	depends on BT_GATT_CLIENT
+	help
+	  remote service discovery, read/write, subscribe와 robust cache client 상태를
+	  포함합니다. client를 사용하지 않는 role은 이 옵션을 끄고 연결별
+	  context를 link 대상에서 제외합니다.
 
 config NUCODE_BLE_GATT_MAX_SERVICES
 	int "NUCODE GATT service 최대 수"
@@ -55,14 +184,77 @@ config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE
 	range 1 8
 	depends on NUCODE_BLE_GATT
 
+config NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE
+	int "NUCODE GATT callback event 최대 payload 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  server write와 client read·notification callback이 main thread로 복사하는
+	  단일 event payload의 최대 byte 수입니다.
+
+config NUCODE_BLE_GATT_TX_PAYLOAD_SIZE
+	int "NUCODE GATT TX 최대 payload 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  server notification·indication 및 client write의 비동기 전송 수명
+	  동안 보존하는 단일 snapshot payload의 최대 byte 수입니다.
+
+config NUCODE_BLE_GATT_TX_CONTEXT_COUNT
+	int "NUCODE GATT server 동시 TX context 수"
+	default 64
+	range 1 128
+	depends on NUCODE_BLE_GATT_SERVER
+	help
+	  notification과 indication이 함께 사용하는 비동기 snapshot context의
+	  최대 수입니다. 부족하면 전송을 시작하지 않고 busy로 실패합니다.
+
+config NUCODE_BLE_GATT_INLINE_VALUE_SIZE
+	int "NUCODE GATT inline cached value 최대 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  caller-owned buffer를 지정하지 않은 characteristic과 descriptor 객체가
+	  내부에 보존하는 cached value의 최대 byte 수입니다.
+
 config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
 	int "NUCODE GATT callback event queue 항목 수"
 	default 8
 	range 4 32
 	depends on NUCODE_BLE_GATT
 	help
-	  server write·CCC·전송 완료와 client payload를 최대 244 byte까지
+	  server write·CCC·전송 완료와 client payload를 선택한 최대 크기까지
 	  복사해 BLEDevice.poll()로 전달하는 고정 record 개수입니다.
+
+config NUCODE_BLE_L2CAP
+	bool "NUCODE BLE LE Credit Based Channel 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_L2CAP_DYNAMIC_CHANNEL
+	help
+	  server 1개와 generation 기반 channel 2개, 512-byte SDU를
+	  고정 RX record와 TX buffer로 BLEDevice.poll()에 전달합니다.
+
+config NUCODE_BLE_L2CAP_EVENT_QUEUE_SIZE
+	int "NUCODE BLE LE CoC event queue 항목 수"
+	default 16
+	range 8 32
+	depends on NUCODE_BLE_L2CAP
+	help
+	  stack callback과 BLEDevice.poll() 사이의 작은 고정 event record 수입니다.
+
+config NUCODE_BLE_NFC_OOB_ADAPTER
+	bool "NUCODE BLE NFC OOB NDEF adapter 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	depends on BT_SMP
+	help
+	  유선 경로와 같은 canonical LE Secure Connections OOB record를
+	  Bluetooth LE OOB MIME NDEF record로 변환합니다. 이 옵션만으로
+	  NFCT pin이나 antenna를 활성화하지 않으며 RF 지원을 의미하지 않습니다.
 
 config NUCODE_BLE_RX_BUFFER_SIZE
 	int "NUCODE BLE NUS RX queue byte 수"

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "release": "v0.5.0",
+  "candidate_version": "0.5.0-rc.1",
+  "host_scope": "Windows 10/11 x64",
+  "status": "public_rc_available_stable_hold",
+  "publication_allowed": false,
+  "public_candidate": {
+    "status": "PASS",
+    "version": "0.5.0-rc.1",
+    "tag": "v0.5.0-rc.1",
+    "source_revision": "7786984a186980f6220271cd506636e4564bc55d",
+    "release_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0-rc.1",
+    "index_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.1/package_nucode_nu54dk_rc_index.json",
+    "public_smoke": "PASS",
+    "evidence": [
+      "00_Docs/04_검증 기록/evidence/m31-w08-public-rc-20260927/publication.json",
+      "00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md"
+    ]
+  },
+  "gates": [
+    {
+      "id": "m31_functionality",
+      "kind": "automated_and_physical",
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/closure-audit.json",
+        "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/closure-audit.json",
+        "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json"
+      ]
+    },
+    {
+      "id": "api_examples_support_matrix",
+      "kind": "automated",
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/closure-audit.json",
+        "00_Docs/document-review.json"
+      ]
+    },
+    {
+      "id": "windows_package_reproducibility",
+      "kind": "automated",
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/rc-plan-summary.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/ci-aggregate.json"
+      ]
+    },
+    {
+      "id": "windows_clean_install_examples_upload",
+      "kind": "automated_and_physical",
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/ci-aggregate.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/physical-upload-debug.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/post-hil-restore.json"
+      ]
+    },
+    {
+      "id": "windows_lifecycle",
+      "kind": "automated",
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/lifecycle.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/ci-aggregate.json"
+      ]
+    },
+    {
+      "id": "rc_review_and_owner_approval",
+      "kind": "human",
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-public-rc-20260927/publication.json"
+      ]
+    },
+    {
+      "id": "public_assets_and_download_smoke",
+      "kind": "external",
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-public-rc-20260927/publication.json",
+        "00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md"
+      ]
+    },
+    {
+      "id": "stable_v0.5.0_publication",
+      "kind": "human",
+      "status": "HOLD",
+      "evidence": [],
+      "reason": "공개 RC와 별도로 stable exact 자산 검토·승인·tag·Release·root catalog·공개 설치 smoke가 필요"
+    }
+  ],
+  "deferred_scope": {
+    "m32": "후속 버전 미정",
+    "m33": "후속 버전 미정",
+    "host_w04_w08": "사용자 지시로 보류",
+    "ubuntu_macos": "해당 OS를 지원하는 후속 릴리스의 사용자 gate"
+  }
+}

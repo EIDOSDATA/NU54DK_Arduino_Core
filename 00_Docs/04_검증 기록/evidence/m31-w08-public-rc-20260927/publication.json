@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W08-PUBLIC-RC",
+  "status": "PASS",
+  "observed_utc": "2026-09-26T17:13:33.6668184Z",
+  "approval": {
+    "status": "PASS",
+    "approver_role": "project-owner",
+    "source": "explicit-user-instruction",
+    "scope": "publish-v0.5.0-rc.1-as-public-prerelease"
+  },
+  "source": {
+    "branch": "0.5.0-RC1",
+    "revision": "7786984a186980f6220271cd506636e4564bc55d",
+    "tag": "v0.5.0-rc.1",
+    "tag_object": "6cb741b45d88b6a4f1152631d5d31ce200ebc9ec",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+  },
+  "release": {
+    "status": "PASS",
+    "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0-rc.1",
+    "published_at_utc": "2026-09-26T17:03:41Z",
+    "draft": false,
+    "prerelease": true,
+    "assets": [
+      {
+        "name": "nucode-nu54dk-zephyr-0.5.0-rc.1.CHECKSUMS.sha256",
+        "size": 572,
+        "sha256": "499fe81e251c941a1835e0bab15674666b8f52ef43c3fe7e17885d3177136e83"
+      },
+      {
+        "name": "nucode-nu54dk-zephyr-0.5.0-rc.1.license-inventory.json",
+        "size": 37512,
+        "sha256": "67c2bf0d99b2fe1b6858bd9a7065cbf05fa6926940c236c14b71f5c4b9faad56"
+      },
+      {
+        "name": "nucode-nu54dk-zephyr-0.5.0-rc.1.release-manifest.json",
+        "size": 271259,
+        "sha256": "2d51098b636fe2255645fc9651dc34c14abf4508f9ef225dd354e7a048b6bc0f"
+      },
+      {
+        "name": "nucode-nu54dk-zephyr-0.5.0-rc.1.spdx.json",
+        "size": 481449,
+        "sha256": "71c04737aaecbec976ac1ab7139874362828cd7a31a6d3dcec61c28e23381ae2"
+      },
+      {
+        "name": "nucode-nu54dk-zephyr-0.5.0-rc.1.THIRD_PARTY_NOTICES.md",
+        "size": 1813,
+        "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d"
+      },
+      {
+        "name": "nucode-nu54dk-zephyr-0.5.0-rc.1.zip",
+        "size": 8537899,
+        "sha256": "e4e2932620e93a2af9bd5477b61e42bd835be24d8a10b34e3811906dd2df5e4f"
+      },
+      {
+        "name": "package_nucode_nu54dk_rc_index.json",
+        "size": 1151,
+        "sha256": "1da065628282226afce249db5cb368ee9010fdabaf8d92354b3794e87fe98521"
+      }
+    ]
+  },
+  "public_smoke": {
+    "status": "PASS",
+    "host": "Windows 10/11 x64",
+    "arduino_cli": "1.5.1",
+    "authentication_used_for_download": false,
+    "all_asset_hashes_match": true,
+    "installed_core": "nucode:zephyr@0.5.0-rc.1",
+    "installed_source_revision": "7786984a186980f6220271cd506636e4564bc55d",
+    "examples_discovered": 113,
+    "representative_compile": {
+      "identity": "NUCODE_BLE_DirectionFinding/CteBeacon",
+      "profile": "ble",
+      "status": "PASS",
+      "flash_bytes": 156700,
+      "ram_bytes": 51405,
+      "build_manifest_sha256": "a08df8a5d73c24cf5c1029814ea69ef6cf5a2aacf163c4d23cb0746468721948"
+    },
+    "uninstall": "PASS",
+    "reinstall": "PASS",
+    "rediscovered_examples": 113,
+    "prerequisite_marker_preserved": true
+  },
+  "diagnostics": [
+    {
+      "status": "FAIL",
+      "scope": "local-smoke-environment",
+      "cause": "첫 대표 compile에서 ready.json과 다른 C:\\ncs 경로를 명시해 fail-closed 경로 검사가 거부",
+      "resolution": "ready.json에 고정된 C:\\Users\\eidos\\ncs 경로로 재실행",
+      "package_defect": false
+    },
+    {
+      "status": "FAIL",
+      "scope": "local-smoke-shell",
+      "cause": "PowerShell Core가 Windows PowerShell 전용 built-in module 경로를 읽어 관리 cmdlet load 실패",
+      "resolution": "powershell.exe -NoProfile 격리 프로세스로 재실행",
+      "package_defect": false
+    }
+  ],
+  "boundaries": {
+    "official_supported_stable": "v0.4.1",
+    "stable_v0.5.0_publication": "HOLD",
+    "stable_root_index_changed": false,
+    "main_changed": false,
+    "ubuntu_macos_claimed": false,
+    "new_physical_hil": false
+  }
+}

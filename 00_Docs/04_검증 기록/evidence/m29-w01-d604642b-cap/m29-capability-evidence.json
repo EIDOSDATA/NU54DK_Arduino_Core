@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "protocol": "M29CAP/1",
+  "test_id": "M29-CAP-01",
+  "status": "passed",
+  "created_at_utc": "2026-09-13T06:50:35.380846+00:00",
+  "identity": {
+    "core": "d604642b1b439fda2840f613f7f157672d801597",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "nonce": "b0a32c88bf92e812ad32e393f2eca7ae",
+  "board": {
+    "daplink_uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "msd_root": "F:\\",
+    "uart_port": "COM14"
+  },
+  "image": {
+    "name": "zephyr.hex",
+    "size": 640327,
+    "sha256": "6d5569f9820727451e3009c79e8ccaa3dd2fea94017a9f2b8a998502fef825e3",
+    "build_record": {
+      "core_revision": "d604642b1b43",
+      "core_source_sha256": "abdaada23b902b9331951da54f39e301214e0074d3c632c15a02cfaa41f19c63",
+      "application_source_sha256": "74b828c4bbe983041b66ad2d01bd1c06a4fbfcc476cfdf85eda8073de7da3f06",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "1957b35e4e6a3681ceb25c2fa6c8f43b2bed3f9b4d68959764214aeb1782c907"
+    },
+    "flash_sequence": "26",
+    "flash_bytes": "640512"
+  },
+  "transcript": {
+    "name": "m29-capability-evidence.transcript.log",
+    "size": 1769,
+    "sha256": "3157c091dcb1c9d9db1eb3739f3bc5cc1dea1c2fc38b33ebfd6fde7c49d07e67"
+  },
+  "result": {
+    "nonce": "b0a32c88bf92e812ad32e393f2eca7ae",
+    "identity": {
+      "core": "d604642b1b439fda2840f613f7f157672d801597",
+      "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "host": {
+      "bt_max_conn": 2,
+      "gatt_client": 1,
+      "dynamic_db": 1,
+      "read_multiple": 1,
+      "service_changed": 1,
+      "caching": 1,
+      "l2cap_dynamic": 1,
+      "signing": 1,
+      "eatt": 1,
+      "eatt_max": 2,
+      "att_tx_count": 8,
+      "prepare_count": 8,
+      "l2cap_tx_mtu": 512,
+      "l2cap_tx_buffers": 4
+    },
+    "l2cap_psm": 128,
+    "contract": {
+      "client_contexts": 2,
+      "value_bytes": 512,
+      "prepare_per_link": 1,
+      "descriptors": 4,
+      "read_multiple_handles": 4,
+      "coc_channels": 2,
+      "coc_sdu_bytes": 512,
+      "eatt_bearers": 2
+    },
+    "capabilities": [
+      "gatt_long_reliable",
+      "gatt_read_multiple",
+      "service_changed",
+      "robust_caching",
+      "le_coc",
+      "signed_write_legacy",
+      "eatt_experimental"
+    ]
+  },
+  "source_capability_status": "candidate-preserved-separately",
+  "peer_negotiated_features": {
+    "signed_write": "not_run",
+    "eatt": "not_run"
+  },
+  "safety": {
+    "external_gpio_wiring_required": false,
+    "mass_erase_requested": false,
+    "recover_requested": false
+  }
+}

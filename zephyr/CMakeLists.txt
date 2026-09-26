@@ -2,6 +2,11 @@ set(NUCODE_BUILD_RECORD
   "${CMAKE_BINARY_DIR}/nucode_arduino_core_build.yml"
 )
 
+if(CONFIG_NUCODE_M30_POWER_HIL_MCUBOOT)
+  zephyr_library_named(nucode_m30_power_hil_mcuboot)
+  zephyr_library_sources(m30_power_mcuboot_hook.c)
+endif()
+
 if(CONFIG_NUCODE_ARDUINO_CORE)
   get_filename_component(NUCODE_ARDUINO_CORE_ROOT
     "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE
@@ -43,6 +48,12 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     "${NUCODE_ARDUINO_CORE_ROOT}/dts"
     "${NUCODE_ARDUINO_VARIANT_ROOT}"
   )
+  if(CONFIG_BT_SIGNING)
+    # 고정 NCS v3.4.0의 deprecated signing key 저장 adapter만 private Host API를 사용한다.
+    zephyr_include_directories(
+      "${ZEPHYR_BASE}/subsys/bluetooth/host"
+    )
+  endif()
   zephyr_system_include_directories(
     "${NUCODE_ARDUINO_API_ROOT}"
   )

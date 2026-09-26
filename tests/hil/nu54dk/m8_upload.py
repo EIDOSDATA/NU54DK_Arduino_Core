@@ -754,6 +754,7 @@ def validate_pyocd_flash_log(
         or tokens.count("--no-rebuild") != 1
         or tokens.count("--dt-flash=n") != 1
         or tokens.count("--tool-opt=-Osmart_flash=false") != 1
+        or tokens.count("--tool-opt=-Oauto_unlock=false") != 1
         or len(probe_options) != 1
         or probe_options[0] + 1 >= len(tokens)
         or tokens[probe_options[0] + 1] != probe_id
@@ -768,6 +769,7 @@ def validate_pyocd_flash_log(
         "attempts": 1,
         "dt_flash": False,
         "smart_flash": False,
+        "auto_unlock": False,
         "mass_erase_requested": False,
         "recover_requested": False,
         "flash_log_sha256": file_sha256(log_path),

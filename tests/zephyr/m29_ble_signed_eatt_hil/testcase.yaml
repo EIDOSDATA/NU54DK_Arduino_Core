@@ -1,0 +1,33 @@
+tests:
+  nucode.m29.ble_signed_eatt_peripheral:
+    tags:
+      - nucode
+      - arduino
+      - m29
+      - bluetooth
+      - signing
+      - eatt
+      - hil
+    build_only: true
+    extra_args:
+      - M29_ADVANCED_ROLE=peripheral
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+  nucode.m29.ble_signed_eatt_central:
+    tags:
+      - nucode
+      - arduino
+      - m29
+      - bluetooth
+      - signing
+      - eatt
+      - hil
+    build_only: true
+    extra_args:
+      - M29_ADVANCED_ROLE=central
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

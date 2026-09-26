@@ -1,0 +1,21 @@
+{
+  "source_revision": "db99597094da758628445f8fb23e780b5e9f3b5a",
+  "files": {
+    ".gitattributes": "00914fde86857422778b8dbea4d70cd16bf60ff06ebe5fd9d65d00a2c992dd15",
+    "build-summary.json": "31eb1fac34cdf3d74a93887ef40759c5d59630e6650201afea03f6c67f717c3d",
+    "codec-build.log.gz": "d0407e7b3f82b4b72093f7d05ea764bdfb9eaadfc9719c62cfb46d6469847d91",
+    "codec-exact.json": "cc8de296c9876f6da6e676644ec3f09d3a788ffd0f7614c4ba80c2b87cc926f9",
+    "codec-flash.json": "022c8154b7d0c646f1211c4b4d260d4854edbc781ad68884002bfd9409a9c9a4",
+    "codec.config.gz": "99fa764d64a14eac4584b45bce789737870014c51a5b52005f6f0a1d8e500034",
+    "codec.hex.gz": "1b962d66f5073fa02a78ace0ab7ceb98e25988c36a288f2cb5b4380b0ed207b0",
+    "fixture-prepare.json": "867c825b8f3cc61bfbae201fb9c295d2f55954647067f774fb92b0c9f74fa095",
+    "qos-build.log.gz": "b109d26361cf5ed7a9aece119ff8d60e63956591cfcd9280c6dc38c394ae4f17",
+    "qos-exact.json": "2c5afeae7dfbd50095a2af28b3ebf84d5c8718d9179a9849095f7362e0b220dd",
+    "qos-flash-candidate.json": "ec732bc5b5beebbb5128db56ad38e3365ebc56fc267c12181fbc718473b596fb",
+    "qos.config.gz": "99fa764d64a14eac4584b45bce789737870014c51a5b52005f6f0a1d8e500034",
+    "qos.hex.gz": "d97a3affb65bf52fa7cf44bec5d8fcadce9342029a59d8ed8dc252db0cb1d4d4",
+    "server-build.json": "9da28db7dafb4dbb28b592a7099762569f6b21c8b7e22cb13dd0f94aebf12fc2",
+    "server.config.gz": "c1d562bdde659c9a65c191740350ecfe524406b1e7b4089de76ef25ae6b49409",
+    "server.hex.gz": "7e4d1d39cda1cdfee19e6f4a3a2193e4e583b667c153f4e5be08c36e550dcc98"
+  }
+}

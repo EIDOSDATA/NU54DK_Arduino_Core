@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "work_package": "HOST-W01",
+  "baseline_core_revision": "30699be4b58439fbd4c90ffb7df46009f7e893fe",
+  "scope": [
+    "platform.txt",
+    "tools/nu54-builder",
+    "tools/nu54-prerequisites",
+    ".github/workflows"
+  ],
+  "supported_target_matrix": [
+    {"os": "windows", "minimum_version": "10", "architecture": "x86_64", "native": true},
+    {"os": "linux", "distribution": "ubuntu", "minimum_version": "24.04", "architecture": "x86_64", "native": true},
+    {"os": "macos", "minimum_version": "26", "architecture": "arm64", "native": true}
+  ],
+  "excluded": [
+    "windows_arm64",
+    "linux_arm64",
+    "non_ubuntu_linux",
+    "intel_macos",
+    "rosetta",
+    "wsl_usb",
+    "container_usb"
+  ],
+  "runtime_token_files": [
+    "platform.txt",
+    "tools/nu54-builder/nu54-builder.cmd",
+    "tools/nu54-builder/nu54-builder.sh",
+    "tools/nu54-builder/src/nu54_builder.py",
+    "tools/nu54-builder/src/nu54_builder_impl/__init__.py",
+    "tools/nu54-builder/src/nu54_builder_impl/artifacts.py",
+    "tools/nu54-builder/src/nu54_builder_impl/cache.py",
+    "tools/nu54-builder/src/nu54_builder_impl/capabilities.py",
+    "tools/nu54-builder/src/nu54_builder_impl/common.py",
+    "tools/nu54-builder/src/nu54_builder_impl/configuration.py",
+    "tools/nu54-builder/src/nu54_builder_impl/environment.py",
+    "tools/nu54-builder/src/nu54_builder_impl/host.py",
+    "tools/nu54-builder/src/nu54_builder_impl/installed_platform.py",
+    "tools/nu54-builder/src/nu54_builder_impl/locking.py",
+    "tools/nu54-builder/src/nu54_builder_impl/source_graph.py",
+    "tools/nu54-builder/src/nu54_builder_impl/upload.py"
+  ],
+  "items": [
+    {
+      "id": "HOST-INV-001",
+      "category": "launcher",
+      "sources": ["platform.txt", "tools/nu54-builder/nu54-builder.cmd"],
+      "assumption": "Arduino recipe와 Python 탐색이 Windows batch에 고정됨",
+      "disposition": "abstracted_host_w03",
+      "status": "resolved"
+    },
+    {
+      "id": "HOST-INV-002",
+      "category": "launcher",
+      "sources": ["tools/nu54-builder/nu54-builder.sh"],
+      "assumption": "POSIX 진입점이 없음",
+      "disposition": "thin_posix_launcher",
+      "status": "resolved"
+    },
+    {
+      "id": "HOST-INV-003",
+      "category": "executable",
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/artifacts.py", "tools/nu54-builder/src/nu54_builder_impl/environment.py", "tools/nu54-builder/src/nu54_builder_impl/host.py"],
+      "assumption": "python/west/git/compiler/size/ccache가 .exe와 Windows bundle layout에 고정됨",
+      "disposition": "central_host_resolver",
+      "status": "resolved"
+    },
+    {
+      "id": "HOST-INV-004",
+      "category": "path",
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/paths.py", "tools/nu54-builder/src/nu54_builder_impl/environment.py"],
+      "assumption": "cache와 prerequisite state가 LOCALAPPDATA에 고정됨",
+      "disposition": "host_data_cache_roots",
+      "status": "resolved"
+    },
+    {
+      "id": "HOST-INV-005",
+      "category": "path",
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/installed_platform.py"],
+      "assumption": "Windows SDK의 비 ASCII/공백 설치 경로 우회가 필요함",
+      "disposition": "intentional_windows_guard",
+      "status": "retained"
+    },
+    {
+      "id": "HOST-INV-006",
+      "category": "path_validation",
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/configuration.py", "tools/nu54-builder/src/nu54_builder_impl/capabilities.py", "tools/nu54-builder/src/nu54_builder_impl/source_graph.py"],
+      "assumption": "Windows 절대 경로를 POSIX에서도 선언형 상대 경로로 오인할 수 있음",
+      "disposition": "portable_security_check",
+      "status": "retained"
+    },
+    {
+      "id": "HOST-INV-007",
+      "category": "locking",
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/locking.py"],
+      "assumption": "Windows mutex와 POSIX flock 구현이 다름",
+      "disposition": "intentional_os_backend",
+      "status": "retained"
+    },
+    {
+      "id": "HOST-INV-008",
+      "category": "upload",
+      "sources": ["tools/nu54-builder/src/nu54_builder_impl/upload.py"],
+      "assumption": "pyOCD와 J-Link 이름·설치 경로가 Windows에 고정됨",
+      "disposition": "central_host_resolver_and_os_roots",
+      "status": "resolved"
+    },
+    {
+      "id": "HOST-INV-009",
+      "category": "prerequisite",
+      "sources": ["tools/nu54-prerequisites/pins.json", "tools/nu54-prerequisites/install-nordic.ps1", "tools/nu54-prerequisites/verify-nordic.ps1"],
+      "assumption": "자산 URL·설치기·검증기가 Windows x86_64 전용임",
+      "disposition": "host_w04_asset_manifest_and_installer",
+      "status": "deferred"
+    },
+    {
+      "id": "HOST-INV-010",
+      "category": "package",
+      "sources": ["tools/nu54-prerequisites/README.md"],
+      "assumption": "post-install 사용자 절차가 batch와 PowerShell만 설명함",
+      "disposition": "host_w04_package_lifecycle",
+      "status": "deferred"
+    },
+    {
+      "id": "HOST-INV-011",
+      "category": "ci",
+      "sources": [".github/workflows/m12-reproducible-build.yml", ".github/workflows/m12-software-gates.yml"],
+      "assumption": "Boards Manager 재현 build가 Windows job에만 있음",
+      "disposition": "host_w06_ci_matrix",
+      "status": "deferred"
+    },
+    {
+      "id": "HOST-INV-012",
+      "category": "hil",
+      "sources": [".github/workflows/m12-nu54dk-hil.yml"],
+      "assumption": "실물 upload·serial runner가 Windows self-hosted에만 있음",
+      "disposition": "host_w07_physical_hosts",
+      "status": "deferred"
+    }
+  ],
+  "completion": {
+    "inventory_complete": true,
+    "unknown_items": 0,
+    "resolved_items": 5,
+    "retained_items": 3,
+    "deferred_items": 4,
+    "next_work_package": "HOST-W04"
+  }
+}

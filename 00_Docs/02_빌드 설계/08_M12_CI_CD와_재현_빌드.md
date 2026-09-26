@@ -1,14 +1,28 @@
-# CI/CD와 재현 빌드 — v0.4.0 stable 현재 계약
+# CI/CD와 재현 빌드 — v0.4.1 지원과 개발 main 회귀
+
+2026-09-26 사용자 승인으로 M31-W08 Windows RC 검증은 GitHub Actions에서 8개 설치 예제 shard와
+별도 lifecycle job을 병렬 실행했다. 과거 문서·이력 정리 때의 CI 생략은 당시 이력으로 보존하며
+현재 W08 결과를 미확인 PASS로 기록하지 않는다.
 
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
 | Software gates | GitHub-hosted Ubuntu/Windows | 계약, M23 inventory, unit, 문서, package, 예제 discovery |
 | Reproducible builds | 고정 Nordic container + Windows | 릴리스 도입 기능군별 병렬 Zephyr/Arduino/M14/M17/M23 build gate |
 | NU54DK HIL | 승인된 self-hosted Windows runner | pyOCD upload와 UART 실기 |
+| M31 W08 Windows RC | GitHub-hosted Windows 2025, 8 shard + lifecycle | exact private RC 이중 재현, 설치 예제 113/113, upgrade/uninstall/reinstall/cache |
 
 CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 시스템이 아니다. 정확한 run ID,
 artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)과
 [M17 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)에 보존한다.
+
+현재 Linux container target build는 Linux Arduino 사용자 Host 지원이 아니며 Windows job 결과도
+macOS 지원을 뜻하지 않는다. `v0.5.0`은 M31 완료 뒤 Windows 10/11 x64 우선 릴리스이며
+최종 package·설치·예제·RC gate를 [v0.5.0 TODO](../TODO_v0.5.0.md)에서 판정한다.
+Ubuntu/macOS package/build matrix와 실물 Host 검증은 버전 미정인 후속 제품선으로 이관한다.
+[다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 사용자가 해당 OS를 추가할
+릴리스의 최종 단계에서 설치·USB upload·serial·debug·수명주기를 검증한다.
+다만 현재 Host 구현은 W01~W03 완료(3/8)에서 사용자 지시로 보류했다. 위 단계는 재개 후의
+검증 계약이며 새 Host 작업·CI 실행·상태 조회를 허가하는 지시가 아니다.
 
 ---
 
@@ -25,7 +39,7 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 | `core-semantic` | M14 Core C++ native semantic runtime |
 | `documents` | tracked Markdown UTF-8과 local link |
 | `package` | Boards Manager package 2회 재현성과 strict validation |
-| `example-discovery` | Arduino CLI `1.5.1`에서 현재 소스 트리를 임시 platform으로 설치해 v0.4 library 9개·예제 30개 열거 |
+| `example-discovery` | Arduino CLI `1.5.1`에서 현재 소스를 임시 platform으로 설치하고 `run_smoke.py`의 명시적 예제 기대 목록과 대조 |
 
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
@@ -39,8 +53,9 @@ M12와 정식 `v0.2.0`의 역사적 기준은 public library 4개·예제 14개�
 EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard peripherals` 22개와
 BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 해당 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
-v0.4.0 stable은 `NUCODE Peripheral Fabric` library·예제 1개를 더해 9개·30개다. Stable index는
-0.4.0과 전환용 0.3.0을 함께 제공하며 각각의 고정 package lock과 identity를 검사한다.
+v0.4.1 stable은 `NUCODE Peripheral Fabric`을 포함해 9개 library·30개 예제를 제공한다. Stable
+index는 지원 버전 0.4.1 하나만 제공하며, 이전 package lock과 identity는 역사 회귀 입력으로만
+검사한다.
 
 로컬 진입점은 다음과 같다.
 
@@ -66,7 +81,7 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 
 1. `ncs-3.4.0.lock.json`과 workflow pin을 검증한다.
 2. exact west workspace를 준비하고 cache key를 lock에서 계산한다.
-3. `run_zephyr_build.py --group <버전>`으로 아래 build-only suite를 네 job에서 동시에 실행한다.
+3. `run_zephyr_build.py --group <버전>`으로 아래 build-only suite를 다섯 job에서 동시에 실행한다.
 4. `v0.2.0` job에서만 `run_m17_feasibility.py`와 `run_m14_qemu.py`를 실행한다.
 5. `v0.4.0` job에서만 exact NCS DTS에 대한 M23 inventory, M24 serial-fabric, M26 system과
    M27 후보 공개 차단·stable 공개 계약을 검사한다. `HOLD contract`라는 step 이름은 후보 도구의
@@ -79,8 +94,11 @@ python tools/ci/run_m12_gate.py examples --arduino-cli <exact-path>
 | `v0.2.0` | 10 | M14 Core/variant, M15 Board/System, M16 BLE NUS, M17 direct sensor |
 | `v0.3.0` | 19 | M19 GAP, M20 GATT, M21 Security, AC-01 GPIO, AC-02 peripheral/analog, AC-03 storage |
 | `v0.4.0` | 35 | R01 구성, pair/T13 HIL build, M23 inventory, M24 Serial, M25 Analog/Event/Stream, M26 System, T16 Fabric profile |
+| `v0.5.0` | 77 | M28·M29 36개, M30 25개, M31 capability·DF IQ 후보·ISO 역할 16개 |
 
-2026-09-10의 `tools/ci/run_zephyr_build.py` 기준 68개 시나리오가 위 네 그룹에 속한다.
+2026-09-21 검토한 `tools/ci/run_zephyr_build.py` 기준 145개 시나리오가 위 다섯 그룹에 속한다.
+2026-09-15 `8c311d9a…` snapshot의 129개에서 M31 16개가 추가됐다. 이는 runner에 등록된 build
+시나리오 수이며 현재 source에서 전체 build·HIL 또는 CI를 다시 실행했다는 의미가 아니다.
 증감 시에는 이 표가 아니라 runner의 `SUITE_GROUPS`를 실행 목록의 원본으로 사용한다. Matrix의
 `fail-fast: false` 때문에 한 그룹이 실패해도 나머지 그룹은 끝까지 실행되어 영향 범위를 한 번에
 알 수 있다. 각 `twister.json`과 `m12-build-evidence.json`은 group 이름, 실제 시나리오와 내부
@@ -93,7 +111,7 @@ Arduino runtime 정식 지원을 뜻하지 않는다.
 
 1. Python `3.12.10`, Arduino CLI `1.5.1`과 고정 Nordic prerequisite를 준비한다.
 2. 설치된 NCS/Zephyr/board revision을 lock과 대조한다.
-3. `tests/arduino-cli/run_smoke.py --group <버전>`을 아래 네 Windows job에서 동시에 실행한다.
+3. `tests/arduino-cli/run_smoke.py --group <버전>`을 아래 다섯 Windows job에서 동시에 실행한다.
 4. `v0.2.0` job에서만 `run_m17_external_arduino.py`로 고정 외부 library를 격리 compile한다.
 5. 그룹별 전체 log와 결과를 서로 다른 14일 보존 artifact로 게시한다.
 
@@ -103,9 +121,17 @@ Arduino runtime 정식 지원을 뜻하지 않는다.
 | `v0.2.0` | `m15`, `m16` | Board/System과 BLE NUS 예제 회귀 |
 | `v0.3.0-ble` | `m19m20`, `m21` | GAP/GATT와 BLE security/profile 회귀 |
 | `v0.3.0-compat` | `ac02b`, `ac03`, `examples` | Peripheral/analog, storage와 catalog 회귀 |
+| `v0.5.0` | `m29`, `m30`, `m30secure`, `m31` | M29·M30과 M31의 설치 source smoke; 정확한 build 조건은 각 runner 함수가 소유 |
 
 `v0.3.0-ble`와 `v0.3.0-compat`는 하나의 `v0.3.0` 릴리스 도입 범위를 wall time 때문에 둘로
 나눈 하위 job이다. `run_smoke.py --group v0.3.0`은 두 하위 범위를 합쳐 로컬에서 한 번에 실행한다.
+
+M28 예제 11개는 `run_smoke.py --tests m28`로 별도 실행한다. 현재 `v0.5.0` Arduino matrix
+group에도 M28 예제 compile이 포함된다고 해석하지 않는다. `m31`은 ISO 11예제,
+`Lc3SyntheticLoopback`, `CteBeacon`을 검사하며 W03 LE Audio 전체 역할의 완료 검증을 대체하지 않는다.
+W03 전체 설치본·실기 증거는 [214번 기록](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)을 따른다.
+`m30secure`는 저장소 밖 signing key를 명시해야 한다. 소스 트리의 예제 수, profile을 바꾼 build
+조건 수와 정식 v0.4.1의 30개 설치 목록은 구분한다.
 
 각 예제 시작 직전에 `SMOKE_TEST_START=<group>/<test>`를 출력한다. 따라서 실패 log의 마지막 start
 표식과 error를 보면 어느 그룹의 어느 예제에서 실패했는지 바로 알 수 있다.
@@ -120,7 +146,7 @@ Windows의 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core` cache는 prerequisite 상
 source에서 같은 검사를 다시 수행할 수 있어야 한다.
 
 Windows Twister는 nRF Security/Cracen의 깊은 object 경로가 legacy `MAX_PATH`를 넘지 않도록
-`C:\t\m12`처럼 **절대경로 전체가 8자 이하**인 outdir를 사용한다. 실행 script가 이 조건을 build
+`C:\z`처럼 **절대경로 전체가 4자 이하**인 outdir를 사용한다. 실행 script가 이 조건을 build
 전에 검사한다. 이는 toolchain archive 입력 경로의 제약이며 source 오류나 병렬 build 경합을
 의미하지 않는다.
 
@@ -132,13 +158,9 @@ Windows Twister는 nRF Security/Cracen의 깊은 object 경로가 legacy `MAX_PA
 `--jobs`와 외부 `--max-workers`를 동시에 과도하게 높이면 RAM·disk I/O 경합으로 오히려 느려질
 수 있다.
 
-먼저 실제 실행 없이 명령과 출력 경로를 확인한다.
+Arduino matrix는 Windows에서도 실행할 수 있다. 먼저 실제 실행 없이 명령과 출력 경로를 확인한다.
 
 ```powershell
-& $NcsPython .\tools\ci\run_build_matrix.py `
-  --runner zephyr --workspace $NcsRoot --out-root C:\t `
-  --evidence-dir .\artifacts\zephyr-matrix --plan
-
 & $Python .\tools\ci\run_build_matrix.py `
   --runner arduino --arduino-cli $ArduinoCli `
   --evidence-dir .\artifacts\arduino-matrix --plan
@@ -152,6 +174,16 @@ Windows Twister는 nRF Security/Cracen의 깊은 object 경로가 legacy `MAX_PA
 GitHub matrix는 전용 runner를 그룹별로 확보할 수 있어 wall time을 가장 긴 그룹 하나의 시간에
 가깝게 줄인다. 로컬 PC에서는 CPU·RAM·SSD를 공유하므로 같은 비율로 단축된다고 보장하지 않는다.
 빠른 원인 격리는 `--groups` 재실행을 사용하고, 최종 판정은 CI의 모든 matrix job PASS로 한다.
+
+Zephyr matrix는 POSIX 경로의 Nordic 환경에서 사용한다. 현재 matrix helper는 out-root 아래에
+`z1`~`z5`를 붙이므로 Windows의 4자 outdir 제한을 충족하지 못한다. Windows에서는 아래처럼
+직접 runner에 고정 group과 짧은 outdir를 지정한다. 다른 group에는 서로 다른 빈 경로를 선택하고,
+실행·증거 보관이 끝난 생성 build 폴더만 정리한다.
+
+```powershell
+& $NcsPython .\tools\ci\run_zephyr_build.py `
+  --workspace $NcsRoot --outdir C:\z --group v0.5.0 --jobs 2
+```
 
 ---
 
@@ -220,7 +252,8 @@ HIL workflow가 존재하거나 queue에 들어갔다는 사실은 PASS가 아�
 | Peripheral·Analog | [AC-02B](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>) |
 | Storage·library | [AC-03](<../04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md>) |
 | v0.3.0 package·공개 수명주기 | [M22 정식 공개](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>) |
-| v0.4.0 현재 실기·제외 범위 | [실행 TODO](../TODO_v0.4.0.md) |
+| v0.4.0 기능 실기·제외 범위 | [완료 TODO](../TODO_v0.4.0.md) |
+| v0.4.1 설치기 유지보수·공개 검증 | [v0.4.1 TODO](../TODO_v0.4.1.md) |
 
 AC-02B의 `ac02b_hil_dut`와 `ac02b_hil_peer`는 Linux/Windows 재현 build에서 **build-only**다.
 `tests/hil/nu54dk/ac02b_peripheral.py`의 물리 실행은 두 probe UID, 두 COM port, exact image hash,
@@ -248,6 +281,26 @@ artifact identity와 함께 검증 기록으로 승격한다. 과거 run ID나 �
 Workflow는 package를 검증하지만 tag 생성, stable index 변경, GitHub Release 공개 또는
 latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람 승인과 릴리스 절차가 필요하다.
 
+M31 W08 workflow는 `0.5.0-RC1` push에서 private RC package를 두 번 재현하고, 정렬된 113개
+설치 예제를 8개 독립 cache shard로 나눠 compile한다. 별도 job은 v0.4.1 설치→RC upgrade→
+uninstall→reinstall과 대표 cache rebuild를 검사하며 aggregate job은 8/8 shard·113/113·lifecycle의
+source/package identity가 모두 같을 때만 PASS한다. 이 workflow는 release/tag/catalog를 게시하지 않는다.
+
+### 후속 제품선 다중 Host CI 승격 조건
+
+| CI/HIL 행 | 자동화할 범위 | CI만으로 증명하지 않는 것 |
+| --- | --- | --- |
+| Windows 10/11 x64 | Host unit, prerequisite, 전체 예제 package build | 모든 Windows adapter·실물 board runtime |
+| Ubuntu 24.04+ AMD64 | 지원 release별 clean install·build·artifact 비교 | container 밖 USB 권한·실물 upload |
+| macOS 26+ Apple Silicon | native ARM64 install·build·artifact 비교 | Intel/Rosetta·실물 upload |
+| Host별 HIL | 명시적 UID upload, Blink·Serial·BLE 대표 runtime, lifecycle | 모든 BLE RF 기능을 OS마다 반복한 결과 |
+
+새 OS 행은 먼저 `candidate`로 추가한다. 정적 job만 통과해 `supported`로 바꾸지 않고 실제 Host의
+clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu/macOS의 해당 실물 증거는
+사용자가 해당 OS를 추가할 후속 릴리스의 최종 단계에서 제공한다. 그 전의 `NOT_RUN`은 해당 OS
+지원 gate 미완료를 뜻하며 M31 v0.5.0 Windows 릴리스를 차단하지 않는다. Windows 최종 후보의
+회귀는 v0.5.0 공개 gate에서, 다중 Host 구현·package 준비는 Host 작업 재개 뒤 진행한다.
+
 ---
 
 ## 7. 관련 구현과 기록
@@ -260,6 +313,8 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [`run_m14_qemu.py`](../../tools/ci/run_m14_qemu.py)
 - [`run_m17_feasibility.py`](../../tools/ci/run_m17_feasibility.py)
 - [`run_m17_external_arduino.py`](../../tools/ci/run_m17_external_arduino.py)
+- [`m31-w08-windows-rc.yml`](../../.github/workflows/m31-w08-windows-rc.yml)
+- [`m31_ci_aggregate.py`](../../tools/release/m31_ci_aggregate.py)
 - [M12 CI/CD 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)
 - [M17 NCS 기능과 예제 coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [M18 공개 검증과 RC2 교정](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
@@ -270,3 +325,4 @@ latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
 - [M23 Peripheral inventory와 공통 소유권 기준선](<../04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md>)
+- [M31 W08 Windows RC 준비와 완료](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>)

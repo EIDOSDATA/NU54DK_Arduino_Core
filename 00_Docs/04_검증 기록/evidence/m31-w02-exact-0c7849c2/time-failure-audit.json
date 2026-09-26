@@ -1,0 +1,28 @@
+{
+  "test_id": "M31-ISO-01:time_sync",
+  "status": "FAIL",
+  "source_clean": true,
+  "scope": "twenty_cycle_one_sdu_below_time_acceptance",
+  "source_revision": "0c7849c23233c026b376122f67e50a3d32488643",
+  "target_build": {
+    "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-0c7849c2/time-build-twister.json",
+    "sha256": "818bcd68ffda9f17d831cc097a012f1267555ea34b026a50367ed45b11df696e",
+    "build_only_count": 2
+  },
+  "result": "00_Docs/04_검증 기록/evidence/m31-w02-exact-0c7849c2/time-hil-01.json",
+  "transcript_sha256": "4e6aac16431f2a3f934fcdfe77b8361908cc58b14383ff63b1a446d5d8574a8b",
+  "measurement": {
+    "cycles": 20,
+    "total_sent": 2000,
+    "total_received": 1999,
+    "minimum_received": 99,
+    "empty_slots": 64,
+    "stale_callback": 0
+  },
+  "time_sync_acceptance": {
+    "minimum_valid_monotonic_per_cycle": 100,
+    "observed_minimum": 99
+  },
+  "corrective_action": "time-sync BIG retransmission number 1 to 2",
+  "exact_pass": "NOT_RUN"
+}

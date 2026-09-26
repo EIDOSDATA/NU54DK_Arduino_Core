@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-audio-broadcast-source-reset-rejoin-memory",
+  "cycles_target": 1,
+  "cycles_completed": 0,
+  "frames_per_session": 100,
+  "image_sha256": {
+    "sink": "d6a33ca6579e6536e02b976345c99dbda869f8885fe234b4b6fd50204fceb548",
+    "source": "e8beaf0804f00fecdb73f93fe8300dbe0d08bd2528cc3a6e00413f45dc03817e"
+  },
+  "probe_uid_sha256": {
+    "sink": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "source": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "sink": {
+      "app": "COM10",
+      "aux": "COM11"
+    },
+    "source": {
+      "app": "COM13",
+      "aux": "COM12"
+    }
+  },
+  "start": {
+    "sink": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "source": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "source_restart": [],
+  "cycle_memory": [],
+  "lines": {
+    "sink": [
+      "P2_READY role=audio-broadcast-sink",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=1284",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_FAIL sink-stage native=-31 step=10",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=672",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=332",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=1284",
+      "P2_STACK name=ISR0 reserved=2048 used=364",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-broadcast-sink decoded=0 dropped=0"
+    ],
+    "source": [
+      "P2_READY role=audio-broadcast-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=2048 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=784",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=240",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=976",
+      "P2_STACK name=ISR0 reserved=2048 used=392",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=broadcast-source",
+      "P2_AUDIO_SENT frames=100",
+      "P2_AUDIO_SENT frames=200",
+      "P2_AUDIO_SENT frames=300",
+      "P2_AUDIO_SENT frames=400",
+      "P2_AUDIO_SENT frames=500",
+      "P2_AUDIO_SENT frames=600",
+      "P2_AUDIO_SENT frames=700",
+      "P2_AUDIO_SENT frames=800",
+      "P2_AUDIO_SENT frames=900",
+      "P2_AUDIO_SENT frames=1000",
+      "P2_AUDIO_SENT frames=1100",
+      "P2_AUDIO_SENT frames=1200",
+      "P2_AUDIO_SENT frames=1300",
+      "P2_AUDIO_SENT frames=1400",
+      "P2_AUDIO_SENT frames=1500",
+      "P2_AUDIO_SENT frames=1600",
+      "P2_AUDIO_SENT frames=1700",
+      "P2_AUDIO_SENT frames=1800",
+      "P2_AUDIO_SENT frames=1900",
+      "P2_AUDIO_SENT frames=2000",
+      "P2_AUDIO_SENT frames=2100",
+      "P2_AUDIO_SENT frames=2200",
+      "P2_AUDIO_SENT frames=2300",
+      "P2_AUDIO_SENT frames=2400",
+      "P2_AUDIO_SENT frames=2500",
+      "P2_AUDIO_SENT frames=2600",
+      "P2_AUDIO_SENT frames=2700",
+      "P2_AUDIO_SENT frames=2800",
+      "P2_AUDIO_SENT frames=2900",
+      "P2_AUDIO_SENT frames=3000",
+      "P2_AUDIO_SENT frames=3100",
+      "P2_AUDIO_SENT frames=3200",
+      "P2_AUDIO_SENT frames=3300",
+      "P2_AUDIO_SENT frames=3400",
+      "P2_AUDIO_SENT frames=3500",
+      "P2_AUDIO_SENT frames=3600",
+      "P2_AUDIO_SENT frames=3700",
+      "P2_AUDIO_SENT frames=3800",
+      "P2_AUDIO_SENT frames=3900",
+      "P2_AUDIO_SENT frames=4000",
+      "P2_AUDIO_SENT frames=4100",
+      "P2_AUDIO_SENT frames=4200",
+      "P2_AUDIO_SENT frames=4300",
+      "P2_AUDIO_SENT frames=4400",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=2048 used=384",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=784",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=372",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=3192",
+      "P2_STACK name=ISR0 reserved=2048 used=560",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-broadcast-source sent=4452"
+    ]
+  },
+  "result": "FAIL",
+  "failure_class": "TimeoutError",
+  "failure_detail": "sink did not report P2_AUDIO_STREAM role=broadcast-sink",
+  "cleanup_attempted": true,
+  "cleanup_observed": {
+    "sink": true,
+    "source": true
+  }
+}

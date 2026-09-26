@@ -30,10 +30,26 @@ python tools/peripheral/verify_m24_serial_contract.py --ncs-root C:\ncs\v3.4.0
 ```
 
 Profile/feature schema는 builder configuration 모듈과 `libraries/*/zephyr/feature.yml`,
-`variants/nu54dk/profiles`가 소유한다. Readiness는
+`variants/nu54dk/profiles`가 소유한다. 완료한 v0.4.0의 릴리스 readiness는
 [v0.4.0-release-readiness.json](../../variants/nu54dk/v0.4.0-release-readiness.json)이 소유하며
 [M27](../release/m27_release.py)의 16개 gate 검사가 이를 대조한다. 생성기 성공으로
 readiness/HIL/public 지원 수준을 올리지 않는다.
+
+후속 BLE 작업은 별도 [M28 readiness](../../variants/nu54dk/m28-ble-readiness.json),
+[M29 readiness](../../variants/nu54dk/m29-ble-readiness.json),
+[M30 readiness](../../variants/nu54dk/m30-ble-readiness.json),
+[M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)에서 작업 묶음·test ID·실행 증거를
+관리한다. 현재 M31은 W01~W08 8/8과 Windows RC 준비를 완료했으며, 이 판정은 W08 exact CI·
+대표 실물·문서 감사 증거를 사용한다. 문서나 생성기 실행만으로 상태를 승격하지 않는다. 다중 Host의 범위·단계는
+[후속 Host 계약](<../../00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
+v0.5.0은 M31 완료 뒤 Windows 우선 릴리스이며 M32/M33 추가 기능과 Ubuntu/macOS 지원은
+후속 제품선이다. HOST-W04~HOST-W08은 사용자 보류 상태이며 구현 착수로 간주하지 않는다. M27 PASS는 후속 BLE·Host
+시험을 대신하지 않으며, 현재 진행률은
+[v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 따른다.
+
+[개선 마일스톤](<../../00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의
+ARF 과제는 미착수 계획이다. M33의 기존 API 예제 보강과 이후 새 API·자원 정책 변경을 구분하며,
+계획 추가만으로 현재 manifest의 구현·build·HIL 상태나 공개 지원 수준을 올리지 않는다.
 
 `EXPECTED_*`의 하드웨어·공개 API 상수는 원본 오류를 잡는 독립 검증 oracle이므로
 검사 대상 JSON에서 다시 만들어 비교하지 않는다. 생성물의 실제 원본만 한 곳으로 유지한다.

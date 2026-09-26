@@ -1,0 +1,14 @@
+M30CAP|1|READY
+M30CAP|1|BEGIN|nonce=62764f6e4f4591bec13743b8b24fd524
+M30CAP|1|IDENTITY|nonce=62764f6e4f4591bec13743b8b24fd524|core=6254398c1ea4e7320b1905014dce1c2a405a53fc|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+M30CAP|1|HOST|nonce=62764f6e4f4591bec13743b8b24fd524|bt_max_conn=2|smp=1|sc_pair_only=1|min_key_bytes=16|max_paired=4|privacy=1|app_pairing=1|mcumgr_bt=1|mcumgr_authen=1
+M30CAP|1|PROBE|nonce=62764f6e4f4591bec13743b8b24fd524|auth_callbacks=1|oob_local=1|profile_service=1|mcumgr_service=1
+M30CAP|1|CONTRACT|nonce=62764f6e4f4591bec13743b8b24fd524|security_contexts=2|pairing_slots=2|oob_records=2|oob_frame_bytes=192|bond_records=4|profile_entries=7|dfu_slots=2
+M30CAP|1|CAP|nonce=62764f6e4f4591bec13743b8b24fd524|id=smp_io_capabilities|source=candidate|publication=stable|probe=config_pass
+M30CAP|1|CAP|nonce=62764f6e4f4591bec13743b8b24fd524|id=le_secure_connections_oob|source=candidate|publication=stable_after_hil|probe=local_generated
+M30CAP|1|CAP|nonce=62764f6e4f4591bec13743b8b24fd524|id=bond_privacy_migration|source=candidate|publication=stable_after_hil|probe=settings_loaded
+M30CAP|1|CAP|nonce=62764f6e4f4591bec13743b8b24fd524|id=adopted_profiles|source=candidate|publication=candidate|probe=service_registered
+M30CAP|1|CAP|nonce=62764f6e4f4591bec13743b8b24fd524|id=mcuboot_signed_image|source=candidate|publication=candidate|probe=source_only
+M30CAP|1|CAP|nonce=62764f6e4f4591bec13743b8b24fd524|id=mcumgr_ble_transport|source=candidate|publication=candidate|probe=service_registered
+M30CAP|1|CAP|nonce=62764f6e4f4591bec13743b8b24fd524|id=dfu_rollback_recovery|source=candidate|publication=candidate|probe=source_only
+M30CAP|1|END|records=11|capabilities=7|nonce=62764f6e4f4591bec13743b8b24fd524

@@ -1,0 +1,73 @@
+{
+  "test_id": "M31-ISO-01:time_sync",
+  "scope": "two_board_iso_timestamp_twenty_cycles",
+  "status": "FAIL",
+  "source_clean": true,
+  "identity": {
+    "core": "0c7849c23233c026b376122f67e50a3d32488643",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "source": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "F:/",
+      "vcom": "COM7",
+      "image_sha256": "5da12ef6172fadfe29955d022fdb2612223d21017601bfdb2b601f14bfbbef1c",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "172032"
+    },
+    "receiver": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "dc908b5ae3b1de26c775c07b38de8126cc40fafd8d6fe9a052c3c71931d75ed9",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "139264"
+    }
+  },
+  "nonces": [
+    "d35ed5afee02a76bc86cd2e970fc7c25",
+    "ae12fdd70a4e4eb851e687f3c764cf1b",
+    "a473f477c29e922d0656c0721ce489a7",
+    "d5329befa9295eafcb20afa799f67b2a",
+    "bb7f72ba2d572fa151e29fe6f324163e",
+    "ecc80feefc44c108e81a42a4360411ec",
+    "be28a63f2d9f04dafc8d419b1a41aace",
+    "38b4befa2c2eba9067a56ff93c4270fb",
+    "5fb829a1d7ad4689b2d5ba8ebc4b9e34",
+    "cbe6e4950001fea53b1f5a5b34be3cf4",
+    "bdc8c23e8a6ee6b1dcb5f2c69ea4c520",
+    "abec0a26e2711634231ed5fca2d47009",
+    "d0c9e5a7a508da040d1cc7429c57d77a",
+    "860ae02eabc7efcb20e25d3ecc3a7949",
+    "1558ef8f9063a2f58c7b6cd984d78cff",
+    "405b66fc22b9896b3206510436403027",
+    "52f4d063f48f8a181c0756771158fac8",
+    "ecd617cc88bd0da048c21cf3086bd1a6",
+    "4efa3c47de7413e086468cda34ffd97a",
+    "c8c521c0f89565619e650e9f96f2c411"
+  ],
+  "cycles": 20,
+  "reason": "M31TimeFailure: time SDU \ubd84\ubaa8 \ub610\ub294 stale callback \uc624\ub958",
+  "measurement": null,
+  "transcript_sha256": "4e6aac16431f2a3f934fcdfe77b8361908cc58b14383ff63b1a446d5d8574a8b",
+  "observed_utc": "2026-09-15T19:48:54.402967+00:00"
+}

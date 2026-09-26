@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-df-cte-beacon-20-cycle-memory",
+  "image_sha256": "3259442d4d8047c1040c9e89cbf49ee78188148f3b19fb8acfc4576bceb0d795",
+  "probe_uid_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "com_mapping": {
+    "app": "COM13",
+    "aux": "COM12"
+  },
+  "start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "lines": {
+    "beacon": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=df-beacon",
+      "P2_DF_REJECTED cte-length",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=2048 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=388",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=784",
+      "P2_STACK name=ISR0 reserved=2048 used=328",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_DF_CYCLE count=1",
+      "P2_DF_CYCLE count=2",
+      "P2_DF_CYCLE count=3",
+      "P2_DF_CYCLE count=4",
+      "P2_DF_CYCLE count=5",
+      "P2_DF_CYCLE count=6",
+      "P2_DF_CYCLE count=7",
+      "P2_DF_CYCLE count=8",
+      "P2_DF_CYCLE count=9",
+      "P2_DF_CYCLE count=10",
+      "P2_DF_CYCLE count=11",
+      "P2_DF_CYCLE count=12",
+      "P2_DF_CYCLE count=13",
+      "P2_DF_CYCLE count=14",
+      "P2_DF_CYCLE count=15",
+      "P2_DF_CYCLE count=16",
+      "P2_DF_CYCLE count=17",
+      "P2_DF_CYCLE count=18",
+      "P2_DF_CYCLE count=19",
+      "P2_DF_CYCLE count=20",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=2048 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=468",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=784",
+      "P2_STACK name=ISR0 reserved=2048 used=400",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=df-beacon cycles=20"
+    ]
+  },
+  "cycles": 20,
+  "result": "PASS"
+}

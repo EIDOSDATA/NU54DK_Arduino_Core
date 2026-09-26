@@ -1,4 +1,4 @@
-# Arduino CLI 및 IDE 통합 설계 — v0.4.0
+# Arduino CLI 및 IDE 통합 설계 — v0.4.1
 
 | 항목 | 내용 |
 | --- | --- |
@@ -7,10 +7,15 @@
 | FQBN | `nucode:zephyr:nu54dk` |
 | Zephyr target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
+| v0.5.0 Host 목표 | M31 완료 뒤 Windows 10/11 x64 우선; Ubuntu/macOS는 후속 제품선 |
 
 이 문서는 Arduino platform lifecycle과 NU54DK Build Adapter의 현재 연결을 설명한다. recipe의
 단일 원본은 `boards.txt`와 `platform.txt`이며, 실행 구현은
 `tools/nu54-builder/src/nu54_builder.py`다.
+
+아래 메뉴·제한은 stable v0.4.1 기준이다. 공개 `v0.5.0-rc.1`의 추가 adaptive·DFU·Audio I/O
+선택은 [프로필 계약](07_구성_프로필과_Arduino_예제_배포.md)과
+[RC 설치 안내](../05_릴리스/v0.5.0-rc.1/README.md)에서 구분한다.
 
 ## 1. 사용자에게 보이는 흐름
 
@@ -127,7 +132,7 @@ NU54_FLASH_USED=<bytes>
 NU54_RAM_USED=<bytes>
 ```
 
-v0.4.0의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
+v0.4.1의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
 IDE가 표시하는 백분율은 위 FLASH used를 이 값으로 나눈 결과다. 이 숫자는 UI 장식이 아니라
 Devicetree `zephyr,code-partition`과 linker에 적용된 `0x000000..0x16c000` 범위와 일치해야
 한다. 세 값이 어긋나면 package/release gate가 실패해야 한다.
@@ -252,7 +257,7 @@ J-Link는 `upload_probe=jlink`와
 ### Serial Monitor와 Debug
 
 Serial Monitor는 target UART의 VCOM bridge이며 SWD probe ID와 별개다. Arduino IDE Debug 버튼의
-자동 toolchain/debugserver 구성은 v0.4.0 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
+자동 toolchain/debugserver 구성은 v0.4.1 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
 수동 west debug 경계는 [업로드와 디버그](./05_업로드와_디버그.md)를 따른다.
 
 ## 8. Library와 구성 경계
@@ -267,7 +272,11 @@ Adapter는 넘겨받은 source/include record를 검증하고 package allowlist 
 - AVR register/libc와 architecture 전용 assembly 호환성 미보장
 - 임의 linker script 주입 미지원
 - sysbuild, MCUboot, DFU, OTA와 LLEXT 미지원
-- Linux/macOS Boards Manager production 지원 미제공
+- Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에 미제공.
+  [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 Ubuntu AMD64·Apple Silicon
+  macOS 구현·실증 중 남은 HOST-W04~HOST-W08을 완료한 뒤 후속 제품선에서 제공할 계획이다.
+  버전은 미정이며 현재는 사용자 지시로
+  HOST-W01~W03 3/8 완료 상태에서 보류했으며, 이 계획만으로 후속 구현을 시작하지 않는다.
 
 ## 9. 오류와 검증 기록
 

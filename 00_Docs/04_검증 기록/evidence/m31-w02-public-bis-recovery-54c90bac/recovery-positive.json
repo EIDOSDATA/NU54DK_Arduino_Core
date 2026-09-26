@@ -1,0 +1,129 @@
+{
+  "status": "PASS",
+  "test": "arduino_public_raw_bis_encrypted_recovery_pair",
+  "core_revision": "54c90bacf730aad959262b713e6e83044a2edb88",
+  "source_clean": true,
+  "probe_sha256": {
+    "source": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "receiver": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "ports": {
+    "source": "COM7",
+    "receiver": "COM5"
+  },
+  "image_sha256": {
+    "source": "ea4a8c432db9cb55efa93c9296ff3610851929e5a3de325236c6bda8ca517600",
+    "receiver": "40f60804e856097ced796119214dd26fadf580ec2691d578b02dc78b07c8beef"
+  },
+  "flash": {
+    "receiver": [
+      "pyocd-sector-hw-reset",
+      "196608"
+    ],
+    "source": [
+      "pyocd-sector-hw-reset",
+      "229376"
+    ]
+  },
+  "requested_cycles": 1,
+  "completed_cycles": {
+    "source": 2,
+    "receiver": 1
+  },
+  "payload_frames": 100,
+  "missing_frames": 0,
+  "allowed_missing": 1,
+  "valid_hci_times": true,
+  "wrong_code_rejected": 1,
+  "wrong_code_stopped": 1,
+  "recovered_frames": 100,
+  "recovery_missing": 0,
+  "recovery_stopped": 1,
+  "image_revision_confirmed": {
+    "source": true,
+    "receiver": true
+  },
+  "excluded_pre_boot_lines": {
+    "source": 3,
+    "receiver": 3
+  },
+  "failed_lines": [],
+  "lines": {
+    "source": [
+      {
+        "at_s": 0.096,
+        "text": "BIS core revision=54c90bacf730aad959262b713e6e83044a2edb88"
+      },
+      {
+        "at_s": 0.096,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 0.096,
+        "text": "BIS core revision=54c90bacf730aad959262b713e6e83044a2edb88"
+      },
+      {
+        "at_s": 0.096,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 3.311,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 4.405,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 8.954,
+        "text": "BIS sent frames=100"
+      }
+    ],
+    "receiver": [
+      {
+        "at_s": 0.197,
+        "text": "BIS recovery retry native=-67 frames=0"
+      },
+      {
+        "at_s": 0.198,
+        "text": "BIS recovery scanning attempt=3"
+      },
+      {
+        "at_s": 0.403,
+        "text": "BIS core revision=54c90bacf730aad959262b713e6e83044a2edb88"
+      },
+      {
+        "at_s": 0.403,
+        "text": "BIS wrong code scanning"
+      },
+      {
+        "at_s": 1.472,
+        "text": "BIS wrong code rejected native=-61 leaked=0"
+      },
+      {
+        "at_s": 1.472,
+        "text": "BIS wrong code stopped"
+      },
+      {
+        "at_s": 1.911,
+        "text": "BIS recovery scanning attempt=1"
+      },
+      {
+        "at_s": 3.42,
+        "text": "BIS recovery retry native=0 frames=27"
+      },
+      {
+        "at_s": 3.858,
+        "text": "BIS recovery scanning attempt=2"
+      },
+      {
+        "at_s": 8.422,
+        "text": "BIS wrong code recovered frames=100 missing=0 errors=0"
+      },
+      {
+        "at_s": 8.422,
+        "text": "BIS wrong code recovery stopped"
+      }
+    ]
+  }
+}

@@ -27,9 +27,41 @@ namespace nucode::arduino::internal
         return result;
     }
 
+    IoResourceResult reserveIoResources(IoResourceOwner owner, const IoResourceId *resources,
+                                        std::size_t count, IoAcquirePolicy policy,
+                                        IoResourceSingleLease &lease,
+                                        IoResourceSnapshot *conflict) noexcept
+    {
+        if (k_is_in_isr())
+        {
+            return IoResourceResult::invalid_context;
+        }
+        k_mutex_lock(&io_resource_mutex, K_FOREVER);
+        const auto result =
+            table.reserveIoResources(owner, resources, count, policy, lease, conflict);
+        k_mutex_unlock(&io_resource_mutex);
+        return result;
+    }
+
     IoResourceResult transferIoResources(IoResourceOwner expected_owner, IoResourceOwner new_owner,
                                          const IoResourceId *resources, std::size_t count,
                                          IoResourceLease &lease,
+                                         IoResourceSnapshot *conflict) noexcept
+    {
+        if (k_is_in_isr())
+        {
+            return IoResourceResult::invalid_context;
+        }
+        k_mutex_lock(&io_resource_mutex, K_FOREVER);
+        const auto result =
+            table.transferIoResources(expected_owner, new_owner, resources, count, lease, conflict);
+        k_mutex_unlock(&io_resource_mutex);
+        return result;
+    }
+
+    IoResourceResult transferIoResources(IoResourceOwner expected_owner, IoResourceOwner new_owner,
+                                         const IoResourceId *resources, std::size_t count,
+                                         IoResourceSingleLease &lease,
                                          IoResourceSnapshot *conflict) noexcept
     {
         if (k_is_in_isr())
@@ -55,6 +87,18 @@ namespace nucode::arduino::internal
         return result;
     }
 
+    IoResourceResult commitIoResources(IoResourceSingleLease &lease) noexcept
+    {
+        if (k_is_in_isr())
+        {
+            return IoResourceResult::invalid_context;
+        }
+        k_mutex_lock(&io_resource_mutex, K_FOREVER);
+        const auto result = table.commitIoResources(lease);
+        k_mutex_unlock(&io_resource_mutex);
+        return result;
+    }
+
     IoResourceResult rollbackIoResources(IoResourceLease &lease) noexcept
     {
         if (k_is_in_isr())
@@ -67,7 +111,31 @@ namespace nucode::arduino::internal
         return result;
     }
 
+    IoResourceResult rollbackIoResources(IoResourceSingleLease &lease) noexcept
+    {
+        if (k_is_in_isr())
+        {
+            return IoResourceResult::invalid_context;
+        }
+        k_mutex_lock(&io_resource_mutex, K_FOREVER);
+        const auto result = table.rollbackIoResources(lease);
+        k_mutex_unlock(&io_resource_mutex);
+        return result;
+    }
+
     IoResourceResult releaseIoResources(IoResourceLease &lease) noexcept
+    {
+        if (k_is_in_isr())
+        {
+            return IoResourceResult::invalid_context;
+        }
+        k_mutex_lock(&io_resource_mutex, K_FOREVER);
+        const auto result = table.releaseIoResources(lease);
+        k_mutex_unlock(&io_resource_mutex);
+        return result;
+    }
+
+    IoResourceResult releaseIoResources(IoResourceSingleLease &lease) noexcept
     {
         if (k_is_in_isr())
         {

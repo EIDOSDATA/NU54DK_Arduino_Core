@@ -1,0 +1,88 @@
+{
+  "test_id": "M31-AUDIO-MEDIA-CALL-01",
+  "status": "FAIL",
+  "profile": "call",
+  "scope": "two_board_public_serial_profile_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "894e32b020f180425f0de2971a57ab288957a7dc",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "image_core_revision": "4186e2f829f941bc5d934ada9a7f65b6b69424e4",
+  "boards": {
+    "server": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "E:/",
+      "vcom": "COM13",
+      "image_sha256": "4ed6226a0b48d9ed580cdbef37a716f0ee4c7b98ab9fb08aa0e0093f91dd7b73",
+      "image_size": 1122610,
+      "config_sha256": "2e8176f8a23a4477279cf9017b33380f9f93d52a09d06ee842804fb41601ebae",
+      "build_record": {
+        "core_revision": "4186e2f829f941bc5d934ada9a7f65b6b69424e4",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "4ed6226a0b48d9ed580cdbef37a716f0ee4c7b98ab9fb08aa0e0093f91dd7b73",
+        "record_format": "nu54-build-json",
+        "record_name": "CallControlServer.ino.nu54-build.json",
+        "record_sha256": "5e01d1ab0029e39683a925a2e37be73cf4aa4799bf6a4f96a796e84f7c8b350c"
+      },
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "401408"
+    },
+    "client": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "F:/",
+      "vcom": "COM14",
+      "image_sha256": "c95fcf8c5ff1602ce072a5c5570a58fee458eafe7e77aeae5a4c98d917fe07c1",
+      "image_size": 1110227,
+      "config_sha256": "721fba9fee4e8257c10afb191981d7b9f68c3b2330ed2a299d94dd0dba2d39a2",
+      "build_record": {
+        "core_revision": "4186e2f829f941bc5d934ada9a7f65b6b69424e4",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "c95fcf8c5ff1602ce072a5c5570a58fee458eafe7e77aeae5a4c98d917fe07c1",
+        "record_format": "nu54-build-json",
+        "record_name": "CallControlClient.ino.nu54-build.json",
+        "record_sha256": "e9386888dd7cf2a0161b455eb7edc9141ee995327bce0b326fae8c629f6bdb08"
+      },
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "397312"
+    }
+  },
+  "normal_operations": 100,
+  "negative_iterations_per_case": 20,
+  "reconnects": 20,
+  "soak_seconds": 0.0,
+  "measurement": null,
+  "reason": "MediaCallExecutionFailure: CALL_ORIGINATE normal operation rejected",
+  "transcript_sha256": "872f74a35f7e613e464ae6d6655e2d555a29e8febe6b9c42b729835930e7ef30",
+  "observed_utc": "2026-09-20T14:15:28.129121+00:00"
+}

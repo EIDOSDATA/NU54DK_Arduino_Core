@@ -1,5 +1,9 @@
 # M24~M26 온보드 protocol 교정과 실기 재검증
 
+> **역사적 온보드 재검증 기록:** 아래 외부 fixture·release HOLD는 당시 상태이며 원래 판정·증거를 보존한다.
+> 후속 결과는 [v0.4.0 완료 TODO](../TODO_v0.4.0.md)에 있다. 현재 작업은
+> [v0.5.0 TODO](../TODO_v0.5.0.md), 설치·지원은 [v0.4.1 안내](../05_릴리스/v0.4.1/README.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VERIFY-V04-ONBOARD-FIX-001 |
@@ -103,7 +107,7 @@ M25의 `4092`는 12-bit raw code이며 full scale에 가깝다. 이 gate는 내�
 ## 5. 당시 남은 physical·release gate
 
 이 절은 당시 계획이다. 이후 기능 검증 범위는 [42번 합의](42_v0.4.0_코어_기능_검증_범위_합의.md),
-최신 사용자 변경과 진행은 [활성 TODO](../TODO_v0.4.0.md)에 따른다.
+최신 사용자 변경과 진행은 [현재 TODO](../TODO_v0.5.0.md)에 따른다.
 
 외부 UART/SPI/TWIS peer·loopback, SAADC 외부 정확도와 PWM timing, PDM/I2S/QDEC 실제 신호,
 최대 동시성·오류 주입·처리량·장시간 soak·CPU·전력은 이 온보드 PASS로 대체하지 않는다.

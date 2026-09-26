@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "scope": "upstream_native_repetition_diagnostic",
+  "core_revision": "fbd32ebd",
+  "planned_results": 100,
+  "observed_results": 1,
+  "status": "FAIL",
+  "reason": "initiator_reboot_and_reflector_disconnect_after_first_result",
+  "file": "native-pair-02.json",
+  "sha256": "8213e8e90131d1990617d31e86f7079c64dc8ae4c0fb3e8bac2d7c68ef4f997a",
+  "initiator_image_sha256": "95783e32d05e59df4867a4b986ba451c99dec41f90564e28c22120b18d9cd1d4",
+  "reflector_image_sha256": "8d5eb2c045c3e83684b9d6a61979d12cb341935dd7621834e82c431aa09398fd"
+}

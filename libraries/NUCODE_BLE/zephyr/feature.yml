@@ -1,10 +1,13 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "id": "nucode.ble.nus",
   "requires": ["ble"],
+  "capabilities": ["nucode.ble.core-api"],
   "conf": ["ble-nus.conf"],
   "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
   "conflicts": ["radio"],
-  "compatible_profiles": ["ble"]
+  "compatible_profiles": ["adaptive", "ble", "ble_audio_io", "secure_ble_dfu"]
 }
 

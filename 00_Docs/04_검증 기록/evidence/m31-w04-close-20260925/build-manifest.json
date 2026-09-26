@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_clean": true,
+  "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=adaptive",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "arduino_examples": {
+    "CteBeacon": {
+      "controller": "product_sdc",
+      "flash_bytes": 114540,
+      "ram_bytes": 38314,
+      "hex_sha256": "5a3cf60a717e865ca083951a3707e725e1124f9e1b0c40faae2e2d8f63e7346e",
+      "elf_sha256": "7b60ae22432a4aaf380dd26b48578ff7791f52ee9331b1c86ab885a74a0f43f5"
+    },
+    "ConnectedCteResponder": {
+      "controller": "zephyr_ll_opt_in",
+      "flash_bytes": 134700,
+      "ram_bytes": 44578,
+      "hex_sha256": "5b2b37f8892ee31a9327741ef872d3e47230873bb9679003a86539775e268bb3",
+      "elf_sha256": "09422e98b5152b5878fdf2d10931858a8d04d30b0ec01e8eee7d5fdc85eae978"
+    }
+  },
+  "diagnostic_receiver": {
+    "controller": "zephyr_ll_internal",
+    "flash_bytes": 143984,
+    "ram_bytes": 32568,
+    "hex_sha256": "3e828317424f84019d8d99deef8cc336a6d9ed01b3f70f68c3e3ced7b5c2d400"
+  },
+  "claim_limits": [
+    "Connected responder and diagnostic receiver use an opt-in Zephyr LL image.",
+    "The diagnostic receiver is not a product SDC IQ RX implementation.",
+    "No antenna switching, angle calculation or AoD support is claimed."
+  ]
+}

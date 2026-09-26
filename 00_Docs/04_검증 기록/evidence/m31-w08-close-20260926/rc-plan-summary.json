@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W08",
+  "status": "HOLD",
+  "publication_allowed": false,
+  "candidate_version": "0.5.0-rc.1",
+  "host_scope": "Windows 10/11 x64",
+  "github_actions_run_id": 36248923341,
+  "core_revision": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "runtime_payload_sha256": "4eb04d8ad071c6a163e354046ff1a5e801aa75a4789b32277a347613c1c7a6bb",
+  "package_reproducibility": {
+    "status": "PASS",
+    "isolated_builds": 2
+  },
+  "artifacts": {
+    "archive_sha256": "2c97a670548dbb49915ff6bb04587ab1921ba638bb82d448ac57b56126ac4a91",
+    "manifest_sha256": "e2e67a019d0bfe5c8c12fdcbd408e455f1f4837396864f50f0b9d1ed51802351",
+    "sbom_sha256": "ed0ce6b594a9ad50ed4f4aa5c89dfbd3b5099b1f8cb1347c7d18b60dc2042b50",
+    "licenses_sha256": "67c2bf0d99b2fe1b6858bd9a7065cbf05fa6926940c236c14b71f5c4b9faad56",
+    "checksums_sha256": "408d3b1eb5dd7d84dd6ea1beaf49af09eb4b8d0305ea3d51aeb9f636e510cf35",
+    "index_sha256": "32b798946c028d8642f5c6c37ef53566d0d233740958dbb37e0c128028945a31",
+    "notices_sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d"
+  },
+  "remaining_gates_at_build": [
+    "m31_functionality",
+    "api_examples_support_matrix",
+    "windows_clean_install_examples_upload",
+    "windows_lifecycle",
+    "rc_review_and_owner_approval",
+    "public_assets_and_download_smoke"
+  ],
+  "claim_limit": "이 비공개 RC plan은 공개 승인·tag·Release·catalog 게시를 수행하지 않는다."
+}

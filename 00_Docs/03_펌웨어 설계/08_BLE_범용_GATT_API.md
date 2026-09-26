@@ -3,19 +3,22 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GATT-001 |
-| 문서 개정 | 1.2 |
-| 문서 상태 | v0.4.0에서도 유지하는 정식 GATT 계약 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`의 `ble` profile |
-| 최종 갱신일 | 2026-09-12 |
+| 문서 개정 | 1.7 |
+| 문서 상태 | v0.4.1 stable GATT 계약과 v0.5.0 RC의 M29 확장 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile, 별도 표시한 공개 `v0.5.0-rc.1` |
+| 최종 갱신일 | 2026-09-27 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
 ## 목적과 범위
 
+Server schema부터 예제·검증 절까지는 설치·지원 v0.4.1 계약이다. 하단의 M29 절은
+공개 RC의 확장을 설명하며, 두 범위의 value 크기·연결 수·지원 operation을 혼합하지 않는다.
+
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼
 고정 profile wrapper가 아니라 UUID, property, permission과 bounded value를 sketch가 선언합니다.
 
-이 API는 `v0.3.0`부터 정식 지원하며 v0.4.0에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
+이 API는 `v0.3.0`부터 정식 지원하며 v0.4.1에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
 [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>), stable package 승격은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)이 소유합니다.
 
@@ -116,3 +119,67 @@ notification subscribe/unsubscribe, indication confirmation, disconnect handle �
 rediscovery/resubscribe를 검증합니다. Peripheral은 runner의 128-bit nonce를 cached value에 넣고
 central이 첫 read에서 전체 binary challenge를 exact 비교하므로 같은 service UUID를 쓰는 주변의
 stale/병렬 보드가 있어도 서로 다른 peer transcript를 하나의 PASS로 결합하지 않습니다.
+
+## M28 회귀 결과와 M29 전환 경계
+
+M28은 기존 단일-link GATT server/client를 M20 회귀에서 PASS하고 3보드 LINK 확인용 GATT
+`LINK_UP`을 사용했다. Local central client와 실제 subscribe한 incoming server link를 구분하지만,
+두 link의 임의 동시 GATT operation을 M28 지원으로 주장하지 않는다. Generation별 client session,
+remote handle·subscription과 long/reliable·cache·CoC 확장은 M29에서 고정 자원·상호운용 시험과
+함께 계약한다. 현재 설치·지원 v0.4.1의 단일 connection session은 그대로 유지한다.
+
+## M29-W02~W06 개발 확장
+
+아래 항목은 `0.4.1-dev` source에서 구현·검증해 공개 v0.5.0 RC에 포함했으며 stable v0.4.1 API로
+소급하지 않는다.
+
+- connection generation handle을 받는 GATT client overload와 link별 고정 operation context 2개
+- MTU 247에서 최대 512-byte long read와 response write, link별 prepare/execute transaction 1개
+- characteristic당 descriptor 4개, read multiple handle 4개, 동기 authorization과 link 지정 전송
+- bonded identity·database hash·UUID·schema·CRC를 결합한 84-byte GATT cache record 4개
+- generation opaque handle의 LE CoC server 1개·channel 2개·512-byte SDU
+
+LE CoC는 `BLEL2cap.startServer()`, `connect()`, `send()`, `disconnect()`와 `connected()`를 제공한다.
+공개 handle에는 raw `bt_l2cap_chan *`를 담지 않으며 slot 재사용은 generation이 바뀌므로 이전
+handle이 새 channel을 조작할 수 없다. RX payload는 channel당 4개의 512-byte record에 복사하고
+전체 TX buffer는 4개로 제한한다. 로컬 TX pool 할당은 `K_NO_WAIT`이며 고갈 시 `false`,
+`BLEError::busy`와 `-EAGAIN`을 반환한다. Stack이 `-EAGAIN`/`-ENOMEM`으로 송신을 거부해도
+`busy`로 보고하고 할당을 반환한다. 반면 상대 CoC credit이 0이어도 stack이 수락한 SDU는
+이미 예약한 buffer 안에서 credit 반환을 기다릴 수 있다. `send()==true`는 peer 수신 완료가 아니다.
+로컬 buffer 포화와 직접 peer-credit 고갈·복구는 서로 다른 시험이며
+[P2 완료 기록](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)의 증거를 구분한다.
+
+Connected·disconnected·received·sent·reconfigured event는 고정 queue를 거쳐
+`BLEDevice.poll()` 문맥에서만 전달한다. `received`의 data pointer는 해당 callback 동안만 유효하다.
+`BLEDevice.end()`는 session generation을 먼저 바꾸고 queue/RX ownership을 폐기한 뒤 active
+channel을 종료한다. Late callback과 disconnect 뒤 stale handle은 새 session이나 재사용 slot을
+수정하지 않는다.
+
+`M29-COC-01`과 `M29-NEG-01`은 exact `767bb4af…`에서 두 실제 NU54DK로 2채널·512-byte SDU를
+방향별 channel당 1,000회, malformed·offset·execute·PSM·credit 각 20회와 disconnect/reconnect를
+검증했다. 이 결과는 NU54DK 간 LE CoC 범위이며 cross-vendor peer, Signed Write와 EATT 지원을
+의미하지 않는다. 상세 근거는
+[146번 기록](<../04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md>)에 있다.
+
+## M29-W07 Signed Write·EATT와 통합 완료
+
+두 기능은 기본 BLE profile에서 OFF이며 별도 library header를 포함할 때만 선택한다.
+
+| 선택 library | 개발 계약 | 작성된 예제 |
+| --- | --- | --- |
+| `NUCODE_BLE_LegacySigning` | deprecated legacy opt-in; bonded CSRK·local/remote counter 영속성과 replay 거부 | `LegacySignedWritePeripheral`, `LegacySignedWriteCentral` |
+| `NUCODE_BLE_EATT` | experimental opt-in; 암호화된 link당 최대 2 bearer, GATT의 `unenhanced`/`enhanced` 선택 | `EattPeripheral`, `EattCentral` |
+
+Exact `c71ef4a2…`의 두 보드 HIL에서 Signed Write 20회·warm reboot counter 유지·replay 수락 0,
+EATT의 암호화 전 거부·2 bearer·상한 초과 거부·production enhanced read/write와 bearer별
+1,000 SDU를 검증했다. Payload 오류·deadlock·starvation은 0이다. 이 결과로 SDK의
+deprecated/experimental 등급을 안정 기능으로 바꾸지 않는다.
+
+후속 통합은 exact `16eb8fce…`에서 3보드 `M29-MULTI-01`·`M29-REG-01`을 PASS했고,
+exact `a964ae20…`에서 Windows WinRT peer 교차 제조사 GATT 상호운용을 PASS했다.
+이로써 M29는 작업 묶음 8/8(100%), test ID 10/10을 완료했다. 후속 M30도 8/8·10/10과
+실제 전원 차단 12/12를 완료했다. M31도 W01~W08 8/8과 공개 RC smoke를 완료했으며 stable 승인 경계는 [M31 TODO](../TODO_M31.md)를 따른다.
+세부 API·자원과 단계별·완료 exact 원본은
+[M29 계약](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
+[147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>),
+[149번 완료 기록](<../04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)에서 관리한다.

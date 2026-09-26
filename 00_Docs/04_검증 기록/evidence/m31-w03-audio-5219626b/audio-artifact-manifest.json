@@ -1,0 +1,438 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/~/ae-w03-audio-exact-521/build/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino.bin",
+      "sha256": "3fe701457b7816448f957c0d7a4a5889321a0bb88976ae56215d99269ce780c8",
+      "size": 220056
+    },
+    "elf": {
+      "path": "C:/~/ae-w03-audio-exact-521/build/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino.elf",
+      "sha256": "3765d684bb94bc33ce169baf16ff0e76204bc1ed692d775c138c8aa2cbfe2d40",
+      "size": 2871180
+    },
+    "hex": {
+      "path": "C:/~/ae-w03-audio-exact-521/build/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino.hex",
+      "sha256": "3fef7a9f46dd3b1a3ca7bdcf8fc3fc0681123c8483915e0b997dddd9d0210b4e",
+      "size": 619100
+    },
+    "map": {
+      "path": "C:/~/ae-w03-audio-exact-521/build/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino.map",
+      "sha256": "a6cf11b25f37e78d7d1c4359d1803098e4e6d54bec22228f42ad731cfa60c347",
+      "size": 854608
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-16T07:38:13.433358+00:00",
+  "cache": {
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:57c230a0ea2a1daf3826e7a21abe9f6ef76b1461cc34a59ebc269b84cb0ae175",
+        "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:09b4cf5ec9686cdbc4f24800254c5ee2068385bca11f5d6a7bac740f1555488e",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:000ca5d30ad431abae3bd9e16fcd783a3e0acdcaea2342415870e4432fa5c072",
+          "id": "ble",
+          "manifest": "sha256:b9ea4262dbe21afbbfa8ddd9c7487d72e7cfefe66e3a44d4131846939bdc70a2",
+          "overlay": "sha256:903d8a13c18d15b61814ccbbecefb029a57a1a61c4138ffcc713be46214929eb",
+          "signing_key_sha256": null,
+          "sysbuild": false,
+          "sysbuild_files": []
+        },
+        "selected_features": [
+          {
+            "conf": [],
+            "id": "nucode.ble.audio",
+            "manifest": "sha256:00433a7580ba2ff8e8b865c6a7e845b98c621b87d1c36b69c2d67f61e831be62",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "sha256:8f71d14a5180e42b4fc5dc6dd404183954f3fa88e266769ba6aa03cdde3a173a",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+        "profile": "ble",
+        "sysbuild": false
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "107f92c8570a58493457347a4bcfcbb8cd7145aab834b98dfbaf54ab79762724",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:0624ae28420fa880a1475312358e534999e261f9718c394c81e52f2ac32fa7ba"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 22.416143,
+    "build_path": "C:/~/ae-w03-audio-exact-521/build/Lc3SyntheticLoopback",
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8",
+    "cache_key": "107f92c8570a58493457347a4bcfcbb8cd7145aab834b98dfbaf54ab79762724",
+    "cache_reused": true,
+    "cache_root": "C:/Users/eidos/AppData/Local/NU54/c",
+    "cache_schema_version": 1,
+    "ccache": "C:/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/Users/eidos/AppData/Local/NU54/c/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 8950,
+      "cache_size_kibibyte": 204000,
+      "called_for_link": 2605,
+      "called_for_preprocessing": 6,
+      "cleanups_performed": 0,
+      "compile_failed": 2,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 591,
+      "direct_cache_miss": 8958,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 17883,
+      "internal_error": 0,
+      "local_storage_hit": 595,
+      "local_storage_miss": 8950,
+      "local_storage_read_hit": 1186,
+      "local_storage_read_miss": 17910,
+      "local_storage_write": 17904,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 1265,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 4,
+      "preprocessed_cache_miss": 8952,
+      "preprocessor_error": 2,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789544292,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 8949,
+      "cache_size_kibibyte": 203956,
+      "called_for_link": 2591,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 2,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 534,
+      "direct_cache_miss": 8955,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 17879,
+      "internal_error": 0,
+      "local_storage_hit": 536,
+      "local_storage_miss": 8949,
+      "local_storage_read_hit": 1070,
+      "local_storage_read_miss": 17906,
+      "local_storage_write": 17900,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 1265,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 2,
+      "preprocessed_cache_miss": 8951,
+      "preprocessor_error": 2,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789544164,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 1,
+      "cache_size_kibibyte": 44,
+      "called_for_link": 14,
+      "called_for_preprocessing": 6,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 57,
+      "direct_cache_miss": 3,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 4,
+      "internal_error": 0,
+      "local_storage_hit": 59,
+      "local_storage_miss": 1,
+      "local_storage_read_hit": 116,
+      "local_storage_read_miss": 4,
+      "local_storage_write": 4,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 0,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 2,
+      "preprocessed_cache_miss": 1,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 128,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:107f92c8570a58493457347a4bcfcbb8cd7145aab834b98dfbaf54ab79762724",
+    "configure_duration_seconds": 0.0,
+    "configure_mode": "cmake-only",
+    "configure_reason": "feature-cache-hit",
+    "configure_skipped": true,
+    "cxx_compiler": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+    "input_manifest": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8/input-manifest.json",
+    "link_configure_duration_seconds": 16.267521,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 1490944,
+      "flash_origin": 0,
+      "flash_size": 1490944
+    },
+    "ncs_root": "C:/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "pristine_configure_count": 1,
+    "product_identity": {
+      "package_version": "0.4.1-dev",
+      "source_version": "0.4.1-dev"
+    },
+    "profile": "ble",
+    "provisional_cache_key": "3d604c4f73bfdfcc6aa7fcb92925e60f8d76429644fc164da5d00b4f39468573",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [],
+        "id": "nucode.ble.audio",
+        "manifest": "sha256:00433a7580ba2ff8e8b865c6a7e845b98c621b87d1c36b69c2d67f61e831be62",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "NUCODE_BLE_Audio"
+    ],
+    "size_tool": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": false,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-16T07:38:13.433358+00:00",
+    "zephyr_build_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+  "metrics": {
+    "build_seconds": 22.416143,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 1,
+      "cache_size_kibibyte": 44,
+      "called_for_link": 14,
+      "called_for_preprocessing": 6,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 57,
+      "direct_cache_miss": 3,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 4,
+      "internal_error": 0,
+      "local_storage_hit": 59,
+      "local_storage_miss": 1,
+      "local_storage_read_hit": 116,
+      "local_storage_read_miss": 4,
+      "local_storage_write": 4,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 0,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 2,
+      "preprocessed_cache_miss": 1,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 128,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 16.267521
+  },
+  "product_identity": {
+    "package_version": "0.4.1-dev",
+    "source_version": "0.4.1-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:c13d9a185e8ac69986dae7baccbcbda8ee35687cbf14d8d0c7a6af330fa86844",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback"
+      },
+      {
+        "content_sha256": "sha256:d8794fe7acc1a6518728eeca2051917592763d2929c296fe6096d1ab6580e166",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:0c35e28c2f9d6551dae67fdbd6b7e79d1a5d8e792aac63d58b954171d1e92328",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:6009908eb78f94ff12ef98ab4e8c19b29362a5bea71e4e042823add164851839",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src"
+      },
+      {
+        "content_sha256": "sha256:c1ce3f3582e10338d7cb95664613571e482f2e7bbd3f559148a6fc7ea9ebe541",
+        "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8/build/nucode_arduino_core_build.yml",
+      "sha256": "3784c8d1cebd79ab22566ba1a6a32ea7059d6abdcdc2f04ec4f1fd0256c53272"
+    },
+    "m31_audio_revisions": {
+      "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "NUCODE_CORE_REVISION": "5219626ba016449b629b0d72c8246d533670d2bd",
+      "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/Users/eidos/AppData/Local/NU54/c/v1/10/107f92c8570a58493457347a4bcfcbb8/app/generated-sources/sketch/Lc3SyntheticLoopback.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/Lc3SyntheticLoopback.ino.cpp",
+        "sha256": "52bc503e33213d27ef4edae1070c20f1c418dcf2afc1b67a2f273e2983d1123f",
+        "source_path": "C:/~/ae-w03-audio-exact-521/build/Lc3SyntheticLoopback/sketch/Lc3SyntheticLoopback.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp",
+        "sha256": "2d708c46271b559b00b2c05fb1c1c90c30d2cccf977d12d862f576122067877a",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/~/ae-w03-audio-exact-521/build/Lc3SyntheticLoopback/sketch/Lc3SyntheticLoopback.ino.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp"
+  ],
+  "sysbuild": false
+}

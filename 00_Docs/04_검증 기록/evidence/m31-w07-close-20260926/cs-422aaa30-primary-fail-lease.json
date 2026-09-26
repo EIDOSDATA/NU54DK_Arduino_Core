@@ -1,0 +1,61 @@
+{
+  "case": "cs",
+  "status": "FAIL",
+  "issued_utc": "2026-09-25T20:05:22.921276+00:00",
+  "expires_utc": "2026-09-25T20:25:22.921276+00:00",
+  "watchdog_seconds": 1200,
+  "source_revision": "422aaa3059f814b069010790bb6ba6db6716721d",
+  "auto_unlock": false,
+  "erase": "sector_only",
+  "finished_utc": "2026-09-25T20:18:44.597480+00:00",
+  "boards": [
+    {
+      "probe_sha256": "162548a45cec6e15a7acdf39ecefafde36c71eee026b290a9a1f80e55195f6ff",
+      "volume": "E:/",
+      "port": "COM18",
+      "target_detect": "unsupported target",
+      "swd_dp_idcode": "0x6ba02477",
+      "target_voltage": "3295 mV (present)",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x43800042",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    {
+      "probe_sha256": "aa592f987b33de47e3bb08be982e8524583bc1312da5dd9f22f4be521335ee6b",
+      "volume": "F:/",
+      "port": "COM16",
+      "target_detect": "unsupported target",
+      "swd_dp_idcode": "0x6ba02477",
+      "target_voltage": "3295 mV (present)",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "port": "COM10",
+      "target_detect": "nRF54L15",
+      "swd_dp_idcode": "0x6ba02477",
+      "target_voltage": "3295 mV (present)",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x43800042",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  ]
+}

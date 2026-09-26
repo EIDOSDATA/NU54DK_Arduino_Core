@@ -1,13 +1,22 @@
 # NU54DK Boards Manager 패키징
 
-현재 설치·지원 대상은 v0.4.1 하나이며 이전 version은 catalog 공급을 종료합니다. v0.4.1 상태는
+현재 stable·지원 대상은 v0.4.1 하나이며 이전 version은 catalog 공급을 종료합니다. 공개
+`v0.5.0-rc.1`은 별도 RC index의 opt-in 후보입니다. v0.4.1 상태는
 [유지보수 TODO](<../../00_Docs/TODO_v0.4.1.md>)에서 관리합니다.
 
 | 항목 | 내용 |
 | --- | --- |
 | 현재 stable | `v0.4.1`만 제공 |
 | Stable index | `package_nucode_nu54dk_index.json` |
-| Stable source·ZIP | 129번 공개 기록의 exact identity |
+| Stable source·ZIP | [129번 공개 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)의 exact identity |
+| 공개 RC | `v0.5.0-rc.1`; [RC 문서](<../../00_Docs/05_릴리스/v0.5.0-rc.1/README.md>)와 별도 `package_nucode_nu54dk_rc_index.json` |
+
+현재 개발 source version은 `0.4.1-dev`입니다. M28~M31 완료와 공개 `0.5.0-rc.1` Windows RC는
+v0.4.1 ZIP에 자동으로 추가되지 않습니다. M31-W08과 RC 승인·tag·Pre-release·전용 catalog·공개
+download/install smoke는 완료했고 정식 v0.5.0 stable 승격은 별도입니다. HOST-W04~HOST-W08은
+사용자 보류/미착수 상태이며 M32/M33 추가 기능과 Ubuntu/macOS는 버전 미정인 후속 제품선입니다.
+정확한 진행과 gate는
+[v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)와 [M31 TODO](../../00_Docs/TODO_M31.md)를 따릅니다.
 
 이 디렉터리의 도구는 지정한 Git commit과 board submodule을 입력으로 사용해 Arduino
 Boards Manager ZIP, index, checksum, release manifest, SPDX SBOM, license inventory와
@@ -58,13 +67,29 @@ stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`
 | 대상 | 사용할 절차 |
 | --- | --- |
 | 정식 `v0.4.1` | [`v041_release.py`](../../tools/release/v041_release.py)와 [129번 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>) |
+| 공개 `v0.5.0-rc.1` | [`m31_release.py`](../../tools/release/m31_release.py), [RC 문서](<../../00_Docs/05_릴리스/v0.5.0-rc.1/README.md>)와 [268번 기록](<../../00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>) |
 | 보존된 비공개 `v0.4.0-rc.1` 후보 | [M27 prepare 절차 기록](../../tools/release/M27_README.md); 준비·검증 완료 |
 | 정식 `v0.4.0` | [완료 TODO](../../00_Docs/TODO_v0.4.0.md)와 [125번 기록](<../../00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>); 공개 완료 |
 | 이미 공개한 stable | 아래 exact tag 감사 절차 |
+| 미공개 stable `v0.5.0` | 공개 RC 관찰 뒤 stable exact 자산·승인·tag/Release/root catalog·공개 smoke 필요 |
 
 현재 `main`에서 이전 stable 이름으로 새 package를 만들지 않습니다. 이전 version은 위 고정
 source에서만 감사 가능한 공개 이력입니다. 생성기는 산출물을 자동 게시하지 않으며, 새 version의
 공개는 이중 재현·Host·문서·package·lifecycle·HIL gate와 소유자의 최종 승인 뒤 별도 수행합니다.
+
+[기능·예제 계약](<../../00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)은
+외장 Audio 경로를 M31, Apple/Google 신규 기능을 후속 M33에 배정합니다. 각 담당 제품선의
+채택 기능은 사용 가능한 구현·예제·설정/연결 안내·자동 검사가 필수이며, 실제
+운용·실물 검증은 사용자 후속 NOT RUN·개발/릴리스 비차단으로 분리합니다. 이 미검증을 실제
+상호운용 PASS로 표시하지 않습니다. Ubuntu/macOS 실제 설치·USB upload·serial·debug·수명주기는
+사용자가 해당 OS를 추가할 후속 릴리스의 최종 단계에서 검증하며 최종 Host 지원 gate를 유지합니다.
+이 후속 gate는 M31 v0.5.0 Windows 릴리스의 선행조건이 아닙니다. 이 범위는 다음 원장/검증기
+구현 계약이며 현재 도구에 자동 적용된 것이 아닙니다.
+
+[개선 마일스톤](<../../00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)에서
+후속 M33의 기존 API 예제 보강과 ARF 공개 API 변경을 분리합니다. 후자의 배포 버전은 API·자원·
+HIL 비용과 기존 제품 계획에 미치는 영향을 확정한 뒤 결정하며, `v0.5.1` 또는 `v0.6.0`으로
+미리 배정하지 않습니다. 이 계획 문서 자체는 package 생성·게시나 기존 자산 교체의 승인이 아닙니다.
 
 ## 공개 stable 감사
 

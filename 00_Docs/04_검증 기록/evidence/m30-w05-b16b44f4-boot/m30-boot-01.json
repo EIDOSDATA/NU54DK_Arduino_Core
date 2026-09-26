@@ -1,0 +1,87 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": 1,
+  "core_revision": "b16b44f405ee8617a675cae9f5dfcc027f03816a",
+  "duration_seconds": 61.156,
+  "endpoint": {
+    "board_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "port": "COM14",
+    "volume": "F:"
+  },
+  "flash_backend": "pyocd-exact-sector",
+  "flash_results": {
+    "boot": [
+      "pyocd-sector",
+      "0"
+    ],
+    "primary": [
+      "pyocd-sector",
+      "8192"
+    ],
+    "unsigned_secondary_bytes": "49152",
+    "wrong_key_secondary_bytes": "53248"
+  },
+  "images": {
+    "bootloader": {
+      "name": "zephyr.hex",
+      "sha256": "431e484dd98f76865a8823043cb20d167514ced7fbaf0b8954b5fcb7f325490a",
+      "size": 95660,
+      "version": null
+    },
+    "primary_signed": {
+      "name": "zephyr.signed.bin",
+      "sha256": "1afcaeec05d4d3ba156a1874149f953d2daf7a004f4394d413a3e731088e4d22",
+      "size": 49303,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "primary_signed_hex": {
+      "name": "zephyr.signed.hex",
+      "sha256": "c54f28444792645f2c8cbeed1409444bf83301890152612f4b4bb99f20b6c78f",
+      "size": 138700,
+      "version": null
+    },
+    "unsigned_candidate": {
+      "name": "zephyr.bin",
+      "sha256": "2e2363d1f026cb9057143c2c9e90c4c56e20100f760bd4d4771ec1524828e343",
+      "size": 49140,
+      "version": null
+    },
+    "wrong_key_candidate": {
+      "name": "wrong-key-v9.bin",
+      "sha256": "ba0e9f953ed924f61ac0572bfb1c25b2a9de634f174dd4cd17b915ab1a5ae13d",
+      "size": 49303,
+      "version": [
+        9,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "mass_erase_or_recover": false,
+  "physical_power_loss_claim": false,
+  "power_cut_injected": false,
+  "schema_version": 1,
+  "secondary_slot": {
+    "erase_end_exclusive": 1523712,
+    "offset": 794624,
+    "size": 729088
+  },
+  "signed_boots": 20,
+  "status": "passed",
+  "test_id": "M30-BOOT-01",
+  "timestamp_utc": "2026-09-14T16:42:25.327718+00:00",
+  "transcript": {
+    "name": "m30-boot-01.transcript.log",
+    "sha256": "9c68e1d445ed977eec23a60199521af58f1761c141866394b4480ad6d3f24f48",
+    "size": 4342
+  },
+  "trust_public_key_source_sha256": "e080e9cf050e5ad50fe0af483352120639e9e0adc53d38c1a38f0e18c766ea46",
+  "unsigned_accepts": 0,
+  "wrong_key_accepts": 0
+}

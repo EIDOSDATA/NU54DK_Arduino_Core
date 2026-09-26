@@ -1,5 +1,9 @@
 # M23 Peripheral inventory와 공통 소유권 기준선
 
+> **역사적 M23 기준선:** 아래 미구현·NOT RUN·M24 착수 가능은 당시 판정이며 원래 증거를 보존한다.
+> 후속 v0.4.0은 [완료 TODO](../TODO_v0.4.0.md)를 따른다. 현재 작업은
+> [v0.5.0 TODO](../TODO_v0.5.0.md), 설치·지원은 [v0.4.1 안내](../05_릴리스/v0.4.1/README.md)를 따른다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | VERIFY-M23-PERIPHERAL-001 |
@@ -126,4 +130,4 @@ TWIM/TWIS20/21/22/30의 실제 선택 API와 sync/async DMA 수명주기를 구�
 다른 block 동시 실행, timeout/cancel/error/System OFF 복구와 실제 NU54DK HIL을 통과하기 전에는
 manifest의 해당 상태를 지원으로 승격하지 않는다.
 
-후속 구현 결과는 [34번 기록](34_M24_Serial_Fabric_경로와_API_계약_기준선.md)에 보존한다. 현재 실행 범위와 우선순위는 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+후속 구현 결과는 [34번 기록](34_M24_Serial_Fabric_경로와_API_계약_기준선.md)에 보존한다. 현재 실행 범위와 우선순위는 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
