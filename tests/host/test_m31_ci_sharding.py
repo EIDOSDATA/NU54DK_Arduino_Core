@@ -123,6 +123,7 @@ class M31CiShardingTests(unittest.TestCase):
                         "mode": "parallel_isolated_worker_caches",
                         "workers": 2,
                         "cache_roots": 2,
+                        "builder_jobs_per_worker": 2,
                     },
                     "results": [
                         {"identity": identity, "profile": profile, "status": "PASS"}
@@ -169,6 +170,22 @@ class M31CiShardingTests(unittest.TestCase):
                 result = AGGREGATE.aggregate(ROOT, root / "plan.json", shard_paths, lifecycle_path)
                 self.assertEqual("PASS", result["status"])
                 self.assertEqual(LIFECYCLE.EXPECTED_EXAMPLES, result["examples"]["compiled"])
+
+                invalid_execution = json.loads(
+                    shard_paths[1].read_text(encoding="utf-8")
+                )
+                invalid_execution["execution"]["builder_jobs_per_worker"] = 0
+                shard_paths[1].write_text(
+                    json.dumps(invalid_execution), encoding="utf-8"
+                )
+                with self.assertRaises(AGGREGATE.M31AggregateFailure):
+                    AGGREGATE.aggregate(
+                        ROOT, root / "plan.json", shard_paths, lifecycle_path
+                    )
+                invalid_execution["execution"]["builder_jobs_per_worker"] = 2
+                shard_paths[1].write_text(
+                    json.dumps(invalid_execution), encoding="utf-8"
+                )
 
                 duplicate = json.loads(shard_paths[1].read_text(encoding="utf-8"))
                 duplicate["results"][0] = json.loads(

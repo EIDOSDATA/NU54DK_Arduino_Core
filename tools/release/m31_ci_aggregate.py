@@ -31,6 +31,27 @@ def read_object(path: Path) -> dict[str, Any]:
     return value
 
 
+## @brief 격리 worker와 내부 builder 작업자 제한이 모두 증거에 고정됐는지 검사합니다.
+def valid_parallel_execution(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    builder_jobs = value.get("builder_jobs_per_worker")
+    return (
+        set(value) == {
+            "mode",
+            "workers",
+            "cache_roots",
+            "builder_jobs_per_worker",
+        }
+        and value.get("mode") == "parallel_isolated_worker_caches"
+        and value.get("workers") == 2
+        and value.get("cache_roots") == 2
+        and isinstance(builder_jobs, int)
+        and not isinstance(builder_jobs, bool)
+        and 1 <= builder_jobs <= 4
+    )
+
+
 ## @brief 8개 shard와 대표 lifecycle이 동일 RC를 검증했는지 집계합니다.
 def aggregate(
     repository: Path, plan_path: Path, shard_paths: list[Path],
@@ -75,11 +96,7 @@ def aggregate(
             or shard.get("global_denominator") != lifecycle.EXPECTED_EXAMPLES
             or shard.get("assigned") != shard.get("compiled")
             or shard.get("failed") != 0
-            or document.get("execution") != {
-                "mode": "parallel_isolated_worker_caches",
-                "workers": 2,
-                "cache_roots": 2,
-            }
+            or not valid_parallel_execution(document.get("execution"))
             or index in by_index
         ):
             raise M31AggregateFailure("shard identity·분모·package 계약이 다릅니다")
