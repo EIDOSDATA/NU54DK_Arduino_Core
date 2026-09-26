@@ -177,6 +177,64 @@ def compile_example(
     }
 
 
+## @brief 예제를 직렬 또는 worker별 독립 cache를 사용하는 병렬 묶음으로 compile합니다.
+def compile_examples(
+    cli: Path, config: Path, environment: dict[str, str], build_root: Path,
+    log_root: Path, examples: list[tuple[str, Path, str]], jobs: int,
+    cache_root: Path,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    if jobs == 1:
+        results = [
+            compile_example(
+                cli, config, environment, build_root, log_root,
+                identity, sketch, profile,
+            )
+            for identity, sketch, profile in examples
+        ]
+        return results, {"mode": "serial", "workers": 1, "cache_roots": 1}
+
+    stop = threading.Event()
+    worker_roots = [cache_root / f"lifecycle-worker-{index}" for index in range(jobs)]
+    for root in worker_roots:
+        root.mkdir(parents=True, exist_ok=True)
+
+    def worker(
+        index: int, assigned: list[tuple[str, Path, str]]
+    ) -> list[dict[str, Any]]:
+        worker_environment = dict(environment)
+        worker_environment["NUCODE_BUILD_CACHE_ROOT"] = str(worker_roots[index])
+        records: list[dict[str, Any]] = []
+        for identity, sketch, profile in assigned:
+            if stop.is_set():
+                break
+            try:
+                records.append(
+                    compile_example(
+                        cli, config, worker_environment, build_root, log_root,
+                        identity, sketch, profile,
+                    )
+                )
+            except Exception:
+                stop.set()
+                raise
+        return records
+
+    groups = [examples[index::jobs] for index in range(jobs)]
+    results: list[dict[str, Any]] = []
+    with ThreadPoolExecutor(max_workers=jobs) as executor:
+        futures = [
+            executor.submit(worker, index, group)
+            for index, group in enumerate(groups)
+        ]
+        for future in as_completed(futures):
+            results.extend(future.result())
+    return results, {
+        "mode": "parallel_isolated_worker_caches",
+        "workers": jobs,
+        "cache_roots": len(worker_roots),
+    }
+
+
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
     """! @brief 로컬 package server의 요청 로그를 외부 출력에 남기지 않습니다. """
 
@@ -332,37 +390,40 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
         ):
             raise M31LifecycleFailure("설치 candidate provenance가 RC plan과 다릅니다")
         examples = installed_examples(platform)
-        results: list[dict[str, Any]] = []
         example_logs = logs / "examples"
         example_logs.mkdir()
         example_builds = build_root / "examples"
         example_builds.mkdir()
-        with ThreadPoolExecutor(max_workers=arguments.jobs) as executor:
-            futures = {
-                executor.submit(
-                    compile_example,
-                    cli,
-                    config,
-                    environment,
-                    example_builds,
-                    example_logs,
-                    identity,
-                    sketch,
-                    profile,
-                ): identity
-                for identity, sketch, profile in examples
-            }
-            for future in as_completed(futures):
-                results.append(future.result())
+        selected_examples = examples
+        if arguments.compile_mode == "representative":
+            selected_examples = [
+                item for item in examples
+                if item[0] == "NUCODE_BLE_DirectionFinding/CteBeacon"
+            ]
+            if len(selected_examples) != 1:
+                raise M31LifecycleFailure("대표 lifecycle 예제 분모가 1이 아닙니다")
+        results, execution = compile_examples(
+            cli,
+            config,
+            environment,
+            example_builds,
+            example_logs,
+            selected_examples,
+            arguments.jobs,
+            cache_root,
+        )
         results.sort(key=lambda item: item["identity"].casefold())
-        if len(results) != EXPECTED_EXAMPLES or any(item["status"] != "PASS" for item in results):
+        if len(results) != len(selected_examples) or any(
+            item["status"] != "PASS" for item in results
+        ):
             raise M31LifecycleFailure("설치 예제 전수 compile이 완료되지 않았습니다")
         steps.append(
             {
                 "name": "installed_examples",
                 "status": "PASS",
                 "denominator": EXPECTED_EXAMPLES,
-                "passed": EXPECTED_EXAMPLES,
+                "compiled": len(results),
+                "compile_mode": arguments.compile_mode,
                 "failed": 0,
             }
         )
@@ -433,9 +494,11 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
         "examples": {
             "discovered": EXPECTED_EXAMPLES,
             "compiled": len(results),
+            "compile_mode": arguments.compile_mode,
             "failed": 0,
             "results": results,
         },
+        "execution": execution,
         "representative": {
             "identity": "NUCODE_BLE_DirectionFinding/CteBeacon",
             "build_relative": cte["build_relative"],
@@ -466,6 +529,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser.add_argument("--cache-root", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--jobs", type=int, default=2)
+    parser.add_argument(
+        "--compile-mode", choices=("full", "representative"), default="full"
+    )
     parser.add_argument("--install-timeout", type=int, default=3600)
     parsed = parser.parse_args(arguments)
     if parsed.jobs not in {1, 2}:

@@ -1,0 +1,277 @@
+name: M31 W08 Windows RC
+
+on:
+  push:
+    branches:
+      - 0.5.0-RC1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m31-w08-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NUCODE_NCS_INSTALL_ROOT: D:\ncs
+  NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+  NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+  NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+
+jobs:
+  prepare:
+    name: Reproduce exact private RC package
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Verify fixed SDK and board lock
+        run: python tools/ci/verify_ci_lock.py
+      - name: Build the exact private RC package twice
+        run: >-
+          python tools/release/m31_release.py prepare
+          --repository .
+          --output-dir D:\m31-rc
+          --commit $env:GITHUB_SHA
+      - name: Revalidate RC bytes and HOLD state
+        run: >-
+          python tools/release/m31_release.py validate-plan
+          --repository .
+          --plan D:\m31-rc\m31-windows-rc-plan.json
+      - name: Upload exact private RC package
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m31-w08-rc-${{ github.sha }}
+          path: D:\m31-rc
+          if-no-files-found: error
+          retention-days: 14
+
+  examples:
+    name: Installed examples shard ${{ matrix.shard }} of 8
+    needs: prepare
+    runs-on: windows-2025
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Download exact private RC package
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m31-w08-rc-${{ github.sha }}
+          path: D:\m31-rc
+      - name: Verify lock and derive cache key
+        id: lock
+        run: python tools/ci/verify_ci_lock.py --github-output
+      - name: Restore Windows Builder cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v1
+      - name: Restore shard-specific compile cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: D:\m31-build-cache\shard-${{ matrix.shard }}
+          key: ${{ steps.lock.outputs.windows_cache_key }}-m31-w08-shard-${{ matrix.shard }}-v1
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+      - name: Verify installed source revisions
+        run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+      - name: Create isolated DFU signing key
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path D:\m31-signing -Force | Out-Null
+          $key = 'D:\m31-signing\ephemeral-ecdsa-p256.pem'
+          $openssl = Join-Path $env:NUCODE_TOOLCHAIN_ROOT 'mingw64\bin\openssl.exe'
+          & $openssl ecparam -name prime256v1 -genkey -noout -out $key
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "NUCODE_DFU_SIGNING_KEY=$key" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Compile installed example shard
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path D:\m31-evidence,D:\t -Force | Out-Null
+          $env:TEMP = 'D:\t'
+          $env:TMP = 'D:\t'
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          python tools/release/m31_windows_example_shard.py `
+            --repository . `
+            --plan D:\m31-rc\m31-windows-rc-plan.json `
+            --workspace D:\m31-shard-${{ matrix.shard }} `
+            --arduino-cli $cli `
+            --prerequisite-state-root $env:NUCODE_PREREQUISITE_STATE_ROOT `
+            --cache-root D:\m31-build-cache\shard-${{ matrix.shard }} `
+            --shard-index ${{ matrix.shard }} `
+            --shard-count 8 `
+            --output D:\m31-evidence\shard-${{ matrix.shard }}.json
+      - name: Upload shard evidence and logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m31-w08-shard-${{ matrix.shard }}-${{ github.sha }}
+          path: |
+            D:\m31-evidence
+            D:\m31-shard-${{ matrix.shard }}\logs
+          if-no-files-found: warn
+          retention-days: 14
+
+  lifecycle:
+    name: Previous-to-RC isolated lifecycle
+    needs: prepare
+    runs-on: windows-2025
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Download exact private RC package
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m31-w08-rc-${{ github.sha }}
+          path: D:\m31-rc
+      - name: Verify lock and derive cache key
+        id: lock
+        run: python tools/ci/verify_ci_lock.py --github-output
+      - name: Restore Windows Builder cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v1
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+      - name: Verify installed source revisions
+        run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+      - name: Verify representative lifecycle without repeating 113 builds
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path D:\m31-evidence,D:\m31-lifecycle-cache,D:\t -Force | Out-Null
+          $env:TEMP = 'D:\t'
+          $env:TMP = 'D:\t'
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          python tools/release/m31_windows_lifecycle.py `
+            --repository . `
+            --plan D:\m31-rc\m31-windows-rc-plan.json `
+            --workspace D:\m31-lifecycle `
+            --arduino-cli $cli `
+            --prerequisite-state-root $env:NUCODE_PREREQUISITE_STATE_ROOT `
+            --cache-root D:\m31-lifecycle-cache `
+            --jobs 1 `
+            --compile-mode representative `
+            --output D:\m31-evidence\lifecycle.json
+      - name: Upload lifecycle evidence and logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m31-w08-lifecycle-${{ github.sha }}
+          path: |
+            D:\m31-evidence
+            D:\m31-lifecycle\logs
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    name: Aggregate exact RC evidence
+    needs: [prepare, examples, lifecycle]
+    if: always()
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Download exact private RC package
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m31-w08-rc-${{ github.sha }}
+          path: D:\m31-rc
+      - name: Download all shard evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: m31-w08-shard-*-${{ github.sha }}
+          path: D:\m31-shards
+          merge-multiple: true
+      - name: Download lifecycle evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m31-w08-lifecycle-${{ github.sha }}
+          path: D:\m31-lifecycle-evidence
+      - name: Reject incomplete jobs and aggregate evidence
+        shell: powershell
+        env:
+          PREPARE_RESULT: ${{ needs.prepare.result }}
+          EXAMPLES_RESULT: ${{ needs.examples.result }}
+          LIFECYCLE_RESULT: ${{ needs.lifecycle.result }}
+        run: |
+          if ($env:PREPARE_RESULT -ne 'success' -or
+              $env:EXAMPLES_RESULT -ne 'success' -or
+              $env:LIFECYCLE_RESULT -ne 'success') {
+            throw "선행 job이 모두 성공하지 않았습니다: prepare=$env:PREPARE_RESULT examples=$env:EXAMPLES_RESULT lifecycle=$env:LIFECYCLE_RESULT"
+          }
+          $plan = @(Get-ChildItem D:\m31-rc -Filter m31-windows-rc-plan.json -Recurse)
+          $lifecycle = @(Get-ChildItem D:\m31-lifecycle-evidence -Filter lifecycle.json -Recurse)
+          if ($plan.Count -ne 1 -or $lifecycle.Count -ne 1) {
+            throw 'RC plan 또는 lifecycle evidence가 정확히 하나가 아닙니다.'
+          }
+          New-Item -ItemType Directory -Path D:\m31-aggregate -Force | Out-Null
+          python tools/release/m31_ci_aggregate.py `
+            --repository . `
+            --plan $plan[0].FullName `
+            --shards D:\m31-shards `
+            --lifecycle $lifecycle[0].FullName `
+            --output D:\m31-aggregate\m31-w08-ci-aggregate.json
+      - name: Upload aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m31-w08-aggregate-${{ github.sha }}
+          path: D:\m31-aggregate
+          if-no-files-found: warn
+          retention-days: 14

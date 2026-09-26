@@ -5,7 +5,9 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 import sys
+import tempfile
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -39,6 +41,44 @@ class M31WindowsLifecycleTests(unittest.TestCase):
         self.assertNotIn("publish-release", source)
         self.assertNotIn("publish-index", source)
         self.assertIn("unknown_version_rejected", source)
+
+    def test_parallel_workers_use_independent_cache_roots(self) -> None:
+        """! @brief 병렬 worker가 같은 build cache를 공유하지 않습니다. """
+        examples = [
+            (f"Library/Example{index}", ROOT, "standard")
+            for index in range(4)
+        ]
+        observed: list[tuple[str, str]] = []
+
+        def compile_stub(
+            _cli: Path, _config: Path, environment: dict[str, str],
+            _build_root: Path, _log_root: Path, identity: str,
+            _sketch: Path, _profile: str,
+        ) -> dict[str, str]:
+            observed.append((identity, environment["NUCODE_BUILD_CACHE_ROOT"]))
+            return {"identity": identity, "status": "PASS"}
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            environment = {"NUCODE_BUILD_CACHE_ROOT": str(root / "shared")}
+            with mock.patch.object(MODULE, "compile_example", side_effect=compile_stub):
+                results, execution = MODULE.compile_examples(
+                    root / "arduino-cli.exe",
+                    root / "arduino-cli.yaml",
+                    environment,
+                    root / "build",
+                    root / "logs",
+                    examples,
+                    2,
+                    root / "cache",
+                )
+        self.assertEqual(4, len(results))
+        self.assertEqual("parallel_isolated_worker_caches", execution["mode"])
+        self.assertEqual(2, execution["workers"])
+        self.assertEqual(2, execution["cache_roots"])
+        roots = {cache for _identity, cache in observed}
+        self.assertEqual(2, len(roots))
+        self.assertNotIn(environment["NUCODE_BUILD_CACHE_ROOT"], roots)
 
 
 if __name__ == "__main__":
