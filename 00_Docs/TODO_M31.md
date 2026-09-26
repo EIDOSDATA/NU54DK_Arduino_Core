@@ -3,17 +3,17 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | `v0.5.0` |
-| 현재 상태 | **W01~W06 완료 / 완료 6/8 작업 묶음, W07~W08 미착수** |
+| 현재 상태 | **W01~W07 완료 / 완료 7/8 작업 묶음, W08 미착수** |
 | 선행 완료 | M30 W01~W08 8/8, test ID 10/10, 실제 전원 차단 4지점 × 3회 = 12/12 |
 | 병행 Host 상태 | HOST-W01~HOST-W03 완료 3/8, HOST-W04~HOST-W08 사용자 지시로 보류; M31과 독립 집계 |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, 고정 lock revision |
-| 기능 검증 장비 | NU54DK 3개를 식별했으나 W06 진단 시 두 보드가 debug protection 상태여서 새 실기는 `HOLD`; W07 전 물리 재연결/전원 재인가 뒤 접근성·SHA-256 probe identity·serial·role·firmware 재대조 필요 |
+| 기능 검증 장비 | 전원 재인가 뒤 NU54DK 3개의 접근성·SHA-256 probe identity·serial·role·firmware를 재대조하고 W07 HIL PASS. 다음 실물 작업도 과거 상태를 추정하지 않고 직전 재확인 |
 | 최종 갱신일 | 2026-09-26 |
 
 2026-09-21 결정으로 **M31 완료 후 v0.5.0 Windows 릴리스**를 준비한다. main 이력 정리 이후의
 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 과거의 설명 통합 요청은 문서만 수정한
 시점의 이력이며, 현재는 `M31-MEM-OPT`에서 메모리 최적화 P0·P1·P2를 완료했다.
-이후 W07 → W08로 이어간다. **미착수**는 원장 상태이며
+이후 남은 작업은 W08이다. **미착수**는 원장 상태이며
 현재 시험 실행 중이라는 뜻이 아니다. Host는 보류한다. M32/M33은 후속 버전(미정)이다.
 
 M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF·connected Channel Sounding
@@ -25,7 +25,7 @@ M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF
 예제 판정 규칙은 [NCS Bluetooth 전체 기능·예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
 기능별 목표는 [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>),
 Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
-계획 개정 자체는 구현 증거가 아니다. W01~W06 완료와 W07 이후 미완료 범위는
+계획 개정 자체는 구현 증거가 아니다. W01~W07 완료와 W08 미완료 범위는
 [착수 계약](<01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md>)과
 [W02 최종 완료 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>),
 [W03 최종 완료 기록](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에서 구분한다.
@@ -70,11 +70,11 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 | --- | --- | --- | --- |
 | M31-W01 capability·착수 계약 | **완료** | ISO·전체 Audio profile·DF·CS 적용성, SDC와 Zephyr LL의 기본 안테나 raw IQ 수신 구성 조사·target build, 전체 NCS Bluetooth sample inventory, 역할·자원·시험 기준 고정; 1보드 capability 실행 | 두 JSON·schema/parser·Host 20/20 negative·전체 Host gate·5구성 clean target/HCI query, parity 703행; [W01 exact audit](<04_검증 기록/evidence/m31-w01-exact-8c125a22/w01-closure-audit.json>) |
 | M31-W02 raw ISO 기반 | **완료** | 공개 `RawCis`/`RawBis` 기반 **11개 역할**의 사용자 payload와 정지·재시작을 각 20회 실기 PASS. 잘못된 Broadcast Code의 유효 SDU 유출 0, 같은 image의 정상 Code 복구 100/100, 강제 sync loss 후 새 session 100/100. 독립 Sketchbook 개발 package 485파일 무결성·고정 prerequisite·11/11 예제 발견·빌드와 같은 revision의 두/세 보드 11역할 실기 20회씩 PASS. 공개 예제 감사 82개 중 0건 | [W02 최종 완료](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)·[완료 audit](<04_검증 기록/evidence/m31-w02-installed-examples-b47aaf40/closure-audit.json>)·[오류 후 복구](<04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md>)·[sync loss 재시작](<04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md>)·[이전 고정 시험 audit](<04_검증 기록/evidence/m31-w02-arduino-e6ae812e/closure-audit.json>) |
-| M31-W03 전체 LE Audio profile | **완료** | W03-01~11의 공개 Arduino 역할과 적용 가능한 native 기반을 모두 닫았다. BAP unicast/broadcast·BASS·CAP·CSIP·PBP·VCP/VOCS/AICS/MICP, MCP/MCS·CCP/TBS, TMAP/GMAP, HAP/HAS의 build/runtime·negative·peer-loss 복구와 합성 PCM RF data path를 실제 2~3보드에서 확인했다. Media/Call은 각 100/100·negative 각 20/20·reconnect 20/20·180초 soak, TMAP/GMAP은 각 180초·stop/restart 20/20·drop 0, HAP/HAS는 preset 100/100·두 negative 각 20/20·복구 20/20이다. 외장 audio·상용 peer·qualification·의료/음향 성능은 사용자 후속 비차단 `NOT RUN`이며 M31 전체는 W07~W08 잔여로 `not_completed`다 | [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[BAP broadcast](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)·[BASS](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>)·[CAP](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)·[Audio Control](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>)·[CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)·[PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)·[Media/Call](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>)·[TMAP/GMAP](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>)·[HAP/HAS](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>)·[W03 완료 감사](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)·[exact closure](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
+| M31-W03 전체 LE Audio profile | **완료** | W03-01~11의 공개 Arduino 역할과 적용 가능한 native 기반을 모두 닫았다. BAP unicast/broadcast·BASS·CAP·CSIP·PBP·VCP/VOCS/AICS/MICP, MCP/MCS·CCP/TBS, TMAP/GMAP, HAP/HAS의 build/runtime·negative·peer-loss 복구와 합성 PCM RF data path를 실제 2~3보드에서 확인했다. Media/Call은 각 100/100·negative 각 20/20·reconnect 20/20·180초 soak, TMAP/GMAP은 각 180초·stop/restart 20/20·drop 0, HAP/HAS는 preset 100/100·두 negative 각 20/20·복구 20/20이다. 외장 audio·상용 peer·qualification·의료/음향 성능은 사용자 후속 비차단 `NOT RUN`이며 M31 전체는 W08 잔여로 `not_completed`다 | [native BAP LC3](<04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md>)·[BAP broadcast](<04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md>)·[BASS](<04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md>)·[CAP](<04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md>)·[Audio Control](<04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md>)·[CSIP](<04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md>)·[PBP](<04_검증 기록/210_M31_W03_Arduino_PBP_완료.md>)·[Media/Call](<04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md>)·[TMAP/GMAP](<04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md>)·[HAP/HAS](<04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md>)·[W03 완료 감사](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)·[exact closure](<04_검증 기록/evidence/m31-w03-close-dc312cce/closure-audit.json>) |
 | M31-W04 Direction Finding | **완료** | 제품 SDC `CteBeacon` start/stop 20/20·invalid length 거부 20/20, 별도 opt-in Zephyr LL `ConnectedCteResponder` 무선 CTE report 20건·IQ sample 1,640개·cleanup PASS를 현재 소스로 재검증했다. 제품 SDC IQ RX·AoD는 `UNSUPPORTED`로 닫았고, 과거 LL 내부 진단·connectionless 실패는 제품 RX 지원으로 승격하지 않았다. 첫 연결형 재검증 IQ 0건 FAIL은 원본 보존하고 허용된 1회 재시도만 PASS했다. | [W04 완료 263](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) · [exact audit](<04_검증 기록/evidence/m31-w04-close-20260925/closure-audit.json>) · [지원 경계 259](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
 | M31-W05 connected Channel Sounding | **완료** | secure ACL·raw RAS 100개와 stop/restart·disconnect/reconnect 각 20/20, 실제 256-step·분할 RAS 유효 raw 1,000개·양측 STOP, 최대 절차 peer 이탈·자동 재연결 뒤 유효 raw 20개를 확인했다. 비암호화 ATT 5·wrong peer/service 부재·one-sided stale bond의 secure RAS 수용 0과 flash 직후 전체 경로 독립 2회도 PASS했다. stale-key ACL은 오류 뒤 STOP까지 유지될 수 있고 간헐 counter gap은 비차단 관찰값이다. 비보정 RTT의 정확도는 미보증이다. | [W05 완료 264](<04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) · [exact audit](<04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json>) · [비암호화 거부](<04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md>) · [flash 직후 복구](<04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md>) · [P2 peer-loss](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | M31-W06 자원·수명주기·회귀 | **완료** | 독립 role image 4개 family의 stack/heap·buffer·stream/connection 예산과 stop/disconnect 반환을 P2 exact 수치로 확정하고 기존 크기를 유지했다. M19~M30 12/12는 현재 소스 target 18개 build·전체 Host 회귀와 기존 family별 물리 분모로 PASS했다. 새 HIL 진단의 protected probe 2개는 `HOLD`이며 PASS 근거에서 제외했다 | [W06 완료 265](<04_검증 기록/265_M31_W06_자원_수명주기와_영향_회귀_완료.md>) · [exact audit](<04_검증 기록/evidence/m31-w06-close-20260926/closure-audit.json>) · [P2 완료](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>). 네 기능 전체 동시 실행은 완료 조건이 아님 |
-| M31-W07 기능 HIL·예제 실행 | **미착수** | 3보드 역할 재배치로 적용 가능한 모든 board-only subcase 유한 실행, Arduino 설치 예제의 실제 실행; 외부 peer 행 별도 관리 | exact image·익명 mapping·transcript·원본 hash, 기능/role별 PASS·FAIL·NOT RUN·UNSUPPORTED 근거 |
+| M31-W07 기능 HIL·예제 실행 | **완료** | 독립 설치 package 4개 library·49개 sketch 49/49 build, 공개 예제 113개 issue 0. 3보드 역할 재배치로 ISO 20/20/20·2,000 frame missing 0, Audio 20/20, DF 20/20+invalid 20/20, CS 100+20/20+20/20과 STOP 확인. 적용 39 PASS·외부 3 NOT RUN·제품 SDC IQ RX 1 UNSUPPORTED | [W07 완료 266](<04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) · [exact audit](<04_검증 기록/evidence/m31-w07-close-20260926/closure-audit.json>) |
 | M31-W08 마감·Windows 릴리스 준비 | **미착수** | API·예제·지원표·문서·원장 일치, Host/target 회귀, M31 8/8 판정과 v0.5.0 Windows 패키지·설치·RC 준비. M32/M33은 후속 버전으로 인계 | 기능 완료와 공개 판정 별도. [v0.5.0 공개 gate](TODO_v0.5.0.md#6-결과공개-규칙), known limits·후속 dependency; 실제 공개는 별도 승인 |
 
 M32-A는 modern LE controller/Host·Nordic 확장, M32-B는 Mesh와 Mesh 1.1, M32-C는 최소 radio와
@@ -130,8 +130,8 @@ SDC 내부 사용 최고치는 노출되지 않으므로 정적 symbol 크기를
 
 ### 다음 실행 순서
 
-1. 완료한 W04~W06의 기능·자원·회귀 원본과 새 HIL `HOLD` 원본을 다시 쓰지 않는다.
-2. W07 설치 예제·적용 역할 HIL → W08 마감·Windows 릴리스 준비 순서로 진행한다.
+1. 완료한 W04~W07의 기능·자원·회귀·설치 예제·HIL 원본과 실패/HOLD 원본을 다시 쓰지 않는다.
+2. W08 원장·지원표·문서 마감과 Windows 릴리스 준비를 진행한다.
 
 ## 3. W03 세부 완료 상태 — 11/11
 
@@ -177,9 +177,9 @@ W03-10 TMAP/GMAP, W03-11 HAP/HAS까지 모두 완료했다.
 
 ## 4. 기존 착수 순서와 재개 기준
 
-W01~W06은 완료했다. 1~8번의 원장·기준선은 보존하며 재구현하지 않는다.
-후속 기능 개발은 완료한 P0~P2와 W04·W05 재검증을 기준선으로 삼아 W06부터
-재개한다. 과거 착수 절차를 현재 미완료 TODO로 다시 집계하지 않는다.
+W01~W07은 완료했다. 1~8번의 원장·기준선은 보존하며 재구현하지 않는다.
+후속 마감은 완료한 P0~P2와 W04~W07을 기준선으로 삼아 W08에서 재개한다.
+과거 착수 절차를 현재 미완료 TODO로 다시 집계하지 않는다.
 
 1. 저장소·branch·HEAD·미커밋 변경·board submodule·SDK/toolchain lock과 변경 전 전체 Host 기준선을
    기록한다. 다른 작업의 변경 소유권과 실행 중 검사를 보존한다. CI/CD 조회·대기는 최신 사용자
@@ -213,24 +213,25 @@ W01~W06은 완료했다. 1~8번의 원장·기준선은 보존하며 재구현�
 7. W01 판정 후 W02의 CIS 중앙/주변 역할과 BIS source/sink부터 구현한다. 2보드 기본 → 3보드 복수
    수신/적용 가능한 combined 역할 → ISO time sync 순으로 기능을 닫고 W03에 인계한다.
 8. W04 DF와 W05 CS는 최적화 image에서 채택 기능·negative·복구 경계를 재검증해 완료했다.
-   W06 독립 image 자원·수명주기·영향 회귀까지 완료했으며 다음은 W07이다.
+   W06 독립 image 자원·수명주기·영향 회귀와 W07 설치 예제·3보드 역할 HIL까지 완료했으며
+   다음은 W08이다.
    앞선 RX 후보 조사·HIL 계획은 [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)의
    고정 SDK 지원 판정으로 대체됐다. 제품 SDC IQ RX는 `UNSUPPORTED`로 명시하고, 과거 LL
    진단을 자동 재개하거나 SDK/controller를 변경하지 않는다. HOST-W04 이후는 계속 보류한다.
 
 ## 5. 예제 품질과 설치 계약
 
-- [ ] 예제마다 목표 기능·upstream origin·필요 보드 수·역할·profile 선택·실행 순서·예상 Serial 출력 명시
-- [ ] 최소 예제, 상대 역할 예제, negative/recovery 예제를 기능에 맞게 제공; 이름과 경로는 원장에서 고정
-- [ ] Arduino `setup()`/`loop()` 경로에서 실제 `NUCODE_*` 공개 API 호출; Zephyr/NCS 호출은 library `.cpp`/`src/internal`에 두고 고급 예제의 Kconfig 설정을 설명
-- [ ] queue/buffer 수명, error 처리, timeout, 종료·재시작, 자원 반환을 예제에 포함하고 busy-loop 회피
-- [ ] 한국어 Doxygen·BSD/Allman·탭 폭 4·모든 제어문 중괄호 적용
-- [ ] clean Arduino package 설치의 example discovery → compile → role firmware → Serial oracle를 연결
-- [ ] Kconfig profile과 build options를 코드 밖의 검증된 설정으로 제공하고 임의 SDK patch 요구 금지
-- [ ] 실험적·미지원·사용자 후속 실물 검증의 책임·비차단 범위를 example README와 parity 원장에 일치시킴
+- [x] 예제마다 목표 기능·upstream origin·필요 보드 수·역할·profile 선택·실행 순서·예상 Serial 출력 명시
+- [x] 최소 예제, 상대 역할 예제, negative/recovery 예제를 기능에 맞게 제공; 이름과 경로는 원장에서 고정
+- [x] Arduino `setup()`/`loop()` 경로에서 실제 `NUCODE_*` 공개 API 호출; Zephyr/NCS 호출은 library `.cpp`/`src/internal`에 두고 고급 예제의 Kconfig 설정을 설명
+- [x] queue/buffer 수명, error 처리, timeout, 종료·재시작, 자원 반환을 예제에 포함하고 busy-loop 회피
+- [x] 한국어 Doxygen·BSD/Allman·탭 폭 4·모든 제어문 중괄호 적용
+- [x] clean Arduino package 설치의 example discovery → compile → role firmware → Serial oracle를 연결
+- [x] Kconfig profile과 build options를 코드 밖의 검증된 설정으로 제공하고 임의 SDK patch 요구 금지
+- [x] 실험적·미지원·사용자 후속 실물 검증의 책임·비차단 범위를 example README와 parity 원장에 일치시킴
 
-M31-W07/W08은 v0.5.0에 채택한 M28~M31 예제의 Windows 설치·발견·compile·실행과 배포 준비를
-닫는다. M33은 후속 버전의 추가 GATT/profile·template와 전체 NCS catalog, 세 Host 확장 검증을
+M31-W07은 v0.5.0에 채택한 M31 예제의 독립 설치·발견·compile·3보드 실행을 닫았다. W08은
+전체 원장·지원표와 Windows 배포 준비를 닫는다. M33은 후속 버전의 추가 GATT/profile·template와 전체 NCS catalog, 세 Host 확장 검증을
 맡는다. M31 예제 패키징을 M33으로 미뤄 v0.5.0 배포 gate를 생략하지 않는다.
 
 ## 6. HOST-W04~HOST-W06 TODO — 사용자 지시로 보류
@@ -260,8 +261,9 @@ Apple/Google 및 외장 I/O의 사용자 후속 검증은 이 최종 Host gate�
 | W03 | 2~3개 합성 PCM/encoded payload와 Audio profile 제어·상태·실제 RF data path; 외장 I/O 구현·예제·설정 안내와 자동 검사 | 외부 mic/codec/speaker·상용 phone/headset의 실물 운용/상호운용은 사용자 후속 `NOT RUN`, 개발·릴리스 비차단 |
 | W04 | 지원되는 CTE TX·response 기능·예제·오류 및 변경 영향 재검증 | 제품 SDC IQ RX·AoD는 고정 SDK `UNSUPPORTED`. LL RX 진단 이력은 보존하고 P2에서 재개하지 않음. 정밀 각도·외장 안테나 실물은 별도 |
 | W05 | 2개 CS initiator/reflector·RAS·raw 결과·거리 추정 출력·보안/복구, 3개 peer 분리 | cross-vendor CS peer 또는 별도로 요청한 정밀 거리/각도 시험 |
-| W06 완료 | 독립 image별 자원·수명주기와 M19~M30 회귀 | 네 기능 전체 동시 실행은 요구하지 않음. 새 실물 debug protection 진단은 `HOLD`로 PASS 근거와 분리 |
-| W07~W08 | 3개 역할을 순차 재배치한 기능 HIL, 설치 예제·원장·문서 인계 | 해결되지 않은 필수 board-only 결함·mapping/접근 문제는 미완료; 사용자 후속 외부 실물 검증은 비차단 |
+| W06 완료 | 독립 image별 자원·수명주기와 M19~M30 회귀 | 네 기능 전체 동시 실행은 요구하지 않음. 당시 debug protection 진단 `HOLD`는 W06 PASS 근거와 분리하고 W07 전원 재인가 뒤 접근성 재확인 |
+| W07 완료 | 3개 역할을 순차 재배치한 기능 HIL, 설치 예제 49/49·43역할 원장 | 적용 39 PASS, 외부 3 NOT RUN, 제품 SDC IQ RX 1 UNSUPPORTED. 최초 preflight FAIL과 제한 재시도 PASS 모두 보존 |
+| W08 | 원장·지원표·문서 인계와 Windows 릴리스 준비 | 해결되지 않은 필수 마감 결함은 미완료; 사용자 후속 외부 실물 검증은 비차단 |
 | HOST | 별도 재개 지시 후 manifest·resolver·launcher·negative와 가능한 자동 검사 | Ubuntu/macOS 실제 설치·USB upload·serial/debug는 해당 OS 후속 릴리스의 사용자 gate; v0.5.0 범위 밖 |
 
 CTE TX 명령 수용·연결 peer 동작만 관찰했다면 그 범위만 기록한다. 수신 IQ 증거가 없는데 CTE
@@ -278,7 +280,7 @@ GPIO·전원 차단을 실행하지 않는다. M30의 4지점 × 3회 정책과 
 
 ## 8. 고정 test family와 W01 수치 확정 TODO
 
-다음 **10개 test family는 기능 식별자**다. 작업 분모 8과 다르며 현재 CAP·PARITY·ISO·AUDIO 4/10 PASS다.
+다음 **10개 test family는 기능 식별자**다. 작업 분모 8과 다르며 현재 8/10 PASS다.
 각 family 아래 역할·profile별 subcase를 W01 원장에 전수 열거하고 그 분모를 함께 고정한다.
 아래 시간·반복은 기능 검증의 계획 기준이며 제품 성능 보증이 아니다. SDU/codec/PHY·허용 손실과
 구체 자원 상한은 고정 sample 기본값·board budget을 대조해 첫 시험 전에 계약과 JSON에 확정한다.
@@ -294,7 +296,7 @@ GPIO·전원 차단을 실행하지 않는다. M30의 4지점 × 3회 정책과 
 | M31-CS-01 | W05/W07, secure initiator/reflector | procedure 100회·전체 600초 timeout·stop/restart 20회, 30초 내 복구; raw/추정 결과 수·유효/invalid 분모, 미인증·wrong peer 수용 0 |
 | M31-NEG-01 | W01~W07, parser/API/runtime 오류 | malformed·stale·wrong role·unsupported·자원 고갈·wrong key·peer loss class별 Host/해당 target case, class당 20회·30초 복구 timeout, 잘못된 성공·누수 0 |
 | M31-REG-01 | W06/W08, 영향 회귀 | M19~M30 영향 목록 전수와 M31 독립 image/profile별 자원·수명주기, family별 기존 수치 재사용; cross-link·보안·자원 회수 오류 0. 네 기능 전체 동시 실행은 분모가 아님 |
-| M31-EXAMPLE-01 | W07/W08, Arduino 예제 | 채택된 M31 example discovery/build 100%, board-only role runtime 전수와 README oracle 일치; 외부 peer/I/O 미실행 분모 별도 |
+| M31-EXAMPLE-01 | W07, Arduino 예제 | 채택된 M31 example discovery/build 100%, board-only role runtime 전수와 README oracle 일치; 외부 peer/I/O 미실행 분모 별도 |
 | M31-CLOSE-01 | W08, 문서·원장 인계 | 모든 M31 row의 state·숫자·revision·evidence·링크 정합, 문서 gate·JSON/parser·diff check, M32/M33 미소유 TODO 0 |
 
 각 subcase는 최대 실행 시간, 즉시 중단 오류, 실패 진단 경로와 동일 조건 재검증 횟수를 기록한다.

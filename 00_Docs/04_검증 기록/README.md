@@ -1,8 +1,8 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**이고, 개발 소스는 **M28·M29·M30 완료, M31 6/8**입니다. M31-W03 LE Audio
-profile은 **11/11 PASS**, W04 Direction Finding, W05 Channel Sounding과 W06 자원·수명주기·영향 회귀는 **PASS**로 닫았으며 W07~W08은 완료가 아닙니다. HOST-W01~W03은 완료했고
+**v0.4.1**이고, 개발 소스는 **M28·M29·M30 완료, M31 7/8**입니다. M31-W03 LE Audio
+profile은 **11/11 PASS**, W04 Direction Finding, W05 Channel Sounding, W06 자원·수명주기·영향 회귀와 W07 설치 예제·3보드 역할 HIL은 **PASS**로 닫았으며 W08은 완료가 아닙니다. HOST-W01~W03은 완료했고
 HOST-W04~W08은 사용자 보류 상태입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
@@ -15,7 +15,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 구분 | 상태 | 기준 문서 |
 | --- | --- | --- |
 | 설치·지원 | `v0.4.1`만 지원 | [v0.4.1 유지보수 기록](129_v0.4.1_설치기_유지보수_릴리스.md) |
-| 개발 소스 | M28·M29·M30 완료, M31 6/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
+| 개발 소스 | M28·M29·M30 완료, M31 7/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
 | M31 메모리 최적화 P0·P1 | 완료. P2의 동적 계측·안전 판정과 구별 | [P0](222_M31_메모리_최적화_P0_완료.md) · [P1](237_M31_메모리_최적화_P1_정적_저장소_완료.md) |
@@ -23,7 +23,8 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | M31-W04 | **완료.** 제품 SDC beacon 20/20·invalid 20/20, opt-in LL connected response report 20건·1,640 sample·cleanup PASS. 제품 SDC IQ RX·AoD `UNSUPPORTED`, 이전 실패 원본 보존 | [W04 완료](263_M31_W04_Direction_Finding_완료.md) · [support boundary](259_M31_P2_DF_고정_SDK_지원_경계.md) · [exact audit](evidence/m31-w04-close-20260925/closure-audit.json) |
 | M31-W05 | **완료.** secure RAS 100·20/20·20/20, 256-step raw 1,000, peer-loss 복구, 비암호화·wrong peer·one-sided stale-key 수용 0, flash 직후 독립 2회 PASS. ACL 유지 오류 경계와 실패 원본 보존 | [W05 완료](264_M31_W05_Channel_Sounding_완료.md) · [exact audit](evidence/m31-w05-close-20260925/closure-audit.json) |
 | M31-W06 | 완료 | [265번 완료 기록](265_M31_W06_자원_수명주기와_영향_회귀_완료.md) |
-| M31-W07~W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
+| M31-W07 | 완료 | [266번 완료 기록](266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md) |
+| M31-W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 
 지원 중인 `v0.4.1`과 개발 브랜치의 M31 결과는 서로 다른 범위입니다. M31 PASS를 설치본의
@@ -48,7 +49,7 @@ PASS/FAIL/HOLD와 원본 JSON은 실행 당시 증거이며, 당시의 다음 �
 P2 기술 축인 **지원 범위의 오류·최악 부하 → stack/heap 여유·크기 결정 → 동등 Nordic native
 비용 비교**는 [262번](262_M31_메모리_최적화_P2_세_축_완료.md)에서 모두 PASS했다.
 기존 크기를 유지했으며 모든 물리 전원 차단·다중 link 조합을 추가하지 않았다.
-W05 기능 마감과 W06 자원·수명주기·영향 회귀를 완료했으며 W07~W08은 별도 M31 작업이다.
+W05 기능 마감, W06 자원·수명주기·영향 회귀와 W07 설치 예제·역할 HIL을 완료했으며 W08은 별도 M31 작업이다.
 
 ## 최근 완료·재개 기록
 
@@ -56,6 +57,7 @@ W05 기능 마감과 W06 자원·수명주기·영향 회귀를 완료했으며 
 | --- | --- |
 | [264 — M31-W05 Channel Sounding 완료](264_M31_W05_Channel_Sounding_완료.md) | secure RAS·반복·256-step·peer-loss, 비암호화·wrong peer·one-sided stale-key negative와 flash 직후 경계를 닫고 M31 5/8 확정 |
 | [265 — M31-W06 자원·수명주기·영향 회귀 완료](265_M31_W06_자원_수명주기와_영향_회귀_완료.md) | 독립 image 4개 family 자원/종료 반환, target recovery 3종, M19~M30 12/12 영향 회귀를 닫고 M31 6/8 확정; 새 실물 debug protection 진단은 HOLD로 분리 |
+| [266 — M31-W07 설치 예제와 3보드 역할 HIL 완료](266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md) | 독립 설치 package 49/49, 공개 예제 113개 issue 0, ISO·Audio·DF·CS 최종 3보드 HIL과 43역할 분모를 닫고 M31 7/8 확정 |
 | [263 — M31-W04 Direction Finding 완료](263_M31_W04_Direction_Finding_완료.md) | 제품 SDC connectionless AoA CTE TX와 별도 opt-in Zephyr LL connected response를 현재 소스로 재검증하고, 제품 SDC IQ RX·AoD `UNSUPPORTED` 경계를 고정. M31 4/8 |
 | [262 — P2 세 축 완료](262_M31_메모리_최적화_P2_세_축_완료.md) | CoC 상대 credit·Audio wrong Code·CS 256-step peer loss, 최종 stack/heap 유지, CoC/Audio 동등 native 비교 PASS. P0~P2 완료 |
 | [261 — P2 세 잔여 축·문서 전수 정비](261_P2_잔여_세_축_확정과_문서_전수_정비.md) | 현행 잔여 세 축과 제외 경계 확정, 문서 전수 검토·인계 정비; 신규 P2 실기 아님 |
@@ -90,7 +92,7 @@ W05 기능 마감과 W06 자원·수명주기·영향 회귀를 완료했으며 
 | [222 — M31 메모리 최적화 P0 완료](222_M31_메모리_최적화_P0_완료.md) | compiler probe·resolver·52 preset·55 image의 config/source/ELF/RAM 상한과 금지 symbol gate, P1 인계 |
 | [221 — main 마일스톤별 이력 정리](221_main_마일스톤별_이력_정리.md) | 공개 v0.4.1 마감 뒤 189커밋→7묶음, 원격 archive 원본 보존·tree 동일성·새 checkout 인계 |
 | [220 — M31 릴리스 전환·문서 정비](220_M31_릴리스_전환과_문서_전수_정비.md) | v0.5.0 Windows·M31 공개 준비, 최적화 우선·main/M31-MEM-OPT 인계, 기존 W04 raw IQ 실패 원본 보존 |
-| [219 — M31-W06 메모리 감사·최적화 계약](219_M31_W06_메모리_점유_감사와_최적화_계약.md) | Audio·CS·DF 정적 RAM 원인, lean fragment·pool·회귀 gate. W06은 265번에서 완료했고 최신 순서는 W07 |
+| [219 — M31-W06 메모리 감사·최적화 계약](219_M31_W06_메모리_점유_감사와_최적화_계약.md) | Audio·CS·DF 정적 RAM 원인, lean fragment·pool·회귀 gate. W06은 265번에서 완료했고 최신 순서는 W08 |
 | [218 — W05 flash 직후 복구 재검증](218_M31_W05_flash_직후_RAS_복구_재검증.md) | 두 exact attempt의 raw RAS·stop/restart·disconnect/reconnect PASS, 과거 간헐 중단 원인 확정 아님 |
 | [217 — W05 동일 ACL ATT 오류 진단](217_M31_W05_비암호화_RAS_ATT_오류_진단.md) | 비암호화 RAS read 20/20 거부, request 재사용 경계·회귀 |
 | [216 — W04 controller IQ event 진단](216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md) | 당시 controller event 102건·Host gate 폐기·sample 0. 최신 내부 callback 시도는 220에 별도 보존 |

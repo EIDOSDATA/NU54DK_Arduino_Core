@@ -52,8 +52,13 @@
     {
       "id": "M31-W07",
       "title": "three_board_hil_examples",
-      "status": "not_started",
-      "exact_evidence": null
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/closure-audit.json",
+      "installed_example_status": "PASS",
+      "role_denominator": 43,
+      "applicable_role_passed": 39,
+      "external_not_run": 3,
+      "unsupported": 1
     },
     {
       "id": "M31-W08",
@@ -624,7 +629,12 @@
       "source_revision": "1d058140dda468ba19dcfdf3b3b26b1202100efb",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-cis-1d058140/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-cis-1d058140/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "raw_iso_peripheral",
@@ -633,7 +643,12 @@
       "source_revision": "1d058140dda468ba19dcfdf3b3b26b1202100efb",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-cis-1d058140/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-cis-1d058140/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "raw_iso_broadcaster",
@@ -643,7 +658,14 @@
       "build_status": "PASS",
       "runtime_status": "PASS",
       "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-encrypted-1bb127b4/manifest.json",
-      "related_sketches": ["libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino"]
+      "related_sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino"
+      ],
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "raw_iso_receiver",
@@ -653,7 +675,14 @@
       "build_status": "PASS",
       "runtime_status": "PASS",
       "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-encrypted-1bb127b4/manifest.json",
-      "related_sketches": ["libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino"]
+      "related_sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino"
+      ],
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "iso_combined_source",
@@ -662,7 +691,12 @@
       "source_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "iso_combined_peer",
@@ -671,7 +705,12 @@
       "source_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "iso_combined_receiver",
@@ -680,7 +719,12 @@
       "source_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "iso_time_sync_sender",
@@ -689,7 +733,12 @@
       "source_revision": "7e4c0109d0f292c32257a3f0dfeb5bbbb5353da9",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "iso_time_sync_receiver",
@@ -698,7 +747,12 @@
       "source_revision": "7e4c0109d0f292c32257a3f0dfeb5bbbb5353da9",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/iso-combined.json"
     },
     {
       "id": "W03-01:codec",
@@ -707,27 +761,46 @@
       "source_revision": "5219626ba016449b629b0d72c8246d533670d2bd",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-02:client",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSource/BapUnicastSource.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSource/BapUnicastSource.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexClient/BapUnicastDuplexClient.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexClient/BapUnicastDuplexClient.ino"
+      ],
       "source_revision": "d29ee27e61acf600b6792282be8d0c3d3bf50a1c",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-duplex-pair-d29ee27e/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-duplex-pair-d29ee27e/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-02:server",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexServer/BapUnicastDuplexServer.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexServer/BapUnicastDuplexServer.ino"
+      ],
       "source_revision": "d29ee27e61acf600b6792282be8d0c3d3bf50a1c",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-duplex-pair-d29ee27e/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-duplex-pair-d29ee27e/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-03:source",
@@ -736,7 +809,12 @@
       "source_revision": "473929f20d6c71503ae460c933d413268ec35222",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-03:sink",
@@ -745,7 +823,12 @@
       "source_revision": "473929f20d6c71503ae460c933d413268ec35222",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-04:source",
@@ -754,7 +837,12 @@
       "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-04:scan_delegator",
@@ -763,7 +851,12 @@
       "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-04:assistant",
@@ -772,27 +865,46 @@
       "source_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-05:initiator",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CapUnicastInitiator/CapUnicastInitiator.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CapUnicastInitiator/CapUnicastInitiator.ino"
+      ],
       "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-05:acceptor",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CapUnicastAcceptor/CapUnicastAcceptor.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CapUnicastAcceptor/CapUnicastAcceptor.ino"
+      ],
       "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-05:commander",
@@ -801,7 +913,12 @@
       "source_revision": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-06:coordinator",
@@ -810,7 +927,12 @@
       "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-06:member_a",
@@ -819,7 +941,12 @@
       "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-06:member_b",
@@ -828,7 +955,12 @@
       "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-07:source",
@@ -837,7 +969,12 @@
       "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-07:sink",
@@ -846,7 +983,12 @@
       "source_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-08:controller",
@@ -855,7 +997,12 @@
       "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-08:renderer",
@@ -864,7 +1011,12 @@
       "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-08:microphone",
@@ -873,57 +1025,99 @@
       "source_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-09:controller",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlClient/MediaControlClient.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlClient/MediaControlClient.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CallControlClient/CallControlClient.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CallControlClient/CallControlClient.ino"
+      ],
       "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-09:server",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer/MediaControlPlayer.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer/MediaControlPlayer.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/CallControlServer/CallControlServer.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CallControlServer/CallControlServer.ino"
+      ],
       "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-10:central",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaGateway/TelephonyMediaGateway.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaGateway/TelephonyMediaGateway.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/GamingAudioGateway/GamingAudioGateway.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioGateway/GamingAudioGateway.ino"
+      ],
       "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-10:peripheral",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaTerminal/TelephonyMediaTerminal.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaTerminal/TelephonyMediaTerminal.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/GamingAudioTerminal/GamingAudioTerminal.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioTerminal/GamingAudioTerminal.ino"
+      ],
       "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-10:broadcast",
       "planned_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaBroadcaster/TelephonyMediaBroadcaster.ino",
       "actual_sketch": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaBroadcaster/TelephonyMediaBroadcaster.ino",
-      "related_sketches": ["libraries/NUCODE_BLE_Audio/examples/TelephonyMediaReceiver/TelephonyMediaReceiver.ino", "libraries/NUCODE_BLE_Audio/examples/GamingAudioBroadcaster/GamingAudioBroadcaster.ino", "libraries/NUCODE_BLE_Audio/examples/GamingAudioReceiver/GamingAudioReceiver.ino"],
+      "related_sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaReceiver/TelephonyMediaReceiver.ino",
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioBroadcaster/GamingAudioBroadcaster.ino",
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioReceiver/GamingAudioReceiver.ino"
+      ],
       "source_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-11:hearing_client",
@@ -932,7 +1126,12 @@
       "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "W03-11:hearing_server",
@@ -941,7 +1140,12 @@
       "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/audio-duplex.json"
     },
     {
       "id": "cte_beacon",
@@ -950,7 +1154,12 @@
       "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/df-beacon.json"
     },
     {
       "id": "cte_peripheral",
@@ -959,7 +1168,12 @@
       "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "current_family_regression_plus_preserved_exact_role_evidence",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/df-beacon.json"
     },
     {
       "id": "raw_iq_receiver_candidate",
@@ -968,7 +1182,12 @@
       "source_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
       "build_status": "UNSUPPORTED",
       "runtime_status": "UNSUPPORTED",
-      "evidence": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md"
+      "evidence": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+      "w07_build_status": "UNSUPPORTED",
+      "w07_build_revision": null,
+      "w07_build_evidence": null,
+      "w07_hil_basis": "not_applicable",
+      "w07_family_evidence": null
     },
     {
       "id": "external_angle_control",
@@ -977,7 +1196,12 @@
       "source_revision": null,
       "build_status": "NOT_RUN",
       "runtime_status": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "w07_build_status": "NOT_RUN",
+      "w07_build_revision": null,
+      "w07_build_evidence": null,
+      "w07_hil_basis": "not_applicable",
+      "w07_family_evidence": null
     },
     {
       "id": "cs_initiator",
@@ -986,7 +1210,12 @@
       "source_revision": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/cs-ras.json"
     },
     {
       "id": "cs_reflector",
@@ -995,7 +1224,12 @@
       "source_revision": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
       "build_status": "PASS",
       "runtime_status": "PASS",
-      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json"
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json",
+      "w07_build_status": "PASS",
+      "w07_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "w07_build_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/installed-examples.json",
+      "w07_hil_basis": "direct_current_role",
+      "w07_family_evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/cs-ras.json"
     },
     {
       "id": "cs_result",
@@ -1004,7 +1238,12 @@
       "source_revision": null,
       "build_status": "NOT_RUN",
       "runtime_status": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "w07_build_status": "NOT_RUN",
+      "w07_build_revision": null,
+      "w07_build_evidence": null,
+      "w07_hil_basis": "not_applicable",
+      "w07_family_evidence": null
     },
     {
       "id": "cs_multipeer",
@@ -1013,7 +1252,12 @@
       "source_revision": null,
       "build_status": "NOT_RUN",
       "runtime_status": "NOT_RUN",
-      "evidence": null
+      "evidence": null,
+      "w07_build_status": "NOT_RUN",
+      "w07_build_revision": null,
+      "w07_build_evidence": null,
+      "w07_hil_basis": "not_applicable",
+      "w07_family_evidence": null
     }
   ],
   "test_families": [
@@ -1857,9 +2101,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/closure-audit.json"
         }
       ]
     },
@@ -1936,9 +2180,9 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 6,
+    "work_completed": 7,
     "test_family_total": 10,
-    "test_family_passed": 7,
+    "test_family_passed": 8,
     "audio_group_total": 11,
     "example_role_total": 43,
     "parity_rows": 703,

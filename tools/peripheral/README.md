@@ -39,7 +39,7 @@ readiness/HIL/public 지원 수준을 올리지 않는다.
 [M29 readiness](../../variants/nu54dk/m29-ble-readiness.json),
 [M30 readiness](../../variants/nu54dk/m30-ble-readiness.json),
 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)에서 작업 묶음·test ID·실행 증거를
-관리한다. 현재 M31은 W01~W06 완료(6/8), W07·W08 미완료이며 문서나 생성기 실행만으로 상태를
+관리한다. 현재 M31은 W01~W07 완료(7/8), W08 미완료이며 문서나 생성기 실행만으로 상태를
 승격하지 않는다. 다중 Host의 범위·단계는
 [후속 Host 계약](<../../00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
 v0.5.0은 M31 완료 뒤 Windows 우선 릴리스이며 M32/M33 추가 기능과 Ubuntu/macOS 지원은

@@ -9,11 +9,11 @@ v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 �
 | M28 GAP/Link/Privacy | W01~W08 완료, 9/9 test ID PASS | [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
 | M29 ATT/GATT/L2CAP | W01~W08 완료, 10/10 test ID와 Windows/Intel GATT 상호운용 PASS | [149번 기록](<../../../00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
 | M30 Security/Profile/DFU | W01~W08 완료, 10/10 test ID PASS. 실제 전원 차단 12/12 | [161번 완료 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
-| M31 ISO/LE Audio/DF/CS | W01~W06 완료(6/8), W03 profile 11/11·W04 DF·W05 CS·W06 자원/회귀 완료. W07~W08 미착수 | [M31 TODO](../../../00_Docs/TODO_M31.md) |
+| M31 ISO/LE Audio/DF/CS | W01~W07 완료(7/8), W03 profile 11/11·W04 DF·W05 CS·W06 자원/회귀·W07 설치 예제 49/49와 3보드 역할 HIL 완료. W08 미착수 | [M31 TODO](../../../00_Docs/TODO_M31.md) |
 
 이는 `0.4.1-dev` 개발 소스의 검증 상태이며 공개 v0.4.1 패키지에 BLE 확장이 포함됐다는 뜻이 아닙니다.
 v0.5.0은 M31 완료 뒤 Windows 우선 릴리스로 준비합니다. `M31-MEM-OPT`의 메모리 최적화
-P0~P2와 W04~W06을 완료했고 다음 구현 순서는 W07 → W08입니다. W06은 독립 ISO·Audio·DF·CS image의 자원·
+P0~P2와 W04~W07을 완료했고 다음 구현은 W08입니다. W06은 독립 ISO·Audio·DF·CS image의 자원·
 수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
 실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
 
@@ -104,6 +104,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `p2_audio_encryption_recovery_memory_run.py` | encrypted BIS wrong Code의 native `-61`·decode 0과 올바른 Code 100-frame 복구·메모리·STOP 판정 | 두 exact NU54DK, [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | `p2_cs_peer_loss_memory_run.py` | 256-step 첫 raw 전 reflector reset, initiator disconnect·자동 재연결·유효 raw 20개·메모리·STOP 판정 | SWD CPU reset이며 물리 전원 차단 아님. [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | `p2_df_connectionless_rx_run.py` | 과거 LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 진단 | IQ 0·수신 fault를 보존. **P2 범위 제외·반복 실행 금지**. [259번 지원 경계](<../../../00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
+| `m31_w07_hil_campaign.py` | W07 clean 설치 image의 preflight·ISO·Audio·DF·CS 역할 재배치, case별 lease·배타 lock·익명 evidence | NU54DK 3대, exact sector flash·`auto_unlock=false`; ISO를 마지막에 실행해 세 역할 STOP. [266번 기록](<../../../00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |

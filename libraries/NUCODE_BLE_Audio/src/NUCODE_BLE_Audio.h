@@ -14,6 +14,12 @@
 #include <cstddef>
 #include <cstdint>
 
+namespace nucode::ble
+{
+    class BLEConnectionHandle;
+    struct BLEScanResult;
+} // namespace nucode::ble
+
 namespace nucode::ble::audio
 {
     /** @brief 암호화 broadcast stream에 사용하는 16-byte 코드입니다. */

@@ -507,6 +507,134 @@ def validate(doc: dict) -> None:
                 evidence["host"].get("status") != "PASS" or
                 evidence["host"].get("failures") != 0):
             raise ValueError("W06 build or Host regression evidence incomplete")
+    if "M31-W07" in completed_work:
+        package = next(item for item in doc["work_packages"]
+                       if item["id"] == "M31-W07")
+        if (package.get("installed_example_status") != "PASS" or
+                package.get("role_denominator") != 43 or
+                package.get("applicable_role_passed") != 39 or
+                package.get("external_not_run") != 3 or
+                package.get("unsupported") != 1):
+            raise ValueError("W07 role denominator incomplete")
+        audit_path = CORE / package["exact_evidence"]
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        installed = audit.get("installed_examples", {})
+        role_summary = audit.get("role_matrix", {})
+        three_board = audit.get("three_board_hil", {})
+        diagnostic = audit.get("diagnostic_history", {})
+        if (installed.get("status") != "PASS" or
+                installed.get("independent_package_files") != 630 or
+                installed.get("libraries") != 4 or
+                installed.get("adopted_unique_sketches") != 49 or
+                installed.get("built") != 49 or installed.get("failed") != 0 or
+                installed.get("public_examples_audited") != 113 or
+                installed.get("public_audit_issues") != 0):
+            raise ValueError("W07 installed example evidence incomplete")
+        if (role_summary.get("status") != "PASS" or
+                role_summary.get("total") != 43 or
+                role_summary.get("applicable_pass") != 39 or
+                role_summary.get("external_not_run") != 3 or
+                role_summary.get("unsupported") != 1):
+            raise ValueError("W07 role matrix evidence incomplete")
+        if (three_board.get("status") != "PASS" or
+                three_board.get("families") != 4 or
+                three_board.get("direct_current_roles") != 8):
+            raise ValueError("W07 three-board HIL evidence incomplete")
+        if (diagnostic.get("status") != "PRESERVED" or
+                not isinstance(diagnostic.get("evidence"), str)):
+            raise ValueError("W07 diagnostic history missing")
+        evidence_names = {
+            "installed": installed.get("evidence"),
+            "staging": installed.get("staging_evidence"),
+            "audit": installed.get("audit_evidence"),
+            "roles": role_summary.get("evidence"),
+            "hil": three_board.get("evidence"),
+            "diagnostic": diagnostic.get("evidence"),
+        }
+        evidence = {}
+        for name, relative in evidence_names.items():
+            if not isinstance(relative, str):
+                raise ValueError("W07 exact evidence name missing")
+            evidence_path = audit_path.parent / relative
+            if not evidence_path.is_file():
+                raise ValueError("W07 exact evidence file missing")
+            evidence[name] = json.loads(evidence_path.read_text(encoding="utf-8"))
+        if (evidence["installed"].get("status") != "PASS" or
+                evidence["installed"].get("built") != 49 or
+                evidence["installed"].get("failed") != 0 or
+                len(evidence["installed"].get("builds", [])) != 49):
+            raise ValueError("W07 installed build manifest incomplete")
+        if (evidence["staging"].get("file_count") != 630 or
+                evidence["staging"].get("platform_is_symlink") is not False or
+                evidence["audit"].get("library_count") != 16 or
+                evidence["audit"].get("example_count") != 113 or
+                evidence["audit"].get("issues") != [] or
+                evidence["audit"].get("public_surface_issues") != []):
+            raise ValueError("W07 package or public audit evidence incomplete")
+        matrix = evidence["roles"]
+        expected_counts = {
+            "total": 43, "applicable_pass": 39,
+            "external_not_run": 3, "unsupported": 1,
+        }
+        matrix_roles = matrix.get("roles", [])
+        if (matrix.get("status") != "PASS" or
+                matrix.get("counts") != expected_counts or
+                len(matrix_roles) != 43 or
+                len({entry.get("id") for entry in matrix_roles}) != 43):
+            raise ValueError("W07 role matrix manifest incomplete")
+        hil = evidence["hil"]
+        families = hil.get("families", {})
+        safety = hil.get("safety", {})
+        if (hil.get("status") != "PASS" or hil.get("minimum_boards") != 3 or
+                hil.get("preflight", {}).get("bounded_retests") != 1 or
+                hil.get("preflight", {}).get("final_status") != "PASS" or
+                set(families) != {
+                    "iso", "audio", "direction_finding", "channel_sounding"
+                } or any(entry.get("status") != "PASS" for entry in families.values()) or
+                families["iso"].get("frames") != 2000 or
+                families["iso"].get("missing_frames") != 0 or
+                families["audio"].get("duplex_stop_release_cycles") != 20 or
+                families["direction_finding"].get("invalid_rejected") != 20 or
+                families["channel_sounding"].get("procedures") != 100 or
+                families["channel_sounding"].get("counter_gap_policy") != "observe_only" or
+                hil.get("final_state", {}).get("all_three_iso_roles_stopped") is not True or
+                safety.get("functional_flash_auto_unlock") is not False or
+                safety.get("functional_flash_erase") != "sector_only" or
+                safety.get("automatic_recover") is not False or
+                safety.get("raw_probe_uid_persisted") is not False):
+            raise ValueError("W07 three-board HIL manifest incomplete")
+        if (evidence["diagnostic"].get("status") != "PRESERVED" or
+                len(evidence["diagnostic"].get("installed_build_failures", [])) != 2):
+            raise ValueError("W07 diagnostic failure preservation incomplete")
+        matrix_by_id = {entry["id"]: entry for entry in matrix_roles}
+        expected_build_evidence = str(
+            (audit_path.parent / "installed-examples.json").relative_to(CORE)
+        ).replace("\\", "/")
+        for role in doc["example_roles"]:
+            matrix_role = matrix_by_id.get(role["id"])
+            if (matrix_role is None or
+                    role.get("w07_build_status") != role["build_status"] or
+                    matrix_role.get("build_status") != role["build_status"] or
+                    matrix_role.get("runtime_status") != role["runtime_status"]):
+                raise ValueError("W07 role status reconciliation incomplete")
+            if role["build_status"] == "PASS":
+                if (role.get("w07_build_revision") != audit["source_revision"] or
+                        role.get("w07_build_evidence") != expected_build_evidence):
+                    raise ValueError("W07 current role build evidence incomplete")
+            elif (role.get("w07_build_revision") is not None or
+                  role.get("w07_build_evidence") is not None):
+                raise ValueError("W07 non-build role promoted")
+            if role["runtime_status"] == "PASS":
+                family_evidence = role.get("w07_family_evidence")
+                if (role.get("w07_hil_basis") not in {
+                        "direct_current_role",
+                        "current_family_regression_plus_preserved_exact_role_evidence",
+                } or not isinstance(family_evidence, str) or
+                        not (CORE / family_evidence).is_file()):
+                    raise ValueError("W07 role HIL relationship incomplete")
+            elif (role.get("w07_hil_basis") != "not_applicable" or
+                  role.get("w07_family_evidence") is not None):
+                raise ValueError("W07 non-applicable role promoted")
     for family in doc["test_families"]:
         for entry in family["cases"]:
             if entry["status"] == "PASS" and (not entry["source_revision"] or not entry["evidence"]):

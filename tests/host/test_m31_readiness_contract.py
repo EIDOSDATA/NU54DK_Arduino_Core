@@ -186,6 +186,66 @@ class M31ReadinessTests(unittest.TestCase):
         finally:
             invalid.unlink(missing_ok=True)
 
+    def test_w07_completion_requires_full_role_denominator(self) -> None:
+        """! @brief 적용·외장·미지원 역할의 고정 분모 축소를 거부합니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        package = next(item for item in doc["work_packages"] if item["id"] == "M31-W07")
+        package["applicable_role_passed"] = 38
+        with self.assertRaisesRegex(ValueError, "W07 role denominator incomplete"):
+            MODULE.validate(doc)
+
+    def test_w07_completion_requires_safe_final_hil(self) -> None:
+        """! @brief 자동 unlock·recover 없는 최종 3보드 HIL 경계를 유지합니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        package = next(item for item in doc["work_packages"] if item["id"] == "M31-W07")
+        audit_path = ROOT / package["exact_evidence"]
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        hil_path = audit_path.parent / audit["three_board_hil"]["evidence"]
+        hil = json.loads(hil_path.read_text(encoding="utf-8"))
+        changed = copy.deepcopy(hil)
+        changed["safety"]["functional_flash_auto_unlock"] = True
+        invalid = audit_path.parent / "test-invalid-w07-hil.json"
+        original = audit["three_board_hil"]["evidence"]
+        try:
+            invalid.write_text(
+                json.dumps(changed, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            audit["three_board_hil"]["evidence"] = invalid.name
+            invalid_audit = audit_path.parent / "test-invalid-w07-audit.json"
+            invalid_audit.write_text(
+                json.dumps(audit, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            package["exact_evidence"] = str(invalid_audit.relative_to(ROOT))
+            with self.assertRaisesRegex(
+                ValueError, "W07 three-board HIL manifest incomplete"
+            ):
+                MODULE.validate(doc)
+        finally:
+            audit["three_board_hil"]["evidence"] = original
+            invalid.unlink(missing_ok=True)
+            (audit_path.parent / "test-invalid-w07-audit.json").unlink(missing_ok=True)
+
+    def test_w07_forward_counter_gap_remains_observe_only(self) -> None:
+        """! @brief 관찰된 순방향 gap을 완료 차단 조건으로 되돌리지 않습니다. """
+        readiness = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+        doc = json.loads(readiness.read_text(encoding="utf-8"))
+        package = next(item for item in doc["work_packages"] if item["id"] == "M31-W07")
+        audit_path = ROOT / package["exact_evidence"]
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        hil = json.loads(
+            (audit_path.parent / audit["three_board_hil"]["evidence"]).read_text(
+                encoding="utf-8"
+            )
+        )
+        channel_sounding = hil["families"]["channel_sounding"]
+        self.assertEqual(channel_sounding["counter_gap_policy"], "observe_only")
+        self.assertEqual(channel_sounding["counter_gaps"], [{"before": 58, "after": 60}])
+        MODULE.validate(doc)
+
 
 if __name__ == "__main__":
     unittest.main()

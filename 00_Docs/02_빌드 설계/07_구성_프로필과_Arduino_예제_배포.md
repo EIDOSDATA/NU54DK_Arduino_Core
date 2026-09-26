@@ -327,7 +327,7 @@ M32·M33의 추가 기능·예제와 Ubuntu/macOS 지원은 후속 제품선이�
 | M31-W02 — 완료 | CIS central/peripheral, BIS broadcaster/receiver, combined ISO·time sync·recovery; [설치본 11예제·11역할 증거](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 — 완료 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP; [11/11 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
 | M31-W04~W05 | AoA CTE 송신 예제와 controller 경계, 제품 SDC IQ RX 미지원 표시, CS initiator/reflector·RAS·복구 |
-| M31-W07~W08 및 v0.5.0 공개 gate | M31까지의 설치 role 예제·제공 경로/제한·Windows package·설치·RC 마감 |
+| M31-W08 및 v0.5.0 공개 gate | W07에서 검증한 설치 role 예제·제공 경로/제한을 입력으로 Windows package·설치·RC 마감 |
 | M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
 | M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
 | M33-W02~W04 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |

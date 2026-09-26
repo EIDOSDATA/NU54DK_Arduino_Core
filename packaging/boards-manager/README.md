@@ -9,9 +9,9 @@
 | Stable index | `package_nucode_nu54dk_index.json` |
 | Stable source·ZIP | [129번 공개 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)의 exact identity |
 
-현재 `main`의 version은 `0.4.1-dev`입니다. M28~M30 완료와 M31의 W01~W06 완료(6/8)는 공개
+현재 `main`의 version은 `0.4.1-dev`입니다. M28~M30 완료와 M31의 W01~W07 완료(7/8)는 공개
 v0.4.1 ZIP에 자동으로 추가되지 않으며 v0.5.0 패키지는 아직 공개하지 않았습니다. M31-W04·W05는
-미완료이고 HOST-W04~HOST-W08은 사용자 보류 상태입니다. v0.5.0은 M31 완료 뒤 Windows
+미완료이고 W08·HOST-W04~HOST-W08은 사용자 보류/미착수 상태입니다. v0.5.0은 M31 완료 뒤 Windows
 10/11 x64 우선 릴리스로 준비하며 M32/M33 추가 기능과 Ubuntu/macOS는 버전 미정인 후속 제품선입니다.
 정확한 진행과 gate는
 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)와 [M31 TODO](../../00_Docs/TODO_M31.md)를 따릅니다.
