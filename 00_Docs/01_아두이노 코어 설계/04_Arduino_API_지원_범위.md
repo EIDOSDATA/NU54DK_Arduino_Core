@@ -5,9 +5,9 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 6.7 |
+| 문서 개정 | 6.8 |
 | 대상 | 지원 stable `v0.4.1` (v0.4.0 기능 기준선 유지) |
-| 최종 갱신일 | 2026-09-21 |
+| 최종 갱신일 | 2026-09-26 |
 | 상태 | **v0.4.1 단독 설치·지원** |
 
 ## 판정 기준
@@ -20,10 +20,10 @@ BLE 확장은 아래 정식 설치본 지원표에 소급하지 않습니다. �
 [M28 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md)과
 [M29 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md),
 [M30 계약](17_M30_BLE_Security_Profile_DFU_착수_계약.md)에서 별도로 확인합니다.
-M31은 W01~W07 7/8을 완료했으며 ISO·LE Audio·Direction Finding·Channel Sounding의 개발 완료도 아래 stable 지원표에 소급하지
-않습니다. DF·CS의 미완료 범위와 이후 작업은 [M31 TODO](../TODO_M31.md)를 따릅니다.
-v0.5.0은 M31 완료 후 Windows 우선 릴리스로 계획하며, 메모리 최적화·남은 기능 검증과
-패키지·설치·RC·공개 gate가 남아 있습니다. M32·M33 및 Ubuntu/macOS 확대는 후속 계획입니다.
+M31은 W01~W08 8/8을 완료했으며 ISO·LE Audio·Direction Finding·Channel Sounding의 개발 완료도
+아래 stable 지원표에 소급하지 않습니다. 완료 범위와 이후 공개 승인은 [M31 TODO](../TODO_M31.md)를
+따릅니다. v0.5.0은 Windows 우선 릴리스로 계획하며 package·설치·RC 준비는 완료했고 공개 승인·게시
+gate가 남아 있습니다. M32·M33 및 Ubuntu/macOS 확대는 후속 계획입니다.
 
 | 상태 | 의미 |
 | --- | --- |

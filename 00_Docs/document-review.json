@@ -1,29 +1,29 @@
 {
   "schema_version": 2,
   "review_date": "2026-09-26",
-  "purpose": "M31-W07의 독립 설치 package 630파일에서 채택 예제 49/49를 build하고, 보존된 역할별 exact runtime과 현재 ISO·Audio·DF·CS 3보드 역할 재배치 HIL을 결합해 적용 역할 39/39를 닫은 뒤 M31 7/8·다음 W08 상태를 현행 인계·TODO·설계·예제·기계 원장 및 전체 문서 hash에 일치시킨 전수 감사 snapshot이다.",
+  "purpose": "M31-W08의 exact private Windows RC 이중 재현, 설치 예제 113/113 병렬 build, v0.4.1→RC upgrade·uninstall·reinstall/cache 수명주기와 대표 실물 upload/UART/debug를 검증하고 M31 8/8 완료·공개 승인 HOLD를 현행 인계·TODO·설계·기계 원장 및 전체 문서 hash에 일치시킨 전수 감사 snapshot이다.",
   "baseline": {
-    "branch": "M31-MEM-OPT",
-    "commit": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
-    "working_tree_at_start": "clean",
-    "record": "00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md"
+    "branch": "0.5.0-RC1",
+    "commit": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+    "working_tree_at_start": "clean before W08 closure documentation",
+    "record": "00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md"
   },
   "previous_review": {
-    "commit": "35b436f9b7865c82d685c18f3be865bda56d18be",
+    "commit": "dd6beea5fd7fff931e16be61723f483a64de7ade",
     "path": "00_Docs/document-review.json",
-    "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/35b436f9b7865c82d685c18f3be865bda56d18be/00_Docs/document-review.json",
-    "note": "이전 429개 W06 완료 감사 snapshot은 exact commit에 보존한다. 이번 W07 설치 build, 현재 family HIL, 역할 원장과 제한 preflight 재시도만 새 완료 판정에 사용한다."
+    "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/dd6beea5fd7fff931e16be61723f483a64de7ade/00_Docs/document-review.json",
+    "note": "이전 430개 W07 완료 감사 snapshot은 exact commit에 보존한다. 이번 W08의 Windows RC·수명주기·실물 upload/debug와 문서 마감만 새 완료 판정에 사용한다."
   },
   "scope": {
-    "baseline_main_repository_markdown": 423,
-    "current_main_repository_markdown": 424,
+    "baseline_main_repository_markdown": 424,
+    "current_main_repository_markdown": 425,
     "board_submodule_markdown": 6,
-    "reviewed_documents": 430,
-    "main_repository_maintained_documents": 423,
+    "reviewed_documents": 431,
+    "main_repository_maintained_documents": 424,
     "vendored_upstream_markdown": 1,
-    "updated_existing_markdown": 28,
+    "updated_existing_markdown": 26,
     "added_markdown": 1,
-    "preserved_markdown": 401,
+    "preserved_markdown": 404,
     "deleted_markdown": 0,
     "classification_counts": {
       "board_submodule_reference": 6,
@@ -31,13 +31,13 @@
       "current_audit_record": 1,
       "current_reference": 85,
       "generated_document": 5,
-      "historical_validation_record": 264,
+      "historical_validation_record": 265,
       "release_record": 65,
       "third_party_notice": 1,
       "vendored_upstream_reference": 1
     },
-    "review_method": "전체 Markdown inventory·strict UTF-8·로컬 링크 존재·LF 정규화 hash·동일 본문 중복·현행 상태 키워드를 검사하고, W07로 변경한 현행 계약·인계·TODO·지원표·검증 기록과 새 evidence를 의미 검토했다. 역사적 결과는 당시 판정으로 보존하며 파일별 review_depth로 이번 검사 깊이를 구분한다.",
-    "link_check_boundary": "Markdown inline 상대 링크의 대상 파일 존재를 검사한다. anchor 의미, 외부 URL 가용성, 기술적 진위 또는 물리 기능은 별도 build·HIL 증거로 판정한다.",
+    "review_method": "전체 Markdown inventory·strict UTF-8·로컬 링크 존재·LF 정규화 hash·동일 본문 중복·현행 상태 키워드를 검사하고, W08로 변경한 현행 계약·인계·TODO·지원표·검증 기록과 새 evidence를 의미 검토했다. 역사적 결과는 당시 판정으로 보존하며 파일별 review_depth로 이번 검사 깊이를 구분한다.",
+    "link_check_boundary": "Markdown inline 상대 링크의 대상 파일 존재를 검사한다. anchor 의미, 외부 URL 가용성, 기술적 진위 또는 물리 기능은 별도 build·HIL·CI 증거로 판정한다.",
     "hash_method": "UTF-8 본문을 strict decode하고 CRLF/CR을 LF로 정규화한 SHA-256. Markdown만 포함하며 이 JSON 자체는 제외한다.",
     "non_markdown_inventory": {
       "rst_documents": 0,
@@ -53,21 +53,21 @@
     "supported_package": "v0.4.1 only",
     "source_version": "0.4.1-dev",
     "sdk": "NCS v3.4.0; fixed Zephyr/toolchain revisions from tools/ci/ncs-3.4.0.lock.json",
-    "working_branch": "M31-MEM-OPT",
+    "working_branch": "0.5.0-RC1",
     "p0": "completed",
     "p1": "completed",
     "p2": "completed; all three agreed technical axes PASS",
-    "m31": "W01-W07 completed: 7/8; overall not_completed",
+    "m31": "W01-W08 completed: 8/8; milestone completed",
     "m31_w03": "11/11 completed",
     "m31_w04": "completed; supported TX paths PASS, product SDC IQ RX and AoD UNSUPPORTED",
     "m31_w05": "completed; supported RAS, security negative and flash-after boundaries PASS",
     "host": "HOST-W01-W03 completed: 3/8; HOST-W04-W08 paused by user",
     "m32": "0/12 not_started; future release, not a v0.5.0 prerequisite",
     "m33": "0/8 not_started; future release, not a v0.5.0 prerequisite",
-    "planned_release": "v0.5.0 after M31 completion; Windows 10/11 x64; package/install/RC/publication gates judged separately",
+    "planned_release": "v0.5.0 Windows 10/11 x64 RC ready; owner approval, tag/Release/catalog publication and public download smoke remain separate",
     "m31_w06": "completed; independent-image resource/lifecycle, target recovery and M19-M30 regression PASS",
     "m31_w07": "completed; 49/49 installed examples, 39/39 applicable roles and four current three-board HIL families PASS",
-    "m31_w08": "not_started; next work is W08"
+    "m31_w08": "completed; exact Windows RC, 113/113 installed examples, lifecycle and physical upload/UART/debug PASS"
   },
   "p2_contract": {
     "completed_technical_axes": [
@@ -141,20 +141,20 @@
     ]
   },
   "preservation": {
-    "historical_records": "과거 PASS/FAIL/HOLD/NOT RUN 원본을 보존했다. 두 clean build campaign과 그 제한 재시도 실패, 과거 CS timeout, 최종 source의 첫 preflight 실패도 PASS로 덮어쓰지 않았다.",
-    "public_assets": "Existing tags, releases, catalogs and released package assets unchanged.",
-    "runtime_sdk_controller": "고정 NCS v3.4.0·제품 SDC와 기존 최종 stack/heap/pool 크기를 유지했다. 49개 설치 build와 네 family HIL은 clean exact execution source에서 수행했다.",
+    "historical_records": "과거 PASS/FAIL/HOLD/NOT RUN 원본과 W08의 다섯 실패·취소 CI run 및 로컬 환경 실패를 보존했다. 원인을 특정한 제한 수정 뒤 final PASS를 얻었으며 실패 원본을 덮어쓰지 않았다.",
+    "public_assets": "Existing tags, releases, catalogs and released package assets unchanged. Owner approval remains HOLD and public download smoke remains NOT RUN.",
+    "runtime_sdk_controller": "고정 NCS v3.4.0·제품 SDC와 P2 최종 stack/heap/pool 크기를 유지했다. exact RC runtime payload hash가 실물 검증 source와 최종 CI source에서 일치한다.",
     "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
     "board_submodule": "Unchanged and clean. Six Markdown hashes match the previous audit.",
-    "safety": "최종 source의 첫 preflight 실패 뒤 자동 unlock·recover 없이 세 probe의 DP/AP를 읽기 전용으로 재확인하고 제한 재시도 한 번만 수행했다. 기능 flash는 auto_unlock=false·sector-only였으며, 마지막 ISO 세 역할 STOP·clock/pin 반환을 확인했다. 원시 probe UID는 공개하거나 evidence에 저장하지 않았다.",
-    "branch_boundary": "No main merge/squash, release/tag/catalog publication, W08 implementation or remote CI/CD request."
+    "safety": "대표 실물은 probe SHA-256 identity·COM·role·image hash를 결합하고 exclusive lock·watchdog·lease, sector-only flash와 auto_unlock=false를 유지했다. mass erase·unlock·recover 없이 시험 뒤 W07 CS reflector image와 무연결·CS 비활성 상태로 복구했으며 원시 probe UID를 공개하지 않았다.",
+    "branch_boundary": "M31-MEM-OPT remains preserved. No main merge/squash, release/tag/catalog publication, M32/M33 or HOST-W04-W08 implementation."
   },
   "checks": [
     {
       "name": "Main Markdown UTF-8/local links",
       "command": "python tools/ci/run_m12_gate.py docs",
       "result": "PASS",
-      "details": "424 files; exit 0"
+      "details": "425 files; exit 0"
     },
     {
       "name": "Generated peripheral contracts",
@@ -172,29 +172,29 @@
       "name": "M31 readiness contract",
       "command": "python tools/bluetooth/m31_contract.py --check",
       "result": "PASS",
-      "details": "W07 49 builds, 43-role denominator, four-family HIL and probe recovery boundary included; exit 0"
+      "details": "M31 W01-W08 completed, 9/10 test families PASS with product-SDC IQ RX UNSUPPORTED boundary retained; exit 0"
     },
     {
-      "name": "W07 targeted regression",
-      "command": "python -m unittest tests.host.test_m30_mcuboot tests.host.test_m31_example_public_boundary tests.host.test_m31_readiness_contract tests.host.test_m31_cs_counter_policy",
+      "name": "W08 targeted regression",
+      "command": "Nordic Python -I: pytest release, sharding, lifecycle, installed-example and M31 readiness tests",
       "result": "PASS",
-      "details": "57 tests; builder, Audio dependency, W07 role/HIL and counter policy fail-closed checks included; exit 0"
+      "details": "34 tests; exit 0"
     },
     {
       "name": "Full Host regression",
-      "command": "Python 3.14: unittest discover -s tests/host -p test_*.py",
+      "command": "Nordic Python -I -m pytest tests/host -q",
       "result": "PASS",
-      "details": "1520 tests, 2 skipped, 0 failures; exit 0"
+      "details": "1537 passed, 2 skipped, 3219 subtests passed in 542.02s; exit 0"
     },
     {
-      "name": "W07 independent installed example build",
+      "name": "W08 GitHub Actions Windows RC",
       "result": "PASS",
-      "details": "630-file package, 4 libraries, 49/49 adopted sketches PASS; public 113-example audit issues 0."
+      "details": "Run 36248923341: exact RC reproduced twice, eight installed-example shards 113/113 and lifecycle aggregate PASS."
     },
     {
-      "name": "W07 current three-board role HIL",
+      "name": "W08 physical upload/UART/debug",
       "result": "PASS",
-      "details": "ISO three roles 20/20 STOP, Audio duplex 20/20, DF control/negative 20/20, CS 100 raw plus stop/restart and reconnect 20/20; gaps observe_only."
+      "details": "Exact Actions RC upload, NUCODE_M8_UPLOAD_READY UART token and setup() breakpoint; sector-only, auto_unlock=false; W07 CS reflector restored."
     },
     {
       "name": "Board Markdown preservation",
@@ -212,12 +212,7 @@
       "name": "Audit inventory and current-file hashes",
       "command": "Independent inventory/path-set/LF-normalized SHA-256/duplicate comparison with document-review.json",
       "result": "PASS",
-      "details": "430 documents; 0 inventory differences, hash mismatches or duplicate paths. Actions: 28 updated, 1 added, 401 preserved."
-    },
-    {
-      "name": "Remote CI/CD",
-      "result": "NOT_REQUESTED_NOT_QUERIED_NOT_WAITED",
-      "details": "User instruction; no CI success claim."
+      "details": "431 documents; 0 inventory differences, hash mismatches or duplicate paths. Actions: 26 updated, 1 added, 404 preserved."
     }
   ],
   "documents": [
@@ -251,7 +246,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "acc31c195d5d568dbcb15d891ec19d4cadbe9558f2edd27a2376dabdc6258ec8"
+      "sha256_utf8_lf": "6f03fb613ffccda5018d7697ddcb410a037fb754aedf614bfe4a09ddd3bb13cf"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/03_핀과_Variant_설계.md",
@@ -267,7 +262,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "c665921443f64ca3ef18983b24f837043d9bf92c6e598590fbcf74f7f3b78e2c"
+      "sha256_utf8_lf": "0e88ff097e7350a7aa5b5631826084a800b1c9bb6a57265d77b00b92af0aae37"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md",
@@ -283,7 +278,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "db45f93980f9afb93da98dc59c082d2f899770983748e09b89c03fef2fa5c665"
+      "sha256_utf8_lf": "241c5c6cd12ef706efe6d73cd9cb24dd20c12c66585e1b67d184cd8d526a065e"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md",
@@ -299,7 +294,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "dd006effdc5d988738e27ba3570572b8441a9626e58a1e0f871ae359284dae69"
+      "sha256_utf8_lf": "331308d134bc99ef364206d0c7edc58a09e82e9d22a329deb7be4989163d7103"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md",
@@ -427,7 +422,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "c68846ac234181db5f56d9ed55d632cebef32e3ca02fe7cdc8b3e79f4242c727"
+      "sha256_utf8_lf": "48488b5359ece8b3971dcc76d919ea0be45b7dc6712bd3869337b8404b91317d"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md",
@@ -435,7 +430,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "3787e0cca6b0e3d0f25b763ec2429f1419d52cba56458f9509e088797015a158"
+      "sha256_utf8_lf": "3699416bd58681dba9eec796974bc9d72aec5acbb367bc700d39b090849163da"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md",
@@ -443,7 +438,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "2f06ece4371c60e3ab2e824ef0eec2a2a7054a09155dbf0c0600b7abc72026cb"
+      "sha256_utf8_lf": "ffb3e4a28816d9a0049f88a1b7f347914fd5bba93e5ffd2ac056ca77e5715b70"
     },
     {
       "path": "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
@@ -451,7 +446,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "b8f888f1638423cf88e06d843722a41c2568b2c32cea0c656266813a24dedd41"
+      "sha256_utf8_lf": "ff2558a312b4ebe21c5e0387cb26ed316042bfb68f70f3bf3b68a1c292f5ba93"
     },
     {
       "path": "00_Docs/02_빌드 설계/01_West_Native_Blink_PoC.md",
@@ -504,26 +499,26 @@
     {
       "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "full_text_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "0ecebc9c3c04eeac78b1d50d714cdac3c2faf89499f249fe1f2cde19ecbde106"
     },
     {
       "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
       "classification": "current_reference",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "action": "updated",
+      "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "dfb82ddfb1817e91a245bfb92977963600539318f8fa1d6aa1807b0e69eae43f"
+      "sha256_utf8_lf": "9ecca11abfebe14e999763dcffecdd4589b8357db189ad5e007c882edfe87698"
     },
     {
       "path": "00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md",
       "classification": "current_reference",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "action": "updated",
+      "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "ca2b0a629f99df2b5e8b96c807e7adcbe4b530748a96173a3750c951dad3eb36"
+      "sha256_utf8_lf": "82c63e9f34c0f15c4f3a29961260f392298ee9d3346ca71b33104f52e34cb39b"
     },
     {
       "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
@@ -563,7 +558,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "c03901d331ab6c0f4d0221dd395e5be48f3efdc1eb1a074039256830f01fdd70"
+      "sha256_utf8_lf": "d120e7a1e9ab03e6a489f9b7dcd9fcda2b948200ab7d93920c5b5f1381dd1932"
     },
     {
       "path": "00_Docs/03_펌웨어 설계/05_NU54DK_Board_System_API.md",
@@ -595,7 +590,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "23f585ee7576a8ef19d62ee0a2ab7d8628afb698019d8e612ff72e9d699b5e39"
+      "sha256_utf8_lf": "551193f91109650e0f622554713af118143a748b6e13934e474250f68626d90b"
     },
     {
       "path": "00_Docs/03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md",
@@ -2127,11 +2122,19 @@
     },
     {
       "path": "00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md",
+      "classification": "historical_validation_record",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "external_read_only": false,
+      "sha256_utf8_lf": "0748f5c5b92e8f7559b6d917816ba9fdd9e2f7f71e77b2da7aa71005b401634b"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md",
       "classification": "current_audit_record",
       "action": "added",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "0748f5c5b92e8f7559b6d917816ba9fdd9e2f7f71e77b2da7aa71005b401634b"
+      "sha256_utf8_lf": "fd0e45eab069ebd947461e43b77e9a718ce483dab89aa62e706fa3d96824cd06"
     },
     {
       "path": "00_Docs/04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md",
@@ -2731,7 +2734,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "456ce497fcab62f2639f05c5d32bd3a5c4d0d973d9c1647c29dde0583d279794"
+      "sha256_utf8_lf": "a080c03a102727899d9a36926da145c27c0cbea22d6d6781eeb97643d6890601"
     },
     {
       "path": "00_Docs/04_검증 기록/evidence/m29-w07-08cc52d6-signed-eatt/diagnostic.md",
@@ -2747,7 +2750,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "53edf5a861499823d39099d23507f2e216758edf8e684b63bcb9f6aaeddc7a30"
+      "sha256_utf8_lf": "0b8bdace225b575c27dd0f50ffe9ed20f317f7318678372f3d0292adf2118c9d"
     },
     {
       "path": "00_Docs/05_릴리스/v0.1.0-rc.1/KNOWN_ISSUES.md",
@@ -3267,7 +3270,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "8795155a23578705066e2b5f38df91cf76981fca573487a0258fc22a7cf9c594"
+      "sha256_utf8_lf": "49622daa355ce5fa2d911faafbe0e816e513a1dff88471c37170feb2bb058217"
     },
     {
       "path": "00_Docs/README.md",
@@ -3275,7 +3278,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "bf507086b72e7abc124de4940c8753ea1f1d38ef4cddfb5f50678c81142534b6"
+      "sha256_utf8_lf": "14e3e77f1099351b320fd82354a6bcd6c1b777c583e25cbafa2987b217688e41"
     },
     {
       "path": "00_Docs/TODO_M31.md",
@@ -3283,7 +3286,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "300a332fa9635570b17c24e7b11ad1301620385d96e6f45ac7dd2b32e82b6d39"
+      "sha256_utf8_lf": "b0759698ba8fa29b42b8aa4f26b7564b13c862532de6846bc90dfe1edec302c0"
     },
     {
       "path": "00_Docs/TODO_M32.md",
@@ -3291,7 +3294,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "62e0a08349e7610d4ee8c52086e54bdb4587fe77c9ff6e0581426242a3d9fa0b"
+      "sha256_utf8_lf": "070a8f8452572f04fa76138e998c76f456d2463198e01c4109d99849cce66f6d"
     },
     {
       "path": "00_Docs/TODO_M33.md",
@@ -3299,7 +3302,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "5abcacaf27c27e595b93950bc3d3dc90af910e300e8f96cb05e8abef1c7ad50e"
+      "sha256_utf8_lf": "b1fcd58c69e2e24fe03be7fb27ff491bc13cefbcbed2b258b780a7cf10673153"
     },
     {
       "path": "00_Docs/TODO_v0.4.0.md",
@@ -3323,7 +3326,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "d51a60b9538bdbeff6c971753c6a9c2cb44eea9b83ed9f6f5ab3ddf8532b6229"
+      "sha256_utf8_lf": "53100e10e58b83eb82dc5125568fda386ddb04ad9feee888e9033160a04e4f13"
     },
     {
       "path": "AGENTS.md",
@@ -3331,7 +3334,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "719468cc72e70c51602887e71875c3c24c0c5095e8399d84884253f38e03f0ed"
+      "sha256_utf8_lf": "4748638e7a4f67ebd1be2ff4dbf99321d9f5b05d59d8485f0d1e157fabbfc15e"
     },
     {
       "path": "README.md",
@@ -3339,7 +3342,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "708cd91ce20835c20dade4d2d1027b51a600a6613a116c601ce9502b3bc8b1c9"
+      "sha256_utf8_lf": "d8d2a64b3991703cda43139d0713338a1cd587e58d3978ab06048f7b95e111da"
     },
     {
       "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/01_BOARD_DEVELOPMENT.md",
@@ -3408,16 +3411,16 @@
     {
       "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "full_text_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "ebb7e45d23209f5051bd33a32859fd0c8632b9cb4169f945cba883c9d1f52333"
     },
     {
       "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "full_text_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "80af2cbde088d9d567ef6a4a484830a706039548c3da1c41bce11300db470c1e"
     },
@@ -3432,16 +3435,16 @@
     {
       "path": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "full_text_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "c159d01e4489e8bf8ffb73b3bc2ad77d904d1c1d0d24d20b64c12b61984b5698"
     },
     {
       "path": "libraries/NUCODE_BLE_DirectionFinding/examples/README.md",
       "classification": "current_reference",
-      "action": "updated",
-      "review_depth": "full_text_review_and_automated_checks",
+      "action": "preserved",
+      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
       "external_read_only": false,
       "sha256_utf8_lf": "9402fca77f8d09942983d1cdba320b02f0f10cce4e1404d5ac57735177c01d0d"
     },
@@ -3459,7 +3462,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "285d1be3ac32b78def0cee4a9f02f79a6b6b0379e9ad9dae9f74522fa6909a35"
+      "sha256_utf8_lf": "c56285987302d97066594fb518d9010f07ab1cd762b5c9eaf20ff6b27217ed60"
     },
     {
       "path": "tests/hil/nu54dk/COMMON_WIRING.md",
@@ -3475,7 +3478,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "c998b31bd3b380958ac3628e4bed8a33fcb9aeee1128035b20d4263cdfa80c8f"
+      "sha256_utf8_lf": "dd2e6c3c9e44c01260e9a5b2256fe6c2e47b0657a663ae60b3e1a41461e1edaa"
     },
     {
       "path": "tests/hil/nu54dk/T13_PLAN.md",
@@ -3603,7 +3606,7 @@
       "action": "updated",
       "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "40ccda2427e1dd50fbfd48c0e311f110548e16e0b300e15449a0ddb074b4651d"
+      "sha256_utf8_lf": "a17d43485330c693c3b8b12a61b245f18c855fc2f823f3087d6464ab4d8165a7"
     },
     {
       "path": "tools/release/M11_README.md",
@@ -3640,10 +3643,10 @@
     {
       "path": "tools/release/README.md",
       "classification": "current_reference",
-      "action": "preserved",
-      "review_depth": "inventory_utf8_local_links_hash_and_status_search",
+      "action": "updated",
+      "review_depth": "full_text_review_and_automated_checks",
       "external_read_only": false,
-      "sha256_utf8_lf": "64761b35dbb44ab19159c15545a3ea73330ce7d7a100c02d24a082c2359d04c1"
+      "sha256_utf8_lf": "b6f9ab974c7a3ae3b028615c22ad6b41ffc050575a25e41b850997f114ba6693"
     },
     {
       "path": "tools/remote-windows/README.md",
@@ -3738,6 +3741,32 @@
       "External angle/control and CS result/multipeer remain NOT RUN and nonblocking.",
       "Product SDC raw IQ RX remains UNSUPPORTED.",
       "No W08, v0.5.0 release, tag, catalog publication or CI/CD claim."
+    ]
+  },
+  "w08_contract": {
+    "result": "PASS; M31-W08 and M31 completed",
+    "source_revision": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+    "github_actions_run_id": 36248923341,
+    "windows_rc": "0.5.0-rc.1 exact private package reproduced twice; publication_allowed=false.",
+    "installed_examples": "Eight fail-closed Windows shards built all 113 public examples exactly once with zero failures.",
+    "lifecycle": "Isolated v0.4.1 install, RC upgrade, uninstall, reinstall and cache boundary PASS without repeating the 113-build denominator.",
+    "physical": "Exact Actions RC upload/UART/setup breakpoint PASS; test board restored to W07 CS reflector image, advertising with no ACL or active CS procedure.",
+    "canonical_evidence": [
+      "00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/closure-audit.json",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/ci-aggregate.json",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/lifecycle.json",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/physical-upload-debug.json",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/post-hil-restore.json",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/diagnostic-history.json",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/host-regression.json",
+      "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/manifest.json"
+    ],
+    "claim_limits": [
+      "Installed and supported public version remains v0.4.1 until separately approved publication.",
+      "No tag, GitHub Release, catalog publication or public download smoke claim.",
+      "Ubuntu/macOS and HOST-W04-W08 remain deferred; M32/M33 remain not started.",
+      "CI/build evidence is not represented as physical HIL; only the bounded representative upload/UART/debug is physical PASS."
     ]
   }
 }

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "status": "PRESERVED",
+  "failed_or_cancelled_ci_runs": [
+    {
+      "run_id": 36238302917,
+      "source_revision": "5a75fd85659af5f3de886e215187a2ad39a2e9e8",
+      "status": "CANCELLED_AFTER_FAILURE",
+      "diagnosis": [
+        "post_install이 고정 NUCODE_NCS_INSTALL_ROOT를 사용하지 않음",
+        "서로 다른 절대 root를 한 upload-artifact 입력으로 전달함"
+      ]
+    },
+    {
+      "run_id": 36239764407,
+      "source_revision": "2c2bf0bc2eda112daab3325c014c34bd0733c40a",
+      "status": "CANCELLED_AFTER_FAILURE",
+      "diagnosis": [
+        "lifecycle 대표 build 상대 경로를 잘못 해석해 StopIteration 발생",
+        "외장 Audio와 Fabric 예제를 일반 ble profile로 잘못 분류함"
+      ]
+    },
+    {
+      "run_id": 36241541445,
+      "source_revision": "a2257170ca48f6027fa4cb0cdfbe5a002a7cd1ec",
+      "status": "CANCELLED_AFTER_FAILURE",
+      "diagnosis": [
+        "install/upgrade post_install 전 ready.json hash를 uninstall 보존 기준으로 사용함"
+      ]
+    },
+    {
+      "run_id": 36242627303,
+      "source_revision": "fb669f50460657ddbb97107476b13a5c573cc0dd",
+      "status": "FAILURE",
+      "diagnosis": [
+        "secure_ble_dfu sysbuild가 application과 MCUboot HEX를 함께 내보내는데 설치 예제 검증기가 top-level HEX 하나만 허용함",
+        "다른 7개 shard와 lifecycle은 PASS했지만 aggregate는 fail-closed로 전체 run을 FAIL 처리함"
+      ]
+    },
+    {
+      "run_id": 36245646295,
+      "source_revision": "065b026a70f83ff2c4e3c00e4e2a0de9a4834b86",
+      "status": "FAILURE",
+      "diagnosis": [
+        "8개 shard 113/113와 lifecycle은 모두 PASS했으나 aggregate PowerShell 임시 script의 한국어 오류 문자열이 Windows PowerShell 5에서 잘못 decode되어 parse error가 발생함",
+        "aggregate 실행 block을 ASCII-only로 고정하고 unit test로 workflow 전체 ASCII 계약을 추가함"
+      ]
+    }
+  ],
+  "host_environment_failures": [
+    {
+      "environment": "system Python 3.12",
+      "status": "FAIL",
+      "reason": "pyocd 미설치로 수집 단계 import error 4건"
+    },
+    {
+      "environment": "Nordic toolchain Python",
+      "status": "FAIL",
+      "reason": "process-lock child가 -I 없이 system stdlib를 상속함"
+    }
+  ],
+  "resolved_by": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+  "claim_limits": [
+    "실패·취소 원본을 최종 PASS로 덮어쓰지 않는다.",
+    "원인을 특정한 뒤 수정했고 무한 재시도를 사용하지 않았다.",
+    "CI build와 Host test를 물리 HIL PASS로 기록하지 않는다."
+  ]
+}

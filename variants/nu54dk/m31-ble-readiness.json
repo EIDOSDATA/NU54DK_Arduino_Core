@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "milestone": "M31",
-  "phase": "implementation_in_progress",
-  "milestone_status": "not_completed",
+  "phase": "completed",
+  "milestone_status": "completed",
   "baseline": {
     "supported_release": "v0.4.1",
     "source_version": "0.4.1-dev",
@@ -63,8 +63,8 @@
     {
       "id": "M31-W08",
       "title": "closure_handoff",
-      "status": "not_started",
-      "exact_evidence": null
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/closure-audit.json"
     }
   ],
   "capabilities": [
@@ -2133,9 +2133,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+          "evidence": "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/closure-audit.json"
         }
       ]
     }
@@ -2180,9 +2180,9 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 7,
+    "work_completed": 8,
     "test_family_total": 10,
-    "test_family_passed": 8,
+    "test_family_passed": 9,
     "audio_group_total": 11,
     "example_role_total": 43,
     "parity_rows": 703,

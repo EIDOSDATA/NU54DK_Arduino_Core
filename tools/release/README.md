@@ -3,9 +3,9 @@
 현재 설치·지원 버전은 **v0.4.1 하나**입니다. 설치·지원 문서는
 [릴리스 안내](../../00_Docs/05_릴리스/README.md), v0.4.1 유지보수 절차는
 `v041_release.py`와 [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md)를 확인합니다.
-현재 `main`은 `0.4.1-dev` 개발 소스이며 M31 진행 결과를 공개 v0.4.1 package 지원 범위로
-해석하지 않습니다. v0.5.0은 아직 공개하지 않았으며 M31 완료 뒤 Windows 10/11 x64 우선
-릴리스로 준비합니다. M32/M33 추가 기능과 Ubuntu/macOS 지원은 버전 미정인 후속 제품선입니다.
+현재 공개 설치·지원은 v0.4.1이며 M31 결과를 공개 v0.4.1 package 지원 범위로 해석하지 않습니다.
+`0.5.0-RC1`에서 M31과 Windows 10/11 x64 RC 준비를 완료했지만 v0.5.0은 아직 공개하지 않았습니다.
+M32/M33 추가 기능과 Ubuntu/macOS 지원은 버전 미정인 후속 제품선입니다.
 
 이 디렉터리는 제품 세대별 자동화 계약을 보존합니다. 과거 도구의 version allowlist와
 게시 명령을 현재 작업에 재사용하지 않으며, 공개된 버전을 다른 byte로 다시 게시하지 않습니다.
@@ -13,7 +13,7 @@
 | 제품선 | 절차 문서 | 주 도구 | 상태 |
 | --- | --- | --- | --- |
 | `v0.4.1` 유지보수 | [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md) | `v041_release.py` | 현재 설치·지원 기준 |
-| `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | `m31_release.py`, `m31_windows_lifecycle.py` | 미공개; `0.5.0-rc.1` 이중 재현·HOLD plan과 격리 Windows 설치·예제·수명주기 검증 |
+| `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | `m31_release.py`, `m31_windows_lifecycle.py`, `m31_windows_example_shard.py`, `m31_ci_aggregate.py` | M31 8/8·Windows RC 준비 완료, 미공개·소유자 승인 대기 |
 | `v0.4.0` / M27 | [M27_README.md](M27_README.md) | `m27_release.py`, `m27_stable_release.py` | 정식 공개·T24/T25 완료·동결 |
 | `v0.3.0` / M22 | [M22_README.md](M22_README.md) | `m22_release.py`, `m22_cleanroom.py` | 역사적·동결 |
 | `v0.2.0` / M18 | [M18_README.md](M18_README.md) | `m18_release.py` | 역사적·동결 |

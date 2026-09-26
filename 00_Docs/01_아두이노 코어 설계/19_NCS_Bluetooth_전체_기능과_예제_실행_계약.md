@@ -4,11 +4,11 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | 개발 source `0.4.1-dev`의 M31 `v0.5.0` Windows 릴리스와 M32·M33 후속 기능(버전 미정), M34~M45 인계 의존성 |
-| 현재 상태 | **M31 W01~W07 완료 7/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS·W06 자원/회귀·W07 설치 예제/HIL 완료. W08과 M32·M33은 미착수 |
+| 현재 상태 | **M31 W01~W08 완료 8/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS·W06 자원/회귀·W07 예제/HIL·W08 Windows RC 준비 완료. M32·M33은 미착수 |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
-| 최종 갱신일 | 2026-09-25 |
+| 최종 갱신일 | 2026-09-26 |
 
 전체 번호·제품선은 [제품 로드맵](02_구현_로드맵.md), 작업 묶음은 [M31 TODO](../TODO_M31.md),
 [M32 TODO](../TODO_M32.md), [M33 TODO](../TODO_M33.md), 현재 상태는
@@ -23,10 +23,10 @@
 
 ### 2026-09-21 릴리스 범위 결정
 
-`v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다. 완료한 W04~W07 다음 W08
-순서로 기능을 검증하고, M31-W08에서 해당 버전의 재현 package·Windows 설치 수명주기·RC·
-공개 승인/게시·공개 설치 gate를 관리한다. M31 기능 8/8과 릴리스 판정은 별도 집계한다.
-현재 `M31-MEM-OPT`에서 메모리 최적화 P0·P1·P2를 완료했다. P2의 지원 범위 오류·최악 부하,
+`v0.5.0`은 완료한 M31을 기준으로 Windows 우선으로 릴리스한다. M31-W08에서 해당 버전의 재현
+package·Windows 설치 수명주기·RC 준비를 완료했고 공개 승인/게시·공개 설치 gate는 별도로 남아
+있다. M31 기능 8/8과 릴리스 판정은 별도 집계한다. `M31-MEM-OPT`에서 메모리 최적화
+P0·P1·P2를 완료했다. P2의 지원 범위 오류·최악 부하,
 stack/heap 안전 여유·최종 크기, 동일 조건 Nordic native FLASH/RAM 비교는
 [262번](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)이 소유한다.
 SDK/controller와 standard/full 기본값은 바꾸지 않았다.
@@ -34,7 +34,7 @@ SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 M32·M33 추가 기능과 Ubuntu/macOS 확대는 버전 미정 후속 범위다. M33-W07~W08은 후속
 다중 Host·RC·공개를 계속 소유한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-현재 설치·지원 `v0.4.1`, 개발 source `0.4.1-dev`, M31 7/8·M32 0/12·M33 0/8·HOST 3/8은 유지한다.
+현재 설치·지원 `v0.4.1`, 개발 source `0.4.1-dev`, M31 8/8·M32 0/12·M33 0/8·HOST 3/8은 유지한다.
 
 ### 구현 책임과 실물 검증 gate
 
@@ -401,7 +401,7 @@ Arduino target으로 build한다. 기능 HIL과 negative가 필요한 항목은 
 ## 10. 전체 source·예제 parity 기계 원장
 
 다음 산출물의 생성기·schema·원장·Host 20/20 negative와 local drift gate는 **M31-W01에서 구현해
-완료**했다. 원격 CI/CD 실행·조회는 최신 사용자 지시로 생략했다. M31 capability 원장과 전체
+완료**했다. W08에서는 GitHub Actions 병렬 Windows RC 검증까지 수행했다. M31 capability 원장과 전체
 sample 원장은 서로 다른 목적이며 함께 연결한다. 개별 예제 target/Arduino build·기능 HIL은
 해당 M31/M32/M33 owner가 완료 전 별도로 닫는다.
 

@@ -3,50 +3,62 @@
   "release": "v0.5.0",
   "candidate_version": "0.5.0-rc.1",
   "host_scope": "Windows 10/11 x64",
-  "status": "preparation_in_progress",
+  "status": "rc_ready_awaiting_approval",
   "publication_allowed": false,
   "gates": [
     {
       "id": "m31_functionality",
       "kind": "automated_and_physical",
-      "status": "PENDING",
-      "evidence": [],
-      "reason": "M31-W08 마감 판정 전"
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/closure-audit.json",
+        "00_Docs/04_검증 기록/evidence/m31-w07-close-20260926/closure-audit.json",
+        "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json"
+      ]
     },
     {
       "id": "api_examples_support_matrix",
       "kind": "automated",
-      "status": "PENDING",
-      "evidence": [],
-      "reason": "W08 원장·지원표·문서 정합 검사 전"
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/closure-audit.json",
+        "00_Docs/document-review.json"
+      ]
     },
     {
       "id": "windows_package_reproducibility",
       "kind": "automated",
-      "status": "PENDING",
-      "evidence": [],
-      "reason": "exact RC package 이중 생성 전"
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/rc-plan-summary.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/ci-aggregate.json"
+      ]
     },
     {
       "id": "windows_clean_install_examples_upload",
       "kind": "automated_and_physical",
-      "status": "PENDING",
-      "evidence": [],
-      "reason": "격리 설치·전체 예제·대표 upload/runtime 검증 전"
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/ci-aggregate.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/physical-upload-debug.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/post-hil-restore.json"
+      ]
     },
     {
       "id": "windows_lifecycle",
       "kind": "automated",
-      "status": "PENDING",
-      "evidence": [],
-      "reason": "upgrade/reinstall/uninstall/cache 수명주기 검증 전"
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/lifecycle.json",
+        "00_Docs/04_검증 기록/evidence/m31-w08-close-20260926/ci-aggregate.json"
+      ]
     },
     {
       "id": "rc_review_and_owner_approval",
       "kind": "human",
       "status": "HOLD",
       "evidence": [],
-      "reason": "W08 완료 뒤 exact RC 결과에 대한 별도 공개 승인 필요"
+      "reason": "M31-W08 완료와 exact RC 준비 뒤에도 공개 승인 요청·승인은 별도 사용자 결정"
     },
     {
       "id": "public_assets_and_download_smoke",

@@ -24,8 +24,8 @@ Windows 10/11 x64 우선 릴리스다. Ubuntu AMD64·Apple Silicon macOS는 버�
 자동 검사·사용자 절차가 남아 있다. **현재 HOST-W04 이후는 사용자 지시로 보류 중**이다.
 Ubuntu/macOS의 실제 설치·USB upload·serial·debug·수명주기는 사용자가 해당 OS를 추가할 후속
 릴리스의 최종 단계에서 검증한다. 정식 지원의 최종 실물 gate는 유지한다.
-이번 문서·인계 작업의 CI/CD 생략은
-[CI/CD 계약의 현행 예외](08_M12_CI_CD와_재현_빌드.md)를 따른다.
+M31-W08의 Windows package·설치 예제·수명주기는 사용자 승인에 따라 GitHub Actions 병렬
+workflow로 검증했으며 [CI/CD 계약](08_M12_CI_CD와_재현_빌드.md)을 따른다.
 
 ---
 

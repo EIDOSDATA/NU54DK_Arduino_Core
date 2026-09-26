@@ -1,20 +1,22 @@
-# 개발 인계 — M31-W07 완료와 W08 인계
+# 개발 인계 — M31-W08과 M31 완료, v0.5.0 공개 승인 대기
 
-최종 정리: **2026-09-26**. 작업 브랜치는 **`M31-MEM-OPT`**이며 메모리 최적화
-**P0·P1·P2와 M31-W01~W07을 완료**했다. W04의 지원 CTE TX·response 재검증과
+최종 정리: **2026-09-27**. 작업 브랜치는 **`0.5.0-RC1`**이며 메모리 최적화
+**P0·P1·P2와 M31-W01~W08 8/8을 완료**했다. W04의 지원 CTE TX·response 재검증과
 제품 SDC IQ RX·AoD `UNSUPPORTED` 경계는 [263번 완료 기록](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)이 소유한다.
 P2의 오류·최악 부하, 최종 stack/heap 크기, 동등 Nordic native FLASH/RAM 비교 근거는
 [262번 완료 기록](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 있다. W07의
 설치 예제 49/49와 3보드 역할 HIL은 [266번 완료 기록](<04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>)이 소유한다.
-다음 실행의 단일 체크리스트는 [M31 TODO](TODO_M31.md#2-작업-묶음--8개-유지)다.
+W08 Windows RC 준비와 M31 마감은 [267번 완료 기록](<04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>)이 소유한다.
 
-## 1. 바로 이어서 할 작업
+## 1. 다음 작업
 
-P2와 W04~W07을 다시 열지 않고 M31의 마지막 미완료 작업 묶음 **W08**을 이어간다.
+M31 기능과 Windows RC 준비는 완료했다. 다음 단계는 자동 착수하지 않고 사용자의 별도 공개
+승인을 기다린다.
 
 | 순서 | 작업 | 완료 결과 |
 | --- | --- | --- |
-| 1 | W08 | 원장/지원표/문서·Windows package/clean install/RC 준비. 공개는 별도 승인 |
+| 1 | v0.5.0 공개 승인 | exact RC 결과·미지원/후속 경계를 검토하고 사용자 승인 확보 |
+| 2 | 승인 뒤 공개 | 승인된 exact 자산으로 tag/Release/catalog 공개 후 다운로드·설치 smoke |
 
 ### 다시 추가하지 않을 조건
 
@@ -38,7 +40,7 @@ P2와 W04~W07을 다시 열지 않고 M31의 마지막 미완료 작업 묶음 *
 | --- | --- | --- |
 | 공개 설치본 / 개발 소스 | v0.4.1 단독 지원 / 0.4.1-dev | [지원 안내](<05_릴리스/v0.4.1/README.md>) |
 | M28·M29·M30 | 각각 8/8 완료. M30 실제 전원 차단 12/12 | [v0.5.0 계획](TODO_v0.5.0.md) |
-| M31 | **W01~W07 완료 7/8**, W03 Audio 11/11·W04 DF·W05 CS·W06 자원/회귀·W07 설치 예제/HIL 완료. W08 미착수 | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W07](<04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) |
+| M31 | **W01~W08 완료 8/8**, 10개 family 판정 완료. Windows RC 이중 재현·설치 예제 113/113·수명주기·대표 upload/UART/debug PASS | [readiness](../variants/nu54dk/m31-ble-readiness.json) · [W08](<04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) |
 | 메모리 P0 / P1 / P2 | **모두 완료**. adaptive는 실험적 선택지, standard/full 기본값과 기존 최종 크기 유지 | [P0](<04_검증 기록/222_M31_메모리_최적화_P0_완료.md>) · [P1](<04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md>) · [P2](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | P2 오류·최악 부하 | CoC peer credit 1 직접 고갈·4 SDU 복구, Audio 양방향 10,000 frame·wrong Code `-61` 후 100 frame 복구, CS 256-step 중 peer reset 뒤 raw 20개 복구 | [P2 원본](<04_검증 기록/evidence/m31-p2-three-axes-20260925/>) |
 | P2 최종 크기 / native | MPSL 최소 관찰 여유 264 B 등으로 기존 크기 유지. CoC와 암호화 Audio 두 동등 쌍의 ELF/map 비교 PASS | [메모리 판정](<04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json>) · [native 비교](<04_검증 기록/evidence/m31-p2-three-axes-20260925/native-memory-comparison.json>) |
@@ -49,25 +51,24 @@ M29-W01~W08의 계약·상태는 [M29 착수 계약](<01_아두이노 코어 설
 `M30-POWER-01`은 [M30 착수 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>)과
 [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json)에 보존한다.
 
-W07 마감의 현재 전체 Host 기준선은 **1,520건 실행·2 skip·실패 0**이다. W07은 별도의 설치 예제 49/49,
-공개 예제 감사 113/113, 3보드 4-family HIL도 PASS했다.
+W08 마감의 현재 전체 Host 기준선은 [267번 기록](<04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>)에
+고정한다. W07의 설치 예제 49/49, 공개 예제 감사 113/113, 3보드 4-family HIL도 그대로 유효하다.
 P2 build·HIL·메모리/native 비교는 [262번](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>),
 W06 current build·Host·회귀와 당시 실물 `HOLD`는 [265번](<04_검증 기록/265_M31_W06_자원_수명주기와_영향_회귀_완료.md>)에,
 전원 재인가 뒤 W07 최종 실기는 [266번](<04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>)에 분리했다.
 
-## 3. P2 이후 순서 — P2 분모와 별개
+## 3. M31 이후 순서 — 공개와 후속 개발은 별도
 
-1. 완료한 **M31-W04~W07**의 증거와 실패/HOLD 원본을 다시 열지 않는다. 제품 SDC IQ RX·AoD
+1. 완료한 **M31-W04~W08**의 증거와 실패/HOLD 원본을 다시 열지 않는다. 제품 SDC IQ RX·AoD
    `UNSUPPORTED` 경계도 수신 구현 의무로 바꾸지 않는다.
-2. **W08**에서 원장·지원표·문서 마감과 Windows package·clean 설치·RC 준비를 수행한다.
-3. M31 **8/8 기능 완료**와 **v0.5.0 공개**는 별도다. tag/Release/catalog 공개는 별도 사용자
+2. M31 **8/8 기능 완료**와 **v0.5.0 공개**는 별도다. tag/Release/catalog 공개는 별도 사용자
    승인 후 수행한다. M32/M33·Ubuntu/macOS 확대와 보류한 Host 작업을 자동 재개하지 않는다.
 
 ## 4. 재개 전 확인과 고정 환경
 
 | 항목 | 기준 |
 | --- | --- |
-| 실제 저장소 / 브랜치 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `M31-MEM-OPT` |
+| 실제 저장소 / 브랜치 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `0.5.0-RC1` |
 | P2 실행 시작 HEAD | `46d4fb101513143d89b8533636e3ed671212fea4`; 이후 현재 SHA는 `git log -1`로 확인 |
 | Target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | NCS / Zephyr | v3.4.0 · `99553055607b2e9885fbc80ccd11fa9da81c2df0` / `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
@@ -83,5 +84,5 @@ W06 current build·Host·회귀와 당시 실물 `HOLD`는 [265번](<04_검증 �
   임의 전원·USB·결선 변경을 하지 않는다. 원시 probe UID·인증 정보는 공개하지 않는다.
 - 과거 source·image·실패 JSON과 공개 자산은 보존한다. 이력 대응은 [215번](<04_검증 기록/215_M31_W03_이력과_문서_정비.md>)·
   [221번](<04_검증 기록/221_main_마일스톤별_이력_정리.md>), 다른 PC 준비는 [Windows 환경](<02_빌드 설계/09_Windows_개발환경_설정.md>)을 따른다.
-- 안정된 변경을 `M31-MEM-OPT`에 커밋·푸시한다. main 반영·이력 재작성·release/tag는 수행하지 않는다.
-  **CI/CD 실행 요청·조회·대기는 생략**하고 로컬 검사를 사용한다.
+- M31 완료 변경은 `0.5.0-RC1`에 보존한다. `M31-MEM-OPT`는 역사 branch로 삭제하지 않는다.
+  main 반영·이력 재작성·release/tag/catalog 공개는 별도 승인 전 수행하지 않는다.

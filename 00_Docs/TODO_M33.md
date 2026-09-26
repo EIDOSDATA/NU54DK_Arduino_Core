@@ -8,19 +8,19 @@
 | 병행 Host 계획 | HOST-W08; 현재 W01~W03 완료 3/8, W04 이후 사용자 보류, 재개 후 별도 분모 유지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | 설치·지원 `v0.4.1`, 개발 source `0.4.1-dev`; 이 계획으로 버전을 올리지 않음 |
-| 최종 갱신일 | 2026-09-21 |
+| 최종 갱신일 | 2026-09-26 |
 
 M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지원표로 완성한다. 핵심 목표는
 고정 NCS에서 nRF54L15에 적용 가능한 Bluetooth 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것이다.
 전체 기능·upstream 대응·제공 방식은
 [NCS Bluetooth 전체 기능과 예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>),
 기능 구현은 [M31 TODO](TODO_M31.md)·[M32 TODO](TODO_M32.md), 제품선 진행은
-[제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W07 완료 7/8이며 M32·M33은 미착수다.
+[제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W08 8/8 완료이며 M32·M33은 미착수다.
 아래 항목은 모두 구현·검증 예정이며 완료 실적이 아니다. Host 병행 계획은 별도 재개 지시 이후에 적용한다.
 
 2026-09-21 사용자 결정에 따라 `v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다.
-그 버전의 재현 package·Windows 설치 수명주기·RC·공개 승인/게시·공개 설치 gate는
-[M31-W08](TODO_M31.md)이 소유한다. M33-W07~W08은 추가 기능과 다중 Host를 포함하는
+그 버전의 재현 package·Windows 설치 수명주기·RC 준비는 [M31-W08](TODO_M31.md)에서 완료했고,
+공개 승인/게시·공개 설치 gate는 별도로 남아 있다. M33-W07~W08은 추가 기능과 다중 Host를 포함하는
 후속 릴리스의 gate로 유지한다. M33 0/8이나 HOST 3/8을 완료로 올리거나 M31 출시에 합산하지 않는다.
 
 ## 1. Catalog와 지원 원칙
@@ -196,7 +196,7 @@ exact source가 바뀐 범위는 새 package와 해당 Host에서 검증한다. 
 - [ ] 승인된 exact plan으로 tag·Release·asset·stable index를 게시하고 기존 공개 자산을 보존한다.
 - [ ] 공개 URL의 hash·격리 설치·예제·대표 upload/runtime·수명주기를 검증한다.
 - [ ] `M33-RELEASE-01`에 승인·공개·공개 설치를 독립 결과로 남긴다. Exact push commit의 CI 확인은
-  최신 사용자의 명시적 생략 지시를 우선하며, 현재 인계에서는 CI/CD 실행 요청·조회·대기를 하지 않는다.
+  해당 시점의 최신 사용자 지시를 따른다. M31-W08의 CI 허용을 M33 공개 권한으로 확대하지 않는다.
 - [ ] README·API/profile·example catalog·release-readiness·검증 기록·HANDOFF와 제품 지원 버전을 맞춘다.
 - [ ] M34~M45와 별도 ARF에 남은 security/storage/radio/network/Matter·사용자 후속 외부 ecosystem·후속 Host 확대
   요구를 구체적 다음 행동·장비·owner·상태와 함께 인계한다.

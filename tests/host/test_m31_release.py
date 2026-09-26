@@ -42,15 +42,32 @@ class M31ReleaseTests(unittest.TestCase):
         self.assertNotIn("publish-release", source)
         self.assertNotIn("publish-index", source)
 
-    def test_package_pass_cannot_consume_remaining_gates(self) -> None:
-        """! @brief package 이중 재현만으로 설치·수명주기·승인을 PASS로 만들지 않습니다. """
+    def test_completed_preparation_leaves_only_publication_gates(self) -> None:
+        """! @brief W08 완료 뒤에도 승인과 공개 후 smoke는 자동 소비하지 않습니다. """
         _m31, release = MODULE.validate_contract(ROOT)
         remaining = MODULE.blockers(release, package_passed=True)
-        self.assertNotIn("windows_package_reproducibility", remaining)
-        self.assertIn("windows_clean_install_examples_upload", remaining)
-        self.assertIn("windows_lifecycle", remaining)
-        self.assertIn("rc_review_and_owner_approval", remaining)
-        self.assertIn("public_assets_and_download_smoke", remaining)
+        self.assertEqual([
+            "rc_review_and_owner_approval",
+            "public_assets_and_download_smoke",
+        ], remaining)
+
+    def test_final_rc_requires_all_m31_work_packages(self) -> None:
+        """! @brief W08을 다시 미완료로 바꾼 source의 최종 RC 생성을 거부합니다. """
+        m31 = json.loads((ROOT / MODULE.M31_READINESS).read_text(encoding="utf-8"))
+        release = (ROOT / MODULE.RELEASE_READINESS).read_bytes()
+        m31["work_packages"][-1]["status"] = "in_progress"
+        m31["counts"]["work_completed"] = 7
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / MODULE.M31_READINESS.parent).mkdir(parents=True)
+            (root / MODULE.RELEASE_READINESS.parent).mkdir(parents=True, exist_ok=True)
+            (root / MODULE.M31_READINESS).write_text(
+                json.dumps(m31, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            (root / MODULE.RELEASE_READINESS).write_bytes(release)
+            with self.assertRaisesRegex(MODULE.M31ReleaseFailure, "W01~W08 완료"):
+                MODULE.validate_contract(root)
 
     def test_pass_gate_requires_existing_evidence(self) -> None:
         """! @brief 증거 없는 PASS gate를 거부합니다. """

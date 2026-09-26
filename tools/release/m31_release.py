@@ -158,7 +158,7 @@ def configure_candidate(package: Any) -> None:
     package.configure_release_candidates(BASE_RC_VERSIONS + (VERSION,))
 
 
-## @brief M31 7/8 이상과 v0.5.0 Windows release gate schema를 검사합니다.
+## @brief M31 8/8 완료와 v0.5.0 Windows release gate schema를 검사합니다.
 def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], dict[str, Any]]:
     root = repository.resolve()
     m31 = strict_json(root / M31_READINESS)
@@ -168,11 +168,10 @@ def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], di
         m31.get("milestone") != "M31"
         or m31.get("counts", {}).get("work_total") != 8
         or len(packages) != 8
-        or any(item.get("status") != "completed" for item in packages[:7])
+        or any(item.get("status") != "completed" for item in packages)
         or packages[7].get("id") != "M31-W08"
-        or packages[7].get("status") not in {"not_started", "in_progress", "completed"}
     ):
-        raise M31ReleaseFailure("M31 W01~W07 완료 또는 W08 상태가 RC 준비 계약과 다릅니다")
+        raise M31ReleaseFailure("M31 W01~W08 완료 상태가 최종 RC 준비 계약과 다릅니다")
     fixed = {
         "schema_version": 1,
         "release": "v0.5.0",

@@ -4,14 +4,17 @@
 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
 **M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
 M30-W08 `M30-POWER-01`은 네 지점 × 3회 실제 전원 차단 12/12를 통과했고 HOST-W01~HOST-W03도
-완료했다. M31은 W01~W07 완료 7/8이고 W03 LE Audio 11/11, W04 Direction Finding, W05 Channel Sounding, W06 자원·수명주기·M19~M30 회귀, W07 설치 예제 49/49·3보드 역할 HIL을 닫았다. W08과 M32·M33은 미착수**다. M28~M30 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
+완료했다. M31도 W01~W08 8/8을 완료했다. W03 LE Audio 11/11, W04 Direction Finding,
+W05 Channel Sounding, W06 자원·수명주기·M19~M30 회귀, W07 설치 예제 49/49·3보드 역할 HIL,
+W08 Windows RC 준비를 닫았다. M32·M33은 미착수**다. M28~M31 완료는 v0.5.0 공개,
+mobile/desktop 전체 상호운용 또는
 Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
 
 **2026-09-21 사용자 결정: v0.5.0은 M31 완료 후 Windows 10/11 x64로 릴리스한다.**
 M32/M33의 추가 기능·전체 catalog와 Ubuntu/macOS 지원은 후속 버전(미정)으로 분리한다.
 M31 기능 완료만으로 공개하지 않으며 §6의 패키지·설치·RC·공개 승인 gate를 별도로 충족해야 한다.
 
-현재 브랜치는 **`M31-MEM-OPT`**다. 메모리 최적화 **P0·P1·P2를 완료**했으며
+현재 브랜치는 **`0.5.0-RC1`**다. 메모리 최적화 **P0·P1·P2와 M31 8/8을 완료**했으며
 실행별 경과는 [M31 TODO](TODO_M31.md#메모리-최적화-현재-상태), [HANDOFF](HANDOFF.md),
 [262번 P2 완료 기록](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 모은다.
 P2는 지원 범위 오류·최악 부하, stack·heap 안전 여유·최종 크기, 동등 조건 Nordic native
@@ -21,10 +24,10 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 따라 `UNSUPPORTED`·P2 범위 밖이다. CS 간헐 RF/controller loss·counter gap은 비차단 관찰값이며
 유효 raw·완료 수·STOP·fault·중복/역행 검사는 유지한다. SDC 내부 high-water 비노출도 추가 gate가
 아니다. SDK 역할/count별 요구량·8-byte 정렬을 준수하고 축소 근거가 없으면 pool을 유지한다.
-이 경계와 세 축을 입력으로 W04·W05를 완료했지만 릴리스 승인은 아니다.
+이 경계와 세 축을 입력으로 W04~W08을 완료했지만 릴리스 승인은 아니다.
 
-이후 구현 순서는 **W08·Windows 릴리스 준비**다.
-**HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 이번 문서 작업에서 재개하지 않는다.
+다음 순서는 **v0.5.0 RC 검토와 별도 공개 승인**이다.
+**HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 M32·M33도 자동 착수하지 않는다.
 
 | 정보 | 단일 원본 |
 | --- | --- |
@@ -46,6 +49,7 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
 | M28~M30 완료 근거 | [검증 기록 목차](<04_검증 기록/README.md>)의 milestone별 완료 기록 |
 | M31 W02 / W03 완료 근거 | [ISO 설치본](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) · [LE Audio 11/11](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
+| M31 W08 / 전체 완료 근거 | [Windows RC 준비와 M31 완료](<04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) |
 
 ## 1. 다음 착수 순서
 
@@ -59,7 +63,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
-| M31 / v0.5.0 | **7/8** | W01~W07과 메모리 최적화 P0~P2 완료. W07 설치 예제·적용 역할 HIL PASS를 기준으로 W08 마감·Windows 릴리스 준비. 네 기능 전체 동시 실행은 요구하지 않음 |
+| M31 / v0.5.0 | **8/8 완료** | 메모리 최적화 P0~P2, W04~W07 기능·회귀·예제/HIL과 W08 Windows RC 준비 완료. 공개는 별도 승인 대기 |
 | M32 / 후속 버전 미정 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
 | M33 / 후속 버전 미정 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 후속 Host·RC·공개 |
 | Host | **3/8, 보류** | HOST-W01~HOST-W03 완료. 재개 후 HOST-W04 prerequisite·HOST-W05 path/cache부터 진행 |
@@ -69,10 +73,9 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)를 따른다.
 목표 기본 경로는 사용자 선언과 필수 의존성만 포함하는 nRF native 수준의 구성에 우리 API의 최소
 필수 비용을 더하는 구조다. full은 명시적 호환 선택지로 보존했고 실제 절감량은 P2의 동등 조건에서 검증했다.
-P2 완료 수치와 W04~W07 완료 evidence를 유지하고 W08 마감·Windows 릴리스 준비를 닫는다. W05의
-독립 구현·분석은 병행할 수 있지만 같은
-probe/보드를 동시에 점유하지 않는다. 추가 외장 장치 확보는 자동 가능한 구현·검사의 선행조건이 아니다.
-M31 8/8과 Host 3/8은 독립 집계하며, v0.5.0 Windows 릴리스 준비는 M31-W08이 소유한다.
+P2 완료 수치와 W04~W08 완료 evidence를 유지한다. 추가 외장 장치 확보는 자동 가능한 구현·검사의
+선행조건이 아니다. M31 8/8과 Host 3/8은 독립 집계하며, v0.5.0 Windows 릴리스 준비는
+M31-W08에서 완료했고 공개 승인·게시·공개 후 smoke는 아직 남아 있다.
 사용자가 보드 3개 연결을 확인했다. 실제 mapping은 재검증하며, 정밀 RF·음질·거리/각도 보정은
 필수 gate 밖으로 변경한다. 보드 기반 실제 데이터·보안·복구 검증은 계속 필수다.
 
@@ -156,7 +159,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M32-A | power/path loss → timing/subrate → adv/EAD/identity/resource → Nordic LLPM/QoS/event | 새 자원 preset·실험적 opt-in·짝 예제·2/3보드 기능/negative |
 | M32-B | Mesh 기본 → Mesh 1.1 → BLOB/Mesh DFU/Distribution | node/model·key/settings·transfer·복구, 내부 RRAM/배포자 한계와 M36 인계 |
 | M32-C | 최소 radio/profile·802.15.4/ESB 단독 TX/RX → 선택 공존·복구 | MPSL ownership·loss/서비스 지연·M38/M39 공개 예제 인계 |
-| M31 릴리스 | 완료한 메모리 최적화·W04~W07 → W08 → Windows 패키지·clean 설치·RC → 별도 승인 후 v0.5.0 공개 | M28~M31 채택 범위·image/자원·예제·지원/제약·설치 수명주기 근거 |
+| M31 릴리스 | 메모리 최적화·W04~W08·Windows 패키지/clean 설치/RC 준비 완료 → 별도 승인 후 v0.5.0 공개 | M28~M31 채택 범위·image/자원·예제·지원/제약·설치 수명주기 근거 |
 | M33 / 후속 버전 | GATT/beacon·ecosystem·HCI/DTM 예제 → 전체 parity·interop → HOST-W08/RC → 후속 공개 | 누락 0 원장·예제 제공 범위·실행 증거·세 Host 지원/제약·qualification 적용성 |
 
 M31-A/B/C는 **M31 내부 작업 ID**다. 하나를 완료해 M31 전체 완료로 계산하지 않는다.
@@ -259,13 +262,13 @@ v0.4.0의 범위 제외는 그대로 보존한다.
 
 ### v0.5.0 공개 gate — 기능 8/8과 별도 판정
 
-- [ ] 메모리 최적화와 M31-W01~W08 8/8, 적용 가능한 필수 board-only HIL·M19~M30 영향 회귀 완료
-- [ ] M28~M31 채택 API·예제·profile·자원 상한·지원표·known limits와 readiness/parity 정합
-- [ ] 고정 SDK·board·toolchain과 exact release source의 Windows 패키지·manifest/hash·라이선스 검사
-- [ ] clean Windows 설치에서 채택된 전체 예제 발견·compile, 대표 upload/runtime·serial/debug 확인
-- [ ] Windows upgrade/reinstall/uninstall/cache 수명주기와 오류 복구 검사, 과거 지원 버전 이동 안내
+- [x] 메모리 최적화와 M31-W01~W08 8/8, 적용 가능한 필수 board-only HIL·M19~M30 영향 회귀 완료
+- [x] M28~M31 채택 API·예제·profile·자원 상한·지원표·known limits와 readiness/parity 정합
+- [x] 고정 SDK·board·toolchain과 exact release source의 Windows 패키지·manifest/hash·라이선스 검사
+- [x] clean Windows 설치에서 채택된 전체 예제 발견·compile, 대표 upload/runtime·serial/debug 확인
+- [x] Windows upgrade/reinstall/uninstall/cache 수명주기와 오류 복구 검사, 과거 지원 버전 이동 안내
 - [ ] RC 결과·회귀·사용자 후속 NOT RUN·미지원 경계를 검토하고 별도 공개 승인 확보
 - [ ] 승인된 exact 자산으로 tag/Release/catalog 공개, 실제 다운로드·설치 smoke와 배포 문서 확인
 
-위 항목은 아직 완료로 표시하지 않는다. 문서 정비나 브랜치 준비는 패키지 제작·공개 실행이
-아니다. 준비 산출물은 M31-W08이 소유하되 기능 완료와 실제 배포 결과를 따로 보고한다.
+앞의 다섯 준비 gate는 완료했다. 남은 두 항목은 사용자 공개 승인과 승인 뒤 실제 게시·다운로드
+smoke다. 준비 완료를 공개 완료로 해석하지 않는다.

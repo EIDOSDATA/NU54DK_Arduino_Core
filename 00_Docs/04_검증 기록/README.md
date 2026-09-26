@@ -1,8 +1,9 @@
 # 검증 기록
 
 시험 당시의 source·환경·조건·성공·실패와 원본 증거를 보존하는 색인입니다. 현재 설치·지원 버전은
-**v0.4.1**이고, 개발 소스는 **M28·M29·M30 완료, M31 7/8**입니다. M31-W03 LE Audio
-profile은 **11/11 PASS**, W04 Direction Finding, W05 Channel Sounding, W06 자원·수명주기·영향 회귀와 W07 설치 예제·3보드 역할 HIL은 **PASS**로 닫았으며 W08은 완료가 아닙니다. HOST-W01~W03은 완료했고
+**v0.4.1**이고, 개발 소스는 **M28·M29·M30·M31 완료**입니다. M31-W03 LE Audio
+profile은 **11/11 PASS**, W04 Direction Finding, W05 Channel Sounding, W06 자원·수명주기·영향 회귀,
+W07 설치 예제·3보드 역할 HIL과 W08 Windows RC 준비를 **PASS**로 닫았습니다. HOST-W01~W03은 완료했고
 HOST-W04~W08은 사용자 보류 상태입니다.
 
 지원 배포와 개발 중 기능을 구분하려면 [프로젝트 README](../../README.md)를, 다음 작업은
@@ -15,7 +16,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | 구분 | 상태 | 기준 문서 |
 | --- | --- | --- |
 | 설치·지원 | `v0.4.1`만 지원 | [v0.4.1 유지보수 기록](129_v0.4.1_설치기_유지보수_릴리스.md) |
-| 개발 소스 | M28·M29·M30 완료, M31 7/8 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
+| 개발 소스 | M28·M29·M30·M31 완료 | [v0.5.0 TODO](../TODO_v0.5.0.md) · [M31 TODO](../TODO_M31.md) |
 | M31-W01·W02 | 완료 | [W01/W02 진행 기록](165_M31_W01_착수와_W02_CIS_개발_후보.md) · [W02 최종 설치본 기록](199_M31_W02_격리_설치본_ISO_11예제와_완료.md) |
 | M31-W03 | LE Audio profile 11/11 PASS·완료 | [W03 종료 기록](214_M31_W03_LE_Audio_Profile_완료.md) |
 | M31 메모리 최적화 P0·P1 | 완료. P2의 동적 계측·안전 판정과 구별 | [P0](222_M31_메모리_최적화_P0_완료.md) · [P1](237_M31_메모리_최적화_P1_정적_저장소_완료.md) |
@@ -24,7 +25,7 @@ HOST-W04~W08은 사용자 보류 상태입니다.
 | M31-W05 | **완료.** secure RAS 100·20/20·20/20, 256-step raw 1,000, peer-loss 복구, 비암호화·wrong peer·one-sided stale-key 수용 0, flash 직후 독립 2회 PASS. ACL 유지 오류 경계와 실패 원본 보존 | [W05 완료](264_M31_W05_Channel_Sounding_완료.md) · [exact audit](evidence/m31-w05-close-20260925/closure-audit.json) |
 | M31-W06 | 완료 | [265번 완료 기록](265_M31_W06_자원_수명주기와_영향_회귀_완료.md) |
 | M31-W07 | 완료 | [266번 완료 기록](266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md) |
-| M31-W08 | 미착수 | [M31 TODO](../TODO_M31.md) |
+| M31-W08 | 완료. 비공개 RC 이중 재현, Windows 설치 예제 113/113, 수명주기·대표 upload/UART/debug PASS | [267번 완료 기록](267_M31_W08_Windows_RC_준비와_M31_완료.md) |
 | HOST-W04~W08 | 사용자 보류·미완료 | [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 
 지원 중인 `v0.4.1`과 개발 브랜치의 M31 결과는 서로 다른 범위입니다. M31 PASS를 설치본의
@@ -55,6 +56,7 @@ W05 기능 마감, W06 자원·수명주기·영향 회귀와 W07 설치 예제�
 
 | 기록 | 용도 |
 | --- | --- |
+| [267 — M31-W08 Windows RC 준비와 M31 완료](267_M31_W08_Windows_RC_준비와_M31_완료.md) | exact private RC 이중 재현, Windows 설치 예제 113/113 병렬 build, 0.4.1→RC 수명주기와 대표 실물 upload/UART/debug를 닫고 M31 8/8 확정; 공개 승인·tag·Release·catalog는 HOLD |
 | [264 — M31-W05 Channel Sounding 완료](264_M31_W05_Channel_Sounding_완료.md) | secure RAS·반복·256-step·peer-loss, 비암호화·wrong peer·one-sided stale-key negative와 flash 직후 경계를 닫고 M31 5/8 확정 |
 | [265 — M31-W06 자원·수명주기·영향 회귀 완료](265_M31_W06_자원_수명주기와_영향_회귀_완료.md) | 독립 image 4개 family 자원/종료 반환, target recovery 3종, M19~M30 12/12 영향 회귀를 닫고 M31 6/8 확정; 새 실물 debug protection 진단은 HOLD로 분리 |
 | [266 — M31-W07 설치 예제와 3보드 역할 HIL 완료](266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md) | 독립 설치 package 49/49, 공개 예제 113개 issue 0, ISO·Audio·DF·CS 최종 3보드 HIL과 43역할 분모를 닫고 M31 7/8 확정 |
