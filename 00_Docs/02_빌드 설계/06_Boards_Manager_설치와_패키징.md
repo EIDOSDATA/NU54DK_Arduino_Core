@@ -8,8 +8,9 @@
 | 이전 버전 | `0.4.1` 미만 stable·RC·preview 모두 지원·catalog 공급 종료 |
 | 공식 사용자 OS | Windows 10/11 x64 |
 
-이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.4.1` 계약이다. `v0.5.0`은 M31 완료 뒤
-Windows 10/11 x64 우선 릴리스로 준비한다. Ubuntu/macOS 확장은 버전 미정인 후속 제품선이며
+이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.4.1` 계약이다.
+[공개 `v0.5.0-rc.1`](../05_릴리스/v0.5.0-rc.1/README.md)은 별도 RC index로 설치하며 다운로드·설치 smoke를 완료했다.
+정식 v0.5.0 stable 승격은 별도다. Ubuntu/macOS 확장은 버전 미정인 후속 제품선이며
 [다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다.
 HOST-W01~W03은 3/8 완료, HOST-W04~W08은 사용자 재개 지시까지 보류다. 후속 OS의
 prerequisite·설치·실물 검증 gate는 유지하지만 M31 Windows 릴리스의 선행조건으로 두지 않는다.
@@ -22,7 +23,7 @@ Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL입니다.
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-Index는 지원 버전 `0.4.1` 하나만 제공합니다. 이전 모든 stable·RC·preview의 tag·Release·자산과
+Stable index는 `0.4.1` 하나만 제공합니다. `0.4.1` 미만 stable·RC·preview의 tag·Release·자산과
 검증 기록은 감사용으로 보존하지만 일반 설치·지원 목록에는 넣지 않습니다.
 
 Arduino CLI 설치 예시:

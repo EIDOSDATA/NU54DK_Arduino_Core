@@ -1,6 +1,7 @@
 """! @brief M31 CS one-sided stale-key fixture와 runner 계약을 검사합니다. """
 
 from importlib.util import module_from_spec, spec_from_file_location
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -26,21 +27,24 @@ class M31CsStaleKeyTests(unittest.TestCase):
 
         initiator = STALE.parse_status_line(
             "initiator",
-            "CSKEY initiator status bonds=1 pairing_rejected=1 "
-            "l2=0 ready=0 raw=0 connected=0",
+            "CSKEY initiator status bonds=1 pairing_requests=0 pairing_rejected=0 "
+            "security_errors=0 security_reason=0 disconnects=1 "
+            "disconnect_reason=6 l2=0 ready=0 raw=0 connected=0",
         )
         reflector = STALE.parse_status_line(
             "reflector",
-            "CSKEY reflector status bonds=0 pairing_rejected=2 "
-            "l2=0 ready=0 active=0 connected=0",
+            "CSKEY reflector status bonds=0 pairing_requests=0 pairing_rejected=0 "
+            "security_errors=1 security_reason=4 disconnects=1 "
+            "disconnect_reason=5 l2=0 ready=0 active=0 connected=0",
         )
         self.assertEqual(initiator["bonds"], 1)
         self.assertEqual(reflector["active"], 0)
         self.assertIsNone(
             STALE.parse_status_line(
                 "initiator",
-                "CSKEY initiator status bonds=1 pairing_rejected=1 "
-                "l2=0 ready=0 raw=0 connected=0 trailing",
+                "CSKEY initiator status bonds=1 pairing_requests=0 pairing_rejected=0 "
+                "security_errors=0 security_reason=0 disconnects=1 "
+                "disconnect_reason=6 l2=0 ready=0 raw=0 connected=0 trailing",
             )
         )
 
@@ -49,7 +53,12 @@ class M31CsStaleKeyTests(unittest.TestCase):
 
         initiator = {
             "bonds": 1,
-            "pairing_rejected": 1,
+            "pairing_requests": 0,
+            "pairing_rejected": 0,
+            "security_errors": 0,
+            "security_reason": 0,
+            "disconnects": 1,
+            "disconnect_reason": 6,
             "l2": 0,
             "ready": 0,
             "raw": 0,
@@ -57,13 +66,21 @@ class M31CsStaleKeyTests(unittest.TestCase):
         }
         reflector = {
             "bonds": 0,
-            "pairing_rejected": 1,
+            "pairing_requests": 0,
+            "pairing_rejected": 0,
+            "security_errors": 1,
+            "security_reason": 4,
+            "disconnects": 1,
+            "disconnect_reason": 5,
             "l2": 0,
             "ready": 0,
             "active": 0,
             "connected": 0,
         }
-        STALE.validate_negative_snapshot(initiator, reflector)
+        self.assertEqual(
+            STALE.validate_negative_snapshot(initiator, reflector),
+            "controller_key_failure_disconnect",
+        )
         for role, field in (
             (initiator, "raw"),
             (initiator, "l2"),
@@ -78,6 +95,30 @@ class M31CsStaleKeyTests(unittest.TestCase):
                 else:
                     STALE.validate_negative_snapshot(initiator, changed)
 
+        retained_initiator = initiator.copy()
+        retained_reflector = reflector.copy()
+        retained_initiator["disconnects"] = 0
+        retained_initiator["disconnect_reason"] = 0
+        retained_initiator["security_errors"] = 1
+        retained_initiator["security_reason"] = 2
+        retained_initiator["connected"] = 1
+        retained_reflector["disconnects"] = 0
+        retained_reflector["disconnect_reason"] = 0
+        retained_reflector["security_errors"] = 0
+        retained_reflector["security_reason"] = 0
+        retained_reflector["connected"] = 1
+        self.assertEqual(
+            STALE.validate_negative_snapshot(retained_initiator, retained_reflector),
+            "security_error_acl_retained",
+        )
+
+        retained_initiator["security_errors"] = 0
+        retained_initiator["security_reason"] = 0
+        with self.assertRaisesRegex(
+            STALE.StaleKeyFailure, "stale-key rejection signal missing"
+        ):
+            STALE.validate_negative_snapshot(retained_initiator, retained_reflector)
+
     def test_only_reflector_has_one_sided_stale_erase_command(self) -> None:
         """! @brief 초기 clean 뒤 stale 단계에서는 reflector만 bond를 삭제합니다. """
 
@@ -91,6 +132,33 @@ class M31CsStaleKeyTests(unittest.TestCase):
         self.assertIn("CSKEY reflector stale erased bonds=", reflector)
         self.assertIn("BLESecurity.acceptPairing(record.connection, accept)", initiator)
         self.assertIn("BLESecurity.acceptPairing(record.connection, accept)", reflector)
+
+    def test_adaptive_build_roles_are_explicit(self) -> None:
+        """! @brief 내부 fixture도 CS 역할을 fail-closed manifest로 선언합니다. """
+
+        for fixture, role in (
+            ("RasStaleKeyInitiator", "ble-cs-ras-initiator"),
+            ("RasStaleKeyReflector", "ble-cs-ras-reflector"),
+        ):
+            manifest = json.loads(
+                (HIL / f"fixtures/{fixture}/nucode-build.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(manifest["schema_version"], 1)
+            self.assertEqual(manifest["roles"], [role])
+            self.assertEqual(manifest["capabilities"], [])
+            self.assertEqual(manifest["capacities"], {})
+
+    def test_fixture_keeps_supported_security_mode(self) -> None:
+        """! @brief negative fixture가 제품 보안 API의 pairing mode를 덮어쓰지 않습니다. """
+
+        for fixture in ("RasStaleKeyInitiator", "RasStaleKeyReflector"):
+            configuration = (
+                HIL / f"fixtures/{fixture}/prj.conf"
+            ).read_text(encoding="utf-8")
+            self.assertNotIn("CONFIG_BT_SMP_SC_PAIR_ONLY=", configuration)
+            self.assertIn("CONFIG_BT_SMP_MIN_ENC_KEY_SIZE=16", configuration)
 
     def test_runner_labels_scope_without_arbitrary_ltk_claim(self) -> None:
         """! @brief 증적 명칭을 one-sided stale key로 한정하고 exact source를 요구할 수 있습니다. """

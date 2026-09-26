@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-cs-10-raw-memory",
+  "raw_target": 10,
+  "timeout_s": 180.0,
+  "image_sha256": {
+    "initiator": "35600bd52de57428d37256cd12e1890fe0961c871b34ec62b4e86336b0691883",
+    "reflector": "1efe4958284c05bc91a3695029d5f0e5d4eb1ad513eb0ac19148972f8d3a8ba5"
+  },
+  "probe_uid_sha256": {
+    "initiator": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "reflector": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "initiator": {
+      "app": "COM10",
+      "aux": "COM11"
+    },
+    "reflector": {
+      "app": "COM13",
+      "aux": "COM12"
+    }
+  },
+  "start": {
+    "reflector": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "initiator": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "initiator": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=cs-initiator",
+      "P2_PHASE name=ready",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=232",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=BT GATT DM WQ reserved=1304 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=496",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=516 allocated=0 peak=0",
+      "CS initiator connected; securing",
+      "CS procedures requested",
+      "CS_DIAG counter=0 peer_bytes=2379 local_bytes=2883 mtu=65",
+      "CS_RAW counter=0 local=256 peer=256 rtt=55 tone=195 valid_rtt=52 distance_m=6.196",
+      "CS_DIAG counter=1 peer_bytes=2370 local_bytes=2874 mtu=65",
+      "CS_RAW counter=1 local=256 peer=256 rtt=58 tone=192 valid_rtt=45 distance_m=5.991",
+      "CS_DIAG counter=2 peer_bytes=2382 local_bytes=2886 mtu=65",
+      "CS_RAW counter=2 local=256 peer=256 rtt=54 tone=196 valid_rtt=47 distance_m=5.514",
+      "CS_DIAG counter=3 peer_bytes=2379 local_bytes=2883 mtu=65",
+      "CS_RAW counter=3 local=256 peer=256 rtt=55 tone=195 valid_rtt=54 distance_m=5.985",
+      "CS_DIAG counter=4 peer_bytes=2370 local_bytes=2874 mtu=65",
+      "CS_RAW counter=4 local=256 peer=256 rtt=58 tone=192 valid_rtt=53 distance_m=5.586",
+      "CS_DIAG counter=5 peer_bytes=2373 local_bytes=2877 mtu=65",
+      "CS_RAW counter=5 local=256 peer=256 rtt=57 tone=193 valid_rtt=49 distance_m=6.118",
+      "CS_DIAG counter=6 peer_bytes=2376 local_bytes=2880 mtu=65",
+      "CS_RAW counter=6 local=256 peer=256 rtt=56 tone=194 valid_rtt=33 distance_m=5.585",
+      "CS_DIAG counter=7 peer_bytes=2376 local_bytes=2880 mtu=65",
+      "CS_RAW counter=7 local=256 peer=256 rtt=56 tone=194 valid_rtt=49 distance_m=6.533",
+      "CS_DIAG counter=8 peer_bytes=2370 local_bytes=2874 mtu=65",
+      "CS_RAW counter=8 local=256 peer=256 rtt=58 tone=192 valid_rtt=39 distance_m=6.626",
+      "CS_DIAG counter=9 peer_bytes=2367 local_bytes=2871 mtu=65",
+      "CS_RAW counter=9 local=256 peer=256 rtt=59 tone=191 valid_rtt=32 distance_m=5.879",
+      "CS procedures stop requested",
+      "P2_CS_STATS completed=10",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=1520",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=744",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=BT GATT DM WQ reserved=1304 used=352",
+      "P2_STACK name=sysworkq reserved=4096 used=288",
+      "P2_STACK name=MPSL Work reserved=1024 used=488",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=1048",
+      "P2_STACK name=ISR0 reserved=2048 used=516",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=516 allocated=0 peak=264",
+      "P2_STOP role=cs-initiator",
+      "CS disconnect requested",
+      "CS initiator disconnected"
+    ],
+    "reflector": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=cs-reflector",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RAS RRSP WQ reserved=1024 used=48",
+      "P2_STACK name=bt_tx_processor reserved=904 used=232",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=496",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "CS reflector advertising",
+      "CS reflector connected",
+      "CS reflector secure L2",
+      "CS reflector config ready",
+      "CS procedures enabled",
+      "CS reflector disconnected",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=1232",
+      "P2_STACK name=BT RAS RRSP WQ reserved=1024 used=428",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=1168",
+      "P2_STACK name=sysworkq reserved=4096 used=448",
+      "P2_STACK name=MPSL Work reserved=1024 used=760",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=1032",
+      "P2_STACK name=ISR0 reserved=2048 used=476",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=cs-reflector"
+    ]
+  },
+  "raw_count": 10,
+  "counter_gaps": [],
+  "result": "PASS",
+  "firmware_completed": 10
+}

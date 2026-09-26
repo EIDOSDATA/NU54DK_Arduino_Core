@@ -16,6 +16,18 @@
 #include <errno.h>
 #include <string.h>
 
+#if !defined(CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE)
+#define CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE 512
+#endif
+
+#if !defined(CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE)
+#define CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE 512
+#endif
+
+#if !defined(CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT)
+#define CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT 64
+#endif
+
 namespace nucode::ble::internal
 {
 
@@ -283,11 +295,26 @@ namespace nucode::ble::internal::gatt
     using nucode::ble::internal::GattAccess;
 
     inline constexpr std::size_t maximum_services = CONFIG_NUCODE_BLE_GATT_MAX_SERVICES;
-    inline constexpr std::size_t maximum_characteristics = BLEService::maximum_characteristics;
+    inline constexpr std::size_t maximum_characteristics =
+        CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE;
     inline constexpr std::size_t maximum_descriptors = BLECharacteristic::maximum_descriptors;
+    inline constexpr std::size_t maximum_value_length = BLECharacteristic::maximum_value_length;
+    inline constexpr std::size_t maximum_event_payload_length =
+        CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE;
+    inline constexpr std::size_t maximum_tx_payload_length =
+        CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE;
+    inline constexpr std::size_t maximum_server_tx_contexts =
+        CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT;
+    static_assert(maximum_event_payload_length >= 1U &&
+                      maximum_event_payload_length <= maximum_value_length,
+                  "GATT event payload 크기가 공개 값 범위를 벗어났습니다.");
+    static_assert(maximum_tx_payload_length >= 1U &&
+                      maximum_tx_payload_length <= maximum_value_length,
+                  "GATT TX payload 크기가 공개 값 범위를 벗어났습니다.");
+    static_assert(maximum_server_tx_contexts >= 1U && maximum_server_tx_contexts <= 128U,
+                  "GATT server TX context 수가 검증 범위를 벗어났습니다.");
     inline constexpr std::size_t maximum_attributes =
         1U + maximum_characteristics * (3U + maximum_descriptors);
-    inline constexpr std::size_t maximum_value_length = BLECharacteristic::maximum_value_length;
 
     static_assert(maximum_services > 0U, "GATT service slot이 하나 이상 필요합니다.");
     static_assert(CONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE <=
@@ -319,15 +346,7 @@ namespace nucode::ble::internal::gatt
         }
     };
 
-    /** @brief 등록 service 하나의 attribute와 async 전송 수명을 보존합니다. */
-    struct NotificationContext
-    {
-        BLECharacteristic *characteristic = nullptr;
-        struct bt_conn *connection = nullptr;
-        std::uint32_t generation = 0U;
-    };
-
-    /** @brief 등록 service 하나의 attribute와 async 전송 수명을 보존합니다. */
+    /** @brief 등록 service 하나의 attribute 수명을 보존합니다. */
     struct ServiceSlot
     {
         BLEService *owner = nullptr;
@@ -340,14 +359,6 @@ namespace nucode::ble::internal::gatt
         struct bt_gatt_ccc_managed_user_data ccc[maximum_characteristics] = {};
         BLECharacteristic *characteristics[maximum_characteristics] = {};
         BLEDescriptor *descriptors[maximum_characteristics][maximum_descriptors] = {};
-        NotificationContext notifications[maximum_characteristics] = {};
-        std::uint8_t notification_data[maximum_characteristics][maximum_value_length] = {};
-        atomic_t notification_active[maximum_characteristics] = {};
-        struct bt_gatt_indicate_params indications[maximum_characteristics] = {};
-        std::uint8_t indication_data[maximum_characteristics][maximum_value_length] = {};
-        atomic_t indication_active[maximum_characteristics] = {};
-        struct bt_conn *indication_connections[maximum_characteristics] = {};
-        std::uint32_t indication_generations[maximum_characteristics] = {};
         std::size_t value_attribute_index[maximum_characteristics] = {};
         std::size_t ccc_attribute_index[maximum_characteristics] = {};
         std::size_t descriptor_attribute_index[maximum_characteristics][maximum_descriptors] = {};
@@ -365,19 +376,27 @@ namespace nucode::ble::internal::gatt
         } owner_kind;
         std::uint32_t generation;
         BLEConnectionHandle connection;
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
         BLECharacteristic *characteristic;
         BLEDescriptor *descriptor;
         BLECharacteristicEvent server_event;
         BLEGattAuthorizationOperation authorization_operation;
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         BLEGattClientEvent client_event;
+#endif
         std::uint16_t length;
         std::uint16_t offset;
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
         bool without_response;
         bool persist_signing;
+#endif
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
         std::uint8_t att_error;
         BLEGattBearer bearer;
+#endif
         int status;
-        std::uint8_t data[maximum_value_length];
+        std::uint8_t data[maximum_event_payload_length];
     };
 
     /** @brief generic client discovery의 bounded 비동기 단계입니다. */
@@ -435,6 +454,25 @@ namespace nucode::ble::internal::gatt
     ServiceSlots &serviceSlots() noexcept;
     inline constexpr std::size_t maximum_prepare_transactions = 2U;
 
+    /** @brief shared server TX context의 전송 종류입니다. */
+    enum class ServerTxKind : std::uint8_t
+    {
+        notification,
+        indication,
+    };
+
+    /** @brief notification 또는 indication 하나의 비동기 수명을 보존합니다. */
+    struct ServerTxContext
+    {
+        atomic_t active = ATOMIC_INIT(0);
+        ServerTxKind kind = ServerTxKind::notification;
+        BLECharacteristic *characteristic = nullptr;
+        struct bt_conn *connection = nullptr;
+        std::uint32_t generation = 0U;
+        struct bt_gatt_indicate_params indication = {};
+        std::uint8_t data[maximum_tx_payload_length] = {};
+    };
+
     /** @brief link 하나의 long write prepare 범위를 고정 상태로 소유합니다. */
     struct PrepareTransaction
     {
@@ -448,7 +486,9 @@ namespace nucode::ble::internal::gatt
     struct ServerState
     {
         struct k_spinlock characteristic_value_lock;
+        struct k_spinlock tx_context_lock;
         PrepareTransaction prepare_transactions[maximum_prepare_transactions] = {};
+        ServerTxContext tx_contexts[maximum_server_tx_contexts] = {};
     };
     ServerState &serverState() noexcept;
 
@@ -463,7 +503,14 @@ namespace nucode::ble::internal::gatt
         atomic_t gatt_session_generation = ATOMIC_INIT(1);
     };
     SessionState &sessionState() noexcept;
+    /** @brief 동시 GATT client 상태를 실제 Bluetooth 연결 상한과 공개 2-link 상한 중 작게 잡습니다. */
+#if defined(CONFIG_BT_MAX_CONN)
+    inline constexpr std::size_t maximum_client_contexts =
+        CONFIG_BT_MAX_CONN < 2 ? CONFIG_BT_MAX_CONN : 2U;
+#else
     inline constexpr std::size_t maximum_client_contexts = 2U;
+#endif
+    static_assert(maximum_client_contexts >= 1U, "GATT client context가 하나 이상 필요합니다.");
 
     /** @brief 공개 client callback은 두 link가 공유하고 event가 link를 식별합니다. */
     struct ClientCallbacks
@@ -510,7 +557,7 @@ namespace nucode::ble::internal::gatt
         struct bt_gatt_read_params cache_read_parameters = {};
         struct bt_gatt_write_params cache_write_parameters = {};
         struct bt_gatt_subscribe_params cache_subscribe_parameters = {};
-        std::uint8_t read_data[maximum_value_length] = {};
+        std::uint8_t read_data[maximum_event_payload_length] = {};
         std::uint8_t remote_database_hash[GattDatabase::hash_length] = {};
         std::uint8_t client_features_value = 1U;
         std::uint16_t read_handles[maximum_descriptors] = {};
@@ -522,7 +569,7 @@ namespace nucode::ble::internal::gatt
         std::uint16_t client_features_handle = 0U;
         std::uint16_t database_hash_handle = 0U;
         std::uint16_t descriptor_end_handle = 0U;
-        std::uint8_t write_data[maximum_value_length] = {};
+        std::uint8_t write_data[maximum_tx_payload_length] = {};
         std::size_t read_length = 0U;
         bool read_multiple = false;
         struct bt_conn *client_operation_connection = nullptr;
@@ -711,8 +758,6 @@ namespace nucode::ble::internal::gatt
                             std::uint8_t flags) noexcept;
     void cccChanged(const struct bt_gatt_attr *attribute, std::uint16_t value) noexcept;
     void notificationCompleted(struct bt_conn *connection, void *user_data) noexcept;
-    bool findIndication(struct bt_gatt_indicate_params *parameters, ServiceSlot *&slot,
-                        std::size_t &index) noexcept;
     void indicationCompleted(struct bt_conn *connection, struct bt_gatt_indicate_params *parameters,
                              std::uint8_t error) noexcept;
     void indicationDestroyed(struct bt_gatt_indicate_params *parameters) noexcept;

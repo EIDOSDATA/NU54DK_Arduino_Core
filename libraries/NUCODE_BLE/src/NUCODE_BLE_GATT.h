@@ -13,6 +13,10 @@
 #include <cstddef>
 #include <cstdint>
 
+#if !defined(CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE)
+#define CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE 512
+#endif
+
 namespace nucode::ble
 {
 
@@ -132,8 +136,17 @@ namespace nucode::ble
     {
       public:
         static constexpr std::size_t maximum_value_length = 512U;
+        static constexpr std::size_t maximum_inline_value_length =
+            CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE;
+        static_assert(maximum_inline_value_length >= 1U &&
+                          maximum_inline_value_length <= maximum_value_length,
+                      "GATT inline value 크기가 공개 값 범위를 벗어났습니다.");
 
-        /** @brief 내부 고정 buffer를 사용하는 descriptor를 선언합니다. */
+        /**
+         * @brief 내부 고정 buffer를 사용하는 descriptor를 선언합니다.
+         * @note capacity는 maximum_inline_value_length 이하여야 합니다. 더 큰 값은
+         * caller-owned buffer overload를 사용합니다.
+         */
         BLEDescriptor(const BLEUuid &uuid, BLEPermission permissions,
                       std::size_t capacity = 20U) noexcept;
 
@@ -174,7 +187,7 @@ namespace nucode::ble
         std::uint8_t *value_ = nullptr;
         std::size_t capacity_ = 0U;
         std::size_t value_length_ = 0U;
-        std::uint8_t internal_value_[maximum_value_length] = {};
+        std::uint8_t internal_value_[maximum_inline_value_length] = {};
         BLEGattAuthorizationCallback authorization_callback_ = nullptr;
         void *authorization_context_ = nullptr;
         bool registered_ = false;
@@ -191,9 +204,18 @@ namespace nucode::ble
     {
       public:
         static constexpr std::size_t maximum_value_length = 512U;
+        static constexpr std::size_t maximum_inline_value_length =
+            CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE;
         static constexpr std::size_t maximum_descriptors = 4U;
+        static_assert(maximum_inline_value_length >= 1U &&
+                          maximum_inline_value_length <= maximum_value_length,
+                      "GATT inline value 크기가 공개 값 범위를 벗어났습니다.");
 
-        /** @brief 내부 고정 buffer를 사용하는 characteristic을 선언합니다. */
+        /**
+         * @brief 내부 고정 buffer를 사용하는 characteristic을 선언합니다.
+         * @note capacity는 maximum_inline_value_length 이하여야 합니다. 더 큰 값은
+         * caller-owned buffer overload를 사용합니다.
+         */
         BLECharacteristic(const BLEUuid &uuid, BLEProperty properties, BLEPermission permissions,
                           std::size_t capacity = 20U) noexcept;
 
@@ -271,7 +293,7 @@ namespace nucode::ble
         std::uint8_t *value_ = nullptr;
         std::size_t capacity_ = 0U;
         std::size_t value_length_ = 0U;
-        std::uint8_t internal_value_[maximum_value_length] = {};
+        std::uint8_t internal_value_[maximum_inline_value_length] = {};
         BLECharacteristicCallback callback_ = nullptr;
         void *callback_context_ = nullptr;
         BLEGattAuthorizationCallback authorization_callback_ = nullptr;

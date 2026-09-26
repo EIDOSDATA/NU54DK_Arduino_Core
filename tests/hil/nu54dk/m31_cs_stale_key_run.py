@@ -44,16 +44,44 @@ def parse_status_line(role: str, line: str) -> dict[str, int] | None:
 
     if role == "initiator":
         pattern = re.compile(
-            r"CSKEY initiator status bonds=(\d+) pairing_rejected=(\d+) "
-            r"l2=(\d+) ready=(\d+) raw=(\d+) connected=([01])"
+            r"CSKEY initiator status bonds=(\d+) pairing_requests=(\d+) "
+            r"pairing_rejected=(\d+) security_errors=(\d+) security_reason=(\d+) "
+            r"disconnects=(\d+) disconnect_reason=(\d+) l2=(\d+) ready=(\d+) "
+            r"raw=(\d+) connected=([01])"
         )
-        names = ("bonds", "pairing_rejected", "l2", "ready", "raw", "connected")
+        names = (
+            "bonds",
+            "pairing_requests",
+            "pairing_rejected",
+            "security_errors",
+            "security_reason",
+            "disconnects",
+            "disconnect_reason",
+            "l2",
+            "ready",
+            "raw",
+            "connected",
+        )
     elif role == "reflector":
         pattern = re.compile(
-            r"CSKEY reflector status bonds=(\d+) pairing_rejected=(\d+) "
-            r"l2=(\d+) ready=(\d+) active=(\d+) connected=([01])"
+            r"CSKEY reflector status bonds=(\d+) pairing_requests=(\d+) "
+            r"pairing_rejected=(\d+) security_errors=(\d+) security_reason=(\d+) "
+            r"disconnects=(\d+) disconnect_reason=(\d+) l2=(\d+) ready=(\d+) "
+            r"active=(\d+) connected=([01])"
         )
-        names = ("bonds", "pairing_rejected", "l2", "ready", "active", "connected")
+        names = (
+            "bonds",
+            "pairing_requests",
+            "pairing_rejected",
+            "security_errors",
+            "security_reason",
+            "disconnects",
+            "disconnect_reason",
+            "l2",
+            "ready",
+            "active",
+            "connected",
+        )
     else:
         raise ValueError("role must be initiator or reflector")
     match = pattern.fullmatch(line)
@@ -64,17 +92,35 @@ def parse_status_line(role: str, line: str) -> dict[str, int] | None:
 
 def validate_negative_snapshot(
     initiator: dict[str, int], reflector: dict[str, int]
-) -> None:
-    """! @brief stale 한쪽 삭제와 repair 거부 뒤 CS 무진행을 판정합니다. """
+) -> str:
+    """! @brief stale 한쪽 삭제 뒤 fail-closed 보안 경로와 CS 무진행을 판정합니다. """
 
     if initiator["bonds"] != 1 or reflector["bonds"] != 0:
         raise StaleKeyFailure("one-sided bond count mismatch")
-    if initiator["pairing_rejected"] < 1 or reflector["pairing_rejected"] < 1:
-        raise StaleKeyFailure("repair pairing was not explicitly rejected by both roles")
+    for role in (initiator, reflector):
+        if role["pairing_requests"] != role["pairing_rejected"]:
+            raise StaleKeyFailure("repair pairing request was not rejected")
+        if role["security_errors"] > 0 and role["security_reason"] == 0:
+            raise StaleKeyFailure("security error reason missing")
+        if role["disconnects"] > 0 and role["disconnect_reason"] == 0:
+            raise StaleKeyFailure("negative disconnect reason missing")
     if any(initiator[name] != 0 for name in ("l2", "ready", "raw")):
         raise StaleKeyFailure("initiator advanced after stale-key rejection")
     if any(reflector[name] != 0 for name in ("l2", "ready", "active")):
         raise StaleKeyFailure("reflector advanced after stale-key rejection")
+    if any(role["pairing_rejected"] > 0 for role in (initiator, reflector)):
+        return "application_repair_rejected"
+    security_error = any(
+        (role["security_errors"] > 0) or (role["disconnects"] > 0)
+        for role in (initiator, reflector)
+    )
+    if not security_error:
+        raise StaleKeyFailure("stale-key rejection signal missing")
+    if initiator["connected"] != 0 or reflector["connected"] != 0:
+        if not any(role["security_errors"] > 0 for role in (initiator, reflector)):
+            raise StaleKeyFailure("connected stale-key link lacks security error")
+        return "security_error_acl_retained"
+    return "controller_key_failure_disconnect"
 
 
 def _read_lines(port: Any, lines: list[str]) -> list[str]:
@@ -356,15 +402,6 @@ def main() -> int:
                 )
                 negative_started = time.monotonic()
                 _send(initiator, b"n")
-                _wait_markers(
-                    ports,
-                    record,
-                    {
-                        "initiator": ("CSKEY initiator repair pairing rejected",),
-                        "reflector": ("CSKEY reflector repair pairing rejected",),
-                    },
-                    20.0,
-                )
                 while time.monotonic() - negative_started < args.negative_window:
                     _pump(ports, record, 0.05)
 
@@ -389,7 +426,13 @@ def main() -> int:
                 reflector_status = _latest_status(
                     "reflector", record["reflector_lines"]
                 )
-                validate_negative_snapshot(initiator_status, reflector_status)
+                record["rejection_path"] = validate_negative_snapshot(
+                    initiator_status, reflector_status
+                )
+                record["acl_connected_before_stop"] = {
+                    "initiator": bool(initiator_status["connected"]),
+                    "reflector": bool(reflector_status["connected"]),
+                }
                 record["initiator_negative"] = initiator_status
                 record["reflector_negative"] = reflector_status
                 _stop(ports, record)

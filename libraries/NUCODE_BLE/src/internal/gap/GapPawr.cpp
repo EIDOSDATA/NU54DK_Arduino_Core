@@ -138,20 +138,26 @@ namespace nucode::ble::internal::gap
 
     void releasePawrSet(BLEAdvertisingSetHandle handle) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_RSP)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
         if (gapState().pawr.advertising_set == handle)
         {
             gapState().pawr = PawrContext{};
         }
         k_spin_unlock(&gapState().configuration_lock, key);
+#else
+        ARG_UNUSED(handle);
+#endif
     }
 
     void endPawr() noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_RSP)
         k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
         gapState().pawr = PawrContext{};
         k_spin_unlock(&gapState().configuration_lock, key);
         k_msgq_purge(&pawrResponseQueue());
+#endif
     }
 } // namespace nucode::ble::internal::gap
 
@@ -405,11 +411,16 @@ namespace nucode::ble
 
     int Pawr::available() const noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_RSP)
         return static_cast<int>(k_msgq_num_used_get(&pawrResponseQueue()));
+#else
+        return 0;
+#endif
     }
 
     bool Pawr::read(BLEPawrResponse &response) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_RSP)
         PawrResponseRecord record = {};
         while (k_msgq_get(&pawrResponseQueue(), &record, K_NO_WAIT) == 0)
         {
@@ -421,12 +432,21 @@ namespace nucode::ble
             }
         }
         return false;
+#else
+        ARG_UNUSED(response);
+        return false;
+#endif
     }
 
     void Pawr::onResponse(BLEPawrResponseCallback callback, void *context) noexcept
     {
+#if defined(CONFIG_BT_PER_ADV_RSP)
         gapState().pawr_response_callback = callback;
         gapState().pawr_response_context = context;
+#else
+        ARG_UNUSED(callback);
+        ARG_UNUSED(context);
+#endif
     }
 
     std::uint32_t Pawr::droppedResponses() const noexcept

@@ -36,6 +36,7 @@ class M28BlePawrTests(unittest.TestCase):
                 "-DCONFIG_BT_EXT_ADV=1",
                 "-DCONFIG_BT_PER_ADV=1",
                 "-DCONFIG_BT_PER_ADV_SYNC=1",
+                "-DCONFIG_BT_OBSERVER=1",
                 "-DCONFIG_BT_PER_ADV_RSP=1",
                 "-DCONFIG_BT_PER_ADV_SYNC_RSP=1",
                 "-DCONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER=1",

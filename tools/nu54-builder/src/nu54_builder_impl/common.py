@@ -45,16 +45,29 @@ DEFAULT_BOARD = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
 DEFAULT_PROFILE = "standard"
 
 
-PROFILE_SCHEMA_VERSION = 2
+PROFILE_SCHEMA_VERSION = 3
 
 
-FEATURE_SCHEMA_VERSION = 1
+FEATURE_SCHEMA_VERSION = 3
+
+
+CAPABILITY_REGISTRY_SCHEMA_VERSION = 4
+
+
+CAPABILITY_DECLARATION_SCHEMA_VERSION = 1
+
+
+CAPABILITY_RESOLUTION_SCHEMA_VERSION = 4
+
+
+CAPABILITY_PROBE_SCHEMA_VERSION = 1
 
 
 FEATURE_ALLOWLIST = {
     "NUCODE_BLE": "nucode.ble.nus",
     "NUCODE_BLE_ISO": "nucode.ble.iso",
     "NUCODE_BLE_Audio": "nucode.ble.audio",
+    "NUCODE_BLE_ChannelSounding": "nucode.ble.channel_sounding",
     "NUCODE_BLE_DirectionFinding": "nucode.ble.direction_finding",
     "NUCODE_BLE_DFU": "nucode.ble.dfu",
     "NUCODE_BLE_EATT": "nucode.ble.eatt",

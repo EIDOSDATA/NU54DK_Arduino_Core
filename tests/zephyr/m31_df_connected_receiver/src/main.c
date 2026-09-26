@@ -16,11 +16,13 @@
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/bluetooth/hci_types.h>
 #include <zephyr/device.h>
+#include <zephyr/debug/thread_analyzer.h>
 #include <zephyr/drivers/uart.h>
 #include <zephyr/kernel.h>
 #include <zephyr/net_buf.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/sys/printk.h>
+#include <sys_malloc.h>
 
 #include "conn_internal.h"
 
@@ -31,6 +33,42 @@ static struct bt_conn *selected_connection;
 static bool connecting;
 static const uint8_t antenna_pattern[] = {0U, 0U};
 K_MUTEX_DEFINE(connection_mutex);
+
+/** @brief 진단 image의 thread별 stack 예약량과 최대 사용량을 출력합니다. */
+static void report_thread(struct thread_analyzer_info *info)
+{
+    printk("P2_STACK name=%s reserved=%u used=%u\n", info->name,
+           (unsigned int)info->stack_size, (unsigned int)info->stack_used);
+}
+
+/** @brief 연결 종료 뒤 관찰 가능한 stack·heap 사용량을 출력합니다. */
+static void report_memory(void)
+{
+    printk("P2_PHASE name=stopped\n");
+    thread_analyzer_run(report_thread, 0U);
+
+    struct sys_memory_stats stats = {0};
+    if (malloc_runtime_stats_get(&stats) == 0)
+    {
+        printk("P2_MALLOC free=%u allocated=%u peak=%u\n",
+               (unsigned int)stats.free_bytes,
+               (unsigned int)stats.allocated_bytes,
+               (unsigned int)stats.max_allocated_bytes);
+    }
+
+    struct k_heap *heaps = NULL;
+    const int count = k_heap_array_get(&heaps);
+    for (int index = 0; index < count; ++index)
+    {
+        if (sys_heap_runtime_stats_get(&heaps[index].heap, &stats) == 0)
+        {
+            printk("P2_KHEAP index=%d free=%u allocated=%u peak=%u\n", index,
+                   (unsigned int)stats.free_bytes,
+                   (unsigned int)stats.allocated_bytes,
+                   (unsigned int)stats.max_allocated_bytes);
+        }
+    }
+}
 
 /**
  * @brief 원시 HCI 수신 설정과 Zephyr Host의 report gate 상태를 동기화합니다.
@@ -358,6 +396,8 @@ int main(void)
             (uart_poll_in(console, &command) == 0) && (command == 's'))
         {
             stop_diagnostic();
+            k_sleep(K_MSEC(200));
+            report_memory();
         }
         k_sleep(K_MSEC(10));
     }

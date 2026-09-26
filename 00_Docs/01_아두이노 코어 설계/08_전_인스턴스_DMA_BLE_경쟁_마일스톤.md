@@ -11,12 +11,12 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 5.0 |
-| 문서 상태 | 고정 source 비교, M23~M30 완료·M31 3/8과 M32~M33 계획 |
+| 문서 개정 | 5.2 |
+| 문서 상태 | 고정 source 비교, M23~M31 완료·M32~M33 계획 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.4.1` stable / release source `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-21 |
+| 최종 갱신일 | 2026-09-27 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을
@@ -40,15 +40,15 @@ Ubuntu/macOS 확대는 버전 미정 후속 범위다. 해당 OS의 실제 설�
 후속 지원 공개 때 사용자가 검증하며 M33의 세 Host 증거 gate를 유지한다.
 
 M28은 **W01~W08·9개 test ID**, M29와 M30은 각각 **W01~W08·10개 test ID를 완료**했다.
-M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31은 **W01~W03 완료 3/8**,
-W04·W05 진행 중·미완료, W06~W08 미착수다. M32·M33은 각각 0/12·0/8로 미착수다. M28~M30의 기능 지원성·
+M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31도 **W01~W08 8/8 완료**다.
+M32·M33은 각각 0/12·0/8로 미착수다. M28~M31의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다. 준비 문서를 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
 
-새 리팩토링 진단은 M23~M27을 재번호화하지 않는다. T11 뒤 R00~R05 정확성, R06~R13 구조·도구
-리팩토링을 최종 physical gate의 선행조건으로 연결한다. R13과 전체 software gate 뒤 최종 exact
-source로 current-source T11 회귀와 T12~T15를 한 번 수행하고 R14에서 RC를 고정한다. 상세 범위와 상태는
+당시 리팩토링은 M23~M27을 재번호화하지 않고 T11 뒤 R00~R05 정확성, R06~R13 구조·도구
+개선을 최종 physical gate의 선행조건으로 연결했다. 최종 exact source의 T11 회귀·T12~T15와
+R14 RC 고정을 모두 완료했다. 상세 범위와 증거는
 [리팩토링 문서 안내](<14_리팩토링/README.md>)와
 [진행 체크리스트](<14_리팩토링/05_리팩토링_진행_체크리스트.md>)를 따른다.
 
@@ -469,30 +469,33 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 ### M31 — ISO·LE Audio·Direction Finding·Channel Sounding
 
-M31-W01~W08 **8개 작업**은 [M31 TODO](../TODO_M31.md)에서 관리한다. W01의 고정 NCS
-parity 원장·capability, W02 설치본 ISO 11예제·11역할과 W03 Audio 11/11을 완료했다.
-근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
-[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다.
+M31-W01~W08 **8/8 완료**의 작업별 판정·근거는 [M31 TODO](../TODO_M31.md)에서 관리한다.
+이 문서는 아래 기능 분담과 후속 의존성을 소유하며 완료 경과를 중복 관리하지 않는다.
 HOST는 독립 3/8 완료이며 W04 이후는 사용자 지시로 보류한다. Windows v0.5.0의 package·설치·
 RC·공개 gate는 M31-W08, 후속 다중 Host 확대의 최종 수락은 M33-W07~W08이 소유한다.
-다음 순서는 메모리 최적화 → W04·W05 → W06~W08이며, 이번 작업은 문서의 main 반영과
-`M31-MEM-OPT` 생성까지다. 최적화 계약과 판정은 [219번 기록](<../04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)을 따른다.
+메모리 최적화 P0·P1·P2와 W04~W08, 공개 `v0.5.0-rc.1` smoke를 완료했으며 다음 순서는
+정식 v0.5.0 stable의 별도 승인이다.
+P2 세 축의 오류·최악 부하, 최종 크기와 Nordic native 비교는
+[262번](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)을 따른다.
 
 | 하위 gate | 계획 범위 | 선행 결정·완료 증거 |
 | --- | --- | --- |
 | M31-A ISO·LE Audio | CIS/CIG·BIS/BIG·combined/time sync, LC3, BAP/CAP, PACS/ASCS, BASS assistant/delegator, CSIP, PBP, VCP/VOCS/AICS, MICP, MCP/MCS, CCP/TBS, TMAP/GMAP/HAP/HAS | 역할별 source/build 적용성, 고정 buffer·stream 예산, 합성 PCM·SDU 실제 전송·codec·제어·오류 복구, 역할별 Arduino 예제 |
-| M31-B Direction Finding | AoA CTE advertising/response TX, Zephyr LL raw IQ RX 후보, AoD·antenna switching 판정 | CTE TX 부분 실기·RX target/HCI 및 connected 일부 IQ 수신 확인, 반복·cleanup 미완료. connectionless 독립 판정, SDC TX-only·AoD unsupported 구분 |
+| M31-B Direction Finding | **W04 완료** — AoA CTE TX와 별도 LL 연결 응답, 제품 IQ RX·AoD 미지원 판정 | 현재 소스 TX·연결 응답 HIL PASS. 고정 NCS v3.4.0·nRF54L15 제품 SDC IQ RX·AoD는 `UNSUPPORTED`. [263번](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
 | M31-C connected Channel Sounding | DF와 별도 A1_B1의 두 역할, 보안 ACL initiator/reflector, capability·procedure·RAS, raw 결과·거리 산출 | 기본 2보드 자동 HIL의 실제 procedure·결과·peer loss/reconnect·security negative, 정밀 거리 정확도 보증 제외 |
 
-기본 NCS SDC의 CTE Advertising/Response는 **AoA용 CTE 송신을 지원하지만 AoD는 지원하지 않는다**.
-SDC의 해당 경로를 AoA 각도 산출이나 IQ 수신 전체 지원으로 해석하지 않는다. nRF54L DTS의 DFE 존재와
+기본 NCS SDC의 AoA CTE 광고 송신은 국소 PASS지만 연결 응답 명령은 실제 image에서
+Unknown HCI Command였다. 공개 연결 응답 예제는 별도 Zephyr LL을 사용하며
+[174번 기록](<../04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md>)의 범위를 따른다. AoD는 미지원이다.
+송신 경로를 AoA 각도 산출이나 IQ 수신 전체 지원으로 해석하지 않는다. nRF54L DTS의 DFE 존재와
 controller 지원은 별개이므로, 칩에 방향탐지 hardware가 없다고 단정하지도 않는다.
-M31-B는 SDC의 실제 지원 범위와 고정 Zephyr LL source candidate의 RX·IQ 경로를 먼저 판정한다.
-NU54DK RX target build·HCI query와 connected 일부 유효 IQ report를 확인했지만 반복 수신·cleanup은
-미완료다. W04는 connectionless/connected 경로와 Host/controller 경계를 각각 진단한다.
-Raw IQ 수집에는 안테나 배열을 일괄 필수로 요구하지 않는다. 안테나 전환·
-각도 산출·정밀 교정은 별도 사용자 외장 후속이며, 이 절차가 기본 controller/SDK의 자동 교체를 뜻하지 않는다.
-별도 후보 profile는 자원 충돌·callback/buffer·회귀 계약을 확정한 뒤 검증한다.
+제품 IQ RX의 고정 SDK 미지원 근거는 [259번](<../04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)을 따른다.
+연결형 Zephyr LL 내부 IQ 20 report·1,640 sample·cleanup 국소 PASS와 connectionless IQ 0·fault는
+과거 진단으로 보존하며 제품 수신 지원이나 P2 필수 재시험으로 승계하지 않는다.
+안테나 배열 부재가 제품 RX 미지원의 이유는 아니다. SDK/controller 변경은 P2 완료 조건이 아니며
+안테나 전환·각도 산출·정밀 교정은 기존 사용자 후속·범위 제외 정책을 유지한다.
+CS의 간헐 loss/counter gap은 P2에서 비차단 관찰값이다. 유효 결과·step·양측 STOP·fault 검사와
+최대 절차의 peer 이탈·복구를 구별하며 0-gap을 추가 완료 조건으로 두지 않는다.
 
 완료 gate는 적용 가능한 보드 기반 기능의 정량 HIL과 모든 역할의 제공/미지원 판정이다. Raw IQ가
 미실행이면 실제 controller/build/runtime 사유를 기록하며 배열이 없다는 이유만으로 장비 부족 처리하지 않는다.
@@ -555,7 +558,7 @@ M31 Windows v0.5.0은 M31-W08이 마감한다. M33의 추가 기능·전체 cata
 [다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
 M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
-M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 3/8 완료·전체 미완료이고 M32·M33은 계획이다. M28 결과와
+M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8 완료이고 M32·M33은 계획이다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은

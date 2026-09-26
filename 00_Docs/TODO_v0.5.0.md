@@ -1,26 +1,40 @@
 # v0.5.0 실행 계획 — M31 완료 후 Windows 릴리스
 
-현재 설치·지원 배포는 **v0.4.1 하나**이며 v0.4.0 M27까지의 기능 기준선과 v0.4.1 설치기
-유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과 판정 산출물을 관리한다.
+현재 stable·지원 배포는 **v0.4.1 하나**이고 공개 후보는 **v0.5.0-rc.1**이다. v0.4.0 M27까지의
+기능 기준선과 v0.4.1 설치기 유지보수는 완료했다. 이 문서는 다음 제품선의 진행 상태·남은 작업과
+판정 산출물을 관리한다.
 **M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
 M30-W08 `M30-POWER-01`은 네 지점 × 3회 실제 전원 차단 12/12를 통과했고 HOST-W01~HOST-W03도
-완료했다. M31은 W01~W03 완료 3/8이고 W03 LE Audio 11/11을 닫았다. W04 DF·W05 CS는 미완료이며 M32·M33은 미착수**다. M28~M30 완료는 v0.5.0 공개, mobile/desktop 전체 상호운용 또는
-Bluetooth qualification 완료가 아니다. 현재 v0.4.1 사용자 지원과 후속 개발은 별개다.
+완료했다. M31도 W01~W08 8/8을 완료했다. W03 LE Audio 11/11, W04 Direction Finding,
+W05 Channel Sounding, W06 자원·수명주기·M19~M30 회귀, W07 설치 예제 49/49·3보드 역할 HIL,
+W08 Windows RC 준비와 공개 `v0.5.0-rc.1` 설치 smoke를 닫았다. M32·M33은 미착수**다.
+정식 v0.5.0 stable 승격, mobile/desktop 전체 상호운용과 Bluetooth qualification은 별도 상태다.
 
 **2026-09-21 사용자 결정: v0.5.0은 M31 완료 후 Windows 10/11 x64로 릴리스한다.**
 M32/M33의 추가 기능·전체 catalog와 Ubuntu/macOS 지원은 후속 버전(미정)으로 분리한다.
 M31 기능 완료만으로 공개하지 않으며 §6의 패키지·설치·RC·공개 승인 gate를 별도로 충족해야 한다.
 
-main 이력 정리 이후의 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 후속 최적화 설명 통합은
-문서화만이며 브랜치 생성·구현을 재개하지 않는다. 다음 구현 브랜치 이름은 **`M31-MEM-OPT`**다.
-이후 구현 순서는 **메모리 최적화 → W04·W05 → W06 → W07 → W08·Windows 릴리스 준비**다.
-**HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 이번 문서 작업에서 재개하지 않는다.
+현재 브랜치는 **`0.5.0-RC1`**다. 메모리 최적화 **P0·P1·P2와 M31 8/8을 완료**했으며
+실행별 경과는 [M31 TODO](TODO_M31.md#메모리-최적화-현재-상태), [HANDOFF](HANDOFF.md),
+[262번 P2 완료 기록](<04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 모은다.
+P2는 지원 범위 오류·최악 부하, stack·heap 안전 여유·최종 크기, 동등 조건 Nordic native
+FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거가 없어 유지했다.
+
+**NCS v3.4.0을 유지한다.** 제품 SDC DF IQ RX는 [259번 근거](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)에
+따라 `UNSUPPORTED`·P2 범위 밖이다. CS 간헐 RF/controller loss·counter gap은 비차단 관찰값이며
+유효 raw·완료 수·STOP·fault·중복/역행 검사는 유지한다. SDC 내부 high-water 비노출도 추가 gate가
+아니다. SDK 역할/count별 요구량·8-byte 정렬을 준수하고 축소 근거가 없으면 pool을 유지한다.
+이 경계와 세 축을 입력으로 W04~W08을 완료했지만 릴리스 승인은 아니다.
+
+공개 `v0.5.0-rc.1`과 공개 다운로드·설치 smoke를 완료했다. 다음 순서는 **RC 결과 관찰과 정식
+v0.5.0 stable 승격의 별도 검토·승인**이다.
+**HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 M32·M33도 자동 착수하지 않는다.
 
 | 정보 | 단일 원본 |
 | --- | --- |
 | M28~M45 순서·전체 상태 | [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>) |
 | BLE 기능군별 목표·완료 조건 | [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>) |
-| v0.5.0 착수 체크·결정 상태 | 이 문서 |
+| v0.5.0 완료 범위·stable 공개 잔여 | 이 문서 |
 | 재개 복구·Adafruit 개선 과제의 배치 | [개정 실행 순서](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>) |
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
@@ -36,6 +50,8 @@ main 이력 정리 이후의 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
 | M28~M30 완료 근거 | [검증 기록 목차](<04_검증 기록/README.md>)의 milestone별 완료 기록 |
 | M31 W02 / W03 완료 근거 | [ISO 설치본](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) · [LE Audio 11/11](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
+| M31 W08 / 전체 완료 근거 | [Windows RC 준비와 M31 완료](<04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) |
+| 공개 RC 설치·검증 근거 | [RC 사용 안내](<05_릴리스/v0.5.0-rc.1/README.md>) · [공개 다운로드 smoke](<04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>) |
 
 ## 1. 다음 착수 순서
 
@@ -49,7 +65,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
-| M31 / v0.5.0 | **3/8** | W01~W03 완료. 메모리 최적화 → W04 DF·W05 CS → W06 독립 image 자원·수명주기·회귀 → W07 설치 예제 → W08 마감·Windows 릴리스 준비. 네 기능 전체 동시 실행은 요구하지 않음 |
+| M31 / v0.5.0 | **8/8 완료, RC 공개** | 메모리 최적화 P0~P2, W04~W07 기능·회귀·예제/HIL과 W08 Windows RC 준비, `v0.5.0-rc.1` 공개 smoke 완료. stable은 별도 승인 대기 |
 | M32 / 후속 버전 미정 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
 | M33 / 후속 버전 미정 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 후속 Host·RC·공개 |
 | Host | **3/8, 보류** | HOST-W01~HOST-W03 완료. 재개 후 HOST-W04 prerequisite·HOST-W05 path/cache부터 진행 |
@@ -58,11 +74,10 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 기능 선택·Kconfig/source/link·정적 pool·계측의 수정 방법과 이전 설명 정정은
 [통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)를 따른다.
 목표 기본 경로는 사용자 선언과 필수 의존성만 포함하는 nRF native 수준의 구성에 우리 API의 최소
-필수 비용을 더하는 구조다. full은 명시적 호환 선택지로 보존하고 실제 절감량은 동등 조건에서 검증한다.
-W04·W05를 먼저 마감한 뒤 최적화하는 순서는 폐기한다. 기존 evidence를 유지하고 최적화된
-image에서 잔여와 영향 재검증을 닫는다. W04·W05의 독립 구현·분석은 병행할 수 있지만 같은
-probe/보드를 동시에 점유하지 않는다. 추가 외장 장치 확보는 자동 가능한 구현·검사의 선행조건이 아니다.
-M31 8/8과 Host 3/8은 독립 집계하며, v0.5.0 Windows 릴리스 준비는 M31-W08이 소유한다.
+필수 비용을 더하는 구조다. full은 명시적 호환 선택지로 보존했고 실제 절감량은 P2의 동등 조건에서 검증했다.
+P2 완료 수치와 W04~W08 완료 evidence를 유지한다. 추가 외장 장치 확보는 자동 가능한 구현·검사의
+선행조건이 아니다. M31 8/8과 Host 3/8은 독립 집계하며, v0.5.0 Windows 릴리스 준비는
+M31-W08에서 완료했고 공개 RC 승인·게시·공개 후 smoke도 닫았다. stable 승격은 별도다.
 사용자가 보드 3개 연결을 확인했다. 실제 mapping은 재검증하며, 정밀 RF·음질·거리/각도 보정은
 필수 gate 밖으로 변경한다. 보드 기반 실제 데이터·보안·복구 검증은 계속 필수다.
 
@@ -72,7 +87,7 @@ M31 8/8과 Host 3/8은 독립 집계하며, v0.5.0 Windows 릴리스 준비는 M
 | --- | --- | --- |
 | Apple/Google 등 외부 ecosystem/peer | 신규 기능·예제는 후속 M33-W03 소유. 채택 기능의 설정·credential·가능한 자동 검사는 담당 단계에서 필수 | 실물은 사용자 후속 NOT RUN. M33 기능을 v0.5.0 지원으로 안내하지 않으며 검증된 상호운용 주장 금지 |
 | 마이크·스피커·외장 장치 | 실제 연결해 사용할 API·설정·예제·연결 안내와 가능한 자동 검사; 합성 보드 경로 검증 | 외부 장치의 실제 운용·호환성은 사용자 후속. 개발·공개 차단 아님 |
-| DF 원시 IQ | 기본 SDC TX와 Zephyr LL RX 후보 구분, 배열 없이 수신 구성 조사·build·적용 가능한 2보드 HIL | 장비 대기가 아닌 소프트웨어 지원성/기능 판정. 각도 산출·실제 안테나 전환은 별도 외장 경로 |
+| DF 원시 IQ | 고정 NCS v3.4.0의 nRF54L15 제품 SDC IQ RX는 지원 밖. 지원표·예제·원장에 근거를 기록 | P2에서 제외하며 SDK/controller를 변경하지 않음. 과거 LL 연결형 성공·connectionless 실패는 내부 진단 이력; 제품 지원·각도 PASS 아님 |
 | Ubuntu/macOS 사용자 Host | 후속 Host 트랙에서 prerequisite·launcher/resolver·설치 도구·자동 검사와 검증 절차 구현; 현재 보류 | 해당 OS를 포함하는 후속 릴리스에서 사용자 실물 gate 유지. Windows-only v0.5.0을 차단하지 않음 |
 
 세 보드의 USB 접근·명확한 mapping을 전제로 추가 부품 연결을 중간 선행조건으로 요구하지 않는다.
@@ -106,7 +121,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | --- | --- | --- |
 | M29 Signed Write | Zephyr host `BT_SIGNING`은 `DEPRECATED` | 기본 OFF의 `NUCODE_BLE_LegacySigning`, legacy opt-in으로 구현. CSRK/counter 영속화·replay 거부와 통합 회귀 PASS |
 | M29 EATT | Zephyr host `BT_EATT`는 `EXPERIMENTAL` | 기본 OFF의 `NUCODE_BLE_EATT`, experimental opt-in으로 구현. 암호화·2 bearer 부하와 통합 회귀 PASS; 안정 API로 승격하지 않음 |
-| M31 방향탐지 | 기본 SDC의 CTE 송신은 AoA 지원·AoD 미지원. 전체 RX/IQ 경로 지원을 뜻하지 않음 | 송신·수신·안테나 전환을 분리해 controller/profile 적용성 판정. 대체 Zephyr LL은 별도 후보이지 검증 완료 대안이 아님 |
+| M31 방향탐지 | nRF54L15는 고정 NCS v3.4.0에서 Experimental·AoA 송신 전용. 제품 SDC IQ RX·AoD 미지원 | IQ RX는 P2 범위 밖. TX·미지원 경계를 문서/예제/원장에 일치시키고 W04 변경 영향을 검증. LL 진단을 제품 대안으로 승격하지 않음 |
 | M31 Audio 확장 | W03의 11개 profile/data 하위 작업을 공개 Arduino 예제와 보드 HIL로 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)의 역할별 적용성·한계 유지. 외장 audio·상용 peer 실물은 사용자 후속 NOT RUN |
 | M32-A 최신 LE | 고정 SDC의 power/path loss·subrating·SCA·frame space·shorter interval·extended feature set 및 Nordic 확장 | M28의 기존 6개 capability PASS와 구분해 W01~W05에 신규 구현·예제·negative 배정 |
 | M32-A EAD/coding·자원 | EAD Host source·광고 coding 설정, nRF54L15용 multi-set/identity 예제 존재 | EAD/coding은 적용 build·runtime 확인 전 candidate; 1 advertising set 기본값과 확장 preset 분리 |
@@ -141,12 +156,12 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M29 | GATT/CoC → signed write/EATT 정책 적용 → 오류·상호운용 | client/server·cache·credit·실험/legacy 제약과 시험 근거 |
 | M30 | 보안/profile → 최소 boot/layout·서명·BLE update → 실패 복구 + HOST-W01~HOST-W03 | M34~M36이 재사용할 보안 계약과 Host 공통 backend·Windows 전용 가정 inventory |
 | M31-A | ISO/CIS/BIS·combined/time sync → LC3·전체 Audio profile → 합성 데이터/제어 HIL | stream/buffer·codec·역할별 짝 예제·미지원/외부 I/O 미검증 행 |
-| M31-B | controller 적용성 → CTE TX와 배열 없는 raw IQ 수신 후보 조사/build·적용 HIL; AoD 개별 판정 | TX/RX 증거 깊이, 고정 Zephyr LL 후보의 실제 결과, SDC AoD 미지원·각도/전환 후속 경로 |
+| M31-B | 고정 SDK 지원 CTE TX/response·예제·negative와 변경 영향 검증 | 제품 SDC IQ RX·AoD 미지원 근거, TX와 내부 LL 진단 이력 구분·원장 정합 |
 | M31-C | Connected ACL·CS/RAS·raw 결과/거리 산출 → security/peer loss/recovery | 기능 동작 근거; 정밀 거리 보정·정확도는 필수 밖 |
 | M32-A | power/path loss → timing/subrate → adv/EAD/identity/resource → Nordic LLPM/QoS/event | 새 자원 preset·실험적 opt-in·짝 예제·2/3보드 기능/negative |
 | M32-B | Mesh 기본 → Mesh 1.1 → BLOB/Mesh DFU/Distribution | node/model·key/settings·transfer·복구, 내부 RRAM/배포자 한계와 M36 인계 |
 | M32-C | 최소 radio/profile·802.15.4/ESB 단독 TX/RX → 선택 공존·복구 | MPSL ownership·loss/서비스 지연·M38/M39 공개 예제 인계 |
-| M31 릴리스 | 메모리 최적화·W04~W08 → Windows 패키지·clean 설치·RC → 별도 승인 후 v0.5.0 공개 | M28~M31 채택 범위·image/자원·예제·지원/제약·설치 수명주기 근거 |
+| M31 릴리스 | 메모리 최적화·W04~W08·Windows 패키지/설치·공개 RC 완료 → 정식 v0.5.0 stable 승격 검토 | M28~M31 채택 범위·image/자원·예제·지원/제약·설치 수명주기 근거 |
 | M33 / 후속 버전 | GATT/beacon·ecosystem·HCI/DTM 예제 → 전체 parity·interop → HOST-W08/RC → 후속 공개 | 누락 0 원장·예제 제공 범위·실행 증거·세 Host 지원/제약·qualification 적용성 |
 
 M31-A/B/C는 **M31 내부 작업 ID**다. 하나를 완료해 M31 전체 완료로 계산하지 않는다.
@@ -177,14 +192,14 @@ Android/iOS/Linux cross-vendor matrix는 M28/M29 PASS에 포함하지 않는다.
 | --- | --- | --- |
 | BLE 기본·multi-link | NU54DK 2~3개와 수신측 sequence/hash | probe SHA-256·serial·role·revision; OS peer는 별도 M33 행 |
 | ISO/LE Audio | 2보드 송수신, 3보드 source/sink/assistant 또는 broadcast; 합성 PCM/LC3 | 실제 SDU·codec·제어·buffer/복구, 외부 microphone/speaker/codec는 별도 미검증 행 |
-| Direction Finding | CTE TX 1보드; 기본 안테나의 raw IQ 수신 적용 가능한 2보드 | SDC RX 미제공. Zephyr LL connected 내부 진단 4 report·328 sample이나 전체 FAIL; connectionless RX·공개 API·각도/전환은 별도 판정 |
+| Direction Finding | 지원 CTE TX 기능 기준. 제품 SDC IQ RX는 고정 SDK 지원 밖 | RX를 P2 실기 대기 항목으로 잡지 않음. [259번 지원 경계](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)와 과거 LL 성공/실패 원본을 구분 |
 | Channel Sounding | CS initiator/reflector 2보드, 선택 3번째 peer | procedure/RAS·결과·보안·재연결 기능; 정밀 거리·방향 보정 요구 없음 |
 | Mesh/coexistence | 승인 topology의 2~3노드, BLE/802.15.4/ESB traffic 관측 | 역할별 노드 수·단독 통신·조합·부하·서비스 지연; 새 power-loss 확장은 M36 후속이며 v0.5.0 추가 필수 gate 아님 |
 
 사용자가 제외한 정밀 계측은 `out_of_scope_by_user_decision`, 사용자 후속 외장/상호운용 실기는
-`NOT RUN`과 후속 책임·비차단 범위를 함께 기록한다. DF RX의 경로별 미완료·실패는
-별도 기술 상태이며 장비 부족 또는 `UNSUPPORTED`로 자동 분류하지 않는다. 고정 controller의
-실제 비지원은 근거와 함께 기록한다. 3보드 결과를 더 큰 topology의 PASS로 확대하지 않는다.
+`NOT RUN`과 후속 책임·비차단 범위를 함께 기록한다. 제품 SDC DF IQ RX는 공식 고정 SDK 근거로
+`UNSUPPORTED` 판정한다. 이는 과거 LL 경로의 실제 실패를 미지원으로 소급 변경하는 것이 아니다.
+3보드 결과를 더 큰 topology의 PASS로 확대하지 않는다.
 
 Android/iOS/Linux 항목은 **BLE 상대 장치 상호운용**이며 Arduino Core 개발·설치 Host matrix와
 서로 다른 시험이다. v0.5.0 Host 범위는 Windows 10/11 x64다. Ubuntu 24.04 이상 AMD64와
@@ -219,29 +234,22 @@ v0.4.0의 범위 제외는 그대로 보존한다.
 
 ## 6. 결과·공개 규칙
 
-- M28·M29·M30의 capability·구현·Host·target·유한 HIL·문서 인계를 완료했다.
-  M31~M33과 v0.5.0 공개는 완료 처리하지 않는다.
+- M28~M31의 채택 기능·Host·target·필수 HIL·문서 인계와 공개 `v0.5.0-rc.1` 검증을 완료했다.
+  M32·M33은 미착수이며 정식 v0.5.0 stable 공개는 남아 있다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.
-- 2026-09-16 결정의 정밀 RF/audio/거리/각도 계측 제외는 유지한다. 이번 2026-09-21 개정은
-  릴리스 시점·범위를 M31 Windows로 분리하며 기능 PASS를 추가하지 않는다.
-  전체 NCS Bluetooth 기능·예제를 명시한 단계에 배치했다. M31-W01 inventory·readiness·
-  capability parser/target의 clean HCI query, parity 703행·negative 20/20으로 W01을
-  완료했다. W02 clean CIS·BIS 전체 positive/negative·time sync와
-  [combined 세 보드 20회×100](<04_검증 기록/166_M31_W02_3보드_CIS_BIS_통합_실기.md>)은 PASS이며
-  독립 개발 package의 설치 Arduino ISO 11예제 빌드·역할별 실기도 완료했다.
-  [W02 최종 기록](<04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>)과
-  [W03 LE Audio 11/11](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)까지 완료했다.
-  DF·CS 및 독립 image별 자원·수명주기·회귀·예제·마감은 잔여다. ISO·Audio·DF·CS 네 기능
-  전체를 한 MCU에서 동시에 실행하는 것은 M31 완료 조건이 아니다.
+- 2026-09-16 결정의 정밀 RF/audio/거리/각도 계측 제외와 2026-09-21의 Windows 릴리스 범위를
+  유지한다. M31 W01~W08의 세부 분모·완료 증거는 [M31 TODO](TODO_M31.md#2-작업-묶음--8개-유지),
+  공개 RC 검증은 [268번 기록](<04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)에서 관리한다.
+  ISO·Audio·DF·CS 네 기능 전체를 한 MCU에서 동시에 실행하는 것은 M31 완료 조건이 아니다.
 - 외장 Audio 경로는 M31, Apple/Google 신규 기능은 후속 M33의 채택 범위에서 구현·예제·
   가능한 자동 검사를 완료한다. 실물 운용·상호운용은 각 담당 제품선에서 사용자 후속·비차단으로
   유지하며, 그 NOT RUN은 PASS가 아니다.
   원장의 구현 요구·검증 책임·개발/공개 차단 여부를 독립 필드로 구현해 이 구분을 검사한다.
 - 문서상의 기능 계획과 Bluetooth/Matter 제품 인증 취득은 별개다.
-- v0.4.0·v0.4.1 공개 승인은 v0.5.0 공개 승인이 아니다. M31-W08에서 exact 결과·자산 기준으로
-  v0.5.0 Windows 공개 준비를 관리하며, 실제 tag/Release/catalog 공개는 별도 사용자 승인을 받는다.
+- v0.4.0·v0.4.1 공개 승인과 `v0.5.0-rc.1` 공개 승인은 정식 v0.5.0 stable 공개 승인이 아니다.
+  RC tag/Pre-release/전용 catalog는 공개했으며 stable tag/Release/root catalog는 별도 사용자 승인을 받는다.
 - 이후 세 Host를 지원하려면 각 OS에 clean 설치·채택된 전체 예제 build·대표 upload/runtime·
   수명주기 증거가 있어야 한다. 후속 OS gate를 삭제하거나 자동 PASS로 올리지 않는다.
 - 다음 작업 보고에는 완료 범위·현재 항목·남은 항목과 **해당 작업의 분모**를 적는다.
@@ -249,13 +257,14 @@ v0.4.0의 범위 제외는 그대로 보존한다.
 
 ### v0.5.0 공개 gate — 기능 8/8과 별도 판정
 
-- [ ] 메모리 최적화와 M31-W01~W08 8/8, 적용 가능한 필수 board-only HIL·M19~M30 영향 회귀 완료
-- [ ] M28~M31 채택 API·예제·profile·자원 상한·지원표·known limits와 readiness/parity 정합
-- [ ] 고정 SDK·board·toolchain과 exact release source의 Windows 패키지·manifest/hash·라이선스 검사
-- [ ] clean Windows 설치에서 채택된 전체 예제 발견·compile, 대표 upload/runtime·serial/debug 확인
-- [ ] Windows upgrade/reinstall/uninstall/cache 수명주기와 오류 복구 검사, 과거 지원 버전 이동 안내
-- [ ] RC 결과·회귀·사용자 후속 NOT RUN·미지원 경계를 검토하고 별도 공개 승인 확보
-- [ ] 승인된 exact 자산으로 tag/Release/catalog 공개, 실제 다운로드·설치 smoke와 배포 문서 확인
+- [x] 메모리 최적화와 M31-W01~W08 8/8, 적용 가능한 필수 board-only HIL·M19~M30 영향 회귀 완료
+- [x] M28~M31 채택 API·예제·profile·자원 상한·지원표·known limits와 readiness/parity 정합
+- [x] 고정 SDK·board·toolchain과 exact release source의 Windows 패키지·manifest/hash·라이선스 검사
+- [x] clean Windows 설치에서 채택된 전체 예제 발견·compile, 대표 upload/runtime·serial/debug 확인
+- [x] Windows upgrade/reinstall/uninstall/cache 수명주기와 오류 복구 검사, 과거 지원 버전 이동 안내
+- [x] RC 결과·회귀·사용자 후속 NOT RUN·미지원 경계를 검토하고 공개 RC 승인 확보
+- [x] 승인된 exact RC 자산으로 tag/Pre-release/RC catalog 공개, 실제 다운로드·설치 smoke와 배포 문서 확인
+- [ ] RC 관찰 결과를 검토하고 stable exact 자산·별도 승인·stable tag/Release/root catalog·공개 설치 smoke 완료
 
-위 항목은 아직 완료로 표시하지 않는다. 문서 정비나 브랜치 준비는 패키지 제작·공개 실행이
-아니다. 준비 산출물은 M31-W08이 소유하되 기능 완료와 실제 배포 결과를 따로 보고한다.
+공개 RC까지 일곱 gate는 완료했다. 남은 항목은 정식 stable의 별도 승인·게시·공개 smoke다.
+공개 RC 완료를 stable 공개 완료로 해석하지 않는다.

@@ -78,6 +78,18 @@ class ProfileRecoveryWatchdog:
 class M31ExamplePublicBoundaryTests(unittest.TestCase):
     """! @brief 공개 흐름·역할·Zephyr 경계의 실제 sketch 변조를 거부합니다. """
 
+    def test_audio_library_declares_ble_dependency(self) -> None:
+        """! @brief Audio만 include하는 sketch도 BLE backend header를 찾도록 의존성을 고정합니다. """
+
+        properties = (
+            ROOT / "libraries/NUCODE_BLE_Audio/library.properties"
+        ).read_text(encoding="utf-8")
+        header = (
+            ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.h"
+        ).read_text(encoding="utf-8")
+        self.assertIn("\ndepends=NUCODE BLE\n", f"\n{properties.rstrip()}\n")
+        self.assertIn("#include <NUCODE_BLE.h>", header)
+
     def test_iso_role_and_backend_flow_must_match(self) -> None:
         """! @brief Kconfig 역할과 공개 Program 역할의 불일치를 거부합니다. """
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:

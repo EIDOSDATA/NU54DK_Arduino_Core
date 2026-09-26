@@ -1,5 +1,6 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
+  "capability_mode": "compatibility",
   "id": "ble",
   "display_name": "BLE NUS",
   "board": "nucode:zephyr:nu54dk",

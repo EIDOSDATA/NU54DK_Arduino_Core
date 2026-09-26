@@ -1,9 +1,12 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "id": "nucode.ble.direction_finding",
   "requires": ["ble"],
+  "capabilities": ["nucode.ble.direction-finding-api"],
   "conf": [],
   "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
   "conflicts": [],
-  "compatible_profiles": ["ble"]
+  "compatible_profiles": ["adaptive", "ble"]
 }

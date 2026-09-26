@@ -165,6 +165,7 @@ namespace nucode::ble::internal::gap
             {
                 return true;
             }
+#if defined(CONFIG_BT_EXT_ADV)
             bool accepts = false;
             k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
             const ExtendedAdvertisingContext &context = gapState().extended_advertising;
@@ -172,6 +173,9 @@ namespace nucode::ble::internal::gap
                       atomic_get(&context.active) != 0;
             k_spin_unlock(&gapState().configuration_lock, key);
             return accepts;
+#else
+            return false;
+#endif
         }
 
         /** @brief MTU callback parameter가 소유한 고정 요청 context를 찾습니다. */

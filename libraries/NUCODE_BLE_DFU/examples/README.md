@@ -1,8 +1,8 @@
 # Secure BLE DFU 예제
 
-이 예제는 개발 소스 `0.4.1-dev`의 secure BLE DFU 검증 범위다. 현재 설치·지원 package는 `v0.4.1`이며
-이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다. Build 성공과 인증 BLE DFU·rollback의
-실제 보드 판정은 서로 구분한다.
+이 예제는 공개 후보 `v0.5.0-rc.1`에 포함된 secure BLE DFU 예제다. Windows 설치 방법은
+[RC 안내](<../../../00_Docs/05_릴리스/v0.5.0-rc.1/README.md>)를 따른다. 정식 지원 버전
+`v0.4.1`에는 포함되지 않는다. Build 성공과 인증 BLE DFU·rollback의 실제 보드 판정은 구분한다.
 
 `SecureDfuPeripheral`은 `secure_ble_dfu` Arduino board profile에서 빌드한다. 이 profile은
 MCUboot sysbuild, ECDSA P-256 image 서명, MCUmgr SMP over BLE, 인증된 GATT 접근을 함께

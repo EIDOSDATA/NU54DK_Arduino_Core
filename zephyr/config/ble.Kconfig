@@ -125,7 +125,7 @@ config NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE
 	range 2 32
 	depends on NUCODE_BLE_CORE
 	help
-	  callback 밖 수명을 보장하는 31-byte bounded scan 결과 개수입니다.
+	  callback 밖 수명을 보장하는 최대 255-byte payload scan 결과 개수입니다.
 
 config NUCODE_BLE_PERIODIC_REPORT_QUEUE_SIZE
 	int "NUCODE BLE periodic report queue 항목 수"
@@ -147,11 +147,30 @@ config NUCODE_BLE_GATT
 	bool "NUCODE 범용 GATT server/client 활성화"
 	default n
 	depends on NUCODE_BLE_CORE
-	depends on BT_GATT_CLIENT
+	depends on BT_GATT_CLIENT || BT_GATT_DYNAMIC_DB
+	help
+	  Bluetooth 시작 전 고정 schema 등록과 bounded generic client operation 중
+	  role이 요구하는 방향만 제공합니다.
+
+config NUCODE_BLE_GATT_SERVER
+	bool "NUCODE 범용 GATT server 활성화"
+	default y
+	depends on NUCODE_BLE_GATT
 	depends on BT_GATT_DYNAMIC_DB
 	help
-	  Bluetooth 시작 전 고정 schema 등록, cached server value와 한 번에
-	  하나의 bounded generic client operation을 제공합니다.
+	  고정 service schema, cached value, write, notify와 indicate server 상태를
+	  포함합니다. server를 사용하지 않는 role은 이 옵션을 끄고 저장소를
+	  link 대상에서 제외합니다.
+
+config NUCODE_BLE_GATT_CLIENT
+	bool "NUCODE 범용 GATT client 활성화"
+	default y
+	depends on NUCODE_BLE_GATT
+	depends on BT_GATT_CLIENT
+	help
+	  remote service discovery, read/write, subscribe와 robust cache client 상태를
+	  포함합니다. client를 사용하지 않는 role은 이 옵션을 끄고 연결별
+	  context를 link 대상에서 제외합니다.
 
 config NUCODE_BLE_GATT_MAX_SERVICES
 	int "NUCODE GATT service 최대 수"
@@ -165,13 +184,49 @@ config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE
 	range 1 8
 	depends on NUCODE_BLE_GATT
 
+config NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE
+	int "NUCODE GATT callback event 최대 payload 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  server write와 client read·notification callback이 main thread로 복사하는
+	  단일 event payload의 최대 byte 수입니다.
+
+config NUCODE_BLE_GATT_TX_PAYLOAD_SIZE
+	int "NUCODE GATT TX 최대 payload 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  server notification·indication 및 client write의 비동기 전송 수명
+	  동안 보존하는 단일 snapshot payload의 최대 byte 수입니다.
+
+config NUCODE_BLE_GATT_TX_CONTEXT_COUNT
+	int "NUCODE GATT server 동시 TX context 수"
+	default 64
+	range 1 128
+	depends on NUCODE_BLE_GATT_SERVER
+	help
+	  notification과 indication이 함께 사용하는 비동기 snapshot context의
+	  최대 수입니다. 부족하면 전송을 시작하지 않고 busy로 실패합니다.
+
+config NUCODE_BLE_GATT_INLINE_VALUE_SIZE
+	int "NUCODE GATT inline cached value 최대 크기"
+	default 512
+	range 1 512
+	depends on NUCODE_BLE_GATT
+	help
+	  caller-owned buffer를 지정하지 않은 characteristic과 descriptor 객체가
+	  내부에 보존하는 cached value의 최대 byte 수입니다.
+
 config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE
 	int "NUCODE GATT callback event queue 항목 수"
 	default 8
 	range 4 32
 	depends on NUCODE_BLE_GATT
 	help
-	  server write·CCC·전송 완료와 client payload를 최대 244 byte까지
+	  server write·CCC·전송 완료와 client payload를 선택한 최대 크기까지
 	  복사해 BLEDevice.poll()로 전달하는 고정 record 개수입니다.
 
 config NUCODE_BLE_L2CAP

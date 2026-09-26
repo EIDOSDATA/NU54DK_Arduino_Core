@@ -657,6 +657,7 @@ namespace nucode::ble::internal
         {
             queueSecurityChangedIfNew(connection, level);
         }
+#if defined(CONFIG_BT_HIDS)
         if (atomic_get(&hidState().hid_initialized) != 0)
         {
             lockHidApi();
@@ -667,6 +668,7 @@ namespace nucode::ble::internal
                 recordHidError(SecurityError::driver_error, result);
             }
         }
+#endif
     }
 
     void securityConnected(struct bt_conn *connection) noexcept
@@ -680,6 +682,7 @@ namespace nucode::ble::internal
         {
             return;
         }
+#if defined(CONFIG_BT_HIDS)
         if (atomic_get(&hidState().hid_initialized) != 0)
         {
             lockHidApi();
@@ -690,6 +693,7 @@ namespace nucode::ble::internal
                 recordHidError(SecurityError::driver_error, result);
             }
         }
+#endif
         clearPending(handle);
         struct bt_conn *released = nullptr;
         struct bt_conn *promoted = nullptr;

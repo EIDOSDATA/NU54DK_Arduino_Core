@@ -71,7 +71,10 @@ namespace
         {
             Serial.print("NUCODE_DF|1|READY|nonce=");
             Serial.print(nonce);
-            Serial.print("|role=beacon|core=");
+            Serial.print("|role=beacon");
+#if !defined(NUCODE_CAPABILITY_PROBE)
+            /** @note capability probe에는 최종 build의 revision 매크로가 아직 없습니다. */
+            Serial.print("|core=");
             Serial.print(NUCODE_CORE_REVISION);
             Serial.print("|board=");
             Serial.print(NUCODE_BOARD_REVISION);
@@ -79,6 +82,7 @@ namespace
             Serial.print(NUCODE_NCS_REVISION);
             Serial.print("|zephyr=");
             Serial.println(NUCODE_ZEPHYR_REVISION);
+#endif
         }
         else if (matches("START"))
         {

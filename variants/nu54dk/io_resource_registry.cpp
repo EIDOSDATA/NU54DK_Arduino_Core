@@ -21,7 +21,6 @@ namespace nucode::arduino::internal
 {
     namespace
     {
-        IoResourceLease uart20_lease{};
         IoResourceResult registry_result = IoResourceResult::success;
 #if !defined(CONFIG_ZTEST)
         bool registry_initialized = false;
@@ -96,21 +95,6 @@ namespace nucode::arduino::internal
             }
         }
 
-        /** @brief 부팅 고정 UART20 등록 transaction을 해제합니다. */
-        [[nodiscard]] IoResourceResult unwindRegisteredResources() noexcept
-        {
-            IoResourceResult first_error = IoResourceResult::success;
-            unwindFixedLease(uart20_lease, first_error);
-            return first_error;
-        }
-
-        /** @brief 등록 실패 원인과 rollback 실패를 하나의 fail-closed 결과로 합칩니다. */
-        [[nodiscard]] IoResourceResult failRegistryInitialization(IoResourceResult cause) noexcept
-        {
-            const IoResourceResult unwind_result = unwindRegisteredResources();
-            return unwind_result == IoResourceResult::success ? cause : unwind_result;
-        }
-
         /** @brief APPLICATION init 단계에서 C++ 정적 초기화 후 registry를 채웁니다. */
         int initializeRegistryAtBoot()
         {
@@ -126,9 +110,7 @@ namespace nucode::arduino::internal
 
     IoResourceResult initializeNu54dkIoResources() noexcept
     {
-#if defined(CONFIG_ZTEST)
-        uart20_lease = {};
-#else
+#if !defined(CONFIG_ZTEST)
         if (registry_initialized)
         {
             return registry_result;
@@ -153,12 +135,15 @@ namespace nucode::arduino::internal
             pselResource(DT_PROP_BY_IDX(DT_CHILD(DT_NODELABEL(uart20_default), group2), psels, 1)),
             peripheralIoResource(IoResourceKind::serial_block, 20U),
         };
+        IoResourceLease uart20_lease{};
         IoResourceResult result = registerFixedResources(
             {IoOwnerKind::serial, 20U}, uart20_resources,
             sizeof(uart20_resources) / sizeof(uart20_resources[0]), uart20_lease);
         if (result != IoResourceResult::success)
         {
-            return failRegistryInitialization(result);
+            IoResourceResult unwind_result = IoResourceResult::success;
+            unwindFixedLease(uart20_lease, unwind_result);
+            return unwind_result == IoResourceResult::success ? result : unwind_result;
         }
 
         /**

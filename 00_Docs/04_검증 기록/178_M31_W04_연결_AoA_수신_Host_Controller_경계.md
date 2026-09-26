@@ -1,5 +1,8 @@
 # M31-W04 연결 AoA 수신의 Host·controller 경계
 
+> **후속 지원 판정:** 아래 결과는 당시 LL 진단이다. 후속 내부 IQ 진단은 [244번](244_M31_P2_DF_연결_IQ_진단.md),
+> 제품 SDC IQ RX의 `UNSUPPORTED`·P2 비차단 경계는 [259번](259_M31_P2_DF_고정_SDK_지원_경계.md)을 따른다.
+
 고정 NCS v3.4.0의 Zephyr LL로 [저장소 소유 진단 앱](../../tests/zephyr/m31_df_connected_receiver/README.md)을
 `8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb`에서 clean build했다.
 NU54DK 두 대의 CMSIS-DAP V2 SHA-256 역할 매핑과 DP/AP register identity를 확인하고

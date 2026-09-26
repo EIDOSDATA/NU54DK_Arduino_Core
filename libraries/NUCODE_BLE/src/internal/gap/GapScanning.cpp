@@ -3,6 +3,7 @@
  */
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 #include "GapInternal.h"
+#if defined(CONFIG_BT_OBSERVER)
 namespace nucode::ble::internal::gap
 {
     namespace
@@ -501,4 +502,91 @@ namespace nucode::ble
     }
 
 } // namespace nucode::ble
+#else
+namespace nucode::ble
+{
+    namespace
+    {
+        /** @brief observer 비활성 image에서 scan API의 명시적 오류를 기록합니다. */
+        bool reportScanUnsupported() noexcept
+        {
+            if (!internal::gap::requireThreadContext())
+            {
+                return false;
+            }
+            internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+            return false;
+        }
+    } // namespace
+
+    bool Scan::clearFilters() noexcept
+    {
+        return reportScanUnsupported();
+    }
+
+    bool Scan::filterName(const char *exact_name) noexcept
+    {
+        ARG_UNUSED(exact_name);
+        return reportScanUnsupported();
+    }
+
+    bool Scan::filterServiceUuid(const BLEUuid &uuid) noexcept
+    {
+        ARG_UNUSED(uuid);
+        return reportScanUnsupported();
+    }
+
+    bool Scan::filterAddress(const BLEAddress &address) noexcept
+    {
+        ARG_UNUSED(address);
+        return reportScanUnsupported();
+    }
+
+    bool Scan::start(bool active) noexcept
+    {
+        ARG_UNUSED(active);
+        return reportScanUnsupported();
+    }
+
+    bool Scan::startExtended(bool active, bool coded, bool filter_duplicates) noexcept
+    {
+        ARG_UNUSED(active);
+        ARG_UNUSED(coded);
+        ARG_UNUSED(filter_duplicates);
+        return reportScanUnsupported();
+    }
+
+    bool Scan::stop() noexcept
+    {
+        return reportScanUnsupported();
+    }
+
+    bool Scan::running() const noexcept
+    {
+        return false;
+    }
+
+    int Scan::available() const noexcept
+    {
+        return 0;
+    }
+
+    bool Scan::read(BLEScanResult &result) noexcept
+    {
+        ARG_UNUSED(result);
+        return false;
+    }
+
+    void Scan::onResult(BLEScanCallback callback, void *context) noexcept
+    {
+        ARG_UNUSED(callback);
+        ARG_UNUSED(context);
+    }
+
+    std::uint32_t Scan::droppedResults() const noexcept
+    {
+        return 0U;
+    }
+} // namespace nucode::ble
+#endif
 #endif

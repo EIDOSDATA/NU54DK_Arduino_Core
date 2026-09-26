@@ -1,9 +1,12 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "id": "nucode.peripheral.fabric",
   "requires": ["peripheral_fabric"],
+  "capabilities": ["nucode.peripheral-fabric"],
   "conf": ["peripheral-fabric.conf"],
   "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
   "conflicts": ["arduino.serial", "arduino.wire", "arduino.spi", "arduino.adc", "arduino.pwm", "arduino.interrupts"],
   "compatible_profiles": ["fabric", "ble_audio_io"]
 }

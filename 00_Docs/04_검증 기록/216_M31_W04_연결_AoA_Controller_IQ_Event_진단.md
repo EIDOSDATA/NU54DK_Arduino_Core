@@ -1,5 +1,8 @@
 # M31-W04 연결 AoA controller IQ event 진단
 
+> **후속 지원 판정:** 이 기록은 당시 내부 Zephyr LL 진단이다. 제품 SDC IQ RX는
+> 고정 NCS `v3.4.0`에서 `UNSUPPORTED`이며 P2를 차단하지 않는다. [259번](259_M31_P2_DF_고정_SDK_지원_경계.md)
+
 `7586cb14bbea666b7ad2a49280be4a9dbc1fd846`의 clean source와 고정 NCS
 v3.4.0, Zephyr `bf801e4e3d19e1ffa76164346480cb7734dd2800`, Windows toolchain
 `dcbdc366a1`로 연결 수신 진단 앱과 공개 `ConnectedCteResponder`를 새로 빌드했다.

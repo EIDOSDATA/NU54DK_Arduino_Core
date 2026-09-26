@@ -19,6 +19,12 @@ static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::operation_failed) ==
               "기존 client event ordinal을 유지해야 합니다.");
 static_assert(static_cast<std::uint8_t>(BLEGattClientEvent::read_multiple_complete) == 11U,
               "W04 client event ordinal을 유지해야 합니다.");
+static_assert(sizeof(decltype(nucode::ble::internal::gatt::ClientState::read_data)) ==
+                  CONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE,
+              "client read snapshot은 선언한 event payload 크기를 사용해야 합니다.");
+static_assert(sizeof(decltype(nucode::ble::internal::gatt::ClientState::write_data)) ==
+                  CONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE,
+              "client write snapshot은 선언한 TX payload 크기를 사용해야 합니다.");
 
 namespace nucode::ble::internal
 {
@@ -64,14 +70,24 @@ namespace nucode::ble::internal
 constexpr BLEProperty properties = BLEProperty::read | BLEProperty::write |
                                    BLEProperty::write_without_response | BLEProperty::notify |
                                    BLEProperty::indicate;
+#if CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE == 64
+constexpr std::size_t local_characteristic_capacity = 64U;
+#else
+constexpr std::size_t local_characteristic_capacity = 512U;
+#endif
 BLEService service(BLEUuid(std::uint16_t{0x180A}));
 BLEService second_service(BLEUuid(std::uint16_t{0x180F}));
 BLECharacteristic characteristic(BLEUuid(std::uint16_t{0x2A29}), properties,
-                                 BLEPermission::read | BLEPermission::write, 512);
+                                 BLEPermission::read | BLEPermission::write,
+                                 local_characteristic_capacity);
 BLECharacteristic alternate_characteristic(BLEUuid(std::uint16_t{0x2A24}), BLEProperty::write,
-                                           BLEPermission::write, 512);
+                                           BLEPermission::write,
+                                           local_characteristic_capacity);
 BLECharacteristic second_characteristic(BLEUuid(std::uint16_t{0x2A19}), BLEProperty::read,
-                                         BLEPermission::read, 20);
+                                          BLEPermission::read, 20);
+BLECharacteristic tx_peer_characteristic(BLEUuid(std::uint16_t{0x2A26}),
+                                         BLEProperty::read | BLEProperty::notify,
+                                         BLEPermission::read, 20U);
 BLEDescriptor descriptors[] = {
     BLEDescriptor(BLEUuid(std::uint16_t{0x2901}), BLEPermission::read | BLEPermission::write, 4U),
     BLEDescriptor(BLEUuid(std::uint16_t{0x2904}), BLEPermission::read | BLEPermission::write, 4U),
@@ -410,6 +426,12 @@ int main(int argc, char **argv)
     }
     assert(service.addCharacteristic(characteristic));
     assert(service.addCharacteristic(alternate_characteristic));
+    if (std::strcmp(scenario, "tx_pool_parallel") == 0)
+    {
+        assert(second_service.addCharacteristic(tx_peer_characteristic));
+        tx_peer_characteristic.onEvent(serverObserved, nullptr);
+        assert(BLEDevice.addService(second_service));
+    }
     assert(BLEDevice.addService(service));
     const bool cache_scenario = std::strncmp(scenario, "m29_cache_", 10U) == 0;
     if (cache_scenario)
@@ -443,6 +465,7 @@ int main(int argc, char **argv)
         std::strcmp(scenario, "m29_long_write") == 0 ||
         std::strcmp(scenario, "m29_signed_write") == 0 ||
         std::strcmp(scenario, "m29_signed_overflow") == 0 ||
+        std::strcmp(scenario, "client_signed_capacity") == 0 ||
         std::strcmp(scenario, "m29_eatt") == 0 ||
         std::strcmp(scenario, "client_reentrant_end") == 0)
     {
@@ -696,6 +719,90 @@ int main(int argc, char **argv)
         assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::notification_sent)] ==
                1);
     }
+    else if (std::strcmp(scenario, "tx_capacity") == 0)
+    {
+        std::array<std::uint8_t, 65> oversized{};
+        assert(characteristic.setValue(oversized.data(), oversized.size()));
+        assert(!characteristic.notify());
+        assert(BLEDevice.lastError() == BLEError::value_overflow);
+        assert(!characteristic.indicate());
+        assert(BLEDevice.lastError() == BLEError::value_overflow);
+    }
+#if CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT == 1
+    else if (std::strcmp(scenario, "tx_pool") == 0)
+    {
+        assert(characteristic.setValue(payload, sizeof(payload)));
+        assert(characteristic.notify());
+        assert(!characteristic.indicate());
+        assert(BLEDevice.lastError() == BLEError::busy);
+        auto notification = mock_notification;
+        notification.func(connection, notification.user_data);
+
+        assert(characteristic.indicate());
+        auto *indication = mock_indication;
+        indication->func(connection, indication, 0U);
+        assert(!characteristic.notify());
+        assert(BLEDevice.lastError() == BLEError::busy);
+        indication->destroy(indication);
+
+        assert(characteristic.notify());
+        notification = mock_notification;
+        notification.func(connection, notification.user_data);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::notification_sent)] ==
+               2U);
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::indication_confirmed)] ==
+               1U);
+    }
+#endif
+#if CONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT == 2
+    else if (std::strcmp(scenario, "tx_pool_parallel") == 0)
+    {
+        const std::uint8_t peer_payload[]{0x41U, 0x42U, 0x43U, 0x44U};
+        assert(characteristic.setValue(payload, sizeof(payload)));
+        assert(tx_peer_characteristic.setValue(peer_payload, sizeof(peer_payload)));
+        assert(characteristic.notify());
+        const auto first_notification = mock_notification;
+        assert(tx_peer_characteristic.notify());
+        const auto second_notification = mock_notification;
+        assert(first_notification.data != second_notification.data);
+        assert(std::memcmp(first_notification.data, payload, sizeof(payload)) == 0);
+        assert(std::memcmp(second_notification.data, peer_payload, sizeof(peer_payload)) == 0);
+        assert(!characteristic.indicate());
+        assert(BLEDevice.lastError() == BLEError::busy);
+
+        first_notification.func(connection, first_notification.user_data);
+        assert(std::memcmp(second_notification.data, peer_payload, sizeof(peer_payload)) == 0);
+        assert(characteristic.indicate());
+        auto *indication = mock_indication;
+        second_notification.func(connection, second_notification.user_data);
+        indication->func(connection, indication, 0U);
+        indication->destroy(indication);
+        BLEDevice.poll();
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::notification_sent)] ==
+               2U);
+        assert(server_events[static_cast<unsigned>(BLECharacteristicEvent::indication_confirmed)] ==
+               1U);
+    }
+#endif
+#if CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE == 64
+    else if (std::strcmp(scenario, "inline_capacity") == 0)
+    {
+        static_assert(BLECharacteristic::maximum_value_length == 512U);
+        static_assert(BLECharacteristic::maximum_inline_value_length == 64U);
+        std::array<std::uint8_t, 65> value{};
+        assert(characteristic.capacity() == 64U);
+        assert(characteristic.setValue(value.data(), 64U));
+        assert(!characteristic.setValue(value.data(), value.size()));
+
+        std::array<std::uint8_t, 512> external_buffer{};
+        BLECharacteristic external(BLEUuid(std::uint16_t{0x2A25}), BLEProperty::read,
+                                   BLEPermission::read, external_buffer.data(),
+                                   external_buffer.size());
+        assert(external.capacity() == BLECharacteristic::maximum_value_length);
+        assert(external.setValue(value.data(), value.size()));
+    }
+#endif
     else if (std::strcmp(scenario, "indication") == 0)
     {
         assert(characteristic.setValue(payload, 4));
@@ -1021,6 +1128,18 @@ int main(int argc, char **argv)
             assert(detailed_events[0][static_cast<unsigned>(
                        BLEGattClientEvent::signed_write_complete)] == 0U);
         }
+        else if (std::strcmp(scenario, "client_signed_capacity") == 0)
+        {
+            observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
+            discoverSigned();
+            std::array<std::uint8_t, 65> capacity_payload{};
+            assert(!BLEClient.writeSigned(capacity_payload.data(), capacity_payload.size()));
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(BLEClient.writeSigned(capacity_payload.data(), 64U));
+            mock_command_callback(connection, mock_command_user_data);
+            BLEDevice.poll();
+            assert(!BLEClient.busy());
+        }
         else if (std::strcmp(scenario, "m29_eatt") == 0)
         {
             observed_handles[0] = BLEConnection.handle(BLELinkRole::central);
@@ -1057,6 +1176,7 @@ int main(int argc, char **argv)
         }
         if (std::strcmp(scenario, "m29_signed_write") == 0 ||
             std::strcmp(scenario, "m29_signed_overflow") == 0 ||
+            std::strcmp(scenario, "client_signed_capacity") == 0 ||
             std::strcmp(scenario, "m29_eatt") == 0)
         {
         }
@@ -1082,6 +1202,36 @@ int main(int argc, char **argv)
             mock_write->func(connection, 0, mock_write);
             assert(!BLEClient.busy());
             assert(BLEClient.writeWithoutResponse(payload, 4));
+            mock_command_callback(connection, mock_command_user_data);
+            assert(!BLEClient.busy());
+        }
+        else if (std::strcmp(scenario, "client_capacity") == 0)
+        {
+            std::array<std::uint8_t, 65> capacity_payload{};
+            capacity_payload.fill(0x5AU);
+            assert(BLEClient.read());
+            assert(mock_read->func(connection, 0U, mock_read, capacity_payload.data(),
+                                   static_cast<std::uint16_t>(capacity_payload.size())) ==
+                   BT_GATT_ITER_STOP);
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(!BLEClient.busy());
+            BLEDevice.poll();
+            assert(BLEClient.read());
+            assert(mock_read->func(connection, 0U, mock_read, capacity_payload.data(), 64U) ==
+                   BT_GATT_ITER_CONTINUE);
+            assert(mock_read->func(connection, 0U, mock_read, nullptr, 0U) == BT_GATT_ITER_STOP);
+            BLEDevice.poll();
+            assert(observed_length == 64U && observed_data[63] == 0x5AU);
+
+            assert(!BLEClient.write(capacity_payload.data(), capacity_payload.size()));
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(BLEClient.write(capacity_payload.data(), 64U));
+            mock_write->func(connection, 0U, mock_write);
+            assert(!BLEClient.busy());
+            assert(!BLEClient.writeWithoutResponse(capacity_payload.data(),
+                                                   capacity_payload.size()));
+            assert(BLEDevice.lastError() == BLEError::value_overflow);
+            assert(BLEClient.writeWithoutResponse(capacity_payload.data(), 64U));
             mock_command_callback(connection, mock_command_user_data);
             assert(!BLEClient.busy());
         }

@@ -70,7 +70,7 @@ class M29BleLongWriteTests(unittest.TestCase):
 
         client = CLIENT.read_text(encoding="utf-8")
         config = CONFIG.read_text(encoding="utf-8")
-        self.assertIn("length > maximum_value_length", client)
+        self.assertIn("length > maximum_tx_payload_length", client)
         self.assertIn("validWriteCommandPayload(*state, length)", client)
         self.assertIn("CONFIG_BT_ATT_PREPARE_COUNT=6", config)
         self.assertIn("CONFIG_BT_L2CAP_TX_MTU=512", config)

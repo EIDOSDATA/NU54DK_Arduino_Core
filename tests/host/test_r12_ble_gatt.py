@@ -16,8 +16,11 @@ class BleGattTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='nu54-r12-gatt-') as folder:
             binary = Path(folder) / 'gatt.exe'
             command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                       '-DCONFIG_BT_OBSERVER=1',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
+                       '-DCONFIG_NUCODE_BLE_GATT_SERVER=1',
+                       '-DCONFIG_NUCODE_BLE_GATT_CLIENT=1',
                        '-DCONFIG_NUCODE_BLE_GATT_MAX_SERVICES=2', '-DCONFIG_NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE=8',
                        '-DCONFIG_NUCODE_BLE_GATT_EVENT_QUEUE_SIZE=24', '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1',
                        '-DCONFIG_BT_GATT_CACHING=1', '-DCONFIG_BT_SIGNING=1',
@@ -54,6 +57,73 @@ class BleGattTests(unittest.TestCase):
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
+
+            capacity_binary = Path(folder) / 'gatt-tx-capacity.exe'
+            capacity_result = subprocess.run(
+                command + ['-DCONFIG_NUCODE_BLE_GATT_EVENT_PAYLOAD_SIZE=64',
+                           '-DCONFIG_NUCODE_BLE_GATT_TX_PAYLOAD_SIZE=64',
+                           '-DCONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT=1',
+                           '-o', str(capacity_binary)],
+                capture_output=True,
+                timeout=60,
+            )
+            self.assertEqual(
+                capacity_result.returncode,
+                0,
+                capacity_result.stderr.decode(errors='replace'),
+            )
+            for scenario in ('tx_capacity', 'tx_pool', 'client_capacity',
+                             'client_signed_capacity'):
+                capacity_run = run_executable(
+                    [str(capacity_binary), scenario], capture_output=True, timeout=10
+                )
+                self.assertEqual(
+                    capacity_run.returncode,
+                    0,
+                    capacity_run.stderr.decode(errors='replace'),
+                )
+
+            parallel_binary = Path(folder) / 'gatt-tx-parallel.exe'
+            parallel_result = subprocess.run(
+                command + ['-DCONFIG_NUCODE_BLE_GATT_TX_CONTEXT_COUNT=2',
+                           '-o', str(parallel_binary)],
+                capture_output=True,
+                timeout=60,
+            )
+            self.assertEqual(
+                parallel_result.returncode,
+                0,
+                parallel_result.stderr.decode(errors='replace'),
+            )
+            parallel_run = run_executable(
+                [str(parallel_binary), 'tx_pool_parallel'], capture_output=True, timeout=10
+            )
+            self.assertEqual(
+                parallel_run.returncode,
+                0,
+                parallel_run.stderr.decode(errors='replace'),
+            )
+
+            inline_binary = Path(folder) / 'gatt-inline-capacity.exe'
+            inline_result = subprocess.run(
+                command + ['-DCONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE=64',
+                           '-o', str(inline_binary)],
+                capture_output=True,
+                timeout=60,
+            )
+            self.assertEqual(
+                inline_result.returncode,
+                0,
+                inline_result.stderr.decode(errors='replace'),
+            )
+            inline_run = run_executable(
+                [str(inline_binary), 'inline_capacity'], capture_output=True, timeout=10
+            )
+            self.assertEqual(
+                inline_run.returncode,
+                0,
+                inline_run.stderr.decode(errors='replace'),
+            )
 
 
 if __name__ == '__main__':

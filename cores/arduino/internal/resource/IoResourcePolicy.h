@@ -71,9 +71,10 @@ namespace nucode::arduino::internal::io_resource_detail
     }
 
     /** @brief 호출자가 전달한 lease가 고정 배열 범위 안인지 확인합니다. */
-    [[nodiscard]] inline constexpr bool validLeaseShape(const IoResourceLease &lease) noexcept
+    template <typename Lease>
+    [[nodiscard]] inline constexpr bool validLeaseShape(const Lease &lease) noexcept
     {
         return (lease.owner.kind != IoOwnerKind::none) && (lease.count != 0U) &&
-               (lease.count <= io_resource_lease_capacity);
+               (lease.count <= Lease::capacity);
     }
 } // namespace nucode::arduino::internal::io_resource_detail

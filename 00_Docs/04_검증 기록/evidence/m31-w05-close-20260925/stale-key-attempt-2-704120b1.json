@@ -1,0 +1,75 @@
+{
+  "status": "FAIL",
+  "test": "one_sided_stale_key_rejection",
+  "arbitrary_unequal_ltk_injection": false,
+  "source_clean": true,
+  "core_revision": "704120b1968c236d4809b5709b83cea7dc38b2fa",
+  "negative_window_s": 30.0,
+  "initiator_probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "initiator_port": "COM10",
+  "reflector_port": "COM13",
+  "initiator_image_sha256": "4b9794b95dec79cb307208bbc8769fbee2f3d526e1326bee03139659dd3a036f",
+  "reflector_image_sha256": "d3e450d92081f4e16d1a0baeb3c43d31625e2f262d113c333baac7779bb79208",
+  "prime_raw_reports": 1,
+  "negative_raw_reports": 0,
+  "stop_confirmed": true,
+  "initiator_lines": [
+    "CSKEY initiator boot bonds=1",
+    "CSKEY initiator boot bonds=1",
+    "CSKEY initiator clean bonds=0",
+    "CSKEY initiator prime scan",
+    "CSKEY initiator connected phase=prime begin=0",
+    "CSKEY initiator paired bonds=1",
+    "CSKEY initiator prime ready raw=1 bonds=1",
+    "CSKEY initiator disconnect requested",
+    "CSKEY initiator disconnected",
+    "CSKEY initiator negative scan",
+    "CSKEY initiator connected phase=negative begin=0",
+    "CSKEY initiator security error reason=2",
+    "CSKEY initiator status bonds=1 pairing_requests=0 pairing_rejected=0 security_errors=1 security_reason=2 disconnects=0 disconnect_reason=0 l2=0 ready=0 raw=0 connected=1",
+    "CSKEY initiator disconnected",
+    "CSKEY initiator STOPPED"
+  ],
+  "reflector_lines": [
+    "CSKEY reflector boot bonds=0",
+    "CSKEY reflector clean bonds=0",
+    "CSKEY reflector prime advertising",
+    "CSKEY reflector connected phase=prime begin=0",
+    "CSKEY reflector paired bonds=1",
+    "CSKEY reflector prime ready bonds=1",
+    "CSKEY reflector disconnected",
+    "CSKEY reflector stale erased bonds=0",
+    "CSKEY reflector negative advertising",
+    "CSKEY reflector connected phase=negative begin=0",
+    "CSKEY reflector status bonds=0 pairing_requests=0 pairing_rejected=0 security_errors=0 security_reason=0 disconnects=0 disconnect_reason=0 l2=0 ready=0 active=0 connected=1",
+    "CSKEY reflector disconnected",
+    "CSKEY reflector STOPPED"
+  ],
+  "initiator_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "253952"
+  ],
+  "initiator_flash": [
+    "pyocd-sector-hw-reset",
+    "266240"
+  ],
+  "failure_class": "StaleKeyFailure",
+  "failure_detail": "stale-key link remained connected"
+}

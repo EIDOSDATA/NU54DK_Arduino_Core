@@ -25,9 +25,11 @@ class BleSecurityTests(unittest.TestCase):
                 '-o', str(c_object)], capture_output=True, timeout=60)
             self.assertEqual(c_result.returncode, 0, c_result.stderr.decode(errors='replace'))
             command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                       '-DCONFIG_BT_OBSERVER=1',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
                        '-DCONFIG_BT_MAX_PAIRED=4', '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1',
+                       '-DCONFIG_BT_HIDS=1',
                        '-DCONFIG_NUCODE_BLE_NFC_OOB_ADAPTER=1']
             for path in ['tests/host/ble_stubs', 'libraries/NUCODE_BLE/src', 'libraries/NUCODE_BLE_Security/src', 'third_party/ArduinoCore-API']:
                 command += ['-I', str(ROOT / path)]

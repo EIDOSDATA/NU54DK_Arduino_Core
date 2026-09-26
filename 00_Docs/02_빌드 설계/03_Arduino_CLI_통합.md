@@ -13,6 +13,10 @@
 단일 원본은 `boards.txt`와 `platform.txt`이며, 실행 구현은
 `tools/nu54-builder/src/nu54_builder.py`다.
 
+아래 메뉴·제한은 stable v0.4.1 기준이다. 공개 `v0.5.0-rc.1`의 추가 adaptive·DFU·Audio I/O
+선택은 [프로필 계약](07_구성_프로필과_Arduino_예제_배포.md)과
+[RC 설치 안내](../05_릴리스/v0.5.0-rc.1/README.md)에서 구분한다.
+
 ## 1. 사용자에게 보이는 흐름
 
 Arduino 사용자는 일반 platform과 같은 순서로 작업한다.

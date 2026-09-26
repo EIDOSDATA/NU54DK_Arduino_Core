@@ -1,0 +1,12 @@
+{
+  "client": {
+    "public_source": "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexClient/BapUnicastDuplexClient.ino",
+    "public_source_sha256": "49e1e5584db107be8e42073565dff2f78006713fe195f8c22e378c640d45fc7e",
+    "staged_sketch": "C:\\r31k\\p2_audio_stage_repro_20260925\\p2_audio_duplex_client"
+  },
+  "server": {
+    "public_source": "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexServer/BapUnicastDuplexServer.ino",
+    "public_source_sha256": "384f6c18a9836f71094de1a99aa53d2d80914e3e4b65d29bd3fa6f567fee9e7b",
+    "staged_sketch": "C:\\r31k\\p2_audio_stage_repro_20260925\\p2_audio_duplex_server"
+  }
+}

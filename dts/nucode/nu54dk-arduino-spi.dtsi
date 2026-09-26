@@ -1,0 +1,19 @@
+/**
+ * @file nu54dk-arduino-spi.dtsi
+ * @brief SPI가 소유하는 SPIM00 장치와 chosen만 활성화합니다.
+ * SPDX-License-Identifier: MIT
+ */
+
+/ {
+	chosen {
+		nucode,arduino-spi = &spi00;
+	};
+};
+
+&spi00 {
+	status = "okay";
+	pinctrl-0 = <&spi00_default>;
+	pinctrl-1 = <&spi00_sleep>;
+	pinctrl-names = "default", "sleep";
+	zephyr,pm-device-runtime-auto;
+};

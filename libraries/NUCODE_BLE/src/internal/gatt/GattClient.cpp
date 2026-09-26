@@ -445,7 +445,8 @@ namespace nucode::ble::internal::gatt
         }
         if (data != nullptr)
         {
-            if (length == 0U || state->read_length + length > maximum_value_length)
+            if (length == 0U || state->read_length + length > maximum_value_length ||
+                state->read_length + length > maximum_event_payload_length)
             {
                 failClient(*state, -EMSGSIZE);
                 return BT_GATT_ITER_STOP;
@@ -456,6 +457,11 @@ namespace nucode::ble::internal::gatt
         }
         const std::size_t completed_length = state->read_length;
         const bool read_multiple = state->read_multiple;
+        if (completed_length > maximum_event_payload_length)
+        {
+            failClient(*state, -EMSGSIZE);
+            return BT_GATT_ITER_STOP;
+        }
         state->read_length = 0U;
         state->read_multiple = false;
         clearClientOperationToken(*state);
@@ -574,12 +580,21 @@ namespace nucode::ble::internal::gatt
             queueClientEvent(*state, BLEGattClientEvent::unsubscribed);
             return BT_GATT_ITER_STOP;
         }
-        queueClientEvent(*state,
-                         atomic_get(&state->client_subscription_value) == BT_GATT_CCC_INDICATE
-                             ? BLEGattClientEvent::indication_received
-                             : BLEGattClientEvent::notification_received,
-                         data, length);
-        return BT_GATT_ITER_CONTINUE;
+        const bool queued = queueClientEvent(
+            *state,
+            atomic_get(&state->client_subscription_value) == BT_GATT_CCC_INDICATE
+                ? BLEGattClientEvent::indication_received
+                : BLEGattClientEvent::notification_received,
+            data, length);
+        if (queued)
+        {
+            return BT_GATT_ITER_CONTINUE;
+        }
+        atomic_set(&state->client_subscribed, 0);
+        atomic_set(&state->client_subscription_value, 0);
+        clearClientSubscriptionToken(*state);
+        atomic_set(&state->client_busy_value, 0);
+        return BT_GATT_ITER_STOP;
     }
 
     void continueCharacteristicDiscovery(ClientState &state) noexcept
@@ -747,7 +762,7 @@ namespace nucode::ble::internal::gatt
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
         bt_conn_unref(connection);
-        if (length > maximum_value_length || mtu < 3U || length > mtu - 3U)
+        if (length > maximum_tx_payload_length || mtu < 3U || length > mtu - 3U)
         {
             nucode::ble::internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
@@ -1309,7 +1324,7 @@ namespace nucode::ble
             internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
-        if (length > maximum_value_length)
+        if (length > maximum_tx_payload_length)
         {
             internal::recordError(BLEError::value_overflow, -EMSGSIZE, true);
             return false;
@@ -1492,7 +1507,7 @@ namespace nucode::ble
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
-        if (length > maximum_value_length || mtu < 15U || length > mtu - 15U)
+        if (length > maximum_tx_payload_length || mtu < 15U || length > mtu - 15U)
         {
             bt_conn_unref(connection);
             atomic_set(&state->client_busy_value, 0);

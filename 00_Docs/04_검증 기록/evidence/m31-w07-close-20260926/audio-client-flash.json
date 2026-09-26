@@ -1,0 +1,11 @@
+{
+  "status": "FLASH_PREPARED",
+  "client_flash": {
+    "mode": "pyocd-sector-hw-reset",
+    "bytes": 495616
+  },
+  "client_probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "client_image_sha256": "d46ba64c2f1c6eb1aa2a28cfe083c3f143be8106c46e253912f24ac1ccc428bb",
+  "auto_unlock": false,
+  "erase": "sector"
+}

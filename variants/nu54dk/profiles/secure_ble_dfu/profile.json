@@ -1,5 +1,6 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
+  "capability_mode": "compatibility",
   "id": "secure_ble_dfu",
   "display_name": "Secure BLE DFU (MCUboot)",
   "board": "nucode:zephyr:nu54dk",

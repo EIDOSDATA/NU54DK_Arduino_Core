@@ -1289,6 +1289,7 @@ namespace nucode::ble::internal::gatt
         }
     }
 
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
     bool setGattDatabaseRevision(std::uint32_t revision) noexcept
     {
         if (revision == 0U || stackReady() || atomic_get(&database_state.registered) != 0)
@@ -1367,9 +1368,11 @@ namespace nucode::ble::internal::gatt
         return 0;
 #endif
     }
+#endif
 
 } // namespace nucode::ble::internal::gatt
 
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
 namespace nucode::ble::internal
 {
     int recordGattDatabaseIdentity() noexcept
@@ -1377,9 +1380,11 @@ namespace nucode::ble::internal
         return gatt::recordGattDatabaseIdentity();
     }
 } // namespace nucode::ble::internal
+#endif
 
 namespace nucode::ble
 {
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
     bool GattDatabase::setRevision(std::uint32_t revision) noexcept
     {
         if (!internal::requireThreadContext())
@@ -1406,7 +1411,9 @@ namespace nucode::ble
         }
         return internal::gatt::readGattDatabaseHash(output);
     }
+#endif
 
+#if defined(CONFIG_NUCODE_BLE_GATT_CLIENT)
     bool GattClient::discoverCached(BLEConnectionHandle connection,
                                     const BLEUuid &service_uuid,
                                     const BLEUuid &characteristic_uuid,
@@ -1438,8 +1445,11 @@ namespace nucode::ble
     {
         return internal::gatt::clientCacheStatistics();
     }
+#endif
 } // namespace nucode::ble
 
+#if defined(CONFIG_NUCODE_BLE_GATT_SERVER)
 nucode::ble::GattDatabase BLEGattDatabase;
+#endif
 
 #endif

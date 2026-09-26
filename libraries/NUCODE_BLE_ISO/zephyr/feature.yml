@@ -1,9 +1,12 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "id": "nucode.ble.iso",
   "requires": ["ble"],
+  "capabilities": ["nucode.ble.iso-api"],
   "conf": [],
   "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
   "conflicts": ["radio"],
-  "compatible_profiles": ["ble"]
+  "compatible_profiles": ["adaptive", "ble"]
 }

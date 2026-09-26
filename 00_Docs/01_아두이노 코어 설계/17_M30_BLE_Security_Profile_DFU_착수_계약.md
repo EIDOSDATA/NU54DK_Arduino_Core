@@ -8,7 +8,7 @@
 | 기준 Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | 기준 board | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | 기준 toolchain | Windows bundle `dcbdc366a1` |
-| 현재 지원 릴리즈 | `v0.4.1` 하나 |
+| stable 지원 릴리즈 | `v0.4.1`; 공개 RC는 [v0.5.0 TODO](../TODO_v0.5.0.md) 참조 |
 | M30 상태 | **W01~W08 8/8 완료, test ID 10/10 PASS** |
 | 기계 원장 | [`m30-ble-readiness.json`](../../variants/nu54dk/m30-ble-readiness.json) |
 

@@ -9,6 +9,7 @@
 #define NUCODE_BLE_AUDIO_H
 
 #include <Arduino.h>
+#include <NUCODE_BLE.h>
 
 #include <cstddef>
 #include <cstdint>

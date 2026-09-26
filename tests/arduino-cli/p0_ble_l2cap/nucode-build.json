@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "capabilities": [],
+  "roles": ["ble-l2cap-coc-dual-role"],
+  "capacities": {}
+}

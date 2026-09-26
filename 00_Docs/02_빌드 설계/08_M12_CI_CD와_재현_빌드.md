@@ -1,14 +1,15 @@
 # CI/CD와 재현 빌드 — v0.4.1 지원과 개발 main 회귀
 
-2026-09-21 문서·이력 정리 작업도 사용자 지시에 따라 **로컬 검증·커밋·푸시까지만 수행하고
-CI/CD 실행 요청·상태 조회·완료 대기를 생략한다.** 아래 내용은 기존 workflow의 설계·운영 계약이며,
-이번 생략으로 workflow·trigger·검사 범위를 변경하거나 미확인 CI를 PASS로 기록하지 않는다.
+2026-09-26 사용자 승인으로 M31-W08 Windows RC 검증은 GitHub Actions에서 8개 설치 예제 shard와
+별도 lifecycle job을 병렬 실행했다. 과거 문서·이력 정리 때의 CI 생략은 당시 이력으로 보존하며
+현재 W08 결과를 미확인 PASS로 기록하지 않는다.
 
 | 계층 | 실행 환경 | 목적 |
 | --- | --- | --- |
 | Software gates | GitHub-hosted Ubuntu/Windows | 계약, M23 inventory, unit, 문서, package, 예제 discovery |
 | Reproducible builds | 고정 Nordic container + Windows | 릴리스 도입 기능군별 병렬 Zephyr/Arduino/M14/M17/M23 build gate |
 | NU54DK HIL | 승인된 self-hosted Windows runner | pyOCD upload와 UART 실기 |
+| M31 W08 Windows RC | GitHub-hosted Windows 2025, 8 shard + lifecycle | exact private RC 이중 재현, 설치 예제 113/113, upgrade/uninstall/reinstall/cache |
 
 CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 시스템이 아니다. 정확한 run ID,
 artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)과
@@ -280,6 +281,11 @@ artifact identity와 함께 검증 기록으로 승격한다. 과거 run ID나 �
 Workflow는 package를 검증하지만 tag 생성, stable index 변경, GitHub Release 공개 또는
 latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람 승인과 릴리스 절차가 필요하다.
 
+M31 W08 workflow는 `0.5.0-RC1` push에서 private RC package를 두 번 재현하고, 정렬된 113개
+설치 예제를 8개 독립 cache shard로 나눠 compile한다. 별도 job은 v0.4.1 설치→RC upgrade→
+uninstall→reinstall과 대표 cache rebuild를 검사하며 aggregate job은 8/8 shard·113/113·lifecycle의
+source/package identity가 모두 같을 때만 PASS한다. 이 workflow는 release/tag/catalog를 게시하지 않는다.
+
 ### 후속 제품선 다중 Host CI 승격 조건
 
 | CI/HIL 행 | 자동화할 범위 | CI만으로 증명하지 않는 것 |
@@ -307,6 +313,8 @@ clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu
 - [`run_m14_qemu.py`](../../tools/ci/run_m14_qemu.py)
 - [`run_m17_feasibility.py`](../../tools/ci/run_m17_feasibility.py)
 - [`run_m17_external_arduino.py`](../../tools/ci/run_m17_external_arduino.py)
+- [`m31-w08-windows-rc.yml`](../../.github/workflows/m31-w08-windows-rc.yml)
+- [`m31_ci_aggregate.py`](../../tools/release/m31_ci_aggregate.py)
 - [M12 CI/CD 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)
 - [M17 NCS 기능과 예제 coverage 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)
 - [M18 공개 검증과 RC2 교정](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
@@ -317,3 +325,4 @@ clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu
 - [M21 BLE 보안과 표준 Profile 검증](<../04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md>)
 - [AC-02B Peripheral/Analog runtime 기준선](<../04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md>)
 - [M23 Peripheral inventory와 공통 소유권 기준선](<../04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md>)
+- [M31 W08 Windows RC 준비와 완료](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>)

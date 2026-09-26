@@ -29,7 +29,7 @@ PASS가 아니다. M28 완료 판정은 아래 9개 test ID의 실제 PASS를 �
 
 | 대상 | 고정 값 | 현재 의미 |
 | --- | --- | --- |
-| 설치·지원 release | `v0.4.1` | M28 개발 중에도 기존 사용자 지원 기준 유지 |
+| stable 설치·지원 release | `v0.4.1` | M28 개발 중에도 기존 사용자 지원 기준 유지; 공개 RC는 [v0.5.0 TODO](../TODO_v0.5.0.md) 참조 |
 | 개발 source version | `0.4.1-dev` | `platform.txt`의 source 식별자 |
 | NCS | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` | lock과 설치 source 일치 확인 |
 | Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` | lock과 설치 source 일치 확인 |

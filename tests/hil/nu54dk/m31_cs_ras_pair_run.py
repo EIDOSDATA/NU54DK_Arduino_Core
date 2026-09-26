@@ -54,6 +54,17 @@ def collect_until(initiator, reflector, record, expected, timeout):
     return False
 
 
+def record_counter_transition(previous_counter, counter, gaps):
+    """! @brief CS counter의 순방향 누락은 기록하고 중복·역행은 거부합니다. """
+    if previous_counter is None:
+        return
+    delta = (counter - previous_counter) & 0xFFFF
+    if delta == 0 or delta >= 0x8000:
+        raise RuntimeError("duplicate or backward CS counter")
+    if delta > 1:
+        gaps.append({"before": previous_counter, "after": counter})
+
+
 def read_procedures(initiator, reflector, record, count, timeout):
     pattern = re.compile(
         r"^CS_RAW counter=(\d+) local=(\d+) peer=(\d+) rtt=(\d+) "
@@ -61,6 +72,8 @@ def read_procedures(initiator, reflector, record, count, timeout):
     )
     deadline = time.monotonic() + timeout
     previous_counter = None
+    record["counter_gap_policy"] = "observe_only"
+    record["counter_gaps"] = []
     while time.monotonic() < deadline and record["procedures"] < count:
         for port, key in ((initiator, "initiator_lines"),
                           (reflector, "reflector_lines")):
@@ -79,9 +92,9 @@ def read_procedures(initiator, reflector, record, count, timeout):
             counter, local, peer, rtt, tone, valid = map(
                 int, (counter, local, peer, rtt, tone, valid)
             )
-            if (previous_counter is not None and
-                    counter != ((previous_counter + 1) & 0xFFFF)):
-                raise RuntimeError("ranging counter gap")
+            record_counter_transition(
+                previous_counter, counter, record["counter_gaps"]
+            )
             if not (local == peer and local > 0 and rtt > 0 and tone > 0 and
                     0 < valid <= rtt and 0.0 <= float(distance) < 1000.0):
                 raise RuntimeError("invalid ranging result")

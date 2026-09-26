@@ -36,19 +36,22 @@ class M29BleLongReadTests(unittest.TestCase):
             self.assertIn(token, text, token)
         self.assertIn("[[nodiscard]] bool read() noexcept;", text)
 
-    def test_two_contexts_own_all_async_parameters(self):
-        """! @brief 두 link가 Zephyr async parameter와 payload를 공유하지 않아야 합니다. """
+    def test_connection_bounded_contexts_own_all_async_parameters(self):
+        """! @brief 연결 상한까지 각 link가 async parameter와 payload를 독립 소유해야 합니다. """
 
         text = INTERNAL.read_text(encoding="utf-8")
         for token in (
+            "defined(CONFIG_BT_MAX_CONN)",
+            "CONFIG_BT_MAX_CONN < 2 ? CONFIG_BT_MAX_CONN : 2U",
             "maximum_client_contexts = 2U",
+            "maximum_client_contexts >= 1U",
             "using ClientStates = ClientState[maximum_client_contexts]",
             "struct bt_gatt_discover_params discovery_parameters",
             "struct bt_gatt_read_params read_parameters",
             "struct bt_gatt_write_params write_parameters",
             "struct bt_gatt_subscribe_params subscribe_parameters",
-            "std::uint8_t read_data[maximum_value_length]",
-            "std::uint8_t write_data[maximum_value_length]",
+            "std::uint8_t read_data[maximum_event_payload_length]",
+            "std::uint8_t write_data[maximum_tx_payload_length]",
             "BLEConnectionHandle connection_handle",
         ):
             self.assertIn(token, text, token)
@@ -64,6 +67,8 @@ class M29BleLongReadTests(unittest.TestCase):
         callback = text[start:end]
         for token in (
             "state->read_length + length > maximum_value_length",
+            "state->read_length + length > maximum_event_payload_length",
+            "completed_length > maximum_event_payload_length",
             "::memcpy(state->read_data + state->read_length, data, length)",
             "return BT_GATT_ITER_CONTINUE",
             "data != nullptr",
@@ -71,6 +76,46 @@ class M29BleLongReadTests(unittest.TestCase):
         ):
             self.assertIn(token, callback, token)
         self.assertLess(callback.index("data != nullptr"), callback.index("read_complete"))
+
+    def test_declared_event_payload_fails_closed_at_ingress(self):
+        """! @brief 선언 payload를 넘는 server write와 client notification을 거부합니다. """
+
+        internal = INTERNAL.read_text(encoding="utf-8")
+        server = (ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp").read_text(
+            encoding="utf-8"
+        )
+        client = CLIENT.read_text(encoding="utf-8")
+        self.assertIn("data[maximum_event_payload_length]", internal)
+        self.assertIn("maximum_event_payload_length <= maximum_value_length", internal)
+        self.assertGreaterEqual(
+            server.count("length > maximum_event_payload_length"), 2
+        )
+        start = client.index("std::uint8_t clientNotification(")
+        end = client.index("void continueCharacteristicDiscovery(")
+        notification = client[start:end]
+        for token in (
+            "const bool queued = queueClientEvent(",
+            "clearClientSubscriptionToken(*state)",
+            "return BT_GATT_ITER_STOP",
+        ):
+            self.assertIn(token, notification, token)
+
+    def test_declared_tx_payload_fails_closed_without_truncation(self):
+        """! @brief 선언 TX payload를 넘는 전송 snapshot은 잘라 보내지 않습니다. """
+
+        internal = INTERNAL.read_text(encoding="utf-8")
+        server = (ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("ServerTxContext tx_contexts[maximum_server_tx_contexts]", internal)
+        self.assertIn("std::uint8_t data[maximum_tx_payload_length]", internal)
+        self.assertNotIn("notification_data[maximum_characteristics]", internal)
+        self.assertNotIn("indication_data[maximum_characteristics]", internal)
+        self.assertIn("maximum_tx_payload_length <= maximum_value_length", internal)
+        self.assertIn("maximum_server_tx_contexts <= 128U", internal)
+        self.assertGreaterEqual(server.count("copyCachedValueForTransmission("), 3)
+        self.assertIn("if (length > capacity)", server)
+        self.assertGreaterEqual(server.count("BLEError::value_overflow, -EMSGSIZE"), 2)
 
     def test_disconnect_is_link_local_and_generation_checked(self):
         """! @brief 한 link 해제가 다른 context queue를 purge하거나 초기화하면 안 됩니다. """

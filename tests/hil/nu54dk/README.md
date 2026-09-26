@@ -9,13 +9,22 @@ v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 �
 | M28 GAP/Link/Privacy | W01~W08 완료, 9/9 test ID PASS | [140번 기록](<../../../00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>) |
 | M29 ATT/GATT/L2CAP | W01~W08 완료, 10/10 test ID와 Windows/Intel GATT 상호운용 PASS | [149번 기록](<../../../00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
 | M30 Security/Profile/DFU | W01~W08 완료, 10/10 test ID PASS. 실제 전원 차단 12/12 | [161번 완료 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
-| M31 ISO/LE Audio/DF/CS | W01~W03 완료(3/8), W03 profile 11/11 완료. W04·W05 진행 중, W06~W08 미착수 | [M31 TODO](../../../00_Docs/TODO_M31.md) |
+| M31 ISO/LE Audio/DF/CS | W01~W08 완료(8/8), W03 profile 11/11·W04 DF·W05 CS·W06 자원/회귀·W07 설치 예제/HIL·W08 Windows RC 준비 PASS | [M31 TODO](../../../00_Docs/TODO_M31.md) · [W08 완료](<../../../00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) |
 
-이는 `0.4.1-dev` 개발 소스의 검증 상태이며 공개 v0.4.1 패키지에 BLE 확장이 포함됐다는 뜻이 아닙니다.
-v0.5.0은 M31 완료 뒤 Windows 우선 릴리스로 준비합니다. 다음 구현 순서는 `M31-MEM-OPT`의
-메모리 최적화 → W04·W05 → W06~W08입니다. W06은 독립 ISO·Audio·DF·CS image의 자원·
+M28~M31의 채택 기능은 공개 후보 `v0.5.0-rc.1`에 포함됐으며 공개 다운로드·설치 smoke도
+[268번 기록](<../../../00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)에서 완료했습니다.
+정식 지원 v0.4.1의 패키지 범위와 구분하며, v0.5.0 stable 승격은 별도 후속입니다.
+메모리 최적화 P0~P2와 W04~W08을 완료했고 현재 작업 브랜치는 `0.5.0-RC1`입니다.
+W06은 독립 ISO·Audio·DF·CS image의 자원·
 수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
 실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
+
+P0·P1·P2는 완료했습니다. P2의 지원 범위 오류·최악 부하, stack/heap 최종 크기,
+동일 조건 Nordic native FLASH/RAM 비교 세 축은
+[262번](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 기록합니다.
+고정 NCS v3.4.0 제품 SDC의 DF IQ RX는 `UNSUPPORTED`·범위 제외입니다.
+CS 간헐 loss/counter gap과 SDC 내부 high-water 비노출을 추가 gate로 두지 않습니다.
+과거 실패·HOLD 원본은 보존하고, 지원 기능의 유효 결과·양측 STOP·fault·복구 검사는 유지합니다.
 
 빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
@@ -34,6 +43,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 찾을 내용 | 절 |
 | --- | --- |
 | 공통 실행 경계 | [실행 원칙](#실행-원칙) |
+| M31 ISO·Audio·DF·CS·P2 | [완료 근거와 실행기](#m31-isoaudiodfcs와-메모리-계측) |
 | 온보드 GPIO·버튼 | [M14 신규 핀](#m14-신규-핀-hil), [AC-01 loopback](#ac-01-p25p26-gpio-loopback-hil) |
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
 | 기존 Arduino API | [AC-02B 주변장치 pair](#ac-02b-동적-주변장치-pair-hil), [BLE pair](#m19m20m21-두-보드-ble-hil) |
@@ -87,6 +97,17 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `m30_ble_dfu.py` | 인증 BLE DFU·부정 image·rollback 검증 | NU54DK 두 대, exact bootloader·서명 image·독립 DAP/UART |
 | `m30_ble_multi.py` | generation handle별 security operation과 cross-link 격리 strict 검증 | NU54DK 세 대, 독립 DAP/UART, 추가 배선 없음 |
 | `m30_power_loss.py` | 별도 준비 mode와 실제 전원 차단 4지점×3회 주입·복구 판정 | NU54DK 두 대, DUT 물리 전원 차단 필요; exact `ae5186f7…` 12/12 PASS |
+| `p2_cs_native_comparison_run.py` | 고정 Nordic RAS 계측 복사본의 유효 counter·abort/busy·양측 STOP 비교 | 두 exact NU54DK, [계측 fixture](fixtures/NordicRasComparison/README.md), [250번 기록](<../../../00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md>) |
+| `p2_cs_memory_run.py` | Arduino raw RAS 유효 step·개수·양측 STOP 판정, 중복/역행 거부; gap은 `observe_only` | 두 exact NU54DK, 후속 256-step 유효 raw 1,000건·양측 STOP 확인. [260번 기록](<../../../00_Docs/04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md>) |
+| `p2_coc_recovery_memory_run.py` | 두 채널 512 B echo·ACL 재연결/서버 SWD reset 각 20회·양측 STOP·stack/heap, `--burst`로 로컬 TX pool 포화 후 복구 | `peer-reset`은 전원 차단이 아니며 로컬 pool 포화는 상대 credit 고갈과 다름. [257번 기록](<../../../00_Docs/04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md>) |
+| `p2_coc_peer_credit_memory_run.py` | native peer가 실제 초기 credit 1을 보유해 Arduino client의 3개 SDU 대기·credit 반환·새 SDU 복구·메모리·STOP 판정 | [CoC peer fixture](fixtures/P2CocCreditPeer/README.md), [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| `p2_audio_broadcast_rejoin_memory_run.py` | 암호화 LC3/BIS source SWD reset 뒤 sink 공개 API 재가입·100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; initial sync 실패는 최대 3회만 명시적 재가입, [253번 기록](<../../../00_Docs/04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>) |
+| `p2_audio_unicast_peer_reset_memory_run.py` | LC3/CIS source SWD reset 뒤 sink 지속 실행·공개 API 재연결·누적 100-frame milestone·양측 STOP·메모리 high-water 검증 | 두 exact NU54DK, `--cycles 20` 기본; [254번 기록](<../../../00_Docs/04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md>) |
+| `p2_audio_duplex_memory_run.py` | 양방향 LC3/CIS frame·drop·즉시 종료와 stack/heap 계측 | 두 exact NU54DK, 양방향 각 10,000 frame·drop 0와 즉시 종료 20/20. [258번 기록](<../../../00_Docs/04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md>) |
+| `p2_audio_encryption_recovery_memory_run.py` | encrypted BIS wrong Code의 native `-61`·decode 0과 올바른 Code 100-frame 복구·메모리·STOP 판정 | 두 exact NU54DK, [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| `p2_cs_peer_loss_memory_run.py` | 256-step 첫 raw 전 reflector reset, initiator disconnect·자동 재연결·유효 raw 20개·메모리·STOP 판정 | SWD CPU reset이며 물리 전원 차단 아님. [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| `p2_df_connectionless_rx_run.py` | 과거 LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 진단 | IQ 0·수신 fault를 보존. **P2 범위 제외·반복 실행 금지**. [259번 지원 경계](<../../../00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
+| `m31_w07_hil_campaign.py` | W07 clean 설치 image의 preflight·ISO·Audio·DF·CS 역할 재배치, case별 lease·배타 lock·익명 evidence | NU54DK 3대, exact sector flash·`auto_unlock=false`; ISO를 마지막에 실행해 세 역할 STOP. [266번 기록](<../../../00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -121,6 +142,26 @@ T12 PWM capture의 초기 240조건은 [97번](<../../../00_Docs/04_검증 기�
 - 실기 PASS는 해당 commit, artifact hash와 fixture 조건을 검증 기록에 연결합니다.
 - M15 운영 절차에서는 고정된 NCS Ubuntu container를 사용하는 clean GitHub Actions build
   artifact만 사용합니다. 로컬 Windows build를 M15 검증 증적으로 대체하지 않습니다.
+
+## M31 ISO·Audio·DF·CS와 메모리 계측
+
+M31 기능 판정은 [M31 TODO](../../../00_Docs/TODO_M31.md)와
+[readiness](../../../variants/nu54dk/m31-ble-readiness.json)가 관리합니다. 아래는 완료한 시험의
+진입점입니다. 재실행할 때는 해당 기록의 역할·image·분모를 확인하고 공통 실행 원칙을 적용합니다.
+
+| 범위 | 실행기·fixture | 완료 근거 |
+| --- | --- | --- |
+| 공개 ISO 사용자 SDU | [CIS](m31_iso_public_cis_pair_run.py) · [BIS](m31_iso_public_bis_pair_run.py) · [세 보드 CIS→BIS](m31_iso_public_combined_run.py) | [199번](<../../../00_Docs/04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
+| LE Audio 오류·복구 | [BAP recovery](m31_audio_bap_recovery_run.py) · [원격 negative](m31_audio_bap_negative_run.py) · [TMAP/GMAP](m31_tmap_gmap_run.py) · [HAP](m31_audio_hap_run.py) | [214번](<../../../00_Docs/04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
+| Direction Finding | [CTE beacon](m31_df_beacon_run.py) · [내부 LL 연결형 진단](m31_df_connected_rx_run.py) | [263번](<../../../00_Docs/04_검증 기록/263_M31_W04_Direction_Finding_완료.md>); 제품 SDC IQ RX·AoD는 UNSUPPORTED |
+| Channel Sounding | [secure RAS pair](m31_cs_ras_pair_run.py) · [wrong peer](m31_cs_wrong_peer_run.py) · [stale key](m31_cs_stale_key_run.py) | [264번](<../../../00_Docs/04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
+| P2 오류 부하·메모리 | [상대 credit 고갈](p2_coc_peer_credit_memory_run.py) · [Audio 암호화 오류 복구](p2_audio_encryption_recovery_memory_run.py) · [CS peer loss](p2_cs_peer_loss_memory_run.py) | [262번](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| 최종 세 보드 역할 회귀 | [W07 campaign](m31_w07_hil_campaign.py) | [266번](<../../../00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) |
+
+Native RAS 진단은 [NordicRasComparison](fixtures/NordicRasComparison/README.md), 동등 조건
+메모리 비교는 [CoC](fixtures/P2CocCreditPeer/README.md)와
+[Audio](fixtures/P2NativeAudioComparison/README.md)를 확인합니다. 두 비교의 설정과 판정 목적을
+섞지 않습니다. 내부 LL connectionless FAIL 재현 경로는 자동 반복 실행 대상이 아닙니다.
 
 ## M30-W07 세 보드 secure multi-link HIL
 

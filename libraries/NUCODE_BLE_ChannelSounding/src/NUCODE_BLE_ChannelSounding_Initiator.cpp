@@ -61,6 +61,15 @@ namespace nucode::ble::cs
             atomic_t procedure_pending = 0;
             atomic_t local_busy = 0;
             atomic_t completed = 0;
+            atomic_t local_busy_drops = 0;
+            atomic_t local_overflows = 0;
+            atomic_t procedure_aborts = 0;
+            atomic_t subevent_aborts = 0;
+            atomic_t ras_counter_mismatches = 0;
+            atomic_t ras_errors = 0;
+            atomic_t local_missing = 0;
+            atomic_t invalid_readings = 0;
+            atomic_t reading_queue_full = 0;
             bool rreq_allocated = false;
             int32_t local_counter = -1;
             int32_t dropped_counter = -1;
@@ -328,18 +337,23 @@ namespace nucode::ble::cs
             {
                 return;
             }
-            if ((error != 0) || (counter != state.local_counter))
+            if (counter != state.local_counter)
             {
+                /** @note 늦게 도착한 이전 RAS가 현재 절차의 로컬 step을 지우지 않게 합니다. */
+                atomic_inc(&state.ras_counter_mismatches);
+                return;
+            }
+            if (error != 0)
+            {
+                atomic_inc(&state.ras_errors);
                 net_buf_simple_reset(&local_steps);
                 atomic_set(&state.local_busy, 0);
-                if (error != 0)
-                {
-                    fail(error);
-                }
+                fail(error);
                 return;
             }
             if (local_steps.len == 0U)
             {
+                atomic_inc(&state.local_missing);
                 atomic_set(&state.local_busy, 0);
                 return;
             }
@@ -360,10 +374,21 @@ namespace nucode::ble::cs
             }
             net_buf_simple_reset(&local_steps);
             atomic_set(&state.local_busy, 0);
-            if ((reading.local_steps > 0U) &&
-                (k_msgq_put(&reading_queue, &reading, K_NO_WAIT) == 0))
+            if ((reading.local_steps > 0U) && (reading.valid_rtt_samples == 0U))
             {
-                atomic_inc(&state.completed);
+                /** @note 유효 RTT가 없는 단편 RAS는 거리 결과로 공개하지 않습니다. */
+                atomic_inc(&state.invalid_readings);
+            }
+            else if (reading.local_steps > 0U)
+            {
+                if (k_msgq_put(&reading_queue, &reading, K_NO_WAIT) == 0)
+                {
+                    atomic_inc(&state.completed);
+                }
+                else
+                {
+                    atomic_inc(&state.reading_queue_full);
+                }
             }
         }
 
@@ -384,17 +409,36 @@ namespace nucode::ble::cs
             {
                 if (!atomic_cas(&state.local_busy, 0, 1))
                 {
+                    atomic_inc(&state.local_busy_drops);
                     state.dropped_counter = counter;
                     return;
                 }
                 state.local_counter = counter;
             }
-            if ((result->header.subevent_done_status != BT_CONN_LE_CS_SUBEVENT_ABORTED) &&
-                (result->step_data_buf != nullptr))
+            if (result->header.procedure_done_status == BT_CONN_LE_CS_PROCEDURE_ABORTED)
+            {
+                /** @note 중단된 절차에는 RAS 통지가 없을 수 있으므로 잠금을 반환합니다. */
+                atomic_inc(&state.procedure_aborts);
+                net_buf_simple_reset(&local_steps);
+                atomic_set(&state.local_busy, 0);
+                state.dropped_counter = counter;
+                return;
+            }
+            if (result->header.subevent_done_status == BT_CONN_LE_CS_SUBEVENT_ABORTED)
+            {
+                /** @note 같은 절차의 다음 subevent는 유효할 수 있으므로 다시 수집합니다. */
+                atomic_inc(&state.subevent_aborts);
+                net_buf_simple_reset(&local_steps);
+                atomic_set(&state.local_busy, 0);
+                state.local_counter = -1;
+                return;
+            }
+            if (result->step_data_buf != nullptr)
             {
                 const std::uint16_t length = result->step_data_buf->len;
                 if (length > net_buf_simple_tailroom(&local_steps))
                 {
+                    atomic_inc(&state.local_overflows);
                     net_buf_simple_reset(&local_steps);
                     atomic_set(&state.local_busy, 0);
                     state.dropped_counter = counter;
@@ -405,11 +449,6 @@ namespace nucode::ble::cs
                 net_buf_simple_add_mem(&local_steps, bytes, length);
             }
             state.dropped_counter = -1;
-            if (result->header.procedure_done_status == BT_CONN_LE_CS_PROCEDURE_ABORTED)
-            {
-                net_buf_simple_reset(&local_steps);
-                atomic_set(&state.local_busy, 0);
-            }
         }
 
         BT_CONN_CB_DEFINE(nucode_ras_initiator_callbacks) = {
@@ -463,6 +502,15 @@ namespace nucode::ble::cs
         atomic_set(&state.procedure_pending, 0);
         atomic_set(&state.local_busy, 0);
         atomic_set(&state.completed, 0);
+        atomic_set(&state.local_busy_drops, 0);
+        atomic_set(&state.local_overflows, 0);
+        atomic_set(&state.procedure_aborts, 0);
+        atomic_set(&state.subevent_aborts, 0);
+        atomic_set(&state.ras_counter_mismatches, 0);
+        atomic_set(&state.ras_errors, 0);
+        atomic_set(&state.local_missing, 0);
+        atomic_set(&state.invalid_readings, 0);
+        atomic_set(&state.reading_queue_full, 0);
         state.rreq_allocated = false;
         state.local_counter = -1;
         state.dropped_counter = -1;
@@ -697,6 +745,25 @@ namespace nucode::ble::cs
     {
         return (state_ == nullptr) ? 0U :
                                        static_cast<std::uint32_t>(atomic_get(&state.completed));
+    }
+
+    /** @brief 연결 수명 동안 누적한 결과 누락 경로를 원자적으로 스냅샷합니다. */
+    RasStatistics RasInitiator::statistics() const noexcept
+    {
+        RasStatistics snapshot = {};
+        if (state_ != nullptr)
+        {
+            snapshot.local_busy_drops = atomic_get(&state.local_busy_drops);
+            snapshot.local_overflows = atomic_get(&state.local_overflows);
+            snapshot.procedure_aborts = atomic_get(&state.procedure_aborts);
+            snapshot.subevent_aborts = atomic_get(&state.subevent_aborts);
+            snapshot.ras_counter_mismatches = atomic_get(&state.ras_counter_mismatches);
+            snapshot.ras_errors = atomic_get(&state.ras_errors);
+            snapshot.local_missing = atomic_get(&state.local_missing);
+            snapshot.invalid_readings = atomic_get(&state.invalid_readings);
+            snapshot.reading_queue_full = atomic_get(&state.reading_queue_full);
+        }
+        return snapshot;
     }
 
     /** @brief 마지막 공개 오류를 반환합니다. */

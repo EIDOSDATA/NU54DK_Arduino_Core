@@ -37,7 +37,12 @@ namespace
     bool disconnectSeen = false;
     bool primeReported = false;
     bool stopReported = false;
+    unsigned int negativePairingRequests = 0U;
     unsigned int negativePairingRejected = 0U;
+    unsigned int negativeSecurityErrors = 0U;
+    unsigned int negativeDisconnects = 0U;
+    unsigned int negativeSecurityReason = 0U;
+    unsigned int negativeDisconnectReason = 0U;
     unsigned int negativeSecurityL2 = 0U;
     unsigned int negativeReady = 0U;
     unsigned int negativeActive = 0U;
@@ -74,6 +79,13 @@ namespace
         else if ((event.event == BLEEvent::disconnected) &&
                  (event.connection == peer))
         {
+            if (phase == Phase::negative)
+            {
+                ++negativeDisconnects;
+                negativeDisconnectReason = event.reason;
+                Serial.print("CSKEY reflector negative disconnected reason=");
+                Serial.println(negativeDisconnectReason);
+            }
             reflector.end();
             peer = BLEConnectionHandle();
             disconnectSeen = true;
@@ -88,6 +100,10 @@ namespace
         if (record.event == SecurityEvent::pairing_requested)
         {
             const bool accept = phase == Phase::prime;
+            if (!accept)
+            {
+                ++negativePairingRequests;
+            }
             if (!BLESecurity.acceptPairing(record.connection, accept))
             {
                 Serial.println("CSKEY reflector pairing response failed");
@@ -120,6 +136,14 @@ namespace
             Serial.print("CSKEY reflector security rejected reason=");
             Serial.println(record.reason);
         }
+        else if ((phase == Phase::negative) &&
+                 (record.event == SecurityEvent::error))
+        {
+            ++negativeSecurityErrors;
+            negativeSecurityReason = record.reason;
+            Serial.print("CSKEY reflector security error reason=");
+            Serial.println(negativeSecurityReason);
+        }
     }
 
     /** @brief 현재 negative 관측값을 key material 없이 출력합니다. */
@@ -127,8 +151,18 @@ namespace
     {
         Serial.print("CSKEY reflector status bonds=");
         Serial.print(BLESecurity.bondCount());
+        Serial.print(" pairing_requests=");
+        Serial.print(negativePairingRequests);
         Serial.print(" pairing_rejected=");
         Serial.print(negativePairingRejected);
+        Serial.print(" security_errors=");
+        Serial.print(negativeSecurityErrors);
+        Serial.print(" security_reason=");
+        Serial.print(negativeSecurityReason);
+        Serial.print(" disconnects=");
+        Serial.print(negativeDisconnects);
+        Serial.print(" disconnect_reason=");
+        Serial.print(negativeDisconnectReason);
         Serial.print(" l2=");
         Serial.print(negativeSecurityL2);
         Serial.print(" ready=");
@@ -189,7 +223,12 @@ namespace
                  !BLEConnection.connected())
         {
             phase = Phase::negative;
+            negativePairingRequests = 0U;
             negativePairingRejected = 0U;
+            negativeSecurityErrors = 0U;
+            negativeDisconnects = 0U;
+            negativeSecurityReason = 0U;
+            negativeDisconnectReason = 0U;
             negativeSecurityL2 = 0U;
             negativeReady = 0U;
             negativeActive = 0U;

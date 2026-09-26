@@ -4,11 +4,11 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | 개발 source `0.4.1-dev`의 M31 `v0.5.0` Windows 릴리스와 M32·M33 후속 기능(버전 미정), M34~M45 인계 의존성 |
-| 현재 상태 | **M31 W01~W03 완료 3/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11 완료. W04 DF·W05 CS는 진행 중·미완료, W06~W08과 M32·M33은 미착수 |
+| 현재 상태 | **M31 W01~W08 완료 8/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS·W06 자원/회귀·W07 예제/HIL·W08 Windows RC 준비 완료. M32·M33은 미착수 |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
-| 최종 갱신일 | 2026-09-21 |
+| 최종 갱신일 | 2026-09-27 |
 
 전체 번호·제품선은 [제품 로드맵](02_구현_로드맵.md), 작업 묶음은 [M31 TODO](../TODO_M31.md),
 [M32 TODO](../TODO_M32.md), [M33 TODO](../TODO_M33.md), 현재 상태는
@@ -23,15 +23,20 @@
 
 ### 2026-09-21 릴리스 범위 결정
 
-`v0.5.0`은 M31 완료 후 Windows 우선으로 릴리스한다. 메모리 최적화 → W04·W05 → W06~W08
-순서로 기능을 검증하고, M31-W08에서 해당 버전의 재현 package·Windows 설치 수명주기·RC·
-공개 승인/게시·공개 설치 gate를 관리한다. M31 기능 8/8과 릴리스 판정은 별도 집계한다.
-이번 문서 작업은 main 반영과 `M31-MEM-OPT` 생성까지이며 구현·HIL·공개 실행은 포함하지 않는다.
+`v0.5.0`은 완료한 M31을 기준으로 Windows 우선으로 릴리스한다. M31-W08에서 해당 버전의 재현
+package·Windows 설치 수명주기·RC 준비를 완료했다. 이후 공개 `v0.5.0-rc.1` 승인·게시·다운로드
+smoke까지 [268번 기록](<../04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)에서 닫았으며 정식 stable gate는 별도다.
+M31 기능 8/8과 릴리스 판정은 별도 집계한다. `M31-MEM-OPT`에서 메모리 최적화
+P0·P1·P2를 완료했다. P2의 지원 범위 오류·최악 부하,
+stack/heap 안전 여유·최종 크기, 동일 조건 Nordic native FLASH/RAM 비교는
+[262번](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)이 소유한다.
+SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 
 M32·M33 추가 기능과 Ubuntu/macOS 확대는 버전 미정 후속 범위다. M33-W07~W08은 후속
 다중 Host·RC·공개를 계속 소유한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-현재 설치·지원 `v0.4.1`, 개발 source `0.4.1-dev`, M31 3/8·M32 0/12·M33 0/8·HOST 3/8은 유지한다.
+현재 stable `v0.4.1`, 공개 RC `v0.5.0-rc.1`, 개발 source 식별자 `0.4.1-dev`,
+M31 8/8·M32 0/12·M33 0/8·HOST 3/8을 구분한다.
 
 ### 구현 책임과 실물 검증 gate
 
@@ -45,7 +50,7 @@ M32·M33 추가 기능과 Ubuntu/macOS 확대는 버전 미정 후속 범위다.
 | 보드 기반 Bluetooth 기능 | 사용 가능한 구현·설정·역할별 Arduino 예제·Host/negative·target build·지원 가능한 1~3보드 기능 HIL | 개발 자동화; 실제 시험 전 mapping 재대조 | 적용 필수 기능의 구현·자동 검증은 필수. SDK 제약/미지원/미판정은 근거를 남기고 임의 PASS·제외 금지 |
 | Apple/Google 및 외부 제품 ecosystem | 실사용 가능한 기능·예제·설정·credential 입력 안내, 자동 가능한 parser/semantic·build·scripted peer 검증. 빈 stub·문서만 제공 금지 | 실제 운용·제품 상호운용은 사용자 추후 | 구현·예제·자동 검사는 필수. 사용자 후속 실제 제품 시험은 필수 gate에서 제외; `NOT_RUN`·상호운용 미검증 표시는 유지 |
 | 마이크·스피커·코덱·센서·외장 장치 | 실제 연결용 adapter/설정·예제·연결 안내와 자동 가능한 검사; 합성 PCM/data의 실제 protocol 경로 검증 | 실물 연결·운용·검증은 사용자 추후 | 구현·예제·자동 검사는 필수. 외장 I/O 실물 시험은 필수 gate에서 제외; `NOT_RUN`과 검증 범위 유지 |
-| DF 원시 IQ 수신 | 기본 안테나 사용 가능 수신 경로의 source/controller/DTS 조사 → 별도 target build → 적용 가능한 2보드 IQ HIL | M31-W04 개발 항목; 안테나 배열 구매/연결을 착수 조건으로 요구하지 않음 | source candidate·build·runtime 별도 판정. 미확인 상태를 장비 부족 또는 칩 불가능으로 확정하지 않음 |
+| DF 원시 IQ 수신 | 고정 NCS v3.4.0·nRF54L15 제품 SDC는 AoA 송신만 지원하므로 IQ RX는 `UNSUPPORTED` | P2 범위 제외. 별도 Zephyr LL 진단은 과거 증거로 보존하며 제품 수신 구현 의무로 승계하지 않음 | 안테나 배열 부족이 원인이 아님. SDK/controller 교체는 별도 범위 결정이며 이번 완료 조건이 아님 |
 | DF 실제 AoA 각도·안테나 전환 | 적용 가능한 설정·예제·연결 안내와 raw IQ/각도 계산 경계 | 외부 안테나 구성의 실물 운용·검증은 사용자 추후 | 외장 실물 시험은 필수 gate 제외. 정밀 각도 보정·정확도 보증은 범위 밖 |
 | Connected Channel Sounding | 기본 안테나의 initiator/reflector·RAS·결과 처리·보안·복구 예제 | 기본 보드 2개로 개발 자동화; 필요 시 세 번째 peer | 지원 경로의 board-only 기능 HIL 필수. 정밀 거리 보정·정확도는 범위 밖 |
 | Windows 실제 Host | M31 package 재현성·설치 예제·업로드·serial/debug·설치 수명주기 | M31-W08 릴리스 검증 | v0.5.0 Windows 지원에 필요한 실제 증거 필수 |
@@ -58,7 +63,7 @@ M32·M33 추가 기능과 Ubuntu/macOS 확대는 버전 미정 후속 범위다.
 
 ## 1. 완료 기준선과 추가 구현의 경계
 
-- 공개·설치 지원 버전은 `v0.4.1` 하나다. 개발 기능을 설치본 지원으로 안내하지 않는다.
+- stable 설치·지원 버전은 `v0.4.1`이며 공개 RC는 별도 채널이다. RC 기능을 stable 설치본 지원으로 안내하지 않는다.
 - M28은 GAP/link/privacy 8/8·test ID 9/9, M29는 ATT/GATT/L2CAP 8/8·10/10, M30은
   security/profile/DFU 8/8·10/10 완료다. 완료 계약과 원본을 유지하고 여기서 추가한 기능의 소유자는
   M31~M33으로 지정한다.
@@ -149,11 +154,12 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 
 | 순서·우선순위 | 구현할 묶음 | 선행 입력 | 산출물·다음 의존성 |
 | --- | --- | --- | --- |
-| 1 / P0 | M31-W01 전체 source inventory·capability·실행 계약 | M28~M30 기준선, lock, 세 보드 role inventory | 전체 예제 parity 원장 후보와 M31 capability 원장·parser·target |
-| 2 / P0 | M31-A: W02 ISO → W03 Audio | controller capability·고정 stream/buffer | raw data/합성 PCM 예제, Audio role별 profile와 test |
-| 다음 / P0 | M31 메모리 최적화 | W01~W03 완료와 W04·W05 기존 성공/실패 원본 | `M31-MEM-OPT`에서 image별 미사용 정적 자원·pool 감사와 최적화; [219번 계약](<../04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>) |
-| 2 / P0 | M31-B W04 DF, M31-C W05 CS | W01 controller별 판정과 최적화 image | 실제 CTE TX·connected CS 예제; RX/AoD 경계와 negative·복구 |
-| 3 / P0 | M31-W06~W08 독립 image 자원·수명주기·회귀, HIL·예제·릴리스 | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8 마감과 별도 Windows package·설치·RC·공개 gate; M32 자원 인계 |
+| 완료 / P0 | M31-W01 전체 source inventory·capability·실행 계약 | M28~M30 기준선, lock, 세 보드 role inventory | 전체 예제 parity 원장 후보와 M31 capability 원장·parser·target |
+| 완료 / P0 | M31-A: W02 ISO → W03 Audio | controller capability·고정 stream/buffer | raw data/합성 PCM 예제, Audio role별 profile와 test |
+| 완료 / P0 | M31 메모리 최적화 | W01~W03 완료와 W04·W05 기존 성공/실패 원본 | P0~P2 완료, 최종 크기 유지; [262번 완료](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| 완료 / P0 | M31-B W04 DF | W01 controller별 판정과 최적화 image | 지원 CTE TX·연결 응답 PASS, 제품 SDC RX/AoD `UNSUPPORTED`; [263번 완료](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
+| 완료 / P0 | M31-C W05 CS | W01 controller별 판정과 최적화 image | connected CS 예제, negative·복구 완료; [264번](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
+| 완료 / P0 | M31-W06 독립 image 자원·수명주기·회귀, W07 설치 예제·3보드 HIL, W08 Windows RC | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8·Windows package·설치·공개 RC smoke 완료; stable 별도 gate와 M32 자원 인계 |
 | 4 / P0 | M32-A W01~W05 modern LE·Nordic 확장 | M31 W01 inventory와 기존 GAP | power/timing/광고/resource/diagnostic 예제 |
 | 5 / P0 | M32-B W06 Mesh 기반 → W07 Mesh 1.1 → W08 BLOB/DFU | 설정·보안·고정 memory budget | Mesh role/model·전송·update 예제 |
 | 5 / P0 | M32-C W09 단독 radio → W10 공존 | BLE/Mesh 단독 PASS, 최소 802.15.4/ESB profile | 지원 조합·중재·복구 예제; M38/M39 재사용 |
@@ -165,7 +171,7 @@ P1은 생략 가능 표시가 아닌 구현 순서다. 공식 nRF54L15 적용 �
 제공하고, 기능·외부 의존성의 정당한 예외만 원장에 기록한다. 문서 계획 진척과 구현·runtime 진척은
 각각 별도 분모로 보고한다. HOST-W04~HOST-W08은 Host 작업이며 M30 잔여 작업이 아니다.
 M32-A 중 M31의 ISO/Audio/CS 자원을 사용하지 않는 항목은 공통 capability·자원 계약 뒤 M31과
-기술적으로 독립 병행할 수 있다. 현재 실행 우선순위는 M31이며 M32·M33은 별도 재개 후 진행한다.
+기술적으로 독립 병행할 수 있다. M31은 완료했으며 M32·M33은 별도 착수 지시 후 진행한다.
 최종 M32 통합 HIL에는 M31 인계와 해당 protocol 단독 결과가 필요하다.
 
 ## 4. M31-A — ISO와 LE Audio 구현 목록
@@ -228,8 +234,8 @@ timestamp에 근거한 소프트웨어 관측 지연과 외부 계측 end-to-end
 | 소유자·기능 | 고정 source·지원 경계 | Arduino 경로·계획 예제 | 검증·장비 |
 | --- | --- | --- | --- |
 | M31-W04 connectionless AoA CTE TX | SDC CTE advertising, `N:direction_finding_connectionless_tx` nRF54L15 metadata. NCS maturity는 experimental | `profile/direct`: `DirectionFindingCteBeacon` | 1보드 capability/start/stop; CTE 실제 수신 확인은 지원 RX peer 필요. 보드 3개 보유만으로 IQ RX를 가정하지 않음 |
-| M31-W04 connected AoA CTE response TX | SDC Connection CTE Response, `N:direction_finding_peripheral` nRF54L15 metadata. experimental | `profile/direct`: `DirectionFindingCtePeripheral` | 2역할; 요청·응답 기능은 적용 가능한 requester가 있어야 HIL. unsupported command·재연결 |
-| M31-W04 원시 AoA RX/IQ | 기본 SDC는 DF TX 범위이며 RX 미제공. Zephyr LL의 RX 코드·nRF54L15 DTS `dfe-supported`는 후보 근거이나 해당 RX sample metadata에 nRF54L15 없음 | `profile/direct` 후보 `DirectionFindingIqReceiver`; 기본 안테나의 별도 RX target build·HCI query 확인 | connected 진단에서 일부 유효 IQ를 수신했으나 반복·cleanup 미완료. connectionless와 독립 판정하고 배열을 raw IQ의 선행조건으로 두지 않음 |
+| M31-W04 connected AoA CTE response TX | `N:direction_finding_peripheral` metadata와 실제 controller 적용성은 별도. 고정 SDC 실기는 HCI `0x2055` Unknown Command, 별도 Zephyr LL 응답은 국소 PASS | `profile/direct`: 공개 `ConnectedCteResponder`는 별도 LL 설정 사용 | [174번](<../04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md>)의 시작·중단·재시작만 검증. 실제 CTE 요청·IQ 수신 판정과 구분 |
+| M31-W04 원시 AoA RX/IQ | 고정 NCS v3.4.0의 nRF54L15 제품 SDC는 AoA 송신 전용. IQ RX는 `UNSUPPORTED` | 제품 RX 예제를 제공한다고 약속하지 않음. 기존 Zephyr LL fixture는 내부 진단용 | connected 내부 진단은 IQ 20 report·1,640 sample·cleanup 국소 PASS, connectionless는 IQ 0·fault. 둘 다 제품 SDC RX·P2 gate가 아님 |
 | M31-W04 실제 AoA 각도·antenna switching | 공간적 위상차를 이용한 각도 계산과 외장 antenna 제어는 원시 IQ 수집과 다른 경로 | 적용 가능한 설정·예제·연결 안내를 별도 제공 | 실물 안테나 구성의 운용·검증은 사용자 후속·릴리스 비차단 `NOT_RUN`; 정밀 각도 보정·정확도 보증은 범위 제외 |
 | M31-W04 AoD | 고정 SDC의 connectionless/connected CTE는 AoD 미지원 | 기본 SDC `excluded`; 명확한 오류·capability 예제로 표시 | Unsupported negative. 다른 controller가 필요하면 별도 영향 평가; 자동 전환하지 않음 |
 | M31-W05 CS initiator/reflector | `BT_CHANNEL_SOUNDING`; `N:channel_sounding/ras_initiator`, `ras_reflector` nRF54L15 metadata·`build_only` 존재, initiator의 `A1_B1`은 양쪽 안테나 1개 | `wrapper/profile`: `ChannelSoundingInitiator`, `ChannelSoundingReflector` | 기본 안테나의 2보드; ACL→security→capability/config→procedure→result→stop. 안테나 배열을 요구하지 않음 |
@@ -239,12 +245,17 @@ timestamp에 근거한 소프트웨어 관측 지연과 외부 계측 end-to-end
 
 고정 [Zephyr 수신 README](https://github.com/nrfconnect/sdk-zephyr/blob/bf801e4e3d19e1ffa76164346480cb7734dd2800/samples/bluetooth/direction_finding_connectionless_rx/README.rst)는
 AoA antenna matrix를 선택 사항으로 적는다. 이는 NU54DK 수신 PASS가 아니라 **배열이 없다는 이유만으로
-원시 IQ 개발을 차단하면 안 된다는 근거**다. 같은 경로의 `sample.yaml`에는 nRF54L15가 없으므로,
+원시 IQ의 지원 여부를 안테나 배열 유무만으로 판단하면 안 된다는 근거**다. 같은 경로의 `sample.yaml`에는 nRF54L15가 없으므로,
 Zephyr LL RX 코드·DTS `dfe-supported` 존재만으로 해당 SoC/보드의 수신 적용성을 확정하지 않는다.
-고정 SDK·기본 SDC를 보존한 별도 후보 구성의 source/build 조사부터 수행하고, 실제 controller 전환이
-필요한 경우 영향·허가 범위를 먼저 확인한다. 기존 SDC의 TX/AoD 제한을 전체 칩의 RX 불가능으로 확대하지 않는다.
+제품 지원 판정은 [259번 고정 SDK 지원 경계](<../04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)를 따른다.
+Zephyr LL의 내부 Host 상태 우회 진단과 connectionless 실패는 보존하되 제품 SDC IQ RX의
+미완료 blocker로 재등록하지 않는다. 기존 SDC의 제한을 전체 칩·다른 Nordic 제품의 RX 불가능으로 확대하지 않는다.
 CS의 단일 안테나 계획은 고정 [RAS initiator 설정](https://github.com/nrfconnect/sdk-nrf/blob/99553055607b2e9885fbc80ccd11fa9da81c2df0/samples/bluetooth/channel_sounding/ras_initiator/src/main.c#L963)에
 근거하며 DF의 각도용 배열 조건과 혼동하지 않는다.
+
+CS의 간헐 RF/controller loss·counter gap은 P2에서 관찰값으로만 기록한다. 0-gap이나
+loss 없는 재전송을 완료 조건으로 추가하지 않는다. 유효 raw·step·결과 수, 양측 STOP,
+fault·중복·역행 counter 검사는 유지하며 최대 절차 중 peer 이탈·복구는 별도 부하 검증이다.
 
 NCS의 `nrf_dm`은 이 고정 버전의 sample metadata에 nRF54L15가 없고 nRF52/nRF5340 대상으로
 한정되어 있다. 해당 예제는 `not_applicable/excluded` 근거를 남기고 nRF54L15의 connected CS 경로를
@@ -392,7 +403,7 @@ Arduino target으로 build한다. 기능 HIL과 negative가 필요한 항목은 
 ## 10. 전체 source·예제 parity 기계 원장
 
 다음 산출물의 생성기·schema·원장·Host 20/20 negative와 local drift gate는 **M31-W01에서 구현해
-완료**했다. 원격 CI/CD 실행·조회는 최신 사용자 지시로 생략했다. M31 capability 원장과 전체
+완료**했다. W08에서는 GitHub Actions 병렬 Windows RC 검증까지 수행했다. M31 capability 원장과 전체
 sample 원장은 서로 다른 목적이며 함께 연결한다. 개별 예제 target/Arduino build·기능 HIL은
 해당 M31/M32/M33 owner가 완료 전 별도로 닫는다.
 
@@ -491,15 +502,15 @@ Ubuntu/macOS 실제 Host는 해당 OS 후속 릴리스의 사용자 검증까지
 ## 11. 세 보드 자동 실행과 증거의 경계
 
 M31-W01~W08의 구현·Host/negative·target build·문서·예제와 지원 가능한 board-only 기능 HIL은
-자동 실행 흐름으로 설계한다. 세 보드가 모든 RF 역할을 지원한다는 전제는 두지 않는다. DF IQ RX는
-source/build/실행 적용성을 조사할 개발 항목이지 사전 안테나 배열 대기가 아니다. USB HCI의 SoC 적용성,
+자동 실행 흐름으로 설계한다. 세 보드가 모든 RF 역할을 지원한다는 전제는 두지 않는다. 제품 SDC의
+DF IQ RX는 고정 SDK 미지원으로 P2 범위에서 제외하며 과거 LL 진단을 자동 재개하지 않는다. USB HCI의 SoC 적용성,
 큰 Mesh topology는 별도 근거로 판정하고 외부 audio/Apple/Google 실물 시험은 사용자 후속으로 인계한다.
 
 | 자동화 수준 | 할 일 | 멈추거나 `NOT RUN`으로 남길 조건 |
 | --- | --- | --- |
 | 보드 없이 가능 | source 조사·schema/parser·Host unit/negative·CI·역할별 native/Arduino build·예제/문서 | SDK/toolchain 접근 실패 등 실제 원인을 기록 |
 | 1보드 | capability, codec 합성 loopback, local command·resource·start/stop | probe SHA-256·serial·role·image mapping 미확정 |
-| 2보드 | ISO·Audio synthetic 송수신, 기본 안테나 CS, 적용 가능 시 원시 DF IQ, 대부분 GAP/GATT/Nordic 기능 | 양 역할 capability/profile 제약은 실제 근거로 조사. 사용자 후속 외장 실물 경로는 별도 비차단 행 |
+| 2보드 | ISO·Audio synthetic 송수신, 기본 안테나 CS, 대부분 GAP/GATT/Nordic 기능 | 제품 SDC DF IQ RX는 미지원·P2 범위 제외. 사용자 후속 외장 실물 경로는 별도 비차단 행 |
 | 3보드 | BIS 복수 수신·BASS assistant·CSIP set·다중 peer·Mesh 기본 topology·선택 공존 | 별도 네 번째 역할이나 더 큰 topology가 필수이면 추가 보드 필요 |
 | 사용자 후속 | 실제 Apple/Google·외장 audio/I/O·각도용 antenna 구성 | 사용 가능한 구현·예제·안내·자동 검사를 완료하고 실물 행만 `NOT_RUN`으로 인계; 개발·릴리스 비차단 |
 | 후속 Host 실물 | Ubuntu/macOS 설치·USB upload·serial·debug·수명주기 | 해당 OS를 포함하는 후속 릴리스 때 사용자 검증. M31 Windows 공개 비차단, 해당 OS 지원 gate 유지 |

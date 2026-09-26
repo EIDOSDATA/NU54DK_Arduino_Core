@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS = ['cycle', 'guards', 'block', 'alias', 'begin0', 'begin1', 'pinctrl',
              'get', 'commit', 'unwind_put', 'unwind_pinctrl', 'rollback',
              'put_retry', 'restore_pinctrl', 'restore_pin', 'stale_release',
-             'stale', 'transfer', 'borrow', 'capacity', 'dma', 'threads']
+             'stale', 'transfer', 'borrow', 'capacity', 'dma', 'threads', 'single']
 
 
 class ResourceRouteTests(unittest.TestCase):

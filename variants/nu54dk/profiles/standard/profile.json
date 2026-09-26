@@ -1,5 +1,6 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
+  "capability_mode": "compatibility",
   "id": "standard",
   "display_name": "Standard peripherals",
   "board": "nucode:zephyr:nu54dk",

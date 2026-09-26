@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-audio-duplex-lc3-cis-memory",
+  "target_frames_each_direction": 100,
+  "image_sha256": {
+    "client": "03017b5adc874e0c4051ab227adcc902a32e56dd701938e60e82ea32c7419b99",
+    "server": "617e82b6e2fd45adc20b3c635544b7ffd7172c53c7c84ff39ca850f78021fdba"
+  },
+  "probe_uid_sha256": {
+    "client": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "server": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "client": {
+      "app": "COM10",
+      "aux": "COM11"
+    },
+    "server": {
+      "app": "COM13",
+      "aux": "COM12"
+    }
+  },
+  "start": {
+    "server": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "client": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "client": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-duplex-client",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=824",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "LE Audio duplex server found",
+      "LE Audio connected; preparing",
+      "LE Audio duplex client streaming",
+      "LE Audio duplex sent frames=100",
+      "LE Audio duplex received=100 energy=911919 dropped=0",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=1464",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=648",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=264",
+      "P2_STACK name=MPSL Work reserved=1024 used=360",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=3460",
+      "P2_STACK name=ISR0 reserved=2048 used=544",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-duplex-client decoded=102"
+    ],
+    "server": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "LE Audio duplex server advertising",
+      "P2_READY role=audio-duplex-server",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=1028",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "LE Audio duplex sent=100",
+      "LE Audio duplex received=100 energy=941215 dropped=0",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=1232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=1168",
+      "P2_STACK name=sysworkq reserved=4096 used=424",
+      "P2_STACK name=MPSL Work reserved=1024 used=656",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=3560",
+      "P2_STACK name=ISR0 reserved=2048 used=416",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-duplex-server decoded=102"
+    ]
+  },
+  "result": "PASS",
+  "frames": {
+    "client": {
+      "received": 100,
+      "sent": 100
+    },
+    "server": {
+      "received": 100,
+      "sent": 100
+    }
+  },
+  "memory": {
+    "client": {
+      "stacks": {
+        "BT RX WQ": {
+          "reserved": 3200,
+          "used": 1464
+        },
+        "bt_tx_processor": {
+          "reserved": 3200,
+          "used": 648
+        },
+        "BT LW WQ": {
+          "reserved": 2104,
+          "used": 936
+        },
+        "sysworkq": {
+          "reserved": 4096,
+          "used": 264
+        },
+        "MPSL Work": {
+          "reserved": 1024,
+          "used": 360
+        },
+        "idle": {
+          "reserved": 320,
+          "used": 64
+        },
+        "main": {
+          "reserved": 8192,
+          "used": 3460
+        },
+        "ISR0": {
+          "reserved": 2048,
+          "used": 544
+        }
+      },
+      "malloc": {
+        "free": 8108,
+        "allocated": 0,
+        "peak": 0
+      }
+    },
+    "server": {
+      "stacks": {
+        "BT RX WQ": {
+          "reserved": 3200,
+          "used": 1232
+        },
+        "bt_tx_processor": {
+          "reserved": 3200,
+          "used": 404
+        },
+        "BT LW WQ": {
+          "reserved": 2104,
+          "used": 1168
+        },
+        "sysworkq": {
+          "reserved": 4096,
+          "used": 424
+        },
+        "MPSL Work": {
+          "reserved": 1024,
+          "used": 656
+        },
+        "idle": {
+          "reserved": 320,
+          "used": 64
+        },
+        "main": {
+          "reserved": 8192,
+          "used": 3560
+        },
+        "ISR0": {
+          "reserved": 2048,
+          "used": 416
+        }
+      },
+      "malloc": {
+        "free": 8108,
+        "allocated": 0,
+        "peak": 0
+      }
+    }
+  }
+}

@@ -111,6 +111,20 @@ namespace nucode::ble::cs
         float rtt_distance_meters = 0.0F;
     };
 
+    /** @brief RAS 수명 중 결과 누락·중단 경로를 구분하는 누적 계수입니다. */
+    struct RasStatistics
+    {
+        std::uint32_t local_busy_drops = 0U;
+        std::uint32_t local_overflows = 0U;
+        std::uint32_t procedure_aborts = 0U;
+        std::uint32_t subevent_aborts = 0U;
+        std::uint32_t ras_counter_mismatches = 0U;
+        std::uint32_t ras_errors = 0U;
+        std::uint32_t local_missing = 0U;
+        std::uint32_t invalid_readings = 0U;
+        std::uint32_t reading_queue_full = 0U;
+    };
+
     /**
      * @brief 보안 연결에서 CS initiator와 Ranging Requestor를 실행합니다.
      *
@@ -155,6 +169,9 @@ namespace nucode::ble::cs
 
         /** @brief 버려진 결과와 오류를 제외한 누적 결과 수를 반환합니다. */
         [[nodiscard]] std::uint32_t completed() const noexcept;
+
+        /** @brief 현재 연결 수명에서 관찰한 누락·중단 원인 계수를 반환합니다. */
+        [[nodiscard]] RasStatistics statistics() const noexcept;
 
         /** @brief 마지막 공개 오류를 반환합니다. */
         [[nodiscard]] Error lastError() const noexcept;

@@ -3,17 +3,17 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GATT-001 |
-| 문서 개정 | 1.6 |
-| 문서 상태 | v0.4.1 정식 GATT 계약과 v0.5.0 M29 개발 확장 |
-| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile, `v0.5.0` 개발 source |
-| 최종 갱신일 | 2026-09-15 |
+| 문서 개정 | 1.7 |
+| 문서 상태 | v0.4.1 stable GATT 계약과 v0.5.0 RC의 M29 확장 |
+| 적용 제품 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1`의 `ble` profile, 별도 표시한 공개 `v0.5.0-rc.1` |
+| 최종 갱신일 | 2026-09-27 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
 ## 목적과 범위
 
 Server schema부터 예제·검증 절까지는 설치·지원 v0.4.1 계약이다. 하단의 M29 절은
-개발 `main`의 확장을 설명하며, 두 범위의 value 크기·연결 수·지원 operation을 혼합하지 않는다.
+공개 RC의 확장을 설명하며, 두 범위의 value 크기·연결 수·지원 operation을 혼합하지 않는다.
 
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼
 고정 profile wrapper가 아니라 UUID, property, permission과 bounded value를 sketch가 선언합니다.
@@ -130,7 +130,7 @@ remote handle·subscription과 long/reliable·cache·CoC 확장은 M29에서 고
 
 ## M29-W02~W06 개발 확장
 
-아래 항목은 현재 `0.4.1-dev` source에서 구현·검증한 v0.5.0 후보이며 설치·지원 v0.4.1 API로
+아래 항목은 `0.4.1-dev` source에서 구현·검증해 공개 v0.5.0 RC에 포함했으며 stable v0.4.1 API로
 소급하지 않는다.
 
 - connection generation handle을 받는 GATT client overload와 link별 고정 operation context 2개
@@ -142,8 +142,12 @@ remote handle·subscription과 long/reliable·cache·CoC 확장은 M29에서 고
 LE CoC는 `BLEL2cap.startServer()`, `connect()`, `send()`, `disconnect()`와 `connected()`를 제공한다.
 공개 handle에는 raw `bt_l2cap_chan *`를 담지 않으며 slot 재사용은 generation이 바뀌므로 이전
 handle이 새 channel을 조작할 수 없다. RX payload는 channel당 4개의 512-byte record에 복사하고
-전체 TX buffer는 4개로 제한한다. TX pool 또는 controller credit이 부족하면 blocking·heap 확장
-대신 `false`, `BLEError::busy`와 driver 오류를 반환한다.
+전체 TX buffer는 4개로 제한한다. 로컬 TX pool 할당은 `K_NO_WAIT`이며 고갈 시 `false`,
+`BLEError::busy`와 `-EAGAIN`을 반환한다. Stack이 `-EAGAIN`/`-ENOMEM`으로 송신을 거부해도
+`busy`로 보고하고 할당을 반환한다. 반면 상대 CoC credit이 0이어도 stack이 수락한 SDU는
+이미 예약한 buffer 안에서 credit 반환을 기다릴 수 있다. `send()==true`는 peer 수신 완료가 아니다.
+로컬 buffer 포화와 직접 peer-credit 고갈·복구는 서로 다른 시험이며
+[P2 완료 기록](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)의 증거를 구분한다.
 
 Connected·disconnected·received·sent·reconfigured event는 고정 queue를 거쳐
 `BLEDevice.poll()` 문맥에서만 전달한다. `received`의 data pointer는 해당 callback 동안만 유효하다.
@@ -174,7 +178,7 @@ deprecated/experimental 등급을 안정 기능으로 바꾸지 않는다.
 후속 통합은 exact `16eb8fce…`에서 3보드 `M29-MULTI-01`·`M29-REG-01`을 PASS했고,
 exact `a964ae20…`에서 Windows WinRT peer 교차 제조사 GATT 상호운용을 PASS했다.
 이로써 M29는 작업 묶음 8/8(100%), test ID 10/10을 완료했다. 후속 M30도 8/8·10/10과
-실제 전원 차단 12/12를 완료했다. M31은 W01~W03 완료 3/8이며 잔여 범위는 [M31 TODO](../TODO_M31.md)를 따른다.
+실제 전원 차단 12/12를 완료했다. M31도 W01~W08 8/8과 공개 RC smoke를 완료했으며 stable 승인 경계는 [M31 TODO](../TODO_M31.md)를 따른다.
 세부 API·자원과 단계별·완료 exact 원본은
 [M29 계약](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
 [147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>),

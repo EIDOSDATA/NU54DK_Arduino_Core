@@ -103,6 +103,43 @@ class M30McubootContractTests(unittest.TestCase):
         self.assertIn("--no-sysbuild", standard_text)
         self.assertNotIn("--sysbuild", standard_text)
 
+    def test_configure_command_disables_zephyr_ccache_wrapper(self) -> None:
+        """! @brief 명시적 compiler launcher 사용 시 Zephyr의 중복 ccache wrapper를 끕니다. """
+
+        paths = {
+            "platform_root": REPOSITORY,
+            "app": Path("C:/cache/app"),
+            "zephyr_build": Path("C:/cache/build"),
+        }
+        common = argparse.Namespace(
+            fqbn="nucode:zephyr:nu54dk",
+            board=MODULE.DEFAULT_BOARD,
+            profile="standard",
+        )
+        with tempfile.TemporaryDirectory(prefix="n54-m30-ccache-") as directory:
+            ccache = Path(directory) / "ccache.exe"
+            ccache.touch()
+            tools = {
+                "west": Path("C:/tools/west.exe"),
+                "zephyr_base": Path("C:/ncs/zephyr"),
+                "ccache": ccache,
+            }
+            command = MODULE.configure_command(
+                paths,
+                common,
+                tools,
+                REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS",
+                pristine=True,
+            )
+        command_text = [str(value) for value in command]
+        self.assertIn("-DUSE_CCACHE=0", command_text)
+        self.assertIn(
+            f"-DCMAKE_C_COMPILER_LAUNCHER={ccache.as_posix()}", command_text
+        )
+        self.assertIn(
+            f"-DCMAKE_CXX_COMPILER_LAUNCHER={ccache.as_posix()}", command_text
+        )
+
     def test_signing_key_is_required_outside_repository(self) -> None:
         """! @brief 서명 private key 누락·저장소 내부 배치를 fail-closed로 거부합니다. """
 

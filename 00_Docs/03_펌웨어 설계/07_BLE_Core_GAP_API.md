@@ -3,16 +3,16 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GAP-001 |
-| 문서 개정 | 1.4 |
-| 문서 상태 | v0.4.1 정식 GAP 계약과 v0.5.0 M28 개발 결과 |
-| 적용 제품 버전 | 설치·지원 `v0.4.1`의 `ble` profile, 별도 표시한 `v0.5.0` 개발 source |
-| 최종 갱신일 | 2026-09-14 |
+| 문서 개정 | 1.5 |
+| 문서 상태 | v0.4.1 stable GAP 계약과 v0.5.0 RC의 M28 확장 |
+| 적용 제품 버전 | stable `v0.4.1`의 `ble` profile, 별도 표시한 공개 `v0.5.0-rc.1` |
+| 최종 갱신일 | 2026-09-27 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
 ## 목적과 범위
 
-아래 본문은 설치·지원 v0.4.1 계약이다. 개발 `main`의 M28 확장은 마지막 절에서 별도로 설명한다.
+아래 본문은 stable v0.4.1 계약이다. 공개 RC의 M28 확장은 마지막 절에서 별도로 설명한다.
 
 M19는 NUS에 종속되지 않는 Arduino 친화 BLE lifecycle과 GAP API를 제공합니다. 공개 헤더는
 Zephyr type을 노출하지 않으며, 동적 할당 없이 단일 연결과 31-byte legacy advertising을
@@ -110,8 +110,8 @@ central이 이를 exact filter하므로 두 transcript가 같은 실제 RF fixtu
 
 v0.5.0 개발 source의 multi-role/link, extended·periodic advertising, PAwR와 privacy는
 [M28 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)의 W01~W08과
-9개 test ID를 완료했다. 현재 설치·지원 v0.4.1의 연결 1개·legacy 31-byte 계약은 새 release가
-공개되기 전까지 그대로 유지한다.
+9개 test ID를 완료했고 [공개 RC](../05_릴리스/v0.5.0-rc.1/README.md)에 포함됐다.
+v0.4.1 stable의 연결 1개·legacy 31-byte 계약은 소급 변경하지 않는다.
 
 | 개발 API/자원 | M28에서 확인한 상한과 동작 |
 | --- | --- |

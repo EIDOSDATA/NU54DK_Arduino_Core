@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-audio-broadcast-lc3-1000-frame-memory",
+  "image_sha256": {
+    "sink": "c00bbc7c711bb51a4262e42b16932f0c9c265ec3a903953519be9089bb365823",
+    "source": "015d84e42e3ab7090c984140c0d0e9007c29b454ffcffed0d35057ba7497fe68"
+  },
+  "probe_uid_sha256": {
+    "sink": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "source": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+  },
+  "com_mapping": {
+    "sink": {
+      "app": "COM13",
+      "aux": "COM12"
+    },
+    "source": {
+      "app": "COM10",
+      "aux": "COM11"
+    }
+  },
+  "start": {
+    "sink": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "source": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "sink": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-broadcast-sink",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=1284",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_FAIL sink-stage native=-31",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=672",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=368",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=1284",
+      "P2_STACK name=ISR0 reserved=2048 used=364",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-broadcast-sink decoded=0 dropped=0"
+    ],
+    "source": [
+      "P2_AUDIO_SENT frames=2500",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-broadcast-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=2048 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=784",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=240",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=976",
+      "P2_STACK name=ISR0 reserved=2048 used=392",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=broadcast-source",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=2048 used=384",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=784",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=372",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=3192",
+      "P2_STACK name=ISR0 reserved=2048 used=512",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-broadcast-source sent=93"
+    ]
+  },
+  "sent": 0,
+  "decoded": 0,
+  "dropped": 0,
+  "result": "FAIL"
+}

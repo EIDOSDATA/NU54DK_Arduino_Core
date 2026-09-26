@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W08",
+  "status": "PASS",
+  "source_revision": "a2257170ca48f6027fa4cb0cdfbe5a002a7cd1ec",
+  "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "serial_port": "COM10",
+  "role": "cs_reflector",
+  "image_sha256": "81e3025ce5b60247cab8d196bbdc62de8e856c0e789cab542222f922c71f59c6",
+  "matches_w07_reflector_image": true,
+  "programmed_bytes": 397312,
+  "erase": "sector_only",
+  "auto_unlock": false,
+  "mass_erase_requested": false,
+  "recover_requested": false,
+  "advertising": true,
+  "acl_connected": false,
+  "cs_procedure_active": false,
+  "stop_state": "no_active_acl_or_cs_procedure",
+  "raw_probe_uid_persisted": false,
+  "completed_at_utc": "2026-09-26T12:34:26.592228+00:00"
+}

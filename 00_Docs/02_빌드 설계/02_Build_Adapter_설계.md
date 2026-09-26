@@ -13,6 +13,9 @@
 Build Adapter는 Arduino의 전처리·library discovery lifecycle을 보존하면서 실제 컴파일과 최종
 링크를 Zephyr CMake/Ninja에 맡기는 중계 도구다. 현재 구현의 단일 원본은 다음 파일이다.
 
+본문의 기본 계약은 stable v0.4.1이며 §4.1·§4.2는 공개 RC에 포함된 확장이다.
+패키지별 현재 상태와 설치 경로는 [v0.5.0 RC 안내](../05_릴리스/v0.5.0-rc.1/README.md)를 따른다.
+
 - `platform.txt`
 - `tools/nu54-builder/nu54-builder.cmd`
 - `tools/nu54-builder/src/nu54_builder.py`
@@ -197,15 +200,18 @@ Feature는 Arduino source/include record에서 실제로 선택된 bundled libra
 외부 library가 임의 `feature.yml`을 설치했다고 신뢰하지 않는다. profile, manifest와 fragment
 내용은 최종 cache identity와 artifact provenance에 포함한다.
 
-역할별 `prj.conf` 합성은 공통 Core의 미사용 정적 저장소까지 제거했다는 증거가 아니다. 현재
-개발 BLE image의 과도한 정적 RAM은 ELF/map의 실제 symbol·참조 경로로 감사하고, `M31-MEM-OPT`에서
-feature·source·pool 경계를 최적화할 계획이다. 구현과 대표 image 비교 전에는 절감량을 확정하지 않는다.
-범위와 판정은 [메모리 감사·최적화 계약](<../04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>)을 따른다.
+역할별 `prj.conf` 합성만으로 모든 미사용 정적 저장소가 제거됐다고 판정하지 않는다.
+`M31-MEM-OPT`의 P0·P1에서 capability·source·정적 pool 경계를 구현하고 ELF/map으로 검증했다.
+P2에서는 지원 범위의 오류·최악 부하 계측, stack/heap 여유·최종 크기,
+동일 조건 Nordic native FLASH/RAM 비교를 완료했다. [262번 완료 기록](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>),
+[M31 TODO](../TODO_M31.md)의 현재 상태와
+[통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 구현 계약을 따른다.
 
-### 4.1 선언 기반 최적화의 목표 build 흐름
+### 4.1 개발 adaptive build 흐름
 
-후속 `M31-MEM-OPT`에서는 현재 source record와 final cache 이관을 유지하면서 다음 단계를 추가한다.
-이는 아직 v0.4.1 builder의 완료 기능이 아니다.
+공개 `v0.5.0-rc.1`의 `adaptive` 선택은 source record와 final cache 이관을 유지하면서
+다음 단계를 실행한다. P0·P1·P2 완료 범위이며 v0.4.1 stable builder에는 포함되지 않는다.
+현재 메뉴 기본값은 `standard`다. 아래 최소 구성 경로를 사용하려면 `adaptive`를 명시적으로 선택한다.
 
 ```text
 Arduino source/library discovery

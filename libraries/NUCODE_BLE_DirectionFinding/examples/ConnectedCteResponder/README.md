@@ -1,8 +1,13 @@
 # Connected CTE responder
 
-이 예제는 개발 소스 `0.4.1-dev`의 Direction Finding 진단 범위이며 수신·IQ
-경로는 아직 완료되지 않았다.
-현재 설치·지원 package는 `v0.4.1`이며 이 개발 예제가 그 공개 ZIP에 포함됐다는 뜻은 아니다.
+이 예제는 공개 후보 `v0.5.0-rc.1`에 포함된 별도 Zephyr LL 연결 CTE 응답 경로입니다.
+고정 NCS v3.4.0·nRF54L15 제품 SDC의 IQ RX는 미지원이며 P2 범위에서 제외합니다.
+이 송신 예제와 내부 LL 수신 진단은 제품 SDC RX 지원을 의미하지 않습니다.
+Windows 설치 방법은 [RC 안내](<../../../../00_Docs/05_릴리스/v0.5.0-rc.1/README.md>)를 따릅니다.
+정식 지원 버전 `v0.4.1`에는 포함되지 않습니다.
+현재 소스 검증에서는 이 예제의 연결 CTE report 20건·IQ sample 1,640개와 cleanup을
+PASS했고, 첫 bounded 시도의 report 0건 실패도 덮어쓰지 않고 보존했습니다. 상세 판정은
+[263번 완료 기록](<../../../../00_Docs/04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)을 따릅니다.
 
 [`ConnectedCteResponder.ino`](ConnectedCteResponder.ino)는 `NU54-CTE-RSP`라는 이름으로
 연결 가능한 광고를 시작합니다. 중앙 장치가

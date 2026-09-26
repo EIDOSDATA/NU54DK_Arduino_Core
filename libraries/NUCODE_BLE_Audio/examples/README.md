@@ -4,17 +4,36 @@
 실행한다. `.ino`에는 일반 C++로 PCM 생성, codec 설정, encode/decode, 결과 검사와 오류 처리를
 보여 준다. liblc3와 Zephyr Audio 객체는 라이브러리 구현 내부에 있다.
 
-이 예제 집합은 개발 소스 `0.4.1-dev`의 LE Audio 표면이다. 완료 감사에 채택된
+이 예제 집합은 공개 후보 `v0.5.0-rc.1`에 포함된 LE Audio 예제다. 완료 감사에 채택된
 profile·역할 예제는 build와 합성 PCM/payload의 보드 간 데이터·제어·복구 경로를
 검증했다. `ExternalPdmMicrophoneSource`와 `ExternalI2sSpeakerSink`는 build 가능한 실제
 연결 예제이지만, 외장 PDM/I2S 장치의 실물 입출력·음질·전기적 호환성은
-사용자 후속 `NOT RUN`이다. 현재 설치·지원 package는 `v0.4.1`이며 이 개발
-예제들이 그 공개 ZIP에 포함됐다는 뜻은 아니다. 세부 판정은
+사용자 후속 `NOT RUN`이다. Windows 설치 방법은
+[RC 안내](<../../../00_Docs/05_릴리스/v0.5.0-rc.1/README.md>)를 따른다. 정식 지원 버전
+`v0.4.1`에는 포함되지 않는다. 세부 판정은
 [검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
 
 RAM 사용량은 선택한 역할·Core revision·buffer 설정에 따라 달라진다. 빌드가 표시하는 정적
 RAM에는 Audio buffer뿐 아니라 공통 Core 저장소도 포함되므로 Audio 기능만의 요구량으로
 해석하지 않는다. 기능을 추가하기 전에 해당 ELF/map과 최종 `.config`로 자원 예산을 확인한다.
+
+BAP 예제 9개(`BapUnicastSource`, `BapUnicastSink`, `BapUnicastCycle`, duplex client/server,
+broadcast source/sink/delegator sink/assistant)는 각각 공개 `nucode-build.json` role 선언을 제공한다.
+실험적 **NU54DK Zephyr / Adaptive** feature set에서는 이 선언으로 연결 수·ISO stream 수와 필수
+Kconfig를 생성하고, 공통 `NUCODE_BLE_Audio.cpp`와 선택 역할의 unicast/broadcast backend만 빌드한다.
+예제의 저수준 `prj.conf` 목록을 adaptive 역할 해석의 단일 원본으로 사용하지 않으며, 현재 기본
+`standard`와 BLE 호환 profile의 동작은 바꾸지 않는다.
+
+`HearingAccessServer`와 `HearingAccessClient`도 각각 공개 role 선언을 제공한다. Adaptive
+feature set은 HAS server/client 설정과 연결·ISO capacity를 생성하고, Audio 공통 facade와
+`NUCODE_BLE_Audio_HearingAccess.cpp`만 선택한다. 두 예제의 `NUCODE_BLE_Security` 의존성은
+pairing·bond·ZMS settings backend만 포함하며, 사용하지 않는 BAS·DIS·HID·HRS source와 Kconfig는
+제외한다.
+
+`AudioControlDevice`와 `AudioControlController`는 VCP·MICP server/client 조합을 각각 하나의
+검증된 role로 선언한다. Adaptive feature set은 각 역할에 필요한 AICS 2개와 VOCS 1개의 상한,
+연결 1개, device/controller backend를 선택한다. 이 두 역할도 HAP와 같은 최소 보안 source 경계를
+사용하며 다른 Audio backend와 보안 부가 profile은 포함하지 않는다.
 
 ## `Lc3SyntheticLoopback`
 

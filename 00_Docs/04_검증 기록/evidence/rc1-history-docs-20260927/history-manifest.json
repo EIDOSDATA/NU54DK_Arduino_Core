@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "scope": "0.5.0-RC1 only: 83 commits after unchanged main plus reviewed documentation become one commit",
+  "original_head": "174713ffa7dd1fbe1e8d4cd614fb1678e89ff17b",
+  "original_tree": "ab844dd76660b7748fcd1a51d322ebb1a158d41a",
+  "unchanged_parent_main": "4b6afa7a097bdf32b1535a264e443233c3258bf8",
+  "replacement_commit": "the containing squash commit; resolve via git log -1",
+  "removed_refs": {
+    "refs/heads/M31-MEM-OPT": "8691fd0db1893d1a4e9fe93b26453f039f83430c",
+    "refs/remotes/origin/M31-MEM-OPT": "dd6beea5fd7fff931e16be61723f483a64de7ade"
+  },
+  "preserved_public_tag": {
+    "name": "v0.5.0-rc.1",
+    "tag_object": "6cb741b45d88b6a4f1152631d5d31ce200ebc9ec",
+    "source_commit": "7786984a186980f6220271cd506636e4564bc55d",
+    "note": "Release tag retains original history; branch cleanup does not rewrite released source or assets."
+  },
+  "bundle": {
+    "name": "pre-rc1-squash-174713ff.bundle",
+    "bytes": 147665900,
+    "sha256": "742cf1da2a8fdb14a8700425a9142a5843a70079eb58c543cde20ec9986aa1a5",
+    "verification": "git bundle verify PASS; complete history; RC branch, local/remote M31 refs and public RC tag included",
+    "storage": "outside repository; delivery path is recorded in document 269"
+  },
+  "original_commit_count": 83,
+  "original_commits": [
+    {
+      "original_commit": "7a0cbe3caf9bb2e905686fd2d6cac58339da16ff",
+      "subject": "feat(builder): add P0 capability resolver contract"
+    },
+    {
+      "original_commit": "d9ceda65905a8388d03dcf547e9ae62dbe68f754",
+      "subject": "feat(builder): add compiler-assisted capability probe"
+    },
+    {
+      "original_commit": "ee33a30d7f560e652ba607e8d0e99932a864444f",
+      "subject": "feat(builder): integrate adaptive capability builds"
+    },
+    {
+      "original_commit": "7c1e3dec193a8a402b56aa80eb4c994383addd62",
+      "subject": "feat(builder): generate role capacity configuration"
+    },
+    {
+      "original_commit": "356f15bea0d3a94def0334abd4ca5500134e60b3",
+      "subject": "feat(builder): require verified roles for capabilities"
+    },
+    {
+      "original_commit": "d881155f7ceb276325ebbe802f7b4f88a19adc30",
+      "subject": "feat(builder): split compatibility and resolved fragments"
+    },
+    {
+      "original_commit": "9efe3bb2b0be8deeaa2460ef6ffb66d8ffef4463",
+      "subject": "feat(builder): add verified BLE role presets"
+    },
+    {
+      "original_commit": "74c670d721a0dfd084a54600590097705a005db7",
+      "subject": "feat(builder): gate BLE role sources"
+    },
+    {
+      "original_commit": "3d4901e29b07da0f27b64ace6a678e42cfa62bb6",
+      "subject": "feat(builder): add complete ISO role presets"
+    },
+    {
+      "original_commit": "20f447da2cc27c1db9fb9a82704d7c6f89717ddf",
+      "subject": "feat(builder): add adaptive BAP role presets"
+    },
+    {
+      "original_commit": "5835f879e5f814ac04c3441888d1169be1fea9e0",
+      "subject": "feat(builder): add adaptive hearing access roles"
+    },
+    {
+      "original_commit": "3d4a277a81e1d1ff52c5e20186a62f4a7b65d7e5",
+      "subject": "feat(builder): add adaptive audio control roles"
+    },
+    {
+      "original_commit": "103306bc6fb01d40d6ce25142d10a7a9da46b1cd",
+      "subject": "feat(builder): add adaptive media control roles"
+    },
+    {
+      "original_commit": "6f38e600bf361eb9e5b320f78053eed5ceda893d",
+      "subject": "feat(builder): add adaptive call control roles"
+    },
+    {
+      "original_commit": "670593a140064eb0502eda584ab757a18bad5e5c",
+      "subject": "feat(builder): add adaptive CAP roles"
+    },
+    {
+      "original_commit": "6e182c8ebdd1a0be72387cf40df11dabf5f1af14",
+      "subject": "feat(builder): add adaptive CSIP roles"
+    },
+    {
+      "original_commit": "7cc0a1a23134f1bbc184cfa9b3be3d0ac94e09e1",
+      "subject": "feat(builder): add adaptive public broadcast roles"
+    },
+    {
+      "original_commit": "f3ddcab174e978264ea7922cd40269ecc3615abb",
+      "subject": "feat(builder): add adaptive TMAP roles"
+    },
+    {
+      "original_commit": "fc2f2b5426617182e37c6b9601701febbb26366f",
+      "subject": "feat(builder): add adaptive GMAP roles"
+    },
+    {
+      "original_commit": "7bf4aa851f1f5c959eaa6301ccfd76360a45e845",
+      "subject": "feat(builder): enforce adaptive ELF RAM audit"
+    },
+    {
+      "original_commit": "5cd34f99b076e60da819056358e14a49e294b781",
+      "subject": "fix(ble): remove disabled observer scan queue"
+    },
+    {
+      "original_commit": "8ae9c956ab99d73e6e8bb214b2e062f2ed0a7b81",
+      "subject": "fix(ble): gate advanced GAP context storage"
+    },
+    {
+      "original_commit": "e90cd46faf2019fd0406f8462255e6e0865af96e",
+      "subject": "feat(builder): gate adaptive role RAM regressions"
+    },
+    {
+      "original_commit": "4757076752d74fb799e0dcbd130c4fa29d109b75",
+      "subject": "feat(builder): complete adaptive P0 RAM baselines"
+    },
+    {
+      "original_commit": "6c57a091a6b8d6bacd3c415da7477ea5d49755e1",
+      "subject": "feat(core): shrink persistent GPIO ownership state"
+    },
+    {
+      "original_commit": "dce1f76da3b037ce8d58f68a979f669ca2e1efeb",
+      "subject": "feat(core): release persistent UART registry lease"
+    },
+    {
+      "original_commit": "2ead687aa04ab710ba7768a741ac68cb548858cf",
+      "subject": "feat(core): right-size single-resource route leases"
+    },
+    {
+      "original_commit": "4efcfb5d9dd0dce19430d2cdf38b5bd7157d58d7",
+      "subject": "perf(core): compact resource transaction layout"
+    },
+    {
+      "original_commit": "d0f46b6344385360c3cf92a3bd372e71948b8ab5",
+      "subject": "perf(ble): exclude generic GATT from CoC-only role"
+    },
+    {
+      "original_commit": "d279649798cc68b59c35f23ba677457efad00491",
+      "subject": "perf(ble): size GATT slots from declared capacity"
+    },
+    {
+      "original_commit": "96c1116133be63cce4413f430cf9b076e22ea805",
+      "subject": "perf(ble): bound GATT client state by connections"
+    },
+    {
+      "original_commit": "be87d9371150db89442cdfc95c5f1755ceb351c8",
+      "subject": "perf(ble): size GATT events from declared payload"
+    },
+    {
+      "original_commit": "6d1d7135db2f7e1dde99b3f55130b0927ac706cf",
+      "subject": "perf(ble): size GATT TX snapshots from declaration"
+    },
+    {
+      "original_commit": "9e47f62c8f93cb44004e6761876268e5162ebf2c",
+      "subject": "perf(ble): size inline GATT values from declaration"
+    },
+    {
+      "original_commit": "e596fd74833dc783b370f1fc7efa486e7ff21597",
+      "subject": "perf(ble): split GATT server and client roles"
+    },
+    {
+      "original_commit": "7a0f65d5db8132bb18e94a9856f90a4fb2404d69",
+      "subject": "perf(ble): share bounded GATT server TX contexts"
+    },
+    {
+      "original_commit": "cd258832801298c850526707aea56650a4bef02d",
+      "subject": "perf(ble): right-size GATT client payload buffers"
+    },
+    {
+      "original_commit": "8f5f7cf8b66bea8fb301392da5d522b8ef2a85c6",
+      "subject": "test(memory): gate role-specific static pools and close P1"
+    },
+    {
+      "original_commit": "bdd0be538ebf33e1493742661f6379d38d335bcf",
+      "subject": "M31 P2: measure GATT CoC CS and harden adaptive memory layout"
+    },
+    {
+      "original_commit": "7c918d795bf63ff2029fb5f2204779f6ee9ddfea",
+      "subject": "M31 P2: measure ISO Audio DF and CS follow-up"
+    },
+    {
+      "original_commit": "2ae8ff1c2991a8ce5fb94ada056879988dd8294a",
+      "subject": "M31 P2: measure adaptive encrypted broadcast audio"
+    },
+    {
+      "original_commit": "045f633903a8efc5f4b728830ded9ba5b2a1e1cb",
+      "subject": "M31 P2: stress encrypted broadcast audio for 10000 frames"
+    },
+    {
+      "original_commit": "53e8bbadcc562a8a55f984e66219fbc660c1f8c4",
+      "subject": "M31 P2: validate connected DF IQ diagnostic and cleanup"
+    },
+    {
+      "original_commit": "0841e703b0972798f31de980c3a08885d079b8e9",
+      "subject": "test(m31): capture P2 long-run memory evidence and diagnostics"
+    },
+    {
+      "original_commit": "df7cd0bcb6217bc4b190d8ca8acb45f4e7975d42",
+      "subject": "docs(m31): bound CS buffer follow-up against SDK RAS state"
+    },
+    {
+      "original_commit": "2cf92933e1a291405a4b51d7916ede423c6d02a0",
+      "subject": "test(m31): preserve failed CS two-buffer experiment and recovery"
+    },
+    {
+      "original_commit": "424ed835cda80a3ff07a52688065225888113014",
+      "subject": "test: record P2 native CS, DF diagnostics and CoC recovery"
+    },
+    {
+      "original_commit": "851c57408deedc402125592126fc29ddcdf77a00",
+      "subject": "test: verify CoC recovery after peer reset"
+    },
+    {
+      "original_commit": "a575965ee55de2beb2988f699dd4f822d5ff335c",
+      "subject": "test: preserve DF active-scan failure and board recovery"
+    },
+    {
+      "original_commit": "e70af9dabd8c397c2a77f8b314092b82dcc89da8",
+      "subject": "test: bound CS long-procedure diagnostics without claiming max RAS"
+    },
+    {
+      "original_commit": "e153c4d34875caa2e5de6fad9ca611d2ce117eb8",
+      "subject": "test(p2): measure audio broadcast rejoin memory and preserve hold"
+    },
+    {
+      "original_commit": "74617414c1e2040c3c431b9e7cce6e136d653bd3",
+      "subject": "fix(p2): restore adaptive audio unicast reconnect and measure reset memory"
+    },
+    {
+      "original_commit": "e1e8e0952f750b60f0d57959c2e77f021677c77a",
+      "subject": "docs(p2): record 256-step fragmented RAS diagnostics"
+    },
+    {
+      "original_commit": "41bb986d4d69466ba94aaeb6474b66e2758dc5b1",
+      "subject": "docs(p2): preserve DF pending-sync failure and board recovery"
+    },
+    {
+      "original_commit": "ab52e35a59854dbeca622c51c8697deab76c3c10",
+      "subject": "fix(p2): validate four BLE axes and preserve support limits"
+    },
+    {
+      "original_commit": "b3ef5e9d2687cb5c3225a0b31b1709231530e5ae",
+      "subject": "fix(p2): exclude intermittent CS loss from acceptance"
+    },
+    {
+      "original_commit": "46d4fb101513143d89b8533636e3ed671212fea4",
+      "subject": "docs: reconcile P2 scope and refresh documentation handoff"
+    },
+    {
+      "original_commit": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+      "subject": "test(p2): complete memory optimization validation"
+    },
+    {
+      "original_commit": "1b2f5a53dd1767ab926da71c880334adab7f94c4",
+      "subject": "test(m31): complete direction finding W04"
+    },
+    {
+      "original_commit": "4e8625ffb44c5b862c7113a5e0312f2721b943af",
+      "subject": "test(m31): declare stale key fixture roles"
+    },
+    {
+      "original_commit": "08eac945905b50969695412913bb0cb3e61f71c2",
+      "subject": "fix(builder): allow CS roles to select security API"
+    },
+    {
+      "original_commit": "aeae0cdf896cd519cb9f44a0d62924930fc30bec",
+      "subject": "fix(builder): bind CS roles to bond persistence"
+    },
+    {
+      "original_commit": "f30404e2d9d54ffb3c9280c70dddc88b21ad6bd5",
+      "subject": "test(m31): align stale key fixture security mode"
+    },
+    {
+      "original_commit": "704120b1968c236d4809b5709b83cea7dc38b2fa",
+      "subject": "test(m31): classify controller stale key rejection"
+    },
+    {
+      "original_commit": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
+      "subject": "test(m31): accept secure ACL stale key rejection"
+    },
+    {
+      "original_commit": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+      "subject": "feat(m31): complete W05 channel sounding"
+    },
+    {
+      "original_commit": "35b436f9b7865c82d685c18f3be865bda56d18be",
+      "subject": "test(m31): complete W06 integration regression"
+    },
+    {
+      "original_commit": "f990f935a11a169e568ddd4444aae12063a27189",
+      "subject": "test(m31): add W07 installed example gate"
+    },
+    {
+      "original_commit": "422aaa3059f814b069010790bb6ba6db6716721d",
+      "subject": "style(m31): normalize W07 runner EOF"
+    },
+    {
+      "original_commit": "92df552f8b20b16de806ab3c3bae85dfdc1774f2",
+      "subject": "fix(build): avoid nested ccache launcher"
+    },
+    {
+      "original_commit": "318b327f25d09f8d9f5a4ec4bf272b314b12bb81",
+      "subject": "fix(audio): declare BLE library dependency"
+    },
+    {
+      "original_commit": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "subject": "fix(audio): expose transitive BLE include"
+    },
+    {
+      "original_commit": "dd6beea5fd7fff931e16be61723f483a64de7ade",
+      "subject": "feat(m31): complete W07 installed example HIL"
+    },
+    {
+      "original_commit": "ca86a4e126652a4df6e2de3bfff6d9bb49a47b71",
+      "subject": "feat(release): add M31 Windows RC preparation gate"
+    },
+    {
+      "original_commit": "8691fd0db1893d1a4e9fe93b26453f039f83430c",
+      "subject": "test(release): verify Windows RC lifecycle safely"
+    },
+    {
+      "original_commit": "5a75fd85659af5f3de886e215187a2ad39a2e9e8",
+      "subject": "ci(release): shard M31 Windows RC validation"
+    },
+    {
+      "original_commit": "2c2bf0bc2eda112daab3325c014c34bd0733c40a",
+      "subject": "fix(release): preserve pinned Windows RC environment"
+    },
+    {
+      "original_commit": "a2257170ca48f6027fa4cb0cdfbe5a002a7cd1ec",
+      "subject": "fix(ci): route RC examples to declared profiles"
+    },
+    {
+      "original_commit": "fb669f50460657ddbb97107476b13a5c573cc0dd",
+      "subject": "fix(release): anchor lifecycle state at uninstall boundary"
+    },
+    {
+      "original_commit": "065b026a70f83ff2c4e3c00e4e2a0de9a4834b86",
+      "subject": "fix(release): select sysbuild primary image"
+    },
+    {
+      "original_commit": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+      "subject": "fix(ci): keep aggregate script ASCII-safe"
+    },
+    {
+      "original_commit": "7786984a186980f6220271cd506636e4564bc55d",
+      "subject": "test(m31): complete W08 Windows RC validation"
+    },
+    {
+      "original_commit": "174713ffa7dd1fbe1e8d4cd614fb1678e89ff17b",
+      "subject": "release: publish v0.5.0-rc.1 and record public smoke"
+    }
+  ]
+}

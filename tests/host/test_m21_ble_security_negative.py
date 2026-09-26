@@ -87,7 +87,9 @@ class M21BleSecurityNegativeTests(unittest.TestCase):
         self.assertIn("bt_unpair(BT_ID_DEFAULT, BT_ADDR_LE_ANY)", SOURCE)
         self.assertNotRegex(HEADER + SOURCE, r"factory[_A-Z]?reset|mass[_A-Z]?erase")
         self.assertEqual(FEATURE["conflicts"], [])
-        self.assertEqual(FEATURE["compatible_profiles"], ["ble", "secure_ble_dfu"])
+        self.assertEqual(
+            FEATURE["compatible_profiles"], ["adaptive", "ble", "secure_ble_dfu"]
+        )
 
     def test_no_fixed_passkey_secret_log_or_unencrypted_hids_config(self) -> None:
         """! @brief 고정 passkey·secret 로그·평문 HIDS 설정을 모두 금지합니다. """

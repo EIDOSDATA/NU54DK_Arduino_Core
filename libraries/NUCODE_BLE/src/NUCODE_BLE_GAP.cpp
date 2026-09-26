@@ -6,18 +6,28 @@
 #include "internal/gap/GapInternal.h"
 namespace nucode::ble::internal::gap
 {
+#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)
+    /** @brief 주기 광고 facade가 링크된 역할에서만 종료 hook을 제공합니다. */
+    void endPeriodicAdvertising() noexcept __attribute__((weak));
+#endif
     namespace
     {
         K_MSGQ_DEFINE(gap_event_queue, sizeof(GapEventRecord),
                       CONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE, alignof(GapEventRecord));
+#if defined(CONFIG_BT_OBSERVER)
         K_MSGQ_DEFINE(scan_result_queue, sizeof(ScanResultRecord),
                       CONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE, alignof(BLEScanResult));
+#endif
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         K_MSGQ_DEFINE(periodic_report_queue, sizeof(PeriodicReportRecord),
                       CONFIG_NUCODE_BLE_PERIODIC_REPORT_QUEUE_SIZE,
                       alignof(BLEPeriodicReport));
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
         K_MSGQ_DEFINE(pawr_response_queue, sizeof(PawrResponseRecord),
                       CONFIG_NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE,
                       alignof(BLEPawrResponse));
+#endif
         K_MUTEX_DEFINE(gap_lifecycle_mutex);
 
         GapContext context{};
@@ -30,18 +40,24 @@ namespace nucode::ble::internal::gap
     {
         return gap_event_queue;
     }
+#if defined(CONFIG_BT_OBSERVER)
     k_msgq &scanResultQueue() noexcept
     {
         return scan_result_queue;
     }
+#endif
+#if defined(CONFIG_BT_PER_ADV_SYNC)
     k_msgq &periodicReportQueue() noexcept
     {
         return periodic_report_queue;
     }
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
     k_msgq &pawrResponseQueue() noexcept
     {
         return pawr_response_queue;
     }
+#endif
     void lockGapLifecycle() noexcept
     {
         k_mutex_lock(&gap_lifecycle_mutex, K_FOREVER);
@@ -239,9 +255,15 @@ namespace nucode::ble
         }
 
         k_msgq_purge(&gapEventQueue());
+#if defined(CONFIG_BT_OBSERVER)
         k_msgq_purge(&scanResultQueue());
+#endif
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         k_msgq_purge(&periodicReportQueue());
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
         k_msgq_purge(&pawrResponseQueue());
+#endif
         atomic_set(&gapState().advertising_active, 0);
         atomic_set(&gapState().scanning_active, 0);
         atomic_set(&gapState().connection_connecting, 0);
@@ -249,10 +271,12 @@ namespace nucode::ble
         atomic_set(&gapState().mtu_exchange_active, 0);
         atomic_set(&gapState().rpa_expiration_count, 0);
         ::memcpy(gapState().local_name, name, length + 1U);
+#if defined(CONFIG_BT_CONN)
         if (atomic_cas(&gapState().gatt_callback_registered, 0, 1))
         {
             bt_gatt_cb_register(&gattCallbacks());
         }
+#endif
         atomic_set(&gapState().device_initialized, 1);
         internal::recordError(BLEError::none, 0, false);
         unlockGapLifecycle();
@@ -291,6 +315,7 @@ namespace nucode::ble
             }
         }
 
+#if defined(CONFIG_BT_OBSERVER)
         BLEScanCallback result_callback = gapState().scan_callback;
         if (result_callback != nullptr)
         {
@@ -304,8 +329,10 @@ namespace nucode::ble
                 }
             }
         }
+#endif
         internal::pollGatt();
         internal::pollL2cap();
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         BLEPeriodicReportCallback periodic_callback = gapState().periodic_report_callback;
         if (periodic_callback != nullptr)
         {
@@ -320,6 +347,8 @@ namespace nucode::ble
                 }
             }
         }
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
         BLEPawrResponseCallback pawr_callback = gapState().pawr_response_callback;
         if (pawr_callback != nullptr)
         {
@@ -333,6 +362,7 @@ namespace nucode::ble
                 }
             }
         }
+#endif
     }
 
     void Device::end() noexcept
@@ -350,18 +380,35 @@ namespace nucode::ble
         atomic_set(&gapState().device_initialized, 0);
         atomic_inc(&gapState().device_session_generation);
 
+#if defined(CONFIG_BT_OBSERVER)
         const bool stop_scan = atomic_cas(&gapState().scanning_active, 1, 0);
+#endif
+#if defined(CONFIG_BT_BROADCASTER)
         const bool stop_advertising = atomic_cas(&gapState().advertising_active, 1, 0);
+#else
+        atomic_set(&gapState().advertising_active, 0);
+#endif
+#if defined(CONFIG_BT_OBSERVER)
         if (stop_scan)
         {
             static_cast<void>(bt_le_scan_stop());
         }
+#endif
+#if defined(CONFIG_BT_BROADCASTER)
         if (stop_advertising)
         {
             static_cast<void>(bt_le_adv_stop());
         }
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
         endPawr();
-        endPeriodicAdvertising();
+#endif
+#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)
+        if (endPeriodicAdvertising != nullptr)
+        {
+            endPeriodicAdvertising();
+        }
+#endif
         endExtendedAdvertising();
         nucode::ble::internal::l2capEnded();
 
@@ -390,9 +437,15 @@ namespace nucode::ble
         atomic_set(&gapState().mtu_exchange_active, 0);
         atomic_set(&gapState().rpa_expiration_count, 0);
         k_msgq_purge(&gapEventQueue());
+#if defined(CONFIG_BT_OBSERVER)
         k_msgq_purge(&scanResultQueue());
+#endif
+#if defined(CONFIG_BT_PER_ADV_SYNC)
         k_msgq_purge(&periodicReportQueue());
+#endif
+#if defined(CONFIG_BT_PER_ADV_RSP)
         k_msgq_purge(&pawrResponseQueue());
+#endif
 
         for (std::size_t index = 0U; index < maximum_connection_slots; ++index)
         {

@@ -70,6 +70,7 @@ class BuildContext(TypedDict):
     ccache_stats_after: NotRequired[dict[str, int]]
     ccache_stats_delta: NotRequired[dict[str, int]]
     memory_layout: NotRequired[dict[str, Any]]
+    resource_audit: NotRequired[dict[str, Any]]
     selected_library_features: NotRequired[list[dict[str, Any]]]
 
 
@@ -87,4 +88,5 @@ class ArtifactManifest(TypedDict):
     sources: list[str]
     source_inputs: dict[str, Any]
     artifacts: dict[str, Any]
+    resource_audit: dict[str, Any]
     built_at_utc: str
