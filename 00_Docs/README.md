@@ -20,7 +20,7 @@ RC는 별도 설치 목록을 사용하는 opt-in 후보입니다. v0.5.0 stable
 | 목적 | 읽을 문서 |
 | --- | --- |
 | 개발 시작·기여·검사 명령 | [CONTRIBUTING](../CONTRIBUTING.md), [Windows 개발환경](<02_빌드 설계/09_Windows_개발환경_설정.md>) |
-| 현재 상태·다음 작업·다른 PC에서 재개 | [HANDOFF](HANDOFF.md), [v0.5.0 TODO](TODO_v0.5.0.md) |
+| 현재 상태·다음 작업·다른 PC에서 재개 | [HANDOFF](HANDOFF.md), [RC2 교정 계획](TODO_v0.5.0-RC2.md), [v0.5.0 TODO](TODO_v0.5.0.md) |
 | 완료된 M31 범위와 메모리 최적화 | [M31 TODO](TODO_M31.md), [메모리 통합 설계](<01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>) |
 | 기능·역할·검증 소유권 | [Bluetooth 전체 기능·예제 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) |
 | 후속 계획 | [M32 TODO](TODO_M32.md), [M33 TODO](TODO_M33.md), [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
@@ -31,8 +31,9 @@ M28~M31과 Windows RC 공개·smoke는 완료했습니다. 이후 stable 승격�
 M32/M33과 보류한 HOST-W04~W08을 완료된 RC의 추가 조건으로 합치지 않습니다.
 세부 진행 수치와 남은 조건은 위 TODO를 기준으로 봅니다.
 
-현재 개발 시작점은 `main`이고 `0.5.0-RC1` branch는 별도로 보존합니다. Main 통합은 새 배포가
-아니며 stable v0.4.1의 catalog·공개 자산과 공개 RC tag의 원래 source는 유지합니다.
+현재 개발 branch는 `main`에서 분기한 `0.5.0-RC2`이고 `0.5.0-RC1` branch는 별도로
+보존합니다. RC2 branch 생성은 새 배포가 아니며 stable v0.4.1의 catalog·공개 자산과 공개 RC1
+tag의 원래 source는 유지합니다.
 기존 checkout 전환은 [CONTRIBUTING](../CONTRIBUTING.md#이력-정리-뒤-기존-checkout)을 따릅니다.
 
 ## 현행 안내와 기록 구분

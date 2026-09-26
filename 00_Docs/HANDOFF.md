@@ -1,6 +1,7 @@
-# 개발 인계 — M31 완료와 v0.5.0-rc.1 공개, stable 승격 보류
+# 개발 인계 — v0.5.0-rc.2 사용자 경험 교정 착수
 
-최종 정리: **2026-09-27**. 개발 기준 브랜치는 **`main`**이며 메모리 최적화
+최종 정리: **2026-09-27**. 개발 기준 브랜치는 `main`의 `7b869244...`에서 분기한
+**`0.5.0-RC2`**이며 메모리 최적화
 **P0·P1·P2와 M31-W01~W08 8/8을 완료**했다. W04의 지원 CTE TX·response 재검증과
 제품 SDC IQ RX·AoD `UNSUPPORTED` 경계는 [263번 완료 기록](<04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)이 소유한다.
 P2의 오류·최악 부하, 최종 stack/heap 크기, 동등 Nordic native FLASH/RAM 비교 근거는
@@ -17,13 +18,16 @@ main으로의 완료 상태 통합·이력 squash와 이번 문서 동기화는
 ## 1. 다음 작업
 
 M31 기능과 Windows RC 준비, 공개 `v0.5.0-rc.1` Pre-release 및 공개 설치 smoke를 완료했다.
-다음 단계는 RC 사용 결과를 검토한 뒤 정식 `v0.5.0` stable 승격 여부를 별도로 결정하는 것이다.
+실제 Arduino IDE 사용에서 확인한 예제별 Feature set 안내, Upload probe/UID UX, 한국어 출력,
+SWD 진단과 Verify 진행 표시를 [RC2 TODO](TODO_v0.5.0-RC2.md)에 따라 먼저 교정한다.
+RC2 공개와 정식 `v0.5.0` stable 승격은 각각 별도 결정이다.
 
-| 순서 | 작업 | 완료 결과 |
+| 순서 | 작업 | 완료 조건 |
 | --- | --- | --- |
-| 1 | 공개 RC 관찰 | `v0.5.0-rc.1` 사용 결과와 미지원/후속 경계를 검토 |
-| 2 | stable 별도 승인 | stable exact 자산·root catalog 변경·공개 설치 smoke 범위를 확정하고 승인 확보 |
-| 3 | 승인 뒤 stable 공개 | `v0.5.0` tag/Release/root catalog 게시와 인증 없는 다운로드·설치 smoke |
+| 1 | RC2 문제 재현·계약 | IDE/CLI에서 안내·UID·UTF-8·Verify 무출력 조건과 첫 오류를 고정 |
+| 2 | RC2 구현·회귀 | 113개 예제 안내, probe UX·진단, 진행 표시와 변경 영향 검증 완료 |
+| 3 | RC2 별도 승인·공개 | exact RC2 자산·tag·Pre-release·RC catalog와 공개 smoke 승인 확보 뒤 실행 |
+| 4 | stable 별도 승인 | RC2 관찰 뒤 stable exact 자산·root catalog·공개 smoke를 별도 승인 |
 
 ### 다시 추가하지 않을 조건
 
@@ -77,7 +81,7 @@ W06 current build·Host·회귀와 당시 실물 `HOLD`는 [265번](<04_검증 �
 
 | 항목 | 기준 |
 | --- | --- |
-| 실제 저장소 / 브랜치 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `main` |
+| 실제 저장소 / 브랜치 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `0.5.0-RC2` |
 | 공개 RC source | `v0.5.0-rc.1` → `7786984a186980f6220271cd506636e4564bc55d` |
 | 정리된 main 이력 | v0.4.1 마감 `1e0bf4a6...`까지 보존, 이후 개발 10개를 squash 1개로 통합; 현재 SHA는 `git log -1`로 확인 |
 | 보존한 RC branch | `0.5.0-RC1` → `a99623636c01aae87fcba4f72322d83d7d6078f8`; 공개 tag의 source와 구분 |

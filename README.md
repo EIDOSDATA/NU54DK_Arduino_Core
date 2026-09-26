@@ -155,11 +155,13 @@ Arduino IDE의 `File → Examples`에서 열거나 다음 경로에서 코드를
 | 설치·마이그레이션·문제 해결 | [Stable 문서](<00_Docs/05_릴리스/v0.4.1/README.md>) · [RC 문서](<00_Docs/05_릴리스/v0.5.0-rc.1/README.md>) |
 | API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
 | Core 개발·검사·기여 | [기여 안내](CONTRIBUTING.md) · [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) |
-| 현재 개발 상태·다음 작업 | [HANDOFF](00_Docs/HANDOFF.md) · [v0.5.0 TODO](00_Docs/TODO_v0.5.0.md) |
+| 현재 개발 상태·다음 작업 | [HANDOFF](00_Docs/HANDOFF.md) · [RC2 교정 계획](00_Docs/TODO_v0.5.0-RC2.md) · [v0.5.0 TODO](00_Docs/TODO_v0.5.0.md) |
 | 실기·배포 근거 | [검증 기록](<00_Docs/04_검증 기록/README.md>) · [릴리스 이력](<00_Docs/05_릴리스/README.md>) |
 
-현재 개발 브랜치는 `main`이며, 통합한 `0.5.0-RC1` 브랜치는 별도로 보존합니다. M28~M31과
-메모리 최적화 P0~P2, Windows RC 공개 검증은 완료했고 다음 제품 단계는 정식 v0.5.0 검토입니다.
+현재 개발 브랜치는 `main`에서 분기한 `0.5.0-RC2`이며, 통합한 `0.5.0-RC1` 브랜치는 별도로
+보존합니다. M28~M31과 메모리 최적화 P0~P2, Windows RC1 공개 검증은 완료했고, RC2에서는
+예제 설정·Upload probe·UTF-8 진단·Verify 진행 표시를 교정합니다. RC2 공개와 정식 v0.5.0은
+각각 별도 승인 대상입니다.
 이번 main 통합·이력 정리는 새 릴리스가 아닙니다. Stable v0.4.1의 설치 목록·공개 자산과
 RC tag의 원래 source `7786984a186980f6220271cd506636e4564bc55d`는 바꾸지 않았습니다.
 공개 패키지 재현에는 branch HEAD 대신 release tag·manifest를 사용합니다. 기존 checkout의
