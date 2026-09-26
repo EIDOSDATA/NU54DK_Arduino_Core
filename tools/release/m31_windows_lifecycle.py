@@ -169,6 +169,24 @@ def resolve_example_build(build_root: Path, relative: str) -> Path:
     return candidate
 
 
+## @brief manifest가 지정한 primary HEX를 격리 build root 안에서 검증합니다.
+def primary_image(build: Path, manifest: dict[str, Any]) -> Path:
+    root = build.resolve()
+    artifacts = manifest.get("artifacts")
+    record = artifacts.get("hex") if isinstance(artifacts, dict) else None
+    if not isinstance(record, dict) or not isinstance(record.get("path"), str):
+        raise M31LifecycleFailure("설치 예제 manifest에 primary HEX가 없습니다")
+    image = Path(record["path"]).resolve()
+    if (
+        not image.is_relative_to(root)
+        or not image.is_file()
+        or image.stat().st_size == 0
+        or record.get("sha256") != sha256_file(image)
+    ):
+        raise M31LifecycleFailure("설치 예제 primary HEX가 manifest와 다릅니다")
+    return image
+
+
 ## @brief 설치 예제 하나를 독립 build path에서 clean compile합니다.
 def compile_example(
     cli: Path, config: Path, environment: dict[str, str], build_root: Path,
@@ -187,20 +205,20 @@ def compile_example(
         log_path=log,
     )
     manifests = list(build.glob("*.nu54-build.json"))
-    images = list(build.glob("*.hex"))
-    if len(manifests) != 1 or len(images) != 1:
-        raise M31LifecycleFailure(f"설치 예제 artifact가 정확히 하나가 아닙니다: {identity}")
+    if len(manifests) != 1:
+        raise M31LifecycleFailure(f"설치 예제 manifest가 정확히 하나가 아닙니다: {identity}")
     manifest = read_json(manifests[0])
     context = manifest.get("context", {})
     if context.get("profile") != profile:
         raise M31LifecycleFailure(f"설치 예제 profile이 다릅니다: {identity}")
+    image = primary_image(build, manifest)
     return {
         "identity": identity,
         "status": "PASS",
         "profile": profile,
         "sketch_sha256": sha256_file(sketch / f"{sketch.name}.ino"),
         "manifest_sha256": sha256_file(manifests[0]),
-        "hex_sha256": sha256_file(images[0]),
+        "hex_sha256": sha256_file(image),
         "build_relative": build.relative_to(build_root.parent).as_posix(),
         "elapsed_s": record["elapsed_s"],
         "log_sha256": record["log_sha256"],

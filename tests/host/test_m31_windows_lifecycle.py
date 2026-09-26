@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -59,6 +61,39 @@ class M31WindowsLifecycleTests(unittest.TestCase):
             self.assertEqual(expected, actual)
             with self.assertRaises(MODULE.M31LifecycleFailure):
                 MODULE.resolve_example_build(root, "../outside")
+
+    def test_sysbuild_selects_manifest_primary_hex(self) -> None:
+        """! @brief MCUboot HEX가 함께 있어도 manifest의 application HEX만 선택합니다. """
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory) / "build"
+            build.mkdir()
+            application = build / "Sketch.ino.hex"
+            bootloader = build / "Sketch.ino.boot.hex"
+            application.write_bytes(b"application")
+            bootloader.write_bytes(b"bootloader")
+            manifest = {
+                "artifacts": {
+                    "hex": {
+                        "path": str(application),
+                        "sha256": hashlib.sha256(application.read_bytes()).hexdigest(),
+                    },
+                    "boot.hex": {
+                        "path": str(bootloader),
+                        "sha256": hashlib.sha256(bootloader.read_bytes()).hexdigest(),
+                    },
+                }
+            }
+            self.assertEqual(application.resolve(), MODULE.primary_image(build, manifest))
+
+            outside = Path(directory) / "outside.hex"
+            outside.write_bytes(b"outside")
+            changed = json.loads(json.dumps(manifest))
+            changed["artifacts"]["hex"]["path"] = str(outside)
+            changed["artifacts"]["hex"]["sha256"] = hashlib.sha256(
+                outside.read_bytes()
+            ).hexdigest()
+            with self.assertRaises(MODULE.M31LifecycleFailure):
+                MODULE.primary_image(build, changed)
 
     def test_lifecycle_runner_has_no_publication_command(self) -> None:
         """! @brief 설치 검증기가 tag·Release·catalog를 게시하지 않습니다. """
