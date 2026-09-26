@@ -65,6 +65,7 @@ class M31CiShardingTests(unittest.TestCase):
         self.assertIn("fail-fast: false", workflow)
         self.assertIn("--compile-mode representative", workflow)
         self.assertIn("d3f86a106a0bac45b974a628896c90dbdf5c8093", workflow)
+        self.assertEqual(workflow, workflow.encode("ascii").decode("ascii"))
         self.assertNotIn("gh release", workflow.casefold())
         self.assertNotIn("publish-release", workflow)
         self.assertNotIn("publish-index", workflow)

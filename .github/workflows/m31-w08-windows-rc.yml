@@ -277,12 +277,12 @@ jobs:
           if ($env:PREPARE_RESULT -ne 'success' -or
               $env:EXAMPLES_RESULT -ne 'success' -or
               $env:LIFECYCLE_RESULT -ne 'success') {
-            throw "선행 job이 모두 성공하지 않았습니다: prepare=$env:PREPARE_RESULT examples=$env:EXAMPLES_RESULT lifecycle=$env:LIFECYCLE_RESULT"
+            throw "Prerequisite jobs did not all succeed: prepare=$env:PREPARE_RESULT examples=$env:EXAMPLES_RESULT lifecycle=$env:LIFECYCLE_RESULT"
           }
           $plan = @(Get-ChildItem D:\m31-rc -Filter m31-windows-rc-plan.json -Recurse)
           $lifecycle = @(Get-ChildItem D:\m31-lifecycle-evidence -Filter lifecycle.json -Recurse)
           if ($plan.Count -ne 1 -or $lifecycle.Count -ne 1) {
-            throw 'RC plan 또는 lifecycle evidence가 정확히 하나가 아닙니다.'
+            throw 'Expected exactly one RC plan and one lifecycle evidence file.'
           }
           New-Item -ItemType Directory -Path D:\m31-aggregate -Force | Out-Null
           python tools/release/m31_ci_aggregate.py `
