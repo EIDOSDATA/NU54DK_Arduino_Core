@@ -67,6 +67,15 @@ class M31WindowsLifecycleTests(unittest.TestCase):
         self.assertNotIn("publish-index", source)
         self.assertIn("unknown_version_rejected", source)
 
+    def test_prerequisite_snapshot_is_taken_after_post_install(self) -> None:
+        """! @brief 갱신 가능한 post_install 뒤 byte를 uninstall 보존 기준으로 사용합니다. """
+        source = MODULE_PATH.read_text(encoding="utf-8")
+        snapshot = source.index("prerequisite_before = sha256_file(ready_path)")
+        upgrade = source.index('"upgrade_candidate"')
+        uninstall = source.index('"uninstall_candidate"')
+        self.assertLess(upgrade, snapshot)
+        self.assertLess(snapshot, uninstall)
+
     def test_parallel_workers_use_independent_cache_roots(self) -> None:
         """! @brief 병렬 worker가 같은 build cache를 공유하지 않습니다. """
         examples = [

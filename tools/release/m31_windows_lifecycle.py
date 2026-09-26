@@ -338,8 +338,6 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
     shutil.copy2(archive, served_archive)
     if sha256_file(served_archive) != archive_record["sha256"]:
         raise M31LifecycleFailure("로컬 server archive byte가 plan과 다릅니다")
-    prerequisite_before = sha256_file(ready_path)
-
     handler = lambda *args, **kwargs: QuietHandler(  # noqa: E731
         *args, directory=str(server_root), **kwargs
     )
@@ -467,6 +465,9 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
             300,
             expect_success=False,
         )
+        # install/upgrade의 post_install은 검증 시각을 갱신할 수 있으므로
+        # uninstall 직전 byte를 보존 기준으로 고정합니다.
+        prerequisite_before = sha256_file(ready_path)
         step("uninstall_candidate", (cli, "core", "uninstall", "nucode:zephyr", "--config-file", config), 900)
         listed = step("list_uninstalled", (cli, "core", "list", "--json", "--config-file", config), 120)
         assert_installed_version(listed["output"], None)
