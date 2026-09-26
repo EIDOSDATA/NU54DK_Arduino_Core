@@ -39,6 +39,7 @@ from .common import (
     ARTIFACT_MANIFEST_SCHEMA_VERSION,
     AdapterError,
     CACHE_SCHEMA_VERSION,
+    DEFAULT_BUILD_LOCK_TIMEOUT_SECONDS,
     DEFAULT_PROFILE,
     NCS_VERSION,
     SESSION_CONTEXT_SCHEMA_VERSION,
@@ -61,7 +62,7 @@ from .configuration import (
     resolve_library_features,
 )
 from .environment import tool_environment
-from .locking import build_lock
+from .locking import build_lock, operating_system_lock
 from .paths import (
     adapter_paths,
     add_workspace_paths,
@@ -72,6 +73,7 @@ from .paths import (
     record_path,
 )
 from .progress import (
+    ProgressResult,
     build_environment,
     build_worker_count,
     progress_message,
@@ -156,6 +158,42 @@ def west_build_working_directory(paths: dict[str, Path]) -> Path:
             f"{app_root} != {build_root}"
         )
     return app_root
+
+
+## @brief 공유 Zephyr cache를 사용하는 configure를 host에서 하나씩 실행합니다.
+def run_serialized_configure(
+    paths: dict[str, Path],
+    args: argparse.Namespace,
+    tools: dict[str, Any],
+    board_root: Path,
+    *,
+    pristine: bool,
+    environment: dict[str, str],
+    log_path: Path,
+    stage: str,
+    worker_count: int,
+) -> ProgressResult:
+    ncs_root = canonical_path(tools["ncs_root"])
+    identity = f"zephyr-configure:{ncs_root.as_posix().casefold()}"
+    with operating_system_lock(
+        ncs_root,
+        DEFAULT_BUILD_LOCK_TIMEOUT_SECONDS,
+        logical_identity=identity,
+    ):
+        return run_progress_command(
+            configure_command(
+                paths,
+                args,
+                tools,
+                board_root,
+                pristine=pristine,
+            ),
+            cwd=west_build_working_directory(paths),
+            environment=environment,
+            log_path=log_path,
+            stage=stage,
+            worker_count=worker_count,
+        )
 
 
 ## @brief Zephyr application template과 사용자 config/overlay를 materialize합니다.
@@ -432,11 +470,12 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                     first_configure_complete=False,
                 )
                 try:
-                    configure_result = run_progress_command(
-                        configure_command(
-                            paths, args, tools, board_root.resolve(), pristine=True
-                        ),
-                        cwd=west_build_working_directory(paths),
+                    configure_result = run_serialized_configure(
+                        paths,
+                        args,
+                        tools,
+                        board_root.resolve(),
+                        pristine=True,
                         environment=child_environment,
                         log_path=configure_log,
                         stage="Zephyr 구성",
@@ -612,9 +651,12 @@ def migrate_feature_workspace(
             )
             transition_cache_state(workspace, cache_key, "configuring", first_configure_complete=False, configure_reason="selected-features")
             try:
-                configure_result = run_progress_command(
-                    configure_command(paths, args, tools, board_root, pristine=True),
-                    cwd=west_build_working_directory(paths),
+                configure_result = run_serialized_configure(
+                    paths,
+                    args,
+                    tools,
+                    board_root,
+                    pristine=True,
                     environment=child_environment,
                     log_path=configure_log,
                     stage="Feature 구성",
@@ -770,15 +812,12 @@ def link(args: argparse.Namespace) -> None:
             build_targets = 0
             try:
                 if manifest_changed:
-                    configure_result = run_progress_command(
-                        configure_command(
-                            paths,
-                            args,
-                            tools,
-                            canonical_path(context["board_root"]),
-                            pristine=False,
-                        ),
-                        cwd=west_build_working_directory(paths),
+                    configure_result = run_serialized_configure(
+                        paths,
+                        args,
+                        tools,
+                        canonical_path(context["board_root"]),
+                        pristine=False,
                         environment=child_environment,
                         log_path=build_log,
                         stage="source graph 재구성",

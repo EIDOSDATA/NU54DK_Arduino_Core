@@ -131,6 +131,58 @@ class M9SafetyContractTests(unittest.TestCase):
         self.assertTrue((lock_root / ".adapter.lock").is_file())
         (lock_root / ".adapter.lock").unlink()
 
+    def test_configure_uses_one_host_lock_for_shared_zephyr_cache(self) -> None:
+        """! @brief 서로 다른 build cache도 같은 NCS configure lock을 사용합니다. """
+
+        build_module = MODULE.implementation.build
+        app = self.root / "app"
+        zephyr_build = self.root / "zephyr-build"
+        ncs_root = self.root / "ncs"
+        app.mkdir()
+        zephyr_build.mkdir()
+        captured: dict[str, object] = {}
+        expected = mock.Mock()
+
+        @contextlib.contextmanager
+        def fake_lock(
+            root: Path, timeout_seconds: float, logical_identity: str | None = None
+        ):
+            captured["root"] = root
+            captured["timeout_seconds"] = timeout_seconds
+            captured["logical_identity"] = logical_identity
+            yield
+
+        with (
+            mock.patch.object(build_module, "operating_system_lock", fake_lock),
+            mock.patch.object(
+                build_module, "configure_command", return_value=["west", "build"]
+            ),
+            mock.patch.object(
+                build_module, "run_progress_command", return_value=expected
+            ) as progress,
+        ):
+            actual = build_module.run_serialized_configure(
+                {
+                    "app": app,
+                    "zephyr_build": zephyr_build,
+                },
+                argparse.Namespace(),
+                {"ncs_root": ncs_root},
+                self.root / "board",
+                pristine=True,
+                environment={},
+                log_path=self.root / "configure.log",
+                stage="test",
+                worker_count=2,
+            )
+        self.assertIs(expected, actual)
+        self.assertEqual(ncs_root.resolve(), captured["root"])
+        self.assertEqual(
+            f"zephyr-configure:{ncs_root.resolve().as_posix().casefold()}",
+            captured["logical_identity"],
+        )
+        progress.assert_called_once()
+
     def test_transactional_export_publishes_one_verified_generation(self) -> None:
         """! @brief staging이 모두 끝난 뒤 네 artifact를 검증된 generation으로 교체합니다. """
 
