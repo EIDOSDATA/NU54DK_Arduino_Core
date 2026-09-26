@@ -10,7 +10,22 @@ from pathlib import Path
 import re
 import time
 
-import serial
+try:
+    import serial
+except ModuleNotFoundError:
+    class SerialUnavailable:
+        """! @brief Host 계약 시험에서 pyserial 의존성을 실제 HIL까지 지연합니다. """
+
+        class SerialException(Exception):
+            """! @brief pyserial이 없는 Host에서 예외 형식 계약을 보존합니다. """
+
+        @staticmethod
+        def Serial(*_args, **_kwargs):
+            """! @brief 실제 HIL에서 pyserial이 없으면 명시적으로 중단합니다. """
+
+            raise RuntimeError("pyserial is required for physical HIL")
+
+    serial = SerialUnavailable()
 try:
     from pyocd.core.helpers import ConnectHelper
 except ModuleNotFoundError:
