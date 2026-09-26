@@ -9,23 +9,31 @@ import json
 from pathlib import Path
 import re
 import time
-
-import serial
-from serial.tools import list_ports
+from typing import Any
 
 from onboard_start import reset_halted_start
+
+
+def import_pyserial() -> tuple[Any, Any]:
+    """! @brief 실제 HIL 실행 시점에만 pyserial과 port 열거기를 가져옵니다. """
+
+    import serial
+    from serial.tools import list_ports
+
+    return serial, list_ports
 
 
 def require_mapping(port: str, uid: str) -> None:
     """! @brief 현재 USB serial number가 요청 probe와 일치하는지 검사합니다. """
 
+    _, list_ports = import_pyserial()
     observed = {item.device.upper(): item for item in list_ports.comports()}
     device = observed.get(port.upper())
     if device is None or (device.serial_number or "").lower() != uid.lower():
         raise RuntimeError(f"COM/probe mapping mismatch: {port}")
 
 
-def read_lines(streams: dict[str, serial.Serial], pending: dict[str, bytearray],
+def read_lines(streams: dict[str, Any], pending: dict[str, bytearray],
                lines: dict[str, list[str]]) -> None:
     """! @brief 두 역할의 줄 단위 UART 기록을 유실 없이 누적합니다. """
 
@@ -42,7 +50,7 @@ def read_lines(streams: dict[str, serial.Serial], pending: dict[str, bytearray],
                 lines[role].append(line)
 
 
-def wait_for_line(streams: dict[str, serial.Serial], pending: dict[str, bytearray],
+def wait_for_line(streams: dict[str, Any], pending: dict[str, bytearray],
                   lines: dict[str, list[str]], role: str, expected: str,
                   timeout: float) -> None:
     """! @brief 지정된 준비·종료 신호를 유한 대기합니다. """
@@ -63,6 +71,7 @@ def run(arguments: argparse.Namespace) -> dict:
 
     from pyocd.core.helpers import ConnectHelper
 
+    serial, _ = import_pyserial()
     if arguments.peripheral_uid.lower() == arguments.central_uid.lower():
         raise RuntimeError("two distinct probes are required")
     for role in ("peripheral", "central"):
@@ -105,8 +114,8 @@ def run(arguments: argparse.Namespace) -> dict:
         "lines": {"peripheral": [], "central": []},
         "result": "FAIL",
     }
-    streams: dict[str, serial.Serial] = {}
-    auxiliary: dict[str, serial.Serial] = {}
+    streams: dict[str, Any] = {}
+    auxiliary: dict[str, Any] = {}
     try:
         for role in ("peripheral", "central"):
             streams[role] = serial.Serial(
