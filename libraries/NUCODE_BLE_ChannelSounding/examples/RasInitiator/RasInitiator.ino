@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: Adaptive capabilities (experimental) (adaptive, 실험적 대안)
+ * @par 보드와 역할
+ * 2대 — 1) RasInitiator (initiator); 2) RasReflector (reflector)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * nucode-build.json, prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * Reflector를 먼저 켜고 두 보드의 보안 peer 상태를 맞춥니다.
+ * @par Metadata
+ * identity `NUCODE_BLE_ChannelSounding/RasInitiator`, sha256 `01776401708fbed8ef04098be6b913abe607770692f900287e7b09e633ad4e88`
+ * @nucode_example_setup_end */
+
 /**
  * @file RasInitiator.ino
  * @brief 보안 연결의 Ranging Service를 찾아 CS raw step을 수집합니다.

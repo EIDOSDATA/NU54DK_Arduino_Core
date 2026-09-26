@@ -20,7 +20,8 @@ REPOSITORY = Path(__file__).resolve().parents[2]
 PACKAGE_MODULE = REPOSITORY / "packaging" / "boards-manager" / "nu54_package.py"
 M31_READINESS = Path("variants/nu54dk/m31-ble-readiness.json")
 RELEASE_READINESS = Path("variants/nu54dk/v0.5.0-release-readiness.json")
-VERSION = "0.5.0-rc.1"
+VERSION = "0.5.0-rc.2"
+PREVIOUS_RC_VERSION = "0.5.0-rc.1"
 STABLE_VERSION = "0.5.0"
 BASE_RC_VERSIONS = (
     "0.1.0-rc.2",
@@ -38,6 +39,15 @@ GATE_IDS = (
     "windows_lifecycle",
     "rc_review_and_owner_approval",
     "public_assets_and_download_smoke",
+    "stable_v0.5.0_publication",
+)
+RC2_REQUIRED_BLOCKERS = (
+    "rc2_full_rc_ci",
+    "rc2_installed_arduino_cli",
+    "rc2_arduino_ide_gui",
+    "rc2_physical_hil",
+    "rc2_documentation_audit",
+    "rc2_owner_approval",
     "stable_v0.5.0_publication",
 )
 
@@ -156,7 +166,9 @@ def configure_candidate(package: Any) -> None:
         raise M31ReleaseFailure("과거 RC allowlist가 변경됐습니다")
     if VERSION in package.PACKAGE_VERSIONS:
         raise M31ReleaseFailure("M31 RC가 영구 package allowlist에 들어갔습니다")
-    package.configure_release_candidates(BASE_RC_VERSIONS + (VERSION,))
+    package.configure_release_candidates(
+        BASE_RC_VERSIONS + (PREVIOUS_RC_VERSION, VERSION)
+    )
 
 
 ## @brief M31 8/8 완료와 v0.5.0 Windows release gate schema를 검사합니다.
@@ -176,7 +188,7 @@ def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], di
     fixed = {
         "schema_version": 1,
         "release": "v0.5.0",
-        "candidate_version": VERSION,
+        "candidate_version": PREVIOUS_RC_VERSION,
         "host_scope": "Windows 10/11 x64",
         "publication_allowed": False,
     }
@@ -217,8 +229,8 @@ def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], di
     if (
         not isinstance(candidate, dict)
         or candidate.get("status") != "PASS"
-        or candidate.get("version") != VERSION
-        or candidate.get("tag") != f"v{VERSION}"
+        or candidate.get("version") != PREVIOUS_RC_VERSION
+        or candidate.get("tag") != f"v{PREVIOUS_RC_VERSION}"
         or not re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("source_revision")))
         or candidate.get("public_smoke") != "PASS"
         or not isinstance(candidate.get("release_url"), str)
@@ -328,7 +340,7 @@ def prepare(repository: Path, output: Path, revision: str) -> Path:
             "isolated_builds": 2,
             "artifact_hashes": reproducible_hashes,
         },
-        "blockers": blockers(release, package_passed=True),
+        "blockers": list(RC2_REQUIRED_BLOCKERS),
         "artifacts": artifact_records,
         "created_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
@@ -371,7 +383,7 @@ def validate_plan(plan_path: Path, *, repository: Path = REPOSITORY) -> dict[str
     ):
         raise M31ReleaseFailure("RC plan의 tracked readiness identity가 source commit과 다릅니다")
     publication_blockers = {
-        "rc_review_and_owner_approval",
+        "rc2_owner_approval",
         "stable_v0.5.0_publication",
     }
     if (

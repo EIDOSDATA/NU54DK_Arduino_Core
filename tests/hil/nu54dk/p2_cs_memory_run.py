@@ -11,7 +11,16 @@ import re
 import time
 
 import serial
-from pyocd.core.helpers import ConnectHelper
+try:
+    from pyocd.core.helpers import ConnectHelper
+except ModuleNotFoundError:
+    class ConnectHelper:
+        """! @brief Host 판정에서 pyOCD 의존성을 지연하는 대체 형식입니다. """
+
+        @staticmethod
+        def get_all_connected_probes(*_args, **_kwargs):
+            """! @brief 실제 HIL에서 pyOCD가 없으면 명시적으로 중단합니다. """
+            raise RuntimeError("pyOCD is required for physical HIL")
 
 from onboard_start import reset_halted_start
 from p2_gatt_memory_run import read_lines, require_mapping, wait_for_line

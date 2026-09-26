@@ -56,16 +56,12 @@ recipe.output.save_file={build.project_name}.nu54dk.hex
 # M8 일반 Upload는 manifest를 검증한 뒤 Zephyr runner를 사용하며 erase/recover를 요청하지 않는다.
 tools.nu54_pyocd.upload.params.verbose=--verbose
 tools.nu54_pyocd.upload.params.quiet=
-tools.nu54_pyocd.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd {upload.verbose}
-
-tools.nu54_pyocd_uid.upload.params.verbose=--verbose
-tools.nu54_pyocd_uid.upload.params.quiet=
-tools.nu54_pyocd_uid.upload.field.probe_id=CMSIS-DAP unique ID
-tools.nu54_pyocd_uid.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd --probe-id "{upload.field.probe_id}" {upload.verbose}
+tools.nu54_pyocd.upload.field.probe_id=auto-single
+tools.nu54_pyocd.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd --probe-id "{upload.field.probe_id}" {upload.verbose}
 
 tools.nu54_jlink.upload.params.verbose=--verbose
 tools.nu54_jlink.upload.params.quiet=
-tools.nu54_jlink.upload.field.probe_id=J-Link serial number
+tools.nu54_jlink.upload.field.probe_id=j-link-serial-required
 tools.nu54_jlink.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner jlink --probe-id "{upload.field.probe_id}" {upload.verbose}
 
 pluggable_discovery.required.0=builtin:serial-discovery

@@ -19,6 +19,12 @@ import time
 from typing import Sequence
 
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+
+
 FQBN = "nucode:zephyr:nu54dk"
 ARDUINO_TESTS = (
     "blink",
@@ -57,6 +63,7 @@ ARDUINO_TESTS = (
     "adaptive_audio_pbp",
     "adaptive_audio_tmap",
     "adaptive_audio_gmap",
+    "rc2_profiles",
 )
 DEFAULT_TESTS = tuple(
     test
@@ -174,6 +181,15 @@ def board_examples(repository: Path) -> Path:
 
 class SmokeFailure(RuntimeError):
     """! @brief smoke test 계약 위반을 나타냅니다. """
+
+
+## @brief 파일의 SHA-256을 block 단위로 계산합니다.
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 ## @brief Arduino IDE에 포함된 CLI 1.5.1의 기본 절대 경로를 반환합니다.
@@ -2103,17 +2119,6 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
     if manifest.get("fqbn") != f"{FQBN}:upload_probe=pyocd":
         raise SmokeFailure("M8 upload menu selection was not recorded in the manifest")
 
-    uid_build = root / "build-m8-upload-uid"
-    uid_command = compile_command(cli, config, uid_build, sketch)
-    uid_command[-1:-1] = ("--board-options", "upload_probe=pyocd_uid")
-    run(uid_command)
-    assert_build(uid_build, "m8_upload.ino")
-    uid_manifest = json.loads(
-        (uid_build / "m8_upload.ino.nu54-build.json").read_text(encoding="utf-8")
-    )
-    if uid_manifest.get("fqbn") != f"{FQBN}:upload_probe=pyocd_uid":
-        raise SmokeFailure("M8 explicit UID upload menu was not recorded in the manifest")
-
     field_value = "NU54_UPLOAD_FIELD_EXPANSION_DO_NOT_MATCH_A_REAL_PROBE"
     field_command: list[str | Path] = [
         cli,
@@ -2124,9 +2129,9 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
         "--config-file",
         config,
         "--build-path",
-        uid_build,
+        build,
         "--board-options",
-        "upload_probe=pyocd_uid",
+        "upload_probe=pyocd",
         "--upload-field",
         f"probe_id={field_value}",
         sketch,
@@ -2153,27 +2158,59 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
     builder_text = upload_source.read_text(encoding="utf-8")
     for expected in (
         "tools.nu54_pyocd.upload.pattern=",
-        "--runner pyocd {upload.verbose}",
-        "tools.nu54_pyocd_uid.upload.field.probe_id=CMSIS-DAP unique ID",
-        'tools.nu54_pyocd_uid.upload.pattern={nu54.builder}',
+        "tools.nu54_pyocd.upload.field.probe_id=auto-single",
         '--runner pyocd --probe-id "{upload.field.probe_id}"',
         "--runner jlink",
         "nu54-builder",
     ):
         if expected not in platform_text:
             raise SmokeFailure(f"M8 upload recipe is missing: {expected}")
-    if "tools.nu54_pyocd.upload.field." in platform_text:
-        raise SmokeFailure("M8 default pyOCD recipe must not require an upload field")
+    if "nu54_pyocd_uid" in platform_text:
+        raise SmokeFailure("M8 pyOCD recipe must use one auto-or-CLI-field path")
     if "smart_flash=false" not in builder_text:
         raise SmokeFailure("M8 pyOCD stability option is missing")
     for expected in (
         "upload.tool.default=nu54_pyocd",
-        "menu.upload_probe.pyocd_uid=CMSIS-DAP with UID (pyOCD)",
-        "menu.upload_probe.pyocd_uid.upload.tool.default=nu54_pyocd_uid",
+        "menu.upload_probe.pyocd=CMSIS-DAP - one probe auto (multiple: CLI UID)",
         "menu.upload_probe.jlink",
     ):
         if expected not in boards_text:
             raise SmokeFailure(f"M8 board upload property is missing: {expected}")
+    if "menu.upload_probe.pyocd_uid" in boards_text:
+        raise SmokeFailure("M8 board menu must not expose an unusable IDE UID field")
+
+
+## @brief RC2 Fast CI에서 여섯 Feature set의 대표 공개 예제를 build합니다.
+def test_rc2_profile_representatives(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    cases = (
+        ("standard", "NUCODE_NU54DK", "Blink"),
+        ("ble", "NUCODE_BLE", "NUSPeripheral"),
+        ("adaptive", "NUCODE_BLE_ChannelSounding", "RasInitiator"),
+        ("fabric", "NUCODE_Peripheral_Fabric", "FabricCapabilities"),
+        ("secure_ble_dfu", "NUCODE_BLE_DFU", "SecureDfuPeripheral"),
+        ("ble_audio_io", "NUCODE_BLE_Audio", "ExternalPdmMicrophoneSource"),
+    )
+    for profile, library, example in cases:
+        sketch = repository / "libraries" / library / "examples" / example
+        build = root / "build-rc2-profiles" / profile
+        command = compile_command(cli, config, build, sketch)
+        command[-1:-1] = ("--board-options", f"feature_set={profile}")
+        run(command)
+        manifests = list(build.glob("*.nu54-build.json"))
+        if len(manifests) != 1:
+            raise SmokeFailure(f"RC2 {profile} manifest가 정확히 하나가 아닙니다")
+        manifest = json.loads(manifests[0].read_text(encoding="utf-8"))
+        context = manifest.get("context", {})
+        artifacts = manifest.get("artifacts", {})
+        if context.get("profile") != profile:
+            raise SmokeFailure(f"RC2 대표 build profile이 다릅니다: {profile}")
+        for role in ("hex", "elf"):
+            record = artifacts.get(role)
+            path = Path(str(record.get("path", ""))) if isinstance(record, dict) else Path()
+            if not path.is_file() or record.get("sha256") != file_sha256(path):
+                raise SmokeFailure(f"RC2 {profile} {role} artifact가 잘못되었습니다")
 
 
 ## @brief P0 adaptive profile의 direct·include-only source/config 경계를 clean build로 검증합니다.
@@ -4611,6 +4648,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "adaptive_audio_pbp": test_adaptive_audio_pbp_roles,
                 "adaptive_audio_tmap": test_adaptive_audio_tmap_roles,
                 "adaptive_audio_gmap": test_adaptive_audio_gmap_roles,
+                "rc2_profiles": test_rc2_profile_representatives,
             }
             selected_tests = (
                 ARDUINO_SELECTIONS[args.group]

@@ -550,10 +550,10 @@ class M11RcHilTests(unittest.TestCase):
             {
                 "probe_id": "redacted",
                 "probe_selection_mode": "explicit",
-                "upload_probe": "pyocd_uid",
+                "upload_probe": "pyocd",
             },
         )
-        self.assertIn("upload_probe=pyocd_uid", commands[0])
+        self.assertIn("upload_probe=pyocd", commands[0])
         self.assertIn("--upload-field", commands[1])
         self.assertIn("probe_id=fixture-probe", commands[1])
         self.assertNotIn("fixture-probe", json.dumps(evidence))

@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 2대 — 1) LongGattCentral (central/client); 2) LongGattPeripheral (peripheral/server)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE/LongGattCentral`, sha256 `8fbe47087cb3cef0d91ed459f98c68de990c8397b35a0ac1fa208456d71825ad`
+ * @nucode_example_setup_end */
+
 /**
  * @file LongGattCentral.ino
  * @brief generation handle로 512-byte value를 읽는 long read central 예제입니다.

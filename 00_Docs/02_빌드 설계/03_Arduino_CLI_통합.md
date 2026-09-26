@@ -216,25 +216,31 @@ arduino-cli upload `
 
 ### 6.4 명시 UID 또는 J-Link Upload
 
-여러 CMSIS-DAP 중 하나를 선택할 때는 compile부터 `pyocd_uid`를 사용한다.
+Arduino IDE 2.x의 board option은 임의 UID 입력 UI를 제공하지 않는다. 따라서 작동하지 않는
+별도 `pyocd_uid` 메뉴를 노출하지 않고, IDE의 Upload Probe 메뉴에는 CMSIS-DAP 자동 선택 한
+항목만 둔다. CMSIS-DAP가 한 대면 자동 선택하며, 여러 대면 임의 선택하지 않고 CLI의
+`--upload-field probe_id=<CMSIS-DAP-UID>`로 exact 대상을 지정한다. compile 때는 일반
+`upload_probe=pyocd`를 그대로 사용한다.
 
 ```powershell
 arduino-cli compile `
   --fqbn 'nucode:zephyr:nu54dk' `
-  --board-options feature_set=standard,upload_probe=pyocd_uid `
+  --board-options feature_set=standard,upload_probe=pyocd `
   --build-path $ArduinoBuild `
   $SketchDir
 
 arduino-cli upload `
   --fqbn 'nucode:zephyr:nu54dk' `
-  --board-options feature_set=standard,upload_probe=pyocd_uid `
+  --board-options feature_set=standard,upload_probe=pyocd `
   --upload-field probe_id=<CMSIS-DAP-UID> `
   --build-path $ArduinoBuild `
   --verbose `
   $SketchDir
 ```
 
-J-Link는 `upload_probe=jlink`와
+빈 값·메뉴 placeholder·형식 오류·현재 연결되지 않은 UID는 flash 전에 각각 구체적인 ASCII 오류
+코드와 한국어 해결 안내로 거부한다. 일반 console에는 UID의 끝 4자리만 남기고, 증거에는 원문 대신
+SHA-256을 기록한다. J-Link는 외장 probe의 SWD·VTref·GND를 연결한 경우에만 `upload_probe=jlink`와
 `--upload-field probe_id=<JLINK-SERIAL-NUMBER>`를 사용한다. 선택 runner가 없거나 ID가 비면
 실패하며 pyOCD로 자동 fallback하지 않는다.
 
@@ -246,13 +252,23 @@ J-Link는 `upload_probe=jlink`와
 - 표준 예제는 sidecar 없이 선택 profile로 build된다.
 - source 오류는 Arduino의 `#line` 정보를 가능한 한 보존한다.
 - 성공 뒤 Full Zephyr FLASH/RAM 사용량을 표시한다.
+- 기본 non-verbose console에도 환경/Feature set, 구성, compile, link, artifact의 5단계를 표시한다.
+  Ninja의 실제 `[완료/전체]`가 있을 때만 분모를 표시하고, 장시간 출력이 없으면 10초마다 경과
+  heartbeat를 한 줄 갱신한다. 가짜 퍼센트는 만들지 않는다.
+- 실패 단계와 전체 UTF-8 로그 경로를 표시한다. 정상 console은 bounded summary만 유지한다.
 
 ### Upload
 
-- 선택한 세 upload tool 중 하나를 사용한다.
+- 선택한 두 upload tool(CMSIS-DAP pyOCD 또는 외장 J-Link) 중 하나를 사용한다.
 - 다중 CMSIS-DAP 기본 경로는 임의 probe를 고르지 않고 실패한다.
 - manifest, context와 artifact hash가 맞아야 flash한다.
 - 일반 upload에서 mass erase/recover를 실행하지 않는다.
+- `E_PROBE_NONE`, `E_PROBE_AMBIGUOUS`, `E_PROBE_ID`, `E_PROBE_NOT_FOUND`,
+  `E_SWD_NO_ACK`, `E_TARGET_POWER`, `E_TARGET_UNRESPONSIVE`, `E_PYOCD_EXEC`,
+  `E_JLINK_EXEC`, `E_FLASH_WRITE`를 첫 원인 기준으로 구분한다. 비차단 Board ID 경고가 뒤의
+  SWD No ACK를 가리지 않아야 한다.
+- 저속 SWD와 under-reset은 명시적 비파괴 진단 인자로만 제공한다. 자동 unlock·recover·mass erase는
+  어떤 오류 복구에도 사용하지 않는다.
 
 ### Serial Monitor와 Debug
 

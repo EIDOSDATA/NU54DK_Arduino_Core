@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: Adaptive capabilities (experimental) (adaptive, 실험적 대안)
+ * @par 보드와 역할
+ * 3대 — 1) BapBroadcastSource (source/transmitter); 2) BapBroadcastAssistant 실행 보드; 3) BapBroadcastDelegatorSink (sink/receiver)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * nucode-build.json, prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE_Audio/BapBroadcastDelegatorSink`, sha256 `3e894b62cc380c2e820d47d43ca0e763e6794e768260189cc10dd9b2ebb2cccf`
+ * @nucode_example_setup_end */
+
 /**
  * @file BapBroadcastDelegatorSink.ino
  * @brief BASS Scan Delegator로 선택된 broadcast LC3 stream을 수신합니다.

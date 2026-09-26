@@ -260,13 +260,17 @@ class M9SafetyContractTests(unittest.TestCase):
             ),
             mock.patch.object(MODULE.implementation.build, "materialize_application"),
             mock.patch.object(MODULE.implementation.build, "configure_command", return_value=["configure"]),
-            mock.patch.object(MODULE.implementation.build, "run_checked") as run_checked,
+            mock.patch.object(
+                MODULE.implementation.build,
+                "run_progress_command",
+                return_value=argparse.Namespace(duration_seconds=0.1),
+            ) as run_progress,
         ):
             MODULE.prepare(args)
-        run_checked.assert_called_once()
-        self.assertEqual(run_checked.call_args.kwargs["cwd"], workspace / "app")
+        run_progress.assert_called_once()
+        self.assertEqual(run_progress.call_args.kwargs["cwd"], workspace / "app")
         self.assertNotEqual(
-            PureWindowsPath(str(run_checked.call_args.kwargs["cwd"])).drive.casefold(),
+            PureWindowsPath(str(run_progress.call_args.kwargs["cwd"])).drive.casefold(),
             PureWindowsPath(str(tools["ncs_root"])).drive.casefold(),
         )
 
@@ -283,11 +287,15 @@ class M9SafetyContractTests(unittest.TestCase):
             ),
             mock.patch.object(MODULE.implementation.build, "materialize_application"),
             mock.patch.object(MODULE.implementation.build, "configure_command", return_value=["configure"]),
-            mock.patch.object(MODULE.implementation.build, "run_checked") as run_checked,
+            mock.patch.object(
+                MODULE.implementation.build,
+                "run_progress_command",
+                return_value=argparse.Namespace(duration_seconds=0.1),
+            ) as run_progress,
         ):
             first = MODULE.prepare(args)
             second = MODULE.prepare(args)
-        self.assertEqual(run_checked.call_count, 1)
+        self.assertEqual(run_progress.call_count, 1)
         self.assertEqual(first["configure_reason"], "state-recovery")
         self.assertEqual(second["configure_reason"], "cache-hit")
         state = MODULE.load_json_object(workspace / "state.json", "E_TEST")
@@ -311,7 +319,11 @@ class M9SafetyContractTests(unittest.TestCase):
             ),
             mock.patch.object(MODULE.implementation.build, "materialize_application"),
             mock.patch.object(MODULE.implementation.build, "configure_command", return_value=["configure"]),
-            mock.patch.object(MODULE.implementation.build, "run_checked", side_effect=RuntimeError("configure failed")),
+            mock.patch.object(
+                MODULE.implementation.build,
+                "run_progress_command",
+                side_effect=RuntimeError("configure failed"),
+            ),
         ):
             with self.assertRaisesRegex(RuntimeError, "configure failed"):
                 MODULE.prepare(args)
@@ -380,6 +392,8 @@ class M9SafetyContractTests(unittest.TestCase):
             manifest=str(build / "Blink.ino.nu54-build.json"),
             runner="pyocd",
             probe_id=None,
+            swd_frequency=1_000_000,
+            connect_mode="under-reset",
             verbose=False,
         )
         active: list[str] = []

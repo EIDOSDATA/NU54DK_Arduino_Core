@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 2대 — 1) L2capCocClient (client/controller); 2) L2capCocServer (server/device)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE/L2capCocServer`, sha256 `7c4132b249624f0ae61671d7635106b120b7f1da3ecec08c8eb8307b33300e97`
+ * @nucode_example_setup_end */
+
 /**
  * @file L2capCocServer.ino
  * @brief 두 LE CoC channel에서 최대 512-byte SDU를 그대로 돌려주는 echo server 예제입니다.

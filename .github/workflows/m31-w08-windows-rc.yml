@@ -3,7 +3,7 @@ name: M31 W08 Windows RC
 on:
   push:
     branches:
-      - 0.5.0-RC1
+      - 0.5.0-RC2
   workflow_dispatch:
 
 permissions:
@@ -90,12 +90,21 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
-          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v1
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v2
+      - name: Restore exact NCS and toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            D:\ncs
+            D:\nu54-prerequisites
+          key: ${{ steps.lock.outputs.windows_cache_key }}-ncs-toolchain-v2
       - name: Restore shard-specific compile cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: D:\m31-build-cache\shard-${{ matrix.shard }}
-          key: ${{ steps.lock.outputs.windows_cache_key }}-m31-w08-shard-${{ matrix.shard }}-v1
+          key: ${{ steps.lock.outputs.windows_cache_key }}-m31-rc2-${{ hashFiles('tools/nu54-builder/**', 'cores/**', 'variants/**', 'libraries/**', 'platform.txt', 'boards.txt') }}-shard-${{ matrix.shard }}-v2
+          restore-keys: |
+            ${{ steps.lock.outputs.windows_cache_key }}-m31-rc2-
       - name: Install or verify exact Nordic prerequisites
         shell: powershell
         run: >-
@@ -130,6 +139,7 @@ jobs:
             --cache-root D:\m31-build-cache\shard-${{ matrix.shard }} `
             --shard-index ${{ matrix.shard }} `
             --shard-count 8 `
+            --jobs 2 `
             --output D:\m31-evidence\shard-${{ matrix.shard }}.json
       - name: Stage shard evidence under one artifact root
         if: always()
@@ -185,7 +195,14 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
-          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v1
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v2
+      - name: Restore exact NCS and toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            D:\ncs
+            D:\nu54-prerequisites
+          key: ${{ steps.lock.outputs.windows_cache_key }}-ncs-toolchain-v2
       - name: Install or verify exact Nordic prerequisites
         shell: powershell
         run: >-

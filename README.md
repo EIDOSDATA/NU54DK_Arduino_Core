@@ -160,8 +160,9 @@ Arduino IDE의 `File → Examples`에서 열거나 다음 경로에서 코드를
 
 현재 개발 브랜치는 `main`에서 분기한 `0.5.0-RC2`이며, 통합한 `0.5.0-RC1` 브랜치는 별도로
 보존합니다. M28~M31과 메모리 최적화 P0~P2, Windows RC1 공개 검증은 완료했고, RC2에서는
-예제 설정·Upload probe·UTF-8 진단·Verify 진행 표시를 교정합니다. RC2 공개와 정식 v0.5.0은
-각각 별도 승인 대상입니다.
+예제 설정·Upload probe·UTF-8 진단·Verify 진행 표시를 교정합니다. RC2는 모든 필수 gate가
+PASS일 때만 조건부 Pre-release로 공개하며, 정식 v0.5.0은
+별도 승인 대상입니다.
 이번 main 통합·이력 정리는 새 릴리스가 아닙니다. Stable v0.4.1의 설치 목록·공개 자산과
 RC tag의 원래 source `7786984a186980f6220271cd506636e4564bc55d`는 바꾸지 않았습니다.
 공개 패키지 재현에는 branch HEAD 대신 release tag·manifest를 사용합니다. 기존 checkout의

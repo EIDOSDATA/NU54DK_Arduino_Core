@@ -48,13 +48,29 @@ class M31CiShardingTests(unittest.TestCase):
     """! @brief 8개 shard의 완전성·중복 거부를 검사합니다. """
 
     def test_eight_shards_partition_all_examples_once(self) -> None:
-        """! @brief 113개 예제가 15/14개 shard로 정확히 한 번 나뉩니다. """
+        """! @brief 113개 예제가 실측 시간 기준으로 정확히 한 번 나뉩니다. """
         examples = LIFECYCLE.installed_examples(ROOT)
         selections = [SHARD.select_shard(examples, index, 8) for index in range(8)]
         identities = [item[0] for selection in selections for item in selection]
-        self.assertEqual([15, 14, 14, 14, 14, 14, 14, 14], [len(item) for item in selections])
         self.assertEqual(LIFECYCLE.EXPECTED_EXAMPLES, len(identities))
         self.assertEqual(LIFECYCLE.EXPECTED_EXAMPLES, len(set(identities)))
+        weights = SHARD.load_example_weights(examples)
+        loads = [sum(weights[item[0]] for item in selection) for selection in selections]
+        self.assertLess(max(loads) - min(loads), max(weights.values()))
+        self.assertLess(max(loads) / min(loads), 1.08)
+
+    def test_new_example_uses_conservative_default_weight(self) -> None:
+        """! @brief 실측 이력이 없는 신규 예제는 기존 최댓값으로 배치합니다. """
+        examples = LIFECYCLE.installed_examples(ROOT)
+        document = json.loads(SHARD.WEIGHTS_PATH.read_text(encoding="utf-8"))
+        missing_identity = sorted(document["weights_seconds"])[0]
+        document["weights_seconds"].pop(missing_identity)
+        expected_default = max(document["weights_seconds"].values())
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "weights.json"
+            path.write_text(json.dumps(document), encoding="utf-8")
+            weights = SHARD.load_example_weights(examples, path)
+        self.assertEqual(expected_default, weights[missing_identity])
 
     def test_workflow_uses_eight_windows_shards_without_publication(self) -> None:
         """! @brief workflow가 고정 Action과 비공개 8분할만 사용합니다. """
@@ -97,11 +113,16 @@ class M31CiShardingTests(unittest.TestCase):
                     "shard": {
                         "index": index,
                         "count": 8,
-                        "assignment": "sorted_identity_position_modulo",
+                        "assignment": SHARD.ASSIGNMENT_NAME,
                         "global_denominator": LIFECYCLE.EXPECTED_EXAMPLES,
                         "assigned": len(selected),
                         "compiled": len(selected),
                         "failed": 0,
+                    },
+                    "execution": {
+                        "mode": "parallel_isolated_worker_caches",
+                        "workers": 2,
+                        "cache_roots": 2,
                     },
                     "results": [
                         {"identity": identity, "profile": profile, "status": "PASS"}

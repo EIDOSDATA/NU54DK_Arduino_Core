@@ -312,6 +312,20 @@ Arduino build path의 생성 source만 cache mirror로 옮긴다.
 - 일반 Upload에서 mass erase, recover 또는 다른 runner fallback을 실행하지 않는다.
 - `cmd /c`로 긴 shell 문자열을 다시 해석하지 않고 CMD wrapper가 고정 Python entry를 찾는다.
 
+### 7.1 RC2 진행 출력과 병렬 실행
+
+Adapter는 configure와 Ninja process를 pipe로 읽으면서 전체 byte를 UTF-8 log에 보존하고, Arduino
+console에는 5단계 상태·실제 Ninja target 분모·최대 10초 heartbeat만 출력한다. stdout/stderr는
+`backslashreplace`를 포함한 UTF-8 경계로 고정해 Windows system code page가 한국어 진단 byte를
+바꾸지 못하게 한다. process 시작 실패와 non-zero 종료는 해당 단계와 log 경로를 포함해 원래 실패로
+반환한다.
+
+기본 worker 수는 논리 CPU와 가용 RAM을 함께 사용해 `min(CPU, RAM/2 GiB, 64)`로 고른다.
+`NUCODE_BUILD_JOBS`는 benchmark·재현을 위한 양의 정수 override이며 child CMake/Ninja에도 같은
+상한을 전달한다. context와 최종 build manifest에는 worker 수, configure/build target 수, 단계별
+경과 시간과 전체 log 경로를 기록한다. 진행 출력은 build graph·artifact byte·cache key에 영향을
+주지 않는다.
+
 ## 8. 현재 제한
 
 현재 정식 범위에는 다음이 포함되지 않는다.

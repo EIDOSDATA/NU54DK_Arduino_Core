@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: Adaptive capabilities (experimental) (adaptive, 실험적 대안)
+ * @par 보드와 역할
+ * 2대 — 1) CISCentral (central/client); 2) CISPeripheral (peripheral/server)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * nucode-build.json, prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE_ISO/CISPeripheral`, sha256 `18ee2189f3b320ee1e36c28e4c281d3ceddf84e00e8c6ad11fe3537e5dbf65ca`
+ * @nucode_example_setup_end */
+
 /**
  * @file CISPeripheral.ino
  * @brief CIS 사용자 SDU의 내용과 순서를 Arduino 코드에서 검사합니다.

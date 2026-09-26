@@ -28,4 +28,8 @@ for _name in implementation.__all__:
     globals()[_name] = getattr(implementation, _name)
 
 if __name__ == "__main__":
+    ## @brief Windows Arduino IDE/CLI pipe에서도 진단 byte를 UTF-8로 고정합니다.
+    for _stream in (_sys.stdout, _sys.stderr):
+        if hasattr(_stream, "reconfigure"):
+            _stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     raise SystemExit(main())

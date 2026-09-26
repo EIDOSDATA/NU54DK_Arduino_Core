@@ -56,10 +56,9 @@ class UploadHilFailure(RuntimeError):
     """! @brief M8 실제 upload 계약 위반을 나타냅니다. """
 
 
-## @brief runner와 명시 UID 유무에 맞는 Arduino Upload probe 메뉴 값을 반환합니다.
+## @brief runner에 맞는 Arduino Upload probe 메뉴 값을 반환합니다.
 def select_upload_probe_option(runner: str, requested_probe_id: str) -> str:
-    if runner == "pyocd" and requested_probe_id:
-        return "pyocd_uid"
+    del requested_probe_id
     return runner
 
 

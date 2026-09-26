@@ -122,6 +122,29 @@ class WindowsRecipeTests(unittest.TestCase):
                     self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
                     self.assertIn('usage: nu54-builder', result.stdout + result.stderr)
 
+    def test_installed_command_emits_strict_utf8_korean_diagnostics(self):
+        """! @brief Windows launcher의 한국어 오류 byte가 strict UTF-8인지 검증합니다. """
+
+        properties = dict(line.split('=', 1) for line in
+                          (ROOT / 'platform.txt').read_text(encoding='utf-8').splitlines()
+                          if line and not line.startswith('#') and '=' in line)
+        with tempfile.TemporaryDirectory(prefix='NU54 UTF8 진단 ') as directory:
+            installed = Path(directory) / '설치본'
+            shutil.copytree(ROOT / 'tools/nu54-builder', installed / 'tools/nu54-builder',
+                            ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+            prefix = properties.get('nu54.builder.windows', properties['nu54.builder'])
+            prefix = prefix.replace('{runtime.platform.path}', installed.as_posix())
+            if not prefix.lower().startswith('cmd.exe '):
+                prefix = 'cmd.exe /c ' + prefix
+            environment = dict(os.environ, NUCODE_PYTHON=sys.executable)
+            result = subprocess.run(prefix + ' cache inspect', cwd=directory,
+                                    env=environment, capture_output=True, timeout=30)
+            output = result.stdout + result.stderr
+            decoded = output.decode('utf-8', errors='strict')
+            self.assertEqual(result.returncode, 2, decoded)
+            self.assertIn('key가 필요합니다', decoded)
+            self.assertNotIn('\ufffd', decoded)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -12,7 +12,6 @@ import time
 
 import serial
 from serial.tools import list_ports
-from pyocd.core.helpers import ConnectHelper
 
 from onboard_start import reset_halted_start
 
@@ -61,6 +60,8 @@ def wait_for_line(streams: dict[str, serial.Serial], pending: dict[str, bytearra
 
 def run(arguments: argparse.Namespace) -> dict:
     """! @brief 현재 mapping·image를 확정하고 20회 회복 뒤 양측 STOP을 확인합니다. """
+
+    from pyocd.core.helpers import ConnectHelper
 
     if arguments.peripheral_uid.lower() == arguments.central_uid.lower():
         raise RuntimeError("two distinct probes are required")

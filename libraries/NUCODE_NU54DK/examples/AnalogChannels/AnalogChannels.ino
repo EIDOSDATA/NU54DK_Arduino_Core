@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: Standard peripherals (`standard`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 1대 — 1) AnalogChannels 실행 보드
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_NU54DK/AnalogChannels`, sha256 `0b5b40e1aade2eb46e71d1b22afcb3df362170b73ff352f96ef8898577c83303`
+ * @nucode_example_setup_end */
+
 /**
  * @file AnalogChannels.ino
  * @brief 기본 profile에서 강제 탈취 없이 읽을 수 있는 SAADC 별칭을 순회합니다.

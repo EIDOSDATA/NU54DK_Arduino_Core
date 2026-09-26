@@ -71,6 +71,12 @@ from .paths import (
     paths_from_context,
     record_path,
 )
+from .progress import (
+    build_environment,
+    build_worker_count,
+    progress_message,
+    run_progress_command,
+)
 from .source_graph import (
     invalidate_source_records,
     records_for_objects,
@@ -317,6 +323,7 @@ def validate_resolved_configuration(
 
 ## @brief 현재 고정 입력으로 Zephyr configure-only를 수행하고 context를 기록합니다.
 def prepare(args: argparse.Namespace) -> BuildContext:
+    progress_message("[NU54 1/5] 환경과 Feature set 확인")
     session_paths = adapter_paths(args)
     platform_root = session_paths["platform_root"]
     board_root = platform_root / "board_package" / "NU54DK_Zephyr_DTS"
@@ -340,6 +347,9 @@ def prepare(args: argparse.Namespace) -> BuildContext:
     paths = add_workspace_paths(session_paths, workspace)
     paths["build_path"].mkdir(parents=True, exist_ok=True)
     paths["state_root"].mkdir(parents=True, exist_ok=True)
+    worker_count = build_worker_count()
+    child_environment = build_environment(tools["environment"], worker_count)
+    configure_log = paths["state_root"] / "logs" / "configure.log"
 
     with build_lock(paths["state_root"], operation="prepare-session"):
         # Arduino의 library 선택과 include graph는 cache key와 독립적으로 바뀔 수 있습니다.
@@ -410,6 +420,10 @@ def prepare(args: argparse.Namespace) -> BuildContext:
             pristine_count = int((state_document or {}).get("pristine_configure_count", 0))
             recovery_count = int((state_document or {}).get("recovery_count", 0))
             if configure_required:
+                progress_message(
+                    f"[NU54 2/5] Zephyr 구성 준비: {configure_reason}, "
+                    f"작업자 {worker_count}개"
+                )
                 transition_cache_state(
                     workspace,
                     cache_key,
@@ -417,14 +431,16 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                     configure_reason=configure_reason,
                     first_configure_complete=False,
                 )
-                started = time.perf_counter()
                 try:
-                    run_checked(
+                    configure_result = run_progress_command(
                         configure_command(
                             paths, args, tools, board_root.resolve(), pristine=True
                         ),
                         cwd=west_build_working_directory(paths),
-                        environment=tools["environment"],
+                        environment=child_environment,
+                        log_path=configure_log,
+                        stage="Zephyr 구성",
+                        worker_count=worker_count,
                     )
                 except Exception as error:
                     transition_cache_state(
@@ -435,10 +451,12 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                         failure=str(error),
                     )
                     raise
-                configure_seconds = time.perf_counter() - started
+                configure_seconds = configure_result.duration_seconds
                 pristine_count += 1
                 if configure_reason != "new-cache":
                     recovery_count += 1
+            else:
+                progress_message("[NU54 2/5] Zephyr 구성 준비: cache hit")
 
             transition_cache_state(
                 workspace,
@@ -489,6 +507,8 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                 "configure_mode": "cmake-only",
                 "configure_reason": configure_reason if configure_required else "cache-hit",
                 "configure_duration_seconds": round(configure_seconds, 6),
+                "build_worker_count": worker_count,
+                "configure_log": configure_log.as_posix(),
                 "configure_skipped": not configure_required,
                 "cache_reused": not configure_required,
                 "pristine_configure_count": pristine_count,
@@ -575,6 +595,8 @@ def migrate_feature_workspace(
         stored_state_key = (state or {}).get("cache_key")
         if isinstance(stored_state_key, str) and re.fullmatch(r"[0-9a-f]{64}", stored_state_key) and stored_state_key != cache_key:
             raise AdapterError("[NU54:E_CACHE_KEY_COLLISION] feature cache state의 전체 SHA-256이 다릅니다.")
+        worker_count = build_worker_count()
+        configure_log = session_paths["state_root"] / "logs" / "configure.log"
         reusable = bool(stored == input_manifest and state and state.get("cache_key") == cache_key and state.get("state") == "ready" and state.get("first_configure_complete") is True and (paths["zephyr_build"] / "CMakeCache.txt").is_file() and (paths["zephyr_build"] / "build.ninja").is_file())
         materialize_application(
             paths, args, selected_libraries, capability_resolution
@@ -583,19 +605,28 @@ def migrate_feature_workspace(
         atomic_write_json(input_path, input_manifest)
         configure_seconds = 0.0
         if not reusable:
+            child_environment = build_environment(tools["environment"], worker_count)
+            progress_message(
+                f"[NU54 2/5] Zephyr 구성 준비: selected-features, "
+                f"작업자 {worker_count}개"
+            )
             transition_cache_state(workspace, cache_key, "configuring", first_configure_complete=False, configure_reason="selected-features")
-            started = time.perf_counter()
             try:
-                run_checked(
+                configure_result = run_progress_command(
                     configure_command(paths, args, tools, board_root, pristine=True),
                     cwd=west_build_working_directory(paths),
-                    environment=tools["environment"],
+                    environment=child_environment,
+                    log_path=configure_log,
+                    stage="Feature 구성",
+                    worker_count=worker_count,
                 )
             except Exception as error:
                 transition_cache_state(workspace, cache_key, "failed", first_configure_complete=False, last_build_result="configure-failed", failure=str(error))
                 raise
-            configure_seconds = time.perf_counter() - started
+            configure_seconds = configure_result.duration_seconds
             transition_cache_state(workspace, cache_key, "ready", first_configure_complete=True, last_build_result="not-built", configure_reason="selected-features", configure_duration_seconds=round(configure_seconds, 6), pristine_configure_count=int((state or {}).get("pristine_configure_count", 0)) + 1)
+        else:
+            progress_message("[NU54 2/5] Zephyr 구성 준비: feature cache hit")
         validate_resolved_configuration(paths, capability_resolution)
     old_key = str(context["cache_key"])
     context.update({
@@ -616,6 +647,8 @@ def migrate_feature_workspace(
         "provisional_cache_key": old_key,
         "configure_reason": "feature-cache-hit" if reusable else "selected-features",
         "configure_duration_seconds": round(configure_seconds, 6),
+        "build_worker_count": worker_count,
+        "configure_log": configure_log.as_posix(),
         "configure_skipped": reusable,
         "cache_reused": reusable,
         "pristine_configure_count": int((state or {}).get("pristine_configure_count", 0)) + (0 if reusable else 1),
@@ -632,6 +665,9 @@ def link(args: argparse.Namespace) -> None:
     session_paths = adapter_paths(args)
     tools = tool_environment(canonical_path(args.platform_root))
     output_manifest = session_paths["build_path"] / f"{args.project_name}.nu54-build.json"
+    worker_count = build_worker_count()
+    child_environment = build_environment(tools["environment"], worker_count)
+    build_log = session_paths["state_root"] / "logs" / "build.log"
 
     with build_lock(session_paths["state_root"], operation="link-session"):
         context = load_context(args, create=False)
@@ -686,6 +722,7 @@ def link(args: argparse.Namespace) -> None:
             capability_resolution,
         )
         with build_lock(paths["workspace"], operation="link-cache"):
+            progress_message("[NU54 3/5] 소스 컴파일 준비: source graph와 cache 검증")
             state_document = load_json_object(paths["workspace"] / "state.json", "E_CACHE_STATE")
             if (
                 state_document.get("schema_version") != CACHE_SCHEMA_VERSION
@@ -729,10 +766,11 @@ def link(args: argparse.Namespace) -> None:
             ccache_before = read_ccache_stats(tools)
             configure_seconds = 0.0
             build_started = time.perf_counter()
+            configure_targets = 0
+            build_targets = 0
             try:
                 if manifest_changed:
-                    configure_started = time.perf_counter()
-                    run_checked(
+                    configure_result = run_progress_command(
                         configure_command(
                             paths,
                             args,
@@ -741,11 +779,19 @@ def link(args: argparse.Namespace) -> None:
                             pristine=False,
                         ),
                         cwd=west_build_working_directory(paths),
-                        environment=tools["environment"],
+                        environment=child_environment,
+                        log_path=build_log,
+                        stage="source graph 재구성",
+                        worker_count=worker_count,
                     )
-                    configure_seconds = time.perf_counter() - configure_started
+                    configure_seconds = configure_result.duration_seconds
+                    configure_targets = configure_result.total_targets
                 validate_resolved_configuration(paths, capability_resolution)
-                run_checked(
+                progress_message(
+                    f"[NU54 3/5] 소스 컴파일 중: 작업자 {worker_count}개, "
+                    f"전체 log {build_log}"
+                )
+                build_result = run_progress_command(
                     [
                         tools["west"],
                         "-z",
@@ -755,8 +801,13 @@ def link(args: argparse.Namespace) -> None:
                         paths["zephyr_build"],
                     ],
                     cwd=west_build_working_directory(paths),
-                    environment=tools["environment"],
+                    environment=child_environment,
+                    log_path=build_log,
+                    stage="컴파일과 링크",
+                    worker_count=worker_count,
                 )
+                build_targets = build_result.total_targets
+                progress_message("[NU54 4/5] 링크와 firmware 생성")
                 profile = load_configuration_profile(
                     paths["platform_root"],
                     getattr(args, "profile", DEFAULT_PROFILE),
@@ -838,6 +889,10 @@ def link(args: argparse.Namespace) -> None:
                             "source_manifest_changed": manifest_changed,
                             "link_configure_duration_seconds": round(configure_seconds, 6),
                             "build_duration_seconds": round(build_seconds, 6),
+                            "build_worker_count": worker_count,
+                            "configure_target_count": configure_targets,
+                            "build_target_count": build_targets,
+                            "build_log": build_log.as_posix(),
                             "ccache_stats_before": ccache_before,
                             "ccache_stats_after": ccache_after,
                             "ccache_stats_delta": ccache_delta(ccache_before, ccache_after),
@@ -868,6 +923,10 @@ def link(args: argparse.Namespace) -> None:
                         "metrics": {
                             "configure_seconds": round(configure_seconds, 6),
                             "build_seconds": round(build_seconds, 6),
+                            "worker_count": worker_count,
+                            "configure_target_count": configure_targets,
+                            "build_target_count": build_targets,
+                            "build_log": build_log.as_posix(),
                             "ccache_delta": ccache_delta(ccache_before, ccache_after),
                         },
                         "context": context,
@@ -889,6 +948,9 @@ def link(args: argparse.Namespace) -> None:
                         last_build_result="success",
                         last_artifact_manifest=output_manifest.as_posix(),
                         last_build_duration_seconds=round(build_seconds, 6),
+                    )
+                    progress_message(
+                        f"[NU54 5/5] 산출물·메모리 검증 완료: {build_seconds:.1f}초"
                     )
             except Exception as error:
                 transition_cache_state(

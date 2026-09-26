@@ -69,6 +69,10 @@ def create_parser() -> argparse.ArgumentParser:
     flash_parser.add_argument("--manifest", required=True)
     flash_parser.add_argument("--runner", choices=("pyocd", "jlink"), required=True)
     flash_parser.add_argument("--probe-id")
+    flash_parser.add_argument("--swd-frequency", type=int)
+    flash_parser.add_argument(
+        "--connect-mode", choices=("normal", "under-reset"), default="normal"
+    )
     flash_parser.add_argument("--verbose", action="store_true")
 
     clean_parser = subparsers.add_parser("clean-build")

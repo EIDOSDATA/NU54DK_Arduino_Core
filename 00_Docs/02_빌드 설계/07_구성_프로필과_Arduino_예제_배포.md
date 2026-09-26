@@ -292,6 +292,16 @@ M31-W01~W08과 DF·CS를 포함한 지원 역할별 기능 검증도 완료했�
 물리 HIL 역할 수는 서로 다른 분모다. 실제 경로와 단계별 증거는
 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)와 [M31 TODO](../TODO_M31.md)를 따른다.
 
+RC2부터 113개 예제의 사용자 설정 안내는
+[`libraries/example-metadata.json`](../../libraries/example-metadata.json)을 단일 원본으로 사용한다.
+각 identity에는 권장 Feature set, 호환 대안과 실험/전용 여부, 보드 수·역할, Serial baud,
+필수 sidecar와 외장 I/O·bootloader 조건을 기록한다. 생성기
+[`sync_example_guidance.py`](../../tools/examples/sync_example_guidance.py)는 각 `.ino`의 맨 위에
+한국어 Doxygen 안내 block을 동기화한다. `--check`, Host test와 공개 예제 audit는 metadata의
+exact 113 identity, 실제 sidecar와 표시 block의 byte drift를 모두 거부한다. Channel Sounding
+Initiator/Reflector는 BLE NUS를 기본으로 하고 Adaptive를 실험적 대안으로 표시하며, 두 보드와
+115200 baud를 요구한다.
+
 이전 2026-09-15 검토한 `8c311d9a…`의 `0.4.1-dev` 소스 트리에는 12개 library와 60개 `.ino`가 있었다.
 정식 v0.4.1 예제 30개에 M28 11개, M29 15개, M30 profile 예제 4개가 추가된 snapshot이다.
 `NUCODE_BLE_DFU`는 별도 library이며 새 `.ino`를 더하지 않는다. 이 수를 v0.4.1 설치본의 제공 수로

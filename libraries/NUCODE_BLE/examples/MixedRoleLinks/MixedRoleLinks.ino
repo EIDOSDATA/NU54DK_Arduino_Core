@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 1대 — 1) MixedRoleLinks 실행 보드
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다.
+ * @par Metadata
+ * identity `NUCODE_BLE/MixedRoleLinks`, sha256 `5b3d8641a5b0a7fdb94800e390b015d6378ec6e4afc9bb7644ade169fc0da542`
+ * @nucode_example_setup_end */
+
 /**
  * @file MixedRoleLinks.ino
  * @brief 한 NU54DK가 central 1-link와 peripheral 1-link를 동시에 유지하는 예제입니다.

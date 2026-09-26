@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE Audio external I/O (DAP UART disconnected) (`ble_audio_io`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 2대 — 1) ExternalPdmMicrophoneSource (source/transmitter); 2) ExternalI2sSpeakerSink (sink/receiver)
+ * @par Serial Monitor
+ * 사용하지 않음
+ * @par 필수 sidecar
+ * prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * DAP UART를 분리하고 PDM 또는 I2S 외장 장치의 전압·clock·GND 결선을 확인합니다.
+ * @par Metadata
+ * identity `NUCODE_BLE_Audio/ExternalPdmMicrophoneSource`, sha256 `e8a0acabea4b151ee9afe53aa5dcf37824a13d6209b82b6523b6653c565eabb0`
+ * @nucode_example_setup_end */
+
 /**
  * @file ExternalPdmMicrophoneSource.ino
  * @brief 외부 PDM microphone의 PCM을 LC3 unicast source로 전송합니다.

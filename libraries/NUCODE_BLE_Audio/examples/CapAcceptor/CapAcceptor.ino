@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: Adaptive capabilities (experimental) (adaptive, 실험적 대안)
+ * @par 보드와 역할
+ * 2대 — 1) CapCommander (commander); 2) CapAcceptor (acceptor)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * nucode-build.json, prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE_Audio/CapAcceptor`, sha256 `c2ca72a914ed9ab10d5f51fdf8af938c9d99f38740683449a60e589fed85b5b5`
+ * @nucode_example_setup_end */
+
 /**
  * @file CapAcceptor.ino
  * @brief CAP Acceptor와 Scan Delegator로 암호화 LC3 broadcast를 수신합니다.

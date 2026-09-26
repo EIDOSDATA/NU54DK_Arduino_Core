@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: Adaptive capabilities (experimental) (adaptive, 실험적 대안)
+ * @par 보드와 역할
+ * 2대 — 1) BapUnicastCycle 실행 보드; 2) BapUnicastSink (sink/receiver)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * nucode-build.json, prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE_Audio/BapUnicastCycle`, sha256 `34937e329e1f7b858f7aaf0a52a930aef7f729df930e2102f4f2ab483c87002b`
+ * @nucode_example_setup_end */
+
 /**
  * @file BapUnicastCycle.ino
  * @brief 합성 LC3 stream의 시작·중단·release·재연결을 반복합니다.

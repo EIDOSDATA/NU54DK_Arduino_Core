@@ -22,20 +22,88 @@ if str(Path(__file__).resolve().parent) not in sys.path:
 import m31_windows_lifecycle as lifecycle  # noqa: E402
 
 
+WEIGHTS_PATH = REPOSITORY / "tools" / "ci" / "rc2-example-weights.json"
+ASSIGNMENT_NAME = "rc1_elapsed_weighted_lpt_affinity_v1"
+
+
 class M31ShardFailure(RuntimeError):
     """! @brief RC 설치 또는 shard 분모 위반을 나타냅니다. """
 
 
-## @brief 정렬된 전체 예제에서 위치 modulo로 shard의 고정 집합을 선택합니다.
+## @brief RC1 실측 elapsed weight를 읽고 신규 예제에는 보수적 기본값을 적용합니다.
+def load_example_weights(
+    examples: list[tuple[str, Path, str]], path: Path = WEIGHTS_PATH,
+) -> dict[str, float]:
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise M31ShardFailure(f"예제 weight를 읽지 못했습니다: {path}") from error
+    weights = document.get("weights_seconds") if isinstance(document, dict) else None
+    expected = {identity for identity, _sketch, _profile in examples}
+    if (
+        document.get("schema_version") != 1
+        or not isinstance(weights, dict)
+        or bool(set(weights) - expected)
+        or not all(
+            isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
+            for value in weights.values()
+        )
+    ):
+        raise M31ShardFailure("예제 weight identity·값이 현재 예제 집합과 호환되지 않습니다")
+    default_weight = max((float(value) for value in weights.values()), default=300.0)
+    return {
+        identity: float(weights.get(identity, default_weight))
+        for identity in sorted(expected)
+    }
+
+
+## @brief 실측 시간 LPT와 작은 profile/library affinity로 모든 shard를 계획합니다.
+def weighted_shards(
+    examples: list[tuple[str, Path, str]], shard_count: int,
+    *, weights_path: Path = WEIGHTS_PATH,
+) -> list[list[tuple[str, Path, str]]]:
+    if shard_count < 2:
+        raise M31ShardFailure("shard count가 유효하지 않습니다")
+    weights = load_example_weights(examples, weights_path)
+    shards: list[list[tuple[str, Path, str]]] = [[] for _ in range(shard_count)]
+    loads = [0.0] * shard_count
+    profiles: list[set[str]] = [set() for _ in range(shard_count)]
+    libraries: list[set[str]] = [set() for _ in range(shard_count)]
+    ordered = sorted(examples, key=lambda item: (-weights[item[0]], item[0]))
+    for item in ordered:
+        identity, _sketch, profile = item
+        library = identity.split("/", 1)[0]
+        weight = weights[identity]
+
+        def score(index: int) -> tuple[float, float, int]:
+            affinity = 0.0
+            if profile in profiles[index]:
+                affinity += min(8.0, weight * 0.03)
+            if library in libraries[index]:
+                affinity += min(4.0, weight * 0.015)
+            return loads[index] - affinity, loads[index], index
+
+        target = min(range(shard_count), key=score)
+        shards[target].append(item)
+        loads[target] += weight
+        profiles[target].add(profile)
+        libraries[target].add(library)
+    for shard in shards:
+        shard.sort(key=lambda item: item[0])
+    assigned = [identity for shard in shards for identity, _sketch, _profile in shard]
+    expected = [identity for identity, _sketch, _profile in examples]
+    if len(assigned) != len(set(assigned)) or set(assigned) != set(expected):
+        raise M31ShardFailure("weighted shard가 예제 identity를 정확히 한 번 포함하지 않습니다")
+    return shards
+
+
+## @brief 실측 weight 계획에서 지정 shard의 고정 집합을 선택합니다.
 def select_shard(
     examples: list[tuple[str, Path, str]], shard_index: int, shard_count: int
 ) -> list[tuple[str, Path, str]]:
     if shard_count < 2 or not 0 <= shard_index < shard_count:
         raise M31ShardFailure("shard index/count가 유효하지 않습니다")
-    return [
-        item for position, item in enumerate(examples)
-        if position % shard_count == shard_index
-    ]
+    return weighted_shards(examples, shard_count)[shard_index]
 
 
 ## @brief 고정 prerequisite marker와 실제 SDK/toolchain 경로를 검증합니다.
@@ -72,7 +140,11 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
     workspace = arguments.workspace.resolve()
     if workspace.exists():
         raise M31ShardFailure(f"기존 workspace를 덮어쓰지 않습니다: {workspace}")
-    select_shard([], arguments.shard_index, arguments.shard_count)
+    if (
+        arguments.shard_count < 2
+        or not 0 <= arguments.shard_index < arguments.shard_count
+    ):
+        raise M31ShardFailure("shard index/count가 유효하지 않습니다")
     repository = arguments.repository.resolve()
     plan_path = arguments.plan.resolve()
     release_tool = lifecycle.load_release_tool()
@@ -175,23 +247,24 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
         selected = select_shard(
             examples, arguments.shard_index, arguments.shard_count
         )
-        expected = (
-            lifecycle.EXPECTED_EXAMPLES + arguments.shard_count - 1 - arguments.shard_index
-        ) // arguments.shard_count
-        if len(selected) != expected:
+        weights = load_example_weights(examples)
+        if not selected:
             raise M31ShardFailure("고정 shard 분모가 다릅니다")
-        result_records = []
         example_logs = logs / "examples"
         example_builds = build_root / "examples"
         example_logs.mkdir()
         example_builds.mkdir()
-        for identity, sketch, profile in selected:
-            result_records.append(
-                lifecycle.compile_example(
-                    arguments.arduino_cli.resolve(), config, environment,
-                    example_builds, example_logs, identity, sketch, profile,
-                )
-            )
+        result_records, execution = lifecycle.compile_examples(
+            arguments.arduino_cli.resolve(),
+            config,
+            environment,
+            example_builds,
+            example_logs,
+            selected,
+            arguments.jobs,
+            arguments.cache_root.resolve(),
+        )
+        result_records.sort(key=lambda item: item["identity"].casefold())
     finally:
         server.shutdown()
         server.server_close()
@@ -214,8 +287,12 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
         "shard": {
             "index": arguments.shard_index,
             "count": arguments.shard_count,
-            "assignment": "sorted_identity_position_modulo",
+            "assignment": ASSIGNMENT_NAME,
             "global_denominator": lifecycle.EXPECTED_EXAMPLES,
+            "estimated_seconds": round(sum(
+                weights[identity]
+                for identity, _sketch, _profile in selected
+            ), 3),
             "assigned": len(selected),
             "compiled": len(result_records),
             "failed": 0,
@@ -227,6 +304,7 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
             "shard_specific_build_cache": True,
             "public_installation_modified": False,
         },
+        "execution": execution,
         "results": result_records,
         "steps": steps,
     }
@@ -243,6 +321,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser.add_argument("--cache-root", type=Path, required=True)
     parser.add_argument("--shard-index", type=int, required=True)
     parser.add_argument("--shard-count", type=int, default=8)
+    parser.add_argument("--jobs", type=int, choices=(1, 2), default=2)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--install-timeout", type=int, default=3600)
     parsed = parser.parse_args(arguments)

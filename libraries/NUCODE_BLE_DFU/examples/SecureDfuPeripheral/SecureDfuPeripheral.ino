@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: Secure BLE DFU (MCUboot) (`secure_ble_dfu`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 1대 — 1) SecureDfuPeripheral (peripheral/server)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 외부 ECDSA P-256 signing key와 MCUboot sysbuild가 필요하며 자동 CONFIRM은 하지 않습니다.
+ * @par Metadata
+ * identity `NUCODE_BLE_DFU/SecureDfuPeripheral`, sha256 `7ffd37d32271a63ecedb872b357e2d59c14de652bf0a4709ca107e408900277f`
+ * @nucode_example_setup_end */
+
 /**
  * @file SecureDfuPeripheral.ino
  * @brief 인증된 BLE SMP DFU와 MCUboot image 확인 절차를 실행합니다.

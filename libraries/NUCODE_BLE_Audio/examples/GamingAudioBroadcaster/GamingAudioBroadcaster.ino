@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: Adaptive capabilities (experimental) (adaptive, 실험적 대안)
+ * @par 보드와 역할
+ * 2대 — 1) GamingAudioBroadcaster (broadcaster); 2) GamingAudioReceiver (receiver)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * nucode-build.json, prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE_Audio/GamingAudioBroadcaster`, sha256 `b34ecb1d66b3def44a3f6fe72133f3c454d27a4da24a590bf923b15f1ef5dc28`
+ * @nucode_example_setup_end */
+
 /**
  * @file GamingAudioBroadcaster.ino
  * @brief GMAP broadcast sender가 합성 PCM을 LC3 방송으로 전송합니다.

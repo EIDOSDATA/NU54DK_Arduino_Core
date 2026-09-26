@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 1대 — 1) Lc3SyntheticLoopback 실행 보드
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * prj.conf
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * @par 추가 조건
+ * 동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다.
+ * @par Metadata
+ * identity `NUCODE_BLE_Audio/Lc3SyntheticLoopback`, sha256 `cdb589841165d88034979a95a435c3070755df97867a5a1751f9361b53c83a74`
+ * @nucode_example_setup_end */
+
 /**
  * @file Lc3SyntheticLoopback.ino
  * @brief 합성 PCM을 공개 LC3 API로 encode/decode하고 결과를 검증합니다.

@@ -34,12 +34,14 @@ class M31ReleaseTests(unittest.TestCase):
         self.assertFalse(release["publication_allowed"])
 
     def test_process_local_candidate_does_not_change_public_allowlist(self) -> None:
-        """! @brief 0.5.0-rc.1은 W08 process 안에서만 활성화됩니다. """
+        """! @brief RC1과 RC2는 release process 안에서만 활성화됩니다. """
         package = MODULE.load_package_module()
         before = tuple(package.RELEASE_CANDIDATE_VERSIONS)
         MODULE.configure_candidate(package)
         self.assertNotIn(MODULE.VERSION, before)
+        self.assertNotIn(MODULE.PREVIOUS_RC_VERSION, before)
         self.assertIn(MODULE.VERSION, package.RELEASE_CANDIDATE_VERSIONS)
+        self.assertIn(MODULE.PREVIOUS_RC_VERSION, package.RELEASE_CANDIDATE_VERSIONS)
         source = MODULE_PATH.read_text(encoding="utf-8")
         self.assertNotIn("publish-release", source)
         self.assertNotIn("publish-index", source)

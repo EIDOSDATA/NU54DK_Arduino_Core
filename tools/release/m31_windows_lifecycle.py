@@ -23,14 +23,14 @@ from typing import Any, Sequence
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 RELEASE_TOOL = Path(__file__).with_name("m31_release.py")
-VERSION = "0.5.0-rc.1"
-PREVIOUS_VERSION = "0.4.1"
+VERSION = "0.5.0-rc.2"
+PREVIOUS_VERSION = "0.5.0-rc.1"
 FQBN = "nucode:zephyr:nu54dk"
 EXPECTED_EXAMPLES = 113
-EXTERNAL_AUDIO_IO_EXAMPLES = {
-    "ExternalI2sSpeakerSink",
-    "ExternalPdmMicrophoneSource",
-}
+PREVIOUS_RC_INDEX_URL = (
+    "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/"
+    "v0.5.0-rc.1/package_nucode_nu54dk_rc_index.json"
+)
 
 
 class M31LifecycleFailure(RuntimeError):
@@ -73,6 +73,7 @@ def write_config(path: Path, data: Path, downloads: Path, user: Path, index_url:
         "board_manager:\n"
         "  additional_urls:\n"
         "    - https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json\n"
+        f"    - {PREVIOUS_RC_INDEX_URL}\n"
         f"    - {index_url}\n"
         "directories:\n"
         f"  data: {data.as_posix()}\n"
@@ -118,25 +119,25 @@ def run_command(
     }
 
 
-## @brief library와 example identity에 맞는 공개 build profile을 선택합니다.
-def example_profile(library_name: str, example_name: str) -> str:
-    if library_name == "NUCODE_BLE_DFU":
-        return "secure_ble_dfu"
-    if library_name == "NUCODE_Peripheral_Fabric":
-        return "fabric"
+## @brief 설치본의 단일 예제 metadata를 읽고 identity별 권장 profile을 반환합니다.
+def installed_example_metadata(platform: Path) -> dict[str, Any]:
+    path = platform / "libraries" / "example-metadata.json"
+    document = read_json(path)
+    examples = document.get("examples")
     if (
-        library_name == "NUCODE_BLE_Audio"
-        and example_name in EXTERNAL_AUDIO_IO_EXAMPLES
+        document.get("schema_version") != 1
+        or document.get("example_count") != EXPECTED_EXAMPLES
+        or not isinstance(examples, dict)
+        or len(examples) != EXPECTED_EXAMPLES
     ):
-        return "ble_audio_io"
-    if library_name.startswith("NUCODE_BLE"):
-        return "ble"
-    return "standard"
+        raise M31LifecycleFailure("설치본 예제 metadata 분모 또는 schema가 잘못되었습니다")
+    return examples
 
 
 ## @brief 설치 platform 아래 공개 Arduino 예제 113개를 열거합니다.
 def installed_examples(platform: Path) -> list[tuple[str, Path, str]]:
     result: list[tuple[str, Path, str]] = []
+    metadata = installed_example_metadata(platform)
     libraries = platform / "libraries"
     for library in sorted(libraries.iterdir(), key=lambda item: item.name.casefold()):
         if not library.is_dir() or not (library / "library.properties").is_file():
@@ -148,15 +149,26 @@ def installed_examples(platform: Path) -> list[tuple[str, Path, str]]:
             sketch = example / f"{example.name}.ino"
             if example.is_dir() and sketch.is_file():
                 identity = f"{library.name}/{example.name}"
+                record = metadata.get(identity)
+                if not isinstance(record, dict):
+                    raise M31LifecycleFailure(f"설치 예제 metadata가 없습니다: {identity}")
+                profile = record.get("recommended_profile")
+                if profile not in {
+                    "standard", "ble", "adaptive", "fabric",
+                    "secure_ble_dfu", "ble_audio_io",
+                }:
+                    raise M31LifecycleFailure(f"설치 예제 권장 profile이 잘못되었습니다: {identity}")
                 result.append(
                     (
                         identity,
                         example,
-                        example_profile(library.name, example.name),
+                        profile,
                     )
                 )
     if len(result) != EXPECTED_EXAMPLES or len({item[0] for item in result}) != EXPECTED_EXAMPLES:
         raise M31LifecycleFailure(f"설치 예제 분모가 {EXPECTED_EXAMPLES}이 아닙니다: {len(result)}")
+    if {item[0] for item in result} != set(metadata):
+        raise M31LifecycleFailure("설치 예제와 metadata identity 집합이 다릅니다")
     return result
 
 
@@ -478,7 +490,7 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
         cte_hex = next(cte_build.glob("*.hex"))
         step(
             "negative_unknown_version",
-            (cli, "core", "install", "nucode:zephyr@0.5.0-rc.2",
+            (cli, "core", "install", "nucode:zephyr@0.5.0-rc.3",
              "--config-file", config),
             300,
             expect_success=False,

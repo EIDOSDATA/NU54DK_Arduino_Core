@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - 0.5.0-RC2
   workflow_dispatch:
 
 permissions:
@@ -15,6 +16,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  classify:
+    name: Classify RC2 build impact
+    runs-on: ubuntu-24.04
+    outputs:
+      docs_only: ${{ steps.classify.outputs.docs_only }}
+      run_six_profiles: ${{ steps.classify.outputs.run_six_profiles }}
+      run_all_examples: ${{ steps.classify.outputs.run_all_examples }}
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Classify semantic build impact
+        id: classify
+        shell: bash
+        run: |
+          base='${{ github.event.pull_request.base.sha || github.event.before }}'
+          if [[ -z "$base" || "$base" =~ ^0+$ ]]; then
+            base="$(git rev-parse HEAD^)"
+          fi
+          python tools/ci/rc2_change_classifier.py \
+            --base "$base" \
+            --head '${{ github.sha }}' \
+            --output rc2-change-classification.json \
+            --github-output "$GITHUB_OUTPUT"
+      - name: Upload classifier evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: rc2-change-classification-${{ github.sha }}
+          path: rc2-change-classification.json
+          if-no-files-found: error
+          retention-days: 14
+
   contract:
     name: CI contract
     runs-on: ubuntu-24.04
@@ -142,3 +177,71 @@ jobs:
           version: 1.5.1
       - name: Discover packaged library examples
         run: python tools/ci/run_m12_gate.py examples --arduino-cli "$(command -v arduino-cli)"
+
+  fast-profile-builds:
+    name: Six Feature set representative builds
+    needs: classify
+    if: needs.classify.outputs.run_six_profiles == 'true'
+    runs-on: windows-2025
+    timeout-minutes: 25
+    env:
+      NUCODE_NCS_INSTALL_ROOT: D:\ncs
+      NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+      NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+      NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+      NUCODE_BUILD_CACHE_ROOT: D:\rc2-fast-compile-cache
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Verify lock and derive cache key
+        id: lock
+        run: python tools/ci/verify_ci_lock.py --github-output
+      - name: Restore exact NCS and toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            D:\ncs
+            D:\nu54-prerequisites
+          key: ${{ steps.lock.outputs.windows_cache_key }}-ncs-toolchain-v2
+      - name: Restore configuration and source compile cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: D:\rc2-fast-compile-cache
+          key: ${{ steps.lock.outputs.windows_cache_key }}-fast-${{ hashFiles('tools/nu54-builder/**', 'cores/**', 'variants/**', 'libraries/**', 'platform.txt', 'boards.txt') }}
+          restore-keys: |
+            ${{ steps.lock.outputs.windows_cache_key }}-fast-
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+      - name: Create isolated DFU signing key
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path D:\rc2-fast-key -Force | Out-Null
+          $key = 'D:\rc2-fast-key\ephemeral-ecdsa-p256.pem'
+          $openssl = Join-Path $env:NUCODE_TOOLCHAIN_ROOT 'mingw64\bin\openssl.exe'
+          & $openssl ecparam -name prime256v1 -genkey -noout -out $key
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "NUCODE_DFU_SIGNING_KEY=$key" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Build six Feature set representatives
+        shell: powershell
+        run: |
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          python tests\arduino-cli\run_smoke.py `
+            --cli $cli `
+            --tests rc2_profiles `
+            --work-root D:\rc2-fast-work

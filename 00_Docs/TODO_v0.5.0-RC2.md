@@ -24,8 +24,10 @@ RC1 tag·Release·자산·검증 기록과 `0.5.0-RC1` branch는 변경하지 �
 | RC2-DIAG-02 | 상위 오류가 실제 원인을 가림 | SWD `No ACK`도 포괄적인 `E_FLASH_WRITE`로 끝남 | probe 선택·접속·SWD 무응답·flash 실행 실패를 구분하고 첫 원인과 안전한 다음 조치 출력 |
 | RC2-DIAG-03 | 안전한 `No ACK` 진단 경로 부족 | Arduino 메뉴에는 저속 SWD·under-reset 진단 경로가 없고 일반 사용자가 원인을 분리하기 어려움 | 전원·`DISABLE_SWD`·점유·저전력 상태를 순서대로 확인하고 필요 시 비파괴 저속/under-reset 진단을 명시적으로 실행 가능 |
 | RC2-BUILD-01 | Verify 중 진행 상태가 보이지 않음 | 장시간 Zephyr configure/build 동안 기본 Arduino console이 사실상 무응답 | verbose 설정 없이 단계·경과 시간·가능한 compile 분모를 주기적으로 표시하고 완료/실패 단계 명시 |
+| RC2-BUILD-02 | 현행 source·설치 package의 로컬 성능 기준선이 없음 | M9의 cold 108.56초·무변경 1.23초·Sketch 수정 3.57초는 역사적 source의 단일 PC 수치 | 여섯 Feature set의 cold·무변경·Sketch 수정과 단계별 시간, ccache·Ninja 작업량을 같은 exact source에서 전후 비교 |
 | RC2-CI-01 | GitHub Actions 전체 검증이 약 1시간 이상 소요 | 성공한 RC1 run `36253017005`는 약 57분이며 8개 예제 shard의 compile 단계가 각각 약 44~49분으로 병목. Main은 현재 113개 예제를 단일 Windows job에서 다시 빌드하고 과거 제품군도 매 push마다 실행 | 검증 분모를 줄이지 않고 중복·불균형·무효 cache·과도한 artifact를 제거해 일반 변경의 빠른 feedback과 RC 전수 gate를 분리 |
 | RC2-QA-01 | 사용자 안내를 검사하는 gate 없음 | 설치 예제 compile은 profile별로 검사하지만 `.ino` 설정 안내의 존재·정확성은 검사하지 않음 | 예제 metadata와 사용자 표시 안내의 누락·불일치를 CI/Host test가 거부 |
+| RC2-QA-02 | Host/direct west 결과와 실제 Arduino 설치본·IDE 결과의 경계가 약함 | RC1은 설치 예제 전수 compile을 완료했지만 이번 UX 교정의 CLI byte 경로와 IDE 화면은 RC2 exact package에서 다시 확인해야 함 | 격리 설치 package의 CLI 113/113·성능·negative와 Arduino IDE 2.x GUI smoke를 별도 evidence로 판정 |
 
 ## 2. 예제별 설정 계약
 
@@ -167,7 +169,42 @@ Arduino IDE의 기본 **Verify**에서도 긴 무출력 구간이 없어야 한�
 - 최종 선택 전 기존 8-shard 기준과 후보별 wall time·runner-minute·cache hit·최장 shard를 같은
   exact source에서 비교한다.
 
-## 7. 실행 순서
+## 7. 로컬 Arduino 빌드 성능 계약
+
+진행 표시의 추가만으로 build 성능 작업을 완료 처리하지 않는다. `standard`, `ble`, `adaptive`,
+`fabric`, `secure_ble_dfu`, `ble_audio_io`의 대표 설치 예제를 같은 RC2 exact source와 격리 cache에서
+각각 cold·무변경·Sketch 본문 수정으로 측정한다.
+
+- prepare/configure/compile/link/artifact 단계별 wall time, Ninja 실행 target 수와 ccache hit/miss를
+  evidence에 기록한다.
+- Sketch·일반 library 본문 변경과 Arduino 임시 `build.path` 변경은 기존 CMake/Ninja tree를 유지한다.
+- profile·Kconfig·DTS·sidecar 변경은 새 identity를 선택하고 손상·실패 cache를 성공으로 재사용하지 않는다.
+- worker 수는 CPU·RAM과 로컬 저장장치 조건을 기록한 뒤 대표 cold build로 비교한다. 기본값은 측정한
+  안전 범위에서 자동 선택하고 `NUCODE_BUILD_JOBS`로 재현 가능하게 고정할 수 있어야 한다.
+- antivirus·느린 저장장치·다른 process 부하는 제품 build 시간과 분리할 수 있도록 host 진단값으로 남긴다.
+- 전체 prebuilt Zephyr image를 package에 넣어 cold compile을 우회하지 않는다.
+
+M9의 역사 수치는 회귀 참고값일 뿐 RC2 PASS로 재사용하지 않는다. 최적화 전·후는 동일 exact source와
+같은 host에서 비교하고 correctness·재현성·cache 격리를 먼저 통과해야 한다.
+
+## 8. 실제 Arduino 설치본 자동검증 계약
+
+RC2 candidate package를 별도 Arduino data/download/user/cache root에 clean install하고 repo source가
+아닌 설치 경로를 provenance로 고정한다.
+
+1. 설치본의 공개 예제와 metadata를 113/113 열거하고 지정 Feature set·sidecar로 Arduino recipe를 실행한다.
+2. 여섯 Feature set 대표 예제의 cold/cache-hit/Sketch 수정, memory 출력과 artifact hash를 수집한다.
+3. 잘못된 Feature set, probe 0/1/2대, UID placeholder·형식·불일치, J-Link 미설치와 UTF-8
+   stdout/stderr byte를 negative fixture로 검사한다.
+4. package 제거·재설치·이전 공개 RC에서 upgrade와 cache 경계를 검사한다.
+5. Arduino IDE 2.x에서 Blink, NUS 역할, Channel Sounding initiator/reflector의 보드·Feature set·
+   Upload probe 메뉴, Verify 진행, 한글, memory, Upload와 잘못된 선택 진단을 실제 GUI로 확인한다.
+
+CLI PASS를 IDE PASS나 실제 flash PASS로 바꾸지 않는다. 실제 보드 작업 직전에는 probe SHA-256 identity,
+COM, 역할, image hash, command lease와 배타 lock을 다시 결합한다. 자동 mass erase·unlock·recover와
+임의 USB·전원·배선 변경은 금지한다.
+
+## 9. 실행 순서
 
 | 단계 | 상태 | 작업 | 완료 조건 |
 | --- | --- | --- | --- |
@@ -175,12 +212,14 @@ Arduino IDE의 기본 **Verify**에서도 긴 무출력 구간이 없어야 한�
 | RC2-02 metadata·예제 안내 | 진행 전 | 113개 예제의 profile·역할·보드 수·sidecar·Serial 단일 원본과 사용자 표시 추가 | 누락·불일치 0, 예제 audit PASS |
 | RC2-03 probe UX·오류 | 진행 전 | 메뉴 문구, UID 전달·검증·마스킹, 오류 분류와 안전한 SWD 진단 개선 | 한 대/여러 대/잘못된 UID/No ACK negative가 예상 코드와 조치 출력 |
 | RC2-04 UTF-8·진행 표시 | 진행 전 | launcher/Builder 출력 인코딩과 Verify 단계·heartbeat 구현 | Windows IDE 기본 화면과 CLI에서 깨짐·장기 무출력 0 |
-| RC2-05 CI 실행시간 교정 | 진행 전 | 중복 제거·변경 분류·부하 기반 shard·cache/artifact 최적화 benchmark | coverage 유지, 일반 feedback·전수 RC wall time 목표를 exact run으로 판정 |
-| RC2-06 변경 영향 회귀 | 진행 전 | Host/unit, profile matrix, 설치 예제 113개와 대표 build/upload 재검증 | Host·문서·전체 설치 예제 PASS; 실제 upload는 조건과 결과를 별도 기록 |
-| RC2-07 패키지·공개 준비 | 진행 전 | RC2 archive/index 재현성, clean 설치·수명주기·문서 정합 | exact package 근거와 공개 전 승인 자료 준비 |
-| RC2-08 공개 | 승인 대기 | 별도 사용자 승인 뒤 tag·Pre-release·RC catalog와 공개 다운로드 smoke | 승인 exact source/asset만 공개하고 공개 URL 재검증 |
+| RC2-05 로컬 성능 | 진행 전 | 여섯 profile의 단계 계측, cache/tree 재사용과 worker 수 전후 benchmark | correctness 유지, exact source 전후 수치와 진단값 기록 |
+| RC2-06 CI 실행시간 교정 | 진행 전 | 중복 제거·변경 분류·부하 기반 shard·cache/artifact 최적화 benchmark | coverage 유지, 일반 feedback·전수 RC wall time 목표를 exact run으로 판정 |
+| RC2-07 변경 영향 회귀 | 진행 전 | Host/unit, profile matrix, 설치 예제 113개와 대표 build/upload 재검증 | Host·문서·전체 설치 예제 PASS; 실제 upload는 조건과 결과를 별도 기록 |
+| RC2-08 실제 Arduino 자동검증 | 진행 전 | 격리 설치본 CLI 전수·negative·성능과 IDE 2.x GUI smoke | CLI·IDE·실물 판정을 분리한 exact evidence |
+| RC2-09 패키지·공개 준비 | 진행 전 | RC2 archive/index 재현성, clean 설치·수명주기·문서 정합 | exact package 근거와 공개 gate 자료 준비 |
+| RC2-10 공개 | 조건부 승인 | 2026-09-27 사용자 승인에 따라 모든 필수 gate PASS일 때만 tag·Pre-release·RC catalog와 공개 다운로드 smoke | 승인 exact source/asset만 공개하고 공개 URL 재검증; FAIL/HOLD가 남으면 공개 금지 |
 
-## 8. 검증 분모
+## 10. 검증 분모
 
 최소 자동 검사는 다음 범위를 포함한다.
 
@@ -196,9 +235,11 @@ Arduino IDE의 기본 **Verify**에서도 긴 무출력 구간이 없어야 한�
 물리 PASS로 기록하지 않는다. Channel Sounding의 정밀 거리 보정, 제품 SDC DF IQ RX, M32/M33와
 보류한 HOST-W04~W08은 RC2 사용자 경험 교정 범위에 새로 합산하지 않는다.
 
-## 9. 마감과 공개 경계
+## 11. 마감과 공개 경계
 
 RC2 구현이 끝나면 변경 영향에 맞는 Host·build·국소 HIL, 설치본 Arduino IDE 확인, 문서와
 evidence를 갱신하고 exact commit을 고정한다. Branch push나 CI 실행은 tag·Release 공개가 아니다.
-`v0.5.0-rc.2` tag·Pre-release·RC catalog 갱신과 공개 다운로드 smoke는 별도 사용자 승인 뒤에만
-수행한다. 정식 `v0.5.0` stable tag·Release·root catalog는 그 이후에도 별도 승인 대상이다.
+2026-09-27 사용자는 RC2의 모든 필수 gate가 PASS일 때 `v0.5.0-rc.2` tag·Pre-release·RC catalog
+갱신과 공개 다운로드 smoke를 별도 재확인 없이 수행하도록 승인했다. FAIL 또는 HOLD가 하나라도
+남으면 tag와 Release를 만들지 않는다. 정식 `v0.5.0` stable tag·Release·root catalog는 그 이후에도
+별도 승인 대상이다.

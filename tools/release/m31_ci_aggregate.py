@@ -16,6 +16,7 @@ if str(Path(__file__).resolve().parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import m31_windows_lifecycle as lifecycle  # noqa: E402
+import m31_windows_example_shard as shard_plan  # noqa: E402
 
 
 class M31AggregateFailure(RuntimeError):
@@ -39,8 +40,14 @@ def aggregate(
     plan = release_tool.validate_plan(plan_path, repository=repository)
     expected = lifecycle.installed_examples(repository)
     expected_by_identity = {
-        identity: {"position": position, "profile": profile}
-        for position, (identity, _sketch, profile) in enumerate(expected)
+        identity: {"profile": profile}
+        for identity, _sketch, profile in expected
+    }
+    expected_shards = shard_plan.weighted_shards(expected, 8)
+    expected_index = {
+        identity: index
+        for index, selection in enumerate(expected_shards)
+        for identity, _sketch, _profile in selection
     }
     if len(expected_by_identity) != lifecycle.EXPECTED_EXAMPLES:
         raise M31AggregateFailure("source 예제 분모가 113이 아닙니다")
@@ -64,10 +71,15 @@ def aggregate(
             or document.get("package", {}).get("board_revision") != plan["board_revision"]
             or not isinstance(index, int)
             or shard.get("count") != 8
-            or shard.get("assignment") != "sorted_identity_position_modulo"
+            or shard.get("assignment") != shard_plan.ASSIGNMENT_NAME
             or shard.get("global_denominator") != lifecycle.EXPECTED_EXAMPLES
             or shard.get("assigned") != shard.get("compiled")
             or shard.get("failed") != 0
+            or document.get("execution") != {
+                "mode": "parallel_isolated_worker_caches",
+                "workers": 2,
+                "cache_roots": 2,
+            }
             or index in by_index
         ):
             raise M31AggregateFailure("shard identity·분모·package 계약이 다릅니다")
@@ -82,7 +94,7 @@ def aggregate(
                 expected_record is None
                 or result.get("status") != "PASS"
                 or result.get("profile") != expected_record["profile"]
-                or expected_record["position"] % 8 != index
+                or expected_index[identity] != index
                 or identity in observed
             ):
                 raise M31AggregateFailure(f"shard {index} 예제 identity가 다릅니다: {identity}")
@@ -139,7 +151,7 @@ def aggregate(
             "failed": 0,
             "missing": 0,
             "duplicates": 0,
-            "assignment": "sorted_identity_position_modulo",
+            "assignment": shard_plan.ASSIGNMENT_NAME,
             "per_shard": {
                 str(index): by_index[index]["shard"]["compiled"]
                 for index in sorted(by_index)

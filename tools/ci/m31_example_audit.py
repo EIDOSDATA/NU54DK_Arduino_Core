@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import re
@@ -13,6 +14,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
+EXAMPLE_GUIDANCE_TOOL = ROOT / "tools" / "examples" / "sync_example_guidance.py"
 ISO_BACKENDS = {
     "CIS": ("NUCODE_ISO_CIS_Impl.inc", "m31_iso_cis_hil"),
     "BIS": ("NUCODE_ISO_BIS_Impl.inc", "m31_iso_bis_hil"),
@@ -44,6 +46,18 @@ MILESTONE_IDENTIFIER = re.compile(r"\bM[0-9]{2}[A-Za-z0-9_]*")
 ZEPHYR_DIRECT_USE = re.compile(
     r"#\s*include\s*[<\"]zephyr/|\b(?:bt|k|device)_[A-Za-z0-9_]+\s*\("
 )
+
+
+## @brief RC2 예제 설정 metadata와 생성 안내 검사 모듈을 로드합니다.
+def load_example_guidance_tool():
+    specification = importlib.util.spec_from_file_location(
+        "nu54_rc2_example_guidance", EXAMPLE_GUIDANCE_TOOL
+    )
+    if specification is None or specification.loader is None:
+        raise RuntimeError(f"예제 설정 검사 도구를 읽을 수 없습니다: {EXAMPLE_GUIDANCE_TOOL}")
+    module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    return module
 
 
 ## @brief 입출력 예제마다 직접 코드 또는 검증 source와 byte 동일한 backend를 확인합니다.
@@ -819,6 +833,8 @@ def inspect_sketch(library: Path, sketch: Path) -> dict[str, object]:
 
 ## @brief 설치 대상 library.properties의 전체 예제를 누락 없이 원장으로 만듭니다.
 def audit() -> dict[str, object]:
+    guidance = load_example_guidance_tool()
+    guidance_issues = guidance.synchronize(write=False, root=ROOT)
     rows = []
     for library in sorted((ROOT / "libraries").iterdir()):
         if not library.is_dir() or not (library / "library.properties").is_file():
@@ -855,7 +871,7 @@ def audit() -> dict[str, object]:
     ] + [
         str(example["path"]) for example in sketches
         if example["status"] not in ("VISIBLE_CODE", "VERIFIED_BACKEND", "VISIBLE_VERIFIED_BACKEND")
-    ] + public_surface_issues
+    ] + public_surface_issues + [f"example-guidance: {issue}" for issue in guidance_issues]
     issues = sorted(set(issues), key=str.casefold)
     revision = subprocess.check_output(
         ("git", "rev-parse", "HEAD"), cwd=ROOT, text=True
@@ -875,6 +891,7 @@ def audit() -> dict[str, object]:
             for example in sketches
         ),
         "issues": issues,
+        "example_guidance_issues": guidance_issues,
         "public_surface_issues": public_surface_issues,
         "libraries": rows,
     }
