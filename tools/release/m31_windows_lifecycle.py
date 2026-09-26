@@ -27,6 +27,10 @@ VERSION = "0.5.0-rc.1"
 PREVIOUS_VERSION = "0.4.1"
 FQBN = "nucode:zephyr:nu54dk"
 EXPECTED_EXAMPLES = 113
+EXTERNAL_AUDIO_IO_EXAMPLES = {
+    "ExternalI2sSpeakerSink",
+    "ExternalPdmMicrophoneSource",
+}
 
 
 class M31LifecycleFailure(RuntimeError):
@@ -114,6 +118,22 @@ def run_command(
     }
 
 
+## @brief library와 example identity에 맞는 공개 build profile을 선택합니다.
+def example_profile(library_name: str, example_name: str) -> str:
+    if library_name == "NUCODE_BLE_DFU":
+        return "secure_ble_dfu"
+    if library_name == "NUCODE_Peripheral_Fabric":
+        return "fabric"
+    if (
+        library_name == "NUCODE_BLE_Audio"
+        and example_name in EXTERNAL_AUDIO_IO_EXAMPLES
+    ):
+        return "ble_audio_io"
+    if library_name.startswith("NUCODE_BLE"):
+        return "ble"
+    return "standard"
+
+
 ## @brief 설치 platform 아래 공개 Arduino 예제 113개를 열거합니다.
 def installed_examples(platform: Path) -> list[tuple[str, Path, str]]:
     result: list[tuple[str, Path, str]] = []
@@ -124,19 +144,29 @@ def installed_examples(platform: Path) -> list[tuple[str, Path, str]]:
         example_root = library / "examples"
         if not example_root.is_dir():
             continue
-        profile = (
-            "secure_ble_dfu"
-            if library.name == "NUCODE_BLE_DFU"
-            else "ble" if library.name.startswith("NUCODE_BLE") else "standard"
-        )
         for example in sorted(example_root.iterdir(), key=lambda item: item.name.casefold()):
             sketch = example / f"{example.name}.ino"
             if example.is_dir() and sketch.is_file():
                 identity = f"{library.name}/{example.name}"
-                result.append((identity, example, profile))
+                result.append(
+                    (
+                        identity,
+                        example,
+                        example_profile(library.name, example.name),
+                    )
+                )
     if len(result) != EXPECTED_EXAMPLES or len({item[0] for item in result}) != EXPECTED_EXAMPLES:
         raise M31LifecycleFailure(f"설치 예제 분모가 {EXPECTED_EXAMPLES}이 아닙니다: {len(result)}")
     return result
+
+
+## @brief compile record의 상대 경로를 격리 build root 아래로만 해석합니다.
+def resolve_example_build(build_root: Path, relative: str) -> Path:
+    root = build_root.resolve()
+    candidate = (root / relative).resolve()
+    if not candidate.is_relative_to(root):
+        raise M31LifecycleFailure("설치 예제 build 경로가 격리 root 밖입니다")
+    return candidate
 
 
 ## @brief 설치 예제 하나를 독립 build path에서 clean compile합니다.
@@ -428,7 +458,7 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
             }
         )
         cte = next(item for item in results if item["identity"] == "NUCODE_BLE_DirectionFinding/CteBeacon")
-        cte_build = workspace / cte["build_relative"]
+        cte_build = resolve_example_build(build_root, cte["build_relative"])
         cte_hex = next(cte_build.glob("*.hex"))
         step(
             "negative_unknown_version",

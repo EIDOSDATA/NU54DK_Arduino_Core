@@ -28,12 +28,37 @@ class M31WindowsLifecycleTests(unittest.TestCase):
         self.assertEqual(MODULE.EXPECTED_EXAMPLES, len(examples))
         self.assertEqual(MODULE.EXPECTED_EXAMPLES, len({item[0] for item in examples}))
 
-    def test_secure_dfu_and_ble_profiles_are_separate(self) -> None:
-        """! @brief DFU sysbuild와 일반 BLE 예제의 profile을 합치지 않습니다. """
+    def test_profile_specific_examples_are_separate(self) -> None:
+        """! @brief DFU·외장 audio·Fabric과 일반 BLE profile을 합치지 않습니다. """
         profiles = {identity: profile for identity, _path, profile in MODULE.installed_examples(ROOT)}
         self.assertEqual("secure_ble_dfu", profiles["NUCODE_BLE_DFU/SecureDfuPeripheral"])
+        self.assertEqual(
+            "ble_audio_io",
+            profiles["NUCODE_BLE_Audio/ExternalPdmMicrophoneSource"],
+        )
+        self.assertEqual(
+            "ble_audio_io",
+            profiles["NUCODE_BLE_Audio/ExternalI2sSpeakerSink"],
+        )
+        self.assertEqual(
+            "fabric",
+            profiles["NUCODE_Peripheral_Fabric/FabricCapabilities"],
+        )
         self.assertEqual("ble", profiles["NUCODE_BLE_DirectionFinding/CteBeacon"])
         self.assertEqual("standard", profiles["NUCODE_NU54DK/Blink"])
+
+    def test_example_build_relative_path_stays_under_build_root(self) -> None:
+        """! @brief lifecycle artifact 경로가 workspace/build 아래에서 해석됩니다. """
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "build"
+            expected = (root / "examples" / "DirectionFinding__CteBeacon").resolve()
+            actual = MODULE.resolve_example_build(
+                root,
+                "examples/DirectionFinding__CteBeacon",
+            )
+            self.assertEqual(expected, actual)
+            with self.assertRaises(MODULE.M31LifecycleFailure):
+                MODULE.resolve_example_build(root, "../outside")
 
     def test_lifecycle_runner_has_no_publication_command(self) -> None:
         """! @brief 설치 검증기가 tag·Release·catalog를 게시하지 않습니다. """
