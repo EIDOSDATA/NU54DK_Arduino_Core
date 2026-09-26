@@ -131,14 +131,26 @@ jobs:
             --shard-index ${{ matrix.shard }} `
             --shard-count 8 `
             --output D:\m31-evidence\shard-${{ matrix.shard }}.json
+      - name: Stage shard evidence under one artifact root
+        if: always()
+        shell: powershell
+        run: |
+          $stage = 'D:\m31-shard-artifact'
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          $evidence = 'D:\m31-evidence\shard-${{ matrix.shard }}.json'
+          $logs = 'D:\m31-shard-${{ matrix.shard }}\logs'
+          if (Test-Path -LiteralPath $evidence -PathType Leaf) {
+            Copy-Item -LiteralPath $evidence -Destination $stage
+          }
+          if (Test-Path -LiteralPath $logs -PathType Container) {
+            Copy-Item -LiteralPath $logs -Destination $stage -Recurse
+          }
       - name: Upload shard evidence and logs
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: m31-w08-shard-${{ matrix.shard }}-${{ github.sha }}
-          path: |
-            D:\m31-evidence
-            D:\m31-shard-${{ matrix.shard }}\logs
+          path: D:\m31-shard-artifact
           if-no-files-found: warn
           retention-days: 14
 
@@ -200,14 +212,26 @@ jobs:
             --jobs 1 `
             --compile-mode representative `
             --output D:\m31-evidence\lifecycle.json
+      - name: Stage lifecycle evidence under one artifact root
+        if: always()
+        shell: powershell
+        run: |
+          $stage = 'D:\m31-lifecycle-artifact'
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          $evidence = 'D:\m31-evidence\lifecycle.json'
+          $logs = 'D:\m31-lifecycle\logs'
+          if (Test-Path -LiteralPath $evidence -PathType Leaf) {
+            Copy-Item -LiteralPath $evidence -Destination $stage
+          }
+          if (Test-Path -LiteralPath $logs -PathType Container) {
+            Copy-Item -LiteralPath $logs -Destination $stage -Recurse
+          }
       - name: Upload lifecycle evidence and logs
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: m31-w08-lifecycle-${{ github.sha }}
-          path: |
-            D:\m31-evidence
-            D:\m31-lifecycle\logs
+          path: D:\m31-lifecycle-artifact
           if-no-files-found: warn
           retention-days: 14
 
