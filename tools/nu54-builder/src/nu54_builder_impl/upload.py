@@ -64,7 +64,7 @@ def validate_probe_id(value: str | None, *, runner: str) -> str:
         raise AdapterError(
             "[NU54:E_PROBE_UID_PLACEHOLDER] Probe identifier placeholder is not a target. "
             "Arduino IDE 2.x에서는 UID 입력 메뉴를 지원하지 않습니다. probe 한 대만 연결하거나 "
-            "Arduino CLI의 `--upload-field probe_id=<UID>`를 사용하십시오."
+            "Arduino CLI 실행 전에 `NUCODE_PROBE_UID` 환경 변수로 exact UID를 지정하십시오."
         )
     if not PROBE_ID_PATTERN.fullmatch(requested):
         raise AdapterError(
@@ -72,6 +72,15 @@ def validate_probe_id(value: str | None, *, runner: str) -> str:
             f"runner={runner}; 공백 없는 4~128자 영문자·숫자·`.`·`_`·`:`·`-` 값을 사용하십시오."
         )
     return requested
+
+
+## @brief recipe sentinel을 환경 변수의 exact probe identity로 안전하게 치환합니다.
+def resolve_probe_request(value: str | None, *, runner: str) -> str | None:
+    argument = (value or "").strip()
+    sentinel = "auto-single" if runner == "pyocd" else "j-link-serial-required"
+    if argument.casefold() == sentinel:
+        return os.environ.get("NUCODE_PROBE_UID") or None
+    return argument or os.environ.get("NUCODE_PROBE_UID") or None
 
 
 ## @brief UTF-8을 우선하고 legacy Windows byte는 Unicode로 변환해 console UTF-8로 다시 출력합니다.
@@ -183,7 +192,7 @@ def select_pyocd_probe(requested: str | None, discovered: Sequence[str] | None =
         raise AdapterError(
             "[NU54:E_PROBE_AMBIGUOUS] Multiple CMSIS-DAP probes require an exact UID. detected="
             + ", ".join(mask_probe_id(value) for value in probe_ids)
-            + ". Arduino CLI에서 `--upload-field probe_id=<UID>`를 사용하고 COM·보드 역할을 대조하십시오."
+            + ". Arduino CLI 실행 전에 `NUCODE_PROBE_UID`를 지정하고 COM·보드 역할을 대조하십시오."
         )
     return probe_ids[0]
 
@@ -445,16 +454,16 @@ def flash(args: argparse.Namespace) -> None:
             for runner_build in inputs.get("runner_builds", [inputs["zephyr_build"]]):
                 validate_runner_configuration(runner_build, args.runner)
             if args.runner == "pyocd":
-                requested = args.probe_id or os.environ.get("NUCODE_PROBE_UID")
+                requested = resolve_probe_request(args.probe_id, runner=args.runner)
                 probe_id = select_pyocd_probe(requested)
             else:
                 probe_id = validate_probe_id(
-                    args.probe_id or os.environ.get("NUCODE_PROBE_UID"), runner="jlink"
+                    resolve_probe_request(args.probe_id, runner=args.runner), runner="jlink"
                 )
                 if not probe_id:
                     raise AdapterError(
                         "[NU54:E_PROBE_AMBIGUOUS] J-Link upload requires an exact serial. "
-                        "Arduino CLI의 `--upload-field probe_id=<serial>`을 사용하고 외장 J-Link의 "
+                        "Arduino CLI 실행 전에 `NUCODE_PROBE_UID`를 지정하고 외장 J-Link의 "
                         "SWD·VTref·GND 연결을 확인하십시오."
                     )
             command = build_flash_command(

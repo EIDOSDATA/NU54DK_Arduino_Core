@@ -12,7 +12,7 @@
  * @par 필수 sidecar
  * prj.conf
  * @par Upload probe
- * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
  * @par 추가 조건
  * 동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다.
  * @par Metadata

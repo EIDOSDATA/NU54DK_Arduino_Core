@@ -1,4 +1,4 @@
-# 개발 인계 — v0.5.0-rc.2 사용자 경험 교정 착수
+# 개발 인계 — v0.5.0-rc.2 사용자 경험 교정 완료·공개 HOLD
 
 최종 정리: **2026-09-27**. 개발 기준 브랜치는 `main`의 `7b869244...`에서 분기한
 **`0.5.0-RC2`**이며 메모리 최적화
@@ -14,19 +14,22 @@ W08 Windows RC 준비와 M31 마감은 [267번 완료 기록](<04_검증 기록/
 [269번 기록](<04_검증 기록/269_공개_RC_이력_Squash와_문서_전수_정비.md>)을 따른다.
 main으로의 완료 상태 통합·이력 squash와 이번 문서 동기화는
 [270번 기록](<04_검증 기록/270_main_RC_통합_Squash와_문서_동기화.md>)을 따른다.
+RC2 사용자 경험 교정, 자동 검증과 실제 upload, 공개 HOLD 판정은
+[271번 기록](<04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>)이 소유한다.
 
 ## 1. 다음 작업
 
 M31 기능과 Windows RC 준비, 공개 `v0.5.0-rc.1` Pre-release 및 공개 설치 smoke를 완료했다.
-실제 Arduino IDE 사용에서 확인한 예제별 Feature set 안내, Upload probe/UID UX, 한국어 출력,
-SWD 진단과 Verify 진행 표시를 [RC2 TODO](TODO_v0.5.0-RC2.md)에 따라 먼저 교정한다.
-RC2 공개와 정식 `v0.5.0` stable 승격은 각각 별도 결정이다.
+예제별 Feature set 안내, Upload probe/UID UX, 한국어 출력, SWD 진단과 Verify 진행 표시를
+[RC2 TODO](TODO_v0.5.0-RC2.md)에 따라 교정했다. 자동 검증과 실제 upload는 PASS했지만
+Arduino IDE 2.x 실제 GUI 판정은 실행 환경 제약으로 HOLD다. 이 HOLD 때문에 RC2 tag·Release·
+catalog를 만들지 않았다. 정식 `v0.5.0` stable 승격도 별도 결정이다.
 
 | 순서 | 작업 | 완료 조건 |
 | --- | --- | --- |
-| 1 | RC2 문제 재현·계약 | IDE/CLI에서 안내·UID·UTF-8·Verify 무출력 조건과 첫 오류를 고정 |
-| 2 | RC2 구현·회귀 | 113개 예제 안내, probe UX·진단, 진행 표시와 변경 영향 검증 완료 |
-| 3 | RC2 별도 승인·공개 | exact RC2 자산·tag·Pre-release·RC catalog와 공개 smoke 승인 확보 뒤 실행 |
+| 1 | RC2 문제 재현·계약 | 완료 |
+| 2 | RC2 구현·회귀 | 완료 — 113개 예제 안내, Host 1,558, package·수명주기·실제 upload |
+| 3 | RC2 공개 재판정 | 실제 Arduino IDE GUI gate를 exact candidate로 PASS한 뒤에만 공개 |
 | 4 | stable 별도 승인 | RC2 관찰 뒤 stable exact 자산·root catalog·공개 smoke를 별도 승인 |
 
 ### 다시 추가하지 않을 조건

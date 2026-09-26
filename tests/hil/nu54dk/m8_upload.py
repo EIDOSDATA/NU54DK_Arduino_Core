@@ -194,7 +194,10 @@ def terminate_process_tree(process: subprocess.Popen[Any]) -> None:
 
 ## @brief 명령 출력을 disk에 spool하고 제한된 tail 및 종료 code를 반환합니다.
 def run(
-    command: Sequence[str | Path], *, timeout_seconds: int = 3600
+    command: Sequence[str | Path],
+    *,
+    timeout_seconds: int = 3600,
+    environment: dict[str, str] | None = None,
 ) -> tuple[int, str, float]:
     if timeout_seconds < 1 or timeout_seconds > 86400:
         raise UploadHilFailure("HIL command timeout은 1..86400초여야 합니다.")
@@ -213,6 +216,7 @@ def run(
                 normalized,
                 stdout=capture,
                 stderr=subprocess.STDOUT,
+                env=environment,
                 **process_options,
             )
             try:
@@ -1039,12 +1043,15 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "--board-options",
             f"upload_probe={upload_probe}",
         ]
-        if requested_probe_id:
-            upload_command.extend(("--upload-field", f"probe_id={requested_probe_id}"))
         upload_command.append(sketch)
+        upload_environment = dict(os.environ)
+        if requested_probe_id:
+            upload_environment["NUCODE_PROBE_UID"] = requested_probe_id
         print(f"NUCODE_M8_UPLOAD_ATTEMPT:{sequence}/{args.repetitions}")
         return_code, output, upload_seconds = run(
-            upload_command, timeout_seconds=args.upload_timeout
+            upload_command,
+            timeout_seconds=args.upload_timeout,
+            environment=upload_environment,
         )
         pass_marker = f"NU54_UPLOAD_PASS runner={args.runner}"
         if return_code != 0 or pass_marker not in output:

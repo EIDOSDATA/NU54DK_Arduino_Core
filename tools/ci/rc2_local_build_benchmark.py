@@ -131,6 +131,33 @@ def installed_example(platform: Path, identity: str) -> Path:
     return path
 
 
+## @brief secure DFU build에 사용할 일회성 P-256 private key를 격리 workspace에 생성합니다.
+def create_ephemeral_signing_key(workspace: Path, openssl: Path) -> Path:
+    openssl = openssl.resolve()
+    if not openssl.is_file():
+        raise Rc2BenchmarkFailure("secure DFU benchmark에 필요한 OpenSSL이 없습니다")
+    key = workspace / "private" / "ephemeral-ecdsa-p256.pem"
+    key.parent.mkdir(parents=True)
+    result = subprocess.run(
+        [
+            openssl,
+            "ecparam",
+            "-name",
+            "prime256v1",
+            "-genkey",
+            "-noout",
+            "-out",
+            key,
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+    )
+    if result.returncode != 0 or not key.is_file() or key.stat().st_size == 0:
+        raise Rc2BenchmarkFailure("일회성 secure DFU signing key 생성에 실패했습니다")
+    return key
+
+
 ## @brief cold·no-change·Sketch 수정 build를 여섯 Feature set에서 측정합니다.
 def execute(arguments: argparse.Namespace) -> dict[str, Any]:
     platform = arguments.platform.resolve()
@@ -148,6 +175,9 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
     environment.update({
         "NUCODE_BUILD_CACHE_ROOT": str(workspace / "cache"),
         "NUCODE_BUILD_JOBS": str(arguments.jobs),
+        "NUCODE_DFU_SIGNING_KEY": str(
+            create_ephemeral_signing_key(workspace, arguments.openssl)
+        ),
         "PYTHONUTF8": "1",
         "PYTHONIOENCODING": "utf-8",
     })
@@ -203,6 +233,7 @@ def execute(arguments: argparse.Namespace) -> dict[str, Any]:
             "platform": platform.as_posix(),
         },
         "jobs": arguments.jobs,
+        "ephemeral_dfu_signing_key": True,
         "feature_sets": results,
     }
 
@@ -213,6 +244,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser.add_argument("--arduino-cli", type=Path, required=True)
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--platform", type=Path, required=True)
+    parser.add_argument("--openssl", type=Path, required=True)
     parser.add_argument("--workspace", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-version", default="0.5.0-rc.2")

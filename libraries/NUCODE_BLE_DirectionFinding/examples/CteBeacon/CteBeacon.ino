@@ -12,7 +12,7 @@
  * @par 필수 sidecar
  * nucode-build.json, prj.conf
  * @par Upload probe
- * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
  * @par 추가 조건
  * 제품 SDC의 IQ RX·AoD는 지원하지 않으며 외부 compatible peer 조건을 확인합니다.
  * @par Metadata

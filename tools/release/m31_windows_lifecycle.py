@@ -207,15 +207,28 @@ def compile_example(
     key = identity.replace("/", "__")
     build = build_root / key
     log = log_root / f"{key}.log"
-    record = run_command(
-        (
-            cli, "compile", "--config-file", config, "--clean", "--fqbn", FQBN,
-            "--board-options", f"feature_set={profile}", "--build-path", build, sketch,
-        ),
-        environment=environment,
-        timeout=1800,
-        log_path=log,
-    )
+    try:
+        record = run_command(
+            (
+                cli, "compile", "--config-file", config, "--clean", "--fqbn", FQBN,
+                "--board-options", f"feature_set={profile}", "--build-path", build, sketch,
+            ),
+            environment=environment,
+            timeout=1800,
+            log_path=log,
+        )
+    except M31LifecycleFailure as error:
+        diagnostic_source = build / "nu54-zephyr" / "logs"
+        diagnostic_target = log_root / "details" / key
+        tails: list[str] = []
+        if diagnostic_source.is_dir():
+            diagnostic_target.mkdir(parents=True, exist_ok=True)
+            for source in sorted(diagnostic_source.glob("*.log")):
+                destination = diagnostic_target / source.name
+                shutil.copy2(source, destination)
+                tails.append(source.read_text(encoding="utf-8", errors="replace")[-4000:])
+        detail = "\n".join(tails) if tails else "Builder 상세 log가 생성되지 않았습니다."
+        raise M31LifecycleFailure(f"{error}\nBuilder diagnostics:\n{detail}") from error
     manifests = list(build.glob("*.nu54-build.json"))
     if len(manifests) != 1:
         raise M31LifecycleFailure(f"설치 예제 manifest가 정확히 하나가 아닙니다: {identity}")
@@ -255,6 +268,8 @@ def compile_examples(
 
     stop = threading.Event()
     worker_roots = [cache_root / f"lifecycle-worker-{index}" for index in range(jobs)]
+    host_cpus = max(1, os.cpu_count() or 1)
+    builder_jobs_per_worker = max(1, min(4, host_cpus // jobs))
     for root in worker_roots:
         root.mkdir(parents=True, exist_ok=True)
 
@@ -263,6 +278,7 @@ def compile_examples(
     ) -> list[dict[str, Any]]:
         worker_environment = dict(environment)
         worker_environment["NUCODE_BUILD_CACHE_ROOT"] = str(worker_roots[index])
+        worker_environment["NUCODE_BUILD_JOBS"] = str(builder_jobs_per_worker)
         records: list[dict[str, Any]] = []
         for identity, sketch, profile in assigned:
             if stop.is_set():
@@ -292,6 +308,7 @@ def compile_examples(
         "mode": "parallel_isolated_worker_caches",
         "workers": jobs,
         "cache_roots": len(worker_roots),
+        "builder_jobs_per_worker": builder_jobs_per_worker,
     }
 
 

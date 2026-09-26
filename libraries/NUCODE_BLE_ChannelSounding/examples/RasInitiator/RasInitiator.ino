@@ -12,7 +12,7 @@
  * @par 필수 sidecar
  * nucode-build.json, prj.conf
  * @par Upload probe
- * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
  * @par 추가 조건
  * Reflector를 먼저 켜고 두 보드의 보안 peer 상태를 맞춥니다.
  * @par Metadata

@@ -208,16 +208,16 @@ COM, 역할, image hash, command lease와 배타 lock을 다시 결합한다. �
 
 | 단계 | 상태 | 작업 | 완료 조건 |
 | --- | --- | --- | --- |
-| RC2-01 범위·재현 | 진행 전 | RC1 설치본에서 예제 안내, UID placeholder, UTF-8, Verify 무출력과 `No ACK` 진단 경계를 재현 | IDE/CLI/version/입력/첫 오류와 실제 출력 byte를 기록 |
-| RC2-02 metadata·예제 안내 | 진행 전 | 113개 예제의 profile·역할·보드 수·sidecar·Serial 단일 원본과 사용자 표시 추가 | 누락·불일치 0, 예제 audit PASS |
-| RC2-03 probe UX·오류 | 진행 전 | 메뉴 문구, UID 전달·검증·마스킹, 오류 분류와 안전한 SWD 진단 개선 | 한 대/여러 대/잘못된 UID/No ACK negative가 예상 코드와 조치 출력 |
-| RC2-04 UTF-8·진행 표시 | 진행 전 | launcher/Builder 출력 인코딩과 Verify 단계·heartbeat 구현 | Windows IDE 기본 화면과 CLI에서 깨짐·장기 무출력 0 |
-| RC2-05 로컬 성능 | 진행 전 | 여섯 profile의 단계 계측, cache/tree 재사용과 worker 수 전후 benchmark | correctness 유지, exact source 전후 수치와 진단값 기록 |
-| RC2-06 CI 실행시간 교정 | 진행 전 | 중복 제거·변경 분류·부하 기반 shard·cache/artifact 최적화 benchmark | coverage 유지, 일반 feedback·전수 RC wall time 목표를 exact run으로 판정 |
-| RC2-07 변경 영향 회귀 | 진행 전 | Host/unit, profile matrix, 설치 예제 113개와 대표 build/upload 재검증 | Host·문서·전체 설치 예제 PASS; 실제 upload는 조건과 결과를 별도 기록 |
-| RC2-08 실제 Arduino 자동검증 | 진행 전 | 격리 설치본 CLI 전수·negative·성능과 IDE 2.x GUI smoke | CLI·IDE·실물 판정을 분리한 exact evidence |
-| RC2-09 패키지·공개 준비 | 진행 전 | RC2 archive/index 재현성, clean 설치·수명주기·문서 정합 | exact package 근거와 공개 gate 자료 준비 |
-| RC2-10 공개 | 조건부 승인 | 2026-09-27 사용자 승인에 따라 모든 필수 gate PASS일 때만 tag·Pre-release·RC catalog와 공개 다운로드 smoke | 승인 exact source/asset만 공개하고 공개 URL 재검증; FAIL/HOLD가 남으면 공개 금지 |
+| RC2-01 범위·재현 | 완료 | RC1 설치본에서 예제 안내, UID placeholder, UTF-8, Verify 무출력과 `No ACK` 진단 경계를 재현 | CLI/version/입력/첫 오류와 실제 출력 byte 기록 |
+| RC2-02 metadata·예제 안내 | 완료 | 113개 예제의 profile·역할·보드 수·sidecar·Serial 단일 원본과 사용자 표시 추가 | 113/113 생성·audit PASS |
+| RC2-03 probe UX·오류 | 완료 | 메뉴 문구, 환경 변수 UID 전달·검증·마스킹, 오류 분류와 안전한 SWD 진단 개선 | Host negative와 실제 upload PASS |
+| RC2-04 UTF-8·진행 표시 | 자동 PASS / GUI HOLD | launcher/Builder 출력 인코딩과 Verify 단계·heartbeat 구현 | CLI replacement 0; IDE 실제 화면은 자동화 표면 미노출 |
+| RC2-05 로컬 성능 | 완료 | 여섯 profile의 cold/cache-hit/Sketch 수정과 단계 계측 | 18회 PASS; [271번](<04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>) |
+| RC2-06 CI 실행시간 교정 | 구현 완료 | 중복 제거·변경 분류·부하 기반 shard·cache/artifact 최적화 | 부하 shard와 상세 실패 log, nested worker 제한 구현 |
+| RC2-07 변경 영향 회귀 | 완료 | Host/unit, profile matrix, 설치 예제와 대표 build/upload 재검증 | Host 1,558 PASS; 실제 upload 조건·source 분리 기록 |
+| RC2-08 실제 Arduino 자동검증 | GUI HOLD | 격리 설치본 CLI·negative·성능과 IDE 2.x GUI smoke | CLI·실물 PASS, IDE 실제 GUI 판정 불가 |
+| RC2-09 패키지·공개 준비 | 완료 | RC2 archive/index 재현성, clean 설치·수명주기·문서 정합 | 이중 재현 package와 짧은 root 수명주기 PASS |
+| RC2-10 공개 | HOLD | 모든 필수 gate PASS일 때만 tag·Pre-release·RC catalog와 공개 다운로드 smoke | IDE GUI HOLD가 남아 공개 금지; tag·Release·catalog 미생성 |
 
 ## 10. 검증 분모
 

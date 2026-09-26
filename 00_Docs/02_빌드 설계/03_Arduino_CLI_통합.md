@@ -219,7 +219,7 @@ arduino-cli upload `
 Arduino IDE 2.x의 board option은 임의 UID 입력 UI를 제공하지 않는다. 따라서 작동하지 않는
 별도 `pyocd_uid` 메뉴를 노출하지 않고, IDE의 Upload Probe 메뉴에는 CMSIS-DAP 자동 선택 한
 항목만 둔다. CMSIS-DAP가 한 대면 자동 선택하며, 여러 대면 임의 선택하지 않고 CLI의
-`--upload-field probe_id=<CMSIS-DAP-UID>`로 exact 대상을 지정한다. compile 때는 일반
+`NUCODE_PROBE_UID` 환경 변수로 exact 대상을 지정한다. compile 때는 일반
 `upload_probe=pyocd`를 그대로 사용한다.
 
 ```powershell
@@ -229,10 +229,10 @@ arduino-cli compile `
   --build-path $ArduinoBuild `
   $SketchDir
 
+$env:NUCODE_PROBE_UID = '<CMSIS-DAP-UID>'
 arduino-cli upload `
   --fqbn 'nucode:zephyr:nu54dk' `
   --board-options feature_set=standard,upload_probe=pyocd `
-  --upload-field probe_id=<CMSIS-DAP-UID> `
   --build-path $ArduinoBuild `
   --verbose `
   $SketchDir
@@ -241,7 +241,7 @@ arduino-cli upload `
 빈 값·메뉴 placeholder·형식 오류·현재 연결되지 않은 UID는 flash 전에 각각 구체적인 ASCII 오류
 코드와 한국어 해결 안내로 거부한다. 일반 console에는 UID의 끝 4자리만 남기고, 증거에는 원문 대신
 SHA-256을 기록한다. J-Link는 외장 probe의 SWD·VTref·GND를 연결한 경우에만 `upload_probe=jlink`와
-`--upload-field probe_id=<JLINK-SERIAL-NUMBER>`를 사용한다. 선택 runner가 없거나 ID가 비면
+`NUCODE_PROBE_UID=<JLINK-SERIAL-NUMBER>`를 사용한다. 선택 runner가 없거나 ID가 비면
 실패하며 pyOCD로 자동 fallback하지 않는다.
 
 ## 7. Arduino IDE 2.x 계약

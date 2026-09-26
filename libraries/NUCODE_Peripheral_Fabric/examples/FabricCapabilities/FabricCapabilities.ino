@@ -12,7 +12,7 @@
  * @par 필수 sidecar
  * 없음
  * @par Upload probe
- * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
  * @par 추가 조건
  * DAP UART 공유 핀을 분리하고 예제가 요구하는 외장 I/O 결선을 확인합니다.
  * @par Metadata

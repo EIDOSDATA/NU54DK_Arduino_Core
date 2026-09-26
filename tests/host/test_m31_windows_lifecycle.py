@@ -117,14 +117,20 @@ class M31WindowsLifecycleTests(unittest.TestCase):
             (f"Library/Example{index}", ROOT, "standard")
             for index in range(4)
         ]
-        observed: list[tuple[str, str]] = []
+        observed: list[tuple[str, str, str]] = []
 
         def compile_stub(
             _cli: Path, _config: Path, environment: dict[str, str],
             _build_root: Path, _log_root: Path, identity: str,
             _sketch: Path, _profile: str,
         ) -> dict[str, str]:
-            observed.append((identity, environment["NUCODE_BUILD_CACHE_ROOT"]))
+            observed.append(
+                (
+                    identity,
+                    environment["NUCODE_BUILD_CACHE_ROOT"],
+                    environment["NUCODE_BUILD_JOBS"],
+                )
+            )
             return {"identity": identity, "status": "PASS"}
 
         with tempfile.TemporaryDirectory() as directory:
@@ -145,9 +151,15 @@ class M31WindowsLifecycleTests(unittest.TestCase):
         self.assertEqual("parallel_isolated_worker_caches", execution["mode"])
         self.assertEqual(2, execution["workers"])
         self.assertEqual(2, execution["cache_roots"])
-        roots = {cache for _identity, cache in observed}
+        self.assertGreaterEqual(execution["builder_jobs_per_worker"], 1)
+        self.assertLessEqual(execution["builder_jobs_per_worker"], 4)
+        roots = {cache for _identity, cache, _jobs in observed}
         self.assertEqual(2, len(roots))
         self.assertNotIn(environment["NUCODE_BUILD_CACHE_ROOT"], roots)
+        self.assertEqual(
+            {str(execution["builder_jobs_per_worker"])},
+            {jobs for _identity, _cache, jobs in observed},
+        )
 
 
 if __name__ == "__main__":

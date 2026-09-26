@@ -137,6 +137,9 @@ class MediaCallControlContractTests(unittest.TestCase):
 
     def test_fixed_sdk_sources_and_metadata_are_present(self) -> None:
         """! @brief 고정 checkout의 source와 nRF54 allowlist 부재를 정확히 유지합니다. """
+
+        if not SDK.is_dir():
+            self.skipTest("locked SDK unavailable")
         required = (
             "include/zephyr/bluetooth/audio/mcc.h",
             "include/zephyr/bluetooth/audio/mcs.h",

@@ -447,14 +447,19 @@ class M11RcHilTests(unittest.TestCase):
         workspace = self.root / "workspace"
         calls: list[str] = []
         commands: list[list[str]] = []
+        environments: list[dict[str, str] | None] = []
 
         def fake_run(
-            command: list[Path | str], *, timeout_seconds: int
+            command: list[Path | str],
+            *,
+            timeout_seconds: int,
+            environment: dict[str, str] | None = None,
         ) -> tuple[int, str, float]:
             self.assertGreater(timeout_seconds, 0)
             operation = str(command[1])
             calls.append(operation)
             commands.append([str(value) for value in command])
+            environments.append(environment)
             build = Path(command[command.index("--build-path") + 1])
             sketch = Path(command[-1])
             staged = build.parent / "user" / "hardware" / "nucode" / "zephyr"
@@ -554,8 +559,10 @@ class M11RcHilTests(unittest.TestCase):
             },
         )
         self.assertIn("upload_probe=pyocd", commands[0])
-        self.assertIn("--upload-field", commands[1])
-        self.assertIn("probe_id=fixture-probe", commands[1])
+        self.assertNotIn("--upload-field", commands[1])
+        self.assertNotIn("fixture-probe", commands[1])
+        self.assertIsNotNone(environments[1])
+        self.assertEqual(environments[1]["NUCODE_PROBE_UID"], "fixture-probe")
         self.assertNotIn("fixture-probe", json.dumps(evidence))
         self.assertEqual(evidence["uart"]["candidate_count"], 2)
         self.assertEqual(

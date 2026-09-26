@@ -12,7 +12,7 @@
  * @par 필수 sidecar
  * nucode-build.json
  * @par Upload probe
- * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
  * @par 추가 조건
  * 추가 조건 없음
  * @par Metadata

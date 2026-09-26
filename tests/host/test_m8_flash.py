@@ -300,6 +300,39 @@ class M8FlashContractTests(unittest.TestCase):
         self.assertEqual(MODULE.select_pyocd_probe("auto-single", ["ABC123"]), "ABC123")
         self.assertEqual(MODULE.select_pyocd_probe("abc123", ["ABC123"]), "ABC123")
 
+    def test_resolves_recipe_sentinel_from_environment(self) -> None:
+        """! @brief 고정 recipe sentinel보다 환경 변수의 exact UID를 우선합니다. """
+
+        with mock.patch.dict(
+            MODULE.implementation.upload.os.environ,
+            {"NUCODE_PROBE_UID": "ABC123"},
+            clear=False,
+        ):
+            self.assertEqual(
+                MODULE.resolve_probe_request("auto-single", runner="pyocd"),
+                "ABC123",
+            )
+            self.assertEqual(
+                MODULE.resolve_probe_request("j-link-serial-required", runner="jlink"),
+                "ABC123",
+            )
+            self.assertEqual(
+                MODULE.resolve_probe_request("EXPLICIT456", runner="pyocd"),
+                "EXPLICIT456",
+            )
+
+        with mock.patch.dict(
+            MODULE.implementation.upload.os.environ,
+            {},
+            clear=True,
+        ):
+            self.assertIsNone(
+                MODULE.resolve_probe_request("auto-single", runner="pyocd")
+            )
+            self.assertIsNone(
+                MODULE.resolve_probe_request("j-link-serial-required", runner="jlink")
+            )
+
     def test_selects_one_pyocd_upload_tool_for_auto_and_explicit_uid(self) -> None:
         """! @brief 자동 선택과 명시 UID가 같은 pyOCD 메뉴를 사용하는지 검증합니다. """
 

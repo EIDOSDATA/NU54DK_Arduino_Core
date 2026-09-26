@@ -12,7 +12,7 @@
  * @par 필수 sidecar
  * prj.conf
  * @par Upload probe
- * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
  * @par 추가 조건
  * DAP UART를 분리하고 PDM 또는 I2S 외장 장치의 전압·clock·GND 결선을 확인합니다.
  * @par Metadata

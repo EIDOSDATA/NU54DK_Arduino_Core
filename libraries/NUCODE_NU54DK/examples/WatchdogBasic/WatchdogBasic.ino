@@ -12,7 +12,7 @@
  * @par 필수 sidecar
  * 없음
  * @par Upload probe
- * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI `--upload-field probe_id=<UID>`로 명시 선택합니다.
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
  * @par 추가 조건
  * watchdog reset이 의도된 예제이므로 Serial 종료 메시지와 재부팅을 함께 확인합니다.
  * @par Metadata

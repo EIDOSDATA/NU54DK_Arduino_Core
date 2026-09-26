@@ -198,7 +198,12 @@ def default_cli() -> Path:
 
 
 ## @brief 실행 결과를 합친 UTF-8 text로 반환합니다.
-def run(command: Sequence[str | Path], *, expect_success: bool = True) -> tuple[int, str]:
+def run(
+    command: Sequence[str | Path],
+    *,
+    expect_success: bool = True,
+    environment: dict[str, str] | None = None,
+) -> tuple[int, str]:
     values = [str(value) for value in command]
     is_compile = len(values) > 1 and values[1] == "compile"
     attempts = CLI_BOOTSTRAP_ATTEMPTS if expect_success and is_compile else 1
@@ -210,6 +215,7 @@ def run(command: Sequence[str | Path], *, expect_success: bool = True) -> tuple[
             encoding="utf-8",
             errors="replace",
             check=False,
+            env=environment,
         )
         if result.returncode == 0 or not expect_success:
             return result.returncode, result.stdout
@@ -2132,16 +2138,22 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
         build,
         "--board-options",
         "upload_probe=pyocd",
-        "--upload-field",
-        f"probe_id={field_value}",
         sketch,
     ]
-    return_code, field_output = run(field_command, expect_success=False)
+    field_environment = dict(os.environ)
+    field_environment["NUCODE_PROBE_UID"] = field_value
+    return_code, field_output = run(
+        field_command,
+        expect_success=False,
+        environment=field_environment,
+    )
     normalized_field_output = field_output.replace('"', "").replace("'", "")
     if return_code == 0:
         raise SmokeFailure("M8 upload-field sentinel unexpectedly selected a real probe")
-    if f"--runner pyocd --probe-id {field_value}" not in normalized_field_output:
-        raise SmokeFailure("Arduino CLI did not expand the explicit UID upload field")
+    if "--runner pyocd --probe-id auto-single" not in normalized_field_output:
+        raise SmokeFailure("Arduino CLI did not expand the non-interactive upload recipe")
+    if field_value in normalized_field_output:
+        raise SmokeFailure("M8 upload output exposed the exact UID environment value")
     runners = Path(context["zephyr_build_dir"]) / "zephyr" / "runners.yaml"
     content = runners.read_text(encoding="utf-8")
     for expected in ("- pyocd", "- jlink", "--target=nrf54l", "--device=nRF54L15_M33"):
@@ -2158,15 +2170,14 @@ def test_m8_upload_build(cli: Path, config: Path, root: Path, repository: Path) 
     builder_text = upload_source.read_text(encoding="utf-8")
     for expected in (
         "tools.nu54_pyocd.upload.pattern=",
-        "tools.nu54_pyocd.upload.field.probe_id=auto-single",
-        '--runner pyocd --probe-id "{upload.field.probe_id}"',
+        "--runner pyocd --probe-id auto-single",
         "--runner jlink",
         "nu54-builder",
     ):
         if expected not in platform_text:
             raise SmokeFailure(f"M8 upload recipe is missing: {expected}")
-    if "nu54_pyocd_uid" in platform_text:
-        raise SmokeFailure("M8 pyOCD recipe must use one auto-or-CLI-field path")
+    if "upload.field.probe_id" in platform_text or "nu54_pyocd_uid" in platform_text:
+        raise SmokeFailure("M8 recipe must use one auto-or-environment path")
     if "smart_flash=false" not in builder_text:
         raise SmokeFailure("M8 pyOCD stability option is missing")
     for expected in (
