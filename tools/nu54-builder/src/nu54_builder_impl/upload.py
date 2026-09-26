@@ -88,7 +88,9 @@ def decode_child_output(data: bytes) -> str:
     try:
         return data.decode("utf-8", errors="strict")
     except UnicodeDecodeError:
-        encodings = [locale.getpreferredencoding(False), "mbcs", "cp949"]
+        ## @details 영어권 Windows의 cp1252가 한국어 byte를 mojibake로 확정하지 않도록
+        ## 고정 지원 대상의 legacy encoding을 먼저 시도합니다.
+        encodings = ["cp949", locale.getpreferredencoding(False), "mbcs"]
         for encoding in encodings:
             if not encoding:
                 continue
