@@ -365,11 +365,13 @@ class M11RcHilTests(unittest.TestCase):
             f"command=west flash -d {zephyr_build.resolve().as_posix()} "
             "-r pyocd "
             "--no-rebuild --dev-id fixture-probe "
-            "--dt-flash=n --tool-opt=-Osmart_flash=false\n"
+            "--dt-flash=n --tool-opt=-Osmart_flash=false "
+            "--tool-opt=-Oauto_unlock=false\n"
         )
         log.write_text(safe, encoding="utf-8")
         result = MODULE.validate_pyocd_flash_log(log, digest, hex_path, zephyr_build)
         self.assertEqual(result["attempts"], 1)
+        self.assertFalse(result["auto_unlock"])
 
         log.write_text(safe.replace("--no-rebuild", "--no-rebuild --erase"), encoding="utf-8")
         with self.assertRaisesRegex(MODULE.UploadHilFailure, "파괴 option"):
@@ -485,7 +487,8 @@ class M11RcHilTests(unittest.TestCase):
                 "exit_code=0\n"
                 f"command=west flash -d {zephyr_build.resolve().as_posix()} "
                 "-r pyocd --no-rebuild --dev-id fixture-probe "
-                "--dt-flash=n --tool-opt=-Osmart_flash=false\n",
+                "--dt-flash=n --tool-opt=-Osmart_flash=false "
+                "--tool-opt=-Oauto_unlock=false\n",
                 encoding="utf-8",
             )
             return 0, "NU54_UPLOAD_PASS runner=pyocd probe=redacted", 0.2

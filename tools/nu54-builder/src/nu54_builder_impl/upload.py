@@ -167,7 +167,11 @@ def build_flash_command(
         probe_id,
     ]
     if runner == "pyocd":
-        command.extend(("--dt-flash=n", "--tool-opt=-Osmart_flash=false"))
+        command.extend((
+            "--dt-flash=n",
+            "--tool-opt=-Osmart_flash=false",
+            "--tool-opt=-Oauto_unlock=false",
+        ))
     forbidden = {"--erase", "--recover"}
     if forbidden.intersection(str(value) for value in command):
         raise AdapterError("[NU54:E_FLASH_UNSAFE_OPTION] 일반 upload에 destructive option이 포함됐습니다.")

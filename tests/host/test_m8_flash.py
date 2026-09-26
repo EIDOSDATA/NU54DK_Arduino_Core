@@ -345,6 +345,7 @@ class M8FlashContractTests(unittest.TestCase):
         self.assertIn("--no-rebuild", command)
         self.assertIn("--dt-flash=n", command)
         self.assertIn("--tool-opt=-Osmart_flash=false", command)
+        self.assertIn("--tool-opt=-Oauto_unlock=false", command)
         probe_index = command.index("--dev-id")
         self.assertEqual(command[probe_index : probe_index + 2], ["--dev-id", "ABC123"])
         self.assertNotIn("--erase", command)
