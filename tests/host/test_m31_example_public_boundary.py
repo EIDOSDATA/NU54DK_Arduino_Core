@@ -84,7 +84,11 @@ class M31ExamplePublicBoundaryTests(unittest.TestCase):
         properties = (
             ROOT / "libraries/NUCODE_BLE_Audio/library.properties"
         ).read_text(encoding="utf-8")
+        header = (
+            ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.h"
+        ).read_text(encoding="utf-8")
         self.assertIn("\ndepends=NUCODE BLE\n", f"\n{properties.rstrip()}\n")
+        self.assertIn("#include <NUCODE_BLE.h>", header)
 
     def test_iso_role_and_backend_flow_must_match(self) -> None:
         """! @brief Kconfig 역할과 공개 Program 역할의 불일치를 거부합니다. """

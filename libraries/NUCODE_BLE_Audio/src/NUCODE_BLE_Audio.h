@@ -9,15 +9,10 @@
 #define NUCODE_BLE_AUDIO_H
 
 #include <Arduino.h>
+#include <NUCODE_BLE.h>
 
 #include <cstddef>
 #include <cstdint>
-
-namespace nucode::ble
-{
-    class BLEConnectionHandle;
-    struct BLEScanResult;
-} // namespace nucode::ble
 
 namespace nucode::ble::audio
 {
