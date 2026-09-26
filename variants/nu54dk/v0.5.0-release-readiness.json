@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "release": "v0.5.0",
+  "candidate_version": "0.5.0-rc.1",
+  "host_scope": "Windows 10/11 x64",
+  "status": "preparation_in_progress",
+  "publication_allowed": false,
+  "gates": [
+    {
+      "id": "m31_functionality",
+      "kind": "automated_and_physical",
+      "status": "PENDING",
+      "evidence": [],
+      "reason": "M31-W08 마감 판정 전"
+    },
+    {
+      "id": "api_examples_support_matrix",
+      "kind": "automated",
+      "status": "PENDING",
+      "evidence": [],
+      "reason": "W08 원장·지원표·문서 정합 검사 전"
+    },
+    {
+      "id": "windows_package_reproducibility",
+      "kind": "automated",
+      "status": "PENDING",
+      "evidence": [],
+      "reason": "exact RC package 이중 생성 전"
+    },
+    {
+      "id": "windows_clean_install_examples_upload",
+      "kind": "automated_and_physical",
+      "status": "PENDING",
+      "evidence": [],
+      "reason": "격리 설치·전체 예제·대표 upload/runtime 검증 전"
+    },
+    {
+      "id": "windows_lifecycle",
+      "kind": "automated",
+      "status": "PENDING",
+      "evidence": [],
+      "reason": "upgrade/reinstall/uninstall/cache 수명주기 검증 전"
+    },
+    {
+      "id": "rc_review_and_owner_approval",
+      "kind": "human",
+      "status": "HOLD",
+      "evidence": [],
+      "reason": "W08 완료 뒤 exact RC 결과에 대한 별도 공개 승인 필요"
+    },
+    {
+      "id": "public_assets_and_download_smoke",
+      "kind": "external",
+      "status": "NOT_RUN",
+      "evidence": [],
+      "reason": "승인된 tag·Release·catalog 공개 이후에만 실행"
+    }
+  ],
+  "deferred_scope": {
+    "m32": "후속 버전 미정",
+    "m33": "후속 버전 미정",
+    "host_w04_w08": "사용자 지시로 보류",
+    "ubuntu_macos": "해당 OS를 지원하는 후속 릴리스의 사용자 gate"
+  }
+}

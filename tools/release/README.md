@@ -13,7 +13,7 @@
 | 제품선 | 절차 문서 | 주 도구 | 상태 |
 | --- | --- | --- | --- |
 | `v0.4.1` 유지보수 | [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md) | `v041_release.py` | 현재 설치·지원 기준 |
-| `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | 새 version 전용 절차·gate 준비 필요 | 미공개; M31 8/8 뒤 Windows package·설치·RC 검증 |
+| `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | `m31_release.py` | 미공개; `0.5.0-rc.1` 이중 재현·HOLD plan과 Windows 설치 gate 준비 중 |
 | `v0.4.0` / M27 | [M27_README.md](M27_README.md) | `m27_release.py`, `m27_stable_release.py` | 정식 공개·T24/T25 완료·동결 |
 | `v0.3.0` / M22 | [M22_README.md](M22_README.md) | `m22_release.py`, `m22_cleanroom.py` | 역사적·동결 |
 | `v0.2.0` / M18 | [M18_README.md](M18_README.md) | `m18_release.py` | 역사적·동결 |
