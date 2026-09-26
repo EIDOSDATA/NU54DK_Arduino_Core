@@ -66,6 +66,71 @@ class M9SafetyContractTests(unittest.TestCase):
             )
         return build, artifacts
 
+    def test_atomic_write_retries_transient_windows_file_sharing(self) -> None:
+        """! @brief scanner 공유 위반 뒤에도 metadata를 원자적으로 교체합니다. """
+
+        destination = self.root / "metadata.json"
+        destination.write_bytes(b"old")
+        real_replace = os.replace
+        attempts = 0
+
+        def transient_replace(source: str | Path, target: str | Path) -> None:
+            nonlocal attempts
+            attempts += 1
+            if attempts < 3:
+                raise PermissionError("injected Windows sharing violation")
+            real_replace(source, target)
+
+        with (
+            mock.patch.object(MODULE.os, "name", "nt"),
+            mock.patch.object(MODULE.os, "replace", side_effect=transient_replace),
+            mock.patch.object(MODULE.time, "sleep"),
+        ):
+            MODULE.atomic_write_bytes(destination, b"new")
+        self.assertEqual(3, attempts)
+        self.assertEqual(b"new", destination.read_bytes())
+
+    def test_unchanged_write_retries_transient_windows_read_sharing(self) -> None:
+        """! @brief 기존 metadata 읽기의 짧은 공유 위반도 timestamp 보존을 방해하지 않습니다. """
+
+        destination = self.root / "unchanged.json"
+        destination.write_bytes(b"same")
+        real_read = Path.read_bytes
+        attempts = 0
+
+        def transient_read(path: Path) -> bytes:
+            nonlocal attempts
+            attempts += 1
+            if attempts < 3:
+                raise PermissionError("injected Windows read sharing violation")
+            return real_read(path)
+
+        with (
+            mock.patch.object(MODULE.os, "name", "nt"),
+            mock.patch.object(Path, "read_bytes", transient_read),
+            mock.patch.object(MODULE.time, "sleep"),
+        ):
+            changed = MODULE.atomic_write_bytes_if_changed(destination, b"same")
+        self.assertFalse(changed)
+        self.assertEqual(3, attempts)
+
+    def test_lock_diagnostic_cleanup_cannot_fail_successful_operation(self) -> None:
+        """! @brief OS mutex 해제 뒤 lock JSON 삭제 실패는 build를 실패시키지 않습니다. """
+
+        lock_root = self.root / "lock-cleanup"
+        real_unlink = Path.unlink
+
+        def blocked_unlink(path: Path, *arguments: object, **keywords: object) -> None:
+            if path.name == ".adapter.lock":
+                raise PermissionError("injected scanner lock")
+            real_unlink(path, *arguments, **keywords)
+
+        with mock.patch.object(Path, "unlink", blocked_unlink):
+            with MODULE.build_lock(lock_root, operation="cleanup-test"):
+                pass
+        self.assertTrue((lock_root / ".adapter.lock").is_file())
+        (lock_root / ".adapter.lock").unlink()
+
     def test_transactional_export_publishes_one_verified_generation(self) -> None:
         """! @brief staging이 모두 끝난 뒤 네 artifact를 검증된 generation으로 교체합니다. """
 
