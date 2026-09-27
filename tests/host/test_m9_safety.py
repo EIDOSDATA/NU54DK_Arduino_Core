@@ -131,57 +131,46 @@ class M9SafetyContractTests(unittest.TestCase):
         self.assertTrue((lock_root / ".adapter.lock").is_file())
         (lock_root / ".adapter.lock").unlink()
 
-    def test_configure_uses_one_host_lock_for_shared_zephyr_cache(self) -> None:
-        """! @brief 서로 다른 build cache도 같은 NCS configure lock을 사용합니다. """
+    def test_configure_uses_worker_local_zephyr_user_cache(self) -> None:
+        """! @brief 병렬 worker는 NCS source의 공유 cache 대신 독립 cache를 사용합니다. """
 
         build_module = MODULE.implementation.build
+        platform = self.root / "platform"
         app = self.root / "app"
         zephyr_build = self.root / "zephyr-build"
-        ncs_root = self.root / "ncs"
+        board = self.root / "board"
         app.mkdir()
         zephyr_build.mkdir()
-        captured: dict[str, object] = {}
-        expected = mock.Mock()
-
-        @contextlib.contextmanager
-        def fake_lock(
-            root: Path, timeout_seconds: float, logical_identity: str | None = None
-        ):
-            captured["root"] = root
-            captured["timeout_seconds"] = timeout_seconds
-            captured["logical_identity"] = logical_identity
-            yield
-
         with (
-            mock.patch.object(build_module, "operating_system_lock", fake_lock),
             mock.patch.object(
-                build_module, "configure_command", return_value=["west", "build"]
+                build_module,
+                "load_configuration_profile",
+                return_value={"sysbuild": False},
             ),
             mock.patch.object(
-                build_module, "run_progress_command", return_value=expected
-            ) as progress,
+                build_module, "platform_build_root", return_value=platform
+            ),
         ):
-            actual = build_module.run_serialized_configure(
+            command = build_module.configure_command(
                 {
                     "app": app,
                     "zephyr_build": zephyr_build,
+                    "platform_root": platform,
                 },
-                argparse.Namespace(),
-                {"ncs_root": ncs_root},
-                self.root / "board",
+                argparse.Namespace(board="fixture", fqbn="nucode:zephyr:nu54dk"),
+                {
+                    "west": self.root / "west.exe",
+                    "zephyr_base": self.root / "zephyr",
+                    "ccache": None,
+                },
+                board,
                 pristine=True,
-                environment={},
-                log_path=self.root / "configure.log",
-                stage="test",
-                worker_count=2,
             )
-        self.assertIs(expected, actual)
-        self.assertEqual(ncs_root.resolve(), captured["root"])
-        self.assertEqual(
-            f"zephyr-configure:{ncs_root.resolve().as_posix().casefold()}",
-            captured["logical_identity"],
-        )
-        progress.assert_called_once()
+        expected = (
+            Path(os.environ["NUCODE_BUILD_CACHE_ROOT"])
+            / "zephyr-user-cache"
+        ).as_posix()
+        self.assertIn(f"-DUSER_CACHE_DIR={expected}", command)
 
     def test_transactional_export_publishes_one_verified_generation(self) -> None:
         """! @brief staging이 모두 끝난 뒤 네 artifact를 검증된 generation으로 교체합니다. """
