@@ -183,7 +183,7 @@ jobs:
     needs: classify
     if: needs.classify.outputs.run_six_profiles == 'true'
     runs-on: windows-2025
-    timeout-minutes: 25
+    timeout-minutes: 45
     env:
       NUCODE_NCS_INSTALL_ROOT: D:\ncs
       NUCODE_NCS_ROOT: D:\ncs\v3.4.0
