@@ -13,7 +13,7 @@
 | 기계 원장 | [`m30-ble-readiness.json`](../../variants/nu54dk/m30-ble-readiness.json) |
 
 이 문서는 M30 구현 전에 보안 정책, OOB carrier, profile catalog, MCUboot layout, 신뢰키와 열 개의
-유한 test ID를 고정했다. 설치·지원 v0.4.1의 기능 확대를 뜻하지 않는다. M30은 2026-09-15에
+유한 test ID를 고정했다. 채택 범위는 정식 v0.5.0에 포함됐으며 이전 v0.4.1 자산을 확대하지 않는다. M30은 2026-09-15에
 `M30-POWER-01` 네 지점 × 3회 실제 전원 차단 12/12까지 통과해 완료됐다.
 
 ## 1. 목표와 호환 경계

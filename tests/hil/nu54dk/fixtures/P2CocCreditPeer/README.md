@@ -12,3 +12,8 @@ CoC server 정적 크기 비교에서는 `comparison.conf`를 `EXTRA_CONF_FILE`�
 Arduino image와 같은 ACL 251-byte·TX buffer 4개·로그 OFF·loaderless partition으로
 빌드한다. Arduino의 dual-role·연결 2개 설정은 native에 추가하지 않는다.
 Arduino client의 로컬 TX buffer 포화만으로 상대 credit 고갈을 주장하지 않는다.
+
+이 fixture의 상대 credit 고갈·복구와 동등 조건 크기 비교는 P2에서 완료했다.
+실제 수치·source·양측 STOP 근거는
+[262번](<../../../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 보존하며,
+이 설명을 새 실기 실행이나 완료된 P2 재개 지시로 사용하지 않는다.

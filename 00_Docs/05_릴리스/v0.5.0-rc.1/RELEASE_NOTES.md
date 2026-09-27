@@ -1,5 +1,9 @@
 # v0.5.0-rc.1 Release notes
 
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.5.0-rc.1` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
+
 v0.4.1의 Arduino 주변장치·Storage·기본 BLE를 유지하고 M28~M31의 확장을 Windows RC로 통합했습니다.
 정식 stable 승격이나 Bluetooth qualification 완료를 의미하지 않습니다.
 

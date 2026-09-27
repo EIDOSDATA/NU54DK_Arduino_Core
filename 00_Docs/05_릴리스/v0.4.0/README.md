@@ -1,8 +1,8 @@
 # NU54DK Arduino Core v0.4.0
 
-> **지원 종료:** 현재 정식(stable) 설치·지원 버전은 [v0.4.1](../v0.4.1/README.md) 하나입니다. 이 문서와
-> 공개 자산은 v0.4.0 당시 상태를 보존하며 stable Boards Manager 목록에서는 제공하지 않습니다.
-> 최신 RC 시험 설치와 정식 채널의 구분은 [릴리스 안내](../README.md)를 따릅니다.
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.4.0` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
 
 `v0.4.0`은 nRF54L15 주변장치의 직접 instance·DMA 제어를 `Peripheral Fabric` profile로
 추가하면서 기존 Arduino singleton API와 BLE·Storage profile을 유지하는 릴리스입니다.
@@ -31,7 +31,7 @@ SHA-256과 설치 검증 결과는 [125번 기록](<../../04_검증 기록/125_v
 ## 당시 설치 절차
 
 아래는 v0.4.0 공개 당시의 절차입니다. 현재 index에서는 `0.4.0`을 선택할 수 없으며,
-새 설치에는 [v0.4.1 설치 안내](../v0.4.1/README.md#설치)를 사용합니다.
+새 설치에는 [v0.5.0 설치 안내](../v0.5.0/README.md)를 사용합니다.
 
 Arduino IDE의 Additional Boards Manager URLs에 stable index를 추가합니다.
 

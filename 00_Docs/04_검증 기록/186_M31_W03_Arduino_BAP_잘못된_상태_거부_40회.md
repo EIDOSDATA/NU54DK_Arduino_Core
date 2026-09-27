@@ -1,5 +1,10 @@
 # M31-W03 Arduino BAP 잘못된 상태 전이 거부 40회
 
+> **역사 기록 · 정식 공개 후 안내:** 본문의 버전·진행률·다음 작업은 해당 실행 당시 상태다.
+> 현재 설치·지원 버전은 [v0.5.0](<../05_릴리스/v0.5.0/README.md>)이며 개발 기준은 `main`이다.
+> 완료된 main 통합·RC 브랜치 정리와 공개 결과는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md),
+> 후속 작업은 [HANDOFF](../HANDOFF.md)를 따른다. 당시 source·수치·PASS/FAIL/HOLD/NOT RUN은 보존한다.
+
 clean Core `9084063b42e2a63fcb360e8feb75203ea43e5bcf`의 공개
 `BapUnicastCycle` 예제에서 매 LC3 stream 120 frame 전송 뒤
 `UnicastClient::stop()`을 호출했다. 이어 중단 중인 ASE에 중복 stop과 frame

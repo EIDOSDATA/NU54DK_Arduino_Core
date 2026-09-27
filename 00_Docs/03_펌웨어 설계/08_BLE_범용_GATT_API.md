@@ -12,13 +12,13 @@
 
 ## 목적과 범위
 
-Server schema부터 예제·검증 절까지는 v0.4.1에서 이어진 기본 계약이다. 하단의 M29 절은
-v0.5.0에서 승격한 확장을 설명하며, 두 범위의 value 크기·연결 수·지원 operation을 혼합하지 않는다.
+본문은 v0.5.0 계약이며 M20에서 도입한 기본 API와 M29에서 추가한 link별 확장을 구분한다.
+과거 v0.4.1의 244-byte value·단일 연결·long write 미지원 한도를 현재 지원 한도로 해석하지 않는다.
 
 M20은 M19 Core/GAP 위에 vendor service를 만들고 사용하는 범용 GATT API를 제공합니다. NUS처럼
 고정 profile wrapper가 아니라 UUID, property, permission과 bounded value를 sketch가 선언합니다.
 
-이 API는 `v0.3.0`부터 정식 지원하며 v0.4.1에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
+기본 API는 `v0.3.0`부터 정식 지원했고 v0.4.1까지 같은 범위를 유지했습니다. 도입 당시 두 보드 RF PASS는
 [M20 범용 GATT 검증](<../04_검증 기록/24_M20_범용_GATT_검증.md>), stable package 승격은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)이 소유합니다.
 
@@ -38,7 +38,8 @@ nucode::ble::BLECharacteristic value(
 
 Characteristic을 service에, service를 `BLEDevice`에 추가한 뒤 `BLEDevice.begin()`을 호출합니다.
 Bluetooth 시작 뒤 schema 변경은 거부합니다. 기본 Kconfig 경계는 service 4개, service당
-characteristic 8개이며 characteristic value는 최대 244 byte입니다. 16/128-bit UUID를 지원하고
+characteristic 8개이며 characteristic value의 논리 상한은 512 byte입니다. 실제 inline buffer는 선택
+구성의 `CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE`를 따르고 caller-owned buffer도 해당 API 한도를 검사합니다. 16/128-bit UUID를 지원하고
 GATT schema의 32-bit UUID는 현재 명시적으로 거부합니다.
 
 등록한 `BLEService`, `BLECharacteristic`과 선택적인 caller-owned value buffer는 Bluetooth image가
@@ -51,8 +52,8 @@ Database 준비는 모든 service/characteristic을 먼저 검증·구성한 뒤
 `begin()`이 부분 database에 막히지 않습니다.
 
 Read는 stack callback deadline 안에서 cached value를 동기 반환합니다. Write는 bounded buffer에
-복사한 뒤 `BLEDevice.poll()`에서 `written` callback을 전달합니다. Prepare/execute long write는
-지원하지 않고 ATT `not supported`로 거부합니다.
+복사한 뒤 `BLEDevice.poll()`에서 `written` callback을 전달합니다. v0.5.0의 prepare/execute long write는
+link별 transaction 한 개와 최대 512-byte 한도로 지원하며 offset·길이·권한·execute/cancel을 검증합니다.
 
 Peer의 BT RX callback과 Arduino thread가 공유하는 cached value/length는 spinlock으로 보호합니다.
 Read, notify와 indicate는 lock 안에서 고정 buffer snapshot을 만든 뒤 stack 호출 전에 lock을
@@ -65,7 +66,7 @@ Read, notify와 indicate는 lock 안에서 고정 buffer snapshot을 만든 뒤 
 수명을 보존하며, 성공은 `indication_confirmed`, peer/ATT 실패는 `indication_failed`로 구분합니다.
 같은 characteristic의 indication을 동시에 두 개 시작하면 `busy`입니다.
 
-Subscription 상태는 현재 단일 peer 연결에만 유효합니다. Disconnect 뒤 유지되거나 자동
+Subscription 상태는 해당 connection generation에만 유효합니다. Disconnect 뒤 유지되거나 자동
 복원된다고 가정하지 않습니다.
 요청한 notify/indicate type은 `bt_gatt_subscribe()` 전에 별도 상태로 보존해 CCC write 응답보다
 먼저 수신되는 packet도 정확히 분류합니다. Unsubscribe와 ATT error는 subscription 상태를
@@ -85,7 +86,8 @@ remote service/characteristic 객체는 portable handle 복사본이며 다음 d
 - notification 또는 indication CCC subscribe
 - unsubscribe
 
-Operation은 한 번에 하나만 진행합니다. Disconnect 시 service/characteristic/CCC handle과 busy,
+Operation은 link별 고정 context에서 한 번에 하나만 진행합니다. 두 link를 구분할 때는 connection handle
+overload를 사용합니다. Disconnect 시 해당 link의 service/characteristic/CCC handle과 busy,
 subscription 상태를 먼저 무효화하고 `handles_invalidated`를 main thread에 전달합니다. 재연결 뒤에는
 반드시 discovery와 subscribe를 다시 수행해야 합니다.
 
@@ -178,7 +180,8 @@ deprecated/experimental 등급을 안정 기능으로 바꾸지 않는다.
 후속 통합은 exact `16eb8fce…`에서 3보드 `M29-MULTI-01`·`M29-REG-01`을 PASS했고,
 exact `a964ae20…`에서 Windows WinRT peer 교차 제조사 GATT 상호운용을 PASS했다.
 이로써 M29는 작업 묶음 8/8(100%), test ID 10/10을 완료했다. 후속 M30도 8/8·10/10과
-실제 전원 차단 12/12를 완료했다. M31도 W01~W08 8/8과 공개 RC smoke를 완료했으며 stable 승인 경계는 [M31 TODO](../TODO_M31.md)를 따른다.
+실제 전원 차단 12/12를 완료했다. M31도 W01~W08 8/8과 공개 RC smoke를 완료했고 별도 승인 후 정식
+v0.5.0으로 공개했다. 완료 증거는 [M31 TODO](../TODO_M31.md)와 [274번 기록](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따른다.
 세부 API·자원과 단계별·완료 exact 원본은
 [M29 계약](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>)과
 [147번 기록](<../04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md>),

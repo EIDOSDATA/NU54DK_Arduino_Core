@@ -1,10 +1,15 @@
-# v0.5.0-rc.2 — Windows Arduino GUI 시험 후보
+# v0.5.0-rc.2 — Windows Arduino GUI 시험 후보 기록
 
-RC2는 RC1의 예제 설정·probe 선택·한국어 출력·빌드 진행/캐시를 교정한 **Pre-release**다.
-Stable 지원은 계속 v0.4.1이며 정식 v0.5.0 공개가 아니다. CI 시간 목표 미달은 사용자가 수용했고,
-IDE GUI 검증은 사용자가 이어간다. 자동 검사·실물 upload 결과를 GUI PASS로 표시하지 않는다.
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.5.0-rc.2` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
 
-## Arduino IDE 2.x 설치
+RC2는 RC1의 예제 설정·probe 선택·한국어 출력·빌드 진행/캐시를 교정한 **Pre-release**로 공개됐다.
+당시 stable 지원은 v0.4.1이었고 CI 시간 목표 미달은 사용자가 수용했으며 IDE GUI 시험은 사용자에게 인계했다.
+이후 연속 Upload 교정 확인과 별도 승인으로 정식 [v0.5.0](../v0.5.0/README.md)을 공개했다.
+자동 검사·실물 upload 결과를 전체 GUI PASS로 확대하지 않으며 RC2 당시 판정은 아래에 보존한다.
+
+## 당시 Arduino IDE 2.x 설치 절차
 
 1. `File → Preferences → Additional Boards Manager URLs`에 아래 URL을 추가한다.
    기존 RC1 URL이 있다면 RC2 URL로 교체한다. Stable URL은 그대로 둘 수 있다.
@@ -27,7 +32,7 @@ Windows 10/11 x64 대상이며 일반 사용자에게 별도 Git/Python/VS Code 
 Serial 예제는 대응 DAP UART COM 포트의 115200 8N1을 사용한다. COM 포트 선택은 SWD probe 선택과 다르다.
 
 > 공개 후 GUI 시험에서 Standard Blink 실행 뒤 수정한 두 번째 pyOCD Upload가 No ACK로 실패하는
-> runtime PM 문제가 확인됐다. USB 재연결은 일시 복구이며, main 후속 교정은 전역 장치 자동 suspend를
+> runtime PM 문제가 확인됐다. USB 재연결은 일시 복구이며, 정식 v0.5.0에 포함한 후속 교정은 전역 장치 자동 suspend를
 > 끈다. 공개 RC2 archive는 변경하지 않았으므로 [문제 해결](TROUBLESHOOTING.md)과
 > [알려진 제한](KNOWN_ISSUES.md)을 확인한다.
 
@@ -56,8 +61,8 @@ J-Link 메뉴는 외부 SEGGER 장비·SWD/VTref/GND 결선이 있을 때만 사
 | Archive 크기 | 8,717,905 bytes |
 | 패키지 분모 | 16개 library·113개 예제 |
 
-이미 검증한 b2e7 package를 그대로 배포하며 이후 main의 문서 갱신으로 다시 만들지 않는다.
-Archive 내부 문서는 생성 당시 snapshot이다. 최신 설치·GUI 시험 안내는 이 문서와 루트 README를 따른다.
+당시 검증한 b2e7 package를 그대로 공개했으며 이후 main의 문서 갱신으로 다시 만들지 않는다.
+Archive 내부 문서는 생성 당시 snapshot이다. 현재 설치·GUI 시험 안내는 [정식 v0.5.0](../v0.5.0/README.md)을 따른다.
 `NU54DK.coreVersion()`의 `0.4.1-dev`는 source 식별 문자열이며 설치 버전은 Boards Manager/core list/manifest로 확인한다.
 
 [변경점](RELEASE_NOTES.md) · [이동·복귀](MIGRATION.md) · [검증·GUI 체크리스트](TESTING.md) ·

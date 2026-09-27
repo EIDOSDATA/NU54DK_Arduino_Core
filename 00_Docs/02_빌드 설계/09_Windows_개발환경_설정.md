@@ -466,7 +466,7 @@ checkout이나 당시 공개 ZIP을 다시 build하는 절차는 아니다. 자�
 [CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)를 따른다.
 
 정식 설치본의 build/upload 수명주기를 확인하려면 source staging 시험으로 대체하지 말고
-[v0.4.1 설치와 시험](../05_릴리스/v0.4.1/TESTING.md)의 stable Boards Manager 절차를 사용한다.
+[v0.5.0 설치와 시험](../05_릴리스/v0.5.0/TESTING.md)의 stable Boards Manager 절차를 사용한다.
 
 ### C/C++ 코드 정렬 도구
 
@@ -533,7 +533,7 @@ exact Core/board revision, artifact hash, probe와 COM 선택, wiring 조건과 
 | `clang-format 22.1.8 필요` | 위 명령으로 정확한 사용자 범위 버전을 설치하고 `--clang-format`에 실제 경로 지정 |
 
 Prerequisite 설치 log는 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\logs`에 남는다. 정식
-Core 설치·빌드 문제는 [v0.4.1 문제 해결](../05_릴리스/v0.4.1/TROUBLESHOOTING.md)도 함께
+Core 설치·빌드 문제는 [v0.5.0 문제 해결](../05_릴리스/v0.5.0/TROUBLESHOOTING.md)도 함께
 확인한다.
 
 ## 12. 완료 점검표
@@ -556,5 +556,5 @@ Core 설치·빌드 문제는 [v0.4.1 문제 해결](../05_릴리스/v0.4.1/TROU
 - [Boards Manager 설치와 package](./06_Boards_Manager_설치와_패키징.md)
 - [CI/CD와 재현 build](./08_M12_CI_CD와_재현_빌드.md)
 - [NU54DK HIL 시험](../../tests/hil/nu54dk/README.md)
-- [v0.4.1 설치와 시험](../05_릴리스/v0.4.1/TESTING.md)
-- [v0.4.1 문제 해결](../05_릴리스/v0.4.1/TROUBLESHOOTING.md)
+- [v0.5.0 설치와 시험](../05_릴리스/v0.5.0/TESTING.md)
+- [v0.5.0 문제 해결](../05_릴리스/v0.5.0/TROUBLESHOOTING.md)

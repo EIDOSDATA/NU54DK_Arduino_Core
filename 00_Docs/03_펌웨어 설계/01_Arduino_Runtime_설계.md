@@ -5,8 +5,8 @@
 | 문서 ID | FW-RUNTIME-001 |
 | 문서 개정 | 4.3 |
 | 문서 상태 | `v0.5.0` 정식 runtime·profile 계약 |
-| 최종 갱신일 | 2026-09-12 |
-| 실행 방식 | Loader 없는 Native Full Zephyr 정적 firmware |
+| 최종 갱신일 | 2026-09-27 |
+| 실행 방식 | Native Full Zephyr 정적 firmware; 기본 loaderless, 선택 `secure_ble_dfu`만 MCUboot |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -46,7 +46,7 @@ SoC Boot ROM, 선택적인 bootloader, sysbuild 보조 image와 probe firmware�
 | Arduino 수명주기 | `cores/arduino/main.cpp` |
 | post-loop scheduler 정책 | `cores/arduino/internal/runtime_scheduler.cpp` |
 | 논리 핀 | `variants/nu54dk` |
-| 일반 사용자 구성 | `variants/nu54dk/profiles/{standard,ble,fabric}`와 library feature manifest |
+| 일반 사용자 구성 | `variants/nu54dk/profiles`의 여섯 Feature set과 library feature manifest |
 | expert 구성 | Sketch의 `prj.conf`, `app.overlay`, Zephyr/NCS 공개 API |
 
 Runtime에 UART/GPIO 번호, Flash 주소와 partition 크기를 다시 하드코딩하지 않는다.

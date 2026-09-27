@@ -1,5 +1,9 @@
 # NU54DK Arduino Core v0.3.0 릴리스 노트
 
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.3.0` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
+
 `v0.3.0`은 `v0.2.0` 이후 Arduino 호환 API, 동적 주변장치 route, BLE, storage와 package
 검증을 확장한 정식 릴리스입니다. 공개 `v0.3.0-rc.3`의 검증된 runtime payload를 그대로
 stable package로 승격했습니다.

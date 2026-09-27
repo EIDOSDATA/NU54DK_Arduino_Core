@@ -1,5 +1,9 @@
 # v0.5.0-rc.2 알려진 제한
 
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.5.0-rc.2` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
+
 ## 수용한 잔여 항목
 
 | 항목 | 실제 상태 | 이번 시험 배포의 처리 |
@@ -10,8 +14,9 @@
 | Windows 일시적 compile 종료 | 최종 전체 예제 중 bounded retry 1회 | 재시도 뒤 PASS; 무재시도 PASS가 아님 |
 | 긴 Windows 경로 | sysbuild/Ninja의 긴 경로 제약 가능 | 짧은 cache/build root 사용, 실패 원본 보존 |
 
-기능 추가를 중단하고 현재 RC2로 GUI 시험을 이어간다는 2026-09-27 사용자 결정에 따른다.
-이 결정은 모든 기술 gate PASS 선언이나 stable 공개 승인이 아니다.
+위 표는 기능 추가를 중단하고 RC2로 GUI 시험을 이어가기로 한 2026-09-27 당시 사용자 결정을 보존한다.
+그 결정 자체는 모든 기술 gate PASS 선언이나 stable 공개 승인이 아니었으며, 후속 정식 공개는
+[별도 승인 기록](<../../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따른다.
 
 ## 공개 후 확인된 연속 Upload 문제
 
@@ -23,7 +28,7 @@
 main 후속 교정은 Standard profile에 `CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE=n`을 명시한다.
 Wire·SPI·PWM의 runtime route는 `begin()` 시 필요한 장치에만 runtime PM을 명시적으로 적용하므로
 기능은 유지된다. 수정 설치본에서 250 ms → 100 ms 연속 Upload를 USB 재연결 없이 통과했다.
-공개 RC2 tag·archive·index는 재작성하지 않으며, 이 수정은 main과 다음 배포 후보에 포함한다.
+공개 RC2 tag·archive·index는 재작성하지 않았다. 이 수정은 main과 정식 [v0.5.0](../v0.5.0/README.md)에 포함됐다.
 
 ## 계속 유지되는 지원 경계
 

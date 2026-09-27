@@ -15,10 +15,10 @@
 아래 본문은 stable v0.5.0 계약이다. M28 확장과 역사 RC 검증은 마지막 절에서 구분한다.
 
 M19는 NUS에 종속되지 않는 Arduino 친화 BLE lifecycle과 GAP API를 제공합니다. 공개 헤더는
-Zephyr type을 노출하지 않으며, 동적 할당 없이 단일 연결과 31-byte legacy advertising을
-명시적으로 지원합니다.
+Zephyr type을 노출하지 않습니다. M19의 단일 연결·31-byte legacy advertising 계약에서
+v0.5.0은 central 1 + peripheral 1의 두 link와 아래 M28 확장으로 범위를 넓혔습니다.
 
-이 API는 `v0.3.0`부터 정식 지원하며 v0.4.1에서도 같은 공개 범위를 유지합니다. 도입 당시 두 보드 RF PASS는
+기본 API는 `v0.3.0`부터 정식 지원했으며 v0.4.1까지 같은 공개 범위를 유지했습니다. 도입 당시 두 보드 RF PASS는
 [M19 BLE Core/GAP 검증](<../04_검증 기록/23_M19_BLE_Core_GAP_검증.md>), stable package 승격은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)이 소유합니다.
 
@@ -27,7 +27,7 @@ Zephyr type을 노출하지 않으며, 동적 할당 없이 단일 연결과 31-
 | `BLEDevice` | stack 1회 초기화, 이름, main-thread event dispatch | image당 1개 |
 | `BLEAdvertising` | flags, interval, UUID, manufacturer/service data | advertising·scan response 각각 31 byte |
 | `BLEScan` | active/passive scan, 이름·UUID·주소 filter | bounded 결과 queue, payload 31 byte |
-| `BLEConnection` | connect, disconnect, explicit reconnect, MTU/PHY/parameter 요청 | 동시 peer 1개 |
+| `BLEConnection` | connect, disconnect, explicit reconnect, MTU/PHY/parameter 요청 | central 1 + peripheral 1; 기존 인자 없는 API는 호환 view |
 | `BLEUuid` | 16/32/128-bit UUID 저장·형식화 | heap 없음 |
 | `BLEAddress` | public/random LE 주소 복사본 | heap 없음 |
 
@@ -83,7 +83,7 @@ Disconnect 이후 advertising 재시작과 client 재연결 시점은 sketch가 
 
 MTU, PHY와 connection parameter 요청은 controller/peer의 비동기 협상입니다. 요청 성공은 최종
 협상값 보장이 아니며 `mtu_changed`, `phy_changed`, `parameters_changed` event와 현재 getter를
-함께 확인해야 합니다. 이 버전은 동시 연결 1개와 단일 pending connect만 지원합니다.
+함께 확인해야 합니다. v0.5.0은 central 1 + peripheral 1의 동시 두 link와 단일 central pending connect를 지원합니다.
 `txPower()`는 PHY별 transmit-power-control 설정을 요구하지 않는 legacy current/max 조회 경로를
 사용하며, 실제 연결 HIL에서 성공과 반환 범위를 확인합니다.
 
@@ -108,12 +108,12 @@ central이 이를 exact filter하므로 두 transcript가 같은 실제 RF fixtu
 
 ## M28 개발 결과와 공개 경계
 
-v0.5.0 개발 source의 multi-role/link, extended·periodic advertising, PAwR와 privacy는
+v0.5.0의 multi-role/link, extended·periodic advertising, PAwR와 privacy는
 [M28 계약](<../01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>)의 W01~W08과
 9개 test ID를 완료했고 [정식 v0.5.0](../05_릴리스/v0.5.0/README.md)에 포함됐다.
 v0.4.1 stable의 연결 1개·legacy 31-byte 계약은 역사 기준선으로 보존한다.
 
-| 개발 API/자원 | M28에서 확인한 상한과 동작 |
+| 정식 확장 API/자원 | M28에서 확인한 상한과 동작 |
 | --- | --- |
 | `BLEConnectionHandle`·상세 event | central 1 + peripheral 1, 총 2-link; generation으로 stale callback 차단 |
 | Extended advertising/scanning | generation set 1개, payload 최대 255 byte, SID·PHY·TX power metadata |
@@ -121,6 +121,6 @@ v0.4.1 stable의 연결 1개·legacy 31-byte 계약은 역사 기준선으로 �
 | PAwR advertiser/scanner | 4 subevent × 4 response slot, payload 최대 249 byte |
 | Privacy·link control | RPA timeout 1~3600초, identity·DLE·parameter·remote-info를 link별 조회 |
 
-인자 없는 기존 singleton API는 호환 view를 유지한다. 현재 개발 자원과 실제 두/세 보드 결과는
+인자 없는 기존 singleton API는 호환 view를 유지한다. 현재 자원과 실제 두/세 보드 결과는
 [M28 readiness](../../variants/nu54dk/m28-ble-readiness.json)와
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따른다.

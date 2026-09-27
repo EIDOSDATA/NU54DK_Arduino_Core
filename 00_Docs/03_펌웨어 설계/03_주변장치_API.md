@@ -5,7 +5,7 @@
 | 문서 ID | FW-PERIPHERAL-001 |
 | 문서 개정 | 4.8 |
 | 문서 상태 | `v0.5.0` 정식 singleton·Fabric 계약 |
-| 최종 갱신일 | 2026-09-15 |
+| 최종 갱신일 | 2026-09-27 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -25,7 +25,7 @@ commit은 `04_검증 기록`으로 이동하고 여기에는 제품 동작만 �
 | runtime owner/resource 상태 | `cores/arduino/internal/IoResourceManager.h` |
 | runtime pinctrl/PM route | `cores/arduino/internal/RuntimePeripheralRoute.*`, `variants/nu54dk/peripheral_routes.*` |
 | 부팅 고정 자원 registry | `variants/nu54dk/io_resource_registry.cpp` — UART20 console만 고정 |
-| 일반 사용자 subsystem 선택 | `standard`/`ble`/`fabric` profile과 library feature manifest |
+| 일반 사용자 subsystem 선택 | v0.5.0의 여섯 Feature set과 library feature manifest; 주변장치 기본 경로는 `standard`/`ble`/`fabric` |
 | Sketch별 custom 구성 | expert `prj.conf`/overlay |
 
 Core에 `uart20`, `i2c22`, `spi00`과 실제 pin 번호를 별도 board truth로 복제하지 않는다.
@@ -33,7 +33,7 @@ Production backend는 Devicetree chosen, alias와 profile overlay를 소비한�
 
 ## 3. 현재 자원과 ownership
 
-| 공개 객체/역할 | Devicetree source | `v0.4.1` stable ownership |
+| 공개 객체/역할 | Devicetree source | `v0.5.0` stable ownership |
 | --- | --- | --- |
 | `Serial` | `DT_CHOSEN(zephyr_console)` | 기존 console UART의 non-owning wrapper |
 | `Serial1` | UART30 runtime node | `begin/end`가 P0 RX/TX pad·UART30 block과 runtime PM을 소유 |
@@ -299,7 +299,7 @@ Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch�
 
 ## 12. Radio와 USB 경계
 
-- v0.4.0의 BLE 범위는 NUS, GAP/GATT, 보안과 표준 profile의 검증된 계약을 유지한다.
+- v0.5.0의 BLE 범위는 NUS, GAP/GATT, 보안·표준 profile에 M28~M31 확장을 포함하며 [전체 기능 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)을 따른다.
 - 802.15.4, ESB, OpenThread와 Matter는 현재 runtime 미지원이다.
 - BLE와 다른 radio stack의 multiprotocol 동시 운용을 임의로 활성화하지 않는다.
 - nRF54L15 target의 native USB device API, CDC, Keyboard와 Mouse를 제공하지 않는다.

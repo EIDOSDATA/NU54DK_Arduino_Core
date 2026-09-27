@@ -1,5 +1,10 @@
 # 272 — RC2 사용자 수용과 main 통합 및 시험 배포
 
+> **역사 기록 · 정식 공개 후 안내:** 본문의 버전·진행률·다음 작업은 해당 실행 당시 상태다.
+> 현재 설치·지원 버전은 [v0.5.0](<../05_릴리스/v0.5.0/README.md>)이며 개발 기준은 `main`이다.
+> 완료된 main 통합·RC 브랜치 정리와 공개 결과는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md),
+> 후속 작업은 [HANDOFF](../HANDOFF.md)를 따른다. 당시 source·수치·PASS/FAIL/HOLD/NOT RUN은 보존한다.
+
 작성일: 2026-09-27. [271번](271_v0.5.0-rc.2_사용자경험_교정과_검증.md)의 초기 공개 HOLD 이후 결정이다.
 과거 성능 FAIL·GUI HOLD와 실패/재시도 원본을 보존하며 새 수용 결정으로 기술 결과를 덮어쓰지 않는다.
 
@@ -8,7 +13,8 @@
 사용자는 최종 결과를 확인한 뒤 현재 결과가 충분하다고 수용하고 모든 문서를 읽어 갱신하며,
 `0.5.0-RC2`를 main에 반영하고 README에 설치 링크를 제공하라고 요청했다.
 Arduino GUI 시험은 사용자가 직접 수행한다. 따라서 RC2는 성능 목표 미달을 수용한 GUI 시험용 Pre-release다.
-stable v0.5.0 공개·M32/M33 착수·보류 Host 재개·추가 실물 flash·squash/force-push·branch 삭제는 이번 범위 밖이다.
+stable v0.5.0 공개·M32/M33 착수·보류 Host 재개·추가 실물 flash·squash/force-push·branch 삭제는 당시 범위 밖이었다.
+이후 별도 사용자 승인으로 진행한 stable 공개·이력 Squash·RC branch 삭제는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md)에 구분한다.
 
 ## 2. 불변 배포 입력
 
@@ -24,12 +30,13 @@ stable v0.5.0 공개·M32/M33 착수·보류 Host 재개·추가 실물 flash·s
 
 배포 자산은 [Full RC run 36287748550](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/36287748550)의
 재현 package이며 문서 변경으로 재생성하지 않는다. 후속 문서/main HEAD와 tag의 source를 구분한다.
-Archive 내부 문서는 b2e7 생성 당시 snapshot이며 최신 사용자 안내는 main의 RC2 문서 묶음이다.
+Archive 내부 문서는 b2e7 생성 당시 snapshot이며 RC2 당시 사용자 안내는 main의 RC2 문서 묶음이었다.
+현재 설치는 [v0.5.0 stable 안내](<../05_릴리스/v0.5.0/README.md>)를 따르며 RC2 문서는 역사 기록이다.
 기존 package plan/aggregate의 `publication_allowed=false`는 생성 당시 HOLD로 보존한다.
 이후 사용자 수용 판단은 이 기록에 별도로 남기며 자동 validator를 모든 gate PASS로 속이지 않는다.
-`stable_v0.5.0_publication`은 지금도 승인되지 않았다.
+`stable_v0.5.0_publication`은 이 RC2 시험배포 시점에는 승인되지 않았다.
 기존 `v0.5.0-release-readiness.json`의 RC1 공개 항목도 당시 완료 계약으로 보존한다.
-이번 RC2 수용·공개 상태의 최신 원본은 이 기록이며 RC1 원장을 소급 재작성하지 않는다.
+이 기록은 RC2 수용·공개 상태의 원본이며 RC1 원장을 소급 재작성하지 않는다.
 
 불변 증거: [원래 package plan](evidence/rc2-public-20260927/original-package-plan.json) ·
 [최종 Full RC 집계](evidence/rc2-public-20260927/full-rc-ci-aggregate.json) ·
@@ -43,8 +50,9 @@ Archive 내부 문서는 b2e7 생성 당시 snapshot이며 최신 사용자 안�
   성공 shard 최장 54분으로 40분 목표 FAIL이며 전체 재시도 시간은 그보다 길다.
 - 최종 package의 M8 sector flash/UART ready HIL PASS. 자동 unlock/recover/mass erase 없이 한 번 업로드했다.
   실제 다중 probe negative는 E_PROBE_AMBIGUOUS, exit1, flash false다. 이번 문서/공개 작업은 추가 flash하지 않는다.
-- GUI는 native app 자동화 표면이 없어 초기 HOLD였고 이제 **사용자 후속 NOT RUN**이다.
-  [GUI 확인 목록](<../05_릴리스/v0.5.0-rc.2/TESTING.md>)에서 새 결과를 추가한다.
+- GUI는 native app 자동화 표면이 없어 초기 HOLD였고 이 실행에서는 **사용자 후속 NOT RUN**이었다.
+  이후 Blink 연속 Upload만 [273번](273_RC2_GUI_연속_Upload_Runtime_PM_교정.md)에서 별도로 PASS했다.
+  [GUI 확인 목록](<../05_릴리스/v0.5.0-rc.2/TESTING.md>) 전체를 PASS로 올리지 않는다.
 
 ## 4. 문서 전체 검토
 
@@ -61,8 +69,9 @@ M31 contract, CI contract, release/readiness/example 경계 집중 Host 47개와
 ## 5. main 통합과 공개 확인
 
 기존 main `7b869244...`에서 RC2 source `b2e7a587...`까지 16개 commit을 fast-forward로 통합하고 원격 main에 반영했다.
-이후 문서 변경은 main의 별도 후속 commit으로 기록하며 squash/force-push는 하지 않는다.
-RC1·RC2 branch, 기존 tag/Release/asset과 stable v0.4.1 index는 보존했다.
+이 실행의 문서 변경은 main의 별도 후속 commit으로 기록했으며 당시에는 squash/force-push를 하지 않았다.
+당시 RC1·RC2 branch, 기존 tag/Release/asset과 stable v0.4.1 index는 보존했다. 후속 정식 공개 때
+별도 승인으로 RC branch를 삭제하고 stable catalog를 v0.5.0 단독으로 갱신했지만 RC tag·asset은 보존했다.
 `v0.5.0-rc.2` annotated tag는 검증된 b2e7 source를 가리키며, 후속 문서 HEAD로 옮기지 않는다.
 
 - GitHub Pre-release를 공개하고 검증된 자산 7개를 그대로 첨부했다. latest stable은 v0.4.1로 유지했다.
@@ -86,5 +95,6 @@ tag push로 시작한 별도 M12 재현 matrix는 [36299830764](https://github.c
 앞선 b2e7 9/9·11/11 성공을 새 문서 commit의 검사 결과로 대체하지 않는다.
 
 - 공개 페이지: [v0.5.0-rc.2](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0-rc.2)
-- 설치 URL: [RC2 Boards Manager index](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/package_nucode_nu54dk_rc_index.json)
-- 사용자 인계: [설치](<../05_릴리스/v0.5.0-rc.2/README.md>) · [시험](<../05_릴리스/v0.5.0-rc.2/TESTING.md>) · [제한](<../05_릴리스/v0.5.0-rc.2/KNOWN_ISSUES.md>)
+- 당시 설치 URL: [보존 RC2 Boards Manager index](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/package_nucode_nu54dk_rc_index.json) — 현재 지원·catalog 공급 대상 아님
+- 당시 인계 기록: [설치](<../05_릴리스/v0.5.0-rc.2/README.md>) · [시험](<../05_릴리스/v0.5.0-rc.2/TESTING.md>) · [제한](<../05_릴리스/v0.5.0-rc.2/KNOWN_ISSUES.md>)
+- 현재 설치: [v0.5.0 stable](<../05_릴리스/v0.5.0/README.md>) — 273번 runtime PM 교정 포함

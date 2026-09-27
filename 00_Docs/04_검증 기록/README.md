@@ -5,6 +5,9 @@ RC2의 시간 목표 FAIL·초기 GUI HOLD 원본은 보존하고, 후속 실제
 승인·공개를 별도 기록합니다. 최종 정식 상태는
 [274번 기록](274_v0.5.0_정식_릴리스_승인과_공개.md)을 따릅니다.
 현재 작업과 후속 범위는 [HANDOFF](../HANDOFF.md)와 [v0.5.0 TODO](../TODO_v0.5.0.md)가 관리합니다.
+현재 설치는 [v0.5.0 stable 안내](<../05_릴리스/v0.5.0/README.md>)를 따릅니다. 구버전·RC는 지원·catalog
+공급을 종료했으며 과거 tag·Release·asset·evidence만 보존합니다. RC 개발 branch 삭제와 main 통합도 완료했습니다.
+공개 후 문서 재검토·commit/push 결과는 [275번](275_v0.5.0_공개_후_문서_전수_재검토.md)에서 구분합니다.
 
 과거 기록의 진행률·HOLD·다음 작업은 작성 당시 상태입니다. 아래 최종 기록부터 읽고,
 필요한 경우 번호별 원본과 [evidence](evidence/)로 내려가세요.
@@ -15,14 +18,15 @@ RC2의 시간 목표 FAIL·초기 GUI HOLD 원본은 보존하고, 후속 실제
 
 | 확인할 내용 | 최종 근거 |
 | --- | --- |
+| v0.5.0 공개 후 모든 문서 재검토·현행 안내와 역사 기록 분리 | [275번](275_v0.5.0_공개_후_문서_전수_재검토.md) |
 | v0.5.0 정식 승인·이력 Squash·Release·stable catalog·공개 smoke | [274번](274_v0.5.0_정식_릴리스_승인과_공개.md) |
 | RC2 GUI 연속 Upload No ACK·runtime PM 원인·교정 PASS | [273번](273_RC2_GUI_연속_Upload_Runtime_PM_교정.md) |
-| RC2 사용자 수용·main 통합·GUI 후속 시험용 설치 | [272번](272_RC2_사용자_수용과_main_통합_및_시험배포.md) |
+| 과거 RC2 사용자 수용·main 통합·GUI 후속 시험용 배포 | [272번](272_RC2_사용자_수용과_main_통합_및_시험배포.md) — 현재 설치 대상은 v0.5.0 stable |
 | RC2 최종 exact 기능 검증·CI 시간 FAIL·GUI HOLD | [271번](271_v0.5.0-rc.2_사용자경험_교정과_검증.md) — M12 9/9, M31 11/11, 예제 113/113, 최종 설치본 HIL PASS |
 | main RC 통합·개발 이력 squash·문서 동기화 | [270번](270_main_RC_통합_Squash와_문서_동기화.md) |
 | RC 브랜치 이력 정리·문서 전수 정비 | [269번](269_공개_RC_이력_Squash와_문서_전수_정비.md) |
 | 이전 stable v0.4.1 · 설치 예제 30개 | [129번](<129_v0.4.1_설치기_유지보수_릴리스.md>) · [역사 문서](<../05_릴리스/v0.4.1/README.md>) |
-| 기존 v0.5.0-rc.1 공개 이력 · 다운로드·설치 smoke | [268번](<268_v0.5.0-rc.1_공개와_다운로드_smoke.md>) · [RC1 설치 안내](<../05_릴리스/v0.5.0-rc.1/README.md>) |
+| 기존 v0.5.0-rc.1 공개 이력 · 다운로드·설치 smoke | [268번](<268_v0.5.0-rc.1_공개와_다운로드_smoke.md>) · [RC1 역사 문서](<../05_릴리스/v0.5.0-rc.1/README.md>) |
 | M31-W08 · Windows RC 준비 · M31 8/8 | [267번](<267_M31_W08_Windows_RC_준비와_M31_완료.md>) — 설치 예제 113/113, 수명주기·대표 upload/UART/debug |
 | M31-W07 · 설치 예제·3보드 역할 HIL | [266번](<266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) — 설치 예제 49/49, 공개 예제 감사 113개, 역할 43개 |
 | M31-W06 · 자원·수명주기·영향 회귀 | [265번](<265_M31_W06_자원_수명주기와_영향_회귀_완료.md>) — 독립 image와 M19~M30 회귀; 당시 debug protection HOLD 원본 보존 |
@@ -78,38 +82,38 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 기존 번호를 다시 매기지 않습니다.
 
 <details>
-<summary>P2 실측·최종 기능 완료·RC/stable 공개·문서 정비 — 238~274</summary>
+<summary>P2 실측·최종 기능 완료·RC/stable 공개·문서 정비 — 238~275</summary>
 
-- [238 — — M31 메모리 최적화 P2: GATT 512 B 실기와 adaptive 정정](<238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)
-- [239 — — M31 메모리 최적화 P2: CoC PASS, CS 당시 연속성 HOLD 기록](<239_M31_메모리_최적화_P2_CoC_CS_계측.md>)
-- [240 — — M31 메모리 최적화 P2: CIS·BIS 100 SDU × 20세션 실기 계측](<240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)
-- [241 — — M31 메모리 최적화 P2: LE Audio unicast LC3 실기 계측](<241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)
-- [242 — — M31 메모리 최적화 P2: AoA CTE beacon TX 계측](<242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)
-- [243 — — M31 메모리 최적화 P2: 암호화 Audio broadcast 실기 계측](<243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)
-- [244 — — M31 P2 연결형 DF IQ 수신 내부 진단](<244_M31_P2_DF_연결_IQ_진단.md>)
-- [245 — — M31 P2 CS 장기 연속성·중단 상태 진단](<245_M31_P2_CS_장기_연속성_진단.md>)
-- [246 — — M31 P2 연결형 DF IQ 수신의 내부 LL 메모리 계측](<246_M31_P2_DF_연결_IQ_메모리_계측.md>)
-- [247 — — M31 P2 connectionless DF 수신 재진단과 보류](<247_M31_P2_DF_connectionless_재진단과_보류.md>)
-- [248 — — M31 P2 SDC controller pool 정적 경계 감사](<248_M31_P2_SDC_pool_정적_경계_감사.md>)
-- [249 — — M31 P2 문서 정합성·가독성 감사](<249_M31_P2_문서_정합성_감사.md>)
-- [250 — — M31 P2 native RAS 비교·connectionless DF 재진단](<250_M31_P2_native_CS_비교와_DF_재진단.md>)
-- [251 — — M31 P2 두 채널 CoC 재연결 메모리 계측](<251_M31_P2_CoC_재연결_메모리_계측.md>)
-- [252 — — M31 P2 CS 장절차·반복 계수 경계 진단](<252_M31_P2_CS_장절차_반복계수_경계_진단.md>)
-- [253 — — M31 P2 Audio broadcast source 재시작·sink 재가입 메모리 계측](<253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)
-- [254 — — M31 P2 Audio unicast source 재시작·sink 재연결 메모리 계측](<254_M31_P2_Audio_unicast_재연결_메모리_계측.md>)
-- [255 — — M31 P2 CS 256-step·분할 RAS 실기 진단](<255_M31_P2_CS_256_step_분할_RAS_진단.md>)
-- [256 — — M31 P2 DF connectionless sync 대기 취소 진단](<256_M31_P2_DF_sync_대기_취소_진단.md>)
-- [257 — — M31 P2 CoC 송신 버퍼 포화·재연결 부하](<257_M31_P2_CoC_송신_버퍼_부하와_복구.md>)
-- [258 — — M31 P2 Audio/ISO 양방향 장시간·종료 경합](<258_M31_P2_Audio_양방향_장시간과_종료_복구.md>)
-- [259 — — M31 P2 DF 고정 SDK 지원 경계](<259_M31_P2_DF_고정_SDK_지원_경계.md>)
-- [260 — — M31 P2 CS 누락 원인 계수·256-step 장시간](<260_M31_P2_CS_누락_분류와_256_step_장시간.md>)
-- [261 — — P2 잔여 세 축 확정과 문서 전수 정비](<261_P2_잔여_세_축_확정과_문서_전수_정비.md>)
-- [262 — — M31 메모리 최적화 P2 세 축 완료](<262_M31_메모리_최적화_P2_세_축_완료.md>)
+- [238 — M31 메모리 최적화 P2: GATT 512 B 실기와 adaptive 정정](<238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)
+- [239 — M31 메모리 최적화 P2: CoC PASS, CS 당시 연속성 HOLD 기록](<239_M31_메모리_최적화_P2_CoC_CS_계측.md>)
+- [240 — M31 메모리 최적화 P2: CIS·BIS 100 SDU × 20세션 실기 계측](<240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md>)
+- [241 — M31 메모리 최적화 P2: LE Audio unicast LC3 실기 계측](<241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md>)
+- [242 — M31 메모리 최적화 P2: AoA CTE beacon TX 계측](<242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md>)
+- [243 — M31 메모리 최적화 P2: 암호화 Audio broadcast 실기 계측](<243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md>)
+- [244 — M31 P2 연결형 DF IQ 수신 내부 진단](<244_M31_P2_DF_연결_IQ_진단.md>)
+- [245 — M31 P2 CS 장기 연속성·중단 상태 진단](<245_M31_P2_CS_장기_연속성_진단.md>)
+- [246 — M31 P2 연결형 DF IQ 수신의 내부 LL 메모리 계측](<246_M31_P2_DF_연결_IQ_메모리_계측.md>)
+- [247 — M31 P2 connectionless DF 수신 재진단과 보류](<247_M31_P2_DF_connectionless_재진단과_보류.md>)
+- [248 — M31 P2 SDC controller pool 정적 경계 감사](<248_M31_P2_SDC_pool_정적_경계_감사.md>)
+- [249 — M31 P2 문서 정합성·가독성 감사](<249_M31_P2_문서_정합성_감사.md>)
+- [250 — M31 P2 native RAS 비교·connectionless DF 재진단](<250_M31_P2_native_CS_비교와_DF_재진단.md>)
+- [251 — M31 P2 두 채널 CoC 재연결 메모리 계측](<251_M31_P2_CoC_재연결_메모리_계측.md>)
+- [252 — M31 P2 CS 장절차·반복 계수 경계 진단](<252_M31_P2_CS_장절차_반복계수_경계_진단.md>)
+- [253 — M31 P2 Audio broadcast source 재시작·sink 재가입 메모리 계측](<253_M31_P2_Audio_broadcast_재가입_메모리_계측.md>)
+- [254 — M31 P2 Audio unicast source 재시작·sink 재연결 메모리 계측](<254_M31_P2_Audio_unicast_재연결_메모리_계측.md>)
+- [255 — M31 P2 CS 256-step·분할 RAS 실기 진단](<255_M31_P2_CS_256_step_분할_RAS_진단.md>)
+- [256 — M31 P2 DF connectionless sync 대기 취소 진단](<256_M31_P2_DF_sync_대기_취소_진단.md>)
+- [257 — M31 P2 CoC 송신 버퍼 포화·재연결 부하](<257_M31_P2_CoC_송신_버퍼_부하와_복구.md>)
+- [258 — M31 P2 Audio/ISO 양방향 장시간·종료 경합](<258_M31_P2_Audio_양방향_장시간과_종료_복구.md>)
+- [259 — M31 P2 DF 고정 SDK 지원 경계](<259_M31_P2_DF_고정_SDK_지원_경계.md>)
+- [260 — M31 P2 CS 누락 원인 계수·256-step 장시간](<260_M31_P2_CS_누락_분류와_256_step_장시간.md>)
+- [261 — P2 잔여 세 축 확정과 문서 전수 정비](<261_P2_잔여_세_축_확정과_문서_전수_정비.md>)
+- [262 — M31 메모리 최적화 P2 세 축 완료](<262_M31_메모리_최적화_P2_세_축_완료.md>)
 - [263 — M31-W04 Direction Finding 완료](<263_M31_W04_Direction_Finding_완료.md>)
 - [264 — M31-W05 connected Channel Sounding 완료](<264_M31_W05_Channel_Sounding_완료.md>)
 - [265 — M31-W06 자원·수명주기와 영향 회귀 완료](<265_M31_W06_자원_수명주기와_영향_회귀_완료.md>)
-- [266 — — M31-W07 설치 예제와 3보드 역할 HIL 완료](<266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>)
-- [267 — — M31-W08 Windows RC 준비와 M31 완료](<267_M31_W08_Windows_RC_준비와_M31_완료.md>)
+- [266 — M31-W07 설치 예제와 3보드 역할 HIL 완료](<266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>)
+- [267 — M31-W08 Windows RC 준비와 M31 완료](<267_M31_W08_Windows_RC_준비와_M31_완료.md>)
 - [268 — v0.5.0-rc.1 공개와 다운로드 smoke](<268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)
 - [269 — 공개 RC 이력 Squash와 문서 전수 정비](<269_공개_RC_이력_Squash와_문서_전수_정비.md>)
 - [270 — main RC 통합 Squash와 문서 동기화](<270_main_RC_통합_Squash와_문서_동기화.md>)
@@ -117,35 +121,36 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [272 — RC2 사용자 수용과 main 통합 및 시험배포](272_RC2_사용자_수용과_main_통합_및_시험배포.md)
 - [273 — RC2 GUI 연속 Upload runtime PM 교정](273_RC2_GUI_연속_Upload_Runtime_PM_교정.md)
 - [274 — v0.5.0 정식 릴리스 승인과 공개](274_v0.5.0_정식_릴리스_승인과_공개.md)
+- [275 — v0.5.0 공개 후 문서 전수 재검토](275_v0.5.0_공개_후_문서_전수_재검토.md)
 
 </details>
 
 <details>
 <summary>P0·P1 메모리 최적화 — 222~237</summary>
 
-- [222 — — M31 메모리 최적화 P0 완료](<222_M31_메모리_최적화_P0_완료.md>)
-- [223 — — M31 메모리 최적화 P1 GPIO 상태 절감](<223_M31_메모리_최적화_P1_GPIO_상태_절감.md>)
-- [224 — — M31 메모리 최적화 P1 UART20 lease 절감](<224_M31_메모리_최적화_P1_UART20_lease_절감.md>)
-- [225 — — M31 메모리 최적화 P1 Runtime Route 절감](<225_M31_메모리_최적화_P1_Runtime_Route_절감.md>)
-- [226 — — M31 메모리 최적화 P1 Resource Table 정렬](<226_M31_메모리_최적화_P1_Resource_Table_정렬.md>)
-- [227 — — M31 메모리 최적화 P1 CoC/GATT 분리](<227_M31_메모리_최적화_P1_CoC_GATT_분리.md>)
-- [228 — — M31 메모리 최적화 P1 GATT Schema Capacity](<228_M31_메모리_최적화_P1_GATT_Schema_Capacity.md>)
-- [229 — — M31 메모리 최적화 P1 GATT Client Context](<229_M31_메모리_최적화_P1_GATT_Client_Context.md>)
-- [230 — — M31 메모리 최적화 P1 GATT Event Payload](<230_M31_메모리_최적화_P1_GATT_Event_Payload.md>)
-- [231 — — M31 메모리 최적화 P1 GATT TX Payload](<231_M31_메모리_최적화_P1_GATT_TX_Payload.md>)
-- [232 — — M31 메모리 최적화 P1 GATT Inline Value](<232_M31_메모리_최적화_P1_GATT_Inline_Value.md>)
-- [233 — — M31 메모리 최적화 P1 GATT 방향 분리](<233_M31_메모리_최적화_P1_GATT_방향_분리.md>)
-- [234 — — M31 메모리 최적화 P1 GATT shared TX pool](<234_M31_메모리_최적화_P1_GATT_Shared_TX_Pool.md>)
-- [235 — — M31 메모리 최적화 P1 GATT client payload buffer](<235_M31_메모리_최적화_P1_GATT_Client_Payload_Buffer.md>)
-- [236 — — M31 메모리 최적화 P1 역할별 잔여 pool 감사](<236_M31_메모리_최적화_P1_역할별_잔여_Pool_감사.md>)
-- [237 — — M31 메모리 최적화 P1 정적 저장소 구현 완료](<237_M31_메모리_최적화_P1_정적_저장소_완료.md>)
+- [222 — M31 메모리 최적화 P0 완료](<222_M31_메모리_최적화_P0_완료.md>)
+- [223 — M31 메모리 최적화 P1 GPIO 상태 절감](<223_M31_메모리_최적화_P1_GPIO_상태_절감.md>)
+- [224 — M31 메모리 최적화 P1 UART20 lease 절감](<224_M31_메모리_최적화_P1_UART20_lease_절감.md>)
+- [225 — M31 메모리 최적화 P1 Runtime Route 절감](<225_M31_메모리_최적화_P1_Runtime_Route_절감.md>)
+- [226 — M31 메모리 최적화 P1 Resource Table 정렬](<226_M31_메모리_최적화_P1_Resource_Table_정렬.md>)
+- [227 — M31 메모리 최적화 P1 CoC/GATT 분리](<227_M31_메모리_최적화_P1_CoC_GATT_분리.md>)
+- [228 — M31 메모리 최적화 P1 GATT Schema Capacity](<228_M31_메모리_최적화_P1_GATT_Schema_Capacity.md>)
+- [229 — M31 메모리 최적화 P1 GATT Client Context](<229_M31_메모리_최적화_P1_GATT_Client_Context.md>)
+- [230 — M31 메모리 최적화 P1 GATT Event Payload](<230_M31_메모리_최적화_P1_GATT_Event_Payload.md>)
+- [231 — M31 메모리 최적화 P1 GATT TX Payload](<231_M31_메모리_최적화_P1_GATT_TX_Payload.md>)
+- [232 — M31 메모리 최적화 P1 GATT Inline Value](<232_M31_메모리_최적화_P1_GATT_Inline_Value.md>)
+- [233 — M31 메모리 최적화 P1 GATT 방향 분리](<233_M31_메모리_최적화_P1_GATT_방향_분리.md>)
+- [234 — M31 메모리 최적화 P1 GATT shared TX pool](<234_M31_메모리_최적화_P1_GATT_Shared_TX_Pool.md>)
+- [235 — M31 메모리 최적화 P1 GATT client payload buffer](<235_M31_메모리_최적화_P1_GATT_Client_Payload_Buffer.md>)
+- [236 — M31 메모리 최적화 P1 역할별 잔여 pool 감사](<236_M31_메모리_최적화_P1_역할별_잔여_Pool_감사.md>)
+- [237 — M31 메모리 최적화 P1 정적 저장소 구현 완료](<237_M31_메모리_최적화_P1_정적_저장소_완료.md>)
 
 </details>
 
 <details>
 <summary>M31 ISO·LE Audio·DF/CS 초기 검증 — 165~221</summary>
 
-- [165 — — M31-W01 완료와 W02 CIS/BIS 진행](<165_M31_W01_착수와_W02_CIS_개발_후보.md>)
+- [165 — M31-W01 완료와 W02 CIS/BIS 진행](<165_M31_W01_착수와_W02_CIS_개발_후보.md>)
 - [166 — M31-W02 세 보드 CIS→BIS 기능 실기](<166_M31_W02_3보드_CIS_BIS_통합_실기.md>)
 - [167 — M31-W02 설치 Arduino ISO 예제 완료](<167_M31_W02_설치_Arduino_ISO_예제_완료.md>)
 - [168 — M31-W03 LC3 공개 Arduino API 실기 진행](<168_M31_W03_LC3_공개_API_실기_진행.md>)
@@ -197,9 +202,9 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [216 — M31-W04 연결 AoA controller IQ event 진단](<216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md>)
 - [217 — M31-W05 비암호화 RAS ATT 오류 진단](<217_M31_W05_비암호화_RAS_ATT_오류_진단.md>)
 - [218 — M31-W05 flash 직후 RAS 복구 재검증](<218_M31_W05_flash_직후_RAS_복구_재검증.md>)
-- [219 — — M31-W06 메모리 점유 감사와 최적화 계약](<219_M31_W06_메모리_점유_감사와_최적화_계약.md>)
-- [220 — — M31 릴리스 전환과 문서 전수 정비](<220_M31_릴리스_전환과_문서_전수_정비.md>)
-- [221 — — main 마일스톤별 이력 정리](<221_main_마일스톤별_이력_정리.md>)
+- [219 — M31-W06 메모리 점유 감사와 최적화 계약](<219_M31_W06_메모리_점유_감사와_최적화_계약.md>)
+- [220 — M31 릴리스 전환과 문서 전수 정비](<220_M31_릴리스_전환과_문서_전수_정비.md>)
+- [221 — main 마일스톤별 이력 정리](<221_main_마일스톤별_이력_정리.md>)
 
 </details>
 
@@ -210,12 +215,12 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [131 — M28-W01 Capability image와 Host·target 준비](<131_M28_W01_Capability_image와_Host_target_준비.md>)
 - [132 — M28-W01 실제 HCI capability 완료](<132_M28_W01_실제_HCI_capability_완료.md>)
 - [133 — M28-W01 CI container revision 교정](<133_M28_W01_CI_container_revision_교정.md>)
-- [134 — — M28-W02 고정 2-slot·generation link 기반](<134_M28_W02_2-slot_generation_link_기반.md>)
-- [135 — — M28-W03 확장 광고와 스캔](<135_M28_W03_확장_광고와_스캔.md>)
-- [136 — — M28-W04 periodic sync·PAST](<136_M28_W04_periodic_sync_PAST.md>)
-- [137 — — M28-W05 PAwR advertiser·scanner](<137_M28_W05_PAwR_advertiser_scanner.md>)
-- [138 — — M28-W06 privacy·RPA·link control](<138_M28_W06_privacy_RPA_link_control.md>)
-- [139 — — M28-W07 2보드 HIL 자동화 준비](<139_M28_W07_2보드_HIL_자동화_준비.md>)
+- [134 — M28-W02 고정 2-slot·generation link 기반](<134_M28_W02_2-slot_generation_link_기반.md>)
+- [135 — M28-W03 확장 광고와 스캔](<135_M28_W03_확장_광고와_스캔.md>)
+- [136 — M28-W04 periodic sync·PAST](<136_M28_W04_periodic_sync_PAST.md>)
+- [137 — M28-W05 PAwR advertiser·scanner](<137_M28_W05_PAwR_advertiser_scanner.md>)
+- [138 — M28-W06 privacy·RPA·link control](<138_M28_W06_privacy_RPA_link_control.md>)
+- [139 — M28-W07 2보드 HIL 자동화 준비](<139_M28_W07_2보드_HIL_자동화_준비.md>)
 - [140 — M28-W07 2·3보드 HIL과 W08 완료](<140_M28_W07_3보드_HIL과_W08_완료.md>)
 - [141 — M29-W01 ATT/GATT·L2CAP capability 완료](<141_M29_W01_ATT_GATT_L2CAP_capability.md>)
 - [142 — M29-W02 link별 GATT client와 long read 완료](<142_M29_W02_link별_GATT_long_read.md>)
@@ -226,7 +231,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [147 — M29-W07 Signed Write·EATT HIL 준비와 2보드 완료](<147_M29_W07_Signed_Write_EATT_HIL_준비.md>)
 - [148 — 개발문서 전수 검토와 README 개선](<148_개발문서_전수검토와_README_개선.md>)
 - [149 — M29-W07 3보드 통합·회귀·Windows 상호운용과 W08 완료](<149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>)
-- [150 — — v0.5.0 다중 Host 지원 계획 정비](<150_v0.5.0_다중_Host_지원_계획_정비.md>)
+- [150 — v0.5.0 다중 Host 지원 계획 정비](<150_v0.5.0_다중_Host_지원_계획_정비.md>)
 - [151 — M30-W01 계약과 HOST-W01~W03 기반](<151_M30_W01_계약과_HOST_W01_W03_기반.md>)
 - [152 — M30-W01 capability 실기 완료](<152_M30_W01_capability_실기_완료.md>)
 - [153 — M30-W02 link별 security와 IO capability 5종 완료](<153_M30_W02_link별_security와_IO_5종_완료.md>)

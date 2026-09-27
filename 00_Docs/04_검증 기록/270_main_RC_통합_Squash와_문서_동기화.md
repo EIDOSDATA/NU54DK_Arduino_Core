@@ -1,8 +1,13 @@
 # 270. main RC 통합 Squash와 문서 동기화
 
+> **역사 기록 · 정식 공개 후 안내:** 본문의 버전·진행률·다음 작업은 해당 실행 당시 상태다.
+> 현재 설치·지원 버전은 [v0.5.0](<../05_릴리스/v0.5.0/README.md>)이며 개발 기준은 `main`이다.
+> 완료된 main 통합·RC 브랜치 정리와 공개 결과는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md),
+> 후속 작업은 [HANDOFF](../HANDOFF.md)를 따른다. 당시 source·수치·PASS/FAIL/HOLD/NOT RUN은 보존한다.
+
 작성: 2026-09-27. [269번 RC branch 정리](269_공개_RC_이력_Squash와_문서_전수_정비.md) 뒤 사용자가
 main에도 같은 정리를 요청했다. 완료한 RC source와 사용자 문서를 main에 반영하고, v0.4.1 공개
-마감 이후 개발 이력을 하나로 정리한다. **정식 v0.5.0 stable 공개나 공개 RC 재배포는 아니다.**
+마감 이후 개발 이력을 하나로 정리한 기록이다. **이 실행은 정식 v0.5.0 stable 공개나 공개 RC 재배포가 아니었다.**
 
 ## 이력 범위
 
@@ -57,6 +62,8 @@ third-party 원본을 유지하며 추가 삭제·폴더 이동은 하지 않는
 | 새 firmware build·물리 HIL | **NOT RUN** — 기존 exact-source 결과를 새 실기 PASS로 바꾸지 않음 |
 | push 후 exact-SHA CI | commit 작성 시 **NOT RUN**; 최종 push SHA의 실제 Actions 상태를 확인하고 이전 run과 구분 |
 
-main은 최신 개발·안내 진입점이며 stable 설치 channel을 뜻하지 않는다. 지원 stable은 v0.4.1,
-공개 후보는 v0.5.0-rc.1이다. 정식 stable 승격과 M32/M33·보류 Host 작업은
-[HANDOFF](../HANDOFF.md)의 별도 후속 범위를 유지한다.
+이 실행 당시 지원 stable은 v0.4.1, 공개 후보는 v0.5.0-rc.1이었으며 main 반영만으로 stable을
+승격하지 않았다. 이후 별도 승인에 따른 v0.5.0 공개와 RC branch 삭제는
+[274번](274_v0.5.0_정식_릴리스_승인과_공개.md)에서 완료했다. 현재 설치·지원 버전은 v0.5.0 하나다.
+main은 개발·안내 진입점이며 불변 release source는 tag로 구분한다. M32/M33·보류 Host 범위는
+[HANDOFF](../HANDOFF.md)를 따른다.

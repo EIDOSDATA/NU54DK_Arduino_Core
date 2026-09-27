@@ -1,5 +1,10 @@
 # M31-W03 native BAP unicast LC3 실제 무선 전송
 
+> **역사 기록 · 정식 공개 후 안내:** 본문의 버전·진행률·다음 작업은 해당 실행 당시 상태다.
+> 현재 설치·지원 버전은 [v0.5.0](<../05_릴리스/v0.5.0/README.md>)이며 개발 기준은 `main`이다.
+> 완료된 main 통합·RC 브랜치 정리와 공개 결과는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md),
+> 후속 작업은 [HANDOFF](../HANDOFF.md)를 따른다. 당시 source·수치·PASS/FAIL/HOLD/NOT RUN은 보존한다.
+
 고정 NCS v3.4.0의 upstream `bap_unicast_client`와 `bap_unicast_server`를
 NU54DK target으로 빌드하고, 두 보드의 실제 무선 ISO 경로를 확인했다.
 clean Core `b28631df3cdc4bcf1c4926730e81eea377f7ef47`, 고정 board

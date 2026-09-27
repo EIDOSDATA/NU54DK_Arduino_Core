@@ -9,9 +9,10 @@
 | BLE feature ID | `nucode.ble.nus` |
 | BLE config | `ble-nus.conf` |
 
-위 수치는 현재 stable `v0.5.0`의 Windows 설치본 계약이다. RC2와 정식 package에서
-16개 library·113개 예제의 discovery·설치본 compile을 완료했다. [stable 설치 안내](../05_릴리스/v0.5.0/README.md)와
-[W08 증거](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>)를 따르며 compile을 전체 물리 HIL로 해석하지 않는다.
+위 수치는 현재 stable `v0.5.0`의 Windows 설치본 계약이다. W08/RC2의 설치본 113/113 compile과
+정식 공개 후 설치·Blink cold compile은 서로 다른 검증 실행이다. [stable 설치 안내](../05_릴리스/v0.5.0/README.md),
+[W08 증거](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) 및
+[274번 공개 smoke](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)를 따르며 compile을 전체 물리 HIL로 해석하지 않는다.
 Ubuntu/macOS는 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에
 따라 후속 제품선에서 검증한다. 한 Host의 compile 결과를 다른 Host의 PASS로 합산하지 않는다.
 
@@ -67,7 +68,7 @@ Zephyr 직접 호출은 library 구현 내부가 소유하며 개발 마일스�
 | `standard` | Standard peripherals | GPIO, Serial, Wire, SPI, ADC, PWM | 일반 Arduino sketch |
 | `adaptive` | Adaptive capabilities (experimental) | compiler probe·library manifest·role declaration의 합집합 | 기능별 최소 설정·소스 개발 경로 |
 | `ble` | BLE NUS | standard 기능 + BLE | NUS, GAP/GATT, 보안·표준 profile |
-| `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0에서 도입해 v0.4.1에 유지한 고급 주변장치 API |
+| `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0에서 도입해 v0.5.0에도 유지한 고급 주변장치 API |
 | `secure_ble_dfu` | Secure BLE DFU (MCUboot) | sysbuild·서명·고정 dual-slot layout | v0.5.0의 인증 BLE DFU; 외부 signing key 필수 |
 | `ble_audio_io` | BLE Audio external I/O (DAP UART disconnected) | BLE Audio와 외장 I/O 설정 | v0.5.0의 연결 경로; 외장 실물 검증은 사용자 후속 NOT RUN |
 
@@ -88,13 +89,18 @@ feature_set=secure_ble_dfu → secure_ble_dfu
 feature_set=ble_audio_io   → ble_audio_io
 ~~~
 
-`fabric`은 v0.4.0에서 도입해 v0.4.1에 유지한 정식 profile입니다. 직접 nrfx IRQ와 peripheral block을 소유하므로 standard
+`fabric`은 v0.4.0에서 도입해 v0.5.0에도 유지한 정식 profile입니다. 직접 nrfx IRQ와 peripheral block을 소유하므로 standard
 singleton을 함께 활성화하지 않습니다. P1.4~P1.7을 route로 쓰려면 보드의 DAP UART가 물리적으로
 분리돼 있어야 합니다.
 
 ---
 
 ## 3. Bundled library feature 계약
+
+현재 v0.5.0의 16개 library별 feature·호환 profile의 단일 원본은 각 `libraries/<library>/zephyr/feature.yml`이다.
+아래 아홉 행과 JSON 예시는 v0.4.1 당시 기준선이다. 이후 추가한 DFU·LegacySigning·EATT·ISO·Audio·
+DirectionFinding·ChannelSounding 및 확장 profile은 현재 manifest와 [예제 metadata](../../libraries/example-metadata.json)를 따른다.
+과거 표의 `ble` 단독 호환 값을 현재 16개 library 전체에 적용하지 않는다.
 
 | Library | feature ID | 추가 conf/overlay | 호환 profile |
 | --- | --- | --- | --- |
@@ -108,7 +114,7 @@ singleton을 함께 활성화하지 않습니다. P1.4~P1.7을 route로 쓰려�
 | `LittleFS` | `nucode.littlefs` | `littlefs.conf`, overlay 없음 | `standard`, `ble` |
 | `NUCODE_Peripheral_Fabric` | `nucode.peripheral.fabric` | `peripheral-fabric.conf`, overlay 없음 | `fabric`만 |
 
-정식 `v0.4.1`은 위 아홉 feature를 제공합니다. `NUCODE_Peripheral_Fabric`은 T16에서 추가한
+이전 정식 `v0.4.1`은 위 아홉 feature를 제공했습니다. `NUCODE_Peripheral_Fabric`은 T16에서 추가한
 정식 경로이며 이전 v0.3.0의 여덟 feature와 archive는 소급 변경하지 않습니다.
 `v0.2.0` archive가 앞의 네 항목만 가졌다는 사실도 해당 버전의 역사 기록으로 유지합니다.
 BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
@@ -151,7 +157,7 @@ BLE NUS feature manifest의 핵심 값은 다음과 같습니다.
 
 ### 4.1 개발 adaptive profile
 
-개발 `adaptive`는 `standard`/`ble`의 범용 기능을 모두 켜지 않고 compiler-assisted
+v0.5.0의 실험적 `adaptive`는 `standard`/`ble`의 범용 기능을 모두 켜지 않고 compiler-assisted
 capability probe, 선택 library의 feature manifest와 공개 role/capacity 선언의 합집합으로
 최종 구성을 만든다. P0·P1·P2는 완료했지만 공개 기본값 전환은 별도 UX 후속이다.
 
@@ -220,13 +226,13 @@ ELF·linker map·adaptive capability 결과 hash, FLASH/RAM 사용량과 headroo
 
 ### 4.3 메모리 layout의 별도 선택 축
 
-`v0.4.1`의 세 profile은 같은 loaderless 기본 layout을 사용한다. Application은
+`v0.5.0`의 `secure_ble_dfu` 이외 profile은 같은 loaderless 기본 layout을 사용한다. Application은
 `0x000000..0x16c000`의 1,490,944 byte(1,456 KiB), LittleFS와 Settings/ZMS는 RRAM 끝의
 32 KiB와 36 KiB다. Feature set 선택은 메모리 layout을 암묵적으로 바꾸지 않는다.
 
-`v0.5.0` 개발 M30은 BLE DFU용 최소 MCUboot·signed update·rollback 기반과 별도
-`secure_ble_dfu` profile을 구현했다. 개발 Tools 메뉴의 `Secure BLE DFU (MCUboot)`는
-sysbuild와 maximum size `729088` byte를 선택한다. 설치·지원 v0.4.1의 위 세 profile에는 포함되지 않는다.
+`v0.5.0`은 M30에서 구현한 BLE DFU용 최소 MCUboot·signed update·rollback 기반과 별도
+`secure_ble_dfu` profile을 제공한다. Tools 메뉴의 `Secure BLE DFU (MCUboot)`는
+sysbuild와 maximum size `729088` byte를 선택한다. 이전 v0.4.1의 세 profile에는 포함되지 않았다.
 
 `v0.6.0` M36은 이 최소 기반을 여러 layout·update transport로 확장하는 후속 계획이다.
 고급 `Tools → Memory layout`을 제공할 때에는 검증된 preset이 feature set과 별개의 명시적
@@ -238,7 +244,7 @@ M36은 미착수다. 완료·인계 조건은 [v0.5.0 착수 계획](../TODO_v0.
 
 ---
 
-## 5. v0.4.1 사용자 예제 30개
+## 5. 이전 v0.4.1 사용자 예제 30개 기록
 
 | Library | 예제 |
 | --- | --- |
@@ -264,16 +270,16 @@ Wire target/callback/no-STOP, `Wire1`, `SPI1`은 profile을 선택해도 활성�
 
 ## 6. 배포와 자동 검증
 
-정식 `v0.4.1` Boards Manager ZIP은 profile 세 개, feature manifest 아홉 개와 예제 30개를
+정식 `v0.5.0` Boards Manager ZIP은 Feature set 여섯 개, library 16개와 예제 113개를
 같은 상대 경로로 보존한다. Arduino IDE/CLI가 설치된 Core에서 library별 예제를 같은 이름으로
 열거해야 한다.
 
 자동 gate는 다음을 검사한다.
 
 - profile/feature schema, allowlist, 경로 안전성과 conflict
-- 예제 폴더/`.ino` 이름 및 정식 30개 discovery
+- 예제 폴더/`.ino` 이름 및 정식 113개 discovery
 - profile별 예제 compile과 feature provenance
-- 공개 예제에 `prj.conf`, `app.overlay` sidecar가 없는지
+- 예제 metadata에 선언한 필수 `prj.conf`, `app.overlay` sidecar와 역할 조건의 일치
 - source package와 Boards Manager archive의 예제 집합 일치
 
 이전 v0.2.0의 14개와 v0.3.0의 29개 예제 결과는 각 버전의 역사 기록으로 남는다.
@@ -287,7 +293,7 @@ v0.4.1 stable lock은 `NUCODE Peripheral Fabric/FabricCapabilities`를 더한 30
 외부 Arduino library 호환성은 bundled feature allowlist에 자동 편입하지 않고 M17의 고정된
 별도 gate로 검증한다.
 
-### 공개 RC의 추가 예제
+### v0.5.0 정식 예제와 추가 범위
 
 stable v0.5.0 소스는 **library 16개·`.ino` 113개**, W08 설치본 compile은 **113/113**이다.
 M31-W01~W08과 DF·CS를 포함한 지원 역할별 기능 검증도 완료했으나 예제 파일 수·compile 수·
@@ -319,7 +325,7 @@ Initiator/Reflector는 BLE NUS를 기본으로 하고 Adaptive를 실험적 대�
 | M30 profile 4개 | `NUCODE_BLE_Security`, `feature_set=ble` | `run_smoke.py --tests m30` |
 | M30 secure DFU build 조건 | 기존 `HeartRate` 예제, `feature_set=secure_ble_dfu` | `run_smoke.py --tests m30secure`; 저장소 밖 signing key 필요 |
 
-선택형 두 library는 `ble`과 개발 `secure_ble_dfu` profile에 호환되며, header를 포함하지 않은
+선택형 두 library는 `ble`과 `secure_ble_dfu` profile에 호환되며, header를 포함하지 않은
 기본 BLE build에 signing/EATT를 강제로 켜지 않는다. `adaptive` 지원으로 확대하지 않는다.
 M29의 실제 예제명과 완료·잔여 상태는
 [M29 계약의 예제 목록](<../01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md#8-개발-예제와-남은-예제>)을 따른다.
@@ -342,7 +348,7 @@ M32·M33의 추가 기능·예제와 Ubuntu/macOS 지원은 후속 제품선이�
 | M31-W02 — 완료 | CIS central/peripheral, BIS broadcaster/receiver, combined ISO·time sync·recovery; [설치본 11예제·11역할 증거](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>) |
 | M31-W03 — 완료 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP; [11/11 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
 | M31-W04~W05 — 완료 | AoA CTE 송신 예제와 controller 경계, 제품 SDC IQ RX 미지원 표시, CS initiator/reflector·RAS·복구 |
-| M31-W08 및 공개 RC — 완료 | W07 설치 role 예제·제공 경로/제한, Windows package·설치·RC smoke 완료; stable 별도 gate |
+| M31-W08 및 정식 공개 — 완료 | W07 설치 role 예제·제공 경로/제한, Windows package·설치·RC smoke와 별도 stable 승격·공개 완료 |
 | M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
 | M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
 | M33-W02~W04 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |

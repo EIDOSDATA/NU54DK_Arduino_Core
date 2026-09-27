@@ -207,7 +207,7 @@ P2에서는 지원 범위의 오류·최악 부하 계측, stack/heap 여유·�
 [M31 TODO](../TODO_M31.md)의 현재 상태와
 [통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)의 구현 계약을 따른다.
 
-### 4.1 개발 adaptive build 흐름
+### 4.1 실험적 adaptive build 흐름
 
 정식 `v0.5.0`의 `adaptive` 선택은 source record와 final cache 이관을 유지하면서
 다음 단계를 실행한다. P0·P1·P2 완료 범위이며 v0.4.1 stable builder에는 포함되지 않았다.
@@ -241,17 +241,17 @@ cache와 artifact provenance에 넣는다. 같은 source의 pristine build와 ca
 만들어야 한다. 상세 구조·정정 사항·완료 gate는
 [M31 메모리 최적화 통합 설계](<../01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md>)가 소유한다.
 
-v0.3.0 RC3에서 도입해 v0.4.1에서도 유지하는 메모리 계약은 loaderless 단일 application
+v0.3.0 RC3에서 도입해 v0.5.0에서도 유지하는 기본 메모리 계약은 loaderless 단일 application
 1,490,944 byte와 끝단 영구 저장소
 68 KiB다. Adapter와 release gate는 Devicetree code partition, linker FLASH 범위와
 `boards.txt` maximum size가 모두 `0x000000..0x16c000`을 가리키는지 확인해야 한다. 전문가
 `app.overlay`가 마지막에 병합되더라도 이 경계를 조용히 우회하거나 Arduino size 표시만 바꾸는
 구성은 지원하지 않는다.
 
-### 4.2 개발 update profile과 후속 인계 경계
+### 4.2 선택 update profile과 후속 인계 경계
 
 `v0.5.0` M30은 별도 `secure_ble_dfu` profile로 제한된 고정 layout, MCUboot 최초 설치,
-외부 키 서명과 BLE update 경로를 구현했다. 개발 `boards.txt`에서 이 profile은 sysbuild와
+외부 키 서명과 BLE update 경로를 구현·검증했다. 정식 `boards.txt`에서 이 profile은 sysbuild와
 maximum size `729088` byte를 선택한다. 기본 loaderless 단일 image profile과 구분하며,
 image·layout·서명 정책을 식별하는 별도 manifest·cache·upload 검증을 적용한다.
 
@@ -333,7 +333,7 @@ console에는 5단계 상태·실제 Ninja target 분모·최대 10초 heartbeat
 현재 정식 범위에는 다음이 포함되지 않는다.
 
 - precompiled Arduino library와 LTO object
-- sysbuild/multi-image, MCUboot, DFU와 OTA
+- 선택 `secure_ble_dfu`의 고정 MCUboot/sysbuild·BLE update 계약을 벗어나는 임의 multi-image·DFU·OTA
 - LLEXT 또는 Loader ABI
 - remote/distributed cache와 network cache
 - Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에

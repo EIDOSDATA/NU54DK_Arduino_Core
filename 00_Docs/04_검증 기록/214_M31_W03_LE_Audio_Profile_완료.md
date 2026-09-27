@@ -1,5 +1,10 @@
 # M31-W03 LE Audio profile 완료
 
+> **역사 기록 · 정식 공개 후 안내:** 본문의 버전·진행률·다음 작업은 해당 실행 당시 상태다.
+> 현재 설치·지원 버전은 [v0.5.0](<../05_릴리스/v0.5.0/README.md>)이며 개발 기준은 `main`이다.
+> 완료된 main 통합·RC 브랜치 정리와 공개 결과는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md),
+> 후속 작업은 [HANDOFF](../HANDOFF.md)를 따른다. 당시 source·수치·PASS/FAIL/HOLD/NOT RUN은 보존한다.
+
 M31-W03의 LE Audio 11개 subcase를 고정 NCS v3.4.0과 NU54DK 세 보드 범위에서
 모두 닫았다. 실행할 때마다 CMSIS-DAP V2 probe identity를 원문 UID 대신
 SHA-256으로 선택하고 target COM·role·image revision을 다시 결합했다. 공개

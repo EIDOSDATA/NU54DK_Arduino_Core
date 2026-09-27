@@ -46,7 +46,8 @@ Ubuntu/macOS package/build matrix와 실물 Host 검증은 버전 미정인 후�
 Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workflow permission은
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
 
-RC2는 `main`과 `0.5.0-RC2` push를 모두 검사한다. 문서 전용 변경은 classifier 근거가 있을 때
+현재 M12 workflow에는 `main`과 과거 `0.5.0-RC2` push trigger가 남아 있다. RC2 브랜치는 정식
+승격 후 삭제했으므로 일반 개발은 `main`에서 검사한다. 문서 전용 변경은 classifier 근거가 있을 때
 대표 target build를 생략할 수 있지만 문서·Host·계약·package 검사는 유지한다. NCS/toolchain
 설치 cache와 configuration/source compile cache는 서로 다른 key·경로로 관리한다.
 
@@ -287,7 +288,8 @@ artifact identity와 함께 검증 기록으로 승격한다. 과거 run ID나 �
 Workflow는 package를 검증하지만 tag 생성, stable index 변경, GitHub Release 공개 또는
 latest 지정은 자동으로 수행하지 않는다. 공개에는 별도 사람 승인과 릴리스 절차가 필요하다.
 
-M31 W08 workflow는 `0.5.0-RC2` push 또는 수동 실행에서 private RC2 package를 두 번 재현한다.
+M31 W08 workflow는 과거 `0.5.0-RC2` push 또는 수동 실행에서 private RC2 package를 두 번 재현하는
+역사 검증 도구다. RC2 브랜치는 삭제했으며 현재 stable 공개 절차로 이 workflow를 해석하지 않는다.
 실측 가중치 원본 [`rc2-example-weights.json`](../../tools/ci/rc2-example-weights.json)으로 113개
 설치 예제를 16개 worker lane에 배정한 뒤 8개 shard의 2-worker 입력으로 묶는다. 각 worker는
 독립 compile·Zephyr configure cache를 사용하며 내부 Ninja 병렬도도 CPU/RAM 상한에 맞춘다.
@@ -303,10 +305,11 @@ artifact를 받아 package·aggregate identity를 검사하고 게시 입력을 
 build하지 않으며 tag·Release·catalog 게시도 수행하지 않는다.
 
 RC2 최종 기능 gate는 M12 9/9, M31 113/113 PASS다. Fast CI 20분 목표와 Full RC 40분 목표는
-각각 24분 20초·최장 shard 54분으로 미달했다. 2026-09-27 사용자는 적용 결과를 수용했고 GUI
-시험을 직접 수행하기로 했다. 시간 목표 FAIL과 실제 GUI HOLD/사용자 후속 상태를 PASS로 바꾸지
-않는다. Exact 실행·허용 범위는 [RC2 검증 기록](<../04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>)과
-[RC2 TODO](../TODO_v0.5.0-RC2.md)를 따른다.
+각각 24분 20초·최장 shard 54분으로 미달했다. 2026-09-27 사용자는 적용 결과를 수용했고 이후
+GUI 연속 Blink 업로드 성공을 확인했다. 시간 목표 FAIL과 최초 GUI HOLD는 당시 기록으로 보존하며,
+후속 GUI 성공 범위는 [273번 기록](<../04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>)으로 구분한다.
+Exact 실행·허용 범위는 [RC2 검증 기록](<../04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>)과
+[RC2 TODO](../TODO_v0.5.0-RC2.md)를 따른다. 정식 공개 결과는 [274번 기록](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따른다.
 
 ### 후속 제품선 다중 Host CI 승격 조건
 

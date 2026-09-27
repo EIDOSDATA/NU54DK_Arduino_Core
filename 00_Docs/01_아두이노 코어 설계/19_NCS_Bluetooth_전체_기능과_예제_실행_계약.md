@@ -25,7 +25,9 @@
 
 `v0.5.0`은 완료한 M31을 기준으로 Windows 우선으로 릴리스한다. M31-W08에서 해당 버전의 재현
 package·Windows 설치 수명주기·RC 준비를 완료했다. 이후 공개 `v0.5.0-rc.1` 승인·게시·다운로드
-smoke까지 [268번 기록](<../04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)에서 닫았으며 정식 stable gate는 별도다.
+smoke까지 [268번 기록](<../04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)에서 닫았다.
+후속 RC2·GUI 연속 Upload 교정 뒤 별도 정식 stable gate도
+[274번](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에서 완료했다.
 M31 기능 8/8과 릴리스 판정은 별도 집계한다. `M31-MEM-OPT`에서 메모리 최적화
 P0·P1·P2를 완료했다. P2의 지원 범위 오류·최악 부하,
 stack/heap 안전 여유·최종 크기, 동일 조건 Nordic native FLASH/RAM 비교는
@@ -37,8 +39,8 @@ M32·M33 추가 기능과 Ubuntu/macOS 확대는 버전 미정 후속 범위다.
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
 현재 stable `v0.5.0`, source 식별자 `0.5.0`,
 M31 8/8·M32 0/12·M33 0/8·HOST 3/8을 구분한다.
-RC2의 예제 안내·Upload·UTF-8·진행 표시 교정과 자동 검사, 시간 목표 미달 수용 및 사용자 GUI
-후속은 [RC2 TODO](../TODO_v0.5.0-RC2.md)를 따른다. RC1 결과와 M31 기능 분모는 그대로 보존한다.
+RC2의 예제 안내·Upload·UTF-8·진행 표시 교정과 자동 검사, 시간 목표 미달 수용 및 후속 GUI
+연속 Upload 성공 확인은 [RC2 TODO](../TODO_v0.5.0-RC2.md)를 따른다. RC1 결과와 M31 기능 분모는 그대로 보존한다.
 
 ### 구현 책임과 실물 검증 gate
 
@@ -161,7 +163,7 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 | 완료 / P0 | M31 메모리 최적화 | W01~W03 완료와 W04·W05 기존 성공/실패 원본 | P0~P2 완료, 최종 크기 유지; [262번 완료](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | 완료 / P0 | M31-B W04 DF | W01 controller별 판정과 최적화 image | 지원 CTE TX·연결 응답 PASS, 제품 SDC RX/AoD `UNSUPPORTED`; [263번 완료](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
 | 완료 / P0 | M31-C W05 CS | W01 controller별 판정과 최적화 image | connected CS 예제, negative·복구 완료; [264번](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
-| 완료 / P0 | M31-W06 독립 image 자원·수명주기·회귀, W07 설치 예제·3보드 HIL, W08 Windows RC | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8·Windows package·설치·공개 RC smoke 완료; stable 별도 gate와 M32 자원 인계 |
+| 완료 / P0 | M31-W06 독립 image 자원·수명주기·회귀, W07 설치 예제·3보드 HIL, W08 Windows RC | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8·Windows package·설치·RC 및 stable 공개 smoke 완료; M32 자원 인계 |
 | 4 / P0 | M32-A W01~W05 modern LE·Nordic 확장 | M31 W01 inventory와 기존 GAP | power/timing/광고/resource/diagnostic 예제 |
 | 5 / P0 | M32-B W06 Mesh 기반 → W07 Mesh 1.1 → W08 BLOB/DFU | 설정·보안·고정 memory budget | Mesh role/model·전송·update 예제 |
 | 5 / P0 | M32-C W09 단독 radio → W10 공존 | BLE/Mesh 단독 PASS, 최소 802.15.4/ESB profile | 지원 조합·중재·복구 예제; M38/M39 재사용 |

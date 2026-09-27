@@ -1,12 +1,13 @@
 # v0.5.0-rc.2 사용자 경험 교정과 마감
 
 이 문서는 공개 `v0.5.0-rc.1` 사용 과정에서 확인한 Arduino IDE 사용자 경험 문제를
-`0.5.0-RC2` branch에서 교정하기 위한 실행 계약이다. Branch는 2026-09-27에
+`0.5.0-RC2` branch에서 교정한 실행 계약과 완료 이력이다. 현재 설치·지원은
+[정식 v0.5.0](<05_릴리스/v0.5.0/README.md>) 하나이며 RC1/RC2 branch는 삭제했다. Branch는 2026-09-27에
 `main`의 `7b8692441f92c9d5b93d2613f6c8c50312992519`에서 분기했다.
 
 계획 작성 당시 stable·지원 버전은 `v0.4.1`, 공개 시험 후보는 `v0.5.0-rc.1`이었다. 계획 작성과
 branch 생성 자체는 `v0.5.0-rc.2` tag·GitHub Release·RC catalog 공개 승인이 아니었다. 기존
-RC1 tag·Release·자산·검증 기록과 `0.5.0-RC1` branch는 변경하지 않는다.
+RC1 tag·Release·자산·검증 기록과 `0.5.0-RC1` branch는 그 RC2 작업 당시 변경하지 않았다.
 최신 상태는 §9·§11과 아래 정식 승격 기록이다. 이 문서의 v0.4.1 stable·RC2 후보 표현은 당시 상태다.
 
 ## 1. RC1에서 확인한 문제와 최초 완료 기준
@@ -205,7 +206,10 @@ CLI PASS를 IDE PASS나 실제 flash PASS로 바꾸지 않는다. 실제 보드 
 COM, 역할, image hash, command lease와 배타 lock을 다시 결합한다. 자동 mass erase·unlock·recover와
 임의 USB·전원·배선 변경은 금지한다.
 
-## 9. 실행 순서
+## 9. RC2 시험 배포 당시 실행 결과
+
+아래 GUI NOT RUN·시간 목표 FAIL은 RC2 배포 당시 판정이다. 이후 Blink 연속 Upload 교정과
+정식 승격은 §11에 별도 기록한다. 확인하지 않은 GUI 전체 항목을 일괄 PASS로 바꾸지 않는다.
 
 | 단계 | 상태 | 작업 | 완료 조건 |
 | --- | --- | --- | --- |
@@ -245,14 +249,15 @@ evidence를 갱신하고 exact commit을 고정한다. Branch push나 CI 실행�
 남으면 tag와 Release를 만들지 않는다. 정식 `v0.5.0` stable tag·Release·root catalog는 그 이후에도
 별도 승인 대상이다.
 
-### 최신 수용 결정 — 초기 공개 HOLD 이후
+### RC2 당시 수용 결정 — 초기 공개 HOLD 이후
 
 사용자는 최종 결과를 확인한 뒤 “충분해”, 전체 문서 갱신·RC2의 main 반영·README 설치 링크를 요청하고
-Arduino GUI 환경에서 직접 시험하겠다고 했다. 이에 시간 목표 FAIL을 수용한 **RC2 시험 배포**로 마감한다.
-GUI는 사용자 후속 NOT RUN이며 기능 PASS로 바꾸지 않는다. 초기 조건부 승인·HOLD·실패 원본은 보존한다.
+Arduino GUI 환경에서 직접 시험하겠다고 했다. 이에 시간 목표 FAIL을 수용한 **RC2 시험 배포**로 마감했다.
+당시 GUI는 사용자 후속 NOT RUN이었으며 기능 PASS로 바꾸지 않는다. 초기 조건부 승인·HOLD·실패 원본은 보존한다.
 최종 source `b2e7a587...`의 M12/Full RC·113예제·package·HIL 결과와 이후 문서/main 검사를 분리한다.
-정식 stable·M32/M33·보류 Host·추가 성능 개발을 자동 재개하지 않는다.
-[272번 최신 결정](<04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md>)과
+당시에는 별도 승인 전 정식 stable을 공개하지 않았으며, 이후 승격은 아래 기록을 따른다.
+M32/M33·보류 Host·추가 성능 개발은 자동 재개하지 않는다.
+[272번 당시 결정](<04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md>)과
 [GUI 체크리스트](<05_릴리스/v0.5.0-rc.2/TESTING.md>)를 따른다.
 
 ### 공개 후 GUI 연속 Upload 교정
@@ -261,12 +266,12 @@ GUI는 사용자 후속 NOT RUN이며 기능 PASS로 바꾸지 않는다. 초기
 `E_SWD_NO_ACK`로 실패하고 USB 재연결 뒤 성공했다. VS Code에서 사용한 동일 board DTS의 Zephyr
 기본 Blink와 비교해 Standard profile의 전역 runtime PM 자동 enable을 원인으로 확정했다.
 `CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE=n`을 명시한 설치본은 USB 재연결 없는 연속 Upload를 통과했다.
-공개 RC2 tag·archive·index는 변경하지 않고 main과 다음 배포 후보에 교정을 보존한다.
+공개 RC2 tag·archive·index는 변경하지 않았으며 교정은 main과 정식 v0.5.0에 포함됐다.
 [273번 기록](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>)을 따른다.
 
 ### 정식 v0.5.0 승격
 
 사용자는 교정 설치본의 연속 Upload 성공을 확인한 뒤 정식 릴리스를 승인했다. RC2의 시간 목표 FAIL과
 초기 GUI NOT RUN 원본은 변경하지 않으며, 후속 실제 GUI 연속 Upload PASS와 stable package 검증을 별도
-근거로 연결한다. `0.5.0-RC1`·`0.5.0-RC2` branch는 정식 마감 뒤 삭제하지만 RC tag·Pre-release·asset은
+근거로 연결한다. `0.5.0-RC1`·`0.5.0-RC2` branch는 정식 마감에서 로컬·원격 모두 삭제했고 RC tag·Pre-release·asset은
 immutable 역사로 보존한다. [274번 기록](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따른다.

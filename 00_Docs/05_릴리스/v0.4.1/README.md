@@ -1,11 +1,13 @@
 # NU54DK Arduino Core v0.4.1
 
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.4.1` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
+
 `v0.4.1`은 `v0.4.0`의 보드 기능과 Arduino API를 그대로 유지하면서 Nordic prerequisite
-설치 결과를 더 정확하게 표시하는 유지보수 릴리스입니다. **현재 정식(stable) 설치·지원 대상은 v0.4.1
-하나이며, 이전 stable·RC·preview는 지원하지 않고 stable Boards Manager 목록에서도
-제공하지 않습니다.** 과거 tag·Release·자산·검증 기록은 재현성 감사를 위해 보존합니다.
-시험용 `v0.5.0-rc.2`의 별도 설치 경로와 GUI 검증 안내는 [릴리스 안내](../README.md)를 따릅니다.
-RC 시험 설치가 v0.4.1 정식 지원 정책을 바꾸지는 않습니다.
+설치 결과를 더 정확하게 표시한 유지보수 릴리스입니다. 공개 당시 정식 설치·지원 대상과
+stable Boards Manager 공급을 v0.4.1 하나로 전환했습니다. 이후 정식 v0.5.0 공개로
+v0.4.1의 지원·catalog 공급을 종료했으며, 과거 tag·Release·자산·검증 기록은 보존합니다.
 
 | 항목 | 값 |
 | --- | --- |
@@ -14,8 +16,8 @@ RC 시험 설치가 v0.4.1 정식 지원 정책을 바꾸지는 않습니다.
 | 공식 사용자 OS | Windows 10/11 x64 |
 | SDK | nRF Connect SDK v3.4.0 |
 | Toolchain | `dcbdc366a1` |
-| 설치 channel | Stable Boards Manager index |
-| 정식 지원 버전 | `0.4.1`만 지원 |
+| 당시 설치 channel | Stable Boards Manager index |
+| 당시 정식 지원 버전 | `0.4.1` 단독; 현재는 지원·catalog 공급 종료 |
 | 기능 기준선 | v0.4.0과 동일 |
 
 공개 source·ZIP·checksum의 고정 identity와 설치 검증 결과는
@@ -24,7 +26,9 @@ RC 시험 설치가 v0.4.1 정식 지원 정책을 바꾸지는 않습니다.
 않습니다. 개발 소스의 지원 범위와 v0.5.0 상태는 [개발 TODO](../../TODO_v0.5.0.md)와
 [RC2 실행 기록](../../TODO_v0.5.0-RC2.md)을 따릅니다.
 
-## 설치
+## 당시 설치 절차
+
+현재 index에서는 `0.4.1`을 선택할 수 없습니다. 신규 설치는 [v0.5.0 설치 안내](../v0.5.0/README.md)를 따릅니다.
 
 Arduino IDE의 Additional Boards Manager URLs에 다음 주소를 추가합니다.
 

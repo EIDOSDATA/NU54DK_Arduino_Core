@@ -10,7 +10,7 @@
 | Stable | v0.5.0, Windows 10/11 x64, 16개 library·113개 예제 | [릴리스 안내](<05_릴리스/v0.5.0/README.md>) |
 | M28·M29·M30 | 각각 8/8 완료, M30 전원 차단 12/12 | [v0.5.0 TODO](TODO_v0.5.0.md) |
 | M31 | W01~W08 8/8, package·설치·예제·수명주기·대표 HIL 완료 | [M31 TODO](TODO_M31.md) |
-| RC1/RC2 | 공개 tag·Pre-release·asset과 evidence 보존, branch는 정식 마감 뒤 삭제 | [RC2 TODO](TODO_v0.5.0-RC2.md) |
+| RC1/RC2 | 로컬·원격 branch 삭제 완료, 공개 tag·Pre-release·asset과 evidence 보존 | [RC2 TODO](TODO_v0.5.0-RC2.md) |
 | 연속 Upload | Standard Blink 250 ms → 100 ms를 USB 재연결 없이 실제 GUI에서 PASS | [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>) |
 | 정식 공개 | exact package 이중 재현·승인·tag/Release·단일 stable catalog·공개 smoke | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
 | 후속 제품선 | M32 0/12, M33 0/8, HOST-W04~W08 사용자 보류 | [M32](TODO_M32.md) · [M33](TODO_M33.md) |
@@ -41,6 +41,7 @@ M32/M33, Ubuntu/macOS Host 확대, 외장 audio 장치와 상용 peer 실물 상
 | NCS / Zephyr | v3.4.0 · `99553055607b2e9885fbc80ccd11fa9da81c2df0` / `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | Windows toolchain | `dcbdc366a1` |
+| 정식 tag source | `v0.5.0` → `0999b6a721b4579faa6a7a4d91d04da5e4960c07` |
 | RC1 tag source | `v0.5.0-rc.1` → `7786984a186980f6220271cd506636e4564bc55d` |
 | RC2 tag source | `v0.5.0-rc.2` → `b2e7a587ba6fde31e033dc21008d7084bd6e631b` |
 
@@ -58,5 +59,7 @@ exact source commit을 가리키고, root catalog와 공개 결과 마감은 후
 - 다른 PC 준비는 [Windows 환경](<02_빌드 설계/09_Windows_개발환경_설정.md>), 이력 정리 뒤 checkout은
   [기여 안내](../CONTRIBUTING.md#이력-정리-뒤-기존-checkout)를 따릅니다.
 
-전체 문서 검토 범위와 hash는 [문서 감사 원장](document-review.json), 실행별 실제 결과는
-[검증 기록](<04_검증 기록/README.md>)에서 확인합니다.
+전체 문서 검토 범위·방법과 hash는 [문서 감사 원장](document-review.json), 공개 후 누락 교정은
+[275번 기록](<04_검증 기록/275_v0.5.0_공개_후_문서_전수_재검토.md>), 실행별 실제 결과는
+[검증 기록](<04_검증 기록/README.md>)에서 확인합니다. Hash·링크 검사 통과와 본문 의미의 최신성은
+별도로 판정하며, 과거 raw evidence를 새 source의 실기 PASS로 재사용하지 않습니다.

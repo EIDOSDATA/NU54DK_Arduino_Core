@@ -29,7 +29,7 @@ v0.5.0은 Windows용 정식 배포입니다. 이전 stable과 RC는 지원·cata
 
 ### 1. Core 설치
 
-Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 사용할 채널을 추가합니다.
+Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 아래 stable 설치 URL을 추가합니다.
 
 **Stable v0.5.0 — [설치용 index 링크](https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json)**
 
@@ -118,7 +118,7 @@ Signed Write는 deprecated legacy opt-in, EATT와 adaptive는 experimental opt-i
 - LE Audio는 보드 간 합성 PCM/LC3·프로토콜 경로를 검증했습니다. 외장 마이크·스피커·상용 peer의
   실제 운용은 미검증이며 정밀 음질·거리·각도 보정을 보증하지 않습니다.
 - ISO·Audio·DF·CS의 모든 기능을 한 image에서 동시에 사용하는 구성과 모든 주변장치 조합을 보증하지 않습니다.
-- Native USB·Wi-Fi·Ethernet·Thread·Matter·Mesh는 이 두 배포판의 지원 범위가 아닙니다.
+- Native USB·Wi-Fi·Ethernet·Thread·Matter·Mesh는 v0.5.0의 지원 범위가 아닙니다.
 - 실제 결선은 [P2/P4 핀맵](<00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>)을 확인합니다.
   Storage format/reset은 데이터를 지우며, GPIO interrupt callback에서는 blocking·heap 할당·`Serial`·`delay()`를 사용하지 않습니다.
 
@@ -131,11 +131,11 @@ Arduino IDE의 `File → Examples`에서 열거나 다음 경로에서 코드를
 
 | 해보고 싶은 것 | 시작할 예제 | 채널 |
 | --- | --- | --- |
-| LED·보드 정보 | [Blink](libraries/NUCODE_NU54DK/examples/Blink) · [BoardInfo](libraries/NUCODE_NU54DK/examples/BoardInfo) | Stable·RC |
-| 통신·핀 변경 | [Serial1RuntimePins](libraries/NUCODE_NU54DK/examples/Serial1RuntimePins) · [WireRuntimePins](libraries/NUCODE_NU54DK/examples/WireRuntimePins) · [SPI00RuntimePins](libraries/NUCODE_NU54DK/examples/SPI00RuntimePins) | Stable·RC |
-| BLE 통신·보안 | [NUSPeripheral](libraries/NUCODE_BLE/examples/NUSPeripheral) · [NUSCentral](libraries/NUCODE_BLE/examples/NUSCentral) · [SecureKeyboard](libraries/NUCODE_BLE_Security/examples/SecureKeyboard) | Stable·RC |
-| 저장·저전력 | [LittleFSPersistence](libraries/LittleFS/examples/LittleFSPersistence) · [SystemOffWake](libraries/NUCODE_NU54DK/examples/SystemOffWake) | Stable·RC |
-| 직접 주변장치 제어 | [FabricCapabilities](libraries/NUCODE_Peripheral_Fabric/examples/FabricCapabilities) | Stable·RC |
+| LED·보드 정보 | [Blink](libraries/NUCODE_NU54DK/examples/Blink) · [BoardInfo](libraries/NUCODE_NU54DK/examples/BoardInfo) | Stable |
+| 통신·핀 변경 | [Serial1RuntimePins](libraries/NUCODE_NU54DK/examples/Serial1RuntimePins) · [WireRuntimePins](libraries/NUCODE_NU54DK/examples/WireRuntimePins) · [SPI00RuntimePins](libraries/NUCODE_NU54DK/examples/SPI00RuntimePins) | Stable |
+| BLE 통신·보안 | [NUSPeripheral](libraries/NUCODE_BLE/examples/NUSPeripheral) · [NUSCentral](libraries/NUCODE_BLE/examples/NUSCentral) · [SecureKeyboard](libraries/NUCODE_BLE_Security/examples/SecureKeyboard) | Stable |
+| 저장·저전력 | [LittleFSPersistence](libraries/LittleFS/examples/LittleFSPersistence) · [SystemOffWake](libraries/NUCODE_NU54DK/examples/SystemOffWake) | Stable |
+| 직접 주변장치 제어 | [FabricCapabilities](libraries/NUCODE_Peripheral_Fabric/examples/FabricCapabilities) | Stable |
 | 두 link·CoC | [MixedRoleLinks](libraries/NUCODE_BLE/examples/MixedRoleLinks) · [L2capCocClient](libraries/NUCODE_BLE/examples/L2capCocClient) | Stable |
 | ISO·LE Audio | [ISO 역할 안내](libraries/NUCODE_BLE_ISO/examples/README.md) · [Audio 역할 안내](libraries/NUCODE_BLE_Audio/examples/README.md) | Stable |
 | CTE 송신·거리 측정 | [Direction Finding](libraries/NUCODE_BLE_DirectionFinding/examples/README.md) · [RasInitiator](libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/README.md) · [RasReflector](libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/README.md) | Stable |
@@ -151,7 +151,7 @@ Arduino IDE의 `File → Examples`에서 열거나 다음 경로에서 코드를
 | 설치·마이그레이션·문제 해결 | [v0.5.0 문서](<00_Docs/05_릴리스/v0.5.0/README.md>) |
 | API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
 | Core 개발·검사·기여 | [기여 안내](CONTRIBUTING.md) · [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) |
-| 현재 개발 상태·다음 작업 | [HANDOFF](00_Docs/HANDOFF.md) · [RC2 교정 계획](00_Docs/TODO_v0.5.0-RC2.md) · [v0.5.0 TODO](00_Docs/TODO_v0.5.0.md) |
+| 현재 개발 상태·다음 작업 | [HANDOFF](00_Docs/HANDOFF.md) · [RC2 교정 완료 기록](00_Docs/TODO_v0.5.0-RC2.md) · [v0.5.0 TODO](00_Docs/TODO_v0.5.0.md) |
 | 실기·배포 근거 | [검증 기록](<00_Docs/04_검증 기록/README.md>) · [릴리스 이력](<00_Docs/05_릴리스/README.md>) |
 
 M28~M31·P0~P2와 RC2 사용자 경험 교정, 연속 Upload runtime PM 교정을 포함해 v0.5.0으로

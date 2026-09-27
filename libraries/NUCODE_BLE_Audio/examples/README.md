@@ -4,13 +4,12 @@
 실행한다. `.ino`에는 일반 C++로 PCM 생성, codec 설정, encode/decode, 결과 검사와 오류 처리를
 보여 준다. liblc3와 Zephyr Audio 객체는 라이브러리 구현 내부에 있다.
 
-이 예제 집합은 공개 후보 `v0.5.0-rc.2`에 포함된 LE Audio 예제다. 완료 감사에 채택된
+이 예제 집합은 정식 `v0.5.0`에 포함된 LE Audio 예제다. 완료 감사에 채택된
 profile·역할 예제는 build와 합성 PCM/payload의 보드 간 데이터·제어·복구 경로를
 검증했다. `ExternalPdmMicrophoneSource`와 `ExternalI2sSpeakerSink`는 build 가능한 실제
 연결 예제이지만, 외장 PDM/I2S 장치의 실물 입출력·음질·전기적 호환성은
-사용자 후속 `NOT RUN`이다. Windows 설치 방법은
-[RC 안내](<../../../00_Docs/05_릴리스/v0.5.0-rc.2/README.md>)를 따른다. 정식 지원 버전
-`v0.4.1`에는 포함되지 않는다. 세부 판정은
+사용자 후속 `NOT RUN`이다. Windows 10/11 x64 설치 방법은
+[v0.5.0 안내](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)를 따른다. 세부 판정은
 [검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
 
 RAM 사용량은 선택한 역할·Core revision·buffer 설정에 따라 달라진다. 빌드가 표시하는 정적

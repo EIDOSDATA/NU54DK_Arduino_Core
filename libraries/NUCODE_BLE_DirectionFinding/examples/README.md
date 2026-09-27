@@ -1,13 +1,12 @@
 # NUCODE BLE Direction Finding 예제
 
-이 예제는 공개 후보 `v0.5.0-rc.2`의 Direction Finding 송신 범위다. 고정 NCS v3.4.0의
+이 예제는 정식 `v0.5.0`의 Direction Finding 송신 범위다. 고정 NCS v3.4.0의
 nRF54L15 제품 SDC는 connectionless AoA CTE 송신만 지원하며 IQ 수신과 AoD는
 `UNSUPPORTED`다. 제품 SDC 수신 구현은 P2·W04 범위에서 제외하며 SDK/controller 변경을
-요구하지 않는다. 현재 소스 검증은 공개 `CteBeacon` start/stop·오류 거부 20/20과
+요구하지 않는다. 채택한 기능 검증 증거는 공개 `CteBeacon` start/stop·오류 거부 20/20과
 별도 opt-in Zephyr LL 연결 응답·IQ report 20/20을 검증해 완료했다. 상세 판정은
 [263번 완료 기록](<../../../00_Docs/04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)을 따른다.
-Windows 설치 방법은 [RC 안내](<../../../00_Docs/05_릴리스/v0.5.0-rc.2/README.md>)를 따른다.
-정식 지원 버전 `v0.4.1`에는 포함되지 않는다.
+Windows 10/11 x64 설치 방법은 [v0.5.0 안내](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)를 따른다.
 
 [`CteBeacon.ino`](CteBeacon/CteBeacon.ino)는 기본 안테나에서 connectionless AoA CTE를
 송신하는 공개 Arduino 예제다. 일반 C++로 `BeaconConfig`를 설정하고 `Beacon::begin()`,

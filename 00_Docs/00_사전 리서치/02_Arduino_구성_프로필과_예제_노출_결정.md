@@ -93,9 +93,9 @@ Loaderless 제품선의 기본값은 **단일 application이 영구 저장소를
 layout**이다. 향후 boot/update 기능을 사용하지 않는 사용자에게 MCUboot 예약과 두 번째 image
 slot 비용을 기본으로 부과하지 않는다.
 
-`v0.5.0` 개발 M30은 제한된 고정 layout과 별도 `secure_ble_dfu` profile을 선택해 최소 MCUboot·
-signed update·BLE update·rollback 경로를 구현했다. 이는 현재 설치·지원 `v0.4.1` profile에
-boot 영역이나 update slot을 추가한다는 뜻은 아니다.
+`v0.5.0`의 M30은 제한된 고정 layout과 별도 `secure_ble_dfu` profile을 선택해 최소 MCUboot·
+signed update·BLE update·rollback 경로를 구현·검증했고 정식 설치본에 포함했다. 기본 loaderless
+profile에는 boot 영역이나 update slot을 추가하지 않는다. 이전 `v0.4.1` 자산도 그대로 보존한다.
 
 `v0.6.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
 선택으로 확장하는 후속 계획이다. Layout 선택은 단순 Devicetree 조각이 아니라 code partition,

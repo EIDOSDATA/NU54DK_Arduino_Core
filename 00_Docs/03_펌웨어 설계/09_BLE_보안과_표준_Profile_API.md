@@ -164,7 +164,7 @@ if (BLEKeyboard.connected() && BLEKeyboard.press(0x04U))
 
 ### 6.4 HID mouse와 consumer-control
 
-v0.5.0 개발 source의 `BLEMouse`와 `BLEConsumerControl`은 keyboard와 하나의 정적 HIDS database를
+v0.5.0의 `BLEMouse`와 `BLEConsumerControl`은 keyboard와 하나의 정적 HIDS database를
 공유한다. report ID와 payload는 각각 keyboard 1/8 byte, mouse 2/4 byte, consumer-control
 3/2 byte로 고정된다. 각 facade는 별도로 `begin()`해야 하며 L2 이상 연결과 해당 report CCC 구독
 전에 전송하지 않는다. keyboard boot protocol에서는 mouse와 consumer-control을 거부한다.

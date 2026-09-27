@@ -206,16 +206,21 @@ RAM-only 승인, register policy와 사용자 전원·배터리 조건의 별도
 | API/영역 | 상태 | 계약 |
 | --- | --- | --- |
 | BLE NUS | 지원 | Peripheral/Central byte `Stream`, reconnect lifecycle |
-| GAP | 지원된 범위 | Advertising, scanning, 단일 connection lifecycle |
-| 범용 GATT | 지원된 범위 | Server/client read, write, notify, indicate |
-| Pairing/bonding/SMP | 지원된 범위 | `NUCODE_BLE_Security`의 고정 lifecycle |
-| BAS/DIS | 지원된 범위 | 표준 profile API와 예제 |
+| GAP·Link·Privacy | 지원된 범위 | 기존 단일 연결과 총 2-link, 확장·주기 광고/PAST/PAwR, per-link control과 privacy |
+| 범용 GATT·L2CAP | 지원된 범위 | Server/client read/write/notify/indicate, long/reliable·descriptor·cache·LE CoC; Signed Write는 legacy opt-in, EATT는 experimental opt-in |
+| Pairing/bonding/SMP | 지원된 범위 | `NUCODE_BLE_Security`의 per-link 보안·IO/OOB·bond lifecycle; NFC RF는 NOT RUN |
+| 표준 profile | 지원된 범위 | BAS/DIS·HID와 M30 채택 profile API·예제; 외부 장치별 호환성은 별도 판정 |
 | BLE HID keyboard | 지원된 범위 | Windows 11 pairing, 입력과 bond 복원 HIL |
-| Mesh/ISO/Channel Sounding | 미지원 | API, 예제와 runtime 검증 없음 |
+| ISO·LE Audio | 지원된 범위 | CIS/BIS·time sync·combined 및 LC3·채택 Audio 역할/profile; 보드 합성 데이터·제어 검증, 외장 audio/상용 peer 실물은 사용자 후속 NOT RUN |
+| Direction Finding | 지원된 범위 | 제품 SDC의 connectionless AoA CTE TX와 별도 opt-in Zephyr LL connected response; 제품 SDC IQ RX·AoD는 미지원 |
+| Channel Sounding | 지원된 범위 | Connected ACL CS initiator/reflector·RAS·유효 raw/거리 산출·보안·복구; 정밀 거리 정확도 보증 제외 |
+| Secure BLE DFU | 선택 profile 지원 | `secure_ble_dfu`의 고정 MCUboot layout·서명·인증 update·rollback·전원 복구; 기본 loaderless와 분리 |
+| Mesh·최신 LE 추가 기능·multiprotocol | 후속 계획 | M32·M33 범위는 v0.5.0 지원에 포함하지 않음 |
 | 802.15.4/OpenThread/Matter | 미지원 | 과거 build feasibility는 runtime 지원 아님 |
 
-BLE 검증은 NU54DK 두 대와 Windows 11 범위이며 Bluetooth qualification, 보안 인증 또는 모든
-OS interoperability를 뜻하지 않습니다.
+BLE 검증은 기능별 두·세 NU54DK와 기록된 Windows 상호운용 범위이며 Bluetooth qualification,
+보안 인증 또는 모든 OS/상용 peer interoperability를 뜻하지 않습니다. 세부 계약은
+[전체 Bluetooth 기능·예제 계약](19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md)을 따릅니다.
 
 ## 공개 진단 API
 
@@ -242,12 +247,12 @@ Arduino 계약은 아닙니다. 외부 sensor library compile, crypto sample bui
 
 ## 명시적 미지원 범위
 
-- Loader/LLEXT, native USB device, UF2와 OTA/DFU
+- Loader/LLEXT, native USB device, UF2와 선택 `secure_ble_dfu` 외의 일반 OTA/DFU
 - 일반 Arduino Wire API의 `Wire1`, target/slave와 no-STOP read. Fabric의 TWIS는 별도 지원
 - 일반 Arduino SPI API의 `SPI1`, peripheral mode. Fabric의 SPIS는 별도 지원
 - DAC, Wi-Fi와 Ethernet
 - External filesystem과 일반 secure storage
-- BLE Mesh, ISO, Channel Sounding과 multiprotocol
+- BLE Mesh와 multiprotocol, 제품 SDC의 DF IQ RX·AoD
 - IEEE 802.15.4, ESB, OpenThread와 Matter runtime
 - AVR/SAMD direct register/port와 Harvard memory API
 

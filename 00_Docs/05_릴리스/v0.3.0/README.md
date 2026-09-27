@@ -1,8 +1,8 @@
 # NU54DK Arduino Core v0.3.0
 
-> **지원 종료:** 현재 정식(stable) 설치·지원 버전은 [v0.4.1](../v0.4.1/README.md) 하나입니다. 이 문서와
-> 공개 자산은 역사 자료로 보존하며 stable Boards Manager 목록에서는 제공하지 않습니다.
-> 최신 RC 시험 설치와 정식 채널의 구분은 [릴리스 안내](../README.md)를 따릅니다.
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.3.0` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -16,7 +16,7 @@
 
 `v0.3.0`은 NU54DK용 loaderless Arduino Core의 이전 stable입니다. 공개 당시 원본 자산만
 보존하며 현재 stable index에서는 제공하지 않습니다. 신규 설치와 지원 요청은
-[v0.4.1](../v0.4.1/README.md)을 기준으로 합니다.
+[v0.5.0](../v0.5.0/README.md)을 기준으로 합니다.
 이 폴더의 버전별 문서는 공개 당시 기능·제약과 검증 판단을 보존합니다. 본문의 “현재 버전”이나
 지원 요청 기준을 오늘의 정책으로 적용하지 않습니다. Sketch와 선택한 Arduino
 library를 nRF Connect SDK v3.4.0/Zephyr 4.4.0의 전체 image로 빌드하며, 온보드
@@ -25,7 +25,7 @@ CMSIS-DAP V2와 pyOCD를 기본 업로드 경로로 사용합니다.
 ## 당시 설치 절차
 
 아래는 v0.3.0 공개 당시의 절차입니다. 현재 index에서는 `0.3.0`을 선택할 수 없으며,
-새 설치에는 [v0.4.1 설치 안내](../v0.4.1/README.md#설치)를 사용합니다.
+새 설치에는 [v0.5.0 설치 안내](../v0.5.0/README.md)를 사용합니다.
 
 Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 다음 URL을 추가합니다.
 
@@ -77,8 +77,9 @@ Arduino maximum Sketch size, Devicetree code partition과 실제 linker FLASH �
 위 index 행은 최초 공개 당시 snapshot입니다. 2026-09-08 공급 종료 당시 catalog는
 1,126 byte, SHA-256 `97e842248772d1e19b4649574008b24b405bde092c2f9df98d115dc65b2f5b57`이며
 0.3.0만 제공했습니다. 이후 v0.4.0 공개 당시 catalog는 `0.4.0`, `0.3.0`을 제공했습니다.
-현재 stable catalog는 `0.4.1` 하나이며 index identity는
-[129번 기록](<../../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)을 따릅니다.
+이후 v0.4.1 공개 당시 catalog는 `0.4.1` 하나로 전환했으며 당시 identity는
+[129번 기록](<../../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에 보존합니다.
+현재 stable catalog는 `0.5.0` 하나이며 [274번 공개 기록](<../../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
 v0.3.0 ZIP과 나머지 5개 sidecar는 변경하지 않았습니다.
 
 Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
@@ -99,5 +100,5 @@ Stable ZIP의 version-independent runtime payload SHA-256은 RC3와 같은
 자산은 별도 archive 브랜치에서 보존합니다. v0.3.0 태그·설치 ZIP·checksum·SBOM 등 6개
 payload/sidecar는 유지하며, 해당 Release의 catalog index만 당시 공급 목록과 일치시켰습니다.
 
-현재 stable root는 `0.4.1` 하나만 제공하고 preview URL은 빈 목록입니다. 신규 설치와 문제
+현재 stable root는 `0.5.0` 하나만 제공하고 preview URL은 빈 목록입니다. 신규 설치와 문제
 보고는 [현재 릴리스 안내](../README.md)를 따릅니다.

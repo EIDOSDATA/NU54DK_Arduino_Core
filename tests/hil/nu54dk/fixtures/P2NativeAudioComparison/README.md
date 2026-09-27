@@ -10,3 +10,7 @@ thread/heap 계측 활성으로 고정한다.
 계측 코드와 loaderless `slot0 [0, 0x16c000)` 영역이 양쪽 image에서 같게 한다.
 native sample 고유 제어 코드와 Arduino/NUCODE facade 비용은 ELF/map symbol 분류에서
 따로 기록하며, Arduino 설정을 native 쪽에 추가해 차이를 숨기지 않는다.
+
+이 동등 조건 비교는 P2에서 완료했으며 결과·ELF/map 근거는
+[262번](<../../../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 보존한다.
+설정이 다른 [Nordic RAS 진단](../NordicRasComparison/README.md)과 혼합하거나 새 실기 PASS로 계산하지 않는다.

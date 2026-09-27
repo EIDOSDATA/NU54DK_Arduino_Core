@@ -1,8 +1,7 @@
 # Ranging Service reflector
 
-이 예제는 공개 후보 `v0.5.0-rc.2`에 포함되며 Channel Sounding 검증을 완료했다.
-Windows 설치 방법은 [RC 안내](<../../../../00_Docs/05_릴리스/v0.5.0-rc.2/README.md>)를 따른다.
-정식 지원 버전 `v0.4.1`에는 포함되지 않는다.
+이 예제는 정식 `v0.5.0`에 포함되며 Channel Sounding 검증을 완료했다.
+Windows 10/11 x64 설치 방법은 [v0.5.0 안내](<../../../../00_Docs/05_릴리스/v0.5.0/README.md>)를 따른다.
 아래 준비 상태는 거리 정확도·cross-vendor 상호운용 보증이 아니다.
 
 보드 **NU54DK (nRF54L15, Zephyr)**, Feature set **BLE NUS**를 권장한다.

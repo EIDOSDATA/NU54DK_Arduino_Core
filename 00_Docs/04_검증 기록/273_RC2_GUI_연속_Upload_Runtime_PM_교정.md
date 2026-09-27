@@ -1,5 +1,10 @@
 # 273 — RC2 GUI 연속 Upload runtime PM 교정
 
+> **역사 기록 · 정식 공개 후 안내:** 본문의 버전·진행률·다음 작업은 해당 실행 당시 상태다.
+> 현재 설치·지원 버전은 [v0.5.0](<../05_릴리스/v0.5.0/README.md>)이며 개발 기준은 `main`이다.
+> 완료된 main 통합·RC 브랜치 정리와 공개 결과는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md),
+> 후속 작업은 [HANDOFF](../HANDOFF.md)를 따른다. 당시 source·수치·PASS/FAIL/HOLD/NOT RUN은 보존한다.
+
 ## 1. 범위와 결론
 
 2026-09-27 실제 Windows Arduino GUI와 NU54DK 한 대에서 공개 `v0.5.0-rc.2` 설치본의
@@ -70,5 +75,7 @@ PASS로 바꾸지 않고 Blink 단일·연속 Upload 항목만 별도 PASS로 �
 ## 5. 배포 경계
 
 공개 `v0.5.0-rc.2` tag, archive와 RC index는 immutable 자산으로 유지하며 다시 만들거나 교체하지 않는다.
-이번 교정은 실제 사용자 설치 경로에 적용해 확인했고 main과 다음 배포 후보가 소유한다. 기존 공개 RC2를
+이번 교정은 실제 사용자 설치 경로에 적용해 확인한 뒤 main과 정식 v0.5.0에 포함했다. 기존 공개 RC2를
 Boards Manager에서 제거·재설치하면 공개 archive 원본으로 돌아가므로 이 후속 교정이 포함되지 않는다.
+RC2 재설치·로컬 수정 대신 [v0.5.0 stable](<../05_릴리스/v0.5.0/README.md>)을 설치한다.
+정식 package source·공개 설치 smoke와 RC branch 정리는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md)을 따른다.

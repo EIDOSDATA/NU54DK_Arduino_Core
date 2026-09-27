@@ -1,8 +1,10 @@
 # NU54DK HIL 시험
 
-v0.4.0의 T01~T25와 합의한 HIL 범위는 완료했습니다. 이 문서는 재현에 필요한 실행기·fixture
-계약을 보존하며 현재 보드의 결선 상태를 나타내지 않습니다. 최종 지원·검증 범위는
-[v0.4.0 완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>)에서 확인합니다.
+현재 설치·지원 버전은 [v0.5.0 stable](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)입니다.
+v0.4.0의 T01~T25와 합의한 HIL 범위도 완료했으며, 이 문서는 재현에 필요한 실행기·fixture
+계약을 보존합니다. 현재 보드의 결선 상태나 자동 재시험 지시가 아닙니다. v0.4.0 당시 지원·검증
+범위는 [완료 TODO](<../../../00_Docs/TODO_v0.4.0.md>), 현재 제품 상태는
+[v0.5.0 TODO](../../../00_Docs/TODO_v0.5.0.md)에서 확인합니다.
 
 | 개발 범위 | 현재 실기·작업 상태 | 근거 |
 | --- | --- | --- |
@@ -18,8 +20,12 @@ M28~M31의 채택 기능은 공개 후보 `v0.5.0-rc.1`에 포함됐으며 공�
 RC2 exact source `b2e7a587ba6fde31e033dc21008d7084bd6e631b` package는 sector flash 1회와
 UART ready를 통과했고 다중 probe 미선택은 `E_PROBE_AMBIGUOUS`로 flash 전에 거부했습니다.
 원시 UID는 공개하지 않으며 mass erase·recover·unlock을 사용하지 않았습니다. 후속 실제 Arduino IDE
-GUI Blink 연속 Upload도 통과했습니다. [RC2 검증](<../../../00_Docs/04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>)과
-[RC2 설치 안내](<../../../00_Docs/05_릴리스/v0.5.0-rc.2/README.md>)를 따릅니다.
+GUI Blink 연속 Upload도 [273번](<../../../00_Docs/04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>)에서
+통과했고 해당 runtime PM 교정은 정식 v0.5.0에 포함됐습니다. 불변 공개 RC2 archive에는 이 후속 교정이
+없으므로 새 설치는 [v0.5.0 stable 안내](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)를 따릅니다.
+정식 source·공개 smoke는 [274번](<../../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>),
+과거 RC2 exact 결과·시간 목표 FAIL·GUI 전체 HOLD/NOT RUN은
+[271번](<../../../00_Docs/04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>)에 구분합니다.
 W06은 독립 ISO·Audio·DF·CS image의 자원·
 수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
 실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.

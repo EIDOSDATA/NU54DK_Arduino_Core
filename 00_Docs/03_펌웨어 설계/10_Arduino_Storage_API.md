@@ -8,7 +8,7 @@
 | 현재 정식 버전 | `v0.5.0` (v0.4.x Storage 계약 유지) |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
-| 최종 갱신일 | 2026-09-15 |
+| 최종 갱신일 | 2026-09-27 |
 
 ## 1. 목적과 지원 경계
 
@@ -67,7 +67,7 @@ v0.4.0이 제공하는 layout은 RC3에서 도입한 위 loaderless 단일 appli
 4. LittleFS, Settings/ZMS와 update image의 겹침 검사
 5. Upgrade/downgrade, 복구와 package 시험 matrix
 
-`v0.5.0` 개발 M30은 제한된 고정 layout과 별도 `secure_ble_dfu` profile을 선택해 최소 MCUboot·
+`v0.5.0`은 M30에서 구현한 제한된 고정 layout과 별도 `secure_ble_dfu` profile을 선택해 최소 MCUboot·
 signed update·BLE update·rollback 기반을 구현했다. Boot/update 영역과 기존 저장소의 보존 경계를
 함께 검증하며, 현재 EEPROM/LittleFS HIL 결과를 새 layout의 update·power-fail 보증으로 재사용하지 않는다.
 
@@ -157,7 +157,7 @@ Sketch에서 `<EEPROM.h>` 또는 `<LittleFS.h>`를 include하면 Build Adapter�
 | EEPROM | `EEPROMPersistence` | `Standard peripherals` |
 | LittleFS | `LittleFSPersistence` | `Standard peripherals` |
 
-두 예제는 `v0.4.1` stable의 30개 설치 예제에 포함된다. BLE profile에서도 build 입력은
+두 예제는 `v0.5.0` stable의 113개 설치 예제에 포함된다. 이전 v0.4.1에도 제공한 예제다. BLE profile에서도 build 입력은
 호환되지만, 예제 메뉴의 기본 사용 안내는 storage 동작만 분리해 보는 `Standard peripherals`다.
 
 ## 6. 실패 진단

@@ -139,7 +139,7 @@ NU54_FLASH_USED=<bytes>
 NU54_RAM_USED=<bytes>
 ```
 
-v0.4.1의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
+v0.5.0의 기본 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
 IDE가 표시하는 백분율은 위 FLASH used를 이 값으로 나눈 결과다. 이 숫자는 UI 장식이 아니라
 Devicetree `zephyr,code-partition`과 linker에 적용된 `0x000000..0x16c000` 범위와 일치해야
 한다. 세 값이 어긋나면 package/release gate가 실패해야 한다.
@@ -253,8 +253,10 @@ SHA-256을 기록한다. J-Link는 외장 probe의 SWD·VTref·GND를 연결한 
 
 ## 7. Arduino IDE 2.x 계약
 
-RC2의 실제 GUI smoke는 사용자 후속이다. 자동 CLI·설치 package·실물 Upload PASS는
-GUI에서 메뉴 선택·Verify·Upload·Serial Monitor를 수행했다는 증거로 대체하지 않는다.
+공개 RC2 뒤 실제 Arduino IDE GUI Blink 연속 Upload 문제를 교정하고 사용자가 성공을 확인했다.
+근거는 [273번 기록](<../04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>)이며 정식 v0.5.0에 포함됐다.
+자동 CLI·설치 package·실물 Upload PASS와 사용자 GUI 확인 범위를 구분하고, 이 확인을 모든
+메뉴·예제·Serial Monitor 조합의 GUI 검증으로 확대하지 않는다.
 
 ### Verify
 
@@ -283,7 +285,7 @@ GUI에서 메뉴 선택·Verify·Upload·Serial Monitor를 수행했다는 증�
 ### Serial Monitor와 Debug
 
 Serial Monitor는 target UART의 VCOM bridge이며 SWD probe ID와 별개다. Arduino IDE Debug 버튼의
-자동 toolchain/debugserver 구성은 v0.4.1 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
+자동 toolchain/debugserver 구성은 v0.5.0 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
 수동 west debug 경계는 [업로드와 디버그](./05_업로드와_디버그.md)를 따른다.
 
 ## 8. Library와 구성 경계
@@ -297,7 +299,7 @@ Adapter는 넘겨받은 source/include record를 검증하고 package allowlist 
 - precompiled-only 또는 LTO-only Arduino library 미지원
 - AVR register/libc와 architecture 전용 assembly 호환성 미보장
 - 임의 linker script 주입 미지원
-- 기본 loaderless 경로의 sysbuild·MCUboot·DFU·OTA 미제공; RC의 `secure_ble_dfu`는
+- 기본 loaderless 경로의 sysbuild·MCUboot·DFU·OTA 미제공; 정식 v0.5.0의 `secure_ble_dfu`는
   별도 서명·고정 layout 계약으로만 제공하며 [DFU 안내](../../libraries/NUCODE_BLE_DFU/examples/README.md)를 따른다.
 - LLEXT 미지원
 - Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에 미제공.

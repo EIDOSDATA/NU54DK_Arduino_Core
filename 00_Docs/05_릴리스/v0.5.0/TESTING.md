@@ -12,13 +12,23 @@
 - 문서 UTF-8·로컬 링크·생성 계약과 package inventory
 
 RC2의 M12 9/9 job, Full RC 11/11 job, 113/113 예제와 실제 sector upload/UART HIL은 PASS였습니다.
-정식 source에서는 RC2 이후 runtime PM 교정과 영향 Host 회귀를 다시 실행하고 stable package를 두 번
-생성합니다. package source, tag target, manifest의 source revision은 같은 exact commit이어야 합니다.
+정식 source에서는 RC2 이후 runtime PM 교정과 영향 Host 회귀를 다시 실행했고 stable package를 두 번
+생성해 byte 일치를 확인했습니다. package source, tag target, manifest의 source revision은
+`0999b6a721b4579faa6a7a4d91d04da5e4960c07`로 일치합니다. 공개 자산 11개 재다운로드·hash 비교와
+공개 index의 격리 설치·Blink cold compile도 PASS했습니다.
+[274번 공개 기록](<../../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
+
+공개 후 main `ed5fb745`의 6개 대표 build 단계는 PASS했지만 cache 저장 중 25분 제한으로 job은
+취소됐습니다. 제한을 45분으로 보정한 `7a343b4f`의
+[M12 실행](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/36313276335)은
+8개 job 성공·대표 build 1개 생략으로 전체 성공했습니다. 같은 실행에서 9개 모두 성공하거나
+6개 대표 build를 다시 수행한 것으로 집계하지 않습니다.
 
 ## Arduino IDE 사용자 확인
 
-사용자는 실제 Arduino IDE에서 Standard Blink 250 ms를 Upload한 뒤 100 ms로 수정해 USB 재연결 없이
-다시 Upload했고 성공을 확인했습니다. 이 결과는 연속 Upload 교정에 대한 실제 GUI·보드 PASS이며,
+사용자는 runtime PM 교정을 적용한 RC2 설치본과 실제 Arduino IDE에서 Standard Blink 250 ms를
+Upload한 뒤 100 ms로 수정해 USB 재연결 없이 다시 Upload했고 성공을 확인했습니다.
+같은 교정은 정식 source에 포함됐습니다. 이 결과는 연속 Upload 교정에 대한 실제 GUI·보드 PASS이며,
 NUS·Channel Sounding 전체 GUI 동작을 새로 수행했다는 뜻은 아닙니다.
 
 ## 결과 해석

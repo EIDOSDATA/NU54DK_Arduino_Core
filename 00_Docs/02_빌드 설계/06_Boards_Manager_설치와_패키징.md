@@ -45,8 +45,8 @@ arduino-cli board listall nucode:zephyr
 
 아래 주소는 정식 공개 전 RC2 시험에 사용한 역사 URL이다. 신규 설치에는 stable index를 사용한다.
 당시 RC2를 시험할 때에는 Arduino IDE 2.x의 추가 보드 매니저 URL에 다음 주소를 넣고
-Boards Manager에서 `NUCODE NU54DK Zephyr Boards`의 `0.5.0-rc.2`를 선택한다. Stable URL과는 별도
-opt-in 채널이며 GUI 실물 결과는 사용자가 후속 기록한다.
+Boards Manager에서 `NUCODE NU54DK Zephyr Boards`의 `0.5.0-rc.2`를 선택했다. 당시 Stable URL과 별도인
+opt-in 채널이었다. 이후 GUI 연속 Blink 업로드 성공과 적용 범위는 [273번 기록](<../04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>)에 보존한다.
 
 ```text
 https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/package_nucode_nu54dk_rc_index.json
@@ -105,11 +105,16 @@ checksum, release manifest, SPDX와 license inventory를 검증합니다. Index�
 source를 포장하거나 tag·asset을 이동·교체하지 않습니다. 이미 공개한 이전 stable은 해당 tag의
 별도 worktree에서 감사하고 현재 도구로 재생성하지 않습니다.
 
-`v0.4.1` 생성·공개 절차는 [`v041_release.py`](../../tools/release/v041_release.py)와
+현재 `v0.5.0` 생성·공개 절차는 [`v050_release.py`](../../tools/release/v050_release.py)와
+[정식 릴리스 안내](../05_릴리스/v0.5.0/README.md)를 따른다. exact source, 11개 공개 자산,
+stable index의 `0.5.0` 단독 제공과 공개 URL 설치·Blink compile 결과는
+[274번 기록](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에 고정한다.
+
+이전 `v0.4.1` 생성·공개 절차는 [`v041_release.py`](../../tools/release/v041_release.py)와
 [유지보수 TODO](../TODO_v0.4.1.md)를 따릅니다. 공개 identity와 공개 URL 설치 결과는
 [129번 기록](<../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에 고정합니다.
 
-## v0.4.1 공개 검증
+## 이전 v0.4.1 공개 검증 기록
 
 - stable 이중 생성의 byte 재현성과 exact source 확인
 - 승인된 source에 tag·GitHub Release와 11개 자산 공개
@@ -118,6 +123,7 @@ source를 포장하거나 tag·asset을 이동·교체하지 않습니다. 이�
 - stable index에 `0.4.1` 하나만 남는지 확인
 
 v0.4.1 결과와 공개 자산은 [129번 기록](<../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>),
-사용자 진단은 [v0.4.1 문제 해결](<../05_릴리스/v0.4.1/TROUBLESHOOTING.md>)을 따릅니다.
+당시 사용자 진단은 [v0.4.1 문제 해결](<../05_릴리스/v0.4.1/TROUBLESHOOTING.md>)에 보존합니다.
+현재 설치본 진단은 [v0.5.0 문제 해결](<../05_릴리스/v0.5.0/TROUBLESHOOTING.md>)을 따릅니다.
 이전 버전의 예제 29개·자산 7개 등 당시 기준은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 보존합니다.

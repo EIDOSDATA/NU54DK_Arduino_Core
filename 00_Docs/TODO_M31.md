@@ -10,7 +10,7 @@
 | 기능 검증 장비 | W08 exact RC 대표 upload/UART/debug PASS 뒤 시험 보드를 W07 CS reflector image로 복구하고 advertising·무연결·CS 비활성 상태 확인 |
 | 최종 갱신일 | 2026-09-27 |
 
-2026-09-21 결정으로 **M31 완료 후 v0.5.0 Windows 릴리스**를 준비한다. main 이력 정리 이후의
+2026-09-21 결정에 따른 **M31 완료 후 v0.5.0 Windows 릴리스**를 완료했다. main 이력 정리 이후의
 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 과거의 설명 통합 요청은 문서만 수정한
 시점의 이력이며, `M31-MEM-OPT`에서 메모리 최적화 P0·P1·P2를 완료한 뒤
 `0.5.0-RC1`에서 W04~W08을 닫았다. M31은 완료했고 `v0.5.0-rc.1` 공개 및 공개 설치 smoke도
@@ -131,12 +131,14 @@ P2 필수 조건이 아니다. CS 유효 raw·step·완료 수·STOP·fault·중
 SDC 내부 사용 최고치는 노출되지 않으므로 정적 symbol 크기를 실제 사용량으로 쓰지 않는다.
 안전한 축소 근거가 없으면 pool을 유지할 수 있으며 **무조건 축소해야 P2 완료인 것은 아니다**.
 
-### 다음 실행 순서
+### 완료 후 유지·후속 경계
 
 1. 완료한 W04~W08의 기능·자원·회귀·설치 예제·HIL·RC 원본과 실패/HOLD 원본을 다시 쓰지 않는다.
-2. [RC2 GUI 시험](<05_릴리스/v0.5.0-rc.2/TESTING.md>)은 사용자가 이어간다. 시간 목표 미달 수용·시험 배포는
-   [272번](<04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md>)을 따른다. stable 별도 승인 전에는 `v0.5.0` tag/Release/root catalog를
-   만들지 않고 M32/M33·Host 보류 작업도 시작하지 않는다.
+2. RC2 시간 목표 미달 수용·시험 배포는 [272번](<04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md>),
+   후속 GUI 연속 Upload 교정 PASS는 [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>),
+   별도 승인에 따른 `v0.5.0` tag/Release/root catalog 공개는 [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에 완료 기록을 보존한다.
+3. M32/M33·Host 보류 작업은 후속 범위이며 자동으로 시작하지 않는다. GUI에서 확인하지 않은
+   예제·화면 항목은 Blink 연속 Upload 성공으로 일괄 PASS 처리하지 않는다.
 
 ## 3. W03 세부 완료 상태 — 11/11
 
@@ -182,8 +184,9 @@ W03-10 TMAP/GMAP, W03-11 HAP/HAS까지 모두 완료했다.
 
 ## 4. 기존 착수 순서와 재개 기준
 
-W01~W08과 공개 RC는 완료했다. 1~8번의 원장·기준선은 보존하며 재구현하지 않는다.
-후속 작업은 M31과 W08을 다시 열지 않고 stable 별도 승인 지점에서 재개한다.
+W01~W08, 공개 RC와 별도 승인에 따른 정식 stable 공개를 완료했다. 1~8번의 착수 당시
+원장·기준선은 역사 절차로 보존하며 재구현하지 않는다. 후속 작업은 [HANDOFF](HANDOFF.md)의
+제품선 경계에서 시작하며 M31과 W08을 다시 열지 않는다.
 과거 착수 절차를 현재 미완료 TODO로 다시 집계하지 않는다.
 
 1. 저장소·branch·HEAD·미커밋 변경·board submodule·SDK/toolchain lock과 변경 전 전체 Host 기준선을
@@ -219,7 +222,7 @@ W01~W08과 공개 RC는 완료했다. 1~8번의 원장·기준선은 보존하�
    수신/적용 가능한 combined 역할 → ISO time sync 순으로 기능을 닫고 W03에 인계한다.
 8. W04 DF와 W05 CS는 최적화 image에서 채택 기능·negative·복구 경계를 재검증해 완료했다.
    W06 독립 image 자원·수명주기·영향 회귀, W07 설치 예제·3보드 역할 HIL과 W08 Windows
-   RC 준비와 공개 `v0.5.0-rc.1` smoke까지 완료했으며 다음은 stable 별도 승인이다.
+   RC 준비와 공개 `v0.5.0-rc.1` smoke까지 완료했다. 이후 RC2와 별도 승인에 따른 stable 공개도 완료했다.
    앞선 RX 후보 조사·HIL 계획은 [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)의
    고정 SDK 지원 판정으로 대체됐다. 제품 SDC IQ RX는 `UNSUPPORTED`로 명시하고, 과거 LL
    진단을 자동 재개하거나 SDK/controller를 변경하지 않는다. HOST-W04 이후는 계속 보류한다.
@@ -268,7 +271,7 @@ Apple/Google 및 외장 I/O의 사용자 후속 검증은 이 최종 Host gate�
 | W05 | 2개 CS initiator/reflector·RAS·raw 결과·거리 추정 출력·보안/복구, 3개 peer 분리 | cross-vendor CS peer 또는 별도로 요청한 정밀 거리/각도 시험 |
 | W06 완료 | 독립 image별 자원·수명주기와 M19~M30 회귀 | 네 기능 전체 동시 실행은 요구하지 않음. 당시 debug protection 진단 `HOLD`는 W06 PASS 근거와 분리하고 W07 전원 재인가 뒤 접근성 재확인 |
 | W07 완료 | 3개 역할을 순차 재배치한 기능 HIL, 설치 예제 49/49·43역할 원장 | 적용 39 PASS, 외부 3 NOT RUN, 제품 SDC IQ RX 1 UNSUPPORTED. 최초 preflight FAIL과 제한 재시도 PASS 모두 보존 |
-| W08 완료 | 원장·지원표·문서 인계와 Windows RC 준비, RC tag·Pre-release·전용 catalog·공개 download/install smoke PASS | 정식 stable 승인·tag·Release·root catalog·공개 smoke는 별도 gate; 사용자 후속 외부 실물 검증은 비차단 |
+| W08 완료 | 원장·지원표·문서 인계와 Windows RC 준비, RC tag·Pre-release·전용 catalog·공개 download/install smoke PASS | 별도 정식 stable 승인·tag·Release·root catalog·공개 smoke도 완료; 사용자 후속 외부 실물 검증은 비차단 |
 | HOST | 별도 재개 지시 후 manifest·resolver·launcher·negative와 가능한 자동 검사 | Ubuntu/macOS 실제 설치·USB upload·serial/debug는 해당 OS 후속 릴리스의 사용자 gate; v0.5.0 범위 밖 |
 
 CTE TX 명령 수용·연결 peer 동작만 관찰했다면 그 범위만 기록한다. 수신 IQ 증거가 없는데 CTE

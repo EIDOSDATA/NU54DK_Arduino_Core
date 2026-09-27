@@ -1,8 +1,8 @@
 # NUCODE BLE ISO 예제
 
-이 11개 역할 예제는 공개 후보 `v0.5.0-rc.2`에 포함되며 격리 설치본 build와 실제 보드
-실행을 완료했다. Windows 설치 방법은 [RC 안내](<../../../00_Docs/05_릴리스/v0.5.0-rc.2/README.md>)를
-따른다. 정식 지원 버전 `v0.4.1`에는 포함되지 않는다. 설치본 범위와 exact 증거는
+이 11개 역할 예제는 정식 `v0.5.0`에 포함된다. 채택한 검증 증거에서 격리 설치본 build와 실제 보드
+실행을 완료했다. Windows 10/11 x64 설치 방법은 [v0.5.0 안내](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)를
+따른다. 각 실행의 source·설치본 범위와 exact 증거는
 [검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
 
 `CISCentral`과 `CISPeripheral`은 `RawCis` 공개 API로 `.ino`에서 8-byte payload를

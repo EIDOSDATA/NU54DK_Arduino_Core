@@ -1,5 +1,10 @@
 # M31-W03 Arduino TMAP·GMAP 완료
 
+> **역사 기록 · 정식 공개 후 안내:** 본문의 버전·진행률·다음 작업은 해당 실행 당시 상태다.
+> 현재 설치·지원 버전은 [v0.5.0](<../05_릴리스/v0.5.0/README.md>)이며 개발 기준은 `main`이다.
+> 완료된 main 통합·RC 브랜치 정리와 공개 결과는 [274번](274_v0.5.0_정식_릴리스_승인과_공개.md),
+> 후속 작업은 [HANDOFF](../HANDOFF.md)를 따른다. 당시 source·수치·PASS/FAIL/HOLD/NOT RUN은 보존한다.
+
 고정 NCS v3.4.0과 NU54DK 두 보드에서 공개 Arduino TMAP·GMAP 8개 역할을
 순차적으로 배치해 unicast·broadcast 네 scenario를 검증했다. 공개 `.ino`는
 사용자가 읽고 수정할 수 있는 NUCODE C++ API 흐름만 사용하며 Zephyr 직접 호출이나

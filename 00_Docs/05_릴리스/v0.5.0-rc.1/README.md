@@ -1,17 +1,21 @@
 # NU54DK Arduino Core v0.5.0-rc.1
 
-이 문서는 RC1의 고정 배포 기록이다. 최신 GUI 시험 후보는 [RC2](../v0.5.0-rc.2/README.md)이며,
-RC1의 아래 source·자산·당시 검증은 그대로 보존한다.
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.5.0-rc.1` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
 
-`v0.5.0-rc.1`은 **Windows 10/11 x64용 공개 Release Candidate**입니다.
-새 Bluetooth 기능을 시험할 수 있지만 정식 stable·지원 기준은 계속
-[v0.4.1](../v0.4.1/README.md)입니다. RC는 stable root catalog에 넣지 않습니다.
+이 문서는 RC1의 고정 배포 기록이다. 후속 [RC2](../v0.5.0-rc.2/README.md)의 GUI 교정과
+별도 승인으로 정식 [v0.5.0](../v0.5.0/README.md)을 공개했으며 RC1의 source·자산·당시 검증은 보존한다.
+
+`v0.5.0-rc.1`은 당시 **Windows 10/11 x64용 공개 Release Candidate**였습니다.
+새 Bluetooth 기능의 시험 배포로 공개했으며 당시 정식 stable·지원 기준은
+[v0.4.1](../v0.4.1/README.md)이었습니다. RC는 당시에도 stable root catalog에 넣지 않았습니다.
 
 - [GitHub Pre-release와 다운로드](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0-rc.1)
 - [변경점](RELEASE_NOTES.md) · [이전/복귀](MIGRATION.md) · [검증 범위](TESTING.md)
 - [알려진 제한](KNOWN_ISSUES.md) · [문제 해결](TROUBLESHOOTING.md)
 
-## Arduino IDE 설치
+## 당시 Arduino IDE 설치 절차
 
 1. Arduino IDE의 `File → Preferences → Additional Boards Manager URLs`에 아래 RC URL을 추가합니다.
 2. Boards Manager에서 `NUCODE NU54DK Zephyr Boards`의 **0.5.0-rc.1**을 명시적으로 선택합니다.
@@ -28,7 +32,7 @@ https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.1/p
 NCS v3.4.0과 Windows toolchain `dcbdc366a1`을 사용하며 임의의 다른 SDK로 바꾸지 않습니다.
 한 Arduino data directory에서 같은 core의 stable과 RC를 전환하므로 기존 스케치·설정은 별도로 보존합니다.
 
-## Arduino CLI 설치
+## 당시 Arduino CLI 설치 절차
 
 PowerShell에서 사용할 수 있는 명령입니다. 설치 작업을 실행하는 예시이며 검증 결과 자체는 아닙니다.
 

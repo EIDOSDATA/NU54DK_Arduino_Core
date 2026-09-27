@@ -1,5 +1,9 @@
 # v0.4.1 Troubleshooting
 
+> **보존 문서·지원 종료:** 현재 정식 설치·지원 버전은 [v0.5.0](../v0.5.0/README.md) 하나입니다.
+> 아래 지원 범위·설치 명령·검증 결과·예정 작업은 `v0.4.1` 작성 당시의 기록이며 현행 설치 안내가 아닙니다.
+> 이 버전은 지원·stable catalog 공급 대상이 아니며, 당시 판정·source·자산 식별값은 보존합니다.
+
 ## Boards Manager에 0.4.1이 보이지 않음
 
 Additional Boards Manager URLs가 다음 stable index인지 확인하고 index를 새로 고칩니다.
@@ -8,9 +12,9 @@ Additional Boards Manager URLs가 다음 stable index인지 확인하고 index�
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-stable index는 `0.4.1` 하나만 제공합니다. v0.4.1 정식 설치에는 별도 preview/RC index나 캐시된
-과거 index를 사용하지 마십시오. 최신 RC를 의도적으로 시험할 때는 [릴리스 안내](../README.md)의
-해당 RC 전용 주소와 절차를 따릅니다.
+v0.4.1 공개 당시 stable index는 `0.4.1` 하나만 제공했고 별도 preview/RC index를 사용하지 않았습니다.
+현재 index는 `0.5.0`만 제공하므로 v0.4.1이 보이지 않는 것은 지원·catalog 공급 종료에 따른 정상 상태입니다.
+신규 설치·문제 해결은 [v0.5.0 안내](../v0.5.0/README.md)를 따릅니다.
 
 ## 설치는 표시됐지만 prerequisite 결과가 불분명함
 

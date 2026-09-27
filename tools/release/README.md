@@ -5,9 +5,10 @@
 `v050_release.py`와 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 확인합니다.
 M32/M33·Ubuntu/macOS는 후속 제품선입니다.
 
-RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하되, stable package는 최종 exact
-commit에서 두 번 새로 생성합니다. 전체 예제 113/113·설치 수명주기·대표 실물 Upload와 사용자 GUI
-연속 Upload 결과를 구분해 기록합니다.
+정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,
+stable package를 최종 exact commit에서 두 번 새로 생성했습니다. 전체 예제 113/113·설치 수명주기·
+대표 실물 Upload와 사용자 GUI 연속 Upload는 각 source와 실행 범위를 구분합니다. 최종 판정과
+공개 결과는 [274번 기록](<../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
 
 이 디렉터리는 제품 세대별 자동화 계약을 보존합니다. 과거 도구의 version allowlist와
 게시 명령을 현재 작업에 재사용하지 않으며, 공개된 버전을 다른 byte로 다시 게시하지 않습니다.

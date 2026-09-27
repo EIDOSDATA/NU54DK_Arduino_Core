@@ -82,7 +82,7 @@ git submodule update --init --recursive
 
 개인 변경은 새 branch에서 필요한 commit만 검토해 적용합니다. 새 이름이 이미 존재하면 다른
 미사용 이름을 선택합니다. 별도 clone으로 시작해도 되며, 어느 방법이든 원본 작업을 먼저 보존합니다.
-공개 RC 재현에는 main/RC branch HEAD 대신 해당 release tag를 사용합니다. 최신 RC2는
+공개 RC 재현에는 main/RC branch HEAD 대신 해당 release tag를 사용합니다. 보존된 RC2는
 `v0.5.0-rc.2` → `b2e7a587ba6fde31e033dc21008d7084bd6e631b`이며 RC1 tag는 그대로입니다.
 
 ## RC2 통합과 GUI 시험 인계 — 역사
@@ -93,4 +93,7 @@ RC2의 16개 구현·CI commit과 후속 문서 정비를 main에 반영한 당�
 이력 Squash·공개·backup branch·RC branch 삭제는 [274번 기록](<00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
 CI 시간 목표 미달은 수용한 제한으로 보존합니다. 후속 GUI Blink 연속 Upload는 PASS했지만 별도 기술
 gate의 과거 FAIL/HOLD를 소급 변경하지 않습니다.
-패키지는 검증된 b2e7 소스의 immutable 자산이고 최신 문서 commit과 구분합니다.
+RC2 패키지는 검증된 b2e7 소스의 immutable 자산이고 최신 문서 commit과 구분합니다.
+현재 지원되는 정식 패키지는 `v0.5.0` tag의 `0999b6a721b4579faa6a7a4d91d04da5e4960c07`을
+기준으로 합니다. 공개 후 문서 교정은 [275번 기록](<00_Docs/04_검증 기록/275_v0.5.0_공개_후_문서_전수_재검토.md>)과
+[감사 원장](00_Docs/document-review.json)에 남기며 기존 공개 자산을 덮어쓰지 않습니다.
