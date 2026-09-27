@@ -61,6 +61,10 @@ PUBLISHED_STABLE_ROOT_INDEX_IDENTITIES = {
         1126,
         "6c3a7d9b480ae1d9618b6106451078260ec8e31e2c44d83ed7c5b49fe207692d",
     ),
+    "0.5.0": (
+        1126,
+        "8cc7a8bdcc9127a7b3f6aba4cf775b45887358936a9a7b52ed03950f958ca56f",
+    ),
 }
 EXPECTED_PINS = {
     "NCS_VERSION": "v3.4.0",
