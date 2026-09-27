@@ -199,6 +199,28 @@ def primary_image(build: Path, manifest: dict[str, Any]) -> Path:
     return image
 
 
+## @brief 성공한 configure 직후 조용히 종료된 Windows adapter만 1회 재시도 대상으로 판정합니다.
+def is_transient_post_configure_failure(
+    error: M31LifecycleFailure, build: Path,
+) -> bool:
+    logs = build / "nu54-zephyr" / "logs"
+    configure_log = logs / "configure.log"
+    if (
+        "Error during build: exit status 1" not in str(error)
+        or not configure_log.is_file()
+        or (logs / "build.log").exists()
+        or any(build.glob("*.nu54-build.json"))
+    ):
+        return False
+    try:
+        lines = configure_log.read_text(
+            encoding="utf-8", errors="replace"
+        ).splitlines()
+    except OSError:
+        return False
+    return any(line.strip() == "exit_code=0" for line in lines)
+
+
 ## @brief 설치 예제 하나를 독립 build path에서 clean compile합니다.
 def compile_example(
     cli: Path, config: Path, environment: dict[str, str], build_root: Path,
@@ -207,28 +229,57 @@ def compile_example(
     key = identity.replace("/", "__")
     build = build_root / key
     log = log_root / f"{key}.log"
-    try:
-        record = run_command(
-            (
-                cli, "compile", "--config-file", config, "--clean", "--fqbn", FQBN,
-                "--board-options", f"feature_set={profile}", "--build-path", build, sketch,
-            ),
-            environment=environment,
-            timeout=1800,
-            log_path=log,
-        )
-    except M31LifecycleFailure as error:
-        diagnostic_source = build / "nu54-zephyr" / "logs"
-        diagnostic_target = log_root / "details" / key
-        tails: list[str] = []
-        if diagnostic_source.is_dir():
-            diagnostic_target.mkdir(parents=True, exist_ok=True)
-            for source in sorted(diagnostic_source.glob("*.log")):
-                destination = diagnostic_target / source.name
-                shutil.copy2(source, destination)
-                tails.append(source.read_text(encoding="utf-8", errors="replace")[-4000:])
-        detail = "\n".join(tails) if tails else "Builder 상세 log가 생성되지 않았습니다."
-        raise M31LifecycleFailure(f"{error}\nBuilder diagnostics:\n{detail}") from error
+    started = time.monotonic()
+    transient_retries = 0
+    while True:
+        try:
+            record = run_command(
+                (
+                    cli, "compile", "--config-file", config, "--clean", "--fqbn", FQBN,
+                    "--board-options", f"feature_set={profile}", "--build-path", build, sketch,
+                ),
+                environment=environment,
+                timeout=1800,
+                log_path=log,
+            )
+            break
+        except M31LifecycleFailure as error:
+            diagnostic_source = build / "nu54-zephyr" / "logs"
+            diagnostic_target = log_root / "details" / key
+            if (
+                transient_retries == 0
+                and is_transient_post_configure_failure(error, build)
+            ):
+                diagnostic_target.mkdir(parents=True, exist_ok=True)
+                if log.is_file():
+                    shutil.copy2(log, diagnostic_target / "arduino-attempt-1.log")
+                shutil.copy2(
+                    diagnostic_source / "configure.log",
+                    diagnostic_target / "configure-attempt-1.log",
+                )
+                transient_retries = 1
+                continue
+
+            tails: list[str] = []
+            if diagnostic_source.is_dir():
+                diagnostic_target.mkdir(parents=True, exist_ok=True)
+                for source in sorted(diagnostic_source.glob("*.log")):
+                    destination = diagnostic_target / source.name
+                    shutil.copy2(source, destination)
+                    tails.append(
+                        source.read_text(
+                            encoding="utf-8", errors="replace"
+                        )[-4000:]
+                    )
+            detail = (
+                "\n".join(tails)
+                if tails
+                else "Builder 상세 log가 생성되지 않았습니다."
+            )
+            raise M31LifecycleFailure(
+                f"{error}\nBuilder diagnostics:\n{detail}"
+            ) from error
+    record["elapsed_s"] = round(time.monotonic() - started, 3)
     manifests = list(build.glob("*.nu54-build.json"))
     if len(manifests) != 1:
         raise M31LifecycleFailure(f"설치 예제 manifest가 정확히 하나가 아닙니다: {identity}")
@@ -247,6 +298,7 @@ def compile_example(
         "build_relative": build.relative_to(build_root.parent).as_posix(),
         "elapsed_s": record["elapsed_s"],
         "log_sha256": record["log_sha256"],
+        "transient_retries": transient_retries,
     }
 
 

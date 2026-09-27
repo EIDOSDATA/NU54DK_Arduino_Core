@@ -102,6 +102,93 @@ class M31WindowsLifecycleTests(unittest.TestCase):
         self.assertNotIn("publish-index", source)
         self.assertIn("unknown_version_rejected", source)
 
+    def test_post_configure_silent_exit_is_retried_once(self) -> None:
+        """! @brief configure 성공 뒤 조용한 Windows 종료만 정확히 1회 재시도합니다. """
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            build_root = root / "build"
+            log_root = root / "logs"
+            sketch = root / "Example"
+            sketch.mkdir()
+            (sketch / "Example.ino").write_text("void setup() {}\n", encoding="utf-8")
+            calls = 0
+
+            def run_stub(*_arguments, **keywords):
+                nonlocal calls
+                calls += 1
+                build = build_root / "Library__Example"
+                details = build / "nu54-zephyr" / "logs"
+                details.mkdir(parents=True, exist_ok=True)
+                log_path = keywords["log_path"]
+                log_path.parent.mkdir(parents=True, exist_ok=True)
+                if calls == 1:
+                    log_path.write_text(
+                        "Error during build: exit status 1\n", encoding="utf-8"
+                    )
+                    (details / "configure.log").write_text(
+                        "-- Configuring done\nexit_code=0\n", encoding="utf-8"
+                    )
+                    raise MODULE.M31LifecycleFailure(
+                        "Error during build: exit status 1"
+                    )
+
+                image = build / "Example.ino.hex"
+                image.write_bytes(b"hex")
+                manifest = {
+                    "context": {"profile": "standard"},
+                    "artifacts": {
+                        "hex": {
+                            "path": str(image),
+                            "sha256": hashlib.sha256(b"hex").hexdigest(),
+                        }
+                    },
+                }
+                (build / "Example.ino.nu54-build.json").write_text(
+                    json.dumps(manifest), encoding="utf-8"
+                )
+                log_path.write_text("PASS\n", encoding="utf-8")
+                return {"elapsed_s": 1.0, "log_sha256": "a" * 64}
+
+            with mock.patch.object(MODULE, "run_command", side_effect=run_stub):
+                result = MODULE.compile_example(
+                    root / "arduino-cli.exe",
+                    root / "arduino-cli.yaml",
+                    {},
+                    build_root,
+                    log_root,
+                    "Library/Example",
+                    sketch,
+                    "standard",
+                )
+
+            self.assertEqual(2, calls)
+            self.assertEqual(1, result["transient_retries"])
+            self.assertTrue(
+                (
+                    log_root
+                    / "details"
+                    / "Library__Example"
+                    / "configure-attempt-1.log"
+                ).is_file()
+            )
+
+    def test_post_configure_retry_rejects_real_build_failure(self) -> None:
+        """! @brief build log가 있는 실제 compile 실패는 재시도로 숨기지 않습니다. """
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory) / "build"
+            logs = build / "nu54-zephyr" / "logs"
+            logs.mkdir(parents=True)
+            (logs / "configure.log").write_text(
+                "exit_code=0\n", encoding="utf-8"
+            )
+            (logs / "build.log").write_text("compiler error\n", encoding="utf-8")
+            error = MODULE.M31LifecycleFailure(
+                "Error during build: exit status 1"
+            )
+            self.assertFalse(
+                MODULE.is_transient_post_configure_failure(error, build)
+            )
+
     def test_prerequisite_snapshot_is_taken_after_post_install(self) -> None:
         """! @brief 갱신 가능한 post_install 뒤 byte를 uninstall 보존 기준으로 사용합니다. """
         source = MODULE_PATH.read_text(encoding="utf-8")
