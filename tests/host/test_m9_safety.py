@@ -166,10 +166,7 @@ class M9SafetyContractTests(unittest.TestCase):
                 board,
                 pristine=True,
             )
-        expected = (
-            Path(os.environ["NUCODE_BUILD_CACHE_ROOT"])
-            / "zephyr-user-cache"
-        ).as_posix()
+        expected = (MODULE.build_cache_root() / "zephyr-user-cache").as_posix()
         self.assertIn(f"-DUSER_CACHE_DIR={expected}", command)
 
     def test_transactional_export_publishes_one_verified_generation(self) -> None:
