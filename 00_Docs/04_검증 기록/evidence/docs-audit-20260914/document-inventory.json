@@ -1,0 +1,1765 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-09-14",
+  "baseline_core_revision": "fcfd3e2c22a90c1e842126c512362c0840a5fa45",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "scope": "Tracked Markdown in main and its pinned board submodule; historical evidence, generated and third-party documents included for review, with original evidence preserved.",
+  "review_method": "Full-content review split by document group, current claims checked against repository code/readiness, UTF-8 and local-link checks, duplicate/empty checks, and internal-heading link checks.",
+  "counts": {
+    "baseline_main_markdown": 284,
+    "board_markdown": 6,
+    "added_main_markdown": 1,
+    "final_main_markdown": 285,
+    "deleted_markdown": 0,
+    "modified_existing_markdown": 106
+  },
+  "added_document": "00_Docs/04_검증 기록/148_개발문서_전수검토와_README_개선.md",
+  "deferred_checks": [
+    "Remote CI status for the documentation push, per user request"
+  ],
+  "known_document_limitations": [
+    "Record 125 contains a 61-character Runtime payload SHA-256 transcription. The original remains, with an erratum stating it cannot be used as a verification checksum; the correct original was not recovered."
+  ],
+  "documents": [
+    {
+      "path": "00_Docs/00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md",
+      "baseline_blob": "55e6979a6052d5d45dbf61bafca8d3c53ea6d923",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md",
+      "baseline_blob": "1d9308fb00b7d2b41d0be95ea98cfdf7a6b4012e",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/01_저장소_폴더_구조.md",
+      "baseline_blob": "b205ff3cdc32cee5ce77a7b581155cac60a6be66",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+      "baseline_blob": "d6720b881bd6b5d2c27a320d46f47ba68ed09702",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/03_핀과_Variant_설계.md",
+      "baseline_blob": "bb17c8565e849f20ca0755693b0dc2424ec446dd",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md",
+      "baseline_blob": "b45d49b771769cb9fab8490f2d402a6957380996",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md",
+      "baseline_blob": "e60ecf77c739aac243fcc9c30d79325f0e58fc66",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md",
+      "baseline_blob": "b2f9c20902e22396bbaad29666ff69bbb6df7f5c",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md",
+      "baseline_blob": "e1f44abb47d13e9eaf74ab2a97d2f2386fc5f3db",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md",
+      "baseline_blob": "1e7266e3480a50f62887f77198704507ad9e52e1",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md",
+      "baseline_blob": "e541712d6902af569068fb97e1754dae1304118e",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md",
+      "baseline_blob": "94a9c46b1dc0b020611bef9681bd85482f82855c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md",
+      "baseline_blob": "d337e836071c96f67500710ba2b7fb26fc0e66ac",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md",
+      "baseline_blob": "794ba535f2f17a4410e5b72f02128af9acc739f9",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md",
+      "baseline_blob": "a2724b6ef7e8dea5df5d59c59bcbcf87b6b7d201",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/01_진단_비교와_최종_판단.md",
+      "baseline_blob": "d44390135c1d9ef9dee5ad4dd55508fb91f04358",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/02_리팩토링_통합_실행계획.md",
+      "baseline_blob": "23cdae6072e6139ee00bb0e351670a97e66544fa",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/03_리팩토링_착수_시점_및_운영계획.md",
+      "baseline_blob": "c91389fd1987a1dde4cfc8800cec8d3d7eaa6712",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/04_리팩토링_작업지시서_및_검증기록.md",
+      "baseline_blob": "8cda84d10a5a332bb553aa9b1ed445d0ccd5e02d",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md",
+      "baseline_blob": "12390971dea7a52ba08ca3b1168bc558c3d94006",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/99_최초_리팩토링_설계안_참고.md",
+      "baseline_blob": "e425b66552f9c166055cd7d074e2dcdae23d1c46",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md",
+      "baseline_blob": "279702aa6d5bdec64fd5a327917e938d74c53281",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md",
+      "baseline_blob": "143fb32d9b491a8b54b4c512f687bd4d71bdf075",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md",
+      "baseline_blob": "7b20efbea27380dbab7ac9bda28c3a140960a1e8",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/01_West_Native_Blink_PoC.md",
+      "baseline_blob": "113c042989e7d2e9d8b6a4290c79b80f6829fe8e",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
+      "baseline_blob": "030a8f76add2c90a4dbe2504555598905fb241e2",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
+      "baseline_blob": "1b3c55794871416363cfa5c035a029460cea8813",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/04_빌드_캐시와_산출물.md",
+      "baseline_blob": "34cb817235634122f8e0684320f49c96f8a352fd",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/05_업로드와_디버그.md",
+      "baseline_blob": "93cefcaf4344e5c84ecb052e79e90b53cde74cab",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md",
+      "baseline_blob": "03246e0a4d586506df1e894a4562445a3d73c791",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
+      "baseline_blob": "a98dd8420a6411ef40975566e2f6ec9b8a03ad54",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+      "baseline_blob": "edc705e3e5255a4bd85280d0e55c10a04947d9cd",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md",
+      "baseline_blob": "7314f5f9d35a4684c0bd1d0d0c1a47a600d8c41e",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/01_Arduino_Runtime_설계.md",
+      "baseline_blob": "131ca20500b79dc577fbff4173cea9fc2ddb73b7",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/02_GPIO와_시간_API.md",
+      "baseline_blob": "7f684ffe7c207406e989b7a6139776d4442f79e7",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/03_주변장치_API.md",
+      "baseline_blob": "56cca44c39af4d85f21c81cf0214fa2c2171f8dd",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+      "baseline_blob": "4273a84589c4fae10016f15625c2ab152e4d0518",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/05_NU54DK_Board_System_API.md",
+      "baseline_blob": "e91e6752854499f522bd22c030a428aa5539451d",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/06_BLE_NUS_API.md",
+      "baseline_blob": "632d5e18666562ba33d752596f5e3685e66c9573",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/07_BLE_Core_GAP_API.md",
+      "baseline_blob": "75dacb60e18848fffb4f93c05991b086ce30c1e5",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/08_BLE_범용_GATT_API.md",
+      "baseline_blob": "80e40e9fb4d9bbf96295f2b9f7bd965059b0c04f",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md",
+      "baseline_blob": "ce7bd2b86a38ff8419d894e438d14f345ddba7e1",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/10_Arduino_Storage_API.md",
+      "baseline_blob": "23f1d4cc5de062a680f721cf4898d1d4c2ec35fe",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/01_M1_도구와_보드_기준선.md",
+      "baseline_blob": "1bc9127138bb8077e05595c2e21cf79524f3cced",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md",
+      "baseline_blob": "94ac83629c2d3fd617b68ac4acd2fdd86a52d159",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md",
+      "baseline_blob": "b8e057a46d6334c043a40d1f19d266599947a40b",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md",
+      "baseline_blob": "9256390814a175d0c41be78e827ba7ba594b3c73",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md",
+      "baseline_blob": "bec7007a1f21da95d026a81ada20ff33b26d6179",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md",
+      "baseline_blob": "d2f87907c10494e3da1956ba6754f4c386eb2f6f",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md",
+      "baseline_blob": "66e4e972f36d178c9dcee8fd5e9d15b7f21ae559",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/08_M8_업로드와_디버그_기준선.md",
+      "baseline_blob": "35cccd32abfccef688396c97f3a02f0cffbc85e1",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md",
+      "baseline_blob": "615a10fbbc92793d28e8355baee810444e4774ac",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md",
+      "baseline_blob": "144407209421aee8ae19d4a59bca73397f637c76",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md",
+      "baseline_blob": "647ecc473dfac9b4d00209dd39b4c67a0c97ad79",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md",
+      "baseline_blob": "bae4c04df8507ad2b52ed27c6b8118a890b9dfa2",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/103_TIMER_기능_완료와_T13_진행_경계.md",
+      "baseline_blob": "06946e7bba45e72a5a2b2c8d79438834195959b3",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md",
+      "baseline_blob": "2fdb1660dd8ab38a1c8b33162bb006b27d1b2f3d",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/105_T13_S_GPIO_전수_결선_진단.md",
+      "baseline_blob": "693274aedf2ef63faea5d01ce018e9bad6ad43df",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md",
+      "baseline_blob": "d97dcadebdebe9f7fc6227523f08ae9c5a187cbe",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/107_T13_S_자동_진행과_System_OFF_계획.md",
+      "baseline_blob": "20ff2f30f5306ae4834c3bcd51956c06b62aec29",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/108_T13_S_자동_실행_종료와_재개_항목.md",
+      "baseline_blob": "ad379502eb4e3229c48df56dd9d2cf2f16e53af0",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/109_T13_S_세_복구_묶음_재검증.md",
+      "baseline_blob": "a6f8a94975a2aab072e9e531f838af25dda5c159",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md",
+      "baseline_blob": "123af197fcbb58165262fe449305425442d7b630",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md",
+      "baseline_blob": "81dc1909d57150fa03fc95d867cd0ef4cc5ab785",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md",
+      "baseline_blob": "0a44b74af62ecf36c8a53099bb51ad7fcfbd380c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md",
+      "baseline_blob": "513f5403593ba11dc108b3463fc9c851756e1309",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md",
+      "baseline_blob": "cbf5dd090ba8e383fd8a1fa50aeef1f3ee6ee711",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md",
+      "baseline_blob": "1123a809079ccd9e03474440f3737919d05794a6",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md",
+      "baseline_blob": "b2325dbefa5ab20a0fe6fce392a4d2f5e9396ade",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md",
+      "baseline_blob": "5a414f21c963c30eebe0bb585df3f90bc2bd8430",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md",
+      "baseline_blob": "34f7256b5b30dbca14961c130bf329cc52ff2f44",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md",
+      "baseline_blob": "b522755df797edcf920832995322301e6a775e95",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/119_T17_문서와_지원_매트릭스_정리.md",
+      "baseline_blob": "b831517403375486d0fc86e68e5dfb0a0c99a9ab",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md",
+      "baseline_blob": "d63a3be754dc0d0d25a8cc1440339b6838227d8a",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/120_T18_stable_공개_절차와_승인_차단.md",
+      "baseline_blob": "b68724cf29721d09accd6186aaa037f66da93953",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md",
+      "baseline_blob": "2d1942905f993ad7b3e83f863514143ad57c0603",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/122_T20_RC_설치_수명주기와_실제_Upload.md",
+      "baseline_blob": "84d4fa176e48c9597edbcfcbe6d154731f90da42",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md",
+      "baseline_blob": "d3110df55364e0c6057cbf4fdcf4e05c20d7099f",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md",
+      "baseline_blob": "df361f010c5bb73740b68f1a5a894faa7db56b9f",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md",
+      "baseline_blob": "d40574acaa7b9af80dc55d0ad1d9f5dcdb263cfd",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/126_정식_공개_후_문서_전수_정비.md",
+      "baseline_blob": "396b74ad512076b4802fbda7f11ce653bfcd0b49",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/127_후속_마일스톤_지원_경계와_착수_계획_정비.md",
+      "baseline_blob": "609f3e5bbd363f9934c0b72213b62f032b4c9ebd",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/128_Nordic_설치_복구_검증_로그_교정.md",
+      "baseline_blob": "25e9511f445207bf1adf95271e23cb0d58475d53",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md",
+      "baseline_blob": "d40159484f2cc97cc56cfa059d67b951e14ae7c1",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md",
+      "baseline_blob": "9f48008f31291b19fed847b262c5ffd72a43d3d3",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/130_개발문서_전수감사와_M28_착수_준비.md",
+      "baseline_blob": "500a0d3bf6a9bf77830e48d1f93d774f3a2e9788",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md",
+      "baseline_blob": "2a4655d4fe697ce20f1ebf70b333fa7848d72282",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md",
+      "baseline_blob": "c81c542f9b49f9afe69f099b1d6b2b764802fd9a",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/133_M28_W01_CI_container_revision_교정.md",
+      "baseline_blob": "c707d166cf0f880679d999df4f6097ab7c33f935",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md",
+      "baseline_blob": "a7fbba07c228e18bd77b76cd0d880b1f192ce65c",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/135_M28_W03_확장_광고와_스캔.md",
+      "baseline_blob": "367e62c78e5dac4f76078fbc8b359e5053dce989",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/136_M28_W04_periodic_sync_PAST.md",
+      "baseline_blob": "3c2442a5c1a59f33af23b04e82b87ab6429aa7e9",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/137_M28_W05_PAwR_advertiser_scanner.md",
+      "baseline_blob": "a10eeaf7cd9811d7b5d63e1e87f27a7f225843f5",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/138_M28_W06_privacy_RPA_link_control.md",
+      "baseline_blob": "a7bfbde7d7f4836d828c3a94cb1f1b752858af9c",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/139_M28_W07_2보드_HIL_자동화_준비.md",
+      "baseline_blob": "4d6aa905f6aa9ba859928de6c64c071ea46f9244",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md",
+      "baseline_blob": "9d316ce8d2ccc394ccfc26e4a9f8e3fa747a922d",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md",
+      "baseline_blob": "332383e5397202c06e58b2cebb9464afe6e32dae",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/141_M29_W01_ATT_GATT_L2CAP_capability.md",
+      "baseline_blob": "f3693857bce249f992cc5a7fd2cef6d4b76e01cc",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/142_M29_W02_link별_GATT_long_read.md",
+      "baseline_blob": "14ad64b4cfa1ac3f2f549279da361e6743a918c9",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/143_M29_W03_long_reliable_write.md",
+      "baseline_blob": "a134901b9d03b3f5afe98f51454ecb34548fc4db",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md",
+      "baseline_blob": "fb1c520caeae164a1273829283dfe98513e8237a",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md",
+      "baseline_blob": "7feaa16510e4f31050b8ad1ca1005a5c826cd4c4",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md",
+      "baseline_blob": "075b5f1dc5e2c99d0e2fa96140d7bca141009b00",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md",
+      "baseline_blob": "e6b45d8be2781cc5bdffc00015880ed289a423dc",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md",
+      "baseline_blob": "4fbcba301e5bd8f5fed18ba30a208266c8edbd89",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md",
+      "baseline_blob": "1738ac3ecba45060468abb0a48f1de4babd0573c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md",
+      "baseline_blob": "ce7b31cc480cf49dca4c500edb0d3447d6849dba",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md",
+      "baseline_blob": "57a44326bd8bdad62ccb9c731137f4d01a5b2e46",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md",
+      "baseline_blob": "aafa928eda729bccad161e0c9da1abcfdc3dfba2",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md",
+      "baseline_blob": "d9829193bff1deed0bdd0836c6e74c0f9d03d77f",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md",
+      "baseline_blob": "debf052c3d98ce8673daec53deb2116cc28fbf88",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md",
+      "baseline_blob": "4f3c090229aad08e9cee3cc46dfb16d3d7048c28",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md",
+      "baseline_blob": "76d9d877318c126c48c9cdc686559e0866ab75de",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md",
+      "baseline_blob": "992ff9492402393af433a8457334de103feb4d29",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md",
+      "baseline_blob": "60c102d834362faca1a550b5a8ae905315c1b6f6",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md",
+      "baseline_blob": "ceee4848bfd312d3a4d217173eeb32853f8c27cd",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md",
+      "baseline_blob": "88a8d42025b81fe9096280f5940c916414e499c9",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md",
+      "baseline_blob": "30dece3d99c08b3b0e8cf18831596a15587dc6d0",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md",
+      "baseline_blob": "81def4c4aec3e64d382ab23aaf95a866fb2036d8",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md",
+      "baseline_blob": "4cd58e59758250ce4cffe862b5870c340560efa9",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md",
+      "baseline_blob": "796c90660496c20a3556b508fb51450d66622e65",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/31_M22_v0.3.0_rc3_검증과_stable_인계.md",
+      "baseline_blob": "5747232dcab087d244499bd01528454104792a58",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md",
+      "baseline_blob": "160dbe57a56a41e69cf240a83e0bc652521ff5b0",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md",
+      "baseline_blob": "f255c672d06467ddb915b064d67f9005b27bf2f7",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/34_M24_Serial_Fabric_경로와_API_계약_기준선.md",
+      "baseline_blob": "b8f814d51e0c82ca723709a672e17931afc0ccf9",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/35_M24_Serial_Fabric_공통_backend_기준선.md",
+      "baseline_blob": "329a8e7002610dd53859d3a5ad21cdaa8ed70292",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md",
+      "baseline_blob": "6de34aa4213fd76adaa7171e15133fc9a4cb6530",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md",
+      "baseline_blob": "9fd56b75a6fa38526732c2037c816dd8336c9bea",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/38_M26_System_Peripheral_판정과_온보드_HIL_준비.md",
+      "baseline_blob": "317783eb7be815004be3da20d7391e3981d39eeb",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md",
+      "baseline_blob": "410c5476d8b1389670214f6badeeb3c0638dbd98",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/40_M24_M26_온보드_재개와_USB_UART_진단.md",
+      "baseline_blob": "41b53eacc2038eb1b010202144abfe8e59d55b20",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md",
+      "baseline_blob": "a9f61e2888ad308ee8f36df9bb428cb0356b4efc",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md",
+      "baseline_blob": "b98cfdb5208790819b969ead589a26e7abd438bc",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/43_v0.4.0_시험_준비와_구현_대조.md",
+      "baseline_blob": "6f2983934dd56650235b64cb9456a371d210a6e6",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md",
+      "baseline_blob": "e846ce16baaa9d1a303cdd63d0912bd509141ca1",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md",
+      "baseline_blob": "201a0b8bbd5b9615cd922a8fe77cea02709233c1",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md",
+      "baseline_blob": "e4bcf7ad823f924c5f12cb8d1624580f43d956de",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md",
+      "baseline_blob": "f92e77afe496659feabdcf8721cf314bd7403561",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md",
+      "baseline_blob": "03b085db2abbb5f7580f2db476b8063e239294bb",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md",
+      "baseline_blob": "68f0cb84ead83873cf898a171c149e8d8d0e39d6",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md",
+      "baseline_blob": "4f879e081172ca16bd143998fbc2073ae8f2d9ba",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/51_R00_리팩토링_기준선.md",
+      "baseline_blob": "9fa0bad354cff6dabcdb048606626001af6dab04",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/52_R01_CMake_source_소속_교정.md",
+      "baseline_blob": "4807137a9e1be5c0cab63eb88c412e6d012342b1",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/53_R02_Serial_완료와_DMA_수명주기.md",
+      "baseline_blob": "f3cefad347a4924fd67a15baf78d5c7b13ac3728",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/54_R03_Analog_Stream_ISR_정지_동기화.md",
+      "baseline_blob": "97c405aaecbe1d65a1bb105fadb37357b22774e2",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/55_R04_File_공유_slot_수명주기.md",
+      "baseline_blob": "6fd08b985c191d76ace3af6797127757d24866ee",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/56_R05_Core_소스와_패키지_identity.md",
+      "baseline_blob": "c0b43f9c21a9e77b29881c04be749a67038e1d0e",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/57_R06_builder_모듈과_설치_경로.md",
+      "baseline_blob": "2256907f299ff4150372ede508bd17890c80bd9c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/58_R07_EventFabric_책임_분할.md",
+      "baseline_blob": "71d10591537b4d530723fa629ad697dcf67c6bb7",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/59_R08_자원과_경로_수명주기.md",
+      "baseline_blob": "f019bcd96822d3512f1100056f4efcbf665997e2",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/60_R09_Arduino_SPI_경계.md",
+      "baseline_blob": "b061d1ff189655c0429404533542d11565531b3d",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/61_R10_Serial_Fabric_동시_호출.md",
+      "baseline_blob": "e118b195f689564ca41b7f282963ab4f00862e41",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/62_R11_Analog_Stream_peripheral_분리.md",
+      "baseline_blob": "7ce847ed1e586b6d2dcd889d25459642a811c9f9",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/63_R12_BLE_Storage_수명주기.md",
+      "baseline_blob": "d96f1b46319a9baf58c19f3b89cb72cf9645bef2",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md",
+      "baseline_blob": "aaa06fb5306720d64cf51add43518a737fe6fefa",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md",
+      "baseline_blob": "bdf09e2105fa99a49048e0769d7588a226be3063",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md",
+      "baseline_blob": "343efe05c38766113e00ff58cbbdff0366b675b9",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md",
+      "baseline_blob": "42617c3e393eda2e3fe0f2a9264390b9f44d974a",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md",
+      "baseline_blob": "9f77bd4eb92c7e2a0997240832b5674fa420fc4e",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md",
+      "baseline_blob": "1f452bf3185608bd11be788632534d614f67c982",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md",
+      "baseline_blob": "9c4ce3f0f248fce14f75c33626da6dd54664c6dd",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md",
+      "baseline_blob": "0752152d759dd130bf84f233a11a7f06aefe2a54",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md",
+      "baseline_blob": "f7e10d617a3992c448d5d820c085d878b738e30d",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md",
+      "baseline_blob": "98899c99c5d0a56107029a9861e5407d7ec43f00",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md",
+      "baseline_blob": "ca3d27641f28481c028975a0cab2c8dea9f953a6",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md",
+      "baseline_blob": "1f4e1c46407d208be73c746d421dc45dead2cad2",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md",
+      "baseline_blob": "0d287bafd124212622b1878a8bdaa40d9ab62a17",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md",
+      "baseline_blob": "da6f019ed66a8d0abb4261cc119ea12420187cee",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md",
+      "baseline_blob": "a42c71e21a9b2779b0859c9906e6d69608d0c092",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md",
+      "baseline_blob": "751399c67a8558c6a47b4a1a821a0ebdee1a8dfe",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md",
+      "baseline_blob": "d179f09404794a5ec69da32cc6c9b9627e01b487",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/81_T12_Fixture_407_Host_재개와_검증.md",
+      "baseline_blob": "747f72d463a351584ac576008377b9046f37f14f",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md",
+      "baseline_blob": "d6cd56a62d1cf0daa909a57b95f7c4fb0c111310",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md",
+      "baseline_blob": "60527ba7350f76b4f7fb95ff2ce4b04b6a70ce9c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/84_T12_Fixture_420_current_source_QDEC_검증.md",
+      "baseline_blob": "06b20b46be0885273d40f37f7eaa2e30c0617edd",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/85_T12_Fixture_420_current_source_QDEC_재검증.md",
+      "baseline_blob": "93547e15eda36196a45843c8b1b05385cc5dec96",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/86_T12_Fixture_430_current_source_I2S_검증.md",
+      "baseline_blob": "8bf5e546b3842ced50ab1b8ca34ee2e5ee2e912c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/87_T12_Fixture_430_current_source_I2S_재검증.md",
+      "baseline_blob": "9731a6ca5032ef39e981781cecdecc46dbbd402f",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/88_T12_Fixture_440_current_source_PDM_검증.md",
+      "baseline_blob": "8d84f369f8d72ffc07b05485794156e0fd08cfea",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/89_T12_Fixture_440_clock_gate_분리_진단.md",
+      "baseline_blob": "71d245ee8270f4bafe8799f2fb0cfcd1217b4395",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/90_T12_Fixture_440_재결선과_PDM_위상_진단.md",
+      "baseline_blob": "18d1420689672caaf9fc5f0daed4c15f6f9a0d12",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md",
+      "baseline_blob": "b575ef127c53e726297b1fdd3e0b81752af0e923",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/92_T12_Fixture_440_PDM_연속_전체_검증.md",
+      "baseline_blob": "9b992a4556ae6291f1e554181bd89f743365e1a5",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md",
+      "baseline_blob": "66dea4a34e9d78a442b07096ca842b5a49eed15c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md",
+      "baseline_blob": "74c0586262250a29c2191afe9d7ce4e97409b3be",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md",
+      "baseline_blob": "b80eb718ee1b51d8aa3c7f1d30549e41ea3927fc",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/96_새_PC_인수와_T12_PWM_peer_capture_준비.md",
+      "baseline_blob": "f5466d5d5aca1a407a592626c717df93451338c1",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md",
+      "baseline_blob": "8df03363c2e2c50510632315ab9a98097445c708",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/98_T13_단독_안정성_3분_기준_조정.md",
+      "baseline_blob": "d314da7d246f04a270b39695c32a630a4fb00981",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md",
+      "baseline_blob": "5eb7206ad6f3ec954a657fb24bc33d570ae173b5",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/README.md",
+      "baseline_blob": "88d861c46c28e003f2d7960ef874d9115b53e036",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/evidence/m29-w07-08cc52d6-signed-eatt/diagnostic.md",
+      "baseline_blob": "11bf8a49e1edb1618c01b05483a5b5550cc98158",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/README.md",
+      "baseline_blob": "df7aaa1593c9d01da5a72412c2dfb01defdca1cb",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/KNOWN_ISSUES.md",
+      "baseline_blob": "aa26346bd569e86ebbac2467bd314a2f23be7f4d",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/MIGRATION.md",
+      "baseline_blob": "059ab20476875ca40302ea72df067d8151ba045b",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/README.md",
+      "baseline_blob": "6defe665a6cf9851a4aba7bd490dc7b8c32b1e04",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/RELEASE_NOTES.md",
+      "baseline_blob": "b4356945ce1fc6f62b770691ff925a310a80a3d0",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/TROUBLESHOOTING.md",
+      "baseline_blob": "bc346706e21f1b67e70d08326c634a5b61bbd16a",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/WITHDRAWAL.md",
+      "baseline_blob": "6530f5da1a147814b186ad2e5e72a15b63c52a7e",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/KNOWN_ISSUES.md",
+      "baseline_blob": "49258ce07b49dd2c5642d1a097d9603398d8d52f",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/MIGRATION.md",
+      "baseline_blob": "e7dacd3e37c20ca44194b58b548f33dfb0fe2b9a",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/README.md",
+      "baseline_blob": "8198bf00c780217d3ce4fa95b6b70b899809edf5",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/RELEASE_NOTES.md",
+      "baseline_blob": "f1f86cb7ba193da7b625f418022f8370c92a56c8",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/TROUBLESHOOTING.md",
+      "baseline_blob": "eb1b10227af415b1aa17503b4472d209075a4d3b",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/KNOWN_ISSUES.md",
+      "baseline_blob": "afed0cec5c8c2dc5d1fd9476df428575393e256d",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/MIGRATION.md",
+      "baseline_blob": "58366a81a1575ec346cd8795f45b58d96fb3f45b",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/README.md",
+      "baseline_blob": "942cbc578f22bf023141adc7abaea5ccef741598",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/RELEASE_NOTES.md",
+      "baseline_blob": "a7877208c0dbc423cfb0e6c8cf772e1d8117da60",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/TROUBLESHOOTING.md",
+      "baseline_blob": "0007b39e02474083b3370588eeba75802c4ebb05",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/KNOWN_ISSUES.md",
+      "baseline_blob": "89d7caedfe61368553ae13000b5d10b179caaa07",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/MIGRATION.md",
+      "baseline_blob": "f0286cdcdbcceba42206c3f9789e7ae4629b14a5",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/README.md",
+      "baseline_blob": "f42c03f5f255ba814509d2ae6a98f60a3a162d1c",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/RELEASE_NOTES.md",
+      "baseline_blob": "24686ba862965ad9059088a24dc3e4b54a88215a",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/TROUBLESHOOTING.md",
+      "baseline_blob": "e9ae5560467f02bdff7f98504f7c48f57771a7bf",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/CLEANROOM_ABORT.md",
+      "baseline_blob": "4ccce32377a5071df69cf8bfc06f9192e0d78e68",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/KNOWN_ISSUES.md",
+      "baseline_blob": "c4654cc7d5eb1add133a0908f4f80e680d9f841d",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/MIGRATION.md",
+      "baseline_blob": "3b594e17efc2c177992f64efc386d14c43a8295a",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/README.md",
+      "baseline_blob": "c8cd2d656dd68b3781d22be0fe250b5a7ae7b424",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/RELEASE_NOTES.md",
+      "baseline_blob": "aa8a5fdc5982b5668c923e1821779a7e25217b4e",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/TESTING.md",
+      "baseline_blob": "e083e2d1920e014516ca47b49a16e9db6d994a6f",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/TROUBLESHOOTING.md",
+      "baseline_blob": "204a3de1920ace5eef35e7319c643b4a38b9fda8",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/KNOWN_ISSUES.md",
+      "baseline_blob": "1efeb629bd40bb65f27dfb03bea046ba8ada03bf",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/MIGRATION.md",
+      "baseline_blob": "2479c372c38b28e0aac587dbe505b3435d130351",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/README.md",
+      "baseline_blob": "68b52b9e968f8363d2c080dffa4a71da0efa2f94",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/RELEASE_NOTES.md",
+      "baseline_blob": "d9e5a793053d935ca3068094ba3783c98f51765f",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/TESTING.md",
+      "baseline_blob": "dff2f63a7610a9ca9e4f2578c79538dbef4bab4e",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/TROUBLESHOOTING.md",
+      "baseline_blob": "38bf02a13a17acc990a9a53ba9118b70d235c433",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/KNOWN_ISSUES.md",
+      "baseline_blob": "7d85fbac14c04fa0136ab1b32360293aaed093a4",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/MIGRATION.md",
+      "baseline_blob": "1f96e031a80f0dc5a75ef14f10ac83e164049ae2",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/README.md",
+      "baseline_blob": "4068b8720494375199f0fc1cb81803ccb8c5632e",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/RELEASE_NOTES.md",
+      "baseline_blob": "4864154301b452b8ae0b3087c1379ad7b729d444",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/TESTING.md",
+      "baseline_blob": "11f6155428efeca195608d44475d8de6c2c9bd56",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/TROUBLESHOOTING.md",
+      "baseline_blob": "e2e11d99c8c8d5f7c98409a95bf35246cf954605",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/KNOWN_ISSUES.md",
+      "baseline_blob": "a709aa60b6b69c24eca6c9d597f110852fc2a1ff",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/MIGRATION.md",
+      "baseline_blob": "22795f50513cbcc6f128cc55d43021b72d5c240e",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/README.md",
+      "baseline_blob": "360eb05b99a368654cd4a28b117be756656be2f9",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/RELEASE_NOTES.md",
+      "baseline_blob": "7c3efc22defba1b550ab5e376853976e4bbea43e",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/TESTING.md",
+      "baseline_blob": "5e6ec061e1a4537f0ff4d6c8a6953ede0c7fe69f",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md",
+      "baseline_blob": "d835f5a89998302c6733e5f930bbdc4040f20aef",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/KNOWN_ISSUES.md",
+      "baseline_blob": "10859574112cc86fc019df385b701b04c2fd3c49",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/MIGRATION.md",
+      "baseline_blob": "5dbbddbbfa729c1500e678467d611d4286ba8c15",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/README.md",
+      "baseline_blob": "1ddf69d6c5752f0c2a2013953142858f9d12e616",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/RELEASE_NOTES.md",
+      "baseline_blob": "7a45f2c02ae47a4b35f843f1dbce51a9fc973f5a",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/TESTING.md",
+      "baseline_blob": "532f2d6af8e934337aa883a9efaffdfb2ab87dd6",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/TROUBLESHOOTING.md",
+      "baseline_blob": "ff1e885c7f712e500e95e7e169369971a62815d2",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/KNOWN_ISSUES.md",
+      "baseline_blob": "bcf0de497be08eb58ee81177188adc7d6fe15d37",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/MIGRATION.md",
+      "baseline_blob": "4c3a15fa4321f9875a9e25b54c44bdd34a9b4461",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/README.md",
+      "baseline_blob": "b4c2754fe7c8bbef0a245e6fc882704b1fdb76c6",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/RELEASE_NOTES.md",
+      "baseline_blob": "964a35a9a44e7da04106389fdfc2c707b86f5237",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/TESTING.md",
+      "baseline_blob": "fa9117f916e74484f6bcb993a507343631a34f66",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/TROUBLESHOOTING.md",
+      "baseline_blob": "a9ffd3b31825dd4a612aecab242e74cdc7330d57",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/KNOWN_ISSUES.md",
+      "baseline_blob": "8bd9a2292237c7d2270d7922c3b3f89d9abda192",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/MIGRATION.md",
+      "baseline_blob": "8ae9ea8c5d3e78991ccfc25f1ccfec6ce2e52091",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/README.md",
+      "baseline_blob": "4196cdfb715d533f1ddbdfd36a7874e76cb5d087",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/RELEASE_NOTES.md",
+      "baseline_blob": "252b8e765ad8d2259ef8693a1a343ac2591660a5",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/TESTING.md",
+      "baseline_blob": "7bd2004e17fa2578c4e70ce07de3cbc2bb3a07f9",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/TROUBLESHOOTING.md",
+      "baseline_blob": "c2aac3a4f8e963764bfeaf13682dd00c859debb9",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/HANDOFF.md",
+      "baseline_blob": "1480b6ae9265b0cf774dcee4fe3dce0f03263b3a",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/README.md",
+      "baseline_blob": "a2689307a58950c5d0fe9304004003514ce19d5e",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/TODO_v0.4.0.md",
+      "baseline_blob": "008b8b71ee14360adc72c686b6056518b5186a4e",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "00_Docs/TODO_v0.4.1.md",
+      "baseline_blob": "d84e54e78f4361e96bb44e280eae46638ad92d18",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "00_Docs/TODO_v0.5.0.md",
+      "baseline_blob": "1ce7a757f5162b18ad93bf5bc516eaec3a0c0e87",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "AGENTS.md",
+      "baseline_blob": "370a95011a538efa9cb12e56e415922696716603",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "README.md",
+      "baseline_blob": "c702d1e3be3c4159df96c2272f13e7105639d831",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "coverage/ncs-v3.4.0/generated/summary.md",
+      "baseline_blob": "a0c21dedb602de6d1ba460f4bbd3c3b97e4838fa",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "packaging/boards-manager/README.md",
+      "baseline_blob": "0898edc0da22ff88cea97e1b100555c320032a10",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "tests/hil/nu54dk/COMMON_WIRING.md",
+      "baseline_blob": "5c3de4725d610e1a0cb79e0c76288242b897b9ef",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tests/hil/nu54dk/README.md",
+      "baseline_blob": "d19c6a6c0b3240921813f26e14150572bdc8f871",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_PLAN.md",
+      "baseline_blob": "5672d2feb3c5ecaef50ef22694bd9fc95052106c",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_POWER.md",
+      "baseline_blob": "e16e4854d58afab84bcb86d4d947c1973a262b51",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_RECOVERY.md",
+      "baseline_blob": "a5529f176d4576ed2cf679e546c88c5986185215",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tests/zephyr/m25_nojumper_hil/README.md",
+      "baseline_blob": "4dd73786f43c873f300e15345abdc7089b481651",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "third_party/ArduinoCore-API/README.md",
+      "baseline_blob": "506569a8bac14fa91476508a29138d4af056e465",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "third_party/THIRD_PARTY_NOTICES.md",
+      "baseline_blob": "43bff2228363372146a5e1eb45057de40c9b48b6",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tools/format/README.md",
+      "baseline_blob": "99670244c6a494259f91eb9838cae778e3a296bd",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tools/nu54-prerequisites/README.md",
+      "baseline_blob": "a2acbf55eb929e3115fa3875e927e276c9a0086c",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "tools/peripheral/README.md",
+      "baseline_blob": "fd6116a9e88a1b6114316ca549e03118a046e9bf",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "tools/release/M11_README.md",
+      "baseline_blob": "6ae58026b1d35b60aa6cfa8fdaf80800a03cfa44",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "tools/release/M18_README.md",
+      "baseline_blob": "81e8f97375a194721074f64402ec4c90bc2ba239",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tools/release/M22_README.md",
+      "baseline_blob": "52f8fa55a634c2b3ab3da6336cf3db666a317fbf",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tools/release/M27_README.md",
+      "baseline_blob": "81d159e8a0203a836d71cbce38c95ef120dc3015",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tools/release/README.md",
+      "baseline_blob": "9d1456e459fe04a87e219e380dc15eb71dc7f4e5",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "tools/remote-windows/README.md",
+      "baseline_blob": "c97860595098962cf355cd70a34f04c9e57f4f96",
+      "review": "completed",
+      "action": "updated"
+    },
+    {
+      "path": "tools/remote-windows/m10/README.md",
+      "baseline_blob": "ee75dc9c06fc8efa11fbc8f91a2f58eb6a22658a",
+      "review": "completed",
+      "action": "preserved"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/01_BOARD_DEVELOPMENT.md",
+      "baseline_blob": "182c799b8e29a413dcd81c877934ebcfe9b6cca1",
+      "review": "completed",
+      "action": "preserved_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/02_NRF54L15DK_DELTA.md",
+      "baseline_blob": "be73e7b5c1d39c1023958e29350599e40aaf1c43",
+      "review": "completed",
+      "action": "preserved_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/03_PINOUT.md",
+      "baseline_blob": "0c8445fb4eab05b47ff5fa67f50bdaaf0e098761",
+      "review": "completed",
+      "action": "preserved_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/04_HARDWARE_NOTES.md",
+      "baseline_blob": "ad3f7b9999869c35f07bb5f1352a665f28fe0241",
+      "review": "completed",
+      "action": "preserved_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/README.md",
+      "baseline_blob": "15954e3cde5143e4383762e9ef736e68c18291f5",
+      "review": "completed",
+      "action": "preserved_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/README.md",
+      "baseline_blob": "00b1f1abd9badbc60be4cfc6a14cfc4698dd182b",
+      "review": "completed",
+      "action": "preserved_read_only"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import hashlib
 import os
 import re
 from .common import AdapterError, CACHE_SCHEMA_VERSION, CONTEXT_DIRECTORY, canonical_path, path_key
+from .host import user_cache_root
 
 
 ## @brief cache root가 단일 host의 local filesystem인지 검증합니다.
@@ -24,11 +25,7 @@ def build_cache_root() -> Path:
     configured = os.environ.get("NUCODE_BUILD_CACHE_ROOT")
     if configured:
         return local_cache_root(configured)
-    local_data = os.environ.get("LOCALAPPDATA")
-    if local_data:
-        base = canonical_path(local_data)
-    else:
-        base = canonical_path(Path.home() / ".cache")
+    base = user_cache_root()
     ## @note nRF Security의 긴 object 이름이 Windows MAX_PATH를 넘지 않도록 build 전용
     ##       기본 경로는 짧게 유지하고 설치 상태와 log는 기존 NUCODE 경로를 사용합니다.
     return local_cache_root(base / "NU54" / "c")

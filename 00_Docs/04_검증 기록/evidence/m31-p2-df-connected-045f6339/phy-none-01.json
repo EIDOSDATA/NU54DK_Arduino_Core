@@ -1,0 +1,148 @@
+{
+  "status": "FAIL",
+  "outcome": "UNEXPECTED",
+  "scope": "connected_raw_iq_rx",
+  "raw_iq_rx": "NOT RUN",
+  "angle_measurement": "NOT RUN",
+  "core_revision": "045f6339",
+  "receiver_probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "responder_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "receiver_port": "COM10",
+  "responder_port": "COM13",
+  "receiver_aux": "COM11",
+  "responder_aux": "COM12",
+  "receiver_image_sha256": "35fac137e274e99b8eef5d248f816e3a2cd188868aaba2a898c551527c302bc7",
+  "responder_image_sha256": "5b2b37f8892ee31a9327741ef872d3e47230873bb9679003a86539775e268bb3",
+  "source_clean": false,
+  "iq_reports": 5,
+  "iq_samples": 410,
+  "iq_event_counters": [
+    4,
+    15,
+    26,
+    37,
+    48,
+    59
+  ],
+  "host_iq_callbacks": 6,
+  "controller_iq_events": 0,
+  "host_gate_drops": 0,
+  "iq_packet_status_counts": {
+    "0": 5,
+    "1": 1
+  },
+  "cleanup_confirmed": true,
+  "receiver_lines": [
+    "DF_CONN|ANT_INFO|count=1|max_pattern=12|max_cte=20",
+    "DF_CONN|SCANNING|code=0",
+    "DF_CONN|SCAN_STOP|code=0",
+    "DF_CONN|CONNECT_REQUEST|code=0",
+    "DF_CONN|CONNECTED|error=0",
+    "DF_CONN|AOA_RX_ENABLE|code=-22",
+    "DF_CONN|RAW_RX_PARAM|code=0",
+    "DF_CONN|HOST_RX_STATE|enabled=1|params=1|cte_types=1",
+    "DF_CONN|RAW_REQUEST|code=0",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=4|channel=19|i0=-8|q0=10|rssi=-560",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=15|channel=35|i0=-16|q0=-1|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=26|channel=21|i0=12|q0=7|rssi=-560",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=37|channel=9|i0=7|q0=14|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=48|channel=35|i0=-11|q0=-10|rssi=-590",
+    "DF_CONN|IQ|error=0|count=12|type=1|status=1|sample_type=0|slot=2|event=59|channel=5|i0=-15|q0=3|rssi=-610",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=59|channel=5|i0=3|q0=-16|rssi=-610",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=70|channel=26|i0=12|q0=-8|rssi=-560",
+    "DF_CONN|RAW_REQUEST_STOP|code=0",
+    "DF_CONN|RAW_RX_STOP|code=0",
+    "DF_CONN|HOST_RX_STATE|enabled=0|params=1|cte_types=0",
+    "DF_CONN|DISCONNECT_REQUEST|code=0",
+    "DF_CONN|DISCONNECTED|reason=22",
+    "DF_CONN|HOST_RX_STATE|enabled=0|params=1|cte_types=0",
+    "DF_CONN|STOPPED"
+  ],
+  "responder_lines": [
+    "CTE responses enabled on connected peer",
+    "CTE peer disconnected",
+    "CTE responses enabled on connected peer",
+    "CTE peer disconnected"
+  ],
+  "receiver_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_flash": {
+    "method": "pyocd-load-sector-no-reset",
+    "exit_code": 0
+  },
+  "receiver_flash": {
+    "method": "pyocd-load-sector-no-reset",
+    "exit_code": 0
+  },
+  "responder_start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "receiver_start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "cleanup": {
+    "request_disabled": true,
+    "sampling_disabled": true,
+    "disconnect_requested": true,
+    "receiver_stopped": true,
+    "host_state_disarmed": true,
+    "responder_stopped": false,
+    "responder_disconnected": true
+  },
+  "failure_class": "RuntimeError",
+  "failure_detail": "duplicate IQ event counter"
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "results": {
+    "connectionless_tx": {
+      "source": "zephyr/samples/bluetooth/direction_finding_connectionless_tx",
+      "controller": "default_sdc",
+      "extra_configuration": "overlay-aoa.conf",
+      "status": "PASS",
+      "image_sha256": "71a2584fd51c938e437aca6e1b2520678d137f69416028094872b117c05560c4",
+      "log_sha256": "a083822caec8f0293630ac09f808d651f2b5fcd3f86cc3fc2eba3107dbba083f",
+      "flash_bytes": 108648,
+      "ram_bytes": 23232
+    },
+    "connected_responder": {
+      "source": "zephyr/samples/bluetooth/direction_finding_peripheral",
+      "controller": "default_sdc",
+      "extra_configuration": "overlay-aoa.conf",
+      "status": "PASS",
+      "image_sha256": "37dfeb7acd01bf7bbd14e2197a1a56c3e6192033742358aecb46c41924ad6acb",
+      "log_sha256": "6c2dcaec9f1d661b713bdebbe93727de5a36d04bdbad373be6f1370aa7e0b583",
+      "flash_bytes": 167068,
+      "ram_bytes": 32180
+    },
+    "connectionless_rx_ll": {
+      "source": "zephyr/samples/bluetooth/direction_finding_connectionless_rx",
+      "controller": "zephyr_ll",
+      "extra_configuration": "bt-ll-sw-split+df_iq_ll.conf",
+      "status": "PASS",
+      "image_sha256": "3386580c3d7681d7a014533d5e0d833aa1e5d337d1363d5a293f9fef84b2f574",
+      "log_sha256": "78c187d617604facf26138c8d88a888194e9ffafb4f5b82c0fd225e0c9255f77",
+      "flash_bytes": 89772,
+      "ram_bytes": 49348
+    }
+  },
+  "counts": {
+    "total": 3,
+    "pass": 3
+  }
+}

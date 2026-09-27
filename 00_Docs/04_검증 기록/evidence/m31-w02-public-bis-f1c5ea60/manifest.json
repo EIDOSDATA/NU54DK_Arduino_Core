@@ -1,0 +1,67 @@
+{
+  "core_revision": "f1c5ea60493ed79829885887d67dd5693c7b9c87",
+  "source_clean_at_hil": true,
+  "accepted": "public-bis-exact.json",
+  "diagnostics_excluded": [
+    "diagnostic-disconnect.json",
+    "diagnostic-preboot.json",
+    "diagnostic-broadcast-loss.json",
+    "diagnostic-candidate.json"
+  ],
+  "roles": {
+    "source": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
+      "config_sha256": "690c92c1c0d08e1f2b42257670c5c1e195949aec134c8d707ab80f344e9f1b8b",
+      "hex_sha256": "0b7ab7e9c1580ad374595c5c9845f9c637d45aaa45230b2b8d0dc971a34d9683",
+      "flash_bytes": 229376,
+      "program_bytes": 226860,
+      "ram_bytes": 107338,
+      "build_manifest": "source-build.json",
+      "build_manifest_sha256": "b8bd19b41ec44d64b7201e6010be01d2519dcc7f75dbdd2a8ec396ab8f5d2b69"
+    },
+    "receiver": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
+      "config_sha256": "3d8dfcdb827338629c710e24f9db3829e94fcaab959d23838ebe9bd1e6faf014",
+      "hex_sha256": "ad27f489b01986e9a90853307a121a295613934fad25931398b1c385ecb2f898",
+      "flash_bytes": 196608,
+      "program_bytes": 195868,
+      "ram_bytes": 106467,
+      "build_manifest": "receiver-build.json",
+      "build_manifest_sha256": "17e8a22efe5e1bd26452dc3bad1f9105cca6e305c4e5ee489eb80f92513d22ce"
+    }
+  },
+  "runner": {
+    "path": "tests/hil/nu54dk/m31_iso_public_bis_pair_run.py",
+    "sha256": "93bc3f72d3c396e81cc5ef2b3e6bae134ad6e87251469a1296556e26dc060c6f"
+  },
+  "artifacts": [
+    {
+      "path": "public-bis-exact.json",
+      "sha256": "18dd5efea7e354bb0a87b2524f386e17a3e5bd7bae33a8b2c4d4a3a6567e8fd3"
+    },
+    {
+      "path": "diagnostic-disconnect.json",
+      "sha256": "9e3f84d86cba4ce342fe9075a308512e5d9354801b12b7e29f3194fad8d5a8bb"
+    },
+    {
+      "path": "diagnostic-preboot.json",
+      "sha256": "3744a7d6ad7819f884dc914c01a0935bcd6f97aba2864423d5640b03478a0292"
+    },
+    {
+      "path": "diagnostic-broadcast-loss.json",
+      "sha256": "962f25ef77c0d73aa2c12229562888647410e9a67df520c36d9977d0d5d4c3ce"
+    },
+    {
+      "path": "diagnostic-candidate.json",
+      "sha256": "db056e091e1fb8a1a72052400c5814ccadab96b9fc3d896bf2f603bae97fde8f"
+    },
+    {
+      "path": "source-build.json",
+      "sha256": "b8bd19b41ec44d64b7201e6010be01d2519dcc7f75dbdd2a8ec396ab8f5d2b69"
+    },
+    {
+      "path": "receiver-build.json",
+      "sha256": "17e8a22efe5e1bd26452dc3bad1f9105cca6e305c4e5ee489eb80f92513d22ce"
+    }
+  ]
+}

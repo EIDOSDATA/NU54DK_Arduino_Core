@@ -178,7 +178,9 @@ def build_lock(
                 if owner.get("token") == token:
                     try:
                         lock_path.unlink()
-                    except FileNotFoundError:
+                    # OS mutex가 실제 배타성을 소유하므로 scanner가 diagnostic
+                    # JSON 삭제를 잠시 막아도 build 결과를 실패시키지 않습니다.
+                    except OSError:
                         pass
     except TimeoutError as error:
         owner = read_lock_document(lock_path)

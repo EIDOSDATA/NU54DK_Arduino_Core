@@ -114,6 +114,12 @@ namespace nucode::ble::internal
         return 0;
     }
 
+    /** @brief M29 GATT cache가 링크되기 전에는 database identity를 기록하지 않습니다. */
+    __weak int recordGattDatabaseIdentity() noexcept
+    {
+        return 0;
+    }
+
     /** @brief M20이 링크되기 전에는 custom GATT schema가 없습니다. */
     __weak bool hasGattSchema() noexcept
     {
@@ -126,21 +132,31 @@ namespace nucode::ble::internal
     }
 
     /** @brief M20이 링크되기 전에는 generic GATT connection 관찰을 생략합니다. */
-    __weak void gattConnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    __weak void gattConnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
         ARG_UNUSED(connection);
-        ARG_UNUSED(generation);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M20이 링크되기 전에는 generic GATT disconnect 관찰을 생략합니다. */
-    __weak void gattDisconnected(struct bt_conn *connection, std::uint32_t generation) noexcept
+    __weak void gattDisconnected(struct bt_conn *connection, BLEConnectionHandle handle) noexcept
     {
         ARG_UNUSED(connection);
-        ARG_UNUSED(generation);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M20이 링크되기 전에는 GATT 종료 정리가 없습니다. */
     __weak void gattEnded() noexcept
+    {
+    }
+
+    /** @brief M29 LE CoC가 링크되기 전에는 main-thread 작업이 없습니다. */
+    __weak void pollL2cap() noexcept
+    {
+    }
+
+    /** @brief M29 LE CoC가 링크되기 전에는 channel 종료 작업이 없습니다. */
+    __weak void l2capEnded() noexcept
     {
     }
 
@@ -157,10 +173,26 @@ namespace nucode::ble::internal
         ARG_UNUSED(connection);
     }
 
+    /** @brief M30이 링크되기 전에는 exact security connection 관찰을 비활성화합니다. */
+    __weak void securityConnected(struct bt_conn *connection,
+                                  BLEConnectionHandle handle) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
+    }
+
     /** @brief M21이 링크되기 전에는 security disconnect 관찰을 비활성화합니다. */
     __weak void securityDisconnected(struct bt_conn *connection) noexcept
     {
         ARG_UNUSED(connection);
+    }
+
+    /** @brief M30이 링크되기 전에는 exact security disconnect 관찰을 비활성화합니다. */
+    __weak void securityDisconnected(struct bt_conn *connection,
+                                     BLEConnectionHandle handle) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
     }
 
     /** @brief M21이 링크되기 전에는 security level 변경 관찰을 비활성화합니다. */
@@ -168,6 +200,16 @@ namespace nucode::ble::internal
                                 enum bt_security_err error) noexcept
     {
         ARG_UNUSED(connection);
+        ARG_UNUSED(level);
+        ARG_UNUSED(error);
+    }
+
+    /** @brief M30이 링크되기 전에는 exact security 변경 관찰을 비활성화합니다. */
+    __weak void securityChanged(struct bt_conn *connection, BLEConnectionHandle handle,
+                                bt_security_t level, enum bt_security_err error) noexcept
+    {
+        ARG_UNUSED(connection);
+        ARG_UNUSED(handle);
         ARG_UNUSED(level);
         ARG_UNUSED(error);
     }

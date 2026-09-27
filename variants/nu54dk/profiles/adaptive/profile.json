@@ -1,0 +1,17 @@
+{
+  "schema_version": 3,
+  "capability_mode": "resolved",
+  "id": "adaptive",
+  "display_name": "Adaptive capabilities (experimental)",
+  "board": "nucode:zephyr:nu54dk",
+  "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_version": "v3.4.0",
+  "conf": "prj.conf",
+  "overlay": "app.overlay",
+  "sysbuild": false,
+  "sysbuild_files": [],
+  "signing_key_env": null,
+  "features": [],
+  "conflicts": [],
+  "requires_hil": []
+}

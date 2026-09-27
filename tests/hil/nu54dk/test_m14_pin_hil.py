@@ -95,7 +95,9 @@ class M14PinHilTests(unittest.TestCase):
         """! @brief M14 local build 검증이 CI canonical helper로 바뀌지 않게 고정합니다. """
 
         with mock.patch.object(
-            MODULE, "files_digest", side_effect=("1" * 64, "2" * 64, "3" * 64)
+            MODULE,
+            "source_files_digest",
+            side_effect=("1" * 64, "2" * 64, "3" * 64),
         ) as live_digest, mock.patch.object(
             MODULE,
             "git_committed_files_digest",

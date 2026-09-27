@@ -1,0 +1,2997 @@
+{
+  "schema": "nucode.m31.pbp-hil.v2",
+  "status": "PASS",
+  "mode": "quality",
+  "started_at": "2026-09-20T06:39:34.302645+00:00",
+  "finished_at": "2026-09-20T06:41:06.957436+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "source_clean": true,
+  "public_example_sha256": {
+    "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+    "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+  },
+  "runner": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_hil_final.py",
+    "sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e"
+  },
+  "debug_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "raw_probe_identifiers_recorded": false
+  },
+  "flash_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\flash_by_probe_hash.py",
+    "sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "outer_timeout_seconds": 165.0
+  },
+  "flash_receipts": {
+    "source": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\quality-source-flash.json",
+      "sha256": "204f12cd8de0abcc5e27d85a26a3b7809b6f57ce758e481a1b5cce123a4ea2e2",
+      "programmed_bytes": 503808,
+      "status": "PASS"
+    },
+    "sink": {
+      "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\quality-sink-flash.json",
+      "sha256": "6c24646a4a4d572387247fa3f6f4e89e864795b4640509622be2a987e3dca46b",
+      "programmed_bytes": 491520,
+      "status": "PASS"
+    }
+  },
+  "final_provenance": {
+    "verified": true,
+    "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+    "public_example_sha256": {
+      "source": "9476ef6d0575c54664189f74df79d8f473802815ebb4e15a9b60cee45cb06212",
+      "sink": "c7b16301bfaa8f9949cd19b0158c4452d3fabfb51b19f93235acc11a486f1bf5"
+    },
+    "image_sha256": {
+      "source": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e",
+      "sink": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    },
+    "debug_helper_sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "flash_helper_sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16",
+    "runner_sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e",
+    "flash_receipt_sha256": {
+      "source": "204f12cd8de0abcc5e27d85a26a3b7809b6f57ce758e481a1b5cce123a4ea2e2",
+      "sink": "6c24646a4a4d572387247fa3f6f4e89e864795b4640509622be2a987e3dca46b"
+    }
+  },
+  "probe_preflight": {
+    "connected_probe_count": 3,
+    "expected_hash_matches": {
+      "source": 1,
+      "sink": 1
+    }
+  },
+  "usb_port_preflight": {
+    "required_port_count": 4,
+    "roles": {
+      "source": {
+        "target_port": "COM10",
+        "aux_port": "COM11",
+        "serial_sha256": "f419aa19cc41d8d2c8c85339a81b8f2c0e1ada5bf91f0ff04200513fc6aba69f"
+      },
+      "sink": {
+        "target_port": "COM14",
+        "aux_port": "COM15",
+        "serial_sha256": "a68185c274fd83f93c9520f99fb418184395f9548a52e306449733c3c9f39b46"
+      }
+    },
+    "raw_usb_serials_recorded": false
+  },
+  "board_map": {
+    "source": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w07-source-fcbbfac5\\PublicAudioBroadcastSource.ino.hex",
+      "image_sha256": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e"
+    },
+    "sink": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w07-sink-fcbbfac5\\PublicAudioBroadcastSink.ino.hex",
+      "image_sha256": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    }
+  },
+  "runner_behavior": {
+    "flashes_devices": true,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "time_contract": {
+    "positive_stream_duration_seconds": 180.0,
+    "non_positive_campaign_timeout_seconds": 180.0,
+    "recovery_timeout_seconds": 30.0,
+    "cycles": 20
+  },
+  "transcript": {
+    "path": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\quality.transcript.log",
+    "sha256": "bd67e75104d5db7d035e0dab018f66921dcae827c02d69cffbd776b5aca0a8bf",
+    "event_count": 472
+  },
+  "result": {
+    "initial": {
+      "source_preparing_sequence": 3,
+      "source_streaming_sequence": 4,
+      "sink_scanning_sequence": 6,
+      "announcement_sequence": 7,
+      "sink_streaming_sequence": 9,
+      "baseline_sample_sequence": 11,
+      "baseline": {
+        "frames": 100,
+        "energy": 972087,
+        "dropped": 0
+      }
+    },
+    "cycles": 20,
+    "source_unsupported_code": 10,
+    "sink_unsupported_code": 10,
+    "source_rejected": 20,
+    "sink_rejected": 20,
+    "recovered": 20,
+    "recovery_seconds": [
+      4.316,
+      4.255,
+      4.567,
+      4.569,
+      4.376,
+      4.31,
+      4.31,
+      4.266,
+      4.67,
+      4.207,
+      4.976,
+      4.629,
+      4.599,
+      4.925,
+      4.849,
+      4.838,
+      4.188,
+      4.239,
+      4.501,
+      4.283
+    ],
+    "campaign_elapsed_seconds": 92.481
+  },
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 0.015,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 1,
+      "at_s": 0.04,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 2,
+      "at_s": 0.166,
+      "role": "runner",
+      "text": "command board=G value=r"
+    },
+    {
+      "sequence": 3,
+      "at_s": 0.246,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 4,
+      "at_s": 0.246,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 5,
+      "at_s": 0.368,
+      "role": "runner",
+      "text": "command board=F value=r"
+    },
+    {
+      "sequence": 6,
+      "at_s": 0.373,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 7,
+      "at_s": 0.576,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 8,
+      "at_s": 1.27,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 9,
+      "at_s": 1.459,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 10,
+      "at_s": 2.282,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 11,
+      "at_s": 2.471,
+      "role": "sink",
+      "text": "public audio received=100 energy=972087 dropped=0"
+    },
+    {
+      "sequence": 12,
+      "at_s": 2.596,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-1 state=armed"
+    },
+    {
+      "sequence": 13,
+      "at_s": 2.596,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-1 state=armed"
+    },
+    {
+      "sequence": 14,
+      "at_s": 2.596,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 15,
+      "at_s": 2.666,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 16,
+      "at_s": 2.667,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 17,
+      "at_s": 2.667,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-1 state=disarmed"
+    },
+    {
+      "sequence": 18,
+      "at_s": 3.673,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 19,
+      "at_s": 3.673,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 20,
+      "at_s": 3.673,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 21,
+      "at_s": 3.743,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 22,
+      "at_s": 3.871,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-1 state=disarmed"
+    },
+    {
+      "sequence": 23,
+      "at_s": 3.871,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-1 state=armed"
+    },
+    {
+      "sequence": 24,
+      "at_s": 3.871,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 25,
+      "at_s": 3.877,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 26,
+      "at_s": 3.877,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-1 state=disarmed"
+    },
+    {
+      "sequence": 27,
+      "at_s": 4.685,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 28,
+      "at_s": 4.88,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 29,
+      "at_s": 4.953,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 30,
+      "at_s": 5.689,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 31,
+      "at_s": 5.787,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 32,
+      "at_s": 6.694,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 33,
+      "at_s": 6.788,
+      "role": "sink",
+      "text": "public audio received=100 energy=1155689 dropped=0"
+    },
+    {
+      "sequence": 34,
+      "at_s": 6.788,
+      "role": "runner",
+      "text": "quality cycle=1/20 elapsed=4.316s pass"
+    },
+    {
+      "sequence": 35,
+      "at_s": 6.911,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-2 state=armed"
+    },
+    {
+      "sequence": 36,
+      "at_s": 6.911,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-2 state=armed"
+    },
+    {
+      "sequence": 37,
+      "at_s": 6.911,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 38,
+      "at_s": 6.986,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 39,
+      "at_s": 6.987,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 40,
+      "at_s": 6.988,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-2 state=disarmed"
+    },
+    {
+      "sequence": 41,
+      "at_s": 7.989,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 42,
+      "at_s": 7.989,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 43,
+      "at_s": 7.989,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 44,
+      "at_s": 8.004,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 45,
+      "at_s": 8.13,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-2 state=disarmed"
+    },
+    {
+      "sequence": 46,
+      "at_s": 8.13,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-2 state=armed"
+    },
+    {
+      "sequence": 47,
+      "at_s": 8.13,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 48,
+      "at_s": 8.14,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 49,
+      "at_s": 8.14,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-2 state=disarmed"
+    },
+    {
+      "sequence": 50,
+      "at_s": 9.001,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 51,
+      "at_s": 9.142,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 52,
+      "at_s": 9.16,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 53,
+      "at_s": 10.021,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 54,
+      "at_s": 10.039,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 55,
+      "at_s": 11.029,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 56,
+      "at_s": 11.043,
+      "role": "sink",
+      "text": "public audio received=100 energy=1072902 dropped=0"
+    },
+    {
+      "sequence": 57,
+      "at_s": 11.043,
+      "role": "runner",
+      "text": "quality cycle=2/20 elapsed=4.255s pass"
+    },
+    {
+      "sequence": 58,
+      "at_s": 11.166,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-3 state=armed"
+    },
+    {
+      "sequence": 59,
+      "at_s": 11.167,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-3 state=armed"
+    },
+    {
+      "sequence": 60,
+      "at_s": 11.167,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 61,
+      "at_s": 11.243,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 62,
+      "at_s": 11.243,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 63,
+      "at_s": 11.243,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-3 state=disarmed"
+    },
+    {
+      "sequence": 64,
+      "at_s": 12.246,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 65,
+      "at_s": 12.246,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 66,
+      "at_s": 12.247,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 67,
+      "at_s": 12.261,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 68,
+      "at_s": 12.385,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-3 state=disarmed"
+    },
+    {
+      "sequence": 69,
+      "at_s": 12.385,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-3 state=armed"
+    },
+    {
+      "sequence": 70,
+      "at_s": 12.386,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 71,
+      "at_s": 12.391,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 72,
+      "at_s": 12.392,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-3 state=disarmed"
+    },
+    {
+      "sequence": 73,
+      "at_s": 13.254,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 74,
+      "at_s": 13.398,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 75,
+      "at_s": 13.769,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 76,
+      "at_s": 14.261,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 77,
+      "at_s": 14.598,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 78,
+      "at_s": 15.271,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 79,
+      "at_s": 15.61,
+      "role": "sink",
+      "text": "public audio received=100 energy=1010947 dropped=0"
+    },
+    {
+      "sequence": 80,
+      "at_s": 15.61,
+      "role": "runner",
+      "text": "quality cycle=3/20 elapsed=4.567s pass"
+    },
+    {
+      "sequence": 81,
+      "at_s": 15.734,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-4 state=armed"
+    },
+    {
+      "sequence": 82,
+      "at_s": 15.734,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-4 state=armed"
+    },
+    {
+      "sequence": 83,
+      "at_s": 15.734,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 84,
+      "at_s": 15.807,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 85,
+      "at_s": 15.807,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 86,
+      "at_s": 15.807,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-4 state=disarmed"
+    },
+    {
+      "sequence": 87,
+      "at_s": 16.811,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 88,
+      "at_s": 16.812,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 89,
+      "at_s": 16.818,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 90,
+      "at_s": 16.893,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 91,
+      "at_s": 17.017,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-4 state=disarmed"
+    },
+    {
+      "sequence": 92,
+      "at_s": 17.017,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-4 state=armed"
+    },
+    {
+      "sequence": 93,
+      "at_s": 17.017,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 94,
+      "at_s": 17.027,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 95,
+      "at_s": 17.027,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-4 state=disarmed"
+    },
+    {
+      "sequence": 96,
+      "at_s": 17.834,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 97,
+      "at_s": 18.028,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 98,
+      "at_s": 18.341,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 99,
+      "at_s": 18.851,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 100,
+      "at_s": 19.167,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 101,
+      "at_s": 19.868,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 102,
+      "at_s": 20.179,
+      "role": "sink",
+      "text": "public audio received=100 energy=935728 dropped=0"
+    },
+    {
+      "sequence": 103,
+      "at_s": 20.18,
+      "role": "runner",
+      "text": "quality cycle=4/20 elapsed=4.569s pass"
+    },
+    {
+      "sequence": 104,
+      "at_s": 20.303,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-5 state=armed"
+    },
+    {
+      "sequence": 105,
+      "at_s": 20.303,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-5 state=armed"
+    },
+    {
+      "sequence": 106,
+      "at_s": 20.303,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 107,
+      "at_s": 20.377,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 108,
+      "at_s": 20.378,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 109,
+      "at_s": 20.378,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-5 state=disarmed"
+    },
+    {
+      "sequence": 110,
+      "at_s": 21.379,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 111,
+      "at_s": 21.384,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 112,
+      "at_s": 21.384,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 113,
+      "at_s": 21.398,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 114,
+      "at_s": 21.526,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-5 state=disarmed"
+    },
+    {
+      "sequence": 115,
+      "at_s": 21.526,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-5 state=armed"
+    },
+    {
+      "sequence": 116,
+      "at_s": 21.526,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 117,
+      "at_s": 21.531,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 118,
+      "at_s": 21.531,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-5 state=disarmed"
+    },
+    {
+      "sequence": 119,
+      "at_s": 22.387,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 120,
+      "at_s": 22.537,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 121,
+      "at_s": 22.565,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 122,
+      "at_s": 23.396,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 123,
+      "at_s": 23.555,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 124,
+      "at_s": 24.406,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 125,
+      "at_s": 24.555,
+      "role": "sink",
+      "text": "public audio received=100 energy=1134822 dropped=0"
+    },
+    {
+      "sequence": 126,
+      "at_s": 24.556,
+      "role": "runner",
+      "text": "quality cycle=5/20 elapsed=4.376s pass"
+    },
+    {
+      "sequence": 127,
+      "at_s": 24.678,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-6 state=armed"
+    },
+    {
+      "sequence": 128,
+      "at_s": 24.678,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-6 state=armed"
+    },
+    {
+      "sequence": 129,
+      "at_s": 24.678,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 130,
+      "at_s": 24.747,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 131,
+      "at_s": 24.747,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 132,
+      "at_s": 24.747,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-6 state=disarmed"
+    },
+    {
+      "sequence": 133,
+      "at_s": 25.748,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 134,
+      "at_s": 25.749,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 135,
+      "at_s": 25.753,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 136,
+      "at_s": 25.764,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 137,
+      "at_s": 25.891,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-6 state=disarmed"
+    },
+    {
+      "sequence": 138,
+      "at_s": 25.891,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-6 state=armed"
+    },
+    {
+      "sequence": 139,
+      "at_s": 25.891,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 140,
+      "at_s": 25.896,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 141,
+      "at_s": 25.896,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-6 state=disarmed"
+    },
+    {
+      "sequence": 142,
+      "at_s": 26.771,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 143,
+      "at_s": 26.899,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 144,
+      "at_s": 26.936,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 145,
+      "at_s": 27.778,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 146,
+      "at_s": 27.861,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 147,
+      "at_s": 28.785,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 148,
+      "at_s": 28.865,
+      "role": "sink",
+      "text": "public audio received=100 energy=1134822 dropped=0"
+    },
+    {
+      "sequence": 149,
+      "at_s": 28.866,
+      "role": "runner",
+      "text": "quality cycle=6/20 elapsed=4.310s pass"
+    },
+    {
+      "sequence": 150,
+      "at_s": 28.988,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-7 state=armed"
+    },
+    {
+      "sequence": 151,
+      "at_s": 28.988,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-7 state=armed"
+    },
+    {
+      "sequence": 152,
+      "at_s": 28.988,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 153,
+      "at_s": 29.062,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 154,
+      "at_s": 29.062,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 155,
+      "at_s": 29.062,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-7 state=disarmed"
+    },
+    {
+      "sequence": 156,
+      "at_s": 30.064,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 157,
+      "at_s": 30.069,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 158,
+      "at_s": 30.069,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 159,
+      "at_s": 30.087,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 160,
+      "at_s": 30.213,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-7 state=disarmed"
+    },
+    {
+      "sequence": 161,
+      "at_s": 30.213,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-7 state=armed"
+    },
+    {
+      "sequence": 162,
+      "at_s": 30.213,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 163,
+      "at_s": 30.223,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 164,
+      "at_s": 30.224,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-7 state=disarmed"
+    },
+    {
+      "sequence": 165,
+      "at_s": 31.083,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 166,
+      "at_s": 31.225,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 167,
+      "at_s": 31.253,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 168,
+      "at_s": 32.081,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 169,
+      "at_s": 32.183,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 170,
+      "at_s": 33.084,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 171,
+      "at_s": 33.175,
+      "role": "sink",
+      "text": "public audio received=100 energy=1002911 dropped=0"
+    },
+    {
+      "sequence": 172,
+      "at_s": 33.175,
+      "role": "runner",
+      "text": "quality cycle=7/20 elapsed=4.310s pass"
+    },
+    {
+      "sequence": 173,
+      "at_s": 33.298,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-8 state=armed"
+    },
+    {
+      "sequence": 174,
+      "at_s": 33.298,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-8 state=armed"
+    },
+    {
+      "sequence": 175,
+      "at_s": 33.298,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 176,
+      "at_s": 33.372,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 177,
+      "at_s": 33.372,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 178,
+      "at_s": 33.372,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-8 state=disarmed"
+    },
+    {
+      "sequence": 179,
+      "at_s": 34.374,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 180,
+      "at_s": 34.374,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 181,
+      "at_s": 34.378,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 182,
+      "at_s": 34.39,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 183,
+      "at_s": 34.516,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-8 state=disarmed"
+    },
+    {
+      "sequence": 184,
+      "at_s": 34.516,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-8 state=armed"
+    },
+    {
+      "sequence": 185,
+      "at_s": 34.516,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 186,
+      "at_s": 34.521,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 187,
+      "at_s": 34.521,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-8 state=disarmed"
+    },
+    {
+      "sequence": 188,
+      "at_s": 35.4,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 189,
+      "at_s": 35.524,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 190,
+      "at_s": 35.539,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 191,
+      "at_s": 36.414,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 192,
+      "at_s": 36.428,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 193,
+      "at_s": 37.427,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 194,
+      "at_s": 37.441,
+      "role": "sink",
+      "text": "public audio received=100 energy=1163586 dropped=0"
+    },
+    {
+      "sequence": 195,
+      "at_s": 37.441,
+      "role": "runner",
+      "text": "quality cycle=8/20 elapsed=4.266s pass"
+    },
+    {
+      "sequence": 196,
+      "at_s": 37.564,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-9 state=armed"
+    },
+    {
+      "sequence": 197,
+      "at_s": 37.564,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-9 state=armed"
+    },
+    {
+      "sequence": 198,
+      "at_s": 37.564,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 199,
+      "at_s": 37.637,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 200,
+      "at_s": 37.637,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 201,
+      "at_s": 37.638,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-9 state=disarmed"
+    },
+    {
+      "sequence": 202,
+      "at_s": 38.641,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 203,
+      "at_s": 38.646,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 204,
+      "at_s": 38.646,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 205,
+      "at_s": 38.657,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 206,
+      "at_s": 38.785,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-9 state=disarmed"
+    },
+    {
+      "sequence": 207,
+      "at_s": 38.786,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-9 state=armed"
+    },
+    {
+      "sequence": 208,
+      "at_s": 38.786,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 209,
+      "at_s": 38.791,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 210,
+      "at_s": 38.791,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-9 state=disarmed"
+    },
+    {
+      "sequence": 211,
+      "at_s": 39.656,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 212,
+      "at_s": 39.797,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 213,
+      "at_s": 40.113,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 214,
+      "at_s": 40.66,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 215,
+      "at_s": 41.118,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 216,
+      "at_s": 41.658,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 217,
+      "at_s": 42.111,
+      "role": "sink",
+      "text": "public audio received=100 energy=1126438 dropped=0"
+    },
+    {
+      "sequence": 218,
+      "at_s": 42.112,
+      "role": "runner",
+      "text": "quality cycle=9/20 elapsed=4.670s pass"
+    },
+    {
+      "sequence": 219,
+      "at_s": 42.233,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-10 state=armed"
+    },
+    {
+      "sequence": 220,
+      "at_s": 42.233,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-10 state=armed"
+    },
+    {
+      "sequence": 221,
+      "at_s": 42.233,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 222,
+      "at_s": 42.308,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 223,
+      "at_s": 42.309,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 224,
+      "at_s": 42.309,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-10 state=disarmed"
+    },
+    {
+      "sequence": 225,
+      "at_s": 43.309,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 226,
+      "at_s": 43.314,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 227,
+      "at_s": 43.314,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 228,
+      "at_s": 43.325,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 229,
+      "at_s": 43.453,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-10 state=disarmed"
+    },
+    {
+      "sequence": 230,
+      "at_s": 43.453,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-10 state=armed"
+    },
+    {
+      "sequence": 231,
+      "at_s": 43.453,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 232,
+      "at_s": 43.458,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 233,
+      "at_s": 43.459,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-10 state=disarmed"
+    },
+    {
+      "sequence": 234,
+      "at_s": 44.339,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 235,
+      "at_s": 44.461,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 236,
+      "at_s": 44.497,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 237,
+      "at_s": 45.304,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 238,
+      "at_s": 45.355,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 239,
+      "at_s": 46.319,
+      "role": "sink",
+      "text": "public audio received=100 energy=928727 dropped=0"
+    },
+    {
+      "sequence": 240,
+      "at_s": 46.319,
+      "role": "runner",
+      "text": "quality cycle=10/20 elapsed=4.207s pass"
+    },
+    {
+      "sequence": 241,
+      "at_s": 46.375,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 242,
+      "at_s": 46.502,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-11 state=armed"
+    },
+    {
+      "sequence": 243,
+      "at_s": 46.502,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-11 state=armed"
+    },
+    {
+      "sequence": 244,
+      "at_s": 46.502,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 245,
+      "at_s": 46.577,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 246,
+      "at_s": 46.578,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 247,
+      "at_s": 46.578,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-11 state=disarmed"
+    },
+    {
+      "sequence": 248,
+      "at_s": 47.577,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 249,
+      "at_s": 47.582,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 250,
+      "at_s": 47.582,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 251,
+      "at_s": 47.597,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 252,
+      "at_s": 47.721,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-11 state=disarmed"
+    },
+    {
+      "sequence": 253,
+      "at_s": 47.721,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-11 state=armed"
+    },
+    {
+      "sequence": 254,
+      "at_s": 47.721,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 255,
+      "at_s": 47.73,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 256,
+      "at_s": 47.73,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-11 state=disarmed"
+    },
+    {
+      "sequence": 257,
+      "at_s": 48.595,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 258,
+      "at_s": 48.73,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 259,
+      "at_s": 48.745,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 260,
+      "at_s": 49.605,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 261,
+      "at_s": 50.291,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 262,
+      "at_s": 50.62,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 263,
+      "at_s": 51.295,
+      "role": "sink",
+      "text": "public audio received=100 energy=949656 dropped=0"
+    },
+    {
+      "sequence": 264,
+      "at_s": 51.295,
+      "role": "runner",
+      "text": "quality cycle=11/20 elapsed=4.976s pass"
+    },
+    {
+      "sequence": 265,
+      "at_s": 51.415,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-12 state=armed"
+    },
+    {
+      "sequence": 266,
+      "at_s": 51.415,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-12 state=armed"
+    },
+    {
+      "sequence": 267,
+      "at_s": 51.415,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 268,
+      "at_s": 51.484,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 269,
+      "at_s": 51.484,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 270,
+      "at_s": 51.484,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-12 state=disarmed"
+    },
+    {
+      "sequence": 271,
+      "at_s": 52.487,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 272,
+      "at_s": 52.491,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 273,
+      "at_s": 52.491,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 274,
+      "at_s": 52.503,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 275,
+      "at_s": 52.627,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-12 state=disarmed"
+    },
+    {
+      "sequence": 276,
+      "at_s": 52.628,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-12 state=armed"
+    },
+    {
+      "sequence": 277,
+      "at_s": 52.628,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 278,
+      "at_s": 52.632,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 279,
+      "at_s": 52.633,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-12 state=disarmed"
+    },
+    {
+      "sequence": 280,
+      "at_s": 53.521,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 281,
+      "at_s": 53.637,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 282,
+      "at_s": 54.022,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 283,
+      "at_s": 54.549,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 284,
+      "at_s": 54.901,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 285,
+      "at_s": 55.571,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 286,
+      "at_s": 55.924,
+      "role": "sink",
+      "text": "public audio received=100 energy=1126135 dropped=0"
+    },
+    {
+      "sequence": 287,
+      "at_s": 55.924,
+      "role": "runner",
+      "text": "quality cycle=12/20 elapsed=4.629s pass"
+    },
+    {
+      "sequence": 288,
+      "at_s": 56.045,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-13 state=armed"
+    },
+    {
+      "sequence": 289,
+      "at_s": 56.045,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-13 state=armed"
+    },
+    {
+      "sequence": 290,
+      "at_s": 56.045,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 291,
+      "at_s": 56.11,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 292,
+      "at_s": 56.111,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 293,
+      "at_s": 56.111,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-13 state=disarmed"
+    },
+    {
+      "sequence": 294,
+      "at_s": 57.114,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 295,
+      "at_s": 57.118,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 296,
+      "at_s": 57.118,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 297,
+      "at_s": 57.132,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 298,
+      "at_s": 57.259,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-13 state=disarmed"
+    },
+    {
+      "sequence": 299,
+      "at_s": 57.259,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-13 state=armed"
+    },
+    {
+      "sequence": 300,
+      "at_s": 57.259,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 301,
+      "at_s": 57.27,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 302,
+      "at_s": 57.27,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-13 state=disarmed"
+    },
+    {
+      "sequence": 303,
+      "at_s": 58.143,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 304,
+      "at_s": 58.269,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 305,
+      "at_s": 58.644,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 306,
+      "at_s": 59.148,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 307,
+      "at_s": 59.531,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 308,
+      "at_s": 60.151,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 309,
+      "at_s": 60.523,
+      "role": "sink",
+      "text": "public audio received=100 energy=1149911 dropped=0"
+    },
+    {
+      "sequence": 310,
+      "at_s": 60.523,
+      "role": "runner",
+      "text": "quality cycle=13/20 elapsed=4.599s pass"
+    },
+    {
+      "sequence": 311,
+      "at_s": 60.644,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-14 state=armed"
+    },
+    {
+      "sequence": 312,
+      "at_s": 60.644,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-14 state=armed"
+    },
+    {
+      "sequence": 313,
+      "at_s": 60.644,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 314,
+      "at_s": 60.719,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 315,
+      "at_s": 60.72,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 316,
+      "at_s": 60.72,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-14 state=disarmed"
+    },
+    {
+      "sequence": 317,
+      "at_s": 61.722,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 318,
+      "at_s": 61.727,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 319,
+      "at_s": 61.727,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 320,
+      "at_s": 61.738,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 321,
+      "at_s": 61.863,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-14 state=disarmed"
+    },
+    {
+      "sequence": 322,
+      "at_s": 61.864,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-14 state=armed"
+    },
+    {
+      "sequence": 323,
+      "at_s": 61.864,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 324,
+      "at_s": 61.868,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 325,
+      "at_s": 61.868,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-14 state=disarmed"
+    },
+    {
+      "sequence": 326,
+      "at_s": 62.747,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 327,
+      "at_s": 62.874,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 328,
+      "at_s": 63.546,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 329,
+      "at_s": 63.763,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 330,
+      "at_s": 64.438,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 331,
+      "at_s": 64.775,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 332,
+      "at_s": 65.448,
+      "role": "sink",
+      "text": "public audio received=100 energy=1104925 dropped=0"
+    },
+    {
+      "sequence": 333,
+      "at_s": 65.448,
+      "role": "runner",
+      "text": "quality cycle=14/20 elapsed=4.925s pass"
+    },
+    {
+      "sequence": 334,
+      "at_s": 65.57,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-15 state=armed"
+    },
+    {
+      "sequence": 335,
+      "at_s": 65.57,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-15 state=armed"
+    },
+    {
+      "sequence": 336,
+      "at_s": 65.57,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 337,
+      "at_s": 65.638,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 338,
+      "at_s": 65.638,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 339,
+      "at_s": 65.638,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-15 state=disarmed"
+    },
+    {
+      "sequence": 340,
+      "at_s": 66.644,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 341,
+      "at_s": 66.644,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 342,
+      "at_s": 66.645,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 343,
+      "at_s": 66.659,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 344,
+      "at_s": 66.784,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-15 state=disarmed"
+    },
+    {
+      "sequence": 345,
+      "at_s": 66.784,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-15 state=armed"
+    },
+    {
+      "sequence": 346,
+      "at_s": 66.784,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 347,
+      "at_s": 66.793,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 348,
+      "at_s": 66.793,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-15 state=disarmed"
+    },
+    {
+      "sequence": 349,
+      "at_s": 67.66,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 350,
+      "at_s": 67.797,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 351,
+      "at_s": 68.298,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 352,
+      "at_s": 68.686,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 353,
+      "at_s": 69.294,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 354,
+      "at_s": 69.703,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 355,
+      "at_s": 70.297,
+      "role": "sink",
+      "text": "public audio received=100 energy=986938 dropped=0"
+    },
+    {
+      "sequence": 356,
+      "at_s": 70.297,
+      "role": "runner",
+      "text": "quality cycle=15/20 elapsed=4.849s pass"
+    },
+    {
+      "sequence": 357,
+      "at_s": 70.417,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-16 state=armed"
+    },
+    {
+      "sequence": 358,
+      "at_s": 70.417,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-16 state=armed"
+    },
+    {
+      "sequence": 359,
+      "at_s": 70.417,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 360,
+      "at_s": 70.488,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 361,
+      "at_s": 70.488,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 362,
+      "at_s": 70.488,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-16 state=disarmed"
+    },
+    {
+      "sequence": 363,
+      "at_s": 71.491,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 364,
+      "at_s": 71.491,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 365,
+      "at_s": 71.491,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 366,
+      "at_s": 71.507,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 367,
+      "at_s": 71.633,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-16 state=disarmed"
+    },
+    {
+      "sequence": 368,
+      "at_s": 71.638,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-16 state=armed"
+    },
+    {
+      "sequence": 369,
+      "at_s": 71.638,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 370,
+      "at_s": 71.648,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 371,
+      "at_s": 71.648,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-16 state=disarmed"
+    },
+    {
+      "sequence": 372,
+      "at_s": 72.505,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 373,
+      "at_s": 72.648,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 374,
+      "at_s": 73.261,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 375,
+      "at_s": 73.53,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 376,
+      "at_s": 74.141,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 377,
+      "at_s": 74.531,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 378,
+      "at_s": 75.135,
+      "role": "sink",
+      "text": "public audio received=100 energy=1023458 dropped=0"
+    },
+    {
+      "sequence": 379,
+      "at_s": 75.135,
+      "role": "runner",
+      "text": "quality cycle=16/20 elapsed=4.838s pass"
+    },
+    {
+      "sequence": 380,
+      "at_s": 75.257,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-17 state=armed"
+    },
+    {
+      "sequence": 381,
+      "at_s": 75.257,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-17 state=armed"
+    },
+    {
+      "sequence": 382,
+      "at_s": 75.257,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 383,
+      "at_s": 75.336,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 384,
+      "at_s": 75.336,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 385,
+      "at_s": 75.336,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-17 state=disarmed"
+    },
+    {
+      "sequence": 386,
+      "at_s": 76.336,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 387,
+      "at_s": 76.34,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 388,
+      "at_s": 76.34,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 389,
+      "at_s": 76.355,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 390,
+      "at_s": 76.481,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-17 state=disarmed"
+    },
+    {
+      "sequence": 391,
+      "at_s": 76.481,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-17 state=armed"
+    },
+    {
+      "sequence": 392,
+      "at_s": 76.481,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 393,
+      "at_s": 76.487,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 394,
+      "at_s": 76.487,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-17 state=disarmed"
+    },
+    {
+      "sequence": 395,
+      "at_s": 77.341,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 396,
+      "at_s": 77.491,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 397,
+      "at_s": 77.509,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 398,
+      "at_s": 78.331,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 399,
+      "at_s": 78.349,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 400,
+      "at_s": 79.323,
+      "role": "sink",
+      "text": "public audio received=100 energy=958876 dropped=0"
+    },
+    {
+      "sequence": 401,
+      "at_s": 79.323,
+      "role": "runner",
+      "text": "quality cycle=17/20 elapsed=4.188s pass"
+    },
+    {
+      "sequence": 402,
+      "at_s": 79.353,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 403,
+      "at_s": 79.48,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-18 state=armed"
+    },
+    {
+      "sequence": 404,
+      "at_s": 79.48,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-18 state=armed"
+    },
+    {
+      "sequence": 405,
+      "at_s": 79.48,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 406,
+      "at_s": 79.55,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 407,
+      "at_s": 79.554,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 408,
+      "at_s": 79.555,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-18 state=disarmed"
+    },
+    {
+      "sequence": 409,
+      "at_s": 80.554,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 410,
+      "at_s": 80.563,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 411,
+      "at_s": 80.563,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 412,
+      "at_s": 80.57,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 413,
+      "at_s": 80.695,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-18 state=disarmed"
+    },
+    {
+      "sequence": 414,
+      "at_s": 80.695,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-18 state=armed"
+    },
+    {
+      "sequence": 415,
+      "at_s": 80.695,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 416,
+      "at_s": 80.7,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 417,
+      "at_s": 80.7,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-18 state=disarmed"
+    },
+    {
+      "sequence": 418,
+      "at_s": 81.581,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 419,
+      "at_s": 81.705,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 420,
+      "at_s": 81.733,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 421,
+      "at_s": 82.551,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 422,
+      "at_s": 82.601,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 423,
+      "at_s": 83.562,
+      "role": "sink",
+      "text": "public audio received=100 energy=912666 dropped=0"
+    },
+    {
+      "sequence": 424,
+      "at_s": 83.562,
+      "role": "runner",
+      "text": "quality cycle=18/20 elapsed=4.239s pass"
+    },
+    {
+      "sequence": 425,
+      "at_s": 83.615,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 426,
+      "at_s": 83.741,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-19 state=armed"
+    },
+    {
+      "sequence": 427,
+      "at_s": 83.741,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-19 state=armed"
+    },
+    {
+      "sequence": 428,
+      "at_s": 83.741,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 429,
+      "at_s": 83.81,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 430,
+      "at_s": 83.81,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 431,
+      "at_s": 83.81,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-19 state=disarmed"
+    },
+    {
+      "sequence": 432,
+      "at_s": 84.815,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 433,
+      "at_s": 84.815,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 434,
+      "at_s": 84.82,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 435,
+      "at_s": 84.831,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 436,
+      "at_s": 84.955,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-19 state=disarmed"
+    },
+    {
+      "sequence": 437,
+      "at_s": 84.955,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-19 state=armed"
+    },
+    {
+      "sequence": 438,
+      "at_s": 84.955,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 439,
+      "at_s": 84.959,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 440,
+      "at_s": 84.96,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-19 state=disarmed"
+    },
+    {
+      "sequence": 441,
+      "at_s": 85.836,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 442,
+      "at_s": 85.965,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 443,
+      "at_s": 86.222,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 444,
+      "at_s": 86.846,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 445,
+      "at_s": 87.048,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 446,
+      "at_s": 87.859,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 447,
+      "at_s": 88.063,
+      "role": "sink",
+      "text": "public audio received=100 energy=1028134 dropped=0"
+    },
+    {
+      "sequence": 448,
+      "at_s": 88.063,
+      "role": "runner",
+      "text": "quality cycle=19/20 elapsed=4.501s pass"
+    },
+    {
+      "sequence": 449,
+      "at_s": 88.185,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-20 state=armed"
+    },
+    {
+      "sequence": 450,
+      "at_s": 88.185,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-20 state=armed"
+    },
+    {
+      "sequence": 451,
+      "at_s": 88.185,
+      "role": "runner",
+      "text": "command board=G value=h"
+    },
+    {
+      "sequence": 452,
+      "at_s": 88.258,
+      "role": "source",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 453,
+      "at_s": 88.259,
+      "role": "sink",
+      "text": "public audio sync failed: -19 step=11"
+    },
+    {
+      "sequence": 454,
+      "at_s": 88.259,
+      "role": "runner",
+      "text": "error-window name=quality-source-h-20 state=disarmed"
+    },
+    {
+      "sequence": 455,
+      "at_s": 89.262,
+      "role": "source",
+      "text": "public audio source preparing"
+    },
+    {
+      "sequence": 456,
+      "at_s": 89.263,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 457,
+      "at_s": 89.267,
+      "role": "source",
+      "text": "public audio source streaming"
+    },
+    {
+      "sequence": 458,
+      "at_s": 89.282,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 459,
+      "at_s": 89.409,
+      "role": "runner",
+      "text": "error-window name=quality-source-transition-20 state=disarmed"
+    },
+    {
+      "sequence": 460,
+      "at_s": 89.409,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-20 state=armed"
+    },
+    {
+      "sequence": 461,
+      "at_s": 89.409,
+      "role": "runner",
+      "text": "command board=F value=h"
+    },
+    {
+      "sequence": 462,
+      "at_s": 89.418,
+      "role": "sink",
+      "text": "high quality rejected: 10"
+    },
+    {
+      "sequence": 463,
+      "at_s": 89.418,
+      "role": "runner",
+      "text": "error-window name=quality-sink-h-20 state=disarmed"
+    },
+    {
+      "sequence": 464,
+      "at_s": 90.285,
+      "role": "source",
+      "text": "public audio sent frames=100"
+    },
+    {
+      "sequence": 465,
+      "at_s": 90.423,
+      "role": "sink",
+      "text": "public audio sink scanning"
+    },
+    {
+      "sequence": 466,
+      "at_s": 90.455,
+      "role": "sink",
+      "text": "selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes"
+    },
+    {
+      "sequence": 467,
+      "at_s": 91.301,
+      "role": "source",
+      "text": "public audio sent frames=200"
+    },
+    {
+      "sequence": 468,
+      "at_s": 91.316,
+      "role": "sink",
+      "text": "public audio sink streaming"
+    },
+    {
+      "sequence": 469,
+      "at_s": 92.323,
+      "role": "source",
+      "text": "public audio sent frames=300"
+    },
+    {
+      "sequence": 470,
+      "at_s": 92.346,
+      "role": "sink",
+      "text": "public audio received=100 energy=1071213 dropped=0"
+    },
+    {
+      "sequence": 471,
+      "at_s": 92.346,
+      "role": "runner",
+      "text": "quality cycle=20/20 elapsed=4.283s pass"
+    }
+  ],
+  "error": null
+}

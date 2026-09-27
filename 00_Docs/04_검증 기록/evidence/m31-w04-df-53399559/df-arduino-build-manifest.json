@@ -1,0 +1,26 @@
+{
+  "revision": "53399559daa748b07539025c1ab64bb6464c7788",
+  "source_clean": true,
+  "images": {
+    "CteBeacon": {
+      "hex": "C:\\~\\ae-w04-df-exact-533\\build\\CteBeacon\\CteBeacon.ino.hex",
+      "sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+      "context": "C:\\~\\ae-w04-df-exact-533\\build\\CteBeacon\\nu54-zephyr\\context.json",
+      "log": "C:\\~\\ae-w04-df-exact-533\\CteBeacon.build.log",
+      "artifact_manifest": "C:\\~\\ae-w04-df-exact-533\\build\\CteBeacon\\CteBeacon.ino.nu54-build.json",
+      "artifact_manifest_sha256": "33b11edb532ec11446b354df4f3b91021d6e72f9a3a7056b164a60528e7686fe",
+      "identity_revisions": {
+        "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "NUCODE_CORE_REVISION": "53399559daa748b07539025c1ab64bb6464c7788",
+        "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+      },
+      "flash_bytes": 182868,
+      "ram_bytes": 99744,
+      "profile": "ble",
+      "selected_features": [
+        "nucode.ble.direction_finding"
+      ]
+    }
+  }
+}

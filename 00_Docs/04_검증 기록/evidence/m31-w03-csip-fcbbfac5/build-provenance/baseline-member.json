@@ -1,0 +1,23 @@
+{
+  "schema": "nucode.m31.csip-baseline-build.v1",
+  "role": "member",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "public_example_sha256": "68bc8eb82a0b4753f73c80e9e15517517d412bdb75fb79b9f337284a3f726f68",
+  "source_path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetMember\\CsipSetMember.ino",
+  "build_path": "C:\\w\\m31w06-member-fcbbfac5",
+  "image_path": "C:\\w\\m31w06-member-fcbbfac5\\CsipSetMember.ino.hex",
+  "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "build_command": [
+    "C:\\Program Files\\Arduino CLI\\arduino-cli.exe",
+    "compile",
+    "--config-file",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\arduino-dev\\arduino-cli.yaml",
+    "--fqbn",
+    "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+    "--clean",
+    "--build-path",
+    "C:\\w\\m31w06-member-fcbbfac5",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetMember"
+  ]
+}

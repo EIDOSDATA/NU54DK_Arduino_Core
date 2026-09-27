@@ -4,6 +4,7 @@
 /artifacts/
 /.cache/
 /.venv/
+/.vscode/
 
 # Python 도구 캐시
 **/__pycache__/

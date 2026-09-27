@@ -56,10 +56,9 @@ class UploadHilFailure(RuntimeError):
     """! @brief M8 실제 upload 계약 위반을 나타냅니다. """
 
 
-## @brief runner와 명시 UID 유무에 맞는 Arduino Upload probe 메뉴 값을 반환합니다.
+## @brief runner에 맞는 Arduino Upload probe 메뉴 값을 반환합니다.
 def select_upload_probe_option(runner: str, requested_probe_id: str) -> str:
-    if runner == "pyocd" and requested_probe_id:
-        return "pyocd_uid"
+    del requested_probe_id
     return runner
 
 
@@ -195,7 +194,10 @@ def terminate_process_tree(process: subprocess.Popen[Any]) -> None:
 
 ## @brief 명령 출력을 disk에 spool하고 제한된 tail 및 종료 code를 반환합니다.
 def run(
-    command: Sequence[str | Path], *, timeout_seconds: int = 3600
+    command: Sequence[str | Path],
+    *,
+    timeout_seconds: int = 3600,
+    environment: dict[str, str] | None = None,
 ) -> tuple[int, str, float]:
     if timeout_seconds < 1 or timeout_seconds > 86400:
         raise UploadHilFailure("HIL command timeout은 1..86400초여야 합니다.")
@@ -214,6 +216,7 @@ def run(
                 normalized,
                 stdout=capture,
                 stderr=subprocess.STDOUT,
+                env=environment,
                 **process_options,
             )
             try:
@@ -754,6 +757,7 @@ def validate_pyocd_flash_log(
         or tokens.count("--no-rebuild") != 1
         or tokens.count("--dt-flash=n") != 1
         or tokens.count("--tool-opt=-Osmart_flash=false") != 1
+        or tokens.count("--tool-opt=-Oauto_unlock=false") != 1
         or len(probe_options) != 1
         or probe_options[0] + 1 >= len(tokens)
         or tokens[probe_options[0] + 1] != probe_id
@@ -768,6 +772,7 @@ def validate_pyocd_flash_log(
         "attempts": 1,
         "dt_flash": False,
         "smart_flash": False,
+        "auto_unlock": False,
         "mass_erase_requested": False,
         "recover_requested": False,
         "flash_log_sha256": file_sha256(log_path),
@@ -1038,12 +1043,15 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "--board-options",
             f"upload_probe={upload_probe}",
         ]
-        if requested_probe_id:
-            upload_command.extend(("--upload-field", f"probe_id={requested_probe_id}"))
         upload_command.append(sketch)
+        upload_environment = dict(os.environ)
+        if requested_probe_id:
+            upload_environment["NUCODE_PROBE_UID"] = requested_probe_id
         print(f"NUCODE_M8_UPLOAD_ATTEMPT:{sequence}/{args.repetitions}")
         return_code, output, upload_seconds = run(
-            upload_command, timeout_seconds=args.upload_timeout
+            upload_command,
+            timeout_seconds=args.upload_timeout,
+            environment=upload_environment,
         )
         pass_marker = f"NU54_UPLOAD_PASS runner={args.runner}"
         if return_code != 0 or pass_marker not in output:

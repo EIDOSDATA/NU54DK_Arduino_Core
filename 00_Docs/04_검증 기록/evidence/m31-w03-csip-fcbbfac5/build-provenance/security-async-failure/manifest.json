@@ -1,0 +1,27 @@
+{
+  "schema": "nucode.m31.csip-fault-build.v1",
+  "mode": "security-async-failure",
+  "role": "coordinator",
+  "mutation_id": "security_level_negotiation_async_failure",
+  "required_source_marker": "NUCODE_CSIP_FAULT_SECURITY_ASYNC_FAILURE",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "public_example_sha256": "b7f12a192da55f6dc7bd2c072776dbe9cd99ad7a4319e1ccb6581d2c56299fb7",
+  "fault_source_path": "C:\\w\\m31w06-security-async-fcbbfac5\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetCoordinator\\CsipSetCoordinator.ino",
+  "fault_source_sha256": "342b749a72405ca55dacf62c7c843f46d3921671e9111cba41ef95552cbc6df8",
+  "patch_path": "security-async-failure.patch",
+  "patch_sha256": "ef5d73bd0c2e00c7de07f38ff385083842e9592833e245e0f46e7850c5b2433c",
+  "baseline_manifest_path": "..\\baseline-coordinator.json",
+  "baseline_image_path": "C:\\w\\m31w06-coordinator-fcbbfac5\\CsipSetCoordinator.ino.hex",
+  "baseline_image_sha256": "841cd72d4728050e3e4baa1e6c6eecf7f9def2d1874465125442bcd963746663",
+  "build_path": "C:\\w\\m31w06-fault-security-async-l3-fcbbfac5",
+  "image_path": "C:\\w\\m31w06-fault-security-async-l3-fcbbfac5\\CsipSetCoordinator.ino.hex",
+  "image_sha256": "c81d908a8eb15407a745a4617cf46ac1a0acfd00ba1d640b3989fdb228ce05ff",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "build_command": [
+    "C:\\Program Files\\Arduino CLI\\arduino-cli.exe", "compile", "--config-file",
+    "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\arduino-dev\\arduino-cli.yaml",
+    "--fqbn", "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd", "--clean", "--build-path",
+    "C:\\w\\m31w06-fault-security-async-l3-fcbbfac5",
+    "C:\\w\\m31w06-security-async-fcbbfac5\\libraries\\NUCODE_BLE_Audio\\examples\\CsipSetCoordinator"
+  ]
+}

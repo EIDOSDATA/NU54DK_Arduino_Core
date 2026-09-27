@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+  "runtime_measurement_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+  "source_equivalence": {
+    "status": "PASS",
+    "range": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32..bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+    "runtime_paths_changed": 0,
+    "reviewed_paths": [
+      "cores",
+      "libraries",
+      "variants/nu54dk",
+      "zephyr",
+      "tests/zephyr"
+    ],
+    "only_relevant_changes": "README and capability/readiness documentation; no runtime implementation change"
+  },
+  "independent_images": [
+    {
+      "family": "raw_iso",
+      "status": "PASS",
+      "lifecycle": "STOP/disconnect callback, link and stream ownership returned",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w02-installed-examples-b47aaf40/closure-audit.json"
+    },
+    {
+      "family": "le_audio",
+      "status": "PASS",
+      "lifecycle": "encrypted stream error, recovery and both-role STOP returned heap and stream ownership",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/audio-encryption-recovery.json"
+    },
+    {
+      "family": "direction_finding",
+      "status": "PASS",
+      "lifecycle": "supported TX/response images stop and release link/radio ownership; product SDC IQ RX stays UNSUPPORTED",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/closure-audit.json"
+    },
+    {
+      "family": "channel_sounding",
+      "status": "PASS",
+      "lifecycle": "procedure stop, ACL disconnect and both-role STOP return CS/link/radio ownership",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/cs-peer-loss-recovery.json"
+    }
+  ],
+  "final_sizes": {
+    "decision": "KEEP",
+    "main_stack_bytes": 8192,
+    "system_workqueue_stack_bytes": 4096,
+    "bt_rx_stack_bytes": 3200,
+    "bt_long_workqueue_stack_bytes": 2104,
+    "mpsl_work_stack_bytes": 1024,
+    "libc_heap_bytes": 8192,
+    "minimum_observed_stack_margin_bytes": 264,
+    "allocation_failures": 0,
+    "resource_leaks": 0,
+    "returned_after_stop": true,
+    "evidence": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/memory-finalization.json"
+  },
+  "current_regression_builds": {
+    "status": "PASS",
+    "images": 18,
+    "maximum_ram_bytes": 148715,
+    "ram_region_bytes": 262144,
+    "maximum_ram_percent": 56.73,
+    "evidence": "build-manifest.json"
+  },
+  "interpretation_limits": [
+    "SDC pool count and size keep the pinned SDK role/count requirements and 8-byte alignment.",
+    "ELF/static symbol size is not SDC runtime high-water usage.",
+    "No pool or stack is reduced without a supported runtime margin argument."
+  ]
+}

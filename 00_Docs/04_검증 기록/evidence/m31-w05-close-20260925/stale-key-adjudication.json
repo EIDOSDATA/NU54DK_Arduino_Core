@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "test": "one_sided_stale_key_secure_ras_rejection",
+  "source_clean": true,
+  "physical_source_revision": "704120b1968c236d4809b5709b83cea7dc38b2fa",
+  "runner_contract_revision": "bd8bb98af2ca7b7d54104e80175b379375c7e718",
+  "input_evidence": "stale-key-attempt-2-704120b1.json",
+  "input_sha256": "a809ce2549aa6fe6f84b5b73859b222f1308142b3773ec8e9710aa75b40998d1",
+  "observed": {
+    "prime_raw_reports": 1,
+    "one_sided_bond_counts": {
+      "initiator": 1,
+      "reflector": 0
+    },
+    "repair_pairing_requests": 0,
+    "repair_pairing_accepts": 0,
+    "initiator_security_errors": 1,
+    "initiator_security_reason": 2,
+    "negative_security_level_2": 0,
+    "negative_cs_ready": 0,
+    "negative_cs_active": 0,
+    "negative_raw_reports": 0,
+    "acl_connected_before_stop": true,
+    "both_stop_confirmed": true
+  },
+  "acceptance": {
+    "authenticated_ras_accepts": 0,
+    "automatic_repair_pairings": 0,
+    "cs_progress_after_security_error": 0,
+    "cleanup": "PASS"
+  },
+  "preserved_runner_result": {
+    "status": "FAIL",
+    "failure_detail": "stale-key link remained connected",
+    "classification": "the wrapper required ACL teardown although W05 requires secure RAS acceptance to remain zero"
+  },
+  "retry_policy": {
+    "initial_attempt": "stale-key-attempt-1-f30404e2.json",
+    "single_corrected_attempt": "stale-key-attempt-2-704120b1.json",
+    "additional_physical_retry": "NOT_RUN"
+  },
+  "claim_limits": [
+    "This is one-sided stale-bond rejection, not arbitrary unequal LTK injection.",
+    "The ACL remained connected until explicit STOP; no disconnect-on-error claim is made.",
+    "Security reason 2 is recorded as the public facade value without inventing an HCI meaning.",
+    "The raw FAIL attempts remain authoritative execution records and are not overwritten."
+  ]
+}

@@ -15,6 +15,14 @@ config NUCODE_ARDUINO_CORE
 	  소유합니다. 예외와 RTTI의 기본 검증값은 비활성이지만 Core가
 	  구조적으로 금지하지 않습니다.
 
+config NUCODE_M30_POWER_HIL_MCUBOOT
+	bool "M30 전원 손실 HIL용 MCUboot swap 관찰 창"
+	depends on MCUBOOT_ACTION_HOOKS
+	help
+	  M30-POWER-01 전원 시험용 MCUboot image에서 test swap 직전의
+	  유한 전원 차단 창을 보고합니다. 일반 Arduino Core image에서는
+	  사용하지 않으며 전원 시험용 sysbuild 설정만 활성화합니다.
+
 if NUCODE_ARDUINO_CORE
 
 rsource "config/core.Kconfig"

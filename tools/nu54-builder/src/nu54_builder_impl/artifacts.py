@@ -10,6 +10,7 @@ import contextlib
 import os
 import re
 import shutil
+import sys
 import tempfile
 from .cache import cache_key_for_manifest
 from .common import (
@@ -26,8 +27,15 @@ from .common import (
     is_within,
     load_json_object,
     path_key,
+    run_checked,
 )
 from .paths import adapter_paths, paths_from_context
+
+
+RESOURCE_AUDIT_SCHEMA_VERSION = 1
+RESOURCE_RAM_WARNING_PERCENT = 75.0
+RESOURCE_RAM_FAILURE_PERCENT = 85.0
+RESOURCE_TOP_RAM_SYMBOLS = 32
 
 
 ## @brief 생성된 devicetree에서 이름을 가진 mapped partition의 주소와 크기를 반환합니다.
@@ -65,7 +73,9 @@ def generated_mapped_partition(
 
 
 ## @brief 선택한 code partition과 실제 linker FLASH 영역이 같은지 fail-closed로 검증합니다.
-def validate_linked_code_partition(zephyr_output: Path) -> dict[str, int | str]:
+def validate_linked_code_partition(
+    zephyr_output: Path, *, loaderless: bool = False
+) -> dict[str, int | str]:
     configuration_path = zephyr_output / ".config"
     devicetree_path = zephyr_output / "zephyr.dts"
     map_path = zephyr_output / "zephyr.map"
@@ -125,17 +135,333 @@ def validate_linked_code_partition(zephyr_output: Path) -> dict[str, int | str]:
     if flash is None:
         raise AdapterError("[NU54:E_MEMORY_LAYOUT] linker map의 FLASH 영역을 해석할 수 없습니다.")
     linker_start, linker_size = (int(value, 16) for value in flash.groups())
-    if (linker_start, linker_size) != code_region:
+    mcuboot = re.search(
+        r"^CONFIG_BOOTLOADER_MCUBOOT=y\s*$", configuration, re.MULTILINE
+    ) is not None
+    if mcuboot:
+        start_offset_match = re.search(
+            r"^CONFIG_ROM_START_OFFSET=(0x[0-9a-fA-F]+|[0-9]+)\s*$",
+            configuration,
+            re.MULTILINE,
+        )
+        end_offset_match = re.search(
+            r"^CONFIG_ROM_END_OFFSET=(0x[0-9a-fA-F]+|[0-9]+)\s*$",
+            configuration,
+            re.MULTILINE,
+        )
+        if start_offset_match is None or end_offset_match is None:
+            raise AdapterError(
+                "[NU54:E_MEMORY_LAYOUT] MCUboot image의 ROM header/trailer 경계를 해석할 수 없습니다."
+            )
+        start_offset = int(start_offset_match.group(1), 0)
+        end_offset = int(end_offset_match.group(1), 0)
+        linked_region_matches = (
+            start_offset > 0
+            and end_offset > 0
+            and linker_start == code_start
+            and linker_size + end_offset == code_size
+        )
+    else:
+        linked_region_matches = (linker_start, linker_size) == code_region
+    if not linked_region_matches:
         raise AdapterError(
             "[NU54:E_MEMORY_LAYOUT] linker FLASH 영역과 devicetree code partition이 다릅니다: "
             f"linker=0x{linker_start:x}+0x{linker_size:x}, "
             f"devicetree=0x{code_start:x}+0x{code_size:x}"
+        )
+    if loaderless and (
+        mcuboot
+        or code_label != "slot0_partition"
+        or (code_start, code_size) != (0, 0x16C000)
+    ):
+        raise AdapterError(
+            "[NU54:E_MEMORY_LAYOUT] loaderless profile은 "
+            "slot0_partition [0x0, 0x16c000)을 사용해야 합니다: "
+            f"{code_label}=0x{code_start:x}+0x{code_size:x}"
         )
     return {
         "code_partition": code_label,
         "flash_origin": code_start,
         "flash_size": code_size,
         "flash_end": code_end,
+    }
+
+
+## @brief GNU size 기본 출력에서 text/data/bss byte를 해석합니다.
+def parse_size_summary(output: str) -> dict[str, int]:
+    match = re.search(
+        r"^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+[0-9a-fA-F]+\s+.+$",
+        output,
+        re.MULTILINE,
+    )
+    if match is None:
+        raise AdapterError("[NU54:E_RESOURCE_SIZE] ELF size 출력을 해석할 수 없습니다.")
+    text_size, data_size, bss_size, decimal_size = (
+        int(value) for value in match.groups()
+    )
+    if decimal_size != text_size + data_size + bss_size:
+        raise AdapterError("[NU54:E_RESOURCE_SIZE] ELF size 합계가 일치하지 않습니다.")
+    return {
+        "text": text_size,
+        "data": data_size,
+        "bss": bss_size,
+        "flash": text_size + data_size,
+        "ram": data_size + bss_size,
+    }
+
+
+## @brief GNU size section 출력에서 실제 할당 section의 byte와 주소를 읽습니다.
+def parse_section_sizes(output: str) -> list[dict[str, int | str]]:
+    sections: list[dict[str, int | str]] = []
+    for line in output.splitlines():
+        match = re.fullmatch(r"\s*(\S+)\s+(\d+)\s+(\d+)\s*", line)
+        if match is None or match.group(1) in {"section", "Total"}:
+            continue
+        name, size, address = match.groups()
+        parsed_size = int(size)
+        parsed_address = int(address)
+        if parsed_size == 0 or parsed_address == 0:
+            continue
+        sections.append(
+            {"name": name, "size": parsed_size, "address": parsed_address}
+        )
+    if not sections:
+        raise AdapterError("[NU54:E_RESOURCE_SECTIONS] ELF section 출력을 해석할 수 없습니다.")
+    return sections
+
+
+## @brief linker map의 FLASH/RAM 영역 시작과 크기를 읽습니다.
+def parse_memory_regions(memory_map: str) -> dict[str, dict[str, int]]:
+    regions: dict[str, dict[str, int]] = {}
+    for name in ("FLASH", "RAM"):
+        match = re.search(
+            rf"^{name}\s+(0x[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]+)\s+\S+\s*$",
+            memory_map,
+            re.MULTILINE,
+        )
+        if match is None:
+            raise AdapterError(
+                f"[NU54:E_RESOURCE_REGION] linker map에 {name} 영역이 없습니다."
+            )
+        origin, size = (int(value, 16) for value in match.groups())
+        if size <= 0:
+            raise AdapterError(f"[NU54:E_RESOURCE_REGION] {name} 영역 크기가 0입니다.")
+        regions[name.lower()] = {
+            "origin": origin,
+            "size": size,
+            "end": origin + size,
+        }
+    return regions
+
+
+## @brief GNU nm의 크기순 symbol 중 RAM 영역에 실제 배치된 항목을 반환합니다.
+def parse_ram_symbols(
+    output: str, ram_origin: int, ram_size: int, *, limit: int = RESOURCE_TOP_RAM_SYMBOLS
+) -> list[dict[str, int | str]]:
+    ram_end = ram_origin + ram_size
+    symbols: list[dict[str, int | str]] = []
+    for line in output.splitlines():
+        match = re.fullmatch(r"\s*(\d+)\s+(\d+)\s+(\S)\s+(.+?)\s*", line)
+        if match is None:
+            continue
+        address_text, size_text, symbol_type, name = match.groups()
+        address = int(address_text)
+        size = int(size_text)
+        if size <= 0 or address < ram_origin or address >= ram_end:
+            continue
+        symbols.append(
+            {
+                "name": name,
+                "type": symbol_type,
+                "address": address,
+                "size": size,
+            }
+        )
+    symbols.sort(key=lambda item: (-int(item["size"]), str(item["name"])))
+    return symbols[:limit]
+
+
+## @brief size 실행 파일과 같은 toolchain prefix의 nm 경로를 반환합니다.
+def nm_tool_for_size(size_tool: Path) -> Path:
+    executable_suffix = ".exe" if size_tool.suffix.casefold() == ".exe" else ""
+    stem = size_tool.name[: -len(executable_suffix)] if executable_suffix else size_tool.name
+    if not stem.endswith("size"):
+        raise AdapterError(
+            f"[NU54:E_RESOURCE_TOOL] size 실행 파일 이름을 해석할 수 없습니다: {size_tool}"
+        )
+    nm_tool = size_tool.with_name(stem[:-4] + "nm" + executable_suffix)
+    if not nm_tool.is_file():
+        raise AdapterError(f"[NU54:E_RESOURCE_TOOL] nm 실행 파일이 없습니다: {nm_tool}")
+    return nm_tool
+
+
+## @brief 비활성 BLE 기능의 전용 정적 저장소가 ELF에 남았는지 검사합니다.
+def forbidden_resource_symbols(configuration: str, nm_output: str) -> list[str]:
+    checks = (
+        ("CONFIG_BT_OBSERVER=y", "scan_result_queue"),
+        ("CONFIG_BT_PER_ADV_SYNC=y", "periodic_report_queue"),
+        ("CONFIG_BT_PER_ADV_RSP=y", "pawr_response_queue"),
+        ("CONFIG_NUCODE_BLE_NUS=y", "ble_rx_queue"),
+        ("CONFIG_NUCODE_BLE_NUS=y", "ble_event_queue"),
+        ("CONFIG_NUCODE_BLE_GATT=y", "gatt_event_queue"),
+        (
+            "CONFIG_NUCODE_BLE_GATT_SERVER=y",
+            "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+        ),
+        (
+            "CONFIG_NUCODE_BLE_GATT_CLIENT=y",
+            "nucode::ble::internal::gatt::(anonymous namespace)::states",
+        ),
+        (
+            "CONFIG_NUCODE_BLE_L2CAP=y",
+            "nucode::ble::internal::l2cap::(anonymous namespace)",
+        ),
+        (
+            "CONFIG_NUCODE_BLE_CS_INITIATOR=y",
+            "nucode::ble::cs::(anonymous namespace)::net_buf_data_local_steps",
+        ),
+        ("CONFIG_BT_SMP=y", "security_event_queue"),
+        (
+            "CONFIG_BT_SMP=y",
+            "nucode::ble::internal::security::(anonymous namespace)::state",
+        ),
+    )
+    findings: set[str] = set()
+    configuration_lines = set(configuration.splitlines())
+    for required, symbol_fragment in checks:
+        if required in configuration_lines:
+            continue
+        for line in nm_output.splitlines():
+            if symbol_fragment in line:
+                match = re.fullmatch(r"\s*\d+\s+\d+\s+(\S)\s+(.+?)\s*", line)
+                if match is not None and match.group(1) in "BbDdGgSsCc":
+                    findings.add(match.group(2))
+    return sorted(findings)
+
+
+## @brief RAM region 대비 정적 예약률을 pass·warning·fail로 판정합니다.
+def resource_budget_status(used_bytes: int, region_bytes: int) -> str:
+    if used_bytes < 0 or region_bytes <= 0:
+        raise AdapterError("[NU54:E_RESOURCE_BUDGET] RAM 사용량 또는 영역 크기가 잘못됐습니다.")
+    used_percent = 100.0 * used_bytes / region_bytes
+    if used_percent >= RESOURCE_RAM_FAILURE_PERCENT:
+        return "fail"
+    if used_percent >= RESOURCE_RAM_WARNING_PERCENT:
+        return "warning"
+    return "pass"
+
+
+## @brief 최종 config·DTS·ELF/map의 정적 자원 증거를 machine-readable record로 만듭니다.
+def collect_resource_audit(
+    zephyr_output: Path,
+    size_tool: Path,
+    environment: dict[str, str],
+    *,
+    enforce_budget: bool,
+    source_manifest: Path,
+    resolution_manifest: Path | None = None,
+) -> dict[str, Any]:
+    inputs = {
+        "config": zephyr_output / ".config",
+        "devicetree": zephyr_output / "zephyr.dts",
+        "elf": zephyr_output / "zephyr.elf",
+        "map": zephyr_output / "zephyr.map",
+        "source_manifest": source_manifest,
+    }
+    if resolution_manifest is not None:
+        inputs["capability_resolution"] = resolution_manifest
+    for name, path in inputs.items():
+        if not path.is_file():
+            raise AdapterError(f"[NU54:E_RESOURCE_INPUT] {name} 입력이 없습니다: {path}")
+
+    summary_result = run_checked(
+        [size_tool, inputs["elf"]],
+        cwd=zephyr_output,
+        environment=environment,
+        capture=True,
+    )
+    section_result = run_checked(
+        [size_tool, "-A", "-d", inputs["elf"]],
+        cwd=zephyr_output,
+        environment=environment,
+        capture=True,
+    )
+    nm_result = run_checked(
+        [
+            nm_tool_for_size(size_tool),
+            "-S",
+            "--size-sort",
+            "--radix=d",
+            "--demangle",
+            inputs["elf"],
+        ],
+        cwd=zephyr_output,
+        environment=environment,
+        capture=True,
+    )
+    summary = parse_size_summary(summary_result.stdout.decode("utf-8", errors="replace"))
+    sections = parse_section_sizes(section_result.stdout.decode("utf-8", errors="replace"))
+    nm_output = nm_result.stdout.decode("utf-8", errors="replace")
+    configuration = inputs["config"].read_text(encoding="utf-8")
+    regions = parse_memory_regions(inputs["map"].read_text(encoding="utf-8"))
+    ram_region = regions["ram"]
+    flash_region = regions["flash"]
+    raw_ram_percent = 100.0 * summary["ram"] / ram_region["size"]
+    raw_flash_percent = 100.0 * summary["flash"] / flash_region["size"]
+    ram_percent = round(raw_ram_percent, 4)
+    flash_percent = round(raw_flash_percent, 4)
+    budget_status = resource_budget_status(summary["ram"], ram_region["size"])
+    forbidden_symbols = forbidden_resource_symbols(configuration, nm_output)
+    if enforce_budget and budget_status == "fail":
+        raise AdapterError(
+            "[NU54:E_RESOURCE_BUDGET] adaptive image의 정적 RAM 예약이 실패 상한 이상입니다: "
+            f"{summary['ram']}/{ram_region['size']} bytes ({ram_percent}%)"
+        )
+    if enforce_budget and budget_status == "warning":
+        print(
+            "nu54-builder: warning: adaptive image의 정적 RAM 예약이 경고 상한 이상입니다: "
+            f"{summary['ram']}/{ram_region['size']} bytes ({ram_percent}%)",
+            file=sys.stderr,
+        )
+    if enforce_budget and forbidden_symbols:
+        raise AdapterError(
+            "[NU54:E_RESOURCE_SYMBOL] 비활성 기능의 정적 symbol이 ELF에 남았습니다: "
+            + ", ".join(forbidden_symbols)
+        )
+    return {
+        "schema_version": RESOURCE_AUDIT_SCHEMA_VERSION,
+        "budget": {
+            "enforced": enforce_budget,
+            "warning_percent": RESOURCE_RAM_WARNING_PERCENT,
+            "failure_percent": RESOURCE_RAM_FAILURE_PERCENT,
+            "status": budget_status,
+        },
+        "flash": {
+            "text_bytes": summary["text"],
+            "data_bytes": summary["data"],
+            "used_bytes": summary["flash"],
+            "region_bytes": flash_region["size"],
+            "headroom_bytes": flash_region["size"] - summary["flash"],
+            "used_percent": flash_percent,
+        },
+        "ram": {
+            "data_bytes": summary["data"],
+            "bss_bytes": summary["bss"],
+            "used_bytes": summary["ram"],
+            "region_bytes": ram_region["size"],
+            "headroom_bytes": ram_region["size"] - summary["ram"],
+            "used_percent": ram_percent,
+        },
+        "regions": regions,
+        "sections": sections,
+        "top_ram_symbols": parse_ram_symbols(
+            nm_output, ram_region["origin"], ram_region["size"]
+        ),
+        "forbidden_symbols": forbidden_symbols,
+        "inputs": {
+            name: {"path": path.as_posix(), "sha256": file_sha256(path)}
+            for name, path in inputs.items()
+        },
     }
 
 
@@ -312,6 +638,63 @@ def validate_manifest_artifact(
     return artifact, actual_hash
 
 
+## @brief sysbuild domain과 flash 순서가 bootloader 다음 application인지 검증합니다.
+def validate_sysbuild_domains(zephyr_build: Path) -> tuple[Path, Path]:
+    domains_path = zephyr_build / "domains.yaml"
+    if not domains_path.is_file():
+        raise AdapterError(
+            f"[NU54:E_FLASH_SYSBUILD_DOMAINS] domains.yaml이 없습니다: {domains_path}"
+        )
+    try:
+        import yaml
+
+        document = yaml.safe_load(domains_path.read_text(encoding="utf-8"))
+    except Exception as error:
+        raise AdapterError(
+            f"[NU54:E_FLASH_SYSBUILD_DOMAINS] domains.yaml을 읽지 못했습니다: {error}"
+        ) from error
+    if not isinstance(document, dict):
+        raise AdapterError("[NU54:E_FLASH_SYSBUILD_DOMAINS] domains.yaml root가 object가 아닙니다.")
+    default_domain = document.get("default")
+    domains = document.get("domains")
+    flash_order = document.get("flash_order")
+    if (
+        not isinstance(default_domain, str)
+        or default_domain == "mcuboot"
+        or not isinstance(domains, list)
+        or len(domains) != 2
+        or flash_order != ["mcuboot", default_domain]
+    ):
+        raise AdapterError(
+            "[NU54:E_FLASH_SYSBUILD_DOMAINS] bootloader/application flash 순서가 고정 계약과 다릅니다."
+        )
+    domain_builds: dict[str, Path] = {}
+    for entry in domains:
+        if not isinstance(entry, dict) or set(entry) != {"name", "build_dir"}:
+            raise AdapterError(
+                "[NU54:E_FLASH_SYSBUILD_DOMAINS] domain record 형식이 잘못되었습니다."
+            )
+        name = entry.get("name")
+        build_dir = entry.get("build_dir")
+        if not isinstance(name, str) or not isinstance(build_dir, str) or name in domain_builds:
+            raise AdapterError(
+                "[NU54:E_FLASH_SYSBUILD_DOMAINS] domain 이름 또는 build directory가 잘못되었습니다."
+            )
+        resolved = canonical_path(build_dir)
+        if not is_within(resolved, zephyr_build) or path_key(resolved) != path_key(
+            zephyr_build / name
+        ):
+            raise AdapterError(
+                "[NU54:E_FLASH_SYSBUILD_DOMAINS] domain build directory가 sysbuild root와 다릅니다."
+            )
+        domain_builds[name] = resolved
+    if set(domain_builds) != {"mcuboot", default_domain}:
+        raise AdapterError(
+            "[NU54:E_FLASH_SYSBUILD_DOMAINS] MCUboot 또는 application domain이 없습니다."
+        )
+    return domain_builds["mcuboot"], domain_builds[default_domain]
+
+
 ## @brief M8 upload가 사용할 manifest와 native Zephyr artifact를 검증합니다.
 def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
     build_path = canonical_path(args.build_path)
@@ -331,10 +714,9 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         raise AdapterError("[NU54:E_FLASH_MANIFEST_VERSION] 지원하지 않는 build manifest version입니다.")
     if manifest.get("fqbn") != args.fqbn or manifest.get("board") != args.board:
         raise AdapterError("[NU54:E_FLASH_BOARD_MISMATCH] manifest의 FQBN 또는 Zephyr board가 다릅니다.")
-    if manifest.get("sysbuild") is not False:
-        raise AdapterError(
-            "[NU54:E_FLASH_SYSBUILD_UNSUPPORTED] M8 upload는 non-sysbuild zephyr.hex만 지원합니다."
-        )
+    sysbuild = manifest.get("sysbuild")
+    if not isinstance(sysbuild, bool):
+        raise AdapterError("[NU54:E_FLASH_SYSBUILD] manifest의 sysbuild 값이 boolean이 아닙니다.")
 
     context = manifest.get("context")
     if not isinstance(context, dict):
@@ -343,6 +725,8 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         raise AdapterError("[NU54:E_FLASH_CONTEXT] 지원하지 않는 session context version입니다.")
     if context.get("state") != "built":
         raise AdapterError("[NU54:E_FLASH_CONTEXT] 마지막으로 완료된 build context가 아닙니다.")
+    if context.get("sysbuild") is not sysbuild:
+        raise AdapterError("[NU54:E_FLASH_CONTEXT] manifest와 context의 sysbuild 값이 다릅니다.")
     context_pairs = {
         "fqbn": args.fqbn,
         "board": args.board,
@@ -395,8 +779,28 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         raise AdapterError("[NU54:E_FLASH_CONTEXT] Zephyr build directory가 cache context와 다릅니다.")
     if not (zephyr_build / "CMakeCache.txt").is_file() or not (zephyr_build / "build.ninja").is_file():
         raise AdapterError(f"[NU54:E_FLASH_CONTEXT] 유효한 Zephyr build directory가 아닙니다: {zephyr_build}")
-    native_hex = zephyr_build / "zephyr" / "zephyr.hex"
-    native_elf = zephyr_build / "zephyr" / "zephyr.elf"
+    runner_builds = [zephyr_build]
+    if sysbuild:
+        boot_build, application_build = validate_sysbuild_domains(zephyr_build)
+        runner_builds = [boot_build, application_build]
+        exported_boot, boot_hash = validate_manifest_artifact(
+            manifest, "boot.hex", build_path
+        )
+        validate_manifest_artifact(manifest, "update.bin", build_path)
+        native_boot = boot_build / "zephyr" / "zephyr.hex"
+        if not native_boot.is_file() or native_boot.stat().st_size == 0:
+            raise AdapterError(
+                f"[NU54:E_FLASH_ARTIFACT_MISSING] native boot HEX가 없습니다: {native_boot}"
+            )
+        if file_sha256(native_boot) != boot_hash:
+            raise AdapterError(
+                "[NU54:E_FLASH_ARTIFACT_HASH] native boot HEX와 export artifact가 다릅니다."
+            )
+        native_hex = application_build / "zephyr" / "zephyr.signed.hex"
+        native_elf = application_build / "zephyr" / "zephyr.elf"
+    else:
+        native_hex = zephyr_build / "zephyr" / "zephyr.hex"
+        native_elf = zephyr_build / "zephyr" / "zephyr.elf"
     for extension, native, exported_hash in (
         ("hex", native_hex, hex_hash),
         ("elf", native_elf, elf_hash),
@@ -416,6 +820,7 @@ def validate_flash_manifest(args: argparse.Namespace) -> dict[str, Any]:
         "elf": exported_elf,
         "hex_sha256": hex_hash,
         "elf_sha256": elf_hash,
+        "runner_builds": runner_builds,
     }
 
 

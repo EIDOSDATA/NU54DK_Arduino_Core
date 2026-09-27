@@ -1,12 +1,18 @@
-# Boards Manager 설치와 패키징 — stable v0.4.1
+# Boards Manager 설치와 패키징 — stable v0.5.0
 
 | 항목 | 값 |
 | --- | --- |
 | Package | `nucode:zephyr` |
 | Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 stable | `0.4.1`만 지원·제공 |
-| 이전 버전 | `0.4.1` 미만 stable·RC·preview 모두 지원·catalog 공급 종료 |
+| 현재 stable | `0.5.0`만 지원·제공 |
+| 이전 버전 | `0.5.0` 미만 stable·RC·preview 모두 지원·catalog 공급 종료 |
 | 공식 사용자 OS | Windows 10/11 x64 |
+
+이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.5.0` 계약이다.
+RC1/RC2 다운로드·설치 결과는 해당 역사 문서에 보존한다. Ubuntu/macOS 확장은 버전 미정인 후속 제품선이며
+[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다.
+HOST-W01~W03은 3/8 완료, HOST-W04~W08은 사용자 재개 지시까지 보류다. 후속 OS의
+prerequisite·설치·실물 검증 gate는 유지하지만 M31 Windows 릴리스의 선행조건으로 두지 않는다.
 
 ## Stable index와 설치
 
@@ -16,7 +22,7 @@ Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL입니다.
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-Index는 지원 버전 `0.4.1` 하나만 제공합니다. 이전 모든 stable·RC·preview의 tag·Release·자산과
+Stable index는 `0.5.0` 하나만 제공합니다. 이전 stable·RC·preview의 tag·Release·자산과
 검증 기록은 감사용으로 보존하지만 일반 설치·지원 목록에는 넣지 않습니다.
 
 Arduino CLI 설치 예시:
@@ -24,7 +30,7 @@ Arduino CLI 설치 예시:
 ```powershell
 $StableIndex = 'https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json'
 arduino-cli core update-index --additional-urls $StableIndex
-arduino-cli core install nucode:zephyr@0.4.1 --run-post-install --additional-urls $StableIndex
+arduino-cli core install nucode:zephyr@0.5.0 --run-post-install --additional-urls $StableIndex
 arduino-cli core list
 arduino-cli board listall nucode:zephyr
 ```
@@ -32,8 +38,22 @@ arduino-cli board listall nucode:zephyr
 설치된 platform의 기본 위치는 다음과 같습니다.
 
 ```text
-%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.4.1
+%LOCALAPPDATA%\Arduino15\packages\nucode\hardware\zephyr\0.5.0
 ```
+
+## 이전 RC2 설치 기록
+
+아래 주소는 정식 공개 전 RC2 시험에 사용한 역사 URL이다. 신규 설치에는 stable index를 사용한다.
+당시 RC2를 시험할 때에는 Arduino IDE 2.x의 추가 보드 매니저 URL에 다음 주소를 넣고
+Boards Manager에서 `NUCODE NU54DK Zephyr Boards`의 `0.5.0-rc.2`를 선택한다. Stable URL과는 별도
+opt-in 채널이며 GUI 실물 결과는 사용자가 후속 기록한다.
+
+```text
+https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/package_nucode_nu54dk_rc_index.json
+```
+
+게시 완료와 exact 자산 identity는 [RC2 안내](../05_릴리스/v0.5.0-rc.2/README.md)에서 확인한다.
+Package·CLI·HIL의 자동 PASS를 실제 IDE GUI PASS로 대체하지 않는다.
 
 ## 고정 prerequisite
 
@@ -48,15 +68,19 @@ arduino-cli board listall nucode:zephyr
 
 단일 원본은 [`pins.json`](../../tools/nu54-prerequisites/pins.json)과
 [`nrfutil-requirements.json`](../../tools/nu54-prerequisites/nrfutil-requirements.json)입니다.
-NCS/Toolchain은 Core ZIP에 넣지 않고 `post_install.bat`이 Nordic 공식 배포 경로에서
+NCS/Toolchain은 Core ZIP에 넣지 않고 현재 v0.5.0의 `post_install.bat`이 Nordic 공식 배포 경로에서
 사용자 영역에 준비합니다. 같은 exact 설치는 Core version 간 공유하며 uninstall 때 자동
 삭제하지 않습니다.
+
+후속 다중 Host 제품선은 OS·architecture별 공식 nRF Util 자산의 URL·SHA-256을 manifest에 고정하고 같은
+prerequisite 검증 backend를 `.cmd`와 `.sh`에서 호출한다. Linux/macOS에서 system Python·Git이
+우연히 존재하는 것을 설치 성공 조건으로 삼지 않는다.
 
 ## Compile과 Upload
 
 ```powershell
 $BuildPath = Join-Path $PWD 'build\blink'
-$Sketch = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.4.1\libraries\NUCODE_NU54DK\examples\Blink"
+$Sketch = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.5.0\libraries\NUCODE_NU54DK\examples\Blink"
 arduino-cli compile --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
 arduino-cli upload --fqbn nucode:zephyr:nu54dk --build-path $BuildPath $Sketch
 ```

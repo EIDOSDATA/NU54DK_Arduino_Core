@@ -67,7 +67,7 @@ class M19BleGapContractTests(unittest.TestCase):
         self.assertNotIn("struct bt_", text)
         self.assertIn("maximum_payload_length = 31U", text)
         self.assertIn("maximumConnections()", text)
-        self.assertIn("return 1U;", text)
+        self.assertIn("return 2U;", text)
 
     def test_once_init_and_m21_observer_hooks_are_shared(self) -> None:
         """! @brief NUS/GAP/M21이 bt_enable과 connection callback을 중복 소유하지 않습니다. """
@@ -89,6 +89,18 @@ class M19BleGapContractTests(unittest.TestCase):
         self.assertIn("settings_load()", stack)
         self.assertIn("__weak void securityConnected", stack)
 
+    def test_role_specific_end_omits_unselected_advertising(self) -> None:
+        """! @brief central-only 역할의 종료가 광고·PAwR 구현을 링크하지 않습니다. """
+
+        source = SOURCE.read_text(encoding="utf-8")
+        body = source[source.index("void Device::end() noexcept"):
+                      source.index("nucode::ble::internal::l2capEnded();")]
+        self.assertIn("#if defined(CONFIG_BT_BROADCASTER)\n        if (stop_advertising)", body)
+        self.assertIn("#if defined(CONFIG_BT_PER_ADV_RSP)\n        endPawr();", body)
+        self.assertIn("void endPeriodicAdvertising() noexcept __attribute__((weak));", source)
+        self.assertIn("#if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)\n"
+                      "        if (endPeriodicAdvertising != nullptr)", body)
+
     def test_stack_callbacks_only_enqueue_bounded_records(self) -> None:
         """! @brief Bluetooth callback에서 user callback·heap 사용을 금지합니다. """
 
@@ -101,7 +113,7 @@ class M19BleGapContractTests(unittest.TestCase):
             "Device::poll()",
             "result_callback(record.result, gapState().scan_context)",
             "record.generation",
-            "callback(record.event, gapState().event_context)",
+            "callback(record.information.event, gapState().event_context)",
         ):
             self.assertIn(token, source, token)
         for forbidden in (
@@ -208,7 +220,7 @@ class M19BleGapContractTests(unittest.TestCase):
             self.assertIn(symbol, kconfig, symbol)
         for setting in (
             "CONFIG_NUCODE_BLE_CORE=y",
-            "CONFIG_BT_MAX_CONN=1",
+            "CONFIG_BT_MAX_CONN=2",
             "CONFIG_BT_USER_PHY_UPDATE=y",
         ):
             self.assertIn(setting, feature_conf, setting)
@@ -243,7 +255,8 @@ class M19BleGapContractTests(unittest.TestCase):
 
         source = gap_source()
         self.assertIn(".phy = 0U", source)
-        self.assertIn("pending_connection_generation", source)
+        self.assertIn("connection_slots[maximum_connection_slots]", source)
+        self.assertIn("next_connection_generation", source)
         self.assertIn("atomic_inc(&gapState().device_session_generation)", source)
         end = source[source.index("void Device::end()") : source.index(
             "bool Device::initialized()", source.index("void Device::end()")
@@ -252,7 +265,7 @@ class M19BleGapContractTests(unittest.TestCase):
             end.index("atomic_set(&gapState().device_initialized, 0)"),
             end.index("bt_conn_disconnect("),
         )
-        self.assertIn("pending = gapState().pending_connection", end)
+        self.assertIn("pending[index] = slot.pending", end)
         self.assertIn("k_msgq_purge(&gapEventQueue())", end)
         hil = (
             REPOSITORY

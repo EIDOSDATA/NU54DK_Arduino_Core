@@ -1,0 +1,92 @@
+{
+  "core_revision": "b47aaf40df6fd5f73d132508e06b2bf7da9364f6",
+  "source_clean_at_build_and_hil": true,
+  "accepted": [
+    "closure-audit.json",
+    "installed-examples-11-build.json",
+    "integrity.json",
+    "package-bis-encrypted.json",
+    "package-bis-plain.json",
+    "package-bis-time.json",
+    "package-cis-to-bis.json",
+    "package-cis.json",
+    "prerequisite-verified.json",
+    "staging.json"
+  ],
+  "diagnostics_excluded": [
+    "diagnostic-missing-manifest.json",
+    "diagnostic-prerequisite-mismatch.json"
+  ],
+  "runners": [
+    {
+      "path": "tools/ci/m31_iso_stage_package.py",
+      "sha256": "a28fc9530a663d2136efc53304d881f3c94650c61a689fcc4cb72b8915973a91"
+    },
+    {
+      "path": "tools/ci/m31_iso_installed_examples.py",
+      "sha256": "18ecdc03568cc9412565e4dcc6b69a1b8979a8815835e5bf28132b6fca6d8e48"
+    },
+    {
+      "path": "tests/hil/nu54dk/m31_iso_public_cis_pair_run.py",
+      "sha256": "362dfb9ede7db43ab5ab5e775e7b73e33cbf3d9fef6237778caade88670f6e5a"
+    },
+    {
+      "path": "tests/hil/nu54dk/m31_iso_public_bis_pair_run.py",
+      "sha256": "1e095fdbf561d67b5f726417297f927d727b5574104e4e063c6ad53928d81bfe"
+    },
+    {
+      "path": "tests/hil/nu54dk/m31_iso_public_combined_run.py",
+      "sha256": "3f6571e6755ce037ce066af57a0c105036aa200b9a6ee22e42f0764708e70bdb"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "closure-audit.json",
+      "sha256": "671ee86608ef45ec38cbe555a2b01af8d8acd8a0636c00809921310ca6eaf5b7"
+    },
+    {
+      "path": "installed-examples-11-build.json",
+      "sha256": "ce7b1f244216294a4907fe252ea104ee007a6eb0fd9022973afcb49f81e3e803"
+    },
+    {
+      "path": "integrity.json",
+      "sha256": "1b4a2376b7370c65e1e696ecf5446859548b544057d043c28e4b0e2d322d0e59"
+    },
+    {
+      "path": "package-bis-encrypted.json",
+      "sha256": "986905b18f7c0d79651c86c8338cd68da5f0d40760a7529cecbe3bc9629008f0"
+    },
+    {
+      "path": "package-bis-plain.json",
+      "sha256": "9ede13828432b879f856beacd54f8ea67582d9fd1e260edea931bc772b0c32fe"
+    },
+    {
+      "path": "package-bis-time.json",
+      "sha256": "c8c6caa5169c78b1e9de6c09bfaac09d24e38eaaec6c6111f77cfc968e3ef3cc"
+    },
+    {
+      "path": "package-cis-to-bis.json",
+      "sha256": "e63ff3e97b3920cda778298ec899b6bf29760dee20a9d477fcebc61ca2d83eaa"
+    },
+    {
+      "path": "package-cis.json",
+      "sha256": "71c32a1ac20154370774691a8dd0144f0975394253ffcbf6de181b3a4da952a8"
+    },
+    {
+      "path": "prerequisite-verified.json",
+      "sha256": "e5378bde3cfdb822f77d1c058bb4d46a0352cbf354c70c5874a2fdfe73d848e5"
+    },
+    {
+      "path": "staging.json",
+      "sha256": "71a6972b3082804c969f62ef989289473b999d4d4838a5e60c0e4c578b0cd629"
+    },
+    {
+      "path": "diagnostic-missing-manifest.json",
+      "sha256": "1e74e48d889d82fb31d8778d7c4a22b1b0400a76591cf521b14aa4b79a7c904d"
+    },
+    {
+      "path": "diagnostic-prerequisite-mismatch.json",
+      "sha256": "793deba16c91e3d14cbdd07dc91928132e574f4f4ddd58d9ab7e3fbbd10e04a7"
+    }
+  ]
+}

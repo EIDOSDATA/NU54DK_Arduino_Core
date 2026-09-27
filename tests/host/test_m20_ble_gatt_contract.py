@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import unittest
 from ble_source_contracts import gap_source, gatt_source
@@ -47,7 +48,9 @@ class M20BleGattContractTests(unittest.TestCase):
             self.assertIn(token, text, token)
         self.assertNotIn("#include <zephyr/", text)
         self.assertNotIn("struct bt_", text)
-        self.assertIn("maximum_value_length = 244U", text)
+        self.assertIn("maximum_value_length = 512U", text)
+        self.assertIn("maximum_inline_value_length", text)
+        self.assertIn("internal_value_[maximum_inline_value_length]", text)
         self.assertIn("BLERemoteService remoteService() const", text)
         self.assertIn("BLERemoteCharacteristic remoteCharacteristic() const", text)
         self.assertIn("image 수명 동안 유효", text)
@@ -96,7 +99,8 @@ class M20BleGattContractTests(unittest.TestCase):
             "GattAccess::dispatch(*record.characteristic, event)",
             "characteristic_value_lock",
             "copyCachedValue(*characteristic, snapshot",
-            "copyCachedValue(*this, snapshot",
+            "copyCachedValueForTransmission(*this, context->data",
+            "capacity <= maximum_inline_value_length ? internal_value_ : nullptr",
         ):
             self.assertIn(token, source, token)
         server_write = source[source.index("ssize_t serverWrite(") : source.index(
@@ -115,13 +119,13 @@ class M20BleGattContractTests(unittest.TestCase):
             "bool BLECharacteristic::notify()",
             "bool BLECharacteristic::indicate()",
             "bool BLEService::addCharacteristic(",
-            "bool GattClient::discover(",
-            "bool GattClient::read()",
-            "bool GattClient::write(",
-            "bool GattClient::writeWithoutResponse(",
-            "bool GattClient::subscribeNotifications()",
-            "bool GattClient::subscribeIndications()",
-            "bool GattClient::unsubscribe()",
+            "bool GattClient::discover(BLEConnectionHandle",
+            "bool GattClient::read(BLEConnectionHandle",
+            "bool GattClient::write(BLEConnectionHandle",
+            "bool GattClient::writeWithoutResponse(BLEConnectionHandle",
+            "bool GattClient::subscribeNotifications(BLEConnectionHandle",
+            "bool GattClient::subscribeIndications(BLEConnectionHandle",
+            "bool GattClient::unsubscribe(BLEConnectionHandle",
         ):
             start = source.index(signature)
             body = source[start : source.index("\n}", start) + 2]
@@ -129,20 +133,20 @@ class M20BleGattContractTests(unittest.TestCase):
         for token in (
             "gatt_session_generation",
             "k_msgq_purge(&gatt_event_queue)",
-            "setClientOperationToken(connection)",
-            "validClientOperation(connection)",
-            "setClientSubscriptionToken(connection)",
-            "validClientSubscription(connection)",
+            "setClientOperationToken(*state, connection)",
+            "validClientOperation(*state, connection)",
+            "setClientSubscriptionToken(state, connection)",
+            "validClientSubscription(*state, connection)",
             "client_subscription_value",
-            "NotificationContext",
-            "indication_generations",
+            "ServerTxContext",
+            "context->generation",
         ):
             self.assertIn(token, source, token)
         subscribe = source[source.index("bool startSubscription(") : source.index(
             "} // namespace", source.index("bool startSubscription(")
         )]
         self.assertLess(
-            subscribe.index("atomic_set(&client_subscription_value, value)"),
+            subscribe.index("atomic_set(&state.client_subscription_value, value)"),
             subscribe.index("bt_gatt_subscribe("),
         )
         hil = (
@@ -163,8 +167,8 @@ class M20BleGattContractTests(unittest.TestCase):
         source = gatt_source()
         for token in (
             "BT_GATT_SUBSCRIBE_FLAG_VOLATILE",
-            "GattAccess::clear(remote_service)",
-            "GattAccess::clear(remote_characteristic)",
+            "GattAccess::clear(client.remote_service)",
+            "GattAccess::clear(client.remote_characteristic)",
             "BLEGattClientEvent::handles_invalidated",
             "ClientStage::service_found",
             "ClientStage::characteristic_found",
@@ -180,13 +184,13 @@ class M20BleGattContractTests(unittest.TestCase):
             self.assertIn(token, source, token)
         subscribe_callback = source[
             source.index("void clientSubscribeCompleted(") : source.index(
-                "/** @brief notify/indicate payload", source.index("void clientSubscribeCompleted(")
+                "std::uint8_t clientNotification", source.index("void clientSubscribeCompleted(")
             )
         ]
         zero_value = subscribe_callback[
             subscribe_callback.index("parameters->value == 0U") :
         ]
-        self.assertIn("atomic_set(&client_subscribed, 0)", zero_value)
+        self.assertIn("atomic_set(&state->client_subscribed, 0)", zero_value)
         self.assertNotIn("BLEGattClientEvent::subscribed", zero_value.split("return;", 1)[0])
 
     def test_kconfig_examples_and_target_contracts_exist(self) -> None:
@@ -198,18 +202,29 @@ class M20BleGattContractTests(unittest.TestCase):
         )
         for symbol in (
             "config NUCODE_BLE_GATT",
+            "config NUCODE_BLE_GATT_SERVER",
+            "config NUCODE_BLE_GATT_CLIENT",
             "config NUCODE_BLE_GATT_MAX_SERVICES",
             "config NUCODE_BLE_GATT_MAX_CHARACTERISTICS_PER_SERVICE",
             "config NUCODE_BLE_GATT_EVENT_QUEUE_SIZE",
+            "config NUCODE_BLE_GATT_TX_CONTEXT_COUNT",
         ):
             self.assertIn(symbol, kconfig, symbol)
         self.assertIn("CONFIG_BT_GATT_DYNAMIC_DB=y", feature_conf)
         self.assertIn("CONFIG_NUCODE_BLE_GATT=y", feature_conf)
-        for name in ("CustomGattPeripheral", "CustomGattCentral"):
+        roles = {
+            "CustomGattPeripheral": "ble-gatt-server-peripheral",
+            "CustomGattCentral": "ble-gatt-client-central",
+        }
+        for name, role in roles.items():
             example = LIBRARY / "examples" / name / f"{name}.ino"
             self.assertTrue(example.is_file(), example)
             self.assertFalse((example.parent / "prj.conf").exists())
             self.assertFalse((example.parent / "app.overlay").exists())
+            declaration = json.loads(
+                (example.parent / "nucode-build.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(declaration["roles"], [role])
         self.assertTrue((REPOSITORY / "tests" / "zephyr" / "m19_ble_gap_contract").is_dir())
         self.assertTrue((REPOSITORY / "tests" / "zephyr" / "m20_ble_gatt_contract").is_dir())
 

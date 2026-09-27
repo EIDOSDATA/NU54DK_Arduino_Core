@@ -103,7 +103,11 @@ class M27ReleaseTests(unittest.TestCase):
     def test_historical_package_contract_is_not_modified(self) -> None:
         package = MODULE.load_package_module()
         self.assertEqual(package.RELEASE_CANDIDATE_VERSIONS, MODULE.BASE_RC_VERSIONS)
-        self.assertEqual(package.STABLE_VERSIONS, MODULE.BASE_STABLE_VERSIONS)
+        self.assertEqual(
+            package.STABLE_VERSIONS[: len(MODULE.BASE_STABLE_VERSIONS)],
+            MODULE.BASE_STABLE_VERSIONS,
+        )
+        self.assertIn("0.4.1", package.STABLE_VERSIONS)
 
     def test_clean_submodule_status_survives_trimmed_first_prefix(self) -> None:
         if MODULE.git_output(REPOSITORY, "status", "--porcelain"):

@@ -1,0 +1,14 @@
+diff --git a/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino b/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
+index bca12628..39547250 100644
+--- a/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
++++ b/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
+@@ -164,7 +164,8 @@ namespace
+                 discoveryStarted[linkCount] = false;
+                 ++linkCount;
+             }
+-            if (!BLESecurity.requestSecurity(information.connection))
++            /** @brief NUCODE_CSIP_FAULT_SECURITY_SYNC_FAILURE invalid handle을 거부시킵니다. */
++            if (!BLESecurity.requestSecurity(nucode::ble::BLEConnectionHandle{}))
+             {
+                 Serial.println("Set coordinator security request failed");
+                 recoveryPending = true;

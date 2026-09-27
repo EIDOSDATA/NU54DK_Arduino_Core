@@ -14,6 +14,9 @@ LIBRARY = REPOSITORY / "libraries" / "NUCODE_NU54DK"
 HEADER = LIBRARY / "src" / "NUCODE_NU54DK.h"
 SOURCE = LIBRARY / "src" / "NUCODE_NU54DK.cpp"
 FEATURE = LIBRARY / "zephyr" / "feature.yml"
+STANDARD_PROFILE = (
+    REPOSITORY / "variants" / "nu54dk" / "profiles" / "standard" / "prj.conf"
+)
 
 
 class M15BoardSystemContractTests(unittest.TestCase):
@@ -121,12 +124,19 @@ class M15BoardSystemContractTests(unittest.TestCase):
         """! @brief Arduino library 선택이 Wire와 고정 conf·overlay를 자동 병합하는지 검사합니다. """
 
         document = json.loads(FEATURE.read_text(encoding="utf-8"))
-        self.assertEqual(document["schema_version"], 1)
+        self.assertEqual(document["schema_version"], 3)
         self.assertEqual(document["id"], "nucode.board")
         self.assertIn("wire", document["requires"])
         self.assertEqual(document["conf"], ["board-system.conf"])
         self.assertEqual(document["overlays"], ["board-system.overlay"])
-        self.assertEqual(document["compatible_profiles"], ["standard", "ble"])
+        self.assertEqual(document["resolved_conf"], ["board-system.conf"])
+        self.assertEqual(
+            document["resolved_overlays"], ["board-system.overlay"]
+        )
+        self.assertEqual(
+            document["compatible_profiles"],
+            ["standard", "adaptive", "ble", "secure_ble_dfu"],
+        )
 
         configuration = (LIBRARY / "zephyr" / "board-system.conf").read_text(
             encoding="utf-8"
@@ -144,6 +154,12 @@ class M15BoardSystemContractTests(unittest.TestCase):
         ):
             self.assertIn(symbol, configuration, symbol)
         self.assertNotIn("CONFIG_SETTINGS_ZMS_FORCE_MOUNT=y", configuration)
+
+    def test_standard_profile_does_not_auto_suspend_every_runtime_device(self) -> None:
+        """! @brief 실행 직후 SWD 재접속을 막는 전역 runtime PM 자동 suspend를 금지합니다. """
+
+        configuration = STANDARD_PROFILE.read_text(encoding="utf-8")
+        self.assertIn("CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE=n", configuration)
 
     def test_storage_namespace_and_bounds_are_fixed(self) -> None:
         """! @brief Sketch가 설정 저장소 전체나 무제한 값을 소유하지 못하게 합니다. """

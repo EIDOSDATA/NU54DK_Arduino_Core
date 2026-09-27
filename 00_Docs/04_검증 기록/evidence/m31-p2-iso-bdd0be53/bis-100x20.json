@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-iso-bis-100-frame-20-cycle-memory",
+  "image_sha256": {
+    "receiver": "31c6cc3ac03aa4e8c3d1ecf9e69db6886f3ea7bd7f7edfa73629afb65444e2ba",
+    "source": "d0cf66f90fb7a6b20c8c980b06497620d4ed27325ff79e3b99d9d1cadec64e1f"
+  },
+  "probe_uid_sha256": {
+    "receiver": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "source": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+  },
+  "com_mapping": {
+    "receiver": {
+      "app": "COM13",
+      "aux": "COM12"
+    },
+    "source": {
+      "app": "COM10",
+      "aux": "COM11"
+    }
+  },
+  "start": {
+    "receiver": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "source": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "receiver": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=bis-receiver",
+      "P2_PHASE name=ready",
+      "P2_STACK name=bt_tx_processor reserved=904 used=232",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=472",
+      "P2_STACK name=ISR0 reserved=2048 used=328",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_BIS_RECV cycle=1 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=2 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=3 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=4 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=5 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=6 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=7 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=8 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=9 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=10 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=11 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=12 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=13 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=14 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=15 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=16 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=17 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=18 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=19 frames=100 missing=0 errors=0",
+      "P2_BIS_RECV cycle=20 frames=100 missing=0 errors=0",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=2048 used=416",
+      "P2_STACK name=bt_tx_processor reserved=904 used=404",
+      "P2_STACK name=sysworkq reserved=4096 used=744",
+      "P2_STACK name=MPSL Work reserved=1024 used=596",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=808",
+      "P2_STACK name=ISR0 reserved=2048 used=472",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=bis-receiver cycles=20"
+    ],
+    "source": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=bis-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=bt_tx_processor reserved=904 used=232",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=472",
+      "P2_STACK name=ISR0 reserved=2048 used=328",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_BIS_SENT cycle=1 frames=100",
+      "P2_BIS_SENT cycle=2 frames=100",
+      "P2_BIS_SENT cycle=3 frames=100",
+      "P2_BIS_SENT cycle=4 frames=100",
+      "P2_BIS_SENT cycle=5 frames=100",
+      "P2_BIS_SENT cycle=6 frames=100",
+      "P2_BIS_SENT cycle=7 frames=100",
+      "P2_BIS_SENT cycle=8 frames=100",
+      "P2_BIS_SENT cycle=9 frames=100",
+      "P2_BIS_SENT cycle=10 frames=100",
+      "P2_BIS_SENT cycle=11 frames=100",
+      "P2_BIS_SENT cycle=12 frames=100",
+      "P2_BIS_SENT cycle=13 frames=100",
+      "P2_BIS_SENT cycle=14 frames=100",
+      "P2_BIS_SENT cycle=15 frames=100",
+      "P2_BIS_SENT cycle=16 frames=100",
+      "P2_BIS_SENT cycle=17 frames=100",
+      "P2_BIS_SENT cycle=18 frames=100",
+      "P2_BIS_SENT cycle=19 frames=100",
+      "P2_BIS_SENT cycle=20 frames=100",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=2048 used=336",
+      "P2_STACK name=bt_tx_processor reserved=904 used=564",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=364",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=840",
+      "P2_STACK name=ISR0 reserved=2048 used=560",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=bis-source cycles=20"
+    ]
+  },
+  "sent_cycles": 20,
+  "received_cycles": 20,
+  "missing_total": 0,
+  "result": "PASS"
+}

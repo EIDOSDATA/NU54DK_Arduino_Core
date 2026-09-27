@@ -1,0 +1,71 @@
+{
+  "status": "FAIL",
+  "core_revision": "d1a258161cd439b5b5f2e869538aa00857799b5a",
+  "initiator_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "initiator_image_sha256": "5ba9c27f5c10a29524acc63e1a49d5e9d2ff785e3b3c6791d1792005fe918dd4",
+  "reflector_image_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "initiator_port": "COM7",
+  "reflector_port": "COM5",
+  "mode": "sector_flash_pair_reset",
+  "procedures": 8,
+  "stop_restart_cycles": 0,
+  "disconnect_reconnect_cycles": 0,
+  "initiator_lines": [
+    "CS initiator connected; securing",
+    "CS procedures requested",
+    "CS_RAW counter=0 local=94 peer=94 rtt=19 tone=72 valid_rtt=12 distance_m=0.000",
+    "CS_RAW counter=1 local=98 peer=98 rtt=23 tone=72 valid_rtt=23 distance_m=0.459",
+    "CS_RAW counter=2 local=96 peer=96 rtt=21 tone=72 valid_rtt=20 distance_m=0.296",
+    "CS_RAW counter=3 local=96 peer=96 rtt=21 tone=72 valid_rtt=21 distance_m=0.000",
+    "CS_RAW counter=4 local=96 peer=96 rtt=21 tone=72 valid_rtt=21 distance_m=0.517",
+    "CS_RAW counter=5 local=96 peer=96 rtt=21 tone=72 valid_rtt=21 distance_m=0.000",
+    "CS_RAW counter=6 local=94 peer=94 rtt=19 tone=72 valid_rtt=19 distance_m=0.000",
+    "CS_RAW counter=7 local=97 peer=97 rtt=22 tone=72 valid_rtt=21 distance_m=0.014",
+    "CS initiator disconnected",
+    "CS initiator connected; securing",
+    "CS initiator connected; securing",
+    "CS procedures requested",
+    "CS_RAW counter=0 local=95 peer=95 rtt=20 tone=72 valid_rtt=19 distance_m=0.063"
+  ],
+  "reflector_lines": [
+    "CS reflector connected",
+    "CS reflector secure L2",
+    "CS reflector config ready",
+    "CS procedures enabled",
+    "CS reflector advertising",
+    "CS reflector connected",
+    "CS reflector secure L2",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector secure L2",
+    "CS reflector config ready",
+    "CS procedures enabled"
+  ],
+  "initiator_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "425984"
+  ],
+  "initiator_flash": [
+    "pyocd-sector-hw-reset",
+    "430080"
+  ],
+  "failure_class": "RuntimeError",
+  "failure_detail": "ranging counter gap"
+}

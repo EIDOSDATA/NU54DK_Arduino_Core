@@ -1,0 +1,37 @@
+{
+  "core_revision": "e613b01066b488ce8510c6306e323260172f2aeb",
+  "server_sketch": "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexServer/BapUnicastDuplexServer.ino",
+  "server_hex_sha256": "adf5a9258c40d9bbd867dc9f2aa675a4110a3a1a0448f1c13ab6b4025f646714",
+  "server_config_sha256": "913a7fdd3cf709a0b559d6982ff675297b6a6881dc897d1aaef1d159f7873d4e",
+  "native_client_hex_sha256": "8b0e801b1b13e3ec2f62e328f83227ae1144220fb50b839cc48ed945037d3a50",
+  "native_client_config_sha256": "4903c78cce6efe09f0c38111c90a3877b12394da91f595ff4614d42654a65c6d",
+  "flash_bytes": 515484,
+  "ram_bytes": 231579,
+  "ram_free_bytes": 30565,
+  "tests": [
+    "flash-exact.json",
+    "pair-exact.json"
+  ],
+  "artifacts": [
+    {
+      "path": "arduino-build.log",
+      "sha256": "a1105e27e95251a9ad631e0dee9cc13c68f111e4be24878ceb987de88944dbbe"
+    },
+    {
+      "path": "flash-exact.json",
+      "sha256": "783c7c3f56d0caec7b0620cfd8f3118a8b81e38e6c6f7a6250949601082e8670"
+    },
+    {
+      "path": "pair-exact.json",
+      "sha256": "f1c63558e02332fd4bf339fbf03715e4a1a82e778f17eeac7f3e4b74a9eb6037"
+    },
+    {
+      "path": "preflash-invalid.json",
+      "sha256": "2b28ca92908d76b54ac574f47f560a696960f7988de31500c88c163ba2a61545"
+    },
+    {
+      "path": "provenance-audit.json",
+      "sha256": "0ccec29483973b2cb3c50068e5db0ec86eb0f021e639a6a38a8696bb0016e049"
+    }
+  ]
+}

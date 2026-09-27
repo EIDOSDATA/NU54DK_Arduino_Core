@@ -1,0 +1,439 @@
+00000.226|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00000.227|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00004.072|controller|Audio control device disconnected reason=8
+00004.072|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00004.222|device|Audio control device ready
+00004.222|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00004.228|controller|Audio control device found
+00004.238|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00004.366|device|Audio controller connected
+00005.330|controller|Volume discovery started
+00007.350|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00007.444|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00007.539|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00007.683|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00007.834|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00007.956|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00008.036|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00008.167|controller|Microphone discovery started
+00008.167|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.598|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.598|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.598|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.598|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.598|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.598|controller|Audio control device disconnected reason=8
+00014.598|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.699|device|Audio control device ready
+00014.720|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00014.721|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00015.040|controller|Audio control device found
+00015.245|device|Audio controller connected
+00016.297|controller|Volume discovery started
+00018.333|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00018.425|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00018.543|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00018.650|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00018.734|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00018.825|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00018.943|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00019.025|controller|Microphone discovery started
+00019.053|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.711|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.711|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.711|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.711|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.711|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.711|controller|Audio control device disconnected reason=8
+00023.711|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.879|device|Audio control device ready
+00023.908|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00023.908|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00024.121|controller|Audio control device found
+00024.228|device|Audio controller connected
+00025.235|controller|Volume discovery started
+00027.234|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00027.332|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00027.422|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00027.515|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00027.635|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00027.730|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00027.842|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00027.937|controller|Microphone discovery started
+00027.937|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.593|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.593|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.593|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.593|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.593|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.593|controller|Audio control device disconnected reason=8
+00031.593|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.750|device|Audio control device ready
+00031.756|controller|Audio control device found
+00031.756|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.779|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00031.883|device|Audio controller connected
+00032.919|controller|Volume discovery started
+00034.916|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00035.009|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00035.109|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00035.209|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00035.334|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00035.422|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00035.525|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00035.615|controller|Microphone discovery started
+00035.615|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00038.889|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00038.890|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00038.890|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00038.890|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00038.890|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00038.920|controller|Audio control device disconnected reason=8
+00038.920|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00039.073|device|Audio control device ready
+00039.079|controller|Audio control device found
+00039.079|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00039.106|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00039.197|device|Audio controller connected
+00040.201|controller|Volume discovery started
+00042.211|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00042.295|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00042.411|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00042.500|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00042.590|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00042.708|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00042.791|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00042.891|controller|Microphone discovery started
+00042.891|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00045.852|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00045.853|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00045.853|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00045.853|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00045.853|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00045.884|controller|Audio control device disconnected reason=8
+00045.919|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00046.063|device|Audio control device ready
+00046.063|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00046.069|controller|Audio control device found
+00046.069|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00046.205|device|Audio controller connected
+00047.200|controller|Volume discovery started
+00049.202|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00049.282|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00049.397|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00049.482|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00049.604|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00049.689|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00049.803|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00049.890|controller|Microphone discovery started
+00049.890|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00052.891|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00052.891|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00052.891|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00052.891|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00052.891|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00052.891|controller|Audio control device disconnected reason=8
+00052.891|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00053.072|device|Audio control device ready
+00053.078|controller|Audio control device found
+00053.078|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00053.110|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00053.192|device|Audio controller connected
+00054.210|controller|Volume discovery started
+00056.360|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00056.442|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00056.559|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00056.647|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00056.735|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00056.857|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00056.951|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00057.086|controller|Microphone discovery started
+00057.111|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.097|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.097|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.097|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.097|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.097|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.097|controller|Audio control device disconnected reason=8
+00060.097|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.330|device|Audio control device ready
+00060.330|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.336|controller|Audio control device found
+00060.336|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00060.470|device|Audio controller connected
+00061.459|controller|Volume discovery started
+00063.452|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00063.563|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00063.715|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00063.909|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00064.016|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00064.112|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00064.196|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00064.293|controller|Microphone discovery started
+00064.315|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.658|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.658|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.658|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.658|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.658|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.658|controller|Audio control device disconnected reason=8
+00067.658|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.816|device|Audio control device ready
+00067.823|controller|Audio control device found
+00067.823|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.845|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00067.940|device|Audio controller connected
+00068.946|controller|Volume discovery started
+00071.044|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00071.124|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00071.242|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00071.341|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00071.451|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00071.529|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00071.642|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00071.726|controller|Microphone discovery started
+00071.754|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.103|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.103|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.103|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.103|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.103|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.191|controller|Audio control device disconnected reason=8
+00075.191|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.341|device|Audio control device ready
+00075.341|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.347|controller|Audio control device found
+00075.372|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00075.491|device|Audio controller connected
+00076.475|controller|Volume discovery started
+00078.474|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00078.563|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00078.675|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00078.759|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00078.858|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00078.975|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00079.061|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00079.188|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00079.188|controller|Microphone discovery started
+00083.042|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.043|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.043|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.043|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.043|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.043|controller|Audio control device disconnected reason=8
+00083.043|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.232|device|Audio control device ready
+00083.232|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.238|controller|Audio control device found
+00083.238|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00083.379|device|Audio controller connected
+00084.373|controller|Volume discovery started
+00086.404|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00086.517|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00086.613|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00086.700|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00086.824|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00086.908|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00087.025|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00087.109|controller|Microphone discovery started
+00087.110|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.167|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.167|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.167|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.167|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.167|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.167|controller|Audio control device disconnected reason=8
+00095.167|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.212|device|Audio control device ready
+00095.212|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.212|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00095.316|controller|Audio control device found
+00095.437|device|Audio controller connected
+00096.417|controller|Volume discovery started
+00098.476|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00098.555|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00098.667|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00098.748|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00098.875|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00098.959|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00099.069|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00099.157|controller|Microphone discovery started
+00099.157|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.441|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.441|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.441|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.441|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.441|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.468|controller|Audio control device disconnected reason=8
+00103.468|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.647|device|Audio control device ready
+00103.647|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.647|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00103.749|controller|Audio control device found
+00103.870|device|Audio controller connected
+00104.876|controller|Volume discovery started
+00106.874|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00107.075|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00107.175|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00107.266|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00107.391|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00107.467|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00107.583|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00107.667|controller|Microphone discovery started
+00107.667|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00110.942|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00110.942|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00110.942|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00110.942|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00110.942|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00110.942|controller|Audio control device disconnected reason=8
+00110.942|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00111.123|device|Audio control device ready
+00111.123|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00111.123|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00111.659|controller|Audio control device found
+00112.015|controller|Audio control device disconnected reason=62
+00112.183|controller|Audio control device found
+00112.294|device|Audio controller connected
+00113.292|controller|Volume discovery started
+00115.334|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00115.457|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00115.541|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00115.625|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00115.740|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00115.833|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00115.924|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00116.050|controller|Microphone discovery started
+00116.050|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.487|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.487|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.487|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.487|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.487|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.487|controller|Audio control device disconnected reason=8
+00119.487|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.648|device|Audio control device ready
+00119.648|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.648|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00119.750|controller|Audio control device found
+00119.856|device|Audio controller connected
+00120.860|controller|Volume discovery started
+00122.858|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00122.943|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00123.070|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00123.155|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00123.257|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00123.340|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00123.458|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00123.551|controller|Microphone discovery started
+00123.551|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.002|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.002|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.002|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.002|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.002|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.002|controller|Audio control device disconnected reason=8
+00127.002|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.170|device|Audio control device ready
+00127.170|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.170|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00127.383|controller|Audio control device found
+00127.487|device|Audio controller connected
+00128.499|controller|Volume discovery started
+00130.590|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00130.694|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00130.777|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00130.891|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00130.974|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00131.093|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00131.251|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00131.333|controller|Microphone discovery started
+00131.334|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.620|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.620|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.620|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.620|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.620|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.620|controller|Audio control device disconnected reason=8
+00134.651|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.795|device|Audio control device ready
+00134.795|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.801|controller|Audio control device found
+00134.828|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00134.904|device|Audio controller connected
+00135.908|controller|Volume discovery started
+00137.925|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00138.009|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00138.132|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00138.216|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00138.309|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00138.425|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00138.527|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00138.615|controller|Microphone discovery started
+00138.615|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00141.832|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00141.833|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00141.833|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00141.833|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00141.833|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00141.860|controller|Audio control device disconnected reason=8
+00141.860|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00142.026|device|Audio control device ready
+00142.033|controller|Audio control device found
+00142.033|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00142.060|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00142.168|device|Audio controller connected
+00143.208|controller|Volume discovery started
+00145.202|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00145.316|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00145.395|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00145.507|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00145.600|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00145.694|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00145.808|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00145.892|controller|Microphone discovery started
+00145.918|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.498|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.498|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.498|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.498|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.498|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.498|controller|Audio control device disconnected reason=8
+00149.498|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.656|device|Audio control device ready
+00149.657|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.663|controller|Audio control device found
+00149.688|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00149.803|device|Audio controller connected
+00150.799|controller|Volume discovery started
+00152.796|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00152.882|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00152.984|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00153.099|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00153.193|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00153.299|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00153.382|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00153.475|controller|Microphone discovery started
+00153.505|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.357|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.357|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.357|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.358|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.358|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.358|controller|Audio control device disconnected reason=8
+00173.358|controller|volume=0 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.358|controller|Audio control device found
+00173.358|device|Audio control device ready
+00173.358|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.358|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00173.358|device|Audio controller connected
+00174.326|controller|Volume discovery started
+00176.325|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00176.443|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00176.524|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00176.641|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00176.723|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00176.846|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00176.939|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00177.023|controller|Microphone discovery started
+00177.023|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0

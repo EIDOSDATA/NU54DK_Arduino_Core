@@ -142,19 +142,23 @@ class M12CiContractTests(unittest.TestCase):
         self.assertIn('"m27_release.py"', gate)
         self.assertIn('"m27_stable_release.py"', gate)
         self.assertIn('"v041_release.py"', gate)
+        self.assertIn('"v050_release.py"', gate)
         workflow = (
             REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
         ).read_text(encoding="utf-8")
         contract = "python3 tools/release/m27_release.py contract"
         stable_contract = "python3 tools/release/m27_stable_release.py contract"
         maintenance_contract = "python3 tools/release/v041_release.py contract"
+        v050_contract = "python3 tools/release/v050_release.py contract"
         build = "python3 tools/ci/run_zephyr_build.py"
         self.assertIn(contract, workflow)
         self.assertIn(stable_contract, workflow)
         self.assertIn(maintenance_contract, workflow)
+        self.assertIn(v050_contract, workflow)
         self.assertLess(workflow.index(contract), workflow.index(build))
         self.assertLess(workflow.index(stable_contract), workflow.index(build))
         self.assertLess(workflow.index(maintenance_contract), workflow.index(build))
+        self.assertLess(workflow.index(v050_contract), workflow.index(build))
         self.assertIn('      - "v0.4.0-rc.*"', workflow)
         self.assertNotIn("continue-on-error", workflow)
 
@@ -281,9 +285,12 @@ class M12CiContractTests(unittest.TestCase):
         path = REPOSITORY / ".github" / "workflows" / "m12-reproducible-build.yml"
         text = path.read_text(encoding="utf-8")
         linux_job, windows_job = text.split("\n  arduino-build:\n", 1)
-        self.assertIn("group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0]", linux_job)
         self.assertIn(
-            "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat]",
+            "group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0]",
+            linux_job,
+        )
+        self.assertIn(
+            "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0]",
             windows_job,
         )
         self.assertEqual(text.count("fail-fast: false"), 2)

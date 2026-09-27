@@ -1,0 +1,48 @@
+{
+  "status": "CANDIDATE",
+  "source_clean": false,
+  "initiator_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "initiator_image_sha256": "0efe8ebe5a95489a2c307764a48cae9de0e61ed23518700ec02f5b0dcd66da3d",
+  "reflector_image_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "initiator_port": "COM7",
+  "reflector_port": "COM5",
+  "initiator_lines": [
+    "***** USAGE FAULT *****",
+    "Stack overflow (context area not valid)",
+    "r0/a1:  0x00000000  r1/a2:  0x00000000  r2/a3:  0x00000000",
+    "r3/a4:  0x20018608 r12/ip:  0x000027cb r14/lr:  0x0000002a",
+    "xpsr:  0x00043800",
+    "Faulting instruction address (r15/pc): 0x00000000"
+  ],
+  "initiator_times_s": [
+    0.593,
+    0.656,
+    0.703,
+    0.75,
+    0.812,
+    0.875
+  ],
+  "reflector_lines": [
+    "CS reflector advertising"
+  ],
+  "reflector_times_s": [
+    0.062
+  ],
+  "initiator_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  }
+}

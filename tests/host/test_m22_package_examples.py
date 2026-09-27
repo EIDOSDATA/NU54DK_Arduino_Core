@@ -84,8 +84,8 @@ class M22PackageExamplesTests(unittest.TestCase):
             (record["library"], record["example"]) for record in self.lock
         })
 
-    def test_stable_lock_matches_v03_examples_and_excludes_v04_candidate(self) -> None:
-        """! @brief v0.3 lock과 후속 v0.4 후보 예제의 경계를 고정합니다. """
+    def test_stable_lock_matches_v03_examples_and_excludes_later_candidates(self) -> None:
+        """! @brief v0.3 lock과 후속 milestone 예제의 경계를 고정합니다. """
 
         all_source_examples = {
             (
@@ -104,10 +104,115 @@ class M22PackageExamplesTests(unittest.TestCase):
         source_examples = {
             item for item in all_source_examples if item[0] in stable_directories
         }
-        self.assertEqual(source_examples, locked_examples)
+        later_ble_examples = {
+            ("NUCODE_BLE", name)
+            for name in (
+                "ExtendedAdvertising",
+                "ExtendedScanner",
+                "LongGattCentral",
+                "LongGattPeripheral",
+                "ReliableWriteCentral",
+                "ReliableWritePeripheral",
+                "GattDescriptors",
+                "GattAuthorization",
+                "MixedGattCocLinks",
+                "MixedRoleLinks",
+                "PawrAdvertiser",
+                "PawrScanner",
+                "PerLinkControl",
+                "PeriodicAdvertiser",
+                "PeriodicScanner",
+                "PastSender",
+                "PastReceiver",
+                "PrivacyPeripheral",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE", "L2capCocClient"),
+            ("NUCODE_BLE", "L2capCocServer"),
+            ("NUCODE_BLE_Security", "GattCacheCentral"),
+            ("NUCODE_BLE_Security", "GattCachePeripheral"),
+            ("NUCODE_BLE_Security", "EnvironmentalSensing"),
+            ("NUCODE_BLE_Security", "HeartRate"),
+            ("NUCODE_BLE_Security", "SecureConsumerControl"),
+            ("NUCODE_BLE_Security", "SecureMouse"),
+            ("NUCODE_BLE_LegacySigning", "LegacySignedWriteCentral"),
+            ("NUCODE_BLE_LegacySigning", "LegacySignedWritePeripheral"),
+            ("NUCODE_BLE_EATT", "EattCentral"),
+            ("NUCODE_BLE_EATT", "EattPeripheral"),
+            ("NUCODE_BLE_DFU", "SecureDfuPeripheral"),
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_ISO", name)
+            for name in (
+                "CISCentral",
+                "CISPeripheral",
+                "BISSource",
+                "BISReceiver",
+                "BISEncryptedSource",
+                "BISEncryptedReceiver",
+                "BISTimeSource",
+                "BISTimeReceiver",
+                "CISToBISBridge",
+                "CISToBISPeer",
+                "CISToBISReceiver",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_Audio", name)
+            for name in (
+                "Lc3SyntheticLoopback",
+                "BapUnicastSink",
+                "BapUnicastSource",
+                "BapUnicastCycle",
+                "BapUnicastDuplexClient",
+                "BapUnicastDuplexServer",
+                "BapBroadcastSource",
+                "BapBroadcastSink",
+                "BapBroadcastAssistant",
+                "BapBroadcastDelegatorSink",
+                "CapInitiator",
+                "CapAcceptor",
+                "CapCommander",
+                "CapUnicastInitiator",
+                "CapUnicastAcceptor",
+                "CsipSetCoordinator",
+                "CsipSetMember",
+                "PublicAudioBroadcastSource",
+                "PublicAudioBroadcastSink",
+                "AudioControlController",
+                "AudioControlDevice",
+                "ExternalPdmMicrophoneSource",
+                "ExternalI2sSpeakerSink",
+                "HearingAccessServer",
+                "HearingAccessClient",
+                "MediaControlPlayer",
+                "MediaControlClient",
+                "CallControlServer",
+                "CallControlClient",
+                "TelephonyMediaGateway",
+                "TelephonyMediaTerminal",
+                "TelephonyMediaBroadcaster",
+                "TelephonyMediaReceiver",
+                "GamingAudioGateway",
+                "GamingAudioTerminal",
+                "GamingAudioBroadcaster",
+                "GamingAudioReceiver",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_DirectionFinding", name)
+            for name in ("CteBeacon", "ConnectedCteResponder")
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_ChannelSounding", name)
+            for name in ("RasInitiator", "RasReflector")
+        }
+        self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(
-            all_source_examples - source_examples,
-            {("NUCODE_Peripheral_Fabric", "FabricCapabilities")},
+            all_source_examples - locked_examples,
+            later_ble_examples
+            | {("NUCODE_Peripheral_Fabric", "FabricCapabilities")},
         )
 
     def test_discovery_accepts_only_installed_platform_paths(self) -> None:

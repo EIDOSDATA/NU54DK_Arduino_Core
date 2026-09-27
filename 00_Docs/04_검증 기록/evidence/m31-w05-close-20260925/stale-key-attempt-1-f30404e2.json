@@ -1,0 +1,72 @@
+{
+  "status": "FAIL",
+  "test": "one_sided_stale_key_rejection",
+  "arbitrary_unequal_ltk_injection": false,
+  "source_clean": true,
+  "core_revision": "f30404e2d9d54ffb3c9280c70dddc88b21ad6bd5",
+  "negative_window_s": 30.0,
+  "initiator_probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "initiator_port": "COM10",
+  "reflector_port": "COM13",
+  "initiator_image_sha256": "3a1deef891100d8a0c087f7dbf68e5ccacb70e7bb838e85ea537c2eac940e421",
+  "reflector_image_sha256": "ab5ca7ba6b516742837b4dc40b1481f18fac711463475c1dca6c8a0241fe6f5b",
+  "prime_raw_reports": 1,
+  "negative_raw_reports": 0,
+  "stop_confirmed": true,
+  "initiator_lines": [
+    "CSKEY initiator boot bonds=0",
+    "CSKEY initiator boot bonds=0",
+    "CSKEY initiator clean bonds=0",
+    "CSKEY initiator prime scan",
+    "CSKEY initiator connected phase=prime begin=0",
+    "CSKEY initiator paired bonds=1",
+    "CSKEY initiator prime ready raw=1 bonds=1",
+    "CSKEY initiator disconnect requested",
+    "CSKEY initiator disconnected",
+    "CSKEY initiator negative scan",
+    "CSKEY initiator connected phase=negative begin=0",
+    "CSKEY initiator STOPPED",
+    "CSKEY initiator disconnected"
+  ],
+  "reflector_lines": [
+    "CSKEY reflector boot bonds=0",
+    "CSKEY reflector clean bonds=0",
+    "CSKEY reflector prime advertising",
+    "CSKEY reflector connected phase=prime begin=0",
+    "CSKEY reflector paired bonds=1",
+    "CSKEY reflector prime ready bonds=1",
+    "CSKEY reflector disconnected",
+    "CSKEY reflector stale erased bonds=0",
+    "CSKEY reflector negative advertising",
+    "CSKEY reflector connected phase=negative begin=0",
+    "CSKEY reflector disconnected",
+    "CSKEY reflector STOPPED"
+  ],
+  "initiator_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "249856"
+  ],
+  "initiator_flash": [
+    "pyocd-sector-hw-reset",
+    "266240"
+  ],
+  "failure_class": "StaleKeyFailure",
+  "failure_detail": "UART marker timeout"
+}

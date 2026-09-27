@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-cs-100-raw-memory",
+  "image_sha256": {
+    "initiator": "c0cd9de5c24482ee5c571a45c918f0d71515499a36eb807a338566b2ee84427b",
+    "reflector": "3265c3a64d5e6b8106c8e1bc2d88455cdb78d7e92db46dce038c52bad71e029d"
+  },
+  "probe_uid_sha256": {
+    "initiator": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "reflector": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "initiator": {
+      "app": "COM10",
+      "aux": "COM11"
+    },
+    "reflector": {
+      "app": "COM13",
+      "aux": "COM12"
+    }
+  },
+  "start": {
+    "reflector": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "initiator": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "initiator": [
+      "CS_RAW counter=28 local=98 peer=98 rtt=23 tone=72 valid_rtt=19 distance_m=4.667",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=cs-initiator",
+      "P2_PHASE name=ready",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=232",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=BT GATT DM WQ reserved=1304 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=496",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=516 allocated=0 peak=0",
+      "CS initiator connected; securing",
+      "CS initiator disconnected",
+      "CS initiator connected; securing",
+      "CS procedures requested",
+      "CS_RAW counter=0 local=97 peer=97 rtt=22 tone=72 valid_rtt=20 distance_m=5.231"
+    ],
+    "reflector": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=cs-reflector",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RAS RRSP WQ reserved=1024 used=48",
+      "P2_STACK name=bt_tx_processor reserved=904 used=232",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=496",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "CS reflector advertising",
+      "CS reflector connected",
+      "CS reflector secure L2",
+      "CS reflector config ready",
+      "CS procedures enabled"
+    ]
+  },
+  "raw_count": 0,
+  "result": "FAIL"
+}

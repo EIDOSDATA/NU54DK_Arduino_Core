@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "scope": "pinned_upstream_native_target_build_only",
+  "core_revision": "332734c2733a93abd77e4a8720359b0cc71b7ea0",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "results": {
+    "initiator": {
+      "source": "zephyr/samples/bluetooth/channel_sounding/connected_cs/initiator",
+      "status": "PASS",
+      "flash_bytes": 235452,
+      "ram_bytes": 56948,
+      "image_sha256": "95783e32d05e59df4867a4b986ba451c99dec41f90564e28c22120b18d9cd1d4",
+      "log_sha256": "d052e09d9d84f0eed19cb895e2a9ed34e8d07ed18e8741b8645d4d09c166ba1f",
+      "initiator.zephyr.hex.gz_sha256": "210e83ab83b0c19bef90228213ccfdbb0780fca279a44d11b4cc5c506d300782",
+      "initiator.build.log.gz_sha256": "79d31f8faabcd6e64b20da9e15fcb80e428845c33292a31ea04e249252b890ec"
+    },
+    "reflector": {
+      "source": "zephyr/samples/bluetooth/channel_sounding/connected_cs/reflector",
+      "status": "PASS",
+      "flash_bytes": 221076,
+      "ram_bytes": 48232,
+      "image_sha256": "8d5eb2c045c3e83684b9d6a61979d12cb341935dd7621834e82c431aa09398fd",
+      "log_sha256": "70e778d9ae5468cdf6b09be18add9d7c15ea359345cdab89eb136c3b1691f79c",
+      "reflector.zephyr.hex.gz_sha256": "a66dd4b79f3e28914374d9b38e16d89bb40c0b4bb345bb1cf89cf5aba2cdef1a",
+      "reflector.build.log.gz_sha256": "144a3beec63af5eb059af85ccd967533ea144da0a4b855e7fbcb3bc16cb5a701"
+    }
+  }
+}

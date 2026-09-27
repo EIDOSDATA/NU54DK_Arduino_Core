@@ -1,0 +1,806 @@
+00000.278|INITIATOR|CAP sent frames=8900
+00001.311|INITIATOR|CAP sent frames=9000
+00002.311|INITIATOR|CAP sent frames=9100
+00003.336|INITIATOR|CAP sent frames=9200
+00004.344|INITIATOR|CAP sent frames=9300
+00005.352|INITIATOR|CAP sent frames=9400
+00006.361|INITIATOR|CAP sent frames=9500
+00007.381|INITIATOR|CAP sent frames=9600
+00008.414|INITIATOR|CAP sent frames=9700
+00008.453|ACCEPTOR|CAP commander disconnected reason=8
+00008.453|ACCEPTOR|CAP acceptor profile restarted
+00008.578|ACCEPTOR|CAP acceptor advertising restarted
+00008.674|COMMANDER|CAP acceptor found
+00008.787|ACCEPTOR|CAP commander connected
+00009.403|INITIATOR|CAP sent frames=9800
+00009.807|COMMANDER|CAP discovery started
+00009.807|COMMANDER|CAP commander stage=1 step=1 native=0
+00010.284|COMMANDER|CAP commander stage=2 step=2 native=0
+00010.284|COMMANDER|CAP source scan started
+00010.366|COMMANDER|CAP broadcast source selected
+00010.366|COMMANDER|CAP reception start: 0 native=0
+00010.366|COMMANDER|CAP commander stage=3 step=4 native=0
+00010.419|INITIATOR|CAP sent frames=9900
+00010.419|ACCEPTOR|CAP source added: 1
+00010.499|COMMANDER|CAP commander stage=2 step=4 native=0
+00010.499|COMMANDER|CAP broadcast code: 0 native=0
+00010.499|COMMANDER|CAP state update=1 source=1 pa=0 bis=0
+00010.499|COMMANDER|CAP commander stage=3 step=5 native=0
+00010.583|COMMANDER|CAP commander stage=2 step=5 native=0
+00010.804|COMMANDER|CAP state update=2 source=1 pa=1 bis=0
+00011.142|COMMANDER|CAP state update=3 source=1 pa=1 bis=0
+00011.445|INITIATOR|CAP sent frames=10000
+00011.483|ACCEPTOR|CAP acceptor streaming
+00011.484|COMMANDER|CAP state update=4 source=1 pa=1 bis=1
+00012.443|INITIATOR|CAP sent frames=10100
+00012.475|ACCEPTOR|CAP received=100 energy=956409 dropped=0
+00012.567|COMMANDER|CAP reception stop: 0 native=0
+00012.567|COMMANDER|CAP commander stage=3 step=6 native=0
+00012.583|ACCEPTOR|CAP source modified: 1
+00012.632|COMMANDER|CAP state update=5 source=1 pa=0 bis=0
+00012.632|COMMANDER|CAP state update=6 source=1 pa=0 bis=0
+00012.694|ACCEPTOR|CAP source removed: 1
+00012.741|COMMANDER|CAP commander stage=2 step=6 native=0
+00012.741|COMMANDER|CAP state update=7 source=255 pa=0 bis=0
+00012.767|COMMANDER|CAP reception restart: 0 native=0
+00012.767|COMMANDER|CAP commander stage=3 step=4 native=0
+00012.782|ACCEPTOR|CAP source added: 2
+00012.857|COMMANDER|CAP commander stage=2 step=4 native=0
+00012.857|COMMANDER|CAP state update=8 source=2 pa=0 bis=0
+00012.891|COMMANDER|CAP broadcast code: 0 native=0
+00012.891|COMMANDER|CAP commander stage=3 step=5 native=0
+00012.947|COMMANDER|CAP commander stage=2 step=5 native=0
+00013.152|COMMANDER|CAP state update=9 source=2 pa=1 bis=0
+00013.470|INITIATOR|CAP sent frames=10200
+00013.483|COMMANDER|CAP state update=10 source=2 pa=1 bis=0
+00013.807|ACCEPTOR|CAP acceptor streaming
+00013.845|COMMANDER|CAP state update=11 source=2 pa=1 bis=1
+00014.478|INITIATOR|CAP sent frames=10300
+00014.716|ACCEPTOR|CAP received=200 energy=968233 dropped=0
+00014.817|COMMANDER|CAP reception stop: 0 native=0
+00014.817|COMMANDER|CAP commander stage=3 step=6 native=0
+00014.832|ACCEPTOR|CAP source modified: 2
+00014.874|COMMANDER|CAP state update=13 source=2 pa=0 bis=0
+00014.943|ACCEPTOR|CAP source removed: 2
+00014.990|COMMANDER|CAP commander stage=2 step=6 native=0
+00014.990|COMMANDER|CAP state update=14 source=255 pa=0 bis=0
+00015.017|COMMANDER|CAP reception restart: 0 native=0
+00015.017|COMMANDER|CAP commander stage=3 step=4 native=0
+00015.033|ACCEPTOR|CAP source added: 3
+00015.088|COMMANDER|CAP commander stage=2 step=4 native=0
+00015.088|COMMANDER|CAP state update=15 source=3 pa=0 bis=0
+00015.174|COMMANDER|CAP broadcast code: 0 native=0
+00015.174|COMMANDER|CAP commander stage=3 step=5 native=0
+00015.248|COMMANDER|CAP commander stage=2 step=5 native=0
+00015.485|INITIATOR|CAP sent frames=10400
+00015.635|COMMANDER|CAP state update=16 source=3 pa=1 bis=0
+00015.999|COMMANDER|CAP state update=17 source=3 pa=1 bis=0
+00016.336|ACCEPTOR|CAP acceptor streaming
+00016.336|COMMANDER|CAP state update=18 source=3 pa=1 bis=1
+00016.508|INITIATOR|CAP sent frames=10500
+00017.233|ACCEPTOR|CAP received=300 energy=1155689 dropped=0
+00017.324|ACCEPTOR|CAP source modified: 3
+00017.324|COMMANDER|CAP reception stop: 0 native=0
+00017.324|COMMANDER|CAP commander stage=3 step=6 native=0
+00017.399|COMMANDER|CAP state update=20 source=3 pa=0 bis=0
+00017.441|ACCEPTOR|CAP source removed: 3
+00017.501|COMMANDER|CAP commander stage=2 step=6 native=0
+00017.501|COMMANDER|CAP state update=21 source=255 pa=0 bis=0
+00017.515|COMMANDER|CAP reception restart: 0 native=0
+00017.515|COMMANDER|CAP commander stage=3 step=4 native=0
+00017.518|INITIATOR|CAP sent frames=10600
+00017.518|ACCEPTOR|CAP source added: 4
+00017.598|COMMANDER|CAP commander stage=2 step=4 native=0
+00017.598|COMMANDER|CAP state update=22 source=4 pa=0 bis=0
+00017.676|COMMANDER|CAP broadcast code: 0 native=0
+00017.676|COMMANDER|CAP commander stage=3 step=5 native=0
+00017.748|COMMANDER|CAP commander stage=2 step=5 native=0
+00017.921|COMMANDER|CAP state update=23 source=4 pa=1 bis=0
+00018.275|COMMANDER|CAP state update=24 source=4 pa=1 bis=0
+00018.544|INITIATOR|CAP sent frames=10700
+00018.624|ACCEPTOR|CAP acceptor streaming
+00018.624|COMMANDER|CAP state update=25 source=4 pa=1 bis=1
+00019.483|ACCEPTOR|CAP received=400 energy=1138882 dropped=0
+00019.559|INITIATOR|CAP sent frames=10800
+00019.566|COMMANDER|CAP reception stop: 0 native=0
+00019.583|ACCEPTOR|CAP source modified: 4
+00019.583|COMMANDER|CAP commander stage=3 step=6 native=0
+00019.641|COMMANDER|CAP state update=27 source=4 pa=0 bis=0
+00019.691|ACCEPTOR|CAP source removed: 4
+00019.750|COMMANDER|CAP commander stage=2 step=6 native=0
+00019.750|COMMANDER|CAP state update=28 source=255 pa=0 bis=0
+00019.766|COMMANDER|CAP reception restart: 0 native=0
+00019.766|COMMANDER|CAP commander stage=3 step=4 native=0
+00019.782|ACCEPTOR|CAP source added: 5
+00019.832|COMMANDER|CAP commander stage=2 step=4 native=0
+00019.832|COMMANDER|CAP state update=29 source=5 pa=0 bis=0
+00019.905|COMMANDER|CAP broadcast code: 0 native=0
+00019.905|COMMANDER|CAP commander stage=3 step=5 native=0
+00019.991|COMMANDER|CAP commander stage=2 step=5 native=0
+00020.435|COMMANDER|CAP state update=30 source=5 pa=1 bis=0
+00020.580|INITIATOR|CAP sent frames=10900
+00020.794|COMMANDER|CAP state update=31 source=5 pa=1 bis=0
+00021.128|ACCEPTOR|CAP acceptor streaming
+00021.129|COMMANDER|CAP state update=32 source=5 pa=1 bis=1
+00021.570|INITIATOR|CAP sent frames=11000
+00022.041|ACCEPTOR|CAP received=500 energy=928442 dropped=0
+00022.144|COMMANDER|CAP reception stop: 0 native=0
+00022.144|COMMANDER|CAP commander stage=3 step=6 native=0
+00022.198|ACCEPTOR|CAP source modified: 5
+00022.250|COMMANDER|CAP state update=34 source=5 pa=0 bis=0
+00022.291|ACCEPTOR|CAP source removed: 5
+00022.339|COMMANDER|CAP commander stage=2 step=6 native=0
+00022.340|COMMANDER|CAP state update=35 source=255 pa=0 bis=0
+00022.416|COMMANDER|CAP reception restart: 0 native=0
+00022.416|COMMANDER|CAP commander stage=3 step=4 native=0
+00022.432|ACCEPTOR|CAP source added: 6
+00022.483|COMMANDER|CAP commander stage=2 step=4 native=0
+00022.483|COMMANDER|CAP state update=36 source=6 pa=0 bis=0
+00022.557|COMMANDER|CAP broadcast code: 0 native=0
+00022.557|COMMANDER|CAP commander stage=3 step=5 native=0
+00022.610|INITIATOR|CAP sent frames=11100
+00022.633|COMMANDER|CAP commander stage=2 step=5 native=0
+00022.775|COMMANDER|CAP state update=37 source=6 pa=1 bis=0
+00023.150|COMMANDER|CAP state update=38 source=6 pa=1 bis=0
+00023.482|ACCEPTOR|CAP acceptor streaming
+00023.482|COMMANDER|CAP state update=39 source=6 pa=1 bis=1
+00023.629|INITIATOR|CAP sent frames=11200
+00024.350|ACCEPTOR|CAP received=600 energy=919231 dropped=0
+00024.416|COMMANDER|CAP reception stop: 0 native=0
+00024.416|COMMANDER|CAP commander stage=3 step=6 native=0
+00024.432|ACCEPTOR|CAP source modified: 6
+00024.499|COMMANDER|CAP state update=41 source=6 pa=0 bis=0
+00024.524|ACCEPTOR|CAP source removed: 6
+00024.594|COMMANDER|CAP commander stage=2 step=6 native=0
+00024.594|COMMANDER|CAP state update=42 source=255 pa=0 bis=0
+00024.616|COMMANDER|CAP reception restart: 0 native=0
+00024.616|COMMANDER|CAP commander stage=3 step=4 native=0
+00024.618|INITIATOR|CAP sent frames=11300
+00024.618|ACCEPTOR|CAP source added: 7
+00024.693|COMMANDER|CAP commander stage=2 step=4 native=0
+00024.693|COMMANDER|CAP state update=43 source=7 pa=0 bis=0
+00024.766|COMMANDER|CAP broadcast code: 0 native=0
+00024.766|COMMANDER|CAP commander stage=3 step=5 native=0
+00024.844|COMMANDER|CAP commander stage=2 step=5 native=0
+00025.000|COMMANDER|CAP state update=44 source=7 pa=1 bis=0
+00025.345|COMMANDER|CAP state update=45 source=7 pa=1 bis=0
+00025.653|INITIATOR|CAP sent frames=11400
+00025.691|ACCEPTOR|CAP acceptor streaming
+00025.740|COMMANDER|CAP state update=46 source=7 pa=1 bis=1
+00026.617|ACCEPTOR|CAP received=700 energy=1114743 dropped=0
+00026.677|INITIATOR|CAP sent frames=11500
+00026.691|COMMANDER|CAP reception stop: 0 native=0
+00026.691|COMMANDER|CAP commander stage=3 step=6 native=0
+00026.748|ACCEPTOR|CAP source modified: 7
+00026.790|COMMANDER|CAP state update=48 source=7 pa=0 bis=0
+00026.849|ACCEPTOR|CAP source removed: 7
+00026.902|COMMANDER|CAP commander stage=2 step=6 native=0
+00026.902|COMMANDER|CAP state update=49 source=255 pa=0 bis=0
+00026.966|COMMANDER|CAP reception restart: 0 native=0
+00026.966|COMMANDER|CAP commander stage=3 step=4 native=0
+00026.980|ACCEPTOR|CAP source added: 8
+00027.024|COMMANDER|CAP commander stage=2 step=4 native=0
+00027.024|COMMANDER|CAP state update=50 source=8 pa=0 bis=0
+00027.051|COMMANDER|CAP broadcast code: 0 native=0
+00027.051|COMMANDER|CAP commander stage=3 step=5 native=0
+00027.147|COMMANDER|CAP commander stage=2 step=5 native=0
+00027.333|COMMANDER|CAP state update=51 source=8 pa=1 bis=0
+00027.683|COMMANDER|CAP state update=52 source=8 pa=1 bis=0
+00027.686|INITIATOR|CAP sent frames=11600
+00028.033|ACCEPTOR|CAP acceptor streaming
+00028.034|COMMANDER|CAP state update=53 source=8 pa=1 bis=1
+00028.693|INITIATOR|CAP sent frames=11700
+00028.949|ACCEPTOR|CAP received=800 energy=1028134 dropped=0
+00029.016|COMMANDER|CAP reception stop: 0 native=0
+00029.016|COMMANDER|CAP commander stage=3 step=6 native=0
+00029.032|ACCEPTOR|CAP source modified: 8
+00029.082|COMMANDER|CAP state update=54 source=8 pa=0 bis=0
+00029.082|COMMANDER|CAP state update=55 source=8 pa=0 bis=0
+00029.151|ACCEPTOR|CAP source removed: 8
+00029.194|COMMANDER|CAP commander stage=2 step=6 native=0
+00029.194|COMMANDER|CAP state update=56 source=255 pa=0 bis=0
+00029.266|COMMANDER|CAP reception restart: 0 native=0
+00029.266|COMMANDER|CAP commander stage=3 step=4 native=0
+00029.282|ACCEPTOR|CAP source added: 9
+00029.340|COMMANDER|CAP commander stage=2 step=4 native=0
+00029.340|COMMANDER|CAP state update=57 source=9 pa=0 bis=0
+00029.432|COMMANDER|CAP broadcast code: 0 native=0
+00029.432|COMMANDER|CAP commander stage=3 step=5 native=0
+00029.499|COMMANDER|CAP commander stage=2 step=5 native=0
+00029.540|COMMANDER|CAP state update=58 source=9 pa=1 bis=0
+00029.721|INITIATOR|CAP sent frames=11800
+00029.885|COMMANDER|CAP state update=59 source=9 pa=1 bis=0
+00030.250|ACCEPTOR|CAP acceptor streaming
+00030.291|COMMANDER|CAP state update=60 source=9 pa=1 bis=1
+00030.718|INITIATOR|CAP sent frames=11900
+00031.166|ACCEPTOR|CAP received=900 energy=1170351 dropped=0
+00031.208|COMMANDER|CAP reception stop: 0 native=0
+00031.208|COMMANDER|CAP commander stage=3 step=6 native=0
+00031.221|ACCEPTOR|CAP source modified: 9
+00031.272|COMMANDER|CAP state update=62 source=9 pa=0 bis=0
+00031.333|ACCEPTOR|CAP source removed: 9
+00031.380|COMMANDER|CAP commander stage=2 step=6 native=0
+00031.380|COMMANDER|CAP state update=63 source=255 pa=0 bis=0
+00031.416|COMMANDER|CAP reception restart: 0 native=0
+00031.416|COMMANDER|CAP commander stage=3 step=4 native=0
+00031.432|ACCEPTOR|CAP source added: 10
+00031.490|COMMANDER|CAP commander stage=2 step=4 native=0
+00031.490|COMMANDER|CAP state update=64 source=10 pa=0 bis=0
+00031.574|COMMANDER|CAP broadcast code: 0 native=0
+00031.575|COMMANDER|CAP commander stage=3 step=5 native=0
+00031.650|COMMANDER|CAP commander stage=2 step=5 native=0
+00031.650|COMMANDER|CAP state update=65 source=10 pa=1 bis=0
+00031.743|INITIATOR|CAP sent frames=12000
+00031.970|COMMANDER|CAP state update=66 source=10 pa=1 bis=0
+00032.715|ACCEPTOR|CAP acceptor streaming
+00032.718|INITIATOR|CAP sent frames=12100
+00032.732|COMMANDER|CAP state update=67 source=10 pa=1 bis=1
+00033.641|ACCEPTOR|CAP received=1000 energy=1010947 dropped=0
+00033.715|COMMANDER|CAP reception stop: 0 native=0
+00033.715|COMMANDER|CAP commander stage=3 step=6 native=0
+00033.724|ACCEPTOR|CAP source modified: 10
+00033.743|INITIATOR|CAP sent frames=12200
+00033.809|COMMANDER|CAP state update=69 source=10 pa=0 bis=0
+00033.824|ACCEPTOR|CAP source removed: 10
+00033.882|COMMANDER|CAP commander stage=2 step=6 native=0
+00033.882|COMMANDER|CAP state update=70 source=255 pa=0 bis=0
+00033.965|COMMANDER|CAP reception restart: 0 native=0
+00033.965|COMMANDER|CAP commander stage=3 step=4 native=0
+00033.983|ACCEPTOR|CAP source added: 11
+00034.050|COMMANDER|CAP commander stage=2 step=4 native=0
+00034.050|COMMANDER|CAP state update=71 source=11 pa=0 bis=0
+00034.134|COMMANDER|CAP broadcast code: 0 native=0
+00034.134|COMMANDER|CAP commander stage=3 step=5 native=0
+00034.193|COMMANDER|CAP commander stage=2 step=5 native=0
+00034.193|COMMANDER|CAP state update=72 source=11 pa=1 bis=0
+00034.553|COMMANDER|CAP state update=73 source=11 pa=1 bis=0
+00034.778|INITIATOR|CAP sent frames=12300
+00034.864|ACCEPTOR|CAP acceptor streaming
+00034.900|COMMANDER|CAP state update=74 source=11 pa=1 bis=1
+00035.795|INITIATOR|CAP sent frames=12400
+00035.795|ACCEPTOR|CAP received=1100 energy=968233 dropped=0
+00035.865|COMMANDER|CAP reception stop: 0 native=0
+00035.865|COMMANDER|CAP commander stage=3 step=6 native=0
+00035.882|ACCEPTOR|CAP source modified: 11
+00035.933|COMMANDER|CAP state update=75 source=11 pa=0 bis=0
+00035.933|COMMANDER|CAP state update=76 source=11 pa=0 bis=0
+00035.990|ACCEPTOR|CAP source removed: 11
+00036.034|COMMANDER|CAP commander stage=2 step=6 native=0
+00036.034|COMMANDER|CAP state update=77 source=255 pa=0 bis=0
+00036.115|COMMANDER|CAP reception restart: 0 native=0
+00036.115|COMMANDER|CAP commander stage=3 step=4 native=0
+00036.131|ACCEPTOR|CAP source added: 12
+00036.176|COMMANDER|CAP commander stage=2 step=4 native=0
+00036.176|COMMANDER|CAP state update=78 source=12 pa=0 bis=0
+00036.256|COMMANDER|CAP broadcast code: 0 native=0
+00036.256|COMMANDER|CAP commander stage=3 step=5 native=0
+00036.331|COMMANDER|CAP commander stage=2 step=5 native=0
+00036.440|COMMANDER|CAP state update=79 source=12 pa=1 bis=0
+00036.774|COMMANDER|CAP state update=80 source=12 pa=1 bis=0
+00036.776|INITIATOR|CAP sent frames=12500
+00037.144|ACCEPTOR|CAP acceptor streaming
+00037.192|COMMANDER|CAP state update=81 source=12 pa=1 bis=1
+00037.819|INITIATOR|CAP sent frames=12600
+00038.082|ACCEPTOR|CAP received=1200 energy=948306 dropped=0
+00038.115|COMMANDER|CAP reception stop: 0 native=0
+00038.115|COMMANDER|CAP commander stage=3 step=6 native=0
+00038.130|ACCEPTOR|CAP source modified: 12
+00038.178|COMMANDER|CAP state update=82 source=12 pa=0 bis=0
+00038.178|COMMANDER|CAP state update=83 source=12 pa=0 bis=0
+00038.242|ACCEPTOR|CAP source removed: 12
+00038.332|COMMANDER|CAP commander stage=2 step=6 native=0
+00038.332|COMMANDER|CAP state update=84 source=255 pa=0 bis=0
+00038.365|COMMANDER|CAP reception restart: 0 native=0
+00038.365|COMMANDER|CAP commander stage=3 step=4 native=0
+00038.382|ACCEPTOR|CAP source added: 13
+00038.426|COMMANDER|CAP commander stage=2 step=4 native=0
+00038.427|COMMANDER|CAP state update=85 source=13 pa=0 bis=0
+00038.506|COMMANDER|CAP broadcast code: 0 native=0
+00038.506|COMMANDER|CAP commander stage=3 step=5 native=0
+00038.580|COMMANDER|CAP commander stage=2 step=5 native=0
+00038.650|COMMANDER|CAP state update=86 source=13 pa=1 bis=0
+00038.836|INITIATOR|CAP sent frames=12700
+00038.991|COMMANDER|CAP state update=87 source=13 pa=1 bis=0
+00039.317|ACCEPTOR|CAP acceptor streaming
+00039.345|COMMANDER|CAP state update=88 source=13 pa=1 bis=1
+00039.817|INITIATOR|CAP sent frames=12800
+00040.315|ACCEPTOR|CAP received=1300 energy=909880 dropped=0
+00040.365|COMMANDER|CAP reception stop: 0 native=0
+00040.365|COMMANDER|CAP commander stage=3 step=6 native=0
+00040.381|ACCEPTOR|CAP source modified: 13
+00040.431|COMMANDER|CAP state update=90 source=13 pa=0 bis=0
+00040.482|ACCEPTOR|CAP source removed: 13
+00040.519|COMMANDER|CAP commander stage=2 step=6 native=0
+00040.553|COMMANDER|CAP state update=91 source=255 pa=0 bis=0
+00040.553|COMMANDER|CAP reception restart: 0 native=0
+00040.553|COMMANDER|CAP commander stage=3 step=4 native=0
+00040.576|ACCEPTOR|CAP source added: 14
+00040.624|COMMANDER|CAP commander stage=2 step=4 native=0
+00040.624|COMMANDER|CAP state update=92 source=14 pa=0 bis=0
+00040.701|COMMANDER|CAP broadcast code: 0 native=0
+00040.701|COMMANDER|CAP commander stage=3 step=5 native=0
+00040.773|COMMANDER|CAP commander stage=2 step=5 native=0
+00040.837|COMMANDER|CAP state update=93 source=14 pa=1 bis=0
+00040.840|INITIATOR|CAP sent frames=12900
+00041.174|COMMANDER|CAP state update=94 source=14 pa=1 bis=0
+00041.541|ACCEPTOR|CAP acceptor streaming
+00041.541|COMMANDER|CAP state update=95 source=14 pa=1 bis=1
+00041.867|INITIATOR|CAP sent frames=13000
+00042.465|ACCEPTOR|CAP received=1400 energy=1174713 dropped=0
+00042.564|COMMANDER|CAP reception stop: 0 native=0
+00042.564|COMMANDER|CAP commander stage=3 step=6 native=0
+00042.582|ACCEPTOR|CAP source modified: 14
+00042.631|COMMANDER|CAP state update=97 source=14 pa=0 bis=0
+00042.691|ACCEPTOR|CAP source removed: 14
+00042.740|COMMANDER|CAP commander stage=2 step=6 native=0
+00042.740|COMMANDER|CAP state update=98 source=255 pa=0 bis=0
+00042.765|COMMANDER|CAP reception restart: 0 native=0
+00042.765|COMMANDER|CAP commander stage=3 step=4 native=0
+00042.783|ACCEPTOR|CAP source added: 15
+00042.831|COMMANDER|CAP commander stage=2 step=4 native=0
+00042.831|COMMANDER|CAP state update=99 source=15 pa=0 bis=0
+00042.888|INITIATOR|CAP sent frames=13100
+00042.898|COMMANDER|CAP broadcast code: 0 native=0
+00042.898|COMMANDER|CAP commander stage=3 step=5 native=0
+00042.926|COMMANDER|CAP state update=100 source=15 pa=1 bis=0
+00042.999|COMMANDER|CAP commander stage=2 step=5 native=0
+00043.291|COMMANDER|CAP state update=101 source=15 pa=1 bis=0
+00043.633|ACCEPTOR|CAP acceptor streaming
+00043.633|COMMANDER|CAP state update=102 source=15 pa=1 bis=1
+00043.888|INITIATOR|CAP sent frames=13200
+00044.508|ACCEPTOR|CAP received=1500 energy=1159410 dropped=0
+00044.590|COMMANDER|CAP reception stop: 0 native=0
+00044.590|COMMANDER|CAP commander stage=3 step=6 native=0
+00044.639|ACCEPTOR|CAP source modified: 15
+00044.692|COMMANDER|CAP state update=104 source=15 pa=0 bis=0
+00044.741|ACCEPTOR|CAP source removed: 15
+00044.786|COMMANDER|CAP commander stage=2 step=6 native=0
+00044.786|COMMANDER|CAP state update=105 source=255 pa=0 bis=0
+00044.852|COMMANDER|CAP reception restart: 0 native=0
+00044.852|COMMANDER|CAP commander stage=3 step=4 native=0
+00044.869|ACCEPTOR|CAP source added: 16
+00044.917|INITIATOR|CAP sent frames=13300
+00044.930|COMMANDER|CAP commander stage=2 step=4 native=0
+00044.930|COMMANDER|CAP state update=106 source=16 pa=0 bis=0
+00045.007|COMMANDER|CAP broadcast code: 0 native=0
+00045.007|COMMANDER|CAP commander stage=3 step=5 native=0
+00045.082|COMMANDER|CAP commander stage=2 step=5 native=0
+00045.386|COMMANDER|CAP state update=107 source=16 pa=1 bis=0
+00045.749|COMMANDER|CAP state update=108 source=16 pa=1 bis=0
+00045.931|INITIATOR|CAP sent frames=13400
+00046.099|ACCEPTOR|CAP acceptor streaming
+00046.149|COMMANDER|CAP state update=109 source=16 pa=1 bis=1
+00046.944|INITIATOR|CAP sent frames=13500
+00046.984|ACCEPTOR|CAP received=1600 energy=914551 dropped=0
+00047.065|COMMANDER|CAP reception stop: 0 native=0
+00047.065|COMMANDER|CAP commander stage=3 step=6 native=0
+00047.088|ACCEPTOR|CAP source modified: 16
+00047.135|COMMANDER|CAP state update=111 source=16 pa=0 bis=0
+00047.191|ACCEPTOR|CAP source removed: 16
+00047.239|COMMANDER|CAP commander stage=2 step=6 native=0
+00047.239|COMMANDER|CAP state update=112 source=255 pa=0 bis=0
+00047.264|COMMANDER|CAP reception restart: 0 native=0
+00047.264|COMMANDER|CAP commander stage=3 step=4 native=0
+00047.283|ACCEPTOR|CAP source added: 17
+00047.340|COMMANDER|CAP commander stage=2 step=4 native=0
+00047.340|COMMANDER|CAP state update=113 source=17 pa=0 bis=0
+00047.415|COMMANDER|CAP broadcast code: 0 native=0
+00047.415|COMMANDER|CAP commander stage=3 step=5 native=0
+00047.442|COMMANDER|CAP state update=114 source=17 pa=1 bis=0
+00047.468|COMMANDER|CAP commander stage=2 step=5 native=0
+00047.775|COMMANDER|CAP state update=115 source=17 pa=1 bis=0
+00047.962|INITIATOR|CAP sent frames=13600
+00048.132|ACCEPTOR|CAP acceptor streaming
+00048.132|COMMANDER|CAP state update=116 source=17 pa=1 bis=1
+00048.971|INITIATOR|CAP sent frames=13700
+00049.039|ACCEPTOR|CAP received=1700 energy=912670 dropped=0
+00049.135|COMMANDER|CAP reception stop: 0 native=0
+00049.135|COMMANDER|CAP commander stage=3 step=6 native=0
+00049.198|ACCEPTOR|CAP source modified: 17
+00049.244|COMMANDER|CAP state update=117 source=17 pa=0 bis=0
+00049.244|COMMANDER|CAP state update=118 source=17 pa=0 bis=0
+00049.290|ACCEPTOR|CAP source removed: 17
+00049.333|COMMANDER|CAP commander stage=2 step=6 native=0
+00049.333|COMMANDER|CAP state update=119 source=255 pa=0 bis=0
+00049.414|COMMANDER|CAP reception restart: 0 native=0
+00049.414|COMMANDER|CAP commander stage=3 step=4 native=0
+00049.428|ACCEPTOR|CAP source added: 18
+00049.468|COMMANDER|CAP commander stage=2 step=4 native=0
+00049.499|COMMANDER|CAP state update=120 source=18 pa=0 bis=0
+00049.524|COMMANDER|CAP broadcast code: 0 native=0
+00049.524|COMMANDER|CAP commander stage=3 step=5 native=0
+00049.636|COMMANDER|CAP commander stage=2 step=5 native=0
+00049.985|INITIATOR|CAP sent frames=13800
+00050.691|COMMANDER|CAP state update=121 source=18 pa=1 bis=0
+00051.007|INITIATOR|CAP sent frames=13900
+00051.020|COMMANDER|CAP state update=122 source=18 pa=1 bis=0
+00051.383|ACCEPTOR|CAP acceptor streaming
+00051.383|COMMANDER|CAP state update=123 source=18 pa=1 bis=1
+00052.027|INITIATOR|CAP sent frames=14000
+00052.232|ACCEPTOR|CAP received=1800 energy=941215 dropped=0
+00052.324|ACCEPTOR|CAP source modified: 18
+00052.324|COMMANDER|CAP reception stop: 0 native=0
+00052.324|COMMANDER|CAP commander stage=3 step=6 native=0
+00052.399|COMMANDER|CAP state update=124 source=18 pa=0 bis=0
+00052.399|COMMANDER|CAP state update=125 source=18 pa=0 bis=0
+00052.439|ACCEPTOR|CAP source removed: 18
+00052.477|COMMANDER|CAP commander stage=2 step=6 native=0
+00052.477|COMMANDER|CAP state update=126 source=255 pa=0 bis=0
+00052.515|COMMANDER|CAP reception restart: 0 native=0
+00052.515|COMMANDER|CAP commander stage=3 step=4 native=0
+00052.537|ACCEPTOR|CAP source added: 19
+00052.585|COMMANDER|CAP commander stage=2 step=4 native=0
+00052.585|COMMANDER|CAP state update=127 source=19 pa=0 bis=0
+00052.658|COMMANDER|CAP broadcast code: 0 native=0
+00052.658|COMMANDER|CAP commander stage=3 step=5 native=0
+00052.740|COMMANDER|CAP commander stage=2 step=5 native=0
+00052.848|COMMANDER|CAP state update=128 source=19 pa=1 bis=0
+00053.025|INITIATOR|CAP sent frames=14100
+00053.174|COMMANDER|CAP state update=129 source=19 pa=1 bis=0
+00053.533|ACCEPTOR|CAP acceptor streaming
+00053.533|COMMANDER|CAP state update=130 source=19 pa=1 bis=1
+00054.014|INITIATOR|CAP sent frames=14200
+00054.432|ACCEPTOR|CAP received=1900 energy=1026887 dropped=0
+00054.515|ACCEPTOR|CAP source modified: 19
+00054.515|COMMANDER|CAP reception stop: 0 native=0
+00054.515|COMMANDER|CAP commander stage=3 step=6 native=0
+00054.593|COMMANDER|CAP state update=132 source=19 pa=0 bis=0
+00054.641|ACCEPTOR|CAP source removed: 19
+00054.692|COMMANDER|CAP commander stage=2 step=6 native=0
+00054.692|COMMANDER|CAP state update=133 source=255 pa=0 bis=0
+00054.714|COMMANDER|CAP reception restart: 0 native=0
+00054.714|COMMANDER|CAP commander stage=3 step=4 native=0
+00054.733|ACCEPTOR|CAP source added: 20
+00054.782|COMMANDER|CAP commander stage=2 step=4 native=0
+00054.782|COMMANDER|CAP state update=134 source=20 pa=0 bis=0
+00054.865|COMMANDER|CAP broadcast code: 0 native=0
+00054.865|COMMANDER|CAP commander stage=3 step=5 native=0
+00054.949|COMMANDER|CAP commander stage=2 step=5 native=0
+00055.055|INITIATOR|CAP sent frames=14300
+00055.554|COMMANDER|CAP state update=135 source=20 pa=1 bis=0
+00055.875|COMMANDER|CAP state update=136 source=20 pa=1 bis=0
+00056.056|INITIATOR|CAP sent frames=14400
+00056.232|ACCEPTOR|CAP acceptor streaming
+00056.232|COMMANDER|CAP state update=137 source=20 pa=1 bis=1
+00057.077|INITIATOR|CAP sent frames=14500
+00057.115|ACCEPTOR|CAP received=2000 energy=912670 dropped=0
+00057.157|COMMANDER|CAP reception stop: 0 native=0
+00057.157|COMMANDER|CAP commander stage=3 step=6 native=0
+00057.174|ACCEPTOR|CAP source modified: 20
+00057.257|COMMANDER|CAP state update=138 source=20 pa=0 bis=0
+00057.258|COMMANDER|CAP state update=139 source=20 pa=0 bis=0
+00057.273|ACCEPTOR|CAP source removed: 20
+00057.342|COMMANDER|CAP commander stage=2 step=6 native=0
+00057.343|COMMANDER|CAP state update=140 source=255 pa=0 bis=0
+00057.414|COMMANDER|CAP reception restart: 0 native=0
+00057.414|COMMANDER|CAP commander stage=3 step=4 native=0
+00057.431|ACCEPTOR|CAP source added: 21
+00057.469|COMMANDER|CAP commander stage=2 step=4 native=0
+00057.469|COMMANDER|CAP state update=141 source=21 pa=0 bis=0
+00057.498|COMMANDER|CAP broadcast code: 0 native=0
+00057.498|COMMANDER|CAP commander stage=3 step=5 native=0
+00057.650|COMMANDER|CAP commander stage=2 step=5 native=0
+00057.898|COMMANDER|CAP state update=142 source=21 pa=1 bis=0
+00058.094|INITIATOR|CAP sent frames=14600
+00058.241|COMMANDER|CAP state update=143 source=21 pa=1 bis=0
+00058.583|ACCEPTOR|CAP acceptor streaming
+00058.583|COMMANDER|CAP state update=144 source=21 pa=1 bis=1
+00059.102|INITIATOR|CAP sent frames=14700
+00059.506|ACCEPTOR|CAP received=2100 energy=941229 dropped=0
+00059.553|COMMANDER|CAP reception stop: 0 native=0
+00059.553|COMMANDER|CAP commander stage=3 step=6 native=0
+00059.567|ACCEPTOR|CAP source modified: 21
+00059.647|COMMANDER|CAP state update=146 source=21 pa=0 bis=0
+00059.690|ACCEPTOR|CAP source removed: 21
+00059.740|COMMANDER|CAP commander stage=2 step=6 native=0
+00059.740|COMMANDER|CAP state update=147 source=255 pa=0 bis=0
+00059.814|COMMANDER|CAP reception restart: 0 native=0
+00059.814|COMMANDER|CAP commander stage=3 step=4 native=0
+00059.831|ACCEPTOR|CAP source added: 22
+00059.889|COMMANDER|CAP commander stage=2 step=4 native=0
+00059.889|COMMANDER|CAP state update=148 source=22 pa=0 bis=0
+00059.976|COMMANDER|CAP broadcast code: 0 native=0
+00059.976|COMMANDER|CAP commander stage=3 step=5 native=0
+00060.040|COMMANDER|CAP commander stage=2 step=5 native=0
+00060.135|INITIATOR|CAP sent frames=14800
+00060.287|COMMANDER|CAP state update=149 source=22 pa=1 bis=0
+00060.643|COMMANDER|CAP state update=150 source=22 pa=1 bis=0
+00060.974|ACCEPTOR|CAP acceptor streaming
+00060.974|COMMANDER|CAP state update=151 source=22 pa=1 bis=1
+00061.139|INITIATOR|CAP sent frames=14900
+00061.932|ACCEPTOR|CAP received=2200 energy=914167 dropped=0
+00062.013|COMMANDER|CAP reception stop: 0 native=0
+00062.013|COMMANDER|CAP commander stage=3 step=6 native=0
+00062.032|ACCEPTOR|CAP source modified: 22
+00062.067|COMMANDER|CAP state update=153 source=22 pa=0 bis=0
+00062.131|ACCEPTOR|CAP source removed: 22
+00062.151|INITIATOR|CAP sent frames=15000
+00062.208|COMMANDER|CAP commander stage=2 step=6 native=0
+00062.208|COMMANDER|CAP state update=154 source=255 pa=0 bis=0
+00062.284|COMMANDER|CAP reception restart: 0 native=0
+00062.284|COMMANDER|CAP commander stage=3 step=4 native=0
+00062.348|ACCEPTOR|CAP source added: 23
+00062.385|COMMANDER|CAP commander stage=2 step=4 native=0
+00062.385|COMMANDER|CAP state update=155 source=23 pa=0 bis=0
+00062.416|COMMANDER|CAP broadcast code: 0 native=0
+00062.416|COMMANDER|CAP commander stage=3 step=5 native=0
+00062.498|COMMANDER|CAP commander stage=2 step=5 native=0
+00062.696|COMMANDER|CAP state update=156 source=23 pa=1 bis=0
+00063.083|COMMANDER|CAP state update=157 source=23 pa=1 bis=0
+00063.179|INITIATOR|CAP sent frames=15100
+00063.374|ACCEPTOR|CAP acceptor streaming
+00063.374|COMMANDER|CAP state update=158 source=23 pa=1 bis=1
+00064.194|INITIATOR|CAP sent frames=15200
+00064.290|ACCEPTOR|CAP received=2300 energy=1155679 dropped=0
+00064.363|COMMANDER|CAP reception stop: 0 native=0
+00064.363|COMMANDER|CAP commander stage=3 step=6 native=0
+00064.380|ACCEPTOR|CAP source modified: 23
+00064.431|COMMANDER|CAP state update=160 source=23 pa=0 bis=0
+00064.486|ACCEPTOR|CAP source removed: 23
+00064.538|COMMANDER|CAP commander stage=2 step=6 native=0
+00064.538|COMMANDER|CAP state update=161 source=255 pa=0 bis=0
+00064.601|COMMANDER|CAP reception restart: 0 native=0
+00064.601|COMMANDER|CAP commander stage=3 step=4 native=0
+00064.618|ACCEPTOR|CAP source added: 24
+00064.698|COMMANDER|CAP commander stage=2 step=4 native=0
+00064.699|COMMANDER|CAP state update=162 source=24 pa=0 bis=0
+00064.726|COMMANDER|CAP broadcast code: 0 native=0
+00064.726|COMMANDER|CAP commander stage=3 step=5 native=0
+00064.787|COMMANDER|CAP commander stage=2 step=5 native=0
+00064.787|COMMANDER|CAP state update=163 source=24 pa=1 bis=0
+00065.119|COMMANDER|CAP state update=164 source=24 pa=1 bis=0
+00065.209|INITIATOR|CAP sent frames=15300
+00065.481|ACCEPTOR|CAP acceptor streaming
+00065.481|COMMANDER|CAP state update=165 source=24 pa=1 bis=1
+00066.239|INITIATOR|CAP sent frames=15400
+00066.378|ACCEPTOR|CAP received=2400 energy=1163586 dropped=0
+00066.464|COMMANDER|CAP reception stop: 0 native=0
+00066.464|COMMANDER|CAP commander stage=3 step=6 native=0
+00066.480|ACCEPTOR|CAP source modified: 24
+00066.531|COMMANDER|CAP state update=166 source=24 pa=0 bis=0
+00066.531|COMMANDER|CAP state update=167 source=24 pa=0 bis=0
+00066.593|ACCEPTOR|CAP source removed: 24
+00066.642|COMMANDER|CAP commander stage=2 step=6 native=0
+00066.642|COMMANDER|CAP state update=168 source=255 pa=0 bis=0
+00066.715|ACCEPTOR|CAP source added: 25
+00066.715|COMMANDER|CAP reception restart: 0 native=0
+00066.715|COMMANDER|CAP commander stage=3 step=4 native=0
+00066.789|COMMANDER|CAP commander stage=2 step=4 native=0
+00066.789|COMMANDER|CAP state update=169 source=25 pa=0 bis=0
+00066.862|COMMANDER|CAP broadcast code: 0 native=0
+00066.862|COMMANDER|CAP commander stage=3 step=5 native=0
+00066.940|COMMANDER|CAP commander stage=2 step=5 native=0
+00067.233|INITIATOR|CAP sent frames=15500
+00067.428|COMMANDER|CAP state update=170 source=25 pa=1 bis=0
+00067.791|COMMANDER|CAP state update=171 source=25 pa=1 bis=0
+00068.091|ACCEPTOR|CAP acceptor streaming
+00068.135|COMMANDER|CAP state update=172 source=25 pa=1 bis=1
+00068.265|INITIATOR|CAP sent frames=15600
+00069.027|ACCEPTOR|CAP received=2500 energy=1151093 dropped=0
+00069.112|COMMANDER|CAP reception stop: 0 native=0
+00069.112|COMMANDER|CAP commander stage=3 step=6 native=0
+00069.136|ACCEPTOR|CAP source modified: 25
+00069.194|COMMANDER|CAP state update=174 source=25 pa=0 bis=0
+00069.235|ACCEPTOR|CAP source removed: 25
+00069.250|INITIATOR|CAP sent frames=15700
+00069.295|COMMANDER|CAP commander stage=2 step=6 native=0
+00069.295|COMMANDER|CAP state update=175 source=255 pa=0 bis=0
+00069.327|COMMANDER|CAP reception restart: 0 native=0
+00069.327|COMMANDER|CAP commander stage=3 step=4 native=0
+00069.397|ACCEPTOR|CAP source added: 26
+00069.441|COMMANDER|CAP commander stage=2 step=4 native=0
+00069.441|COMMANDER|CAP state update=176 source=26 pa=0 bis=0
+00069.473|COMMANDER|CAP broadcast code: 0 native=0
+00069.473|COMMANDER|CAP commander stage=3 step=5 native=0
+00069.594|COMMANDER|CAP commander stage=2 step=5 native=0
+00069.944|COMMANDER|CAP state update=177 source=26 pa=1 bis=0
+00070.278|COMMANDER|CAP state update=178 source=26 pa=1 bis=0
+00070.281|INITIATOR|CAP sent frames=15800
+00070.625|ACCEPTOR|CAP acceptor streaming
+00070.625|COMMANDER|CAP state update=179 source=26 pa=1 bis=1
+00071.304|INITIATOR|CAP sent frames=15900
+00071.524|ACCEPTOR|CAP received=2600 energy=968233 dropped=0
+00071.562|COMMANDER|CAP reception stop: 0 native=0
+00071.562|COMMANDER|CAP commander stage=3 step=6 native=0
+00071.576|ACCEPTOR|CAP source modified: 26
+00071.623|COMMANDER|CAP state update=181 source=26 pa=0 bis=0
+00071.681|ACCEPTOR|CAP source removed: 26
+00071.731|COMMANDER|CAP commander stage=2 step=6 native=0
+00071.731|COMMANDER|CAP state update=182 source=255 pa=0 bis=0
+00071.804|COMMANDER|CAP reception restart: 0 native=0
+00071.804|COMMANDER|CAP commander stage=3 step=4 native=0
+00071.820|ACCEPTOR|CAP source added: 27
+00071.873|COMMANDER|CAP commander stage=2 step=4 native=0
+00071.873|COMMANDER|CAP state update=183 source=27 pa=0 bis=0
+00071.957|COMMANDER|CAP broadcast code: 0 native=0
+00071.957|COMMANDER|CAP commander stage=3 step=5 native=0
+00072.032|COMMANDER|CAP commander stage=2 step=5 native=0
+00072.123|COMMANDER|CAP state update=184 source=27 pa=1 bis=0
+00072.305|INITIATOR|CAP sent frames=16000
+00072.540|COMMANDER|CAP state update=185 source=27 pa=1 bis=0
+00072.831|ACCEPTOR|CAP acceptor streaming
+00072.882|COMMANDER|CAP state update=186 source=27 pa=1 bis=1
+00073.332|INITIATOR|CAP sent frames=16100
+00073.807|ACCEPTOR|CAP received=2700 energy=1100263 dropped=0
+00073.907|COMMANDER|CAP reception stop: 0 native=0
+00073.908|COMMANDER|CAP commander stage=3 step=6 native=0
+00073.928|ACCEPTOR|CAP source modified: 27
+00073.969|COMMANDER|CAP state update=188 source=27 pa=0 bis=0
+00074.032|ACCEPTOR|CAP source removed: 27
+00074.082|COMMANDER|CAP commander stage=2 step=6 native=0
+00074.082|COMMANDER|CAP state update=189 source=255 pa=0 bis=0
+00074.112|COMMANDER|CAP reception restart: 0 native=0
+00074.112|COMMANDER|CAP commander stage=3 step=4 native=0
+00074.132|ACCEPTOR|CAP source added: 28
+00074.181|COMMANDER|CAP commander stage=2 step=4 native=0
+00074.181|COMMANDER|CAP state update=190 source=28 pa=0 bis=0
+00074.260|COMMANDER|CAP broadcast code: 0 native=0
+00074.260|COMMANDER|CAP commander stage=3 step=5 native=0
+00074.328|COMMANDER|CAP commander stage=2 step=5 native=0
+00074.331|INITIATOR|CAP sent frames=16200
+00074.541|COMMANDER|CAP state update=191 source=28 pa=1 bis=0
+00074.882|COMMANDER|CAP state update=192 source=28 pa=1 bis=0
+00075.231|ACCEPTOR|CAP acceptor streaming
+00075.273|COMMANDER|CAP state update=193 source=28 pa=1 bis=1
+00075.384|INITIATOR|CAP sent frames=16300
+00076.114|ACCEPTOR|CAP received=2800 energy=964355 dropped=0
+00076.207|COMMANDER|CAP reception stop: 0 native=0
+00076.207|COMMANDER|CAP commander stage=3 step=6 native=0
+00076.230|ACCEPTOR|CAP source modified: 28
+00076.282|COMMANDER|CAP state update=195 source=28 pa=0 bis=0
+00076.335|ACCEPTOR|CAP source removed: 28
+00076.382|COMMANDER|CAP commander stage=2 step=6 native=0
+00076.382|COMMANDER|CAP state update=196 source=255 pa=0 bis=0
+00076.384|INITIATOR|CAP sent frames=16400
+00076.396|COMMANDER|CAP reception restart: 0 native=0
+00076.397|COMMANDER|CAP commander stage=3 step=4 native=0
+00076.444|ACCEPTOR|CAP source added: 29
+00076.486|COMMANDER|CAP commander stage=2 step=4 native=0
+00076.486|COMMANDER|CAP state update=197 source=29 pa=0 bis=0
+00076.555|COMMANDER|CAP broadcast code: 0 native=0
+00076.555|COMMANDER|CAP commander stage=3 step=5 native=0
+00076.635|COMMANDER|CAP commander stage=2 step=5 native=0
+00076.874|COMMANDER|CAP state update=198 source=29 pa=1 bis=0
+00077.249|COMMANDER|CAP state update=199 source=29 pa=1 bis=0
+00077.416|INITIATOR|CAP sent frames=16500
+00077.607|ACCEPTOR|CAP acceptor streaming
+00077.649|COMMANDER|CAP state update=200 source=29 pa=1 bis=1
+00078.401|INITIATOR|CAP sent frames=16600
+00078.540|ACCEPTOR|CAP received=2900 energy=1065459 dropped=0
+00078.615|ACCEPTOR|CAP source modified: 29
+00078.615|COMMANDER|CAP reception stop: 0 native=0
+00078.615|COMMANDER|CAP commander stage=3 step=6 native=0
+00078.690|COMMANDER|CAP state update=201 source=29 pa=0 bis=0
+00078.690|COMMANDER|CAP state update=202 source=29 pa=0 bis=0
+00078.732|ACCEPTOR|CAP source removed: 29
+00078.791|COMMANDER|CAP commander stage=2 step=6 native=0
+00078.792|COMMANDER|CAP state update=203 source=255 pa=0 bis=0
+00078.823|COMMANDER|CAP reception restart: 0 native=0
+00078.823|COMMANDER|CAP commander stage=3 step=4 native=0
+00078.890|ACCEPTOR|CAP source added: 30
+00078.947|COMMANDER|CAP commander stage=2 step=4 native=0
+00078.947|COMMANDER|CAP state update=204 source=30 pa=0 bis=0
+00078.973|COMMANDER|CAP broadcast code: 0 native=0
+00078.973|COMMANDER|CAP commander stage=3 step=5 native=0
+00079.052|COMMANDER|CAP commander stage=2 step=5 native=0
+00079.443|INITIATOR|CAP sent frames=16700
+00079.774|COMMANDER|CAP state update=205 source=30 pa=1 bis=0
+00080.147|COMMANDER|CAP state update=206 source=30 pa=1 bis=0
+00080.451|INITIATOR|CAP sent frames=16800
+00080.451|ACCEPTOR|CAP acceptor streaming
+00080.493|COMMANDER|CAP state update=207 source=30 pa=1 bis=1
+00081.406|ACCEPTOR|CAP received=3000 energy=910419 dropped=0
+00081.457|COMMANDER|CAP reception stop: 0 native=0
+00081.458|COMMANDER|CAP commander stage=3 step=6 native=0
+00081.460|INITIATOR|CAP sent frames=16900
+00081.487|ACCEPTOR|CAP source modified: 30
+00081.525|COMMANDER|CAP state update=209 source=30 pa=0 bis=0
+00081.589|ACCEPTOR|CAP source removed: 30
+00081.640|COMMANDER|CAP commander stage=2 step=6 native=0
+00081.640|COMMANDER|CAP state update=210 source=255 pa=0 bis=0
+00081.663|COMMANDER|CAP reception restart: 0 native=0
+00081.663|COMMANDER|CAP commander stage=3 step=4 native=0
+00081.680|ACCEPTOR|CAP source added: 31
+00081.731|COMMANDER|CAP commander stage=2 step=4 native=0
+00081.731|COMMANDER|CAP state update=211 source=31 pa=0 bis=0
+00081.807|COMMANDER|CAP broadcast code: 0 native=0
+00081.807|COMMANDER|CAP commander stage=3 step=5 native=0
+00081.899|COMMANDER|CAP commander stage=2 step=5 native=0
+00082.166|COMMANDER|CAP state update=212 source=31 pa=1 bis=0
+00082.485|INITIATOR|CAP sent frames=17000
+00082.540|COMMANDER|CAP state update=213 source=31 pa=1 bis=0
+00082.856|ACCEPTOR|CAP acceptor streaming
+00082.887|COMMANDER|CAP state update=214 source=31 pa=1 bis=1
+00083.500|INITIATOR|CAP sent frames=17100
+00083.792|ACCEPTOR|CAP received=3100 energy=972087 dropped=0
+00083.873|ACCEPTOR|CAP source modified: 31
+00083.873|COMMANDER|CAP reception stop: 0 native=0
+00083.873|COMMANDER|CAP commander stage=3 step=6 native=0
+00083.940|COMMANDER|CAP state update=216 source=31 pa=0 bis=0
+00083.964|ACCEPTOR|CAP source removed: 31
+00084.049|COMMANDER|CAP commander stage=2 step=6 native=0
+00084.049|COMMANDER|CAP state update=217 source=255 pa=0 bis=0
+00084.073|ACCEPTOR|CAP source added: 32
+00084.074|COMMANDER|CAP reception restart: 0 native=0
+00084.074|COMMANDER|CAP commander stage=3 step=4 native=0
+00084.148|COMMANDER|CAP commander stage=2 step=4 native=0
+00084.148|COMMANDER|CAP state update=218 source=32 pa=0 bis=0
+00084.234|COMMANDER|CAP broadcast code: 0 native=0
+00084.234|COMMANDER|CAP commander stage=3 step=5 native=0
+00084.272|COMMANDER|CAP commander stage=2 step=5 native=0
+00084.335|COMMANDER|CAP state update=219 source=32 pa=1 bis=0
+00084.521|INITIATOR|CAP sent frames=17200
+00084.676|COMMANDER|CAP state update=220 source=32 pa=1 bis=0
+00085.024|ACCEPTOR|CAP acceptor streaming
+00085.025|COMMANDER|CAP state update=221 source=32 pa=1 bis=1
+00085.543|INITIATOR|CAP sent frames=17300
+00085.940|ACCEPTOR|CAP received=3200 energy=1010092 dropped=0
+00086.041|COMMANDER|CAP reception stop: 0 native=0
+00086.041|COMMANDER|CAP commander stage=3 step=6 native=0
+00086.106|ACCEPTOR|CAP source modified: 32
+00086.149|COMMANDER|CAP state update=223 source=32 pa=0 bis=0
+00086.165|ACCEPTOR|CAP source removed: 32
+00086.219|COMMANDER|CAP commander stage=2 step=6 native=0
+00086.219|COMMANDER|CAP state update=224 source=255 pa=0 bis=0
+00086.260|COMMANDER|CAP reception restart: 0 native=0
+00086.260|COMMANDER|CAP commander stage=3 step=4 native=0
+00086.274|ACCEPTOR|CAP source added: 33
+00086.334|COMMANDER|CAP commander stage=2 step=4 native=0
+00086.334|COMMANDER|CAP state update=225 source=33 pa=0 bis=0
+00086.414|COMMANDER|CAP broadcast code: 0 native=0
+00086.414|COMMANDER|CAP commander stage=3 step=5 native=0
+00086.498|COMMANDER|CAP commander stage=2 step=5 native=0
+00086.546|INITIATOR|CAP sent frames=17400
+00086.691|COMMANDER|CAP state update=226 source=33 pa=1 bis=0
+00087.039|COMMANDER|CAP state update=227 source=33 pa=1 bis=0
+00087.380|ACCEPTOR|CAP acceptor streaming
+00087.380|COMMANDER|CAP state update=228 source=33 pa=1 bis=1
+00087.586|INITIATOR|CAP sent frames=17500
+00088.246|ACCEPTOR|CAP received=3300 energy=1023285 dropped=0
+00088.312|COMMANDER|CAP reception stop: 0 native=0
+00088.312|COMMANDER|CAP commander stage=3 step=6 native=0
+00088.326|ACCEPTOR|CAP source modified: 33
+00088.382|COMMANDER|CAP state update=229 source=33 pa=0 bis=0
+00088.382|COMMANDER|CAP state update=230 source=33 pa=0 bis=0
+00088.451|ACCEPTOR|CAP source removed: 33
+00088.490|COMMANDER|CAP commander stage=2 step=6 native=0
+00088.490|COMMANDER|CAP state update=231 source=255 pa=0 bis=0
+00088.561|COMMANDER|CAP reception restart: 0 native=0
+00088.561|COMMANDER|CAP commander stage=3 step=4 native=0
+00088.569|ACCEPTOR|CAP source added: 34
+00088.584|INITIATOR|CAP sent frames=17600
+00088.634|COMMANDER|CAP commander stage=2 step=4 native=0
+00088.634|COMMANDER|CAP state update=232 source=34 pa=0 bis=0
+00088.706|COMMANDER|CAP broadcast code: 0 native=0
+00088.706|COMMANDER|CAP commander stage=3 step=5 native=0
+00088.790|COMMANDER|CAP commander stage=2 step=5 native=0
+00089.078|COMMANDER|CAP state update=233 source=34 pa=1 bis=0
+00089.426|COMMANDER|CAP state update=234 source=34 pa=1 bis=0
+00089.576|INITIATOR|CAP sent frames=17700
+00089.776|ACCEPTOR|CAP acceptor streaming
+00089.776|COMMANDER|CAP state update=235 source=34 pa=1 bis=1
+00090.609|INITIATOR|CAP sent frames=17800
+00090.699|ACCEPTOR|CAP received=3400 energy=983342 dropped=0
+00090.757|COMMANDER|CAP reception stop: 0 native=0
+00090.757|COMMANDER|CAP commander stage=3 step=6 native=0
+00090.773|ACCEPTOR|CAP source modified: 34
+00090.824|COMMANDER|CAP state update=236 source=34 pa=0 bis=0
+00090.824|COMMANDER|CAP state update=237 source=34 pa=0 bis=0
+00090.886|ACCEPTOR|CAP source removed: 34
+00090.926|COMMANDER|CAP commander stage=2 step=6 native=0
+00090.926|COMMANDER|CAP state update=238 source=255 pa=0 bis=0
+00090.961|COMMANDER|CAP reception restart: 0 native=0
+00090.961|COMMANDER|CAP commander stage=3 step=4 native=0
+00090.982|ACCEPTOR|CAP source added: 35
+00091.031|COMMANDER|CAP commander stage=2 step=4 native=0
+00091.031|COMMANDER|CAP state update=239 source=35 pa=0 bis=0
+00091.116|COMMANDER|CAP broadcast code: 0 native=0
+00091.117|COMMANDER|CAP commander stage=3 step=5 native=0
+00091.117|COMMANDER|CAP state update=240 source=35 pa=1 bis=0
+00091.197|COMMANDER|CAP commander stage=2 step=5 native=0
+00091.469|COMMANDER|CAP state update=241 source=35 pa=1 bis=0
+00091.618|INITIATOR|CAP sent frames=17900
+00091.815|ACCEPTOR|CAP acceptor streaming
+00091.815|COMMANDER|CAP state update=242 source=35 pa=1 bis=1
+00092.655|INITIATOR|CAP sent frames=18000
+00092.740|ACCEPTOR|CAP received=3500 energy=1121405 dropped=0

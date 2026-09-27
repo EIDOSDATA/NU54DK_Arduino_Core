@@ -1,0 +1,597 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/~/m31-w03-audio-unicast-sink-exact-b5623c7d/BapUnicastSink.ino.bin",
+      "sha256": "e30250ac8ee29ee6c39338e85d64f8302c6b8f0fa7256eebe62bb2d8770fa816",
+      "size": 474196
+    },
+    "elf": {
+      "path": "C:/~/m31-w03-audio-unicast-sink-exact-b5623c7d/BapUnicastSink.ino.elf",
+      "sha256": "69f0522edcf759c6b87860b8a8d30690e46069f1d0ec3eef20e39d51ae0a9703",
+      "size": 5863448
+    },
+    "hex": {
+      "path": "C:/~/m31-w03-audio-unicast-sink-exact-b5623c7d/BapUnicastSink.ino.hex",
+      "sha256": "7542183c36587efc75e336fff82128a8fba5b8d3a35ab69bb2461fb5a36bff03",
+      "size": 1333937
+    },
+    "map": {
+      "path": "C:/~/m31-w03-audio-unicast-sink-exact-b5623c7d/BapUnicastSink.ino.map",
+      "sha256": "587c10dbf4005c62907c29c5c442bdf6d8fd9869fb02afcb976ea85caa26ba28",
+      "size": 2211160
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-16T15:41:40.780030+00:00",
+  "cache": {
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:aacf1ac8d1f6e7ed653f721d0620a24455481589e5056d952de71838addcfc8c",
+        "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:09b4cf5ec9686cdbc4f24800254c5ee2068385bca11f5d6a7bac740f1555488e",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:000ca5d30ad431abae3bd9e16fcd783a3e0acdcaea2342415870e4432fa5c072",
+          "id": "ble",
+          "manifest": "sha256:b9ea4262dbe21afbbfa8ddd9c7487d72e7cfefe66e3a44d4131846939bdc70a2",
+          "overlay": "sha256:903d8a13c18d15b61814ccbbecefb029a57a1a61c4138ffcc713be46214929eb",
+          "signing_key_sha256": null,
+          "sysbuild": false,
+          "sysbuild_files": []
+        },
+        "selected_features": [
+          {
+            "conf": [
+              "sha256:a4f2a41bed95848afe5df4d6bd53d5739aeb35e7aa0285172f2cc210338865b7"
+            ],
+            "id": "nucode.ble.nus",
+            "manifest": "sha256:8fba063e3e99bd236d0bd62267ec7d03e92edcce3e035fac9f994bb0a84830f2",
+            "overlays": []
+          },
+          {
+            "conf": [],
+            "id": "nucode.ble.audio",
+            "manifest": "sha256:f325fd8f5782193faface3a819fdd51109f5353235d625bfef98089adaf9b283",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "sha256:ed62fc0b24e11c29b41e36cba3dfa7372c322779f809fc646308ffe3654fcaf0",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/examples/BapUnicastSink"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+        "profile": "ble",
+        "sysbuild": false
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "f4852d41b4e6af642a9c1e8adc4abe756c8d4d971bcacb1f510e9b38f65b515c",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:592a81cdc3ccccc9856b5dd3d9a04e15cfdf5e31f7d37bd27efd99fbfec4c17d"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 41.494497,
+    "build_path": "C:/~/m31-w03-audio-unicast-sink-exact-b5623c7d",
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75",
+    "cache_key": "f4852d41b4e6af642a9c1e8adc4abe756c8d4d971bcacb1f510e9b38f65b515c",
+    "cache_reused": false,
+    "cache_root": "C:/Users/eidos/AppData/Local/NU54/c",
+    "cache_schema_version": 1,
+    "ccache": "C:/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/Users/eidos/AppData/Local/NU54/c/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 17439,
+      "cache_size_kibibyte": 422104,
+      "called_for_link": 5286,
+      "called_for_preprocessing": 55,
+      "cleanups_performed": 0,
+      "compile_failed": 6,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 3170,
+      "direct_cache_miss": 17551,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 34939,
+      "internal_error": 0,
+      "local_storage_hit": 3271,
+      "local_storage_miss": 17439,
+      "local_storage_read_hit": 6446,
+      "local_storage_read_miss": 34991,
+      "local_storage_write": 34979,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 2515,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 101,
+      "preprocessed_cache_miss": 17445,
+      "preprocessor_error": 5,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789573299,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 17435,
+      "cache_size_kibibyte": 421776,
+      "called_for_link": 5188,
+      "called_for_preprocessing": 55,
+      "cleanups_performed": 0,
+      "compile_failed": 6,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 2810,
+      "direct_cache_miss": 17530,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 34914,
+      "internal_error": 0,
+      "local_storage_hit": 2894,
+      "local_storage_miss": 17435,
+      "local_storage_read_hit": 5709,
+      "local_storage_read_miss": 34966,
+      "local_storage_write": 34954,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 2467,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 84,
+      "preprocessed_cache_miss": 17441,
+      "preprocessor_error": 5,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789573179,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 4,
+      "cache_size_kibibyte": 328,
+      "called_for_link": 98,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 360,
+      "direct_cache_miss": 21,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 25,
+      "internal_error": 0,
+      "local_storage_hit": 377,
+      "local_storage_miss": 4,
+      "local_storage_read_hit": 737,
+      "local_storage_read_miss": 25,
+      "local_storage_write": 25,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 48,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 17,
+      "preprocessed_cache_miss": 4,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 120,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:f4852d41b4e6af642a9c1e8adc4abe756c8d4d971bcacb1f510e9b38f65b515c",
+    "configure_duration_seconds": 19.612532,
+    "configure_mode": "cmake-only",
+    "configure_reason": "selected-features",
+    "configure_skipped": false,
+    "cxx_compiler": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+    "input_manifest": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75/input-manifest.json",
+    "link_configure_duration_seconds": 16.786227,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 1490944,
+      "flash_origin": 0,
+      "flash_size": 1490944
+    },
+    "ncs_root": "C:/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "pristine_configure_count": 1,
+    "product_identity": {
+      "package_version": "0.4.1-dev",
+      "source_version": "0.4.1-dev"
+    },
+    "profile": "ble",
+    "provisional_cache_key": "74ca8cfc6999369f148ff37b3dbb78cba4a36f844cfd671ec940286de415220d",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [
+          "sha256:a4f2a41bed95848afe5df4d6bd53d5739aeb35e7aa0285172f2cc210338865b7"
+        ],
+        "id": "nucode.ble.nus",
+        "manifest": "sha256:8fba063e3e99bd236d0bd62267ec7d03e92edcce3e035fac9f994bb0a84830f2",
+        "overlays": []
+      },
+      {
+        "conf": [],
+        "id": "nucode.ble.audio",
+        "manifest": "sha256:f325fd8f5782193faface3a819fdd51109f5353235d625bfef98089adaf9b283",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "NUCODE_BLE",
+      "NUCODE_BLE_Audio"
+    ],
+    "size_tool": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/examples/BapUnicastSink",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": false,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-16T15:41:40.775812+00:00",
+    "zephyr_build_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+  "metrics": {
+    "build_seconds": 41.494497,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 4,
+      "cache_size_kibibyte": 328,
+      "called_for_link": 98,
+      "called_for_preprocessing": 0,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 360,
+      "direct_cache_miss": 21,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 25,
+      "internal_error": 0,
+      "local_storage_hit": 377,
+      "local_storage_miss": 4,
+      "local_storage_read_hit": 737,
+      "local_storage_read_miss": 25,
+      "local_storage_write": 25,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 48,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 17,
+      "preprocessed_cache_miss": 4,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 120,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 16.786227
+  },
+  "product_identity": {
+    "package_version": "0.4.1-dev",
+    "source_version": "0.4.1-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:b14382deab136e736e9da57a8bc49c0a1e2153103070603ab0f25cf0d0c6e3e2",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/examples/BapUnicastSink"
+      },
+      {
+        "content_sha256": "sha256:d8794fe7acc1a6518728eeca2051917592763d2929c296fe6096d1ab6580e166",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:62924d853bbaff72e1c403e0817319ea77b9656f70a7fea616b788459302c2f4",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:4b973fa3acc61d26d3d1a8c4c53f9cd7e348649b52cfc54431c85d219e836476",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src"
+      },
+      {
+        "content_sha256": "sha256:d76410027d0bbedbbb5335b7e291e2a895cb2fc0f0d4f7ac7d68c380980263c2",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src"
+      },
+      {
+        "content_sha256": "sha256:3d1b9d22bea7628507562764fadab5d1dfcc35f74c429540772d3aef0657db28",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal"
+      },
+      {
+        "content_sha256": "sha256:c228f07ce6cff366e8c9aff2e5c30ab6acbb7a3bdfe496502e63603f81bbece2",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap"
+      },
+      {
+        "content_sha256": "sha256:ffd38d16355828b79093495fa21821498f5c6b48ef678b4bf52fc080ead3351a",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt"
+      },
+      {
+        "content_sha256": "sha256:9567f4d614816f4047869c3129e000bffe128d3b901d96fb2af1f4b7f4140ae0",
+        "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75/build/nucode_arduino_core_build.yml",
+      "sha256": "63e88db019be9da34ac69a8f664551a895fda1ec8c7b060299f2dc513c8513a7"
+    },
+    "m31_audio_revisions": {
+      "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "NUCODE_CORE_REVISION": "b5623c7de6941ed043d3b2a50f4171f990cdbff5",
+      "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/Users/eidos/AppData/Local/NU54/c/v1/f4/f4852d41b4e6af642a9c1e8adc4abe75/app/generated-sources/sketch/BapUnicastSink.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/BapUnicastSink.ino.cpp",
+        "sha256": "73a3de13c832ca547012680d0508e64985647ba2243a097ff44770fa4519d80b",
+        "source_path": "C:/~/m31-w03-audio-unicast-sink-exact-b5623c7d/sketch/BapUnicastSink.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+        "sha256": "72b9372cff777d0a86d9fe29f9fffe86e90446505e8ce3eb7f3c2b8a86650a17",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+        "sha256": "9e7b445ea8174ace1d49c35d969dec5678888b5b2ea640ec8447c56ec515b86a",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+        "sha256": "de7b84b981e4eecba35acd891d6113a6f5a5f3e37f25f690bdf340933b3ad016",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+        "sha256": "6ddc484ed7f22d9f7d0f83dd90fbf7c92ebb99b937701b125ee3a9d4ee10a96c",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+        "sha256": "6691dfa34d16b19907aadb1de2c41d191bd8c36a8a650259fb02030771a3f440",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+        "sha256": "36232c5183a45939d0d2082f98ec67ce805601a5ea43e5e0c73bf64a27c8a184",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+        "sha256": "ab6b255171c58d4f042a29010acfc54c6539b460b9186862bc11562b25e01fb2",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+        "sha256": "d42412ad496d544db4405378e13ed4f9f9e965fc611ae11d2e88a2155301ebdc",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+        "sha256": "27ab31f7bd348de6939ddf47f1ec7a17221ece565b24da25094915095c11c29a",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+        "sha256": "78157a955d03dedcac2b09543753a534aabef29ccd2a19c82e634df8aab81239",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+        "sha256": "5971562c7648a625b49559d03b904c1c962c0263ac3dc050309e341c5c2337c2",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+        "sha256": "3533e0855ccfc3a15eee4f9e92a77c0187b86860107acb5d8eeae29ded413950",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp",
+        "sha256": "20d05bd708261202821dc04f2804347c7a2120734896604789f8da66ae006004",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+        "sha256": "68f78ea6ebcfafd3efe410a64d189e28eea39307f1110a5c0df99974a389d1b7",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+        "sha256": "7dfc99386e8d416d0f8c9c133523d4207e70bb1d26dc9445ee31f861dda60849",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+        "sha256": "0bfdf8541227c65016e0678f8be7510b07e94672871af5fcd9a0175799e2340f",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp",
+        "sha256": "2d708c46271b559b00b2c05fb1c1c90c30d2cccf977d12d862f576122067877a",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastClient.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastClient.cpp",
+        "sha256": "e735647e0ac5ee2b43e337bdd951b5c7177f87394eeb252dce88a9fee43bead3",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastClient.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastServer.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastServer.cpp",
+        "sha256": "e90f81c876eada7c8fe973f55b3ab8fe4f64bc902559d2557b486ad7ae17d432",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastServer.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/~/m31-w03-audio-unicast-sink-exact-b5623c7d/sketch/BapUnicastSink.ino.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_GATT.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/NUCODE_BLE_L2CAP.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattCache.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattDatabase.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastClient.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_UnicastServer.cpp"
+  ],
+  "sysbuild": false
+}

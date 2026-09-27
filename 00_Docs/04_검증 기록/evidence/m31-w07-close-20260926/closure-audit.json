@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W07",
+  "status": "PASS",
+  "source_clean": true,
+  "source_clean_scope": "최종 설치 build와 최종 4-family HIL은 clean fc1d3589 source에서 실행했다. 이후 W07 원장·문서 변경은 별도 후속 커밋이다.",
+  "source_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1",
+    "sdk_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3"
+  },
+  "installed_examples": {
+    "status": "PASS",
+    "independent_package_files": 630,
+    "libraries": 4,
+    "adopted_unique_sketches": 49,
+    "built": 49,
+    "failed": 0,
+    "public_examples_audited": 113,
+    "public_audit_issues": 0,
+    "evidence": "installed-examples.json",
+    "staging_evidence": "package-staging.json",
+    "audit_evidence": "example-audit.json"
+  },
+  "role_matrix": {
+    "status": "PASS",
+    "total": 43,
+    "applicable_pass": 39,
+    "external_not_run": 3,
+    "unsupported": 1,
+    "evidence": "role-matrix.json"
+  },
+  "three_board_hil": {
+    "status": "PASS",
+    "families": 4,
+    "direct_current_roles": 8,
+    "evidence": "hil-summary.json"
+  },
+  "diagnostic_history": {
+    "status": "PRESERVED",
+    "evidence": "diagnostic-history.json"
+  },
+  "remaining_m31": [
+    {
+      "work_id": "M31-W08",
+      "status": "NOT_STARTED"
+    }
+  ],
+  "claim_limits": [
+    "외부 angle/control과 CS result/multipeer 3개는 사용자 후속 NOT_RUN이다.",
+    "고정 제품 SDC raw IQ receiver 1개는 UNSUPPORTED다.",
+    "가족 대표 current HIL은 보존된 role별 exact runtime과 결합한다.",
+    "M31-W08과 release/tag/catalog 완료 주장을 하지 않는다."
+  ],
+  "ci_cd_queried": false
+}

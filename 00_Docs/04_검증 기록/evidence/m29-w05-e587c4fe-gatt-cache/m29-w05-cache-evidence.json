@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "gate": "m29-w05-robust-gatt-cache-pair-hil",
+  "status": "passed",
+  "created_at_utc": "2026-09-13T12:35:01.024001+00:00",
+  "core_revision": "e587c4fe563df65f37eb6cb322b3c07386f69ffa",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "03f696e2cea8ff55195fdda1c36ac36b",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "54153603000528402aae46c5e8e3712a",
+      "msd_root": "G:\\",
+      "uart_port": "COM10"
+    },
+    "central": {
+      "daplink_uid": "5415360300052840fcd47678fd7d106d",
+      "msd_root": "E:\\",
+      "uart_port": "COM13"
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 715196,
+      "sha256": "7ba51c3b666a4efd2f95e573b5af5a80e4bb4e71792d4e12e43d2955d17c2828",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "233472",
+      "build_record": {
+        "core_revision": "e587c4fe563d",
+        "core_source_sha256": "d5eda2be24452a9ef215aa3c7a6820cf4508a9ba5ea262e0199d91bfcb76e186",
+        "application_source_sha256": "22deaf28d41bd25567f3aca497159969503d23496bbe5d59c6edaa697d78b975",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "ddf9b841aebe48c01644fc6fad83cf040ecf9effff4fdf5368be8aa46bfdad9e"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 722216,
+      "sha256": "6fdb247d6de8ba47d9a4a4faac1f5bd2a9add1ffac14ba615c5da2e136f66e51",
+      "flash_sequence": "pyocd-sector",
+      "flash_bytes": "233472",
+      "build_record": {
+        "core_revision": "e587c4fe563d",
+        "core_source_sha256": "d5eda2be24452a9ef215aa3c7a6820cf4508a9ba5ea262e0199d91bfcb76e186",
+        "application_source_sha256": "22deaf28d41bd25567f3aca497159969503d23496bbe5d59c6edaa697d78b975",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "ddf9b841aebe48c01644fc6fad83cf040ecf9effff4fdf5368be8aa46bfdad9e"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "m29-w05-cache-evidence.peripheral.transcript.log",
+      "size": 1179,
+      "sha256": "dbc581db769a6eca885f872da9c2d9e82e0ab65a4cf1a5148937b64db2cc0264"
+    },
+    "central": {
+      "name": "m29-w05-cache-evidence.central.transcript.log",
+      "size": 1819,
+      "sha256": "5e72eadef9c8b99c92f79d9779c6b83f20ea709d9329f60502e3532b453d97fa"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "stage": 2,
+      "bonded": 1,
+      "reconnects": 20,
+      "hash_reads": 0,
+      "cache_saved": 0,
+      "cache_restored": 0,
+      "invalidated": 0,
+      "service_changed": 1,
+      "corrupt_rejected": 0,
+      "stale_handles": 0,
+      "callback_context": "pass"
+    },
+    "central": {
+      "role": "central",
+      "stage": 2,
+      "bonded": 1,
+      "reconnects": 20,
+      "hash_reads": 24,
+      "cache_saved": 4,
+      "cache_restored": 20,
+      "invalidated": 2,
+      "service_changed": 1,
+      "corrupt_rejected": 1,
+      "stale_handles": 0,
+      "callback_context": "pass"
+    }
+  },
+  "coverage": {
+    "bonded_reconnects": 20,
+    "database_hash_reads": 24,
+    "service_changed_events": 1,
+    "database_migrations": 1,
+    "cache_corruption_accepts": 0,
+    "stale_handle_uses": 0,
+    "m29_cache_01_status": "passed"
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "sector_flash": true,
+    "warm_reboots": 2
+  }
+}

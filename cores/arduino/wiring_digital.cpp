@@ -63,12 +63,14 @@ namespace
 
     /**
 	 * @brief 물리 핀 정보를 복제하지 않는 논리 핀별 가변 상태입니다.
+	 *
+	 * @details commit된 pad 소유권은 중앙 IoResourceTable이 보존합니다. rollback에만 필요한
+	 * 16-entry lease snapshot은 전환 transaction의 지역 변수에 두고 pin마다 중복 보존하지 않습니다.
 	 */
     struct PinRuntimeState
     {
         atomic_t mode;
         atomic_t output_latch;
-        IoResourceLease ownership_lease;
 #if defined(CONFIG_NUCODE_ARDUINO_INTERRUPTS)
         nucode::arduino::internal::PinInterruptHandoverState interrupt_recovery;
         bool interrupt_recovery_pending{false};
@@ -698,7 +700,6 @@ namespace nucode::arduino::internal
         }
         PinRuntimeState &runtime = pin_runtime_states[handover.canonical_pin];
         atomic_set(&runtime.mode, static_cast<atomic_val_t>(RuntimePinMode::unconfigured));
-        runtime.ownership_lease = {};
         handover.phase = PinHandoverPhase::committed;
         unlockGpioTransition();
         handover.lock_held = false;
@@ -765,7 +766,7 @@ namespace nucode::arduino::internal
         }
 
         const IoResourceId resource = gpioIoResource(description->gpio);
-        IoResourceLease restore_lease{};
+        IoResourceSingleLease restore_lease{};
         const IoResourceResult reserve_result =
             transferIoResources(handover.target_owner, gpio_owner, &resource, 1U, restore_lease);
         if (reserve_result != IoResourceResult::success)
@@ -826,7 +827,6 @@ namespace nucode::arduino::internal
             return handoverResult(commit_result);
         }
         PinRuntimeState &runtime = pin_runtime_states[handover.canonical_pin];
-        runtime.ownership_lease = restore_lease;
         atomic_set(&runtime.mode, static_cast<atomic_val_t>(previous_mode));
         atomic_set(&runtime.output_latch, handover.previous_output_latch ? 1 : 0);
         handover.phase = PinHandoverPhase::rolled_back;
@@ -1011,7 +1011,6 @@ void pinMode(pin_size_t pin, PinMode mode)
             return false;
         }
 
-        const bool newly_owned = ownership_lease.entries[0].changed;
         const IoResourceResult commit_result =
             nucode::arduino::internal::commitIoResources(ownership_lease);
         if (commit_result != IoResourceResult::success)
@@ -1064,11 +1063,6 @@ void pinMode(pin_size_t pin, PinMode mode)
         }
         state->interrupt_recovery_pending = false;
 #endif
-        if (newly_owned)
-        {
-            state->ownership_lease = ownership_lease;
-        }
-
         atomic_set(&state->mode, static_cast<atomic_val_t>(runtime_mode));
         recordSuccess();
         return true;

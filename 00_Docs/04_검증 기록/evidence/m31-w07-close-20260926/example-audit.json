@@ -1,0 +1,1013 @@
+{
+  "schema_version": 1,
+  "core_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+  "source_clean": true,
+  "library_count": 16,
+  "example_count": 113,
+  "visible_code_count": 113,
+  "verified_backend_count": 0,
+  "issues": [],
+  "public_surface_issues": [],
+  "libraries": [
+    {
+      "library": "EEPROM",
+      "examples": [
+        {
+          "name": "EEPROMPersistence",
+          "path": "libraries/EEPROM/examples/EEPROMPersistence/EEPROMPersistence.ino",
+          "sketch_code_lines": 31,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "LittleFS",
+      "examples": [
+        {
+          "name": "LittleFSPersistence",
+          "path": "libraries/LittleFS/examples/LittleFSPersistence/LittleFSPersistence.ino",
+          "sketch_code_lines": 35,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE",
+      "examples": [
+        {
+          "name": "CustomGattCentral",
+          "path": "libraries/NUCODE_BLE/examples/CustomGattCentral/CustomGattCentral.ino",
+          "sketch_code_lines": 68,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CustomGattPeripheral",
+          "path": "libraries/NUCODE_BLE/examples/CustomGattPeripheral/CustomGattPeripheral.ino",
+          "sketch_code_lines": 43,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "ExtendedAdvertising",
+          "path": "libraries/NUCODE_BLE/examples/ExtendedAdvertising/ExtendedAdvertising.ino",
+          "sketch_code_lines": 32,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "ExtendedScanner",
+          "path": "libraries/NUCODE_BLE/examples/ExtendedScanner/ExtendedScanner.ino",
+          "sketch_code_lines": 28,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GAPCentral",
+          "path": "libraries/NUCODE_BLE/examples/GAPCentral/GAPCentral.ino",
+          "sketch_code_lines": 31,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GAPPeripheral",
+          "path": "libraries/NUCODE_BLE/examples/GAPPeripheral/GAPPeripheral.ino",
+          "sketch_code_lines": 34,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GattAuthorization",
+          "path": "libraries/NUCODE_BLE/examples/GattAuthorization/GattAuthorization.ino",
+          "sketch_code_lines": 96,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GattDescriptors",
+          "path": "libraries/NUCODE_BLE/examples/GattDescriptors/GattDescriptors.ino",
+          "sketch_code_lines": 148,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "L2capCocClient",
+          "path": "libraries/NUCODE_BLE/examples/L2capCocClient/L2capCocClient.ino",
+          "sketch_code_lines": 125,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "L2capCocServer",
+          "path": "libraries/NUCODE_BLE/examples/L2capCocServer/L2capCocServer.ino",
+          "sketch_code_lines": 60,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "LongGattCentral",
+          "path": "libraries/NUCODE_BLE/examples/LongGattCentral/LongGattCentral.ino",
+          "sketch_code_lines": 140,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "LongGattPeripheral",
+          "path": "libraries/NUCODE_BLE/examples/LongGattPeripheral/LongGattPeripheral.ino",
+          "sketch_code_lines": 56,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "MixedGattCocLinks",
+          "path": "libraries/NUCODE_BLE/examples/MixedGattCocLinks/MixedGattCocLinks.ino",
+          "sketch_code_lines": 334,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "MixedRoleLinks",
+          "path": "libraries/NUCODE_BLE/examples/MixedRoleLinks/MixedRoleLinks.ino",
+          "sketch_code_lines": 74,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "NUSCentral",
+          "path": "libraries/NUCODE_BLE/examples/NUSCentral/NUSCentral.ino",
+          "sketch_code_lines": 21,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "NUSPeripheral",
+          "path": "libraries/NUCODE_BLE/examples/NUSPeripheral/NUSPeripheral.ino",
+          "sketch_code_lines": 48,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PastReceiver",
+          "path": "libraries/NUCODE_BLE/examples/PastReceiver/PastReceiver.ino",
+          "sketch_code_lines": 60,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PastSender",
+          "path": "libraries/NUCODE_BLE/examples/PastSender/PastSender.ino",
+          "sketch_code_lines": 118,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PawrAdvertiser",
+          "path": "libraries/NUCODE_BLE/examples/PawrAdvertiser/PawrAdvertiser.ino",
+          "sketch_code_lines": 45,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PawrScanner",
+          "path": "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino",
+          "sketch_code_lines": 55,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PeriodicAdvertiser",
+          "path": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
+          "sketch_code_lines": 34,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PeriodicScanner",
+          "path": "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino",
+          "sketch_code_lines": 37,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PerLinkControl",
+          "path": "libraries/NUCODE_BLE/examples/PerLinkControl/PerLinkControl.ino",
+          "sketch_code_lines": 61,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PrivacyPeripheral",
+          "path": "libraries/NUCODE_BLE/examples/PrivacyPeripheral/PrivacyPeripheral.ino",
+          "sketch_code_lines": 31,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "ReliableWriteCentral",
+          "path": "libraries/NUCODE_BLE/examples/ReliableWriteCentral/ReliableWriteCentral.ino",
+          "sketch_code_lines": 135,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "ReliableWritePeripheral",
+          "path": "libraries/NUCODE_BLE/examples/ReliableWritePeripheral/ReliableWritePeripheral.ino",
+          "sketch_code_lines": 65,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_Audio",
+      "examples": [
+        {
+          "name": "AudioControlController",
+          "path": "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino",
+          "sketch_code_lines": 410,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "AudioControlDevice",
+          "path": "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino",
+          "sketch_code_lines": 194,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapBroadcastAssistant",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastAssistant/BapBroadcastAssistant.ino",
+          "sketch_code_lines": 272,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapBroadcastDelegatorSink",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino",
+          "sketch_code_lines": 192,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapBroadcastSink",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSink/BapBroadcastSink.ino",
+          "sketch_code_lines": 129,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapBroadcastSource",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino",
+          "sketch_code_lines": 115,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapUnicastCycle",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastCycle/BapUnicastCycle.ino",
+          "sketch_code_lines": 217,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapUnicastDuplexClient",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexClient/BapUnicastDuplexClient.ino",
+          "sketch_code_lines": 239,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapUnicastDuplexServer",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexServer/BapUnicastDuplexServer.ino",
+          "sketch_code_lines": 148,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapUnicastSink",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino",
+          "sketch_code_lines": 105,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BapUnicastSource",
+          "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSource/BapUnicastSource.ino",
+          "sketch_code_lines": 208,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CallControlClient",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CallControlClient/CallControlClient.ino",
+          "sketch_code_lines": 254,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CallControlServer",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CallControlServer/CallControlServer.ino",
+          "sketch_code_lines": 140,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CapAcceptor",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
+          "sketch_code_lines": 189,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CapCommander",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino",
+          "sketch_code_lines": 351,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CapInitiator",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
+          "sketch_code_lines": 132,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CapUnicastAcceptor",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CapUnicastAcceptor/CapUnicastAcceptor.ino",
+          "sketch_code_lines": 136,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CapUnicastInitiator",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CapUnicastInitiator/CapUnicastInitiator.ino",
+          "sketch_code_lines": 223,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CsipSetCoordinator",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino",
+          "sketch_code_lines": 372,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CsipSetMember",
+          "path": "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino",
+          "sketch_code_lines": 242,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "ExternalI2sSpeakerSink",
+          "path": "libraries/NUCODE_BLE_Audio/examples/ExternalI2sSpeakerSink/ExternalI2sSpeakerSink.ino",
+          "sketch_code_lines": 165,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "ExternalPdmMicrophoneSource",
+          "path": "libraries/NUCODE_BLE_Audio/examples/ExternalPdmMicrophoneSource/ExternalPdmMicrophoneSource.ino",
+          "sketch_code_lines": 107,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GamingAudioBroadcaster",
+          "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioBroadcaster/GamingAudioBroadcaster.ino",
+          "sketch_code_lines": 146,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GamingAudioGateway",
+          "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioGateway/GamingAudioGateway.ino",
+          "sketch_code_lines": 260,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GamingAudioReceiver",
+          "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioReceiver/GamingAudioReceiver.ino",
+          "sketch_code_lines": 127,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GamingAudioTerminal",
+          "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioTerminal/GamingAudioTerminal.ino",
+          "sketch_code_lines": 156,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "HearingAccessClient",
+          "path": "libraries/NUCODE_BLE_Audio/examples/HearingAccessClient/HearingAccessClient.ino",
+          "sketch_code_lines": 282,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "HearingAccessServer",
+          "path": "libraries/NUCODE_BLE_Audio/examples/HearingAccessServer/HearingAccessServer.ino",
+          "sketch_code_lines": 171,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "Lc3SyntheticLoopback",
+          "path": "libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino",
+          "sketch_code_lines": 247,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "MediaControlClient",
+          "path": "libraries/NUCODE_BLE_Audio/examples/MediaControlClient/MediaControlClient.ino",
+          "sketch_code_lines": 277,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "MediaControlPlayer",
+          "path": "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer/MediaControlPlayer.ino",
+          "sketch_code_lines": 101,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PublicAudioBroadcastSink",
+          "path": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSink/PublicAudioBroadcastSink.ino",
+          "sketch_code_lines": 202,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PublicAudioBroadcastSource",
+          "path": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSource/PublicAudioBroadcastSource.ino",
+          "sketch_code_lines": 194,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "TelephonyMediaBroadcaster",
+          "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaBroadcaster/TelephonyMediaBroadcaster.ino",
+          "sketch_code_lines": 132,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "TelephonyMediaGateway",
+          "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaGateway/TelephonyMediaGateway.ino",
+          "sketch_code_lines": 237,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "TelephonyMediaReceiver",
+          "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaReceiver/TelephonyMediaReceiver.ino",
+          "sketch_code_lines": 113,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "TelephonyMediaTerminal",
+          "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaTerminal/TelephonyMediaTerminal.ino",
+          "sketch_code_lines": 142,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_ChannelSounding",
+      "examples": [
+        {
+          "name": "RasInitiator",
+          "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/RasInitiator.ino",
+          "sketch_code_lines": 164,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "RasReflector",
+          "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/RasReflector.ino",
+          "sketch_code_lines": 102,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_DFU",
+      "examples": [
+        {
+          "name": "SecureDfuPeripheral",
+          "path": "libraries/NUCODE_BLE_DFU/examples/SecureDfuPeripheral/SecureDfuPeripheral.ino",
+          "sketch_code_lines": 214,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_DirectionFinding",
+      "examples": [
+        {
+          "name": "ConnectedCteResponder",
+          "path": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/ConnectedCteResponder.ino",
+          "sketch_code_lines": 105,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CteBeacon",
+          "path": "libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon/CteBeacon.ino",
+          "sketch_code_lines": 169,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_EATT",
+      "examples": [
+        {
+          "name": "EattCentral",
+          "path": "libraries/NUCODE_BLE_EATT/examples/EattCentral/EattCentral.ino",
+          "sketch_code_lines": 190,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "EattPeripheral",
+          "path": "libraries/NUCODE_BLE_EATT/examples/EattPeripheral/EattPeripheral.ino",
+          "sketch_code_lines": 104,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_ISO",
+      "examples": [
+        {
+          "name": "BISEncryptedReceiver",
+          "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino",
+          "sketch_code_lines": 177,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BISEncryptedSource",
+          "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino",
+          "sketch_code_lines": 111,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BISReceiver",
+          "path": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
+          "sketch_code_lines": 174,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BISSource",
+          "path": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
+          "sketch_code_lines": 108,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BISTimeReceiver",
+          "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino",
+          "sketch_code_lines": 167,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BISTimeSource",
+          "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino",
+          "sketch_code_lines": 184,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CISCentral",
+          "path": "libraries/NUCODE_BLE_ISO/examples/CISCentral/CISCentral.ino",
+          "sketch_code_lines": 102,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CISPeripheral",
+          "path": "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/CISPeripheral.ino",
+          "sketch_code_lines": 103,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CISToBISBridge",
+          "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino",
+          "sketch_code_lines": 183,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CISToBISPeer",
+          "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino",
+          "sketch_code_lines": 119,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CISToBISReceiver",
+          "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino",
+          "sketch_code_lines": 176,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_LegacySigning",
+      "examples": [
+        {
+          "name": "LegacySignedWriteCentral",
+          "path": "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWriteCentral/LegacySignedWriteCentral.ino",
+          "sketch_code_lines": 158,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "LegacySignedWritePeripheral",
+          "path": "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWritePeripheral/LegacySignedWritePeripheral.ino",
+          "sketch_code_lines": 114,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_BLE_Security",
+      "examples": [
+        {
+          "name": "EnvironmentalSensing",
+          "path": "libraries/NUCODE_BLE_Security/examples/EnvironmentalSensing/EnvironmentalSensing.ino",
+          "sketch_code_lines": 42,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GattCacheCentral",
+          "path": "libraries/NUCODE_BLE_Security/examples/GattCacheCentral/GattCacheCentral.ino",
+          "sketch_code_lines": 164,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "GattCachePeripheral",
+          "path": "libraries/NUCODE_BLE_Security/examples/GattCachePeripheral/GattCachePeripheral.ino",
+          "sketch_code_lines": 113,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "HeartRate",
+          "path": "libraries/NUCODE_BLE_Security/examples/HeartRate/HeartRate.ino",
+          "sketch_code_lines": 39,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "SecureConsumerControl",
+          "path": "libraries/NUCODE_BLE_Security/examples/SecureConsumerControl/SecureConsumerControl.ino",
+          "sketch_code_lines": 48,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "SecureKeyboard",
+          "path": "libraries/NUCODE_BLE_Security/examples/SecureKeyboard/SecureKeyboard.ino",
+          "sketch_code_lines": 105,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "SecureMouse",
+          "path": "libraries/NUCODE_BLE_Security/examples/SecureMouse/SecureMouse.ino",
+          "sketch_code_lines": 47,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_NU54DK",
+      "examples": [
+        {
+          "name": "AnalogChannels",
+          "path": "libraries/NUCODE_NU54DK/examples/AnalogChannels/AnalogChannels.ino",
+          "sketch_code_lines": 17,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "AnalogReadA0",
+          "path": "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
+          "sketch_code_lines": 12,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "AnalogResolution",
+          "path": "libraries/NUCODE_NU54DK/examples/AnalogResolution/AnalogResolution.ino",
+          "sketch_code_lines": 16,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "Blink",
+          "path": "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
+          "sketch_code_lines": 15,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "BoardInfo",
+          "path": "libraries/NUCODE_NU54DK/examples/BoardInfo/BoardInfo.ino",
+          "sketch_code_lines": 41,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "CounterAlarm",
+          "path": "libraries/NUCODE_NU54DK/examples/CounterAlarm/CounterAlarm.ino",
+          "sketch_code_lines": 30,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "DynamicPWM",
+          "path": "libraries/NUCODE_NU54DK/examples/DynamicPWM/DynamicPWM.ino",
+          "sketch_code_lines": 19,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "InterruptButton",
+          "path": "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino",
+          "sketch_code_lines": 22,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "PWMFade",
+          "path": "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino",
+          "sketch_code_lines": 19,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "Serial1RuntimePins",
+          "path": "libraries/NUCODE_NU54DK/examples/Serial1RuntimePins/Serial1RuntimePins.ino",
+          "sketch_code_lines": 17,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "SerialEcho",
+          "path": "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino",
+          "sketch_code_lines": 59,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "SettingsStorage",
+          "path": "libraries/NUCODE_NU54DK/examples/SettingsStorage/SettingsStorage.ino",
+          "sketch_code_lines": 41,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "SPI00RuntimePins",
+          "path": "libraries/NUCODE_NU54DK/examples/SPI00RuntimePins/SPI00RuntimePins.ino",
+          "sketch_code_lines": 16,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "SystemOffWake",
+          "path": "libraries/NUCODE_NU54DK/examples/SystemOffWake/SystemOffWake.ino",
+          "sketch_code_lines": 70,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "ToneOutput",
+          "path": "libraries/NUCODE_NU54DK/examples/ToneOutput/ToneOutput.ino",
+          "sketch_code_lines": 12,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "WatchdogBasic",
+          "path": "libraries/NUCODE_NU54DK/examples/WatchdogBasic/WatchdogBasic.ino",
+          "sketch_code_lines": 25,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        },
+        {
+          "name": "WireRuntimePins",
+          "path": "libraries/NUCODE_NU54DK/examples/WireRuntimePins/WireRuntimePins.ino",
+          "sketch_code_lines": 14,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "NUCODE_Peripheral_Fabric",
+      "examples": [
+        {
+          "name": "FabricCapabilities",
+          "path": "libraries/NUCODE_Peripheral_Fabric/examples/FabricCapabilities/FabricCapabilities.ino",
+          "sketch_code_lines": 35,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "Servo",
+      "examples": [
+        {
+          "name": "Sweep",
+          "path": "libraries/Servo/examples/Sweep/Sweep.ino",
+          "sketch_code_lines": 25,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "SPI",
+      "examples": [
+        {
+          "name": "SPITransaction",
+          "path": "libraries/SPI/examples/SPITransaction/SPITransaction.ino",
+          "sketch_code_lines": 15,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    },
+    {
+      "library": "Wire",
+      "examples": [
+        {
+          "name": "WirePmicId",
+          "path": "libraries/Wire/examples/WirePmicId/WirePmicId.ino",
+          "sketch_code_lines": 90,
+          "visible_setup_loop": true,
+          "backend": null,
+          "status": "VISIBLE_CODE"
+        }
+      ],
+      "status": "HAS_EXAMPLES"
+    }
+  ]
+}

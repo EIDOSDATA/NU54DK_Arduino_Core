@@ -160,7 +160,7 @@ namespace nucode::arduino::internal
             struct pinctrl_state active_states_[2]{};
             const struct pinctrl_state *previous_states_{nullptr};
             std::uint8_t previous_state_count_{0U};
-            IoResourceLease block_lease_{};
+            IoResourceSingleLease block_lease_{};
             GpioPinHandover pin_handovers_[runtime_peripheral_route_pin_capacity]{};
             std::size_t committed_pin_count_{0U};
             bool pinctrl_route_installed_{false};

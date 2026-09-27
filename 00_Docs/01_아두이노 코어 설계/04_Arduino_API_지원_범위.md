@@ -5,15 +5,27 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 6.3 |
-| 대상 | 지원 stable `v0.4.1` (v0.4.0 기능 기준선 유지) |
-| 최종 갱신일 | 2026-09-12 |
-| 상태 | **v0.4 정식 공개** |
+| 문서 개정 | 7.0 |
+| 대상 | 지원 stable `v0.5.0` |
+| 최종 갱신일 | 2026-09-27 |
+| 상태 | **v0.5.0 stable 지원 계약** |
 
 ## 판정 기준
 
-이 문서는 `nucode:zephyr@0.4.0`이 약속하는 Arduino/NUCODE API 범위를 정리합니다. Header에
+이 문서는 `nucode:zephyr@0.5.0`이 약속하는 Arduino/NUCODE API 범위를 정리합니다. Header에
 이름이 존재하는 것, target에서 compile되는 것과 실제 hardware 지원은 서로 다른 판정입니다.
+
+소스와 배포 package version은 `0.5.0`으로 일치합니다. M28·M29·M30 완료 범위와
+M31 ISO·LE Audio·Direction Finding·Channel Sounding은 정식 설치본에 포함됩니다. 개발 결과는
+[M28 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md)과
+[M29 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md),
+[M30 계약](17_M30_BLE_Security_Profile_DFU_착수_계약.md)에서 별도로 확인합니다.
+M31 완료 범위와 정식 공개는 [M31 TODO](../TODO_M31.md)와
+[v0.5.0 문서](../05_릴리스/v0.5.0/README.md)를 따릅니다. M32·M33 및 Ubuntu/macOS 확대는 후속 계획입니다.
+
+역사 [v0.5.0-rc.2](../05_릴리스/v0.5.0-rc.2/README.md)는 같은 M28~M31 API 범위를 검증하며
+예제별 설정 안내·업로드 선택·한국어 진단·빌드 진행 표시를 교정했습니다. 전체 113개 설치 예제와
+대표 실물 Upload 자동 검증을 통과했습니다. 정식 릴리스는 후속 GUI 연속 Upload 교정도 포함합니다.
 
 | 상태 | 의미 |
 | --- | --- |
@@ -48,7 +60,7 @@ QDEC20/21은 기본·event 시험을 근거로 지원하며 manifest의 단독 H
 따라서 특정 identity가 공개 API에 있다는 사실만으로 모든 가능한 동시 조합을 보증하지 않습니다.
 DAP UART와 같은 핀을 쓰는 route는 switch 분리와 profile의 전기 선행조건을 만족해야 합니다.
 v0.4.0 기능 기준선은 T22 소유자 승인 뒤 공개 URL 설치 검증까지 완료됐고, 같은 API 범위를
-유지하는 v0.4.1만 현재 설치·지원합니다.
+유지·확장한 v0.5.0이 현재 stable 설치·지원 버전입니다.
 
 ## Runtime과 공통 API
 
@@ -224,6 +236,9 @@ GPIO, Serial, Wire, SPI와 Analog backend의 `invalid_context`, `invalid_argumen
 Full Zephyr 구조이므로 expert Sketch가 공개 Zephyr/NCS API를 직접 사용할 수 있지만 portable
 Arduino 계약은 아닙니다. 외부 sensor library compile, crypto sample build와
 802.15.4/OpenThread/Matter feasibility 결과도 runtime 지원으로 확대하지 않습니다.
+공개 배포 `.ino`는 사용자가 읽고 수정할 수 있는 C++/NUCODE API 흐름을 제공하며, Zephyr 직접
+호출과 개발 마일스톤 표시는 내부 구현·시험에 둡니다. 전문가 override의 존재와 공개 예제의
+작성 규칙은 별개입니다.
 
 ## 명시적 미지원 범위
 

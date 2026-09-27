@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "test_id": "M31-AUDIO-01:W03-03",
+  "source_clean": true,
+  "core_revision": "473929f20d6c71503ae460c933d413268ec35222",
+  "flash_evidence": "flash.json",
+  "transcript": "broadcast-encrypted-exact.transcript.log",
+  "mode": "encrypted_bap_broadcast_lc3",
+  "positive": {
+    "source_frames_at_least": 2000,
+    "sink_frames_at_least": 1800,
+    "nonzero_decode_energy": true,
+    "dropped_frames": 0
+  },
+  "restart": {
+    "cycles": 20,
+    "completed": 20,
+    "decoded_frames_per_cycle": 100,
+    "decoded_frames_total": 2000,
+    "nonzero_energy_cycles": 20,
+    "dropped_frames": 0
+  },
+  "wrong_code": {
+    "cycles": 20,
+    "rejected": 20,
+    "hci_mic_failure_reason": -61,
+    "invalid_frames": 0,
+    "normal_code_recoveries": 20,
+    "recovered_frames_total": 2000,
+    "dropped_frames": 0
+  },
+  "sync_loss": {
+    "injection": "source_probe_hardware_reset",
+    "cycles": 20,
+    "detected": 20,
+    "hci_timeout_first": 15,
+    "periodic_sync_reset_first": 5,
+    "recoveries": 20,
+    "recovered_frames_total": 2000,
+    "minimum_recovery_seconds": 3.422,
+    "maximum_recovery_seconds": 3.783,
+    "recovery_limit_seconds": 30,
+    "dropped_frames": 0
+  },
+  "acceptance": {
+    "valid_frames_at_least": 100,
+    "state_mismatch": 0,
+    "invalid_accept": 0
+  },
+  "result": "PASS"
+}

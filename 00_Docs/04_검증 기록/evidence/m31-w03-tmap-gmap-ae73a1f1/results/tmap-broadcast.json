@@ -1,0 +1,136 @@
+{
+  "test_id": "M31-W03-10-TMAP-GMAP-HIL",
+  "status": "PASS",
+  "scenario": "tmap-broadcast",
+  "source_clean": true,
+  "identity": {
+    "core": "2f257b163615c2455385e7a01de2c6f5c5abc502",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "image_core_revision": "6d51a259988f25f656806b8a627a3bf990e37c49",
+  "sdk_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3",
+  "roles": {
+    "source": {
+      "role_bits": "0x10",
+      "service": "TMAS",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "vcom": "COM10"
+    },
+    "sink": {
+      "role_bits": "0x20",
+      "service": "TMAS",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "probe_registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "vcom": "COM14"
+    }
+  },
+  "artifacts": {
+    "source": {
+      "image_name": "TelephonyMediaBroadcaster.ino.hex",
+      "image_size": 1401569,
+      "image_sha256": "1b1203c4afbec962b203fe3b9e0886a026a8dea8fe49f06a9dc5790f1cd3cdf1",
+      "config": {
+        "name": "prj.conf",
+        "size": 1105,
+        "sha256": "ad4a2c80bcae4844834116ae14b143b20a78b6cd2cf6266ef19d5650e8fc5fed",
+        "required": [
+          "CONFIG_BT_TMAP=y",
+          "CONFIG_BT_BAP_BROADCAST_SOURCE=y",
+          "CONFIG_LIBLC3=y"
+        ]
+      },
+      "build_record": {
+        "core_revision": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "1b1203c4afbec962b203fe3b9e0886a026a8dea8fe49f06a9dc5790f1cd3cdf1",
+        "record_format": "nu54-build-json",
+        "record_name": "TelephonyMediaBroadcaster.ino.nu54-build.json",
+        "record_sha256": "5796253c56ed01b0da7b6065d3453d8ef0ff6f1f5a449b60991d75d04515442a"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "499712"
+    },
+    "sink": {
+      "image_name": "TelephonyMediaReceiver.ino.hex",
+      "image_size": 1373219,
+      "image_sha256": "cba5f41098840b94514f06eaaa192d53a6d629c8f4dec4e2295a68db158bfc4c",
+      "config": {
+        "name": "prj.conf",
+        "size": 1285,
+        "sha256": "908888d36910fb80d43ced1a1f6fd10abe59e9a7fdac7f82208e6cf8c7df5c37",
+        "required": [
+          "CONFIG_BT_TMAP=y",
+          "CONFIG_BT_BAP_BROADCAST_SINK=y",
+          "CONFIG_LIBLC3=y"
+        ]
+      },
+      "build_record": {
+        "core_revision": "6d51a259988f25f656806b8a627a3bf990e37c49",
+        "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_bundle_id": "dcbdc366a1",
+        "cxx_compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "hex_sha256": "cba5f41098840b94514f06eaaa192d53a6d629c8f4dec4e2295a68db158bfc4c",
+        "record_format": "nu54-build-json",
+        "record_name": "TelephonyMediaReceiver.ino.nu54-build.json",
+        "record_sha256": "6b372cd553c2d634c948a4a5abb7bfdf4e28994053c0c4204a98099709173043"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "491520"
+    }
+  },
+  "transcripts": {
+    "source": {
+      "name": "tmap-broadcast-final4.source.transcript.log",
+      "size": 15912,
+      "sha256": "5f1459df3ed0a2a5075f209bf1e8573f15f31eab336e51bca98cd0428fba2618"
+    },
+    "sink": {
+      "name": "tmap-broadcast-final4.sink.transcript.log",
+      "size": 9786,
+      "sha256": "44de183a04beab50883cd7b6acb59bbf4a64aae4e10e826416aa58c5372e9824"
+    }
+  },
+  "result": {
+    "advertised_discovered_role_feature_service": "PASS",
+    "stream_start_send_read_stop": "PASS",
+    "soak_seconds": 180.0,
+    "minimum_soak_frames": 17500,
+    "source_frames": 22700,
+    "decoded_frames": 19500,
+    "dropped_frames": 0,
+    "recovery_cycles": 20,
+    "stop_restart_pass": "20/20",
+    "disconnect_reconnect_pass": "not-applicable-broadcast",
+    "negative_role": "PASS",
+    "negative_quality": "PASS",
+    "negative_feature": "not-applicable"
+  },
+  "observed_utc": "2026-09-20T15:09:23.547188+00:00"
+}

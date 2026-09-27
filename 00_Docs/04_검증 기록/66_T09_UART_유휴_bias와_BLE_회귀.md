@@ -139,7 +139,7 @@ identity/ping 2개 결과다. 이를 전체 primitives 904건이나 외부 fixtu
 
 종료 당시 스위치는 DAP UART 연결, SWD 연결이며 보드 간 선은 없었다. **이 실행에서 외부
 current-source T11은 NOT RUN**이었다. 이후 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md)에 있다.
-아래는 당시 후속 계획이며 현재 실행·결선 기준은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+아래는 당시 후속 계획이며 현재 실행·결선 기준은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 당시 다음 작업은 전원을 모두 끄고 [Fixture 101 결선표](44_M24_Fixture_101_UART_실기_검증.md)에
 따라 UART 4선+GND를 연결하고 DAP UART를 분리한 뒤 사용자의 완료 확인을 받는 것이다.

@@ -1,0 +1,313 @@
+00000.041|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00000.096|source|public audio sent frames=3300
+00000.221|runner|command board=G value=r
+00000.289|source|public audio source preparing
+00000.294|source|public audio source streaming
+00000.417|runner|command board=F value=r
+00000.422|sink|public audio sink scanning
+00000.436|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00001.265|sink|public audio sink streaming
+00001.305|source|public audio sent frames=100
+00002.277|sink|public audio received=100 energy=1100263 dropped=0
+00002.323|source|public audio sent frames=200
+00002.448|runner|command board=F value=s
+00002.453|sink|public audio sink stopped
+00002.575|runner|command board=G value=s
+00002.642|source|public audio source stopped
+00002.765|runner|command board=G value=r
+00002.774|source|public audio source preparing
+00002.775|source|public audio source streaming
+00002.895|runner|command board=F value=r
+00002.900|sink|public audio sink scanning
+00002.915|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00003.746|sink|public audio sink streaming
+00003.797|source|public audio sent frames=100
+00004.761|sink|public audio received=100 energy=1179427 dropped=0
+00004.761|runner|stop-restart cycle=1/20 elapsed=2.474s pass
+00004.810|source|public audio sent frames=200
+00004.935|runner|command board=F value=s
+00004.940|sink|public audio sink stopped
+00005.064|runner|command board=G value=s
+00005.138|source|public audio source stopped
+00005.262|runner|command board=G value=r
+00005.271|source|public audio source preparing
+00005.271|source|public audio source streaming
+00005.395|runner|command board=F value=r
+00005.399|sink|public audio sink scanning
+00005.427|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00006.288|source|public audio sent frames=100
+00006.360|sink|public audio sink streaming
+00007.300|source|public audio sent frames=200
+00007.372|sink|public audio received=100 energy=983379 dropped=0
+00007.373|runner|stop-restart cycle=2/20 elapsed=2.612s pass
+00007.495|runner|command board=F value=s
+00007.500|sink|public audio sink stopped
+00007.622|runner|command board=G value=s
+00007.692|source|public audio source stopped
+00007.812|runner|command board=G value=r
+00007.822|source|public audio source preparing
+00007.822|source|public audio source streaming
+00007.945|runner|command board=F value=r
+00007.950|sink|public audio sink scanning
+00007.974|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00008.793|sink|public audio sink streaming
+00008.847|source|public audio sent frames=100
+00009.798|sink|public audio received=100 energy=1150664 dropped=0
+00009.798|runner|stop-restart cycle=3/20 elapsed=2.425s pass
+00009.860|source|public audio sent frames=200
+00009.986|runner|command board=F value=s
+00009.991|sink|public audio sink stopped
+00010.114|runner|command board=G value=s
+00010.187|source|public audio source stopped
+00010.310|runner|command board=G value=r
+00010.319|source|public audio source preparing
+00010.319|source|public audio source streaming
+00010.442|runner|command board=F value=r
+00010.447|sink|public audio sink scanning
+00010.529|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00011.335|source|public audio sent frames=100
+00011.412|sink|public audio sink streaming
+00012.352|source|public audio sent frames=200
+00012.425|sink|public audio received=100 energy=912670 dropped=0
+00012.425|runner|stop-restart cycle=4/20 elapsed=2.628s pass
+00012.548|runner|command board=F value=s
+00012.553|sink|public audio sink stopped
+00012.674|runner|command board=G value=s
+00012.753|source|public audio source stopped
+00012.876|runner|command board=G value=r
+00012.885|source|public audio source preparing
+00012.885|source|public audio source streaming
+00013.008|runner|command board=F value=r
+00013.013|sink|public audio sink scanning
+00013.027|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00013.855|sink|public audio sink streaming
+00013.896|source|public audio sent frames=100
+00014.860|sink|public audio received=100 energy=1079595 dropped=0
+00014.860|runner|stop-restart cycle=5/20 elapsed=2.435s pass
+00014.913|source|public audio sent frames=200
+00015.037|runner|command board=F value=s
+00015.042|sink|public audio sink stopped
+00015.165|runner|command board=G value=s
+00015.236|source|public audio source stopped
+00015.358|runner|command board=G value=r
+00015.368|source|public audio source preparing
+00015.368|source|public audio source streaming
+00015.490|runner|command board=F value=r
+00015.495|sink|public audio sink scanning
+00015.578|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00016.373|source|public audio sent frames=100
+00016.459|sink|public audio sink streaming
+00017.379|source|public audio sent frames=200
+00017.463|sink|public audio received=100 energy=1072873 dropped=0
+00017.464|runner|stop-restart cycle=6/20 elapsed=2.604s pass
+00017.585|runner|command board=F value=s
+00017.590|sink|public audio sink stopped
+00017.711|runner|command board=G value=s
+00017.780|source|public audio source stopped
+00017.902|runner|command board=G value=r
+00017.912|source|public audio source preparing
+00017.912|source|public audio source streaming
+00018.033|runner|command board=F value=r
+00018.037|sink|public audio sink scanning
+00018.063|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00018.930|source|public audio sent frames=100
+00019.362|sink|public audio sink streaming
+00019.946|source|public audio sent frames=200
+00020.367|sink|public audio received=100 energy=1010947 dropped=0
+00020.368|runner|stop-restart cycle=7/20 elapsed=2.904s pass
+00020.490|runner|command board=F value=s
+00020.496|sink|public audio sink stopped
+00020.620|runner|command board=G value=s
+00020.695|source|public audio source stopped
+00020.817|runner|command board=G value=r
+00020.826|source|public audio source preparing
+00020.827|source|public audio source streaming
+00020.951|runner|command board=F value=r
+00020.957|sink|public audio sink scanning
+00020.971|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00021.798|sink|public audio sink streaming
+00021.840|source|public audio sent frames=100
+00022.798|sink|public audio received=100 energy=1155707 dropped=0
+00022.798|runner|stop-restart cycle=8/20 elapsed=2.431s pass
+00022.856|source|public audio sent frames=200
+00022.980|runner|command board=F value=s
+00022.989|sink|public audio sink stopped
+00023.110|runner|command board=G value=s
+00023.181|source|public audio source stopped
+00023.301|runner|command board=G value=r
+00023.311|source|public audio source preparing
+00023.311|source|public audio source streaming
+00023.435|runner|command board=F value=r
+00023.441|sink|public audio sink scanning
+00023.571|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00024.328|source|public audio sent frames=100
+00024.464|sink|public audio sink streaming
+00025.352|source|public audio sent frames=200
+00025.473|sink|public audio received=100 energy=910423 dropped=0
+00025.473|runner|stop-restart cycle=9/20 elapsed=2.675s pass
+00025.595|runner|command board=F value=s
+00025.600|sink|public audio sink stopped
+00025.720|runner|command board=G value=s
+00025.791|source|public audio source stopped
+00025.911|runner|command board=G value=r
+00025.922|source|public audio source preparing
+00025.922|source|public audio source streaming
+00026.043|runner|command board=F value=r
+00026.048|sink|public audio sink scanning
+00026.072|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00026.891|sink|public audio sink streaming
+00026.945|source|public audio sent frames=100
+00027.906|sink|public audio received=100 energy=1172020 dropped=0
+00027.906|runner|stop-restart cycle=10/20 elapsed=2.433s pass
+00027.967|source|public audio sent frames=200
+00028.091|runner|command board=F value=s
+00028.096|sink|public audio sink stopped
+00028.218|runner|command board=G value=s
+00028.295|source|public audio source stopped
+00028.419|runner|command board=G value=r
+00028.433|source|public audio source preparing
+00028.433|source|public audio source streaming
+00028.556|runner|command board=F value=r
+00028.561|sink|public audio sink scanning
+00028.575|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00029.441|source|public audio sent frames=100
+00029.758|sink|public audio sink streaming
+00030.455|source|public audio sent frames=200
+00030.761|sink|public audio received=100 energy=1015523 dropped=0
+00030.761|runner|stop-restart cycle=11/20 elapsed=2.855s pass
+00030.884|runner|command board=F value=s
+00030.890|sink|public audio sink stopped
+00031.012|runner|command board=G value=s
+00031.081|source|public audio source stopped
+00031.203|runner|command board=G value=r
+00031.212|source|public audio source preparing
+00031.212|source|public audio source streaming
+00031.335|runner|command board=F value=r
+00031.341|sink|public audio sink scanning
+00031.359|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00032.240|source|public audio sent frames=100
+00032.305|sink|public audio sink streaming
+00033.253|source|public audio sent frames=200
+00033.315|sink|public audio received=100 energy=1072873 dropped=0
+00033.315|runner|stop-restart cycle=12/20 elapsed=2.553s pass
+00033.438|runner|command board=F value=s
+00033.443|sink|public audio sink stopped
+00033.566|runner|command board=G value=s
+00033.633|source|public audio source stopped
+00033.754|runner|command board=G value=r
+00033.765|source|public audio source preparing
+00033.765|source|public audio source streaming
+00033.886|runner|command board=F value=r
+00033.891|sink|public audio sink scanning
+00033.905|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00034.774|source|public audio sent frames=100
+00034.793|sink|public audio sink streaming
+00035.795|source|public audio sent frames=200
+00035.808|sink|public audio received=100 energy=1091030 dropped=0
+00035.808|runner|stop-restart cycle=13/20 elapsed=2.493s pass
+00035.931|runner|command board=F value=s
+00035.936|sink|public audio sink stopped
+00036.057|runner|command board=G value=s
+00036.128|source|public audio source stopped
+00036.249|runner|command board=G value=r
+00036.259|source|public audio source preparing
+00036.259|source|public audio source streaming
+00036.382|runner|command board=F value=r
+00036.388|sink|public audio sink scanning
+00036.527|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00037.279|source|public audio sent frames=100
+00038.131|sink|public audio sink streaming
+00038.304|source|public audio sent frames=200
+00039.141|sink|public audio received=100 energy=1050856 dropped=0
+00039.141|runner|stop-restart cycle=14/20 elapsed=3.333s pass
+00039.264|runner|command board=F value=s
+00039.270|sink|public audio sink stopped
+00039.315|source|public audio sent frames=300
+00039.443|runner|command board=G value=s
+00039.511|source|public audio source stopped
+00039.632|runner|command board=G value=r
+00039.642|source|public audio source preparing
+00039.642|source|public audio source streaming
+00039.765|runner|command board=F value=r
+00039.771|sink|public audio sink scanning
+00039.907|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00040.649|source|public audio sent frames=100
+00040.734|sink|public audio sink streaming
+00041.668|source|public audio sent frames=200
+00041.733|sink|public audio received=100 energy=964355 dropped=0
+00041.734|runner|stop-restart cycle=15/20 elapsed=2.592s pass
+00041.857|runner|command board=F value=s
+00041.862|sink|public audio sink stopped
+00041.984|runner|command board=G value=s
+00042.053|source|public audio source stopped
+00042.176|runner|command board=G value=r
+00042.186|source|public audio source preparing
+00042.187|source|public audio source streaming
+00042.309|runner|command board=F value=r
+00042.314|sink|public audio sink scanning
+00042.333|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00043.200|source|public audio sent frames=100
+00043.219|sink|public audio sink streaming
+00044.215|source|public audio sent frames=200
+00044.229|sink|public audio received=100 energy=981493 dropped=0
+00044.229|runner|stop-restart cycle=16/20 elapsed=2.496s pass
+00044.352|runner|command board=F value=s
+00044.358|sink|public audio sink stopped
+00044.478|runner|command board=G value=s
+00044.548|source|public audio source stopped
+00044.669|runner|command board=G value=r
+00044.678|source|public audio source preparing
+00044.679|source|public audio source streaming
+00044.802|runner|command board=F value=r
+00044.807|sink|public audio sink scanning
+00044.886|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00045.700|source|public audio sent frames=100
+00045.828|sink|public audio sink streaming
+00046.715|source|public audio sent frames=200
+00046.831|sink|public audio received=100 energy=1173685 dropped=0
+00046.831|runner|stop-restart cycle=17/20 elapsed=2.602s pass
+00046.954|runner|command board=F value=s
+00046.959|sink|public audio sink stopped
+00047.083|runner|command board=G value=s
+00047.149|source|public audio source stopped
+00047.273|runner|command board=G value=r
+00047.283|source|public audio source preparing
+00047.283|source|public audio source streaming
+00047.403|runner|command board=F value=r
+00047.408|sink|public audio sink scanning
+00047.427|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00048.284|source|public audio sent frames=100
+00048.313|sink|public audio sink streaming
+00049.300|source|public audio sent frames=200
+00049.314|sink|public audio received=100 energy=1059809 dropped=0
+00049.314|runner|stop-restart cycle=18/20 elapsed=2.483s pass
+00049.437|runner|command board=F value=s
+00049.443|sink|public audio sink stopped
+00049.564|runner|command board=G value=s
+00049.632|source|public audio source stopped
+00049.753|runner|command board=G value=r
+00049.768|source|public audio source preparing
+00049.768|source|public audio source streaming
+00049.889|runner|command board=F value=r
+00049.894|sink|public audio sink scanning
+00049.979|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00050.790|source|public audio sent frames=100
+00051.275|sink|public audio sink streaming
+00051.799|source|public audio sent frames=200
+00052.278|sink|public audio received=100 energy=1163586 dropped=0
+00052.278|runner|stop-restart cycle=19/20 elapsed=2.964s pass
+00052.398|runner|command board=F value=s
+00052.403|sink|public audio sink stopped
+00052.524|runner|command board=G value=s
+00052.596|source|public audio source stopped
+00052.719|runner|command board=G value=r
+00052.728|source|public audio source preparing
+00052.728|source|public audio source streaming
+00052.849|runner|command board=F value=r
+00052.854|sink|public audio sink scanning
+00052.888|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00053.745|source|public audio sent frames=100
+00053.822|sink|public audio sink streaming
+00054.754|source|public audio sent frames=200
+00054.822|sink|public audio received=100 energy=983379 dropped=0
+00054.822|runner|stop-restart cycle=20/20 elapsed=2.544s pass

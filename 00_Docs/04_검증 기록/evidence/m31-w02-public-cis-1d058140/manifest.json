@@ -1,0 +1,55 @@
+{
+  "core_revision": "1d058140dda468ba19dcfdf3b3b26b1202100efb",
+  "source_clean_at_hil": true,
+  "accepted": "public-cis-exact.json",
+  "diagnostics_excluded": [
+    "diagnostic-candidate.json",
+    "diagnostic-state.json",
+    "diagnostic-preboot-and-retry.json",
+    "diagnostic-recovered-setup.json"
+  ],
+  "roles": {
+    "central": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/CISCentral/CISCentral.ino",
+      "config_sha256": "e786d52ec1c419899ca524abe42b5549f15828b004cba8b129d3cef51fab2571",
+      "hex_sha256": "df40f76553eb9150ea43e1aba6d20c8f6ca267dfbffaa139c9676132aec0993e",
+      "flash_bytes": 274432,
+      "program_bytes": 272924,
+      "ram_bytes": 115557
+    },
+    "peripheral": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/CISPeripheral.ino",
+      "config_sha256": "4c358f4512c3d86ae7f05b1b3eb0ca01f48a5dddf442ee9e5fd257096e17c4ba",
+      "hex_sha256": "bae9207c6918755948313d69c14215b0f408e58170e0e497717b5a19b7a5ed03",
+      "flash_bytes": 274432,
+      "program_bytes": 272036,
+      "ram_bytes": 115554
+    }
+  },
+  "runner": {
+    "path": "tests/hil/nu54dk/m31_iso_public_cis_pair_run.py",
+    "sha256": "362dfb9ede7db43ab5ab5e775e7b73e33cbf3d9fef6237778caade88670f6e5a"
+  },
+  "artifacts": [
+    {
+      "path": "public-cis-exact.json",
+      "sha256": "991137b4faeffda18ad3da1ab43a9497703a57ed8b809c28eae17bfd73f95402"
+    },
+    {
+      "path": "diagnostic-preboot-and-retry.json",
+      "sha256": "3673ffcc6a221b52cf5ad5f529c34c0307f6fc6438f8517d4f64d24d66cf1f34"
+    },
+    {
+      "path": "diagnostic-recovered-setup.json",
+      "sha256": "134e20cee8ce4906f1d09a54c27714783db75efdc7e79f00be0fb9851248199a"
+    },
+    {
+      "path": "diagnostic-candidate.json",
+      "sha256": "f259dfdc7c83d0049beffaa94437a2a05d9f4b1fb62d4f863ab664ec82ad4fdf"
+    },
+    {
+      "path": "diagnostic-state.json",
+      "sha256": "73dc45e1bf949362dc1b6ef907ce7724a165d12ab4a6ae6d2f8cbbbc65295771"
+    }
+  ]
+}

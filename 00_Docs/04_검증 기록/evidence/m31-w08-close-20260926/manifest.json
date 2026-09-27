@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+  "files": [
+    {
+      "path": "ci-aggregate.json",
+      "bytes": 1907,
+      "sha256": "903d17c08f3893d2c7719184ced363f684e1a70a3afeac533fc21130624cc9df"
+    },
+    {
+      "path": "closure-audit.json",
+      "bytes": 3396,
+      "sha256": "4cd8ef51f2e5768a36baea2254dcd7501593dc0d3d304561b92f74ee58751830"
+    },
+    {
+      "path": "diagnostic-history.json",
+      "bytes": 2668,
+      "sha256": "53c8d25369fdfa995bc8c0c870617e0d54cffd8633d7c0cf2f1e939176547d64"
+    },
+    {
+      "path": "host-regression.json",
+      "bytes": 655,
+      "sha256": "5ffd2f1540e40bf200f11a05f99ac2e3a0b0997872c17c1e995a52c3ffd8440d"
+    },
+    {
+      "path": "lifecycle.json",
+      "bytes": 4669,
+      "sha256": "0d11ad6ac4b16cce877daed9121d08e26d7c0fdef7b3acd089836cacfb19c442"
+    },
+    {
+      "path": "physical-upload-debug.json",
+      "bytes": 1254,
+      "sha256": "18dea3944f37b6289c455080b8151b4794d991cd97ee0a5c77c05120786643b2"
+    },
+    {
+      "path": "post-hil-restore.json",
+      "bytes": 765,
+      "sha256": "46c90171849cf6d37400d6aad4b24a9405612e3bafc051fcc48f22841d9f981a"
+    },
+    {
+      "path": "rc-plan-summary.json",
+      "bytes": 1530,
+      "sha256": "9e968866aa6f2340f500d80722b7c933e8ab422a99c4025bdcbead29f20f39b8"
+    }
+  ]
+}

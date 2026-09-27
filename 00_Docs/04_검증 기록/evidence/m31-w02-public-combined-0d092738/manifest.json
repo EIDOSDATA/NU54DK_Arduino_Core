@@ -1,0 +1,62 @@
+{
+  "core_revision": "0d092738b56397d4cdd6b67d30a24be01da705fb",
+  "source_clean_at_hil": true,
+  "accepted": [
+    "combined-positive.json"
+  ],
+  "diagnostics_excluded": [
+    "diagnostic-qos-failure.json",
+    "diagnostic-banner-loss.json",
+    "diagnostic-reset-race.json",
+    "diagnostic-candidate-pass.json"
+  ],
+  "roles": {
+    "bridge": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino",
+      "config_sha256": "4382364da948a76803ee392557ee2c8d6d33e3df7e92ddd5afa21ed371b71cf7",
+      "hex_sha256": "1e9184271ce9b3db8cd126c78bd849ac288a4cb7486257683940fc7222609b1c",
+      "program_bytes": 295076,
+      "ram_bytes": 121600
+    },
+    "peer": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino",
+      "config_sha256": "349f07c9abd7af1a86eeeff919cb781cca5db5ebe14ce405ccc15605e51e0e0a",
+      "hex_sha256": "b4c10a715723805fec4774c9bfab8de9e93013bfbf06af97e4c7954728d23f7b",
+      "program_bytes": 272544,
+      "ram_bytes": 115565
+    },
+    "receiver": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino",
+      "config_sha256": "558e48728558fbb0dae43ef8883e25a6928a6b7e0c4398a36062ddebe9500dd6",
+      "hex_sha256": "63b2d9cbc146d2a2fccd9a528a7819e649fbf21118e5465ce01f53487c039b4c",
+      "program_bytes": 195988,
+      "ram_bytes": 106483
+    }
+  },
+  "runner": {
+    "path": "tests/hil/nu54dk/m31_iso_public_combined_run.py",
+    "sha256": "3f6571e6755ce037ce066af57a0c105036aa200b9a6ee22e42f0764708e70bdb"
+  },
+  "artifacts": [
+    {
+      "path": "combined-positive.json",
+      "sha256": "3e5c0f5d35abb0887d59385bcafa4a453eb7ea4f50ab1a821ea5e6027339e408"
+    },
+    {
+      "path": "diagnostic-qos-failure.json",
+      "sha256": "2100283584c2c97eab165a2de4d695b8bb805f4af2b9bbead652771b74347af5"
+    },
+    {
+      "path": "diagnostic-banner-loss.json",
+      "sha256": "7c906a188abc36071ab4e417e8f5c98fbb806c233ec03941ee518d9671727c7f"
+    },
+    {
+      "path": "diagnostic-reset-race.json",
+      "sha256": "c28ef495942d154361f21e5aee2dead9f52baecc428018f599311f7bb86a6d31"
+    },
+    {
+      "path": "diagnostic-candidate-pass.json",
+      "sha256": "f337ebfea2782aff060deeee0e2071c380a2f8af30b47fc0c6798616c33d4b11"
+    }
+  ]
+}

@@ -1,0 +1,438 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/~/ae-w04-df-exact-533/build/CteBeacon/CteBeacon.ino.bin",
+      "sha256": "004eb7d5cb31457d2229ed810ea83d5228ff34a5e99460cf3ce12744046a7362",
+      "size": 182868
+    },
+    "elf": {
+      "path": "C:/~/ae-w04-df-exact-533/build/CteBeacon/CteBeacon.ino.elf",
+      "sha256": "02e39682d513bccd8dc120d31a92b382d1a1f76069be4b1b239e7d038649078c",
+      "size": 2836932
+    },
+    "hex": {
+      "path": "C:/~/ae-w04-df-exact-533/build/CteBeacon/CteBeacon.ino.hex",
+      "sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+      "size": 514453
+    },
+    "map": {
+      "path": "C:/~/ae-w04-df-exact-533/build/CteBeacon/CteBeacon.ino.map",
+      "sha256": "4c2193cf6f9b06733a5a51a016c75bff4fa5d221e1b57ad68ab06931265c2ba4",
+      "size": 1585552
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-16T08:06:12.537637+00:00",
+  "cache": {
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:4bea27aa2c47f3aa6adcf51870d574bfe683856c3624fed80659a001c6725a09",
+        "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:09b4cf5ec9686cdbc4f24800254c5ee2068385bca11f5d6a7bac740f1555488e",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:000ca5d30ad431abae3bd9e16fcd783a3e0acdcaea2342415870e4432fa5c072",
+          "id": "ble",
+          "manifest": "sha256:b9ea4262dbe21afbbfa8ddd9c7487d72e7cfefe66e3a44d4131846939bdc70a2",
+          "overlay": "sha256:903d8a13c18d15b61814ccbbecefb029a57a1a61c4138ffcc713be46214929eb",
+          "signing_key_sha256": null,
+          "sysbuild": false,
+          "sysbuild_files": []
+        },
+        "selected_features": [
+          {
+            "conf": [],
+            "id": "nucode.ble.direction_finding",
+            "manifest": "sha256:88dbc03f03572e88bd847a6386adc3c39b593d1f23544e220a8447052589eb32",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "sha256:e69f451388e2e0f7c7ff8e8ebc776718b87a740a7cf39562724c33ac7371832a",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+        "profile": "ble",
+        "sysbuild": false
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "419c42a70328c8bb8fa7162b6c4bca1f0182e8921b9e1b2a7762b545bb09d09c",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:f82d9baed6bd772810fca1353000b60e3a6191d594ad6708f3d6379e412c6bb8"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 20.844143,
+    "build_path": "C:/~/ae-w04-df-exact-533/build/CteBeacon",
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f",
+    "cache_key": "419c42a70328c8bb8fa7162b6c4bca1f0182e8921b9e1b2a7762b545bb09d09c",
+    "cache_reused": true,
+    "cache_root": "C:/Users/eidos/AppData/Local/NU54/c",
+    "cache_schema_version": 1,
+    "ccache": "C:/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/Users/eidos/AppData/Local/NU54/c/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 9247,
+      "cache_size_kibibyte": 210676,
+      "called_for_link": 2804,
+      "called_for_preprocessing": 14,
+      "cleanups_performed": 0,
+      "compile_failed": 2,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 1037,
+      "direct_cache_miss": 9258,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 18479,
+      "internal_error": 0,
+      "local_storage_hit": 1043,
+      "local_storage_miss": 9247,
+      "local_storage_read_hit": 2080,
+      "local_storage_read_miss": 18507,
+      "local_storage_write": 18500,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 1352,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 6,
+      "preprocessed_cache_miss": 9249,
+      "preprocessor_error": 3,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789545971,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 9246,
+      "cache_size_kibibyte": 210632,
+      "called_for_link": 2790,
+      "called_for_preprocessing": 8,
+      "cleanups_performed": 0,
+      "compile_failed": 2,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 980,
+      "direct_cache_miss": 9255,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 18475,
+      "internal_error": 0,
+      "local_storage_hit": 984,
+      "local_storage_miss": 9246,
+      "local_storage_read_hit": 1964,
+      "local_storage_read_miss": 18503,
+      "local_storage_write": 18496,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 1352,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 4,
+      "preprocessed_cache_miss": 9248,
+      "preprocessor_error": 3,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789545890,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 1,
+      "cache_size_kibibyte": 44,
+      "called_for_link": 14,
+      "called_for_preprocessing": 6,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 57,
+      "direct_cache_miss": 3,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 4,
+      "internal_error": 0,
+      "local_storage_hit": 59,
+      "local_storage_miss": 1,
+      "local_storage_read_hit": 116,
+      "local_storage_read_miss": 4,
+      "local_storage_write": 4,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 0,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 2,
+      "preprocessed_cache_miss": 1,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 81,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:419c42a70328c8bb8fa7162b6c4bca1f0182e8921b9e1b2a7762b545bb09d09c",
+    "configure_duration_seconds": 0.0,
+    "configure_mode": "cmake-only",
+    "configure_reason": "feature-cache-hit",
+    "configure_skipped": true,
+    "cxx_compiler": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+    "input_manifest": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f/input-manifest.json",
+    "link_configure_duration_seconds": 15.037449,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 1490944,
+      "flash_origin": 0,
+      "flash_size": 1490944
+    },
+    "ncs_root": "C:/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "pristine_configure_count": 3,
+    "product_identity": {
+      "package_version": "0.4.1-dev",
+      "source_version": "0.4.1-dev"
+    },
+    "profile": "ble",
+    "provisional_cache_key": "a6cff537cf666b6c1dc029a0758cc83deaa6bf27f0fa479a352bc27f2b81801a",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [],
+        "id": "nucode.ble.direction_finding",
+        "manifest": "sha256:88dbc03f03572e88bd847a6386adc3c39b593d1f23544e220a8447052589eb32",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "NUCODE_BLE_DirectionFinding"
+    ],
+    "size_tool": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": false,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-16T08:06:12.537637+00:00",
+    "zephyr_build_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+  "metrics": {
+    "build_seconds": 20.844143,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 1,
+      "cache_size_kibibyte": 44,
+      "called_for_link": 14,
+      "called_for_preprocessing": 6,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 57,
+      "direct_cache_miss": 3,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 4,
+      "internal_error": 0,
+      "local_storage_hit": 59,
+      "local_storage_miss": 1,
+      "local_storage_read_hit": 116,
+      "local_storage_read_miss": 4,
+      "local_storage_write": 4,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 0,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 2,
+      "preprocessed_cache_miss": 1,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 81,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 15.037449
+  },
+  "product_identity": {
+    "package_version": "0.4.1-dev",
+    "source_version": "0.4.1-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:890f0789826f623a6629731cc3dcffabec3d3ef17e696e378af6f5b30d31f56b",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon"
+      },
+      {
+        "content_sha256": "sha256:d8794fe7acc1a6518728eeca2051917592763d2929c296fe6096d1ab6580e166",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:461eb5bd8eca4b7546a19822a1c792acc7d254ec8685523094c9350ddba19fcb",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:4873d2d5ddc9a4013d1b38d3d473c20cc968b4ed16718839ccdc91b12b7833ae",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_DirectionFinding/src"
+      },
+      {
+        "content_sha256": "sha256:7761f194cbd8d25ad22f48ae0eb541870dd70ad0c1de467183d04bfc92d6ce16",
+        "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f/build/nucode_arduino_core_build.yml",
+      "sha256": "3913b47fbc86a304d793f3ec0a532f82b54865b3f4a9be8cb946307a97e7eb9c"
+    },
+    "m31_df_revisions": {
+      "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "NUCODE_CORE_REVISION": "53399559daa748b07539025c1ab64bb6464c7788",
+      "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/Users/eidos/AppData/Local/NU54/c/v1/41/419c42a70328c8bb8fa7162b6c4bca1f/app/generated-sources/sketch/CteBeacon.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/CteBeacon.ino.cpp",
+        "sha256": "b6981fad2900cbe4104109bb363f039ae2206834dd9c1eb5ca89c246d118ae4f",
+        "source_path": "C:/~/ae-w04-df-exact-533/build/CteBeacon/sketch/CteBeacon.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding.cpp",
+        "sha256": "5d7fbe63b27b7887282d70d0ca84c856983a633f86d65b5b5a086add08f8e658",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/~/ae-w04-df-exact-533/build/CteBeacon/sketch/CteBeacon.ino.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_DirectionFinding/src/NUCODE_BLE_DirectionFinding.cpp"
+  ],
+  "sysbuild": false
+}

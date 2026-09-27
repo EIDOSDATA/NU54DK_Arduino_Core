@@ -1,0 +1,16 @@
+diff --git a/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino b/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
+index bca12628..09fa5e0c 100644
+--- a/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
++++ b/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
+@@ -27,8 +27,9 @@ namespace
+     std::uint32_t progressDeadlineMs = 0U;
+     std::uint32_t recoveryRetryMs = 0U;
+ 
+-    constexpr std::uint32_t securityTimeoutMs = 30000U;
+-    constexpr std::uint32_t discoveryTimeoutMs = 15000U;
++    /** @brief NUCODE_CSIP_FAULT_WATCHDOG progress deadline을 즉시 만료시킵니다. */
++    constexpr std::uint32_t securityTimeoutMs = 1U;
++    constexpr std::uint32_t discoveryTimeoutMs = 1U;
+     constexpr std::uint32_t recoveryRetryIntervalMs = 250U;
+ 
+     /** @brief 이 고정 키는 로컬 상호운용 시험 전용이며 제품에는 고유 비밀을 주입해야 합니다. */

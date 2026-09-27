@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "gate": "m28-three-board-hil",
+  "status": "passed",
+  "test_id": "M28-LINK-01",
+  "created_at_utc": "2026-09-12T17:50:16.140261+00:00",
+  "core_revision": "035591014b998dc121ac49e418aee69e57c67f21",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "flash_backend": "daplink-msd",
+  "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "nonce": "fc7baf336faf44981b3f21e031e4f2be",
+  "boards": {
+    "peripheral": {
+      "daplink_uid": "5415360300052840d9e1e32cc887aaf1",
+      "msd_root": "F:\\",
+      "uart_port": "COM14",
+      "debug_identity": {
+        "source": "daplink-details",
+        "target": "nRF54L15",
+        "swd_dp_idcode": "0x6ba02477",
+        "target_voltage": "3307 mV (present)"
+      }
+    },
+    "mixed": {
+      "daplink_uid": "5415360300052840fcd47678fd7d106d",
+      "msd_root": "E:\\",
+      "uart_port": "COM13",
+      "debug_identity": {
+        "source": "daplink-details",
+        "target": "nRF54L15",
+        "swd_dp_idcode": "0x6ba02477",
+        "target_voltage": "3295 mV (present)"
+      }
+    },
+    "central": {
+      "daplink_uid": "54153603000528402aae46c5e8e3712a",
+      "msd_root": "G:\\",
+      "uart_port": "COM10",
+      "debug_identity": {
+        "source": "daplink-details",
+        "target": "nRF54L15",
+        "swd_dp_idcode": "0x6ba02477",
+        "target_voltage": "3299 mV (present)"
+      }
+    }
+  },
+  "images": {
+    "peripheral": {
+      "name": "zephyr.hex",
+      "size": 660251,
+      "sha256": "853ec1815b4135c8a73ae6a8d25896f0af0f16465d4ae4ab6f8760df0e040898",
+      "flash_sequence": "7",
+      "flash_bytes": "660480",
+      "build_record": {
+        "core_revision": "035591014b99",
+        "core_source_sha256": "d9871569ec2485113308ee364a63028d648fa0e62f9ff02f6d5e7a891fae4193",
+        "application_source_sha256": "70688e42b99aaa163594e2dff337d3b95a7f95e397ed0ea6ea2b63c1234b3d97",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "794304c4150a5591461e5cb53bf3d3cbef2d3889cb5a5f600f12119fe0bbed91"
+      }
+    },
+    "mixed": {
+      "name": "zephyr.hex",
+      "size": 674524,
+      "sha256": "3f8f230ffb033ee0b6be3d69414b21de39c264b90b75b77309e1496a5fb98356",
+      "flash_sequence": "6",
+      "flash_bytes": "674816",
+      "build_record": {
+        "core_revision": "035591014b99",
+        "core_source_sha256": "d9871569ec2485113308ee364a63028d648fa0e62f9ff02f6d5e7a891fae4193",
+        "application_source_sha256": "70688e42b99aaa163594e2dff337d3b95a7f95e397ed0ea6ea2b63c1234b3d97",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "794304c4150a5591461e5cb53bf3d3cbef2d3889cb5a5f600f12119fe0bbed91"
+      }
+    },
+    "central": {
+      "name": "zephyr.hex",
+      "size": 667655,
+      "sha256": "6f051f7e670c64335f2db67fbff45fce77efdc7a5c9347210f83620c81dbd62c",
+      "flash_sequence": "6",
+      "flash_bytes": "668160",
+      "build_record": {
+        "core_revision": "035591014b99",
+        "core_source_sha256": "d9871569ec2485113308ee364a63028d648fa0e62f9ff02f6d5e7a891fae4193",
+        "application_source_sha256": "70688e42b99aaa163594e2dff337d3b95a7f95e397ed0ea6ea2b63c1234b3d97",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "794304c4150a5591461e5cb53bf3d3cbef2d3889cb5a5f600f12119fe0bbed91"
+      }
+    }
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "m28-3board-evidence.peripheral.transcript.log",
+      "size": 627,
+      "sha256": "e6c90293179341154540a2656fe9a04d0cbe692fc19b22eb030861f89c6eb1fc"
+    },
+    "mixed": {
+      "name": "m28-3board-evidence.mixed.transcript.log",
+      "size": 607,
+      "sha256": "c669c55251a373e2fab556e8bb9901661c196192b97473c0e86efe677fbc6957"
+    },
+    "central": {
+      "name": "m28-3board-evidence.central.transcript.log",
+      "size": 485,
+      "sha256": "dac6452badd9fcae533d27e3daf66d191e4c2c4a788d2daae456728df756f25a"
+    }
+  },
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "test_id": "M28-LINK-01",
+      "metrics": {
+        "links": 1,
+        "sequence": 1000
+      }
+    },
+    "mixed": {
+      "role": "mixed",
+      "test_id": "M28-LINK-01",
+      "metrics": {
+        "links": 2,
+        "sequence": 1000
+      }
+    },
+    "central": {
+      "role": "central",
+      "test_id": "M28-LINK-01",
+      "metrics": {
+        "links": 1,
+        "sequence": 1000
+      }
+    }
+  },
+  "packet_trace": {
+    "method": "three-node-receiver-validated-sequence",
+    "binding": "same-run-128-bit-nonce-and-three-uart-transcripts",
+    "denominator": "gatt-sender-write-completion-sequence",
+    "payload_integrity": "nonce-phase-sender-sequence-fnv1a"
+  },
+  "safety": {
+    "external_wiring_required": false,
+    "mass_erase_requested": false,
+    "pmic_write_executed": false
+  }
+}

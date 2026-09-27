@@ -11,6 +11,7 @@
 #include <Arduino.h>
 #include <NUCODE_BLE_GAP.h>
 #include <NUCODE_BLE_GATT.h>
+#include <NUCODE_BLE_L2CAP.h>
 
 #include <cstddef>
 #include <cstdint>

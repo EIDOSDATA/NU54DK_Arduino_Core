@@ -1,0 +1,89 @@
+{
+  "test_id": "M31-ISO-01:bis_cis_combined",
+  "scope": "three_board_cis_receive_bis_forward_twenty_cycles",
+  "status": "PASS_CANDIDATE",
+  "source_clean": false,
+  "identity": {
+    "core": "64c6b5fcaad3b0330f181d5b5f814b00a14e41bf",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "peer": {
+      "volume": "D:/",
+      "vcom": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "56a3e8ff169e0815bd8d29b4b7424e42a12fe0c367f07d16f150527fe1c20e2b",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "217088"
+    },
+    "combined": {
+      "volume": "F:/",
+      "vcom": "COM7",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_sha256": "0f97cbdcd32fb967564935feb8b973ec59f0b008ab3e9b3d2fa026dfefdedff5",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "237568"
+    },
+    "receiver": {
+      "volume": "E:/",
+      "vcom": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "bdaa21e226caee2f4b3162013177a550023b549b321d20696a1caefed340dabb",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "139264"
+    }
+  },
+  "nonces": [
+    "8cf937f9be760e34c70caa36105f72fd",
+    "a118c2eb7981acb7e877cbba7dcb1174",
+    "f59ed5b38330c54b75688ea386cb6a4e",
+    "f90ccb2555c68b17117c1bf1e87caeb0",
+    "45ef8ccfbd78d332f1931154e46d7c65",
+    "0ab391f14c047f990c9903f61cf1aa4b",
+    "e61a5e7cc2793984078318bfb496769e",
+    "05d7969891bff1e3f085eda98c75e118",
+    "b135765f28b86be56ba429304af16204",
+    "a09507fadebe0cf518f707454bc9b59c",
+    "d61c11040473918892c08fd596977802",
+    "0e00281b701ae1c550feb5b043b99906",
+    "8f3041506b8a9aaf0e8b25b80fcffcd7",
+    "e38e9a17d933eb437fadbf66e86afb44",
+    "02ad1b6fa4df634fb6afbfee752c59c7",
+    "5f51fceb94636b9978dc1878f1317b87",
+    "3b719fea0ede044c3a3c802ebe9e3aed",
+    "b1ffb9e822aaa745aa97b9c08e75e5de",
+    "71d504c7a2c540bbc8e10ef2ad62a5c5",
+    "c65744a698c2b7cd6f471ec260ef6745"
+  ],
+  "cycles": 20,
+  "reason": null,
+  "measurement": null,
+  "transcript_sha256": "37fa06c4eff875567bf5073f55655dd5df74475112647982c275c57706fc576d",
+  "observed_utc": "2026-09-15T21:44:42.616422+00:00"
+}

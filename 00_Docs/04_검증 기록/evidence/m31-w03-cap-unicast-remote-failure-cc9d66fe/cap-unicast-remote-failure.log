@@ -1,0 +1,585 @@
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+ACCEPTOR|*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+ACCEPTOR|*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+ACCEPTOR|[00:00:00.014,640] \x1B[0m<inf> bt_sdc_hci_driver: SoftDevice Controller build revision:
+ACCEPTOR|                                            c8 da 30 98 f9 f0 34 a4  4b 6e ba d3 08 19 cc 0c |..0...4. Kn......
+ACCEPTOR|                                            ea 51 da 47                                      |.Q.G             \x1B[0m
+ACCEPTOR|[00:00:00.015,471] \x1B[1;33m<wrn> bt_hci_core: Num of Controller's ISO packets != ISO bt_conn_tx contexts(3 != 1)\x1B[0m
+ACCEPTOR|[00:00:00.016,077] \x1B[0m<inf> bt_hci_core: HW Platform: Nordic Semiconductor (0x0002)\x1B[0m
+ACCEPTOR|[00:00:00.016,090] \x1B[0m<inf> bt_hci_core: HW Variant: nRF54Lx (0x0005)\x1B[0m
+ACCEPTOR|[00:00:00.016,102] \x1B[0m<inf> bt_hci_core: Firmware: Standard Bluetooth controller (0x00) Version 200.12506 Build 888207768\x1B[0m
+ACCEPTOR|[00:00:00.016,485] \x1B[0m<inf> bt_hci_core: HCI transport: SDC\x1B[0m
+ACCEPTOR|[00:00:00.016,534] \x1B[0m<inf> bt_hci_core: Identity: E4:17:FF:9D:C9:6B (random)\x1B[0m
+ACCEPTOR|[00:00:00.016,550] \x1B[0m<inf> bt_hci_core: HCI: version 6.3 (0x11) revision 0x3039, manufacturer 0x0059\x1B[0m
+ACCEPTOR|[00:00:00.016,565] \x1B[0m<inf> bt_hci_core: LMP: version 6.3 (0x11) subver 0x3039\x1B[0m
+ACCEPTOR|[00:00:00.016,571] \x1B[0m<inf> cap_acceptor: Bluetooth initialized\x1B[0m
+ACCEPTOR|[00:00:00.016,681] \x1B[0m<inf> cap_acceptor: CAP Acceptor initialized\x1B[0m
+ACCEPTOR|[00:00:00.016,685] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:00.017,173] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+INITIATOR|\xf8>\xfc\x02\xf8\xff\xff \xff8\xff\xfc\xff\xff\x8c\xfc\x80\xff\xfc\x00\xbc\xfc\x8c\xff\x8d?\xff\xcc\xf0\xfc\xfc\x8c\xffp\xfe\xfc?\xff\xfc\x8c\xfc\xff\x81\xfc\xfc\x8f\xff\xff\x80\xfc\xff\xff\xef\xef\xfc\xfc\xf8\xfc\xff\xfc|\xff?\xfeCAP Acceptor scan started
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:01.706,172] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:06.408,703] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:06.408,716] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:06.408,726] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:06.408,732] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:06.408,738] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:06.408,744] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:06.408,750] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:06.408,757] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:06.408,904] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:06.408,925] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:06.508,254] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:06.508,269] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:06.508,418] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:06.608,228] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:06.758,346] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:06.758,363] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:06.758,399] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:06.758,991] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:06.796,849] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:11.049,409] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:11.049,422] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:11.049,432] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:11.049,438] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:11.049,444] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:11.049,450] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:11.049,456] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:11.049,463] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:11.049,610] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:11.049,631] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:11.148,959] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:11.148,973] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:11.149,121] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:11.248,933] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:11.399,052] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:11.399,071] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:11.399,106] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:11.399,697] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:11.453,864] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+ACCEPTOR|[00:00:15.656,428] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:15.656,442] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:15.656,451] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:15.656,457] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:15.656,463] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:15.656,469] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:15.656,475] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:15.656,482] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:15.656,629] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:15.656,650] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:15.755,978] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:15.755,992] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:15.756,140] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:15.855,953] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:16.006,072] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:16.006,090] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:16.006,125] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:16.006,716] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:16.073,405] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:20.325,966] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:20.325,980] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:20.325,990] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:20.325,996] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:20.326,002] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:20.326,008] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:20.326,014] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:20.326,022] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:20.326,169] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:20.326,189] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:20.425,516] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+ACCEPTOR|[00:00:20.425,530] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:20.425,678] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:20.525,490] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:20.675,609] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:20.675,627] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:20.675,662] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:20.676,253] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:20.730,514] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:25.133,066] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:25.133,080] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:25.133,089] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:25.133,095] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:25.133,101] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:25.133,107] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:25.133,113] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:25.133,120] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:25.133,267] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:25.133,289] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:25.232,617] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:25.232,631] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:25.232,780] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:25.332,591] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:25.482,710] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:25.482,728] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:25.482,763] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:25.483,355] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:25.516,672] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:29.819,228] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:29.819,241] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:29.819,251] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:29.819,257] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:29.819,263] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:29.819,269] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:29.819,275] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:29.819,282] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:29.819,429] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:29.819,450] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:29.918,778] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:29.918,792] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:29.918,941] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:30.018,752] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:30.168,872] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:30.168,890] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:30.168,925] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:30.169,516] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:30.210,958] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:34.513,515] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:34.513,529] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:34.513,538] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:34.513,544] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:34.513,550] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:34.513,556] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:34.513,563] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:34.513,570] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:34.513,717] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:34.513,737] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:34.613,066] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+ACCEPTOR|[00:00:34.613,080] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:34.613,228] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:34.713,040] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:34.863,159] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:34.863,177] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:34.863,212] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:34.863,803] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:34.897,596] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:38.950,171] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:38.950,185] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:38.950,194] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:38.950,200] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:38.950,206] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:38.950,212] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:38.950,219] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:38.950,226] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:38.950,373] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:38.950,394] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:39.049,722] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:39.049,736] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:39.049,884] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:39.149,696] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:39.349,812] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:39.349,830] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:39.349,865] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:39.350,457] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:39.389,233] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:43.991,767] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:43.991,780] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:43.991,790] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:43.991,796] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:43.991,801] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:43.991,807] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:43.991,814] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:43.991,822] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:43.991,969] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:43.991,990] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:44.091,313] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+ACCEPTOR|[00:00:44.091,327] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:44.091,476] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:44.191,292] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:44.341,411] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:44.341,429] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:44.341,461] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:44.342,028] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:44.398,398] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:48.450,972] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:48.450,986] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:48.450,995] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:48.451,001] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:48.451,007] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:48.451,013] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:48.451,019] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:48.451,027] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:48.451,174] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:48.451,194] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:48.550,520] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:48.550,534] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:48.550,683] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:48.700,496] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:48.850,614] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:48.850,632] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:48.850,664] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:48.851,231] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:48.881,597] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:52.884,177] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:52.884,191] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:52.884,200] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:52.884,206] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:52.884,212] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:52.884,218] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:52.884,225] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:52.884,232] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:52.884,379] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:52.884,400] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:52.983,728] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:52.983,742] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:52.983,890] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:53.083,703] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:00:53.233,821] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:53.233,839] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:53.233,874] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:53.234,466] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:53.269,854] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:00:58.122,368] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:00:58.122,382] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:00:58.122,391] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:00:58.122,397] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:00:58.122,403] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:00:58.122,409] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:00:58.122,415] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:00:58.122,423] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:58.122,569] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:58.122,590] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:00:58.221,918] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:00:58.221,932] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:00:58.222,081] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:00:58.321,893] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:00:58.472,010] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:00:58.472,028] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:00:58.472,064] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:00:58.472,655] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:00:58.512,497] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:02.765,057] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:02.765,071] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:02.765,080] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:02.765,086] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:02.765,092] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:02.765,100] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=9
+ACCEPTOR|[00:01:02.765,106] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:02.765,113] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:02.765,260] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:02.765,281] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+ACCEPTOR|[00:01:02.964,600] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+ACCEPTOR|[00:01:02.964,614] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:02.964,762] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:01:03.064,575] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:01:03.314,686] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:01:03.314,704] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:03.314,739] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:01:03.315,330] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=9
+INITIATOR|CAP peer disconnected
+INITIATOR|CAP Acceptor found
+INITIATOR|CAP connected; discovering services
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+ACCEPTOR|[00:01:07.208,157] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:11.460,723] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:11.460,737] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:11.460,746] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:11.460,752] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:11.460,758] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:11.460,764] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:01:11.460,771] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:11.460,778] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:11.460,925] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:11.460,945] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:01:11.560,274] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:01:11.560,289] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:11.560,438] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:01:11.660,248] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:01:11.810,754] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:01:11.810,772] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:11.810,807] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:01:11.811,399] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:01:11.838,330] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:16.190,884] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:16.190,898] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:16.190,907] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:16.190,913] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:16.190,919] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:16.190,925] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:01:16.190,931] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:16.190,938] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:16.191,085] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:16.191,106] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:01:16.290,434] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:01:16.290,448] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:16.290,596] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:01:16.390,409] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:01:16.540,528] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:01:16.540,547] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:16.540,582] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:01:16.541,174] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:01:16.602,665] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:20.655,241] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:20.655,254] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:20.655,264] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:20.655,270] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:20.655,276] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:20.655,282] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:01:20.655,288] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:20.655,295] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:20.655,442] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:20.655,463] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:01:20.754,791] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:01:20.754,805] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:20.754,953] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:01:20.854,765] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:01:21.004,884] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:01:21.004,902] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:21.004,937] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:01:21.005,528] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:01:21.041,919] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:25.694,449] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:25.694,463] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:25.694,473] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:25.694,479] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:25.694,485] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:25.694,491] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:01:25.694,498] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:25.694,505] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:25.694,652] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:25.694,673] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:01:25.794,000] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:01:25.794,014] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:25.794,162] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:01:25.893,974] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:01:26.044,480] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:01:26.044,497] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:26.044,533] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:01:26.045,125] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:01:26.077,698] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:30.180,274] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:30.180,287] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:30.180,297] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:30.180,303] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:30.180,309] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:30.180,315] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:01:30.180,321] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:30.180,328] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:30.180,475] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:30.180,497] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:01:30.279,824] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:01:30.279,838] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:30.279,986] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:01:30.379,798] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:01:30.529,917] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:01:30.529,935] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:30.529,970] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:01:30.530,562] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+ACCEPTOR|[00:01:30.567,514] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:34.820,074] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:34.820,088] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:34.820,097] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:34.820,103] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:34.820,109] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:34.820,115] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:01:34.820,122] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:34.820,129] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:34.820,276] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:34.820,296] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:01:34.919,625] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:01:34.919,639] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:34.919,787] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2
+ACCEPTOR|[00:01:35.019,600] \x1B[1;31m<err> bt_ascs: Enable rejected: err -22, code 11, reason 2\x1B[0m
+ACCEPTOR|[00:01:35.169,718] \x1B[0m<inf> cap_acceptor: Disconnected: 43:15:F0:B8:7B:78 (random), reason 0x13 \x1B[0m
+ACCEPTOR|[00:01:35.169,736] \x1B[0m<inf> cap_acceptor_unicast: Released bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:35.169,768] \x1B[0m<inf> cap_acceptor: Resetting\x1B[0m
+ACCEPTOR|[00:01:35.170,335] \x1B[0m<inf> cap_acceptor: Advertising successfully started\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_READY mode=enable
+INITIATOR|CAP connected; discovering services
+ACCEPTOR|[00:01:35.238,237] \x1B[0m<inf> cap_acceptor: Connected: 43:15:F0:B8:7B:78 (random)\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=1
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=3
+INITIATOR|CAP group start result=0
+ACCEPTOR|[00:01:39.390,805] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config: conn 0x200025f8 ep 0x20002afc dir 1\x1B[0m
+ACCEPTOR|[00:01:39.390,819] \x1B[0m<inf> cap_acceptor_unicast: codec_cfg 0x06 cid 0x0000 vid 0x0000 count 19\x1B[0m
+ACCEPTOR|[00:01:39.390,828] \x1B[0m<inf> cap_acceptor_unicast: 	Frequency: 16000 Hz\x1B[0m
+ACCEPTOR|[00:01:39.390,834] \x1B[0m<inf> cap_acceptor_unicast: 	Frame Duration: 10000 us\x1B[0m
+ACCEPTOR|[00:01:39.390,840] \x1B[0m<inf> cap_acceptor_unicast: 	Channel allocation: 0x00000001\x1B[0m
+ACCEPTOR|[00:01:39.390,846] \x1B[0m<inf> cap_acceptor_unicast: 	Octets per frame: 40\x1B[0m
+ACCEPTOR|[00:01:39.390,853] \x1B[0m<inf> cap_acceptor_unicast: 	Frames per SDU: 1\x1B[0m
+ACCEPTOR|[00:01:39.390,860] \x1B[0m<inf> cap_acceptor_unicast: ASE Codec Config bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:39.391,007] \x1B[0m<inf> cap_acceptor_unicast: Configured bap_stream 0x20005090\x1B[0m
+ACCEPTOR|[00:01:39.391,027] \x1B[0m<inf> cap_acceptor_unicast: Local preferences: unframed supported, phy 2, rtn 2, latency 20, pd_min 20000, pd_max 40000, pref_pd_min 20000, pref_pd_max 40000\x1B[0m
+INITIATOR|CAP Initiator status found=0 connected=1 connecting=0 stage=5
+INITIATOR|CAP procedure failed step=5 peer=1 native=-77
+INITIATOR|CAP peer disconnected
+ACCEPTOR|[00:01:39.490,355] \x1B[0m<inf> cap_acceptor_unicast: QoS: bap_stream 0x20005090 qos 0x20007ce8\x1B[0m
+INITIATOR|CAP Acceptor found
+ACCEPTOR|[00:01:39.490,369] \x1B[0m<inf> cap_acceptor_unicast: QoS: interval 10000 framing 0x00 phy 0x02 sdu 40 rtn 2 latency 10 pd 40000\x1B[0m
+ACCEPTOR|[00:01:39.490,518] \x1B[0m<inf> cap_acceptor_unicast: QoS set bap_stream 0x20005090\x1B[0m
+ACCEPTOR|M31_CAP_REJECT_ENABLE code=11 reason=2

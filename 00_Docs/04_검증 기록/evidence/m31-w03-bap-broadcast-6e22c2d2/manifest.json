@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "scope": "M31-W03-03 BAP broadcast plaintext and restart/rejoin partial evidence",
+  "core_revision": "6e22c2d26828a614fc4ca88746d140abe71cbb9f",
+  "source_clean": true,
+  "verdict": "PARTIAL_PASS",
+  "files": [
+    {
+      "path": "source-build.json",
+      "sha256": "6aa25cc9b604b6e860a103aa6dd2f92464d1e96127db083735f0089fd247fd06"
+    },
+    {
+      "path": "sink-build.json",
+      "sha256": "e5d8d9a238e6d60c35091daa9686135c4a4125dee5d015b7a39ca38b40519eef"
+    },
+    {
+      "path": "flash.json",
+      "sha256": "d7b0db5a34ca18f0b3f56013bd8db99d37a13ddb70e403d6b58be01b6a4c1fb6"
+    },
+    {
+      "path": "broadcast-plain-rejoin.transcript.log",
+      "sha256": "9277b60f72453c11f3bdf9325c643a19c19f13e845f4cbec3c23e99301edf067"
+    },
+    {
+      "path": "broadcast-plain-rejoin.json",
+      "sha256": "e711a014e27dcf1cb11b6d24b5fd70e9073335596151aecba8a2c3974445916a"
+    }
+  ],
+  "remaining": [
+    "encrypted Broadcast Code positive",
+    "wrong Broadcast Code rejection",
+    "unexpected sync loss and rejoin"
+  ]
+}

@@ -1,0 +1,1918 @@
+{
+  "schema_version": 1,
+  "example_count": 113,
+  "board": "NU54DK (nRF54L15, Zephyr)",
+  "upload_probe_policy": {
+    "single": "CMSIS-DAP 자동 선택",
+    "multiple": "Arduino CLI --upload-field probe_id=<UID> 명시 선택",
+    "raw_uid_public_logs": false
+  },
+  "examples": {
+    "EEPROM/EEPROMPersistence": {
+      "path": "libraries/EEPROM/examples/EEPROMPersistence/EEPROMPersistence.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "EEPROMPersistence 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "LittleFS/LittleFSPersistence": {
+      "path": "libraries/LittleFS/examples/LittleFSPersistence/LittleFSPersistence.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "LittleFSPersistence 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/CustomGattCentral": {
+      "path": "libraries/NUCODE_BLE/examples/CustomGattCentral/CustomGattCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CustomGattCentral (central/client)",
+        "CustomGattPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE/CustomGattPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/CustomGattPeripheral/CustomGattPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CustomGattCentral (central/client)",
+        "CustomGattPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE/ExtendedAdvertising": {
+      "path": "libraries/NUCODE_BLE/examples/ExtendedAdvertising/ExtendedAdvertising.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ExtendedAdvertising 실행 보드",
+        "ExtendedScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/ExtendedScanner": {
+      "path": "libraries/NUCODE_BLE/examples/ExtendedScanner/ExtendedScanner.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ExtendedAdvertising 실행 보드",
+        "ExtendedScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/GAPCentral": {
+      "path": "libraries/NUCODE_BLE/examples/GAPCentral/GAPCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "GAPCentral (central/client)",
+        "GAPPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/GAPPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/GAPPeripheral/GAPPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "GAPCentral (central/client)",
+        "GAPPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/GattAuthorization": {
+      "path": "libraries/NUCODE_BLE/examples/GattAuthorization/GattAuthorization.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "GattAuthorization 실행 보드",
+        "GattDescriptors 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/GattDescriptors": {
+      "path": "libraries/NUCODE_BLE/examples/GattDescriptors/GattDescriptors.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "GattAuthorization 실행 보드",
+        "GattDescriptors 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/L2capCocClient": {
+      "path": "libraries/NUCODE_BLE/examples/L2capCocClient/L2capCocClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "L2capCocClient (client/controller)",
+        "L2capCocServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE/L2capCocServer": {
+      "path": "libraries/NUCODE_BLE/examples/L2capCocServer/L2capCocServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "L2capCocClient (client/controller)",
+        "L2capCocServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/LongGattCentral": {
+      "path": "libraries/NUCODE_BLE/examples/LongGattCentral/LongGattCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "LongGattCentral (central/client)",
+        "LongGattPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/LongGattPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/LongGattPeripheral/LongGattPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "LongGattCentral (central/client)",
+        "LongGattPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/MixedGattCocLinks": {
+      "path": "libraries/NUCODE_BLE/examples/MixedGattCocLinks/MixedGattCocLinks.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "MixedGattCocLinks 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE/MixedRoleLinks": {
+      "path": "libraries/NUCODE_BLE/examples/MixedRoleLinks/MixedRoleLinks.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "MixedRoleLinks 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE/NUSCentral": {
+      "path": "libraries/NUCODE_BLE/examples/NUSCentral/NUSCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "NUSCentral (central/client)",
+        "NUSPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE/NUSPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/NUSPeripheral/NUSPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "NUSCentral (central/client)",
+        "NUSPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PastReceiver": {
+      "path": "libraries/NUCODE_BLE/examples/PastReceiver/PastReceiver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PastSender (sender)",
+        "PastReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PastSender": {
+      "path": "libraries/NUCODE_BLE/examples/PastSender/PastSender.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PastSender (sender)",
+        "PastReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PawrAdvertiser": {
+      "path": "libraries/NUCODE_BLE/examples/PawrAdvertiser/PawrAdvertiser.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PawrAdvertiser (advertiser)",
+        "PawrScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PawrScanner": {
+      "path": "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PawrAdvertiser (advertiser)",
+        "PawrScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PeriodicAdvertiser": {
+      "path": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PeriodicAdvertiser (advertiser)",
+        "PeriodicScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PeriodicScanner": {
+      "path": "libraries/NUCODE_BLE/examples/PeriodicScanner/PeriodicScanner.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PeriodicAdvertiser (advertiser)",
+        "PeriodicScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PerLinkControl": {
+      "path": "libraries/NUCODE_BLE/examples/PerLinkControl/PerLinkControl.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "PerLinkControl 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE/PrivacyPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/PrivacyPeripheral/PrivacyPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "PrivacyPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE/ReliableWriteCentral": {
+      "path": "libraries/NUCODE_BLE/examples/ReliableWriteCentral/ReliableWriteCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ReliableWriteCentral (central/client)",
+        "ReliableWritePeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/ReliableWritePeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/ReliableWritePeripheral/ReliableWritePeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ReliableWriteCentral (central/client)",
+        "ReliableWritePeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/AudioControlController": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "AudioControlController (controller)",
+        "AudioControlDevice (device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/AudioControlDevice": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "AudioControlController (controller)",
+        "AudioControlDevice (device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapBroadcastAssistant": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastAssistant/BapBroadcastAssistant.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 3,
+      "roles": [
+        "BapBroadcastSource (source/transmitter)",
+        "BapBroadcastAssistant 실행 보드",
+        "BapBroadcastDelegatorSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapBroadcastDelegatorSink": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 3,
+      "roles": [
+        "BapBroadcastSource (source/transmitter)",
+        "BapBroadcastAssistant 실행 보드",
+        "BapBroadcastDelegatorSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapBroadcastSink": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSink/BapBroadcastSink.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BapBroadcastSource (source/transmitter)",
+        "BapBroadcastSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapBroadcastSource": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 3,
+      "roles": [
+        "BapBroadcastSource (source/transmitter)",
+        "BapBroadcastAssistant 실행 보드",
+        "BapBroadcastDelegatorSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapUnicastCycle": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastCycle/BapUnicastCycle.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BapUnicastCycle 실행 보드",
+        "BapUnicastSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapUnicastDuplexClient": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexClient/BapUnicastDuplexClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BapUnicastDuplexClient (client/controller)",
+        "BapUnicastDuplexServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapUnicastDuplexServer": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexServer/BapUnicastDuplexServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BapUnicastDuplexClient (client/controller)",
+        "BapUnicastDuplexServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapUnicastSink": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BapUnicastSource (source/transmitter)",
+        "BapUnicastSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/BapUnicastSource": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/BapUnicastSource/BapUnicastSource.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BapUnicastSource (source/transmitter)",
+        "BapUnicastSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CallControlClient": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CallControlClient/CallControlClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CallControlClient (client/controller)",
+        "CallControlServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CallControlServer": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CallControlServer/CallControlServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CallControlClient (client/controller)",
+        "CallControlServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CapAcceptor": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CapCommander (commander)",
+        "CapAcceptor (acceptor)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CapCommander": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CapCommander (commander)",
+        "CapAcceptor (acceptor)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CapInitiator": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CapInitiator (initiator)",
+        "CapAcceptor (acceptor)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CapUnicastAcceptor": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CapUnicastAcceptor/CapUnicastAcceptor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CapUnicastInitiator (initiator)",
+        "CapUnicastAcceptor (acceptor)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CapUnicastInitiator": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CapUnicastInitiator/CapUnicastInitiator.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CapUnicastInitiator (initiator)",
+        "CapUnicastAcceptor (acceptor)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CsipSetCoordinator": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CsipSetCoordinator (coordinator)",
+        "CsipSetMember (set member)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/CsipSetMember": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CsipSetCoordinator (coordinator)",
+        "CsipSetMember (set member)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/ExternalI2sSpeakerSink": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/ExternalI2sSpeakerSink/ExternalI2sSpeakerSink.ino",
+      "recommended_profile": "ble_audio_io",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ExternalPdmMicrophoneSource (source/transmitter)",
+        "ExternalI2sSpeakerSink (sink/receiver)"
+      ],
+      "serial_baud": null,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "DAP UART를 분리하고 PDM 또는 I2S 외장 장치의 전압·clock·GND 결선을 확인합니다."
+      ]
+    },
+    "NUCODE_BLE_Audio/ExternalPdmMicrophoneSource": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/ExternalPdmMicrophoneSource/ExternalPdmMicrophoneSource.ino",
+      "recommended_profile": "ble_audio_io",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ExternalPdmMicrophoneSource (source/transmitter)",
+        "ExternalI2sSpeakerSink (sink/receiver)"
+      ],
+      "serial_baud": null,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "DAP UART를 분리하고 PDM 또는 I2S 외장 장치의 전압·clock·GND 결선을 확인합니다."
+      ]
+    },
+    "NUCODE_BLE_Audio/GamingAudioBroadcaster": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioBroadcaster/GamingAudioBroadcaster.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "GamingAudioBroadcaster (broadcaster)",
+        "GamingAudioReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/GamingAudioGateway": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioGateway/GamingAudioGateway.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "GamingAudioGateway (gateway)",
+        "GamingAudioTerminal (terminal)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/GamingAudioReceiver": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioReceiver/GamingAudioReceiver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "GamingAudioBroadcaster (broadcaster)",
+        "GamingAudioReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/GamingAudioTerminal": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/GamingAudioTerminal/GamingAudioTerminal.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "GamingAudioGateway (gateway)",
+        "GamingAudioTerminal (terminal)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/HearingAccessClient": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/HearingAccessClient/HearingAccessClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "HearingAccessClient (client/controller)",
+        "HearingAccessServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/HearingAccessServer": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/HearingAccessServer/HearingAccessServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "HearingAccessClient (client/controller)",
+        "HearingAccessServer (server/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/Lc3SyntheticLoopback": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "Lc3SyntheticLoopback 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE_Audio/MediaControlClient": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/MediaControlClient/MediaControlClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "MediaControlClient (client/controller)",
+        "MediaControlPlayer (player/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/MediaControlPlayer": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer/MediaControlPlayer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "MediaControlClient (client/controller)",
+        "MediaControlPlayer (player/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/PublicAudioBroadcastSink": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSink/PublicAudioBroadcastSink.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "PublicAudioBroadcastSource (source/transmitter)",
+        "PublicAudioBroadcastSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/PublicAudioBroadcastSource": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSource/PublicAudioBroadcastSource.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "PublicAudioBroadcastSource (source/transmitter)",
+        "PublicAudioBroadcastSink (sink/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/TelephonyMediaBroadcaster": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaBroadcaster/TelephonyMediaBroadcaster.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "TelephonyMediaBroadcaster (broadcaster)",
+        "TelephonyMediaReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/TelephonyMediaGateway": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaGateway/TelephonyMediaGateway.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "TelephonyMediaGateway (gateway)",
+        "TelephonyMediaTerminal (terminal)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/TelephonyMediaReceiver": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaReceiver/TelephonyMediaReceiver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "TelephonyMediaBroadcaster (broadcaster)",
+        "TelephonyMediaReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_Audio/TelephonyMediaTerminal": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaTerminal/TelephonyMediaTerminal.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "TelephonyMediaGateway (gateway)",
+        "TelephonyMediaTerminal (terminal)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ChannelSounding/RasInitiator": {
+      "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/RasInitiator.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "RasInitiator (initiator)",
+        "RasReflector (reflector)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": [
+        "Reflector를 먼저 켜고 두 보드의 보안 peer 상태를 맞춥니다."
+      ]
+    },
+    "NUCODE_BLE_ChannelSounding/RasReflector": {
+      "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/RasReflector.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "RasInitiator (initiator)",
+        "RasReflector (reflector)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": [
+        "Initiator와 함께 사용하며 거리 결과는 Initiator Serial에서 확인합니다."
+      ]
+    },
+    "NUCODE_BLE_DFU/SecureDfuPeripheral": {
+      "path": "libraries/NUCODE_BLE_DFU/examples/SecureDfuPeripheral/SecureDfuPeripheral.ino",
+      "recommended_profile": "secure_ble_dfu",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SecureDfuPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "외부 ECDSA P-256 signing key와 MCUboot sysbuild가 필요하며 자동 CONFIRM은 하지 않습니다."
+      ]
+    },
+    "NUCODE_BLE_DirectionFinding/ConnectedCteResponder": {
+      "path": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/ConnectedCteResponder.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 1,
+      "roles": [
+        "ConnectedCteResponder (responder)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "app.overlay",
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": [
+        "제품 SDC의 IQ RX·AoD는 지원하지 않으며 외부 compatible peer 조건을 확인합니다."
+      ]
+    },
+    "NUCODE_BLE_DirectionFinding/CteBeacon": {
+      "path": "libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon/CteBeacon.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 1,
+      "roles": [
+        "CteBeacon 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": [
+        "제품 SDC의 IQ RX·AoD는 지원하지 않으며 외부 compatible peer 조건을 확인합니다."
+      ]
+    },
+    "NUCODE_BLE_EATT/EattCentral": {
+      "path": "libraries/NUCODE_BLE_EATT/examples/EattCentral/EattCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "EattCentral (central/client)",
+        "EattPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE_EATT/EattPeripheral": {
+      "path": "libraries/NUCODE_BLE_EATT/examples/EattPeripheral/EattPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "EattCentral (central/client)",
+        "EattPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/BISEncryptedReceiver": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BISEncryptedSource (source/transmitter)",
+        "BISEncryptedReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/BISEncryptedSource": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BISEncryptedSource (source/transmitter)",
+        "BISEncryptedReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/BISReceiver": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BISSource (source/transmitter)",
+        "BISReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/BISSource": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BISSource (source/transmitter)",
+        "BISReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/BISTimeReceiver": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BISTimeSource (source/transmitter)",
+        "BISTimeReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/BISTimeSource": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "BISTimeSource (source/transmitter)",
+        "BISTimeReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/CISCentral": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISCentral/CISCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CISCentral (central/client)",
+        "CISPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/CISPeripheral": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/CISPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 2,
+      "roles": [
+        "CISCentral (central/client)",
+        "CISPeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/CISToBISBridge": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 3,
+      "roles": [
+        "CISToBISPeer (peer)",
+        "CISToBISBridge (bridge)",
+        "CISToBISReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/CISToBISPeer": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 3,
+      "roles": [
+        "CISToBISPeer (peer)",
+        "CISToBISBridge (bridge)",
+        "CISToBISReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_ISO/CISToBISReceiver": {
+      "path": "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [
+        {
+          "profile": "adaptive",
+          "classification": "experimental"
+        }
+      ],
+      "board_count": 3,
+      "roles": [
+        "CISToBISPeer (peer)",
+        "CISToBISBridge (bridge)",
+        "CISToBISReceiver (receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": []
+    },
+    "NUCODE_BLE_LegacySigning/LegacySignedWriteCentral": {
+      "path": "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWriteCentral/LegacySignedWriteCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "LegacySignedWriteCentral (central/client)",
+        "LegacySignedWritePeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE_LegacySigning/LegacySignedWritePeripheral": {
+      "path": "libraries/NUCODE_BLE_LegacySigning/examples/LegacySignedWritePeripheral/LegacySignedWritePeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "LegacySignedWriteCentral (central/client)",
+        "LegacySignedWritePeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE_Security/EnvironmentalSensing": {
+      "path": "libraries/NUCODE_BLE_Security/examples/EnvironmentalSensing/EnvironmentalSensing.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "EnvironmentalSensing 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE_Security/GattCacheCentral": {
+      "path": "libraries/NUCODE_BLE_Security/examples/GattCacheCentral/GattCacheCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "GattCacheCentral (central/client)",
+        "GattCachePeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE_Security/GattCachePeripheral": {
+      "path": "libraries/NUCODE_BLE_Security/examples/GattCachePeripheral/GattCachePeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "GattCacheCentral (central/client)",
+        "GattCachePeripheral (peripheral/server)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE_Security/HeartRate": {
+      "path": "libraries/NUCODE_BLE_Security/examples/HeartRate/HeartRate.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "HeartRate 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE_Security/SecureConsumerControl": {
+      "path": "libraries/NUCODE_BLE_Security/examples/SecureConsumerControl/SecureConsumerControl.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SecureConsumerControl 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE_Security/SecureKeyboard": {
+      "path": "libraries/NUCODE_BLE_Security/examples/SecureKeyboard/SecureKeyboard.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SecureKeyboard 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_BLE_Security/SecureMouse": {
+      "path": "libraries/NUCODE_BLE_Security/examples/SecureMouse/SecureMouse.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SecureMouse 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "동작에 필요한 compatible BLE peer 또는 mobile/host client를 별도로 준비합니다."
+      ]
+    },
+    "NUCODE_NU54DK/AnalogChannels": {
+      "path": "libraries/NUCODE_NU54DK/examples/AnalogChannels/AnalogChannels.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "AnalogChannels 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/AnalogReadA0": {
+      "path": "libraries/NUCODE_NU54DK/examples/AnalogReadA0/AnalogReadA0.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "AnalogReadA0 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/AnalogResolution": {
+      "path": "libraries/NUCODE_NU54DK/examples/AnalogResolution/AnalogResolution.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "AnalogResolution 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/Blink": {
+      "path": "libraries/NUCODE_NU54DK/examples/Blink/Blink.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "Blink 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/BoardInfo": {
+      "path": "libraries/NUCODE_NU54DK/examples/BoardInfo/BoardInfo.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "BoardInfo 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/CounterAlarm": {
+      "path": "libraries/NUCODE_NU54DK/examples/CounterAlarm/CounterAlarm.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "CounterAlarm 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/DynamicPWM": {
+      "path": "libraries/NUCODE_NU54DK/examples/DynamicPWM/DynamicPWM.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "DynamicPWM 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/InterruptButton": {
+      "path": "libraries/NUCODE_NU54DK/examples/InterruptButton/InterruptButton.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "InterruptButton 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/PWMFade": {
+      "path": "libraries/NUCODE_NU54DK/examples/PWMFade/PWMFade.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "PWMFade 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/Serial1RuntimePins": {
+      "path": "libraries/NUCODE_NU54DK/examples/Serial1RuntimePins/Serial1RuntimePins.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "Serial1RuntimePins 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/SerialEcho": {
+      "path": "libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SerialEcho 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/SettingsStorage": {
+      "path": "libraries/NUCODE_NU54DK/examples/SettingsStorage/SettingsStorage.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SettingsStorage 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/SPI00RuntimePins": {
+      "path": "libraries/NUCODE_NU54DK/examples/SPI00RuntimePins/SPI00RuntimePins.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SPI00RuntimePins 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/SystemOffWake": {
+      "path": "libraries/NUCODE_NU54DK/examples/SystemOffWake/SystemOffWake.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SystemOffWake 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "System OFF wake source와 버튼 조건을 확인합니다."
+      ]
+    },
+    "NUCODE_NU54DK/ToneOutput": {
+      "path": "libraries/NUCODE_NU54DK/examples/ToneOutput/ToneOutput.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "ToneOutput 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_NU54DK/WatchdogBasic": {
+      "path": "libraries/NUCODE_NU54DK/examples/WatchdogBasic/WatchdogBasic.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "WatchdogBasic 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "watchdog reset이 의도된 예제이므로 Serial 종료 메시지와 재부팅을 함께 확인합니다."
+      ]
+    },
+    "NUCODE_NU54DK/WireRuntimePins": {
+      "path": "libraries/NUCODE_NU54DK/examples/WireRuntimePins/WireRuntimePins.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "WireRuntimePins 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_Peripheral_Fabric/FabricCapabilities": {
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/FabricCapabilities/FabricCapabilities.ino",
+      "recommended_profile": "fabric",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "FabricCapabilities 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": [
+        "DAP UART 공유 핀을 분리하고 예제가 요구하는 외장 I/O 결선을 확인합니다."
+      ]
+    },
+    "Servo/Sweep": {
+      "path": "libraries/Servo/examples/Sweep/Sweep.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "Sweep 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "SPI/SPITransaction": {
+      "path": "libraries/SPI/examples/SPITransaction/SPITransaction.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SPITransaction 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    },
+    "Wire/WirePmicId": {
+      "path": "libraries/Wire/examples/WirePmicId/WirePmicId.ino",
+      "recommended_profile": "standard",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "WirePmicId 실행 보드"
+      ],
+      "serial_baud": null,
+      "sidecars": [],
+      "conditions": []
+    }
+  }
+}

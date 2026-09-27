@@ -1,4 +1,4 @@
-# Arduino CLI 및 IDE 통합 설계 — v0.4.0
+# Arduino CLI 및 IDE 통합 설계 — stable v0.5.0
 
 | 항목 | 내용 |
 | --- | --- |
@@ -7,10 +7,15 @@
 | FQBN | `nucode:zephyr:nu54dk` |
 | Zephyr target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | 최종 이미지 | Loader/LLEXT 없는 단일 Full Zephyr 이미지 |
+| v0.5.0 Host 지원 | Windows 10/11 x64; Ubuntu/macOS는 후속 제품선 |
 
 이 문서는 Arduino platform lifecycle과 NU54DK Build Adapter의 현재 연결을 설명한다. recipe의
 단일 원본은 `boards.txt`와 `platform.txt`이며, 실행 구현은
 `tools/nu54-builder/src/nu54_builder.py`다.
+
+아래 메뉴와 사용자 출력은 stable `v0.5.0` 구현 기준이다. 이전 stable `v0.4.1`의 profile 세 개와
+v0.5.0의 adaptive·DFU·Audio I/O 선택은 [프로필 계약](07_구성_프로필과_Arduino_예제_배포.md)에서
+구분한다. 설치 경로와 GUI 절차는 [v0.5.0 설치 안내](../05_릴리스/v0.5.0/README.md)를 따른다.
 
 ## 1. 사용자에게 보이는 흐름
 
@@ -74,14 +79,21 @@ Arduino Tools 메뉴는 두 독립 선택을 제공한다.
 | 메뉴 | 값 | 전달되는 의미 |
 | --- | --- | --- |
 | `Feature set` | `Standard peripherals` | `build.nu54_profile=standard` |
+| `Feature set` | `Adaptive capabilities (experimental)` | `build.nu54_profile=adaptive`; 실험적 선택 |
 | `Feature set` | `BLE NUS` | `build.nu54_profile=ble` |
+| `Feature set` | `Secure BLE DFU (MCUboot)` | `build.nu54_profile=secure_ble_dfu`; 서명·sysbuild |
 | `Feature set` | `Peripheral Fabric (DAP UART disconnected)` | `build.nu54_profile=fabric` |
-| `Upload probe` | `CMSIS-DAP (pyOCD)` | 한 probe 자동 선택 |
-| `Upload probe` | `CMSIS-DAP with UID (pyOCD)` | 필수 CMSIS-DAP UID field |
-| `Upload probe` | `SEGGER J-Link` | 필수 J-Link serial field |
+| `Feature set` | `BLE Audio external I/O (DAP UART disconnected)` | `build.nu54_profile=ble_audio_io`; 외장 실물은 사용자 후속 |
+| `Upload probe` | `CMSIS-DAP - one probe auto (multiple: CLI UID)` | 한 probe 자동 선택, 여러 대는 CLI exact UID |
+| `Upload probe` | `SEGGER J-Link - external SWD/VTref/GND (CLI serial)` | 외장 SWD probe와 CLI serial 필요 |
 
 `upload.tool.default`는 full-image SWD upload에도 Arduino가 요구하는 표준 property 이름이다.
 COM port, DAPLink volume과 probe UID는 서로 다른 식별자다.
+
+Standard profile은 Wire·SPI·PWM의 동적 route 때문에 `PM_DEVICE_RUNTIME`을 포함하지만
+`CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE=n`을 명시한다. 각 backend가 `begin()` 시 필요한 장치에만
+runtime PM을 켜며, 사용하지 않은 전체 장치를 부팅 직후 자동 suspend하여 다음 pyOCD SWD 접속을
+막지 않는다. 이 계약은 공개 RC2 이후 GUI 연속 Upload 재현으로 추가됐다.
 
 ## 4. Arduino lifecycle 연결
 
@@ -127,7 +139,7 @@ NU54_FLASH_USED=<bytes>
 NU54_RAM_USED=<bytes>
 ```
 
-v0.4.0의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
+v0.4.1의 Arduino maximum Sketch size는 loaderless application partition과 같은 `1490944` byte다.
 IDE가 표시하는 백분율은 위 FLASH used를 이 값으로 나눈 결과다. 이 숫자는 UI 장식이 아니라
 Devicetree `zephyr,code-partition`과 linker에 적용된 `0x000000..0x16c000` 범위와 일치해야
 한다. 세 값이 어긋나면 package/release gate가 실패해야 한다.
@@ -209,31 +221,40 @@ arduino-cli upload `
 
 기본 경로는 CMSIS-DAP가 정확히 한 대일 때만 자동 선택한다.
 
-### 6.4 명시 UID 또는 J-Link Upload
+### 6.4 RC2 명시 UID 또는 J-Link Upload
 
-여러 CMSIS-DAP 중 하나를 선택할 때는 compile부터 `pyocd_uid`를 사용한다.
+Arduino IDE 2.x의 board option은 임의 UID 입력 UI를 제공하지 않는다. 따라서 작동하지 않는
+별도 `pyocd_uid` 메뉴를 노출하지 않고, CMSIS-DAP에는 자동 선택 한 항목만 둔다.
+CMSIS-DAP가 한 대면 자동 선택하며, 여러 대면 임의 선택하지 않고 CLI의
+`NUCODE_PROBE_UID` 환경 변수로 exact 대상을 지정한다. compile 때는 일반
+`upload_probe=pyocd`를 그대로 사용한다.
 
 ```powershell
 arduino-cli compile `
   --fqbn 'nucode:zephyr:nu54dk' `
-  --board-options feature_set=standard,upload_probe=pyocd_uid `
+  --board-options feature_set=standard,upload_probe=pyocd `
   --build-path $ArduinoBuild `
   $SketchDir
 
+$env:NUCODE_PROBE_UID = '<CMSIS-DAP-UID>'
 arduino-cli upload `
   --fqbn 'nucode:zephyr:nu54dk' `
-  --board-options feature_set=standard,upload_probe=pyocd_uid `
-  --upload-field probe_id=<CMSIS-DAP-UID> `
+  --board-options feature_set=standard,upload_probe=pyocd `
   --build-path $ArduinoBuild `
   --verbose `
   $SketchDir
 ```
 
-J-Link는 `upload_probe=jlink`와
-`--upload-field probe_id=<JLINK-SERIAL-NUMBER>`를 사용한다. 선택 runner가 없거나 ID가 비면
+빈 값·메뉴 placeholder·형식 오류·현재 연결되지 않은 UID는 flash 전에 각각 구체적인 ASCII 오류
+코드와 한국어 해결 안내로 거부한다. 일반 console에는 UID의 끝 4자리만 남기고, 증거에는 원문 대신
+SHA-256을 기록한다. J-Link는 외장 probe의 SWD·VTref·GND를 연결한 경우에만 `upload_probe=jlink`와
+`NUCODE_PROBE_UID=<JLINK-SERIAL-NUMBER>`를 사용한다. 선택 runner가 없거나 ID가 비면
 실패하며 pyOCD로 자동 fallback하지 않는다.
 
 ## 7. Arduino IDE 2.x 계약
+
+RC2의 실제 GUI smoke는 사용자 후속이다. 자동 CLI·설치 package·실물 Upload PASS는
+GUI에서 메뉴 선택·Verify·Upload·Serial Monitor를 수행했다는 증거로 대체하지 않는다.
 
 ### Verify
 
@@ -241,18 +262,28 @@ J-Link는 `upload_probe=jlink`와
 - 표준 예제는 sidecar 없이 선택 profile로 build된다.
 - source 오류는 Arduino의 `#line` 정보를 가능한 한 보존한다.
 - 성공 뒤 Full Zephyr FLASH/RAM 사용량을 표시한다.
+- 기본 non-verbose console에도 환경/Feature set, 구성, compile, link, artifact의 5단계를 표시한다.
+  Ninja의 실제 `[완료/전체]`가 있을 때만 분모를 표시하고, 장시간 출력이 없으면 10초마다 경과
+  heartbeat를 한 줄 갱신한다. 가짜 퍼센트는 만들지 않는다.
+- 실패 단계와 전체 UTF-8 로그 경로를 표시한다. 정상 console은 bounded summary만 유지한다.
 
 ### Upload
 
-- 선택한 세 upload tool 중 하나를 사용한다.
+- 선택한 두 upload tool(CMSIS-DAP pyOCD 또는 외장 J-Link) 중 하나를 사용한다.
 - 다중 CMSIS-DAP 기본 경로는 임의 probe를 고르지 않고 실패한다.
 - manifest, context와 artifact hash가 맞아야 flash한다.
 - 일반 upload에서 mass erase/recover를 실행하지 않는다.
+- `E_PROBE_NONE`, `E_PROBE_AMBIGUOUS`, `E_PROBE_ID`, `E_PROBE_NOT_FOUND`,
+  `E_SWD_NO_ACK`, `E_TARGET_POWER`, `E_TARGET_UNRESPONSIVE`, `E_PYOCD_EXEC`,
+  `E_JLINK_EXEC`, `E_FLASH_WRITE`를 첫 원인 기준으로 구분한다. 비차단 Board ID 경고가 뒤의
+  SWD No ACK를 가리지 않아야 한다.
+- 저속 SWD와 under-reset은 명시적 비파괴 진단 인자로만 제공한다. 자동 unlock·recover·mass erase는
+  어떤 오류 복구에도 사용하지 않는다.
 
 ### Serial Monitor와 Debug
 
 Serial Monitor는 target UART의 VCOM bridge이며 SWD probe ID와 별개다. Arduino IDE Debug 버튼의
-자동 toolchain/debugserver 구성은 v0.4.0 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
+자동 toolchain/debugserver 구성은 v0.4.1 정식 지원 범위가 아니다. Full Zephyr ELF를 이용한
 수동 west debug 경계는 [업로드와 디버그](./05_업로드와_디버그.md)를 따른다.
 
 ## 8. Library와 구성 경계
@@ -266,8 +297,14 @@ Adapter는 넘겨받은 source/include record를 검증하고 package allowlist 
 - precompiled-only 또는 LTO-only Arduino library 미지원
 - AVR register/libc와 architecture 전용 assembly 호환성 미보장
 - 임의 linker script 주입 미지원
-- sysbuild, MCUboot, DFU, OTA와 LLEXT 미지원
-- Linux/macOS Boards Manager production 지원 미제공
+- 기본 loaderless 경로의 sysbuild·MCUboot·DFU·OTA 미제공; RC의 `secure_ble_dfu`는
+  별도 서명·고정 layout 계약으로만 제공하며 [DFU 안내](../../libraries/NUCODE_BLE_DFU/examples/README.md)를 따른다.
+- LLEXT 미지원
+- Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에 미제공.
+  [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 Ubuntu AMD64·Apple Silicon
+  macOS 구현·실증 중 남은 HOST-W04~HOST-W08을 완료한 뒤 후속 제품선에서 제공할 계획이다.
+  버전은 미정이며 현재는 사용자 지시로
+  HOST-W01~W03 3/8 완료 상태에서 보류했으며, 이 계획만으로 후속 구현을 시작하지 않는다.
 
 ## 9. 오류와 검증 기록
 

@@ -1,0 +1,312 @@
+player: Media player ready; s=status x=stop service ownership
+client: Commands: p=play u=pause x=stop n=next b=previous +=seek i=select k=bad-opcode z=stale-object s=state r=refresh
+player: Media controller connected
+client: Media discovery result=0
+client: Commands: p=play u=pause x=stop n=next b=previous +=seek i=select k=bad-opcode z=stale-object s=state r=refresh
+player: Media controller disconnected reason=8
+player: Media advertising restarted
+player: Media controller connected
+client: Media discovery result=0
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=8 notifications=0
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=1
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=16 notifications=1
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=2
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=24 notifications=2
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=3
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=32 notifications=2
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=4
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=40 notifications=2
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=5
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=48 notifications=2
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=6
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=56 notifications=2
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=7
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=64 notifications=2
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=8
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=72 notifications=3
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=9
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=80 notifications=4
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=10
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=88 notifications=4
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=11
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=96 notifications=4
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=12
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=104 notifications=4
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=13
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=112 notifications=4
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=14
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=120 notifications=4
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=15
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=128 notifications=5
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=16
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=136 notifications=6
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=17
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=144 notifications=6
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=18
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=152 notifications=6
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=19
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=160 notifications=6
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=20
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=168 notifications=6
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=21
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=176 notifications=6
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=22
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=184 notifications=7
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=23
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=192 notifications=8
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=24
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=200 notifications=8
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=25
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=208 notifications=8
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=26
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=216 notifications=8
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=27
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=224 notifications=8
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=28
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=232 notifications=8
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=29
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=240 notifications=9
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=30
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=248 notifications=10
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=31
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=256 notifications=10
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=32
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=264 notifications=10
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=33
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=272 notifications=10
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=34
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=280 notifications=10
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=35
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=288 notifications=10
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=36
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=296 notifications=11
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=37
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=304 notifications=12
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=38
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=312 notifications=12
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=39
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=320 notifications=12
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=40
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=328 notifications=12
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=41
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=336 notifications=12
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=42
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=344 notifications=12
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=43
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=352 notifications=13
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=44
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=360 notifications=14
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=45
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=368 notifications=14
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=46
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=376 notifications=14
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=47
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=384 notifications=14
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=48
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=392 notifications=14
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=49
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=400 notifications=14
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=50
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=408 notifications=15
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=51
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=416 notifications=16
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=52
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=424 notifications=16
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=53
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=432 notifications=16
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=54
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=440 notifications=16
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=55
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=448 notifications=16
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=56
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=456 notifications=16
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=57
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=464 notifications=17
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=58
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=472 notifications=18
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=59
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=480 notifications=18
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=60
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=488 notifications=18
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=61
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=496 notifications=18
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=62
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=504 notifications=18
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=63
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=512 notifications=18
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=64
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=520 notifications=19
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=65
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=528 notifications=20
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=66
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=536 notifications=20
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=67
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=544 notifications=20
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=68
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=552 notifications=20
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=69
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=560 notifications=20
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=70
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=568 notifications=20
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=71
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=576 notifications=21
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=72
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=584 notifications=22
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=73
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=592 notifications=22
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=74
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=600 notifications=22
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=75
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=608 notifications=22
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=76
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=616 notifications=22
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=77
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=624 notifications=22
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=78
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=632 notifications=23
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=79
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=640 notifications=24
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=80
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=648 notifications=24
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=81
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=656 notifications=24
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=82
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=664 notifications=24
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=83
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=672 notifications=24
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=84
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=680 notifications=24
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=85
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=688 notifications=25
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=86
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=696 notifications=26
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=87
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=704 notifications=26
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=88
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=712 notifications=26
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=89
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=720 notifications=26
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=90
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=728 notifications=26
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=91
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=736 notifications=26
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=92
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=744 notifications=27
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=93
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=752 notifications=28
+client: MEDIA_SEEK submitted=1
+client: MEDIA_SEEK complete=1 normal_ops=94
+client: player=Player0 track=Interlude #1 (Song for id=257 position=500 duration=6300 opcodes=2097151 state=2 updates=760 notifications=28
+client: MEDIA_NEXT submitted=1
+client: MEDIA_NEXT complete=1 normal_ops=95
+client: player=Player0 track=Interlude #2 (For Bobb id=258 position=0 duration=7500 opcodes=2097151 state=2 updates=768 notifications=28
+client: MEDIA_PREVIOUS submitted=1
+client: MEDIA_PREVIOUS complete=1 normal_ops=96
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=776 notifications=28
+client: MEDIA_SELECT submitted=1
+client: MEDIA_SELECT complete=1 normal_ops=97
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=784 notifications=28
+client: MEDIA_REFRESH submitted=1
+client: MEDIA_REFRESH complete=1 normal_ops=98
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=792 notifications=28
+client: MEDIA_PLAY submitted=1
+client: MEDIA_PLAY complete=1 normal_ops=99
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=1 updates=800 notifications=29
+client: MEDIA_PAUSE submitted=1
+client: MEDIA_PAUSE complete=1 normal_ops=100
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=808 notifications=30
+client: player=Player0 track=Interlude #1 (Song for id=257 position=0 duration=6300 opcodes=2097151 state=2 updates=808 notifications=30
+client: MEDIA_NEG_OPCODE rejected=1 result=1 native=-22

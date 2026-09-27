@@ -1,5 +1,9 @@
 # M12 CI/CD와 재현 빌드 기준선
 
+> **역사적 M12 기준선:** 아래 job·suite 수, cache와 8자 outdir 명령은 당시 source의 재현 계약이다.
+> 원래 실행 결과를 보존하며 현행 runner의 입력 제한이나 최신 CI 상태로 해석하지 않는다.
+> 현재 작업은 [v0.5.0 TODO](../TODO_v0.5.0.md), 설치·지원은 [v0.4.1 안내](../05_릴리스/v0.4.1/README.md)를 따른다.
+
 ## 1. 목적과 당시 최종 판정
 
 M12는 GitHub-hosted software 검증, exact NCS 기반 재현 build와 self-hosted NU54DK HIL을

@@ -1,0 +1,184 @@
+{
+  "status": "PASS",
+  "outcome": "CONNECTED_RAW_IQ_OBSERVED",
+  "scope": "connected_raw_iq_rx",
+  "raw_iq_rx": "PASS",
+  "angle_measurement": "NOT RUN",
+  "core_revision": "045f6339",
+  "receiver_probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "responder_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "receiver_port": "COM10",
+  "responder_port": "COM13",
+  "receiver_aux": "COM11",
+  "responder_aux": "COM12",
+  "receiver_image_sha256": "35fac137e274e99b8eef5d248f816e3a2cd188868aaba2a898c551527c302bc7",
+  "responder_image_sha256": "5b2b37f8892ee31a9327741ef872d3e47230873bb9679003a86539775e268bb3",
+  "source_clean": false,
+  "iq_reports": 20,
+  "iq_samples": 1640,
+  "iq_event_counters": [
+    4,
+    15,
+    26,
+    37,
+    48,
+    59,
+    70,
+    81,
+    92,
+    103,
+    114,
+    125,
+    136,
+    147,
+    158,
+    169,
+    180,
+    191,
+    202,
+    213
+  ],
+  "host_iq_callbacks": 20,
+  "controller_iq_events": 20,
+  "host_gate_drops": 0,
+  "iq_packet_status_counts": {
+    "0": 20
+  },
+  "cleanup_confirmed": true,
+  "receiver_lines": [
+    "DF_CONN|ANT_INFO|count=1|max_pattern=12|max_cte=20",
+    "DF_CONN|SCANNING|code=0",
+    "DF_CONN|SCAN_STOP|code=0",
+    "DF_CONN|CONNECT_REQUEST|code=0",
+    "DF_CONN|CONNECTED|error=0",
+    "DF_CONN|AOA_RX_ENABLE|code=-22",
+    "DF_CONN|RAW_RX_PARAM|code=0",
+    "DF_CONN|HOST_RX_STATE|enabled=1|params=1|cte_types=1",
+    "DF_CONN|RAW_REQUEST|code=0",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=4|channel=36|i0=14|q0=-4|rssi=-590",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=15|channel=26|i0=12|q0=-8|rssi=-560",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=26|channel=18|i0=-11|q0=12|rssi=-570",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=37|channel=19|i0=-13|q0=3|rssi=-570",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=48|channel=14|i0=7|q0=16|rssi=-570",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=59|channel=34|i0=-15|q0=5|rssi=-590",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=70|channel=2|i0=6|q0=14|rssi=-610",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=81|channel=11|i0=16|q0=-5|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=92|channel=26|i0=14|q0=0|rssi=-560",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=103|channel=11|i0=12|q0=-1|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=114|channel=1|i0=-15|q0=9|rssi=-610",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=125|channel=21|i0=-14|q0=5|rssi=-560",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=136|channel=17|i0=-13|q0=0|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=147|channel=6|i0=16|q0=-8|rssi=-600",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=158|channel=32|i0=13|q0=10|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=169|channel=22|i0=-9|q0=-12|rssi=-560",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=180|channel=13|i0=6|q0=-9|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=191|channel=33|i0=14|q0=-6|rssi=-580",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=202|channel=29|i0=13|q0=2|rssi=-570",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=213|channel=34|i0=-15|q0=0|rssi=-590",
+    "DF_CONN|IQ|error=0|count=82|type=1|status=0|sample_type=0|slot=2|event=224|channel=19|i0=4|q0=-13|rssi=-570",
+    "DF_CONN|RAW_REQUEST_STOP|code=0",
+    "DF_CONN|RAW_RX_STOP|code=0",
+    "DF_CONN|HOST_RX_STATE|enabled=0|params=1|cte_types=0",
+    "DF_CONN|DISCONNECT_REQUEST|code=0",
+    "DF_CONN|DISCONNECTED|reason=22",
+    "DF_CONN|HOST_RX_STATE|enabled=0|params=1|cte_types=0",
+    "DF_CONN|STOPPED"
+  ],
+  "responder_lines": [
+    "CTE responses enabled on connected peer",
+    "CTE peer disconnected"
+  ],
+  "receiver_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_flash": {
+    "method": "pyocd-load-sector-no-reset",
+    "exit_code": 0
+  },
+  "receiver_flash": {
+    "method": "pyocd-load-sector-no-reset",
+    "exit_code": 0
+  },
+  "responder_start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "receiver_start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "elapsed_s": 11.419,
+  "path_results": {
+    "connected_controller_commands": "PASS",
+    "connected_controller_iq_event": "PASS",
+    "connected_host_callback": "PASS",
+    "connected_raw_iq_samples": "PASS",
+    "connectionless_controller_commands": "NOT RUN",
+    "connectionless_controller_iq_event": "NOT RUN",
+    "connectionless_host_callback": "NOT RUN",
+    "connectionless_raw_iq_samples": "NOT RUN",
+    "antenna_switching": "NOT RUN",
+    "angle_measurement": "NOT RUN",
+    "external_rf_path": "NOT RUN"
+  },
+  "cleanup": {
+    "request_disabled": true,
+    "sampling_disabled": true,
+    "disconnect_requested": true,
+    "receiver_stopped": true,
+    "host_state_disarmed": true,
+    "responder_stopped": false,
+    "responder_disconnected": true
+  }
+}

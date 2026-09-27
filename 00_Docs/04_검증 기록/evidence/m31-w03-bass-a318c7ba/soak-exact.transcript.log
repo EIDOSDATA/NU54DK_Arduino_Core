@@ -1,0 +1,9 @@
+source_revision=a318c7ba9b5fa84d586c35fadab88c1675163100 source_clean=true duration_seconds=180
+ROLE_PORT=COM10|LINES=178
+COM10|broadcast sent frames=65300
+COM10|broadcast sent frames=83000
+ROLE_PORT=COM13|LINES=0
+ROLE_PORT=COM14|LINES=176
+COM14|delegated received=3300 energy=1126135 dropped=0
+COM14|delegated received=20800 energy=1084378 dropped=0
+summary source_frame_delta=17700 received_frame_delta=17500 positive_energy_observations=176 dropped=0 unexpected_disconnects=0

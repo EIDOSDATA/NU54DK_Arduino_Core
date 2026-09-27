@@ -1,0 +1,641 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+  "counts": {
+    "total": 43,
+    "applicable_pass": 39,
+    "external_not_run": 3,
+    "unsupported": 1
+  },
+  "fresh_hil_direct_roles": [
+    "W03-02:client",
+    "W03-02:server",
+    "cs_initiator",
+    "cs_reflector",
+    "cte_beacon",
+    "iso_combined_peer",
+    "iso_combined_receiver",
+    "iso_combined_source"
+  ],
+  "fresh_hil_families": {
+    "iso": "iso-combined.json",
+    "audio": "audio-duplex.json",
+    "df": "df-beacon.json",
+    "cs": "cs-ras.json"
+  },
+  "roles": [
+    {
+      "id": "raw_iso_central",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/CISCentral/CISCentral.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-cis-1d058140/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "raw_iso_peripheral",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/CISPeripheral/CISPeripheral.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-cis-1d058140/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "raw_iso_broadcaster",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
+        "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-encrypted-1bb127b4/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "raw_iso_receiver",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
+        "libraries/NUCODE_BLE_ISO/examples/BISEncryptedReceiver/BISEncryptedReceiver.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-encrypted-1bb127b4/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "iso_combined_source",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/CISToBISBridge/CISToBISBridge.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "iso_combined_peer",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/CISToBISPeer/CISToBISPeer.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "iso_combined_receiver",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/CISToBISReceiver/CISToBISReceiver.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-combined-0d092738/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "iso_time_sync_sender",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/BISTimeSource/BISTimeSource.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "iso_time_sync_receiver",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ISO/examples/BISTimeReceiver/BISTimeReceiver.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w02-public-bis-time-7e4c0109/manifest.json",
+      "w07_family_hil": "iso-combined.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-01:codec",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-audio-5219626b/audio-lc3-01.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-02:client",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapUnicastSource/BapUnicastSource.ino",
+        "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexClient/BapUnicastDuplexClient.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-duplex-pair-d29ee27e/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "W03-02:server",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapUnicastSink/BapUnicastSink.ino",
+        "libraries/NUCODE_BLE_Audio/examples/BapUnicastDuplexServer/BapUnicastDuplexServer.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-duplex-pair-d29ee27e/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "W03-03:source",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-03:sink",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSink/BapBroadcastSink.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-04:source",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapBroadcastSource/BapBroadcastSource.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-04:scan_delegator",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapBroadcastDelegatorSink/BapBroadcastDelegatorSink.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-04:assistant",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/BapBroadcastAssistant/BapBroadcastAssistant.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bass-a318c7ba/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-05:initiator",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CapInitiator/CapInitiator.ino",
+        "libraries/NUCODE_BLE_Audio/examples/CapUnicastInitiator/CapUnicastInitiator.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-05:acceptor",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CapAcceptor/CapAcceptor.ino",
+        "libraries/NUCODE_BLE_Audio/examples/CapUnicastAcceptor/CapUnicastAcceptor.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-05:commander",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CapCommander/CapCommander.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-close-dc312cce/w03-subcase-index.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-06:coordinator",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-06:member_a",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-06:member_b",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/CsipSetMember/CsipSetMember.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-csip-fcbbfac5/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-07:source",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSource/PublicAudioBroadcastSource.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-07:sink",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/PublicAudioBroadcastSink/PublicAudioBroadcastSink.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-pbp-fcbbfac5/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-08:controller",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-08:renderer",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-08:microphone",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-control-119c3bd7/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-09:controller",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/MediaControlClient/MediaControlClient.ino",
+        "libraries/NUCODE_BLE_Audio/examples/CallControlClient/CallControlClient.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-09:server",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/MediaControlPlayer/MediaControlPlayer.ino",
+        "libraries/NUCODE_BLE_Audio/examples/CallControlServer/CallControlServer.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-media-call-dc312cce/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-10:central",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaGateway/TelephonyMediaGateway.ino",
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioGateway/GamingAudioGateway.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-10:peripheral",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaTerminal/TelephonyMediaTerminal.ino",
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioTerminal/GamingAudioTerminal.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-10:broadcast",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaBroadcaster/TelephonyMediaBroadcaster.ino",
+        "libraries/NUCODE_BLE_Audio/examples/TelephonyMediaReceiver/TelephonyMediaReceiver.ino",
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioBroadcaster/GamingAudioBroadcaster.ino",
+        "libraries/NUCODE_BLE_Audio/examples/GamingAudioReceiver/GamingAudioReceiver.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-11:hearing_client",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/HearingAccessClient/HearingAccessClient.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "W03-11:hearing_server",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_Audio/examples/HearingAccessServer/HearingAccessServer.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json",
+      "w07_family_hil": "audio-duplex.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "cte_beacon",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon/CteBeacon.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/cte-beacon-public-20.json",
+      "w07_family_hil": "df-beacon.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "cte_peripheral",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/ConnectedCteResponder.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w04-close-20260925/connected-responder-iq20-retry.json",
+      "w07_family_hil": "df-beacon.json",
+      "w07_hil_relationship": "current_family_regression_plus_preserved_exact_role_evidence"
+    },
+    {
+      "id": "raw_iq_receiver_candidate",
+      "classification": "unsupported",
+      "build_status": "UNSUPPORTED",
+      "runtime_status": "UNSUPPORTED",
+      "sketches": [],
+      "current_build_revision": null,
+      "current_build_evidence": null,
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+      "w07_family_hil": null,
+      "w07_hil_relationship": "not_applicable"
+    },
+    {
+      "id": "external_angle_control",
+      "classification": "external_follow_up",
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "sketches": [],
+      "current_build_revision": null,
+      "current_build_evidence": null,
+      "role_specific_runtime_evidence": null,
+      "w07_family_hil": null,
+      "w07_hil_relationship": "not_applicable"
+    },
+    {
+      "id": "cs_initiator",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/RasInitiator.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json",
+      "w07_family_hil": "cs-ras.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "cs_reflector",
+      "classification": "applicable",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "sketches": [
+        "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/RasReflector.ino"
+      ],
+      "current_build_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+      "current_build_evidence": "installed-examples.json",
+      "role_specific_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-w05-close-20260925/closure-audit.json",
+      "w07_family_hil": "cs-ras.json",
+      "w07_hil_relationship": "direct_current_role"
+    },
+    {
+      "id": "cs_result",
+      "classification": "external_follow_up",
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "sketches": [],
+      "current_build_revision": null,
+      "current_build_evidence": null,
+      "role_specific_runtime_evidence": null,
+      "w07_family_hil": null,
+      "w07_hil_relationship": "not_applicable"
+    },
+    {
+      "id": "cs_multipeer",
+      "classification": "external_follow_up",
+      "build_status": "NOT_RUN",
+      "runtime_status": "NOT_RUN",
+      "sketches": [],
+      "current_build_revision": null,
+      "current_build_evidence": null,
+      "role_specific_runtime_evidence": null,
+      "w07_family_hil": null,
+      "w07_hil_relationship": "not_applicable"
+    }
+  ],
+  "claim_limits": [
+    "가족 대표 current HIL을 다른 역할의 새 직접 실행으로 표시하지 않는다.",
+    "적용 역할 39개는 current 설치 build와 보존된 role별 exact runtime을 함께 요구한다.",
+    "외부 후속 3개 NOT_RUN과 제품 SDC IQ RX UNSUPPORTED를 PASS 분자에 넣지 않는다."
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "nucode.m31.audio-control-evidence.v1",
+  "status": "PASS",
+  "core_revision": "119c3bd7a2a87b9c0827691ee2092793d531a788",
+  "sdk_lock": {
+    "ncs_nrf": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_package": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain": "dcbdc366a1"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble,upload_probe=pyocd",
+  "public_examples": {
+    "controller": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino",
+      "sha256": "24c0291e4be23ab7879c17bbf62b0996c834b6880bc87597f22be1f65c91ae64"
+    },
+    "device": {
+      "path": "libraries/NUCODE_BLE_Audio/examples/AudioControlDevice/AudioControlDevice.ino",
+      "sha256": "e97559ddec2c4a01a193a8664497e0f3b4cea5558acf843c6bbf7847cf5e7db3"
+    }
+  },
+  "builds": {
+    "controller": {
+      "flash_bytes": 415500,
+      "ram_bytes": 211730,
+      "image_sha256": "493d00967cfca12e47be78abce3bb22f82b1a3dadefe8f254c6df4cc81381ae4"
+    },
+    "device": {
+      "flash_bytes": 402284,
+      "ram_bytes": 212797,
+      "image_sha256": "42b9175e1947530a3a507314de6e4a87af5538a4f3f0fad723a6ad4e9fdc1d74"
+    }
+  },
+  "board_map": {
+    "controller": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+    },
+    "device": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    }
+  },
+  "runner": {
+    "path": "audio-control-hil.py",
+    "sha256": "93edcddc5e50124fa17e01a979437798c37543dda954a4babfb5e7d107277175"
+  },
+  "functional": {
+    "evidence": "w08-control-119c3bd7-functional-v3.json",
+    "evidence_sha256": "1abf8a73abaf39ab04cd3fb015f229beb4615eead4d225da6c411a729bec4820",
+    "transcript": "w08-control-119c3bd7-functional-v3.transcript.log",
+    "transcript_sha256": "3678fa2411977a4756f6b65397e18410e164991ecc6d3243e9b933c2925ebca6",
+    "elapsed_seconds": 118.204,
+    "control_reports": 276,
+    "valid_reports": 273,
+    "invalid_argument_rejections": 3,
+    "state_mismatch": 0
+  },
+  "recovery": {
+    "evidence": "w08-control-119c3bd7-recovery-v4.json",
+    "evidence_sha256": "c1b6fb34e01d65cd85099172872af41af506354b2657a8bae8b23f1f733308bd",
+    "transcript": "w08-control-119c3bd7-recovery-v4.transcript.log",
+    "transcript_sha256": "d3993971d66046747157bcb3cb14fcc3c438d9dea91dffa49786bd23aa737989",
+    "elapsed_seconds": 178.128,
+    "completed_cycles": 20,
+    "maximum_cycle_seconds": 23.517,
+    "state_mismatch": 0
+  },
+  "scope": {
+    "physical_audio": "NOT_RUN",
+    "external_peer_interoperability": "NOT_RUN",
+    "qualification_claim": false
+  }
+}

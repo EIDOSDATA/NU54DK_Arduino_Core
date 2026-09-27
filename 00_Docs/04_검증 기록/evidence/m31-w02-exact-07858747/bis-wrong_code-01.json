@@ -1,0 +1,63 @@
+{
+  "test_id": "M31-ISO-01:bis",
+  "scope": "two_board_bis_negative_and_recovery",
+  "negative_class": "wrong_broadcast_code",
+  "status": "PASS",
+  "source_clean": true,
+  "identity": {
+    "core": "078587471637db187e508db2deec7d091a8262ef",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "source": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "F:/",
+      "vcom": "COM7",
+      "image_sha256": "0ff5686c58a3d593506262eed9b31b6306eccf675a93a16bd88a10e3a7e886e3",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "172032"
+    },
+    "receiver": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "3ce1668fdee245a4dd58cef09d27257d45d8d96e91c76e1e23fcd37082cb3734",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "139264"
+    }
+  },
+  "nonces": [
+    "a26d5b426b5b0e0b98d884cb29aa3827",
+    "a7b501158ba6f85754659cb78ae4a9dc"
+  ],
+  "cycles": 2,
+  "reason": null,
+  "measurement": {
+    "negative_class": "wrong_broadcast_code",
+    "cycles": 2,
+    "rejected_payloads": 0,
+    "recovery_sent": 100,
+    "recovery_received": 100,
+    "recovery_empty_slots": 5
+  },
+  "transcript_sha256": "a3e6d853d6a84b8671795cfa9e9f2e4c9a9614e29a34d01709dd2ac661c69911",
+  "observed_utc": "2026-09-15T20:30:18.612595+00:00"
+}

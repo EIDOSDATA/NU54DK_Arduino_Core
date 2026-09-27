@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "archive_format": "base64-rfc4648",
+  "purpose": "M29 Windows/Intel GATT reconnect failure raw evidence",
+  "core_revision": "ad605babfd935fcd430a8f75b132881d0f8a6f82",
+  "classification": "host_reconnect_before_physical_disconnect",
+  "files": [
+    {
+      "logical_name": "result.peripheral.transcript.log",
+      "archive_file": "raw/result.peripheral.transcript.log.b64",
+      "raw_size": 211,
+      "raw_sha256": "34393a05661a10afac52a1437969ca1884df1f86d36fd9e009eb96d9c8410717"
+    }
+  ]
+}

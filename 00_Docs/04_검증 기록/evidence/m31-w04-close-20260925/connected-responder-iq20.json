@@ -1,0 +1,153 @@
+{
+  "status": "FAIL",
+  "outcome": "COMMANDS_ACCEPTED_IQ_NOT_OBSERVED",
+  "scope": "connected_raw_iq_rx",
+  "raw_iq_rx": "HOLD",
+  "angle_measurement": "NOT RUN",
+  "core_revision": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+  "receiver_probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "responder_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "receiver_port": "COM10",
+  "responder_port": "COM13",
+  "receiver_aux": "COM11",
+  "responder_aux": "COM12",
+  "receiver_image_sha256": "3e828317424f84019d8d99deef8cc336a6d9ed01b3f70f68c3e3ced7b5c2d400",
+  "responder_image_sha256": "5b2b37f8892ee31a9327741ef872d3e47230873bb9679003a86539775e268bb3",
+  "source_clean": true,
+  "iq_reports": 0,
+  "iq_samples": 0,
+  "iq_event_counters": [],
+  "host_iq_callbacks": 0,
+  "controller_iq_events": 0,
+  "host_gate_drops": 0,
+  "iq_packet_status_counts": {},
+  "cleanup_confirmed": false,
+  "receiver_lines": [
+    "DF_CONN|ANT_INFO|count=1|max_pattern=12|max_cte=20",
+    "DF_CONN|SCANNING|code=0",
+    "DF_CONN|SCAN_STOP|code=0",
+    "DF_CONN|CONNECT_REQUEST|code=0",
+    "DF_CONN|CONNECTED|error=0",
+    "DF_CONN|AOA_RX_ENABLE|code=-22",
+    "DF_CONN|RAW_RX_PARAM|code=0",
+    "DF_CONN|HOST_RX_STATE|enabled=1|params=1|cte_types=1",
+    "DF_CONN|RAW_REQUEST|code=0",
+    "DF_CONN|DISCONNECTED|reason=62",
+    "DF_CONN|HOST_RX_STATE|enabled=0|params=1|cte_types=0",
+    "DF_CONN|STOPPED",
+    "DF_CONN|STOPPED",
+    "P2_PHASE name=stopped",
+    "P2_STACK name=BT CTLR RX reserved=896 used=224",
+    "P2_STACK name=BT CTLR RX pri reserved=448 used=216",
+    "P2_STACK name=BT RX WQ reserved=1200 used=480",
+    "P2_STACK name=bt_tx_processor reserved=904 used=744",
+    "P2_STACK name=BT LW WQ reserved=2104 used=1056",
+    "P2_STACK name=sysworkq reserved=1024 used=336",
+    "P2_STACK name=logging reserved=768 used=496",
+    "P2_STACK name=idle reserved=320 used=64",
+    "P2_STACK name=main reserved=4096 used=716",
+    "P2_STACK name=ISR0 reserved=2048 used=680",
+    "P2_MALLOC free=229476 allocated=0 peak=0"
+  ],
+  "responder_lines": [
+    "CTE responses enabled on connected peer",
+    "CTE peer disconnected",
+    "CTE responses enabled on connected peer",
+    "CTE peer disconnected"
+  ],
+  "receiver_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "responder_flash": {
+    "method": "pyocd-load-sector-no-reset",
+    "exit_code": 0
+  },
+  "receiver_flash": {
+    "method": "pyocd-load-sector-no-reset",
+    "exit_code": 0
+  },
+  "responder_start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "receiver_start": {
+    "method": "reset-halt-drain-resume",
+    "cpuid": "0x411fd210",
+    "frequency_hz": 1000000,
+    "dap_uart_idle_bias": [
+      {
+        "pin": "P0.00",
+        "pin_cnf_address": "0x5010a080",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      },
+      {
+        "pin": "P1.04",
+        "pin_cnf_address": "0x500d8290",
+        "before": "0x00000002",
+        "after": "0x0000000e",
+        "mode": "input-pullup"
+      }
+    ],
+    "auto_unlock": false,
+    "mass_erase_requested": false
+  },
+  "elapsed_s": 60.016,
+  "path_results": {
+    "connected_controller_commands": "PASS",
+    "connected_controller_iq_event": "HOLD",
+    "connected_host_callback": "HOLD",
+    "connected_raw_iq_samples": "HOLD",
+    "connectionless_controller_commands": "NOT RUN",
+    "connectionless_controller_iq_event": "NOT RUN",
+    "connectionless_host_callback": "NOT RUN",
+    "connectionless_raw_iq_samples": "NOT RUN",
+    "antenna_switching": "NOT RUN",
+    "angle_measurement": "NOT RUN",
+    "external_rf_path": "NOT RUN"
+  },
+  "cleanup": {
+    "request_disabled": false,
+    "sampling_disabled": false,
+    "disconnect_requested": false,
+    "receiver_stopped": true,
+    "host_state_disarmed": true,
+    "responder_stopped": false,
+    "responder_disconnected": true
+  },
+  "failure_class": "RuntimeError",
+  "failure_detail": "DF cleanup contract incomplete"
+}

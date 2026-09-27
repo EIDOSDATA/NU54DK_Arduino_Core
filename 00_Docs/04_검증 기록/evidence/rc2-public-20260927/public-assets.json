@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "observed_utc": "2026-09-27T06:21:18.6234404Z",
+  "release_tag": "v0.5.0-rc.2",
+  "package_source": "b2e7a587ba6fde31e033dc21008d7084bd6e631b",
+  "status": "PASS",
+  "test": "anonymous_public_asset_download_and_exact_byte_verification",
+  "authenticated_download": false,
+  "artifact_count": 7,
+  "assets": [
+    {
+      "name": "nucode-nu54dk-zephyr-0.5.0-rc.2.zip",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/nucode-nu54dk-zephyr-0.5.0-rc.2.zip",
+      "sha256": "b2992bcab8c2e7cb322336a3be1a5101c69da5b63fa1676add0194ae181d43c4",
+      "size": 8717905,
+      "result": "PASS"
+    },
+    {
+      "name": "nucode-nu54dk-zephyr-0.5.0-rc.2.CHECKSUMS.sha256",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/nucode-nu54dk-zephyr-0.5.0-rc.2.CHECKSUMS.sha256",
+      "sha256": "e984387611c73d3ec26a386067848b58972f9fa8dc4ee3c263c83a77547bb493",
+      "size": 572,
+      "result": "PASS"
+    },
+    {
+      "name": "package_nucode_nu54dk_rc_index.json",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/package_nucode_nu54dk_rc_index.json",
+      "sha256": "6324f0a2218fa38725e064d004c9eb062cdb743011af5a640743e8d675be8e0a",
+      "size": 1151,
+      "result": "PASS"
+    },
+    {
+      "name": "nucode-nu54dk-zephyr-0.5.0-rc.2.license-inventory.json",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/nucode-nu54dk-zephyr-0.5.0-rc.2.license-inventory.json",
+      "sha256": "b9ec18820c46934d934e63b07f0f7b5a2ea2a198ce26e45f836da85e9a0923d0",
+      "size": 37512,
+      "result": "PASS"
+    },
+    {
+      "name": "nucode-nu54dk-zephyr-0.5.0-rc.2.release-manifest.json",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/nucode-nu54dk-zephyr-0.5.0-rc.2.release-manifest.json",
+      "sha256": "49ba60a3b572ad7588caf014687a12344dc2c5314d365ee0ffffba1766636262",
+      "size": 272086,
+      "result": "PASS"
+    },
+    {
+      "name": "nucode-nu54dk-zephyr-0.5.0-rc.2.THIRD_PARTY_NOTICES.md",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/nucode-nu54dk-zephyr-0.5.0-rc.2.THIRD_PARTY_NOTICES.md",
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "size": 1813,
+      "result": "PASS"
+    },
+    {
+      "name": "nucode-nu54dk-zephyr-0.5.0-rc.2.spdx.json",
+      "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/nucode-nu54dk-zephyr-0.5.0-rc.2.spdx.json",
+      "sha256": "2f07b02cf03299977599b1b43a7fddc5d7df4778630e83ac9877caa0da515c3f",
+      "size": 482926,
+      "result": "PASS"
+    }
+  ],
+  "owner_decision": "최종 결과 수용, 전체 문서 갱신, RC2 main 반영 및 GUI 시험용 설치 링크 제공 요청",
+  "accepted_exceptions": [
+    "CI performance targets FAIL accepted",
+    "Arduino IDE GUI NOT RUN: user follow-up"
+  ],
+  "stable_publication_authorized": false,
+  "original_plan_hold_preserved": true
+}

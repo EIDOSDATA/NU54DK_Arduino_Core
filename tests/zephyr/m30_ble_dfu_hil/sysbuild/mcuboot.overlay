@@ -1,0 +1,12 @@
+/**
+ * @file mcuboot.overlay
+ * @brief M30 secure BLE DFU가 사용하는 내부 flash boot partition을 선택합니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/ {
+	chosen {
+		zephyr,code-partition = &boot_partition;
+	};
+};

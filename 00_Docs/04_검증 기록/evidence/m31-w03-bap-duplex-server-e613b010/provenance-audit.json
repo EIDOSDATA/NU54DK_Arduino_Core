@@ -1,0 +1,7 @@
+{
+  "status": "INVALID_IMAGE_PROVENANCE",
+  "reason": "The first reset-only measurement referenced the final image path while the board still held the earlier candidate image.",
+  "flashed_server_hex_sha256": "613b8121d691c81748303704bd8f8335ee9c25316ea29b4324fbb7296b23fdaa",
+  "referenced_server_hex_sha256": "adf5a9258c40d9bbd867dc9f2aa675a4110a3a1a0448f1c13ab6b4025f646714",
+  "accepted_evidence": "pair-exact.json after flash-exact.json"
+}

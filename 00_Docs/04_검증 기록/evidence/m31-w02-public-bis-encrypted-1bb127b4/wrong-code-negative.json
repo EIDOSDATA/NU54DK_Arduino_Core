@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "test": "arduino_public_raw_bis_encrypted_negative_pair",
+  "core_revision": "1bb127b4d211c0a7b85da16cb3de8dc8e130b4dc",
+  "source_clean": true,
+  "probe_sha256": {
+    "source": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "receiver": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "ports": {
+    "source": "COM7",
+    "receiver": "COM5"
+  },
+  "image_sha256": {
+    "source": "127118f58b9365344db1de75b7c53ff6526fd8a35695545e5b201afb716c1359",
+    "receiver": "742bc0dc19b75f6826efda3c9c2685189fd8356bc5e94a1f85fa403047ed038c"
+  },
+  "flash": {
+    "receiver": [
+      "pyocd-sector-hw-reset",
+      "196608"
+    ],
+    "source": [
+      "pyocd-sector-hw-reset",
+      "229376"
+    ]
+  },
+  "requested_cycles": 1,
+  "completed_cycles": {
+    "source": 1,
+    "receiver": 0
+  },
+  "payload_frames": 0,
+  "missing_frames": 0,
+  "allowed_missing": 1,
+  "wrong_code_rejected": 1,
+  "wrong_code_stopped": 1,
+  "image_revision_confirmed": {
+    "source": true,
+    "receiver": true
+  },
+  "excluded_pre_boot_lines": {
+    "source": 3,
+    "receiver": 1
+  },
+  "failed_lines": [],
+  "lines": {
+    "source": [
+      {
+        "at_s": 0.093,
+        "text": "BIS core revision=1bb127b4d211c0a7b85da16cb3de8dc8e130b4dc"
+      },
+      {
+        "at_s": 0.093,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 0.093,
+        "text": "BIS core revision=1bb127b4d211c0a7b85da16cb3de8dc8e130b4dc"
+      },
+      {
+        "at_s": 0.093,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 0.093,
+        "text": "BIS sent frames=100"
+      },
+      {
+        "at_s": 1.156,
+        "text": "BIS source advertising"
+      }
+    ],
+    "receiver": [
+      {
+        "at_s": 0.422,
+        "text": "BIS core revision=1bb127b4d211c0a7b85da16cb3de8dc8e130b4dc"
+      },
+      {
+        "at_s": 0.422,
+        "text": "BIS wrong code scanning"
+      },
+      {
+        "at_s": 3.156,
+        "text": "BIS wrong code rejected native=-61 leaked=0"
+      },
+      {
+        "at_s": 3.156,
+        "text": "BIS wrong code stopped"
+      }
+    ]
+  }
+}

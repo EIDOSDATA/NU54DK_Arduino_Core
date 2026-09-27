@@ -1,0 +1,61 @@
+tests:
+  nucode.m30.pair.ni.p:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=peripheral, M30_PAIR_CASE=0, M30_PAIR_IO=0]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.ni.c:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=central, M30_PAIR_CASE=0, M30_PAIR_IO=0]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.dk.p:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=peripheral, M30_PAIR_CASE=1, M30_PAIR_IO=1]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.dk.c:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=central, M30_PAIR_CASE=1, M30_PAIR_IO=2]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.kd.p:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=peripheral, M30_PAIR_CASE=2, M30_PAIR_IO=2]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.kd.c:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=central, M30_PAIR_CASE=2, M30_PAIR_IO=1]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.yn.p:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=peripheral, M30_PAIR_CASE=3, M30_PAIR_IO=3]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.yn.c:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=central, M30_PAIR_CASE=3, M30_PAIR_IO=3]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.kdf.p:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=peripheral, M30_PAIR_CASE=4, M30_PAIR_IO=4]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.pair.kdf.c:
+    tags: [nucode, arduino, m30, bluetooth, security, hil]
+    build_only: true
+    extra_args: [M30_PAIR_ROLE=central, M30_PAIR_CASE=4, M30_PAIR_IO=4]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]

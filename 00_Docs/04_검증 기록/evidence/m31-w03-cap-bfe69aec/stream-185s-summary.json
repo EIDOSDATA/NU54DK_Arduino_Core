@@ -1,0 +1,14 @@
+{
+  "commit": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+  "duration_seconds": 185.0,
+  "sent_first": 900,
+  "sent_last": 19000,
+  "sent_delta": 18100,
+  "received_first": 11500,
+  "received_last": 29500,
+  "received_delta": 18000,
+  "drop_max": 0,
+  "failure_count": 0,
+  "failures": [],
+  "pass": true
+}

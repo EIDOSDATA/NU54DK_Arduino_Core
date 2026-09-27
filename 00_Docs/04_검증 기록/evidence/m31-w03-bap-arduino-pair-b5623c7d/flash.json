@@ -1,0 +1,49 @@
+{
+  "status": "FLASH_PREPARED",
+  "test": "arduino_bap_unicast_lc3_pair",
+  "source_clean": true,
+  "core_revision": "b5623c7de6941ed043d3b2a50f4171f990cdbff5",
+  "mode": "sector_flash_pair_reset",
+  "client_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "server_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "client_port": "COM7",
+  "server_port": "COM5",
+  "client_image_sha256": "89c53a8b09d1f87de5d575fd8c6322268e7a9e636b128f809cb087fd0afd178f",
+  "server_image_sha256": "7542183c36587efc75e336fff82128a8fba5b8d3a35ab69bb2461fb5a36bff03",
+  "client_config_sha256": "4d76f54357c5eeadf733a70de602fd14a3b19409eaad48e1c4d6321f4d4377b2",
+  "server_config_sha256": "0f36450637de890ca3026ba57a4c214122ad35277bb84c845e2cf6f24e32dcd4",
+  "client_lines": [],
+  "server_lines": [],
+  "client_tx_streams": {},
+  "server_tx_streams": {},
+  "client_rx_sdus": 0,
+  "server_rx_sdus": 0,
+  "server_plc_count": 0,
+  "server_pcm_energy": 0,
+  "server_queue_drops": 0,
+  "require_lc3": true,
+  "client_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "server_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "server_flash": [
+    "pyocd-sector-hw-reset",
+    "475136"
+  ],
+  "client_flash": [
+    "pyocd-sector-hw-reset",
+    "503808"
+  ]
+}

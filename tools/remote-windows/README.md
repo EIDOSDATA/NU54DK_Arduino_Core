@@ -3,6 +3,11 @@
 `setup-nu54-ci-ssh.ps1`은 M10 Boards Manager clean-machine 시험용 Windows PC를
 SSH 검증기로 구성한다. 대상 PC에서 관리자 PowerShell로 한 번 실행한다.
 
+M10 당시 clean-machine 구성을 재현하는 도구 안내이며, 아래 키 이름과 경로는 그 구성의
+예시이다. 이미 완료한 M10 시험을 다시 수행하거나 원격 접근을 자동 승인하는 문서가 아니다.
+일반 개발·설치 환경은 [Windows 개발환경 설정](<../../00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>),
+현재 공개 버전은 [릴리스 안내](<../../00_Docs/05_릴리스/README.md>)를 따른다.
+
 ## 1. 개발 PC에서 공개키 생성
 
 ~~~powershell

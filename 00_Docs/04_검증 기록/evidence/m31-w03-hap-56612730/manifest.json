@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W03",
+  "subcase": "W03-11",
+  "status": "PASS",
+  "source_clean": true,
+  "scope": "arduino_hap_has_preset_negative_recovery_exact_hil",
+  "source_revision": "56612730d0518f0d75ffab2a2a81a74ba589ce97",
+  "image_core_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "board_mapping": {
+    "hearing_client": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "target_vcom": "COM14",
+      "register_snapshot": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "hearing_server": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "target_vcom": "COM13",
+      "register_snapshot": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "images": {
+    "hearing_client": {
+      "sha256": "138d38a48d493e9853afc5be88049a56ddb96b6a1fd2a7a9a50f03ac530121bf",
+      "config_sha256": "c7abf2fb2775c3bacdfd728d73e3c2f2fee91147298eb9170f874ad8e577cb53",
+      "build_record": "build-provenance/ae73a1f1/HearingAccessClient.nu54-build.json"
+    },
+    "hearing_server": {
+      "sha256": "53394d749464ba59fc86a794925ce8ee0bbfac2789b57204d8fe94db9121597a",
+      "config_sha256": "91965c0f3af5703d2ec8ef9c554e1ae6969f16044f8947f770ddfdbadcbde095",
+      "build_record": "build-provenance/ae73a1f1/HearingAccessServer.nu54-build.json"
+    }
+  },
+  "result": {
+    "path": "results/hap-final.json",
+    "runner_status": "ARDUINO_HAP_100_OP_20_NEGATIVE_20_RECOVERY_PASS",
+    "requested_operations": 100,
+    "completed_operations": 100,
+    "invalid_index_rejected": 20,
+    "synchronized_request_rejected": 20,
+    "requested_recovery_cycles": 20,
+    "completed_recovery_cycles": 20,
+    "minimum_recovery_seconds": 6.187,
+    "maximum_recovery_seconds": 10.079,
+    "recovery_limit_seconds": 30,
+    "client_storage_reset": "PASS",
+    "server_storage_reset": "PASS",
+    "storage_offset": "0x174000",
+    "storage_size": 36864,
+    "storage_fill": "0xff",
+    "storage_readback_verified": true
+  },
+  "diagnostic_history": [
+    {
+      "path": "diagnostic-history/hap-first-attempt-fail.json",
+      "status": "FAIL",
+      "source_revision": "8a07ca4f065db73d3581644212ad118884c61c51",
+      "image_core_revision": "ae73a1f16a7070b14fec0f7b8ad7fe902cef4bd0",
+      "reason": "synchronized preset rejection timeout",
+      "counted_in_pass": false
+    }
+  ],
+  "files": [
+    {"path":"build-provenance/ae73a1f1/build-manifest.json","size":2531,"sha256":"45b1f8a267d2b0708d4a331ef53c6b75c1b62f182980786d6af6f48c5756162e"},
+    {"path":"build-provenance/ae73a1f1/HearingAccessClient.build.log.gz","size":567608,"sha256":"3ffa7b071730071c3b75d15a240eaf1ab3b4f03eda67fc9147e90b9151bd575f","uncompressed_size":3966282,"uncompressed_sha256":"6f56e15baf1e3a2315b78eb5e5059941ea2c15321e0dc83d01ee948f2114c3fc"},
+    {"path":"build-provenance/ae73a1f1/HearingAccessClient.nu54-build.json","size":42844,"sha256":"410b3206a5a7a4e3a794aa4d489b86c677b88716cd31527d4b3ebf68db57637b"},
+    {"path":"build-provenance/ae73a1f1/HearingAccessServer.build.log.gz","size":569688,"sha256":"01c40d6560f955852e39cf556896ddd914ec225a98bde1c858cfc3117d59e7ae","uncompressed_size":3993099,"uncompressed_sha256":"6f361e4d8c3896c57c69b6638b393319cdbeffd6a3ec0875de36aae00315014f"},
+    {"path":"build-provenance/ae73a1f1/HearingAccessServer.nu54-build.json","size":42826,"sha256":"e52f3816f510ec20ddd95493ba42f4d18fa6ee279c8b17dbd91ee2f44fc58ad6"},
+    {"path":"diagnostic-history/hap-first-attempt-fail.json","size":53303,"sha256":"6caaf0bb62c45203d851fd239f54cf96389aab6ffe35dfa483e821cb871d3154"},
+    {"path":"results/hap-final.json","size":78476,"sha256":"2fd086896429169a341dfde3a5aeaae1a788b9bbf243a7ed8004b32d3735fb40"}
+  ],
+  "limits": {
+    "commercial_hearing_aid_interoperability": "NOT_RUN_user_follow_up_nonblocking",
+    "medical_or_acoustic_performance": "not-claimed",
+    "bluetooth_qualification": "not-claimed"
+  }
+}

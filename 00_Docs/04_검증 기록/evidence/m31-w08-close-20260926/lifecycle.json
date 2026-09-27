@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W08",
+  "status": "PASS",
+  "test": "windows_boards_manager_lifecycle",
+  "observed_utc": "2026-09-26T14:57:56.930882+00:00",
+  "source_revision": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+  "release_version": "0.5.0-rc.1",
+  "previous_version": "0.4.1",
+  "host_scope": "Windows 10/11 x64",
+  "package": {
+    "archive_sha256": "2c97a670548dbb49915ff6bb04587ab1921ba638bb82d448ac57b56126ac4a91",
+    "runtime_payload_sha256": "4eb04d8ad071c6a163e354046ff1a5e801aa75a4789b32277a347613c1c7a6bb",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+  },
+  "isolation": {
+    "fresh_arduino_data": true,
+    "fresh_download_cache": true,
+    "fresh_sketchbook": true,
+    "existing_prerequisite_reused": true,
+    "existing_verified_build_cache_reused": true,
+    "public_installation_modified": false
+  },
+  "examples": {
+    "discovered": 113,
+    "compiled": 1,
+    "compile_mode": "representative",
+    "failed": 0,
+    "results": [
+      {
+        "identity": "NUCODE_BLE_DirectionFinding/CteBeacon",
+        "status": "PASS",
+        "profile": "ble",
+        "sketch_sha256": "a3d44b7277535bf4c8d94391689b7a9376760feec642183f296d44e751ef408c",
+        "manifest_sha256": "005d4b631f296c0974a47832aaf741de4baf080e02169e401d82c253da8d2d0b",
+        "hex_sha256": "2b91d1aa335e3f682984cfa5fe3a03df758fe207d66a28dd5d16a08bcaf6e3b8",
+        "build_relative": "examples/NUCODE_BLE_DirectionFinding__CteBeacon",
+        "elapsed_s": 145.532,
+        "log_sha256": "a0aec1e0ebe600d4bda9625fd8b51714b5f8ec450c2c5fc3a4b4ecfcb47168bf"
+      }
+    ]
+  },
+  "execution": {
+    "mode": "serial",
+    "workers": 1,
+    "cache_roots": 1
+  },
+  "representative": {
+    "identity": "NUCODE_BLE_DirectionFinding/CteBeacon",
+    "build_relative": "examples/NUCODE_BLE_DirectionFinding__CteBeacon",
+    "hex_sha256": "2b91d1aa335e3f682984cfa5fe3a03df758fe207d66a28dd5d16a08bcaf6e3b8"
+  },
+  "lifecycle": {
+    "install_previous": "PASS",
+    "upgrade_candidate": "PASS",
+    "unknown_version_rejected": true,
+    "uninstall": "PASS",
+    "prerequisite_preserved": true,
+    "reinstall": "PASS",
+    "rediscovered_examples": 113,
+    "cache_rebuild": "PASS"
+  },
+  "steps": [
+    {
+      "name": "cli_identity",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 0.297,
+      "log_sha256": "b150aa13f265adf277829cfcc3eecc1a2da42e0cab30cff98ce82acdbb464111"
+    },
+    {
+      "name": "update_index",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 5.141,
+      "log_sha256": "c25a32671fd6d5af776dbfa03ee16ea7e2c577784d45da141e04057a5ddb0e7b"
+    },
+    {
+      "name": "install_previous",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 807.437,
+      "log_sha256": "f201c2b4304b1110c759a1b911fa46d5a093575daa157fe3703b722d6107aca3"
+    },
+    {
+      "name": "list_previous",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 0.438,
+      "log_sha256": "e613d094218a5afef08910accb4151b05516b5b2efa366d7a5304540d570bea5"
+    },
+    {
+      "name": "upgrade_candidate",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 7.672,
+      "log_sha256": "f8d16217aae1fadb645f50caa0c75207993f93a958b76f8f3a4fcb416b4edeea"
+    },
+    {
+      "name": "list_candidate",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 0.375,
+      "log_sha256": "7c726dcabe639d1b40acf908f469011ed34513aad05f791a72778fdab1e1944f"
+    },
+    {
+      "name": "installed_examples",
+      "status": "PASS",
+      "denominator": 113,
+      "compiled": 1,
+      "compile_mode": "representative",
+      "failed": 0
+    },
+    {
+      "name": "negative_unknown_version",
+      "status": "PASS",
+      "exit_code": 1,
+      "elapsed_s": 0.641,
+      "log_sha256": "f38defbc23dc7fd01ad8671e6709427d0b90eaf4071a8bf9fdfec6abf06197f9"
+    },
+    {
+      "name": "uninstall_candidate",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 0.969,
+      "log_sha256": "6fa322f4b93cf998eb013aab1bfbb99fe9b24bf1bf0c5772ae15dca24f9e2b76"
+    },
+    {
+      "name": "list_uninstalled",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 0.312,
+      "log_sha256": "254355ff94dcf05258914c6b516342ed90681d48c5468e40913ab2c173ddf17d"
+    },
+    {
+      "name": "reinstall_candidate",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 2.078,
+      "log_sha256": "cc0035d4ae1bbb0fb0b9838122e0edfd998d67ba2f76783c33ec4653360813c6"
+    },
+    {
+      "name": "list_reinstalled",
+      "status": "PASS",
+      "exit_code": 0,
+      "elapsed_s": 0.36,
+      "log_sha256": "7c726dcabe639d1b40acf908f469011ed34513aad05f791a72778fdab1e1944f"
+    }
+  ]
+}

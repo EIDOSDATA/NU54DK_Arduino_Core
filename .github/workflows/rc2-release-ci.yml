@@ -1,0 +1,96 @@
+name: RC2 Release CI
+
+on:
+  workflow_run:
+    workflows:
+      - M31 W08 Windows RC
+    branches:
+      - 0.5.0-RC2
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      full_run_id:
+        description: Successful Full RC workflow run ID
+        required: true
+        type: string
+      exact_sha:
+        description: Exact 40-character source SHA from that run
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: rc2-release-${{ github.event.workflow_run.head_sha || inputs.exact_sha }}
+  cancel-in-progress: false
+
+jobs:
+  immutable-full-rc:
+    name: Reuse immutable Full RC artifact and evidence
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: windows-2025
+    timeout-minutes: 20
+    env:
+      FULL_RUN_ID: ${{ github.event.workflow_run.id || inputs.full_run_id }}
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha || inputs.exact_sha }}
+    steps:
+      - name: Reject a non-exact source identity
+        shell: powershell
+        run: |
+          if ($env:SOURCE_SHA -notmatch '^[0-9a-f]{40}$') {
+            throw 'Release CI requires an exact 40-character source SHA.'
+          }
+          if ($env:FULL_RUN_ID -notmatch '^[1-9][0-9]*$') {
+            throw 'Release CI requires a numeric Full RC run ID.'
+          }
+      - name: Checkout the exact Full RC source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Download exact private RC package from Full RC
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.FULL_RUN_ID }}
+          name: m31-w08-rc-${{ env.SOURCE_SHA }}
+          path: D:\rc2-release\package
+      - name: Download exact aggregate evidence from Full RC
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.FULL_RUN_ID }}
+          name: m31-w08-aggregate-${{ env.SOURCE_SHA }}
+          path: D:\rc2-release\aggregate
+      - name: Fail closed on SHA or package-byte drift
+        shell: powershell
+        run: |
+          if ((git rev-parse HEAD) -ne $env:SOURCE_SHA) {
+            throw 'Checkout SHA differs from Full RC source SHA.'
+          }
+          $plan = @(Get-ChildItem D:\rc2-release\package -Filter m31-windows-rc-plan.json -Recurse)
+          $aggregate = @(Get-ChildItem D:\rc2-release\aggregate -Filter m31-w08-ci-aggregate.json -Recurse)
+          if ($plan.Count -ne 1 -or $aggregate.Count -ne 1) {
+            throw 'Expected exactly one plan and aggregate evidence document.'
+          }
+          python tools/release/m31_release.py validate-plan --repository . --plan $plan[0].FullName
+          python -c "import json,os,pathlib; p=json.loads(pathlib.Path(os.environ['AGGREGATE']).read_text(encoding='utf-8')); assert p['status']=='PASS' and p['source_revision']==os.environ['SOURCE_SHA']"
+        env:
+          AGGREGATE: D:\rc2-release\aggregate\m31-w08-ci-aggregate.json
+      - name: Preserve publication input without rebuilding examples
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: rc2-release-input-${{ env.SOURCE_SHA }}
+          path: D:\rc2-release
+          if-no-files-found: error
+          retention-days: 30

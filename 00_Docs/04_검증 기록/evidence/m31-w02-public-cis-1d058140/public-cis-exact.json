@@ -1,0 +1,385 @@
+{
+  "status": "PASS",
+  "test": "arduino_public_raw_cis_pair",
+  "core_revision": "1d058140dda468ba19dcfdf3b3b26b1202100efb",
+  "source_clean": true,
+  "probe_sha256": {
+    "central": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "peripheral": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "ports": {
+    "central": "COM7",
+    "peripheral": "COM5"
+  },
+  "image_sha256": {
+    "central": "df40f76553eb9150ea43e1aba6d20c8f6ca267dfbffaa139c9676132aec0993e",
+    "peripheral": "bae9207c6918755948313d69c14215b0f408e58170e0e497717b5a19b7a5ed03"
+  },
+  "flash": {
+    "peripheral": [
+      "pyocd-sector-hw-reset",
+      "274432"
+    ],
+    "central": [
+      "pyocd-sector-hw-reset",
+      "274432"
+    ]
+  },
+  "requested_cycles": 20,
+  "completed_cycles": {
+    "central": 20,
+    "peripheral": 20
+  },
+  "image_revision_confirmed": {
+    "central": true,
+    "peripheral": true
+  },
+  "excluded_pre_boot_lines": {
+    "central": 3,
+    "peripheral": 1
+  },
+  "failed_lines": [],
+  "recovered_setup_failures": [],
+  "lines": {
+    "central": [
+      {
+        "at_s": 0.109,
+        "text": "CIS core revision=1d058140dda468ba19dcfdf3b3b26b1202100efb"
+      },
+      {
+        "at_s": 0.109,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 0.328,
+        "text": "CIS core revision=1d058140dda468ba19dcfdf3b3b26b1202100efb"
+      },
+      {
+        "at_s": 0.328,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 3.078,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 4.14,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 7.125,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 8.203,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 11.0,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 11.844,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 14.625,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 15.906,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 18.656,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 19.734,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 22.5,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 23.562,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 26.312,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 27.39,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 30.203,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 31.265,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 34.094,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 35.125,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 37.89,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 38.953,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 41.734,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 42.828,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 45.578,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 46.64,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 49.437,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 50.515,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 53.312,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 54.375,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 57.14,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 58.203,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 60.984,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 62.078,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 64.859,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 65.922,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 68.672,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 69.906,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 72.719,
+        "text": "CIS sent frames=100"
+      },
+      {
+        "at_s": 73.594,
+        "text": "CIS central scanning"
+      },
+      {
+        "at_s": 76.375,
+        "text": "CIS sent frames=100"
+      }
+    ],
+    "peripheral": [
+      {
+        "at_s": 0.422,
+        "text": "CIS core revision=1d058140dda468ba19dcfdf3b3b26b1202100efb"
+      },
+      {
+        "at_s": 0.422,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 3.187,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 4.25,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 7.015,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 8.078,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 10.875,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 11.953,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 14.734,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 15.797,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 18.547,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 19.64,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 22.609,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 23.453,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 26.422,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 27.297,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 30.312,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 31.156,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 33.969,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 35.015,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 37.984,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 39.062,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 41.859,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 42.719,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 45.687,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 46.765,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 49.547,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 50.39,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 53.422,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 54.265,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 57.25,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 58.094,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 61.094,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 62.187,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 64.953,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 66.031,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 68.781,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 69.797,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 72.609,
+        "text": "CIS received frames=100 errors=0"
+      },
+      {
+        "at_s": 73.687,
+        "text": "CIS peripheral advertising"
+      },
+      {
+        "at_s": 76.484,
+        "text": "CIS received frames=100 errors=0"
+      }
+    ]
+  }
+}

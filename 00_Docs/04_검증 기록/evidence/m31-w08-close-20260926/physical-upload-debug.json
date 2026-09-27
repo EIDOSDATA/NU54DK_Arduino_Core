@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W08",
+  "status": "PASS",
+  "test": "exact_actions_rc_upload_uart_debug",
+  "source_revision": "a2257170ca48f6027fa4cb0cdfbe5a002a7cd1ec",
+  "validated_source_revision": "6c3c9ec59c4dd96ad5b4bc81bc013e30dc52b2d8",
+  "runtime_payload_sha256": "4eb04d8ad071c6a163e354046ff1a5e801aa75a4789b32277a347613c1c7a6bb",
+  "runtime_payload_matches_validated_source": true,
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "binding": {
+    "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "serial_port": "COM10",
+    "role": "windows_rc_upload_debug_target",
+    "image_sha256": "97082547dc872304fe6008aa5583f8291d8b1c0274bd07ec27e055aab92faf17",
+    "target": "nRF54L15"
+  },
+  "safety": {
+    "exclusive_probe_lock": true,
+    "bounded_command_timeouts": true,
+    "exact_sector_flash": true,
+    "auto_unlock": false,
+    "mass_erase_requested": false,
+    "recover_requested": false,
+    "raw_probe_uid_persisted": false
+  },
+  "upload_uart": {
+    "status": "PASS",
+    "ready_token": "NUCODE_M8_UPLOAD_READY",
+    "ready": true
+  },
+  "debug": {
+    "status": "PASS",
+    "breakpoint": "setup",
+    "breakpoint_hit": true,
+    "source_line_visible": true
+  }
+}

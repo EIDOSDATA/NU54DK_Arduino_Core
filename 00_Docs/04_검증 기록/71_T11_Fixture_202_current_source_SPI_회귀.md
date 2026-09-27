@@ -20,7 +20,7 @@ catalog revision 2, exact UID SHA·역할·source·image hash와 스위치·전�
 이는 사용자 확인으로서 배선을 전기적으로 계측한 결과는 아니다.
 
 위 30분 제한은 당시 확인 절차의 기록이다. 현행 시간제 사용자 확인 만료는 폐기했으며,
-펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+펌웨어 watchdog·lease·STOP 보호와 구분한다. 현재 정책은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 | 신호 | A/DUT | B/peer |
 | --- | --- | --- |
@@ -116,7 +116,7 @@ checkout·board·SDK·작업 프로세스 종료 점검은 최종 작업 산출�
 
 ## 당시 다음: Fixture 203 SPI
 
-이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [활성 TODO](../TODO_v0.4.0.md)를 따른다.
+이 절은 해당 fixture 종료 당시의 안내다. 이후 T11 완료 결과는 [73번 통신 회귀 완료 기록](73_T11_Fixture_301_current_source_TWI_회귀.md), 현재 결선·진행은 [현재 TODO](../TODO_v0.5.0.md)를 따른다.
 
 **두 USB 전원을 모두 분리하고 A의 신호선 네 개만 옮긴다. B와 GND는 그대로다.**
 [다음 결선 감사](evidence/t11-fixture202-1349e20/next-wiring-audit.json)에서 catalog와 사용자 확정 connector pinmap을 대조했다.

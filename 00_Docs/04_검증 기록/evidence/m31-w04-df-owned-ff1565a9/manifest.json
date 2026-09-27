@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "scope": "controlled_receiver_native_build_and_failed_sync_attempt",
+  "core_revision": "ff1565a971f900d4605056cee8cdb863f577f2e0",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "receiver_source": "tests/zephyr/m31_df_receiver",
+  "receiver_image_sha256": "161d482a73e9dde27c31994ea91a906b4f0ae23c9b04b8b403570238b0ed2d5a",
+  "receiver_build_log_sha256": "0092a5969fe4e785a21932447f9d4ff5f1e364c3033741668a755b92c7675fec",
+  "receiver_flash_bytes": 87572,
+  "receiver_ram_bytes": 46524,
+  "tx_image_sha256": "f11655cea3598a586eabcb85de129d29646bdcf149ac31b950cd0758c3109a8c",
+  "result": "SYNC_TIMEOUT",
+  "files": {
+    "receiver.zephyr.hex.gz": "62f2af3765f13a3ba1458e0ffb662f0b00cef7371a5b43b2b1e9473d90e20b8c",
+    "receiver.build.log.gz": "137e9ec40f150e5f776c23c5d7ba60e64b09d329de21908f4c9f31dbaef10d09",
+    "pair-01.json": "ab88eb7ee94aedef9b05c48eb906b6883b46b72cd770ee7a193da1fbd47a1c66"
+  }
+}

@@ -1,0 +1,472 @@
+00000.015|sink|public audio sink scanning
+00000.040|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00000.166|runner|command board=G value=r
+00000.246|source|public audio source preparing
+00000.246|source|public audio source streaming
+00000.368|runner|command board=F value=r
+00000.373|sink|public audio sink scanning
+00000.576|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00001.270|source|public audio sent frames=100
+00001.459|sink|public audio sink streaming
+00002.282|source|public audio sent frames=200
+00002.471|sink|public audio received=100 energy=972087 dropped=0
+00002.596|runner|error-window name=quality-source-transition-1 state=armed
+00002.596|runner|error-window name=quality-source-h-1 state=armed
+00002.596|runner|command board=G value=h
+00002.666|source|high quality rejected: 10
+00002.667|sink|public audio sync failed: -19 step=11
+00002.667|runner|error-window name=quality-source-h-1 state=disarmed
+00003.673|source|public audio source preparing
+00003.673|sink|public audio sink scanning
+00003.673|source|public audio source streaming
+00003.743|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00003.871|runner|error-window name=quality-source-transition-1 state=disarmed
+00003.871|runner|error-window name=quality-sink-h-1 state=armed
+00003.871|runner|command board=F value=h
+00003.877|sink|high quality rejected: 10
+00003.877|runner|error-window name=quality-sink-h-1 state=disarmed
+00004.685|source|public audio sent frames=100
+00004.880|sink|public audio sink scanning
+00004.953|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00005.689|source|public audio sent frames=200
+00005.787|sink|public audio sink streaming
+00006.694|source|public audio sent frames=300
+00006.788|sink|public audio received=100 energy=1155689 dropped=0
+00006.788|runner|quality cycle=1/20 elapsed=4.316s pass
+00006.911|runner|error-window name=quality-source-transition-2 state=armed
+00006.911|runner|error-window name=quality-source-h-2 state=armed
+00006.911|runner|command board=G value=h
+00006.986|source|high quality rejected: 10
+00006.987|sink|public audio sync failed: -19 step=11
+00006.988|runner|error-window name=quality-source-h-2 state=disarmed
+00007.989|source|public audio source preparing
+00007.989|source|public audio source streaming
+00007.989|sink|public audio sink scanning
+00008.004|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00008.130|runner|error-window name=quality-source-transition-2 state=disarmed
+00008.130|runner|error-window name=quality-sink-h-2 state=armed
+00008.130|runner|command board=F value=h
+00008.140|sink|high quality rejected: 10
+00008.140|runner|error-window name=quality-sink-h-2 state=disarmed
+00009.001|source|public audio sent frames=100
+00009.142|sink|public audio sink scanning
+00009.160|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00010.021|source|public audio sent frames=200
+00010.039|sink|public audio sink streaming
+00011.029|source|public audio sent frames=300
+00011.043|sink|public audio received=100 energy=1072902 dropped=0
+00011.043|runner|quality cycle=2/20 elapsed=4.255s pass
+00011.166|runner|error-window name=quality-source-transition-3 state=armed
+00011.167|runner|error-window name=quality-source-h-3 state=armed
+00011.167|runner|command board=G value=h
+00011.243|source|high quality rejected: 10
+00011.243|sink|public audio sync failed: -19 step=11
+00011.243|runner|error-window name=quality-source-h-3 state=disarmed
+00012.246|source|public audio source preparing
+00012.246|source|public audio source streaming
+00012.247|sink|public audio sink scanning
+00012.261|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00012.385|runner|error-window name=quality-source-transition-3 state=disarmed
+00012.385|runner|error-window name=quality-sink-h-3 state=armed
+00012.386|runner|command board=F value=h
+00012.391|sink|high quality rejected: 10
+00012.392|runner|error-window name=quality-sink-h-3 state=disarmed
+00013.254|source|public audio sent frames=100
+00013.398|sink|public audio sink scanning
+00013.769|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00014.261|source|public audio sent frames=200
+00014.598|sink|public audio sink streaming
+00015.271|source|public audio sent frames=300
+00015.610|sink|public audio received=100 energy=1010947 dropped=0
+00015.610|runner|quality cycle=3/20 elapsed=4.567s pass
+00015.734|runner|error-window name=quality-source-transition-4 state=armed
+00015.734|runner|error-window name=quality-source-h-4 state=armed
+00015.734|runner|command board=G value=h
+00015.807|source|high quality rejected: 10
+00015.807|sink|public audio sync failed: -19 step=11
+00015.807|runner|error-window name=quality-source-h-4 state=disarmed
+00016.811|source|public audio source preparing
+00016.812|sink|public audio sink scanning
+00016.818|source|public audio source streaming
+00016.893|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00017.017|runner|error-window name=quality-source-transition-4 state=disarmed
+00017.017|runner|error-window name=quality-sink-h-4 state=armed
+00017.017|runner|command board=F value=h
+00017.027|sink|high quality rejected: 10
+00017.027|runner|error-window name=quality-sink-h-4 state=disarmed
+00017.834|source|public audio sent frames=100
+00018.028|sink|public audio sink scanning
+00018.341|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00018.851|source|public audio sent frames=200
+00019.167|sink|public audio sink streaming
+00019.868|source|public audio sent frames=300
+00020.179|sink|public audio received=100 energy=935728 dropped=0
+00020.180|runner|quality cycle=4/20 elapsed=4.569s pass
+00020.303|runner|error-window name=quality-source-transition-5 state=armed
+00020.303|runner|error-window name=quality-source-h-5 state=armed
+00020.303|runner|command board=G value=h
+00020.377|source|high quality rejected: 10
+00020.378|sink|public audio sync failed: -19 step=11
+00020.378|runner|error-window name=quality-source-h-5 state=disarmed
+00021.379|sink|public audio sink scanning
+00021.384|source|public audio source preparing
+00021.384|source|public audio source streaming
+00021.398|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00021.526|runner|error-window name=quality-source-transition-5 state=disarmed
+00021.526|runner|error-window name=quality-sink-h-5 state=armed
+00021.526|runner|command board=F value=h
+00021.531|sink|high quality rejected: 10
+00021.531|runner|error-window name=quality-sink-h-5 state=disarmed
+00022.387|source|public audio sent frames=100
+00022.537|sink|public audio sink scanning
+00022.565|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00023.396|source|public audio sent frames=200
+00023.555|sink|public audio sink streaming
+00024.406|source|public audio sent frames=300
+00024.555|sink|public audio received=100 energy=1134822 dropped=0
+00024.556|runner|quality cycle=5/20 elapsed=4.376s pass
+00024.678|runner|error-window name=quality-source-transition-6 state=armed
+00024.678|runner|error-window name=quality-source-h-6 state=armed
+00024.678|runner|command board=G value=h
+00024.747|source|high quality rejected: 10
+00024.747|sink|public audio sync failed: -19 step=11
+00024.747|runner|error-window name=quality-source-h-6 state=disarmed
+00025.748|source|public audio source preparing
+00025.749|sink|public audio sink scanning
+00025.753|source|public audio source streaming
+00025.764|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00025.891|runner|error-window name=quality-source-transition-6 state=disarmed
+00025.891|runner|error-window name=quality-sink-h-6 state=armed
+00025.891|runner|command board=F value=h
+00025.896|sink|high quality rejected: 10
+00025.896|runner|error-window name=quality-sink-h-6 state=disarmed
+00026.771|source|public audio sent frames=100
+00026.899|sink|public audio sink scanning
+00026.936|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00027.778|source|public audio sent frames=200
+00027.861|sink|public audio sink streaming
+00028.785|source|public audio sent frames=300
+00028.865|sink|public audio received=100 energy=1134822 dropped=0
+00028.866|runner|quality cycle=6/20 elapsed=4.310s pass
+00028.988|runner|error-window name=quality-source-transition-7 state=armed
+00028.988|runner|error-window name=quality-source-h-7 state=armed
+00028.988|runner|command board=G value=h
+00029.062|source|high quality rejected: 10
+00029.062|sink|public audio sync failed: -19 step=11
+00029.062|runner|error-window name=quality-source-h-7 state=disarmed
+00030.064|sink|public audio sink scanning
+00030.069|source|public audio source preparing
+00030.069|source|public audio source streaming
+00030.087|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00030.213|runner|error-window name=quality-source-transition-7 state=disarmed
+00030.213|runner|error-window name=quality-sink-h-7 state=armed
+00030.213|runner|command board=F value=h
+00030.223|sink|high quality rejected: 10
+00030.224|runner|error-window name=quality-sink-h-7 state=disarmed
+00031.083|source|public audio sent frames=100
+00031.225|sink|public audio sink scanning
+00031.253|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00032.081|source|public audio sent frames=200
+00032.183|sink|public audio sink streaming
+00033.084|source|public audio sent frames=300
+00033.175|sink|public audio received=100 energy=1002911 dropped=0
+00033.175|runner|quality cycle=7/20 elapsed=4.310s pass
+00033.298|runner|error-window name=quality-source-transition-8 state=armed
+00033.298|runner|error-window name=quality-source-h-8 state=armed
+00033.298|runner|command board=G value=h
+00033.372|source|high quality rejected: 10
+00033.372|sink|public audio sync failed: -19 step=11
+00033.372|runner|error-window name=quality-source-h-8 state=disarmed
+00034.374|source|public audio source preparing
+00034.374|sink|public audio sink scanning
+00034.378|source|public audio source streaming
+00034.390|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00034.516|runner|error-window name=quality-source-transition-8 state=disarmed
+00034.516|runner|error-window name=quality-sink-h-8 state=armed
+00034.516|runner|command board=F value=h
+00034.521|sink|high quality rejected: 10
+00034.521|runner|error-window name=quality-sink-h-8 state=disarmed
+00035.400|source|public audio sent frames=100
+00035.524|sink|public audio sink scanning
+00035.539|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00036.414|source|public audio sent frames=200
+00036.428|sink|public audio sink streaming
+00037.427|source|public audio sent frames=300
+00037.441|sink|public audio received=100 energy=1163586 dropped=0
+00037.441|runner|quality cycle=8/20 elapsed=4.266s pass
+00037.564|runner|error-window name=quality-source-transition-9 state=armed
+00037.564|runner|error-window name=quality-source-h-9 state=armed
+00037.564|runner|command board=G value=h
+00037.637|source|high quality rejected: 10
+00037.637|sink|public audio sync failed: -19 step=11
+00037.638|runner|error-window name=quality-source-h-9 state=disarmed
+00038.641|sink|public audio sink scanning
+00038.646|source|public audio source preparing
+00038.646|source|public audio source streaming
+00038.657|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00038.785|runner|error-window name=quality-source-transition-9 state=disarmed
+00038.786|runner|error-window name=quality-sink-h-9 state=armed
+00038.786|runner|command board=F value=h
+00038.791|sink|high quality rejected: 10
+00038.791|runner|error-window name=quality-sink-h-9 state=disarmed
+00039.656|source|public audio sent frames=100
+00039.797|sink|public audio sink scanning
+00040.113|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00040.660|source|public audio sent frames=200
+00041.118|sink|public audio sink streaming
+00041.658|source|public audio sent frames=300
+00042.111|sink|public audio received=100 energy=1126438 dropped=0
+00042.112|runner|quality cycle=9/20 elapsed=4.670s pass
+00042.233|runner|error-window name=quality-source-transition-10 state=armed
+00042.233|runner|error-window name=quality-source-h-10 state=armed
+00042.233|runner|command board=G value=h
+00042.308|source|high quality rejected: 10
+00042.309|sink|public audio sync failed: -19 step=11
+00042.309|runner|error-window name=quality-source-h-10 state=disarmed
+00043.309|sink|public audio sink scanning
+00043.314|source|public audio source preparing
+00043.314|source|public audio source streaming
+00043.325|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00043.453|runner|error-window name=quality-source-transition-10 state=disarmed
+00043.453|runner|error-window name=quality-sink-h-10 state=armed
+00043.453|runner|command board=F value=h
+00043.458|sink|high quality rejected: 10
+00043.459|runner|error-window name=quality-sink-h-10 state=disarmed
+00044.339|source|public audio sent frames=100
+00044.461|sink|public audio sink scanning
+00044.497|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00045.304|sink|public audio sink streaming
+00045.355|source|public audio sent frames=200
+00046.319|sink|public audio received=100 energy=928727 dropped=0
+00046.319|runner|quality cycle=10/20 elapsed=4.207s pass
+00046.375|source|public audio sent frames=300
+00046.502|runner|error-window name=quality-source-transition-11 state=armed
+00046.502|runner|error-window name=quality-source-h-11 state=armed
+00046.502|runner|command board=G value=h
+00046.577|source|high quality rejected: 10
+00046.578|sink|public audio sync failed: -19 step=11
+00046.578|runner|error-window name=quality-source-h-11 state=disarmed
+00047.577|sink|public audio sink scanning
+00047.582|source|public audio source preparing
+00047.582|source|public audio source streaming
+00047.597|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00047.721|runner|error-window name=quality-source-transition-11 state=disarmed
+00047.721|runner|error-window name=quality-sink-h-11 state=armed
+00047.721|runner|command board=F value=h
+00047.730|sink|high quality rejected: 10
+00047.730|runner|error-window name=quality-sink-h-11 state=disarmed
+00048.595|source|public audio sent frames=100
+00048.730|sink|public audio sink scanning
+00048.745|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00049.605|source|public audio sent frames=200
+00050.291|sink|public audio sink streaming
+00050.620|source|public audio sent frames=300
+00051.295|sink|public audio received=100 energy=949656 dropped=0
+00051.295|runner|quality cycle=11/20 elapsed=4.976s pass
+00051.415|runner|error-window name=quality-source-transition-12 state=armed
+00051.415|runner|error-window name=quality-source-h-12 state=armed
+00051.415|runner|command board=G value=h
+00051.484|source|high quality rejected: 10
+00051.484|sink|public audio sync failed: -19 step=11
+00051.484|runner|error-window name=quality-source-h-12 state=disarmed
+00052.487|sink|public audio sink scanning
+00052.491|source|public audio source preparing
+00052.491|source|public audio source streaming
+00052.503|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00052.627|runner|error-window name=quality-source-transition-12 state=disarmed
+00052.628|runner|error-window name=quality-sink-h-12 state=armed
+00052.628|runner|command board=F value=h
+00052.632|sink|high quality rejected: 10
+00052.633|runner|error-window name=quality-sink-h-12 state=disarmed
+00053.521|source|public audio sent frames=100
+00053.637|sink|public audio sink scanning
+00054.022|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00054.549|source|public audio sent frames=200
+00054.901|sink|public audio sink streaming
+00055.571|source|public audio sent frames=300
+00055.924|sink|public audio received=100 energy=1126135 dropped=0
+00055.924|runner|quality cycle=12/20 elapsed=4.629s pass
+00056.045|runner|error-window name=quality-source-transition-13 state=armed
+00056.045|runner|error-window name=quality-source-h-13 state=armed
+00056.045|runner|command board=G value=h
+00056.110|source|high quality rejected: 10
+00056.111|sink|public audio sync failed: -19 step=11
+00056.111|runner|error-window name=quality-source-h-13 state=disarmed
+00057.114|sink|public audio sink scanning
+00057.118|source|public audio source preparing
+00057.118|source|public audio source streaming
+00057.132|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00057.259|runner|error-window name=quality-source-transition-13 state=disarmed
+00057.259|runner|error-window name=quality-sink-h-13 state=armed
+00057.259|runner|command board=F value=h
+00057.270|sink|high quality rejected: 10
+00057.270|runner|error-window name=quality-sink-h-13 state=disarmed
+00058.143|source|public audio sent frames=100
+00058.269|sink|public audio sink scanning
+00058.644|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00059.148|source|public audio sent frames=200
+00059.531|sink|public audio sink streaming
+00060.151|source|public audio sent frames=300
+00060.523|sink|public audio received=100 energy=1149911 dropped=0
+00060.523|runner|quality cycle=13/20 elapsed=4.599s pass
+00060.644|runner|error-window name=quality-source-transition-14 state=armed
+00060.644|runner|error-window name=quality-source-h-14 state=armed
+00060.644|runner|command board=G value=h
+00060.719|source|high quality rejected: 10
+00060.720|sink|public audio sync failed: -19 step=11
+00060.720|runner|error-window name=quality-source-h-14 state=disarmed
+00061.722|sink|public audio sink scanning
+00061.727|source|public audio source preparing
+00061.727|source|public audio source streaming
+00061.738|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00061.863|runner|error-window name=quality-source-transition-14 state=disarmed
+00061.864|runner|error-window name=quality-sink-h-14 state=armed
+00061.864|runner|command board=F value=h
+00061.868|sink|high quality rejected: 10
+00061.868|runner|error-window name=quality-sink-h-14 state=disarmed
+00062.747|source|public audio sent frames=100
+00062.874|sink|public audio sink scanning
+00063.546|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00063.763|source|public audio sent frames=200
+00064.438|sink|public audio sink streaming
+00064.775|source|public audio sent frames=300
+00065.448|sink|public audio received=100 energy=1104925 dropped=0
+00065.448|runner|quality cycle=14/20 elapsed=4.925s pass
+00065.570|runner|error-window name=quality-source-transition-15 state=armed
+00065.570|runner|error-window name=quality-source-h-15 state=armed
+00065.570|runner|command board=G value=h
+00065.638|source|high quality rejected: 10
+00065.638|sink|public audio sync failed: -19 step=11
+00065.638|runner|error-window name=quality-source-h-15 state=disarmed
+00066.644|source|public audio source preparing
+00066.644|source|public audio source streaming
+00066.645|sink|public audio sink scanning
+00066.659|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00066.784|runner|error-window name=quality-source-transition-15 state=disarmed
+00066.784|runner|error-window name=quality-sink-h-15 state=armed
+00066.784|runner|command board=F value=h
+00066.793|sink|high quality rejected: 10
+00066.793|runner|error-window name=quality-sink-h-15 state=disarmed
+00067.660|source|public audio sent frames=100
+00067.797|sink|public audio sink scanning
+00068.298|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00068.686|source|public audio sent frames=200
+00069.294|sink|public audio sink streaming
+00069.703|source|public audio sent frames=300
+00070.297|sink|public audio received=100 energy=986938 dropped=0
+00070.297|runner|quality cycle=15/20 elapsed=4.849s pass
+00070.417|runner|error-window name=quality-source-transition-16 state=armed
+00070.417|runner|error-window name=quality-source-h-16 state=armed
+00070.417|runner|command board=G value=h
+00070.488|source|high quality rejected: 10
+00070.488|sink|public audio sync failed: -19 step=11
+00070.488|runner|error-window name=quality-source-h-16 state=disarmed
+00071.491|source|public audio source preparing
+00071.491|source|public audio source streaming
+00071.491|sink|public audio sink scanning
+00071.507|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00071.633|runner|error-window name=quality-source-transition-16 state=disarmed
+00071.638|runner|error-window name=quality-sink-h-16 state=armed
+00071.638|runner|command board=F value=h
+00071.648|sink|high quality rejected: 10
+00071.648|runner|error-window name=quality-sink-h-16 state=disarmed
+00072.505|source|public audio sent frames=100
+00072.648|sink|public audio sink scanning
+00073.261|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00073.530|source|public audio sent frames=200
+00074.141|sink|public audio sink streaming
+00074.531|source|public audio sent frames=300
+00075.135|sink|public audio received=100 energy=1023458 dropped=0
+00075.135|runner|quality cycle=16/20 elapsed=4.838s pass
+00075.257|runner|error-window name=quality-source-transition-17 state=armed
+00075.257|runner|error-window name=quality-source-h-17 state=armed
+00075.257|runner|command board=G value=h
+00075.336|source|high quality rejected: 10
+00075.336|sink|public audio sync failed: -19 step=11
+00075.336|runner|error-window name=quality-source-h-17 state=disarmed
+00076.336|sink|public audio sink scanning
+00076.340|source|public audio source preparing
+00076.340|source|public audio source streaming
+00076.355|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00076.481|runner|error-window name=quality-source-transition-17 state=disarmed
+00076.481|runner|error-window name=quality-sink-h-17 state=armed
+00076.481|runner|command board=F value=h
+00076.487|sink|high quality rejected: 10
+00076.487|runner|error-window name=quality-sink-h-17 state=disarmed
+00077.341|source|public audio sent frames=100
+00077.491|sink|public audio sink scanning
+00077.509|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00078.331|sink|public audio sink streaming
+00078.349|source|public audio sent frames=200
+00079.323|sink|public audio received=100 energy=958876 dropped=0
+00079.323|runner|quality cycle=17/20 elapsed=4.188s pass
+00079.353|source|public audio sent frames=300
+00079.480|runner|error-window name=quality-source-transition-18 state=armed
+00079.480|runner|error-window name=quality-source-h-18 state=armed
+00079.480|runner|command board=G value=h
+00079.550|sink|public audio sync failed: -19 step=11
+00079.554|source|high quality rejected: 10
+00079.555|runner|error-window name=quality-source-h-18 state=disarmed
+00080.554|sink|public audio sink scanning
+00080.563|source|public audio source preparing
+00080.563|source|public audio source streaming
+00080.570|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00080.695|runner|error-window name=quality-source-transition-18 state=disarmed
+00080.695|runner|error-window name=quality-sink-h-18 state=armed
+00080.695|runner|command board=F value=h
+00080.700|sink|high quality rejected: 10
+00080.700|runner|error-window name=quality-sink-h-18 state=disarmed
+00081.581|source|public audio sent frames=100
+00081.705|sink|public audio sink scanning
+00081.733|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00082.551|sink|public audio sink streaming
+00082.601|source|public audio sent frames=200
+00083.562|sink|public audio received=100 energy=912666 dropped=0
+00083.562|runner|quality cycle=18/20 elapsed=4.239s pass
+00083.615|source|public audio sent frames=300
+00083.741|runner|error-window name=quality-source-transition-19 state=armed
+00083.741|runner|error-window name=quality-source-h-19 state=armed
+00083.741|runner|command board=G value=h
+00083.810|source|high quality rejected: 10
+00083.810|sink|public audio sync failed: -19 step=11
+00083.810|runner|error-window name=quality-source-h-19 state=disarmed
+00084.815|source|public audio source preparing
+00084.815|sink|public audio sink scanning
+00084.820|source|public audio source streaming
+00084.831|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00084.955|runner|error-window name=quality-source-transition-19 state=disarmed
+00084.955|runner|error-window name=quality-sink-h-19 state=armed
+00084.955|runner|command board=F value=h
+00084.959|sink|high quality rejected: 10
+00084.960|runner|error-window name=quality-sink-h-19 state=disarmed
+00085.836|source|public audio sent frames=100
+00085.965|sink|public audio sink scanning
+00086.222|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00086.846|source|public audio sent frames=200
+00087.048|sink|public audio sink streaming
+00087.859|source|public audio sent frames=300
+00088.063|sink|public audio received=100 energy=1028134 dropped=0
+00088.063|runner|quality cycle=19/20 elapsed=4.501s pass
+00088.185|runner|error-window name=quality-source-transition-20 state=armed
+00088.185|runner|error-window name=quality-source-h-20 state=armed
+00088.185|runner|command board=G value=h
+00088.258|source|high quality rejected: 10
+00088.259|sink|public audio sync failed: -19 step=11
+00088.259|runner|error-window name=quality-source-h-20 state=disarmed
+00089.262|source|public audio source preparing
+00089.263|sink|public audio sink scanning
+00089.267|source|public audio source streaming
+00089.282|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00089.409|runner|error-window name=quality-source-transition-20 state=disarmed
+00089.409|runner|error-window name=quality-sink-h-20 state=armed
+00089.409|runner|command board=F value=h
+00089.418|sink|high quality rejected: 10
+00089.418|runner|error-window name=quality-sink-h-20 state=disarmed
+00090.285|source|public audio sent frames=100
+00090.423|sink|public audio sink scanning
+00090.455|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00091.301|source|public audio sent frames=200
+00091.316|sink|public audio sink streaming
+00092.323|source|public audio sent frames=300
+00092.346|sink|public audio received=100 energy=1071213 dropped=0
+00092.346|runner|quality cycle=20/20 elapsed=4.283s pass

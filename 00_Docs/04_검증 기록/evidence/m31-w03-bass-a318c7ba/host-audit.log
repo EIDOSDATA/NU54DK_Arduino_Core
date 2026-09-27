@@ -1,0 +1,10 @@
+source_revision=a318c7ba9b5fa84d586c35fadab88c1675163100
+command=python -B -m unittest discover -s tests/host -p test_m31_*.py -v
+Ran 52 tests in 0.371s
+OK
+command=python -B tools/ci/m31_example_audit.py --output <temporary-output>
+M31_EXAMPLE_AUDIT=LIBRARIES=16;EXAMPLES=86;ISSUES=0
+command=git diff --check
+result=PASS
+command=python -B tools/bluetooth/m31_contract.py --check
+M31_CONTRACT_OK

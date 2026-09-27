@@ -1,0 +1,9 @@
+M29W05|1|READY|role=peripheral|stage=1|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|BEGIN|role=peripheral|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|ADVERTISE|role=peripheral|stage=1|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|SERVICE_CHANGED|role=peripheral|status=requested|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|MIGRATE_REBOOT|role=peripheral|stage=2|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|REBOOT|role=peripheral|stage=2|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|ADVERTISE|role=peripheral|stage=2|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|RESULT|role=peripheral|stage=2|service_changed_requests=1|migration_requests=1|callback_context=pass|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa
+M29W05|1|END|role=peripheral|status=pass|nonce=03f696e2cea8ff55195fdda1c36ac36b|core=e587c4fe563df65f37eb6cb322b3c07386f69ffa

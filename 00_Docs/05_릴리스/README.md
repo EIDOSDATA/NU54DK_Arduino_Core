@@ -1,86 +1,64 @@
-# NU54DK Arduino Core — 릴리스 문서 안내
+# 릴리스 문서 안내
 
-**현재 설치·지원 버전은 v0.4.1 하나입니다.** 이전 stable·RC·preview는 지원하지 않으며 stable
-Boards Manager 목록에서도 제공하지 않습니다. v0.4.1 유지보수 결과는
-[129번 기록](<../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에서 확인합니다.
+**현재 stable·지원 버전은 v0.5.0입니다.** Windows 10/11 x64 대상이며,
+이전 stable과 RC는 지원·catalog 공급이 끝난 역사 배포로 보존합니다.
 
-| 항목 | 내용 |
+## 현재 사용자 문서
+
+| 목적 | Stable v0.5.0 |
 | --- | --- |
-| 문서 ID | RELEASE-INDEX-001 |
-| 문서 개정 | 3.0 |
-| 현재 정식 버전 | `v0.4.1` |
-| 설치 channel | Stable Boards Manager index |
-| 공식 사용자 OS | Windows 10/11 x64 |
-| 이전 버전 상태 | `v0.4.1` 미만 모두 지원·catalog 공급 종료, 원본 자산은 보존 |
-| 최종 갱신일 | 2026-09-12 |
+| 설치·버전 identity | [시작하기](v0.5.0/README.md) |
+| 변경 기능 | [Release notes](v0.5.0/RELEASE_NOTES.md) |
+| 이전 버전에서 이동·복귀 | [Migration](v0.5.0/MIGRATION.md) |
+| 검증 범위와 기본 시험 | [Testing](v0.5.0/TESTING.md) |
+| 설치·compile·upload 문제 | [Troubleshooting](v0.5.0/TROUBLESHOOTING.md) |
+| 제한·미검증 범위 | [Known issues](v0.5.0/KNOWN_ISSUES.md) |
+| 설치 예제 | 16개 library·113개 |
 
-신규 설치와 지원 요청은 `v0.4.1` 문서를 사용합니다. 이전 stable과 RC 문서는
-당시 artifact, migration 경계와 검증 판단을 보존하는 역사 자료입니다.
-
-## 현재 정식 버전 — v0.4.1
-
-| 목적 | 문서 |
-| --- | --- |
-| 릴리스 개요와 공개 identity | [v0.4.1 문서](v0.4.1/README.md) |
-| 추가·변경된 기능 | [Release notes](v0.4.1/RELEASE_NOTES.md) |
-| 이전 버전에서 이동 | [Migration](v0.4.1/MIGRATION.md) |
-| 설치와 기본 시험 | [Testing](v0.4.1/TESTING.md) |
-| 설치·compile·upload 문제 | [Troubleshooting](v0.4.1/TROUBLESHOOTING.md) |
-| 지원 경계와 미검증 범위 | [Known issues](v0.4.1/KNOWN_ISSUES.md) |
-
-Stable package index:
+Stable Boards Manager index:
 
 ```text
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-## 버전별 상태와 문서
+정식 [GitHub Release](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0)와
+공개 검증 결과는 [274번 기록](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
 
-| 버전 | 현재 상태 | 문서 |
-| --- | --- | --- |
-| `v0.4.1` | 유일한 stable·신규 설치와 지원 기준 | [현재 릴리스](v0.4.1/README.md) |
-| `v0.4.0` | 지원·catalog 공급 종료·역사 자료 | [보존 문서](v0.4.0/README.md) |
-| `v0.4.0-rc.1` | 지원 종료·비공개 후보 기록 | [후보 절차 기록](v0.4.0-rc.1/README.md) |
-| `v0.3.0` | 지원·catalog 공급 종료·역사 자료 | [보존 문서](v0.3.0/README.md) |
-| `v0.2.0` | 공급 종료·역사 자료 | [보존 문서](v0.2.0/README.md) |
-| `v0.1.0` | 공급 종료·역사 자료 | [보존 문서](v0.1.0/README.md) |
+## 개발 소스와 다음 릴리스
 
-각 버전 README에서 해당 Release notes·Migration·Testing·Troubleshooting·Known issues로
-이동할 수 있습니다. 이전 버전 문서의 “현재 stable”, 지원 대상과 예정 gate는 **작성 당시의
-상태**입니다. 현재 설치·지원 정책보다 우선하지 않으며, 과거 후보를 다시 공개하라는 지시도 아닙니다.
+현재 개발 브랜치는 `main`이고 정식 릴리스 백업은 `Release-0.5.0`입니다. M28~M31과 메모리
+최적화 P0~P2, RC2 사용자 경험 교정과 stable 공개를 완료했습니다. 현행 소스의 `0.5.0` 문자열은
+릴리스 코어 식별자이며 package 재현 기준은 `v0.5.0` tag와 manifest의 source SHA입니다.
 
-## 검증 수치와 보존 문서 해석
+v0.4.1 공개 마감 이후 개발 이력은 단일 v0.5.0 릴리스 commit으로 통합했습니다. RC1/RC2 branch는
+삭제하되 공개 tag·Pre-release·자산과 과거 검증 기록은 보존합니다. M32/M33과 Ubuntu/macOS 지원은
+후속 제품선이며 버전은 미정입니다. 개발 재개는 [HANDOFF](../HANDOFF.md)를 따릅니다.
 
-v0.4.0의 공개 identity는 **64개**, 단독 HIL 상태는 **62 PASS + QDEC20/21 2 PARTIAL**입니다.
-QDEC20/21은 기본 정·역회전과 SAMPLE/REPORT event를 지원하지만 반복 manual `read()/clear`의
-무손실을 보증하지 않습니다. “공개 identity HIL 통과”와 같은 요약을 QDEC까지 포함한 전 항목
-PASS로 읽지 않습니다. 최종 범위는 [124번 지원 결정](<../04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md>)을 따릅니다.
+## 이전 버전 — 지원·공급 종료
 
-정식 Release에 포함된 사용자 문서 5종은 공개 당시 byte를 보존합니다. 현행 지원 범위·시점에
-대한 보충 안내는 이 페이지와 각 버전 README에서 제공하며, 과거 실패나 제외를 새 PASS로 바꾸지 않습니다.
+아래 문서는 당시 artifact·migration 경계·검증 판단을 보존하는 역사 자료입니다. stable 설치 목록에서
+제공하지 않으며 문서 안의 “현재 stable”과 예정 gate는 작성 당시 상태입니다.
 
-## 보존된 v0.3.0 Release Candidate
+| 버전 | 보존 문서와 당시 특징 |
+| --- | --- |
+| v0.5.0-rc.2 | [RC2 문서](v0.5.0-rc.2/README.md) — 정식 릴리스 이전 공개 후보, 기존 자산 보존 |
+| v0.5.0-rc.1 | [RC1 문서](v0.5.0-rc.1/README.md) — RC2 이전 공개 후보, 기존 자산 보존 |
+| v0.4.1 | [릴리스 문서](v0.4.1/README.md) — 이전 stable |
+| v0.4.0 | [릴리스 문서](v0.4.0/README.md) — v0.4.1의 기능 기준선 |
+| v0.4.0-rc.1 | [후보 절차 기록](v0.4.0-rc.1/README.md) — 비공개 후보 |
+| v0.3.0 | [릴리스 문서](v0.3.0/README.md) |
+| v0.3.0-rc.3 | [RC3 문서](v0.3.0-rc.3/README.md) |
+| v0.3.0-rc.2 | [RC2 문서](v0.3.0-rc.2/README.md) |
+| v0.3.0-rc.1 | [RC1 문서](v0.3.0-rc.1/README.md), [clean-room 중단](v0.3.0-rc.1/CLEANROOM_ABORT.md) |
+| v0.2.0 | [릴리스 문서](v0.2.0/README.md) |
+| v0.1.0 | [릴리스 문서](v0.1.0/README.md) |
 
-RC1~RC3의 공개 Release·tag·설치 목록은 공급 종료 대상입니다. 교정 과정과 승격 근거는
-아래 역사 문서와 archive 브랜치의 원본 자산에 보존합니다.
+## 검증 수치와 자산 보존
 
-| 후보 | 상태 | 문서 |
-| --- | --- | --- |
-| `v0.3.0-rc.3` | Stable runtime 동등성 기준 | [RC3 문서](v0.3.0-rc.3/README.md) |
-| `v0.3.0-rc.2` | 공개 lifecycle 통과, 이후 memory 계약 교정 | [RC2 문서](v0.3.0-rc.2/README.md) |
-| `v0.3.0-rc.1` | Clean-room 실행기 결함으로 중단 | [RC1 문서](v0.3.0-rc.1/README.md), [중단 기록](v0.3.0-rc.1/CLEANROOM_ABORT.md) |
+v0.4.0의 공개 identity 64개와 당시 HIL 결과, v0.4.1 유지보수 결과는 역사 기록으로 유지합니다.
+QDEC20/21의 기본 정·역회전과 SAMPLE/REPORT event는 지원하지만 반복 manual `read()/clear`의
+무손실은 보증하지 않습니다.
 
-## 그 밖의 역사적 RC
-
-- `v0.2.0-rc.1`/`rc.2`: [M18 기록](<../04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md>)
-- `v0.1.0-rc.2`: [역사 문서](v0.1.0-rc.2/README.md)
-- `v0.1.0-rc.1`: [역사 문서](v0.1.0-rc.1/README.md), [배포 중단 기록](v0.1.0-rc.1/WITHDRAWAL.md)
-
-## 문서와 자산 보존 규칙
-
-1. 현재 정식 `v0.4.1` tag·Release·archive·checksum·SBOM은 immutable로 유지합니다.
-2. 이전 버전의 tag·Release·archive·checksum·SBOM도 감사용 원본 그대로 유지합니다.
-3. Stable root는 `0.4.1` 하나만 제공하고 preview/RC는 지원 목록에 넣지 않습니다.
-4. 공급 종료된 모든 이전 버전은 원본 자산과 문서만 역사 자료로 보존합니다.
-5. 실제 검증 수치는 [검증 기록](<../04_검증 기록/README.md>)에서 확인합니다.
-6. 다음 버전 계획은 [제품 로드맵](<../01_아두이노 코어 설계/02_구현_로드맵.md>)에서 관리합니다.
+- 공개 tag·Release·archive·checksum·SBOM은 immutable이며 문서·브랜치 정리로 다시 만들지 않습니다.
+- 공개 자산에 포함된 문서와 과거 실패 원본은 당시 byte·판정을 보존합니다.
+- 실제 결과는 [검증 기록](<../04_검증 기록/README.md>), 현재 읽는 기준은 [문서 안내](../README.md)를 따릅니다.

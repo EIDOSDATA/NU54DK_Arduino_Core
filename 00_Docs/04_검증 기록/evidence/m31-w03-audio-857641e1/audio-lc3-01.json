@@ -1,0 +1,59 @@
+{
+  "test_id": "M31-AUDIO-01:W03-01",
+  "status": "PASS",
+  "source_clean": true,
+  "identity": {
+    "core": "857641e1caa28a22508a470b82168850b3275dd2",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "nonces": [
+    "ac657bf58e5fd206fcbaf3e5afa923ce",
+    "0561a76864e66f848f2f6e5984af97de",
+    "91576ed7dfbbcfb66cd9f45a75241a29",
+    "e7e87eaeb1c7dc4fe110fd2773fafc4f",
+    "29c56d5a1cb464dfc4d34856f814f832",
+    "8526b4c21547ffc5cb04a06f55b9e46b",
+    "25a0e5e657794c6d1aec99275fa14c18",
+    "1296a3d0618ef258a9e4aaa752dab192",
+    "9f93f885ed8135443df48e1b99d77cbf",
+    "4cbb5858cab5af3b7c12e0a47049dd6c",
+    "b1b6b15a1e5eceaf8629716987d673f7",
+    "cf130a3407720e747cc8aa18dcb563ac",
+    "5e8f53ad8e0efa1eec12cc2f75403746",
+    "06d550d0dfbb8e2d7d41a95cd26a5369",
+    "6dcdc154c88b91aec6982fd0c3fe6154",
+    "1ea0819d08abb7f00a10b504ab1a8c2f",
+    "ed3a1a6a88002f8103405d3f6c3a3bda",
+    "6913caa8f64487cc32c90bbec3f31a0a",
+    "780014b5b045ff300311211eeda34283",
+    "9e41bfafa5aa9835ccbb224784a1645e"
+  ],
+  "board": {
+    "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "volume": "F:/",
+    "vcom": "COM7",
+    "image_sha256": "8f6b52a46286f6fd6b43ab1eafa3f6566c9131c9fb56381420210c5f7d67aaa6",
+    "registers": {
+      "dp_idcode": "0x6ba02477",
+      "dp_targetid_observed": "0xf0000f40",
+      "ahb_ap_idr": "0x84770001",
+      "ahb_ap_csw": "0x03800052",
+      "ctrl_ap_idr": "0x32880000",
+      "approtect_status": "0x00000000"
+    },
+    "flash_mode": "pyocd-sector-hw-reset",
+    "flash_bytes": "221184"
+  },
+  "measured": {
+    "cycles": 20,
+    "encoded_frames": 2000,
+    "decoded_frames": 2000,
+    "rejected_invalid": 40,
+    "frame_samples": 160,
+    "frame_octets": 40
+  },
+  "transcript_sha256": "f994f19d68e648dea76f01c4ab59f34738324ed5851c8d9b9ccf65ef967b5f66",
+  "observed_utc": "2026-09-16T07:17:12.495011+00:00"
+}

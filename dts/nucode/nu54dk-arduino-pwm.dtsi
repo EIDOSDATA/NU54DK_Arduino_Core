@@ -1,0 +1,59 @@
+/**
+ * @file nu54dk-arduino-pwm.dtsi
+ * @brief analogWrite·tone·Servo용 PWM20~22만 활성화합니다.
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <zephyr/dt-bindings/pinctrl/nrf-pinctrl.h>
+
+/ {
+	chosen {
+		nucode,arduino-pwm = &pwm_led1;
+	};
+};
+
+&pinctrl {
+	nucode_pwm21_default: nucode_pwm21_default {
+		group1 { psels = <NRF_PSEL(PWM_OUT0, 1, 14)>; };
+	};
+	nucode_pwm21_sleep: nucode_pwm21_sleep {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 1, 14)>;
+			low-power-enable;
+		};
+	};
+
+	nucode_pwm22_default: nucode_pwm22_default {
+		group1 { psels = <NRF_PSEL(PWM_OUT0, 1, 10)>; };
+	};
+	nucode_pwm22_sleep: nucode_pwm22_sleep {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 1, 10)>;
+			low-power-enable;
+		};
+	};
+};
+
+&pwm20 {
+	status = "okay";
+	pinctrl-0 = <&pwm20_default>;
+	pinctrl-1 = <&pwm20_sleep>;
+	pinctrl-names = "default", "sleep";
+	zephyr,pm-device-runtime-auto;
+};
+
+&pwm21 {
+	status = "okay";
+	pinctrl-0 = <&nucode_pwm21_default>;
+	pinctrl-1 = <&nucode_pwm21_sleep>;
+	pinctrl-names = "default", "sleep";
+	zephyr,pm-device-runtime-auto;
+};
+
+&pwm22 {
+	status = "okay";
+	pinctrl-0 = <&nucode_pwm22_default>;
+	pinctrl-1 = <&nucode_pwm22_sleep>;
+	pinctrl-names = "default", "sleep";
+	zephyr,pm-device-runtime-auto;
+};

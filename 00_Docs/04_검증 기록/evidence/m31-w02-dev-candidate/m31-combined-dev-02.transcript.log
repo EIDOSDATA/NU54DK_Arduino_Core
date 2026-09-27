@@ -1,0 +1,17 @@
+peer: M31ISO|1|READY|role=peripheral
+combined: M31COMB|1|READY|role=combined
+receiver: M31BIS|1|READY|role=receiver
+combined: M31COMB|1|BEGIN|nonce=751db336a359ee0eb0115c0dd29defc9|role=combined
+combined: M31COMB|1|IDENTITY|nonce=751db336a359ee0eb0115c0dd29defc9|core=64c6b5fcaad3b0330f181d5b5f814b00a14e41bf|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+combined: M31COMB|1|ACL_CONNECTED|nonce=751db336a359ee0eb0115c0dd29defc9
+combined: M31COMB|1|BIG_SYNCED|nonce=751db336a359ee0eb0115c0dd29defc9
+combined: M31COMB|1|CIS_CONNECTED|nonce=751db336a359ee0eb0115c0dd29defc9
+peer: M31ISO|1|BEGIN|nonce=751db336a359ee0eb0115c0dd29defc9|role=peripheral
+peer: M31ISO|1|IDENTITY|nonce=751db336a359ee0eb0115c0dd29defc9|core=64c6b5fcaad3b0330f181d5b5f814b00a14e41bf|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+peer: M31ISO|1|ACL_CONNECTED|nonce=751db336a359ee0eb0115c0dd29defc9
+peer: M31ISO|1|ISO_CONNECTED|nonce=751db336a359ee0eb0115c0dd29defc9
+receiver: M31BIS|1|BEGIN|nonce=751db336a359ee0eb0115c0dd29defc9|role=receiver
+receiver: M31BIS|1|IDENTITY|nonce=751db336a359ee0eb0115c0dd29defc9|core=078587471637db187e508db2deec7d091a8262ef|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800
+receiver: M31BIS|1|PA_SYNCED|nonce=751db336a359ee0eb0115c0dd29defc9
+receiver: M31BIS|1|BIG_SYNCED|nonce=751db336a359ee0eb0115c0dd29defc9|role=receiver
+peer: M31ISO|1|SEND_ARMED|nonce=751db336a359ee0eb0115c0dd29defc9

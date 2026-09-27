@@ -1,0 +1,17 @@
+diff --git a/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino b/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
+index bca12628..0e32457e 100644
+--- a/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
++++ b/libraries/NUCODE_BLE_Audio/examples/CsipSetCoordinator/CsipSetCoordinator.ino
+@@ -312,9 +312,10 @@ void setup()
+     Serial.begin(115200);
+ 
+     nucode::ble::SecurityConfig security{};
+-    security.minimum_level = nucode::ble::SecurityLevel::encrypted;
++    /** @brief NUCODE_CSIP_FAULT_SECURITY_ASYNC_FAILURE 비동기 협상 실패를 유도합니다. */
++    security.minimum_level = nucode::ble::SecurityLevel::authenticated;
+     security.bonding = true;
+-    security.io_capability = nucode::ble::SecurityIoCapability::no_input_output;
++    security.io_capability = nucode::ble::SecurityIoCapability::display_yes_no;
+     BLESecurity.onEvent(onSecurityEvent);
+     BLEDevice.onEventInfo(onBleEvent);
+     BLEScan.onResult(onScanResult);

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "test_id": "M31-AUDIO-01",
+  "work_item": "W03-05",
+  "scenario": "cap-unicast-start-cancel-stop-reconnect",
+  "verdict": "PASS",
+  "commit": "23afdc432d43f42fc23c29d282caa5d5407d5401",
+  "recorded_at_utc": "2026-09-19T16:18:57.445733+00:00",
+  "elapsed_seconds": 240.016,
+  "minimum_success": 20,
+  "minimum_decoded_frames": 1000,
+  "artifacts": {
+    "initiator": {
+      "sha256": "2d5fd1ddec3b0222fa9686a6ef1597dd8c7472f0a49927e2ecb0bcbe9d760907",
+      "size": 1441294
+    },
+    "acceptor": {
+      "sha256": "79af4a0075fad61dbac0923a98f7ce527ef69789a002c2a62cfe939d99296bb0",
+      "size": 1338863
+    }
+  },
+  "devices": {
+    "initiator": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port_role": "target-uart",
+      "target": "nRF54L15",
+      "target_voltage": "3299 mV (present)",
+      "flash_result": "SUCCESS",
+      "flash_error": "None",
+      "flash_bytes": 1441294
+    },
+    "acceptor": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "port_role": "target-uart",
+      "target": "nRF54L15",
+      "target_voltage": "3295 mV (present)",
+      "flash_result": "SUCCESS",
+      "flash_error": "None",
+      "flash_bytes": 1338863
+    }
+  },
+  "ready": {
+    "initiator": true,
+    "acceptor": true
+  },
+  "results": {
+    "stream_sessions": 23,
+    "cancel_sessions": 22,
+    "duplicate_stop_rejections": 23,
+    "disconnects": 48,
+    "reconnections": 48,
+    "procedure_failures": 0,
+    "recoveries_after_failure": 0,
+    "max_completed_sessions": 45,
+    "max_decoded_frames": 1800,
+    "max_dropped_frames": 0
+  },
+  "contracts": {
+    "cap_group_members": 1,
+    "lc3_frame_octets": 40,
+    "lc3_interval_us": 10000,
+    "physical_audio_io": "not-used-synthetic-pcm",
+    "multi_member_partial_failure": "not-applicable-to-fixed-single-member-api",
+    "handover": "disconnect-release-and-new-peer-reconnect"
+  },
+  "transcript": "cap-unicast-transcript.log"
+}

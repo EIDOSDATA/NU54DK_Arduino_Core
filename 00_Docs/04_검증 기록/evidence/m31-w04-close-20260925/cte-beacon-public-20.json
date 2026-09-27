@@ -1,0 +1,59 @@
+{
+  "test_id": "M31-DF-01:connectionless_cte_tx:controller_acceptance",
+  "status": "PASS_CONTROL",
+  "source_clean": true,
+  "identity": {
+    "core": "6e646fcf4c6f578f8cb29cfcd4dbf43f701fed32",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "probe_nonce": "fb722279470adadfd257b6fed50e5c7c",
+  "nonces": [
+    "af1b9b2425337066b5bdc910091eff68",
+    "8635257778333b4c1259e0c82a8555a5",
+    "6e6fc4ba2aaa15b2e83a14513db17337",
+    "2437e80f61b67eae30a6e1da25c06481",
+    "b9ae91ad1d5fcfeebafab70c6db4c6e9",
+    "7f7ea0e6c9fb424f67e078f3ecb327c9",
+    "2730310c37a001afa40ee0f401aeda02",
+    "7ed8b95958679f77e985c203c2138277",
+    "a9b0925f4277982f4cd1e0ba998b5482",
+    "a0485c30c9243cd32aa6ddff2809bb11",
+    "b33ff8cf6ac455e09c4f2f88c78400c7",
+    "acec9fa1fad64f130b5b8daeeb79bb2d",
+    "77144afb38f599d57044521534bfa5fc",
+    "248620d255a5b1ecb5405cfc35db7c8b",
+    "136594073592fb9ad6f91a8a978a8349",
+    "1b13c89165f0b758e1d1950d6258b19c",
+    "b8cd8a9c58ea12e658139be50d3eee4a",
+    "4c70cde729755286b55571faa74f7fbb",
+    "08670849fc1bddfca497fcdec5e07356",
+    "5cadd782dfa4e26c677cf98becdf1758"
+  ],
+  "board": {
+    "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "volume": "G:/",
+    "vcom": "COM10",
+    "image_sha256": "5a3cf60a717e865ca083951a3707e725e1124f9e1b0c40faae2e2d8f63e7346e",
+    "registers": {
+      "dp_idcode": "0x6ba02477",
+      "dp_targetid_observed": "0xf0000f40",
+      "ahb_ap_idr": "0x84770001",
+      "ahb_ap_csw": "0x03800052",
+      "ctrl_ap_idr": "0x32880000",
+      "approtect_status": "0x00000000"
+    },
+    "flash_mode": "pyocd-sector-hw-reset",
+    "flash_bytes": "114688"
+  },
+  "measured": {
+    "cycles": 20,
+    "starts": 20,
+    "stops": 20,
+    "invalid_rejected": 20
+  },
+  "transcript_sha256": "e47982dd2c3382b25e1204d3d0028aef055e75125d1f285a5a2a41e476649797",
+  "observed_utc": "2026-09-25T12:47:56.536063+00:00",
+  "scope": "controller_acceptance_only_no_over_air_iq_proof"
+}

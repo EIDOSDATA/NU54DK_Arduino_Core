@@ -1,0 +1,94 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: BLE NUS (`ble`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 2대 — 1) L2capCocClient (client/controller); 2) L2capCocServer (server/device)
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_BLE/L2capCocServer`, sha256 `7c4132b249624f0ae61671d7635106b120b7f1da3ecec08c8eb8307b33300e97`
+ * @nucode_example_setup_end */
+
+/**
+ * @file L2capCocServer.ino
+ * @brief 두 LE CoC channel에서 최대 512-byte SDU를 그대로 돌려주는 echo server 예제입니다.
+ */
+
+#include <NUCODE_BLE.h>
+
+constexpr std::uint16_t echoPsm = 0x0080U;
+bool restartAdvertising = false;
+
+/** @brief 연결 해제 뒤 connectable advertising 재시작을 예약합니다. */
+void onBleEvent(const nucode::ble::BLEEventInfo &information, void *context)
+{
+    static_cast<void>(context);
+    if (information.event == nucode::ble::BLEEvent::disconnected)
+    {
+        restartAdvertising = true;
+    }
+}
+
+/** @brief main thread에서 받은 SDU를 같은 channel에 echo합니다. */
+void onL2capEvent(const nucode::ble::BLEL2capEventInfo &information, void *context)
+{
+    static_cast<void>(context);
+    if (information.event == nucode::ble::BLEL2capEvent::connected)
+    {
+        Serial.print("LE CoC connected, remote MTU=");
+        Serial.println(information.remote_mtu);
+    }
+    else if (information.event == nucode::ble::BLEL2capEvent::received)
+    {
+        if (!BLEL2cap.send(information.channel, information.data, information.length))
+        {
+            Serial.print("LE CoC echo failed, error=");
+            Serial.println(static_cast<unsigned>(BLEDevice.lastError()));
+        }
+    }
+    else if (information.event == nucode::ble::BLEL2capEvent::disconnected)
+    {
+        Serial.println("LE CoC disconnected");
+    }
+}
+
+void setup()
+{
+    Serial.begin(115200);
+    BLEDevice.onEventInfo(onBleEvent);
+    BLEL2cap.onEvent(onL2capEvent);
+
+    if (!BLEDevice.begin("NU54-CoC-Echo") || !BLEL2cap.startServer(echoPsm) ||
+        !BLEAdvertising.clear() || !BLEAdvertising.setConnectable(true) ||
+        !BLEAdvertising.start())
+    {
+        Serial.print("LE CoC server start failed, error=");
+        Serial.println(static_cast<unsigned>(BLEDevice.lastError()));
+        return;
+    }
+    Serial.print("LE CoC echo PSM=0x");
+    Serial.println(BLEL2cap.serverPsm(), HEX);
+}
+
+void loop()
+{
+    BLEDevice.poll();
+    if (restartAdvertising && BLEConnection.count() == 0U)
+    {
+        restartAdvertising = false;
+        if (!BLEAdvertising.start())
+        {
+            Serial.println("BLE advertising restart failed");
+        }
+    }
+}

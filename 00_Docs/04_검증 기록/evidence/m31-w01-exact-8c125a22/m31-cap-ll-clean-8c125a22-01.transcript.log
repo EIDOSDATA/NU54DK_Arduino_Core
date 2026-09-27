@@ -1,0 +1,12 @@
+M31CAP|1|READY
+M31CAP|1|BEGIN|nonce=3baf439119509efd60307d5449027f4e|controller=zephyr_ll_candidate
+M31CAP|1|IDENTITY|nonce=3baf439119509efd60307d5449027f4e|core=8c125a220c4df722e4922887fdf6c5a5e3793612|board=fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3|ncs=99553055607b2e9885fbc80ccd11fa9da81c2df0|zephyr=bf801e4e3d19e1ffa76164346480cb7734dd2800|controller=zephyr_ll_candidate
+M31CAP|1|LE_FEATURES|nonce=3baf439119509efd60307d5449027f4e|features=9f71910010000000
+M31CAP|1|CAP|nonce=3baf439119509efd60307d5449027f4e|id=cis_central|controller_bit=0|host_config=0
+M31CAP|1|CAP|nonce=3baf439119509efd60307d5449027f4e|id=cis_peripheral|controller_bit=0|host_config=0
+M31CAP|1|CAP|nonce=3baf439119509efd60307d5449027f4e|id=bis_broadcaster|controller_bit=0|host_config=0
+M31CAP|1|CAP|nonce=3baf439119509efd60307d5449027f4e|id=bis_receiver|controller_bit=0|host_config=0
+M31CAP|1|CAP|nonce=3baf439119509efd60307d5449027f4e|id=cte_tx|controller_bit=0|host_config=0
+M31CAP|1|CAP|nonce=3baf439119509efd60307d5449027f4e|id=raw_iq_rx|controller_bit=1|host_config=1
+M31CAP|1|CAP|nonce=3baf439119509efd60307d5449027f4e|id=channel_sounding|controller_bit=0|host_config=0
+M31CAP|1|END|records=10|capabilities=7|nonce=3baf439119509efd60307d5449027f4e

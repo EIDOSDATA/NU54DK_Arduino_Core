@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "scope": "pinned_ncs_native_ras_diagnostic_not_arduino_acceptance",
+  "core_revision": "96de07ba31f32e53f3cb34a5893fd8dbff8c223b",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "toolchain_bundle": "dcbdc366a1",
+  "role_builds": {
+    "initiator": {
+      "source": "nrf/samples/bluetooth/channel_sounding/ras_initiator",
+      "build_status": "PASS",
+      "flash_bytes": 290180,
+      "ram_bytes": 67352,
+      "image_sha256": "aaf3fcd3d2d475c21d9ce6d53559c8fc7e6f597f1b224a13c565471d621dbc16",
+      "build_log_sha256": "751a6151f461f4e27a7a38515af570c30002d41148c0deaadf6d9dc73c553479",
+      "image_archive_sha256": "125fcb9e8dfc4827c3a29d93aeae78b086406a38febd82b57b9ecea724b8e4e9",
+      "build_log_archive_sha256": "1caa68efb1f4f4e5e156e7627c851e46696aa9207a465a41f7114b6d1b91f2c8"
+    },
+    "reflector": {
+      "source": "nrf/samples/bluetooth/channel_sounding/ras_reflector",
+      "build_status": "PASS",
+      "flash_bytes": 247840,
+      "ram_bytes": 53574,
+      "image_sha256": "5e4094d2b69e0748171334705bda25168690f38203652b6207a9b7fc7f456b20",
+      "build_log_sha256": "bc4dd3fde61bd329668f3815e22237b21d7f2a526c7ba899a2ee39294ee3211d",
+      "image_archive_sha256": "01f5f0a8a1f93b11cde12885e437c6f26680cd249ccb480cb8f899df1dae0149",
+      "build_log_archive_sha256": "1190a603bf159efcc3716770d37f08feebe4444db9de0b4df230eff6c16a1645"
+    }
+  },
+  "runs": [
+    {
+      "id": "flashed_hardware_reset",
+      "status": "FAIL",
+      "result": {
+        "estimates": 33,
+        "initiator_boots": 2,
+        "reflector_boots": 2,
+        "reflector_buffer_failures": 33,
+        "initiator_error_lines": 0,
+        "reflector_error_lines": 33
+      },
+      "file": "native-probe.json",
+      "sha256": "027cb65a5006b1a860b2047e1073e8b31e13f4135a0b1e2ad6c24478ad69695c"
+    },
+    {
+      "id": "existing_images_reset_only",
+      "status": "PASS_NATIVE_DIAGNOSTIC",
+      "result": {
+        "estimates": 100,
+        "initiator_boots": 1,
+        "reflector_boots": 1,
+        "reflector_buffer_failures": 0,
+        "initiator_error_lines": 0,
+        "reflector_error_lines": 0
+      },
+      "first_estimate_seconds": 1.828,
+      "hundredth_estimate_seconds": 11.735,
+      "file": "reset-probe.json",
+      "sha256": "8fca1fa5837ea5ba55a83b21eff8f4bd0de85c6c2a2ec621b8d571727be02267",
+      "finite_triples": 100,
+      "parsed_triples": 100
+    }
+  ],
+  "runner_source": "temporary local Python probe; source_clean=false; UART BLE addresses redacted; probe UIDs hashed"
+}

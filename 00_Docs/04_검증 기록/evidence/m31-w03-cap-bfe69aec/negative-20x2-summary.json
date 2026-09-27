@@ -1,0 +1,133 @@
+{
+  "commit": "bfe69aec76ccdc19af73d51a27ec385afacd791f",
+  "requested_per_class": 20,
+  "invalid_source_rejected": 20,
+  "duplicate_start_rejected": 20,
+  "unexpected_acceptance": 0,
+  "received_first": 4800,
+  "received_last": 5100,
+  "drop_max": 0,
+  "results": [
+    {
+      "repeat": 1,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 2,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 3,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 4,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 5,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 6,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 7,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 8,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 9,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 10,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 11,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 12,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 13,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 14,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 15,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 16,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 17,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 18,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 19,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    },
+    {
+      "repeat": 20,
+      "invalid_source_rejected": true,
+      "duplicate_start_rejected": true,
+      "pass": true
+    }
+  ],
+  "pass": true
+}

@@ -8,6 +8,7 @@
 #include <nucode/nu54dk-arduino-connectors.dtsi>
 #include <nucode/nu54dk-arduino-pins.dtsi>
 #include <nucode/nu54dk-arduino-runtime.dtsi>
+#include <nucode/nu54dk-arduino-storage.dtsi>
 
 / {
     chosen {

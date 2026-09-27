@@ -58,6 +58,8 @@ class BuildContext(TypedDict):
     configure_mode: str
     configure_reason: str
     configure_duration_seconds: float
+    build_worker_count: NotRequired[int]
+    configure_log: NotRequired[str]
     configure_skipped: bool
     cache_reused: bool
     pristine_configure_count: int
@@ -66,10 +68,14 @@ class BuildContext(TypedDict):
     source_manifest_changed: NotRequired[bool]
     link_configure_duration_seconds: NotRequired[float]
     build_duration_seconds: NotRequired[float]
+    configure_target_count: NotRequired[int]
+    build_target_count: NotRequired[int]
+    build_log: NotRequired[str]
     ccache_stats_before: NotRequired[dict[str, int]]
     ccache_stats_after: NotRequired[dict[str, int]]
     ccache_stats_delta: NotRequired[dict[str, int]]
     memory_layout: NotRequired[dict[str, Any]]
+    resource_audit: NotRequired[dict[str, Any]]
     selected_library_features: NotRequired[list[dict[str, Any]]]
 
 
@@ -87,4 +93,5 @@ class ArtifactManifest(TypedDict):
     sources: list[str]
     source_inputs: dict[str, Any]
     artifacts: dict[str, Any]
+    resource_audit: dict[str, Any]
     built_at_utc: str

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "test_id": "M31-AUDIO-01:W03-03-plain-rejoin",
+  "source_clean": true,
+  "core_revision": "6e22c2d26828a614fc4ca88746d140abe71cbb9f",
+  "flash_evidence": "flash.json",
+  "transcript": "broadcast-plain-rejoin.transcript.log",
+  "mode": "unencrypted_bap_broadcast_lc3",
+  "baseline": {
+    "source_frames_at_least": 2000,
+    "sink_frames_at_least": 1800,
+    "last_decode_energy": 972087,
+    "dropped_frames": 0
+  },
+  "restart": {
+    "cycles": 20,
+    "source_stop_success": 20,
+    "sink_stop_success": 20,
+    "source_restart_success": 20,
+    "sink_rejoin_success": 20,
+    "decoded_frames_per_cycle": 100,
+    "decoded_frames_total": 2000,
+    "nonzero_energy_cycles": 20,
+    "dropped_frames": 0,
+    "elapsed_seconds": 34.8359365
+  },
+  "negative": {
+    "wrong_broadcast_code": "NOT_RUN",
+    "unexpected_sync_loss": "NOT_RUN"
+  },
+  "result": "PARTIAL_PASS",
+  "reason": "비암호화 payload와 명시적 stop/restart 재가입은 통과했으나 Broadcast Code와 강제 sync loss negative가 남아 있습니다."
+}

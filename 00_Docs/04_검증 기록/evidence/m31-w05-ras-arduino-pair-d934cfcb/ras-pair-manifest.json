@@ -1,0 +1,21 @@
+{
+  "case": "M31-CS-01 Arduino initiator/reflector baseline",
+  "status": "PARTIAL",
+  "core_source_revision": "babdf15e0361b1a681ec5c92d493b6bfe65612f3",
+  "hil_runner_revision": "d934cfcb",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "initiator_hex_sha256": "f0409a73fc90279bb1e24ccc204e37c46f05b812e9873bfdc11123759d043684",
+  "reflector_hex_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "files": {
+    "flash-run-9-then-timeout.json": "a27fdea5efacd0272b0b883c580c6d791c9e2b47036286c72591d94d1e3e01b2",
+    "initiator.build.log.gz": "6ef8cc34aad68a8710f0ee43257f0dd4ae29e730866eaf8468d0aa877150f7d3",
+    "initiator.ino.hex.gz": "103d663f1553a669b6e41012c1fb853f01e71eea8961ee49961cd0925eb20f73",
+    "reflector.ino.hex.gz": "f6b2fcf70781036e84b735fd5e8a470f838d9a3d472cd5a37844e168d8a849dd",
+    "reset-run-100-procedure-20-cycle.json": "8de4be0581a7c81778e8524178f8aeafa2964f5e18062d2c291363272929c193",
+    "tx-stack-fault-registers.txt": "95406786413a2cbb77e9261541b1876dde2605dd9c1e8b97e4f06ff29eda2435",
+    "tx-stack-fault-serial.json": "2999c3a1e6e9cf8f0ecb88812628d4dee954afcea05dc1c05ffb572bf7a3054f",
+    "tx-stack-symbols-after-fix.txt": "51d0e83e97e13bc6e4773d9745a218ee2d8270995e014a4ca9e7d89a33195b83"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "nucode.m31.pbp-campaign.v1",
+  "status": "PASS",
+  "started_at": "2026-09-20T06:29:27.669601+00:00",
+  "finished_at": "2026-09-20T06:44:18.876942+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "campaign": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_full_campaign.py",
+    "sha256": "954deb5cf46520d74159ed8751e4ee1db0f640dffc2bfbc4ae61c1053569ae1f"
+  },
+  "runner": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pbp_hil_final.py",
+    "sha256": "66e0e27f84f4535e5212035e198e4c9b4be37b698026edc7cc718771ba89036e"
+  },
+  "debug_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2"
+  },
+  "flash_helper": {
+    "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\flash_by_probe_hash.py",
+    "sha256": "3cdbd5d87aa8a39240bf06124ee0f5bfeafbfdf9c9c96c2705ab07d066497d16"
+  },
+  "storage_erase": {
+    "required": false,
+    "reason": "PBP는 bond 저장소를 사용하지 않음"
+  },
+  "images": {
+    "source": {
+      "path": "C:\\w\\m31w07-source-fcbbfac5\\PublicAudioBroadcastSource.ino.hex",
+      "sha256": "1b5d5adcdf62a5974a9edddcbd8f88f7f658252d5224e22b6b0ca8d5cbbefa1e"
+    },
+    "sink": {
+      "path": "C:\\w\\m31w07-sink-fcbbfac5\\PublicAudioBroadcastSink.ino.hex",
+      "sha256": "ca5f1db5ded8792cb833d3ac7f0dab351d685607170fc6e966397800a2a560cb"
+    }
+  },
+  "modes": [
+    "positive",
+    "stop-restart",
+    "wrong-code",
+    "quality",
+    "sync-loss"
+  ],
+  "results": [
+    {
+      "mode": "positive",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\positive.summary.json",
+      "bounded_output": "M31_PBP_POSITIVE=PASS;EVENTS=366;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\positive.summary.json"
+    },
+    {
+      "mode": "stop-restart",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\stop-restart.summary.json",
+      "bounded_output": "M31_PBP_STOP_RESTART=PASS;EVENTS=313;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\stop-restart.summary.json"
+    },
+    {
+      "mode": "wrong-code",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\wrong-code.summary.json",
+      "bounded_output": "M31_PBP_WRONG_CODE=PASS;EVENTS=318;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\wrong-code.summary.json"
+    },
+    {
+      "mode": "quality",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\quality.summary.json",
+      "bounded_output": "M31_PBP_QUALITY=PASS;EVENTS=472;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\quality.summary.json"
+    },
+    {
+      "mode": "sync-loss",
+      "status": "PASS",
+      "returncode": 0,
+      "summary": "C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\sync-loss.summary.json",
+      "bounded_output": "M31_PBP_SYNC_LOSS=PASS;EVENTS=373;SUMMARY=C:\\w\\m31w07-final-fcbbfac5-20260920-v4\\sync-loss.summary.json"
+    }
+  ],
+  "error": null,
+  "raw_probe_identifiers_recorded": false,
+  "existing_files_overwritten": false
+}

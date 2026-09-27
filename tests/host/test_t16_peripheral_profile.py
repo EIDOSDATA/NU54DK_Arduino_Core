@@ -89,11 +89,9 @@ class T16PeripheralProfileTests(unittest.TestCase):
 
         feature = BUILDER.load_library_feature(REPOSITORY, "NUCODE_Peripheral_Fabric")
         self.assertIsNotNone(feature)
-        self.assertEqual(feature["compatible_profiles"], ["fabric"])
+        self.assertEqual(feature["compatible_profiles"], ["fabric", "ble_audio_io"])
         self.assertEqual(feature["conf"], ["peripheral-fabric.conf"])
-        configuration = (LIBRARY / "zephyr" / "peripheral-fabric.conf").read_text(
-            encoding="utf-8"
-        )
+        configuration = (PROFILE / "prj.conf").read_text(encoding="utf-8")
         for symbol in (
             "SERIAL_FABRIC",
             "ANALOG_FABRIC",

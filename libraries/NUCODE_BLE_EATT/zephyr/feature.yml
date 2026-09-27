@@ -1,0 +1,12 @@
+{
+  "schema_version": 3,
+  "id": "nucode.ble.eatt",
+  "requires": ["ble"],
+  "capabilities": [],
+  "conf": ["ble-eatt.conf"],
+  "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["ble", "secure_ble_dfu"]
+}

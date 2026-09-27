@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W08",
+  "status": "PASS",
+  "test": "github_windows_rc_examples_and_lifecycle",
+  "observed_utc": "2026-09-27T04:37:40.891467+00:00",
+  "source_revision": "b2e7a587ba6fde31e033dc21008d7084bd6e631b",
+  "host_scope": "GitHub Actions windows-2025",
+  "package": {
+    "archive_sha256": "b2992bcab8c2e7cb322336a3be1a5101c69da5b63fa1676add0194ae181d43c4",
+    "runtime_payload_sha256": "61e3e30ee797bc019dd3d3c49479b706ed35a49bcc4e6f8114d85f1f3c24d5c8",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "reproducibility": {
+      "artifact_hashes": {
+        "archive": "b2992bcab8c2e7cb322336a3be1a5101c69da5b63fa1676add0194ae181d43c4",
+        "checksums": "e984387611c73d3ec26a386067848b58972f9fa8dc4ee3c263c83a77547bb493",
+        "licenses": "b9ec18820c46934d934e63b07f0f7b5a2ea2a198ce26e45f836da85e9a0923d0",
+        "manifest": "49ba60a3b572ad7588caf014687a12344dc2c5314d365ee0ffffba1766636262",
+        "notices": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+        "sbom": "2f07b02cf03299977599b1b43a7fddc5d7df4778630e83ac9877caa0da515c3f"
+      },
+      "isolated_builds": 2,
+      "status": "PASS"
+    }
+  },
+  "examples": {
+    "shards": 8,
+    "discovered": 113,
+    "compiled": 113,
+    "failed": 0,
+    "missing": 0,
+    "duplicates": 0,
+    "assignment": "rc2_elapsed_worker_lpt_v2",
+    "per_shard": {
+      "0": 14,
+      "1": 14,
+      "2": 14,
+      "3": 15,
+      "4": 14,
+      "5": 14,
+      "6": 14,
+      "7": 14
+    }
+  },
+  "lifecycle": {
+    "status": "PASS",
+    "previous_version": "0.5.0-rc.1",
+    "candidate_version": "0.5.0-rc.2",
+    "representative_compiled": 1,
+    "unknown_version_rejected": true,
+    "uninstall": "PASS",
+    "prerequisite_preserved": true,
+    "reinstall": "PASS",
+    "rediscovered_examples": 113,
+    "cache_rebuild": "PASS"
+  },
+  "publication_allowed": false
+}

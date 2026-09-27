@@ -212,6 +212,41 @@ class Ac02bAnalogContractTests(unittest.TestCase):
             self.assertIn(token, interrupt)
         self.assertGreaterEqual(spi.count("spi_interrupt_mask_faulted || hasActiveSpiInterruptToken()"), 3)
 
+    def test_gpio_runtime_does_not_retain_transaction_lease_per_pin(self) -> None:
+        """! @brief commit 뒤 rollback snapshot을 논리 pin마다 중복 보존하지 않습니다. """
+        digital = (ROOT / "cores" / "arduino" / "wiring_digital.cpp").read_text(
+            encoding="utf-8"
+        )
+        state_start = digital.index("struct PinRuntimeState")
+        state_end = digital.index("K_MUTEX_DEFINE(gpio_transition_mutex)", state_start)
+        state = digital[state_start:state_end]
+
+        self.assertNotIn("IoResourceLease", state)
+        self.assertNotIn("ownership_lease", state)
+        self.assertNotIn("runtime.ownership_lease", digital)
+        self.assertNotIn("state->ownership_lease", digital)
+        self.assertIn("commitIoResources(ownership_lease)", digital)
+        self.assertIn("rollbackIoResources(ownership_lease)", digital)
+
+    def test_boot_registry_does_not_retain_committed_uart_lease(self) -> None:
+        """! @brief 부팅 고정 owner는 중앙 table에만 남기고 transaction은 폐기합니다. """
+        registry = (
+            ROOT / "variants" / "nu54dk" / "io_resource_registry.cpp"
+        ).read_text(encoding="utf-8")
+        globals_end = registry.index("constexpr std::uint16_t pselPin")
+        initialize_start = registry.index(
+            "IoResourceResult initializeNu54dkIoResources()"
+        )
+        initialize_end = registry.index(
+            "IoResourceResult nu54dkIoResourceRegistryResult()", initialize_start
+        )
+        initialize = registry[initialize_start:initialize_end]
+
+        self.assertNotIn("IoResourceLease uart20_lease", registry[:globals_end])
+        self.assertIn("IoResourceLease uart20_lease{};", initialize)
+        self.assertIn("unwindFixedLease(uart20_lease, unwind_result)", initialize)
+        self.assertIn("return unwind_result == IoResourceResult::success", initialize)
+
     def test_examples_exist(self) -> None:
         expected = (
             ROOT / "libraries" / "NUCODE_NU54DK" / "examples" / "AnalogChannels" / "AnalogChannels.ino",

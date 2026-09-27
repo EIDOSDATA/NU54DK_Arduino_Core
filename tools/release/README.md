@@ -1,15 +1,21 @@
 # 릴리스 자동화 안내
 
-현재 설치·지원 버전은 **v0.4.1 하나**입니다. 설치·지원 문서는
-[릴리스 안내](../../00_Docs/05_릴리스/README.md), v0.4.1 유지보수 절차는
-`v041_release.py`와 [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md)를 확인합니다.
+정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
+[릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
+`v050_release.py`와 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 확인합니다.
+M32/M33·Ubuntu/macOS는 후속 제품선입니다.
+
+RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하되, stable package는 최종 exact
+commit에서 두 번 새로 생성합니다. 전체 예제 113/113·설치 수명주기·대표 실물 Upload와 사용자 GUI
+연속 Upload 결과를 구분해 기록합니다.
 
 이 디렉터리는 제품 세대별 자동화 계약을 보존합니다. 과거 도구의 version allowlist와
 게시 명령을 현재 작업에 재사용하지 않으며, 공개된 버전을 다른 byte로 다시 게시하지 않습니다.
 
 | 제품선 | 절차 문서 | 주 도구 | 상태 |
 | --- | --- | --- | --- |
-| `v0.4.1` 유지보수 | [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md) | `v041_release.py` | 현재 설치·지원 기준 |
+| `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | `v050_release.py`, `m31_release.py`, `m31_windows_lifecycle.py`, `m31_windows_example_shard.py`, `m31_ci_aggregate.py` | 정식 공개·stable catalog·공개 smoke 완료 |
+| `v0.4.1` 유지보수 | [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md) | `v041_release.py` | 역사적·지원 종료 |
 | `v0.4.0` / M27 | [M27_README.md](M27_README.md) | `m27_release.py`, `m27_stable_release.py` | 정식 공개·T24/T25 완료·동결 |
 | `v0.3.0` / M22 | [M22_README.md](M22_README.md) | `m22_release.py`, `m22_cleanroom.py` | 역사적·동결 |
 | `v0.2.0` / M18 | [M18_README.md](M18_README.md) | `m18_release.py` | 역사적·동결 |
@@ -25,11 +31,13 @@
 4. 스크립트의 성공을 실제 공개 승인이나 hardware 검증으로 확대하지 않습니다.
 5. 현재 사용자 문서와 공개 상태는 [릴리스 문서 안내](../../00_Docs/05_릴리스/README.md)를
    단일 진입점으로 사용합니다.
+6. M31 기능 완료, RC 검증과 stable 게시를 구분합니다. Windows exact package의 이중 재현·설치·
+   전체 예제·lifecycle·공개 asset을 확인합니다. 후속 OS의 실물 gate는 해당 OS 지원 릴리스로 이관합니다.
 
 ## 구버전 공급 종료 이력
 
 2026-09-08 소유자가 승인한 v0.3.0 미만 공급 종료와 이력 정리는
 [106번 기록](<../../00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)에 보존합니다.
-이후 v0.4.1부터 stable catalog는 `0.4.1` 하나만 제공합니다. v0.4.0 이하의 package payload,
+v0.5.0 stable catalog는 `0.5.0` 하나만 제공합니다. v0.4.1 이하와 RC package payload,
 tag와 Release 자산은 삭제하지 않지만 모두 지원 종료 상태입니다. M18/M22/M27의 과거 index
 identity와 역사 version 생성 allowlist는 재현·감사용이며 현재 공개 공급 목록을 뜻하지 않습니다.

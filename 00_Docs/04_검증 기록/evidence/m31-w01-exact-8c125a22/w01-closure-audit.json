@@ -1,0 +1,15 @@
+{
+  "work_id": "M31-W01",
+  "status": "PASS",
+  "source_clean": true,
+  "scope": "inventory_capability_contract_only",
+  "source_revision": "f5619f235a6a4bd2347e8ba41d8bc5e76221228c",
+  "capability_source_revision": "8c125a220c4df722e4922887fdf6c5a5e3793612",
+  "capability_manifest": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/capability-manifest.json",
+  "capability_manifest_sha256": "a716b115fbb17237f11dd39ac2d93114adc990fc4dffa33cd7718b63f145c542",
+  "parity_audit": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/parity-audit.json",
+  "negative_audit": "00_Docs/04_검증 기록/evidence/m31-w01-exact-8c125a22/negative-audit.json",
+  "audio_profile_target_and_hil": "NOT_RUN_W03",
+  "raw_iq_functional_hil": "NOT_RUN_W04",
+  "channel_sounding_procedure": "NOT_RUN_W05"
+}

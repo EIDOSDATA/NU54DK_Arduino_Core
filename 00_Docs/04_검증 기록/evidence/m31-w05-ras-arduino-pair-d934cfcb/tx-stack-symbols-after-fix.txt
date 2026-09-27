@@ -1,0 +1,3 @@
+20029490 00000c80 b bt_tx_processor_stack
+2000c678 000000a8 b bt_tx_processor_workq
+00000c80 A CONFIG_BT_TX_PROCESSOR_STACK_SIZE

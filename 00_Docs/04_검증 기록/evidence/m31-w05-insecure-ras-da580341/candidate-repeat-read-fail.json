@@ -1,0 +1,57 @@
+{
+  "status": "FAIL",
+  "test": "unencrypted_ranging_features_read_20",
+  "source_clean": false,
+  "core_revision": "dirty-insecure-read-candidate",
+  "client_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "client_port": "COM7",
+  "reflector_port": "COM5",
+  "client_image_sha256": "ef1ce936b6ec2eda7abd6efd2620f5c94ca0ed7a2cdb7f7b4afdd69b5ca42f10",
+  "reflector_image_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "rejected": 4,
+  "client_lines": [
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure read rejected att=15 count=2",
+    "CS insecure read rejected att=15 count=3",
+    "CS insecure read rejected att=15 count=4",
+    "CS insecure peer disconnected",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1"
+  ],
+  "reflector_lines": [
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector advertising",
+    "CS reflector connected"
+  ],
+  "client_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "425984"
+  ],
+  "client_flash": [
+    "pyocd-sector-hw-reset",
+    "335872"
+  ],
+  "failure_class": "RuntimeError",
+  "failure_detail": "insecure rejection counter gap"
+}

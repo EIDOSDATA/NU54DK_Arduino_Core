@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "capabilities": [],
+  "roles": ["ble-audio-broadcast-assistant"],
+  "capacities": {}
+}

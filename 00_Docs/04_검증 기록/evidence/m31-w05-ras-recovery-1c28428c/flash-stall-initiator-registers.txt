@@ -1,0 +1,24 @@
+Board ID 5415 is not recognized
+NRF54L15 is not in a secure state
+{
+  "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "state": "HALTED",
+  "registers": {
+    "pc": "0x4db7c",
+    "lr": "0x563f5",
+    "sp": "0x2002bbe0",
+    "msp": "0x2002bac0",
+    "psp": "0x2002bbe0",
+    "xpsr": "0x41000000",
+    "control": "0x2",
+    "kernel_current": "0x200183c8"
+  },
+  "scb": {
+    "cpuid": "0x411fd210",
+    "cfsr": "0x0",
+    "hfsr": "0x0",
+    "shcsr": "0x70000",
+    "mmfar": "0x2002bbd4",
+    "bfar": "0x2002bbd4"
+  }
+}

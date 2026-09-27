@@ -1,0 +1,265 @@
+00000.009|sink|public audio sink scanning
+00000.017|source|public audio sent frames=3300
+00000.143|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00000.268|runner|command board=G value=r
+00000.349|source|public audio source preparing
+00000.349|source|public audio source streaming
+00000.472|runner|command board=F value=r
+00000.482|sink|public audio sink scanning
+00000.609|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00001.367|source|public audio sent frames=100
+00001.438|sink|public audio sink streaming
+00002.377|source|public audio sent frames=200
+00002.444|sink|public audio received=100 energy=1036670 dropped=0
+00002.565|runner|error-window name=sync-loss-1 state=armed
+00005.782|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00005.783|source|public audio sent frames=300
+00005.783|source|public audio sent frames=400
+00005.783|source|\xfc\xff\xff\xff\xdcpublic audio source preparing
+00005.783|source|public audio source streaming
+00005.783|sink|public audio received=200 energy=911748 dropped=0
+00005.783|sink|public audio received=300 energy=1065263 dropped=0
+00005.783|sink|public audio sync failed: -8 step=11
+00005.783|runner|error-window name=sync-loss-1 state=disarmed
+00006.478|source|public audio sent frames=100
+00006.596|sink|public audio sink scanning
+00006.965|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00007.477|source|public audio sent frames=200
+00007.877|sink|public audio sink streaming
+00008.481|source|public audio sent frames=300
+00008.879|sink|public audio received=100 energy=1174609 dropped=0
+00008.879|runner|sync-loss cycle=1/20 elapsed=6.434s pass
+00008.999|runner|error-window name=sync-loss-2 state=armed
+00012.415|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00012.416|source|public audio sent frames=400
+00012.416|source|public audio sent frames=500
+00012.416|source|public audio sent frames=600
+00012.416|source|\xe4\xfc\xfe\xffpublic audio source preparing
+00012.416|source|public audio source streaming
+00012.416|sink|public audio received=200 energy=1071412 dropped=0
+00012.416|sink|public audio received=300 energy=912221 dropped=0
+00012.416|sink|public audio received=400 energy=1026887 dropped=0
+00012.416|sink|public audio sync failed: -8 step=11
+00012.416|runner|error-window name=sync-loss-2 state=disarmed
+00013.063|source|public audio sent frames=100
+00013.179|sink|public audio sink scanning
+00013.249|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00014.070|source|public audio sent frames=200
+00014.281|sink|public audio sink streaming
+00015.075|source|public audio sent frames=300
+00015.277|sink|public audio received=100 energy=1165738 dropped=0
+00015.277|runner|sync-loss cycle=2/20 elapsed=6.398s pass
+00015.399|runner|error-window name=sync-loss-3 state=armed
+00019.376|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00019.376|source|public audio sent frames=400
+00019.376|source|public audio sent frames=500
+00019.376|source|public audio sent frames=600
+00019.376|source|public audio source preparing
+00019.376|source|public audio source streaming
+00019.376|sink|public audio received=200 energy=1100653 dropped=0
+00019.377|sink|public audio received=300 energy=920947 dropped=0
+00019.377|sink|public audio received=400 energy=1010070 dropped=0
+00019.377|sink|public audio sync failed: -8 step=11
+00019.377|runner|error-window name=sync-loss-3 state=disarmed
+00020.084|source|public audio sent frames=100
+00020.186|sink|public audio sink scanning
+00020.558|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00021.093|source|public audio sent frames=200
+00021.416|sink|public audio sink streaming
+00022.106|source|public audio sent frames=300
+00022.429|sink|public audio received=100 energy=910423 dropped=0
+00022.429|runner|sync-loss cycle=3/20 elapsed=7.152s pass
+00022.551|runner|error-window name=sync-loss-4 state=armed
+00025.628|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nSuccessfully resumed device\nCOMMANDER_RC=0
+00025.628|source|public audio sent frames=400
+00025.628|source|public audio sent frames=500
+00025.628|source|public audio source preparing
+00025.628|source|public audio source streaming
+00025.628|sink|public audio received=200 energy=1037562 dropped=0
+00025.628|sink|public audio received=300 energy=1179427 dropped=0
+00025.628|sink|public audio sync failed: -8 step=11
+00025.628|runner|error-window name=sync-loss-4 state=disarmed
+00026.207|source|public audio sent frames=100
+00026.330|sink|public audio sink scanning
+00026.522|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00027.215|source|public audio sent frames=200
+00027.431|sink|public audio sink streaming
+00028.223|source|public audio sent frames=300
+00028.421|sink|public audio received=100 energy=1165738 dropped=0
+00028.422|runner|sync-loss cycle=4/20 elapsed=5.993s pass
+00028.544|runner|error-window name=sync-loss-5 state=armed
+00031.569|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00031.569|source|public audio sent frames=400
+00031.569|source|public audio sent frames=500
+00031.569|source|\xff\xfe\xff\xfcpublic audio source preparing
+00031.569|source|public audio source streaming
+00031.569|sink|public audio received=200 energy=1100653 dropped=0
+00031.569|sink|public audio received=300 energy=1149911 dropped=0
+00031.569|sink|public audio sync failed: -8 step=11
+00031.569|runner|error-window name=sync-loss-5 state=disarmed
+00032.302|source|public audio sent frames=100
+00032.404|sink|public audio sink scanning
+00032.432|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00033.305|source|public audio sent frames=200
+00033.332|sink|public audio sink streaming
+00034.323|source|public audio sent frames=300
+00034.355|sink|public audio received=100 energy=1002932 dropped=0
+00034.355|runner|sync-loss cycle=5/20 elapsed=5.934s pass
+00034.476|runner|error-window name=sync-loss-6 state=armed
+00037.440|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nSuccessfully resumed device\nCOMMANDER_RC=0
+00037.440|source|public audio sent frames=400
+00037.440|source|public audio sent frames=500
+00037.440|source|public audio source preparing
+00037.440|source|public audio source streaming
+00037.441|sink|public audio received=200 energy=928727 dropped=0
+00037.441|sink|public audio received=300 energy=1170186 dropped=0
+00037.441|sink|public audio sync failed: -8 step=11
+00037.441|runner|error-window name=sync-loss-6 state=disarmed
+00038.161|source|public audio sent frames=100
+00038.264|sink|public audio sink scanning
+00038.885|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00039.173|source|public audio sent frames=200
+00039.909|sink|public audio sink streaming
+00040.191|source|public audio sent frames=300
+00040.912|sink|public audio received=100 energy=1179427 dropped=0
+00040.913|runner|sync-loss cycle=6/20 elapsed=6.557s pass
+00041.034|runner|error-window name=sync-loss-7 state=armed
+00044.003|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00044.003|source|public audio sent frames=400
+00044.003|source|public audio sent frames=500
+00044.003|source|public audio sent frames=600
+00044.003|source|public audio source preparing
+00044.003|source|public audio source streaming
+00044.003|sink|public audio received=200 energy=919203 dropped=0
+00044.003|sink|public audio received=300 energy=1015534 dropped=0
+00044.003|sink|public audio sync failed: -8 step=11
+00044.003|runner|error-window name=sync-loss-7 state=disarmed
+00044.754|source|public audio sent frames=100
+00044.864|sink|public audio sink scanning
+00045.005|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00045.766|source|public audio sent frames=200
+00046.266|sink|public audio sink streaming
+00046.777|source|public audio sent frames=300
+00047.278|sink|public audio received=100 energy=1140289 dropped=0
+00047.278|runner|sync-loss cycle=7/20 elapsed=6.366s pass
+00047.400|runner|error-window name=sync-loss-8 state=armed
+00050.371|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00050.372|source|public audio sent frames=400
+00050.372|source|public audio sent frames=500
+00050.372|source|public audio sent frames=600
+00050.372|source|\xfepublic audio source preparing
+00050.372|source|public audio source streaming
+00050.372|sink|public audio received=200 energy=983379 dropped=0
+00050.372|sink|public audio received=300 energy=948352 dropped=0
+00050.372|sink|public audio sync failed: -8 step=11
+00050.372|runner|error-window name=sync-loss-8 state=disarmed
+00051.046|source|public audio sent frames=100
+00051.160|sink|public audio sink scanning
+00051.410|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00052.062|source|public audio sent frames=200
+00052.863|sink|public audio sink streaming
+00053.059|source|public audio sent frames=300
+00053.856|sink|public audio received=100 energy=912221 dropped=0
+00053.856|runner|sync-loss cycle=8/20 elapsed=6.578s pass
+00053.979|runner|error-window name=sync-loss-9 state=armed
+00057.286|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nSuccessfully resumed device\nCOMMANDER_RC=0
+00057.287|source|public audio sent frames=400
+00057.287|source|public audio sent frames=500
+00057.287|source|public audio sent frames=600
+00057.287|source|public audio source preparing
+00057.287|source|public audio source streaming
+00057.287|sink|public audio received=200 energy=1026887 dropped=0
+00057.287|sink|public audio received=300 energy=1174713 dropped=0
+00057.287|sink|public audio received=400 energy=1071216 dropped=0
+00057.287|sink|public audio sync failed: -8 step=11
+00057.287|runner|error-window name=sync-loss-9 state=disarmed
+00058.001|source|public audio sent frames=100
+00058.115|sink|public audio sink scanning
+00058.440|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00059.008|source|public audio sent frames=200
+00059.333|sink|public audio sink streaming
+00060.014|source|public audio sent frames=300
+00060.338|sink|public audio received=100 energy=910423 dropped=0
+00060.338|runner|sync-loss cycle=9/20 elapsed=6.482s pass
+00060.460|runner|error-window name=sync-loss-10 state=armed
+00063.409|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00063.409|source|public audio sent frames=400
+00063.409|source|public audio sent frames=500
+00063.409|source|public audio source preparing
+00063.409|source|public audio source streaming
+00063.409|sink|public audio received=200 energy=1037562 dropped=0
+00063.409|sink|public audio received=300 energy=1179427 dropped=0
+00063.409|sink|public audio sync failed: -8 step=11
+00063.409|runner|error-window name=sync-loss-10 state=disarmed
+00064.140|source|public audio sent frames=100
+00064.251|sink|public audio sink scanning
+00064.347|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00065.155|source|public audio sent frames=200
+00065.173|sink|public audio sink streaming
+00066.168|source|public audio sent frames=300
+00066.178|sink|public audio received=100 energy=1159410 dropped=0
+00066.178|runner|sync-loss cycle=10/20 elapsed=5.840s pass
+00066.298|runner|error-window name=sync-loss-11 state=armed
+00069.249|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00069.250|source|public audio sent frames=400
+00069.250|source|public audio sent frames=500
+00069.250|source|\xfepublic audio source preparing
+00069.250|source|public audio source streaming
+00069.250|sink|public audio received=200 energy=1115188 dropped=0
+00069.250|sink|public audio received=300 energy=941229 dropped=0
+00069.250|sink|public audio sync failed: -8 step=11
+00069.250|runner|error-window name=sync-loss-11 state=disarmed
+00069.971|source|public audio sent frames=100
+00070.080|sink|public audio sink scanning
+00070.572|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00070.988|source|public audio sent frames=200
+00071.423|sink|public audio sink streaming
+00071.996|source|public audio sent frames=300
+00072.425|sink|public audio received=100 energy=1105003 dropped=0
+00072.425|runner|sync-loss cycle=11/20 elapsed=6.247s pass
+00072.546|runner|error-window name=sync-loss-12 state=armed
+00075.529|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00075.529|source|public audio sent frames=400
+00075.529|source|public audio sent frames=500
+00075.529|source|public audio sent frames=600
+00075.529|source|\xfe\xffpublic audio source preparing
+00075.529|source|public audio source streaming
+00075.529|sink|public audio received=200 energy=895369 dropped=0
+00075.529|sink|public audio received=300 energy=1048189 dropped=0
+00075.529|sink|public audio sync failed: -8 step=11
+00075.529|runner|error-window name=sync-loss-12 state=disarmed
+00076.249|source|public audio sent frames=100
+00076.358|sink|public audio sink scanning
+00076.564|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00077.262|source|public audio sent frames=200
+00077.401|sink|public audio sink streaming
+00078.281|source|public audio sent frames=300
+00078.414|sink|public audio received=100 energy=919203 dropped=0
+00078.414|runner|sync-loss cycle=12/20 elapsed=5.989s pass
+00078.537|runner|error-window name=sync-loss-13 state=armed
+00081.509|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00081.509|source|public audio sent frames=400
+00081.509|source|public audio sent frames=500
+00081.509|source|0\x9c\xfe\xff\xfepublic audio source preparing
+00081.509|source|public audio source streaming
+00081.509|sink|public audio received=200 energy=1015534 dropped=0
+00081.509|sink|public audio received=300 energy=1170903 dropped=0
+00081.510|sink|public audio sync failed: -8 step=11
+00081.510|runner|error-window name=sync-loss-13 state=disarmed
+00082.210|source|public audio sent frames=100
+00082.323|sink|public audio sink scanning
+00082.420|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00083.226|source|public audio sent frames=200
+00083.248|sink|public audio sink streaming
+00084.239|source|public audio sent frames=300
+00084.262|sink|public audio received=100 energy=1134738 dropped=0
+00085.254|source|public audio sent frames=400
+00085.271|sink|public audio received=200 energy=968233 dropped=0
+00086.256|source|public audio sent frames=500
+00086.280|sink|public audio received=300 energy=956409 dropped=0
+00087.266|source|public audio sent frames=600
+00087.299|sink|public audio received=400 energy=1149755 dropped=0
+00088.276|source|public audio sent frames=700
+00088.313|sink|public audio received=500 energy=1002911 dropped=0
+00089.286|source|public audio sent frames=800
+00089.323|sink|public audio received=600 energy=1072902 dropped=0

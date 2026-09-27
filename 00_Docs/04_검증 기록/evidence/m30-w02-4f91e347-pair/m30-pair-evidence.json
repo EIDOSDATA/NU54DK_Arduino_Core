@@ -1,0 +1,696 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": 2,
+  "cases": [
+    {
+      "case": "no_input_output",
+      "central_io": 0,
+      "images": {
+        "central": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "9f008cb22445010e25edaa24a6b3243840757b35f3b4d5619f43873475367e9e",
+          "size": 680406
+        },
+        "peripheral": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "d36eeccc985b5b68c4ea1281e3daa1c00e76fe35ec1ef9ae431b8911864a766a",
+          "size": 680570
+        }
+      },
+      "method": "just_works",
+      "peripheral_io": 0,
+      "rounds": [
+        {
+          "central_flash_bytes": "221184",
+          "central_flash_sequence": "pyocd-sector",
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "31efb8ef6663bce99d39e7b7396c2a99444b8b7038f041305707088d51b7b06a",
+          "peripheral_flash_bytes": "221184",
+          "peripheral_flash_sequence": "pyocd-sector",
+          "round": 1,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "5dcd03cfc8eedb6fde5d7c415d1652874ba2eb9aed991164b15c4c5feede2ace",
+          "round": 2,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "e904599319a5098b0f8ddb00bb1e6ed4fa7e4d40250cd6f23f839bde8ecac3c6",
+          "round": 3,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "a3a9d5a18c9e61526bbb9e928783ebdb3dad7d11e97ae1b5fd06e93bb163ad3e",
+          "round": 4,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "923384d13e893e2fae766299b3f446803c4c9721b9aab99c0254fd206bc789d9",
+          "round": 5,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "4f690de69099c8c96a6d3cb4804b19035f062e7e8f7c5489d2c789291a81fa04",
+          "round": 6,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "e88b4d6ff695275d6e53c6e3488197e137de6032ed13e23ffc5b3d880069d8e8",
+          "round": 7,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "d90f6e1222ada1eeb123626422b6bb71152386e7bdd2feb72231298ecb56ed91",
+          "round": 8,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "651cc0ff4d5b81f73739b3b00c6a36765352c6aa753619d8f2f3e253b61b002f",
+          "round": 9,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "just_works",
+          "nonce_sha256": "bbde2c5a7ab04f85a940b4d7b69c53d8f88f74bff731622b59ad5568be598249",
+          "round": 10,
+          "security_level": 2,
+          "unexpected_auth_failures": 0
+        }
+      ]
+    },
+    {
+      "case": "display_keyboard",
+      "central_io": 2,
+      "images": {
+        "central": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "844249fa8390c02e3742993df18745325535278cdf886ff00a57bbc3f3adaf40",
+          "size": 680594
+        },
+        "peripheral": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "c55f94d97ad7ffb967e1777cb7cb29a6dbfcc59bd625556d0dfb584cb84a5c99",
+          "size": 680774
+        }
+      },
+      "method": "passkey_entry",
+      "peripheral_io": 1,
+      "rounds": [
+        {
+          "central_flash_bytes": "221184",
+          "central_flash_sequence": "pyocd-sector",
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "f154545f2a5d06d404243a0663cea636007931925c648705f529531a79ad5991",
+          "peripheral_flash_bytes": "221184",
+          "peripheral_flash_sequence": "pyocd-sector",
+          "round": 1,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "af79e5c6e3d051069e6c2db5e1c139ecb5cd568128e3e3217ed56bbf98e1a61d",
+          "round": 2,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "69d1d8169841b03216918c2361940f2fa2ba33ce89153b1a695d8fa826a55694",
+          "round": 3,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "39d7120c91d765019df1748555cde20821e68716b6a97bde2d19edbf825140da",
+          "round": 4,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "59dd9bc3059b36ee593f30a0fa96abde307ef193c8106e3f90f518069743a74d",
+          "round": 5,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "b84758058cec25303b7dce1cd23c8af57f3f49fd67beb7041b6c8501ce824abf",
+          "round": 6,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "acebcbab0e4bcfc98e51dfcb818a6e27bc19a2d733c7939bed9340f7c03ec579",
+          "round": 7,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "ea2b0da20b85c0d18da345f5cb8fc6018b797c5938ab035748f048ad994b90d6",
+          "round": 8,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "01a360bc7f5b4152daddf684f509ad45682382002078e7bec9d71171cf59ecf0",
+          "round": 9,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "adcef04885b61d049b452d244fd28591d04390a2b1dd4bd89c0a2f0abbff32c9",
+          "round": 10,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        }
+      ]
+    },
+    {
+      "case": "keyboard_display",
+      "central_io": 1,
+      "images": {
+        "central": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "44b4cdd75184af40f51323ab961bf036c8542d756e1864b5ca72733044214f88",
+          "size": 680594
+        },
+        "peripheral": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "e38677039924a1dba1ef88a40dbdf269057f567a7058deabf7110dff3514424a",
+          "size": 680766
+        }
+      },
+      "method": "passkey_entry",
+      "peripheral_io": 2,
+      "rounds": [
+        {
+          "central_flash_bytes": "8192",
+          "central_flash_sequence": "pyocd-sector",
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "2398d2cabea09b9647b3b643540981b2b92173bf90a394d1f875d0974f90beba",
+          "peripheral_flash_bytes": "159744",
+          "peripheral_flash_sequence": "pyocd-sector",
+          "round": 1,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "a592058bb950d4df5b9e44c4498d742924ce2788738763857ce5bbc5a466b578",
+          "round": 2,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "ebaa7346b8f13542d778f6089d2b8b5ca0edae696b5f7a8c514738c91976731d",
+          "round": 3,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "c4f55c1999390d17e1d344f2867f1aee957abb15ed84f230c1b7d1ae668eff8f",
+          "round": 4,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "8a59c23742ebce7c069b65f5627d744474aa44f04f982c9c0bea7bb1ae3bac67",
+          "round": 5,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "d34522eebe9eab52d3614b65d89f8dc6a9240b9115f63521f945f3d556b7d462",
+          "round": 6,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "7cf8dbd79238adcdcd378c2401c0cc3b9747452ffb5c661022e752f634169720",
+          "round": 7,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "3972daa47fa10325945888324390e9435bc45ae9ec2a59ffd01b7eef00df374b",
+          "round": 8,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "22f4637a700f59958438173c8b26b8c8c279cb88ff4e493e32f7e1051c63b8c1",
+          "round": 9,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "passkey_entry",
+          "nonce_sha256": "d08e8c5fd3e0f754ad6152c27fb55172c20eb966e550247e6c7819b4cae3e98f",
+          "round": 10,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        }
+      ]
+    },
+    {
+      "case": "display_yes_no",
+      "central_io": 3,
+      "images": {
+        "central": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "a43cc59de4701e2e81e152588c54b2f4488bad5ca912969373ce2f85e98492aa",
+          "size": 680533
+        },
+        "peripheral": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "1743449229398039e22323b41f01d5e1e9171aa488743955e21b8a56f4c5f94c",
+          "size": 680684
+        }
+      },
+      "method": "numeric_comparison",
+      "peripheral_io": 3,
+      "rounds": [
+        {
+          "central_flash_bytes": "221184",
+          "central_flash_sequence": "pyocd-sector",
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "76dd30fa2a3450a80d7deed646d14368b5b9a871b7e8bedfd83eee9b49c70b84",
+          "peripheral_flash_bytes": "221184",
+          "peripheral_flash_sequence": "pyocd-sector",
+          "round": 1,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "f5c7214b0d808125ef905485006de57f2461d94881cc82bd64623f45d5199303",
+          "round": 2,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "68ecfeee7e3f43cfba2e549a3329f6a832c2eb09e71466e33d8fef48c8f31f82",
+          "round": 3,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "8a87396aae28695fe022dc6ce9ac5aed39709901f0c81b97fcb59d8fc2ed52bb",
+          "round": 4,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "b317401fe166c6660175bb164e602a8146052cfd5f0e5260e8b5e3649233c6ca",
+          "round": 5,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "c899da5be772b02009bfd3b9982a2ec4491228c57f36ca03085b1a9e23b2ffb8",
+          "round": 6,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "3aa1dd9f1f9396fce87c669b5cc8c5dd1e40fb0a9b7ae80f4c35d6ae2ab0c796",
+          "round": 7,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "c1c7456ea5d5d9ac0d70506ec7ae5ea88b873ad5f9f3db62e8f3dfb37e7c8c2f",
+          "round": 8,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "2994f2069cb458ae3a5fb49e44425ac2d56cfc18cea6828a46bf5effc560eb22",
+          "round": 9,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "c1cf7e5bb9657d97510e19538bcc4299449c83a97468d2a7a3cc5401307e2eb9",
+          "round": 10,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        }
+      ]
+    },
+    {
+      "case": "keyboard_display_full",
+      "central_io": 4,
+      "images": {
+        "central": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "c9469415059ea749b34ff17b3c69734b3d9bee90ce716ffbbbbef5a282fc9880",
+          "size": 680533
+        },
+        "peripheral": {
+          "build_record": {
+            "application_source_sha256": "a3239b5e0cc3e2783e340e173617ed64c302eb9dd503020e8cf68959eaa9a979",
+            "board": "nrf54l15dk",
+            "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+            "board_revision": "fe65f2f0880b",
+            "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+            "core_revision": "4f91e347e8e3",
+            "core_source_sha256": "4ab8e18a427cac7401d16e6d463f41bb1326177255c322f209282b54e06c3cfb",
+            "ncs_revision": "99553055607b",
+            "record_name": "nucode_arduino_core_build.yml",
+            "record_sha256": "40e807f99818a834afa3543d7faf82f6b61d0af546a341441e8b62a9b307028e",
+            "zephyr_revision": "bf801e4e3d19"
+          },
+          "name": "zephyr.hex",
+          "sha256": "c819d22ada99b56284d44aeeec073499e1931eceeb27b55f127da0aa3e737a29",
+          "size": 680705
+        }
+      },
+      "method": "numeric_comparison",
+      "peripheral_io": 4,
+      "rounds": [
+        {
+          "central_flash_bytes": "172032",
+          "central_flash_sequence": "pyocd-sector",
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "fa730458b13d93350a7330fbb2ef9ffd1e1c850716026583ce9f7bd125ca707e",
+          "peripheral_flash_bytes": "172032",
+          "peripheral_flash_sequence": "pyocd-sector",
+          "round": 1,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "f19e593fcb94ec432b6373982e762c2bf5f56ffeba36bf0913baf61c28b42957",
+          "round": 2,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "960ae95b65375edeccf81cc4299cfc773ec38b70a7c4d7e2c3cce4aafc8861ff",
+          "round": 3,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "f98a2b020674f199c1cfbbd95de1b4e5c8aeb62ce15ddb3ac4dfd2902eed24aa",
+          "round": 4,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "a4463cfee65909b31293cd12b245dd377969e9490b0a32b6892d7482e20655bc",
+          "round": 5,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "aa842b1eb3bd44efd52b8290d596a2680c3073d07edca3aeb77678103261d383",
+          "round": 6,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "4ebe96af1b9accd0dee611f809711626646ca5b9e9d01c818b251d956b866591",
+          "round": 7,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "f9ff8aa37a2e276d3f2ff711e6766bc98de4d2d8741226df1e0fbf6046d5fb70",
+          "round": 8,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "ce8fcb257a46ff32eaf1cd54a795a85afc4732ed24bf76e31bb38138303aeabf",
+          "round": 9,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        },
+        {
+          "key_size": 16,
+          "method": "numeric_comparison",
+          "nonce_sha256": "00691629c09e567f14fadb2f4fb66c715bb97b33151f4c9c8e479c590d3a4435",
+          "round": 10,
+          "security_level": 4,
+          "unexpected_auth_failures": 0
+        }
+      ]
+    }
+  ],
+  "core_revision": "4f91e347e8e36e77c959de90def7d9c2622be30b",
+  "duration_seconds": 367.5,
+  "endpoints": {
+    "central": {
+      "board_id_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port": "COM10",
+      "volume": "G:"
+    },
+    "peripheral": {
+      "board_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "port": "COM14",
+      "volume": "F:"
+    }
+  },
+  "flash_backend": "pyocd-sector",
+  "io_capabilities": 5,
+  "mass_erase_or_recover": false,
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "passkey_evidence_policy": "redacted",
+  "power_cut_injected": false,
+  "rounds_per_capability": 10,
+  "schema_version": 1,
+  "status": "passed",
+  "test_id": "M30-PAIR-01",
+  "timestamp_utc": "2026-09-14T11:01:09.374122+00:00",
+  "total_pairings": 50,
+  "transcripts": {
+    "central": {
+      "name": "m30-pair-evidence.central.transcript.log",
+      "sha256": "9897f1b4f24e0cb1d0e8c3965a3efd47e30945dee3cce083e0dc4198084e8092",
+      "size": 22479
+    },
+    "peripheral": {
+      "name": "m30-pair-evidence.peripheral.transcript.log",
+      "sha256": "c6fcd5a7b1cbdb0e3f97fc6226be903937615f5146125b6dd69d429a09d9fe83",
+      "size": 23004
+    }
+  },
+  "unexpected_auth_failures": 0,
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

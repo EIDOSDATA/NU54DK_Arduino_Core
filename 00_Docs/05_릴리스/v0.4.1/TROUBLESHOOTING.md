@@ -8,8 +8,9 @@ Additional Boards Manager URLs가 다음 stable index인지 확인하고 index�
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-stable index는 `0.4.1` 하나만 제공합니다. 별도 preview/RC index나 캐시된 과거 index를 사용하지
-마십시오.
+stable index는 `0.4.1` 하나만 제공합니다. v0.4.1 정식 설치에는 별도 preview/RC index나 캐시된
+과거 index를 사용하지 마십시오. 최신 RC를 의도적으로 시험할 때는 [릴리스 안내](../README.md)의
+해당 RC 전용 주소와 절차를 따릅니다.
 
 ## 설치는 표시됐지만 prerequisite 결과가 불분명함
 

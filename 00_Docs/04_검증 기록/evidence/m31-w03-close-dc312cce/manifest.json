@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "work_id": "M31-W03",
+  "status": "PASS",
+  "source_clean": true,
+  "source_revision": "dc312cce5d56bf50a5acc0ed3e7788b8ada804c6",
+  "scope": "m31_w03_le_audio_profile_closure",
+  "locks": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1",
+    "sdk_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3"
+  },
+  "summary": {
+    "subcases_total": 11,
+    "pass": 11,
+    "fail": 0,
+    "not_run": 0,
+    "remaining_m31_work_packages": 5
+  },
+  "files": [
+    {
+      "path": "closure-audit.json",
+      "size": 3192,
+      "sha256": "0a1c092710b0c92d6dcfa6b01a253fad81dc3c1254ac648c2a6aca622d850d4d"
+    },
+    {
+      "path": "w03-subcase-index.json",
+      "size": 9445,
+      "sha256": "171e28f4347e4534b97e167d38eebeb6db79036b9f046198741a93c442727e1c"
+    },
+    {
+      "path": "../../211_M31_W03_Arduino_Media_Call_Control_완료.md",
+      "size": 5628,
+      "sha256": "74730088590aabe6631f38d3fc8692494d6b7a2fe681968b0bbae6db64513974"
+    },
+    {
+      "path": "../../212_M31_W03_Arduino_TMAP_GMAP_완료.md",
+      "size": 4720,
+      "sha256": "86b097707ab7e859ef4ed6025749cddfaac2cd3d80dc8ca5a2669f4145514c93"
+    },
+    {
+      "path": "../../213_M31_W03_Arduino_HAP_HAS_완료.md",
+      "size": 3489,
+      "sha256": "72ce55edefaf6a00d00a0b68ee15248b309817e740bf649129ec072336419be8"
+    },
+    {
+      "path": "../../214_M31_W03_LE_Audio_Profile_완료.md",
+      "size": 5183,
+      "sha256": "96449ca8aa055af1790c8846792881c0026d43c5e8d8fec41c4264022714cfc1"
+    },
+    {
+      "path": "../m31-w03-media-call-dc312cce/manifest.json",
+      "size": 11550,
+      "sha256": "6ca4f1c03334e95639d9813fcd8c894082ea0b47eca0cca0b47546e7192321e7"
+    },
+    {
+      "path": "../m31-w03-tmap-gmap-ae73a1f1/manifest.json",
+      "size": 9834,
+      "sha256": "8dc95b350ad59fc273cccdd6a4bd11f3b38b18cd525ba7d893d419d018b6517e"
+    },
+    {
+      "path": "../m31-w03-hap-56612730/manifest.json",
+      "size": 4598,
+      "sha256": "d005cd510b50f47b2698b63142451679e2221d92fd7113d43fcf83c3cadeb053"
+    }
+  ],
+  "limits": {
+    "physical_audio_io": "NOT_RUN_user_follow_up_nonblocking",
+    "commercial_peer_interoperability": "NOT_RUN_user_follow_up_nonblocking",
+    "bluetooth_qualification": "not_claimed"
+  }
+}

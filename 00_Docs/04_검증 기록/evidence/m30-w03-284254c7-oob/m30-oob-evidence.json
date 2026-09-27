@@ -1,0 +1,297 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": 2,
+  "core_revision": "284254c7176fa0bf996137567952ae9d0ce5b4c0",
+  "duration_seconds": 68.182,
+  "endpoints": {
+    "central": {
+      "board_id_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port": "COM10",
+      "volume": "G:"
+    },
+    "peripheral": {
+      "board_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "port": "COM14",
+      "volume": "F:"
+    }
+  },
+  "flash_backend": "pyocd-sector",
+  "flash_results": {
+    "central": {
+      "bytes": "229376",
+      "sequence": "pyocd-sector"
+    },
+    "peripheral": {
+      "bytes": "229376",
+      "sequence": "pyocd-sector"
+    }
+  },
+  "images": {
+    "central": {
+      "build_record": {
+        "application_source_sha256": "25bac0fbfea2bbf717763c57c623b2e20c5e698d0880a79302d8cd132125dbc7",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "core_revision": "284254c7176f",
+        "core_source_sha256": "74318325fa5472919a4d82e265338ba012ca9663270643c543eb786d68b74811",
+        "ncs_revision": "99553055607b",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "23362f6d3e6e5ff903064ef97802ae06a56e75fe352020db92879876cfaf4ede",
+        "zephyr_revision": "bf801e4e3d19"
+      },
+      "name": "zephyr.hex",
+      "sha256": "7a4d53d2adf5ec0a7c580c4c5d58a041dca454daf4db12c39145403aa307a284",
+      "size": 698162
+    },
+    "peripheral": {
+      "build_record": {
+        "application_source_sha256": "25bac0fbfea2bbf717763c57c623b2e20c5e698d0880a79302d8cd132125dbc7",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+        "core_revision": "284254c7176f",
+        "core_source_sha256": "74318325fa5472919a4d82e265338ba012ca9663270643c543eb786d68b74811",
+        "ncs_revision": "99553055607b",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "23362f6d3e6e5ff903064ef97802ae06a56e75fe352020db92879876cfaf4ede",
+        "zephyr_revision": "bf801e4e3d19"
+      },
+      "name": "zephyr.hex",
+      "sha256": "0a485153cc4096c4a08548eb7a0fc5e7e672e74261062011f558f08ce592af44",
+      "size": 698080
+    }
+  },
+  "mass_erase_or_recover": false,
+  "mismatch_attempts": 40,
+  "mismatched_payload_accepts": 0,
+  "mitm_links": 20,
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "nfc_adapter_target_builds": 2,
+  "nfc_rf_runs": 0,
+  "power_cut_injected": false,
+  "raw_oob_evidence_policy": "sha256_only",
+  "rounds": [
+    {
+      "central_frame_sha256": "41425bde7717cbb70ce1119b5170823eb2f2eb2f81a493b75d3ee7e9f8a7946e",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "2a7b44becbc8d903c2ba42a48a5610a424465fa545c4d7c01dfffe9edfe2bf56",
+      "peripheral_frame_sha256": "2d93e7a8c99e932d37eb996846a94863ade5b10c2d2f705777e82526403805e5",
+      "round": 1,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "4d7651dff21d58869564993e88dcb70e83f5d27b4b33fed9abb93a74c15eee9b",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "5f8ec5f8de161c5bc0df4fc7e11b811796131365351eb034a8e3394dd2ea4b7f",
+      "peripheral_frame_sha256": "09a535b5a2a40f9bafcc3da5a7461f70cbc200227a41c5d79e9a2b1fb6e35734",
+      "round": 2,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "8c1206c408ac1207e67ecd1fd0698a4afc6e02d46f3231db8e12bf1f51edc151",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "787df9d1dea12a9d25d71e88982fb7341fd2ae162076b701d4b1f54cc85604cd",
+      "peripheral_frame_sha256": "1b626c2a8c4d1b58da3ee036d790026a595ca9319949771fd9ae8c72c2c1684e",
+      "round": 3,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "c245ccb73ed4b4346bbfaa726255e65674ba38707fe8fd2343e993c45125f1c2",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "7ae7622035241e8ba98e053d24ece310e8654ae146400ba4779c147a199b4a27",
+      "peripheral_frame_sha256": "deab33760c2935408493a8c794f4b7cd1111a5e97135042ab42bc9063c0a5860",
+      "round": 4,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "57a14998d9919d7708b3f3e07578f8488d74b72a5b862a75ebc28b0e3374b862",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "03358e2db8ffc9b2132dec6b6e1cbd08b2bad5109582091329c7468203435a9f",
+      "peripheral_frame_sha256": "0da337a2c107ed18ff6ecb2d97a93356aa466d7d50e922be0c87103c359a1626",
+      "round": 5,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "081ef02275d1a32661a4d848f2279bba1a1c9312dcb56c3cc46001bfd74bcbc8",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "a2004faecf5304b5b9debe69d779ac127696fb2d6e0fc248d0b3de8153bdc461",
+      "peripheral_frame_sha256": "02084384bf8d04e64f06d49a21e61fcdb51b0947d739b4a17b37983fef2eb2ec",
+      "round": 6,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "7e1758bc3ec951cd7a0f7cdb8492211cd37e2dc5ca46f31ef3ad330f9a0278b7",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "8fe6c8f843045af8177fa6c6272768e3996c86a2b3d7a9bb44640d2086f70e79",
+      "peripheral_frame_sha256": "58cdde10be6277595ad68ec2a512d280782725f0d1985efab2ac84d6cb6430a4",
+      "round": 7,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "2ed3f1b3ee0f430dba36330ea3abe61bec1bf0ff0c6a715a187375815d560e7e",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "e55eed252324af8f9f6a17c480b838e4772554527bec9a038ddd362d2d69c3d1",
+      "peripheral_frame_sha256": "4f801c1194bbb41b23042a87c0956b417c6b1c9dc7a3b310544389b38f8b01e8",
+      "round": 8,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "910aa051545033f353697bf60e8a7c5f4dcfbe6785cd6cca6066814e8c068d88",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "06620ec2e312c25753eb9e0ebe057f5a8cd9d9d66d54ac47f5f65d2a825aa08a",
+      "peripheral_frame_sha256": "274d832d5a4328453bf186c4313bc4ecc2a55d97728b07a6f842c2afca36203f",
+      "round": 9,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "c2cdbc2fb3f4998f51fdfd356ba2fab517caee20ec31cf45ce1359bf1c5e2540",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "454c390cc6ba723fb2169d46b0d5e329a21d518a55e692911675354fc49dbb66",
+      "peripheral_frame_sha256": "2d3b704ac9aa6f3436c22eecc583b2033fc3dfea7b52f2e7b770eb8423bcdd47",
+      "round": 10,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "154c81569b26f0187ca5a9b0a837932ef7679205beaabb12cac165e2f31e718d",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "f78a96bc0b64e250311555c863c39bd52221761013d1d7167a574bc13ed6f977",
+      "peripheral_frame_sha256": "92a0d34704a9285791920b726b944651fe49df23ed25f13a0afc7c1bd6f9ef02",
+      "round": 11,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "8e3fcdd978ebdbd805ed8531ddd206b70e2ebf910aa48613080fcfd657d8e1ef",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "2d64ab303efa1dee363f91b98352bf26edd4c9bc4ee41717b14cb182bb2456dd",
+      "peripheral_frame_sha256": "267869e488f2c171f985a17ce70183ba0303b96654a649f00fd7d094627be04b",
+      "round": 12,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "27a9d087bf8c6d40f350fcc096b23ff9e45713297f503fd47d7b6da5893b649f",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "de4020c5d1fe5721e27b0fac4f034ed8ca00e6ba54713fd91ed6b556bd0fe716",
+      "peripheral_frame_sha256": "f74fdc1664e7f2e4fde1cb0f0878ffecd8ff9e10634edb382d86b8b006a428b1",
+      "round": 13,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "9587778d2d97f4dee6f94991b1011d85b6b6705f0221a54ea1e45cd15ceaeb88",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "49f57ea30f7bb27079e9613bbfa7273844168ca1242d5f2ed780a608029cbe27",
+      "peripheral_frame_sha256": "db41d3da676b295b025c2009523c25b28260933665655ef7fb2164d690136c89",
+      "round": 14,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "5c87e1e2e542d0904da01f42ee7a6c1e6d0d3403b4c2cd2aa4b55d2770a5f007",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "9330453d710cbb6da6a0f959af9f9cbcc4186989b7945f26f4079f3ee86f91b8",
+      "peripheral_frame_sha256": "ec1a2810d6f71282f8a4b5f027bf51fabb88edcbddefb406bc9c5eafbeccc482",
+      "round": 15,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "060506d0af84bd6a9df4b243985a0c71a28631c6a70fc331ff035708588edcd7",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "2c50feb58639230f3d7d38bf5ced832490b612076299c93b8180772a5989bdd7",
+      "peripheral_frame_sha256": "8c59b2cebc080fbfa2a9a7d0b185ed96109850262e2ac52795f6d63c6a50f71d",
+      "round": 16,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "1623cfa24e2a7fea18f215c707a98e8c3035af79ab47a61be8037a6ad306bb51",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "0c917e2552675d974f1de6dadfb88f7445041e1ecc3a7c81e315184fee31db3d",
+      "peripheral_frame_sha256": "240410ecb134f6d6af30bf7aca959b7fb855c068c2d04b5ef5cef2cc079455fa",
+      "round": 17,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "79502a0662137aa1da3986c25dcf295141668c5874453dad5b323d3c78a4a224",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "43abe576619c3fc52e7b7f43ea2a03d8b975fe677021466edbf0e98d9653aa50",
+      "peripheral_frame_sha256": "4c084925bb258c4d8f83835b8f8244728e167e8c58e47038b277d348a10e24a0",
+      "round": 18,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "eb46b6e00cbbbbdc912f5e4b563dce7ef603cce1db7b82de96ecf3961fce4d15",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "b58260a11c65e26079cb4f7e396b242b4ec27cfd45ffe3387399c29aeb43de4e",
+      "peripheral_frame_sha256": "49cb7f549f3fedef5130f8dd9c06582308a7b2601ef9400ee3301249164226a5",
+      "round": 19,
+      "security_level": 4
+    },
+    {
+      "central_frame_sha256": "676ef4b84afdbc710b850de168191c017d7fee17c3537bc9f1f70e0566c2f45a",
+      "key_size": 16,
+      "mismatch_accepts": 0,
+      "mismatch_attempts": 2,
+      "nonce_sha256": "0e02d1cc7af17ece653cde12cbf5afcbc7a6ae76cc11b543eeb05391c6b4a243",
+      "peripheral_frame_sha256": "af0bd9fae04c9e79aecf3e27aab0e2cdabb42c2cb8d702ca6ca1c60fe37cfc6a",
+      "round": 20,
+      "security_level": 4
+    }
+  ],
+  "schema_version": 1,
+  "status": "passed",
+  "test_id": "M30-OOB-01",
+  "timestamp_utc": "2026-09-14T12:19:19.610825+00:00",
+  "transcripts": {
+    "central": {
+      "name": "m30-oob-evidence.central.transcript.log",
+      "sha256": "1876eaf7b44a269638c8f376b2f1179ee15929ec736947c907e684d69bc16d91",
+      "size": 12164
+    },
+    "peripheral": {
+      "name": "m30-oob-evidence.peripheral.transcript.log",
+      "sha256": "fe501fa4305da2ba5d9b897e9aed3f8cf668bdc3c861e9763059ec4ce68b49eb",
+      "size": 12527
+    }
+  },
+  "wired_carrier": "daplink_vcom",
+  "wired_pairings": 20,
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+}

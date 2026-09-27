@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+  "scope": "full tests/host discovery including pending W06 contract, readiness and documentation checks",
+  "command": "py -3.14 -m unittest discover -s tests/host -p test_*.py",
+  "tests_run": 1508,
+  "skipped": 2,
+  "failures": 0,
+  "errors": 0,
+  "elapsed_seconds": 540.210,
+  "result": "OK",
+  "ci_cd_queried": false
+}

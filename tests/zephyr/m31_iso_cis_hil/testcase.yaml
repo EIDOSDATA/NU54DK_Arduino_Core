@@ -1,0 +1,45 @@
+tests:
+  nucode.m31.iso_cis.central:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - iso
+      - hil
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - M31_ISO_ROLE=central
+  nucode.m31.iso_cis.peripheral:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - iso
+      - hil
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - M31_ISO_ROLE=peripheral
+  nucode.m31.iso_combined.peer:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - iso
+      - combined
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - M31_ISO_ROLE=peripheral
+      - M31_ISO_COMBINED_PEER=1

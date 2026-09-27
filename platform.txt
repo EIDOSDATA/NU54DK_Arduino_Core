@@ -1,5 +1,5 @@
 name=NUCODE NU54DK Zephyr Boards
-version=0.4.1-dev
+version=0.5.0
 
 # M5에서는 Arduino compiler recipe를 source graph 수집기로 사용한다.
 compiler.warning_flags=-Wall
@@ -18,6 +18,9 @@ build.extra_flags=
 nu54.builder="{runtime.platform.path}/tools/nu54-builder/nu54-builder.cmd"
 # Windows command interpreter가 공백 설치 경로의 첫 인용부호를 제거하지 않도록 호출한다.
 nu54.builder.windows=cmd.exe /d /c call "{runtime.platform.path}/tools/nu54-builder/nu54-builder.cmd"
+# POSIX Host는 인자를 재해석하지 않는 공통 shell launcher를 사용한다.
+nu54.builder.linux=/bin/sh "{runtime.platform.path}/tools/nu54-builder/nu54-builder.sh"
+nu54.builder.macosx=/bin/sh "{runtime.platform.path}/tools/nu54-builder/nu54-builder.sh"
 nu54.common_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.source.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}" --profile "{build.nu54_profile}"
 nu54.upload_args=--platform-root "{runtime.platform.path}" --build-path "{build.path}" --sketch-root "{build.path}" --fqbn "{build.fqbn}" --project-name "{build.project_name}" --board "{build.zephyr_board}" --profile "{build.nu54_profile}"
 
@@ -53,17 +56,11 @@ recipe.output.save_file={build.project_name}.nu54dk.hex
 # M8 일반 Upload는 manifest를 검증한 뒤 Zephyr runner를 사용하며 erase/recover를 요청하지 않는다.
 tools.nu54_pyocd.upload.params.verbose=--verbose
 tools.nu54_pyocd.upload.params.quiet=
-tools.nu54_pyocd.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd {upload.verbose}
-
-tools.nu54_pyocd_uid.upload.params.verbose=--verbose
-tools.nu54_pyocd_uid.upload.params.quiet=
-tools.nu54_pyocd_uid.upload.field.probe_id=CMSIS-DAP unique ID
-tools.nu54_pyocd_uid.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd --probe-id "{upload.field.probe_id}" {upload.verbose}
+tools.nu54_pyocd.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner pyocd --probe-id auto-single {upload.verbose}
 
 tools.nu54_jlink.upload.params.verbose=--verbose
 tools.nu54_jlink.upload.params.quiet=
-tools.nu54_jlink.upload.field.probe_id=J-Link serial number
-tools.nu54_jlink.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner jlink --probe-id "{upload.field.probe_id}" {upload.verbose}
+tools.nu54_jlink.upload.pattern={nu54.builder} flash {nu54.upload_args} --manifest "{build.path}/{build.project_name}.nu54-build.json" --runner jlink --probe-id j-link-serial-required {upload.verbose}
 
 pluggable_discovery.required.0=builtin:serial-discovery
 pluggable_monitor.required.serial=builtin:serial-monitor

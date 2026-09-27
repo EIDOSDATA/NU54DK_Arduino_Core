@@ -1,0 +1,45 @@
+{
+  "core_revision": "41a56627e3666ededf4fff57d7ee1f2ade425822",
+  "source_clean_at_hil": true,
+  "accepted": ["sync-loss-positive.json"],
+  "diagnostics_excluded": [
+    "diagnostic-zero-assumption-failure.json",
+    "diagnostic-candidate-pass.json"
+  ],
+  "roles": {
+    "source": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISSource/BISSource.ino",
+      "sketch_sha256": "a232704902e775da330118db9bb32318e2dcc0dfcda0a9a8ef6b3251ce5cf8cf",
+      "config_sha256": "690c92c1c0d08e1f2b42257670c5c1e195949aec134c8d707ab80f344e9f1b8b",
+      "hex_sha256": "f96b17dceb07c0cf6c48e0b95d0e08865ad340cbfc462080d185c5c11ba7a7da",
+      "program_bytes": 226896,
+      "ram_bytes": 107354
+    },
+    "receiver": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISReceiver/BISReceiver.ino",
+      "sketch_sha256": "961c06cd07049a1c5899c3412f0e896e66191b1f3eafd8a6bee387b73284c58a",
+      "config_sha256": "3d8dfcdb827338629c710e24f9db3829e94fcaab959d23838ebe9bd1e6faf014",
+      "hex_sha256": "3e07bf9d9c84b27ba3fb4f811b1d9ee087c2aaff0d1791401ef864b305cda524",
+      "program_bytes": 195904,
+      "ram_bytes": 106483
+    }
+  },
+  "runner": {
+    "path": "tests/hil/nu54dk/m31_iso_public_bis_pair_run.py",
+    "sha256": "1e095fdbf561d67b5f726417297f927d727b5574104e4e063c6ad53928d81bfe"
+  },
+  "artifacts": [
+    {
+      "path": "sync-loss-positive.json",
+      "sha256": "f5358dcbe6b346e87ecf7dd0edfd05e933302f3230a96e11094153ceb22ce5c2"
+    },
+    {
+      "path": "diagnostic-zero-assumption-failure.json",
+      "sha256": "04683ef4332170a329f7b14f80759ae4140676efbfd8e46c1e2c4fa773f02dce"
+    },
+    {
+      "path": "diagnostic-candidate-pass.json",
+      "sha256": "7541eb9dc22cc2551761f6fabd8a2168180f3ea713f119abcce85f80b9f0f928"
+    }
+  ]
+}

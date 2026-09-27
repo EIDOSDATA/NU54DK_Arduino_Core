@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "scope": "M31-W03-03 encrypted BAP broadcast exact completion evidence",
+  "core_revision": "473929f20d6c71503ae460c933d413268ec35222",
+  "source_clean": true,
+  "verdict": "PASS",
+  "files": [
+    {
+      "path": "source-build.json",
+      "sha256": "b3f4bba2158b89c98d9a8e7e7698a18305a32f597b18466e97aa3bd68c13f0ca"
+    },
+    {
+      "path": "sink-build.json",
+      "sha256": "f2c2d294d358d19478b303cb4411394aaf80b085bcdbf1d0170f843633b087cc"
+    },
+    {
+      "path": "flash.json",
+      "sha256": "4d82cfba1a1fc9ea4c6761276de1383218c9db01246bd9d39d64c0226e336fae"
+    },
+    {
+      "path": "broadcast-encrypted-exact.transcript.log",
+      "sha256": "72ebd3252005377b500f06b975bc61b1ef1c46931cf4a16b1537167ae2585d98"
+    },
+    {
+      "path": "broadcast-encrypted-exact.json",
+      "sha256": "c6d7bebd3927181ecfa8678d54e09678c3c52124f14b455e5867872595fce647"
+    },
+    {
+      "path": "diagnostic-audit.json",
+      "sha256": "fa251031ceccf30f13d29fc531fc0d443974e32a6c6da174f0f22b33efd29bca"
+    }
+  ],
+  "result": "PASS"
+}

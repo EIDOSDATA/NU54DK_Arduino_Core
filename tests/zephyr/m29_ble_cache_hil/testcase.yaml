@@ -1,0 +1,31 @@
+tests:
+  nucode.m29.ble_cache_peripheral:
+    tags:
+      - nucode
+      - arduino
+      - m29
+      - bluetooth
+      - cache
+      - hil
+    build_only: true
+    extra_args:
+      - M29_CACHE_ROLE=peripheral
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+  nucode.m29.ble_cache_central:
+    tags:
+      - nucode
+      - arduino
+      - m29
+      - bluetooth
+      - cache
+      - hil
+    build_only: true
+    extra_args:
+      - M29_CACHE_ROLE=central
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

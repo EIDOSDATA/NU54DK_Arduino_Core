@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "protocol": "M28CAP/1",
+  "test_id": "M28-CAP-01",
+  "status": "passed",
+  "created_at_utc": "2026-09-12T04:58:53.894281+00:00",
+  "identity": {
+    "core": "78078a422351cd373e0d153987add2c5b770acbb",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "nonce": "7ffb92604532fdd3014aada6e07ea690",
+  "board": {
+    "daplink_uid_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "msd_root": "F:\\",
+    "uart_port": "COM14"
+  },
+  "image": {
+    "name": "zephyr.hex",
+    "size": 757844,
+    "sha256": "65f531e6be6e0ecfa6e64139a860613d773f8ad8682626970ba5283d4de3b121",
+    "build_record": {
+      "core_revision": "78078a422351",
+      "core_source_sha256": "86ae86f0f4dcc9c90e7c79745a2d64f794fbdaf4fdcc4f55397c8425204da12b",
+      "application_source_sha256": "82b13f09f66db185cf23e578284a2fc93ad578883e61efb1208d9a34e4e3a459",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "ncs_revision": "99553055607b",
+      "zephyr_revision": "bf801e4e3d19",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "3801453b7c8852a068bea807116b52223fe4a2df90d13c656987fdb012a3bce6"
+    },
+    "flash_sequence": "3",
+    "flash_bytes": "758272"
+  },
+  "transcript": {
+    "name": "m28-cap-01-78078a42.transcript.log",
+    "size": 2014,
+    "sha256": "1aa891eaa7594db85f8d78f98571aaf2acd60b40320d29a2dcd762cba65d3347"
+  },
+  "result": {
+    "nonce": "7ffb92604532fdd3014aada6e07ea690",
+    "identity": {
+      "core": "78078a422351cd373e0d153987add2c5b770acbb",
+      "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "hci_version": 17,
+    "hci_revision": 12345,
+    "manufacturer": 89,
+    "lmp_subversion": 12345,
+    "supported_commands": "2000800000c000000000040000002802000000000000040000b73fec0f0000003040797e7efdbf04e00300000000e40300000000000000000000000000000000",
+    "le_features": "fd71000310190000",
+    "maximum_advertising_data_length": 257,
+    "advertising_sets": 1,
+    "periodic_advertiser_list_size": 1,
+    "resolving_list_size": 8,
+    "capabilities": [
+      "multi_role_multi_link",
+      "extended_advertising_scanning",
+      "periodic_advertising_sync_past",
+      "pawr_advertiser_scanner",
+      "privacy_rpa",
+      "per_link_control"
+    ]
+  },
+  "source_capability_status": "candidate-preserved-separately",
+  "runtime_hci_status": "passed",
+  "safety": {
+    "external_gpio_wiring_required": false,
+    "mass_erase_requested": false,
+    "recover_requested": false
+  }
+}

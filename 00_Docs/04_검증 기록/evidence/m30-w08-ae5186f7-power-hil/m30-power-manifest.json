@@ -1,0 +1,263 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": {
+    "central_relay": {
+      "board_id_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "daplink_git_sha": "unknown",
+      "daplink_version": "unknown",
+      "port": "COM10",
+      "target_detect": "nRF54L15",
+      "volume": "G:"
+    },
+    "peripheral_dut": {
+      "board_id_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "daplink_git_sha": "unknown",
+      "daplink_version": "unknown",
+      "port": "COM13",
+      "target_detect": "nRF54L15",
+      "volume": "E:"
+    }
+  },
+  "bootloader": {
+    "name": "zephyr.hex",
+    "sha256": "b2c40f975bbea1765e117d92ef0f28c63acf3761d39d4a7d8c02ee05a9f62d58",
+    "size": 93900,
+    "swap_observation_hook": true,
+    "window_seconds": 15
+  },
+  "build_records": {
+    "central": {
+      "application_build_ninja_sha256": "dafd719250d08d98dd626358bec65363db6262ecebedf925c4a36d6283cce13a",
+      "application_config_sha256": "de69f8ad8d165d804f2fab515ce3ad35770a79db799ce5748dc7a5666ee4334d",
+      "application_source_sha256": "589446149ce1a46f4ee189f908e905747575e39f2e49cfdc3b30f9a677479bfa",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "db04b63f9311bc97ac818a94ee5db6e943d0252a060ab64b2094e07a357e15a7",
+      "bootloader_config_sha256": "0dbf1da4cd0c784f41a80d37f28aae9e9aadd58f47e13539cf94e5a8b8b6212f",
+      "core_revision": "ae5186f7790a",
+      "core_source_sha256": "450f0ce445cd8591a163e8874f7f8bc6fa02e983ec45a9b9ca5dc4ff4f1015cc",
+      "cxx_compiler": "GNU 14.3.0",
+      "domains_sha256": "171ff383d55c03426aade525d889a9daf2c0bf1fc86e16301c54ff46a9eaef6c",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "19899db9873b464e9621be4a0d85fff931cfbcaaac5ac9be0fab8fa0ad70d7cc",
+      "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "toolchain_variant": "zephyr",
+      "zephyr_revision": "bf801e4e3d19"
+    },
+    "confirmed": {
+      "application_build_ninja_sha256": "16e05e2ca3dbe9e01d6a783e4835b879b269b41fd0f06257622dcaa6e785913b",
+      "application_config_sha256": "65764c5813549c40cf38f2e00cdfbacf27820e9c9280616770c2663f45f0d7f5",
+      "application_source_sha256": "589446149ce1a46f4ee189f908e905747575e39f2e49cfdc3b30f9a677479bfa",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "db04b63f9311bc97ac818a94ee5db6e943d0252a060ab64b2094e07a357e15a7",
+      "bootloader_config_sha256": "58e08491d2b4630fd26996a518417f6f505b4ce09b6923fa4de6160e4fbfbae1",
+      "core_revision": "ae5186f7790a",
+      "core_source_sha256": "450f0ce445cd8591a163e8874f7f8bc6fa02e983ec45a9b9ca5dc4ff4f1015cc",
+      "cxx_compiler": "GNU 14.3.0",
+      "domains_sha256": "6bfc07fd8dc35776fa5ca1ad7ff57ab90cd3fed147fa658a99eb94c25622ac93",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "19899db9873b464e9621be4a0d85fff931cfbcaaac5ac9be0fab8fa0ad70d7cc",
+      "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "toolchain_variant": "zephyr",
+      "zephyr_revision": "bf801e4e3d19"
+    },
+    "unconfirmed": {
+      "application_build_ninja_sha256": "d273c8fbf7899da4f69e980f361a6a67ffd246ef579c6c9396fa77f282f3c504",
+      "application_config_sha256": "65764c5813549c40cf38f2e00cdfbacf27820e9c9280616770c2663f45f0d7f5",
+      "application_source_sha256": "589446149ce1a46f4ee189f908e905747575e39f2e49cfdc3b30f9a677479bfa",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "db04b63f9311bc97ac818a94ee5db6e943d0252a060ab64b2094e07a357e15a7",
+      "bootloader_config_sha256": "58e08491d2b4630fd26996a518417f6f505b4ce09b6923fa4de6160e4fbfbae1",
+      "core_revision": "ae5186f7790a",
+      "core_source_sha256": "450f0ce445cd8591a163e8874f7f8bc6fa02e983ec45a9b9ca5dc4ff4f1015cc",
+      "cxx_compiler": "GNU 14.3.0",
+      "domains_sha256": "4051e32f78bb1712500524a0a3e07d8b08bbb014d72b29aea00046b31334b79f",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "19899db9873b464e9621be4a0d85fff931cfbcaaac5ac9be0fab8fa0ad70d7cc",
+      "toolchain_path": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+      "toolchain_variant": "zephyr",
+      "zephyr_revision": "bf801e4e3d19"
+    }
+  },
+  "central_image": {
+    "bootloader": {
+      "name": "zephyr.hex",
+      "sha256": "daed2b8d831020516c82b4109189b48be3487bd26efaaceb74de30d9b6e39abf",
+      "size": 90615
+    },
+    "primary": {
+      "name": "zephyr.signed.hex",
+      "sha256": "ed4e321757c0bbe107e4083b7027d1d39eb74828b945d41169e374d2d49fad06",
+      "size": 706193
+    }
+  },
+  "core_revision": "ae5186f7790a748641fb04128c16156519ee1017",
+  "criteria": {
+    "cuts_per_point": 3,
+    "injection_points": 4,
+    "invalid_image_boots": 0,
+    "recovery_failures": 0,
+    "total_physical_cuts": 12
+  },
+  "images": {
+    "confirmed": {
+      "image_hash": "4e02f02ced8b6cfdd61c1d730dee559a32fd7b499c67161fc71a966e680dcf49",
+      "name": "m30-power-confirmed-v40.bin",
+      "sha256": "fc56216f2430b5d320de96611511574a0320e36366b99896a50ae6856b3a0911",
+      "size": 262063,
+      "version": [
+        40,
+        0,
+        0,
+        0
+      ]
+    },
+    "retry": {
+      "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+      "name": "m30-power-retry-v42.bin",
+      "sha256": "fba16aad35fc38cf42b74fb55190f2118ad545c8eee01963038255f237a7d00c",
+      "size": 262063,
+      "version": [
+        42,
+        0,
+        0,
+        0
+      ]
+    },
+    "unconfirmed": {
+      "image_hash": "de35bf9802baa0a605372243a7fb6b9678f5e3068c02ee59b737ec14a93dbbb8",
+      "name": "m30-power-unconfirmed-v41.bin",
+      "sha256": "8106a65ccba06932af2191bb25bcf004a96aaaa67544881c1de75e601e3384a8",
+      "size": 261955,
+      "version": [
+        41,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "injection_plan": [
+    {
+      "cuts": 3,
+      "point": "slot1_transfer"
+    },
+    {
+      "cuts": 3,
+      "point": "image_validation_write"
+    },
+    {
+      "cuts": 3,
+      "point": "mcuboot_test_swap"
+    },
+    {
+      "cuts": 3,
+      "point": "new_image_first_boot"
+    }
+  ],
+  "input_identity_sha256": "1ced0330210856ec1c7c2ea108a4dd5721671ea233e81fe2d418f6528a422d2f",
+  "next_action": "execute runner and physically disconnect DUT target USB at first armed window",
+  "power_hil": "not_run",
+  "preflight": {
+    "bond_storage_reset": {
+      "backend": "daplink-msd-exact-range",
+      "boards": 2,
+      "offset": 1523712,
+      "performed": true,
+      "results": {
+        "central": [
+          "daplink-msd",
+          "88064"
+        ],
+        "peripheral": [
+          "daplink-msd",
+          "88064"
+        ]
+      },
+      "size": 36864
+    },
+    "dfu_retry": {
+      "image_hash": "0cb4ee34fbfe1338527b118e83b5d6479b36e0e7e089a96149c746be4ef25926",
+      "requests": 1311
+    },
+    "encryption_key_bytes": 16,
+    "flash_backend": "daplink-msd-exact-range",
+    "flash_results": {
+      "central_bootloader": [
+        "daplink-msd",
+        "90624"
+      ],
+      "central_primary": [
+        "daplink-msd",
+        "706560"
+      ],
+      "peripheral_bootloader": [
+        "daplink-msd",
+        "94208"
+      ],
+      "peripheral_primary": [
+        "daplink-msd",
+        "737280"
+      ]
+    },
+    "input_identity_sha256": "1ced0330210856ec1c7c2ea108a4dd5721671ea233e81fe2d418f6528a422d2f",
+    "physical_power_cuts": 0,
+    "security_level": 4,
+    "state": {
+      "bond_count": 1,
+      "bonded": 0,
+      "rejected_bonds": 0,
+      "settings_valid": 1
+    },
+    "status": "passed"
+  },
+  "runner": {
+    "entrypoint": "tests/hil/nu54dk/m30_power_loss.py",
+    "files": [
+      {
+        "path": "tests/hil/nu54dk/m30_power_loss.py",
+        "sha256": "9ad8b01b6d1efd21aeb4bbd1cb950f90df07bb3a800aa328352e3d8c9e421a9c"
+      },
+      {
+        "path": "tests/hil/nu54dk/m30_ble_dfu.py",
+        "sha256": "13cb258f143b4600c7df20d5f537ab7593bd51bc06e9bf61d548775b98979f6e"
+      },
+      {
+        "path": "tests/hil/nu54dk/m30_mcuboot.py",
+        "sha256": "2a12324196bcde7236449645377f95f500ca9b0b0cbec8b2432f5a5d38200d6a"
+      },
+      {
+        "path": "tests/hil/nu54dk/ble_pair_hil_common.py",
+        "sha256": "bfc1f1d8b5a473971f9e8bce48782a79fa765f63b2499be21d293cf694e66563"
+      },
+      {
+        "path": "tests/hil/nu54dk/m14_pin_hil.py",
+        "sha256": "5cad8c463312119ed3b5b701b21930c7bee7cb35149dab8d873287e5bcfbea4f"
+      },
+      {
+        "path": "tests/hil/nu54dk/m6_serial_echo.py",
+        "sha256": "68bede3e09d06bcf0a1e0674b83784163f4e1b6e7340c4ea3f821d41d88d9fee"
+      }
+    ]
+  },
+  "safety": {
+    "mass_erase_or_recover": false,
+    "physical_power_cuts": 0,
+    "raw_probe_uids_stored": false,
+    "requires_msd_and_uart_absence": true,
+    "reset_substitution_allowed": false
+  },
+  "schema_version": 2,
+  "status": "blocked_human_power_cut",
+  "test_id": "M30-POWER-01",
+  "timestamp_utc": "2026-09-15T11:36:17.476580+00:00",
+  "trust_public_key_source_sha256": "0e82c1e18be6c3173be02b9a3efb6a5cb7cfb49010cfd380bd7c89a869fe77c7"
+}

@@ -25,20 +25,27 @@ class BleSecurityTests(unittest.TestCase):
                 '-o', str(c_object)], capture_output=True, timeout=60)
             self.assertEqual(c_result.returncode, 0, c_result.stderr.decode(errors='replace'))
             command = [*compiler, '-std=c++17', '-Wall', '-Wextra', '-Werror', '-pthread',
+                       '-DCONFIG_BT_OBSERVER=1',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
-                       '-DCONFIG_BT_MAX_PAIRED=4', '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1']
+                       '-DCONFIG_BT_MAX_PAIRED=4', '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1',
+                       '-DCONFIG_BT_HIDS=1',
+                       '-DCONFIG_NUCODE_BLE_NFC_OOB_ADAPTER=1']
             for path in ['tests/host/ble_stubs', 'libraries/NUCODE_BLE/src', 'libraries/NUCODE_BLE_Security/src', 'third_party/ArduinoCore-API']:
                 command += ['-I', str(ROOT / path)]
             command += [str(ROOT / path) for path in ['libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp',
                         'libraries/NUCODE_BLE/src/NUCODE_BLE_GAP.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapExtendedAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapPeriodicAdvertising.cpp',
+                        'libraries/NUCODE_BLE/src/internal/gap/GapPawr.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapScanning.cpp',
                         'libraries/NUCODE_BLE/src/internal/gap/GapConnection.cpp',
 
                         'libraries/NUCODE_BLE_Security/src/NUCODE_BLE_Security.cpp',
                         'libraries/NUCODE_BLE_Security/src/internal/security/SecurityPairing.cpp',
+                        'libraries/NUCODE_BLE_Security/src/internal/security/SecurityOob.cpp',
                         'libraries/NUCODE_BLE_Security/src/internal/security/SecurityBond.cpp',
                         'libraries/NUCODE_BLE_Security/src/internal/security/SecurityHid.cpp',
                         'libraries/NUCODE_BLE_Security/src/internal/security/SecurityBattery.cpp',
@@ -49,7 +56,14 @@ class BleSecurityTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
             for scenario in ['pairing_failure', 'pending_timeout', 'pending_duplicate', 'reentrant',
                              'late_callback', 'not_persisted', 'restored_bond', 'erase_failure',
-                             'driver_failure', 'queue_overflow', 'profiles', 'hid']:
+                             'driver_failure', 'identity_type_normalization',
+                             'deferred_rpa_identity',
+                             'queue_overflow', 'dual_pending_isolation',
+                             'dual_timeout_isolation', 'sparse_pending_duplicate',
+                             'oob_codec', 'oob_pairing', 'oob_mismatch',
+                             'bond_legacy_migration', 'bond_future_rejected',
+                             'bond_truncated_rejected',
+                             'profiles', 'hid']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))

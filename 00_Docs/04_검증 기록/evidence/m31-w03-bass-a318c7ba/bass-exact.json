@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "case": "M31-AUDIO-01:W03-04",
+  "core_revision": "a318c7ba9b5fa84d586c35fadab88c1675163100",
+  "source_clean": true,
+  "roles": [
+    "source",
+    "scan_delegator_sink",
+    "assistant"
+  ],
+  "control_cycles": {
+    "iterations": 20,
+    "passed": 20,
+    "valid_denominator": 100,
+    "valid_completed": 100,
+    "components": {
+      "stop": 20,
+      "remove": 20,
+      "re_add": 20,
+      "broadcast_code": 20,
+      "recovered_frame": 20
+    },
+    "invalid_source_rejected": 20,
+    "duplicate_source_rejected": 20,
+    "state_mismatch": 0,
+    "invalid_accept": 0,
+    "dropped_frames": 0
+  },
+  "peer_loss": {
+    "injection": "scan_delegator_probe_hardware_reset",
+    "iterations": 20,
+    "recovered": 20,
+    "reset_failures": 0,
+    "timeouts": 0,
+    "recovery_timeout_seconds": 30,
+    "required_markers": [
+      "assistant_disconnect",
+      "delegator_ready",
+      "delegator_rediscovered",
+      "pa_and_bis_synced",
+      "streaming",
+      "received_frame_with_zero_drop"
+    ]
+  },
+  "continuous_stream": {
+    "duration_seconds": 180,
+    "source_serial_lines": 178,
+    "source_frames_first": 65300,
+    "source_frames_last": 83000,
+    "source_frame_delta": 17700,
+    "delegator_serial_lines": 176,
+    "received_frames_first": 3300,
+    "received_frames_last": 20800,
+    "received_frame_delta": 17500,
+    "positive_energy_observations": 176,
+    "dropped_frames": 0,
+    "assistant_serial_lines": 0,
+    "unexpected_disconnects": 0
+  },
+  "result": "PASS"
+}

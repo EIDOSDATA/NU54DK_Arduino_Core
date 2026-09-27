@@ -1,0 +1,1951 @@
+00000.239|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.240|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.359|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.359|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.479|device|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.485|controller|volume=100 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.596|controller|Volume up result=0 native=0
+00000.596|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.648|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.789|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.794|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.943|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00000.943|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.060|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.060|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.143|controller|Volume mute result=0 native=0
+00001.171|device|volume=105 muted=1 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.217|controller|volume=105 muted=1 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.364|controller|volume=105 muted=1 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.364|device|volume=105 muted=1 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.485|controller|volume=105 muted=1 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.485|device|volume=105 muted=1 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.574|controller|Volume unmute result=0 native=0
+00001.614|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.666|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.817|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.817|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.933|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00001.933|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.052|controller|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.052|device|volume=105 muted=0 offset=0 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.144|controller|Output offset result=0 native=0
+00002.179|device|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.216|controller|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.364|controller|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.364|device|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.490|controller|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.490|device|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.609|controller|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.643|device|volume=105 muted=0 offset=8 speaker_gain=0 microphone_muted=0 microphone_gain=0
+00002.694|controller|Program input gain result=0 native=0
+00002.729|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00002.771|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00002.926|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00002.926|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.031|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.031|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.094|controller|Microphone mute result=0 native=0
+00003.128|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=1 microphone_gain=0
+00003.178|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=1 microphone_gain=0
+00003.324|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=1 microphone_gain=0
+00003.324|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=1 microphone_gain=0
+00003.455|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=1 microphone_gain=0
+00003.455|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=1 microphone_gain=0
+00003.542|controller|Microphone unmute result=0 native=0
+00003.566|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.620|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.768|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.768|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.872|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.872|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00003.982|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00004.009|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=0
+00004.094|controller|Microphone input gain result=0 native=0
+00004.124|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.166|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.313|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.313|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.428|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.429|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.511|controller|Read volume result=0 native=0
+00004.567|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.717|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.717|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.836|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.842|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00004.943|controller|Read output offset result=0 native=0
+00005.033|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.190|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.190|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.313|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.318|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.433|controller|Read program input result=0 native=0
+00005.523|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.668|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.668|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.800|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.800|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00005.883|controller|Read microphone result=0 native=0
+00005.959|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.117|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.117|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.238|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.238|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.318|controller|Read microphone input result=0 native=0
+00006.397|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.542|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.542|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.675|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.675|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.791|controller|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.791|device|volume=105 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.930|device|Volume up result=0 native=0
+00006.930|device|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00006.968|controller|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.114|controller|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.114|device|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.241|controller|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.241|device|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.362|controller|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.362|device|volume=110 muted=0 offset=8 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.489|device|Output offset result=0 native=0
+00007.489|device|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.513|controller|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.674|controller|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.674|device|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.784|controller|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.784|device|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.892|controller|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00007.892|device|volume=110 muted=0 offset=16 speaker_gain=1 microphone_muted=0 microphone_gain=1
+00008.025|device|Program input gain result=0 native=0
+00008.025|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.074|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.232|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.232|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.351|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.378|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.495|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.496|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=0 microphone_gain=1
+00008.620|device|Microphone mute result=0 native=0
+00008.620|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00008.667|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00008.806|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00008.806|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00008.925|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00008.925|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00009.037|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00009.037|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=1
+00009.139|device|Microphone input gain result=0 native=0
+00009.145|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.150|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.309|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.309|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.434|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.434|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.551|controller|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.551|device|volume=110 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.645|controller|Volume up result=0 native=0
+00009.645|device|volume=115 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.701|controller|volume=115 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.846|device|volume=115 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.851|controller|volume=115 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.988|controller|volume=115 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00009.988|device|volume=115 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.070|controller|Volume up result=0 native=0
+00010.107|device|volume=120 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.165|controller|volume=120 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.307|controller|volume=120 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.307|device|volume=120 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.416|controller|volume=120 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.416|device|volume=120 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.491|controller|Volume up result=0 native=0
+00010.519|device|volume=125 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.572|controller|volume=125 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.706|controller|volume=125 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.706|device|volume=125 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.832|controller|volume=125 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.832|device|volume=125 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.893|controller|Volume up result=0 native=0
+00010.920|device|volume=130 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00010.965|controller|volume=130 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.107|controller|volume=130 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.107|device|volume=130 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.232|controller|volume=130 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.232|device|volume=130 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.294|controller|Volume up result=0 native=0
+00011.315|device|volume=135 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.365|controller|volume=135 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.508|controller|volume=135 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.508|device|volume=135 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.611|controller|volume=135 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.612|device|volume=135 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.694|controller|Volume up result=0 native=0
+00011.723|device|volume=140 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.764|controller|volume=140 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.910|controller|volume=140 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00011.910|device|volume=140 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.037|controller|volume=140 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.037|device|volume=140 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.094|controller|Volume up result=0 native=0
+00012.123|device|volume=145 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.168|controller|volume=145 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.307|controller|volume=145 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.307|device|volume=145 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.432|controller|volume=145 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.433|device|volume=145 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.494|controller|Volume up result=0 native=0
+00012.519|device|volume=150 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.567|controller|volume=150 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.704|controller|volume=150 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.704|device|volume=150 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.832|controller|volume=150 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.833|device|volume=150 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.894|controller|Volume up result=0 native=0
+00012.914|device|volume=155 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00012.965|controller|volume=155 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.098|controller|volume=155 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.099|device|volume=155 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.221|controller|volume=155 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.222|device|volume=155 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.294|controller|Volume up result=0 native=0
+00013.315|device|volume=160 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.365|controller|volume=160 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.507|controller|volume=160 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.507|device|volume=160 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.619|controller|volume=160 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.619|device|volume=160 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.694|controller|Volume up result=0 native=0
+00013.720|device|volume=165 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.764|controller|volume=165 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.908|controller|volume=165 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00013.908|device|volume=165 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.024|controller|volume=165 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.024|device|volume=165 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.091|controller|Volume up result=0 native=0
+00014.112|device|volume=170 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.165|controller|volume=170 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.332|controller|volume=170 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.332|device|volume=170 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.442|controller|volume=170 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.442|device|volume=170 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.528|controller|Volume up result=0 native=0
+00014.565|device|volume=175 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.624|controller|volume=175 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.774|controller|volume=175 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.774|device|volume=175 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.899|controller|volume=175 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.907|device|volume=175 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00014.988|controller|Volume up result=0 native=0
+00015.012|device|volume=180 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.068|controller|volume=180 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.224|controller|volume=180 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.224|device|volume=180 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.344|controller|volume=180 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.345|device|volume=180 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.432|controller|Volume up result=0 native=0
+00015.470|device|volume=185 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.514|controller|volume=185 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.648|controller|volume=185 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.648|device|volume=185 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.757|controller|volume=185 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.757|device|volume=185 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.837|controller|Volume up result=0 native=0
+00015.858|device|volume=190 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00015.919|controller|volume=190 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.057|controller|volume=190 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.057|device|volume=190 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.179|controller|volume=190 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.179|device|volume=190 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.243|controller|Volume up result=0 native=0
+00016.278|device|volume=195 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.314|controller|volume=195 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.452|controller|volume=195 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.452|device|volume=195 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.577|controller|volume=195 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.577|device|volume=195 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.643|controller|Volume up result=0 native=0
+00016.669|device|volume=200 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.716|controller|volume=200 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.874|controller|volume=200 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.874|device|volume=200 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.984|controller|volume=200 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00016.984|device|volume=200 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.070|controller|Volume up result=0 native=0
+00017.111|device|volume=205 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.165|controller|volume=205 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.328|controller|volume=205 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.328|device|volume=205 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.453|controller|volume=205 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.454|device|volume=205 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.534|controller|Volume up result=0 native=0
+00017.561|device|volume=210 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.614|controller|volume=210 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.755|controller|volume=210 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.756|device|volume=210 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.865|controller|volume=210 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.866|device|volume=210 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00017.943|controller|Volume up result=0 native=0
+00017.976|device|volume=215 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.015|controller|volume=215 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.156|controller|volume=215 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.156|device|volume=215 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.291|controller|volume=215 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.291|device|volume=215 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.376|controller|Volume up result=0 native=0
+00018.410|device|volume=220 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.464|controller|volume=220 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.598|controller|volume=220 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.598|device|volume=220 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.724|controller|volume=220 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.724|device|volume=220 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.793|controller|Volume up result=0 native=0
+00018.819|device|volume=225 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.865|controller|volume=225 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00018.999|controller|volume=225 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.000|device|volume=225 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.107|controller|volume=225 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.107|device|volume=225 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.193|controller|Volume up result=0 native=0
+00019.222|device|volume=230 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.267|controller|volume=230 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.426|controller|volume=230 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.426|device|volume=230 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.551|controller|volume=230 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.552|device|volume=230 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.633|controller|Volume up result=0 native=0
+00019.662|device|volume=235 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.715|controller|volume=235 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.849|controller|volume=235 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.849|device|volume=235 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.960|controller|volume=235 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00019.960|device|volume=235 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.042|controller|Volume up result=0 native=0
+00020.069|device|volume=240 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.116|controller|volume=240 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.248|controller|volume=240 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.248|device|volume=240 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.357|controller|volume=240 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.361|device|volume=240 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.442|controller|Volume up result=0 native=0
+00020.470|device|volume=245 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.515|controller|volume=245 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.659|controller|volume=245 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.659|device|volume=245 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.785|controller|volume=245 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.785|device|volume=245 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.843|controller|Volume up result=0 native=0
+00020.870|device|volume=250 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00020.915|controller|volume=250 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.045|controller|volume=250 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.045|device|volume=250 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.158|controller|volume=250 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.159|device|volume=250 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.243|controller|Volume up result=0 native=0
+00021.270|device|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.321|controller|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.459|controller|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.459|device|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.575|controller|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.575|device|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.682|controller|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.682|device|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.758|controller|Volume up result=0 native=0
+00021.915|controller|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00021.915|device|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.031|controller|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.032|device|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.142|controller|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.142|device|volume=255 muted=0 offset=16 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.225|controller|Output offset result=0 native=0
+00022.260|device|volume=255 muted=0 offset=24 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.372|controller|volume=255 muted=0 offset=24 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.516|controller|volume=255 muted=0 offset=24 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.516|device|volume=255 muted=0 offset=24 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.622|controller|volume=255 muted=0 offset=24 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.622|device|volume=255 muted=0 offset=24 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.693|controller|Output offset result=0 native=0
+00022.714|device|volume=255 muted=0 offset=32 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.765|controller|volume=255 muted=0 offset=32 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.918|controller|volume=255 muted=0 offset=32 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00022.918|device|volume=255 muted=0 offset=32 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.031|controller|volume=255 muted=0 offset=32 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.032|device|volume=255 muted=0 offset=32 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.093|controller|Output offset result=0 native=0
+00023.122|device|volume=255 muted=0 offset=40 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.165|controller|volume=255 muted=0 offset=40 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.308|controller|volume=255 muted=0 offset=40 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.308|device|volume=255 muted=0 offset=40 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.426|controller|volume=255 muted=0 offset=40 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.427|device|volume=255 muted=0 offset=40 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.516|controller|Output offset result=0 native=0
+00023.569|device|volume=255 muted=0 offset=48 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.625|controller|volume=255 muted=0 offset=48 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.767|controller|volume=255 muted=0 offset=48 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.767|device|volume=255 muted=0 offset=48 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.886|controller|volume=255 muted=0 offset=48 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.886|device|volume=255 muted=0 offset=48 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00023.966|controller|Output offset result=0 native=0
+00024.012|device|volume=255 muted=0 offset=56 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.065|controller|volume=255 muted=0 offset=56 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.210|controller|volume=255 muted=0 offset=56 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.210|device|volume=255 muted=0 offset=56 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.323|controller|volume=255 muted=0 offset=56 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.323|device|volume=255 muted=0 offset=56 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.393|controller|Output offset result=0 native=0
+00024.428|device|volume=255 muted=0 offset=64 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.464|controller|volume=255 muted=0 offset=64 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.619|controller|volume=255 muted=0 offset=64 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.620|device|volume=255 muted=0 offset=64 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.732|controller|volume=255 muted=0 offset=64 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.732|device|volume=255 muted=0 offset=64 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.793|controller|Output offset result=0 native=0
+00024.822|device|volume=255 muted=0 offset=72 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00024.871|controller|volume=255 muted=0 offset=72 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.015|controller|volume=255 muted=0 offset=72 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.015|device|volume=255 muted=0 offset=72 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.125|controller|volume=255 muted=0 offset=72 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.126|device|volume=255 muted=0 offset=72 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.193|controller|Output offset result=0 native=0
+00025.220|device|volume=255 muted=0 offset=80 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.323|controller|volume=255 muted=0 offset=80 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.459|controller|volume=255 muted=0 offset=80 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.459|device|volume=255 muted=0 offset=80 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.571|controller|volume=255 muted=0 offset=80 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.571|device|volume=255 muted=0 offset=80 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.642|controller|Output offset result=0 native=0
+00025.669|device|volume=255 muted=0 offset=88 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.715|controller|volume=255 muted=0 offset=88 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.859|controller|volume=255 muted=0 offset=88 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.859|device|volume=255 muted=0 offset=88 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.974|controller|volume=255 muted=0 offset=88 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00025.974|device|volume=255 muted=0 offset=88 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.043|controller|Output offset result=0 native=0
+00026.069|device|volume=255 muted=0 offset=96 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.117|controller|volume=255 muted=0 offset=96 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.259|controller|volume=255 muted=0 offset=96 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.259|device|volume=255 muted=0 offset=96 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.369|controller|volume=255 muted=0 offset=96 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.369|device|volume=255 muted=0 offset=96 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.443|controller|Output offset result=0 native=0
+00026.469|device|volume=255 muted=0 offset=104 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.522|controller|volume=255 muted=0 offset=104 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.666|controller|volume=255 muted=0 offset=104 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.666|device|volume=255 muted=0 offset=104 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.774|controller|volume=255 muted=0 offset=104 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.775|device|volume=255 muted=0 offset=104 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.842|controller|Output offset result=0 native=0
+00026.864|device|volume=255 muted=0 offset=112 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00026.964|controller|volume=255 muted=0 offset=112 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.118|controller|volume=255 muted=0 offset=112 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.119|device|volume=255 muted=0 offset=112 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.232|controller|volume=255 muted=0 offset=112 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.233|device|volume=255 muted=0 offset=112 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.292|controller|Output offset result=0 native=0
+00027.312|device|volume=255 muted=0 offset=120 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.367|controller|volume=255 muted=0 offset=120 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.507|controller|volume=255 muted=0 offset=120 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.507|device|volume=255 muted=0 offset=120 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.611|controller|volume=255 muted=0 offset=120 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.612|device|volume=255 muted=0 offset=120 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.693|controller|Output offset result=0 native=0
+00027.719|device|volume=255 muted=0 offset=128 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.765|controller|volume=255 muted=0 offset=128 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.899|controller|volume=255 muted=0 offset=128 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00027.899|device|volume=255 muted=0 offset=128 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.016|controller|volume=255 muted=0 offset=128 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.016|device|volume=255 muted=0 offset=128 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.092|controller|Output offset result=0 native=0
+00028.114|device|volume=255 muted=0 offset=136 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.165|controller|volume=255 muted=0 offset=136 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.307|controller|volume=255 muted=0 offset=136 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.307|device|volume=255 muted=0 offset=136 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.425|controller|volume=255 muted=0 offset=136 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.425|device|volume=255 muted=0 offset=136 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.516|controller|Output offset result=0 native=0
+00028.569|device|volume=255 muted=0 offset=144 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.610|controller|volume=255 muted=0 offset=144 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.752|controller|volume=255 muted=0 offset=144 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.753|device|volume=255 muted=0 offset=144 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.875|controller|volume=255 muted=0 offset=144 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.875|device|volume=255 muted=0 offset=144 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00028.967|controller|Output offset result=0 native=0
+00029.010|device|volume=255 muted=0 offset=152 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.066|controller|volume=255 muted=0 offset=152 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.225|controller|volume=255 muted=0 offset=152 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.225|device|volume=255 muted=0 offset=152 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.358|controller|volume=255 muted=0 offset=152 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.358|device|volume=255 muted=0 offset=152 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.433|controller|Output offset result=0 native=0
+00029.461|device|volume=255 muted=0 offset=160 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.514|controller|volume=255 muted=0 offset=160 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.646|controller|volume=255 muted=0 offset=160 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.647|device|volume=255 muted=0 offset=160 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.758|controller|volume=255 muted=0 offset=160 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.758|device|volume=255 muted=0 offset=160 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.834|controller|Output offset result=0 native=0
+00029.869|device|volume=255 muted=0 offset=168 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00029.915|controller|volume=255 muted=0 offset=168 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.066|controller|volume=255 muted=0 offset=168 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.066|device|volume=255 muted=0 offset=168 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.182|controller|volume=255 muted=0 offset=168 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.183|device|volume=255 muted=0 offset=168 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.242|controller|Output offset result=0 native=0
+00030.270|device|volume=255 muted=0 offset=176 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.314|controller|volume=255 muted=0 offset=176 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.455|controller|volume=255 muted=0 offset=176 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.455|device|volume=255 muted=0 offset=176 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.566|controller|volume=255 muted=0 offset=176 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.566|device|volume=255 muted=0 offset=176 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.644|controller|Output offset result=0 native=0
+00030.697|device|volume=255 muted=0 offset=184 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.757|controller|volume=255 muted=0 offset=184 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.892|controller|volume=255 muted=0 offset=184 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00030.892|device|volume=255 muted=0 offset=184 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.006|controller|volume=255 muted=0 offset=184 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.007|device|volume=255 muted=0 offset=184 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.082|controller|Output offset result=0 native=0
+00031.111|device|volume=255 muted=0 offset=192 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.165|controller|volume=255 muted=0 offset=192 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.298|controller|volume=255 muted=0 offset=192 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.298|device|volume=255 muted=0 offset=192 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.407|controller|volume=255 muted=0 offset=192 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.407|device|volume=255 muted=0 offset=192 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.492|controller|Output offset result=0 native=0
+00031.513|device|volume=255 muted=0 offset=200 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.565|controller|volume=255 muted=0 offset=200 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.701|controller|volume=255 muted=0 offset=200 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.701|device|volume=255 muted=0 offset=200 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.808|controller|volume=255 muted=0 offset=200 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.808|device|volume=255 muted=0 offset=200 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.882|controller|Output offset result=0 native=0
+00031.912|device|volume=255 muted=0 offset=208 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00031.961|controller|volume=255 muted=0 offset=208 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.125|controller|volume=255 muted=0 offset=208 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.126|device|volume=255 muted=0 offset=208 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.232|controller|volume=255 muted=0 offset=208 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.232|device|volume=255 muted=0 offset=208 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.324|controller|Output offset result=0 native=0
+00032.363|device|volume=255 muted=0 offset=216 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.414|controller|volume=255 muted=0 offset=216 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.548|controller|volume=255 muted=0 offset=216 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.549|device|volume=255 muted=0 offset=216 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.657|controller|volume=255 muted=0 offset=216 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.657|device|volume=255 muted=0 offset=216 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.742|controller|Output offset result=0 native=0
+00032.768|device|volume=255 muted=0 offset=224 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.815|controller|volume=255 muted=0 offset=224 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.949|controller|volume=255 muted=0 offset=224 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00032.950|device|volume=255 muted=0 offset=224 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.074|controller|volume=255 muted=0 offset=224 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.074|device|volume=255 muted=0 offset=224 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.142|controller|Output offset result=0 native=0
+00033.170|device|volume=255 muted=0 offset=232 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.215|controller|volume=255 muted=0 offset=232 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.376|controller|volume=255 muted=0 offset=232 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.377|device|volume=255 muted=0 offset=232 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.492|controller|volume=255 muted=0 offset=232 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.492|device|volume=255 muted=0 offset=232 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.575|controller|Output offset result=0 native=0
+00033.606|device|volume=255 muted=0 offset=240 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.664|controller|volume=255 muted=0 offset=240 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.814|controller|volume=255 muted=0 offset=240 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.814|device|volume=255 muted=0 offset=240 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.941|controller|volume=255 muted=0 offset=240 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00033.941|device|volume=255 muted=0 offset=240 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.034|controller|Output offset result=0 native=0
+00034.062|device|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.114|controller|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.267|controller|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.267|device|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.390|controller|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.391|device|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.466|controller|Output offset result=1 native=0
+00034.611|controller|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.611|device|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.716|controller|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.716|device|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.819|controller|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.849|device|volume=255 muted=0 offset=248 speaker_gain=2 microphone_muted=1 microphone_gain=2
+00034.920|controller|Program input gain result=0 native=0
+00034.956|device|volume=255 muted=0 offset=248 speaker_gain=3 microphone_muted=1 microphone_gain=2
+00035.022|controller|volume=255 muted=0 offset=248 speaker_gain=3 microphone_muted=1 microphone_gain=2
+00035.159|controller|volume=255 muted=0 offset=248 speaker_gain=3 microphone_muted=1 microphone_gain=2
+00035.159|device|volume=255 muted=0 offset=248 speaker_gain=3 microphone_muted=1 microphone_gain=2
+00035.264|controller|volume=255 muted=0 offset=248 speaker_gain=3 microphone_muted=1 microphone_gain=2
+00035.264|device|volume=255 muted=0 offset=248 speaker_gain=3 microphone_muted=1 microphone_gain=2
+00035.333|controller|Program input gain result=0 native=0
+00035.360|device|volume=255 muted=0 offset=248 speaker_gain=4 microphone_muted=1 microphone_gain=2
+00035.411|controller|volume=255 muted=0 offset=248 speaker_gain=4 microphone_muted=1 microphone_gain=2
+00035.549|controller|volume=255 muted=0 offset=248 speaker_gain=4 microphone_muted=1 microphone_gain=2
+00035.549|device|volume=255 muted=0 offset=248 speaker_gain=4 microphone_muted=1 microphone_gain=2
+00035.677|controller|volume=255 muted=0 offset=248 speaker_gain=4 microphone_muted=1 microphone_gain=2
+00035.678|device|volume=255 muted=0 offset=248 speaker_gain=4 microphone_muted=1 microphone_gain=2
+00035.742|controller|Program input gain result=0 native=0
+00035.768|device|volume=255 muted=0 offset=248 speaker_gain=5 microphone_muted=1 microphone_gain=2
+00035.815|controller|volume=255 muted=0 offset=248 speaker_gain=5 microphone_muted=1 microphone_gain=2
+00035.948|controller|volume=255 muted=0 offset=248 speaker_gain=5 microphone_muted=1 microphone_gain=2
+00035.948|device|volume=255 muted=0 offset=248 speaker_gain=5 microphone_muted=1 microphone_gain=2
+00036.072|controller|volume=255 muted=0 offset=248 speaker_gain=5 microphone_muted=1 microphone_gain=2
+00036.072|device|volume=255 muted=0 offset=248 speaker_gain=5 microphone_muted=1 microphone_gain=2
+00036.142|controller|Program input gain result=0 native=0
+00036.169|device|volume=255 muted=0 offset=248 speaker_gain=6 microphone_muted=1 microphone_gain=2
+00036.214|controller|volume=255 muted=0 offset=248 speaker_gain=6 microphone_muted=1 microphone_gain=2
+00036.361|controller|volume=255 muted=0 offset=248 speaker_gain=6 microphone_muted=1 microphone_gain=2
+00036.395|device|volume=255 muted=0 offset=248 speaker_gain=6 microphone_muted=1 microphone_gain=2
+00036.507|controller|volume=255 muted=0 offset=248 speaker_gain=6 microphone_muted=1 microphone_gain=2
+00036.507|device|volume=255 muted=0 offset=248 speaker_gain=6 microphone_muted=1 microphone_gain=2
+00036.592|controller|Program input gain result=0 native=0
+00036.614|device|volume=255 muted=0 offset=248 speaker_gain=7 microphone_muted=1 microphone_gain=2
+00036.664|controller|volume=255 muted=0 offset=248 speaker_gain=7 microphone_muted=1 microphone_gain=2
+00036.824|controller|volume=255 muted=0 offset=248 speaker_gain=7 microphone_muted=1 microphone_gain=2
+00036.824|device|volume=255 muted=0 offset=248 speaker_gain=7 microphone_muted=1 microphone_gain=2
+00036.937|controller|volume=255 muted=0 offset=248 speaker_gain=7 microphone_muted=1 microphone_gain=2
+00036.938|device|volume=255 muted=0 offset=248 speaker_gain=7 microphone_muted=1 microphone_gain=2
+00037.025|controller|Program input gain result=0 native=0
+00037.061|device|volume=255 muted=0 offset=248 speaker_gain=8 microphone_muted=1 microphone_gain=2
+00037.111|controller|volume=255 muted=0 offset=248 speaker_gain=8 microphone_muted=1 microphone_gain=2
+00037.245|controller|volume=255 muted=0 offset=248 speaker_gain=8 microphone_muted=1 microphone_gain=2
+00037.245|device|volume=255 muted=0 offset=248 speaker_gain=8 microphone_muted=1 microphone_gain=2
+00037.366|controller|volume=255 muted=0 offset=248 speaker_gain=8 microphone_muted=1 microphone_gain=2
+00037.366|device|volume=255 muted=0 offset=248 speaker_gain=8 microphone_muted=1 microphone_gain=2
+00037.442|controller|Program input gain result=0 native=0
+00037.464|device|volume=255 muted=0 offset=248 speaker_gain=9 microphone_muted=1 microphone_gain=2
+00037.523|controller|volume=255 muted=0 offset=248 speaker_gain=9 microphone_muted=1 microphone_gain=2
+00037.657|controller|volume=255 muted=0 offset=248 speaker_gain=9 microphone_muted=1 microphone_gain=2
+00037.658|device|volume=255 muted=0 offset=248 speaker_gain=9 microphone_muted=1 microphone_gain=2
+00037.766|controller|volume=255 muted=0 offset=248 speaker_gain=9 microphone_muted=1 microphone_gain=2
+00037.767|device|volume=255 muted=0 offset=248 speaker_gain=9 microphone_muted=1 microphone_gain=2
+00037.842|controller|Program input gain result=0 native=0
+00037.865|device|volume=255 muted=0 offset=248 speaker_gain=10 microphone_muted=1 microphone_gain=2
+00037.915|controller|volume=255 muted=0 offset=248 speaker_gain=10 microphone_muted=1 microphone_gain=2
+00038.065|controller|volume=255 muted=0 offset=248 speaker_gain=10 microphone_muted=1 microphone_gain=2
+00038.065|device|volume=255 muted=0 offset=248 speaker_gain=10 microphone_muted=1 microphone_gain=2
+00038.170|controller|volume=255 muted=0 offset=248 speaker_gain=10 microphone_muted=1 microphone_gain=2
+00038.170|device|volume=255 muted=0 offset=248 speaker_gain=10 microphone_muted=1 microphone_gain=2
+00038.242|controller|Program input gain result=0 native=0
+00038.269|device|volume=255 muted=0 offset=248 speaker_gain=11 microphone_muted=1 microphone_gain=2
+00038.315|controller|volume=255 muted=0 offset=248 speaker_gain=11 microphone_muted=1 microphone_gain=2
+00038.450|controller|volume=255 muted=0 offset=248 speaker_gain=11 microphone_muted=1 microphone_gain=2
+00038.450|device|volume=255 muted=0 offset=248 speaker_gain=11 microphone_muted=1 microphone_gain=2
+00038.573|controller|volume=255 muted=0 offset=248 speaker_gain=11 microphone_muted=1 microphone_gain=2
+00038.574|device|volume=255 muted=0 offset=248 speaker_gain=11 microphone_muted=1 microphone_gain=2
+00038.642|controller|Program input gain result=0 native=0
+00038.669|device|volume=255 muted=0 offset=248 speaker_gain=12 microphone_muted=1 microphone_gain=2
+00038.714|controller|volume=255 muted=0 offset=248 speaker_gain=12 microphone_muted=1 microphone_gain=2
+00038.872|controller|volume=255 muted=0 offset=248 speaker_gain=12 microphone_muted=1 microphone_gain=2
+00038.872|device|volume=255 muted=0 offset=248 speaker_gain=12 microphone_muted=1 microphone_gain=2
+00039.006|controller|volume=255 muted=0 offset=248 speaker_gain=12 microphone_muted=1 microphone_gain=2
+00039.006|device|volume=255 muted=0 offset=248 speaker_gain=12 microphone_muted=1 microphone_gain=2
+00039.092|controller|Program input gain result=0 native=0
+00039.114|device|volume=255 muted=0 offset=248 speaker_gain=13 microphone_muted=1 microphone_gain=2
+00039.215|controller|volume=255 muted=0 offset=248 speaker_gain=13 microphone_muted=1 microphone_gain=2
+00039.351|controller|volume=255 muted=0 offset=248 speaker_gain=13 microphone_muted=1 microphone_gain=2
+00039.351|device|volume=255 muted=0 offset=248 speaker_gain=13 microphone_muted=1 microphone_gain=2
+00039.460|controller|volume=255 muted=0 offset=248 speaker_gain=13 microphone_muted=1 microphone_gain=2
+00039.461|device|volume=255 muted=0 offset=248 speaker_gain=13 microphone_muted=1 microphone_gain=2
+00039.541|controller|Program input gain result=0 native=0
+00039.561|device|volume=255 muted=0 offset=248 speaker_gain=14 microphone_muted=1 microphone_gain=2
+00039.614|controller|volume=255 muted=0 offset=248 speaker_gain=14 microphone_muted=1 microphone_gain=2
+00039.781|controller|volume=255 muted=0 offset=248 speaker_gain=14 microphone_muted=1 microphone_gain=2
+00039.781|device|volume=255 muted=0 offset=248 speaker_gain=14 microphone_muted=1 microphone_gain=2
+00039.893|controller|volume=255 muted=0 offset=248 speaker_gain=14 microphone_muted=1 microphone_gain=2
+00039.893|device|volume=255 muted=0 offset=248 speaker_gain=14 microphone_muted=1 microphone_gain=2
+00039.975|controller|Program input gain result=0 native=0
+00040.006|device|volume=255 muted=0 offset=248 speaker_gain=15 microphone_muted=1 microphone_gain=2
+00040.064|controller|volume=255 muted=0 offset=248 speaker_gain=15 microphone_muted=1 microphone_gain=2
+00040.209|controller|volume=255 muted=0 offset=248 speaker_gain=15 microphone_muted=1 microphone_gain=2
+00040.209|device|volume=255 muted=0 offset=248 speaker_gain=15 microphone_muted=1 microphone_gain=2
+00040.316|controller|volume=255 muted=0 offset=248 speaker_gain=15 microphone_muted=1 microphone_gain=2
+00040.316|device|volume=255 muted=0 offset=248 speaker_gain=15 microphone_muted=1 microphone_gain=2
+00040.391|controller|Program input gain result=0 native=0
+00040.416|device|volume=255 muted=0 offset=248 speaker_gain=16 microphone_muted=1 microphone_gain=2
+00040.467|controller|volume=255 muted=0 offset=248 speaker_gain=16 microphone_muted=1 microphone_gain=2
+00040.629|controller|volume=255 muted=0 offset=248 speaker_gain=16 microphone_muted=1 microphone_gain=2
+00040.629|device|volume=255 muted=0 offset=248 speaker_gain=16 microphone_muted=1 microphone_gain=2
+00040.737|controller|volume=255 muted=0 offset=248 speaker_gain=16 microphone_muted=1 microphone_gain=2
+00040.737|device|volume=255 muted=0 offset=248 speaker_gain=16 microphone_muted=1 microphone_gain=2
+00040.792|controller|Program input gain result=0 native=0
+00040.824|device|volume=255 muted=0 offset=248 speaker_gain=17 microphone_muted=1 microphone_gain=2
+00040.871|controller|volume=255 muted=0 offset=248 speaker_gain=17 microphone_muted=1 microphone_gain=2
+00041.020|controller|volume=255 muted=0 offset=248 speaker_gain=17 microphone_muted=1 microphone_gain=2
+00041.020|device|volume=255 muted=0 offset=248 speaker_gain=17 microphone_muted=1 microphone_gain=2
+00041.138|controller|volume=255 muted=0 offset=248 speaker_gain=17 microphone_muted=1 microphone_gain=2
+00041.138|device|volume=255 muted=0 offset=248 speaker_gain=17 microphone_muted=1 microphone_gain=2
+00041.192|controller|Program input gain result=0 native=0
+00041.214|device|volume=255 muted=0 offset=248 speaker_gain=18 microphone_muted=1 microphone_gain=2
+00041.264|controller|volume=255 muted=0 offset=248 speaker_gain=18 microphone_muted=1 microphone_gain=2
+00041.403|controller|volume=255 muted=0 offset=248 speaker_gain=18 microphone_muted=1 microphone_gain=2
+00041.403|device|volume=255 muted=0 offset=248 speaker_gain=18 microphone_muted=1 microphone_gain=2
+00041.514|controller|volume=255 muted=0 offset=248 speaker_gain=18 microphone_muted=1 microphone_gain=2
+00041.514|device|volume=255 muted=0 offset=248 speaker_gain=18 microphone_muted=1 microphone_gain=2
+00041.592|controller|Program input gain result=0 native=0
+00041.628|device|volume=255 muted=0 offset=248 speaker_gain=19 microphone_muted=1 microphone_gain=2
+00041.665|controller|volume=255 muted=0 offset=248 speaker_gain=19 microphone_muted=1 microphone_gain=2
+00041.792|controller|volume=255 muted=0 offset=248 speaker_gain=19 microphone_muted=1 microphone_gain=2
+00041.819|device|volume=255 muted=0 offset=248 speaker_gain=19 microphone_muted=1 microphone_gain=2
+00041.928|controller|volume=255 muted=0 offset=248 speaker_gain=19 microphone_muted=1 microphone_gain=2
+00041.928|device|volume=255 muted=0 offset=248 speaker_gain=19 microphone_muted=1 microphone_gain=2
+00041.991|controller|Program input gain result=0 native=0
+00042.014|device|volume=255 muted=0 offset=248 speaker_gain=20 microphone_muted=1 microphone_gain=2
+00042.065|controller|volume=255 muted=0 offset=248 speaker_gain=20 microphone_muted=1 microphone_gain=2
+00042.208|controller|volume=255 muted=0 offset=248 speaker_gain=20 microphone_muted=1 microphone_gain=2
+00042.208|device|volume=255 muted=0 offset=248 speaker_gain=20 microphone_muted=1 microphone_gain=2
+00042.337|controller|volume=255 muted=0 offset=248 speaker_gain=20 microphone_muted=1 microphone_gain=2
+00042.337|device|volume=255 muted=0 offset=248 speaker_gain=20 microphone_muted=1 microphone_gain=2
+00042.426|controller|Program input gain result=0 native=0
+00042.461|device|volume=255 muted=0 offset=248 speaker_gain=21 microphone_muted=1 microphone_gain=2
+00042.515|controller|volume=255 muted=0 offset=248 speaker_gain=21 microphone_muted=1 microphone_gain=2
+00042.654|controller|volume=255 muted=0 offset=248 speaker_gain=21 microphone_muted=1 microphone_gain=2
+00042.687|device|volume=255 muted=0 offset=248 speaker_gain=21 microphone_muted=1 microphone_gain=2
+00042.816|controller|volume=255 muted=0 offset=248 speaker_gain=21 microphone_muted=1 microphone_gain=2
+00042.816|device|volume=255 muted=0 offset=248 speaker_gain=21 microphone_muted=1 microphone_gain=2
+00042.892|controller|Program input gain result=0 native=0
+00042.929|device|volume=255 muted=0 offset=248 speaker_gain=22 microphone_muted=1 microphone_gain=2
+00042.962|controller|volume=255 muted=0 offset=248 speaker_gain=22 microphone_muted=1 microphone_gain=2
+00043.108|controller|volume=255 muted=0 offset=248 speaker_gain=22 microphone_muted=1 microphone_gain=2
+00043.108|device|volume=255 muted=0 offset=248 speaker_gain=22 microphone_muted=1 microphone_gain=2
+00043.242|controller|volume=255 muted=0 offset=248 speaker_gain=22 microphone_muted=1 microphone_gain=2
+00043.242|device|volume=255 muted=0 offset=248 speaker_gain=22 microphone_muted=1 microphone_gain=2
+00043.326|controller|Program input gain result=0 native=0
+00043.354|device|volume=255 muted=0 offset=248 speaker_gain=23 microphone_muted=1 microphone_gain=2
+00043.421|controller|volume=255 muted=0 offset=248 speaker_gain=23 microphone_muted=1 microphone_gain=2
+00043.583|controller|volume=255 muted=0 offset=248 speaker_gain=23 microphone_muted=1 microphone_gain=2
+00043.584|device|volume=255 muted=0 offset=248 speaker_gain=23 microphone_muted=1 microphone_gain=2
+00043.701|controller|volume=255 muted=0 offset=248 speaker_gain=23 microphone_muted=1 microphone_gain=2
+00043.701|device|volume=255 muted=0 offset=248 speaker_gain=23 microphone_muted=1 microphone_gain=2
+00043.784|controller|Program input gain result=0 native=0
+00043.813|device|volume=255 muted=0 offset=248 speaker_gain=24 microphone_muted=1 microphone_gain=2
+00043.866|controller|volume=255 muted=0 offset=248 speaker_gain=24 microphone_muted=1 microphone_gain=2
+00044.004|controller|volume=255 muted=0 offset=248 speaker_gain=24 microphone_muted=1 microphone_gain=2
+00044.004|device|volume=255 muted=0 offset=248 speaker_gain=24 microphone_muted=1 microphone_gain=2
+00044.127|controller|volume=255 muted=0 offset=248 speaker_gain=24 microphone_muted=1 microphone_gain=2
+00044.127|device|volume=255 muted=0 offset=248 speaker_gain=24 microphone_muted=1 microphone_gain=2
+00044.191|controller|Program input gain result=0 native=0
+00044.217|device|volume=255 muted=0 offset=248 speaker_gain=25 microphone_muted=1 microphone_gain=2
+00044.260|controller|volume=255 muted=0 offset=248 speaker_gain=25 microphone_muted=1 microphone_gain=2
+00044.406|controller|volume=255 muted=0 offset=248 speaker_gain=25 microphone_muted=1 microphone_gain=2
+00044.406|device|volume=255 muted=0 offset=248 speaker_gain=25 microphone_muted=1 microphone_gain=2
+00044.514|controller|volume=255 muted=0 offset=248 speaker_gain=25 microphone_muted=1 microphone_gain=2
+00044.514|device|volume=255 muted=0 offset=248 speaker_gain=25 microphone_muted=1 microphone_gain=2
+00044.591|controller|Program input gain result=0 native=0
+00044.615|device|volume=255 muted=0 offset=248 speaker_gain=26 microphone_muted=1 microphone_gain=2
+00044.670|controller|volume=255 muted=0 offset=248 speaker_gain=26 microphone_muted=1 microphone_gain=2
+00044.812|controller|volume=255 muted=0 offset=248 speaker_gain=26 microphone_muted=1 microphone_gain=2
+00044.812|device|volume=255 muted=0 offset=248 speaker_gain=26 microphone_muted=1 microphone_gain=2
+00044.937|controller|volume=255 muted=0 offset=248 speaker_gain=26 microphone_muted=1 microphone_gain=2
+00044.937|device|volume=255 muted=0 offset=248 speaker_gain=26 microphone_muted=1 microphone_gain=2
+00045.025|controller|Program input gain result=0 native=0
+00045.065|device|volume=255 muted=0 offset=248 speaker_gain=27 microphone_muted=1 microphone_gain=2
+00045.107|controller|volume=255 muted=0 offset=248 speaker_gain=27 microphone_muted=1 microphone_gain=2
+00045.255|controller|volume=255 muted=0 offset=248 speaker_gain=27 microphone_muted=1 microphone_gain=2
+00045.255|device|volume=255 muted=0 offset=248 speaker_gain=27 microphone_muted=1 microphone_gain=2
+00045.362|controller|volume=255 muted=0 offset=248 speaker_gain=27 microphone_muted=1 microphone_gain=2
+00045.392|device|volume=255 muted=0 offset=248 speaker_gain=27 microphone_muted=1 microphone_gain=2
+00045.476|controller|Program input gain result=0 native=0
+00045.508|device|volume=255 muted=0 offset=248 speaker_gain=28 microphone_muted=1 microphone_gain=2
+00045.560|controller|volume=255 muted=0 offset=248 speaker_gain=28 microphone_muted=1 microphone_gain=2
+00045.716|controller|volume=255 muted=0 offset=248 speaker_gain=28 microphone_muted=1 microphone_gain=2
+00045.716|device|volume=255 muted=0 offset=248 speaker_gain=28 microphone_muted=1 microphone_gain=2
+00045.849|controller|volume=255 muted=0 offset=248 speaker_gain=28 microphone_muted=1 microphone_gain=2
+00045.849|device|volume=255 muted=0 offset=248 speaker_gain=28 microphone_muted=1 microphone_gain=2
+00045.930|controller|Program input gain result=0 native=0
+00045.962|device|volume=255 muted=0 offset=248 speaker_gain=29 microphone_muted=1 microphone_gain=2
+00046.022|controller|volume=255 muted=0 offset=248 speaker_gain=29 microphone_muted=1 microphone_gain=2
+00046.192|controller|volume=255 muted=0 offset=248 speaker_gain=29 microphone_muted=1 microphone_gain=2
+00046.192|device|volume=255 muted=0 offset=248 speaker_gain=29 microphone_muted=1 microphone_gain=2
+00046.308|controller|volume=255 muted=0 offset=248 speaker_gain=29 microphone_muted=1 microphone_gain=2
+00046.308|device|volume=255 muted=0 offset=248 speaker_gain=29 microphone_muted=1 microphone_gain=2
+00046.391|controller|Program input gain result=0 native=0
+00046.418|device|volume=255 muted=0 offset=248 speaker_gain=30 microphone_muted=1 microphone_gain=2
+00046.463|controller|volume=255 muted=0 offset=248 speaker_gain=30 microphone_muted=1 microphone_gain=2
+00046.612|controller|volume=255 muted=0 offset=248 speaker_gain=30 microphone_muted=1 microphone_gain=2
+00046.612|device|volume=255 muted=0 offset=248 speaker_gain=30 microphone_muted=1 microphone_gain=2
+00046.731|controller|volume=255 muted=0 offset=248 speaker_gain=30 microphone_muted=1 microphone_gain=2
+00046.732|device|volume=255 muted=0 offset=248 speaker_gain=30 microphone_muted=1 microphone_gain=2
+00046.791|controller|Program input gain result=0 native=0
+00046.824|device|volume=255 muted=0 offset=248 speaker_gain=31 microphone_muted=1 microphone_gain=2
+00046.864|controller|volume=255 muted=0 offset=248 speaker_gain=31 microphone_muted=1 microphone_gain=2
+00047.015|controller|volume=255 muted=0 offset=248 speaker_gain=31 microphone_muted=1 microphone_gain=2
+00047.015|device|volume=255 muted=0 offset=248 speaker_gain=31 microphone_muted=1 microphone_gain=2
+00047.132|controller|volume=255 muted=0 offset=248 speaker_gain=31 microphone_muted=1 microphone_gain=2
+00047.132|device|volume=255 muted=0 offset=248 speaker_gain=31 microphone_muted=1 microphone_gain=2
+00047.191|controller|Program input gain result=0 native=0
+00047.213|device|volume=255 muted=0 offset=248 speaker_gain=32 microphone_muted=1 microphone_gain=2
+00047.267|controller|volume=255 muted=0 offset=248 speaker_gain=32 microphone_muted=1 microphone_gain=2
+00047.417|controller|volume=255 muted=0 offset=248 speaker_gain=32 microphone_muted=1 microphone_gain=2
+00047.417|device|volume=255 muted=0 offset=248 speaker_gain=32 microphone_muted=1 microphone_gain=2
+00047.535|controller|volume=255 muted=0 offset=248 speaker_gain=32 microphone_muted=1 microphone_gain=2
+00047.561|device|volume=255 muted=0 offset=248 speaker_gain=32 microphone_muted=1 microphone_gain=2
+00047.641|controller|Program input gain result=0 native=0
+00047.663|device|volume=255 muted=0 offset=248 speaker_gain=33 microphone_muted=1 microphone_gain=2
+00047.715|controller|volume=255 muted=0 offset=248 speaker_gain=33 microphone_muted=1 microphone_gain=2
+00047.858|controller|volume=255 muted=0 offset=248 speaker_gain=33 microphone_muted=1 microphone_gain=2
+00047.859|device|volume=255 muted=0 offset=248 speaker_gain=33 microphone_muted=1 microphone_gain=2
+00047.974|controller|volume=255 muted=0 offset=248 speaker_gain=33 microphone_muted=1 microphone_gain=2
+00047.975|device|volume=255 muted=0 offset=248 speaker_gain=33 microphone_muted=1 microphone_gain=2
+00048.041|controller|Program input gain result=0 native=0
+00048.070|device|volume=255 muted=0 offset=248 speaker_gain=34 microphone_muted=1 microphone_gain=2
+00048.122|controller|volume=255 muted=0 offset=248 speaker_gain=34 microphone_muted=1 microphone_gain=2
+00048.259|controller|volume=255 muted=0 offset=248 speaker_gain=34 microphone_muted=1 microphone_gain=2
+00048.259|device|volume=255 muted=0 offset=248 speaker_gain=34 microphone_muted=1 microphone_gain=2
+00048.366|controller|volume=255 muted=0 offset=248 speaker_gain=34 microphone_muted=1 microphone_gain=2
+00048.367|device|volume=255 muted=0 offset=248 speaker_gain=34 microphone_muted=1 microphone_gain=2
+00048.441|controller|Program input gain result=0 native=0
+00048.462|device|volume=255 muted=0 offset=248 speaker_gain=35 microphone_muted=1 microphone_gain=2
+00048.515|controller|volume=255 muted=0 offset=248 speaker_gain=35 microphone_muted=1 microphone_gain=2
+00048.669|controller|volume=255 muted=0 offset=248 speaker_gain=35 microphone_muted=1 microphone_gain=2
+00048.669|device|volume=255 muted=0 offset=248 speaker_gain=35 microphone_muted=1 microphone_gain=2
+00048.797|controller|volume=255 muted=0 offset=248 speaker_gain=35 microphone_muted=1 microphone_gain=2
+00048.797|device|volume=255 muted=0 offset=248 speaker_gain=35 microphone_muted=1 microphone_gain=2
+00048.890|controller|Program input gain result=0 native=0
+00048.912|device|volume=255 muted=0 offset=248 speaker_gain=36 microphone_muted=1 microphone_gain=2
+00048.966|controller|volume=255 muted=0 offset=248 speaker_gain=36 microphone_muted=1 microphone_gain=2
+00049.095|controller|volume=255 muted=0 offset=248 speaker_gain=36 microphone_muted=1 microphone_gain=2
+00049.095|device|volume=255 muted=0 offset=248 speaker_gain=36 microphone_muted=1 microphone_gain=2
+00049.208|controller|volume=255 muted=0 offset=248 speaker_gain=36 microphone_muted=1 microphone_gain=2
+00049.209|device|volume=255 muted=0 offset=248 speaker_gain=36 microphone_muted=1 microphone_gain=2
+00049.283|controller|Program input gain result=0 native=0
+00049.320|device|volume=255 muted=0 offset=248 speaker_gain=37 microphone_muted=1 microphone_gain=2
+00049.366|controller|volume=255 muted=0 offset=248 speaker_gain=37 microphone_muted=1 microphone_gain=2
+00049.502|device|volume=255 muted=0 offset=248 speaker_gain=37 microphone_muted=1 microphone_gain=2
+00049.508|controller|volume=255 muted=0 offset=248 speaker_gain=37 microphone_muted=1 microphone_gain=2
+00049.654|controller|volume=255 muted=0 offset=248 speaker_gain=37 microphone_muted=1 microphone_gain=2
+00049.654|device|volume=255 muted=0 offset=248 speaker_gain=37 microphone_muted=1 microphone_gain=2
+00049.735|controller|Program input gain result=0 native=0
+00049.770|device|volume=255 muted=0 offset=248 speaker_gain=38 microphone_muted=1 microphone_gain=2
+00049.816|controller|volume=255 muted=0 offset=248 speaker_gain=38 microphone_muted=1 microphone_gain=2
+00049.947|controller|volume=255 muted=0 offset=248 speaker_gain=38 microphone_muted=1 microphone_gain=2
+00049.947|device|volume=255 muted=0 offset=248 speaker_gain=38 microphone_muted=1 microphone_gain=2
+00050.054|controller|volume=255 muted=0 offset=248 speaker_gain=38 microphone_muted=1 microphone_gain=2
+00050.054|device|volume=255 muted=0 offset=248 speaker_gain=38 microphone_muted=1 microphone_gain=2
+00050.141|controller|Program input gain result=0 native=0
+00050.162|device|volume=255 muted=0 offset=248 speaker_gain=39 microphone_muted=1 microphone_gain=2
+00050.215|controller|volume=255 muted=0 offset=248 speaker_gain=39 microphone_muted=1 microphone_gain=2
+00050.359|controller|volume=255 muted=0 offset=248 speaker_gain=39 microphone_muted=1 microphone_gain=2
+00050.360|device|volume=255 muted=0 offset=248 speaker_gain=39 microphone_muted=1 microphone_gain=2
+00050.474|controller|volume=255 muted=0 offset=248 speaker_gain=39 microphone_muted=1 microphone_gain=2
+00050.474|device|volume=255 muted=0 offset=248 speaker_gain=39 microphone_muted=1 microphone_gain=2
+00050.541|controller|Program input gain result=0 native=0
+00050.562|device|volume=255 muted=0 offset=248 speaker_gain=40 microphone_muted=1 microphone_gain=2
+00050.615|controller|volume=255 muted=0 offset=248 speaker_gain=40 microphone_muted=1 microphone_gain=2
+00050.760|controller|volume=255 muted=0 offset=248 speaker_gain=40 microphone_muted=1 microphone_gain=2
+00050.760|device|volume=255 muted=0 offset=248 speaker_gain=40 microphone_muted=1 microphone_gain=2
+00050.875|controller|volume=255 muted=0 offset=248 speaker_gain=40 microphone_muted=1 microphone_gain=2
+00050.875|device|volume=255 muted=0 offset=248 speaker_gain=40 microphone_muted=1 microphone_gain=2
+00050.941|controller|Program input gain result=0 native=0
+00050.970|device|volume=255 muted=0 offset=248 speaker_gain=41 microphone_muted=1 microphone_gain=2
+00051.016|controller|volume=255 muted=0 offset=248 speaker_gain=41 microphone_muted=1 microphone_gain=2
+00051.158|controller|volume=255 muted=0 offset=248 speaker_gain=41 microphone_muted=1 microphone_gain=2
+00051.158|device|volume=255 muted=0 offset=248 speaker_gain=41 microphone_muted=1 microphone_gain=2
+00051.267|controller|volume=255 muted=0 offset=248 speaker_gain=41 microphone_muted=1 microphone_gain=2
+00051.267|device|volume=255 muted=0 offset=248 speaker_gain=41 microphone_muted=1 microphone_gain=2
+00051.341|controller|Program input gain result=0 native=0
+00051.342|device|volume=255 muted=0 offset=248 speaker_gain=42 microphone_muted=1 microphone_gain=2
+00051.397|controller|volume=255 muted=0 offset=248 speaker_gain=42 microphone_muted=1 microphone_gain=2
+00051.532|controller|volume=255 muted=0 offset=248 speaker_gain=42 microphone_muted=1 microphone_gain=2
+00051.532|device|volume=255 muted=0 offset=248 speaker_gain=42 microphone_muted=1 microphone_gain=2
+00051.657|controller|volume=255 muted=0 offset=248 speaker_gain=42 microphone_muted=1 microphone_gain=2
+00051.657|device|volume=255 muted=0 offset=248 speaker_gain=42 microphone_muted=1 microphone_gain=2
+00051.740|controller|Program input gain result=0 native=0
+00051.763|device|volume=255 muted=0 offset=248 speaker_gain=43 microphone_muted=1 microphone_gain=2
+00051.815|controller|volume=255 muted=0 offset=248 speaker_gain=43 microphone_muted=1 microphone_gain=2
+00051.950|controller|volume=255 muted=0 offset=248 speaker_gain=43 microphone_muted=1 microphone_gain=2
+00051.950|device|volume=255 muted=0 offset=248 speaker_gain=43 microphone_muted=1 microphone_gain=2
+00052.068|controller|volume=255 muted=0 offset=248 speaker_gain=43 microphone_muted=1 microphone_gain=2
+00052.068|device|volume=255 muted=0 offset=248 speaker_gain=43 microphone_muted=1 microphone_gain=2
+00052.140|controller|Program input gain result=0 native=0
+00052.163|device|volume=255 muted=0 offset=248 speaker_gain=44 microphone_muted=1 microphone_gain=2
+00052.208|controller|volume=255 muted=0 offset=248 speaker_gain=44 microphone_muted=1 microphone_gain=2
+00052.358|controller|volume=255 muted=0 offset=248 speaker_gain=44 microphone_muted=1 microphone_gain=2
+00052.359|device|volume=255 muted=0 offset=248 speaker_gain=44 microphone_muted=1 microphone_gain=2
+00052.476|controller|volume=255 muted=0 offset=248 speaker_gain=44 microphone_muted=1 microphone_gain=2
+00052.476|device|volume=255 muted=0 offset=248 speaker_gain=44 microphone_muted=1 microphone_gain=2
+00052.540|controller|Program input gain result=0 native=0
+00052.569|device|volume=255 muted=0 offset=248 speaker_gain=45 microphone_muted=1 microphone_gain=2
+00052.614|controller|volume=255 muted=0 offset=248 speaker_gain=45 microphone_muted=1 microphone_gain=2
+00052.758|controller|volume=255 muted=0 offset=248 speaker_gain=45 microphone_muted=1 microphone_gain=2
+00052.758|device|volume=255 muted=0 offset=248 speaker_gain=45 microphone_muted=1 microphone_gain=2
+00052.873|controller|volume=255 muted=0 offset=248 speaker_gain=45 microphone_muted=1 microphone_gain=2
+00052.874|device|volume=255 muted=0 offset=248 speaker_gain=45 microphone_muted=1 microphone_gain=2
+00052.940|controller|Program input gain result=0 native=0
+00052.961|device|volume=255 muted=0 offset=248 speaker_gain=46 microphone_muted=1 microphone_gain=2
+00053.006|controller|volume=255 muted=0 offset=248 speaker_gain=46 microphone_muted=1 microphone_gain=2
+00053.159|controller|volume=255 muted=0 offset=248 speaker_gain=46 microphone_muted=1 microphone_gain=2
+00053.159|device|volume=255 muted=0 offset=248 speaker_gain=46 microphone_muted=1 microphone_gain=2
+00053.273|controller|volume=255 muted=0 offset=248 speaker_gain=46 microphone_muted=1 microphone_gain=2
+00053.273|device|volume=255 muted=0 offset=248 speaker_gain=46 microphone_muted=1 microphone_gain=2
+00053.340|controller|Program input gain result=0 native=0
+00053.361|device|volume=255 muted=0 offset=248 speaker_gain=47 microphone_muted=1 microphone_gain=2
+00053.422|controller|volume=255 muted=0 offset=248 speaker_gain=47 microphone_muted=1 microphone_gain=2
+00053.557|controller|volume=255 muted=0 offset=248 speaker_gain=47 microphone_muted=1 microphone_gain=2
+00053.557|device|volume=255 muted=0 offset=248 speaker_gain=47 microphone_muted=1 microphone_gain=2
+00053.667|controller|volume=255 muted=0 offset=248 speaker_gain=47 microphone_muted=1 microphone_gain=2
+00053.667|device|volume=255 muted=0 offset=248 speaker_gain=47 microphone_muted=1 microphone_gain=2
+00053.740|controller|Program input gain result=0 native=0
+00053.761|device|volume=255 muted=0 offset=248 speaker_gain=48 microphone_muted=1 microphone_gain=2
+00053.813|controller|volume=255 muted=0 offset=248 speaker_gain=48 microphone_muted=1 microphone_gain=2
+00053.956|controller|volume=255 muted=0 offset=248 speaker_gain=48 microphone_muted=1 microphone_gain=2
+00053.956|device|volume=255 muted=0 offset=248 speaker_gain=48 microphone_muted=1 microphone_gain=2
+00054.082|controller|volume=255 muted=0 offset=248 speaker_gain=48 microphone_muted=1 microphone_gain=2
+00054.082|device|volume=255 muted=0 offset=248 speaker_gain=48 microphone_muted=1 microphone_gain=2
+00054.140|controller|Program input gain result=0 native=0
+00054.165|device|volume=255 muted=0 offset=248 speaker_gain=49 microphone_muted=1 microphone_gain=2
+00054.217|controller|volume=255 muted=0 offset=248 speaker_gain=49 microphone_muted=1 microphone_gain=2
+00054.346|controller|volume=255 muted=0 offset=248 speaker_gain=49 microphone_muted=1 microphone_gain=2
+00054.346|device|volume=255 muted=0 offset=248 speaker_gain=49 microphone_muted=1 microphone_gain=2
+00054.470|controller|volume=255 muted=0 offset=248 speaker_gain=49 microphone_muted=1 microphone_gain=2
+00054.470|device|volume=255 muted=0 offset=248 speaker_gain=49 microphone_muted=1 microphone_gain=2
+00054.540|controller|Program input gain result=0 native=0
+00054.562|device|volume=255 muted=0 offset=248 speaker_gain=50 microphone_muted=1 microphone_gain=2
+00054.611|controller|volume=255 muted=0 offset=248 speaker_gain=50 microphone_muted=1 microphone_gain=2
+00054.754|device|volume=255 muted=0 offset=248 speaker_gain=50 microphone_muted=1 microphone_gain=2
+00054.760|controller|volume=255 muted=0 offset=248 speaker_gain=50 microphone_muted=1 microphone_gain=2
+00054.893|controller|volume=255 muted=0 offset=248 speaker_gain=50 microphone_muted=1 microphone_gain=2
+00054.893|device|volume=255 muted=0 offset=248 speaker_gain=50 microphone_muted=1 microphone_gain=2
+00054.984|controller|Program input gain result=0 native=0
+00055.011|device|volume=255 muted=0 offset=248 speaker_gain=51 microphone_muted=1 microphone_gain=2
+00055.064|controller|volume=255 muted=0 offset=248 speaker_gain=51 microphone_muted=1 microphone_gain=2
+00055.219|controller|volume=255 muted=0 offset=248 speaker_gain=51 microphone_muted=1 microphone_gain=2
+00055.219|device|volume=255 muted=0 offset=248 speaker_gain=51 microphone_muted=1 microphone_gain=2
+00055.332|controller|volume=255 muted=0 offset=248 speaker_gain=51 microphone_muted=1 microphone_gain=2
+00055.332|device|volume=255 muted=0 offset=248 speaker_gain=51 microphone_muted=1 microphone_gain=2
+00055.390|controller|Program input gain result=0 native=0
+00055.413|device|volume=255 muted=0 offset=248 speaker_gain=52 microphone_muted=1 microphone_gain=2
+00055.464|controller|volume=255 muted=0 offset=248 speaker_gain=52 microphone_muted=1 microphone_gain=2
+00055.608|controller|volume=255 muted=0 offset=248 speaker_gain=52 microphone_muted=1 microphone_gain=2
+00055.608|device|volume=255 muted=0 offset=248 speaker_gain=52 microphone_muted=1 microphone_gain=2
+00055.733|controller|volume=255 muted=0 offset=248 speaker_gain=52 microphone_muted=1 microphone_gain=2
+00055.733|device|volume=255 muted=0 offset=248 speaker_gain=52 microphone_muted=1 microphone_gain=2
+00055.816|controller|Program input gain result=0 native=0
+00055.853|device|volume=255 muted=0 offset=248 speaker_gain=53 microphone_muted=1 microphone_gain=2
+00055.914|controller|volume=255 muted=0 offset=248 speaker_gain=53 microphone_muted=1 microphone_gain=2
+00056.054|controller|volume=255 muted=0 offset=248 speaker_gain=53 microphone_muted=1 microphone_gain=2
+00056.054|device|volume=255 muted=0 offset=248 speaker_gain=53 microphone_muted=1 microphone_gain=2
+00056.166|controller|volume=255 muted=0 offset=248 speaker_gain=53 microphone_muted=1 microphone_gain=2
+00056.166|device|volume=255 muted=0 offset=248 speaker_gain=53 microphone_muted=1 microphone_gain=2
+00056.241|controller|Program input gain result=0 native=0
+00056.262|device|volume=255 muted=0 offset=248 speaker_gain=54 microphone_muted=1 microphone_gain=2
+00056.315|controller|volume=255 muted=0 offset=248 speaker_gain=54 microphone_muted=1 microphone_gain=2
+00056.458|controller|volume=255 muted=0 offset=248 speaker_gain=54 microphone_muted=1 microphone_gain=2
+00056.458|device|volume=255 muted=0 offset=248 speaker_gain=54 microphone_muted=1 microphone_gain=2
+00056.576|controller|volume=255 muted=0 offset=248 speaker_gain=54 microphone_muted=1 microphone_gain=2
+00056.576|device|volume=255 muted=0 offset=248 speaker_gain=54 microphone_muted=1 microphone_gain=2
+00056.641|controller|Program input gain result=0 native=0
+00056.664|device|volume=255 muted=0 offset=248 speaker_gain=55 microphone_muted=1 microphone_gain=2
+00056.710|controller|volume=255 muted=0 offset=248 speaker_gain=55 microphone_muted=1 microphone_gain=2
+00056.857|controller|volume=255 muted=0 offset=248 speaker_gain=55 microphone_muted=1 microphone_gain=2
+00056.857|device|volume=255 muted=0 offset=248 speaker_gain=55 microphone_muted=1 microphone_gain=2
+00056.966|controller|volume=255 muted=0 offset=248 speaker_gain=55 microphone_muted=1 microphone_gain=2
+00056.966|device|volume=255 muted=0 offset=248 speaker_gain=55 microphone_muted=1 microphone_gain=2
+00057.040|controller|Program input gain result=0 native=0
+00057.061|device|volume=255 muted=0 offset=248 speaker_gain=56 microphone_muted=1 microphone_gain=2
+00057.114|controller|volume=255 muted=0 offset=248 speaker_gain=56 microphone_muted=1 microphone_gain=2
+00057.261|controller|volume=255 muted=0 offset=248 speaker_gain=56 microphone_muted=1 microphone_gain=2
+00057.261|device|volume=255 muted=0 offset=248 speaker_gain=56 microphone_muted=1 microphone_gain=2
+00057.376|controller|volume=255 muted=0 offset=248 speaker_gain=56 microphone_muted=1 microphone_gain=2
+00057.376|device|volume=255 muted=0 offset=248 speaker_gain=56 microphone_muted=1 microphone_gain=2
+00057.467|controller|Program input gain result=0 native=0
+00057.518|device|volume=255 muted=0 offset=248 speaker_gain=57 microphone_muted=1 microphone_gain=2
+00057.556|controller|volume=255 muted=0 offset=248 speaker_gain=57 microphone_muted=1 microphone_gain=2
+00057.699|controller|volume=255 muted=0 offset=248 speaker_gain=57 microphone_muted=1 microphone_gain=2
+00057.700|device|volume=255 muted=0 offset=248 speaker_gain=57 microphone_muted=1 microphone_gain=2
+00057.816|controller|volume=255 muted=0 offset=248 speaker_gain=57 microphone_muted=1 microphone_gain=2
+00057.817|device|volume=255 muted=0 offset=248 speaker_gain=57 microphone_muted=1 microphone_gain=2
+00057.890|controller|Program input gain result=0 native=0
+00057.911|device|volume=255 muted=0 offset=248 speaker_gain=58 microphone_muted=1 microphone_gain=2
+00057.964|controller|volume=255 muted=0 offset=248 speaker_gain=58 microphone_muted=1 microphone_gain=2
+00058.102|controller|volume=255 muted=0 offset=248 speaker_gain=58 microphone_muted=1 microphone_gain=2
+00058.137|device|volume=255 muted=0 offset=248 speaker_gain=58 microphone_muted=1 microphone_gain=2
+00058.258|controller|volume=255 muted=0 offset=248 speaker_gain=58 microphone_muted=1 microphone_gain=2
+00058.259|device|volume=255 muted=0 offset=248 speaker_gain=58 microphone_muted=1 microphone_gain=2
+00058.341|controller|Program input gain result=0 native=0
+00058.362|device|volume=255 muted=0 offset=248 speaker_gain=59 microphone_muted=1 microphone_gain=2
+00058.418|controller|volume=255 muted=0 offset=248 speaker_gain=59 microphone_muted=1 microphone_gain=2
+00058.558|controller|volume=255 muted=0 offset=248 speaker_gain=59 microphone_muted=1 microphone_gain=2
+00058.558|device|volume=255 muted=0 offset=248 speaker_gain=59 microphone_muted=1 microphone_gain=2
+00058.678|controller|volume=255 muted=0 offset=248 speaker_gain=59 microphone_muted=1 microphone_gain=2
+00058.678|device|volume=255 muted=0 offset=248 speaker_gain=59 microphone_muted=1 microphone_gain=2
+00058.782|controller|Program input gain result=0 native=0
+00058.805|device|volume=255 muted=0 offset=248 speaker_gain=60 microphone_muted=1 microphone_gain=2
+00058.908|controller|volume=255 muted=0 offset=248 speaker_gain=60 microphone_muted=1 microphone_gain=2
+00059.047|controller|volume=255 muted=0 offset=248 speaker_gain=60 microphone_muted=1 microphone_gain=2
+00059.047|device|volume=255 muted=0 offset=248 speaker_gain=60 microphone_muted=1 microphone_gain=2
+00059.157|controller|volume=255 muted=0 offset=248 speaker_gain=60 microphone_muted=1 microphone_gain=2
+00059.157|device|volume=255 muted=0 offset=248 speaker_gain=60 microphone_muted=1 microphone_gain=2
+00059.236|controller|Program input gain result=0 native=0
+00059.262|device|volume=255 muted=0 offset=248 speaker_gain=61 microphone_muted=1 microphone_gain=2
+00059.314|controller|volume=255 muted=0 offset=248 speaker_gain=61 microphone_muted=1 microphone_gain=2
+00059.460|controller|volume=255 muted=0 offset=248 speaker_gain=61 microphone_muted=1 microphone_gain=2
+00059.487|device|volume=255 muted=0 offset=248 speaker_gain=61 microphone_muted=1 microphone_gain=2
+00059.603|controller|volume=255 muted=0 offset=248 speaker_gain=61 microphone_muted=1 microphone_gain=2
+00059.603|device|volume=255 muted=0 offset=248 speaker_gain=61 microphone_muted=1 microphone_gain=2
+00059.686|controller|Program input gain result=0 native=0
+00059.707|device|volume=255 muted=0 offset=248 speaker_gain=62 microphone_muted=1 microphone_gain=2
+00059.756|controller|volume=255 muted=0 offset=248 speaker_gain=62 microphone_muted=1 microphone_gain=2
+00059.900|controller|volume=255 muted=0 offset=248 speaker_gain=62 microphone_muted=1 microphone_gain=2
+00059.901|device|volume=255 muted=0 offset=248 speaker_gain=62 microphone_muted=1 microphone_gain=2
+00060.024|controller|volume=255 muted=0 offset=248 speaker_gain=62 microphone_muted=1 microphone_gain=2
+00060.024|device|volume=255 muted=0 offset=248 speaker_gain=62 microphone_muted=1 microphone_gain=2
+00060.090|controller|Program input gain result=0 native=0
+00060.118|device|volume=255 muted=0 offset=248 speaker_gain=63 microphone_muted=1 microphone_gain=2
+00060.166|controller|volume=255 muted=0 offset=248 speaker_gain=63 microphone_muted=1 microphone_gain=2
+00060.323|controller|volume=255 muted=0 offset=248 speaker_gain=63 microphone_muted=1 microphone_gain=2
+00060.323|device|volume=255 muted=0 offset=248 speaker_gain=63 microphone_muted=1 microphone_gain=2
+00060.440|controller|volume=255 muted=0 offset=248 speaker_gain=63 microphone_muted=1 microphone_gain=2
+00060.440|device|volume=255 muted=0 offset=248 speaker_gain=63 microphone_muted=1 microphone_gain=2
+00060.523|controller|Program input gain result=0 native=0
+00060.557|device|volume=255 muted=0 offset=248 speaker_gain=64 microphone_muted=1 microphone_gain=2
+00060.610|controller|volume=255 muted=0 offset=248 speaker_gain=64 microphone_muted=1 microphone_gain=2
+00060.748|controller|volume=255 muted=0 offset=248 speaker_gain=64 microphone_muted=1 microphone_gain=2
+00060.748|device|volume=255 muted=0 offset=248 speaker_gain=64 microphone_muted=1 microphone_gain=2
+00060.881|controller|volume=255 muted=0 offset=248 speaker_gain=64 microphone_muted=1 microphone_gain=2
+00060.881|device|volume=255 muted=0 offset=248 speaker_gain=64 microphone_muted=1 microphone_gain=2
+00060.940|controller|Program input gain result=0 native=0
+00060.961|device|volume=255 muted=0 offset=248 speaker_gain=65 microphone_muted=1 microphone_gain=2
+00061.014|controller|volume=255 muted=0 offset=248 speaker_gain=65 microphone_muted=1 microphone_gain=2
+00061.164|controller|volume=255 muted=0 offset=248 speaker_gain=65 microphone_muted=1 microphone_gain=2
+00061.164|device|volume=255 muted=0 offset=248 speaker_gain=65 microphone_muted=1 microphone_gain=2
+00061.274|controller|volume=255 muted=0 offset=248 speaker_gain=65 microphone_muted=1 microphone_gain=2
+00061.274|device|volume=255 muted=0 offset=248 speaker_gain=65 microphone_muted=1 microphone_gain=2
+00061.340|controller|Program input gain result=0 native=0
+00061.361|device|volume=255 muted=0 offset=248 speaker_gain=66 microphone_muted=1 microphone_gain=2
+00061.416|controller|volume=255 muted=0 offset=248 speaker_gain=66 microphone_muted=1 microphone_gain=2
+00061.569|controller|volume=255 muted=0 offset=248 speaker_gain=66 microphone_muted=1 microphone_gain=2
+00061.569|device|volume=255 muted=0 offset=248 speaker_gain=66 microphone_muted=1 microphone_gain=2
+00061.692|controller|volume=255 muted=0 offset=248 speaker_gain=66 microphone_muted=1 microphone_gain=2
+00061.692|device|volume=255 muted=0 offset=248 speaker_gain=66 microphone_muted=1 microphone_gain=2
+00061.769|controller|Program input gain result=0 native=0
+00061.810|device|volume=255 muted=0 offset=248 speaker_gain=67 microphone_muted=1 microphone_gain=2
+00061.864|controller|volume=255 muted=0 offset=248 speaker_gain=67 microphone_muted=1 microphone_gain=2
+00062.001|controller|volume=255 muted=0 offset=248 speaker_gain=67 microphone_muted=1 microphone_gain=2
+00062.001|device|volume=255 muted=0 offset=248 speaker_gain=67 microphone_muted=1 microphone_gain=2
+00062.117|controller|volume=255 muted=0 offset=248 speaker_gain=67 microphone_muted=1 microphone_gain=2
+00062.118|device|volume=255 muted=0 offset=248 speaker_gain=67 microphone_muted=1 microphone_gain=2
+00062.190|controller|Program input gain result=0 native=0
+00062.212|device|volume=255 muted=0 offset=248 speaker_gain=68 microphone_muted=1 microphone_gain=2
+00062.265|controller|volume=255 muted=0 offset=248 speaker_gain=68 microphone_muted=1 microphone_gain=2
+00062.398|controller|volume=255 muted=0 offset=248 speaker_gain=68 microphone_muted=1 microphone_gain=2
+00062.398|device|volume=255 muted=0 offset=248 speaker_gain=68 microphone_muted=1 microphone_gain=2
+00062.517|controller|volume=255 muted=0 offset=248 speaker_gain=68 microphone_muted=1 microphone_gain=2
+00062.517|device|volume=255 muted=0 offset=248 speaker_gain=68 microphone_muted=1 microphone_gain=2
+00062.590|controller|Program input gain result=0 native=0
+00062.621|device|volume=255 muted=0 offset=248 speaker_gain=69 microphone_muted=1 microphone_gain=2
+00062.668|controller|volume=255 muted=0 offset=248 speaker_gain=69 microphone_muted=1 microphone_gain=2
+00062.821|controller|volume=255 muted=0 offset=248 speaker_gain=69 microphone_muted=1 microphone_gain=2
+00062.822|device|volume=255 muted=0 offset=248 speaker_gain=69 microphone_muted=1 microphone_gain=2
+00062.958|controller|volume=255 muted=0 offset=248 speaker_gain=69 microphone_muted=1 microphone_gain=2
+00062.958|device|volume=255 muted=0 offset=248 speaker_gain=69 microphone_muted=1 microphone_gain=2
+00063.034|controller|Program input gain result=0 native=0
+00063.067|device|volume=255 muted=0 offset=248 speaker_gain=70 microphone_muted=1 microphone_gain=2
+00063.116|controller|volume=255 muted=0 offset=248 speaker_gain=70 microphone_muted=1 microphone_gain=2
+00063.245|controller|volume=255 muted=0 offset=248 speaker_gain=70 microphone_muted=1 microphone_gain=2
+00063.279|device|volume=255 muted=0 offset=248 speaker_gain=70 microphone_muted=1 microphone_gain=2
+00063.403|controller|volume=255 muted=0 offset=248 speaker_gain=70 microphone_muted=1 microphone_gain=2
+00063.403|device|volume=255 muted=0 offset=248 speaker_gain=70 microphone_muted=1 microphone_gain=2
+00063.490|controller|Program input gain result=0 native=0
+00063.514|device|volume=255 muted=0 offset=248 speaker_gain=71 microphone_muted=1 microphone_gain=2
+00063.560|controller|volume=255 muted=0 offset=248 speaker_gain=71 microphone_muted=1 microphone_gain=2
+00063.700|controller|volume=255 muted=0 offset=248 speaker_gain=71 microphone_muted=1 microphone_gain=2
+00063.701|device|volume=255 muted=0 offset=248 speaker_gain=71 microphone_muted=1 microphone_gain=2
+00063.819|controller|volume=255 muted=0 offset=248 speaker_gain=71 microphone_muted=1 microphone_gain=2
+00063.819|device|volume=255 muted=0 offset=248 speaker_gain=71 microphone_muted=1 microphone_gain=2
+00063.890|controller|Program input gain result=0 native=0
+00063.925|device|volume=255 muted=0 offset=248 speaker_gain=72 microphone_muted=1 microphone_gain=2
+00063.956|controller|volume=255 muted=0 offset=248 speaker_gain=72 microphone_muted=1 microphone_gain=2
+00064.098|controller|volume=255 muted=0 offset=248 speaker_gain=72 microphone_muted=1 microphone_gain=2
+00064.098|device|volume=255 muted=0 offset=248 speaker_gain=72 microphone_muted=1 microphone_gain=2
+00064.208|controller|volume=255 muted=0 offset=248 speaker_gain=72 microphone_muted=1 microphone_gain=2
+00064.208|device|volume=255 muted=0 offset=248 speaker_gain=72 microphone_muted=1 microphone_gain=2
+00064.290|controller|Program input gain result=0 native=0
+00064.312|device|volume=255 muted=0 offset=248 speaker_gain=73 microphone_muted=1 microphone_gain=2
+00064.373|controller|volume=255 muted=0 offset=248 speaker_gain=73 microphone_muted=1 microphone_gain=2
+00064.513|controller|volume=255 muted=0 offset=248 speaker_gain=73 microphone_muted=1 microphone_gain=2
+00064.513|device|volume=255 muted=0 offset=248 speaker_gain=73 microphone_muted=1 microphone_gain=2
+00064.636|controller|volume=255 muted=0 offset=248 speaker_gain=73 microphone_muted=1 microphone_gain=2
+00064.636|device|volume=255 muted=0 offset=248 speaker_gain=73 microphone_muted=1 microphone_gain=2
+00064.724|controller|Program input gain result=0 native=0
+00064.752|device|volume=255 muted=0 offset=248 speaker_gain=74 microphone_muted=1 microphone_gain=2
+00064.805|controller|volume=255 muted=0 offset=248 speaker_gain=74 microphone_muted=1 microphone_gain=2
+00064.959|controller|volume=255 muted=0 offset=248 speaker_gain=74 microphone_muted=1 microphone_gain=2
+00064.959|device|volume=255 muted=0 offset=248 speaker_gain=74 microphone_muted=1 microphone_gain=2
+00065.079|controller|volume=255 muted=0 offset=248 speaker_gain=74 microphone_muted=1 microphone_gain=2
+00065.116|device|volume=255 muted=0 offset=248 speaker_gain=74 microphone_muted=1 microphone_gain=2
+00065.190|controller|Program input gain result=0 native=0
+00065.212|device|volume=255 muted=0 offset=248 speaker_gain=75 microphone_muted=1 microphone_gain=2
+00065.257|controller|volume=255 muted=0 offset=248 speaker_gain=75 microphone_muted=1 microphone_gain=2
+00065.408|controller|volume=255 muted=0 offset=248 speaker_gain=75 microphone_muted=1 microphone_gain=2
+00065.409|device|volume=255 muted=0 offset=248 speaker_gain=75 microphone_muted=1 microphone_gain=2
+00065.531|controller|volume=255 muted=0 offset=248 speaker_gain=75 microphone_muted=1 microphone_gain=2
+00065.532|device|volume=255 muted=0 offset=248 speaker_gain=75 microphone_muted=1 microphone_gain=2
+00065.611|controller|Program input gain result=0 native=0
+00065.650|device|volume=255 muted=0 offset=248 speaker_gain=76 microphone_muted=1 microphone_gain=2
+00065.708|controller|volume=255 muted=0 offset=248 speaker_gain=76 microphone_muted=1 microphone_gain=2
+00065.844|controller|volume=255 muted=0 offset=248 speaker_gain=76 microphone_muted=1 microphone_gain=2
+00065.844|device|volume=255 muted=0 offset=248 speaker_gain=76 microphone_muted=1 microphone_gain=2
+00065.958|controller|volume=255 muted=0 offset=248 speaker_gain=76 microphone_muted=1 microphone_gain=2
+00065.958|device|volume=255 muted=0 offset=248 speaker_gain=76 microphone_muted=1 microphone_gain=2
+00066.039|controller|Program input gain result=0 native=0
+00066.060|device|volume=255 muted=0 offset=248 speaker_gain=77 microphone_muted=1 microphone_gain=2
+00066.114|controller|volume=255 muted=0 offset=248 speaker_gain=77 microphone_muted=1 microphone_gain=2
+00066.258|controller|volume=255 muted=0 offset=248 speaker_gain=77 microphone_muted=1 microphone_gain=2
+00066.258|device|volume=255 muted=0 offset=248 speaker_gain=77 microphone_muted=1 microphone_gain=2
+00066.393|controller|volume=255 muted=0 offset=248 speaker_gain=77 microphone_muted=1 microphone_gain=2
+00066.394|device|volume=255 muted=0 offset=248 speaker_gain=77 microphone_muted=1 microphone_gain=2
+00066.489|controller|Program input gain result=0 native=0
+00066.510|device|volume=255 muted=0 offset=248 speaker_gain=78 microphone_muted=1 microphone_gain=2
+00066.564|controller|volume=255 muted=0 offset=248 speaker_gain=78 microphone_muted=1 microphone_gain=2
+00066.708|controller|volume=255 muted=0 offset=248 speaker_gain=78 microphone_muted=1 microphone_gain=2
+00066.708|device|volume=255 muted=0 offset=248 speaker_gain=78 microphone_muted=1 microphone_gain=2
+00066.825|controller|volume=255 muted=0 offset=248 speaker_gain=78 microphone_muted=1 microphone_gain=2
+00066.825|device|volume=255 muted=0 offset=248 speaker_gain=78 microphone_muted=1 microphone_gain=2
+00066.918|controller|Program input gain result=0 native=0
+00066.959|device|volume=255 muted=0 offset=248 speaker_gain=79 microphone_muted=1 microphone_gain=2
+00067.015|controller|volume=255 muted=0 offset=248 speaker_gain=79 microphone_muted=1 microphone_gain=2
+00067.172|controller|volume=255 muted=0 offset=248 speaker_gain=79 microphone_muted=1 microphone_gain=2
+00067.172|device|volume=255 muted=0 offset=248 speaker_gain=79 microphone_muted=1 microphone_gain=2
+00067.282|controller|volume=255 muted=0 offset=248 speaker_gain=79 microphone_muted=1 microphone_gain=2
+00067.282|device|volume=255 muted=0 offset=248 speaker_gain=79 microphone_muted=1 microphone_gain=2
+00067.361|controller|Program input gain result=0 native=0
+00067.413|device|volume=255 muted=0 offset=248 speaker_gain=80 microphone_muted=1 microphone_gain=2
+00067.520|controller|volume=255 muted=0 offset=248 speaker_gain=80 microphone_muted=1 microphone_gain=2
+00067.659|controller|volume=255 muted=0 offset=248 speaker_gain=80 microphone_muted=1 microphone_gain=2
+00067.659|device|volume=255 muted=0 offset=248 speaker_gain=80 microphone_muted=1 microphone_gain=2
+00067.768|controller|volume=255 muted=0 offset=248 speaker_gain=80 microphone_muted=1 microphone_gain=2
+00067.796|device|volume=255 muted=0 offset=248 speaker_gain=80 microphone_muted=1 microphone_gain=2
+00067.875|controller|Program input gain result=0 native=0
+00067.913|device|volume=255 muted=0 offset=248 speaker_gain=81 microphone_muted=1 microphone_gain=2
+00067.963|controller|volume=255 muted=0 offset=248 speaker_gain=81 microphone_muted=1 microphone_gain=2
+00068.098|controller|volume=255 muted=0 offset=248 speaker_gain=81 microphone_muted=1 microphone_gain=2
+00068.098|device|volume=255 muted=0 offset=248 speaker_gain=81 microphone_muted=1 microphone_gain=2
+00068.207|controller|volume=255 muted=0 offset=248 speaker_gain=81 microphone_muted=1 microphone_gain=2
+00068.207|device|volume=255 muted=0 offset=248 speaker_gain=81 microphone_muted=1 microphone_gain=2
+00068.283|controller|Program input gain result=0 native=0
+00068.309|device|volume=255 muted=0 offset=248 speaker_gain=82 microphone_muted=1 microphone_gain=2
+00068.357|controller|volume=255 muted=0 offset=248 speaker_gain=82 microphone_muted=1 microphone_gain=2
+00068.491|controller|volume=255 muted=0 offset=248 speaker_gain=82 microphone_muted=1 microphone_gain=2
+00068.492|device|volume=255 muted=0 offset=248 speaker_gain=82 microphone_muted=1 microphone_gain=2
+00068.609|controller|volume=255 muted=0 offset=248 speaker_gain=82 microphone_muted=1 microphone_gain=2
+00068.609|device|volume=255 muted=0 offset=248 speaker_gain=82 microphone_muted=1 microphone_gain=2
+00068.684|controller|Program input gain result=0 native=0
+00068.707|device|volume=255 muted=0 offset=248 speaker_gain=83 microphone_muted=1 microphone_gain=2
+00068.757|controller|volume=255 muted=0 offset=248 speaker_gain=83 microphone_muted=1 microphone_gain=2
+00068.898|controller|volume=255 muted=0 offset=248 speaker_gain=83 microphone_muted=1 microphone_gain=2
+00068.899|device|volume=255 muted=0 offset=248 speaker_gain=83 microphone_muted=1 microphone_gain=2
+00069.031|controller|volume=255 muted=0 offset=248 speaker_gain=83 microphone_muted=1 microphone_gain=2
+00069.032|device|volume=255 muted=0 offset=248 speaker_gain=83 microphone_muted=1 microphone_gain=2
+00069.109|controller|Program input gain result=0 native=0
+00069.144|device|volume=255 muted=0 offset=248 speaker_gain=84 microphone_muted=1 microphone_gain=2
+00069.198|controller|volume=255 muted=0 offset=248 speaker_gain=84 microphone_muted=1 microphone_gain=2
+00069.340|controller|volume=255 muted=0 offset=248 speaker_gain=84 microphone_muted=1 microphone_gain=2
+00069.340|device|volume=255 muted=0 offset=248 speaker_gain=84 microphone_muted=1 microphone_gain=2
+00069.455|controller|volume=255 muted=0 offset=248 speaker_gain=84 microphone_muted=1 microphone_gain=2
+00069.455|device|volume=255 muted=0 offset=248 speaker_gain=84 microphone_muted=1 microphone_gain=2
+00069.534|controller|Program input gain result=0 native=0
+00069.570|device|volume=255 muted=0 offset=248 speaker_gain=85 microphone_muted=1 microphone_gain=2
+00069.611|controller|volume=255 muted=0 offset=248 speaker_gain=85 microphone_muted=1 microphone_gain=2
+00069.751|controller|volume=255 muted=0 offset=248 speaker_gain=85 microphone_muted=1 microphone_gain=2
+00069.751|device|volume=255 muted=0 offset=248 speaker_gain=85 microphone_muted=1 microphone_gain=2
+00069.875|controller|volume=255 muted=0 offset=248 speaker_gain=85 microphone_muted=1 microphone_gain=2
+00069.876|device|volume=255 muted=0 offset=248 speaker_gain=85 microphone_muted=1 microphone_gain=2
+00069.939|controller|Program input gain result=0 native=0
+00069.961|device|volume=255 muted=0 offset=248 speaker_gain=86 microphone_muted=1 microphone_gain=2
+00070.015|controller|volume=255 muted=0 offset=248 speaker_gain=86 microphone_muted=1 microphone_gain=2
+00070.158|controller|volume=255 muted=0 offset=248 speaker_gain=86 microphone_muted=1 microphone_gain=2
+00070.158|device|volume=255 muted=0 offset=248 speaker_gain=86 microphone_muted=1 microphone_gain=2
+00070.274|controller|volume=255 muted=0 offset=248 speaker_gain=86 microphone_muted=1 microphone_gain=2
+00070.274|device|volume=255 muted=0 offset=248 speaker_gain=86 microphone_muted=1 microphone_gain=2
+00070.340|controller|Program input gain result=0 native=0
+00070.362|device|volume=255 muted=0 offset=248 speaker_gain=87 microphone_muted=1 microphone_gain=2
+00070.413|controller|volume=255 muted=0 offset=248 speaker_gain=87 microphone_muted=1 microphone_gain=2
+00070.565|controller|volume=255 muted=0 offset=248 speaker_gain=87 microphone_muted=1 microphone_gain=2
+00070.565|device|volume=255 muted=0 offset=248 speaker_gain=87 microphone_muted=1 microphone_gain=2
+00070.683|controller|volume=255 muted=0 offset=248 speaker_gain=87 microphone_muted=1 microphone_gain=2
+00070.683|device|volume=255 muted=0 offset=248 speaker_gain=87 microphone_muted=1 microphone_gain=2
+00070.739|controller|Program input gain result=0 native=0
+00070.761|device|volume=255 muted=0 offset=248 speaker_gain=88 microphone_muted=1 microphone_gain=2
+00070.805|controller|volume=255 muted=0 offset=248 speaker_gain=88 microphone_muted=1 microphone_gain=2
+00070.941|controller|volume=255 muted=0 offset=248 speaker_gain=88 microphone_muted=1 microphone_gain=2
+00070.941|device|volume=255 muted=0 offset=248 speaker_gain=88 microphone_muted=1 microphone_gain=2
+00071.064|controller|volume=255 muted=0 offset=248 speaker_gain=88 microphone_muted=1 microphone_gain=2
+00071.064|device|volume=255 muted=0 offset=248 speaker_gain=88 microphone_muted=1 microphone_gain=2
+00071.141|controller|Program input gain result=0 native=0
+00071.211|device|volume=255 muted=0 offset=248 speaker_gain=89 microphone_muted=1 microphone_gain=2
+00071.256|controller|volume=255 muted=0 offset=248 speaker_gain=89 microphone_muted=1 microphone_gain=2
+00071.408|controller|volume=255 muted=0 offset=248 speaker_gain=89 microphone_muted=1 microphone_gain=2
+00071.408|device|volume=255 muted=0 offset=248 speaker_gain=89 microphone_muted=1 microphone_gain=2
+00071.532|controller|volume=255 muted=0 offset=248 speaker_gain=89 microphone_muted=1 microphone_gain=2
+00071.532|device|volume=255 muted=0 offset=248 speaker_gain=89 microphone_muted=1 microphone_gain=2
+00071.618|controller|Program input gain result=0 native=0
+00071.664|device|volume=255 muted=0 offset=248 speaker_gain=90 microphone_muted=1 microphone_gain=2
+00071.706|controller|volume=255 muted=0 offset=248 speaker_gain=90 microphone_muted=1 microphone_gain=2
+00071.861|controller|volume=255 muted=0 offset=248 speaker_gain=90 microphone_muted=1 microphone_gain=2
+00071.861|device|volume=255 muted=0 offset=248 speaker_gain=90 microphone_muted=1 microphone_gain=2
+00071.985|controller|volume=255 muted=0 offset=248 speaker_gain=90 microphone_muted=1 microphone_gain=2
+00071.985|device|volume=255 muted=0 offset=248 speaker_gain=90 microphone_muted=1 microphone_gain=2
+00072.074|controller|Program input gain result=0 native=0
+00072.104|device|volume=255 muted=0 offset=248 speaker_gain=91 microphone_muted=1 microphone_gain=2
+00072.155|controller|volume=255 muted=0 offset=248 speaker_gain=91 microphone_muted=1 microphone_gain=2
+00072.293|controller|volume=255 muted=0 offset=248 speaker_gain=91 microphone_muted=1 microphone_gain=2
+00072.293|device|volume=255 muted=0 offset=248 speaker_gain=91 microphone_muted=1 microphone_gain=2
+00072.408|controller|volume=255 muted=0 offset=248 speaker_gain=91 microphone_muted=1 microphone_gain=2
+00072.408|device|volume=255 muted=0 offset=248 speaker_gain=91 microphone_muted=1 microphone_gain=2
+00072.489|controller|Program input gain result=0 native=0
+00072.513|device|volume=255 muted=0 offset=248 speaker_gain=92 microphone_muted=1 microphone_gain=2
+00072.569|controller|volume=255 muted=0 offset=248 speaker_gain=92 microphone_muted=1 microphone_gain=2
+00072.720|controller|volume=255 muted=0 offset=248 speaker_gain=92 microphone_muted=1 microphone_gain=2
+00072.720|device|volume=255 muted=0 offset=248 speaker_gain=92 microphone_muted=1 microphone_gain=2
+00072.833|controller|volume=255 muted=0 offset=248 speaker_gain=92 microphone_muted=1 microphone_gain=2
+00072.833|device|volume=255 muted=0 offset=248 speaker_gain=92 microphone_muted=1 microphone_gain=2
+00072.890|controller|Program input gain result=0 native=0
+00072.915|device|volume=255 muted=0 offset=248 speaker_gain=93 microphone_muted=1 microphone_gain=2
+00072.960|controller|volume=255 muted=0 offset=248 speaker_gain=93 microphone_muted=1 microphone_gain=2
+00073.116|controller|volume=255 muted=0 offset=248 speaker_gain=93 microphone_muted=1 microphone_gain=2
+00073.116|device|volume=255 muted=0 offset=248 speaker_gain=93 microphone_muted=1 microphone_gain=2
+00073.236|controller|volume=255 muted=0 offset=248 speaker_gain=93 microphone_muted=1 microphone_gain=2
+00073.236|device|volume=255 muted=0 offset=248 speaker_gain=93 microphone_muted=1 microphone_gain=2
+00073.317|controller|Program input gain result=0 native=0
+00073.353|device|volume=255 muted=0 offset=248 speaker_gain=94 microphone_muted=1 microphone_gain=2
+00073.407|controller|volume=255 muted=0 offset=248 speaker_gain=94 microphone_muted=1 microphone_gain=2
+00073.565|controller|volume=255 muted=0 offset=248 speaker_gain=94 microphone_muted=1 microphone_gain=2
+00073.566|device|volume=255 muted=0 offset=248 speaker_gain=94 microphone_muted=1 microphone_gain=2
+00073.675|controller|volume=255 muted=0 offset=248 speaker_gain=94 microphone_muted=1 microphone_gain=2
+00073.675|device|volume=255 muted=0 offset=248 speaker_gain=94 microphone_muted=1 microphone_gain=2
+00073.739|controller|Program input gain result=0 native=0
+00073.770|device|volume=255 muted=0 offset=248 speaker_gain=95 microphone_muted=1 microphone_gain=2
+00073.807|controller|volume=255 muted=0 offset=248 speaker_gain=95 microphone_muted=1 microphone_gain=2
+00073.948|controller|volume=255 muted=0 offset=248 speaker_gain=95 microphone_muted=1 microphone_gain=2
+00073.948|device|volume=255 muted=0 offset=248 speaker_gain=95 microphone_muted=1 microphone_gain=2
+00074.066|controller|volume=255 muted=0 offset=248 speaker_gain=95 microphone_muted=1 microphone_gain=2
+00074.067|device|volume=255 muted=0 offset=248 speaker_gain=95 microphone_muted=1 microphone_gain=2
+00074.169|controller|Program input gain result=0 native=0
+00074.210|device|volume=255 muted=0 offset=248 speaker_gain=96 microphone_muted=1 microphone_gain=2
+00074.256|controller|volume=255 muted=0 offset=248 speaker_gain=96 microphone_muted=1 microphone_gain=2
+00074.397|controller|volume=255 muted=0 offset=248 speaker_gain=96 microphone_muted=1 microphone_gain=2
+00074.397|device|volume=255 muted=0 offset=248 speaker_gain=96 microphone_muted=1 microphone_gain=2
+00074.522|controller|volume=255 muted=0 offset=248 speaker_gain=96 microphone_muted=1 microphone_gain=2
+00074.522|device|volume=255 muted=0 offset=248 speaker_gain=96 microphone_muted=1 microphone_gain=2
+00074.589|controller|Program input gain result=0 native=0
+00074.611|device|volume=255 muted=0 offset=248 speaker_gain=97 microphone_muted=1 microphone_gain=2
+00074.666|controller|volume=255 muted=0 offset=248 speaker_gain=97 microphone_muted=1 microphone_gain=2
+00074.797|controller|volume=255 muted=0 offset=248 speaker_gain=97 microphone_muted=1 microphone_gain=2
+00074.830|device|volume=255 muted=0 offset=248 speaker_gain=97 microphone_muted=1 microphone_gain=2
+00074.959|controller|volume=255 muted=0 offset=248 speaker_gain=97 microphone_muted=1 microphone_gain=2
+00074.959|device|volume=255 muted=0 offset=248 speaker_gain=97 microphone_muted=1 microphone_gain=2
+00075.039|controller|Program input gain result=0 native=0
+00075.069|device|volume=255 muted=0 offset=248 speaker_gain=98 microphone_muted=1 microphone_gain=2
+00075.107|controller|volume=255 muted=0 offset=248 speaker_gain=98 microphone_muted=1 microphone_gain=2
+00075.243|controller|volume=255 muted=0 offset=248 speaker_gain=98 microphone_muted=1 microphone_gain=2
+00075.243|device|volume=255 muted=0 offset=248 speaker_gain=98 microphone_muted=1 microphone_gain=2
+00075.362|controller|volume=255 muted=0 offset=248 speaker_gain=98 microphone_muted=1 microphone_gain=2
+00075.362|device|volume=255 muted=0 offset=248 speaker_gain=98 microphone_muted=1 microphone_gain=2
+00075.452|controller|Program input gain result=0 native=0
+00075.509|device|volume=255 muted=0 offset=248 speaker_gain=99 microphone_muted=1 microphone_gain=2
+00075.555|controller|volume=255 muted=0 offset=248 speaker_gain=99 microphone_muted=1 microphone_gain=2
+00075.695|controller|volume=255 muted=0 offset=248 speaker_gain=99 microphone_muted=1 microphone_gain=2
+00075.695|device|volume=255 muted=0 offset=248 speaker_gain=99 microphone_muted=1 microphone_gain=2
+00075.809|controller|volume=255 muted=0 offset=248 speaker_gain=99 microphone_muted=1 microphone_gain=2
+00075.809|device|volume=255 muted=0 offset=248 speaker_gain=99 microphone_muted=1 microphone_gain=2
+00075.889|controller|Program input gain result=0 native=0
+00075.911|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00075.959|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.115|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.115|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.223|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.223|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.299|controller|Program input gain result=1 native=0
+00076.432|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.432|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.550|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.550|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.674|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.674|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=2
+00076.739|controller|Microphone input gain result=0 native=0
+00076.762|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=3
+00076.806|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=3
+00076.949|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=3
+00076.950|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=3
+00077.067|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=3
+00077.067|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=3
+00077.139|controller|Microphone input gain result=0 native=0
+00077.164|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=4
+00077.206|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=4
+00077.346|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=4
+00077.346|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=4
+00077.458|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=4
+00077.458|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=4
+00077.539|controller|Microphone input gain result=0 native=0
+00077.561|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=5
+00077.611|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=5
+00077.751|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=5
+00077.751|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=5
+00077.862|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=5
+00077.895|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=5
+00077.967|controller|Microphone input gain result=0 native=0
+00078.010|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=6
+00078.057|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=6
+00078.201|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=6
+00078.201|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=6
+00078.314|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=6
+00078.314|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=6
+00078.388|controller|Microphone input gain result=0 native=0
+00078.410|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=7
+00078.459|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=7
+00078.609|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=7
+00078.610|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=7
+00078.740|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=7
+00078.740|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=7
+00078.817|controller|Microphone input gain result=0 native=0
+00078.854|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=8
+00078.908|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=8
+00079.065|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=8
+00079.065|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=8
+00079.169|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=8
+00079.169|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=8
+00079.238|controller|Microphone input gain result=0 native=0
+00079.264|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=9
+00079.309|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=9
+00079.441|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=9
+00079.441|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=9
+00079.559|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=9
+00079.559|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=9
+00079.639|controller|Microphone input gain result=0 native=0
+00079.664|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=10
+00079.706|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=10
+00079.850|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=10
+00079.850|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=10
+00079.966|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=10
+00079.966|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=10
+00080.039|controller|Microphone input gain result=0 native=0
+00080.060|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=11
+00080.114|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=11
+00080.248|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=11
+00080.248|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=11
+00080.366|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=11
+00080.367|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=11
+00080.439|controller|Microphone input gain result=0 native=0
+00080.461|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=12
+00080.521|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=12
+00080.675|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=12
+00080.675|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=12
+00080.802|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=12
+00080.803|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=12
+00080.883|controller|Microphone input gain result=0 native=0
+00080.913|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=13
+00080.959|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=13
+00081.115|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=13
+00081.115|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=13
+00081.223|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=13
+00081.223|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=13
+00081.288|controller|Microphone input gain result=0 native=0
+00081.311|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=14
+00081.358|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=14
+00081.512|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=14
+00081.512|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=14
+00081.630|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=14
+00081.630|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=14
+00081.715|controller|Microphone input gain result=0 native=0
+00081.749|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=15
+00081.810|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=15
+00081.951|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=15
+00081.951|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=15
+00082.082|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=15
+00082.082|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=15
+00082.175|controller|Microphone input gain result=0 native=0
+00082.211|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=16
+00082.265|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=16
+00082.409|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=16
+00082.409|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=16
+00082.532|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=16
+00082.532|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=16
+00082.617|controller|Microphone input gain result=0 native=0
+00082.660|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=17
+00082.703|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=17
+00082.860|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=17
+00082.861|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=17
+00082.983|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=17
+00082.983|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=17
+00083.038|controller|Microphone input gain result=0 native=0
+00083.060|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=18
+00083.112|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=18
+00083.261|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=18
+00083.261|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=18
+00083.367|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=18
+00083.367|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=18
+00083.438|controller|Microphone input gain result=0 native=0
+00083.460|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=19
+00083.509|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=19
+00083.668|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=19
+00083.669|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=19
+00083.791|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=19
+00083.791|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=19
+00083.869|controller|Microphone input gain result=0 native=0
+00083.905|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=20
+00083.965|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=20
+00084.112|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=20
+00084.112|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=20
+00084.243|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=20
+00084.244|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=20
+00084.324|controller|Microphone input gain result=0 native=0
+00084.354|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=21
+00084.406|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=21
+00084.551|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=21
+00084.551|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=21
+00084.678|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=21
+00084.678|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=21
+00084.767|controller|Microphone input gain result=0 native=0
+00084.803|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=22
+00084.857|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=22
+00084.990|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=22
+00084.990|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=22
+00085.104|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=22
+00085.144|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=22
+00085.225|controller|Microphone input gain result=0 native=0
+00085.253|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=23
+00085.306|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=23
+00085.451|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=23
+00085.451|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=23
+00085.568|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=23
+00085.568|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=23
+00085.638|controller|Microphone input gain result=0 native=0
+00085.661|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=24
+00085.715|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=24
+00085.859|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=24
+00085.860|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=24
+00085.983|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=24
+00085.983|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=24
+00086.067|controller|Microphone input gain result=0 native=0
+00086.103|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=25
+00086.157|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=25
+00086.293|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=25
+00086.293|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=25
+00086.416|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=25
+00086.416|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=25
+00086.488|controller|Microphone input gain result=0 native=0
+00086.512|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=26
+00086.557|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=26
+00086.709|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=26
+00086.709|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=26
+00086.816|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=26
+00086.816|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=26
+00086.888|controller|Microphone input gain result=0 native=0
+00086.911|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=27
+00086.960|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=27
+00087.109|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=27
+00087.109|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=27
+00087.219|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=27
+00087.219|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=27
+00087.288|controller|Microphone input gain result=0 native=0
+00087.311|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=28
+00087.357|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=28
+00087.490|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=28
+00087.491|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=28
+00087.595|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=28
+00087.596|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=28
+00087.675|controller|Microphone input gain result=0 native=0
+00087.706|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=29
+00087.756|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=29
+00087.903|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=29
+00087.903|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=29
+00088.026|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=29
+00088.027|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=29
+00088.115|controller|Microphone input gain result=0 native=0
+00088.154|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=30
+00088.214|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=30
+00088.361|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=30
+00088.361|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=30
+00088.475|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=30
+00088.475|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=30
+00088.538|controller|Microphone input gain result=0 native=0
+00088.562|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=31
+00088.613|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=31
+00088.759|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=31
+00088.759|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=31
+00088.875|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=31
+00088.875|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=31
+00088.966|controller|Microphone input gain result=0 native=0
+00089.002|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=32
+00089.058|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=32
+00089.210|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=32
+00089.210|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=32
+00089.325|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=32
+00089.325|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=32
+00089.388|controller|Microphone input gain result=0 native=0
+00089.414|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=33
+00089.457|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=33
+00089.605|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=33
+00089.611|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=33
+00089.753|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=33
+00089.785|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=33
+00089.875|controller|Microphone input gain result=0 native=0
+00089.903|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=34
+00089.956|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=34
+00090.101|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=34
+00090.101|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=34
+00090.208|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=34
+00090.208|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=34
+00090.288|controller|Microphone input gain result=0 native=0
+00090.312|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=35
+00090.357|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=35
+00090.490|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=35
+00090.490|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=35
+00090.616|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=35
+00090.616|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=35
+00090.687|controller|Microphone input gain result=0 native=0
+00090.712|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=36
+00090.757|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=36
+00090.898|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=36
+00090.898|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=36
+00091.014|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=36
+00091.014|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=36
+00091.088|controller|Microphone input gain result=0 native=0
+00091.111|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=37
+00091.155|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=37
+00091.289|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=37
+00091.289|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=37
+00091.413|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=37
+00091.413|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=37
+00091.481|controller|Microphone input gain result=0 native=0
+00091.502|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=38
+00091.556|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=38
+00091.698|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=38
+00091.698|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=38
+00091.809|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=38
+00091.810|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=38
+00091.882|controller|Microphone input gain result=0 native=0
+00091.903|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=39
+00091.955|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=39
+00092.113|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=39
+00092.113|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=39
+00092.248|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=39
+00092.248|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=39
+00092.334|controller|Microphone input gain result=0 native=0
+00092.359|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=40
+00092.415|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=40
+00092.583|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=40
+00092.583|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=40
+00092.722|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=40
+00092.722|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=40
+00092.788|controller|Microphone input gain result=0 native=0
+00092.819|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=41
+00092.863|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=41
+00093.027|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=41
+00093.027|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=41
+00093.167|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=41
+00093.167|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=41
+00093.238|controller|Microphone input gain result=0 native=0
+00093.260|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=42
+00093.306|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=42
+00093.458|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=42
+00093.458|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=42
+00093.575|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=42
+00093.575|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=42
+00093.673|controller|Microphone input gain result=0 native=0
+00093.711|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=43
+00093.768|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=43
+00093.925|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=43
+00093.925|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=43
+00094.063|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=43
+00094.063|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=43
+00094.138|controller|Microphone input gain result=0 native=0
+00094.169|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=44
+00094.214|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=44
+00094.382|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=44
+00094.382|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=44
+00094.491|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=44
+00094.492|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=44
+00094.586|controller|Microphone input gain result=0 native=0
+00094.611|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=45
+00094.662|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=45
+00094.824|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=45
+00094.825|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=45
+00094.927|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=45
+00094.927|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=45
+00095.016|controller|Microphone input gain result=0 native=0
+00095.052|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=46
+00095.112|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=46
+00095.257|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=46
+00095.257|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=46
+00095.382|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=46
+00095.382|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=46
+00095.438|controller|Microphone input gain result=0 native=0
+00095.460|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=47
+00095.514|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=47
+00095.658|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=47
+00095.659|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=47
+00095.775|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=47
+00095.775|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=47
+00095.838|controller|Microphone input gain result=0 native=0
+00095.863|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=48
+00095.907|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=48
+00096.061|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=48
+00096.061|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=48
+00096.168|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=48
+00096.169|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=48
+00096.238|controller|Microphone input gain result=0 native=0
+00096.261|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=49
+00096.307|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=49
+00096.440|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=49
+00096.440|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=49
+00096.547|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=49
+00096.548|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=49
+00096.637|controller|Microphone input gain result=0 native=0
+00096.658|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=50
+00096.708|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=50
+00096.876|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=50
+00096.877|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=50
+00097.021|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=50
+00097.021|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=50
+00097.115|controller|Microphone input gain result=0 native=0
+00097.151|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=51
+00097.207|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=51
+00097.358|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=51
+00097.358|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=51
+00097.474|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=51
+00097.475|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=51
+00097.537|controller|Microphone input gain result=0 native=0
+00097.561|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=52
+00097.606|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=52
+00097.751|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=52
+00097.751|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=52
+00097.876|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=52
+00097.876|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=52
+00097.937|controller|Microphone input gain result=0 native=0
+00097.961|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=53
+00098.007|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=53
+00098.150|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=53
+00098.150|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=53
+00098.267|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=53
+00098.267|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=53
+00098.337|controller|Microphone input gain result=0 native=0
+00098.360|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=54
+00098.408|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=54
+00098.542|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=54
+00098.543|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=54
+00098.666|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=54
+00098.666|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=54
+00098.737|controller|Microphone input gain result=0 native=0
+00098.761|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=55
+00098.809|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=55
+00098.957|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=55
+00098.957|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=55
+00099.073|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=55
+00099.073|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=55
+00099.136|controller|Microphone input gain result=0 native=0
+00099.162|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=56
+00099.208|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=56
+00099.345|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=56
+00099.345|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=56
+00099.460|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=56
+00099.460|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=56
+00099.537|controller|Microphone input gain result=0 native=0
+00099.569|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=57
+00099.610|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=57
+00099.757|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=57
+00099.757|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=57
+00099.867|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=57
+00099.867|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=57
+00099.937|controller|Microphone input gain result=0 native=0
+00099.960|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=58
+00100.013|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=58
+00100.159|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=58
+00100.159|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=58
+00100.291|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=58
+00100.292|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=58
+00100.374|controller|Microphone input gain result=0 native=0
+00100.404|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=59
+00100.457|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=59
+00100.600|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=59
+00100.600|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=59
+00100.723|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=59
+00100.723|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=59
+00100.787|controller|Microphone input gain result=0 native=0
+00100.810|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=60
+00100.855|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=60
+00101.001|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=60
+00101.001|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=60
+00101.125|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=60
+00101.125|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=60
+00101.187|controller|Microphone input gain result=0 native=0
+00101.211|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=61
+00101.257|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=61
+00101.399|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=61
+00101.399|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=61
+00101.525|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=61
+00101.525|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=61
+00101.611|controller|Microphone input gain result=0 native=0
+00101.659|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=62
+00101.713|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=62
+00101.864|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=62
+00101.864|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=62
+00101.982|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=62
+00101.982|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=62
+00102.036|controller|Microphone input gain result=0 native=0
+00102.068|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=63
+00102.106|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=63
+00102.242|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=63
+00102.242|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=63
+00102.360|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=63
+00102.361|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=63
+00102.437|controller|Microphone input gain result=0 native=0
+00102.460|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=64
+00102.514|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=64
+00102.658|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=64
+00102.658|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=64
+00102.774|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=64
+00102.775|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=64
+00102.867|controller|Microphone input gain result=0 native=0
+00102.902|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=65
+00102.959|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=65
+00103.108|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=65
+00103.108|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=65
+00103.232|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=65
+00103.232|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=65
+00103.317|controller|Microphone input gain result=0 native=0
+00103.353|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=66
+00103.405|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=66
+00103.544|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=66
+00103.545|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=66
+00103.659|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=66
+00103.659|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=66
+00103.737|controller|Microphone input gain result=0 native=0
+00103.762|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=67
+00103.808|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=67
+00103.945|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=67
+00103.945|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=67
+00104.050|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=67
+00104.050|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=67
+00104.131|controller|Microphone input gain result=0 native=0
+00104.152|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=68
+00104.209|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=68
+00104.360|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=68
+00104.361|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=68
+00104.469|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=68
+00104.469|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=68
+00104.537|controller|Microphone input gain result=0 native=0
+00104.561|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=69
+00104.611|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=69
+00104.766|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=69
+00104.766|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=69
+00104.885|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=69
+00104.886|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=69
+00104.966|controller|Microphone input gain result=0 native=0
+00105.008|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=70
+00105.056|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=70
+00105.201|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=70
+00105.201|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=70
+00105.324|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=70
+00105.324|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=70
+00105.387|controller|Microphone input gain result=0 native=0
+00105.414|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=71
+00105.464|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=71
+00105.606|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=71
+00105.606|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=71
+00105.725|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=71
+00105.725|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=71
+00105.816|controller|Microphone input gain result=0 native=0
+00105.851|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=72
+00105.905|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=72
+00106.052|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=72
+00106.052|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=72
+00106.166|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=72
+00106.166|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=72
+00106.237|controller|Microphone input gain result=0 native=0
+00106.272|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=73
+00106.306|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=73
+00106.455|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=73
+00106.455|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=73
+00106.566|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=73
+00106.566|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=73
+00106.636|controller|Microphone input gain result=0 native=0
+00106.661|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=74
+00106.710|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=74
+00106.859|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=74
+00106.859|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=74
+00106.985|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=74
+00106.985|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=74
+00107.072|controller|Microphone input gain result=0 native=0
+00107.101|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=75
+00107.158|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=75
+00107.323|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=75
+00107.323|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=75
+00107.456|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=75
+00107.456|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=75
+00107.536|controller|Microphone input gain result=0 native=0
+00107.560|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=76
+00107.605|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=76
+00107.756|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=76
+00107.756|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=76
+00107.876|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=76
+00107.876|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=76
+00107.965|controller|Microphone input gain result=0 native=0
+00108.005|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=77
+00108.063|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=77
+00108.203|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=77
+00108.237|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=77
+00108.350|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=77
+00108.350|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=77
+00108.425|controller|Microphone input gain result=0 native=0
+00108.452|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=78
+00108.507|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=78
+00108.657|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=78
+00108.658|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=78
+00108.775|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=78
+00108.775|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=78
+00108.837|controller|Microphone input gain result=0 native=0
+00108.860|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=79
+00108.905|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=79
+00109.048|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=79
+00109.048|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=79
+00109.157|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=79
+00109.157|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=79
+00109.233|controller|Microphone input gain result=0 native=0
+00109.260|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=80
+00109.305|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=80
+00109.447|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=80
+00109.447|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=80
+00109.573|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=80
+00109.574|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=80
+00109.636|controller|Microphone input gain result=0 native=0
+00109.660|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=81
+00109.713|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=81
+00109.863|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=81
+00109.863|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=81
+00109.982|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=81
+00109.982|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=81
+00110.065|controller|Microphone input gain result=0 native=0
+00110.102|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=82
+00110.155|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=82
+00110.291|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=82
+00110.291|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=82
+00110.424|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=82
+00110.424|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=82
+00110.485|controller|Microphone input gain result=0 native=0
+00110.510|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=83
+00110.561|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=83
+00110.699|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=83
+00110.700|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=83
+00110.807|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=83
+00110.807|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=83
+00110.886|controller|Microphone input gain result=0 native=0
+00110.913|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=84
+00110.957|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=84
+00111.106|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=84
+00111.106|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=84
+00111.217|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=84
+00111.218|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=84
+00111.285|controller|Microphone input gain result=0 native=0
+00111.309|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=85
+00111.356|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=85
+00111.508|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=85
+00111.508|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=85
+00111.619|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=85
+00111.619|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=85
+00111.686|controller|Microphone input gain result=0 native=0
+00111.690|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=86
+00111.766|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=86
+00111.910|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=86
+00111.910|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=86
+00112.023|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=86
+00112.023|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=86
+00112.086|controller|Microphone input gain result=0 native=0
+00112.110|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=87
+00112.156|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=87
+00112.301|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=87
+00112.302|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=87
+00112.424|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=87
+00112.424|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=87
+00112.486|controller|Microphone input gain result=0 native=0
+00112.510|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=88
+00112.556|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=88
+00112.707|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=88
+00112.707|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=88
+00112.816|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=88
+00112.816|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=88
+00112.886|controller|Microphone input gain result=0 native=0
+00112.911|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=89
+00112.958|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=89
+00113.109|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=89
+00113.109|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=89
+00113.231|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=89
+00113.232|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=89
+00113.317|controller|Microphone input gain result=0 native=0
+00113.351|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=90
+00113.406|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=90
+00113.542|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=90
+00113.542|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=90
+00113.664|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=90
+00113.664|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=90
+00113.736|controller|Microphone input gain result=0 native=0
+00113.760|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=91
+00113.806|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=91
+00113.949|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=91
+00113.949|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=91
+00114.058|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=91
+00114.059|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=91
+00114.134|controller|Microphone input gain result=0 native=0
+00114.164|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=92
+00114.215|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=92
+00114.344|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=92
+00114.374|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=92
+00114.505|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=92
+00114.505|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=92
+00114.586|controller|Microphone input gain result=0 native=0
+00114.609|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=93
+00114.655|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=93
+00114.800|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=93
+00114.800|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=93
+00114.938|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=93
+00114.938|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=93
+00115.024|controller|Microphone input gain result=0 native=0
+00115.051|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=94
+00115.106|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=94
+00115.239|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=94
+00115.239|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=94
+00115.357|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=94
+00115.357|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=94
+00115.436|controller|Microphone input gain result=0 native=0
+00115.459|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=95
+00115.505|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=95
+00115.657|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=95
+00115.657|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=95
+00115.772|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=95
+00115.777|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=95
+00115.867|controller|Microphone input gain result=0 native=0
+00115.904|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=96
+00115.958|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=96
+00116.106|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=96
+00116.106|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=96
+00116.216|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=96
+00116.216|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=96
+00116.286|controller|Microphone input gain result=0 native=0
+00116.310|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=97
+00116.355|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=97
+00116.506|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=97
+00116.506|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=97
+00116.615|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=97
+00116.615|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=97
+00116.685|controller|Microphone input gain result=0 native=0
+00116.709|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=98
+00116.755|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=98
+00116.906|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=98
+00116.906|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=98
+00117.015|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=98
+00117.015|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=98
+00117.086|controller|Microphone input gain result=0 native=0
+00117.110|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=99
+00117.155|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=99
+00117.290|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=99
+00117.290|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=99
+00117.415|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=99
+00117.415|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=99
+00117.486|controller|Microphone input gain result=0 native=0
+00117.510|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00117.554|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00117.705|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00117.706|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00117.823|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00117.824|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00117.922|controller|Microphone input gain result=1 native=0
+00118.066|controller|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100
+00118.066|device|volume=255 muted=0 offset=248 speaker_gain=100 microphone_muted=1 microphone_gain=100

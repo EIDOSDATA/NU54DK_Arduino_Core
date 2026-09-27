@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "toolchain_bundle": "dcbdc366a1",
+  "size_method": "arm-zephyr-eabi-size: FLASH=text+data, RAM=data+bss; linker region alignment may report a few additional bytes",
+  "flash_region_bytes": 1560576,
+  "ram_region_bytes": 262144,
+  "images": [
+    {"build":"m19-central","flash_bytes":195404,"ram_bytes":57452,"elf_sha256":"cef919d2e8748446ccafbb7b83e6e5c4666dc1a082121112c059e4135f6d9bc1","map_sha256":"e4439967eb51df2a214bc2bd492739758eda8d080b95dfdfc02ea09d75f2f056","hex_sha256":"57427c80b2d085119819ec0cfdd341547bd43360e03778ada742faed41dac475","build_record_sha256":"863665a1a5f91dd1799ed6b3250a3056bfeb049960c6ac1da0b1ba58f5f696fa"},
+    {"build":"m19-peripheral","flash_bytes":193024,"ram_bytes":57553,"elf_sha256":"f420d05cdc72e1f137f61fc43835d42bce7d67fd418db5cbaf3bcda5197db1be","map_sha256":"bbbd07f8e2e097cc0c41bbbcdcfdb91427a336f34681a6d63465f2334d6283fc","hex_sha256":"dfdb469e16b08c6d75c91fd1597fa980e5ec646f01be6637a1e45016d7a79c77","build_record_sha256":"863665a1a5f91dd1799ed6b3250a3056bfeb049960c6ac1da0b1ba58f5f696fa"},
+    {"build":"m20-central","flash_bytes":213600,"ram_bytes":115251,"elf_sha256":"e5d040b34bc7f904ab5ee35663cbea09a6003e02eb76bcef209b799ee810570d","map_sha256":"75d7b397d573a384c9f04caac04a923c1c337d66248c2c4dbe76f65aaeda5b31","hex_sha256":"c7a904f8a08b3a3a02b205d0c44472c1c2cf78802c0e76491fa7bbe8551861d3","build_record_sha256":"7cd6a3c434509bfccf3a171149e1e396f3887f43b67d64b352f8c6e469a65d1e"},
+    {"build":"m20-peripheral","flash_bytes":208964,"ram_bytes":115360,"elf_sha256":"13fc1be37afed95ee5a761c3c1a573a27a954656a057fb3f434b13d047923a3e","map_sha256":"943ac1048966d7c47c2eda98354fae91ca1f4165b1882032350a789385a9f673","hex_sha256":"287020aee0ac32d3466645afd96d498e8ff5ce60a6079cb861a4504263cc8041","build_record_sha256":"7cd6a3c434509bfccf3a171149e1e396f3887f43b67d64b352f8c6e469a65d1e"},
+    {"build":"m21-central","flash_bytes":252072,"ram_bytes":62094,"elf_sha256":"750525807ebcdf628333cea69185ce231a4b962e3a9171ee3d0405072fce1620","map_sha256":"ac695fa7ae627031d735839c9d980718abac34c7cfc4403cdbc7632f122b6813","hex_sha256":"f4213822180138024fcf8b1e135e7cfee48f95b07a19132039d3022ee5ba9bbf","build_record_sha256":"8cb229d35de938bc9c7215296156113a99dc4c844b3a71eeda26a28c762d049f"},
+    {"build":"m21-peripheral","flash_bytes":251484,"ram_bytes":62119,"elf_sha256":"192a9255b14ace24311ff6c40d5dacdd9f9bbc73c623cf0f6becec2094d5df1c","map_sha256":"eebe9509c99a3d804fa8e40fc4d408343397fab3f933f47702e12eda4a0007b2","hex_sha256":"3bdb4cc99c4c922c143d5ebb6d11db25da2b738fdacbd7e579154523cd40edb3","build_record_sha256":"8cb229d35de938bc9c7215296156113a99dc4c844b3a71eeda26a28c762d049f"},
+    {"build":"m24","flash_bytes":75924,"ram_bytes":46621,"elf_sha256":"e215c7264e01e604a0ddae4474f9a3e355f66174e3c26cbdc53ff3d12955409a","map_sha256":"9f4e723489cbcf628a714d14bb4c06c882e8fb5ffdb6ccb104f681c594df68b3","hex_sha256":"9a0f5b041f8053a92f2e20ff9299cb871adea8d4844d935e43e1987594b465f9","build_record_sha256":"d98f71eb4bc4e6d3926d97431cc770431bf13392bffb41c026cfedbf0bfee772"},
+    {"build":"m25","flash_bytes":130192,"ram_bytes":88870,"elf_sha256":"d69e38bd76b81d0e5ff8ebcac9d20718f4c9dec43fe15c1f438dbfae1e9cf233","map_sha256":"28d65497b5b12557f2ecfcc1b79334280e86ebaa0a5d315c54a50f2bd42d29e6","hex_sha256":"72373580252454ee7ccebe79ccfdcb58fd566f01ca1030f546ff662f31f2a809","build_record_sha256":"8424bbe31f5208a1190e6d7a3062054d572f5cc399461848718b80bf72dd1f69"},
+    {"build":"m26","flash_bytes":77384,"ram_bytes":44979,"elf_sha256":"2410cc04e994b0adc45c18722b52b789485d8e4dd4e1a787c8b417c686ddc130","map_sha256":"8e28af034106e389aaa16fdcd0da8855c5a9ceaa1a78e56aff8a046bc2d8ac8d","hex_sha256":"6cdea1f61086dde5ba51663e715fa56cd659336e8f376b9e1adf87205aacb4bd","build_record_sha256":"7a9357243d09fa76efd881066e9090e9c93c76566faf71d7006a93a421389547"},
+    {"build":"m28-link-central","flash_bytes":246484,"ram_bytes":148684,"elf_sha256":"5725fdf0d9a860fee24bb3cb60232e2a1a528e3fe05a2e0450b6e6a72bd20c59","map_sha256":"1b1d2f0446a3207d6fa046d6fb7e57940c31130579cb3c6fbdbe1025e5106ea0","hex_sha256":"8344d58f9148537f6cea14c6fdcce000d4375e1822ee9c1e48c56695f8cc3fd0","build_record_sha256":"66c0e542bdb953277e5261194d20b37e9c09c469a78569282a6cdcdd2be3ab1c"},
+    {"build":"m28-link-mixed","flash_bytes":249388,"ram_bytes":148715,"elf_sha256":"d41f62f729fb98ce6145728a2f8c558096771766e900d19134c6c17c4f25bf11","map_sha256":"ebd8fd60d4a53265f75e2da4d3e7baddb073efaeaf84f8def3a82a293489d19c","hex_sha256":"84951d12f5a1666a3ad43df339ab8e985e25eb27aafb26cf0ca28a252d5887d4","build_record_sha256":"66c0e542bdb953277e5261194d20b37e9c09c469a78569282a6cdcdd2be3ab1c"},
+    {"build":"m28-link-peripheral","flash_bytes":243780,"ram_bytes":148604,"elf_sha256":"f71440aa783b20a74f68f23168360a2011a36f7e756d8c868a411fb8ce9a6a69","map_sha256":"5ca412587c6d7d288adeb4764b979e4cdb752ddcc2f49e5b1b6298d3350dccd7","hex_sha256":"138ee3a2840ecf1da9fcc3ca776caaf4bb53ea62d1064211772c6c36ca3bf7e0","build_record_sha256":"66c0e542bdb953277e5261194d20b37e9c09c469a78569282a6cdcdd2be3ab1c"},
+    {"build":"m29-central","flash_bytes":248780,"ram_bytes":144248,"elf_sha256":"32cc4241fb296284560fcd467a6b5f3581b50964cb7847efe6ab948f358e085a","map_sha256":"b1577174a63db6cbd0b863df0033480566287d841d35822bd5a25e5dd35ce82b","hex_sha256":"2bef66f16135eb18adbfccfe4e3a9be7150f47f53d1bf3ab1ab95d613ea41568","build_record_sha256":"c19ffeb5335e4c3f2592f29eaa8f019408bc6d62723e60adf5683c308e616bac"},
+    {"build":"m29-mixed","flash_bytes":254212,"ram_bytes":144452,"elf_sha256":"051b1e2e5a91eb59cb2152c4389420bede3fe22512f8919b138a526015f898e0","map_sha256":"68ca6941d51398e2d00c3fb82bb633a370ad97c5c723991ee4efcf4ed1a3bad6","hex_sha256":"0c52703c153973068cacc7c0789e3943f4bd322e7175eb1399c63888e244b0ff","build_record_sha256":"c19ffeb5335e4c3f2592f29eaa8f019408bc6d62723e60adf5683c308e616bac"},
+    {"build":"m29-peripheral","flash_bytes":249256,"ram_bytes":144334,"elf_sha256":"31e92a00b2bdc94d662611a149b16939c23540984f8d194d5edb9d15c7504cf9","map_sha256":"4b4c5e4017874fafd06210d0b1e9e0ace02c51a783283661c97d863bc2079b3f","hex_sha256":"462b3ab5c60c16fe0985a4738798c816881318d43840619e3b9316051580de74","build_record_sha256":"c19ffeb5335e4c3f2592f29eaa8f019408bc6d62723e60adf5683c308e616bac"},
+    {"build":"m30-central","flash_bytes":240872,"ram_bytes":63094,"elf_sha256":"0a6b10e9d10dba6a4d6b9b3b9a663ead78a1377f28f1ec6ec5fcb1fd96626edd","map_sha256":"d931a6cf17eae3d3a73afaf3c9938d039f6e119bb389b1eca8eb0fe9df0b692e","hex_sha256":"31d2d84069e66bd709981c109ed5171b5121a494903b345bbc5611ad4d83efcb","build_record_sha256":"9e2802497cb5853dce59d9ecab3d5e70a6ef5d2788f831601a756e4c307edb0a"},
+    {"build":"m30-mixed","flash_bytes":244864,"ram_bytes":63290,"elf_sha256":"c845eaa6134f7c5660be7147fe725bc212a91d5ee3acc483a2e9b06682798c11","map_sha256":"3508dbd2c53deea718458b844dbd88af155896aab4ca8068c9b5cc7832a7fed6","hex_sha256":"6b965be460a9cf3bc7cb1a54156573cf503853e0d1377b3d3a93fda8bc8c636c","build_record_sha256":"9e2802497cb5853dce59d9ecab3d5e70a6ef5d2788f831601a756e4c307edb0a"},
+    {"build":"m30-peripheral","flash_bytes":242492,"ram_bytes":63223,"elf_sha256":"bb0e0f2835a999fe4e553fd1d1108ca08b15cf9e354d09d98847e1167cc0730f","map_sha256":"843856259750263e224f2569ecfb461441dbc5671a60c2f6c17b11442eda76d5","hex_sha256":"98faa72b9b5a5cd35e97ea1f33b99613fe294b45e4afa71aca91f85f3d2895f2","build_record_sha256":"9e2802497cb5853dce59d9ecab3d5e70a6ef5d2788f831601a756e4c307edb0a"}
+  ],
+  "summary": {
+    "images": 18,
+    "failed": 0,
+    "maximum_flash_bytes": 254212,
+    "maximum_ram_bytes": 148715,
+    "maximum_ram_percent": 56.73
+  },
+  "preserved_setup_failure": {
+    "status": "FAIL",
+    "scope": "initial M28 link build invocation before compilation",
+    "cause": "BOARD_ROOT and EXTRA_ZEPHYR_MODULES were omitted",
+    "correction": "rerun with the repository board root and module path; all three pristine M28 roles then built PASS",
+    "used_as_source_failure": false
+  }
+}

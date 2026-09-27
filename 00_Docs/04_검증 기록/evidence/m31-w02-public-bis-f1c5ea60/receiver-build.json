@@ -1,0 +1,452 @@
+{
+  "adapter_version": "0.1.0-dev.m10",
+  "artifacts": {
+    "bin": {
+      "path": "C:/~/m31-w02-raw-bis-receiver-f1c5ea60/BISReceiver.ino.bin",
+      "sha256": "a726dc93116772e92dcac50447578b787f913386244bc93ff5210bfe32172fb5",
+      "size": 195884
+    },
+    "elf": {
+      "path": "C:/~/m31-w02-raw-bis-receiver-f1c5ea60/BISReceiver.ino.elf",
+      "sha256": "80c1a06f609c4ab465492dcac9f8280b1e231e14a30c1fb591ae2db05d3e8d53",
+      "size": 2952764
+    },
+    "hex": {
+      "path": "C:/~/m31-w02-raw-bis-receiver-f1c5ea60/BISReceiver.ino.hex",
+      "sha256": "ad27f489b01986e9a90853307a121a295613934fad25931398b1c385ecb2f898",
+      "size": 551080
+    },
+    "map": {
+      "path": "C:/~/m31-w02-raw-bis-receiver-f1c5ea60/BISReceiver.ino.map",
+      "sha256": "8c343f61c2a33d2aa49f38f87d8d5e4c9f9339d748721fa62d6c1a3f3547f2fe",
+      "size": 1609123
+    }
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "built_at_utc": "2026-09-16T22:29:45.179090+00:00",
+  "cache": {
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707",
+    "input_manifest": {
+      "adapter": {
+        "platform_content": "sha256:90b4507c022eb4c859ed7a341ce8acd346c208b7934b26b4e202c81f94a55276",
+        "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "version": "0.1.0-dev.m10"
+      },
+      "board_package": {
+        "content": "sha256:09b4cf5ec9686cdbc4f24800254c5ee2068385bca11f5d6a7bac740f1555488e",
+        "revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS"
+      },
+      "configuration": {
+        "profile": {
+          "conf": "sha256:000ca5d30ad431abae3bd9e16fcd783a3e0acdcaea2342415870e4432fa5c072",
+          "id": "ble",
+          "manifest": "sha256:b9ea4262dbe21afbbfa8ddd9c7487d72e7cfefe66e3a44d4131846939bdc70a2",
+          "overlay": "sha256:903d8a13c18d15b61814ccbbecefb029a57a1a61c4138ffcc713be46214929eb",
+          "signing_key_sha256": null,
+          "sysbuild": false,
+          "sysbuild_files": []
+        },
+        "selected_features": [
+          {
+            "conf": [],
+            "id": "nucode.ble.iso",
+            "manifest": "sha256:f9c0689bb3caeb58e1c4aa6114b814efaf446d787668941ed48b6fc875fc21cf",
+            "overlays": []
+          }
+        ]
+      },
+      "ncs": {
+        "declared_version": "v3.4.0",
+        "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+        "nrf_west_yml": "sha256:04e4c21ce96b989fb2a73a4581c0309d1fdc9b27a53b3a34976beb0c8cb2b78d",
+        "root": "C:/ncs/v3.4.0",
+        "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "zephyr_version_file": "sha256:fd6ba7636a003973a983412c2906173dc45ce3ba62386e407b212f9a5736ce01"
+      },
+      "schema_version": 1,
+      "sketch": {
+        "app_overlay": "missing",
+        "prj_conf": "sha256:3d8dfcdb827338629c710e24f9db3829e94fcaab959d23838ebe9bd1e6faf014",
+        "root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/examples/BISReceiver"
+      },
+      "target": {
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+        "profile": "ble",
+        "sysbuild": false
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "compiler": "arm-zephyr-eabi-g++.exe (Zephyr SDK 1.0.1) 14.3.0",
+        "environment": "sha256:824994386257c9422cfba4006d678fd30ea7ccfe4960e06c8074b20fb6f3fc82",
+        "manifest": "sha256:e5ed500e679a8e2baa1d71e0ddf68167f25d9f514985a7cb746b607be67413a8",
+        "root": "C:/ncs/toolchains/dcbdc366a1"
+      }
+    },
+    "key": "6b2f975f95c68401840c4a2e257bf707d97e700190fa18bb2da4df40a4948060",
+    "schema_version": 1,
+    "source_manifest_sha256": "sha256:6e37016e55e2b5a2b899cf2271584478648da39de479ad7c77a14bc826176800"
+  },
+  "context": {
+    "adapter_version": "0.1.0-dev.m10",
+    "app_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707/app",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+    "build_duration_seconds": 31.667435,
+    "build_path": "C:/~/m31-w02-raw-bis-receiver-f1c5ea60",
+    "cache_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707",
+    "cache_key": "6b2f975f95c68401840c4a2e257bf707d97e700190fa18bb2da4df40a4948060",
+    "cache_reused": true,
+    "cache_root": "C:/Users/eidos/AppData/Local/NU54/c",
+    "cache_schema_version": 1,
+    "ccache": "C:/ncs/toolchains/dcbdc366a1/opt/bin/ccache.exe",
+    "ccache_dir": "C:/Users/eidos/AppData/Local/NU54/c/compiler-cache",
+    "ccache_stats_after": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 23925,
+      "cache_size_kibibyte": 591492,
+      "called_for_link": 7554,
+      "called_for_preprocessing": 272,
+      "cleanups_performed": 0,
+      "compile_failed": 10,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 5651,
+      "direct_cache_miss": 24360,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 48204,
+      "internal_error": 0,
+      "local_storage_hit": 6071,
+      "local_storage_miss": 23925,
+      "local_storage_read_hit": 11738,
+      "local_storage_read_miss": 48279,
+      "local_storage_write": 48270,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 3368,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 420,
+      "preprocessed_cache_miss": 23935,
+      "preprocessor_error": 5,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789597783,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_before": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 23923,
+      "cache_size_kibibyte": 591344,
+      "called_for_link": 7526,
+      "called_for_preprocessing": 260,
+      "cleanups_performed": 0,
+      "compile_failed": 10,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 5537,
+      "direct_cache_miss": 24350,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 48192,
+      "internal_error": 0,
+      "local_storage_hit": 5949,
+      "local_storage_miss": 23923,
+      "local_storage_read_hit": 11502,
+      "local_storage_read_miss": 48267,
+      "local_storage_write": 48258,
+      "max_cache_size_kibibyte": 1953125,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 3368,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 412,
+      "preprocessed_cache_miss": 23933,
+      "preprocessor_error": 5,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 1789597497,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "ccache_stats_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 2,
+      "cache_size_kibibyte": 148,
+      "called_for_link": 28,
+      "called_for_preprocessing": 12,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 114,
+      "direct_cache_miss": 10,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 12,
+      "internal_error": 0,
+      "local_storage_hit": 122,
+      "local_storage_miss": 2,
+      "local_storage_read_hit": 236,
+      "local_storage_read_miss": 12,
+      "local_storage_write": 12,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 0,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 8,
+      "preprocessed_cache_miss": 2,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 286,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configuration_fingerprint": "sha256:6b2f975f95c68401840c4a2e257bf707d97e700190fa18bb2da4df40a4948060",
+    "configure_duration_seconds": 0.0,
+    "configure_mode": "cmake-only",
+    "configure_reason": "feature-cache-hit",
+    "configure_skipped": true,
+    "cxx_compiler": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++.exe",
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+    "input_manifest": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707/input-manifest.json",
+    "link_configure_duration_seconds": 18.931359,
+    "memory_layout": {
+      "code_partition": "slot0_partition",
+      "flash_end": 1490944,
+      "flash_origin": 0,
+      "flash_size": 1490944
+    },
+    "ncs_root": "C:/ncs/v3.4.0",
+    "ncs_version": "v3.4.0",
+    "platform_build_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "platform_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+    "pristine_configure_count": 2,
+    "product_identity": {
+      "package_version": "0.4.1-dev",
+      "source_version": "0.4.1-dev"
+    },
+    "profile": "ble",
+    "provisional_cache_key": "192d382ca00d35e79e805a7f444ad347109d43a60676840c2d6169d0149657d3",
+    "recovery_count": 0,
+    "schema_version": 2,
+    "selected_features": [
+      {
+        "conf": [],
+        "id": "nucode.ble.iso",
+        "manifest": "sha256:f9c0689bb3caeb58e1c4aa6114b814efaf446d787668941ed48b6fc875fc21cf",
+        "overlays": []
+      }
+    ],
+    "selected_libraries": [
+      "NUCODE_BLE_ISO"
+    ],
+    "size_tool": "C:/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-size.exe",
+    "sketch_root": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/examples/BISReceiver",
+    "source_manifest_changed": true,
+    "state": "built",
+    "sysbuild": false,
+    "toolchain_bundle_id": "dcbdc366a1",
+    "toolchain_root": "C:/ncs/toolchains/dcbdc366a1",
+    "updated_at_utc": "2026-09-16T22:29:45.174194+00:00",
+    "zephyr_build_dir": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707/build",
+    "zephyr_version": "4.4.0"
+  },
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+  "metrics": {
+    "build_seconds": 31.667435,
+    "ccache_delta": {
+      "autoconf_test": 0,
+      "bad_compiler_arguments": 0,
+      "bad_input_file": 0,
+      "bad_output_file": 0,
+      "cache_miss": 2,
+      "cache_size_kibibyte": 148,
+      "called_for_link": 28,
+      "called_for_preprocessing": 12,
+      "cleanups_performed": 0,
+      "compile_failed": 0,
+      "compiler_check_failed": 0,
+      "compiler_produced_empty_output": 0,
+      "compiler_produced_no_output": 0,
+      "compiler_produced_stdout": 0,
+      "could_not_find_compiler": 0,
+      "could_not_use_modules": 0,
+      "could_not_use_precompiled_header": 0,
+      "direct_cache_hit": 114,
+      "direct_cache_miss": 10,
+      "disabled": 0,
+      "error_hashing_extra_file": 0,
+      "files_in_cache": 12,
+      "internal_error": 0,
+      "local_storage_hit": 122,
+      "local_storage_miss": 2,
+      "local_storage_read_hit": 236,
+      "local_storage_read_miss": 12,
+      "local_storage_write": 12,
+      "max_cache_size_kibibyte": 0,
+      "max_files_in_cache": 0,
+      "missing_cache_file": 0,
+      "modified_input_file": 0,
+      "multiple_source_files": 0,
+      "no_input_file": 0,
+      "output_to_stdout": 0,
+      "preprocessed_cache_hit": 8,
+      "preprocessed_cache_miss": 2,
+      "preprocessor_error": 0,
+      "recache": 0,
+      "remote_storage_error": 0,
+      "remote_storage_hit": 0,
+      "remote_storage_miss": 0,
+      "remote_storage_read_hit": 0,
+      "remote_storage_read_miss": 0,
+      "remote_storage_timeout": 0,
+      "remote_storage_write": 0,
+      "stats_updated_timestamp": 286,
+      "stats_zeroed_timestamp": 0,
+      "unsupported_code_directive": 0,
+      "unsupported_compiler_option": 0,
+      "unsupported_environment_variable": 0,
+      "unsupported_source_encoding": 0,
+      "unsupported_source_language": 0
+    },
+    "configure_seconds": 18.931359
+  },
+  "product_identity": {
+    "package_version": "0.4.1-dev",
+    "source_version": "0.4.1-dev"
+  },
+  "schema_version": 2,
+  "source_inputs": {
+    "include_roots": [
+      {
+        "content_sha256": "sha256:8015b557dfbef9697878f1702edcfff18d2f520d7c16ab16013fec6ea49fbe05",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/examples/BISReceiver"
+      },
+      {
+        "content_sha256": "sha256:d8794fe7acc1a6518728eeca2051917592763d2929c296fe6096d1ab6580e166",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/cores/arduino"
+      },
+      {
+        "content_sha256": "sha256:70d3e78a7f6f5f6ed98a8dfbae6cc6f2d5c8860416c6352d6b2eafff92be58f9",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/variants/nu54dk"
+      },
+      {
+        "content_sha256": "sha256:149e0d39c38fc3c57b3d94c74ff86d87f4b1893dc7e83e32e424af5e7d5905e8",
+        "path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src"
+      },
+      {
+        "content_sha256": "sha256:b5506dc4f3f48815385597773b6cd2efa27e67e7201e5443e8d83d141e567608",
+        "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707/app/generated-sources/sketch"
+      }
+    ],
+    "live_build_record": {
+      "path": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707/build/nucode_arduino_core_build.yml",
+      "sha256": "5778436340504a3781099f1ee2f65dfb74c254bcb10617c389f75f3f2f3d944d"
+    },
+    "m31_iso_revisions": {
+      "NUCODE_BOARD_REVISION": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+      "NUCODE_CORE_REVISION": "f1c5ea60493ed79829885887d67dd5693c7b9c87",
+      "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+      "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+    },
+    "sources": [
+      {
+        "compiled_path": "C:/Users/eidos/AppData/Local/NU54/c/v1/6b/6b2f975f95c68401840c4a2e257bf707/app/generated-sources/sketch/BISReceiver.ino.cpp",
+        "logical_identity": "arduino-generated:sketch/BISReceiver.ino.cpp",
+        "sha256": "eca12e85113d2161c7a0e6df0d129a03095c6997b171edf53523a3e9e83af415",
+        "source_path": "C:/~/m31-w02-raw-bis-receiver-f1c5ea60/sketch/BISReceiver.ino.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO.cpp",
+        "sha256": "381147da43a0997d98acea96d8a63b09fe7fac0ba096c48bb93cab51ec287ecd",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp",
+        "sha256": "2b01ee2ff44dba7ae88301ab6ef6c2a8dc9b8c02c2677b45ea4050a9cf5f7dfa",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp"
+      },
+      {
+        "compiled_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp",
+        "logical_identity": "platform:libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp",
+        "sha256": "6753685f91919160b6256f6aa22caae95570145b8840b8c4fd29807c4a40338a",
+        "source_path": "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp"
+      }
+    ]
+  },
+  "sources": [
+    "C:/~/m31-w02-raw-bis-receiver-f1c5ea60/sketch/BISReceiver.ino.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawBis.cpp",
+    "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/libraries/NUCODE_BLE_ISO/src/NUCODE_BLE_ISO_RawCis.cpp"
+  ],
+  "sysbuild": false
+}

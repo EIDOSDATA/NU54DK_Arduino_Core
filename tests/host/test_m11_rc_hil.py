@@ -365,11 +365,13 @@ class M11RcHilTests(unittest.TestCase):
             f"command=west flash -d {zephyr_build.resolve().as_posix()} "
             "-r pyocd "
             "--no-rebuild --dev-id fixture-probe "
-            "--dt-flash=n --tool-opt=-Osmart_flash=false\n"
+            "--dt-flash=n --tool-opt=-Osmart_flash=false "
+            "--tool-opt=-Oauto_unlock=false\n"
         )
         log.write_text(safe, encoding="utf-8")
         result = MODULE.validate_pyocd_flash_log(log, digest, hex_path, zephyr_build)
         self.assertEqual(result["attempts"], 1)
+        self.assertFalse(result["auto_unlock"])
 
         log.write_text(safe.replace("--no-rebuild", "--no-rebuild --erase"), encoding="utf-8")
         with self.assertRaisesRegex(MODULE.UploadHilFailure, "파괴 option"):
@@ -445,14 +447,19 @@ class M11RcHilTests(unittest.TestCase):
         workspace = self.root / "workspace"
         calls: list[str] = []
         commands: list[list[str]] = []
+        environments: list[dict[str, str] | None] = []
 
         def fake_run(
-            command: list[Path | str], *, timeout_seconds: int
+            command: list[Path | str],
+            *,
+            timeout_seconds: int,
+            environment: dict[str, str] | None = None,
         ) -> tuple[int, str, float]:
             self.assertGreater(timeout_seconds, 0)
             operation = str(command[1])
             calls.append(operation)
             commands.append([str(value) for value in command])
+            environments.append(environment)
             build = Path(command[command.index("--build-path") + 1])
             sketch = Path(command[-1])
             staged = build.parent / "user" / "hardware" / "nucode" / "zephyr"
@@ -485,7 +492,8 @@ class M11RcHilTests(unittest.TestCase):
                 "exit_code=0\n"
                 f"command=west flash -d {zephyr_build.resolve().as_posix()} "
                 "-r pyocd --no-rebuild --dev-id fixture-probe "
-                "--dt-flash=n --tool-opt=-Osmart_flash=false\n",
+                "--dt-flash=n --tool-opt=-Osmart_flash=false "
+                "--tool-opt=-Oauto_unlock=false\n",
                 encoding="utf-8",
             )
             return 0, "NU54_UPLOAD_PASS runner=pyocd probe=redacted", 0.2
@@ -547,12 +555,14 @@ class M11RcHilTests(unittest.TestCase):
             {
                 "probe_id": "redacted",
                 "probe_selection_mode": "explicit",
-                "upload_probe": "pyocd_uid",
+                "upload_probe": "pyocd",
             },
         )
-        self.assertIn("upload_probe=pyocd_uid", commands[0])
-        self.assertIn("--upload-field", commands[1])
-        self.assertIn("probe_id=fixture-probe", commands[1])
+        self.assertIn("upload_probe=pyocd", commands[0])
+        self.assertNotIn("--upload-field", commands[1])
+        self.assertNotIn("fixture-probe", commands[1])
+        self.assertIsNotNone(environments[1])
+        self.assertEqual(environments[1]["NUCODE_PROBE_UID"], "fixture-probe")
         self.assertNotIn("fixture-probe", json.dumps(evidence))
         self.assertEqual(evidence["uart"]["candidate_count"], 2)
         self.assertEqual(

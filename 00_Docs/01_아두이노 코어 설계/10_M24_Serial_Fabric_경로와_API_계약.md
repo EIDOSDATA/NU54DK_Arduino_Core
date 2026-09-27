@@ -73,7 +73,7 @@ allocation 없는 typed handle로 제공한다. Raw base address는 받지 않�
 - Different serial blocks may run together only when pin and DMA leases are disjoint.
 - Unsupported instance, route, profile or electrical policy fails before any register or pin change.
 - Standard Arduino singleton behavior and identity remain unchanged when the advanced API is enabled.
-- The advanced header is available in supported stable v0.4.1 only through the explicit fabric profile and remains disabled in standard and ble profiles.
+- The advanced header is available in supported stable v0.5.0 only through the explicit fabric profile and remains disabled in standard and ble profiles.
 
 ## 3. 물리 block과 가능한 personality
 

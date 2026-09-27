@@ -7,6 +7,9 @@ import subprocess
 import time
 
 
+APPLICATION_CONTROL_RETRIES = 30
+
+
 def compiler_command(language="c++", optional=False):
     """! @brief 명시한 도구가 없으면 실패하며 셸 없이 실행할 인자 목록을 반환합니다. """
     if language not in ("c", "c++"):
@@ -30,7 +33,13 @@ def compiler_command(language="c++", optional=False):
     return [compiler, *flags]
 
 
-def run_executable(command, *, application_control_retries=2, retry_delay_seconds=0.25, **kwargs):
+def run_executable(
+    command,
+    *,
+    application_control_retries=APPLICATION_CONTROL_RETRIES,
+    retry_delay_seconds=1.0,
+    **kwargs,
+):
     """! @brief Windows 정책이 새 실행 파일 검사를 마칠 때까지 제한적으로 다시 시작합니다. """
     for attempt in range(application_control_retries + 1):
         try:

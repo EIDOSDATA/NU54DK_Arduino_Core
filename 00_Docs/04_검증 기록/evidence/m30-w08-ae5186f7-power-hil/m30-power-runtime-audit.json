@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "test_id": "M30-POWER-01",
+  "core_revision": "ae5186f7790a748641fb04128c16156519ee1017",
+  "excluded_attempt": {
+    "point": "mcuboot_test_swap",
+    "attempt": 1,
+    "physical_cycle_observed": true,
+    "absent_after_seconds": 13.969,
+    "absent_stable_seconds": 0.75,
+    "restored_after_seconds": 20.078,
+    "failure": "peripheral READY synchronization timeout"
+  },
+  "disposition": "The failed recovery was excluded from completed attempts and will be repeated.",
+  "cause": "The 60-second link recovery deadline matched the intentional 60-second MCUboot upgrading observation hook.",
+  "continuation": {
+    "completed_attempts_preserved": 6,
+    "resume_point": "mcuboot_test_swap",
+    "resume_attempt": 1,
+    "link_recovery_timeout_seconds": 120
+  },
+  "preserved_failed_journal": "m30-power-journal.failed-7a1.json"
+}

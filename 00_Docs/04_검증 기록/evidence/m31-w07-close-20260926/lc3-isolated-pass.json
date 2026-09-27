@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "attempt": 2,
+  "maximum_diagnostic_retests": 1,
+  "reason": "primary cmake build exit 1 without compiler diagnostic; single serialized exact-source retest",
+  "root_cause_claim": "NOT_CLAIMED",
+  "core_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+  "source_clean": true,
+  "source_clean_after": true,
+  "observed_utc": "2026-09-26T04:57:51.710826+00:00",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+  "sketch": "libraries/NUCODE_BLE_Audio/examples/Lc3SyntheticLoopback/Lc3SyntheticLoopback.ino",
+  "exit_code": 0,
+  "elapsed_s": 235.564,
+  "sketch_sha256": "96feef66457f0372fa1c1f279718485647acc9f8c163309647b0ed8b36434892",
+  "log_sha256": "5fb4186b5e1000ba7f1d7dd4d0a0e09b9543747238a99c52be2c94447a3b5ef2",
+  "hex_sha256": "13c62546c2f143658527120052ecbdd9f533fb0e92042ca77826070233771923",
+  "program_bytes": 420384,
+  "ram_bytes": 144246,
+  "failure_tail": []
+}

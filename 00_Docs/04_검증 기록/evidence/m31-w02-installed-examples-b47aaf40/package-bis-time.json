@@ -1,0 +1,560 @@
+{
+  "status": "PASS",
+  "test": "arduino_public_raw_bis_time_pair",
+  "core_revision": "b47aaf40df6fd5f73d132508e06b2bf7da9364f6",
+  "source_clean": true,
+  "probe_sha256": {
+    "source": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "receiver": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "ports": {
+    "source": "COM7",
+    "receiver": "COM5"
+  },
+  "image_sha256": {
+    "source": "8291343cf1f745810dc61c6d34d5bfacb72a5ba6c195a867febc0bcd6d360296",
+    "receiver": "e42c47772e36683b22637dfe2ace4dd3897b78e85ad38d5024560dc278296063"
+  },
+  "flash": {
+    "receiver": [
+      "pyocd-sector-hw-reset",
+      "196608"
+    ],
+    "source": [
+      "pyocd-sector-hw-reset",
+      "229376"
+    ]
+  },
+  "requested_cycles": 20,
+  "completed_cycles": {
+    "source": 20,
+    "receiver": 20
+  },
+  "payload_frames": 2000,
+  "missing_frames": 0,
+  "allowed_missing": 0,
+  "valid_hci_times": true,
+  "wrong_code_rejected": 0,
+  "wrong_code_stopped": 0,
+  "recovered_frames": 0,
+  "recovery_missing": 0,
+  "recovery_stopped": 0,
+  "sync_loss_injection": {},
+  "sync_loss_lines": [],
+  "recovery_path_confirmed": false,
+  "image_revision_confirmed": {
+    "source": true,
+    "receiver": true
+  },
+  "excluded_pre_boot_lines": {
+    "source": 3,
+    "receiver": 2
+  },
+  "failed_lines": [],
+  "lines": {
+    "source": [
+      {
+        "at_s": 0.106,
+        "text": "BIS core revision=b47aaf40df6fd5f73d132508e06b2bf7da9364f6"
+      },
+      {
+        "at_s": 0.106,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 0.106,
+        "text": "BIS core revision=b47aaf40df6fd5f73d132508e06b2bf7da9364f6"
+      },
+      {
+        "at_s": 0.106,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 3.319,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=3044815 last_hci_ts=4024815"
+      },
+      {
+        "at_s": 4.401,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 8.699,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=8478564 last_hci_ts=9458564"
+      },
+      {
+        "at_s": 9.763,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 14.03,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=13912054 last_hci_ts=14892054"
+      },
+      {
+        "at_s": 15.13,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 19.566,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=19345811 last_hci_ts=20325811"
+      },
+      {
+        "at_s": 20.622,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 25.067,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=24780276 last_hci_ts=25760276"
+      },
+      {
+        "at_s": 26.169,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 30.425,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=30214294 last_hci_ts=31194294"
+      },
+      {
+        "at_s": 31.491,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 35.946,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=35647974 last_hci_ts=36627974"
+      },
+      {
+        "at_s": 37.013,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 41.256,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=41082338 last_hci_ts=42062338"
+      },
+      {
+        "at_s": 42.296,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 46.817,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=46515922 last_hci_ts=47495922"
+      },
+      {
+        "at_s": 47.885,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 52.113,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=51949613 last_hci_ts=52929613"
+      },
+      {
+        "at_s": 53.179,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 57.64,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=57383293 last_hci_ts=58363293"
+      },
+      {
+        "at_s": 58.702,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 62.957,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=62817217 last_hci_ts=63797217"
+      },
+      {
+        "at_s": 64.012,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 68.466,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=68251331 last_hci_ts=69231331"
+      },
+      {
+        "at_s": 69.533,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 73.828,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=73685205 last_hci_ts=74665205"
+      },
+      {
+        "at_s": 74.875,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 79.411,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=79119847 last_hci_ts=80099847"
+      },
+      {
+        "at_s": 80.497,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 84.788,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=84553963 last_hci_ts=85533963"
+      },
+      {
+        "at_s": 85.846,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 90.181,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=89987967 last_hci_ts=90967967"
+      },
+      {
+        "at_s": 91.21,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 95.664,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=95421637 last_hci_ts=96401637"
+      },
+      {
+        "at_s": 96.74,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 100.999,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=100855318 last_hci_ts=101835318"
+      },
+      {
+        "at_s": 102.066,
+        "text": "BIS time source advertising"
+      },
+      {
+        "at_s": 106.547,
+        "text": "BIS time sent frames=100 timestamped=99 first_hci_ts=106288711 last_hci_ts=107268711"
+      }
+    ],
+    "receiver": [
+      {
+        "at_s": 0.211,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 0.426,
+        "text": "BIS core revision=b47aaf40df6fd5f73d132508e06b2bf7da9364f6"
+      },
+      {
+        "at_s": 0.426,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 1.279,
+        "text": "BIS time receiver synchronized ms=828"
+      },
+      {
+        "at_s": 1.92,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 2.977,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 3.848,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 4.723,
+        "text": "BIS time receiver synchronized ms=790"
+      },
+      {
+        "at_s": 7.322,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 8.389,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 9.445,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 10.71,
+        "text": "BIS time receiver synchronized ms=1330"
+      },
+      {
+        "at_s": 12.843,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 13.713,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 14.792,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 15.665,
+        "text": "BIS time receiver synchronized ms=909"
+      },
+      {
+        "at_s": 18.181,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 19.246,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 20.3,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 21.567,
+        "text": "BIS time receiver synchronized ms=1390"
+      },
+      {
+        "at_s": 23.677,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 24.741,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 25.612,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 26.917,
+        "text": "BIS time receiver synchronized ms=1270"
+      },
+      {
+        "at_s": 29.037,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 30.104,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 31.173,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 32.025,
+        "text": "BIS time receiver synchronized ms=969"
+      },
+      {
+        "at_s": 34.573,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 35.413,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 36.479,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 37.333,
+        "text": "BIS time receiver synchronized ms=789"
+      },
+      {
+        "at_s": 39.868,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 40.934,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 41.98,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 42.842,
+        "text": "BIS time receiver synchronized ms=910"
+      },
+      {
+        "at_s": 45.43,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 46.283,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 47.351,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 48.618,
+        "text": "BIS time receiver synchronized ms=1210"
+      },
+      {
+        "at_s": 50.939,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 51.793,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 52.86,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 53.718,
+        "text": "BIS time receiver synchronized ms=849"
+      },
+      {
+        "at_s": 56.25,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 57.315,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 58.172,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 59.022,
+        "text": "BIS time receiver synchronized ms=849"
+      },
+      {
+        "at_s": 61.783,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 62.645,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 63.705,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 64.753,
+        "text": "BIS time receiver synchronized ms=1151"
+      },
+      {
+        "at_s": 67.092,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 68.154,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 69.213,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 70.302,
+        "text": "BIS time receiver synchronized ms=1209"
+      },
+      {
+        "at_s": 72.454,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 73.508,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 74.567,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 75.616,
+        "text": "BIS time receiver synchronized ms=1030"
+      },
+      {
+        "at_s": 77.989,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 79.07,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 79.942,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 80.605,
+        "text": "BIS time receiver synchronized ms=670"
+      },
+      {
+        "at_s": 83.392,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 84.477,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 85.526,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 86.606,
+        "text": "BIS time receiver synchronized ms=1210"
+      },
+      {
+        "at_s": 88.755,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 89.861,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 90.906,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 91.742,
+        "text": "BIS time receiver synchronized ms=970"
+      },
+      {
+        "at_s": 94.292,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 95.343,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 96.201,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 97.277,
+        "text": "BIS time receiver synchronized ms=909"
+      },
+      {
+        "at_s": 99.825,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 100.678,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      },
+      {
+        "at_s": 101.748,
+        "text": "BIS time receiver scanning"
+      },
+      {
+        "at_s": 102.827,
+        "text": "BIS time receiver synchronized ms=1208"
+      },
+      {
+        "at_s": 105.16,
+        "text": "BIS time first frame=0"
+      },
+      {
+        "at_s": 106.227,
+        "text": "BIS time received frames=100 timestamps=100 errors=0"
+      }
+    ]
+  }
+}

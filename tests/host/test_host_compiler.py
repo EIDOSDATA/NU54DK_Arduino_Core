@@ -53,7 +53,7 @@ class HostCompilerTests(unittest.TestCase):
                 patch("host_compiler.time.sleep") as sleeper:
             self.assertIs(run_executable(["generated.exe"]), completed)
         self.assertEqual(runner.call_count, 2)
-        sleeper.assert_called_once_with(0.25)
+        sleeper.assert_called_once_with(1.0)
 
     def test_non_policy_start_error_is_not_retried(self):
         failure = OSError("missing")
@@ -63,6 +63,22 @@ class HostCompilerTests(unittest.TestCase):
             with self.assertRaises(OSError):
                 run_executable(["missing.exe"])
         runner.assert_called_once()
+
+    def test_application_control_retry_exhaustion_remains_fail_closed(self):
+        blocked = OSError("blocked")
+        blocked.winerror = 4551
+        with patch("host_compiler.os.name", "nt"), \
+                patch("host_compiler.subprocess.run", side_effect=blocked) as runner, \
+                patch("host_compiler.time.sleep") as sleeper:
+            with self.assertRaises(OSError):
+                run_executable(
+                    ["blocked.exe"],
+                    application_control_retries=2,
+                    retry_delay_seconds=0.25,
+                )
+        self.assertEqual(runner.call_count, 3)
+        self.assertEqual(sleeper.call_count, 2)
+        sleeper.assert_called_with(0.25)
 
 
 if __name__ == "__main__":

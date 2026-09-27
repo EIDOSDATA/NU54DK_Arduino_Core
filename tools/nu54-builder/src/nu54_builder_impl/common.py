@@ -13,6 +13,7 @@ import shlex
 import subprocess
 import sys
 import tempfile
+import time
 
 
 ADAPTER_VERSION = "0.1.0-dev.m10"
@@ -45,14 +46,33 @@ DEFAULT_BOARD = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
 DEFAULT_PROFILE = "standard"
 
 
-PROFILE_SCHEMA_VERSION = 1
+PROFILE_SCHEMA_VERSION = 3
 
 
-FEATURE_SCHEMA_VERSION = 1
+FEATURE_SCHEMA_VERSION = 3
+
+
+CAPABILITY_REGISTRY_SCHEMA_VERSION = 4
+
+
+CAPABILITY_DECLARATION_SCHEMA_VERSION = 1
+
+
+CAPABILITY_RESOLUTION_SCHEMA_VERSION = 4
+
+
+CAPABILITY_PROBE_SCHEMA_VERSION = 1
 
 
 FEATURE_ALLOWLIST = {
     "NUCODE_BLE": "nucode.ble.nus",
+    "NUCODE_BLE_ISO": "nucode.ble.iso",
+    "NUCODE_BLE_Audio": "nucode.ble.audio",
+    "NUCODE_BLE_ChannelSounding": "nucode.ble.channel_sounding",
+    "NUCODE_BLE_DirectionFinding": "nucode.ble.direction_finding",
+    "NUCODE_BLE_DFU": "nucode.ble.dfu",
+    "NUCODE_BLE_EATT": "nucode.ble.eatt",
+    "NUCODE_BLE_LegacySigning": "nucode.ble.legacy_signing",
     "NUCODE_BLE_Security": "nucode.ble.security",
     "NUCODE_NU54DK": "nucode.board",
     "NUCODE_Peripheral_Fabric": "nucode.peripheral.fabric",
@@ -131,6 +151,10 @@ class CacheBusyError(AdapterError):
     """! @brief 사용 중인 cache entry의 삭제를 안전하게 건너뛰기 위한 오류입니다. """
 
 
+WINDOWS_FILE_RETRY_ATTEMPTS = 8
+WINDOWS_FILE_RETRY_INITIAL_SECONDS = 0.025
+
+
 ## @brief 경로를 존재 여부와 무관하게 절대 경로로 정규화합니다.
 def canonical_path(value: str | Path) -> Path:
     return Path(value).expanduser().resolve(strict=False)
@@ -140,6 +164,54 @@ def canonical_path(value: str | Path) -> Path:
 def path_key(value: str | Path) -> str:
     normalized = canonical_path(value).as_posix()
     return normalized.casefold() if os.name == "nt" else normalized
+
+
+## @brief Windows scanner·indexer의 짧은 공유 위반만 재시도 대상으로 판정합니다.
+def transient_windows_file_error(error: OSError) -> bool:
+    return os.name == "nt" and (
+        isinstance(error, PermissionError)
+        or getattr(error, "winerror", None) in {5, 32, 33}
+    )
+
+
+## @brief 짧은 Windows 공유 위반 사이에 제한된 지수 backoff를 적용합니다.
+def wait_for_windows_file_retry(attempt: int) -> None:
+    delay = min(
+        WINDOWS_FILE_RETRY_INITIAL_SECONDS * (2 ** attempt),
+        0.4,
+    )
+    time.sleep(delay)
+
+
+## @brief Windows 공유 위반을 제한적으로 재시도하며 파일 bytes를 읽습니다.
+def read_bytes_with_retry(path: Path) -> bytes:
+    for attempt in range(WINDOWS_FILE_RETRY_ATTEMPTS):
+        try:
+            return path.read_bytes()
+        except OSError as error:
+            if (
+                not transient_windows_file_error(error)
+                or attempt + 1 == WINDOWS_FILE_RETRY_ATTEMPTS
+            ):
+                raise
+            wait_for_windows_file_retry(attempt)
+    raise AssertionError("Windows file read retry loop가 종료되지 않았습니다.")
+
+
+## @brief Windows 공유 위반을 제한적으로 재시도하며 원자 교체를 완료합니다.
+def replace_with_retry(source: Path, destination: Path) -> None:
+    for attempt in range(WINDOWS_FILE_RETRY_ATTEMPTS):
+        try:
+            os.replace(source, destination)
+            return
+        except OSError as error:
+            if (
+                not transient_windows_file_error(error)
+                or attempt + 1 == WINDOWS_FILE_RETRY_ATTEMPTS
+            ):
+                raise
+            wait_for_windows_file_retry(attempt)
+    raise AssertionError("Windows file replace retry loop가 종료되지 않았습니다.")
 
 
 ## @brief 같은 directory 안에서 임시 파일을 교체하여 bytes를 원자적으로 기록합니다.
@@ -152,16 +224,23 @@ def atomic_write_bytes(path: Path, content: bytes) -> None:
             stream.write(content)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        replace_with_retry(temporary, path)
     finally:
         if temporary.exists():
-            temporary.unlink()
+            try:
+                temporary.unlink()
+            except OSError:
+                pass
 
 
 ## @brief bytes 내용이 같으면 기존 파일과 timestamp를 보존합니다.
 def atomic_write_bytes_if_changed(path: Path, content: bytes) -> bool:
-    if path.exists() and path.read_bytes() == content:
-        return False
+    if path.exists():
+        try:
+            if read_bytes_with_retry(path) == content:
+                return False
+        except FileNotFoundError:
+            pass
     atomic_write_bytes(path, content)
     return True
 
@@ -169,8 +248,12 @@ def atomic_write_bytes_if_changed(path: Path, content: bytes) -> bool:
 ## @brief UTF-8 text를 원자적으로 기록하며 내용이 같으면 timestamp를 보존합니다.
 def atomic_write_text(path: Path, content: str) -> bool:
     encoded = content.encode("utf-8")
-    if path.exists() and path.read_bytes() == encoded:
-        return False
+    if path.exists():
+        try:
+            if read_bytes_with_retry(path) == encoded:
+                return False
+        except FileNotFoundError:
+            pass
     atomic_write_bytes(path, encoded)
     return True
 

@@ -1,0 +1,18 @@
+{
+  "schema": "nucode.storage-erase-receipt.v2",
+  "status": "PASS",
+  "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "storage_range": "0x174000-0x17d000",
+  "method": "rram-full-range-ff-program",
+  "bytes_programmed": 36864,
+  "bytes_verified": 36864,
+  "readback_all_ff": true,
+  "left_halted": true,
+  "failure_type": "",
+  "failure_message": "",
+  "helper_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\erase_storage_by_probe_hash.py",
+  "helper_sha256": "99174653a5e4204f505c37fb06d71ce06d430a2c65db0a9e322ee3cba23e78e4",
+  "finished_at": "2026-09-20T05:27:48.388056+00:00",
+  "raw_probe_identifiers_recorded": false,
+  "existing_files_overwritten": false
+}

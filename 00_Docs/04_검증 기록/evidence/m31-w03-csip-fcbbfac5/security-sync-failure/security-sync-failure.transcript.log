@@ -1,0 +1,28 @@
+00003.050|runner|debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00006.290|runner|debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.376|runner|debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.376|runner|pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true
+00012.478|runner|debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00012.478|runner|pre-reset UART quarantine board=E observed_bytes=0 input_buffer_purged=true
+00015.535|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00015.535|runner|pre-reset UART quarantine board=G observed_bytes=4467 input_buffer_purged=true
+00018.651|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00018.652|coordinator|<reset-uart-noise chars=2929>Searching for two set members
+00018.652|member_one|Enter this member rank (1 or 2):
+00018.652|member_two|Enter this member rank (1 or 2):
+00018.652|runner|command board=F value=1
+00018.715|runner|command board=E value=2
+00018.748|member_one|Set member ready; send a to authorize SIRK read, f to force-release
+00018.748|member_one|Provision a unique secret before using this outside a local test setup
+00018.806|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00018.806|member_two|Provision a unique secret before using this outside a local test setup
+00018.861|coordinator|Set coordinator security request failed
+00018.997|coordinator|Set coordinator security request failed
+00019.444|coordinator|Set coordinator security request failed
+00019.585|coordinator|Set coordinator security request failed
+00019.973|coordinator|Set coordinator security request failed
+00020.119|coordinator|Set coordinator security request failed
+00020.402|coordinator|Set coordinator security request failed
+00020.680|coordinator|Set coordinator security request failed
+00020.736|coordinator|Set member connection failed
+00020.802|coordinator|Set member connection failed

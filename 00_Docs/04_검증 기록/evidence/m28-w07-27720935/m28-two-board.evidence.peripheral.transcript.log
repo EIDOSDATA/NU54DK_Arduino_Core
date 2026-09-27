@@ -1,0 +1,5 @@
+ÿsÿÿÿÿÿKÿÿ]ÿÿ{O0?ÿÿÿÿÿKÿÿWÿÿÿ­»ÿÿE[ÿÿÿÿ7Gÿÿÿ)O!ÿÿÿÿÿ_Eÿ5	oÿÿÿoÿÿÿÿÿÿMÿoÿOSÿN	ÿ*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M28B2_READY:role=peripheral
+NUCODE_M28B2_PERIPHERAL:ADVERTISE:PASS:nonce=076240c1b679e59b7e53013b81cda432
+NUCODE_M28B2_PERIPHERAL:ADV:PASS:reports=110:payload=255:corrupt=0:stale=0:nonce=076240c1b679e59b7e53013b81cda432

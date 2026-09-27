@@ -10,7 +10,11 @@ if not exist "%NU54_INSTALLER%" (
   exit /b 2
 )
 
-powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%NU54_INSTALLER%" -PlatformRoot "%NU54_PLATFORM_ROOT%"
+if defined NUCODE_NCS_INSTALL_ROOT (
+  powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%NU54_INSTALLER%" -PlatformRoot "%NU54_PLATFORM_ROOT%" -NcsRoot "%NUCODE_NCS_INSTALL_ROOT%"
+) else (
+  powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%NU54_INSTALLER%" -PlatformRoot "%NU54_PLATFORM_ROOT%"
+)
 set "NU54_RESULT=%ERRORLEVEL%"
 
 if not "%NU54_RESULT%"=="0" (

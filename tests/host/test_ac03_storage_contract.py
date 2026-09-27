@@ -23,7 +23,7 @@ class AC03StorageContractTests(unittest.TestCase):
     """! @brief AC-03 production 입력의 fail-closed 정적 계약입니다. """
 
     def test_partition_is_common_exact_and_non_overlapping(self) -> None:
-        """! @brief 두 profile이 같은 loaderless flash 분할과 linker 설정을 포함하는지 검증합니다. """
+        """! @brief 일반 profile이 같은 loaderless flash 분할과 linker 설정을 포함하는지 검증합니다. """
 
         partition = ROOT / "dts" / "nucode" / "nu54dk-arduino-storage.dtsi"
         source = partition.read_text(encoding="utf-8")
@@ -54,7 +54,7 @@ class AC03StorageContractTests(unittest.TestCase):
         self.assertIn("nu54dk.upload.maximum_size=1490944", boards)
 
         include = "#include <nucode/nu54dk-arduino-storage.dtsi>"
-        for profile in ("standard", "ble"):
+        for profile in ("standard", "ble", "adaptive", "fabric", "ble_audio_io"):
             profile_root = ROOT / "variants" / "nu54dk" / "profiles" / profile
             self.assertIn(include, (profile_root / "app.overlay").read_text(encoding="utf-8"))
             self.assertIn(
@@ -62,8 +62,9 @@ class AC03StorageContractTests(unittest.TestCase):
                 (profile_root / "prj.conf").read_text(encoding="utf-8"),
             )
             document = json.loads((profile_root / "profile.json").read_text(encoding="utf-8"))
-            self.assertIn("storage", document["features"])
-            self.assertIn("storage", document["requires_hil"])
+            if profile in ("standard", "ble"):
+                self.assertIn("storage", document["features"])
+                self.assertIn("storage", document["requires_hil"])
 
     def test_feature_manifests_are_allowlisted_and_profile_compatible(self) -> None:
         """! @brief EEPROM과 LittleFS의 선언형 build 입력을 검증합니다. """
@@ -75,7 +76,10 @@ class AC03StorageContractTests(unittest.TestCase):
         self.assertEqual(BUILDER.FEATURE_ALLOWLIST["LittleFS"], "nucode.littlefs")
         for feature in resolved:
             self.assertEqual(feature["requires"], ["storage"])
-            self.assertEqual(feature["compatible_profiles"], ["standard", "ble"])
+            self.assertEqual(
+                feature["compatible_profiles"],
+                ["standard", "adaptive", "ble", "secure_ble_dfu"],
+            )
 
     def test_builder_validates_the_effective_linker_partition(self) -> None:
         """! @brief generated DTS와 linker map의 일치를 산출물 공개 전에 검증합니다. """
@@ -118,7 +122,7 @@ class AC03StorageContractTests(unittest.TestCase):
             )
 
             self.assertEqual(
-                BUILDER.validate_linked_code_partition(zephyr),
+                BUILDER.validate_linked_code_partition(zephyr, loaderless=True),
                 {
                     "code_partition": "slot0_partition",
                     "flash_origin": 0,
@@ -133,6 +137,43 @@ class AC03StorageContractTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(BUILDER.AdapterError, "E_MEMORY_LAYOUT"):
                 BUILDER.validate_linked_code_partition(zephyr)
+
+            (zephyr / "zephyr.dts").write_text(
+                (zephyr / "zephyr.dts").read_text(encoding="utf-8")
+                .replace("partition@0", "partition@10000")
+                .replace("reg = < 0x0 0x16c000 >;", "reg = < 0x10000 0xb2000 >;"),
+                encoding="utf-8",
+            )
+            (zephyr / "zephyr.map").write_text(
+                "FLASH 0x0000000000010000 0x00000000000b2000 xr\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(BUILDER.AdapterError, "loaderless profile"):
+                BUILDER.validate_linked_code_partition(zephyr, loaderless=True)
+
+            (zephyr / "zephyr.dts").write_text(
+                (zephyr / "zephyr.dts").read_text(encoding="utf-8")
+                .replace("partition@10000", "partition@0")
+                .replace("reg = < 0x10000 0xb2000 >;", "reg = < 0x0 0x16c000 >;"),
+                encoding="utf-8",
+            )
+
+            (zephyr / ".config").write_text(
+                "CONFIG_USE_DT_CODE_PARTITION=y\n"
+                "CONFIG_FLASH_USES_MAPPED_PARTITION=y\n"
+                "CONFIG_BOOTLOADER_MCUBOOT=y\n"
+                "CONFIG_ROM_START_OFFSET=0x800\n"
+                "CONFIG_ROM_END_OFFSET=0x4096\n",
+                encoding="utf-8",
+            )
+            (zephyr / "zephyr.map").write_text(
+                "FLASH 0x0000000000000000 0x0000000000167f6a xr\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                BUILDER.validate_linked_code_partition(zephyr)["flash_size"],
+                0x16C000,
+            )
 
     def test_eeprom_record_and_explicit_commit_contract(self) -> None:
         """! @brief EEPROM의 mirror, CRC, bounds, 명시적 commit 계약을 검증합니다. """

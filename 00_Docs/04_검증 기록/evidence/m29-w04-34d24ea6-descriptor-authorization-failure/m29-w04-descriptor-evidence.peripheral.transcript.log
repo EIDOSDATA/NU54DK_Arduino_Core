@@ -1,0 +1,4 @@
+M29W04|1|READY|role=peripheral|core=34d24ea68c8e4dda4f5f0fedef10dfdd580fa25b
+M29W04|1|BEGIN|role=peripheral|nonce=f3fdb44db14eb0ed26e56ed3988335ab|core=34d24ea68c8e4dda4f5f0fedef10dfdd580fa25b
+M29W04|1|ADVERTISE|role=peripheral|status=pass|nonce=f3fdb44db14eb0ed26e56ed3988335ab|core=34d24ea68c8e4dda4f5f0fedef10dfdd580fa25b
+M29W04|1|LINK|role=peripheral|mtu=247|nonce=f3fdb44db14eb0ed26e56ed3988335ab|core=34d24ea68c8e4dda4f5f0fedef10dfdd580fa25b

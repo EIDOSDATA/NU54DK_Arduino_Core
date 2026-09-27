@@ -1,0 +1,12 @@
+M29W07|1|READY|role=peripheral|bond_count=1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|CLEAR|role=peripheral|bond_count=0|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|REBOOTING|role=peripheral|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|READY|role=peripheral|bond_count=0|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|BEGIN|role=peripheral|mode=pair|iteration=0|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|ADVERTISE|role=peripheral|mode=pair|status=pass|iteration=0|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|PAIR|role=peripheral|bond_count=1|local_counter=0|remote_counter=0|iteration=0|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|END|role=peripheral|mode=pair|status=pass|callback_context=pass|iteration=0|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|REBOOTING|role=peripheral|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|READY|role=peripheral|bond_count=1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|BEGIN|role=peripheral|mode=sign|iteration=1|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691
+M29W07|1|ADVERTISE|role=peripheral|mode=sign|status=pass|iteration=1|nonce=bd33a789b2d8687eb6b045ecad37b3f1|core=f497d38270f90dde547bcad80b81d539656c7691

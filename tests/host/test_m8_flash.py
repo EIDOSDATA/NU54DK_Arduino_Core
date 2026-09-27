@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 
 MODULE_PATH = (
@@ -110,6 +111,7 @@ class M8FlashContractTests(unittest.TestCase):
                 "state": "built",
                 "fqbn": "nucode:zephyr:nu54dk",
                 "board": MODULE.DEFAULT_BOARD,
+                "sysbuild": False,
                 "build_path": self.build.as_posix(),
                 "platform_root": self.platform.as_posix(),
                 "cache_root": self.cache_root.as_posix(),
@@ -139,6 +141,8 @@ class M8FlashContractTests(unittest.TestCase):
             manifest=str(self.manifest_path),
             runner="pyocd",
             probe_id=None,
+            swd_frequency=None,
+            connect_mode="normal",
             verbose=False,
         )
 
@@ -193,12 +197,73 @@ class M8FlashContractTests(unittest.TestCase):
         with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_BOARD_MISMATCH"):
             MODULE.validate_flash_manifest(self.args)
 
-    def test_rejects_sysbuild_manifest(self) -> None:
-        """! @brief 아직 지원하지 않는 merged sysbuild artifact를 명확히 거부합니다. """
+    def test_rejects_non_boolean_sysbuild_manifest(self) -> None:
+        """! @brief 자유 형식 sysbuild manifest 값을 거부합니다. """
 
-        self.manifest["sysbuild"] = True
+        self.manifest["sysbuild"] = "true"
         self.write_manifest()
-        with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_SYSBUILD_UNSUPPORTED"):
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_SYSBUILD"):
+            MODULE.validate_flash_manifest(self.args)
+
+    def configure_sysbuild_fixture(self) -> None:
+        """! @brief MCUboot과 signed application domain fixture를 구성합니다. """
+
+        runners = (self.zephyr_build / "zephyr" / "runners.yaml").read_bytes()
+        application = self.zephyr_build / "app" / "zephyr"
+        bootloader = self.zephyr_build / "mcuboot" / "zephyr"
+        application.mkdir(parents=True)
+        bootloader.mkdir(parents=True)
+        (application / "zephyr.signed.hex").write_bytes(self.hex_content)
+        (application / "zephyr.elf").write_bytes(self.elf_content)
+        (application / "runners.yaml").write_bytes(runners)
+        boot_content = b":020000040001F9\n:00000001FF\n"
+        (bootloader / "zephyr.hex").write_bytes(boot_content)
+        (bootloader / "runners.yaml").write_bytes(runners)
+        exported_boot = self.build / "Blink.ino.boot.hex"
+        exported_update = self.build / "Blink.ino.update.bin"
+        exported_boot.write_bytes(boot_content)
+        exported_update.write_bytes(b"signed-update")
+        (self.zephyr_build / "domains.yaml").write_text(
+            f"default: app\n"
+            f"build_dir: {self.zephyr_build.as_posix()}\n"
+            "domains:\n"
+            "  - name: app\n"
+            f"    build_dir: {(self.zephyr_build / 'app').as_posix()}\n"
+            "  - name: mcuboot\n"
+            f"    build_dir: {(self.zephyr_build / 'mcuboot').as_posix()}\n"
+            "flash_order:\n"
+            "  - mcuboot\n"
+            "  - app\n",
+            encoding="utf-8",
+        )
+        self.manifest["sysbuild"] = True
+        self.manifest["context"]["sysbuild"] = True
+        self.manifest["artifacts"]["boot.hex"] = self.artifact_record(exported_boot)
+        self.manifest["artifacts"]["update.bin"] = self.artifact_record(exported_update)
+        self.write_manifest()
+
+    def test_accepts_matching_sysbuild_artifacts_and_flash_order(self) -> None:
+        """! @brief MCUboot 다음 signed application을 기록한 sysbuild를 승인합니다. """
+
+        self.configure_sysbuild_fixture()
+        result = MODULE.validate_flash_manifest(self.args)
+        self.assertEqual(
+            result["runner_builds"],
+            [self.zephyr_build / "mcuboot", self.zephyr_build / "app"],
+        )
+
+    def test_rejects_reversed_sysbuild_flash_order(self) -> None:
+        """! @brief application을 bootloader보다 먼저 기록하는 sysbuild를 거부합니다. """
+
+        self.configure_sysbuild_fixture()
+        domains = self.zephyr_build / "domains.yaml"
+        domains.write_text(
+            domains.read_text(encoding="utf-8").replace(
+                "  - mcuboot\n  - app\n", "  - app\n  - mcuboot\n"
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_FLASH_SYSBUILD_DOMAINS"):
             MODULE.validate_flash_manifest(self.args)
 
     def test_validates_both_runner_contracts(self) -> None:
@@ -232,28 +297,62 @@ class M8FlashContractTests(unittest.TestCase):
 
         self.assertEqual(MODULE.select_pyocd_probe(None, ["ABC123"]), "ABC123")
         self.assertEqual(MODULE.select_pyocd_probe("   ", ["ABC123"]), "ABC123")
+        self.assertEqual(MODULE.select_pyocd_probe("auto-single", ["ABC123"]), "ABC123")
         self.assertEqual(MODULE.select_pyocd_probe("abc123", ["ABC123"]), "ABC123")
 
-    def test_selects_noninteractive_or_explicit_uid_upload_tool(self) -> None:
-        """! @brief 기본 pyOCD와 명시 UID 전용 메뉴가 분리되는지 검증합니다. """
+    def test_resolves_recipe_sentinel_from_environment(self) -> None:
+        """! @brief 고정 recipe sentinel보다 환경 변수의 exact UID를 우선합니다. """
+
+        with mock.patch.dict(
+            MODULE.implementation.upload.os.environ,
+            {"NUCODE_PROBE_UID": "ABC123"},
+            clear=False,
+        ):
+            self.assertEqual(
+                MODULE.resolve_probe_request("auto-single", runner="pyocd"),
+                "ABC123",
+            )
+            self.assertEqual(
+                MODULE.resolve_probe_request("j-link-serial-required", runner="jlink"),
+                "ABC123",
+            )
+            self.assertEqual(
+                MODULE.resolve_probe_request("EXPLICIT456", runner="pyocd"),
+                "EXPLICIT456",
+            )
+
+        with mock.patch.dict(
+            MODULE.implementation.upload.os.environ,
+            {},
+            clear=True,
+        ):
+            self.assertIsNone(
+                MODULE.resolve_probe_request("auto-single", runner="pyocd")
+            )
+            self.assertIsNone(
+                MODULE.resolve_probe_request("j-link-serial-required", runner="jlink")
+            )
+
+    def test_selects_one_pyocd_upload_tool_for_auto_and_explicit_uid(self) -> None:
+        """! @brief 자동 선택과 명시 UID가 같은 pyOCD 메뉴를 사용하는지 검증합니다. """
 
         self.assertEqual(HIL_MODULE.select_upload_probe_option("pyocd", ""), "pyocd")
         self.assertEqual(
             HIL_MODULE.select_upload_probe_option("pyocd", "ABC123"),
-            "pyocd_uid",
+            "pyocd",
         )
         self.assertEqual(HIL_MODULE.select_upload_probe_option("jlink", "ABC123"), "jlink")
 
     def test_redacts_explicit_probe_identity_without_losing_selection_mode(self) -> None:
         """! @brief 결과 JSON이 UID를 숨기면서 선택 방식과 메뉴를 보존하는지 검증합니다. """
 
-        explicit = HIL_MODULE.probe_selection_summary("pyocd_uid", "ABC123")
+        explicit = HIL_MODULE.probe_selection_summary("pyocd", "ABC123")
         self.assertEqual(
             explicit,
             {
                 "probe_id": "redacted",
                 "probe_selection_mode": "explicit",
-                "upload_probe": "pyocd_uid",
+                "upload_probe": "pyocd",
             },
         )
         self.assertNotIn("ABC123", explicit.values())
@@ -265,10 +364,48 @@ class M8FlashContractTests(unittest.TestCase):
     def test_rejects_missing_or_ambiguous_pyocd_probe(self) -> None:
         """! @brief probe 없음과 다중 probe 무지정 상태를 구분해 거부합니다. """
 
-        with self.assertRaisesRegex(MODULE.AdapterError, "E_PROBE_NOT_FOUND"):
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_PROBE_NONE"):
             MODULE.select_pyocd_probe(None, [])
         with self.assertRaisesRegex(MODULE.AdapterError, "E_PROBE_AMBIGUOUS"):
             MODULE.select_pyocd_probe(None, ["A", "B"])
+
+    def test_rejects_probe_placeholders_and_invalid_identifiers(self) -> None:
+        """! @brief placeholder와 공백이 있는 식별자를 열거 전에 거부합니다. """
+
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_PROBE_UID_PLACEHOLDER"):
+            MODULE.validate_probe_id("CMSIS-DAP unique ID", runner="pyocd")
+        with self.assertRaisesRegex(MODULE.AdapterError, "E_PROBE_UID_INVALID"):
+            MODULE.validate_probe_id("bad probe id", runner="pyocd")
+
+    def test_reports_missing_external_jlink_without_fallback(self) -> None:
+        """! @brief 외장 J-Link software가 없으면 pyOCD로 바꾸지 않고 구체적으로 거부합니다. """
+
+        upload = MODULE.implementation.upload
+        with (
+            mock.patch.object(upload.shutil, "which", return_value=None),
+            mock.patch.object(upload.Path, "is_dir", return_value=False),
+            mock.patch.object(upload.os.environ, "get", return_value=None),
+        ):
+            with self.assertRaisesRegex(MODULE.AdapterError, "E_RUNNER_JLINK_UNAVAILABLE"):
+                MODULE.discover_jlink_directory({"PATH": ""})
+
+    def test_masks_probe_identity_and_classifies_first_cause(self) -> None:
+        """! @brief UID 비공개와 대표 flash 최초 원인 분류를 검증합니다. """
+
+        probe_id = "1234567890ABCDEF"
+        masked = MODULE.mask_probe_id(probe_id)
+        self.assertEqual(masked, "1234…CDEF")
+        self.assertNotIn(probe_id, MODULE.redact_probe_identity(
+            f"probe {probe_id} failed", probe_id
+        ))
+        no_ack = MODULE.classify_flash_failure(
+            "Board ID warning followed by SWD No ACK", "pyocd", 1
+        )
+        self.assertIn("E_SWD_NO_ACK", str(no_ack))
+        power = MODULE.classify_flash_failure("Target voltage: 0 V", "pyocd", 1)
+        self.assertIn("E_TARGET_POWER", str(power))
+        legacy = "대상 전원 오류".encode("cp949")
+        self.assertEqual(MODULE.decode_child_output(legacy), "대상 전원 오류")
 
     def test_flash_command_has_no_destructive_option(self) -> None:
         """! @brief 일반 upload 명령에 erase 또는 recover가 없는지 검증합니다. """
@@ -283,8 +420,29 @@ class M8FlashContractTests(unittest.TestCase):
         self.assertIn("--no-rebuild", command)
         self.assertIn("--dt-flash=n", command)
         self.assertIn("--tool-opt=-Osmart_flash=false", command)
+        self.assertIn("--tool-opt=-Oauto_unlock=false", command)
         probe_index = command.index("--dev-id")
         self.assertEqual(command[probe_index : probe_index + 2], ["--dev-id", "ABC123"])
+        self.assertNotIn("--erase", command)
+        self.assertNotIn("--recover", command)
+
+    def test_flash_diagnostics_are_explicit_and_non_destructive(self) -> None:
+        """! @brief 저속 SWD와 reset 연결이 명시될 때만 추가되는지 검증합니다. """
+
+        tools = {
+            "west": Path("C:/toolchain/west.exe"),
+            "zephyr_base": Path("C:/ncs/zephyr"),
+        }
+        command = [str(value) for value in MODULE.build_flash_command(
+            tools,
+            self.zephyr_build,
+            "pyocd",
+            "ABC123",
+            swd_frequency=1_000_000,
+            connect_mode="under-reset",
+        )]
+        self.assertIn("--tool-opt=-Ofrequency=1000000", command)
+        self.assertIn("--tool-opt=-Oconnect_mode=under-reset", command)
         self.assertNotIn("--erase", command)
         self.assertNotIn("--recover", command)
 

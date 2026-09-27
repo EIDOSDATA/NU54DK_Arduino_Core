@@ -1,18 +1,28 @@
 # NU54DK Arduino Core v0.4.1
 
 `v0.4.1`은 `v0.4.0`의 보드 기능과 Arduino API를 그대로 유지하면서 Nordic prerequisite
-설치 결과를 더 정확하게 표시하는 유지보수 릴리스입니다. **현재 설치·지원 대상은 v0.4.1
+설치 결과를 더 정확하게 표시하는 유지보수 릴리스입니다. **현재 정식(stable) 설치·지원 대상은 v0.4.1
 하나이며, 이전 stable·RC·preview는 지원하지 않고 stable Boards Manager 목록에서도
 제공하지 않습니다.** 과거 tag·Release·자산·검증 기록은 재현성 감사를 위해 보존합니다.
+시험용 `v0.5.0-rc.2`의 별도 설치 경로와 GUI 검증 안내는 [릴리스 안내](../README.md)를 따릅니다.
+RC 시험 설치가 v0.4.1 정식 지원 정책을 바꾸지는 않습니다.
 
 | 항목 | 값 |
 | --- | --- |
 | 보드 | NU54DK v2, nRF54L15 application core |
+| Board/FQBN | `nucode:zephyr:nu54dk` |
+| 공식 사용자 OS | Windows 10/11 x64 |
 | SDK | nRF Connect SDK v3.4.0 |
 | Toolchain | `dcbdc366a1` |
 | 설치 channel | Stable Boards Manager index |
-| 지원 버전 | `0.4.1`만 지원 |
+| 정식 지원 버전 | `0.4.1`만 지원 |
 | 기능 기준선 | v0.4.0과 동일 |
+
+공개 source·ZIP·checksum의 고정 identity와 설치 검증 결과는
+[129번 기록](<../../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>)에서 확인합니다.
+후속 제품선에서 완료한 M28~M31 BLE 확장과 RC2 사용자 경험 교정은 이 설치 패키지에 포함되지
+않습니다. 개발 소스의 지원 범위와 v0.5.0 상태는 [개발 TODO](../../TODO_v0.5.0.md)와
+[RC2 실행 기록](../../TODO_v0.5.0-RC2.md)을 따릅니다.
 
 ## 설치
 

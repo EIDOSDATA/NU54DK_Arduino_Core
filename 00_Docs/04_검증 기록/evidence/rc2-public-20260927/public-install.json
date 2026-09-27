@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "observed_utc": "2026-09-27T06:39:09.3778259Z",
+  "result": "PASS_WITH_HARNESS_RESTARTS_RECORDED",
+  "index_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0-rc.2/package_nucode_nu54dk_rc_index.json",
+  "isolation": "New D:/r2pubb2e Arduino data/download/user/build/cache roots; existing verified SDK/toolchain prerequisites reused",
+  "arduino_cli_version": "1.5.1",
+  "package_version": "0.5.0-rc.2",
+  "core_revision": "b2e7a587ba6fde31e033dc21008d7084bd6e631b",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "runtime_payload_sha256": "61e3e30ee797bc019dd3d3c49479b706ed35a49bcc4e6f8114d85f1f3c24d5c8",
+  "installed_manifest_sha256": "49ba60a3b572ad7588caf014687a12344dc2c5314d365ee0ffffba1766636262",
+  "installed_payload_files_checked": 633,
+  "installed_payload_mismatches": 0,
+  "installed_example_count": 113,
+  "installation": "PASS: public index core update-index and core install nucode:zephyr@0.5.0-rc.2",
+  "blink": {
+    "result": "PASS",
+    "exit_code": 0,
+    "fqbn": "nucode:zephyr:nu54dk:feature_set=standard",
+    "sketch": "installed libraries/NUCODE_NU54DK/examples/Blink",
+    "command": "arduino-cli compile --config-file rc2-public-smoke.yaml --clean --fqbn nucode:zephyr:nu54dk --board-options feature_set=standard --build-path D:/r2pubb2e/build <installed Blink>",
+    "built_at_utc": "2026-09-27T06:31:45.2971940+00:00",
+    "build_target_count": 320,
+    "configure_reason": "state-recovery",
+    "recovery_count": 1,
+    "configure_duration_seconds": 284.656595,
+    "build_duration_seconds": 236.645675,
+    "duration_boundary": "Separate adapter phases, not total wall-clock time or an uninterrupted first attempt",
+    "flash_used_bytes": 81528,
+    "flash_capacity_bytes": 1490944,
+    "ram_used_bytes": 29439,
+    "ram_capacity_bytes": 262144,
+    "artifacts": [
+      {
+        "name": "Blink.ino.bin",
+        "sha256": "311cf1cef04c3d698b91d4aa27aa29ad998fb5a7fa8ceba0437d406d58a693b1",
+        "size": 81532
+      },
+      {
+        "name": "Blink.ino.elf",
+        "sha256": "893d42836d814e3cd46146b7bed093069d5604444e69706fee2260eac41205b6",
+        "size": 2294028
+      },
+      {
+        "name": "Blink.ino.hex",
+        "sha256": "400a9ee0fd93a08aa6ee018eca1143ec4e3415edc3d352c72fe5faf742968953",
+        "size": 229459
+      },
+      {
+        "name": "Blink.ino.map",
+        "sha256": "23ade4944cba5bdabb7db7ebc3aae757d36ab68ac76e393be5621248f774641d",
+        "size": 817843
+      }
+    ]
+  },
+  "harness_restarts": [
+    "Windows PowerShell 5.1 -File interpreted the UTF-8-without-BOM Korean helper as ANSI and failed parsing before execution; restarted via explicit UTF-8 ReadAllText/scriptblock.",
+    "After successful install, Windows PowerShell 5.1 ErrorActionPreference=Stop treated normal native stderr progress as NativeCommandError and interrupted compile startup. Resumed the same isolated installed Blink directly in PowerShell 7; exit 0. Adapter recorded state-recovery=1."
+  ],
+  "local_log_hashes": [
+    {
+      "local_test_relative_path": "install.log",
+      "sha256": "e8a57d1f588d6b2fed23c50418e63c05adf3000176dabee6023f397f8394b24d"
+    },
+    {
+      "local_test_relative_path": "installed.json",
+      "sha256": "9cac955566b72d1b77175e6331382cd81d5ffa8d17317260980c23eff7c53198"
+    },
+    {
+      "local_test_relative_path": "blink.log",
+      "sha256": "db9e857e045e161b056831c2488d4ef4c8298e704e6959fc5aa71fcfad5f12aa"
+    },
+    {
+      "local_test_relative_path": "build/Blink.ino.nu54-build.json",
+      "sha256": "3869c14b38b46f97dfe89398ac279d5eb4e0051c870909be606c0cf74012722a"
+    },
+    {
+      "local_test_relative_path": "build/nu54-zephyr/logs/configure.log",
+      "sha256": "d61ead4cf218ca72e79448b2d7bbb9ccc8c1a65c51f994b89f22d60d8714bc2c"
+    },
+    {
+      "local_test_relative_path": "build/nu54-zephyr/logs/build.log",
+      "sha256": "eaf5d2d75f2e2e179b9cdd3689148872116119162b503e80a1d9853122bf4d06"
+    }
+  ],
+  "hardware_write_performed": false,
+  "gui_result": "NOT RUN: user follow-up",
+  "prior_full_rc_example_result": "113/113 PASS from immutable source b2e7, run 36287748550 attempt 2; not repeated in this single-Blink public smoke"
+}

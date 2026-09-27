@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-audio-unicast-source-reset-sink-memory",
+  "cycles_target": 1,
+  "cycles_completed": 0,
+  "frames_per_session": 100,
+  "image_sha256": {
+    "sink": "25d8576233257bdaa74113ffc7065ad034360ff6812746f13eb1c0422a253a5e",
+    "source": "eaf646a19fb8b9fe3d9592f7a91fa22987de0a90889039c1815b06855f3cae6d"
+  },
+  "probe_uid_sha256": {
+    "sink": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "source": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "com_mapping": {
+    "sink": {
+      "app": "COM10",
+      "aux": "COM11"
+    },
+    "source": {
+      "app": "COM13",
+      "aux": "COM12"
+    }
+  },
+  "start": {
+    "sink": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "source": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "source_restart": [
+    {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  ],
+  "sessions": [
+    {
+      "decoded": 100,
+      "source_sent": 100
+    }
+  ],
+  "lines": {
+    "sink": [
+      "P2_READY role=audio-sink",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=248",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=1020",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_ADVERTISING role=sink",
+      "P2_AUDIO_DECODED frames=100 dropped=0 energy=941215",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=1232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=404",
+      "P2_STACK name=BT LW WQ reserved=2104 used=1168",
+      "P2_STACK name=sysworkq reserved=4096 used=400",
+      "P2_STACK name=MPSL Work reserved=1024 used=712",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=2868",
+      "P2_STACK name=ISR0 reserved=2048 used=460",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-sink decoded=143 dropped=0"
+    ],
+    "source": [
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_STREAM role=source",
+      "P2_AUDIO_SENT frames=100",
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=audio-source",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=3200 used=232",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=420",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=4096 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=276",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=816",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_AUDIO_FAIL scan-restart",
+      "P2_PHASE name=stopped",
+      "P2_STACK name=BT RX WQ reserved=3200 used=960",
+      "P2_STACK name=bt_tx_processor reserved=3200 used=548",
+      "P2_STACK name=BT LW WQ reserved=2104 used=936",
+      "P2_STACK name=sysworkq reserved=4096 used=280",
+      "P2_STACK name=MPSL Work reserved=1024 used=356",
+      "P2_STACK name=idle reserved=320 used=64",
+      "P2_STACK name=main reserved=8192 used=1176",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_STOP role=audio-source sent=0"
+    ]
+  },
+  "result": "FAIL",
+  "failure_class": "RuntimeError",
+  "failure_detail": "unicast firmware reported failure or fault",
+  "cleanup_attempted": true,
+  "cleanup_observed": {
+    "source": true,
+    "sink": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "status": "FAIL",
+  "core_revision": "dirty-uuid-filter-candidate",
+  "initiator_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "initiator_image_sha256": "24e791cba33a1d98cd94fd7fa69ecf366353ac72b27c89c53f6e4013f2ff1f97",
+  "reflector_image_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "initiator_port": "COM7",
+  "reflector_port": "COM5",
+  "mode": "sector_flash_and_reset",
+  "procedures": 0,
+  "stop_restart_cycles": 0,
+  "disconnect_reconnect_cycles": 0,
+  "initiator_lines": [],
+  "reflector_lines": [
+    "CS reflector advertising"
+  ],
+  "initiator_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "425984"
+  ],
+  "initiator_flash": [
+    "pyocd-sector-hw-reset",
+    "430080"
+  ],
+  "failure_class": "RuntimeError",
+  "failure_detail": "procedure count timeout"
+}

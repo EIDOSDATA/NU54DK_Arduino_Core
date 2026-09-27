@@ -21,15 +21,19 @@ int bt_hids_boot_kb_inp_rep_send(bt_hids *, bt_conn *, const std::uint8_t *data,
     assert(size == 8);
     ++mock_hids_send_calls;
     mock_hids_boot = true;
+    mock_hids_report_index = 0;
+    mock_hids_report_size = size;
     std::memcpy(mock_hids_data, data, size);
     return mock_hids_send_error;
 }
 int bt_hids_inp_rep_send(bt_hids *, bt_conn *, std::uint8_t index, const std::uint8_t *data,
                          std::size_t size, void *)
 {
-    assert(index == 0 && size == 8);
+    assert(index < 3 && size <= sizeof(mock_hids_data));
     ++mock_hids_send_calls;
     mock_hids_boot = false;
+    mock_hids_report_index = index;
+    mock_hids_report_size = size;
     std::memcpy(mock_hids_data, data, size);
     return mock_hids_send_error;
 }

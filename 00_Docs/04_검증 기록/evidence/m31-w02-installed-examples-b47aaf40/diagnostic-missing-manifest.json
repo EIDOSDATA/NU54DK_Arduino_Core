@@ -1,0 +1,53 @@
+{
+  "status": "FAIL",
+  "test": "m31_iso_installed_examples_all_build",
+  "core_revision": "4ea42761a1ed87120885d5d1e29694d9677e3af9",
+  "source_clean": true,
+  "observed_utc": "2026-09-17T00:48:04.173033+00:00",
+  "fqbn": "nucode:zephyr:nu54dk:feature_set=ble",
+  "cli_sha256": "ba1890afcfc08524f76191b5cc801b0779cb25e81a5e6693eb0e26b50a3f3538",
+  "config_sha256": "97648823a87a750da1ae3a1573cbf9401ed147a6cc4ad57cb0d46df898c62ae5",
+  "library": {
+    "name": "NUCODE BLE ISO",
+    "location": "platform",
+    "container_platform": "nucode:zephyr@0.4.1-dev",
+    "source_file_count": 32,
+    "source_tree_sha256": "8e4cbeeafe10a5fb345b53ec8d7ff8ec155c96ec8e86d1da0de4f2586f02b281",
+    "installed_tree_sha256": "8e4cbeeafe10a5fb345b53ec8d7ff8ec155c96ec8e86d1da0de4f2586f02b281"
+  },
+  "discovered": [
+    "BISEncryptedReceiver",
+    "BISEncryptedSource",
+    "BISReceiver",
+    "BISSource",
+    "BISTimeReceiver",
+    "BISTimeSource",
+    "CISCentral",
+    "CISPeripheral",
+    "CISToBISBridge",
+    "CISToBISPeer",
+    "CISToBISReceiver"
+  ],
+  "builds": [
+    {
+      "example": "BISEncryptedReceiver",
+      "status": "FAIL",
+      "exit_code": 1,
+      "elapsed_s": 0.96,
+      "sketch_sha256": "b5aa24dcd21597fa8e6b407896b168c4b7f9554e71dea8f47d0c007c1d25a2e8",
+      "log_sha256": "121aaa252c917ef252bf148ddb0d856436e26ce2f97a53888e43d48d7afe851e",
+      "hex_sha256": null,
+      "program_bytes": null,
+      "ram_bytes": null,
+      "failure_tail": [
+        "",
+        "Used platform Version   Path",
+        "nucode:zephyr 0.4.1-dev C:\\~\\m31-w02-independent-package-4ea42761\\user\\hardware\\nucode\\zephyr",
+        "nu54-builder: error: [NU54:E_PACKAGE_MANIFEST] Git-less package�� release-manifest.json�� �����ϴ�.",
+        "Error during build: exit status 2"
+      ]
+    }
+  ],
+  "finished_utc": "2026-09-17T00:48:05.175734+00:00",
+  "source_clean_after": true
+}

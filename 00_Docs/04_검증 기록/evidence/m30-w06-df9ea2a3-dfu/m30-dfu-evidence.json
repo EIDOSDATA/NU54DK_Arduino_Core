@@ -1,0 +1,359 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": 2,
+  "build_records": {
+    "central": {
+      "application_source_sha256": "3f3eb1629a173f1ddfea7766b8fbcdf9241ea9ba362b3f2554b395facf52bc7c",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "core_revision": "df9ea2a3ee51",
+      "core_source_sha256": "ac67e947472f23cfa88015da4413701468d2103d2560860da9ea9845515d26e6",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "3123a93bea74b167ba7008544ecb2095afe5004fd58d192f6c558bbd29726465",
+      "zephyr_revision": "bf801e4e3d19"
+    },
+    "confirmed": {
+      "application_source_sha256": "3f3eb1629a173f1ddfea7766b8fbcdf9241ea9ba362b3f2554b395facf52bc7c",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "core_revision": "df9ea2a3ee51",
+      "core_source_sha256": "ac67e947472f23cfa88015da4413701468d2103d2560860da9ea9845515d26e6",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "3123a93bea74b167ba7008544ecb2095afe5004fd58d192f6c558bbd29726465",
+      "zephyr_revision": "bf801e4e3d19"
+    },
+    "unconfirmed": {
+      "application_source_sha256": "3f3eb1629a173f1ddfea7766b8fbcdf9241ea9ba362b3f2554b395facf52bc7c",
+      "board": "nrf54l15dk",
+      "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+      "board_revision": "fe65f2f0880b",
+      "board_source_sha256": "00305e847d6844c401a78f0dbf449c1c37dda4fd707afaacb43ca6217bf9f72e",
+      "core_revision": "df9ea2a3ee51",
+      "core_source_sha256": "ac67e947472f23cfa88015da4413701468d2103d2560860da9ea9845515d26e6",
+      "ncs_revision": "99553055607b",
+      "record_name": "nucode_arduino_core_build.yml",
+      "record_sha256": "3123a93bea74b167ba7008544ecb2095afe5004fd58d192f6c558bbd29726465",
+      "zephyr_revision": "bf801e4e3d19"
+    }
+  },
+  "candidates": {
+    "negative": {
+      "corrupt": {
+        "image_hash": "9930797b7f6f418376ff3b021bb0f68a8d8bec4904d3daaf30bf52b864155abb",
+        "name": "negative-corrupt.bin",
+        "sha256": "5302ccc09f34fdbc0fce62d7c5438734c720a987e2b137ea86821f5ea0289835",
+        "size": 261296,
+        "version": [
+          20,
+          0,
+          0,
+          2
+        ]
+      },
+      "downgrade": {
+        "image_hash": "9e626bff797f3ef25de2faff3aa796271e300735e2cb99481902b17e356ca5a6",
+        "name": "negative-downgrade.bin",
+        "sha256": "08127e7b385c5ec65fdbcf436092745714d7104c70ee2f3073f0b434aabc523f",
+        "size": 261295,
+        "version": [
+          9,
+          0,
+          0,
+          0
+        ]
+      },
+      "truncated": {
+        "image_hash": "44d8e9b53bff38c801da29a89da4730e75e81ee97bb4e94358ca71a3bea606a0",
+        "name": "negative-truncated.bin",
+        "sha256": "d8ff4ea72ef4716dcba75b68feeb0823a71bafea49674b65f66d53401cde0cfb",
+        "size": 261279,
+        "version": [
+          20,
+          0,
+          0,
+          3
+        ]
+      },
+      "unsigned": {
+        "image_hash": "6f67ec80abcec5cd15ffd1247fc6023a66c998e5862648d82f4265819da82413",
+        "name": "negative-unsigned.bin",
+        "sha256": "7e14b4cc0b81103d4cbfa1137f7d527e430a8e3ddc11ca1046e0bff667316797",
+        "size": 261184,
+        "version": [
+          20,
+          0,
+          0,
+          0
+        ]
+      },
+      "wrong_key": {
+        "image_hash": "8c2350101240a9295db27d82661c4199d82b2fd6a4c8bd30784c3bc99f618ba0",
+        "name": "negative-wrong-key.bin",
+        "sha256": "b9186fb444c86654cdd3d2da871c6266023fd6600fd0867905f5089eb9bf48ad",
+        "size": 261295,
+        "version": [
+          20,
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    "positive": [
+      {
+        "image_hash": "a1f6942f02a17173ea9b16f121b717bfcc2b53b3e09adc3e5ee23ee22644caf3",
+        "name": "positive-v1.bin",
+        "sha256": "0002a302eb5abf011db9bbf3142f401697050d77ee3fe3789838221212f89b10",
+        "size": 261295,
+        "version": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "fcdbb21fb2b58ba6ca3104efb64b08c70c7862ea6b930e8e41498d922e7906db",
+        "name": "positive-v2.bin",
+        "sha256": "6f5ac109f28e36514028dc3cf9fcd6d3864c3f83f87078661dddc21edaa8e388",
+        "size": 261296,
+        "version": [
+          2,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "46360339883195fb2690e875b27805fe868c9b0c7ab42dccea81b6f33cb81f42",
+        "name": "positive-v3.bin",
+        "sha256": "7b8d991f5b21e7dfc7c829fb8daaa9ae6a00543fb75db6d79907f14a40a2b652",
+        "size": 261294,
+        "version": [
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "c9ae6455f20959588384f48d684cf2d55bb9fca2ecd8b443a7d98874043a633f",
+        "name": "positive-v4.bin",
+        "sha256": "55110e022cf4f4cb1238827009eb9bfae139c34247865d0a0d3cbab2ce983a47",
+        "size": 261295,
+        "version": [
+          4,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "c878cabeeac0e8a6dca73473a6a39d443b13881b8cc7cf607ebd7a26eac8e460",
+        "name": "positive-v5.bin",
+        "sha256": "e2283d6f7caa8f0d2f1763b27069eab32a4f9d5ce5aa41f0d174e36e3305a07e",
+        "size": 261294,
+        "version": [
+          5,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "fa37cd34414b2206f776442125c037a460e7fca464465892f25678bc815e7b77",
+        "name": "positive-v6.bin",
+        "sha256": "3f66b00b31126bb971dcea5bf794246c3c544e5bf5ef76040151969dddbb7a67",
+        "size": 261294,
+        "version": [
+          6,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "1e458d940a985c30e93f9db199ab641747c4838aced9f9172dff82d5eb18f6df",
+        "name": "positive-v7.bin",
+        "sha256": "44953d15db02a8c095a48c0ffe4fb3575b8574d4126206ef69fd781ff1f351e6",
+        "size": 261295,
+        "version": [
+          7,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "94ab3b58ae70775b95758e8a8308c08075192735ece2cf119fc1253ebba3cdbb",
+        "name": "positive-v8.bin",
+        "sha256": "d69685404476de230f992b8d7471d81896bcf97e3a289ddf469e718a4eb6ba2a",
+        "size": 261295,
+        "version": [
+          8,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "9e626bff797f3ef25de2faff3aa796271e300735e2cb99481902b17e356ca5a6",
+        "name": "positive-v9.bin",
+        "sha256": "358b9885baed9b18c635baa283374e8f5a25c429d4cd590324198693d670ff85",
+        "size": 261295,
+        "version": [
+          9,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "image_hash": "6e980a69e257cd1c9ecff78b3a64714b1f398abae2bd45bc452d5a3999b7ca2d",
+        "name": "positive-v10.bin",
+        "sha256": "105cb3cb9e884b899b78e90be824f61c3f7871a5aaa03165ae63d2e69cd141f0",
+        "size": 261295,
+        "version": [
+          10,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "unconfirmed": {
+      "image_hash": "b542bbf9f62687c3483f3f3f375242ddbfeffe6066e725be0d5b37a0749b0437",
+      "name": "unconfirmed-v11.bin",
+      "sha256": "dd51822a12cff74082febd5cd39acd85a91a32f8c69c154578969f600cf881c5",
+      "size": 261186,
+      "version": [
+        11,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "core_revision": "df9ea2a3ee5111c350364a938409021d379810e2",
+  "duration_seconds": 1947.373,
+  "endpoints": {
+    "central": {
+      "board_id_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port": "COM10",
+      "volume": "G:"
+    },
+    "peripheral": {
+      "board_id_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "port": "COM14",
+      "volume": "F:"
+    }
+  },
+  "flash_backend": "pyocd-exact-sector",
+  "flash_results": {
+    "central": [
+      "pyocd-sector",
+      "225280"
+    ],
+    "peripheral_bootloader": [
+      "pyocd-sector",
+      "0"
+    ],
+    "peripheral_primary": [
+      "pyocd-sector",
+      "12288"
+    ]
+  },
+  "mass_erase_or_recover": false,
+  "physical_power_loss_claim": false,
+  "power_cut_injected": false,
+  "results": {
+    "M30-DFU-01": {
+      "duration_seconds": 1182.14,
+      "hash_mismatches": 0,
+      "status": "passed",
+      "unconfirmed_boots": 0,
+      "updates": 10,
+      "upload_requests": 13070
+    },
+    "M30-DFU-NEG-01": {
+      "classes": {
+        "corrupt": {
+          "attempts": 20,
+          "boot_rejects": 1,
+          "invalid_accepts": 0,
+          "state_rejects": 19,
+          "upload_requests": 1307
+        },
+        "downgrade": {
+          "attempts": 20,
+          "boot_rejects": 1,
+          "invalid_accepts": 0,
+          "state_rejects": 19,
+          "upload_requests": 1307
+        },
+        "truncated": {
+          "attempts": 20,
+          "boot_rejects": 1,
+          "invalid_accepts": 0,
+          "state_rejects": 19,
+          "upload_requests": 1307
+        },
+        "unsigned": {
+          "attempts": 20,
+          "boot_rejects": 1,
+          "invalid_accepts": 0,
+          "state_rejects": 19,
+          "upload_requests": 1307
+        },
+        "wrong_key": {
+          "attempts": 20,
+          "boot_rejects": 1,
+          "invalid_accepts": 0,
+          "state_rejects": 19,
+          "upload_requests": 1307
+        }
+      },
+      "duration_seconds": 707.242,
+      "invalid_accepts": 0,
+      "recovered_version": [
+        10,
+        0,
+        0,
+        0
+      ],
+      "rollback_accepts": 0,
+      "status": "passed",
+      "unconfirmed_first_boots": 1,
+      "upload_requests": 1307
+    }
+  },
+  "schema_version": 1,
+  "status": "passed",
+  "timestamp_utc": "2026-09-14T18:39:14.122368+00:00",
+  "transcripts": {
+    "central": {
+      "name": "m30-dfu-evidence.central.transcript.log",
+      "sha256": "8d8e6a42f1e6b5ca008950cd106045926b305dd8cbe844c4f6e298e1abcb5806",
+      "size": 3267694
+    },
+    "peripheral": {
+      "name": "m30-dfu-evidence.peripheral.transcript.log",
+      "sha256": "aa99ba447da6c64545869e6e97fdd8e1742f0316cb99c5612865e515ae94f155",
+      "size": 11786
+    }
+  },
+  "transport": {
+    "att_mtu": 247,
+    "carrier": "BLE",
+    "encryption_key_size": 16,
+    "host_to_ble_bridge": "NU54DK-central-vcom",
+    "security_level": 4
+  },
+  "trust_public_key_source_sha256": "e080e9cf050e5ad50fe0af483352120639e9e0adc53d38c1a38f0e18c766ea46"
+}

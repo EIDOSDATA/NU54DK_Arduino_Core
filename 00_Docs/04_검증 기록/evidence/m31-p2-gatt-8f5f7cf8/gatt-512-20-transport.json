@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-gatt-512-recovery-20",
+  "image_sha256": {
+    "peripheral": "30faa36701787fd0f2f15b4a7d2a39bc77b96c5b464cabebf3cbdb9a12701efc",
+    "central": "5801011d71479f0c88da6b70252320056fdfbbd0762878e616b6d66f0b4c6669"
+  },
+  "probe_uid_sha256": {
+    "peripheral": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "central": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+  },
+  "com_mapping": {
+    "peripheral": {
+      "app": "COM13",
+      "aux": "COM12"
+    },
+    "central": {
+      "app": "COM10",
+      "aux": "COM11"
+    }
+  },
+  "start": {
+    "peripheral": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    },
+    "central": {
+      "method": "reset-halt-drain-resume",
+      "cpuid": "0x411fd210",
+      "frequency_hz": 1000000,
+      "dap_uart_idle_bias": [
+        {
+          "pin": "P0.00",
+          "pin_cnf_address": "0x5010a080",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        },
+        {
+          "pin": "P1.04",
+          "pin_cnf_address": "0x500d8290",
+          "before": "0x00000002",
+          "after": "0x0000000e",
+          "mode": "input-pullup"
+        }
+      ],
+      "auto_unlock": false,
+      "mass_erase_requested": false
+    }
+  },
+  "lines": {
+    "peripheral": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=peripheral",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=2048 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=372",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=sysworkq reserved=2048 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=232",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=1272",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=4100 allocated=0 peak=0",
+      "P2_LINK connected",
+      "P2_RX writes=1",
+      "P2_LINK disconnected"
+    ],
+    "central": [
+      "*** Booting nRF Connect SDK v3.4.0-99553055607b ***",
+      "*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***",
+      "P2_READY role=central",
+      "P2_PHASE name=ready",
+      "P2_STACK name=BT RX WQ reserved=2048 used=232",
+      "P2_STACK name=bt_tx_processor reserved=904 used=412",
+      "P2_STACK name=BT LW WQ reserved=2104 used=48",
+      "P2_STACK name=BT GATT DM WQ reserved=1304 used=48",
+      "P2_STACK name=sysworkq reserved=2048 used=232",
+      "P2_STACK name=MPSL Work reserved=1024 used=268",
+      "P2_STACK name=idle reserved=320 used=48",
+      "P2_STACK name=main reserved=8192 used=792",
+      "P2_STACK name=ISR0 reserved=2048 used=336",
+      "P2_MALLOC free=8108 allocated=0 peak=0",
+      "P2_KHEAP index=0 free=4100 allocated=0 peak=0",
+      "P2_CYCLE pass=1",
+      "P2_FAIL stage=cross-link driver=0"
+    ]
+  },
+  "result": "FAIL"
+}

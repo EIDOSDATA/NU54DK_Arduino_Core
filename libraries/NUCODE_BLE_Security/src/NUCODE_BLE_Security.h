@@ -40,6 +40,74 @@ namespace nucode::ble
         keyboard_display,
     };
 
+    /**
+     * @brief Zephyr type을 공개하지 않는 Bluetooth LE identity 주소입니다.
+     *
+     * type은 public identity를 0, random identity를 1로 정규화합니다.
+     */
+    struct PeerAddress
+    {
+        std::uint8_t type = 0U;
+        std::uint8_t value[6] = {};
+    };
+
+    /** @brief OOB record를 생성한 로컬 Bluetooth LE 역할입니다. */
+    enum class OobRole : std::uint8_t
+    {
+        peripheral = 1U,
+        central = 2U,
+    };
+
+    /** @brief carrier와 무관하게 공유하는 LE Secure Connections OOB record입니다. */
+    struct SecureConnectionsOobRecord
+    {
+        static constexpr std::uint8_t current_schema = 1U;
+
+        std::uint8_t schema = current_schema;
+        OobRole role = OobRole::peripheral;
+        PeerAddress identity = {};
+        PeerAddress pairing_address = {};
+        std::uint8_t random[16] = {};
+        std::uint8_t confirm[16] = {};
+        std::uint8_t session_nonce[16] = {};
+    };
+
+    /** @brief CRC로 보호된 고정 binary 유선 OOB frame codec입니다. */
+    class OobFrameCodec final
+    {
+      public:
+        static constexpr std::size_t frame_bytes = 74U;
+        static constexpr std::size_t maximum_frame_bytes = 192U;
+
+        /** @brief canonical record를 고정 74-byte frame으로 직렬화합니다. */
+        [[nodiscard]] static bool encode(const SecureConnectionsOobRecord &record,
+                                         std::uint8_t *buffer, std::size_t capacity,
+                                         std::size_t &length) noexcept;
+
+        /** @brief 길이·schema·역할·주소·nonce·CRC를 검사해 record를 복원합니다. */
+        [[nodiscard]] static bool decode(const std::uint8_t *buffer, std::size_t length,
+                                         SecureConnectionsOobRecord &record) noexcept;
+    };
+
+    /** @brief canonical OOB record와 Bluetooth LE OOB NDEF record 사이의 adapter입니다. */
+    class OobNdefAdapter final
+    {
+      public:
+        static constexpr std::size_t maximum_ndef_bytes = 192U;
+
+        /** @brief NFC adapter가 현재 profile에서 명시적으로 활성화됐는지 반환합니다. */
+        [[nodiscard]] static bool enabled() noexcept;
+
+        /** @brief canonical record를 단일 MIME NDEF record로 직렬화합니다. */
+        [[nodiscard]] static bool encode(const SecureConnectionsOobRecord &record,
+                                         std::uint8_t *buffer, std::size_t capacity,
+                                         std::size_t &length) noexcept;
+
+        /** @brief 단일 MIME NDEF record를 엄격히 검사해 canonical record로 복원합니다. */
+        [[nodiscard]] static bool decode(const std::uint8_t *buffer, std::size_t length,
+                                         SecureConnectionsOobRecord &record) noexcept;
+    };
+
     /** @brief 현재 연결에서 관찰한 bond 수명주기 상태입니다. */
     enum class BondState : std::uint8_t
     {
@@ -63,10 +131,14 @@ namespace nucode::ble
         passkey_input_requested,
         passkey_confirmation_requested,
         pairing_cancelled,
+        oob_data_applied,
+        oob_data_rejected,
         paired,
         bond_persistence_pending,
         bond_restored_candidate,
         bond_verified,
+        bond_metadata_migrated,
+        bond_metadata_rejected,
         pairing_failed,
         security_changed,
         bond_removal_requested,
@@ -92,17 +164,11 @@ namespace nucode::ble
         driver_error,
     };
 
-    /** @brief Zephyr type을 공개하지 않는 Bluetooth LE identity 주소입니다. */
-    struct PeerAddress
-    {
-        std::uint8_t type = 0U;
-        std::uint8_t value[6] = {};
-    };
-
     /** @brief 보안 event가 전달하는 고정 길이 snapshot입니다. */
     struct SecurityEventRecord
     {
         SecurityEvent event = SecurityEvent::error;
+        BLEConnectionHandle connection = {};
         SecurityLevel level = SecurityLevel::none;
         PeerAddress peer = {};
         std::uint32_t passkey = 0U;
@@ -121,6 +187,8 @@ namespace nucode::ble
         bool bonding = true;
         std::uint32_t response_timeout_ms = 30000U;
         SecurityIoCapability io_capability = SecurityIoCapability::keyboard_display;
+        bool secure_connections_oob = false;
+        std::uint16_t bond_database_revision = 1U;
     };
 
     /**
@@ -141,17 +209,45 @@ namespace nucode::ble
         /** @brief 현재 연결에 설정된 최소 security level을 요청합니다. */
         [[nodiscard]] bool requestSecurity() noexcept;
 
+        /** @brief 지정 generation의 연결에 설정된 최소 security level을 요청합니다. */
+        [[nodiscard]] bool requestSecurity(BLEConnectionHandle connection) noexcept;
+
         /** @brief Just Works pairing 요청을 승인하거나 거부합니다. */
         [[nodiscard]] bool acceptPairing(bool accept) noexcept;
+
+        /** @brief 지정 연결의 Just Works pairing 요청을 승인하거나 거부합니다. */
+        [[nodiscard]] bool acceptPairing(BLEConnectionHandle connection, bool accept) noexcept;
 
         /** @brief passkey input 요청에 000000~999999 값을 제공합니다. */
         [[nodiscard]] bool enterPasskey(std::uint32_t passkey) noexcept;
 
+        /** @brief 지정 연결의 passkey input 요청에 000000~999999 값을 제공합니다. */
+        [[nodiscard]] bool enterPasskey(BLEConnectionHandle connection,
+                                        std::uint32_t passkey) noexcept;
+
         /** @brief numeric comparison 결과를 승인하거나 거부합니다. */
         [[nodiscard]] bool confirmPasskey(bool accept) noexcept;
 
+        /** @brief 지정 연결의 numeric comparison 결과를 승인하거나 거부합니다. */
+        [[nodiscard]] bool confirmPasskey(BLEConnectionHandle connection, bool accept) noexcept;
+
         /** @brief 진행 중인 사용자 pairing 응답을 취소합니다. */
         [[nodiscard]] bool cancelPairing() noexcept;
+
+        /** @brief 지정 연결에서 진행 중인 사용자 pairing 응답을 취소합니다. */
+        [[nodiscard]] bool cancelPairing(BLEConnectionHandle connection) noexcept;
+
+        /** @brief 새 pairing용 local SC OOB record를 생성하고 역할별 slot에 보존합니다. */
+        [[nodiscard]] bool createLocalOob(OobRole role, const std::uint8_t *session_nonce,
+                                          std::size_t nonce_length,
+                                          SecureConnectionsOobRecord &record) noexcept;
+
+        /** @brief 유선/NFC carrier에서 받은 remote record를 로컬 역할 slot에 결합합니다. */
+        [[nodiscard]] bool setRemoteOob(OobRole local_role,
+                                        const SecureConnectionsOobRecord &record) noexcept;
+
+        /** @brief 지정 역할의 volatile OOB material을 지우며 bond는 삭제하지 않습니다. */
+        [[nodiscard]] bool clearOob(OobRole role) noexcept;
 
         /** @brief 현재 identity에 저장된 bond 수를 반환합니다. */
         [[nodiscard]] std::size_t bondCount() const noexcept;
@@ -159,6 +255,15 @@ namespace nucode::ble
         /** @brief 저장된 peer 주소를 caller buffer에 bounded copy합니다. */
         [[nodiscard]] std::size_t copyBonds(PeerAddress *buffer,
                                             std::size_t capacity) const noexcept;
+
+        /** @brief 현재 image가 요구하는 local bond database revision을 반환합니다. */
+        [[nodiscard]] std::uint16_t bondDatabaseRevision() const noexcept;
+
+        /** @brief 이번 boot에서 원자 변환한 이전 정상 metadata record 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t bondMigrationCount() const noexcept;
+
+        /** @brief 이번 boot에서 fail-closed 폐기한 metadata/native bond 수를 반환합니다. */
+        [[nodiscard]] std::uint32_t rejectedBondCount() const noexcept;
 
         /**
          * @brief 지정 peer의 bond 제거 요청을 제출합니다.
@@ -177,14 +282,26 @@ namespace nucode::ble
         /** @brief 현재 연결이 pairing을 완료했는지 반환합니다. */
         [[nodiscard]] bool paired() const noexcept;
 
+        /** @brief 지정 generation의 연결이 pairing을 완료했는지 반환합니다. */
+        [[nodiscard]] bool paired(BLEConnectionHandle connection) const noexcept;
+
         /** @brief 재부팅 뒤 저장 key로 L2 이상 복원까지 검증되었는지 반환합니다. */
         [[nodiscard]] bool bonded() const noexcept;
+
+        /** @brief 지정 연결이 저장 key로 L2 이상 복원됐는지 반환합니다. */
+        [[nodiscard]] bool bonded(BLEConnectionHandle connection) const noexcept;
 
         /** @brief 현재 연결에서 관찰한 bond 수명주기 상태를 반환합니다. */
         [[nodiscard]] BondState bondState() const noexcept;
 
+        /** @brief 지정 연결에서 관찰한 bond 수명주기 상태를 반환합니다. */
+        [[nodiscard]] BondState bondState(BLEConnectionHandle connection) const noexcept;
+
         /** @brief 현재 연결에서 관찰한 실제 security level을 반환합니다. */
         [[nodiscard]] SecurityLevel currentLevel() const noexcept;
+
+        /** @brief 지정 연결에서 관찰한 실제 security level을 반환합니다. */
+        [[nodiscard]] SecurityLevel currentLevel(BLEConnectionHandle connection) const noexcept;
 
         /** @brief 사용자 event callback을 등록합니다. */
         void onEvent(SecurityEventCallback callback, void *context = nullptr) noexcept;
@@ -266,6 +383,108 @@ namespace nucode::ble
         [[nodiscard]] int lastDriverError() const noexcept;
     };
 
+    /** @brief 표준 HID mouse input report의 고정 4-byte 표현입니다. */
+    struct MouseReport
+    {
+        std::uint8_t buttons = 0U;
+        std::int8_t x = 0;
+        std::int8_t y = 0;
+        std::int8_t wheel = 0;
+    };
+
+    /** @brief 암호화된 BLE HID mouse input report를 전송합니다. */
+    class HidMouse final
+    {
+      public:
+        /** @brief 공용 HIDS에 mouse report를 활성화합니다. */
+        [[nodiscard]] bool begin() noexcept;
+
+        /** @brief 현재 encrypted peer에 하나의 mouse report를 보냅니다. */
+        [[nodiscard]] bool sendReport(const MouseReport &report) noexcept;
+
+        /** @brief 버튼과 상대 X/Y/wheel 이동을 한 report로 보냅니다. */
+        [[nodiscard]] bool move(std::int8_t x, std::int8_t y, std::int8_t wheel = 0,
+                                std::uint8_t buttons = 0U) noexcept;
+
+        /** @brief 모든 mouse button을 놓는 zero report를 보냅니다. */
+        [[nodiscard]] bool releaseAll() noexcept;
+
+        /** @brief mouse profile이 활성화되고 encrypted peer가 연결됐는지 반환합니다. */
+        [[nodiscard]] bool connected() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+
+        /** @brief 마지막 Zephyr/NCS 음수 오류를 반환합니다. */
+        [[nodiscard]] int lastDriverError() const noexcept;
+    };
+
+    /** @brief HID Consumer Page의 단일 16-bit usage report입니다. */
+    struct ConsumerControlReport
+    {
+        std::uint16_t usage = 0U;
+    };
+
+    /** @brief 암호화된 BLE HID consumer-control input report를 전송합니다. */
+    class HidConsumerControl final
+    {
+      public:
+        /** @brief 공용 HIDS에 consumer-control report를 활성화합니다. */
+        [[nodiscard]] bool begin() noexcept;
+
+        /** @brief 현재 encrypted peer에 하나의 consumer report를 보냅니다. */
+        [[nodiscard]] bool sendReport(const ConsumerControlReport &report) noexcept;
+
+        /** @brief 0x0001~0x03ff 범위의 Consumer Page usage를 누릅니다. */
+        [[nodiscard]] bool press(std::uint16_t usage) noexcept;
+
+        /** @brief consumer usage를 놓는 zero report를 보냅니다. */
+        [[nodiscard]] bool release() noexcept;
+
+        /** @brief consumer profile이 활성화되고 encrypted peer가 연결됐는지 반환합니다. */
+        [[nodiscard]] bool connected() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+
+        /** @brief 마지막 Zephyr/NCS 음수 오류를 반환합니다. */
+        [[nodiscard]] int lastDriverError() const noexcept;
+    };
+
+    /** @brief 표준 Heart Rate Service의 측정값과 notification을 관리합니다. */
+    class HeartRateService final
+    {
+      public:
+        /** @brief 1~240 bpm을 저장하고 구독자에게 알립니다. */
+        [[nodiscard]] bool setRate(std::uint16_t beats_per_minute) noexcept;
+
+        /** @brief 마지막으로 저장한 심박수를 반환합니다. */
+        [[nodiscard]] std::uint16_t rate() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+    };
+
+    /** @brief 표준 Environmental Sensing Service의 온도·습도를 관리합니다. */
+    class EnvironmentalSensingService final
+    {
+      public:
+        /** @brief 0.01 °C 단위 signed 온도를 저장하고 구독자에게 알립니다. */
+        [[nodiscard]] bool setTemperature(std::int16_t hundredths_celsius) noexcept;
+
+        /** @brief 마지막 온도를 0.01 °C 단위로 반환합니다. */
+        [[nodiscard]] std::int16_t temperature() const noexcept;
+
+        /** @brief 0.01 % 단위 0~10000 습도를 저장하고 구독자에게 알립니다. */
+        [[nodiscard]] bool setHumidity(std::uint16_t hundredths_percent) noexcept;
+
+        /** @brief 마지막 습도를 0.01 % 단위로 반환합니다. */
+        [[nodiscard]] std::uint16_t humidity() const noexcept;
+
+        /** @brief 마지막 공개 오류를 반환합니다. */
+        [[nodiscard]] SecurityError lastError() const noexcept;
+    };
+
 } // namespace nucode::ble
 
 /** @brief NU54DK의 단일 BLE security manager입니다. */
@@ -279,5 +498,17 @@ extern nucode::ble::DeviceInformationService BLEDeviceInformation;
 
 /** @brief NU54DK의 암호화 BLE HID keyboard facade입니다. */
 extern nucode::ble::HidKeyboard BLEKeyboard;
+
+/** @brief NU54DK의 암호화 BLE HID mouse facade입니다. */
+extern nucode::ble::HidMouse BLEMouse;
+
+/** @brief NU54DK의 암호화 BLE HID consumer-control facade입니다. */
+extern nucode::ble::HidConsumerControl BLEConsumerControl;
+
+/** @brief NU54DK의 표준 BLE Heart Rate Service facade입니다. */
+extern nucode::ble::HeartRateService BLEHeartRate;
+
+/** @brief NU54DK의 표준 BLE Environmental Sensing Service facade입니다. */
+extern nucode::ble::EnvironmentalSensingService BLEEnvironmentalSensing;
 
 #endif

@@ -1,0 +1,16 @@
+{
+  "source_revision": "e6ae812eb18cb40ce2d9b178e59fa48c16ff3989",
+  "source_clean": true,
+  "package_version": "0.5.0-rc.1",
+  "example": "SecureDfuPeripheral",
+  "profile": "secure_ble_dfu",
+  "selected_features": [
+    "nucode.ble.dfu",
+    "nucode.ble.nus",
+    "nucode.ble.security"
+  ],
+  "signing_key_sha256": "48446f5f148b4c17154a014e94b9d627ecda9bfd6293970457e4964fd7625e5d",
+  "artifact_manifest_sha256": "37532a66021e5afa6d1afdd58c9c22411ee9b4ec4339d346d89aad9fdb78d769",
+  "artifact_core_revision": null,
+  "log_sha256": "f61738f3f622a0e16ea7a6c2a2b2a54f295ce9386abdcebc2134135f4eefe521"
+}

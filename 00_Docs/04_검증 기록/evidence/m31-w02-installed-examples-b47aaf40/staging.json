@@ -1,0 +1,11 @@
+{
+  "core_revision": "b47aaf40df6fd5f73d132508e06b2bf7da9364f6",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "source_clean": true,
+  "staging_type": "independent_clean_checkout_platform_files",
+  "file_count": 485,
+  "file_bytes": 6267340,
+  "file_tree_sha256": "566be7061cf56554be2d6bd11ed88ed02590ea5134fd0a4d4a99264b77507f3c",
+  "arduino_config_sha256": "2b5d70b7dbc4133b3d61cbc8f4d4bf385e775138c95c4c8152f726aef16312b7",
+  "platform_is_symlink": false
+}

@@ -10,6 +10,8 @@
 #include <vector>
 
 using namespace nucode::arduino::internal;
+static_assert(IoResourceSingleLease::capacity == 1U);
+static_assert(sizeof(IoResourceSingleLease) < sizeof(IoResourceLease));
 namespace
 {
     std::string scenario;
@@ -278,6 +280,24 @@ void managerScenario()
         }
         assert(state(block) == IoResourceState::free);
     }
+    else if (scenario == "single")
+    {
+        assert(releaseIoResources(first) == IoResourceResult::success);
+        const IoResourceId resources[] = {
+            peripheralIoResource(IoResourceKind::timer_channel, 0U),
+            peripheralIoResource(IoResourceKind::timer_channel, 1U),
+        };
+        IoResourceSingleLease lease{};
+        assert(reserveIoResources(owner, resources, 2U, IoAcquirePolicy::exclusive, lease) ==
+               IoResourceResult::invalid_argument);
+        assert(lease.phase == IoLeasePhase::empty);
+        assert(reserveIoResources(owner, resources, 1U, IoAcquirePolicy::exclusive, lease) ==
+               IoResourceResult::success);
+        assert(commitIoResources(lease) == IoResourceResult::success);
+        auto stale = lease;
+        assert(releaseIoResources(lease) == IoResourceResult::success);
+        assert(releaseIoResources(stale) == IoResourceResult::stale_lease);
+    }
 }
 
 int main(int argc, char **argv)
@@ -286,7 +306,8 @@ int main(int argc, char **argv)
     scenario = argv[1];
     resetIoResourceManagerForTest();
     if (scenario == "stale" || scenario == "transfer" || scenario == "borrow" ||
-        scenario == "capacity" || scenario == "dma" || scenario == "threads")
+        scenario == "capacity" || scenario == "dma" || scenario == "threads" ||
+        scenario == "single")
     {
         managerScenario();
         return 0;

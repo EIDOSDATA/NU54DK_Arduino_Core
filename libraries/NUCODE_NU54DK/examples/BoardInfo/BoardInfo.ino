@@ -1,3 +1,24 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: Standard peripherals (`standard`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 1대 — 1) BoardInfo 실행 보드
+ * @par Serial Monitor
+ * 115200 baud
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
+ * @par 추가 조건
+ * 추가 조건 없음
+ * @par Metadata
+ * identity `NUCODE_NU54DK/BoardInfo`, sha256 `755e0a124515bdb9908640f15469b23bff08d4e4e6f96cf417aa97ec5966465d`
+ * @nucode_example_setup_end */
+
 /**
  * @file BoardInfo.ino
  * @brief NU54DK 모델, target, device ID와 reset 원인을 출력합니다.

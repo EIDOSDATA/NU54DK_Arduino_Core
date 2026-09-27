@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "archive": {
+      "path": "artifacts/nucode-nu54dk-zephyr-0.5.0-rc.2.zip",
+      "sha256": "b2992bcab8c2e7cb322336a3be1a5101c69da5b63fa1676add0194ae181d43c4",
+      "size": 8717905
+    },
+    "checksums": {
+      "path": "artifacts/nucode-nu54dk-zephyr-0.5.0-rc.2.CHECKSUMS.sha256",
+      "sha256": "e984387611c73d3ec26a386067848b58972f9fa8dc4ee3c263c83a77547bb493",
+      "size": 572
+    },
+    "index": {
+      "path": "artifacts/package_nucode_nu54dk_rc_index.json",
+      "sha256": "6324f0a2218fa38725e064d004c9eb062cdb743011af5a640743e8d675be8e0a",
+      "size": 1151
+    },
+    "licenses": {
+      "path": "artifacts/nucode-nu54dk-zephyr-0.5.0-rc.2.license-inventory.json",
+      "sha256": "b9ec18820c46934d934e63b07f0f7b5a2ea2a198ce26e45f836da85e9a0923d0",
+      "size": 37512
+    },
+    "manifest": {
+      "path": "artifacts/nucode-nu54dk-zephyr-0.5.0-rc.2.release-manifest.json",
+      "sha256": "49ba60a3b572ad7588caf014687a12344dc2c5314d365ee0ffffba1766636262",
+      "size": 272086
+    },
+    "notices": {
+      "path": "artifacts/nucode-nu54dk-zephyr-0.5.0-rc.2.THIRD_PARTY_NOTICES.md",
+      "sha256": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "size": 1813
+    },
+    "sbom": {
+      "path": "artifacts/nucode-nu54dk-zephyr-0.5.0-rc.2.spdx.json",
+      "sha256": "2f07b02cf03299977599b1b43a7fddc5d7df4778630e83ac9877caa0da515c3f",
+      "size": 482926
+    }
+  },
+  "blockers": [
+    "rc2_full_rc_ci",
+    "rc2_installed_arduino_cli",
+    "rc2_arduino_ide_gui",
+    "rc2_physical_hil",
+    "rc2_documentation_audit",
+    "rc2_owner_approval",
+    "stable_v0.5.0_publication"
+  ],
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "core_revision": "b2e7a587ba6fde31e033dc21008d7084bd6e631b",
+  "created_at_utc": "2026-09-27T02:11:44.773490+00:00",
+  "host_scope": "Windows 10/11 x64",
+  "m31_readiness_sha256": "211ab0862fc4b36f2dc38981a7ee2737a84af4f0f70e28c37a74045da56e8da1",
+  "milestone": "M31-W08",
+  "package_reproducibility": {
+    "artifact_hashes": {
+      "archive": "b2992bcab8c2e7cb322336a3be1a5101c69da5b63fa1676add0194ae181d43c4",
+      "checksums": "e984387611c73d3ec26a386067848b58972f9fa8dc4ee3c263c83a77547bb493",
+      "licenses": "b9ec18820c46934d934e63b07f0f7b5a2ea2a198ce26e45f836da85e9a0923d0",
+      "manifest": "49ba60a3b572ad7588caf014687a12344dc2c5314d365ee0ffffba1766636262",
+      "notices": "d748669517ba571923cd86fc7adee164945cdf3c36ba391510121c170507282d",
+      "sbom": "2f07b02cf03299977599b1b43a7fddc5d7df4778630e83ac9877caa0da515c3f"
+    },
+    "isolated_builds": 2,
+    "status": "PASS"
+  },
+  "publication_allowed": false,
+  "release_readiness_sha256": "7bde29f7ec10296be1d4c6818a5f371109d90d2c2841700eb7225fc14ab6f89a",
+  "runtime_payload_sha256": "61e3e30ee797bc019dd3d3c49479b706ed35a49bcc4e6f8114d85f1f3c24d5c8",
+  "schema_version": 1,
+  "stable_version": "0.5.0",
+  "status": "HOLD",
+  "version": "0.5.0-rc.2"
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case": "M31-NEG-01:target_recovery",
+  "status": "PASS",
+  "source_revision": "bf9ae1c6b324150a16ea584bf45e6f5a1b5c9176",
+  "minimum_boards": 2,
+  "timeout_seconds": 180,
+  "recovery_timeout_seconds": 30,
+  "iterations_per_class": 20,
+  "completed_per_class": 20,
+  "resource_leaks": 0,
+  "evidence_reuse": "The W06 contract permits family-specific existing denominators. Older 20-cycle functional campaigns are paired with current-runtime P2 instrumentation where applicable; no historical source revision is relabeled as a new physical run.",
+  "classes": [
+    {
+      "id": "peer_loss",
+      "status": "PASS",
+      "completed": 20,
+      "unexpected_success": 0,
+      "resource_leaks": 0,
+      "basis": "encrypted BAP source hardware reset was detected and recovered 20/20 within 30 seconds; the separate current-runtime CS fixture covers peer loss during a 256-step maximum procedure",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/broadcast-encrypted-exact.json",
+      "maximum_procedure_evidence": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/cs-peer-loss-recovery.json"
+    },
+    {
+      "id": "wrong_key",
+      "status": "PASS",
+      "completed": 20,
+      "unexpected_success": 0,
+      "resource_leaks": 0,
+      "basis": "wrong Broadcast Code was rejected 20/20 and the correct Code recovered 20/20; the current-runtime instrumented Audio fixture confirms error -61, 100 recovered frames and both-role STOP",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-broadcast-473929f2/broadcast-encrypted-exact.json",
+      "instrumented_current_runtime_evidence": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/audio-encryption-recovery.json"
+    },
+    {
+      "id": "resource_exhaustion",
+      "status": "PASS",
+      "completed": 20,
+      "unexpected_success": 0,
+      "resource_leaks": 0,
+      "basis": "bounded four-buffer local TX saturation was followed by 20/20 disconnect/reconnect recovery; the separate direct peer-credit fixture proves that this is not being mistaken for remote credit exhaustion",
+      "evidence": "00_Docs/04_검증 기록/evidence/m31-p2-four-axes-20260925/coc-burst-acl20.json",
+      "direct_peer_credit_evidence": "00_Docs/04_검증 기록/evidence/m31-p2-three-axes-20260925/coc-peer-credit-r2.json"
+    }
+  ],
+  "retry_policy": {
+    "unbounded_retry": false,
+    "maximum_diagnostic_retests": 1
+  }
+}

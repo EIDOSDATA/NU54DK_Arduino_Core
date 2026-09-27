@@ -1,0 +1,318 @@
+00000.127|runner|command board=G value=r
+00000.203|source|public audio source preparing
+00000.203|source|public audio source streaming
+00000.323|runner|command board=F value=r
+00000.329|sink|public audio sink scanning
+00000.351|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00001.225|source|public audio sent frames=100
+00001.234|sink|public audio sink streaming
+00002.238|source|public audio sent frames=200
+00002.248|sink|public audio received=100 energy=1107631 dropped=0
+00002.371|runner|error-window name=wrong-code-1 state=armed
+00002.380|runner|command board=F value=w
+00002.389|sink|public audio sink scanning
+00002.403|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00003.250|source|public audio sent frames=300
+00003.274|sink|public audio sync failed: -61 step=11
+00003.274|runner|error-window name=wrong-code-1 state=disarmed
+00004.268|source|public audio sent frames=400
+00004.277|sink|public audio sink scanning
+00004.299|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00005.285|source|public audio sent frames=500
+00005.313|sink|public audio sink streaming
+00006.302|source|public audio sent frames=600
+00006.317|sink|public audio received=100 energy=958876 dropped=0
+00006.317|runner|wrong-code cycle=1/20 elapsed=4.069s pass
+00006.439|runner|error-window name=wrong-code-2 state=armed
+00006.439|runner|command board=F value=w
+00006.444|sink|public audio sink scanning
+00006.473|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00007.313|source|public audio sent frames=700
+00007.355|sink|public audio sync failed: -61 step=11
+00007.356|runner|error-window name=wrong-code-2 state=disarmed
+00008.330|source|public audio sent frames=800
+00008.358|sink|public audio sink scanning
+00008.675|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00009.341|source|public audio sent frames=900
+00009.695|sink|public audio sink streaming
+00010.361|source|public audio sent frames=1000
+00010.706|sink|public audio received=100 energy=1100263 dropped=0
+00010.706|runner|wrong-code cycle=2/20 elapsed=4.389s pass
+00010.827|runner|error-window name=wrong-code-3 state=armed
+00010.827|runner|command board=F value=w
+00010.832|sink|public audio sink scanning
+00011.215|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00011.368|source|public audio sent frames=1100
+00012.381|source|public audio sent frames=1200
+00012.576|sink|public audio sync failed: -61 step=11
+00012.576|runner|error-window name=wrong-code-3 state=disarmed
+00013.398|source|public audio sent frames=1300
+00013.576|sink|public audio sink scanning
+00013.888|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00014.407|source|public audio sent frames=1400
+00014.732|sink|public audio sink streaming
+00015.432|source|public audio sent frames=1500
+00015.747|sink|public audio received=100 energy=1072902 dropped=0
+00015.747|runner|wrong-code cycle=3/20 elapsed=5.041s pass
+00015.868|runner|error-window name=wrong-code-4 state=armed
+00015.868|runner|command board=F value=w
+00015.878|sink|public audio sink scanning
+00016.133|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00016.449|source|public audio sent frames=1600
+00017.013|sink|public audio sync failed: -61 step=11
+00017.013|runner|error-window name=wrong-code-4 state=disarmed
+00017.465|source|public audio sent frames=1700
+00018.018|sink|public audio sink scanning
+00018.046|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00018.490|source|public audio sent frames=1800
+00018.874|sink|public audio sink streaming
+00019.506|source|public audio sent frames=1900
+00019.886|sink|public audio received=100 energy=1036609 dropped=0
+00019.886|runner|wrong-code cycle=4/20 elapsed=4.139s pass
+00020.008|runner|error-window name=wrong-code-5 state=armed
+00020.008|runner|command board=F value=w
+00020.014|sink|public audio sink scanning
+00020.506|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00020.519|source|public audio sent frames=2000
+00021.334|sink|public audio sync failed: -61 step=11
+00021.334|runner|error-window name=wrong-code-5 state=disarmed
+00021.536|source|public audio sent frames=2100
+00022.338|sink|public audio sink scanning
+00022.547|source|public audio sent frames=2200
+00022.831|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00023.555|source|public audio sent frames=2300
+00023.791|sink|public audio sink streaming
+00024.570|source|public audio sent frames=2400
+00024.807|sink|public audio received=100 energy=989557 dropped=0
+00024.807|runner|wrong-code cycle=5/20 elapsed=4.921s pass
+00024.930|runner|error-window name=wrong-code-6 state=armed
+00024.930|runner|command board=F value=w
+00024.936|sink|public audio sink scanning
+00024.972|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00025.591|source|public audio sent frames=2500
+00025.955|sink|public audio sync failed: -61 step=11
+00025.955|runner|error-window name=wrong-code-6 state=disarmed
+00026.612|source|public audio sent frames=2600
+00026.956|sink|public audio sink scanning
+00027.391|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00027.627|source|public audio sent frames=2700
+00028.290|sink|public audio sink streaming
+00028.635|source|public audio sent frames=2800
+00029.292|sink|public audio received=100 energy=1050734 dropped=0
+00029.292|runner|wrong-code cycle=6/20 elapsed=4.486s pass
+00029.413|runner|error-window name=wrong-code-7 state=armed
+00029.413|runner|command board=F value=w
+00029.418|sink|public audio sink scanning
+00029.455|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00029.647|source|public audio sent frames=2900
+00030.640|sink|public audio sync failed: -61 step=11
+00030.640|runner|error-window name=wrong-code-7 state=disarmed
+00030.669|source|public audio sent frames=3000
+00031.647|sink|public audio sink scanning
+00031.680|source|public audio sent frames=3100
+00031.680|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00032.552|sink|public audio sink streaming
+00032.696|source|public audio sent frames=3200
+00033.565|sink|public audio received=100 energy=907237 dropped=0
+00033.565|runner|wrong-code cycle=7/20 elapsed=4.272s pass
+00033.686|runner|error-window name=wrong-code-8 state=armed
+00033.686|runner|command board=F value=w
+00033.692|sink|public audio sink scanning
+00033.710|source|public audio sent frames=3300
+00034.069|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00034.722|source|public audio sent frames=3400
+00034.893|sink|public audio sync failed: -61 step=11
+00034.893|runner|error-window name=wrong-code-8 state=disarmed
+00035.733|source|public audio sent frames=3500
+00035.897|sink|public audio sink scanning
+00035.969|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00036.747|source|public audio sent frames=3600
+00036.872|sink|public audio sink streaming
+00037.765|source|public audio sent frames=3700
+00037.883|sink|public audio received=100 energy=1059809 dropped=0
+00037.884|runner|wrong-code cycle=8/20 elapsed=4.319s pass
+00038.005|runner|error-window name=wrong-code-9 state=armed
+00038.005|runner|command board=F value=w
+00038.015|sink|public audio sink scanning
+00038.448|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00038.779|source|public audio sent frames=3800
+00039.332|sink|public audio sink streaming
+00039.343|sink|public audio sync failed: -61 step=11
+00039.343|runner|error-window name=wrong-code-9 state=disarmed
+00039.793|source|public audio sent frames=3900
+00040.345|sink|public audio sink scanning
+00040.542|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00040.805|source|public audio sent frames=4000
+00041.431|sink|public audio sink streaming
+00041.819|source|public audio sent frames=4100
+00042.445|sink|public audio received=100 energy=986915 dropped=0
+00042.445|runner|wrong-code cycle=9/20 elapsed=4.561s pass
+00042.568|runner|error-window name=wrong-code-10 state=armed
+00042.568|runner|command board=F value=w
+00042.573|sink|public audio sink scanning
+00042.609|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00042.835|source|public audio sent frames=4200
+00043.592|sink|public audio sync failed: -61 step=11
+00043.592|runner|error-window name=wrong-code-10 state=disarmed
+00043.848|source|public audio sent frames=4300
+00044.595|sink|public audio sink scanning
+00044.618|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00044.865|source|public audio sent frames=4400
+00045.569|sink|public audio sink streaming
+00045.879|source|public audio sent frames=4500
+00046.582|sink|public audio received=100 energy=928794 dropped=0
+00046.582|runner|wrong-code cycle=10/20 elapsed=4.137s pass
+00046.703|runner|error-window name=wrong-code-11 state=armed
+00046.703|runner|command board=F value=w
+00046.708|sink|public audio sink scanning
+00046.893|source|public audio sent frames=4600
+00046.902|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00047.792|sink|public audio sync failed: -61 step=11
+00047.792|runner|error-window name=wrong-code-11 state=disarmed
+00047.906|source|public audio sent frames=4700
+00048.794|sink|public audio sink scanning
+00048.922|source|public audio sent frames=4800
+00049.469|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00049.935|source|public audio sent frames=4900
+00050.369|sink|public audio sink streaming
+00050.952|source|public audio sent frames=5000
+00051.382|sink|public audio received=100 energy=1139185 dropped=0
+00051.382|runner|wrong-code cycle=11/20 elapsed=4.800s pass
+00051.503|runner|error-window name=wrong-code-12 state=armed
+00051.503|runner|command board=F value=w
+00051.508|sink|public audio sink scanning
+00051.884|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00051.967|source|public audio sent frames=5100
+00052.713|sink|public audio sync failed: -61 step=11
+00052.713|runner|error-window name=wrong-code-12 state=disarmed
+00052.982|source|public audio sent frames=5200
+00053.713|sink|public audio sink scanning
+00053.792|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00054.001|source|public audio sent frames=5300
+00054.689|sink|public audio sink streaming
+00055.020|source|public audio sent frames=5400
+00055.703|sink|public audio received=100 energy=1100653 dropped=0
+00055.703|runner|wrong-code cycle=12/20 elapsed=4.321s pass
+00055.825|runner|error-window name=wrong-code-13 state=armed
+00055.825|runner|command board=F value=w
+00055.834|sink|public audio sink scanning
+00055.848|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00056.034|source|public audio sent frames=5500
+00057.030|sink|public audio sync failed: -61 step=11
+00057.030|runner|error-window name=wrong-code-13 state=disarmed
+00057.052|source|public audio sent frames=5600
+00058.036|sink|public audio sink scanning
+00058.072|source|public audio sent frames=5700
+00058.170|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00059.069|sink|public audio sink streaming
+00059.087|source|public audio sent frames=5800
+00060.084|sink|public audio received=100 energy=1065263 dropped=0
+00060.084|runner|wrong-code cycle=13/20 elapsed=4.381s pass
+00060.098|source|public audio sent frames=5900
+00060.223|runner|error-window name=wrong-code-14 state=armed
+00060.223|runner|command board=F value=w
+00060.232|sink|public audio sink scanning
+00060.363|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00061.112|source|public audio sent frames=6000
+00061.170|sink|public audio sync failed: -61 step=11
+00061.171|runner|error-window name=wrong-code-14 state=disarmed
+00062.118|source|public audio sent frames=6100
+00062.174|sink|public audio sink scanning
+00062.192|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00063.030|sink|public audio sink streaming
+00063.134|source|public audio sent frames=6200
+00064.034|sink|public audio received=100 energy=1131139 dropped=0
+00064.034|runner|wrong-code cycle=14/20 elapsed=3.949s pass
+00064.148|source|public audio sent frames=6300
+00064.274|runner|error-window name=wrong-code-15 state=armed
+00064.274|runner|command board=F value=w
+00064.283|sink|public audio sink scanning
+00064.776|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00065.169|source|public audio sent frames=6400
+00065.608|sink|public audio sync failed: -61 step=11
+00065.608|runner|error-window name=wrong-code-15 state=disarmed
+00066.189|source|public audio sent frames=6500
+00066.611|sink|public audio sink scanning
+00066.811|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00067.202|source|public audio sent frames=6600
+00067.706|sink|public audio sink streaming
+00068.221|source|public audio sent frames=6700
+00068.719|sink|public audio received=100 energy=956428 dropped=0
+00068.719|runner|wrong-code cycle=15/20 elapsed=4.686s pass
+00068.842|runner|error-window name=wrong-code-16 state=armed
+00068.842|runner|command board=F value=w
+00068.847|sink|public audio sink scanning
+00069.169|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00069.235|source|public audio sent frames=6800
+00070.168|sink|public audio sync failed: -61 step=11
+00070.168|runner|error-window name=wrong-code-16 state=disarmed
+00070.244|source|public audio sent frames=6900
+00071.171|sink|public audio sink scanning
+00071.208|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00071.268|source|public audio sent frames=7000
+00072.269|sink|public audio sink streaming
+00072.279|source|public audio sent frames=7100
+00073.272|sink|public audio received=100 energy=1172020 dropped=0
+00073.272|runner|wrong-code cycle=16/20 elapsed=4.553s pass
+00073.297|source|public audio sent frames=7200
+00073.423|runner|error-window name=wrong-code-17 state=armed
+00073.423|runner|command board=F value=w
+00073.429|sink|public audio sink scanning
+00073.567|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00074.305|source|public audio sent frames=7300
+00074.548|sink|public audio sync failed: -61 step=11
+00074.548|runner|error-window name=wrong-code-17 state=disarmed
+00075.326|source|public audio sent frames=7400
+00075.554|sink|public audio sink scanning
+00075.753|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00076.341|source|public audio sent frames=7500
+00076.707|sink|public audio sink streaming
+00077.360|source|public audio sent frames=7600
+00077.713|sink|public audio received=100 energy=1150664 dropped=0
+00077.713|runner|wrong-code cycle=17/20 elapsed=4.441s pass
+00077.834|runner|error-window name=wrong-code-18 state=armed
+00077.834|runner|command board=F value=w
+00077.844|sink|public audio sink scanning
+00077.976|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00078.373|source|public audio sent frames=7700
+00078.927|sink|public audio sync failed: -61 step=11
+00078.927|runner|error-window name=wrong-code-18 state=disarmed
+00079.394|source|public audio sent frames=7800
+00079.931|sink|public audio sink scanning
+00080.008|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00080.412|source|public audio sent frames=7900
+00080.910|sink|public audio sink streaming
+00081.430|source|public audio sent frames=8000
+00081.921|sink|public audio received=100 energy=981493 dropped=0
+00081.921|runner|wrong-code cycle=18/20 elapsed=4.208s pass
+00082.044|runner|error-window name=wrong-code-19 state=armed
+00082.044|runner|command board=F value=w
+00082.049|sink|public audio sink scanning
+00082.080|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00082.440|source|public audio sent frames=8100
+00082.947|sink|public audio sync failed: -61 step=11
+00082.947|runner|error-window name=wrong-code-19 state=disarmed
+00083.454|source|public audio sent frames=8200
+00083.954|sink|public audio sink scanning
+00083.968|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00084.468|source|public audio sent frames=8300
+00084.809|sink|public audio sink streaming
+00085.479|source|public audio sent frames=8400
+00085.811|sink|public audio received=100 energy=912666 dropped=0
+00085.811|runner|wrong-code cycle=19/20 elapsed=3.890s pass
+00085.934|runner|error-window name=wrong-code-20 state=armed
+00085.934|runner|command board=F value=w
+00085.939|sink|public audio sink scanning
+00086.316|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00086.492|source|public audio sent frames=8500
+00087.206|sink|public audio sync failed: -61 step=11
+00087.207|runner|error-window name=wrong-code-20 state=disarmed
+00087.500|source|public audio sent frames=8600
+00088.212|sink|public audio sink scanning
+00088.248|sink|selected public audio name=NUCODE-PUBLIC-AUDIO program=Synthetic 16 kHz audio encrypted=yes
+00088.518|source|public audio sent frames=8700
+00089.519|source|public audio sent frames=8800
+00089.668|sink|public audio sink streaming
+00090.536|source|public audio sent frames=8900
+00090.680|sink|public audio received=100 energy=995245 dropped=0
+00090.680|runner|wrong-code cycle=20/20 elapsed=4.869s pass

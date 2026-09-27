@@ -1,0 +1,155 @@
+{
+    "environment":{
+        "os":"Windows",
+        "zephyr_version":"ncs-v3.4.0",
+        "toolchain":"zephyr/gnu",
+        "commit_date":"2026-07-01T15:51:10+02:00",
+        "run_date":"2026-09-15T18:25:08+00:00",
+        "options":{
+            "testsuite_root":[
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m31_ble_capability",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m31_ble_capability",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m31_ble_capability",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m31_ble_capability",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m31_ble_capability"
+            ],
+            "platform":[
+                "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
+            ],
+            "test":[
+                "nucode.m31.ble_capability",
+                "nucode.m31.ble_capability.iso",
+                "nucode.m31.ble_capability.cs",
+                "nucode.m31.ble_capability.df_tx",
+                "nucode.m31.ble_capability.df_iq_ll"
+            ],
+            "build_only":true,
+            "board_root":[
+                "C:\\Users\\eidos\\ncs\\v3.4.0\\zephyr/boards",
+                "C:\\Users\\eidos\\ncs\\v3.4.0\\zephyr/subsys/testsuite/boards",
+                "C:/Users/eidos/ncs/v3.4.0/nrf\\.\\boards",
+                "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\board_package\\NU54DK_Zephyr_DTS\\boards"
+            ],
+            "jobs":2,
+            "detailed_test_id":true,
+            "outdir":"C:\\6",
+            "extra_args":[
+                "BOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+                "EXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+                "USE_CCACHE=0"
+            ]
+        }
+    },
+    "testsuites":[
+        {
+            "name":"nucode.m31.ble_capability",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m31_ble_capability",
+            "run_id":"08cfa38336778accff51994b6c576ddb",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"39.91",
+            "testcases":[
+                {
+                    "identifier":"nucode.m31.ble_capability",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m31.ble_capability.iso",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m31_ble_capability",
+            "run_id":"0f1939eecb294a19fa034973eb1f2bf9",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"60.02",
+            "testcases":[
+                {
+                    "identifier":"nucode.m31.ble_capability.iso",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m31.ble_capability.cs",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m31_ble_capability",
+            "run_id":"5c5253db2d7af90c343e376b6015940e",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"60.71",
+            "testcases":[
+                {
+                    "identifier":"nucode.m31.ble_capability.cs",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m31.ble_capability.df_tx",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m31_ble_capability",
+            "run_id":"5e9014ba2c945ff12d5f4fa56362e6a0",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"98.26",
+            "testcases":[
+                {
+                    "identifier":"nucode.m31.ble_capability.df_tx",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m31.ble_capability.df_iq_ll",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m31_ble_capability",
+            "run_id":"fb590fc2c41949a4a979ef836443bc42",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"99.64",
+            "testcases":[
+                {
+                    "identifier":"nucode.m31.ble_capability.df_iq_ll",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        }
+    ]
+}

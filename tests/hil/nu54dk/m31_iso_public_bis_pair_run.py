@@ -1,0 +1,357 @@
+#!/usr/bin/env python3
+"""! @brief 공개 RawBis Arduino 두 예제의 SDU·해제 반복을 실제 보드에서 검증합니다. """
+
+from __future__ import annotations
+
+from argparse import ArgumentParser
+from pathlib import Path
+import hashlib
+import json
+import re
+import subprocess
+import sys
+import time
+
+from pyocd.core.helpers import ConnectHelper
+import serial
+
+from ble_pair_hil_common import flash_image_pyocd
+
+
+ROOT = Path(__file__).resolve().parents[3]
+SENT = re.compile(r"^BIS sent frames=100$")
+RECEIVED = re.compile(r"^BIS received frames=(99|100) missing=(0|1) errors=0$")
+TIME_SENT = re.compile(
+    r"^BIS time sent frames=100 timestamped=99 first_hci_ts=(\d+) last_hci_ts=(\d+)$"
+)
+TIME_RECEIVED = re.compile(r"^BIS time received frames=100 timestamps=100 errors=0$")
+RECEIVE_END = re.compile(r"^BIS received frames=")
+WRONG_CODE_REJECTED = re.compile(r"^BIS wrong code rejected native=-61 leaked=0$")
+RECOVERED = re.compile(
+    r"^BIS wrong code recovered frames=(99|100) missing=(0|1) errors=0$"
+)
+SYNC_LOST = re.compile(
+    r"^BIS (?:peer stopped before enough frames: |error: -67 frames=)"
+    r"(\d{1,2}) missing=(\d{1,2}) errors=0$"
+)
+WRONG_CODE_FAILURE = re.compile(r"^BIS wrong code (?:begin failed|failed|timeout)")
+ERROR = re.compile(
+    r"^BIS (?:start|send) failed:|^BIS error:|^BIS receive timeout|"
+    r"^BIS peer stopped before enough frames:|^BIS time (?:invalid|error:|"
+    r"source timeout|receive timeout|TX sync sequence regressed|send failed:)|"
+    r"^BIS recovery (?:begin failed:|exhausted)"
+)
+
+
+## @brief probe UID는 메모리에서만 사용하고 결과에는 SHA-256만 기록합니다.
+def resolve_probes(expected: dict[str, str]) -> dict[str, str]:
+    connected = {
+        hashlib.sha256(probe.unique_id.encode()).hexdigest(): probe.unique_id
+        for probe in ConnectHelper.get_all_connected_probes()
+    }
+    if len(set(expected.values())) != 2 or any(
+        digest not in connected for digest in expected.values()
+    ):
+        raise RuntimeError("두 역할의 CMSIS-DAP V2 probe SHA mapping이 일치하지 않습니다")
+    return {role: connected[digest] for role, digest in expected.items()}
+
+
+## @brief sector flash 이후 두 보드에 비파괴 hardware reset을 보냅니다.
+def reset(uid: str) -> None:
+    result = subprocess.run(
+        (
+            sys.executable, "-I", "-m", "pyocd", "reset", "--uid", uid,
+            "--target", "nrf54l", "--frequency", "500000", "--connect",
+            "under-reset", "-O", "cmsis_dap.limit_packets=true", "-O",
+            "cmsis_dap.prefer_v1=false", "-O", "auto_unlock=false",
+            "--method", "hw",
+        ),
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError("CMSIS-DAP hardware reset 실패")
+
+
+## @brief 두 COM의 완결된 줄을 원본 순서와 시간과 함께 저장합니다.
+def capture(ports: dict[str, str], probe_ids: dict[str, str],
+            seconds: float, cycles: int, revision: str,
+            wrong_code: bool, time_mode: bool,
+            recovery_mode: bool, sync_loss_mode: bool,
+            injection: dict) -> dict[str, list[dict]]:
+    streams = {role: serial.Serial(port, 115200, timeout=0.1)
+               for role, port in ports.items()}
+    lines: dict[str, list[dict]] = {role: [] for role in ports}
+    pending = {role: b"" for role in ports}
+    try:
+        for stream in streams.values():
+            stream.reset_input_buffer()
+        reset(probe_ids["source"])
+        reset(probe_ids["receiver"])
+        start = time.monotonic()
+        deadline = start + seconds
+        while time.monotonic() < deadline:
+            for role, stream in streams.items():
+                pending[role] += stream.read(4096)
+                while b"\n" in pending[role]:
+                    line, pending[role] = pending[role].split(b"\n", 1)
+                    lines[role].append({
+                        "at_s": round(time.monotonic() - start, 3),
+                        "text": line.rstrip(b"\r").decode("utf-8", errors="replace"),
+                    })
+            after_boot = {role: after_final_boot(items, revision)
+                          for role, items in lines.items()}
+            if sync_loss_mode and "source_reset_at_s" not in injection and any(
+                item["text"].startswith("BIS receiver synchronized ms=")
+                for item in after_boot["receiver"]
+            ):
+                injection["payload_before_reset"] = any(
+                    item["text"].startswith("BIS first frame=") or
+                    item["text"].startswith("BIS received frames=")
+                    for item in after_boot["receiver"]
+                )
+                injection["completed_before_reset"] = any(
+                    item["text"].startswith("BIS received frames=")
+                    for item in after_boot["receiver"]
+                )
+                reset(probe_ids["source"])
+                injection["source_reset_at_s"] = round(time.monotonic() - start, 3)
+            sent_pattern = TIME_SENT if time_mode else SENT
+            receive_pattern = TIME_RECEIVED if time_mode else RECEIVED
+            sent_count = sum(bool(sent_pattern.fullmatch(item["text"]))
+                             for item in after_boot["source"])
+            receiver_done = (
+                sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= 1 and
+                any(item["text"] == "BIS wrong code stopped"
+                    for item in after_boot["receiver"])
+            ) if wrong_code else (
+                sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= 1 and
+                sum(bool(RECOVERED.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= 1 and
+                any(item["text"] == "BIS wrong code recovery stopped"
+                    for item in after_boot["receiver"])
+            ) if recovery_mode else (
+                any(SYNC_LOST.fullmatch(item["text"])
+                    for item in after_boot["receiver"]) and
+                any(RECEIVED.fullmatch(item["text"])
+                    for item in after_boot["receiver"])
+            ) if sync_loss_mode else (
+                sum(bool(receive_pattern.fullmatch(item["text"]))
+                    for item in after_boot["receiver"]) >= cycles
+            )
+            if sent_count >= (2 if recovery_mode else cycles) and receiver_done:
+                break
+    finally:
+        for stream in streams.values():
+            stream.close()
+    return lines
+
+
+## @brief 최종 hardware reset의 boot banner 이후만 한 실행으로 셉니다.
+def after_final_boot(lines: list[dict], revision: str) -> list[dict]:
+    banner = f"BIS core revision={revision}"
+    positions = [index for index, item in enumerate(lines)
+                 if item["text"] == banner]
+    return lines[positions[-1] + 1:] if positions else []
+
+
+## @brief exact source·image·probe 결합을 확인하고 20회 사용자 payload 경로를 실행합니다.
+def main() -> int:
+    parser = ArgumentParser()
+    for role in ("source", "receiver"):
+        parser.add_argument(f"--{role}-image", type=Path, required=True)
+        parser.add_argument(f"--{role}-probe-sha256", required=True)
+        parser.add_argument(f"--{role}-port", required=True)
+    parser.add_argument("--cycles", type=int, default=20)
+    parser.add_argument("--seconds", type=float, default=120.0)
+    parser.add_argument("--mode", choices=("plain", "encrypted", "encrypted_negative",
+                                           "encrypted_recovery", "sync_loss", "time"),
+                        default="plain")
+    parser.add_argument("--evidence", type=Path, required=True)
+    parser.add_argument("--allow-dirty-candidate", action="store_true")
+    args = parser.parse_args()
+    if args.cycles <= 0 or args.seconds <= 0:
+        parser.error("cycles와 seconds는 양수여야 합니다")
+    wrong_code = args.mode == "encrypted_negative"
+    recovery_mode = args.mode == "encrypted_recovery"
+    sync_loss_mode = args.mode == "sync_loss"
+    time_mode = args.mode == "time"
+    if wrong_code and args.cycles != 1:
+        parser.error("encrypted_negative는 한 송신 session을 검사합니다")
+    if recovery_mode and args.cycles != 1:
+        parser.error("encrypted_recovery는 wrong-code 후 한 복구 session을 검사합니다")
+    if sync_loss_mode and args.cycles != 1:
+        parser.error("sync_loss는 BIG 중단 후 한 복구 session을 검사합니다")
+    revision = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=ROOT,
+                                       text=True).strip()
+    dirty = subprocess.check_output(("git", "status", "--porcelain"), cwd=ROOT,
+                                    text=True).strip()
+    if dirty and not args.allow_dirty_candidate:
+        raise RuntimeError("Core source가 clean 상태가 아닙니다")
+    images = {role: getattr(args, f"{role}_image").resolve()
+              for role in ("source", "receiver")}
+    if any(path.suffix.lower() != ".hex" or not path.is_file()
+           for path in images.values()):
+        raise RuntimeError("두 역할의 Intel HEX image가 필요합니다")
+    probe_hashes = {role: getattr(args, f"{role}_probe_sha256")
+                    for role in images}
+    if any(re.fullmatch(r"[0-9a-f]{64}", digest) is None
+           for digest in probe_hashes.values()):
+        parser.error("probe SHA-256은 64자리 소문자 hex여야 합니다")
+    probe_ids = resolve_probes(probe_hashes)
+    ports = {role: getattr(args, f"{role}_port") for role in images}
+    if len(set(ports.values())) != 2:
+        parser.error("두 역할의 COM port가 같으면 안 됩니다")
+    flash = {}
+    for role in ("receiver", "source"):
+        flash[role] = flash_image_pyocd(role, probe_ids[role], images[role],
+                                        120.0, hardware_reset=True)
+    injection: dict = {}
+    lines = capture(ports, probe_ids, args.seconds, args.cycles, revision,
+                    wrong_code, time_mode, recovery_mode, sync_loss_mode,
+                    injection)
+    post_boot = {role: after_final_boot(items, revision)
+                 for role, items in lines.items()}
+    sent_pattern = TIME_SENT if time_mode else SENT
+    receive_pattern = TIME_RECEIVED if time_mode else RECEIVED
+    sent_matches = [sent_pattern.fullmatch(item["text"])
+                    for item in post_boot["source"]]
+    sent_matches = [match for match in sent_matches if match is not None]
+    sent = len(sent_matches)
+    receive_items = [item for item in post_boot["receiver"]
+                     if receive_pattern.fullmatch(item["text"])]
+    receive_matches = [receive_pattern.fullmatch(item["text"])
+                       for item in receive_items]
+    received = len(receive_matches)
+    payload_frames = received * 100 if time_mode else sum(
+        int(match.group(1)) for match in receive_matches
+    )
+    missing_frames = 0 if time_mode else sum(
+        int(match.group(2)) for match in receive_matches
+    )
+    valid_hci_times = not time_mode or all(
+        0 < int(match.group(1)) < int(match.group(2)) for match in sent_matches
+    )
+    bad = []
+    for role in post_boot:
+        for item in post_boot[role]:
+            if ((ERROR.search(item["text"]) and
+                 not (sync_loss_mode and SYNC_LOST.fullmatch(item["text"]))) or
+                WRONG_CODE_FAILURE.search(item["text"]) or
+                (RECEIVE_END.search(item["text"]) and
+                 not RECEIVED.fullmatch(item["text"])) or
+                (item["text"].startswith("BIS wrong code recovered frames=") and
+                 not RECOVERED.fullmatch(item["text"])) or
+                (item["text"].startswith("BIS time received frames=") and
+                 not TIME_RECEIVED.fullmatch(item["text"]))):
+                bad.append(item)
+    rejected = sum(bool(WRONG_CODE_REJECTED.fullmatch(item["text"]))
+                   for item in post_boot["receiver"])
+    stopped = sum(item["text"] == "BIS wrong code stopped"
+                  for item in post_boot["receiver"])
+    recovery_matches = [RECOVERED.fullmatch(item["text"])
+                        for item in post_boot["receiver"]]
+    recovery_matches = [match for match in recovery_matches if match is not None]
+    recovery_stopped = sum(item["text"] == "BIS wrong code recovery stopped"
+                           for item in post_boot["receiver"])
+    sync_loss_matches = [item for item in post_boot["receiver"]
+                         if SYNC_LOST.fullmatch(item["text"])]
+    sync_loss_partial = all(
+        sum(int(value) for value in SYNC_LOST.fullmatch(item["text"]).groups()) < 100
+        for item in sync_loss_matches
+    )
+    recovery_path_confirmed = False
+    if len(sync_loss_matches) == 1 and len(receive_items) == 1:
+        receiver_lines = post_boot["receiver"]
+        loss_index = receiver_lines.index(sync_loss_matches[0])
+        receive_index = receiver_lines.index(receive_items[0])
+        recovery_path_confirmed = any(
+            loss_index < scan_index < sync_index < receive_index
+            for scan_index, scan_line in enumerate(receiver_lines)
+            if scan_line["text"] == "BIS receiver scanning"
+            for sync_index, sync_line in enumerate(receiver_lines)
+            if sync_line["text"].startswith("BIS receiver synchronized ms=")
+        )
+    recovered_frames = sum(int(match.group(1)) for match in recovery_matches)
+    recovery_missing = sum(int(match.group(2)) for match in recovery_matches)
+    if recovery_mode:
+        received = len(recovery_matches)
+        payload_frames = recovered_frames
+        missing_frames = recovery_missing
+    image_revision_confirmed = {
+        role: any(item["text"] == f"BIS core revision={revision}"
+                  for item in lines[role])
+        for role in lines
+    }
+    if sync_loss_mode:
+        accepted = ("source_reset_at_s" in injection and
+                    not injection["completed_before_reset"] and
+                    sent >= 1 and received == 1 and len(sync_loss_matches) == 1 and
+                    sync_loss_partial and recovery_path_confirmed and
+                    injection["source_reset_at_s"] < sync_loss_matches[0]["at_s"] and
+                    sync_loss_matches[0]["at_s"] < receive_items[0]["at_s"] and
+                    payload_frames + missing_frames == 100 and
+                    missing_frames <= 1 and rejected == 0 and not bad and
+                    all(image_revision_confirmed.values()))
+    elif recovery_mode:
+        accepted = (sent >= 2 and rejected == 1 and stopped == 1 and
+                    len(recovery_matches) == 1 and recovery_stopped == 1 and
+                    recovered_frames + recovery_missing == 100 and
+                    recovery_missing <= 1 and not bad and
+                    all(image_revision_confirmed.values()))
+    elif wrong_code:
+        accepted = (sent == 1 and received == 0 and rejected == 1 and stopped == 1 and
+                    payload_frames == 0 and not bad and
+                    all(image_revision_confirmed.values()))
+    else:
+        accepted = (sent == args.cycles and received == args.cycles and
+                    payload_frames + missing_frames == args.cycles * 100 and
+                    missing_frames <= (0 if time_mode else args.cycles) and
+                    rejected == 0 and not bad and
+                    valid_hci_times and
+                    all(image_revision_confirmed.values()))
+    status = ("CANDIDATE_PASS" if dirty else "PASS") if accepted else "FAIL"
+    result = {
+        "status": status,
+        "test": f"arduino_public_raw_bis_{args.mode}_pair",
+        "core_revision": revision,
+        "source_clean": not bool(dirty),
+        "probe_sha256": probe_hashes,
+        "ports": ports,
+        "image_sha256": {role: hashlib.sha256(path.read_bytes()).hexdigest()
+                         for role, path in images.items()},
+        "flash": flash,
+        "requested_cycles": args.cycles,
+        "completed_cycles": {"source": sent, "receiver": received},
+        "payload_frames": payload_frames,
+        "missing_frames": missing_frames,
+        "allowed_missing": 0 if time_mode else args.cycles,
+        "valid_hci_times": valid_hci_times,
+        "wrong_code_rejected": rejected,
+        "wrong_code_stopped": stopped,
+        "recovered_frames": recovered_frames,
+        "recovery_missing": recovery_missing,
+        "recovery_stopped": recovery_stopped,
+        "sync_loss_injection": injection,
+        "sync_loss_lines": sync_loss_matches,
+        "recovery_path_confirmed": recovery_path_confirmed,
+        "image_revision_confirmed": image_revision_confirmed,
+        "excluded_pre_boot_lines": {role: len(lines[role]) - len(post_boot[role])
+                                    for role in lines},
+        "failed_lines": bad,
+        "lines": lines,
+    }
+    args.evidence.parent.mkdir(parents=True, exist_ok=True)
+    if args.evidence.exists():
+        raise RuntimeError("기존 evidence를 덮어쓰지 않습니다")
+    args.evidence.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+                             encoding="utf-8")
+    print(f"ARDUINO_PUBLIC_BIS_PAIR={status};CYCLES={sent}/{received}")
+    return 0 if accepted else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

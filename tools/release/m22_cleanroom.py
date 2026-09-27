@@ -634,6 +634,7 @@ def validate_flash_log(
         or tokens.count("--no-rebuild") != 1
         or tokens.count("--dt-flash=n") != 1
         or tokens.count("--tool-opt=-Osmart_flash=false") != 1
+        or tokens.count("--tool-opt=-Oauto_unlock=false") != 1
         or len(uid_positions) != 1
         or uid_positions[0] + 1 >= len(tokens)
         or tokens[uid_positions[0] + 1] != probe_id
@@ -646,6 +647,7 @@ def validate_flash_log(
         "probe_id_recorded": False,
         "dt_flash": False,
         "smart_flash": False,
+        "auto_unlock": False,
         "mass_erase_requested": False,
         "recover_requested": False,
         "flash_log_sha256": file_sha256(path),
@@ -748,10 +750,20 @@ def run_cleanroom(args: argparse.Namespace) -> dict[str, Any]:
     upload_evidence: dict[str, Any] | None = None
 
     ## @brief 고정 단계 실행 결과를 증적 목록에 추가합니다.
-    def step(label: str, argv: Sequence[str | Path], timeout: int) -> str:
+    def step(
+        label: str,
+        argv: Sequence[str | Path],
+        timeout: int,
+        *,
+        command_environment: dict[str, str] | None = None,
+    ) -> str:
         output = run_child(
             argv,
-            environment=environment,
+            environment=(
+                command_environment
+                if command_environment is not None
+                else environment
+            ),
             log_path=private_log,
             label=label,
             timeout=timeout,
@@ -885,13 +897,15 @@ def run_cleanroom(args: argparse.Namespace) -> dict[str, Any]:
                 "--board-options",
                 "feature_set=standard",
                 "--board-options",
-                "upload_probe=pyocd_uid",
+                "upload_probe=pyocd",
                 "--build-path",
                 upload_build,
                 blink,
             ),
             args.compile_timeout,
         )
+        upload_environment = dict(environment)
+        upload_environment["NUCODE_PROBE_UID"] = args.probe_id
         upload_output = step(
             "installed-blink-exact-uid-upload",
             (
@@ -904,14 +918,13 @@ def run_cleanroom(args: argparse.Namespace) -> dict[str, Any]:
                 "--board-options",
                 "feature_set=standard",
                 "--board-options",
-                "upload_probe=pyocd_uid",
-                "--upload-field",
-                f"probe_id={args.probe_id}",
+                "upload_probe=pyocd",
                 "--build-path",
                 upload_build,
                 blink,
             ),
             args.upload_timeout,
+            command_environment=upload_environment,
         )
         if "NU54_UPLOAD_PASS runner=pyocd" not in upload_output:
             raise CleanroomFailure("설치본 exact UID pyOCD upload PASS marker가 없습니다.")

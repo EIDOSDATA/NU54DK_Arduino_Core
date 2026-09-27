@@ -1,0 +1,20 @@
+{
+  "core_revision": "db99597094da758628445f8fb23e780b5e9f3b5a",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "generated_main_sha256": "9c554fbb474aebf6e6a08c33f3fe318901ab4905f6688e00f8a5f010b0d93831",
+  "generated_cmake_sha256": "156d2d136a94505acb66089a39da98a5d845472cfd527bb8dd392d1aa3134825",
+  "cases": {
+    "codec": {
+      "image_sha256": "f316603bff3fc2069ed52f62ca3886669815e0041e3bc655b78639006b3191c0",
+      "config_sha256": "2b05c55266947e7415ebd663bd5f7255730bc42962167341d22e9ee3caa06df9",
+      "cmake_negative_case": "codec"
+    },
+    "qos": {
+      "image_sha256": "0625792ecc89ff5634a127684e389f91cde09a91df25599bb8e853062955d12c",
+      "config_sha256": "2b05c55266947e7415ebd663bd5f7255730bc42962167341d22e9ee3caa06df9",
+      "cmake_negative_case": "qos"
+    }
+  }
+}

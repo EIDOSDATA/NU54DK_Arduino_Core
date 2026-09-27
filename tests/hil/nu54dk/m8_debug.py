@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
@@ -34,14 +35,33 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+## @brief raw probe UID를 소문자 정규화 뒤 SHA-256 identity로 바꿉니다.
+def probe_sha256(probe_id: str) -> str:
+    return hashlib.sha256(probe_id.lower().encode("ascii")).hexdigest()
+
+
+## @brief debugserver log의 raw probe UID를 공개 불가능한 표식으로 교체합니다.
+def redact_probe_log(path: Path, probe_id: str) -> None:
+    if not path.is_file():
+        return
+    text = path.read_text(encoding="utf-8", errors="replace")
+    redacted = re.sub(
+        re.escape(probe_id), "<redacted-probe-id>", text,
+        flags=re.IGNORECASE,
+    )
+    path.write_text(redacted, encoding="utf-8", newline="\n")
+
+
 ## @brief probe를 소비하지 않고 GDB server log의 준비 표식을 기다립니다.
 def wait_for_server(log_path: Path, process: subprocess.Popen[bytes], timeout_seconds: float) -> None:
     deadline = time.monotonic() + timeout_seconds
     while time.monotonic() < deadline:
         if process.poll() is not None:
             raise DebugHilFailure(f"debugserver가 조기에 종료됐습니다: {process.returncode}")
-        if log_path.is_file() and b"GDB server listening on port" in log_path.read_bytes():
-            return
+        if log_path.is_file():
+            output = log_path.read_bytes()
+            if b"GDB server" in output and b"port" in output:
+                return
         time.sleep(0.1)
     raise DebugHilFailure("debugserver 준비 시간이 초과됐습니다.")
 
@@ -51,6 +71,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--probe-id", required=True)
+    parser.add_argument("--probe-sha256")
     parser.add_argument("--breakpoint", default="setup")
     parser.add_argument("--gdb-port", type=int, default=3333)
     parser.add_argument("--server-timeout", type=float, default=15.0)
@@ -64,6 +85,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
     manifest_path = args.manifest.resolve()
     if not manifest_path.is_file():
         raise DebugHilFailure(f"build manifest가 없습니다: {manifest_path}")
+    hashed_probe = probe_sha256(args.probe_id)
+    if args.probe_sha256 is not None and args.probe_sha256 != hashed_probe:
+        raise DebugHilFailure("probe SHA-256 identity가 raw UID와 다릅니다.")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     context = manifest.get("context", {})
     elf_record = manifest.get("artifacts", {}).get("elf", {})
@@ -74,7 +98,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
     zephyr_build = Path(str(context.get("zephyr_build_dir", ""))).resolve()
     ncs_root = Path(str(context.get("ncs_root", ""))).resolve()
     toolchain_root = Path(str(context.get("toolchain_root", ""))).resolve()
-    west = toolchain_root / "opt" / "bin" / "Scripts" / "west.exe"
     python = toolchain_root / "opt" / "bin" / "python.exe"
     gdb = (
         toolchain_root
@@ -85,7 +108,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         / "bin"
         / "arm-zephyr-eabi-gdb.exe"
     )
-    for executable in (west, python, gdb):
+    for executable in (python, gdb):
         if not executable.is_file():
             raise DebugHilFailure(f"debug 실행 파일이 없습니다: {executable}")
 
@@ -106,70 +129,74 @@ def main(arguments: Sequence[str] | None = None) -> int:
     server_log = result_path.with_name("m8-debugserver.log")
     server_log.parent.mkdir(parents=True, exist_ok=True)
     server_command: list[str | Path] = [
-        west,
-        "-z",
-        ncs_root / "zephyr",
-        "debugserver",
-        "-d",
-        zephyr_build,
-        "-r",
+        python,
+        "-I",
+        "-m",
         "pyocd",
-        "--no-rebuild",
-        "--dev-id",
-        args.probe_id,
-        "--gdb-port",
+        "gdbserver",
+        "-p",
         str(args.gdb_port),
+        "-T",
+        str(args.gdb_port + 1111),
+        "-t",
+        "nrf54l",
+        "-u",
+        args.probe_id,
+        "-Oauto_unlock=false",
     ]
-    with server_log.open("wb") as stream:
-        server = subprocess.Popen(
-            [str(value) for value in server_command],
-            cwd=ncs_root,
-            env=environment,
-            stdout=stream,
-            stderr=subprocess.STDOUT,
-        )
-        try:
-            wait_for_server(server_log, server, args.server_timeout)
-            gdb_command: list[str | Path] = [
-                gdb,
-                "-q",
-                "-batch",
-                elf,
-                "-ex",
-                "set pagination off",
-                "-ex",
-                f"target remote localhost:{args.gdb_port}",
-                "-ex",
-                "monitor reset halt",
-                "-ex",
-                f"break {args.breakpoint}",
-                "-ex",
-                "continue",
-                "-ex",
-                "info breakpoints",
-                "-ex",
-                "frame",
-                "-ex",
-                "disconnect",
-            ]
-            result = subprocess.run(
-                [str(value) for value in gdb_command],
-                cwd=manifest_path.parent,
+    try:
+        with server_log.open("wb") as stream:
+            server = subprocess.Popen(
+                [str(value) for value in server_command],
+                cwd=ncs_root,
                 env=environment,
-                stdout=subprocess.PIPE,
+                stdout=stream,
                 stderr=subprocess.STDOUT,
-                encoding="utf-8",
-                errors="replace",
-                check=False,
-                timeout=30.0,
             )
-        finally:
-            server.terminate()
             try:
-                server.wait(timeout=5.0)
-            except subprocess.TimeoutExpired:
-                server.kill()
-                server.wait(timeout=5.0)
+                wait_for_server(server_log, server, args.server_timeout)
+                gdb_command: list[str | Path] = [
+                    gdb,
+                    "-q",
+                    "-batch",
+                    elf,
+                    "-ex",
+                    "set pagination off",
+                    "-ex",
+                    f"target remote localhost:{args.gdb_port}",
+                    "-ex",
+                    "monitor reset halt",
+                    "-ex",
+                    f"break {args.breakpoint}",
+                    "-ex",
+                    "continue",
+                    "-ex",
+                    "info breakpoints",
+                    "-ex",
+                    "frame",
+                    "-ex",
+                    "disconnect",
+                ]
+                result = subprocess.run(
+                    [str(value) for value in gdb_command],
+                    cwd=manifest_path.parent,
+                    env=environment,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    encoding="utf-8",
+                    errors="replace",
+                    check=False,
+                    timeout=30.0,
+                )
+            finally:
+                server.terminate()
+                try:
+                    server.wait(timeout=5.0)
+                except subprocess.TimeoutExpired:
+                    server.kill()
+                    server.wait(timeout=5.0)
+    finally:
+        redact_probe_log(server_log, args.probe_id)
 
     print(result.stdout, end="" if result.stdout.endswith("\n") else "\n")
     expected = f"Breakpoint 1, {args.breakpoint} () at"
@@ -178,7 +205,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
             f"GDB source breakpoint가 확인되지 않았습니다: return_code={result.returncode}"
         )
     reset = subprocess.run(
-        [str(python), "-m", "pyocd", "reset", "-t", "nrf54l", "-u", args.probe_id],
+        [
+            str(python), "-I", "-m", "pyocd", "reset", "-t", "nrf54l",
+            "-u", args.probe_id, "-Oauto_unlock=false",
+        ],
         cwd=ncs_root,
         env=environment,
         stdout=subprocess.PIPE,
@@ -193,13 +223,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
     summary = {
         "schema_version": 1,
         "runner": "pyocd",
-        "probe_id": args.probe_id,
+        "probe_sha256": hashed_probe,
         "gdb_port": args.gdb_port,
         "elf": elf.as_posix(),
         "elf_sha256": file_sha256(elf),
         "breakpoint": args.breakpoint,
         "breakpoint_hit": True,
         "source_line_visible": "m8_upload.ino" in result.stdout,
+        "dt_flash": False,
+        "auto_unlock": False,
+        "debugserver_log_sha256": file_sha256(server_log),
+        "debugserver_log_redacted": True,
         "completed_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
     result_path.write_text(

@@ -488,8 +488,40 @@ class M10PrerequisiteContractTests(unittest.TestCase):
         )
         self.assertIn('set "NU54_PLATFORM_ROOT=%~dp0."', hook)
         self.assertIn('-File "%NU54_INSTALLER%" -PlatformRoot "%NU54_PLATFORM_ROOT%"', hook)
+        self.assertIn("if defined NUCODE_NCS_INSTALL_ROOT", hook)
+        self.assertIn('-NcsRoot "%NUCODE_NCS_INSTALL_ROOT%"', hook)
         self.assertIn("set \"NU54_RESULT=%ERRORLEVEL%\"", hook)
         self.assertIn("exit /b %NU54_RESULT%", hook)
+
+    @unittest.skipUnless(os.name == "nt", "CMD와 Windows PowerShell 통합 시험입니다.")
+    def test_post_install_forwards_explicit_ncs_install_root(self) -> None:
+        """! @brief CI와 clean-room이 고정한 NCS base를 post-install도 유지합니다. """
+
+        package_root = self.root / "package with explicit ncs"
+        installer = package_root / "tools" / "nu54-prerequisites" / "install-nordic.ps1"
+        installer.parent.mkdir(parents=True)
+        hook = package_root / "post_install.bat"
+        shutil.copy2(REPOSITORY_ROOT / "post_install.bat", hook)
+        installer.write_text(
+            "[CmdletBinding()]\n"
+            "param([string]$PlatformRoot,[string]$NcsRoot)\n"
+            "[Console]::Out.WriteLine(\"NCS=$NcsRoot\")\n",
+            encoding="utf-8-sig",
+        )
+        ncs_root = self.root / "ncs root"
+        environment = dict(os.environ)
+        environment["NUCODE_NCS_INSTALL_ROOT"] = str(ncs_root)
+        result = subprocess.run(
+            ["cmd.exe", "/d", "/c", str(hook)],
+            cwd=package_root,
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(0, result.returncode, result.stdout)
+        self.assertIn(f"NCS={ncs_root}", result.stdout)
 
     @unittest.skipUnless(os.name == "nt", "CMD와 Windows PowerShell 통합 시험입니다.")
     def test_post_install_cmd_preserves_quoted_platform_root_and_exit_code(self) -> None:

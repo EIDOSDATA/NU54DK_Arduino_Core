@@ -1,0 +1,228 @@
+{
+  "status": "PASS",
+  "test": "unencrypted_ranging_features_read_20",
+  "source_clean": true,
+  "core_revision": "98f22d5ad6febac4f98cc0877561252a91a310b4",
+  "client_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "client_port": "COM14",
+  "reflector_port": "COM13",
+  "client_image_sha256": "dac877f1b5378cb9db242a84c8e58d3744b0359f0da0a5682f2e6e35f47bd203",
+  "reflector_image_sha256": "6e9fd045a6f2b7f8c37260a2672989c205caeeedef7819f1dc27fc6304f23362",
+  "cycles_expected": 20,
+  "rejected": 20,
+  "mode": "same_acl",
+  "same_acl": true,
+  "connections": 1,
+  "connection_events_observed": 2,
+  "discovery_events_observed": 1,
+  "disconnect_reasons": [
+    22
+  ],
+  "unexpected_disconnects": 0,
+  "stop_confirmed": true,
+  "att_errors": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ],
+  "read_timestamps_ms": [
+    4140,
+    4391,
+    4640,
+    4890,
+    5141,
+    5390,
+    5640,
+    5890,
+    6140,
+    6390,
+    6641,
+    6891,
+    7140,
+    7391,
+    7641,
+    7890,
+    8141,
+    8390,
+    8640,
+    8941
+  ],
+  "cycles": [
+    {
+      "cycle": 1,
+      "elapsed_s": 4.39
+    },
+    {
+      "cycle": 2,
+      "elapsed_s": 0.14
+    },
+    {
+      "cycle": 3,
+      "elapsed_s": 0.14
+    },
+    {
+      "cycle": 4,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 5,
+      "elapsed_s": 0.141
+    },
+    {
+      "cycle": 6,
+      "elapsed_s": 0.141
+    },
+    {
+      "cycle": 7,
+      "elapsed_s": 0.14
+    },
+    {
+      "cycle": 8,
+      "elapsed_s": 0.141
+    },
+    {
+      "cycle": 9,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 10,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 11,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 12,
+      "elapsed_s": 0.141
+    },
+    {
+      "cycle": 13,
+      "elapsed_s": 0.14
+    },
+    {
+      "cycle": 14,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 15,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 16,
+      "elapsed_s": 0.14
+    },
+    {
+      "cycle": 17,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 18,
+      "elapsed_s": 0.14
+    },
+    {
+      "cycle": 19,
+      "elapsed_s": 0.156
+    },
+    {
+      "cycle": 20,
+      "elapsed_s": 0.265
+    }
+  ],
+  "client_lines": [
+    "CS insecure peer connected count=1",
+    "CS insecure peer connected count=1",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=5 count=1 ms=4140",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=2 ms=4391",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=3 ms=4640",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=4 ms=4890",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=5 ms=5141",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=6 ms=5390",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=7 ms=5640",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=8 ms=5890",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=9 ms=6140",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=10 ms=6390",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=11 ms=6641",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=12 ms=6891",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=13 ms=7140",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=14 ms=7391",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=15 ms=7641",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=16 ms=7890",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=17 ms=8141",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=18 ms=8390",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=19 ms=8640",
+    "CS insecure retry requested",
+    "CS insecure read rejected att=5 count=20 ms=8941",
+    "CS insecure stop requested",
+    "CS insecure peer disconnected reason=22"
+  ],
+  "reflector_lines": [
+    "CS reflector advertising",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected"
+  ],
+  "client_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "425984"
+  ],
+  "client_flash": [
+    "pyocd-sector-hw-reset",
+    "335872"
+  ],
+  "elapsed_s": 9.343
+}

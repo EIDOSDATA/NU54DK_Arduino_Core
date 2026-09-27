@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "status": "PASS_WITH_PRESERVED_FAILURES",
+  "attempts": [
+    {
+      "source_revision": "1b2f5a53dd1767ab926da71c880334adab7f94c4d",
+      "target": "RasStaleKeyInitiator",
+      "status": "FAIL",
+      "failure": "E_ROLE_REQUIRED channel-sounding-api; fixture manifest absent"
+    },
+    {
+      "source_revision": "4e8625ffb44c5b862c7113a5e0312f2721b943af",
+      "target": "RasStaleKeyInitiator",
+      "status": "FAIL",
+      "failure": "E_ROLE_REQUIRED security-api; CS roles missing from the security capability contract"
+    },
+    {
+      "source_revision": "08eac945905b50969695412913bb0cb3e61f71c2",
+      "target": "RasStaleKeyInitiator",
+      "status": "FAIL",
+      "failure": "E_CAPABILITY_FINAL_CONFIG; bond persistence settings were active but undeclared"
+    },
+    {
+      "source_revision": "aeae0cdf896cd519cb9f44a0d62924930fc30bec",
+      "target": "RasStaleKeyInitiator",
+      "status": "FAIL",
+      "failure": "E_CAPABILITY_FINAL_CONFIG; fixture overrode the supported security pairing mode"
+    },
+    {
+      "source_revision": "f30404e2d9d54ffb3c9280c70dddc88b21ad6bd5",
+      "target": "RasStaleKeyInitiator/RasStaleKeyReflector",
+      "status": "PASS",
+      "initiator": {
+        "flash_bytes": 265756,
+        "ram_bytes": 79358
+      },
+      "reflector": {
+        "flash_bytes": 249812,
+        "ram_bytes": 61783
+      }
+    },
+    {
+      "source_revision": "704120b1968c236d4809b5709b83cea7dc38b2fa",
+      "target": "instrumented RasStaleKeyInitiator/RasStaleKeyReflector",
+      "status": "PASS",
+      "initiator": {
+        "flash_bytes": 266224,
+        "ram_bytes": 79378
+      },
+      "reflector": {
+        "flash_bytes": 250312,
+        "ram_bytes": 61803
+      }
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+#!/usr/bin/env python3
+"""! @brief W03-11 Hearing Access 공개 API와 예제 경계를 검사합니다. """
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import re
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[2]
+HEADER = ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio.h"
+BACKEND = ROOT / "libraries/NUCODE_BLE_Audio/src/NUCODE_BLE_Audio_HearingAccess.cpp"
+EXAMPLES = ROOT / "libraries/NUCODE_BLE_Audio/examples"
+BUILD_RUNNER = ROOT / "tests/arduino-cli/run_m31_examples.py"
+READINESS = ROOT / "variants/nu54dk/m31-ble-readiness.json"
+HIL_RUNNER = ROOT / "tests/hil/nu54dk/m31_audio_hap_run.py"
+HIL_EVIDENCE_PATH = (
+    "00_Docs/04_검증 기록/evidence/m31-w03-hap-56612730/manifest.json"
+)
+HIL_EVIDENCE = ROOT / HIL_EVIDENCE_PATH
+
+
+class HearingAccessContractTests(unittest.TestCase):
+    """! @brief HAS facade, backend, 예제와 고정 SDK 근거를 대조합니다. """
+
+    def test_public_api_covers_server_client_and_bounded_presets(self) -> None:
+        """! @brief server/client가 preset·active index·이름·범위 오류 API를 제공합니다. """
+        source = HEADER.read_text(encoding="utf-8")
+        for token in (
+            "class HearingAccessServer final",
+            "class HearingAccessClient final",
+            "struct HearingPreset",
+            "Error addPreset(",
+            "Error setActivePreset(",
+            "Error setPresetAvailable(",
+            "Error renamePreset(",
+            "Error readPresets(",
+            "Error nextPreset(",
+            "Error previousPreset(",
+            "maximum_name_bytes = 40U",
+        ):
+            self.assertIn(token, source)
+
+    def test_backend_uses_fixed_has_api_and_rejects_invalid_ranges(self) -> None:
+        """! @brief Zephyr 호출은 backend에만 있고 index/name 경계가 명시됩니다. """
+        source = BACKEND.read_text(encoding="utf-8")
+        for token in (
+            "bt_has_register",
+            "bt_has_preset_register",
+            "bt_has_preset_active_set",
+            "bt_has_preset_name_change",
+            "bt_has_client_discover",
+            "bt_has_client_presets_read",
+            "bt_has_client_preset_set",
+            "bt_has_client_preset_next",
+            "bt_has_client_preset_prev",
+            "start_index == 0U",
+            "index == 0U",
+            "-EINVAL",
+        ):
+            self.assertIn(token, source)
+
+    def test_examples_keep_zephyr_calls_behind_nucode_api(self) -> None:
+        """! @brief 공개 sketch에 개발 표식이나 Zephyr 직접 호출이 없습니다. """
+        for name in ("HearingAccessServer", "HearingAccessClient"):
+            sketch = (EXAMPLES / name / f"{name}.ino").read_text(encoding="utf-8")
+            self.assertIn("#include <NUCODE_BLE_Audio.h>", sketch)
+            self.assertIn("void setup()", sketch)
+            self.assertIn("void loop()", sketch)
+            self.assertNotRegex(sketch, r"#include\s*[<\"]zephyr/")
+            self.assertNotRegex(sketch, r"\bbt_[a-zA-Z0-9_]+\s*\(")
+            self.assertNotRegex(sketch, r"\bk_[a-zA-Z0-9_]+\s*\(")
+            self.assertNotRegex(sketch, r"M31|W03")
+
+    def test_role_kconfigs_select_exact_has_capabilities(self) -> None:
+        """! @brief 두 역할 Kconfig가 HAS server/client 기능을 분리합니다. """
+        server = (EXAMPLES / "HearingAccessServer/prj.conf").read_text(encoding="utf-8")
+        client = (EXAMPLES / "HearingAccessClient/prj.conf").read_text(encoding="utf-8")
+        self.assertIn("CONFIG_BT_HAS=y", server)
+        self.assertIn("CONFIG_BT_HAS_PRESET_COUNT=4", server)
+        self.assertIn("CONFIG_BT_HAS_PRESET_NAME_DYNAMIC=y", server)
+        self.assertIn("CONFIG_BT_BAP_UNICAST_SERVER=y", server)
+        self.assertIn("CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT=1", server)
+        self.assertIn("CONFIG_FPU=y", server)
+        self.assertIn("CONFIG_LIBLC3=y", server)
+        self.assertNotIn("CONFIG_BT_HAS_CLIENT=y", server)
+        self.assertIn("CONFIG_BT_HAS_CLIENT=y", client)
+        self.assertIn("CONFIG_BT_GATT_AUTO_UPDATE_MTU=y", client)
+        self.assertIn("CONFIG_FPU=y", client)
+        self.assertIn("CONFIG_LIBLC3=y", client)
+        self.assertNotIn("CONFIG_BT_HAS=y", client)
+        for name in ("HearingAccessServer", "HearingAccessClient"):
+            sketch = (EXAMPLES / name / f"{name}.ino").read_text(encoding="utf-8")
+            self.assertIn("security.bonding = true", sketch)
+
+    def test_client_exposes_invalid_and_synchronized_negative_commands(self) -> None:
+        """! @brief 실제 peer에서 index와 동기 선택 거부를 재현할 수 있습니다. """
+        sketch = (EXAMPLES / "HearingAccessClient/HearingAccessClient.ino").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "hearingAccess.setActivePreset(0U)",
+            "hearingAccess.setActivePreset(5U, true)",
+            "BLESecurity.currentLevel(peerConnection) >= SecurityLevel::encrypted",
+            "securitySettlingMs = 100U",
+            "Hearing Access operation rejected",
+            "Hearing Access recovery requested",
+            "BLEConnection.disconnect(peerConnection)",
+            "presetsReadAt = millis() + 500U",
+            "BLESecurity.eraseAllBonds()",
+            "BLESecurity.bondCount()",
+        ):
+            self.assertIn(token, sketch)
+        self.assertNotIn("event.event == SecurityEvent::security_changed", sketch)
+        self.assertNotIn("event.event == SecurityEvent::paired", sketch)
+        self.assertNotIn("event.event == SecurityEvent::bond_verified", sketch)
+
+    def test_server_exposes_deterministic_bond_cleanup_command(self) -> None:
+        """! @brief server가 공개 Security API로 저장 bond와 남은 수를 보고합니다. """
+        sketch = (EXAMPLES / "HearingAccessServer/HearingAccessServer.ino").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "command == 'c'",
+            "BLESecurity.eraseAllBonds()",
+            "BLESecurity.bondCount()",
+            'Serial.print("Hearing bond cleanup result=")',
+            'Serial.print(" remaining=")',
+        ):
+            self.assertIn(token, sketch)
+
+    def test_hil_resets_both_exact_storage_ranges_before_flash(self) -> None:
+        """! @brief HIL이 양쪽 settings 범위를 readback 검증한 뒤 image를 flash합니다. """
+        runner = HIL_RUNNER.read_text(encoding="utf-8")
+        client_reset = runner.index(
+            'record["client_storage_reset"] = reset_bond_storage(client_uid, 60.0)'
+        )
+        server_reset = runner.index(
+            'record["server_storage_reset"] = reset_bond_storage(server_uid, 60.0)'
+        )
+        server_flash = runner.index('record["server_flash"] = flash_image_pyocd(')
+        client_flash = runner.index('record["client_flash"] = flash_image_pyocd(')
+        self.assertLess(client_reset, server_reset)
+        self.assertLess(server_reset, server_flash)
+        self.assertLess(server_flash, client_flash)
+        for token in (
+            "STORAGE_OFFSET = 0x174000",
+            "STORAGE_SIZE = 0x9000",
+            "target.reset_and_halt()",
+            "flash.program_page(address, bytes([255])",
+            "target.read_memory_block8",
+            '"readback_verified": True',
+            'board_id, "[redacted]"',
+            "def wait_stable_state(",
+            '"Hearing Access server disconnected" in line',
+            "int(match.group(2)) == 3",
+            "wait_stable_state(client, server, record, 1)",
+        ):
+            self.assertIn(token, runner)
+
+    def test_hil_records_source_and_image_revisions_separately(self) -> None:
+        """! @brief 후속 수정 뒤 실행해도 exact image revision을 별도로 보존합니다. """
+        runner = HIL_RUNNER.read_text(encoding="utf-8")
+        self.assertIn('parser.add_argument("--image-core-revision", required=True)', runner)
+        self.assertIn('"image_core_revision": image_revision', runner)
+        self.assertIn('f"{args.image_core_revision}^{{commit}}"', runner)
+
+    def test_exact_build_runner_includes_both_examples(self) -> None:
+        """! @brief 공개 Hearing Access 두 역할을 exact build 목록에 고정합니다. """
+        runner = BUILD_RUNNER.read_text(encoding="utf-8")
+        self.assertIn('"HearingAccessServer"', runner)
+        self.assertIn('"HearingAccessClient"', runner)
+
+    def test_readiness_records_exact_hil_pass_evidence(self) -> None:
+        """! @brief W03-11 PASS가 exact HIL 결과와 역할 근거를 가리킵니다. """
+        document = json.loads(READINESS.read_text(encoding="utf-8"))
+        row = next(item for item in document["audio_groups"] if item["id"] == "W03-11")
+        self.assertEqual(row["status"], "PASS")
+        roles = [item for item in document["example_roles"]
+                 if item["id"].startswith("W03-11:")]
+        self.assertEqual(len(roles), 2)
+        self.assertTrue(all(item["build_status"] == "PASS" for item in roles))
+        self.assertTrue(all(item["runtime_status"] == "PASS" for item in roles))
+        self.assertTrue(all(item["evidence"] == HIL_EVIDENCE_PATH
+                            for item in roles))
+        capability = next(item for item in document["capabilities"]
+                          if item["id"] == "W03-11")
+        self.assertEqual(capability["functional_hil"], "PASS")
+        self.assertEqual(capability["evidence"], HIL_EVIDENCE_PATH)
+
+        evidence = json.loads(HIL_EVIDENCE.read_text(encoding="utf-8"))
+        self.assertEqual(evidence["work_id"], "M31-W03")
+        self.assertEqual(evidence["subcase"], "W03-11")
+        self.assertEqual(evidence["status"], "PASS")
+        self.assertTrue(evidence["source_clean"])
+        result = evidence["result"]
+        self.assertEqual(result["completed_operations"], 100)
+        self.assertEqual(result["invalid_index_rejected"], 20)
+        self.assertEqual(result["synchronized_request_rejected"], 20)
+        self.assertEqual(result["completed_recovery_cycles"], 20)
+
+    def test_doxygen_and_control_flow_style(self) -> None:
+        """! @brief 추가 public 구현의 Doxygen과 중괄호 규칙을 검사합니다. """
+        source = BACKEND.read_text(encoding="utf-8")
+        self.assertIn("/** @brief", source)
+        self.assertIsNone(
+            re.search(r"\b(?:if|for|while)\s*\([^\n]+\)\r?\n[ \t]*([^\s{])", source)
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

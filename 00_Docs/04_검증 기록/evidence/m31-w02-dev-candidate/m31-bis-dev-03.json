@@ -1,0 +1,73 @@
+{
+  "test_id": "M31-ISO-01:bis",
+  "scope": "two_board_bis_twenty_cycles",
+  "status": "FAIL",
+  "source_clean": false,
+  "identity": {
+    "core": "9cc1d21505c493d11e316f92a16fa4f4684e6107",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "source": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "F:/",
+      "vcom": "COM7",
+      "image_sha256": "c946d10717ec9bad9fe8bdb2edb9bd5b7eeb2a8cee2b0093cb306310732f54e5",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "172032"
+    },
+    "receiver": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "f1b688d653fd6ca0be119c1bc767be8a5e662c9ea757418bf636ac0a67e52c70",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector",
+      "flash_bytes": "139264"
+    }
+  },
+  "nonces": [
+    "b9381a901a9e936c08e32f488f374a11",
+    "52259e96b0b9c0ef14590ea0fc4c63ac",
+    "7ed5a5a43814d8260fbf55a6bbe182ab",
+    "09341a781dc093811bc3ecb0beadc0c5",
+    "8fdddd2114d6763f66fe17a7ce65666f",
+    "f913a47088e90f8e9606bae4fe92bd13",
+    "810185d8dd209fb79944429993b67ea0",
+    "c98378cd434eeb2746e0a8a821602df0",
+    "27376c1b26764c024ddc1e5eac9a1b23",
+    "2f7b79b6de6d91ffdb3acde409f9f080",
+    "7c9054673a99699741e37bee426559a6",
+    "14e534792db27165b4fc6e9d0f992184",
+    "43cdefb17dde35eade29dd19bf4ad04a",
+    "62a6af6ec624a8b311edcef9a4a90b90",
+    "6bf5f060e497168f248a4cb84bbba166",
+    "c6773a010fd6794f139be25a67af7091",
+    "90a5be67d5e0234d13c63be6ec66bf6e",
+    "72ca025fbea5ee77bb70bbcf8065d6ab",
+    "78e76a93dccc539b8bb5de90038c2c8a",
+    "05fe84dba67cbeb8a8f51c368af401dd"
+  ],
+  "cycles": 20,
+  "reason": "M31BisFailure: receiver RX \uc218\ub77d\u00b7\ubb34\uacb0\uc131\u00b7\ud574\uc81c \ubd88\uc77c\uce58",
+  "measurement": null,
+  "transcript_sha256": "994977d5d990de1d1eff44ec80f640263b209de2ef0c0942944c36c68038c79f",
+  "observed_utc": "2026-09-15T19:08:43.004396+00:00"
+}

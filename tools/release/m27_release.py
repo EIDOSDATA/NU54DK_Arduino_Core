@@ -145,8 +145,8 @@ def load_package_module() -> Any:
 def configure_v04_candidate(package: Any) -> None:
     if tuple(package.RELEASE_CANDIDATE_VERSIONS) != BASE_RC_VERSIONS:
         raise M27ReleaseFailure("historical release-candidate allowlist changed")
-    if tuple(package.STABLE_VERSIONS) != BASE_STABLE_VERSIONS:
-        raise M27ReleaseFailure("historical stable allowlist changed")
+    if tuple(package.STABLE_VERSIONS[: len(BASE_STABLE_VERSIONS)]) != BASE_STABLE_VERSIONS:
+        raise M27ReleaseFailure("historical stable prefix changed")
     package.configure_release_candidates(BASE_RC_VERSIONS + (VERSION,))
 
 

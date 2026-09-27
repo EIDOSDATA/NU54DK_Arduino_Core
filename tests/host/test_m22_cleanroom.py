@@ -264,6 +264,7 @@ class M22CleanroomTests(unittest.TestCase):
         command = (
             f"west flash -r pyocd --no-rebuild --dt-flash=n "
             f"--tool-opt=-Osmart_flash=false "
+            f"--tool-opt=-Oauto_unlock=false "
             f"--dev-id {uid} -d build"
         )
         log.write_text(
@@ -282,6 +283,7 @@ class M22CleanroomTests(unittest.TestCase):
             encoding="utf-8",
         )
         evidence = MODULE.validate_flash_log(log, probe_id=uid, hex_path=hex_path)
+        self.assertFalse(evidence["auto_unlock"])
         self.assertFalse(evidence["mass_erase_requested"])
         self.assertFalse(evidence["probe_id_recorded"])
         with self.assertRaisesRegex(MODULE.CleanroomFailure, "runner/UID"):

@@ -4,6 +4,7 @@ from __future__ import annotations
 from .installed_platform import platform_compiled_path
 
 from pathlib import Path
+from pathlib import PureWindowsPath
 from typing import Any
 from typing import Sequence
 from .common import (
@@ -14,6 +15,7 @@ from .common import (
     atomic_write_text,
     canonical_path,
     file_sha256,
+    git_or_release_revision,
     is_within,
     load_json_object,
     path_key,
@@ -133,7 +135,9 @@ def source_logical_identity(source: Path, paths: dict[str, Path]) -> str:
 
 ## @brief source record를 결정적인 sources.cmake와 provenance로 변환합니다.
 def write_source_manifest(
-    paths: dict[str, Path], records: Sequence[dict[str, Any]]
+    paths: dict[str, Path], records: Sequence[dict[str, Any]],
+    selected_libraries: Sequence[str] = (), input_manifest: dict[str, Any] | None = None,
+    capability_resolution: dict[str, Any] | None = None,
 ) -> tuple[list[Path], dict[str, Any], bool]:
     core_root = paths["platform_root"] / "cores"
     variant_root = paths["platform_root"] / "variants"
@@ -141,6 +145,65 @@ def write_source_manifest(
     source_keys: set[str] = set()
     includes: list[Path] = []
     include_keys: set[str] = set()
+    excluded_source_inputs: list[dict[str, str]] = []
+
+    generated = (
+        capability_resolution.get("generated")
+        if capability_resolution is not None
+        else None
+    )
+    if capability_resolution is not None and not isinstance(generated, dict):
+        raise AdapterError("[NU54:E_CAPABILITY_RESULT] generated source 설정이 없습니다.")
+
+    ## @brief 해석 결과의 source 경로를 platform 내부 경로로 다시 검증합니다.
+    def resolved_source_paths(field: str, *, directories: bool) -> list[Path]:
+        if generated is None:
+            return []
+        values = generated.get(field)
+        if (
+            not isinstance(values, list)
+            or not all(isinstance(value, str) for value in values)
+            or len(values) != len(set(values))
+        ):
+            raise AdapterError(
+                f"[NU54:E_CAPABILITY_RESULT] generated.{field}는 중복 없는 문자열 배열이어야 합니다."
+            )
+        resolved: list[Path] = []
+        for value in values:
+            candidate = canonical_path(paths["platform_root"] / value)
+            if (
+                Path(value).is_absolute()
+                or PureWindowsPath(value).is_absolute()
+                or value.startswith(("\\\\", "//"))
+                or not is_within(candidate, paths["platform_root"])
+                or (directories and not candidate.is_dir())
+                or (not directories and not candidate.exists())
+            ):
+                raise AdapterError(
+                    f"[NU54:E_CAPABILITY_RESULT] generated.{field} 경로가 잘못되었습니다: {value}"
+                )
+            resolved.append(candidate)
+        return resolved
+
+    source_roots = resolved_source_paths("source_roots", directories=True)
+    selected_source_paths = resolved_source_paths("sources", directories=False)
+    if any(
+        not any(is_within(source, root) for root in source_roots)
+        for source in selected_source_paths
+    ):
+        raise AdapterError(
+            "[NU54:E_CAPABILITY_RESULT] 선택 source가 등록된 source root 밖에 있습니다."
+        )
+
+    ## @brief resolved source root 안에서 선택 capability가 소유한 source만 허용합니다.
+    def source_is_selected(source: Path) -> bool:
+        if not any(is_within(source, root) for root in source_roots):
+            return True
+        return any(
+            source == selected
+            or (selected.is_dir() and is_within(source, selected))
+            for selected in selected_source_paths
+        )
 
     def add_include(include: Path) -> None:
         key = path_key(include)
@@ -156,14 +219,27 @@ def write_source_manifest(
             continue
         if not source.is_file():
             raise AdapterError(f"Arduino source가 사라졌습니다: {source}")
+        for value in record.get("include_dirs", []):
+            add_include(canonical_path(value))
+        if not source_is_selected(source):
+            excluded_source_inputs.append(
+                {
+                    "logical_identity": source_logical_identity(source, paths),
+                    "source_path": source.as_posix(),
+                    "sha256": file_sha256(source),
+                }
+            )
+            continue
         source_key = path_key(source)
         if source_key not in source_keys:
             source_keys.add(source_key)
             sources.append(source)
-        for value in record.get("include_dirs", []):
-            add_include(canonical_path(value))
         if not is_within(source.parent, paths["build_path"]):
             add_include(source.parent)
+
+    excluded_source_inputs.sort(
+        key=lambda item: (item["logical_identity"].casefold(), item["source_path"].casefold())
+    )
 
     compiled_sources: list[Path] = []
     source_inputs: list[dict[str, str]] = []
@@ -206,9 +282,33 @@ def write_source_manifest(
     lines.append("set(NUCODE_ARDUINO_INCLUDE_DIRS")
     lines.extend(f'  "{cmake_quote(path)}"' for path in includes)
     lines.extend((")", ""))
+    iso_revisions: dict[str, str] = {}
+    m31_identity_keys: list[str] = []
+    if "NUCODE_BLE_ISO" in selected_libraries:
+        m31_identity_keys.append("m31_iso_revisions")
+    if "NUCODE_BLE_Audio" in selected_libraries:
+        m31_identity_keys.append("m31_audio_revisions")
+    if "NUCODE_BLE_DirectionFinding" in selected_libraries:
+        m31_identity_keys.append("m31_df_revisions")
+    if m31_identity_keys:
+        if input_manifest is None:
+            raise AdapterError("[NU54:E_M31_ISO_REVISION] target manifest가 없습니다.")
+        iso_revisions = {
+            "NUCODE_CORE_REVISION": git_or_release_revision(paths["platform_root"], paths["platform_root"], "core_revision"),
+            "NUCODE_BOARD_REVISION": str(input_manifest["board_package"]["revision"]),
+            "NUCODE_NCS_REVISION": str(input_manifest["ncs"]["nrf_revision"]),
+            "NUCODE_ZEPHYR_REVISION": str(input_manifest["ncs"]["zephyr_revision"]),
+        }
+        if any(len(value) != 40 or any(char not in "0123456789abcdef" for char in value) for value in iso_revisions.values()):
+            raise AdapterError("[NU54:E_M31_ISO_REVISION] pinned revision이 40자리 SHA가 아닙니다.")
+        lines.append("# ISO role example의 실제 build provenance를 target에 기록합니다.")
+        lines.append("target_compile_definitions(app PRIVATE")
+        lines.extend(f'  {key}=\\"{value}\\"' for key, value in iso_revisions.items())
+        lines.extend((")", ""))
     changed = atomic_write_text(paths["app"] / "sources.cmake", "\n".join(lines))
     provenance = {
         "sources": source_inputs,
+        "excluded_sources": excluded_source_inputs,
         "include_roots": [
             {
                 "path": include.as_posix(),
@@ -217,4 +317,7 @@ def write_source_manifest(
             for include in includes
         ],
     }
+    if iso_revisions:
+        for identity_key in m31_identity_keys:
+            provenance[identity_key] = iso_revisions
     return sources, provenance, changed

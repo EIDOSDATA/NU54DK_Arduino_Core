@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "test_id": "M31-ISO-01:bis_cis_combined",
+  "status": "PASS",
+  "scope": "clean_three_board_direct_west_20x100_cis_to_bis",
+  "source_clean": true,
+  "identity": {
+    "core": "9e49bee2f3eab012654c97943d6d865162db6df4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "build_method": "west --sysbuild / pinned NCS v3.4.0 / no SDK patch",
+  "builds": {
+    "peer": {
+      "build_root": "C:/~/t",
+      "log": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/peer-build.log.gz",
+        "sha256": "e70faa56fc77998dc306e5012b2a2ec4d58491085dd542d3c8897bad112cb948"
+      },
+      "image": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/peer-zephyr.hex.gz",
+        "sha256": "3c0dc82e958958052f2f9689daaf4fedcdc1e7e1df361684cf6d73020543467f"
+      },
+      "image_sha256": "1b01758ce725ea271f1e5c0b624d1a1c715303165bcaf603b3b6c233a4913340",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+    },
+    "combined": {
+      "build_root": "C:/~/u",
+      "log": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-build.log.gz",
+        "sha256": "535e50e053aae0571f1eac9968336bb5a63f6e65c166fc290b047496357fdeb8"
+      },
+      "image": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-zephyr.hex.gz",
+        "sha256": "ec2daf432e937a66d66bee09be221ba786961bf9f737a81b4940d8f2c0f10fc8"
+      },
+      "image_sha256": "e4d44b44dd5cdf672857423e2d27199bcba6fe3adbe8099e3d77b8ddfe93d43c",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0"
+    },
+    "receiver": {
+      "build_root": "C:/~/w",
+      "log": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/receiver-build.log.gz",
+        "sha256": "5e9bb70fac52c82ee029c603bfc98190d8225e52e909d3682f0a8535105a9844"
+      },
+      "image": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/receiver-zephyr.hex.gz",
+        "sha256": "ead3e136ef1da5385a0099d7e21a297d3664dc6832efcac1d544da1956627584"
+      },
+      "image_sha256": "fa049d4126ee71247d5b9d92665ee486244c68034bf4216d52757ccdfc589443",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334"
+    }
+  },
+  "attempt": {
+    "result": {
+      "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-clean-01.json",
+      "sha256": "5a640ae428e049226036efc321d9ef6f8abc93165279e5123fc316e6ab7c47ba"
+    },
+    "transcript": {
+      "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-9e49bee2/combined-clean-01.transcript.log",
+      "sha256": "828c6e37160e9fca83ecd61990de19b2e2ea488ad72d70b394651ad542bd062b"
+    },
+    "measurement": {
+      "cycles": 20,
+      "peer_sent": 2000,
+      "cis_received": 2000,
+      "bis_forwarded": 2000,
+      "bis_received": 2000,
+      "minimum_cis_received": 100,
+      "minimum_bis_received": 100,
+      "cis_empty_slots": 622,
+      "bis_empty_slots": 180
+    }
+  }
+}

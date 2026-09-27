@@ -1,0 +1,25 @@
+00002.958|runner|debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00005.925|runner|debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.000|runner|debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.000|runner|pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true
+00011.975|runner|debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00011.976|runner|pre-reset UART quarantine board=E observed_bytes=0 input_buffer_purged=true
+00015.160|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00015.160|runner|pre-reset UART quarantine board=G observed_bytes=1705 input_buffer_purged=true
+00018.110|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00018.110|coordinator|<reset-uart-noise chars=1439>Searching for two set members
+00018.111|member_one|Enter this member rank (1 or 2):
+00018.111|member_two|Enter this member rank (1 or 2):
+00018.111|runner|command board=F value=1
+00018.173|runner|command board=E value=2
+00018.196|member_one|Set member ready; send a to authorize SIRK read, f to force-release
+00018.196|member_one|Provision a unique secret before using this outside a local test setup
+00018.259|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00018.259|member_two|Provision a unique secret before using this outside a local test setup
+00019.423|member_one|Set member bonded; physically verify the controller, then send a
+00019.444|runner|authorize board=F controller=G mapping=preverified wrong-sirk-case=true
+00019.711|runner|command board=F value=a
+00019.738|member_one|Bonded controller identity authorized
+00020.660|coordinator|Member rank 1 of 2
+00061.112|runner|command board=G value=o
+00061.162|coordinator|Set operation rejected

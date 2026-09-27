@@ -1,0 +1,37 @@
+{
+  "core_revision": "54c90bacf730aad959262b713e6e83044a2edb88",
+  "source_clean_at_hil": true,
+  "accepted": ["recovery-positive.json"],
+  "diagnostics_excluded": ["diagnostic-candidate.json"],
+  "roles": {
+    "source": {
+      "sketch": "libraries/NUCODE_BLE_ISO/examples/BISEncryptedSource/BISEncryptedSource.ino",
+      "sketch_sha256": "4abee58821c60f17feb393d2e948febb2da524e4e5994fb2a47026b1988ae607",
+      "hex_sha256": "ea4a8c432db9cb55efa93c9296ff3610851929e5a3de325236c6bda8ca517600",
+      "program_bytes": 226968,
+      "ram_bytes": 107354
+    },
+    "receiver": {
+      "sketch": "tests/hil/nu54dk/fixtures/bis_encrypted_recovery/bis_encrypted_recovery.ino",
+      "sketch_sha256": "81dd076f3a1d152a42bcff9fbeded21cde3391b0e7bece507ad4c32ac3e0f7d4",
+      "config_sha256": "93e0387f17c1dd24b70e119e07e805c016feb9c040dc54298b027a7c95cadc26",
+      "hex_sha256": "40f60804e856097ced796119214dd26fadf580ec2691d578b02dc78b07c8beef",
+      "program_bytes": 196220,
+      "ram_bytes": 106488
+    }
+  },
+  "runner": {
+    "path": "tests/hil/nu54dk/m31_iso_public_bis_pair_run.py",
+    "sha256": "be5fcfd7122bbd45cdb8781f6bd82d6f6c2363853c511537bc0347f8660528cc"
+  },
+  "artifacts": [
+    {
+      "path": "recovery-positive.json",
+      "sha256": "bc10554f8e68a4fbe7c72790414aeb4573fc9bd3f7d5c3fb391a0b26531120c7"
+    },
+    {
+      "path": "diagnostic-candidate.json",
+      "sha256": "d93107376b175b3d72258f81fe60ee0abb9a446d3fb4c9f6b20d4cfe514f21f9"
+    }
+  ]
+}

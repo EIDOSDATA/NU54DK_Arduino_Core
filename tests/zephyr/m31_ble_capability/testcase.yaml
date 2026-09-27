@@ -1,0 +1,72 @@
+tests:
+  nucode.m31.ble_capability:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - capability
+      - hil
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+  nucode.m31.ble_capability.iso:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - iso
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=iso.conf
+  nucode.m31.ble_capability.cs:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - channel_sounding
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=cs.conf
+  nucode.m31.ble_capability.df_tx:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - direction_finding
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=df_tx.conf
+  nucode.m31.ble_capability.df_iq_ll:
+    tags:
+      - nucode
+      - arduino
+      - m31
+      - bluetooth
+      - direction_finding
+      - candidate
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=df_iq_ll.conf
+      - SNIPPET=bt-ll-sw-split

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "original_main": "4b6afa7a097bdf32b1535a264e443233c3258bf8",
+  "integrated_and_preserved_rc_branch": "a99623636c01aae87fcba4f72322d83d7d6078f8",
+  "preserved_parent": "1e0bf4a636e1799b890b51ea7da00bca31e48b03",
+  "preserved_commit_count": 143,
+  "squashed_commit_count": 10,
+  "resulting_main_commit_count": 144,
+  "replacement_commit": "containing main squash commit",
+  "original_commits": [
+    {
+      "original_commit": "f865f5f819858ab3b6a6eeb983f74ce78ce7f19d",
+      "subject": "feat(ble): complete M28 GAP link and privacy support"
+    },
+    {
+      "original_commit": "e4cf269f0b33b07229c8f37d6b1e7c6c66b97ce5",
+      "subject": "feat(ble): complete M29 ATT GATT and L2CAP support"
+    },
+    {
+      "original_commit": "f282b3b5261fc4edcbd9214c001bc39b0a5e2e58",
+      "subject": "feat(ble): complete M30 security DFU and power recovery"
+    },
+    {
+      "original_commit": "96be7f3a0fecd0546b65794ddbe0c7448c58a5d5",
+      "subject": "feat(ble): complete M31 ISO and LE Audio through W03"
+    },
+    {
+      "original_commit": "357ec900b52486aaa9a58ef07d014c0fc14abead",
+      "subject": "docs: reconcile M31 W03 status and documentation"
+    },
+    {
+      "original_commit": "ea6a6917f6f27477868a7d72c06af4f178becc66",
+      "subject": "test(ble): consolidate ongoing M31 DF and CS diagnostics"
+    },
+    {
+      "original_commit": "ab0a54c536de560648b34dd7ec647ad6b774d149",
+      "subject": "docs: define M31 memory optimization and Windows release plan"
+    },
+    {
+      "original_commit": "4683d825eb43638ffa9445992b4dfe9a97f93f11",
+      "subject": "docs: record milestone squash and preserve original source identities"
+    },
+    {
+      "original_commit": "4b6afa7a097bdf32b1535a264e443233c3258bf8",
+      "subject": "docs: finalize declaration-based memory optimization plan"
+    },
+    {
+      "original_commit": "a99623636c01aae87fcba4f72322d83d7d6078f8",
+      "subject": "feat: consolidate v0.5.0-rc.1 development and documentation"
+    }
+  ],
+  "preserved_tags": {
+    "v0.4.1": "bbc2dc1fc5823ca465fc1d1ff2170512282b9313",
+    "v0.5.0-rc.1": "6cb741b45d88b6a4f1152631d5d31ce200ebc9ec",
+    "v0.5.0-rc.1_peeled": "7786984a186980f6220271cd506636e4564bc55d"
+  },
+  "stable_catalog_blob": "8d5760da657154c057bee50f8332b21b5762274c",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "backup": {
+    "filename": "pre-main-squash-4b6afa7a.bundle",
+    "sha256": "b531facc11902080b71a37c1dddcab1019fedb89f7a033b16b8770e8ae0b7332",
+    "verification": "git bundle verify PASS; complete history; original local/remote main, RC branch and two public release tags",
+    "location": "outside repository; document 270 records the delivery path"
+  },
+  "scope": "Main-only development history consolidation. RC branch, other archive refs, public tags/assets and stable catalog are not rewritten."
+}

@@ -1,0 +1,6 @@
+*** Booting nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+NUCODE_M28B3_READY:role=central:test=SOAK
+NUCODE_M28B3_central:TRACE:PASS:test=SOAK:source=rf-gatt:tx=10000:rx=0:nonce=64ecc356ce27b0307968060113075deb
+NUCODE_M28B3_central:SOAK:PASS:duration_s=1800:links=1:sequence=10000:loss=0:corrupt=0:duplicate=0:unexpected_disconnect=0:recovery_failures=0:drops=0:nonce=64ecc356ce27b0307968060113075deb
+NUCODE_M28B3_central:FINAL:PASS:test=SOAK:nonce=64ecc356ce27b0307968060113075deb

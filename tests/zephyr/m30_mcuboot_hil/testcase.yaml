@@ -1,0 +1,12 @@
+tests:
+  nucode.m30.mcuboot_hil:
+    tags:
+      - nucode
+      - m30
+      - mcuboot
+      - hil
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    sysbuild: true
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk

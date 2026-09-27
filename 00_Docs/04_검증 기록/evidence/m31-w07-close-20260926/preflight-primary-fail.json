@@ -1,0 +1,13 @@
+{
+  "case": "preflight",
+  "status": "FAIL",
+  "issued_utc": "2026-09-26T07:33:31.633595+00:00",
+  "expires_utc": "2026-09-26T07:53:31.633595+00:00",
+  "watchdog_seconds": 1200,
+  "source_revision": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+  "auto_unlock": false,
+  "erase": "sector_only",
+  "failure_class": "RuntimeError",
+  "failure_detail": "CMSIS-DAP V2 register record missing: dp_targetid_observed",
+  "finished_utc": "2026-09-26T07:33:34.061918+00:00"
+}

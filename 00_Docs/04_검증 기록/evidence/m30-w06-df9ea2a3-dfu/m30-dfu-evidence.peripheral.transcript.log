@@ -1,0 +1,124 @@
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=0.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=1.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=2.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=3.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=4.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=5.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=6.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=7.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=8.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=9.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+-M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=10.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=10.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=10.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=10.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=10.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=10.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=0|auto_confirm=0|version=11.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+*** Booting MCUboot v2.3.0-dev-c1d2d128a001 ***
+*** Using nRF Connect SDK v3.4.0-99553055607b ***
+*** Using Zephyr OS v4.4.0-bf801e4e3d19 ***
+M30DFU|1|READY|role=peripheral|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BEGIN|role=peripheral|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|BOOT|role=peripheral|active_area_id=1|confirmed=1|auto_confirm=1|version=10.0.0+0|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2
+M30DFU|1|LINK|role=peripheral|level=4|key_size=16|smp=1|nonce=057d054dc2e55dd36046f17e8ca99fba|core=df9ea2a3ee5111c350364a938409021d379810e2

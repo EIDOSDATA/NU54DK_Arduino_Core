@@ -1,0 +1,35 @@
+00003.001|runner|debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00005.948|runner|debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.330|runner|debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\nSuccessfully halted device\nCOMMANDER_RC=0
+00009.330|runner|pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true
+00012.368|runner|debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00012.378|runner|pre-reset UART quarantine board=E observed_bytes=0 input_buffer_purged=true
+00015.599|runner|debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00015.600|runner|pre-reset UART quarantine board=G observed_bytes=3855 input_buffer_purged=true
+00018.793|runner|debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\nResetting target\nDevice entered sleep\nCOMMANDER_RC=0
+00018.794|coordinator|<reset-uart-noise chars=3070>Searching for two set members
+00018.794|member_one|Enter this member rank (1 or 2):
+00018.795|member_two|Enter this member rank (1 or 2):
+00018.795|runner|command board=F value=1
+00018.860|runner|command board=E value=2
+00018.885|member_one|Set member ready; send a to authorize SIRK read, f to force-release
+00018.885|member_one|Provision a unique secret before using this outside a local test setup
+00018.959|member_two|Set member ready; send a to authorize SIRK read, f to force-release
+00018.959|member_two|Provision a unique secret before using this outside a local test setup
+00019.225|coordinator|Set coordinator security failed
+00019.228|coordinator|Set coordinator security failed
+00019.308|member_one|Set member security failed
+00019.308|member_one|Set member security failed
+00019.590|coordinator|Set member connection failed
+00019.706|coordinator|Set member connection failed
+00019.764|coordinator|Set member connection failed
+00019.923|coordinator|Set member connection failed
+00019.989|coordinator|Set member connection failed
+00020.099|coordinator|Set member connection failed
+00020.392|coordinator|Set member connection failed
+00020.530|coordinator|Set member connection failed
+00020.650|coordinator|Set member connection failed
+00020.706|coordinator|Set member connection failed
+00020.857|coordinator|Set member connection failed
+00020.923|coordinator|Set member connection failed
+00021.067|coordinator|Set member connection failed

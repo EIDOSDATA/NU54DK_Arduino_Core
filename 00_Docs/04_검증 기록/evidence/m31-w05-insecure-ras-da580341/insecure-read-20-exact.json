@@ -1,0 +1,228 @@
+{
+  "status": "PASS",
+  "test": "unencrypted_ranging_features_read_20",
+  "source_clean": true,
+  "core_revision": "da5803415519823cbe489ed1616ee4889ef11a9d",
+  "client_probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "reflector_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "client_port": "COM7",
+  "reflector_port": "COM5",
+  "client_image_sha256": "53a9d324d4a075295ffb3b3b99902750fb5f9940a8ea638606ba06c766535aff",
+  "reflector_image_sha256": "cc0919207c424ee52cd2d22aaabbbe98d668c9f8e493a88d74a6c67b2202500b",
+  "cycles_expected": 20,
+  "rejected": 20,
+  "cycles": [
+    {
+      "cycle": 1,
+      "elapsed_s": 0.047
+    },
+    {
+      "cycle": 2,
+      "elapsed_s": 0.172
+    },
+    {
+      "cycle": 3,
+      "elapsed_s": 0.063
+    },
+    {
+      "cycle": 4,
+      "elapsed_s": 0.063
+    },
+    {
+      "cycle": 5,
+      "elapsed_s": 0.047
+    },
+    {
+      "cycle": 6,
+      "elapsed_s": 0.047
+    },
+    {
+      "cycle": 7,
+      "elapsed_s": 0.062
+    },
+    {
+      "cycle": 8,
+      "elapsed_s": 0.063
+    },
+    {
+      "cycle": 9,
+      "elapsed_s": 0.062
+    },
+    {
+      "cycle": 10,
+      "elapsed_s": 0.062
+    },
+    {
+      "cycle": 11,
+      "elapsed_s": 0.047
+    },
+    {
+      "cycle": 12,
+      "elapsed_s": 0.063
+    },
+    {
+      "cycle": 13,
+      "elapsed_s": 0.062
+    },
+    {
+      "cycle": 14,
+      "elapsed_s": 0.047
+    },
+    {
+      "cycle": 15,
+      "elapsed_s": 4.391
+    },
+    {
+      "cycle": 16,
+      "elapsed_s": 1.0
+    },
+    {
+      "cycle": 17,
+      "elapsed_s": 4.344
+    },
+    {
+      "cycle": 18,
+      "elapsed_s": 1.187
+    },
+    {
+      "cycle": 19,
+      "elapsed_s": 4.312
+    },
+    {
+      "cycle": 20,
+      "elapsed_s": 4.469
+    }
+  ],
+  "client_lines": [
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer disconnected",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1",
+    "CS insecure peer connected",
+    "CS insecure RAS discovered",
+    "CS insecure read rejected att=15 count=1"
+  ],
+  "reflector_lines": [
+    "CS reflector connected",
+    "CS reflector advertising",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected",
+    "CS reflector disconnected",
+    "CS reflector connected"
+  ],
+  "client_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "reflector_flash": [
+    "pyocd-sector-hw-reset",
+    "425984"
+  ],
+  "client_flash": [
+    "pyocd-sector-hw-reset",
+    "335872"
+  ],
+  "elapsed_s": 112.938
+}

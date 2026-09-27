@@ -1,0 +1,976 @@
+{
+  "schema_version": 1,
+  "case": "m31-p2-equivalent-nordic-native-flash-ram-comparison",
+  "result": "PASS",
+  "pairs": [
+    {
+      "id": "coc_peripheral_server",
+      "result": "PASS",
+      "identical_conditions": {
+        "ncs": "v3.4.0",
+        "zephyr": "4.4.0 / ncs-v3.4.0",
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "controller": "Nordic SDC",
+        "code_partition": "slot0 [0x000000, 0x16c000)",
+        "ram_region_bytes": 262144,
+        "logging": "disabled",
+        "telemetry": "thread analyzer and heap runtime statistics enabled",
+        "functional_role": "one peripheral CoC server, one link, two channels",
+        "security": "SMP enabled",
+        "mtu_bytes": 512,
+        "l2cap_tx_buffers": 4,
+        "acl_octets": 251,
+        "main_stack_bytes": 8192,
+        "system_workqueue_stack_bytes": 4096,
+        "kernel_heap_bytes": 8192,
+        "malloc_arena_bytes": 8192
+      },
+      "deliberate_not_inflated_native_conditions": [
+        {
+          "item": "compiled role/capacity",
+          "arduino": "public dual-role L2CAP capability, CONFIG_BT_MAX_CONN=2",
+          "native": "test role only, CONFIG_BT_MAX_CONN=1",
+          "classification": "reusable Arduino capability cost; native was not inflated"
+        }
+      ],
+      "arduino": {
+        "manifest": {
+          "path": "C:/r31k/p2_coc_server_current/p2_coc_server.ino.nu54-build.json",
+          "sha256": "e5a3e0506a45b54694e382ad3857d8d844d0989e04dd283da99b0db0df5f345a",
+          "built_at_utc": "2026-09-24T18:51:59.333760+00:00"
+        },
+        "resource": {
+          "flash_used_bytes": 215888,
+          "ram_used_bytes": 82181,
+          "flash_region_bytes": 1490944,
+          "ram_region_bytes": 262144
+        },
+        "elf": {
+          "path": "C:/r31k/p2_coc_server_current/p2_coc_server.ino.elf",
+          "sha256": "2b93143a1c54f893cd764bc32fc627f499184ce0c6cd33882dfbf053e2d2c591"
+        },
+        "map_sha256": "89ea25bced996fcb22846caf1ea468b8777a899ca5b35e72c5d5ed992d339404",
+        "top_ram_symbols": [
+          {
+            "address": 536928400,
+            "name": "kheap__system_heap",
+            "size": 8276,
+            "type": "B"
+          },
+          {
+            "address": 536897712,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536916112,
+            "name": "z_main_stack",
+            "size": 8192,
+            "type": "B"
+          },
+          {
+            "address": 536886256,
+            "name": "sdc_mempool",
+            "size": 5618,
+            "type": "b"
+          },
+          {
+            "address": 536871552,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536924304,
+            "name": "sys_work_q_stack",
+            "size": 4096,
+            "type": "b"
+          },
+          {
+            "address": 536940032,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 536908912,
+            "name": "rx_thread_stack",
+            "size": 3200,
+            "type": "b"
+          },
+          {
+            "address": 536949944,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 536905904,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 536936676,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 536944588,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536913744,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536948292,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536938928,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 536946892,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536912720,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536885208,
+            "name": "bt_smp_pool",
+            "size": 1008,
+            "type": "b"
+          },
+          {
+            "address": 536896112,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 960,
+            "type": "b"
+          },
+          {
+            "address": 536908008,
+            "name": "bt_tx_processor_stack",
+            "size": 904,
+            "type": "b"
+          },
+          {
+            "address": 536893984,
+            "name": "global_data",
+            "size": 708,
+            "type": "b"
+          },
+          {
+            "address": 536897072,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::_k_fifo_buf_event_queue",
+            "size": 640,
+            "type": "b"
+          },
+          {
+            "address": 536912112,
+            "name": "_k_mem_slab_buf_chan_slab",
+            "size": 608,
+            "type": "b"
+          },
+          {
+            "address": 536895587,
+            "name": "mbedtls_heap",
+            "size": 512,
+            "type": "b"
+          },
+          {
+            "address": 536952440,
+            "name": "net_buf_data_reassembled_data.2",
+            "size": 512,
+            "type": "b"
+          },
+          {
+            "address": 536884192,
+            "name": "acl_conns",
+            "size": 416,
+            "type": "b"
+          },
+          {
+            "address": 536884608,
+            "name": "bt_l2cap_pool",
+            "size": 416,
+            "type": "b"
+          },
+          {
+            "address": 536876232,
+            "name": "bt_dev",
+            "size": 376,
+            "type": "D"
+          },
+          {
+            "address": 536943360,
+            "name": "_net_buf_hci_rx_pool",
+            "size": 364,
+            "type": "b"
+          },
+          {
+            "address": 536871232,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 320,
+            "type": "d"
+          },
+          {
+            "address": 536915792,
+            "name": "z_idle_stacks",
+            "size": 320,
+            "type": "b"
+          },
+          {
+            "address": 536943936,
+            "name": "net_buf_data_sync_evt_pool",
+            "size": 258,
+            "type": "b"
+          }
+        ],
+        "named_api_symbol_floor": {
+          "flash_bytes_lower_bound": 10408,
+          "ram_bytes_lower_bound": 12870,
+          "symbol_count": 123
+        }
+      },
+      "native": {
+        "resource": {
+          "text_bytes": 148180,
+          "data_bytes": 2056,
+          "bss_bytes": 62736,
+          "flash_used_bytes": 150236,
+          "ram_used_bytes": 64792
+        },
+        "regions": {
+          "flash": {
+            "origin": 0,
+            "size": 1490944,
+            "end": 1490944
+          },
+          "ram": {
+            "origin": 536870912,
+            "size": 262144,
+            "end": 537133056
+          }
+        },
+        "top_ram_symbols": [
+          {
+            "address": 536915416,
+            "size": 8276,
+            "type": "B",
+            "name": "kheap__system_heap"
+          },
+          {
+            "address": 536885048,
+            "size": 8192,
+            "type": "b",
+            "name": "malloc_arena"
+          },
+          {
+            "address": 536903128,
+            "size": 8192,
+            "type": "B",
+            "name": "z_main_stack"
+          },
+          {
+            "address": 536911320,
+            "size": 4096,
+            "type": "b",
+            "name": "sys_work_q_stack"
+          },
+          {
+            "address": 536896248,
+            "size": 3200,
+            "type": "b",
+            "name": "rx_thread_stack"
+          },
+          {
+            "address": 536928148,
+            "size": 3072,
+            "type": "b",
+            "name": "net_buf_data_hci_rx_pool"
+          },
+          {
+            "address": 536878232,
+            "size": 2828,
+            "type": "b",
+            "name": "sdc_mempool"
+          },
+          {
+            "address": 536893240,
+            "size": 2104,
+            "type": "B",
+            "name": "bt_lw_stack_area"
+          },
+          {
+            "address": 536925944,
+            "size": 2092,
+            "type": "b",
+            "name": "net_buf_data_rx_pool"
+          },
+          {
+            "address": 536923692,
+            "size": 2092,
+            "type": "b",
+            "name": "net_buf_data_tx_pool"
+          },
+          {
+            "address": 536932380,
+            "size": 2084,
+            "type": "b",
+            "name": "net_buf_data_acl_tx_pool"
+          },
+          {
+            "address": 536900760,
+            "size": 2048,
+            "type": "B",
+            "name": "z_interrupt_stacks"
+          },
+          {
+            "address": 536899736,
+            "size": 1024,
+            "type": "b",
+            "name": "mpsl_work_stack"
+          },
+          {
+            "address": 536895344,
+            "size": 904,
+            "type": "b",
+            "name": "bt_tx_processor_stack"
+          },
+          {
+            "address": 536934684,
+            "size": 774,
+            "type": "b",
+            "name": "net_buf_data_att_pool"
+          },
+          {
+            "address": 536882988,
+            "size": 708,
+            "type": "b",
+            "name": "global_data"
+          },
+          {
+            "address": 536884534,
+            "size": 512,
+            "type": "b",
+            "name": "mbedtls_heap"
+          },
+          {
+            "address": 536877696,
+            "size": 496,
+            "type": "b",
+            "name": "bt_smp_pool"
+          },
+          {
+            "address": 536875992,
+            "size": 416,
+            "type": "b",
+            "name": "channels"
+          },
+          {
+            "address": 536931220,
+            "size": 336,
+            "type": "b",
+            "name": "_net_buf_hci_rx_pool"
+          },
+          {
+            "address": 536871136,
+            "size": 336,
+            "type": "D",
+            "name": "bt_dev"
+          },
+          {
+            "address": 536902808,
+            "size": 320,
+            "type": "b",
+            "name": "z_idle_stacks"
+          },
+          {
+            "address": 536899448,
+            "size": 288,
+            "type": "b",
+            "name": "_k_mem_slab_buf_chan_slab"
+          },
+          {
+            "address": 536931768,
+            "size": 258,
+            "type": "b",
+            "name": "net_buf_data_sync_evt_pool"
+          },
+          {
+            "address": 536884205,
+            "size": 257,
+            "type": "b",
+            "name": "rx_hci_msg"
+          },
+          {
+            "address": 536876408,
+            "size": 232,
+            "type": "b",
+            "name": "bt_long_wq"
+          },
+          {
+            "address": 536876640,
+            "size": 232,
+            "type": "b",
+            "name": "bt_tx_processor_workq"
+          },
+          {
+            "address": 536876872,
+            "size": 232,
+            "type": "b",
+            "name": "bt_workq"
+          },
+          {
+            "address": 536881760,
+            "size": 232,
+            "type": "B",
+            "name": "k_sys_work_q"
+          },
+          {
+            "address": 536881064,
+            "size": 232,
+            "type": "B",
+            "name": "mpsl_work_q"
+          },
+          {
+            "address": 536932052,
+            "size": 213,
+            "type": "b",
+            "name": "net_buf_data_hci_cmd_pool"
+          },
+          {
+            "address": 536877104,
+            "size": 208,
+            "type": "b",
+            "name": "acl_conns"
+          }
+        ],
+        "inputs": {
+          "elf": {
+            "path": "C:/r31k/p2_coc_credit_peer_equal_20260925/zephyr/zephyr.elf",
+            "sha256": "30325a5c4b779ff06ca018b88c22546f11a06271321714e27ca030c86c1f0055"
+          },
+          "map": {
+            "path": "C:/r31k/p2_coc_credit_peer_equal_20260925/zephyr/zephyr.map",
+            "sha256": "199706ca2037acfe93e1cdeb902aae08381795c3969bfeaf49fcfa672339e192"
+          },
+          "config": {
+            "path": "C:/r31k/p2_coc_credit_peer_equal_20260925/zephyr/.config",
+            "sha256": "f576372a6235659eec27cb69d60627ac959ea54cbf5cb580fc9025757cf2560e"
+          }
+        }
+      },
+      "delta_arduino_minus_native": {
+        "flash_bytes": 65652,
+        "ram_bytes": 17389
+      }
+    },
+    {
+      "id": "encrypted_lc3_broadcast_source",
+      "result": "PASS",
+      "identical_conditions": {
+        "ncs": "v3.4.0",
+        "zephyr": "4.4.0 / ncs-v3.4.0",
+        "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "controller": "Nordic SDC",
+        "code_partition": "slot0 [0x000000, 0x16c000)",
+        "ram_region_bytes": 262144,
+        "logging": "disabled",
+        "telemetry": "thread analyzer and heap runtime statistics enabled",
+        "functional_role": "encrypted BAP broadcast source",
+        "security": "same 16-byte Broadcast Code",
+        "codec": "LC3 16 kHz mono, 40-byte/10-ms frame",
+        "streams": 1,
+        "subgroups": 1,
+        "iso_tx_buffers": 6,
+        "main_stack_bytes": 8192,
+        "system_workqueue_stack_bytes": 4096,
+        "kernel_heap_bytes": 0,
+        "malloc_arena_bytes": 8192
+      },
+      "deliberate_not_inflated_native_conditions": [
+        {
+          "item": "application scaffolding",
+          "arduino": "inline sketch encode/send loop and NUCODE codec state",
+          "native": "upstream sample encoder thread with 16384-byte stack",
+          "classification": "native sample overhead retained and reported; not an Arduino saving"
+        }
+      ],
+      "arduino": {
+        "manifest": {
+          "path": "C:/r31k/p2_audio_broadcast_source_rejoin/p2_audio_broadcast_source.ino.nu54-build.json",
+          "sha256": "fa09ec382a3df2abda352589e53fe14a5946eb9097b07bd708f69722feb02cdb",
+          "built_at_utc": "2026-09-24T19:37:22.116856+00:00"
+        },
+        "resource": {
+          "flash_used_bytes": 246736,
+          "ram_used_bytes": 55747,
+          "flash_region_bytes": 1490944,
+          "ram_region_bytes": 262144
+        },
+        "elf": {
+          "path": "C:/r31k/p2_audio_broadcast_source_rejoin/p2_audio_broadcast_source.ino.elf",
+          "sha256": "7e00fe647efdceb94904b1a7f31e6a61b127c48c9c6f3f64999ec475bd2d1ada"
+        },
+        "map_sha256": "1f6a3f1fee1b26813084c503934e9dd9ce402e669e7e5e7da508d86da17f782b",
+        "top_ram_symbols": [
+          {
+            "address": 536892912,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536909744,
+            "name": "z_main_stack",
+            "size": 8192,
+            "type": "B"
+          },
+          {
+            "address": 536872360,
+            "name": "nucode::ble::audio::(anonymous namespace)::codec_state",
+            "size": 5776,
+            "type": "d"
+          },
+          {
+            "address": 536917936,
+            "name": "sys_work_q_stack",
+            "size": 4096,
+            "type": "b"
+          },
+          {
+            "address": 536901104,
+            "name": "bt_tx_processor_stack",
+            "size": 3200,
+            "type": "b"
+          },
+          {
+            "address": 536885208,
+            "name": "sdc_mempool",
+            "size": 3050,
+            "type": "b"
+          },
+          {
+            "address": 536922404,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 2904,
+            "type": "b"
+          },
+          {
+            "address": 536904304,
+            "name": "rx_thread_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536907376,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536871224,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 1136,
+            "type": "d"
+          },
+          {
+            "address": 536906352,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536891952,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 960,
+            "type": "b"
+          },
+          {
+            "address": 536890684,
+            "name": "global_data",
+            "size": 708,
+            "type": "b"
+          },
+          {
+            "address": 536909424,
+            "name": "z_idle_stacks",
+            "size": 320,
+            "type": "b"
+          },
+          {
+            "address": 536925308,
+            "name": "_net_buf_hci_rx_pool",
+            "size": 308,
+            "type": "b"
+          },
+          {
+            "address": 536884264,
+            "name": "bt_tx_processor_workq",
+            "size": 304,
+            "type": "b"
+          },
+          {
+            "address": 536884568,
+            "name": "bt_workq",
+            "size": 304,
+            "type": "b"
+          },
+          {
+            "address": 536889176,
+            "name": "k_sys_work_q",
+            "size": 304,
+            "type": "B"
+          },
+          {
+            "address": 536888264,
+            "name": "mpsl_work_q",
+            "size": 304,
+            "type": "B"
+          },
+          {
+            "address": 536878136,
+            "name": "bt_dev",
+            "size": 280,
+            "type": "D"
+          },
+          {
+            "address": 536889480,
+            "name": "_thread_dummy",
+            "size": 272,
+            "type": "B"
+          },
+          {
+            "address": 536888568,
+            "name": "z_idle_threads",
+            "size": 272,
+            "type": "B"
+          },
+          {
+            "address": 536888840,
+            "name": "z_main_thread",
+            "size": 272,
+            "type": "B"
+          },
+          {
+            "address": 536891609,
+            "name": "rx_hci_msg",
+            "size": 265,
+            "type": "b"
+          },
+          {
+            "address": 536926188,
+            "name": "net_buf_data_hci_cmd_pool",
+            "size": 259,
+            "type": "b"
+          },
+          {
+            "address": 536925904,
+            "name": "net_buf_data_sync_evt_pool",
+            "size": 258,
+            "type": "b"
+          },
+          {
+            "address": 536925616,
+            "name": "net_buf_data_discardable_pool",
+            "size": 213,
+            "type": "b"
+          },
+          {
+            "address": 536922032,
+            "name": "nucode::ble::audio::(anonymous namespace)::net_buf_data_source_tx_pool",
+            "size": 212,
+            "type": "b"
+          },
+          {
+            "address": 536884960,
+            "name": "iso_conns",
+            "size": 208,
+            "type": "B"
+          },
+          {
+            "address": 536922244,
+            "name": "nucode::ble::audio::(anonymous namespace)::_net_buf_source_tx_pool",
+            "size": 160,
+            "type": "b"
+          },
+          {
+            "address": 536878464,
+            "name": "m_cb",
+            "size": 144,
+            "type": "d"
+          },
+          {
+            "address": 536926512,
+            "name": "(anonymous namespace)::_k_fifo_buf_console_rx_queue",
+            "size": 128,
+            "type": "b"
+          }
+        ],
+        "named_api_symbol_floor": {
+          "flash_bytes_lower_bound": 4734,
+          "ram_bytes_lower_bound": 8520,
+          "symbol_count": 80
+        }
+      },
+      "native": {
+        "resource": {
+          "text_bytes": 238888,
+          "data_bytes": 1996,
+          "bss_bytes": 62532,
+          "flash_used_bytes": 240884,
+          "ram_used_bytes": 64528
+        },
+        "regions": {
+          "flash": {
+            "origin": 0,
+            "size": 1490944,
+            "end": 1490944
+          },
+          "ram": {
+            "origin": 536870912,
+            "size": 262144,
+            "end": 537133056
+          }
+        },
+        "top_ram_symbols": [
+          {
+            "address": 536887840,
+            "size": 16384,
+            "type": "B",
+            "name": "_k_thread_stack_encoder"
+          },
+          {
+            "address": 536904224,
+            "size": 8192,
+            "type": "b",
+            "name": "malloc_arena"
+          },
+          {
+            "address": 536918760,
+            "size": 8192,
+            "type": "B",
+            "name": "z_main_stack"
+          },
+          {
+            "address": 536926952,
+            "size": 4096,
+            "type": "b",
+            "name": "sys_work_q_stack"
+          },
+          {
+            "address": 536931328,
+            "size": 2904,
+            "type": "b",
+            "name": "net_buf_data_hci_rx_pool"
+          },
+          {
+            "address": 536881168,
+            "size": 2783,
+            "type": "b",
+            "name": "sdc_mempool"
+          },
+          {
+            "address": 536877576,
+            "size": 2648,
+            "type": "b",
+            "name": "streams"
+          },
+          {
+            "address": 536913320,
+            "size": 2048,
+            "type": "b",
+            "name": "rx_thread_stack"
+          },
+          {
+            "address": 536916392,
+            "size": 2048,
+            "type": "B",
+            "name": "z_interrupt_stacks"
+          },
+          {
+            "address": 536915368,
+            "size": 1024,
+            "type": "b",
+            "name": "mpsl_work_stack"
+          },
+          {
+            "address": 536912416,
+            "size": 904,
+            "type": "b",
+            "name": "bt_tx_processor_stack"
+          },
+          {
+            "address": 536886288,
+            "size": 708,
+            "type": "b",
+            "name": "global_data"
+          },
+          {
+            "address": 536887172,
+            "size": 320,
+            "type": "b",
+            "name": "send_pcm_data"
+          },
+          {
+            "address": 536918440,
+            "size": 320,
+            "type": "b",
+            "name": "z_idle_stacks"
+          },
+          {
+            "address": 536934232,
+            "size": 308,
+            "type": "b",
+            "name": "_net_buf_hci_rx_pool"
+          },
+          {
+            "address": 536880224,
+            "size": 304,
+            "type": "b",
+            "name": "bt_tx_processor_workq"
+          },
+          {
+            "address": 536880528,
+            "size": 304,
+            "type": "b",
+            "name": "bt_workq"
+          },
+          {
+            "address": 536884864,
+            "size": 304,
+            "type": "B",
+            "name": "k_sys_work_q"
+          },
+          {
+            "address": 536883952,
+            "size": 304,
+            "type": "B",
+            "name": "mpsl_work_q"
+          },
+          {
+            "address": 536877304,
+            "size": 272,
+            "type": "B",
+            "name": "_k_thread_obj_encoder"
+          },
+          {
+            "address": 536885168,
+            "size": 272,
+            "type": "B",
+            "name": "_thread_dummy"
+          },
+          {
+            "address": 536884256,
+            "size": 272,
+            "type": "B",
+            "name": "z_idle_threads"
+          },
+          {
+            "address": 536884528,
+            "size": 272,
+            "type": "B",
+            "name": "z_main_thread"
+          },
+          {
+            "address": 536887497,
+            "size": 265,
+            "type": "b",
+            "name": "rx_hci_msg"
+          },
+          {
+            "address": 536935112,
+            "size": 259,
+            "type": "b",
+            "name": "net_buf_data_hci_cmd_pool"
+          },
+          {
+            "address": 536934828,
+            "size": 258,
+            "type": "b",
+            "name": "net_buf_data_sync_evt_pool"
+          },
+          {
+            "address": 536871224,
+            "size": 240,
+            "type": "D",
+            "name": "bt_dev"
+          },
+          {
+            "address": 536934540,
+            "size": 213,
+            "type": "b",
+            "name": "net_buf_data_discardable_pool"
+          },
+          {
+            "address": 536880920,
+            "size": 208,
+            "type": "B",
+            "name": "iso_conns"
+          },
+          {
+            "address": 536931048,
+            "size": 159,
+            "type": "b",
+            "name": "net_buf_data_tx_pool"
+          },
+          {
+            "address": 536871512,
+            "size": 144,
+            "type": "d",
+            "name": "m_cb"
+          },
+          {
+            "address": 536931208,
+            "size": 120,
+            "type": "b",
+            "name": "_net_buf_tx_pool"
+          }
+        ],
+        "inputs": {
+          "elf": {
+            "path": "C:/r31k/p2_native_audio_source_equal_20260925/zephyr/zephyr.elf",
+            "sha256": "f5d5fc23c26564c7bd22c859dc5da33e9f7ea08264d421c8daf0bb8148db43c5"
+          },
+          "map": {
+            "path": "C:/r31k/p2_native_audio_source_equal_20260925/zephyr/zephyr.map",
+            "sha256": "d8cfe8ee243a1ea68e843dbf15d30ec8e4a14500385ad48906af1a1db05729ca"
+          },
+          "config": {
+            "path": "C:/r31k/p2_native_audio_source_equal_20260925/zephyr/.config",
+            "sha256": "a3f28a9d87f93bf23acf1c66b19dc6f60cd6764fc3aa0fafb18fe22d71c05b9a"
+          }
+        }
+      },
+      "delta_arduino_minus_native": {
+        "flash_bytes": 5852,
+        "ram_bytes": -8781
+      }
+    }
+  ],
+  "interpretation": {
+    "coc": "Arduino의 양수 delta는 Arduino/NUCODE 공개 API·event queue·dual-role 용량을 포함한다. 동일 pool의 중복 사본은 발견하지 않았다.",
+    "audio": "raw RAM delta에는 native upstream sample의 16384-byte encoder stack이 포함되므로 Arduino의 음수 delta를 API 절감으로 해석하지 않는다.",
+    "native_inflation": "Arduino의 CONFIG_BT_MAX_CONN=2 또는 미사용 역할을 native에 추가하지 않았다.",
+    "record_250": "조건이 다른 Nordic RAS 진단은 이 PASS의 분모나 수치로 사용하지 않았다."
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "test_id": "M31-DF-01:connectionless_cte_tx:controller_acceptance",
+  "status": "PASS_CONTROL",
+  "source_clean": true,
+  "identity": {
+    "core": "fc1d35898d824dfd4a4d157fd08b2b90c3b1e5b2",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "probe_nonce": "c19c7549d0951e8aecbb089504694f7e",
+  "nonces": [
+    "cd83d03139bb4aafde5aafa7029d8674",
+    "612fdeee573615d701b17a0828c62a77",
+    "d7ca2e9900d3efc658abf28e8335fe6d",
+    "110315ea37306e51ae04f13c1d5ec1e4",
+    "e4028ffb2648aec43c733a3a276426dc",
+    "30bf17356e3e28d90e443c680ede604d",
+    "293fb8d0b0bca16f7b09097e69f441e9",
+    "e0b947a0536bf69ba0f18ebbcb451ac0",
+    "06323a14585a4abad314761231980581",
+    "92db2d8ccde7f0fc95e71f85c2dcb435",
+    "e5832582a1f0ee2c6fda705519af6d5c",
+    "14991dcc08914a08ac9835ea1671a500",
+    "32a6b10ffc095c105ac555295c69c8e4",
+    "85ba7b53ecca36d98d8dbdf078b4ea72",
+    "ae5c145aff57c1b5ac12d8a6dd78d8b0",
+    "2e0d69c1d3b443d82342a03b5a9db66d",
+    "4c77936531c27101c49e753dae2dbf2a",
+    "81ddad848e73e3204d6545ae1037c034",
+    "fdadfc6c61346f8365a3e50b8cb66cbd",
+    "352f90f66446216c9003a216cc2b5667"
+  ],
+  "board": {
+    "probe_sha256": "aa592f987b33de47e3bb08be982e8524583bc1312da5dd9f22f4be521335ee6b",
+    "volume": "F:/",
+    "vcom": "COM16",
+    "image_sha256": "97427693584fef455348ee7c34e5f688333d7679d0342754192d1d03ee9fd1c1",
+    "registers": {
+      "dp_idcode": "0x6ba02477",
+      "dp_targetid_observed": "0x201c0289",
+      "ahb_ap_idr": "0x84770001",
+      "ahb_ap_csw": "0x43800042",
+      "ctrl_ap_idr": "0x32880000",
+      "approtect_status": "0x00000000"
+    },
+    "flash_mode": "pyocd-sector-hw-reset",
+    "flash_bytes": "159744"
+  },
+  "measured": {
+    "cycles": 20,
+    "starts": 20,
+    "stops": 20,
+    "invalid_rejected": 20
+  },
+  "transcript_sha256": "621df32453560523a860c7bd10453fc054410616045bdb67a7f2e95f95ce75cc",
+  "observed_utc": "2026-09-26T07:44:48.084449+00:00",
+  "scope": "controller_acceptance_only_no_over_air_iq_proof"
+}

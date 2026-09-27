@@ -1,0 +1,62 @@
+{
+  "arduino_cli": {
+    "sha256": "65daefba1423010575d0874275734cb4a917faf5293609f01e9db6ed1c1c7e79"
+  },
+  "build": {
+    "compile_seconds": 164.961,
+    "fqbn": "nucode:zephyr:nu54dk:upload_probe=pyocd",
+    "hex_file_name": "m8_upload.ino.hex",
+    "hex_sha256": "97082547dc872304fe6008aa5583f8291d8b1c0274bd07ec27e055aab92faf17",
+    "hex_size": 229954,
+    "manifest_sha256": "d9c5078d38aa49f89ead95e36e39ebd4ac4500a63544cf8c00cd94032969f952"
+  },
+  "completed_at_utc": "2026-09-27T02:16:22.830524+00:00",
+  "evidence_type": "rc-pyocd-hil",
+  "milestone": "M11",
+  "platform": {
+    "mode": "validated-extracted-rc",
+    "staged_byte_exact": true
+  },
+  "release": {
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "core_revision": "b2e7a587ba6fde31e033dc21008d7084bd6e631b",
+    "file_count": 638,
+    "platform_tree_sha256": "00e292fc03b29f3b4e479855e497dbb46c7b20ad460823cc37973a47534e76b0",
+    "release_manifest_sha256": "49ba60a3b572ad7588caf014687a12344dc2c5314d365ee0ffffba1766636262",
+    "runtime_payload_sha256": "61e3e30ee797bc019dd3d3c49479b706ed35a49bcc4e6f8114d85f1f3c24d5c8",
+    "version": "0.5.0-rc.2"
+  },
+  "schema_version": 1,
+  "sketch": {
+    "repository_relative_path": "tests/arduino-cli/m8_upload/m8_upload.ino",
+    "sha256": "c527faa363d5abedbecf065df9091b2341292cd16165d719f19433af0e00bda2"
+  },
+  "status": "passed",
+  "uart": {
+    "candidate_count": 6,
+    "ready": true,
+    "ready_match_count": 1,
+    "selection": "auto-daplink-token",
+    "timeout_seconds": 10.0,
+    "token": "NUCODE_M8_UPLOAD_READY",
+    "transcript_bytes": 120,
+    "transcript_sha256": "26ae8e93811beecca76356d1addbda240fc66c682834ecea4be7efc8dbdabdb0"
+  },
+  "upload": {
+    "attempts": 1,
+    "auto_unlock": false,
+    "dt_flash": false,
+    "flash_log_sha256": "95f188110c74229febc9c0a6ffe58f868c68c094fe236e36473a8e36c7695f44",
+    "hex_unchanged_after_upload": true,
+    "mass_erase_requested": false,
+    "probe_selection": {
+      "probe_id": "redacted",
+      "probe_selection_mode": "explicit",
+      "upload_probe": "pyocd"
+    },
+    "recover_requested": false,
+    "runner": "pyocd",
+    "smart_flash": false,
+    "upload_seconds": 9.351
+  }
+}

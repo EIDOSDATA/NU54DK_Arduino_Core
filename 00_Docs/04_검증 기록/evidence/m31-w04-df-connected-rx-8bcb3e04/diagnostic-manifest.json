@@ -1,0 +1,15 @@
+{
+  "case": "M31-W04 connected AoA receive Host versus controller diagnostic",
+  "status": "PARTIAL_HOST_REJECTED",
+  "source_clean": true,
+  "receiver_source_revision": "8bcb3e049f2e5ff5cf8a9d08fba8dfd0842e06fb",
+  "receiver_hex_sha256": "f0c106266c8abdffe6243819073da4d3c19bbc5766b25fab95d310cda963639a",
+  "responder_hex_sha256": "256f75eb0d334f66d8da8f34fdb85520b943cf71e235857df5748f0a20713b8f",
+  "controller_command_acceptance_is_not_iq": true,
+  "flash_bytes": 125920,
+  "ram_bytes": 29712,
+  "files": {
+    "connected-aoa-host-controller-diagnostic.json": "7847d86975eb6f9caee8a90a413c075c0c0b99b9713af46381585c865a0b824d",
+    "connected-receiver-8bcb3e04.hex.gz": "33dbe2df6f89b5309692f4b5b956cbbc60653ee6d9f08111a6750d7e6d5a89de"
+  }
+}

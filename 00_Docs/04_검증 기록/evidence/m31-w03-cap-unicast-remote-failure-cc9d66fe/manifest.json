@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "test_id": "M31-AUDIO-01",
+  "work_item": "W03-05",
+  "scenario": "cap-unicast-remote-enable-rejection",
+  "verdict": "PASS",
+  "commit": "cc9d66fe4a7b72821ae233e9f6a71b442cac4913",
+  "recorded_at_utc": "2026-09-19T16:54:44.320193+00:00",
+  "elapsed_seconds": 98.385,
+  "minimum_failures": 20,
+  "fixture": {
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_submodule": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain": "dcbdc366a1",
+    "upstream_source_sha256": {
+      "CMakeLists.txt": "f2d60560b08ee0ed26cd8b721852b6424ab3357ce9af02f43e029f6ab93df165",
+      "prj.conf": "8916dbd7f222c49155e8a070c78c86bcefadad77ab5d64a9a2a4a91092cbe5f5",
+      "src/cap_acceptor.h": "316cf4a55329f554878be958525bf616df2a1ac3caa13b28fb1a4e6ca8e68251",
+      "src/cap_acceptor_unicast.c": "26f6a42543d203879c671b0037edd1a86e07638882ceb2634f9bae4a8d146356",
+      "src/main.c": "da698ad281a56ad4cebb25735abaadf70c114429cead3338de98977de626c1f6"
+    },
+    "flash_bytes": 244512,
+    "ram_bytes": 48644
+  },
+  "artifacts": {
+    "initiator": {
+      "sha256": "2d5fd1ddec3b0222fa9686a6ef1597dd8c7472f0a49927e2ecb0bcbe9d760907",
+      "size": 1441294
+    },
+    "reject_acceptor": {
+      "sha256": "e39f7b55a2e722a1d513f377830df9bca73be9f34eeed38862742a8ad2f78875",
+      "size": 687910
+    }
+  },
+  "devices": {
+    "initiator": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port_role": "target-uart",
+      "target": "nRF54L15",
+      "flash_result": "SUCCESS",
+      "flash_bytes": 1441294
+    },
+    "acceptor": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "port_role": "target-uart",
+      "target": "nRF54L15",
+      "flash_result": "SUCCESS",
+      "flash_bytes": 687910
+    }
+  },
+  "results": {
+    "fixture_ready": 20,
+    "remote_rejections": 20,
+    "peer_failures": 20,
+    "other_failures": 0,
+    "disconnects": 20,
+    "reconnections": 19
+  },
+  "expected_failure": {
+    "operation": "ASCS Enable",
+    "response_code": 11,
+    "response_reason": 2,
+    "initiator_step": 5,
+    "initiator_native_error": -77,
+    "failed_on_peer": true
+  },
+  "transcript": "cap-unicast-remote-failure.log"
+}

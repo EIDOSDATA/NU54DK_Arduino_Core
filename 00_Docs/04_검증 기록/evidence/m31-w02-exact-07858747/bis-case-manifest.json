@@ -1,0 +1,75 @@
+{
+  "test_id": "M31-ISO-01:bis",
+  "status": "PASS",
+  "scope": "twenty_positive_cycles_and_two_negative_recovery_classes",
+  "source_clean": true,
+  "source_revision": "078587471637db187e508db2deec7d091a8262ef",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "nrf_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "build_only": {
+    "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-07858747/bis-build-twister.json",
+    "sha256": "71de1b40dcbfabf9cd6939c850f78c9b9ec110162e3bfdc6387c460d5dd96fdb"
+  },
+  "build_scenarios": [
+    "nucode.m31.iso_bis.receiver",
+    "nucode.m31.iso_bis.source",
+    "nucode.m31.iso_bis_encrypted.receiver",
+    "nucode.m31.iso_bis_encrypted.source"
+  ],
+  "attempts": {
+    "positive": {
+      "result": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-07858747/bis-positive-01.json",
+        "sha256": "3f64d5dbc6934aa3e5ac5428038279023769a2b477ba4c7e0e894f0ae69fdc64"
+      },
+      "transcript": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-07858747/bis-positive-01.transcript.log",
+        "sha256": "53f0a9860b5736f40a95ac2e34cd104a594b8040c914fc7bf98946e6f1a6e5ff"
+      },
+      "measurement": {
+        "cycles": 20,
+        "total_sent": 2000,
+        "total_received": 1997,
+        "minimum_received": 99,
+        "empty_slots": 103
+      }
+    },
+    "wrong_code": {
+      "result": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-07858747/bis-wrong_code-01.json",
+        "sha256": "1a628268b795478d602142cec38775b3fa8c3be10a0917c7562e91c89af96039"
+      },
+      "transcript": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-07858747/bis-wrong_code-01.transcript.log",
+        "sha256": "a3e6d853d6a84b8671795cfa9e9f2e4c9a9614e29a34d01709dd2ac661c69911"
+      },
+      "measurement": {
+        "negative_class": "wrong_broadcast_code",
+        "cycles": 2,
+        "rejected_payloads": 0,
+        "recovery_sent": 100,
+        "recovery_received": 100,
+        "recovery_empty_slots": 5
+      }
+    },
+    "sync_loss": {
+      "result": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-07858747/bis-sync_loss-01.json",
+        "sha256": "da5398c3149c6cbb28980e58fc7c33dd856caab2f60b450137f3a892ef787955"
+      },
+      "transcript": {
+        "path": "00_Docs/04_검증 기록/evidence/m31-w02-exact-07858747/bis-sync_loss-01.transcript.log",
+        "sha256": "2c3b0c0a7c5b51d80b20f82680d9a63175d21c7fb633f913c893e958fe5dac60"
+      },
+      "measurement": {
+        "negative_class": "sync_loss",
+        "cycles": 2,
+        "rejected_payloads": 0,
+        "recovery_sent": 100,
+        "recovery_received": 100,
+        "recovery_empty_slots": 5
+      }
+    }
+  }
+}

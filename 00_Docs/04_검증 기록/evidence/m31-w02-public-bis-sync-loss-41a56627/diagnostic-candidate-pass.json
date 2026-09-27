@@ -1,0 +1,140 @@
+{
+  "status": "CANDIDATE_PASS",
+  "test": "arduino_public_raw_bis_sync_loss_pair",
+  "core_revision": "304358bf8813f2bd6d2e69816b8f9e1d744d14af",
+  "source_clean": false,
+  "probe_sha256": {
+    "source": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+    "receiver": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9"
+  },
+  "ports": {
+    "source": "COM7",
+    "receiver": "COM5"
+  },
+  "image_sha256": {
+    "source": "87ac10986b507e44ffddd3e9bc58944eb80ad5fcaff476f25567cda97778fafa",
+    "receiver": "e53f99d2e8ae7cf85f5729339ee495f163514e49ea159c97c05d7b457878b0cc"
+  },
+  "flash": {
+    "receiver": [
+      "pyocd-sector-hw-reset",
+      "196608"
+    ],
+    "source": [
+      "pyocd-sector-hw-reset",
+      "229376"
+    ]
+  },
+  "requested_cycles": 1,
+  "completed_cycles": {
+    "source": 1,
+    "receiver": 1
+  },
+  "payload_frames": 100,
+  "missing_frames": 0,
+  "allowed_missing": 1,
+  "valid_hci_times": true,
+  "wrong_code_rejected": 0,
+  "wrong_code_stopped": 0,
+  "recovered_frames": 0,
+  "recovery_missing": 0,
+  "recovery_stopped": 0,
+  "sync_loss_injection": {
+    "payload_before_reset": true,
+    "completed_before_reset": false,
+    "source_reset_at_s": 2.718
+  },
+  "sync_loss_lines": [
+    {
+      "at_s": 3.351,
+      "text": "BIS error: -67 frames=58 missing=20 errors=0"
+    }
+  ],
+  "image_revision_confirmed": {
+    "source": true,
+    "receiver": true
+  },
+  "excluded_pre_boot_lines": {
+    "source": 5,
+    "receiver": 3
+  },
+  "failed_lines": [],
+  "lines": {
+    "source": [
+      {
+        "at_s": 0.097,
+        "text": "BIS core revision=304358bf8813f2bd6d2e69816b8f9e1d744d14af"
+      },
+      {
+        "at_s": 0.097,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 0.097,
+        "text": "BIS core revision=304358bf8813f2bd6d2e69816b8f9e1d744d14af"
+      },
+      {
+        "at_s": 0.097,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 3.031,
+        "text": "BIS core revision=304358bf8813f2bd6d2e69816b8f9e1d744d14af"
+      },
+      {
+        "at_s": 3.031,
+        "text": "BIS source advertising"
+      },
+      {
+        "at_s": 7.646,
+        "text": "BIS sent frames=100"
+      }
+    ],
+    "receiver": [
+      {
+        "at_s": 0.203,
+        "text": "BIS receiver synchronized ms=13282"
+      },
+      {
+        "at_s": 0.203,
+        "text": "BIS error: -67 frames=0 missing=0 errors=0"
+      },
+      {
+        "at_s": 0.417,
+        "text": "BIS core revision=304358bf8813f2bd6d2e69816b8f9e1d744d14af"
+      },
+      {
+        "at_s": 0.417,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 1.284,
+        "text": "BIS receiver synchronized ms=957"
+      },
+      {
+        "at_s": 1.284,
+        "text": "BIS first frame=20"
+      },
+      {
+        "at_s": 3.351,
+        "text": "BIS error: -67 frames=58 missing=20 errors=0"
+      },
+      {
+        "at_s": 4.392,
+        "text": "BIS receiver scanning"
+      },
+      {
+        "at_s": 4.808,
+        "text": "BIS receiver synchronized ms=399"
+      },
+      {
+        "at_s": 5.021,
+        "text": "BIS first frame=0"
+      },
+      {
+        "at_s": 7.127,
+        "text": "BIS received frames=100 missing=0 errors=0"
+      }
+    ]
+  }
+}

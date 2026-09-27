@@ -1,0 +1,2801 @@
+{
+  "schema": "nucode.m31.csip-hil.v1",
+  "status": "PASS",
+  "mode": "recovery",
+  "started_at": "2026-09-20T05:36:05.993010+00:00",
+  "finished_at": "2026-09-20T05:38:38.135195+00:00",
+  "core_revision": "fcbbfac5fe348c51be0fb4e30f2b8415099b8758",
+  "source_clean": true,
+  "pre_reset_uart_quarantine": {
+    "member_one": {
+      "observed_bytes": 0,
+      "input_buffer_purged": true
+    },
+    "member_two": {
+      "observed_bytes": 1,
+      "input_buffer_purged": true
+    },
+    "coordinator": {
+      "observed_bytes": 2994,
+      "input_buffer_purged": true
+    }
+  },
+  "public_example_sha256": {
+    "coordinator": "b7f12a192da55f6dc7bd2c072776dbe9cd99ad7a4319e1ccb6581d2c56299fb7",
+    "member": "68bc8eb82a0b4753f73c80e9e15517517d412bdb75fb79b9f337284a3f726f68"
+  },
+  "runner_behavior": {
+    "flashes_devices": false,
+    "power_cycles_devices": false,
+    "interactive_input": false,
+    "debug_control_enabled": true,
+    "debug_control": "SHA-256 helper reset/halt/go",
+    "debug_helper_path": "C:\\Users\\eidos\\Documents\\Codex\\2026-09-19\\nu54dk-arduino-core-c-drive-origin\\work\\pyocd_commands_by_hash.py",
+    "debug_helper_sha256": "a2d9c1a83198a3e28c6d2562320697edbbc3adba03ce10c8e6295ffde310a7a2",
+    "opens_only_explicit_com_ports": true,
+    "raw_probe_identifiers_recorded": false,
+    "existing_files_overwritten": false
+  },
+  "board_map": {
+    "coordinator": {
+      "board": "G",
+      "port": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_path": "C:\\w\\m31w06-coordinator-fcbbfac5\\CsipSetCoordinator.ino.hex",
+      "image_sha256": "841cd72d4728050e3e4baa1e6c6eecf7f9def2d1874465125442bcd963746663"
+    },
+    "member_one": {
+      "board": "F",
+      "port": "COM14",
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "image_path": "C:\\w\\m31w06-member-fcbbfac5\\CsipSetMember.ino.hex",
+      "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32"
+    },
+    "member_two": {
+      "board": "E",
+      "port": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_path": "C:\\w\\m31w06-member-fcbbfac5\\CsipSetMember.ino.hex",
+      "image_sha256": "ad654a7f6941615ad39d85468485cf72bb4805aea4eba2fe527c02aaaf76dc32"
+    }
+  },
+  "fault_image_sha256": null,
+  "fault_role": null,
+  "fault_build_manifest": null,
+  "time_contract": {
+    "campaign_timeout_seconds": 180.0,
+    "recovery_timeout_seconds": 30.0
+  },
+  "expected_tokens": {
+    "coordinator_search": "Searching for two set members",
+    "coordinator_ready": "Set ready; send o to order, l to lock, u to release",
+    "operation_rejected": "Set operation rejected",
+    "member_rank_one": "Member rank 1 of 2",
+    "member_rank_two": "Member rank 2 of 2",
+    "member_rank_prompt": "Enter this member rank (1 or 2):",
+    "member_ready": "Set member ready; send a to authorize SIRK read, f to force-release",
+    "authorization_prompt": "Set member bonded; physically verify the controller, then send a",
+    "authorization_success": "Bonded controller identity authorized",
+    "locked": "Set locked",
+    "released": "Set released",
+    "security_sync_failure": "Set coordinator security request failed",
+    "security_async_failure": "Set coordinator security failed",
+    "watchdog": "Set coordinator progress timeout"
+  },
+  "result": {
+    "boot_debug_actions": [
+      {
+        "board": "F",
+        "action": "halt",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "E",
+        "action": "halt",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "G",
+        "action": "halt",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "F",
+        "action": "reset-and-go",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "E",
+        "action": "reset-and-go",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+      },
+      {
+        "board": "G",
+        "action": "reset-and-go",
+        "returncode": 0,
+        "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+      }
+    ],
+    "requested_cycles": 20,
+    "completed_cycles": 20,
+    "loss_role": "member_two",
+    "loss_board": "E",
+    "loss_trigger": "hardware-reset",
+    "recovery_seconds": [
+      6.967,
+      6.906,
+      6.153,
+      6.209,
+      6.645,
+      6.987,
+      6.299,
+      6.413,
+      6.542,
+      6.25,
+      6.083,
+      6.336,
+      6.108,
+      6.524,
+      6.325,
+      6.472,
+      6.252,
+      6.151,
+      6.401,
+      6.506
+    ],
+    "recovery_timeout_seconds": 30.0,
+    "debug_actions": [
+      {
+        "cycle": 1,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 2,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 3,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 4,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 5,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 6,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 7,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 8,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 9,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 10,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 11,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 12,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 13,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 14,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 15,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 16,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 17,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 18,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 19,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      },
+      {
+        "cycle": 20,
+        "reset": {
+          "board": "E",
+          "action": "reset-and-go",
+          "returncode": 0,
+          "sanitized_output": "Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+        }
+      }
+    ],
+    "exact_handle_authorization_each_rejoin": true,
+    "lock_release_each_cycle": true,
+    "campaign_elapsed_seconds": 152.017
+  },
+  "events": [
+    {
+      "sequence": 0,
+      "at_s": 2.907,
+      "role": "runner",
+      "text": "debug board=F action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 1,
+      "at_s": 6.04,
+      "role": "runner",
+      "text": "debug board=E action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 2,
+      "at_s": 8.839,
+      "role": "runner",
+      "text": "debug board=G action=halt rc=0 output=Setting SWD clock to 500 kHz\\nSuccessfully halted device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 3,
+      "at_s": 8.839,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=F observed_bytes=0 input_buffer_purged=true"
+    },
+    {
+      "sequence": 4,
+      "at_s": 12.012,
+      "role": "runner",
+      "text": "debug board=F action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 5,
+      "at_s": 12.014,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=E observed_bytes=1 input_buffer_purged=true"
+    },
+    {
+      "sequence": 6,
+      "at_s": 15.082,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 7,
+      "at_s": 15.082,
+      "role": "runner",
+      "text": "pre-reset UART quarantine board=G observed_bytes=2994 input_buffer_purged=true"
+    },
+    {
+      "sequence": 8,
+      "at_s": 18.139,
+      "role": "runner",
+      "text": "debug board=G action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 9,
+      "at_s": 18.14,
+      "role": "coordinator",
+      "text": "<reset-uart-noise chars=2196>Searching for two set members"
+    },
+    {
+      "sequence": 10,
+      "at_s": 18.14,
+      "role": "member_one",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 11,
+      "at_s": 18.14,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 12,
+      "at_s": 18.14,
+      "role": "runner",
+      "text": "command board=F value=1"
+    },
+    {
+      "sequence": 13,
+      "at_s": 18.208,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 14,
+      "at_s": 18.236,
+      "role": "member_one",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 15,
+      "at_s": 18.236,
+      "role": "member_one",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 16,
+      "at_s": 18.3,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 17,
+      "at_s": 18.3,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 18,
+      "at_s": 19.514,
+      "role": "member_one",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 19,
+      "at_s": 19.538,
+      "role": "runner",
+      "text": "authorize board=F controller=G mapping=preverified"
+    },
+    {
+      "sequence": 20,
+      "at_s": 19.759,
+      "role": "runner",
+      "text": "command board=F value=a"
+    },
+    {
+      "sequence": 21,
+      "at_s": 19.784,
+      "role": "member_one",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 22,
+      "at_s": 20.803,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 23,
+      "at_s": 22.101,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 24,
+      "at_s": 22.101,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 25,
+      "at_s": 22.325,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 26,
+      "at_s": 22.372,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 27,
+      "at_s": 23.273,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 28,
+      "at_s": 23.273,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 29,
+      "at_s": 23.273,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 30,
+      "at_s": 26.667,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 31,
+      "at_s": 26.716,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 32,
+      "at_s": 26.717,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 33,
+      "at_s": 26.776,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 34,
+      "at_s": 26.776,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 35,
+      "at_s": 27.983,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 36,
+      "at_s": 27.983,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 37,
+      "at_s": 28.234,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 38,
+      "at_s": 28.296,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 39,
+      "at_s": 29.336,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 40,
+      "at_s": 29.336,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 41,
+      "at_s": 29.336,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 42,
+      "at_s": 29.636,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 43,
+      "at_s": 29.734,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 44,
+      "at_s": 29.809,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 45,
+      "at_s": 30.04,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 46,
+      "at_s": 30.168,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 47,
+      "at_s": 30.202,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 48,
+      "at_s": 30.3,
+      "role": "runner",
+      "text": "recovery cycle=1/20 ranks=[1, 2] seconds=6.967 operations=2"
+    },
+    {
+      "sequence": 49,
+      "at_s": 33.476,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 50,
+      "at_s": 33.516,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 51,
+      "at_s": 33.517,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 52,
+      "at_s": 33.575,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 53,
+      "at_s": 33.575,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 54,
+      "at_s": 34.876,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 55,
+      "at_s": 34.876,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 56,
+      "at_s": 35.126,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 57,
+      "at_s": 35.183,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 58,
+      "at_s": 36.197,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 59,
+      "at_s": 36.197,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 60,
+      "at_s": 36.197,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 61,
+      "at_s": 36.526,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 62,
+      "at_s": 36.617,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 63,
+      "at_s": 36.617,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 64,
+      "at_s": 36.941,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 65,
+      "at_s": 36.992,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 66,
+      "at_s": 37.108,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 67,
+      "at_s": 37.206,
+      "role": "runner",
+      "text": "recovery cycle=2/20 ranks=[1, 2] seconds=6.906 operations=2"
+    },
+    {
+      "sequence": 68,
+      "at_s": 40.384,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 69,
+      "at_s": 40.436,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 70,
+      "at_s": 40.436,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 71,
+      "at_s": 40.502,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 72,
+      "at_s": 40.502,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 73,
+      "at_s": 41.115,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 74,
+      "at_s": 41.116,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 75,
+      "at_s": 41.36,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 76,
+      "at_s": 41.424,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 77,
+      "at_s": 42.448,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 78,
+      "at_s": 42.452,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 79,
+      "at_s": 42.452,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 80,
+      "at_s": 42.735,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 81,
+      "at_s": 42.766,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 82,
+      "at_s": 42.842,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 83,
+      "at_s": 43.102,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 84,
+      "at_s": 43.156,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 85,
+      "at_s": 43.258,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 86,
+      "at_s": 43.359,
+      "role": "runner",
+      "text": "recovery cycle=3/20 ranks=[1, 2] seconds=6.153 operations=2"
+    },
+    {
+      "sequence": 87,
+      "at_s": 46.55,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 88,
+      "at_s": 46.608,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 89,
+      "at_s": 46.609,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 90,
+      "at_s": 46.659,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 91,
+      "at_s": 46.659,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 92,
+      "at_s": 47.238,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 93,
+      "at_s": 47.238,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 94,
+      "at_s": 47.483,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 95,
+      "at_s": 47.533,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 96,
+      "at_s": 48.613,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 97,
+      "at_s": 48.613,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 98,
+      "at_s": 48.613,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 99,
+      "at_s": 48.922,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 100,
+      "at_s": 48.956,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 101,
+      "at_s": 49.031,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 102,
+      "at_s": 49.29,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 103,
+      "at_s": 49.341,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 104,
+      "at_s": 49.459,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 105,
+      "at_s": 49.568,
+      "role": "runner",
+      "text": "recovery cycle=4/20 ranks=[1, 2] seconds=6.209 operations=2"
+    },
+    {
+      "sequence": 106,
+      "at_s": 52.773,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 107,
+      "at_s": 52.827,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 108,
+      "at_s": 52.828,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 109,
+      "at_s": 52.891,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 110,
+      "at_s": 52.891,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 111,
+      "at_s": 53.783,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 112,
+      "at_s": 53.783,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 113,
+      "at_s": 54.026,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 114,
+      "at_s": 54.085,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 115,
+      "at_s": 55.149,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 116,
+      "at_s": 55.149,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 117,
+      "at_s": 55.149,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 118,
+      "at_s": 55.484,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 119,
+      "at_s": 55.508,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 120,
+      "at_s": 55.666,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 121,
+      "at_s": 55.924,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 122,
+      "at_s": 55.984,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 123,
+      "at_s": 56.109,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 124,
+      "at_s": 56.213,
+      "role": "runner",
+      "text": "recovery cycle=5/20 ranks=[1, 2] seconds=6.645 operations=2"
+    },
+    {
+      "sequence": 125,
+      "at_s": 59.463,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 126,
+      "at_s": 59.508,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 127,
+      "at_s": 59.509,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 128,
+      "at_s": 59.56,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 129,
+      "at_s": 59.56,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 130,
+      "at_s": 60.925,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 131,
+      "at_s": 60.925,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 132,
+      "at_s": 61.208,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 133,
+      "at_s": 61.258,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 134,
+      "at_s": 62.214,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 135,
+      "at_s": 62.214,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 136,
+      "at_s": 62.27,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 137,
+      "at_s": 62.581,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 138,
+      "at_s": 62.61,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 139,
+      "at_s": 62.684,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 140,
+      "at_s": 62.936,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 141,
+      "at_s": 62.985,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 142,
+      "at_s": 63.1,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 143,
+      "at_s": 63.2,
+      "role": "runner",
+      "text": "recovery cycle=6/20 ranks=[1, 2] seconds=6.987 operations=2"
+    },
+    {
+      "sequence": 144,
+      "at_s": 66.443,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 145,
+      "at_s": 66.496,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 146,
+      "at_s": 66.497,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 147,
+      "at_s": 66.549,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 148,
+      "at_s": 66.549,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 149,
+      "at_s": 67.122,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 150,
+      "at_s": 67.122,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 151,
+      "at_s": 67.382,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 152,
+      "at_s": 67.44,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 153,
+      "at_s": 68.551,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 154,
+      "at_s": 68.551,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 155,
+      "at_s": 68.551,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 156,
+      "at_s": 68.875,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 157,
+      "at_s": 68.907,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 158,
+      "at_s": 68.996,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 159,
+      "at_s": 69.227,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 160,
+      "at_s": 69.274,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 161,
+      "at_s": 69.385,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 162,
+      "at_s": 69.499,
+      "role": "runner",
+      "text": "recovery cycle=7/20 ranks=[1, 2] seconds=6.299 operations=2"
+    },
+    {
+      "sequence": 163,
+      "at_s": 72.746,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 164,
+      "at_s": 72.796,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 165,
+      "at_s": 72.796,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 166,
+      "at_s": 72.845,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 167,
+      "at_s": 72.846,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 168,
+      "at_s": 73.559,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 169,
+      "at_s": 73.56,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 170,
+      "at_s": 73.8,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 171,
+      "at_s": 73.851,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 172,
+      "at_s": 74.94,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 173,
+      "at_s": 74.94,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 174,
+      "at_s": 74.941,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 175,
+      "at_s": 75.267,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 176,
+      "at_s": 75.352,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 177,
+      "at_s": 75.401,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 178,
+      "at_s": 75.637,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 179,
+      "at_s": 75.691,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 180,
+      "at_s": 75.801,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 181,
+      "at_s": 75.912,
+      "role": "runner",
+      "text": "recovery cycle=8/20 ranks=[1, 2] seconds=6.413 operations=2"
+    },
+    {
+      "sequence": 182,
+      "at_s": 79.08,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 183,
+      "at_s": 79.121,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 184,
+      "at_s": 79.121,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 185,
+      "at_s": 79.174,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 186,
+      "at_s": 79.174,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 187,
+      "at_s": 80.216,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 188,
+      "at_s": 80.216,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 189,
+      "at_s": 80.472,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 190,
+      "at_s": 80.525,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 191,
+      "at_s": 81.513,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 192,
+      "at_s": 81.513,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 193,
+      "at_s": 81.513,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 194,
+      "at_s": 81.825,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 195,
+      "at_s": 81.85,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 196,
+      "at_s": 81.925,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 197,
+      "at_s": 82.163,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 198,
+      "at_s": 82.257,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 199,
+      "at_s": 82.341,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 200,
+      "at_s": 82.454,
+      "role": "runner",
+      "text": "recovery cycle=9/20 ranks=[1, 2] seconds=6.542 operations=2"
+    },
+    {
+      "sequence": 201,
+      "at_s": 85.652,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 202,
+      "at_s": 85.699,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 203,
+      "at_s": 85.699,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 204,
+      "at_s": 85.766,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 205,
+      "at_s": 85.766,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 206,
+      "at_s": 86.324,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 207,
+      "at_s": 86.325,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 208,
+      "at_s": 86.567,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 209,
+      "at_s": 86.624,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 210,
+      "at_s": 87.752,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 211,
+      "at_s": 87.752,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 212,
+      "at_s": 87.752,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 213,
+      "at_s": 88.017,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 214,
+      "at_s": 88.101,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 215,
+      "at_s": 88.16,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 216,
+      "at_s": 88.408,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 217,
+      "at_s": 88.461,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 218,
+      "at_s": 88.591,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 219,
+      "at_s": 88.704,
+      "role": "runner",
+      "text": "recovery cycle=10/20 ranks=[1, 2] seconds=6.25 operations=2"
+    },
+    {
+      "sequence": 220,
+      "at_s": 91.798,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 221,
+      "at_s": 91.859,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 222,
+      "at_s": 91.86,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 223,
+      "at_s": 91.912,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 224,
+      "at_s": 91.912,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 225,
+      "at_s": 92.611,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 226,
+      "at_s": 92.612,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 227,
+      "at_s": 92.857,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 228,
+      "at_s": 92.922,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 229,
+      "at_s": 93.912,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 230,
+      "at_s": 93.912,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 231,
+      "at_s": 93.912,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 232,
+      "at_s": 94.183,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 233,
+      "at_s": 94.204,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 234,
+      "at_s": 94.286,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 235,
+      "at_s": 94.517,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 236,
+      "at_s": 94.573,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 237,
+      "at_s": 94.686,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 238,
+      "at_s": 94.788,
+      "role": "runner",
+      "text": "recovery cycle=11/20 ranks=[1, 2] seconds=6.083 operations=2"
+    },
+    {
+      "sequence": 239,
+      "at_s": 98.041,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nSuccessfully resumed device\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 240,
+      "at_s": 98.09,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 241,
+      "at_s": 98.09,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 242,
+      "at_s": 98.154,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 243,
+      "at_s": 98.154,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 244,
+      "at_s": 98.765,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 245,
+      "at_s": 98.765,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 246,
+      "at_s": 99.04,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 247,
+      "at_s": 99.106,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 248,
+      "at_s": 100.079,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 249,
+      "at_s": 100.079,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 250,
+      "at_s": 100.079,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 251,
+      "at_s": 100.426,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 252,
+      "at_s": 100.45,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 253,
+      "at_s": 100.542,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 254,
+      "at_s": 100.811,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 255,
+      "at_s": 100.866,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 256,
+      "at_s": 100.992,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 257,
+      "at_s": 101.123,
+      "role": "runner",
+      "text": "recovery cycle=12/20 ranks=[1, 2] seconds=6.336 operations=2"
+    },
+    {
+      "sequence": 258,
+      "at_s": 104.069,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 259,
+      "at_s": 104.13,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 260,
+      "at_s": 104.13,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 261,
+      "at_s": 104.183,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 262,
+      "at_s": 104.183,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 263,
+      "at_s": 104.891,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 264,
+      "at_s": 104.891,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 265,
+      "at_s": 105.122,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 266,
+      "at_s": 105.181,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 267,
+      "at_s": 106.238,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 268,
+      "at_s": 106.238,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 269,
+      "at_s": 106.238,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 270,
+      "at_s": 106.583,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 271,
+      "at_s": 106.609,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 272,
+      "at_s": 106.675,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 273,
+      "at_s": 106.94,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 274,
+      "at_s": 107.007,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 275,
+      "at_s": 107.107,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 276,
+      "at_s": 107.232,
+      "role": "runner",
+      "text": "recovery cycle=13/20 ranks=[1, 2] seconds=6.108 operations=2"
+    },
+    {
+      "sequence": 277,
+      "at_s": 110.186,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 278,
+      "at_s": 110.233,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 279,
+      "at_s": 110.234,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 280,
+      "at_s": 110.3,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 281,
+      "at_s": 110.301,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 282,
+      "at_s": 111.273,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 283,
+      "at_s": 111.275,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 284,
+      "at_s": 111.564,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 285,
+      "at_s": 111.621,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 286,
+      "at_s": 112.696,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 287,
+      "at_s": 112.696,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 288,
+      "at_s": 112.696,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 289,
+      "at_s": 113.052,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 290,
+      "at_s": 113.148,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 291,
+      "at_s": 113.205,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 292,
+      "at_s": 113.492,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 293,
+      "at_s": 113.563,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 294,
+      "at_s": 113.651,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 295,
+      "at_s": 113.757,
+      "role": "runner",
+      "text": "recovery cycle=14/20 ranks=[1, 2] seconds=6.524 operations=2"
+    },
+    {
+      "sequence": 296,
+      "at_s": 116.719,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 297,
+      "at_s": 116.774,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 298,
+      "at_s": 116.774,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 299,
+      "at_s": 116.848,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 300,
+      "at_s": 116.848,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 301,
+      "at_s": 117.724,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 302,
+      "at_s": 117.724,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 303,
+      "at_s": 118.015,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 304,
+      "at_s": 118.08,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 305,
+      "at_s": 119.098,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 306,
+      "at_s": 119.098,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 307,
+      "at_s": 119.098,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 308,
+      "at_s": 119.414,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 309,
+      "at_s": 119.447,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 310,
+      "at_s": 119.542,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 311,
+      "at_s": 119.792,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 312,
+      "at_s": 119.843,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 313,
+      "at_s": 119.959,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 314,
+      "at_s": 120.082,
+      "role": "runner",
+      "text": "recovery cycle=15/20 ranks=[1, 2] seconds=6.325 operations=2"
+    },
+    {
+      "sequence": 315,
+      "at_s": 122.959,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 316,
+      "at_s": 123.016,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 317,
+      "at_s": 123.016,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 318,
+      "at_s": 123.074,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 319,
+      "at_s": 123.074,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 320,
+      "at_s": 124.173,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 321,
+      "at_s": 124.173,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 322,
+      "at_s": 124.474,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 323,
+      "at_s": 124.532,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 324,
+      "at_s": 125.537,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 325,
+      "at_s": 125.537,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 326,
+      "at_s": 125.537,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 327,
+      "at_s": 125.875,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 328,
+      "at_s": 125.907,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 329,
+      "at_s": 126.001,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 330,
+      "at_s": 126.29,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 331,
+      "at_s": 126.347,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 332,
+      "at_s": 126.44,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 333,
+      "at_s": 126.554,
+      "role": "runner",
+      "text": "recovery cycle=16/20 ranks=[1, 2] seconds=6.472 operations=2"
+    },
+    {
+      "sequence": 334,
+      "at_s": 129.47,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 335,
+      "at_s": 129.53,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 336,
+      "at_s": 129.531,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 337,
+      "at_s": 129.591,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 338,
+      "at_s": 129.591,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 339,
+      "at_s": 130.305,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 340,
+      "at_s": 130.305,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 341,
+      "at_s": 130.588,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 342,
+      "at_s": 130.658,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 343,
+      "at_s": 131.66,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 344,
+      "at_s": 131.66,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 345,
+      "at_s": 131.66,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 346,
+      "at_s": 132.007,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 347,
+      "at_s": 132.109,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 348,
+      "at_s": 132.109,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 349,
+      "at_s": 132.508,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 350,
+      "at_s": 132.558,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 351,
+      "at_s": 132.691,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 352,
+      "at_s": 132.806,
+      "role": "runner",
+      "text": "recovery cycle=17/20 ranks=[1, 2] seconds=6.252 operations=2"
+    },
+    {
+      "sequence": 353,
+      "at_s": 135.693,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 354,
+      "at_s": 135.748,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 355,
+      "at_s": 135.748,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 356,
+      "at_s": 135.828,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 357,
+      "at_s": 135.828,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 358,
+      "at_s": 136.598,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 359,
+      "at_s": 136.598,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 360,
+      "at_s": 136.857,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 361,
+      "at_s": 136.923,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 362,
+      "at_s": 137.862,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 363,
+      "at_s": 137.862,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 364,
+      "at_s": 137.862,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 365,
+      "at_s": 138.192,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 366,
+      "at_s": 138.304,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 367,
+      "at_s": 138.39,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 368,
+      "at_s": 138.655,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 369,
+      "at_s": 138.705,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 370,
+      "at_s": 138.826,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 371,
+      "at_s": 138.957,
+      "role": "runner",
+      "text": "recovery cycle=18/20 ranks=[1, 2] seconds=6.151 operations=2"
+    },
+    {
+      "sequence": 372,
+      "at_s": 141.938,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 373,
+      "at_s": 142.0,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 374,
+      "at_s": 142.001,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 375,
+      "at_s": 142.063,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 376,
+      "at_s": 142.064,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 377,
+      "at_s": 142.957,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 378,
+      "at_s": 142.958,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 379,
+      "at_s": 143.223,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 380,
+      "at_s": 143.287,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 381,
+      "at_s": 144.37,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 382,
+      "at_s": 144.37,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 383,
+      "at_s": 144.37,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 384,
+      "at_s": 144.684,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 385,
+      "at_s": 144.707,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 386,
+      "at_s": 144.797,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 387,
+      "at_s": 145.074,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 388,
+      "at_s": 145.126,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 389,
+      "at_s": 145.247,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 390,
+      "at_s": 145.358,
+      "role": "runner",
+      "text": "recovery cycle=19/20 ranks=[1, 2] seconds=6.401 operations=2"
+    },
+    {
+      "sequence": 391,
+      "at_s": 148.259,
+      "role": "runner",
+      "text": "debug board=E action=reset-and-go rc=0 output=Setting SWD clock to 500 kHz\\nResetting target\\nDevice entered sleep\\nCOMMANDER_RC=0"
+    },
+    {
+      "sequence": 392,
+      "at_s": 148.313,
+      "role": "member_two",
+      "text": "Enter this member rank (1 or 2):"
+    },
+    {
+      "sequence": 393,
+      "at_s": 148.314,
+      "role": "runner",
+      "text": "command board=E value=2"
+    },
+    {
+      "sequence": 394,
+      "at_s": 148.366,
+      "role": "member_two",
+      "text": "Set member ready; send a to authorize SIRK read, f to force-release"
+    },
+    {
+      "sequence": 395,
+      "at_s": 148.366,
+      "role": "member_two",
+      "text": "Provision a unique secret before using this outside a local test setup"
+    },
+    {
+      "sequence": 396,
+      "at_s": 149.357,
+      "role": "member_two",
+      "text": "Set member bonded; physically verify the controller, then send a"
+    },
+    {
+      "sequence": 397,
+      "at_s": 149.357,
+      "role": "runner",
+      "text": "authorize board=E controller=G mapping=preverified"
+    },
+    {
+      "sequence": 398,
+      "at_s": 149.63,
+      "role": "runner",
+      "text": "command board=E value=a"
+    },
+    {
+      "sequence": 399,
+      "at_s": 149.69,
+      "role": "member_two",
+      "text": "Bonded controller identity authorized"
+    },
+    {
+      "sequence": 400,
+      "at_s": 150.77,
+      "role": "coordinator",
+      "text": "Member rank 1 of 2"
+    },
+    {
+      "sequence": 401,
+      "at_s": 150.77,
+      "role": "coordinator",
+      "text": "Member rank 2 of 2"
+    },
+    {
+      "sequence": 402,
+      "at_s": 150.77,
+      "role": "coordinator",
+      "text": "Set ready; send o to order, l to lock, u to release"
+    },
+    {
+      "sequence": 403,
+      "at_s": 151.104,
+      "role": "runner",
+      "text": "command board=G value=l"
+    },
+    {
+      "sequence": 404,
+      "at_s": 151.215,
+      "role": "member_one",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 405,
+      "at_s": 151.215,
+      "role": "member_two",
+      "text": "Set locked"
+    },
+    {
+      "sequence": 406,
+      "at_s": 151.591,
+      "role": "runner",
+      "text": "command board=G value=u"
+    },
+    {
+      "sequence": 407,
+      "at_s": 151.656,
+      "role": "member_two",
+      "text": "Set released"
+    },
+    {
+      "sequence": 408,
+      "at_s": 151.746,
+      "role": "member_one",
+      "text": "Set released"
+    },
+    {
+      "sequence": 409,
+      "at_s": 151.865,
+      "role": "runner",
+      "text": "recovery cycle=20/20 ranks=[1, 2] seconds=6.506 operations=2"
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,20 @@
+{
+  "case": "M31-CS-01 Ranging UUID spoof without GATT service",
+  "status": "PARTIAL_WRONG_PEER_PASS",
+  "source_clean": true,
+  "runner_revision": "add22762f8d2bc1d4bb0de480170dafa590a412d",
+  "initiator_firmware_revision": "907ab2f7493cf5f866d7690ffc35fef00da1b192",
+  "spoof_firmware_revision": "add22762f8d2bc1d4bb0de480170dafa590a412d",
+  "initiator_hex_sha256": "07f7905304c718995f20ebdcccc74751880649554e0c2b1038e48a8e18c8bcdf",
+  "spoof_hex_sha256": "b220162f8baf649e97229d97f56c350f78aa26ef0f1ae1dfc5b50f11d3d7e2ef",
+  "spoof_flash_bytes": 371120,
+  "spoof_ram_bytes": 202151,
+  "rejections": 20,
+  "elapsed_s": 24.64,
+  "files": {
+    "missing-service-20-rejections.json": "5e5bdec461951bc078b310fda528032c90c2274b97eb94af5a2eb1fe85f471c8",
+    "missing-service-add22762.hex.gz": "ad85b5cd999211b685477e44c4f80180c3440ac1b186621c16957292233a28e9",
+    "missing-service-build-artifact.json": "2e595cf46394b108b8feebd6c7e9e546207f93ee9d92aff4f4cdd1b2bc7f2fa8",
+    "missing-service-build.log.gz": "3e9e88c07c0364055f0e59e7f238bbf7ed6e18b48a67c789527637241c7e8251"
+  }
+}

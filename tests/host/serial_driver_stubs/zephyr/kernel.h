@@ -5,10 +5,12 @@
 #include <functional>
 #include <mutex>
 #include <thread>
+#include <chrono>
 inline std::recursive_mutex mock_irq_mutex;
 inline thread_local bool mock_in_isr = false;
 inline std::function<void(std::uint32_t)> mock_wait;
 inline std::atomic<std::uint64_t> waited_us{0};
+inline std::atomic<std::uint32_t> mock_uptime_offset_ms{0U};
 #define K_MUTEX_DEFINE(name) std::recursive_mutex name
 #define K_FOREVER 0
 /** @brief 별도 translation unit에서도 초기화 함수 참조를 보존하며 장치 초기화는 실행하지 않습니다. */
@@ -32,6 +34,17 @@ inline void k_busy_wait(std::uint32_t us)
     {
         mock_wait(us);
     }
+    std::this_thread::yield();
+}
+inline std::uint32_t k_uptime_get_32()
+{
+    using namespace std::chrono;
+    return static_cast<std::uint32_t>(
+               duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count()) +
+           mock_uptime_offset_ms.load();
+}
+inline void k_yield()
+{
     std::this_thread::yield();
 }
 struct k_spinlock

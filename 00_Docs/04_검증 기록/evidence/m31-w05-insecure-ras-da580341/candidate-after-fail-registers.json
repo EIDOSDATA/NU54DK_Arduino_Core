@@ -1,0 +1,11 @@
+{
+  "initial_state": "SLEEPING",
+  "halted_state": "HALTED",
+  "pc": "0x3c680",
+  "lr": "0x42b4b",
+  "psp": "0x20027a88",
+  "msp": "0x20027968",
+  "xpsr": "0x41000000",
+  "cfsr": "0x0",
+  "hfsr": "0x0"
+}

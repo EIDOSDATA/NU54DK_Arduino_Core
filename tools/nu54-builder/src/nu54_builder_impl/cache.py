@@ -24,6 +24,7 @@ from .common import (
     atomic_write_json,
     canonical_path,
     exact_git_revision,
+    file_sha256,
     git_or_release_revision,
     is_within,
     load_json_object,
@@ -31,7 +32,12 @@ from .common import (
     run_checked,
     tree_content_sha256,
 )
-from .configuration import declared_path, load_configuration_profile, resolve_library_features
+from .configuration import (
+    declared_path,
+    load_configuration_profile,
+    resolve_library_features,
+    resolve_profile_signing_key,
+)
 from .environment import compiler_version, tool_environment
 from .locking import build_lock, operating_system_lock
 from .installed_platform import requires_platform_copy
@@ -42,6 +48,8 @@ from .paths import build_cache_root, cache_workspace, local_cache_root, positive
 def cache_input_manifest(
     paths: dict[str, Path], args: argparse.Namespace, tools: dict[str, Any],
     selected_library_names: Sequence[str] = (),
+    capability_resolution: dict[str, Any] | None = None,
+    capability_probe: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     platform_root = paths["platform_root"]
     board_root = platform_root / "board_package" / "NU54DK_Zephyr_DTS"
@@ -51,6 +59,8 @@ def cache_input_manifest(
         "release-manifest.json",
         "post_install.bat",
         "platform.txt",
+        "tools/nu54-builder/nu54-builder.cmd",
+        "tools/nu54-builder/nu54-builder.sh",
         "boards.txt",
         "programmers.txt",
         "cores",
@@ -83,6 +93,11 @@ def cache_input_manifest(
         else None
     )
     features = resolve_library_features(platform_root, profile, selected_library_names) if profile is not None else []
+    signing_key = (
+        resolve_profile_signing_key(platform_root, profile)
+        if profile is not None
+        else None
+    )
     manifest = {
         "schema_version": CACHE_SCHEMA_VERSION,
         "adapter": {
@@ -93,13 +108,16 @@ def cache_input_manifest(
         "target": {
             "fqbn": args.fqbn,
             "board": args.board,
-            "sysbuild": False,
+            "sysbuild": bool(profile and profile["sysbuild"]),
             "profile": profile_id,
         },
         "sketch": {
             "root": paths["sketch_root"].as_posix(),
             "prj_conf": optional_file_sha256(paths["sketch_root"] / "prj.conf"),
             "app_overlay": optional_file_sha256(paths["sketch_root"] / "app.overlay"),
+            "build_declaration": optional_file_sha256(
+                paths["sketch_root"] / "nucode-build.json"
+            ),
         },
         "board_package": {
             "root": board_root.resolve().as_posix(),
@@ -130,9 +148,53 @@ def cache_input_manifest(
     }
     if profile is not None:
         manifest["configuration"] = {
-            "profile": {"id": profile["id"], "manifest": optional_file_sha256(profile["path"]), "conf": optional_file_sha256(profile["conf_path"]), "overlay": optional_file_sha256(profile["overlay_path"])},
-            "selected_features": [{"id": item["id"], "manifest": optional_file_sha256(item["path"]), "conf": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["conf"]], "overlays": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["overlays"]]} for item in features],
+            "profile": {
+                "id": profile["id"],
+                "capability_mode": profile["capability_mode"],
+                "manifest": optional_file_sha256(profile["path"]),
+                "conf": optional_file_sha256(profile["conf_path"]),
+                "overlay": optional_file_sha256(profile["overlay_path"]),
+                "sysbuild": profile["sysbuild"],
+                "sysbuild_files": [
+                    optional_file_sha256(path) for path in profile["sysbuild_paths"]
+                ],
+                "signing_key_sha256": (
+                    file_sha256(signing_key) if signing_key is not None else None
+                ),
+            },
+            "selected_features": [{"id": item["id"], "manifest": optional_file_sha256(item["path"]), "conf": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["active_conf"]], "overlays": [optional_file_sha256(declared_path(item["root"], value, "E_FEATURE_PATH")) for value in item["active_overlays"]]} for item in features],
         }
+        if profile["capability_mode"] == "resolved":
+            if (capability_resolution is None) != (capability_probe is None):
+                raise AdapterError(
+                    "[NU54:E_CAPABILITY_CACHE] resolution과 probe 결과는 함께 제공해야 합니다."
+                )
+            manifest["configuration"]["capability_resolution"] = capability_resolution
+            manifest["configuration"]["capability_probe"] = (
+                {
+                    key: capability_probe[key]
+                    for key in (
+                        "schema_version",
+                        "probe_mapping_version",
+                        "compiler",
+                        "link_mode",
+                        "roots",
+                        "undefined_symbols",
+                        "capabilities",
+                    )
+                }
+                if capability_probe is not None
+                else None
+            )
+            if capability_probe is not None:
+                manifest["configuration"]["capability_probe"]["sources"] = [
+                    {
+                        "logical_identity": source["logical_identity"],
+                        "sha256": source["sha256"],
+                        "language": source["language"],
+                    }
+                    for source in capability_probe["sources"]
+                ]
     elif hasattr(args, "profile"):
         raise AdapterError(f"[NU54:E_PROFILE_SCHEMA] profile을 찾을 수 없습니다: {profile_path}")
     if requires_platform_copy(platform_root):

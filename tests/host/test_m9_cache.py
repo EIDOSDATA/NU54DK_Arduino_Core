@@ -511,7 +511,14 @@ with module.build_lock(Path(sys.argv[2]), operation="child", timeout_seconds=2.0
     sys.stdin.readline()
 '''
         process = subprocess.Popen(
-            [sys.executable, "-c", child_code, str(MODULE_PATH), str(lock_root)],
+            [
+                sys.executable,
+                "-I",
+                "-c",
+                child_code,
+                str(MODULE_PATH),
+                str(lock_root),
+            ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

@@ -1,0 +1,30 @@
+{
+  "case": "M31-AUDIO-01 W03-01/02 partial Arduino BAP unicast LC3 sink",
+  "status": "ARDUINO_BAP_LC3_1000_FRAME_PASS",
+  "source_clean": true,
+  "core_revision": "58f0e701646cf14a3fbd6088255e23d5a95a62fb",
+  "peer_native_revision": "b28631df3cdc4bcf1c4926730e81eea377f7ef47",
+  "peer_native_evidence": "00_Docs/04_검증 기록/evidence/m31-w03-bap-lc3-b28631df/bap-lc3-manifest.json",
+  "arduino_build_cache_key": "937ddd9a28777f8490c2fae225b1e0a2c89383cfc958a85aed8cde9557a83353",
+  "arduino_flash_bytes": 474180,
+  "arduino_ram_bytes": 225024,
+  "arduino_image_sha256": "7542183c36587efc75e336fff82128a8fba5b8d3a35ab69bb2461fb5a36bff03",
+  "native_client_image_sha256": "8b0e801b1b13e3ec2f62e328f83227ae1144220fb50b839cc48ed945037d3a50",
+  "arduino_config_sha256": "0f36450637de890ca3026ba57a4c214122ad35277bb84c845e2cf6f24e32dcd4",
+  "client_tx_streams": {
+    "0x20009840": 1000
+  },
+  "arduino_decoded_frames": 1000,
+  "arduino_pcm_energy": 3330223,
+  "arduino_queue_drops": 0,
+  "elapsed_s": 18.203,
+  "candidate_failure": "SMP peer reason 0x03 with persistent settings; cause not proven",
+  "files": {
+    "arduino-build.json": "5f3676b0f0ab3c45a288f4a3da33079bf0190401dfeaedbd4fe9e8fc1e4d45e9",
+    "arduino-build.log.gz": "d5975a37017170efb6b3051c2ba26d94438ef942d28bc05ef0837580767dda75",
+    "arduino-sink-exact.json": "85f02fc4a2dbb394be67641c607169fa66ac0822b7b18ff4ff2865a3bbf100fc",
+    "arduino-sink.hex.gz": "0b0965453853c0cc140695891bfb082bfa2a19fa0e21a4061e1362d1c21addfe",
+    "candidate-ephemeral-pass.json": "e836bb1b983a1c6ee6f1d34780257ea351af59a73c2739b7d0e237190032e87e",
+    "candidate-pairing-failed.json": "2776c132deea49e0dfddf271c49e3f56da5dff0e5e18e0a52b8442b97ba621d1"
+  }
+}

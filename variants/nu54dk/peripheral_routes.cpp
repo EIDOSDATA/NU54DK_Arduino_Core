@@ -19,13 +19,14 @@
 #include <cstdint>
 
 #if defined(CONFIG_PINCTRL_DYNAMIC)
-#if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30))
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL1) && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30))
 PINCTRL_DT_DEV_CONFIG_DECLARE(DT_NODELABEL(uart30));
 #endif
-#if DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(i2c22))
+#if defined(CONFIG_NUCODE_ARDUINO_WIRE) && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(i2c22))
 PINCTRL_DT_DEV_CONFIG_DECLARE(DT_NODELABEL(i2c22));
 #endif
-#if defined(CONFIG_SPI) && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
+#if defined(CONFIG_NUCODE_ARDUINO_SPI) && defined(CONFIG_SPI) &&                                \
+    DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
 PINCTRL_DT_DEV_CONFIG_DECLARE(DT_NODELABEL(spi00));
 #endif
 #endif
@@ -196,7 +197,8 @@ namespace nucode::arduino::internal
 
     PeripheralRouteBinding serial1RouteBinding() noexcept
     {
-#if defined(CONFIG_PINCTRL_DYNAMIC) && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30))
+#if defined(CONFIG_NUCODE_ARDUINO_SERIAL1) && defined(CONFIG_PINCTRL_DYNAMIC) &&                  \
+    DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(uart30))
         return {DEVICE_DT_GET(DT_NODELABEL(uart30)),
                 PINCTRL_DT_DEV_CONFIG_GET(DT_NODELABEL(uart30)),
                 {IoOwnerKind::serial, 30U},
@@ -211,7 +213,8 @@ namespace nucode::arduino::internal
 
     PeripheralRouteBinding wireRouteBinding() noexcept
     {
-#if defined(CONFIG_PINCTRL_DYNAMIC) && DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(i2c22))
+#if defined(CONFIG_NUCODE_ARDUINO_WIRE) && defined(CONFIG_PINCTRL_DYNAMIC) &&                     \
+    DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(i2c22))
         return {DEVICE_DT_GET(DT_NODELABEL(i2c22)),
                 PINCTRL_DT_DEV_CONFIG_GET(DT_NODELABEL(i2c22)),
                 {IoOwnerKind::wire, 22U},
@@ -227,7 +230,8 @@ namespace nucode::arduino::internal
     PeripheralRouteBinding spiRouteBinding() noexcept
     {
         /** @brief DTS 활성 상태와 함께 실제 SPI driver의 device 생성 여부를 확인합니다. */
-#if defined(CONFIG_SPI) && defined(CONFIG_PINCTRL_DYNAMIC) &&                                      \
+#if defined(CONFIG_NUCODE_ARDUINO_SPI) && defined(CONFIG_SPI) &&                                  \
+    defined(CONFIG_PINCTRL_DYNAMIC) &&                                                            \
     DT_NODE_HAS_STATUS_OKAY(DT_NODELABEL(spi00))
         return {DEVICE_DT_GET(DT_NODELABEL(spi00)),
                 PINCTRL_DT_DEV_CONFIG_GET(DT_NODELABEL(spi00)),
