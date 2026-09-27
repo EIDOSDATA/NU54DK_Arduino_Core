@@ -23,7 +23,7 @@ import m31_windows_lifecycle as lifecycle  # noqa: E402
 
 
 WEIGHTS_PATH = REPOSITORY / "tools" / "ci" / "rc2-example-weights.json"
-ASSIGNMENT_NAME = "rc1_elapsed_weighted_lpt_affinity_v1"
+ASSIGNMENT_NAME = "rc2_elapsed_worker_lpt_v2"
 
 
 class M31ShardFailure(RuntimeError):
@@ -57,7 +57,80 @@ def load_example_weights(
     }
 
 
-## @brief 실측 시간 LPT와 작은 profile/library affinity로 모든 shard를 계획합니다.
+## @brief worker 부하의 최대값과 분산을 순서대로 비교합니다.
+def worker_load_objective(loads: list[float]) -> tuple[float, float]:
+    mean = sum(loads) / len(loads)
+    return max(loads), sum((load - mean) ** 2 for load in loads)
+
+
+## @brief LPT worker 배치를 결정적 move·swap으로 국소 개선합니다.
+def improve_worker_lanes(
+    lanes: list[list[tuple[str, Path, str]]],
+    loads: list[float],
+    weights: dict[str, float],
+) -> None:
+    minimum_count = min(len(lane) for lane in lanes)
+    maximum_count = max(len(lane) for lane in lanes)
+    while True:
+        best_score = worker_load_objective(loads)
+        best_action: tuple[str, int, int, int, int] | None = None
+
+        if maximum_count == minimum_count + 1:
+            for source, lane in enumerate(lanes):
+                if len(lane) != maximum_count:
+                    continue
+                for target, target_lane in enumerate(lanes):
+                    if len(target_lane) != minimum_count:
+                        continue
+                    for source_item, item in enumerate(lane):
+                        weight = weights[item[0]]
+                        candidate = list(loads)
+                        candidate[source] -= weight
+                        candidate[target] += weight
+                        score = worker_load_objective(candidate)
+                        if score < best_score:
+                            best_score = score
+                            best_action = (
+                                "move", source, target, source_item, -1
+                            )
+
+        for left in range(len(lanes)):
+            for right in range(left + 1, len(lanes)):
+                for left_item, first in enumerate(lanes[left]):
+                    for right_item, second in enumerate(lanes[right]):
+                        first_weight = weights[first[0]]
+                        second_weight = weights[second[0]]
+                        candidate = list(loads)
+                        candidate[left] += second_weight - first_weight
+                        candidate[right] += first_weight - second_weight
+                        score = worker_load_objective(candidate)
+                        if score < best_score:
+                            best_score = score
+                            best_action = (
+                                "swap", left, right, left_item, right_item
+                            )
+
+        if best_action is None:
+            return
+        operation, left, right, left_item, right_item = best_action
+        if operation == "move":
+            item = lanes[left].pop(left_item)
+            lanes[right].append(item)
+            weight = weights[item[0]]
+            loads[left] -= weight
+            loads[right] += weight
+            continue
+
+        first = lanes[left][left_item]
+        second = lanes[right][right_item]
+        lanes[left][left_item], lanes[right][right_item] = second, first
+        first_weight = weights[first[0]]
+        second_weight = weights[second[0]]
+        loads[left] += second_weight - first_weight
+        loads[right] += first_weight - second_weight
+
+
+## @brief 실측 시간 LPT로 2-worker shard의 실제 병렬 부하를 계획합니다.
 def weighted_shards(
     examples: list[tuple[str, Path, str]], shard_count: int,
     *, weights_path: Path = WEIGHTS_PATH,
@@ -65,31 +138,38 @@ def weighted_shards(
     if shard_count < 2:
         raise M31ShardFailure("shard count가 유효하지 않습니다")
     weights = load_example_weights(examples, weights_path)
-    shards: list[list[tuple[str, Path, str]]] = [[] for _ in range(shard_count)]
-    loads = [0.0] * shard_count
-    profiles: list[set[str]] = [set() for _ in range(shard_count)]
-    libraries: list[set[str]] = [set() for _ in range(shard_count)]
+    worker_count = shard_count * 2
+    lanes: list[list[tuple[str, Path, str]]] = [
+        [] for _ in range(worker_count)
+    ]
+    loads = [0.0] * worker_count
     ordered = sorted(examples, key=lambda item: (-weights[item[0]], item[0]))
     for item in ordered:
-        identity, _sketch, profile = item
-        library = identity.split("/", 1)[0]
+        identity, _sketch, _profile = item
         weight = weights[identity]
 
         def score(index: int) -> tuple[float, float, int]:
-            affinity = 0.0
-            if profile in profiles[index]:
-                affinity += min(8.0, weight * 0.03)
-            if library in libraries[index]:
-                affinity += min(4.0, weight * 0.015)
-            return loads[index] - affinity, loads[index], index
+            return loads[index], float(len(lanes[index])), index
 
-        target = min(range(shard_count), key=score)
-        shards[target].append(item)
+        target = min(range(worker_count), key=score)
+        lanes[target].append(item)
         loads[target] += weight
-        profiles[target].add(profile)
-        libraries[target].add(library)
-    for shard in shards:
-        shard.sort(key=lambda item: item[0])
+    counts = [len(lane) for lane in lanes]
+    if max(counts) - min(counts) > 1:
+        raise M31ShardFailure("worker lane 예제 수가 균형을 이루지 못했습니다")
+    improve_worker_lanes(lanes, loads, weights)
+
+    shards: list[list[tuple[str, Path, str]]] = []
+    for index in range(shard_count):
+        first = lanes[index * 2]
+        second = lanes[index * 2 + 1]
+        shard: list[tuple[str, Path, str]] = []
+        for offset in range(max(len(first), len(second))):
+            if offset < len(first):
+                shard.append(first[offset])
+            if offset < len(second):
+                shard.append(second[offset])
+        shards.append(shard)
     assigned = [identity for shard in shards for identity, _sketch, _profile in shard]
     expected = [identity for identity, _sketch, _profile in examples]
     if len(assigned) != len(set(assigned)) or set(assigned) != set(expected):

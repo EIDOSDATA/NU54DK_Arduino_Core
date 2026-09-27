@@ -48,16 +48,22 @@ class M31CiShardingTests(unittest.TestCase):
     """! @brief 8개 shard의 완전성·중복 거부를 검사합니다. """
 
     def test_eight_shards_partition_all_examples_once(self) -> None:
-        """! @brief 113개 예제가 실측 시간 기준으로 정확히 한 번 나뉩니다. """
+        """! @brief 113개 예제가 16개 worker에 균등하게 정확히 한 번 나뉩니다. """
         examples = LIFECYCLE.installed_examples(ROOT)
         selections = [SHARD.select_shard(examples, index, 8) for index in range(8)]
         identities = [item[0] for selection in selections for item in selection]
         self.assertEqual(LIFECYCLE.EXPECTED_EXAMPLES, len(identities))
         self.assertEqual(LIFECYCLE.EXPECTED_EXAMPLES, len(set(identities)))
         weights = SHARD.load_example_weights(examples)
-        loads = [sum(weights[item[0]] for item in selection) for selection in selections]
+        lanes = [
+            selection[worker::2]
+            for selection in selections
+            for worker in range(2)
+        ]
+        loads = [sum(weights[item[0]] for item in lane) for lane in lanes]
+        self.assertLessEqual(max(map(len, lanes)) - min(map(len, lanes)), 1)
         self.assertLess(max(loads) - min(loads), max(weights.values()))
-        self.assertLess(max(loads) / min(loads), 1.08)
+        self.assertLess(max(loads) / min(loads), 1.02)
 
     def test_new_example_uses_conservative_default_weight(self) -> None:
         """! @brief 실측 이력이 없는 신규 예제는 기존 최댓값으로 배치합니다. """
