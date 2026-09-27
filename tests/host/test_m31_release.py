@@ -23,15 +23,16 @@ SPEC.loader.exec_module(MODULE)
 class M31ReleaseTests(unittest.TestCase):
     """! @brief 공개 차단·분모·candidate 격리 계약을 확인합니다. """
 
-    def test_contract_records_public_rc_and_retains_stable_gate(self) -> None:
-        """! @brief 공개 RC 완료와 stable 공개 차단을 함께 유지합니다. """
+    def test_contract_records_public_rc_and_published_stable(self) -> None:
+        """! @brief 공개 RC 이력과 stable 공개 완료 상태를 함께 유지합니다. """
         _m31, release = MODULE.validate_contract(ROOT)
         by_id = {gate["id"]: gate for gate in release["gates"]}
         self.assertEqual("PASS", by_id["rc_review_and_owner_approval"]["status"])
         self.assertEqual("PASS", by_id["public_assets_and_download_smoke"]["status"])
-        self.assertEqual("HOLD", by_id["stable_v0.5.0_publication"]["status"])
+        self.assertEqual("PASS", by_id["stable_v0.5.0_publication"]["status"])
         self.assertEqual("PASS", release["public_candidate"]["status"])
-        self.assertFalse(release["publication_allowed"])
+        self.assertEqual("PASS", release["stable_release"]["status"])
+        self.assertTrue(release["publication_allowed"])
 
     def test_process_local_candidate_does_not_change_public_allowlist(self) -> None:
         """! @brief RC1과 RC2는 release process 안에서만 활성화됩니다. """
@@ -46,11 +47,11 @@ class M31ReleaseTests(unittest.TestCase):
         self.assertNotIn("publish-release", source)
         self.assertNotIn("publish-index", source)
 
-    def test_completed_preparation_leaves_only_publication_gates(self) -> None:
-        """! @brief 공개 RC 완료 뒤에는 stable 공개 gate만 남습니다. """
+    def test_published_release_has_no_remaining_blockers(self) -> None:
+        """! @brief stable 공개 완료 뒤에는 남은 release gate가 없습니다. """
         _m31, release = MODULE.validate_contract(ROOT)
         remaining = MODULE.blockers(release, package_passed=True)
-        self.assertEqual(["stable_v0.5.0_publication"], remaining)
+        self.assertEqual([], remaining)
 
     def test_final_rc_requires_all_m31_work_packages(self) -> None:
         """! @brief W08을 다시 미완료로 바꾼 source의 최종 RC 생성을 거부합니다. """

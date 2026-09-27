@@ -6,7 +6,7 @@ NU54DK Boards Manager 정식 archive와 stable index를 생성합니다.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.4.1')]
+    [ValidateSet('0.1.0', '0.2.0', '0.3.0', '0.4.0', '0.4.1', '0.5.0')]
     [string]$Version,
 
     [string]$Commit = '',
@@ -61,6 +61,10 @@ if ($Version -eq '0.4.0') {
 
 if ($Version -eq '0.4.1') {
     $IndexArguments = @('0.4.1')
+}
+
+if ($Version -eq '0.5.0') {
+    $IndexArguments = @('0.5.0')
 }
 
 & $Python $Builder index `

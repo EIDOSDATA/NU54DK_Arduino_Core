@@ -26,6 +26,12 @@ ROOT_INDEX_PATH = REPOSITORY / "package_nucode_nu54dk_index.json"
 VERSION = "0.5.0"
 RC_VERSION = "0.5.0-rc.2"
 TAG = f"v{VERSION}"
+PUBLISHED_SOURCE_COMMIT = "0999b6a721b4579faa6a7a4d91d04da5e4960c07"
+PUBLISHED_ARCHIVE_SIZE = 8712498
+PUBLISHED_ARCHIVE_SHA256 = (
+    "0a7b72de5772c9d710e521552a6197a8164d5da924f78b64efa6c595fb93c972"
+)
+PUBLISHED_LEGAL_STATUS = "project-owner-approved-for-final-public-release"
 REPOSITORY_URL = "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
 GITHUB_REPOSITORY = "EIDOSDATA/NU54DK_Arduino_Core"
 PLAN_FILENAME = "v0.5.0-stable-plan.json"
@@ -192,7 +198,7 @@ def assert_exact_source(repository: Path, revision: str) -> str:
     return commit
 
 
-## @brief M31 완료와 stable 승인 전 모든 기술 gate가 통과했는지 확인합니다.
+## @brief M31 완료와 stable 공개 전후의 모든 기술 gate가 통과했는지 확인합니다.
 def validate_technical_readiness(repository: Path) -> dict[str, Any]:
     repository = repository.resolve()
     m31 = strict_json(repository / M31_READINESS_PATH.relative_to(REPOSITORY))
@@ -224,15 +230,49 @@ def validate_technical_readiness(repository: Path) -> dict[str, Any]:
             f"정식 릴리스 기술 gate가 미완료입니다: {','.join(blockers)}"
         )
     stable = gates.get("stable_v0.5.0_publication", {})
-    if stable.get("kind") != "human" or stable.get("status") != "HOLD":
-        raise StableReleaseFailure("stable 승인 gate의 fail-closed 상태가 다릅니다")
+    if stable.get("kind") != "human":
+        raise StableReleaseFailure("stable 승인 gate 종류가 다릅니다")
+    pre_publication = (
+        stable.get("status") == "HOLD"
+        and release.get("publication_allowed") is False
+    )
+    published = (
+        stable.get("status") == "PASS"
+        and release.get("publication_allowed") is True
+        and release.get("status") == "stable_published"
+        and isinstance(release.get("stable_release"), dict)
+        and release["stable_release"].get("source_revision")
+        == PUBLISHED_SOURCE_COMMIT
+        and release["stable_release"].get("public_smoke") == "PASS"
+    )
+    if not pre_publication and not published:
+        raise StableReleaseFailure("stable 공개 전후 gate 상태가 다릅니다")
     return release
 
 
-## @brief 현재 프로세스에만 v0.5.0 stable 후보를 구성합니다.
+## @brief 공개 전 후보를 구성하거나 공개된 v0.5.0 고정 identity를 검증합니다.
 def configure_stable_package(package: Any, commit: str) -> None:
-    if VERSION in package.STABLE_VERSIONS or VERSION in package.PACKAGE_VERSIONS:
-        raise StableReleaseFailure("v0.5.0은 공개 전 permanent allowlist에 없어야 합니다")
+    in_stable = VERSION in package.STABLE_VERSIONS
+    in_package = VERSION in package.PACKAGE_VERSIONS
+    if in_stable or in_package:
+        archive = package.PUBLISHED_STABLE_ARCHIVE_IDENTITIES.get(VERSION)
+        if not in_stable or not in_package:
+            raise StableReleaseFailure("v0.5.0 permanent allowlist가 불완전합니다")
+        if (
+            commit != PUBLISHED_SOURCE_COMMIT
+            or package.release_channel(VERSION) != "stable"
+            or package.release_tag(VERSION) != TAG
+            or package.STABLE_RELEASE_COMMITS.get(VERSION) != PUBLISHED_SOURCE_COMMIT
+            or archive
+            != {
+                "size": PUBLISHED_ARCHIVE_SIZE,
+                "sha256": PUBLISHED_ARCHIVE_SHA256,
+            }
+            or package.STABLE_LEGAL_REVIEW_STATUSES.get(VERSION)
+            != PUBLISHED_LEGAL_STATUS
+        ):
+            raise StableReleaseFailure("published v0.5.0 package identity가 다릅니다")
+        return
     try:
         package.configure_unpublished_stable(VERSION, commit)
     except package.PackageError as error:
@@ -659,9 +699,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parsed = build_parser().parse_args(arguments)
     if parsed.command == "contract":
         package = load_module("nu54_v050_stable_contract", PACKAGE_MODULE)
-        historical = ("0.1.0", "0.2.0", "0.3.0", "0.4.0", "0.4.1")
-        if tuple(package.STABLE_VERSIONS) != historical:
-            raise StableReleaseFailure("v0.5.0 이전 stable history가 변경됐습니다")
+        published = ("0.1.0", "0.2.0", "0.3.0", "0.4.0", "0.4.1", VERSION)
+        if tuple(package.STABLE_VERSIONS) != published:
+            raise StableReleaseFailure("v0.5.0 stable history가 변경됐습니다")
+        configure_stable_package(package, PUBLISHED_SOURCE_COMMIT)
         choices = set(build_parser()._subparsers._group_actions[0].choices)
         if choices != {
             "contract",
@@ -672,7 +713,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "publish-index",
         }:
             raise StableReleaseFailure("stable release command separation changed")
-        print("V050_STABLE_CONTRACT_PASS=1;PUBLICATION_REQUIRES_APPROVAL=1")
+        print("V050_STABLE_CONTRACT_PASS=1;PUBLICATION_STATE=PUBLISHED")
     elif parsed.command == "prepare":
         plan = prepare(parsed.repository, parsed.output_dir, parsed.commit)
         print(f"V050_STABLE_PREPARE_HOLD=1;PLAN={plan}")

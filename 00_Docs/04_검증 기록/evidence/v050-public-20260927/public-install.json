@@ -1,0 +1,26 @@
+{
+  "arduino_cli": {
+    "commit": "01f3d4f2b",
+    "version": "1.5.1"
+  },
+  "blink_compile": {
+    "cold_build_seconds": 96.7,
+    "flash_max": 1490944,
+    "flash_used": 81572,
+    "ram_max": 262144,
+    "ram_used": 29439,
+    "status": "PASS"
+  },
+  "index_url": "https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json",
+  "installed_version": "0.5.0",
+  "isolated_install": true,
+  "latest_version": "0.5.0",
+  "post_install": {
+    "prerequisite": "exact reusable NCS and toolchain",
+    "status": "PASS"
+  },
+  "release": "v0.5.0",
+  "schema_version": 1,
+  "status": "PASS",
+  "upload": "공개 smoke에서는 실행하지 않음; Arduino IDE 연속 Upload 성공은 274번 기록과 RC2 사용자 수용 증거에 별도 기록"
+}

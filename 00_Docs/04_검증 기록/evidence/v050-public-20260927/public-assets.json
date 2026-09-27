@@ -1,0 +1,22 @@
+{
+  "archive": {
+    "name": "nucode-nu54dk-zephyr-0.5.0.zip",
+    "sha256": "0a7b72de5772c9d710e521552a6197a8164d5da924f78b64efa6c595fb93c972",
+    "size": 8712498
+  },
+  "assets_verified": 11,
+  "index": {
+    "publication_commit": "399adf657436fd86fbb34c964e858c385170065b",
+    "sha256": "8cc7a8bdcc9127a7b3f6aba4cf775b45887358936a9a7b52ed03950f958ca56f",
+    "size": 1126,
+    "url": "https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json"
+  },
+  "published_at_utc": "2026-09-27T09:39:17Z",
+  "release": "v0.5.0",
+  "release_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0",
+  "schema_version": 1,
+  "source_revision": "0999b6a721b4579faa6a7a4d91d04da5e4960c07",
+  "status": "PASS",
+  "tag_target": "0999b6a721b4579faa6a7a4d91d04da5e4960c07",
+  "verification": "v050_release.py publish-index가 공개 자산을 다시 내려받아 plan byte와 비교함"
+}

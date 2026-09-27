@@ -3,8 +3,8 @@
   "release": "v0.5.0",
   "candidate_version": "0.5.0-rc.2",
   "host_scope": "Windows 10/11 x64",
-  "status": "public_rc_available_stable_hold",
-  "publication_allowed": false,
+  "status": "stable_published",
+  "publication_allowed": true,
   "public_candidate": {
     "status": "PASS",
     "version": "0.5.0-rc.2",
@@ -17,6 +17,21 @@
       "00_Docs/04_검증 기록/evidence/rc2-public-20260927/public-assets.json",
       "00_Docs/04_검증 기록/evidence/rc2-public-20260927/public-install.json",
       "00_Docs/04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md"
+    ]
+  },
+  "stable_release": {
+    "status": "PASS",
+    "version": "0.5.0",
+    "tag": "v0.5.0",
+    "source_revision": "0999b6a721b4579faa6a7a4d91d04da5e4960c07",
+    "release_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0",
+    "index_url": "https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json",
+    "index_commit": "399adf657436fd86fbb34c964e858c385170065b",
+    "public_smoke": "PASS",
+    "evidence": [
+      "00_Docs/04_검증 기록/evidence/v050-public-20260927/public-assets.json",
+      "00_Docs/04_검증 기록/evidence/v050-public-20260927/public-install.json",
+      "00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md"
     ]
   },
   "gates": [
@@ -87,9 +102,12 @@
     {
       "id": "stable_v0.5.0_publication",
       "kind": "human",
-      "status": "HOLD",
-      "evidence": [],
-      "reason": "공개 RC와 별도로 stable exact 자산 검토·승인·tag·Release·root catalog·공개 설치 smoke가 필요"
+      "status": "PASS",
+      "evidence": [
+        "00_Docs/04_검증 기록/evidence/v050-public-20260927/public-assets.json",
+        "00_Docs/04_검증 기록/evidence/v050-public-20260927/public-install.json",
+        "00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md"
+      ]
     }
   ],
   "deferred_scope": {

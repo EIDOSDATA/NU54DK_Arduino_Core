@@ -40,7 +40,7 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 | --- | --- |
 | M28~M45 순서·전체 상태 | [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>) |
 | BLE 기능군별 목표·완료 조건 | [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>) |
-| v0.5.0 완료 범위·stable 공개 잔여 | 이 문서 |
+| v0.5.0 완료 범위·stable 공개 결과 | 이 문서와 [274번 공개 기록](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
 | 재개 복구·Adafruit 개선 과제의 배치 | [개정 실행 순서](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>) |
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
@@ -167,7 +167,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M32-A | power/path loss → timing/subrate → adv/EAD/identity/resource → Nordic LLPM/QoS/event | 새 자원 preset·실험적 opt-in·짝 예제·2/3보드 기능/negative |
 | M32-B | Mesh 기본 → Mesh 1.1 → BLOB/Mesh DFU/Distribution | node/model·key/settings·transfer·복구, 내부 RRAM/배포자 한계와 M36 인계 |
 | M32-C | 최소 radio/profile·802.15.4/ESB 단독 TX/RX → 선택 공존·복구 | MPSL ownership·loss/서비스 지연·M38/M39 공개 예제 인계 |
-| M31 릴리스 | 메모리 최적화·W04~W08·Windows 패키지/설치·공개 RC 완료 → 정식 v0.5.0 stable 승격 검토 | M28~M31 채택 범위·image/자원·예제·지원/제약·설치 수명주기 근거 |
+| M31 릴리스 | 메모리 최적화·W04~W08·Windows 패키지/설치·공개 RC와 정식 v0.5.0 stable 승격 완료 | M28~M31 채택 범위·image/자원·예제·지원/제약·설치 수명주기 근거 |
 | M33 / 후속 버전 | GATT/beacon·ecosystem·HCI/DTM 예제 → 전체 parity·interop → HOST-W08/RC → 후속 공개 | 누락 0 원장·예제 제공 범위·실행 증거·세 Host 지원/제약·qualification 적용성 |
 
 M31-A/B/C는 **M31 내부 작업 ID**다. 하나를 완료해 M31 전체 완료로 계산하지 않는다.
@@ -240,7 +240,7 @@ v0.4.0의 범위 제외는 그대로 보존한다.
 
 ## 6. 결과·공개 규칙
 
-- M28~M31의 채택 기능·Host·target·필수 HIL·문서 인계와 공개 `v0.5.0-rc.1` 검증을 완료했다.
+- M28~M31의 채택 기능·Host·target·필수 HIL·문서 인계와 공개 RC1/RC2 검증을 완료했다.
   M32·M33은 미착수이며 정식 v0.5.0 stable 공개는 완료했다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
@@ -254,8 +254,8 @@ v0.4.0의 범위 제외는 그대로 보존한다.
   유지하며, 그 NOT RUN은 PASS가 아니다.
   원장의 구현 요구·검증 책임·개발/공개 차단 여부를 독립 필드로 구현해 이 구분을 검사한다.
 - 문서상의 기능 계획과 Bluetooth/Matter 제품 인증 취득은 별개다.
-- v0.4.0·v0.4.1 공개 승인과 `v0.5.0-rc.1` 공개 승인은 정식 v0.5.0 stable 공개 승인이 아니다.
-  RC tag/Pre-release/전용 catalog는 공개했으며 stable tag/Release/root catalog는 별도 사용자 승인을 받는다.
+- v0.4.0·v0.4.1 공개 승인과 RC1/RC2 공개 승인은 정식 v0.5.0 stable 공개 승인으로 재사용하지 않았다.
+  별도 사용자 승인에 결합한 exact plan으로 stable tag/Release/root catalog를 공개했다.
 - 이후 세 Host를 지원하려면 각 OS에 clean 설치·채택된 전체 예제 build·대표 upload/runtime·
   수명주기 증거가 있어야 한다. 후속 OS gate를 삭제하거나 자동 PASS로 올리지 않는다.
 - 다음 작업 보고에는 완료 범위·현재 항목·남은 항목과 **해당 작업의 분모**를 적는다.

@@ -171,7 +171,7 @@ def configure_candidate(package: Any) -> None:
     )
 
 
-## @brief M31 8/8 완료와 v0.5.0 Windows release gate schema를 검사합니다.
+## @brief M31 8/8 완료와 v0.5.0 Windows 공개 전후 gate schema를 검사합니다.
 def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], dict[str, Any]]:
     root = repository.resolve()
     m31 = strict_json(root / M31_READINESS)
@@ -190,7 +190,6 @@ def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], di
         "release": "v0.5.0",
         "candidate_version": VERSION,
         "host_scope": "Windows 10/11 x64",
-        "publication_allowed": False,
     }
     if any(release.get(key) != value for key, value in fixed.items()):
         raise M31ReleaseFailure("v0.5.0 release identity 또는 공개 차단 계약이 다릅니다")
@@ -225,6 +224,18 @@ def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], di
         raise M31ReleaseFailure("공개 자산 smoke gate는 external이어야 합니다")
     if by_id["stable_v0.5.0_publication"]["kind"] != "human":
         raise M31ReleaseFailure("stable v0.5.0 공개 gate는 human이어야 합니다")
+    pre_publication = (
+        release.get("status") == "public_rc_available_stable_hold"
+        and release.get("publication_allowed") is False
+        and by_id["stable_v0.5.0_publication"]["status"] == "HOLD"
+    )
+    published = (
+        release.get("status") == "stable_published"
+        and release.get("publication_allowed") is True
+        and by_id["stable_v0.5.0_publication"]["status"] == "PASS"
+    )
+    if not pre_publication and not published:
+        raise M31ReleaseFailure("v0.5.0 공개 전후 상태 계약이 다릅니다")
     candidate = release.get("public_candidate")
     if (
         not isinstance(candidate, dict)
@@ -245,8 +256,25 @@ def validate_contract(repository: Path = REPOSITORY) -> tuple[dict[str, Any], di
         path = (root / relative).resolve()
         if not path.is_relative_to(root_resolved) or not path.is_file():
             raise M31ReleaseFailure(f"공개 RC candidate 증거가 없습니다: {relative}")
-    if all(item["status"] == "PASS" for item in gates):
-        raise M31ReleaseFailure("stable v0.5.0 별도 공개 gate가 사라졌습니다")
+    stable = release.get("stable_release")
+    if published:
+        if (
+            not isinstance(stable, dict)
+            or stable.get("status") != "PASS"
+            or stable.get("version") != STABLE_VERSION
+            or stable.get("tag") != f"v{STABLE_VERSION}"
+            or not re.fullmatch(r"[0-9a-f]{40}", str(stable.get("source_revision")))
+            or stable.get("public_smoke") != "PASS"
+            or not isinstance(stable.get("evidence"), list)
+            or not stable["evidence"]
+        ):
+            raise M31ReleaseFailure("공개 stable 계약이 잘못됐습니다")
+        for relative in stable["evidence"]:
+            if not isinstance(relative, str):
+                raise M31ReleaseFailure("공개 stable 증거 경로가 문자열이 아닙니다")
+            path = (root / relative).resolve()
+            if not path.is_relative_to(root_resolved) or not path.is_file():
+                raise M31ReleaseFailure(f"공개 stable 증거가 없습니다: {relative}")
     return m31, release
 
 

@@ -59,6 +59,7 @@ R13의 본문·CLI·산출물 byte 비교는
 | `0.3.0` | `94ee3fec29ba9f86835b6cb3d96ab13ce2cf8c11` | 1,660,169 | `138740bcf6c458992fdb5c8eb81d6110d28b0baee18c68f5d8cb050e2e0e1ecc` |
 | `0.4.0` | `ad829439e570c7510fce2f8cc7252e5b9ef32b04` | 2,630,374 | `6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189` |
 | `0.4.1` | `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` | 2,633,005 | `90c4993d11fd6fadbc70d32659bd1608a8dfb14264e43cc5faed60c5aa6f4d2d` |
+| `0.5.0` | `0999b6a721b4579faa6a7a4d91d04da5e4960c07` | 8,712,498 | `0a7b72de5772c9d710e521552a6197a8164d5da924f78b64efa6c595fb93c972` |
 
 `STABLE_RELEASE_COMMITS`는 source와 packaging tool이 모두 해당 exact commit에 있을 때만 같은
 stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`는 통합 index에 넣는

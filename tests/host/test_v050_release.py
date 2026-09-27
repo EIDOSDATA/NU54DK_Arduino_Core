@@ -44,15 +44,27 @@ class V050ReleaseTests(unittest.TestCase):
                 with self.assertRaises(SystemExit):
                     parser.parse_args((command, "--plan", "plan.json"))
 
-    def test_stable_configuration_is_process_local(self) -> None:
-        """! @brief 공개 전 v0.5.0이 영구 허용목록을 바꾸지 않는지 확인합니다. """
+    def test_published_stable_configuration_has_fixed_identity(self) -> None:
+        """! @brief 공개된 v0.5.0의 source와 ZIP identity가 영구 고정됐는지 확인합니다. """
         package = MODULE.load_module("nu54_v050_test_package", MODULE.PACKAGE_MODULE)
         before = tuple(package.STABLE_VERSIONS)
-        MODULE.configure_stable_package(package, "a" * 40)
-        self.assertNotIn(MODULE.VERSION, before)
+        MODULE.configure_stable_package(package, MODULE.PUBLISHED_SOURCE_COMMIT)
         self.assertIn(MODULE.VERSION, package.STABLE_VERSIONS)
+        self.assertEqual(
+            package.STABLE_RELEASE_COMMITS[MODULE.VERSION],
+            MODULE.PUBLISHED_SOURCE_COMMIT,
+        )
+        self.assertEqual(
+            package.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[MODULE.VERSION],
+            {
+                "size": MODULE.PUBLISHED_ARCHIVE_SIZE,
+                "sha256": MODULE.PUBLISHED_ARCHIVE_SHA256,
+            },
+        )
         fresh = MODULE.load_module("nu54_v050_test_package_fresh", MODULE.PACKAGE_MODULE)
         self.assertEqual(before, tuple(fresh.STABLE_VERSIONS))
+        with self.assertRaisesRegex(MODULE.StableReleaseFailure, "identity"):
+            MODULE.configure_stable_package(fresh, "a" * 40)
 
     def test_readiness_requires_all_pre_stable_gates(self) -> None:
         """! @brief 기술 gate 하나가 HOLD이면 정식 준비를 거부합니다. """

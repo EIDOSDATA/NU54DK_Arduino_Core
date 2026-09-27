@@ -58,7 +58,7 @@ class M27StableReleaseTests(unittest.TestCase):
         fresh = MODULE.load_module("nu54_m27_stable_config_b", MODULE.PACKAGE_MODULE)
         self.assertEqual(
             fresh.STABLE_VERSIONS,
-            ("0.1.0", "0.2.0", "0.3.0", "0.4.0", "0.4.1"),
+            ("0.1.0", "0.2.0", "0.3.0", "0.4.0", "0.4.1", "0.5.0"),
         )
         self.assertIn(MODULE.VERSION, fresh.PACKAGE_VERSIONS)
 
