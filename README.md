@@ -151,12 +151,17 @@ Arduino IDE의 `File → Examples`에서 열거나 다음 경로에서 코드를
 | 설치·마이그레이션·문제 해결 | [v0.5.0 문서](<00_Docs/05_릴리스/v0.5.0/README.md>) |
 | API·핀·설계 | [전체 문서 목차](00_Docs/README.md) · [API 지원 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>) |
 | Core 개발·검사·기여 | [기여 안내](CONTRIBUTING.md) · [Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>) |
-| 현재 개발 상태·다음 작업 | [HANDOFF](00_Docs/HANDOFF.md) · [RC2 교정 완료 기록](00_Docs/TODO_v0.5.0-RC2.md) · [v0.5.0 TODO](00_Docs/TODO_v0.5.0.md) |
+| 현재 개발 상태·다음 작업 | [HANDOFF](00_Docs/HANDOFF.md) · [v0.6.0 개발 계획](00_Docs/TODO_v0.6.0.md) · [v0.5.0 완료 기록](00_Docs/TODO_v0.5.0.md) |
 | 실기·배포 근거 | [검증 기록](<00_Docs/04_검증 기록/README.md>) · [릴리스 이력](<00_Docs/05_릴리스/README.md>) |
 
 M28~M31·P0~P2와 RC2 사용자 경험 교정, 연속 Upload runtime PM 교정을 포함해 v0.5.0으로
 정식 공개했습니다. RC1/RC2 tag·Pre-release·자산과 과거 evidence는 역사 기록으로 보존합니다.
 결정·검증·공개 근거는 [274번 기록](<00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
+
+다음 개발 목표는 **v0.6.0 — M32·M33의 BLE 제어·Mesh·무선 공존·예제 확장**입니다.
+아직 계획·구현 미착수이며 설치할 수 있는 릴리스가 아닙니다. 이후 Security/Update는 v0.7.0,
+Radio/Network는 v0.8.0, Matter는 v0.9.0으로 배정했습니다. 상세 범위와 보류 상태는
+[v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따르며 현재 지원·설치는 v0.5.0을 유지합니다.
 
 `NU54DK.coreVersion()`의 `0.5.0`은 소스 식별 문자열입니다. 실제 설치 버전은
 Boards Manager·`arduino-cli core list`·release manifest에서 확인합니다.

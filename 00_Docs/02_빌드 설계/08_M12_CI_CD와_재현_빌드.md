@@ -18,7 +18,8 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 현재 Linux container target build는 Linux Arduino 사용자 Host 지원이 아니며 Windows job 결과도
 macOS 지원을 뜻하지 않는다. `v0.5.0`은 M31 완료 뒤 Windows 10/11 x64 우선 릴리스이며
 최종 package·설치·예제·RC gate를 [v0.5.0 TODO](../TODO_v0.5.0.md)에서 판정한다.
-Ubuntu/macOS package/build matrix와 실물 Host 검증은 버전 미정인 후속 제품선으로 이관한다.
+Ubuntu/macOS package/build matrix와 실물 Host 검증은 v0.6.0의 M32·M33 계획과 연계한다.
+버전 배정은 OS 지원 확정이 아니며 기존 세 Host 계획·OS별 최종 gate를 완화하지 않는다.
 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 사용자가 해당 OS를 추가할
 릴리스의 최종 단계에서 설치·USB upload·serial·debug·수명주기를 검증한다.
 다만 현재 Host 구현은 W01~W03 완료(3/8)에서 사용자 지시로 보류했다. 위 단계는 재개 후의

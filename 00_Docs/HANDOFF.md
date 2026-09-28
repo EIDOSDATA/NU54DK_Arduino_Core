@@ -1,6 +1,6 @@
-# 개발 인계 — v0.5.0 정식 릴리스
+# 개발 인계 — v0.5.0 완료와 v0.6.0 후속 계획
 
-최종 정리: **2026-09-27**. M28~M31, 메모리 최적화 P0~P2, RC1/RC2, RC2 이후 Standard runtime PM
+최종 정리: **2026-09-28**. M28~M31, 메모리 최적화 P0~P2, RC1/RC2, RC2 이후 Standard runtime PM
 교정과 Windows 정식 `v0.5.0` 공개를 완료했습니다. 현재 stable·지원 버전은 v0.5.0 하나입니다.
 
 ## 현재 상태
@@ -13,7 +13,7 @@
 | RC1/RC2 | 로컬·원격 branch 삭제 완료, 공개 tag·Pre-release·asset과 evidence 보존 | [RC2 TODO](TODO_v0.5.0-RC2.md) |
 | 연속 Upload | Standard Blink 250 ms → 100 ms를 USB 재연결 없이 실제 GUI에서 PASS | [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>) |
 | 정식 공개 | exact package 이중 재현·승인·tag/Release·단일 stable catalog·공개 smoke | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
-| 후속 제품선 | M32 0/12, M33 0/8, HOST-W04~W08 사용자 보류 | [M32](TODO_M32.md) · [M33](TODO_M33.md) |
+| v0.6.0 계획 | M32 0/12, M33 0/8, HOST-W04~W08 사용자 보류 | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
 
 완료 기능의 상세 계약과 기계 판정 원장은 다음과 같습니다.
 
@@ -23,7 +23,10 @@
 
 ## 재개 지점
 
-v0.5.0의 완료 gate를 다시 열지 않습니다. 다음 기능 개발은 새 버전과 명시적 범위에서 시작합니다.
+v0.5.0의 완료 gate를 다시 열지 않습니다. M32·M33의 다음 기능 개발은 v0.6.0 계획을 따릅니다.
+다음 구현 항목은 M32-W01이며 버전 배정과 문서 변경만으로 구현·보드 시험을 시작하지 않습니다.
+후속 버전은 M34~M37 v0.7.0, M38~M41 v0.8.0, M42~M45 v0.9.0입니다. 번호와 기능 범위는
+유지하며 [276번 결정](<04_검증 기록/276_v0.6.0_후속_버전_배정과_문서_동기화.md>)을 따릅니다.
 M32/M33, Ubuntu/macOS Host 확대, 외장 audio 장치와 상용 peer 실물 상호운용은 v0.5.0 완료 조건이
 아니며 자동으로 재개하지 않습니다.
 
@@ -37,6 +40,7 @@ M32/M33, Ubuntu/macOS Host 확대, 외장 audio 장치와 상용 peer 실물 상
 | --- | --- |
 | 저장소 / 기본 branch | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `main` |
 | 릴리스 백업 branch | `Release-0.5.0` |
+| v0.5.0 백업 기준선 | `4790e3fa532ffea00bfd96780079cbadea263ca5`; 후속 문서·개발로 이동하지 않음 |
 | Target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | NCS / Zephyr | v3.4.0 · `99553055607b2e9885fbc80ccd11fa9da81c2df0` / `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
 | Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
@@ -47,6 +51,8 @@ M32/M33, Ubuntu/macOS Host 확대, 외장 audio 장치와 상용 peer 실물 상
 
 정식 tag source와 최종 main/index commit은 다를 수 있습니다. package manifest와 `v0.5.0` tag는 Squash한
 exact source commit을 가리키고, root catalog와 공개 결과 마감은 후속 main commit에 기록합니다.
+문서 마감 `4790e3fa`의 [M12 CI](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/36316010285)는
+9/9 job 성공이며 6개 대표 구성도 실제 build했습니다. 새 v0.6.0 source의 검증 결과를 뜻하지 않습니다.
 
 ## 안전·검증 원칙
 

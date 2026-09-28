@@ -31,8 +31,11 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 릴리스 코어 식별자이며 package 재현 기준은 `v0.5.0` tag와 manifest의 source SHA입니다.
 
 v0.4.1 공개 마감 이후 개발 이력은 단일 v0.5.0 릴리스 commit으로 통합했습니다. RC1/RC2 branch는
-로컬·원격에서 삭제했고 공개 tag·Pre-release·자산과 과거 검증 기록은 보존합니다. M32/M33과 Ubuntu/macOS 지원은
-후속 제품선이며 버전은 미정입니다. 개발 재개는 [HANDOFF](../HANDOFF.md)를 따릅니다.
+로컬·원격에서 삭제했고 공개 tag·Pre-release·자산과 과거 검증 기록은 보존합니다.
+M32/M33은 [v0.6.0 계획](../TODO_v0.6.0.md)으로 배정했으며 아직 구현 미착수·미공개입니다.
+이후 Security/Update는 v0.7.0, Radio/Network는 v0.8.0, Matter는 v0.9.0입니다.
+Ubuntu/macOS Host의 사용자 보류와 OS별 실물 지원 gate는 유지합니다. 현재 설치·지원 버전은
+계속 v0.5.0이며 개발 재개는 [HANDOFF](../HANDOFF.md)를 따릅니다.
 
 ## 이전 버전 — 지원·공급 종료
 

@@ -29,6 +29,8 @@ GUI Blink 연속 Upload도 [273번](<../../../00_Docs/04_검증 기록/273_RC2_G
 W06은 독립 ISO·Audio·DF·CS image의 자원·
 수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
 실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
+M32·M33은 [v0.6.0 계획](../../../00_Docs/TODO_v0.6.0.md)에 배정했으며 기존 세 Host 계획·OS별 최종
+gate를 유지합니다. 버전 배정은 구현·HIL 완료나 Host 재개 승인이 아니며 추가 OS 지원도 확정하지 않습니다.
 
 P0·P1·P2는 완료했습니다. P2의 지원 범위 오류·최악 부하, stack/heap 최종 크기,
 동일 조건 Nordic native FLASH/RAM 비교 세 축은

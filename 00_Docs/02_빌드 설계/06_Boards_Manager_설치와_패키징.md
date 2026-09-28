@@ -9,10 +9,11 @@
 | 공식 사용자 OS | Windows 10/11 x64 |
 
 이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.5.0` 계약이다.
-RC1/RC2 다운로드·설치 결과는 해당 역사 문서에 보존한다. Ubuntu/macOS 확장은 버전 미정인 후속 제품선이며
+RC1/RC2 다운로드·설치 결과는 해당 역사 문서에 보존한다. Ubuntu/macOS 확장은 v0.6.0의 M32·M33 계획과 연계하며
 [다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다.
 HOST-W01~W03은 3/8 완료, HOST-W04~W08은 사용자 재개 지시까지 보류다. 후속 OS의
 prerequisite·설치·실물 검증 gate는 유지하지만 M31 Windows 릴리스의 선행조건으로 두지 않는다.
+버전 배정은 새 OS 지원 확정이나 재개 승인이 아니며 기존 세 Host 계획·OS별 최종 gate를 유지한다.
 
 ## Stable index와 설치
 

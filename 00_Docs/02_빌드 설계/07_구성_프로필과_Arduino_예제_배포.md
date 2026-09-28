@@ -14,7 +14,8 @@
 [W08 증거](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) 및
 [274번 공개 smoke](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)를 따르며 compile을 전체 물리 HIL로 해석하지 않는다.
 Ubuntu/macOS는 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에
-따라 후속 제품선에서 검증한다. 한 Host의 compile 결과를 다른 Host의 PASS로 합산하지 않는다.
+따라 v0.6.0의 M32·M33 계획과 연계하되 Host 보류·OS별 최종 gate를 유지한다.
+한 Host의 compile 결과를 다른 Host의 PASS로 합산하거나 버전 배정만으로 새 OS 지원을 확정하지 않는다.
 
 Profile은 사용자가 먼저 선택하는 보드 수준 구성이고 feature는 Arduino가 실제 선택한 bundled
 library에서 자동 해석하는 추가 구성이다. 실행 결과와 실기 증거는
@@ -234,7 +235,7 @@ ELF·linker map·adaptive capability 결과 hash, FLASH/RAM 사용량과 headroo
 `secure_ble_dfu` profile을 제공한다. Tools 메뉴의 `Secure BLE DFU (MCUboot)`는
 sysbuild와 maximum size `729088` byte를 선택한다. 이전 v0.4.1의 세 profile에는 포함되지 않았다.
 
-`v0.6.0` M36은 이 최소 기반을 여러 layout·update transport로 확장하는 후속 계획이다.
+`v0.7.0` M36은 이 최소 기반을 여러 layout·update transport로 확장하는 후속 계획이다.
 고급 `Tools → Memory layout`을 제공할 때에는 검증된 preset이 feature set과 별개의 명시적
 입력이 되고, fixed partition, linker 경계, Arduino maximum size와 cache identity가 함께
 바뀌어야 한다. 현재는 임의 숫자나 Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을
@@ -334,14 +335,16 @@ M29의 실제 예제명과 완료·잔여 상태는
 
 ## 7. 관련 구현과 기록
 
-### M31 v0.5.0과 후속 제품선의 예제 구현·검증 TODO
+### M31 v0.5.0과 M32·M33 v0.6.0의 예제 구현·검증 TODO
 
 이전 stable 30개와 v0.5.0 stable 113개는 서로 다른 패키지 목록이다. 다음 표는 단계별 예제 계약이다.
 M31은 완료했고 M32·M33은 미착수다. 상세 feature·role은
 [전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
 M31-W08까지의 예제 정합화와 Windows package·설치·RC 공개 gate는 마감했다.
-M32·M33의 추가 기능·예제와 Ubuntu/macOS 지원은 후속 제품선이며 배포 버전은 미정이다.
+M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배정했다. Ubuntu/macOS의
+기존 세 Host 계획·M33-W07~W08 최종 gate는 유지하며, HOST-W04~W08 재개 승인과 실물 검증 전에는
+새 OS 지원을 확정하지 않는다. 이 배정은 기능 구현·검증 완료를 뜻하지 않는다.
 
 | 소유 단계 | 반드시 제공/판정할 예제 묶음 |
 | --- | --- |
@@ -352,7 +355,7 @@ M32·M33의 추가 기능·예제와 Ubuntu/macOS 지원은 후속 제품선이�
 | M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
 | M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
 | M33-W02~W04 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
-| M33-W05~W08 — 후속 제품선 | 추가 role 예제·ARF-04A·후속 기능 회귀·설치·지원표 마감 |
+| M33-W05~W08 — v0.6.0 계획 | 추가 role 예제·ARF-04A·후속 기능 회귀·설치·지원표 마감 |
 
 다음은 모든 예제 owner에 적용하는 반복 검증 계약이다. 완료율 체크리스트가 아니며 M31의 완료
 증거와 M32/M33의 미착수 상태는 위 TODO에서 각각 관리한다.

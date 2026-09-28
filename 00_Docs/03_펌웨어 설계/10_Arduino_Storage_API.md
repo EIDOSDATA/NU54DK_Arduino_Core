@@ -71,7 +71,7 @@ v0.4.0이 제공하는 layout은 RC3에서 도입한 위 loaderless 단일 appli
 signed update·BLE update·rollback 기반을 구현했다. Boot/update 영역과 기존 저장소의 보존 경계를
 함께 검증하며, 현재 EEPROM/LittleFS HIL 결과를 새 layout의 update·power-fail 보증으로 재사용하지 않는다.
 
-`v0.6.0` M36은 M30의 최소 기반을 여러 layout·update transport와 **고급 Memory layout 선택**으로
+`v0.7.0` M36은 M30의 최소 기반을 여러 layout·update transport와 **고급 Memory layout 선택**으로
 확장하고 hardening한다. 기본 loaderless layout은 유지하며, MCUboot/DFU와 signed update·rollback이
 실제로 포함된 검증 경로에서만 boot 영역과 dual-slot layout을 노출한다. Arduino Tools에는 임의
 숫자 입력 대신 검증된 preset을 제공하고, 전문가 overlay는 같은 정적 검사와 linker assertion을

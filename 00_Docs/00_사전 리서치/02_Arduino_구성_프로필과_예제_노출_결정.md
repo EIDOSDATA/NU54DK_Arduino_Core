@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | ADR-0002 |
-| 문서 개정 | 2.2 |
+| 문서 개정 | 2.3 |
 | 문서 상태 | **Accepted** |
 | 결정일 | 2026-08-28 |
 | 적용 범위 | `v0.2.0` 이후 구성 UX와 Arduino 예제 소유권 |
@@ -97,7 +97,7 @@ slot 비용을 기본으로 부과하지 않는다.
 signed update·BLE update·rollback 경로를 구현·검증했고 정식 설치본에 포함했다. 기본 loaderless
 profile에는 boot 영역이나 update slot을 추가하지 않는다. 이전 `v0.4.1` 자산도 그대로 보존한다.
 
-`v0.6.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
+`v0.7.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
 선택으로 확장하는 후속 계획이다. Layout 선택은 단순 Devicetree 조각이 아니라 code partition,
 linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 계약이다.
 Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공하며, 전문가 `app.overlay`도 같은 충돌
@@ -206,3 +206,4 @@ Profile, feature 또는 공개 예제를 바꿀 때 다음을 확인한다.
 | 2026-08-31 | Refined | 구현 목록과 미래형 설명을 제거하고 결정 중심으로 축약 |
 | 2026-09-02 | Refined | Loaderless 단일 application을 기본값으로, MCUboot/DFU dual-slot을 검증된 고급 layout으로 분리 |
 | 2026-09-12 | Refined | M30의 최소 BLE DFU 기반과 M36의 다중 layout·transport 확장 계획을 분리; 현재 loaderless 계약 유지 |
+| 2026-09-28 | Refined | M32·M33의 v0.6.0 배정에 따라 M36 목표를 v0.7.0으로 이동; M번호·기본 layout·미착수 상태 유지 |

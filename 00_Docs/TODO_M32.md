@@ -1,14 +1,14 @@
-# M32 실행 TODO — 최신 BLE 제어·Mesh 1.1·무선 공존
+# M32 실행 TODO — v0.6.0 최신 BLE 제어·Mesh 1.1·무선 공존
 
 | 항목 | 내용 |
 | --- | --- |
-| 대상 제품선 | M31 `v0.5.0` 이후 후속 제품선; 버전 미정 |
+| 대상 제품선 | **v0.6.0** — M33과 함께 후속 Bluetooth 확장 제품선 구성 |
 | 현재 구현 상태 | **계획 — 0/12 작업 묶음** |
 | 하위 gate | M32-A Controller/Host·Nordic 확장, M32-B Mesh, M32-C 최소 radio·공존 |
 | 선행·병행 계획 | M31의 controller/resource 계약 인계; HOST-W07은 Host 트랙 재개 후 독립 진행 |
 | 고정 기준 | NCS `v3.4.0`, [CI lock](../tools/ci/ncs-3.4.0.lock.json)의 Zephyr·toolchain revision |
 | 사용자 장비 조건 | NU54DK 3개 연결, 외부 RF·audio 계측 장비 없음; 실행 직전 실제 mapping 재확인 |
-| 최종 갱신일 | 2026-09-27 |
+| 최종 갱신일 | 2026-09-28 |
 
 기능·upstream 예제·제공 방식의 상세 원본은
 [NCS Bluetooth 전체 기능과 예제 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)이다.
@@ -23,8 +23,10 @@ RC2의 교정·성능 결과 수용·main 통합은
 이 결과를 M32 착수 지시로 확대하지 않는다.
 
 2026-09-21 사용자 결정에 따라 `v0.5.0`을 M31 완료 후 Windows 대상으로 정식 공개했다.
-M32의 12개 작업은 후속 범위로 유지하며 M31 릴리스의 선행조건이 아니다. M32 추가 기능과
-Host 확대의 배포 버전은 별도 착수 때 확정한다.
+M32의 12개 작업은 M31 릴리스의 선행조건이 아니다. 2026-09-28 사용자는 M32·M33을
+**v0.6.0**으로 배정했다. 현재 지원·설치는 v0.5.0이며 M32는 여전히 구현 미착수다.
+[v0.6.0 계획](TODO_v0.6.0.md)과 [276번 결정](<04_검증 기록/276_v0.6.0_후속_버전_배정과_문서_동기화.md>)을 따른다.
+Host 보류와 OS별 최종 검증 gate는 유지하며 버전 배정을 구현·실물 시험·공개 승인으로 해석하지 않는다.
 
 ## 1. 착수 경계
 
@@ -185,7 +187,7 @@ HOST-W07의 자동 검사·최종 인계 절차는 준비하되 Ubuntu/macOS PC�
 - [ ] M30의 서명·image/key·rollback 계약을 재사용하고 Mesh transport의 인증·배포 권한·metadata·version·
   hash 검증·부분 image·잘못된 target/키·미확인 image 복귀를 추가 검증한다.
 - [ ] Transport cancel·peer loss·다시 시작·정상 재부팅 복구를 자동화한다. 새로운 실제 전원 차단 확장은
-  M36 후속으로 인계하며 M32 후속 제품선의 추가 필수 사용자 gate로 만들지 않는다. 별도 정책·장치·사용자
+  v0.7.0의 M36으로 인계하며 M32/v0.6.0의 추가 필수 사용자 gate로 만들지 않는다. 별도 정책·장치·사용자
   요청 없이 실행하지 않고, reset 시험으로 전원 차단 PASS를 기록하지 않는다.
 - [ ] `M32-BLOB-01`, `M32-MDFU-01`의 role image·object/image hash·분모·negative 결과를 보존한다.
 - [ ] M36으로 partition·배포 transport·복구 경계·남은 외장 storage variant를 인계한다.

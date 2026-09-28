@@ -11,7 +11,8 @@ W08 Windows RC 준비와 공개 `v0.5.0-rc.1` 설치 smoke를 닫았다. M32·M3
 mobile/desktop 전체 상호운용과 Bluetooth qualification은 별도 상태다.
 
 **2026-09-21 사용자 결정: v0.5.0은 M31 완료 후 Windows 10/11 x64로 릴리스한다.**
-M32/M33의 추가 기능·전체 catalog와 Ubuntu/macOS 지원은 후속 버전(미정)으로 분리한다.
+당시 분리한 M32/M33의 추가 기능·전체 catalog는 2026-09-28 [v0.6.0 계획](TODO_v0.6.0.md)으로
+배정했다. Ubuntu/macOS Host 작업의 사용자 보류와 해당 OS 최종 지원 gate는 유지한다.
 M31 기능 완료와 별도로 §6의 패키지·설치·RC·공개 승인 gate도 모두 충족했다.
 
 공개 RC의 완료 구현·문서는 `main`에 통합했다. 2026-09-27 공개 RC1 사용 과정에서 Arduino
@@ -43,6 +44,7 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 | M28~M45 순서·전체 상태 | [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>) |
 | BLE 기능군별 목표·완료 조건 | [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>) |
 | v0.5.0 완료 범위·stable 공개 결과 | 이 문서와 [274번 공개 기록](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
+| v0.6.0 M32·M33과 후속 버전 배정 | [v0.6.0 계획](TODO_v0.6.0.md) · [276번 결정](<04_검증 기록/276_v0.6.0_후속_버전_배정과_문서_동기화.md>) |
 | 재개 복구·Adafruit 개선 과제의 배치 | [개정 실행 순서](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>) |
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
@@ -52,7 +54,7 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 | M30 기계 판정 원본 | [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) |
 | M31 실행 TODO | [M31 TODO](TODO_M31.md) |
 | M32 최신 LE·Mesh·공존 TODO | [M32 TODO](TODO_M32.md) |
-| 후속 버전 M33 전체 예제·상호운용·공개 TODO | [M33 TODO](TODO_M33.md) |
+| v0.6.0 M33 전체 예제·상호운용·공개 TODO | [M33 TODO](TODO_M33.md) |
 | 기능별 upstream·제공 경로·예제·검증 | [전체 Bluetooth 기능 실행 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>) |
 | 후속 다중 Host 계약·v0.5.0 Windows 경계 | [다중 Host 지원 착수 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) — 기존 파일명 유지 |
 | v0.4.0 완료·보존할 지원 계약 | [v0.4.0 완료 TODO](TODO_v0.4.0.md) |
@@ -63,19 +65,19 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 
 ## 1. 다음 착수 순서
 
-### 현행 순서 — 2026-09-21 릴리스 분리
+### 현행 순서 — 2026-09-21 릴리스 분리와 2026-09-28 버전 배정
 
 사용자 목표는 **고정 NCS v3.4.0에서 nRF54L15가 할 수 있는 Bluetooth 기능과 예제를 NU54DK의
 Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 wrapper/direct/profile/template 중
 기능에 맞게 정하고 upstream sample·역할·test ID를 전수 추적한다. 이 장기 목표를 한 릴리스에
-모두 넣지는 않는다. v0.5.0에는 M28~M31의 검증된 범위만 포함하고, M32/M33은 후속 제품선으로
+모두 넣지는 않는다. v0.5.0에는 M28~M31의 검증된 범위만 포함하고, M32/M33은 v0.6.0 제품선으로
 유지한다. 계획 문서 작성은 구현 완료에 포함하지 않는다.
 
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
 | M31 / v0.5.0 | **8/8 완료, stable 공개** | 메모리 최적화 P0~P2, 기능·회귀·예제/HIL, Windows RC1/RC2와 정식 `v0.5.0` 공개 smoke 완료 |
-| M32 / 후속 버전 미정 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
-| M33 / 후속 버전 미정 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 후속 Host·RC·공개 |
+| M32 / v0.6.0 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
+| M33 / v0.6.0 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 후속 Host·RC·공개 |
 | Host | **3/8, 보류** | HOST-W01~HOST-W03 완료. 재개 후 HOST-W04 prerequisite·HOST-W05 path/cache부터 진행 |
 
 메모리 최적화의 측정·상위 gate는 [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>),
@@ -170,7 +172,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M32-B | Mesh 기본 → Mesh 1.1 → BLOB/Mesh DFU/Distribution | node/model·key/settings·transfer·복구, 내부 RRAM/배포자 한계와 M36 인계 |
 | M32-C | 최소 radio/profile·802.15.4/ESB 단독 TX/RX → 선택 공존·복구 | MPSL ownership·loss/서비스 지연·M38/M39 공개 예제 인계 |
 | M31 릴리스 | 메모리 최적화·W04~W08·Windows 패키지/설치·공개 RC와 정식 v0.5.0 stable 승격 완료 | M28~M31 채택 범위·image/자원·예제·지원/제약·설치 수명주기 근거 |
-| M33 / 후속 버전 | GATT/beacon·ecosystem·HCI/DTM 예제 → 전체 parity·interop → HOST-W08/RC → 후속 공개 | 누락 0 원장·예제 제공 범위·실행 증거·세 Host 지원/제약·qualification 적용성 |
+| M33 / v0.6.0 | GATT/beacon·ecosystem·HCI/DTM 예제 → 전체 parity·interop → HOST-W08/RC → v0.6.0 공개 | 누락 0 원장·예제 제공 범위·실행 증거·세 Host 지원/제약·qualification 적용성 |
 
 M31-A/B/C는 **M31 내부 작업 ID**다. 하나를 완료해 M31 전체 완료로 계산하지 않는다.
 M30 최소 DFU에서는 고정 layout·신뢰키·초기 설치·BLE 갱신·전원 차단 복구와 Arduino 제공 형태를
@@ -185,7 +187,8 @@ M33의 사용자 경로 정리에 기존 API만 사용하는 ARF-04A 목적별 �
 Buffered NUS·PWM pool·별도 편의 API는 M30/M33 필수 구현에 합치지 않고
 [별도 개선 작업](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)으로 검증한다.
 BLE role-budget ARF-01은 M32-W04로 통합해 기본 2-link 및 확장 역할 preset과 한 번 검증한다.
-후속 배포 버전은 착수 gate에서 확정하며 기존 M34~M45 제품선을 임의 재배치하지 않는다.
+독립 ARF의 배포 버전은 별도 착수 gate에서 확정한다. M 번호·주제는 유지하며,
+2026-09-28 승인에 따라 M34~M37은 v0.7.0, M38~M41은 v0.8.0, M42~M45는 v0.9.0으로 배정한다.
 
 ## 5. 장비와 정량 판정 기준
 

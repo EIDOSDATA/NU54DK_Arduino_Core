@@ -5,9 +5,9 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 7.0 |
+| 문서 개정 | 7.1 |
 | 대상 | 지원 stable `v0.5.0` |
-| 최종 갱신일 | 2026-09-27 |
+| 최종 갱신일 | 2026-09-28 |
 | 상태 | **v0.5.0 stable 지원 계약** |
 
 ## 판정 기준
@@ -21,7 +21,8 @@ M31 ISO·LE Audio·Direction Finding·Channel Sounding은 정식 설치본에 �
 [M29 계약](16_M29_ATT_GATT_L2CAP_착수_계약.md),
 [M30 계약](17_M30_BLE_Security_Profile_DFU_착수_계약.md)에서 별도로 확인합니다.
 M31 완료 범위와 정식 공개는 [M31 TODO](../TODO_M31.md)와
-[v0.5.0 문서](../05_릴리스/v0.5.0/README.md)를 따릅니다. M32·M33 및 Ubuntu/macOS 확대는 후속 계획입니다.
+[v0.5.0 문서](../05_릴리스/v0.5.0/README.md)를 따릅니다. M32·M33은 [v0.6.0 후속 계획](../TODO_v0.6.0.md)이며,
+Ubuntu/macOS 확대의 기존 Host 실물 gate와 보류 상태는 유지합니다. 계획 버전 배정은 현재 지원 확대가 아닙니다.
 
 역사 [v0.5.0-rc.2](../05_릴리스/v0.5.0-rc.2/README.md)는 같은 M28~M31 API 범위를 검증하며
 예제별 설정 안내·업로드 선택·한국어 진단·빌드 진행 표시를 교정했습니다. 전체 113개 설치 예제와
@@ -215,7 +216,7 @@ RAM-only 승인, register policy와 사용자 전원·배터리 조건의 별도
 | Direction Finding | 지원된 범위 | 제품 SDC의 connectionless AoA CTE TX와 별도 opt-in Zephyr LL connected response; 제품 SDC IQ RX·AoD는 미지원 |
 | Channel Sounding | 지원된 범위 | Connected ACL CS initiator/reflector·RAS·유효 raw/거리 산출·보안·복구; 정밀 거리 정확도 보증 제외 |
 | Secure BLE DFU | 선택 profile 지원 | `secure_ble_dfu`의 고정 MCUboot layout·서명·인증 update·rollback·전원 복구; 기본 loaderless와 분리 |
-| Mesh·최신 LE 추가 기능·multiprotocol | 후속 계획 | M32·M33 범위는 v0.5.0 지원에 포함하지 않음 |
+| Mesh·최신 LE 추가 기능·multiprotocol | v0.6.0 계획 | M32·M33은 미착수이며 v0.5.0 지원에 포함하지 않음 |
 | 802.15.4/OpenThread/Matter | 미지원 | 과거 build feasibility는 runtime 지원 아님 |
 
 BLE 검증은 기능별 두·세 NU54DK와 기록된 Windows 상호운용 범위이며 Bluetooth qualification,

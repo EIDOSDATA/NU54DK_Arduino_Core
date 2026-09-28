@@ -4,7 +4,7 @@
 | --- | --- |
 | 문서 상태 | **현재 구현 계약** |
 | 현재 정식 버전 | `v0.5.0` |
-| 다음 목표 버전 | 미정 |
+| 다음 목표 버전 | `v0.6.0` — M32·M33 계획, 현재 구현·지원과 구분 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
 | v0.5.0 Host 목표 | M31 완료 뒤 Windows 10/11 x64 우선; Ubuntu/macOS는 후속 제품선 |
@@ -255,7 +255,7 @@ v0.3.0 RC3에서 도입해 v0.5.0에서도 유지하는 기본 메모리 계약�
 maximum size `729088` byte를 선택한다. 기본 loaderless 단일 image profile과 구분하며,
 image·layout·서명 정책을 식별하는 별도 manifest·cache·upload 검증을 적용한다.
 
-`v0.6.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
+`v0.7.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
 hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
 제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
 M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단 12/12를 완료했고 M36은 미착수다.
@@ -338,7 +338,8 @@ console에는 5단계 상태·실제 Ninja target 분모·최대 10초 heartbeat
 - remote/distributed cache와 network cache
 - Linux/macOS Boards Manager production 지원은 `v0.4.1`과 M31 `v0.5.0` Windows 릴리스에
   포함하지 않는다. [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 해당 OS를
-  추가할 후속 릴리스에서 판정한다. 버전은 미정이며 HOST-W04~HOST-W08은 보류 상태다.
+  추가할 릴리스에서 판정한다. v0.6.0의 M32·M33 계획과 연계하되 OS 지원 확정이 아니며,
+  HOST-W04~HOST-W08은 보류 상태다. 기존 세 Host 계획·OS별 최종 gate는 유지한다.
   현재 HOST-W01~W03 3/8을 완료했으며 이후 구현은 사용자 지시로 보류했다.
 - Arduino IDE Debug 버튼 자동 구성
 - 자동 recover 또는 mass erase
