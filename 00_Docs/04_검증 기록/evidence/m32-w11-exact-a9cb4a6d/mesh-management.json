@@ -1,0 +1,142 @@
+{
+  "test_ids": [
+    "M32-MESH11-01:management"
+  ],
+  "status": "PASS",
+  "scope": "three_board_mesh_1_1_remote_provisioning_management",
+  "source_clean": true,
+  "identity": {
+    "core": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "client": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "bbb7f83c95b225228f63f6ad39b3af08c252665acce6084c45e8dc946b3997f1",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "352256"
+    },
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "image_sha256": "97ba68b0ee8fdd4caddbbd1333d12f35732c52022902965a1ea12ad527eb29db",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "344064"
+    },
+    "target": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "image_sha256": "9adf932bc953fa76c5ea38f42928abc47038cf7216e1566384005ff3433693f9",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "344064"
+    }
+  },
+  "nonce": "edf58af5cfe23bfc88686fa3a7e5c9a8",
+  "results": {
+    "server": {
+      "role": "server",
+      "provisioned": "1",
+      "management_server": "pass",
+      "recovery": "pass",
+      "nonce": "edf58af5cfe23bfc88686fa3a7e5c9a8",
+      "core": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b"
+    },
+    "target": {
+      "role": "target",
+      "provisioned": "1",
+      "management_server": "pass",
+      "recovery": "pass",
+      "nonce": "edf58af5cfe23bfc88686fa3a7e5c9a8",
+      "core": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b"
+    },
+    "client": {
+      "role": "client",
+      "remote_provisioned": "1",
+      "feature_groups": "7",
+      "iterations": "10",
+      "operations": "350",
+      "links_closed": "2",
+      "remote_reports": "1",
+      "malformed_rejected": "1",
+      "out_of_range_rejected": "1",
+      "replay_rejected": "1",
+      "wrong_subnet_rejected": "1",
+      "recovery": "pass",
+      "nonce": "edf58af5cfe23bfc88686fa3a7e5c9a8",
+      "core": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b"
+    }
+  },
+  "capacities": {
+    "client": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 2,
+      "cdb_app_keys": 2,
+      "local_subnets": 2,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    },
+    "server": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 2,
+      "cdb_app_keys": 2,
+      "local_subnets": 2,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    },
+    "target": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 2,
+      "cdb_app_keys": 2,
+      "local_subnets": 2,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    }
+  },
+  "iterations": 10,
+  "operation_denominator": 350,
+  "negative_denominators": {
+    "malformed_rejected": 1,
+    "out_of_range_rejected": 1,
+    "replay_rejected": 1,
+    "wrong_subnet_rejected": 1
+  },
+  "reason": null,
+  "transcript_sha256": "902d417705c9f01fa9b710842cf7322cbb6824c1069b6dd32e3eecbbf55af605",
+  "observed_utc": "2026-10-02T12:55:22.587307+00:00"
+}

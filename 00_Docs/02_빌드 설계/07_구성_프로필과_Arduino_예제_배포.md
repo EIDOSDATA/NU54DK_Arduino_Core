@@ -235,7 +235,9 @@ ELF·linker map·adaptive capability 결과 hash, FLASH/RAM 사용량과 headroo
 `secure_ble_dfu` profile을 제공한다. Tools 메뉴의 `Secure BLE DFU (MCUboot)`는
 sysbuild와 maximum size `729088` byte를 선택한다. 이전 v0.4.1의 세 profile에는 포함되지 않았다.
 
-`v0.7.0` M36은 이 최소 기반을 여러 layout·update transport로 확장하는 후속 계획이다.
+`v0.8.0` M36은 이 최소 기반을 여러 layout·update transport로 확장하는 후속 계획이다.
+선행 [v0.7.0](../TODO_v0.7.0.md)은 NCS 3.4.1 전체 SDK 전환만 수행하며 신규 profile·기능이나
+M36의 layout·transport 확장을 포함하지 않는다. 기존 profile·예제의 호환성은 전환 회귀로 검증한다.
 고급 `Tools → Memory layout`을 제공할 때에는 검증된 preset이 feature set과 별개의 명시적
 입력이 되고, fixed partition, linker 경계, Arduino maximum size와 cache identity가 함께
 바뀌어야 한다. 현재는 임의 숫자나 Sketch `app.overlay` 하나만으로 partition을 바꾸는 구성을
@@ -338,7 +340,8 @@ M29의 실제 예제명과 완료·잔여 상태는
 ### M31 v0.5.0과 M32·M33 v0.6.0의 예제 구현·검증 TODO
 
 이전 stable 30개와 v0.5.0 stable 113개는 서로 다른 패키지 목록이다. 다음 표는 단계별 예제 계약이다.
-M31은 완료했고 M32·M33은 미착수다. 상세 feature·role은
+M31과 M32는 완료했고 M32는 W01~W12 12/12, M33은 미착수다. W08 BLOB·signed MDFU,
+W10 공존, W11 exact 회귀·soak와 W12 정합성 감사·인계를 완료했다. 과거 W08 FAIL은 당시 기록으로 보존한다. 상세 feature·role은
 [전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
 M31-W08까지의 예제 정합화와 Windows package·설치·RC 공개 gate는 마감했다.
@@ -352,13 +355,13 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 | M31-W03 — 완료 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP; [11/11 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
 | M31-W04~W05 — 완료 | AoA CTE 송신 예제와 controller 경계, 제품 SDC IQ RX 미지원 표시, CS initiator/reflector·RAS·복구 |
 | M31-W08 및 정식 공개 — 완료 | W07 설치 role 예제·제공 경로/제한, Windows package·설치·RC smoke와 별도 stable 승격·공개 완료 |
-| M32-W02~W05 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget |
-| M32-W06~W10 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 승인된 공존 |
-| M33-W02~W04 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
+| M32-W02~W05 — 완료·미공개 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget; 고정 Host 미지원 경계 유지 |
+| M32-W06~W10 — 완료·미공개 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 검증한 세 내부 공존 조합 |
+| M33-W02~W04 — 계획 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
 | M33-W05~W08 — v0.6.0 계획 | 추가 role 예제·ARF-04A·후속 기능 회귀·설치·지원표 마감 |
 
 다음은 모든 예제 owner에 적용하는 반복 검증 계약이다. 완료율 체크리스트가 아니며 M31의 완료
-증거와 M32/M33의 미착수 상태는 위 TODO에서 각각 관리한다.
+증거와 M32/M33의 현재 진행 상태는 위 TODO에서 각각 관리한다.
 
 - 예제명·폴더·주 `.ino` 이름, upstream path/test ID·license·작성 역할과 제공 route를 원장에 고정한다.
 - 입문용 최소 예제 → 상대 역할 예제 → 오류/종료/복구 예제를 연결한다. 한 sketch의 role 선택 방식도 허용한다.

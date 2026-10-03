@@ -1,0 +1,114 @@
+{
+  "test_ids": [
+    "M32-SUB-01:primary",
+    "M32-SCA-01:primary",
+    "M32-TIME-01:primary",
+    "M32-FEAT-01:primary"
+  ],
+  "status": "PASS",
+  "scope": "two_board_timing_feature_and_packet_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "central": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "ea326c0a43e07bf7d8f95a0e6cf0c16231a41adc0ca5f8752e89347af9f0f2ca",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "229376"
+    },
+    "peripheral": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "image_sha256": "047d646027d6a1435616260093d9760830072ba21cf3d8ad49f1fb4398f4d264",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "225280"
+    }
+  },
+  "nonce": "a2410af32abe437b4b9aaa1d5df428dc",
+  "iterations": 20,
+  "packet_denominator": 2000,
+  "feature_samples": 40,
+  "sca_support_samples": 20,
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "tx": "0",
+      "rx": "2000",
+      "subrate": "20",
+      "frame": "2",
+      "rate": "20",
+      "channel": "0",
+      "feature": "20",
+      "sca": "10",
+      "min_interval_us": "0",
+      "callback_context": "pass",
+      "packet_gap_ms": "8",
+      "procedure_gap_ms": "2500",
+      "nonce": "a2410af32abe437b4b9aaa1d5df428dc",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    },
+    "central": {
+      "role": "central",
+      "tx": "2000",
+      "rx": "0",
+      "subrate": "20",
+      "frame": "20",
+      "rate": "20",
+      "channel": "20",
+      "feature": "20",
+      "sca": "10",
+      "min_interval_us": "750",
+      "callback_context": "pass",
+      "packet_gap_ms": "8",
+      "procedure_gap_ms": "1350",
+      "nonce": "a2410af32abe437b4b9aaa1d5df428dc",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    }
+  },
+  "allowed_loss": {
+    "packets": 20,
+    "procedures": 0,
+    "features": 0
+  },
+  "lost": {
+    "packets": 0,
+    "procedures": {
+      "subrate": 0,
+      "frame": 0,
+      "rate": 0,
+      "channel": 0
+    }
+  },
+  "sca_boundary": {
+    "controller_procedure": true,
+    "host_request_and_report": false,
+    "classification": "unsupported_host_initiator_api"
+  },
+  "reason": null,
+  "transcript_sha256": "8b30a2048d4499643db0c966a5d8e38b28d900e3537d7351aee15b2ae6ef875a",
+  "observed_utc": "2026-10-03T00:02:01.035943+00:00"
+}

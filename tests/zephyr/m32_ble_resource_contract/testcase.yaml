@@ -1,0 +1,34 @@
+tests:
+  nucode.m32.ble.resource.c1p1:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=c1p1.conf
+    tags:
+      - nucode
+      - m32
+      - bluetooth
+  nucode.m32.ble.resource.c2p0:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=c2p0.conf
+    tags:
+      - nucode
+      - m32
+      - bluetooth
+  nucode.m32.ble.resource.c0p2:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=c0p2.conf
+    tags:
+      - nucode
+      - m32
+      - bluetooth

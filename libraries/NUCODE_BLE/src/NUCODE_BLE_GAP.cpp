@@ -4,6 +4,14 @@
 #include <NUCODE_BLE_GAP.h>
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 #include "internal/gap/GapInternal.h"
+namespace nucode::ble::internal
+{
+    /** @brief Nordic 확장 translation unit이 선택된 경우에만 poll hook을 연결합니다. */
+    void pollNordicExtensions() noexcept __attribute__((weak));
+
+    /** @brief Nordic 확장 translation unit이 선택된 경우에만 종료 hook을 연결합니다. */
+    void nordicExtensionsEnded() noexcept __attribute__((weak));
+} // namespace nucode::ble::internal
 namespace nucode::ble::internal::gap
 {
 #if defined(CONFIG_BT_PER_ADV) || defined(CONFIG_BT_PER_ADV_SYNC)
@@ -71,7 +79,9 @@ namespace nucode::ble::internal::gap
                     std::uint32_t device_generation,
                     BLEAdvertisingSetHandle advertising_set,
                     BLEPeriodicSyncHandle periodic_sync,
-                    std::uint8_t reason) noexcept
+                    std::uint8_t reason,
+                    BLETransmitPowerReport transmit_power,
+                    BLEPathLossReport path_loss) noexcept
     {
         const std::uint32_t current_generation =
             static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation));
@@ -84,6 +94,8 @@ namespace nucode::ble::internal::gap
                     .periodic_sync = periodic_sync,
                     .role = role,
                     .reason = reason,
+                    .transmit_power = transmit_power,
+                    .path_loss = path_loss,
                 },
             .device_generation =
                 device_generation == 0U ? current_generation : device_generation,
@@ -332,6 +344,10 @@ namespace nucode::ble
 #endif
         internal::pollGatt();
         internal::pollL2cap();
+        if (internal::pollNordicExtensions != nullptr)
+        {
+            internal::pollNordicExtensions();
+        }
 #if defined(CONFIG_BT_PER_ADV_SYNC)
         BLEPeriodicReportCallback periodic_callback = gapState().periodic_report_callback;
         if (periodic_callback != nullptr)
@@ -410,6 +426,10 @@ namespace nucode::ble
         }
 #endif
         endExtendedAdvertising();
+        if (internal::nordicExtensionsEnded != nullptr)
+        {
+            internal::nordicExtensionsEnded();
+        }
         nucode::ble::internal::l2capEnded();
 
         struct bt_conn *active[maximum_connection_slots] = {};
@@ -522,6 +542,9 @@ nucode::ble::ExtendedAdvertising BLEExtendedAdvertising;
 nucode::ble::PeriodicAdvertising BLEPeriodicAdvertising;
 nucode::ble::Pawr BLEPawr;
 nucode::ble::Privacy BLEPrivacy;
+nucode::ble::Identity BLEIdentity;
+nucode::ble::AdvertisingLists BLEAdvertisingLists;
+nucode::ble::NordicExtensions BLENordic;
 nucode::ble::Connection BLEConnection;
 
 #endif

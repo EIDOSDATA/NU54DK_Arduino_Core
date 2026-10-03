@@ -69,7 +69,7 @@ inline bool mock_oob_flag = false;
 inline int mock_oob_get_error = 0, mock_oob_set_error = 0;
 inline void bt_id_get(bt_addr_le_t *addresses, std::size_t *count)
 {
-    if (addresses == nullptr || count == nullptr || *count < 1U)
+    if (addresses == nullptr || count == nullptr)
     {
         if (count != nullptr)
         {
@@ -77,8 +77,23 @@ inline void bt_id_get(bt_addr_le_t *addresses, std::size_t *count)
         }
         return;
     }
-    addresses[0] = mock_local_identity;
-    *count = 1U;
+    mock_identities[0] = mock_local_identity;
+    const std::size_t capacity = *count;
+    std::size_t last_present = 0U;
+    for (std::size_t index = 0U; index < CONFIG_BT_ID_MAX; ++index)
+    {
+        if (mock_identity_present[index])
+        {
+            last_present = index + 1U;
+        }
+    }
+    const std::size_t copied = capacity < last_present ? capacity : last_present;
+    for (std::size_t index = 0U; index < copied; ++index)
+    {
+        addresses[index] = mock_identity_present[index] ? mock_identities[index]
+                                                        : mock_any;
+    }
+    *count = copied;
 }
 inline int bt_le_oob_get_local(std::uint8_t, bt_le_oob *oob)
 {

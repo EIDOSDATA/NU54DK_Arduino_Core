@@ -22,6 +22,7 @@ from typing import Any, Sequence
 HIL_DIRECTORY = Path(__file__).resolve().parent
 REPOSITORY = HIL_DIRECTORY.parents[2]
 BOARD_ROOT = REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS"
+PYOCD_LAUNCHER = HIL_DIRECTORY / "pyocd_launcher.py"
 
 from m6_serial_echo import (  # noqa: E402
     DEFAULT_BAUD_RATE,
@@ -145,6 +146,7 @@ def validate_source_clean(
         "tests/hil/nu54dk/ble_pair_hil_common.py",
         "tests/hil/nu54dk/m14_pin_hil.py",
         "tests/hil/nu54dk/m6_serial_echo.py",
+        "tests/hil/nu54dk/pyocd_launcher.py",
         *(str(path.resolve().relative_to(REPOSITORY)) for path in additional_paths),
     )
     core = subprocess.run(
@@ -421,27 +423,39 @@ def flash_image_pyocd(
     timeout_seconds: float,
     *,
     hardware_reset: bool = False,
+    cmsis_dap_v1: bool = False,
+    preserve_nrf54l_access: bool = False,
+    defer_reset: bool = False,
 ) -> tuple[str, str]:
     if timeout_seconds <= 0:
         raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
+    if hardware_reset and defer_reset:
+        raise BlePairHilFailure("hardware_reset과 defer_reset은 함께 사용할 수 없습니다.")
+    dap_preference = "true" if cmsis_dap_v1 else "false"
+    frequency_hz = "100000" if cmsis_dap_v1 else "500000"
+    if defer_reset and preserve_nrf54l_access:
+        connect_mode = "halt"
+    else:
+        connect_mode = (
+            "attach" if cmsis_dap_v1 or preserve_nrf54l_access else "under-reset"
+        )
     command = (
         sys.executable,
         "-I",
-        "-m",
-        "pyocd",
+        str(PYOCD_LAUNCHER),
         "flash",
         "--uid",
         board_id,
         "--target",
         "nrf54l",
         "--frequency",
-        "500000",
+        frequency_hz,
         "--connect",
-        "under-reset",
+        connect_mode,
         "-O",
         "cmsis_dap.limit_packets=true",
         "-O",
-        "cmsis_dap.prefer_v1=false",
+        f"cmsis_dap.prefer_v1={dap_preference}",
         "-O",
         "smart_flash=false",
         "-O",
@@ -452,7 +466,7 @@ def flash_image_pyocd(
         "hex",
         str(image),
     )
-    if hardware_reset:
+    if hardware_reset or defer_reset:
         command = command[:-1] + ("--no-reset", command[-1])
     try:
         result = subprocess.run(
@@ -472,30 +486,33 @@ def flash_image_pyocd(
     match = re.search(rb"programmed\s+(\d+)\s+bytes", output)
     if match is None:
         raise BlePairHilFailure(f"{role} pyOCD programmed byte 증거가 없습니다.")
+    if defer_reset:
+        return "pyocd-sector-no-reset", match.group(1).decode("ascii")
     if hardware_reset:
-        ## @brief nRF54 ISO 앱 시작 전 CMSIS-DAP의 비파괴 hardware reset을 분리합니다.
+        ## @brief nRF54L 접근 보호를 보존할 때는 pin reset 대신 system reset을 사용합니다.
+        reset_method = "sw" if preserve_nrf54l_access else "hw"
+        reset_label = "software" if preserve_nrf54l_access else "hardware"
         reset_command = (
             sys.executable,
             "-I",
-            "-m",
-            "pyocd",
+            str(PYOCD_LAUNCHER),
             "reset",
             "--uid",
             board_id,
             "--target",
             "nrf54l",
             "--frequency",
-            "500000",
+            frequency_hz,
             "--connect",
-            "under-reset",
+            connect_mode,
             "-O",
             "cmsis_dap.limit_packets=true",
             "-O",
-            "cmsis_dap.prefer_v1=false",
+            f"cmsis_dap.prefer_v1={dap_preference}",
             "-O",
             "auto_unlock=false",
             "--method",
-            "hw",
+            reset_method,
         )
         try:
             reset_result = subprocess.run(
@@ -505,14 +522,143 @@ def flash_image_pyocd(
                 check=False,
             )
         except subprocess.TimeoutExpired as error:
-            raise BlePairHilFailure(f"{role} pyOCD hardware reset timeout") from error
+            raise BlePairHilFailure(
+                f"{role} pyOCD {reset_label} reset timeout"
+            ) from error
         if reset_result.returncode != 0:
             raise BlePairHilFailure(
-                f"{role} pyOCD hardware reset 실패: "
+                f"{role} pyOCD {reset_label} reset 실패: "
                 f"{(reset_result.stdout + reset_result.stderr).decode('utf-8', errors='backslashreplace')}"
             )
-        return "pyocd-sector-hw-reset", match.group(1).decode("ascii")
+        return f"pyocd-sector-{reset_method}-reset", match.group(1).decode("ascii")
     return "pyocd-sector", match.group(1).decode("ascii")
+
+
+## @brief 정지한 nRF54L의 RRAM 구간을 erase value로 채우고 전 byte를 검증합니다.
+def clear_nrf54l_rram_pyocd(
+    role: str,
+    board_id: str,
+    start: int,
+    size: int,
+    timeout_seconds: float,
+) -> dict[str, int | str]:
+    if timeout_seconds <= 0:
+        raise BlePairHilFailure("RRAM clear timeout은 0보다 커야 합니다.")
+    if start < 0 or size <= 0 or start % 4 != 0 or size % 4 != 0:
+        raise BlePairHilFailure("RRAM clear 범위는 양의 4-byte 정렬이어야 합니다.")
+    chunk_size = 0x100
+    if size % chunk_size != 0:
+        raise BlePairHilFailure("RRAM clear 크기는 256-byte 배수여야 합니다.")
+    command = (
+        sys.executable,
+        "-I",
+        str(PYOCD_LAUNCHER),
+        "commander",
+        "--uid",
+        board_id,
+        "--target",
+        "nrf54l",
+        "--frequency",
+        "500000",
+        "--connect",
+        "halt",
+        "-O",
+        "cmsis_dap.limit_packets=true",
+        "-O",
+        "cmsis_dap.prefer_v1=false",
+        "-O",
+        "auto_unlock=false",
+        "-x",
+        "-",
+    )
+    commands = ["halt", "write32 0x5004b500 1", "read32 0x5004b500 4"]
+    commands.extend(
+        f"fill 32 {hex(address)} {hex(chunk_size)} 0xffffffff"
+        for address in range(start, start + size, chunk_size)
+    )
+    commands.extend(
+        f"read32 {hex(address)} {hex(chunk_size)}"
+        for address in range(start, start + size, chunk_size)
+    )
+    commands.append("exit")
+    try:
+        result = subprocess.run(
+            command,
+            input="\n".join(commands).encode("ascii") + b"\n",
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise BlePairHilFailure(f"{role} RRAM clear timeout") from error
+    output = result.stdout + result.stderr
+    if result.returncode != 0 or b"memory transfer failed" in output.lower():
+        raise BlePairHilFailure(
+            f"{role} RRAM clear 실패(returncode={result.returncode})"
+        )
+    erased_words = sum(
+        word.lower() == b"ffffffff"
+        for word in re.findall(rb"\b([0-9a-fA-F]{8})\b", output)
+    )
+    expected_words = size // 4
+    if erased_words < expected_words:
+        raise BlePairHilFailure(
+            f"{role} RRAM clear 검증 실패: {erased_words}/{expected_words} words"
+        )
+    return {
+        "mode": "nrf54l-rram-fill-verified",
+        "start": start,
+        "end_exclusive": start + size,
+        "bytes": size,
+        "erase_value": "0xff",
+        "verified_words": expected_words,
+    }
+
+
+## @brief CMSIS-DAP V2에서 flash 뒤 application software reset barrier를 실행합니다.
+def reset_target_pyocd(
+    role: str,
+    board_id: str,
+    timeout_seconds: float,
+    *,
+    preserve_nrf54l_access: bool = False,
+) -> str:
+    if timeout_seconds <= 0:
+        raise BlePairHilFailure("reset timeout은 0보다 커야 합니다.")
+    command = (
+        sys.executable,
+        "-I",
+        str(PYOCD_LAUNCHER),
+        "reset",
+        "--uid",
+        board_id,
+        "--target",
+        "nrf54l",
+        "--frequency",
+        "500000",
+        "--connect",
+        "attach" if preserve_nrf54l_access else "under-reset",
+        "-O",
+        "cmsis_dap.limit_packets=true",
+        "-O",
+        "cmsis_dap.prefer_v1=false",
+        "-O",
+        "auto_unlock=false",
+        "--method",
+        "sw",
+    )
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise BlePairHilFailure(f"{role} pyOCD software reset timeout") from error
+    if result.returncode != 0:
+        raise BlePairHilFailure(f"{role} pyOCD software reset 실패")
+    return "pyocd-v2-sw-reset"
 
 
 ## @brief bounded UART capture에서 newline 하나를 읽습니다.

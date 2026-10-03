@@ -11,12 +11,12 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
-| 문서 개정 | 5.3 |
-| 문서 상태 | 고정 source 비교, M23~M31 완료·v0.6.0 M32~M33 계획 |
+| 문서 개정 | 5.6 |
+| 문서 상태 | 고정 source 비교, M23~M32 완료·M33 미착수 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.5.0` stable / exact source는 정식 release tag·기록이 소유 |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
-| 최종 갱신일 | 2026-09-28 |
+| 최종 갱신일 | 2026-10-03 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 nRF54L15 주변장치의 **모든 실제 인스턴스**, EasyDMA 경로와 Bluetooth LE 기능군을
@@ -41,7 +41,7 @@ M32·M33의 목표 버전을 [v0.6.0](../TODO_v0.6.0.md)으로 배정했다. Ubu
 
 M28은 **W01~W08·9개 test ID**, M29와 M30은 각각 **W01~W08·10개 test ID를 완료**했다.
 M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31도 **W01~W08 8/8 완료**다.
-M32·M33은 각각 0/12·0/8로 미착수다. M28~M31의 기능 지원성·
+M32는 W01~W12 12/12 완료이며 M33은 0/8로 미착수다. M28~M31의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 완료](../TODO_v0.5.0.md)와 [v0.6.0 계획](../TODO_v0.6.0.md)에서 관리한다. 준비 문서나 버전 배정을 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
@@ -513,9 +513,11 @@ CTE TX image가 실행됐다는 사실은 IQ 수신 또는 각도 계산 성공�
 
 [M32 TODO](../TODO_M32.md)의 **12개 작업**으로 확장한다. 기존 M28 2-link·1 advertising set
 기준선을 유지하고 더 큰 자원/역할 구성은 별도 검증 preset으로 제공한다. M31 v0.5.0 이후의
-후속 제품선 `v0.6.0` 계획이며 아직 구현 0/12다. 버전 배정이 구현·실기·공개 승인은 아니다.
+후속 제품선 `v0.6.0` 개발이며 W01~W12 12/12 완료다. W08 BLOB·signed MDFU, W10 공존,
+W11 exact 회귀·soak와 W12 정합성 감사·후속 인계를 PASS했다. 과거 W08 FAIL은 당시 기록으로 보존한다.
+완료 증거와 다음 M33 착수 경계는 [HANDOFF](../HANDOFF.md)를 따른다. 버전 배정이 공개 승인은 아니다.
 
-| 기능군·작업 | 구현해야 할 기능 |
+| 기능군·작업 | 완료 범위와 검증 경계 |
 | --- | --- |
 | M32-A / W01~W05 | capability, LE Power Control·Path Loss·Tx report, Subrating·SCA Update·Frame Space·Shorter CI·LL Extended Feature Set, channel classification/event timing·PHY fallback |
 | M32-A 광고·자원 | multi-set/identity, Filter Accept/Resolving/Periodic Advertiser List, directed advertising, scan while initiating, EAD·Advertising Coding Selection, 확장 budget·ARF-01 |
@@ -526,7 +528,7 @@ CTE TX image가 실행됐다는 사실은 IQ 수신 또는 각도 계산 성공�
 
 Mesh DFU의 최소 layout·transfer·서명·복구는 M32 범위다. 저장소 용량/배포자 역할의 제약과
 확장 partition·transport는 M36으로 인계한다. 실제 전원 차단은 자동화 허가에 포함하지 않으며 별도
-요청과 실행 계약이 필요하다. HOST-W07의 실행기·절차·자동 검사는 병행 준비한다. Ubuntu/macOS의
+요청과 실행 계약이 필요하다. HOST-W07의 실행기·절차·자동 검사는 Host 작업 재개 승인 뒤 준비한다. Ubuntu/macOS의
 실제 설치·upload/debug/serial/lifecycle은 해당 OS 후속 릴리스의 사용자 검증으로 남긴다.
 
 ### M33 — 전체 Bluetooth 예제·상호운용·후속 릴리스
@@ -561,7 +563,7 @@ v0.6.0 계획으로 배정하며 현재 0/8이다. Host 보류와 기존 OS별 �
 [다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
 M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
-M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8 완료이고 M32·M33은 계획이다. M28 결과와
+M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8, M32는 12/12 완료이며 M33은 0/8 계획이다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은
@@ -569,6 +571,11 @@ CMSIS-DAP 실패 진단은
 
 전체 Bluetooth catalog 완료는 M33의 후속 목표이며 v0.5.0의 지원 명칭으로 사용하지 않는다.
 하드웨어에 없는 BR/EDR, 모든 SIG profile의 무제한 구현 또는 인증 자동 획득을 뜻하지도 않는다.
+
+M33 다음 [v0.7.0](../TODO_v0.7.0.md)은 **NCS 3.4.0 → 3.4.1 전체 SDK 전환 전용**이다.
+SDK-W01~W06에서 기존 API·예제·동작의 호환성과 회귀·설치·문서 정합화만 검증하며 새 기능이나
+독립 ARF를 추가하지 않는다. 이후 M34~M37 Security/Update는 v0.8.0, M38~M41 Radio/Network는
+v0.9.0, M42~M45 Matter는 v0.10.0으로 이동하고 기존 M번호·기능은 유지한다.
 
 ---
 

@@ -1,6 +1,6 @@
 # 개발 인계 — v0.5.0 완료와 v0.6.0 후속 계획
 
-최종 정리: **2026-09-28**. M28~M31, 메모리 최적화 P0~P2, RC1/RC2, RC2 이후 Standard runtime PM
+최종 정리: **2026-10-03**. M28~M31, 메모리 최적화 P0~P2, RC1/RC2, RC2 이후 Standard runtime PM
 교정과 Windows 정식 `v0.5.0` 공개를 완료했습니다. 현재 stable·지원 버전은 v0.5.0 하나입니다.
 
 ## 현재 상태
@@ -13,7 +13,7 @@
 | RC1/RC2 | 로컬·원격 branch 삭제 완료, 공개 tag·Pre-release·asset과 evidence 보존 | [RC2 TODO](TODO_v0.5.0-RC2.md) |
 | 연속 Upload | Standard Blink 250 ms → 100 ms를 USB 재연결 없이 실제 GUI에서 PASS | [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>) |
 | 정식 공개 | exact package 이중 재현·승인·tag/Release·단일 stable catalog·공개 smoke | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
-| v0.6.0 계획 | M32 0/12, M33 0/8, HOST-W04~W08 사용자 보류 | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
+| v0.6.0 개발 | M32 **12/12 완료**·M33 **0/8**, W11 exact closure·signed MDFU·soak와 W12 감사 PASS | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
 
 완료 기능의 상세 계약과 기계 판정 원장은 다음과 같습니다.
 
@@ -23,22 +23,50 @@
 
 ## 재개 지점
 
-v0.5.0의 완료 gate를 다시 열지 않습니다. M32·M33의 다음 기능 개발은 v0.6.0 계획을 따릅니다.
-다음 구현 항목은 M32-W01이며 버전 배정과 문서 변경만으로 구현·보드 시험을 시작하지 않습니다.
-후속 버전은 M34~M37 v0.7.0, M38~M41 v0.8.0, M42~M45 v0.9.0입니다. 번호와 기능 범위는
-유지하며 [276번 결정](<04_검증 기록/276_v0.6.0_후속_버전_배정과_문서_동기화.md>)을 따릅니다.
-M32/M33, Ubuntu/macOS Host 확대, 외장 audio 장치와 상용 peer 실물 상호운용은 v0.5.0 완료 조건이
-아니며 자동으로 재개하지 않습니다.
+M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통합한 뒤 다음 기능 작업은
+**M33-W01 전체 sample·예제 catalog 대조**입니다. M33은 0/8이며 이번 문서 정비에서 구현을 시작하지 않았습니다.
 
-제품 SDC의 DF IQ RX·AoD는 고정 NCS v3.4.0에서 `UNSUPPORTED`입니다. Zephyr LL 연결형 내부 진단을
-제품 지원으로 승격하지 않습니다. CS 간헐 RF/controller loss·counter gap, SDC high-water 비노출,
-정밀 RF·음질·거리/각도 보정도 v0.5.0의 새 차단 조건으로 되살리지 않습니다.
+| 다음 작업 | 입력·유지할 경계 |
+| --- | --- |
+| M33-W01 inventory와 catalog | M28~M32 readiness, 고정 NCS sample, 역할별 Arduino 예제와 누락/미지원 사유 |
+| M33-W02~W06 기능·예제·통합 | M32 지원 후보 38개는 `not_published`; 자동 검사와 외부 peer 실제 검증을 구분 |
+| M33-W07~W08 Host·package·공개 | HOST-W04~W08 사용자 보류, OS별 최종 gate와 별도 공개 승인 유지 |
+
+착수·완료 조건은 [M33 TODO](TODO_M33.md), 작업별 실제 수치와 원본은 [M32 TODO](TODO_M32.md)가 소유합니다.
+완료된 M32 실기를 다음 작업으로 다시 예약하지 않습니다.
+
+### M32 완료 기준선
+
+| 범위 | 최종 검증과 원본 |
+| --- | --- |
+| W08 BLOB·signed MDFU | BLOB 10/10회, MDFU 5회×두 target 10/10·negative·confirm/rollback·STOP/cleanup. [294번](<04_검증 기록/294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md>) |
+| W09·W10 radio·공존 | 단독 radio 회귀와 세 내부 조합 protocol별 4,000/4,000. [284번](<04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md>) · [285번](<04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md>) |
+| W11 회귀·soak | `94f02544…` native 62/62·exact family 12/12·signed MDFU 10/10·1,800초 soak. [286번](<04_검증 기록/286_M32_W11_software_회귀와_HIL_soak_blocker.md>) |
+| W12 정합성·최종 CI | `49099e74…` 원장·예제·후속 인계 정합성, [CI 9/9 성공](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/37099299097). [287번](<04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>) |
+
+과거 timeout·Apply·rollback·privacy 실패 원본은 위 기록에 보존합니다. 최종 W11 preflight에서는
+세 보드 AHB debug가 열려 있어 승인받은 ERASEALL을 실행하지 않았습니다. 이 관찰은 당시 상태이며,
+새 실기 때 probe·COM·image·결선을 다시 확인합니다. HOST-W07은 별도 보류 트랙입니다.
+
+### SDK와 후속 버전
+
+현재 v0.6.0 개발에서는 NCS v3.4.0을 유지합니다. **제품 v0.7.0은 NCS v3.4.1 전체 전환만** 수행합니다.
+[SDK-W01~W06 계획](TODO_v0.7.0.md)은 기존 기능 유지에 필요한 호환 수정·회귀·배포 전환을 다루며
+새로운 Storage/보안 API·TF-M 확장·다중 update transport 같은 기능은 넣지 않습니다.
+[SDK 영향 검토](<00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)에 공식 수정 사항,
+현재 설정의 적용성, 업그레이드 회귀 목록을 남깁니다. M32 BLOB의 과거 실패와 고정 NCS v3.4.0에서 완료한 재시험을 SDK 전환 결과로 해석하지 않습니다.
+
+기존 M 번호·기능은 유지하고 M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0으로 옮깁니다.
+제품 SDC DF IQ RX·AoD의 고정 SDK 미지원, CS 간헐 loss·counter gap 비차단 관찰,
+외부 peer/장치·정밀 계측 경계는 유지합니다. 이는 새로운 assert·데이터 손상·보안 오류를
+무시하라는 뜻이 아닙니다.
 
 ## 고정 환경
 
 | 항목 | 기준 |
 | --- | --- |
-| 저장소 / 기본 branch | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `main` |
+| 저장소 / 후속 개발 기준 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `main` |
+| M32 원본 이력 | `Dev-0.6.0-M32` — 단계별 source·HIL 증거 보존 |
 | 릴리스 백업 branch | `Release-0.5.0` |
 | v0.5.0 백업 기준선 | `4790e3fa532ffea00bfd96780079cbadea263ca5`; 후속 문서·개발로 이동하지 않음 |
 | Target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -65,7 +93,7 @@ exact source commit을 가리키고, root catalog와 공개 결과 마감은 후
 - 다른 PC 준비는 [Windows 환경](<02_빌드 설계/09_Windows_개발환경_설정.md>), 이력 정리 뒤 checkout은
   [기여 안내](../CONTRIBUTING.md#이력-정리-뒤-기존-checkout)를 따릅니다.
 
-전체 문서 검토 범위·방법과 hash는 [문서 감사 원장](document-review.json), 공개 후 누락 교정은
-[275번 기록](<04_검증 기록/275_v0.5.0_공개_후_문서_전수_재검토.md>), 실행별 실제 결과는
+전체 문서 검토 범위·방법과 hash는 [문서 감사 원장](document-review.json), 이번 문서 정비·main 통합은
+[295번 기록](<04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>), 실행별 실제 결과는
 [검증 기록](<04_검증 기록/README.md>)에서 확인합니다. Hash·링크 검사 통과와 본문 의미의 최신성은
 별도로 판정하며, 과거 raw evidence를 새 source의 실기 PASS로 재사용하지 않습니다.

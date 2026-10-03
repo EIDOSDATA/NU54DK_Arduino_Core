@@ -15,12 +15,14 @@ SDK, `third_party`, board submodule, 기존 공개 ZIP·asset은 대상이 아�
 ```powershell
 $Format = 'C:\NU54DEV\tools\LLVM-22.1.8\bin\clang-format.exe'
 python tools/format/run_cpp_style.py --list
-python tools/format/run_cpp_style.py --clang-format $Format --write
 python tools/format/run_cpp_style.py --clang-format $Format
 ```
 
 마지막 명령은 변경 없는 검사입니다. 대상 목록은 Git의 tracked/untracked first-party 파일을
 합쳐 수집하므로 아직 커밋하지 않은 새 파일도 누락하지 않습니다.
+
+전체 first-party 파일의 정렬을 실제로 적용할 때만 `--write`를 추가합니다.
+단일 파일을 고칠 때는 같은 고정 도구로 `& $Format -i <파일>`을 실행한 뒤 diff를 확인합니다.
 
 `InsertBraces`는 보통의 제어문을 보완하지만, 전처리기·매크로 내부까지 완전한 AST 검증을
 대신하지 않습니다. 한국어 Doxygen 내용도 자동 번역하지 않습니다. 최종 리뷰에서 해당 부분과

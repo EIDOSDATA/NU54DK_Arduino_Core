@@ -1,0 +1,146 @@
+{
+  "test_ids": [
+    "M32-MESH-01:traffic",
+    "M32-MESHSEC-01:traffic"
+  ],
+  "status": "PASS",
+  "scope": "three_board_mesh_provisioning_model_traffic",
+  "source_clean": true,
+  "identity": {
+    "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "provisioner": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "f23671c14e9476d3f24920d5b2ec91e6760fca7a6c978c48705c3f4299c60aab",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "323584"
+    },
+    "node_a": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "image_sha256": "c1eefcd30d71fe58b0697412c8bcd0920fef3409bb43da05523349c27f49144f",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "319488"
+    },
+    "node_b": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "image_sha256": "6a0039b50c39551ca2d1cbff40082be61dcde3a23e71328e642207dc61b0678d",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "319488"
+    }
+  },
+  "nonce": "8557866b0d2bbf6ddad5b0cfb28af26b",
+  "results": {
+    "node_a": {
+      "role": "node_a",
+      "received": "250",
+      "unprovisioned_rejected": "1",
+      "feature": "pass",
+      "payload_integrity": "pass",
+      "nonce": "8557866b0d2bbf6ddad5b0cfb28af26b",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    },
+    "provisioner": {
+      "role": "provisioner",
+      "provisioned_nodes": "2",
+      "configured_nodes": "2",
+      "base_messages": "300",
+      "secured_messages": "200",
+      "acknowledged": "500",
+      "max_latency_ms": "115",
+      "invalid_destination_rejected": "1",
+      "wrong_key_rejected": "1",
+      "payload_integrity": "pass",
+      "nonce": "8557866b0d2bbf6ddad5b0cfb28af26b",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    },
+    "node_b": {
+      "role": "node_b",
+      "received": "250",
+      "unprovisioned_rejected": "1",
+      "feature": "pass",
+      "payload_integrity": "pass",
+      "nonce": "8557866b0d2bbf6ddad5b0cfb28af26b",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    }
+  },
+  "capacities": {
+    "provisioner": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 1,
+      "cdb_app_keys": 2,
+      "local_subnets": 1,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    },
+    "node_a": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 1,
+      "cdb_app_keys": 2,
+      "local_subnets": 1,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    },
+    "node_b": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 1,
+      "cdb_app_keys": 2,
+      "local_subnets": 1,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    }
+  },
+  "message_denominators": {
+    "base": 300,
+    "secured": 200,
+    "acknowledged": 500
+  },
+  "negative_denominators": {
+    "unprovisioned_access": 2,
+    "invalid_destination": 1,
+    "wrong_key": 1
+  },
+  "latency_limit_ms": 2000,
+  "reason": null,
+  "transcript_sha256": "685d6c0963157e7a48fe0a61fe48db17c22223b969914188b22b5d4f9863fdf3",
+  "observed_utc": "2026-10-03T00:18:19.774319+00:00"
+}

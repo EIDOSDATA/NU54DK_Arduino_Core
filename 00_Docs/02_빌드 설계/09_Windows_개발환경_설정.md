@@ -5,11 +5,11 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | BUILD-WINDOWS-DEV-001 |
-| 문서 개정 | 1.15 |
+| 문서 개정 | 1.17 |
 | 문서 상태 | 현재 source 개발 기준 |
 | 적용 제품 버전 | `v0.5.0` stable 및 이후 개발 소스 |
 | 지원 host | Windows 10/11 x64 |
-| 최종 갱신일 | 2026-09-28 |
+| 최종 갱신일 | 2026-10-01 |
 | 작성자 | Quantum / NUCODE |
 
 이 문서는 새 Windows PC에서 NU54DK Arduino Core의 source를 수정하고 로컬 gate와 실물 보드
@@ -72,6 +72,12 @@ nRF Connect for VS Code도 이 저장소의 build·upload 필수 조건은 아�
 Git과 GitHub CLI는 제품 산출물의 고정 입력이 아니다. 보안 수정이 반영된 최신 안정판을 쓰되,
 release 증거에는 실제 사용 버전을 기록한다. WinLibs POSIX/UCRT GCC 16.1.0 r4는 Windows host
 gate에서 검증한 권장 조합이며 target build identity에는 들어가지 않는다.
+
+NCS 3.4.1 출시로 위 고정값이 자동 변경되지는 않는다. `v0.5.0`과 `v0.6.0`은 NCS 3.4.0을
+유지하며 [제품 v0.7.0](../TODO_v0.7.0.md)은 **NCS 3.4.1 전체 SDK 전환 전용**으로 배정했다.
+SDK-W01~W06에서 기존 기능 호환·회귀·설치/package·정합화를 검증하고 신규 기능은 추가하지 않는다.
+이번 문서 변경은 현재 SDK 설치·pin을 바꾸거나 보류한 Host 작업을 재개하지 않는다.
+[NCS 3.4.1 변경·개발 영향](<../00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)을 참고한다.
 
 ## 3. Windows 기본 도구 설치
 
@@ -243,6 +249,9 @@ NU54DK의 debug USB connector를 **data 통신이 가능한 cable**로 연결한
 
 일반 upload에서 mass erase나 recover를 자동으로 실행하지 않는다. 보호 상태 복구나 전체
 삭제는 데이터를 잃을 수 있으므로 원인이 확인된 별도 복구 절차에서만 수행한다.
+온보드 CMSIS-DAP V2의 `under-reset` 연결도 일반 해결책으로 실행하지 않는다. DAPLink USB
+timeout·인터페이스 소실 이력이 있으므로 [업로드·디버그 안전 경계](05_업로드와_디버그.md)를
+따라 probe/USB와 target/SWD 원인을 분리하고, 명시적 저속 SWD 등 비파괴 진단부터 수행한다.
 
 `-I`는 Python의 사용자 package와 `PYTHONPATH` 유입을 막는 격리 옵션이다. 이 고정 bundle에서
 확인한 target Python은 **3.12.4**, pyOCD는 **0.42.0**이다. Host gate용 Python 3.12.10과 목적이

@@ -1,0 +1,158 @@
+{
+  "test_ids": [
+    "M32-COEX-01:ble_154",
+    "M32-COEX-01:ble_esb",
+    "M32-COEX-01:ble_mesh"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_ble_internal_radio_coexistence",
+  "source_clean": true,
+  "identity": {
+    "core": "aa39b707936993b5739b7012c4cba8bf87ae2462",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "dut": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "225280"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "204800"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "radio": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "90112"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "57344"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "ble": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "192512"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "192512"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "image_sha256": {
+    "ble_154": {
+      "dut": "da57702f85a4ecb828395e95a1c4ec8417a693c8fbaf901b3c75825d4355b28e",
+      "radio_peer": "bb26ca09dc8c225c6556e83c88c2c9960408b2aca35c1d947859d99d6963a333",
+      "ble_peer": "a57f697418f25f19a286c93b1a75a46c32cab92f1f1842230ac467d303f59d6e"
+    },
+    "ble_esb": {
+      "dut": "3d21d69e3940d79ad08b714a24ac7077650c2bf144a421152827a698d966d4a1",
+      "radio_peer": "722531f6c0e2decf10d0058aee68e2aa3b59667843668b34a4d17efdaef951f8",
+      "ble_peer": "79c19710c85ef0f1de35e046a0bf144cfb7c640b0ba393726d5895e4b327a806"
+    },
+    "ble_mesh": {
+      "dut": "555f95c611682a5d37bb2c72c61f2f3348b60c156b7e83ed05123f16c678506c",
+      "mesh_peer": "192229af1ac15ea5ebdaba4898e9cb211033af0f83b4485c742a5a157b1baf88",
+      "ble_peer": "8373d150bccaebf7d102eb3517ea010b306a8f8bf7178b7150c3a819c8bb86fe"
+    }
+  },
+  "iterations_per_scenario": 20,
+  "packets_per_protocol": 4000,
+  "allowed_loss": 80,
+  "service_gap_limit_ms": 500,
+  "results": {
+    "ble_154": {
+      "radio_peer": {
+        "role": "radio_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "acknowledged": "4000",
+        "failures": "0",
+        "restarts": "1",
+        "invalid_configuration_rejected": "1",
+        "invalid_length_rejected": "1",
+        "double_owner_rejected": "1",
+        "nonce": "4bd46c1e662cad1a29c27b3c4790bbea",
+        "core": "aa39b707936993b5739b7012c4cba8bf87ae2462",
+        "scenario": "ble_154"
+      },
+      "ble_peer": {
+        "role": "ble_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "reconnects": "1",
+        "write_failures": "0",
+        "nonce": "4bd46c1e662cad1a29c27b3c4790bbea",
+        "core": "aa39b707936993b5739b7012c4cba8bf87ae2462",
+        "scenario": "ble_154"
+      },
+      "dut": {
+        "role": "dut",
+        "iterations": "20",
+        "ble_received": "4000",
+        "radio_received": "4000",
+        "ble_loss": "0",
+        "radio_loss": "0",
+        "ble_corrupt": "0",
+        "radio_corrupt": "0",
+        "ble_restarts": "1",
+        "radio_restarts": "1",
+        "ble_gap_ms": "243",
+        "radio_gap_ms": "18",
+        "starvation": "0",
+        "double_owner_rejected": "1",
+        "nonce": "4bd46c1e662cad1a29c27b3c4790bbea",
+        "core": "aa39b707936993b5739b7012c4cba8bf87ae2462",
+        "scenario": "ble_154"
+      }
+    }
+  },
+  "reason": "CoexistenceFailure: ble_esb/radio_peer target FAIL: radio_loss_boundary",
+  "transcript_sha256": "68bca3785e08c6d9891e1dab5dfcb6a0c742683c6b6e3bbb54ff764e68aada1a",
+  "observed_utc": "2026-10-01T23:10:14.848790+00:00"
+}

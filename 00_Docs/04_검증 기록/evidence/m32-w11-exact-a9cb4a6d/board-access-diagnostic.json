@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "transport": "CMSIS-DAP V2",
+  "frequency_hz": 100000,
+  "auto_unlock": false,
+  "destructive_actions": {
+    "mass_erase": false,
+    "recover": false,
+    "unlock": false
+  },
+  "boards": {
+    "board_d": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "exit_code": 0,
+      "registers": [
+        {
+          "address": "0x0",
+          "value": "0x6ba02477"
+        },
+        {
+          "address": "0x24",
+          "value": "0x201c0289"
+        },
+        {
+          "address": "0xfc",
+          "value": "0x84770001"
+        },
+        {
+          "address": "0x0",
+          "value": "0x43000002"
+        },
+        {
+          "address": "0x20000fc",
+          "value": "0x32880000"
+        },
+        {
+          "address": "0x2000008",
+          "value": "0x00000000"
+        },
+        {
+          "address": "0x200000c",
+          "value": "0x00000000"
+        },
+        {
+          "address": "0x2000014",
+          "value": "0x00000003"
+        }
+      ],
+      "error": ""
+    },
+    "board_e": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "exit_code": 0,
+      "registers": [
+        {
+          "address": "0x0",
+          "value": "0x6ba02477"
+        },
+        {
+          "address": "0x24",
+          "value": "0x201c0289"
+        },
+        {
+          "address": "0xfc",
+          "value": "0x84770001"
+        },
+        {
+          "address": "0x0",
+          "value": "0x43000012"
+        },
+        {
+          "address": "0x20000fc",
+          "value": "0x32880000"
+        },
+        {
+          "address": "0x2000008",
+          "value": "0x00000000"
+        },
+        {
+          "address": "0x200000c",
+          "value": "0x00000000"
+        },
+        {
+          "address": "0x2000014",
+          "value": "0x00000003"
+        }
+      ],
+      "error": ""
+    },
+    "board_f": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "exit_code": 0,
+      "registers": [
+        {
+          "address": "0x0",
+          "value": "0x6ba02477"
+        },
+        {
+          "address": "0x24",
+          "value": "0x201c0289"
+        },
+        {
+          "address": "0xfc",
+          "value": "0x84770001"
+        },
+        {
+          "address": "0x0",
+          "value": "0x43000002"
+        },
+        {
+          "address": "0x20000fc",
+          "value": "0x32880000"
+        },
+        {
+          "address": "0x2000008",
+          "value": "0x00000000"
+        },
+        {
+          "address": "0x200000c",
+          "value": "0x00000000"
+        },
+        {
+          "address": "0x2000014",
+          "value": "0x00000003"
+        }
+      ],
+      "error": ""
+    }
+  }
+}

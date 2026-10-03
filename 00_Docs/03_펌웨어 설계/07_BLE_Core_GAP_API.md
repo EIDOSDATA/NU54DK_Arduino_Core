@@ -3,10 +3,10 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-BLE-GAP-001 |
-| 문서 개정 | 1.5 |
-| 문서 상태 | v0.5.0 stable GAP 계약과 M28 확장 |
-| 적용 제품 버전 | stable `v0.5.0`의 `ble`·지정 확장 profile |
-| 최종 갱신일 | 2026-09-27 |
+| 문서 개정 | 1.9 |
+| 문서 상태 | v0.5.0 stable GAP 계약과 M28 확장, v0.6.0 M32-W03~W05 완료한 개발 API |
+| 적용 제품 버전 | stable `v0.5.0`의 `ble`·지정 확장 profile, 개발 중 `v0.6.0` |
+| 최종 갱신일 | 2026-10-01 |
 | 대상 library | `NUCODE_BLE` |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0` |
 
@@ -124,3 +124,82 @@ v0.4.1 stable의 연결 1개·legacy 31-byte 계약은 역사 기준선으로 �
 인자 없는 기존 singleton API는 호환 view를 유지한다. 현재 자원과 실제 두/세 보드 결과는
 [M28 readiness](../../variants/nu54dk/m28-ble-readiness.json)와
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)을 따른다.
+
+## v0.6.0 M32-W03 timing·feature API
+
+M32-W03 구현 commit `30258a57…`은 기존 generation handle과 main-thread callback 규칙을 유지하면서
+다음 per-link 제어·조회 API를 추가했다. W03 exact HIL은 완료했으며 이 v0.6.0 개발 결과를
+현재 v0.5.0 stable 지원 범위로 소급하지 않는다.
+
+| 범위 | 공개 API와 경계 |
+| --- | --- |
+| Connection Subrating | `setDefaultSubrate()`, `requestSubrate()`, `subrate()`와 `subrate_changed`; factor·continuation·latency·timeout 조합을 호출 전에 검증 |
+| Shorter Connection Interval | `setDefaultConnectionRate()`, `requestConnectionRate()`, `connectionRate()`, `minimumConnectionInterval()`과 `connection_rate_changed`; interval은 요청 125 us·결과 us 단위 |
+| Frame Space Update | `requestFrameSpace()`, `frameSpace()`와 `frame_space_changed`; PHY·spacing mask와 0~10,000 us 범위를 검증하고 controller status를 보존 |
+| Extended LE Feature Set | local 32-byte 지원 범위와 remote 최대 248-byte page 복사, page 0의 8-byte·후속 page의 24-byte indexing, 최대 page 10 거부 |
+| Channel classification | 37-channel map, reserved bit 0과 최소 활성 channel 2개를 검사한 뒤 controller에 복사 |
+| SCA 적용성 | 고정 controller의 SCA 절차와 Zephyr Host 요청·report API 부재를 `BLESleepClockAccuracySupport`의 두 필드로 분리 |
+
+모든 비동기 결과는 link slot에 복사한 뒤 `BLEDevice.poll()` event로 전달한다. Disconnect·slot 재사용 때
+Subrating, rate, Frame Space, remote feature cache를 지워 stale handle이 다음 generation의 결과를 읽지
+못하게 한다. `ConnectionSubrating*`, `FrameSpaceUpdate*`, `ShorterConnectionIntervals*`,
+`BleThroughput*`, `ExtendedLeFeaturePages`, `SleepClockAccuracyUpdate`, `LeChannelMapControl` 예제가 단위와
+지원 경계를 출력한다.
+
+초기 software 검사와 DP/AP 접근 중단 당시의 미완료 시도는
+[279번 기록](<../04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md>)에 보존한다.
+이후 exact identity·sector flash·STOP을 포함한 W03 HIL을 완료했으며 최종 판정은
+[288번 기록](<../04_검증 기록/288_M32_W03_연결_timing_feature_exact_HIL_완료.md>)과
+[M32 TODO](../TODO_M32.md)를 따른다. 초기 시도의 NOT RUN을 소급해 PASS로 바꾸지 않는다.
+
+## v0.6.0 M32-W04 광고·identity·자원 API
+
+M32-W04 구현 commit `b8d0c0c1…`은 singleton 호환 view를 유지하면서 최대 3개의 generation 기반
+`BLEExtendedAdvertisingSet`, 최대 2개의 `BLEPeriodicSync`, `BLEIdentity`, `BLEAdvertisingLists`를
+추가했다. 생성·시작·중지·삭제는 고정 slot을 사용하며, 삭제나 session 전환 뒤의 handle은
+`stale_handle`로 거부한다.
+
+| 범위 | 공개 API와 경계 |
+| --- | --- |
+| Multiple advertising | set별 legacy/extended·connectable/scannable·primary/secondary PHY·SID·coding·payload를 보존하고 활성 set 변경과 자원 초과를 fail-closed로 거부 |
+| Directed advertising | peer 주소·local identity·high/low duty timeout을 명시하며 연결 완료 뒤 재광고는 sketch가 결정 |
+| Identity와 list | identity 생성/reset/delete 및 accept/resolving/periodic advertiser list 추가·삭제·clear; 활성 절차 중 controller가 거부한 상태를 그대로 반환 |
+| EAD | 16-byte session key·8-byte IV·5-byte randomizer를 복사해 암복호화하고 인증 실패·재사용 randomizer를 거부하며 임시 key/plaintext를 지움 |
+| Coding selection | coded PHY에서 S=2/S=8 선호를 명시하며 coded controller 설정이 없는 image는 build/profile 단계에서 분리 |
+| 동시 scan/initiate | `CONFIG_BT_SCAN_AND_INITIATE_IN_PARALLEL` 전용 profile에서 scan을 유지한 채 연결을 시작; 기본 profile의 기존 배타 규칙은 보존 |
+
+자원 preset은 C1P1=2 link/1 peripheral/3 set/3 identity/2 sync, C2P0=2/0/1/2/2,
+C0P2=2/2/2/2/1이다. target build의 RAM/RRAM은 각각 65,280/226,048 B,
+60,344/218,716 B, 61,248/207,276 B로 230 KiB/640 KiB 상한을 만족했다.
+공개 예제 12/12, Host 회귀 21 test와 target 5/5 build는 PASS했고 이후
+`M32-ADV-01`, `M32-PRIV-01`, `M32-EAD-01` exact HIL도 완료했다.
+초기 DP/AP 중단 시도는 [279번 기록](<../04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md>),
+최종 완료는 [290번 기록](<../04_검증 기록/290_M32_W04_광고_identity_privacy_exact_HIL_완료.md>)에서
+구분한다. 이 개발 결과를 v0.5.0 stable 지원 범위로 소급하지 않는다.
+
+## v0.6.0 M32-W05 Nordic 확장 API
+
+M32-W05 구현 commit `85da6122…`은 고정 NCS `v3.4.0`의 Nordic vendor HCI 기능을
+`BLENordic` 객체로 제공한다. 공개 헤더에는 Zephyr·SDC type을 노출하지 않으며, 기능을 켠 image만
+`CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS`와 종류별 4~64개 bounded report queue를 포함한다.
+
+| 범위 | 공개 API와 경계 |
+| --- | --- |
+| LLPM | `setLlpmMode()`는 active link가 없을 때 image-wide mode를 설정한다. `requestLlpmInterval()`은 2M PHY link와 1~7 ms 정수 interval만 허용하며 표준 Shorter Connection Interval API와 분리한다. |
+| QoS report | `setConnectionEventReports()`와 `setChannelSurvey()`가 vendor report를 켜고, read/callback API가 controller callback 밖 수명 복사본을 main thread에 전달한다. |
+| Connection time | `setAnchorPointReports()`가 event counter와 controller clock us를 전달한다. `projectAnchorPoint()`는 16-bit event counter wrap을 signed 차이로 계산하며 서로 다른 controller clock domain의 직접 비교를 보증하지 않는다. |
+| Event trigger | Connection·advertising set·scanner·initiator 시작 task를 caller 소유 32-bit 주소에 연결한다. 0은 cancel이며 EGU/DPPI/peripheral 수명과 충돌 방지는 caller 책임이다. |
+| Radio notification | `setRadioNotification()`은 anchor와 connection interval로 periodic absolute timer를 갱신하고 system workqueue에서 prepare callback을 호출한다. Callback은 Serial·heap·blocking/BLE 제어를 수행하지 않는다. |
+| Flushable ACL | `flushableAclSupport()`가 controller experimental, Host transmit path, usable을 따로 반환한다. 고정 Host에는 flushable LE ACL TX API가 없어 usable=false이며 전송 facade를 제공하지 않는다. |
+
+Vendor HCI callback은 connection generation을 조회한 뒤 QoS·survey·anchor 종류별 queue에 복사한다.
+Queue overflow는 `event_overflow`와 누적 drop counter로 보이며, disable·`BLEDevice.end()`는 report queue와
+radio timer/work를 제거한다. 설정·trigger API는 Arduino main thread 전용이고 stale connection/set,
+초기화 전 호출, 정렬되지 않은 task 주소를 거부한다.
+
+공개 예제 8/8, Nordic target contract와 관련 Host 회귀가 PASS했다. Exact revision `f813356c…`의
+CMSIS-DAP v2 두 보드 HIL에서 역할별 QoS 200·survey 20·anchor 1,000·event 200·radio prepare 200,
+LLPM 1,000 us를 확인했다. 최대 anchor gap 3,999 us·event gap 1 ms, overflow와 negative,
+disable 뒤 callback 0·STOP을 PASS해 W05를 완료했다. Flushable ACL만 고정 Host TX 경로 부재로
+unsupported/HOLD이며 지원 기능 수에 넣지 않는다. [280번 기록](<../04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md>)과
+exact JSON이 판정을 소유한다. 이 v0.6.0 개발 결과를 현재 v0.5.0 stable 지원으로 소급하지 않는다.

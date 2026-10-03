@@ -1,0 +1,12 @@
+{
+  "schema_version": 3,
+  "id": "nucode.radio.esb",
+  "requires": ["radio"],
+  "capabilities": ["nucode.radio.esb-api"],
+  "conf": ["esb.conf"],
+  "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
+  "conflicts": ["radio-owner"],
+  "compatible_profiles": ["radio_esb", "coexistence_ble_esb"]
+}

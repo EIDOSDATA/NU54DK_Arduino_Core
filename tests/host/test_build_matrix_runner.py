@@ -41,7 +41,7 @@ ARDUINO = load_module(
 class BuildMatrixRunnerTests(unittest.TestCase):
     """! @brief 릴리스 기능군 범위·명령·진단 경계를 검증합니다. """
 
-    ## @brief Zephyr 145개 시나리오가 중복·누락 없이 제품군별로 분리됩니다.
+    ## @brief Zephyr 207개 시나리오가 중복·누락 없이 제품군별로 분리됩니다.
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
@@ -51,6 +51,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.3.0": 19,
                 "v0.4.0": 35,
                 "v0.5.0": 77,
+                "v0.6.0": 62,
             },
         )
         flattened = tuple(
@@ -126,6 +127,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.2.0": ("m15", "m16"),
                 "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
                 "v0.5.0": ("m29", "m30", "m30secure", "m31"),
+                "v0.6.0": ("m32",),
             },
         )
         self.assertEqual(
@@ -136,6 +138,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.3.0-ble": ("m19m20", "m21"),
                 "v0.3.0-compat": ("ac02b", "ac03", "examples"),
                 "v0.5.0": ("m29", "m30", "m30secure", "m31"),
+                "v0.6.0": ("m32",),
             },
         )
         flattened = tuple(
@@ -171,13 +174,13 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 out_root=Path("C:/t"),
                 evidence_dir=evidence,
             )
-        self.assertEqual(len(tasks), 5)
+        self.assertEqual(len(tasks), 6)
         outdirs = []
         for task in tasks:
             command = list(task.command)
             self.assertEqual(command[command.index("--group") + 1], task.group)
             outdirs.append(command[command.index("--outdir") + 1])
-        self.assertEqual(len(set(outdirs)), 5)
+        self.assertEqual(len(set(outdirs)), 6)
         self.assertTrue(all(len(outdir) <= 8 for outdir in outdirs))
 
     def test_zephyr_twister_uses_isolated_bundled_python(self) -> None:
@@ -187,6 +190,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn('sys.executable,\n        "-I",', source)
+        self.assertIn('"--short-build-path",', source)
 
     ## @brief 실패한 Twister suite의 이름·상태·사유가 즉시 표시됩니다.
     def test_zephyr_failure_summary_identifies_scenario(self) -> None:

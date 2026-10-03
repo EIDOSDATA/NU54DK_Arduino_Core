@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "BLOCKED",
+  "software_status": "PASS",
+  "scope": "m32_w11_exact_regression_and_closure",
+  "source_revision": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+  "source_clean": true,
+  "fixed_environment": {
+    "ncs": "v3.4.0",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "checks": {
+    "contract": {
+      "status": "PASS",
+      "evidence": "m32-contract.log"
+    },
+    "native_build": {
+      "status": "PASS",
+      "passed": 62,
+      "denominator": 62,
+      "evidence": "native-build-summary.json"
+    },
+    "arduino_build": {
+      "status": "PASS",
+      "passed": 74,
+      "denominator": 74,
+      "evidence": "arduino-build-summary.json"
+    },
+    "host_regression": {
+      "status": "PASS",
+      "passed": 1689,
+      "denominator": 1689,
+      "skipped": 1,
+      "evidence": "host-regression-summary.json"
+    },
+    "signed_mdfu_build": {
+      "status": "PASS",
+      "runtime_status": "NOT_RUN",
+      "evidence": "signed-mdfu-build.json"
+    },
+    "finite_soak": {
+      "status": "PASS",
+      "duration_seconds": 1800,
+      "packet_denominator_per_link": 10000,
+      "observed_loss_packets": 0,
+      "evidence": "soak.json"
+    },
+    "exact_hil_family_closure": {
+      "status": "NOT_RUN",
+      "passed": 2,
+      "denominator": 12,
+      "not_run": 10,
+      "evidence": "regression-family-status.json"
+    }
+  },
+  "board_access": {
+    "status": "BLOCKED",
+    "boards_affected": 3,
+    "reason": "세 보드 모두 APPROTECT와 SECUREAPPROTECT가 활성화되어 승인 없는 ERASEALL 없이 새 역할 image를 sector flash할 수 없음",
+    "evidence": "board-access-assessment.json"
+  },
+  "w11_status": "IN_PROGRESS",
+  "m32_completed_work_packages": 10,
+  "m32_work_package_denominator": 12
+}

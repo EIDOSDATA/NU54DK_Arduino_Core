@@ -1,0 +1,231 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": {
+    "distributor": {
+      "port": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "D:/"
+    },
+    "target_a": {
+      "port": "COM18",
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "E:/"
+    },
+    "target_b": {
+      "port": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "F:/"
+    }
+  },
+  "capacities": {
+    "distributor": {
+      "cdb_local_slots": 1,
+      "cdb_node_slots": 3,
+      "cdb_remote_capacity": 2
+    },
+    "target_a": {
+      "cdb_local_slots": 1,
+      "cdb_node_slots": 3,
+      "cdb_remote_capacity": 2
+    },
+    "target_b": {
+      "cdb_local_slots": 1,
+      "cdb_node_slots": 3,
+      "cdb_remote_capacity": 2
+    }
+  },
+  "duration_seconds": 4041.781,
+  "firmware_distribution_targets": 10,
+  "flash_backend": "pyocd-cmsis-dap-v2-exact-sector",
+  "flash_results": {
+    "distributor_base": [
+      "pyocd-sector",
+      "352256"
+    ],
+    "distributor_boot": [
+      "pyocd-sector",
+      "36864"
+    ],
+    "distributor_candidate_bytes": "57344",
+    "target_a_base": [
+      "pyocd-sector",
+      "344064"
+    ],
+    "target_a_boot": [
+      "pyocd-sector",
+      "36864"
+    ],
+    "target_b_base": [
+      "pyocd-sector",
+      "344064"
+    ],
+    "target_b_boot": [
+      "pyocd-sector",
+      "36864"
+    ]
+  },
+  "images": {
+    "candidate": {
+      "name": "zephyr.signed.bin",
+      "sha256": "f9bd3aba9f94302da28e228e7b71792c15104dbc16d0da7740f14b2dbe71a806",
+      "size": 55040,
+      "version": [
+        2,
+        0,
+        0,
+        0
+      ]
+    },
+    "distributor_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "40c62d52f67a24029303207fd1e8a236c2e667ae0323e576e85bbe0e320f7b33",
+      "size": 350871,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_a_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "af2c67c376c337c734ede15c8ff956f20c78bbfa23bacfb7b7e3096cbc74cdf4",
+      "size": 343599,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_b_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "1b70028a02dc49efc150393b33f4963d8bc71d76a190ad97371bee22c6d9f535",
+      "size": 343598,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "iteration_records": [
+    {
+      "candidate_boots": 2,
+      "iteration": 1,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 2,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 3,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 4,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 5,
+      "target_a_confirmed": 1,
+      "target_b_confirmed": 0
+    }
+  ],
+  "iterations": 5,
+  "mass_erase_or_recover": false,
+  "negative": {
+    "partial_image": "rejected",
+    "rollback": "observed",
+    "wrong_image": "rejected",
+    "wrong_key": "rejected"
+  },
+  "nonce": "d6a69f941109af894057252104c3667a",
+  "observed_utc": "2026-10-01T22:25:07.262940+00:00",
+  "rollback_count": 9,
+  "rollback_records": [
+    {
+      "iteration": 1,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 2,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 3,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 4,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 5,
+      "roles": [
+        "target_b"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "scope": "signed_mesh_dfu_five_iterations_two_targets_and_mcuboot_rollback",
+  "secondary_slot": {
+    "erase_end_exclusive": 1523712,
+    "offset": 794624,
+    "size": 729088
+  },
+  "source_clean": true,
+  "source_revision": "e0a1b7fd7885b79bbc8d8b575c63f5468c94c2a8",
+  "status": "PASS",
+  "test_ids": [
+    "M32-MDFU-01:primary"
+  ],
+  "transcript_sha256": "28608ed0a0bce2151e64ae0b793f6927aa3a46caae729a99fa7e1d45a281661b",
+  "trust_public_key_source_sha256": "2e567f16e75c1f0ea609bc4342c04a427b0bed948ff132004dd9d130b590c34f"
+}

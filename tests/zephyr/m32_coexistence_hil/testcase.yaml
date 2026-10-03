@@ -1,0 +1,55 @@
+tests:
+  nucode.m32.coexistence_hil.ble_154.dut:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_154, M32_COEX_ROLE=dut, EXTRA_CONF_FILE=ble_154_dut.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, radio, m32, hil]
+  nucode.m32.coexistence_hil.ble_154.radio_peer:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_154, M32_COEX_ROLE=radio_peer, EXTRA_CONF_FILE=radio154_peer.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, radio, m32, hil]
+  nucode.m32.coexistence_hil.ble_154.ble_peer:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_154, M32_COEX_ROLE=ble_peer, EXTRA_CONF_FILE=ble.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, radio, m32, hil]
+  nucode.m32.coexistence_hil.ble_esb.dut:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_esb, M32_COEX_ROLE=dut, EXTRA_CONF_FILE=ble_esb_dut.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, radio, m32, hil]
+  nucode.m32.coexistence_hil.ble_esb.radio_peer:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_esb, M32_COEX_ROLE=radio_peer, EXTRA_CONF_FILE=esb_peer.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, radio, m32, hil]
+  nucode.m32.coexistence_hil.ble_esb.ble_peer:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_esb, M32_COEX_ROLE=ble_peer, EXTRA_CONF_FILE=ble.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, radio, m32, hil]
+  nucode.m32.coexistence_hil.ble_mesh.dut:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_mesh, M32_COEX_ROLE=dut, EXTRA_CONF_FILE=ble_mesh_dut.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, mesh, m32, hil]
+  nucode.m32.coexistence_hil.ble_mesh.mesh_peer:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_mesh, M32_COEX_ROLE=mesh_peer, EXTRA_CONF_FILE=mesh_peer.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, mesh, m32, hil]
+  nucode.m32.coexistence_hil.ble_mesh.ble_peer:
+    build_only: true
+    extra_args: [M32_COEX_SCENARIO=ble_mesh, M32_COEX_ROLE=ble_peer, EXTRA_CONF_FILE=ble.conf]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, mesh, m32, hil]

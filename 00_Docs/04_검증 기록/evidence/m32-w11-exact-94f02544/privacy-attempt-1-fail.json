@@ -1,0 +1,109 @@
+{
+  "test_ids": [
+    "M32-PRIV-01:primary"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_identity_privacy_accept_list_reconnection_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "identity_a": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "39bbbed11a75a1db6ac2f4af0ff500ff62da419d06876ad11156c89cd7d81a5c",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "241664"
+    },
+    "identity_b": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "image_sha256": "24ec2064b343b8759ce6f3431da47d602656e1ee5178dcb12ebf74bb1f76285c",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "241664"
+    },
+    "peer": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "image_sha256": "d5db3a2c932f7b429fbd9edcca4ed6ca0b76c15e6031a90f42bac2e677beab61",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "237568"
+    }
+  },
+  "local_addresses": {
+    "identity_a": {
+      "address": "F6:BF:65:82:F1:AA",
+      "type": 1
+    },
+    "identity_b": {
+      "address": "D2:20:D3:CB:EF:A9",
+      "type": 1
+    },
+    "peer": {
+      "address": "FA:B5:DC:C8:4E:6A",
+      "type": 1
+    }
+  },
+  "nonce": "f023b6c0effa701d1f42b720714640b3",
+  "iterations": 20,
+  "packet_denominator": 200,
+  "results": {
+    "identity_a": {
+      "role": "identity_a",
+      "connections": "20",
+      "disconnections": "20",
+      "wrong_identity_rejected": "1",
+      "active_list_change_rejected": "1",
+      "unauthorized_peer_rejected": "0",
+      "callback_context": "pass",
+      "nonce": "f023b6c0effa701d1f42b720714640b3",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    }
+  },
+  "negative_denominators": {
+    "wrong_identity": 1,
+    "unauthorized_peer": 0,
+    "active_list_change": 1
+  },
+  "allowed_loss": {
+    "identity_reports": 0
+  },
+  "lost": {
+    "identity_reports": 200
+  },
+  "latency_limit_ms": 1000,
+  "reason": "PrivacyExecutionFailure: identity_b target FAIL: session_timeout",
+  "transcript_sha256": "d6e0d725b310ac7b28922e098791c631bf520374f148c73c0126df1fde3b5d21",
+  "observed_utc": "2026-10-03T00:09:52.441878+00:00"
+}

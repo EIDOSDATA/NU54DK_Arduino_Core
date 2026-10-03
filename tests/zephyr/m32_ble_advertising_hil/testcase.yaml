@@ -1,0 +1,28 @@
+tests:
+  nucode.m32.ble_advertising_hil.advertiser_a:
+    build_only: true
+    extra_args:
+      - M32_ADV_ROLE=advertiser_a
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags: [bluetooth, m32, advertising, hil]
+  nucode.m32.ble_advertising_hil.advertiser_b:
+    build_only: true
+    extra_args:
+      - M32_ADV_ROLE=advertiser_b
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags: [bluetooth, m32, advertising, hil]
+  nucode.m32.ble_advertising_hil.scanner:
+    build_only: true
+    extra_args:
+      - M32_ADV_ROLE=scanner
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags: [bluetooth, m32, advertising, hil]

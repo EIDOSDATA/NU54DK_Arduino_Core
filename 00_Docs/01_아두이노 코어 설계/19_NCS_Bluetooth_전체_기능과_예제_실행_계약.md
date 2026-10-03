@@ -4,11 +4,11 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | stable/source `v0.5.0`의 M31 Windows 릴리스와 `v0.6.0` 계획의 M32·M33, M34~M45 인계 의존성 |
-| 현재 상태 | **M31 W01~W08 완료 8/8**. W02 설치본 ISO 11예제·11역할, W03 Audio 11/11, W04 DF·W05 CS·W06 자원/회귀·W07 예제/HIL·W08 Windows RC 준비 완료. M32·M33은 미착수 |
+| 현재 상태 | **M31 8/8 완료, M32 12/12 완료, M33 0/8**. W08 BLOB·signed MDFU, W10 공존, W11 exact 회귀·soak, W12 정합성 감사·인계 PASS |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
-| 최종 갱신일 | 2026-09-28 |
+| 최종 갱신일 | 2026-10-03 |
 
 전체 번호·제품선은 [제품 로드맵](02_구현_로드맵.md), 작업 묶음은 [M31 TODO](../TODO_M31.md),
 [M32 TODO](../TODO_M32.md), [M33 TODO](../TODO_M33.md), 현재 상태는
@@ -37,17 +37,29 @@ SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 당시 버전 미정 후속이었던 M32·M33은 2026-09-28 `v0.6.0` 계획으로 배정했다. M33-W07~W08은
 다중 Host·RC·공개를 계속 소유하며 Host 보류·OS별 최종 실물 검증 조건은 유지한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-현재 stable `v0.5.0`, source 식별자 `0.5.0`,
-M31 8/8·M32 0/12·M33 0/8·HOST 3/8을 구분한다.
+현재 stable `v0.5.0`, source 식별자 `0.5.0`, M31 8/8·M32 12/12·M33 0/8·HOST 3/8을 구분한다.
+M32 실행별 source·수치·실패/완료 근거는 [M32 TODO](../TODO_M32.md)와
+[M32 readiness](../../variants/nu54dk/m32-ble-readiness.json)가 소유한다. W08 BLOB·signed MDFU와
+W10 공존은 후속 exact HIL에서 완료했다. W11 clean `94f02544…`의 exact family 12/12·signed MDFU·
+1,800초 soak와 W12 최종 정합성 감사도 PASS했다. 당시 최종 UART·STOP 증거가 없었던 W08 FAIL은
+원본 그대로 보존하며, 완료 증거와 다음 M33 착수 경계는 [HANDOFF](../HANDOFF.md)에 연결한다.
+Flushable ACL의 고정 Host TX 경로 부재는 unsupported/HOLD로 유지한다.
 RC2의 예제 안내·Upload·UTF-8·진행 표시 교정과 자동 검사, 시간 목표 미달 수용 및 후속 GUI
 연속 Upload 성공 확인은 [RC2 TODO](../TODO_v0.5.0-RC2.md)를 따른다. RC1 결과와 M31 기능 분모는 그대로 보존한다.
 
-### 2026-09-28 후속 목표 버전 배정
+### 2026-10-01 후속 목표 버전 배정
 
-M32·M33의 계획 목표는 `v0.6.0`이며 M34~M37 Security/Update는 `v0.7.0`, M38~M41
-Radio/Network는 `v0.8.0`, M42~M45 Matter는 `v0.9.0`이다. M번호·기능·인계 의존성과 완료
-분모는 유지한다. 이 문서 갱신은 구현 착수·Host 보류 해제·정식 공개 승인 또는 현재 지원 확대가 아니다.
-독립 ARF의 배포 버전은 별도 결정하며 [v0.6.0 TODO](../TODO_v0.6.0.md)를 착수 진입점으로 사용한다.
+M32·M33의 계획 목표는 `v0.6.0`이며 `v0.7.0`은 NCS 3.4.1 전체 SDK 전환 전용이다.
+M34~M37 Security/Update는 `v0.8.0`, M38~M41 Radio/Network는 `v0.9.0`, M42~M45 Matter는
+`v0.10.0`이다. M번호·기능·인계 의존성과 완료 분모는 유지한다. 이 문서 갱신은 구현 착수·Host 보류
+해제·정식 공개 승인 또는 현재 지원 확대가 아니다.
+독립 ARF의 배포 버전은 별도 결정하며 SDK 전용 v0.7.0에는 포함하지 않는다. M32·M33은
+[v0.6.0 TODO](../TODO_v0.6.0.md)를 착수 진입점으로 사용한다.
+
+NCS v3.4.0 → v3.4.1 전환은 [v0.7.0 SDK-W01~W06](../TODO_v0.7.0.md)에서 기존 기능의
+호환성·보안·회귀·설치 검증만 수행한다. SDK 신규 기능을 공개 API/지원 범위로 추가하지 않는다.
+M31~M33의 고정 v3.4.0 SDK와 제품 SDC를 이번 문서 정비에서 바꾸지 않는다. 공개 수정 이력과 현재 기능별
+적용 위험은 [NCS 3.4.1 영향 검토](<../00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)를 따른다.
 
 ### 구현 책임과 실물 검증 gate
 
@@ -171,19 +183,19 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 | 완료 / P0 | M31-B W04 DF | W01 controller별 판정과 최적화 image | 지원 CTE TX·연결 응답 PASS, 제품 SDC RX/AoD `UNSUPPORTED`; [263번 완료](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
 | 완료 / P0 | M31-C W05 CS | W01 controller별 판정과 최적화 image | connected CS 예제, negative·복구 완료; [264번](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
 | 완료 / P0 | M31-W06 독립 image 자원·수명주기·회귀, W07 설치 예제·3보드 HIL, W08 Windows RC | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8·Windows package·설치·RC 및 stable 공개 smoke 완료; M32 자원 인계 |
-| 4 / P0 | M32-A W01~W05 modern LE·Nordic 확장 | M31 W01 inventory와 기존 GAP | power/timing/광고/resource/diagnostic 예제 |
-| 5 / P0 | M32-B W06 Mesh 기반 → W07 Mesh 1.1 → W08 BLOB/DFU | 설정·보안·고정 memory budget | Mesh role/model·전송·update 예제 |
-| 5 / P0 | M32-C W09 단독 radio → W10 공존 | BLE/Mesh 단독 PASS, 최소 802.15.4/ESB profile | 지원 조합·중재·복구 예제; M38/M39 재사용 |
-| 6 / P0 | M32-W11~W12 회귀·HIL·인계 | M32-A/B/C | 자원 상한·적용 조합·전체 원장 |
+| 완료 / P0 | M32-A W01~W05 modern LE·Nordic 확장 | M31 W01 inventory와 기존 GAP | power/timing/광고/resource/diagnostic 예제; Flushable ACL unsupported/HOLD |
+| 완료 / P0 | M32-B W06 Mesh 기반 → W07 Mesh 1.1 → W08 BLOB/DFU | 설정·보안·고정 memory budget | Mesh role/model·전송·update 예제와 적용 HIL |
+| 완료 / P0 | M32-C W09 단독 radio → W10 공존 | BLE/Mesh 단독 PASS, 최소 802.15.4/ESB profile | 세 내부 조합·중재·복구 예제와 HIL; M38/M39 재사용 |
+| 완료 / P0 | M32-W11~W12 회귀·HIL·인계 | M32-A/B/C | exact 회귀·soak·자원 상한·적용 조합·전체 원장 감사 |
 | 7 / P1 | M33-W01~W04 catalog·GATT·ecosystem·DTM/HCI | 각 기능의 owner 산출물 | 누락 없는 예제 경로, 조건부 external template |
 | 8 / P0 | M33-W05~W08 예제·설치·통합·Host 확대·공개 | 기능 원장, native Host, exact image·package | v0.6.0 계획의 기능별 지원표와 공개 gate; Host 보류·실물 조건 유지 |
 
 P1은 생략 가능 표시가 아닌 구현 순서다. 공식 nRF54L15 적용 예제에는 실행 가능한 Arduino 경로를
 제공하고, 기능·외부 의존성의 정당한 예외만 원장에 기록한다. 문서 계획 진척과 구현·runtime 진척은
 각각 별도 분모로 보고한다. HOST-W04~HOST-W08은 Host 작업이며 M30 잔여 작업이 아니다.
-M32-A 중 M31의 ISO/Audio/CS 자원을 사용하지 않는 항목은 공통 capability·자원 계약 뒤 M31과
-기술적으로 독립 병행할 수 있다. M31은 완료했으며 M32·M33은 별도 착수 지시 후 진행한다.
-최종 M32 통합 HIL에는 M31 인계와 해당 protocol 단독 결과가 필요하다.
+M31과 M32는 완료했고 다음 기능 작업은 M33-W01이다. M32의 개별 기능·통합 HIL은 M31 인계와
+각 protocol 단독 결과를 선행 근거로 사용했다. 후속 착수 조건은 [HANDOFF](../HANDOFF.md)를
+따르며, HOST-W04~W08은 사용자 보류를 유지한다.
 
 ## 4. M31-A — ISO와 LE Audio 구현 목록
 
@@ -303,8 +315,9 @@ Host API의 존재를 대조하고 NU54DK image·runtime을 별도로 기록한�
 | W05 Event Trigger·Radio Notification | `BT_CTLR_SDC_EVENT_TRIGGER`, `N:event_trigger`; `BT_RADIO_NOTIFICATION_CONN_CB`, `N:radio_notification_cb` | `direct/profile`: `RadioEventTrigger`, `ConnectionRadioNotification` | 1~2보드; callback lifetime·priority·등록/해제·late event. GPIO 경로는 명시된 fixture만 사용 |
 | W05 LE Flushable ACL Data | `BT_CTLR_LE_FLUSHABLE_ACL_DATA`, SDC experimental 기능 | experimental opt-in `profile/direct`: `FlushableAclData` | 2보드; flushable/non-flushable 구분·expiry/drop·buffer 회수·지원 미일치 |
 
-현재 `txPower()` 조회 성공은 W02 Power Control/Path Loss 절차 완료가 아니다. 마찬가지로 Kconfig의
-허용 최대값이나 upstream 예제의 set 개수를 그대로 Core 자원 상한으로 삼지 않는다. 해당 NU54DK
+W02는 exact `9a7d0351…`에서 Power report 40/40과 Path Loss zone event 60/60, callback main-thread
+귀속과 STOP 2/2를 완료했다. 외부 제품 peer 상호운용은 별도 `NOT_RUN`이다. Kconfig의 허용 최대값이나
+upstream 예제의 set 개수를 그대로 Core 자원 상한으로 삼지 않는다. 해당 NU54DK
 profile가 실제로 build·동작하는 상한을 측정하고 요청 초과는 명시적 오류로 거부한다.
 ARF-01 BLE role-budget의 `C1P1/C2P0/C0P2`는 M32-W04 자원 preset에 통합한다. 기존 기본값
 2-link·1-set을 유지하고 새 preset별 역할·buffer·상한·초과 거절을 검증한다. ARF-01을 별도 구현
@@ -540,7 +553,8 @@ mass erase/recover, 전체 flash 초기화, 임의 GPIO, 전원 차단은 자동
 
 ## 12. M34~M45로 넘길 산출물
 
-후속 M번호·주제는 유지하며 M34~M37은 v0.7.0, M38~M41은 v0.8.0, M42~M45는 v0.9.0 계획이다.
+후속 M번호·주제는 유지하며 M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0 계획이다.
+선행 v0.7.0은 기존 기능을 유지하는 SDK 전환만 수행하며 아래 새 기능 인계를 대신 완료하지 않는다.
 다음 표의 입력을 각 착수 계약에서 받아 무선 기능과 보안·저장·network의
 누락을 막는다. M31~M33에서 필요한 최소 기능을 전부 미래 마일스톤으로 미루는 의미는 아니다.
 

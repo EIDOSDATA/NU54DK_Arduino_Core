@@ -1,0 +1,4294 @@
+{
+  "schema_version": 1,
+  "milestone": "M32",
+  "phase": "completed",
+  "milestone_status": "completed",
+  "baseline": {
+    "supported_release": "v0.5.0",
+    "development_release": "v0.6.0",
+    "development_branch": "Dev-0.6.0-M32",
+    "target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1",
+    "parity_lock_sha256": "8c5ab4deaf0bb21dc83957330c49531d011e142959c6f93f7b47052bba5146f3"
+  },
+  "parity_scope": {
+    "sample_ids": [
+      "nrf:applications/ipc_radio",
+      "nrf:samples/bluetooth/conn_time_sync",
+      "nrf:samples/bluetooth/event_trigger",
+      "nrf:samples/bluetooth/llpm",
+      "nrf:samples/bluetooth/mesh/ble_peripheral_lbs_coex",
+      "nrf:samples/bluetooth/mesh/chat",
+      "nrf:samples/bluetooth/mesh/dfu/distributor",
+      "nrf:samples/bluetooth/mesh/dfu/target",
+      "nrf:samples/bluetooth/mesh/light",
+      "nrf:samples/bluetooth/mesh/light_ctrl",
+      "nrf:samples/bluetooth/mesh/light_dimmer",
+      "nrf:samples/bluetooth/mesh/light_switch",
+      "nrf:samples/bluetooth/mesh/sensor_client",
+      "nrf:samples/bluetooth/mesh/sensor_server",
+      "nrf:samples/bluetooth/mesh/silvair_enocean",
+      "nrf:samples/bluetooth/multiple_adv_sets",
+      "nrf:samples/bluetooth/path_loss_monitoring/central",
+      "nrf:samples/bluetooth/path_loss_monitoring/peripheral",
+      "nrf:samples/bluetooth/peripheral_with_multiple_identities",
+      "nrf:samples/bluetooth/radio_coex_1wire",
+      "nrf:samples/bluetooth/radio_notification_cb",
+      "nrf:samples/bluetooth/rssi_power_control/central",
+      "nrf:samples/bluetooth/rssi_power_control/peripheral",
+      "nrf:samples/bluetooth/scanning_while_connecting",
+      "nrf:samples/bluetooth/shorter_conn_intervals",
+      "nrf:samples/bluetooth/subrating",
+      "nrf:samples/bluetooth/throughput",
+      "nrf:samples/esb/esb_prx_ble",
+      "nrf:samples/esb/esb_ptx_ble",
+      "nrf:samples/wifi/ble_coex",
+      "zephyr:samples/bluetooth/broadcaster_multiple",
+      "zephyr:samples/bluetooth/direct_adv",
+      "zephyr:samples/bluetooth/encrypted_advertising/central",
+      "zephyr:samples/bluetooth/encrypted_advertising/peripheral",
+      "zephyr:samples/bluetooth/mesh",
+      "zephyr:samples/bluetooth/mesh_demo",
+      "zephyr:samples/bluetooth/mesh_provisioner",
+      "zephyr:samples/bluetooth/peripheral_accept_list",
+      "zephyr:samples/bluetooth/peripheral_identity",
+      "zephyr:samples/boards/nordic/mesh/onoff-app",
+      "zephyr:samples/boards/nordic/mesh/onoff_level_lighting_vnd_app"
+    ],
+    "variant_ids": [
+      "nrf:applications/ipc_radio:applications.ipc_radio.802154",
+      "nrf:applications/ipc_radio:applications.ipc_radio.802154.sysbuild",
+      "nrf:applications/ipc_radio:applications.ipc_radio.hci",
+      "nrf:applications/ipc_radio:applications.ipc_radio.hci.nrf54h.sysbuild",
+      "nrf:applications/ipc_radio:applications.ipc_radio.hci.sysbuild",
+      "nrf:applications/ipc_radio:applications.ipc_radio.hci802154",
+      "nrf:applications/ipc_radio:applications.ipc_radio.hci802154.sysbuild",
+      "nrf:applications/ipc_radio:applications.ipc_radio.rpc",
+      "nrf:applications/ipc_radio:applications.ipc_radio.rpc.nrf54h.sysbuild",
+      "nrf:applications/ipc_radio:applications.ipc_radio.rpc.sysbuild",
+      "nrf:samples/bluetooth/conn_time_sync:sample.bluetooth.conn_time_sync",
+      "nrf:samples/bluetooth/event_trigger:sample.bluetooth.event_trigger",
+      "nrf:samples/bluetooth/llpm:sample.bluetooth.llpm",
+      "nrf:samples/bluetooth/mesh/ble_peripheral_lbs_coex:sample.bluetooth.mesh.ble_and_mesh",
+      "nrf:samples/bluetooth/mesh/ble_peripheral_lbs_coex:sample.bluetooth.mesh.ble_and_mesh.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/chat:sample.bluetooth.mesh.chat",
+      "nrf:samples/bluetooth/mesh/chat:sample.bluetooth.mesh.chat.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/dfu/distributor:sample.bluetooth.mesh_dfu_distributor",
+      "nrf:samples/bluetooth/mesh/dfu/distributor:sample.bluetooth.mesh_dfu_distributor.dfu_ext_flash",
+      "nrf:samples/bluetooth/mesh/dfu/distributor:sample.bluetooth.mesh_dfu_distributor.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/dfu/distributor:sample.bluetooth.mesh_dfu_distributor.smp_bt_auth",
+      "nrf:samples/bluetooth/mesh/dfu/target:sample.bluetooth.mesh_dfu_target",
+      "nrf:samples/bluetooth/mesh/dfu/target:sample.bluetooth.mesh_dfu_target.dfu_ext_flash",
+      "nrf:samples/bluetooth/mesh/dfu/target:sample.bluetooth.mesh_dfu_target.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/light:sample.bluetooth.mesh.light",
+      "nrf:samples/bluetooth/mesh/light:sample.bluetooth.mesh.light.dfu",
+      "nrf:samples/bluetooth/mesh/light:sample.bluetooth.mesh.light.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/light_ctrl:sample.bluetooth.mesh.light_ctrl",
+      "nrf:samples/bluetooth/mesh/light_ctrl:sample.bluetooth.mesh.light_ctrl.emds",
+      "nrf:samples/bluetooth/mesh/light_ctrl:sample.bluetooth.mesh.light_ctrl.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/light_dimmer:sample.bluetooth.mesh.light_dimmer",
+      "nrf:samples/bluetooth/mesh/light_dimmer:sample.bluetooth.mesh.light_dimmer.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/light_switch:sample.bluetooth.mesh.light_switch",
+      "nrf:samples/bluetooth/mesh/light_switch:sample.bluetooth.mesh.light_switch.lpn",
+      "nrf:samples/bluetooth/mesh/light_switch:sample.bluetooth.mesh.light_switch.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/sensor_client:sample.bluetooth.mesh.sensor_client",
+      "nrf:samples/bluetooth/mesh/sensor_client:sample.bluetooth.mesh.sensor_client.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/sensor_server:sample.bluetooth.mesh.sensor_server",
+      "nrf:samples/bluetooth/mesh/sensor_server:sample.bluetooth.mesh.sensor_server.settings_ext_flash",
+      "nrf:samples/bluetooth/mesh/silvair_enocean:sample.bluetooth.mesh.silvair_enocean",
+      "nrf:samples/bluetooth/mesh/silvair_enocean:sample.bluetooth.mesh.silvair_enocean.settings_ext_flash",
+      "nrf:samples/bluetooth/multiple_adv_sets:sample.bluetooth.multiple_adv_sets",
+      "nrf:samples/bluetooth/path_loss_monitoring/central:sample.bluetooth.central_path_loss_monitoring",
+      "nrf:samples/bluetooth/path_loss_monitoring/peripheral:sample.bluetooth.peripheral_path_loss_monitoring",
+      "nrf:samples/bluetooth/peripheral_with_multiple_identities:sample.bluetooth.peripheral_with_multiple_identities",
+      "nrf:samples/bluetooth/radio_coex_1wire:sample.bluetooth.radio_coex_1wire",
+      "nrf:samples/bluetooth/radio_notification_cb:sample.bluetooth.conn_evt_cb",
+      "nrf:samples/bluetooth/rssi_power_control/central:sample.bluetooth.central_automated_power_control",
+      "nrf:samples/bluetooth/rssi_power_control/peripheral:sample.bluetooth.peripheral_automated_power_control",
+      "nrf:samples/bluetooth/scanning_while_connecting:sample.bluetooth.scanning_while_connecting",
+      "nrf:samples/bluetooth/shorter_conn_intervals:sample.bluetooth.shorter_conn_intervals",
+      "nrf:samples/bluetooth/subrating:sample.bluetooth.subrating",
+      "nrf:samples/bluetooth/throughput:sample.bluetooth.throughput",
+      "nrf:samples/esb/esb_prx_ble:sample.esb.prx.ble.build",
+      "nrf:samples/esb/esb_ptx_ble:sample.esb.ptx.ble.build",
+      "nrf:samples/wifi/ble_coex:sample.54lm20dk.nrf7002eb2.ble_coex",
+      "nrf:samples/wifi/ble_coex:sample.nrf7001.ble_coex",
+      "nrf:samples/wifi/ble_coex:sample.nrf7001ek.ble_coex",
+      "nrf:samples/wifi/ble_coex:sample.nrf7002.ble_coex_sep_ant",
+      "nrf:samples/wifi/ble_coex:sample.nrf7002.ble_coex_sha_ant",
+      "nrf:samples/wifi/ble_coex:sample.nrf7002_eb.thingy53.ble_coex",
+      "nrf:samples/wifi/ble_coex:sample.nrf7002ek.ble_coex",
+      "zephyr:samples/bluetooth/broadcaster_multiple:sample.bluetooth.broadcaster_multiple",
+      "zephyr:samples/bluetooth/broadcaster_multiple:sample.bluetooth.broadcaster_multiple.bt_ll_sw_split",
+      "zephyr:samples/bluetooth/direct_adv:sample.bluetooth.direct_adv",
+      "zephyr:samples/bluetooth/encrypted_advertising/central:sample.bluetooth.central_ead",
+      "zephyr:samples/bluetooth/encrypted_advertising/peripheral:sample.bluetooth.peripheral_ead",
+      "zephyr:samples/bluetooth/mesh:sample.bluetooth.mesh",
+      "zephyr:samples/bluetooth/mesh_demo:sample.bluetooth.mesh_demo",
+      "zephyr:samples/bluetooth/mesh_provisioner:sample.bluetooth.mesh_provisioner",
+      "zephyr:samples/bluetooth/peripheral_accept_list:sample.bluetooth.peripheral_accept_list",
+      "zephyr:samples/bluetooth/peripheral_identity:sample.bluetooth.peripheral_identity",
+      "zephyr:samples/boards/nordic/mesh/onoff-app:sample.bluetooth.mesh.onoff",
+      "zephyr:samples/boards/nordic/mesh/onoff_level_lighting_vnd_app:sample.bluetooth.mesh.onoff_level_lighting_vnd"
+    ],
+    "sample_count": 41,
+    "variant_count": 74,
+    "selected_rows_sha256": "806714f1323c65eaaa012ab6492da494620ffbe5af7ba4c6c6d4a290ad4bd4ac"
+  },
+  "work_packages": [
+    {
+      "id": "M32-W01",
+      "title": "capability_resource_inventory_contract",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/w01-closure-audit.json"
+    },
+    {
+      "id": "M32-W02",
+      "title": "le_power_control_path_loss",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/w02-closure-audit.json"
+    },
+    {
+      "id": "M32-W03",
+      "title": "modern_connection_timing_features",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/w03-closure-audit.json"
+    },
+    {
+      "id": "M32-W04",
+      "title": "advertising_identity_privacy_resources",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/w04-closure-audit.json"
+    },
+    {
+      "id": "M32-W05",
+      "title": "nordic_link_diagnostics",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/w05-closure-audit.json"
+    },
+    {
+      "id": "M32-W06",
+      "title": "mesh_foundation_models_security",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/w06-closure-audit.json"
+    },
+    {
+      "id": "M32-W07",
+      "title": "mesh_1_1_management_privacy_bridging",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/w07-closure-audit.json"
+    },
+    {
+      "id": "M32-W08",
+      "title": "mesh_blob_dfu_distribution",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w08-mdfu-e0a1b7fd-exact/w08-closure-audit.json"
+    },
+    {
+      "id": "M32-W09",
+      "title": "ieee802154_esb_standalone",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/w09-reconfirm-audit.json"
+    },
+    {
+      "id": "M32-W10",
+      "title": "supported_radio_coexistence",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/w10-closure-audit.json"
+    },
+    {
+      "id": "M32-W11",
+      "title": "functional_hil_negative_regression_soak",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/286_M32_W11_software_회귀와_HIL_soak_blocker.md"
+    },
+    {
+      "id": "M32-W12",
+      "title": "api_examples_evidence_handoff",
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md"
+    }
+  ],
+  "validated_support_candidates": {
+    "publication_status": "not_published",
+    "capability_ids": [
+      "advertising_coding_selection",
+      "advertising_lists",
+      "ble_esb_coexistence",
+      "ble_ieee802154_coexistence",
+      "ble_mesh_coexistence",
+      "channel_classification_throughput",
+      "connection_subrating",
+      "connection_time_sync",
+      "directed_advertising",
+      "encrypted_advertising_data",
+      "esb_standalone",
+      "extended_le_feature_set",
+      "frame_space_update",
+      "ieee802154_standalone",
+      "le_power_control",
+      "mesh_blob_transfer",
+      "mesh_dfu_distribution",
+      "mesh_large_composition_data",
+      "mesh_opcodes_aggregator",
+      "mesh_private_beacon",
+      "mesh_private_proxy_solicitation",
+      "mesh_provisioning_configuration_health",
+      "mesh_relay_friend_lpn_proxy",
+      "mesh_remote_provisioning",
+      "mesh_sar_configuration",
+      "mesh_standard_models_settings",
+      "mesh_subnet_bridging",
+      "multiple_advertising_sets",
+      "multiple_identities",
+      "nordic_llpm",
+      "nordic_qos_channel_survey",
+      "nordic_qos_conn_event",
+      "path_loss_monitoring",
+      "radio_event_trigger",
+      "radio_notification",
+      "scalable_ble_resources",
+      "scan_while_initiating",
+      "shorter_connection_intervals"
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "modern_le_capability",
+      "owner_work_id": "M32-W01",
+      "title": "확장 LE feature page와 자원 조회",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_LE_EXTENDED_FEAT_SET"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/hci_types.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "testing_profile",
+      "planned_examples": [
+        "ModernLeCapabilities"
+      ],
+      "resource_profile_ids": [
+        "ble_baseline",
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-CAP-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-manifest.json"
+        },
+        "arduino_build": {
+          "status": "NOT_APPLICABLE",
+          "revision": null,
+          "evidence": null
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-manifest.json"
+        },
+        "functional_hil": {
+          "status": "NOT_APPLICABLE",
+          "revision": null,
+          "evidence": null
+        },
+        "external_peer_interop": {
+          "status": "NOT_APPLICABLE",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "le_power_control",
+      "owner_work_id": "M32-W02",
+      "title": "LE Power Control·Tx Power Report",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_TRANSMIT_POWER_CONTROL"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/conn.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/rssi_power_control/central",
+        "nrf:samples/bluetooth/rssi_power_control/peripheral"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "LePowerControlCentral",
+        "LePowerControlPeripheral"
+      ],
+      "resource_profile_ids": [
+        "ble_baseline"
+      ],
+      "test_ids": [
+        "M32-PWR-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/w02-closure-audit.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/arduino-build-summary.json"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/m32-power-path-exact-9a7d0351.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/m32-power-path-exact-9a7d0351.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "path_loss_monitoring",
+      "owner_work_id": "M32-W02",
+      "title": "Path Loss Monitoring",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_PATH_LOSS_MONITORING"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/conn.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/path_loss_monitoring/central",
+        "nrf:samples/bluetooth/path_loss_monitoring/peripheral"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "PathLossMonitorCentral",
+        "PathLossMonitorPeripheral"
+      ],
+      "resource_profile_ids": [
+        "ble_baseline"
+      ],
+      "test_ids": [
+        "M32-PATH-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/w02-closure-audit.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/arduino-build-summary.json"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/m32-power-path-exact-9a7d0351.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/m32-power-path-exact-9a7d0351.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "connection_subrating",
+      "owner_work_id": "M32-W03",
+      "title": "Connection Subrating",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_SUBRATING"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/conn.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/subrating"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "ConnectionSubratingCentral",
+        "ConnectionSubratingPeripheral"
+      ],
+      "resource_profile_ids": [
+        "ble_baseline"
+      ],
+      "test_ids": [
+        "M32-SUB-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/native-build-summary.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-software-012b9c18/software-regression.json"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "sleep_clock_accuracy_update",
+      "owner_work_id": "M32-W03",
+      "title": "Sleep Clock Accuracy Update",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_SCA_UPDATE"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/conn.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "SleepClockAccuracyUpdate"
+      ],
+      "resource_profile_ids": [
+        "ble_baseline"
+      ],
+      "test_ids": [
+        "M32-SCA-01"
+      ],
+      "target_applicability": "unsupported",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/native-build-summary.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-software-012b9c18/software-regression.json"
+        },
+        "runtime_capability": {
+          "status": "UNSUPPORTED",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/288_M32_W03_연결_timing_feature_exact_HIL_완료.md"
+        },
+        "functional_hil": {
+          "status": "NOT_APPLICABLE",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_APPLICABLE",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/288_M32_W03_연결_timing_feature_exact_HIL_완료.md"
+        }
+      }
+    },
+    {
+      "id": "frame_space_update",
+      "owner_work_id": "M32-W03",
+      "title": "Frame Space Update",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_FRAME_SPACE_UPDATE",
+        "CONFIG_BT_LE_EXTENDED_FEAT_SET"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/conn.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/throughput"
+      ],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "FrameSpaceUpdateCentral",
+        "FrameSpaceUpdatePeripheral"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-TIME-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/native-build-summary.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-software-012b9c18/software-regression.json"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "shorter_connection_intervals",
+      "owner_work_id": "M32-W03",
+      "title": "Shorter Connection Intervals",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_SHORTER_CONNECTION_INTERVALS",
+        "CONFIG_BT_SUBRATING"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/conn.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/shorter_conn_intervals"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "ShorterConnectionIntervalsCentral",
+        "ShorterConnectionIntervalsPeripheral"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-TIME-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/native-build-summary.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-software-012b9c18/software-regression.json"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "extended_le_feature_set",
+      "owner_work_id": "M32-W03",
+      "title": "LL Extended Feature Set",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_LE_EXTENDED_FEAT_SET"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/hci_types.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "ExtendedLeFeaturePages"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-FEAT-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/native-build-summary.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-software-012b9c18/software-regression.json"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "channel_classification_throughput",
+      "owner_work_id": "M32-W03",
+      "title": "Channel classification·map·throughput",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_DATA_LEN_UPDATE",
+        "CONFIG_BT_PHY_UPDATE"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/conn.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/throughput"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "BleThroughputCentral",
+        "BleThroughputPeripheral",
+        "LeChannelMapControl"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-FEAT-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/native-build-summary.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-software-012b9c18/software-regression.json"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "multiple_advertising_sets",
+      "owner_work_id": "M32-W04",
+      "title": "Multiple Advertising Sets",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_EXT_ADV",
+        "CONFIG_BT_EXT_ADV_MAX_ADV_SET=3"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/multiple_adv_sets",
+        "zephyr:samples/bluetooth/broadcaster_multiple"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "MultipleAdvertisingSets",
+        "MultiplePeriodicSyncs"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-ADV-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "multiple_identities",
+      "owner_work_id": "M32-W04",
+      "title": "Multiple local identities",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_ID_MAX=3",
+        "CONFIG_BT_PRIVACY"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/peripheral_with_multiple_identities",
+        "zephyr:samples/bluetooth/peripheral_identity"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "MultipleBleIdentities"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-PRIV-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/m32-priv-02.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/m32-priv-02.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "advertising_lists",
+      "owner_work_id": "M32-W04",
+      "title": "Accept·resolving·periodic advertiser lists",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_FILTER_ACCEPT_LIST",
+        "CONFIG_BT_PER_ADV_SYNC"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [
+        "zephyr:samples/bluetooth/peripheral_accept_list"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "AdvertisingAcceptList",
+        "PeriodicAdvertiserList"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-PRIV-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/m32-priv-02.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/m32-priv-02.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "directed_advertising",
+      "owner_work_id": "M32-W04",
+      "title": "Directed Advertising",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_PERIPHERAL",
+        "CONFIG_BT_PRIVACY"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [
+        "zephyr:samples/bluetooth/direct_adv"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "DirectedAdvertisingPeripheral",
+        "DirectedAdvertisingCentral"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-PRIV-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/m32-priv-02.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/m32-priv-02.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "encrypted_advertising_data",
+      "owner_work_id": "M32-W04",
+      "title": "Encrypted Advertising Data",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_EAD"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [
+        "zephyr:samples/bluetooth/encrypted_advertising/central",
+        "zephyr:samples/bluetooth/encrypted_advertising/peripheral"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "EncryptedAdvertisingCentral",
+        "EncryptedAdvertisingPeripheral"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-EAD-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "4af5b15a54aacc9d15f8257e535bbd7bc635b78b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-4af5b15a/m32-ead-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "4af5b15a54aacc9d15f8257e535bbd7bc635b78b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-4af5b15a/m32-ead-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "advertising_coding_selection",
+      "owner_work_id": "M32-W04",
+      "title": "Advertising Coding Selection",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_CTLR_PHY_CODED",
+        "CONFIG_BT_EXT_ADV_CODING_SELECTION"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "AdvertisingCodingSelection"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-ADV-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "scan_while_initiating",
+      "owner_work_id": "M32-W04",
+      "title": "Scan while initiating",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_SCAN_AND_INITIATE_IN_PARALLEL",
+        "CONFIG_BT_SCAN_WITH_IDENTITY"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/scanning_while_connecting"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "ScanWhileConnecting"
+      ],
+      "resource_profile_ids": [
+        "ble_extended"
+      ],
+      "test_ids": [
+        "M32-ADV-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "scalable_ble_resources",
+      "owner_work_id": "M32-W04",
+      "title": "ARF-01 BLE role budget",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MAX_CONN=2"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/bluetooth.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "ScalableBleResources"
+      ],
+      "resource_profile_ids": [
+        "ble_c1p1",
+        "ble_c2p0",
+        "ble_c0p2"
+      ],
+      "test_ids": [
+        "M32-ADV-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+          "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "nordic_llpm",
+      "owner_work_id": "M32-W05",
+      "title": "Nordic LLPM",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_CTLR_SDC_LLPM"
+      ],
+      "api_sources": [
+        "nrf/include/bluetooth/hci_vs_sdc.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/llpm"
+      ],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "NordicLlpmPair"
+      ],
+      "resource_profile_ids": [
+        "ble_nordic"
+      ],
+      "test_ids": [
+        "M32-NORDIC-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "nordic_qos_conn_event",
+      "owner_work_id": "M32-W05",
+      "title": "QoS Connection Event Reports",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_CTLR_SDC_QOS_CONN_EVENT_REPORT"
+      ],
+      "api_sources": [
+        "nrf/include/bluetooth/hci_vs_sdc.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "NordicConnectionEventQos"
+      ],
+      "resource_profile_ids": [
+        "ble_nordic"
+      ],
+      "test_ids": [
+        "M32-NORDIC-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "nordic_qos_channel_survey",
+      "owner_work_id": "M32-W05",
+      "title": "QoS Channel Survey",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_CTLR_SDC_QOS_CHANNEL_SURVEY"
+      ],
+      "api_sources": [
+        "nrf/include/bluetooth/hci_vs_sdc.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "NordicChannelSurvey"
+      ],
+      "resource_profile_ids": [
+        "ble_nordic"
+      ],
+      "test_ids": [
+        "M32-NORDIC-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "connection_time_sync",
+      "owner_work_id": "M32-W05",
+      "title": "Connection Time Sync",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_CTLR_SDC_CONN_ANCHOR_POINT_REPORT",
+        "CONFIG_BT_HCI_VS_EVT_USER"
+      ],
+      "api_sources": [
+        "nrf/include/bluetooth/hci_vs_sdc.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/conn_time_sync"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "ConnectionTimeSyncCentral",
+        "ConnectionTimeSyncPeripheral"
+      ],
+      "resource_profile_ids": [
+        "ble_nordic"
+      ],
+      "test_ids": [
+        "M32-SYNC-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "radio_event_trigger",
+      "owner_work_id": "M32-W05",
+      "title": "Event Trigger",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_CTLR_SDC_EVENT_TRIGGER"
+      ],
+      "api_sources": [
+        "nrf/include/bluetooth/hci_vs_sdc.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/event_trigger"
+      ],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "RadioEventTrigger"
+      ],
+      "resource_profile_ids": [
+        "ble_nordic"
+      ],
+      "test_ids": [
+        "M32-EVENT-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "radio_notification",
+      "owner_work_id": "M32-W05",
+      "title": "Radio Notification callback",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_RADIO_NOTIFICATION_CONN_CB"
+      ],
+      "api_sources": [
+        "nrf/include/bluetooth/hci_vs_sdc.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/radio_notification_cb"
+      ],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "ConnectionRadioNotification"
+      ],
+      "resource_profile_ids": [
+        "ble_nordic"
+      ],
+      "test_ids": [
+        "M32-EVENT-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "flushable_acl_data",
+      "owner_work_id": "M32-W05",
+      "title": "LE Flushable ACL Data",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_CTLR_LE_FLUSHABLE_ACL_DATA"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/hci_types.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "FlushableAclData"
+      ],
+      "resource_profile_ids": [
+        "ble_nordic"
+      ],
+      "test_ids": [
+        "M32-ACL-01"
+      ],
+      "target_applicability": "unsupported",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "UNSUPPORTED",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "functional_hil": {
+          "status": "NOT_APPLICABLE",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_APPLICABLE",
+          "revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        }
+      }
+    },
+    {
+      "id": "mesh_provisioning_configuration_health",
+      "owner_work_id": "M32-W06",
+      "title": "Mesh provisioning·configuration·health",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH",
+        "CONFIG_BT_MESH_PB_GATT"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [
+        "zephyr:samples/bluetooth/mesh",
+        "zephyr:samples/bluetooth/mesh_provisioner",
+        "nrf:samples/bluetooth/mesh/chat"
+      ],
+      "arduino_provision": "wrapper",
+      "planned_examples": [
+        "MeshProvisioner",
+        "MeshNode",
+        "MeshHealth"
+      ],
+      "resource_profile_ids": [
+        "mesh_base"
+      ],
+      "test_ids": [
+        "M32-MESH-01",
+        "M32-MESHSEC-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "ab3f682547836afd33d6c09612f027266b144f90",
+          "evidence": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "ab3f682547836afd33d6c09612f027266b144f90",
+          "evidence": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_relay_friend_lpn_proxy",
+      "owner_work_id": "M32-W06",
+      "title": "Mesh Relay·Friend·LPN·Proxy",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_RELAY",
+        "CONFIG_BT_MESH_FRIEND",
+        "CONFIG_BT_MESH_LOW_POWER",
+        "CONFIG_BT_MESH_GATT_PROXY_ENABLED"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [
+        "zephyr:samples/bluetooth/mesh"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "MeshRelay",
+        "MeshFriend",
+        "MeshLowPowerNode",
+        "MeshProxy"
+      ],
+      "resource_profile_ids": [
+        "mesh_base"
+      ],
+      "test_ids": [
+        "M32-MESH-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "ab3f682547836afd33d6c09612f027266b144f90",
+          "evidence": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "ab3f682547836afd33d6c09612f027266b144f90",
+          "evidence": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_standard_models_settings",
+      "owner_work_id": "M32-W06",
+      "title": "Mesh model·settings·key refresh",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH",
+        "CONFIG_SETTINGS"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/mesh/light",
+        "nrf:samples/bluetooth/mesh/light_switch",
+        "nrf:samples/bluetooth/mesh/light_dimmer",
+        "nrf:samples/bluetooth/mesh/sensor_client",
+        "nrf:samples/bluetooth/mesh/sensor_server"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "MeshOnOff",
+        "MeshLevel",
+        "MeshLight",
+        "MeshSensor",
+        "MeshTimeSceneScheduler"
+      ],
+      "resource_profile_ids": [
+        "mesh_base"
+      ],
+      "test_ids": [
+        "M32-MESH-01",
+        "M32-MESHSEC-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "ab3f682547836afd33d6c09612f027266b144f90",
+          "evidence": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "ab3f682547836afd33d6c09612f027266b144f90",
+          "evidence": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_remote_provisioning",
+      "owner_work_id": "M32-W07",
+      "title": "Mesh Remote Provisioning",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_RPR_CLI",
+        "CONFIG_BT_MESH_RPR_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshRemoteProvisioner",
+        "MeshRemoteProvisioningServer"
+      ],
+      "resource_profile_ids": [
+        "mesh_management"
+      ],
+      "test_ids": [
+        "M32-MESH11-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_sar_configuration",
+      "owner_work_id": "M32-W07",
+      "title": "Mesh SAR Configuration",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_SAR_CFG_CLI",
+        "CONFIG_BT_MESH_SAR_CFG_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshSarConfigurationClient",
+        "MeshSarConfigurationServer"
+      ],
+      "resource_profile_ids": [
+        "mesh_management"
+      ],
+      "test_ids": [
+        "M32-MESH11-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_opcodes_aggregator",
+      "owner_work_id": "M32-W07",
+      "title": "Mesh Opcodes Aggregator",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_OP_AGG_CLI",
+        "CONFIG_BT_MESH_OP_AGG_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshOpcodeAggregatorClient",
+        "MeshOpcodeAggregatorServer"
+      ],
+      "resource_profile_ids": [
+        "mesh_management"
+      ],
+      "test_ids": [
+        "M32-MESH11-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_large_composition_data",
+      "owner_work_id": "M32-W07",
+      "title": "Mesh Large Composition Data",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_LARGE_COMP_DATA_CLI",
+        "CONFIG_BT_MESH_LARGE_COMP_DATA_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshLargeCompositionDataClient",
+        "MeshLargeCompositionDataServer"
+      ],
+      "resource_profile_ids": [
+        "mesh_management"
+      ],
+      "test_ids": [
+        "M32-MESH11-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_private_beacon",
+      "owner_work_id": "M32-W07",
+      "title": "Mesh Private Beacon",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_PRIV_BEACONS",
+        "CONFIG_BT_MESH_PRIV_BEACON_CLI",
+        "CONFIG_BT_MESH_PRIV_BEACON_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshPrivateBeaconClient",
+        "MeshPrivateBeaconServer"
+      ],
+      "resource_profile_ids": [
+        "mesh_management"
+      ],
+      "test_ids": [
+        "M32-MESH11-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_private_proxy_solicitation",
+      "owner_work_id": "M32-W07",
+      "title": "Mesh On-Demand Private Proxy·Solicitation",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_OD_PRIV_PROXY_CLI",
+        "CONFIG_BT_MESH_OD_PRIV_PROXY_SRV",
+        "CONFIG_BT_MESH_SOLICITATION",
+        "CONFIG_BT_MESH_SOL_PDU_RPL_CLI"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshOnDemandPrivateProxy",
+        "MeshProxySolicitation"
+      ],
+      "resource_profile_ids": [
+        "mesh_management"
+      ],
+      "test_ids": [
+        "M32-MESH11-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_subnet_bridging",
+      "owner_work_id": "M32-W07",
+      "title": "Mesh Subnet Bridging",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_BRG_CFG_CLI",
+        "CONFIG_BT_MESH_BRG_CFG_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshSubnetBridge"
+      ],
+      "resource_profile_ids": [
+        "mesh_management"
+      ],
+      "test_ids": [
+        "M32-MESH11-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+          "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_blob_transfer",
+      "owner_work_id": "M32-W08",
+      "title": "Mesh BLOB Transfer",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_BLOB_CLI",
+        "CONFIG_BT_MESH_BLOB_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/mesh/dfu/distributor",
+        "nrf:samples/bluetooth/mesh/dfu/target"
+      ],
+      "arduino_provision": "direct",
+      "planned_examples": [
+        "MeshBlobClient",
+        "MeshBlobServer"
+      ],
+      "resource_profile_ids": [
+        "mesh_dfu_internal"
+      ],
+      "test_ids": [
+        "M32-BLOB-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "1a57eaae55acec26dd2903ab05c807062b6bfb9a",
+          "evidence": "00_Docs/04_검증 기록/283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "1a57eaae55acec26dd2903ab05c807062b6bfb9a",
+          "evidence": "00_Docs/04_검증 기록/283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "40e4c46b83addefd7ae12cc0c2af1b24764c4356",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-blob-40e4c46b-exact/m32-blob-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "40e4c46b83addefd7ae12cc0c2af1b24764c4356",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-blob-40e4c46b-exact/m32-blob-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "mesh_dfu_distribution",
+      "owner_work_id": "M32-W08",
+      "title": "Mesh DFU·Firmware Distribution",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT_MESH_DFU_CLI",
+        "CONFIG_BT_MESH_DFU_SRV",
+        "CONFIG_BT_MESH_DFD_SRV"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/mesh/dfu/distributor",
+        "nrf:samples/bluetooth/mesh/dfu/target"
+      ],
+      "arduino_provision": "template",
+      "planned_examples": [
+        "MeshDfuTarget",
+        "MeshFirmwareDistributor"
+      ],
+      "resource_profile_ids": [
+        "mesh_dfu_internal"
+      ],
+      "test_ids": [
+        "M32-MDFU-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "1a57eaae55acec26dd2903ab05c807062b6bfb9a",
+          "evidence": "00_Docs/04_검증 기록/283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "1a57eaae55acec26dd2903ab05c807062b6bfb9a",
+          "evidence": "00_Docs/04_검증 기록/283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "e0a1b7fd7885b79bbc8d8b575c63f5468c94c2a8",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-mdfu-e0a1b7fd-exact/m32-mdfu-01.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "e0a1b7fd7885b79bbc8d8b575c63f5468c94c2a8",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-mdfu-e0a1b7fd-exact/m32-mdfu-01.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "ieee802154_standalone",
+      "owner_work_id": "M32-W09",
+      "title": "IEEE 802.15.4 최소 TX/RX",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_NRF_802154_RADIO_DRIVER",
+        "CONFIG_NRF_802154_DRV_REINIT_ENABLED"
+      ],
+      "api_sources": [
+        "nrfxlib/nrf_802154/common/include/nrf_802154.h",
+        "nrfxlib/nrf_802154/common/include/nrf_802154_callouts.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "Radio154Transmitter",
+        "Radio154Receiver"
+      ],
+      "resource_profile_ids": [
+        "radio_ieee802154"
+      ],
+      "test_ids": [
+        "M32-154-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "82361413bc0377871fffd74f4a23eca5a98a2abb",
+          "evidence": "00_Docs/04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "esb_standalone",
+      "owner_work_id": "M32-W09",
+      "title": "ESB PTX/PRX",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_ESB"
+      ],
+      "api_sources": [
+        "nrf/include/esb.h"
+      ],
+      "upstream_samples": [],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "EsbPtx",
+        "EsbPrx"
+      ],
+      "resource_profile_ids": [
+        "radio_esb"
+      ],
+      "test_ids": [
+        "M32-ESB-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "82361413bc0377871fffd74f4a23eca5a98a2abb",
+          "evidence": "00_Docs/04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "ble_mesh_coexistence",
+      "owner_work_id": "M32-W10",
+      "title": "BLE와 Mesh 공존",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_BT",
+        "CONFIG_BT_MESH"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/mesh/access.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/mesh/ble_peripheral_lbs_coex"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "BleMeshCoexistence"
+      ],
+      "resource_profile_ids": [
+        "coexistence_ble_mesh"
+      ],
+      "test_ids": [
+        "M32-COEX-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/w10-closure-audit.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+          "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/m32-coexistence.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/m32-coexistence.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "ble_ieee802154_coexistence",
+      "owner_work_id": "M32-W10",
+      "title": "BLE와 IEEE 802.15.4 공존",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_MPSL",
+        "CONFIG_IEEE802154"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/hci_types.h"
+      ],
+      "upstream_samples": [
+        "nrf:applications/ipc_radio"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "Ble154Coexistence"
+      ],
+      "resource_profile_ids": [
+        "coexistence_ble_154"
+      ],
+      "test_ids": [
+        "M32-COEX-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/w10-closure-audit.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+          "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/m32-coexistence.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/m32-coexistence.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "ble_esb_coexistence",
+      "owner_work_id": "M32-W10",
+      "title": "BLE와 ESB 공존 후보",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_MPSL",
+        "CONFIG_ESB"
+      ],
+      "api_sources": [
+        "nrf/include/esb.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/esb/esb_prx_ble",
+        "nrf:samples/esb/esb_ptx_ble"
+      ],
+      "arduino_provision": "profile",
+      "planned_examples": [
+        "BleEsbCoexistence"
+      ],
+      "resource_profile_ids": [
+        "coexistence_ble_esb"
+      ],
+      "test_ids": [
+        "M32-COEX-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/w10-closure-audit.json"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+          "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/m32-coexistence.json"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/m32-coexistence.json"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    },
+    {
+      "id": "radio_coexistence_one_wire",
+      "owner_work_id": "M32-W10",
+      "title": "외부 1-wire coexistence",
+      "controller_variant": "product_sdc",
+      "kconfig": [
+        "CONFIG_MPSL_CX"
+      ],
+      "api_sources": [
+        "zephyr/include/zephyr/bluetooth/hci_types.h"
+      ],
+      "upstream_samples": [
+        "nrf:samples/bluetooth/radio_coex_1wire"
+      ],
+      "arduino_provision": "template",
+      "planned_examples": [
+        "RadioCoexistenceOneWire"
+      ],
+      "resource_profile_ids": [
+        "external_coexistence"
+      ],
+      "test_ids": [
+        "M32-COEX-01"
+      ],
+      "target_applicability": "applicable",
+      "stages": {
+        "source_candidate": {
+          "status": "PASS",
+          "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+          "evidence": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md"
+        },
+        "nu54dk_native_build": {
+          "status": "PASS",
+          "revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+          "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+          "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+        },
+        "runtime_capability": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        },
+        "functional_hil": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "revision": null,
+          "evidence": null
+        }
+      }
+    }
+  ],
+  "resource_profiles": [
+    {
+      "id": "ble_baseline",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 1,
+      "acl_buffers_per_direction": 6,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "ble",
+      "measured_ram_bytes": 61364,
+      "measured_rram_bytes": 199564,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "ble_extended",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 3,
+      "identities": 3,
+      "periodic_syncs": 2,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "ble",
+      "measured_ram_bytes": 66396,
+      "measured_rram_bytes": 217196,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "ble_c1p1",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 3,
+      "identities": 3,
+      "periodic_syncs": 2,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "ble",
+      "measured_ram_bytes": 65280,
+      "measured_rram_bytes": 226048,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "ble_c2p0",
+      "max_connections": 2,
+      "peripheral_connections": 0,
+      "advertising_sets": 1,
+      "identities": 2,
+      "periodic_syncs": 2,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "ble",
+      "measured_ram_bytes": 60344,
+      "measured_rram_bytes": 218716,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "ble_c0p2",
+      "max_connections": 2,
+      "peripheral_connections": 2,
+      "advertising_sets": 2,
+      "identities": 2,
+      "periodic_syncs": 1,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "ble",
+      "measured_ram_bytes": 61248,
+      "measured_rram_bytes": 207276,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "ble_nordic",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 1,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "ble",
+      "measured_ram_bytes": 53380,
+      "measured_rram_bytes": 184132,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "mesh_base",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 2,
+      "radio_mode": "mesh",
+      "measured_ram_bytes": 70248,
+      "measured_rram_bytes": 292068,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "mesh_management",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 2,
+      "radio_mode": "mesh",
+      "measured_ram_bytes": 71265,
+      "measured_rram_bytes": 283300,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "mesh_dfu_internal",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 10,
+      "mesh_remote_nodes": 2,
+      "radio_mode": "mesh_dfu",
+      "measured_ram_bytes": 72460,
+      "measured_rram_bytes": 277712,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "radio_ieee802154",
+      "max_connections": 0,
+      "peripheral_connections": 0,
+      "advertising_sets": 0,
+      "identities": 0,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 0,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "ieee802154",
+      "measured_ram_bytes": 38748,
+      "measured_rram_bytes": 97166,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "radio_esb",
+      "max_connections": 0,
+      "peripheral_connections": 0,
+      "advertising_sets": 0,
+      "identities": 0,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 0,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "esb",
+      "measured_ram_bytes": 27876,
+      "measured_rram_bytes": 66640,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "coexistence_ble_mesh",
+      "max_connections": 2,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 8,
+      "mesh_remote_nodes": 2,
+      "radio_mode": "coexistence",
+      "measured_ram_bytes": 162997,
+      "measured_rram_bytes": 421056,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "coexistence_ble_154",
+      "max_connections": 1,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 6,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "coexistence",
+      "measured_ram_bytes": 137190,
+      "measured_rram_bytes": 356679,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "coexistence_ble_esb",
+      "max_connections": 1,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 6,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "coexistence_candidate",
+      "measured_ram_bytes": 129441,
+      "measured_rram_bytes": 335820,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    },
+    {
+      "id": "external_coexistence",
+      "max_connections": 1,
+      "peripheral_connections": 1,
+      "advertising_sets": 1,
+      "identities": 1,
+      "periodic_syncs": 0,
+      "acl_buffers_per_direction": 6,
+      "mesh_remote_nodes": 0,
+      "radio_mode": "external_template",
+      "measured_ram_bytes": 127622,
+      "measured_rram_bytes": 326104,
+      "physical_ram_bytes": 262144,
+      "application_rram_partition_bytes": 729088,
+      "maximum_ram_bytes": 235520,
+      "maximum_rram_bytes": 655360,
+      "minimum_free_ram_bytes": 26624,
+      "minimum_free_rram_bytes": 73728
+    }
+  ],
+  "profile_conflicts": [
+    {
+      "left": "radio_ieee802154",
+      "right": "radio_esb",
+      "condition": "same_image",
+      "status": "forbidden"
+    },
+    {
+      "left": "mesh_dfu_internal",
+      "right": "radio_esb",
+      "condition": "same_image",
+      "status": "forbidden_use_dedicated_profile"
+    },
+    {
+      "left": "mesh_dfu_internal",
+      "right": "radio_ieee802154",
+      "condition": "same_image",
+      "status": "forbidden_use_dedicated_profile"
+    },
+    {
+      "left": "ble_extended",
+      "right": "mesh_management",
+      "condition": "combined_maxima",
+      "status": "forbidden_use_dedicated_profile"
+    },
+    {
+      "left": "scan_initiate_parallel",
+      "right": "multiple_identities",
+      "condition": "same_image",
+      "status": "forbidden_by_fixed_controller_requires_id_max_1"
+    },
+    {
+      "left": "coexistence_ble_esb",
+      "right": "product_support",
+      "condition": "before_standalone_and_coexistence_hil",
+      "status": "candidate_only"
+    }
+  ],
+  "build_matrix": [
+    {
+      "id": "m32_capability_baseline_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_capability",
+      "extra_conf_file": "baseline.conf",
+      "resource_profile_id": "ble_baseline",
+      "status": "PASS",
+      "source_revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+      "evidence": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-manifest.json"
+    },
+    {
+      "id": "m32_capability_extended_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_capability",
+      "extra_conf_file": "extended.conf",
+      "resource_profile_id": "ble_extended",
+      "status": "PASS",
+      "source_revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+      "evidence": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-manifest.json"
+    },
+    {
+      "id": "m32_advertising_extended_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_advertising_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "ble_extended",
+      "status": "PASS",
+      "source_revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+      "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_scan_initiate_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_scan_initiate_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "ble_baseline",
+      "status": "PASS",
+      "source_revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+      "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_resource_c1p1_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_resource_contract",
+      "extra_conf_file": "c1p1.conf",
+      "resource_profile_id": "ble_c1p1",
+      "status": "PASS",
+      "source_revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+      "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_resource_c2p0_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_resource_contract",
+      "extra_conf_file": "c2p0.conf",
+      "resource_profile_id": "ble_c2p0",
+      "status": "PASS",
+      "source_revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+      "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_resource_c0p2_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_resource_contract",
+      "extra_conf_file": "c0p2.conf",
+      "resource_profile_id": "ble_c0p2",
+      "status": "PASS",
+      "source_revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+      "evidence": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_nordic_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_ble_nordic_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "ble_nordic",
+      "status": "PASS",
+      "source_revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+      "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_mesh_base_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_mesh_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "mesh_base",
+      "status": "PASS",
+      "source_revision": "ab3f682547836afd33d6c09612f027266b144f90",
+      "evidence": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_mesh_management_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_mesh_management_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "mesh_management",
+      "status": "PASS",
+      "source_revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+      "evidence": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_mesh_dfu_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_mesh_update_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "mesh_dfu_internal",
+      "status": "PASS",
+      "source_revision": "1a57eaae55acec26dd2903ab05c807062b6bfb9a",
+      "evidence": "00_Docs/04_검증 기록/283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_radio_ieee802154",
+      "controller_variant": "direct_radio",
+      "application": "tests/zephyr/m32_radio154_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "radio_ieee802154",
+      "status": "PASS",
+      "source_revision": "82361413bc0377871fffd74f4a23eca5a98a2abb",
+      "evidence": "00_Docs/04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_radio_esb",
+      "controller_variant": "direct_radio",
+      "application": "tests/zephyr/m32_esb_contract",
+      "extra_conf_file": null,
+      "resource_profile_id": "radio_esb",
+      "status": "PASS",
+      "source_revision": "82361413bc0377871fffd74f4a23eca5a98a2abb",
+      "evidence": "00_Docs/04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_coexistence_ble_mesh_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_coexistence_contract",
+      "extra_conf_file": "ble_mesh.conf",
+      "resource_profile_id": "coexistence_ble_mesh",
+      "status": "PASS",
+      "source_revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+      "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_coexistence_ble_154_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_coexistence_contract",
+      "extra_conf_file": "ble_154.conf",
+      "resource_profile_id": "coexistence_ble_154",
+      "status": "PASS",
+      "source_revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+      "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_coexistence_ble_esb_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_coexistence_contract",
+      "extra_conf_file": "ble_esb.conf",
+      "resource_profile_id": "coexistence_ble_esb",
+      "status": "PASS",
+      "source_revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+      "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+    },
+    {
+      "id": "m32_coexistence_external_one_wire_sdc",
+      "controller_variant": "product_sdc",
+      "application": "tests/zephyr/m32_coexistence_contract",
+      "extra_conf_file": "external.conf",
+      "resource_profile_id": "external_coexistence",
+      "status": "PASS",
+      "source_revision": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+      "evidence": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md"
+    }
+  ],
+  "test_families": [
+    {
+      "id": "M32-CAP-01",
+      "cases": [
+        {
+          "id": "M32-CAP-01:primary",
+          "owner_work_id": "M32-W01",
+          "roles": [
+            "capability_probe"
+          ],
+          "minimum_boards": 1,
+          "timeout_s": 60,
+          "iterations": 1,
+          "packet_denominator": 13,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5000,
+          "metric": "controller_feature_and_resource_records",
+          "negative_classes": [
+            "missing",
+            "duplicate",
+            "unknown",
+            "revision"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-manifest.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-PWR-01",
+      "cases": [
+        {
+          "id": "M32-PWR-01:primary",
+          "owner_work_id": "M32-W02",
+          "roles": [
+            "central",
+            "peripheral"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 180,
+          "iterations": 20,
+          "packet_denominator": 40,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5000,
+          "metric": "tx_power_reports",
+          "negative_classes": [
+            "unsupported_peer",
+            "out_of_range",
+            "stale_handle"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+        "status": "PASS",
+        "source_revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+        "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/m32-power-path-exact-9a7d0351.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-PATH-01",
+      "cases": [
+        {
+          "id": "M32-PATH-01:primary",
+          "owner_work_id": "M32-W02",
+          "roles": [
+            "monitor",
+            "peer"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 240,
+          "iterations": 20,
+          "packet_denominator": 60,
+          "allowed_loss_packets": 1,
+          "latency_limit_ms": 5000,
+          "metric": "path_loss_zone_events",
+          "negative_classes": [
+            "invalid_threshold",
+            "disabled_report",
+            "peer_loss"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+        "status": "PASS",
+        "source_revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+        "evidence": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/m32-power-path-exact-9a7d0351.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-SUB-01",
+      "cases": [
+        {
+          "id": "M32-SUB-01:primary",
+          "owner_work_id": "M32-W03",
+          "roles": [
+            "central",
+            "peripheral"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 240,
+          "iterations": 20,
+          "packet_denominator": 40,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5000,
+          "metric": "subrate_changes",
+          "negative_classes": [
+            "rejected_request",
+            "stale_link",
+            "invalid_factor"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-SCA-01",
+      "cases": [
+        {
+          "id": "M32-SCA-01:primary",
+          "owner_work_id": "M32-W03",
+          "roles": [
+            "central",
+            "peripheral"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 180,
+          "iterations": 20,
+          "packet_denominator": 20,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5000,
+          "metric": "sca_updates",
+          "negative_classes": [
+            "unsupported_peer",
+            "disconnect_pending"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-TIME-01",
+      "cases": [
+        {
+          "id": "M32-TIME-01:primary",
+          "owner_work_id": "M32-W03",
+          "roles": [
+            "central",
+            "peripheral"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 240,
+          "iterations": 20,
+          "packet_denominator": 2000,
+          "allowed_loss_packets": 20,
+          "latency_limit_ms": 50,
+          "metric": "frame_space_interval_packets",
+          "negative_classes": [
+            "invalid_combination",
+            "controller_reject"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-FEAT-01",
+      "cases": [
+        {
+          "id": "M32-FEAT-01:primary",
+          "owner_work_id": "M32-W03",
+          "roles": [
+            "central",
+            "peripheral"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 180,
+          "iterations": 20,
+          "packet_denominator": 40,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5000,
+          "metric": "feature_page_and_channel_updates",
+          "negative_classes": [
+            "unknown_page",
+            "all_channels_disabled",
+            "cross_link"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w03-exact-9b3badc4/m32-timing-feature-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-ADV-01",
+      "cases": [
+        {
+          "id": "M32-ADV-01:primary",
+          "owner_work_id": "M32-W04",
+          "roles": [
+            "advertiser_a",
+            "advertiser_b",
+            "scanner"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 300,
+          "iterations": 20,
+          "packet_denominator": 600,
+          "allowed_loss_packets": 6,
+          "latency_limit_ms": 500,
+          "metric": "set_sid_scan_records",
+          "negative_classes": [
+            "over_capacity",
+            "stale_set",
+            "scan_initiate_conflict"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-3829f144/m32-adv-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-PRIV-01",
+      "cases": [
+        {
+          "id": "M32-PRIV-01:primary",
+          "owner_work_id": "M32-W04",
+          "roles": [
+            "identity_a",
+            "identity_b",
+            "peer"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 300,
+          "iterations": 20,
+          "packet_denominator": 200,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 1000,
+          "metric": "identity_list_reconnections",
+          "negative_classes": [
+            "wrong_identity",
+            "unauthorized_peer",
+            "active_list_change"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-386bc379/m32-priv-02.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-EAD-01",
+      "cases": [
+        {
+          "id": "M32-EAD-01:primary",
+          "owner_work_id": "M32-W04",
+          "roles": [
+            "advertiser",
+            "scanner"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 240,
+          "iterations": 20,
+          "packet_denominator": 400,
+          "allowed_loss_packets": 4,
+          "latency_limit_ms": 1000,
+          "metric": "authenticated_advertisements",
+          "negative_classes": [
+            "tamper",
+            "wrong_key",
+            "wrong_iv",
+            "replay"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "4af5b15a54aacc9d15f8257e535bbd7bc635b78b",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-4af5b15a/m32-ead-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-NORDIC-01",
+      "cases": [
+        {
+          "id": "M32-NORDIC-01:primary",
+          "owner_work_id": "M32-W05",
+          "roles": [
+            "central",
+            "peripheral"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 300,
+          "iterations": 20,
+          "packet_denominator": 200,
+          "allowed_loss_packets": 2,
+          "latency_limit_ms": 1000,
+          "metric": "vendor_link_reports",
+          "negative_classes": [
+            "unsupported_vendor_feature",
+            "overflow",
+            "disabled_callback"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-SYNC-01",
+      "cases": [
+        {
+          "id": "M32-SYNC-01:primary",
+          "owner_work_id": "M32-W05",
+          "roles": [
+            "time_source",
+            "time_sink"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 300,
+          "iterations": 20,
+          "packet_denominator": 1000,
+          "allowed_loss_packets": 10,
+          "latency_limit_ms": 5,
+          "metric": "timestamp_samples",
+          "negative_classes": [
+            "wrap",
+            "stale_sample",
+            "peer_loss"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-EVENT-01",
+      "cases": [
+        {
+          "id": "M32-EVENT-01:primary",
+          "owner_work_id": "M32-W05",
+          "roles": [
+            "event_source",
+            "observer"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 240,
+          "iterations": 20,
+          "packet_denominator": 200,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5,
+          "metric": "event_and_notification_callbacks",
+          "negative_classes": [
+            "cancelled_event",
+            "duplicate_reservation",
+            "late_callback"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w05-exact-f813356c/m32-nordic-exact.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-ACL-01",
+      "cases": [
+        {
+          "id": "M32-ACL-01:primary",
+          "owner_work_id": "M32-W05",
+          "roles": [
+            "sender",
+            "receiver"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 300,
+          "iterations": 20,
+          "packet_denominator": 1000,
+          "allowed_loss_packets": 10,
+          "latency_limit_ms": 1000,
+          "metric": "flushable_acl_buffers",
+          "negative_classes": [
+            "unsupported_peer",
+            "expired_buffer",
+            "post_disconnect_access"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "HOLD",
+          "source_revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+          "evidence": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+        }
+      ]
+    },
+    {
+      "id": "M32-MESH-01",
+      "cases": [
+        {
+          "id": "M32-MESH-01:primary",
+          "owner_work_id": "M32-W06",
+          "roles": [
+            "provisioner",
+            "node_a",
+            "node_b"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 600,
+          "iterations": 10,
+          "packet_denominator": 300,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 2000,
+          "metric": "provisioned_model_messages",
+          "negative_classes": [
+            "unprovisioned_access",
+            "invalid_opcode",
+            "peer_loss"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-MESHSEC-01",
+      "cases": [
+        {
+          "id": "M32-MESHSEC-01:primary",
+          "owner_work_id": "M32-W06",
+          "roles": [
+            "provisioner",
+            "node_a",
+            "node_b"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 600,
+          "iterations": 10,
+          "packet_denominator": 200,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 2000,
+          "metric": "secured_mesh_messages",
+          "negative_classes": [
+            "wrong_key",
+            "replay",
+            "settings_corruption"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w06-exact-45715e42/m32-mesh-11.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-MESH11-01",
+      "cases": [
+        {
+          "id": "M32-MESH11-01:primary",
+          "owner_work_id": "M32-W07",
+          "roles": [
+            "client",
+            "server",
+            "target"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 900,
+          "iterations": 10,
+          "packet_denominator": 350,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 3000,
+          "metric": "mesh_1_1_management_operations",
+          "negative_classes": [
+            "malformed",
+            "out_of_range",
+            "replay",
+            "wrong_subnet"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w07-exact-f95cca6c/m32-mesh11-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-BLOB-01",
+      "cases": [
+        {
+          "id": "M32-BLOB-01:primary",
+          "owner_work_id": "M32-W08",
+          "roles": [
+            "blob_client",
+            "blob_server",
+            "observer"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 10800,
+          "iterations": 10,
+          "packet_denominator": 1024,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 3000,
+          "metric": "blob_chunks",
+          "negative_classes": [
+            "missing_chunk",
+            "bad_digest",
+            "cancel_resume"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "40e4c46b83addefd7ae12cc0c2af1b24764c4356",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-blob-40e4c46b-exact/m32-blob-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-MDFU-01",
+      "cases": [
+        {
+          "id": "M32-MDFU-01:primary",
+          "owner_work_id": "M32-W08",
+          "roles": [
+            "distributor",
+            "target_a",
+            "target_b"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 10800,
+          "iterations": 5,
+          "packet_denominator": 10,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5000,
+          "metric": "firmware_distribution_targets",
+          "negative_classes": [
+            "wrong_image",
+            "wrong_key",
+            "rollback",
+            "partial_image"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "e0a1b7fd7885b79bbc8d8b575c63f5468c94c2a8",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-mdfu-e0a1b7fd-exact/m32-mdfu-01.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-154-01",
+      "cases": [
+        {
+          "id": "M32-154-01:primary",
+          "owner_work_id": "M32-W09",
+          "roles": [
+            "transmitter",
+            "receiver"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 300,
+          "iterations": 20,
+          "packet_denominator": 2000,
+          "allowed_loss_packets": 20,
+          "latency_limit_ms": 100,
+          "metric": "ieee802154_packets",
+          "negative_classes": [
+            "invalid_channel",
+            "invalid_length",
+            "missing_stop"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-ESB-01",
+      "cases": [
+        {
+          "id": "M32-ESB-01:primary",
+          "owner_work_id": "M32-W09",
+          "roles": [
+            "ptx",
+            "prx"
+          ],
+          "minimum_boards": 2,
+          "timeout_s": 300,
+          "iterations": 20,
+          "packet_denominator": 2000,
+          "allowed_loss_packets": 20,
+          "latency_limit_ms": 100,
+          "metric": "esb_acknowledged_packets",
+          "negative_classes": [
+            "invalid_rate",
+            "invalid_length",
+            "missing_ack",
+            "missing_stop"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w09-reconfirm-115d039f/m32-radio-standalone.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-COEX-01",
+      "cases": [
+        {
+          "id": "M32-COEX-01:primary",
+          "owner_work_id": "M32-W10",
+          "roles": [
+            "service_a",
+            "service_b",
+            "observer"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 600,
+          "iterations": 20,
+          "packet_denominator": 4000,
+          "allowed_loss_packets": 80,
+          "latency_limit_ms": 500,
+          "metric": "per_protocol_packets",
+          "negative_classes": [
+            "double_ownership",
+            "starvation",
+            "restart_failure"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w10-exact-512b027a/m32-coexistence.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-REG-01",
+      "cases": [
+        {
+          "id": "M32-REG-01:primary",
+          "owner_work_id": "M32-W11",
+          "roles": [
+            "regression_roles"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 1200,
+          "iterations": 1,
+          "packet_denominator": 12,
+          "allowed_loss_packets": 0,
+          "latency_limit_ms": 5000,
+          "metric": "baseline_family_count",
+          "negative_classes": [
+            "cross_link",
+            "security_regression",
+            "cleanup"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "94f0254499858800b4ced38b1211746b3f2175f8",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-exact-94f02544/regression-family-status.json"
+        }
+      ]
+    },
+    {
+      "id": "M32-SOAK-01",
+      "cases": [
+        {
+          "id": "M32-SOAK-01:primary",
+          "owner_work_id": "M32-W11",
+          "roles": [
+            "stress_roles"
+          ],
+          "minimum_boards": 3,
+          "timeout_s": 1800,
+          "iterations": 1,
+          "packet_denominator": 10000,
+          "allowed_loss_packets": 100,
+          "latency_limit_ms": 500,
+          "metric": "bounded_soak_packets",
+          "negative_classes": [
+            "counter_regression",
+            "payload_corruption",
+            "resource_leak"
+          ],
+          "recovery_timeout_s": 30,
+          "abort_conditions": [
+            "revision_mismatch",
+            "wrong_role_or_image",
+            "unexpected_security_acceptance",
+            "payload_corruption",
+            "resource_cleanup_failure"
+          ],
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "94f0254499858800b4ced38b1211746b3f2175f8",
+          "evidence": "00_Docs/04_검증 기록/evidence/m32-w11-exact-94f02544/soak.json"
+        }
+      ]
+    }
+  ],
+  "follow_up_cases": [
+    {
+      "id": "external_peer_product_interop",
+      "verification_owner": "user",
+      "verification_stage": "user_follow_up",
+      "development_blocker": false,
+      "release_blocker": false,
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "external_storage_mesh_dfu_physical",
+      "verification_owner": "user",
+      "verification_stage": "user_follow_up",
+      "development_blocker": false,
+      "release_blocker": false,
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "external_one_wire_coexistence_physical",
+      "verification_owner": "user",
+      "verification_stage": "user_follow_up",
+      "development_blocker": false,
+      "release_blocker": false,
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "ubuntu_host_physical",
+      "verification_owner": "user",
+      "verification_stage": "final_release",
+      "development_blocker": false,
+      "release_blocker": true,
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "macos_host_physical",
+      "verification_owner": "user",
+      "verification_stage": "final_release",
+      "development_blocker": false,
+      "release_blocker": true,
+      "status": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "counts": {
+    "work_total": 12,
+    "work_completed": 12,
+    "capability_total": 42,
+    "resource_profile_total": 15,
+    "test_family_total": 24,
+    "test_family_passed": 23,
+    "test_case_total": 24,
+    "m32_parity_samples": 41,
+    "m32_parity_variants": 74
+  }
+}

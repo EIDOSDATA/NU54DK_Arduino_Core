@@ -1,0 +1,255 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": {
+    "distributor": {
+      "port": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289"
+      },
+      "volume": "D:/"
+    },
+    "target_a": {
+      "port": "COM18",
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289"
+      },
+      "volume": "E:/"
+    },
+    "target_b": {
+      "port": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289"
+      },
+      "volume": "F:/"
+    }
+  },
+  "capacities": {
+    "distributor": {
+      "cdb_local_slots": 1,
+      "cdb_node_slots": 3,
+      "cdb_remote_capacity": 2
+    },
+    "target_a": {
+      "cdb_local_slots": 1,
+      "cdb_node_slots": 3,
+      "cdb_remote_capacity": 2
+    },
+    "target_b": {
+      "cdb_local_slots": 1,
+      "cdb_node_slots": 3,
+      "cdb_remote_capacity": 2
+    }
+  },
+  "duration_seconds": 4107.781,
+  "firmware_distribution_targets": 10,
+  "flash_backend": "pyocd-cmsis-dap-v2-exact-sector",
+  "flash_results": {
+    "distributor_base": [
+      "pyocd-sector-no-reset",
+      "352256"
+    ],
+    "distributor_boot": [
+      "pyocd-sector-no-reset",
+      "36864"
+    ],
+    "distributor_candidate_bytes": "57344",
+    "distributor_settings_clear": {
+      "bytes": 36864,
+      "end_exclusive": 1560576,
+      "erase_value": "0xff",
+      "mode": "nrf54l-rram-fill-verified",
+      "start": 1523712,
+      "verified_words": 9216
+    },
+    "target_a_base": [
+      "pyocd-sector-no-reset",
+      "344064"
+    ],
+    "target_a_boot": [
+      "pyocd-sector-no-reset",
+      "36864"
+    ],
+    "target_a_settings_clear": {
+      "bytes": 36864,
+      "end_exclusive": 1560576,
+      "erase_value": "0xff",
+      "mode": "nrf54l-rram-fill-verified",
+      "start": 1523712,
+      "verified_words": 9216
+    },
+    "target_b_base": [
+      "pyocd-sector-no-reset",
+      "344064"
+    ],
+    "target_b_boot": [
+      "pyocd-sector-no-reset",
+      "36864"
+    ],
+    "target_b_settings_clear": {
+      "bytes": 36864,
+      "end_exclusive": 1560576,
+      "erase_value": "0xff",
+      "mode": "nrf54l-rram-fill-verified",
+      "start": 1523712,
+      "verified_words": 9216
+    }
+  },
+  "images": {
+    "candidate": {
+      "name": "zephyr.signed.bin",
+      "sha256": "65d0afc768f8d20d4aac088a8fd8a262413a22599f6ef9730d83ab13a8c62755",
+      "size": 55040,
+      "version": [
+        2,
+        0,
+        0,
+        0
+      ]
+    },
+    "distributor_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "ac78e445306b4f07f040e3b039e1681ad9b0572edd5f1c780ae5524abe2d1300",
+      "size": 351362,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_a_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "03e3027dde339967501fa47393cd41b4f910a3bbec50ee286aa99b2eaf333a6b",
+      "size": 343751,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_b_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "3af994c963c7af46cdcd600d625f466ae21cef5433755e5390ab387e2b3abdaf",
+      "size": 343750,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "iteration_records": [
+    {
+      "candidate_boots": 2,
+      "iteration": 1,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 2,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 3,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 4,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 5,
+      "target_a_confirmed": 1,
+      "target_b_confirmed": 0
+    }
+  ],
+  "iterations": 5,
+  "mass_erase_or_recover": false,
+  "negative": {
+    "partial_image": "rejected",
+    "rollback": "observed",
+    "wrong_image": "rejected",
+    "wrong_key": "rejected"
+  },
+  "nonce": "c832227a98565ccb7f651a0554117323",
+  "observed_utc": "2026-10-03T04:08:18.704707+00:00",
+  "rollback_count": 9,
+  "rollback_records": [
+    {
+      "iteration": 1,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 2,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 3,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 4,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 5,
+      "roles": [
+        "target_b"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "scope": "signed_mesh_dfu_five_iterations_two_targets_and_mcuboot_rollback",
+  "secondary_slot": {
+    "erase_end_exclusive": 1523712,
+    "offset": 794624,
+    "size": 729088
+  },
+  "source_clean": true,
+  "source_revision": "94f0254499858800b4ced38b1211746b3f2175f8",
+  "status": "PASS",
+  "test_ids": [
+    "M32-MDFU-01:primary"
+  ],
+  "transcript_sha256": "9e9eca8f3aff2cd80774d92c6cae87bb57e6421d5cbaa813727cdf96d6e87e84",
+  "trust_public_key_source_sha256": "2e567f16e75c1f0ea609bc4342c04a427b0bed948ff132004dd9d130b590c34f"
+}

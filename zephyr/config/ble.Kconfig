@@ -143,6 +143,23 @@ config NUCODE_BLE_PAWR_RESPONSE_QUEUE_SIZE
 	help
 	  callback 밖 수명을 보장하는 bounded PAwR response 개수입니다.
 
+config NUCODE_BLE_NORDIC_EXTENSIONS
+	bool "NUCODE BLE Nordic SDC 확장 API 활성화"
+	default n
+	depends on NUCODE_BLE_CORE
+	help
+	  LLPM, QoS connection event/channel survey, connection anchor time,
+	  event-start task와 radio notification 경계를 공개합니다.
+
+config NUCODE_BLE_NORDIC_REPORT_QUEUE_SIZE
+	int "NUCODE BLE Nordic report queue 항목 수"
+	default 16
+	range 4 64
+	depends on NUCODE_BLE_NORDIC_EXTENSIONS
+	help
+	  vendor HCI callback에서 BLEDevice.poll()로 전달할 QoS·survey·anchor
+	  record 종류별 고정 개수입니다.
+
 config NUCODE_BLE_GATT
 	bool "NUCODE 범용 GATT server/client 활성화"
 	default n

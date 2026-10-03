@@ -66,6 +66,15 @@ inline void *net_buf_add_mem(net_buf *buffer, const void *data, std::size_t leng
     return buffer->data + buffer->len - length;
 }
 
+inline void *net_buf_add(net_buf *buffer, std::size_t length)
+{
+    assert(buffer != nullptr && buffer->len + length <= buffer->capacity);
+    void *const added = buffer->data + buffer->len;
+    std::memset(added, 0, length);
+    buffer->len += length;
+    return added;
+}
+
 inline void net_buf_unref(net_buf *buffer)
 {
     assert(buffer != nullptr && buffer->in_use);

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W07",
+  "status": "PASS",
+  "source_revision": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+  "native_build": {
+    "status": "PASS",
+    "roles": 3,
+    "client_flash_bytes": 352256,
+    "server_flash_bytes": 339968,
+    "target_flash_bytes": 339968,
+    "evidence": "m32-mesh11-01.json"
+  },
+  "arduino_build": {
+    "status": "PASS",
+    "examples": 13,
+    "source_revision": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+    "evidence": "../../282_M32_W07_Mesh_1.1_software와_HIL_blocker.md"
+  },
+  "host_negative_and_contract": {
+    "status": "PASS",
+    "tests": 105,
+    "commands": [
+      "PYTHONPATH=tests/host python -m unittest discover -s tests/host -p test_m32_*.py",
+      "python tools/bluetooth/m32_contract.py --check --sdk-root C:/ncs/v3.4.0"
+    ]
+  },
+  "functional_hil": {
+    "status": "PASS",
+    "evidence": "m32-mesh11-01.json",
+    "test_ids": [
+      "M32-MESH11-01:primary"
+    ],
+    "boards": 3,
+    "remote_provisioned_nodes": 1,
+    "direct_provisioned_nodes": 1,
+    "feature_groups": 7,
+    "iterations": 10,
+    "management_operations": 350,
+    "malformed_rejected": 1,
+    "out_of_range_rejected": 1,
+    "replay_rejected": 1,
+    "wrong_subnet_rejected": 1,
+    "stopped_roles": 3
+  },
+  "capacity": {
+    "status": "PASS",
+    "cdb_node_slots": 3,
+    "cdb_remote_capacity": 2,
+    "cdb_subnets": 2,
+    "local_subnets": 2,
+    "cdb_app_keys": 2,
+    "local_app_keys": 2,
+    "model_app_keys": 2
+  },
+  "external_peer_interop": "NOT_RUN"
+}

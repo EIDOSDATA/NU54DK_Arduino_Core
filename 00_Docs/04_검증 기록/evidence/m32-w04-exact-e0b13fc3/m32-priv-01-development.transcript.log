@@ -1,0 +1,10 @@
+identity_a: M32PRIV|1|READY|role=identity_a|address=E4:17:FF:9D:C9:6B|type=1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+identity_b: M32PRIV|1|READY|role=identity_b|address=F6:BF:65:82:F1:AA|type=1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+peer: M32PRIV|1|READY|role=peer|address=FA:B5:DC:C8:4E:6A|type=1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+identity_a: M32PRIV|1|BEGIN|role=identity_a|nonce=7bb31061d89b9c569f6351e8071644d1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+identity_b: M32PRIV|1|BEGIN|role=identity_b|nonce=7bb31061d89b9c569f6351e8071644d1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+identity_b: M32PRIV|1|NEG|role=identity_b|unauthorized_peer_rejected=1|nonce=7bb31061d89b9c569f6351e8071644d1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+identity_a: M32PRIV|1|ARMED|role=identity_a|nonce=7bb31061d89b9c569f6351e8071644d1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+identity_b: M32PRIV|1|ARMED|role=identity_b|nonce=7bb31061d89b9c569f6351e8071644d1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+peer: M32PRIV|1|BEGIN|role=peer|nonce=7bb31061d89b9c569f6351e8071644d1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4
+identity_b: M32PRIV|1|FAIL|role=identity_b|stage=session_timeout|code=0|nonce=7bb31061d89b9c569f6351e8071644d1|core=e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4

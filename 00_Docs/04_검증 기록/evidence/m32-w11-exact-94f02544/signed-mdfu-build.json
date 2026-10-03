@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "94f0254499858800b4ced38b1211746b3f2175f8",
+  "source_clean": true,
+  "signing_key_embedded": false,
+  "runtime_evidence": "mesh-mdfu.json",
+  "artifacts": [
+    {
+      "role": "candidate",
+      "kind": "signed_bin",
+      "bytes": 55040,
+      "sha256": "65d0afc768f8d20d4aac088a8fd8a262413a22599f6ef9730d83ab13a8c62755"
+    },
+    {
+      "role": "candidate",
+      "kind": "signed_hex",
+      "bytes": 154828,
+      "sha256": "2dcaa750882331bd05653e34a7e5546b54ef9cd8cb2782de185c4f7226038232"
+    },
+    {
+      "role": "candidate",
+      "kind": "mcuboot_hex",
+      "bytes": 93042,
+      "sha256": "6e476ae9b0b89daa33682e566310956c34e2f185adf7722b56ee6f10ee743466"
+    },
+    {
+      "role": "candidate",
+      "kind": "dfu_zip",
+      "bytes": 55840,
+      "sha256": "51ca0bc67665c1eec35b112458502b39747225b57927655819789c79ec9860a9"
+    },
+    {
+      "role": "distributor",
+      "kind": "signed_bin",
+      "bytes": 351362,
+      "sha256": "ac78e445306b4f07f040e3b039e1681ad9b0572edd5f1c780ae5524abe2d1300"
+    },
+    {
+      "role": "distributor",
+      "kind": "signed_hex",
+      "bytes": 988334,
+      "sha256": "49e29e6c6c295c33e26b0ceb092ecb4fa328ae41153571bc762b7d222c045331"
+    },
+    {
+      "role": "distributor",
+      "kind": "mcuboot_hex",
+      "bytes": 93042,
+      "sha256": "6e476ae9b0b89daa33682e566310956c34e2f185adf7722b56ee6f10ee743466"
+    },
+    {
+      "role": "distributor",
+      "kind": "dfu_zip",
+      "bytes": 352163,
+      "sha256": "b6e220b15c893feebd7f6423451b922c1544e364380210d9a1eaea4ea5d15821"
+    },
+    {
+      "role": "target_a",
+      "kind": "signed_bin",
+      "bytes": 343751,
+      "sha256": "03e3027dde339967501fa47393cd41b4f910a3bbec50ee286aa99b2eaf333a6b"
+    },
+    {
+      "role": "target_a",
+      "kind": "signed_hex",
+      "bytes": 966922,
+      "sha256": "163156361b42be6734f0588155661e710d924d6383b071cb84ee7036fb757d72"
+    },
+    {
+      "role": "target_a",
+      "kind": "mcuboot_hex",
+      "bytes": 93042,
+      "sha256": "6e476ae9b0b89daa33682e566310956c34e2f185adf7722b56ee6f10ee743466"
+    },
+    {
+      "role": "target_a",
+      "kind": "dfu_zip",
+      "bytes": 344552,
+      "sha256": "e52b01b81c49eb34cb2401f5245ea96390cd20dd788b39acf537131dc7d09029"
+    },
+    {
+      "role": "target_b",
+      "kind": "signed_bin",
+      "bytes": 343750,
+      "sha256": "3af994c963c7af46cdcd600d625f466ae21cef5433755e5390ab387e2b3abdaf"
+    },
+    {
+      "role": "target_b",
+      "kind": "signed_hex",
+      "bytes": 966922,
+      "sha256": "d10e07ebac3ba68b743ddcf93f066f173d2b50bb6ed7cdfe2d281d70ac39f7c5"
+    },
+    {
+      "role": "target_b",
+      "kind": "mcuboot_hex",
+      "bytes": 93042,
+      "sha256": "6e476ae9b0b89daa33682e566310956c34e2f185adf7722b56ee6f10ee743466"
+    },
+    {
+      "role": "target_b",
+      "kind": "dfu_zip",
+      "bytes": 344551,
+      "sha256": "e3ac926ad999613e799beec91a8f4271c9e3cfd88784ba35556c2ad86f92e620"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT
+
+menuconfig NUCODE_BLE_MESH_MANAGEMENT
+    bool "NUCODE Bluetooth Mesh 1.1 management API"
+    depends on NUCODE_BLE_MESH
+    help
+      Remote Provisioning, SAR Configuration, Opcodes Aggregator, Large
+      Composition Data, privacy, solicitation, and Subnet Bridging wrappers.
+
+if NUCODE_BLE_MESH_MANAGEMENT
+
+config NUCODE_BLE_MESH_MANAGEMENT_EVENT_QUEUE_SIZE
+    int "Mesh management event queue entries"
+    range 4 64
+    default 16
+
+endif

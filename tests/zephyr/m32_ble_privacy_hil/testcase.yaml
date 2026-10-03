@@ -1,0 +1,19 @@
+tests:
+  nucode.m32.ble_privacy_hil.identity_a:
+    build_only: true
+    extra_args: [M32_PRIV_ROLE=identity_a]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, m32, identity, privacy, hil]
+  nucode.m32.ble_privacy_hil.identity_b:
+    build_only: true
+    extra_args: [M32_PRIV_ROLE=identity_b]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, m32, identity, privacy, hil]
+  nucode.m32.ble_privacy_hil.peer:
+    build_only: true
+    extra_args: [M32_PRIV_ROLE=peer]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, m32, identity, privacy, hil]

@@ -1,0 +1,12 @@
+{
+  "schema_version": 3,
+  "id": "nucode.ble.mesh-update",
+  "requires": ["nucode.ble.mesh", "dfu"],
+  "capabilities": ["nucode.ble.mesh-update-api"],
+  "conf": ["mesh-update.conf"],
+  "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["secure_ble_dfu"]
+}

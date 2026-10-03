@@ -1,0 +1,100 @@
+{
+  "test_ids": [
+    "M32-COEX-01:ble_154",
+    "M32-COEX-01:ble_esb",
+    "M32-COEX-01:ble_mesh"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_ble_internal_radio_coexistence",
+  "source_clean": true,
+  "identity": {
+    "core": "b91e248ab7a35779e1d571e3019bee14c5831c15",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "dut": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "225280"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "radio": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "90112"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "ble": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "192512"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "image_sha256": {
+    "ble_154": {
+      "dut": "8a0b201bf23a8f760499d42c8b1bbd0c60c528f5bd8a3ec14229309390135ec5",
+      "radio_peer": "2e48ece371e8a31ed08ae2c51694d36a46480fca0a769fc6687d42f1537e725c",
+      "ble_peer": "15c434db1dda88db4d72bd9eb3c27e73bf1203f541e680067ad09b779bdba4c0"
+    },
+    "ble_esb": {
+      "dut": "e1b909514daab132b648438bf6abf9d34cdd29d12e291e099eb24c30ef4e9226",
+      "radio_peer": "bc488faec967f2a4fddbc53c0cbf646ff75aa21bbae3dc6a09d003716584a014",
+      "ble_peer": "a9bccbb6b996efc39ccd9ce9214b5a35fd9d5b936616f1955a9e666142b3bfdb"
+    },
+    "ble_mesh": {
+      "dut": "c2de3641303c6f3e18d676f24d8f25036b69f696aa64cb3814786d8622c3426f",
+      "mesh_peer": "7f0ce387bf07d2d838fdae5a5fbd2413f769783c0b4ceeea304d578f6528eea8",
+      "ble_peer": "9cb22169c5cb7be028111ddf828d619903e033d036fb05bbbec7ff593e68524b"
+    }
+  },
+  "iterations_per_scenario": 20,
+  "packets_per_protocol": 4000,
+  "allowed_loss": 80,
+  "service_gap_limit_ms": 500,
+  "results": {},
+  "reason": "CoexistenceFailure: ble_154/dut READY timeout",
+  "transcript_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "observed_utc": "2026-10-01T22:47:14.757780+00:00"
+}

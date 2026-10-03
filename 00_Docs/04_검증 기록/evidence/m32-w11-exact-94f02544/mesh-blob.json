@@ -1,0 +1,161 @@
+{
+  "test_ids": [
+    "M32-BLOB-01:traffic"
+  ],
+  "status": "PASS",
+  "scope": "three_board_blob_push_digest_recovery",
+  "source_clean": true,
+  "identity": {
+    "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "blob_client": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "5b3111ee3cc51c762f34a564c8f57e1e66b360652fe12143293db8c4d99192dc",
+      "boot_image_sha256": "384727ffc41990d1c8e210041e54a0c2dd3c40c070d965de409b35b57cac3118",
+      "signed_image_sha256": "1f2c39e326e14d9da4f4b39e3ed708706936f5691e9ced7bb6698719831654d0",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "boot_flash_mode": "pyocd-sector-no-reset",
+      "boot_flash_bytes": "36864",
+      "signed_flash_mode": "pyocd-sector-no-reset",
+      "signed_flash_bytes": "352256",
+      "settings_clear": {
+        "mode": "nrf54l-rram-fill-verified",
+        "start": 1523712,
+        "end_exclusive": 1560576,
+        "bytes": 36864,
+        "erase_value": "0xff",
+        "verified_words": 9216
+      },
+      "reset_barrier": "pyocd-v2-sw-reset"
+    },
+    "target_a": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "image_sha256": "89dd8145deb93aeb4c9fe2d30bb58c244da783304c9a6745ca5567c9ad16203c",
+      "boot_image_sha256": "384727ffc41990d1c8e210041e54a0c2dd3c40c070d965de409b35b57cac3118",
+      "signed_image_sha256": "afcce7f2b0d2294c7c6ff03d75c6e2c3dd0796677e3eaa85564776c1ede2493d",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "boot_flash_mode": "pyocd-sector-no-reset",
+      "boot_flash_bytes": "36864",
+      "signed_flash_mode": "pyocd-sector-no-reset",
+      "signed_flash_bytes": "348160",
+      "settings_clear": {
+        "mode": "nrf54l-rram-fill-verified",
+        "start": 1523712,
+        "end_exclusive": 1560576,
+        "bytes": 36864,
+        "erase_value": "0xff",
+        "verified_words": 9216
+      },
+      "reset_barrier": "pyocd-v2-sw-reset"
+    },
+    "target_b": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "image_sha256": "85727959c9a6b64893cffd273f0718e154a5a8dcf1d9406026935e12779efad0",
+      "boot_image_sha256": "384727ffc41990d1c8e210041e54a0c2dd3c40c070d965de409b35b57cac3118",
+      "signed_image_sha256": "d7e2a3d16d51651be0d7e79b331046d049fa940d6551d80f8a3a33d11acd112f",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "boot_flash_mode": "pyocd-sector-no-reset",
+      "boot_flash_bytes": "36864",
+      "signed_flash_mode": "pyocd-sector-no-reset",
+      "signed_flash_bytes": "348160",
+      "settings_clear": {
+        "mode": "nrf54l-rram-fill-verified",
+        "start": 1523712,
+        "end_exclusive": 1560576,
+        "bytes": 36864,
+        "erase_value": "0xff",
+        "verified_words": 9216
+      },
+      "reset_barrier": "pyocd-v2-sw-reset"
+    }
+  },
+  "nonce": "f1b9ace8ba32c33d1ea45189132e0d22",
+  "iterations": 10,
+  "chunk_denominator": 5120,
+  "capacities": {
+    "blob_client": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2
+    },
+    "target_a": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2
+    },
+    "target_b": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2
+    }
+  },
+  "results": {
+    "target_a": {
+      "role": "target_a",
+      "iterations": "10",
+      "chunks": "2560",
+      "chunk_size": "128",
+      "bad_digest_rejected": "1",
+      "object_digest": "pass",
+      "nonce": "f1b9ace8ba32c33d1ea45189132e0d22",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    },
+    "target_b": {
+      "role": "target_b",
+      "iterations": "10",
+      "chunks": "2560",
+      "chunk_size": "128",
+      "bad_digest_rejected": "1",
+      "object_digest": "pass",
+      "nonce": "f1b9ace8ba32c33d1ea45189132e0d22",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    },
+    "blob_client": {
+      "role": "blob_client",
+      "targets": "2",
+      "iterations": "10",
+      "chunks": "5120",
+      "chunk_size": "128",
+      "object_size": "32768",
+      "suspend_resume": "pass",
+      "wrong_key_rejected": "1",
+      "object_digest": "pass",
+      "nonce": "f1b9ace8ba32c33d1ea45189132e0d22",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    }
+  },
+  "reason": null,
+  "transcript_sha256": "18c12b9684a853328758e5e2875ae72ad9c90ff2760d4bf820b6969b8d2c79ba",
+  "observed_utc": "2026-10-03T02:34:32.008875+00:00"
+}

@@ -1,0 +1,47 @@
+{
+  "test_id": "M32-CAP-01",
+  "status": "PASS",
+  "scope": "two_builds_two_hci_queries_only",
+  "source_clean": true,
+  "source_revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+  "target_build": {
+    "path": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-build-twister.json",
+    "sha256": "fdf96f2863fe9ee9f4c11ac735bcdd6a381ddf7be16dacee574ebddfa31a8a94",
+    "summary_path": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-build-summary.json",
+    "summary_sha256": "d4d29dd457b899a7a4abe2beba2c8737a102f62028de241f8a615d21b741c1e1",
+    "build_only_count": 2,
+    "scenarios": [
+      "nucode.m32.ble_capability.baseline_sdc",
+      "nucode.m32.ble_capability.extended_sdc"
+    ]
+  },
+  "profiles": [
+    {
+      "profile": "ble_baseline",
+      "build_log": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/baseline-build.log",
+      "build_log_sha256": "8636e1edcebbdb0d8126c42b044e600ef83206fea50362a110f82561a342b18a",
+      "image_sha256": "93026cb7cdd3254f94037a7d740347f63a6a1b286ee4e3a5b4d5d10312530b5e",
+      "ram_bytes": 61364,
+      "rram_bytes": 199564,
+      "result_path": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/m32-cap-baseline-clean-35aabc84-01.json",
+      "result_sha256": "d621045fa79d3796f1a8181ebe8ca58635516dc32b56c6dcaf20844d4ff65a48",
+      "transcript_sha256": "ef40c7bf4b1c9f766ba2b7c0612be47e962726db4139b01e6a085f9c74cffd24",
+      "max_page": 0,
+      "record_count": 13
+    },
+    {
+      "profile": "ble_extended",
+      "build_log": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/extended-build.log",
+      "build_log_sha256": "318cd9995d0b016897497d1c9acc2e3443d3c69affe573527073c31479c3f1db",
+      "image_sha256": "a16dad372bf51649e43bdd7f0e4993f478e336942614a450aef63272de675daf",
+      "ram_bytes": 66396,
+      "rram_bytes": 217196,
+      "result_path": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/m32-cap-extended-clean-35aabc84-02.json",
+      "result_sha256": "cdc86d129640b219b97203024e184afc8bf529cb8de2c13a2e8deb833ba79b3a",
+      "transcript_sha256": "da4b2b6d86670fb8185e76f9ba7f727cf54cdbff24d2356deeb7d27a01942aa8",
+      "max_page": 1,
+      "record_count": 13
+    }
+  ],
+  "functional_hil": "NOT_APPLICABLE_CAPABILITY_QUERY_ONLY"
+}

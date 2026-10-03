@@ -23,6 +23,12 @@ ALLOWED_PROFILES = {
     "fabric",
     "secure_ble_dfu",
     "ble_audio_io",
+    "radio_ieee802154",
+    "radio_esb",
+    "coexistence_ble_mesh",
+    "coexistence_ble_154",
+    "coexistence_ble_esb",
+    "external_coexistence",
 }
 PROFILE_LABELS = {
     "standard": "Standard peripherals",
@@ -31,6 +37,12 @@ PROFILE_LABELS = {
     "fabric": "Peripheral Fabric (DAP UART disconnected)",
     "secure_ble_dfu": "Secure BLE DFU (MCUboot)",
     "ble_audio_io": "BLE Audio external I/O (DAP UART disconnected)",
+    "radio_ieee802154": "Standalone IEEE 802.15.4 radio",
+    "radio_esb": "Standalone Enhanced ShockBurst radio",
+    "coexistence_ble_mesh": "BLE + Bluetooth Mesh coexistence",
+    "coexistence_ble_154": "BLE + IEEE 802.15.4 coexistence",
+    "coexistence_ble_esb": "BLE + ESB coexistence candidate",
+    "external_coexistence": "BLE external 1-wire coexistence",
 }
 SIDECAR_NAMES = {
     "nucode-build.json",

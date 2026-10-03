@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | ADR-0002 |
-| 문서 개정 | 2.3 |
+| 문서 개정 | 2.4 |
 | 문서 상태 | **Accepted** |
 | 결정일 | 2026-08-28 |
 | 적용 범위 | `v0.2.0` 이후 구성 UX와 Arduino 예제 소유권 |
@@ -97,7 +97,7 @@ slot 비용을 기본으로 부과하지 않는다.
 signed update·BLE update·rollback 경로를 구현·검증했고 정식 설치본에 포함했다. 기본 loaderless
 profile에는 boot 영역이나 update slot을 추가하지 않는다. 이전 `v0.4.1` 자산도 그대로 보존한다.
 
-`v0.7.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
+`v0.8.0` M36은 M30의 최소 기반을 여러 layout·update transport와 검증된 고급 Memory layout
 선택으로 확장하는 후속 계획이다. Layout 선택은 단순 Devicetree 조각이 아니라 code partition,
 linker 최대 범위, Arduino maximum size, storage 주소와 migration 정책을 묶은 계약이다.
 Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공하며, 전문가 `app.overlay`도 같은 충돌
@@ -105,6 +105,10 @@ Tools 메뉴에는 임의 byte 입력보다 시험한 preset만 제공하며, �
 실제 전원 차단 12/12를 완료했고 M36은 미착수다. M30의 완료 근거와 후속 경계는
 [161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
 [v0.5.0 착수 계획](../TODO_v0.5.0.md)에서 관리한다.
+
+2026-10-01 결정에 따라 [v0.7.0](../TODO_v0.7.0.md)은 NCS 3.4.0→3.4.1 전체 SDK 전환과 기존
+기능 회귀만 수행한다. 이 전환에 새 layout·storage API·update transport를 추가하지 않으며,
+기존 profile·layout 계약과 M36 번호·미착수 상태를 유지한다.
 
 ---
 
@@ -207,3 +211,4 @@ Profile, feature 또는 공개 예제를 바꿀 때 다음을 확인한다.
 | 2026-09-02 | Refined | Loaderless 단일 application을 기본값으로, MCUboot/DFU dual-slot을 검증된 고급 layout으로 분리 |
 | 2026-09-12 | Refined | M30의 최소 BLE DFU 기반과 M36의 다중 layout·transport 확장 계획을 분리; 현재 loaderless 계약 유지 |
 | 2026-09-28 | Refined | M32·M33의 v0.6.0 배정에 따라 M36 목표를 v0.7.0으로 이동; M번호·기본 layout·미착수 상태 유지 |
+| 2026-10-01 | Refined | v0.7.0을 NCS 3.4.1 전체 SDK 전환 전용으로 분리하고 M36은 v0.8.0으로 이동; 기존 M번호·profile/layout 계약 유지 |

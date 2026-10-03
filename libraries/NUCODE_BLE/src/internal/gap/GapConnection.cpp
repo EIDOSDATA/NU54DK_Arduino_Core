@@ -3,6 +3,17 @@
  */
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 #include "GapInternal.h"
+#if defined(CONFIG_BT_TRANSMIT_POWER_CONTROL)
+extern "C"
+{
+    int bt_conn_set_remote_tx_power_level(struct bt_conn *connection,
+                                          enum bt_conn_le_tx_power_phy phy,
+                                          std::int8_t delta);
+}
+#endif
+#if defined(CONFIG_BT_CTLR_CONN_RSSI)
+#include <zephyr/sys/byteorder.h>
+#endif
 namespace nucode::ble::internal::gap
 {
     namespace
@@ -61,6 +72,84 @@ namespace nucode::ble::internal::gap
             atomic_set(&gapState().connection_connecting, connecting ? 1 : 0);
         }
 
+        /** @brief 새 generation이 이전 link의 timing·feature 결과를 상속하지 않게 지웁니다. */
+        void clearConnectionReports(ConnectionSlot &slot) noexcept
+        {
+            slot.subrate = {};
+            slot.subrate_valid = false;
+            slot.connection_rate = {};
+            slot.connection_rate_valid = false;
+            slot.frame_space = {};
+            slot.frame_space_valid = false;
+            slot.remote_features = {};
+            slot.remote_features_valid = false;
+        }
+
+        /** @brief 표준 Connection Subrating 조합을 controller 호출 전에 검증합니다. */
+        [[maybe_unused]] bool validSubrateParameters(
+            const BLESubrateParameters &parameters) noexcept
+        {
+            return parameters.minimum_factor >= 1U &&
+                   parameters.maximum_factor <= 500U &&
+                   parameters.minimum_factor <= parameters.maximum_factor &&
+                   parameters.maximum_peripheral_latency <= 499U &&
+                   static_cast<std::uint32_t>(parameters.maximum_factor) *
+                           (parameters.maximum_peripheral_latency + 1U) <=
+                       500U &&
+                   parameters.continuation_number <= 499U &&
+                   parameters.continuation_number < parameters.maximum_factor &&
+                   parameters.supervision_timeout_10ms >= 10U &&
+                   parameters.supervision_timeout_10ms <= 3200U;
+        }
+
+        /** @brief 표준 Shorter Connection Interval 요청 조합을 검증합니다. */
+        [[maybe_unused]] bool validConnectionRateParameters(
+            const BLEConnectionRateParameters &parameters) noexcept
+        {
+            return parameters.interval_minimum_125us >= 3U &&
+                   parameters.interval_maximum_125us <= 0x0c80U &&
+                   parameters.interval_minimum_125us <=
+                       parameters.interval_maximum_125us &&
+                   parameters.subrate_minimum >= 1U &&
+                   parameters.subrate_maximum <= 500U &&
+                   parameters.subrate_minimum <= parameters.subrate_maximum &&
+                   parameters.maximum_peripheral_latency <= 499U &&
+                   static_cast<std::uint32_t>(parameters.subrate_maximum) *
+                           (parameters.maximum_peripheral_latency + 1U) <=
+                       500U &&
+                   parameters.continuation_number <= 499U &&
+                   parameters.continuation_number < parameters.subrate_maximum &&
+                   parameters.supervision_timeout_10ms >= 10U &&
+                   parameters.supervision_timeout_10ms <= 3200U &&
+                   parameters.event_length_minimum_125us >= 1U &&
+                   parameters.event_length_maximum_125us <= 0x3e7fU &&
+                   parameters.event_length_minimum_125us <=
+                       parameters.event_length_maximum_125us;
+        }
+
+        /** @brief timing·feature controller 오류를 공개 오류 분류로 보존합니다. */
+        void recordProcedureError(int error) noexcept
+        {
+            BLEError public_error = BLEError::driver_error;
+            if (error == -EINVAL)
+            {
+                public_error = BLEError::invalid_argument;
+            }
+            else if (error == -ENOTSUP)
+            {
+                public_error = BLEError::unsupported;
+            }
+            else if (error == -EBUSY || error == -EALREADY)
+            {
+                public_error = BLEError::busy;
+            }
+            else if (error == -ENOTCONN)
+            {
+                public_error = BLEError::not_connected;
+            }
+            internal::recordError(public_error, error, true);
+        }
+
         /** @brief callback connection을 현재 slot handle과 역할로 변환합니다. */
         bool activeConnectionHandle(struct bt_conn *connection, BLEConnectionHandle &handle,
                                     BLELinkRole &role,
@@ -84,6 +173,71 @@ namespace nucode::ble::internal::gap
             return found && device_generation == static_cast<std::uint32_t>(
                                                      atomic_get(&gapState().device_session_generation));
         }
+
+        /** @brief 공개 LE Power Control PHY를 고정 SDK enum으로 변환합니다. */
+        bool nativeTransmitPowerPhy(BLETransmitPowerPhy phy,
+                                    enum bt_conn_le_tx_power_phy &native_phy) noexcept
+        {
+            switch (phy)
+            {
+                case BLETransmitPowerPhy::none:
+                    native_phy = BT_CONN_LE_TX_POWER_PHY_NONE;
+                    return true;
+                case BLETransmitPowerPhy::le_1m:
+                    native_phy = BT_CONN_LE_TX_POWER_PHY_1M;
+                    return true;
+                case BLETransmitPowerPhy::le_2m:
+                    native_phy = BT_CONN_LE_TX_POWER_PHY_2M;
+                    return true;
+                case BLETransmitPowerPhy::coded_s8:
+                    native_phy = BT_CONN_LE_TX_POWER_PHY_CODED_S8;
+                    return true;
+                case BLETransmitPowerPhy::coded_s2:
+                    native_phy = BT_CONN_LE_TX_POWER_PHY_CODED_S2;
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /** @brief 고정 SDK LE Power Control PHY를 공개 enum으로 변환합니다. */
+        BLETransmitPowerPhy publicTransmitPowerPhy(
+            enum bt_conn_le_tx_power_phy phy) noexcept
+        {
+            switch (phy)
+            {
+                case BT_CONN_LE_TX_POWER_PHY_NONE:
+                    return BLETransmitPowerPhy::none;
+                case BT_CONN_LE_TX_POWER_PHY_1M:
+                    return BLETransmitPowerPhy::le_1m;
+                case BT_CONN_LE_TX_POWER_PHY_2M:
+                    return BLETransmitPowerPhy::le_2m;
+                case BT_CONN_LE_TX_POWER_PHY_CODED_S8:
+                    return BLETransmitPowerPhy::coded_s8;
+                case BT_CONN_LE_TX_POWER_PHY_CODED_S2:
+                    return BLETransmitPowerPhy::coded_s2;
+                default:
+                    return BLETransmitPowerPhy::unknown;
+            }
+        }
+
+#if defined(CONFIG_BT_TRANSMIT_POWER_CONTROL)
+        /** @brief 고정 SDK 송신 전력 보고 reason을 공개 enum으로 변환합니다. */
+        BLETransmitPowerReportReason publicTransmitPowerReason(std::uint8_t reason) noexcept
+        {
+            switch (reason)
+            {
+                case BT_HCI_LE_TX_POWER_REPORT_REASON_LOCAL_CHANGED:
+                    return BLETransmitPowerReportReason::local_changed;
+                case BT_HCI_LE_TX_POWER_REPORT_REASON_REMOTE_CHANGED:
+                    return BLETransmitPowerReportReason::remote_changed;
+                case BT_HCI_LE_TX_POWER_REPORT_REASON_READ_REMOTE_COMPLETED:
+                    return BLETransmitPowerReportReason::remote_read_completed;
+                default:
+                    return BLETransmitPowerReportReason::unknown;
+            }
+        }
+#endif
 
         /** @brief 기존 API가 사용할 central 우선, peripheral 차선 handle을 반환합니다. */
         BLEConnectionHandle legacyHandle() noexcept
@@ -168,9 +322,16 @@ namespace nucode::ble::internal::gap
 #if defined(CONFIG_BT_EXT_ADV)
             bool accepts = false;
             k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
-            const ExtendedAdvertisingContext &context = gapState().extended_advertising;
-            accepts = context.instance != nullptr && context.connectable &&
-                      atomic_get(&context.active) != 0;
+            for (const ExtendedAdvertisingContext &context :
+                 gapState().extended_advertising)
+            {
+                if (context.instance != nullptr && context.connectable &&
+                    atomic_get(&context.active) != 0)
+                {
+                    accepts = true;
+                    break;
+                }
+            }
             k_spin_unlock(&gapState().configuration_lock, key);
             return accepts;
 #else
@@ -313,6 +474,7 @@ namespace nucode::ble::internal::gap
                     central->peer_address = identity_address;
                     central->connection_address = connection_address;
                     central->identity_resolved = identity_resolved;
+                    clearConnectionReports(*central);
                     owns_connection = true;
                 }
                 else
@@ -325,6 +487,7 @@ namespace nucode::ble::internal::gap
                     central->peer_address = BLEAddress{};
                     central->connection_address = BLEAddress{};
                     central->identity_resolved = false;
+                    clearConnectionReports(*central);
                 }
             }
             else if (error == 0U)
@@ -343,6 +506,7 @@ namespace nucode::ble::internal::gap
                         peripheral.peer_address = identity_address;
                         peripheral.connection_address = connection_address;
                         peripheral.identity_resolved = identity_resolved;
+                        clearConnectionReports(peripheral);
                         peripheral.active = bt_conn_ref(connection);
                         handle = makeHandle(peripheral_connection_slot, peripheral.generation);
                         role = peripheral.role;
@@ -436,6 +600,7 @@ namespace nucode::ble::internal::gap
                     slot.peer_address = BLEAddress{};
                     slot.connection_address = BLEAddress{};
                     slot.identity_resolved = false;
+                    clearConnectionReports(slot);
                     break;
                 }
             }
@@ -573,6 +738,240 @@ namespace nucode::ble::internal::gap
         }
 #endif
 
+#if defined(CONFIG_BT_TRANSMIT_POWER_CONTROL)
+        /** @brief 송신 전력 보고를 exact generation의 main-thread event로 복사합니다. */
+        void transmitPowerReported(struct bt_conn *connection,
+                                   const struct bt_conn_le_tx_power_report *report) noexcept
+        {
+            if (report == nullptr)
+            {
+                return;
+            }
+            BLEConnectionHandle handle;
+            BLELinkRole role = BLELinkRole::none;
+            std::uint32_t device_generation = 0U;
+            if (atomic_get(&gapState().device_initialized) == 0 ||
+                !activeConnectionHandle(connection, handle, role, device_generation))
+            {
+                return;
+            }
+            const BLETransmitPowerReport public_report = {
+                .reason = publicTransmitPowerReason(report->reason),
+                .phy = publicTransmitPowerPhy(report->phy),
+                .level_dbm = report->tx_power_level,
+                .delta_db = report->delta,
+                .at_minimum = (report->tx_power_level_flag & 0x01U) != 0U,
+                .at_maximum = (report->tx_power_level_flag & 0x02U) != 0U,
+            };
+            queueEvent(BLEEvent::transmit_power_report, handle, role, device_generation,
+                       {}, {}, 0U, public_report);
+        }
+#endif
+
+#if defined(CONFIG_BT_PATH_LOSS_MONITORING)
+        /** @brief Path Loss 구간 보고를 exact generation의 main-thread event로 복사합니다. */
+        void pathLossReported(
+            struct bt_conn *connection,
+            const struct bt_conn_le_path_loss_threshold_report *report) noexcept
+        {
+            if (report == nullptr)
+            {
+                return;
+            }
+            BLEConnectionHandle handle;
+            BLELinkRole role = BLELinkRole::none;
+            std::uint32_t device_generation = 0U;
+            if (atomic_get(&gapState().device_initialized) == 0 ||
+                !activeConnectionHandle(connection, handle, role, device_generation))
+            {
+                return;
+            }
+            BLEPathLossZone zone = BLEPathLossZone::unknown;
+            switch (report->zone)
+            {
+                case BT_CONN_LE_PATH_LOSS_ZONE_ENTERED_LOW:
+                    zone = BLEPathLossZone::low;
+                    break;
+                case BT_CONN_LE_PATH_LOSS_ZONE_ENTERED_MIDDLE:
+                    zone = BLEPathLossZone::middle;
+                    break;
+                case BT_CONN_LE_PATH_LOSS_ZONE_ENTERED_HIGH:
+                    zone = BLEPathLossZone::high;
+                    break;
+                case BT_CONN_LE_PATH_LOSS_ZONE_UNAVAILABLE:
+                    zone = BLEPathLossZone::unavailable;
+                    break;
+                default:
+                    break;
+            }
+            const BLEPathLossReport public_report = {
+                .zone = zone,
+                .path_loss_db = report->path_loss,
+            };
+            queueEvent(BLEEvent::path_loss_changed, handle, role, device_generation,
+                       {}, {}, 0U, {}, public_report);
+        }
+#endif
+
+#if defined(CONFIG_BT_SUBRATING)
+        /** @brief Subrating 결과를 exact link cache에 복사하고 main-thread event를 예약합니다. */
+        void subrateChanged(struct bt_conn *connection,
+                            const struct bt_conn_le_subrate_changed *parameters) noexcept
+        {
+            if (parameters == nullptr)
+            {
+                return;
+            }
+            BLEConnectionHandle handle;
+            BLELinkRole role = BLELinkRole::none;
+            std::uint32_t device_generation = 0U;
+            if (atomic_get(&gapState().device_initialized) == 0 ||
+                !activeConnectionHandle(connection, handle, role, device_generation))
+            {
+                return;
+            }
+            k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+            std::size_t slot_index = 0U;
+            if (matchesSlotLocked(handle, slot_index, false) &&
+                gapState().connection_slots[slot_index].active == connection)
+            {
+                ConnectionSlot &slot = gapState().connection_slots[slot_index];
+                slot.subrate = {
+                    .status = parameters->status,
+                    .factor = parameters->factor,
+                    .continuation_number = parameters->continuation_number,
+                    .peripheral_latency = parameters->peripheral_latency,
+                    .supervision_timeout_10ms = parameters->supervision_timeout,
+                };
+                slot.subrate_valid = true;
+            }
+            k_spin_unlock(&gapState().connection_lock, key);
+            queueEvent(BLEEvent::subrate_changed, handle, role, device_generation);
+        }
+#endif
+
+#if defined(CONFIG_BT_SHORTER_CONNECTION_INTERVALS)
+        /** @brief connection rate 결과를 exact link cache에 복사합니다. */
+        void connectionRateChanged(
+            struct bt_conn *connection, std::uint8_t status,
+            const struct bt_conn_le_conn_rate_changed *parameters) noexcept
+        {
+            BLEConnectionHandle handle;
+            BLELinkRole role = BLELinkRole::none;
+            std::uint32_t device_generation = 0U;
+            if (atomic_get(&gapState().device_initialized) == 0 ||
+                !activeConnectionHandle(connection, handle, role, device_generation))
+            {
+                return;
+            }
+            k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+            std::size_t slot_index = 0U;
+            if (matchesSlotLocked(handle, slot_index, false) &&
+                gapState().connection_slots[slot_index].active == connection)
+            {
+                ConnectionSlot &slot = gapState().connection_slots[slot_index];
+                slot.connection_rate = {};
+                slot.connection_rate.status = status;
+                if (status == BT_HCI_ERR_SUCCESS && parameters != nullptr)
+                {
+                    slot.connection_rate.interval_us = parameters->interval_us;
+                    slot.connection_rate.subrate_factor = parameters->subrate_factor;
+                    slot.connection_rate.peripheral_latency =
+                        parameters->peripheral_latency;
+                    slot.connection_rate.continuation_number =
+                        parameters->continuation_number;
+                    slot.connection_rate.supervision_timeout_10ms =
+                        parameters->supervision_timeout_10ms;
+                }
+                slot.connection_rate_valid = true;
+            }
+            k_spin_unlock(&gapState().connection_lock, key);
+            queueEvent(BLEEvent::connection_rate_changed, handle, role,
+                       device_generation);
+        }
+#endif
+
+#if defined(CONFIG_BT_LE_EXTENDED_FEAT_SET)
+        /** @brief remote 확장 feature page를 callback 수명 밖 고정 cache로 복사합니다. */
+        void remoteFeaturesAvailable(
+            struct bt_conn *connection,
+            const struct bt_conn_le_read_all_remote_feat_complete *parameters) noexcept
+        {
+            if (parameters == nullptr)
+            {
+                return;
+            }
+            BLEConnectionHandle handle;
+            BLELinkRole role = BLELinkRole::none;
+            std::uint32_t device_generation = 0U;
+            if (atomic_get(&gapState().device_initialized) == 0 ||
+                !activeConnectionHandle(connection, handle, role, device_generation))
+            {
+                return;
+            }
+            k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+            std::size_t slot_index = 0U;
+            if (matchesSlotLocked(handle, slot_index, false) &&
+                gapState().connection_slots[slot_index].active == connection)
+            {
+                ConnectionSlot &slot = gapState().connection_slots[slot_index];
+                slot.remote_features = {};
+                slot.remote_features.status = parameters->status;
+                slot.remote_features.maximum_remote_page = parameters->max_remote_page;
+                slot.remote_features.maximum_valid_page = parameters->max_valid_page;
+                if (parameters->status == BT_HCI_ERR_SUCCESS &&
+                    parameters->features != nullptr)
+                {
+                    ::memcpy(slot.remote_features.features, parameters->features,
+                             sizeof(slot.remote_features.features));
+                }
+                slot.remote_features_valid = true;
+            }
+            k_spin_unlock(&gapState().connection_lock, key);
+            queueEvent(BLEEvent::remote_features_available, handle, role,
+                       device_generation);
+        }
+#endif
+
+#if defined(CONFIG_BT_FRAME_SPACE_UPDATE)
+        /** @brief Frame Space 결과를 exact link cache에 복사합니다. */
+        void frameSpaceUpdated(
+            struct bt_conn *connection,
+            const struct bt_conn_le_frame_space_updated *parameters) noexcept
+        {
+            if (parameters == nullptr)
+            {
+                return;
+            }
+            BLEConnectionHandle handle;
+            BLELinkRole role = BLELinkRole::none;
+            std::uint32_t device_generation = 0U;
+            if (atomic_get(&gapState().device_initialized) == 0 ||
+                !activeConnectionHandle(connection, handle, role, device_generation))
+            {
+                return;
+            }
+            k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+            std::size_t slot_index = 0U;
+            if (matchesSlotLocked(handle, slot_index, false) &&
+                gapState().connection_slots[slot_index].active == connection)
+            {
+                ConnectionSlot &slot = gapState().connection_slots[slot_index];
+                slot.frame_space = {
+                    .status = parameters->status,
+                    .initiator = static_cast<std::uint8_t>(parameters->initiator),
+                    .frame_space_us = parameters->frame_space,
+                    .phy_mask = parameters->phys,
+                    .spacing_type_mask = parameters->spacing_types,
+                };
+                slot.frame_space_valid = true;
+            }
+            k_spin_unlock(&gapState().connection_lock, key);
+            queueEvent(BLEEvent::frame_space_changed, handle, role,
+                       device_generation);
+        }
+#endif
+
 #if defined(CONFIG_BT_SMP) || defined(CONFIG_BT_CLASSIC)
         /** @brief security 변경을 M21의 bounded event 계층으로 전달합니다. */
         void linkSecurityChanged(struct bt_conn *connection, bt_security_t level,
@@ -607,6 +1006,24 @@ namespace nucode::ble::internal::gap
 #endif
 #if defined(CONFIG_BT_USER_DATA_LEN_UPDATE)
             .le_data_len_updated = dataLengthUpdated,
+#endif
+#if defined(CONFIG_BT_TRANSMIT_POWER_CONTROL)
+            .tx_power_report = transmitPowerReported,
+#endif
+#if defined(CONFIG_BT_PATH_LOSS_MONITORING)
+            .path_loss_threshold_report = pathLossReported,
+#endif
+#if defined(CONFIG_BT_SUBRATING)
+            .subrate_changed = subrateChanged,
+#endif
+#if defined(CONFIG_BT_SHORTER_CONNECTION_INTERVALS)
+            .conn_rate_changed = connectionRateChanged,
+#endif
+#if defined(CONFIG_BT_LE_EXTENDED_FEAT_SET)
+            .read_all_remote_feat_complete = remoteFeaturesAvailable,
+#endif
+#if defined(CONFIG_BT_FRAME_SPACE_UPDATE)
+            .frame_space_updated = frameSpaceUpdated,
 #endif
         };
 
@@ -694,11 +1111,13 @@ namespace nucode::ble
             unlockGapLifecycle();
             return false;
         }
+#if !defined(CONFIG_BT_SCAN_AND_INITIATE_IN_PARALLEL)
         if (atomic_get(&gapState().scanning_active) != 0 && !BLEScan.stop())
         {
             unlockGapLifecycle();
             return false;
         }
+#endif
 
         const std::uint32_t generation = nextConnectionGeneration();
         const std::uint32_t device_generation = static_cast<std::uint32_t>(
@@ -730,14 +1149,24 @@ namespace nucode::ble
         reserved_slot.connection_address = address;
         reserved_slot.identity_resolved = address.type() != BLEAddress::Type::random_address ||
                                           (address.data()[5] & 0xc0U) != 0x40U;
+        clearConnectionReports(reserved_slot);
         gapState().last_central_address = address;
         connection_handle = makeHandle(central_slot_index, generation);
         refreshConnectionFlagsLocked();
         k_spin_unlock(&gapState().connection_lock, key);
 
+        const struct bt_le_conn_param llpm_parameters = {
+            .interval_min = 0x0d01U,
+            .interval_max = 0x0d01U,
+            .latency = 0U,
+            .timeout = 400U,
+        };
         struct bt_conn *connection = nullptr;
-        const int result =
-            bt_conn_le_create(&peer, BT_CONN_LE_CREATE_CONN, BT_LE_CONN_PARAM_DEFAULT, &connection);
+        const int result = atomic_get(&gapState().nordic_llpm_mode_enabled) != 0
+                               ? bt_conn_le_create(&peer, BT_CONN_LE_CREATE_CONN,
+                                                   &llpm_parameters, &connection)
+                               : bt_conn_le_create(&peer, BT_CONN_LE_CREATE_CONN,
+                                                   BT_LE_CONN_PARAM_DEFAULT, &connection);
         if (result < 0)
         {
             key = k_spin_lock(&gapState().connection_lock);
@@ -751,6 +1180,7 @@ namespace nucode::ble
                 slot.peer_address = BLEAddress{};
                 slot.connection_address = BLEAddress{};
                 slot.identity_resolved = false;
+                clearConnectionReports(slot);
             }
             refreshConnectionFlagsLocked();
             k_spin_unlock(&gapState().connection_lock, key);
@@ -774,6 +1204,7 @@ namespace nucode::ble
             slot.peer_address = BLEAddress{};
             slot.connection_address = BLEAddress{};
             slot.identity_resolved = false;
+            clearConnectionReports(slot);
             refreshConnectionFlagsLocked();
             k_spin_unlock(&gapState().connection_lock, key);
             static_cast<void>(bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
@@ -1123,8 +1554,27 @@ namespace nucode::ble
 
     bool Connection::txPower(BLEConnectionHandle connection_handle, std::int8_t &dbm) const noexcept
     {
+        BLETransmitPowerLevel level;
+        if (!localTransmitPower(connection_handle, BLETransmitPowerPhy::none, level))
+        {
+            return false;
+        }
+        dbm = level.current_dbm;
+        return true;
+    }
+
+    bool Connection::localTransmitPower(BLEConnectionHandle connection_handle,
+                                        BLETransmitPowerPhy phy,
+                                        BLETransmitPowerLevel &level) const noexcept
+    {
         if (!requireThreadContext())
         {
+            return false;
+        }
+        enum bt_conn_le_tx_power_phy native_phy = BT_CONN_LE_TX_POWER_PHY_NONE;
+        if (!nativeTransmitPowerPhy(phy, native_phy))
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
             return false;
         }
         struct bt_conn *connection = referenceConnection(connection_handle);
@@ -1134,7 +1584,7 @@ namespace nucode::ble
             return false;
         }
         struct bt_conn_le_tx_power power = {
-            .phy = 0U,
+            .phy = static_cast<std::uint8_t>(native_phy),
             .current_level = 0,
             .max_level = 0,
         };
@@ -1146,7 +1596,720 @@ namespace nucode::ble
                 result == -ENOTSUP ? BLEError::unsupported : BLEError::driver_error, result, true);
             return false;
         }
-        dbm = power.current_level;
+        level = {
+            .phy = publicTransmitPowerPhy(
+                static_cast<enum bt_conn_le_tx_power_phy>(power.phy)),
+            .current_dbm = power.current_level,
+            .maximum_dbm = power.max_level,
+        };
+        return true;
+    }
+
+    bool Connection::requestRemoteTransmitPower(BLEConnectionHandle connection_handle,
+                                                BLETransmitPowerPhy phy) noexcept
+    {
+#if defined(CONFIG_BT_TRANSMIT_POWER_CONTROL)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        enum bt_conn_le_tx_power_phy native_phy = BT_CONN_LE_TX_POWER_PHY_NONE;
+        if (phy == BLETransmitPowerPhy::none || !nativeTransmitPowerPhy(phy, native_phy))
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const int result = bt_conn_le_get_remote_tx_power_level(connection, native_phy);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(
+                result == -ENOTSUP ? BLEError::unsupported : BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(phy);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::requestRemoteTransmitPowerChange(BLEConnectionHandle connection_handle,
+                                                      BLETransmitPowerPhy phy,
+                                                      std::int8_t delta_db) noexcept
+    {
+#if defined(CONFIG_BT_TRANSMIT_POWER_CONTROL)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        enum bt_conn_le_tx_power_phy native_phy = BT_CONN_LE_TX_POWER_PHY_NONE;
+        if (phy == BLETransmitPowerPhy::none || !nativeTransmitPowerPhy(phy, native_phy) ||
+            delta_db < -20 || delta_db > 20)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const int result = bt_conn_set_remote_tx_power_level(connection, native_phy, delta_db);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(
+                result == -ENOTSUP ? BLEError::unsupported : BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(phy);
+        ARG_UNUSED(delta_db);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::setTransmitPowerReporting(BLEConnectionHandle connection_handle,
+                                               bool local_enabled,
+                                               bool remote_enabled) noexcept
+    {
+#if defined(CONFIG_BT_TRANSMIT_POWER_CONTROL)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const int result = bt_conn_le_set_tx_power_report_enable(
+            connection, local_enabled, remote_enabled);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(
+                result == -ENOTSUP ? BLEError::unsupported : BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(local_enabled);
+        ARG_UNUSED(remote_enabled);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::readRssi(BLEConnectionHandle connection_handle,
+                              std::int8_t &rssi_dbm) const noexcept
+    {
+#if defined(CONFIG_BT_CTLR_CONN_RSSI)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        std::uint16_t native_handle = 0U;
+        int result = bt_hci_get_conn_handle(connection, &native_handle);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(BLEError::driver_error, result, true);
+            return false;
+        }
+        struct net_buf *command = bt_hci_cmd_alloc(K_NO_WAIT);
+        if (command == nullptr)
+        {
+            internal::recordError(BLEError::driver_error, -ENOBUFS, true);
+            return false;
+        }
+        auto *parameters = static_cast<struct bt_hci_cp_read_rssi *>(
+            net_buf_add(command, sizeof(struct bt_hci_cp_read_rssi)));
+        parameters->handle = sys_cpu_to_le16(native_handle);
+        struct net_buf *response = nullptr;
+        result = bt_hci_cmd_send_sync(BT_HCI_OP_READ_RSSI, command, &response);
+        if (result < 0)
+        {
+            internal::recordError(BLEError::driver_error, result, true);
+            return false;
+        }
+        if (response == nullptr || response->len < sizeof(struct bt_hci_rp_read_rssi))
+        {
+            if (response != nullptr)
+            {
+                net_buf_unref(response);
+            }
+            internal::recordError(BLEError::driver_error, -EIO, true);
+            return false;
+        }
+        const auto *report = reinterpret_cast<const struct bt_hci_rp_read_rssi *>(response->data);
+        if (report->status != BT_HCI_ERR_SUCCESS)
+        {
+            const int status = -static_cast<int>(report->status);
+            net_buf_unref(response);
+            internal::recordError(BLEError::driver_error, status, true);
+            return false;
+        }
+        rssi_dbm = report->rssi;
+        net_buf_unref(response);
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(rssi_dbm);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::configurePathLossMonitoring(
+        BLEConnectionHandle connection_handle,
+        const BLEPathLossParameters &parameters) noexcept
+    {
+#if defined(CONFIG_BT_PATH_LOSS_MONITORING)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        const std::uint16_t high_boundary =
+            static_cast<std::uint16_t>(parameters.high_threshold_db) +
+            parameters.high_hysteresis_db;
+        const std::uint16_t low_boundary =
+            static_cast<std::uint16_t>(parameters.low_threshold_db) +
+            parameters.low_hysteresis_db;
+        if (parameters.minimum_connection_events == 0U || high_boundary > 0xffU ||
+            parameters.low_threshold_db < parameters.low_hysteresis_db ||
+            low_boundary > parameters.high_threshold_db -
+                               parameters.high_hysteresis_db)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const struct bt_conn_le_path_loss_reporting_param native_parameters = {
+            .high_threshold = parameters.high_threshold_db,
+            .high_hysteresis = parameters.high_hysteresis_db,
+            .low_threshold = parameters.low_threshold_db,
+            .low_hysteresis = parameters.low_hysteresis_db,
+            .min_time_spent = parameters.minimum_connection_events,
+        };
+        const int result = bt_conn_le_set_path_loss_mon_param(connection, &native_parameters);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(
+                result == -ENOTSUP ? BLEError::unsupported : BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(parameters);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::setPathLossMonitoring(BLEConnectionHandle connection_handle,
+                                           bool enabled) noexcept
+    {
+#if defined(CONFIG_BT_PATH_LOSS_MONITORING)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const int result = bt_conn_le_set_path_loss_mon_enable(connection, enabled);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            internal::recordError(
+                result == -ENOTSUP ? BLEError::unsupported : BLEError::driver_error, result, true);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(enabled);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::setDefaultSubrate(
+        const BLESubrateParameters &parameters) noexcept
+    {
+#if defined(CONFIG_BT_SUBRATING) && defined(CONFIG_BT_CENTRAL)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (!validSubrateParameters(parameters))
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        const struct bt_conn_le_subrate_param native_parameters = {
+            .subrate_min = parameters.minimum_factor,
+            .subrate_max = parameters.maximum_factor,
+            .max_latency = parameters.maximum_peripheral_latency,
+            .continuation_number = parameters.continuation_number,
+            .supervision_timeout = parameters.supervision_timeout_10ms,
+        };
+        const int result = bt_conn_le_subrate_set_defaults(&native_parameters);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(parameters);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::requestSubrate(BLEConnectionHandle connection_handle,
+                                    const BLESubrateParameters &parameters) noexcept
+    {
+#if defined(CONFIG_BT_SUBRATING)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (!validSubrateParameters(parameters))
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const struct bt_conn_le_subrate_param native_parameters = {
+            .subrate_min = parameters.minimum_factor,
+            .subrate_max = parameters.maximum_factor,
+            .max_latency = parameters.maximum_peripheral_latency,
+            .continuation_number = parameters.continuation_number,
+            .supervision_timeout = parameters.supervision_timeout_10ms,
+        };
+        const int result = bt_conn_le_subrate_request(connection, &native_parameters);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(parameters);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::subrate(BLEConnectionHandle connection_handle,
+                             BLESubrateInfo &information) const noexcept
+    {
+#if defined(CONFIG_BT_SUBRATING)
+        bool valid = false;
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        std::size_t slot_index = 0U;
+        if (matchesSlotLocked(connection_handle, slot_index, false))
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[slot_index];
+            valid = slot.subrate_valid;
+            if (valid)
+            {
+                information = slot.subrate;
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return valid;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(information);
+        return false;
+#endif
+    }
+
+    bool Connection::setDefaultConnectionRate(
+        const BLEConnectionRateParameters &parameters) noexcept
+    {
+#if defined(CONFIG_BT_SHORTER_CONNECTION_INTERVALS) && defined(CONFIG_BT_CENTRAL)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (!validConnectionRateParameters(parameters))
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        const struct bt_conn_le_conn_rate_param native_parameters = {
+            .interval_min_125us = parameters.interval_minimum_125us,
+            .interval_max_125us = parameters.interval_maximum_125us,
+            .subrate_min = parameters.subrate_minimum,
+            .subrate_max = parameters.subrate_maximum,
+            .max_latency = parameters.maximum_peripheral_latency,
+            .continuation_number = parameters.continuation_number,
+            .supervision_timeout_10ms = parameters.supervision_timeout_10ms,
+            .min_ce_len_125us = parameters.event_length_minimum_125us,
+            .max_ce_len_125us = parameters.event_length_maximum_125us,
+        };
+        const int result = bt_conn_le_conn_rate_set_defaults(&native_parameters);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(parameters);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::requestConnectionRate(
+        BLEConnectionHandle connection_handle,
+        const BLEConnectionRateParameters &parameters) noexcept
+    {
+#if defined(CONFIG_BT_SHORTER_CONNECTION_INTERVALS)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (!validConnectionRateParameters(parameters))
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const struct bt_conn_le_conn_rate_param native_parameters = {
+            .interval_min_125us = parameters.interval_minimum_125us,
+            .interval_max_125us = parameters.interval_maximum_125us,
+            .subrate_min = parameters.subrate_minimum,
+            .subrate_max = parameters.subrate_maximum,
+            .max_latency = parameters.maximum_peripheral_latency,
+            .continuation_number = parameters.continuation_number,
+            .supervision_timeout_10ms = parameters.supervision_timeout_10ms,
+            .min_ce_len_125us = parameters.event_length_minimum_125us,
+            .max_ce_len_125us = parameters.event_length_maximum_125us,
+        };
+        const int result = bt_conn_le_conn_rate_request(connection, &native_parameters);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(parameters);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::connectionRate(
+        BLEConnectionHandle connection_handle,
+        BLEConnectionRateInfo &information) const noexcept
+    {
+#if defined(CONFIG_BT_SHORTER_CONNECTION_INTERVALS)
+        bool valid = false;
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        std::size_t slot_index = 0U;
+        if (matchesSlotLocked(connection_handle, slot_index, false))
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[slot_index];
+            valid = slot.connection_rate_valid;
+            if (valid)
+            {
+                information = slot.connection_rate;
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return valid;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(information);
+        return false;
+#endif
+    }
+
+    bool Connection::minimumConnectionInterval(std::uint16_t &interval_us) const noexcept
+    {
+#if defined(CONFIG_BT_SHORTER_CONNECTION_INTERVALS)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        const int result = bt_conn_le_read_min_conn_interval(&interval_us);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(interval_us);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::requestFrameSpace(
+        BLEConnectionHandle connection_handle,
+        const BLEFrameSpaceParameters &parameters) noexcept
+    {
+#if defined(CONFIG_BT_FRAME_SPACE_UPDATE)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (parameters.phy_mask == 0U || (parameters.phy_mask & ~0x07U) != 0U ||
+            parameters.spacing_type_mask == 0U ||
+            (parameters.spacing_type_mask & ~0x001fU) != 0U ||
+            parameters.minimum_us > parameters.maximum_us ||
+            parameters.maximum_us > 10000U)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const struct bt_conn_le_frame_space_update_param native_parameters = {
+            .phys = parameters.phy_mask,
+            .spacing_types = parameters.spacing_type_mask,
+            .frame_space_min = parameters.minimum_us,
+            .frame_space_max = parameters.maximum_us,
+        };
+        const int result = bt_conn_le_frame_space_update(connection, &native_parameters);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(parameters);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::frameSpace(BLEConnectionHandle connection_handle,
+                                BLEFrameSpaceInfo &information) const noexcept
+    {
+#if defined(CONFIG_BT_FRAME_SPACE_UPDATE)
+        bool valid = false;
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        std::size_t slot_index = 0U;
+        if (matchesSlotLocked(connection_handle, slot_index, false))
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[slot_index];
+            valid = slot.frame_space_valid;
+            if (valid)
+            {
+                information = slot.frame_space;
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return valid;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(information);
+        return false;
+#endif
+    }
+
+    bool Connection::localExtendedFeatures(
+        BLEExtendedFeatureSet &features) const noexcept
+    {
+#if defined(CONFIG_BT_LE_EXTENDED_FEAT_SET)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        struct bt_le_local_features native_features = {};
+        const int result = bt_le_get_local_features(&native_features);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        features = {};
+        features.status = BT_HCI_ERR_SUCCESS;
+        static_assert(sizeof(native_features.features) >= 8U);
+        static_assert(sizeof(native_features.features) <= sizeof(features.features));
+        features.maximum_valid_page = static_cast<std::uint8_t>(
+            (sizeof(native_features.features) - 8U) / 24U);
+        ::memcpy(features.features, native_features.features,
+                 sizeof(native_features.features));
+        return true;
+#else
+        ARG_UNUSED(features);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::requestRemoteExtendedFeatures(
+        BLEConnectionHandle connection_handle, std::uint8_t maximum_page) noexcept
+    {
+#if defined(CONFIG_BT_LE_EXTENDED_FEAT_SET)
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (maximum_page > BLEExtendedFeatureSet::maximum_page)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        struct bt_conn *connection = referenceConnection(connection_handle);
+        if (connection == nullptr)
+        {
+            internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        const int result = bt_conn_le_read_all_remote_features(connection, maximum_page);
+        bt_conn_unref(connection);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
+        return true;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(maximum_page);
+        internal::recordError(BLEError::unsupported, -ENOTSUP, true);
+        return false;
+#endif
+    }
+
+    bool Connection::remoteExtendedFeatures(
+        BLEConnectionHandle connection_handle,
+        BLEExtendedFeatureSet &features) const noexcept
+    {
+#if defined(CONFIG_BT_LE_EXTENDED_FEAT_SET)
+        bool valid = false;
+        k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);
+        std::size_t slot_index = 0U;
+        if (matchesSlotLocked(connection_handle, slot_index, false))
+        {
+            const ConnectionSlot &slot = gapState().connection_slots[slot_index];
+            valid = slot.remote_features_valid;
+            if (valid)
+            {
+                features = slot.remote_features;
+            }
+        }
+        k_spin_unlock(&gapState().connection_lock, key);
+        return valid;
+#else
+        ARG_UNUSED(connection_handle);
+        ARG_UNUSED(features);
+        return false;
+#endif
+    }
+
+    BLESleepClockAccuracySupport Connection::sleepClockAccuracySupport() const noexcept
+    {
+        return {
+#if defined(CONFIG_BT_SCA_UPDATE)
+            .controller_procedure = true,
+#else
+            .controller_procedure = false,
+#endif
+            .host_request_and_report = false,
+        };
+    }
+
+    bool Connection::setChannelClassification(
+        const std::uint8_t channel_map[5]) noexcept
+    {
+        if (!requireThreadContext())
+        {
+            return false;
+        }
+        if (channel_map == nullptr || (channel_map[4] & 0xe0U) != 0U)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        std::uint8_t enabled_channels = 0U;
+        for (std::size_t index = 0U; index < 5U; ++index)
+        {
+            std::uint8_t value = channel_map[index];
+            while (value != 0U)
+            {
+                enabled_channels = static_cast<std::uint8_t>(
+                    enabled_channels + (value & 0x01U));
+                value = static_cast<std::uint8_t>(value >> 1U);
+            }
+        }
+        if (enabled_channels < 2U)
+        {
+            internal::recordError(BLEError::invalid_argument, -EINVAL, true);
+            return false;
+        }
+        std::uint8_t native_map[5] = {};
+        ::memcpy(native_map, channel_map, sizeof(native_map));
+        const int result = bt_le_set_chan_map(native_map);
+        if (result < 0)
+        {
+            recordProcedureError(result);
+            return false;
+        }
         return true;
     }
 
@@ -1211,7 +2374,8 @@ namespace nucode::ble
         {
             return false;
         }
-        information.interval_us = native_information.le.interval_us;
+        information.interval_us = normalizeConnectionIntervalUs(
+            native_information.le.interval_us);
         information.latency = native_information.le.latency;
         information.supervision_timeout = native_information.le.timeout;
         return true;

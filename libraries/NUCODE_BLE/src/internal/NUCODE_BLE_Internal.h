@@ -104,6 +104,12 @@ namespace nucode::ble::internal
     /** @brief Device::end에서 LE CoC channel과 queue를 bounded 방식으로 폐기합니다. */
     void l2capEnded() noexcept;
 
+    /** @brief Nordic SDC report queue를 Arduino main thread에서 전달합니다. */
+    void pollNordicExtensions() noexcept;
+
+    /** @brief Device::end에서 Nordic report·timer·controller enable을 정리합니다. */
+    void nordicExtensionsEnded() noexcept;
+
     /** @brief M21 security 계층에 새 connection reference를 관찰용으로 전달합니다. */
     void securityConnected(struct bt_conn *connection) noexcept;
 

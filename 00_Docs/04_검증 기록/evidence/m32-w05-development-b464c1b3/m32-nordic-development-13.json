@@ -1,0 +1,74 @@
+{
+  "test_ids": [
+    "M32-NORDIC-01:primary",
+    "M32-SYNC-01:primary",
+    "M32-EVENT-01:primary"
+  ],
+  "status": "FAIL",
+  "scope": "two_board_nordic_extension_contract",
+  "source_clean": false,
+  "identity": {
+    "core": "b464c1b347bf0028ccb4a8387d189bab0fb14527",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "central": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "59380fc883ad2ee442e6f3db5586419f3d22e3e39587f687ca3907f875f696d2",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "208896"
+    },
+    "peripheral": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "86f9cb118f096e81da1df1753c740fca00b501da0aae2ceba490a60a2e7b3d3b",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "208896"
+    }
+  },
+  "nonce": "6b19ff9efbbe9604378245e3b0e8e664",
+  "iterations": 20,
+  "denominators": {
+    "qos_per_role": 200,
+    "survey_per_role": 20,
+    "anchor_per_role": 1000,
+    "event_per_role": 200,
+    "radio_prepare_per_role": 200
+  },
+  "latency_limits": {
+    "anchor_gap_us": 5000,
+    "event_gap_ms": 5,
+    "llpm_interval_us": 1000
+  },
+  "results": {},
+  "acl_boundary": {
+    "controller_experimental": true,
+    "host_transmit_path": false,
+    "usable": false,
+    "classification": "unsupported_host_transmit_path"
+  },
+  "reason": "NordicExtensionFailure: peripheral target FAIL: timeout",
+  "transcript_sha256": "0ca2f02a1c21fcaa1afb7b971d543a4289ebaa5e164e7439f7c8b1fb9a98d295",
+  "observed_utc": "2026-09-29T15:30:29.489490+00:00"
+}

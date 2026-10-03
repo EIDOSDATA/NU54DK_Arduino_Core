@@ -16,6 +16,21 @@ RAM 사용량은 선택한 역할·Core revision·buffer 설정에 따라 달라
 RAM에는 Audio buffer뿐 아니라 공통 Core 저장소도 포함되므로 Audio 기능만의 요구량으로
 해석하지 않는다. 기능을 추가하기 전에 해당 ELF/map과 최종 `.config`로 자원 예산을 확인한다.
 
+일반 예제는 **BLE NUS**, 외장 PDM/I2S 예제는 **BLE Audio external I/O (DAP UART disconnected)**를
+사용한다. 각 `.ino` 상단의 역할·보드 수·필수 sidecar 안내를 먼저 확인한다.
+
+| 목적 | 시작 예제·안내 |
+| --- | --- |
+| 보드 한 대의 LC3 codec | [합성 loopback](#lc3syntheticloopback) |
+| 두 보드 연결형 Audio | [Source](#bapunicastsource) · [Sink](#bapunicastsink) · [양방향 Client](#bapunicastduplexclient) · [Server](#bapunicastduplexserver) |
+| 방송 Audio·세 보드 BASS 제어 | [Source](#bapbroadcastsource) · [Sink](#bapbroadcastsink) · [Assistant](#bapbroadcastassistant) · [Delegator](#bapbroadcastdelegatorsink) |
+| 음량·마이크·보청기 제어 | [Audio Control](#audiocontroldevice) · [Hearing Access](#hearingaccessserver) |
+| TMAP·GMAP 역할 | [TMAP](#tmap-역할-예제) · [GMAP](#gmap-역할-예제) |
+| 실제 외장 장치 연결 | [PDM microphone·I2S speaker](#외부-microphonecodecspeaker-연결) — 실물 검증 NOT RUN |
+| 미디어·통화 제어 | [Media Control](#mediacontrolplayer--mediacontrolclient) · [Call Control](#callcontrolserver--callcontrolclient) |
+
+## Adaptive 역할 선택
+
 BAP 예제 9개(`BapUnicastSource`, `BapUnicastSink`, `BapUnicastCycle`, duplex client/server,
 broadcast source/sink/delegator sink/assistant)는 각각 공개 `nucode-build.json` role 선언을 제공한다.
 실험적 **Adaptive capabilities (experimental)** feature set에서는 이 선언으로 연결 수·ISO stream 수와 필수

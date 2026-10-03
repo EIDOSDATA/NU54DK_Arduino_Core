@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "test_ids": ["M32-MDFU-01:primary"],
+  "status": "FAIL",
+  "source_clean": true,
+  "source_revision": "40e4c46b83addefd7ae12cc0c2af1b24764c4356",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "failure": "DFU iteration 1 timeout",
+  "result_timeout_seconds": 1800,
+  "candidate": {
+    "size": 343511,
+    "sha256": "41567b611534ad763e48689a8f7f5c88455ec95dc69618a8a9f777ee6c5af599"
+  },
+  "post_timeout": {
+    "distributor_phase": "transferring",
+    "target_a_version": "0.0.0+0",
+    "target_b_version": "0.0.0+0",
+    "target_a_cleanup": "pass",
+    "target_b_cleanup": "pass",
+    "distributor_debug_reset_required": true
+  },
+  "register_preflight": {
+    "boards": 3,
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "diagnosis": {
+    "partial_image_previous_size": 343495,
+    "valid_distribution_iterations": 5,
+    "cause": "full-stack candidate and near-full partial negative cannot complete within the fixed 1800-second session",
+    "corrective_action": "use a minimal signed candidate oracle and cap the partial negative transfer at 4096 bytes"
+  },
+  "mass_erase_or_recover": false,
+  "raw_probe_identity_persisted": false,
+  "runner_transcript_persisted": false,
+  "runner_transcript_note": "The pre-fix runner returned before save_attempt on failure; the bounded stderr and post-timeout UART/register diagnosis are preserved here.",
+  "observed_local": "2026-10-02T04:29:23.2182445+09:00"
+}

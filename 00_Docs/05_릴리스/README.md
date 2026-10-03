@@ -26,16 +26,21 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 ## 개발 소스와 다음 릴리스
 
-현재 개발 브랜치는 `main`이고 정식 릴리스 백업은 `Release-0.5.0`입니다. M28~M31과 메모리
-최적화 P0~P2, RC2 사용자 경험 교정과 stable 공개를 완료했습니다. 현행 소스의 `0.5.0` 문자열은
-릴리스 코어 식별자이며 package 재현 기준은 `v0.5.0` tag와 manifest의 source SHA입니다.
+후속 개발의 출발점은 M32를 통합한 `main`입니다. `Dev-0.6.0-M32`는 단계별 구현·실기 source의
+원본 이력으로, `Release-0.5.0`은 정식 릴리스 기준선으로 보존합니다. 통합 범위와 squash 대응은
+[295번 기록](<../04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)을 따릅니다.
 
-v0.4.1 공개 마감 이후 개발 이력은 단일 v0.5.0 릴리스 commit으로 통합했습니다. RC1/RC2 branch는
-로컬·원격에서 삭제했고 공개 tag·Pre-release·자산과 과거 검증 기록은 보존합니다.
-M32/M33은 [v0.6.0 계획](../TODO_v0.6.0.md)으로 배정했으며 아직 구현 미착수·미공개입니다.
-이후 Security/Update는 v0.7.0, Radio/Network는 v0.8.0, Matter는 v0.9.0입니다.
-Ubuntu/macOS Host의 사용자 보류와 OS별 실물 지원 gate는 유지합니다. 현재 설치·지원 버전은
-계속 v0.5.0이며 개발 재개는 [HANDOFF](../HANDOFF.md)를 따릅니다.
+| 제품선·트랙 | 현재 상태 | 다음 작업 |
+| --- | --- | --- |
+| v0.5.0 | Windows stable 공개·지원 | 공개 tag와 manifest의 source SHA로 패키지 재현 |
+| [v0.6.0](../TODO_v0.6.0.md) | M32 **12/12 완료**, M33 **0/8**, 미공개 | M33-W01부터 전체 예제·상호운용·배포 준비 |
+| Host | HOST-W01~W03 완료, W04~W08 사용자 보류 | 별도 재개 지시 후 OS별 실물 지원 gate 수행 |
+| [v0.7.0](../TODO_v0.7.0.md) | SDK-W01~W06 **0/6** | NCS v3.4.0 → v3.4.1 전체 전환만 수행 |
+
+M32 완료 근거는 [M32 TODO](../TODO_M32.md), 다음 개발 절차는 [HANDOFF](../HANDOFF.md)가
+관리합니다. M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0 계획입니다.
+현행 소스의 제품 식별자는 `0.5.0`이고 v0.6.0 개발은 NCS v3.4.0을 유지합니다. 개발 소스의
+M32 기능은 현재 stable 패키지에 포함되지 않으며, v0.6.0 공개는 M33의 검증·승인 경계를 따릅니다.
 
 ## 이전 버전 — 지원·공급 종료
 

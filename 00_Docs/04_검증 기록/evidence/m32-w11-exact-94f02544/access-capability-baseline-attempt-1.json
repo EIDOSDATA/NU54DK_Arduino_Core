@@ -1,0 +1,509 @@
+{
+  "schema": 1,
+  "timestamp_utc": "2026-10-02T23:58:40.208442+00:00",
+  "authorization": "explicit-user-approval-ctrl-ap-eraseall-and-flash-deletion",
+  "transport": "CMSIS-DAP V2",
+  "frequency_hz": 100000,
+  "target": "nrf54l",
+  "operation": {
+    "implementation": "pyOCD target_nRF54L.NRF54L.mass_erase via auto_unlock",
+    "register_sequence": [
+      "CTRL_AP.ERASEALL(0x004)=1",
+      "poll CTRL_AP.ERASEALLSTATUS(0x008): BUSY(2) then READYTORESET(1)",
+      "CTRL_AP.RESET(0x000)=2",
+      "CTRL_AP.RESET(0x000)=0"
+    ],
+    "official_reference": "https://docs.nordicsemi.com/r/bundle/nan_047/page/app/nan_production_programming/nrf54l/nrf54l_disable_approtect.html"
+  },
+  "boards": [
+    {
+      "board": "board_d",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "eraseall_required": false,
+      "preflight": {
+        "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+        "exit_code": 0,
+        "registers": [
+          {
+            "kind": "dp",
+            "address": "0x0",
+            "value": "0x6ba02477"
+          },
+          {
+            "kind": "dp",
+            "address": "0x24",
+            "value": "0x201c0289"
+          },
+          {
+            "kind": "ap",
+            "address": "0xfc",
+            "value": "0x84770001"
+          },
+          {
+            "kind": "ap",
+            "address": "0x0",
+            "value": "0x43800042"
+          },
+          {
+            "kind": "ap",
+            "address": "0x20000fc",
+            "value": "0x32880000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000000",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000008",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200000c",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000014",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000024",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200002c",
+            "value": "0x00000000"
+          }
+        ],
+        "error": "",
+        "diagnostic_tail": [
+          "AP register 0xfc = 0x84770001",
+          "AP register 0x0 = 0x43800042",
+          "AP#2 IDR = 0x32880000",
+          "AP register 0x20000fc = 0x32880000",
+          "AP register 0x2000000 = 0x00000000",
+          "AP register 0x2000008 = 0x00000000",
+          "AP register 0x200000c = 0x00000000",
+          "AP register 0x2000014 = 0x00000000",
+          "AP register 0x2000024 = 0x00000000",
+          "AP register 0x200002c = 0x00000000",
+          "",
+          "0001037 W Board ID 5415 is not recognized [mbed_board]"
+        ]
+      },
+      "pyocd_exit_code": 0,
+      "pyocd_tail": [
+        "CTRL-AP ERASEALL not required: AHB debug already enabled"
+      ],
+      "postflight": {
+        "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+        "exit_code": 0,
+        "registers": [
+          {
+            "kind": "dp",
+            "address": "0x0",
+            "value": "0x6ba02477"
+          },
+          {
+            "kind": "dp",
+            "address": "0x24",
+            "value": "0x201c0289"
+          },
+          {
+            "kind": "ap",
+            "address": "0xfc",
+            "value": "0x84770001"
+          },
+          {
+            "kind": "ap",
+            "address": "0x0",
+            "value": "0x43800042"
+          },
+          {
+            "kind": "ap",
+            "address": "0x20000fc",
+            "value": "0x32880000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000000",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000008",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200000c",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000014",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000024",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200002c",
+            "value": "0x00000000"
+          }
+        ],
+        "error": "",
+        "diagnostic_tail": [
+          "AP register 0xfc = 0x84770001",
+          "AP register 0x0 = 0x43800042",
+          "AP#2 IDR = 0x32880000",
+          "AP register 0x20000fc = 0x32880000",
+          "AP register 0x2000000 = 0x00000000",
+          "AP register 0x2000008 = 0x00000000",
+          "AP register 0x200000c = 0x00000000",
+          "AP register 0x2000014 = 0x00000000",
+          "AP register 0x2000024 = 0x00000000",
+          "AP register 0x200002c = 0x00000000",
+          "",
+          "0000876 W Board ID 5415 is not recognized [mbed_board]"
+        ]
+      },
+      "ahb_debug_enabled": true,
+      "result": "PASS"
+    },
+    {
+      "board": "board_e",
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "eraseall_required": false,
+      "preflight": {
+        "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+        "exit_code": 0,
+        "registers": [
+          {
+            "kind": "dp",
+            "address": "0x0",
+            "value": "0x6ba02477"
+          },
+          {
+            "kind": "dp",
+            "address": "0x24",
+            "value": "0x201c0289"
+          },
+          {
+            "kind": "ap",
+            "address": "0xfc",
+            "value": "0x84770001"
+          },
+          {
+            "kind": "ap",
+            "address": "0x0",
+            "value": "0x03800052"
+          },
+          {
+            "kind": "ap",
+            "address": "0x20000fc",
+            "value": "0x32880000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000000",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000008",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200000c",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000014",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000024",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200002c",
+            "value": "0x00000000"
+          }
+        ],
+        "error": "",
+        "diagnostic_tail": [
+          "AP register 0xfc = 0x84770001",
+          "AP register 0x0 = 0x03800052",
+          "AP#2 IDR = 0x32880000",
+          "AP register 0x20000fc = 0x32880000",
+          "AP register 0x2000000 = 0x00000000",
+          "AP register 0x2000008 = 0x00000000",
+          "AP register 0x200000c = 0x00000000",
+          "AP register 0x2000014 = 0x00000000",
+          "AP register 0x2000024 = 0x00000000",
+          "AP register 0x200002c = 0x00000000",
+          "",
+          "0000818 W Board ID 5415 is not recognized [mbed_board]"
+        ]
+      },
+      "pyocd_exit_code": 0,
+      "pyocd_tail": [
+        "CTRL-AP ERASEALL not required: AHB debug already enabled"
+      ],
+      "postflight": {
+        "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+        "exit_code": 0,
+        "registers": [
+          {
+            "kind": "dp",
+            "address": "0x0",
+            "value": "0x6ba02477"
+          },
+          {
+            "kind": "dp",
+            "address": "0x24",
+            "value": "0x201c0289"
+          },
+          {
+            "kind": "ap",
+            "address": "0xfc",
+            "value": "0x84770001"
+          },
+          {
+            "kind": "ap",
+            "address": "0x0",
+            "value": "0x03800052"
+          },
+          {
+            "kind": "ap",
+            "address": "0x20000fc",
+            "value": "0x32880000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000000",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000008",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200000c",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000014",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000024",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200002c",
+            "value": "0x00000000"
+          }
+        ],
+        "error": "",
+        "diagnostic_tail": [
+          "AP register 0xfc = 0x84770001",
+          "AP register 0x0 = 0x03800052",
+          "AP#2 IDR = 0x32880000",
+          "AP register 0x20000fc = 0x32880000",
+          "AP register 0x2000000 = 0x00000000",
+          "AP register 0x2000008 = 0x00000000",
+          "AP register 0x200000c = 0x00000000",
+          "AP register 0x2000014 = 0x00000000",
+          "AP register 0x2000024 = 0x00000000",
+          "AP register 0x200002c = 0x00000000",
+          "",
+          "0000836 W Board ID 5415 is not recognized [mbed_board]"
+        ]
+      },
+      "ahb_debug_enabled": true,
+      "result": "PASS"
+    },
+    {
+      "board": "board_f",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "eraseall_required": false,
+      "preflight": {
+        "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+        "exit_code": 0,
+        "registers": [
+          {
+            "kind": "dp",
+            "address": "0x0",
+            "value": "0x6ba02477"
+          },
+          {
+            "kind": "dp",
+            "address": "0x24",
+            "value": "0x201c0289"
+          },
+          {
+            "kind": "ap",
+            "address": "0xfc",
+            "value": "0x84770001"
+          },
+          {
+            "kind": "ap",
+            "address": "0x0",
+            "value": "0x43800042"
+          },
+          {
+            "kind": "ap",
+            "address": "0x20000fc",
+            "value": "0x32880000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000000",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000008",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200000c",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000014",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000024",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200002c",
+            "value": "0x00000000"
+          }
+        ],
+        "error": "",
+        "diagnostic_tail": [
+          "AP register 0xfc = 0x84770001",
+          "AP register 0x0 = 0x43800042",
+          "AP#2 IDR = 0x32880000",
+          "AP register 0x20000fc = 0x32880000",
+          "AP register 0x2000000 = 0x00000000",
+          "AP register 0x2000008 = 0x00000000",
+          "AP register 0x200000c = 0x00000000",
+          "AP register 0x2000014 = 0x00000000",
+          "AP register 0x2000024 = 0x00000000",
+          "AP register 0x200002c = 0x00000000",
+          "",
+          "0000824 W Board ID 5415 is not recognized [mbed_board]"
+        ]
+      },
+      "pyocd_exit_code": 0,
+      "pyocd_tail": [
+        "CTRL-AP ERASEALL not required: AHB debug already enabled"
+      ],
+      "postflight": {
+        "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+        "exit_code": 0,
+        "registers": [
+          {
+            "kind": "dp",
+            "address": "0x0",
+            "value": "0x6ba02477"
+          },
+          {
+            "kind": "dp",
+            "address": "0x24",
+            "value": "0x201c0289"
+          },
+          {
+            "kind": "ap",
+            "address": "0xfc",
+            "value": "0x84770001"
+          },
+          {
+            "kind": "ap",
+            "address": "0x0",
+            "value": "0x43800042"
+          },
+          {
+            "kind": "ap",
+            "address": "0x20000fc",
+            "value": "0x32880000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000000",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000008",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200000c",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000014",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x2000024",
+            "value": "0x00000000"
+          },
+          {
+            "kind": "ap",
+            "address": "0x200002c",
+            "value": "0x00000000"
+          }
+        ],
+        "error": "",
+        "diagnostic_tail": [
+          "AP register 0xfc = 0x84770001",
+          "AP register 0x0 = 0x43800042",
+          "AP#2 IDR = 0x32880000",
+          "AP register 0x20000fc = 0x32880000",
+          "AP register 0x2000000 = 0x00000000",
+          "AP register 0x2000008 = 0x00000000",
+          "AP register 0x200000c = 0x00000000",
+          "AP register 0x2000014 = 0x00000000",
+          "AP register 0x2000024 = 0x00000000",
+          "AP register 0x200002c = 0x00000000",
+          "",
+          "0000824 W Board ID 5415 is not recognized [mbed_board]"
+        ]
+      },
+      "ahb_debug_enabled": true,
+      "result": "PASS"
+    }
+  ]
+}

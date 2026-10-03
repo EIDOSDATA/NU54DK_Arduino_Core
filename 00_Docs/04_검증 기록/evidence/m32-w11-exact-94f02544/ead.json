@@ -1,0 +1,111 @@
+{
+  "test_ids": [
+    "M32-EAD-01:primary"
+  ],
+  "status": "PASS",
+  "scope": "two_board_encrypted_advertising_data_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "advertiser": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "d92f493f1718f2851bf28155c3c1f665ba9d6dd2e5d584e7aa2a063851201d40",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "143360"
+    },
+    "scanner": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "image_sha256": "93776c5140e4bd9f18f7fa7d7d9f0a13be85879aa04b8d0a27bd430470e11011",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "143360"
+    }
+  },
+  "nonce": "5480a0dda8c68d1877ab45b16d26581f",
+  "iterations": 20,
+  "packet_denominator": 400,
+  "results": {
+    "advertiser": {
+      "role": "advertiser",
+      "updates": "20",
+      "callback_context": "pass",
+      "nonce": "5480a0dda8c68d1877ab45b16d26581f",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    },
+    "scanner": {
+      "role": "scanner",
+      "raw": "400",
+      "authenticated": "20",
+      "replay_rejected": "20",
+      "tamper_rejected": "20",
+      "wrong_key_rejected": "20",
+      "wrong_iv_rejected": "20",
+      "dropped": "0",
+      "callback_context": "pass",
+      "nonce": "5480a0dda8c68d1877ab45b16d26581f",
+      "core": "94f0254499858800b4ced38b1211746b3f2175f8"
+    }
+  },
+  "auth_sequences": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "negative_denominators": {
+    "replay_rejected": 20,
+    "tamper_rejected": 20,
+    "wrong_key_rejected": 20,
+    "wrong_iv_rejected": 20
+  },
+  "allowed_loss": {
+    "scan_queue": 4
+  },
+  "lost": {
+    "reports": 0,
+    "scan_queue": 0
+  },
+  "reason": null,
+  "transcript_sha256": "a5d3e91e7501a7b3ab52aa85be12f02036ab90bcdb6d678dcc16c69c6ddc1da6",
+  "observed_utc": "2026-10-03T00:14:33.155466+00:00"
+}

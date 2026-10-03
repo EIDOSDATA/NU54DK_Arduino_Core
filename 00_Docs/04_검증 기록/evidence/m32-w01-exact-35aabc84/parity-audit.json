@@ -1,0 +1,25 @@
+{
+  "test_id": "M32-W01:parity",
+  "status": "PASS",
+  "source_revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+  "sdk_root": "C:/ncs/v3.4.0",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "full_inventory": {
+    "samples": 190,
+    "variants": 474,
+    "source_only_features": 39,
+    "path": "variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json",
+    "sha256": "24004a758cac6d03b72289d028a6b649e628fade901cd77e9e47b18852056206"
+  },
+  "m32_scope": {
+    "samples": 41,
+    "variants": 74,
+    "selected_rows_sha256": "806714f1323c65eaaa012ab6492da494620ffbe5af7ba4c6c6d4a290ad4bd4ac"
+  },
+  "commands": [
+    "python tools/bluetooth/m31_inventory.py --sdk-root C:/ncs/v3.4.0 --check",
+    "python tools/bluetooth/m32_contract.py --sdk-root C:/ncs/v3.4.0 --check"
+  ]
+}

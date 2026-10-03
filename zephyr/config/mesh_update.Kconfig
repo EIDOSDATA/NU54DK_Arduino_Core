@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+
+menuconfig NUCODE_BLE_MESH_UPDATE
+    bool "NUCODE Bluetooth Mesh BLOB and firmware update API"
+    depends on NUCODE_BLE_MESH
+    help
+      Bounded BLOB Client/Server, Mesh DFU Target, Firmware Distributor,
+      inactive-slot digest verification, and MCUboot rollback control.

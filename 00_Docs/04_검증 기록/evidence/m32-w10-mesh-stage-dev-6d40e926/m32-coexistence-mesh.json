@@ -1,0 +1,90 @@
+{
+  "test_ids": [
+    "M32-COEX-01:ble_154",
+    "M32-COEX-01:ble_esb",
+    "M32-COEX-01:ble_mesh"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_ble_internal_radio_coexistence",
+  "source_clean": false,
+  "identity": {
+    "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "dut": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "flashes": {
+        "ble_mesh": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "327680"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "radio": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "flashes": {
+        "ble_mesh": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "323584"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "ble": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "flashes": {
+        "ble_mesh": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "192512"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "image_sha256": {
+    "ble_mesh": {
+      "dut": "6c1d7649f8e987307b05b6b85f870ccdc356fad53e82c9609ee739e8efc106a9",
+      "mesh_peer": "c3ebf375661087fbf8e5df687cda66a4bc206d71bfecd87d0906856e835e40c5",
+      "ble_peer": "f802fbbec32a3757eed342864a0072606dd714add5f4c2e2eaaa177846b6edb2"
+    }
+  },
+  "iterations_per_scenario": 20,
+  "packets_per_protocol": 4000,
+  "allowed_loss": 80,
+  "service_gap_limit_ms": 500,
+  "results": {},
+  "reason": "CoexistenceFailure: ble_mesh/mesh_peer target FAIL: mesh_configure_remote_key",
+  "transcript_sha256": "dcc90562b07c56815282769772280803aa3b48a2c5005fad9254fc8b967f3a3c",
+  "observed_utc": "2026-10-02T01:19:31.884836+00:00"
+}

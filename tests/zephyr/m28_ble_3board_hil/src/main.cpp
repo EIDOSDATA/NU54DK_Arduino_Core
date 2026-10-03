@@ -15,7 +15,7 @@
 #include <cstdint>
 #include <string.h>
 
-#if !defined(CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER) || \
+#if !defined(CONFIG_BT_PER_ADV_SYNC_TRANSFER_RECEIVER) ||                                          \
     !defined(CONFIG_BT_PER_ADV_SYNC_TRANSFER_SENDER)
 #error "M28B3 requires both periodic sync transfer roles"
 #endif
@@ -44,21 +44,25 @@ namespace
     constexpr std::int64_t periodic_settle_ms = 1500;
     constexpr std::int64_t soak_duration_ms = 1800000;
     constexpr std::int64_t soak_packet_interval_ms = 180;
+#if defined(NUCODE_M32_W11_SOAK)
+    constexpr std::int64_t soak_gap_limit_ms = 500;
+    constexpr std::int64_t cleanup_timeout_ms = 30000;
+#endif
     constexpr std::uint8_t periodic_sid = 7U;
     constexpr std::uint16_t company_id = 0x054dU;
 
     static_assert(periodic_update_interval_ms >=
-                  static_cast<std::int64_t>(periodic_interval_max) * 5 / 2,
+                      static_cast<std::int64_t>(periodic_interval_max) * 5 / 2,
                   "Each sequence must span at least two periodic events");
 
     const nucode::ble::BLEUuid service_uuid("9f3c2801-8b7a-4d64-a1b2-001122334455");
     const nucode::ble::BLEUuid value_uuid("9f3c2802-8b7a-4d64-a1b2-001122334455");
     nucode::ble::BLEService trace_service(service_uuid);
-    nucode::ble::BLECharacteristic trace_value(
-        value_uuid,
-        nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write |
-            nucode::ble::BLEProperty::notify,
-        nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 64U);
+    nucode::ble::BLECharacteristic
+        trace_value(value_uuid,
+                    nucode::ble::BLEProperty::read | nucode::ble::BLEProperty::write |
+                        nucode::ble::BLEProperty::notify,
+                    nucode::ble::BLEPermission::read | nucode::ble::BLEPermission::write, 64U);
 
     enum class Phase : std::uint8_t
     {
@@ -152,6 +156,10 @@ namespace
     std::int64_t transmit_start_ms = 0;
     std::int64_t receive_start_ms = 0;
     std::int64_t next_transmit_ms = 0;
+#if defined(NUCODE_M32_W11_SOAK)
+    std::int64_t previous_receive_ms = 0;
+    std::int64_t maximum_receive_gap_ms = 0;
+#endif
 
     [[maybe_unused]] std::uint32_t past_sent = 0U;
     [[maybe_unused]] std::uint32_t past_received = 0U;
@@ -269,15 +277,14 @@ namespace
     /** @brief little-endian 32-bit 값을 고정 packet에서 읽습니다. */
     [[maybe_unused]] std::uint32_t getU32(const std::uint8_t *input)
     {
-        return static_cast<std::uint32_t>(input[0]) |
-               (static_cast<std::uint32_t>(input[1]) << 8U) |
+        return static_cast<std::uint32_t>(input[0]) | (static_cast<std::uint32_t>(input[1]) << 8U) |
                (static_cast<std::uint32_t>(input[2]) << 16U) |
                (static_cast<std::uint32_t>(input[3]) << 24U);
     }
 
     /** @brief nonce·phase·sender·sequence가 결합된 28-byte GATT packet을 만듭니다. */
     [[maybe_unused]] void buildTracePacket(std::uint8_t *packet, std::uint8_t phase_code,
-                          std::uint8_t sender, std::uint32_t sequence)
+                                           std::uint8_t sender, std::uint32_t sequence)
     {
         packet[0] = 'M';
         packet[1] = '3';
@@ -290,12 +297,11 @@ namespace
 
     /** @brief 수신 GATT packet의 무결성·nonce·순서를 fail-closed로 검증합니다. */
     [[maybe_unused]] void consumeTracePacket(const std::uint8_t *packet, std::size_t length,
-                            std::uint8_t phase_code, std::uint8_t sender,
-                            std::uint32_t target)
+                                             std::uint8_t phase_code, std::uint8_t sender,
+                                             std::uint32_t target)
     {
-        if (length != 28U || packet[0] != 'M' || packet[1] != '3' ||
-            packet[2] != phase_code || packet[3] != sender ||
-            ::memcmp(&packet[4], nonce_binary, nonce_binary_length) != 0 ||
+        if (length != 28U || packet[0] != 'M' || packet[1] != '3' || packet[2] != phase_code ||
+            packet[3] != sender || ::memcmp(&packet[4], nonce_binary, nonce_binary_length) != 0 ||
             getU32(&packet[24]) != checksum(packet, 24U))
         {
             ++receive_corrupt;
@@ -318,10 +324,27 @@ namespace
             fail("trace-sequence");
             return;
         }
+        const std::int64_t receive_time_ms = k_uptime_get();
         if (receive_sequence == 0U)
         {
-            receive_start_ms = k_uptime_get();
+            receive_start_ms = receive_time_ms;
         }
+#if defined(NUCODE_M32_W11_SOAK)
+        if (previous_receive_ms != 0)
+        {
+            const std::int64_t gap_ms = receive_time_ms - previous_receive_ms;
+            if (gap_ms > maximum_receive_gap_ms)
+            {
+                maximum_receive_gap_ms = gap_ms;
+            }
+            if (gap_ms > soak_gap_limit_ms)
+            {
+                fail("soak-service-gap");
+                return;
+            }
+        }
+        previous_receive_ms = receive_time_ms;
+#endif
         receive_sequence = sequence;
     }
 
@@ -337,8 +360,8 @@ namespace
                                            std::size_t length)
     {
         if (pending_client_write != ClientWriteKind::none ||
-            active_client_write != ClientWriteKind::none || data == nullptr ||
-            length == 0U || length > sizeof(pending_client_payload))
+            active_client_write != ClientWriteKind::none || data == nullptr || length == 0U ||
+            length > sizeof(pending_client_payload))
         {
             return false;
         }
@@ -431,7 +454,8 @@ namespace
         Serial.print("NUCODE_M28B3_");
         Serial.print(roleName());
 #if defined(NUCODE_M28_B3_ROLE_MIXED)
-        Serial.print(":LINK:PASS:links=2:central=1:peripheral=1:reconnects_per_link=20:sequence_per_link=1000");
+        Serial.print(":LINK:PASS:links=2:central=1:peripheral=1:reconnects_per_link=20:sequence_"
+                     "per_link=1000");
 #else
         Serial.print(":LINK:PASS:links=1:reconnects=20:sequence=1000");
 #endif
@@ -474,13 +498,14 @@ namespace
             return;
         }
         if (control_round != control_round_target || cross_state_events != 0U ||
-            stale_events != 0U || unreported_driver_errors != 0U ||
-            unexpected_disconnects != 0U || BLEDevice.droppedEvents() != 0U)
+            stale_events != 0U || unreported_driver_errors != 0U || unexpected_disconnects != 0U ||
+            BLEDevice.droppedEvents() != 0U)
         {
             fail("control-final-counts");
             return;
         }
-        Serial.print("NUCODE_M28B3_mixed:CTRL:PASS:links=2:requests_per_link=20:cross_state=0:stale=0:unreported_driver=0:unexpected_disconnect=0:drops=0");
+        Serial.print("NUCODE_M28B3_mixed:CTRL:PASS:links=2:requests_per_link=20:cross_state=0:"
+                     "stale=0:unreported_driver=0:unexpected_disconnect=0:drops=0");
         printNonceEnd();
         Serial.print("NUCODE_M28B3_mixed:FINAL:PASS:test=CTRL");
         printNonceEnd();
@@ -501,12 +526,25 @@ namespace
             fail("soak-final-counts");
             return;
         }
+#if defined(NUCODE_M32_W11_SOAK)
+        const std::int64_t cleanup_start_ms = k_uptime_get();
+#endif
         BLEDevice.end();
+#if defined(NUCODE_M32_W11_SOAK)
+        const std::int64_t cleanup_elapsed_ms = k_uptime_get() - cleanup_start_ms;
+#endif
         if (BLEDevice.initialized() || BLEConnection.count() != 0U)
         {
             fail("resource-recovery");
             return;
         }
+#if defined(NUCODE_M32_W11_SOAK)
+        if (maximum_receive_gap_ms > soak_gap_limit_ms || cleanup_elapsed_ms > cleanup_timeout_ms)
+        {
+            fail("soak-bounded-recovery");
+            return;
+        }
+#endif
         Serial.print("NUCODE_M28B3_");
         Serial.print(roleName());
         Serial.print(":TRACE:PASS:test=SOAK:source=rf-gatt:tx=");
@@ -521,7 +559,15 @@ namespace
 #else
         Serial.print(":SOAK:PASS:duration_s=1800:links=1:sequence=10000");
 #endif
-        Serial.print(":loss=0:corrupt=0:duplicate=0:unexpected_disconnect=0:recovery_failures=0:drops=0");
+        Serial.print(
+            ":loss=0:corrupt=0:duplicate=0:unexpected_disconnect=0:recovery_failures=0:drops=0");
+#if defined(NUCODE_M32_W11_SOAK)
+        Serial.print(":max_gap_ms=");
+        Serial.print(maximum_receive_gap_ms);
+        Serial.print(":cleanup_ms=");
+        Serial.print(cleanup_elapsed_ms);
+        Serial.print(":cleanup=pass");
+#endif
         printNonceEnd();
         Serial.print("NUCODE_M28B3_");
         Serial.print(roleName());
@@ -564,7 +610,7 @@ namespace
             !BLEExtendedAdvertising.setData(periodic_set, extended_payload, extended_length) ||
             !BLEPeriodicAdvertising.configure(periodic_set, periodic) ||
             !BLEPeriodicAdvertising.setData(periodic_set, periodic_payload,
-                                             sizeof(periodic_payload)) ||
+                                            sizeof(periodic_payload)) ||
             !BLEPeriodicAdvertising.start(periodic_set) ||
             !BLEExtendedAdvertising.start(periodic_set))
         {
@@ -595,11 +641,11 @@ namespace
 
     /** @brief periodic report의 nonce·checksum·unique sequence를 검증합니다. */
     [[maybe_unused]] void consumePeriodicReport(const nucode::ble::BLEPeriodicReport &report,
-                               bool receiver)
+                                                bool receiver)
     {
         if (report.payload_length != 29U || report.payload[0] != 28U ||
-            report.payload[1] != 0xffU || report.payload[2] !=
-                static_cast<std::uint8_t>(company_id) ||
+            report.payload[1] != 0xffU ||
+            report.payload[2] != static_cast<std::uint8_t>(company_id) ||
             report.payload[3] != static_cast<std::uint8_t>(company_id >> 8U) ||
             report.payload[4] != 'P' ||
             ::memcmp(&report.payload[5], nonce_binary, nonce_binary_length) != 0 ||
@@ -660,7 +706,7 @@ namespace
 
     /** @brief 한 packet write를 준비하고 client completion까지 직렬화합니다. */
     [[maybe_unused]] void driveTraceTransmitter(std::uint8_t phase_code, std::uint32_t target,
-                               std::int64_t interval_ms)
+                                                std::int64_t interval_ms)
     {
         if (!client_ready || pending_client_write != ClientWriteKind::none ||
             active_client_write != ClientWriteKind::none || transmit_sequence >= target)
@@ -691,8 +737,8 @@ namespace
             return;
         }
         ++transmit_sequence;
-        next_transmit_ms = transmit_start_ms +
-                           static_cast<std::int64_t>(transmit_sequence) * interval_ms;
+        next_transmit_ms =
+            transmit_start_ms + static_cast<std::int64_t>(transmit_sequence) * interval_ms;
     }
 
     /** @brief 현재 예약된 GATT write 하나를 제출합니다. */
@@ -809,8 +855,8 @@ namespace
         }
         if (length == 8U && ::memcmp(data, "PER_DONE", length) == 0)
         {
-            if (periodic_emitted != periodic_sequence_target ||
-                periodic_corrupt != 0U || BLEDevice.droppedEvents() != 0U)
+            if (periodic_emitted != periodic_sequence_target || periodic_corrupt != 0U ||
+                BLEDevice.droppedEvents() != 0U)
             {
                 fail("periodic-advertiser-counts");
                 return;
@@ -839,7 +885,8 @@ namespace
 
     /** @brief GATT server event를 main-thread 고정 상태로 변환합니다. */
     [[maybe_unused]] void onCharacteristic(nucode::ble::BLECharacteristic &,
-                          const nucode::ble::BLECharacteristicEventInfo &event, void *)
+                                           const nucode::ble::BLECharacteristicEventInfo &event,
+                                           void *)
     {
         if (!protocol_started || protocol_failed)
         {
@@ -887,7 +934,7 @@ namespace
 
     /** @brief generic GATT client 결과를 write 종류와 discovery 상태로 결합합니다. */
     [[maybe_unused]] void onClientEvent(nucode::ble::BLEGattClientEvent event,
-                       const std::uint8_t *data, std::size_t length, void *)
+                                        const std::uint8_t *data, std::size_t length, void *)
     {
         if (!protocol_started || protocol_failed)
         {
@@ -922,8 +969,7 @@ namespace
             }
             else if (completed == ClientWriteKind::link_up)
             {
-                if (phase != Phase::reconnect_outgoing ||
-                    !outgoing_confirmation_pending ||
+                if (phase != Phase::reconnect_outgoing || !outgoing_confirmation_pending ||
                     outgoing_reconnects >= reconnect_target)
                 {
                     fail("link-up-completion");
@@ -947,7 +993,8 @@ namespace
             else if (completed == ClientWriteKind::periodic_done)
             {
                 const std::uint32_t loss = periodic_sequence_target - periodic_received;
-                Serial.print("NUCODE_M28B3_central:TRACE:PASS:test=PER:source=rf-periodic:denominator=1000:received=");
+                Serial.print("NUCODE_M28B3_central:TRACE:PASS:test=PER:source=rf-periodic:"
+                             "denominator=1000:received=");
                 Serial.print(periodic_received);
                 Serial.print(":loss=");
                 Serial.print(loss);
@@ -1012,8 +1059,8 @@ namespace
             return;
         }
 #if defined(NUCODE_M28_B3_ROLE_MIXED) && defined(NUCODE_M28_B3_TEST_PERIODIC)
-        if (phase == Phase::periodic_sync && result.extended &&
-            result.periodic_interval != 0U && result.sid == periodic_sid)
+        if (phase == Phase::periodic_sync && result.extended && result.periodic_interval != 0U &&
+            result.sid == periodic_sid)
         {
             periodic_address = result.address;
             periodic_scan_result_pending = true;
@@ -1053,8 +1100,7 @@ namespace
         if (information.event == nucode::ble::BLEEvent::error)
         {
 #if defined(NUCODE_M28_B3_TEST_LINK)
-            if (BLEDevice.lastDriverError() ==
-                    -static_cast<int>(BT_HCI_ERR_UNKNOWN_CONN_ID) &&
+            if (BLEDevice.lastDriverError() == -static_cast<int>(BT_HCI_ERR_UNKNOWN_CONN_ID) &&
                 (phase == Phase::startup || phase == Phase::reconnect_outgoing) &&
                 reconnect_attempt_failures < reconnect_attempt_failure_limit)
             {
@@ -1079,8 +1125,7 @@ namespace
                 outgoing_link = information.connection;
                 ++outgoing_connections;
 #if defined(NUCODE_M28_B3_TEST_LINK) || defined(NUCODE_M28_B3_TEST_SOAK)
-                if (outgoing_connections == 1U &&
-                    !BLEConnection.requestMtu(outgoing_link))
+                if (outgoing_connections == 1U && !BLEConnection.requestMtu(outgoing_link))
                 {
                     fail("client-mtu-request");
                     return;
@@ -1123,8 +1168,7 @@ namespace
                 outgoing_confirmation_queued = false;
             }
 #if defined(NUCODE_M28_B3_ROLE_PERIPHERAL)
-            if (incoming_reconnects == reconnect_target &&
-                receive_sequence == link_sequence_target)
+            if (incoming_reconnects == reconnect_target && receive_sequence == link_sequence_target)
             {
                 finishLink();
             }
@@ -1147,8 +1191,7 @@ namespace
                 client_ready = false;
                 outgoing_confirmation_pending = false;
                 outgoing_confirmation_queued = false;
-                if (phase == Phase::reconnect_outgoing &&
-                    outgoing_reconnects < reconnect_target)
+                if (phase == Phase::reconnect_outgoing && outgoing_reconnects < reconnect_target)
                 {
                     reconnect_waiting_for_recycle = true;
                 }
@@ -1180,8 +1223,7 @@ namespace
                 server_subscribed = false;
                 incoming_confirmation_pending = false;
 #if defined(NUCODE_M28_B3_TEST_LINK)
-                if ((phase == Phase::startup || phase == Phase::data) &&
-                    receive_sequence == 0U)
+                if ((phase == Phase::startup || phase == Phase::data) && receive_sequence == 0U)
                 {
                     phase = Phase::startup;
                     advertising_waiting_for_recycle = true;
@@ -1225,8 +1267,8 @@ namespace
                 action_deadline_ms = k_uptime_get();
             }
             if ((phase == Phase::startup || phase == Phase::reconnect_outgoing) &&
-                reconnect_waiting_for_recycle &&
-                outgoing_reconnects < reconnect_target && !outgoing_link.valid())
+                reconnect_waiting_for_recycle && outgoing_reconnects < reconnect_target &&
+                !outgoing_link.valid())
             {
                 reconnect_waiting_for_recycle = false;
                 reconnect_pending = true;
@@ -1384,8 +1426,7 @@ namespace
     {
 #if defined(NUCODE_M28_B3_TEST_LINK)
 #if defined(NUCODE_M28_B3_ROLE_MIXED) || defined(NUCODE_M28_B3_ROLE_CENTRAL)
-        if (phase == Phase::startup && client_ready &&
-            BLEConnection.mtu(outgoing_link) >= 31U)
+        if (phase == Phase::startup && client_ready && BLEConnection.mtu(outgoing_link) >= 31U)
         {
 #if defined(NUCODE_M28_B3_ROLE_MIXED)
             if (incoming_link.valid())
@@ -1398,9 +1439,8 @@ namespace
         {
             driveTraceTransmitter('L', link_sequence_target, 0);
         }
-        if (phase == Phase::reconnect_outgoing && client_ready &&
-            outgoing_confirmation_pending && !outgoing_confirmation_queued &&
-            pending_client_write == ClientWriteKind::none &&
+        if (phase == Phase::reconnect_outgoing && client_ready && outgoing_confirmation_pending &&
+            !outgoing_confirmation_queued && pending_client_write == ClientWriteKind::none &&
             active_client_write == ClientWriteKind::none)
         {
             if (!queueClientCommand(ClientWriteKind::link_up, "LINK_UP"))
@@ -1467,8 +1507,8 @@ namespace
         {
             periodic_scan_result_pending = false;
             static_cast<void>(BLEScan.stop());
-            if (!BLEPeriodicAdvertising.createSync(periodic_address, periodic_sid,
-                                                    periodic_sync, 0U, 1000U, true))
+            if (!BLEPeriodicAdvertising.createSync(periodic_address, periodic_sid, periodic_sync,
+                                                   0U, 1000U, true))
             {
                 fail("periodic-source-sync");
             }
@@ -1495,8 +1535,7 @@ namespace
                 fail("past-sync-delete");
             }
         }
-        if (periodic_result_deadline_ms != 0 &&
-            k_uptime_get() >= periodic_result_deadline_ms)
+        if (periodic_result_deadline_ms != 0 && k_uptime_get() >= periodic_result_deadline_ms)
         {
             periodic_result_deadline_ms = 0;
             finishPeriodicCentral();
@@ -1522,8 +1561,7 @@ namespace
     {
 #if defined(NUCODE_M28_B3_ROLE_MIXED) && defined(NUCODE_M28_B3_TEST_CONTROL)
         const std::int64_t now = k_uptime_get();
-        if (phase == Phase::startup && client_ready && server_subscribed &&
-            validateActiveLinks())
+        if (phase == Phase::startup && client_ready && server_subscribed && validateActiveLinks())
         {
             phase = Phase::control;
             control_next_action_ms = now + control_stage_delay_ms;
@@ -1615,8 +1653,7 @@ namespace
     {
 #if defined(NUCODE_M28_B3_TEST_SOAK)
 #if defined(NUCODE_M28_B3_ROLE_MIXED) || defined(NUCODE_M28_B3_ROLE_CENTRAL)
-        if (phase == Phase::startup && client_ready &&
-            BLEConnection.mtu(outgoing_link) >= 31U)
+        if (phase == Phase::startup && client_ready && BLEConnection.mtu(outgoing_link) >= 31U)
         {
 #if defined(NUCODE_M28_B3_ROLE_MIXED)
             if (incoming_link.valid())
@@ -1637,13 +1674,12 @@ namespace
             completion_deadline = receive_start_ms + soak_duration_ms;
         }
 #elif defined(NUCODE_M28_B3_ROLE_MIXED)
-        if (receive_sequence == soak_sequence_target &&
-            transmit_completed == soak_sequence_target)
+        if (receive_sequence == soak_sequence_target && transmit_completed == soak_sequence_target)
         {
             const std::int64_t receive_deadline = receive_start_ms + soak_duration_ms;
             const std::int64_t transmit_deadline = transmit_start_ms + soak_duration_ms;
-            completion_deadline = receive_deadline > transmit_deadline
-                                      ? receive_deadline : transmit_deadline;
+            completion_deadline =
+                receive_deadline > transmit_deadline ? receive_deadline : transmit_deadline;
         }
 #else
         if (transmit_completed == soak_sequence_target)
@@ -1736,8 +1772,7 @@ void setup()
     }
 #if !defined(NUCODE_M28_B3_ROLE_CENTRAL)
     trace_value.onEvent(onCharacteristic);
-    if (!trace_service.addCharacteristic(trace_value) ||
-        !BLEDevice.addService(trace_service))
+    if (!trace_service.addCharacteristic(trace_value) || !BLEDevice.addService(trace_service))
     {
         fail("gatt-schema");
         return;
@@ -1748,8 +1783,7 @@ void setup()
     BLEScan.onResult(onScanResult);
     BLEClient.onEvent(onClientEvent);
 #endif
-#if defined(NUCODE_M28_B3_TEST_PERIODIC) && \
-    !defined(NUCODE_M28_B3_ROLE_PERIPHERAL)
+#if defined(NUCODE_M28_B3_TEST_PERIODIC) && !defined(NUCODE_M28_B3_ROLE_PERIPHERAL)
     BLEPeriodicAdvertising.onReport(onPeriodicReport);
 #endif
     if (!BLEDevice.begin(

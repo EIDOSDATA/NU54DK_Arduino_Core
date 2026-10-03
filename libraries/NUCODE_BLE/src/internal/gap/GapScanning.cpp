@@ -275,12 +275,18 @@ namespace nucode::ble::internal::gap
                 nucode::ble::internal::recordError(BLEError::already_started, -EALREADY, true);
                 return false;
             }
-            if (atomic_get(&gapState().advertising_active) != 0 ||
-                atomic_get(&gapState().connection_connecting) != 0)
+            if (atomic_get(&gapState().advertising_active) != 0)
             {
                 nucode::ble::internal::recordError(BLEError::busy, -EBUSY, true);
                 return false;
             }
+#if !defined(CONFIG_BT_SCAN_AND_INITIATE_IN_PARALLEL)
+            if (atomic_get(&gapState().connection_connecting) != 0)
+            {
+                nucode::ble::internal::recordError(BLEError::busy, -EBUSY, true);
+                return false;
+            }
+#endif
 #if defined(CONFIG_BT_EXT_ADV)
             if (atomic_cas(&gapState().scan_callback_registered, 0, 1))
             {

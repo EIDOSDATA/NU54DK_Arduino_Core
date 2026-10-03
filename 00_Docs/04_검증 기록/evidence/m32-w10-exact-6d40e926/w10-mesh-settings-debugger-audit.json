@@ -1,0 +1,50 @@
+{
+  "status": "FAIL_DIAGNOSED",
+  "observed_utc": "2026-10-02T00:47:40.7905994Z",
+  "identity": {
+    "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "scenario": "ble_mesh",
+  "role": "dut",
+  "failure": {
+    "target_fault": "UsageFault: Illegal use of the EPSR",
+    "stacked_pc": "0x00000000",
+    "stacked_lr": "0x0003b889",
+    "stacked_r2": "0x0003b8bf",
+    "stacked_r12": "0x000304ad",
+    "symbolized": {
+      "stacked_lr": "settings_call_set_handler at settings.c:232",
+      "stacked_r2": "settings_zms_read_fn at settings_zms.c:50",
+      "stacked_r12": "nrf_rram_read at soc_flash_nrf_rram.c:294"
+    }
+  },
+  "debugger": {
+    "transport": "CMSIS-DAP V2",
+    "connect_mode": "attach",
+    "reset_performed": false,
+    "auto_unlock": false,
+    "initial_state": "RUNNING",
+    "halted_state": "HALTED",
+    "pc": "0x00044d8a",
+    "lr": "0x00044d93",
+    "psp": "0x2000d320",
+    "msp": "0x2000c390",
+    "xpsr": "0x29000006",
+    "cfsr": "0x00000000",
+    "hfsr": "0x00000000",
+    "pc_symbol": "arch_system_halt at fatal.c:30",
+    "resumed_after_read": true
+  },
+  "root_cause": {
+    "category": "duplicate_settings_load_with_commit_only_mesh_handler",
+    "detail": "Mesh begin의 null-safe settings 복원 뒤 NUS begin이 별도 settings_load를 다시 호출했고, Zephyr settings core가 h_set이 null인 commit 전용 Mesh 상위 handler를 검사하지 않고 호출했다.",
+    "evidence": "stacked LR은 settings_call_set_handler의 blx h_set 다음 주소이며 fault PC는 0이다."
+  },
+  "remediation": {
+    "ble_once_loader": "null-safe settings_load_subtree_direct 뒤 settings_commit을 명시 호출",
+    "mesh_ble_coordination": "Mesh가 먼저 복원한 결과를 BLE one-shot state에 전달해 중복 복원을 금지"
+  }
+}

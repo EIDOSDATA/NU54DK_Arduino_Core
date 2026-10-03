@@ -1,0 +1,43 @@
+tests:
+  nucode.m32.mesh_dfu_hil.distributor:
+    tags: [nucode, arduino, m32, bluetooth, mesh, dfu, hil]
+    build_only: true
+    sysbuild: true
+    extra_args:
+      - M32_MDFU_ROLE=distributor
+      - M32_MDFU_CANDIDATE_SHA256=0000000000000000000000000000000000000000000000000000000000000000
+      - M32_MDFU_CANDIDATE_SIZE=1
+      - EXTRA_CONF_FILE=mesh.conf
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m32.mesh_dfu_hil.target_a:
+    tags: [nucode, arduino, m32, bluetooth, mesh, dfu, hil]
+    build_only: true
+    sysbuild: true
+    extra_args:
+      - M32_MDFU_ROLE=target_a
+      - M32_MDFU_CANDIDATE_SHA256=0000000000000000000000000000000000000000000000000000000000000000
+      - M32_MDFU_CANDIDATE_SIZE=1
+      - EXTRA_CONF_FILE=mesh.conf
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m32.mesh_dfu_hil.target_b:
+    tags: [nucode, arduino, m32, bluetooth, mesh, dfu, hil]
+    build_only: true
+    sysbuild: true
+    extra_args:
+      - M32_MDFU_ROLE=target_b
+      - M32_MDFU_CANDIDATE_SHA256=0000000000000000000000000000000000000000000000000000000000000000
+      - M32_MDFU_CANDIDATE_SIZE=1
+      - EXTRA_CONF_FILE=mesh.conf
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m32.mesh_dfu_hil.candidate:
+    tags: [nucode, arduino, m32, bluetooth, mesh, dfu, hil]
+    build_only: true
+    sysbuild: true
+    extra_args:
+      - M32_MDFU_ROLE=candidate
+      - EXTRA_CONF_FILE=candidate.conf
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]

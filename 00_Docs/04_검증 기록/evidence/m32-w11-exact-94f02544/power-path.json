@@ -1,0 +1,88 @@
+{
+  "test_ids": [
+    "M32-PWR-01:primary",
+    "M32-PATH-01:primary"
+  ],
+  "status": "PASS",
+  "scope": "two_board_power_and_path_loss_twenty_iterations",
+  "source_clean": true,
+  "identity": {
+    "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "central": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "image_sha256": "8aee205d3b0aef5dc67cd9d1dda18a04171d6e6bbcca9c5d016a22a359b6eb0d",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "196608"
+    },
+    "peripheral": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "image_sha256": "fe1b7c1745c542f62a64bdf6d5ccd9fee2fa71c05925d9bfb7db626a80e5c59a",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "196608"
+    }
+  },
+  "nonce": "da29bf3a40547b866ff41deeab4f6717",
+  "iterations": 20,
+  "power_reports": {
+    "central": 20,
+    "peripheral": 20
+  },
+  "power_denominator": 40,
+  "power_range_dbm": {
+    "central": [
+      0,
+      0
+    ],
+    "peripheral": [
+      0,
+      0
+    ]
+  },
+  "path_reports": 60,
+  "path_denominator": 60,
+  "path_range_db": [
+    33,
+    38
+  ],
+  "maximum_event_gap_ms": {
+    "power_central": 203.99999999790452,
+    "power_peripheral": 250.0,
+    "path": 125.0
+  },
+  "allowed_loss": {
+    "power": 0,
+    "path": 1
+  },
+  "lost_reports": {
+    "power": 0,
+    "path": 0
+  },
+  "reason": null,
+  "transcript_sha256": "951056d7b7cc83689f99590aac68913ee70d4cb1bccbd85b48e86d07ca9cc328",
+  "observed_utc": "2026-10-03T00:00:42.669194+00:00"
+}

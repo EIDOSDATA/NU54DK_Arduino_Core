@@ -1,0 +1,12 @@
+{
+  "schema_version": 3,
+  "id": "nucode.ble.mesh-management",
+  "requires": ["nucode.ble.mesh"],
+  "capabilities": ["nucode.ble.mesh-management-api"],
+  "conf": ["mesh-management.conf"],
+  "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
+  "conflicts": [],
+  "compatible_profiles": ["adaptive", "ble"]
+}

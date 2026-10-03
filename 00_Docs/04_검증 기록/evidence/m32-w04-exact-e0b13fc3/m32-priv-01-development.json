@@ -1,0 +1,97 @@
+{
+  "test_ids": [
+    "M32-PRIV-01:primary"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_identity_privacy_accept_list_reconnection_contract",
+  "source_clean": false,
+  "identity": {
+    "core": "e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "identity_a": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "E:/",
+      "vcom": "COM14",
+      "image_sha256": "e6379ec4ccd1120c5ea465193a494f7ae0bbc74fe3f6b579e0a297ce45b390db",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "241664"
+    },
+    "identity_b": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "F:/",
+      "vcom": "COM13",
+      "image_sha256": "c8c4b487b19412ea03d834b62fe312c1d2ee14f36f26a800ad0180c7c97fcdca",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "241664"
+    },
+    "peer": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "vcom": "COM10",
+      "image_sha256": "614035c48f357632bf9a0e67148d7cf59feb1c3dd504c0bb00d64dfad1555976",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "237568"
+    }
+  },
+  "local_addresses": {
+    "identity_a": {
+      "address": "E4:17:FF:9D:C9:6B",
+      "type": 1
+    },
+    "identity_b": {
+      "address": "F6:BF:65:82:F1:AA",
+      "type": 1
+    },
+    "peer": {
+      "address": "FA:B5:DC:C8:4E:6A",
+      "type": 1
+    }
+  },
+  "nonce": "7bb31061d89b9c569f6351e8071644d1",
+  "iterations": 20,
+  "packet_denominator": 200,
+  "results": {},
+  "negative_denominators": {
+    "wrong_identity": 0,
+    "unauthorized_peer": 0,
+    "active_list_change": 0
+  },
+  "allowed_loss": {
+    "identity_reports": 0
+  },
+  "lost": {
+    "identity_reports": 200
+  },
+  "latency_limit_ms": 1000,
+  "reason": "PrivacyExecutionFailure: identity_b target FAIL: session_timeout",
+  "transcript_sha256": "aab837b59e916c986e42e85ea9ccfea380bfa687c56bb04e1d0da10272199e34",
+  "observed_utc": "2026-09-29T13:38:37.334193+00:00"
+}

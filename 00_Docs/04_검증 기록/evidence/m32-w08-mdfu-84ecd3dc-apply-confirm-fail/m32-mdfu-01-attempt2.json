@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "test_ids": ["M32-MDFU-01:primary"],
+  "status": "FAIL",
+  "source_clean": true,
+  "source_revision": "84ecd3dc74b9c1f8b838742c6d3cc85176d5ade2",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "failure": "MeshDfuFailure: distributor target FAIL: distribution",
+  "candidate": {
+    "size": 55040,
+    "sha256": "09b0dbfa0c054898c311f3673891cd26e8cdbe54b8f9df2f014e9a0ae4527528",
+    "version": "2.0.0+0"
+  },
+  "distribution_state": {
+    "stage": "wait_valid_image",
+    "iteration_completed": 0,
+    "wrong_key_rejected": true,
+    "wrong_image_rejected": true,
+    "partial_image_rejected": true,
+    "dfd_phase": "failed",
+    "targets": [
+      {
+        "role": "target_a",
+        "blob_status": "internal_error",
+        "blob_timed_out": true,
+        "dfu_status": "internal_error",
+        "dfu_phase": "applying"
+      },
+      {
+        "role": "target_b",
+        "blob_status": "internal_error",
+        "blob_timed_out": true,
+        "dfu_status": "internal_error",
+        "dfu_phase": "applying"
+      }
+    ]
+  },
+  "post_failure_probe": {
+    "distributor_version": "0.0.0+0",
+    "target_a_version": "0.0.0+0",
+    "target_b_version": "0.0.0+0",
+    "all_confirmed": true
+  },
+  "register_diagnosis": {
+    "attachment": "cmsis-dap-v2-read-only",
+    "halt_read_resume": true,
+    "boards": 3,
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "diagnosis": {
+    "primary_cause": "The DFU Target apply callback scheduled a test upgrade but did not reboot after the Apply Status response, so confirmation could not find the candidate firmware identity.",
+    "candidate_boundary": "The minimal candidate intentionally has no Mesh composition and therefore must be declared as an unprovisioning composition change.",
+    "corrective_action": "Reboot from the apply callback, encode a changed composition hash, accept the Zephyr unprovisioning confirmation timeout as target success, and retain the three-hour finite runner deadline."
+  },
+  "mass_erase_or_recover": false,
+  "raw_probe_identity_persisted": false,
+  "runner_transcript_persisted": false,
+  "runner_transcript_note": "The runner at this source revision returned before save_attempt on failure. The next revision saves bounded FAIL JSON and transcript automatically.",
+  "observed_local": "2026-10-02T05:08:55.6612471+09:00"
+}

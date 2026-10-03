@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""! @brief M31 RC 설치 예제 113개 중 고정 Windows shard를 검증합니다. """
+"""! @brief 설치 예제 130개 중 고정 Windows shard를 검증합니다. """
 
 from __future__ import annotations
 
@@ -163,6 +163,8 @@ def weighted_shards(
     for index in range(shard_count):
         first = lanes[index * 2]
         second = lanes[index * 2 + 1]
+        if len(second) > len(first):
+            first, second = second, first
         shard: list[tuple[str, Path, str]] = []
         for offset in range(max(len(first), len(second))):
             if offset < len(first):

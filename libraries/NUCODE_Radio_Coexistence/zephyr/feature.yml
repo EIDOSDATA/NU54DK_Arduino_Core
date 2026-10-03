@@ -1,0 +1,17 @@
+{
+  "schema_version": 3,
+  "id": "nucode.radio.coexistence",
+  "requires": ["ble", "radio"],
+  "capabilities": ["nucode.radio.coexistence-api"],
+  "conf": ["coexistence.conf"],
+  "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
+  "conflicts": ["coexistence-monitor-owner"],
+  "compatible_profiles": [
+    "coexistence_ble_mesh",
+    "coexistence_ble_154",
+    "coexistence_ble_esb",
+    "external_coexistence"
+  ]
+}

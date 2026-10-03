@@ -1,0 +1,84 @@
+{
+  "test_ids": [
+    "M32-ADV-01:primary"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_extended_advertising_set_sid_contract",
+  "source_clean": false,
+  "identity": {
+    "core": "dc752676960aefe105e8e1cd9b139760cc1dc406",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "advertiser_a": {
+      "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+      "volume": "E:/",
+      "vcom": "COM14",
+      "image_sha256": "b0e13132d4930cd33c57be0004a221973839ffddbaa52346ce1258c90cdf7e51",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "196608"
+    },
+    "advertiser_b": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "F:/",
+      "vcom": "COM13",
+      "image_sha256": "8c7e6b2f9ad05b56060efa4d6815fda6019b7a2b4a9b1998198fb9103e973dc6",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "196608"
+    },
+    "scanner": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "vcom": "COM10",
+      "image_sha256": "f7fb8391fe308392aa6acdd006a5d177fb77036bc70b73771a06948f90262bc4",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "196608"
+    }
+  },
+  "nonce": "20bc2e0c525c9478cc8cccea8c03cbb9",
+  "iterations": 20,
+  "packet_denominator": 600,
+  "unique_denominator": 120,
+  "results": {},
+  "negative_denominators": {
+    "over_capacity": 0,
+    "stale_set": 0,
+    "scan_initiate_conflict": 0
+  },
+  "allowed_loss": {
+    "scan_queue": 6
+  },
+  "lost": {
+    "reports": 600,
+    "scan_queue": 0
+  },
+  "reason": "AdvertisingExecutionFailure: scanner target FAIL: diagnostic_complete",
+  "transcript_sha256": "ca83863be4b62a3b48635d21e924f7a6750ad688954bb369a9d72f89ef3c2a04",
+  "observed_utc": "2026-09-29T13:16:01.926749+00:00"
+}

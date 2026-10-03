@@ -1,0 +1,237 @@
+{
+  "test_ids": [
+    "M32-REG-01:primary"
+  ],
+  "status": "PASS",
+  "scope": "m32_w01_w10_exact_hil_regression_closure",
+  "source_revision": "94f0254499858800b4ced38b1211746b3f2175f8",
+  "source_clean": true,
+  "baseline_family_denominator": 12,
+  "baseline_family_passed": 12,
+  "allowed_loss_packets": 0,
+  "latency_limit_ms": 5000,
+  "recovery_timeout_s": 30,
+  "negative_classes": [
+    "cleanup",
+    "cross_link",
+    "security_regression"
+  ],
+  "families": {
+    "capability": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-CAP-01"
+      ],
+      "evidence": [
+        {
+          "name": "capability-baseline.json",
+          "sha256": "cc194345cbd390b305e33bc8dde206c98e25f53e5933e1158717ef027691cd57",
+          "test_ids": [
+            "M32-CAP-01"
+          ]
+        },
+        {
+          "name": "capability-extended.json",
+          "sha256": "baece0835e0b5536120323a41802492a064d40341480fb4f61a9483255fbe088",
+          "test_ids": [
+            "M32-CAP-01"
+          ]
+        }
+      ]
+    },
+    "power_path": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-PATH-01:primary",
+        "M32-PWR-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "power-path.json",
+          "sha256": "f063eadeaabf5428b7a733e397591d93c30b91e1f33524211c6cb276c0572ab8",
+          "test_ids": [
+            "M32-PATH-01:primary",
+            "M32-PWR-01:primary"
+          ]
+        }
+      ]
+    },
+    "timing_feature": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-FEAT-01:primary",
+        "M32-SCA-01:primary",
+        "M32-SUB-01:primary",
+        "M32-TIME-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "timing-feature.json",
+          "sha256": "5b3329f1dd9893b4c23a7d02da14d1eff619a8ca779ea7599452a304200f84a6",
+          "test_ids": [
+            "M32-FEAT-01:primary",
+            "M32-SCA-01:primary",
+            "M32-SUB-01:primary",
+            "M32-TIME-01:primary"
+          ]
+        }
+      ]
+    },
+    "advertising": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-ADV-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "advertising.json",
+          "sha256": "9d77da63209483df1c074041e1ef54163b149ae7c831a1c4672a53333fcc4ed7",
+          "test_ids": [
+            "M32-ADV-01:primary"
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-PRIV-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "privacy.json",
+          "sha256": "74565400409dde446450ddc5cb4f819c39c40a030e2bc78bcdcf5f071f95e675",
+          "test_ids": [
+            "M32-PRIV-01:primary"
+          ]
+        }
+      ]
+    },
+    "ead": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-EAD-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "ead.json",
+          "sha256": "e002da8a49843101cda20d58467b3b565be7c56cfd385f7349205198228df7d0",
+          "test_ids": [
+            "M32-EAD-01:primary"
+          ]
+        }
+      ]
+    },
+    "nordic_extensions": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-EVENT-01:primary",
+        "M32-NORDIC-01:primary",
+        "M32-SYNC-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "nordic-extensions.json",
+          "sha256": "742e23fc07ec2983b03ca3329eb525f9dd3062955e01e09d1bc9ec2618f5cbf3",
+          "test_ids": [
+            "M32-EVENT-01:primary",
+            "M32-NORDIC-01:primary",
+            "M32-SYNC-01:primary"
+          ]
+        }
+      ]
+    },
+    "mesh_base": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-MESH-01:traffic",
+        "M32-MESHSEC-01:traffic"
+      ],
+      "evidence": [
+        {
+          "name": "mesh-base.json",
+          "sha256": "adc97fd85d23cefda71cea4f2427b51df005fa57193504bb6bcb3e96211013e9",
+          "test_ids": [
+            "M32-MESH-01:traffic",
+            "M32-MESHSEC-01:traffic"
+          ]
+        }
+      ]
+    },
+    "mesh_management": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-MESH11-01:management"
+      ],
+      "evidence": [
+        {
+          "name": "mesh-management.json",
+          "sha256": "12f26c8accfc9dd03e7ebf52de902b24f83fd8daa4bf932c8eac145f03198487",
+          "test_ids": [
+            "M32-MESH11-01:management"
+          ]
+        }
+      ]
+    },
+    "mesh_update": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-BLOB-01:traffic",
+        "M32-MDFU-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "mesh-blob.json",
+          "sha256": "b424fbe5ebfd1b24f1933f288d18dd0314806cad929827fb82e4cf28f2782bed",
+          "test_ids": [
+            "M32-BLOB-01:traffic"
+          ]
+        },
+        {
+          "name": "mesh-mdfu.json",
+          "sha256": "101d8543a18e2ea0077c64f37c45fcf8d69b87ec33bfcd61d3fe5567933f384c",
+          "test_ids": [
+            "M32-MDFU-01:primary"
+          ]
+        }
+      ]
+    },
+    "standalone_radio": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-154-01:primary",
+        "M32-ESB-01:primary"
+      ],
+      "evidence": [
+        {
+          "name": "standalone-radio.json",
+          "sha256": "a9b2aa74501aa5afe35d91d34fcd8445986eb757edf9dec67524013ca70daca6",
+          "test_ids": [
+            "M32-154-01:primary",
+            "M32-ESB-01:primary"
+          ]
+        }
+      ]
+    },
+    "coexistence": {
+      "status": "PASS",
+      "required_test_ids": [
+        "M32-COEX-01:ble_154",
+        "M32-COEX-01:ble_esb",
+        "M32-COEX-01:ble_mesh"
+      ],
+      "evidence": [
+        {
+          "name": "coexistence.json",
+          "sha256": "45e966f9e8d6d0d8fdfb4fd39f6046293060b1d6ca16a2ec6a82044ee2497fe1",
+          "test_ids": [
+            "M32-COEX-01:ble_154",
+            "M32-COEX-01:ble_esb",
+            "M32-COEX-01:ble_mesh"
+          ]
+        }
+      ]
+    }
+  },
+  "observed_utc": "2026-10-03T04:40:11.538248+00:00"
+}

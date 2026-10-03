@@ -87,6 +87,7 @@ class M19BleGapContractTests(unittest.TestCase):
         ):
             self.assertIn(token, internal, token)
         self.assertIn("settings_load()", stack)
+        self.assertIn("nucode_ble_note_settings_loaded", stack)
         self.assertIn("__weak void securityConnected", stack)
 
     def test_role_specific_end_omits_unselected_advertising(self) -> None:
@@ -254,7 +255,8 @@ class M19BleGapContractTests(unittest.TestCase):
         """! @brief TPC 비활성 target과 end-during-connect 경계를 정적으로 고정합니다. """
 
         source = gap_source()
-        self.assertIn(".phy = 0U", source)
+        self.assertIn("BLETransmitPowerPhy::none", source)
+        self.assertIn(".phy = static_cast<std::uint8_t>(native_phy)", source)
         self.assertIn("connection_slots[maximum_connection_slots]", source)
         self.assertIn("next_connection_generation", source)
         self.assertIn("atomic_inc(&gapState().device_session_generation)", source)

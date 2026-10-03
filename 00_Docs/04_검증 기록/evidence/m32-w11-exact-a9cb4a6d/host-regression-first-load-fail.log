@@ -1,0 +1,215 @@
+[NU54-FIXED-GATE] exec: C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\python.exe -m unittest discover -s C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host -p test_*.py
+ARDUINO_CLI_BOOTSTRAP_RETRY=1/2;DELAY_SECONDS=2
+...........................................................................................................................................................usage: __main__.pyc prepare [-h] [--repo-root REPO_ROOT] --output-dir
+                            OUTPUT_DIR --version {0.1.0-rc.2}
+                            [--commit COMMIT]
+__main__.pyc prepare: error: argument --version: invalid choice: '0.2.0-rc.1' (choose from '0.1.0-rc.2')
+.....................F...usage: __main__.pyc [-h]
+                    {prepare,validate-plan,run-gate,record-docs,import-m10,finalize}
+                    ...
+__main__.pyc: error: unrecognized arguments: -- C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\python.exe -c raise SystemExit(0)
+...................s....[NU54 2/5] Zephyr 구성 준비: selected-features, 작업자 15개
+[NU54] command output truncated to final 32 MiB
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+NU54_UPLOAD_PASS runner=pyocd
+NUCODE_M8_UPLOAD_ATTEMPT:1/1
+NUCODE_M8_UPLOAD_ATTEMPT_PASS:1/1
+M8_UPLOAD_HIL_PASS runner=pyocd repetitions=1 hex_sha256=3f8e73b74c458dcf96bcdf19bf482239a9abf5ced2b78737a4418d6035c81a03 result=C:\Users\eidos\AppData\Local\Temp\nu54-m11-rc-hil-qdbw28f7\workspace\20261002T122653-741325Z\m8-upload-result.json
+[central] NUCODE_M21_EVENT:DISCONNECTED:role=central:nonce=fedcba9876543210fedcba9876543210
+[central] NUCODE_M21_FAIL:role=central:reason=old-image
+[central] NUCODE_M21_READY:role=central:bond_count=0
+[central] NUCODE_M21_EVENT:DISCONNECTED:role=central:nonce=fedcba9876543210fedcba9876543210
+M27_PACKAGE_EXAMPLE_PASS 1/30 EEPROM::EEPROMPersistence
+M27_PACKAGE_EXAMPLE_PASS 2/30 LittleFS::LittleFSPersistence
+M27_PACKAGE_EXAMPLE_PASS 3/30 NUCODE BLE::CustomGattCentral
+M27_PACKAGE_EXAMPLE_PASS 4/30 NUCODE BLE::CustomGattPeripheral
+M27_PACKAGE_EXAMPLE_PASS 5/30 NUCODE BLE::GAPCentral
+M27_PACKAGE_EXAMPLE_PASS 6/30 NUCODE BLE::GAPPeripheral
+M27_PACKAGE_EXAMPLE_PASS 7/30 NUCODE BLE::NUSCentral
+M27_PACKAGE_EXAMPLE_PASS 8/30 NUCODE BLE::NUSPeripheral
+M27_PACKAGE_EXAMPLE_PASS 9/30 NUCODE BLE Security::SecureKeyboard
+M27_PACKAGE_EXAMPLE_PASS 10/30 NUCODE Peripheral Fabric::FabricCapabilities
+M27_PACKAGE_EXAMPLE_PASS 11/30 NUCODE NU54DK::AnalogChannels
+M27_PACKAGE_EXAMPLE_PASS 12/30 NUCODE NU54DK::AnalogReadA0
+M27_PACKAGE_EXAMPLE_PASS 13/30 NUCODE NU54DK::AnalogResolution
+M27_PACKAGE_EXAMPLE_PASS 14/30 NUCODE NU54DK::Blink
+M27_PACKAGE_EXAMPLE_PASS 15/30 NUCODE NU54DK::BoardInfo
+M27_PACKAGE_EXAMPLE_PASS 16/30 NUCODE NU54DK::CounterAlarm
+M27_PACKAGE_EXAMPLE_PASS 17/30 NUCODE NU54DK::DynamicPWM
+M27_PACKAGE_EXAMPLE_PASS 18/30 NUCODE NU54DK::InterruptButton
+M27_PACKAGE_EXAMPLE_PASS 19/30 NUCODE NU54DK::PWMFade
+M27_PACKAGE_EXAMPLE_PASS 20/30 NUCODE NU54DK::Serial1RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 21/30 NUCODE NU54DK::SerialEcho
+M27_PACKAGE_EXAMPLE_PASS 22/30 NUCODE NU54DK::SettingsStorage
+M27_PACKAGE_EXAMPLE_PASS 23/30 NUCODE NU54DK::SPI00RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 24/30 NUCODE NU54DK::SystemOffWake
+M27_PACKAGE_EXAMPLE_PASS 25/30 NUCODE NU54DK::ToneOutput
+M27_PACKAGE_EXAMPLE_PASS 26/30 NUCODE NU54DK::WatchdogBasic
+M27_PACKAGE_EXAMPLE_PASS 27/30 NUCODE NU54DK::WireRuntimePins
+M27_PACKAGE_EXAMPLE_PASS 28/30 Servo::Sweep
+M27_PACKAGE_EXAMPLE_PASS 29/30 SPI::SPITransaction
+M27_PACKAGE_EXAMPLE_PASS 30/30 Wire::WirePmicId
+M27_PACKAGE_EXAMPLE_PASS 1/30 EEPROM::EEPROMPersistence
+M27_PACKAGE_EXAMPLE_PASS 2/30 LittleFS::LittleFSPersistence
+M27_PACKAGE_EXAMPLE_PASS 3/30 NUCODE BLE::CustomGattCentral
+M27_PACKAGE_EXAMPLE_PASS 4/30 NUCODE BLE::CustomGattPeripheral
+M27_PACKAGE_EXAMPLE_PASS 5/30 NUCODE BLE::GAPCentral
+M27_PACKAGE_EXAMPLE_PASS 6/30 NUCODE BLE::GAPPeripheral
+M27_PACKAGE_EXAMPLE_PASS 7/30 NUCODE BLE::NUSCentral
+M27_PACKAGE_EXAMPLE_PASS 8/30 NUCODE BLE::NUSPeripheral
+M27_PACKAGE_EXAMPLE_PASS 9/30 NUCODE BLE Security::SecureKeyboard
+M27_PACKAGE_EXAMPLE_PASS 10/30 NUCODE Peripheral Fabric::FabricCapabilities
+M27_PACKAGE_EXAMPLE_PASS 11/30 NUCODE NU54DK::AnalogChannels
+M27_PACKAGE_EXAMPLE_PASS 12/30 NUCODE NU54DK::AnalogReadA0
+M27_PACKAGE_EXAMPLE_PASS 13/30 NUCODE NU54DK::AnalogResolution
+M27_PACKAGE_EXAMPLE_PASS 14/30 NUCODE NU54DK::Blink
+M27_PACKAGE_EXAMPLE_PASS 15/30 NUCODE NU54DK::BoardInfo
+M27_PACKAGE_EXAMPLE_PASS 16/30 NUCODE NU54DK::CounterAlarm
+M27_PACKAGE_EXAMPLE_PASS 17/30 NUCODE NU54DK::DynamicPWM
+M27_PACKAGE_EXAMPLE_PASS 18/30 NUCODE NU54DK::InterruptButton
+M27_PACKAGE_EXAMPLE_PASS 19/30 NUCODE NU54DK::PWMFade
+M27_PACKAGE_EXAMPLE_PASS 20/30 NUCODE NU54DK::Serial1RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 21/30 NUCODE NU54DK::SerialEcho
+M27_PACKAGE_EXAMPLE_PASS 22/30 NUCODE NU54DK::SettingsStorage
+M27_PACKAGE_EXAMPLE_PASS 23/30 NUCODE NU54DK::SPI00RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 24/30 NUCODE NU54DK::SystemOffWake
+M27_PACKAGE_EXAMPLE_PASS 25/30 NUCODE NU54DK::ToneOutput
+M27_PACKAGE_EXAMPLE_PASS 26/30 NUCODE NU54DK::WatchdogBasic
+M27_PACKAGE_EXAMPLE_PASS 27/30 NUCODE NU54DK::WireRuntimePins
+M27_PACKAGE_EXAMPLE_PASS 28/30 Servo::Sweep
+M27_PACKAGE_EXAMPLE_PASS 29/30 SPI::SPITransaction
+M27_PACKAGE_EXAMPLE_PASS 30/30 Wire::WirePmicId
+M27_PACKAGE_EXAMPLE_PASS 1/30 EEPROM::EEPROMPersistence
+M27_PACKAGE_EXAMPLE_PASS 2/30 LittleFS::LittleFSPersistence
+M27_PACKAGE_EXAMPLE_PASS 3/30 NUCODE BLE::CustomGattCentral
+M27_PACKAGE_EXAMPLE_PASS 4/30 NUCODE BLE::CustomGattPeripheral
+M27_PACKAGE_EXAMPLE_PASS 5/30 NUCODE BLE::GAPCentral
+M27_PACKAGE_EXAMPLE_PASS 6/30 NUCODE BLE::GAPPeripheral
+M27_PACKAGE_EXAMPLE_PASS 7/30 NUCODE BLE::NUSCentral
+M27_PACKAGE_EXAMPLE_PASS 8/30 NUCODE BLE::NUSPeripheral
+M27_PACKAGE_EXAMPLE_PASS 9/30 NUCODE BLE Security::SecureKeyboard
+M27_PACKAGE_EXAMPLE_PASS 10/30 NUCODE Peripheral Fabric::FabricCapabilities
+M27_PACKAGE_EXAMPLE_PASS 11/30 NUCODE NU54DK::AnalogChannels
+M27_PACKAGE_EXAMPLE_PASS 12/30 NUCODE NU54DK::AnalogReadA0
+M27_PACKAGE_EXAMPLE_PASS 13/30 NUCODE NU54DK::AnalogResolution
+M27_PACKAGE_EXAMPLE_PASS 14/30 NUCODE NU54DK::Blink
+M27_PACKAGE_EXAMPLE_PASS 15/30 NUCODE NU54DK::BoardInfo
+M27_PACKAGE_EXAMPLE_PASS 16/30 NUCODE NU54DK::CounterAlarm
+M27_PACKAGE_EXAMPLE_PASS 17/30 NUCODE NU54DK::DynamicPWM
+M27_PACKAGE_EXAMPLE_PASS 18/30 NUCODE NU54DK::InterruptButton
+M27_PACKAGE_EXAMPLE_PASS 19/30 NUCODE NU54DK::PWMFade
+M27_PACKAGE_EXAMPLE_PASS 20/30 NUCODE NU54DK::Serial1RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 21/30 NUCODE NU54DK::SerialEcho
+M27_PACKAGE_EXAMPLE_PASS 22/30 NUCODE NU54DK::SettingsStorage
+M27_PACKAGE_EXAMPLE_PASS 23/30 NUCODE NU54DK::SPI00RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 24/30 NUCODE NU54DK::SystemOffWake
+M27_PACKAGE_EXAMPLE_PASS 25/30 NUCODE NU54DK::ToneOutput
+M27_PACKAGE_EXAMPLE_PASS 26/30 NUCODE NU54DK::WatchdogBasic
+M27_PACKAGE_EXAMPLE_PASS 27/30 NUCODE NU54DK::WireRuntimePins
+M27_PACKAGE_EXAMPLE_PASS 28/30 Servo::Sweep
+M27_PACKAGE_EXAMPLE_PASS 29/30 SPI::SPITransaction
+M27_PACKAGE_EXAMPLE_PASS 30/30 Wire::WirePmicId
+M27_PACKAGE_EXAMPLE_PASS 1/30 EEPROM::EEPROMPersistence
+M27_PACKAGE_EXAMPLE_PASS 2/30 LittleFS::LittleFSPersistence
+M27_PACKAGE_EXAMPLE_PASS 3/30 NUCODE BLE::CustomGattCentral
+M27_PACKAGE_EXAMPLE_PASS 4/30 NUCODE BLE::CustomGattPeripheral
+M27_PACKAGE_EXAMPLE_PASS 5/30 NUCODE BLE::GAPCentral
+M27_PACKAGE_EXAMPLE_PASS 6/30 NUCODE BLE::GAPPeripheral
+M27_PACKAGE_EXAMPLE_PASS 7/30 NUCODE BLE::NUSCentral
+M27_PACKAGE_EXAMPLE_PASS 8/30 NUCODE BLE::NUSPeripheral
+M27_PACKAGE_EXAMPLE_PASS 9/30 NUCODE BLE Security::SecureKeyboard
+M27_PACKAGE_EXAMPLE_PASS 10/30 NUCODE Peripheral Fabric::FabricCapabilities
+M27_PACKAGE_EXAMPLE_PASS 11/30 NUCODE NU54DK::AnalogChannels
+M27_PACKAGE_EXAMPLE_PASS 12/30 NUCODE NU54DK::AnalogReadA0
+M27_PACKAGE_EXAMPLE_PASS 13/30 NUCODE NU54DK::AnalogResolution
+M27_PACKAGE_EXAMPLE_PASS 14/30 NUCODE NU54DK::Blink
+M27_PACKAGE_EXAMPLE_PASS 15/30 NUCODE NU54DK::BoardInfo
+M27_PACKAGE_EXAMPLE_PASS 16/30 NUCODE NU54DK::CounterAlarm
+M27_PACKAGE_EXAMPLE_PASS 17/30 NUCODE NU54DK::DynamicPWM
+M27_PACKAGE_EXAMPLE_PASS 18/30 NUCODE NU54DK::InterruptButton
+M27_PACKAGE_EXAMPLE_PASS 19/30 NUCODE NU54DK::PWMFade
+M27_PACKAGE_EXAMPLE_PASS 20/30 NUCODE NU54DK::Serial1RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 21/30 NUCODE NU54DK::SerialEcho
+M27_PACKAGE_EXAMPLE_PASS 22/30 NUCODE NU54DK::SettingsStorage
+M27_PACKAGE_EXAMPLE_PASS 23/30 NUCODE NU54DK::SPI00RuntimePins
+M27_PACKAGE_EXAMPLE_PASS 24/30 NUCODE NU54DK::SystemOffWake
+M27_PACKAGE_EXAMPLE_PASS 25/30 NUCODE NU54DK::ToneOutput
+M27_PACKAGE_EXAMPLE_PASS 26/30 NUCODE NU54DK::WatchdogBasic
+M27_PACKAGE_EXAMPLE_PASS 27/30 NUCODE NU54DK::WireRuntimePins
+M27_PACKAGE_EXAMPLE_PASS 28/30 Servo::Sweep
+M27_PACKAGE_EXAMPLE_PASS 29/30 SPI::SPITransaction
+M27_PACKAGE_EXAMPLE_PASS 30/30 Wire::WirePmicId
+..........................................................................................................................................................................................................................................................................................................usage: __main__.pyc publication-dry-run [-h] --plan PLAN --approval-evidence
+                                        APPROVAL_EVIDENCE
+__main__.pyc publication-dry-run: error: the following arguments are required: --approval-evidence
+usage: __main__.pyc publish-release [-h] --plan PLAN --approval-evidence
+                                    APPROVAL_EVIDENCE
+__main__.pyc publish-release: error: the following arguments are required: --approval-evidence
+usage: __main__.pyc publish-index [-h] --plan PLAN --approval-evidence
+                                  APPROVAL_EVIDENCE
+__main__.pyc publish-index: error: the following arguments are required: --approval-evidence
+...................................................................................................................................................................................................................................................................................................................usage: __main__.pyc [-h] [--peripheral-hex PERIPHERAL_HEX]
+                    --peripheral-board-id PERIPHERAL_BOARD_ID
+                    [--peripheral-volume PERIPHERAL_VOLUME]
+                    [--peripheral-port PERIPHERAL_PORT]
+                    [--mixed-hex MIXED_HEX] --mixed-board-id MIXED_BOARD_ID
+                    [--mixed-volume MIXED_VOLUME] [--mixed-port MIXED_PORT]
+                    [--central-hex CENTRAL_HEX] --central-board-id
+                    CENTRAL_BOARD_ID [--central-volume CENTRAL_VOLUME]
+                    [--central-port CENTRAL_PORT] [--baud BAUD]
+                    [--flash-timeout FLASH_TIMEOUT]
+                    [--flash-backend {pyocd-sector,daplink-msd}]
+                    [--result-timeout RESULT_TIMEOUT] [--evidence EVIDENCE]
+                    [--expected-core-revision EXPECTED_CORE_REVISION]
+                    [--overwrite-evidence] [--discover-only]
+__main__.pyc: error: the following arguments are required: --mixed-board-id, --central-board-id
+.........................................................................................................................................................................................................................................................................................................................................................................................................................[NU54 1/5] 환경과 Feature set 확인
+......................[NU54 1/5] 환경과 Feature set 확인
+[NU54 2/5] Zephyr 구성 준비: state-recovery, 작업자 15개
+[NU54 1/5] 환경과 Feature set 확인
+[NU54 2/5] Zephyr 구성 준비: cache hit
+.[NU54 1/5] 환경과 Feature set 확인
+[NU54 2/5] Zephyr 구성 준비: state-recovery, 작업자 15개
+......[NU54 1/5] 환경과 Feature set 확인
+[NU54 2/5] Zephyr 구성 준비: state-recovery, 작업자 15개
+NU54_UPLOAD_START runner=pyocd probe=***** board=nrf54l15dk/nrf54l15/cpuapp/nu54dk hex_sha256=1111111111111111111111111111111111111111111111111111111111111111
+NU54_UPLOAD_PASS runner=pyocd probe=*****
+T13_CONFLICT_PROGRESS instance=21 role=1 mode=1 completed=1/1
+T13_RECOVERY_PROGRESS case=uarte20 mode=1 role=1 completed=1/1
+T13_RECOVERY_PROGRESS case=twim20 mode=4 role=1 completed=1/1
+T13_FLOW_PROGRESS case=uarte21 role=1 completed=1/1
+T13_HANDOVER_PROGRESS block=0 rounds=1/1 transitions=2/2
+T13_RX_DELAY_PROGRESS case=uarte21 role=1 completed=1/1
+T13_SPI_BOUNDARY_PROGRESS case=spim20 mode=short completed=1/1
+T13_HANDOVER_PROGRESS block=21 rounds=1/1 transitions=10/10
+T13_STREAM_RECOVERY_PROGRESS case=i2s20 role=1 completed=1/1
+T13_STREAM_RECOVERY_PROGRESS case=i2s20 role=2 completed=1/1
+T13_STREAM_RECOVERY_PROGRESS case=i2s20 role=2 completed=1/1
+T13_TWI_STUCK_PROGRESS case=twim20 completed=1/1
+T13_TWIS_DELAY_PROGRESS case=twim21 completed=1/1
+T13_UART_LINE_PROGRESS case=uarte21 role=1 mode=break completed=1/1
+T13_UART_LINE_PROGRESS case=uarte21 role=1 mode=parity completed=1/1
+......................................................................................................................................................................................................................................................................................................................................................................................................................................................usage: __main__.pyc publication-dry-run [-h] --plan PLAN --approval-evidence
+                                        APPROVAL_EVIDENCE
+__main__.pyc publication-dry-run: error: the following arguments are required: --approval-evidence
+usage: __main__.pyc publish-release [-h] --plan PLAN --approval-evidence
+                                    APPROVAL_EVIDENCE
+__main__.pyc publish-release: error: the following arguments are required: --approval-evidence
+usage: __main__.pyc publish-index [-h] --plan PLAN --approval-evidence
+                                  APPROVAL_EVIDENCE
+__main__.pyc publish-index: error: the following arguments are required: --approval-evidence
+....
+======================================================================
+FAIL: test_21_timeout_terminates_descendant_processes (test_m11_release.M11ReleaseTests.test_21_timeout_terminates_descendant_processes)
+! @brief timeout 시 직접 자식뿐 아니라 command의 후손 process도 종료합니다.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\eidos\GitHub\NU54DK_Arduino_Core\tests\host\test_m11_release.py", line 901, in test_21_timeout_terminates_descendant_processes
+    self.assertFalse(survivor.exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1689 tests in 1962.073s
+
+FAILED (failures=1, skipped=1)
+[NU54-FIXED-GATE] FAIL: gate 명령이 종료 코드 1로 실패했습니다: C:\Users\eidos\ncs\toolchains\dcbdc366a1\opt\bin\python.exe

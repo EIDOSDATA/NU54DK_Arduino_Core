@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-01T20:47:37+09:00",
+  "source_revision": "8dcb033e0fcbf7e939fc7b8f45c9654ffba866b1",
+  "status": "BLOB_DATA_PATH_COMPLETE_EVIDENCE_CHANNEL_FAILED",
+  "runner_evidence": "m32-blob-01.json",
+  "runner_failure": "MeshUpdateFailure: target_b serial progress timeout",
+  "probe": {
+    "type": "CMSIS-DAP-v2",
+    "uid_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+    "connect_mode": "attach",
+    "auto_unlock": false,
+    "destructive_operation": false
+  },
+  "transcript_observation": {
+    "blob_client_iterations": 10,
+    "blob_client_chunks": 5120,
+    "blob_client_targets": 2,
+    "target_a_iterations": 10,
+    "target_a_chunks": 2560,
+    "target_b_last_reported_iterations": 9,
+    "target_b_last_reported_progress_percent": 50,
+    "target_b_vcom_reopen_attempts": 2
+  },
+  "target_b_debug_observation": {
+    "cpu_location": "Zephyr idle",
+    "pc": "0x0004d10c",
+    "lr": "0x00058e35",
+    "cfsr": "0x00000000",
+    "hfsr": "0x00000000",
+    "iterations": 10,
+    "received_chunks": 2560,
+    "bad_digest_rejected": 1,
+    "receive_active": 0,
+    "failed": 0,
+    "session_complete": 1
+  },
+  "conclusion": "세 보드 BLOB data path와 digest는 10회 완료했으며 target B의 단발 RESULT/END가 VCOM 재개방 중 유실되어 runner evidence gate만 실패했습니다.",
+  "follow_up": "최종 RESULT/END 주기 재전송과 동일 중복 RESULT 허용 보강을 clean HEAD에서 다시 빌드한 뒤 M32-BLOB-01:traffic exact 10회를 재실행합니다."
+}

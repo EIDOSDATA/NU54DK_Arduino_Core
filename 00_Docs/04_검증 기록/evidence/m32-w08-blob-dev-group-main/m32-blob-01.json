@@ -1,0 +1,91 @@
+{
+  "test_ids": [
+    "M32-BLOB-01:traffic"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_blob_push_digest_recovery",
+  "source_clean": false,
+  "identity": {
+    "core": "6797270abb362a59d36f727f633aede6e14146b2",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "blob_client": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "F:/",
+      "vcom": "COM13",
+      "image_sha256": "c0c6d76cc3b1aaa3cee14a4cb54a7456d8a02b0c8f50f02a4113e2d7b9852292",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "389120",
+      "reset_barrier": "pyocd-v2-sw-reset"
+    },
+    "target_a": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM25",
+      "image_sha256": "87aa50fa4c722e947aa54f6264b645a07d2f3f5eeb02c8d322f6744c6a216b8e",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "380928",
+      "reset_barrier": "pyocd-v2-sw-reset"
+    },
+    "target_b": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "vcom": "COM10",
+      "image_sha256": "d8943304281617e034dd6aaa91a3e566e23777f3981a09bfd22436217a02cca7",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "380928",
+      "reset_barrier": "pyocd-v2-sw-reset"
+    }
+  },
+  "nonce": "3ea1a3c5a67148567f4eb6f4dbf62d02",
+  "iterations": 10,
+  "chunk_denominator": 5120,
+  "capacities": {
+    "blob_client": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2
+    },
+    "target_a": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2
+    },
+    "target_b": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2
+    }
+  },
+  "results": {},
+  "reason": "MeshUpdateFailure: blob_client target FAIL: configure_target_a_app_key",
+  "transcript_sha256": "1818600378303ba9ee43319d0b511332f3ae01ef3c9f4675a59370064a68d5e4",
+  "observed_utc": "2026-09-30T19:41:20.951058+00:00"
+}

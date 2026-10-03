@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "status": "NOT_RUN",
+  "scope": "m32_w01_w10_exact_hil_regression_closure_preflight",
+  "source_revision": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+  "source_clean": true,
+  "baseline_family_denominator": 12,
+  "baseline_family_passed": 2,
+  "baseline_family_not_run": 10,
+  "families": {
+    "capability": "NOT_RUN",
+    "power_path": "NOT_RUN",
+    "timing_feature": "NOT_RUN",
+    "advertising": "NOT_RUN",
+    "privacy": "NOT_RUN",
+    "ead": "NOT_RUN",
+    "nordic_extensions": "NOT_RUN",
+    "mesh_base": "PASS",
+    "mesh_management": "PASS",
+    "mesh_update": "NOT_RUN",
+    "standalone_radio": "NOT_RUN",
+    "coexistence": "NOT_RUN"
+  },
+  "exact_pass_evidence": {
+    "mesh_base": "mesh-base.json",
+    "mesh_management": "mesh-management.json"
+  },
+  "soak": {
+    "status": "PASS",
+    "evidence": "soak.json",
+    "duration_seconds": 1800,
+    "packet_denominator_per_link": 10000,
+    "observed_loss_packets": 0
+  },
+  "closure_output_created": false,
+  "reason": "세 보드 모두 APPROTECT와 SECUREAPPROTECT가 활성화되어 나머지 역할 image를 sector flash할 수 없음",
+  "board_access_evidence": "board-access-assessment.json"
+}

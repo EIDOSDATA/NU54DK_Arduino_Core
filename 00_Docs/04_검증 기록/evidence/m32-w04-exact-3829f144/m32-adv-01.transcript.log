@@ -1,0 +1,15 @@
+advertiser_a: M32ADV|1|READY|role=advertiser_a|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_b: M32ADV|1|READY|role=advertiser_b|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+scanner: M32ADV|1|READY|role=scanner|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_a: M32ADV|1|BEGIN|role=advertiser_a|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_b: M32ADV|1|BEGIN|role=advertiser_b|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+scanner: M32ADV|1|BEGIN|role=scanner|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+scanner: M32ADV|1|RESULT|role=scanner|raw=1210|unique=120|corrupt=0|dropped=0|scan_initiate_conflict_rejected=1|callback_context=pass|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+scanner: M32ADV|1|END|role=scanner|status=pass|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_b: M32ADV|1|RESULT|role=advertiser_b|updates=20|sets=3|over_capacity_rejected=1|stale_set_rejected=1|callback_context=pass|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_a: M32ADV|1|RESULT|role=advertiser_a|updates=20|sets=3|over_capacity_rejected=1|stale_set_rejected=1|callback_context=pass|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_b: M32ADV|1|END|role=advertiser_b|status=pass|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_a: M32ADV|1|END|role=advertiser_a|status=pass|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_a: M32ADV|1|STOPPED|role=advertiser_a|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+advertiser_b: M32ADV|1|STOPPED|role=advertiser_b|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12
+scanner: M32ADV|1|STOPPED|role=scanner|nonce=75590487372332703ae8ce6cb4ce354c|core=3829f144d8caba43bea65f01445ab392f5e7ec12

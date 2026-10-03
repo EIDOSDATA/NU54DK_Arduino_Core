@@ -43,6 +43,15 @@ rsource "config/analog.Kconfig"
 
 rsource "config/ble.Kconfig"
 
+rsource "config/mesh.Kconfig"
+
+rsource "config/mesh_management.Kconfig"
+rsource "config/mesh_update.Kconfig"
+
+rsource "config/radio.Kconfig"
+
+rsource "config/coexistence.Kconfig"
+
 rsource "config/scheduler.Kconfig"
 
 endif

@@ -3,9 +3,9 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-PERIPHERAL-001 |
-| 문서 개정 | 4.8 |
+| 문서 개정 | 4.10 |
 | 문서 상태 | `v0.5.0` 정식 singleton·Fabric 계약 |
-| 최종 갱신일 | 2026-09-27 |
+| 최종 갱신일 | 2026-10-03 |
 | 기준 | NCS v3.4.0 / Zephyr 4.4.0 |
 
 ## 1. 목적
@@ -300,7 +300,9 @@ Arduino IDE feature set을 선택하고 raw conf/overlay는 expert escape hatch�
 ## 12. Radio와 USB 경계
 
 - v0.5.0의 BLE 범위는 NUS, GAP/GATT, 보안·표준 profile에 M28~M31 확장을 포함하며 [전체 기능 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)을 따른다.
-- 802.15.4, ESB, OpenThread와 Matter는 현재 runtime 미지원이다.
+- v0.5.0 stable은 802.15.4, ESB, OpenThread와 Matter runtime을 지원하지 않는다.
+  v0.6.0 개발의 M32-W09 단독 peer HIL과 W10의 BLE+802.15.4·BLE+ESB·BLE+Mesh 공존 HIL은 완료했다.
+  M32는 12/12 완료·미공개이며 검증 조합과 외부 실물 NOT RUN은 [M32 TODO](../TODO_M32.md)로 구분한다.
 - BLE와 다른 radio stack의 multiprotocol 동시 운용을 임의로 활성화하지 않는다.
 - nRF54L15 target의 native USB device API, CDC, Keyboard와 Mouse를 제공하지 않는다.
 - 온보드 CMSIS-DAP USB는 target MCU의 Arduino USB peripheral이 아니다.

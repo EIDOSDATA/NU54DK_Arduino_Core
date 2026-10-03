@@ -3,10 +3,10 @@
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
 `v050_release.py`와 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 확인합니다.
-후속 계획은 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)에 M32·M33, v0.7.0에 M34~M37 Security,
-v0.8.0에 M38~M41 Radio/Network, v0.9.0에 M42~M45 Matter를 배정합니다. 이는 구현·공개 완료나
-현재 제품 version 변경이 아닙니다. Ubuntu/macOS의 기존 세 Host 계획·OS별 최종 gate를 유지하며,
-HOST-W04~HOST-W08은 사용자 보류 상태입니다. 별도 재개 승인과 실물 gate 없이 새 OS 지원을 확정하지 않습니다.
+후속 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)은 M32 12/12 완료·M33 0/8 미착수이며 미공개입니다.
+v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
+`SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
+HOST-W04~HOST-W08은 사용자 보류 상태이며 Ubuntu/macOS 지원에는 OS별 최종 실물 gate가 필요합니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,
 stable package를 최종 exact commit에서 두 번 새로 생성했습니다. 전체 예제 113/113·설치 수명주기·
@@ -18,6 +18,7 @@ stable package를 최종 exact commit에서 두 번 새로 생성했습니다. �
 
 | 제품선 | 절차 문서 | 주 도구 | 상태 |
 | --- | --- | --- | --- |
+| `v0.6.0` / M32·M33 | [M33 TODO](../../00_Docs/TODO_M33.md) | 배포 준비 단계에서 exact version·plan·도구를 확정 | 미공개; 기존 `v050_release.py`를 새 버전 게시 도구로 재사용하지 않음 |
 | `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | `v050_release.py`, `m31_release.py`, `m31_windows_lifecycle.py`, `m31_windows_example_shard.py`, `m31_ci_aggregate.py` | 정식 공개·stable catalog·공개 smoke 완료 |
 | `v0.4.1` 유지보수 | [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md) | `v041_release.py` | 역사적·지원 종료 |
 | `v0.4.0` / M27 | [M27_README.md](M27_README.md) | `m27_release.py`, `m27_stable_release.py` | 정식 공개·T24/T25 완료·동결 |

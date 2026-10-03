@@ -7,7 +7,16 @@
   "overlays": [],
   "resolved_conf": [],
   "resolved_overlays": [],
-  "conflicts": ["radio"],
-  "compatible_profiles": ["adaptive", "ble", "ble_audio_io", "secure_ble_dfu"]
+  "conflicts": ["ble-nus-owner"],
+  "compatible_profiles": [
+    "adaptive",
+    "ble",
+    "ble_audio_io",
+    "secure_ble_dfu",
+    "coexistence_ble_mesh",
+    "coexistence_ble_154",
+    "coexistence_ble_esb",
+    "external_coexistence"
+  ]
 }
 

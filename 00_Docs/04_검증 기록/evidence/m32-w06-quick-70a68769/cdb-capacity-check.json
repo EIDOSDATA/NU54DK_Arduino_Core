@@ -1,0 +1,51 @@
+{
+  "test_id": "M32-W06:CDB-CAPACITY-QUICK",
+  "status": "PASS",
+  "scope": "provisioner_and_two_remote_nodes_provisioning_only",
+  "source_clean": true,
+  "identity": {
+    "core": "70a687698bdd293ae53a8cec52ca114f918a6bb4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "configuration": {
+    "CONFIG_BT_MESH_CDB_NODE_COUNT": 3,
+    "expected_cdb_nodes": [
+      "local_provisioner",
+      "node_a",
+      "node_b"
+    ]
+  },
+  "boards": {
+    "provisioner": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "F:/",
+      "vcom": "COM13",
+      "image_sha256": "0bf054a86a9b83afc8f8cda3b04d054899d549476b2c18db6fb304eee9058ddd",
+      "provisioned": true
+    },
+    "node_a": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM25",
+      "image_sha256": "0041a2162be8a8fc490e5138e7742cade4a31e003edd21777341cc7fef98c464",
+      "provisioned": true
+    },
+    "node_b": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "vcom": "COM10",
+      "image_sha256": "e44bb6d51e152db5f7e28c2135a50da3341c7c5515e552c812c5effc57705fd8",
+      "provisioned": true
+    }
+  },
+  "method": "CMSIS-DAP v2 sector flash 뒤 bounded runner를 약 240초 실행하고 중단한 다음 각 UART의 PROBE record로 provisioning 상태를 확인",
+  "full_denominator_executed": false,
+  "message_denominators": {
+    "base": 0,
+    "secured": 0,
+    "acknowledged": 0
+  },
+  "observed_utc": "2026-09-30T11:17:24.7591244Z"
+}

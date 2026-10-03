@@ -18,6 +18,10 @@ PASS했고, 첫 bounded 시도의 report 0건 실패도 덮어쓰지 않고 보�
 기능을 선택합니다. 다른 BLE 예제의 controller 설정을 그대로 복사하면 시작이 실패할 수
 있습니다.
 
+보드는 **NU54DK (nRF54L15, Zephyr)**, Feature set은 **BLE NUS**를 권장합니다.
+**Adaptive capabilities (experimental)**는 실험적 대안입니다. `app.overlay`, `prj.conf`,
+`nucode-build.json`을 `.ino`와 함께 유지하고, CTE 요청·수신이 가능한 중앙 장치를 상대 역할로 준비합니다.
+
 Serial Monitor는 115200 baud를 사용합니다. 연결 중 `s`를 입력하면 응답을 멈추고,
 `r`을 입력하면 같은 연결에서 재시작합니다. Arduino sketch에는 연결 event와
 시작·중단 흐름이 보이며 Bluetooth controller 직접 호출은

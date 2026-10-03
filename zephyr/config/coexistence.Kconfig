@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT
+
+menuconfig NUCODE_RADIO_COEXISTENCE
+	bool "NUCODE radio coexistence telemetry API"
+	depends on NUCODE_ARDUINO_API
+	help
+	  BLE, Mesh, IEEE 802.15.4, ESB 공존 시험의 sequence, hash,
+	  service 간격, drop, timeslot 실패와 재시작 통계를 제공합니다.
+
+config NUCODE_RADIO_COEX_ONEWIRE
+	bool "NUCODE external 1-wire radio coexistence backend"
+	depends on NUCODE_RADIO_COEXISTENCE
+	depends on MPSL_CX_1WIRE
+	help
+	  외부 grant 입력과 연결된 local output 및 MPSL RADIO READY event
+	  계수를 제공합니다. external_coexistence profile에서만 활성화합니다.

@@ -1,0 +1,20 @@
+{
+  "test_id": "M32-W01:host-negative",
+  "status": "PASS",
+  "source_revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+  "command": "python -m unittest tests.host.test_m32_ble_capability tests.host.test_m32_readiness_contract -v",
+  "tests_run": 14,
+  "failures": 0,
+  "errors": 0,
+  "rejected_classes": [
+    "missing_or_duplicate_record",
+    "unknown_enum_or_identifier",
+    "revision_or_nonce_mismatch",
+    "raw_feature_bit_mismatch",
+    "resource_profile_drift",
+    "premature_stage_promotion",
+    "invalid_test_denominator",
+    "follow_up_blocker_corruption",
+    "raw_probe_uid_leak"
+  ]
+}

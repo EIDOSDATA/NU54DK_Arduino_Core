@@ -1,0 +1,5 @@
+central: M32NOR|1|READY|role=central|core=b464c1b347bf0028ccb4a8387d189bab0fb14527
+peripheral: M32NOR|1|READY|role=peripheral|core=b464c1b347bf0028ccb4a8387d189bab0fb14527
+central: M32NOR|1|BEGIN|role=central|nonce=66ac63c39c7202b7390df8d273c050bf|core=b464c1b347bf0028ccb4a8387d189bab0fb14527
+peripheral: M32NOR|1|BEGIN|role=peripheral|nonce=66ac63c39c7202b7390df8d273c050bf|core=b464c1b347bf0028ccb4a8387d189bab0fb14527
+peripheral: M32NOR|1|FAIL|role=peripheral|stage=phy_request|code=-5|nonce=66ac63c39c7202b7390df8d273c050bf|core=b464c1b347bf0028ccb4a8387d189bab0fb14527

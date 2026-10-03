@@ -11,7 +11,13 @@
     "libraries/NUCODE_BLE_Audio/src",
     "libraries/NUCODE_BLE_Security/src",
     "libraries/NUCODE_BLE_DirectionFinding/src",
-    "libraries/NUCODE_BLE_ChannelSounding/src"
+    "libraries/NUCODE_BLE_ChannelSounding/src",
+    "libraries/NUCODE_BLE_Mesh/src",
+    "libraries/NUCODE_BLE_Mesh_Management/src",
+    "libraries/NUCODE_BLE_Mesh_Update/src",
+    "libraries/NUCODE_Radio_IEEE802154/src",
+    "libraries/NUCODE_Radio_ESB/src",
+    "libraries/NUCODE_Radio_Coexistence/src"
   ],
   "capabilities": [
     {
@@ -229,6 +235,7 @@
       ],
       "conflicts": [],
       "conf": [
+        "CONFIG_CLOCK_CONTROL=y",
         "CONFIG_BT=y",
         "CONFIG_BT_DEVICE_NAME_DYNAMIC=y",
         "CONFIG_BT_DEVICE_NAME_MAX=32",
@@ -245,6 +252,188 @@
         "libraries/NUCODE_BLE/src/internal/gap/GapValues.cpp"
       ],
       "source_gates": ["CONFIG_NUCODE_BLE_CORE"]
+    },
+    {
+      "id": "nucode.ble.mesh-api",
+      "requires": ["arduino.api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_BT=y",
+        "CONFIG_BT_CENTRAL=y",
+        "CONFIG_BT_PERIPHERAL=y",
+        "CONFIG_BT_OBSERVER=y",
+        "CONFIG_BT_BROADCASTER=y",
+        "CONFIG_BT_MAX_CONN=2",
+        "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",
+        "CONFIG_BT_BUF_ACL_TX_COUNT=8",
+        "CONFIG_BT_BUF_ACL_RX_COUNT_EXTRA=7",
+        "CONFIG_BT_MESH=y",
+        "CONFIG_BT_MESH_PB_ADV=y",
+        "CONFIG_BT_MESH_PB_GATT=y",
+        "CONFIG_BT_MESH_PB_GATT_CLIENT=y",
+        "CONFIG_BT_MESH_PROVISIONER=y",
+        "CONFIG_BT_MESH_CDB=y",
+        "CONFIG_BT_MESH_CDB_KEY_SYNC=y",
+        "CONFIG_BT_MESH_CFG_CLI=y",
+        "CONFIG_BT_MESH_HEALTH_CLI=y",
+        "CONFIG_BT_MESH_RELAY=y",
+        "CONFIG_BT_MESH_FRIEND=y",
+        "CONFIG_BT_MESH_LOW_POWER=y",
+        "CONFIG_BT_MESH_GATT_PROXY=y",
+        "CONFIG_BT_MESH_TX_SEG_MAX=16",
+        "CONFIG_BT_MESH_RX_SEG_MAX=16",
+        "CONFIG_BT_MESH_ADV_BUF_COUNT=16",
+        "CONFIG_BT_MESH_RX_SEG_MSG_COUNT=2",
+        "CONFIG_BT_MESH_TX_SEG_MSG_COUNT=2",
+        "CONFIG_BT_SETTINGS=y",
+        "CONFIG_SETTINGS=y",
+        "CONFIG_SETTINGS_ZMS=y",
+        "CONFIG_FLASH=y",
+        "CONFIG_FLASH_MAP=y",
+        "CONFIG_ZMS=y",
+        "CONFIG_NUCODE_BLE_MESH=y",
+        "CONFIG_NUCODE_BLE_MESH_EVENT_QUEUE_SIZE=16",
+        "CONFIG_HEAP_MEM_POOL_SIZE=4096",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=2048"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Mesh/src/NUCODE_BLE_Mesh.cpp",
+        "libraries/NUCODE_BLE_Mesh/src/NUCODE_BLE_Mesh_Composition.c"
+      ],
+      "source_gates": ["CONFIG_NUCODE_BLE_MESH"]
+    },
+    {
+      "id": "nucode.ble.mesh-management-api",
+      "requires": ["nucode.ble.mesh-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_NUCODE_BLE_MESH_MANAGEMENT=y",
+        "CONFIG_NUCODE_BLE_MESH_MANAGEMENT_EVENT_QUEUE_SIZE=16",
+        "CONFIG_BT_MESH_MODEL_EXTENSIONS=y",
+        "CONFIG_BT_MESH_RPR_CLI=y",
+        "CONFIG_BT_MESH_RPR_SRV=y",
+        "CONFIG_BT_MESH_RPR_AD_TYPES_MAX=4",
+        "CONFIG_BT_MESH_RPR_SRV_SCANNED_ITEMS_MAX=4",
+        "CONFIG_BT_MESH_RPR_SRV_AD_DATA_MAX=31",
+        "CONFIG_BT_MESH_SAR_CFG_CLI=y",
+        "CONFIG_BT_MESH_SAR_CFG_SRV=y",
+        "CONFIG_BT_MESH_OP_AGG_CLI=y",
+        "CONFIG_BT_MESH_OP_AGG_SRV=y",
+        "CONFIG_BT_MESH_LARGE_COMP_DATA_CLI=y",
+        "CONFIG_BT_MESH_LARGE_COMP_DATA_SRV=y",
+        "CONFIG_BT_MESH_MODELS_METADATA_PAGE_LEN=150",
+        "CONFIG_BT_MESH_PRIV_BEACONS=y",
+        "CONFIG_BT_MESH_PRIV_BEACON_CLI=y",
+        "CONFIG_BT_MESH_PRIV_BEACON_SRV=y",
+        "CONFIG_BT_MESH_OD_PRIV_PROXY_CLI=y",
+        "CONFIG_BT_MESH_OD_PRIV_PROXY_SRV=y",
+        "CONFIG_BT_MESH_SOL_PDU_RPL_CLI=y",
+        "CONFIG_BT_MESH_PROXY_SRPL_SIZE=10",
+        "CONFIG_BT_MESH_BRG_CFG_CLI=y",
+        "CONFIG_BT_MESH_BRG_CFG_SRV=y",
+        "CONFIG_BT_MESH_BRG_TABLE_ITEMS_MAX=16"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Mesh_Management/src/NUCODE_BLE_Mesh_Management.cpp"
+      ],
+      "source_gates": ["CONFIG_NUCODE_BLE_MESH_MANAGEMENT"]
+    },
+    {
+      "id": "nucode.ble.mesh-update-api",
+      "requires": ["nucode.ble.mesh-api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": [
+        "CONFIG_NUCODE_BLE_MESH_UPDATE=y",
+        "CONFIG_BT_SMP=y",
+        "CONFIG_BT_BONDABLE=y",
+        "CONFIG_BT_SMP_SC_PAIR_ONLY=y",
+        "CONFIG_BOOTLOADER_MCUBOOT=y",
+        "CONFIG_STREAM_FLASH=y",
+        "CONFIG_IMG_MANAGER=y",
+        "CONFIG_MCUBOOT_IMG_MANAGER=y",
+        "CONFIG_IMG_ENABLE_IMAGE_CHECK=y",
+        "CONFIG_REBOOT=y",
+        "CONFIG_BT_MESH_MODEL_EXTENSIONS=y",
+        "CONFIG_BT_MESH_MODEL_EXTENSION_LIST_SIZE=4",
+        "CONFIG_BT_MESH_BLOB_SRV=y",
+        "CONFIG_BT_MESH_BLOB_CLI=y",
+        "CONFIG_BT_MESH_BLOB_IO_FLASH=y",
+        "CONFIG_BT_MESH_BLOB_SIZE_MAX=720896",
+        "CONFIG_BT_MESH_BLOB_BLOCK_SIZE_MIN=4096",
+        "CONFIG_BT_MESH_BLOB_BLOCK_SIZE_MAX=4096",
+        "CONFIG_BT_MESH_BLOB_CHUNK_COUNT_MAX=32",
+        "CONFIG_BT_MESH_ALIGN_CHUNK_SIZE_TO_MAX_SEGMENT=n",
+        "CONFIG_BT_MESH_RX_BLOB_CHUNK_SIZE=128",
+        "CONFIG_BT_MESH_TX_BLOB_CHUNK_SIZE=128",
+        "CONFIG_BT_MESH_DFU_SRV=y",
+        "CONFIG_BT_MESH_DFU_CLI=y",
+        "CONFIG_BT_MESH_DFU_METADATA=y",
+        "CONFIG_BT_MESH_DFU_SLOTS=y",
+        "CONFIG_BT_MESH_DFU_SLOT_CNT=1",
+        "CONFIG_BT_MESH_DFD_SRV=y",
+        "CONFIG_BT_MESH_DFD_SRV_SLOT_MAX_SIZE=720896",
+        "CONFIG_BT_MESH_DFD_SRV_SLOT_SPACE=720896",
+        "CONFIG_BT_MESH_DFD_SRV_TARGETS_MAX=4"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_BLE_Mesh_Update/src/NUCODE_BLE_Mesh_Update.cpp"
+      ],
+      "source_gates": ["CONFIG_NUCODE_BLE_MESH_UPDATE"]
+    },
+    {
+      "id": "nucode.radio.ieee802154-api",
+      "requires": ["arduino.api"],
+      "requires_any_role": [],
+      "conflicts": ["nucode.radio.esb-api"],
+      "conf": [
+        "CONFIG_NUCODE_RADIO_IEEE802154=y",
+        "CONFIG_NRF_802154_RADIO_DRIVER=y",
+        "CONFIG_NRF_802154_DRV_REINIT_ENABLED=y",
+        "CONFIG_NRF_802154_ENCRYPTION=n",
+        "CONFIG_NRF_802154_TX_DIAGNOSTIC_MODE=y",
+        "CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE=2048"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_Radio_IEEE802154/src/NUCODE_Radio_IEEE802154.cpp"
+      ],
+      "source_gates": ["CONFIG_NUCODE_RADIO_IEEE802154"]
+    },
+    {
+      "id": "nucode.radio.esb-api",
+      "requires": ["arduino.api"],
+      "requires_any_role": [],
+      "conflicts": ["nucode.radio.ieee802154-api"],
+      "conf": [
+        "CONFIG_NUCODE_RADIO_ESB=y",
+        "CONFIG_ESB=y",
+        "CONFIG_ESB_MAX_PAYLOAD_LENGTH=32",
+        "CONFIG_CLOCK_CONTROL=y",
+        "CONFIG_ESB_CLOCK_INIT=y"
+      ],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_Radio_ESB/src/NUCODE_Radio_ESB.cpp"
+      ],
+      "source_gates": ["CONFIG_NUCODE_RADIO_ESB"]
+    },
+    {
+      "id": "nucode.radio.coexistence-api",
+      "requires": ["arduino.api"],
+      "requires_any_role": [],
+      "conflicts": [],
+      "conf": ["CONFIG_NUCODE_RADIO_COEXISTENCE=y"],
+      "overlays": [],
+      "sources": [
+        "libraries/NUCODE_Radio_Coexistence/src/NUCODE_Radio_Coexistence.cpp"
+      ],
+      "source_gates": ["CONFIG_NUCODE_RADIO_COEXISTENCE"]
     },
     {
       "id": "nucode.ble.iso-api",
@@ -4164,9 +4353,63 @@
       "maximum": 512,
       "unit": "octets",
       "conf": ["CONFIG_NUCODE_BLE_GATT_INLINE_VALUE_SIZE={value}"]
+    },
+    {
+      "id": "mesh.cdb-node-slots",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 4096,
+      "unit": "node-slots",
+      "conf": ["CONFIG_BT_MESH_CDB_NODE_COUNT={value}"]
+    },
+    {
+      "id": "mesh.cdb-subnets",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 4096,
+      "unit": "subnets",
+      "conf": ["CONFIG_BT_MESH_CDB_SUBNET_COUNT={value}"]
+    },
+    {
+      "id": "mesh.cdb-app-keys",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 4096,
+      "unit": "app-keys",
+      "conf": ["CONFIG_BT_MESH_CDB_APP_KEY_COUNT={value}"]
+    },
+    {
+      "id": "mesh.local-subnets",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 4096,
+      "unit": "subnets",
+      "conf": ["CONFIG_BT_MESH_SUBNET_COUNT={value}"]
+    },
+    {
+      "id": "mesh.local-app-keys",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 4096,
+      "unit": "app-keys",
+      "conf": ["CONFIG_BT_MESH_APP_KEY_COUNT={value}"]
+    },
+    {
+      "id": "mesh.model-app-keys",
+      "aggregation": "maximum",
+      "minimum": 1,
+      "maximum": 4096,
+      "unit": "app-keys-per-model",
+      "conf": ["CONFIG_BT_MESH_MODEL_KEY_COUNT={value}"]
     }
   ],
   "probe_symbols": [
+    {"symbol": "NUCODECoexistence", "capability": "nucode.radio.coexistence-api"},
+    {"symbol": "NUCODERadio154", "capability": "nucode.radio.ieee802154-api"},
+    {"symbol": "NUCODEEsb", "capability": "nucode.radio.esb-api"},
+    {"symbol": "NUCODEMeshUpdate", "capability": "nucode.ble.mesh-update-api"},
+    {"symbol": "NUCODEMeshManagement", "capability": "nucode.ble.mesh-management-api"},
+    {"symbol": "NUCODEMesh", "capability": "nucode.ble.mesh-api"},
     {"symbol": "Serial", "capability": "arduino.serial"},
     {"symbol": "Serial1", "capability": "arduino.serial1"},
     {"symbol": "Wire", "capability": "arduino.wire"},

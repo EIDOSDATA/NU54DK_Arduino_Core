@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "gate": "m32-w02-arduino-examples",
+  "status": "PASS",
+  "group": "v0.6.0",
+  "source_revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "toolchain_bundle": "dcbdc366a1",
+  "examples": [
+    "LePowerControlCentral",
+    "LePowerControlPeripheral",
+    "PathLossMonitorCentral",
+    "PathLossMonitorPeripheral",
+    "RssiPowerControlCentral",
+    "RssiPowerControlPeripheral"
+  ],
+  "passed": 6,
+  "failed": 0,
+  "observed_utc": "2026-09-28T17:01:03.7781165Z"
+}

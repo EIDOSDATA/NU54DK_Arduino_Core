@@ -1,0 +1,13 @@
+tests:
+  nucode.m32.radio154_hil.transmitter:
+    build_only: true
+    extra_args: [M32_RADIO154_ROLE=transmitter]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [m32, radio, ieee802154, hil]
+  nucode.m32.radio154_hil.receiver:
+    build_only: true
+    extra_args: [M32_RADIO154_ROLE=receiver]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [m32, radio, ieee802154, hil]

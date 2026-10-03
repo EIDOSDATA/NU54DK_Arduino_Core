@@ -1,5 +1,8 @@
 # M29-W07 Signed Write·EATT HIL 준비와 2보드 완료
 
+> **2026-10-01 문서 위생 정정:** 설명문의 원시 probe UID를 역할 표기로 비식별화했다.
+> 당시 역할·COM·시험 판정과 원본 evidence/hash는 변경하지 않았다.
+
 W07-C의 최종 성공 결과는 아래 요약표와 [§7](#7-exact-c71ef4a2-2보드-signeatt-완료)에 있습니다.
 §4~6은 그 전에 발생한 실패·진단·수정 이력이며, 당시 판정과 원본을 그대로 보존합니다.
 W07 전체 완료와 구분해 남은 세 보드 MULTI/REG는 [§8](#8-남은-유한-실행-순서)에 정리합니다.
@@ -91,9 +94,8 @@ image를 아래 2보드 HIL runner에 전달했다.
 ## 4. 첫 exact HIL 실패와 원인 분류
 
 Exact `fb03df6e1220f77ca52b311ffb78de987a48aae0`의 Software Gates 7/7과 Reproducible
-Builds 10/10을 확인하고 clean target 2/2를 만들었다. Peripheral
-`54153603000528402aae46c5e8e3712a`/COM10과 central
-`5415360300052840fcd47678fd7d106d`/COM13은 pyOCD sector flash, READY, CLEAR와 양쪽 warm reboot를
+Builds 10/10을 확인하고 clean target 2/2를 만들었다. Peripheral(COM10)과 central(COM13)은
+pyOCD sector flash, READY, CLEAR와 양쪽 warm reboot를
 통과했다. 첫 `pair` session의 peripheral은 다음 record로 즉시 멈췄다.
 
 ```text
@@ -253,8 +255,7 @@ diagnostic EATT-only 실행은 105.391초에 bearer별 1,000, payload 오류·de
 ## 7. Exact `c71ef4a2…` 2보드 SIGN·EATT 완료
 
 Clean exact `c71ef4a21465923760933f6b87ad7d92d9a95698`의 두 role build는 2/2, warning 0으로
-끝났다. Peripheral `54153603000528402aae46c5e8e3712a`/COM10과 central
-`5415360300052840fcd47678fd7d106d`/COM13을 pyOCD sector flash한 단일 strict runner session은
+끝났다. Peripheral(COM10)과 central(COM13)을 pyOCD sector flash한 단일 strict runner session은
 연결 재시도 없이 다음을 모두 통과했다.
 
 - bond 초기화, 신규 pairing과 양쪽 CSRK 생성

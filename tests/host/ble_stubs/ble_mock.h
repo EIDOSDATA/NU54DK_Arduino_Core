@@ -5,6 +5,9 @@
 #include <cassert>
 #include <cerrno>
 #include <cstring>
+#if !defined(CONFIG_BT_ID_MAX)
+#define CONFIG_BT_ID_MAX 1
+#endif
 struct bt_addr_t
 {
     std::uint8_t val[6];
@@ -59,6 +62,106 @@ inline int mock_create_error = 0, mock_disconnect_error = 0, mock_mtu_error = 0;
 inline int mock_start_error = 0, mock_name_error = 0, mock_settings_error = 0;
 inline int mock_enable_calls = 0, mock_settings_calls = 0;
 inline bool mock_stack_ready = false;
+inline bt_addr_le_t mock_identities[4] = {
+    {BT_ADDR_LE_PUBLIC, {{6U, 5U, 4U, 3U, 2U, 1U}}},
+};
+inline bool mock_identity_present[4] = {true, false, false, false};
+inline std::size_t mock_filter_accept_count = 0U;
+inline std::size_t mock_periodic_advertiser_count = 0U;
+inline int mock_list_error = 0;
+inline void mock_generate_identity(std::size_t index, bt_addr_le_t &address)
+{
+    address.type = BT_ADDR_LE_RANDOM;
+    for (std::size_t octet = 0U; octet < 6U; ++octet)
+    {
+        address.a.val[octet] = static_cast<std::uint8_t>(index * 16U + octet + 1U);
+    }
+    address.a.val[5] |= 0xc0U;
+}
+inline int bt_id_create(bt_addr_le_t *address, std::uint8_t *)
+{
+    for (std::size_t index = 1U; index < CONFIG_BT_ID_MAX; ++index)
+    {
+        if (!mock_identity_present[index])
+        {
+            mock_generate_identity(index, *address);
+            mock_identities[index] = *address;
+            mock_identity_present[index] = true;
+            return static_cast<int>(index);
+        }
+    }
+    return -ENOMEM;
+}
+inline int bt_id_reset(std::uint8_t identity, bt_addr_le_t *address, std::uint8_t *)
+{
+    if (identity == 0U || identity >= CONFIG_BT_ID_MAX)
+    {
+        return -EINVAL;
+    }
+    mock_generate_identity(static_cast<std::size_t>(identity) + 4U, *address);
+    mock_identities[identity] = *address;
+    mock_identity_present[identity] = true;
+    return 0;
+}
+inline int bt_id_delete(std::uint8_t identity)
+{
+    if (identity == 0U || identity >= CONFIG_BT_ID_MAX ||
+        !mock_identity_present[identity])
+    {
+        return -EINVAL;
+    }
+    mock_identity_present[identity] = false;
+    mock_identities[identity] = {};
+    return 0;
+}
+inline int bt_le_filter_accept_list_add(const bt_addr_le_t *)
+{
+    if (mock_list_error == 0)
+    {
+        ++mock_filter_accept_count;
+    }
+    return mock_list_error;
+}
+inline int bt_le_filter_accept_list_remove(const bt_addr_le_t *)
+{
+    if (mock_list_error == 0 && mock_filter_accept_count != 0U)
+    {
+        --mock_filter_accept_count;
+    }
+    return mock_list_error;
+}
+inline int bt_le_filter_accept_list_clear()
+{
+    if (mock_list_error == 0)
+    {
+        mock_filter_accept_count = 0U;
+    }
+    return mock_list_error;
+}
+inline int bt_le_per_adv_list_add(const bt_addr_le_t *, std::uint8_t)
+{
+    if (mock_list_error == 0)
+    {
+        ++mock_periodic_advertiser_count;
+    }
+    return mock_list_error;
+}
+inline int bt_le_per_adv_list_remove(const bt_addr_le_t *, std::uint8_t)
+{
+    if (mock_list_error == 0 && mock_periodic_advertiser_count != 0U)
+    {
+        --mock_periodic_advertiser_count;
+    }
+    return mock_list_error;
+}
+inline int bt_le_per_adv_list_clear()
+{
+    if (mock_list_error == 0)
+    {
+        mock_periodic_advertiser_count = 0U;
+    }
+    return mock_list_error;
+}
 inline bt_conn *bt_conn_ref(bt_conn *c)
 {
     ++c->refs;
@@ -114,6 +217,7 @@ struct bt_conn_info
         std::uint8_t flags;
     } security;
 };
+inline bt_conn_le_phy_info mock_connection_phy{};
 struct bt_conn_le_phy_param
 {
     std::uint16_t options;
@@ -126,20 +230,137 @@ struct bt_conn_le_tx_power
     std::int8_t current_level;
     std::int8_t max_level;
 };
+enum bt_conn_le_tx_power_phy
+{
+    BT_CONN_LE_TX_POWER_PHY_NONE,
+    BT_CONN_LE_TX_POWER_PHY_1M,
+    BT_CONN_LE_TX_POWER_PHY_2M,
+    BT_CONN_LE_TX_POWER_PHY_CODED_S8,
+    BT_CONN_LE_TX_POWER_PHY_CODED_S2,
+};
+#define BT_HCI_LE_TX_POWER_REPORT_REASON_LOCAL_CHANGED 0U
+#define BT_HCI_LE_TX_POWER_REPORT_REASON_REMOTE_CHANGED 1U
+#define BT_HCI_LE_TX_POWER_REPORT_REASON_READ_REMOTE_COMPLETED 2U
+struct bt_conn_le_tx_power_report
+{
+    std::uint8_t reason;
+    bt_conn_le_tx_power_phy phy;
+    std::int8_t tx_power_level;
+    std::uint8_t tx_power_level_flag;
+    std::int8_t delta;
+};
+enum bt_conn_le_path_loss_zone
+{
+    BT_CONN_LE_PATH_LOSS_ZONE_ENTERED_LOW,
+    BT_CONN_LE_PATH_LOSS_ZONE_ENTERED_MIDDLE,
+    BT_CONN_LE_PATH_LOSS_ZONE_ENTERED_HIGH,
+    BT_CONN_LE_PATH_LOSS_ZONE_UNAVAILABLE,
+};
+struct bt_conn_le_path_loss_threshold_report
+{
+    bt_conn_le_path_loss_zone zone;
+    std::uint8_t path_loss;
+};
+struct bt_conn_le_path_loss_reporting_param
+{
+    std::uint8_t high_threshold;
+    std::uint8_t high_hysteresis;
+    std::uint8_t low_threshold;
+    std::uint8_t low_hysteresis;
+    std::uint16_t min_time_spent;
+};
+struct bt_conn_le_subrate_param
+{
+    std::uint16_t subrate_min;
+    std::uint16_t subrate_max;
+    std::uint16_t max_latency;
+    std::uint16_t continuation_number;
+    std::uint16_t supervision_timeout;
+};
+struct bt_conn_le_subrate_changed
+{
+    std::uint8_t status;
+    std::uint16_t factor;
+    std::uint16_t continuation_number;
+    std::uint16_t peripheral_latency;
+    std::uint16_t supervision_timeout;
+};
+struct bt_conn_le_conn_rate_param
+{
+    std::uint16_t interval_min_125us;
+    std::uint16_t interval_max_125us;
+    std::uint16_t subrate_min;
+    std::uint16_t subrate_max;
+    std::uint16_t max_latency;
+    std::uint16_t continuation_number;
+    std::uint16_t supervision_timeout_10ms;
+    std::uint16_t min_ce_len_125us;
+    std::uint16_t max_ce_len_125us;
+};
+struct bt_conn_le_conn_rate_changed
+{
+    std::uint32_t interval_us;
+    std::uint16_t subrate_factor;
+    std::uint16_t peripheral_latency;
+    std::uint16_t continuation_number;
+    std::uint16_t supervision_timeout_10ms;
+};
+struct bt_conn_le_read_all_remote_feat_complete
+{
+    std::uint8_t status;
+    std::uint8_t max_remote_page;
+    std::uint8_t max_valid_page;
+    const std::uint8_t *features;
+};
+enum bt_conn_le_frame_space_update_initiator
+{
+    BT_CONN_LE_FRAME_SPACE_UPDATE_INITIATOR_LOCAL_HOST,
+    BT_CONN_LE_FRAME_SPACE_UPDATE_INITIATOR_LOCAL_CONTROLLER,
+    BT_CONN_LE_FRAME_SPACE_UPDATE_INITIATOR_PEER
+};
+struct bt_conn_le_frame_space_update_param
+{
+    std::uint8_t phys;
+    std::uint16_t spacing_types;
+    std::uint16_t frame_space_min;
+    std::uint16_t frame_space_max;
+};
+struct bt_conn_le_frame_space_updated
+{
+    std::uint8_t status;
+    bt_conn_le_frame_space_update_initiator initiator;
+    std::uint16_t frame_space;
+    std::uint8_t phys;
+    std::uint16_t spacing_types;
+};
+struct bt_le_local_features
+{
+    std::uint8_t features[248];
+    std::uint64_t states;
+    std::uint16_t acl_mtu;
+    std::uint8_t acl_pkts;
+    std::uint16_t iso_mtu;
+    std::uint8_t iso_pkts;
+    std::uint8_t rl_size;
+    std::uint16_t max_adv_data_len;
+};
 struct bt_le_conn_param
 {
     std::uint16_t interval_min, interval_max, latency, timeout;
 };
 inline const bt_le_conn_param mock_default_parameters{24, 40, 0, 400};
+inline bt_le_conn_param mock_last_create_parameters{};
 #define BT_LE_CONN_PARAM_DEFAULT (&mock_default_parameters)
 #define BT_CONN_LE_CREATE_CONN nullptr
-inline int bt_conn_le_create(const bt_addr_le_t *peer, const void *, const bt_le_conn_param *,
+inline int bt_conn_le_create(const bt_addr_le_t *peer, const void *,
+                             const bt_le_conn_param *parameters,
                              bt_conn **c)
 {
     if (mock_create_error != 0)
     {
         return mock_create_error;
     }
+    mock_last_create_parameters = *parameters;
     *c = bt_conn_ref(mock_next_connection);
     (*c)->peer = *peer;
     (*c)->role = BT_CONN_ROLE_CENTRAL;
@@ -157,7 +378,6 @@ inline bool bt_le_bond_exists(std::uint8_t, const bt_addr_le_t *)
 inline bt_conn_le_data_len_info mock_data_lengths[4]{};
 inline int bt_conn_get_info(bt_conn *connection, bt_conn_info *info)
 {
-    static bt_conn_le_phy_info phy{};
     extern bt_addr_le_t mock_local_pairing;
     info->type = 1;
     info->id = 0U;
@@ -169,7 +389,7 @@ inline int bt_conn_get_info(bt_conn *connection, bt_conn_info *info)
     info->le.interval_us = connection->interval_us;
     info->le.latency = connection->latency;
     info->le.timeout = connection->supervision_timeout;
-    info->le.phy = &phy;
+    info->le.phy = &mock_connection_phy;
     info->le.data_len = &mock_data_lengths[static_cast<std::size_t>(connection - mock_connections)];
     info->security.level = connection->security;
     info->security.enc_key_size = 16U;
@@ -222,7 +442,136 @@ inline int bt_conn_get_remote_info(const bt_conn *connection, bt_conn_remote_inf
 inline int bt_conn_le_get_tx_power_level(bt_conn *connection, bt_conn_le_tx_power *power)
 {
     power->current_level = connection->tx_power;
+    power->max_level = 8;
     return 0;
+}
+inline int mock_remote_tx_power_error = 0;
+inline int mock_remote_tx_power_change_error = 0;
+inline int mock_tx_power_reporting_error = 0;
+inline int mock_path_loss_parameter_error = 0;
+inline int mock_path_loss_enable_error = 0;
+inline unsigned mock_remote_tx_power_calls = 0U;
+inline unsigned mock_remote_tx_power_change_calls = 0U;
+inline unsigned mock_tx_power_reporting_calls = 0U;
+inline unsigned mock_path_loss_parameter_calls = 0U;
+inline unsigned mock_path_loss_enable_calls = 0U;
+inline bt_conn_le_tx_power_phy mock_remote_tx_power_phy = BT_CONN_LE_TX_POWER_PHY_NONE;
+inline std::int8_t mock_remote_tx_power_delta = 0;
+inline bool mock_local_power_reporting = false;
+inline bool mock_remote_power_reporting = false;
+inline bool mock_path_loss_enabled = false;
+inline bt_conn_le_path_loss_reporting_param mock_path_loss_parameters{};
+inline int mock_subrate_default_error = 0;
+inline int mock_subrate_request_error = 0;
+inline int mock_connection_rate_default_error = 0;
+inline int mock_connection_rate_request_error = 0;
+inline int mock_minimum_connection_interval_error = 0;
+inline int mock_remote_features_error = 0;
+inline int mock_frame_space_error = 0;
+inline int mock_local_features_error = 0;
+inline int mock_channel_map_error = 0;
+inline unsigned mock_subrate_default_calls = 0U;
+inline unsigned mock_subrate_request_calls = 0U;
+inline unsigned mock_connection_rate_default_calls = 0U;
+inline unsigned mock_connection_rate_request_calls = 0U;
+inline unsigned mock_remote_features_calls = 0U;
+inline unsigned mock_frame_space_calls = 0U;
+inline unsigned mock_channel_map_calls = 0U;
+inline bt_conn_le_subrate_param mock_subrate_parameters{};
+inline bt_conn_le_conn_rate_param mock_connection_rate_parameters{};
+inline bt_conn_le_frame_space_update_param mock_frame_space_parameters{};
+inline std::uint16_t mock_minimum_connection_interval_us = 750U;
+inline std::uint8_t mock_remote_features_page = 0U;
+inline bt_le_local_features mock_local_features{};
+inline std::uint8_t mock_channel_map[5]{};
+inline int bt_conn_le_get_remote_tx_power_level(bt_conn *, bt_conn_le_tx_power_phy phy)
+{
+    ++mock_remote_tx_power_calls;
+    mock_remote_tx_power_phy = phy;
+    return mock_remote_tx_power_error;
+}
+extern "C" inline int bt_conn_set_remote_tx_power_level(bt_conn *,
+                                                        bt_conn_le_tx_power_phy phy,
+                                                        std::int8_t delta)
+{
+    ++mock_remote_tx_power_change_calls;
+    mock_remote_tx_power_phy = phy;
+    mock_remote_tx_power_delta = delta;
+    return mock_remote_tx_power_change_error;
+}
+inline int bt_conn_le_set_tx_power_report_enable(bt_conn *, bool local_enabled,
+                                                 bool remote_enabled)
+{
+    ++mock_tx_power_reporting_calls;
+    mock_local_power_reporting = local_enabled;
+    mock_remote_power_reporting = remote_enabled;
+    return mock_tx_power_reporting_error;
+}
+inline int bt_conn_le_set_path_loss_mon_param(
+    bt_conn *, const bt_conn_le_path_loss_reporting_param *parameters)
+{
+    ++mock_path_loss_parameter_calls;
+    mock_path_loss_parameters = *parameters;
+    return mock_path_loss_parameter_error;
+}
+inline int bt_conn_le_set_path_loss_mon_enable(bt_conn *, bool enabled)
+{
+    ++mock_path_loss_enable_calls;
+    mock_path_loss_enabled = enabled;
+    return mock_path_loss_enable_error;
+}
+inline int bt_conn_le_subrate_set_defaults(const bt_conn_le_subrate_param *parameters)
+{
+    ++mock_subrate_default_calls;
+    mock_subrate_parameters = *parameters;
+    return mock_subrate_default_error;
+}
+inline int bt_conn_le_subrate_request(bt_conn *, const bt_conn_le_subrate_param *parameters)
+{
+    ++mock_subrate_request_calls;
+    mock_subrate_parameters = *parameters;
+    return mock_subrate_request_error;
+}
+inline int bt_conn_le_conn_rate_set_defaults(const bt_conn_le_conn_rate_param *parameters)
+{
+    ++mock_connection_rate_default_calls;
+    mock_connection_rate_parameters = *parameters;
+    return mock_connection_rate_default_error;
+}
+inline int bt_conn_le_conn_rate_request(bt_conn *, const bt_conn_le_conn_rate_param *parameters)
+{
+    ++mock_connection_rate_request_calls;
+    mock_connection_rate_parameters = *parameters;
+    return mock_connection_rate_request_error;
+}
+inline int bt_conn_le_read_min_conn_interval(std::uint16_t *interval_us)
+{
+    *interval_us = mock_minimum_connection_interval_us;
+    return mock_minimum_connection_interval_error;
+}
+inline int bt_conn_le_read_all_remote_features(bt_conn *, std::uint8_t maximum_page)
+{
+    ++mock_remote_features_calls;
+    mock_remote_features_page = maximum_page;
+    return mock_remote_features_error;
+}
+inline int bt_conn_le_frame_space_update(
+    bt_conn *, const bt_conn_le_frame_space_update_param *parameters)
+{
+    ++mock_frame_space_calls;
+    mock_frame_space_parameters = *parameters;
+    return mock_frame_space_error;
+}
+inline int bt_le_get_local_features(bt_le_local_features *features)
+{
+    *features = mock_local_features;
+    return mock_local_features_error;
+}
+inline int bt_le_set_chan_map(std::uint8_t channel_map[5])
+{
+    ++mock_channel_map_calls;
+    std::memcpy(mock_channel_map, channel_map, sizeof(mock_channel_map));
+    return mock_channel_map_error;
 }
 inline int bt_conn_le_param_update(bt_conn *connection, const bt_le_conn_param *)
 {
@@ -242,6 +591,15 @@ struct bt_conn_cb
     void (*remote_info_available)(bt_conn *, bt_conn_remote_info *){};
     void (*le_phy_updated)(bt_conn *, bt_conn_le_phy_info *){};
     void (*le_data_len_updated)(bt_conn *, bt_conn_le_data_len_info *){};
+    void (*tx_power_report)(bt_conn *, const bt_conn_le_tx_power_report *){};
+    void (*path_loss_threshold_report)(bt_conn *,
+                                       const bt_conn_le_path_loss_threshold_report *){};
+    void (*subrate_changed)(bt_conn *, const bt_conn_le_subrate_changed *){};
+    void (*conn_rate_changed)(bt_conn *, std::uint8_t,
+                              const bt_conn_le_conn_rate_changed *){};
+    void (*read_all_remote_feat_complete)(
+        bt_conn *, const bt_conn_le_read_all_remote_feat_complete *){};
+    void (*frame_space_updated)(bt_conn *, const bt_conn_le_frame_space_updated *){};
     int registered{(mock_conn_callbacks = this, 0)};
 };
 #define BT_CONN_CB_DEFINE(name) bt_conn_cb name
@@ -852,4 +1210,11 @@ enum
     BT_LE_ADV_OPT_CODED = 4096,
     BT_LE_ADV_OPT_ANONYMOUS = 8192,
     BT_LE_ADV_OPT_USE_TX_POWER = 16384,
+    BT_LE_ADV_OPT_USE_IDENTITY = 32768,
+    BT_LE_ADV_OPT_FILTER_SCAN_REQ = 65536,
+    BT_LE_ADV_OPT_FILTER_CONN = 131072,
+    BT_LE_ADV_OPT_DIR_MODE_LOW_DUTY = 262144,
+    BT_LE_ADV_OPT_DIR_ADDR_RPA = 524288,
+    BT_LE_ADV_OPT_REQUIRE_S2_CODING = 1048576,
+    BT_LE_ADV_OPT_REQUIRE_S8_CODING = 2097152,
 };

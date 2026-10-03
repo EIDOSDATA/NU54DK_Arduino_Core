@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "source_revision": "94f0254499858800b4ced38b1211746b3f2175f8",
+  "source_clean": true,
+  "negative_classes": [
+    "cleanup",
+    "cross_link",
+    "security_regression"
+  ],
+  "families": {
+    "capability": [
+      "capability-baseline.json",
+      "capability-extended.json"
+    ],
+    "power_path": [
+      "power-path.json"
+    ],
+    "timing_feature": [
+      "timing-feature.json"
+    ],
+    "advertising": [
+      "advertising.json"
+    ],
+    "privacy": [
+      "privacy.json"
+    ],
+    "ead": [
+      "ead.json"
+    ],
+    "nordic_extensions": [
+      "nordic-extensions.json"
+    ],
+    "mesh_base": [
+      "mesh-base.json"
+    ],
+    "mesh_management": [
+      "mesh-management.json"
+    ],
+    "mesh_update": [
+      "mesh-blob.json",
+      "mesh-mdfu.json"
+    ],
+    "standalone_radio": [
+      "standalone-radio.json"
+    ],
+    "coexistence": [
+      "coexistence.json"
+    ]
+  }
+}

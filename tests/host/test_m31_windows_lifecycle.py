@@ -25,10 +25,14 @@ class M31WindowsLifecycleTests(unittest.TestCase):
     """! @brief source tree를 package layout으로 사용해 분모 규칙을 확인합니다. """
 
     def test_source_library_examples_have_exact_release_denominator(self) -> None:
-        """! @brief 공개 library 예제 113개를 누락 없이 열거합니다. """
+        """! @brief 공개 library 예제 130개를 누락 없이 열거합니다. """
         examples = MODULE.installed_examples(ROOT)
         self.assertEqual(MODULE.EXPECTED_EXAMPLES, len(examples))
         self.assertEqual(MODULE.EXPECTED_EXAMPLES, len({item[0] for item in examples}))
+        metadata = json.loads(
+            (ROOT / "libraries" / "example-metadata.json").read_text(encoding="utf-8")
+        )
+        self.assertGreater(metadata["example_count"], MODULE.EXPECTED_EXAMPLES)
 
     def test_profile_specific_examples_are_separate(self) -> None:
         """! @brief DFU·외장 audio·Fabric과 일반 BLE profile을 합치지 않습니다. """

@@ -1,0 +1,166 @@
+{
+  "test_ids": [
+    "M32-154-01:primary",
+    "M32-ESB-01:primary"
+  ],
+  "status": "PASS",
+  "scope": "two_board_standalone_ieee802154_and_esb_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "c817a27ed765641bdf41e4e386664a8aa8c173f9",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "transmitter": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "216560c25e7516500b04be519b1cf41de45d6b62ee4cd75ef656c4920c022a7e",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "90112"
+    },
+    "ptx": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "fcb3145aa5d90af6606880c75f2c4cbb27d6a57226efc28c057f4731990f247e",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "57344"
+    },
+    "receiver": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "5fb9fe70818c66e18e138b916443bb4712d6942a45425cdc4473dc92d8e2b856",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "90112"
+    },
+    "prx": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "73a794220296f520ca5963bee5ca3728b79c6d156ce62080d90e1f49be3bc479",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "57344"
+    }
+  },
+  "iterations": 20,
+  "packet_denominator_per_protocol": 2000,
+  "allowed_loss_packets_per_protocol": 20,
+  "latency_limit_ms": 100,
+  "protocols": {
+    "radio154": {
+      "results": {
+        "transmitter": {
+          "role": "transmitter",
+          "requested": "2000",
+          "acknowledged": "2000",
+          "failed": "0",
+          "retried": "240",
+          "max_latency_ms": "12",
+          "iterations": "20",
+          "invalid_channel_rejected": "1",
+          "invalid_length_rejected": "1",
+          "nonce": "bbaa9e41bc9e8427497b3accdde1ed87",
+          "core": "c817a27ed765641bdf41e4e386664a8aa8c173f9"
+        },
+        "receiver": {
+          "role": "receiver",
+          "received": "2000",
+          "unique": "2000",
+          "duplicates": "0",
+          "corrupt": "0",
+          "dropped": "0",
+          "iterations": "20",
+          "invalid_channel_rejected": "1",
+          "invalid_length_rejected": "1",
+          "nonce": "bbaa9e41bc9e8427497b3accdde1ed87",
+          "core": "c817a27ed765641bdf41e4e386664a8aa8c173f9"
+        }
+      },
+      "denominator": {
+        "expected_packets": 2000,
+        "acknowledged_packets": 2000,
+        "unique_packets": 2000,
+        "lost_acknowledgements": 0,
+        "lost_unique_packets": 0
+      },
+      "nonce": "bbaa9e41bc9e8427497b3accdde1ed87"
+    },
+    "esb": {
+      "results": {
+        "ptx": {
+          "role": "ptx",
+          "requested": "2000",
+          "acknowledged": "2000",
+          "failed": "76",
+          "attempts": "2951",
+          "max_latency_ms": "4",
+          "iterations": "20",
+          "invalid_rate_rejected": "1",
+          "invalid_length_rejected": "1",
+          "nonce": "3ae443205f1566cc7937cbf3988fc2b3",
+          "core": "c817a27ed765641bdf41e4e386664a8aa8c173f9"
+        },
+        "prx": {
+          "role": "prx",
+          "received": "2000",
+          "unique": "2000",
+          "duplicates": "0",
+          "corrupt": "0",
+          "dropped": "0",
+          "iterations": "20",
+          "invalid_rate_rejected": "1",
+          "invalid_length_rejected": "1",
+          "nonce": "3ae443205f1566cc7937cbf3988fc2b3",
+          "core": "c817a27ed765641bdf41e4e386664a8aa8c173f9"
+        }
+      },
+      "denominator": {
+        "expected_packets": 2000,
+        "acknowledged_packets": 2000,
+        "unique_packets": 2000,
+        "lost_acknowledgements": 0,
+        "lost_unique_packets": 0
+      },
+      "nonce": "3ae443205f1566cc7937cbf3988fc2b3"
+    }
+  },
+  "reason": null,
+  "transcript_sha256": "1ad58dca9ccfd4271916374921a16a0d520d4987c72e270bd2679bf68898d319",
+  "observed_utc": "2026-09-29T14:27:06.558901+00:00"
+}

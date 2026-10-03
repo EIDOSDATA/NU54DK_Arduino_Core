@@ -286,17 +286,19 @@ class M12CiContractTests(unittest.TestCase):
         text = path.read_text(encoding="utf-8")
         linux_job, windows_job = text.split("\n  arduino-build:\n", 1)
         self.assertIn(
-            "group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0]",
+            "group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0, v0.6.0]",
             linux_job,
         )
         self.assertIn(
-            "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0]",
+            "group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0, v0.6.0]",
             windows_job,
         )
         self.assertEqual(text.count("fail-fast: false"), 2)
         self.assertIn('--group "${{ matrix.group }}"', linux_job)
         self.assertIn("--group '${{ matrix.group }}'", windows_job)
         self.assertIn("m12-zephyr-${{ matrix.group }}-${{ github.sha }}", linux_job)
+        self.assertIn("python3 tools/bluetooth/m32_contract.py", linux_job)
+        self.assertIn("if: matrix.group == 'v0.6.0'", linux_job)
         self.assertIn("m12-arduino-${{ matrix.group }}-${{ github.sha }}", windows_job)
         self.assertIn("if: matrix.group == 'v0.2.0'", windows_job)
 

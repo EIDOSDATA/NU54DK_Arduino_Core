@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W09",
+  "status": "PASS",
+  "source_revision": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+  "source_clean": true,
+  "native_build": {
+    "status": "PASS",
+    "roles": 4,
+    "radio154_transmitter_flash_bytes": 90112,
+    "radio154_receiver_flash_bytes": 90112,
+    "esb_ptx_flash_bytes": 57344,
+    "esb_prx_flash_bytes": 57344,
+    "evidence": "m32-radio-standalone.json"
+  },
+  "arduino_build": {
+    "status": "PASS",
+    "examples": 4,
+    "source_revision": "82361413bc0377871fffd74f4a23eca5a98a2abb",
+    "evidence": "../../284_M32_W09_802154_ESB_software와_HIL_blocker.md"
+  },
+  "functional_hil": {
+    "status": "PASS",
+    "evidence": "m32-radio-standalone.json",
+    "test_ids": [
+      "M32-154-01:primary",
+      "M32-ESB-01:primary"
+    ],
+    "boards": 2,
+    "iterations_per_protocol": 20,
+    "packets_per_protocol": 2000,
+    "acknowledged_packets_per_protocol": 2000,
+    "unique_packets_per_protocol": 2000,
+    "lost_packets": 0,
+    "corrupt_packets": 0,
+    "dropped_packets": 0,
+    "maximum_latency_ms": 7,
+    "negative_classes": 4,
+    "stopped_roles": 4,
+    "mass_erase_or_recover": false
+  },
+  "support_boundary": {
+    "ieee802154_external_peer_interop": "NOT_RUN",
+    "esb_external_peer_interop": "NOT_RUN",
+    "coexistence": "M32-W10"
+  }
+}

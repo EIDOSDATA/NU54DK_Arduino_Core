@@ -1,0 +1,215 @@
+{
+  "test_ids": [
+    "M32-COEX-01:ble_154",
+    "M32-COEX-01:ble_esb",
+    "M32-COEX-01:ble_mesh"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_ble_internal_radio_coexistence",
+  "source_clean": true,
+  "identity": {
+    "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "dut": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "225280"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "204800"
+        },
+        "ble_mesh": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "327680"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "radio": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "90112"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "57344"
+        },
+        "ble_mesh": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "319488"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "ble": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "192512"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "192512"
+        },
+        "ble_mesh": {
+          "mode": "pyocd-sector-hw-reset",
+          "bytes": "192512"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "image_sha256": {
+    "ble_154": {
+      "dut": "9c0dac4340b6efe5d49d54ab49a5f6dc765b6f5db851f162982f75b09cd2ff71",
+      "radio_peer": "fe348585e8c2243fce5207240163cdbf79eef43a7230a987daa3d4086ab42cf8",
+      "ble_peer": "5f82dab5a2c8917d68d718c9fbadc4ac596109105056d8a8f97edc8b9d8d194e"
+    },
+    "ble_esb": {
+      "dut": "024588cfa638927e5e2e8c2176da523998e77b8040d5924ea15ad7246f77390c",
+      "radio_peer": "e2dcad39f8baecf8ab4faaac73bc43d5065a65b0f94e94b47d3b24713926b69f",
+      "ble_peer": "426d68d530af8f3260c99d4c9ad263d30c5991b0dc1c0688155868d863e8d405"
+    },
+    "ble_mesh": {
+      "dut": "7e73406c23a5026d371ffaa9646d7be7f95a7e2533d7497ee9283c65148921c0",
+      "mesh_peer": "fe8c6b8cd2e4830a51e2f5247609f80f829f92e89b0263f4b5dcb4e16e1cd2eb",
+      "ble_peer": "13bc6ed5a66e17fed37ba58139ca27678948d1a1c17ad17d2b64ffac08bf9693"
+    }
+  },
+  "iterations_per_scenario": 20,
+  "packets_per_protocol": 4000,
+  "allowed_loss": 80,
+  "service_gap_limit_ms": 500,
+  "results": {
+    "ble_154": {
+      "radio_peer": {
+        "role": "radio_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "acknowledged": "4000",
+        "failures": "0",
+        "restarts": "1",
+        "invalid_configuration_rejected": "1",
+        "invalid_length_rejected": "1",
+        "double_owner_rejected": "1",
+        "nonce": "e84e6867e0da7cc99da9baf1e58c9384",
+        "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+        "scenario": "ble_154"
+      },
+      "ble_peer": {
+        "role": "ble_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "reconnects": "1",
+        "write_failures": "0",
+        "nonce": "e84e6867e0da7cc99da9baf1e58c9384",
+        "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+        "scenario": "ble_154"
+      },
+      "dut": {
+        "role": "dut",
+        "iterations": "20",
+        "ble_received": "4000",
+        "radio_received": "4000",
+        "ble_loss": "0",
+        "radio_loss": "0",
+        "ble_corrupt": "0",
+        "radio_corrupt": "0",
+        "ble_restarts": "1",
+        "radio_restarts": "1",
+        "ble_gap_ms": "200",
+        "radio_gap_ms": "16",
+        "starvation": "0",
+        "double_owner_rejected": "1",
+        "nonce": "e84e6867e0da7cc99da9baf1e58c9384",
+        "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+        "scenario": "ble_154"
+      }
+    },
+    "ble_esb": {
+      "radio_peer": {
+        "role": "radio_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "acknowledged": "4000",
+        "failures": "0",
+        "restarts": "1",
+        "invalid_configuration_rejected": "1",
+        "invalid_length_rejected": "1",
+        "double_owner_rejected": "1",
+        "nonce": "62ab378c58d92afe12bff1d8758b50cf",
+        "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+        "scenario": "ble_esb"
+      },
+      "ble_peer": {
+        "role": "ble_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "reconnects": "1",
+        "write_failures": "0",
+        "nonce": "62ab378c58d92afe12bff1d8758b50cf",
+        "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+        "scenario": "ble_esb"
+      },
+      "dut": {
+        "role": "dut",
+        "iterations": "20",
+        "ble_received": "4000",
+        "radio_received": "4000",
+        "ble_loss": "0",
+        "radio_loss": "0",
+        "ble_corrupt": "0",
+        "radio_corrupt": "0",
+        "ble_restarts": "1",
+        "radio_restarts": "1",
+        "ble_gap_ms": "151",
+        "radio_gap_ms": "24",
+        "starvation": "0",
+        "double_owner_rejected": "1",
+        "nonce": "62ab378c58d92afe12bff1d8758b50cf",
+        "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+        "scenario": "ble_esb"
+      }
+    }
+  },
+  "reason": "CoexistenceFailure: ble_mesh/ble_peer target FAIL: timeout",
+  "transcript_sha256": "a1b849512ce42a3c079a7ae1f89d30cdd7e8682ba088cc1ca976306fc9c2df6a",
+  "observed_utc": "2026-10-02T00:41:55.293184+00:00"
+}

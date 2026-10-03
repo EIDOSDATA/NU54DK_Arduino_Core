@@ -1,0 +1,88 @@
+{
+  "test_ids": [
+    "M32-PWR-01:primary",
+    "M32-PATH-01:primary"
+  ],
+  "status": "PASS_CANDIDATE",
+  "scope": "two_board_power_and_path_loss_twenty_iterations",
+  "source_clean": false,
+  "identity": {
+    "core": "34d13859dfda27c8148a2c8909445d13d94b1359",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "central": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "F:/",
+      "vcom": "COM13",
+      "image_sha256": "453e4240f169a23226c5ef2d1d8ac1411c11c7bb36e0e8925f225bd2440b6c92",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "212992"
+    },
+    "peripheral": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "vcom": "COM10",
+      "image_sha256": "b02449ec1a326b62395bd7263a4ec23cf917aa53361f1d7dce6cb3f486001be3",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "208896"
+    }
+  },
+  "nonce": "c4e5bafba5f20941520e77ce14baab61",
+  "iterations": 20,
+  "power_reports": {
+    "central": 20,
+    "peripheral": 20
+  },
+  "power_denominator": 40,
+  "power_range_dbm": {
+    "central": [
+      0,
+      0
+    ],
+    "peripheral": [
+      0,
+      0
+    ]
+  },
+  "path_reports": 60,
+  "path_denominator": 60,
+  "path_range_db": [
+    54,
+    65
+  ],
+  "maximum_event_gap_ms": {
+    "power_central": 266.00000000325963,
+    "power_peripheral": 266.00000000325963,
+    "path": 125.0
+  },
+  "allowed_loss": {
+    "power": 0,
+    "path": 1
+  },
+  "lost_reports": {
+    "power": 0,
+    "path": 0
+  },
+  "reason": null,
+  "transcript_sha256": "9edac968566ca73d1ad870a2f1970dd2ec60ba81580d7a84cc897491e8903a18",
+  "observed_utc": "2026-09-28T16:30:43.742484+00:00"
+}

@@ -33,11 +33,13 @@ class M31IsoHardwareFlashTests(unittest.TestCase):
         self.assertEqual(2, run.call_count)
         flash_command = run.call_args_list[0].args[0]
         reset_command = run.call_args_list[1].args[0]
-        self.assertEqual("flash", flash_command[flash_command.index("pyocd") + 1])
+        self.assertTrue(flash_command[2].endswith("pyocd_launcher.py"))
+        self.assertEqual("flash", flash_command[3])
         self.assertEqual("sector", flash_command[flash_command.index("--erase") + 1])
         self.assertIn("--no-reset", flash_command)
         self.assertNotIn("chip", flash_command)
-        self.assertEqual("reset", reset_command[reset_command.index("pyocd") + 1])
+        self.assertTrue(reset_command[2].endswith("pyocd_launcher.py"))
+        self.assertEqual("reset", reset_command[3])
         self.assertEqual("hw", reset_command[reset_command.index("--method") + 1])
         self.assertNotIn("--erase", reset_command)
         self.assertEqual("a" * 32, reset_command[reset_command.index("--uid") + 1])
@@ -51,6 +53,27 @@ class M31IsoHardwareFlashTests(unittest.TestCase):
                 common.flash_image_pyocd(
                     "central", "a" * 32, Path("image.hex"), 120.0, hardware_reset=True
                 )
+
+    def test_m32_access_preserving_flash_uses_attach_and_software_reset(self) -> None:
+        """! @brief M32 경로는 pin reset 없이 attach와 system reset을 사용합니다. """
+
+        flash = SimpleNamespace(returncode=0, stdout=b"programmed 274432 bytes", stderr=b"")
+        reset = SimpleNamespace(returncode=0, stdout=b"", stderr=b"")
+        with patch.object(common.subprocess, "run", side_effect=(flash, reset)) as run:
+            mode, byte_count = common.flash_image_pyocd(
+                "capability",
+                "a" * 32,
+                Path("image.hex"),
+                120.0,
+                hardware_reset=True,
+                preserve_nrf54l_access=True,
+            )
+        self.assertEqual(("pyocd-sector-sw-reset", "274432"), (mode, byte_count))
+        flash_command = run.call_args_list[0].args[0]
+        reset_command = run.call_args_list[1].args[0]
+        self.assertEqual("attach", flash_command[flash_command.index("--connect") + 1])
+        self.assertEqual("attach", reset_command[reset_command.index("--connect") + 1])
+        self.assertEqual("sw", reset_command[reset_command.index("--method") + 1])
 
     def test_combined_exact_requires_hardware_reset_evidence(self) -> None:
         """! @brief 결합 HIL 완료 승격에서 명시적 hardware reset 근거를 요구합니다. """

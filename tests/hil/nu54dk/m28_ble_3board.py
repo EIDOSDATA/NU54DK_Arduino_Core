@@ -379,6 +379,34 @@ def wait_exact_token(
             return
 
 
+## @brief START 전에 동일 READY 재전송만 짧은 quiet window로 흡수합니다.
+def settle_ready_replays(
+    serial_port: Any,
+    role: str,
+    ready: bytes,
+    pending: bytearray,
+    capture: bytearray,
+    quiet_seconds: float,
+) -> None:
+    if not 0.0 < quiet_seconds <= 1.0:
+        raise BlePairHilFailure("READY quiet window는 0초 초과 1초 이하여야 합니다.")
+    prefix = b"NUCODE_M28B3_"
+    fail_prefix = b"NUCODE_M28B3_FAIL:"
+    deadline = time.monotonic() + quiet_seconds
+    while True:
+        try:
+            line = common.read_line(serial_port, pending, capture, deadline)
+        except TimeoutError:
+            return
+        deadline = time.monotonic() + quiet_seconds
+        if line.startswith(fail_prefix):
+            raise BlePairHilFailure(f"{role} target 실패: {line!r}")
+        if line.startswith(prefix) and line != ready:
+            raise BlePairHilFailure(
+                f"{role} START 전 stale/예상 밖 protocol입니다: {line!r}"
+            )
+
+
 ## @brief 현재 test·nonce START command를 한 role UART에 기록합니다.
 def write_start_command(serial_port: Any, test_name: str, nonce: str) -> None:
     request = f"NUCODE_M28B3_START:{test_name}:{nonce}\r\n".encode("ascii")
@@ -439,6 +467,9 @@ def execute_three_board(
     flash_timeout: float,
     result_timeout: float,
     flash_backend: str,
+    hardware_reset: bool = False,
+    preserve_nrf54l_access: bool = False,
+    ready_replay_settle_seconds: float = 0.0,
 ) -> ThreeBoardExecution:
     if baud_rate != DEFAULT_BAUD_RATE:
         raise BlePairHilFailure(f"기준선은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
@@ -471,6 +502,9 @@ def execute_three_board(
                         endpoints[role].board_id,
                         images[role],
                         flash_timeout,
+                        hardware_reset=hardware_reset,
+                        cmsis_dap_v1=False,
+                        preserve_nrf54l_access=preserve_nrf54l_access,
                     )
                 else:
                     flashes[role] = common.flash_image(
@@ -489,6 +523,19 @@ def execute_three_board(
                 wait_exact_token(
                     ports[role], role, ready, pending[role], captures[role], deadline
                 )
+            if ready_replay_settle_seconds > 0.0:
+                for role in ROLES:
+                    ready = (
+                        f"NUCODE_M28B3_READY:role={role}:test={test_name}"
+                    ).encode("ascii")
+                    settle_ready_replays(
+                        ports[role],
+                        role,
+                        ready,
+                        pending[role],
+                        captures[role],
+                        ready_replay_settle_seconds,
+                    )
 
             suffix = f":test={test_name}:nonce={nonce}".encode("ascii")
             write_start_command(ports["peripheral"], test_name, nonce)

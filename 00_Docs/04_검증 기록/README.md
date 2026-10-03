@@ -9,8 +9,9 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 현재 설치는 [v0.5.0 stable 안내](<../05_릴리스/v0.5.0/README.md>)를 따릅니다. 구버전·RC는 지원·catalog
 공급을 종료했으며 과거 tag·Release·asset·evidence만 보존합니다. RC 개발 branch 삭제와 main 통합도 완료했습니다.
 공개 후 문서 재검토·commit/push 결과는 [275번](275_v0.5.0_공개_후_문서_전수_재검토.md)에서 구분합니다.
-후속 M32·M33의 v0.6.0 배정과 뒤 제품선 버전 이동은
-[276번](276_v0.6.0_후속_버전_배정과_문서_동기화.md)을 따릅니다. 역사 기록의 옛 버전 계획은 당시 상태입니다.
+현재 후속 버전 배정은 [293번](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md), M32의 기능별
+최종 근거는 아래 표에서 찾습니다. 예전 장비 blocker·진행률·버전 계획은 당시 상태이며,
+현재 재개 시에는 **CMSIS-DAP v2**와 실제 장치 mapping을 다시 확인합니다.
 
 과거 기록의 진행률·HOLD·다음 작업은 작성 당시 상태입니다. 아래 최종 기록부터 읽고,
 필요한 경우 번호별 원본과 [evidence](evidence/)로 내려가세요.
@@ -21,6 +22,22 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 
 | 확인할 내용 | 최종 근거 |
 | --- | --- |
+| M32 완료 후 문서 정비·main squash 통합 | [295번 기록](295_M32_문서_전수_정비와_main_Squash_통합.md) — 후속 개발 출발점 `main`, `Dev-0.6.0-M32` 원본 이력 보존 |
+| v0.7.0 SDK 전환 전용 확정·후속 제품선 재배정 | [293번 기록](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md) · [v0.7.0 TODO](../TODO_v0.7.0.md) |
+| 전체 문서 검토·NCS 3.4.1 조건부 영향 | [292번 기록](292_문서_전수_검토와_NCS_3.4.1_영향.md) — 당시 전환 시점 해석은 293번에서 대체 · [SDK 영향 검토](<../00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>) |
+| M32 최종 상태 — 12/12 완료 | [287번 W12 마감](287_M32_W12_정합성_감사와_후속_인계.md) · [M32 TODO](../TODO_M32.md) · [HANDOFF](../HANDOFF.md). 다음은 M33-W01 |
+| M32-W08 BLOB·signed MDFU exact HIL 완료 | [294번](294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md) — BLOB 10/10, MDFU 5회·두 target 10/10, negative·confirm/rollback·STOP PASS. [283번](283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md)은 과거 FAIL 보존 |
+| M32-W07 Mesh 1.1 exact HIL 완료 | [282번](282_M32_W07_Mesh_1.1_software와_HIL_blocker.md) — 350/350 관리 동작·negative·세 역할 STOP |
+| M32-W06 Mesh 기반 exact HIL 완료 | [281번](281_M32_W06_Mesh_기반_software와_HIL_blocker.md) — 두 node 구성·500/500 ACK·negative·STOP. [291번](291_M32_W06_second_node_provisioning_FAIL과_재부팅_인계.md)은 교정 중 과거 인계 |
+| M32-W04 광고·identity·privacy exact HIL 완료 | [290번](290_M32_W04_광고_identity_privacy_exact_HIL_완료.md) — ADV 600/600, PRIV 200/200, EAD 400/400 |
+| M32-W09 IEEE 802.15.4·ESB 단독 exact HIL 완료 | [284번](284_M32_W09_802154_ESB_software와_HIL_blocker.md) — 최신 `115d039f…`에서도 각 2,000/2,000, loss/corrupt/drop 0 재확인 |
+| M32-W03 연결 timing·feature exact HIL 완료 | [288번](288_M32_W03_연결_timing_feature_exact_HIL_완료.md) — packet 2,000/2,000, 네 시험군 PASS |
+| M32-W12 정합성 감사·지원 승격 gate·후속 인계 | [287번](287_M32_W12_정합성_감사와_후속_인계.md) — W12 감사·인계 PASS, M32 12/12 완료 |
+| M32-W11 전체 software 회귀와 HIL·soak 완료 | [286번](286_M32_W11_software_회귀와_HIL_soak_blocker.md) — exact family 12/12·signed MDFU·1,800초 soak PASS |
+| M32-W10 무선 공존 exact HIL 완료 | [285번](285_M32_W10_무선_공존_software와_HIL_blocker.md) — clean `512b027a…`, 세 내부 조합 protocol별 4,000/4,000·negative·restart·STOP PASS |
+| M32-W05 Nordic 확장 software/build와 exact HIL 완료 | [280번](280_M32_W05_Nordic_확장_software와_HIL_blocker.md) — LLPM 1 ms, 역할별 QoS 200·anchor 1,000·event 200; Flushable ACL은 unsupported/HOLD |
+| M32-W02 LE Power Control·Path Loss API·예제·두 보드 기능 HIL | [278번](278_M32_W02_LE_Power_Control_Path_Loss_완료.md) — Power 40/40, Path 60/60, Arduino 6/6 |
+| M32-W01 capability·자원·시험 계약과 baseline/extended HCI query | [277번](277_M32_W01_capability_자원_시험_계약_완료.md) — 2/2 build, 2/2 실물 query |
 | v0.5.0 공개 후 모든 문서 재검토·현행 안내와 역사 기록 분리 | [275번](275_v0.5.0_공개_후_문서_전수_재검토.md) |
 | v0.5.0 정식 승인·이력 Squash·Release·stable catalog·공개 smoke | [274번](274_v0.5.0_정식_릴리스_승인과_공개.md) |
 | RC2 GUI 연속 Upload No ACK·runtime PM 원인·교정 PASS | [273번](273_RC2_GUI_연속_Upload_Runtime_PM_교정.md) |
@@ -40,8 +57,11 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 | M28 · M29 · M30 | [140번](<140_M28_W07_3보드_HIL과_W08_완료.md>) · [149번](<149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) · [161번](<161_M30_W08_실제_전원_HIL과_M30_완료.md>) — 각 W01~W08 완료 |
 | v0.4.0 기능 기준선·QDEC 지원 경계 | [124번](<124_T22전_QDEC_지원_범위_재확정.md>) · [125번](<125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>) |
 
-v0.5.0은 Windows 10/11 x64 stable입니다. v0.6.0의 M32·M33은 미착수이며 HOST-W04~W08은 사용자 보류
-상태입니다. 후속 개발 결과를 v0.5.0 지원 기능으로 소급 해석하지 않습니다.
+v0.5.0은 Windows 10/11 x64 stable입니다. v0.6.0의 M32는 **W01~W12 12/12 완료**입니다.
+W08 BLOB·signed MDFU, W10 공존 HIL, W11 exact 회귀·soak, W12 최종 증거 정합화와 인계를
+완료했습니다. 각 증거의 source와 시험 분모는 해당 기록 당시 수치입니다.
+M33은 미착수이며 HOST-W04~W08은 사용자 보류 상태입니다. 후속 개발 결과를 v0.5.0
+지원 기능으로 소급 해석하지 않습니다.
 
 ## 기록 읽는 방법
 
@@ -85,7 +105,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 기존 번호를 다시 매기지 않습니다.
 
 <details>
-<summary>P2 실측·최종 기능 완료·RC/stable 공개·문서 정비·후속 계획 — 238~276</summary>
+<summary>P2 실측·최종 기능 완료·RC/stable 공개·M32 마감·문서 정비 — 238~295</summary>
 
 - [238 — M31 메모리 최적화 P2: GATT 512 B 실기와 adaptive 정정](<238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)
 - [239 — M31 메모리 최적화 P2: CoC PASS, CS 당시 연속성 HOLD 기록](<239_M31_메모리_최적화_P2_CoC_CS_계측.md>)
@@ -126,6 +146,25 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [274 — v0.5.0 정식 릴리스 승인과 공개](274_v0.5.0_정식_릴리스_승인과_공개.md)
 - [275 — v0.5.0 공개 후 문서 전수 재검토](275_v0.5.0_공개_후_문서_전수_재검토.md)
 - [276 — v0.6.0 후속 버전 배정과 문서 동기화](276_v0.6.0_후속_버전_배정과_문서_동기화.md)
+- [277 — M32-W01 capability·자원·시험 계약 완료](277_M32_W01_capability_자원_시험_계약_완료.md)
+- [278 — M32-W02 LE Power Control·Path Loss 완료](278_M32_W02_LE_Power_Control_Path_Loss_완료.md)
+- [279 — M32-W03·W04 software/build와 exact HIL blocker](279_M32_W03_W04_software와_HIL_blocker.md)
+- [280 — M32-W05 Nordic 확장 software/build와 exact HIL 완료](280_M32_W05_Nordic_확장_software와_HIL_blocker.md)
+- [281 — M32-W06 Mesh 기반 software/build와 exact HIL 완료](281_M32_W06_Mesh_기반_software와_HIL_blocker.md)
+- [282 — M32-W07 Mesh 1.1 software/build와 exact HIL 완료](282_M32_W07_Mesh_1.1_software와_HIL_blocker.md)
+- [283 — M32-W08 BLOB·Mesh DFU software/build와 exact HIL blocker](283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md)
+- [284 — M32-W09 IEEE 802.15.4·ESB software/build와 exact HIL 완료](284_M32_W09_802154_ESB_software와_HIL_blocker.md)
+- [285 — M32-W10 무선 공존 software/build와 exact HIL 완료](285_M32_W10_무선_공존_software와_HIL_blocker.md)
+- [286 — M32-W11 software 회귀와 exact HIL·soak 완료](286_M32_W11_software_회귀와_HIL_soak_blocker.md)
+- [287 — M32-W12 정합성 감사와 후속 인계](287_M32_W12_정합성_감사와_후속_인계.md)
+- [288 — M32-W03 연결 timing·feature exact HIL 완료](288_M32_W03_연결_timing_feature_exact_HIL_완료.md)
+- [289 — M32-W04 EAD exact HIL 진척](289_M32_W04_EAD_exact_HIL_진척.md)
+- [290 — M32-W04 광고·identity·privacy exact HIL 완료](290_M32_W04_광고_identity_privacy_exact_HIL_완료.md)
+- [291 — M32-W06 두 번째 node provisioning 교정 중 재부팅 인계](291_M32_W06_second_node_provisioning_FAIL과_재부팅_인계.md)
+- [292 — 문서 전수 검토와 NCS 3.4.1 영향](292_문서_전수_검토와_NCS_3.4.1_영향.md)
+- [293 — v0.7.0 SDK 전환 전용과 후속 마일스톤 재배정](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md)
+- [294 — M32-W08 BLOB PASS와 signed MDFU timeout 진단·완료](294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md)
+- [295 — M32 문서 전수 정비와 main Squash 통합](295_M32_문서_전수_정비와_main_Squash_통합.md)
 
 </details>
 

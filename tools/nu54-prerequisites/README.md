@@ -18,6 +18,12 @@
 marker, NCS/Zephyr revision 또는 Toolchain bundle이 다르면 Build Adapter는 package
 build를 시작하지 않는다.
 
+NCS v3.4.1이 공개돼도 현재 설치기의 v3.4.0 pin을 자동 갱신하지 않는다.
+[v0.7.0 계획](../../00_Docs/TODO_v0.7.0.md)은 신기능 없이 3.4.1 전체 SDK 전환만 수행하며,
+설치기·빌더·CI·package 전환은 SDK-W05에서 검증한다. 현재는 **0/6 미착수**로 기존 pin을 유지한다.
+[변경·개발 영향 검토](<../../00_Docs/00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)와 exact
+재검증이 필요하며, 다른 SDK의 수동 설치나 이 계획 문서만으로 지원 기준선이 변경되지는 않는다.
+
 공식 nRF Util URL은 unversioned다. 내려받은 byte가 `pins.json`의 SHA-256과 다르면
 자동으로 새 byte를 신뢰하지 않고 중단한다. upstream 변경을 검토하고 새 executable을
 별도로 검증한 뒤 pin과 package version을 함께 갱신해야 한다.

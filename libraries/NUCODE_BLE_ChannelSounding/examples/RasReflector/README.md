@@ -6,8 +6,9 @@ Windows 10/11 x64 설치 방법은 [v0.5.0 안내](<../../../../00_Docs/05_릴�
 
 보드 **NU54DK (nRF54L15, Zephyr)**, Feature set **BLE NUS**를 권장한다.
 **Adaptive capabilities (experimental)**는 실험적 대안이다. NU54DK 두 대에 Reflector와
-Initiator를 각각 업로드하고 양쪽 Serial Monitor를 115200 baud로 연다. 여러 probe를 연결한
-CLI Upload는 exact UID가 필요하며 GUI 시험은 한 번에 업로드할 보드 한 대만 연결한다.
+Initiator를 각각 업로드하고 Reflector를 먼저 켠다. `nucode-build.json`과 `prj.conf`를 `.ino`와
+함께 유지한다. 여러 probe를 연결한 CLI Upload는 `NUCODE_PROBE_UID`로 exact UID를 지정하며,
+GUI Upload는 한 번에 대상 보드 한 대만 연결한다. 업로드 후에는 두 보드를 모두 연결해 실행한다.
 
 고정 NCS v3.4.0 제품 SDC에서 secure raw 100건, stop/restart·disconnect/reconnect 각 20/20,
 256-step 유효 raw 1,000건과 peer-loss 복구를 확인했다. reflector bond만 삭제한 negative에서는

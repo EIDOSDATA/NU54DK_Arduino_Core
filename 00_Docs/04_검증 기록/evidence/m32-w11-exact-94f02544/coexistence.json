@@ -1,0 +1,258 @@
+{
+  "test_ids": [
+    "M32-COEX-01:ble_154",
+    "M32-COEX-01:ble_esb",
+    "M32-COEX-01:ble_mesh"
+  ],
+  "status": "PASS",
+  "scope": "three_board_ble_internal_radio_coexistence",
+  "source_clean": true,
+  "identity": {
+    "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "dut": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "225280"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "204800"
+        },
+        "ble_mesh": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "327680"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "radio": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "90112"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "57344"
+        },
+        "ble_mesh": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "323584"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "ble": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "flashes": {
+        "ble_154": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "192512"
+        },
+        "ble_esb": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "192512"
+        },
+        "ble_mesh": {
+          "mode": "pyocd-sector-sw-reset",
+          "bytes": "192512"
+        }
+      },
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "image_sha256": {
+    "ble_154": {
+      "dut": "dbefce8e5044a3c640f227ac3abab90408057d9d09aa2ff347ca73309636d236",
+      "radio_peer": "81e747805e482af3316ca092b016bb410543354ff6bf6c089d6d76037a5f889a",
+      "ble_peer": "71519a43de5618f205d07b786ce6db164a6d33856b92822a679a133f198c123f"
+    },
+    "ble_esb": {
+      "dut": "4ad3e130c77dd9c95576db53560060790296a8d787428e18c8582dce14a0c746",
+      "radio_peer": "c89b9b675113e9f8ceefc7abd8c637cec2286b4ed048e2546265d6a214865d99",
+      "ble_peer": "3341b8b9b848c8b05ebab1a3f98f9c6194ceab114db4cdc9f77daed78f3eecd9"
+    },
+    "ble_mesh": {
+      "dut": "1d655a911a0fd7538c26b639c0b97a7efe4d262066f83239328e7fe8144516b8",
+      "mesh_peer": "4ae2cbcf852968dd871e6c28701413e4b77426f52cad6dd96f977264b056e3a0",
+      "ble_peer": "820a14b0fc6ee409a8f89654a8848f1698ecc6796503f62bdebb530c8ac0f0ca"
+    }
+  },
+  "iterations_per_scenario": 20,
+  "packets_per_protocol": 4000,
+  "allowed_loss": 80,
+  "service_gap_limit_ms": 500,
+  "results": {
+    "ble_154": {
+      "radio_peer": {
+        "role": "radio_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "acknowledged": "4000",
+        "failures": "0",
+        "restarts": "1",
+        "invalid_configuration_rejected": "1",
+        "invalid_length_rejected": "1",
+        "double_owner_rejected": "1",
+        "nonce": "551d341021d05f8d381efa62e58c3021",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_154"
+      },
+      "ble_peer": {
+        "role": "ble_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "reconnects": "1",
+        "write_failures": "0",
+        "nonce": "551d341021d05f8d381efa62e58c3021",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_154"
+      },
+      "dut": {
+        "role": "dut",
+        "iterations": "20",
+        "ble_received": "4000",
+        "radio_received": "4000",
+        "ble_loss": "0",
+        "radio_loss": "0",
+        "ble_corrupt": "0",
+        "radio_corrupt": "0",
+        "ble_restarts": "1",
+        "radio_restarts": "1",
+        "ble_gap_ms": "250",
+        "radio_gap_ms": "16",
+        "starvation": "0",
+        "double_owner_rejected": "1",
+        "nonce": "551d341021d05f8d381efa62e58c3021",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_154"
+      }
+    },
+    "ble_esb": {
+      "radio_peer": {
+        "role": "radio_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "acknowledged": "4000",
+        "failures": "0",
+        "restarts": "1",
+        "invalid_configuration_rejected": "1",
+        "invalid_length_rejected": "1",
+        "double_owner_rejected": "1",
+        "nonce": "d82e15fee84e2ce0db5d2e4632f636b7",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_esb"
+      },
+      "ble_peer": {
+        "role": "ble_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "reconnects": "1",
+        "write_failures": "0",
+        "nonce": "d82e15fee84e2ce0db5d2e4632f636b7",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_esb"
+      },
+      "dut": {
+        "role": "dut",
+        "iterations": "20",
+        "ble_received": "4000",
+        "radio_received": "4000",
+        "ble_loss": "0",
+        "radio_loss": "0",
+        "ble_corrupt": "0",
+        "radio_corrupt": "0",
+        "ble_restarts": "1",
+        "radio_restarts": "1",
+        "ble_gap_ms": "250",
+        "radio_gap_ms": "23",
+        "starvation": "0",
+        "double_owner_rejected": "1",
+        "nonce": "d82e15fee84e2ce0db5d2e4632f636b7",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_esb"
+      }
+    },
+    "ble_mesh": {
+      "mesh_peer": {
+        "role": "mesh_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "acknowledged": "4000",
+        "restarts": "1",
+        "failures": "0",
+        "configuration_retries": "0",
+        "acknowledgment_retries": "8",
+        "nonce": "c9663a3881334cb2bbb0516e324e1fe4",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_mesh"
+      },
+      "ble_peer": {
+        "role": "ble_peer",
+        "iterations": "20",
+        "sent": "4000",
+        "reconnects": "1",
+        "write_failures": "0",
+        "nonce": "c9663a3881334cb2bbb0516e324e1fe4",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_mesh"
+      },
+      "dut": {
+        "role": "dut",
+        "iterations": "20",
+        "ble_received": "4000",
+        "radio_received": "4000",
+        "ble_loss": "0",
+        "radio_loss": "0",
+        "ble_corrupt": "0",
+        "radio_corrupt": "0",
+        "ble_restarts": "1",
+        "radio_restarts": "1",
+        "ble_gap_ms": "157",
+        "radio_gap_ms": "394",
+        "starvation": "0",
+        "nonce": "c9663a3881334cb2bbb0516e324e1fe4",
+        "core": "94f0254499858800b4ced38b1211746b3f2175f8",
+        "scenario": "ble_mesh"
+      }
+    }
+  },
+  "reason": null,
+  "transcript_sha256": "7a08513c53cd35c46a68b5332aa0e8a06fa41e93a3aa4177491cd79b916b0748",
+  "observed_utc": "2026-10-03T02:59:31.518693+00:00"
+}

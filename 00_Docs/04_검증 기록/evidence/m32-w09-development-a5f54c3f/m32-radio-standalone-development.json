@@ -1,0 +1,69 @@
+{
+  "test_ids": [
+    "M32-154-01:primary",
+    "M32-ESB-01:primary"
+  ],
+  "status": "FAIL",
+  "scope": "two_board_standalone_ieee802154_and_esb_contract",
+  "source_clean": false,
+  "identity": {
+    "core": "a5f54c3fb06a9474401ffb50dd6445c751b49c32",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "transmitter": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "adcca713fc023fa7a2d0c29d22b3c7b851185b8570b6cfc126d4480c16bee161",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "90112"
+    },
+    "ptx": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "3b4e77da11e3205afbc767726f89a7d81cb481705978a26734e29daa0ce16bce"
+    },
+    "receiver": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "3ce6ec1ad9bb00948bd7adc9fa795c180f927b76cbbc0e86ae564f74c6515d74",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "90112"
+    },
+    "prx": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "71fb1896c405a1fb39f969676f67d4653c2d249fd4020826f6ce9b31548fd387"
+    }
+  },
+  "iterations": 20,
+  "packet_denominator_per_protocol": 2000,
+  "allowed_loss_packets_per_protocol": 20,
+  "latency_limit_ms": 100,
+  "protocols": {},
+  "reason": "StandaloneRadioFailure: serial line timeout",
+  "transcript_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "observed_utc": "2026-09-29T14:07:29.183634+00:00"
+}

@@ -34,6 +34,8 @@ class M28BlePrivacyControlTests(unittest.TestCase):
                 "-pthread",
                 "-DNUCODE_HOST_STRONG_DEFAULT_HOOKS=1",
                 "-DCONFIG_BT_EXT_ADV=1",
+                "-DCONFIG_BT_EXT_ADV_MAX_ADV_SET=1",
+                "-DCONFIG_BT_ID_MAX=1",
                 "-DCONFIG_BT_OBSERVER=1",
                 "-DCONFIG_BT_PRIVACY=1",
                 "-DCONFIG_BT_RPA_TIMEOUT_DYNAMIC=1",

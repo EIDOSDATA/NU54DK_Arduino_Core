@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W03",
+  "status": "PASS",
+  "source_revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+  "native_build": {
+    "status": "PASS",
+    "scenarios": 2,
+    "evidence": "native-build-summary.json"
+  },
+  "arduino_build": {
+    "status": "PASS",
+    "examples": 11,
+    "source_revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+    "evidence": "../m32-w11-software-012b9c18/software-regression.json"
+  },
+  "host_negative_and_contract": {
+    "status": "PASS",
+    "tests": 17,
+    "commands": [
+      "python tests/host/test_r12_ble_gap.py",
+      "python tests/host/test_m28_ble_links.py",
+      "python tests/host/test_m32_readiness_contract.py",
+      "python tools/bluetooth/m32_contract.py --check --sdk-root C:/ncs/v3.4.0"
+    ]
+  },
+  "functional_hil": {
+    "status": "PASS",
+    "evidence": "m32-timing-feature-01.json",
+    "test_ids": [
+      "M32-SUB-01:primary",
+      "M32-SCA-01:primary",
+      "M32-TIME-01:primary",
+      "M32-FEAT-01:primary"
+    ],
+    "boards": 2,
+    "packets": 2000,
+    "lost_packets": 0,
+    "procedure_iterations_per_role": 20,
+    "feature_samples": 40,
+    "sca_boundary_samples": 20,
+    "maximum_packet_gap_ms": 9,
+    "maximum_procedure_gap_ms": 907,
+    "stopped_roles": 2
+  },
+  "support_boundary": {
+    "sleep_clock_accuracy_update": "unsupported_host_initiator_api",
+    "controller_procedure": true,
+    "host_request_and_report": false,
+    "external_peer_interop": "NOT_RUN"
+  }
+}

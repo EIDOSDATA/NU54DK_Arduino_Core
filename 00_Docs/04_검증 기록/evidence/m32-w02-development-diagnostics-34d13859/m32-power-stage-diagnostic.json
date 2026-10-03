@@ -1,0 +1,88 @@
+{
+  "test_ids": [
+    "M32-PWR-01:primary",
+    "M32-PATH-01:primary"
+  ],
+  "status": "FAIL",
+  "scope": "two_board_power_and_path_loss_twenty_iterations",
+  "source_clean": false,
+  "identity": {
+    "core": "34d13859dfda27c8148a2c8909445d13d94b1359",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "central": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "F:/",
+      "vcom": "COM13",
+      "image_sha256": "0fcd4a6ed18e7afa4d5a4281976600c36370cee8f43b9495507e3c115014831a",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "196608"
+    },
+    "peripheral": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "vcom": "COM10",
+      "image_sha256": "6da4a833528ad735c81902b41750a65caf5942248e0e1523545888ecf5e21b59",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "192512"
+    }
+  },
+  "nonce": "9ee8ca171038a4aebb792dc48aa6b0b8",
+  "iterations": 20,
+  "power_reports": {
+    "central": 0,
+    "peripheral": 0
+  },
+  "power_denominator": 0,
+  "power_range_dbm": {
+    "central": [
+      127,
+      -127
+    ],
+    "peripheral": [
+      127,
+      -127
+    ]
+  },
+  "path_reports": 0,
+  "path_denominator": 60,
+  "path_range_db": [
+    255,
+    0
+  ],
+  "maximum_event_gap_ms": {
+    "power_central": 0.0,
+    "power_peripheral": 0.0,
+    "path": 0.0
+  },
+  "allowed_loss": {
+    "power": 0,
+    "path": 1
+  },
+  "lost_reports": {
+    "power": 40,
+    "path": 60
+  },
+  "reason": "PowerPathExecutionFailure: peripheral target FAIL",
+  "transcript_sha256": "194bc2154515d1ec101cb45549dabac17fbb1aef868d2029058e6671e262e0f5",
+  "observed_utc": "2026-09-28T15:59:44.883793+00:00"
+}

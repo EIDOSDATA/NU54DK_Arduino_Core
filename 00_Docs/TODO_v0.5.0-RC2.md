@@ -12,7 +12,7 @@ RC1 tag·Release·자산·검증 기록과 `0.5.0-RC1` branch는 그 RC2 작업 
 
 ## 1. RC1에서 확인한 문제와 최초 완료 기준
 
-| ID | 문제 | 현재 근거 | RC2 완료 기준 |
+| ID | 문제 | 최초 확인 근거 | RC2 완료 기준 |
 | --- | --- | --- | --- |
 | RC2-UX-01 | 예제별 Feature set 안내 부족 | 공개 예제 113개 중 `.ino`에서 Feature set을 직접 안내하는 것은 실질적으로 4개 | 설치본의 모든 공개 예제가 Arduino IDE에서 바로 확인 가능한 정확한 기본 Feature set을 안내 |
 | RC2-UX-02 | 호환 profile과 기본 권장 profile의 구분 부족 | Channel Sounding은 `adaptive`·`ble` 모두 호환되지만 예제에는 권장값·실험적 대안 설명이 없음 | 기본 권장값, 허용 대안, 실험/전용 여부를 예제와 공통 안내에서 일치시킴 |
@@ -127,11 +127,12 @@ Arduino IDE의 기본 **Verify**에서도 긴 무출력 구간이 없어야 한�
 전체 검증을 생략해 시간을 줄이지 않는다. 동일 exact commit에서 같은 113개 예제를 여러 workflow가
 중복 빌드하는 구조와, 변경 종류와 무관한 과거 제품군 전수 실행을 먼저 제거한다.
 
-최근 성공한 `M31 W08 Windows RC` run `36253017005`의 wall time은 약 57분이다. Package 재현은
+계획 당시 성공한 `M31 W08 Windows RC` run `36253017005`의 wall time은 약 57분이었다. Package 재현은
 약 1분 22초, lifecycle은 약 18분이었고, 8개 설치 예제 shard는 약 48~55분이었다. 각 shard의
-실제 compile 단계만 약 44~49분이므로 setup보다 113개 clean compile이 지배적이다. 현재 main의
-`M12 Reproducible Builds`는 v0.5.0 113개를 다시 단일 Windows job에서 실행하고 v0.1.0~v0.4.0
-제품군도 매 push마다 실행한다. 이 둘을 그대로 유지한 채 runner 수만 늘리지 않는다.
+실제 compile 단계만 약 44~49분이므로 setup보다 113개 clean compile이 지배적이었다. 당시 main의
+`M12 Reproducible Builds`는 v0.5.0 113개를 단일 Windows job에서 중복 실행하고 v0.1.0~v0.4.0
+제품군도 매 push마다 실행했다. 아래는 이를 교정하기 위해 고정한 설계 기준이며, 최종 구현과
+시간 목표 FAIL 수용 결과는 §9·§11에서 구분한다.
 
 ### 개선 원칙
 
@@ -242,8 +243,8 @@ COM, 역할, image hash, command lease와 배타 lock을 다시 결합한다. �
 
 ## 11. 마감과 공개 경계
 
-RC2 구현이 끝나면 변경 영향에 맞는 Host·build·국소 HIL, 설치본 Arduino IDE 확인, 문서와
-evidence를 갱신하고 exact commit을 고정한다. Branch push나 CI 실행은 tag·Release 공개가 아니다.
+RC2 작업에서는 변경 영향에 맞는 Host·build·국소 HIL, 설치본 Arduino IDE 확인, 문서와
+evidence를 구분하고 exact commit을 고정했다. Branch push나 CI 실행은 tag·Release 공개가 아니다.
 2026-09-27 최초 요청에서 사용자는 RC2의 모든 필수 gate가 PASS일 때 `v0.5.0-rc.2` tag·Pre-release·RC catalog
 갱신과 공개 다운로드 smoke를 별도 재확인 없이 수행하도록 승인했다. FAIL 또는 HOLD가 하나라도
 남으면 tag와 Release를 만들지 않는다. 정식 `v0.5.0` stable tag·Release·root catalog는 그 이후에도
@@ -256,7 +257,8 @@ Arduino GUI 환경에서 직접 시험하겠다고 했다. 이에 시간 목표 
 당시 GUI는 사용자 후속 NOT RUN이었으며 기능 PASS로 바꾸지 않는다. 초기 조건부 승인·HOLD·실패 원본은 보존한다.
 최종 source `b2e7a587...`의 M12/Full RC·113예제·package·HIL 결과와 이후 문서/main 검사를 분리한다.
 당시에는 별도 승인 전 정식 stable을 공개하지 않았으며, 이후 승격은 아래 기록을 따른다.
-M32/M33·보류 Host·추가 성능 개발은 자동 재개하지 않는다.
+이 RC2 수용 결정 자체는 M32/M33·보류 Host·추가 성능 개발의 착수 승인이 아니었다.
+이후 M32의 별도 개발·완료 상태는 [v0.6.0 계획](TODO_v0.6.0.md)에서 관리한다.
 [272번 당시 결정](<04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md>)과
 [GUI 체크리스트](<05_릴리스/v0.5.0-rc.2/TESTING.md>)를 따른다.
 

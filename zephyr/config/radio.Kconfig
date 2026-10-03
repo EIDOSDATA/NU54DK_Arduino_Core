@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT
+
+menuconfig NUCODE_RADIO_IEEE802154
+	bool "NUCODE standalone IEEE 802.15.4 radio API"
+	depends on NUCODE_ARDUINO_API
+	depends on NRF_802154_RADIO_DRIVER
+	help
+	  단독 nRF 802.15.4 driver의 ACK, bounded retry, sequence/hash,
+	  cancel, STOP과 수신 buffer 반환 API를 제공합니다.
+
+menuconfig NUCODE_RADIO_ESB
+	bool "NUCODE standalone Enhanced ShockBurst radio API"
+	depends on NUCODE_ARDUINO_API
+	depends on ESB
+	help
+	  단독 ESB PTX/PRX, hardware ACK/retry, sequence/hash,
+	  cancel, STOP과 FIFO 반환 API를 제공합니다.

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "BLOCKED",
+  "scope": "m32_w11_three_board_debug_access_preflight",
+  "source_revision": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+  "source_clean": true,
+  "observed_local": "2026-10-02T22:27:42.8843580+09:00",
+  "transport": "CMSIS-DAP V2",
+  "frequency_hz": 100000,
+  "auto_unlock": false,
+  "register_interpretation": {
+    "dp_idcode": "0x6ba02477",
+    "targetid": "0x201c0289",
+    "ahb_ap_idr": "0x84770001",
+    "ctrl_ap_idr": "0x32880000",
+    "ahb_ap_csw_dbgstatus_bit": 6,
+    "ahb_ap_csw_dbgstatus": 0,
+    "ctrl_ap_reset": "0x00000000",
+    "ctrl_ap_eraseallstatus": "0x00000000",
+    "ctrl_ap_eraseprotect_status": "0x00000000",
+    "ctrl_ap_approtect_status": "0x00000003",
+    "ctrl_ap_approtect_enabled": true,
+    "ctrl_ap_secureapprotect_enabled": true
+  },
+  "boards": {
+    "board_d": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "ahb_ap_csw": "0x43000002",
+      "debug_access": false
+    },
+    "board_e": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "ahb_ap_csw": "0x43000012",
+      "debug_access": false
+    },
+    "board_f": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "ahb_ap_csw": "0x43000002",
+      "debug_access": false
+    }
+  },
+  "non_destructive_attempts": [
+    "normal_attach",
+    "under_reset_attach",
+    "ctrl_ap_soft_reset",
+    "ctrl_ap_hard_reset",
+    "ctrl_ap_pin_reset",
+    "cmsis_dap_target_reset",
+    "vcom_break_target_reset",
+    "vcom_dtr_rts_toggle"
+  ],
+  "destructive_actions": {
+    "ctrl_ap_eraseall": false,
+    "mass_erase": false,
+    "recover": false,
+    "unlock": false,
+    "power_cycle": false
+  },
+  "official_recovery_boundary": "Nordic nRF54L 문서는 외부 debugger가 APPROTECT를 해제하는 경로로 CTRL-AP ERASEALL을 요구한다.",
+  "blocker": "보존 정책상 별도 승인 없는 ERASEALL·recover·unlock·전원 변경을 실행할 수 없으므로 새 image sector flash와 나머지 exact HIL을 시작할 수 없음",
+  "references": [
+    "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/debug.html-access_port_protection",
+    "https://docs.nordicsemi.com/r/bundle/nan_047/page/app/nan_production_programming/checking_approtect_status.html",
+    "https://docs.nordicsemi.com/r/bundle/nan_047/page/app/nan_production_programming/nrf54l/nrf54l_disable_approtect.html"
+  ]
+}

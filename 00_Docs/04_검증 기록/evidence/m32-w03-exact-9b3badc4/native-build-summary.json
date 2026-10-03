@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "source_revision": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "twister_report_sha256": "00ac66c32d7bbab9cced4b465be10fa9c33bb9b973daea59334e20c54f980c56",
+  "builds": [
+    {
+      "scenario": "nucode.m32.ble_timing_hil.central",
+      "role": "central",
+      "status": "build-only-passed",
+      "hex_size": 642042,
+      "hex_sha256": "ce690160c4b0a01d572c37c1ea89f953c0b1aaf53356854a71bda35e534550d0"
+    },
+    {
+      "scenario": "nucode.m32.ble_timing_hil.peripheral",
+      "role": "peripheral",
+      "status": "build-only-passed",
+      "hex_size": 630705,
+      "hex_sha256": "5d09f87a6f1f2164e1dbec521010816ec438cf03f40332b5ce34844365fef295"
+    }
+  ]
+}

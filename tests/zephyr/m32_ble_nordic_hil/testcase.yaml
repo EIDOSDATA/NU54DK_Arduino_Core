@@ -1,0 +1,13 @@
+tests:
+  nucode.m32.ble_nordic_hil.central:
+    build_only: true
+    extra_args: [M32_NORDIC_ROLE=central]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, m32, nordic, hil]
+  nucode.m32.ble_nordic_hil.peripheral:
+    build_only: true
+    extra_args: [M32_NORDIC_ROLE=peripheral]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, m32, nordic, hil]

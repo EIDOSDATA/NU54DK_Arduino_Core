@@ -1,0 +1,12 @@
+{
+  "schema_version": 3,
+  "id": "nucode.ble.mesh",
+  "requires": ["ble"],
+  "capabilities": ["nucode.ble.mesh-api"],
+  "conf": ["mesh-base.conf"],
+  "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
+  "conflicts": ["mesh-stack-owner"],
+  "compatible_profiles": ["adaptive", "ble", "secure_ble_dfu", "coexistence_ble_mesh"]
+}

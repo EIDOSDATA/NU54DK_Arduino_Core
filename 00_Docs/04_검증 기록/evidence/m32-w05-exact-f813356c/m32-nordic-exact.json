@@ -1,0 +1,125 @@
+{
+  "test_ids": [
+    "M32-NORDIC-01:primary",
+    "M32-SYNC-01:primary",
+    "M32-EVENT-01:primary"
+  ],
+  "status": "PASS",
+  "scope": "two_board_nordic_extension_contract",
+  "source_clean": true,
+  "identity": {
+    "core": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "central": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "3ed82e0fc1f8114a35bb499b1b6025fb0bb0fe40bd49e82e9ec0e548ae0b745f",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "208896"
+    },
+    "peripheral": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "6a1bda3c4840b61d717cea0014f582c0a4cc332298770f2123db2f0079a85f2a",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "208896"
+    }
+  },
+  "nonce": "85e0243086604d558b7ca9d5300de142",
+  "iterations": 20,
+  "denominators": {
+    "qos_per_role": 200,
+    "survey_per_role": 20,
+    "anchor_per_role": 1000,
+    "event_per_role": 200,
+    "radio_prepare_per_role": 200
+  },
+  "latency_limits": {
+    "anchor_gap_us": 5000,
+    "event_gap_ms": 5,
+    "llpm_interval_us": 1000
+  },
+  "results": {
+    "central": {
+      "role": "central",
+      "qos": "200",
+      "survey": "20",
+      "anchors": "1000",
+      "events": "200",
+      "prepares": "200",
+      "llpm_interval_us": "1000",
+      "max_anchor_gap_us": "1000",
+      "max_event_gap_ms": "1",
+      "iterations": "20",
+      "overflow_observed": "1",
+      "invalid_llpm_rejected": "1",
+      "invalid_survey_rejected": "1",
+      "invalid_event_task_rejected": "1",
+      "duplicate_reservation_bounded": "1",
+      "disabled_callback_quiet": "1",
+      "projection_wrap_pass": "1",
+      "acl_controller_experimental": "1",
+      "acl_host_transmit_path": "0",
+      "acl_usable": "0",
+      "callback_context": "pass",
+      "nonce": "85e0243086604d558b7ca9d5300de142",
+      "core": "f813356c783cf1d4a5e74f48156c6b4304d4791d"
+    },
+    "peripheral": {
+      "role": "peripheral",
+      "qos": "200",
+      "survey": "20",
+      "anchors": "1000",
+      "events": "200",
+      "prepares": "200",
+      "llpm_interval_us": "1000",
+      "max_anchor_gap_us": "3999",
+      "max_event_gap_ms": "1",
+      "iterations": "20",
+      "overflow_observed": "1",
+      "invalid_llpm_rejected": "0",
+      "invalid_survey_rejected": "1",
+      "invalid_event_task_rejected": "1",
+      "duplicate_reservation_bounded": "1",
+      "disabled_callback_quiet": "1",
+      "projection_wrap_pass": "1",
+      "acl_controller_experimental": "1",
+      "acl_host_transmit_path": "0",
+      "acl_usable": "0",
+      "callback_context": "pass",
+      "nonce": "85e0243086604d558b7ca9d5300de142",
+      "core": "f813356c783cf1d4a5e74f48156c6b4304d4791d"
+    }
+  },
+  "acl_boundary": {
+    "controller_experimental": true,
+    "host_transmit_path": false,
+    "usable": false,
+    "classification": "unsupported_host_transmit_path"
+  },
+  "reason": null,
+  "transcript_sha256": "2a9104a67202b4601c88c595adb963d81d29356dcd0325966b7fa2d2ddf2e75d",
+  "observed_utc": "2026-09-29T15:39:06.392021+00:00"
+}

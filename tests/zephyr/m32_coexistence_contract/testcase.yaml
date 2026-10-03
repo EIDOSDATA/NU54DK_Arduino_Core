@@ -1,0 +1,22 @@
+tests:
+  nucode.m32.coexistence.ble_mesh:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=ble_mesh.conf
+  nucode.m32.coexistence.ble_154:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=ble_154.conf
+  nucode.m32.coexistence.ble_esb:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=ble_esb.conf
+  nucode.m32.coexistence.external_one_wire:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=external.conf
+      - DTC_OVERLAY_FILE=external.overlay

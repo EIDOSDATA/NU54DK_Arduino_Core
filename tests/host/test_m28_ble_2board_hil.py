@@ -229,6 +229,20 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         self.assertEqual("pyocd-sector", sequence)
         self.assertEqual("12288", byte_count)
 
+        with patch.object(ble_pair_hil_common.subprocess, "run", return_value=result) as run:
+            ble_pair_hil_common.flash_image_pyocd(
+                "peripheral",
+                "a" * 32,
+                Path("image.hex"),
+                45.0,
+                cmsis_dap_v1=True,
+            )
+        command = run.call_args.args[0]
+        self.assertEqual("100000", command[command.index("--frequency") + 1])
+        self.assertEqual("attach", command[command.index("--connect") + 1])
+        self.assertIn("cmsis_dap.prefer_v1=true", command)
+        self.assertIn("pyocd_launcher.py", command[2])
+
         arguments = parse_arguments(
             ["--peripheral-board-id", "a" * 32, "--central-board-id", "b" * 32]
         )

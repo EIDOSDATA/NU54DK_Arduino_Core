@@ -1,0 +1,156 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": {
+    "distributor": {
+      "port": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "D:/"
+    },
+    "target_a": {
+      "port": "COM18",
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "E:/"
+    },
+    "target_b": {
+      "port": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "F:/"
+    }
+  },
+  "duration_seconds": 966.25,
+  "failure": "MeshDfuFailure: distributor target FAIL: distribution",
+  "flash_backend": "pyocd-cmsis-dap-v2-exact-sector",
+  "flash_results": {
+    "distributor_base": [
+      "pyocd-sector",
+      "352256"
+    ],
+    "distributor_boot": [
+      "pyocd-sector",
+      "36864"
+    ],
+    "distributor_candidate_bytes": "57344",
+    "target_a_base": [
+      "pyocd-sector",
+      "344064"
+    ],
+    "target_a_boot": [
+      "pyocd-sector",
+      "36864"
+    ],
+    "target_b_base": [
+      "pyocd-sector",
+      "344064"
+    ],
+    "target_b_boot": [
+      "pyocd-sector",
+      "36864"
+    ]
+  },
+  "images": {
+    "candidate": {
+      "name": "zephyr.signed.bin",
+      "sha256": "aaa686c8dc45ab87e65b0ad06d5fc256273c1169dd69ffbd72593a3f78e7d032",
+      "size": 55039,
+      "version": [
+        2,
+        0,
+        0,
+        0
+      ]
+    },
+    "distributor_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "7f23ae99a76e23626029b5892f11ddf85bf24a2bd547015b97850e8aaaaf705c",
+      "size": 350840,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_a_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "b1f9d99a65b239e3d80efb51c33a0fa7e96cbcc3c5f4f3f0c1c315391494ea47",
+      "size": 343551,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_b_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "520260830c64156e72506189a6899df41997aa4e102d6dceae05baa368b205b5",
+      "size": 343551,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "iteration_records": [
+    {
+      "candidate_boots": 2,
+      "iteration": 1,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    }
+  ],
+  "iterations_completed": 1,
+  "mass_erase_or_recover": false,
+  "observed_utc": "2026-10-01T20:30:45.148714+00:00",
+  "raw_probe_identity_persisted": false,
+  "rollback_records": [
+    {
+      "iteration": 1,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "scope": "signed_mesh_dfu_five_iterations_two_targets_and_mcuboot_rollback",
+  "secondary_slot": {
+    "erase_end_exclusive": 1523712,
+    "offset": 794624,
+    "size": 729088
+  },
+  "source_clean": true,
+  "source_revision": "6c8fe51ee6812347478453eca3ddc04ac706ac6b",
+  "status": "FAIL",
+  "test_ids": [
+    "M32-MDFU-01:primary"
+  ],
+  "transcript_sha256": "3be19f1d0212d4cfcb54877398b28a1320860434d37d77b5460892b493ca2235",
+  "trust_public_key_source_sha256": "2e567f16e75c1f0ea609bc4342c04a427b0bed948ff132004dd9d130b590c34f"
+}

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "scope": "m32_w04_ead_hil_build_only",
+  "source_revision": "4af5b15a54aacc9d15f8257e535bbd7bc635b78b",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "build_only": true,
+  "suite_count": 2,
+  "suites": [
+    {
+      "name": "nucode.m32.ble_ead_hil.advertiser",
+      "status": "PASS",
+      "hex_sha256": "9fafe920a8ad0e69ab8f5dd630a0a5879897ff5d432d86eb2c05ee911542a7b4"
+    },
+    {
+      "name": "nucode.m32.ble_ead_hil.scanner",
+      "status": "PASS",
+      "hex_sha256": "b9379facd177c9edb951abb2bd94a5b8c12fcd59d6c4351eaf11b69d60236098"
+    }
+  ],
+  "completed_utc": "2026-09-29T12:45:05.3985540Z"
+}

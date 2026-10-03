@@ -212,7 +212,7 @@ jobs:
           -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
       - name: Verify installed source revisions
         run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
-      - name: Verify representative lifecycle without repeating 113 builds
+      - name: Verify representative lifecycle without repeating 130 builds
         shell: powershell
         run: |
           New-Item -ItemType Directory -Path D:\m31-evidence,D:\m31-lifecycle-cache,D:\t -Force | Out-Null

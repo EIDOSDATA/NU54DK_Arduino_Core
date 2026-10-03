@@ -1,0 +1,72 @@
+{
+  "test_id": "M32-CAP-01",
+  "status": "PASS",
+  "scope": "product_sdc_hci_capability_query_only",
+  "profile": "ble_extended",
+  "source_clean": true,
+  "probe_sha256": "4574ee31f25fe05f154395ea4d8c6aa0583b04a4f7a0ea97fe3d13b05eea8ca0",
+  "volume": "E:/",
+  "vcom": "COM14",
+  "role": "capability_probe",
+  "identity": {
+    "core": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "image_sha256": "a16dad372bf51649e43bdd7f0e4993f478e336942614a450aef63272de675daf",
+  "transcript_sha256": "da4b2b6d86670fb8185e76f9ba7f727cf54cdbff24d2356deeb7d27a01942aa8",
+  "max_page": 1,
+  "controller_bits": {
+    "sca_update": false,
+    "power_control_request": true,
+    "power_change_indication": true,
+    "path_loss_monitor": true,
+    "connection_subrating": true,
+    "connection_subrating_host": true,
+    "channel_classification": false,
+    "advertising_coding_selection": true,
+    "advertising_coding_selection_host": true,
+    "extended_feature_set": true,
+    "frame_space_update": true,
+    "shorter_connection_intervals": true,
+    "shorter_connection_intervals_host": true
+  },
+  "host_config": {
+    "sca_update": true,
+    "power_control_request": true,
+    "power_change_indication": true,
+    "path_loss_monitor": true,
+    "connection_subrating": true,
+    "connection_subrating_host": true,
+    "channel_classification": true,
+    "advertising_coding_selection": true,
+    "advertising_coding_selection_host": true,
+    "extended_feature_set": true,
+    "frame_space_update": true,
+    "shorter_connection_intervals": true,
+    "shorter_connection_intervals_host": true
+  },
+  "resources": {
+    "connections": 2,
+    "peripherals": 1,
+    "adv_sets": 3,
+    "identities": 3,
+    "syncs": 2,
+    "acl_tx": 8,
+    "acl_rx": 8
+  },
+  "raw_le_features_hex": "9d7900007e0300800203000000000000",
+  "probe_registers": {
+    "dp_idcode": "0x6ba02477",
+    "dp_targetid_observed": "0xf0000f40",
+    "ahb_ap_idr": "0x84770001",
+    "ahb_ap_csw": "0x03800052",
+    "ctrl_ap_idr": "0x32880000",
+    "approtect_status": "0x00000000"
+  },
+  "flash_mode": "pyocd-sector-hw-reset",
+  "flash_bytes": "221184",
+  "nonce": "5ce0a6991fd34afd6c649c3693ea46e6",
+  "observed_utc": "2026-09-28T14:03:38.004123+00:00"
+}

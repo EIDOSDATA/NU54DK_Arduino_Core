@@ -1,0 +1,10 @@
+central: M32NOR|1|READY|role=central|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32NOR|1|READY|role=peripheral|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32NOR|1|BEGIN|role=central|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32NOR|1|BEGIN|role=peripheral|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32NOR|1|RESULT|role=central|qos=200|survey=20|anchors=1000|events=200|prepares=200|llpm_interval_us=1000|max_anchor_gap_us=1000|max_event_gap_ms=1|iterations=20|overflow_observed=1|invalid_llpm_rejected=1|invalid_survey_rejected=1|invalid_event_task_rejected=1|duplicate_reservation_bounded=1|disabled_callback_quiet=1|projection_wrap_pass=1|acl_controller_experimental=1|acl_host_transmit_path=0|acl_usable=0|callback_context=pass|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32NOR|1|RESULT|role=peripheral|qos=200|survey=20|anchors=1000|events=200|prepares=200|llpm_interval_us=1000|max_anchor_gap_us=2000|max_event_gap_ms=1|iterations=20|overflow_observed=1|invalid_llpm_rejected=0|invalid_survey_rejected=1|invalid_event_task_rejected=1|duplicate_reservation_bounded=1|disabled_callback_quiet=1|projection_wrap_pass=1|acl_controller_experimental=1|acl_host_transmit_path=0|acl_usable=0|callback_context=pass|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32NOR|1|END|role=central|status=pass|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32NOR|1|END|role=peripheral|status=pass|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32NOR|1|STOPPED|role=central|cleanup=pass|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32NOR|1|STOPPED|role=peripheral|cleanup=pass|nonce=d92a2d614edb375250f9c44ceef7b034|core=94f0254499858800b4ced38b1211746b3f2175f8

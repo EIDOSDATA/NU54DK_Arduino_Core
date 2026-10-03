@@ -1,0 +1,197 @@
+{
+  "test_ids": [
+    "M32-SOAK-01:primary"
+  ],
+  "status": "PASS",
+  "scope": "three_board_bounded_gatt_soak",
+  "source_clean": true,
+  "identity": {
+    "core": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "peripheral": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "D:/",
+      "vcom": "COM5",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "mixed": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM18",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "central": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "F:/",
+      "vcom": "COM3",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "images": {
+    "peripheral": {
+      "sha256": "1ab5213a839d8ece5cbede1254b1dba49deeb8289536e5c6c032c347b8a51f46",
+      "size": 696299,
+      "build": {
+        "core_revision": "a9cb4a6dd7b1",
+        "core_source_sha256": "6cf890609c8d878be11960401ce292c1fca3f39b3ebff93343a2824a44d79e77",
+        "application_source_sha256": "d579b04b8d36d5fee02567c6f5d15976bcce755d4e5d760ff904f2d198b8f752",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "db04b63f9311bc97ac818a94ee5db6e943d0252a060ab64b2094e07a357e15a7",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_variant": "zephyr",
+        "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+        "cxx_compiler": "GNU 14.3.0",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "f60124c478a7865d287a360f82ad08c1be8c861cce81d69986ca76b01b0be17c"
+      },
+      "flash": {
+        "mode": "pyocd-sector-hw-reset",
+        "bytes": "249856"
+      }
+    },
+    "mixed": {
+      "sha256": "3f77a33383099be20aab809b12f061a1a888ec3d1aa30286b4e43c64e10b436b",
+      "size": 707549,
+      "build": {
+        "core_revision": "a9cb4a6dd7b1",
+        "core_source_sha256": "6cf890609c8d878be11960401ce292c1fca3f39b3ebff93343a2824a44d79e77",
+        "application_source_sha256": "d579b04b8d36d5fee02567c6f5d15976bcce755d4e5d760ff904f2d198b8f752",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "db04b63f9311bc97ac818a94ee5db6e943d0252a060ab64b2094e07a357e15a7",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_variant": "zephyr",
+        "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+        "cxx_compiler": "GNU 14.3.0",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "f60124c478a7865d287a360f82ad08c1be8c861cce81d69986ca76b01b0be17c"
+      },
+      "flash": {
+        "mode": "pyocd-sector-hw-reset",
+        "bytes": "253952"
+      }
+    },
+    "central": {
+      "sha256": "152a0accb2d06f7dca39c92f2602c92f9ce272df4e58e6029cacc113f5e1d5b6",
+      "size": 703650,
+      "build": {
+        "core_revision": "a9cb4a6dd7b1",
+        "core_source_sha256": "6cf890609c8d878be11960401ce292c1fca3f39b3ebff93343a2824a44d79e77",
+        "application_source_sha256": "d579b04b8d36d5fee02567c6f5d15976bcce755d4e5d760ff904f2d198b8f752",
+        "board_revision": "fe65f2f0880b",
+        "board_source_sha256": "db04b63f9311bc97ac818a94ee5db6e943d0252a060ab64b2094e07a357e15a7",
+        "ncs_revision": "99553055607b",
+        "zephyr_revision": "bf801e4e3d19",
+        "board": "nrf54l15dk",
+        "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
+        "toolchain_variant": "zephyr",
+        "toolchain_path": "C:/Users/eidos/ncs/toolchains/dcbdc366a1/opt/zephyr-sdk",
+        "cxx_compiler": "GNU 14.3.0",
+        "record_name": "nucode_arduino_core_build.yml",
+        "record_sha256": "f60124c478a7865d287a360f82ad08c1be8c861cce81d69986ca76b01b0be17c"
+      },
+      "flash": {
+        "mode": "pyocd-sector-hw-reset",
+        "bytes": "253952"
+      }
+    }
+  },
+  "duration_seconds": 1800,
+  "packet_denominator_per_link": 10000,
+  "allowed_loss_packets": 100,
+  "observed_loss_packets": 0,
+  "latency_limit_ms": 500,
+  "recovery_timeout_s": 30,
+  "results": {
+    "peripheral": {
+      "role": "peripheral",
+      "transmitted": 0,
+      "received": 10000,
+      "loss": 0,
+      "corrupt": 0,
+      "duplicate": 0,
+      "maximum_gap_ms": 201,
+      "cleanup_ms": 1,
+      "cleanup": "pass"
+    },
+    "mixed": {
+      "role": "mixed",
+      "transmitted": 10000,
+      "received": 10000,
+      "loss": 0,
+      "corrupt": 0,
+      "duplicate": 0,
+      "maximum_gap_ms": 250,
+      "cleanup_ms": 0,
+      "cleanup": "pass"
+    },
+    "central": {
+      "role": "central",
+      "transmitted": 10000,
+      "received": 0,
+      "loss": 0,
+      "corrupt": 0,
+      "duplicate": 0,
+      "maximum_gap_ms": 0,
+      "cleanup_ms": 0,
+      "cleanup": "pass"
+    }
+  },
+  "reason": null,
+  "safety": {
+    "cmsis_dap": "v2-only",
+    "auto_unlock": false,
+    "erase": "sector",
+    "reset": "hardware",
+    "automatic_recover": false,
+    "mass_erase": false
+  },
+  "transcripts": {
+    "peripheral": {
+      "name": "soak.peripheral.transcript.log",
+      "size": 811,
+      "sha256": "04927a0a8cf1b61670c5652d14848e010af644796389b5bf0ae4dbf51137d467"
+    },
+    "mixed": {
+      "name": "soak.mixed.transcript.log",
+      "size": 794,
+      "sha256": "da9393172fe548c23bba49ca1fdae4ce3812ab728510b274bb20041037f2845a"
+    },
+    "central": {
+      "name": "soak.central.transcript.log",
+      "size": 705,
+      "sha256": "cf7aec467b5bcc5889e7be5a19164c6bd4f4a4ee2ff5a3e6d55e5585c0751869"
+    }
+  },
+  "observed_utc": "2026-10-02T12:47:03.172811+00:00"
+}

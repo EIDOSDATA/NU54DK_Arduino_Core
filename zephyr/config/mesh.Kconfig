@@ -1,0 +1,17 @@
+config NUCODE_BLE_MESH
+	bool "NUCODE Bluetooth Mesh API 활성화"
+	default n
+	depends on NUCODE_ARDUINO_API
+	depends on BT_MESH
+	help
+	  PB-ADV/PB-GATT provisionee·provisioner, foundation 역할과 표준
+	  Generic, Sensor, Light, Time, Scene, Scheduler client model을 제공합니다.
+
+config NUCODE_BLE_MESH_EVENT_QUEUE_SIZE
+	int "NUCODE Mesh event queue 항목 수"
+	default 16
+	range 4 64
+	depends on NUCODE_BLE_MESH
+	help
+	  Bluetooth callback에서 Sketch의 poll 문맥으로 전달하는 provisioning과
+	  model status snapshot의 고정 개수입니다.

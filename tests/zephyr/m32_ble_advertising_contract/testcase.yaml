@@ -1,0 +1,10 @@
+tests:
+  nucode.m32.ble.advertising.contract:
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags:
+      - nucode
+      - m32
+      - bluetooth

@@ -21,7 +21,14 @@ class BleGapTests(unittest.TestCase):
                        '-DCONFIG_BT_OBSERVER=1',
                        '-DCONFIG_BT_DEVICE_NAME_MAX=32', '-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24',
                        '-DCONFIG_NUCODE_BLE_SCAN_RESULT_QUEUE_SIZE=8', '-DCONFIG_BT_USER_PHY_UPDATE=1',
-                       '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1']
+                       '-DCONFIG_BT_SETTINGS=1', '-DCONFIG_BT_SMP=1',
+                       '-DCONFIG_BT_TRANSMIT_POWER_CONTROL=1',
+                       '-DCONFIG_BT_PATH_LOSS_MONITORING=1',
+                       '-DCONFIG_BT_CTLR_CONN_RSSI=1',
+                       '-DCONFIG_BT_SUBRATING=1', '-DCONFIG_BT_CENTRAL=1',
+                       '-DCONFIG_BT_SHORTER_CONNECTION_INTERVALS=1',
+                       '-DCONFIG_BT_LE_EXTENDED_FEAT_SET=1',
+                       '-DCONFIG_BT_FRAME_SPACE_UPDATE=1', '-DCONFIG_BT_SCA_UPDATE=1']
             for path in ['tests/host/ble_stubs', 'libraries/NUCODE_BLE/src']:
                 command += ['-I', str(ROOT / path)]
             command += [str(ROOT / path) for path in ['libraries/NUCODE_BLE/src/internal/NUCODE_BLE_Stack.cpp',
@@ -39,8 +46,10 @@ class BleGapTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
             for scenario in ['lifecycle', 'late_callback', 'reconnect', 'recycled', 'queue_overflow',
                              'reentrant', 'pending_end', 'scan_copy', 'driver_failure',
-                             'settings_failure', 'advertising', 'multi_link', 'generation',
-                             'end_two_links', 'role_callback_guard']:
+                             'settings_failure', 'settings_preloaded', 'advertising',
+                             'multi_link', 'generation',
+                             'end_two_links', 'role_callback_guard', 'power_control',
+                             'timing_features']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))

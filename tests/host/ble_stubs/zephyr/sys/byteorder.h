@@ -3,6 +3,11 @@
 
 #include <cstdint>
 
+inline std::uint16_t sys_cpu_to_le16(std::uint16_t value)
+{
+    return value;
+}
+
 inline void sys_put_le16(std::uint16_t value, std::uint8_t *output)
 {
     output[0] = static_cast<std::uint8_t>(value);

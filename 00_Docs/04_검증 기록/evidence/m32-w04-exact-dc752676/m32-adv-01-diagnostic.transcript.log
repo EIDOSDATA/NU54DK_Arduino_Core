@@ -1,0 +1,8 @@
+advertiser_a: M32ADV|1|READY|role=advertiser_a|core=dc752676960aefe105e8e1cd9b139760cc1dc406
+advertiser_b: M32ADV|1|READY|role=advertiser_b|core=dc752676960aefe105e8e1cd9b139760cc1dc406
+scanner: M32ADV|1|READY|role=scanner|core=dc752676960aefe105e8e1cd9b139760cc1dc406
+advertiser_a: M32ADV|1|BEGIN|role=advertiser_a|nonce=20bc2e0c525c9478cc8cccea8c03cbb9|core=dc752676960aefe105e8e1cd9b139760cc1dc406
+advertiser_b: M32ADV|1|BEGIN|role=advertiser_b|nonce=20bc2e0c525c9478cc8cccea8c03cbb9|core=dc752676960aefe105e8e1cd9b139760cc1dc406
+scanner: M32ADV|1|BEGIN|role=scanner|nonce=20bc2e0c525c9478cc8cccea8c03cbb9|core=dc752676960aefe105e8e1cd9b139760cc1dc406
+scanner: M32ADV|1|TRACE|role=scanner|callbacks=889|raw=230|sid=255|length=31|first=3|extended=0|nonce=20bc2e0c525c9478cc8cccea8c03cbb9|core=dc752676960aefe105e8e1cd9b139760cc1dc406
+scanner: M32ADV|1|FAIL|role=scanner|stage=diagnostic_complete|code=0|nonce=20bc2e0c525c9478cc8cccea8c03cbb9|core=dc752676960aefe105e8e1cd9b139760cc1dc406

@@ -1,0 +1,1524 @@
+{
+    "environment":{
+        "os":"Windows",
+        "zephyr_version":"ncs-v3.4.0",
+        "toolchain":"zephyr/gnu",
+        "commit_date":"2026-07-01T15:51:10+02:00",
+        "run_date":"2026-10-02T12:09:40+00:00",
+        "options":{
+            "testsuite_root":[
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_capability",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_capability",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_power_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_power_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_power_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_timing_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_timing_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_timing_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_advertising_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_ead_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_ead_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_advertising_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_advertising_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_advertising_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_privacy_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_privacy_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_privacy_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_nordic_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_nordic_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_scan_initiate_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_resource_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_resource_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_resource_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_ble_nordic_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_management_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_management_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_management_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_management_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_update_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_update_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_update_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_update_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_dfu_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_dfu_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_dfu_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_mesh_dfu_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_radio154_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_radio154_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_radio154_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_esb_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_esb_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_esb_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_contract",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_coexistence_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_regression_soak_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_regression_soak_hil",
+                "C:/Users/eidos/GitHub/NU54DK_Arduino_Core/tests/zephyr/m32_regression_soak_hil"
+            ],
+            "platform":[
+                "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
+            ],
+            "test":[
+                "nucode.m32.ble_capability.baseline_sdc",
+                "nucode.m32.ble_capability.extended_sdc",
+                "nucode.m32.ble_power_contract",
+                "nucode.m32.ble_power_hil.central",
+                "nucode.m32.ble_power_hil.peripheral",
+                "nucode.m32.ble_timing_contract",
+                "nucode.m32.ble_timing_hil.central",
+                "nucode.m32.ble_timing_hil.peripheral",
+                "nucode.m32.ble.advertising.contract",
+                "nucode.m32.ble_ead_hil.advertiser",
+                "nucode.m32.ble_ead_hil.scanner",
+                "nucode.m32.ble_advertising_hil.advertiser_a",
+                "nucode.m32.ble_advertising_hil.advertiser_b",
+                "nucode.m32.ble_advertising_hil.scanner",
+                "nucode.m32.ble_privacy_hil.identity_a",
+                "nucode.m32.ble_privacy_hil.identity_b",
+                "nucode.m32.ble_privacy_hil.peer",
+                "nucode.m32.ble_nordic_hil.central",
+                "nucode.m32.ble_nordic_hil.peripheral",
+                "nucode.m32.ble.scan_initiate.contract",
+                "nucode.m32.ble.resource.c1p1",
+                "nucode.m32.ble.resource.c2p0",
+                "nucode.m32.ble.resource.c0p2",
+                "nucode.m32.ble.nordic.contract",
+                "nucode.m32.mesh.contract",
+                "nucode.m32.mesh_hil.provisioner",
+                "nucode.m32.mesh_hil.node_a",
+                "nucode.m32.mesh_hil.node_b",
+                "nucode.m32.mesh_management_contract",
+                "nucode.m32.mesh_management_hil.client",
+                "nucode.m32.mesh_management_hil.server",
+                "nucode.m32.mesh_management_hil.target",
+                "nucode.m32.mesh_update_contract",
+                "nucode.m32.mesh_update_hil.blob_client",
+                "nucode.m32.mesh_update_hil.target_a",
+                "nucode.m32.mesh_update_hil.target_b",
+                "nucode.m32.mesh_dfu_hil.distributor",
+                "nucode.m32.mesh_dfu_hil.target_a",
+                "nucode.m32.mesh_dfu_hil.target_b",
+                "nucode.m32.mesh_dfu_hil.candidate",
+                "nucode.m32.radio154_contract",
+                "nucode.m32.radio154_hil.transmitter",
+                "nucode.m32.radio154_hil.receiver",
+                "nucode.m32.esb_contract",
+                "nucode.m32.esb_hil.ptx",
+                "nucode.m32.esb_hil.prx",
+                "nucode.m32.coexistence.ble_mesh",
+                "nucode.m32.coexistence.ble_154",
+                "nucode.m32.coexistence.ble_esb",
+                "nucode.m32.coexistence.external_one_wire",
+                "nucode.m32.coexistence_hil.ble_154.dut",
+                "nucode.m32.coexistence_hil.ble_154.radio_peer",
+                "nucode.m32.coexistence_hil.ble_154.ble_peer",
+                "nucode.m32.coexistence_hil.ble_esb.dut",
+                "nucode.m32.coexistence_hil.ble_esb.radio_peer",
+                "nucode.m32.coexistence_hil.ble_esb.ble_peer",
+                "nucode.m32.coexistence_hil.ble_mesh.dut",
+                "nucode.m32.coexistence_hil.ble_mesh.mesh_peer",
+                "nucode.m32.coexistence_hil.ble_mesh.ble_peer",
+                "nucode.m32.regression_soak_hil.peripheral",
+                "nucode.m32.regression_soak_hil.mixed",
+                "nucode.m32.regression_soak_hil.central"
+            ],
+            "build_only":true,
+            "board_root":[
+                "C:\\Users\\eidos\\ncs\\v3.4.0\\zephyr/boards",
+                "C:\\Users\\eidos\\ncs\\v3.4.0\\zephyr/subsys/testsuite/boards",
+                "C:/Users/eidos/ncs/v3.4.0/nrf\\.\\boards",
+                "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\board_package\\NU54DK_Zephyr_DTS\\boards"
+            ],
+            "jobs":4,
+            "detailed_test_id":true,
+            "outdir":"C:\\d",
+            "short_build_path":true,
+            "extra_args":[
+                "BOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+                "EXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+                "USE_CCACHE=0"
+            ]
+        }
+    },
+    "testsuites":[
+        {
+            "name":"nucode.m32.ble_capability.baseline_sdc",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_capability",
+            "run_id":"2c6fa72e726306827b2304642c4c173a",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"77.62",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_capability.baseline_sdc",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_capability.extended_sdc",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_capability",
+            "run_id":"f450aaefdcb43e9ff15eb943adf47a39",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"210.47",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_capability.extended_sdc",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_power_contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_power_contract",
+            "run_id":"e7547b69517c255005a8dae22670199a",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"209.61",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_power_contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_power_hil.central",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_power_hil",
+            "run_id":"bab183256a63dcf1b7547cc837b93aa2",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"211.74",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_power_hil.central",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_power_hil.peripheral",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_power_hil",
+            "run_id":"d1b571087f6d39291f742dede8acfaba",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"212.13",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_power_hil.peripheral",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_timing_contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_timing_contract",
+            "run_id":"7a44d6c46113011a2ee876357b4e8f16",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"199.35",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_timing_contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_timing_hil.central",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_timing_hil",
+            "run_id":"93a886b24ec00250da8fb8c2afdb2605",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"201.80",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_timing_hil.central",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_timing_hil.peripheral",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_timing_hil",
+            "run_id":"439b07805d4955caf249f4ad9ee27a40",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"209.81",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_timing_hil.peripheral",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble.advertising.contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_advertising_contract",
+            "run_id":"82c17b5e8132afa71aa970541b8033ab",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"212.54",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble.advertising.contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_ead_hil.advertiser",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_ead_hil",
+            "run_id":"cf6abb111635c8cccaaa65faf07fe1cf",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"186.99",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_ead_hil.advertiser",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_ead_hil.scanner",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_ead_hil",
+            "run_id":"ee528d1dfe746fa58944ec3eba6123a3",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"189.59",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_ead_hil.scanner",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_advertising_hil.advertiser_a",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_advertising_hil",
+            "run_id":"7baa2e7549c6004e6687e52f428ecd5b",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"197.97",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_advertising_hil.advertiser_a",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_advertising_hil.advertiser_b",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_advertising_hil",
+            "run_id":"194559a168e735841aef65177a807d20",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"198.23",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_advertising_hil.advertiser_b",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_advertising_hil.scanner",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_advertising_hil",
+            "run_id":"9717513cca78d42f661e567e7b272553",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"197.75",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_advertising_hil.scanner",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_privacy_hil.identity_a",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_privacy_hil",
+            "run_id":"6baacf4a1f19640c973d37f3b53e60d6",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"205.69",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_privacy_hil.identity_a",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_privacy_hil.identity_b",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_privacy_hil",
+            "run_id":"351f6aa4ae14fcb84411188709113e89",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"219.51",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_privacy_hil.identity_b",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_privacy_hil.peer",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_privacy_hil",
+            "run_id":"4f54e5547b9952e4c893a3ca24b9dc57",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"219.42",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_privacy_hil.peer",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_nordic_hil.central",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_nordic_hil",
+            "run_id":"0541db744a568cbffa559268cf81b962",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"213.96",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_nordic_hil.central",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble_nordic_hil.peripheral",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_nordic_hil",
+            "run_id":"f6039a39fa19b6792e115502e6c8def9",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"219.60",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble_nordic_hil.peripheral",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble.scan_initiate.contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_scan_initiate_contract",
+            "run_id":"3127924eb089442202b242e1a303932a",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"238.62",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble.scan_initiate.contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble.resource.c1p1",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_resource_contract",
+            "run_id":"c753c9b15289d6b8e7c72d18f3520954",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"243.34",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble.resource.c1p1",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble.resource.c2p0",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_resource_contract",
+            "run_id":"3c35609bd00003bafe0f2865f2e1c14b",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"211.05",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble.resource.c2p0",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble.resource.c0p2",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_resource_contract",
+            "run_id":"cc24dc36c4390c676e6957bed3040a5f",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"227.10",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble.resource.c0p2",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.ble.nordic.contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_ble_nordic_contract",
+            "run_id":"d7377df4602329599d3242d7839dbcac",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"215.27",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.ble.nordic.contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh.contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_contract",
+            "run_id":"017a00be23d3a014178a26c2142b0e25",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"235.12",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh.contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_hil.provisioner",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_hil",
+            "run_id":"35efd56f9cca677aec8b2ce918797244",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"218.30",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_hil.provisioner",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_hil.node_a",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_hil",
+            "run_id":"177f32e1a5c025c9d9d21b5fdcc988aa",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"214.82",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_hil.node_a",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_hil.node_b",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_hil",
+            "run_id":"867a3f328efd5a4de42a916a44d65e85",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"203.16",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_hil.node_b",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_management_contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_management_contract",
+            "run_id":"0698b4862f1ab577958d5b593230349b",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"208.20",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_management_contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_management_hil.client",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_management_hil",
+            "run_id":"a9c50bc183f1b025d57e305f22bd7d8c",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"226.91",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_management_hil.client",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_management_hil.server",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_management_hil",
+            "run_id":"ec5495f4d9f7ff24270a9ed8c8bc9048",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"255.68",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_management_hil.server",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_management_hil.target",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_management_hil",
+            "run_id":"a1dcee5ed1f6adc3e5f51d69c27a3a3d",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"243.84",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_management_hil.target",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_update_contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_update_contract",
+            "run_id":"891f34779fda1431e2de51895f92481f",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"239.35",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_update_contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_update_hil.blob_client",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_update_hil",
+            "run_id":"fd9e893938a3b81481ee4b545bf52076",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"403.83",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_update_hil.blob_client",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_update_hil.target_a",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_update_hil",
+            "run_id":"652463e04b9a35f093f24510ece4c47d",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"389.36",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_update_hil.target_a",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_update_hil.target_b",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_update_hil",
+            "run_id":"ac68b2dd8c650e69c55c811428ef621d",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"385.72",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_update_hil.target_b",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_dfu_hil.distributor",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_dfu_hil",
+            "run_id":"8232f62937b451afd780dc8491e34ae1",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"363.82",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_dfu_hil.distributor",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_dfu_hil.target_a",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_dfu_hil",
+            "run_id":"8c7de72fa87824496615f956c6213af7",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"367.25",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_dfu_hil.target_a",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_dfu_hil.target_b",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_dfu_hil",
+            "run_id":"51befe61d24fd3db1006bd159af262b9",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"281.61",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_dfu_hil.target_b",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.mesh_dfu_hil.candidate",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_mesh_dfu_hil",
+            "run_id":"d5d62f2a8163c032a4e314fd095380c1",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"253.39",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.mesh_dfu_hil.candidate",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.radio154_contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_radio154_contract",
+            "run_id":"c6360b016539eef81309feefb9e27244",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"145.23",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.radio154_contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.radio154_hil.transmitter",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_radio154_hil",
+            "run_id":"e9c668566b360e3efc12c487df976462",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"145.24",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.radio154_hil.transmitter",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.radio154_hil.receiver",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_radio154_hil",
+            "run_id":"220c208526d38547250b5d87b2b8ab79",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"180.11",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.radio154_hil.receiver",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.esb_contract",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_esb_contract",
+            "run_id":"22ce5c40ccec031a76c254f999425ea8",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"174.46",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.esb_contract",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.esb_hil.ptx",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_esb_hil",
+            "run_id":"9861e85612efb7037593ff97c99776cf",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"178.84",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.esb_hil.ptx",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.esb_hil.prx",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_esb_hil",
+            "run_id":"4a6634be355d330609f3f47a89dcbc1b",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"183.28",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.esb_hil.prx",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence.ble_mesh",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_contract",
+            "run_id":"363dae0dfabf7d5b9cc0034b41b3a52b",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"211.70",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence.ble_mesh",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence.ble_154",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_contract",
+            "run_id":"252699a801c2cc7dbfbb1a0fbfc8e8e5",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"212.18",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence.ble_154",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence.ble_esb",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_contract",
+            "run_id":"2b8e4de010e964092fcbac5fd4359aa4",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"206.94",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence.ble_esb",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence.external_one_wire",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_contract",
+            "run_id":"c2743a88dac33439fa269592f60c052f",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"209.36",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence.external_one_wire",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_154.dut",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"113ac20dadd4054697c985f5330a1c6e",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"184.61",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_154.dut",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_154.radio_peer",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"ed3f34169dbc5f5d29a9447cfd451789",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"182.29",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_154.radio_peer",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_154.ble_peer",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"5adcafd8f8ca415717ad333152b5c90a",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"176.67",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_154.ble_peer",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_esb.dut",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"cee363a18e058caf794d04f6a36f48c3",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"183.74",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_esb.dut",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_esb.radio_peer",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"7526549fe85ab52308fd57d0870fa761",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"183.79",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_esb.radio_peer",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_esb.ble_peer",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"0a0cb248accab4ae3f1b0696df69afbc",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"197.56",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_esb.ble_peer",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_mesh.dut",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"c717695cb86d8dac89a6d638f7594281",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"204.00",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_mesh.dut",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_mesh.mesh_peer",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"f18a643e687825d891da9f81338c9ac5",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"204.28",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_mesh.mesh_peer",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.coexistence_hil.ble_mesh.ble_peer",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_coexistence_hil",
+            "run_id":"63a7fe2e74853c2df4825ba9d6d91e56",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"172.72",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.coexistence_hil.ble_mesh.ble_peer",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.regression_soak_hil.peripheral",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_regression_soak_hil",
+            "run_id":"8c77e8e6575e5cbc0f92ca0513f66751",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"173.95",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.regression_soak_hil.peripheral",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.regression_soak_hil.mixed",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_regression_soak_hil",
+            "run_id":"d177e5d83b25df0c08ca66cbd70164d8",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"174.18",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.regression_soak_hil.mixed",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        },
+        {
+            "name":"nucode.m32.regression_soak_hil.central",
+            "arch":"arm",
+            "platform":"nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+            "path":"..\\..\\..\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m32_regression_soak_hil",
+            "run_id":"60df578a436267a8587d3f459b5071b4",
+            "runnable":false,
+            "retries":0,
+            "toolchain":"zephyr/gnu",
+            "status":"not run",
+            "reason":null,
+            "execution_time":"0.00",
+            "build_time":"175.47",
+            "testcases":[
+                {
+                    "identifier":"nucode.m32.regression_soak_hil.central",
+                    "execution_time":"0.00",
+                    "status":"not run",
+                    "reason":"Test was built only"
+                }
+            ]
+        }
+    ]
+}

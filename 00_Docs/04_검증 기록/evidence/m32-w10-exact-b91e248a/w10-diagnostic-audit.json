@@ -1,0 +1,46 @@
+{
+  "status": "FAIL_DIAGNOSED",
+  "source_revision": "b91e248ab7a35779e1d571e3019bee14c5831c15",
+  "failed_test": "M32-COEX-01:ble_154",
+  "reason": "DUT READY timeout after nrf_802154 request queue assertion",
+  "probe_transport": "CMSIS-DAP v2",
+  "destructive_actions": false,
+  "target_registers": {
+    "pc": "0x00030bcc",
+    "lr": "0x00030bd5",
+    "msp": "0x2000a108",
+    "psp": "0x2000c1e0",
+    "xpsr": "0x2100000b",
+    "cfsr": "0x00000000",
+    "hfsr": "0x00000000",
+    "dfsr": "0x00000001"
+  },
+  "exception_frame": {
+    "r0": "0x00000004",
+    "r1": "0x00000014",
+    "r2": "0x00000000",
+    "r3": "0x00000004",
+    "r12": "0x00000000",
+    "lr": "0x0002f71d",
+    "pc": "0x0002f112",
+    "xpsr": "0x21000000"
+  },
+  "symbols": {
+    "0x00030bcc": "arch_system_halt",
+    "0x0002f112": "nrf_802154_assert_handler",
+    "0x0002f71d": "nrf_802154_request_cca_cfg_update/swi_cca_cfg_update"
+  },
+  "configuration_delta": {
+    "missing": "CONFIG_NRF_802154_TEMPERATURE_UPDATE=n",
+    "affected_roles": [
+      "ble_154/dut",
+      "ble_154/radio_peer"
+    ],
+    "reference_configuration": "tests/zephyr/m32_radio154_hil/prj.conf"
+  },
+  "upstream_references": [
+    "https://devzone.nordicsemi.com/f/nordic-q-a/127840/802-15-4-stack-unusable-due-to-immediate-crashes-stemming-from-unsound-swi-usage-in-driver-code/569778",
+    "https://docs.nordicsemi.com/r/bundle/ps_nrf54l15/page/swi.html-topic",
+    "https://docs.zephyrproject.org/latest/boards/nordic/nrf54l15dk/doc/index.html"
+  ]
+}

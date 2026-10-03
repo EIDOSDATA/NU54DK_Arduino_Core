@@ -1,0 +1,59 @@
+{
+  "status": "FAIL_DIAGNOSED",
+  "observed_utc": "2026-10-02T01:01:58.561237Z",
+  "identity": {
+    "core": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "scenario": "ble_mesh",
+  "role": "mesh_peer",
+  "failure": {
+    "target_fault": "UsageFault: Stack overflow (context area not valid)",
+    "stacked_pc": "0x00046eaa",
+    "stacked_lr": "0x000377fd",
+    "stacked_r12": "0x0002fa29",
+    "symbolized": {
+      "stacked_pc": "sx_cm_load_mask at cmmask.c:15",
+      "stacked_lr": "sx_hw_reserve at cmdma_hw.c:74",
+      "stacked_r12": "nrf_rram_read at soc_flash_nrf_rram.c:294"
+    }
+  },
+  "debugger": {
+    "transport": "CMSIS-DAP V2",
+    "connect_mode": "attach",
+    "reset_performed": false,
+    "auto_unlock": false,
+    "initial_state": "RUNNING",
+    "halted_state": "HALTED",
+    "pc": "0x00043d66",
+    "lr": "0x00043d6f",
+    "psp": "0x20009b80",
+    "msp": "0x2000b480",
+    "xpsr": "0x21000006",
+    "cfsr": "0x00000000",
+    "hfsr": "0x00000000",
+    "pc_symbol": "arch_system_halt at fatal.c:30",
+    "resumed_after_read": true
+  },
+  "stack_map": {
+    "owner": "Bluetooth Mesh extended advertiser workqueue",
+    "section": "adv_ext.c.0",
+    "start": "0x20009b68",
+    "size_bytes": 2048,
+    "observed_psp": "0x20009b80",
+    "distance_from_guard_bytes": 24
+  },
+  "root_cause": {
+    "category": "mesh_advertiser_stack_exhaustion_during_cracen_crypto",
+    "detail": "nRF54L 기본 2048-byte Mesh advertiser stack에서 provisioning 암호 경로가 guard까지 24 byte를 남기고 넘쳤다."
+  },
+  "remediation": {
+    "bt_mesh_adv_stack_size": 4000,
+    "bt_mesh_settings_workq_stack_size": 1700,
+    "system_workqueue_stack_size": 4800,
+    "main_stack_size": 8192,
+    "basis": "기존 M32 Mesh HIL에서 검증한 동일 resource profile"
+  }
+}

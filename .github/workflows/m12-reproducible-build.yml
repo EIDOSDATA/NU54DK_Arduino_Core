@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0]
+        group: [v0.1.0, v0.2.0, v0.3.0, v0.4.0, v0.5.0, v0.6.0]
     container:
       image: ghcr.io/nrfconnect/sdk-nrf-toolchain@sha256:f1dca44678dae83e37404e33f369786f5b2ffe2ed497eec1815f66c3a868bace
     defaults:
@@ -79,6 +79,12 @@ jobs:
       - name: Verify v0.5.0 stable release contract
         if: matrix.group == 'v0.4.0'
         run: python3 tools/release/v050_release.py contract
+      - name: Verify M32 Bluetooth and radio readiness contract
+        if: matrix.group == 'v0.6.0'
+        run: >-
+          python3 tools/bluetooth/m32_contract.py
+          --check
+          --sdk-root "$NCS_CI_WORKSPACE"
       - name: Build ${{ matrix.group }} Zephyr suites
         run: >-
           python3 tools/ci/run_zephyr_build.py
@@ -113,7 +119,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0]
+        group: [v0.1.0, v0.2.0, v0.3.0-ble, v0.3.0-compat, v0.5.0, v0.6.0]
     env:
       NUCODE_NCS_INSTALL_ROOT: D:\ncs
       NUCODE_NCS_ROOT: D:\ncs\v3.4.0

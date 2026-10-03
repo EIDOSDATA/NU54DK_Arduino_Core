@@ -12,32 +12,26 @@ v0.4.0의 T01~T25와 합의한 HIL 범위도 완료했으며, 이 문서는 재�
 | M29 ATT/GATT/L2CAP | W01~W08 완료, 10/10 test ID와 Windows/Intel GATT 상호운용 PASS | [149번 기록](<../../../00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md>) |
 | M30 Security/Profile/DFU | W01~W08 완료, 10/10 test ID PASS. 실제 전원 차단 12/12 | [161번 완료 기록](<../../../00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>) |
 | M31 ISO/LE Audio/DF/CS | W01~W08 완료(8/8), W03 profile 11/11·W04 DF·W05 CS·W06 자원/회귀·W07 설치 예제/HIL·W08 Windows RC 준비 PASS | [M31 TODO](../../../00_Docs/TODO_M31.md) · [W08 완료](<../../../00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) |
+| M32 최신 LE·Mesh·다중 protocol | W01~W12 완료(12/12); `94f02544…` exact family 12/12·signed MDFU·1,800초 soak와 W12 정합성 감사 PASS | [M32 TODO](../../../00_Docs/TODO_M32.md) · [현재 재개 지점](../../../00_Docs/HANDOFF.md) |
 
-M28~M31의 채택 기능은 공개 후보 `v0.5.0-rc.1`에 포함됐으며 공개 다운로드·설치 smoke도
-[268번 기록](<../../../00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>)에서 완료했습니다.
-이 기능·시험 범위는 정식 v0.5.0에 승격됐습니다. v0.4.1과 RC1/RC2의 당시 판정은 역사로 보존합니다.
-메모리 최적화 P0~P2와 W04~W08을 마감한 뒤 `0.5.0-RC2`의 사용자 경험 교정을 완료했습니다.
-RC2 exact source `b2e7a587ba6fde31e033dc21008d7084bd6e631b` package는 sector flash 1회와
-UART ready를 통과했고 다중 probe 미선택은 `E_PROBE_AMBIGUOUS`로 flash 전에 거부했습니다.
-원시 UID는 공개하지 않으며 mass erase·recover·unlock을 사용하지 않았습니다. 후속 실제 Arduino IDE
-GUI Blink 연속 Upload도 [273번](<../../../00_Docs/04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>)에서
-통과했고 해당 runtime PM 교정은 정식 v0.5.0에 포함됐습니다. 불변 공개 RC2 archive에는 이 후속 교정이
-없으므로 새 설치는 [v0.5.0 stable 안내](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)를 따릅니다.
-정식 source·공개 smoke는 [274번](<../../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>),
-과거 RC2 exact 결과·시간 목표 FAIL·GUI 전체 HOLD/NOT RUN은
-[271번](<../../../00_Docs/04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>)에 구분합니다.
-W06은 독립 ISO·Audio·DF·CS image의 자원·
-수명주기와 M19~M30 회귀이며 네 기능 전체 동시 실행을 요구하지 않습니다. Ubuntu/macOS의
-실물 Host gate는 해당 OS를 추가할 후속 릴리스로 이관하고 HOST-W04~W08 보류를 유지합니다.
-M32·M33은 [v0.6.0 계획](../../../00_Docs/TODO_v0.6.0.md)에 배정했으며 기존 세 Host 계획·OS별 최종
-gate를 유지합니다. 버전 배정은 구현·HIL 완료나 Host 재개 승인이 아니며 추가 OS 지원도 확정하지 않습니다.
+M32는 미공개 v0.6.0 개발 범위이며 M33은 0/8 미착수입니다. HOST-W04~W08은 사용자 보류를
+유지하고 Ubuntu/macOS 실물 gate는 해당 OS를 지원하는 후속 릴리스에서 판정합니다.
+NCS v3.4.0 pin을 유지하며 [v0.7.0](../../../00_Docs/TODO_v0.7.0.md)의 SDK 3.4.1 전환은
+별도 0/6 미착수 작업입니다. 현재 보드 mapping·접근성·image는 새 실기 직전에 다시 확인합니다.
 
-P0·P1·P2는 완료했습니다. P2의 지원 범위 오류·최악 부하, stack/heap 최종 크기,
-동일 조건 Nordic native FLASH/RAM 비교 세 축은
-[262번](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>)에 기록합니다.
-고정 NCS v3.4.0 제품 SDC의 DF IQ RX는 `UNSUPPORTED`·범위 제외입니다.
-CS 간헐 loss/counter gap과 SDC 내부 high-water 비노출을 추가 gate로 두지 않습니다.
-과거 실패·HOLD 원본은 보존하고, 지원 기능의 유효 결과·양측 STOP·fault·복구 검사는 유지합니다.
+| 완료 증거 | source·결과와 보존 경계 |
+| --- | --- |
+| M32 BLOB | `40e4c46b…`에서 UART 결과·세 역할 STOP PASS. 앞선 target B 결과 수집 FAIL은 보존 |
+| M32 W11 | clean `94f02544…`: native 62/62, CI 8 job, family 12/12, signed MDFU 10/10, 1,800초 soak PASS. Privacy 최초 `identity_b session_timeout` FAIL과 같은 SHA·image의 허용된 1회 재실행 PASS를 구분. [286번](<../../../00_Docs/04_검증 기록/286_M32_W11_software_회귀와_HIL_soak_blocker.md>) |
+| M32 software checkpoint | clean `a9cb4a6d…`의 Arduino 74/74·Host 1,689/1,689는 별도 source의 결과. W12 마감은 [287번](<../../../00_Docs/04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>) |
+| v0.5.0 RC·stable | RC1 공개 smoke는 [268번](<../../../00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md>). RC2 `b2e7a587ba6fde31e033dc21008d7084bd6e631b`의 sector flash·UART ready PASS, 다중 probe 거부와 시간 목표 FAIL·GUI HOLD/NOT RUN은 [271번](<../../../00_Docs/04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md>)에 보존. 이후 GUI 연속 Upload 교정은 [273번](<../../../00_Docs/04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>), 정식 공개는 [274번](<../../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
+| M31 P0~P2 | 오류·최악 부하, stack/heap 최종 크기, 동일 조건 Nordic native FLASH/RAM 비교 완료. [262번](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+
+W11 당시 세 보드의 AHB debug가 열려 있어 명시적으로 승인된 ERASEALL도 필요하지 않았으며,
+ERASEALL·recover·unlock은 실행하지 않았습니다. 제품 SDC DF IQ RX는 `UNSUPPORTED`입니다.
+CS 간헐 loss/counter gap과 SDC 내부 high-water 비노출은 추가 gate가 아니지만 유효 결과·양측
+STOP·fault·복구 검사는 유지합니다. M31 W06은 독립 image별 회귀이며 ISO·Audio·DF·CS 전체를
+한 image에서 동시에 실행한 결과가 아닙니다.
 
 빠르게 찾기: [완료한 S/U 결선과 U 최소 4신호](T13_PLAN.md) · [오류 복구](T13_RECOVERY.md) ·
 [기존 공개 System OFF 검증](<../../../00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md>) ·
@@ -56,6 +50,7 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | 찾을 내용 | 절 |
 | --- | --- |
 | 공통 실행 경계 | [실행 원칙](#실행-원칙) |
+| M32 최신 LE·Mesh·공존·회귀 | [완료 근거와 실행기](#m32-최신-lemesh공존과-회귀) |
 | M31 ISO·Audio·DF·CS·P2 | [완료 근거와 실행기](#m31-isoaudiodfcs와-메모리-계측) |
 | 온보드 GPIO·버튼 | [M14 신규 핀](#m14-신규-핀-hil), [AC-01 loopback](#ac-01-p25p26-gpio-loopback-hil) |
 | 온보드 system | [M15 CI artifact](#m15-공식-ci-artifact-계약), [M15 System OFF](#m15-system-off-결합-hil) |
@@ -121,6 +116,11 @@ Arduino compile test와 분리하며, 장치가 없는 CI에서 PASS로 추정�
 | `p2_cs_peer_loss_memory_run.py` | 256-step 첫 raw 전 reflector reset, initiator disconnect·자동 재연결·유효 raw 20개·메모리·STOP 판정 | SWD CPU reset이며 물리 전원 차단 아님. [262번 기록](<../../../00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | `p2_df_connectionless_rx_run.py` | 과거 LL connectionless IQ와 beacon의 timeout/fault·STOP 분리 진단 | IQ 0·수신 fault를 보존. **P2 범위 제외·반복 실행 금지**. [259번 지원 경계](<../../../00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>) |
 | `m31_w07_hil_campaign.py` | W07 clean 설치 image의 preflight·ISO·Audio·DF·CS 역할 재배치, case별 lease·배타 lock·익명 evidence | NU54DK 3대, exact sector flash·`auto_unlock=false`; ISO를 마지막에 실행해 세 역할 STOP. [266번 기록](<../../../00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md>) |
+| `m32_ble_capability.py` / `m32_ble_capability_run.py` | M32 baseline·extended capability와 exact revision strict 검증 | NU54DK 1대씩, CMSIS-DAP V2 UART |
+| `m32_power_path_run.py` / `m32_timing_feature_run.py` / `m32_advertising_run.py` / `m32_privacy_run.py` / `m32_ead_run.py` / `m32_nordic_extension_run.py` | Power/path·timing·ADV·identity/privacy·EAD·Nordic 확장 기능 HIL | 역할별 NU54DK 2~3대, exact image·nonce·negative·STOP |
+| `m32_mesh_run.py` / `m32_mesh_management_run.py` / `m32_mesh_update_run.py` / `m32_mesh_dfu_run.py` | Mesh 기반·1.1 관리·BLOB·signed MDFU strict 검증 | NU54DK 3대, MDFU는 MCUboot+signed image·RRAM settings clear 검증 |
+| `m32_standalone_radio_run.py` / `m32_coexistence_run.py` | IEEE 802.15.4·ESB 단독과 세 내부 공존 조합 검증 | NU54DK 3대, packet·negative·cleanup |
+| `m32_regression_soak_run.py` / `m32_regression_closure.py` | 1,800초 유한 soak와 12-family exact evidence closure | NU54DK 3대; closure는 14개 raw JSON의 clean SHA·test ID를 장치 재조작 없이 검사 |
 | `test_m7_*.py` | 실제 장치 없이 HIL protocol/parser를 검증 | 없음 |
 | `test_m14_pin_hil.py` | M14 수동 동작 protocol·증적의 fail-closed 경계를 검증 | 없음 |
 | `test_m15_auto.py` | M15 자동 protocol과 Linux producer/Windows consumer provenance를 검증 | 없음 |
@@ -155,6 +155,23 @@ T12 PWM capture의 초기 240조건은 [97번](<../../../00_Docs/04_검증 기�
 - 실기 PASS는 해당 commit, artifact hash와 fixture 조건을 검증 기록에 연결합니다.
 - M15 운영 절차에서는 고정된 NCS Ubuntu container를 사용하는 clean GitHub Actions build
   artifact만 사용합니다. 로컬 Windows build를 M15 검증 증적으로 대체하지 않습니다.
+
+## M32 최신 LE·Mesh·공존과 회귀
+
+상세 역할·image·분모·허용된 재시도와 후속 NOT RUN은 [M32 TODO](../../../00_Docs/TODO_M32.md)와
+[readiness](../../../variants/nu54dk/m32-ble-readiness.json)를 따릅니다. 완료한 실행을 재현할 때는
+해당 evidence의 full source SHA에서 도구·image·build record를 함께 준비합니다. main의 squash
+commit을 원래 HIL source로 대신 기록하지 않습니다.
+
+| 범위 | 실행기 | 증거 진입점 |
+| --- | --- | --- |
+| Mesh BLOB·signed DFU | [BLOB](m32_mesh_update_run.py) · [MDFU](m32_mesh_dfu_run.py) | [W08 완료·진단](<../../../00_Docs/04_검증 기록/294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md>) |
+| 최소 radio·허용 공존 | [단독 radio](m32_standalone_radio_run.py) · [공존](m32_coexistence_run.py) | [W09](<../../../00_Docs/04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md>) · [W10](<../../../00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md>) |
+| 회귀·soak·증거 결합 | [soak](m32_regression_soak_run.py) · [closure](m32_regression_closure.py) | [W11](<../../../00_Docs/04_검증 기록/286_M32_W11_software_회귀와_HIL_soak_blocker.md>) · [W12](<../../../00_Docs/04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>) |
+
+최신 LE 기능별 실행기는 위 [실행기 목록](#실행기-목록)에 있습니다. 장치를 조작하지 않는
+closure 검사는 기존 raw evidence의 clean SHA·test ID·수치를 대조하며 새 물리 PASS를 만들지 않습니다.
+외부 flash·외부 1-wire·외부 peer·확장 topology의 미검증 범위는 내부 세 보드 PASS와 구분합니다.
 
 ## M31 ISO·Audio·DF·CS와 메모리 계측
 
@@ -462,7 +479,9 @@ Windows EATT·robust caching을 이 결과에서 추정하지 않는다. 최종 
 
 `m15_auto.py`와 `m15_system_off.py`의 운영 입력은
 `.github/workflows/m12-reproducible-build.yml`이 exact commit에서 생성한
-`m12-zephyr-build-<40자리 commit>` artifact입니다. artifact를 다운로드한 Windows checkout도
+`v0.2.0` matrix job의 `m12-zephyr-v0.2.0-<40자리 commit>` artifact입니다. 과거 기록의
+`m12-zephyr-build-<40자리 commit>`는 당시 이름이며 현행 다운로드 이름과 구분합니다.
+Artifact를 다운로드한 Windows checkout도
 같은 commit이어야 하며 Core, M15 application, board package와 runner가 사용하는
 `m14_pin_hil.py`, `m6_serial_echo.py`가 모두 clean이어야 합니다. Runner는 revision·source
 digest와 HEX 실행 전후 불변성을 fail-closed로 검사하지만 GitHub run의 서명이나 attestation
@@ -480,7 +499,7 @@ M14 로컬 build/HIL은 기존대로 실제 working-tree byte를 검증합니다
 ```powershell
 Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
 $CoreRoot = (Get-Location).Path
-$ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-build artifact>"
+$ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-v0.2.0 artifact>"
 $Python = "C:\ncs\toolchains\dcbdc366a1\opt\bin\python.exe"
 $Commit = git -C $CoreRoot rev-parse HEAD
 $AutoHex = Join-Path $ArtifactRoot `
@@ -879,7 +898,7 @@ wake는 결합 HIL PASS 또는 API FAIL로 판정하지 않으며, SWD가 격리
 ```powershell
 Set-Location "<NU54DK_Arduino_Core 저장소 경로>"
 $CoreRoot = (Get-Location).Path
-$ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-build artifact>"
+$ArtifactRoot = "<다운로드해 압축을 푼 m12-zephyr-v0.2.0 artifact>"
 $WakeHex = Join-Path $ArtifactRoot `
   "twister\nrf54l15dk_nrf54l15_cpuapp_nu54dk\zephyr_gnu\nucode.m15.wake\m15_wake\zephyr\zephyr.hex"
 ```

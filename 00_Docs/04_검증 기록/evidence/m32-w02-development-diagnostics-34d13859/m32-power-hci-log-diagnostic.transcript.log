@@ -1,0 +1,7 @@
+central: M32PWR|1|READY|role=central|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|READY|role=peripheral|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|BEGIN|role=central|nonce=6c5f955459eb201faf00585cf9a99028|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|BEGIN|role=peripheral|nonce=6c5f955459eb201faf00585cf9a99028|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: LOG [00:00:02.331,258] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+central: LOG [00:00:46.164,995] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+peripheral: M32PWR|1|FAIL|role=peripheral|stage=remote_power|code=-5|nonce=6c5f955459eb201faf00585cf9a99028|core=34d13859dfda27c8148a2c8909445d13d94b1359

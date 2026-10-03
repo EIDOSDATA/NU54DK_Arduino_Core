@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W10",
+  "status": "PASS",
+  "source_revision": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+  "source_clean": true,
+  "native_build": {
+    "status": "PASS",
+    "roles": 9,
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "functional_hil": {
+    "status": "PASS",
+    "evidence": "m32-coexistence.json",
+    "test_ids": [
+      "M32-COEX-01:ble_154",
+      "M32-COEX-01:ble_esb",
+      "M32-COEX-01:ble_mesh"
+    ],
+    "boards": 3,
+    "scenarios": 3,
+    "iterations_per_scenario": 20,
+    "packets_per_protocol": 4000,
+    "lost_packets": 0,
+    "corrupt_packets": 0,
+    "starvation_events": 0,
+    "restarts_per_protocol": 1,
+    "maximum_ble_gap_ms": 151,
+    "maximum_radio_gap_ms": 124,
+    "stopped_roles": 9,
+    "mass_erase_or_recover": false
+  },
+  "scenario_results": {
+    "ble_154": {
+      "ble_received": 4000,
+      "radio_received": 4000,
+      "ble_gap_ms": 151,
+      "radio_gap_ms": 20
+    },
+    "ble_esb": {
+      "ble_received": 4000,
+      "radio_received": 4000,
+      "ble_gap_ms": 151,
+      "radio_gap_ms": 24
+    },
+    "ble_mesh": {
+      "ble_received": 4000,
+      "radio_received": 4000,
+      "ble_gap_ms": 151,
+      "radio_gap_ms": 124,
+      "configuration_retries": 0,
+      "acknowledgment_retries": 0
+    }
+  },
+  "support_boundary": {
+    "external_one_wire_physical": "NOT_RUN",
+    "external_peer_interop": "NOT_RUN",
+    "development_blocker": false,
+    "release_blocker": false
+  }
+}

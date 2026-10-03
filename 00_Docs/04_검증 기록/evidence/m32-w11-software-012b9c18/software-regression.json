@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W11",
+  "source_revision": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+  "environment": {
+    "host": "Windows",
+    "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "toolchain_bundle": "dcbdc366a1"
+  },
+  "zephyr_native_build": {
+    "runner": "tools/ci/run_zephyr_build.py",
+    "group": "v0.6.0",
+    "expected_targets": 23,
+    "passed_targets": 23,
+    "failed_targets": 0,
+    "elapsed_s": 1498.72,
+    "windows_short_build_path": true,
+    "status": "PASS"
+  },
+  "arduino_build": {
+    "runner": "tests/arduino-cli/run_smoke.py",
+    "expected_examples": 74,
+    "passed_examples": 74,
+    "failed_examples": 0,
+    "groups": [
+      {
+        "id": "m32_link_timing_advertising_nordic",
+        "expected": 37,
+        "passed": 37,
+        "status": "PASS"
+      },
+      {
+        "id": "m32_mesh",
+        "expected": 12,
+        "passed": 12,
+        "status": "PASS"
+      },
+      {
+        "id": "m32_mesh_management",
+        "expected": 13,
+        "passed": 13,
+        "status": "PASS"
+      },
+      {
+        "id": "m32_mesh_update",
+        "expected": 4,
+        "passed": 4,
+        "status": "PASS",
+        "signing_key": "ephemeral_not_preserved"
+      },
+      {
+        "id": "m32_radio",
+        "expected": 4,
+        "passed": 4,
+        "status": "PASS"
+      },
+      {
+        "id": "m32_coexistence",
+        "expected": 4,
+        "passed": 4,
+        "status": "PASS"
+      }
+    ],
+    "status": "PASS"
+  },
+  "host_regression": {
+    "source_revision": "3f3eeac358f01fe630f80c28a80de37ea77f2f5b",
+    "command": "python -m unittest discover -s tests/host -p test_*.py",
+    "tests_run": 1614,
+    "passed": 1614,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1,
+    "elapsed_s": 642.271,
+    "status": "PASS"
+  },
+  "hil": {
+    "M32-REG-01": "NOT_RUN",
+    "M32-SOAK-01": "NOT_RUN",
+    "reason": "연결된 CMSIS-DAP probe의 DP/AP 접근 실패로 image와 role을 안전하게 확정할 수 없음",
+    "board_mutation_performed": false
+  },
+  "overall_status": "SOFTWARE_PASS_HIL_NOT_RUN"
+}

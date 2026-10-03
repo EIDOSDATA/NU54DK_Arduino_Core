@@ -1,0 +1,26 @@
+{
+  "work_id": "M32-W02",
+  "status": "PASS",
+  "source_revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+  "source_clean_at_build_and_hil": true,
+  "checks": {
+    "host_contract_and_negative_tests": "PASS",
+    "native_contract_and_pair_builds": "PASS_3_OF_3",
+    "full_v0_6_0_target_group": "PASS_5_OF_5",
+    "arduino_examples": "PASS_6_OF_6",
+    "power_report_hil": "PASS_40_OF_40",
+    "path_loss_hil": "PASS_60_OF_60",
+    "cleanup_stop_confirmation": "PASS_2_OF_2",
+    "raw_probe_uid_absent": "PASS",
+    "sector_flash_auto_unlock_false": "PASS",
+    "external_peer_interop": "NOT_RUN_NON_BLOCKING"
+  },
+  "evidence": {
+    "manifest": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/w02-manifest.json",
+    "functional_hil": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/m32-power-path-exact-9a7d0351.json",
+    "target_subset": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/power-build-summary.json",
+    "target_group": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/v060-build-summary.json",
+    "arduino": "00_Docs/04_검증 기록/evidence/m32-w02-exact-9a7d0351/arduino-build-summary.json"
+  },
+  "next_work": "M32-W03"
+}

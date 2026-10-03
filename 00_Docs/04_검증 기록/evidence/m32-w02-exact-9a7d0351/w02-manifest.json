@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W02",
+  "status": "PASS",
+  "source_revision": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "toolchain_bundle": "dcbdc366a1",
+  "artifacts": [
+    {
+      "path": "arduino-build-summary.json",
+      "sha256": "12c4ef032c6c0968dc22c29b8b31492d76cd582f5331dee174eeccbb233336be"
+    },
+    {
+      "path": "central-build.log",
+      "sha256": "b42f2999b8d15549909f31e2291a0b3b21dd677da38867be03278da57baf3034"
+    },
+    {
+      "path": "contract-build.log",
+      "sha256": "dd657a441dabdbc39428d6576323be9603bea860521885f21714a3c57cd02749"
+    },
+    {
+      "path": "m32-power-path-exact-9a7d0351.json",
+      "sha256": "17ccc5f03012815b678ae73bbf6e1e77c465cd813acc230efd434b159e9151a5"
+    },
+    {
+      "path": "m32-power-path-exact-9a7d0351.transcript.log",
+      "sha256": "6b75f9043a34d670bc1d47ab9deedef32d68f459e540e8dcdad5a74339705ebf"
+    },
+    {
+      "path": "peripheral-build.log",
+      "sha256": "b2dde77dd8625b7a1652acd51f2097352b7eabd1b363439f8118c1cefde5130a"
+    },
+    {
+      "path": "power-build-summary.json",
+      "sha256": "300ba78d712aa3e51cba0d4a427cc140e4fbcb1ec2a527d715db10cd818bcc27"
+    },
+    {
+      "path": "power-build-twister.json",
+      "sha256": "0dee2d46eac547a0e6578c833296169eeae77866485dbf9639eddba96318c524"
+    },
+    {
+      "path": "v060-build-summary.json",
+      "sha256": "0abd5be0d6b1e0c3b0d8f430e6028887a469fdff4682e06eaf6b8a0eda62109d"
+    },
+    {
+      "path": "v060-build-twister.json",
+      "sha256": "70874877cfe23b664b9ccd8fb606b1ecc90111f0da0d5f5b255b67a9603c4f87"
+    }
+  ],
+  "functional_result": {
+    "power_reports": 40,
+    "power_lost": 0,
+    "path_reports": 60,
+    "path_lost": 0,
+    "maximum_power_event_gap_ms": 281.0,
+    "maximum_path_event_gap_ms": 125.0,
+    "callback_context": "main_thread",
+    "cleanup": "STOP_confirmed"
+  }
+}

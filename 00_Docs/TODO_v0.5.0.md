@@ -7,7 +7,7 @@ v0.5.0 M31·RC1/RC2·정식 공개를 완료했다. 이 문서는 제품선의 �
 M30-W08 `M30-POWER-01`은 네 지점 × 3회 실제 전원 차단 12/12를 통과했고 HOST-W01~HOST-W03도
 완료했다. M31도 W01~W08 8/8을 완료했다. W03 LE Audio 11/11, W04 Direction Finding,
 W05 Channel Sounding, W06 자원·수명주기·M19~M30 회귀, W07 설치 예제 49/49·3보드 역할 HIL,
-W08 Windows RC 준비와 공개 `v0.5.0-rc.1` 설치 smoke를 닫았다. M32·M33은 미착수**다.
+W08 Windows RC 준비와 공개 `v0.5.0-rc.1` 설치 smoke를 닫았다. M32·M33은 후속 v0.6.0 범위**다.
 mobile/desktop 전체 상호운용과 Bluetooth qualification은 별도 상태다.
 
 **2026-09-21 사용자 결정: v0.5.0은 M31 완료 후 Windows 10/11 x64로 릴리스한다.**
@@ -37,14 +37,16 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 
 공개 RC1 이후 RC2의 교정·변경 영향 검증과 사용자 Arduino GUI 연속 Upload 확인을 완료했다.
 성능 목표 FAIL 원본을 보존한 채 별도 승인으로 정식 v0.5.0 stable에 승격했다.
-**HOST-W04~HOST-W08은 사용자 지시로 계속 보류**하며 M32·M33도 자동 착수하지 않는다.
+**HOST-W04~HOST-W08은 사용자 지시로 계속 보류**한다. 후속 M32는 별도 지시로 개발했으며
+W01~W12 **12/12를 완료**했다. [M32 TODO](TODO_M32.md)에 개발 증거와 제한을 보존하고,
+다음 기능 작업인 M33-W01의 착수 기준은 [HANDOFF](HANDOFF.md)에서 관리한다.
 
 | 정보 | 단일 원본 |
 | --- | --- |
 | M28~M45 순서·전체 상태 | [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>) |
 | BLE 기능군별 목표·완료 조건 | [경쟁 마일스톤](<01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md>) |
 | v0.5.0 완료 범위·stable 공개 결과 | 이 문서와 [274번 공개 기록](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
-| v0.6.0 M32·M33과 후속 버전 배정 | [v0.6.0 계획](TODO_v0.6.0.md) · [276번 결정](<04_검증 기록/276_v0.6.0_후속_버전_배정과_문서_동기화.md>) |
+| v0.6.0 M32·M33과 후속 버전 배정 | [v0.6.0 계획](TODO_v0.6.0.md) · [293번 현재 결정](<04_검증 기록/293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md>) · [276번 이전 결정](<04_검증 기록/276_v0.6.0_후속_버전_배정과_문서_동기화.md>) |
 | 재개 복구·Adafruit 개선 과제의 배치 | [개정 실행 순서](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>) |
 | M28 API·자원·시험 계약 | [M28 착수 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) |
 | M28 기계 판정 원본 | [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json) |
@@ -65,7 +67,7 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 
 ## 1. 다음 착수 순서
 
-### 현행 순서 — 2026-09-21 릴리스 분리와 2026-09-28 버전 배정
+### 현행 순서 — M32 완료 후 M33 착수
 
 사용자 목표는 **고정 NCS v3.4.0에서 nRF54L15가 할 수 있는 Bluetooth 기능과 예제를 NU54DK의
 Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 wrapper/direct/profile/template 중
@@ -76,7 +78,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 | 트랙 | 작업 분모·현재 완료 | 다음 구현과 역할 |
 | --- | --- | --- |
 | M31 / v0.5.0 | **8/8 완료, stable 공개** | 메모리 최적화 P0~P2, 기능·회귀·예제/HIL, Windows RC1/RC2와 정식 `v0.5.0` 공개 smoke 완료 |
-| M32 / v0.6.0 | **0/12** | W01~W05 최신 LE/Nordic, W06~W08 Mesh/1.1/DFU, W09~W10 단독 radio/공존, W11~W12 회귀·마감 |
+| M32 / v0.6.0 | **12/12 완료, 미공개** | W08 BLOB·signed MDFU, W10 공존, W11 exact 회귀/soak, W12 정합성 감사와 후속 인계 완료 |
 | M33 / v0.6.0 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 후속 Host·RC·공개 |
 | Host | **3/8, 보류** | HOST-W01~HOST-W03 완료. 재개 후 HOST-W04 prerequisite·HOST-W05 path/cache부터 진행 |
 
@@ -133,11 +135,15 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 | M29 EATT | Zephyr host `BT_EATT`는 `EXPERIMENTAL` | 기본 OFF의 `NUCODE_BLE_EATT`, experimental opt-in으로 구현. 암호화·2 bearer 부하와 통합 회귀 PASS; 안정 API로 승격하지 않음 |
 | M31 방향탐지 | nRF54L15는 고정 NCS v3.4.0에서 Experimental·AoA 송신 전용. 제품 SDC IQ RX·AoD 미지원 | IQ RX는 P2 범위 밖. TX·미지원 경계를 문서/예제/원장에 일치시키고 W04 변경 영향을 검증. LL 진단을 제품 대안으로 승격하지 않음 |
 | M31 Audio 확장 | W03의 11개 profile/data 하위 작업을 공개 Arduino 예제와 보드 HIL로 완료 | [214번](<04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)의 역할별 적용성·한계 유지. 외장 audio·상용 peer 실물은 사용자 후속 NOT RUN |
-| M32-A 최신 LE | 고정 SDC의 power/path loss·subrating·SCA·frame space·shorter interval·extended feature set 및 Nordic 확장 | M28의 기존 6개 capability PASS와 구분해 W01~W05에 신규 구현·예제·negative 배정 |
-| M32-A EAD/coding·자원 | EAD Host source·광고 coding 설정, nRF54L15용 multi-set/identity 예제 존재 | EAD/coding은 적용 build·runtime 확인 전 candidate; 1 advertising set 기본값과 확장 preset 분리 |
-| M32-B Mesh 1.1 | Remote Provisioning·SAR·Opcode Aggregator·Large Composition·Private Beacon/Proxy·Solicitation·Subnet Bridge source 존재 | node/model 역할·RRAM/RAM·BLOB/DFU/Distribution과 함께 W06~W08에서 검증 |
-| M32 공존 | 802.15.4/ESB와 BLE 병행시험에는 동작하는 단독 radio 경로가 먼저 필요 | M32 안에서 최소 검증용 기반·단독 TX/RX를 확보하고, M38/M39는 공개 API·예제·일반 제품화 확장으로 연결 |
+| M32-A 최신 LE | 고정 SDC의 power/path loss·subrating·SCA·frame space·shorter interval·extended feature set 및 Nordic 확장 | W01~W05의 적용 구현·예제·negative·HIL 완료. SCA Host 요청 API 부재와 Flushable ACL의 unsupported/HOLD는 별도 제한으로 유지 |
+| M32-A EAD/coding·자원 | EAD Host source·광고 coding 설정, nRF54L15용 multi-set/identity 예제 존재 | W04 ADV·PRIV·EAD build·runtime·HIL 완료. 1 advertising set 기본값과 확장 preset의 실제 상한을 구분하며 미공개 개발 범위로 유지 |
+| M32-B Mesh 1.1 | Remote Provisioning·SAR·Opcode Aggregator·Large Composition·Private Beacon/Proxy·Solicitation·Subnet Bridge source 존재 | W06~W08 완료. BLOB 10/10회와 signed MDFU 두 target 10/10 배포 PASS; 확장 topology·외부 flash·외부 peer 실물은 별도 NOT RUN |
+| M32 공존 | 최소 802.15.4·ESB 단독 경로와 BLE+Mesh/802.15.4/ESB 세 내부 조합 | W09 단독·W10 조합별 HIL 완료. 외부 1-wire 실물은 NOT RUN; M38/M39에서 일반 제품화·API·예제를 확장 |
 | M33 외부 ecosystem·진단 | Fast Pair·ANCS/AMS·HCI/DTM 예제별 peer/credential/transport 전제 존재 | template/direct 제공, 외부 행 NOT RUN 명시; BR/EDR·nRF54L15 비대상 nrf_dm는 비적용 근거 기록 |
+
+M32 행은 미공개 v0.6.0 개발 결과다. 공개 stable v0.5.0의 지원 기능으로 소급하지 않으며,
+기능별 source·시험·제한은 [M32 readiness](../variants/nu54dk/m32-ble-readiness.json)를 따른다.
+M33 행은 **0/8 미착수 계획**으로 구현·검증 완료를 뜻하지 않는다.
 
 정적 근거는 NCS checkout의 `zephyr/subsys/bluetooth/host/Kconfig` (`BT_SIGNING`),
 `zephyr/subsys/bluetooth/host/Kconfig.gatt` (`BT_EATT`),
@@ -188,7 +194,8 @@ Buffered NUS·PWM pool·별도 편의 API는 M30/M33 필수 구현에 합치지 
 [별도 개선 작업](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)으로 검증한다.
 BLE role-budget ARF-01은 M32-W04로 통합해 기본 2-link 및 확장 역할 preset과 한 번 검증한다.
 독립 ARF의 배포 버전은 별도 착수 gate에서 확정한다. M 번호·주제는 유지하며,
-2026-09-28 승인에 따라 M34~M37은 v0.7.0, M38~M41은 v0.8.0, M42~M45는 v0.9.0으로 배정한다.
+2026-10-01 사용자 결정에 따라 [v0.7.0](TODO_v0.7.0.md)은 NCS 3.4.1 전체 전환만 수행한다.
+기존 M 번호·기능은 보존하고 M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0으로 옮긴다.
 
 ## 5. 장비와 정량 판정 기준
 
@@ -246,7 +253,7 @@ v0.4.0의 범위 제외는 그대로 보존한다.
 ## 6. 결과·공개 규칙
 
 - M28~M31의 채택 기능·Host·target·필수 HIL·문서 인계와 공개 RC1/RC2 검증을 완료했다.
-  M32·M33은 미착수이며 정식 v0.5.0 stable 공개는 완료했다.
+  정식 v0.5.0 stable 공개는 완료했다. 후속 M32/M33 진행은 v0.6.0 TODO에서 별도로 관리한다.
 - 구현·Host·build·실기·상호운용·공개 결과를 분리하고 exact source/profile·조건·raw log를 연결한다.
 - 적용 가능한 필수 기능은 증거가 있어야 완료한다. 기능 제외·보증 범위 축소·SDK 교체가 필요하면
   별도 범위 결정으로 기록하고, 조용히 삭제하거나 성공으로 바꾸지 않는다.

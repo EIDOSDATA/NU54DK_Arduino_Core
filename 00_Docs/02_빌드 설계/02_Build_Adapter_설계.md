@@ -16,6 +16,10 @@ Build Adapter는 Arduino의 전처리·library discovery lifecycle을 보존하�
 본문의 기본 계약은 stable v0.5.0이며 §4.1·§4.2의 확장을 포함한다.
 패키지별 현재 상태와 설치 경로는 [v0.5.0 stable 안내](../05_릴리스/v0.5.0/README.md)를 따른다.
 
+후속 [v0.7.0](../TODO_v0.7.0.md)은 NCS 3.4.1 전체 SDK 전환 전용이다. 기존 recipe·profile·예제의
+호환성과 build/cache/package 정합화를 검증하며 신규 기능이나 M36의 layout·transport 확장은 포함하지 않는다.
+현재 NCS v3.4.0 pin과 제품 기능 경계는 실제 전환 작업 전까지 유지한다.
+
 - `platform.txt`
 - `tools/nu54-builder/nu54-builder.cmd`
 - `tools/nu54-builder/src/nu54_builder.py`
@@ -255,7 +259,7 @@ v0.3.0 RC3에서 도입해 v0.5.0에서도 유지하는 기본 메모리 계약�
 maximum size `729088` byte를 선택한다. 기본 loaderless 단일 image profile과 구분하며,
 image·layout·서명 정책을 식별하는 별도 manifest·cache·upload 검증을 적용한다.
 
-`v0.7.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
+`v0.8.0` M36은 M30에서 확정한 최소 계약을 여러 layout·update transport로 확장하고
 hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
 제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
 M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단 12/12를 완료했고 M36은 미착수다.

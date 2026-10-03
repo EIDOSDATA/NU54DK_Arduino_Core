@@ -1,0 +1,22 @@
+blob_client: M32BLOB|1|READY|role=blob_client|provisioned=1|cdb_node_slots=3|cdb_local_slots=1|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a: M32BLOB|1|READY|role=target_a|provisioned=0|cdb_node_slots=3|cdb_local_slots=1|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b: M32BLOB|1|READY|role=target_b|provisioned=0|cdb_node_slots=3|cdb_local_slots=1|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:02.565,599] [1;33m<wrn> bt_mesh_blob_cli: BLOB xfer already cancelled[0m
+target_a: M32BLOB|1|CLEARED|role=target_a|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b-raw: [00:00:01.243,426] [1;33m<wrn> bt_mesh_blob_cli: BLOB xfer already cancelled[0m
+target_b: M32BLOB|1|CLEARED|role=target_b|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:03.968,412] [1;33m<wrn> bt_mesh_blob_cli: BLOB xfer already cancelled[0m
+blob_client: M32BLOB|1|CLEARED|role=blob_client|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client: M32BLOB|1|BEGIN|role=blob_client|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a: M32BLOB|1|BEGIN|role=target_a|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b: M32BLOB|1|BEGIN|role=target_b|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b-raw: [00:00:04.186,338] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000000 already exists (desync between mesh and PSA ITS)[0m
+target_b-raw: [00:00:05.241,831] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000001 already exists (desync between mesh and PSA ITS)[0m
+blob_client-raw: [00:00:08.584,697] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000004 already exists (desync between mesh and PSA ITS)[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=0|p=0|b=0|e=0|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:12.058,482] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000000 already exists (desync between mesh and PSA ITS)[0m
+target_a-raw: [00:00:12.359,995] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000001 already exists (desync between mesh and PSA ITS)[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=0|a=1|l=1|pa=6|cs=0|rp=0|p=0|b=0|e=0|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:14.245,437] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000005 already exists (desync between mesh and PSA ITS)[0m
+blob_client: M32BLOB|1|FAIL|role=blob_client|stage=provision_retry_limit|code=0|nonce=fc51195a80683635dd3970346ada9eba|core=6797270abb362a59d36f727f633aede6e14146b2

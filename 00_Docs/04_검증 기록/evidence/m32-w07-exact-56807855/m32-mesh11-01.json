@@ -1,0 +1,109 @@
+{
+  "test_ids": [
+    "M32-MESH11-01:management"
+  ],
+  "status": "FAIL",
+  "scope": "three_board_mesh_1_1_remote_provisioning_management",
+  "source_clean": true,
+  "identity": {
+    "core": "5680785527f2855436ffcb6fea5c4c0e58a45be3",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "client": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "volume": "F:/",
+      "vcom": "COM13",
+      "image_sha256": "1b112a748a7ec253c3ecb43d605116d30c1153e846af96ddedf23ea3880414a3",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "352256"
+    },
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "volume": "E:/",
+      "vcom": "COM25",
+      "image_sha256": "5058cb190bc5a396e6bf430e481654d687827db32549040e8c9bccea2c4aebaf",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "339968"
+    },
+    "target": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "volume": "G:/",
+      "vcom": "COM10",
+      "image_sha256": "a198d2ec5d492537dedf69e51db8f36f67971db3a954c562112abbca7313bb8b",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "339968"
+    }
+  },
+  "nonce": "f6c6279f238394a917f3741f8130c754",
+  "results": {},
+  "capacities": {
+    "client": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 2,
+      "cdb_app_keys": 2,
+      "local_subnets": 2,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    },
+    "server": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 2,
+      "cdb_app_keys": 2,
+      "local_subnets": 2,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    },
+    "target": {
+      "cdb_node_slots": 3,
+      "cdb_local_slots": 1,
+      "cdb_remote_capacity": 2,
+      "cdb_subnets": 2,
+      "cdb_app_keys": 2,
+      "local_subnets": 2,
+      "local_app_keys": 2,
+      "model_app_keys": 2
+    }
+  },
+  "iterations": 0,
+  "operation_denominator": 0,
+  "negative_denominators": {
+    "malformed_rejected": 0,
+    "out_of_range_rejected": 0,
+    "replay_rejected": 0,
+    "wrong_subnet_rejected": 0
+  },
+  "reason": "MeshManagementFailure: client target FAIL: solicit",
+  "transcript_sha256": "0b870fbf0e35a65a37819ae022562a5db8c2f4a90dd1c0de2264011f214fe4c2",
+  "observed_utc": "2026-09-30T15:17:09.137525+00:00"
+}

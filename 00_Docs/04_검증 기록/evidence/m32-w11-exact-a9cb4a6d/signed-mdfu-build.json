@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "m32_w11_signed_mesh_dfu_role_builds",
+  "source_revision": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+  "source_clean": true,
+  "ncs_revision": "v3.4.0",
+  "candidate": {
+    "size_bytes": 55040,
+    "sha256": "ccc055f1bd1f1d7a6db61e257750f08b6cd01a236f83fb6a21e52dd0a2a48d8d"
+  },
+  "mcuboot": {
+    "hex_size_bytes": 93042,
+    "hex_sha256": "6e476ae9b0b89daa33682e566310956c34e2f185adf7722b56ee6f10ee743466"
+  },
+  "roles": {
+    "distributor": {
+      "status": "PASS",
+      "signed_image_size_bytes": 351363,
+      "signed_image_sha256": "899ae37466bb9c2432a6d6d22257bec50cd90fad180c78441b1cab86c8fc9b63",
+      "signed_hex_size_bytes": 988334,
+      "signed_hex_sha256": "76ea71d4c103e33458c326a9265bf8113ae9145ee85fcc4f6e4c76cf218b751b",
+      "dfu_zip_size_bytes": 352164,
+      "dfu_zip_sha256": "6ac5d7841eaf84071e70f4cb92d2dffa9d70fe76e98aa65d451a4ffdb44b919e"
+    },
+    "target_a": {
+      "status": "PASS",
+      "signed_image_size_bytes": 343752,
+      "signed_image_sha256": "1790bd9e7380dd1f8f6ef7f4b6cb35b473fa14592c9563ca587137cc27308e57",
+      "signed_hex_size_bytes": 966920,
+      "signed_hex_sha256": "c1622ce95c14b65cfd767d2c938fd3fefeb6902725870d010f2f98f0bb31318f",
+      "dfu_zip_size_bytes": 344553,
+      "dfu_zip_sha256": "93fde08ab10f71d50d3f1a5e98eb0c5e698c54388380f81b995bef6658c2a409"
+    },
+    "target_b": {
+      "status": "PASS",
+      "signed_image_size_bytes": 343751,
+      "signed_image_sha256": "9cc359fbb36169498b24a641aa1269615cf67973636e7561f8c1fa65491b8f24",
+      "signed_hex_size_bytes": 966920,
+      "signed_hex_sha256": "861e0eb1f2e9770f48784d08e51e5eb321e6db3a11d36ce6ae89a2b72e94a714",
+      "dfu_zip_size_bytes": 344552,
+      "dfu_zip_sha256": "54feb28aa70c2e766c02c157158ba25c60aa75908a1e6ca297fdb2ab1a834f9a"
+    }
+  },
+  "signing_key_embedded": false,
+  "runtime_hil_status": "NOT_RUN",
+  "runtime_hil_reason": "세 보드의 AHB-AP 접근 보호로 sector flash를 시작할 수 없음"
+}

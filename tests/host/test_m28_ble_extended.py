@@ -36,6 +36,8 @@ class M28BleExtendedTests(unittest.TestCase):
                 "-pthread",
                 "-DNUCODE_HOST_STRONG_DEFAULT_HOOKS=1",
                 "-DCONFIG_BT_EXT_ADV=1",
+                "-DCONFIG_BT_EXT_ADV_MAX_ADV_SET=1",
+                "-DCONFIG_BT_ID_MAX=1",
                 "-DCONFIG_BT_OBSERVER=1",
                 "-DCONFIG_BT_DEVICE_NAME_MAX=32",
                 "-DCONFIG_NUCODE_BLE_CORE_EVENT_QUEUE_SIZE=24",

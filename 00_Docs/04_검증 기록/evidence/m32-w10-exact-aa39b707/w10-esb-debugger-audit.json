@@ -1,0 +1,37 @@
+{
+  "status": "FAIL_DIAGNOSED",
+  "source_revision": "aa39b707936993b5739b7012c4cba8bf87ae2462",
+  "scenario": "ble_esb",
+  "failure": "radio_peer:radio_loss_boundary",
+  "access": {
+    "transport": "CMSIS-DAP v2",
+    "connect_mode": "attach",
+    "frequency_hz": 100000,
+    "auto_unlock": false,
+    "mass_erase": false
+  },
+  "radio_peer": {
+    "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+    "submitted_packets": 4000,
+    "completed_packets": 4000,
+    "acknowledged_packets": 3910,
+    "failed_packets": 90,
+    "driver_after_restart": {
+      "tx_requested": 2000,
+      "tx_acknowledged": 2000,
+      "tx_failed_events": 51,
+      "tx_attempts": 3289,
+      "timeslot_failures": 0,
+      "rx_dropped": 0
+    }
+  },
+  "dut": {
+    "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "radio_received": 4000,
+    "radio_corrupt": 0,
+    "radio_restarts": 1,
+    "ble_received_at_peer_failure": 1242,
+    "ble_restarts_at_peer_failure": 0
+  },
+  "conclusion": "Payload 4000/4000 arrived, but the default 3 x 600 us ESB retry window did not cover BLE-owned PRX radio intervals; retain the loss boundary and retest with bounded pacing and retry window."
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "full_host_regression",
+  "source_revision": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+  "source_clean": true,
+  "tests_run": 1689,
+  "tests_passed": 1689,
+  "tests_failed": 0,
+  "tests_skipped": 1,
+  "duration_seconds": 658.527,
+  "final_log": {
+    "path": "host-regression.log",
+    "sha256": "f0d454f095a134c98d00eb96f55bf1424b842ee94361a7bd1113a4682631426e"
+  },
+  "preserved_attempts": [
+    {
+      "status": "FAIL",
+      "reason": "동시 compiler 부하 중 descendant-process timeout 1건",
+      "tests_run": 1689,
+      "tests_failed": 1,
+      "duration_seconds": 1962.073,
+      "path": "host-regression-first-load-fail.log",
+      "sha256": "14f60acf6580f8ee3e1c8e133d6d7d5365e2466bdaead65ca9af3aae1098e45a"
+    },
+    {
+      "status": "PASS",
+      "scope": "focused_descendant_timeout_retry",
+      "tests_run": 1,
+      "tests_passed": 1,
+      "duration_seconds": 72.086,
+      "path": "host-timeout-focused-retry.log",
+      "sha256": "1bf833af55bbd1745ff6c66ae0d4a0ac1f7aed15a1ff5a6851db8f1f57a1c314"
+    }
+  ]
+}

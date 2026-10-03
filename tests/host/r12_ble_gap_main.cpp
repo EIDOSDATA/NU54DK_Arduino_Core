@@ -6,6 +6,7 @@
 #include <cstring>
 #include <iostream>
 using namespace nucode::ble;
+extern "C" void nucode_ble_note_settings_loaded(int result) noexcept;
 std::array<unsigned, 64> events{};
 std::array<BLEEventInfo, 64> event_information{};
 std::size_t event_information_count = 0U;
@@ -58,6 +59,14 @@ int main(int argc, char **argv)
         assert(mock_enable_calls == 1 && mock_settings_calls == 1);
         return 0;
     }
+    if (std::strcmp(scenario, "settings_preloaded") == 0)
+    {
+        nucode_ble_note_settings_loaded(0);
+        assert(BLEDevice.begin("preloaded"));
+        assert(mock_enable_calls == 1 && mock_settings_calls == 0);
+        assert(internal::settingsReady() && internal::settingsResult() == 0);
+        return 0;
+    }
     BLEDevice.onEvent(observed, nullptr);
     BLEDevice.onEventInfo(observedInformation, nullptr);
     assert(BLEDevice.begin("host"));
@@ -76,6 +85,274 @@ int main(int argc, char **argv)
         assert(BLEConnection.disconnect());
         mock_conn_callbacks->disconnected(&mock_connections[0], 0x13);
         assert(!BLEConnection.connected() && mock_connections[0].refs == 0);
+    }
+    else if (std::strcmp(scenario, "power_control") == 0)
+    {
+        const BLEConnectionHandle connection = connect();
+        BLETransmitPowerLevel level;
+        assert(BLEConnection.localTransmitPower(connection, BLETransmitPowerPhy::le_1m,
+                                                level));
+        assert(level.phy == BLETransmitPowerPhy::le_1m && level.current_dbm == -4 &&
+               level.maximum_dbm == 8);
+        assert(!BLEConnection.localTransmitPower(connection,
+                                                 BLETransmitPowerPhy::unknown, level));
+        assert(BLEDevice.lastError() == BLEError::invalid_argument);
+
+        assert(BLEConnection.requestRemoteTransmitPower(connection,
+                                                        BLETransmitPowerPhy::le_1m));
+        assert(mock_remote_tx_power_calls == 1U &&
+               mock_remote_tx_power_phy == BT_CONN_LE_TX_POWER_PHY_1M);
+        assert(!BLEConnection.requestRemoteTransmitPower(connection,
+                                                         BLETransmitPowerPhy::none));
+        assert(mock_remote_tx_power_calls == 1U);
+        assert(!BLEConnection.requestRemoteTransmitPowerChange(
+            connection, BLETransmitPowerPhy::le_1m, -21));
+        assert(BLEConnection.requestRemoteTransmitPowerChange(
+            connection, BLETransmitPowerPhy::le_1m, 3));
+        assert(mock_remote_tx_power_change_calls == 1U &&
+               mock_remote_tx_power_delta == 3);
+
+        assert(BLEConnection.setTransmitPowerReporting(connection, true, true));
+        assert(BLEConnection.setTransmitPowerReporting(connection, true, true));
+        assert(BLEConnection.setTransmitPowerReporting(connection, false, false));
+        assert(BLEConnection.setTransmitPowerReporting(connection, false, false));
+        assert(mock_tx_power_reporting_calls == 4U && !mock_local_power_reporting &&
+               !mock_remote_power_reporting);
+
+        std::int8_t rssi = 0;
+        assert(BLEConnection.readRssi(connection, rssi) && rssi == -55);
+
+        BLEPathLossParameters path_parameters;
+        path_parameters.high_threshold_db = 40U;
+        path_parameters.low_threshold_db = 40U;
+        assert(!BLEConnection.configurePathLossMonitoring(connection,
+                                                          path_parameters));
+        assert(mock_path_loss_parameter_calls == 0U);
+        path_parameters = {};
+        path_parameters.high_threshold_db = 250U;
+        path_parameters.high_hysteresis_db = 6U;
+        assert(!BLEConnection.configurePathLossMonitoring(connection,
+                                                          path_parameters));
+        path_parameters = {};
+        path_parameters.low_threshold_db = 4U;
+        path_parameters.low_hysteresis_db = 5U;
+        assert(!BLEConnection.configurePathLossMonitoring(connection,
+                                                          path_parameters));
+        path_parameters = {};
+        path_parameters.high_threshold_db = 44U;
+        assert(!BLEConnection.configurePathLossMonitoring(connection,
+                                                          path_parameters));
+        assert(mock_path_loss_parameter_calls == 0U);
+        path_parameters = {};
+        assert(BLEConnection.configurePathLossMonitoring(connection,
+                                                         path_parameters));
+        assert(mock_path_loss_parameter_calls == 1U &&
+               mock_path_loss_parameters.high_threshold == 60U &&
+               mock_path_loss_parameters.low_threshold == 40U &&
+               mock_path_loss_parameters.min_time_spent == 5U);
+        assert(BLEConnection.setPathLossMonitoring(connection, true));
+        assert(BLEConnection.setPathLossMonitoring(connection, true));
+        assert(BLEConnection.setPathLossMonitoring(connection, false));
+        assert(BLEConnection.setPathLossMonitoring(connection, false));
+        assert(mock_path_loss_enable_calls == 4U && !mock_path_loss_enabled);
+
+        bt_conn_le_tx_power_report power_report = {
+            .reason = BT_HCI_LE_TX_POWER_REPORT_REASON_READ_REMOTE_COMPLETED,
+            .phy = BT_CONN_LE_TX_POWER_PHY_1M,
+            .tx_power_level = -7,
+            .tx_power_level_flag = 0x01U,
+            .delta = -3,
+        };
+        bt_conn_le_path_loss_threshold_report path_report = {
+            .zone = BT_CONN_LE_PATH_LOSS_ZONE_ENTERED_HIGH,
+            .path_loss = 72U,
+        };
+        mock_conn_callbacks->tx_power_report(&mock_connections[0], &power_report);
+        mock_conn_callbacks->path_loss_threshold_report(&mock_connections[0], &path_report);
+        power_report.tx_power_level = 20;
+        path_report.path_loss = 1U;
+        BLEDevice.poll();
+        assert(event_information_count >= 4U);
+        const BLEEventInfo &power_event =
+            event_information[event_information_count - 2U];
+        const BLEEventInfo &path_event =
+            event_information[event_information_count - 1U];
+        assert(power_event.event == BLEEvent::transmit_power_report &&
+               power_event.connection == connection &&
+               power_event.transmit_power.level_dbm == -7 &&
+               power_event.transmit_power.at_minimum);
+        assert(path_event.event == BLEEvent::path_loss_changed &&
+               path_event.connection == connection &&
+               path_event.path_loss.zone == BLEPathLossZone::high &&
+               path_event.path_loss.path_loss_db == 72U);
+
+        mock_conn_callbacks->disconnected(&mock_connections[0], 0x13);
+        BLEDevice.poll();
+        const std::size_t count_after_disconnect = event_information_count;
+        mock_conn_callbacks->tx_power_report(&mock_connections[0], &power_report);
+        mock_conn_callbacks->path_loss_threshold_report(&mock_connections[0], &path_report);
+        BLEDevice.poll();
+        assert(event_information_count == count_after_disconnect);
+        const unsigned request_count = mock_remote_tx_power_calls;
+        assert(!BLEConnection.requestRemoteTransmitPower(connection,
+                                                         BLETransmitPowerPhy::le_1m));
+        assert(mock_remote_tx_power_calls == request_count &&
+               BLEDevice.lastError() == BLEError::not_connected);
+    }
+    else if (std::strcmp(scenario, "timing_features") == 0)
+    {
+        const BLEConnectionHandle connection = connect();
+
+        BLESubrateParameters subrate;
+        subrate.minimum_factor = 0U;
+        assert(!BLEConnection.setDefaultSubrate(subrate));
+        assert(mock_subrate_default_calls == 0U);
+        subrate = {};
+        subrate.minimum_factor = 2U;
+        subrate.maximum_factor = 5U;
+        subrate.maximum_peripheral_latency = 2U;
+        subrate.continuation_number = 1U;
+        subrate.supervision_timeout_10ms = 500U;
+        assert(BLEConnection.setDefaultSubrate(subrate));
+        assert(BLEConnection.requestSubrate(connection, subrate));
+        assert(mock_subrate_default_calls == 1U &&
+               mock_subrate_request_calls == 1U &&
+               mock_subrate_parameters.subrate_min == 2U &&
+               mock_subrate_parameters.subrate_max == 5U);
+        bt_conn_le_subrate_changed subrate_changed = {
+            .status = 0U,
+            .factor = 4U,
+            .continuation_number = 1U,
+            .peripheral_latency = 2U,
+            .supervision_timeout = 500U,
+        };
+        mock_conn_callbacks->subrate_changed(&mock_connections[0], &subrate_changed);
+        BLESubrateInfo subrate_information;
+        assert(BLEConnection.subrate(connection, subrate_information));
+        assert(subrate_information.status == 0U &&
+               subrate_information.factor == 4U &&
+               subrate_information.peripheral_latency == 2U);
+
+        BLEConnectionRateParameters connection_rate;
+        connection_rate.interval_minimum_125us = 2U;
+        assert(!BLEConnection.setDefaultConnectionRate(connection_rate));
+        assert(mock_connection_rate_default_calls == 0U);
+        connection_rate = {};
+        connection_rate.interval_minimum_125us = 6U;
+        connection_rate.interval_maximum_125us = 12U;
+        connection_rate.subrate_minimum = 1U;
+        connection_rate.subrate_maximum = 2U;
+        connection_rate.continuation_number = 0U;
+        connection_rate.supervision_timeout_10ms = 300U;
+        connection_rate.event_length_minimum_125us = 2U;
+        connection_rate.event_length_maximum_125us = 10U;
+        assert(BLEConnection.setDefaultConnectionRate(connection_rate));
+        assert(BLEConnection.requestConnectionRate(connection, connection_rate));
+        assert(mock_connection_rate_default_calls == 1U &&
+               mock_connection_rate_request_calls == 1U &&
+               mock_connection_rate_parameters.interval_min_125us == 6U);
+        bt_conn_le_conn_rate_changed connection_rate_changed = {
+            .interval_us = 750U,
+            .subrate_factor = 2U,
+            .peripheral_latency = 1U,
+            .continuation_number = 0U,
+            .supervision_timeout_10ms = 300U,
+        };
+        mock_conn_callbacks->conn_rate_changed(&mock_connections[0], 0U,
+                                                &connection_rate_changed);
+        BLEConnectionRateInfo connection_rate_information;
+        assert(BLEConnection.connectionRate(connection,
+                                            connection_rate_information));
+        assert(connection_rate_information.interval_us == 750U &&
+               connection_rate_information.subrate_factor == 2U);
+        std::uint16_t minimum_interval_us = 0U;
+        assert(BLEConnection.minimumConnectionInterval(minimum_interval_us));
+        assert(minimum_interval_us == 750U);
+
+        BLEFrameSpaceParameters frame_space;
+        frame_space.phy_mask = 0U;
+        assert(!BLEConnection.requestFrameSpace(connection, frame_space));
+        assert(mock_frame_space_calls == 0U);
+        frame_space = {};
+        frame_space.phy_mask = BLEFrameSpaceParameters::phy_le_2m;
+        frame_space.minimum_us = 20U;
+        frame_space.maximum_us = 140U;
+        assert(BLEConnection.requestFrameSpace(connection, frame_space));
+        assert(mock_frame_space_calls == 1U &&
+               mock_frame_space_parameters.frame_space_min == 20U);
+        bt_conn_le_frame_space_updated frame_space_updated = {
+            .status = 0U,
+            .initiator = BT_CONN_LE_FRAME_SPACE_UPDATE_INITIATOR_LOCAL_HOST,
+            .frame_space = 100U,
+            .phys = BLEFrameSpaceParameters::phy_le_2m,
+            .spacing_types =
+                BLEFrameSpaceParameters::spacing_acl_central_to_peripheral,
+        };
+        mock_conn_callbacks->frame_space_updated(&mock_connections[0],
+                                                  &frame_space_updated);
+        BLEFrameSpaceInfo frame_space_information;
+        assert(BLEConnection.frameSpace(connection, frame_space_information));
+        assert(frame_space_information.status == 0U &&
+               frame_space_information.frame_space_us == 100U);
+
+        mock_local_features.features[0] = 0x04U;
+        mock_local_features.features[8] = 0x08U;
+        BLEExtendedFeatureSet local_features;
+        assert(BLEConnection.localExtendedFeatures(local_features));
+        assert(local_features.supported(0U, 2U) &&
+               local_features.supported(1U, 3U) &&
+               !local_features.supported(11U, 0U));
+        assert(!BLEConnection.requestRemoteExtendedFeatures(connection, 11U));
+        assert(mock_remote_features_calls == 0U);
+        assert(BLEConnection.requestRemoteExtendedFeatures(connection, 2U));
+        assert(mock_remote_features_calls == 1U && mock_remote_features_page == 2U);
+        std::uint8_t remote_bits[BLEExtendedFeatureSet::maximum_size] = {};
+        remote_bits[32] = 0x10U;
+        bt_conn_le_read_all_remote_feat_complete remote_features = {
+            .status = 0U,
+            .max_remote_page = 2U,
+            .max_valid_page = 2U,
+            .features = remote_bits,
+        };
+        mock_conn_callbacks->read_all_remote_feat_complete(&mock_connections[0],
+                                                            &remote_features);
+        remote_bits[32] = 0U;
+        BLEExtendedFeatureSet copied_features;
+        assert(BLEConnection.remoteExtendedFeatures(connection, copied_features));
+        assert(copied_features.supported(2U, 4U));
+
+        const BLESleepClockAccuracySupport sca =
+            BLEConnection.sleepClockAccuracySupport();
+        assert(sca.controller_procedure && !sca.host_request_and_report);
+        const std::uint8_t invalid_channel_map[5] = {1U, 0U, 0U, 0U, 0U};
+        assert(!BLEConnection.setChannelClassification(invalid_channel_map));
+        const std::uint8_t channel_map[5] = {0xffU, 0xffU, 0xffU, 0xffU, 0x1fU};
+        assert(BLEConnection.setChannelClassification(channel_map));
+        assert(mock_channel_map_calls == 1U && mock_channel_map[4] == 0x1fU);
+
+        BLEDevice.poll();
+        assert(events[static_cast<unsigned>(BLEEvent::subrate_changed)] == 1U);
+        assert(events[static_cast<unsigned>(BLEEvent::connection_rate_changed)] == 1U);
+        assert(events[static_cast<unsigned>(BLEEvent::remote_features_available)] == 1U);
+        assert(events[static_cast<unsigned>(BLEEvent::frame_space_changed)] == 1U);
+
+        mock_conn_callbacks->disconnected(&mock_connections[0], 0x13);
+        BLEDevice.poll();
+        const std::size_t count_after_disconnect = event_information_count;
+        mock_conn_callbacks->subrate_changed(&mock_connections[0], &subrate_changed);
+        mock_conn_callbacks->conn_rate_changed(&mock_connections[0], 0U,
+                                                &connection_rate_changed);
+        mock_conn_callbacks->read_all_remote_feat_complete(&mock_connections[0],
+                                                            &remote_features);
+        mock_conn_callbacks->frame_space_updated(&mock_connections[0],
+                                                  &frame_space_updated);
+        BLEDevice.poll();
+        assert(event_information_count == count_after_disconnect);
+        assert(!BLEConnection.subrate(connection, subrate_information));
+        assert(!BLEConnection.connectionRate(connection,
+                                             connection_rate_information));
+        assert(!BLEConnection.remoteExtendedFeatures(connection, copied_features));
+        assert(!BLEConnection.frameSpace(connection, frame_space_information));
     }
     else if (std::strcmp(scenario, "late_callback") == 0)
     {

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "m32_v0_6_0_native_role_builds",
+  "source_revision": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+  "source_clean": true,
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "scenario_denominator": 62,
+  "scenario_built": 62,
+  "scenario_failed": 0,
+  "scenario_errored": 0,
+  "duration_seconds": 3442.55,
+  "artifacts": {
+    "log": {
+      "path": "native-build.log",
+      "sha256": "bceabc1417f0feea692342a223b88f5fffc3f8c706d1f7f4b500a929ef92bf29"
+    },
+    "gate_report": {
+      "path": "native-build-62.json",
+      "sha256": "e3f5c55d8cb480c66841d96fe3ed7bb4d54823a8e9cecb2c9a76b3b7cd253914"
+    },
+    "twister_report": {
+      "path": "native-build-twister.json",
+      "sha256": "ddb43ebea6faf9ec2e4e048c70b37818ba3fe4131f6da35ae6e6827f6f19e06e"
+    }
+  }
+}

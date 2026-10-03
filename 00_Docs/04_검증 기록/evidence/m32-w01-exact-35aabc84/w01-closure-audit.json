@@ -1,0 +1,23 @@
+{
+  "work_id": "M32-W01",
+  "status": "PASS",
+  "source_revision": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+  "source_clean_at_build_and_hil": true,
+  "checks": {
+    "fixed_sdk_inventory": "PASS",
+    "m32_parity_scope_41_samples_74_variants": "PASS",
+    "readiness_schema_and_negative_tests": "PASS",
+    "baseline_and_extended_builds": "PASS_2_OF_2",
+    "baseline_and_extended_runtime_capability": "PASS_2_OF_2",
+    "memory_caps": "PASS_2_OF_2",
+    "raw_probe_uid_absent": "PASS",
+    "sector_flash_auto_unlock_false": "PASS",
+    "functional_feature_hil": "NOT_APPLICABLE_TO_W01_CAPABILITY_QUERY"
+  },
+  "evidence": {
+    "parity": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/parity-audit.json",
+    "negative": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/negative-audit.json",
+    "capability": "00_Docs/04_검증 기록/evidence/m32-w01-exact-35aabc84/capability-manifest.json"
+  },
+  "next_work": "M32-W02"
+}

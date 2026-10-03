@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W04",
+  "status": "PASS",
+  "source_revision": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+  "source_revisions": {
+    "software_and_build": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+    "encrypted_advertising": "4af5b15a54aacc9d15f8257e535bbd7bc635b78b",
+    "advertising_scale": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+    "privacy_final": "386bc37983b27baed8d271c4a3c78c2125657d5b"
+  },
+  "native_build": {
+    "status": "PASS",
+    "capabilities": 8,
+    "build_scenarios": 5,
+    "privacy_roles": 3,
+    "privacy_identity_a_rram_bytes": 237972,
+    "privacy_identity_a_ram_bytes": 77492,
+    "privacy_identity_b_rram_bytes": 238940,
+    "privacy_identity_b_ram_bytes": 77508,
+    "privacy_peer_rram_bytes": 234552,
+    "privacy_peer_ram_bytes": 77484,
+    "evidence": "../../279_M32_W03_W04_software와_HIL_blocker.md"
+  },
+  "arduino_build": {
+    "status": "PASS",
+    "examples": 12,
+    "source_revision": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+    "evidence": "../../279_M32_W03_W04_software와_HIL_blocker.md"
+  },
+  "host_negative_and_contract": {
+    "status": "PASS",
+    "tests": 21,
+    "commands": [
+      "python tests/host/test_m32_privacy_hil.py",
+      "PYTHONPATH=tests/host python -m unittest discover -s tests/host -p test_m32_*.py",
+      "python tools/bluetooth/m32_contract.py --check --sdk-root C:/ncs/v3.4.0"
+    ]
+  },
+  "functional_hil": {
+    "status": "PASS",
+    "test_ids": [
+      "M32-ADV-01:primary",
+      "M32-PRIV-01:primary",
+      "M32-EAD-01:primary"
+    ],
+    "boards": 3,
+    "advertising_evidence": "../m32-w04-exact-3829f144/m32-adv-01.json",
+    "privacy_evidence": "m32-priv-02.json",
+    "encrypted_advertising_evidence": "../m32-w04-exact-4af5b15a/m32-ead-01.json",
+    "advertising_packets": 600,
+    "advertising_lost_packets": 0,
+    "privacy_packets": 200,
+    "privacy_lost_packets": 0,
+    "encrypted_advertising_packets": 400,
+    "encrypted_advertising_lost_packets": 0,
+    "iterations_per_scenario": 20,
+    "maximum_privacy_latency_ms": 212,
+    "negative_classes": 10,
+    "stopped_roles": 8
+  },
+  "failed_attempts": [
+    {
+      "source_revision": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+      "status": "FAIL",
+      "reason": "identity_a_session_timeout",
+      "evidence": "../m32-w04-exact-3829f144/m32-priv-01.json",
+      "resolved_by": "386bc37983b27baed8d271c4a3c78c2125657d5b"
+    }
+  ],
+  "support_boundary": {
+    "privacy_target_roles": "RPA_enabled",
+    "privacy_peer_role": "identity_scan_enabled_without_RPA",
+    "external_peer_interop": "NOT_RUN"
+  }
+}

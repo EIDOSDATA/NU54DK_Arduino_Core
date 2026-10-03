@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W08",
+  "test_id": "M32-BLOB-01:traffic",
+  "status": "BLOCKED",
+  "observed_utc": "2026-10-01T00:09:14.3571609Z",
+  "source_revision": "6797270abb362a59d36f727f633aede6e14146b2",
+  "source_clean": false,
+  "transport": "CMSIS-DAP_V2_only",
+  "affected_probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "affected_volume": "F:/",
+  "affected_vcom": "COM13",
+  "failure": "CMSIS-DAP V2 bulk OUT은 수락하지만 IN response가 반환되지 않아 pyOCD open과 sector flash가 timeout 됨",
+  "diagnosis": "DAPLink CMSIS-DAP V2 response queue 고착 증상과 일치하며 probe USB 재열거가 필요함",
+  "required_action": "F:/ 보드의 debugger USB를 물리적으로 분리한 뒤 다시 연결",
+  "safety": {
+    "cmsis_dap_v1_used": false,
+    "mass_erase": false,
+    "recover": false,
+    "unlock": false,
+    "sector_flash_may_be_partial": true
+  },
+  "references": [
+    "https://github.com/ARMmbed/DAPLink/issues/1026",
+    "https://github.com/ARMmbed/DAPLink/blob/main/docs/MSD_COMMANDS.md"
+  ]
+}

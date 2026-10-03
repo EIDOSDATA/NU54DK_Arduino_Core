@@ -5,9 +5,9 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | CORE-API-001 |
-| 문서 개정 | 7.1 |
+| 문서 개정 | 7.3 |
 | 대상 | 지원 stable `v0.5.0` |
-| 최종 갱신일 | 2026-09-28 |
+| 최종 갱신일 | 2026-10-03 |
 | 상태 | **v0.5.0 stable 지원 계약** |
 
 ## 판정 기준
@@ -216,7 +216,7 @@ RAM-only 승인, register policy와 사용자 전원·배터리 조건의 별도
 | Direction Finding | 지원된 범위 | 제품 SDC의 connectionless AoA CTE TX와 별도 opt-in Zephyr LL connected response; 제품 SDC IQ RX·AoD는 미지원 |
 | Channel Sounding | 지원된 범위 | Connected ACL CS initiator/reflector·RAS·유효 raw/거리 산출·보안·복구; 정밀 거리 정확도 보증 제외 |
 | Secure BLE DFU | 선택 profile 지원 | `secure_ble_dfu`의 고정 MCUboot layout·서명·인증 update·rollback·전원 복구; 기본 loaderless와 분리 |
-| Mesh·최신 LE 추가 기능·multiprotocol | v0.6.0 계획 | M32·M33은 미착수이며 v0.5.0 지원에 포함하지 않음 |
+| Mesh·최신 LE 추가 기능·multiprotocol | v0.6.0 개발 완료·미공개 | M32 12/12 완료. 기능별 검증·미지원·외부 실물 NOT RUN은 [M32 TODO](../TODO_M32.md)에서 관리하며, 현재 v0.5.0 지원에는 포함하지 않음 |
 | 802.15.4/OpenThread/Matter | 미지원 | 과거 build feasibility는 runtime 지원 아님 |
 
 BLE 검증은 기능별 두·세 NU54DK와 기록된 Windows 상호운용 범위이며 Bluetooth qualification,

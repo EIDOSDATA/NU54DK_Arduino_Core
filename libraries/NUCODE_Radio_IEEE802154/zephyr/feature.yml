@@ -1,0 +1,12 @@
+{
+  "schema_version": 3,
+  "id": "nucode.radio.ieee802154",
+  "requires": ["radio"],
+  "capabilities": ["nucode.radio.ieee802154-api"],
+  "conf": ["radio154.conf"],
+  "overlays": [],
+  "resolved_conf": [],
+  "resolved_overlays": [],
+  "conflicts": ["radio-owner"],
+  "compatible_profiles": ["radio_ieee802154", "coexistence_ble_154"]
+}

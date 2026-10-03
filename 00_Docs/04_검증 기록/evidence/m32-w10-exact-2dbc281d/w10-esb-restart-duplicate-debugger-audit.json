@@ -1,0 +1,63 @@
+{
+  "type": "failure_debugger_audit",
+  "status": "FAIL_PRESERVED",
+  "captured_at_utc": "2026-10-02T00:09:00.1293673Z",
+  "source_revision": "2dbc281d0c9f11adfece7db4c879f11e5106e899",
+  "scenario": "ble_esb",
+  "role": "dut",
+  "failure": "result_boundary",
+  "access": {
+    "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "volume": "D:/",
+    "vcom": "COM5",
+    "transport": "CMSIS-DAP v2",
+    "connect_mode": "attach",
+    "frequency_hz": 100000,
+    "auto_unlock": false,
+    "mass_erase": false
+  },
+  "registers": {
+    "pc": "0x000282f8",
+    "lr": "0x0002c5b5"
+  },
+  "application": {
+    "ble_received": 4000,
+    "radio_received": 4001,
+    "radio_corrupt": 0,
+    "radio_restarts": 1,
+    "failed": true,
+    "finished": false,
+    "second_radio_started": true
+  },
+  "esb_backend_after_restart": {
+    "address": "0x20000c2c",
+    "size": 64,
+    "statistics": {
+      "tx_requested": 0,
+      "tx_acknowledged": 0,
+      "tx_failed": 0,
+      "tx_attempts": 0,
+      "rx_received": 2001,
+      "rx_duplicates": 0,
+      "rx_hash_failures": 0,
+      "rx_dropped": 0,
+      "timeslot_failures": 0,
+      "stops": 0
+    },
+    "role": "primary_receiver",
+    "error": "none",
+    "driver_error": 0,
+    "last_sequence": 3999,
+    "started": true,
+    "tx_busy": false,
+    "raw_hex": "e8036400280f000100000000000000000000000000000000d1070000000000000000000000000000000000000000000001000000000000009f0f000001000000"
+  },
+  "peer_result": {
+    "sent": 4000,
+    "acknowledged": 4000,
+    "failures": 0,
+    "restarts": 1
+  },
+  "interpretation": "The intentional PRX stop/restart overlapped the PTX hardware-ACK retry boundary. One final pre-restart payload was delivered again in the new PRX session. EsbRadio::begin() resets its session-local last_sequence, so the otherwise ordered duplicate was not marked by the backend. This interpretation is inferred from the exact +1 DUT count, peer 4000/4000 result, post-restart backend 2001 count, and zero corruption/drop/timeslot failures.",
+  "corrective_action": "Keep a logical-session last sequence in the W10 DUT across the intentional driver restart and exclude only a consecutive identical sequence. Do not relax packet, corruption, loss, service-gap, restart, negative, or cleanup boundaries."
+}

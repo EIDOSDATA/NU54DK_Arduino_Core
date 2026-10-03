@@ -1,0 +1,15 @@
+ble_mesh/dut: M32COEX|1|READY|role=dut|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/mesh_peer: M32COEX|1|READY|role=mesh_peer|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/ble_peer: M32COEX|1|READY|role=ble_peer|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/dut: M32COEX|1|CLEARED|role=dut|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/mesh_peer: M32COEX|1|CLEARED|role=mesh_peer|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/ble_peer: M32COEX|1|CLEARED|role=ble_peer|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/dut: M32COEX|1|BEGIN|role=dut|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/mesh_peer: M32COEX|1|BEGIN|role=mesh_peer|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/ble_peer: M32COEX|1|BEGIN|role=ble_peer|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/dut: M32COEX|1|PROGRESS|role=dut|ble=36|radio=0|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/mesh_peer: M32COEX|1|PROGRESS|role=mesh_peer|sent=0|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/ble_peer: M32COEX|1|PROGRESS|role=ble_peer|sent=39|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/dut: M32COEX|1|PROGRESS|role=dut|ble=85|radio=0|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/ble_peer: M32COEX|1|PROGRESS|role=ble_peer|sent=89|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/mesh_peer: M32COEX|1|FAIL|role=mesh_peer|stage=mesh_configure|code=-116|nonce=b6a5664d5d0c0a0b8d62deba906fba6b|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh

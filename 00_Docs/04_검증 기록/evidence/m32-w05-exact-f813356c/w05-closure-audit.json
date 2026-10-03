@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W05",
+  "status": "PASS",
+  "source_revision": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+  "native_build": {
+    "status": "PASS",
+    "roles": 2,
+    "central_rram_bytes": 208072,
+    "central_ram_bytes": 55760,
+    "peripheral_rram_bytes": 208168,
+    "peripheral_ram_bytes": 55872,
+    "evidence": "m32-nordic-exact.json"
+  },
+  "arduino_build": {
+    "status": "PASS",
+    "examples": 8,
+    "source_revision": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+    "evidence": "../../280_M32_W05_Nordic_확장_software와_HIL_blocker.md"
+  },
+  "host_negative_and_contract": {
+    "status": "PASS",
+    "tests": 63,
+    "commands": [
+      "PYTHONPATH=tests/host python -m unittest discover -s tests/host -p test_m32_*.py",
+      "python tools/bluetooth/m32_contract.py --check --sdk-root C:/ncs/v3.4.0"
+    ]
+  },
+  "functional_hil": {
+    "status": "PASS",
+    "evidence": "m32-nordic-exact.json",
+    "test_ids": [
+      "M32-NORDIC-01:primary",
+      "M32-SYNC-01:primary",
+      "M32-EVENT-01:primary"
+    ],
+    "boards": 2,
+    "iterations": 20,
+    "qos_reports_per_role": 200,
+    "channel_surveys_per_role": 20,
+    "anchor_reports_per_role": 1000,
+    "event_callbacks_per_role": 200,
+    "radio_prepare_callbacks_per_role": 200,
+    "llpm_interval_us": 1000,
+    "maximum_anchor_gap_us": 3999,
+    "maximum_event_gap_ms": 1,
+    "overflow_observed_roles": 2,
+    "stopped_roles": 2
+  },
+  "support_boundary": {
+    "flushable_acl_controller_experimental": true,
+    "flushable_acl_host_transmit_path": false,
+    "flushable_acl_usable": false,
+    "flushable_acl_test_status": "HOLD",
+    "external_peer_interop": "NOT_RUN"
+  }
+}

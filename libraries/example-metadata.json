@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "example_count": 113,
+  "example_count": 187,
   "board": "NU54DK (nRF54L15, Zephyr)",
   "upload_probe_policy": {
     "single": "CMSIS-DAP 자동 선택",
@@ -31,6 +31,381 @@
       "serial_baud": 115200,
       "sidecars": [],
       "conditions": []
+    },
+    "NUCODE_BLE_Mesh/MeshFriend": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshFriend/MeshFriend.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "MeshFriend 실행 보드",
+        "friendship을 요청하는 provisioned Low Power Node"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "외부 provisioner로 AppKey를 배포하고 두 node가 같은 subnet에 속하게 합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshHealth": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshHealth/MeshHealth.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "MeshHealth foundation node",
+        "Configuration/Health Client를 가진 provisioner"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "provisioner에서 Composition Data와 Health Fault 상태를 조회합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshLevel": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshLevel/MeshLevel.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "Generic Level Client",
+        "AppKey가 bind된 Generic Level Server"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "destination group 0xC000에 client publish와 server subscribe를 구성합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshLight": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshLight/MeshLight.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "Light Lightness Client",
+        "AppKey가 bind된 Light Lightness Server"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "destination group 0xC000과 reliable segmented transport를 허용합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshLowPowerNode": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshLowPowerNode/MeshLowPowerNode.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "Mesh Low Power Node",
+        "같은 subnet의 Mesh Friend"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "두 node를 provisioning한 뒤 Friend feature를 먼저 활성화합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshNode": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshNode/MeshNode.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PB-ADV/PB-GATT provisionee node",
+        "Mesh provisioner"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "처음 실행할 때 저장된 Mesh 상태가 없거나 명시적으로 reset되어 있어야 합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshOnOff": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshOnOff/MeshOnOff.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "Generic OnOff Client",
+        "AppKey가 bind된 Generic OnOff Server"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "destination group 0xC000에 client publish와 server subscribe를 구성합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshProvisioner": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshProvisioner/MeshProvisioner.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PB-ADV/PB-GATT provisioner",
+        "초기화되지 않은 Mesh node"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "nucode-build.json",
+        "prj.conf"
+      ],
+      "conditions": [
+        "한 번에 하나의 unprovisioned beacon만 처리하며 실패 뒤 새 beacon에서 재시도합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshProxy": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshProxy/MeshProxy.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "GATT Proxy node",
+        "Mesh Proxy Client"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "node를 provisioning한 뒤 Proxy feature를 활성화하고 GATT bearer로 연결합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshRelay": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshRelay/MeshRelay.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "Relay node",
+        "같은 subnet의 source 또는 destination node"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "Relay를 거치도록 direct radio 경로를 감쇠하고 TTL을 2 이상으로 설정합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshSensor": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshSensor/MeshSensor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "Sensor Client",
+        "AppKey가 bind된 Sensor Server"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "destination group 0xC000을 구성하고 Sensor Status는 32-byte snapshot으로 관찰합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh/MeshTimeSceneScheduler": {
+      "path": "libraries/NUCODE_BLE_Mesh/examples/MeshTimeSceneScheduler/MeshTimeSceneScheduler.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "Time/Scene/Scheduler Client",
+        "AppKey가 bind된 Time/Scene/Scheduler Server"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "destination group 0xC000과 scene 1을 server에 미리 구성합니다."
+      ]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshLargeCompositionDataClient": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshLargeCompositionDataClient/MeshLargeCompositionDataClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Large Composition Data Client", "Large Composition Data Server"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["server를 먼저 provisioning하고 DevKey 관리 model 접근을 허용합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshLargeCompositionDataServer": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshLargeCompositionDataServer/MeshLargeCompositionDataServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Large Composition Data Server", "Large Composition Data Client"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["client가 page와 offset을 바꾸어 분할 응답과 total size를 확인합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshOnDemandPrivateProxy": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshOnDemandPrivateProxy/MeshOnDemandPrivateProxy.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["On-Demand Private Proxy Client", "On-Demand Private Proxy Server"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["Private Beacon Server를 먼저 구성하고 광고 lifetime을 초 단위로 확인합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshOpcodeAggregatorClient": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshOpcodeAggregatorClient/MeshOpcodeAggregatorClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Opcodes Aggregator Client", "Opcodes Aggregator Server"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["AppKey 0을 관리 client와 대상 SIG model에 bind합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshOpcodeAggregatorServer": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshOpcodeAggregatorServer/MeshOpcodeAggregatorServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Opcodes Aggregator Server", "Opcodes Aggregator Client"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["client sequence의 element address와 server primary element를 일치시킵니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshPrivateBeaconClient": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshPrivateBeaconClient/MeshPrivateBeaconClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Private Beacon Client", "Private Beacon Server"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["같은 NetKey를 공유한 뒤 Private Beacon과 Private Node Identity 상태를 관찰합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshPrivateBeaconServer": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshPrivateBeaconServer/MeshPrivateBeaconServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Private Beacon Server", "Private Beacon Client"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["settings 복원 뒤 privacy 상태와 random refresh interval을 다시 조회합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshProxySolicitation": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshProxySolicitation/MeshProxySolicitation.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Solicitation PDU 송신 node", "On-Demand Private Proxy Server"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["SRPL clear 범위의 unicast address와 재생 SSEQ 거부를 함께 확인합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshRemoteProvisioner": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshRemoteProvisioner/MeshRemoteProvisioner.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["Remote Provisioning Client", "Remote Provisioning Server", "unprovisioned node"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["server를 주소 0x0002로 먼저 provisioning한 뒤 scan을 시작합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshRemoteProvisioningServer": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshRemoteProvisioningServer/MeshRemoteProvisioningServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["Remote Provisioning Server", "Remote Provisioning Client", "unprovisioned node"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["server와 unprovisioned node가 PB-ADV 통신 가능한 위치에 있어야 합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshSarConfigurationClient": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshSarConfigurationClient/MeshSarConfigurationClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["SAR Configuration Client", "SAR Configuration Server"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["모든 bit-field가 Mesh Profile 허용 범위 안인지 확인한 뒤 설정합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshSarConfigurationServer": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshSarConfigurationServer/MeshSarConfigurationServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["SAR Configuration Server", "SAR Configuration Client"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["분할 message를 전송해 TX/RX 설정 변경 전후 동작을 비교합니다."]
+    },
+    "NUCODE_BLE_Mesh_Management/MeshSubnetBridge": {
+      "path": "libraries/NUCODE_BLE_Mesh_Management/examples/MeshSubnetBridge/MeshSubnetBridge.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["Bridge Configuration Client", "Subnet Bridge node", "두 subnet의 source 또는 destination node"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["NetKey 0과 1을 배포하고 허용 table 항목 밖의 forwarding은 거부되는지 확인합니다."]
+    },
+    "NUCODE_BLE_Mesh_Update/MeshBlobClient": {
+      "path": "libraries/NUCODE_BLE_Mesh_Update/examples/MeshBlobClient/MeshBlobClient.ino",
+      "recommended_profile": "secure_ble_dfu",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["BLOB Client", "BLOB Server target 0x0002", "BLOB Server target 0x0003"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["M30 signing key로 생성한 inactive-slot image를 먼저 staging하고 BLOB ID·크기를 일치시킵니다."]
+    },
+    "NUCODE_BLE_Mesh_Update/MeshBlobServer": {
+      "path": "libraries/NUCODE_BLE_Mesh_Update/examples/MeshBlobServer/MeshBlobServer.ino",
+      "recommended_profile": "secure_ble_dfu",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["BLOB Server", "BLOB Client"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["송수신 BLOB ID를 맞추고 push·pull, cancel, peer loss 뒤 resume를 각각 확인합니다."]
+    },
+    "NUCODE_BLE_Mesh_Update/MeshDfuTarget": {
+      "path": "libraries/NUCODE_BLE_Mesh_Update/examples/MeshDfuTarget/MeshDfuTarget.ino",
+      "recommended_profile": "secure_ble_dfu",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["Mesh DFU Target", "Mesh DFU Initiator 또는 Distributor"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["production signing key의 public key를 MCUboot에 고정하고 test boot 정상 동작 뒤에만 c로 confirm합니다."]
+    },
+    "NUCODE_BLE_Mesh_Update/MeshFirmwareDistributor": {
+      "path": "libraries/NUCODE_BLE_Mesh_Update/examples/MeshFirmwareDistributor/MeshFirmwareDistributor.ino",
+      "recommended_profile": "secure_ble_dfu",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["Firmware Distributor", "Mesh DFU Initiator", "Mesh DFU Target"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["한 slot을 upload와 distribution이 동시에 사용하지 않도록 절차를 직렬화합니다."]
     },
     "NUCODE_BLE/CustomGattCentral": {
       "path": "libraries/NUCODE_BLE/examples/CustomGattCentral/CustomGattCentral.ino",
@@ -145,6 +520,32 @@
       "roles": [
         "GattAuthorization 실행 보드",
         "GattDescriptors 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/LePowerControlCentral": {
+      "path": "libraries/NUCODE_BLE/examples/LePowerControlCentral/LePowerControlCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "LePowerControlCentral (central/controller)",
+        "LePowerControlPeripheral (peripheral/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/LePowerControlPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/LePowerControlPeripheral/LePowerControlPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "LePowerControlCentral (central/controller)",
+        "LePowerControlPeripheral (peripheral/device)"
       ],
       "serial_baud": 115200,
       "sidecars": [],
@@ -322,6 +723,32 @@
       "sidecars": [],
       "conditions": []
     },
+    "NUCODE_BLE/PathLossMonitorCentral": {
+      "path": "libraries/NUCODE_BLE/examples/PathLossMonitorCentral/PathLossMonitorCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PathLossMonitorCentral (central/monitor)",
+        "PathLossMonitorPeripheral (peripheral/monitor)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/PathLossMonitorPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/PathLossMonitorPeripheral/PathLossMonitorPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "PathLossMonitorCentral (central/monitor)",
+        "PathLossMonitorPeripheral (peripheral/monitor)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
     "NUCODE_BLE/PeriodicAdvertiser": {
       "path": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
       "recommended_profile": "ble",
@@ -401,6 +828,430 @@
       "serial_baud": 115200,
       "sidecars": [],
       "conditions": []
+    },
+    "NUCODE_BLE/RssiPowerControlCentral": {
+      "path": "libraries/NUCODE_BLE/examples/RssiPowerControlCentral/RssiPowerControlCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "RssiPowerControlCentral (central/controller)",
+        "RssiPowerControlPeripheral (peripheral/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/RssiPowerControlPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/RssiPowerControlPeripheral/RssiPowerControlPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "RssiPowerControlCentral (central/controller)",
+        "RssiPowerControlPeripheral (peripheral/device)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/BleThroughputCentral": {
+      "path": "libraries/NUCODE_BLE/examples/BleThroughputCentral/BleThroughputCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "BleThroughputCentral (central/sender)",
+        "BleThroughputPeripheral (peripheral/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "표시값은 1초 application payload window이며 RF PHY bit rate가 아닙니다."
+      ]
+    },
+    "NUCODE_BLE/BleThroughputPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/BleThroughputPeripheral/BleThroughputPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "BleThroughputCentral (central/sender)",
+        "BleThroughputPeripheral (peripheral/receiver)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "표시값은 1초 application payload window이며 RF PHY bit rate가 아닙니다."
+      ]
+    },
+    "NUCODE_BLE/ConnectionSubratingCentral": {
+      "path": "libraries/NUCODE_BLE/examples/ConnectionSubratingCentral/ConnectionSubratingCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ConnectionSubratingCentral (central/requester)",
+        "ConnectionSubratingPeripheral (peripheral/responder)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/ConnectionSubratingPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/ConnectionSubratingPeripheral/ConnectionSubratingPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ConnectionSubratingCentral (central/requester)",
+        "ConnectionSubratingPeripheral (peripheral/responder)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/ExtendedLeFeaturePages": {
+      "path": "libraries/NUCODE_BLE/examples/ExtendedLeFeaturePages/ExtendedLeFeaturePages.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "ExtendedLeFeaturePages (local controller query)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/FrameSpaceUpdateCentral": {
+      "path": "libraries/NUCODE_BLE/examples/FrameSpaceUpdateCentral/FrameSpaceUpdateCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "FrameSpaceUpdateCentral (central/requester)",
+        "FrameSpaceUpdatePeripheral (peripheral/responder)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/FrameSpaceUpdatePeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/FrameSpaceUpdatePeripheral/FrameSpaceUpdatePeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "FrameSpaceUpdateCentral (central/requester)",
+        "FrameSpaceUpdatePeripheral (peripheral/responder)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/LeChannelMapControl": {
+      "path": "libraries/NUCODE_BLE/examples/LeChannelMapControl/LeChannelMapControl.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "LeChannelMapControl (Host classifier)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "연속 적용 간격은 Bluetooth controller 규칙에 따라 최소 1초입니다."
+      ]
+    },
+    "NUCODE_BLE/ShorterConnectionIntervalsCentral": {
+      "path": "libraries/NUCODE_BLE/examples/ShorterConnectionIntervalsCentral/ShorterConnectionIntervalsCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ShorterConnectionIntervalsCentral (central/requester)",
+        "ShorterConnectionIntervalsPeripheral (peripheral/responder)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/ShorterConnectionIntervalsPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/ShorterConnectionIntervalsPeripheral/ShorterConnectionIntervalsPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ShorterConnectionIntervalsCentral (central/requester)",
+        "ShorterConnectionIntervalsPeripheral (peripheral/responder)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": []
+    },
+    "NUCODE_BLE/SleepClockAccuracyUpdate": {
+      "path": "libraries/NUCODE_BLE/examples/SleepClockAccuracyUpdate/SleepClockAccuracyUpdate.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": [
+        "SleepClockAccuracyUpdate (support reporter)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "NCS v3.4.0 고정 Host에는 SCA 요청·완료 report 공개 API가 없어 controller responder 지원만 표시합니다."
+      ]
+    },
+    "NUCODE_BLE/MultipleAdvertisingSets": {
+      "path": "libraries/NUCODE_BLE/examples/MultipleAdvertisingSets/MultipleAdvertisingSets.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "MultipleAdvertisingSets (advertiser)",
+        "ExtendedScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["확장 preset은 3 advertising set을 사용합니다."]
+    },
+    "NUCODE_BLE/MultiplePeriodicSyncs": {
+      "path": "libraries/NUCODE_BLE/examples/MultiplePeriodicSyncs/MultiplePeriodicSyncs.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": [
+        "PeriodicAdvertiser 첫 번째 송신기",
+        "PeriodicAdvertiser 두 번째 송신기",
+        "MultiplePeriodicSyncs (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["두 advertiser는 서로 다른 주소와 SID를 사용해야 합니다."]
+    },
+    "NUCODE_BLE/MultipleBleIdentities": {
+      "path": "libraries/NUCODE_BLE/examples/MultipleBleIdentities/MultipleBleIdentities.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "MultipleBleIdentities (advertiser)",
+        "ExtendedScanner (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["생성된 identity와 IRK는 settings에 보존됩니다."]
+    },
+    "NUCODE_BLE/AdvertisingAcceptList": {
+      "path": "libraries/NUCODE_BLE/examples/AdvertisingAcceptList/AdvertisingAcceptList.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "AdvertisingAcceptList (peripheral)",
+        "허용 주소로 설정한 central"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["예제의 allowedPeer를 central identity 주소로 바꿉니다."]
+    },
+    "NUCODE_BLE/PeriodicAdvertiserList": {
+      "path": "libraries/NUCODE_BLE/examples/PeriodicAdvertiserList/PeriodicAdvertiserList.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": [
+        "PeriodicAdvertiser 첫 번째 송신기",
+        "PeriodicAdvertiser 두 번째 송신기",
+        "PeriodicAdvertiserList 실행 보드"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["예제의 두 주소와 SID를 실제 advertiser 값으로 바꿉니다."]
+    },
+    "NUCODE_BLE/DirectedAdvertisingPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/DirectedAdvertisingPeripheral/DirectedAdvertisingPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "DirectedAdvertisingPeripheral (peripheral)",
+        "DirectedAdvertisingCentral (central)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": ["centralIdentity를 실제 central identity 주소로 바꿉니다."]
+    },
+    "NUCODE_BLE/DirectedAdvertisingCentral": {
+      "path": "libraries/NUCODE_BLE/examples/DirectedAdvertisingCentral/DirectedAdvertisingCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "DirectedAdvertisingPeripheral (peripheral)",
+        "DirectedAdvertisingCentral (central)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": ["peripheralIdentity를 실제 peripheral identity 주소로 바꿉니다."]
+    },
+    "NUCODE_BLE/EncryptedAdvertisingPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/EncryptedAdvertisingPeripheral/EncryptedAdvertisingPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "EncryptedAdvertisingPeripheral (advertiser)",
+        "EncryptedAdvertisingCentral (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["제품에서는 예제 key와 IV를 고유 보안 절차로 교환해야 합니다."]
+    },
+    "NUCODE_BLE/EncryptedAdvertisingCentral": {
+      "path": "libraries/NUCODE_BLE/examples/EncryptedAdvertisingCentral/EncryptedAdvertisingCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "EncryptedAdvertisingPeripheral (advertiser)",
+        "EncryptedAdvertisingCentral (scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["제품에서는 예제 key와 IV를 고유 보안 절차로 교환해야 합니다."]
+    },
+    "NUCODE_BLE/AdvertisingCodingSelection": {
+      "path": "libraries/NUCODE_BLE/examples/AdvertisingCodingSelection/AdvertisingCodingSelection.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "AdvertisingCodingSelection (advertiser)",
+        "ExtendedScanner (coded scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["S=2와 S=8 선택은 controller Advertising Coding Selection 지원이 필요합니다."]
+    },
+    "NUCODE_BLE/ScanWhileConnecting": {
+      "path": "libraries/NUCODE_BLE/examples/ScanWhileConnecting/ScanWhileConnecting.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "connectable peripheral",
+        "ScanWhileConnecting (central/scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["이 profile은 controller 제약으로 한 local identity만 사용합니다."]
+    },
+    "NUCODE_BLE/ScalableBleResources": {
+      "path": "libraries/NUCODE_BLE/examples/ScalableBleResources/ScalableBleResources.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": ["ScalableBleResources 실행 보드"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["확장 preset의 실제 RAM/RRAM 값은 M32 build evidence를 확인합니다."]
+    },
+    "NUCODE_BLE/NordicLlpmPair": {
+      "path": "libraries/NUCODE_BLE/examples/NordicLlpmPair/NordicLlpmPair.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "NordicLlpmPair (central)",
+        "NordicLlpmPair (peripheral)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["centralRole을 한 보드는 true, 다른 보드는 false로 빌드하고 Nordic LLPM peer끼리 사용합니다."]
+    },
+    "NUCODE_BLE/NordicConnectionEventQos": {
+      "path": "libraries/NUCODE_BLE/examples/NordicConnectionEventQos/NordicConnectionEventQos.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "NordicConnectionEventQos 실행 보드",
+        "연결 가능한 BLE peer"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["QoS connection event report는 controller 전역 설정이며 active connection이 필요합니다."]
+    },
+    "NUCODE_BLE/NordicChannelSurvey": {
+      "path": "libraries/NUCODE_BLE/examples/NordicChannelSurvey/NordicChannelSurvey.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": ["NordicChannelSurvey 실행 보드"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["SDC channel energy 측정값은 spectrum analyzer 교정값이 아닙니다."]
+    },
+    "NUCODE_BLE/ConnectionTimeSyncCentral": {
+      "path": "libraries/NUCODE_BLE/examples/ConnectionTimeSyncCentral/ConnectionTimeSyncCentral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ConnectionTimeSyncCentral (central)",
+        "ConnectionTimeSyncPeripheral (peripheral)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["두 controller clock domain을 직접 동일시하지 말고 application transport로 기준 anchor를 교환합니다."]
+    },
+    "NUCODE_BLE/ConnectionTimeSyncPeripheral": {
+      "path": "libraries/NUCODE_BLE/examples/ConnectionTimeSyncPeripheral/ConnectionTimeSyncPeripheral.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ConnectionTimeSyncCentral (central)",
+        "ConnectionTimeSyncPeripheral (peripheral)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["두 controller clock domain을 직접 동일시하지 말고 application transport로 기준 anchor를 교환합니다."]
+    },
+    "NUCODE_BLE/RadioEventTrigger": {
+      "path": "libraries/NUCODE_BLE/examples/RadioEventTrigger/RadioEventTrigger.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": ["RadioEventTrigger scanner"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["EGU10 task와 interrupt는 application 소유이며 다른 DPPI·peripheral 사용과 충돌하지 않아야 합니다."]
+    },
+    "NUCODE_BLE/ConnectionRadioNotification": {
+      "path": "libraries/NUCODE_BLE/examples/ConnectionRadioNotification/ConnectionRadioNotification.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ConnectionRadioNotification (peripheral)",
+        "연결 가능한 BLE central"
+      ],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["radio prepare callback은 system workqueue에서 실행되므로 짧고 비차단인 작업만 수행합니다."]
+    },
+    "NUCODE_BLE/FlushableAclData": {
+      "path": "libraries/NUCODE_BLE/examples/FlushableAclData/FlushableAclData.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": ["FlushableAclData 적용성 확인 보드"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["고정 Zephyr Host에는 flushable LE ACL TX path가 없어 전송 예제가 아니라 적용성 경계 보고 예제입니다."]
     },
     "NUCODE_BLE_Audio/AudioControlController": {
       "path": "libraries/NUCODE_BLE_Audio/examples/AudioControlController/AudioControlController.ino",
@@ -1877,6 +2728,86 @@
       "conditions": [
         "DAP UART 공유 핀을 분리하고 예제가 요구하는 외장 I/O 결선을 확인합니다."
       ]
+    },
+    "NUCODE_Radio_ESB/EsbPrx": {
+      "path": "libraries/NUCODE_Radio_ESB/examples/EsbPrx/EsbPrx.ino",
+      "recommended_profile": "radio_esb",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["ESB PRX", "ESB PTX"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["두 보드의 channel, bitrate, pipe를 같게 설정하고 PRX를 먼저 시작합니다."]
+    },
+    "NUCODE_Radio_ESB/EsbPtx": {
+      "path": "libraries/NUCODE_Radio_ESB/examples/EsbPtx/EsbPtx.ino",
+      "recommended_profile": "radio_esb",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["ESB PTX", "ESB PRX"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["두 보드의 channel, bitrate, pipe를 같게 설정하고 ACK/attempt 통계를 확인합니다."]
+    },
+    "NUCODE_Radio_IEEE802154/Radio154Receiver": {
+      "path": "libraries/NUCODE_Radio_IEEE802154/examples/Radio154Receiver/Radio154Receiver.ino",
+      "recommended_profile": "radio_ieee802154",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["IEEE 802.15.4 receiver 0x0002", "IEEE 802.15.4 transmitter 0x0001"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["두 보드의 PAN ID와 channel을 같게 설정하고 receiver를 먼저 시작합니다."]
+    },
+    "NUCODE_Radio_IEEE802154/Radio154Transmitter": {
+      "path": "libraries/NUCODE_Radio_IEEE802154/examples/Radio154Transmitter/Radio154Transmitter.ino",
+      "recommended_profile": "radio_ieee802154",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["IEEE 802.15.4 transmitter 0x0001", "IEEE 802.15.4 receiver 0x0002"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["두 보드의 PAN ID와 channel을 같게 설정하고 ACK/retry 통계를 확인합니다."]
+    },
+    "NUCODE_Radio_Coexistence/Ble154Coexistence": {
+      "path": "libraries/NUCODE_Radio_Coexistence/examples/Ble154Coexistence/Ble154Coexistence.ino",
+      "recommended_profile": "coexistence_ble_154",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["BLE + IEEE 802.15.4 coexistence receiver", "IEEE 802.15.4 transmitter 0x0001", "BLE NUS central"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["coexistence 보드의 IEEE 802.15.4 주소는 0x0002이며 transmitter와 PAN ID/channel을 같게 설정합니다."]
+    },
+    "NUCODE_Radio_Coexistence/BleEsbCoexistence": {
+      "path": "libraries/NUCODE_Radio_Coexistence/examples/BleEsbCoexistence/BleEsbCoexistence.ino",
+      "recommended_profile": "coexistence_ble_esb",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["BLE + ESB coexistence PRX", "ESB PTX", "BLE NUS central"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["ESB standalone HIL PASS 뒤 candidate profile을 사용하고 두 ESB 역할의 channel, bitrate, pipe를 같게 설정합니다."]
+    },
+    "NUCODE_Radio_Coexistence/BleMeshCoexistence": {
+      "path": "libraries/NUCODE_Radio_Coexistence/examples/BleMeshCoexistence/BleMeshCoexistence.ino",
+      "recommended_profile": "coexistence_ble_mesh",
+      "alternative_profiles": [],
+      "board_count": 3,
+      "roles": ["BLE NUS + Mesh coexistence node", "Mesh provisioner/peer", "BLE NUS central"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["저장된 Mesh 상태가 없거나 의도한 topology와 일치해야 하며 Mesh와 BLE event를 개별 판정합니다."]
+    },
+    "NUCODE_Radio_Coexistence/RadioCoexistenceOneWire": {
+      "path": "libraries/NUCODE_Radio_Coexistence/examples/RadioCoexistenceOneWire/RadioCoexistenceOneWire.ino",
+      "recommended_profile": "external_coexistence",
+      "alternative_profiles": [],
+      "board_count": 1,
+      "roles": ["1-wire grant simulator와 BLE advertiser"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["전원을 끈 상태에서 P1.10(P4-8) output을 P1.14(P4-12) grant input에 연결하고 g/d 명령으로 허용/거부를 확인합니다."]
     },
     "Servo/Sweep": {
       "path": "libraries/Servo/examples/Sweep/Sweep.ino",

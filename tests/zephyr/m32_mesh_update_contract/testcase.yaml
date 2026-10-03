@@ -1,0 +1,12 @@
+tests:
+  nucode.m32.mesh_update_contract:
+    build_only: true
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags:
+      - bluetooth
+      - mesh
+      - dfu
+      - m32

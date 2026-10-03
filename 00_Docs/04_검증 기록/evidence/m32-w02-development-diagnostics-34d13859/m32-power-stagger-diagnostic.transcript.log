@@ -1,0 +1,5 @@
+central: M32PWR|1|READY|role=central|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|READY|role=peripheral|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|BEGIN|role=central|nonce=32a59013afd1fe32e7980dcdaff2883c|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|BEGIN|role=peripheral|nonce=32a59013afd1fe32e7980dcdaff2883c|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|FAIL|role=central|stage=remote_power|code=-5|nonce=32a59013afd1fe32e7980dcdaff2883c|core=34d13859dfda27c8148a2c8909445d13d94b1359

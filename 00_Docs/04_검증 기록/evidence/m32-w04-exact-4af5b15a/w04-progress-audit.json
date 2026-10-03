@@ -1,0 +1,30 @@
+{
+  "work_id": "M32-W04",
+  "status": "IN_PROGRESS",
+  "source_revision": "4af5b15a54aacc9d15f8257e535bbd7bc635b78b",
+  "cmsis_dap_protocol": "v2",
+  "test_families": {
+    "M32-ADV-01:primary": "NOT_RUN",
+    "M32-PRIV-01:primary": "NOT_RUN",
+    "M32-EAD-01:primary": "PASS"
+  },
+  "ead": {
+    "iterations": 20,
+    "packet_denominator": 400,
+    "authenticated": 20,
+    "lost_reports": 0,
+    "scan_queue_drops": 0,
+    "negative_denominators": {
+      "replay": 20,
+      "tamper": 20,
+      "wrong_key": 20,
+      "wrong_iv": 20
+    },
+    "stopped_roles": 2,
+    "evidence": "00_Docs/04_검증 기록/evidence/m32-w04-exact-4af5b15a/m32-ead-01.json"
+  },
+  "remaining": [
+    "M32-ADV-01:primary",
+    "M32-PRIV-01:primary"
+  ]
+}

@@ -12,12 +12,12 @@
 
 현재 source version은 `0.5.0`입니다. M28~M31과 RC1/RC2, runtime PM 연속 Upload 교정,
 stable package·승인·tag/Release·root catalog·공개 smoke를 완료했습니다. HOST-W04~HOST-W08은
-사용자 보류/미착수 상태입니다. M32/M33 추가 기능은 [v0.6.0 계획](../../00_Docs/TODO_v0.6.0.md)이며,
-M34~M37 Security는 v0.7.0, M38~M41 Radio/Network는 v0.8.0, M42~M45 Matter는 v0.9.0에 배정합니다.
-Ubuntu/macOS의 기존 세 Host 계획·OS별 최종 gate는 유지합니다. 버전 배정은 Host 재개나 OS 지원 확정,
-현재 source version 변경·패키지 공개가 아닙니다.
-정확한 진행과 gate는
-[v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)와 [M31 TODO](../../00_Docs/TODO_M31.md)를 따릅니다.
+사용자 보류/미착수 상태입니다. 미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의 M32는 12/12 완료,
+M33은 0/8 미착수입니다. 개발 source의 기능 추가나 main 통합은 공개 v0.5.0 ZIP을 변경하지 않습니다.
+v0.6.0 동안 NCS v3.4.0 pin을 유지하고, SDK 3.4.1 전환은 별도 [v0.7.0 계획](../../00_Docs/TODO_v0.7.0.md)의
+`SDK-W01~W06`에서 수행합니다. Host 재개·OS 지원·제품 version·패키지 공개는 각각의 gate로 판정합니다.
+완료한 공개 절차는 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md), 후속 배포 조건은
+[M33 TODO](../../00_Docs/TODO_M33.md)를 따릅니다.
 
 RC1/RC2 게시 입력과 자산 identity는 각 tag와 역사 문서에 고정합니다. 정식 package는 최종
 v0.5.0 exact commit에서 이중 생성하고 RC2 이후 runtime 차이를 명시합니다. 공개된 같은 version을

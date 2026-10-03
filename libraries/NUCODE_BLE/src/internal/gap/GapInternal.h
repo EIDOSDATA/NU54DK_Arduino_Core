@@ -105,6 +105,21 @@ namespace nucode::ble::internal::gap
     inline constexpr std::uint16_t default_advertising_interval_min = 0x00a0U;
     inline constexpr std::uint16_t default_advertising_interval_max = 0x00f0U;
 
+    /** @brief Zephyr가 raw unit로 노출한 Nordic LLPM interval을 실제 us로 정규화합니다. */
+    inline std::uint32_t normalizeConnectionIntervalUs(std::uint32_t interval_us) noexcept
+    {
+        constexpr std::uint32_t standard_interval_unit_us = 1250U;
+        constexpr std::uint32_t llpm_encoded_base = 0x0d00U;
+        const std::uint32_t encoded_interval = interval_us / standard_interval_unit_us;
+        if ((interval_us % standard_interval_unit_us) == 0U &&
+            encoded_interval > llpm_encoded_base &&
+            encoded_interval <= llpm_encoded_base + 7U)
+        {
+            return (encoded_interval - llpm_encoded_base) * 1000U;
+        }
+        return interval_us;
+    }
+
     /** @brief callback에서 main thread로 전달하는 작은 GAP event record입니다. */
     struct GapEventRecord
     {
@@ -129,6 +144,14 @@ namespace nucode::ble::internal::gap
         BLEAddress connection_address;
         bool identity_resolved = false;
         BLELinkRole role = BLELinkRole::none;
+        BLESubrateInfo subrate;
+        bool subrate_valid = false;
+        BLEConnectionRateInfo connection_rate;
+        bool connection_rate_valid = false;
+        BLEFrameSpaceInfo frame_space;
+        bool frame_space_valid = false;
+        BLEExtendedFeatureSet remote_features;
+        bool remote_features_valid = false;
     };
 
     /** @brief 늦은 MTU callback이 재사용 slot로 들어가지 않게 요청 token을 보존합니다. */
@@ -139,7 +162,7 @@ namespace nucode::ble::internal::gap
         atomic_t active = ATOMIC_INIT(0);
     };
 
-    /** @brief 한 개 고정 extended advertising set의 generation과 payload입니다. */
+    /** @brief 한 extended advertising set의 generation과 payload입니다. */
     struct ExtendedAdvertisingContext
     {
         struct bt_le_ext_adv *instance = nullptr;
@@ -148,6 +171,7 @@ namespace nucode::ble::internal::gap
         atomic_t active = ATOMIC_INIT(0);
         bool connectable = false;
         bool scannable = false;
+        std::uint8_t identity = 0U;
         std::uint8_t advertising_data[ExtendedAdvertising::maximum_payload_length] = {};
         std::size_t advertising_length = 0U;
         std::uint8_t scan_response_data[ExtendedAdvertising::maximum_payload_length] = {};
@@ -257,6 +281,7 @@ namespace nucode::ble::internal::gap
         atomic_t scanning_active = ATOMIC_INIT(0);
         atomic_t connection_connecting = ATOMIC_INIT(0);
         atomic_t connection_active = ATOMIC_INIT(0);
+        atomic_t nordic_llpm_mode_enabled = ATOMIC_INIT(0);
         atomic_t mtu_exchange_active = ATOMIC_INIT(0);
         atomic_t last_error_value = ATOMIC_INIT(static_cast<atomic_val_t>(BLEError::none));
         atomic_t last_driver_error_value = ATOMIC_INIT(0);
@@ -306,13 +331,13 @@ namespace nucode::ble::internal::gap
 
         MtuExchangeContext mtu_exchange_contexts[maximum_mtu_exchange_contexts] = {};
 #if defined(CONFIG_BT_EXT_ADV)
-        ExtendedAdvertisingContext extended_advertising;
+        ExtendedAdvertisingContext extended_advertising[CONFIG_BT_EXT_ADV_MAX_ADV_SET];
 #endif
 #if defined(CONFIG_BT_PER_ADV)
         PeriodicAdvertisingContext periodic_advertising;
 #endif
 #if defined(CONFIG_BT_PER_ADV_SYNC)
-        PeriodicSyncContext periodic_sync;
+        PeriodicSyncContext periodic_sync[CONFIG_BT_PER_ADV_SYNC_MAX];
 #endif
 #if defined(CONFIG_BT_PER_ADV_RSP)
         PawrContext pawr;
@@ -357,7 +382,9 @@ namespace nucode::ble::internal::gap
                     std::uint32_t device_generation = 0U,
                     BLEAdvertisingSetHandle advertising_set = {},
                     BLEPeriodicSyncHandle periodic_sync = {},
-                    std::uint8_t reason = 0U) noexcept;
+                    std::uint8_t reason = 0U,
+                    BLETransmitPowerReport transmit_power = {},
+                    BLEPathLossReport path_loss = {}) noexcept;
 
     /** @brief local name의 UTF-8이 well-formed인지 동적 할당 없이 검증합니다. */
     inline bool validUtf8(const char *text, std::size_t length) noexcept

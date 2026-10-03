@@ -1,0 +1,23 @@
+/*
+ * @file mesh-update-external-flash.overlay.template
+ * @brief 사용자 board의 외부 flash를 secondary slot으로 연결하는 시작 template입니다.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/*
+ * 실제 controller, chip select, JEDEC ID, 크기, erase/write block을 회로와
+ * datasheet에 맞게 바꾼 뒤 application과 MCUboot 양쪽 overlay에 적용해야 합니다.
+ */
+&spi00 {
+	status = "okay";
+
+	external_flash: flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <8000000>;
+		jedec-id = [00 00 00];
+		size = <0>;
+		status = "disabled";
+	};
+};

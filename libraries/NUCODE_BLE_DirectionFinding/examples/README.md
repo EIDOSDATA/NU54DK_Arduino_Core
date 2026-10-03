@@ -13,15 +13,18 @@ Windows 10/11 x64 설치 방법은 [v0.5.0 안내](<../../../00_Docs/05_릴리�
 `start()`, `stop()`을 호출한다. Zephyr 광고 set과 Direction Finding 직접 호출은
 [`NUCODE_BLE_DirectionFinding.cpp`](../src/NUCODE_BLE_DirectionFinding.cpp)에만 있다.
 
-Arduino IDE 또는 CLI에서 **Adaptive capabilities (experimental)** 또는 호환 **BLE NUS** feature set을 선택한다. 115200 baud
-Serial에서 `PROBE`, `START`, `STOP`, `INVALID`를 한 줄씩 보낸다. `START` 뒤
+Arduino IDE 또는 CLI에서 **BLE NUS** feature set을 권장한다.
+**Adaptive capabilities (experimental)**는 실험적 대안이다. 예제의 `nucode-build.json`과
+`prj.conf`를 `.ino`와 함께 유지한다. 115200 baud Serial에서 `PROBE`, `START`, `STOP`,
+`INVALID`를 한 줄씩 보낸다. `START` 뒤
 `NUCODE_DF|1|STARTED`, `STOP` 뒤 `NUCODE_DF|1|STOPPED`, `INVALID` 뒤
 `NUCODE_DF|1|REJECTED`를 기대한다. `START`와 `STOP`을 반복해 자원 재사용을 확인한다.
 
-이 예제는 제품 SDC의 CTE 송신 설정과 controller 수락 경로를 제공한다. W04에서는 별도
-Zephyr LL 진단 수신 보드로 실제 CTE report를 확인했지만, 이를 제품 SDC raw IQ 수신
-지원으로 승격하지 않는다. 1개 안테나의 IQ 값으로 각도를 계산하지
-않으며 AoD 송신이나 안테나 전환을 지원한다고 주장하지 않는다.
+이 예제의 검증 범위는 제품 SDC의 CTE 송신 설정·controller 수락·오류 거부·정지다.
+실제 CTE report 20건·IQ sample 1,640개를 확인한 경로는 별도
+[`ConnectedCteResponder`](ConnectedCteResponder/README.md)와 내부 Zephyr LL 수신 보드의
+연결형 시험이다. 이를 이 beacon의 connectionless IQ 수신 PASS나 제품 SDC 수신 지원으로
+확대하지 않는다. 단일 안테나의 IQ 값으로 방향각을 계산하지 않으며 AoD·안테나 전환도 보증하지 않는다.
 
 Zephyr `direction_finding_connectionless_tx` sample의 AoA 설정을 고정 NCS v3.4.0에서
 참고했다. 이 라이브러리 코드는 MIT이고 upstream sample은 원본 Apache-2.0을 따른다.

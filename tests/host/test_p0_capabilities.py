@@ -784,6 +784,10 @@ extern "C" void sensorRead(void)
                     self.registry, [], features, declaration
                 )
                 self.assertIn(required_conf, result["generated"]["conf"])
+                if "NUCODE_BLE" in libraries:
+                    self.assertIn(
+                        "CONFIG_CLOCK_CONTROL=y", result["generated"]["conf"]
+                    )
                 if role in {
                     "ble-gap-nus-dual-role",
                     "ble-gatt-nus-dual-role",
@@ -1614,6 +1618,30 @@ extern "C" void sensorRead(void)
             MODULE.AdapterError, "E_CAPABILITY_CONFIG_CONFLICT.*BT_MAX_CONN"
         ):
             MODULE.resolve_capabilities(registry, [], [], declaration)
+
+    def test_mesh_capacity_declaration_scales_cdb_and_local_stores(self) -> None:
+        """! @brief Mesh CDB·local key·model binding 용량을 독립 선언으로 생성합니다. """
+        declaration = copy.deepcopy(self.empty_declaration)
+        declaration["capacities"] = {
+            "mesh.cdb-node-slots": 33,
+            "mesh.cdb-subnets": 4,
+            "mesh.cdb-app-keys": 8,
+            "mesh.local-subnets": 4,
+            "mesh.local-app-keys": 8,
+            "mesh.model-app-keys": 4,
+        }
+        result = MODULE.resolve_capabilities(
+            self.registry, ["nucode.ble.mesh-api"], [], declaration
+        )
+        configuration = set(result["generated"]["conf"])
+        self.assertTrue({
+            "CONFIG_BT_MESH_CDB_NODE_COUNT=33",
+            "CONFIG_BT_MESH_CDB_SUBNET_COUNT=4",
+            "CONFIG_BT_MESH_CDB_APP_KEY_COUNT=8",
+            "CONFIG_BT_MESH_SUBNET_COUNT=4",
+            "CONFIG_BT_MESH_APP_KEY_COUNT=8",
+            "CONFIG_BT_MESH_MODEL_KEY_COUNT=4",
+        }.issubset(configuration))
 
     def test_declaration_and_registry_schema_are_strict(self) -> None:
         """! @brief 중복 key·추가 field·잘못된 참조를 모두 거부합니다. """

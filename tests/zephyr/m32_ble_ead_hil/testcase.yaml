@@ -1,0 +1,29 @@
+tests:
+  nucode.m32.ble_ead_hil.advertiser:
+    build_only: true
+    extra_args:
+      - M32_EAD_ROLE=advertiser
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags:
+      - bluetooth
+      - m32
+      - advertising
+      - ead
+      - hil
+  nucode.m32.ble_ead_hil.scanner:
+    build_only: true
+    extra_args:
+      - M32_EAD_ROLE=scanner
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags:
+      - bluetooth
+      - m32
+      - advertising
+      - ead
+      - hil

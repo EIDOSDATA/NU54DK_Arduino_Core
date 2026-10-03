@@ -120,6 +120,23 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "PawrAdvertiser",
                 "PawrScanner",
                 "PerLinkControl",
+                "LePowerControlCentral",
+                "LePowerControlPeripheral",
+                "PathLossMonitorCentral",
+                "PathLossMonitorPeripheral",
+                "RssiPowerControlCentral",
+                "RssiPowerControlPeripheral",
+                "ConnectionSubratingCentral",
+                "ConnectionSubratingPeripheral",
+                "FrameSpaceUpdateCentral",
+                "FrameSpaceUpdatePeripheral",
+                "ShorterConnectionIntervalsCentral",
+                "ShorterConnectionIntervalsPeripheral",
+                "ExtendedLeFeaturePages",
+                "SleepClockAccuracyUpdate",
+                "BleThroughputCentral",
+                "BleThroughputPeripheral",
+                "LeChannelMapControl",
                 "PeriodicAdvertiser",
                 "PeriodicScanner",
                 "PastSender",
@@ -207,6 +224,72 @@ class M22PackageExamplesTests(unittest.TestCase):
         later_ble_examples |= {
             ("NUCODE_BLE_ChannelSounding", name)
             for name in ("RasInitiator", "RasReflector")
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE", name)
+            for name in (
+                "MultipleAdvertisingSets",
+                "MultiplePeriodicSyncs",
+                "MultipleBleIdentities",
+                "AdvertisingAcceptList",
+                "PeriodicAdvertiserList",
+                "DirectedAdvertisingPeripheral",
+                "DirectedAdvertisingCentral",
+                "EncryptedAdvertisingPeripheral",
+                "EncryptedAdvertisingCentral",
+                "AdvertisingCodingSelection",
+                "ScanWhileConnecting",
+                "ScalableBleResources",
+                "NordicLlpmPair",
+                "NordicConnectionEventQos",
+                "NordicChannelSurvey",
+                "ConnectionTimeSyncCentral",
+                "ConnectionTimeSyncPeripheral",
+                "RadioEventTrigger",
+                "ConnectionRadioNotification",
+                "FlushableAclData",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_Mesh", name)
+            for name in (
+                "MeshProvisioner", "MeshNode", "MeshHealth", "MeshRelay",
+                "MeshFriend", "MeshLowPowerNode", "MeshProxy", "MeshOnOff",
+                "MeshLevel", "MeshLight", "MeshSensor", "MeshTimeSceneScheduler",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_Mesh_Management", name)
+            for name in (
+                "MeshRemoteProvisioner", "MeshRemoteProvisioningServer",
+                "MeshSarConfigurationClient", "MeshSarConfigurationServer",
+                "MeshOpcodeAggregatorClient", "MeshOpcodeAggregatorServer",
+                "MeshLargeCompositionDataClient", "MeshLargeCompositionDataServer",
+                "MeshPrivateBeaconClient", "MeshPrivateBeaconServer",
+                "MeshOnDemandPrivateProxy", "MeshProxySolicitation", "MeshSubnetBridge",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_Mesh_Update", name)
+            for name in (
+                "MeshBlobClient", "MeshBlobServer", "MeshDfuTarget",
+                "MeshFirmwareDistributor",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_Radio_IEEE802154", name)
+            for name in ("Radio154Transmitter", "Radio154Receiver")
+        }
+        later_ble_examples |= {
+            ("NUCODE_Radio_ESB", name)
+            for name in ("EsbPtx", "EsbPrx")
+        }
+        later_ble_examples |= {
+            ("NUCODE_Radio_Coexistence", name)
+            for name in (
+                "BleMeshCoexistence", "Ble154Coexistence", "BleEsbCoexistence",
+                "RadioCoexistenceOneWire",
+            )
         }
         self.assertEqual(source_examples - later_ble_examples, locked_examples)
         self.assertEqual(

@@ -1,0 +1,10 @@
+central: M32TIM|1|READY|role=central|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32TIM|1|READY|role=peripheral|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32TIM|1|BEGIN|role=central|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32TIM|1|BEGIN|role=peripheral|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32TIM|1|RESULT|role=peripheral|tx=0|rx=2000|subrate=20|frame=2|rate=20|channel=0|feature=20|sca=10|min_interval_us=0|callback_context=pass|packet_gap_ms=8|procedure_gap_ms=2500|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32TIM|1|END|role=peripheral|status=pass|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32TIM|1|RESULT|role=central|tx=2000|rx=0|subrate=20|frame=20|rate=20|channel=20|feature=20|sca=10|min_interval_us=750|callback_context=pass|packet_gap_ms=8|procedure_gap_ms=1350|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32TIM|1|END|role=central|status=pass|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8
+central: M32TIM|1|STOPPED|role=central|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8
+peripheral: M32TIM|1|STOPPED|role=peripheral|nonce=a2410af32abe437b4b9aaa1d5df428dc|core=94f0254499858800b4ced38b1211746b3f2175f8

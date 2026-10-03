@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "recorded_on": "2026-10-03",
+  "operation": "squash_merge_into_existing_main",
+  "source_before_document_review": "49099e74fec60566f8708e8398d6c1def86dd6d6",
+  "parent_main": "1049caf77a997338373f8a98a57a4888cd33693b",
+  "preserved_source_ref": "refs/heads/Dev-0.6.0-M32",
+  "preserved_release_ref": "refs/heads/Release-0.5.0",
+  "preserved_release_sha": "4790e3fa532ffea00bfd96780079cbadea263ca5",
+  "source_commit_count": 118,
+  "document_closure": "Additional documentation commit(s) on the preserved source branch; final source and squash trees must be identical.",
+  "main_history_rewritten": false,
+  "force_push_required": false,
+  "original_commits": [
+    {
+      "sha": "d3200e1891ece32da55f3228f0d1c4de97066ef3",
+      "subject": "feat: establish M32 W01 capability contract"
+    },
+    {
+      "sha": "0cc370e8deea2b18e2bba679aad66ae7a0638904",
+      "subject": "fix: use bounded hardware reset for M32 capability flash"
+    },
+    {
+      "sha": "35aabc84ffb54240d28d82cff3beddba591c9a65",
+      "subject": "fix: enable coded PHY for the M32 extended profile"
+    },
+    {
+      "sha": "c9059cb31339ae5a26ba597cc23722b6cd27d62b",
+      "subject": "docs: complete M32 W01 capability gate"
+    },
+    {
+      "sha": "31c190ea95ab130936415374bd6c35ed658482b1",
+      "subject": "feat: implement M32 W02 power and path loss control"
+    },
+    {
+      "sha": "ac61bda66a4bacd3c1368794a20647af23c1e20e",
+      "subject": "fix: advertise M32 W02 HIL peer identity"
+    },
+    {
+      "sha": "34d13859dfda27c8148a2c8909445d13d94b1359",
+      "subject": "fix: accept M32 W02 scan response identity"
+    },
+    {
+      "sha": "9a7d0351c8cd21ad7ebe3dcd921f29c2ec2b85bd",
+      "subject": "fix: serialize M32 W02 controller procedures"
+    },
+    {
+      "sha": "d05303b30f0f45fb34797a8a1a406d14c98863e1",
+      "subject": "docs: complete M32 W02 power control gate"
+    },
+    {
+      "sha": "30258a57c1f268f1686c85ba610264af4f7e37dc",
+      "subject": "feat: implement M32 W03 timing feature controls"
+    },
+    {
+      "sha": "bed5b5a7584645671c8d23123202d5bfe3e20d9c",
+      "subject": "docs: record M32 W03 validation blocker"
+    },
+    {
+      "sha": "b8d0c0c1e46eeb119c61d40b4042ac319fda9dc9",
+      "subject": "feat: implement M32 W04 advertising resource controls"
+    },
+    {
+      "sha": "2787660c9b63efb796bd4c1ab69ae485d72c7ed4",
+      "subject": "docs: record M32 W04 software validation blocker"
+    },
+    {
+      "sha": "85da61226c770ead63ef97512b76cbb3c2bc338e",
+      "subject": "feat: implement M32 W05 Nordic controller extensions"
+    },
+    {
+      "sha": "4b29f3752cb7209f920a2495ca46cda1b493e0f6",
+      "subject": "docs: record M32 W05 software validation blocker"
+    },
+    {
+      "sha": "ab3f682547836afd33d6c09612f027266b144f90",
+      "subject": "feat: implement M32 W06 Bluetooth Mesh foundation"
+    },
+    {
+      "sha": "d4db782a73cfed0efcc60587f336251adc1b081d",
+      "subject": "docs: record M32 W06 software readiness"
+    },
+    {
+      "sha": "8da1ff4e2e2aed9084f6acddc2a2d0f2080f2e4d",
+      "subject": "feat: implement M32 W07 Mesh 1.1 management"
+    },
+    {
+      "sha": "df6d4475ff9db2d7bfe7ca77fe7576776379cb19",
+      "subject": "docs: record M32 W07 software readiness"
+    },
+    {
+      "sha": "1a57eaae55acec26dd2903ab05c807062b6bfb9a",
+      "subject": "feat(mesh): M32-W08 BLOB 및 Mesh DFU 추가"
+    },
+    {
+      "sha": "fa0a61557b4891ce62a087c107b0b9947fa55e9b",
+      "subject": "docs: record M32 W08 software readiness"
+    },
+    {
+      "sha": "82361413bc0377871fffd74f4a23eca5a98a2abb",
+      "subject": "feat(radio): M32-W09 단독 802.15.4 및 ESB 추가"
+    },
+    {
+      "sha": "618be25012d0bc782bf89f5a2f12c059ec7be638",
+      "subject": "docs: record M32 W09 radio software readiness"
+    },
+    {
+      "sha": "7e756311d3ada2907820732ebec0a7b7a14b0e0c",
+      "subject": "feat(radio): M32-W10 공존 profile과 telemetry 추가"
+    },
+    {
+      "sha": "1dd6b6097ec420c87dfeaf2fc32dfbafa4b131b4",
+      "subject": "docs(m32): W10 공존 build 판정 기록"
+    },
+    {
+      "sha": "5c273a9b807bb35d7b362302a8fbf3d0679530eb",
+      "subject": "test(m32): W11 회귀 build 범위 확장"
+    },
+    {
+      "sha": "012b9c183e0351f3f42dbb84e6ace1f697345aee",
+      "subject": "fix(ci): Windows Zephyr build 경로 단축"
+    },
+    {
+      "sha": "d0f2b2c059d4a8adce31bc08b1c35edc25b4dd0d",
+      "subject": "test(m32): 후속 예제 회귀 경계 고정"
+    },
+    {
+      "sha": "3f3eeac358f01fe630f80c28a80de37ea77f2f5b",
+      "subject": "feat(m32): W11 회귀와 W12 승격 gate 기록"
+    },
+    {
+      "sha": "05f8f3be57a329530c9fad9230392c97259f8a64",
+      "subject": "docs(m32): W11 exact 회귀와 W12 인계 동기화"
+    },
+    {
+      "sha": "be14de3c37aba1290cd57cab1903a4aadfc88a70",
+      "subject": "fix(m32): CMSIS-DAP v1 HIL 경로 복구"
+    },
+    {
+      "sha": "9b3badc4ce252e01d6d8d637e175d3f22bff0bc9",
+      "subject": "fix(m32): CMSIS-DAP v1 flash를 attach로 연결"
+    },
+    {
+      "sha": "9051641f835e4cb2861ee4adb35bb6dc935a1afd",
+      "subject": "test(m32): W03 exact HIL 완료"
+    },
+    {
+      "sha": "3be98cbee7d6c5af9fe3c2a3fb2cc8f89b9357a3",
+      "subject": "test(m32): W04 EAD HIL 경로 준비"
+    },
+    {
+      "sha": "4af5b15a54aacc9d15f8257e535bbd7bc635b78b",
+      "subject": "fix(m32): CMSIS-DAP v2 HIL 경로 복구"
+    },
+    {
+      "sha": "3f8f962a1b5346a5c872df022ed393510a0377bd",
+      "subject": "test(m32): W04 EAD exact HIL 진척"
+    },
+    {
+      "sha": "dc752676960aefe105e8e1cd9b139760cc1dc406",
+      "subject": "test(m32): W04 multi-set HIL 경로 추가"
+    },
+    {
+      "sha": "e0b13fc33b5e5eaec9055a7c4fa7a6d227692ea4",
+      "subject": "test(m32): W04 multi-set 수신 안정화"
+    },
+    {
+      "sha": "a5f54c3fb06a9474401ffb50dd6445c751b49c32",
+      "subject": "test(m32): W04 identity privacy HIL 경로 추가"
+    },
+    {
+      "sha": "c817a27ed765641bdf41e4e386664a8aa8c173f9",
+      "subject": "test(m32): W09 단독 radio HIL 경로 추가"
+    },
+    {
+      "sha": "b464c1b347bf0028ccb4a8387d189bab0fb14527",
+      "subject": "docs(m32): W09 단독 radio 완료 기록"
+    },
+    {
+      "sha": "f813356c783cf1d4a5e74f48156c6b4304d4791d",
+      "subject": "feat(m32): W05 Nordic exact HIL 경로 추가"
+    },
+    {
+      "sha": "9e0bb59a478036e4d8e23759267d928134e3e089",
+      "subject": "docs(m32): W05 Nordic 확장 완료 기록"
+    },
+    {
+      "sha": "cb73cb086530cb5a9d1dc66cd0aa23c889383c35",
+      "subject": "feat(m32): W06 Mesh exact HIL 경로 추가"
+    },
+    {
+      "sha": "f32c4358c53affceb1dad9932df5cf6712a307c1",
+      "subject": "docs(m32): W06 exact HIL 준비 상태 기록"
+    },
+    {
+      "sha": "c499aa89180779b1502cde2558271087e35e26ea",
+      "subject": "feat(m32): W07 Mesh 1.1 exact HIL 경로 추가"
+    },
+    {
+      "sha": "99407dbe8c1e288557cae05d6670b6e5033e4279",
+      "subject": "docs(m32): W07 exact HIL 준비 상태 기록"
+    },
+    {
+      "sha": "b6d1630c3a060329f5996da71458038da2d530bd",
+      "subject": "fix(m32): W08 update model binding 공개"
+    },
+    {
+      "sha": "19c390bad1d749c54f6b8cb0a52474b8c7061425",
+      "subject": "feat(m32): W08 BLOB exact HIL 경로 추가"
+    },
+    {
+      "sha": "4f6008935889452ffab13ac85fd9d1f1d1ea0fce",
+      "subject": "docs(m32): W08 BLOB HIL 준비 상태 기록"
+    },
+    {
+      "sha": "042cfb32de7d800aa0d0255815ed98201e0c589a",
+      "subject": "feat(m32): W10 공존 exact HIL 경로 추가"
+    },
+    {
+      "sha": "ef16d15d44f3471fb090fe2acf716e4d6bd86f12",
+      "subject": "docs(m32): W10 공존 HIL 준비 상태 기록"
+    },
+    {
+      "sha": "1c7d2e14decc3b236443ff1d8bb00730e6b6ebf2",
+      "subject": "feat(m32): W11 regression 및 soak HIL 경로 추가"
+    },
+    {
+      "sha": "880933121703a289635b4fc633c32a69252a57be",
+      "subject": "docs(m32): W11 exact 실행 준비 상태 기록"
+    },
+    {
+      "sha": "bceb1817cd9a9fa61d49012655bb0f5cc86dd069",
+      "subject": "feat(m32): signed Mesh DFU HIL 경로 추가"
+    },
+    {
+      "sha": "7f53343ff6a2c1d580cbc448078aca6dcc7bf733",
+      "subject": "fix(ci): M32 soak 빌드 행렬 등록"
+    },
+    {
+      "sha": "e475a544d4a7a81b0ab31782bf7f145a5710fcec",
+      "subject": "docs(m32): signed Mesh DFU 준비 상태 기록"
+    },
+    {
+      "sha": "3829f144d8caba43bea65f01445ab392f5e7ec12",
+      "subject": "docs(m32): 최신 전체 회귀 결과 반영"
+    },
+    {
+      "sha": "386bc37983b27baed8d271c4a3c78c2125657d5b",
+      "subject": "fix(m32): privacy HIL peer identity 고정"
+    },
+    {
+      "sha": "9d56f11756168a48f7e6fad7400405705e81b867",
+      "subject": "docs(m32): W04 exact HIL 완료"
+    },
+    {
+      "sha": "97557bf5fe23ab87750b688fa4d047031ac38cee",
+      "subject": "fix(m32): Mesh HIL 스택 경계 확장"
+    },
+    {
+      "sha": "cd82ca9cc58deaeedc96232c55c3777498c68f47",
+      "subject": "fix(m32): Mesh provisioning 전용 스택 확장"
+    },
+    {
+      "sha": "181f05142c73c1e722c2d90d773d8f526cb3e248",
+      "subject": "test(m32): Mesh provisioning 실패 증거 보존"
+    },
+    {
+      "sha": "8a68d1f36bf8496c403748ee7cac945526babd05",
+      "subject": "fix(m32): Mesh 다중 노드 발견 순서 보강"
+    },
+    {
+      "sha": "6af305d3187f59e6c0acc57db98f1a4e03c2c6df",
+      "subject": "fix(m32): Mesh 비동기 provisioning 재시도"
+    },
+    {
+      "sha": "2fb214cb97c7384c8b4b4d1503c9d0ef0b95fd71",
+      "subject": "docs(m32): W06 실기 실패와 재부팅 인계 기록"
+    },
+    {
+      "sha": "70a687698bdd293ae53a8cec52ca114f918a6bb4",
+      "subject": "fix(m32): 두 원격 Mesh node용 CDB 용량 확보"
+    },
+    {
+      "sha": "2b9dfce2d06d62f5db76886d8359e6f148d0c8e4",
+      "subject": "feat(m32): Mesh CDB 용량 프로파일 확장"
+    },
+    {
+      "sha": "93fce46f02d2a12c420f24ca6254da1f2f1df77a",
+      "subject": "docs(m32): W06 CDB 교정과 짧은 실기 기록"
+    },
+    {
+      "sha": "8704633271bbb14928d7c326c62609bdca697c19",
+      "subject": "test(m32): Mesh topology 용량 사전검사 추가"
+    },
+    {
+      "sha": "7da71ab43c9e9f325d58c66c1e57973606728f6d",
+      "subject": "fix(m32): Mesh HIL 용량 증거 수집 초기화"
+    },
+    {
+      "sha": "de09d3f98fbe7ddbfa0483a748494622297dde1f",
+      "subject": "fix(m32): PB-ADV 종료 후 Mesh 구성 시작"
+    },
+    {
+      "sha": "24ea967b494b42b47001f6421cfb8caa9d874a3c",
+      "subject": "test(m32): W06 구성 timeout 실패 증거 보존"
+    },
+    {
+      "sha": "7ef6abcad7ebbfb09c088a194f82364249192299",
+      "subject": "fix(m32): Mesh ACK 손실 유한 재전송"
+    },
+    {
+      "sha": "45715e42e0d95e6a2e5dcf08d3067c8ca42d4241",
+      "subject": "fix(m32): Mesh 구성 응답 timeout 유한 재시도"
+    },
+    {
+      "sha": "6a40925f26036f97822649345d3a8dfb2a328c43",
+      "subject": "test(m32): W06 Mesh exact HIL 완료"
+    },
+    {
+      "sha": "4ca9b4ee02103a81255949144cba50f00b47fdcb",
+      "subject": "fix(m32): W07 Mesh topology 용량과 순서 교정"
+    },
+    {
+      "sha": "6197de0f4165db95a3266fb5972affd00e6c5949",
+      "subject": "fix(m32): W07 용량 증거 수집 초기화"
+    },
+    {
+      "sha": "6097d253039b7c8119eaace00249ba1318ba1e10",
+      "subject": "fix(m32): W07 Mesh stack 경계 보강"
+    },
+    {
+      "sha": "a2f2277a457c1282fa46325253f9783dcd02c4d2",
+      "subject": "fix(m32): W07 SRPL AppKey 경로 교정"
+    },
+    {
+      "sha": "2afd3d53d4ce57061b17df7a476fe7ef8edf5628",
+      "subject": "fix(m32): W07 역할별 설정 코드를 격리"
+    },
+    {
+      "sha": "0a6f5629e0122a6461e81302c42dd9d2b7aae60d",
+      "subject": "fix(m32): W07 opcode aggregation 대기 경로 교정"
+    },
+    {
+      "sha": "5680785527f2855436ffcb6fea5c4c0e58a45be3",
+      "subject": "test(m32): W07 관리 응답 재시도 경계 추가"
+    },
+    {
+      "sha": "22687a95fcea3c4bf4f2b54f2b536018acd03e2f",
+      "subject": "fix(m32): W07 Proxy Solicitation 기능 활성화"
+    },
+    {
+      "sha": "f95cca6c563e9d002e6e001c98b61b1cb32cae4c",
+      "subject": "fix(m32): W07 exact Solicitation 설정 연결"
+    },
+    {
+      "sha": "9bfc766dccfe27c6dbf03bba2a3594f9974a06fd",
+      "subject": "test(m32): W07 Mesh 1.1 exact HIL 완료"
+    },
+    {
+      "sha": "6797270abb362a59d36f727f633aede6e14146b2",
+      "subject": "fix(m32): W08 Mesh 토폴로지 용량과 순서 교정"
+    },
+    {
+      "sha": "75f5b61973cf026bc2425a37fb450c06d9d6a07c",
+      "subject": "fix(m32): W08 Mesh update 장시간 경계 보강"
+    },
+    {
+      "sha": "8dcb033e0fcbf7e939fc7b8f45c9654ffba866b1",
+      "subject": "fix(m32): W08 BLOB 완료 확인 경계 보강"
+    },
+    {
+      "sha": "da6bc81227c21fe3709b02ef2080d11936cd7ce4",
+      "subject": "fix(m32): W08 BLOB VCOM 완료 증거 보강"
+    },
+    {
+      "sha": "99e8306cb36f5ea4f4a2519ac83617ed8a5f505b",
+      "subject": "docs: 문서 전수 정비와 NCS 3.4.1 영향 검토"
+    },
+    {
+      "sha": "40e4c46b83addefd7ae12cc0c2af1b24764c4356",
+      "subject": "docs: v0.7.0을 NCS 3.4.1 전환 전용으로 재배정"
+    },
+    {
+      "sha": "84ecd3dc74b9c1f8b838742c6d3cc85176d5ade2",
+      "subject": "fix(m32): W08 MDFU 유한 전송 계약 보강"
+    },
+    {
+      "sha": "6c8fe51ee6812347478453eca3ddc04ac706ac6b",
+      "subject": "fix(m32): W08 MDFU apply 확인 경계 보강"
+    },
+    {
+      "sha": "861d628aeb2909b32895481d5110ba3bec17be09",
+      "subject": "fix(m32): W08 MDFU rollback 상태 복구"
+    },
+    {
+      "sha": "e0a1b7fd7885b79bbc8d8b575c63f5468c94c2a8",
+      "subject": "M32-W08: extend exact MDFU session budget"
+    },
+    {
+      "sha": "115d039fa8bf98d379f2ece8a07d1fec7192acef",
+      "subject": "M32-W08: close exact BLOB and signed MDFU HIL"
+    },
+    {
+      "sha": "b91e248ab7a35779e1d571e3019bee14c5831c15",
+      "subject": "M32-W09: reconfirm standalone radio on current head"
+    },
+    {
+      "sha": "aa39b707936993b5739b7012c4cba8bf87ae2462",
+      "subject": "M32-W10: fix direct 802.15.4 HIL initialization"
+    },
+    {
+      "sha": "1d15401f9c85bea9fd3f253748a3a88fff6b0a96",
+      "subject": "M32-W10: bound ESB coexistence transmit window"
+    },
+    {
+      "sha": "2dbc281d0c9f11adfece7db4c879f11e5106e899",
+      "subject": "M32-W10: order radio cleanup before BLE disconnect"
+    },
+    {
+      "sha": "6d40e9261a5b429b68d1cee2c139b597e37f6fd6",
+      "subject": "M32-W10: retain radio sequence across HIL restart"
+    },
+    {
+      "sha": "512b027a6b1b9966ef70ead8c6bc07d7a16522d5",
+      "subject": "M32-W10: stabilize BLE Mesh coexistence"
+    },
+    {
+      "sha": "35dbb61f64d35f0df20d46ec1bab7521e573ca14",
+      "subject": "M32-W10: close coexistence exact HIL"
+    },
+    {
+      "sha": "84c3f917a57c164a28da385e73aecce802efe596",
+      "subject": "M32-W11: fix Mesh update Arduino discovery"
+    },
+    {
+      "sha": "433c3f5cfddbc8477f928ae7e1f37b5af8562c3d",
+      "subject": "M32-W11: align MeshProvisioner guidance sidecars"
+    },
+    {
+      "sha": "fd6a8cf50dda3a519693387ba8f6a3e49347dec8",
+      "subject": "M32-W11: clear stale Mesh CDB on role changes"
+    },
+    {
+      "sha": "dd10491e7f1cbe01586abb97ff387439ae307290",
+      "subject": "M32-W11: wait for ESB timeslot cancellation"
+    },
+    {
+      "sha": "29fb27fe8798136a8dc40922d970f90ebbfbbd22",
+      "subject": "M32-W11: settle duplicate soak boot readiness"
+    },
+    {
+      "sha": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+      "subject": "M32-W11: bind local Mesh secondary models"
+    },
+    {
+      "sha": "99153d004c825bbc6d05d306540181e2fee08888",
+      "subject": "M32-W11: record exact soak and protected-board blocker"
+    },
+    {
+      "sha": "a227436fa626cdf40a4d2bc1f676cbaf882a3541",
+      "subject": "M32-W12: align audit and handoff with W11 blocker"
+    },
+    {
+      "sha": "e405999a96dfb6f188f7dd0d544907a1229b116b",
+      "subject": "M32-W12: record exact SHA software CI"
+    },
+    {
+      "sha": "4ea2e90630184f04d78f26942bcda75e1283f5ff",
+      "subject": "M32-W11: preserve nRF54L debug access during HIL"
+    },
+    {
+      "sha": "94f0254499858800b4ced38b1211746b3f2175f8",
+      "subject": "M32-W11: boot signed mesh images from clean RRAM"
+    },
+    {
+      "sha": "b6ec8677d0008dcdf9be3632725420cdea02152a",
+      "subject": "M32-W11: close exact regression and soak"
+    },
+    {
+      "sha": "f1fc7f486001e174acafed2358d4640c225ae0b1",
+      "subject": "M32-W12: complete milestone consistency audit"
+    },
+    {
+      "sha": "49099e74fec60566f8708e8398d6c1def86dd6d6",
+      "subject": "M32-W12: fix adaptive BLE clock dependency"
+    }
+  ],
+  "preserved_tags": [
+    {
+      "sha": "32990b0d8235346b4bb29de42837e06bbcfa2447",
+      "ref": "refs/tags/archive/m31-w03-before-squash-dac8ea8a"
+    },
+    {
+      "sha": "0c6b7f8500f31fb1693ba881425e89bd0419cc07",
+      "ref": "refs/tags/archive/m31-w03-pre-squash-e4c63898"
+    },
+    {
+      "sha": "fa3b4752665eaaae3ad1d08c776cd5781f15c997",
+      "ref": "refs/tags/archive/main-before-milestone-squash-4dce513e"
+    },
+    {
+      "sha": "8f071ba7d363a62fd60149abc86c676269b95dc1",
+      "ref": "refs/tags/v0.3.0"
+    },
+    {
+      "sha": "ad829439e570c7510fce2f8cc7252e5b9ef32b04",
+      "ref": "refs/tags/v0.4.0"
+    },
+    {
+      "sha": "bbc2dc1fc5823ca465fc1d1ff2170512282b9313",
+      "ref": "refs/tags/v0.4.1"
+    },
+    {
+      "sha": "0999b6a721b4579faa6a7a4d91d04da5e4960c07",
+      "ref": "refs/tags/v0.5.0"
+    },
+    {
+      "sha": "6cb741b45d88b6a4f1152631d5d31ce200ebc9ec",
+      "ref": "refs/tags/v0.5.0-rc.1"
+    },
+    {
+      "sha": "c026e78ec41d7bb502f56db2c5672725714299e7",
+      "ref": "refs/tags/v0.5.0-rc.2"
+    }
+  ],
+  "preserved_objects": [
+    {
+      "path": "package_nucode_nu54dk_index.json",
+      "git_object": "c85eb1062e469bf252ed3b48e280321aa97996bf"
+    },
+    {
+      "path": "tools/ci/ncs-3.4.0.lock.json",
+      "git_object": "d893f514fc044e39faa6806d59153967a107ba5b"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS",
+      "git_object": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+    },
+    {
+      "path": "platform.txt",
+      "git_object": "ec3c860b269f146c32f660a756da63e875380d52"
+    }
+  ],
+  "verification": "Compare source tip and squash HEAD trees; exact-SHA Actions and remote refs verified after push, reported separately."
+}

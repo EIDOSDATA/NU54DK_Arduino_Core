@@ -1,0 +1,19 @@
+tests:
+  nucode.m32.mesh_management_hil.client:
+    build_only: true
+    extra_args: [M32_MESH11_ROLE=client]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, mesh, m32, hil]
+  nucode.m32.mesh_management_hil.server:
+    build_only: true
+    extra_args: [M32_MESH11_ROLE=server]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, mesh, m32, hil]
+  nucode.m32.mesh_management_hil.target:
+    build_only: true
+    extra_args: [M32_MESH11_ROLE=target]
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    tags: [bluetooth, mesh, m32, hil]

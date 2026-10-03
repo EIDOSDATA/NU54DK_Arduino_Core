@@ -15,16 +15,20 @@ namespace nucode::ble::internal::gap
         {
             bool matches = false;
             k_spinlock_key_t key = k_spin_lock(&gapState().configuration_lock);
-            const ExtendedAdvertisingContext &extended = gapState().extended_advertising;
             const PawrContext &pawr = gapState().pawr;
-            if (pawr.configured && extended.instance == advertiser &&
-                extended.generation != 0U &&
-                pawr.advertising_set ==
-                    BLEConnectionHandleAccess::makeAdvertisingSet(extended.generation))
+            for (const ExtendedAdvertisingContext &extended :
+                 gapState().extended_advertising)
             {
-                handle = pawr.advertising_set;
-                device_generation = extended.device_generation;
-                matches = true;
+                if (pawr.configured && extended.instance == advertiser &&
+                    extended.generation != 0U &&
+                    pawr.advertising_set ==
+                        BLEConnectionHandleAccess::makeAdvertisingSet(extended.generation))
+                {
+                    handle = pawr.advertising_set;
+                    device_generation = extended.device_generation;
+                    matches = true;
+                    break;
+                }
             }
             k_spin_unlock(&gapState().configuration_lock, key);
             return matches && device_generation == static_cast<std::uint32_t>(
@@ -326,7 +330,7 @@ namespace nucode::ble
         struct bt_le_per_adv_sync *instance = nullptr;
         std::uint32_t device_generation = 0U;
         if (!currentPeriodicSync(sync, instance, device_generation) ||
-            atomic_get(&gapState().periodic_sync.synchronized) == 0)
+            !BLEPeriodicAdvertising.synchronized(sync))
         {
             internal::recordError(BLEError::wrong_state, -ENOENT, true);
             return false;
@@ -376,7 +380,7 @@ namespace nucode::ble
         struct bt_le_per_adv_sync *instance = nullptr;
         std::uint32_t device_generation = 0U;
         if (!currentPeriodicSync(sync, instance, device_generation) ||
-            atomic_get(&gapState().periodic_sync.synchronized) == 0)
+            !BLEPeriodicAdvertising.synchronized(sync))
         {
             internal::recordError(BLEError::wrong_state, -ENOENT, true);
             return false;

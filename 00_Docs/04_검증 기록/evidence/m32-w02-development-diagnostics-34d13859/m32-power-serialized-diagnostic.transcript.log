@@ -1,0 +1,55 @@
+central: M32PWR|1|READY|role=central|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|READY|role=peripheral|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|BEGIN|role=central|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|BEGIN|role=peripheral|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: LOG [00:00:44.627,775] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+peripheral: LOG [00:00:02.244,393] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+central: LOG [00:00:44.734,649] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+peripheral: LOG [00:00:02.351,333] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+central: LOG [00:00:44.841,417] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+peripheral: LOG [00:00:02.458,160] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+peripheral: LOG [00:00:02.564,991] [1;33m<wrn> bt_hci_core: opcode 0x2077 status 0x3a [0m
+central: M32PWR|1|POWER|role=central|index=1|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=1|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=2|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=3|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=2|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=3|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=4|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=5|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=4|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=5|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=6|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=6|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=7|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=8|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=7|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=8|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=9|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=10|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=9|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=10|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=11|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=12|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=11|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=12|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=13|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=14|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=13|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=14|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=15|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=16|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=15|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=16|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=17|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=18|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=17|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=18|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=19|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|POWER|role=central|index=20|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=19|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|PATH|role=central|index=1|zone=0|loss=56|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+peripheral: M32PWR|1|POWER|role=peripheral|index=20|level=0|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: LOG [00:00:49.090,704] [1;33m<wrn> bt_hci_core: opcode 0x2078 status 0x12 [0m
+peripheral: M32PWR|1|RESULT|role=peripheral|power_reports=20|power_min=0|power_max=0|callback_context=pass|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359
+central: M32PWR|1|FAIL|role=central|stage=path_restart|code=-22|nonce=1d38d639fb4f95255abc9ae91b899690|core=34d13859dfda27c8148a2c8909445d13d94b1359

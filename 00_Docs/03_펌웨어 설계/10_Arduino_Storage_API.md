@@ -3,12 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 문서 ID | FW-STORAGE-001 |
-| 문서 개정 | 1.6 |
+| 문서 개정 | 1.7 |
 | 적용 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1` stable 호환 계약 |
 | 현재 정식 버전 | `v0.5.0` (v0.4.x Storage 계약 유지) |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
-| 최종 갱신일 | 2026-09-27 |
+| 최종 갱신일 | 2026-10-01 |
 
 ## 1. 목적과 지원 경계
 
@@ -71,7 +71,7 @@ v0.4.0이 제공하는 layout은 RC3에서 도입한 위 loaderless 단일 appli
 signed update·BLE update·rollback 기반을 구현했다. Boot/update 영역과 기존 저장소의 보존 경계를
 함께 검증하며, 현재 EEPROM/LittleFS HIL 결과를 새 layout의 update·power-fail 보증으로 재사용하지 않는다.
 
-`v0.7.0` M36은 M30의 최소 기반을 여러 layout·update transport와 **고급 Memory layout 선택**으로
+`v0.8.0` M36은 M30의 최소 기반을 여러 layout·update transport와 **고급 Memory layout 선택**으로
 확장하고 hardening한다. 기본 loaderless layout은 유지하며, MCUboot/DFU와 signed update·rollback이
 실제로 포함된 검증 경로에서만 boot 영역과 dual-slot layout을 노출한다. Arduino Tools에는 임의
 숫자 입력 대신 검증된 preset을 제공하고, 전문가 overlay는 같은 정적 검사와 linker assertion을
@@ -79,6 +79,9 @@ signed update·BLE update·rollback 기반을 구현했다. Boot/update 영역�
 4지점 × 3회(12/12)를 완료했다. M36은 미착수다. M30의 완료 근거와 후속 인계는
 [161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
 [v0.5.0 착수 계획](../TODO_v0.5.0.md)을 따른다.
+
+선행 [v0.7.0](../TODO_v0.7.0.md)은 NCS 3.4.1 전체 SDK 전환 전용이다. 기존 Storage API·데이터
+보존·오류 경로의 회귀만 검증하며 새 storage 기능이나 M36의 고급 layout·transport를 추가하지 않는다.
 
 ## 3. EEPROM 계약
 

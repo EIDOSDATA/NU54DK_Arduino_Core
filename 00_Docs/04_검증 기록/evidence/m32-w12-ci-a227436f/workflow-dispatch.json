@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "m32_w12_exact_sha_software_ci",
+  "workflow": "M12 Software Gates",
+  "event": "workflow_dispatch",
+  "run_id": 37045597662,
+  "run_url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/37045597662",
+  "head_branch": "Dev-0.6.0-M32",
+  "head_sha": "a227436fa626cdf40a4d2bc1f676cbaf882a3541",
+  "started_at": "2026-10-02T18:09:59Z",
+  "completed_at": "2026-10-02T18:16:57Z",
+  "jobs": {
+    "success": [
+      "M23 inventory and M24 serial-fabric contract",
+      "M14 Core native semantic runtime",
+      "Classify RC2 build impact",
+      "Reproducible Boards Manager package",
+      "Arduino example discovery",
+      "UTF-8 and local links",
+      "CI contract",
+      "Host unit with Windows PowerShell contracts"
+    ],
+    "skipped": [
+      "Six Feature set representative builds"
+    ],
+    "failed": []
+  },
+  "skip_reason": "classifier가 W12 변경을 문서·증거 전용으로 판정하여 대표 six-profile build 조건이 false",
+  "non_blocking_annotations": [
+    "arduino/setup-arduino-cli action의 Node.js 20이 runner에서 Node.js 24로 강제 실행됨"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "work_id": "M32-W08",
+  "status": "PASS",
+  "source_revisions": {
+    "blob": "40e4c46b83addefd7ae12cc0c2af1b24764c4356",
+    "mesh_dfu": "e0a1b7fd7885b79bbc8d8b575c63f5468c94c2a8"
+  },
+  "source_clean": true,
+  "blob_transfer": {
+    "status": "PASS",
+    "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-blob-40e4c46b-exact/m32-blob-01.json",
+    "boards": 3,
+    "iterations": 10,
+    "client_chunks": 5120,
+    "target_chunks": 2560,
+    "object_size": 32768,
+    "negative": [
+      "wrong_key",
+      "bad_digest",
+      "cancel_resume"
+    ],
+    "stopped_roles": 3
+  },
+  "signed_mesh_dfu": {
+    "status": "PASS",
+    "evidence": "00_Docs/04_검증 기록/evidence/m32-w08-mdfu-e0a1b7fd-exact/m32-mdfu-01.json",
+    "boards": 3,
+    "iterations": 5,
+    "firmware_distribution_targets": 10,
+    "candidate_boots": 10,
+    "rollback_count": 9,
+    "confirmed_targets": 1,
+    "negative": [
+      "wrong_image",
+      "wrong_key",
+      "partial_image",
+      "rollback"
+    ],
+    "stopped_roles": 3,
+    "mass_erase_or_recover": false
+  },
+  "external_storage_variant": "NOT_RUN",
+  "power_cut_extension_owner": "M36"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 3,
+  "capability_mode": "compatibility",
+  "id": "coexistence_ble_154",
+  "display_name": "BLE and IEEE 802.15.4 MPSL coexistence",
+  "board": "nucode:zephyr:nu54dk",
+  "zephyr_board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "ncs_version": "v3.4.0",
+  "conf": "prj.conf",
+  "overlay": "app.overlay",
+  "sysbuild": false,
+  "sysbuild_files": [],
+  "signing_key_env": null,
+  "features": ["gpio", "time", "serial", "storage", "ble", "radio"],
+  "conflicts": [],
+  "requires_hil": ["ble", "ieee802154_radio", "coexistence"]
+}

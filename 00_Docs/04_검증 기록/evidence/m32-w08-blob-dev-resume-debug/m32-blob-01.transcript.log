@@ -1,0 +1,478 @@
+blob_client: M32BLOB|1|READY|role=blob_client|provisioned=1|cdb_node_slots=3|cdb_local_slots=1|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a: M32BLOB|1|READY|role=target_a|provisioned=0|cdb_node_slots=3|cdb_local_slots=1|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b: M32BLOB|1|READY|role=target_b|provisioned=0|cdb_node_slots=3|cdb_local_slots=1|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:02.410,909] [1;33m<wrn> bt_mesh_blob_cli: BLOB xfer already cancelled[0m
+target_a: M32BLOB|1|CLEARED|role=target_a|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b-raw: [00:00:01.179,981] [1;33m<wrn> bt_mesh_blob_cli: BLOB xfer already cancelled[0m
+target_b: M32BLOB|1|CLEARED|role=target_b|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:03.721,195] [1;33m<wrn> bt_mesh_blob_cli: BLOB xfer already cancelled[0m
+blob_client-raw: [00:00:03.730,723] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 0[0m
+blob_client-raw: [00:00:03.739,084] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 0[0m
+blob_client-raw: [00:00:03.749,654] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 0[0m
+blob_client: M32BLOB|1|CLEARED|role=blob_client|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client: M32BLOB|1|BEGIN|role=blob_client|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a: M32BLOB|1|BEGIN|role=target_a|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b: M32BLOB|1|BEGIN|role=target_b|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=0|p=0|b=0|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=0|b=0|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:10.173,531] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000000 already exists (desync between mesh and PSA ITS)[0m
+target_a-raw: [00:00:10.535,320] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000001 already exists (desync between mesh and PSA ITS)[0m
+target_a-raw: [00:00:10.901,702] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 1[0m
+blob_client-raw: [00:00:12.381,098] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000004 already exists (desync between mesh and PSA ITS)[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=0|a=1|l=1|pa=0|cs=0|rp=0|p=0|b=0|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_b-raw: [00:00:13.812,579] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000000 already exists (desync between mesh and PSA ITS)[0m
+target_b-raw: [00:00:14.344,635] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000001 already exists (desync between mesh and PSA ITS)[0m
+blob_client-raw: [00:00:17.571,708] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000005 already exists (desync between mesh and PSA ITS)[0m
+blob_client-raw: [00:00:19.426,620] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000006 already exists (desync between mesh and PSA ITS)[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:19.723,378] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000007 already exists (desync between mesh and PSA ITS)[0m
+blob_client-raw: [00:00:20.083,016] [0m<dbg> bt_mesh_cfg_srv: app_key_add: AppIdx 0x0000 NetIdx 0x0000[0m
+blob_client-raw: [00:00:20.091,371] [0m<dbg> bt_mesh_cfg_cli: app_key_status: net_idx 0x0000 app_idx 0xfffe src 0x0001 len 4: 00000000[0m
+target_a-raw: [00:00:18.959,757] [0m<dbg> bt_mesh_cfg_srv: app_key_add: AppIdx 0x0000 NetIdx 0x0000[0m
+blob_client-raw: [00:00:20.103,832] [0m<dbg> bt_mesh_cfg_srv: get_model: ID 0x1401 addr 0x0002[0m
+target_a-raw: [00:00:18.968,946] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000002 already exists (desync between mesh and PSA ITS)[0m
+blob_client-raw: [00:00:20.111,074] [0m<dbg> bt_mesh_cfg_srv: mod_bind: model 0x697d8 key_idx 0x000[0m
+blob_client-raw: [00:00:20.118,827] [0m<dbg> bt_mesh_cfg_srv: mod_bind: model 0x697d8 id 0x1401 i 0 key 0xffff[0m
+blob_client-raw: [00:00:20.127,537] [0m<dbg> bt_mesh_cfg_srv: mod_app_bind: status 0x00[0m
+target_a-raw: [00:00:19.328,012] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000003 already exists (desync between mesh and PSA ITS)[0m
+blob_client-raw: [00:00:20.134,575] [0m<dbg> bt_mesh_cfg_cli: mod_app_status: net_idx 0x0000 app_idx 0xfffe src 0x0001 len 7: 00020000000114[0m
+blob_client-raw: [00:00:21.099,915] [0m<dbg> bt_mesh_cfg_cli: app_key_status: net_idx 0x0000 app_idx 0xfffd src 0x0100 len 4: 00000000[0m
+target_a-raw: [00:00:19.876,794] [0m<dbg> bt_mesh_cfg_srv: get_model: ID 0x1400 addr 0x0101[0m
+blob_client-raw: [00:00:21.199,453] [0m<dbg> bt_mesh_cfg_cli: mod_app_status: net_idx 0x0000 app_idx 0xfffd src 0x0100 len 7: 00010100000014[0m
+target_a-raw: [00:00:19.884,040] [0m<dbg> bt_mesh_cfg_srv: mod_bind: model 0x67ab0 key_idx 0x000[0m
+blob_client-raw: [00:00:21.285,385] [0m<dbg> bt_mesh_cfg_cli: mod_sub_status: net_idx 0x0000 app_idx 0xfffd src 0x0100 len 7: 00010121c30014[0m
+target_a-raw: [00:00:19.891,782] [0m<dbg> bt_mesh_cfg_srv: mod_bind: model 0x67ab0 id 0x1400 i 0 key 0xffff[0m
+target_a-raw: [00:00:19.900,517] [0m<dbg> bt_mesh_cfg_srv: mod_app_bind: status 0x00[0m
+target_b-raw: [00:00:18.851,504] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000002 already exists (desync between mesh and PSA ITS)[0m
+target_a-raw: [00:00:19.965,954] [0m<dbg> bt_mesh_cfg_srv: mod_sub_add: elem_addr 0x0101, sub_addr 0xc321[0m
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:19.974,449] [0m<dbg> bt_mesh_cfg_srv: get_model: ID 0x1400 addr 0x0101[0m
+target_a-raw: [00:00:19.981,761] [0m<dbg> bt_mesh_cfg_srv: send_mod_sub_status: status 0x00 elem_addr 0x0101 sub_addr 0xc321[0m
+target_b-raw: [00:00:19.320,668] [1;33m<wrn> bt_mesh_crypto_psa: Key with ID 0x20000003 already exists (desync between mesh and PSA ITS)[0m
+blob_client-raw: [00:00:22.343,321] [0m<dbg> bt_mesh_cfg_cli: app_key_status: net_idx 0x0000 app_idx 0xfffd src 0x0200 len 4: 00000000[0m
+blob_client-raw: [00:00:22.413,252] [0m<dbg> bt_mesh_cfg_cli: mod_app_status: net_idx 0x0000 app_idx 0xfffd src 0x0200 len 7: 00010200000014[0m
+blob_client-raw: [00:00:22.467,505] [0m<dbg> bt_mesh_cfg_cli: mod_sub_status: net_idx 0x0000 app_idx 0xfffd src 0x0200 len 7: 00010221c30014[0m
+blob_client-raw: [00:00:26.496,699] [0m<dbg> bt_mesh_blob_cli: block_set: 0 size: 4096 chunks: 32[0m
+blob_client-raw: [00:00:26.504,209] [0m<dbg> bt_mesh_blob_cli: bt_mesh_blob_cli_send:
+target_a-raw: [00:00:25.342,673] [0m<dbg> bt_mesh_blob_srv: handle_xfer_start:
+blob_client-raw: block size log: 12
+target_a-raw: size: 8192 block size: 4096
+blob_client-raw: chunk size: 128
+target_a-raw: mtu_size: 192
+blob_client-raw: blob size: 8192
+target_a-raw: mode: push[0m
+blob_client-raw: mode: 1[0m
+target_a-raw: [00:00:25.353,793] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 2[0m
+blob_client-raw: [00:00:26.516,686] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:25.658,773] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 3[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=0|a=2|l=2|pa=0|cs=8|rp=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:25.664,972] [0m<dbg> bt_mesh_blob_srv: handle_block_start: 0: (1/2)
+blob_client-raw: [00:00:26.809,339] [0m<dbg> bt_mesh_blob_cli: handle_xfer_status: status: 0 push phase: 2 ff0700003435554e[0m
+target_a-raw: size: 4096
+blob_client-raw: [00:00:26.819,096] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast_rsp: 0x0101, pending: 1[0m
+target_a-raw: chunk size: 128
+blob_client-raw: [00:00:26.827,344] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: chunk count: 32[0m
+blob_client-raw: [00:00:26.834,599] [0m<dbg> bt_mesh_blob_cli: block_start: 0 (32 chunks, 1/2)[0m
+target_a-raw: [00:00:25.676,091] [0m<dbg> bt_mesh_blob_srv: block_status_rsp: Status: 0, missing: 32/32[0m
+blob_client-raw: [00:00:26.841,960] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:26.972,267] [0m<dbg> bt_mesh_blob_cli: handle_block_status: status: 0 block: 0 encoding: 0[0m
+blob_client-raw: [00:00:26.981,250] [0m<dbg> bt_mesh_blob_cli: rx_block_status: 0x0101: block: 0 status: 0[0m
+blob_client-raw: [00:00:26.989,588] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast_rsp: 0x0101, pending: 1[0m
+target_a-raw: [00:00:26.471,434] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 1/32 (128 bytes)[0m
+blob_client-raw: [00:00:26.997,905] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:27.005,133] [0m<dbg> bt_mesh_blob_cli: chunk_send: 1 / 32 size: 128[0m
+blob_client-raw: [00:00:27.012,161] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:27.761,088] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:27.768,296] [0m<dbg> bt_mesh_blob_cli: chunk_send: 2 / 32 size: 128[0m
+blob_client-raw: [00:00:27.775,422] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:27.220,945] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 2/32 (128 bytes)[0m
+blob_client-raw: [00:00:28.524,557] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:28.531,758] [0m<dbg> bt_mesh_blob_cli: chunk_send: 3 / 32 size: 128[0m
+blob_client-raw: [00:00:28.538,785] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:29.293,025] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:27.989,985] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 3/32 (128 bytes)[0m
+blob_client-raw: [00:00:29.300,206] [0m<dbg> bt_mesh_blob_cli: chunk_send: 4 / 32 size: 128[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:29.307,253] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:30.043,532] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:28.752,794] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 4/32 (128 bytes)[0m
+blob_client-raw: [00:00:30.050,757] [0m<dbg> bt_mesh_blob_cli: chunk_send: 5 / 32 size: 128[0m
+blob_client-raw: [00:00:30.057,824] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:30.783,063] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:29.494,436] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 5/32 (128 bytes)[0m
+blob_client-raw: [00:00:30.790,259] [0m<dbg> bt_mesh_blob_cli: chunk_send: 6 / 32 size: 128[0m
+blob_client-raw: [00:00:30.797,333] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:30.234,254] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 6/32 (128 bytes)[0m
+blob_client-raw: [00:00:31.528,081] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:31.535,304] [0m<dbg> bt_mesh_blob_cli: chunk_send: 7 / 32 size: 128[0m
+blob_client-raw: [00:00:31.542,332] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:32.306,191] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:31.013,785] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 7/32 (128 bytes)[0m
+blob_client-raw: [00:00:32.313,342] [0m<dbg> bt_mesh_blob_cli: chunk_send: 8 / 32 size: 128[0m
+blob_client-raw: [00:00:32.320,461] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:33.051,216] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:31.763,108] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 8/32 (128 bytes)[0m
+blob_client-raw: [00:00:33.058,399] [0m<dbg> bt_mesh_blob_cli: chunk_send: 9 / 32 size: 128[0m
+blob_client-raw: [00:00:33.065,500] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:33.801,118] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:32.511,778] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 9/32 (128 bytes)[0m
+blob_client-raw: [00:00:33.808,361] [0m<dbg> bt_mesh_blob_cli: chunk_send: 10 / 32 size: 128[0m
+blob_client-raw: [00:00:33.815,557] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:34.546,139] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:33.257,253] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 10/32 (128 bytes)[0m
+blob_client-raw: [00:00:34.553,310] [0m<dbg> bt_mesh_blob_cli: chunk_send: 11 / 32 size: 128[0m
+blob_client-raw: [00:00:34.560,428] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:35.297,980] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:34.005,206] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 11/32 (128 bytes)[0m
+blob_client-raw: [00:00:35.305,138] [0m<dbg> bt_mesh_blob_cli: chunk_send: 12 / 32 size: 128[0m
+blob_client-raw: [00:00:35.312,283] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:36.053,856] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:34.759,011] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 12/32 (128 bytes)[0m
+blob_client-raw: [00:00:36.061,121] [0m<dbg> bt_mesh_blob_cli: chunk_send: 13 / 32 size: 128[0m
+blob_client-raw: [00:00:36.068,236] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=0|a=2|l=2|pa=0|cs=8|rp=1|p=2|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:00:35.511,362] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 13/32 (128 bytes)[0m
+blob_client-raw: [00:00:37.524,485] [0m<dbg> bt_mesh_blob_cli: block_set: 0 size: 4096 chunks: 32[0m
+target_a-raw: [00:00:36.356,673] [0m<dbg> bt_mesh_blob_srv: handle_xfer_start:
+blob_client-raw: [00:00:37.532,347] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: size: 8192 block size: 4096
+target_a-raw: mtu_size: 192
+blob_client-raw: [00:00:37.829,557] [0m<dbg> bt_mesh_blob_cli: handle_xfer_status: status: 0 push phase: 3 ff0700003435554e[0m
+target_a-raw: mode: push[0m
+blob_client-raw: [00:00:37.839,360] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast_rsp: 0x0101, pending: 1[0m
+target_a-raw: [00:00:36.367,779] [0m<dbg> bt_mesh_blob_srv: handle_xfer_start: Duplicate[0m
+blob_client-raw: [00:00:37.847,700] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:36.677,844] [0m<dbg> bt_mesh_blob_srv: block_status_rsp: Status: 0, missing: 19/32[0m
+blob_client-raw: [00:00:37.854,908] [0m<dbg> bt_mesh_blob_cli: block_start: 0 (32 chunks, 1/2)[0m
+target_a-raw: [00:00:36.686,151] [0m<dbg> bt_mesh_blob_srv: block_status_rsp: Bits: 00e0ffff[0m
+blob_client-raw: [00:00:37.862,198] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:37.999,980] [0m<dbg> bt_mesh_blob_cli: handle_block_status: status: 0 block: 0 encoding: 2[0m
+blob_client-raw: [00:00:38.008,959] [0m<dbg> bt_mesh_blob_cli: handle_block_status: Missing: 00e0ffff[0m
+blob_client-raw: [00:00:38.016,934] [0m<dbg> bt_mesh_blob_cli: rx_block_status: 0x0101: block: 0 status: 0[0m
+blob_client-raw: [00:00:38.025,308] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast_rsp: 0x0101, pending: 1[0m
+blob_client-raw: [00:00:38.033,581] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:37.487,432] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 1/32 (128 bytes)[0m
+blob_client-raw: [00:00:38.040,807] [0m<dbg> bt_mesh_blob_cli: chunk_send: 1 / 32 size: 128[0m
+target_a-raw: [00:00:37.494,642] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 0[0m
+blob_client-raw: [00:00:38.047,882] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:38.782,741] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:38.789,953] [0m<dbg> bt_mesh_blob_cli: chunk_send: 2 / 32 size: 128[0m
+blob_client-raw: [00:00:38.796,983] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:39.532,850] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:38.236,835] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 2/32 (128 bytes)[0m
+blob_client-raw: [00:00:39.540,097] [0m<dbg> bt_mesh_blob_cli: chunk_send: 3 / 32 size: 128[0m
+target_a-raw: [00:00:38.244,030] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 1[0m
+blob_client-raw: [00:00:39.547,125] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:39.005,935] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 3/32 (128 bytes)[0m
+blob_client-raw: [00:00:40.300,412] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:39.013,121] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 2[0m
+blob_client-raw: [00:00:40.307,572] [0m<dbg> bt_mesh_blob_cli: chunk_send: 4 / 32 size: 128[0m
+blob_client-raw: [00:00:40.314,604] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:41.085,119] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:39.776,789] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 4/32 (128 bytes)[0m
+blob_client-raw: [00:00:41.092,371] [0m<dbg> bt_mesh_blob_cli: chunk_send: 5 / 32 size: 128[0m
+target_a-raw: [00:00:39.783,969] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 3[0m
+blob_client-raw: [00:00:41.099,400] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:41.864,393] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:40.562,844] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 5/32 (128 bytes)[0m
+blob_client-raw: [00:00:41.871,547] [0m<dbg> bt_mesh_blob_cli: chunk_send: 6 / 32 size: 128[0m
+target_a-raw: [00:00:40.569,999] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 4[0m
+blob_client-raw: [00:00:41.878,576] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:41.326,314] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 6/32 (128 bytes)[0m
+blob_client-raw: [00:00:42.622,855] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:41.333,573] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 5[0m
+blob_client-raw: [00:00:42.630,066] [0m<dbg> bt_mesh_blob_cli: chunk_send: 7 / 32 size: 128[0m
+blob_client-raw: [00:00:42.637,113] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:43.378,908] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:42.083,638] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 7/32 (128 bytes)[0m
+blob_client-raw: [00:00:43.386,134] [0m<dbg> bt_mesh_blob_cli: chunk_send: 8 / 32 size: 128[0m
+target_a-raw: [00:00:42.090,824] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 6[0m
+blob_client-raw: [00:00:43.393,192] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:42.852,450] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 8/32 (128 bytes)[0m
+blob_client-raw: [00:00:44.159,596] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:42.859,653] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 7[0m
+blob_client-raw: [00:00:44.166,805] [0m<dbg> bt_mesh_blob_cli: chunk_send: 9 / 32 size: 128[0m
+blob_client-raw: [00:00:44.173,837] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:44.917,896] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:43.620,866] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 9/32 (128 bytes)[0m
+blob_client-raw: [00:00:44.925,047] [0m<dbg> bt_mesh_blob_cli: chunk_send: 10 / 32 size: 128[0m
+target_a-raw: [00:00:43.628,058] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 8[0m
+blob_client-raw: [00:00:44.932,181] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:44.386,613] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 10/32 (128 bytes)[0m
+blob_client-raw: [00:00:45.686,776] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:44.393,891] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 9[0m
+blob_client-raw: [00:00:45.694,033] [0m<dbg> bt_mesh_blob_cli: chunk_send: 11 / 32 size: 128[0m
+blob_client-raw: [00:00:45.701,150] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:46.450,162] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:45.147,329] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 11/32 (128 bytes)[0m
+blob_client-raw: [00:00:46.457,321] [0m<dbg> bt_mesh_blob_cli: chunk_send: 12 / 32 size: 128[0m
+target_a-raw: [00:00:45.154,650] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 10[0m
+blob_client-raw: [00:00:46.464,473] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=0|a=2|l=2|pa=0|cs=8|rp=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:47.224,607] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:45.925,193] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 12/32 (128 bytes)[0m
+blob_client-raw: [00:00:47.231,825] [0m<dbg> bt_mesh_blob_cli: chunk_send: 13 / 32 size: 128[0m
+target_a-raw: [00:00:45.932,473] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 11[0m
+blob_client-raw: [00:00:47.238,943] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:46.677,431] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 13/32 (128 bytes)[0m
+blob_client-raw: [00:00:47.994,596] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:46.684,682] [0m<dbg> bt_mesh_blob_srv: handle_chunk: Duplicate chunk 12[0m
+blob_client-raw: [00:00:48.001,759] [0m<dbg> bt_mesh_blob_cli: chunk_send: 14 / 32 size: 128[0m
+blob_client-raw: [00:00:48.008,903] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:48.757,438] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:47.443,768] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 14/32 (128 bytes)[0m
+blob_client-raw: [00:00:48.764,603] [0m<dbg> bt_mesh_blob_cli: chunk_send: 15 / 32 size: 128[0m
+blob_client-raw: [00:00:48.771,730] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:49.496,463] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:49.503,628] [0m<dbg> bt_mesh_blob_cli: chunk_send: 16 / 32 size: 128[0m
+target_a-raw: [00:00:48.206,777] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 15/32 (128 bytes)[0m
+blob_client-raw: [00:00:49.510,752] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:48.963,379] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 16/32 (128 bytes)[0m
+blob_client-raw: [00:00:50.253,531] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:50.260,704] [0m<dbg> bt_mesh_blob_cli: chunk_send: 17 / 32 size: 128[0m
+blob_client-raw: [00:00:50.267,821] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:49.707,753] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 17/32 (128 bytes)[0m
+blob_client-raw: [00:00:50.996,067] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:51.003,298] [0m<dbg> bt_mesh_blob_cli: chunk_send: 18 / 32 size: 128[0m
+blob_client-raw: [00:00:51.010,433] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:51.740,923] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:50.447,050] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 18/32 (128 bytes)[0m
+blob_client-raw: [00:00:51.748,118] [0m<dbg> bt_mesh_blob_cli: chunk_send: 19 / 32 size: 128[0m
+blob_client-raw: [00:00:51.755,234] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:51.211,087] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 19/32 (128 bytes)[0m
+blob_client-raw: [00:00:52.513,086] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:52.520,258] [0m<dbg> bt_mesh_blob_cli: chunk_send: 20 / 32 size: 128[0m
+blob_client-raw: [00:00:52.527,402] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:51.978,402] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 20/32 (128 bytes)[0m
+blob_client-raw: [00:00:53.278,985] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:53.286,177] [0m<dbg> bt_mesh_blob_cli: chunk_send: 21 / 32 size: 128[0m
+blob_client-raw: [00:00:53.293,293] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:54.052,738] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:52.763,435] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 21/32 (128 bytes)[0m
+blob_client-raw: [00:00:54.059,943] [0m<dbg> bt_mesh_blob_cli: chunk_send: 22 / 32 size: 128[0m
+blob_client-raw: [00:00:54.067,130] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:54.807,418] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:53.519,963] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 22/32 (128 bytes)[0m
+blob_client-raw: [00:00:54.814,594] [0m<dbg> bt_mesh_blob_cli: chunk_send: 23 / 32 size: 128[0m
+blob_client-raw: [00:00:54.821,763] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:54.287,375] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 23/32 (128 bytes)[0m
+blob_client-raw: [00:00:55.577,336] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:55.584,494] [0m<dbg> bt_mesh_blob_cli: chunk_send: 24 / 32 size: 128[0m
+blob_client-raw: [00:00:55.591,646] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:55.021,288] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 24/32 (128 bytes)[0m
+blob_client-raw: [00:00:56.313,870] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:56.321,086] [0m<dbg> bt_mesh_blob_cli: chunk_send: 25 / 32 size: 128[0m
+blob_client-raw: [00:00:56.328,282] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=0|a=2|l=2|pa=0|cs=8|rp=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:57.061,021] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:55.770,564] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 25/32 (128 bytes)[0m
+blob_client-raw: [00:00:57.068,264] [0m<dbg> bt_mesh_blob_cli: chunk_send: 26 / 32 size: 128[0m
+blob_client-raw: [00:00:57.075,380] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:00:57.816,342] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:56.524,273] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 26/32 (128 bytes)[0m
+blob_client-raw: [00:00:57.823,533] [0m<dbg> bt_mesh_blob_cli: chunk_send: 27 / 32 size: 128[0m
+blob_client-raw: [00:00:57.830,704] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:57.307,414] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 27/32 (128 bytes)[0m
+blob_client-raw: [00:00:58.595,527] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:58.602,711] [0m<dbg> bt_mesh_blob_cli: chunk_send: 28 / 32 size: 128[0m
+blob_client-raw: [00:00:58.609,941] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:00:58.067,943] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 28/32 (128 bytes)[0m
+blob_client-raw: [00:00:59.372,019] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:00:59.379,212] [0m<dbg> bt_mesh_blob_cli: chunk_send: 29 / 32 size: 128[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:00:59.386,374] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:00.130,830] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:58.836,298] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 29/32 (128 bytes)[0m
+blob_client-raw: [00:01:00.137,990] [0m<dbg> bt_mesh_blob_cli: chunk_send: 30 / 32 size: 128[0m
+blob_client-raw: [00:01:00.145,161] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:00.863,329] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:00:59.576,804] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 30/32 (128 bytes)[0m
+blob_client-raw: [00:01:00.870,517] [0m<dbg> bt_mesh_blob_cli: chunk_send: 31 / 32 size: 128[0m
+blob_client-raw: [00:01:00.877,634] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:01:00.334,655] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 31/32 (128 bytes)[0m
+blob_client-raw: [00:01:01.624,897] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:01.632,049] [0m<dbg> bt_mesh_blob_cli: chunk_send: 32 / 32 size: 128[0m
+blob_client-raw: [00:01:01.639,175] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:01.073,607] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 32/32 (128 bytes)[0m
+blob_client-raw: [00:01:02.415,651] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:01.087,354] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 2[0m
+blob_client-raw: [00:01:02.422,837] [0m<dbg> bt_mesh_blob_cli: block_check: [0m
+target_a-raw: [00:01:01.188,379] [0m<dbg> bt_mesh_blob_srv: handle_block_get: [0m
+blob_client-raw: [00:01:02.428,587] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:01.194,618] [0m<dbg> bt_mesh_blob_srv: block_status_rsp: Status: 0, missing: 0/32[0m
+blob_client-raw: [00:01:02.506,426] [0m<dbg> bt_mesh_blob_cli: handle_block_status: status: 0 block: 0 encoding: 1[0m
+target_a-raw: [00:01:01.340,121] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 3[0m
+blob_client-raw: [00:01:02.515,431] [0m<dbg> bt_mesh_blob_cli: rx_block_status: 0x0101: block: 0 status: 0[0m
+target_a-raw: [00:01:01.346,369] [0m<dbg> bt_mesh_blob_srv: handle_block_start: 1: (2/2)
+blob_client-raw: [00:01:02.523,831] [0m<dbg> bt_mesh_blob_cli: rx_block_status: Target 0x0101 received all chunks[0m
+target_a-raw: size: 4096
+blob_client-raw: [00:01:02.532,812] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast_rsp: 0x0101, pending: 1[0m
+target_a-raw: chunk size: 128
+blob_client-raw: [00:01:02.541,063] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: chunk count: 32[0m
+blob_client-raw: [00:01:02.548,274] [0m<dbg> bt_mesh_blob_cli: block_check_end: [0m
+target_a-raw: [00:01:01.357,463] [0m<dbg> bt_mesh_blob_srv: block_status_rsp: Status: 0, missing: 32/32[0m
+blob_client-raw: [00:01:02.554,361] [0m<dbg> bt_mesh_blob_cli: block_check_end: No more missing chunks for block 0[0m
+blob_client-raw: [00:01:02.563,437] [0m<dbg> bt_mesh_blob_cli: block_set: 1 size: 4096 chunks: 32[0m
+blob_client-raw: [00:01:02.571,022] [0m<dbg> bt_mesh_blob_cli: block_start: 1 (32 chunks, 2/2)[0m
+blob_client-raw: [00:01:02.578,343] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:02.149,365] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 1/32 (128 bytes)[0m
+blob_client-raw: [00:01:02.647,608] [0m<dbg> bt_mesh_blob_cli: handle_block_status: status: 0 block: 1 encoding: 0[0m
+blob_client-raw: [00:01:02.656,708] [0m<dbg> bt_mesh_blob_cli: rx_block_status: 0x0101: block: 1 status: 0[0m
+blob_client-raw: [00:01:02.665,043] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast_rsp: 0x0101, pending: 1[0m
+blob_client-raw: [00:01:02.673,450] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:02.680,666] [0m<dbg> bt_mesh_blob_cli: chunk_send: 1 / 32 size: 128[0m
+blob_client-raw: [00:01:02.687,734] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:02.905,925] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 2/32 (128 bytes)[0m
+blob_client-raw: [00:01:03.444,522] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:03.451,783] [0m<dbg> bt_mesh_blob_cli: chunk_send: 2 / 32 size: 128[0m
+blob_client-raw: [00:01:03.458,893] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:04.201,256] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:04.208,452] [0m<dbg> bt_mesh_blob_cli: chunk_send: 3 / 32 size: 128[0m
+blob_client-raw: [00:01:04.215,552] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:03.652,624] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 3/32 (128 bytes)[0m
+blob_client-raw: [00:01:04.944,479] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:04.951,681] [0m<dbg> bt_mesh_blob_cli: chunk_send: 4 / 32 size: 128[0m
+blob_client-raw: [00:01:04.958,710] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:04.567,905] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 4/32 (128 bytes)[0m
+blob_client-raw: [00:01:05.891,677] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:05.898,829] [0m<dbg> bt_mesh_blob_cli: chunk_send: 5 / 32 size: 128[0m
+blob_client-raw: [00:01:05.905,913] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=50|a=2|l=2|pa=0|cs=8|rp=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:01:05.371,581] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 5/32 (128 bytes)[0m
+blob_client-raw: [00:01:06.664,610] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:06.671,812] [0m<dbg> bt_mesh_blob_cli: chunk_send: 6 / 32 size: 128[0m
+blob_client-raw: [00:01:06.678,843] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:06.123,027] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 6/32 (128 bytes)[0m
+blob_client-raw: [00:01:07.409,426] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:07.416,606] [0m<dbg> bt_mesh_blob_cli: chunk_send: 7 / 32 size: 128[0m
+blob_client-raw: [00:01:07.423,636] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:08.180,811] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:06.888,962] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 7/32 (128 bytes)[0m
+blob_client-raw: [00:01:08.188,025] [0m<dbg> bt_mesh_blob_cli: chunk_send: 8 / 32 size: 128[0m
+blob_client-raw: [00:01:08.195,072] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:08.931,838] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:07.637,069] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 8/32 (128 bytes)[0m
+blob_client-raw: [00:01:08.939,098] [0m<dbg> bt_mesh_blob_cli: chunk_send: 9 / 32 size: 128[0m
+blob_client-raw: [00:01:08.946,125] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=50|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:01:08.391,826] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 9/32 (128 bytes)[0m
+blob_client-raw: [00:01:09.688,606] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:09.695,809] [0m<dbg> bt_mesh_blob_cli: chunk_send: 10 / 32 size: 128[0m
+blob_client-raw: [00:01:09.702,925] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:09.141,485] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 10/32 (128 bytes)[0m
+blob_client-raw: [00:01:10.431,817] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:10.438,995] [0m<dbg> bt_mesh_blob_cli: chunk_send: 11 / 32 size: 128[0m
+blob_client-raw: [00:01:10.446,175] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:11.191,192] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:09.900,943] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 11/32 (128 bytes)[0m
+blob_client-raw: [00:01:11.198,398] [0m<dbg> bt_mesh_blob_cli: chunk_send: 12 / 32 size: 128[0m
+blob_client-raw: [00:01:11.205,516] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:01:10.649,288] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 12/32 (128 bytes)[0m
+blob_client-raw: [00:01:11.938,965] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:11.946,153] [0m<dbg> bt_mesh_blob_cli: chunk_send: 13 / 32 size: 128[0m
+blob_client-raw: [00:01:11.953,342] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:11.411,363] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 13/32 (128 bytes)[0m
+blob_client-raw: [00:01:12.702,203] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:12.709,390] [0m<dbg> bt_mesh_blob_cli: chunk_send: 14 / 32 size: 128[0m
+blob_client-raw: [00:01:12.716,551] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:12.150,095] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 14/32 (128 bytes)[0m
+blob_client-raw: [00:01:13.445,042] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:13.452,227] [0m<dbg> bt_mesh_blob_cli: chunk_send: 15 / 32 size: 128[0m
+blob_client-raw: [00:01:13.459,341] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:14.237,435] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:12.917,060] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 15/32 (128 bytes)[0m
+blob_client-raw: [00:01:14.244,600] [0m<dbg> bt_mesh_blob_cli: chunk_send: 16 / 32 size: 128[0m
+blob_client-raw: [00:01:14.251,725] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:15.005,395] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:13.710,145] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 16/32 (128 bytes)[0m
+blob_client-raw: [00:01:15.012,596] [0m<dbg> bt_mesh_blob_cli: chunk_send: 17 / 32 size: 128[0m
+blob_client-raw: [00:01:15.019,722] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:15.748,026] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:14.459,639] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 17/32 (128 bytes)[0m
+blob_client-raw: [00:01:15.755,190] [0m<dbg> bt_mesh_blob_cli: chunk_send: 18 / 32 size: 128[0m
+blob_client-raw: [00:01:15.762,360] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:15.223,325] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 18/32 (128 bytes)[0m
+blob_client-raw: [00:01:16.519,298] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:16.526,471] [0m<dbg> bt_mesh_blob_cli: chunk_send: 19 / 32 size: 128[0m
+blob_client-raw: [00:01:16.533,615] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=50|a=2|l=2|pa=0|cs=8|rp=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:01:17.268,543] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:15.976,561] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 19/32 (128 bytes)[0m
+blob_client-raw: [00:01:17.275,763] [0m<dbg> bt_mesh_blob_cli: chunk_send: 20 / 32 size: 128[0m
+blob_client-raw: [00:01:17.282,916] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:18.003,163] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:16.715,295] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 20/32 (128 bytes)[0m
+blob_client-raw: [00:01:18.010,365] [0m<dbg> bt_mesh_blob_cli: chunk_send: 21 / 32 size: 128[0m
+blob_client-raw: [00:01:18.017,483] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:18.760,925] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:17.467,740] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 21/32 (128 bytes)[0m
+blob_client-raw: [00:01:18.768,145] [0m<dbg> bt_mesh_blob_cli: chunk_send: 22 / 32 size: 128[0m
+blob_client-raw: [00:01:18.775,324] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:19.509,673] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:18.218,150] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 22/32 (128 bytes)[0m
+blob_client-raw: [00:01:19.516,891] [0m<dbg> bt_mesh_blob_cli: chunk_send: 23 / 32 size: 128[0m
+target_a: M32BLOB|1|PROGRESS|role=target_a|iterations=0|progress=50|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:01:19.524,069] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:18.963,708] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 23/32 (128 bytes)[0m
+blob_client-raw: [00:01:20.277,267] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:20.284,435] [0m<dbg> bt_mesh_blob_cli: chunk_send: 24 / 32 size: 128[0m
+blob_client-raw: [00:01:20.291,553] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client-raw: [00:01:21.026,955] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:19.736,993] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 24/32 (128 bytes)[0m
+blob_client-raw: [00:01:21.034,154] [0m<dbg> bt_mesh_blob_cli: chunk_send: 25 / 32 size: 128[0m
+blob_client-raw: [00:01:21.041,331] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_b: M32BLOB|1|PROGRESS|role=target_b|iterations=0|progress=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+target_a-raw: [00:01:20.488,879] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 25/32 (128 bytes)[0m
+blob_client-raw: [00:01:21.783,072] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:21.790,266] [0m<dbg> bt_mesh_blob_cli: chunk_send: 26 / 32 size: 128[0m
+blob_client-raw: [00:01:21.797,381] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:21.229,388] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 26/32 (128 bytes)[0m
+blob_client-raw: [00:01:22.520,863] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:22.528,108] [0m<dbg> bt_mesh_blob_cli: chunk_send: 27 / 32 size: 128[0m
+blob_client-raw: [00:01:22.535,223] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:21.986,946] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 27/32 (128 bytes)[0m
+blob_client-raw: [00:01:23.281,424] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:23.288,581] [0m<dbg> bt_mesh_blob_cli: chunk_send: 28 / 32 size: 128[0m
+blob_client-raw: [00:01:23.295,743] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:22.736,586] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 28/32 (128 bytes)[0m
+blob_client-raw: [00:01:24.023,890] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:24.031,132] [0m<dbg> bt_mesh_blob_cli: chunk_send: 29 / 32 size: 128[0m
+blob_client-raw: [00:01:24.038,212] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:23.488,470] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 29/32 (128 bytes)[0m
+blob_client-raw: [00:01:24.778,520] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:24.785,715] [0m<dbg> bt_mesh_blob_cli: chunk_send: 30 / 32 size: 128[0m
+blob_client-raw: [00:01:24.792,885] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:24.223,340] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 30/32 (128 bytes)[0m
+blob_client-raw: [00:01:25.512,065] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:25.519,292] [0m<dbg> bt_mesh_blob_cli: chunk_send: 31 / 32 size: 128[0m
+blob_client-raw: [00:01:25.526,454] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:24.972,263] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 31/32 (128 bytes)[0m
+blob_client-raw: [00:01:26.285,277] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:26.292,431] [0m<dbg> bt_mesh_blob_cli: chunk_send: 32 / 32 size: 128[0m
+blob_client-raw: [00:01:26.299,549] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+blob_client: M32BLOB|1|PROGRESS|role=blob_client|iterations=0|progress=50|a=2|l=2|pa=0|cs=8|rp=0|p=1|b=1|e=0|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2
+blob_client-raw: [00:01:27.035,825] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+target_a-raw: [00:01:25.745,424] [0m<dbg> bt_mesh_blob_srv: handle_chunk: 32/32 (128 bytes)[0m
+blob_client-raw: [00:01:27.043,023] [0m<dbg> bt_mesh_blob_cli: block_check: [0m
+target_a-raw: [00:01:25.760,671] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 4[0m
+blob_client-raw: [00:01:27.048,755] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast: 1 targets[0m
+target_a-raw: [00:01:25.770,235] [0m<dbg> bt_mesh_blob_srv: phase_set: Phase: 1[0m
+blob_client-raw: [00:01:27.153,113] [0m<dbg> bt_mesh_blob_cli: handle_block_status: status: 4 block: 65535 encoding: 0[0m
+target_a-raw: [00:01:25.836,307] [0m<dbg> bt_mesh_blob_srv: handle_block_get: [0m
+blob_client-raw: [00:01:27.162,470] [0m<dbg> bt_mesh_blob_cli: rx_block_status: 0x0101: block: 65535 status: 4[0m
+target_a-raw: [00:01:25.842,464] [0m<dbg> bt_mesh_blob_srv: block_status_rsp: Status: 4, missing: 32/32[0m
+blob_client-raw: [00:01:27.171,152] [1;33m<wrn> bt_mesh_blob_cli: Dropping 0x0101: 4[0m
+blob_client-raw: [00:01:27.177,609] [0m<dbg> bt_mesh_blob_cli: blob_cli_broadcast_rsp: 0x0101, pending: 1[0m
+blob_client-raw: [00:01:27.185,884] [0m<dbg> bt_mesh_blob_cli: broadcast_complete: continuing[0m
+blob_client-raw: [00:01:27.193,096] [0m<dbg> bt_mesh_blob_cli: block_check_end: [0m
+blob_client-raw: [00:01:27.199,229] [0m<dbg> bt_mesh_blob_cli: end: 0[0m
+blob_client: M32BLOB|1|FAIL|role=blob_client|stage=blob_transfer|code=-5|nonce=0e49e4375a490b04c3cd5f67ebffbb73|core=6797270abb362a59d36f727f633aede6e14146b2

@@ -48,7 +48,7 @@ class M31CiShardingTests(unittest.TestCase):
     """! @brief 8개 shard의 완전성·중복 거부를 검사합니다. """
 
     def test_eight_shards_partition_all_examples_once(self) -> None:
-        """! @brief 113개 예제가 16개 worker에 균등하게 정확히 한 번 나뉩니다. """
+        """! @brief 130개 예제가 16개 worker에 균등하게 정확히 한 번 나뉩니다. """
         examples = LIFECYCLE.installed_examples(ROOT)
         selections = [SHARD.select_shard(examples, index, 8) for index in range(8)]
         identities = [item[0] for selection in selections for item in selection]

@@ -1,0 +1,64 @@
+{
+  "type": "failure_debugger_audit",
+  "status": "FAIL_PRESERVED",
+  "captured_at_utc": "2026-10-01T23:42:17.9216763Z",
+  "source_revision": "1d15401f9c85bea9fd3f253748a3a88fff6b0a96",
+  "scenario": "ble_esb",
+  "role": "dut",
+  "failure": "STOPPED cleanup=fail",
+  "access": {
+    "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+    "volume": "D:/",
+    "vcom": "COM5",
+    "transport": "CMSIS-DAP v2",
+    "connect_mode": "attach",
+    "frequency_hz": 100000,
+    "auto_unlock": false,
+    "mass_erase": false
+  },
+  "registers": {
+    "pc": "0x000282f8",
+    "lr": "0x0002c5b5",
+    "msp": "0x200084b8",
+    "psp": "0x200085d8"
+  },
+  "esb_backend": {
+    "address": "0x20000c2c",
+    "size": 64,
+    "configuration": {
+      "retransmit_delay_us": 1000,
+      "stop_timeout_ms": 100,
+      "channel": 40,
+      "retransmit_count": 15,
+      "pipe": 0,
+      "bitrate": "2Mbps"
+    },
+    "statistics": {
+      "tx_requested": 0,
+      "tx_acknowledged": 0,
+      "tx_failed": 0,
+      "tx_attempts": 0,
+      "rx_received": 2000,
+      "rx_duplicates": 0,
+      "rx_hash_failures": 0,
+      "rx_dropped": 0,
+      "timeslot_failures": 0,
+      "stops": 0
+    },
+    "role": "primary_receiver",
+    "error": "driver_error",
+    "driver_error": -16,
+    "driver_error_name": "EBUSY",
+    "last_sequence": 3999,
+    "started": true,
+    "tx_busy": false,
+    "raw_hex": "e8036400280f000100000000000000000000000000000000d0070000000000000000000000000000000000000000000001050000f0ffffff9f0f000001000000"
+  },
+  "application_flags": {
+    "second_radio_started": false,
+    "ble_started": false,
+    "stop_requested": false
+  },
+  "interpretation": "BLESerial.end() initiated BLE disconnect before ESB cleanup. The following EsbRadio::cancel() received -EBUSY from esb_suspend(), short-circuited EsbRadio::stop(), and left started=true with stops=0. The data path had already received all 2000 post-restart packets with no duplicate, hash failure, drop, or timeslot failure.",
+  "corrective_action": "For direct IEEE 802.15.4 and ESB DUT roles, return the second-radio resources before ending BLE. Keep cleanup failure strict and rerun all nine exact images from a new clean revision."
+}

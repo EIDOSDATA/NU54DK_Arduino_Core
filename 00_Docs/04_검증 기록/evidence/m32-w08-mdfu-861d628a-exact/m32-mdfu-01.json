@@ -1,0 +1,169 @@
+{
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "boards": {
+    "distributor": {
+      "port": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "D:/"
+    },
+    "target_a": {
+      "port": "COM18",
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "E:/"
+    },
+    "target_b": {
+      "port": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "registers": {
+        "ahb_ap_csw": "0x03800052",
+        "ahb_ap_idr": "0x84770001",
+        "approtect_status": "0x00000000",
+        "ctrl_ap_idr": "0x32880000",
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40"
+      },
+      "volume": "F:/"
+    }
+  },
+  "duration_seconds": 1928.703,
+  "failure": "MeshDfuFailure: distributor target FAIL: timeout",
+  "flash_backend": "pyocd-cmsis-dap-v2-exact-sector",
+  "flash_results": {
+    "distributor_base": [
+      "pyocd-sector",
+      "352256"
+    ],
+    "distributor_boot": [
+      "pyocd-sector",
+      "36864"
+    ],
+    "distributor_candidate_bytes": "57344",
+    "target_a_base": [
+      "pyocd-sector",
+      "344064"
+    ],
+    "target_a_boot": [
+      "pyocd-sector",
+      "36864"
+    ],
+    "target_b_base": [
+      "pyocd-sector",
+      "344064"
+    ],
+    "target_b_boot": [
+      "pyocd-sector",
+      "36864"
+    ]
+  },
+  "images": {
+    "candidate": {
+      "name": "zephyr.signed.bin",
+      "sha256": "59fe88492fcc15f44a03f4d21fb7827a88874fe6d86891f826887909704aa0b3",
+      "size": 55038,
+      "version": [
+        2,
+        0,
+        0,
+        0
+      ]
+    },
+    "distributor_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "abe0b36de85ce038e07ef9e598734b19953cd3db946527ae70b375c13e68f34e",
+      "size": 350871,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_a_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "8b84d5e3857f405099e6c21847054798bd53bfee8e78cafe37553be060723f48",
+      "size": 343599,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "target_b_base": {
+      "name": "zephyr.signed.bin",
+      "sha256": "274ad9e6cfd1d2adb36bca79775e48e281104168963fbcf7a8d7affdc3dfee38",
+      "size": 343600,
+      "version": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "iteration_records": [
+    {
+      "candidate_boots": 2,
+      "iteration": 1,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    },
+    {
+      "candidate_boots": 2,
+      "iteration": 2,
+      "target_a_confirmed": 0,
+      "target_b_confirmed": 0
+    }
+  ],
+  "iterations_completed": 2,
+  "mass_erase_or_recover": false,
+  "observed_utc": "2026-10-01T21:10:10.449741+00:00",
+  "raw_probe_identity_persisted": false,
+  "rollback_records": [
+    {
+      "iteration": 1,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    },
+    {
+      "iteration": 2,
+      "roles": [
+        "target_a",
+        "target_b"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "scope": "signed_mesh_dfu_five_iterations_two_targets_and_mcuboot_rollback",
+  "secondary_slot": {
+    "erase_end_exclusive": 1523712,
+    "offset": 794624,
+    "size": 729088
+  },
+  "source_clean": true,
+  "source_revision": "861d628aeb2909b32895481d5110ba3bec17be09",
+  "status": "FAIL",
+  "test_ids": [
+    "M32-MDFU-01:primary"
+  ],
+  "transcript_sha256": "687cccb21a7acd650ab2fdf331e247b158b4bd521dfcd3213e95b38977f50628",
+  "trust_public_key_source_sha256": "2e567f16e75c1f0ea609bc4342c04a427b0bed948ff132004dd9d130b590c34f"
+}

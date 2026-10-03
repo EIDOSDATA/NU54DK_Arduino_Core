@@ -1,0 +1,4 @@
+ble_mesh/dut: M32COEX|1|READY|role=dut|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/mesh_peer: M32COEX|1|READY|role=mesh_peer|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/ble_peer: M32COEX|1|READY|role=ble_peer|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh
+ble_mesh/dut: M32COEX|1|CLEARED|role=dut|nonce=9dea6de918d370e300d22e54098e7280|core=6d40e9261a5b429b68d1cee2c139b597e37f6fd6|scenario=ble_mesh

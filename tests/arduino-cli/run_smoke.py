@@ -47,6 +47,12 @@ ARDUINO_TESTS = (
     "m30",
     "m30secure",
     "m31",
+    "m32",
+    "m32_mesh",
+    "m32_mesh_management",
+    "m32_mesh_update",
+    "m32_radio",
+    "m32_coexistence",
     "ac02b",
     "ac03",
     "examples",
@@ -71,6 +77,11 @@ DEFAULT_TESTS = tuple(
     if test
     not in {
         "incremental",
+        "m32_mesh",
+        "m32_mesh_management",
+        "m32_mesh_update",
+        "m32_radio",
+        "m32_coexistence",
         "adaptive",
         "adaptive_ble",
         "adaptive_iso",
@@ -91,6 +102,7 @@ ARDUINO_GROUPS = {
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
     "v0.5.0": ("m29", "m30", "m30secure", "m31"),
+    "v0.6.0": ("m32",),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
@@ -98,6 +110,7 @@ ARDUINO_MATRIX_GROUPS = {
     "v0.3.0-ble": ("m19m20", "m21"),
     "v0.3.0-compat": ("ac02b", "ac03", "examples"),
     "v0.5.0": ARDUINO_GROUPS["v0.5.0"],
+    "v0.6.0": ARDUINO_GROUPS["v0.6.0"],
 }
 ARDUINO_SELECTIONS = {**ARDUINO_GROUPS, **ARDUINO_MATRIX_GROUPS}
 CLI_BOOTSTRAP_RETRY_MARKERS = (
@@ -1630,6 +1643,122 @@ def test_ble_examples(
             required_symbols.extend(
                 ("CONFIG_BT_NUS", "CONFIG_BT_NUS_CLIENT", "CONFIG_NUCODE_BLE_NUS")
             )
+        if example_name in {
+            "LePowerControlCentral",
+            "LePowerControlPeripheral",
+            "PathLossMonitorCentral",
+            "PathLossMonitorPeripheral",
+            "RssiPowerControlCentral",
+            "RssiPowerControlPeripheral",
+        }:
+            required_symbols.extend(
+                (
+                    "CONFIG_BT_TRANSMIT_POWER_CONTROL",
+                    "CONFIG_BT_PATH_LOSS_MONITORING",
+                    "CONFIG_BT_CTLR_CONN_RSSI",
+                )
+            )
+        w04_symbols = {
+            "MultipleAdvertisingSets": (
+                "CONFIG_BT_EXT_ADV",
+            ),
+            "MultiplePeriodicSyncs": (
+                "CONFIG_BT_PER_ADV_SYNC",
+            ),
+            "MultipleBleIdentities": (
+                "CONFIG_BT_EXT_ADV",
+                "CONFIG_BT_PRIVACY",
+            ),
+            "AdvertisingAcceptList": (
+                "CONFIG_BT_FILTER_ACCEPT_LIST",
+            ),
+            "PeriodicAdvertiserList": (
+                "CONFIG_BT_PER_ADV_SYNC",
+            ),
+            "DirectedAdvertisingPeripheral": (
+                "CONFIG_BT_EXT_ADV",
+                "CONFIG_BT_PRIVACY",
+            ),
+            "DirectedAdvertisingCentral": (
+                "CONFIG_BT_CENTRAL",
+                "CONFIG_BT_PRIVACY",
+            ),
+            "EncryptedAdvertisingPeripheral": (
+                "CONFIG_BT_EAD",
+            ),
+            "EncryptedAdvertisingCentral": (
+                "CONFIG_BT_EAD",
+            ),
+            "AdvertisingCodingSelection": (
+                "CONFIG_BT_EXT_ADV_CODING_SELECTION",
+            ),
+            "ScanWhileConnecting": (
+                "CONFIG_BT_SCAN_AND_INITIATE_IN_PARALLEL",
+            ),
+            "ScalableBleResources": (
+                "CONFIG_BT_EXT_ADV",
+                "CONFIG_BT_FILTER_ACCEPT_LIST",
+            ),
+        }
+        required_symbols.extend(w04_symbols.get(example_name, ()))
+        w05_symbols = {
+            "NordicLlpmPair": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_SDC_LLPM",
+            ),
+            "NordicConnectionEventQos": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_SDC_QOS_CONN_EVENT_REPORT",
+            ),
+            "NordicChannelSurvey": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_SDC_QOS_CHANNEL_SURVEY",
+            ),
+            "ConnectionTimeSyncCentral": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_SDC_CONN_ANCHOR_POINT_REPORT",
+            ),
+            "ConnectionTimeSyncPeripheral": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_SDC_CONN_ANCHOR_POINT_REPORT",
+            ),
+            "RadioEventTrigger": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_SDC_EVENT_TRIGGER",
+            ),
+            "ConnectionRadioNotification": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_SDC_CONN_ANCHOR_POINT_REPORT",
+                "CONFIG_BT_RADIO_NOTIFICATION_CONN_CB",
+            ),
+            "FlushableAclData": (
+                "CONFIG_NUCODE_BLE_NORDIC_EXTENSIONS",
+                "CONFIG_BT_CTLR_LE_FLUSHABLE_ACL_DATA",
+            ),
+        }
+        required_symbols.extend(w05_symbols.get(example_name, ()))
+        if example_name in {
+            "ConnectionSubratingCentral",
+            "ConnectionSubratingPeripheral",
+            "FrameSpaceUpdateCentral",
+            "FrameSpaceUpdatePeripheral",
+            "ShorterConnectionIntervalsCentral",
+            "ShorterConnectionIntervalsPeripheral",
+            "ExtendedLeFeaturePages",
+            "SleepClockAccuracyUpdate",
+            "BleThroughputCentral",
+            "BleThroughputPeripheral",
+            "LeChannelMapControl",
+        }:
+            required_symbols.extend(
+                (
+                    "CONFIG_BT_SUBRATING",
+                    "CONFIG_BT_SCA_UPDATE",
+                    "CONFIG_BT_LE_EXTENDED_FEAT_SET",
+                    "CONFIG_BT_FRAME_SPACE_UPDATE",
+                    "CONFIG_BT_SHORTER_CONNECTION_INTERVALS",
+                )
+            )
         for symbol in required_symbols:
             if not read_kconfig_boolean(configuration, symbol):
                 raise SmokeFailure(f"BLE symbol is disabled: {example_name}: {symbol}")
@@ -1987,6 +2116,324 @@ def test_m31_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
     print(f"M31_DF_ARDUINO_BUILD_PASS={df_name}", flush=True)
 
 
+## @brief M32 Mesh foundation·role·표준 model 예제를 BLE profile로 빌드합니다.
+def test_m32_mesh_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    del repository
+    library = (
+        root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" /
+        "NUCODE_BLE_Mesh"
+    )
+    names = (
+        "MeshProvisioner", "MeshNode", "MeshHealth", "MeshRelay", "MeshFriend",
+        "MeshLowPowerNode", "MeshProxy", "MeshOnOff", "MeshLevel", "MeshLight",
+        "MeshSensor", "MeshTimeSceneScheduler",
+    )
+    for name in names:
+        sketch = library / "examples" / name
+        if not (sketch / f"{name}.ino").is_file() or not (sketch / "prj.conf").is_file():
+            raise SmokeFailure(f"incomplete M32 Mesh example: {sketch}")
+        build = root / f"build-m32-mesh-{name.lower()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        features = {
+            item.get("id") for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if context.get("profile") != "ble" or "nucode.ble.mesh" not in features:
+            raise SmokeFailure(f"M32 Mesh profile 또는 feature가 없습니다: {name}")
+        configuration = (
+            Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+        ).read_text(encoding="utf-8")
+        for symbol in (
+            "CONFIG_BT_MESH", "CONFIG_BT_MESH_PB_ADV", "CONFIG_BT_MESH_PB_GATT",
+            "CONFIG_BT_MESH_PROVISIONER", "CONFIG_NUCODE_BLE_MESH",
+        ):
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(f"M32 Mesh symbol disabled: {name}: {symbol}")
+        print(f"M32_ARDUINO_BUILD_PASS={name}", flush=True)
+
+
+## @brief M32-W07 Mesh 1.1 관리·privacy·bridging 예제를 빌드합니다.
+def test_m32_mesh_management_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    del repository
+    library = (
+        root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" /
+        "NUCODE_BLE_Mesh_Management"
+    )
+    names = (
+        "MeshRemoteProvisioner", "MeshRemoteProvisioningServer",
+        "MeshSarConfigurationClient", "MeshSarConfigurationServer",
+        "MeshOpcodeAggregatorClient", "MeshOpcodeAggregatorServer",
+        "MeshLargeCompositionDataClient", "MeshLargeCompositionDataServer",
+        "MeshPrivateBeaconClient", "MeshPrivateBeaconServer",
+        "MeshOnDemandPrivateProxy", "MeshProxySolicitation", "MeshSubnetBridge",
+    )
+    for name in names:
+        sketch = library / "examples" / name
+        if not (sketch / f"{name}.ino").is_file() or not (sketch / "prj.conf").is_file():
+            raise SmokeFailure(f"incomplete M32 Mesh management example: {sketch}")
+        build = root / f"build-m32-mesh-management-{name.lower()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", "feature_set=ble")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        features = {
+            item.get("id") for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        required_features = {"nucode.ble.mesh", "nucode.ble.mesh-management"}
+        if context.get("profile") != "ble" or not required_features.issubset(features):
+            raise SmokeFailure(f"M32 Mesh management feature가 없습니다: {name}")
+        configuration = (
+            Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+        ).read_text(encoding="utf-8")
+        for symbol in (
+            "CONFIG_BT_MESH_RPR_CLI", "CONFIG_BT_MESH_SAR_CFG_CLI",
+            "CONFIG_BT_MESH_OP_AGG_CLI", "CONFIG_BT_MESH_LARGE_COMP_DATA_CLI",
+            "CONFIG_BT_MESH_PRIV_BEACON_CLI", "CONFIG_BT_MESH_OD_PRIV_PROXY_CLI",
+            "CONFIG_BT_MESH_BRG_CFG_CLI", "CONFIG_NUCODE_BLE_MESH_MANAGEMENT",
+        ):
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(
+                    f"M32 Mesh management symbol disabled: {name}: {symbol}"
+                )
+        print(f"M32_MESH_MANAGEMENT_ARDUINO_BUILD_PASS={name}", flush=True)
+
+
+## @brief M32-W08 signed Mesh BLOB·DFU·Distributor 예제를 빌드합니다.
+def test_m32_mesh_update_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    del repository
+    signing_key_value = os.environ.get("NUCODE_DFU_SIGNING_KEY", "").strip()
+    if not signing_key_value:
+        raise SmokeFailure("M32 secure Mesh build requires NUCODE_DFU_SIGNING_KEY")
+    signing_key = Path(signing_key_value).resolve()
+    if not signing_key.is_file():
+        raise SmokeFailure(f"M32 external signing key is missing: {signing_key}")
+    library = (
+        root / "user" / "hardware" / "nucode" / "zephyr" / "libraries" /
+        "NUCODE_BLE_Mesh_Update"
+    )
+    names = (
+        "MeshBlobClient", "MeshBlobServer", "MeshDfuTarget",
+        "MeshFirmwareDistributor",
+    )
+    for name in names:
+        sketch = library / "examples" / name
+        if not (sketch / f"{name}.ino").is_file() or not (sketch / "prj.conf").is_file():
+            raise SmokeFailure(f"incomplete M32 Mesh update example: {sketch}")
+        build = root / f"build-m32-mesh-update-{name.lower()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", "feature_set=secure_ble_dfu")
+        run(command)
+        context = assert_m30_secure_build(build, f"{name}.ino", signing_key)
+        features = {
+            item.get("id") for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        required_features = {"nucode.ble.mesh", "nucode.ble.mesh-update"}
+        if context.get("profile") != "secure_ble_dfu" or not required_features.issubset(features):
+            raise SmokeFailure(f"M32 signed Mesh update feature가 없습니다: {name}")
+        configuration = (
+            Path(context["zephyr_build_dir"]) / "app" / "zephyr" / ".config"
+        ).read_text(encoding="utf-8")
+        for symbol in (
+            "CONFIG_BOOTLOADER_MCUBOOT", "CONFIG_BT_MESH_BLOB_SRV",
+            "CONFIG_BT_MESH_BLOB_CLI", "CONFIG_BT_MESH_DFU_SRV",
+            "CONFIG_BT_MESH_DFU_CLI", "CONFIG_BT_MESH_DFD_SRV",
+            "CONFIG_NUCODE_BLE_MESH_UPDATE",
+        ):
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(
+                    f"M32 Mesh update symbol disabled: {name}: {symbol}"
+                )
+        print(f"M32_MESH_UPDATE_ARDUINO_BUILD_PASS={name}", flush=True)
+
+
+## @brief M32-W09 단독 IEEE 802.15.4와 ESB 역할 예제를 빌드합니다.
+def test_m32_radio_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    del repository
+    platform = root / "user" / "hardware" / "nucode" / "zephyr"
+    cases = (
+        (
+            "radio_ieee802154",
+            "NUCODE_Radio_IEEE802154",
+            ("Radio154Transmitter", "Radio154Receiver"),
+            "nucode.radio.ieee802154",
+            ("CONFIG_NUCODE_RADIO_IEEE802154", "CONFIG_NRF_802154_RADIO_DRIVER"),
+        ),
+        (
+            "radio_esb",
+            "NUCODE_Radio_ESB",
+            ("EsbPtx", "EsbPrx"),
+            "nucode.radio.esb",
+            ("CONFIG_NUCODE_RADIO_ESB", "CONFIG_ESB"),
+        ),
+    )
+    for profile, library_name, names, feature_id, symbols in cases:
+        library = platform / "libraries" / library_name
+        for name in names:
+            sketch = library / "examples" / name
+            if not (sketch / f"{name}.ino").is_file():
+                raise SmokeFailure(f"incomplete M32 radio example: {sketch}")
+            build = root / f"build-m32-radio-{name.lower()}"
+            command = list(compile_command(cli, config, build, sketch))
+            command[-1:-1] = ("--board-options", f"feature_set={profile}")
+            run(command)
+            context = assert_build(build, f"{name}.ino")
+            features = {
+                item.get("id") for item in context.get("selected_features", [])
+                if isinstance(item, dict)
+            }
+            if context.get("profile") != profile or feature_id not in features:
+                raise SmokeFailure(f"M32 radio feature가 없습니다: {name}")
+            configuration = (
+                Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+            ).read_text(encoding="utf-8")
+            for symbol in symbols:
+                if not read_kconfig_boolean(configuration, symbol):
+                    raise SmokeFailure(f"M32 radio symbol disabled: {name}: {symbol}")
+            print(f"M32_RADIO_ARDUINO_BUILD_PASS={name}", flush=True)
+
+
+## @brief M32-W10 BLE/Mesh/802.15.4/ESB와 외부 1-wire 공존 예제를 빌드합니다.
+def test_m32_coexistence_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    del repository
+    platform = root / "user" / "hardware" / "nucode" / "zephyr"
+    library = platform / "libraries" / "NUCODE_Radio_Coexistence"
+    cases = (
+        (
+            "BleMeshCoexistence",
+            "coexistence_ble_mesh",
+            {"nucode.ble.nus", "nucode.ble.mesh", "nucode.radio.coexistence"},
+            ("CONFIG_BT", "CONFIG_BT_MESH", "CONFIG_NUCODE_RADIO_COEXISTENCE"),
+        ),
+        (
+            "Ble154Coexistence",
+            "coexistence_ble_154",
+            {
+                "nucode.ble.nus",
+                "nucode.radio.ieee802154",
+                "nucode.radio.coexistence",
+            },
+            (
+                "CONFIG_BT",
+                "CONFIG_NRF_802154_RADIO_DRIVER",
+                "CONFIG_NRF_802154_MULTIPROTOCOL_SUPPORT",
+                "CONFIG_NUCODE_RADIO_COEXISTENCE",
+            ),
+        ),
+        (
+            "BleEsbCoexistence",
+            "coexistence_ble_esb",
+            {"nucode.ble.nus", "nucode.radio.esb", "nucode.radio.coexistence"},
+            (
+                "CONFIG_BT",
+                "CONFIG_ESB",
+                "CONFIG_ESB_MPSL_TIMESLOT",
+                "CONFIG_NUCODE_RADIO_COEXISTENCE",
+            ),
+        ),
+        (
+            "RadioCoexistenceOneWire",
+            "external_coexistence",
+            {"nucode.ble.nus", "nucode.radio.coexistence"},
+            (
+                "CONFIG_BT",
+                "CONFIG_MPSL_CX",
+                "CONFIG_MPSL_CX_1WIRE",
+                "CONFIG_NUCODE_RADIO_COEX_ONEWIRE",
+            ),
+        ),
+    )
+    for name, profile, required_features, symbols in cases:
+        sketch = library / "examples" / name
+        if not (sketch / f"{name}.ino").is_file():
+            raise SmokeFailure(f"incomplete M32 coexistence example: {sketch}")
+        build = root / f"build-m32-coexistence-{name.lower()}"
+        command = list(compile_command(cli, config, build, sketch))
+        command[-1:-1] = ("--board-options", f"feature_set={profile}")
+        run(command)
+        context = assert_build(build, f"{name}.ino")
+        features = {
+            item.get("id") for item in context.get("selected_features", [])
+            if isinstance(item, dict)
+        }
+        if context.get("profile") != profile or not required_features.issubset(features):
+            raise SmokeFailure(f"M32 coexistence feature가 없습니다: {name}")
+        configuration = (
+            Path(context["zephyr_build_dir"]) / "zephyr" / ".config"
+        ).read_text(encoding="utf-8")
+        for symbol in symbols:
+            if not read_kconfig_boolean(configuration, symbol):
+                raise SmokeFailure(
+                    f"M32 coexistence symbol disabled: {name}: {symbol}"
+                )
+        print(f"M32_COEXISTENCE_ARDUINO_BUILD_PASS={name}", flush=True)
+
+
+## @brief M32 LE link·timing·광고·Mesh 역할 예제를 BLE profile로 빌드합니다.
+def test_m32_examples(cli: Path, config: Path, root: Path, repository: Path) -> None:
+    example_names = (
+        "LePowerControlCentral",
+        "LePowerControlPeripheral",
+        "PathLossMonitorCentral",
+        "PathLossMonitorPeripheral",
+        "RssiPowerControlCentral",
+        "RssiPowerControlPeripheral",
+        "ConnectionSubratingCentral",
+        "ConnectionSubratingPeripheral",
+        "FrameSpaceUpdateCentral",
+        "FrameSpaceUpdatePeripheral",
+        "ShorterConnectionIntervalsCentral",
+        "ShorterConnectionIntervalsPeripheral",
+        "ExtendedLeFeaturePages",
+        "SleepClockAccuracyUpdate",
+        "BleThroughputCentral",
+        "BleThroughputPeripheral",
+        "LeChannelMapControl",
+        "MultipleAdvertisingSets",
+        "MultiplePeriodicSyncs",
+        "MultipleBleIdentities",
+        "AdvertisingAcceptList",
+        "PeriodicAdvertiserList",
+        "DirectedAdvertisingPeripheral",
+        "DirectedAdvertisingCentral",
+        "EncryptedAdvertisingPeripheral",
+        "EncryptedAdvertisingCentral",
+        "AdvertisingCodingSelection",
+        "ScanWhileConnecting",
+        "ScalableBleResources",
+        "NordicLlpmPair",
+        "NordicConnectionEventQos",
+        "NordicChannelSurvey",
+        "ConnectionTimeSyncCentral",
+        "ConnectionTimeSyncPeripheral",
+        "RadioEventTrigger",
+        "ConnectionRadioNotification",
+        "FlushableAclData",
+    )
+    test_ble_examples(cli, config, root, repository, example_names)
+    for example_name in example_names:
+        print(f"M32_ARDUINO_BUILD_PASS={example_name}", flush=True)
+    test_m32_mesh_examples(cli, config, root, repository)
+    test_m32_mesh_management_examples(cli, config, root, repository)
+    test_m32_mesh_update_examples(cli, config, root, repository)
+    test_m32_radio_examples(cli, config, root, repository)
+    test_m32_coexistence_examples(cli, config, root, repository)
+
+
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
 def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path) -> None:
     del root, repository
@@ -2030,6 +2477,8 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "ExtendedScanner",
             "GAPCentral",
             "GAPPeripheral",
+            "LePowerControlCentral",
+            "LePowerControlPeripheral",
             "LongGattCentral",
             "LongGattPeripheral",
             "MixedGattCocLinks",
@@ -2040,12 +2489,47 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
             "PastSender",
             "PawrAdvertiser",
             "PawrScanner",
+            "PathLossMonitorCentral",
+            "PathLossMonitorPeripheral",
             "PerLinkControl",
             "PeriodicAdvertiser",
             "PeriodicScanner",
             "PrivacyPeripheral",
             "ReliableWriteCentral",
             "ReliableWritePeripheral",
+            "RssiPowerControlCentral",
+            "RssiPowerControlPeripheral",
+            "ConnectionSubratingCentral",
+            "ConnectionSubratingPeripheral",
+            "FrameSpaceUpdateCentral",
+            "FrameSpaceUpdatePeripheral",
+            "ShorterConnectionIntervalsCentral",
+            "ShorterConnectionIntervalsPeripheral",
+            "ExtendedLeFeaturePages",
+            "SleepClockAccuracyUpdate",
+            "BleThroughputCentral",
+            "BleThroughputPeripheral",
+            "LeChannelMapControl",
+            "MultipleAdvertisingSets",
+            "MultiplePeriodicSyncs",
+            "MultipleBleIdentities",
+            "AdvertisingAcceptList",
+            "PeriodicAdvertiserList",
+            "DirectedAdvertisingPeripheral",
+            "DirectedAdvertisingCentral",
+            "EncryptedAdvertisingPeripheral",
+            "EncryptedAdvertisingCentral",
+            "AdvertisingCodingSelection",
+            "ScanWhileConnecting",
+            "ScalableBleResources",
+            "NordicLlpmPair",
+            "NordicConnectionEventQos",
+            "NordicChannelSurvey",
+            "ConnectionTimeSyncCentral",
+            "ConnectionTimeSyncPeripheral",
+            "RadioEventTrigger",
+            "ConnectionRadioNotification",
+            "FlushableAclData",
             "GattDescriptors",
             "GattAuthorization",
             "L2capCocClient",
@@ -2084,6 +2568,19 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
         },
         "NUCODE BLE Direction Finding": {"ConnectedCteResponder", "CteBeacon"},
         "NUCODE BLE Channel Sounding": {"RasInitiator", "RasReflector"},
+        "NUCODE BLE Mesh": {
+            "MeshProvisioner", "MeshNode", "MeshHealth", "MeshRelay", "MeshFriend",
+            "MeshLowPowerNode", "MeshProxy", "MeshOnOff", "MeshLevel", "MeshLight",
+            "MeshSensor", "MeshTimeSceneScheduler",
+        },
+        "NUCODE BLE Mesh Management": {
+            "MeshRemoteProvisioner", "MeshRemoteProvisioningServer",
+            "MeshSarConfigurationClient", "MeshSarConfigurationServer",
+            "MeshOpcodeAggregatorClient", "MeshOpcodeAggregatorServer",
+            "MeshLargeCompositionDataClient", "MeshLargeCompositionDataServer",
+            "MeshPrivateBeaconClient", "MeshPrivateBeaconServer",
+            "MeshOnDemandPrivateProxy", "MeshProxySolicitation", "MeshSubnetBridge",
+        },
     }
     discovered: dict[str, set[str]] = {}
     for record in records:
@@ -4643,6 +5140,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m30": test_m30_examples,
                 "m30secure": test_m30_secure_example,
                 "m31": test_m31_examples,
+                "m32": test_m32_examples,
+                "m32_mesh": test_m32_mesh_examples,
+                "m32_mesh_management": test_m32_mesh_management_examples,
+                "m32_mesh_update": test_m32_mesh_update_examples,
+                "m32_radio": test_m32_radio_examples,
+                "m32_coexistence": test_m32_coexistence_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

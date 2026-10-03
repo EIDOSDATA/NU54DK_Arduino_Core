@@ -48,6 +48,22 @@ namespace
 
 } // namespace
 
+/**
+ * @brief 다른 Bluetooth facade가 먼저 끝낸 settings 복원 결과를 once-loader에 알립니다.
+ *
+ * @details Mesh와 NUS를 같은 image에서 사용할 때 settings를 두 번 복원하지 않습니다.
+ */
+extern "C" void nucode_ble_note_settings_loaded(int result) noexcept
+{
+#if defined(CONFIG_BT_SETTINGS)
+    atomic_set(&settings_result, result);
+#else
+    static_cast<void>(result);
+    atomic_set(&settings_result, 0);
+#endif
+    atomic_set(&settings_attempted, 1);
+}
+
 namespace nucode::ble::internal
 {
 

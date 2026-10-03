@@ -1,0 +1,53 @@
+/**
+ * @file app.overlay
+ * @brief P1.10 grant output과 P1.14 MPSL grant input의 1-wire 공존 연결입니다.
+ * SPDX-License-Identifier: MIT
+ */
+#include <nucode/nu54dk-arduino-connectors.dtsi>
+#include <nucode/nu54dk-arduino-pins.dtsi>
+#include <nucode/nu54dk-arduino-runtime.dtsi>
+#include <nucode/nu54dk-arduino-storage.dtsi>
+
+/ {
+    zephyr,user {
+        coex-pta-grant-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+    };
+
+    nrf_radio_coex: radio_coex_one_wire {
+        status = "okay";
+        compatible = "sdc-radio-coex-one-wire";
+        grant-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
+        concurrency-mode = <0>;
+    };
+
+    aliases {
+        egu = &egu10;
+    };
+};
+
+&gpio1 {
+    status = "okay";
+};
+
+&gpiote20 {
+    status = "okay";
+};
+
+&pwm20 {
+    status = "disabled";
+};
+
+&led1 {
+    status = "disabled";
+};
+
+&led3 {
+    status = "disabled";
+};
+
+&radio {
+    coex = <&nrf_radio_coex>;
+};
+
+/** @brief NFC 전용 P1.2/P1.3 패드를 일반 GPIO로 전환합니다. */
+&uicr { nfct-pins-as-gpios; };

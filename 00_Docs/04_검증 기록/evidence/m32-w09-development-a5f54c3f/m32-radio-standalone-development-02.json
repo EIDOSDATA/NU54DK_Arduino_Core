@@ -1,0 +1,128 @@
+{
+  "test_ids": [
+    "M32-154-01:primary",
+    "M32-ESB-01:primary"
+  ],
+  "status": "FAIL",
+  "scope": "two_board_standalone_ieee802154_and_esb_contract",
+  "source_clean": false,
+  "identity": {
+    "core": "a5f54c3fb06a9474401ffb50dd6445c751b49c32",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "boards": {
+    "transmitter": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "938c5a7a5b6d86cb793e5f7f6e3e0ab0f4092953db4114f1fff573cbf6b112dc",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "90112"
+    },
+    "ptx": {
+      "volume": "F:/",
+      "vcom": "COM13",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "3b4e77da11e3205afbc767726f89a7d81cb481705978a26734e29daa0ce16bce",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "57344"
+    },
+    "receiver": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "0137d312f0cde437e0b93f9311f97fdbfd70658c8e187f634f5a1ce774b446e6",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "90112"
+    },
+    "prx": {
+      "volume": "G:/",
+      "vcom": "COM10",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "71fb1896c405a1fb39f969676f67d4653c2d249fd4020826f6ce9b31548fd387",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0xf0000f40",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-hw-reset",
+      "flash_bytes": "57344"
+    }
+  },
+  "iterations": 20,
+  "packet_denominator_per_protocol": 2000,
+  "allowed_loss_packets_per_protocol": 20,
+  "latency_limit_ms": 100,
+  "protocols": {
+    "radio154": {
+      "results": {
+        "transmitter": {
+          "role": "transmitter",
+          "requested": "2000",
+          "acknowledged": "1997",
+          "failed": "3",
+          "retried": "258",
+          "max_latency_ms": "16",
+          "iterations": "20",
+          "invalid_channel_rejected": "1",
+          "invalid_length_rejected": "1",
+          "nonce": "748833a1a984b247acfac242df9bf098",
+          "core": "a5f54c3fb06a9474401ffb50dd6445c751b49c32"
+        },
+        "receiver": {
+          "role": "receiver",
+          "received": "1997",
+          "unique": "1997",
+          "duplicates": "0",
+          "corrupt": "0",
+          "dropped": "0",
+          "iterations": "20",
+          "invalid_channel_rejected": "1",
+          "invalid_length_rejected": "1",
+          "nonce": "748833a1a984b247acfac242df9bf098",
+          "core": "a5f54c3fb06a9474401ffb50dd6445c751b49c32"
+        }
+      },
+      "denominator": {
+        "expected_packets": 2000,
+        "acknowledged_packets": 1997,
+        "unique_packets": 1997,
+        "lost_acknowledgements": 3,
+        "lost_unique_packets": 3
+      },
+      "nonce": "748833a1a984b247acfac242df9bf098"
+    }
+  },
+  "reason": "StandaloneRadioFailure: ptx STOP mismatch",
+  "transcript_sha256": "1e9b0e97254cc591151150d0626c503c35e4736d2cbcd2c1877e2781448c6632",
+  "observed_utc": "2026-09-29T14:14:09.058773+00:00"
+}

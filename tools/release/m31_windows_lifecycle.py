@@ -26,7 +26,27 @@ RELEASE_TOOL = Path(__file__).with_name("m31_release.py")
 VERSION = "0.5.0-rc.2"
 PREVIOUS_VERSION = "0.5.0-rc.1"
 FQBN = "nucode:zephyr:nu54dk"
-EXPECTED_EXAMPLES = 113
+EXPECTED_EXAMPLES = 130
+EXAMPLE_IDENTITY_LOCK = REPOSITORY / "tools" / "ci" / "rc2-example-weights.json"
+POST_RC2_EXAMPLES = {
+    "NUCODE_BLE/BleThroughputCentral",
+    "NUCODE_BLE/BleThroughputPeripheral",
+    "NUCODE_BLE/ConnectionSubratingCentral",
+    "NUCODE_BLE/ConnectionSubratingPeripheral",
+    "NUCODE_BLE/ExtendedLeFeaturePages",
+    "NUCODE_BLE/FrameSpaceUpdateCentral",
+    "NUCODE_BLE/FrameSpaceUpdatePeripheral",
+    "NUCODE_BLE/LeChannelMapControl",
+    "NUCODE_BLE/LePowerControlCentral",
+    "NUCODE_BLE/LePowerControlPeripheral",
+    "NUCODE_BLE/PathLossMonitorCentral",
+    "NUCODE_BLE/PathLossMonitorPeripheral",
+    "NUCODE_BLE/RssiPowerControlCentral",
+    "NUCODE_BLE/RssiPowerControlPeripheral",
+    "NUCODE_BLE/ShorterConnectionIntervalsCentral",
+    "NUCODE_BLE/ShorterConnectionIntervalsPeripheral",
+    "NUCODE_BLE/SleepClockAccuracyUpdate",
+}
 PREVIOUS_RC_INDEX_URL = (
     "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/"
     "v0.5.0-rc.1/package_nucode_nu54dk_rc_index.json"
@@ -119,22 +139,40 @@ def run_command(
     }
 
 
-## @brief 설치본의 단일 예제 metadata를 읽고 identity별 권장 profile을 반환합니다.
+## @brief Windows lifecycle 분모 130개를 RC2 원장과 후속 고정 집합에서 읽습니다.
+def release_example_identities() -> set[str]:
+    document = read_json(EXAMPLE_IDENTITY_LOCK)
+    weights = document.get("weights_seconds") if isinstance(document, dict) else None
+    if (
+        document.get("schema_version") != 1
+        or not isinstance(weights, dict)
+        or not all(isinstance(identity, str) and identity for identity in weights)
+    ):
+        raise M31LifecycleFailure("M31 예제 identity lock이 잘못되었습니다")
+    identities = set(weights) | POST_RC2_EXAMPLES
+    if len(identities) != EXPECTED_EXAMPLES:
+        raise M31LifecycleFailure("M31 예제 identity lock 분모가 잘못되었습니다")
+    return identities
+
+
+## @brief 설치본 metadata에서 M31 RC2 identity별 권장 profile을 반환합니다.
 def installed_example_metadata(platform: Path) -> dict[str, Any]:
     path = platform / "libraries" / "example-metadata.json"
     document = read_json(path)
     examples = document.get("examples")
     if (
         document.get("schema_version") != 1
-        or document.get("example_count") != EXPECTED_EXAMPLES
         or not isinstance(examples, dict)
-        or len(examples) != EXPECTED_EXAMPLES
+        or document.get("example_count") != len(examples)
     ):
         raise M31LifecycleFailure("설치본 예제 metadata 분모 또는 schema가 잘못되었습니다")
-    return examples
+    expected = release_example_identities()
+    if not expected.issubset(examples):
+        raise M31LifecycleFailure("설치본에서 M31 예제 identity가 누락되었습니다")
+    return {identity: examples[identity] for identity in sorted(expected)}
 
 
-## @brief 설치 platform 아래 공개 Arduino 예제 113개를 열거합니다.
+## @brief 설치 platform 아래 공개 Arduino 예제 130개를 열거합니다.
 def installed_examples(platform: Path) -> list[tuple[str, Path, str]]:
     result: list[tuple[str, Path, str]] = []
     metadata = installed_example_metadata(platform)
@@ -149,6 +187,8 @@ def installed_examples(platform: Path) -> list[tuple[str, Path, str]]:
             sketch = example / f"{example.name}.ino"
             if example.is_dir() and sketch.is_file():
                 identity = f"{library.name}/{example.name}"
+                if identity not in metadata:
+                    continue
                 record = metadata.get(identity)
                 if not isinstance(record, dict):
                     raise M31LifecycleFailure(f"설치 예제 metadata가 없습니다: {identity}")

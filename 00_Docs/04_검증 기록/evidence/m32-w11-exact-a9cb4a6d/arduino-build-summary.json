@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "m32_arduino_example_builds",
+  "source_revision": "a9cb4a6dd7b1950b1bfa0dee5940d64217d95f5b",
+  "source_clean": true,
+  "command_selection": "--tests m32",
+  "group_marker": "ARDUINO_SMOKE_GROUP_PASS=custom;TESTS=1",
+  "example_denominator": 74,
+  "example_built": 74,
+  "example_failed": 0,
+  "duration_seconds": 21240.495,
+  "groups": {
+    "ble_and_mesh_base": 49,
+    "mesh_management": 13,
+    "mesh_update": 4,
+    "standalone_radio": 4,
+    "coexistence": 4
+  },
+  "log": {
+    "path": "arduino-build.log",
+    "sha256": "a4fe09de1e824ff315874c1e536a67db6f931be3d08e2298981747a38cd3fb75"
+  },
+  "started_local": "2026-10-02T21:09:44.4922947+09:00",
+  "finished_local": "2026-10-03T03:03:44.9871631+09:00"
+}

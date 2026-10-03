@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "capabilities": [],
+  "roles": [],
+  "capacities": {
+    "mesh.cdb-node-slots": 33,
+    "mesh.cdb-subnets": 4,
+    "mesh.cdb-app-keys": 8,
+    "mesh.local-subnets": 4,
+    "mesh.local-app-keys": 8,
+    "mesh.model-app-keys": 4
+  }
+}

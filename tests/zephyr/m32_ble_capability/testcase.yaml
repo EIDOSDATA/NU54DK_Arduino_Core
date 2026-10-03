@@ -1,0 +1,25 @@
+tests:
+  nucode.m32.ble_capability.baseline_sdc:
+    build_only: true
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=baseline.conf
+    tags:
+      - bluetooth
+      - m32
+      - capability
+  nucode.m32.ble_capability.extended_sdc:
+    build_only: true
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    extra_args:
+      - EXTRA_CONF_FILE=extended.conf
+    tags:
+      - bluetooth
+      - m32
+      - capability
