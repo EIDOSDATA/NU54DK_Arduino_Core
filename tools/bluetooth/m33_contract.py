@@ -275,6 +275,79 @@ def _sample_test_ids(sample: dict, variants: list[dict]) -> list[str]:
     return list(OWNER_TEST_IDS.get(sample["owner_work_id"], ()))
 
 
+def _sample_requirements(sample: dict, test_ids: list[str]) -> dict:
+    """! @brief sample의 실행 역할·보드·peer 요구와 위임 원본을 명시합니다. """
+    owner = sample["owner_work_id"]
+    path = sample["upstream_path"]
+    if sample["route"] == "excluded":
+        return {
+            "resolution": "not_applicable_excluded",
+            "roles": [],
+            "minimum_boards": 0,
+            "external_parts": [],
+            "peer_policy": "not_applicable",
+            "source": PARITY_PATH.relative_to(CORE).as_posix(),
+        }
+    if owner.startswith("M31-"):
+        return {
+            "resolution": "delegated_existing_owner",
+            "roles": [],
+            "minimum_boards": None,
+            "external_parts": [],
+            "peer_policy": "see_owner_contract",
+            "source": M31_PATH.relative_to(CORE).as_posix(),
+        }
+    if owner.startswith("M32-"):
+        return {
+            "resolution": "delegated_existing_owner",
+            "roles": [],
+            "minimum_boards": None,
+            "external_parts": [],
+            "peer_policy": "see_owner_contract",
+            "source": M32_PATH.relative_to(CORE).as_posix(),
+        }
+    if owner == "M33-W02":
+        beacon = "M33-BEACON-01" in test_ids
+        return {
+            "resolution": "planned_m33_family",
+            "roles": ["advertiser", "observer"] if beacon else ["server", "client"],
+            "minimum_boards": 2,
+            "external_parts": [],
+            "peer_policy": "second_nu54dk",
+            "source": TARGET_PATH.relative_to(CORE).as_posix(),
+        }
+    if owner == "M33-W03":
+        return {
+            "resolution": "planned_m33_family",
+            "roles": ["device", "scripted_peer"],
+            "minimum_boards": 2,
+            "external_parts": ["optional_apple_or_google_product"],
+            "peer_policy": "automatic_required_product_physical_user_follow_up",
+            "source": TARGET_PATH.relative_to(CORE).as_posix(),
+        }
+    if owner == "M33-W04":
+        direct_test_mode = path.endswith("/direct_test_mode")
+        return {
+            "resolution": "planned_m33_family",
+            "roles": (
+                ["transmitter", "receiver"]
+                if direct_test_mode else ["controller", "external_host"]
+            ),
+            "minimum_boards": 2 if direct_test_mode else 1,
+            "external_parts": ["optional_rf_tester"] if direct_test_mode else [],
+            "peer_policy": "nu54dk_or_external_host_by_transport",
+            "source": TARGET_PATH.relative_to(CORE).as_posix(),
+        }
+    return {
+        "resolution": "catalog_decision",
+        "roles": ["host_inventory"],
+        "minimum_boards": 0,
+        "external_parts": [],
+        "peer_policy": "none",
+        "source": CONTRACT_EVIDENCE,
+    }
+
+
 def _upstream_catalog() -> list[dict]:
     """! @brief 190개 upstream sample을 owner·route·test와 한 행씩 연결합니다. """
     variants_by_parent: dict[str, list[dict]] = {}
@@ -283,6 +356,7 @@ def _upstream_catalog() -> list[dict]:
     rows = []
     for sample in PARITY["samples"]:
         variants = variants_by_parent.get(sample["id"], [])
+        test_ids = _sample_test_ids(sample, variants)
         if sample["exclusion_reason"]:
             delivery_state = "excluded_with_reason"
         elif sample["owner_work_id"].startswith(("M31-", "M32-")):
@@ -300,7 +374,24 @@ def _upstream_catalog() -> list[dict]:
             "delivery_state": delivery_state,
             "exclusion_reason": sample["exclusion_reason"],
             "variant_ids": sorted(entry["id"] for entry in variants),
-            "test_ids": _sample_test_ids(sample, variants),
+            "test_ids": test_ids,
+            "execution_requirements": _sample_requirements(sample, test_ids),
+            "arduino_delivery": {
+                "route": sample["route"],
+                "state": delivery_state,
+                "owner_work_id": sample["owner_work_id"],
+                "source": (
+                    M31_PATH.relative_to(CORE).as_posix()
+                    if sample["owner_work_id"].startswith("M31-")
+                    else M32_PATH.relative_to(CORE).as_posix()
+                    if sample["owner_work_id"].startswith("M32-")
+                    else TARGET_PATH.relative_to(CORE).as_posix()
+                ),
+            },
+            "result_stages": [
+                "native_build", "nu54dk_build", "arduino_build", "runtime",
+                "negative", "interoperability",
+            ],
             "target_metadata": {
                 "platform_allow_exact": any(
                     entry["target_metadata"]["platform_allow_exact"] is True
@@ -449,6 +540,11 @@ def _example_catalog() -> list[dict]:
             m31_entry = m31_rows.get(relative)
             m32_entry = m32_capabilities.get(sketch)
             owner = _infer_example_owner(library_path.name, sketch, m32_owners)
+            companion_files = sorted(
+                path.relative_to(CORE).as_posix()
+                for path in sketch_path.parent.rglob("*")
+                if path.is_file() and path != sketch_path
+            )
             if m31_entry is not None:
                 traceability = "m31_readiness_exact"
                 build_status = m31_entry.get("w07_build_status") or m31_entry.get("build_status")
@@ -489,6 +585,29 @@ def _example_catalog() -> list[dict]:
                 "build_status": build_status,
                 "runtime_status": runtime_status,
                 "evidence": evidence,
+                "companion_files": companion_files,
+                "stages": {
+                    "source_candidate": {
+                        "status": "PRESENT",
+                        "evidence": relative,
+                    },
+                    "native_build": {
+                        "status": "NOT_APPLICABLE",
+                        "evidence": None,
+                    },
+                    "arduino_build": {
+                        "status": build_status,
+                        "evidence": evidence if build_status == "PASS" else None,
+                    },
+                    "functional_hil": {
+                        "status": runtime_status,
+                        "evidence": evidence if runtime_status == "PASS" else None,
+                    },
+                    "external_peer_interop": {
+                        "status": "NOT_RUN",
+                        "evidence": None,
+                    },
+                },
                 "sha256": _sha256_bytes(sketch_path.read_bytes()),
             })
     return rows
@@ -949,6 +1068,25 @@ def validate(document: dict, sdk_root: Path | None = None) -> None:
             raise ValueError("reasonless exclusion")
         if SHA256_PATTERN.fullmatch(entry.get("source_sha256", "")) is None:
             raise ValueError("upstream source hash malformed")
+        requirements = entry.get("execution_requirements", {})
+        if (requirements.get("resolution") not in {
+                "not_applicable_excluded", "delegated_existing_owner",
+                "planned_m33_family", "catalog_decision",
+            } or not isinstance(requirements.get("roles"), list) or
+                not isinstance(requirements.get("external_parts"), list) or
+                not isinstance(requirements.get("peer_policy"), str) or
+                not isinstance(requirements.get("source"), str)):
+            raise ValueError("upstream execution requirements missing")
+        delivery = entry.get("arduino_delivery", {})
+        if (delivery.get("route") != entry["route"] or
+                delivery.get("owner_work_id") != entry["owner_work_id"] or
+                not isinstance(delivery.get("source"), str)):
+            raise ValueError("upstream Arduino delivery mapping missing")
+        if entry.get("result_stages") != [
+            "native_build", "nu54dk_build", "arduino_build", "runtime",
+            "negative", "interoperability",
+        ]:
+            raise ValueError("upstream result stage mapping missing")
 
     if document.get("installed_example_catalog") != _example_catalog():
         raise ValueError("installed example catalog drift")
@@ -968,6 +1106,18 @@ def validate(document: dict, sdk_root: Path | None = None) -> None:
             raise ValueError("installed example presentation tier drift")
         if SHA256_PATTERN.fullmatch(entry.get("sha256", "")) is None:
             raise ValueError("installed example hash malformed")
+        if any(not (CORE / path).is_file() for path in entry.get("companion_files", [])):
+            raise ValueError("installed example companion path missing")
+        stages = entry.get("stages", {})
+        if set(stages) != {
+            "source_candidate", "native_build", "arduino_build",
+            "functional_hil", "external_peer_interop",
+        }:
+            raise ValueError("installed example stage separation missing")
+        if (stages["source_candidate"].get("status") != "PRESENT" or
+                stages["source_candidate"].get("evidence") != entry["path"] or
+                stages["external_peer_interop"].get("status") != "NOT_RUN"):
+            raise ValueError("installed example stage promotion invalid")
     if document.get("deduplication_summary") != _deduplication_summary(
         expected_scope, examples
     ):

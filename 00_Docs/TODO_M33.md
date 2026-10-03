@@ -88,10 +88,10 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 
 - [x] M31-W01의 `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`을 고정 SDK의 sample/test
   metadata와 전수 대조한다. 새 탐색 결과·누락·중복을 검출하는 CI gate를 완성한다.
-- [ ] 각 upstream 경로에 nRF54L15 target 허용·integration·build-only 여부, 필요한 역할/보드/부품/peer,
+- [x] 각 upstream 경로에 nRF54L15 target 허용·integration·build-only 여부, 필요한 역할/보드/부품/peer,
   Arduino 경로·profile·owner·예정 test ID를 등록한다.
-- [ ] M28~M32에서 구현한 기능과 예제의 일대다 대응을 연결하고 실제 역할별 `.ino`·설정·README를 추적한다.
-- [ ] Source candidate/native build/Arduino build/HIL/외부 peer 결과를 각각 기록하고 미배정 owner와
+- [x] M28~M32에서 구현한 기능과 예제의 일대다 대응을 연결하고 실제 역할별 `.ino`·설정·README를 추적한다.
+- [x] Source candidate/native build/Arduino build/HIL/외부 peer 결과를 각각 기록하고 미배정 owner와
   이유 없는 제외 0을 마감 조건으로 검사한다.
 - [x] SIG adopted service/profile 전체와 고정 SDK sample 전체의 차이를 공개한다. 고정 SDK 적용 sample은
   모두 추적하고, source가 없는 추가 service도 계획 여부·제공 방식·근거를 catalog에 남긴다.

@@ -193,6 +193,32 @@ class M33ReadinessContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 MODULE.validate(broken)
 
+    def test_upstream_requirements_and_example_stages_are_separate(self) -> None:
+        """! @brief 역할 요구와 source/build/HIL/peer 상태의 분리를 고정합니다. """
+        self.assertTrue(all(
+            entry["execution_requirements"]["source"]
+            for entry in self.document["upstream_catalog"]
+        ))
+        self.assertTrue(all(
+            entry["arduino_delivery"]["owner_work_id"] == entry["owner_work_id"]
+            for entry in self.document["upstream_catalog"]
+        ))
+        self.assertTrue(all(
+            set(entry["stages"]) == {
+                "source_candidate", "native_build", "arduino_build",
+                "functional_hil", "external_peer_interop",
+            }
+            for entry in self.document["installed_example_catalog"]
+        ))
+
+        requirements = copy.deepcopy(self.document)
+        requirements["upstream_catalog"][0]["execution_requirements"]["source"] = ""
+        stages = copy.deepcopy(self.document)
+        del stages["installed_example_catalog"][0]["stages"]["functional_hil"]
+        for broken in (requirements, stages):
+            with self.assertRaises(ValueError):
+                MODULE.validate(broken)
+
     def test_ncs_340_policy_and_conditional_risks_are_preserved(self) -> None:
         """! @brief SDK 자동 전환과 patch note의 원인 단정을 거부합니다. """
         upgrade = copy.deepcopy(self.document)
