@@ -193,7 +193,8 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 P1은 생략 가능 표시가 아닌 구현 순서다. 공식 nRF54L15 적용 예제에는 실행 가능한 Arduino 경로를
 제공하고, 기능·외부 의존성의 정당한 예외만 원장에 기록한다. 문서 계획 진척과 구현·runtime 진척은
 각각 별도 분모로 보고한다. HOST-W04~HOST-W08은 Host 작업이며 M30 잔여 작업이 아니다.
-M31, M32와 M33-W01은 완료했고 다음 기능 작업은 M33-W02다. M32의 개별 기능·통합 HIL은 M31 인계와
+M31, M32와 M33-W01은 완료했고 M33-W02를 진행 중이다. Beacon codec·두 역할 예제의 source와
+target build는 PASS지만 2보드 HIL과 표준 GATT profile은 남아 있다. M32의 개별 기능·통합 HIL은 M31 인계와
 각 protocol 단독 결과를 선행 근거로 사용했다. 후속 착수 조건은 [HANDOFF](../HANDOFF.md)를
 따르며, HOST-W04~W08은 사용자 보류를 유지한다.
 

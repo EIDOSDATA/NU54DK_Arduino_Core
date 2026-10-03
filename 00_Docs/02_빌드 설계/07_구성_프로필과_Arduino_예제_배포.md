@@ -357,7 +357,8 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 | M31-W08 및 정식 공개 — 완료 | W07 설치 role 예제·제공 경로/제한, Windows package·설치·RC smoke와 별도 stable 승격·공개 완료 |
 | M32-W02~W05 — 완료·미공개 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget; 고정 Host 미지원 경계 유지 |
 | M32-W06~W10 — 완료·미공개 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 검증한 세 내부 공존 조합 |
-| M33-W02~W04 — 계획 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
+| M33-W02 — 진행 중 | iBeacon/Eddystone UID/BTHome codec·두 공개 예제·target build PASS, 2보드 HIL `NOT_RUN`; OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS 구현·검증 잔여 |
+| M33-W03~W04 — 계획 | Fast Pair·ANCS/AMS, HCI/DTM profile/template |
 | M33-W05~W08 — v0.6.0 계획 | 추가 role 예제·ARF-04A·후속 기능 회귀·설치·지원표 마감 |
 
 다음은 모든 예제 owner에 적용하는 반복 검증 계약이다. 완료율 체크리스트가 아니며 M31의 완료

@@ -468,15 +468,15 @@
       "m33_after": 108
     },
     "installed_sketch_exact": {
-      "before": 187,
-      "unique_content_after": 187,
+      "before": 189,
+      "unique_content_after": 189,
       "exact_duplicate_group_count": 0,
       "files_in_exact_duplicate_groups": 0,
-      "unique_name_after": 187,
+      "unique_name_after": 189,
       "duplicate_name_group_count": 0,
       "domain_counts": {
         "core_peripheral": 23,
-        "bluetooth_radio": 164
+        "bluetooth_radio": 166
       }
     },
     "planned_functional_groups": {
@@ -639,6 +639,7 @@
       "analog_pwm_tone",
       "ble_advertising_scanning",
       "ble_audio",
+      "ble_beacons",
       "ble_channel_sounding",
       "ble_dfu",
       "ble_direction_finding",
@@ -665,9 +666,9 @@
       "spi",
       "storage"
     ],
-    "functional_recipe_group_total": 28,
+    "functional_recipe_group_total": 29,
     "m33_planned_functional_group_total": 22,
-    "reference_sketch_total": 187,
+    "reference_sketch_total": 189,
     "featured_sketch_total": 24,
     "missing_featured_paths": [],
     "guidance_contract": {
@@ -701,8 +702,8 @@
     {
       "id": "M33-W02",
       "title": "standard_gatt_and_beacons",
-      "status": "not_started",
-      "exact_evidence": null
+      "status": "in_progress",
+      "exact_evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
     },
     {
       "id": "M33-W03",
@@ -10012,6 +10013,80 @@
       "sha256": "c390be65b588b293b2e083c32012f82e545b1821659beb5b7a6a6aa9cb3845ae"
     },
     {
+      "path": "libraries/NUCODE_BLE/examples/BeaconAdvertiser/BeaconAdvertiser.ino",
+      "library": "NUCODE_BLE",
+      "sketch": "BeaconAdvertiser",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_beacons",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_beacon_candidate",
+      "build_status": "PASS",
+      "runtime_status": "NOT_RUN",
+      "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md",
+      "companion_files": [],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE/examples/BeaconAdvertiser/BeaconAdvertiser.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+        },
+        "functional_hil": {
+          "status": "NOT_RUN",
+          "evidence": null
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "ae7b3924b1fc9a39b9f44d4c6d35972b557db5a21afefd08827bad6ebd681bda"
+    },
+    {
+      "path": "libraries/NUCODE_BLE/examples/BeaconObserver/BeaconObserver.ino",
+      "library": "NUCODE_BLE",
+      "sketch": "BeaconObserver",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_beacons",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_beacon_candidate",
+      "build_status": "PASS",
+      "runtime_status": "NOT_RUN",
+      "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md",
+      "companion_files": [],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE/examples/BeaconObserver/BeaconObserver.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+        },
+        "functional_hil": {
+          "status": "NOT_RUN",
+          "evidence": null
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "9db3cf07002730515165b0df214aa51af0fa94ba3d298df5ba454e517f96152c"
+    },
+    {
       "path": "libraries/NUCODE_BLE/examples/BleThroughputCentral/BleThroughputCentral.ino",
       "library": "NUCODE_BLE",
       "sketch": "BleThroughputCentral",
@@ -17780,7 +17855,7 @@
       "id": "ibeacon_eddystone_bthome",
       "authority": "non_SIG_formats",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implementation_in_progress"
     },
     {
       "id": "ancs_ams",
@@ -17958,6 +18033,35 @@
       "id": "M33-BEACON-01",
       "cases": [
         {
+          "id": "M33-BEACON-01:codec_host",
+          "owner_work_id": "M33-W02",
+          "roles": [
+            "host"
+          ],
+          "minimum_boards": 0,
+          "timeout_s": 60,
+          "iterations": 1,
+          "denominator": 4,
+          "metric": "codec_runtime_scenarios",
+          "allowed_failures": 0,
+          "negative_classes": [
+            "bad_length",
+            "bad_version",
+            "wrong_identifier",
+            "reserved_bits",
+            "invalid_range"
+          ],
+          "recovery_timeout_s": 30,
+          "maximum_diagnostic_retests": 1,
+          "verification_owner": "developer",
+          "verification_stage": "development",
+          "development_blocker": true,
+          "release_blocker": true,
+          "status": "PASS",
+          "source_revision": "5f79ba69da503006fbcabdc2493f5146c22d3f63",
+          "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+        },
+        {
           "id": "M33-BEACON-01:formats",
           "owner_work_id": "M33-W02",
           "roles": [
@@ -18094,7 +18198,7 @@
           "minimum_boards": 0,
           "timeout_s": 1800,
           "iterations": 1,
-          "denominator": 187,
+          "denominator": 189,
           "metric": "installed_example_catalog",
           "allowed_failures": 0,
           "negative_classes": [
@@ -18422,13 +18526,13 @@
     "master_variant_total": 474,
     "m33_sample_total": 108,
     "m33_variant_total": 318,
-    "installed_example_total": 187,
-    "installed_ble_radio_example_total": 164,
+    "installed_example_total": 189,
+    "installed_ble_radio_example_total": 166,
     "installed_core_peripheral_example_total": 23,
     "sig_service_total": 69,
     "profile_catalog_total": 19,
     "test_family_total": 12,
-    "test_case_total": 16,
-    "test_case_passed": 4
+    "test_case_total": 17,
+    "test_case_passed": 5
   }
 }

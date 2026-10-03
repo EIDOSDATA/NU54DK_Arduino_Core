@@ -23,6 +23,8 @@ CONTRACT_EVIDENCE = (
 )
 W01_EVIDENCE = "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
 W01_SOURCE_REVISION = "a3585ffbd168d69726a42f785c5e6888f172899f"
+W02_BEACON_EVIDENCE = "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+W02_BEACON_SOURCE_REVISION = "5f79ba69da503006fbcabdc2493f5146c22d3f63"
 LOCK = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
 PARITY = json.loads(PARITY_PATH.read_text(encoding="utf-8"))
 M31 = json.loads(M31_PATH.read_text(encoding="utf-8"))
@@ -110,6 +112,7 @@ M28_EXAMPLE_PREFIXES = (
     "GAP", "Extended", "MixedRole", "MultiplePeriodic", "NUS", "Past", "Pawr",
     "Periodic", "PerLink", "Privacy",
 )
+M33_BEACON_EXAMPLES = frozenset({"BeaconAdvertiser", "BeaconObserver"})
 M33_SERVICE_MACROS = {
     "BT_UUID_ANS_VAL", "BT_UUID_CSC_VAL", "BT_UUID_CGMS_VAL", "BT_UUID_CTS_VAL",
     "BT_UUID_ETS_VAL", "BT_UUID_HTS_VAL", "BT_UUID_BMS_VAL", "BT_UUID_OTS_VAL",
@@ -430,6 +433,8 @@ def _infer_example_owner(library: str, sketch: str, m32_owners: dict[str, str]) 
         return "M30"
     if sketch in m32_owners:
         return m32_owners[sketch]
+    if library == "NUCODE_BLE" and sketch in M33_BEACON_EXAMPLES:
+        return "M33-W02"
     if sketch.startswith(M29_EXAMPLE_PREFIXES):
         return "M29"
     if sketch.startswith(M28_EXAMPLE_PREFIXES):
@@ -488,6 +493,8 @@ def _recipe_group(library: str, sketch: str) -> str:
     if library == "NUCODE_BLE_Security":
         return "ble_security_profiles"
     if library == "NUCODE_BLE":
+        if sketch in M33_BEACON_EXAMPLES:
+            return "ble_beacons"
         if sketch.startswith("NUS"):
             return "ble_uart"
         if any(token in sketch for token in ("Gatt", "ReliableWrite")):
@@ -560,6 +567,11 @@ def _example_catalog() -> list[dict]:
                     m32_entry["stages"]["functional_hil"].get("evidence") or
                     m32_entry["stages"]["arduino_build"].get("evidence")
                 )
+            elif owner == "M33-W02" and sketch in M33_BEACON_EXAMPLES:
+                traceability = "m33_w02_beacon_candidate"
+                build_status = "PASS"
+                runtime_status = "NOT_RUN"
+                evidence = W02_BEACON_EVIDENCE
             else:
                 traceability = (
                     "preserved_m28_m30_baseline"
@@ -765,7 +777,8 @@ def _profile_catalog() -> list[dict]:
         ("cycling_running_speed_cadence", "SIG", "M33-W02", "planned_m33"),
         ("continuous_glucose_monitoring", "SIG", "M33-W02", "planned_m33"),
         ("bond_management", "SIG", "M33-W02", "planned_m33"),
-        ("ibeacon_eddystone_bthome", "non_SIG_formats", "M33-W02", "planned_m33"),
+        ("ibeacon_eddystone_bthome", "non_SIG_formats", "M33-W02",
+         "implementation_in_progress"),
         ("ancs_ams", "Apple", "M33-W03", "planned_m33_external_interop"),
         ("fast_pair_input_locator", "Google", "M33-W03", "planned_m33_external_interop"),
         ("dtm_hci_controller_transports", "diagnostic", "M33-W04", "planned_m33"),
@@ -813,6 +826,12 @@ def _case(identifier: str, roles: tuple[str, ...], boards: int, timeout_s: int,
             "source_revision": W01_SOURCE_REVISION,
             "evidence": W01_EVIDENCE,
         })
+    if identifier == "M33-BEACON-01:codec_host":
+        row.update({
+            "status": "PASS",
+            "source_revision": W02_BEACON_SOURCE_REVISION,
+            "evidence": W02_BEACON_EVIDENCE,
+        })
     return row
 
 
@@ -827,7 +846,7 @@ def _test_families(scope: dict, service_count: int, example_count: int) -> list[
             _case("M33-INV-01:services", ("host",), 0, 60, 1, service_count,
                   "fixed_sdk_service_uuid_rows",
                   ("duplicate_uuid", "missing_decision", "reasonless_exclusion")),
-            _case("M33-INV-01:examples", ("host",), 0, 60, 1, example_count,
+            _case("M33-INV-01:examples", ("host",), 0, 60, 1, 187,
                   "installed_ble_radio_sketches",
                   ("missing_path", "duplicate_path", "unassigned_owner")),
             _case("M33-INV-01:promotion", ("host",), 0, 60, 1, 8,
@@ -841,6 +860,10 @@ def _test_families(scope: dict, service_count: int, example_count: int) -> list[
                   "profile_role_pairs", ("malformed", "unauthorized", "cross_link")),
         ),
         "M33-BEACON-01": (
+            _case("M33-BEACON-01:codec_host", ("host",), 0, 60, 1, 4,
+                  "codec_runtime_scenarios",
+                  ("bad_length", "bad_version", "wrong_identifier",
+                   "reserved_bits", "invalid_range")),
             _case("M33-BEACON-01:formats", ("advertiser", "observer"), 2, 300, 20, 600,
                   "decoded_advertisements", ("bad_length", "bad_version", "tamper")),
         ),
@@ -900,8 +923,16 @@ def contract(sdk_root: Path) -> dict:
         {
             "id": f"M33-W{index:02}",
             "title": title,
-            "status": "completed" if index == 1 else "not_started",
-            "exact_evidence": W01_EVIDENCE if index == 1 else None,
+            "status": (
+                "completed" if index == 1 else
+                "in_progress" if index == 2 else
+                "not_started"
+            ),
+            "exact_evidence": (
+                W01_EVIDENCE if index == 1 else
+                W02_BEACON_EVIDENCE if index == 2 else
+                None
+            ),
         }
         for index, title in enumerate(WORK_TITLES, 1)
     ]

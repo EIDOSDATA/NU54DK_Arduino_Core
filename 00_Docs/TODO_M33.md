@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **M33-W01 완료 — 1/8 작업 묶음** |
+| 현재 구현 상태 | **M33-W01 완료, M33-W02 진행 중 — 완료 1/8 작업 묶음** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
 | 순차 Host 계획 | W01~W03 완료 3/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
@@ -18,7 +18,7 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W08 8/8 완료,
 M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 12/12, signed MDFU와
 1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **1/8이며
-W01 전체 원장과 릴리스 계약을 완료**했다. 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
+W01 전체 원장과 릴리스 계약을 완료하고 W02 Beacon 구현을 시작**했다. 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
 Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
 M32 구현·문서를 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했다. M32 브랜치는 로컬·원격에서
 삭제했으며 원본 이력의 로컬 Git bundle과 전체 실행 순서는 [M33 인계](M33_HANDOFF.md)에 있다.
@@ -58,7 +58,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | 작업 | 구현·검증 범위 | 현재 상태 |
 | --- | --- | --- |
 | M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | **완료** — exact `a3585ffb…`, [296번](<04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md>) |
-| M33-W02 | 표준 GATT profile와 beacon·목적별 예제 보강 | 미착수 |
+| M33-W02 | 표준 GATT profile와 beacon·목적별 예제 보강 | **진행 중** — Beacon 코덱·예제·Host/build PASS, 2보드 HIL·GATT 잔여 |
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | 미착수 |
 | M33-W04 | DTM/HCI와 특수 진단 application template | 미착수 |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | 미착수 |
@@ -121,8 +121,11 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
   source·client/server 역할·필드·보안·upstream 예제를 판정하고 Arduino profile/direct 예제를 제공한다.
 - [ ] 동일 GATT 기반으로 구현하더라도 characteristic 단위·단위 변환·길이·notify/indicate·authorization·
   malformed 데이터·bond 삭제 권한·동시 두 link 상태 격리를 기능별로 검증한다.
-- [ ] iBeacon·Eddystone·BTHome의 advertiser/observer 예제, payload encoder/decoder·filter·변조/길이 경계와
+- [x] iBeacon·Eddystone·BTHome의 advertiser/observer 예제, payload encoder/decoder·filter·변조/길이 경계와
   profile 요구사항을 제공한다. 실제 센서가 없으면 명시적 synthetic 측정값으로 protocol을 검증한다.
+  Exact `5f79ba69da503006fbcabdc2493f5146c22d3f63`에서 Host 4개 runtime scenario와 두 공개 예제의
+  NCS 3.4.0 Arduino build를 PASS했다. 실제 2보드 600광고 HIL은 `NOT_RUN`이며
+  [297번 기록](<04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md>)에 분리했다.
 - [ ] Generic GATT/NUS·peripheral/central·동시 role·periodic/PAwR·보안·DFU 등 기존 사용자 예제를
   새 catalog에 연결하고 동일 기능을 중복 새 구현으로 계산하지 않는다.
 - [ ] [ARF-04A](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의 기존 API 기반
@@ -166,8 +169,8 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
   runner/config를 연결한다. 독립 application template는 별도 위치·빌드 방식을 catalog에 명시한다.
 - [ ] 모든 예제에 목표 기능, upstream path/revision, 필요한 보드 수와 역할, Tools profile/Kconfig,
   예상 출력·종료/재시작·보안·제한·negative·증거 ID를 작성한다.
-- [ ] 설치 예제 187개 모두에 목적·준비물·설정·실행 순서·성공 출력·흔한 오류·다음 예제의 7개 안내
-  필드를 제공한다. `Start Here` 12개 시나리오는 초보자 요약을 추가하고, 나머지도 28개 기능별 Recipe와
+- [ ] 설치 예제 189개 모두에 목적·준비물·설정·실행 순서·성공 출력·흔한 오류·다음 예제의 7개 안내
+  필드를 제공한다. `Start Here` 12개 시나리오는 초보자 요약을 추가하고, 나머지도 29개 기능별 Recipe와
   전체 Reference에서 고립되지 않게 연결한다.
 - [ ] 마이크·스피커·코덱·외장 장치용 adapter/설정·실사용 예제·연결 안내와 자동 가능한 검사를
   owner 결과에서 대조한다. 실물 운용·검증은 사용자 후속 `NOT_RUN`·릴리스 비차단으로 표시하고

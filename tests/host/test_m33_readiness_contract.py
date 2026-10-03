@@ -37,13 +37,13 @@ class M33ReadinessContractTests(unittest.TestCase):
         self.assertEqual(counts["master_variant_total"], 474)
         self.assertEqual(counts["m33_sample_total"], 108)
         self.assertEqual(counts["m33_variant_total"], 318)
-        self.assertEqual(counts["installed_example_total"], 187)
-        self.assertEqual(counts["installed_ble_radio_example_total"], 164)
+        self.assertEqual(counts["installed_example_total"], 189)
+        self.assertEqual(counts["installed_ble_radio_example_total"], 166)
         self.assertEqual(counts["installed_core_peripheral_example_total"], 23)
         self.assertEqual(counts["sig_service_total"], 69)
         self.assertEqual(counts["test_family_total"], 12)
-        self.assertEqual(counts["test_case_total"], 16)
-        self.assertEqual(counts["test_case_passed"], 4)
+        self.assertEqual(counts["test_case_total"], 17)
+        self.assertEqual(counts["test_case_passed"], 5)
 
     def test_deduplication_denominators_are_explicit(self) -> None:
         """! @brief 파일 중복 제거와 기능군 통합 분모를 혼동하지 않습니다. """
@@ -58,14 +58,14 @@ class M33ReadinessContractTests(unittest.TestCase):
             },
         )
         sketches = summary["installed_sketch_exact"]
-        self.assertEqual(sketches["before"], 187)
-        self.assertEqual(sketches["unique_content_after"], 187)
+        self.assertEqual(sketches["before"], 189)
+        self.assertEqual(sketches["unique_content_after"], 189)
         self.assertEqual(sketches["exact_duplicate_group_count"], 0)
-        self.assertEqual(sketches["unique_name_after"], 187)
+        self.assertEqual(sketches["unique_name_after"], 189)
         self.assertEqual(sketches["duplicate_name_group_count"], 0)
         self.assertEqual(
             sketches["domain_counts"],
-            {"core_peripheral": 23, "bluetooth_radio": 164},
+            {"core_peripheral": 23, "bluetooth_radio": 166},
         )
         functional = summary["planned_functional_groups"]
         self.assertEqual(
@@ -90,7 +90,7 @@ class M33ReadinessContractTests(unittest.TestCase):
         self.assertEqual(len(discovery["start_here_journeys"]), 12)
         self.assertGreaterEqual(discovery["functional_recipe_group_total"], 20)
         self.assertEqual(discovery["m33_planned_functional_group_total"], 22)
-        self.assertEqual(discovery["reference_sketch_total"], 187)
+        self.assertEqual(discovery["reference_sketch_total"], 189)
         self.assertEqual(discovery["missing_featured_paths"], [])
         self.assertEqual(discovery["featured_sketch_total"], 24)
         self.assertEqual(
@@ -197,6 +197,34 @@ class M33ReadinessContractTests(unittest.TestCase):
             case["source_revision"] == MODULE.W01_SOURCE_REVISION and
             case["evidence"] == MODULE.W01_EVIDENCE
             for case in inventory["cases"]
+        ))
+
+    def test_w02_beacon_build_and_hil_are_not_conflated(self) -> None:
+        """! @brief Beacon 코덱·Arduino build PASS와 2보드 HIL NOT_RUN을 구분합니다. """
+
+        work = self.document["work_packages"][1]
+        self.assertEqual(work["status"], "in_progress")
+        self.assertEqual(work["exact_evidence"], MODULE.W02_BEACON_EVIDENCE)
+        family = next(
+            entry for entry in self.document["test_families"]
+            if entry["id"] == "M33-BEACON-01"
+        )
+        self.assertEqual(len(family["cases"]), 2)
+        codec, hil = family["cases"]
+        self.assertEqual(codec["status"], "PASS")
+        self.assertEqual(codec["source_revision"], MODULE.W02_BEACON_SOURCE_REVISION)
+        self.assertEqual(hil["status"], "NOT_RUN")
+        self.assertIsNone(hil["source_revision"])
+        beacon_examples = [
+            entry for entry in self.document["installed_example_catalog"]
+            if entry["sketch"] in MODULE.M33_BEACON_EXAMPLES
+        ]
+        self.assertEqual(len(beacon_examples), 2)
+        self.assertTrue(all(
+            entry["owner_work_id"] == "M33-W02" and
+            entry["stages"]["arduino_build"]["status"] == "PASS" and
+            entry["stages"]["functional_hil"]["status"] == "NOT_RUN"
+            for entry in beacon_examples
         ))
 
     def test_example_and_sig_service_drift_are_rejected(self) -> None:

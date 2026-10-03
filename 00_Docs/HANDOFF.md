@@ -13,7 +13,7 @@
 | RC1/RC2 | 로컬·원격 branch 삭제 완료, 공개 tag·Pre-release·asset과 evidence 보존 | [RC2 TODO](TODO_v0.5.0-RC2.md) |
 | 연속 Upload | Standard Blink 250 ms → 100 ms를 USB 재연결 없이 실제 GUI에서 PASS | [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>) |
 | 정식 공개 | exact package 이중 재현·승인·tag/Release·단일 stable catalog·공개 smoke | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
-| v0.6.0 개발 | M32 **12/12 완료**·M33 **1/8**, W11 exact closure·signed MDFU·soak와 W12 감사, M33-W01 원장 PASS | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
+| v0.6.0 개발 | M32 **12/12 완료**·M33 **1/8**, M33-W01 완료·W02 Beacon Host/build 부분 PASS | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
 
 완료 기능의 상세 계약과 기계 판정 원장은 다음과 같습니다.
 
@@ -28,7 +28,8 @@
 최신 사용자 요청에 따라 원격 CI 결과 조회·완료 대기는 생략하되 로컬 검사와 실제 결과 기록은 유지합니다.
 
 M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통합한 뒤 다음 기능 작업은
-**M33-W02 표준 GATT profile·beacon 구현과 예제**입니다. M33-W01은 exact `a3585ffb…`에서 완료했습니다.
+**M33-W02의 2보드 Beacon HIL과 표준 GATT profile 구현·예제**입니다. M33-W01은 exact `a3585ffb…`에서
+완료했고 Beacon 코덱·두 예제·Host/build는 exact `5f79ba69…`에서 부분 PASS했습니다.
 
 | 다음 작업 | 입력·유지할 경계 |
 | --- | --- |

@@ -12,7 +12,7 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
 | 문서 개정 | 5.6 |
-| 문서 상태 | 고정 source 비교, M23~M32 완료·M33 미착수 |
+| 문서 상태 | 고정 source 비교, M23~M32·M33-W01 완료, M33-W02 진행 중 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.5.0` stable / exact source는 정식 release tag·기록이 소유 |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
