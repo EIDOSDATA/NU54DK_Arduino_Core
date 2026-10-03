@@ -23,8 +23,8 @@ CONTRACT_EVIDENCE = (
 )
 W01_EVIDENCE = "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
 W01_SOURCE_REVISION = "a3585ffbd168d69726a42f785c5e6888f172899f"
-W02_BEACON_EVIDENCE = "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
-W02_BEACON_SOURCE_REVISION = "5f79ba69da503006fbcabdc2493f5146c22d3f63"
+W02_EVIDENCE = "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+W02_SOURCE_REVISION = "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
 LOCK = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
 PARITY = json.loads(PARITY_PATH.read_text(encoding="utf-8"))
 M31 = json.loads(M31_PATH.read_text(encoding="utf-8"))
@@ -113,6 +113,10 @@ M28_EXAMPLE_PREFIXES = (
     "Periodic", "PerLink", "Privacy",
 )
 M33_BEACON_EXAMPLES = frozenset({"BeaconAdvertiser", "BeaconObserver"})
+M33_PROFILE_EXAMPLES = frozenset({
+    "AlertSensor", "BondManagement", "GlucoseSensor", "ObjectClient",
+    "ObjectServer", "StandardCollector", "StandardSensor",
+})
 M33_SERVICE_MACROS = {
     "BT_UUID_ANS_VAL", "BT_UUID_CSC_VAL", "BT_UUID_CGMS_VAL", "BT_UUID_CTS_VAL",
     "BT_UUID_ETS_VAL", "BT_UUID_HTS_VAL", "BT_UUID_BMS_VAL", "BT_UUID_OTS_VAL",
@@ -314,7 +318,7 @@ def _sample_requirements(sample: dict, test_ids: list[str]) -> dict:
     if owner == "M33-W02":
         beacon = "M33-BEACON-01" in test_ids
         return {
-            "resolution": "planned_m33_family",
+            "resolution": "implemented_m33_family",
             "roles": ["advertiser", "observer"] if beacon else ["server", "client"],
             "minimum_boards": 2,
             "external_parts": [],
@@ -366,6 +370,8 @@ def _upstream_catalog() -> list[dict]:
             delivery_state = "excluded_with_reason"
         elif sample["owner_work_id"].startswith(("M31-", "M32-")):
             delivery_state = "existing_owner_result"
+        elif sample["owner_work_id"] == "M33-W02":
+            delivery_state = "implemented_m33"
         elif sample["owner_work_id"] == "M33-W01":
             delivery_state = "catalog_decision_required"
         else:
@@ -435,6 +441,8 @@ def _infer_example_owner(library: str, sketch: str, m32_owners: dict[str, str]) 
         return m32_owners[sketch]
     if library == "NUCODE_BLE" and sketch in M33_BEACON_EXAMPLES:
         return "M33-W02"
+    if library == "NUCODE_BLE_Profiles" and sketch in M33_PROFILE_EXAMPLES:
+        return "M33-W02"
     if sketch.startswith(M29_EXAMPLE_PREFIXES):
         return "M29"
     if sketch.startswith(M28_EXAMPLE_PREFIXES):
@@ -490,8 +498,8 @@ def _recipe_group(library: str, sketch: str) -> str:
         return "ble_mesh_update"
     if library in {"NUCODE_BLE_EATT", "NUCODE_BLE_LegacySigning"}:
         return "ble_gatt_extensions"
-    if library == "NUCODE_BLE_Security":
-        return "ble_security_profiles"
+    if library in {"NUCODE_BLE_Security", "NUCODE_BLE_Profiles"}:
+        return "ble_profiles_and_ecosystems"
     if library == "NUCODE_BLE":
         if sketch in M33_BEACON_EXAMPLES:
             return "ble_beacons"
@@ -567,11 +575,11 @@ def _example_catalog() -> list[dict]:
                     m32_entry["stages"]["functional_hil"].get("evidence") or
                     m32_entry["stages"]["arduino_build"].get("evidence")
                 )
-            elif owner == "M33-W02" and sketch in M33_BEACON_EXAMPLES:
-                traceability = "m33_w02_beacon_candidate"
+            elif owner == "M33-W02" and sketch in M33_BEACON_EXAMPLES | M33_PROFILE_EXAMPLES:
+                traceability = "m33_w02_exact"
                 build_status = "PASS"
-                runtime_status = "NOT_RUN"
-                evidence = W02_BEACON_EVIDENCE
+                runtime_status = "PASS"
+                evidence = W02_EVIDENCE
             else:
                 traceability = (
                     "preserved_m28_m30_baseline"
@@ -716,7 +724,7 @@ def _example_discovery(examples: list[dict]) -> dict:
 def _service_owner(macro: str) -> tuple[str, str, str]:
     """! @brief 고정 SDK service UUID를 기존 구현·M33 계획·추가 catalog로 나눕니다. """
     if macro in M33_SERVICE_MACROS:
-        return "M33-W02", "planned_m33", "표준 GATT profile 구현·예제·HIL 대상"
+        return "M33-W02", "implemented_m33", "표준 GATT profile 구현·예제·HIL 완료"
     if macro in M31_AUDIO_SERVICE_MACROS:
         return "M31-W03", "implemented_existing", "M31 Audio profile 완료 결과 재사용"
     if macro in M32_MESH_SERVICE_MACROS:
@@ -770,15 +778,15 @@ def _profile_catalog() -> list[dict]:
         ("audio_control_media_call", "SIG", "M31-W03", "implemented_existing"),
         ("tmap_gmap_hap", "SIG", "M31-W03", "implemented_existing"),
         ("mesh_and_mesh_1_1", "SIG", "M32-W06~W08", "implemented_existing"),
-        ("object_transfer", "SIG", "M33-W02", "planned_m33"),
-        ("alert_notification", "SIG", "M33-W02", "planned_m33"),
-        ("current_time", "SIG", "M33-W02", "planned_m33"),
-        ("health_thermometer", "SIG", "M33-W02", "planned_m33"),
-        ("cycling_running_speed_cadence", "SIG", "M33-W02", "planned_m33"),
-        ("continuous_glucose_monitoring", "SIG", "M33-W02", "planned_m33"),
-        ("bond_management", "SIG", "M33-W02", "planned_m33"),
+        ("object_transfer", "SIG", "M33-W02", "implemented_m33"),
+        ("alert_notification", "SIG", "M33-W02", "implemented_m33"),
+        ("current_time", "SIG", "M33-W02", "implemented_m33"),
+        ("health_thermometer", "SIG", "M33-W02", "implemented_m33"),
+        ("cycling_running_speed_cadence", "SIG", "M33-W02", "implemented_m33"),
+        ("continuous_glucose_monitoring", "SIG", "M33-W02", "implemented_m33"),
+        ("bond_management", "SIG", "M33-W02", "implemented_m33"),
         ("ibeacon_eddystone_bthome", "non_SIG_formats", "M33-W02",
-         "implementation_in_progress"),
+         "implemented_m33"),
         ("ancs_ams", "Apple", "M33-W03", "planned_m33_external_interop"),
         ("fast_pair_input_locator", "Google", "M33-W03", "planned_m33_external_interop"),
         ("dtm_hci_controller_transports", "diagnostic", "M33-W04", "planned_m33"),
@@ -826,11 +834,11 @@ def _case(identifier: str, roles: tuple[str, ...], boards: int, timeout_s: int,
             "source_revision": W01_SOURCE_REVISION,
             "evidence": W01_EVIDENCE,
         })
-    if identifier == "M33-BEACON-01:codec_host":
+    if family in {"M33-PROFILE-01", "M33-BEACON-01"}:
         row.update({
             "status": "PASS",
-            "source_revision": W02_BEACON_SOURCE_REVISION,
-            "evidence": W02_BEACON_EVIDENCE,
+            "source_revision": W02_SOURCE_REVISION,
+            "evidence": W02_EVIDENCE,
         })
     return row
 
@@ -924,13 +932,12 @@ def contract(sdk_root: Path) -> dict:
             "id": f"M33-W{index:02}",
             "title": title,
             "status": (
-                "completed" if index == 1 else
-                "in_progress" if index == 2 else
+                "completed" if index <= 2 else
                 "not_started"
             ),
             "exact_evidence": (
                 W01_EVIDENCE if index == 1 else
-                W02_BEACON_EVIDENCE if index == 2 else
+                W02_EVIDENCE if index == 2 else
                 None
             ),
         }
@@ -1117,7 +1124,7 @@ def validate(document: dict, sdk_root: Path | None = None) -> None:
         requirements = entry.get("execution_requirements", {})
         if (requirements.get("resolution") not in {
                 "not_applicable_excluded", "delegated_existing_owner",
-                "planned_m33_family", "catalog_decision",
+                "implemented_m33_family", "planned_m33_family", "catalog_decision",
             } or not isinstance(requirements.get("roles"), list) or
                 not isinstance(requirements.get("external_parts"), list) or
                 not isinstance(requirements.get("peer_policy"), str) or

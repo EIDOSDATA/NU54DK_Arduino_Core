@@ -26,7 +26,7 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 | v0.7.0 SDK 전환 전용 확정·후속 제품선 재배정 | [293번 기록](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md) · [v0.7.0 TODO](../TODO_v0.7.0.md) |
 | 전체 문서 검토·NCS 3.4.1 조건부 영향 | [292번 기록](292_문서_전수_검토와_NCS_3.4.1_영향.md) — 당시 전환 시점 해석은 293번에서 대체 · [SDK 영향 검토](<../00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>) |
 | M32 최종 상태 — 12/12 완료 | [287번 W12 마감](287_M32_W12_정합성_감사와_후속_인계.md) · [M32 TODO](../TODO_M32.md) · [HANDOFF](../HANDOFF.md) |
-| M33-W01 완료·M33-W02 진행 | [296번 W01 검증](296_M33_W01_전체_예제_원장과_릴리스_계약.md) · [297번 W02 Beacon 착수](297_M33_W02_Beacon_코덱과_예제_착수.md) · [M33 TODO](../TODO_M33.md). Beacon source/build PASS, 2보드 HIL·표준 GATT 잔여 |
+| M33-W01~W02 완료·W03 다음 | [296번 W01 검증](296_M33_W01_전체_예제_원장과_릴리스_계약.md) · [297번 W02 Beacon 착수](297_M33_W02_Beacon_코덱과_예제_착수.md) · [298번 W02 완료](298_M33_W02_표준_GATT_Beacon_완료.md) · [M33 TODO](../TODO_M33.md). Exact `4ebd4952…` profile/Beacon build·두/세 보드 HIL PASS |
 | M32-W08 BLOB·signed MDFU exact HIL 완료 | [294번](294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md) — BLOB 10/10, MDFU 5회·두 target 10/10, negative·confirm/rollback·STOP PASS. [283번](283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md)은 과거 FAIL 보존 |
 | M32-W07 Mesh 1.1 exact HIL 완료 | [282번](282_M32_W07_Mesh_1.1_software와_HIL_blocker.md) — 350/350 관리 동작·negative·세 역할 STOP |
 | M32-W06 Mesh 기반 exact HIL 완료 | [281번](281_M32_W06_Mesh_기반_software와_HIL_blocker.md) — 두 node 구성·500/500 ACK·negative·STOP. [291번](291_M32_W06_second_node_provisioning_FAIL과_재부팅_인계.md)은 교정 중 과거 인계 |

@@ -1,7 +1,7 @@
 # M33 개발 순서와 새 채팅 인계
 
 2026-10-03에 확정한 M33 개발, 후속 Host 이식, RC 검증과 v0.6.0 공개 순서를 정리한다.
-현재 작업은 실제 저장소의 `Dev-0.6.0-M33`에서 **M33-W01을 완료했고 W02를 진행 중**이다.
+현재 작업은 실제 저장소의 `Dev-0.6.0-M33`에서 **M33-W01~W02를 완료했고 W03이 다음**이다.
 Host 작업은 M33 기능 개발과 병렬 진행하지 않고 **M33-W06 완료 직후 HOST-W04부터** 시작한다.
 이 문서 작성은 기능 구현이나 실물 검증 완료가 아니다.
 
@@ -14,12 +14,12 @@ Host 작업은 M33 기능 개발과 병렬 진행하지 않고 **M33-W06 완료 
 | M33 분기 기준 | M32 전체 결과를 squash 통합한 `main`의 `314c04f2b3e342df5aafa7ba8d950643e9124fe6` |
 | Host 순서 확정 커밋 | `ce689fd2c14b7fd8f04cbdeafafb6b0fe7c72d9c`; 이 인계 문서는 그 이후 변경이며 재개 시 실제 HEAD를 확인 |
 | M32 | W01~W12 12/12 완료; 전체 파일 내용은 main에 반영됨 |
-| M33 | W01~W08 **1/8**; W01 완료, W02 Beacon exact `5f79ba69…` Host/build 부분 PASS·진행 중 |
+| M33 | W01~W08 **2/8**; W01 원장, W02 표준 GATT·Beacon exact `4ebd4952…` 완료 |
 | Host | W01~W03 3/8 완료; W04~W08은 M33-W06 완료 전까지 착수 대기 |
 | 현재 공개 제품과 소스 버전 | Windows용 stable v0.5.0, source version 0.5.0; v0.6.0은 아직 미공개 |
 | SDK | NCS v3.4.0 유지; lock·toolchain·SDK checkout을 임의 변경하지 않음 |
 | Board submodule | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 다음 실제 행동 | W02의 Beacon 2보드 HIL과 표준 GATT 9개 구현·negative·역할 시험 계속 |
+| 다음 실제 행동 | W03 Fast Pair·ANCS·AMS exact 구현, credential negative와 scripted peer HIL |
 
 이 채팅의 projectless 폴더를 저장소로 착각하지 않는다. 현재 브랜치는 이미 생성·푸시되어 있으므로
 main에서 새 M33 브랜치를 다시 만들거나 기존 변경을 reset하지 않는다. M33의 8개 작업과 Host의
@@ -106,21 +106,27 @@ M33 다음은 [v0.7.0 SDK-W01~W06](TODO_v0.7.0.md)의 NCS 3.4.1 전체 전환이
   sample 190/variant 474 parity, M32/M33 drift, 고정 lock과 Markdown 480개를 PASS했다. 상세 근거는
   [296번 기록](<04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md>)이다.
 
-### M33-W02 진행 결과
+### M33-W02 완료 결과
 
-- Exact 구현 후보 `5f79ba69da503006fbcabdc2493f5146c22d3f63`에 heap 없는 iBeacon,
-  Eddystone UID, BTHome v2 코덱과 `BeaconAdvertiser`/`BeaconObserver` 두 예제를 추가했다.
-- 알려진 byte·round-trip과 length/company/UUID/frame/version/encryption/reserved/range 음성 경계의
-  Host runtime 4개 scenario를 PASS했다. 공개 예제는 protocol별로 늘리지 않고 공통 backend와 역할별
-  두 Sketch로 묶었으며 두 예제 모두 7개 사용자 안내 필드를 가진다.
-- NCS 3.4.0과 toolchain `dcbdc366a1`의 BLE profile에서 두 예제 Arduino build를 PASS했다. 현행 설치
-  예제 원장은 189개, BLE·radio 166개, core·peripheral 23개이며 exact 내용·이름 중복은 0개다.
-- 긴 격리 경로의 261자 Cracen object는 GNU 아카이버에서 열리지 않았지만 `C:\n54w02`의 짧은
-  경로에서는 두 clean build가 통과했다. 관측상 경로 길이 민감성이며 SDK 결함으로 단정하지 않는다.
-  HOST-W05의 정식 긴 경로 회귀는 M33-W06 이후 순서를 유지한다.
-- `M33-BEACON-01:codec_host`만 PASS다. 2보드 600광고 HIL, 기존 7개 profile 회귀와 신규 표준 GATT,
-  기존 예제/Fabric 연결은 남아 있으므로 W02와 M33 완료 수는 각각 진행 중, 1/8을 유지한다. 상세는
-  [297번 기록](<04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md>)에 있다.
+- Exact 기능 source `4ebd49521d4a6578beac91ebddbd1bf39d679db4`에 CTS·HTS·CSC·RSCS·ETS,
+  ANS·BMS, native CGMS·OTS/OTC facade와 공개 예제 7개를 추가했다. 기존 M30 profile 7개와
+  Generic GATT/NUS·Fabric owner는 보존하고 신규 기능과 중복 집계하지 않았다.
+- profile Host·parser·GATT 경계는 38/38, 기존 profile/예제 안내는 17 PASS·환경 비적용 1 SKIP,
+  W02 완료 원장은 13/13을 기록했다. 공개 예제 9/9, profile target 5/5, beacon target 2/2를
+  NCS 3.4.0에서 빌드했다.
+- Standard 3보드 HIL은 7 profile, client 측정 30, watcher 측정 25, 두 link·malformed·BMS 시험 소유
+  bond만의 scoped 삭제를 PASS했다. Native fresh→restored exact pair는 역할별 L4 3/3, OTS 14 operation,
+  CGMS 2 record, 취소·재접속을 PASS했고 새 passkey 없이 bond 복원 3/3을 확인했다.
+- 실기 뒤 server/client의 시험 소유 bond 각 1개만 제거하고 기존 목록과 STOP 자원 0을 확인했다.
+  sector flash와 `auto_unlock=false`만 사용했으며 mass erase·unlock·recover는 실행하지 않았다.
+- Beacon 2보드 HIL은 600광고(iBeacon 205, Eddystone 200, BTHome 195), 형식 전환 90회,
+  semantic error·drop 0과 두 역할 종료 자원 0을 PASS했다.
+- 설치 예제 원장은 exact 기능 source 기준 196개이며 W02 9개는 7개 안내 필드를 통과했다. 전체 경계
+  감사의 기존 7건은 W05가 보강하며 W02 결과로 숨기지 않았다.
+- Apple/Google·외장 Beacon 실물은 사용자 후속 `NOT_RUN`이다. BMS 재부팅 영속성, native 두 번째 peer,
+  장시간 soak는 W06 분모다. 긴 경로 문제는 짧은 exact 경로에서 재현되지 않았으며 SDK 결함으로
+  단정하지 않고 M33-W06 뒤 HOST-W05에서 회귀한다.
+- 상세 결과와 exact evidence는 [298번 완료 기록](<04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md>)에 있다.
 
 ## OS 장비와 검증 경계
 
@@ -171,11 +177,11 @@ M33 브랜치는 이미 생성·푸시되어 있으니 새로 만들거나 main�
 
 현재 M32는 12/12 완료되어 main에 반영됐고, M32 브랜치는 삭제됐어.
 원본 이력은 인계 문서에 적힌 로컬 Git bundle로 보관돼 있어.
-M33은 W01 완료로 1/8이고 W02를 진행 중이야. Beacon 코덱·두 예제·Host/build는 exact
-`5f79ba69da503006fbcabdc2493f5146c22d3f63`에서 PASS했지만 2보드 HIL과 표준 GATT는 남아 있어.
+M33은 W01~W02 완료로 2/8이고 W03이 다음이야. 표준 GATT·Beacon 구현과 Host/build/HIL은 exact
+`4ebd49521d4a6578beac91ebddbd1bf39d679db4`에서 PASS했고 시험 소유 bond도 제한 정리했어.
 HOST는 W01~W03만 3/8 완료 상태야.
 
-M33-W02의 남은 실제 구현과 검증을 이어가.
+M33-W03의 Fast Pair·ANCS·AMS 구현과 자동 검증을 이어가. 실제 Apple/Google peer 운용은 사용자 후속으로 유지해.
 M33-W01~W06을 먼저 완료하고, HOST 작업은 절대로 그 과정과 병렬로 진행하지 마.
 W06 완료 후 HOST-W04~W06 및 W07 도구 준비 → M33-W07 RC1 준비 → HOST-W07 실제 OS 검증·W08 마감
 → M33-W07 완료 → M33-W08 공개 승인·게시·공개 설치 검증 순서로 진행해.
@@ -190,5 +196,5 @@ NCS 3.4.0을 유지해. SDK 3.4.1 전체 전환은 다음 v0.7.0 작업이야.
 자동 mass erase·unlock·recover나 임의 SDK 변경을 하지 말고, 필요한 새 권한과 최종 공개 승인은 별도로 요청해.
 한국어 Doxygen, BSD/Allman, 4칸 들여쓰기, 제어문 중괄호 필수 규칙을 지켜.
 
-먼저 확인한 현재 상태와 M33-W02에서 할 첫 작업을 짧게 설명한 뒤 착수해.
+먼저 확인한 현재 상태와 M33-W03에서 할 첫 작업을 짧게 설명한 뒤 착수해.
 ```

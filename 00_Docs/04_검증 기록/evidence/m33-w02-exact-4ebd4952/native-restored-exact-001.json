@@ -1,0 +1,182 @@
+{
+  "schema": "nucode-m33-profile-hil-v1",
+  "family": "native",
+  "status": "PASS",
+  "reason": null,
+  "revisions": {
+    "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "development": false,
+  "diagnostic_only": false,
+  "native_security_phase": "restored",
+  "native_prior_evidence_sha256": "7fc218294d81817d762d0cc44739e6c197ee3e99355ca01bd9d39d1c7f711e93",
+  "native_security": {
+    "server": {
+      "passkey_events": 0,
+      "security_changed_levels": [
+        4,
+        4,
+        4
+      ],
+      "bond_restored_candidates": 3,
+      "bond_verified": 3
+    },
+    "client": {
+      "passkey_events": 0,
+      "security_changed_levels": [
+        4,
+        4,
+        4
+      ],
+      "bond_restored_candidates": 3,
+      "bond_verified": 3
+    }
+  },
+  "build_identity": {
+    "server": {
+      "manifest_sha256": "d4ccb1989a1d0fbfea83867dc4b34d8798277a8d8bb9f7323cbfc09373076cfc",
+      "image_sha256": "c657d3fa0b654b6216da036a81fd3268477dd854e9e46f0dcf65ce5cfeb8a366",
+      "source_sha256": "00473c208a2736a44a756435322520886e723143ebff1ebfa9e111a725b76d58"
+    },
+    "client": {
+      "manifest_sha256": "b8c478b94c7953afcf6ca665ec664bce61ba2d1ee874cbbee0323f9746bea755",
+      "image_sha256": "d2d8f8e361272cf4136aff3160c6bfc3b46e67397eb0524e07675d36e76832e3",
+      "source_sha256": "00473c208a2736a44a756435322520886e723143ebff1ebfa9e111a725b76d58"
+    },
+    "watcher": {
+      "manifest_sha256": "10c316cf5417265ff72e9e82b8ac0535f821d15af47c1c0847297968e19a4232",
+      "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+      "source_sha256": "00473c208a2736a44a756435322520886e723143ebff1ebfa9e111a725b76d58"
+    }
+  },
+  "failure_details": null,
+  "late_failures": [],
+  "cleanup": {
+    "server": {
+      "role": "server",
+      "nonce": "b899377a1d6ad241dd2e57150eec8fb3",
+      "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    },
+    "client": {
+      "role": "client",
+      "nonce": "b899377a1d6ad241dd2e57150eec8fb3",
+      "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    },
+    "watcher": {
+      "role": "watcher",
+      "nonce": "b899377a1d6ad241dd2e57150eec8fb3",
+      "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    }
+  },
+  "observed_utc": "2026-10-03T18:03:13.889456+00:00",
+  "transcript_sha256": "de7dded30479024595f751af2eb3b1885202874d4ce110f2893558031517c72e",
+  "results": {
+    "client": {
+      "role": "client",
+      "nonce": "b899377a1d6ad241dd2e57150eec8fb3",
+      "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+      "object_operations": "14",
+      "glucose": "2",
+      "native_checks": "7",
+      "single_link": "1",
+      "native_sessions": "3",
+      "normal_reconnects": "1",
+      "coc_cancels": "1",
+      "cancel_reconnects": "1",
+      "reconnect_reads": "1",
+      "reconnect_writes": "1",
+      "authenticated_links": "3",
+      "passkey_events": "0"
+    }
+  },
+  "server": {
+    "role": "server",
+    "nonce": "b899377a1d6ad241dd2e57150eec8fb3",
+    "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+    "max_links": "1",
+    "email_deliveries": "0",
+    "alert_denied": "0",
+    "bond_deletions": "0",
+    "bms_positive": "0",
+    "bms_skipped": "0",
+    "object_writes": "3",
+    "single_link": "1",
+    "cgms_session": "1",
+    "native_links": "3",
+    "native_disconnects": "2",
+    "authenticated_links": "3",
+    "passkey_events": "0"
+  },
+  "bms_evidence": {},
+  "not_run": [],
+  "excluded": [
+    "BMS reboot persistence",
+    "native second-peer rejection",
+    "Apple/Google interoperability"
+  ],
+  "boards": {
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "c657d3fa0b654b6216da036a81fd3268477dd854e9e46f0dcf65ce5cfeb8a366",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "294912"
+    },
+    "client": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "d2d8f8e361272cf4136aff3160c6bfc3b46e67397eb0524e07675d36e76832e3",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "258048"
+    },
+    "watcher": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "286720"
+    }
+  }
+}

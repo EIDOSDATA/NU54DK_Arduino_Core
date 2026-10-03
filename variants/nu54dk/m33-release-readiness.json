@@ -468,15 +468,15 @@
       "m33_after": 108
     },
     "installed_sketch_exact": {
-      "before": 189,
-      "unique_content_after": 189,
+      "before": 196,
+      "unique_content_after": 196,
       "exact_duplicate_group_count": 0,
       "files_in_exact_duplicate_groups": 0,
-      "unique_name_after": 189,
+      "unique_name_after": 196,
       "duplicate_name_group_count": 0,
       "domain_counts": {
         "core_peripheral": 23,
-        "bluetooth_radio": 166
+        "bluetooth_radio": 173
       }
     },
     "planned_functional_groups": {
@@ -652,7 +652,7 @@
       "ble_mesh_management",
       "ble_mesh_models",
       "ble_mesh_update",
-      "ble_security_profiles",
+      "ble_profiles_and_ecosystems",
       "ble_uart",
       "board_system_power",
       "gpio_interrupt",
@@ -668,7 +668,7 @@
     ],
     "functional_recipe_group_total": 29,
     "m33_planned_functional_group_total": 22,
-    "reference_sketch_total": 189,
+    "reference_sketch_total": 196,
     "featured_sketch_total": 24,
     "missing_featured_paths": [],
     "guidance_contract": {
@@ -702,8 +702,8 @@
     {
       "id": "M33-W02",
       "title": "standard_gatt_and_beacons",
-      "status": "in_progress",
-      "exact_evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
     },
     {
       "id": "M33-W03",
@@ -855,7 +855,7 @@
       "upstream_path": "samples/bluetooth/central_and_peripheral_hrs",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/central_and_peripheral_hrs:sample.bluetooth.central_and_peripheral_hrs"
@@ -864,7 +864,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -876,7 +876,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -902,7 +902,7 @@
       "upstream_path": "samples/bluetooth/central_bas",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/central_bas:sample.bluetooth.central_bas"
@@ -911,7 +911,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -923,7 +923,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -949,7 +949,7 @@
       "upstream_path": "samples/bluetooth/central_hids",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/central_hids:sample.bluetooth.central_hids",
@@ -960,7 +960,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -972,7 +972,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -998,7 +998,7 @@
       "upstream_path": "samples/bluetooth/central_hr_coded",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/central_hr_coded:sample.bluetooth.central_hr_coded"
@@ -1007,7 +1007,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -1019,7 +1019,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -1139,7 +1139,7 @@
       "upstream_path": "samples/bluetooth/central_uart",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/central_uart:sample.bluetooth.central_uart",
@@ -1150,7 +1150,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -1162,7 +1162,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -2926,7 +2926,7 @@
       "upstream_path": "samples/bluetooth/peripheral_bms",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_bms:sample.bluetooth.peripheral_bms"
@@ -2935,7 +2935,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -2947,7 +2947,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -2973,7 +2973,7 @@
       "upstream_path": "samples/bluetooth/peripheral_cgms",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_cgms:sample.bluetooth.peripheral_cgm"
@@ -2982,7 +2982,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -2994,7 +2994,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3020,7 +3020,7 @@
       "upstream_path": "samples/bluetooth/peripheral_cts_client",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_cts_client:sample.bluetooth.peripheral_cts_client"
@@ -3029,7 +3029,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3041,7 +3041,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3067,7 +3067,7 @@
       "upstream_path": "samples/bluetooth/peripheral_gatt_dm",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_gatt_dm:sample.bluetooth.peripheral_gatt_dm"
@@ -3076,7 +3076,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3088,7 +3088,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3114,7 +3114,7 @@
       "upstream_path": "samples/bluetooth/peripheral_hids_keyboard",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_hids_keyboard:sample.bluetooth.peripheral_hids_keyboard",
@@ -3124,7 +3124,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3136,7 +3136,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3162,7 +3162,7 @@
       "upstream_path": "samples/bluetooth/peripheral_hids_mouse",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_hids_mouse:sample.bluetooth.peripheral_hids_mouse",
@@ -3176,7 +3176,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3188,7 +3188,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3216,7 +3216,7 @@
       "upstream_path": "samples/bluetooth/peripheral_hr_coded",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_hr_coded:sample.bluetooth.peripheral_hr_coded"
@@ -3225,7 +3225,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3237,7 +3237,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3263,7 +3263,7 @@
       "upstream_path": "samples/bluetooth/peripheral_lbs",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_lbs:sample.bluetooth.peripheral_lbs",
@@ -3279,7 +3279,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3291,7 +3291,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3482,7 +3482,7 @@
       "upstream_path": "samples/bluetooth/peripheral_rscs",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_rscs:sample.bluetooth.peripheral_rscs"
@@ -3491,7 +3491,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3503,7 +3503,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3529,7 +3529,7 @@
       "upstream_path": "samples/bluetooth/peripheral_status",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_status:sample.bluetooth.peripheral_nsms",
@@ -3539,7 +3539,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3551,7 +3551,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3577,7 +3577,7 @@
       "upstream_path": "samples/bluetooth/peripheral_uart",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/peripheral_uart:sample.bluetooth.peripheral_uart",
@@ -3590,7 +3590,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3602,7 +3602,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -3955,7 +3955,7 @@
       "upstream_path": "samples/bluetooth/shell_bt_nus",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "nrf:samples/bluetooth/shell_bt_nus:sample.bluetooth.shell_bt_nus"
@@ -3964,7 +3964,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -3976,7 +3976,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -5205,7 +5205,7 @@
       "upstream_path": "samples/bluetooth/beacon",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/beacon:sample.bluetooth.beacon",
@@ -5215,7 +5215,7 @@
         "M33-BEACON-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "advertiser",
           "observer"
@@ -5227,7 +5227,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -5253,7 +5253,7 @@
       "upstream_path": "samples/bluetooth/broadcaster",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/broadcaster:sample.bluetooth.broadcaster"
@@ -5262,7 +5262,7 @@
         "M33-BEACON-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "advertiser",
           "observer"
@@ -5274,7 +5274,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -5577,7 +5577,7 @@
       "upstream_path": "samples/bluetooth/central_gatt_write",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/central_gatt_write:sample.bluetooth.central_gatt_write"
@@ -5586,7 +5586,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -5598,7 +5598,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -5624,7 +5624,7 @@
       "upstream_path": "samples/bluetooth/central_hr",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/central_hr:sample.bluetooth.central_hr",
@@ -5638,7 +5638,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -5650,7 +5650,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -5676,7 +5676,7 @@
       "upstream_path": "samples/bluetooth/central_ht",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/central_ht:sample.bluetooth.central_ht",
@@ -5686,7 +5686,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -5698,7 +5698,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -5726,7 +5726,7 @@
       "upstream_path": "samples/bluetooth/central_multilink",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/central_multilink:sample.bluetooth.central.multilink"
@@ -5735,7 +5735,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -5747,7 +5747,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -5773,7 +5773,7 @@
       "upstream_path": "samples/bluetooth/central_otc",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/central_otc:sample.bluetooth.central_otc"
@@ -5782,7 +5782,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -5794,7 +5794,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -6454,7 +6454,7 @@
       "upstream_path": "samples/bluetooth/eddystone",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/eddystone:sample.bluetooth.eddystone"
@@ -6463,7 +6463,7 @@
         "M33-BEACON-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "advertiser",
           "observer"
@@ -6475,7 +6475,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -6593,7 +6593,7 @@
       "upstream_path": "samples/bluetooth/extended_adv/advertiser",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/extended_adv/advertiser:sample.bluetooth.extended_advertising.advertiser"
@@ -6602,7 +6602,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -6614,7 +6614,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -6640,7 +6640,7 @@
       "upstream_path": "samples/bluetooth/extended_adv/scanner",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/extended_adv/scanner:sample.bluetooth.extended_advertising.scanner"
@@ -6649,7 +6649,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -6661,7 +6661,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -7137,7 +7137,7 @@
       "upstream_path": "samples/bluetooth/ibeacon",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/ibeacon:sample.bluetooth.ibeacon"
@@ -7146,7 +7146,7 @@
         "M33-BEACON-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "advertiser",
           "observer"
@@ -7158,7 +7158,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -7455,7 +7455,7 @@
       "upstream_path": "samples/bluetooth/l2cap_coc_acceptor",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/l2cap_coc_acceptor:sample.bluetooth.l2cap_coc_acceptor"
@@ -7464,7 +7464,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -7476,7 +7476,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -7502,7 +7502,7 @@
       "upstream_path": "samples/bluetooth/l2cap_coc_initiator",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/l2cap_coc_initiator:sample.bluetooth.l2cap_coc_initiator"
@@ -7511,7 +7511,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -7523,7 +7523,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -7684,7 +7684,7 @@
       "upstream_path": "samples/bluetooth/mtu_update/central",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/mtu_update/central:sample.bluetooth.central_mtu_update"
@@ -7693,7 +7693,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -7705,7 +7705,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -7731,7 +7731,7 @@
       "upstream_path": "samples/bluetooth/mtu_update/peripheral",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/mtu_update/peripheral:sample.bluetooth.peripheral_mtu_update"
@@ -7740,7 +7740,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -7752,7 +7752,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -7778,7 +7778,7 @@
       "upstream_path": "samples/bluetooth/observer",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/observer:sample.bluetooth.observer",
@@ -7790,7 +7790,7 @@
         "M33-BEACON-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "advertiser",
           "observer"
@@ -7802,7 +7802,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8290,7 +8290,7 @@
       "upstream_path": "samples/bluetooth/peripheral_ans",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_ans:sample.bluetooth.peripheral_ans"
@@ -8299,7 +8299,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8311,7 +8311,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8337,7 +8337,7 @@
       "upstream_path": "samples/bluetooth/peripheral_csc",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_csc:sample.bluetooth.peripheral_csc"
@@ -8346,7 +8346,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8358,7 +8358,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8384,7 +8384,7 @@
       "upstream_path": "samples/bluetooth/peripheral_dis",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_dis:sample.bluetooth.peripheral_dis"
@@ -8393,7 +8393,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8405,7 +8405,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8431,7 +8431,7 @@
       "upstream_path": "samples/bluetooth/peripheral_esp",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_esp:sample.bluetooth.peripheral_esp"
@@ -8440,7 +8440,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8452,7 +8452,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8478,7 +8478,7 @@
       "upstream_path": "samples/bluetooth/peripheral_ets",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_ets:sample.bluetooth.peripheral_ets",
@@ -8488,7 +8488,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8500,7 +8500,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8526,7 +8526,7 @@
       "upstream_path": "samples/bluetooth/peripheral_gap_svc",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_gap_svc:sample.bluetooth.peripheral_gap_svc"
@@ -8535,7 +8535,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8547,7 +8547,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8573,7 +8573,7 @@
       "upstream_path": "samples/bluetooth/peripheral_gatt_write",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_gatt_write:sample.bluetooth.peripheral_gatt_write"
@@ -8582,7 +8582,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8594,7 +8594,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8620,7 +8620,7 @@
       "upstream_path": "samples/bluetooth/peripheral_hids",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_hids:sample.bluetooth.peripheral_hids",
@@ -8630,7 +8630,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8642,7 +8642,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8668,7 +8668,7 @@
       "upstream_path": "samples/bluetooth/peripheral_hr",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_hr:sample.bluetooth.peripheral_hr",
@@ -8685,7 +8685,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8697,7 +8697,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8725,7 +8725,7 @@
       "upstream_path": "samples/bluetooth/peripheral_ht",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_ht:sample.bluetooth.peripheral_ht",
@@ -8737,7 +8737,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8749,7 +8749,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8823,7 +8823,7 @@
       "upstream_path": "samples/bluetooth/peripheral_nus",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_nus:sample.bluetooth.peripheral_nus"
@@ -8832,7 +8832,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8844,7 +8844,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -8870,7 +8870,7 @@
       "upstream_path": "samples/bluetooth/peripheral_ots",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/peripheral_ots:sample.bluetooth.peripheral_ots"
@@ -8879,7 +8879,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -8891,7 +8891,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -9009,7 +9009,7 @@
       "upstream_path": "samples/bluetooth/scan_adv",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/scan_adv:sample.bluetooth.scan_adv"
@@ -9018,7 +9018,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -9030,7 +9030,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -9056,7 +9056,7 @@
       "upstream_path": "samples/bluetooth/st_ble_sensor",
       "owner_work_id": "M33-W02",
       "route": "profile",
-      "delivery_state": "planned_m33_implementation",
+      "delivery_state": "implemented_m33",
       "exclusion_reason": null,
       "variant_ids": [
         "zephyr:samples/bluetooth/st_ble_sensor:sample.bluetooth.st_ble_sensor"
@@ -9065,7 +9065,7 @@
         "M33-PROFILE-01"
       ],
       "execution_requirements": {
-        "resolution": "planned_m33_family",
+        "resolution": "implemented_m33_family",
         "roles": [
           "server",
           "client"
@@ -9077,7 +9077,7 @@
       },
       "arduino_delivery": {
         "route": "profile",
-        "state": "planned_m33_implementation",
+        "state": "implemented_m33",
         "owner_work_id": "M33-W02",
         "source": "variants/nu54dk/m33-release-readiness.json"
       },
@@ -10020,10 +10020,10 @@
       "recipe_group": "ble_beacons",
       "presentation_tier": "reference",
       "owner_work_id": "M33-W02",
-      "traceability": "m33_w02_beacon_candidate",
+      "traceability": "m33_w02_exact",
       "build_status": "PASS",
-      "runtime_status": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
       "companion_files": [],
       "stages": {
         "source_candidate": {
@@ -10036,18 +10036,18 @@
         },
         "arduino_build": {
           "status": "PASS",
-          "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
         },
         "functional_hil": {
-          "status": "NOT_RUN",
-          "evidence": null
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
         },
         "external_peer_interop": {
           "status": "NOT_RUN",
           "evidence": null
         }
       },
-      "sha256": "ae7b3924b1fc9a39b9f44d4c6d35972b557db5a21afefd08827bad6ebd681bda"
+      "sha256": "d0d2262dfc9d4c276c2ca0168004bae22bf7dd07091f9ccb2b8d45a82d36b68b"
     },
     {
       "path": "libraries/NUCODE_BLE/examples/BeaconObserver/BeaconObserver.ino",
@@ -10057,10 +10057,10 @@
       "recipe_group": "ble_beacons",
       "presentation_tier": "reference",
       "owner_work_id": "M33-W02",
-      "traceability": "m33_w02_beacon_candidate",
+      "traceability": "m33_w02_exact",
       "build_status": "PASS",
-      "runtime_status": "NOT_RUN",
-      "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
       "companion_files": [],
       "stages": {
         "source_candidate": {
@@ -10073,18 +10073,18 @@
         },
         "arduino_build": {
           "status": "PASS",
-          "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
         },
         "functional_hil": {
-          "status": "NOT_RUN",
-          "evidence": null
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
         },
         "external_peer_interop": {
           "status": "NOT_RUN",
           "evidence": null
         }
       },
-      "sha256": "9db3cf07002730515165b0df214aa51af0fa94ba3d298df5ba454e517f96152c"
+      "sha256": "247a1a2d0b816ceaa2416b985c91e3baf7a2ffb39632325882495f40a7f3d301"
     },
     {
       "path": "libraries/NUCODE_BLE/examples/BleThroughputCentral/BleThroughputCentral.ino",
@@ -15784,11 +15784,276 @@
       "sha256": "a272e14f9651e725b0a8a9999a20c0cc18605ae6bb1b69f0f80d836a077299d7"
     },
     {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino",
+      "library": "NUCODE_BLE_Profiles",
+      "sketch": "AlertSensor",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_profiles_and_ecosystems",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_exact",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "companion_files": [],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "5cba6fd662fad750153166df4d72f07dbde3215b348dda29a117cf28161f3822"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino",
+      "library": "NUCODE_BLE_Profiles",
+      "sketch": "BondManagement",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_profiles_and_ecosystems",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_exact",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "companion_files": [],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "9a05373b8c0ceffbff0c93c8d578f5e1526d6d57d3bd0ed51aa6d71cab4fdc8b"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino",
+      "library": "NUCODE_BLE_Profiles",
+      "sketch": "GlucoseSensor",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_profiles_and_ecosystems",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_exact",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "companion_files": [
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf"
+      ],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "f85604a287d037e36a096dd61c84e5e0aaf1f658a8f01202036c191505b90ec7"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino",
+      "library": "NUCODE_BLE_Profiles",
+      "sketch": "ObjectClient",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_profiles_and_ecosystems",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_exact",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "companion_files": [
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf"
+      ],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "c324cd222b095aaac0475e4bb526a40de841f1866938ed7a0f80a015bb82d4da"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino",
+      "library": "NUCODE_BLE_Profiles",
+      "sketch": "ObjectServer",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_profiles_and_ecosystems",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_exact",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "companion_files": [
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf"
+      ],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "a4b789afb5b295002629b75e681786caab7dfa571164826c9751a41fadd665c0"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino",
+      "library": "NUCODE_BLE_Profiles",
+      "sketch": "StandardCollector",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_profiles_and_ecosystems",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_exact",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "companion_files": [],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "3907138cfcddad71b154bbdef5420090c829c50abf3bfdd0967d693f7d076337"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino",
+      "library": "NUCODE_BLE_Profiles",
+      "sketch": "StandardSensor",
+      "domain": "bluetooth_radio",
+      "recipe_group": "ble_profiles_and_ecosystems",
+      "presentation_tier": "reference",
+      "owner_work_id": "M33-W02",
+      "traceability": "m33_w02_exact",
+      "build_status": "PASS",
+      "runtime_status": "PASS",
+      "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "companion_files": [],
+      "stages": {
+        "source_candidate": {
+          "status": "PRESENT",
+          "evidence": "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino"
+        },
+        "native_build": {
+          "status": "NOT_APPLICABLE",
+          "evidence": null
+        },
+        "arduino_build": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "functional_hil": {
+          "status": "PASS",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
+        },
+        "external_peer_interop": {
+          "status": "NOT_RUN",
+          "evidence": null
+        }
+      },
+      "sha256": "a6656e3fcb4bf5046629934c99cf5ad21b40acd20b50f5e5f2bb0865d93bfed6"
+    },
+    {
       "path": "libraries/NUCODE_BLE_Security/examples/EnvironmentalSensing/EnvironmentalSensing.ino",
       "library": "NUCODE_BLE_Security",
       "sketch": "EnvironmentalSensing",
       "domain": "bluetooth_radio",
-      "recipe_group": "ble_security_profiles",
+      "recipe_group": "ble_profiles_and_ecosystems",
       "presentation_tier": "reference",
       "owner_work_id": "M30",
       "traceability": "preserved_m28_m30_baseline",
@@ -15825,7 +16090,7 @@
       "library": "NUCODE_BLE_Security",
       "sketch": "GattCacheCentral",
       "domain": "bluetooth_radio",
-      "recipe_group": "ble_security_profiles",
+      "recipe_group": "ble_profiles_and_ecosystems",
       "presentation_tier": "reference",
       "owner_work_id": "M30",
       "traceability": "preserved_m28_m30_baseline",
@@ -15862,7 +16127,7 @@
       "library": "NUCODE_BLE_Security",
       "sketch": "GattCachePeripheral",
       "domain": "bluetooth_radio",
-      "recipe_group": "ble_security_profiles",
+      "recipe_group": "ble_profiles_and_ecosystems",
       "presentation_tier": "reference",
       "owner_work_id": "M30",
       "traceability": "preserved_m28_m30_baseline",
@@ -15899,7 +16164,7 @@
       "library": "NUCODE_BLE_Security",
       "sketch": "HeartRate",
       "domain": "bluetooth_radio",
-      "recipe_group": "ble_security_profiles",
+      "recipe_group": "ble_profiles_and_ecosystems",
       "presentation_tier": "start_here",
       "owner_work_id": "M30",
       "traceability": "preserved_m28_m30_baseline",
@@ -15936,7 +16201,7 @@
       "library": "NUCODE_BLE_Security",
       "sketch": "SecureConsumerControl",
       "domain": "bluetooth_radio",
-      "recipe_group": "ble_security_profiles",
+      "recipe_group": "ble_profiles_and_ecosystems",
       "presentation_tier": "reference",
       "owner_work_id": "M30",
       "traceability": "preserved_m28_m30_baseline",
@@ -15973,7 +16238,7 @@
       "library": "NUCODE_BLE_Security",
       "sketch": "SecureKeyboard",
       "domain": "bluetooth_radio",
-      "recipe_group": "ble_security_profiles",
+      "recipe_group": "ble_profiles_and_ecosystems",
       "presentation_tier": "start_here",
       "owner_work_id": "M30",
       "traceability": "preserved_m28_m30_baseline",
@@ -16010,7 +16275,7 @@
       "library": "NUCODE_BLE_Security",
       "sketch": "SecureMouse",
       "domain": "bluetooth_radio",
-      "recipe_group": "ble_security_profiles",
+      "recipe_group": "ble_profiles_and_ecosystems",
       "presentation_tier": "reference",
       "owner_work_id": "M30",
       "traceability": "preserved_m28_m30_baseline",
@@ -17188,8 +17453,8 @@
       "uuid": "0x1805",
       "name": "Current Time Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17224,8 +17489,8 @@
       "uuid": "0x1809",
       "name": "Health Thermometer Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17296,8 +17561,8 @@
       "uuid": "0x1811",
       "name": "Alert Notification Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17323,8 +17588,8 @@
       "uuid": "0x1814",
       "name": "Running Speed and Cadence Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17341,8 +17606,8 @@
       "uuid": "0x1816",
       "name": "Cycling Speed and Cadence Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17404,8 +17669,8 @@
       "uuid": "0x181e",
       "name": "Bond Management Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17413,8 +17678,8 @@
       "uuid": "0x181f",
       "name": "Continuous Glucose Monitoring Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17467,8 +17732,8 @@
       "uuid": "0x1825",
       "name": "Object Transfer Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17566,8 +17831,8 @@
       "uuid": "0x183f",
       "name": "Elapsed Time Service",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33",
-      "decision_reason": "표준 GATT profile 구현·예제·HIL 대상",
+      "delivery_status": "implemented_m33",
+      "decision_reason": "표준 GATT profile 구현·예제·HIL 완료",
       "source": "zephyr/include/zephyr/bluetooth/uuid.h"
     },
     {
@@ -17813,49 +18078,49 @@
       "id": "object_transfer",
       "authority": "SIG",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "alert_notification",
       "authority": "SIG",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "current_time",
       "authority": "SIG",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "health_thermometer",
       "authority": "SIG",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "cycling_running_speed_cadence",
       "authority": "SIG",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "continuous_glucose_monitoring",
       "authority": "SIG",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "bond_management",
       "authority": "SIG",
       "owner_work_id": "M33-W02",
-      "delivery_status": "planned_m33"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "ibeacon_eddystone_bthome",
       "authority": "non_SIG_formats",
       "owner_work_id": "M33-W02",
-      "delivery_status": "implementation_in_progress"
+      "delivery_status": "implemented_m33"
     },
     {
       "id": "ancs_ams",
@@ -18023,9 +18288,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
         }
       ]
     },
@@ -18058,8 +18323,8 @@
           "development_blocker": true,
           "release_blocker": true,
           "status": "PASS",
-          "source_revision": "5f79ba69da503006fbcabdc2493f5146c22d3f63",
-          "evidence": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md"
+          "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
         },
         {
           "id": "M33-BEACON-01:formats",
@@ -18085,9 +18350,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+          "evidence": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md"
         }
       ]
     },
@@ -18198,7 +18463,7 @@
           "minimum_boards": 0,
           "timeout_s": 1800,
           "iterations": 1,
-          "denominator": 189,
+          "denominator": 196,
           "metric": "installed_example_catalog",
           "allowed_failures": 0,
           "negative_classes": [
@@ -18521,18 +18786,18 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 1,
+    "work_completed": 2,
     "master_sample_total": 190,
     "master_variant_total": 474,
     "m33_sample_total": 108,
     "m33_variant_total": 318,
-    "installed_example_total": 189,
-    "installed_ble_radio_example_total": 166,
+    "installed_example_total": 196,
+    "installed_ble_radio_example_total": 173,
     "installed_core_peripheral_example_total": 23,
     "sig_service_total": 69,
     "profile_catalog_total": 19,
     "test_family_total": 12,
     "test_case_total": 17,
-    "test_case_passed": 5
+    "test_case_passed": 7
   }
 }

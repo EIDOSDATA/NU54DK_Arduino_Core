@@ -1,0 +1,77 @@
+{
+  "schema": "nucode-m33-beacon-hil-v1",
+  "status": "PASS",
+  "reason": null,
+  "development": false,
+  "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "nonce_sha256": "ccf1ddef3dc4b1eb9c55b57a1f5285a40cc4be73d41ff044abf831f81e289d0b",
+  "denominator": {
+    "packets": 600,
+    "per_format": 150,
+    "unique_per_format": 10,
+    "switches": 90
+  },
+  "results": {
+    "observer": {
+      "role": "observer",
+      "raw": "600",
+      "ibeacon_raw": "205",
+      "eddystone_raw": "200",
+      "bthome_raw": "195",
+      "ibeacon_unique": "30",
+      "eddystone_unique": "30",
+      "bthome_unique": "29",
+      "semantic_errors": "0",
+      "dropped": "0",
+      "callback_context": "pass",
+      "codec_negative": "pass",
+      "nonce": "c53ccc131ac98f1a1f9f2717ed9ec485",
+      "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+    },
+    "advertiser": {
+      "role": "advertiser",
+      "switches": "90",
+      "ibeacon_sequences": "30",
+      "eddystone_sequences": "30",
+      "bthome_sequences": "30",
+      "codec_negative": "pass",
+      "nonce": "c53ccc131ac98f1a1f9f2717ed9ec485",
+      "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+    }
+  },
+  "boards": {
+    "advertiser": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "b86762405f2f02b80b1605697e91d4c8e63821fca241c3b7592a7fb7773d1450",
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "180224",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "observer": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "485c88868083acdb6daa407249abdeed893ffb95135bb6c5e046d7068f741b92",
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "180224",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "transcript_sha256": "6f78cdd8bcb1cb02f8012d0b2d89b13fc222f49235b7dcc35e5ea233f8366659",
+  "observed_utc": "2026-10-03T18:12:52.183353+00:00"
+}

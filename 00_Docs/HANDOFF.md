@@ -1,6 +1,6 @@
 # 개발 인계 — v0.5.0 완료와 v0.6.0 후속 계획
 
-최종 정리: **2026-10-03**. M28~M31, 메모리 최적화 P0~P2, RC1/RC2, RC2 이후 Standard runtime PM
+최종 정리: **2026-10-04**. M28~M31, 메모리 최적화 P0~P2, RC1/RC2, RC2 이후 Standard runtime PM
 교정과 Windows 정식 `v0.5.0` 공개를 완료했습니다. 현재 stable·지원 버전은 v0.5.0 하나입니다.
 
 ## 현재 상태
@@ -13,7 +13,7 @@
 | RC1/RC2 | 로컬·원격 branch 삭제 완료, 공개 tag·Pre-release·asset과 evidence 보존 | [RC2 TODO](TODO_v0.5.0-RC2.md) |
 | 연속 Upload | Standard Blink 250 ms → 100 ms를 USB 재연결 없이 실제 GUI에서 PASS | [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>) |
 | 정식 공개 | exact package 이중 재현·승인·tag/Release·단일 stable catalog·공개 smoke | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
-| v0.6.0 개발 | M32 **12/12 완료**·M33 **1/8**, M33-W01 완료·W02 Beacon Host/build 부분 PASS | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
+| v0.6.0 개발 | M32 **12/12 완료**·M33 **2/8**, M33-W01 원장·W02 표준 GATT/Beacon 완료 | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
 
 완료 기능의 상세 계약과 기계 판정 원장은 다음과 같습니다.
 
@@ -27,14 +27,14 @@
 `Dev-0.6.0-M33`이며, 해당 문서에 전체 실행 순서·M32 이력 백업·복사용 지시문을 모았습니다.
 최신 사용자 요청에 따라 원격 CI 결과 조회·완료 대기는 생략하되 로컬 검사와 실제 결과 기록은 유지합니다.
 
-M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통합한 뒤 다음 기능 작업은
-**M33-W02의 2보드 Beacon HIL과 표준 GATT profile 구현·예제**입니다. M33-W01은 exact `a3585ffb…`에서
-완료했고 Beacon 코덱·두 예제·Host/build는 exact `5f79ba69…`에서 부분 PASS했습니다.
+M32-W01~W12는 **12/12 완료**입니다. M33-W01은 exact `a3585ffb…`에서 완료했고 W02는 exact
+`4ebd4952…`에서 표준 GATT·Beacon 구현, 공개 예제 9/9 build와 두/세 보드 HIL을 완료했습니다.
+다음 기능 작업은 **M33-W03 Fast Pair·ANCS·AMS와 scripted peer 검증**입니다.
 
 | 다음 작업 | 입력·유지할 경계 |
 | --- | --- |
-| M33-W01 inventory와 catalog | M28~M32 readiness, 고정 NCS sample, 역할별 Arduino 예제와 누락/미지원 사유 |
-| M33-W02~W06 기능·예제·통합 | M32 지원 후보 38개는 `not_published`; 자동 검사와 외부 peer 실제 검증을 구분 |
+| M33-W01~W02 완료 기준선 | W01 전체 원장, W02 profile/Beacon exact evidence와 사용자 후속 `NOT_RUN` 구분 |
+| M33-W03~W06 기능·예제·통합 | M32 지원 후보 38개는 `not_published`; 자동 검사와 외부 peer 실제 검증을 구분 |
 | M33-W06 이후 Host·package·공개 | W06 완료 후 HOST-W04부터 순차 재개; RC1으로 Host 실기 마감, OS별 최종 gate와 별도 공개 승인 유지 |
 
 착수·완료 조건은 [M33 TODO](TODO_M33.md), 작업별 실제 수치와 원본은 [M32 TODO](TODO_M32.md)가 소유합니다.
@@ -43,7 +43,7 @@ M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통
 **2026-10-03 사용자 결정:** Host는 M33 기능 개발과 병렬 진행하지 않습니다.
 M33-W01~W06 완료 → HOST-W04~W06 및 W07 도구 준비 → M33-W07 시험용 RC1 준비 →
 HOST-W07 실제 OS 검증·W08 마감 및 M33-W07 완료 → M33-W08 공개 승인·게시·공개 설치 순서입니다.
-현재는 M33 1/8·HOST 3/8이며 W06 완료 전까지 Host 착수 대기입니다. Ubuntu/macOS의 실제
+현재는 M33 2/8·HOST 3/8이며 W06 완료 전까지 Host 착수 대기입니다. Ubuntu/macOS의 실제
 장비 검증은 RC 단계에서 수행하며, 접속·결선 상태를 확인하지 않고 사용 가능한 것으로 가정하지 않습니다.
 
 ### M32 완료 기준선

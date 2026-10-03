@@ -32,18 +32,18 @@ class M33ReadinessContractTests(unittest.TestCase):
         MODULE.validate(self.document)
         counts = self.document["counts"]
         self.assertEqual(counts["work_total"], 8)
-        self.assertEqual(counts["work_completed"], 1)
+        self.assertEqual(counts["work_completed"], 2)
         self.assertEqual(counts["master_sample_total"], 190)
         self.assertEqual(counts["master_variant_total"], 474)
         self.assertEqual(counts["m33_sample_total"], 108)
         self.assertEqual(counts["m33_variant_total"], 318)
-        self.assertEqual(counts["installed_example_total"], 189)
-        self.assertEqual(counts["installed_ble_radio_example_total"], 166)
+        self.assertEqual(counts["installed_example_total"], 196)
+        self.assertEqual(counts["installed_ble_radio_example_total"], 173)
         self.assertEqual(counts["installed_core_peripheral_example_total"], 23)
         self.assertEqual(counts["sig_service_total"], 69)
         self.assertEqual(counts["test_family_total"], 12)
         self.assertEqual(counts["test_case_total"], 17)
-        self.assertEqual(counts["test_case_passed"], 5)
+        self.assertEqual(counts["test_case_passed"], 7)
 
     def test_deduplication_denominators_are_explicit(self) -> None:
         """! @brief 파일 중복 제거와 기능군 통합 분모를 혼동하지 않습니다. """
@@ -58,14 +58,14 @@ class M33ReadinessContractTests(unittest.TestCase):
             },
         )
         sketches = summary["installed_sketch_exact"]
-        self.assertEqual(sketches["before"], 189)
-        self.assertEqual(sketches["unique_content_after"], 189)
+        self.assertEqual(sketches["before"], 196)
+        self.assertEqual(sketches["unique_content_after"], 196)
         self.assertEqual(sketches["exact_duplicate_group_count"], 0)
-        self.assertEqual(sketches["unique_name_after"], 189)
+        self.assertEqual(sketches["unique_name_after"], 196)
         self.assertEqual(sketches["duplicate_name_group_count"], 0)
         self.assertEqual(
             sketches["domain_counts"],
-            {"core_peripheral": 23, "bluetooth_radio": 166},
+            {"core_peripheral": 23, "bluetooth_radio": 173},
         )
         functional = summary["planned_functional_groups"]
         self.assertEqual(
@@ -90,7 +90,7 @@ class M33ReadinessContractTests(unittest.TestCase):
         self.assertEqual(len(discovery["start_here_journeys"]), 12)
         self.assertGreaterEqual(discovery["functional_recipe_group_total"], 20)
         self.assertEqual(discovery["m33_planned_functional_group_total"], 22)
-        self.assertEqual(discovery["reference_sketch_total"], 189)
+        self.assertEqual(discovery["reference_sketch_total"], 196)
         self.assertEqual(discovery["missing_featured_paths"], [])
         self.assertEqual(discovery["featured_sketch_total"], 24)
         self.assertEqual(
@@ -178,9 +178,9 @@ class M33ReadinessContractTests(unittest.TestCase):
     def test_not_run_and_pass_evidence_rules_are_enforced(self) -> None:
         """! @brief 미실행 evidence와 exact 근거 없는 PASS를 모두 거부합니다. """
         not_run = copy.deepcopy(self.document)
-        not_run["test_families"][1]["cases"][0]["evidence"] = MODULE.CONTRACT_EVIDENCE
+        not_run["test_families"][3]["cases"][0]["evidence"] = MODULE.CONTRACT_EVIDENCE
         fake_pass = copy.deepcopy(self.document)
-        fake_pass["test_families"][1]["cases"][0]["status"] = "PASS"
+        fake_pass["test_families"][3]["cases"][0]["status"] = "PASS"
         for broken in (not_run, fake_pass):
             with self.assertRaises(ValueError):
                 MODULE.validate(broken)
@@ -199,32 +199,64 @@ class M33ReadinessContractTests(unittest.TestCase):
             for case in inventory["cases"]
         ))
 
-    def test_w02_beacon_build_and_hil_are_not_conflated(self) -> None:
-        """! @brief Beacon 코덱·Arduino build PASS와 2보드 HIL NOT_RUN을 구분합니다. """
+    def test_w02_profile_and_beacon_exact_completion(self) -> None:
+        """! @brief W02 profile·Beacon 자동 검사와 HIL 완료를 exact 근거로 고정합니다. """
 
         work = self.document["work_packages"][1]
-        self.assertEqual(work["status"], "in_progress")
-        self.assertEqual(work["exact_evidence"], MODULE.W02_BEACON_EVIDENCE)
-        family = next(
+        self.assertEqual(work["status"], "completed")
+        self.assertEqual(work["exact_evidence"], MODULE.W02_EVIDENCE)
+        profile = next(
+            entry for entry in self.document["test_families"]
+            if entry["id"] == "M33-PROFILE-01"
+        )
+        beacon = next(
             entry for entry in self.document["test_families"]
             if entry["id"] == "M33-BEACON-01"
         )
-        self.assertEqual(len(family["cases"]), 2)
-        codec, hil = family["cases"]
-        self.assertEqual(codec["status"], "PASS")
-        self.assertEqual(codec["source_revision"], MODULE.W02_BEACON_SOURCE_REVISION)
-        self.assertEqual(hil["status"], "NOT_RUN")
-        self.assertIsNone(hil["source_revision"])
-        beacon_examples = [
+        self.assertEqual(len(profile["cases"]), 1)
+        self.assertEqual(len(beacon["cases"]), 2)
+        self.assertTrue(all(
+            case["status"] == "PASS" and
+            case["source_revision"] == MODULE.W02_SOURCE_REVISION and
+            case["evidence"] == MODULE.W02_EVIDENCE
+            for family in (profile, beacon)
+            for case in family["cases"]
+        ))
+        examples = [
             entry for entry in self.document["installed_example_catalog"]
-            if entry["sketch"] in MODULE.M33_BEACON_EXAMPLES
+            if entry["owner_work_id"] == "M33-W02"
         ]
-        self.assertEqual(len(beacon_examples), 2)
+        self.assertEqual(len(examples), 9)
         self.assertTrue(all(
             entry["owner_work_id"] == "M33-W02" and
             entry["stages"]["arduino_build"]["status"] == "PASS" and
-            entry["stages"]["functional_hil"]["status"] == "NOT_RUN"
-            for entry in beacon_examples
+            entry["stages"]["functional_hil"]["status"] == "PASS" and
+            entry["stages"]["external_peer_interop"]["status"] == "NOT_RUN"
+            for entry in examples
+        ))
+        upstream = [
+            entry for entry in self.document["upstream_catalog"]
+            if entry["owner_work_id"] == "M33-W02" and not entry["exclusion_reason"]
+        ]
+        self.assertTrue(upstream)
+        self.assertTrue(all(
+            entry["delivery_state"] == "implemented_m33" and
+            entry["execution_requirements"]["resolution"] == "implemented_m33_family"
+            for entry in upstream
+        ))
+        services = [
+            entry for entry in self.document["sig_service_catalog"]
+            if entry["owner_work_id"] == "M33-W02"
+        ]
+        profiles = [
+            entry for entry in self.document["profile_delivery_catalog"]
+            if entry["owner_work_id"] == "M33-W02"
+        ]
+        self.assertEqual(len(services), 9)
+        self.assertEqual(len(profiles), 8)
+        self.assertTrue(all(
+            entry["delivery_status"] == "implemented_m33"
+            for entry in services + profiles
         ))
 
     def test_example_and_sig_service_drift_are_rejected(self) -> None:
