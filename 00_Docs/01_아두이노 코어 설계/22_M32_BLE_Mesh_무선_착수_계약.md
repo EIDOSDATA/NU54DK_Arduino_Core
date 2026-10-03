@@ -20,8 +20,9 @@ NCS v3.4.1 변경·보안 영향은 [별도 검토](<../00_사전 리서치/03_N
 관리한다. M32/v0.6.0의 위 pin은 유지한다. [v0.7.0](../TODO_v0.7.0.md)은 NCS v3.4.1 전체 SDK
 전환 전용이며 기존 기능 호환·회귀·설치 검증만 수행하고 신규 기능을 추가하지 않는다.
 M32는 **12/12 완료**이며 완료 증거는 [M32 TODO](../TODO_M32.md), 다음 M33 착수 경계는
-[HANDOFF](../HANDOFF.md)를 따른다. 후속 개발은 통합된 `main`에서 시작하며 `Dev-0.6.0-M32`는
-당시 exact source·검증 이력을 보존한다.
+[HANDOFF](../HANDOFF.md)를 따른다. 현재 작업 브랜치는 통합된 `main`에서 분기한 `Dev-0.6.0-M33`이다.
+M32 브랜치는 로컬·원격에서 삭제했고 당시 exact source·검증 이력은
+[M33 인계](../M33_HANDOFF.md)의 로컬 Git bundle에 보관했다.
 
 고정 SDK와 전체 sample 원장의 대조는 다음 두 명령을 함께 사용한다. 첫 명령은 전체 190개 sample,
 474개 variant, 39개 source-only feature를 원본 SDK와 대조한다. 둘째 명령은 그중 M32 소유

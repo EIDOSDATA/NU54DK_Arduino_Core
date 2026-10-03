@@ -1,6 +1,138 @@
 {
   "schema_version": 9,
   "review_date": "2026-10-03",
+  "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
+  "follow_up_reviews": [
+    {
+      "review_date": "2026-10-03",
+      "baseline_commit": "ce689fd2c14b7fd8f04cbdeafafb6b0fe7c72d9c",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "M33 전체 실행 순서와 새 채팅 복사용 지시문 작성, 현재 브랜치·M32 로컬 bundle 안내 정합화",
+      "handoff": "00_Docs/M33_HANDOFF.md",
+      "scope": {
+        "updated_existing_markdown": 12,
+        "added_markdown": 1,
+        "unchanged_host_contract_hash_checked": 1,
+        "hash_checked_markdown": 14,
+        "deleted_markdown": 0,
+        "review_depth": "새 인계서 전문·복사용 지시문과 기존 문서 변경 문맥·관련 계약 대조. 과거 감사·번호별 기록·실기 판정은 변경하지 않음.",
+        "hash_method": "Strict UTF-8, CRLF/CR normalized to LF, SHA-256. This JSON excluded."
+      },
+      "current_state": {
+        "working_branch": "Dev-0.6.0-M33",
+        "branch_base": "314c04f2b3e342df5aafa7ba8d950643e9124fe6",
+        "m32": "12/12 completed; local and remote Dev-0.6.0-M32 deleted by user request",
+        "m33": "0/8 not started",
+        "host": "3/8 completed; resume HOST-W04 only after M33-W06; no parallel Host development",
+        "sdk": "NCS v3.4.0; board/toolchain unchanged",
+        "source_version": "0.5.0",
+        "stable": "v0.5.0 Windows",
+        "m32_backup": {
+          "storage": "local Git bundle, not committed or uploaded to GitHub",
+          "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-10-02\\di-x20\\outputs\\M32-history-0c2af5bd.bundle",
+          "tip": "0c2af5bdd561c7d271dd21041e2294aba0ea6005",
+          "bytes": 149421813,
+          "sha256": "12e3f96ae50d30ac721bf43fdc217b7819ff7b388e046d622326d013ff99bdb1",
+          "bundle_verify": "PASS; complete history"
+        }
+      },
+      "checks": [
+        {
+          "name": "Markdown UTF-8/local links",
+          "result": "PASS",
+          "command": "python tools/ci/run_m12_gate.py docs",
+          "count": 479
+        },
+        {
+          "name": "Whitespace",
+          "result": "PASS",
+          "command": "git diff --check"
+        },
+        {
+          "name": "Scoped normalized document hashes",
+          "result": "PASS",
+          "count": 14
+        },
+        {
+          "name": "Remote CI result",
+          "result": "NOT_CHECKED",
+          "reason": "Latest explicit user instruction; no CI status query or wait, no workflow disabling"
+        }
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+          "sha256_utf8_lf": "b69325a5256a595f222758efd31e933c2a803105479aa0eb328b6e972cadf5a8",
+          "bytes_utf8_lf": 49227
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md",
+          "sha256_utf8_lf": "7f8ac3281326a2f1e2a9504f740b73fc071a8efca0cc2f8af1c26697ee498e32",
+          "bytes_utf8_lf": 21888
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md",
+          "sha256_utf8_lf": "e219bb967dfd71f60db367dac34d1d3e063329aa752034a6c561812225b4ce20",
+          "bytes_utf8_lf": 10028
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "3e742d7bc3df5c159b581890c507654d524cef464c6221aeb995d1a957a15f89",
+          "bytes_utf8_lf": 19416
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "461568360f6bcc52103072adcb04b463d5bfd3576becb210bd787711e3c5f664",
+          "bytes_utf8_lf": 45245
+        },
+        {
+          "path": "00_Docs/05_릴리스/README.md",
+          "sha256_utf8_lf": "465d8b4da8548e8bd7db2c6fbfdde8b81f60e30cdbc1f1fe7689c1f12a17f0e4",
+          "bytes_utf8_lf": 4488
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "7999615acfdf09d53b61393cda7fac3538c64a416ab19eaabc6cf42a8ddc7de5",
+          "bytes_utf8_lf": 9256
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "3fb3d2c29f9f252c8964f4e941fad1bdb9f39e3b9134fa9b40642157df81f114",
+          "bytes_utf8_lf": 14772
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "9c91c1f9ae85387e778675db2af28b98d780c7496a33a9815050e86e48ac071e",
+          "bytes_utf8_lf": 11878
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "08ab10c741a21a6788602d2b97dc59db3488b8004d29ee74e317c5f77f6cab7c",
+          "bytes_utf8_lf": 24888
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "5dd0eab961d2409aa9c42d23b85c277ce86ea70e5ad280fb8a02cb4e58407a9d",
+          "bytes_utf8_lf": 7845
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "202c233323f82d1afe34168774cff9d0a2b5bb4963de5bc5bd1ed1032b836681",
+          "bytes_utf8_lf": 13328
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "e18623d507aec765e78a43511b21305ee12e020001fe976f169170b1274cea48",
+          "bytes_utf8_lf": 7204
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "14b9b331a35c912ef8d98de20fd16f6c40af0dfe4337005022aaa6c3874fa549",
+          "bytes_utf8_lf": 13336
+        }
+      ]
+    }
+  ],
   "purpose": "M32 완료 후 전체 문서를 목록·구조·현재 안내 관점에서 검토하고 중복/낡은 진행 지시를 정리한다. 문서 commit 후 원본 Dev 이력을 보존한 squash merge로 main을 갱신한다.",
   "baseline": {
     "branch": "Dev-0.6.0-M32",

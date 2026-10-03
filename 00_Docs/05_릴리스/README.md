@@ -26,15 +26,16 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 ## 개발 소스와 다음 릴리스
 
-후속 개발의 출발점은 M32를 통합한 `main`입니다. `Dev-0.6.0-M32`는 단계별 구현·실기 source의
-원본 이력으로, `Release-0.5.0`은 정식 릴리스 기준선으로 보존합니다. 통합 범위와 squash 대응은
-[295번 기록](<../04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)을 따릅니다.
+현재 작업 브랜치는 M32를 통합한 `main`에서 분기한 `Dev-0.6.0-M33`입니다. M32 브랜치는
+로컬·원격에서 삭제했고 단계별 구현·실기 source의 원본 이력은 [M33 인계](../M33_HANDOFF.md)의
+로컬 Git bundle에 보관했습니다. 원격 `Release-0.5.0`은 정식 릴리스 기준선으로 보존합니다.
+통합 범위와 squash 대응은 [295번 기록](<../04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)을 따릅니다.
 
 | 제품선·트랙 | 현재 상태 | 다음 작업 |
 | --- | --- | --- |
 | v0.5.0 | Windows stable 공개·지원 | 공개 tag와 manifest의 source SHA로 패키지 재현 |
 | [v0.6.0](../TODO_v0.6.0.md) | M32 **12/12 완료**, M33 **0/8**, 미공개 | M33-W01부터 전체 예제·상호운용·배포 준비 |
-| Host | HOST-W01~W03 완료, W04~W08 사용자 보류 | 별도 재개 지시 후 OS별 실물 지원 gate 수행 |
+| Host | HOST-W01~W03 완료, W04~W08은 M33-W06 완료 전까지 착수 대기 | W06 완료 후 순차 이식, RC 단계에서 OS별 실물 지원 gate 수행 |
 | [v0.7.0](../TODO_v0.7.0.md) | SDK-W01~W06 **0/6** | NCS v3.4.0 → v3.4.1 전체 전환만 수행 |
 
 M32 완료 근거는 [M32 TODO](../TODO_M32.md), 다음 개발 절차는 [HANDOFF](../HANDOFF.md)가

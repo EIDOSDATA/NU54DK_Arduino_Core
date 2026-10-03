@@ -23,6 +23,10 @@
 
 ## 재개 지점
 
+새 채팅에서는 [M33 개발 순서와 재개 지시](M33_HANDOFF.md)를 먼저 확인합니다. 작업 브랜치는
+`Dev-0.6.0-M33`이며, 해당 문서에 전체 실행 순서·M32 이력 백업·복사용 지시문을 모았습니다.
+최신 사용자 요청에 따라 원격 CI 결과 조회·완료 대기는 생략하되 로컬 검사와 실제 결과 기록은 유지합니다.
+
 M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통합한 뒤 다음 기능 작업은
 **M33-W01 전체 sample·예제 catalog 대조**입니다. M33은 0/8이며 이번 문서 정비에서 구현을 시작하지 않았습니다.
 
@@ -71,9 +75,10 @@ HOST-W07 실제 OS 검증·W08 마감 및 M33-W07 완료 → M33-W08 공개 승�
 
 | 항목 | 기준 |
 | --- | --- |
-| 저장소 / 후속 개발 기준 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `main` |
-| M32 원본 이력 | `Dev-0.6.0-M32` — 단계별 source·HIL 증거 보존 |
-| 릴리스 백업 branch | `Release-0.5.0` |
+| 저장소 / 작업 브랜치 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `Dev-0.6.0-M33` |
+| M33 분기 기준 | M32 전체 결과가 통합된 `main`의 `314c04f2…` |
+| M32 원본 이력 | 로컬·원격 M32 브랜치 삭제 완료; [M33 인계의 로컬 Git bundle](M33_HANDOFF.md#m32-원본-이력-보관)에 보존 |
+| 릴리스 백업 branch | 원격 `Release-0.5.0` |
 | v0.5.0 백업 기준선 | `4790e3fa532ffea00bfd96780079cbadea263ca5`; 후속 문서·개발로 이동하지 않음 |
 | Target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
 | NCS / Zephyr | v3.4.0 · `99553055607b2e9885fbc80ccd11fa9da81c2df0` / `bf801e4e3d19e1ffa76164346480cb7734dd2800` |

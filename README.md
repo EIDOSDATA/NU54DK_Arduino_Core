@@ -20,7 +20,7 @@ firmware로 빌드하고 온보드 CMSIS-DAP으로 업로드합니다.
 | 채널 | 버전 | 포함 범위 | 예제 |
 | --- | --- | --- | ---: |
 | **Stable — 일반 사용·지원 기준** | [v0.5.0](<00_Docs/05_릴리스/v0.5.0/README.md>) | Arduino 주변장치·Storage·Peripheral Fabric + 확장 BLE·보안/DFU·ISO·LE Audio·CTE 송신·CS/RAS | 113 |
-| 개발 소스 — 미공개 | [v0.6.0 계획](00_Docs/TODO_v0.6.0.md) | M32 12/12 완료, M33 0/8 미착수; `main` 기준 | 개발 중 |
+| 개발 소스 — 미공개 | [v0.6.0 계획](00_Docs/TODO_v0.6.0.md) | M32 12/12 완료, M33 0/8 미착수; `Dev-0.6.0-M33` | 개발 중 |
 
 v0.5.0은 Windows용 정식 배포입니다. 이전 stable과 RC는 지원·catalog 공급이 종료됐고
 [릴리스 이력](<00_Docs/05_릴리스/README.md>)으로 보존합니다.
@@ -160,11 +160,13 @@ M28~M31·P0~P2와 RC2 사용자 경험 교정, 연속 Upload runtime PM 교정�
 
 개발 소스의 **M32는 12/12 완료**했고 다음 단계는 **M33 0/8**입니다. BLE 제어·Mesh·무선 공존의
 완료 근거는 [M32 TODO](00_Docs/TODO_M32.md), 예제·배포 잔여 계획은 [M33 TODO](00_Docs/TODO_M33.md)에 있습니다.
-M32 구현과 문서를 한 커밋으로 통합한 `main`에서 후속 개발을 시작하며,
-`Dev-0.6.0-M32`는 검증 source의 원본 이력으로 보존합니다.
+M32 구현과 문서를 한 커밋으로 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했습니다.
+M32 브랜치는 사용자 요청으로 로컬·원격에서 삭제했고 원본 이력은 로컬 Git bundle로 보관했습니다.
+현재 작업 위치·백업 위치·전체 순서와 새 채팅용 지시는 [M33 인계](00_Docs/M33_HANDOFF.md)에 있습니다.
 
 v0.6.0은 미공개이며 NCS v3.4.0을 유지합니다. [v0.7.0](00_Docs/TODO_v0.7.0.md)은 NCS 3.4.1 전체
-전환 전용입니다. 이후 제품선·Host 보류·지원 경계는 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
+전환 전용입니다. Host는 M33-W06 완료 후 순차 진행합니다. 이후 제품선·지원 경계는
+[v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
 
 `NU54DK.coreVersion()`의 `0.5.0`은 소스 식별 문자열입니다. 실제 설치 버전은
 Boards Manager·`arduino-cli core list`·release manifest에서 확인합니다.

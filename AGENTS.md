@@ -26,9 +26,11 @@
   M32 W11 exact `94f02544…`의 12-family HIL·signed MDFU·1,800초 soak와
   W12 `49099e74…`의 정합성·CI 9/9를 완료했습니다. 기능별 근거는 [M32 TODO](00_Docs/TODO_M32.md)에 있습니다.
   M32 test family는 **23 PASS + Flushable ACL 1 HOLD / 24**이며 미지원 ACL을 PASS로 세지 않습니다.
-- **후속 개발 출발점은 `main`입니다.** 사용자 요청에 따른 M32 squash 통합과 문서 정비는
+- **현재 작업 브랜치는 `main`에서 분기한 `Dev-0.6.0-M33`입니다.** M32 squash 통합과 문서 정비는
   [295번](<00_Docs/04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)을 따릅니다.
-  `Dev-0.6.0-M32`는 원본 exact SHA 이력, `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
+  `Dev-0.6.0-M32`는 사용자 요청으로 로컬·원격에서 삭제했고 원본 이력은 로컬 Git bundle에 보관했습니다.
+  위치·hash와 새 채팅 지시는 [M33 인계](00_Docs/M33_HANDOFF.md)를 따릅니다.
+  원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
   현재 source/설치 제품 버전은 **0.5.0**이고 M32의 38개 지원 후보는 `not_published`입니다.
 - 다음 기능 작업은 **M33-W01**, M33은 **0/8 미착수**입니다. HOST-W01~W03은 완료했고
