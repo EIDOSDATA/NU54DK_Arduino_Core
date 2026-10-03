@@ -54,6 +54,25 @@ M31_TEST_FAMILIES = {
     "M31-W04": "M31-DF-01",
     "M31-W05": "M31-CS-01",
 }
+M33_TEST_FAMILIES = {
+    "M33-W01": "M33-INV-01",
+    "M33-W03": "M33-ECOSYSTEM-01",
+    "M33-W04": "M33-DIAG-01",
+}
+M33_PROFILE_SAMPLE_PREFIXES = (
+    "central_and_peripheral_hrs", "central_bas", "central_hids",
+    "central_hr_coded", "central_otc", "central_uart", "central_gatt_write",
+    "central_hr", "central_ht", "central_multilink", "l2cap_coc_",
+    "mtu_update/", "peripheral_bms", "peripheral_cgms",
+    "peripheral_cts_client", "peripheral_gatt_dm", "peripheral_hids",
+    "peripheral_hr", "peripheral_lbs", "peripheral_rscs",
+    "peripheral_status", "peripheral_uart", "peripheral_ans",
+    "peripheral_csc", "peripheral_dis", "peripheral_esp", "peripheral_ets",
+    "peripheral_gap_svc", "peripheral_gatt_write", "peripheral_ht",
+    "peripheral_nus", "peripheral_ots", "shell_bt_nus", "st_ble_sensor",
+    "beacon", "broadcaster", "observer", "eddystone", "ibeacon",
+    "extended_adv/", "scan_adv",
+)
 
 
 def sha256(data: bytes) -> str:
@@ -128,10 +147,14 @@ def owner_for(module: str, sample_path: str) -> tuple[str, str, str | None]:
         return "M32-W10", "profile", None
     if sample_path.startswith(("samples/esb/", "samples/wifi/ble_coex")):
         return "M32-W10", "profile", None
+    if name.startswith(M33_PROFILE_SAMPLE_PREFIXES):
+        return "M33-W02", "profile", None
     if name.startswith(("fast_pair", "peripheral_ancs_client", "peripheral_ams_client",
-                        "enocean", "nrf_auraconfig")):
+                        "peripheral_mds", "enocean", "nrf_auraconfig")):
         return "M33-W03", "template", None
-    if name.startswith(("hci_", "direct_test_mode", "rpc_host")):
+    if (name.startswith(("hci_", "direct_test_mode", "rpc_host",
+                        "peripheral_power_profiling")) or
+            "/bluetooth/hci_" in sample_path or sample_path.endswith("/hci_usb")):
         return "M33-W04", "template", None
     return "M33-W01", "direct", None
 
@@ -220,7 +243,15 @@ def empty_results() -> dict:
 
 def planned_verification(owner: str, identifier: str) -> dict:
     """! @brief 후속 owner의 수치 미확정과 M31 고정 family를 구별합니다. """
-    family = M31_TEST_FAMILIES.get(owner)
+    family = M31_TEST_FAMILIES.get(owner) or M33_TEST_FAMILIES.get(owner)
+    if owner == "M33-W02":
+        lowered = identifier.lower()
+        if any(token in lowered for token in (
+            "beacon", "broadcaster", "observer", "eddystone", "ibeacon", "bthome"
+        )):
+            family = "M33-BEACON-01"
+        else:
+            family = "M33-PROFILE-01"
     return {
         "local_test_id": family,
         "case_id": f"{identifier}:implementation",
@@ -233,7 +264,13 @@ def planned_verification(owner: str, identifier: str) -> dict:
         "negative_expected_errors": [],
         "recovery_timeout_seconds": None,
         "maximum_diagnostic_retests": 1,
-        "numeric_source": "variants/nu54dk/m31-ble-readiness.json" if family else None,
+        "numeric_source": (
+            "variants/nu54dk/m31-ble-readiness.json"
+            if family and owner.startswith("M31-")
+            else "variants/nu54dk/m33-release-readiness.json"
+            if family and owner.startswith("M33-")
+            else None
+        ),
     }
 
 
@@ -489,7 +526,9 @@ def validate(doc: dict) -> None:
             raise ValueError("source/scope status drift")
         contract = item["verification_contract"]
         if contract.get("case_id") != f"{item['id']}:implementation" or (
-            contract.get("local_test_id") != M31_TEST_FAMILIES.get(item["owner_work_id"])
+            contract.get("local_test_id") != planned_verification(
+                item["owner_work_id"], item["id"]
+            )["local_test_id"]
         ):
             raise ValueError("local test/owner mapping drift")
         owner_match = re.fullmatch(r"M(31|32|33)-W([0-9]{2})", item["owner_work_id"])

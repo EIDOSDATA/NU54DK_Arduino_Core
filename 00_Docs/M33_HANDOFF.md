@@ -1,7 +1,7 @@
 # M33 개발 순서와 새 채팅 인계
 
 2026-10-03에 확정한 M33 개발, 후속 Host 이식, RC 검증과 v0.6.0 공개 순서를 정리한다.
-새 채팅은 실제 저장소의 `Dev-0.6.0-M33`에서 **M33-W01부터** 시작한다.
+현재 작업은 실제 저장소의 `Dev-0.6.0-M33`에서 **M33-W01 원장·계약을 구현 중**이다.
 Host 작업은 M33 기능 개발과 병렬 진행하지 않고 **M33-W06 완료 직후 HOST-W04부터** 시작한다.
 이 문서 작성은 기능 구현이나 실물 검증 완료가 아니다.
 
@@ -14,12 +14,12 @@ Host 작업은 M33 기능 개발과 병렬 진행하지 않고 **M33-W06 완료 
 | M33 분기 기준 | M32 전체 결과를 squash 통합한 `main`의 `314c04f2b3e342df5aafa7ba8d950643e9124fe6` |
 | Host 순서 확정 커밋 | `ce689fd2c14b7fd8f04cbdeafafb6b0fe7c72d9c`; 이 인계 문서는 그 이후 변경이며 재개 시 실제 HEAD를 확인 |
 | M32 | W01~W12 12/12 완료; 전체 파일 내용은 main에 반영됨 |
-| M33 | W01~W08 0/8, 기능 개발 미착수 |
+| M33 | W01~W08 0/8; W01 원장·계약 후보 구현과 local 검사를 진행 중 |
 | Host | W01~W03 3/8 완료; W04~W08은 M33-W06 완료 전까지 착수 대기 |
 | 현재 공개 제품과 소스 버전 | Windows용 stable v0.5.0, source version 0.5.0; v0.6.0은 아직 미공개 |
 | SDK | NCS v3.4.0 유지; lock·toolchain·SDK checkout을 임의 변경하지 않음 |
 | Board submodule | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| 다음 실제 행동 | 필수 문서와 저장소 상태 확인 후 W01의 NCS sample metadata와 Arduino 예제 원장 대조 |
+| 다음 실제 행동 | W01 후보를 clean exact source에서 재검사하고 증거·TODO·readiness를 연결한 뒤 W02 착수 |
 
 이 채팅의 projectless 폴더를 저장소로 착각하지 않는다. 현재 브랜치는 이미 생성·푸시되어 있으므로
 main에서 새 M33 브랜치를 다시 만들거나 기존 변경을 reset하지 않는다. M33의 8개 작업과 Host의
@@ -91,6 +91,18 @@ Ubuntu/macOS 이식을 시작하거나 해당 OS 완료를 선행조건으로 �
 각 작업의 세부 체크와 test case는 [M33 TODO](TODO_M33.md)와 [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이
 소유한다. 완료 시 구현·검사·실기 결과·미해결 항목을 해당 TODO와 검증 기록에 연결한다.
 M33 다음은 [v0.7.0 SDK-W01~W06](TODO_v0.7.0.md)의 NCS 3.4.1 전체 전환이며 이번 개발에 섞지 않는다.
+
+### 현재 M33-W01 구현 결과
+
+- 고정 NCS sample 190개와 test variant 474개를 owner·test ID에 연결했고 M33 범위는 sample 108개,
+  variant 318개다.
+- 설치 Arduino Sketch 전체 187개를 전수 등록했다. BLE·radio 164개와 core·peripheral 23개이며,
+  파일 내용·Sketch 이름 완전 중복은 모두 0개다.
+- 모든 예제는 28개 primary Recipe 중 하나에 속한다. 사용자 첫 화면은 12개 사용 시나리오와 대표
+  Sketch 24개만 보여 주고, 전체 187개 Reference와 M33 신규 22개 기능군은 그대로 보존한다.
+- `m33-release-readiness.json`, `m33_contract.py`, `test_m33_readiness_contract.py`와 전체 원장·릴리스
+  계약을 추가했다. NCS 3.4.0 유지, 외부 peer 후속과 Ubuntu/macOS 최종 gate, 공개 승인 분리를 검사한다.
+- 아직 W01 완료가 아니다. clean exact source의 local 검사와 증거 연결 뒤에만 1/8로 올린다.
 
 ## OS 장비와 검증 경계
 

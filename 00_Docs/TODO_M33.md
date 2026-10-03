@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **계획 — 0/8 작업 묶음** |
+| 현재 구현 상태 | **구현 중 — 0/8 작업 묶음, M33-W01 후보 검사 중** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
 | 순차 Host 계획 | W01~W03 완료 3/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
@@ -17,8 +17,8 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 기능 구현은 [M31 TODO](TODO_M31.md)·[M32 TODO](TODO_M32.md), 제품선 진행은
 [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W08 8/8 완료,
 M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 12/12, signed MDFU와
-1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **0/8 미착수**다.
-아래 항목은 모두 구현·검증 예정이며 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
+1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **0/8이며
+W01 원장·계약 구현을 검사 중**이다. 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
 Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
 M32 구현·문서를 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했다. M32 브랜치는 로컬·원격에서
 삭제했으며 원본 이력의 로컬 Git bundle과 전체 실행 순서는 [M33 인계](M33_HANDOFF.md)에 있다.
@@ -57,7 +57,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 
 | 작업 | 구현·검증 범위 | 현재 상태 |
 | --- | --- | --- |
-| M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | 미착수 |
+| M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | 진행 중 — exact 후보 검사·증거 필요 |
 | M33-W02 | 표준 GATT profile와 beacon·목적별 예제 보강 | 미착수 |
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | 미착수 |
 | M33-W04 | DTM/HCI와 특수 진단 application template | 미착수 |
@@ -86,24 +86,28 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 
 ### M33-W01 — 전체 예제 원장 마감
 
-- [ ] M31-W01의 `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`을 고정 SDK의 sample/test
+- [x] M31-W01의 `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`을 고정 SDK의 sample/test
   metadata와 전수 대조한다. 새 탐색 결과·누락·중복을 검출하는 CI gate를 완성한다.
 - [ ] 각 upstream 경로에 nRF54L15 target 허용·integration·build-only 여부, 필요한 역할/보드/부품/peer,
   Arduino 경로·profile·owner·예정 test ID를 등록한다.
 - [ ] M28~M32에서 구현한 기능과 예제의 일대다 대응을 연결하고 실제 역할별 `.ino`·설정·README를 추적한다.
 - [ ] Source candidate/native build/Arduino build/HIL/외부 peer 결과를 각각 기록하고 미배정 owner와
   이유 없는 제외 0을 마감 조건으로 검사한다.
-- [ ] SIG adopted service/profile 전체와 고정 SDK sample 전체의 차이를 공개한다. 고정 SDK 적용 sample은
+- [x] SIG adopted service/profile 전체와 고정 SDK sample 전체의 차이를 공개한다. 고정 SDK 적용 sample은
   모두 추적하고, source가 없는 추가 service도 계획 여부·제공 방식·근거를 catalog에 남긴다.
-- [ ] `variants/nu54dk/m33-release-readiness.json`과 release 계약을 구현해 필수 행·지원 제외·미검증
+- [x] `variants/nu54dk/m33-release-readiness.json`과 release 계약을 구현해 필수 행·지원 제외·미검증
   template·실험 기능의 공개 정책 및 test case 분모를 고정한다.
-- [ ] Master schema의 `verification_owner`·`verification_stage`·`development_blocker`·`release_blocker`를
+- [x] Master schema의 `verification_owner`·`verification_stage`·`development_blocker`·`release_blocker`를
   case별로 적용한다. Apple/Google·외장 I/O 실제 case는 `user`/`user_follow_up`/`false`/`false`,
   Ubuntu/macOS 실물은 해당 OS 후속 지원에 대해 `user`/`final_release`/`false`/`true`로 구분한다.
   이 gate는 M31 Windows 릴리스에 적용하지 않는다. 구현·예제·자동 검사 case는
   필수로 남기며 사용자 후속 실제 case와 합치지 않는다. 이 정책은 현재 원장에 구현 완료된 것이 아니다.
-- [ ] `M33-INV-01`의 inventory drift·누락·중복·잘못된 지원 승격 negative를 구현한다.
+- [x] `M33-INV-01`의 inventory drift·누락·중복·잘못된 지원 승격 negative를 구현한다.
   사용자 후속 실물 `NOT_RUN`의 재차단/PASS 승격, 필수 구현을 후속으로 숨김, 최종 Host gate 면제도 거부한다.
+- [x] 설치 Arduino Sketch 전체 187개(BLE·radio 164, core·peripheral 23)를 hash·기능군·노출 등급으로
+  등록한다. 완전 중복과 이름 중복은 각각 0이며, 모든 예제를 28개 primary recipe 중 하나에 배정한다.
+  Root 진입점은 12개 사용 시나리오·24개 대표 Sketch로 제한하고 전체 187개 Reference를 보존한다.
+- [ ] 위 구현을 clean exact source에서 재검사하고 검증 기록·인계·readiness PASS를 연결해 W01을 마감한다.
 
 ### M33-W02 — 표준 GATT와 beacon 예제
 
@@ -159,6 +163,9 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
   runner/config를 연결한다. 독립 application template는 별도 위치·빌드 방식을 catalog에 명시한다.
 - [ ] 모든 예제에 목표 기능, upstream path/revision, 필요한 보드 수와 역할, Tools profile/Kconfig,
   예상 출력·종료/재시작·보안·제한·negative·증거 ID를 작성한다.
+- [ ] 설치 예제 187개 모두에 목적·준비물·설정·실행 순서·성공 출력·흔한 오류·다음 예제의 7개 안내
+  필드를 제공한다. `Start Here` 12개 시나리오는 초보자 요약을 추가하고, 나머지도 28개 기능별 Recipe와
+  전체 Reference에서 고립되지 않게 연결한다.
 - [ ] 마이크·스피커·코덱·외장 장치용 adapter/설정·실사용 예제·연결 안내와 자동 가능한 검사를
   owner 결과에서 대조한다. 실물 운용·검증은 사용자 후속 `NOT_RUN`·릴리스 비차단으로 표시하고
   합성 PCM/data PASS를 실제 외장 I/O 검증으로 확대하지 않는다.
