@@ -32,6 +32,7 @@ class M33ReadinessContractTests(unittest.TestCase):
         MODULE.validate(self.document)
         counts = self.document["counts"]
         self.assertEqual(counts["work_total"], 8)
+        self.assertEqual(counts["work_completed"], 1)
         self.assertEqual(counts["master_sample_total"], 190)
         self.assertEqual(counts["master_variant_total"], 474)
         self.assertEqual(counts["m33_sample_total"], 108)
@@ -42,6 +43,7 @@ class M33ReadinessContractTests(unittest.TestCase):
         self.assertEqual(counts["sig_service_total"], 69)
         self.assertEqual(counts["test_family_total"], 12)
         self.assertEqual(counts["test_case_total"], 16)
+        self.assertEqual(counts["test_case_passed"], 4)
 
     def test_deduplication_denominators_are_explicit(self) -> None:
         """! @brief 파일 중복 제거와 기능군 통합 분모를 혼동하지 않습니다. """
@@ -176,12 +178,26 @@ class M33ReadinessContractTests(unittest.TestCase):
     def test_not_run_and_pass_evidence_rules_are_enforced(self) -> None:
         """! @brief 미실행 evidence와 exact 근거 없는 PASS를 모두 거부합니다. """
         not_run = copy.deepcopy(self.document)
-        not_run["test_families"][0]["cases"][0]["evidence"] = MODULE.CONTRACT_EVIDENCE
+        not_run["test_families"][1]["cases"][0]["evidence"] = MODULE.CONTRACT_EVIDENCE
         fake_pass = copy.deepcopy(self.document)
-        fake_pass["test_families"][0]["cases"][0]["status"] = "PASS"
+        fake_pass["test_families"][1]["cases"][0]["status"] = "PASS"
         for broken in (not_run, fake_pass):
             with self.assertRaises(ValueError):
                 MODULE.validate(broken)
+
+    def test_w01_pass_uses_clean_exact_source_and_evidence(self) -> None:
+        """! @brief W01 완료와 네 inventory PASS가 같은 exact 증거를 사용합니다. """
+        work = self.document["work_packages"][0]
+        self.assertEqual(work["status"], "completed")
+        self.assertEqual(work["exact_evidence"], MODULE.W01_EVIDENCE)
+        inventory = self.document["test_families"][0]
+        self.assertEqual(len(inventory["cases"]), 4)
+        self.assertTrue(all(
+            case["status"] == "PASS" and
+            case["source_revision"] == MODULE.W01_SOURCE_REVISION and
+            case["evidence"] == MODULE.W01_EVIDENCE
+            for case in inventory["cases"]
+        ))
 
     def test_example_and_sig_service_drift_are_rejected(self) -> None:
         """! @brief 설치 Sketch·service UUID 원장 수작업 drift를 막습니다. """

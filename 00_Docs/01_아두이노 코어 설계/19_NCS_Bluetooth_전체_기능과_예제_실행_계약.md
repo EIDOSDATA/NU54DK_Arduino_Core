@@ -4,7 +4,7 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | stable/source `v0.5.0`의 M31 Windows 릴리스와 `v0.6.0` 계획의 M32·M33, M34~M45 인계 의존성 |
-| 현재 상태 | **M31 8/8 완료, M32 12/12 완료, M33 0/8**. W08 BLOB·signed MDFU, W10 공존, W11 exact 회귀·soak, W12 정합성 감사·인계 PASS |
+| 현재 상태 | **M31 8/8 완료, M32 12/12 완료, M33 1/8**. M33-W01 전체 원장·릴리스 계약 PASS |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
@@ -37,7 +37,7 @@ SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 당시 버전 미정 후속이었던 M32·M33은 2026-09-28 `v0.6.0` 계획으로 배정했다. M33-W07~W08은
 다중 Host·RC·공개를 계속 소유하며 Host 보류·OS별 최종 실물 검증 조건은 유지한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-현재 stable `v0.5.0`, source 식별자 `0.5.0`, M31 8/8·M32 12/12·M33 0/8·HOST 3/8을 구분한다.
+현재 stable `v0.5.0`, source 식별자 `0.5.0`, M31 8/8·M32 12/12·M33 1/8·HOST 3/8을 구분한다.
 M32 실행별 source·수치·실패/완료 근거는 [M32 TODO](../TODO_M32.md)와
 [M32 readiness](../../variants/nu54dk/m32-ble-readiness.json)가 소유한다. W08 BLOB·signed MDFU와
 W10 공존은 후속 exact HIL에서 완료했다. W11 clean `94f02544…`의 exact family 12/12·signed MDFU·
@@ -193,7 +193,7 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 P1은 생략 가능 표시가 아닌 구현 순서다. 공식 nRF54L15 적용 예제에는 실행 가능한 Arduino 경로를
 제공하고, 기능·외부 의존성의 정당한 예외만 원장에 기록한다. 문서 계획 진척과 구현·runtime 진척은
 각각 별도 분모로 보고한다. HOST-W04~HOST-W08은 Host 작업이며 M30 잔여 작업이 아니다.
-M31과 M32는 완료했고 다음 기능 작업은 M33-W01이다. M32의 개별 기능·통합 HIL은 M31 인계와
+M31, M32와 M33-W01은 완료했고 다음 기능 작업은 M33-W02다. M32의 개별 기능·통합 HIL은 M31 인계와
 각 protocol 단독 결과를 선행 근거로 사용했다. 후속 착수 조건은 [HANDOFF](../HANDOFF.md)를
 따르며, HOST-W04~W08은 사용자 보류를 유지한다.
 

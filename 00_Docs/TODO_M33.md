@@ -3,7 +3,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **구현 중 — 0/8 작업 묶음, M33-W01 후보 검사 중** |
+| 현재 구현 상태 | **M33-W01 완료 — 1/8 작업 묶음** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
 | 순차 Host 계획 | W01~W03 완료 3/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
@@ -17,15 +17,15 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 기능 구현은 [M31 TODO](TODO_M31.md)·[M32 TODO](TODO_M32.md), 제품선 진행은
 [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W08 8/8 완료,
 M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 12/12, signed MDFU와
-1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **0/8이며
-W01 원장·계약 구현을 검사 중**이다. 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
+1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **1/8이며
+W01 전체 원장과 릴리스 계약을 완료**했다. 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
 Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
 M32 구현·문서를 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했다. M32 브랜치는 로컬·원격에서
 삭제했으며 원본 이력의 로컬 Git bundle과 전체 실행 순서는 [M33 인계](M33_HANDOFF.md)에 있다.
 [v0.6.0 계획](TODO_v0.6.0.md)은 M32·M33을 같은 제품선으로 관리하며,
 현재 Windows stable의 완료·공개 근거는 [v0.5.0 TODO](TODO_v0.5.0.md)가 소유한다.
 M33-W07~W08은 추가 기능과 다중 Host의 기존 gate를 v0.6.0 계획에서 유지한다. 착수 순서 확정으로
-OS별 실물 gate를 면제하거나 M33 0/8과 HOST 3/8의 완료 수를 올리지 않는다.
+OS별 실물 gate를 면제하거나 M33-W02~W08과 HOST 3/8의 완료 수를 올리지 않는다.
 문서 정비·main 통합은 M33 구현·실물 작업·v0.6.0 공개 승인이 아니다.
 
 M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS v3.4.1 전체 전환 전용이며,
@@ -57,7 +57,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 
 | 작업 | 구현·검증 범위 | 현재 상태 |
 | --- | --- | --- |
-| M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | 진행 중 — exact 후보 검사·증거 필요 |
+| M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | **완료** — exact `a3585ffb…`, [296번](<04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md>) |
 | M33-W02 | 표준 GATT profile와 beacon·목적별 예제 보강 | 미착수 |
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | 미착수 |
 | M33-W04 | DTM/HCI와 특수 진단 application template | 미착수 |
@@ -107,7 +107,10 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 - [x] 설치 Arduino Sketch 전체 187개(BLE·radio 164, core·peripheral 23)를 hash·기능군·노출 등급으로
   등록한다. 완전 중복과 이름 중복은 각각 0이며, 모든 예제를 28개 primary recipe 중 하나에 배정한다.
   Root 진입점은 12개 사용 시나리오·24개 대표 Sketch로 제한하고 전체 187개 Reference를 보존한다.
-- [ ] 위 구현을 clean exact source에서 재검사하고 검증 기록·인계·readiness PASS를 연결해 W01을 마감한다.
+- [x] 위 구현을 clean exact source에서 재검사하고 검증 기록·인계·readiness PASS를 연결해 W01을 마감한다.
+  Exact `a3585ffbd168d69726a42f785c5e6888f172899f`에서 계약 unit test 26/26, sample 190/
+  variant 474 parity, M32/M33 drift, 고정 lock, Markdown 480개와 clean worktree를 PASS했다. 상세 결과는
+  [296번 검증 기록](<04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md>)에 있다.
 
 ### M33-W02 — 표준 GATT와 beacon 예제
 

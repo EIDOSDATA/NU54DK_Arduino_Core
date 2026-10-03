@@ -21,6 +21,8 @@ M32_PATH = CORE / "variants/nu54dk/m32-ble-readiness.json"
 CONTRACT_EVIDENCE = (
     "00_Docs/01_아두이노 코어 설계/23_M33_전체_예제_원장과_릴리스_계약.md"
 )
+W01_EVIDENCE = "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
+W01_SOURCE_REVISION = "a3585ffbd168d69726a42f785c5e6888f172899f"
 LOCK = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
 PARITY = json.loads(PARITY_PATH.read_text(encoding="utf-8"))
 M31 = json.loads(M31_PATH.read_text(encoding="utf-8"))
@@ -784,7 +786,7 @@ def _case(identifier: str, roles: tuple[str, ...], boards: int, timeout_s: int,
           negative_classes: tuple[str, ...]) -> dict:
     """! @brief 유한 시험 분모와 필수 개발 blocker를 정의합니다. """
     family = identifier.split(":", 1)[0]
-    return {
+    row = {
         "id": identifier,
         "owner_work_id": TEST_OWNER[family],
         "roles": list(roles),
@@ -805,6 +807,13 @@ def _case(identifier: str, roles: tuple[str, ...], boards: int, timeout_s: int,
         "source_revision": None,
         "evidence": None,
     }
+    if family == "M33-INV-01":
+        row.update({
+            "status": "PASS",
+            "source_revision": W01_SOURCE_REVISION,
+            "evidence": W01_EVIDENCE,
+        })
+    return row
 
 
 def _test_families(scope: dict, service_count: int, example_count: int) -> list[dict]:
@@ -887,6 +896,15 @@ def contract(sdk_root: Path) -> dict:
     families = _test_families(scope, len(services), len(examples))
     deduplication = _deduplication_summary(scope, examples)
     discovery = _example_discovery(examples)
+    work_packages = [
+        {
+            "id": f"M33-W{index:02}",
+            "title": title,
+            "status": "completed" if index == 1 else "not_started",
+            "exact_evidence": W01_EVIDENCE if index == 1 else None,
+        }
+        for index, title in enumerate(WORK_TITLES, 1)
+    ]
     document = {
         "schema_version": 1,
         "milestone": "M33",
@@ -913,15 +931,7 @@ def contract(sdk_root: Path) -> dict:
         "parity_scope": scope,
         "deduplication_summary": deduplication,
         "example_discovery": discovery,
-        "work_packages": [
-            {
-                "id": f"M33-W{index:02}",
-                "title": title,
-                "status": "in_progress" if index == 1 else "not_started",
-                "exact_evidence": None,
-            }
-            for index, title in enumerate(WORK_TITLES, 1)
-        ],
+        "work_packages": work_packages,
         "upstream_catalog": upstream,
         "installed_example_catalog": examples,
         "sig_service_source": service_identity,
@@ -975,7 +985,9 @@ def contract(sdk_root: Path) -> dict:
         ],
         "counts": {
             "work_total": 8,
-            "work_completed": 0,
+            "work_completed": sum(
+                entry["status"] == "completed" for entry in work_packages
+            ),
             "master_sample_total": scope["master_sample_count"],
             "master_variant_total": scope["master_variant_count"],
             "m33_sample_total": scope["m33_sample_count"],
@@ -991,7 +1003,10 @@ def contract(sdk_root: Path) -> dict:
             "profile_catalog_total": len(profiles),
             "test_family_total": len(families),
             "test_case_total": sum(len(family["cases"]) for family in families),
-            "test_case_passed": 0,
+            "test_case_passed": sum(
+                case["status"] == "PASS"
+                for family in families for case in family["cases"]
+            ),
         },
     }
     validate(document, sdk_root)

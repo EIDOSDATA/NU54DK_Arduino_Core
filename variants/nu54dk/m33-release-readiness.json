@@ -695,8 +695,8 @@
     {
       "id": "M33-W01",
       "title": "sample_profile_example_catalog",
-      "status": "in_progress",
-      "exact_evidence": null
+      "status": "completed",
+      "exact_evidence": "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
     },
     {
       "id": "M33-W02",
@@ -17829,9 +17829,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "a3585ffbd168d69726a42f785c5e6888f172899f",
+          "evidence": "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
         },
         {
           "id": "M33-INV-01:services",
@@ -17856,9 +17856,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "a3585ffbd168d69726a42f785c5e6888f172899f",
+          "evidence": "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
         },
         {
           "id": "M33-INV-01:examples",
@@ -17883,9 +17883,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "a3585ffbd168d69726a42f785c5e6888f172899f",
+          "evidence": "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
         },
         {
           "id": "M33-INV-01:promotion",
@@ -17915,9 +17915,9 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "PASS",
+          "source_revision": "a3585ffbd168d69726a42f785c5e6888f172899f",
+          "evidence": "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md"
         }
       ]
     },
@@ -18417,7 +18417,7 @@
   ],
   "counts": {
     "work_total": 8,
-    "work_completed": 0,
+    "work_completed": 1,
     "master_sample_total": 190,
     "master_variant_total": 474,
     "m33_sample_total": 108,
@@ -18429,6 +18429,6 @@
     "profile_catalog_total": 19,
     "test_family_total": 12,
     "test_case_total": 16,
-    "test_case_passed": 0
+    "test_case_passed": 4
   }
 }

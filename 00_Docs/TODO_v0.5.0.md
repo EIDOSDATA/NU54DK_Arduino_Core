@@ -39,7 +39,7 @@ FLASH/RAM 비교의 세 축을 모두 닫았다. 기존 크기는 축소 근거�
 성능 목표 FAIL 원본을 보존한 채 별도 승인으로 정식 v0.5.0 stable에 승격했다.
 **HOST-W04~HOST-W08은 사용자 지시로 계속 보류**한다. 후속 M32는 별도 지시로 개발했으며
 W01~W12 **12/12를 완료**했다. [M32 TODO](TODO_M32.md)에 개발 증거와 제한을 보존하고,
-다음 기능 작업인 M33-W01의 착수 기준은 [HANDOFF](HANDOFF.md)에서 관리한다.
+M33-W01은 완료했고 다음 기능 작업인 W02의 착수 기준은 [HANDOFF](HANDOFF.md)에서 관리한다.
 
 | 정보 | 단일 원본 |
 | --- | --- |
@@ -79,7 +79,7 @@ Arduino 환경에서 사용할 수 있게 하는 것**이다. 구현 방식은 w
 | --- | --- | --- |
 | M31 / v0.5.0 | **8/8 완료, stable 공개** | 메모리 최적화 P0~P2, 기능·회귀·예제/HIL, Windows RC1/RC2와 정식 `v0.5.0` 공개 smoke 완료 |
 | M32 / v0.6.0 | **12/12 완료, 미공개** | W08 BLOB·signed MDFU, W10 공존, W11 exact 회귀/soak, W12 정합성 감사와 후속 인계 완료 |
-| M33 / v0.6.0 | **0/8** | W01~W04 catalog·GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 후속 Host·RC·공개 |
+| M33 / v0.6.0 | **1/8** | W01 catalog 완료, W02~W04 GATT/beacon·ecosystem·HCI/DTM, W05~W06 예제/통합, W07~W08 후속 Host·RC·공개 |
 | Host | **3/8, 보류** | HOST-W01~HOST-W03 완료. 재개 후 HOST-W04 prerequisite·HOST-W05 path/cache부터 진행 |
 
 메모리 최적화의 측정·상위 gate는 [219번 계약](<04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md>),
@@ -143,7 +143,7 @@ SDK나 controller/profile을 바꾸면 해당 판정과 관련 회귀 범위를 
 
 M32 행은 미공개 v0.6.0 개발 결과다. 공개 stable v0.5.0의 지원 기능으로 소급하지 않으며,
 기능별 source·시험·제한은 [M32 readiness](../variants/nu54dk/m32-ble-readiness.json)를 따른다.
-M33 행은 **0/8 미착수 계획**으로 구현·검증 완료를 뜻하지 않는다.
+M33 행은 **1/8**이며 W01 원장만 완료했다. W02~W08 구현·검증 완료를 뜻하지 않는다.
 
 정적 근거는 NCS checkout의 `zephyr/subsys/bluetooth/host/Kconfig` (`BT_SIGNING`),
 `zephyr/subsys/bluetooth/host/Kconfig.gatt` (`BT_EATT`),
