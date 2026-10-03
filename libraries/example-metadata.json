@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "example_count": 189,
+  "example_count": 196,
   "board": "NU54DK (nRF54L15, Zephyr)",
   "upload_probe_policy": {
     "single": "CMSIS-DAP 자동 선택",
@@ -8,6 +8,76 @@
     "raw_uid_public_logs": false
   },
   "examples": {
+    "NUCODE_BLE_Profiles/StandardSensor": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["선택한 표준 측정 service server", "같은 sensorKind의 StandardCollector"],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": ["두 sketch의 sensorKind를 맞춥니다. CTS/HTS/CSC/RSCS/ETS 값은 합성 예시이며 외장 센서를 검증하지 않습니다."]
+    },
+    "NUCODE_BLE_Profiles/StandardCollector": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["표준 GATT collector", "StandardSensor/AlertSensor/GlucoseSensor 중 선택한 server"],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": ["sensorKind와 server를 맞춥니다. CGMS는 양쪽 표시 숫자를 비교해 각각 y로 승인하는 L3 인증이 필요하며 185초 실행합니다."]
+    },
+    "NUCODE_BLE_Profiles/AlertSensor": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["ANS alert server", "Kind::alert로 설정한 StandardCollector"],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": ["collector가 email category와 CCC를 허용한 뒤에만 알림을 받습니다. ANCS/Apple 알림 연동과는 다른 표준 ANS입니다."]
+    },
+    "NUCODE_BLE_Profiles/BondManagement": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["사용자 무장 BMS server", "암호화·bond된 BMS 요청 peer"],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": ["기본 미무장입니다. Serial 명령과 예제 authorization을 명시 승인한 한 요청 peer의 bond만 opcode 03으로 삭제하며 전체 삭제를 제공하지 않습니다."]
+    },
+    "NUCODE_BLE_Profiles/GlucoseSensor": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["synthetic CGMS server", "Kind::glucose로 설정한 StandardCollector"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["단일 연결과 L3 인증을 요구합니다. 양쪽 숫자가 실제로 같을 때 각각 y를 입력합니다. 1분 주기·16 record이며 의료 측정기나 SOCP start/stop 지원이 아닙니다."]
+    },
+    "NUCODE_BLE_Profiles/ObjectServer": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["RAM OTS object server", "ObjectClient"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["단일 암호화 연결, object 최대 4개×512 byte와 이름 32 octet을 사용합니다. 재부팅하면 RAM object는 사라집니다."]
+    },
+    "NUCODE_BLE_Profiles/ObjectClient": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": ["OTC object client", "ObjectServer"],
+      "serial_baud": 115200,
+      "sidecars": ["prj.conf"],
+      "conditions": ["단일 암호화 연결에서 Serial 명령으로 metadata/read/write/create/name/delete를 하나씩 요청합니다. checksum·execute·append/truncate는 지원 범위가 아닙니다."]
+    },
     "EEPROM/EEPROMPersistence": {
       "path": "libraries/EEPROM/examples/EEPROMPersistence/EEPROMPersistence.ino",
       "recommended_profile": "standard",

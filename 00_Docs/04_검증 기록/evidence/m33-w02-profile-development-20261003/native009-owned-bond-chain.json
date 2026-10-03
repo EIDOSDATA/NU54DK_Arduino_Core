@@ -1,0 +1,358 @@
+{
+  "schema": "nucode-m33-profile-bond-chain-v1",
+  "original_attempt_sha256": "9bf110da33aea695e98c0e3d69adad22ac2c7f798cd784ee216fa9cb80cf1b02",
+  "steps": {
+    "cleanup008": {
+      "evidence": {
+        "path": "standard-attempt-008-owned-cleanup.json",
+        "sha256": "8816618de1486f5bc9681405b362c74436f4dd16da281e0f4f84e6fa5c17a29a"
+      },
+      "transcript": {
+        "path": "standard-attempt-008-owned-cleanup.transcript.log",
+        "sha256": "b85c5fc947a24549b3866e312620ed50ca7d39d7f58aac2778045f51f31ef128"
+      }
+    },
+    "standard009": {
+      "evidence": {
+        "path": "standard-attempt-009.json",
+        "sha256": "85e19e317798a23670cb632ffafdf826ef287a01f417f750fe283f8cf76adb05"
+      },
+      "transcript": {
+        "path": "standard-attempt-009.transcript.log",
+        "sha256": "7bebabad56b80f33b13f1876121083ab851646f4d013b971659bcad732bd01c0"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-server.json",
+          "sha256": "b6d80bead59095e1847cfb42beb519cc54e1f8b3709de56a20310cbae9a156b8"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-client.json",
+          "sha256": "99f0d2b17e48f804088caa16b2e3303e83302cb86842f181e009c9baf1b74a5f"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-watcher.json",
+          "sha256": "7058c77be3d5017de47c1acebcf0e78888eb404d045091e819ba9037291c0cd6"
+        }
+      }
+    },
+    "standard010": {
+      "evidence": {
+        "path": "standard-attempt-010.json",
+        "sha256": "8c5d5e2916dd48e6eec19a894b7f5ff8d30c59e6d51e69f5f4d1c39152ce95c0"
+      },
+      "transcript": {
+        "path": "standard-attempt-010.transcript.log",
+        "sha256": "7ea9998ff6ed33171a481cb8db080815a2a07f705384c342afc2e9c9b4938d57"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-server.json",
+          "sha256": "b6d80bead59095e1847cfb42beb519cc54e1f8b3709de56a20310cbae9a156b8"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-client.json",
+          "sha256": "99f0d2b17e48f804088caa16b2e3303e83302cb86842f181e009c9baf1b74a5f"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-watcher.json",
+          "sha256": "7058c77be3d5017de47c1acebcf0e78888eb404d045091e819ba9037291c0cd6"
+        }
+      }
+    },
+    "native003": {
+      "evidence": {
+        "path": "native-attempt-003.json",
+        "sha256": "444c64c6da34f41f283537a0400715b72ebc78115037dd945f79c40fb9666491"
+      },
+      "transcript": {
+        "path": "native-attempt-003.transcript.log",
+        "sha256": "3bb81ca85f0d52a27f009cefd0e7d2a349834261460b356ba36b58d5d2d7ee2d"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native003-native-server.json",
+          "sha256": "6dbd6997b4f02dfae50f70ffc337dd40ca46f4c385b6c40419633c6f44c5c16b"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native003-native-client.json",
+          "sha256": "e639f594191522ea0480e1154fbd5235760355aca5b39dc7c99a250b4914f6a0"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-watcher.json",
+          "sha256": "7058c77be3d5017de47c1acebcf0e78888eb404d045091e819ba9037291c0cd6"
+        }
+      }
+    },
+    "native004": {
+      "evidence": {
+        "path": "native-attempt-004-diagnostic.json",
+        "sha256": "2a12cc81ee1ddb5980ee4bf2d318429e639ddff36c354e4b174b4679f2ac9b2a"
+      },
+      "transcript": {
+        "path": "native-attempt-004-diagnostic.transcript.log",
+        "sha256": "4b82623b6080752e0475afa61c6112821afa7f2ed436c20b3c0e5dfd593ae296"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native003-native-server.json",
+          "sha256": "6dbd6997b4f02dfae50f70ffc337dd40ca46f4c385b6c40419633c6f44c5c16b"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native004-diagnostic-native-client.json",
+          "sha256": "4746ecd0f7fcbf0168df695808c6644e71d995c96281645dc26912edad10a1dd"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native003-standard-watcher.json",
+          "sha256": "7058c77be3d5017de47c1acebcf0e78888eb404d045091e819ba9037291c0cd6"
+        }
+      }
+    },
+    "cleanup004": {
+      "evidence": {
+        "path": "native004-owned-cleanup.json",
+        "sha256": "6d77ceebe9a46f7a3f56abbdd340668b3c5fd20fd43bd08b3e026979fcbd27ca"
+      },
+      "transcript": {
+        "path": "native004-owned-cleanup.transcript.log",
+        "sha256": "b85c5fc947a24549b3866e312620ed50ca7d39d7f58aac2778045f51f31ef128"
+      }
+    },
+    "standard011": {
+      "evidence": {
+        "path": "standard-attempt-011.json",
+        "sha256": "94be187e1ff0e5a5a5ab21e31858a7764209e5c856ec1450e711c41d62f8a369"
+      },
+      "transcript": {
+        "path": "standard-attempt-011.transcript.log",
+        "sha256": "222d589b6ec8a8a2a7bdf2532232a590a3c35c8b1f1135efd38be6050ad3ca3f"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-standard-server.json",
+          "sha256": "5af94c10d3954ea8d2149591e7c2c278ae346c23901cfbcf626f48d0f7b2a1a2"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-standard-client.json",
+          "sha256": "3cd31cd1255596b2204d57ceef303086ec72418ee8cbc488effb8ae9ee423c1d"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-standard-watcher.json",
+          "sha256": "52e3133ce65b4770852f1cb1833b6070ac4653b78eeece99114ab0d46da12414"
+        }
+      }
+    },
+    "standard012": {
+      "evidence": {
+        "path": "standard-attempt-012.json",
+        "sha256": "8635fe1fbc03a3a75bfc0e620bb15cce2b51da89d1f704742605253617cf4c66"
+      },
+      "transcript": {
+        "path": "standard-attempt-012.transcript.log",
+        "sha256": "35bb51715b72c2d4db5e5a9c1fae99551d4b9b3d64258e40185bf4694ba7ea6f"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-standard-server.json",
+          "sha256": "5af94c10d3954ea8d2149591e7c2c278ae346c23901cfbcf626f48d0f7b2a1a2"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-standard-client.json",
+          "sha256": "3cd31cd1255596b2204d57ceef303086ec72418ee8cbc488effb8ae9ee423c1d"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-standard-watcher.json",
+          "sha256": "52e3133ce65b4770852f1cb1833b6070ac4653b78eeece99114ab0d46da12414"
+        }
+      }
+    },
+    "native005": {
+      "evidence": {
+        "path": "native-attempt-005.json",
+        "sha256": "97a24d4f861e689ae84e9af595bb3d01097f976160fa63ee47eb24353f73a760"
+      },
+      "transcript": {
+        "path": "native-attempt-005.transcript.log",
+        "sha256": "c295fa4835a82209c3d48b1e0f74a2f1993ed46208202e5617f73f14e6ba3024"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-native-server.json",
+          "sha256": "1c00a659d29718977bdea43a93f7e59c309474d09c211273e5afd1b3ccc93a85"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-native-client.json",
+          "sha256": "3fe34665553a4a1ec259be07cc6a226f9697faf48522e2ca09c9c9f61e2f8786"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/final-l3-standard-watcher.json",
+          "sha256": "52e3133ce65b4770852f1cb1833b6070ac4653b78eeece99114ab0d46da12414"
+        }
+      }
+    },
+    "cleanup005": {
+      "evidence": {
+        "path": "native005-owned-cleanup.json",
+        "sha256": "57171c254d2000b2735414b7a84a594fca97278111371c00b6fbcd09e53c79cc"
+      },
+      "transcript": {
+        "path": "native005-owned-cleanup.transcript.log",
+        "sha256": "b85c5fc947a24549b3866e312620ed50ca7d39d7f58aac2778045f51f31ef128"
+      }
+    },
+    "standard013": {
+      "evidence": {
+        "path": "standard-attempt-013.json",
+        "sha256": "61c3a328c5165811cb7582254a0c00bba3751f853b683f0cc87a31237c2d0c6b"
+      },
+      "transcript": {
+        "path": "standard-attempt-013.transcript.log",
+        "sha256": "f6bb5492dd24d0b93701aa47050af78743befadd7474ad85aae864ce86eb7ec0"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native006-standard-server.json",
+          "sha256": "92ef610955063bc9a9076e35ea611c9dabbc71bf44448654aef5776d54f5fbe3"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native006-standard-client.json",
+          "sha256": "27a41c08d9d30435d89eab5b12e9e77f5b8a4c05f7513f4285d55d08313725a8"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native006-standard-watcher.json",
+          "sha256": "278d31ed08a5c5e364a28999164344290e3444b7eca3bb3685a99a0c0b61a4c3"
+        }
+      }
+    },
+    "native006": {
+      "evidence": {
+        "path": "native-attempt-006.json",
+        "sha256": "d4be92ceb6e4a6e0063f5c15aae47c59a250927fbd12b5294c98aed999deaf7d"
+      },
+      "transcript": {
+        "path": "native-attempt-006.transcript.log",
+        "sha256": "60b6e5814af68ff71561eb5e3fa7b82d2ab3cef21ea283bdb3387988bd065c08"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native006-native-server.json",
+          "sha256": "4f78703047cd816c99471fb11dcdbdd2466329ff0596df37bc5af4ad4e1eccef"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native006-native-client.json",
+          "sha256": "fbe90561d64223e2bcf47b3fc6512a1881b02b7eb8654eb096b54c20f47fab67"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native006-standard-watcher.json",
+          "sha256": "278d31ed08a5c5e364a28999164344290e3444b7eca3bb3685a99a0c0b61a4c3"
+        }
+      }
+    },
+    "native007": {
+      "evidence": {
+        "path": "native-attempt-007.json",
+        "sha256": "98e6c9e375ec93cd3caabd89d36f9ae83382f6daffb6a061713b722434f6ef05"
+      },
+      "transcript": {
+        "path": "native-attempt-007.transcript.log",
+        "sha256": "3598c0075c2be9e67ceef8d254ef20758ac9cd10aaef663af22db9505b26525f"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native007-native-server.json",
+          "sha256": "3410234f1f41f2a36249a1aed0506b8d3a0661d8549eb3609b48b9ec72367039"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native007-native-client.json",
+          "sha256": "2f33b1964a5e11b91c0a2ba36f914ee89f98ddf377efafdc7f91543700757806"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native007-standard-watcher.json",
+          "sha256": "71cba1c5926bbc8c7236f4af9526490ce189d0fadce0dd807ee68a2402e4f6c4"
+        }
+      }
+    },
+    "cleanup007": {
+      "evidence": {
+        "path": "native007-owned-cleanup.json",
+        "sha256": "92e9c9c1826422a174c159da04760c533ff3cd0ffc492088aa1d83215208812b"
+      },
+      "transcript": {
+        "path": "native007-owned-cleanup.transcript.log",
+        "sha256": "a66a8a9e55c153624825c5e4139766fbd9ece734a1c59e9f92ca8fca449a7e49"
+      }
+    },
+    "standard014": {
+      "evidence": {
+        "path": "standard-attempt-014.json",
+        "sha256": "70540fab1f3c30c04433af36492a6a7427dd01b66a04d29380be5f984a8cf329"
+      },
+      "transcript": {
+        "path": "standard-attempt-014.transcript.log",
+        "sha256": "5bff76212f9d35b7e26d764a4d79927992849ae50a71c0659cb1d61136fc227c"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native007-standard-server.json",
+          "sha256": "9779879c166a9e4f09cf0e3a8fc891063506a2addb3feb7ea3c14ee600ddcaf0"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native007-standard-client.json",
+          "sha256": "df576ff6c5fe2aa12a28335d18e90695c0a9655377c5442e569ef75b516081c1"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native007-standard-watcher.json",
+          "sha256": "71cba1c5926bbc8c7236f4af9526490ce189d0fadce0dd807ee68a2402e4f6c4"
+        }
+      }
+    },
+    "native008": {
+      "evidence": {
+        "path": "native-attempt-008.json",
+        "sha256": "21413d05ffc2ba7ff5fc0010711ec3583aa745f0a0de8ec612b4951b752089b3"
+      },
+      "transcript": {
+        "path": "native-attempt-008.transcript.log",
+        "sha256": "95551e8ed8f284c72c294e986960517e50bf7930fbbe9079052a6be0d88ec152"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native007-native-server.json",
+          "sha256": "3410234f1f41f2a36249a1aed0506b8d3a0661d8549eb3609b48b9ec72367039"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native007-native-client.json",
+          "sha256": "2f33b1964a5e11b91c0a2ba36f914ee89f98ddf377efafdc7f91543700757806"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native007-standard-watcher.json",
+          "sha256": "71cba1c5926bbc8c7236f4af9526490ce189d0fadce0dd807ee68a2402e4f6c4"
+        }
+      }
+    },
+    "native009": {
+      "evidence": {
+        "path": "native-attempt-009.json",
+        "sha256": "45924c1d9a9700d73c7a85d2605616ee2ece0dc840f27f1cbfb9cef987f203bb"
+      },
+      "transcript": {
+        "path": "native-attempt-009.transcript.log",
+        "sha256": "18673e57d3bfe1fedec7fb5e55bd23dee81296e0865efb2d2184ce89c206e8c2"
+      },
+      "manifests": {
+        "server": {
+          "path": "../../../../../../../../n54w02p/images/native007-native-server.json",
+          "sha256": "3410234f1f41f2a36249a1aed0506b8d3a0661d8549eb3609b48b9ec72367039"
+        },
+        "client": {
+          "path": "../../../../../../../../n54w02p/images/native007-native-client.json",
+          "sha256": "2f33b1964a5e11b91c0a2ba36f914ee89f98ddf377efafdc7f91543700757806"
+        },
+        "watcher": {
+          "path": "../../../../../../../../n54w02p/images/native007-standard-watcher.json",
+          "sha256": "71cba1c5926bbc8c7236f4af9526490ce189d0fadce0dd807ee68a2402e4f6c4"
+        }
+      }
+    }
+  }
+}

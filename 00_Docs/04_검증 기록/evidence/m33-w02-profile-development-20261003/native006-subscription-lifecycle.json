@@ -1,0 +1,26 @@
+{
+  "scope": "native006 observed failure and adapter lifetime correction, not SDK defect attribution",
+  "sources": {
+    "C:\\ncs\\v3.4.0\\zephyr\\subsys\\bluetooth\\host\\gatt.c": "b61dd14941ae9c5bf2189e41d67cff3238c42285e09cf3f7a2f81ff3dbd46860",
+    "C:\\ncs\\v3.4.0\\zephyr\\subsys\\bluetooth\\services\\ots\\ots_client.c": "15f48013c2382a8d1574e7754093d9317b817869df412a163553ca6081d16212",
+    "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f"
+  },
+  "fixed_contract": [
+    "gatt.c remove_subscriptions retains bonded non-VOLATILE intrusive nodes",
+    "gatt.c add_subscriptions traverses those retained nodes on bonded reconnect",
+    "adapter begin reinitializes public bt_ots_client containing OACP/OLCP params",
+    "VOLATILE removes both nodes before next begin; no SDK source change",
+    "current exact-params NULL removal callback reaches OTC handler to clear native busy; stale connection callback rejected"
+  ],
+  "observed": "native006 first full OTS/CGMS session succeeded; second authenticated connection had no client progress, server supervision timeout, client counters reset; FAIL retained",
+  "diagnostic_limit": "current attach-only state is post-reset; no original stuck PC/list or pre-run reset-reason baseline survives, so watchdog cause not established",
+  "read_only_evidence": "native006-readonly-state-v2.json",
+  "superseded_fields": "v1 list_head_tail_words used incorrect struct offsets; v2 source-verified stride16 offset8 supersedes only that decoded view",
+  "host_regressions": [
+    "bonded disconnect removes two nodes",
+    "three begin/reconnect cycles with one SDK registration",
+    "current removal callback dispatched, stale/foreign/duplicate callbacks do not produce ready",
+    "all four Host suites pass"
+  ],
+  "physical_retest": "PENDING; subsequent attempt recorded separately"
+}

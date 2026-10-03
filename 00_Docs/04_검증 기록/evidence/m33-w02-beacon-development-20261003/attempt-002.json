@@ -1,0 +1,61 @@
+{
+  "schema": "nucode-m33-beacon-hil-v1",
+  "status": "FAIL",
+  "reason": "observer target FAIL: session_timeout",
+  "development": true,
+  "source_revision": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "nonce_sha256": "00f7bf8e27abea98d89c208ec37d7d0ea073cbad3e86c44c1118d58307d135c6",
+  "denominator": {
+    "packets": 600,
+    "per_format": 150,
+    "unique_per_format": 10,
+    "switches": 60
+  },
+  "results": {
+    "advertiser": {
+      "role": "advertiser",
+      "switches": "60",
+      "ibeacon_sequences": "20",
+      "eddystone_sequences": "20",
+      "bthome_sequences": "20",
+      "codec_negative": "pass",
+      "nonce": "613023e205023ca998c5510ee6f92cfb",
+      "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8"
+    }
+  },
+  "boards": {
+    "advertiser": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "7c7229736474bc30c116a50687214ab83dcff83b101e8e987885004e66a107e4",
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "180224",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    },
+    "observer": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "06d524eefc17101a424e061c787e437beabcf00c3ff62b17b1edfbdfb71e743d",
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "180224",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      }
+    }
+  },
+  "transcript_sha256": "8264eb55a08da7b9155db8a4e2666bd60d4176bedd9eeb75c13b8ac57d0353de",
+  "observed_utc": "2026-10-03T12:58:32.905686+00:00"
+}

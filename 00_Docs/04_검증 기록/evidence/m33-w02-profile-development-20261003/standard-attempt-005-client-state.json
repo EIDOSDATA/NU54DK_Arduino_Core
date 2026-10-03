@@ -1,0 +1,25 @@
+{
+  "role": "client",
+  "nonce": "6d3066f1360f9848171ae23978091073",
+  "image_sha256": "ee260f1189d7c1c6c6df723b6c25b612354eb24647760107ac657e99945d5bb8",
+  "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "fresh_bond": true,
+  "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "peer_sha256": "e5c95962ea718793a3baff63189368ed06fb67a1fb06280524cf30d52777467a",
+  "startup_bond_count": 0,
+  "peer_not_in_startup": true,
+  "flags": {
+    "cleanup_complete": 1,
+    "stop_reported": 1,
+    "cleanup_expired": 0,
+    "watchdog_channel": -1
+  },
+  "registers": {
+    "radio_state": 0,
+    "radio_subscribe_txen": 0,
+    "radio_subscribe_rxen": 0,
+    "radio_shorts": 524288,
+    "watchdog_runstatus": 0
+  },
+  "method": "read-only attach; no halt/reset/write"
+}

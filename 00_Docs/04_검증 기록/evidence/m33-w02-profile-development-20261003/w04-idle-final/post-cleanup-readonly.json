@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "observed_utc": "2026-10-03T17:01:40.152041+00:00",
+  "fixture_sha256": "0ec485e8b6bf9053073d5a4ca9fe5a2c6c87fb41bcef8e6bd6b44f8fef1c52ba",
+  "after_other_pair_cleanup_sha256": "461db830717098d94491b3114f18b1349444358c4df2bc4bfaefcca533004e70",
+  "actions": [
+    "read_only_audit"
+  ],
+  "load_ranges": [
+    {
+      "start": 0,
+      "length": 1148,
+      "sha256": "34804bea7138d897af27e62ee620724bb2cfb5f762c70ea2c373ad6b1fbbc408"
+    },
+    {
+      "start": 1152,
+      "length": 255080,
+      "sha256": "5602effa05ad5550d418e5644484fafa9e3186a92d2bdfda8d0cc9886a351269"
+    },
+    {
+      "start": 256240,
+      "length": 26416,
+      "sha256": "6aaa518e1f3f49aef538654950c9d6f44ade451a01ee052ecaaa63e0b4620acc"
+    }
+  ],
+  "lifecycle_ram": [
+    {
+      "name": "nonce",
+      "symbol": "_ZN12_GLOBAL__N_15nonceE",
+      "address": 536966127,
+      "size": 33,
+      "sha256": "bfa9c319ea714c8b2e6694a6cd4ff3f9db7e6fe0dd147ae667a7c32f812546c8",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "started",
+      "symbol": "_ZN12_GLOBAL__N_17startedE",
+      "address": 536966110,
+      "size": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup_complete",
+      "symbol": "_ZN12_GLOBAL__N_116cleanup_completeE",
+      "address": 536966103,
+      "size": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "stop_reported",
+      "symbol": "_ZN12_GLOBAL__N_113stop_reportedE",
+      "address": 536966101,
+      "size": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "failed",
+      "symbol": "_ZN12_GLOBAL__N_16failedE",
+      "address": 536966109,
+      "size": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "watchdog_channel",
+      "symbol": "_ZN12_GLOBAL__N_116watchdog_channelE",
+      "address": 536877992,
+      "size": 4,
+      "sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+      "stable_reads": 2,
+      "status": "PASS"
+    }
+  ]
+}

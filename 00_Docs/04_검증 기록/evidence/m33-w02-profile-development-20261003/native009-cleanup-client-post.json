@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "role": "client",
+  "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+  "cleanup_sha256": "461db830717098d94491b3114f18b1349444358c4df2bc4bfaefcca533004e70",
+  "post_count": 0,
+  "post_set_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "private_sha256": "a6b3d15e5f986a2b7d949415547b05787151479b4101128ad3d708d3823087c7",
+  "existing_unchanged": true,
+  "owned_peer_absent": true,
+  "method": "read-only attach; repeated stable RAM snapshot"
+}

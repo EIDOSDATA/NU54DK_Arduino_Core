@@ -1,0 +1,5 @@
+/** @brief 시험 command lease와 cleanup timeout을 WDT30으로 제한합니다. */
+&wdt30
+{
+    status = "okay";
+};

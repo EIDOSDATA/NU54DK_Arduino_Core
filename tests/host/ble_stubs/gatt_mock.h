@@ -64,6 +64,27 @@ struct bt_uuid_128
     bt_uuid uuid;
     std::uint8_t val[16];
 };
+inline int bt_uuid_cmp(const bt_uuid *first, const bt_uuid *second)
+{
+    if (first == nullptr || second == nullptr || first->type != second->type)
+    {
+        return 1;
+    }
+    if (first->type == BT_UUID_TYPE_16)
+    {
+        return reinterpret_cast<const bt_uuid_16 *>(first)->val ==
+                       reinterpret_cast<const bt_uuid_16 *>(second)->val
+                   ? 0
+                   : 1;
+    }
+    if (first->type == BT_UUID_TYPE_128)
+    {
+        return std::memcmp(reinterpret_cast<const bt_uuid_128 *>(first)->val,
+                           reinterpret_cast<const bt_uuid_128 *>(second)->val,
+                           sizeof(bt_uuid_128::val));
+    }
+    return 1;
+}
 inline const bt_uuid_16 mock_primary{{BT_UUID_TYPE_16}, 0x2800};
 inline const bt_uuid_16 mock_chrc{{BT_UUID_TYPE_16}, 0x2803};
 inline const bt_uuid_16 mock_ccc{{BT_UUID_TYPE_16}, 0x2902};
@@ -154,8 +175,8 @@ struct bt_gatt_read_params
     int chan_opt;
 #endif
 };
-using bt_gatt_discover_func_t = std::uint8_t (*)(
-    bt_conn *, const bt_gatt_attr *, bt_gatt_discover_params *);
+using bt_gatt_discover_func_t = std::uint8_t (*)(bt_conn *, const bt_gatt_attr *,
+                                                 bt_gatt_discover_params *);
 struct bt_gatt_write_params
 {
     void (*func)(bt_conn *, std::uint8_t, bt_gatt_write_params *);
@@ -189,8 +210,7 @@ inline ssize_t mock_database_hash_read(bt_conn *, const bt_gatt_attr *, void *ou
     {
         return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
     }
-    const std::size_t copied =
-        std::min<std::size_t>(capacity, sizeof(mock_database_hash) - offset);
+    const std::size_t copied = std::min<std::size_t>(capacity, sizeof(mock_database_hash) - offset);
     std::memcpy(output, mock_database_hash + offset, copied);
     return static_cast<ssize_t>(copied);
 }
@@ -325,9 +345,8 @@ inline int bt_gatt_write(bt_conn *connection, bt_gatt_write_params *p)
     return mock_write_error;
 }
 inline int bt_gatt_write_without_response_cb(bt_conn *connection, std::uint16_t, const void *,
-                                             std::uint16_t,
-                                             bool sign, void (*callback)(bt_conn *, void *),
-                                             void *user_data)
+                                             std::uint16_t, bool sign,
+                                             void (*callback)(bt_conn *, void *), void *user_data)
 {
     mock_command_callback = callback;
     mock_command_user_data = user_data;
