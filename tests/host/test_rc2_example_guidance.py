@@ -33,12 +33,12 @@ class Rc2ExampleGuidanceTest(unittest.TestCase):
     """! @brief 현행 예제 설정 안내의 단일 원본과 drift 거부를 검사합니다. """
 
     def test_all_public_examples_have_valid_metadata_and_generated_guidance(self) -> None:
-        """! @brief 공개 예제 189개가 metadata와 byte 일치하는 안내를 갖습니다. """
+        """! @brief 공개 예제 196개가 metadata와 byte 일치하는 안내를 갖습니다. """
 
         examples = GUIDANCE.public_examples(ROOT)
         metadata = GUIDANCE.load_metadata(ROOT / "libraries" / "example-metadata.json")
-        self.assertEqual(len(examples), 189)
-        self.assertEqual(metadata["example_count"], 189)
+        self.assertEqual(len(examples), 196)
+        self.assertEqual(metadata["example_count"], 196)
         self.assertEqual(GUIDANCE.validate_metadata(metadata, examples, ROOT), [])
         self.assertEqual(GUIDANCE.synchronize(write=False, root=ROOT), [])
 
