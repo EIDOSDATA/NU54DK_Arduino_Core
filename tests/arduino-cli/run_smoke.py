@@ -53,6 +53,7 @@ ARDUINO_TESTS = (
     "m32_mesh_update",
     "m32_radio",
     "m32_coexistence",
+    "m33_beacon",
     "ac02b",
     "ac03",
     "examples",
@@ -102,7 +103,7 @@ ARDUINO_GROUPS = {
     "v0.2.0": ("m15", "m16"),
     "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
     "v0.5.0": ("m29", "m30", "m30secure", "m31"),
-    "v0.6.0": ("m32",),
+    "v0.6.0": ("m32", "m33_beacon"),
 }
 ARDUINO_MATRIX_GROUPS = {
     "v0.1.0": ARDUINO_GROUPS["v0.1.0"],
@@ -2432,6 +2433,16 @@ def test_m32_examples(cli: Path, config: Path, root: Path, repository: Path) -> 
     test_m32_mesh_update_examples(cli, config, root, repository)
     test_m32_radio_examples(cli, config, root, repository)
     test_m32_coexistence_examples(cli, config, root, repository)
+
+
+## @brief M33-W02 Beacon 송신·관찰 예제를 BLE profile로 빌드합니다.
+def test_m33_beacon_examples(
+    cli: Path, config: Path, root: Path, repository: Path
+) -> None:
+    example_names = ("BeaconAdvertiser", "BeaconObserver")
+    test_ble_examples(cli, config, root, repository, example_names)
+    for example_name in example_names:
+        print(f"M33_BEACON_ARDUINO_BUILD_PASS={example_name}", flush=True)
 
 
 ## @brief platform library 예제가 Arduino IDE용 목록에 나타나는지 검증합니다.
@@ -5146,6 +5157,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "m32_mesh_update": test_m32_mesh_update_examples,
                 "m32_radio": test_m32_radio_examples,
                 "m32_coexistence": test_m32_coexistence_examples,
+                "m33_beacon": test_m33_beacon_examples,
                 "ac02b": test_ac02b_examples,
                 "ac03": test_ac03_storage_examples,
                 "examples": test_example_discovery,

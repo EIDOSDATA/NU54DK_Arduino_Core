@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "example_count": 187,
+  "example_count": 189,
   "board": "NU54DK (nRF54L15, Zephyr)",
   "upload_probe_policy": {
     "single": "CMSIS-DAP 자동 선택",
@@ -406,6 +406,36 @@
       "serial_baud": 115200,
       "sidecars": ["prj.conf"],
       "conditions": ["한 slot을 upload와 distribution이 동시에 사용하지 않도록 절차를 직렬화합니다."]
+    },
+    "NUCODE_BLE/BeaconAdvertiser": {
+      "path": "libraries/NUCODE_BLE/examples/BeaconAdvertiser/BeaconAdvertiser.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "BeaconAdvertiser (broadcaster)",
+        "BeaconObserver (passive scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "Apple iBeacon 상용 인증·브랜딩과 외부 단말 상호운용 검증은 이 예제 범위에 포함되지 않음"
+      ]
+    },
+    "NUCODE_BLE/BeaconObserver": {
+      "path": "libraries/NUCODE_BLE/examples/BeaconObserver/BeaconObserver.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "BeaconAdvertiser (broadcaster)",
+        "BeaconObserver (passive scanner)"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "Apple·Google peer와 외장 Beacon 실기 상호운용은 사용자 후속 검증 항목"
+      ]
     },
     "NUCODE_BLE/CustomGattCentral": {
       "path": "libraries/NUCODE_BLE/examples/CustomGattCentral/CustomGattCentral.ino",
