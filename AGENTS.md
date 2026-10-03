@@ -32,7 +32,10 @@
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
   현재 source/설치 제품 버전은 **0.5.0**이고 M32의 38개 지원 후보는 `not_published`입니다.
 - 다음 기능 작업은 **M33-W01**, M33은 **0/8 미착수**입니다. HOST-W01~W03은 완료했고
-  **HOST-W04~W08은 사용자 보류**입니다. M32 완료·문서/main 갱신을 Host 재개나 v0.6.0 공개 승인으로 해석하지 않습니다.
+  **HOST-W04~W08은 M33-W06 완료 전까지 착수 대기**입니다. 2026-10-03 사용자 결정에 따라
+  M33 기능 개발과 Host를 병렬 진행하지 않습니다. W06 완료 후 HOST-W04~W06과 W07 도구를
+  준비하고, M33-W07 RC1으로 Host 실기·HOST-W08을 마감한 뒤 M33-W08로 진행합니다.
+  이 순서 확정은 현재 Host 구현 착수나 v0.6.0 공개 승인이 아닙니다.
   재개 입력은 [HANDOFF](00_Docs/HANDOFF.md), 제품선 범위는 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
 - M31~M33 구현 전에는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
   해당 [M31](00_Docs/TODO_M31.md)·[M32](00_Docs/TODO_M32.md)·[M33](00_Docs/TODO_M33.md) TODO를 읽습니다.

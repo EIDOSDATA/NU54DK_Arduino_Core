@@ -30,10 +30,16 @@ M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통
 | --- | --- |
 | M33-W01 inventory와 catalog | M28~M32 readiness, 고정 NCS sample, 역할별 Arduino 예제와 누락/미지원 사유 |
 | M33-W02~W06 기능·예제·통합 | M32 지원 후보 38개는 `not_published`; 자동 검사와 외부 peer 실제 검증을 구분 |
-| M33-W07~W08 Host·package·공개 | HOST-W04~W08 사용자 보류, OS별 최종 gate와 별도 공개 승인 유지 |
+| M33-W06 이후 Host·package·공개 | W06 완료 후 HOST-W04부터 순차 재개; RC1으로 Host 실기 마감, OS별 최종 gate와 별도 공개 승인 유지 |
 
 착수·완료 조건은 [M33 TODO](TODO_M33.md), 작업별 실제 수치와 원본은 [M32 TODO](TODO_M32.md)가 소유합니다.
 완료된 M32 실기를 다음 작업으로 다시 예약하지 않습니다.
+
+**2026-10-03 사용자 결정:** Host는 M33 기능 개발과 병렬 진행하지 않습니다.
+M33-W01~W06 완료 → HOST-W04~W06 및 W07 도구 준비 → M33-W07 시험용 RC1 준비 →
+HOST-W07 실제 OS 검증·W08 마감 및 M33-W07 완료 → M33-W08 공개 승인·게시·공개 설치 순서입니다.
+현재는 M33 0/8·HOST 3/8이며 W06 완료 전까지 Host 착수 대기입니다. Ubuntu/macOS의 실제
+장비 검증은 RC 단계에서 수행하며, 접속·결선 상태를 확인하지 않고 사용 가능한 것으로 가정하지 않습니다.
 
 ### M32 완료 기준선
 
@@ -46,7 +52,7 @@ M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통
 
 과거 timeout·Apply·rollback·privacy 실패 원본은 위 기록에 보존합니다. 최종 W11 preflight에서는
 세 보드 AHB debug가 열려 있어 승인받은 ERASEALL을 실행하지 않았습니다. 이 관찰은 당시 상태이며,
-새 실기 때 probe·COM·image·결선을 다시 확인합니다. HOST-W07은 별도 보류 트랙입니다.
+새 실기 때 probe·COM·image·결선을 다시 확인합니다. HOST-W07은 위 순차 Host 계획을 따릅니다.
 
 ### SDK와 후속 버전
 
