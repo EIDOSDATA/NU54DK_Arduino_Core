@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """! @brief DTM production parser·Host oracle·mapping과 template 계획을 검사한다. """
+from concurrent.futures import ThreadPoolExecutor
 import copy
 import importlib.util
 import io
 from pathlib import Path
 import subprocess
 import tempfile
+import threading
 from types import SimpleNamespace
 import unittest
 from unittest import mock
@@ -33,6 +35,40 @@ class FakeSerial:
 
 class DiagnosticsTests(unittest.TestCase):
     """! @brief source/build 준비를 runtime PASS로 승격하지 않는 음성 검사. """
+
+    def test_private_debug_output_serializes_process_global_state(self):
+        """! @brief 병렬 pyOCD 작업이 cwd·logging·stream 전역 상태를 겹치지 않게 합니다. """
+
+        first_entered = threading.Event()
+        release_first = threading.Event()
+        second_attempting = threading.Event()
+        second_entered = threading.Event()
+
+        def first_worker():
+            """! @brief 첫 private 구간을 고정해 두 번째 진입 차단을 관측합니다. """
+
+            with DIAG.private_debug_output():
+                first_entered.set()
+                release_first.wait(2.0)
+
+        def second_worker():
+            """! @brief 첫 구간이 끝난 뒤에만 두 번째 private 구간에 진입합니다. """
+
+            second_attempting.set()
+            with DIAG.private_debug_output():
+                second_entered.set()
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            first = executor.submit(first_worker)
+            self.assertTrue(first_entered.wait(1.0))
+            second = executor.submit(second_worker)
+            self.assertTrue(second_attempting.wait(1.0))
+            self.assertFalse(second_entered.wait(0.1))
+            release_first.set()
+            first.result(timeout=2.0)
+            second.result(timeout=2.0)
+        self.assertTrue(second_entered.is_set())
+
     def test_production_parser_boundaries(self):
         with tempfile.TemporaryDirectory(prefix="nu54-diagnostic-") as temporary:
             binary = Path(temporary) / "protocol.exe"

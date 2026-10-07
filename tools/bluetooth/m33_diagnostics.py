@@ -16,6 +16,7 @@ import subprocess
 import struct
 import sys
 import tempfile
+import threading
 import time
 from datetime import datetime, timezone
 
@@ -64,6 +65,8 @@ SAFE_SESSION_OPTIONS = {
     "flash.timeout.program": 10.0,
     "flash.timeout.erase_sector": 10.0,
 }
+## @brief pyOCD의 process 전역 cwd·logging·stream 상태를 병렬 session 사이에서 보호합니다.
+_PRIVATE_DEBUG_LOCK = threading.RLock()
 ROUTES = {
     "dtm_twowire": ("nrf/samples/bluetooth/direct_test_mode", "template", "DAPLink VCOM 19200 8N1; 3초 RF lease"),
     "dtm_hci": ("nrf/samples/bluetooth/direct_test_mode", "template", "DAPLink VCOM H4 115200 8N1; 진단 command만 허용"),
@@ -824,13 +827,15 @@ class PyocdPreparationBackend:
 @contextmanager
 def private_debug_output():
     """! @brief backend 예외/log/print에 포함될 수 있는 raw UID를 공개 출력에 전달하지 않습니다. """
-    previous = logging.root.manager.disable
-    try:
-        logging.disable(logging.CRITICAL)
-        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
-            yield
-    finally:
-        logging.disable(previous)
+
+    with _PRIVATE_DEBUG_LOCK:
+        previous = logging.root.manager.disable
+        try:
+            logging.disable(logging.CRITICAL)
+            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                yield
+        finally:
+            logging.disable(previous)
 
 
 class IdleAuditFailure(ValueError):
