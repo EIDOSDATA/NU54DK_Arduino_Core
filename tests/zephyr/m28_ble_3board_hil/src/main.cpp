@@ -253,6 +253,35 @@ namespace
         Serial.println(nonce);
     }
 
+    /** @brief M32 soak image에 compile-time full revision과 source manifest를 결합합니다. */
+    [[maybe_unused]] void printSoakBuildIdentity()
+    {
+#if defined(NUCODE_M32_W11_SOAK)
+        Serial.print(":core_revision=");
+        Serial.print(M32_W11_CORE_REVISION);
+        Serial.print(":board_revision=");
+        Serial.print(M32_W11_BOARD_REVISION);
+        Serial.print(":ncs_revision=");
+        Serial.print(M32_W11_NCS_REVISION);
+        Serial.print(":zephyr_revision=");
+        Serial.print(M32_W11_ZEPHYR_REVISION);
+        Serial.print(":core_source_sha256=");
+        Serial.print(M32_W11_CORE_SOURCE_SHA256);
+        Serial.print(":application_source_sha256=");
+        Serial.print(M32_W11_APPLICATION_SOURCE_SHA256);
+        Serial.print(":board_source_sha256=");
+        Serial.print(M32_W11_BOARD_SOURCE_SHA256);
+        Serial.print(":firmware_source_sha256=");
+        Serial.print(M32_W11_FIRMWARE_SOURCE_SHA256);
+        Serial.print(":application_cmake_sha256=");
+        Serial.print(M32_W11_APPLICATION_CMAKE_SHA256);
+        Serial.print(":application_config_sha256=");
+        Serial.print(M32_W11_APPLICATION_CONFIG_SHA256);
+        Serial.print(":source_manifest_sha256=");
+        Serial.print(M32_W11_SOURCE_MANIFEST_SHA256);
+#endif
+    }
+
     /** @brief FNV-1a로 작은 RF trace packet의 손상을 검출합니다. */
     [[maybe_unused]] std::uint32_t checksum(const std::uint8_t *data, std::size_t length)
     {
@@ -572,6 +601,7 @@ namespace
         Serial.print("NUCODE_M28B3_");
         Serial.print(roleName());
         Serial.print(":FINAL:PASS:test=SOAK");
+        printSoakBuildIdentity();
         printNonceEnd();
         final_reported = true;
         phase = Phase::complete;
@@ -1802,7 +1832,11 @@ void setup()
     Serial.print("NUCODE_M28B3_READY:role=");
     Serial.print(roleName());
     Serial.print(":test=");
-    Serial.println(testName());
+    Serial.print(testName());
+#if defined(NUCODE_M32_W11_SOAK)
+    printSoakBuildIdentity();
+#endif
+    Serial.println();
 }
 
 void loop()

@@ -8,7 +8,6 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-import hashlib
 import json
 from pathlib import Path
 import sys
@@ -30,10 +29,11 @@ from ble_pair_hil_common import (  # noqa: E402
     RoleEndpoint,
     RoleExecution,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
     git_revision,
     image_record,
+    public_endpoint,
     transcript_record,
     validate_board_revision,
     validate_build_record,
@@ -43,10 +43,11 @@ from ble_pair_hil_common import (  # noqa: E402
 )
 from m28_ble_3board import daplink_debug_identity  # noqa: E402
 from m30_ble_multi_protocol import (  # noqa: E402
+    CYCLE_COUNT,
     MultiSecurityProtocolFailure,
     MultiSecurityRoleResult,
-    parse_role_transcript,
-    validate_three_role_session,
+    parse_role_campaign,
+    validate_three_role_campaign,
 )
 from m6_serial_echo import import_pyserial  # noqa: E402
 
@@ -74,6 +75,7 @@ class MultiSecurityExecution:
     peripheral: RoleExecution
     mixed: RoleExecution
     central: RoleExecution
+    serial_closed: dict[str, bool]
 
 
 def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespace:
@@ -84,7 +86,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     )
     for role in ROLES:
         parser.add_argument(f"--{role}-hex")
-        parser.add_argument(f"--{role}-board-id", required=True)
+        parser.add_argument(f"--probe-{role}-sha256", required=True)
         parser.add_argument(f"--{role}-volume")
         parser.add_argument(f"--{role}-port", default="auto")
     parser.add_argument("--baud", type=int, default=DEFAULT_BAUD_RATE)
@@ -203,7 +205,7 @@ def _wait_for(
             return
 
 
-def _collect_until_end(
+def _collect_until_record(
     serial_port: Any,
     role: str,
     nonce: str,
@@ -212,12 +214,11 @@ def _collect_until_end(
     capture: bytearray,
     deadline: float,
     stop_event: threading.Event,
+    record: str,
 ) -> None:
-    """! @brief role END까지 bounded UART를 수집하고 한 role 실패를 전파합니다. """
+    """! @brief 지정 role record까지 bounded UART를 수집하고 실패를 전파합니다. """
 
-    expected = (
-        f"{PROTOCOL}|END|role={role}|status=pass|nonce={nonce}|core={revision}"
-    ).encode("ascii")
+    expected = record.encode("ascii")
     try:
         while True:
             line = _read_checked_line(
@@ -238,32 +239,59 @@ def _collect_until_end(
         raise
 
 
+def _best_effort_cleanup(
+    ports: dict[str, Any], nonce: str, revision: str, timeout_seconds: float = 5.0
+) -> None:
+    """! @brief 실패 경로에서도 bounded STOP을 세 target에 최대 한 번 전달합니다. """
+
+    stop = f"{PROTOCOL}|STOP|nonce={nonce}|core={revision}"
+    for role in ROLES:
+        try:
+            _write_line(ports[role], stop)
+        except Exception:
+            continue
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() < deadline:
+        if all(getattr(ports[role], "in_waiting", 0) == 0 for role in ROLES):
+            return
+        for role in ROLES:
+            try:
+                ports[role].read(min(int(getattr(ports[role], "in_waiting", 0)), 256))
+            except Exception:
+                continue
+
+
 def execute_three_board(
     *,
     serial_module: Any,
     endpoints: dict[str, RoleEndpoint],
     images: dict[str, Path],
-    nonce: str,
+    nonces: Sequence[str],
     revision: str,
     baud_rate: int,
     flash_timeout: float,
     result_timeout: float,
     flash_backend: str,
 ) -> MultiSecurityExecution:
-    """! @brief 세 image를 exact UID에 기록하고 두 link 보안 연산을 수집합니다. """
+    """! @brief 세 image를 한 번 기록하고 20개 독립 보안 session을 수집합니다. """
 
     if baud_rate != DEFAULT_BAUD_RATE:
         raise BlePairHilFailure(f"기준선은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
     if not 30.0 <= result_timeout <= 1200.0:
         raise BlePairHilFailure("--result-timeout은 30..1200초여야 합니다.")
+    if len(nonces) != CYCLE_COUNT or len(set(nonces)) != CYCLE_COUNT:
+        raise BlePairHilFailure("20개 서로 다른 session nonce가 필요합니다.")
     captures = {role: bytearray() for role in ROLES}
     pending = {role: bytearray() for role in ROLES}
     flashes = {role: ("not-started", "unknown") for role in ROLES}
     try:
         for role in ROLES:
             if flash_backend == "pyocd-sector":
-                flashes[role] = common.flash_image_pyocd(
-                    role, endpoints[role].board_id, images[role], flash_timeout
+                flashes[role] = common.flash_image_pyocd_sha256(
+                    role,
+                    common.probe_sha256(endpoints[role].board_id),
+                    images[role],
+                    flash_timeout,
                 )
             else:
                 flashes[role] = common.flash_image(
@@ -273,6 +301,8 @@ def execute_three_board(
                     images[role],
                     flash_timeout,
                 )
+        ports: dict[str, Any] = {}
+        active_nonce = nonces[0]
         with ExitStack() as stack:
             ports = {
                 role: stack.enter_context(
@@ -288,64 +318,88 @@ def execute_three_board(
                 )
                 for role in ROLES
             }
-            for role in ROLES:
-                ports[role].reset_input_buffer()
-                _write_line(ports[role], f"{PROTOCOL}|READY?")
-            deadline = time.monotonic() + result_timeout
-            for role in ROLES:
-                ready = f"{PROTOCOL}|READY|role={role}|core={revision}".encode("ascii")
-                _wait_for(
-                    ports[role], role, ready, nonce, revision,
-                    pending[role], captures[role], deadline
-                )
-            start = f"{PROTOCOL}|START|test={TEST_ID}|nonce={nonce}|core={revision}"
-            _write_line(ports["peripheral"], start)
-            peripheral_advertise = (
-                f"{PROTOCOL}|ADVERTISE|role=peripheral|marker=161|status=pass"
-                f"|nonce={nonce}|core={revision}"
-            ).encode("ascii")
-            _wait_for(
-                ports["peripheral"], "peripheral", peripheral_advertise,
-                nonce, revision, pending["peripheral"], captures["peripheral"], deadline
-            )
-            _write_line(ports["mixed"], start)
-            mixed_advertise = (
-                f"{PROTOCOL}|ADVERTISE|role=mixed|marker=178|status=pass"
-                f"|nonce={nonce}|core={revision}"
-            ).encode("ascii")
-            _wait_for(
-                ports["mixed"], "mixed", mixed_advertise,
-                nonce, revision, pending["mixed"], captures["mixed"], deadline
-            )
-            _write_line(ports["central"], start)
-            for role, connections in (("peripheral", 1), ("mixed", 2), ("central", 1)):
-                link = (
-                    f"{PROTOCOL}|LINK|role={role}|connections={connections}"
-                    f"|level=2|key_size=16|nonce={nonce}|core={revision}"
-                ).encode("ascii")
-                _wait_for(
-                    ports[role], role, link, nonce, revision,
-                    pending[role], captures[role], deadline
-                )
-            run = f"{PROTOCOL}|RUN|nonce={nonce}|core={revision}"
-            for role in ROLES:
-                _write_line(ports[role], run)
-            stop_event = threading.Event()
-            with ThreadPoolExecutor(max_workers=3) as executor:
-                futures = [
-                    executor.submit(
-                        _collect_until_end,
-                        ports[role], role, nonce, revision,
-                        pending[role], captures[role], deadline, stop_event,
+            for port in ports.values():
+                port.reset_input_buffer()
+            try:
+                for nonce in nonces:
+                    active_nonce = nonce
+                    deadline = time.monotonic() + result_timeout
+                    for role in ROLES:
+                        _write_line(ports[role], f"{PROTOCOL}|READY?")
+                    for role in ROLES:
+                        ready = f"{PROTOCOL}|READY|role={role}|core={revision}".encode("ascii")
+                        _wait_for(
+                            ports[role], role, ready, nonce, revision,
+                            pending[role], captures[role], deadline,
+                        )
+                    start = f"{PROTOCOL}|START|test={TEST_ID}|nonce={nonce}|core={revision}"
+                    _write_line(ports["peripheral"], start)
+                    peripheral_advertise = (
+                        f"{PROTOCOL}|ADVERTISE|role=peripheral|marker=161|status=pass"
+                        f"|nonce={nonce}|core={revision}"
+                    ).encode("ascii")
+                    _wait_for(
+                        ports["peripheral"], "peripheral", peripheral_advertise,
+                        nonce, revision, pending["peripheral"],
+                        captures["peripheral"], deadline,
                     )
-                    for role in ROLES
-                ]
-                try:
-                    for future in futures:
-                        future.result()
-                except Exception:
-                    stop_event.set()
-                    raise
+                    _write_line(ports["mixed"], start)
+                    mixed_advertise = (
+                        f"{PROTOCOL}|ADVERTISE|role=mixed|marker=178|status=pass"
+                        f"|nonce={nonce}|core={revision}"
+                    ).encode("ascii")
+                    _wait_for(
+                        ports["mixed"], "mixed", mixed_advertise, nonce, revision,
+                        pending["mixed"], captures["mixed"], deadline,
+                    )
+                    _write_line(ports["central"], start)
+                    for role, connections in (("peripheral", 1), ("mixed", 2), ("central", 1)):
+                        link = (
+                            f"{PROTOCOL}|LINK|role={role}|connections={connections}"
+                            f"|level=2|key_size=16|nonce={nonce}|core={revision}"
+                        ).encode("ascii")
+                        _wait_for(
+                            ports[role], role, link, nonce, revision,
+                            pending[role], captures[role], deadline,
+                        )
+                    run = f"{PROTOCOL}|RUN|nonce={nonce}|core={revision}"
+                    for role in ROLES:
+                        _write_line(ports[role], run)
+                    stop_event = threading.Event()
+                    with ThreadPoolExecutor(max_workers=3) as executor:
+                        futures = [
+                            executor.submit(
+                                _collect_until_record, ports[role], role, nonce,
+                                revision, pending[role], captures[role], deadline,
+                                stop_event,
+                                f"{PROTOCOL}|END|role={role}|status=pass"
+                                f"|nonce={nonce}|core={revision}",
+                            )
+                            for role in ROLES
+                        ]
+                        for future in futures:
+                            future.result()
+                    stop = f"{PROTOCOL}|STOP|nonce={nonce}|core={revision}"
+                    for role in ROLES:
+                        _write_line(ports[role], stop)
+                    stop_event = threading.Event()
+                    with ThreadPoolExecutor(max_workers=3) as executor:
+                        futures = [
+                            executor.submit(
+                                _collect_until_record, ports[role], role, nonce,
+                                revision, pending[role], captures[role], deadline,
+                                stop_event,
+                                f"{PROTOCOL}|CLEANUP|role={role}|active_links=0"
+                                "|pending_operations=0|buffers=0|status=pass"
+                                f"|nonce={nonce}|core={revision}",
+                            )
+                            for role in ROLES
+                        ]
+                        for future in futures:
+                            future.result()
+            except Exception:
+                _best_effort_cleanup(ports, active_nonce, revision)
+                raise
     except Exception as error:
         raise MultiSecurityExecutionFailure(
             str(error), {role: bytes(captures[role]) for role in ROLES}
@@ -353,20 +407,21 @@ def execute_three_board(
     records = {
         role: RoleExecution(*flashes[role], bytes(captures[role])) for role in ROLES
     }
-    return MultiSecurityExecution(**records)
+    serial_closed = {
+        role: not bool(getattr(ports[role], "is_open", True)) for role in ROLES
+    }
+    if not all(serial_closed.values()):
+        raise MultiSecurityExecutionFailure(
+            "세 UART가 모두 닫히지 않았습니다.",
+            {role: bytes(captures[role]) for role in ROLES},
+        )
+    return MultiSecurityExecution(**records, serial_closed=serial_closed)
 
 
 def _board(endpoint: RoleEndpoint) -> dict[str, str]:
     """! @brief raw UID를 공개하지 않고 endpoint exact identity를 기록합니다. """
 
-    volume = endpoint.volume.root.drive.upper()
-    if len(volume) != 2 or volume[1] != ":":
-        raise BlePairHilFailure("DAPLink volume이 Windows drive root가 아닙니다.")
-    return {
-        "board_id_sha256": hashlib.sha256(endpoint.board_id.encode("ascii")).hexdigest(),
-        "volume": volume,
-        "port": endpoint.port_name,
-    }
+    return public_endpoint(endpoint)
 
 
 def _save_failure_transcripts(paths: dict[str, Path], error: Exception) -> None:
@@ -381,7 +436,7 @@ def _evidence(
     *,
     core_revision: str,
     board_revision: str,
-    nonce: str,
+    nonces: Sequence[str],
     endpoints: dict[str, RoleEndpoint],
     debug_identities: dict[str, dict[str, str]],
     images: dict[str, Path],
@@ -390,14 +445,14 @@ def _evidence(
     build_records: dict[str, dict[str, str]],
     transcript_paths: dict[str, Path],
     execution: MultiSecurityExecution,
-    results: dict[str, MultiSecurityRoleResult],
+    results: dict[str, Sequence[MultiSecurityRoleResult]],
     flash_backend: str,
 ) -> dict[str, Any]:
     """! @brief exact image·장치·두 link 보안 분모를 PASS evidence로 결합합니다. """
 
     executions = {role: getattr(execution, role) for role in ROLES}
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "gate": "m30-w07-three-board-multi-link-security-hil",
         "test_id": TEST_ID,
         "status": "passed",
@@ -405,7 +460,6 @@ def _evidence(
         "core_revision": core_revision,
         "board_revision": board_revision,
         "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
-        "nonce": nonce,
         "flash_backend": flash_backend,
         "boards": {role: _board(endpoints[role]) for role in ROLES},
         "debug_identities": debug_identities,
@@ -420,8 +474,36 @@ def _evidence(
             role: transcript_record(transcript_paths[role], executions[role].transcript)
             for role in ROLES
         },
-        "results": {role: asdict(results[role]) for role in ROLES},
+        "cycles": [
+            {
+                "cycle": index + 1,
+                "nonce": nonces[index],
+                "results": {
+                    role: {
+                        key: value
+                        for key, value in asdict(results[role][index]).items()
+                        if not key.startswith("cleanup_")
+                    }
+                    for role in ROLES
+                },
+                "cleanup": {
+                    role: {
+                        "active_links": results[role][index].cleanup_active_links,
+                        "pending_operations": results[role][index].cleanup_pending_operations,
+                        "buffers": results[role][index].cleanup_buffers,
+                        "status": results[role][index].cleanup_status,
+                    }
+                    for role in ROLES
+                },
+            }
+            for index in range(CYCLE_COUNT)
+        ],
+        "termination": {
+            "serial_closed": execution.serial_closed,
+            "all_serial_closed": all(execution.serial_closed.values()),
+        },
         "coverage": {
+            "independent_sessions": CYCLE_COUNT,
             "simultaneous_links": 2,
             "security_operations_per_link": 100,
             "security_level": 2,
@@ -450,8 +532,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
     serial_module, list_ports = import_pyserial()
     endpoints = {
-        role: discover_endpoint(
-            getattr(args, f"{role}_board_id"),
+        role: discover_endpoint_sha256(
+            getattr(args, f"probe_{role}_sha256"),
             getattr(args, f"{role}_volume"),
             getattr(args, f"{role}_port"),
             list_ports,
@@ -465,7 +547,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     print(
         "NU54DK M30-W07 discovery SUCCESS: "
         + ", ".join(
-            f"{role}={_board(endpoints[role])['board_id_sha256'][:12]}/"
+            f"{role}={_board(endpoints[role])['probe_sha256'][:12]}/"
             f"{endpoints[role].port_name}"
             for role in ROLES
         )
@@ -500,13 +582,16 @@ def main(arguments: Sequence[str] | None = None) -> int:
     image_hashes = {role: file_sha256(images[role]) for role in ROLES}
     if len(set(image_hashes.values())) != len(ROLES):
         raise BlePairHilFailure("세 role HEX가 서로 달라야 합니다.")
-    nonce = build_nonce()
+    nonce_values: set[str] = set()
+    while len(nonce_values) < CYCLE_COUNT:
+        nonce_values.add(build_nonce())
+    nonces = tuple(nonce_values)
     try:
         execution = execute_three_board(
             serial_module=serial_module,
             endpoints=endpoints,
             images=images,
-            nonce=nonce,
+            nonces=nonces,
             revision=core_revision,
             baud_rate=args.baud,
             flash_timeout=args.flash_timeout,
@@ -517,16 +602,16 @@ def main(arguments: Sequence[str] | None = None) -> int:
             validate_image_unchanged(images[role], image_sizes[role], image_hashes[role])
             transcript_paths[role].write_bytes(getattr(execution, role).transcript)
         results = {
-            role: parse_role_transcript(
-                getattr(execution, role).transcript, role, nonce, core_revision
+            role: parse_role_campaign(
+                getattr(execution, role).transcript, role, nonces, core_revision
             )
             for role in ROLES
         }
-        validate_three_role_session(results)
+        validate_three_role_campaign(results)
         evidence = _evidence(
             core_revision=core_revision,
             board_revision=board_revision,
-            nonce=nonce,
+            nonces=nonces,
             endpoints=endpoints,
             debug_identities=debug_identities,
             images=images,

@@ -90,6 +90,15 @@ FEATURE_ALLOWLIST = {
 }
 
 
+## @brief 펌웨어에 exact Core revision을 포함하는 M31 library와 provenance key입니다.
+M31_REVISION_IDENTITY_LIBRARIES = (
+    ("NUCODE_BLE_ISO", "m31_iso_revisions"),
+    ("NUCODE_BLE_Audio", "m31_audio_revisions"),
+    ("NUCODE_BLE_DirectionFinding", "m31_df_revisions"),
+    ("NUCODE_BLE_ChannelSounding", "m31_cs_revisions"),
+)
+
+
 CONTEXT_DIRECTORY = "nu54-zephyr"
 
 

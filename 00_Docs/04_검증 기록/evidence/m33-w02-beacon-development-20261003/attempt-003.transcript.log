@@ -1,0 +1,10 @@
+advertiser: M33BEACON|1|READY|role=advertiser|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+observer: M33BEACON|1|READY|role=observer|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+advertiser: M33BEACON|1|BEGIN|role=advertiser|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+observer: M33BEACON|1|BEGIN|role=observer|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+observer: M33BEACON|1|RESULT|role=observer|raw=600|ibeacon_raw=201|eddystone_raw=191|bthome_raw=208|ibeacon_unique=30|eddystone_unique=30|bthome_unique=29|semantic_errors=0|dropped=0|callback_context=pass|codec_negative=pass|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+observer: M33BEACON|1|END|role=observer|status=pass|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+advertiser: M33BEACON|1|RESULT|role=advertiser|switches=90|ibeacon_sequences=30|eddystone_sequences=30|bthome_sequences=30|codec_negative=pass|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+advertiser: M33BEACON|1|END|role=advertiser|status=pass|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+advertiser: M33BEACON|1|STOPPED|role=advertiser|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+observer: M33BEACON|1|STOPPED|role=observer|nonce=788d5473fba9725b548c6e90989db9b4|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8

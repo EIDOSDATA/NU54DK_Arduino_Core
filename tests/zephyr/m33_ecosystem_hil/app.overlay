@@ -1,0 +1,6 @@
+/* SPDX-License-Identifier: MIT */
+/** @brief 시험 main loop 정지 시 무선을 끝내는 watchdog을 활성화합니다. */
+&wdt31
+{
+    status = "okay";
+};

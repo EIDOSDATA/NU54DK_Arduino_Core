@@ -117,6 +117,8 @@ class M22PackageExamplesTests(unittest.TestCase):
                 "GattAuthorization",
                 "MixedGattCocLinks",
                 "MixedRoleLinks",
+                "BeaconAdvertiser",
+                "BeaconObserver",
                 "PawrAdvertiser",
                 "PawrScanner",
                 "PerLinkControl",
@@ -289,6 +291,24 @@ class M22PackageExamplesTests(unittest.TestCase):
             for name in (
                 "BleMeshCoexistence", "Ble154Coexistence", "BleEsbCoexistence",
                 "RadioCoexistenceOneWire",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_Profiles", name)
+            for name in (
+                "AlertSensor", "BondManagement", "GlucoseSensor", "ObjectClient",
+                "ObjectServer", "StandardCollector", "StandardSensor",
+            )
+        }
+        later_ble_examples |= {
+            ("NUCODE_BLE_Companion", name)
+            for name in ("AppleMediaClient", "AppleNotificationClient")
+        }
+        later_ble_examples |= {
+            ("NUCODE_Peripheral_Fabric", name)
+            for name in (
+                "AdcContinuousDma", "PwmSequencePlayback", "ResourceConflictDemo",
+                "SpiAsyncLoopback", "TwisTargetDoubleBuffer", "UarteAsyncEcho",
             )
         }
         self.assertEqual(source_examples - later_ble_examples, locked_examples)

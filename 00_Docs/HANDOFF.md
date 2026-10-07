@@ -1,99 +1,53 @@
-# 개발 인계 — v0.5.0 완료와 v0.6.0 후속 계획
+# 개발 인계
 
-최종 정리: **2026-10-03**. M28~M31, 메모리 최적화 P0~P2, RC1/RC2, RC2 이후 Standard runtime PM
-교정과 Windows 정식 `v0.5.0` 공개를 완료했습니다. 현재 stable·지원 버전은 v0.5.0 하나입니다.
+최종 갱신: **2026-10-07**. 현재 작업은 **M33-W06 기존 실행 정리와 검증 체계 재설계 문서 정비**다.
+기존 긴 campaign 자동 진행은 사용자 요청으로 중단했다. 새 구조 구현·보드 검증은 아직 시작하지 않는다.
 
 ## 현재 상태
 
-| 범위 | 상태 | 원본 |
-| --- | --- | --- |
-| Stable | v0.5.0, Windows 10/11 x64, 16개 library·113개 예제 | [릴리스 안내](<05_릴리스/v0.5.0/README.md>) |
-| M28·M29·M30 | 각각 8/8 완료, M30 전원 차단 12/12 | [v0.5.0 TODO](TODO_v0.5.0.md) |
-| M31 | W01~W08 8/8, package·설치·예제·수명주기·대표 HIL 완료 | [M31 TODO](TODO_M31.md) |
-| RC1/RC2 | 로컬·원격 branch 삭제 완료, 공개 tag·Pre-release·asset과 evidence 보존 | [RC2 TODO](TODO_v0.5.0-RC2.md) |
-| 연속 Upload | Standard Blink 250 ms → 100 ms를 USB 재연결 없이 실제 GUI에서 PASS | [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>) |
-| 정식 공개 | exact package 이중 재현·승인·tag/Release·단일 stable catalog·공개 smoke | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
-| v0.6.0 개발 | M32 **12/12 완료**·M33 **0/8**, W11 exact closure·signed MDFU·soak와 W12 감사 PASS | [v0.6.0 계획](TODO_v0.6.0.md) · [M32](TODO_M32.md) · [M33](TODO_M33.md) |
-
-완료 기능의 상세 계약과 기계 판정 원장은 다음과 같습니다.
-
-- M28-W01~M28-W08: [GAP·Link·Privacy 계약](<01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md>) · [`m28-ble-readiness.json`](../variants/nu54dk/m28-ble-readiness.json)
-- M29-W01~M29-W08: [ATT/GATT·L2CAP 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>) · [`m29-ble-readiness.json`](../variants/nu54dk/m29-ble-readiness.json) · 완료 8/8
-- M30-W01~M30-W08: [Security·Profile·DFU 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) · [`m30-ble-readiness.json`](../variants/nu54dk/m30-ble-readiness.json) · `M30-POWER-01`
-
-## 재개 지점
-
-M32-W01~W12는 **12/12 완료**입니다. 구현·문서를 `main`에 squash 통합한 뒤 다음 기능 작업은
-**M33-W01 전체 sample·예제 catalog 대조**입니다. M33은 0/8이며 이번 문서 정비에서 구현을 시작하지 않았습니다.
-
-| 다음 작업 | 입력·유지할 경계 |
+| 범위 | 상태·정본 |
 | --- | --- |
-| M33-W01 inventory와 catalog | M28~M32 readiness, 고정 NCS sample, 역할별 Arduino 예제와 누락/미지원 사유 |
-| M33-W02~W06 기능·예제·통합 | M32 지원 후보 38개는 `not_published`; 자동 검사와 외부 peer 실제 검증을 구분 |
-| M33-W07~W08 Host·package·공개 | HOST-W04~W08 사용자 보류, OS별 최종 gate와 별도 공개 승인 유지 |
+| 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
+| v0.6.0 개발 | M32 12/12, M33 W01~W05 **5/8**, W06 미완료 — [계획](TODO_v0.6.0.md) |
+| Host | **3/8**. W06 완료 전 HOST-W04 이후 착수 금지 |
+| 저장소·브랜치 | `D:\w06\src` · `Dev-0.6.0-M33`; 다시 분기하지 않음 |
+| 원본 구현 source | `f9f1cd283ee39bcf0609e047473e0e8c5c9930c1`; squash 후 HEAD와 원본 시험 identity를 구분 |
+| 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
+| 다음 구현의 기준 | [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) — 설계만 작성, 구현 미착수 |
+| 정리 당시 결과·안전 상태 | [304번 기록](<04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md>) |
+| 실제 재개 절차·보존 자료 | [M33 인계](M33_HANDOFF.md) |
 
-착수·완료 조건은 [M33 TODO](TODO_M33.md), 작업별 실제 수치와 원본은 [M32 TODO](TODO_M32.md)가 소유합니다.
-완료된 M32 실기를 다음 작업으로 다시 예약하지 않습니다.
+## 먼저 읽기
 
-### M32 완료 기준선
+1. [AGENTS](../AGENTS.md)와 [M33 인계](M33_HANDOFF.md).
+2. [M33 TODO](TODO_M33.md)의 W06 완료 조건과 [재설계 문서](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>).
+3. 필요한 범위의 [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
+   [도구 안내](../tools/ci/m33_w06_artifacts.md).
+4. 과거 실패 원인이 필요할 때 [302번](<04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)·
+   [303번](<04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md>)의 해당 절만 참조.
 
-| 범위 | 최종 검증과 원본 |
+완료 TODO 6개와 과거 실기·릴리스 기록은 현행 지시가 아니다. [읽기·보존 범위](README.md#todo-읽기갱신-범위)를 따른다.
+이전 인계의 긴 source별 일지는 Git 이력과 번호별 검증 기록에 보존하며 이 진입점에 반복하지 않는다.
+
+## 실행 경계
+
+- 주 에이전트 1개, 로컬 무거운 build/HIL 하나. 기존 CI shard 허용과 하위 에이전트 위임을 구분한다.
+- 모든 새 작업·cache·임시는 D 아래. C의 NCS/toolchain 설치본은 입력으로만 사용한다.
+- NCS 3.4.0과 board/toolchain pin 유지. 3.4.1 전체 전환은 [v0.7.0](TODO_v0.7.0.md)이다.
+- 현재 장치·symlink·firmware·STOP은 재개 시 실제 확인한다. 삭제된 파일이나 옛 hash로 PASS를 합성하지 않는다.
+- 개발 smoke·Host·build와 최종 실제 보드 PASS를 분리한다. 문서 정비는 W06 완료가 아니다.
+- W06 완료 → 다음 범위 확인 → HOST → RC/실제 OS → M33-W07 → 별도 공개 승인 순서를 유지한다.
+- Apple/Google·외장 장치는 사용자 후속 NOT_RUN, Ubuntu/macOS 실제 지원 검증은 RC 단계다.
+
+## 과거 결과 찾기
+
+| 필요한 근거 | 문서 |
 | --- | --- |
-| W08 BLOB·signed MDFU | BLOB 10/10회, MDFU 5회×두 target 10/10·negative·confirm/rollback·STOP/cleanup. [294번](<04_검증 기록/294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md>) |
-| W09·W10 radio·공존 | 단독 radio 회귀와 세 내부 조합 protocol별 4,000/4,000. [284번](<04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md>) · [285번](<04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md>) |
-| W11 회귀·soak | `94f02544…` native 62/62·exact family 12/12·signed MDFU 10/10·1,800초 soak. [286번](<04_검증 기록/286_M32_W11_software_회귀와_HIL_soak_blocker.md>) |
-| W12 정합성·최종 CI | `49099e74…` 원장·예제·후속 인계 정합성, [CI 9/9 성공](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/37099299097). [287번](<04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>) |
+| v0.5.0 공개·지원 경계 | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) · [v0.5.0 Testing](<05_릴리스/v0.5.0/TESTING.md>) |
+| M32 완료 | [M32 완료 TODO](TODO_M32.md) · [287번](<04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>) |
+| M33 W01~W05 완료 | [M33 TODO](TODO_M33.md)와 연결된 296·298~301번 기록 |
+| M32 통합·이력 보관 | [295번](<04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>) · [이력 보관](M33_HANDOFF.md#m32-원본-이력-보관) |
+| 전체 문서 감사 | [문서 안내](README.md) · [감사 원장](document-review.json) |
 
-과거 timeout·Apply·rollback·privacy 실패 원본은 위 기록에 보존합니다. 최종 W11 preflight에서는
-세 보드 AHB debug가 열려 있어 승인받은 ERASEALL을 실행하지 않았습니다. 이 관찰은 당시 상태이며,
-새 실기 때 probe·COM·image·결선을 다시 확인합니다. HOST-W07은 별도 보류 트랙입니다.
-
-### SDK와 후속 버전
-
-현재 v0.6.0 개발에서는 NCS v3.4.0을 유지합니다. **제품 v0.7.0은 NCS v3.4.1 전체 전환만** 수행합니다.
-[SDK-W01~W06 계획](TODO_v0.7.0.md)은 기존 기능 유지에 필요한 호환 수정·회귀·배포 전환을 다루며
-새로운 Storage/보안 API·TF-M 확장·다중 update transport 같은 기능은 넣지 않습니다.
-[SDK 영향 검토](<00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)에 공식 수정 사항,
-현재 설정의 적용성, 업그레이드 회귀 목록을 남깁니다. M32 BLOB의 과거 실패와 고정 NCS v3.4.0에서 완료한 재시험을 SDK 전환 결과로 해석하지 않습니다.
-
-기존 M 번호·기능은 유지하고 M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0으로 옮깁니다.
-제품 SDC DF IQ RX·AoD의 고정 SDK 미지원, CS 간헐 loss·counter gap 비차단 관찰,
-외부 peer/장치·정밀 계측 경계는 유지합니다. 이는 새로운 assert·데이터 손상·보안 오류를
-무시하라는 뜻이 아닙니다.
-
-## 고정 환경
-
-| 항목 | 기준 |
-| --- | --- |
-| 저장소 / 후속 개발 기준 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core` / `main` |
-| M32 원본 이력 | `Dev-0.6.0-M32` — 단계별 source·HIL 증거 보존 |
-| 릴리스 백업 branch | `Release-0.5.0` |
-| v0.5.0 백업 기준선 | `4790e3fa532ffea00bfd96780079cbadea263ca5`; 후속 문서·개발로 이동하지 않음 |
-| Target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
-| NCS / Zephyr | v3.4.0 · `99553055607b2e9885fbc80ccd11fa9da81c2df0` / `bf801e4e3d19e1ffa76164346480cb7734dd2800` |
-| Board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| Windows toolchain | `dcbdc366a1` |
-| 정식 tag source | `v0.5.0` → `0999b6a721b4579faa6a7a4d91d04da5e4960c07` |
-| RC1 tag source | `v0.5.0-rc.1` → `7786984a186980f6220271cd506636e4564bc55d` |
-| RC2 tag source | `v0.5.0-rc.2` → `b2e7a587ba6fde31e033dc21008d7084bd6e631b` |
-
-정식 tag source와 최종 main/index commit은 다를 수 있습니다. package manifest와 `v0.5.0` tag는 Squash한
-exact source commit을 가리키고, root catalog와 공개 결과 마감은 후속 main commit에 기록합니다.
-문서 마감 `4790e3fa`의 [M12 CI](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/36316010285)는
-9/9 job 성공이며 6개 대표 구성도 실제 build했습니다. 새 v0.6.0 source의 검증 결과를 뜻하지 않습니다.
-
-## 안전·검증 원칙
-
-- 작업 전 [AGENTS](../AGENTS.md)를 읽고 branch·HEAD·미커밋 변경·원격 ref·submodule을 직접 확인합니다.
-- 과거 공개 자산과 실패/HOLD/NOT RUN evidence는 수정하거나 삭제하지 않습니다.
-- Host/mock/build/CLI Verify/Upload/기능 HIL을 서로 대체하지 않습니다.
-- probe lock·watchdog·명령 lease·STOP·clock/핀 반환을 유지합니다.
-- 자동 mass erase·unlock·recover, 임의 전원·USB·결선 변경을 하지 않습니다.
-- 원시 probe UID·인증 정보를 문서나 공유 로그에 기록하지 않습니다.
-- 다른 PC 준비는 [Windows 환경](<02_빌드 설계/09_Windows_개발환경_설정.md>), 이력 정리 뒤 checkout은
-  [기여 안내](../CONTRIBUTING.md#이력-정리-뒤-기존-checkout)를 따릅니다.
-
-전체 문서 검토 범위·방법과 hash는 [문서 감사 원장](document-review.json), 이번 문서 정비·main 통합은
-[295번 기록](<04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>), 실행별 실제 결과는
-[검증 기록](<04_검증 기록/README.md>)에서 확인합니다. Hash·링크 검사 통과와 본문 의미의 최신성은
-별도로 판정하며, 과거 raw evidence를 새 source의 실기 PASS로 재사용하지 않습니다.
+공개 tag·Release·asset, 최초 FAIL/HOLD/NOT_RUN 원본은 보존한다. 이번 승인 범위는 M33 이력 squash뿐이며,
+main 통합·추가 이력 정리·공개 게시·W06 실행 재개로 확대하지 않는다.

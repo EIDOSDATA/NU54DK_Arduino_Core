@@ -198,12 +198,16 @@ class M9CacheContractTests(unittest.TestCase):
             "environment": {},
         }
         revisions = {
+            MODULE.path_key(platform): "f" * 40,
             MODULE.path_key(board): "a" * 40,
             MODULE.path_key(ncs / "nrf"): "b" * 40,
             MODULE.path_key(ncs / "zephyr"): "c" * 40,
         }
 
-        def collect(*, compiler_identity: str = "gcc-a") -> dict[str, object]:
+        def collect(
+            *, compiler_identity: str = "gcc-a",
+            selected_libraries: tuple[str, ...] = (),
+        ) -> dict[str, object]:
             with (
                 mock.patch.object(
                     MODULE.implementation.common, "exact_git_revision",
@@ -218,10 +222,15 @@ class M9CacheContractTests(unittest.TestCase):
                     MODULE.implementation.cache, "compiler_version", return_value=compiler_identity
                 ),
             ):
-                return MODULE.cache_input_manifest(paths, args, tools)
+                return MODULE.cache_input_manifest(
+                    paths, args, tools, selected_libraries
+                )
 
         baseline = collect()
         baseline_key = MODULE.cache_key_for_manifest(baseline)
+        self.assertEqual(
+            baseline["adapter"]["embedded_core_revision"], "f" * 40
+        )
         self.assertEqual(baseline["board_package"]["revision"], "a" * 40)
         self.assertEqual(baseline["ncs"]["nrf_revision"], "b" * 40)
         self.assertEqual(baseline["ncs"]["zephyr_revision"], "c" * 40)
@@ -239,11 +248,77 @@ class M9CacheContractTests(unittest.TestCase):
         self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
         revisions[MODULE.path_key(ncs / "zephyr")] = "c" * 40
 
+        revisions[MODULE.path_key(platform)] = "9" * 40
+        self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
+        revisions[MODULE.path_key(platform)] = "f" * 40
+
         self.assertNotEqual(
             MODULE.cache_key_for_manifest(collect(compiler_identity="gcc-b")), baseline_key
         )
         (toolchain / "environment.json").write_text('{"changed":true}\n', encoding="utf-8")
         self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
+
+        identity_manifest = collect(
+            selected_libraries=("NUCODE_BLE_ChannelSounding",)
+        )
+        identity_key = MODULE.cache_key_for_manifest(identity_manifest)
+        self.assertEqual(
+            identity_manifest["adapter"]["embedded_core_revision"], "f" * 40
+        )
+        revisions[MODULE.path_key(platform)] = "9" * 40
+        self.assertNotEqual(
+            MODULE.cache_key_for_manifest(
+                collect(selected_libraries=("NUCODE_BLE_ChannelSounding",))
+            ),
+            identity_key,
+        )
+
+    def test_channel_sounding_source_manifest_embeds_exact_revision(self) -> None:
+        """! @brief Channel Sounding image와 cache가 같은 exact revision을 공유합니다. """
+
+        build = self.root / "build"
+        sketch = self.root / "sketch"
+        platform = self.root / "platform"
+        app = self.root / "app"
+        source = platform / "libraries/NUCODE_BLE_ChannelSounding/src/Fixture.cpp"
+        source.parent.mkdir(parents=True)
+        source.write_text("int channel_sounding_fixture = 1;\n", encoding="utf-8")
+        sketch.mkdir()
+        app.mkdir()
+        revisions = {
+            "NUCODE_CORE_REVISION": "1" * 40,
+            "NUCODE_BOARD_REVISION": "2" * 40,
+            "NUCODE_NCS_REVISION": "3" * 40,
+            "NUCODE_ZEPHYR_REVISION": "4" * 40,
+        }
+        input_manifest = {
+            "board_package": {"revision": revisions["NUCODE_BOARD_REVISION"]},
+            "ncs": {
+                "nrf_revision": revisions["NUCODE_NCS_REVISION"],
+                "zephyr_revision": revisions["NUCODE_ZEPHYR_REVISION"],
+            },
+        }
+        with mock.patch.object(
+            MODULE.implementation.source_graph,
+            "git_or_release_revision",
+            return_value=revisions["NUCODE_CORE_REVISION"],
+        ):
+            _, provenance, _ = MODULE.write_source_manifest(
+                {
+                    "build_path": build,
+                    "sketch_root": sketch,
+                    "platform_root": platform,
+                    "app": app,
+                },
+                [{"source": source.as_posix(), "include_dirs": []}],
+                ("NUCODE_BLE_ChannelSounding",),
+                input_manifest,
+            )
+        self.assertEqual(provenance["m31_cs_revisions"], revisions)
+        self.assertIn(
+            f'NUCODE_CORE_REVISION=\\"{revisions["NUCODE_CORE_REVISION"]}\\"',
+            (app / "sources.cmake").read_text(encoding="utf-8"),
+        )
 
     def test_generated_source_identity_is_build_path_independent(self) -> None:
         """! @brief 다른 Arduino 임시 build path가 같은 Sketch mirror 이름을 사용합니다. """

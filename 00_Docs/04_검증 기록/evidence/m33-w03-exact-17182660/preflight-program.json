@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "status": "PREPARED",
+  "stage": "participants_running_third_halted",
+  "observed_utc": "2026-10-03T20:41:47.149781+00:00",
+  "source_revision": "17182660f8c1c1f4a9f6773b13fcfa453f65e1fc",
+  "identity": "17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc",
+  "preflight_tool_sha256": "9dc896397f99eaf4b29f58e4ead048fdf717d630f9cc8ac6e6e867871638fddd",
+  "debugger_module_sha256": "3fc2d7d28eec62682ec7c2c84c4d34af20f5a5924f60706062a700fbc7df4d3d",
+  "sdk": {
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3"
+  },
+  "safety": {
+    "erase": "sector_only",
+    "auto_unlock": false,
+    "mass_erase": false,
+    "recover": false,
+    "third_program": false,
+    "third_reset": false,
+    "third_resume": false,
+    "programming_mode": "external-pyocd-sector-no-reset-500khz"
+  },
+  "boards": [
+    {
+      "role": "client",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "port": "COM3",
+      "image_sha256": "1f8ee4dd4501927ba7514053031d21c6e23e9f2c0cc9c8ceada4eccec0221947",
+      "programmed_bytes": 294912,
+      "debug_identity": {
+        "dp_idcode": 1805657207,
+        "target_id": 538706569,
+        "ahb_ap_idr": 2222391297,
+        "ahb_ap_csw": 1132462146,
+        "ctrl_ap_idr": 847773696,
+        "approtect_status": 0
+      },
+      "pre_audit": {
+        "cpu": "HALTED",
+        "radio_state": 0,
+        "radio_shorts": 0,
+        "enabled_route_count": 0,
+        "watchdogs": [
+          {
+            "base": 1343258624,
+            "runstatus": 0,
+            "config": 1,
+            "timeout_event": 0
+          },
+          {
+            "base": 1343262720,
+            "runstatus": 1,
+            "config": 65,
+            "timeout_event": 0
+          }
+        ],
+        "stable_reads": 2
+      },
+      "readback": [
+        {
+          "start": 0,
+          "length": 1148,
+          "expected_sha256": "8fe76af92b0dd48da1a7c884cf319714c306518b22855726dcbd52478159027d",
+          "observed_sha256": "8fe76af92b0dd48da1a7c884cf319714c306518b22855726dcbd52478159027d",
+          "status": "PASS"
+        },
+        {
+          "start": 1152,
+          "length": 290548,
+          "expected_sha256": "c64d4735601f9af5beaaaa458658dc4d3f8bc0e46e0e194c4dc50a6fecba2669",
+          "observed_sha256": "c64d4735601f9af5beaaaa458658dc4d3f8bc0e46e0e194c4dc50a6fecba2669",
+          "status": "PASS"
+        }
+      ],
+      "readback_status": "verified"
+    },
+    {
+      "role": "peer",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "port": "COM5",
+      "image_sha256": "c828a434df31d561bec70c306492ae1aa883b2c3b4752792c3c8f0fddee85cb0",
+      "programmed_bytes": 299008,
+      "debug_identity": {
+        "dp_idcode": 1805657207,
+        "target_id": 538706569,
+        "ahb_ap_idr": 2222391297,
+        "ahb_ap_csw": 58720338,
+        "ctrl_ap_idr": 847773696,
+        "approtect_status": 0
+      },
+      "pre_audit": {
+        "cpu": "HALTED",
+        "radio_state": 0,
+        "radio_shorts": 0,
+        "enabled_route_count": 0,
+        "watchdogs": [
+          {
+            "base": 1343258624,
+            "runstatus": 0,
+            "config": 73,
+            "timeout_event": 0
+          },
+          {
+            "base": 1343262720,
+            "runstatus": 1,
+            "config": 65,
+            "timeout_event": 0
+          }
+        ],
+        "stable_reads": 2
+      },
+      "readback": [
+        {
+          "start": 0,
+          "length": 1148,
+          "expected_sha256": "c0f0b14ff7159f61919e68b66472b8c7342482575e53c9310de5ff271c360480",
+          "observed_sha256": "c0f0b14ff7159f61919e68b66472b8c7342482575e53c9310de5ff271c360480",
+          "status": "PASS"
+        },
+        {
+          "start": 1152,
+          "length": 268340,
+          "expected_sha256": "dd42a5aa850e181df1de20d098a142a018d09bf3db0859fae65ed5c0ca1ec6fa",
+          "observed_sha256": "dd42a5aa850e181df1de20d098a142a018d09bf3db0859fae65ed5c0ca1ec6fa",
+          "status": "PASS"
+        },
+        {
+          "start": 269504,
+          "length": 25476,
+          "expected_sha256": "4b568469658ec40212f2b5e5c865fb19b404261db98e0f201849b6d212aec2f2",
+          "observed_sha256": "4b568469658ec40212f2b5e5c865fb19b404261db98e0f201849b6d212aec2f2",
+          "status": "PASS"
+        }
+      ],
+      "readback_status": "verified"
+    },
+    {
+      "role": "isolated",
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "debug_identity": {
+        "dp_idcode": 1805657207,
+        "target_id": 538706569,
+        "ahb_ap_idr": 2222391297,
+        "ahb_ap_csw": 58720338,
+        "ctrl_ap_idr": 847773696,
+        "approtect_status": 0
+      },
+      "pre_audit": {
+        "cpu": "HALTED",
+        "radio_state": 0,
+        "radio_shorts": 524288,
+        "enabled_route_count": 0,
+        "watchdogs": [
+          {
+            "base": 1343258624,
+            "runstatus": 0,
+            "config": 73,
+            "timeout_event": 0
+          },
+          {
+            "base": 1343262720,
+            "runstatus": 0,
+            "config": 1,
+            "timeout_event": 0
+          }
+        ],
+        "stable_reads": 2
+      },
+      "final_audit": {
+        "cpu": "HALTED",
+        "radio_state": 0,
+        "radio_shorts": 524288,
+        "enabled_route_count": 0,
+        "watchdogs": [
+          {
+            "base": 1343258624,
+            "runstatus": 0,
+            "config": 73,
+            "timeout_event": 0
+          },
+          {
+            "base": 1343262720,
+            "runstatus": 0,
+            "config": 1,
+            "timeout_event": 0
+          }
+        ],
+        "stable_reads": 2
+      }
+    }
+  ]
+}

@@ -41,7 +41,7 @@ ARDUINO = load_module(
 class BuildMatrixRunnerTests(unittest.TestCase):
     """! @brief 릴리스 기능군 범위·명령·진단 경계를 검증합니다. """
 
-    ## @brief Zephyr 207개 시나리오가 중복·누락 없이 제품군별로 분리됩니다.
+    ## @brief Zephyr 209개 시나리오가 중복·누락 없이 제품군별로 분리됩니다.
     def test_zephyr_groups_partition_every_suite_once(self) -> None:
         self.assertEqual(
             {name: len(suites) for name, suites in ZEPHYR.SUITE_GROUPS.items()},
@@ -51,7 +51,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.3.0": 19,
                 "v0.4.0": 35,
                 "v0.5.0": 77,
-                "v0.6.0": 62,
+                "v0.6.0": 64,
             },
         )
         flattened = tuple(
@@ -127,7 +127,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.2.0": ("m15", "m16"),
                 "v0.3.0": ("m19m20", "m21", "ac02b", "ac03", "examples"),
                 "v0.5.0": ("m29", "m30", "m30secure", "m31"),
-                "v0.6.0": ("m32",),
+                "v0.6.0": ("m32", "m33_beacon"),
             },
         )
         self.assertEqual(
@@ -138,7 +138,7 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 "v0.3.0-ble": ("m19m20", "m21"),
                 "v0.3.0-compat": ("ac02b", "ac03", "examples"),
                 "v0.5.0": ("m29", "m30", "m30secure", "m31"),
-                "v0.6.0": ("m32",),
+                "v0.6.0": ("m32", "m33_beacon"),
             },
         )
         flattened = tuple(
@@ -189,8 +189,43 @@ class BuildMatrixRunnerTests(unittest.TestCase):
         source = (REPOSITORY / "tools/ci/run_zephyr_build.py").read_text(
             encoding="utf-8"
         )
-        self.assertIn('sys.executable,\n        "-I",', source)
+        self.assertIn('sys.executable,\n        "-B",\n        "-I",', source)
         self.assertIn('"--short-build-path",', source)
+        with tempfile.TemporaryDirectory() as temporary:
+            workspace = Path(temporary) / "sdk"
+            outdir = Path(temporary) / "output"
+            lock = {"board": {"revision": "locked-board"}}
+            with (
+                mock.patch.object(ZEPHYR.LOCK_MODULE, "validate_workspace"),
+                mock.patch.object(ZEPHYR.LOCK_MODULE, "git_revision", return_value="locked-board"),
+                mock.patch.object(ZEPHYR, "validate_outdir_path"),
+                mock.patch.object(ZEPHYR, "validate_report"),
+                mock.patch.object(ZEPHYR, "validate_m15_lfxo"),
+                mock.patch.object(ZEPHYR, "validate_m16_role_builds", return_value=[]),
+                mock.patch("builtins.print"),
+                mock.patch.object(
+                    ZEPHYR.subprocess, "run",
+                    return_value=subprocess.CompletedProcess([], 0),
+                ) as run,
+            ):
+                ZEPHYR.run_build(workspace, outdir, lock, (), jobs=2)
+            command = [str(value) for value in run.call_args.args[0]]
+            self.assertIn("--inline-logs", command)
+            self.assertEqual(command[command.index("--jobs") + 1], "2")
+            self.assertIn(
+                f"ZephyrAppConfiguration_ROOT={(REPOSITORY / 'tools/ci/cmake').as_posix()}",
+                command,
+            )
+            self.assertEqual(
+                (REPOSITORY / "tools/ci/cmake").as_posix(),
+                run.call_args.kwargs["env"]["ZephyrAppConfiguration_ROOT"],
+            )
+        config = (REPOSITORY / "tools/ci/cmake/ZephyrAppConfig.cmake").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('set(USER_CACHE_DIR "${APPLICATION_BINARY_DIR}/.cache"', config)
+        self.assertIn('set(ZEPHYR_TOOLCHAIN_CAPABILITY_CACHE_DIR', config)
+        self.assertIn('NOT IS_ABSOLUTE "${APPLICATION_BINARY_DIR}"', config)
 
     ## @brief 실패한 Twister suite의 이름·상태·사유가 즉시 표시됩니다.
     def test_zephyr_failure_summary_identifies_scenario(self) -> None:

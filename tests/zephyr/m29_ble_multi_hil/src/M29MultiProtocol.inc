@@ -135,3 +135,57 @@
         ::memcpy(nonce, nonce_candidate, sizeof(nonce));
         return true;
     }
+
+    /** @brief 현재 session nonce와 exact revision의 STOP만 허용합니다. */
+    bool acceptStopCommand()
+    {
+        const std::size_t prefix_length = ::strlen(stop_prefix);
+        if (::strncmp(command, stop_prefix, prefix_length) != 0)
+        {
+            return false;
+        }
+        const char *nonce_start = command + prefix_length;
+        return ::strncmp(nonce_start, nonce, MultiPayload::nonce_text_length) == 0 &&
+               ::strcmp(nonce_start + MultiPayload::nonce_text_length, core_suffix) == 0;
+    }
+
+    /** @brief cleanup 완료 뒤 다음 독립 session을 위해 모든 local 상태를 초기화합니다. */
+    void resetSessionState()
+    {
+        ::memset(command, 0, sizeof(command));
+        command_length = 0U;
+        ::memset(nonce, 0, sizeof(nonce));
+        ::memset(nonce_binary, 0, sizeof(nonce_binary));
+        session_started = false;
+        session_finished = false;
+        cleanup_requested = false;
+        cleanup_started = false;
+        callback_context_valid = true;
+        peer_found = false;
+        scan_started = false;
+        client_discovered = false;
+        client_channel_connected = false;
+        server_channel_connected = false;
+        advertising_started = false;
+        mixed_advertising_started = false;
+        link_reported = false;
+        traffic_started = false;
+        gatt_inflight = false;
+        coc_waiting_for_echo = false;
+        server_echo_pending = false;
+        session_deadline = 0;
+        cleanup_deadline = 0;
+        progress_reported = 0U;
+        client_gatt_completed = 0U;
+        client_coc_sent = 0U;
+        client_coc_received = 0U;
+        server_gatt_received = 0U;
+        server_coc_received = 0U;
+        server_coc_sent = 0U;
+        cross_link_events = 0U;
+        payload_errors = 0U;
+        client_connection = nucode::ble::BLEConnectionHandle{};
+        server_connection = nucode::ble::BLEConnectionHandle{};
+        client_channel = nucode::ble::BLEL2capChannelHandle{};
+        server_channel = nucode::ble::BLEL2capChannelHandle{};
+    }

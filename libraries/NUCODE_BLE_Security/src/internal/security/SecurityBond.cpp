@@ -55,6 +55,121 @@ namespace nucode::ble::internal::security
     }
     namespace
     {
+#if defined(CONFIG_BT_SETTINGS)
+        /** @brief native key가 사라진 GATT peer를 삭제 전에 고정 용량으로 수집합니다. */
+        struct OrphanGattPeers
+        {
+            bt_addr_le_t peers[(maximum_bond_records + maximum_security_links) * 3U] = {};
+            std::size_t count = 0U;
+            int error = 0;
+        };
+
+        /** @brief 고정 SDK의 bt/<종류>/<주소 12자리><type>[/identity]를 엄격히 해석합니다. */
+        bool decodeGattPeer(const char *name, bt_addr_le_t &peer,
+                            bool &default_identity) noexcept
+        {
+            if (name == nullptr || ::strlen(name) < 13U ||
+                (name[12] != '0' && name[12] != '1'))
+            {
+                return false;
+            }
+            peer.type = name[12] == '0' ? BT_ADDR_LE_PUBLIC : BT_ADDR_LE_RANDOM;
+            for (std::size_t index = 0U; index < 12U; ++index)
+            {
+                const char value = name[index];
+                const int digit = value >= '0' && value <= '9' ? value - '0'
+                                  : value >= 'a' && value <= 'f' ? value - 'a' + 10
+                                                               : -1;
+                if (digit < 0)
+                {
+                    return false;
+                }
+                std::uint8_t &octet = peer.a.val[5U - index / 2U];
+                octet = index % 2U == 0U ? static_cast<std::uint8_t>(digit << 4U)
+                                        : static_cast<std::uint8_t>(octet | digit);
+            }
+            unsigned int identity = BT_ID_DEFAULT;
+            if (name[13] != '\0')
+            {
+                if (name[13] != '/' || name[14] < '1' || name[14] > '9')
+                {
+                    return false;
+                }
+                identity = 0U;
+                for (const char *digit = name + 14U; *digit != '\0'; ++digit)
+                {
+                    if (*digit < '0' || *digit > '9' || identity > 25U)
+                    {
+                        return false;
+                    }
+                    identity = identity * 10U + static_cast<unsigned int>(*digit - '0');
+                    if (identity > 255U)
+                    {
+                        return false;
+                    }
+                }
+            }
+            default_identity = identity == BT_ID_DEFAULT;
+            return true;
+        }
+
+        /** @brief 열거 callback에서는 저장소를 변경하지 않고 orphan 주소만 복사합니다. */
+        int collectOrphanGattPeer(const char *name, std::size_t length,
+                                  settings_read_cb read_callback, void *read_context,
+                                  void *context) noexcept
+        {
+            static_cast<void>(read_callback);
+            static_cast<void>(read_context);
+            auto &snapshot = *static_cast<OrphanGattPeers *>(context);
+            if (snapshot.error != 0 || length == 0U)
+            {
+                return snapshot.error;
+            }
+            bt_addr_le_t peer = {};
+            bool default_identity = false;
+            if (!decodeGattPeer(name, peer, default_identity))
+            {
+                snapshot.error = -EINVAL;
+                return snapshot.error;
+            }
+            if (!default_identity || bt_le_bond_exists(BT_ID_DEFAULT, &peer))
+            {
+                return 0;
+            }
+            for (std::size_t index = 0U; index < snapshot.count; ++index)
+            {
+                if (snapshot.peers[index].type == peer.type &&
+                    ::memcmp(snapshot.peers[index].a.val, peer.a.val, sizeof(peer.a.val)) == 0)
+                {
+                    return 0;
+                }
+            }
+            if (snapshot.count == ARRAY_SIZE(snapshot.peers))
+            {
+                snapshot.error = -ENOSPC;
+                return snapshot.error;
+            }
+            snapshot.peers[snapshot.count++] = peer;
+            return 0;
+        }
+
+        /** @brief key 설정 전환 뒤 남을 수 있는 세 GATT subtree를 삭제 전에 검사합니다. */
+        int collectOrphanGattPeers(OrphanGattPeers &snapshot) noexcept
+        {
+            constexpr const char *subtrees[] = {"bt/cf", "bt/ccc", "bt/sc"};
+            for (const char *subtree : subtrees)
+            {
+                const int result = settings_load_subtree_direct(
+                    subtree, collectOrphanGattPeer, &snapshot);
+                if (result != 0 || snapshot.error != 0)
+                {
+                    return snapshot.error != 0 ? snapshot.error : result;
+                }
+            }
+            return 0;
+        }
+#endif
+
         bt_addr_le_t startup_bonds[CONFIG_BT_MAX_PAIRED] = {};
         constexpr std::uint32_t metadata_magic = 0x32424e4dUL;
         constexpr std::uint16_t legacy_metadata_schema = 1U;
@@ -841,6 +956,15 @@ namespace nucode::ble
         {
             return false;
         }
+#if defined(CONFIG_BT_SETTINGS)
+        OrphanGattPeers orphaned;
+        const int snapshot_result = collectOrphanGattPeers(orphaned);
+        if (snapshot_result != 0)
+        {
+            recordSecurityError(SecurityError::driver_error, snapshot_result);
+            return false;
+        }
+#endif
         const BondLifecycleState previous = copyBondLifecycle();
         struct bt_conn *connection = referenceActiveConnection();
         const BondLifecycleState link_previous = copyBondLifecycle(connection);
@@ -869,6 +993,18 @@ namespace nucode::ble
         {
             bt_conn_unref(connection);
         }
+#if defined(CONFIG_BT_SETTINGS)
+        for (std::size_t index = 0U; index < orphaned.count; ++index)
+        {
+            const int orphan_result = bt_unpair(BT_ID_DEFAULT, &orphaned.peers[index]);
+            if (orphan_result != 0)
+            {
+                /** @note 이미 제출한 삭제는 되돌릴 수 없어 이전 bonded 상태를 복원하지 않습니다. */
+                recordSecurityError(SecurityError::driver_error, orphan_result);
+                return false;
+            }
+        }
+#endif
         eraseAllBondMetadata();
         queueEvent(makePeerEvent(SecurityEvent::all_bonds_removal_requested, nullptr,
                                  BondState::removal_requested));

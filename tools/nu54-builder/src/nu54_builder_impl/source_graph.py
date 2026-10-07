@@ -10,6 +10,7 @@ from typing import Sequence
 from .common import (
     AdapterError,
     FEATURE_ALLOWLIST,
+    M31_REVISION_IDENTITY_LIBRARIES,
     SOURCE_RECORD_SCHEMA_VERSION,
     atomic_write_bytes_if_changed,
     atomic_write_text,
@@ -283,13 +284,11 @@ def write_source_manifest(
     lines.extend(f'  "{cmake_quote(path)}"' for path in includes)
     lines.extend((")", ""))
     iso_revisions: dict[str, str] = {}
-    m31_identity_keys: list[str] = []
-    if "NUCODE_BLE_ISO" in selected_libraries:
-        m31_identity_keys.append("m31_iso_revisions")
-    if "NUCODE_BLE_Audio" in selected_libraries:
-        m31_identity_keys.append("m31_audio_revisions")
-    if "NUCODE_BLE_DirectionFinding" in selected_libraries:
-        m31_identity_keys.append("m31_df_revisions")
+    m31_identity_keys = [
+        identity_key
+        for library, identity_key in M31_REVISION_IDENTITY_LIBRARIES
+        if library in selected_libraries
+    ]
     if m31_identity_keys:
         if input_manifest is None:
             raise AdapterError("[NU54:E_M31_ISO_REVISION] target manifest가 없습니다.")

@@ -31,13 +31,15 @@ from ble_pair_hil_common import (  # noqa: E402
     RoleEndpoint,
     RoleExecution,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
     flash_image,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     image_record,
+    public_endpoint,
     prepare_output_paths,
+    probe_sha256,
     read_line,
     save_failure_transcripts,
     transcript_record,
@@ -54,6 +56,7 @@ from m6_serial_echo import import_pyserial  # noqa: E402
 PROTOCOL = "M29W05|1"
 APPLICATION_SOURCE_ROOT = REPOSITORY / "tests/zephyr/m29_ble_cache_hil"
 DEFAULT_RESULT_TIMEOUT_SECONDS = 600.0
+MAX_RESET_FRAMING_BYTES = 32
 
 
 @dataclass(frozen=True)
@@ -89,6 +92,61 @@ def _valid_revision(core_revision: str) -> None:
         raise BlePairHilFailure("Core revision은 소문자 40자리 SHA-1이어야 합니다.")
 
 
+def _reboot_marker(role: str, nonce: str, core_revision: str) -> bytes:
+    """! @brief role별로 허용되는 단 하나의 내부 reboot record를 만듭니다. """
+
+    detail = ("MIGRATE_REBOOT|role=peripheral|stage=2" if role == "peripheral"
+              else "CORRUPT_REBOOT|role=central|status=requested")
+    return f"{PROTOCOL}|{detail}".encode("ascii") + _suffix(nonce, core_revision)
+
+
+def _resume_ready(role: str, nonce: str, core_revision: str) -> bytes:
+    """! @brief 영속 nonce를 복원한 target의 재개 준비 응답을 만듭니다. """
+
+    return f"{PROTOCOL}|RESUME_READY|role={role}".encode("ascii") + _suffix(nonce, core_revision)
+
+
+def _framing_count(line: bytes, count: int) -> int:
+    """! @brief RF 보류 reset 경계의 bounded 전기적 framing만 허용합니다. """
+
+    count += len(line)
+    if any(value not in (0x00, 0xff) for value in line) or count > MAX_RESET_FRAMING_BYTES:
+        raise BlePairHilFailure("W05 reboot 경계의 UART framing/한도가 잘못됐습니다.")
+    return count
+
+
+def _protocol_lines(transcript: bytes, role: str, nonce: str, core_revision: str) -> tuple[bytes, ...]:
+    """! @brief 원본을 변경하지 않고 명시 reset handshake 사이의 framing만 분리합니다. """
+
+    marker = _reboot_marker(role, nonce, core_revision)
+    ready = _resume_ready(role, nonce, core_revision)
+    boundary = False
+    count = 0
+    records = []
+    for raw in transcript.replace(b"\r", b"").split(b"\n"):
+        if boundary and raw != ready:
+            count = _framing_count(raw, count)
+            continue
+        if raw == ready:
+            if not boundary:
+                raise BlePairHilFailure("W05 reset 밖 RESUME_READY를 거부했습니다.")
+            boundary = False
+        line = raw.strip()
+        if not line:
+            continue
+        try:
+            line.decode("ascii")
+        except UnicodeDecodeError as error:
+            raise BlePairHilFailure("W05 일반 구간에 비 ASCII noise가 있습니다.") from error
+        records.append(line)
+        if line == marker:
+            boundary = True
+            count = 0
+    if boundary:
+        raise BlePairHilFailure("W05 reboot 뒤 RESUME_READY가 없습니다.")
+    return tuple(records)
+
+
 def parse_role_transcript(
     transcript: bytes, nonce: str, core_revision: str, role: str
 ) -> CacheResult:
@@ -98,16 +156,7 @@ def parse_role_transcript(
     _valid_revision(core_revision)
     if role not in ("peripheral", "central"):
         raise BlePairHilFailure(f"알 수 없는 W05 role입니다: {role}")
-    try:
-        lines = tuple(
-            line.strip()
-            for line in transcript.replace(b"\r", b"").split(b"\n")
-            if line.strip()
-        )
-        for line in lines:
-            line.decode("ascii")
-    except UnicodeDecodeError as error:
-        raise BlePairHilFailure("W05 transcript에 비 ASCII noise가 있습니다.") from error
+    lines = _protocol_lines(transcript, role, nonce, core_revision)
 
     suffix = _suffix(nonce, core_revision)
     ready = (
@@ -127,6 +176,7 @@ def parse_role_transcript(
             + suffix,
             f"{PROTOCOL}|MIGRATE_REBOOT|role=peripheral|stage=2".encode("ascii")
             + suffix,
+            _resume_ready(role, nonce, core_revision),
             f"{PROTOCOL}|REBOOT|role=peripheral|stage=2".encode("ascii") + suffix,
             f"{PROTOCOL}|ADVERTISE|role=peripheral|stage=2".encode("ascii")
             + suffix,
@@ -145,8 +195,8 @@ def parse_role_transcript(
             )
         return CacheResult("peripheral", 2, 1, 20, 0, 0, 0, 0, 1, 0, 0, "pass")
 
-    if len(lines) != 13:
-        raise BlePairHilFailure(f"central W05 record 수가 13이 아닙니다: {len(lines)}")
+    if len(lines) != 14:
+        raise BlePairHilFailure(f"central W05 record 수가 14가 아닙니다: {len(lines)}")
     fixed = (
         ready,
         begin,
@@ -181,6 +231,7 @@ def parse_role_transcript(
         + suffix,
         f"{PROTOCOL}|CORRUPT_REBOOT|role=central|status=requested".encode("ascii")
         + suffix,
+        _resume_ready(role, nonce, core_revision),
         f"{PROTOCOL}|REBOOT|role=central|phase=corrupt".encode("ascii") + suffix,
         f"{PROTOCOL}|SCAN|role=central|stage=2".encode("ascii") + suffix,
         f"{PROTOCOL}|CORRUPT|role=central|rejected=1|restored=0".encode("ascii")
@@ -221,6 +272,33 @@ def _wait_exact(
         raise BlePairHilFailure(f"protocol record 불일치: 기대={wanted!r}, 실제={line!r}")
 
 
+def _resume_after_reboot(
+    serial_port: Any,
+    role: str,
+    nonce: str,
+    core_revision: str,
+    pending: bytearray,
+    capture: bytearray,
+    deadline: float,
+    stop_event: threading.Event,
+) -> None:
+    """! @brief 원시 framing을 보존하며 target 확인 뒤에만 RF 재개를 요청합니다. """
+
+    if stop_event.wait(1.0):
+        raise BlePairHilFailure("다른 role 실패로 reboot handshake를 중단했습니다.")
+    _write_exact(serial_port, f"{PROTOCOL}|RESUME?\r\n".encode("ascii"), f"{role} resume query")
+    ready = _resume_ready(role, nonce, core_revision)
+    resume_deadline = min(deadline, time.monotonic() + 30.0)
+    count = 0
+    while True:
+        line = read_line(serial_port, pending, capture, resume_deadline, stop_event=stop_event)
+        if line == ready:
+            break
+        count = _framing_count(line, count)
+    command = f"{PROTOCOL}|RESUME".encode("ascii") + _suffix(nonce, core_revision) + b"\r\n"
+    _write_exact(serial_port, command, f"{role} resume")
+
+
 def _collect_end(
     serial_port: Any,
     role: str,
@@ -237,6 +315,8 @@ def _collect_end(
         f"{PROTOCOL}|END|role={role}|status=pass".encode("ascii")
         + _suffix(nonce, core_revision)
     )
+    reboot = _reboot_marker(role, nonce, core_revision)
+    reboot_seen = False
     try:
         while True:
             line = read_line(
@@ -246,6 +326,12 @@ def _collect_end(
                 print(f"[{role}] {line.decode('utf-8', errors='backslashreplace')}")
             if line.startswith(f"{PROTOCOL}|FAIL|".encode("ascii")):
                 raise BlePairHilFailure(f"{role} target 실패: {line!r}")
+            if line == reboot:
+                if reboot_seen:
+                    raise BlePairHilFailure(f"{role} 중복 reboot를 거부했습니다.")
+                reboot_seen = True
+                _resume_after_reboot(serial_port, role, nonce, core_revision, pending,
+                                     capture, deadline, stop_event)
             if line == expected_end:
                 return
             if line.startswith(f"{PROTOCOL}|END|".encode("ascii")):
@@ -306,8 +392,8 @@ def execute_cache_pair(
             ):
                 ports[role].reset_input_buffer()
                 if flash_backend == "pyocd-sector":
-                    flashes[role] = flash_image_pyocd(
-                        role, endpoint.board_id, image, flash_timeout
+                    flashes[role] = flash_image_pyocd_sha256(
+                        role, probe_sha256(endpoint.board_id), image, flash_timeout
                     )
                 else:
                     flashes[role] = flash_image(
@@ -396,8 +482,8 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     )
     parser.add_argument("--peripheral-hex")
     parser.add_argument("--central-hex")
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -418,11 +504,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
 def _board(endpoint: RoleEndpoint) -> dict[str, str]:
     """! @brief evidence용 DAP/UART/MSD identity를 복사합니다. """
 
-    return {
-        "daplink_uid": endpoint.board_id,
-        "msd_root": str(endpoint.volume.root),
-        "uart_port": endpoint.port_name,
-    }
+    return public_endpoint(endpoint)
 
 
 def main(arguments: Sequence[str] | None = None) -> int:
@@ -430,17 +512,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
 
     args = parse_arguments(arguments)
     serial_module, list_ports = import_pyserial()
-    peripheral_endpoint = discover_endpoint(
-        args.peripheral_board_id, args.peripheral_volume, args.peripheral_port, list_ports
+    peripheral_endpoint = discover_endpoint_sha256(
+        args.probe_peripheral_sha256, args.peripheral_volume, args.peripheral_port, list_ports
     )
-    central_endpoint = discover_endpoint(
-        args.central_board_id, args.central_volume, args.central_port, list_ports
+    central_endpoint = discover_endpoint_sha256(
+        args.probe_central_sha256, args.central_volume, args.central_port, list_ports
     )
     validate_pair_identity(peripheral_endpoint, central_endpoint)
     print(
         "NU54DK M29-W05 pair discovery SUCCESS: "
-        f"peripheral={peripheral_endpoint.board_id}/{peripheral_endpoint.port_name}, "
-        f"central={central_endpoint.board_id}/{central_endpoint.port_name}"
+        f"peripheral={_board(peripheral_endpoint)['probe_sha256'][:12]}/{peripheral_endpoint.port_name}, "
+        f"central={_board(central_endpoint)['probe_sha256'][:12]}/{central_endpoint.port_name}"
     )
     if args.discover_only:
         return 0

@@ -1,6 +1,8 @@
 """! @brief M30-W07 3보드 동시 보안 link target·runner 계약을 검증합니다. """
 
+import hashlib
 import importlib.util
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -12,8 +14,11 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from m30_ble_multi_protocol import (  # noqa: E402
+    CYCLE_COUNT,
     MultiSecurityProtocolFailure,
+    expected_campaign_lines,
     expected_lines,
+    parse_role_campaign,
     parse_role_transcript,
     validate_three_role_session,
 )
@@ -27,6 +32,7 @@ RUNNER_PATH = HIL / "m30_ble_multi.py"
 MATRIX = ROOT / "tools/ci/run_zephyr_build.py"
 NONCE = "00112233445566778899aabbccddeeff"
 REVISION = "0123456789abcdef0123456789abcdef01234567"
+NONCES = tuple(f"{index:032x}" for index in range(CYCLE_COUNT))
 
 
 def _load_runner():
@@ -72,6 +78,10 @@ class M30BleMultiTests(unittest.TestCase):
             "cross_link_events",
             'fail("cross_link_security_event")',
             'Serial.print("|cross_link=0|security_errors=0|key_size_errors=0")',
+            'stop_prefix[] = "M30W07|1|STOP|nonce="',
+            "driveCleanup()",
+            'Serial.print("|active_links=0|pending_operations=0|buffers=0|status=pass")',
+            "resetSessionState()",
         ):
             self.assertIn(token, target)
         for token in (
@@ -99,12 +109,36 @@ class M30BleMultiTests(unittest.TestCase):
             "validate_build_record",
             "validate_image_unchanged",
             "ThreadPoolExecutor(max_workers=3)",
-            '"board_id_sha256"',
+            "probe_sha256",
             '"security_operations_per_link": 100',
             '"power_cut_executed": False',
+            "CYCLE_COUNT",
+            "serial_closed",
+            "discover_endpoint_sha256",
         ):
             self.assertIn(token, source)
         self.assertNotIn('"daplink_uid"', source)
+        self.assertNotIn("--peripheral-board-id", source)
+
+    def test_twenty_session_campaign_requires_unique_nonce_and_cleanup(self) -> None:
+        """! @brief 20회 campaign 분모와 각 cycle zero cleanup을 고정합니다. """
+
+        raw = (
+            "\r\n".join(expected_campaign_lines("mixed", NONCES, REVISION))
+            + "\r\n"
+        ).encode("ascii")
+        results = parse_role_campaign(raw, "mixed", NONCES, REVISION)
+        self.assertEqual(len(results), CYCLE_COUNT)
+        self.assertTrue(all(result.cleanup_active_links == 0 for result in results))
+        with self.assertRaises(MultiSecurityProtocolFailure):
+            expected_campaign_lines("mixed", (NONCES[0],) * CYCLE_COUNT, REVISION)
+        lines = expected_campaign_lines("mixed", NONCES, REVISION)
+        cleanup = next(index for index, line in enumerate(lines) if "|CLEANUP|" in line)
+        without_cleanup = (
+            "\n".join(lines[:cleanup] + lines[cleanup + 1 :]) + "\n"
+        ).encode("ascii")
+        with self.assertRaises(MultiSecurityProtocolFailure):
+            parse_role_campaign(without_cleanup, "mixed", NONCES, REVISION)
 
     def test_canonical_transcripts_pass(self) -> None:
         results = {
@@ -137,9 +171,35 @@ class M30BleMultiTests(unittest.TestCase):
         with self.assertRaises(MultiSecurityProtocolFailure):
             validate_three_role_session(results)
 
-    def test_discovery_arguments_require_every_uid(self) -> None:
+    def test_discovery_arguments_require_only_hashed_probe_identity(self) -> None:
+        raw_uid = "00112233445566778899aabbccddeeff"
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        arguments = [
+            value
+            for role in ("peripheral", "mixed", "central")
+            for value in (f"--probe-{role}-sha256", digest)
+        ]
+        parsed = RUNNER.parse_arguments(arguments)
+        self.assertEqual(parsed.probe_peripheral_sha256, digest)
+        endpoint = RUNNER.RoleEndpoint(
+            raw_uid,
+            RUNNER.common.DaplinkVolume(
+                Path("E:/"),
+                "Target Detect: nRF54L15\nUnique ID: " + raw_uid,
+            ),
+            "COM13",
+        )
+        serialized_argv = json.dumps(vars(parsed), sort_keys=True).encode("utf-8")
+        serialized_native = json.dumps(
+            {"boards": {"peripheral": RUNNER._board(endpoint)}},
+            sort_keys=True,
+        ).encode("utf-8")
+        self.assertNotIn(raw_uid.encode("ascii"), serialized_argv)
+        self.assertNotIn(raw_uid.encode("ascii"), serialized_native)
+        self.assertIn(digest.encode("ascii"), serialized_argv)
+        self.assertIn(digest.encode("ascii"), serialized_native)
         with self.assertRaises(SystemExit):
-            RUNNER.parse_arguments(["--peripheral-board-id", "p"])
+            RUNNER.parse_arguments(["--peripheral-board-id", "raw-secret"])
 
 
 if __name__ == "__main__":

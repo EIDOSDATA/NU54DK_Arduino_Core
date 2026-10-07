@@ -11,9 +11,11 @@
 | 이전 RC2 | `v0.5.0-rc.2`; 공개 tag·asset 보존, 지원·catalog 공급 종료 |
 
 현재 source version은 `0.5.0`입니다. M28~M31과 RC1/RC2, runtime PM 연속 Upload 교정,
-stable package·승인·tag/Release·root catalog·공개 smoke를 완료했습니다. HOST-W04~HOST-W08은
-사용자 보류/미착수 상태입니다. 미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의 M32는 12/12 완료,
-M33은 0/8 미착수입니다. 개발 source의 기능 추가나 main 통합은 공개 v0.5.0 ZIP을 변경하지 않습니다.
+stable package·승인·tag/Release·root catalog·공개 smoke를 완료했습니다. HOST는 3/8이며
+W04~W08은 M33-W06 완료 전까지 착수 대기입니다. 미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의
+M32는 12/12, M33은 W01~W05 5/8 완료입니다. W06은 미완료·기존 실행 정리 후 검증 체계 재설계 준비 상태이며
+새 채팅의 재개 지점은 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
+개발 source의 기능 추가나 main 통합은 공개 v0.5.0 ZIP을 변경하지 않습니다.
 v0.6.0 동안 NCS v3.4.0 pin을 유지하고, SDK 3.4.1 전환은 별도 [v0.7.0 계획](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 수행합니다. Host 재개·OS 지원·제품 version·패키지 공개는 각각의 gate로 판정합니다.
 완료한 공개 절차는 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md), 후속 배포 조건은
@@ -92,7 +94,7 @@ source에서만 감사 가능한 공개 이력입니다. 생성기는 산출물�
 사용자가 해당 OS를 추가할 후속 릴리스의 최종 단계에서 검증하며 최종 Host 지원 gate를 유지합니다.
 이 후속 gate는 M31 v0.5.0 Windows 릴리스의 선행조건이 아닙니다. M31 후속 실물 항목은
 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)의 `follow_up_cases`에서 검증 책임·단계·
-차단 여부를 분리합니다. M33 미착수 범위까지 현재 구현된 것으로 간주하지 않습니다.
+차단 여부를 분리합니다. M33의 잔여 미완료 범위까지 완료한 것으로 간주하지 않습니다.
 
 [개선 마일스톤](<../../00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)에서
 v0.6.0 M33의 기존 API 예제 보강과 별도 ARF 공개 API 변경을 분리합니다. 후자의 배포 버전은 API·자원·

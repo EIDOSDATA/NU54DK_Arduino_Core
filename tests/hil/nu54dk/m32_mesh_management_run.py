@@ -20,6 +20,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
 from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -38,6 +44,8 @@ MESH_CAPACITY_MINIMUMS = {
     "local_app_keys": 1,
     "model_app_keys": 1,
 }
+APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m32_mesh_management_hil"
+SEMANTICS = ("mesh_management", "target_isolation", "cleanup")
 
 
 class MeshManagementFailure(RuntimeError):
@@ -157,6 +165,28 @@ def _validate_result(role: str, fields: dict[str, str]) -> None:
             raise MeshManagementFailure(f"client {key} denominator mismatch")
     if _integer(fields, "remote_reports") < 1:
         raise MeshManagementFailure("client remote scan report denominator")
+
+
+def build_dispatch_cycle_records(results: dict[str, dict[str, str]],
+                                 capacities: dict[str, dict[str, int]]) -> list[dict]:
+    """! @brief 10 iteration×두 독립 remote node 결과를 20 cycle로 변환합니다. """
+
+    if set(results) != set(ROLES) or set(capacities) != set(ROLES):
+        raise MeshManagementFailure("dispatcher Mesh management role mismatch")
+    for role in ROLES:
+        _validate_result(role, results[role])
+        if capacities[role].get("cdb_remote_capacity", 0) < REMOTE_NODE_TARGET:
+            raise MeshManagementFailure("dispatcher Mesh capacity witness mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {
+            "cycle": (iteration * REMOTE_NODE_TARGET) + offset + 1,
+            "status": "PASS",
+            "semantics": dict(statuses),
+        }
+        for iteration in range(ITERATION_TARGET)
+        for offset, _role in enumerate(("server", "target"))
+    ]
 
 
 def _expect(
@@ -283,6 +313,14 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if len({board["uid"] for board in boards.values()}) != len(ROLES):
         raise MeshManagementFailure("세 역할이 서로 다른 probe에 매핑되지 않음")
+    images = {role: boards[role]["image"] for role in ROLES}
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            identity.board, APPLICATION_ROOT,
+        )
 
     nonce = hashlib.sha256(
         f"{time.time_ns()}:{identity.core}".encode("ascii")
@@ -292,6 +330,8 @@ def execute(args: argparse.Namespace) -> dict:
     capacities: dict[str, dict[str, int]] = {}
     status = "FAIL"
     reason: str | None = None
+    cleanup: dict[str, dict[str, str]] = {}
+    exact_program = None
     with ProbeLocks([board["uid"] for board in boards.values()]):
         for role in ROLES:
             board = boards[role]
@@ -306,11 +346,13 @@ def execute(args: argparse.Namespace) -> dict:
                 preserve_nrf54l_access=True,
             )
         time.sleep(2.0)
-        ports = {
-            role: serial_module.Serial(board["vcom"], 115200, timeout=0.05)
-            for role, board in boards.items()
-        }
+        ports: dict[str, object] = {}
+        stopped_roles: set[str] = set()
         try:
+            for role, board in boards.items():
+                ports[role] = serial_module.Serial(
+                    board["vcom"], 115200, timeout=0.05
+                )
             for port in ports.values():
                 port.reset_input_buffer()
             for role in ROLES:
@@ -355,6 +397,7 @@ def execute(args: argparse.Namespace) -> dict:
                                   identity.core, transcript, 30.0)
                 if stopped.get("cleanup") != "pass":
                     raise MeshManagementFailure(f"{role} cleanup mismatch")
+                stopped_roles.add(role)
             status = "PASS_CANDIDATE" if dirty else "PASS"
         except Exception as error:
             reason = f"{type(error).__name__}: {error}"
@@ -363,8 +406,30 @@ def execute(args: argparse.Namespace) -> dict:
                 r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason
             )
         finally:
-            for port in ports.values():
-                port.close()
+            cleanup = cleanup_direct_ports(
+                ports,
+                {
+                    role: f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
+                    for role in ports
+                },
+                stopped_roles,
+                transcript,
+            )
+        if status == "PASS":
+            exact_program = complete_direct_program(
+                REPOSITORY, identity.core, ROLES, images,
+                {role: boards[role]["uid"] for role in ROLES},
+                {role: boards[role]["probe_sha256"] for role in ROLES},
+                sidecars,
+                {
+                    role: {
+                        "mode": boards[role]["flash_mode"],
+                        "bytes": str(boards[role]["flash_bytes"]),
+                    }
+                    for role in ROLES
+                },
+                build_records,
+            )
 
     public_boards = {
         role: {key: value for key, value in board.items() if key not in {"uid", "image"}}
@@ -393,7 +458,15 @@ def execute(args: argparse.Namespace) -> dict:
             )
         },
         "reason": reason,
+        "cleanup": cleanup,
     }
+    if status == "PASS" and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(results, capacities)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m32_mesh_management", identity.core, 20, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

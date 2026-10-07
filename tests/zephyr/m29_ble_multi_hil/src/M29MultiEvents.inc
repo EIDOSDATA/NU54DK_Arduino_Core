@@ -10,6 +10,21 @@
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            if (information.event == nucode::ble::BLEEvent::disconnected)
+            {
+                if (information.connection == client_connection)
+                {
+                    client_connection = nucode::ble::BLEConnectionHandle{};
+                }
+                if (information.connection == server_connection)
+                {
+                    server_connection = nucode::ble::BLEConnectionHandle{};
+                }
+            }
+            return;
+        }
         if (!session_started || session_finished)
         {
             return;
@@ -71,6 +86,23 @@
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            if (information.event == nucode::ble::BLEL2capEvent::disconnected)
+            {
+                if (information.channel == client_channel)
+                {
+                    client_channel = nucode::ble::BLEL2capChannelHandle{};
+                    client_channel_connected = false;
+                }
+                if (information.channel == server_channel)
+                {
+                    server_channel = nucode::ble::BLEL2capChannelHandle{};
+                    server_channel_connected = false;
+                }
+            }
+            return;
+        }
         if (!session_started || session_finished)
         {
             return;

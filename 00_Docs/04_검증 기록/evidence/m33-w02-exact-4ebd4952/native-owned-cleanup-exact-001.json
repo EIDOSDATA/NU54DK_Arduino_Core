@@ -1,0 +1,46 @@
+{
+  "schema": "nucode-m33-profile-native-owned-cleanup-v1",
+  "status": "PASS",
+  "reason": null,
+  "revisions": {
+    "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "native_pair_sha256": "af119303d5a2a06d81743d0a499cf5dc7efb8be79d15734b17a2df2e3f15d813",
+  "fresh_sha256": "7fc218294d81817d762d0cc44739e6c197ee3e99355ca01bd9d39d1c7f711e93",
+  "restored_sha256": "95f3d6838c3678b16a66614963cb092bb150ec8febb4b2eb0898ce90e468b20f",
+  "observed_utc": "2026-10-03T18:09:28.659829+00:00",
+  "results": {
+    "server": {
+      "removed": 1,
+      "existing_unchanged": true,
+      "stopped": true,
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "294912"
+    },
+    "client": {
+      "removed": 1,
+      "existing_unchanged": true,
+      "stopped": true,
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "258048"
+    }
+  },
+  "boards": {
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "c657d3fa0b654b6216da036a81fd3268477dd854e9e46f0dcf65ce5cfeb8a366",
+      "before_sha256": "03ddfb362ba3c1819f4c67888822a4d389613f30d0821e140fd5cc41e7fa75ff",
+      "peer_sha256": "b0a35cdb1d80cb96d5e06885b005054d39d2f7e93c261603154588ed60e78ccb"
+    },
+    "client": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "d2d8f8e361272cf4136aff3160c6bfc3b46e67397eb0524e07675d36e76832e3",
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "peer_sha256": "e5c95962ea718793a3baff63189368ed06fb67a1fb06280524cf30d52777467a"
+    }
+  },
+  "transcript_sha256": "2f9de5dcd9b5813d7dc068faed2deed9cff571aca4e2bb31fe3366cc5c4b8b43"
+}

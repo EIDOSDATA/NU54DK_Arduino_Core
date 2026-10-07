@@ -137,11 +137,23 @@ namespace
     bool restartScan = false;
     bool started = false;
     bool reportedFailure = false;
+    bool riskScanActive = false;
+    bool riskDisconnectPending = false;
+    bool quiesceRequested = false;
+    bool quiesceDisconnectRequested = false;
+    bool quiesceReported = false;
+    unsigned long riskScanStartedMs = 0UL;
+    std::uint32_t riskDisconnectCycles = 0U;
+    constexpr unsigned long riskRadioOverlapMs = 100UL;
 
     /** @brief Ranging Service를 광고하는 연결 가능한 reflector를 선택합니다. */
     void onScanResult(const BLEScanResult &result, void *context)
     {
         static_cast<void>(context);
+        if (riskScanActive || quiesceRequested)
+        {
+            return;
+        }
         if (!peerFound && result.connectable)
         {
             peerAddress = result.address;
@@ -161,6 +173,11 @@ namespace
             (event.role == nucode::ble::BLELinkRole::central))
         {
             peer = event.connection;
+            if (quiesceRequested)
+            {
+                quiesceDisconnectRequested = false;
+                return;
+            }
             const Error result = initiator.begin(peer);
             if (result == Error::none)
             {
@@ -175,13 +192,82 @@ namespace
         else if ((event.event == BLEEvent::disconnected) &&
                  (event.connection == peer))
         {
+            if (riskScanActive)
+            {
+                riskDisconnectCycles++;
+                Serial.print("P2_CS_RISK_DISCONNECTED cycle=");
+                Serial.print(riskDisconnectCycles);
+                Serial.print(" radio_scan=");
+                Serial.println(BLEScan.running() ? 1 : 0);
+            }
             initiator.end();
             peer = BLEConnectionHandle();
             peerFound = false;
-            restartScan = !p2StopRequested;
+            restartScan = !p2StopRequested && !quiesceRequested;
             started = false;
             reportedFailure = false;
+            riskScanActive = false;
+            riskDisconnectPending = false;
+            quiesceDisconnectRequested = false;
             Serial.println("CS initiator disconnected");
+        }
+    }
+
+    /** @brief scan·CS·ACL을 끝내고 재연결을 금지하는 종료 절차를 시작합니다. */
+    void requestQuiesce()
+    {
+        quiesceRequested = true;
+        quiesceDisconnectRequested = false;
+        quiesceReported = false;
+        p2StopRequested = true;
+        restartScan = false;
+        peerFound = false;
+        riskScanActive = false;
+        riskDisconnectPending = false;
+        if ((initiator.stage() == InitiatorStage::ranging) &&
+            (initiator.stop() != Error::none))
+        {
+            Serial.println("CS quiesce stop failed");
+        }
+        if (BLEScan.running() && !BLEScan.stop())
+        {
+            Serial.println("CS quiesce scan stop failed");
+        }
+        Serial.println("CS quiesce requested role=initiator");
+    }
+
+    /** @brief quiesce 뒤 active ACL·pending 연결·scan·CS가 모두 0인지 공개합니다. */
+    void pollQuiesce()
+    {
+        if (!quiesceRequested)
+        {
+            return;
+        }
+        if (BLEScan.running())
+        {
+            if (!BLEScan.stop())
+            {
+                return;
+            }
+        }
+        if (peer.valid() && BLEConnection.connected() &&
+            !quiesceDisconnectRequested)
+        {
+            if (!BLEConnection.disconnect(peer))
+            {
+                return;
+            }
+            quiesceDisconnectRequested = true;
+        }
+        if (!peer.valid() && !BLEConnection.connected() &&
+            !BLEConnection.connecting() && !BLEScan.running() &&
+            !quiesceReported)
+        {
+            initiator.end();
+            started = false;
+            quiesceReported = true;
+            Serial.println(
+                "CS_QUIESCED role=initiator active_acl=0 pending=0 scan=0 cs=0");
         }
     }
 }
@@ -206,8 +292,10 @@ void loop()
 {
     BLEDevice.poll();
     initiator.poll();
+    pollQuiesce();
 
-    if (peerFound && !BLEConnection.connected() && !BLEConnection.connecting())
+    if (!quiesceRequested && peerFound && !BLEConnection.connected() &&
+        !BLEConnection.connecting())
     {
         peerFound = false;
         if (!BLEConnection.connect(peerAddress))
@@ -216,16 +304,42 @@ void loop()
             Serial.println("CS initiator connect failed");
         }
     }
-    if (restartScan && !BLEConnection.connected() && !BLEConnection.connecting())
+    if (!quiesceRequested && restartScan && !BLEConnection.connected() &&
+        !BLEConnection.connecting())
     {
         restartScan = false;
-        if (!BLEScan.start(true))
+        if (!BLEScan.running() && !BLEScan.start(true))
         {
             Serial.println("CS initiator scan restart failed");
         }
     }
 
-    if ((initiator.stage() == InitiatorStage::ready) && !started)
+    if (riskDisconnectPending &&
+        ((millis() - riskScanStartedMs) >= riskRadioOverlapMs))
+    {
+        if (!peer.valid() ||
+            (initiator.stage() != InitiatorStage::ranging) ||
+            !BLEScan.running())
+        {
+            riskDisconnectPending = false;
+            Serial.println("P2_FAIL stage=cs-risk-active-boundary");
+        }
+        else if (BLEConnection.disconnect(peer))
+        {
+            riskDisconnectPending = false;
+            Serial.print("P2_CS_RISK_ABORT cycle=");
+            Serial.print(riskDisconnectCycles + 1U);
+            Serial.println(" radio=scan acl=disconnect-requested");
+        }
+        else
+        {
+            riskDisconnectPending = false;
+            Serial.println("P2_FAIL stage=cs-risk-acl-disconnect");
+        }
+    }
+
+    if (!quiesceRequested &&
+        (initiator.stage() == InitiatorStage::ready) && !started)
     {
         if (initiator.start() == Error::none)
         {
@@ -330,6 +444,32 @@ void loop()
             {
                 Serial.println("CS disconnect failed");
             }
+        }
+        else if ((command == 'x') && peer.valid() &&
+                 (initiator.stage() == InitiatorStage::ranging) &&
+                 !riskScanActive && !riskDisconnectPending)
+        {
+            if (!BLEScan.running() && !BLEScan.start(true))
+            {
+                Serial.println("P2_FAIL stage=cs-risk-radio-start");
+            }
+            else if (!BLEScan.running())
+            {
+                Serial.println("P2_FAIL stage=cs-risk-radio-not-running");
+            }
+            else
+            {
+                riskScanActive = true;
+                riskDisconnectPending = true;
+                riskScanStartedMs = millis();
+                Serial.print("P2_CS_RISK_ACTIVE cycle=");
+                Serial.print(riskDisconnectCycles + 1U);
+                Serial.println(" radio=scan acl=connected");
+            }
+        }
+        else if (command == 'q')
+        {
+            requestQuiesce();
         }
     }
     delay(1);

@@ -20,6 +20,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m31_ble_capability import ExpectedIdentity  # noqa: E402
 from m31_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -28,10 +34,29 @@ from v04_protocol import ProbeLocks  # noqa: E402
 
 
 ROLES = ("central", "peripheral")
+APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m31_iso_cis_hil"
+SEMANTICS = ("cis_sdu", "active_acl_teardown", "bounded_cleanup")
 
 
 class IsoExecutionFailure(RuntimeError):
     """! @brief 연결·flash·serial 단계의 유한 실패를 나타냅니다. """
+
+
+def build_dispatch_cycle_records(nonces: list[str], measured: object) -> list[dict]:
+    """! @brief strict CIS parser가 닫은 20개 nonce를 dispatcher cycle로 변환합니다. """
+
+    if len(nonces) != 20 or len(set(nonces)) != 20 or \
+            getattr(measured, "cycles", 0) != 20 or \
+            getattr(measured, "total_sent", 0) != 2000 or \
+            not 1980 <= getattr(measured, "total_received", 0) <= 2000 or \
+            getattr(measured, "minimum_received", 0) < 99 or \
+            not 0 <= getattr(measured, "invalid_or_lost", -1) <= 20:
+        raise IsoExecutionFailure("dispatcher CIS cycle witness mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle, _nonce in enumerate(nonces, 1)
+    ]
 
 
 def _line(port: object, deadline: float) -> str:
@@ -91,11 +116,21 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if boards["central"]["uid"] == boards["peripheral"]["uid"]:
         raise IsoExecutionFailure("양 역할이 동일 probe에 매핑됨")
+    images = {role: boards[role]["image"] for role in ROLES}
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            identity.board, APPLICATION_ROOT,
+        )
     transcript: list[str] = []
     nonces: list[str] = []
     reason = None
     status = "FAIL"
     measured = None
+    exact_program = None
+    cleanup: dict[str, dict[str, str]] = {}
     with ProbeLocks([board["uid"] for board in boards.values()]):
         for role in ROLES:
             board = boards[role]
@@ -104,9 +139,14 @@ def execute(args: argparse.Namespace) -> dict:
                 role, board["uid"], board["image"], 120.0, hardware_reset=True
             )
         time.sleep(2.0)
-        ports = {role: serial_module.Serial(board["vcom"], 115200, timeout=0.15)
-                 for role, board in boards.items()}
+        ports = {}
+        active_roles: set[str] = set()
+        stopped_roles: set[str] = set()
         try:
+            for role, board in boards.items():
+                ports[role] = serial_module.Serial(
+                    board["vcom"], 115200, timeout=0.15
+                )
             for port in ports.values():
                 port.reset_input_buffer()
                 port.write(b"M31ISO|1|PROBE\n")
@@ -122,6 +162,8 @@ def execute(args: argparse.Namespace) -> dict:
                 for port in ports.values():
                     port.write(f"M31ISO|1|START|nonce={nonce}|count=100\n".encode("ascii"))
                     port.flush()
+                active_roles = set(ROLES)
+                stopped_roles = set()
                 ends = set()
                 deadline = time.monotonic() + 180.0
                 while time.monotonic() < deadline and ends != set(ROLES):
@@ -154,6 +196,8 @@ def execute(args: argparse.Namespace) -> dict:
                         if "|FAIL|" in line:
                             raise IsoExecutionFailure(f"{role} target STOP FAIL")
                         if line.startswith(f"M31ISO|1|STOPPED|nonce={nonce}"):
+                            active_roles.discard(role)
+                            stopped_roles.add(role)
                             break
             raw = ("\n".join(transcript) + "\n").encode("ascii", errors="replace")
             if dirty:
@@ -172,8 +216,31 @@ def execute(args: argparse.Namespace) -> dict:
             reason = re.sub(r"(?i)\b[0-9a-f]{16,64}\b", "<redacted-identity>", reason)
             reason = re.sub(r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason)
         finally:
-            for port in ports.values():
-                port.close()
+            cleanup = cleanup_direct_ports(
+                ports,
+                {
+                    role: f"M31ISO|1|STOP|nonce={nonces[-1] if nonces else 'none'}\n".encode(
+                        "ascii"
+                    )
+                    for role in ports
+                },
+                stopped_roles,
+                transcript,
+            )
+        if status == "PASS":
+            flash_records = {
+                role: {
+                    "mode": boards[role]["flash_mode"],
+                    "bytes": str(boards[role]["flash_bytes"]),
+                }
+                for role in ROLES
+            }
+            exact_program = complete_direct_program(
+                REPOSITORY, identity.core, ROLES, images,
+                {role: boards[role]["uid"] for role in ROLES},
+                {role: boards[role]["probe_sha256"] for role in ROLES},
+                sidecars, flash_records, build_records,
+            )
     public_boards = {role: {key: value for key, value in board.items()
                            if key not in {"uid", "image"}} for role, board in boards.items()}
     evidence = {
@@ -181,7 +248,15 @@ def execute(args: argparse.Namespace) -> dict:
         "source_clean": not bool(dirty), "identity": vars(identity), "boards": public_boards,
         "nonces": nonces, "cycles": 20, "reason": reason,
         "measurement": vars(measured) if measured is not None else None,
+        "cleanup": cleanup,
     }
+    if status == "PASS" and measured is not None and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(nonces, measured)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m31_iso_cis", identity.core, 20, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

@@ -1,0 +1,15 @@
+/** @brief H5는 TX/RX와 GND만 사용하고 RTS/CTS를 할당하지 않는다. */
+&pinctrl
+{
+    diag_uart30_two_wire: diag_uart30_two_wire
+    {
+        group1 { psels = <NRF_PSEL(UART_TX, 0, 0)>, <NRF_PSEL(UART_RX, 0, 1)>; };
+    };
+};
+&uart30
+{
+    /delete-property/ hw-flow-control;
+    pinctrl-0 = <&diag_uart30_two_wire>;
+    /delete-property/ pinctrl-1;
+    pinctrl-names = "default";
+};

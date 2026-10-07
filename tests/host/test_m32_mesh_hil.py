@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 import sys
 import unittest
@@ -138,6 +139,149 @@ class M32MeshHilTests(unittest.TestCase):
         self.assertIn('"M32-MESH-01:traffic"', source)
         self.assertIn('"M32-MESHSEC-01:traffic"', source)
         self.assertNotIn("--erase chip", source)
+
+    def test_runner_requires_twenty_independent_clean_sessions(self) -> None:
+        """! @brief host 회차와 target resume/reset 증거 없이는 20회로 승격하지 않습니다. """
+
+        first = runner._validate_cleared(
+            "node_a",
+            {
+                "provisioned": "0",
+                "settings_reset": "pass",
+                "resumed": "0",
+                "unprovisioned_rejected": "1",
+            },
+            1,
+        )
+        later = runner._validate_cleared(
+            "node_a",
+            {
+                "provisioned": "0",
+                "settings_reset": "pass",
+                "resumed": "1",
+                "unprovisioned_rejected": "1",
+            },
+            2,
+        )
+        self.assertFalse(first["resumed_from_previous_cleanup"])
+        self.assertTrue(later["resumed_from_previous_cleanup"])
+        with self.assertRaisesRegex(runner.MeshExecutionFailure, "resume mismatch"):
+            runner._validate_cleared(
+                "node_a",
+                {
+                    "provisioned": "0",
+                    "settings_reset": "pass",
+                    "resumed": "0",
+                    "unprovisioned_rejected": "1",
+                },
+                2,
+            )
+        target = (
+            REPOSITORY / "tests" / "zephyr" / "m32_mesh_hil" / "src" / "main.cpp"
+        ).read_text(encoding="utf-8")
+        host = (HIL / "m32_mesh_run.py").read_text(encoding="utf-8")
+        self.assertLess(target.index("bt_mesh_resume()"), target.index("NUCODEMesh.reset()"))
+        self.assertIn("|provisioned=0|settings_reset=pass|resumed=", target)
+        self.assertIn("CYCLE_TARGET = 20", host)
+        self.assertIn('dispatch_attestation(\n                    "m32_mesh"', host)
+
+    def test_twenty_cycle_raw_validator_rechecks_semantics_and_cleanup(self) -> None:
+        """! @brief attestation 전 20회 raw 범위와 역할별 실제 분모를 다시 판정합니다. """
+
+        transcript = []
+        records = []
+        for cycle in range(1, runner.CYCLE_TARGET + 1):
+            nonce = f"{cycle:032x}"
+            start = len(transcript) + 1
+            results = {
+                "provisioner": {
+                    "payload_integrity": "pass",
+                    "provisioned_nodes": "2",
+                    "configured_nodes": "2",
+                    "base_messages": "300",
+                    "secured_messages": "200",
+                    "acknowledged": "500",
+                    "invalid_destination_rejected": "1",
+                    "wrong_key_rejected": "1",
+                    "max_latency_ms": "10",
+                },
+                "node_a": {
+                    "payload_integrity": "pass",
+                    "received": "250",
+                    "unprovisioned_rejected": "1",
+                    "feature": "pass",
+                    "friendship": "pass",
+                },
+                "node_b": {
+                    "payload_integrity": "pass",
+                    "received": "250",
+                    "unprovisioned_rejected": "1",
+                    "feature": "pass",
+                    "friendship": "pass",
+                },
+            }
+            for role in runner.ROLES:
+                for event in ("CLEARED", "BEGIN", "RESULT", "END", "STOPPED"):
+                    transcript.append(
+                        f"{role}: {runner.PROTOCOL}|{event}|nonce={nonce}|role={role}"
+                    )
+            transcript.extend(
+                (
+                    f"node_a: {runner.PROTOCOL}|FRIEND_CLEAR_LOCAL|nonce={nonce}",
+                    f"node_b: {runner.PROTOCOL}|FRIEND_CLEAR_PEER|nonce={nonce}",
+                )
+            )
+            end = len(transcript)
+            raw = ("\n".join(transcript[start - 1:end]) + "\n").encode("ascii")
+            records.append(
+                {
+                    "cycle": cycle,
+                    "nonce": nonce,
+                    "status": "PASS",
+                    "transcript_line_start": start,
+                    "transcript_line_end": end,
+                    "transcript_sha256": hashlib.sha256(raw).hexdigest(),
+                    "cleared": {
+                        role: {
+                            "provisioned": 0,
+                            "settings_reset": "PASS",
+                            "resumed_from_previous_cleanup": cycle > 1,
+                            "unprovisioned_access_rejected": (
+                                0 if role == "provisioner" else 1
+                            ),
+                        }
+                        for role in runner.ROLES
+                    },
+                    "results": results,
+                    "cleanup": {
+                        "status": "PASS",
+                        "command_sent": {role: True for role in runner.ROLES},
+                        "friend_local_callback": True,
+                        "friend_peer_callback": True,
+                        "peer_ack_sent": True,
+                        "errors": [],
+                        "records": {
+                            "provisioner": {
+                                "status": "not_applicable",
+                                "latency_ms": 0,
+                            },
+                            "node_a": {"status": "pass", "latency_ms": 1},
+                            "node_b": {"status": "pass", "latency_ms": 1},
+                        },
+                    },
+                    "semantics": {
+                        "provision_two_nodes": "PASS",
+                        "mesh_security": "PASS",
+                        "lpn_friend_clear": "PASS",
+                        "rejoin": "PASS",
+                        "cleanup": "PASS",
+                    },
+                }
+            )
+        runner.validate_cycle_records(records, transcript)
+        records[4]["results"]["provisioner"]["acknowledged"] = "499"
+        with self.assertRaisesRegex(runner.MeshExecutionFailure, "denominator"):
+            runner.validate_cycle_records(records, transcript)
 
     def test_native_group_builds_all_roles(self) -> None:
         """! @brief v0.6.0 native 회귀에서 세 역할 image를 함께 빌드합니다. """

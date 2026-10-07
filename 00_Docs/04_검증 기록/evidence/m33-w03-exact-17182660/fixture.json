@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "identity": "17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc",
+  "other_radios": "isolated_verified",
+  "test_owned_bond_cleanup": true,
+  "isolated_probe_sha256": [
+    "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"
+  ],
+  "preflight_evidence": "C:/Users/eidos/Documents/Codex/2026-10-03/m33-c-users-eidos-github-nu54dk/work/w03-preflight-program-012.json",
+  "preflight_sha256": "cf0726f9f6b073ead3a271046a69d6067b0dd43a724e72c54814c44b443d7a1e",
+  "boards": [
+    {
+      "role": "client",
+      "port": "COM3",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image": "C:/n54w03e-eco-client-009/build/zephyr/zephyr.hex",
+      "image_sha256": "1f8ee4dd4501927ba7514053031d21c6e23e9f2c0cc9c8ceada4eccec0221947",
+      "readback": "verified"
+    },
+    {
+      "role": "peer",
+      "port": "COM5",
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image": "C:/n54w03e-eco-peer-009/build/zephyr/zephyr.hex",
+      "image_sha256": "c828a434df31d561bec70c306492ae1aa883b2c3b4752792c3c8f0fddee85cb0",
+      "readback": "verified"
+    }
+  ]
+}

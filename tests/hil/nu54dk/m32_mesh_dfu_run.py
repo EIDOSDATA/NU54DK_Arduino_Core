@@ -4,14 +4,15 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import struct
-import subprocess
 import sys
 import time
 from typing import Any, Sequence
@@ -24,18 +25,32 @@ if str(HIL) not in sys.path:
 
 from ble_pair_hil_common import (  # noqa: E402
     BOARD_ROOT,
-    PYOCD_LAUNCHER,
-    clear_nrf54l_rram_pyocd,
+    clear_nrf54l_rram_pyocd_sha256,
+    erase_nrf54l_rram_pyocd_sha256,
     file_sha256,
-    flash_image_pyocd,
+    flash_binary_pyocd_sha256,
+    flash_image_pyocd_sha256,
     git_revision,
+    reset_target_pyocd_sha256,
     validate_board_revision,
     validate_build_record,
     validate_image_unchanged,
     validate_source_clean,
 )
+from m33_sdk_risk_common import (  # noqa: E402
+    copy_program_inputs,
+    dispatch_attestation,
+    exact_program_evidence,
+    readback_programmed_images,
+    require_exact_clean_source,
+    reserve_sidecars,
+    validate_programming_receipt,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
-from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
+from m32_ble_capability_run import (  # noqa: E402
+    collect_register_identity_sha256,
+    discover,
+)
 from v04_protocol import ProbeLocks  # noqa: E402
 
 
@@ -209,6 +224,149 @@ def require_tokens(path: Path, tokens: Sequence[str]) -> str:
     return text
 
 
+def classify_mcuboot_watchdog(
+    application_config: str,
+    boot_config: str,
+    runtime_attestation: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """! @brief 실제 활성 WDT 여부와 MCUboot feed 실행 증거를 분리해 판정합니다. """
+
+    feed_enabled = (
+        "CONFIG_BOOT_WATCHDOG_FEED=y" in boot_config
+        or "CONFIG_BOOT_WATCHDOG_FEED_NRFX_WDT=y" in boot_config
+    )
+    watchdog_driver_enabled = (
+        "CONFIG_WATCHDOG=y" in application_config
+        and "CONFIG_WDT_NRFX=y" in application_config
+    )
+    if not watchdog_driver_enabled:
+        return {
+            "status": "NOT_APPLICABLE",
+            "condition": "application_watchdog_not_enabled",
+            "boot_feed_configured": feed_enabled,
+            "active_watchdog_proven": False,
+        }
+    if runtime_attestation is None:
+        return {
+            "status": "NOT_RUN",
+            "condition": "active_watchdog_runtime_attestation_required",
+            "boot_feed_configured": feed_enabled,
+            "active_watchdog_proven": False,
+        }
+    required = {
+        "watchdog_active": True,
+        "erase_observed": True,
+        "swap_observed": True,
+        "hash_observed": True,
+        "unexpected_watchdog_resets": 0,
+    }
+    if any(runtime_attestation.get(key) != value for key, value in required.items()):
+        raise MeshDfuFailure("active MCUboot watchdog runtime attestation mismatch")
+    timeout_ms = runtime_attestation.get("timeout_ms")
+    if not isinstance(timeout_ms, int) or timeout_ms < 1:
+        raise MeshDfuFailure("active MCUboot watchdog timeout missing")
+    if not feed_enabled:
+        raise MeshDfuFailure("active watchdog image has no MCUboot feed configuration")
+    return {
+        "status": "PASS",
+        "condition": "active_watchdog_erase_swap_hash",
+        "boot_feed_configured": True,
+        "active_watchdog_proven": True,
+        "timeout_ms": timeout_ms,
+    }
+
+
+def build_watchdog_classification(build: "BuildInput") -> dict[str, Any]:
+    """! @brief exact sysbuild의 app/MCUboot 설정을 읽어 적용 조건을 분류합니다. """
+
+    application_config = require_tokens(build.root / APPLICATION_DOMAIN / "zephyr/.config", ())
+    boot_config = require_tokens(build.root / BOOT_DOMAIN / "zephyr/.config", ())
+    classification = classify_mcuboot_watchdog(application_config, boot_config)
+    if classification["status"] == "NOT_RUN":
+        raise MeshDfuFailure(
+            "활성 WDT 구성이지만 erase/swap/hash runtime attestation이 없습니다"
+        )
+    return classification
+
+
+def config_symbol(text: str, symbol: str) -> str:
+    """! @brief exact Kconfig byte에서 y 또는 비활성 n을 중복 없이 읽습니다. """
+
+    enabled = re.findall(rf"(?m)^{re.escape(symbol)}=y$", text)
+    disabled = re.findall(
+        rf"(?m)^(?:{re.escape(symbol)}=n|# {re.escape(symbol)} is not set)$",
+        text,
+    )
+    if len(enabled) + len(disabled) != 1:
+        raise MeshDfuFailure(f"{symbol} exact 설정을 판정할 수 없습니다")
+    return "y" if enabled else "n"
+
+
+def copy_watchdog_condition_evidence(
+    native_path: Path,
+    builds: dict[str, "BuildInput"],
+    classifications: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    """! @brief 네 sysbuild의 실제 .config와 build record byte를 인접 증거로 복사합니다. """
+
+    if set(builds) != set(ROLES) | {"candidate"} or set(classifications) != set(builds):
+        raise MeshDfuFailure("watchdog build denominator mismatch")
+    records: dict[str, dict[str, Any]] = {}
+    for role, build in builds.items():
+        if classifications[role].get("status") != "NOT_APPLICABLE" or \
+                classifications[role].get("condition") != "application_watchdog_not_enabled":
+            raise MeshDfuFailure("active watchdog condition cannot be attested as N/A")
+        application_source = build.root / APPLICATION_DOMAIN / "zephyr/.config"
+        boot_source = build.root / BOOT_DOMAIN / "zephyr/.config"
+        build_record_source = (
+            build.signed_hex.path.parent.parent / build.build_record["record_name"]
+        )
+        sources = {
+            "application_config": application_source,
+            "mcuboot_config": boot_source,
+            "build_record": build_record_source,
+        }
+        copied: dict[str, dict[str, str]] = {}
+        for label, source in sources.items():
+            destination = native_path.with_name(
+                f"{native_path.stem}.{role}.{label}.evidence"
+            )
+            if destination.exists() or not source.is_file():
+                raise MeshDfuFailure(f"{role} {label} evidence path mismatch")
+            shutil.copyfile(source, destination)
+            if file_sha256(destination) != file_sha256(source):
+                raise MeshDfuFailure(f"{role} {label} evidence copy mismatch")
+            copied[label] = {
+                "path": destination.name,
+                "sha256": file_sha256(destination),
+            }
+        if copied["build_record"]["sha256"] != build.build_record["record_sha256"]:
+            raise MeshDfuFailure(f"{role} exact build record digest mismatch")
+        application_text = application_source.read_text(encoding="utf-8")
+        records[role] = {
+            "status": "NOT_APPLICABLE",
+            "condition": "application_watchdog_disabled",
+            "symbols": {
+                "CONFIG_WATCHDOG": config_symbol(
+                    application_text, "CONFIG_WATCHDOG"
+                ),
+            },
+            "boot_feed_configured": classifications[role][
+                "boot_feed_configured"
+            ],
+            **copied,
+        }
+        if records[role]["symbols"]["CONFIG_WATCHDOG"] != "n":
+            raise MeshDfuFailure("disabled application watchdog config mismatch")
+    return {
+        "schema_version": 1,
+        "kind": "m33_mcuboot_watchdog_condition",
+        "status": "NOT_APPLICABLE",
+        "condition": "application_watchdog_disabled",
+        "builds": records,
+    }
+
+
 def cache_value(text: str, key: str) -> str:
     """! @brief CMakeCache의 단일 문자열 값을 반환합니다. """
 
@@ -328,98 +486,41 @@ def validate_build_set(builds: dict[str, BuildInput]) -> None:
             raise MeshDfuFailure(f"{role}에 고정된 candidate size가 다릅니다")
 
 
-def pyocd_prefix(subcommand: str, board_id: str) -> tuple[str, ...]:
-    """! @brief 접근 보호를 보존하는 CMSIS-DAP V2 attach 명령 prefix입니다. """
-
-    return (
-        sys.executable,
-        "-I",
-        str(PYOCD_LAUNCHER),
-        subcommand,
-        "--uid",
-        board_id,
-        "--target",
-        "nrf54l",
-        "--frequency",
-        "500000",
-        "--connect",
-        "attach",
-        "-O",
-        "cmsis_dap.limit_packets=true",
-        "-O",
-        "cmsis_dap.prefer_v1=false",
-        "-O",
-        "auto_unlock=false",
-    )
-
-
-def run_pyocd(
-    command: Sequence[str], label: str, timeout_seconds: float, board_id: str
-) -> bytes:
-    """! @brief bounded pyOCD V2 명령을 실행하고 UID 없는 오류만 반환합니다. """
-
-    try:
-        result = subprocess.run(
-            command, capture_output=True, timeout=timeout_seconds, check=False
-        )
-    except (OSError, subprocess.TimeoutExpired) as error:
-        raise MeshDfuFailure(f"{label} 실행 실패: {type(error).__name__}") from error
-    output = result.stdout + result.stderr
-    if result.returncode != 0:
-        raise MeshDfuFailure(f"{label} 실패(returncode={result.returncode})")
-    if board_id.encode("ascii") in output:
-        output = output.replace(board_id.encode("ascii"), b"<redacted-uid>")
-    return output
-
-
-def erase_secondary_slot(board_id: str, timeout_seconds: float) -> None:
+def erase_secondary_slot(probe_sha256: str, timeout_seconds: float) -> None:
     """! @brief secondary slot의 exact sector 범위만 지웁니다. """
 
-    run_pyocd(
-        (*pyocd_prefix("erase", board_id), "--sector", f"{hex(SLOT1_OFFSET)}-{hex(SLOT1_END)}"),
-        "secondary exact-sector erase",
+    erase_nrf54l_rram_pyocd_sha256(
+        "secondary",
+        probe_sha256,
+        SLOT1_OFFSET,
+        SLOT1_END - SLOT1_OFFSET,
         timeout_seconds,
-        board_id,
     )
 
 
 def flash_secondary_candidate(
-    board_id: str, image: ImageInput, timeout_seconds: float
+    probe_sha256: str, image: ImageInput, timeout_seconds: float
 ) -> str:
     """! @brief Distributor secondary slot에 signed binary를 sector 방식으로 기록합니다. """
 
-    output = run_pyocd(
-        (
-            *pyocd_prefix("flash", board_id),
-            "-O",
-            "smart_flash=false",
-            "--erase",
-            "sector",
-            "--format",
-            "bin",
-            "--base-address",
-            hex(SLOT1_OFFSET),
-            "--no-reset",
-            str(image.path),
-        ),
-        "Distributor candidate secondary flash",
+    _mode, programmed = flash_binary_pyocd_sha256(
+        "distributor_candidate",
+        probe_sha256,
+        image.path,
+        SLOT1_OFFSET,
         timeout_seconds,
-        board_id,
+        defer_reset=True,
     )
-    match = re.search(rb"programmed\s+(\d+)\s+bytes", output)
-    if match is None:
-        raise MeshDfuFailure("candidate pyOCD programmed byte 증거가 없습니다")
-    return match.group(1).decode("ascii")
+    return programmed
 
 
-def access_preserving_reset(board_id: str, timeout_seconds: float) -> None:
+def access_preserving_reset(probe_sha256: str, timeout_seconds: float) -> None:
     """! @brief nRF54L 접근 보호를 보존하는 system reset을 수행합니다. """
 
-    run_pyocd(
-        (*pyocd_prefix("reset", board_id), "--method", "sw"),
-        "access-preserving system reset",
+    reset_target_pyocd_sha256(
+        "mesh_dfu",
+        probe_sha256,
         min(timeout_seconds, 30.0),
-        board_id,
     )
 
 
@@ -495,6 +596,132 @@ def read_record(
     raise MeshDfuFailure(f"{role} {record} timeout")
 
 
+def cleanup_ports(
+    ports: dict[str, Any],
+    nonce: str,
+    core_revision: str,
+    transcript: list[str],
+    required: bool,
+    timeout_seconds: float = 30.0,
+) -> dict[str, Any]:
+    """! @brief 정상·예외 경로 모두에서 세 역할 STOP을 독립 시도합니다. """
+
+    report: dict[str, Any] = {
+        "required": required,
+        "command_sent": {role: False for role in ROLES},
+        "stopped": {role: False for role in ROLES},
+        "errors": [],
+        "status": "NOT_REQUIRED" if not required else "FAIL",
+    }
+    if not required:
+        return report
+    if not ports:
+        report["errors"].append("cleanup required before serial endpoint was available")
+        return report
+    for role, port in ports.items():
+        try:
+            send(port, f"{PROTOCOL}|STOP|nonce={nonce}")
+            report["command_sent"][role] = True
+        except Exception as error:
+            report["errors"].append(f"{role} STOP: {type(error).__name__}: {error}")
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() < deadline:
+        progressed = False
+        for role, port in ports.items():
+            if report["stopped"][role]:
+                continue
+            try:
+                payload = port.readline()
+            except Exception as error:
+                report["errors"].append(
+                    f"{role} cleanup read: {type(error).__name__}: {error}"
+                )
+                continue
+            if not payload:
+                continue
+            progressed = True
+            line = payload.decode("ascii", errors="replace").strip()
+            if not line.startswith(PROTOCOL + "|"):
+                continue
+            transcript.append(f"{role}: {line}")
+            try:
+                values = fields(line)
+            except Exception as error:
+                report["errors"].append(
+                    f"{role} cleanup parse: {type(error).__name__}: {error}"
+                )
+                continue
+            if (
+                line.startswith(f"{PROTOCOL}|STOPPED|")
+                and values.get("role") == role
+                and values.get("nonce") == nonce
+                and values.get("core") == core_revision
+                and values.get("cleanup") == "pass"
+            ):
+                report["stopped"][role] = True
+        if (
+            set(ports) == set(ROLES)
+            and all(report["command_sent"].values())
+            and all(report["stopped"].values())
+        ):
+            report["status"] = "PASS"
+            return report
+        if not progressed:
+            time.sleep(0.005)
+    report["errors"].append("bounded Mesh DFU cleanup evidence incomplete")
+    return report
+
+
+def close_ports(ports: dict[str, Any]) -> dict[str, str]:
+    """! @brief 부분 serial open을 포함해 모든 handle close 결과를 기록합니다. """
+
+    result = {role: "NOT_OPENED" for role in ROLES}
+    for role, port in ports.items():
+        try:
+            port.close()
+            result[role] = "PASS"
+        except Exception as error:
+            result[role] = f"FAIL:{type(error).__name__}:{error}"
+    return result
+
+
+@contextmanager
+def pre_serial_cleanup_guard(
+    state: dict[str, Any],
+    ports: dict[str, Any],
+    nonce: str,
+    core_revision: str,
+    transcript: list[str],
+    failure_evidence: dict[str, Any],
+):
+    """! @brief reset 뒤 serial 소유권 이전 전 예외도 정리 실패로 기록합니다. """
+
+    try:
+        yield
+    finally:
+        if state["radio_started"] and not state["serial_cleanup_owned"]:
+            try:
+                cleanup = cleanup_ports(
+                    ports,
+                    nonce,
+                    core_revision,
+                    transcript,
+                    required=True,
+                )
+            except Exception as error:
+                cleanup = {
+                    "required": True,
+                    "status": "FAIL",
+                    "errors": [
+                        f"cleanup exception: {type(error).__name__}: {error}"
+                    ],
+                }
+            finally:
+                closed = close_ports(ports)
+            failure_evidence["cleanup"] = cleanup
+            failure_evidence["serial_close"] = closed
+
+
 def validate_boot(
     role: str,
     values: dict[str, str],
@@ -518,7 +745,12 @@ def collect_iteration(
     candidate: ImageInput,
     transcript: list[str],
     deadline: float,
-) -> tuple[dict[str, dict[str, str]], dict[str, str] | None, dict[str, str] | None]:
+) -> tuple[
+    dict[str, dict[str, str]],
+    dict[str, str] | None,
+    dict[str, str] | None,
+    dict[str, Any],
+]:
     """! @brief 두 candidate boot·APPLIED와 Distributor iteration을 함께 수집합니다. """
 
     boots: dict[str, dict[str, str]] = {}
@@ -602,7 +834,11 @@ def collect_iteration(
             iteration < ITERATION_TARGET
             or (final_result is not None and final_end is not None)
         ):
-            return boots, final_result, final_end
+            return boots, final_result, final_end, {
+                "boots": boots,
+                "applied": applied,
+                "distributor": distributor_iteration,
+            }
         if not progressed:
             time.sleep(0.005)
     raise MeshDfuFailure(f"DFU iteration {iteration} timeout")
@@ -646,7 +882,7 @@ def reset_and_wait_rollback(
 
     records: dict[str, dict[str, str]] = {}
     for role in roles:
-        access_preserving_reset(boards[role]["uid"], flash_timeout)
+        access_preserving_reset(boards[role]["probe_sha256"], flash_timeout)
     for role in roles:
         values = read_record(
             role,
@@ -659,6 +895,83 @@ def reset_and_wait_rollback(
         )
         validate_boot(role, values, "0.0.0+0", 1)
         records[role] = values
+    return records
+
+
+def build_dispatch_cycle_records(
+    iterations: list[dict[str, Any]],
+    rollbacks: list[dict[str, Any]],
+    transcript: list[str],
+    candidate: ImageInput,
+) -> list[dict[str, Any]]:
+    """! @brief 5회 두 Target의 signed update·rollback raw 분모를 10회로 펼칩니다. """
+
+    if [row.get("iteration") for row in iterations] != list(
+        range(1, ITERATION_TARGET + 1)
+    ):
+        raise MeshDfuFailure("DFU iteration sequence mismatch")
+    if [row.get("iteration") for row in rollbacks] != list(
+        range(1, ITERATION_TARGET + 1)
+    ):
+        raise MeshDfuFailure("DFU rollback sequence mismatch")
+    rollback_roles = {
+        row.get("iteration"): set(row.get("roles", [])) for row in rollbacks
+    }
+    expected_rollbacks = {
+        iteration: ({"target_b"} if iteration == ITERATION_TARGET else
+                    {"target_a", "target_b"})
+        for iteration in range(1, ITERATION_TARGET + 1)
+    }
+    if rollback_roles != expected_rollbacks:
+        raise MeshDfuFailure("DFU rollback role denominator mismatch")
+    records: list[dict[str, Any]] = []
+    expected_start: int | None = None
+    for row in iterations:
+        iteration = row["iteration"]
+        start = row.get("transcript_line_start")
+        end = row.get("transcript_line_end")
+        if not isinstance(start, int) or not isinstance(end, int) or \
+                end < start or end > len(transcript):
+            raise MeshDfuFailure("DFU raw iteration range mismatch")
+        if expected_start is not None and start != expected_start:
+            raise MeshDfuFailure("DFU raw iteration continuity mismatch")
+        raw = ("\n".join(transcript[start - 1:end]) + "\n").encode(
+            "ascii", errors="replace"
+        )
+        if row.get("transcript_sha256") != hashlib.sha256(raw).hexdigest():
+            raise MeshDfuFailure("DFU raw iteration digest mismatch")
+        expected_start = end + 1
+        details = row.get("details", {})
+        if set(details.get("boots", {})) != {"target_a", "target_b"} or \
+                set(details.get("applied", {})) != {"target_a", "target_b"}:
+            raise MeshDfuFailure("DFU target update denominator mismatch")
+        distributor = details.get("distributor", {})
+        if distributor.get("signed_sha256") != candidate.sha256 or \
+                integer(distributor, "targets") != 2:
+            raise MeshDfuFailure("DFU signed candidate raw identity mismatch")
+        for role in ("target_a", "target_b"):
+            confirmed = iteration == ITERATION_TARGET and role == "target_a"
+            if not confirmed and role not in rollback_roles.get(iteration, set()):
+                raise MeshDfuFailure("DFU rollback denominator mismatch")
+            records.append(
+                {
+                    "cycle": len(records) + 1,
+                    "iteration": iteration,
+                    "target": role,
+                    "status": "PASS",
+                    "signed_sha256": candidate.sha256,
+                    "final_state": "confirmed" if confirmed else "rolled_back",
+                    "transcript_sha256": row["transcript_sha256"],
+                    "semantics": {
+                        "signed_mesh_dfu": "PASS",
+                        "rollback": "PASS",
+                        "active_watchdog_condition": "NOT_APPLICABLE",
+                        "cleanup": "PASS",
+                    },
+                }
+            )
+    if len(records) != TARGET_RESULT_DENOMINATOR:
+        raise MeshDfuFailure("DFU dispatch cycle denominator mismatch")
     return records
 
 
@@ -707,6 +1020,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         additional_paths=(
             HIL / "m32_ble_capability_run.py",
             HIL / "m32_ble_capability.py",
+            HIL / "m33_sdk_risk_common.py",
             HIL / "v04_protocol.py",
         ),
     )
@@ -732,6 +1046,10 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         signing_key,
     )
     validate_build_set(builds)
+    watchdog_conditions = {
+        role: build_watchdog_classification(build)
+        for role, build in builds.items()
+    }
     candidate = builds["candidate"].signed_bin
 
     serial_module, list_ports = import_pyserial()
@@ -755,10 +1073,28 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     flash_results: dict[str, Any] = {}
     iteration_records: list[dict[str, Any]] = []
     rollback_records: list[dict[str, Any]] = []
+    dispatch_cycle_records: list[dict[str, Any]] = []
     capacities: dict[str, dict[str, int]] = {}
     started = time.monotonic()
     deadline = started + args.result_timeout
     prefix = args.output_prefix.resolve()
+    native_path = prefix.with_suffix(".json")
+    if native_path.exists() or prefix.with_suffix(".transcript.log").exists():
+        raise MeshDfuFailure("기존 M32-MDFU-01 attempt를 덮어쓰지 않습니다")
+    watchdog_condition_evidence = copy_watchdog_condition_evidence(
+        native_path,
+        builds,
+        watchdog_conditions,
+    )
+    base_images = {role: builds[role].signed_hex.path for role in ROLES}
+    sidecars = reserve_sidecars(native_path, ROLES)
+    copy_program_inputs(base_images, sidecars)
+    program_images = {role: sidecars[role]["image"] for role in ROLES}
+    build_records = {role: builds[role].build_record for role in ROLES}
+    readback_records: dict[str, dict[str, Any]] = {}
+    programming_receipt = None
+    cleanup: dict[str, Any] = {"required": False, "status": "NOT_REQUIRED"}
+    close_result = {role: "NOT_OPENED" for role in ROLES}
     public_boards = {
         role: {
             "probe_sha256": board["probe_sha256"],
@@ -774,10 +1110,12 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "scope": "signed_mesh_dfu_five_iterations_two_targets_and_mcuboot_rollback",
         "source_clean": True,
         "source_revision": core_revision,
+        "identity": {"core": core_revision},
         "board_revision": board_revision,
         "boards": public_boards,
         "iterations_completed": 0,
         "iteration_records": iteration_records,
+        "dispatch_cycle_records": dispatch_cycle_records,
         "rollback_records": rollback_records,
         "images": {
             "candidate": image_evidence(candidate),
@@ -789,6 +1127,11 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "trust_public_key_source_sha256": builds["candidate"].public_key_sha256,
         "flash_backend": "pyocd-cmsis-dap-v2-exact-sector",
         "flash_results": flash_results,
+        "build_records": build_records,
+        "watchdog_condition_evidence": watchdog_condition_evidence,
+        "cleanup": cleanup,
+        "serial_close": close_result,
+        "exact_programming": {},
         "secondary_slot": {
             "offset": SLOT1_OFFSET,
             "size": SLOT1_SIZE,
@@ -796,6 +1139,14 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         },
         "mass_erase_or_recover": False,
         "raw_probe_identity_persisted": False,
+        "sdk_risk_regression": {
+            "mcuboot_active_watchdog": {
+                "status": watchdog_condition_evidence["status"],
+                "condition": watchdog_condition_evidence["condition"],
+                "builds": watchdog_conditions,
+                "not_run_is_pass": False,
+            },
+        },
     }
     _active_attempt = {
         "evidence": failure_evidence,
@@ -803,52 +1154,67 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "started": started,
         "prefix": prefix,
     }
+    ports: dict[str, Any] = {}
+    cleanup_state = {"radio_started": False, "serial_cleanup_owned": False}
 
-    with ProbeLocks([boards[role]["uid"] for role in ROLES]):
+    with ProbeLocks([boards[role]["uid"] for role in ROLES]), pre_serial_cleanup_guard(
+        cleanup_state,
+        ports,
+        nonce,
+        core_revision,
+        transcript,
+        failure_evidence,
+    ):
         for role in ROLES:
             board = boards[role]
-            board["registers"] = collect_register_identity(board["uid"], board["volume"])
+            board["registers"] = collect_register_identity_sha256(
+                board["probe_sha256"], board["volume"]
+            )
             public_boards[role]["registers"] = board["registers"]
-            erase_secondary_slot(board["uid"], args.flash_timeout)
-            flash_results[f"{role}_boot"] = flash_image_pyocd(
+            erase_secondary_slot(board["probe_sha256"], args.flash_timeout)
+            flash_results[f"{role}_boot"] = flash_image_pyocd_sha256(
                 f"{role}-bootloader",
-                board["uid"],
+                board["probe_sha256"],
                 builds[role].boot_hex.path,
                 args.flash_timeout,
-                cmsis_dap_v1=False,
-                preserve_nrf54l_access=True,
                 defer_reset=True,
             )
-            flash_results[f"{role}_base"] = flash_image_pyocd(
+            flash_results[f"{role}_base"] = flash_image_pyocd_sha256(
                 f"{role}-signed-base",
-                board["uid"],
-                builds[role].signed_hex.path,
+                board["probe_sha256"],
+                program_images[role],
                 args.flash_timeout,
-                cmsis_dap_v1=False,
-                preserve_nrf54l_access=True,
                 defer_reset=True,
             )
-            flash_results[f"{role}_settings_clear"] = clear_nrf54l_rram_pyocd(
+            flash_results[f"{role}_settings_clear"] = clear_nrf54l_rram_pyocd_sha256(
                 role,
-                board["uid"],
+                board["probe_sha256"],
                 SETTINGS_STORAGE_START,
                 SETTINGS_STORAGE_SIZE,
                 args.flash_timeout,
             )
         flash_results["distributor_candidate_bytes"] = flash_secondary_candidate(
-            boards["distributor"]["uid"], candidate, args.flash_timeout
+            boards["distributor"]["probe_sha256"], candidate, args.flash_timeout
         )
+        readback_records, programming_receipt = readback_programmed_images(
+            {role: boards[role]["uid"] for role in ROLES},
+            {role: boards[role]["probe_sha256"] for role in ROLES},
+            program_images,
+            sidecars,
+        )
+        cleanup_state["radio_started"] = True
         for role in ROLES:
-            access_preserving_reset(boards[role]["uid"], args.flash_timeout)
+            access_preserving_reset(
+                boards[role]["probe_sha256"], args.flash_timeout
+            )
         time.sleep(2.0)
 
-        ports = {
-            role: serial_module.Serial(
-                boards[role]["port"], 115200, timeout=0.05, write_timeout=2.0
-            )
-            for role in ROLES
-        }
+        cleanup_state["serial_cleanup_owned"] = True
         try:
+            for role in ROLES:
+                ports[role] = serial_module.Serial(
+                    boards[role]["port"], 115200, timeout=0.05, write_timeout=2.0
+                )
             for port in ports.values():
                 port.reset_input_buffer()
             for role in ROLES:
@@ -900,7 +1266,8 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             final_result: dict[str, str] | None = None
             final_end: dict[str, str] | None = None
             for iteration in range(1, ITERATION_TARGET + 1):
-                boots, result, end = collect_iteration(
+                iteration_start = len(transcript)
+                boots, result, end, details = collect_iteration(
                     ports,
                     iteration,
                     nonce,
@@ -915,6 +1282,8 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                         "target_a_confirmed": int(iteration == ITERATION_TARGET),
                         "target_b_confirmed": 0,
                         "candidate_boots": len(boots),
+                        "details": details,
+                        "transcript_line_start": iteration_start + 1,
                     }
                 )
                 failure_evidence["iterations_completed"] = len(iteration_records)
@@ -949,6 +1318,13 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     )
                     if integer(nexted, "iteration") != next_iteration:
                         raise MeshDfuFailure("NEXTED iteration 불일치")
+                    iteration_records[-1]["transcript_line_end"] = len(transcript)
+                    iteration_raw = (
+                        "\n".join(transcript[iteration_start:]) + "\n"
+                    ).encode("ascii", errors="replace")
+                    iteration_records[-1]["transcript_sha256"] = hashlib.sha256(
+                        iteration_raw
+                    ).hexdigest()
                 else:
                     final_result = result
                     final_end = end
@@ -979,28 +1355,91 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             rollback_records.append(
                 {"iteration": ITERATION_TARGET, "roles": sorted(final_b)}
             )
-
-            for role in ROLES:
-                send(ports[role], f"{PROTOCOL}|STOP|nonce={nonce}")
-            for role in ROLES:
-                stopped = read_record(
-                    role,
-                    ports[role],
-                    "STOPPED",
-                    transcript,
-                    deadline,
-                    nonce=nonce,
-                    core_revision=core_revision,
+            iteration_records[-1]["transcript_line_end"] = len(transcript)
+            final_iteration_raw = (
+                "\n".join(
+                    transcript[iteration_records[-1]["transcript_line_start"] - 1:]
                 )
-                if stopped.get("cleanup") != "pass":
-                    raise MeshDfuFailure(f"{role} cleanup 불일치")
+                + "\n"
+            ).encode("ascii", errors="replace")
+            iteration_records[-1]["transcript_sha256"] = hashlib.sha256(
+                final_iteration_raw
+            ).hexdigest()
+
         finally:
-            for port in ports.values():
-                port.close()
+            try:
+                cleanup = cleanup_ports(
+                    ports,
+                    nonce,
+                    core_revision,
+                    transcript,
+                    required=True,
+                )
+            except Exception as error:
+                cleanup = {
+                    "required": True,
+                    "status": "FAIL",
+                    "errors": [
+                        f"cleanup exception: {type(error).__name__}: {error}"
+                    ],
+                }
+            finally:
+                close_result = close_ports(ports)
+            failure_evidence["cleanup"] = cleanup
+            failure_evidence["serial_close"] = close_result
+        if cleanup["status"] != "PASS" or any(
+                value.startswith("FAIL:") for value in close_result.values()):
+            raise MeshDfuFailure("resource cleanup was not proven")
+
+    dispatch_cycle_records.extend(
+        build_dispatch_cycle_records(
+            iteration_records,
+            rollback_records,
+            transcript,
+            candidate,
+        )
+    )
 
     for build in builds.values():
         for image in (build.boot_hex, build.signed_hex, build.signed_bin, build.raw_bin):
             validate_image_unchanged(image.path, image.size, image.sha256)
+
+    require_exact_clean_source(REPOSITORY, core_revision)
+    validate_programming_receipt(programming_receipt, ROLES, readback_records)
+    exact_program = exact_program_evidence(
+        ROLES,
+        {role: boards[role]["probe_sha256"] for role in ROLES},
+        sidecars,
+        {
+            role: {
+                "mode": flash_results[f"{role}_base"][0],
+                "bytes": str(flash_results[f"{role}_base"][1]),
+            }
+            for role in ROLES
+        },
+        build_records,
+        readback_records,
+    )
+    attestation = dispatch_attestation(
+        "m32_mesh_dfu",
+        core_revision,
+        TARGET_RESULT_DENOMINATOR,
+        (
+            "signed_mesh_dfu",
+            "rollback",
+            "active_watchdog_condition",
+            "cleanup",
+        ),
+        ROLES,
+        exact_program,
+        semantic_status={
+            "signed_mesh_dfu": "PASS",
+            "rollback": "PASS",
+            "active_watchdog_condition": "NOT_APPLICABLE",
+            "cleanup": "PASS",
+        },
+    )
+    failure_evidence["exact_programming"] = exact_program
 
     evidence = {
         "schema_version": 1,
@@ -1009,10 +1448,12 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "scope": "signed_mesh_dfu_five_iterations_two_targets_and_mcuboot_rollback",
         "source_clean": True,
         "source_revision": core_revision,
+        "identity": {"core": core_revision},
         "board_revision": board_revision,
         "nonce": nonce,
         "boards": public_boards,
         "iterations": ITERATION_TARGET,
+        "cycles": TARGET_RESULT_DENOMINATOR,
         "firmware_distribution_targets": TARGET_RESULT_DENOMINATOR,
         "capacities": capacities,
         "negative": {
@@ -1023,6 +1464,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         },
         "rollback_count": sum(len(item["roles"]) for item in rollback_records),
         "iteration_records": iteration_records,
+        "dispatch_cycle_records": dispatch_cycle_records,
         "rollback_records": rollback_records,
         "images": {
             "candidate": image_evidence(candidate),
@@ -1034,13 +1476,27 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "trust_public_key_source_sha256": builds["candidate"].public_key_sha256,
         "flash_backend": "pyocd-cmsis-dap-v2-exact-sector",
         "flash_results": flash_results,
+        "build_records": build_records,
+        "watchdog_condition_evidence": watchdog_condition_evidence,
+        "cleanup": cleanup,
+        "serial_close": close_result,
+        "exact_programming": exact_program,
         "secondary_slot": {
             "offset": SLOT1_OFFSET,
             "size": SLOT1_SIZE,
             "erase_end_exclusive": SLOT1_END,
         },
         "mass_erase_or_recover": False,
+        "sdk_risk_regression": {
+            "mcuboot_active_watchdog": {
+                "status": watchdog_condition_evidence["status"],
+                "condition": watchdog_condition_evidence["condition"],
+                "builds": watchdog_conditions,
+                "not_run_is_pass": False,
+            },
+        },
         "duration_seconds": round(time.monotonic() - started, 3),
+        "m33_dispatch_attestation": attestation,
     }
     save_attempt(prefix, evidence, transcript)
     _active_attempt = None

@@ -1,4 +1,4 @@
-"""Check plaintext Ranging Features rejection, optionally on one ACL."""
+"""! @brief 동일 ACL의 plaintext Ranging Features 거부를 검증합니다. """
 
 import argparse
 import hashlib
@@ -14,12 +14,29 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from ble_pair_hil_common import flash_image_pyocd
 from m6_serial_echo import import_pyserial
 from m31_ble_capability_run import collect_register_identity, discover
+from m31_cs_negative_attestation import (
+    build_insecure_read_records,
+    complete_program_phase,
+    make_attestation,
+    phase_contract,
+    prepare_program_phase,
+)
 from m31_cs_ras_pair_run import hardware_reset
 from v04_protocol import ProbeLocks
 
 
+REPOSITORY = Path(__file__).resolve().parents[3]
+APPLICATION_ROOTS = {
+    "client": Path(__file__).resolve().parent / "fixtures/RasInsecureRead",
+    "reflector": (
+        REPOSITORY
+        / "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector"
+    ),
+}
+
+
 def stop_client(client, reflector, record, timeout=5.0):
-    """Request a bounded disconnect and preserve both UART transcripts."""
+    """! @brief bounded disconnect를 요청하고 두 UART transcript를 보존합니다. """
     client.write(b"s")
     client.flush()
     deadline = time.monotonic() + timeout
@@ -59,6 +76,8 @@ def stop_client(client, reflector, record, timeout=5.0):
 
 
 def main():
+    """! @brief 동일 ACL에서 미암호화 RAS 읽기 거부 20회를 실행합니다. """
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--client-probe-sha256", required=True)
     parser.add_argument("--reflector-probe-sha256", required=True)
@@ -70,17 +89,18 @@ def main():
     parser.add_argument("--same-acl", action="store_true")
     parser.add_argument("--cycles", type=int, default=20)
     args = parser.parse_args()
-    if not 1 <= args.cycles <= 20:
-        parser.error("cycles must be between 1 and 20")
+    if args.cycles != 20:
+        parser.error("release campaign requires exactly 20 cycles")
+    if not args.same_acl:
+        parser.error("release campaign requires --same-acl")
     if args.output.exists():
         parser.error("refusing to overwrite existing evidence")
     if args.source_clean:
-        root = Path(__file__).resolve().parents[3]
         revision = subprocess.check_output(
-            ("git", "rev-parse", "HEAD"), cwd=root, text=True
+            ("git", "rev-parse", "HEAD"), cwd=REPOSITORY, text=True
         ).strip()
         changed = subprocess.check_output(
-            ("git", "status", "--porcelain"), cwd=root, text=True
+            ("git", "status", "--porcelain"), cwd=REPOSITORY, text=True
         ).strip()
         if changed or args.core_revision != revision:
             parser.error("exact HIL requires clean source and full HEAD revision")
@@ -92,11 +112,21 @@ def main():
     )
     if client_uid == reflector_uid or client_port == reflector_port:
         raise RuntimeError("role mapping overlap")
+    images = {"client": args.client_image, "reflector": args.reflector_image}
+    phase = prepare_program_phase(
+        args.output,
+        "insecure_read",
+        args.core_revision,
+        images,
+        APPLICATION_ROOTS,
+    )
     record = {
         "status": "FAIL",
         "test": "unencrypted_ranging_features_read_20",
-        "source_clean": args.source_clean,
+        "source_clean": True,
         "core_revision": args.core_revision,
+        "board_revision": phase.board_revision,
+        "negative_phase": phase_contract(phase),
         "client_probe_sha256": args.client_probe_sha256,
         "reflector_probe_sha256": args.reflector_probe_sha256,
         "client_port": client_port,
@@ -119,6 +149,9 @@ def main():
         "client_lines": [],
         "reflector_lines": [],
     }
+    opened_ports = {}
+    flash_results = {}
+    cleanup = {}
     try:
         with ProbeLocks([client_uid, reflector_uid]):
             record["client_registers"] = collect_register_identity(
@@ -129,6 +162,7 @@ def main():
             )
             with serial.Serial(client_port, 115200, timeout=0.05) as client, \
                     serial.Serial(reflector_port, 115200, timeout=0.05) as reflector:
+                opened_ports = {"client": client, "reflector": reflector}
                 client.reset_input_buffer()
                 reflector.reset_input_buffer()
                 record["reflector_flash"] = flash_image_pyocd(
@@ -139,10 +173,14 @@ def main():
                     "cs_insecure_client", client_uid, args.client_image,
                     120.0, hardware_reset=True
                 )
+                flash_results = {
+                    "client": record["client_flash"],
+                    "reflector": record["reflector_flash"],
+                }
                 client.reset_input_buffer()
                 reflector.reset_input_buffer()
-                hardware_reset(reflector_uid)
-                hardware_reset(client_uid)
+                hardware_reset(args.reflector_probe_sha256)
+                hardware_reset(args.client_probe_sha256)
                 started = time.monotonic()
                 campaign_deadline = started + 600.0
                 pattern = re.compile(
@@ -163,7 +201,7 @@ def main():
                                 client.write(b"r")
                                 client.flush()
                             else:
-                                hardware_reset(client_uid)
+                                hardware_reset(args.client_probe_sha256)
                         first_line = len(record["client_lines"])
                         cycle_started = time.monotonic()
                         deadline = min(cycle_started + 60.0, campaign_deadline)
@@ -304,7 +342,6 @@ def main():
                 if any("CS reflector secure L2" in line
                        for line in record["reflector_lines"]):
                     raise RuntimeError("reflector link became encrypted")
-                record["status"] = "PASS"
     except Exception as error:
         record["failure_class"] = type(error).__name__
         detail = str(error).replace(client_uid, "<probe>")
@@ -312,6 +349,51 @@ def main():
         record["failure_detail"] = re.sub(
             r"\b[0-9A-Fa-f]{16,}\b", "<probe>", detail[:120]
         )
+    finally:
+        cleanup = {
+            role: {
+                "stop": (
+                    "PASS"
+                    if role == "client" and record["stop_confirmed"]
+                    else "NOT_APPLICABLE"
+                    if role == "reflector"
+                    else "FAIL"
+                ),
+                "disconnect": (
+                    "PASS" if record["stop_confirmed"] else "FAIL"
+                ),
+                "serial_close": (
+                    "PASS"
+                    if getattr(opened_ports.get(role), "is_open", None) is False
+                    else "FAIL"
+                ),
+            }
+            for role in ("client", "reflector")
+        }
+        record["cleanup"] = cleanup
+
+    if "failure_class" not in record:
+        try:
+            exact_program = complete_program_phase(
+                phase,
+                args.core_revision,
+                {"client": client_uid, "reflector": reflector_uid},
+                {
+                    "client": args.client_probe_sha256,
+                    "reflector": args.reflector_probe_sha256,
+                },
+                flash_results,
+            )
+            cycle_records = build_insecure_read_records(record, cleanup)
+            record["dispatch_cycle_records"] = cycle_records
+            record["program_phase"] = exact_program
+            record["m33_dispatch_attestation"] = make_attestation(
+                phase, args.core_revision, exact_program, cycle_records
+            )
+            record["status"] = "PASS"
+        except Exception as error:
+            record["failure_class"] = type(error).__name__
+            record["failure_detail"] = str(error)[:120]
     for key in ("client_lines", "reflector_lines"):
         record[key] = [
             re.sub(r"\b[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5}\b",

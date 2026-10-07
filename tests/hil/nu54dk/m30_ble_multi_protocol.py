@@ -5,10 +5,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import re
+from typing import Sequence
 
 
 PROTOCOL = "M30W07|1"
 ROLES = ("peripheral", "mixed", "central")
+CYCLE_COUNT = 20
 NONCE_PATTERN = re.compile(r"[0-9a-f]{32}")
 REVISION_PATTERN = re.compile(r"[0-9a-f]{40}")
 
@@ -29,6 +31,10 @@ class MultiSecurityRoleResult:
     security_errors: int
     key_size_errors: int
     callback_context: str
+    cleanup_active_links: int
+    cleanup_pending_operations: int
+    cleanup_buffers: int
+    cleanup_status: str
 
 
 def _identity(nonce: str, revision: str) -> tuple[str, str]:
@@ -104,6 +110,8 @@ def expected_lines(role: str, nonce: str, revision: str) -> list[str]:
             f"|cross_link=0|security_errors=0|key_size_errors=0"
             f"|callback_context=pass{suffix}",
             f"{PROTOCOL}|END|role={role}|status=pass{suffix}",
+            f"{PROTOCOL}|CLEANUP|role={role}|active_links=0|pending_operations=0"
+            f"|buffers=0|status=pass{suffix}",
         )
     )
     return lines
@@ -146,6 +154,55 @@ def parse_role_transcript(
         security_errors=0,
         key_size_errors=0,
         callback_context="pass",
+        cleanup_active_links=0,
+        cleanup_pending_operations=0,
+        cleanup_buffers=0,
+        cleanup_status="pass",
+    )
+
+
+def expected_campaign_lines(role: str, nonces: Sequence[str], revision: str) -> list[str]:
+    """! @brief 20개 독립 nonce session의 canonical transcript를 만듭니다. """
+
+    if len(nonces) != CYCLE_COUNT or len(set(nonces)) != CYCLE_COUNT:
+        raise MultiSecurityProtocolFailure("20개 서로 다른 session nonce가 필요합니다.")
+    return [
+        line
+        for nonce in nonces
+        for line in expected_lines(role, nonce, revision)
+    ]
+
+
+def parse_role_campaign(
+    transcript: bytes, role: str, nonces: Sequence[str], revision: str
+) -> tuple[MultiSecurityRoleResult, ...]:
+    """! @brief 한 role의 20회 session과 cleanup을 strict typed 결과로 해석합니다. """
+
+    expected = expected_campaign_lines(role, nonces, revision)
+    actual = _lines(transcript)
+    if actual != expected:
+        difference = next(
+            (
+                index
+                for index, pair in enumerate(zip(actual, expected, strict=False))
+                if pair[0] != pair[1]
+            ),
+            min(len(actual), len(expected)),
+        )
+        actual_line = actual[difference] if difference < len(actual) else "<누락>"
+        expected_line = expected[difference] if difference < len(expected) else "<없음>"
+        raise MultiSecurityProtocolFailure(
+            f"campaign protocol 불일치 index={difference}: actual={actual_line!r}, "
+            f"expected={expected_line!r}"
+        )
+    return tuple(
+        parse_role_transcript(
+            ("\n".join(expected_lines(role, nonce, revision)) + "\n").encode("ascii"),
+            role,
+            nonce,
+            revision,
+        )
+        for nonce in nonces
     )
 
 
@@ -168,6 +225,25 @@ def validate_three_role_session(
         or result.security_errors != 0
         or result.key_size_errors != 0
         or result.callback_context != "pass"
+        or result.cleanup_active_links != 0
+        or result.cleanup_pending_operations != 0
+        or result.cleanup_buffers != 0
+        or result.cleanup_status != "pass"
         for result in results.values()
     ):
         raise MultiSecurityProtocolFailure("교차 event·보안·key·callback 오류가 0이 아닙니다.")
+
+
+def validate_three_role_campaign(
+    results: dict[str, Sequence[MultiSecurityRoleResult]],
+) -> None:
+    """! @brief 세 role의 20회 보안 결과·cleanup 분모를 cycle별로 검증합니다. """
+
+    if set(results) != set(ROLES):
+        raise MultiSecurityProtocolFailure("세 고정 role campaign 결과가 필요합니다.")
+    if any(len(results[role]) != CYCLE_COUNT for role in ROLES):
+        raise MultiSecurityProtocolFailure("각 role에 정확히 20개 cycle 결과가 필요합니다.")
+    for cycle in range(CYCLE_COUNT):
+        validate_three_role_session(
+            {role: results[role][cycle] for role in ROLES}
+        )

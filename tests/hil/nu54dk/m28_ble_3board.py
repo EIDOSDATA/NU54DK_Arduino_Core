@@ -9,11 +9,9 @@ from contextlib import ExitStack
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 import json
-import os
 from pathlib import Path
 import re
 import string
-import subprocess
 import sys
 import threading
 import time
@@ -33,10 +31,12 @@ from ble_pair_hil_common import (  # noqa: E402
     RoleEndpoint,
     RoleExecution,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
     git_revision,
     image_record,
+    probe_sha256,
+    public_endpoint,
     protocol_lines,
     take_exact,
     transcript_record,
@@ -144,19 +144,21 @@ def find_pyocd_volume(board_id: str, explicit_volume: str | None) -> DaplinkVolu
 
 ## @brief flash backend별 fail-closed 장치 탐색 경계를 적용합니다.
 def discover_role_endpoint(
-    board_id: str,
+    probe_digest: str,
     explicit_volume: str | None,
     explicit_port: str,
     list_ports: Any,
     flash_backend: str,
 ) -> RoleEndpoint:
+    endpoint = discover_endpoint_sha256(
+        probe_digest, explicit_volume, explicit_port, list_ports
+    )
     if flash_backend != "pyocd-sector":
-        return discover_endpoint(board_id, explicit_volume, explicit_port, list_ports)
-    normalized = normalize_board_id(board_id)
+        return endpoint
     return RoleEndpoint(
-        normalized,
-        find_pyocd_volume(normalized, explicit_volume),
-        find_serial_port(normalized, explicit_port, list_ports),
+        endpoint.board_id,
+        find_pyocd_volume(endpoint.board_id, explicit_volume),
+        endpoint.port_name,
     )
 
 
@@ -195,60 +197,16 @@ def parse_pyocd_identity(output: str) -> dict[str, str]:
     return {key: f"0x{value:08x}" for key, value in values.items()}
 
 
-## @brief 실행 중인 target을 멈추지 않고 DP·AP identity를 UID에 결합합니다.
-def probe_pyocd_identity(board_id: str) -> dict[str, str]:
-    command = (
-        sys.executable,
-        "-I",
-        "-m",
-        "pyocd",
-        "commander",
-        "--uid",
-        board_id,
-        "--target",
-        "nrf54l",
-        "--frequency",
-        "100000",
-        "-O",
-        "cmsis_dap.limit_packets=true",
-        "-O",
-        "auto_unlock=false",
-        "--no-init",
-    )
-    commands = "\n".join(
-        (
-            "initdp",
-            "makeap 0",
-            "makeap 2",
-            "readdp 0x24",
-            "readap 0 0xfc",
-            "readap 0 0x00",
-            "readap 2 0xfc",
-            "readap 2 0x14",
-            "exit",
-            "",
-        )
-    )
-    environment = dict(os.environ)
-    environment["PYTHONUTF8"] = "1"
-    environment["PYTHONIOENCODING"] = "utf-8"
-    result = subprocess.run(
-        command,
-        input=commands,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        timeout=30,
-        check=False,
-        env=environment,
-    )
-    output = result.stdout + "\n" + result.stderr
-    if result.returncode != 0:
-        raise BlePairHilFailure(
-            f"pyOCD identity probe 실패: uid={board_id}, rc={result.returncode}"
-        )
-    return parse_pyocd_identity(output)
+## @brief 실행 중인 target을 멈추지 않고 DP·AP identity를 SHA-256 probe에 결합합니다.
+def probe_pyocd_identity(probe_digest: str) -> dict[str, str]:
+    identity = common.collect_register_identity_sha256(probe_digest)
+    return {
+        "target_id": identity["dp_targetid_observed"],
+        "ahb_ap_idr": identity["ahb_ap_idr"],
+        "ahb_ap_csw": identity["ahb_ap_csw"],
+        "ctrl_ap_idr": identity["ctrl_ap_idr"],
+        "approtect_status": identity["approtect_status"],
+    }
 
 
 ## @brief DAPLink가 직접 판독한 target identity를 고정 필드로 보존합니다.
@@ -278,7 +236,10 @@ def collect_debug_identities(
 ) -> dict[str, dict[str, str]]:
     if flash_backend == "pyocd-sector":
         return {
-            role: {"source": "pyocd-direct", **probe_pyocd_identity(endpoint.board_id)}
+            role: {
+                "source": "pyocd-direct",
+                **probe_pyocd_identity(probe_sha256(endpoint.board_id)),
+            }
             for role, endpoint in endpoints.items()
         }
     return {
@@ -294,7 +255,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--test-id", choices=tuple(TEST_NAMES), required=True)
     for role in ROLES:
         parser.add_argument(f"--{role}-hex")
-        parser.add_argument(f"--{role}-board-id", required=True)
+        parser.add_argument(f"--probe-{role}-sha256", required=True)
         parser.add_argument(f"--{role}-volume")
         parser.add_argument(f"--{role}-port", default="auto")
     parser.add_argument("--baud", type=int, default=DEFAULT_BAUD_RATE)
@@ -426,10 +387,11 @@ def collect_until_final(
     capture: bytearray,
     deadline: float,
     stop_event: threading.Event,
+    final_token_suffix: bytes = b"",
 ) -> None:
     final = (
-        f"NUCODE_M28B3_{role}:FINAL:PASS:test={test_name}:nonce={nonce}"
-    ).encode("ascii")
+        f"NUCODE_M28B3_{role}:FINAL:PASS:test={test_name}"
+    ).encode("ascii") + final_token_suffix + f":nonce={nonce}".encode("ascii")
     fail_prefix = b"NUCODE_M28B3_FAIL:"
     try:
         while True:
@@ -470,11 +432,17 @@ def execute_three_board(
     hardware_reset: bool = False,
     preserve_nrf54l_access: bool = False,
     ready_replay_settle_seconds: float = 0.0,
+    ready_token_suffix: bytes = b"",
+    active_timing_callback: Any | None = None,
 ) -> ThreeBoardExecution:
     if baud_rate != DEFAULT_BAUD_RATE:
         raise BlePairHilFailure(f"기준선은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
     if not 30.0 <= result_timeout <= 2200.0:
         raise BlePairHilFailure("--result-timeout은 30..2200초여야 합니다.")
+    if (type(ready_token_suffix) is not bytes or len(ready_token_suffix) > 2048 or
+            b"\r" in ready_token_suffix or b"\n" in ready_token_suffix or
+            (ready_token_suffix and not ready_token_suffix.startswith(b":"))):
+        raise BlePairHilFailure("READY/FINAL identity suffix 형식이 올바르지 않습니다.")
     captures = {role: bytearray() for role in ROLES}
     pending = {role: bytearray() for role in ROLES}
     flashes = {role: ("not-started", "unknown") for role in ROLES}
@@ -497,14 +465,11 @@ def execute_three_board(
             for role in ROLES:
                 ports[role].reset_input_buffer()
                 if flash_backend == "pyocd-sector":
-                    flashes[role] = common.flash_image_pyocd(
+                    flashes[role] = common.flash_image_pyocd_sha256(
                         role,
-                        endpoints[role].board_id,
+                        probe_sha256(endpoints[role].board_id),
                         images[role],
                         flash_timeout,
-                        hardware_reset=hardware_reset,
-                        cmsis_dap_v1=False,
-                        preserve_nrf54l_access=preserve_nrf54l_access,
                     )
                 else:
                     flashes[role] = common.flash_image(
@@ -519,7 +484,7 @@ def execute_three_board(
             for role in ROLES:
                 ready = (
                     f"NUCODE_M28B3_READY:role={role}:test={test_name}"
-                ).encode("ascii")
+                ).encode("ascii") + ready_token_suffix
                 wait_exact_token(
                     ports[role], role, ready, pending[role], captures[role], deadline
                 )
@@ -527,7 +492,7 @@ def execute_three_board(
                 for role in ROLES:
                     ready = (
                         f"NUCODE_M28B3_READY:role={role}:test={test_name}"
-                    ).encode("ascii")
+                    ).encode("ascii") + ready_token_suffix
                     settle_ready_replays(
                         ports[role],
                         role,
@@ -556,6 +521,7 @@ def execute_three_board(
                 captures["mixed"],
                 deadline,
             )
+            active_started_ns = time.monotonic_ns()
             write_start_command(ports["central"], test_name, nonce)
 
             stop_event = threading.Event()
@@ -571,6 +537,7 @@ def execute_three_board(
                         captures[role],
                         deadline,
                         stop_event,
+                        ready_token_suffix,
                     )
                     for role in ROLES
                 ]
@@ -580,6 +547,9 @@ def execute_three_board(
                 except Exception:
                     stop_event.set()
                     raise
+            active_finished_ns = time.monotonic_ns()
+            if active_timing_callback is not None:
+                active_timing_callback(active_started_ns, active_finished_ns)
     except Exception as error:
         raise ThreeBoardExecutionFailure(
             str(error), {role: bytes(captures[role]) for role in ROLES}
@@ -830,9 +800,7 @@ def build_evidence(
         "nonce": nonce,
         "boards": {
             role: {
-                "daplink_uid": endpoints[role].board_id,
-                "msd_root": str(endpoints[role].volume.root),
-                "uart_port": endpoints[role].port_name,
+                **public_endpoint(endpoints[role]),
                 "debug_identity": debug_identities[role],
             }
             for role in ROLES
@@ -887,7 +855,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     serial_module, list_ports = import_pyserial()
     endpoints = {
         role: discover_role_endpoint(
-            getattr(args, f"{role}_board_id"),
+            getattr(args, f"probe_{role}_sha256"),
             getattr(args, f"{role}_volume"),
             getattr(args, f"{role}_port"),
             list_ports,
@@ -900,7 +868,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     print(
         "NU54DK M28 3-board discovery SUCCESS: "
         + ", ".join(
-            f"{role}={endpoints[role].board_id}/{endpoints[role].port_name}"
+            f"{role}={public_endpoint(endpoints[role])['probe_sha256'][:12]}/"
+            f"{endpoints[role].port_name}"
             for role in ROLES
         )
     )

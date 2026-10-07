@@ -37,6 +37,8 @@ namespace
     constexpr char ready_query[] = "M29W05|1|READY?";
     constexpr char reset_command[] = "M29W05|1|RESET|core=" M29_CACHE_CORE_REVISION;
     constexpr char start_prefix[] = "M29W05|1|START|nonce=";
+    constexpr char resume_query[] = "M29W05|1|RESUME?";
+    constexpr char resume_prefix[] = "M29W05|1|RESUME|nonce=";
     constexpr char core_field[] = "|core=";
     constexpr char peer_name[] = "NU54-M29-CACHE";
     constexpr char service_text[] = "8e7e2950-7d8c-4c1a-9d2d-8b6519f77410";
@@ -82,6 +84,7 @@ namespace
     std::size_t command_length = 0U;
     bool protocol_started = false;
     bool protocol_finished = false;
+    bool resume_pending = false;
     bool callback_context_valid = true;
     std::uint8_t database_stage = 1U;
     std::uint8_t service_changed_requests = 0U;
@@ -1041,6 +1044,37 @@ namespace
 #endif
     }
 
+    /** @brief 복원된 nonce와 exact source를 확인한 뒤에만 재부팅 후 RF를 재개합니다. */
+    void resumeProtocol()
+    {
+        const std::size_t prefix_length = ::strlen(resume_prefix);
+        if (::strlen(command) != prefix_length + nonce_text_length +
+                                    ::strlen(core_field) + ::strlen(M29_CACHE_CORE_REVISION) ||
+            ::strncmp(command, resume_prefix, prefix_length) != 0 ||
+            ::strncmp(command + prefix_length, nonce, nonce_text_length) != 0 ||
+            ::strcmp(command + prefix_length + nonce_text_length,
+                     "|core=" M29_CACHE_CORE_REVISION) != 0)
+        {
+            fail("resume_record");
+            return;
+        }
+        resume_pending = false;
+#if defined(NUCODE_M29_CACHE_CENTRAL)
+        central_stage = CentralStage::corrupt;
+        Serial.print(protocol);
+        Serial.print("|REBOOT|role=central|phase=corrupt");
+        printSuffix();
+        Serial.println();
+        Serial.print(protocol);
+        Serial.print("|SCAN|role=central|stage=2");
+        printSuffix();
+        Serial.println();
+        scan_pending = true;
+#else
+        startAdvertising(true, true);
+#endif
+    }
+
     /** @brief Host의 bounded newline command를 수집합니다. */
     void pollHostCommand()
     {
@@ -1066,6 +1100,23 @@ namespace
                 else if (::strcmp(command, reset_command) == 0)
                 {
                     resetPersistentState();
+                }
+                else if (resume_pending && ::strcmp(command, resume_query) == 0)
+                {
+                    Serial.println();
+                    Serial.print(protocol);
+                    Serial.print("|RESUME_READY|role=");
+#if defined(NUCODE_M29_CACHE_CENTRAL)
+                    Serial.print("central");
+#else
+                    Serial.print("peripheral");
+#endif
+                    printSuffix();
+                    Serial.println();
+                }
+                else if (resume_pending)
+                {
+                    resumeProtocol();
                 }
                 else if (!protocol_started)
                 {
@@ -1155,20 +1206,7 @@ void setup()
     {
         protocol_started = true;
         protocol_deadline = k_uptime_get() + protocol_timeout_ms;
-#if defined(NUCODE_M29_CACHE_CENTRAL)
-        central_stage = CentralStage::corrupt;
-        Serial.print(protocol);
-        Serial.print("|REBOOT|role=central|phase=corrupt");
-        printSuffix();
-        Serial.println();
-        Serial.print(protocol);
-        Serial.print("|SCAN|role=central|stage=2");
-        printSuffix();
-        Serial.println();
-        scan_pending = true;
-#else
-        startAdvertising(true, true);
-#endif
+        resume_pending = true;
     }
     else
     {

@@ -30,13 +30,15 @@ from ble_pair_hil_common import (  # noqa: E402
     RoleEndpoint,
     RoleExecution,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
     flash_image,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     image_record,
+    public_endpoint,
     prepare_output_paths,
+    probe_sha256,
     read_line,
     save_failure_transcripts,
     transcript_record,
@@ -364,8 +366,8 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     )
     parser.add_argument("--peripheral-hex")
     parser.add_argument("--central-hex")
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -661,8 +663,8 @@ def execute_advanced_pair(
             ):
                 ports[role].reset_input_buffer()
                 if flash_backend == "pyocd-sector":
-                    flashes[role] = flash_image_pyocd(
-                        role, endpoint.board_id, image, flash_timeout
+                    flashes[role] = flash_image_pyocd_sha256(
+                        role, probe_sha256(endpoint.board_id), image, flash_timeout
                     )
                 else:
                     flashes[role] = flash_image(
@@ -766,11 +768,7 @@ def execute_advanced_pair(
 def _board(endpoint: RoleEndpoint) -> dict[str, str]:
     """! @brief evidence용 DAP/UART/MSD identity를 복사합니다. """
 
-    return {
-        "daplink_uid": endpoint.board_id,
-        "msd_root": str(endpoint.volume.root),
-        "uart_port": endpoint.port_name,
-    }
+    return public_endpoint(endpoint)
 
 
 def main(arguments: Sequence[str] | None = None) -> int:
@@ -778,17 +776,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
 
     args = parse_arguments(arguments)
     serial_module, list_ports = import_pyserial()
-    peripheral_endpoint = discover_endpoint(
-        args.peripheral_board_id, args.peripheral_volume, args.peripheral_port, list_ports
+    peripheral_endpoint = discover_endpoint_sha256(
+        args.probe_peripheral_sha256, args.peripheral_volume, args.peripheral_port, list_ports
     )
-    central_endpoint = discover_endpoint(
-        args.central_board_id, args.central_volume, args.central_port, list_ports
+    central_endpoint = discover_endpoint_sha256(
+        args.probe_central_sha256, args.central_volume, args.central_port, list_ports
     )
     validate_pair_identity(peripheral_endpoint, central_endpoint)
     print(
         "NU54DK M29-W07 pair discovery SUCCESS: "
-        f"peripheral={peripheral_endpoint.board_id}/{peripheral_endpoint.port_name}, "
-        f"central={central_endpoint.board_id}/{central_endpoint.port_name}"
+        f"peripheral={_board(peripheral_endpoint)['probe_sha256'][:12]}/{peripheral_endpoint.port_name}, "
+        f"central={_board(central_endpoint)['probe_sha256'][:12]}/{central_endpoint.port_name}"
     )
     if args.discover_only:
         return 0

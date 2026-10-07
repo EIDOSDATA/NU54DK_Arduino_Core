@@ -3,9 +3,9 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 import sys
-from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -215,46 +215,52 @@ class M32MeshUpdateHilTests(unittest.TestCase):
         self.assertNotIn("--erase chip", source)
 
     def test_deferred_flash_halts_without_reset(self) -> None:
-        """! @brief sysbuild 두 image를 기록하는 동안 target를 정지 상태로 유지합니다. """
+        """! @brief deferred flash도 raw UID argv 없이 SHA backend로 위임합니다. """
 
-        completed = SimpleNamespace(
-            returncode=0, stdout=b"programmed 4096 bytes", stderr=b""
-        )
-        with patch.object(common.subprocess, "run", return_value=completed) as run:
+        raw_uid = "a" * 32
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        with patch.object(
+            common,
+            "flash_image_pyocd_sha256",
+            return_value=("pyocd-sector-no-reset", "4096"),
+        ) as flash, patch.object(common.subprocess, "run") as run:
             result = common.flash_image_pyocd(
                 "blob",
-                "a" * 32,
+                raw_uid,
                 Path("signed.hex"),
                 120.0,
                 preserve_nrf54l_access=True,
                 defer_reset=True,
             )
         self.assertEqual(("pyocd-sector-no-reset", "4096"), result)
-        self.assertEqual(1, run.call_count)
-        command = run.call_args.args[0]
-        self.assertEqual("halt", command[command.index("--connect") + 1])
-        self.assertIn("--no-reset", command)
+        run.assert_not_called()
+        flash.assert_called_once_with(
+            "blob", digest, Path("signed.hex"), 120.0, defer_reset=True
+        )
 
     def test_rram_clear_writes_and_verifies_exact_range(self) -> None:
-        """! @brief nRF54L RRAM erase emulation은 0xFF 기록과 전 word 검증을 요구합니다. """
+        """! @brief RRAM clear도 raw UID argv 없이 SHA backend로 위임합니다. """
 
-        completed = SimpleNamespace(
-            returncode=0,
-            stdout=b" ".join([b"ffffffff"] * 64),
-            stderr=b"",
-        )
-        with patch.object(common.subprocess, "run", return_value=completed) as run:
+        raw_uid = "a" * 32
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        expected = {
+            "mode": "nrf54l-rram-fill-verified",
+            "verified_words": 64,
+        }
+        with patch.object(
+            common,
+            "clear_nrf54l_rram_pyocd_sha256",
+            return_value=expected,
+        ) as clear, patch.object(common.subprocess, "run") as run:
             evidence = common.clear_nrf54l_rram_pyocd(
-                "blob", "a" * 32, 0x174000, 0x100, 120.0
+                "blob", raw_uid, 0x174000, 0x100, 120.0
             )
         self.assertEqual("nrf54l-rram-fill-verified", evidence["mode"])
         self.assertEqual(64, evidence["verified_words"])
-        command = run.call_args.args[0]
-        commands = run.call_args.kwargs["input"]
-        self.assertEqual("halt", command[command.index("--connect") + 1])
-        self.assertIn(b"write32 0x5004b500 1", commands)
-        self.assertIn(b"fill 32 0x174000 0x100 0xffffffff", commands)
-        self.assertIn(b"read32 0x174000 0x100", commands)
+        run.assert_not_called()
+        clear.assert_called_once_with(
+            "blob", digest, 0x174000, 0x100, 120.0
+        )
 
     def test_runner_resets_vcom_reopen_budget_after_progress(self) -> None:
         """! @brief VCOM 재연결 횟수를 무응답 구간별로 제한합니다. """

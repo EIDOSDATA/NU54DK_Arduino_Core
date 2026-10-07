@@ -3,7 +3,9 @@
 
 from pathlib import Path
 import sys
+import threading
 import unittest
+from unittest import mock
 
 
 HIL_DIRECTORY = Path(__file__).resolve().parents[1] / "hil" / "nu54dk"
@@ -13,9 +15,16 @@ APPLICATION_ROOT = (
 if str(HIL_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(HIL_DIRECTORY))
 
-from ble_pair_hil_common import BlePairHilFailure  # noqa: E402
+from ble_pair_hil_common import (  # noqa: E402
+    BlePairHilFailure,
+    discover_endpoint_sha256,
+    probe_sha256,
+    public_endpoint,
+    redact_probe_output,
+)
 from m28_ble_3board import (  # noqa: E402
     TEST_NAMES,
+    collect_until_final,
     collect_debug_identities,
     daplink_debug_identity,
     parse_arguments,
@@ -140,6 +149,28 @@ def role_lines(test_id: str, role: str, nonce: str = NONCE) -> tuple[str, ...]:
 class M28ThreeBoardHilParserTests(unittest.TestCase):
     """! @brief 완전한 세 role PASS만 허용하고 protocol 오판을 거부합니다. """
 
+    def test_final_collector_accepts_bound_identity_suffix(self) -> None:
+        """! @brief M32 compile-time identity가 READY뿐 아니라 FINAL에도 결합됩니다. """
+        identity = b":source_manifest_sha256=" + b"a" * 64
+        line = (
+            b"NUCODE_M28B3_central:FINAL:PASS:test=SOAK"
+            + identity
+            + b":nonce="
+            + NONCE.encode("ascii")
+        )
+        with mock.patch("m28_ble_3board.common.read_line", side_effect=[line]):
+            collect_until_final(
+                object(),
+                "central",
+                "SOAK",
+                NONCE,
+                bytearray(),
+                bytearray(),
+                1.0,
+                threading.Event(),
+                identity,
+            )
+
     def test_all_four_tests_and_three_roles_pass(self) -> None:
         for test_id in TEST_NAMES:
             for role in ("peripheral", "mixed", "central"):
@@ -248,15 +279,40 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             [
                 "--test-id",
                 "M28-LINK-01",
-                "--peripheral-board-id",
-                "a" * 32,
-                "--mixed-board-id",
-                "b" * 32,
-                "--central-board-id",
-                "c" * 32,
+                "--probe-peripheral-sha256",
+                "a" * 64,
+                "--probe-mixed-sha256",
+                "b" * 64,
+                "--probe-central-sha256",
+                "c" * 64,
             ]
         )
         self.assertEqual("pyocd-sector", args.flash_backend)
+
+    def test_public_board_identity_and_debug_output_never_expose_raw_uid(self) -> None:
+        """! @brief native evidence와 pyOCD 오류에서 raw UID를 제거합니다. """
+
+        raw_uid = "0123456789abcdef0123456789abcdef"
+        endpoint = RoleEndpoint(raw_uid, DaplinkVolume(Path("E:/"), ""), "COM7")
+        public = public_endpoint(endpoint)
+        self.assertNotIn(raw_uid, repr(public))
+        self.assertEqual(len(public["probe_sha256"]), 64)
+        redacted = redact_probe_output(
+            f"probe={raw_uid.upper()} failed".encode("ascii"), raw_uid
+        )
+        self.assertNotIn(raw_uid, redacted.casefold())
+        details = "Target Detect: nRF54L15\nUnique ID: " + raw_uid
+        with mock.patch(
+                "ble_pair_hil_common.read_details", return_value=details), \
+                mock.patch(
+                    "ble_pair_hil_common.find_serial_port",
+                    side_effect=RuntimeError("uid=" + raw_uid),
+                ):
+            with self.assertRaises(BlePairHilFailure) as context:
+                discover_endpoint_sha256(
+                    probe_sha256(raw_uid), "E:/", "auto", object()
+                )
+        self.assertNotIn(raw_uid, str(context.exception))
 
     def test_pyocd_identity_requires_nrf54l_aps_and_unlocked_device(self) -> None:
         output = "\n".join(
@@ -341,13 +397,13 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
         )
         runner = (HIL_DIRECTORY / "m28_ble_3board.py").read_text(encoding="utf-8")
         for value in (
-            '"readdp 0x24"',
-            '"readap 0 0xfc"',
-            '"readap 2 0x14"',
-            '"-I"',
+            "collect_register_identity_sha256",
+            "flash_image_pyocd_sha256",
+            "probe_sha256(endpoint.board_id)",
             'target not in ("nRF54L15", "unsupported target")',
         ):
             self.assertIn(value, runner)
+        self.assertNotIn('"--uid"', runner)
         for value in (
             "CONFIG_BT_MAX_CONN=2",
             "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",

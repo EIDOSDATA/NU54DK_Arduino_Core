@@ -20,6 +20,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
 from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -41,6 +47,12 @@ PROTOCOLS = {
         "roles": ("ptx", "prx"),
         "test_id": "M32-ESB-01:primary",
     },
+}
+ATTESTATION_ROLES = ("dut", "peer")
+SEMANTICS = ("ieee802154_packets", "esb_packets", "role_swap", "cleanup")
+APPLICATION_ROOTS = {
+    "radio154": REPOSITORY / "tests/zephyr/m32_radio154_hil",
+    "esb": REPOSITORY / "tests/zephyr/m32_esb_hil",
 }
 
 
@@ -182,8 +194,42 @@ def _validate_result(protocol: str, results: dict[str, dict[str, str]]) -> dict:
     }
 
 
+def build_dispatch_cycle_records(protocol_results: dict[str, dict]) -> list[dict]:
+    """! @brief 두 radio의 실제 20 iteration과 역할 교대를 cycle로 변환합니다. """
+
+    if set(protocol_results) != set(PROTOCOLS):
+        raise StandaloneRadioFailure("dispatcher standalone protocol mismatch")
+    first_probes: dict[str, str] = {}
+    for protocol, definition in PROTOCOLS.items():
+        phase = protocol_results[protocol]
+        results = phase.get("results", {})
+        if set(results) != set(definition["roles"]):
+            raise StandaloneRadioFailure("dispatcher standalone role mismatch")
+        expected = _validate_result(protocol, results)
+        if phase.get("denominator") != expected:
+            raise StandaloneRadioFailure("dispatcher standalone denominator mismatch")
+        cleanup = phase.get("cleanup", {})
+        if set(cleanup) != set(definition["roles"]) or any(
+                row.get("stop") != "PASS" or row.get("serial_close") != "PASS"
+                for row in cleanup.values()):
+            raise StandaloneRadioFailure("dispatcher standalone cleanup mismatch")
+        probe_mapping = phase.get("probe_mapping", {})
+        if set(probe_mapping) != set(ATTESTATION_ROLES):
+            raise StandaloneRadioFailure("dispatcher standalone probe mapping mismatch")
+        first_probes[protocol] = probe_mapping["dut"]
+    if first_probes["radio154"] == first_probes["esb"]:
+        raise StandaloneRadioFailure("dispatcher standalone role swap missing")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle in range(1, ITERATION_TARGET + 1)
+    ]
+
+
 def _run_protocol(protocol: str, boards: dict[str, dict], serial_module: object,
-                  nonce: str, core: str, transcript: list[str]) -> dict:
+                  nonce: str, core: str, transcript: list[str],
+                  exact_inputs: dict | None,
+                  cleanup_records: dict[str, dict]) -> dict:
     """! @brief 한 radio protocol의 flash·2,000 packet·STOP을 실행합니다. """
     definition = PROTOCOLS[protocol]
     wire = definition["wire"]
@@ -200,11 +246,14 @@ def _run_protocol(protocol: str, boards: dict[str, dict], serial_module: object,
             preserve_nrf54l_access=True,
         )
     time.sleep(2.0)
-    ports = {
-        role: serial_module.Serial(boards[role]["vcom"], 115200, timeout=0.05)
-        for role in (transmit_role, receive_role)
-    }
+    ports: dict[str, object] = {}
+    stopped_roles: set[str] = set()
+    output: dict | None = None
     try:
+        for role in (transmit_role, receive_role):
+            ports[role] = serial_module.Serial(
+                boards[role]["vcom"], 115200, timeout=0.05
+            )
         for role, port in ports.items():
             _probe_role(port, wire, role, core, transcript)
         for role in (receive_role, transmit_role):
@@ -250,10 +299,47 @@ def _run_protocol(protocol: str, boards: dict[str, dict], serial_module: object,
                 or fields.get("core") != core
             ):
                 raise StandaloneRadioFailure(f"{role} STOP mismatch")
-        return {"results": results, "denominator": denominator}
+            stopped_roles.add(role)
+        output = {"results": results, "denominator": denominator}
     finally:
-        for port in ports.values():
-            port.close()
+        cleanup_records[protocol] = cleanup_direct_ports(
+            ports,
+            {
+                role: f"{wire}|STOP|nonce={nonce}\n".encode("ascii")
+                for role in ports
+            },
+            stopped_roles,
+            transcript,
+        )
+    if output is None:
+        raise StandaloneRadioFailure(f"{protocol} result missing after cleanup")
+    output["cleanup"] = cleanup_records[protocol]
+    output["probe_mapping"] = {
+        "dut": boards[transmit_role]["probe_sha256"],
+        "peer": boards[receive_role]["probe_sha256"],
+    }
+    if exact_inputs is not None:
+        output["exact_program"] = complete_direct_program(
+            REPOSITORY,
+            core,
+            ATTESTATION_ROLES,
+            exact_inputs["images"],
+            exact_inputs["probe_ids"],
+            exact_inputs["probe_hashes"],
+            exact_inputs["sidecars"],
+            {
+                "dut": {
+                    "mode": boards[transmit_role]["flash_mode"],
+                    "bytes": str(boards[transmit_role]["flash_bytes"]),
+                },
+                "peer": {
+                    "mode": boards[receive_role]["flash_mode"],
+                    "bytes": str(boards[receive_role]["flash_bytes"]),
+                },
+            },
+            exact_inputs["build_records"],
+        )
+    return output
 
 
 def execute(args: argparse.Namespace) -> dict:
@@ -306,13 +392,13 @@ def execute(args: argparse.Namespace) -> dict:
             raise StandaloneRadioFailure(f"{role} target image missing")
 
     boards: dict[str, dict] = {}
-    for role in ("transmitter", "ptx"):
+    for role in ("transmitter", "prx"):
         boards[role] = dict(endpoints["first"])
         boards[role]["image"] = image_definitions[role]
         boards[role]["image_sha256"] = hashlib.sha256(
             image_definitions[role].read_bytes()
         ).hexdigest()
-    for role in ("receiver", "prx"):
+    for role in ("receiver", "ptx"):
         boards[role] = dict(endpoints["second"])
         boards[role]["image"] = image_definitions[role]
         boards[role]["image_sha256"] = hashlib.sha256(
@@ -321,6 +407,36 @@ def execute(args: argparse.Namespace) -> dict:
 
     transcript: list[str] = []
     protocol_results: dict[str, dict] = {}
+    cleanup_records: dict[str, dict] = {}
+    exact_inputs: dict[str, dict] = {}
+    if not dirty:
+        for protocol, definition in PROTOCOLS.items():
+            transmit_role, receive_role = definition["roles"]
+            images = {
+                "dut": boards[transmit_role]["image"],
+                "peer": boards[receive_role]["image"],
+            }
+            sidecars, build_records = prepare_direct_program(
+                prefix.with_name(f"{prefix.name}-{protocol}.native.json"),
+                ATTESTATION_ROLES,
+                images,
+                identity.core,
+                identity.board,
+                APPLICATION_ROOTS[protocol],
+            )
+            exact_inputs[protocol] = {
+                "images": images,
+                "probe_ids": {
+                    "dut": boards[transmit_role]["uid"],
+                    "peer": boards[receive_role]["uid"],
+                },
+                "probe_hashes": {
+                    "dut": boards[transmit_role]["probe_sha256"],
+                    "peer": boards[receive_role]["probe_sha256"],
+                },
+                "sidecars": sidecars,
+                "build_records": build_records,
+            }
     status = "FAIL"
     reason: str | None = None
     with ProbeLocks([endpoints["first"]["uid"], endpoints["second"]["uid"]]):
@@ -330,7 +446,8 @@ def execute(args: argparse.Namespace) -> dict:
                     f"{protocol}:{time.time_ns()}:{identity.core}".encode("ascii")
                 ).hexdigest()[:32]
                 protocol_results[protocol] = _run_protocol(
-                    protocol, boards, serial_module, nonce, identity.core, transcript
+                    protocol, boards, serial_module, nonce, identity.core, transcript,
+                    exact_inputs.get(protocol), cleanup_records,
                 )
                 protocol_results[protocol]["nonce"] = nonce
             status = "PASS_CANDIDATE" if dirty else "PASS"
@@ -355,8 +472,22 @@ def execute(args: argparse.Namespace) -> dict:
         "allowed_loss_packets_per_protocol": ALLOWED_LOSS,
         "latency_limit_ms": LATENCY_LIMIT_MS,
         "protocols": protocol_results,
+        "cleanup": cleanup_records,
         "reason": reason,
     }
+    if status == "PASS":
+        cycle_records = build_dispatch_cycle_records(protocol_results)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["program_phases"] = {
+            protocol: protocol_results[protocol]["exact_program"]
+            for protocol in PROTOCOLS
+        }
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m32_standalone_radio", identity.core, ITERATION_TARGET,
+            SEMANTICS, ATTESTATION_ROLES,
+            protocol_results["esb"]["exact_program"],
+            cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

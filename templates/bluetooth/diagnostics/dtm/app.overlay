@@ -1,0 +1,17 @@
+/** @brief DAPLink VCOM을 binary 진단 UART로 독점하고 외부 LFXO 구성을 유지한다. */
+&uart20
+{
+    current-speed = <19200>;
+    /delete-property/ hw-flow-control;
+};
+
+&lfxo
+{
+    load-capacitors = "external";
+    /delete-property/ load-capacitance-femtofarad;
+};
+
+&wdt31
+{
+    status = "okay";
+};

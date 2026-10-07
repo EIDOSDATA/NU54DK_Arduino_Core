@@ -20,6 +20,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
 from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -33,6 +39,8 @@ PACKET_TARGET = 200
 CONNECTION_TARGET = 20
 ALLOWED_LOSS = 0
 LATENCY_LIMIT_MS = 1000
+APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m32_ble_privacy_hil"
+SEMANTICS = ("identity_resolution", "rpa_rotation", "cleanup")
 
 
 class PrivacyExecutionFailure(RuntimeError):
@@ -81,6 +89,33 @@ def _address(fields: dict[str, str]) -> tuple[str, int]:
     if address_type not in (0, 1):
         raise PrivacyExecutionFailure("invalid READY address type")
     return address, address_type
+
+
+def build_dispatch_cycle_records(results: dict[str, dict[str, str]],
+                                 ready: dict[str, tuple[str, int]]) -> list[dict]:
+    """! @brief 20회 identity reconnect와 고유 local identity를 cycle로 변환합니다. """
+
+    if set(results) != set(ROLES) or set(ready) != set(ROLES) or \
+            len(set(ready.values())) != len(ROLES):
+        raise PrivacyExecutionFailure("dispatcher privacy role witness mismatch")
+    for role in ("identity_a", "identity_b"):
+        fields = results[role]
+        if _integer(fields, "connections") != CONNECTION_TARGET or \
+                _integer(fields, "disconnections") != CONNECTION_TARGET or \
+                _integer(fields, "wrong_identity_rejected") != 1 or \
+                _integer(fields, "active_list_change_rejected") != 1:
+            raise PrivacyExecutionFailure("dispatcher identity witness mismatch")
+    peer = results["peer"]
+    if any(_integer(peer, key) != CONNECTION_TARGET for key in (
+            "connections_a", "connections_b", "disconnections_a",
+            "disconnections_b")) or _integer(peer, "packets") != PACKET_TARGET or \
+            _integer(peer, "max_latency_ms") > LATENCY_LIMIT_MS:
+        raise PrivacyExecutionFailure("dispatcher peer witness mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle in range(1, ITERATION_TARGET + 1)
+    ]
 
 
 def _save(prefix: Path, evidence: dict, transcript: list[str]) -> None:
@@ -147,6 +182,14 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if len({board["uid"] for board in boards.values()}) != len(ROLES):
         raise PrivacyExecutionFailure("세 역할이 서로 다른 probe에 매핑되지 않음")
+    images = {role: boards[role]["image"] for role in ROLES}
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            identity.board, APPLICATION_ROOT,
+        )
 
     nonce = hashlib.sha256(
         f"{time.time_ns()}:{identity.core}".encode("ascii")
@@ -156,6 +199,8 @@ def execute(args: argparse.Namespace) -> dict:
     ready: dict[str, tuple[str, int]] = {}
     status = "FAIL"
     reason: str | None = None
+    cleanup: dict[str, dict[str, str]] = {}
+    exact_program = None
 
     with ProbeLocks([board["uid"] for board in boards.values()]):
         for role in ROLES:
@@ -170,11 +215,13 @@ def execute(args: argparse.Namespace) -> dict:
                 preserve_nrf54l_access=True,
             )
         time.sleep(2.0)
-        ports = {
-            role: serial_module.Serial(board["vcom"], 115200, timeout=0.05)
-            for role, board in boards.items()
-        }
+        ports: dict[str, object] = {}
+        stopped_roles: set[str] = set()
         try:
+            for role, board in boards.items():
+                ports[role] = serial_module.Serial(
+                    board["vcom"], 115200, timeout=0.05
+                )
             for port in ports.values():
                 port.reset_input_buffer()
             for role in ROLES:
@@ -347,14 +394,37 @@ def execute(args: argparse.Namespace) -> dict:
                     or fields.get("core") != identity.core
                 ):
                     raise PrivacyExecutionFailure(f"{role} STOP mismatch")
+                stopped_roles.add(role)
             status = "PASS_CANDIDATE" if dirty else "PASS"
         except Exception as error:
             reason = f"{type(error).__name__}: {error}"
             reason = re.sub(r"(?i)\b[0-9a-f]{16,64}\b", "<redacted-identity>", reason)
             reason = re.sub(r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason)
         finally:
-            for port in ports.values():
-                port.close()
+            cleanup = cleanup_direct_ports(
+                ports,
+                {
+                    role: f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
+                    for role in ports
+                },
+                stopped_roles,
+                transcript,
+            )
+        if status == "PASS":
+            exact_program = complete_direct_program(
+                REPOSITORY, identity.core, ROLES, images,
+                {role: boards[role]["uid"] for role in ROLES},
+                {role: boards[role]["probe_sha256"] for role in ROLES},
+                sidecars,
+                {
+                    role: {
+                        "mode": boards[role]["flash_mode"],
+                        "bytes": str(boards[role]["flash_bytes"]),
+                    }
+                    for role in ROLES
+                },
+                build_records,
+            )
 
     public_boards = {
         role: {key: value for key, value in board.items() if key not in {"uid", "image"}}
@@ -394,7 +464,15 @@ def execute(args: argparse.Namespace) -> dict:
         "lost": {"identity_reports": max(0, PACKET_TARGET - packets)},
         "latency_limit_ms": LATENCY_LIMIT_MS,
         "reason": reason,
+        "cleanup": cleanup,
     }
+    if status == "PASS" and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(results, ready)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m32_privacy", identity.core, ITERATION_TARGET, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

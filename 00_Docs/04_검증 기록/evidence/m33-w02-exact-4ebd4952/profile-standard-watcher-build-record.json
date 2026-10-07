@@ -1,0 +1,72 @@
+{
+  "schema": "nucode-m33-profile-build-v1",
+  "family": "standard",
+  "role": "watcher",
+  "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+  "development": false,
+  "sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+  "image": "C:\\n54w02e-records\\standard-watcher-4ebd4952\\image.hex",
+  "owned_source_sha256": {
+    "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp": "ee9ca18ceb48f28c02cdc0bbf6163d519569b2af1cfc4679123902d86a424b0f",
+    "libraries/NUCODE_BLE_Profiles/README.md": "dfc659c93d08a689f7838e17b1dfb844b1d8b1cc2430022d7c22a0bbc738fb5a",
+    "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "5cba6fd662fad750153166df4d72f07dbde3215b348dda29a117cf28161f3822",
+    "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "9a05373b8c0ceffbff0c93c8d578f5e1526d6d57d3bd0ed51aa6d71cab4fdc8b",
+    "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "f85604a287d037e36a096dd61c84e5e0aaf1f658a8f01202036c191505b90ec7",
+    "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "b612edfa6878f58ff702e913ef461805039e5766a1a725f01cfa802f84f5dfd6",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "c324cd222b095aaac0475e4bb526a40de841f1866938ed7a0f80a015bb82d4da",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "82c33bdd82dd813f1a2db025cb6f31456f2795ce799134c921e508e2f90470ad",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "a4b789afb5b295002629b75e681786caab7dfa571164826c9751a41fadd665c0",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "693426d5e07587bafb90dab5fed2b6ee7c55c6ad8918cf59e8ceae5687afa36c",
+    "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "3907138cfcddad71b154bbdef5420090c829c50abf3bfdd0967d693f7d076337",
+    "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "a6656e3fcb4bf5046629934c99cf5ad21b40acd20b50f5e5f2bb0865d93bfed6",
+    "libraries/NUCODE_BLE_Profiles/library.properties": "0a3bddf9cd9c5bdbde6d8cac447e09ee74bc5bba5fc76388317f625a63c8f714",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "07501f89a689ec6fbdcd3aafb8ed6e2bfdf6a00dc0f4ff6b6d0391c74a924b86",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "648257fa6ed632abffbe3316206025495c68e48d3280adb94261d8b7ecc14649",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "38269fd39ea36d8f000f9a268298e7b4d6e095817259e160f2d9f6f4549e2648",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "77144cd4e06707fc39fea77948720f55cd188876d912d840bb08f67be6d16528",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "ab30aa10f49f7652928a666144d128e3446715e81742fde13dc75da13cbc3f74",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "d1e96b26dc07d94ef246244a59f1779c3b2f2208e45fdbb8ad8db19e62d4e578",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "a27eb8513dfbf5a3359399660651f1f31c272c12fdbaaaaaaaf6bfc7f740459a",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "a38fccefc77fd20f5a4945bd77153c5c67b5272190d0b9ae206582f50fd656be",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "6a3426823b74777ec3a919f76608578792a19b8b1c5233c373a9d8e20240c613",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "3a363df90fdaf20e25f2f388d86fd4f2dd6ce04a44fe26450cfe6ff8a872401f",
+    "tests/zephyr/m33_profile_hil/CMakeLists.txt": "32a682f62a0f4edf13ed16d32666c5f81d198ac00d4b31f8111ab5f47b671442",
+    "tests/zephyr/m33_profile_hil/README.md": "acf5fb28d19ce75fe956abee1465fd71cd204cfbf7924da9d3bf061163a1372b",
+    "tests/zephyr/m33_profile_hil/app.overlay": "ad6c0e28c228c001b26c067c243d02dcc3c7b4f055bb9ee342df879e9e5d99eb",
+    "tests/zephyr/m33_profile_hil/native-client.conf": "dc7bd016cc88da932dd6189c4e226c356a905b69f8dc5f6b7e5a088743d561ec",
+    "tests/zephyr/m33_profile_hil/native.conf": "13edf9703938439df1a9f8c0d9989fe7f7f7bd40d2094a8ab7247080bea9a751",
+    "tests/zephyr/m33_profile_hil/prj.conf": "4333ce416bb0dc4aec01c6cde58d17936541284b8d7e56bb50d6d6ce3787d34e",
+    "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "10910f54b2259ae7fa778a4a5760f3166defcad97605ab44dce62d3a9f83ab5b",
+    "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "dc8399a76faed9ce5c3700cc964b997c650ab9c1f7abcb0a51c5c20ae1eb6152",
+    "tests/zephyr/m33_profile_hil/src/main.cpp": "8702844f15f6529fc368ec7b0a7226d49605ffbf95fe59b826d765f358444bf9"
+  },
+  "command_identity": {
+    "sha256": "b9d139e15b7fc947377429408e5336c00ed5036614da274c42e861976d4aded7",
+    "compile_commands_sha256": "91b60f835d54f63012d8308afca034ffcdbdbd45ea050eb3facaf16ae2ac48e6",
+    "build_info_sha256": "300b398505d97c2188b14cc4b02b4582045e1cd1a20e64b207c43d7386441e4e"
+  },
+  "artifacts": {
+    "elf": {
+      "path": "C:\\n54w02e-records\\standard-watcher-4ebd4952\\image.elf",
+      "sha256": "8f9b91fb20366802fccb25a7b80afaa73643c0b58e4c61b2f1490926f8ddd70a"
+    },
+    "config": {
+      "path": "C:\\n54w02e-records\\standard-watcher-4ebd4952\\config.txt",
+      "sha256": "82714b27b5e93f5b08754aeab0969f14e9e5044a57c6f002cd48f21f2dea4f73"
+    },
+    "sysbuild": {
+      "path": "C:\\n54w02e-records\\standard-watcher-4ebd4952\\sysbuild.txt",
+      "sha256": "1ee95209374a00c2b8955a0efa098f7a877c24ce85f183469055ee2777954c93"
+    }
+  },
+  "provenance": {
+    "compile_commands": {
+      "path": "C:\\n54w02e-records\\standard-watcher-4ebd4952\\compile_commands.json",
+      "sha256": "91b60f835d54f63012d8308afca034ffcdbdbd45ea050eb3facaf16ae2ac48e6"
+    },
+    "build_info": {
+      "path": "C:\\n54w02e-records\\standard-watcher-4ebd4952\\build_info.yml",
+      "sha256": "300b398505d97c2188b14cc4b02b4582045e1cd1a20e64b207c43d7386441e4e"
+    }
+  }
+}

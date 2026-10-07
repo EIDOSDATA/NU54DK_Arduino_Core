@@ -1,0 +1,30 @@
+[NU54 1/5] 환경과 Feature set 확인
+[NU54 2/5] Zephyr 구성 준비: new-cache, 작업자 15개
+[NU54 2/5] Zephyr 구성 준비: selected-features, 작업자 15개
+[NU54 3/5] 소스 컴파일 준비: source graph와 cache 검증
+[NU54 3/5] 소스 컴파일 중: 작업자 15개, 전체 log C:\n54w02e-arduino\build-nucode_ble_profiles-alertsensor\nu54-zephyr\logs\build.log
+[NU54] 컴파일과 링크: 22/445
+[NU54] 컴파일과 링크: 44/445
+[NU54] 컴파일과 링크: 66/445
+[NU54] 컴파일과 링크: 88/445
+[NU54] 컴파일과 링크: 110/445
+[NU54] 컴파일과 링크: 132/445
+[NU54] 컴파일과 링크: 154/445
+[NU54] 컴파일과 링크: 176/445
+[NU54] 컴파일과 링크: 198/445
+[NU54] 컴파일과 링크: 220/445
+[NU54] 컴파일과 링크: 242/445
+[NU54] 컴파일과 링크: 264/445
+[NU54] 컴파일과 링크: 286/445
+[NU54] 컴파일과 링크: 308/445
+[NU54] 컴파일과 링크: 330/445
+[NU54] 컴파일과 링크: 352/445
+[NU54] 컴파일과 링크: 374/445
+[NU54] 컴파일과 링크: 396/445
+[NU54] 컴파일과 링크: 418/445
+[NU54] 컴파일과 링크: 440/445
+[NU54] 컴파일과 링크: 445/445
+[NU54 4/5] 링크와 firmware 생성
+[NU54 5/5] 산출물·메모리 검증 완료: 233.4초
+Sketch uses 380776 bytes (25%) of program storage space. Maximum is 1490944 bytes.
+Global variables use 163861 bytes (62%) of dynamic memory, leaving 98283 bytes for local variables. Maximum is 262144 bytes.

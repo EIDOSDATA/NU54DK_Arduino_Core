@@ -345,6 +345,10 @@ namespace nucode::ble::internal::gap
     };
     GapContext &gapState() noexcept;
     k_msgq &gapEventQueue() noexcept;
+    /** @brief 외부 모듈이 시작한 legacy advertising을 GAP 연결 소유권에 등록합니다. */
+    void legacyAdvertisingStarted() noexcept;
+    /** @brief 외부 모듈이 끝낸 legacy advertising의 GAP 연결 소유권을 해제합니다. */
+    void legacyAdvertisingStopped() noexcept;
 #if defined(CONFIG_BT_OBSERVER)
     k_msgq &scanResultQueue() noexcept;
 #endif

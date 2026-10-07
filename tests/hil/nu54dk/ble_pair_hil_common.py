@@ -9,28 +9,31 @@ from dataclasses import dataclass
 from pathlib import Path
 import hashlib
 import json
+import math
 import re
 import secrets
 import shutil
+import string
 import subprocess
 import sys
 import threading
 import time
-from typing import Any, Sequence
+from typing import Any, Callable, Sequence
 
 
 HIL_DIRECTORY = Path(__file__).resolve().parent
 REPOSITORY = HIL_DIRECTORY.parents[2]
 BOARD_ROOT = REPOSITORY / "board_package" / "NU54DK_Zephyr_DTS"
-PYOCD_LAUNCHER = HIL_DIRECTORY / "pyocd_launcher.py"
 
 from m6_serial_echo import (  # noqa: E402
+    DAPLINK_TARGET,
     DEFAULT_BAUD_RATE,
     DaplinkVolume,
     detail_value,
     find_daplink_volume,
     find_serial_port,
     normalize_board_id,
+    read_details,
     validate_hex_image,
     wait_for_flash_result,
 )
@@ -47,6 +50,18 @@ from m14_pin_hil import (  # noqa: E402
 NONCE_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 MAX_TRANSCRIPT_BYTES = 262144
 DEFAULT_RESULT_TIMEOUT_SECONDS = 180.0
+ARDUINO_REVISION_FAMILIES = {
+    "NUCODE_BLE_ISO": "m31_iso_revisions",
+    "NUCODE_BLE_Audio": "m31_audio_revisions",
+    "NUCODE_BLE_DirectionFinding": "m31_df_revisions",
+    "NUCODE_BLE_ChannelSounding": "m31_cs_revisions",
+}
+ARDUINO_REVISION_FEATURES = {
+    "NUCODE_BLE_ISO": "nucode.ble.iso",
+    "NUCODE_BLE_Audio": "nucode.ble.audio",
+    "NUCODE_BLE_DirectionFinding": "nucode.ble.direction_finding",
+    "NUCODE_BLE_ChannelSounding": "nucode.ble.channel_sounding",
+}
 
 
 class BlePairHilFailure(RuntimeError):
@@ -111,6 +126,432 @@ def discover_endpoint(
         find_daplink_volume(normalized, explicit_volume),
         find_serial_port(normalized, explicit_port, list_ports),
     )
+
+
+## @brief DAPLink UID 원문을 외부 증적에 쓸 SHA-256 identity로 변환합니다.
+def probe_sha256(board_id: str) -> str:
+    normalized = normalize_board_id(board_id)
+    return hashlib.sha256(normalized.encode("ascii")).hexdigest()
+
+
+## @brief pyOCD 진단 문자열에서 raw probe UID를 외부 출력 전에 제거합니다.
+def redact_probe_output(payload: bytes, board_id: str) -> str:
+    text = payload.decode("utf-8", errors="backslashreplace")
+    return re.sub(
+        re.escape(normalize_board_id(board_id)),
+        "<probe-redacted>",
+        text,
+        flags=re.IGNORECASE,
+    )
+
+
+## @brief SHA-256 identity 하나에 정확히 하나의 DAPLink MSD와 UART를 결합합니다.
+def discover_endpoint_sha256(
+    digest: str,
+    explicit_volume: str | None,
+    explicit_port: str,
+    list_ports: Any,
+) -> RoleEndpoint:
+    if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+        raise BlePairHilFailure("probe identity는 64자리 소문자 SHA-256이어야 합니다.")
+    roots = (
+        (Path(explicit_volume).resolve(),)
+        if explicit_volume is not None
+        else tuple(Path(f"{letter}:/") for letter in string.ascii_uppercase)
+    )
+    matches: list[tuple[str, DaplinkVolume]] = []
+    for root in roots:
+        details = read_details(root)
+        if details is None or detail_value(details, "Target Detect") != DAPLINK_TARGET:
+            continue
+        raw_uid = detail_value(details, "Unique ID")
+        if raw_uid is None:
+            continue
+        normalized = normalize_board_id(raw_uid)
+        if probe_sha256(normalized) == digest:
+            matches.append((normalized, DaplinkVolume(root, details)))
+    if len(matches) != 1:
+        raise BlePairHilFailure(
+            f"probe SHA-256 mapping은 정확히 하나여야 합니다: count={len(matches)}"
+        )
+    board_id, volume = matches[0]
+    try:
+        port_name = find_serial_port(board_id, explicit_port, list_ports)
+    except Exception:
+        raise BlePairHilFailure(
+            "probe SHA-256에 대응하는 target UART를 결정하지 못했습니다."
+        ) from None
+    return RoleEndpoint(
+        board_id,
+        volume,
+        port_name,
+    )
+
+
+## @brief raw UID 없이 외부 직렬화가 가능한 board identity를 만듭니다.
+def public_endpoint(endpoint: RoleEndpoint) -> dict[str, str]:
+    return {
+        "probe_sha256": probe_sha256(endpoint.board_id),
+        "msd_root": str(endpoint.volume.root),
+        "uart_port": endpoint.port_name,
+    }
+
+
+def _load_private_pyocd_backend(digest: str):
+    """! @brief raw UID를 argv에 넣지 않고 SHA-256으로 live pyOCD probe를 선택합니다. """
+
+    if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+        raise BlePairHilFailure("probe identity는 64자리 소문자 SHA-256이어야 합니다.")
+    try:
+        __import__("pyocd")
+    except ModuleNotFoundError:
+        from pyocd_launcher import _resolve_site_packages
+
+        site_packages = _resolve_site_packages()
+        if site_packages is not None and str(site_packages) not in sys.path:
+            sys.path.insert(0, str(site_packages))
+    tools = REPOSITORY / "tools" / "bluetooth"
+    if str(tools) not in sys.path:
+        sys.path.insert(0, str(tools))
+    from m33_diagnostics import PyocdPreparationBackend, private_debug_output
+
+    backend = PyocdPreparationBackend()
+    with private_debug_output():
+        probes, _ports = backend.discover()
+    matches = [probe for probe in probes
+               if probe_sha256(probe.unique_id) == digest]
+    if len(matches) != 1:
+        raise BlePairHilFailure(
+            f"probe SHA-256 mapping은 정확히 하나여야 합니다: count={len(matches)}"
+        )
+    return backend, matches[0], private_debug_output
+
+
+def collect_register_identity_sha256(
+    digest: str,
+    _volume: str | Path | None = None,
+) -> dict[str, str]:
+    """! @brief raw UID argv 없이 SHA-256 probe의 DP/AP identity를 읽습니다. """
+
+    backend, probe, private_debug_output = _load_private_pyocd_backend(digest)
+    try:
+        from m33_diagnostics import validate_debug_identity
+
+        with private_debug_output():
+            with backend.session(probe, initialize=False) as session:
+                values = backend.identity(session)
+                validate_debug_identity(values)
+    except Exception as error:
+        raise BlePairHilFailure("CMSIS-DAP V2 DP/AP register query failure") from error
+    return {
+        "dp_idcode": f"0x{values['dp_idcode']:08x}",
+        "dp_targetid_observed": f"0x{values['target_id']:08x}",
+        "ahb_ap_idr": f"0x{values['ahb_ap_idr']:08x}",
+        "ahb_ap_csw": f"0x{values['ahb_ap_csw']:08x}",
+        "ctrl_ap_idr": f"0x{values['ctrl_ap_idr']:08x}",
+        "approtect_status": f"0x{values['approtect_status']:08x}",
+    }
+
+
+def _intel_hex_programmed_bytes(image: Path) -> int:
+    """! @brief Intel HEX의 실제 load byte 수를 중복 주소 없이 계산합니다. """
+
+    tools = REPOSITORY / "tools" / "bluetooth"
+    if str(tools) not in sys.path:
+        sys.path.insert(0, str(tools))
+    from m33_regression import intel_hex_ranges
+
+    return sum(len(data) for _address, data in intel_hex_ranges(image))
+
+
+def _flash_init_timed_out(error: BaseException) -> bool:
+    """! @brief pyOCD flash algorithm 초기화 timeout만 정확히 식별합니다. """
+
+    current: BaseException | None = error
+    visited = set()
+    while current is not None and id(current) not in visited:
+        visited.add(id(current))
+        if (type(current).__name__ == "FlashFailure" and
+                str(current).strip().casefold() == "flash init timed out"):
+            return True
+        current = current.__cause__ or current.__context__
+    return False
+
+
+def _run_flash_session_with_retry(
+    digest: str,
+    deadline: float,
+    operation: Callable[[Any, Any], None],
+) -> None:
+    """! @brief init timeout에만 새 pyOCD session으로 유한 1회 재시도합니다. """
+
+    for attempt in range(2):
+        backend, probe, private_debug_output = _load_private_pyocd_backend(digest)
+        try:
+            with private_debug_output():
+                with backend.session(probe) as session:
+                    operation(backend, session)
+            return
+        except Exception as error:
+            if (attempt == 0 and time.monotonic() < deadline and
+                    _flash_init_timed_out(error)):
+                continue
+            raise
+
+
+def flash_image_pyocd_sha256(
+    role: str,
+    digest: str,
+    image: Path,
+    timeout_seconds: float,
+    *,
+    defer_reset: bool = False,
+    expected_sha256: str | None = None,
+) -> tuple[str, str]:
+    """! @brief raw UID argv 없이 SHA-256 live probe에 sector program을 수행합니다. """
+
+    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
+        raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
+    image = validate_hex_image(str(image))
+    raw = image.read_bytes()
+    if expected_sha256 is not None and (
+            not re.fullmatch(r"[0-9a-f]{64}", expected_sha256) or
+            hashlib.sha256(raw).hexdigest() != expected_sha256):
+        raise BlePairHilFailure(f"{role} exact HEX snapshot 불일치")
+    programmed_bytes = _intel_hex_programmed_bytes(image)
+    if image.read_bytes() != raw:
+        raise BlePairHilFailure(f"{role} Intel HEX가 program 직전에 변경됐습니다.")
+    if programmed_bytes <= 0:
+        raise BlePairHilFailure(f"{role} Intel HEX load byte가 없습니다.")
+    deadline = time.monotonic() + timeout_seconds
+    try:
+        def program(backend: Any, session: Any) -> None:
+            """! @brief 한 session에서 sector program과 승인된 reset을 완료합니다. """
+
+            if time.monotonic() >= deadline:
+                raise BlePairHilFailure(f"{role} pyOCD sector flash timeout")
+            backend.program(session, {"raw": raw})
+            if not defer_reset:
+                backend.start(session)
+            if time.monotonic() >= deadline:
+                raise BlePairHilFailure(f"{role} pyOCD sector flash timeout")
+
+        _run_flash_session_with_retry(digest, deadline, program)
+    except BlePairHilFailure:
+        raise
+    except Exception as error:
+        raise BlePairHilFailure(f"{role} pyOCD sector flash 실패") from error
+    mode = "pyocd-sector-no-reset" if defer_reset else "pyocd-sector-sw-reset"
+    return mode, str(programmed_bytes)
+
+
+def flash_binary_pyocd_sha256(
+    role: str,
+    digest: str,
+    image: Path,
+    base_address: int,
+    timeout_seconds: float,
+    *,
+    defer_reset: bool = False,
+) -> tuple[str, str]:
+    """! @brief raw UID argv 없이 binary를 지정 주소에 sector program합니다. """
+
+    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
+            base_address < 0:
+        raise BlePairHilFailure("binary flash 주소와 timeout이 잘못됐습니다.")
+    image = image.resolve()
+    if not image.is_file() or image.stat().st_size <= 0:
+        raise BlePairHilFailure(f"{role} binary image가 없습니다.")
+    deadline = time.monotonic() + timeout_seconds
+    try:
+        def program(backend: Any, session: Any) -> None:
+            """! @brief 한 session에서 binary sector program과 reset을 완료합니다. """
+
+            if time.monotonic() >= deadline:
+                raise BlePairHilFailure(f"{role} pyOCD binary flash timeout")
+            backend.programmer_type(
+                session,
+                chip_erase="sector",
+                smart_flash=False,
+                trust_crc=False,
+                keep_unwritten=True,
+                no_reset=True,
+            ).program(
+                str(image),
+                base_address=base_address,
+                file_format="bin",
+            )
+            if not defer_reset:
+                backend.start(session)
+            if time.monotonic() >= deadline:
+                raise BlePairHilFailure(f"{role} pyOCD binary flash timeout")
+
+        _run_flash_session_with_retry(digest, deadline, program)
+    except BlePairHilFailure:
+        raise
+    except Exception as error:
+        raise BlePairHilFailure(f"{role} pyOCD binary sector flash 실패") from error
+    mode = "pyocd-sector-no-reset" if defer_reset else "pyocd-sector-sw-reset"
+    return mode, str(image.stat().st_size)
+
+
+def reset_target_pyocd_sha256(
+    role: str,
+    digest: str,
+    timeout_seconds: float,
+) -> str:
+    """! @brief raw UID argv 없이 SHA-256 probe에 software reset을 수행합니다. """
+
+    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
+        raise BlePairHilFailure("reset timeout은 0보다 커야 합니다.")
+    deadline = time.monotonic() + timeout_seconds
+    backend, probe, private_debug_output = _load_private_pyocd_backend(digest)
+    try:
+        with private_debug_output():
+            with backend.session(probe) as session:
+                if time.monotonic() >= deadline:
+                    raise BlePairHilFailure(f"{role} pyOCD software reset timeout")
+                backend.start(session)
+                if time.monotonic() >= deadline:
+                    raise BlePairHilFailure(f"{role} pyOCD software reset timeout")
+    except BlePairHilFailure:
+        raise
+    except Exception as error:
+        raise BlePairHilFailure(f"{role} pyOCD software reset 실패") from error
+    return "pyocd-v2-sw-reset"
+
+
+def erase_nrf54l_rram_pyocd_sha256(
+    role: str,
+    digest: str,
+    start: int,
+    size: int,
+    timeout_seconds: float,
+) -> dict[str, int | str]:
+    """! @brief SHA-256 live probe로 지정 RRAM sector만 erase하고 전 byte를 검증합니다. """
+
+    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
+            start < 0 or size <= 0:
+        raise BlePairHilFailure("RRAM sector erase 범위와 timeout이 잘못됐습니다.")
+    deadline = time.monotonic() + timeout_seconds
+    observed_digest: str | None = None
+    try:
+        from pyocd.flash.eraser import FlashEraser
+
+        def erase(backend: Any, session: Any) -> None:
+            """! @brief 한 session에서 sector erase와 전 byte readback을 완료합니다. """
+
+            nonlocal observed_digest
+            observed_hash = hashlib.sha256()
+            halted = False
+            try:
+                if time.monotonic() >= deadline:
+                    raise BlePairHilFailure(f"{role} RRAM sector erase timeout")
+                FlashEraser(session, FlashEraser.Mode.SECTOR).erase(
+                    [(start, start + size)]
+                )
+                session.target.halt()
+                halted = True
+                for address in range(start, start + size, 0x1000):
+                    if time.monotonic() >= deadline:
+                        raise BlePairHilFailure(f"{role} RRAM sector erase timeout")
+                    length = min(0x1000, start + size - address)
+                    observed = bytes(
+                        session.target.read_memory_block8(address, length)
+                    )
+                    if len(observed) != length or observed != b"\xff" * length:
+                        raise BlePairHilFailure(
+                            f"{role} RRAM sector erase readback이 다릅니다."
+                        )
+                    observed_hash.update(observed)
+                observed_digest = observed_hash.hexdigest()
+            finally:
+                if halted:
+                    session.target.resume()
+
+        _run_flash_session_with_retry(digest, deadline, erase)
+    except BlePairHilFailure:
+        raise
+    except Exception as error:
+        raise BlePairHilFailure(f"{role} RRAM sector erase 실패") from error
+    expected_hash = hashlib.sha256(b"\xff" * size).hexdigest()
+    if observed_digest != expected_hash:
+        raise BlePairHilFailure(f"{role} RRAM sector erase digest가 다릅니다.")
+    return {
+        "mode": "pyocd-sector-erase-verified",
+        "start": start,
+        "end_exclusive": start + size,
+        "bytes": size,
+        "erase_value": "0xff",
+        "expected_sha256": expected_hash,
+        "observed_sha256": observed_digest,
+        "readback_backend": "pyocd-live-target",
+    }
+
+
+def clear_nrf54l_rram_pyocd_sha256(
+    role: str,
+    digest: str,
+    start: int,
+    size: int,
+    timeout_seconds: float,
+) -> dict[str, int | str]:
+    """! @brief SHA-256 live probe로 RRAM을 0xff로 채우고 전체 범위를 검증합니다. """
+
+    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
+            start < 0 or size <= 0 or \
+            start % 4 != 0 or size % 0x100 != 0:
+        raise BlePairHilFailure("RRAM clear 범위와 timeout이 잘못됐습니다.")
+    deadline = time.monotonic() + timeout_seconds
+    backend, probe, private_debug_output = _load_private_pyocd_backend(digest)
+    try:
+        with private_debug_output():
+            with backend.session(probe) as session:
+                session.target.halt()
+                try:
+                    session.target.write32(0x5004B500, 1)
+                    if session.target.read32(0x5004B500) & 1 == 0:
+                        raise BlePairHilFailure(
+                            f"{role} RRAM write-enable 확인이 실패했습니다."
+                        )
+                    words = [0xFFFFFFFF] * (0x100 // 4)
+                    for address in range(start, start + size, 0x100):
+                        if time.monotonic() >= deadline:
+                            raise BlePairHilFailure(f"{role} RRAM clear timeout")
+                        session.target.write_memory_block32(address, words)
+                    observed_hash = hashlib.sha256()
+                    for address in range(start, start + size, 0x1000):
+                        if time.monotonic() >= deadline:
+                            raise BlePairHilFailure(f"{role} RRAM readback timeout")
+                        length = min(0x1000, start + size - address)
+                        observed = bytes(
+                            session.target.read_memory_block8(address, length)
+                        )
+                        if len(observed) != length or observed != b"\xff" * length:
+                            raise BlePairHilFailure(
+                                f"{role} RRAM clear readback이 다릅니다."
+                            )
+                        observed_hash.update(observed)
+                finally:
+                    session.target.resume()
+    except BlePairHilFailure:
+        raise
+    except Exception as error:
+        raise BlePairHilFailure(f"{role} RRAM clear 실패") from error
+    expected_hash = hashlib.sha256(b"\xff" * size).hexdigest()
+    if observed_hash.hexdigest() != expected_hash:
+        raise BlePairHilFailure(f"{role} RRAM 전체 range digest가 다릅니다.")
+    return {
+        "mode": "nrf54l-rram-fill-verified",
+        "start": start,
+        "end_exclusive": start + size,
+        "bytes": size,
+        "erase_value": "0xff",
+        "verified_words": size // 4,
+        "expected_sha256": expected_hash,
+        "observed_sha256": observed_hash.hexdigest(),
+        "readback_backend": "pyocd-live-target",
+    }
 
 
 ## @brief 두 role이 서로 다른 UID·MSD·UART인지 검사합니다.
@@ -233,21 +674,185 @@ def validate_arduino_build_manifest(
             value = value[key]
         return value
 
-    revisions = nested("source_inputs", "m31_audio_revisions")
-    if not isinstance(revisions, dict):
-        raise BlePairHilFailure("Arduino build manifest의 audio revision 형식이 잘못됐습니다.")
+    source_inputs = nested("source_inputs")
+    if not isinstance(source_inputs, dict):
+        raise BlePairHilFailure("Arduino build manifest의 source input 형식이 잘못됐습니다.")
+    selected_libraries = nested("context", "selected_libraries")
+    if (
+        not isinstance(selected_libraries, list)
+        or any(not isinstance(value, str) or not value
+               for value in selected_libraries)
+        or len(selected_libraries) != len(set(selected_libraries))
+    ):
+        raise BlePairHilFailure(
+            "Arduino build manifest의 selected library 형식이 잘못됐습니다."
+        )
+    selected_revision_libraries = {
+        value for value in selected_libraries
+        if value in ARDUINO_REVISION_FAMILIES
+    }
+    expected_families = {
+        ARDUINO_REVISION_FAMILIES[value]
+        for value in selected_revision_libraries
+    }
+    input_manifest = nested("cache", "input_manifest")
+    if not isinstance(input_manifest, dict):
+        raise BlePairHilFailure("Arduino build manifest의 cache input 형식이 잘못됐습니다.")
+    selected_features = nested(
+        "cache", "input_manifest", "configuration", "selected_features"
+    )
+    if not isinstance(selected_features, list):
+        raise BlePairHilFailure(
+            "Arduino build manifest의 selected feature 형식이 잘못됐습니다."
+        )
+    selected_feature_ids = []
+    for feature in selected_features:
+        feature_id = feature.get("id") if isinstance(feature, dict) else None
+        if not isinstance(feature_id, str) or not feature_id:
+            raise BlePairHilFailure(
+                "Arduino build manifest의 selected feature identity가 잘못됐습니다."
+            )
+        selected_feature_ids.append(feature_id)
+    if len(selected_feature_ids) != len(set(selected_feature_ids)):
+        raise BlePairHilFailure(
+            "Arduino build manifest의 selected feature가 중복됐습니다."
+        )
+    revision_feature_ids = {
+        feature_id for feature_id in selected_feature_ids
+        if feature_id in ARDUINO_REVISION_FEATURES.values()
+    }
+    expected_feature_ids = {
+        ARDUINO_REVISION_FEATURES[library]
+        for library in selected_revision_libraries
+    }
+    if revision_feature_ids != expected_feature_ids:
+        raise BlePairHilFailure(
+            "Arduino build manifest의 selected library/cache feature가 다릅니다: "
+            f"expected={sorted(expected_feature_ids)}, "
+            f"actual={sorted(revision_feature_ids)}"
+        )
+
+    platform_root_value = nested("context", "platform_root")
+    if not isinstance(platform_root_value, str) or not platform_root_value:
+        raise BlePairHilFailure(
+            "Arduino build manifest의 platform root 형식이 잘못됐습니다."
+        )
+    platform_root = Path(platform_root_value)
+    if not platform_root.is_absolute():
+        raise BlePairHilFailure(
+            "Arduino build manifest의 platform root가 절대 경로가 아닙니다."
+        )
+    platform_root = platform_root.resolve()
+
+    source_rows = source_inputs.get("sources")
+    if not isinstance(source_rows, list):
+        raise BlePairHilFailure(
+            "Arduino build manifest의 source graph 형식이 잘못됐습니다."
+        )
+    source_libraries = set()
+    for row in source_rows:
+        logical_identity = (
+            row.get("logical_identity") if isinstance(row, dict) else None
+        )
+        if not isinstance(logical_identity, str):
+            raise BlePairHilFailure(
+                "Arduino build manifest의 source identity 형식이 잘못됐습니다."
+        )
+        match = re.fullmatch(r"platform:libraries/([^/]+)/.+", logical_identity)
+        if match is not None and match.group(1) in ARDUINO_REVISION_FAMILIES:
+            library = match.group(1)
+            source_path_value = row.get("source_path")
+            if not isinstance(source_path_value, str) or not source_path_value:
+                raise BlePairHilFailure(
+                    "Arduino build manifest의 source path 형식이 잘못됐습니다."
+                )
+            source_path = Path(source_path_value)
+            if not source_path.is_absolute():
+                raise BlePairHilFailure(
+                    "Arduino build manifest의 source path가 절대 경로가 아닙니다."
+                )
+            library_root = (platform_root / "libraries" / library).resolve()
+            try:
+                relative_source = source_path.resolve().relative_to(library_root)
+            except ValueError as error:
+                raise BlePairHilFailure(
+                    "Arduino build manifest의 source identity/path가 다릅니다: "
+                    f"identity={logical_identity}, source_path={source_path_value}"
+                ) from error
+            if not relative_source.parts:
+                raise BlePairHilFailure(
+                    "Arduino build manifest의 source path가 library 파일이 아닙니다: "
+                    f"{source_path_value}"
+                )
+            expected_identity = (
+                f"platform:libraries/{library}/{relative_source.as_posix()}"
+            )
+            if logical_identity != expected_identity:
+                raise BlePairHilFailure(
+                    "Arduino build manifest의 source identity/path가 다릅니다: "
+                    f"identity={logical_identity}, expected={expected_identity}"
+                )
+            source_libraries.add(library)
+    if source_libraries != selected_revision_libraries:
+        raise BlePairHilFailure(
+            "Arduino build manifest의 selected library/source graph가 다릅니다: "
+            f"selected={sorted(selected_revision_libraries)}, "
+            f"sources={sorted(source_libraries)}"
+        )
+
     expected_revisions = {
         "NUCODE_CORE_REVISION": core_revision,
         "NUCODE_BOARD_REVISION": board_revision,
         "NUCODE_NCS_REVISION": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
         "NUCODE_ZEPHYR_REVISION": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
     }
-    for key, expected in expected_revisions.items():
-        actual = revisions.get(key)
-        if actual != expected:
+    unknown_families = {
+        key for key in source_inputs
+        if key.startswith("m31_") and key.endswith("_revisions")
+        and key not in ARDUINO_REVISION_FAMILIES.values()
+    }
+    if unknown_families:
+        raise BlePairHilFailure(
+            "Arduino build manifest에 알 수 없는 revision family가 있습니다: "
+            f"{sorted(unknown_families)}"
+        )
+    revision_families = {
+        key: source_inputs[key]
+        for key in ARDUINO_REVISION_FAMILIES.values()
+        if key in source_inputs
+    }
+    if set(revision_families) != expected_families:
+        raise BlePairHilFailure(
+            "Arduino build manifest의 selected library/revision family가 다릅니다: "
+            f"expected={sorted(expected_families)}, "
+            f"actual={sorted(revision_families)}"
+        )
+    for family, revisions in revision_families.items():
+        if not isinstance(revisions, dict) or revisions != expected_revisions:
             raise BlePairHilFailure(
-                f"Arduino build manifest revision 불일치: {key}={actual}, expected={expected}"
+                "Arduino build manifest revision 불일치: "
+                f"{family}={revisions}, expected={expected_revisions}"
             )
+
+    cache_revisions = {
+        "NUCODE_CORE_REVISION": nested(
+            "cache", "input_manifest", "adapter", "embedded_core_revision"
+        ),
+        "NUCODE_BOARD_REVISION": nested(
+            "cache", "input_manifest", "board_package", "revision"
+        ),
+        "NUCODE_NCS_REVISION": nested(
+            "cache", "input_manifest", "ncs", "nrf_revision"
+        ),
+        "NUCODE_ZEPHYR_REVISION": nested(
+            "cache", "input_manifest", "ncs", "zephyr_revision"
+        ),
+    }
+    if cache_revisions != expected_revisions:
+        raise BlePairHilFailure(
+            "Arduino build manifest cache revision 불일치: "
+            f"actual={cache_revisions}, expected={expected_revisions}"
+        )
 
     image_artifact = nested("artifacts", "hex")
     if not isinstance(image_artifact, dict):
@@ -415,7 +1020,7 @@ def flash_image(
     )
 
 
-## @brief exact UID의 target sector만 CMSIS-DAP로 기록합니다.
+## @brief legacy UID를 SHA-256으로 변환해 선택한 target sector만 기록합니다.
 def flash_image_pyocd(
     role: str,
     board_id: str,
@@ -427,111 +1032,21 @@ def flash_image_pyocd(
     preserve_nrf54l_access: bool = False,
     defer_reset: bool = False,
 ) -> tuple[str, str]:
-    if timeout_seconds <= 0:
-        raise BlePairHilFailure("--flash-timeout은 0보다 커야 합니다.")
     if hardware_reset and defer_reset:
         raise BlePairHilFailure("hardware_reset과 defer_reset은 함께 사용할 수 없습니다.")
-    dap_preference = "true" if cmsis_dap_v1 else "false"
-    frequency_hz = "100000" if cmsis_dap_v1 else "500000"
-    if defer_reset and preserve_nrf54l_access:
-        connect_mode = "halt"
-    else:
-        connect_mode = (
-            "attach" if cmsis_dap_v1 or preserve_nrf54l_access else "under-reset"
-        )
-    command = (
-        sys.executable,
-        "-I",
-        str(PYOCD_LAUNCHER),
-        "flash",
-        "--uid",
-        board_id,
-        "--target",
-        "nrf54l",
-        "--frequency",
-        frequency_hz,
-        "--connect",
-        connect_mode,
-        "-O",
-        "cmsis_dap.limit_packets=true",
-        "-O",
-        f"cmsis_dap.prefer_v1={dap_preference}",
-        "-O",
-        "smart_flash=false",
-        "-O",
-        "auto_unlock=false",
-        "--erase",
-        "sector",
-        "--format",
-        "hex",
-        str(image),
+    if cmsis_dap_v1:
+        raise BlePairHilFailure("hash-only pyOCD backend은 CMSIS-DAP V2만 허용합니다.")
+    del preserve_nrf54l_access
+    mode, programmed = flash_image_pyocd_sha256(
+        role,
+        probe_sha256(board_id),
+        image,
+        timeout_seconds,
+        defer_reset=defer_reset,
     )
-    if hardware_reset or defer_reset:
-        command = command[:-1] + ("--no-reset", command[-1])
-    try:
-        result = subprocess.run(
-            command,
-            capture_output=True,
-            timeout=timeout_seconds,
-            check=False,
-        )
-    except subprocess.TimeoutExpired as error:
-        raise BlePairHilFailure(f"{role} pyOCD sector flash timeout") from error
-    output = result.stdout + result.stderr
-    if result.returncode != 0:
-        raise BlePairHilFailure(
-            f"{role} pyOCD sector flash 실패: "
-            f"{output.decode('utf-8', errors='backslashreplace')}"
-        )
-    match = re.search(rb"programmed\s+(\d+)\s+bytes", output)
-    if match is None:
-        raise BlePairHilFailure(f"{role} pyOCD programmed byte 증거가 없습니다.")
-    if defer_reset:
-        return "pyocd-sector-no-reset", match.group(1).decode("ascii")
-    if hardware_reset:
-        ## @brief nRF54L 접근 보호를 보존할 때는 pin reset 대신 system reset을 사용합니다.
-        reset_method = "sw" if preserve_nrf54l_access else "hw"
-        reset_label = "software" if preserve_nrf54l_access else "hardware"
-        reset_command = (
-            sys.executable,
-            "-I",
-            str(PYOCD_LAUNCHER),
-            "reset",
-            "--uid",
-            board_id,
-            "--target",
-            "nrf54l",
-            "--frequency",
-            frequency_hz,
-            "--connect",
-            connect_mode,
-            "-O",
-            "cmsis_dap.limit_packets=true",
-            "-O",
-            f"cmsis_dap.prefer_v1={dap_preference}",
-            "-O",
-            "auto_unlock=false",
-            "--method",
-            reset_method,
-        )
-        try:
-            reset_result = subprocess.run(
-                reset_command,
-                capture_output=True,
-                timeout=min(timeout_seconds, 30.0),
-                check=False,
-            )
-        except subprocess.TimeoutExpired as error:
-            raise BlePairHilFailure(
-                f"{role} pyOCD {reset_label} reset timeout"
-            ) from error
-        if reset_result.returncode != 0:
-            raise BlePairHilFailure(
-                f"{role} pyOCD {reset_label} reset 실패: "
-                f"{(reset_result.stdout + reset_result.stderr).decode('utf-8', errors='backslashreplace')}"
-            )
-        return f"pyocd-sector-{reset_method}-reset", match.group(1).decode("ascii")
-    return "pyocd-sector", match.group(1).decode("ascii")
+    if not hardware_reset and not defer_reset:
+        mode = "pyocd-sector"
+    return mode, programmed
 
 
 ## @brief 정지한 nRF54L의 RRAM 구간을 erase value로 채우고 전 byte를 검증합니다.
@@ -542,77 +1057,13 @@ def clear_nrf54l_rram_pyocd(
     size: int,
     timeout_seconds: float,
 ) -> dict[str, int | str]:
-    if timeout_seconds <= 0:
-        raise BlePairHilFailure("RRAM clear timeout은 0보다 커야 합니다.")
-    if start < 0 or size <= 0 or start % 4 != 0 or size % 4 != 0:
-        raise BlePairHilFailure("RRAM clear 범위는 양의 4-byte 정렬이어야 합니다.")
-    chunk_size = 0x100
-    if size % chunk_size != 0:
-        raise BlePairHilFailure("RRAM clear 크기는 256-byte 배수여야 합니다.")
-    command = (
-        sys.executable,
-        "-I",
-        str(PYOCD_LAUNCHER),
-        "commander",
-        "--uid",
-        board_id,
-        "--target",
-        "nrf54l",
-        "--frequency",
-        "500000",
-        "--connect",
-        "halt",
-        "-O",
-        "cmsis_dap.limit_packets=true",
-        "-O",
-        "cmsis_dap.prefer_v1=false",
-        "-O",
-        "auto_unlock=false",
-        "-x",
-        "-",
+    return clear_nrf54l_rram_pyocd_sha256(
+        role,
+        probe_sha256(board_id),
+        start,
+        size,
+        timeout_seconds,
     )
-    commands = ["halt", "write32 0x5004b500 1", "read32 0x5004b500 4"]
-    commands.extend(
-        f"fill 32 {hex(address)} {hex(chunk_size)} 0xffffffff"
-        for address in range(start, start + size, chunk_size)
-    )
-    commands.extend(
-        f"read32 {hex(address)} {hex(chunk_size)}"
-        for address in range(start, start + size, chunk_size)
-    )
-    commands.append("exit")
-    try:
-        result = subprocess.run(
-            command,
-            input="\n".join(commands).encode("ascii") + b"\n",
-            capture_output=True,
-            timeout=timeout_seconds,
-            check=False,
-        )
-    except subprocess.TimeoutExpired as error:
-        raise BlePairHilFailure(f"{role} RRAM clear timeout") from error
-    output = result.stdout + result.stderr
-    if result.returncode != 0 or b"memory transfer failed" in output.lower():
-        raise BlePairHilFailure(
-            f"{role} RRAM clear 실패(returncode={result.returncode})"
-        )
-    erased_words = sum(
-        word.lower() == b"ffffffff"
-        for word in re.findall(rb"\b([0-9a-fA-F]{8})\b", output)
-    )
-    expected_words = size // 4
-    if erased_words < expected_words:
-        raise BlePairHilFailure(
-            f"{role} RRAM clear 검증 실패: {erased_words}/{expected_words} words"
-        )
-    return {
-        "mode": "nrf54l-rram-fill-verified",
-        "start": start,
-        "end_exclusive": start + size,
-        "bytes": size,
-        "erase_value": "0xff",
-        "verified_words": expected_words,
-    }
 
 
 ## @brief CMSIS-DAP V2에서 flash 뒤 application software reset barrier를 실행합니다.
@@ -623,42 +1074,12 @@ def reset_target_pyocd(
     *,
     preserve_nrf54l_access: bool = False,
 ) -> str:
-    if timeout_seconds <= 0:
-        raise BlePairHilFailure("reset timeout은 0보다 커야 합니다.")
-    command = (
-        sys.executable,
-        "-I",
-        str(PYOCD_LAUNCHER),
-        "reset",
-        "--uid",
-        board_id,
-        "--target",
-        "nrf54l",
-        "--frequency",
-        "500000",
-        "--connect",
-        "attach" if preserve_nrf54l_access else "under-reset",
-        "-O",
-        "cmsis_dap.limit_packets=true",
-        "-O",
-        "cmsis_dap.prefer_v1=false",
-        "-O",
-        "auto_unlock=false",
-        "--method",
-        "sw",
+    del preserve_nrf54l_access
+    return reset_target_pyocd_sha256(
+        role,
+        probe_sha256(board_id),
+        timeout_seconds,
     )
-    try:
-        result = subprocess.run(
-            command,
-            capture_output=True,
-            timeout=timeout_seconds,
-            check=False,
-        )
-    except subprocess.TimeoutExpired as error:
-        raise BlePairHilFailure(f"{role} pyOCD software reset timeout") from error
-    if result.returncode != 0:
-        raise BlePairHilFailure(f"{role} pyOCD software reset 실패")
-    return "pyocd-v2-sw-reset"
 
 
 ## @brief bounded UART capture에서 newline 하나를 읽습니다.
@@ -831,16 +1252,16 @@ def execute_pair(
 
             if flash_backend == "pyocd-sector":
                 ports["peripheral"].reset_input_buffer()
-                flashes["peripheral"] = flash_image_pyocd(
+                flashes["peripheral"] = flash_image_pyocd_sha256(
                     "peripheral",
-                    peripheral_endpoint.board_id,
+                    probe_sha256(peripheral_endpoint.board_id),
                     peripheral_image,
                     flash_timeout,
                 )
                 ports["central"].reset_input_buffer()
-                flashes["central"] = flash_image_pyocd(
+                flashes["central"] = flash_image_pyocd_sha256(
                     "central",
-                    central_endpoint.board_id,
+                    probe_sha256(central_endpoint.board_id),
                     central_image,
                     flash_timeout,
                 )

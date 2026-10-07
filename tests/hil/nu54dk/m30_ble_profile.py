@@ -27,9 +27,9 @@ from ble_pair_hil_common import (  # noqa: E402
     REPOSITORY,
     RoleEndpoint,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     transcript_record,
     validate_board_revision,
@@ -40,6 +40,16 @@ from ble_pair_hil_common import (  # noqa: E402
     validate_source_clean,
 )
 from m6_serial_echo import import_pyserial  # noqa: E402
+from m30_native_attestation import (  # noqa: E402
+    M30AttestationFailure,
+    PROFILE_SEMANTICS,
+    ROLES,
+    build_profile_cycle_records,
+    complete_program_phase,
+    make_dispatch_attestation,
+    profile_typed_denominator,
+    prepare_program_phase,
+)
 
 
 MILESTONE = "M30"
@@ -95,8 +105,10 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
         description="M30-PROFILE-01 일곱 BLE profile을 두 NU54DK에서 검증합니다."
     )
     parser.add_argument("--build-outdir", required=True)
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--peripheral-image")
+    parser.add_argument("--central-image")
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -134,15 +146,23 @@ def image_path(build_outdir: Path, role: str) -> Path:
 
 
 def collect_images(
-    build_outdir: Path, core_revision: str, board_revision: str
+    build_outdir: Path,
+    core_revision: str,
+    board_revision: str,
+    direct_images: dict[str, Path] | None = None,
 ) -> dict[str, ImageInput]:
     """! @brief 두 image를 exact source·revision·byte와 결합합니다. """
 
     images: dict[str, ImageInput] = {}
     for role in ("peripheral", "central"):
-        path = validate_hex_image(str(image_path(build_outdir, role)))
+        canonical = validate_hex_image(str(image_path(build_outdir, role)))
+        path = canonical
+        if direct_images is not None:
+            path = validate_hex_image(str(direct_images[role]))
+            if file_sha256(path) != file_sha256(canonical):
+                raise M30ProfileFailure("role direct HEX가 canonical build와 다릅니다.")
         try:
-            path.relative_to(build_outdir)
+            canonical.relative_to(build_outdir)
         except ValueError as error:
             raise M30ProfileFailure("HEX가 지정 build outdir 밖에 있습니다.") from error
         images[role] = ImageInput(
@@ -313,7 +333,11 @@ def execute_hil(
     core_revision: str,
     nonce: str,
     captures: dict[str, bytearray],
-) -> tuple[dict[str, ProfileResult], dict[str, tuple[list[str], int]]]:
+) -> tuple[
+    dict[str, ProfileResult],
+    dict[str, tuple[str, str]],
+    dict[str, str],
+]:
     """! @brief flash→보안→구독→profile 100회 protocol을 실행합니다. """
 
     if baud != DEFAULT_BAUD_RATE:
@@ -323,9 +347,11 @@ def execute_hil(
     with ThreadPoolExecutor(max_workers=2) as executor:
         futures = {
             role: executor.submit(
-                flash_image_pyocd,
+                flash_image_pyocd_sha256,
                 role,
-                endpoints[role].board_id,
+                hashlib.sha256(
+                    endpoints[role].board_id.encode("ascii")
+                ).hexdigest(),
                 images[role].path,
                 flash_timeout,
             )
@@ -415,10 +441,17 @@ def execute_hil(
             }
             results = {role: future.result() for role, future in futures.items()}
 
+    cleanup = {
+        role: "PASS" if getattr(port, "is_open", None) is False else "FAIL"
+        for role, port in ports.items()
+    }
+    if any(value != "PASS" for value in cleanup.values()):
+        raise M30ProfileFailure("profile VCOM close cleanup이 실패했습니다.")
+
     for role in endpoints:
         image = images[role]
         validate_image_unchanged(image.path, image.size, image.sha256)
-    return results, flash_results
+    return results, flash_results, cleanup
 
 
 def endpoint_evidence(endpoint: RoleEndpoint) -> dict[str, str]:
@@ -451,15 +484,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
     if not 60.0 <= args.result_timeout <= 900.0:
         raise M30ProfileFailure("--result-timeout은 60..900초여야 합니다.")
+    if not 1.0 <= args.flash_timeout <= 300.0:
+        raise M30ProfileFailure("--flash-timeout은 1..300초여야 합니다.")
     serial_module, list_ports = import_pyserial()
-    peripheral = discover_endpoint(
-        args.peripheral_board_id,
+    peripheral = discover_endpoint_sha256(
+        args.probe_peripheral_sha256,
         args.peripheral_volume,
         args.peripheral_port,
         list_ports,
     )
-    central = discover_endpoint(
-        args.central_board_id,
+    central = discover_endpoint_sha256(
+        args.probe_central_sha256,
         args.central_volume,
         args.central_port,
         list_ports,
@@ -478,16 +513,35 @@ def main(arguments: Sequence[str] | None = None) -> int:
     build_outdir = Path(args.build_outdir).resolve()
     if not build_outdir.is_dir():
         raise M30ProfileFailure("--build-outdir가 directory가 아닙니다.")
-    images = collect_images(build_outdir, core_revision, board_revision)
+    supplied = (args.peripheral_image, args.central_image)
+    if any(supplied) and not all(supplied):
+        raise M30ProfileFailure("두 role direct image를 함께 지정해야 합니다.")
+    direct_images = None
+    if all(supplied):
+        direct_images = {
+            "peripheral": Path(args.peripheral_image).resolve(),
+            "central": Path(args.central_image).resolve(),
+        }
+    images = collect_images(
+        build_outdir, core_revision, board_revision, direct_images
+    )
     evidence_path, peripheral_path, central_path = output_paths(
         args.evidence, args.overwrite_evidence
     )
     endpoints = {"peripheral": peripheral, "central": central}
     captures = {"peripheral": bytearray(), "central": bytearray()}
+    phase = prepare_program_phase(
+        evidence_path,
+        "profiles",
+        ROLES,
+        {role: images[role].path for role in ROLES},
+        {role: images[role].build_record for role in ROLES},
+        overwrite=args.overwrite_evidence,
+    )
     nonce = build_nonce()
     started = time.monotonic()
     try:
-        results, flash_results = execute_hil(
+        results, flash_results, cleanup = execute_hil(
             serial_module,
             endpoints,
             images,
@@ -498,15 +552,71 @@ def main(arguments: Sequence[str] | None = None) -> int:
             nonce,
             captures,
         )
-    except M30ProfileFailure as error:
+    except Exception as error:
         peripheral_path.write_bytes(captures["peripheral"])
         central_path.write_bytes(captures["central"])
+        cleanup_status = "PASS"
+        try:
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                cleanup_futures = {
+                    role: executor.submit(
+                        flash_image_pyocd_sha256,
+                        f"{role}-failure-cleanup",
+                        hashlib.sha256(
+                            endpoints[role].board_id.encode("ascii")
+                        ).hexdigest(),
+                        images[role].path,
+                        min(args.flash_timeout, 60.0),
+                    )
+                    for role in ROLES
+                }
+                for future in cleanup_futures.values():
+                    future.result()
+        except Exception as cleanup_error:
+            cleanup_status = f"FAIL:{type(cleanup_error).__name__}"
         raise M30ProfileFailure(
-            f"{error}; 실패 transcript: {peripheral_path.name}, {central_path.name}"
+            f"{error}; failure cleanup={cleanup_status}; 실패 transcript: "
+            f"{peripheral_path.name}, {central_path.name}"
         ) from error
-    duration = time.monotonic() - started
     peripheral_path.write_bytes(captures["peripheral"])
     central_path.write_bytes(captures["central"])
+    try:
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = {
+                role: executor.submit(
+                    flash_image_pyocd_sha256,
+                    f"{role}-cleanup",
+                    hashlib.sha256(
+                        endpoints[role].board_id.encode("ascii")
+                    ).hexdigest(),
+                    images[role].path,
+                    args.flash_timeout,
+                )
+                for role in ROLES
+            }
+            cleanup_flash_results = {
+                role: future.result() for role, future in futures.items()
+            }
+        exact_program, program_phase = complete_program_phase(
+            REPOSITORY,
+            core_revision,
+            phase,
+            {role: endpoints[role].board_id for role in ROLES},
+            cleanup_flash_results,
+        )
+        cycle_records = build_profile_cycle_records(
+            results,
+            {role: bytes(captures[role]) for role in ROLES},
+            nonce,
+            core_revision,
+            cleanup,
+        )
+    except Exception as error:
+        raise M30ProfileFailure(
+            "program/readback 또는 raw cycle 검증이 실패했습니다; "
+            f"실패 transcript: {peripheral_path.name}, {central_path.name}"
+        ) from error
+    duration = time.monotonic() - started
     evidence = {
         "schema_version": 1,
         "test_id": "M30-PROFILE-01",
@@ -521,15 +631,44 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "operations_per_service": min(value.operations for value in results.values()),
         "payload_errors": max(value.payload_errors for value in results.values()),
         "driver_errors": max(value.driver_errors for value in results.values()),
+        "results": {
+            role: {
+                "catalog": value.catalog,
+                "operations": value.operations,
+                "payload_errors": value.payload_errors,
+                "driver_errors": value.driver_errors,
+            }
+            for role, value in results.items()
+        },
         "endpoints": {role: endpoint_evidence(value) for role, value in endpoints.items()},
         "images": {role: image_evidence(value) for role, value in images.items()},
         "flash_backend": "pyocd-sector",
         "flash_results": {
-            role: {"sequence": value[0][0], "bytes": value[1]}
+            role: {"sequence": value[0], "bytes": value[1]}
             for role, value in flash_results.items()
         },
         "power_cut_injected": False,
         "mass_erase_or_recover": False,
+        "program_phases": [program_phase],
+        "cleanup": {
+            "serial": cleanup,
+            "target": {role: "SECTOR_REPROGRAM_RESET" for role in ROLES},
+            "flash_results": {
+                role: {"sequence": value[0], "bytes": value[1]}
+                for role, value in cleanup_flash_results.items()
+            },
+            "bonding_disabled": True,
+        },
+        "dispatch_cycle_records": cycle_records,
+        "typed_denominator": profile_typed_denominator(),
+        "m33_dispatch_attestation": make_dispatch_attestation(
+            "m30_profiles",
+            core_revision,
+            PROFILE_SEMANTICS,
+            ROLES,
+            exact_program,
+            cycle_records,
+        ),
         "transcripts": {
             "peripheral": transcript_record(peripheral_path, captures["peripheral"]),
             "central": transcript_record(central_path, captures["central"]),
@@ -546,6 +685,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except M30ProfileFailure as error:
+    except (M30ProfileFailure, M30AttestationFailure) as error:
         print(f"M30_PROFILE_HIL_FAIL: {error}", file=sys.stderr)
         raise SystemExit(1)

@@ -1,0 +1,78 @@
+
+Downloading index: library_index.tar.bz2 0 B / 4.32 MiB    0.00%
+Downloading index: library_index.tar.bz2 downloaded
+
+Downloading index: package_index.tar.bz2 0 B / 110.63 KiB    0.00%
+Downloading index: package_index.tar.bz2 downloaded
+Downloading missing tool builtin:mdns-discovery@1.1.0...
+
+builtin:mdns-discovery@1.1.0 0 B / 3.17 MiB    0.00%
+builtin:mdns-discovery@1.1.0 downloaded
+Installing builtin:mdns-discovery@1.1.0...
+Skipping tool configuration....
+builtin:mdns-discovery@1.1.0 installed
+Downloading missing tool builtin:serial-discovery@1.5.2...
+
+builtin:serial-discovery@1.5.2 0 B / 2.20 MiB    0.00%
+builtin:serial-discovery@1.5.2 downloaded
+Installing builtin:serial-discovery@1.5.2...
+Skipping tool configuration....
+builtin:serial-discovery@1.5.2 installed
+Downloading missing tool builtin:serial-monitor@0.15.0...
+
+builtin:serial-monitor@0.15.0 0 B / 2.45 MiB    0.00%
+builtin:serial-monitor@0.15.0 downloaded
+Installing builtin:serial-monitor@0.15.0...
+Skipping tool configuration....
+builtin:serial-monitor@0.15.0 installed
+Downloading missing tool builtin:ctags@5.8-arduino11...
+
+builtin:ctags@5.8-arduino11 0 B / 113.73 KiB    0.00%
+builtin:ctags@5.8-arduino11 downloaded
+Installing builtin:ctags@5.8-arduino11...
+Skipping tool configuration....
+builtin:ctags@5.8-arduino11 installed
+Downloading missing tool builtin:dfu-discovery@0.1.2...
+
+builtin:dfu-discovery@0.1.2 0 B / 2.18 MiB    0.00%
+builtin:dfu-discovery@0.1.2 downloaded
+Installing builtin:dfu-discovery@0.1.2...
+Skipping tool configuration....
+builtin:dfu-discovery@0.1.2 installed
+[NU54 1/5] 환경과 Feature set 확인
+[NU54 2/5] Zephyr 구성 준비: new-cache, 작업자 15개
+[NU54] Zephyr 구성: 대상 계산 중, 26.4초 경과
+[NU54] Zephyr 구성: 대상 계산 중, 36.4초 경과
+[NU54] Zephyr 구성: 대상 계산 중, 46.4초 경과
+[NU54] Zephyr 구성: 대상 계산 중, 56.4초 경과
+[NU54] Zephyr 구성: 대상 계산 중, 66.4초 경과
+[NU54] Zephyr 구성: 대상 계산 중, 85.8초 경과
+[NU54] Zephyr 구성: 대상 계산 중, 95.8초 경과
+[NU54 2/5] Zephyr 구성 준비: selected-features, 작업자 15개
+[NU54 3/5] 소스 컴파일 준비: source graph와 cache 검증
+[NU54 3/5] 소스 컴파일 중: 작업자 15개, 전체 log C:\n54w02e-arduino\build-nucode_ble-beaconadvertiser\nu54-zephyr\logs\build.log
+[NU54] 컴파일과 링크: 21/423
+[NU54] 컴파일과 링크: 42/423
+[NU54] 컴파일과 링크: 63/423
+[NU54] 컴파일과 링크: 84/423
+[NU54] 컴파일과 링크: 105/423
+[NU54] 컴파일과 링크: 126/423
+[NU54] 컴파일과 링크: 147/423
+[NU54] 컴파일과 링크: 168/423
+[NU54] 컴파일과 링크: 189/423
+[NU54] 컴파일과 링크: 210/423
+[NU54] 컴파일과 링크: 231/423
+[NU54] 컴파일과 링크: 252/423
+[NU54] 컴파일과 링크: 273/423
+[NU54] 컴파일과 링크: 294/423
+[NU54] 컴파일과 링크: 315/423
+[NU54] 컴파일과 링크: 336/423
+[NU54] 컴파일과 링크: 357/423
+[NU54] 컴파일과 링크: 378/423
+[NU54] 컴파일과 링크: 399/423
+[NU54] 컴파일과 링크: 420/423
+[NU54] 컴파일과 링크: 423/423
+[NU54 4/5] 링크와 firmware 생성
+[NU54 5/5] 산출물·메모리 검증 완료: 214.6초
+Sketch uses 366816 bytes (24%) of program storage space. Maximum is 1490944 bytes.
+Global variables use 156656 bytes (59%) of dynamic memory, leaving 105488 bytes for local variables. Maximum is 262144 bytes.

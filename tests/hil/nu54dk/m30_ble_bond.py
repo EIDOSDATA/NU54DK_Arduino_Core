@@ -27,9 +27,9 @@ from ble_pair_hil_common import (  # noqa: E402
     REPOSITORY,
     RoleEndpoint,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     transcript_record,
     validate_board_revision,
@@ -40,6 +40,16 @@ from ble_pair_hil_common import (  # noqa: E402
     validate_source_clean,
 )
 from m6_serial_echo import import_pyserial  # noqa: E402
+from m30_native_attestation import (  # noqa: E402
+    BOND_SEMANTICS,
+    M30AttestationFailure,
+    ROLES,
+    build_bond_cycle_records,
+    complete_program_phase,
+    make_dispatch_attestation,
+    bond_typed_denominator,
+    prepare_program_phase,
+)
 
 
 MILESTONE = "M30"
@@ -89,8 +99,10 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
         description="M30-BOND-01 migration·privacy·stale key를 두 NU54DK에서 검증합니다."
     )
     parser.add_argument("--build-outdir", required=True)
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--peripheral-image")
+    parser.add_argument("--central-image")
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -128,15 +140,23 @@ def image_path(build_outdir: Path, role: str) -> Path:
 
 
 def collect_images(
-    build_outdir: Path, core_revision: str, board_revision: str
+    build_outdir: Path,
+    core_revision: str,
+    board_revision: str,
+    direct_images: dict[str, Path] | None = None,
 ) -> dict[str, ImageInput]:
     """! @brief 두 image를 exact source·revision·byte와 결합합니다. """
 
     images: dict[str, ImageInput] = {}
     for role in ("peripheral", "central"):
-        path = validate_hex_image(str(image_path(build_outdir, role)))
+        canonical = validate_hex_image(str(image_path(build_outdir, role)))
+        path = canonical
+        if direct_images is not None:
+            path = validate_hex_image(str(direct_images[role]))
+            if file_sha256(path) != file_sha256(canonical):
+                raise M30BondFailure("role direct HEX가 canonical build와 다릅니다.")
         try:
-            path.relative_to(build_outdir)
+            canonical.relative_to(build_outdir)
         except ValueError as error:
             raise M30BondFailure("HEX가 지정 build outdir 밖에 있습니다.") from error
         images[role] = ImageInput(
@@ -317,7 +337,12 @@ def execute_hil(
     core_revision: str,
     nonce: str,
     captures: dict[str, bytearray],
-) -> tuple[dict[str, BondResult], dict[str, tuple[list[str], int]]]:
+) -> tuple[
+    dict[str, BondResult],
+    dict[str, tuple[str, str]],
+    dict[str, str],
+    dict[str, str],
+]:
     """! @brief clean→migration→20 reconnect→stale 거부를 두 보드에서 실행합니다. """
 
     if baud != DEFAULT_BAUD_RATE:
@@ -325,9 +350,11 @@ def execute_hil(
     with ThreadPoolExecutor(max_workers=2) as executor:
         futures = {
             role: executor.submit(
-                flash_image_pyocd,
+                flash_image_pyocd_sha256,
                 role,
-                endpoints[role].board_id,
+                hashlib.sha256(
+                    endpoints[role].board_id.encode("ascii")
+                ).hexdigest(),
                 images[role].path,
                 flash_timeout,
             )
@@ -338,8 +365,43 @@ def execute_hil(
 
     pending = {"peripheral": bytearray(), "central": bytearray()}
     with ExitStack() as stack:
-        ports = {
-            role: stack.enter_context(
+        ports: dict[str, Any] = {}
+        deadline = time.monotonic() + result_timeout
+        reset = f"M30BOND|1|RESET|core={core_revision}"
+        emergency = {"armed": True}
+
+        def emergency_reset() -> None:
+            """! @brief 예외 시 열린 UART에서 전체 test bond와 radio state를 정리합니다. """
+
+            if not emergency["armed"]:
+                return
+            cleanup_deadline = time.monotonic() + 5.0
+            active_roles = tuple(ports)
+            try:
+                for cleanup_role in active_roles:
+                    send_line(ports[cleanup_role], reset)
+                for cleanup_role in active_roles:
+                    wait_exact(
+                        ports[cleanup_role], pending[cleanup_role],
+                        captures[cleanup_role],
+                        (
+                            f"M30BOND|1|RESETTING|role={cleanup_role}|"
+                            f"warm=1|core={core_revision}"
+                        ).encode("ascii"),
+                        cleanup_deadline,
+                    )
+            except BaseException as cleanup_error:
+                marker = (
+                    f"M30BOND|1|HOST_CLEANUP_FAIL|type="
+                    f"{type(cleanup_error).__name__}\n"
+                ).encode("ascii")
+                for cleanup_role in active_roles:
+                    captures[cleanup_role].extend(marker)
+            finally:
+                emergency["armed"] = False
+
+        for role in endpoints:
+            ports[role] = stack.enter_context(
                 serial_module.Serial(
                     endpoints[role].port_name,
                     baudrate=baud,
@@ -347,12 +409,9 @@ def execute_hil(
                     write_timeout=2.0,
                 )
             )
-            for role in endpoints
-        }
+            stack.callback(emergency_reset)
         for port in ports.values():
             port.reset_input_buffer()
-        deadline = time.monotonic() + result_timeout
-        reset = f"M30BOND|1|RESET|core={core_revision}"
         for role in endpoints:
             send_line(ports[role], reset)
         for role in endpoints:
@@ -559,10 +618,33 @@ def execute_hil(
             }
             results = {role: future.result() for role, future in futures.items()}
 
+        target_cleanup: dict[str, str] = {}
+        for role in endpoints:
+            send_line(ports[role], reset)
+        for role in endpoints:
+            wait_exact(
+                ports[role],
+                pending[role],
+                captures[role],
+                (
+                    f"M30BOND|1|RESETTING|role={role}|warm=1|core={core_revision}"
+                ).encode("ascii"),
+                deadline,
+            )
+            target_cleanup[role] = "RESET_CLEAR_ACK"
+        emergency["armed"] = False
+
+    cleanup = {
+        role: "PASS" if getattr(port, "is_open", None) is False else "FAIL"
+        for role, port in ports.items()
+    }
+    if any(value != "PASS" for value in cleanup.values()):
+        raise M30BondFailure("bond VCOM close cleanup이 실패했습니다.")
+
     for role in endpoints:
         image = images[role]
         validate_image_unchanged(image.path, image.size, image.sha256)
-    return results, flash_results
+    return results, flash_results, cleanup, target_cleanup
 
 
 def endpoint_evidence(endpoint: RoleEndpoint) -> dict[str, str]:
@@ -593,17 +675,19 @@ def main(arguments: Sequence[str] | None = None) -> int:
     """! @brief preflight 또는 실제 M30-BOND-01을 실행하고 증적을 기록합니다. """
 
     args = parse_arguments(arguments)
+    if not 1.0 <= args.flash_timeout <= 300.0:
+        raise M30BondFailure("--flash-timeout은 1..300초여야 합니다.")
     if not 60.0 <= args.result_timeout <= 900.0:
         raise M30BondFailure("--result-timeout은 60..900초여야 합니다.")
     serial_module, list_ports = import_pyserial()
-    peripheral = discover_endpoint(
-        args.peripheral_board_id,
+    peripheral = discover_endpoint_sha256(
+        args.probe_peripheral_sha256,
         args.peripheral_volume,
         args.peripheral_port,
         list_ports,
     )
-    central = discover_endpoint(
-        args.central_board_id,
+    central = discover_endpoint_sha256(
+        args.probe_central_sha256,
         args.central_volume,
         args.central_port,
         list_ports,
@@ -622,16 +706,35 @@ def main(arguments: Sequence[str] | None = None) -> int:
     build_outdir = Path(args.build_outdir).resolve()
     if not build_outdir.is_dir():
         raise M30BondFailure("--build-outdir가 directory가 아닙니다.")
-    images = collect_images(build_outdir, core_revision, board_revision)
+    supplied = (args.peripheral_image, args.central_image)
+    if any(supplied) and not all(supplied):
+        raise M30BondFailure("두 role direct image를 함께 지정해야 합니다.")
+    direct_images = None
+    if all(supplied):
+        direct_images = {
+            "peripheral": Path(args.peripheral_image).resolve(),
+            "central": Path(args.central_image).resolve(),
+        }
+    images = collect_images(
+        build_outdir, core_revision, board_revision, direct_images
+    )
     evidence_path, peripheral_path, central_path = output_paths(
         args.evidence, args.overwrite_evidence
     )
     endpoints = {"peripheral": peripheral, "central": central}
     captures = {"peripheral": bytearray(), "central": bytearray()}
+    phase = prepare_program_phase(
+        evidence_path,
+        "bond",
+        ROLES,
+        {role: images[role].path for role in ROLES},
+        {role: images[role].build_record for role in ROLES},
+        overwrite=args.overwrite_evidence,
+    )
     nonce = build_nonce()
     started = time.monotonic()
     try:
-        results, flash_results = execute_hil(
+        results, flash_results, cleanup, target_cleanup = execute_hil(
             serial_module,
             endpoints,
             images,
@@ -642,15 +745,35 @@ def main(arguments: Sequence[str] | None = None) -> int:
             nonce,
             captures,
         )
-    except M30BondFailure as error:
+    except Exception as error:
         peripheral_path.write_bytes(captures["peripheral"])
         central_path.write_bytes(captures["central"])
         raise M30BondFailure(
             f"{error}; 실패 transcript: {peripheral_path.name}, {central_path.name}"
         ) from error
-    duration = time.monotonic() - started
     peripheral_path.write_bytes(captures["peripheral"])
     central_path.write_bytes(captures["central"])
+    try:
+        exact_program, program_phase = complete_program_phase(
+            REPOSITORY,
+            core_revision,
+            phase,
+            {role: endpoints[role].board_id for role in ROLES},
+            flash_results,
+        )
+        cycle_records = build_bond_cycle_records(
+            results,
+            {role: bytes(captures[role]) for role in ROLES},
+            nonce,
+            core_revision,
+            cleanup,
+        )
+    except Exception as error:
+        raise M30BondFailure(
+            "program/readback 또는 raw cycle 검증이 실패했습니다; "
+            f"실패 transcript: {peripheral_path.name}, {central_path.name}"
+        ) from error
+    duration = time.monotonic() - started
     evidence = {
         "schema_version": 1,
         "test_id": "M30-BOND-01",
@@ -664,7 +787,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "images": {role: image_evidence(value) for role, value in images.items()},
         "flash_backend": "pyocd-sector",
         "flash_results": {
-            role: {"sequence": value[0][0], "bytes": value[1]}
+            role: {"sequence": value[0], "bytes": value[1]}
             for role, value in flash_results.items()
         },
         "warm_reboots": 4,
@@ -676,9 +799,36 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "stale_key_attempts": 1,
         "stale_key_accepts": max(value.stale_key_accepts for value in results.values()),
         "new_pairings_after_migration": max(value.new_pairings for value in results.values()),
+        "results": {
+            role: {
+                "bonded_reconnects": value.reconnects,
+                "privacy_rotations": value.rotations,
+                "metadata_migrations": value.migration,
+                "stale_key_accepts": value.stale_key_accepts,
+                "new_pairings": value.new_pairings,
+                "final_bond_count": value.final_bond_count,
+            }
+            for role, value in results.items()
+        },
         "final_bond_counts": {
             role: value.final_bond_count for role, value in results.items()
         },
+        "program_phases": [program_phase],
+        "cleanup": {
+            "serial": cleanup,
+            "target": target_cleanup,
+            "stale_bond_erased": True,
+        },
+        "dispatch_cycle_records": cycle_records,
+        "typed_denominator": bond_typed_denominator(),
+        "m33_dispatch_attestation": make_dispatch_attestation(
+            "m30_bond",
+            core_revision,
+            BOND_SEMANTICS,
+            ROLES,
+            exact_program,
+            cycle_records,
+        ),
         "transcripts": {
             "peripheral": transcript_record(peripheral_path, captures["peripheral"]),
             "central": transcript_record(central_path, captures["central"]),
@@ -698,6 +848,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except M30BondFailure as error:
+    except (M30BondFailure, M30AttestationFailure) as error:
         print(f"M30_BOND_HIL_FAIL: {error}", file=sys.stderr)
         raise SystemExit(1)

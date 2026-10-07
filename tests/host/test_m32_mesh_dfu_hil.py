@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 import struct
 import sys
@@ -70,6 +71,132 @@ class M32MeshDfuHilTests(unittest.TestCase):
         runner.validate_final_result(result, {"status": "pass"}, candidate)
         with self.assertRaisesRegex(runner.MeshDfuFailure, "targets"):
             runner.validate_final_result({**result, "targets": "9"}, {"status": "pass"}, candidate)
+
+    def test_dispatch_denominator_expands_five_iterations_to_ten_targets(self) -> None:
+        """! @brief signed update와 rollback raw 범위를 target별 10회로 펼칩니다. """
+
+        candidate = runner.ImageInput(
+            Path("candidate.bin"), 343280, "a" * 64, runner.CANDIDATE_VERSION
+        )
+        transcript = [f"iteration-{iteration}" for iteration in range(1, 6)]
+        iterations = []
+        for iteration, line in enumerate(transcript, start=1):
+            raw = (line + "\n").encode("ascii")
+            iterations.append(
+                {
+                    "iteration": iteration,
+                    "transcript_line_start": iteration,
+                    "transcript_line_end": iteration,
+                    "transcript_sha256": hashlib.sha256(raw).hexdigest(),
+                    "details": {
+                        "boots": {"target_a": {}, "target_b": {}},
+                        "applied": {"target_a": {}, "target_b": {}},
+                        "distributor": {
+                            "targets": "2",
+                            "signed_sha256": candidate.sha256,
+                        },
+                    },
+                }
+            )
+        rollbacks = [
+            {"iteration": iteration, "roles": ["target_a", "target_b"]}
+            for iteration in range(1, 5)
+        ] + [{"iteration": 5, "roles": ["target_b"]}]
+        records = runner.build_dispatch_cycle_records(
+            iterations, rollbacks, transcript, candidate
+        )
+        self.assertEqual(10, len(records))
+        self.assertEqual(9, sum(row["final_state"] == "rolled_back" for row in records))
+        self.assertEqual(
+            {"NOT_APPLICABLE"},
+            {row["semantics"]["active_watchdog_condition"] for row in records},
+        )
+
+    def test_watchdog_condition_uses_exact_disabled_kconfig_value(self) -> None:
+        """! @brief 주석형 Kconfig n을 읽고 y·n 중복은 fail-closed 처리합니다. """
+
+        self.assertEqual(
+            "n", runner.config_symbol("# CONFIG_WATCHDOG is not set\n", "CONFIG_WATCHDOG")
+        )
+        self.assertEqual("y", runner.config_symbol("CONFIG_WATCHDOG=y\n", "CONFIG_WATCHDOG"))
+        with self.assertRaisesRegex(runner.MeshDfuFailure, "판정할 수 없습니다"):
+            runner.config_symbol(
+                "CONFIG_WATCHDOG=y\n# CONFIG_WATCHDOG is not set\n",
+                "CONFIG_WATCHDOG",
+            )
+        source = (HIL / "m32_mesh_dfu_run.py").read_text(encoding="utf-8")
+        self.assertIn('"condition": "application_watchdog_disabled"', source)
+        self.assertIn('"active_watchdog_condition": "NOT_APPLICABLE"', source)
+        self.assertIn('dispatch_attestation(\n        "m32_mesh_dfu"', source)
+
+    def test_watchdog_condition_copies_all_exact_config_and_build_bytes(self) -> None:
+        """! @brief 세 runtime 역할과 candidate의 인접 config/build byte를 모두 결합합니다. """
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            builds = {}
+            classifications = {}
+            for role in (*runner.ROLES, "candidate"):
+                build_root = root / role
+                application = build_root / runner.APPLICATION_DOMAIN / "zephyr"
+                boot = build_root / runner.BOOT_DOMAIN / "zephyr"
+                application.mkdir(parents=True)
+                boot.mkdir(parents=True)
+                application_config = application / ".config"
+                boot_config = boot / ".config"
+                application_config.write_text(
+                    "# CONFIG_WATCHDOG is not set\n", encoding="utf-8"
+                )
+                boot_config.write_text(
+                    "CONFIG_BOOT_WATCHDOG_FEED=y\n", encoding="utf-8"
+                )
+                signed = application / "zephyr.signed.hex"
+                signed.write_bytes(b":00000001FF\n")
+                record = application.parent / "nucode_arduino_core_build.yml"
+                record.write_text(f"role: {role}\n", encoding="utf-8")
+                image = runner.ImageInput(
+                    signed,
+                    signed.stat().st_size,
+                    hashlib.sha256(signed.read_bytes()).hexdigest(),
+                    None,
+                )
+                builds[role] = runner.BuildInput(
+                    role,
+                    build_root,
+                    image,
+                    image,
+                    image,
+                    image,
+                    "b" * 64,
+                    {
+                        "record_name": record.name,
+                        "record_sha256": hashlib.sha256(record.read_bytes()).hexdigest(),
+                    },
+                    None,
+                    None,
+                )
+                classifications[role] = runner.classify_mcuboot_watchdog(
+                    application_config.read_text(encoding="utf-8"),
+                    boot_config.read_text(encoding="utf-8"),
+                )
+            evidence = runner.copy_watchdog_condition_evidence(
+                root / "attempt.json", builds, classifications
+            )
+            self.assertEqual("NOT_APPLICABLE", evidence["status"])
+            self.assertEqual(set(builds), set(evidence["builds"]))
+            for row in evidence["builds"].values():
+                self.assertEqual("n", row["symbols"]["CONFIG_WATCHDOG"])
+                for label in (
+                    "application_config",
+                    "mcuboot_config",
+                    "build_record",
+                ):
+                    path = root / row[label]["path"]
+                    self.assertTrue(path.is_file())
+                    self.assertEqual(
+                        row[label]["sha256"],
+                        hashlib.sha256(path.read_bytes()).hexdigest(),
+                    )
 
     def test_target_source_covers_signed_distribution_and_rollback(self) -> None:
         """! @brief 세 역할 target가 5회 배포·confirm·rollback 경계를 포함합니다. """
@@ -180,16 +307,14 @@ class M32MeshDfuHilTests(unittest.TestCase):
 
         source = (HIL / "m32_mesh_dfu_run.py").read_text(encoding="utf-8")
         for token in (
-            '"cmsis_dap.prefer_v1=false"',
-            '"auto_unlock=false"',
-            '"--connect",\n        "attach"',
-            'cmsis_dap_v1=False',
-            "preserve_nrf54l_access=True",
+            "collect_register_identity_sha256",
+            "flash_image_pyocd_sha256",
+            "flash_binary_pyocd_sha256",
+            "erase_nrf54l_rram_pyocd_sha256",
+            "reset_target_pyocd_sha256",
             "defer_reset=True",
-            "clear_nrf54l_rram_pyocd",
+            "clear_nrf54l_rram_pyocd_sha256",
             "access_preserving_reset",
-            '"--sector"',
-            '"--erase",\n            "sector"',
             "validate_source_clean",
             '"M32-MDFU-01:primary"',
             '"rollback": "observed"',
@@ -202,6 +327,8 @@ class M32MeshDfuHilTests(unittest.TestCase):
         self.assertNotIn('"under-reset"', source)
         self.assertNotIn('"--method", "hw"', source)
         self.assertNotIn("software_reset_barrier", source)
+        self.assertNotIn('"--uid"', source)
+        self.assertNotIn("subprocess.run", source)
         self.assertNotIn("--erase chip", source)
         self.assertNotIn('"recover"', source.casefold())
         self.assertNotIn("--recover", source.casefold())

@@ -1,12 +1,27 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Exact build source byte는 Windows 전역 autocrlf 설정과 무관하게 LF로 고정합니다.
+# 과거 00_Docs/evidence 원본은 이 범위에 넣지 않습니다.
+tools/** text=auto eol=lf
+tests/** text=auto eol=lf
+cores/** text=auto eol=lf
+libraries/** text=auto eol=lf
+variants/** text=auto eol=lf
+zephyr/** text=auto eol=lf
+templates/** text=auto eol=lf
+dts/** text=auto eol=lf
+boards.txt text eol=lf
+platform.txt text eol=lf
+
 # Windows command launcher는 LF-only에서 cmd.exe가 줄을 잘못 해석하므로 CRLF를 고정합니다.
 *.cmd text eol=crlf
 *.bat text eol=crlf
 
 # ArduinoCore-API 원본은 플랫폼 checkout 설정과 무관하게 LF를 유지합니다.
 third_party/ArduinoCore-API/** text eol=lf
+# 외부 provenance metadata도 Windows Actions와 동일한 byte 표현으로 고정합니다.
+third_party/ArduinoCore-API.provenance.yml text eol=crlf
 
 # Coverage 원장과 생성 요약은 Git에 저장되는 LF 바이트를 기준으로 고정합니다.
 coverage/ncs-v3.4.0/** text eol=lf

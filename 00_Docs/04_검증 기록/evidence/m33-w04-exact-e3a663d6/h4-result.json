@@ -1,0 +1,605 @@
+{
+  "test_id": "M33-DIAG-01",
+  "status": "PASS",
+  "fixture_sha256": "e7cbdb8dc9684e6f25ef61ef825c54c67c9a43d667f54877a45da5333b240ab1",
+  "startup_settle_ms": 1000,
+  "cases": [
+    {
+      "tx_role": 0,
+      "rx_role": 1,
+      "phy": 1,
+      "channel": 0,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1900,
+      "observed_tx_ms": 1200,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 0,
+      "rx_role": 1,
+      "phy": 1,
+      "channel": 19,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1911,
+      "observed_tx_ms": 1196,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 0,
+      "rx_role": 1,
+      "phy": 1,
+      "channel": 39,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1934,
+      "observed_tx_ms": 1207,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 0,
+      "rx_role": 1,
+      "phy": 2,
+      "channel": 0,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1922,
+      "observed_tx_ms": 1202,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 0,
+      "rx_role": 1,
+      "phy": 2,
+      "channel": 19,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1922,
+      "observed_tx_ms": 1212,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 0,
+      "rx_role": 1,
+      "phy": 2,
+      "channel": 39,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1903,
+      "observed_tx_ms": 1193,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 1,
+      "rx_role": 0,
+      "phy": 1,
+      "channel": 0,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1884,
+      "observed_tx_ms": 1191,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 1,
+      "rx_role": 0,
+      "phy": 1,
+      "channel": 19,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1924,
+      "observed_tx_ms": 1204,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 1,
+      "rx_role": 0,
+      "phy": 1,
+      "channel": 39,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1910,
+      "observed_tx_ms": 1189,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 1,
+      "rx_role": 0,
+      "phy": 2,
+      "channel": 0,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1933,
+      "observed_tx_ms": 1218,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 1,
+      "rx_role": 0,
+      "phy": 2,
+      "channel": 19,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1913,
+      "observed_tx_ms": 1215,
+      "status": "PASS"
+    },
+    {
+      "tx_role": 1,
+      "rx_role": 0,
+      "phy": 2,
+      "channel": 39,
+      "payload": "PRBS9-37",
+      "duration_ms": 500,
+      "received": 1940,
+      "observed_tx_ms": 1214,
+      "status": "PASS"
+    }
+  ],
+  "negative": [
+    {
+      "role": 0,
+      "range_length_busy": "PASS",
+      "firmware_lease": "PASS"
+    },
+    {
+      "role": 1,
+      "range_length_busy": "PASS",
+      "firmware_lease": "PASS"
+    }
+  ],
+  "cleanup": [
+    {
+      "role": 0,
+      "stop": "PASS"
+    },
+    {
+      "role": 1,
+      "stop": "PASS"
+    }
+  ],
+  "third_final": {
+    "cpu": "HALTED",
+    "radio_state_address": 1342743840,
+    "radio_state": 0,
+    "registers": {
+      "dhcsr_halt": 131075,
+      "0x5008a100": 0,
+      "0x5008a104": 0,
+      "0x5008a108": 0,
+      "0x5008a10c": 0,
+      "0x5008a110": 0,
+      "0x5008a114": 0,
+      "0x5008a118": 0,
+      "0x5008a11c": 0,
+      "0x5008a120": 0,
+      "0x5008a124": 0,
+      "0x5008a128": 0,
+      "0x5008a12c": 0,
+      "0x5008a138": 0,
+      "0x5008a13c": 0,
+      "0x5008a16c": 0,
+      "0x5008a1a0": 0,
+      "0x5008a1a4": 0,
+      "0x5008a300": 0,
+      "0x5008a304": 0,
+      "0x5008a308": 0,
+      "0x5008a30c": 0,
+      "0x5008a310": 0,
+      "0x5008a314": 0,
+      "0x5008a318": 0,
+      "0x5008a31c": 0,
+      "0x5008a320": 0,
+      "0x5008a324": 0,
+      "0x5008a328": 0,
+      "0x5008a32c": 0,
+      "0x5008a330": 0,
+      "0x5008a338": 0,
+      "0x5008a33c": 0,
+      "0x5008a340": 0,
+      "0x5008a344": 0,
+      "0x5008a348": 0,
+      "0x5008a34c": 0,
+      "0x5008a350": 0,
+      "0x5008a354": 0,
+      "0x5008a358": 0,
+      "0x5008a35c": 0,
+      "0x5008a3b0": 0,
+      "0x5008a3bc": 0,
+      "0x5008a3c0": 0,
+      "0x5008a3c8": 0,
+      "0x50108080": 0,
+      "0x50108084": 0,
+      "0x50108180": 0,
+      "0x50108184": 0,
+      "0x50109080": 0,
+      "0x50109084": 0,
+      "0x50109180": 0,
+      "0x50109184": 0,
+      "0x5008a400": 0,
+      "0x5008a520": 0,
+      "0x50108100": 0,
+      "0x50109100": 0,
+      "0x50108400": 0,
+      "0x5010850c": 73,
+      "0x50109400": 0,
+      "0x5010950c": 1
+    },
+    "reset_observed": false,
+    "read_only": true,
+    "watcher_ram": [
+      {
+        "symbol": "_ZN12_GLOBAL__N_15nonceE",
+        "address": 536966127,
+        "size": 33,
+        "name": "nonce",
+        "read_sha256": "039d6ee9b04f1dd2c2d90ef379963172b46bef3ab0708db65a865496fe807f14",
+        "read_value": "1541220c0d51ae8b202a79c36f47ba04",
+        "expected_sha256": "039d6ee9b04f1dd2c2d90ef379963172b46bef3ab0708db65a865496fe807f14",
+        "status": "PASS",
+        "elf_sha256": "8f9b91fb20366802fccb25a7b80afaa73643c0b58e4c61b2f1490926f8ddd70a",
+        "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+        "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_16failedE",
+        "address": 536966109,
+        "size": 1,
+        "name": "failed",
+        "read_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+        "read_value": 0,
+        "expected_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+        "status": "PASS",
+        "elf_sha256": "8f9b91fb20366802fccb25a7b80afaa73643c0b58e4c61b2f1490926f8ddd70a",
+        "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+        "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_116cleanup_completeE",
+        "address": 536966103,
+        "size": 1,
+        "name": "cleanup_complete",
+        "read_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "read_value": 1,
+        "expected_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "status": "PASS",
+        "elf_sha256": "8f9b91fb20366802fccb25a7b80afaa73643c0b58e4c61b2f1490926f8ddd70a",
+        "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+        "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_116watchdog_channelE",
+        "address": 536877992,
+        "size": 4,
+        "name": "watchdog_channel",
+        "read_sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+        "read_value": -1,
+        "expected_sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+        "status": "PASS",
+        "elf_sha256": "8f9b91fb20366802fccb25a7b80afaa73643c0b58e4c61b2f1490926f8ddd70a",
+        "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+        "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_113stop_reportedE",
+        "address": 536966101,
+        "size": 1,
+        "name": "stop_reported",
+        "read_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "read_value": 1,
+        "expected_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "status": "PASS",
+        "elf_sha256": "8f9b91fb20366802fccb25a7b80afaa73643c0b58e4c61b2f1490926f8ddd70a",
+        "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+        "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+      },
+      {
+        "symbol": "_ZN12_GLOBAL__N_17startedE",
+        "address": 536966110,
+        "size": 1,
+        "name": "started",
+        "read_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+        "read_value": 0,
+        "expected_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+        "status": "PASS",
+        "elf_sha256": "8f9b91fb20366802fccb25a7b80afaa73643c0b58e4c61b2f1490926f8ddd70a",
+        "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+        "source_revision": "4ebd49521d4a6578beac91ebddbd1bf39d679db4"
+      }
+    ]
+  },
+  "third_audit_checks": 457,
+  "transcripts": [
+    [
+      {
+        "tx": "0180fc00",
+        "rx": "040e6c0180fc006533613636336436323962636332326662333232326239396334353666646136633865326333313238343036343964396436646563336461393430326530356263666331636336306536633661313737633035623763353334663330383930303666313435396564"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "011d200128",
+        "rx": "040e04011d2012"
+      },
+      {
+        "tx": "011e200100",
+        "rx": "040e04011e2012"
+      },
+      {
+        "tx": "01ffff00",
+        "rx": "040e0401ffff01"
+      },
+      {
+        "tx": "01332003130100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011d200113",
+        "rx": "040e04011d200c"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "01332003130100",
+        "rx": "040e0401332000"
+      },
+      {
+        "rx_auto_stop": "040e06011f20000000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200400250001",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200413250001",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200427250001",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200400250002",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200413250002",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200427250002",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "01332003000100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20005c07"
+      },
+      {
+        "tx": "01332003130100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20008407"
+      },
+      {
+        "tx": "01332003270100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20007607"
+      },
+      {
+        "tx": "01332003000200",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20008d07"
+      },
+      {
+        "tx": "01332003130200",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20007907"
+      },
+      {
+        "tx": "01332003270200",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20009407"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      }
+    ],
+    [
+      {
+        "tx": "0180fc00",
+        "rx": "040e6c0180fc006533613636336436323962636332326662333232326239396334353666646136633865326333313238343036343964396436646563336461393430326530356263666331636336306536633661313737633035623763353334663330383930303666313435396564"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "011d200128",
+        "rx": "040e04011d2012"
+      },
+      {
+        "tx": "011e200100",
+        "rx": "040e04011e2012"
+      },
+      {
+        "tx": "01ffff00",
+        "rx": "040e0401ffff01"
+      },
+      {
+        "tx": "01332003130100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011d200113",
+        "rx": "040e04011d200c"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "01332003130100",
+        "rx": "040e0401332000"
+      },
+      {
+        "rx_auto_stop": "040e06011f20000000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "01332003000100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20006c07"
+      },
+      {
+        "tx": "01332003130100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20007707"
+      },
+      {
+        "tx": "01332003270100",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20008e07"
+      },
+      {
+        "tx": "01332003000200",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20008207"
+      },
+      {
+        "tx": "01332003130200",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20008207"
+      },
+      {
+        "tx": "01332003270200",
+        "rx": "040e0401332000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20006f07"
+      },
+      {
+        "tx": "0134200400250001",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200413250001",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200427250001",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200400250002",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200413250002",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "0134200427250002",
+        "rx": "040e0401342000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      },
+      {
+        "tx": "011f2000",
+        "rx": "040e06011f20000000"
+      }
+    ]
+  ]
+}

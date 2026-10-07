@@ -1,0 +1,7 @@
+{
+  "attempt": "standard-attempt-005",
+  "stopped": false,
+  "lines": [
+    "M33PROFILE|1|SERVER_STATS|role=server|nonce=6d3066f1360f9848171ae23978091073|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|max_links=2|email_deliveries=0|bond_deletions=0|bms_positive=0|bms_skipped=0"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "sdk": "NCS 3.4.0",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "templates": [
+    {
+      "identity": "FastPairInputDevice",
+      "kind": "fast_pair_input",
+      "source": "nrf/samples/bluetooth/fast_pair/input_device",
+      "route": "native_template",
+      "external": ["Google model ID", "anti-spoofing credential", "Fast Pair Seeker"],
+      "automatic_checks": ["credential validation", "NU54DK target build"],
+      "user_followup": "NOT_RUN"
+    },
+    {
+      "identity": "FastPairLocatorTag",
+      "kind": "fast_pair_locator",
+      "source": "nrf/samples/bluetooth/fast_pair/locator_tag",
+      "route": "native_template",
+      "external": ["Google locator model", "anti-spoofing credential", "Google Find Hub", "physical speaker/motion hardware"],
+      "automatic_checks": ["credential validation", "NU54DK target build"],
+      "user_followup": "NOT_RUN",
+      "limitations": ["DK LED/button simulation is not physical speaker/motion validation", "loaderless template excludes DFU"]
+    },
+    {
+      "identity": "EnOceanObserver",
+      "kind": "enocean",
+      "source": "nrf/samples/bluetooth/enocean",
+      "route": "native_template",
+      "external": ["supported EnOcean switch or sensor", "commissioning data"],
+      "automatic_checks": ["NU54DK target build"],
+      "user_followup": "NOT_RUN"
+    },
+    {
+      "identity": "MemfaultDiagnosticService",
+      "kind": "mds",
+      "source": "nrf/samples/bluetooth/peripheral_mds",
+      "route": "native_template",
+      "external": ["Memfault project key", "device ID", "BLE gateway", "cloud account"],
+      "automatic_checks": ["credential validation", "NU54DK target build"],
+      "user_followup": "NOT_RUN"
+    },
+    {
+      "identity": "NrfAuraConfig",
+      "source": "nrf/samples/bluetooth/nrf_auraconfig",
+      "route": "native_not_applicable_with_public_capability_route",
+      "reason": "The fixed sample.yaml allows only nrf5340_audio_dk/nrf5340/cpuapp; the README requires that audio kit exclusively.",
+      "public_route": "NUCODE_BLE_Audio/PublicAudioBroadcastSource",
+      "peer_route": "NUCODE_BLE_Audio/PublicAudioBroadcastSink",
+      "limitations": ["not an implementation of the nRF5340 Audio DK shell or USB audio gateway", "Auracast certification is not claimed"],
+      "user_followup": "NOT_RUN"
+    }
+  ]
+}

@@ -22,10 +22,14 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 
 | 확인할 내용 | 최종 근거 |
 | --- | --- |
-| M32 완료 후 문서 정비·main squash 통합 | [295번 기록](295_M32_문서_전수_정비와_main_Squash_통합.md) — 후속 개발 출발점 `main`, `Dev-0.6.0-M32` 원본 이력 보존 |
+| M33-W06 실행 정리·문서 감사·다음 설계 | [304번](304_M33_W06_실행_정리와_문서_전수_검토.md) · [재설계](<../02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) — 기존 실행 중단, 새 구현 미착수 |
+| M33-W06 기존 checkpoint 개선·실패 교정 이력 | [303번](303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md) — 전송 계층·append-only attempt·경로·cache·orphan GATT·UART 경계의 당시 근거 |
+| M33-W06 중단 기록·로컬 정리 후 인계 | [302번](302_M33_W06_빌드_통과와_runtime_중단_인계.md) — 6867의 과거 build/Host·halt FAIL 보존, §7에 로컬 자료 유실·94bb halt 수정/Actions·단일 처리 반영; 현재 절차는 [M33 인계](../M33_HANDOFF.md) |
+| M32 완료 후 문서 정비·main squash 통합 | [295번 기록](295_M32_문서_전수_정비와_main_Squash_통합.md) — 이후 M32 브랜치 로컬·원격 삭제, 로컬 bundle 보관·`Dev-0.6.0-M33` 재개는 [M33 인계](../M33_HANDOFF.md) 참조 |
 | v0.7.0 SDK 전환 전용 확정·후속 제품선 재배정 | [293번 기록](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md) · [v0.7.0 TODO](../TODO_v0.7.0.md) |
 | 전체 문서 검토·NCS 3.4.1 조건부 영향 | [292번 기록](292_문서_전수_검토와_NCS_3.4.1_영향.md) — 당시 전환 시점 해석은 293번에서 대체 · [SDK 영향 검토](<../00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>) |
-| M32 최종 상태 — 12/12 완료 | [287번 W12 마감](287_M32_W12_정합성_감사와_후속_인계.md) · [M32 TODO](../TODO_M32.md) · [HANDOFF](../HANDOFF.md). 다음은 M33-W01 |
+| M32 최종 상태 — 12/12 완료 | [287번 W12 마감](287_M32_W12_정합성_감사와_후속_인계.md) · [M32 TODO](../TODO_M32.md) · [HANDOFF](../HANDOFF.md) |
+| M33-W01~W05 완료·W06 진행 중 | [296번 W01](296_M33_W01_전체_예제_원장과_릴리스_계약.md) · [298번 W02](298_M33_W02_표준_GATT_Beacon_완료.md) · [299번 W03](299_M33_W03_외부_ecosystem과_companion_완료.md) · [300번 W04](300_M33_W04_DTM_HCI_진단_template_완료.md) · [301번 W05](301_M33_W05_전체_예제와_설치_경로_완료.md) · [M33 TODO](../TODO_M33.md). Exact `5f9b2257…` 설치 예제 catalog·발견·compile 204/204와 negative 9/9 PASS |
 | M32-W08 BLOB·signed MDFU exact HIL 완료 | [294번](294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md) — BLOB 10/10, MDFU 5회·두 target 10/10, negative·confirm/rollback·STOP PASS. [283번](283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md)은 과거 FAIL 보존 |
 | M32-W07 Mesh 1.1 exact HIL 완료 | [282번](282_M32_W07_Mesh_1.1_software와_HIL_blocker.md) — 350/350 관리 동작·negative·세 역할 STOP |
 | M32-W06 Mesh 기반 exact HIL 완료 | [281번](281_M32_W06_Mesh_기반_software와_HIL_blocker.md) — 두 node 구성·500/500 ACK·negative·STOP. [291번](291_M32_W06_second_node_provisioning_FAIL과_재부팅_인계.md)은 교정 중 과거 인계 |
@@ -60,7 +64,8 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 v0.5.0은 Windows 10/11 x64 stable입니다. v0.6.0의 M32는 **W01~W12 12/12 완료**입니다.
 W08 BLOB·signed MDFU, W10 공존 HIL, W11 exact 회귀·soak, W12 최종 증거 정합화와 인계를
 완료했습니다. 각 증거의 source와 시험 분모는 해당 기록 당시 수치입니다.
-M33은 미착수이며 HOST-W04~W08은 사용자 보류 상태입니다. 후속 개발 결과를 v0.5.0
+M33은 W01~W05 5/8 완료이며 W06은 기존 실행 정리 후 재설계 준비 상태입니다.
+HOST-W04~W08은 M33-W06 완료 후 순차 진행합니다. 후속 개발 결과를 v0.5.0
 지원 기능으로 소급 해석하지 않습니다.
 
 ## 기록 읽는 방법
@@ -105,7 +110,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 기존 번호를 다시 매기지 않습니다.
 
 <details>
-<summary>P2 실측·최종 기능 완료·RC/stable 공개·M32 마감·문서 정비 — 238~295</summary>
+<summary>P2 실측·최종 기능 완료·RC/stable 공개·M32 마감·M33 W01~W05 — 238~301</summary>
 
 - [238 — M31 메모리 최적화 P2: GATT 512 B 실기와 adaptive 정정](<238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)
 - [239 — M31 메모리 최적화 P2: CoC PASS, CS 당시 연속성 HOLD 기록](<239_M31_메모리_최적화_P2_CoC_CS_계측.md>)
@@ -165,6 +170,12 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [293 — v0.7.0 SDK 전환 전용과 후속 마일스톤 재배정](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md)
 - [294 — M32-W08 BLOB PASS와 signed MDFU timeout 진단·완료](294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md)
 - [295 — M32 문서 전수 정비와 main Squash 통합](295_M32_문서_전수_정비와_main_Squash_통합.md)
+- [296 — M33-W01 전체 예제 원장과 릴리스 계약](296_M33_W01_전체_예제_원장과_릴리스_계약.md)
+- [297 — M33-W02 Beacon 코덱과 예제 착수](297_M33_W02_Beacon_코덱과_예제_착수.md)
+- [298 — M33-W02 표준 GATT·Beacon 완료](298_M33_W02_표준_GATT_Beacon_완료.md)
+- [299 — M33-W03 외부 ecosystem·companion 완료](299_M33_W03_외부_ecosystem과_companion_완료.md)
+- [300 — M33-W04 DTM·HCI 진단 template 완료](300_M33_W04_DTM_HCI_진단_template_완료.md)
+- [301 — M33-W05 전체 예제와 설치 경로 완료](301_M33_W05_전체_예제와_설치_경로_완료.md)
 
 </details>
 

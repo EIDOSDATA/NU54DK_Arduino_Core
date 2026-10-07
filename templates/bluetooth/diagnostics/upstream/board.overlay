@@ -1,0 +1,7 @@
+/** @brief 기존 NU54DK의 외부 LFXO와 watchdog만 선택한다. */
+&lfxo
+{
+    load-capacitors = "external";
+    /delete-property/ load-capacitance-femtofarad;
+};
+&wdt31 { status = "okay"; };

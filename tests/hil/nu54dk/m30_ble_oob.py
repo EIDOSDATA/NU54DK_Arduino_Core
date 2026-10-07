@@ -28,9 +28,9 @@ from ble_pair_hil_common import (  # noqa: E402
     REPOSITORY,
     RoleEndpoint,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     transcript_record,
     validate_board_revision,
@@ -41,6 +41,16 @@ from ble_pair_hil_common import (  # noqa: E402
     validate_source_clean,
 )
 from m6_serial_echo import import_pyserial  # noqa: E402
+from m30_native_attestation import (  # noqa: E402
+    M30AttestationFailure,
+    OOB_SEMANTICS,
+    ROLES,
+    build_oob_cycle_records,
+    complete_program_phase,
+    make_dispatch_attestation,
+    oob_typed_denominator,
+    prepare_program_phase,
+)
 
 
 MILESTONE = "M30"
@@ -80,8 +90,10 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
         description="M30-OOB-01 유선 SC OOB를 두 NU54DK에서 20회 검증합니다."
     )
     parser.add_argument("--build-outdir", required=True)
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--peripheral-image")
+    parser.add_argument("--central-image")
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -119,15 +131,23 @@ def image_path(build_outdir: Path, role: str) -> Path:
 
 
 def collect_images(
-    build_outdir: Path, core_revision: str, board_revision: str
+    build_outdir: Path,
+    core_revision: str,
+    board_revision: str,
+    direct_images: dict[str, Path] | None = None,
 ) -> dict[str, ImageInput]:
     """! @brief 두 image를 exact source·revision·byte와 결합합니다. """
 
     images: dict[str, ImageInput] = {}
     for role in ("peripheral", "central"):
-        path = validate_hex_image(str(image_path(build_outdir, role)))
+        canonical = validate_hex_image(str(image_path(build_outdir, role)))
+        path = canonical
+        if direct_images is not None:
+            path = validate_hex_image(str(direct_images[role]))
+            if file_sha256(path) != file_sha256(canonical):
+                raise M30OobFailure("role direct HEX가 canonical build와 다릅니다.")
         try:
-            path.relative_to(build_outdir)
+            canonical.relative_to(build_outdir)
         except ValueError as error:
             raise M30OobFailure("HEX가 지정 build outdir 밖에 있습니다.") from error
         images[role] = ImageInput(
@@ -419,7 +439,12 @@ def execute_hil(
     flash_timeout: float,
     deadline: float,
     captures: dict[str, bytearray],
-) -> tuple[list[dict[str, Any]], dict[str, tuple[list[str], int]]]:
+) -> tuple[
+    list[dict[str, Any]],
+    dict[str, tuple[str, str]],
+    dict[str, str],
+    dict[str, str],
+]:
     """! @brief 두 image를 flash하고 20회 유선 OOB exchange와 RF pairing을 실행합니다. """
 
     if baud != DEFAULT_BAUD_RATE:
@@ -427,9 +452,11 @@ def execute_hil(
     with ThreadPoolExecutor(max_workers=2) as executor:
         futures = {
             role: executor.submit(
-                flash_image_pyocd,
+                flash_image_pyocd_sha256,
                 role,
-                endpoints[role].board_id,
+                hashlib.sha256(
+                    endpoints[role].board_id.encode("ascii")
+                ).hexdigest(),
                 images[role].path,
                 flash_timeout,
             )
@@ -441,8 +468,44 @@ def execute_hil(
     pending = {"peripheral": bytearray(), "central": bytearray()}
     results: list[dict[str, Any]] = []
     with ExitStack() as stack:
-        ports = {
-            role: stack.enter_context(
+        ports: dict[str, Any] = {}
+        emergency = {"armed": True, "round": 1, "nonce": build_nonce()}
+
+        def emergency_clear() -> None:
+            """! @brief 예외 시 열린 UART로 OOB·radio·bond를 최선 노력으로 정리합니다. """
+
+            if not emergency["armed"]:
+                return
+            cleanup_deadline = time.monotonic() + 5.0
+            active_roles = tuple(ports)
+            try:
+                for cleanup_role in active_roles:
+                    send_command(
+                        ports[cleanup_role], "CLEAR", int(emergency["round"]),
+                        str(emergency["nonce"]),
+                    )
+                for cleanup_role in active_roles:
+                    wait_line(
+                        ports[cleanup_role], pending[cleanup_role],
+                        captures[cleanup_role], cleanup_deadline,
+                        (
+                            f"M30OOB|1|CLEARED|role={cleanup_role}|"
+                            f"round={emergency['round']}|bond_count=0|"
+                            f"nonce={emergency['nonce']}"
+                        ).encode("ascii"),
+                    )
+            except BaseException as cleanup_error:
+                marker = (
+                    f"M30OOB|1|HOST_CLEANUP_FAIL|type="
+                    f"{type(cleanup_error).__name__}\n"
+                ).encode("ascii")
+                for cleanup_role in active_roles:
+                    captures[cleanup_role].extend(marker)
+            finally:
+                emergency["armed"] = False
+
+        for role in endpoints:
+            ports[role] = stack.enter_context(
                 serial_module.Serial(
                     endpoints[role].port_name,
                     baudrate=baud,
@@ -450,8 +513,7 @@ def execute_hil(
                     write_timeout=2.0,
                 )
             )
-            for role in endpoints
-        }
+            stack.callback(emergency_clear)
         for port in ports.values():
             port.reset_input_buffer()
         ready_nonces = {role: build_nonce() for role in endpoints}
@@ -469,6 +531,8 @@ def execute_hil(
 
         for round_index in range(1, ROUNDS + 1):
             nonce = build_nonce()
+            emergency["round"] = round_index
+            emergency["nonce"] = nonce
             for role in endpoints:
                 send_command(ports[role], "CLEAR", round_index, nonce)
             for role in endpoints:
@@ -582,10 +646,34 @@ def execute_hil(
             )
             print(f"M30_OOB_PROGRESS={round_index}/{ROUNDS}")
 
+        target_cleanup: dict[str, str] = {}
+        for role in endpoints:
+            send_command(ports[role], "CLEAR", ROUNDS, nonce)
+        for role in endpoints:
+            wait_line(
+                ports[role],
+                pending[role],
+                captures[role],
+                deadline,
+                (
+                    f"M30OOB|1|CLEARED|role={role}|round={ROUNDS}|"
+                    f"bond_count=0|nonce={nonce}"
+                ).encode("ascii"),
+            )
+            target_cleanup[role] = "CLEAR_ACK"
+        emergency["armed"] = False
+
+    cleanup = {
+        role: "PASS" if getattr(port, "is_open", None) is False else "FAIL"
+        for role, port in ports.items()
+    }
+    if any(value != "PASS" for value in cleanup.values()):
+        raise M30OobFailure("OOB VCOM close cleanup이 실패했습니다.")
+
     for role in endpoints:
         image = images[role]
         validate_image_unchanged(image.path, image.size, image.sha256)
-    return results, flash_results
+    return results, flash_results, cleanup, target_cleanup
 
 
 def endpoint_evidence(endpoint: RoleEndpoint) -> dict[str, str]:
@@ -618,15 +706,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
     if not 30.0 <= args.result_timeout <= 600.0:
         raise M30OobFailure("--result-timeout은 30..600초여야 합니다.")
+    if not 1.0 <= args.flash_timeout <= 300.0:
+        raise M30OobFailure("--flash-timeout은 1..300초여야 합니다.")
     serial_module, list_ports = import_pyserial()
-    peripheral = discover_endpoint(
-        args.peripheral_board_id,
+    peripheral = discover_endpoint_sha256(
+        args.probe_peripheral_sha256,
         args.peripheral_volume,
         args.peripheral_port,
         list_ports,
     )
-    central = discover_endpoint(
-        args.central_board_id,
+    central = discover_endpoint_sha256(
+        args.probe_central_sha256,
         args.central_volume,
         args.central_port,
         list_ports,
@@ -645,22 +735,60 @@ def main(arguments: Sequence[str] | None = None) -> int:
     build_outdir = Path(args.build_outdir).resolve()
     if not build_outdir.is_dir():
         raise M30OobFailure("--build-outdir가 directory가 아닙니다.")
-    images = collect_images(build_outdir, core_revision, board_revision)
+    supplied = (args.peripheral_image, args.central_image)
+    if any(supplied) and not all(supplied):
+        raise M30OobFailure("두 role direct image를 함께 지정해야 합니다.")
+    direct_images = None
+    if all(supplied):
+        direct_images = {
+            "peripheral": Path(args.peripheral_image).resolve(),
+            "central": Path(args.central_image).resolve(),
+        }
+    images = collect_images(
+        build_outdir, core_revision, board_revision, direct_images
+    )
     evidence_path, peripheral_path, central_path = output_paths(
         args.evidence, args.overwrite_evidence
     )
     endpoints = {"peripheral": peripheral, "central": central}
     captures = {"peripheral": bytearray(), "central": bytearray()}
-    started = time.monotonic()
-    rounds, flash_results = execute_hil(
-        serial_module,
-        endpoints,
-        images,
-        args.baud,
-        args.flash_timeout,
-        started + args.result_timeout,
-        captures,
+    phase = prepare_program_phase(
+        evidence_path,
+        "oob",
+        ROLES,
+        {role: images[role].path for role in ROLES},
+        {role: images[role].build_record for role in ROLES},
+        overwrite=args.overwrite_evidence,
     )
+    started = time.monotonic()
+    try:
+        rounds, flash_results, cleanup, target_cleanup = execute_hil(
+            serial_module,
+            endpoints,
+            images,
+            args.baud,
+            args.flash_timeout,
+            started + args.result_timeout,
+            captures,
+        )
+        exact_program, program_phase = complete_program_phase(
+            REPOSITORY,
+            core_revision,
+            phase,
+            {role: endpoints[role].board_id for role in ROLES},
+            flash_results,
+        )
+        cycle_records = build_oob_cycle_records(
+            rounds,
+            {role: bytes(captures[role]) for role in ROLES},
+            cleanup,
+        )
+    except Exception as error:
+        peripheral_path.write_bytes(bytes(captures["peripheral"]))
+        central_path.write_bytes(bytes(captures["central"]))
+        raise M30OobFailure(
+            f"{error}; 실패 transcript: {peripheral_path.name}, {central_path.name}"
+        ) from error
 
     peripheral_path.write_bytes(bytes(captures["peripheral"]))
     central_path.write_bytes(bytes(captures["central"]))
@@ -691,7 +819,24 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "nfc_adapter_target_builds": 2,
         "nfc_rf_runs": 0,
         "raw_oob_evidence_policy": "sha256_only",
+        "results": rounds,
         "rounds": rounds,
+        "program_phases": [program_phase],
+        "cleanup": {
+            "serial": cleanup,
+            "target": target_cleanup,
+            "bond_clear_per_cycle": True,
+        },
+        "dispatch_cycle_records": cycle_records,
+        "typed_denominator": oob_typed_denominator(),
+        "m33_dispatch_attestation": make_dispatch_attestation(
+            "m30_oob",
+            core_revision,
+            OOB_SEMANTICS,
+            ROLES,
+            exact_program,
+            cycle_records,
+        ),
         "transcripts": {
             "peripheral": transcript_record(
                 peripheral_path, bytes(captures["peripheral"])
@@ -716,6 +861,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (M30OobFailure, OSError, ValueError) as error:
+    except (M30OobFailure, M30AttestationFailure, OSError, ValueError) as error:
         print(f"M30_OOB_HIL_FAIL: {error}", file=sys.stderr)
         raise SystemExit(1) from error

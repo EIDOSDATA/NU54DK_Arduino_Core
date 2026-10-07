@@ -20,6 +20,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
 from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -30,10 +36,27 @@ ROLES = ("central", "peripheral")
 PROTOCOL = "M32PWR|1"
 POWER_TARGET = 20
 PATH_TARGET = 60
+APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m32_ble_power_hil"
+SEMANTICS = ("power_control", "path_loss", "cleanup")
 
 
 class PowerPathExecutionFailure(RuntimeError):
     """! @brief mapping·flash·UART·분모 검증의 제한된 실패입니다. """
+
+
+def build_dispatch_cycle_records(power_counts: dict[str, int], path_count: int,
+                                 maximum_gap_ms: dict[str, float]) -> list[dict]:
+    """! @brief 20 power index와 cycle당 세 path report 분모를 변환합니다. """
+
+    if power_counts != {"central": 20, "peripheral": 20} or path_count != 60 or \
+            set(maximum_gap_ms) != {"power_central", "power_peripheral", "path"} or \
+            any(value < 0.0 or value > 5000.0 for value in maximum_gap_ms.values()):
+        raise PowerPathExecutionFailure("dispatcher power/path cycle witness mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle in range(1, 21)
+    ]
 
 
 def _line(port: object, deadline: float) -> str:
@@ -125,6 +148,14 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if boards["central"]["uid"] == boards["peripheral"]["uid"]:
         raise PowerPathExecutionFailure("양 역할이 동일 probe에 매핑됨")
+    images = {role: boards[role]["image"] for role in ROLES}
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            identity.board, APPLICATION_ROOT,
+        )
 
     nonce = hashlib.sha256(
         f"{time.time_ns()}:{identity.core}".encode("ascii")
@@ -140,6 +171,8 @@ def execute(args: argparse.Namespace) -> dict:
     maximum_gap_ms = {"power_central": 0.0, "power_peripheral": 0.0, "path": 0.0}
     status = "FAIL"
     reason: str | None = None
+    cleanup: dict[str, dict[str, str]] = {}
+    exact_program = None
 
     with ProbeLocks([board["uid"] for board in boards.values()]):
         for role in ROLES:
@@ -154,11 +187,13 @@ def execute(args: argparse.Namespace) -> dict:
                 preserve_nrf54l_access=True,
             )
         time.sleep(2.0)
-        ports = {
-            role: serial_module.Serial(board["vcom"], 115200, timeout=0.1)
-            for role, board in boards.items()
-        }
+        ports: dict[str, object] = {}
+        stopped_roles: set[str] = set()
         try:
+            for role, board in boards.items():
+                ports[role] = serial_module.Serial(
+                    board["vcom"], 115200, timeout=0.1
+                )
             for port in ports.values():
                 port.reset_input_buffer()
                 port.write((PROTOCOL + "|PROBE\n").encode("ascii"))
@@ -254,6 +289,7 @@ def execute(args: argparse.Namespace) -> dict:
                     if "|FAIL|" in line:
                         raise PowerPathExecutionFailure(f"{role} STOP FAIL")
                     if line.startswith(f"{PROTOCOL}|STOPPED|role={role}"):
+                        stopped_roles.add(role)
                         break
             status = "PASS_CANDIDATE" if dirty else "PASS"
         except Exception as error:
@@ -263,8 +299,30 @@ def execute(args: argparse.Namespace) -> dict:
                 r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason
             )
         finally:
-            for port in ports.values():
-                port.close()
+            cleanup = cleanup_direct_ports(
+                ports,
+                {
+                    role: f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
+                    for role in ports
+                },
+                stopped_roles,
+                transcript,
+            )
+        if status == "PASS":
+            exact_program = complete_direct_program(
+                REPOSITORY, identity.core, ROLES, images,
+                {role: boards[role]["uid"] for role in ROLES},
+                {role: boards[role]["probe_sha256"] for role in ROLES},
+                sidecars,
+                {
+                    role: {
+                        "mode": boards[role]["flash_mode"],
+                        "bytes": str(boards[role]["flash_bytes"]),
+                    }
+                    for role in ROLES
+                },
+                build_records,
+            )
 
     public_boards = {
         role: {
@@ -293,7 +351,17 @@ def execute(args: argparse.Namespace) -> dict:
         "allowed_loss": {"power": 0, "path": 1},
         "lost_reports": {"power": 40 - sum(power_counts.values()), "path": 60 - path_count},
         "reason": reason,
+        "cleanup": cleanup,
     }
+    if status == "PASS" and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(
+            power_counts, path_count, maximum_gap_ms
+        )
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m32_power", identity.core, 20, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

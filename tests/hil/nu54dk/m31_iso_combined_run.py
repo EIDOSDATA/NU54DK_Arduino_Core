@@ -22,6 +22,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m31_ble_capability import ExpectedIdentity  # noqa: E402
 from m31_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -32,10 +38,38 @@ from v04_protocol import ProbeLocks  # noqa: E402
 ROLES = ("peer", "combined", "receiver")
 PROTOCOL = {"peer": "M31ISO|1|", "combined": "M31COMB|1|", "receiver": "M31BIS|1|"}
 CAPTURE_HCI_LOG = False
+APPLICATION_ROOTS = {
+    "peer": CORE / "tests/zephyr/m31_iso_cis_hil",
+    "combined": CORE / "tests/zephyr/m31_iso_combined_hil",
+    "receiver": CORE / "tests/zephyr/m31_iso_bis_hil",
+}
+SEMANTICS = ("simultaneous_cis_bis", "buffer_cleanup")
 
 
 class CombinedFailure(RuntimeError):
     """! @brief 세 보드 flash·VCOM·기능 protocol의 유한 오류입니다. """
+
+
+def build_dispatch_cycle_records(nonces: list[str], measured: object) -> list[dict]:
+    """! @brief combined strict parser의 20개 동시 CIS/BIS session을 변환합니다. """
+
+    if len(nonces) != 20 or len(set(nonces)) != 20 or \
+            getattr(measured, "cycles", 0) != 20 or \
+            getattr(measured, "peer_sent", 0) != 2000 or \
+            not 1980 <= getattr(measured, "cis_received", 0) <= 2000 or \
+            getattr(measured, "bis_forwarded", 0) != \
+            getattr(measured, "cis_received", -1) or \
+            not 1980 <= getattr(measured, "bis_received", 0) <= 2000 or \
+            getattr(measured, "minimum_cis_received", 0) < 99 or \
+            getattr(measured, "minimum_bis_received", 0) < 99 or \
+            not 0 <= getattr(measured, "cis_empty_slots", -1) <= 20 or \
+            not 0 <= getattr(measured, "bis_empty_slots", -1) <= 20:
+        raise CombinedFailure("dispatcher combined cycle witness mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle, _nonce in enumerate(nonces, 1)
+    ]
 
 
 def write_command(port: object, payload: str) -> None:
@@ -134,13 +168,25 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if len({board["uid"] for board in boards.values()}) != 3:
         raise CombinedFailure("3 role을 서로 다른 probe에 매핑해야 합니다")
+    images = {role: boards[role]["image"] for role in ROLES}
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            identity.board, APPLICATION_ROOTS,
+        )
     transcript: list[str] = []
     nonces: list[str] = []
     reason = None
     status = "FAIL"
     measured = None
+    exact_program = None
+    cleanup: dict[str, dict[str, str]] = {}
     with ProbeLocks([board["uid"] for board in boards.values()]):
         ports = {}
+        active_roles: set[str] = set()
+        stopped_roles: set[str] = set()
         try:
             for role in ROLES:
                 board = boards[role]
@@ -167,10 +213,13 @@ def execute(args: argparse.Namespace) -> dict:
                 nonces.append(nonce)
                 write_command(ports["peer"], f"M31ISO|1|START|nonce={nonce}|count=100")
                 write_command(ports["combined"], f"M31COMB|1|START|nonce={nonce}|count=100")
+                active_roles = {"peer", "combined"}
+                stopped_roles = set()
                 wait_events(ports["combined"], "combined", transcript,
                             {"CIS_CONNECTED", "BIG_SYNCED"}, nonce, 60.0)
                 wait_events(ports["peer"], "peer", transcript, {"ISO_CONNECTED"}, nonce, 60.0)
                 write_command(ports["receiver"], f"M31BIS|1|START|nonce={nonce}|count=100")
+                active_roles.add("receiver")
                 wait_events(ports["receiver"], "receiver", transcript, {"BIG_SYNCED"}, nonce, 60.0)
                 write_command(ports["peer"], f"M31ISO|1|SEND|nonce={nonce}")
                 wait_events(ports["peer"], "peer", transcript, {"TX_END"}, nonce, 60.0)
@@ -180,6 +229,8 @@ def execute(args: argparse.Namespace) -> dict:
                 for role in ("receiver", "peer", "combined"):
                     write_command(ports[role], PROTOCOL[role] + f"STOP|nonce={nonce}")
                     wait_events(ports[role], role, transcript, {"STOPPED"}, nonce, 35.0)
+                    active_roles.discard(role)
+                    stopped_roles.add(role)
             if args.cycles == 20:
                 if dirty:
                     status = "PASS_CANDIDATE"
@@ -208,8 +259,33 @@ def execute(args: argparse.Namespace) -> dict:
             reason = re.sub(r"(?i)\b[0-9a-f]{16,64}\b", "<redacted-identity>", reason)
             reason = re.sub(r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason)
         finally:
-            for port in ports.values():
-                port.close()
+            cleanup = cleanup_direct_ports(
+                ports,
+                {
+                    role: (PROTOCOL[role] +
+                           f"STOP|nonce={nonces[-1] if nonces else 'none'}\n").encode(
+                               "ascii"
+                           )
+                    for role in ports
+                },
+                stopped_roles,
+                transcript,
+            )
+        if status == "PASS":
+            exact_program = complete_direct_program(
+                CORE, identity.core, ROLES, images,
+                {role: boards[role]["uid"] for role in ROLES},
+                {role: boards[role]["probe_sha256"] for role in ROLES},
+                sidecars,
+                {
+                    role: {
+                        "mode": boards[role]["flash_mode"],
+                        "bytes": str(boards[role]["flash_bytes"]),
+                    }
+                    for role in ROLES
+                },
+                build_records,
+            )
     public_boards = {role: {key: value for key, value in board.items()
                            if key not in {"uid", "image"}} for role, board in boards.items()}
     evidence = {
@@ -218,7 +294,15 @@ def execute(args: argparse.Namespace) -> dict:
         "status": status, "source_clean": not bool(dirty), "identity": vars(identity),
         "boards": public_boards, "nonces": nonces, "cycles": args.cycles,
         "reason": reason, "measurement": vars(measured) if measured is not None else None,
+        "cleanup": cleanup,
     }
+    if status == "PASS" and measured is not None and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(nonces, measured)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m31_iso_combined", identity.core, 20, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     save_attempt(prefix, evidence, transcript)
     return evidence
 

@@ -26,6 +26,9 @@ namespace
     bool wasSecure = false;
     bool wasReady = false;
     bool wasActive = false;
+    bool quiesceRequested = false;
+    bool quiesceDisconnectRequested = false;
+    bool quiesceReported = false;
 
     /** @brief 연결 상태 변화를 공개 API로 reflector에 전달합니다. */
     void onBleEvent(const BLEEventInfo &event, void *context)
@@ -34,6 +37,11 @@ namespace
         if (event.event == BLEEvent::connected)
         {
             peer = event.connection;
+            if (quiesceRequested)
+            {
+                quiesceDisconnectRequested = false;
+                return;
+            }
             const Error result = reflector.begin(peer);
             if (result == Error::none)
             {
@@ -50,11 +58,59 @@ namespace
         {
             reflector.end();
             peer = BLEConnectionHandle();
-            restartAdvertising = true;
+            restartAdvertising = !quiesceRequested;
             wasSecure = false;
             wasReady = false;
             wasActive = false;
             Serial.println("CS reflector disconnected");
+        }
+    }
+
+    /** @brief advertising·CS·ACL을 끝내고 재광고를 금지합니다. */
+    void requestQuiesce()
+    {
+        quiesceRequested = true;
+        quiesceDisconnectRequested = false;
+        quiesceReported = false;
+        restartAdvertising = false;
+        reflector.end();
+        if (BLEAdvertising.running() && !BLEAdvertising.stop())
+        {
+            Serial.println("CS quiesce advertising stop failed");
+        }
+        Serial.println("CS quiesce requested role=reflector");
+    }
+
+    /** @brief quiesce 뒤 active ACL·pending 연결·advertising·CS가 모두 0인지 공개합니다. */
+    void pollQuiesce()
+    {
+        if (!quiesceRequested)
+        {
+            return;
+        }
+        if (BLEAdvertising.running())
+        {
+            if (!BLEAdvertising.stop())
+            {
+                return;
+            }
+        }
+        if (peer.valid() && BLEConnection.connected() &&
+            !quiesceDisconnectRequested)
+        {
+            if (!BLEConnection.disconnect(peer))
+            {
+                return;
+            }
+            quiesceDisconnectRequested = true;
+        }
+        if (!peer.valid() && !BLEConnection.connected() &&
+            !BLEConnection.connecting() && !BLEAdvertising.running() &&
+            !quiesceReported)
+        {
+            quiesceReported = true;
+            Serial.println(
+                "CS_QUIESCED role=reflector active_acl=0 pending=0 advertising=0 cs=0");
         }
     }
 }
@@ -80,14 +136,25 @@ void setup()
 /** @brief CS 설정 완료와 보안·절차 상태를 Arduino 문맥에서 관찰합니다. */
 void loop()
 {
+    BLEDevice.poll();
     if (p2Stopped)
     {
+        if (Serial.available() > 0)
+        {
+            const int command = Serial.read();
+            if (command == 'q')
+            {
+                requestQuiesce();
+            }
+        }
+        pollQuiesce();
+        delay(1);
         return;
     }
-    BLEDevice.poll();
     reflector.poll();
+    pollQuiesce();
 
-    if (restartAdvertising && !BLEConnection.connected())
+    if (!quiesceRequested && restartAdvertising && !BLEConnection.connected())
     {
         restartAdvertising = false;
         if (!BLEAdvertising.start())
@@ -125,17 +192,25 @@ void loop()
         Serial.println(reflector.nativeCode());
         reflector.end();
     }
-    if (Serial.available() > 0 && Serial.read() == 's')
+    if (Serial.available() > 0)
     {
-        reflector.end();
-        if (BLEAdvertising.running() && !BLEAdvertising.stop())
+        const int command = Serial.read();
+        if (command == 'q')
         {
-            Serial.println("P2_FAIL stage=cs-reflector-stop");
+            requestQuiesce();
         }
-        nucode::test::reportMemory("stopped");
-        Serial.println("P2_STOP role=cs-reflector");
-        p2Stopped = true;
-        return;
+        else if (command == 's')
+        {
+            reflector.end();
+            if (BLEAdvertising.running() && !BLEAdvertising.stop())
+            {
+                Serial.println("P2_FAIL stage=cs-reflector-stop");
+            }
+            nucode::test::reportMemory("stopped");
+            Serial.println("P2_STOP role=cs-reflector");
+            p2Stopped = true;
+            return;
+        }
     }
     delay(1);
 }

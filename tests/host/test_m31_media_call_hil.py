@@ -40,13 +40,40 @@ def write_arduino_manifest(image: Path, core_revision: str, board_revision: str,
         "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
         "cache": {
             "input_manifest": {
+                "adapter": {
+                    "embedded_core_revision": core_revision,
+                },
+                "board_package": {
+                    "revision": board_revision,
+                },
+                "ncs": {
+                    "nrf_revision":
+                        "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+                    "zephyr_revision":
+                        "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+                },
+                "configuration": {
+                    "selected_features": [{"id": "nucode.ble.audio"}],
+                },
                 "toolchain": {
                     "bundle_id": "dcbdc366a1",
                     "compiler": "arm-zephyr-eabi-g++.exe 14.3.0",
                 }
             }
         },
+        "context": {
+            "platform_root": (image.parent / "platform").resolve().as_posix(),
+            "selected_libraries": ["NUCODE_BLE_Audio"],
+        },
         "source_inputs": {
+            "sources": [{
+                "logical_identity":
+                    "platform:libraries/NUCODE_BLE_Audio/src/fixture.cpp",
+                "source_path": (
+                    image.parent
+                    / "platform/libraries/NUCODE_BLE_Audio/src/fixture.cpp"
+                ).resolve().as_posix(),
+            }],
             "m31_audio_revisions": {
                 "NUCODE_CORE_REVISION": core_revision,
                 "NUCODE_BOARD_REVISION": board_revision,

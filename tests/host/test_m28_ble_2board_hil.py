@@ -2,8 +2,9 @@
 """! @brief M28 두 보드 fixed protocol parser를 Host에서 검증합니다. """
 
 from pathlib import Path
+import hashlib
+import inspect
 import sys
-from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -205,46 +206,44 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
         )
 
     def test_pyocd_sector_flash_is_uid_bound(self) -> None:
-        """! @brief M28 기본 flash가 exact UID와 sector erase만 사용합니다. """
+        """! @brief legacy 입력도 raw UID argv 없이 SHA backend로 변환합니다. """
 
-        result = SimpleNamespace(
-            returncode=0,
-            stdout=b"programmed 12288 bytes",
-            stderr=b"",
-        )
-        with patch.object(ble_pair_hil_common.subprocess, "run", return_value=result) as run:
+        raw_uid = "a" * 32
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        with patch.object(
+            ble_pair_hil_common,
+            "flash_image_pyocd_sha256",
+            return_value=("pyocd-sector-sw-reset", "12288"),
+        ) as flash, patch.object(ble_pair_hil_common.subprocess, "run") as run:
             sequence, byte_count = ble_pair_hil_common.flash_image_pyocd(
-                "peripheral", "a" * 32, Path("image.hex"), 45.0
+                "peripheral", raw_uid, Path("image.hex"), 45.0
             )
-        command = run.call_args.args[0]
-        self.assertEqual("a" * 32, command[command.index("--uid") + 1])
-        self.assertEqual("500000", command[command.index("--frequency") + 1])
-        self.assertEqual("under-reset", command[command.index("--connect") + 1])
-        self.assertIn("cmsis_dap.limit_packets=true", command)
-        self.assertIn("cmsis_dap.prefer_v1=false", command)
-        self.assertIn("smart_flash=false", command)
-        self.assertIn("auto_unlock=false", command)
-        self.assertEqual("sector", command[command.index("--erase") + 1])
-        self.assertNotIn("chip", command)
+        run.assert_not_called()
+        flash.assert_called_once_with(
+            "peripheral",
+            digest,
+            Path("image.hex"),
+            45.0,
+            defer_reset=False,
+        )
         self.assertEqual("pyocd-sector", sequence)
         self.assertEqual("12288", byte_count)
 
-        with patch.object(ble_pair_hil_common.subprocess, "run", return_value=result) as run:
+        with self.assertRaises(BlePairHilFailure), patch.object(
+            ble_pair_hil_common.subprocess, "run"
+        ) as run:
             ble_pair_hil_common.flash_image_pyocd(
-                "peripheral",
-                "a" * 32,
-                Path("image.hex"),
-                45.0,
-                cmsis_dap_v1=True,
+                "peripheral", raw_uid, Path("image.hex"), 45.0, cmsis_dap_v1=True
             )
-        command = run.call_args.args[0]
-        self.assertEqual("100000", command[command.index("--frequency") + 1])
-        self.assertEqual("attach", command[command.index("--connect") + 1])
-        self.assertIn("cmsis_dap.prefer_v1=true", command)
-        self.assertIn("pyocd_launcher.py", command[2])
+        run.assert_not_called()
 
         arguments = parse_arguments(
-            ["--peripheral-board-id", "a" * 32, "--central-board-id", "b" * 32]
+            [
+                "--probe-peripheral-sha256",
+                "a" * 64,
+                "--probe-central-sha256",
+                "b" * 64,
+            ]
         )
         self.assertEqual("pyocd-sector", arguments.flash_backend)
 
@@ -269,6 +268,23 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             self.assertLess(peripheral_reset, peripheral_flash)
             self.assertLess(peripheral_flash, central_reset)
             self.assertLess(central_reset, central_flash)
+
+    def test_hash_only_pyocd_helpers_never_build_subprocess_uid_argv(self) -> None:
+        """! @brief 모든 hash-only pyOCD helper가 중첩 subprocess argv를 만들지 않습니다. """
+
+        helpers = (
+            ble_pair_hil_common.collect_register_identity_sha256,
+            ble_pair_hil_common.flash_image_pyocd_sha256,
+            ble_pair_hil_common.flash_binary_pyocd_sha256,
+            ble_pair_hil_common.reset_target_pyocd_sha256,
+            ble_pair_hil_common.erase_nrf54l_rram_pyocd_sha256,
+            ble_pair_hil_common.clear_nrf54l_rram_pyocd_sha256,
+        )
+        for helper in helpers:
+            with self.subTest(helper=helper.__name__):
+                source = inspect.getsource(helper)
+                self.assertNotIn("subprocess", source)
+                self.assertNotIn('"--uid"', source)
 
 
 if __name__ == "__main__":

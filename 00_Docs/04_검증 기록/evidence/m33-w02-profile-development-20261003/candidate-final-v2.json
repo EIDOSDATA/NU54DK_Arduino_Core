@@ -1,0 +1,1218 @@
+{
+  "schema": "nucode-m33-profile-candidate-v1",
+  "status": "DEVELOPMENT_CANDIDATE",
+  "observed_utc": "2026-10-03T17:02:49.597427+00:00",
+  "scope": "new standard/native profile implementation; local Windows host, target build and development HIL; not release PASS",
+  "git_head": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+  "target_builds": {
+    "standard-server": {
+      "manifest": {
+        "path": "C:\\n54w02p\\images\\standard-server.json",
+        "sha256": "9779879c166a9e4f09cf0e3a8fc891063506a2addb3feb7ea3c14ee600ddcaf0"
+      },
+      "image": {
+        "path": "C:\\n54w02p\\images\\standard-server.hex",
+        "sha256": "17655c759d305c57d412b65f9984abd4dcbbdd79845e8a94d67c62c80a3b1440"
+      },
+      "resources_bytes": {
+        "FLASH": 288024,
+        "RAM": 157696
+      },
+      "owned_source_sha256": {
+        "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+        "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+        "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+        "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+        "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+        "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+        "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+        "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+        "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+        "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+        "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+        "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+        "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f"
+      },
+      "artifacts": {
+        "elf": {
+          "path": "C:\\n54w02p\\images\\standard-server.elf",
+          "sha256": "f3ab377350c26e0fb44246b551fbf33863fc64bd1ebbbe849262c59816adfa48"
+        },
+        "config": {
+          "path": "C:\\n54w02p\\images\\standard-server.config",
+          "sha256": "ab4c10bf3ad2841f6e81f2177c47c3688d57708bb808982fb44f34d531124c05"
+        },
+        "sysbuild": {
+          "path": "C:\\n54w02p\\images\\standard-server.sysbuild",
+          "sha256": "1ee95209374a00c2b8955a0efa098f7a877c24ce85f183469055ee2777954c93"
+        }
+      },
+      "command": [
+        "C:\\Users\\eidos\\AppData\\Local\\NUCODE\\NU54DK_Arduino_Core\\tools\\nrfutil.exe",
+        "sdk-manager",
+        "toolchain",
+        "launch",
+        "--toolchain-bundle-id",
+        "dcbdc366a1",
+        "--install-dir",
+        "C:/ncs",
+        "--chdir",
+        "C:/ncs/v3.4.0",
+        "--",
+        "west",
+        "build",
+        "-b",
+        "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m33_profile_hil",
+        "-d",
+        "C:\\n54w02p\\build-standard-server",
+        "--",
+        "-DBOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+        "-DEXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "-DM33_PROFILE_ROLE=server",
+        "-DM33_PROFILE_FAMILY=standard",
+        "-DUSE_CCACHE=0"
+      ],
+      "log": {
+        "path": "C:\\n54w02p\\hil-standard-server.log",
+        "sha256": "38f5e8820edee65e460c6f66a84f0624a5723c9037e69ebb2b4f6daa759abb05"
+      }
+    },
+    "standard-client": {
+      "manifest": {
+        "path": "C:\\n54w02p\\images\\standard-client.json",
+        "sha256": "df576ff6c5fe2aa12a28335d18e90695c0a9655377c5442e569ef75b516081c1"
+      },
+      "image": {
+        "path": "C:\\n54w02p\\images\\standard-client.hex",
+        "sha256": "d87c63d50e9d174b7befaf15782af8a367fabf2cfeb38c7f83b39959771e3fcb"
+      },
+      "resources_bytes": {
+        "FLASH": 281956,
+        "RAM": 157408
+      },
+      "owned_source_sha256": {
+        "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+        "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+        "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+        "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+        "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+        "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+        "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+        "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+        "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+        "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+        "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+        "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+        "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f"
+      },
+      "artifacts": {
+        "elf": {
+          "path": "C:\\n54w02p\\images\\standard-client.elf",
+          "sha256": "7bf920b8466d0ef0aa5f9381bc0952332186d5116e9ed1726235f738fc296142"
+        },
+        "config": {
+          "path": "C:\\n54w02p\\images\\standard-client.config",
+          "sha256": "ab4c10bf3ad2841f6e81f2177c47c3688d57708bb808982fb44f34d531124c05"
+        },
+        "sysbuild": {
+          "path": "C:\\n54w02p\\images\\standard-client.sysbuild",
+          "sha256": "1ee95209374a00c2b8955a0efa098f7a877c24ce85f183469055ee2777954c93"
+        }
+      },
+      "command": [
+        "C:\\Users\\eidos\\AppData\\Local\\NUCODE\\NU54DK_Arduino_Core\\tools\\nrfutil.exe",
+        "sdk-manager",
+        "toolchain",
+        "launch",
+        "--toolchain-bundle-id",
+        "dcbdc366a1",
+        "--install-dir",
+        "C:/ncs",
+        "--chdir",
+        "C:/ncs/v3.4.0",
+        "--",
+        "west",
+        "build",
+        "-b",
+        "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m33_profile_hil",
+        "-d",
+        "C:\\n54w02p\\build-standard-server",
+        "--",
+        "-DBOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+        "-DEXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "-DM33_PROFILE_ROLE=client",
+        "-DM33_PROFILE_FAMILY=standard",
+        "-DUSE_CCACHE=0"
+      ],
+      "log": {
+        "path": "C:\\n54w02p\\hil-standard-client.log",
+        "sha256": "4908adff9cd81efc8826a0ff371310b554ebb7fa3f15cc7754aa7ef131b35dc0"
+      }
+    },
+    "standard-watcher": {
+      "manifest": {
+        "path": "C:\\n54w02p\\images\\standard-watcher.json",
+        "sha256": "71cba1c5926bbc8c7236f4af9526490ce189d0fadce0dd807ee68a2402e4f6c4"
+      },
+      "image": {
+        "path": "C:\\n54w02p\\images\\standard-watcher.hex",
+        "sha256": "7d3291adba143fa416383445e590c61aac66fffbd1cecf60aea99bbb0f62256d"
+      },
+      "resources_bytes": {
+        "FLASH": 282656,
+        "RAM": 157512
+      },
+      "owned_source_sha256": {
+        "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+        "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+        "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+        "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+        "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+        "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+        "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+        "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+        "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+        "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+        "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+        "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+        "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f"
+      },
+      "artifacts": {
+        "elf": {
+          "path": "C:\\n54w02p\\images\\standard-watcher.elf",
+          "sha256": "a63ee8de4820bb5fff03cb1cc273d024e5cf5112f9918b7077358ea0a318b115"
+        },
+        "config": {
+          "path": "C:\\n54w02p\\images\\standard-watcher.config",
+          "sha256": "ab4c10bf3ad2841f6e81f2177c47c3688d57708bb808982fb44f34d531124c05"
+        },
+        "sysbuild": {
+          "path": "C:\\n54w02p\\images\\standard-watcher.sysbuild",
+          "sha256": "1ee95209374a00c2b8955a0efa098f7a877c24ce85f183469055ee2777954c93"
+        }
+      },
+      "command": [
+        "C:\\Users\\eidos\\AppData\\Local\\NUCODE\\NU54DK_Arduino_Core\\tools\\nrfutil.exe",
+        "sdk-manager",
+        "toolchain",
+        "launch",
+        "--toolchain-bundle-id",
+        "dcbdc366a1",
+        "--install-dir",
+        "C:/ncs",
+        "--chdir",
+        "C:/ncs/v3.4.0",
+        "--",
+        "west",
+        "build",
+        "-b",
+        "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m33_profile_hil",
+        "-d",
+        "C:\\n54w02p\\build-standard-server",
+        "--",
+        "-DBOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+        "-DEXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "-DM33_PROFILE_ROLE=watcher",
+        "-DM33_PROFILE_FAMILY=standard",
+        "-DUSE_CCACHE=0"
+      ],
+      "log": {
+        "path": "C:\\n54w02p\\hil-standard-watcher.log",
+        "sha256": "62847876111845948dc9c96f94327174aeedf3a1352f5a25d3b4414158cb40c7"
+      }
+    },
+    "native-server": {
+      "manifest": {
+        "path": "C:\\n54w02p\\images\\native-server.json",
+        "sha256": "3410234f1f41f2a36249a1aed0506b8d3a0661d8549eb3609b48b9ec72367039"
+      },
+      "image": {
+        "path": "C:\\n54w02p\\images\\native-server.hex",
+        "sha256": "2444500e3aefdf2abe86d5fa9142d510b4e3c7285096b21e4aeb79ef4191a8cf"
+      },
+      "resources_bytes": {
+        "FLASH": 294828,
+        "RAM": 171512
+      },
+      "owned_source_sha256": {
+        "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+        "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+        "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+        "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+        "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+        "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+        "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+        "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+        "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+        "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+        "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+        "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+        "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f"
+      },
+      "artifacts": {
+        "elf": {
+          "path": "C:\\n54w02p\\images\\native-server.elf",
+          "sha256": "b60fcc4efe40af8029b40a3f14b26c5c10fcd459ed2c940708aec74347e5736a"
+        },
+        "config": {
+          "path": "C:\\n54w02p\\images\\native-server.config",
+          "sha256": "1fd0731f2d4c4795aa3404c3521e0640179a6e60a3009301f9471bce4b2265f0"
+        },
+        "sysbuild": {
+          "path": "C:\\n54w02p\\images\\native-server.sysbuild",
+          "sha256": "1ee95209374a00c2b8955a0efa098f7a877c24ce85f183469055ee2777954c93"
+        }
+      },
+      "command": [
+        "C:\\Users\\eidos\\AppData\\Local\\NUCODE\\NU54DK_Arduino_Core\\tools\\nrfutil.exe",
+        "sdk-manager",
+        "toolchain",
+        "launch",
+        "--toolchain-bundle-id",
+        "dcbdc366a1",
+        "--install-dir",
+        "C:/ncs",
+        "--chdir",
+        "C:/ncs/v3.4.0",
+        "--",
+        "west",
+        "build",
+        "-b",
+        "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+        "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m33_profile_hil",
+        "-d",
+        "C:\\n54w02p\\build-native",
+        "--",
+        "-DBOARD_ROOT=C:/Users/eidos/GitHub/NU54DK_Arduino_Core/board_package/NU54DK_Zephyr_DTS",
+        "-DEXTRA_ZEPHYR_MODULES=C:/Users/eidos/GitHub/NU54DK_Arduino_Core",
+        "-DM33_PROFILE_ROLE=server",
+        "-DM33_PROFILE_FAMILY=native",
+        "-DUSE_CCACHE=0"
+      ],
+      "log": {
+        "path": "C:\\n54w02p\\hil-native-server.log",
+        "sha256": "570ba1323ab229a2114ca1aa44604597f67f6827f5c6e8c0e093b588ff717a87"
+      }
+    },
+    "native-client": {
+      "manifest": {
+        "path": "C:\\n54w02p\\images\\native-client.json",
+        "sha256": "2f33b1964a5e11b91c0a2ba36f914ee89f98ddf377efafdc7f91543700757806"
+      },
+      "image": {
+        "path": "C:\\n54w02p\\images\\native-client.hex",
+        "sha256": "65c20fc1d339d6580cd0a9c009f7e0486144a5752a3c9e2cdf422d67d1d3fafd"
+      },
+      "resources_bytes": {
+        "FLASH": 256276,
+        "RAM": 159855
+      },
+      "owned_source_sha256": {
+        "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+        "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+        "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+        "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+        "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+        "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+        "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+        "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+        "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+        "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+        "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+        "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+        "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f"
+      },
+      "artifacts": {
+        "elf": {
+          "path": "C:\\n54w02p\\images\\native-client.elf",
+          "sha256": "1409183b87e6979c7b4d6bb0ca0131f721e3e58edc394660eb11b45f626b5642"
+        },
+        "config": {
+          "path": "C:\\n54w02p\\images\\native-client.config",
+          "sha256": "2f766726661a988cc4bc5b1c7b13c1d9fa27b657f265217c2204ce724b0ed404"
+        },
+        "sysbuild": {
+          "path": "C:\\n54w02p\\images\\native-client.sysbuild",
+          "sha256": "1ee95209374a00c2b8955a0efa098f7a877c24ce85f183469055ee2777954c93"
+        }
+      },
+      "command": [
+        "C:\\Users\\eidos\\AppData\\Local\\NUCODE\\NU54DK_Arduino_Core\\tools\\nrfutil.exe",
+        "sdk-manager",
+        "toolchain",
+        "launch",
+        "--toolchain-bundle-id",
+        "dcbdc366a1",
+        "--install-dir",
+        "C:/ncs",
+        "--chdir",
+        "C:/ncs/v3.4.0",
+        "--",
+        "west",
+        "build",
+        "-d",
+        "C:\\n54w02p\\build-native"
+      ],
+      "log": {
+        "path": "C:\\n54w02p\\hil-native-client.log",
+        "sha256": "ec2a6bb048fb20272a48b50355104ffb43d94bd6d741f0264136204f3fda956a"
+      }
+    }
+  },
+  "hil": {
+    "standard-attempt-014": {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\standard-attempt-014.json",
+      "sha256": "70540fab1f3c30c04433af36492a6a7427dd01b66a04d29380be5f984a8cf329"
+    },
+    "native-attempt-007": {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\native-attempt-007.json",
+      "sha256": "98e6c9e375ec93cd3caabd89d36f9ae83382f6daffb6a061713b722434f6ef05"
+    },
+    "native-attempt-008": {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\native-attempt-008.json",
+      "sha256": "21413d05ffc2ba7ff5fc0010711ec3583aa745f0a0de8ec612b4951b752089b3"
+    },
+    "native-attempt-009": {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\native-attempt-009.json",
+      "sha256": "45924c1d9a9700d73c7a85d2605616ee2ece0dc840f27f1cbfb9cef987f203bb"
+    }
+  },
+  "source_sha256": {
+    "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+    "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+    "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+    "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+    "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+    "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+    "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+    "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+    "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+    "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+    "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+    "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+    "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+    "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+    "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+    "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+    "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f",
+    "tests/host/m33_profile_codec_main.cpp": "b0d9e18f7c4c2434bcc1c7e6915edc62b245ab1400c8be66f01a173af96556e0",
+    "tests/host/m33_profile_native_main.cpp": "7bed6f14ceebf57b0e472320e8da81b969302c9bcabe47b516f838b84a11b0f6",
+    "tests/host/m33_profile_reject_main.cpp": "4364fa522d9acc0a06276714770928bfe739bfdf70bb2c25a75bb355246b8f67",
+    "tests/host/m33_profile_runtime_main.cpp": "191979813bab570d693b6764415a1e68a4f7466bccdc41dbc6c1a306fd8870c2",
+    "tests/host/test_m33_profile_codec.py": "c7f08c54e104415330afb9df7db475cdb4b2959dd90e9ebe293921672da31e88",
+    "tests/host/test_m33_profile_hil.py": "ba2dfedbbc622faf56f2314c1503ce8b62e4e5b9de6e052d0370babff353d935",
+    "tests/host/test_m33_profile_native.py": "45a1b8c0d404429860f80f44618c7f435d75c17c770612c3f120a624b09016f8",
+    "tests/host/test_m33_profile_runtime.py": "329afc10340849130fdb576afca2bcdeae4ced4e8881a3e888abbf62bcac3265",
+    "tests/host/m33_profile_native_stubs/NUCODE_BLE.h": "0693626e76eba198f790c544a320bff9954cf68f19f51c53514a7c5e286d6d70",
+    "tests/host/m33_profile_native_stubs/internal/NUCODE_BLE_Internal.h": "518a7c25499644f41a64e8918870a3496e17d3a2cac608024bdf8b1f4ff1ef2d",
+    "tests/host/m33_profile_native_stubs/zephyr/kernel.h": "05b44d7d00b9fb1f1ad5ca618c4b4e41ce1da69b47edc4bc9943244cf84abfe2",
+    "tests/host/m33_profile_native_stubs/bluetooth/services/cgms.h": "b9a6e70f21d941473499625466949f09e78c62464490753693fc57a18363d790",
+    "tests/host/m33_profile_native_stubs/zephyr/bluetooth/bluetooth.h": "812f57e623561f1c3cf9f0119ec952c061a3fab9fa01593bb0582b5c2d0b7960",
+    "tests/host/m33_profile_native_stubs/zephyr/bluetooth/gatt.h": "99e1904d18470d81bef77b17756fb76931552884262453db70ae7ed7f49cbb29",
+    "tests/host/m33_profile_native_stubs/zephyr/bluetooth/services/ots.h": "5f6d16609904fcbbba3c4e3bc90207af1b069d3663677865bdfd2888a7499304",
+    "tests/hil/nu54dk/m33_profile_bond_cleanup.py": "2e470f16030a388da80acd1a3285b7203995c4d3924bb434f3f7be246245afaa",
+    "tests/hil/nu54dk/m33_profile_idle_fixture.py": "f233151cc8e269fa4d2490e3cbe62483e0c99c97422133790e82fa605a39efff",
+    "tests/hil/nu54dk/m33_profile_run.py": "baac69310d02d75feb117039cda7c5aac67f5937bdb1109f7991de3c92aa59cf",
+    "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp": "76415fef83c3997d20c4c007e1221446dc8b7147ff0da0f2c0cb4b5297d2f56c"
+  },
+  "host": {
+    "path": "C:\\n54w02p\\host-tests-delivery-v2-20261004.json",
+    "sha256": "67b199428f5446f3c038febcbefcc5b12cfb5de6d798b6cb425624daa5c7e247",
+    "results": {
+      "kind": "development_host_tests",
+      "not_hil": true,
+      "observed_utc": "2026-10-03T16:58:37.397663+00:00",
+      "python": "C:\\Users\\eidos\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "compiler": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+      "tests": [
+        {
+          "command": [
+            "C:\\Users\\eidos\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+            "tests/host/test_m33_profile_codec.py"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": "test_production_codec (__main__.ProfileCodecTests.test_production_codec) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.393s\n\nOK\n"
+        },
+        {
+          "command": [
+            "C:\\Users\\eidos\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+            "tests/host/test_m33_profile_runtime.py"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": "test_production_gatt_services (__main__.ProfileRuntimeTests.test_production_gatt_services) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 9.210s\n\nOK\n"
+        },
+        {
+          "command": [
+            "C:\\Users\\eidos\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+            "tests/host/test_m33_profile_native.py"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": "test_native_and_disabled (__main__.ProfileNativeTests.test_native_and_disabled) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 4.234s\n\nOK\n"
+        },
+        {
+          "command": [
+            "C:\\Users\\eidos\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+            "tests/host/test_m33_profile_hil.py"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": "test_bms_fresh_bond_handshake (__main__.ProfileHilTests.test_bms_fresh_bond_handshake) ... ok\ntest_cleanup_gate_ownership (__main__.ProfileHilTests.test_cleanup_gate_ownership) ... ok\ntest_failed_attempt_owned_cleanup_proof (__main__.ProfileHilTests.test_failed_attempt_owned_cleanup_proof) ... ok\ntest_idle_fixture_live_ram (__main__.ProfileHilTests.test_idle_fixture_live_ram) ... ok\ntest_native_denominators (__main__.ProfileHilTests.test_native_denominators) ... ok\ntest_owned_chain_rejects_changed_evidence_and_pair (__main__.ProfileHilTests.test_owned_chain_rejects_changed_evidence_and_pair) ... ok\ntest_standard_denominators (__main__.ProfileHilTests.test_standard_denominators) ... ok\ntest_start_barriers (__main__.ProfileHilTests.test_start_barriers) ... ok\ntest_stop_fail_closed (__main__.ProfileHilTests.test_stop_fail_closed) ... ok\ntest_strict_fields (__main__.ProfileHilTests.test_strict_fields) ... ok\ntest_target_failure_details_are_bounded (__main__.ProfileHilTests.test_target_failure_details_are_bounded) ... ok\ntest_target_reject_pair_orders (__main__.ProfileHilTests.test_target_reject_pair_orders) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 0.436s\n\nOK\n"
+        }
+      ],
+      "source_sha256": {
+        "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+        "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+        "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+        "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+        "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+        "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+        "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+        "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+        "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+        "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+        "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+        "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+        "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f",
+        "tests/host/m33_profile_native_stubs/NUCODE_BLE.h": "0693626e76eba198f790c544a320bff9954cf68f19f51c53514a7c5e286d6d70",
+        "tests/host/m33_profile_native_stubs/internal/NUCODE_BLE_Internal.h": "518a7c25499644f41a64e8918870a3496e17d3a2cac608024bdf8b1f4ff1ef2d",
+        "tests/host/m33_profile_native_stubs/zephyr/kernel.h": "05b44d7d00b9fb1f1ad5ca618c4b4e41ce1da69b47edc4bc9943244cf84abfe2",
+        "tests/host/m33_profile_native_stubs/bluetooth/services/cgms.h": "b9a6e70f21d941473499625466949f09e78c62464490753693fc57a18363d790",
+        "tests/host/m33_profile_native_stubs/zephyr/bluetooth/bluetooth.h": "812f57e623561f1c3cf9f0119ec952c061a3fab9fa01593bb0582b5c2d0b7960",
+        "tests/host/m33_profile_native_stubs/zephyr/bluetooth/gatt.h": "99e1904d18470d81bef77b17756fb76931552884262453db70ae7ed7f49cbb29",
+        "tests/host/m33_profile_native_stubs/zephyr/bluetooth/services/ots.h": "5f6d16609904fcbbba3c4e3bc90207af1b069d3663677865bdfd2888a7499304",
+        "tests/host/m33_profile_codec_main.cpp": "b0d9e18f7c4c2434bcc1c7e6915edc62b245ab1400c8be66f01a173af96556e0",
+        "tests/host/m33_profile_native_main.cpp": "7bed6f14ceebf57b0e472320e8da81b969302c9bcabe47b516f838b84a11b0f6",
+        "tests/host/m33_profile_reject_main.cpp": "4364fa522d9acc0a06276714770928bfe739bfdf70bb2c25a75bb355246b8f67",
+        "tests/host/m33_profile_runtime_main.cpp": "191979813bab570d693b6764415a1e68a4f7466bccdc41dbc6c1a306fd8870c2",
+        "tests/host/test_m33_profile_codec.py": "c7f08c54e104415330afb9df7db475cdb4b2959dd90e9ebe293921672da31e88",
+        "tests/host/test_m33_profile_hil.py": "ba2dfedbbc622faf56f2314c1503ce8b62e4e5b9de6e052d0370babff353d935",
+        "tests/host/test_m33_profile_native.py": "45a1b8c0d404429860f80f44618c7f435d75c17c770612c3f120a624b09016f8",
+        "tests/host/test_m33_profile_runtime.py": "329afc10340849130fdb576afca2bcdeae4ced4e8881a3e888abbf62bcac3265",
+        "tests/hil/nu54dk/m33_profile_bond_cleanup.py": "2e470f16030a388da80acd1a3285b7203995c4d3924bb434f3f7be246245afaa",
+        "tests/hil/nu54dk/m33_profile_idle_fixture.py": "f233151cc8e269fa4d2490e3cbe62483e0c99c97422133790e82fa605a39efff",
+        "tests/hil/nu54dk/m33_profile_run.py": "baac69310d02d75feb117039cda7c5aac67f5937bdb1109f7991de3c92aa59cf"
+      },
+      "status": "PASS"
+    }
+  },
+  "public_builds": {
+    "path": "C:\\n54w02p\\public-builds-delivery-20261004.json",
+    "sha256": "e97d44308dbf07089911bc638c3a6e90a11543139801a9d415e2e78cbd7400cf",
+    "results": {
+      "status": "PASS",
+      "scope": "Arduino target build only; not HIL",
+      "observed_utc": "2026-10-03T16:42:14.546068+00:00",
+      "source_sha256": {
+        "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+        "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+        "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+        "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+        "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+        "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+        "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+        "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+        "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp": "76415fef83c3997d20c4c007e1221446dc8b7147ff0da0f2c0cb4b5297d2f56c"
+      },
+      "builds": [
+        {
+          "name": "StandardSensor",
+          "context": "C:\\n54w02p\\b-standardsensor\\nu54-zephyr\\context.json",
+          "context_sha256": "084e4078b47c496bf643da6946c03ce53c3acb6d30e837bad0504fd08d3fe160",
+          "flash": {
+            "data_bytes": 19400,
+            "headroom_bytes": 1107832,
+            "region_bytes": 1490944,
+            "text_bytes": 363712,
+            "used_bytes": 383112,
+            "used_percent": 25.6959
+          },
+          "ram": {
+            "bss_bytes": 142451,
+            "data_bytes": 19400,
+            "headroom_bytes": 100293,
+            "region_bytes": 262144,
+            "used_bytes": 161851,
+            "used_percent": 61.7413
+          },
+          "inputs": {
+            "config": {
+              "path": "C:/n54w02p/cache/v1/4b/4b9a32946f4bca1eff199a6f0edd0196/build/zephyr/.config",
+              "sha256": "54c2112e34101896a57c70015e3783cf30e41d0e9e60d047fcdbb468f159d33e"
+            },
+            "devicetree": {
+              "path": "C:/n54w02p/cache/v1/4b/4b9a32946f4bca1eff199a6f0edd0196/build/zephyr/zephyr.dts",
+              "sha256": "61dfef5a61aa56a9620fe36fa40241963a8041978a6ba035ceb3daf6f62fc393"
+            },
+            "elf": {
+              "path": "C:/n54w02p/cache/v1/4b/4b9a32946f4bca1eff199a6f0edd0196/build/zephyr/zephyr.elf",
+              "sha256": "401bc72f876c8ed0ba78de3523752c12600f6e448c1fabc32375f82e67dfa933"
+            },
+            "map": {
+              "path": "C:/n54w02p/cache/v1/4b/4b9a32946f4bca1eff199a6f0edd0196/build/zephyr/zephyr.map",
+              "sha256": "3efe5ba770ecd2a13db3f5287041bf48b744c287c903a9d6a2e7a266279e7236"
+            },
+            "source_manifest": {
+              "path": "C:/n54w02p/cache/v1/4b/4b9a32946f4bca1eff199a6f0edd0196/app/sources.cmake",
+              "sha256": "c31ae3a10dd47a866f70f2ebe45c8f0b6fd3e0c0fd72bc746a7ceb318651c2d3"
+            }
+          },
+          "hex": "C:\\n54w02p\\b-standardsensor\\StandardSensor.ino.hex",
+          "hex_sha256": "ffcaca277a12b5ef2d83350f685c4c4d416b972621fe06ead434e52257e6d1f6",
+          "log": "C:\\n54w02p\\StandardSensor.log",
+          "log_sha256": "ca8fbf022e4a6993e44068d108d0bbf74b98f3dd9e5951b6c1b4fc383309b7bd",
+          "evicted_cache_inputs": [
+            "config",
+            "devicetree",
+            "elf",
+            "map",
+            "source_manifest"
+          ]
+        },
+        {
+          "name": "StandardCollector",
+          "context": "C:\\n54w02p\\b-standardcollector\\nu54-zephyr\\context.json",
+          "context_sha256": "3e959a1ffa8911431c1bca1c196222e60d79e7a8597dcc3b952f3e541561301c",
+          "flash": {
+            "data_bytes": 19292,
+            "headroom_bytes": 1106852,
+            "region_bytes": 1490944,
+            "text_bytes": 364800,
+            "used_bytes": 384092,
+            "used_percent": 25.7617
+          },
+          "ram": {
+            "bss_bytes": 141247,
+            "data_bytes": 19292,
+            "headroom_bytes": 101605,
+            "region_bytes": 262144,
+            "used_bytes": 160539,
+            "used_percent": 61.2408
+          },
+          "inputs": {
+            "config": {
+              "path": "C:/n54w02p/cache/v1/36/36ed2693872d15bf19a8acfd15dec8a6/build/zephyr/.config",
+              "sha256": "54c2112e34101896a57c70015e3783cf30e41d0e9e60d047fcdbb468f159d33e"
+            },
+            "devicetree": {
+              "path": "C:/n54w02p/cache/v1/36/36ed2693872d15bf19a8acfd15dec8a6/build/zephyr/zephyr.dts",
+              "sha256": "fc301e188df993eb53f9abe02814623d86f7d2c6cbc934014288dd1d5b63dd66"
+            },
+            "elf": {
+              "path": "C:/n54w02p/cache/v1/36/36ed2693872d15bf19a8acfd15dec8a6/build/zephyr/zephyr.elf",
+              "sha256": "5c02cddf4b8dd50c25ac39677106d5ccf9704d34526fa80a5ba268e244a0d22e"
+            },
+            "map": {
+              "path": "C:/n54w02p/cache/v1/36/36ed2693872d15bf19a8acfd15dec8a6/build/zephyr/zephyr.map",
+              "sha256": "d4787e0f49a3cec19cfe630ffe18922d3d643ca24af3de827aedabbe5f7faf81"
+            },
+            "source_manifest": {
+              "path": "C:/n54w02p/cache/v1/36/36ed2693872d15bf19a8acfd15dec8a6/app/sources.cmake",
+              "sha256": "16484f1187c0d7c634823afc2d0e03f49cc9cd21489935058d7b89501828d2b9"
+            }
+          },
+          "hex": "C:\\n54w02p\\b-standardcollector\\StandardCollector.ino.hex",
+          "hex_sha256": "eb38edc09856ee0e905c1be93781adb09f6fdf875b82c60f3cd72b33a5477737",
+          "log": "C:\\n54w02p\\StandardCollector.log",
+          "log_sha256": "19a44301df0710367ecee37b2d0761f1ed2b7094e4056ac7e3d8ccf2c8a07b9d",
+          "evicted_cache_inputs": [
+            "config",
+            "devicetree",
+            "elf",
+            "map",
+            "source_manifest"
+          ]
+        },
+        {
+          "name": "AlertSensor",
+          "context": "C:\\n54w02p\\b-alertsensor\\nu54-zephyr\\context.json",
+          "context_sha256": "e4d0c71acdd5a54f567a5e8cd8e0dc67e863c9223ad0f18c755fd8fad902552c",
+          "flash": {
+            "data_bytes": 19400,
+            "headroom_bytes": 1110168,
+            "region_bytes": 1490944,
+            "text_bytes": 361376,
+            "used_bytes": 380776,
+            "used_percent": 25.5393
+          },
+          "ram": {
+            "bss_bytes": 144461,
+            "data_bytes": 19400,
+            "headroom_bytes": 98283,
+            "region_bytes": 262144,
+            "used_bytes": 163861,
+            "used_percent": 62.508
+          },
+          "inputs": {
+            "config": {
+              "path": "C:/n54w02p/cache/v1/05/052d77a73e1d35459a5e6ffecd794c31/build/zephyr/.config",
+              "sha256": "54c2112e34101896a57c70015e3783cf30e41d0e9e60d047fcdbb468f159d33e"
+            },
+            "devicetree": {
+              "path": "C:/n54w02p/cache/v1/05/052d77a73e1d35459a5e6ffecd794c31/build/zephyr/zephyr.dts",
+              "sha256": "7879b36a641f65b1512378f3cf333381b05e91cb83b426397fa731304b412b37"
+            },
+            "elf": {
+              "path": "C:/n54w02p/cache/v1/05/052d77a73e1d35459a5e6ffecd794c31/build/zephyr/zephyr.elf",
+              "sha256": "999fa2f154037aa256be3683a41f65246753ab3102e6bdbf473f1bbe2b503f9c"
+            },
+            "map": {
+              "path": "C:/n54w02p/cache/v1/05/052d77a73e1d35459a5e6ffecd794c31/build/zephyr/zephyr.map",
+              "sha256": "4c62d14c84402e9b186db0cf3cbb85825316736012529a6507b2383879d54357"
+            },
+            "source_manifest": {
+              "path": "C:/n54w02p/cache/v1/05/052d77a73e1d35459a5e6ffecd794c31/app/sources.cmake",
+              "sha256": "ce4f651def210b653037ba3f42f039a1a60f08a0b8fb02fc369631d8721848ff"
+            }
+          },
+          "hex": "C:\\n54w02p\\b-alertsensor\\AlertSensor.ino.hex",
+          "hex_sha256": "b7c3e2ff77fca4642f3c3fc24a5ca86d058d2dfc6840083e64713d8702560757",
+          "log": "C:\\n54w02p\\AlertSensor.log",
+          "log_sha256": "986bce52def6d8e570ca1d8a62ebd646d6ab9864d78fccf0fb02d2d8871820af",
+          "evicted_cache_inputs": [
+            "config",
+            "devicetree",
+            "elf",
+            "map",
+            "source_manifest"
+          ]
+        },
+        {
+          "name": "BondManagement",
+          "context": "C:\\n54w02p\\b-bondmanagement\\nu54-zephyr\\context.json",
+          "context_sha256": "e3a09795a232c16ac9a44d10054f59a95f29d1290e17e026db0f9a4bfbbeb826",
+          "flash": {
+            "data_bytes": 19788,
+            "headroom_bytes": 1106096,
+            "region_bytes": 1490944,
+            "text_bytes": 365060,
+            "used_bytes": 384848,
+            "used_percent": 25.8124
+          },
+          "ram": {
+            "bss_bytes": 142462,
+            "data_bytes": 19788,
+            "headroom_bytes": 99894,
+            "region_bytes": 262144,
+            "used_bytes": 162250,
+            "used_percent": 61.8935
+          },
+          "inputs": {
+            "config": {
+              "path": "C:/n54w02p/cache/v1/64/64a9951de7ab4efcffeabe3143b05c8e/build/zephyr/.config",
+              "sha256": "54c2112e34101896a57c70015e3783cf30e41d0e9e60d047fcdbb468f159d33e"
+            },
+            "devicetree": {
+              "path": "C:/n54w02p/cache/v1/64/64a9951de7ab4efcffeabe3143b05c8e/build/zephyr/zephyr.dts",
+              "sha256": "b0d4e865b959b0996bcb9bb5cf5619b09ba01cf64be7f95b070a9092461274fe"
+            },
+            "elf": {
+              "path": "C:/n54w02p/cache/v1/64/64a9951de7ab4efcffeabe3143b05c8e/build/zephyr/zephyr.elf",
+              "sha256": "7152ae6558a3247708892905948a5ed676d3c9e641d44d8d42b9d4c4517cc7ec"
+            },
+            "map": {
+              "path": "C:/n54w02p/cache/v1/64/64a9951de7ab4efcffeabe3143b05c8e/build/zephyr/zephyr.map",
+              "sha256": "d549e7c7f60c4539fd2fc6f4d27e51177f0b9618d4d02ca61f268fc2d0d88e94"
+            },
+            "source_manifest": {
+              "path": "C:/n54w02p/cache/v1/64/64a9951de7ab4efcffeabe3143b05c8e/app/sources.cmake",
+              "sha256": "e5164480601727a30b9583c7455ef8cd89047d5253dc0175bf7bdccac55fb26b"
+            }
+          },
+          "hex": "C:\\n54w02p\\b-bondmanagement\\BondManagement.ino.hex",
+          "hex_sha256": "b466e7fc3b4ea24513937a7d372f9321ca95ac68a6e0a6d915d025bdc7a1d4a9",
+          "log": "C:\\n54w02p\\BondManagement.log",
+          "log_sha256": "96125f15c9c0785c2fe997b05378e0864986d5b85bc4a60699bf2bbe6f3257a8",
+          "evicted_cache_inputs": []
+        },
+        {
+          "name": "GlucoseSensor",
+          "context": "C:\\n54w02p\\b-glucosesensor\\nu54-zephyr\\context.json",
+          "context_sha256": "087820ba1f7f1e2bd744541bf87471086806a05732727b8e4149e59e1b8de707",
+          "flash": {
+            "data_bytes": 18200,
+            "headroom_bytes": 1105328,
+            "region_bytes": 1490944,
+            "text_bytes": 367416,
+            "used_bytes": 385616,
+            "used_percent": 25.8639
+          },
+          "ram": {
+            "bss_bytes": 141872,
+            "data_bytes": 18200,
+            "headroom_bytes": 102072,
+            "region_bytes": 262144,
+            "used_bytes": 160072,
+            "used_percent": 61.0626
+          },
+          "inputs": {
+            "config": {
+              "path": "C:/n54w02p/cache/v1/1e/1ebea2208e9fe6e45509faa7d8970a81/build/zephyr/.config",
+              "sha256": "6f3159e057c5bed444b4abd4a4f745c86f89caf341e38c7e5fc74afb9820b947"
+            },
+            "devicetree": {
+              "path": "C:/n54w02p/cache/v1/1e/1ebea2208e9fe6e45509faa7d8970a81/build/zephyr/zephyr.dts",
+              "sha256": "4c97110aa126b9e838101cbf3b1829ae3ca931a09e933330d8991d088834d842"
+            },
+            "elf": {
+              "path": "C:/n54w02p/cache/v1/1e/1ebea2208e9fe6e45509faa7d8970a81/build/zephyr/zephyr.elf",
+              "sha256": "c1c912758d649225411132669792295a7869778271fd466e33da9cda012322fa"
+            },
+            "map": {
+              "path": "C:/n54w02p/cache/v1/1e/1ebea2208e9fe6e45509faa7d8970a81/build/zephyr/zephyr.map",
+              "sha256": "d40833fdcd181861005fe8ed2276428b84bb56590ed393a57734ecd5aebeaa85"
+            },
+            "source_manifest": {
+              "path": "C:/n54w02p/cache/v1/1e/1ebea2208e9fe6e45509faa7d8970a81/app/sources.cmake",
+              "sha256": "d85f2940cc92542de496a8f81a2f50dcc9a28df09519ed40f79b6e8b1452871c"
+            }
+          },
+          "hex": "C:\\n54w02p\\b-glucosesensor\\GlucoseSensor.ino.hex",
+          "hex_sha256": "1bbfec46322d3ebfeee3e2da53e5692b27cb77a2d65bca788c6ebff8604118e8",
+          "log": "C:\\n54w02p\\GlucoseSensor.log",
+          "log_sha256": "b303289a3301c8d7dbc135c7ed004c5bb10b1d94ee65f4fb5eae2e24efc52560",
+          "evicted_cache_inputs": []
+        },
+        {
+          "name": "ObjectServer",
+          "context": "C:\\n54w02p\\b-objectserver\\nu54-zephyr\\context.json",
+          "context_sha256": "b5c48b2aed74d75bf04dacbac52cdf2895fc28a9ee7f09621fe22a0c458c5cc5",
+          "flash": {
+            "data_bytes": 18680,
+            "headroom_bytes": 1101832,
+            "region_bytes": 1490944,
+            "text_bytes": 370432,
+            "used_bytes": 389112,
+            "used_percent": 26.0984
+          },
+          "ram": {
+            "bss_bytes": 147510,
+            "data_bytes": 18680,
+            "headroom_bytes": 95954,
+            "region_bytes": 262144,
+            "used_bytes": 166190,
+            "used_percent": 63.3965
+          },
+          "inputs": {
+            "config": {
+              "path": "C:/n54w02p/cache/v1/50/50dae62f5a40cf96617472756dd728a9/build/zephyr/.config",
+              "sha256": "b5c5cd52b56ec0f8d520c1d1b64563e5e654da289f755e9dd9bb81e3ed6163d0"
+            },
+            "devicetree": {
+              "path": "C:/n54w02p/cache/v1/50/50dae62f5a40cf96617472756dd728a9/build/zephyr/zephyr.dts",
+              "sha256": "a65fbb6845f4b0091aa7938f78387757d074a960cf650c694c4697aa3b2989e3"
+            },
+            "elf": {
+              "path": "C:/n54w02p/cache/v1/50/50dae62f5a40cf96617472756dd728a9/build/zephyr/zephyr.elf",
+              "sha256": "210b93d6a6f91a24d00469cb8cdd8138de7937be0a3603668bc2083edc184c74"
+            },
+            "map": {
+              "path": "C:/n54w02p/cache/v1/50/50dae62f5a40cf96617472756dd728a9/build/zephyr/zephyr.map",
+              "sha256": "c05950842794fe757f5f4c7fa3700a4556a5a8723d0f48fe05f9edd6320d4b4b"
+            },
+            "source_manifest": {
+              "path": "C:/n54w02p/cache/v1/50/50dae62f5a40cf96617472756dd728a9/app/sources.cmake",
+              "sha256": "3855b196de2440975b182eb34dc8cb7f6761d7b4b64ac0c49be5d6a88b08122b"
+            }
+          },
+          "hex": "C:\\n54w02p\\b-objectserver\\ObjectServer.ino.hex",
+          "hex_sha256": "76d4a0e9c3675b8d6964f628678c1d4425129226c1f72863eca86634544eb0b1",
+          "log": "C:\\n54w02p\\ObjectServer.log",
+          "log_sha256": "aa770fd950aa85cd212545d60f6e786fa37f1ef01c5b5b2ca88508b05d683399",
+          "evicted_cache_inputs": []
+        },
+        {
+          "name": "ObjectClient",
+          "context": "C:\\n54w02p\\b-objectclient\\nu54-zephyr\\context.json",
+          "context_sha256": "d1b2a5a3699822c7dfe522751dedc99d4706c480c1b7a9948174be2087d4bbfd",
+          "flash": {
+            "data_bytes": 17888,
+            "headroom_bytes": 1141236,
+            "region_bytes": 1490944,
+            "text_bytes": 331820,
+            "used_bytes": 349708,
+            "used_percent": 23.4555
+          },
+          "ram": {
+            "bss_bytes": 136594,
+            "data_bytes": 17888,
+            "headroom_bytes": 107662,
+            "region_bytes": 262144,
+            "used_bytes": 154482,
+            "used_percent": 58.9302
+          },
+          "inputs": {
+            "config": {
+              "path": "C:/n54w02p/cache/v1/e9/e93c82626892f74b4d9bb4141cff3c33/build/zephyr/.config",
+              "sha256": "e658ca3ee9890786466cdca0fecbef1ad9bbae460c9c09ea7cbab25126ecadcf"
+            },
+            "devicetree": {
+              "path": "C:/n54w02p/cache/v1/e9/e93c82626892f74b4d9bb4141cff3c33/build/zephyr/zephyr.dts",
+              "sha256": "5d1f0d615d67e403800b53e754e5e38d341aa1a6640399557557d3459034c587"
+            },
+            "elf": {
+              "path": "C:/n54w02p/cache/v1/e9/e93c82626892f74b4d9bb4141cff3c33/build/zephyr/zephyr.elf",
+              "sha256": "1b7f572e67d308b24a453c70c3c8b80c28a5bf1cae6de446e58d76ce25ebab59"
+            },
+            "map": {
+              "path": "C:/n54w02p/cache/v1/e9/e93c82626892f74b4d9bb4141cff3c33/build/zephyr/zephyr.map",
+              "sha256": "0638d1f2bd9548317628fe8db73a8160d5b03da571acc0302c51978935f49c2a"
+            },
+            "source_manifest": {
+              "path": "C:/n54w02p/cache/v1/e9/e93c82626892f74b4d9bb4141cff3c33/app/sources.cmake",
+              "sha256": "547af60f58452eacc16372ecf5ae8a7d80f1f3fcf559e1007fa8b9005e53ed8f"
+            }
+          },
+          "hex": "C:\\n54w02p\\b-objectclient\\ObjectClient.ino.hex",
+          "hex_sha256": "f40a0dd9b8f550c5faf0ec4b8e03783c6c0bd1a511cba6a05b5d7d99175c4bae",
+          "log": "C:\\n54w02p\\ObjectClient.log",
+          "log_sha256": "8ee3250a40659c7f2e4789ccd44178ad0928e8528cc2003cb4a20025ad8adb19",
+          "evicted_cache_inputs": []
+        }
+      ]
+    }
+  },
+  "w04_idle_fixture": {
+    "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\w04-idle-final\\fixture.json",
+    "sha256": "0ec485e8b6bf9053073d5a4ca9fe5a2c6c87fb41bcef8e6bd6b44f8fef1c52ba"
+  },
+  "watcher_after_cleanup": {
+    "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\w04-idle-final\\post-cleanup-readonly.json",
+    "sha256": "70452ee035db751cf585e5f8170d6393830e4e8b67339117f0cdd4c9964f9642"
+  },
+  "example_metadata": {
+    "NUCODE_BLE_Profiles/StandardSensor": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "선택한 표준 측정 service server",
+        "같은 sensorKind의 StandardCollector"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "두 sketch의 sensorKind를 맞춥니다. CTS/HTS/CSC/RSCS/ETS 값은 합성 예시이며 외장 센서를 검증하지 않습니다."
+      ]
+    },
+    "NUCODE_BLE_Profiles/StandardCollector": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "표준 GATT collector",
+        "StandardSensor/AlertSensor/GlucoseSensor 중 선택한 server"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "sensorKind와 server를 맞춥니다. CGMS는 양쪽 표시 숫자를 비교해 각각 y로 승인하는 L3 인증이 필요하며 185초 실행합니다."
+      ]
+    },
+    "NUCODE_BLE_Profiles/AlertSensor": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "ANS alert server",
+        "Kind::alert로 설정한 StandardCollector"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "collector가 email category와 CCC를 허용한 뒤에만 알림을 받습니다. ANCS/Apple 알림 연동과는 다른 표준 ANS입니다."
+      ]
+    },
+    "NUCODE_BLE_Profiles/BondManagement": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "사용자 무장 BMS server",
+        "암호화·bond된 BMS 요청 peer"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [],
+      "conditions": [
+        "기본 미무장입니다. Serial 명령과 예제 authorization을 명시 승인한 한 요청 peer의 bond만 opcode 03으로 삭제하며 전체 삭제를 제공하지 않습니다."
+      ]
+    },
+    "NUCODE_BLE_Profiles/GlucoseSensor": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "synthetic CGMS server",
+        "Kind::glucose로 설정한 StandardCollector"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "단일 연결과 L3 인증을 요구합니다. 양쪽 숫자가 실제로 같을 때 각각 y를 입력합니다. 1분 주기·16 record이며 의료 측정기나 SOCP start/stop 지원이 아닙니다."
+      ]
+    },
+    "NUCODE_BLE_Profiles/ObjectServer": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "RAM OTS object server",
+        "ObjectClient"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "단일 암호화 연결, object 최대 4개×512 byte와 이름 32 octet을 사용합니다. 재부팅하면 RAM object는 사라집니다."
+      ]
+    },
+    "NUCODE_BLE_Profiles/ObjectClient": {
+      "path": "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino",
+      "recommended_profile": "ble",
+      "alternative_profiles": [],
+      "board_count": 2,
+      "roles": [
+        "OTC object client",
+        "ObjectServer"
+      ],
+      "serial_baud": 115200,
+      "sidecars": [
+        "prj.conf"
+      ],
+      "conditions": [
+        "단일 암호화 연결에서 Serial 명령으로 metadata/read/write/create/name/delete를 하나씩 요청합니다. checksum·execute·append/truncate는 지원 범위가 아닙니다."
+      ]
+    }
+  },
+  "not_run_or_separate_denominators": [
+    "native second physical peer rejection",
+    "BMS reboot persistence dedicated case",
+    "native long reconnect soak",
+    "external Apple/Google peers and sensors",
+    "existing M30 seven-profile regression owned by integration"
+  ],
+  "known_boundaries": [
+    "NCS3.4.0 retained",
+    "native CONFIG_BT_MAX_CONN=1",
+    "OTS name CONFIG exactly32, four512-byte RAM objects",
+    "CGMS SOCP01/02 only, 1a/1b unsupported, RACP02 unsupported",
+    "CGMS requires authenticated L3; HIL achieved L4",
+    "no SIG qualification claim; no SDK patch",
+    "all original failed attempts preserved"
+  ],
+  "owned_bond_cleanup": {
+    "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\native009-owned-cleanup.json",
+    "sha256": "461db830717098d94491b3114f18b1349444358c4df2bc4bfaefcca533004e70"
+  },
+  "bond_post_snapshots": {
+    "server": {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\native009-cleanup-server-post.json",
+      "sha256": "bee16babf54385155a4d8dfc74d9c47844a0bf1992f2904f5c891a7df1c51867"
+    },
+    "client": {
+      "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\native009-cleanup-client-post.json",
+      "sha256": "f318d998b3b984873f13df5eb15803397f479c06d13cfd48660dc06e0bc2116d"
+    }
+  },
+  "whole_example_guidance_audit": {
+    "path": "C:\\n54w02p\\profile-example-audit-final-20261004.json",
+    "sha256": "0038350c92556965c0d2a289631db0244ae6d21e1c4ea457d8825cd698faeba1"
+  },
+  "whole_example_guidance_scope": "204 examples; W02 seven entries have no issue; two W03 metadata omissions separately owned by integration",
+  "format": {
+    "status": "PASS",
+    "file_count": 31,
+    "command": [
+      "C:/ncs/toolchains/dcbdc366a1/opt/bin/Lib/site-packages/clang_format/data/bin/clang-format.exe",
+      "--dry-run",
+      "--Werror",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_Glucose.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_Glucose.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_ObjectStore.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_ObjectStore.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_ObjectTransfer.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_ObjectTransfer.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_ProfileCodec.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_ProfileCodec.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_Profiles.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\src\\NUCODE_BLE_Profiles.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\examples\\AlertSensor\\AlertSensor.ino",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\examples\\BondManagement\\BondManagement.ino",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\examples\\GlucoseSensor\\GlucoseSensor.ino",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\examples\\ObjectClient\\ObjectClient.ino",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\examples\\ObjectServer\\ObjectServer.ino",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\examples\\StandardCollector\\StandardCollector.ino",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\libraries\\NUCODE_BLE_Profiles\\examples\\StandardSensor\\StandardSensor.ino",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m33_profile_hil\\src\\ExpectedCgms.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m33_profile_hil\\src\\ExpectedReject.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\zephyr\\m33_profile_hil\\src\\main.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_stubs\\NUCODE_BLE.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_stubs\\internal\\NUCODE_BLE_Internal.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_stubs\\zephyr\\kernel.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_stubs\\bluetooth\\services\\cgms.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_stubs\\zephyr\\bluetooth\\bluetooth.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_stubs\\zephyr\\bluetooth\\gatt.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_stubs\\zephyr\\bluetooth\\services\\ots.h",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_codec_main.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_native_main.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_reject_main.cpp",
+      "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\tests\\host\\m33_profile_runtime_main.cpp"
+    ],
+    "stderr": ""
+  },
+  "supersedes_candidate": {
+    "path": "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core\\00_Docs\\04_검증 기록\\evidence\\m33-w02-profile-development-20261003\\candidate-final.json",
+    "sha256": "b9c2eebaa2958e9c31597138e0aaa75ef238936833fe1e2f49b08a6bb40f58b0",
+    "reason": "memory parser now preserves native linker KB units; standard-server RAM is154*1024=157696 bytes"
+  }
+}

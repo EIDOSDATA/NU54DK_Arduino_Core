@@ -178,6 +178,9 @@ inline int bt_conn_auth_info_cb_register(bt_conn_auth_info_cb *p)
 }
 inline bool mock_bondable = false, mock_saved_bond = false;
 inline int mock_unpair_error = 0;
+inline unsigned int mock_unpair_calls = 0U;
+inline unsigned int mock_unpair_fail_call = 0U;
+inline void (*mock_unpair_observer)(std::uint8_t, const bt_addr_le_t *) = nullptr;
 struct bt_bond_info
 {
     bt_addr_le_t addr;
@@ -195,10 +198,19 @@ inline void bt_foreach_bond(std::uint8_t, void (*callback)(const bt_bond_info *,
         callback(&bond, context);
     }
 }
-inline int bt_unpair(std::uint8_t, const bt_addr_le_t *peer)
+inline int bt_unpair(std::uint8_t id, const bt_addr_le_t *peer)
 {
+    ++mock_unpair_calls;
+    if (mock_unpair_fail_call == mock_unpair_calls)
+    {
+        return -EIO;
+    }
     if (mock_unpair_error == 0)
     {
+        if (mock_unpair_observer != nullptr)
+        {
+            mock_unpair_observer(id, peer);
+        }
         mock_saved_bond = false;
         if (mock_auth_info != nullptr && mock_auth_info->bond_deleted != nullptr)
         {

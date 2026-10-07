@@ -24,11 +24,12 @@ from ble_pair_hil_common import (  # noqa: E402
     BlePairHilFailure,
     RoleEndpoint,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     execute_pair,
     file_sha256,
     git_revision,
     image_record,
+    public_endpoint,
     prepare_output_paths,
     protocol_lines,
     save_failure_transcripts,
@@ -83,8 +84,8 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     )
     parser.add_argument("--peripheral-hex")
     parser.add_argument("--central-hex")
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -227,11 +228,7 @@ def build_evidence(
     central_result: M28TwoBoardRoleResult,
 ) -> dict[str, Any]:
     def board(endpoint: RoleEndpoint) -> dict[str, str]:
-        return {
-            "daplink_uid": endpoint.board_id,
-            "msd_root": str(endpoint.volume.root),
-            "uart_port": endpoint.port_name,
-        }
+        return public_endpoint(endpoint)
 
     return {
         "schema_version": EVIDENCE_SCHEMA,
@@ -306,14 +303,14 @@ def build_evidence(
 def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
     serial_module, list_ports = import_pyserial()
-    peripheral_endpoint = discover_endpoint(
-        args.peripheral_board_id,
+    peripheral_endpoint = discover_endpoint_sha256(
+        args.probe_peripheral_sha256,
         args.peripheral_volume,
         args.peripheral_port,
         list_ports,
     )
-    central_endpoint = discover_endpoint(
-        args.central_board_id,
+    central_endpoint = discover_endpoint_sha256(
+        args.probe_central_sha256,
         args.central_volume,
         args.central_port,
         list_ports,
@@ -321,8 +318,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
     validate_pair_identity(peripheral_endpoint, central_endpoint)
     print(
         "NU54DK M28 2-board discovery SUCCESS: "
-        f"peripheral={peripheral_endpoint.board_id}/{peripheral_endpoint.port_name}, "
-        f"central={central_endpoint.board_id}/{central_endpoint.port_name}"
+        f"peripheral={public_endpoint(peripheral_endpoint)['probe_sha256'][:12]}/"
+        f"{peripheral_endpoint.port_name}, "
+        f"central={public_endpoint(central_endpoint)['probe_sha256'][:12]}/"
+        f"{central_endpoint.port_name}"
     )
     if args.discover_only:
         return 0

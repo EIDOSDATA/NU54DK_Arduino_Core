@@ -104,6 +104,9 @@ def cache_input_manifest(
             "version": ADAPTER_VERSION,
             "platform_root": platform_root.as_posix(),
             "platform_content": tree_content_sha256(platform_root, platform_inputs),
+            "embedded_core_revision": git_or_release_revision(
+                platform_root, platform_root, "core_revision"
+            ),
         },
         "target": {
             "fqbn": args.fqbn,

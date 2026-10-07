@@ -28,6 +28,7 @@ namespace
     constexpr std::size_t nonce_length = 32U;
     constexpr std::uint32_t procedure_target = 20U;
     constexpr std::uint32_t packet_target = 2000U;
+    constexpr std::uint32_t boundary_packet_mask = 0x80000000U;
     constexpr std::uint32_t feature_target = 20U;
     constexpr std::uint32_t sca_target = 10U;
     constexpr std::int64_t session_timeout_ms = 240000;
@@ -65,10 +66,17 @@ namespace
     bool discovery_pending = false;
     bool procedures_started = false;
     bool initial_parameters_ready = false;
+    bool subrate_ack_pending = false;
+    bool subrate_ack_received = false;
+    bool boundary_write_pending = false;
+    bool boundary_write_complete = false;
 #endif
     std::uint32_t transmitted_packets = 0U;
     std::uint32_t received_packets = 0U;
     std::uint32_t subrate_changes = 0U;
+    std::uint32_t subrate_acknowledgements = 0U;
+    std::uint32_t subrate_increase_acknowledgements = 0U;
+    std::uint32_t boundary_packets = 0U;
     std::uint32_t frame_space_changes = 0U;
     std::uint32_t connection_rate_changes = 0U;
     std::uint32_t channel_updates = 0U;
@@ -169,6 +177,33 @@ namespace
         return true;
     }
 
+    /** @brief 반복 번호별 Subrate factor·latency·timeout 경계를 고정합니다. */
+    void subrateParameters(std::uint32_t iteration,
+                           nucode::ble::BLESubrateParameters &parameters)
+    {
+        const bool increased = (iteration & 1U) != 0U;
+        const std::uint16_t factor = increased ? 4U : 2U;
+        parameters.minimum_factor = factor;
+        parameters.maximum_factor = factor;
+        parameters.maximum_peripheral_latency = increased ? 3U : 0U;
+        parameters.continuation_number = 0U;
+        parameters.supervision_timeout_10ms = increased ? 800U : 400U;
+    }
+
+    /** @brief controller ACK가 factor·latency 범위·timeout 계약을 만족하는지 검사합니다. */
+    bool validSubrateAck(std::uint32_t iteration,
+                         const nucode::ble::BLESubrateInfo &result)
+    {
+        nucode::ble::BLESubrateParameters expected;
+        subrateParameters(iteration, expected);
+        return result.status == 0U &&
+               result.factor == expected.minimum_factor &&
+               result.continuation_number == expected.continuation_number &&
+               result.peripheral_latency <= expected.maximum_peripheral_latency &&
+               result.supervision_timeout_10ms ==
+                   expected.supervision_timeout_10ms;
+    }
+
 #if defined(NUCODE_M32_TIMING_CENTRAL)
     /** @brief packet sequence와 역상 값을 little-endian payload에 기록합니다. */
     void encodePacket(std::uint32_t sequence)
@@ -182,22 +217,22 @@ namespace
     }
 #else
 
-    /** @brief 고정 길이 packet의 sequence와 역상 값을 검증합니다. */
-    bool validPacket(const std::uint8_t *data, std::size_t length,
-                     std::uint32_t expected)
+    /** @brief 고정 길이 packet의 sequence와 역상을 복호화합니다. */
+    bool decodePacket(const std::uint8_t *data, std::size_t length,
+                      std::uint32_t &sequence)
     {
         if (data == nullptr || length != sizeof(packet))
         {
             return false;
         }
-        std::uint32_t sequence = 0U;
+        sequence = 0U;
         std::uint32_t inverse = 0U;
         for (std::size_t index = 0U; index < 4U; ++index)
         {
             sequence |= static_cast<std::uint32_t>(data[index]) << (index * 8U);
             inverse |= static_cast<std::uint32_t>(data[index + 4U]) << (index * 8U);
         }
-        return sequence == expected && inverse == ~sequence;
+        return inverse == ~sequence;
     }
 #endif
 
@@ -228,17 +263,56 @@ namespace
         return BLEClient.writeWithoutResponse(connection_handle, packet, sizeof(packet));
     }
 
+    /** @brief 다음 Frame Space 요청 함수의 Subrate 경계용 전방 선언입니다. */
+    bool requestFrameSpaceIteration();
+
+    /** @brief Subrate 요청 직후 기존 link로 ACK 경계 payload를 제출합니다. */
+    bool sendBoundaryPacket()
+    {
+        encodePacket(boundary_packet_mask | subrate_changes);
+        boundary_write_pending = true;
+        boundary_write_complete = false;
+        if (!BLEClient.writeWithoutResponse(connection_handle, packet, sizeof(packet)))
+        {
+            boundary_write_pending = false;
+            return false;
+        }
+        return true;
+    }
+
+    /** @brief Subrate ACK와 경계 payload 완료가 모두 관측된 뒤 다음 절차로 이동합니다. */
+    void advanceSubrateBoundary()
+    {
+        if (!subrate_ack_received || !boundary_write_complete || failed)
+        {
+            return;
+        }
+        subrate_ack_received = false;
+        boundary_write_complete = false;
+        if (!requestFrameSpaceIteration())
+        {
+            fail("frame_request", BLEDevice.lastDriverError());
+        }
+    }
+
     /** @brief 다음 Subrating 절차를 exact factor로 시작합니다. */
     bool requestSubrateIteration()
     {
         nucode::ble::BLESubrateParameters parameters;
-        const std::uint16_t factor =
-            static_cast<std::uint16_t>((subrate_changes % 2U) + 2U);
-        parameters.minimum_factor = factor;
-        parameters.maximum_factor = factor;
-        parameters.continuation_number = 0U;
+        subrateParameters(subrate_changes, parameters);
         procedure_phase = ProcedurePhase::subrate;
-        return BLEConnection.requestSubrate(connection_handle, parameters);
+        subrate_ack_pending = true;
+        subrate_ack_received = false;
+        if (!BLEConnection.requestSubrate(connection_handle, parameters))
+        {
+            subrate_ack_pending = false;
+            return false;
+        }
+        if (!sendBoundaryPacket())
+        {
+            return false;
+        }
+        return true;
     }
 
     /** @brief 다음 Frame Space 절차를 controller가 고를 수 있는 2M ACL 범위로 제출합니다. */
@@ -321,6 +395,14 @@ namespace
         }
         else if (event == nucode::ble::BLEGattClientEvent::write_without_response_complete)
         {
+            if (boundary_write_pending)
+            {
+                boundary_write_pending = false;
+                boundary_write_complete = true;
+                ++boundary_packets;
+                advanceSubrateBoundary();
+                return;
+            }
             if (transmitted_packets == 100U)
             {
                 last_packet_ms = 0;
@@ -362,9 +444,28 @@ namespace
         checkCallbackContext();
         if (event.event == nucode::ble::BLECharacteristicEvent::written)
         {
-            if (!validPacket(event.data, event.length, received_packets))
+            std::uint32_t sequence = 0U;
+            if (!decodePacket(event.data, event.length, sequence))
             {
                 fail("payload_corruption", static_cast<int>(received_packets));
+                return;
+            }
+            if ((sequence & boundary_packet_mask) != 0U)
+            {
+                const std::uint32_t boundary_sequence =
+                    sequence & ~boundary_packet_mask;
+                if (boundary_sequence != boundary_packets)
+                {
+                    fail("subrate_boundary_order",
+                         static_cast<int>(boundary_sequence));
+                    return;
+                }
+                ++boundary_packets;
+                return;
+            }
+            if (sequence != received_packets)
+            {
+                fail("payload_sequence", static_cast<int>(sequence));
                 return;
             }
             if (received_packets == 100U)
@@ -392,6 +493,10 @@ namespace
         Serial.print(received_packets);
         Serial.print("|subrate=");
         Serial.print(subrate_changes);
+        Serial.print("|subrate_ack=");
+        Serial.print(subrate_acknowledgements);
+        Serial.print("|boundary=");
+        Serial.print(boundary_packets);
         Serial.print("|frame=");
         Serial.print(frame_space_changes);
         Serial.print("|rate=");
@@ -481,19 +586,29 @@ namespace
                  information.connection == connection_handle)
         {
             nucode::ble::BLESubrateInfo result;
-            if (!BLEConnection.subrate(connection_handle, result) || result.status != 0U)
+            if (!BLEConnection.subrate(connection_handle, result) ||
+                !validSubrateAck(subrate_changes, result))
             {
                 fail("subrate_result", result.status);
                 return;
             }
             recordGap(last_procedure_ms, maximum_procedure_gap_ms);
+            ++subrate_acknowledgements;
+            if ((subrate_changes & 1U) != 0U)
+            {
+                ++subrate_increase_acknowledgements;
+            }
             ++subrate_changes;
 #if defined(NUCODE_M32_TIMING_CENTRAL)
             if (procedure_phase != ProcedurePhase::subrate ||
-                !requestFrameSpaceIteration())
+                !subrate_ack_pending)
             {
-                fail("frame_request", BLEDevice.lastDriverError());
+                fail("subrate_ack_order");
+                return;
             }
+            subrate_ack_pending = false;
+            subrate_ack_received = true;
+            advanceSubrateBoundary();
 #endif
         }
         else if (information.event == nucode::ble::BLEEvent::frame_space_changed &&
@@ -558,7 +673,10 @@ namespace
     void finishIfComplete()
     {
         if (session_complete || failed || !started ||
-            feature_samples != feature_target || sca_samples != sca_target)
+            feature_samples != feature_target || sca_samples != sca_target ||
+            subrate_acknowledgements != procedure_target ||
+            subrate_increase_acknowledgements != procedure_target / 2U ||
+            boundary_packets != procedure_target)
         {
             return;
         }
@@ -590,6 +708,12 @@ namespace
         Serial.print(received_packets);
         Serial.print("|subrate=");
         Serial.print(subrate_changes);
+        Serial.print("|subrate_ack=");
+        Serial.print(subrate_acknowledgements);
+        Serial.print("|subrate_increase_ack=");
+        Serial.print(subrate_increase_acknowledgements);
+        Serial.print("|boundary=");
+        Serial.print(boundary_packets);
         Serial.print("|frame=");
         Serial.print(frame_space_changes);
         Serial.print("|rate=");

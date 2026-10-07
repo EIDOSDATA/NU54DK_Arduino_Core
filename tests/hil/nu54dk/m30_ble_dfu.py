@@ -30,9 +30,11 @@ from ble_pair_hil_common import (  # noqa: E402
     DEFAULT_BAUD_RATE,
     REPOSITORY,
     RoleEndpoint,
-    discover_endpoint,
+    clear_nrf54l_rram_pyocd_sha256,
+    discover_endpoint_sha256,
+    erase_nrf54l_rram_pyocd_sha256,
     file_sha256,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     transcript_record,
     validate_board_revision,
@@ -43,11 +45,20 @@ from ble_pair_hil_common import (  # noqa: E402
 )
 from m30_mcuboot import (  # noqa: E402
     M30BootFailure,
-    erase_secondary_slot,
+    SLOT1_OFFSET,
+    SLOT1_SIZE,
     imgtool_environment,
     validate_private_key,
 )
 from m6_serial_echo import import_pyserial  # noqa: E402
+from m30_native_attestation import (  # noqa: E402
+    M30AttestationFailure,
+    ROLES,
+    build_dfu_cycle_records,
+    complete_program_phase,
+    preserve_dfu_candidates,
+    prepare_program_phase,
+)
 
 
 MILESTONE = "M30"
@@ -142,8 +153,10 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--peripheral-build-outdir", required=True)
     parser.add_argument("--unconfirmed-build-outdir", required=True)
     parser.add_argument("--central-build-outdir", required=True)
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--peripheral-image")
+    parser.add_argument("--central-image")
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -721,31 +734,50 @@ class DfuSession:
         self.capture = {"peripheral": bytearray(), "central": bytearray()}
         self.sequence = 0
         self.central_started = False
+        self.cleanup = {role: "NOT_RUN" for role in ("peripheral", "central")}
 
     def __enter__(self) -> DfuSession:
         """! @brief role별 exact VCOM을 열고 기존 입력을 비웁니다. """
 
-        for role in ("peripheral", "central"):
-            endpoint = self.endpoints[role]
-            port = self.stack.enter_context(
-                self.serial_module.Serial(
-                    endpoint.port_name,
-                    baudrate=self.baud,
-                    bytesize=self.serial_module.EIGHTBITS,
-                    parity=self.serial_module.PARITY_NONE,
-                    stopbits=self.serial_module.STOPBITS_ONE,
-                    timeout=0.05,
-                    write_timeout=2.0,
+        try:
+            for role in ("peripheral", "central"):
+                endpoint = self.endpoints[role]
+                port = self.stack.enter_context(
+                    self.serial_module.Serial(
+                        endpoint.port_name,
+                        baudrate=self.baud,
+                        bytesize=self.serial_module.EIGHTBITS,
+                        parity=self.serial_module.PARITY_NONE,
+                        stopbits=self.serial_module.STOPBITS_ONE,
+                        timeout=0.05,
+                        write_timeout=2.0,
+                    )
                 )
-            )
-            port.reset_input_buffer()
-            self.ports[role] = port
+                port.reset_input_buffer()
+                self.ports[role] = port
+        except BaseException:
+            self.stack.close()
+            self.cleanup = {
+                role: (
+                    "PASS"
+                    if getattr(port, "is_open", None) is False
+                    else "FAIL"
+                )
+                for role, port in self.ports.items()
+            }
+            raise
         return self
 
     def __exit__(self, exception_type: Any, exception: Any, traceback: Any) -> None:
         """! @brief 열린 VCOM을 역순으로 닫습니다. """
 
         self.stack.close()
+        self.cleanup = {
+            role: "PASS" if getattr(port, "is_open", None) is False else "FAIL"
+            for role, port in self.ports.items()
+        }
+        if any(value != "PASS" for value in self.cleanup.values()):
+            raise M30DfuFailure("DFU VCOM close cleanup이 실패했습니다.")
 
     def send_line(self, role: str, line: str) -> None:
         """! @brief 민감 payload를 출력하지 않고 완전한 ASCII command를 기록합니다. """
@@ -1196,8 +1228,10 @@ def run_positive(
     upload_requests = 0
     hash_mismatches = 0
     unconfirmed_boots = 0
+    records: list[dict[str, Any]] = []
     for index, artifact in enumerate(positives, start=1):
-        upload_requests += session.upload(artifact, deadline)
+        request_count = session.upload(artifact, deadline)
+        upload_requests += request_count
         state = session.state_for_hash(artifact.image_hash, deadline)
         if state is None or state.get("bootable") is not True:
             raise M30DfuFailure(f"positive v{index}가 bootable state에 없습니다.")
@@ -1211,13 +1245,35 @@ def run_positive(
         if active is None or active.get("active") is not True or active.get("confirmed") is not True:
             hash_mismatches += 1
             raise M30DfuFailure(f"positive v{index} active hash·confirm state가 다릅니다.")
+        records.append({
+            "update": index,
+            "candidate_sha256": artifact.sha256,
+            "candidate_image_hash": artifact.image_hash.hex(),
+            "version": list(artifact.version),
+            "upload_requests": request_count,
+            "active": True,
+            "confirmed": True,
+        })
         print(f"M30_DFU_POSITIVE_PASS={index}/{POSITIVE_UPDATES}", flush=True)
     return {
         "updates": len(positives),
         "upload_requests": upload_requests,
         "hash_mismatches": hash_mismatches,
         "unconfirmed_boots": unconfirmed_boots,
+        "records": records,
     }
+
+
+def build_record_path_for_image(image: Path) -> Path:
+    """! @brief image와 결합된 Arduino 또는 native build record 경로를 반환합니다. """
+
+    arduino = image.with_suffix(".nu54-build.json")
+    if arduino.is_file():
+        return arduino
+    native = image.parent.parent / "nucode_arduino_core_build.yml"
+    if not native.is_file():
+        raise M30DfuFailure(f"build record가 없습니다: {image}")
+    return native
 
 
 def run_negative_class(
@@ -1228,21 +1284,47 @@ def run_negative_class(
 ) -> dict[str, Any]:
     """! @brief 한 invalid image upload 뒤 test 승인·boot 거부를 20회 반복합니다. """
 
-    upload_requests = session.upload(artifact, deadline)
+    upload_requests = 0
     state_rejects = 0
     boot_rejects = 0
     invalid_accepts = 0
+    records: list[dict[str, Any]] = []
     for attempt in range(1, NEGATIVE_ATTEMPTS + 1):
+        session.erase_secondary(deadline)
+        request_count = session.upload(artifact, deadline)
+        upload_requests += request_count
+        candidate_state = session.state_for_hash(artifact.image_hash, deadline)
+        if candidate_state is None or candidate_state.get("active") is True:
+            raise M30DfuFailure(f"{name} candidate secondary state가 다릅니다.")
         result = session.request_test(artifact.image_hash, deadline)
         if result.error_code != 0:
             state_rejects += 1
-        else:
-            boot = session.reset_and_reconnect(deadline)
-            if boot.version == FINAL_VERSION and boot.confirmed == 1 and boot.auto_confirm == 1:
-                boot_rejects += 1
-            else:
-                invalid_accepts += 1
-                raise M30DfuFailure(f"{name} candidate가 boot됐습니다: {boot}")
+            raise M30DfuFailure(
+                f"{name} candidate가 boot 검증 전에 거부됐습니다: "
+                f"group={result.error_group}, rc={result.error_code}"
+            )
+        boot = session.reset_and_reconnect(deadline)
+        if boot.version != FINAL_VERSION or boot.confirmed != 1 or boot.auto_confirm != 1:
+            invalid_accepts += 1
+            raise M30DfuFailure(f"{name} candidate가 boot됐습니다: {boot}")
+        active = session.state_for_hash(artifact.image_hash, deadline)
+        active_candidate = bool(active is not None and active.get("active") is True)
+        if active_candidate:
+            invalid_accepts += 1
+            raise M30DfuFailure(f"{name} candidate가 active state로 남았습니다.")
+        boot_rejects += 1
+        records.append({
+            "attempt": attempt,
+            "class": name,
+            "candidate_sha256": artifact.sha256,
+            "candidate_image_hash": artifact.image_hash.hex(),
+            "upload_requests": request_count,
+            "request_error_group": result.error_group,
+            "request_error_code": result.error_code,
+            "outcome": "boot_rejected",
+            "recovered_version": list(boot.version),
+            "active_candidate": active_candidate,
+        })
         if attempt % 5 == 0:
             print(f"M30_DFU_NEGATIVE_PROGRESS={name}:{attempt}/{NEGATIVE_ATTEMPTS}", flush=True)
     if state_rejects + boot_rejects != NEGATIVE_ATTEMPTS:
@@ -1254,6 +1336,7 @@ def run_negative_class(
         "state_rejects": state_rejects,
         "boot_rejects": boot_rejects,
         "invalid_accepts": invalid_accepts,
+        "records": records,
     }
 
 
@@ -1280,6 +1363,13 @@ def run_rollback(
         "unconfirmed_first_boots": 1,
         "rollback_accepts": 0,
         "recovered_version": list(reverted.version),
+        "rollback_record": {
+            "candidate_sha256": rollback.sha256,
+            "candidate_image_hash": rollback.image_hash.hex(),
+            "first_boot_version": list(first.version),
+            "recovered_version": list(reverted.version),
+            "rollback_accepts": 0,
+        },
     }
 
 
@@ -1289,8 +1379,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
     args = parse_arguments(arguments)
     if not 120.0 <= args.phase_timeout <= 1200.0:
         raise M30DfuFailure("--phase-timeout은 120..1200초여야 합니다.")
-    if args.flash_timeout <= 0:
-        raise M30DfuFailure("--flash-timeout은 0보다 커야 합니다.")
+    if not 1.0 <= args.flash_timeout <= 600.0:
+        raise M30DfuFailure("--flash-timeout은 1..600초여야 합니다.")
     if args.nonce is None:
         nonce = os.urandom(16).hex()
     elif re.fullmatch(r"[0-9a-f]{32}", args.nonce):
@@ -1299,14 +1389,14 @@ def main(arguments: Sequence[str] | None = None) -> int:
         raise M30DfuFailure("--nonce는 32자리 소문자 hex여야 합니다.")
 
     serial_module, list_ports = import_pyserial()
-    peripheral_endpoint = discover_endpoint(
-        args.peripheral_board_id,
+    peripheral_endpoint = discover_endpoint_sha256(
+        args.probe_peripheral_sha256,
         args.peripheral_volume,
         args.peripheral_port,
         list_ports,
     )
-    central_endpoint = discover_endpoint(
-        args.central_board_id,
+    central_endpoint = discover_endpoint_sha256(
+        args.probe_central_sha256,
         args.central_volume,
         args.central_port,
         list_ports,
@@ -1344,6 +1434,40 @@ def main(arguments: Sequence[str] | None = None) -> int:
         raise M30DfuFailure("confirmed와 unconfirmed MCUboot public key가 다릅니다.")
     if file_sha256(confirmed.boot_hex) != file_sha256(unconfirmed.boot_hex):
         raise M30DfuFailure("confirmed와 unconfirmed MCUboot image가 다릅니다.")
+    supplied = (args.peripheral_image, args.central_image)
+    if any(supplied) and not all(supplied):
+        raise M30DfuFailure("두 role direct image를 함께 지정해야 합니다.")
+    program_images = {
+        "peripheral": confirmed.signed_hex,
+        "central": central.signed_hex,
+    }
+    program_records = {
+        "peripheral": confirmed.record,
+        "central": central.record,
+    }
+    if all(supplied):
+        direct_images = {
+            "peripheral": Path(args.peripheral_image).resolve(),
+            "central": Path(args.central_image).resolve(),
+        }
+        canonical = {
+            "peripheral": confirmed.signed_hex,
+            "central": central.signed_hex,
+        }
+        for role in ROLES:
+            image = direct_images[role]
+            if (
+                not image.is_file()
+                or image.suffix.lower() != ".hex"
+                or file_sha256(image) != file_sha256(canonical[role])
+            ):
+                raise M30DfuFailure(
+                    f"{role} direct HEX가 canonical signed build와 다릅니다."
+                )
+            program_records[role] = validate_build_record(
+                image, core_revision, board_revision, APPLICATION_ROOT
+            )
+        program_images = direct_images
     immutable_inputs = {
         path.resolve(): (path.stat().st_size, file_sha256(path))
         for path in (
@@ -1360,10 +1484,61 @@ def main(arguments: Sequence[str] | None = None) -> int:
     evidence_path, peripheral_transcript, central_transcript = output_paths(
         args.evidence, args.overwrite_evidence
     )
+    cleanup_phase = prepare_program_phase(
+        evidence_path,
+        "dfu-cleanup",
+        ROLES,
+        program_images,
+        program_records,
+        overwrite=args.overwrite_evidence,
+    )
+    initial_phase_inputs = (
+        (
+            "dfu-initial-peripheral-bootloader",
+            "peripheral_bootloader",
+            confirmed.boot_hex,
+            confirmed.record,
+            build_record_path_for_image(confirmed.signed_hex),
+        ),
+        (
+            "dfu-initial-peripheral-application",
+            "peripheral_application",
+            program_images["peripheral"],
+            program_records["peripheral"],
+            build_record_path_for_image(program_images["peripheral"]),
+        ),
+        (
+            "dfu-initial-central-bootloader",
+            "central_bootloader",
+            central.boot_hex,
+            central.record,
+            build_record_path_for_image(central.signed_hex),
+        ),
+        (
+            "dfu-initial-central-application",
+            "central_application",
+            program_images["central"],
+            program_records["central"],
+            build_record_path_for_image(program_images["central"]),
+        ),
+    )
+    initial_phases = {
+        name: prepare_program_phase(
+            evidence_path,
+            name,
+            (role,),
+            {role: image},
+            {role: record},
+            build_record_paths={role: record_path},
+            overwrite=args.overwrite_evidence,
+        )
+        for name, role, image, record, record_path in initial_phase_inputs
+    }
 
     imgtool_python = Path(args.imgtool_python).resolve()
     imgtool = Path(args.imgtool).resolve()
     flash_results: dict[str, Any] = {}
+    program_phases: list[dict[str, Any]] = []
     session: DfuSession | None = None
     started = time.monotonic()
     try:
@@ -1377,31 +1552,79 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 imgtool,
                 Path(temporary),
             )
-            erase_secondary_slot(peripheral_endpoint.board_id, args.flash_timeout)
-            flash_results["peripheral_bootloader"] = flash_image_pyocd(
+            candidates_evidence = preserve_dfu_candidates(
+                evidence_path,
+                positives,
+                negatives,
+                rollback,
+                overwrite=args.overwrite_evidence,
+            )
+            erase_nrf54l_rram_pyocd_sha256(
+                "peripheral-secondary-initial-erase",
+                args.probe_peripheral_sha256,
+                SLOT1_OFFSET,
+                SLOT1_SIZE,
+                args.flash_timeout,
+            )
+            flash_results["peripheral_bootloader"] = flash_image_pyocd_sha256(
                 "peripheral-bootloader",
-                peripheral_endpoint.board_id,
+                args.probe_peripheral_sha256,
                 confirmed.boot_hex,
                 args.flash_timeout,
             )
-            flash_results["peripheral_primary"] = flash_image_pyocd(
+            flash_results["peripheral_primary"] = flash_image_pyocd_sha256(
                 "peripheral-primary",
-                peripheral_endpoint.board_id,
-                confirmed.signed_hex,
+                args.probe_peripheral_sha256,
+                program_images["peripheral"],
                 args.flash_timeout,
             )
-            flash_results["central_bootloader"] = flash_image_pyocd(
+            flash_results["central_bootloader"] = flash_image_pyocd_sha256(
                 "central-bootloader",
-                central_endpoint.board_id,
+                args.probe_central_sha256,
                 central.boot_hex,
                 args.flash_timeout,
             )
-            flash_results["central_primary"] = flash_image_pyocd(
+            flash_results["central_primary"] = flash_image_pyocd_sha256(
                 "central-primary",
-                central_endpoint.board_id,
-                central.signed_hex,
+                args.probe_central_sha256,
+                program_images["central"],
                 args.flash_timeout,
             )
+            phase_receipts = (
+                (
+                    "dfu-initial-peripheral-bootloader",
+                    "peripheral_bootloader",
+                    peripheral_endpoint.board_id,
+                    flash_results["peripheral_bootloader"],
+                ),
+                (
+                    "dfu-initial-peripheral-application",
+                    "peripheral_application",
+                    peripheral_endpoint.board_id,
+                    flash_results["peripheral_primary"],
+                ),
+                (
+                    "dfu-initial-central-bootloader",
+                    "central_bootloader",
+                    central_endpoint.board_id,
+                    flash_results["central_bootloader"],
+                ),
+                (
+                    "dfu-initial-central-application",
+                    "central_application",
+                    central_endpoint.board_id,
+                    flash_results["central_primary"],
+                ),
+            )
+            for phase_name, role, board_id, flash_result in phase_receipts:
+                _exact, phase_record = complete_program_phase(
+                    REPOSITORY,
+                    core_revision,
+                    initial_phases[phase_name],
+                    {role: board_id},
+                    {role: flash_result},
+                )
+                program_phases.append(phase_record)
 
             with DfuSession(
                 serial_module,
@@ -1422,17 +1645,16 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 positive_duration = time.monotonic() - positive_started
 
                 negative_started = time.monotonic()
-                negative_results = {
-                    name: run_negative_class(
+                negative_results = {}
+                for name, artifact in negatives.items():
+                    negative_results[name] = run_negative_class(
                         session,
                         name,
                         artifact,
-                        negative_started + args.phase_timeout,
+                        time.monotonic() + args.phase_timeout,
                     )
-                    for name, artifact in negatives.items()
-                }
                 rollback_result = run_rollback(
-                    session, rollback, negative_started + args.phase_timeout
+                    session, rollback, time.monotonic() + args.phase_timeout
                 )
                 negative_duration = time.monotonic() - negative_started
 
@@ -1444,28 +1666,112 @@ def main(arguments: Sequence[str] | None = None) -> int:
 
                 peripheral_capture = bytes(session.capture["peripheral"])
                 central_capture = bytes(session.capture["central"])
-                candidates_evidence = {
-                    "positive": [artifact_evidence(item) for item in positives],
-                    "negative": {
-                        name: artifact_evidence(item) for name, item in negatives.items()
-                    },
-                    "unconfirmed": artifact_evidence(rollback),
-                }
+            serial_cleanup = dict(session.cleanup)
+            secondary_cleanup = clear_nrf54l_rram_pyocd_sha256(
+                "peripheral-secondary-cleanup",
+                args.probe_peripheral_sha256,
+                SLOT1_OFFSET,
+                SLOT1_SIZE,
+                args.flash_timeout,
+            )
+            cleanup_flash_results = {
+                "peripheral": flash_image_pyocd_sha256(
+                    "peripheral-cleanup",
+                    args.probe_peripheral_sha256,
+                    program_images["peripheral"],
+                    args.flash_timeout,
+                ),
+                "central": flash_image_pyocd_sha256(
+                    "central-cleanup",
+                    args.probe_central_sha256,
+                    program_images["central"],
+                    args.flash_timeout,
+                ),
+            }
     except Exception as error:
-        if session is not None:
-            peripheral_transcript.write_bytes(bytes(session.capture["peripheral"]))
-            central_transcript.write_bytes(bytes(session.capture["central"]))
-        if isinstance(error, (M30DfuFailure, M30BootFailure, BlePairHilFailure)):
-            raise M30DfuFailure(
-                f"{error}; 실패 transcript: {peripheral_transcript.name}, {central_transcript.name}"
-            ) from error
-        raise
+        peripheral_transcript.write_bytes(
+            bytes(session.capture["peripheral"]) if session is not None else b""
+        )
+        central_transcript.write_bytes(
+            bytes(session.capture["central"]) if session is not None else b""
+        )
+        cleanup_status = "PASS"
+        try:
+            clear_nrf54l_rram_pyocd_sha256(
+                "peripheral-failure-secondary-cleanup",
+                args.probe_peripheral_sha256,
+                SLOT1_OFFSET,
+                SLOT1_SIZE,
+                min(args.flash_timeout, 120.0),
+            )
+            flash_image_pyocd_sha256(
+                "peripheral-failure-cleanup",
+                args.probe_peripheral_sha256,
+                program_images["peripheral"],
+                min(args.flash_timeout, 120.0),
+            )
+            flash_image_pyocd_sha256(
+                "central-failure-cleanup",
+                args.probe_central_sha256,
+                program_images["central"],
+                min(args.flash_timeout, 120.0),
+            )
+        except Exception as cleanup_error:
+            cleanup_status = f"FAIL:{type(cleanup_error).__name__}"
+        raise M30DfuFailure(
+            f"{error}; failure cleanup={cleanup_status}; 실패 transcript: "
+            f"{peripheral_transcript.name}, {central_transcript.name}"
+        ) from error
 
     for path, (size, digest) in immutable_inputs.items():
         validate_image_unchanged(path, size, digest)
     peripheral_transcript.write_bytes(peripheral_capture)
     central_transcript.write_bytes(central_capture)
+    try:
+        _exact_program, program_phase = complete_program_phase(
+            REPOSITORY,
+            core_revision,
+            cleanup_phase,
+            {
+                "peripheral": peripheral_endpoint.board_id,
+                "central": central_endpoint.board_id,
+            },
+            cleanup_flash_results,
+        )
+        program_phases.append(program_phase)
+    except Exception as error:
+        raise M30DfuFailure(
+            "cleanup image program/readback 검증이 실패했습니다; "
+            "실패 transcript: "
+            f"{peripheral_transcript.name}, {central_transcript.name}"
+        ) from error
     duration = time.monotonic() - started
+    result_evidence = {
+        "M30-DFU-01": {
+            "status": "passed",
+            "duration_seconds": round(positive_duration, 3),
+            **positive,
+        },
+        "M30-DFU-NEG-01": {
+            "status": "passed",
+            "duration_seconds": round(negative_duration, 3),
+            "classes": negative_results,
+            "invalid_accepts": 0,
+            **rollback_result,
+        },
+    }
+    typed_denominator = build_dfu_cycle_records(
+        result_evidence,
+        candidates_evidence,
+        {
+            "peripheral": peripheral_capture,
+            "central": central_capture,
+        },
+        nonce,
+        core_revision,
+        serial_cleanup,
+        secondary_cleanup,
+    )
     evidence = {
         "schema_version": 1,
         "status": "passed",
@@ -1478,20 +1784,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "peripheral": endpoint_evidence(peripheral_endpoint),
             "central": endpoint_evidence(central_endpoint),
         },
-        "results": {
-            "M30-DFU-01": {
-                "status": "passed",
-                "duration_seconds": round(positive_duration, 3),
-                **positive,
-            },
-            "M30-DFU-NEG-01": {
-                "status": "passed",
-                "duration_seconds": round(negative_duration, 3),
-                "classes": negative_results,
-                "invalid_accepts": 0,
-                **rollback_result,
-            },
-        },
+        "results": result_evidence,
         "candidates": candidates_evidence,
         "trust_public_key_source_sha256": confirmed.public_key_sha256,
         "build_records": {
@@ -1511,6 +1804,14 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "power_cut_injected": False,
         "physical_power_loss_claim": False,
         "mass_erase_or_recover": False,
+        "program_phases": program_phases,
+        "cleanup": {
+            "serial": serial_cleanup,
+            "secondary_slot": secondary_cleanup,
+            "base_images_restored": True,
+            "target": {role: "SECTOR_REPROGRAM_RESET" for role in ROLES},
+        },
+        "typed_denominator": typed_denominator,
         "transcripts": {
             "peripheral": transcript_record(peripheral_transcript, peripheral_capture),
             "central": transcript_record(central_transcript, central_capture),
@@ -1528,6 +1829,11 @@ def main(arguments: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (M30DfuFailure, M30BootFailure, BlePairHilFailure) as error:
+    except (
+        M30DfuFailure,
+        M30AttestationFailure,
+        M30BootFailure,
+        BlePairHilFailure,
+    ) as error:
         print(f"M30_DFU_HIL_FAIL: {error}", file=sys.stderr)
         raise SystemExit(1)

@@ -31,8 +31,10 @@ namespace
     constexpr size_t sdu_length = 8U;
     constexpr size_t nonce_length = 32U;
     constexpr char start_prefix[] = "M31ISO|1|START|nonce=";
+    constexpr char risk_start_prefix[] = "M31ISO|1|START_RISK|nonce=";
     constexpr char start_suffix[] = "|count=100";
     constexpr char stop_prefix[] = "M31ISO|1|STOP|nonce=";
+    constexpr char risk_stop_prefix[] = "M31ISO|1|ABORT_ACL|nonce=";
 #if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
     constexpr char send_prefix[] = "M31ISO|1|SEND|nonce=";
     constexpr uint32_t send_period_ms = 18U;
@@ -42,30 +44,36 @@ namespace
     constexpr char role_name[] = NUCODE_BLE_ISO_CIS_ROLE;
     const bool central_role = strcmp(role_name, "central") == 0;
 #if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
-    bool send_armed = false;
+    atomic_t send_armed = ATOMIC_INIT(0);
 #endif
-    char command[sizeof(start_prefix) + nonce_length + sizeof(start_suffix)] = {};
+    char command[128] = {};
     size_t command_length = 0U;
     char nonce[nonce_length + 1U] = {};
     uint8_t nonce_bytes[nonce_length / 2U] = {};
-    bool started = false;
-    bool finished = false;
-    bool stopping = false;
+    atomic_t started = ATOMIC_INIT(0);
+    atomic_t finished = ATOMIC_INIT(0);
+    atomic_t stopping = ATOMIC_INIT(0);
     bool bluetooth_enabled = false;
     bool server_registered = false;
-    int64_t stop_start_ms = 0;
-    bool rx_end_printed = false;
-    bool tx_end_printed = false;
+    atomic_t stop_start_ms = ATOMIC_INIT(0);
+    atomic_t rx_end_printed = ATOMIC_INIT(0);
+    atomic_t tx_end_printed = ATOMIC_INIT(0);
+    atomic_t risk_mode = ATOMIC_INIT(0);
+    atomic_t risk_ready_printed = ATOMIC_INIT(0);
+    atomic_t acl_first_teardown = ATOMIC_INIT(0);
+    atomic_t negotiated_nse = ATOMIC_INIT(0);
     atomic_t transmitted = ATOMIC_INIT(0);
     atomic_t received = ATOMIC_INIT(0);
     atomic_t invalid_or_lost = ATOMIC_INIT(0);
     atomic_t corrupt = ATOMIC_INIT(0);
     atomic_t duplicate = ATOMIC_INIT(0);
+    atomic_t risk_load_ticks = ATOMIC_INIT(0);
     uint32_t seen[(sdu_count + 31U) / 32U] = {};
     struct bt_conn *acl = nullptr;
     struct bt_iso_cig *cig = nullptr;
     struct bt_iso_chan iso_channel = {};
     struct k_work_delayable send_work;
+    struct k_work_delayable risk_load_work;
 
     NET_BUF_POOL_FIXED_DEFINE(iso_tx_pool, 4U, BT_ISO_SDU_BUF_SIZE(CONFIG_BT_ISO_TX_MTU),
                               CONFIG_BT_CONN_TX_USER_DATA_SIZE, nullptr);
@@ -73,7 +81,7 @@ namespace
     /** @brief 첫 오류를 제한된 stage/code로 남기고 성공 출력을 중단합니다. */
     void fail(const char *stage, int code)
     {
-        if (finished)
+        if (!atomic_cas(&finished, 0, 1))
         {
             return;
         }
@@ -85,7 +93,6 @@ namespace
         Serial.print(stage);
         Serial.print("|code=");
         Serial.println(code);
-        finished = true;
     }
 
     /** @brief 16-byte nonce를 제조사 광고 데이터의 전부로 비교합니다. */
@@ -135,7 +142,7 @@ namespace
                      struct net_buf *buffer)
     {
         (void)channel;
-        if (finished || !started)
+        if (atomic_get(&finished) != 0 || atomic_get(&started) == 0)
         {
             return;
         }
@@ -147,7 +154,7 @@ namespace
         }
         if ((information->flags & BT_ISO_FLAGS_VALID) == 0U)
         {
-            if (!rx_end_printed)
+            if (atomic_get(&rx_end_printed) == 0)
             {
                 const atomic_val_t prior = atomic_inc(&invalid_or_lost);
                 if (prior < 4)
@@ -199,9 +206,8 @@ namespace
         }
         word |= bit;
         atomic_inc(&received);
-        if (sequence == sdu_count - 1U && !rx_end_printed)
+        if (sequence == sdu_count - 1U && atomic_cas(&rx_end_printed, 0, 1))
         {
-            rx_end_printed = true;
             Serial.print("M31ISO|1|RX_END|nonce=");
             Serial.print(nonce);
             Serial.print("|received=");
@@ -213,6 +219,21 @@ namespace
             Serial.print("|invalid_or_lost=");
             Serial.println(atomic_get(&invalid_or_lost));
         }
+    }
+
+    /** @brief risk session 동안 system workqueue에 20%의 유한 CPU 부하를 가합니다. */
+    void runRiskLoad(struct k_work *work)
+    {
+        (void)work;
+        if (atomic_get(&risk_mode) == 0 || atomic_get(&started) == 0 ||
+            atomic_get(&finished) != 0 ||
+            iso_channel.state != BT_ISO_STATE_CONNECTED)
+        {
+            return;
+        }
+        k_busy_wait(2000U);
+        atomic_inc(&risk_load_ticks);
+        k_work_schedule(&risk_load_work, K_MSEC(8));
     }
 
     /** @brief 한 개의 HCI transparent path를 role 방향에 따라 선택합니다. */
@@ -240,6 +261,21 @@ namespace
             return;
         }
 #endif
+        if (atomic_get(&risk_mode) != 0)
+        {
+            struct bt_iso_info risk_information = {};
+            const int risk_information_result =
+                bt_iso_chan_get_info(channel, &risk_information);
+            if (risk_information_result != 0 ||
+                risk_information.max_subevent <= 1U)
+            {
+                fail("risk_nse", risk_information_result != 0 ?
+                     risk_information_result : -ERANGE);
+                return;
+            }
+            atomic_set(&negotiated_nse, risk_information.max_subevent);
+            k_work_schedule(&risk_load_work, K_NO_WAIT);
+        }
         const struct bt_iso_chan_path path = {
             .pid = BT_ISO_DATA_PATH_HCI,
             .format = BT_HCI_CODING_FORMAT_TRANSPARENT,
@@ -269,6 +305,7 @@ namespace
     {
         (void)channel;
         k_work_cancel_delayable(&send_work);
+        k_work_cancel_delayable(&risk_load_work);
         Serial.print("M31ISO|1|ISO_DISCONNECTED|nonce=");
         Serial.print(nonce);
         Serial.print("|reason=");
@@ -310,12 +347,13 @@ namespace
     void sendNext(struct k_work *work)
     {
         (void)work;
-        if (finished || iso_channel.state != BT_ISO_STATE_CONNECTED)
+        if (atomic_get(&finished) != 0 ||
+            iso_channel.state != BT_ISO_STATE_CONNECTED)
         {
             return;
         }
 #if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
-        if (!send_armed)
+        if (atomic_get(&send_armed) == 0)
         {
             return;
         }
@@ -348,7 +386,7 @@ namespace
         atomic_inc(&transmitted);
         if (sequence == sdu_count - 1U)
         {
-            tx_end_printed = true;
+            atomic_set(&tx_end_printed, 1);
             Serial.print("M31ISO|1|TX_END|nonce=");
             Serial.print(nonce);
             Serial.print("|sent=");
@@ -394,7 +432,8 @@ namespace
                struct net_buf_simple *advertisement)
     {
         (void)rssi;
-        if (!started || finished || acl != nullptr ||
+        if (atomic_get(&started) == 0 || atomic_get(&finished) != 0 ||
+            acl != nullptr ||
             type != BT_GAP_ADV_TYPE_ADV_IND)
         {
             return;
@@ -462,6 +501,10 @@ namespace
     /** @brief 끊어진 ACL pointer를 같은 세션으로 재사용하지 않습니다. */
     void aclDisconnected(struct bt_conn *connection, uint8_t reason)
     {
+        const bool peer_acl_first_teardown =
+            connection == acl && atomic_get(&risk_mode) != 0 &&
+            atomic_get(&risk_ready_printed) != 0 &&
+            atomic_get(&stopping) == 0;
         if (connection == acl)
         {
             bt_conn_unref(acl);
@@ -471,6 +514,15 @@ namespace
         Serial.print(nonce);
         Serial.print("|reason=");
         Serial.println(reason);
+        if (peer_acl_first_teardown)
+        {
+            atomic_set(&finished, 1);
+            atomic_set(&stopping, 1);
+            atomic_set(&acl_first_teardown, 1);
+            atomic_set(&stop_start_ms, k_uptime_get_32());
+            k_work_cancel_delayable(&send_work);
+            k_work_cancel_delayable(&risk_load_work);
+        }
     }
 
     BT_CONN_CB_DEFINE(iso_acl_callbacks) = {
@@ -539,13 +591,14 @@ namespace
     }
 
     /** @brief exact revision과 bounded session 조건을 보고합니다. */
-    void startProtocol()
+    void startProtocol(const char *prefix, bool enable_risk_mode)
     {
-        const size_t prefix_length = strlen(start_prefix);
+        const size_t prefix_length = strlen(prefix);
         const size_t suffix_length = strlen(start_suffix);
-        if (started || stopping || acl != nullptr || cig != nullptr ||
+        if (atomic_get(&started) != 0 || atomic_get(&stopping) != 0 ||
+            acl != nullptr || cig != nullptr ||
             command_length != prefix_length + nonce_length + suffix_length ||
-            memcmp(command, start_prefix, prefix_length) != 0 ||
+            memcmp(command, prefix, prefix_length) != 0 ||
             memcmp(command + prefix_length + nonce_length, start_suffix, suffix_length) != 0)
         {
             fail("start_command", -EINVAL);
@@ -558,20 +611,27 @@ namespace
             fail("nonce", -EINVAL);
             return;
         }
-        started = true;
-        finished = false;
-        rx_end_printed = false;
-        tx_end_printed = false;
+        atomic_set(&started, 1);
+        atomic_set(&finished, 0);
+        atomic_set(&rx_end_printed, 0);
+        atomic_set(&tx_end_printed, 0);
+        atomic_set(&risk_mode, enable_risk_mode ? 1 : 0);
+        atomic_set(&risk_ready_printed, 0);
+        atomic_set(&acl_first_teardown, 0);
+        atomic_set(&negotiated_nse, 0);
+        atomic_set(&stop_start_ms, 0);
 #if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
-        send_armed = false;
+        atomic_set(&send_armed, 0);
 #endif
         atomic_set(&transmitted, 0);
         atomic_set(&received, 0);
         atomic_set(&invalid_or_lost, 0);
         atomic_set(&corrupt, 0);
         atomic_set(&duplicate, 0);
+        atomic_set(&risk_load_ticks, 0);
         memset(seen, 0, sizeof(seen));
         memset(&iso_channel, 0, sizeof(iso_channel));
+        k_work_init_delayable(&risk_load_work, runRiskLoad);
         Serial.print("M31ISO|1|BEGIN|nonce=");
         Serial.print(nonce);
         Serial.print("|role=");
@@ -604,7 +664,9 @@ namespace
     void startSending()
     {
         const size_t prefix_length = strlen(send_prefix);
-        if (central_role || !started || finished || stopping || send_armed ||
+        if (central_role || atomic_get(&started) == 0 ||
+            atomic_get(&finished) != 0 || atomic_get(&stopping) != 0 ||
+            atomic_get(&send_armed) != 0 ||
             iso_channel.state != BT_ISO_STATE_CONNECTED ||
             command_length != prefix_length + nonce_length ||
             memcmp(command, send_prefix, prefix_length) != 0 ||
@@ -613,29 +675,40 @@ namespace
             fail("send_command", -EINVAL);
             return;
         }
-        send_armed = true;
+        atomic_set(&send_armed, 1);
         Serial.print("M31ISO|1|SEND_ARMED|nonce=");
         Serial.println(nonce);
         k_work_schedule(&send_work, K_MSEC(send_period_ms));
     }
 #endif
 
-    /** @brief STOP은 보유 session nonce가 정확할 때만 무선 자원을 해제합니다. */
-    void stopProtocol()
+    /** @brief STOP 또는 active-CIS ACL 우선 종료로 무선 자원을 해제합니다. */
+    void stopProtocol(const char *prefix, bool acl_first)
     {
-        const size_t prefix_length = strlen(stop_prefix);
-        if (!started || stopping || command_length != prefix_length + nonce_length ||
-            memcmp(command, stop_prefix, prefix_length) != 0 ||
+        const size_t prefix_length = strlen(prefix);
+        if (atomic_get(&started) == 0 || atomic_get(&stopping) != 0 ||
+            command_length != prefix_length + nonce_length ||
+            memcmp(command, prefix, prefix_length) != 0 ||
             memcmp(command + prefix_length, nonce, nonce_length) != 0)
         {
             fail("stop_command", -EINVAL);
             return;
         }
-        finished = true;
-        stopping = true;
-        stop_start_ms = k_uptime_get();
+        if (acl_first && (atomic_get(&risk_mode) == 0 ||
+                          atomic_get(&risk_ready_printed) == 0 ||
+                          iso_channel.state != BT_ISO_STATE_CONNECTED))
+        {
+            fail("risk_abort_state", -EINVAL);
+            return;
+        }
+        atomic_set(&finished, 1);
+        atomic_set(&stopping, 1);
+        atomic_set(&acl_first_teardown, acl_first ? 1 : 0);
+        atomic_set(&stop_start_ms, k_uptime_get_32());
         k_work_cancel_delayable(&send_work);
-        if (central_role && iso_channel.state == BT_ISO_STATE_CONNECTED)
+        k_work_cancel_delayable(&risk_load_work);
+        if (!acl_first && central_role &&
+            iso_channel.state == BT_ISO_STATE_CONNECTED)
         {
             (void)bt_iso_chan_disconnect(&iso_channel);
         }
@@ -656,21 +729,24 @@ namespace
     /** @brief 무선 callback의 종료를 확인한 뒤 CIG/server 자원을 실제 반환합니다. */
     void finishStop()
     {
-        if (!stopping)
+        if (atomic_get(&stopping) == 0)
         {
             return;
         }
         if (acl != nullptr || iso_channel.state == BT_ISO_STATE_CONNECTED ||
             iso_channel.state == BT_ISO_STATE_CONNECTING)
         {
-            if (k_uptime_get() - stop_start_ms > 30000)
+            const uint32_t stop_elapsed = k_uptime_get_32() -
+                                          static_cast<uint32_t>(
+                                              atomic_get(&stop_start_ms));
+            if (stop_elapsed > 30000U)
             {
                 Serial.print("M31ISO|1|FAIL|nonce=");
                 Serial.print(nonce);
                 Serial.print("|role=");
                 Serial.print(role_name);
                 Serial.println("|stage=stop_timeout|code=-110");
-                stopping = false;
+                atomic_set(&stopping, 0);
             }
             return;
         }
@@ -685,7 +761,7 @@ namespace
                 Serial.print(role_name);
                 Serial.print("|stage=cig_terminate|code=");
                 Serial.println(result);
-                stopping = false;
+                atomic_set(&stopping, 0);
                 return;
             }
             cig = nullptr;
@@ -701,28 +777,73 @@ namespace
                 Serial.print(role_name);
                 Serial.print("|stage=server_unregister|code=");
                 Serial.println(result);
-                stopping = false;
+                atomic_set(&stopping, 0);
                 return;
             }
             server_registered = false;
         }
-        Serial.print("M31ISO|1|STOPPED|nonce=");
+        Serial.print(atomic_get(&risk_mode) != 0 ?
+                         "M31ISO|1|RISK_STOPPED|nonce=" :
+                         "M31ISO|1|STOPPED|nonce=");
         Serial.print(nonce);
         Serial.print("|role=");
         Serial.print(role_name);
         Serial.print("|tx=");
         Serial.print(atomic_get(&transmitted));
         Serial.print("|rx=");
-        Serial.println(atomic_get(&received));
-        started = false;
-        stopping = false;
-        finished = false;
+        Serial.print(atomic_get(&received));
+        if (atomic_get(&risk_mode) != 0)
+        {
+            Serial.print("|nse=");
+            Serial.print(atomic_get(&negotiated_nse));
+            Serial.print("|load_ticks=");
+            Serial.print(atomic_get(&risk_load_ticks));
+            Serial.print("|acl_first=");
+            Serial.print(atomic_get(&acl_first_teardown) != 0 ? 1 : 0);
+        }
+        Serial.println();
+        atomic_set(&started, 0);
+        atomic_set(&stopping, 0);
+        atomic_set(&finished, 0);
+        atomic_set(&risk_mode, 0);
+        atomic_set(&risk_ready_printed, 0);
+        atomic_set(&acl_first_teardown, 0);
+        atomic_set(&negotiated_nse, 0);
         memset(&iso_channel, 0, sizeof(iso_channel));
         memset(nonce, 0, sizeof(nonce));
         memset(nonce_bytes, 0, sizeof(nonce_bytes));
     }
 
-    /** @brief PROBE, START, STOP만 bounded UART 입력으로 수락합니다. */
+    /** @brief active CIS·NSE>1·실제 CPU 부하가 함께 성립한 종료 시점을 보고합니다. */
+    void reportRiskReady()
+    {
+        const atomic_val_t payload_count = central_role ?
+                                               atomic_get(&transmitted) :
+                                               atomic_get(&received);
+        if (atomic_get(&risk_mode) == 0 ||
+            atomic_get(&risk_ready_printed) != 0 ||
+            atomic_get(&finished) != 0 ||
+            iso_channel.state != BT_ISO_STATE_CONNECTED ||
+            atomic_get(&negotiated_nse) <= 1 ||
+            atomic_get(&risk_load_ticks) < 10 ||
+            payload_count < 25)
+        {
+            return;
+        }
+        Serial.print("M31ISO|1|RISK_ACTIVE|nonce=");
+        Serial.print(nonce);
+        Serial.print("|role=");
+        Serial.print(role_name);
+        Serial.print("|nse=");
+        Serial.print(atomic_get(&negotiated_nse));
+        Serial.print("|load_ticks=");
+        Serial.print(atomic_get(&risk_load_ticks));
+        Serial.print("|payloads=");
+        Serial.println(payload_count);
+        atomic_set(&risk_ready_printed, 1);
+    }
+
+    /** @brief PROBE, START, START_RISK, STOP, ABORT_ACL만 bounded 입력으로 수락합니다. */
     void pollSerial()
     {
         while (Serial.available() > 0)
@@ -745,13 +866,23 @@ namespace
                     Serial.print("M31ISO|1|READY|role=");
                     Serial.println(role_name);
                 }
+                else if (strncmp(command, risk_start_prefix,
+                                 strlen(risk_start_prefix)) == 0)
+                {
+                    startProtocol(risk_start_prefix, true);
+                }
                 else if (strncmp(command, start_prefix, strlen(start_prefix)) == 0)
                 {
-                    startProtocol();
+                    startProtocol(start_prefix, false);
+                }
+                else if (strncmp(command, risk_stop_prefix,
+                                 strlen(risk_stop_prefix)) == 0)
+                {
+                    stopProtocol(risk_stop_prefix, true);
                 }
                 else if (strncmp(command, stop_prefix, strlen(stop_prefix)) == 0)
                 {
-                    stopProtocol();
+                    stopProtocol(stop_prefix, false);
                 }
 #if defined(NUCODE_BLE_ISO_CIS_TO_BIS_PEER)
                 else if (strncmp(command, send_prefix, strlen(send_prefix)) == 0)
@@ -789,6 +920,7 @@ namespace nucode::ble::iso::internal
     void poll()
     {
         pollSerial();
+        reportRiskReady();
         finishStop();
     }
 }

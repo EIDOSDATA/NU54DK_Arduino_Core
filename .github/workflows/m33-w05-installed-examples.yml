@@ -1,0 +1,244 @@
+name: M33 W05 Installed Examples
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_source_sha:
+        description: Exact 40-character source revision to validate
+        required: true
+        default: 5f9b2257e2d9630fc919d9cd6508f918d93207cc
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m33-w05-${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'workflow_dispatch' && inputs.target_source_sha || github.sha }}
+  cancel-in-progress: false
+
+env:
+  TARGET_SOURCE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.target_source_sha || github.sha }}
+  NUCODE_NCS_INSTALL_ROOT: D:\ncs
+  NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+  NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+  NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+
+jobs:
+  examples:
+    name: Installed examples shard ${{ matrix.shard }} of 8
+    runs-on: windows-2025
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - name: Checkout control tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: control
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Checkout exact target source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.TARGET_SOURCE_SHA }}
+          path: target
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Checkout independent exact installed platform
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.TARGET_SOURCE_SHA }}
+          path: installed
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Verify target identity and derive cache key
+        id: lock
+        shell: powershell
+        run: |
+          if ($env:TARGET_SOURCE_SHA -notmatch '^[0-9a-f]{40}$') {
+            throw 'TARGET_SOURCE_SHA must be a full lowercase SHA.'
+          }
+          $target = (& git -C target rev-parse HEAD).Trim()
+          $installed = (& git -C installed rev-parse HEAD).Trim()
+          if ($target -ne $env:TARGET_SOURCE_SHA -or $installed -ne $env:TARGET_SOURCE_SHA) {
+            throw "Exact checkout mismatch: target=$target installed=$installed expected=$env:TARGET_SOURCE_SHA"
+          }
+          Push-Location target
+          try {
+            python tools/ci/verify_ci_lock.py --github-output
+          }
+          finally {
+            Pop-Location
+          }
+      - name: Restore Windows Builder cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v3
+      - name: Restore exact NCS and toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            D:\ncs
+            D:\nu54-prerequisites
+          key: ${{ steps.lock.outputs.windows_cache_key }}-ncs-toolchain-v3
+      - name: Restore shard-specific compile cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: D:\m33-w05-cache\shard-${{ matrix.shard }}
+          key: ${{ steps.lock.outputs.windows_cache_key }}-m33-w05-${{ env.TARGET_SOURCE_SHA }}-shard-${{ matrix.shard }}-v1
+          restore-keys: |
+            ${{ steps.lock.outputs.windows_cache_key }}-m33-w05-${{ env.TARGET_SOURCE_SHA }}-shard-${{ matrix.shard }}-
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\target\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .\target
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+      - name: Verify installed SDK revisions
+        working-directory: target
+        run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+      - name: Create isolated Arduino configuration and signing key
+        shell: powershell
+        run: |
+          $arduino = Join-Path $env:GITHUB_WORKSPACE 'arduino'
+          $downloads = Join-Path $arduino 'downloads'
+          $user = Join-Path $arduino 'user'
+          New-Item -ItemType Directory -Path $downloads,$user,D:\m33-w05-signing -Force | Out-Null
+          $versions = @(Get-Content installed/platform.txt | Where-Object { $_ -like 'version=*' })
+          if ($versions.Count -ne 1) {
+            throw 'platform.txt must contain exactly one version.'
+          }
+          $version = $versions[0].Substring('version='.Length).Trim()
+          if ($version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$') {
+            throw "Invalid platform version: $version"
+          }
+          $platformParent = Join-Path $arduino 'data\packages\nucode\hardware\zephyr'
+          New-Item -ItemType Directory -Path $platformParent -Force | Out-Null
+          New-Item -ItemType Junction -Path (Join-Path $platformParent $version) `
+            -Target (Resolve-Path installed) | Out-Null
+          $dataText = (Join-Path $arduino 'data').Replace('\', '/')
+          $downloadsText = $downloads.Replace('\', '/')
+          $userText = $user.Replace('\', '/')
+          @"
+          directories:
+            data: $dataText
+            downloads: $downloadsText
+            user: $userText
+          "@ | Set-Content -LiteralPath (Join-Path $arduino 'arduino-cli.yaml') -Encoding utf8
+          $key = 'D:\m33-w05-signing\ephemeral-ecdsa-p256.pem'
+          $openssl = Join-Path $env:NUCODE_TOOLCHAIN_ROOT 'mingw64\bin\openssl.exe'
+          & $openssl ecparam -name prime256v1 -genkey -noout -out $key
+          if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+          }
+          "NUCODE_DFU_SIGNING_KEY=$key" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Compile exact assigned shard
+        shell: powershell
+        env:
+          NUCODE_BUILD_CACHE_ROOT: D:\m33-w05-cache\shard-${{ matrix.shard }}
+        run: |
+          New-Item -ItemType Directory -Path D:\m33-w05-evidence,D:\t -Force | Out-Null
+          $env:TEMP = 'D:\t'
+          $env:TMP = 'D:\t'
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          python control/tools/ci/m33_w05_installed_examples.py `
+            --repository target `
+            --installed-platform installed `
+            --sdk-root $env:NUCODE_NCS_ROOT `
+            --arduino-cli $cli `
+            --config-file arduino/arduino-cli.yaml `
+            --build-root D:\m33-w05-build-${{ matrix.shard }} `
+            --output D:\m33-w05-evidence\shard-${{ matrix.shard }}.json `
+            --jobs 2 `
+            --shard-index ${{ matrix.shard }} `
+            --shard-count 8
+      - name: Stage path-redacted shard evidence
+        if: always()
+        shell: powershell
+        run: |
+          $stage = 'D:\m33-w05-shard-artifact'
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          $evidence = 'D:\m33-w05-evidence\shard-${{ matrix.shard }}.json'
+          if (Test-Path -LiteralPath $evidence -PathType Leaf) {
+            Copy-Item -LiteralPath $evidence -Destination $stage
+          }
+      - name: Upload shard evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m33-w05-shard-${{ matrix.shard }}-${{ github.run_id }}
+          path: D:\m33-w05-shard-artifact
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    name: Aggregate exact installed-example evidence
+    needs: examples
+    if: always()
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - name: Checkout control tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: control
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Checkout exact target source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.TARGET_SOURCE_SHA }}
+          path: target
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Download all shard evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: m33-w05-shard-*-${{ github.run_id }}
+          path: D:\m33-w05-shards
+          merge-multiple: true
+      - name: Reject incomplete jobs and aggregate evidence
+        shell: powershell
+        env:
+          EXAMPLES_RESULT: ${{ needs.examples.result }}
+        run: |
+          if ($env:EXAMPLES_RESULT -ne 'success') {
+            throw "Example shard jobs did not all succeed: $env:EXAMPLES_RESULT"
+          }
+          $shards = @(Get-ChildItem D:\m33-w05-shards -Filter shard-*.json -Recurse)
+          if ($shards.Count -ne 8) {
+            throw "Expected exactly 8 shard files, found $($shards.Count)."
+          }
+          New-Item -ItemType Directory -Path D:\m33-w05-aggregate -Force | Out-Null
+          python control/tools/ci/m33_w05_aggregate.py `
+            --repository target `
+            --target-revision $env:TARGET_SOURCE_SHA `
+            --shards D:\m33-w05-shards `
+            --output D:\m33-w05-aggregate\installed-examples.json
+      - name: Upload aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m33-w05-aggregate-${{ github.run_id }}
+          path: D:\m33-w05-aggregate
+          if-no-files-found: warn
+          retention-days: 14

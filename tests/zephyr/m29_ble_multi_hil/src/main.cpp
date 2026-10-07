@@ -36,6 +36,7 @@ namespace
     constexpr char protocol[] = "M29W07D|1";
     constexpr char ready_query[] = "M29W07D|1|READY?";
     constexpr char start_prefix[] = "M29W07D|1|START|test=M29-MULTI-01|nonce=";
+    constexpr char stop_prefix[] = "M29W07D|1|STOP|nonce=";
     constexpr char core_suffix[] = "|core=" M29_MULTI_CORE_REVISION;
     constexpr char service_text[] = "90bf2a40-14f5-4d3d-92c7-299334932a20";
     constexpr char characteristic_text[] = "90bf2a41-14f5-4d3d-92c7-299334932a20";
@@ -43,6 +44,7 @@ namespace
     constexpr std::uint16_t coc_psm = 0x0081U;
     constexpr std::uint32_t required_operations = 1000U;
     constexpr std::int64_t session_timeout_ms = 900000;
+    constexpr std::int64_t cleanup_timeout_ms = 30000;
     constexpr std::uint8_t peripheral_marker = 0xa1U;
     constexpr std::uint8_t mixed_marker = 0xb2U;
 
@@ -61,12 +63,15 @@ namespace
     std::uint8_t coc_payload[MultiPayload::payload_length] = {};
     bool session_started = false;
     bool session_finished = false;
+    bool cleanup_requested = false;
+    bool cleanup_started = false;
     bool callback_context_valid = true;
     bool peer_found = false;
     bool scan_started = false;
     bool client_discovered = false;
     bool client_channel_connected = false;
     bool server_channel_connected = false;
+    bool advertising_started = false;
     [[maybe_unused]] bool mixed_advertising_started = false;
     bool link_reported = false;
     bool traffic_started = false;
@@ -74,6 +79,7 @@ namespace
     bool coc_waiting_for_echo = false;
     bool server_echo_pending = false;
     std::int64_t session_deadline = 0;
+    std::int64_t cleanup_deadline = 0;
     std::uint32_t progress_reported = 0U;
     std::uint32_t client_gatt_completed = 0U;
     std::uint32_t client_coc_sent = 0U;
@@ -88,6 +94,7 @@ namespace
     nucode::ble::BLEConnectionHandle server_connection;
     nucode::ble::BLEL2capChannelHandle client_channel;
     nucode::ble::BLEL2capChannelHandle server_channel;
+    nucode::ble::BLEL2capStatistics session_statistics_base;
     struct k_thread *setup_thread = nullptr;
 
 #include "M29MultiProtocol.inc"
@@ -136,6 +143,7 @@ void loop()
 {
     pollHostCommand();
     BLEDevice.poll();
+    driveCleanup();
     if (!session_started || session_finished)
     {
         delay(1);

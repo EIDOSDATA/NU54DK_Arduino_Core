@@ -1,5 +1,9 @@
 # CI/CD와 재현 빌드 — v0.5.0 지원과 개발 main 회귀
 
+W06 전용 build/artifact/개발 smoke/최종 검증의 다음 구조는
+[재설계 문서](11_M33_W06_검증_파이프라인_재설계.md)에서 관리한다. 아직 미구현이며
+기존 workflow·stable gate와 구분한다. 문서 수정만으로 CI shard 수나 캐시 계약을 바꾸지 않는다.
+
 2026-09-26 사용자 승인으로 M31-W08 Windows RC 검증은 GitHub Actions에서 8개 설치 예제 shard와
 별도 lifecycle job을 병렬 실행했다. 과거 문서·이력 정리 때의 CI 생략은 당시 이력으로 보존하며
 현재 W08 결과를 미확인 PASS로 기록하지 않는다.
@@ -329,7 +333,28 @@ clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu
 
 ---
 
-## 7. 관련 구현과 기록
+## 7. M33-W05 설치 예제 Actions — 기존 도구 reference
+
+[`m33-w05-installed-examples.yml`](../../.github/workflows/m33-w05-installed-examples.yml)은 수동 실행으로
+Windows clean 설치 예제 검사를 8개 shard에 나눈다. 자동 push trigger는 없으며 모든 개발 push에서
+204개를 다시 빌드하지 않는다. `target_source_sha`는 40자리 소문자 commit SHA이고 기본값은
+W05 완료 source `5f9b2257e2d9630fc919d9cd6508f918d93207cc`다. W06 재실행 지시가 아니다.
+
+각 shard는 제어 도구, exact target, 독립 exact 설치 checkout을 분리하고 Arduino data에는
+설치 checkout을 가리키는 version별 junction만 만든다. 정렬한 204개 예제 identity와 negative 9개를
+각각 modulo 8로 배정해 전체에서 한 번씩 검사한다. Shard 내부 worker 상한은 2개이며,
+단일 PC에서 shard option을 생략하면 204개와 negative 9개를 전수 검사한다.
+
+Aggregate는 shard 0~7의 완전성·중복·누락, exact revision과 source/install clean 상태,
+설치 tree 불변성, library 24개·profile 204개 합계, build PASS·timeout 없음,
+negative의 nonzero exit·timeout 없음·artifact 0을 재검증한다. 최초 실패를 보존한 최대 1회
+진단 재시험과 절대경로·raw UID·secret 비노출도 검사한다. `installed-examples.json`은
+비분할 전수 evidence schema와 호환되지만 별도 검토 없이 완료 evidence로 복사하지 않는다.
+
+이 절로 기존 `tools/ci/m33_w05_github_actions.md`의 고유 내용을 통합했다.
+실제 W05 결과는 [301번](<../04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>)에 보존한다.
+
+## 8. 관련 구현과 기록
 
 - [`verify_ci_lock.py`](../../tools/ci/verify_ci_lock.py)
 - [`prepare_ncs_workspace.py`](../../tools/ci/prepare_ncs_workspace.py)

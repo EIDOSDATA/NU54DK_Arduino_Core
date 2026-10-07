@@ -3,12 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **계획 — 0/8 작업 묶음** |
+| 현재 구현 상태 | **M33-W01~W05 완료, M33-W06 미완료·실행 중단 후 재설계 준비 — 완료 5/8 작업 묶음** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
-| 병행 Host 계획 | HOST-W08; 현재 W01~W03 완료 3/8, W04 이후 사용자 보류, 재개 후 별도 분모 유지 |
+| 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-10-03 |
+| 최종 갱신일 | 2026-10-07 |
 
 M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지원표로 완성한다. 핵심 목표는
 고정 NCS에서 nRF54L15에 적용 가능한 Bluetooth 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것이다.
@@ -17,13 +17,24 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 기능 구현은 [M31 TODO](TODO_M31.md)·[M32 TODO](TODO_M32.md), 제품선 진행은
 [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W08 8/8 완료,
 M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 12/12, signed MDFU와
-1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **0/8 미착수**다.
-아래 항목은 모두 구현·검증 예정이며 완료 실적이 아니다. Host 병행 계획은 별도 재개 지시 이후에 적용한다.
-M32 구현·문서를 통합한 `main`이 후속 개발의 출발점이다. `Dev-0.6.0-M32`는 검증 source의
-원본 이력으로 보존한다. [v0.6.0 계획](TODO_v0.6.0.md)은 M32·M33을 같은 제품선으로 관리하며,
+1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **5/8이며
+W01 전체 원장, W02 표준 GATT·Beacon, W03 외부 ecosystem companion, W04 DTM/HCI 진단,
+W05 전체 예제·설치 경로를 완료했고 W06은 기존 실행을 정리하고 재설계를 준비하는 상태**다.
+미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
+Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
+
+2026-10-07 사용자 결정으로 기존 W06 실행을 중단하고 문서 정비·재설계 준비로 전환했다.
+[새 검증 파이프라인 설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)는
+도구 계약 → 짧은 전체 탐색 → 영향 회귀 수정 → clean source 고정 → 최종 전체 검증을 분리한다.
+설계 구현은 미착수이며 이번 문서 정비를 W06 완료로 세지 않는다. 정확한 중단 결과는
+[304번](<04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md>), 현재 입력은 [M33 인계](M33_HANDOFF.md)를 따른다.
+
+M32 구현·문서를 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했다. M32 브랜치는 로컬·원격에서
+삭제했으며 원본 이력의 로컬 Git bundle과 전체 실행 순서는 [M33 인계](M33_HANDOFF.md)에 있다.
+[v0.6.0 계획](TODO_v0.6.0.md)은 M32·M33을 같은 제품선으로 관리하며,
 현재 Windows stable의 완료·공개 근거는 [v0.5.0 TODO](TODO_v0.5.0.md)가 소유한다.
-M33-W07~W08은 추가 기능과 다중 Host의 기존 gate를 v0.6.0 계획에서 유지한다. Host 보류를
-해제하거나 OS별 실물 gate를 면제하지 않으며, M33 0/8이나 HOST 3/8을 완료로 올리지 않는다.
+M33-W07~W08은 추가 기능과 다중 Host의 기존 gate를 v0.6.0 계획에서 유지한다. 착수 순서 확정으로
+OS별 실물 gate를 면제하거나 M33-W02~W08과 HOST 3/8의 완료 수를 올리지 않는다.
 문서 정비·main 통합은 M33 구현·실물 작업·v0.6.0 공개 승인이 아니다.
 
 M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS v3.4.1 전체 전환 전용이며,
@@ -55,107 +66,170 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 
 | 작업 | 구현·검증 범위 | 현재 상태 |
 | --- | --- | --- |
-| M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | 미착수 |
-| M33-W02 | 표준 GATT profile와 beacon·목적별 예제 보강 | 미착수 |
-| M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | 미착수 |
-| M33-W04 | DTM/HCI와 특수 진단 application template | 미착수 |
-| M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | 미착수 |
-| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | 미착수 |
+| M33-W01 | 전체 sample inventory 마감·profile/example catalog 범위 | **완료** — exact `a3585ffb…`, [296번](<04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md>) |
+| M33-W02 | 표준 GATT profile와 beacon·목적별 예제 보강 | **완료** — exact `4ebd4952…`, [298번](<04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md>) |
+| M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | **완료** — exact `17182660…`, [299번](<04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md>) |
+| M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
+| M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
+| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료·D에서 진행 중** — e76 build 141·Host 61/522·runtime producer PASS; matrix/closure 연결 수정 후 새 exact 재검증; [M33 인계](M33_HANDOFF.md) |
 | M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
-W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한다. W05에서 한 catalog로
-합치고 W06~W08에서 실제 배포 입력을 고정한다. HOST-W08은 M33의 8개 작업에 합산하지 않는다.
+W02~W05는 완료했다. 현재 W06은 사용자 결정에 따라 주 에이전트 1개로 순차 처리하며 하위 에이전트에
+병렬 위임하지 않는다. 기존 Actions shard는 허용한다. W06~W08에서 실제 배포 입력을 고정하고
+HOST-W08은 M33의 8개 작업에 합산하지 않는다.
+
+### Host 순차 진행 — 2026-10-03 사용자 결정
+
+1. M33-W01~W06의 기능·예제·통합 검증을 먼저 완료한다. Host 이식은 병렬 진행하지 않는다.
+2. HOST-W04~W06과 HOST-W07 도구·검증 절차를 준비한다.
+3. M33-W07에서 exact source·hash를 고정한 시험용 RC1 package를 만든다.
+4. 해당 RC로 Windows·Ubuntu·macOS의 HOST-W07 실제 검증과 HOST-W08 지원표·문서를 마감한다.
+   수정된 후보는 영향 범위를 다시 검증하고, 필요한 Host 증거를 모아 M33-W07을 완료한다.
+5. M33-W08에서 별도 공개 승인·게시·공개 설치 검증을 수행한다.
+
+W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경과 공통 단위 검사를 뜻한다.
+새 Ubuntu/macOS 이식과 OS별 전체 예제 compile·실물 결과는 위 Host 단계와 W07에서 추가한다.
+최종 세 Host 필수 검증을 생략하지 않으며, 사용자 장비의 접속·연결 상태는 실행 시 확인한다.
 
 ## 3. 구현 TODO
 
 ### M33-W01 — 전체 예제 원장 마감
 
-- [ ] M31-W01의 `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`을 고정 SDK의 sample/test
+- [x] M31-W01의 `variants/nu54dk/ncs-v3.4.0-bluetooth-sample-parity.json`을 고정 SDK의 sample/test
   metadata와 전수 대조한다. 새 탐색 결과·누락·중복을 검출하는 CI gate를 완성한다.
-- [ ] 각 upstream 경로에 nRF54L15 target 허용·integration·build-only 여부, 필요한 역할/보드/부품/peer,
+- [x] 각 upstream 경로에 nRF54L15 target 허용·integration·build-only 여부, 필요한 역할/보드/부품/peer,
   Arduino 경로·profile·owner·예정 test ID를 등록한다.
-- [ ] M28~M32에서 구현한 기능과 예제의 일대다 대응을 연결하고 실제 역할별 `.ino`·설정·README를 추적한다.
-- [ ] Source candidate/native build/Arduino build/HIL/외부 peer 결과를 각각 기록하고 미배정 owner와
+- [x] M28~M32에서 구현한 기능과 예제의 일대다 대응을 연결하고 실제 역할별 `.ino`·설정·README를 추적한다.
+- [x] Source candidate/native build/Arduino build/HIL/외부 peer 결과를 각각 기록하고 미배정 owner와
   이유 없는 제외 0을 마감 조건으로 검사한다.
-- [ ] SIG adopted service/profile 전체와 고정 SDK sample 전체의 차이를 공개한다. 고정 SDK 적용 sample은
+- [x] SIG adopted service/profile 전체와 고정 SDK sample 전체의 차이를 공개한다. 고정 SDK 적용 sample은
   모두 추적하고, source가 없는 추가 service도 계획 여부·제공 방식·근거를 catalog에 남긴다.
-- [ ] `variants/nu54dk/m33-release-readiness.json`과 release 계약을 구현해 필수 행·지원 제외·미검증
+- [x] `variants/nu54dk/m33-release-readiness.json`과 release 계약을 구현해 필수 행·지원 제외·미검증
   template·실험 기능의 공개 정책 및 test case 분모를 고정한다.
-- [ ] Master schema의 `verification_owner`·`verification_stage`·`development_blocker`·`release_blocker`를
+- [x] Master schema의 `verification_owner`·`verification_stage`·`development_blocker`·`release_blocker`를
   case별로 적용한다. Apple/Google·외장 I/O 실제 case는 `user`/`user_follow_up`/`false`/`false`,
   Ubuntu/macOS 실물은 해당 OS 후속 지원에 대해 `user`/`final_release`/`false`/`true`로 구분한다.
   이 gate는 M31 Windows 릴리스에 적용하지 않는다. 구현·예제·자동 검사 case는
   필수로 남기며 사용자 후속 실제 case와 합치지 않는다. 이 정책은 현재 원장에 구현 완료된 것이 아니다.
-- [ ] `M33-INV-01`의 inventory drift·누락·중복·잘못된 지원 승격 negative를 구현한다.
+- [x] `M33-INV-01`의 inventory drift·누락·중복·잘못된 지원 승격 negative를 구현한다.
   사용자 후속 실물 `NOT_RUN`의 재차단/PASS 승격, 필수 구현을 후속으로 숨김, 최종 Host gate 면제도 거부한다.
+- [x] 설치 Arduino Sketch 전체 187개(BLE·radio 164, core·peripheral 23)를 hash·기능군·노출 등급으로
+  등록한다. 완전 중복과 이름 중복은 각각 0이며, 모든 예제를 28개 primary recipe 중 하나에 배정한다.
+  Root 진입점은 12개 사용 시나리오·24개 대표 Sketch로 제한하고 전체 187개 Reference를 보존한다.
+- [x] 위 구현을 clean exact source에서 재검사하고 검증 기록·인계·readiness PASS를 연결해 W01을 마감한다.
+  Exact `a3585ffbd168d69726a42f785c5e6888f172899f`에서 계약 unit test 26/26, sample 190/
+  variant 474 parity, M32/M33 drift, 고정 lock, Markdown 480개와 clean worktree를 PASS했다. 상세 결과는
+  [296번 검증 기록](<04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md>)에 있다.
 
 ### M33-W02 — 표준 GATT와 beacon 예제
 
-- [ ] 기존 BAS·DIS·HID keyboard/mouse/consumer-control·HRS·ESS 7개 catalog를 회귀하고 M30의 7/7
+- [x] 기존 BAS·DIS·HID keyboard/mouse/consumer-control·HRS·ESS 7개 catalog를 회귀하고 M30의 7/7
   완료를 보존한다. 신규 profile를 과거 완료 수에 합산하지 않는다.
-- [ ] OTS server·OTC client/OTP의 object 생성·목록·선택·read/write·CoC 전송·권한·중단/재시작 예제를 만든다.
-- [ ] ANS(알림), CTS(시각), HTS(체온), CSC/RSCS(운동), CGMS(혈당), BMS(본드 관리)의 고정 SDK
+- [x] OTS server·OTC client/OTP의 object 생성·목록·선택·read/write·CoC 전송·권한·중단/재시작 예제를 만든다.
+- [x] ANS(알림), CTS(시각), HTS(체온), CSC/RSCS(운동), CGMS(혈당), BMS(본드 관리)의 고정 SDK
   source·client/server 역할·필드·보안·upstream 예제를 판정하고 Arduino profile/direct 예제를 제공한다.
-- [ ] 동일 GATT 기반으로 구현하더라도 characteristic 단위·단위 변환·길이·notify/indicate·authorization·
+- [x] 동일 GATT 기반으로 구현하더라도 characteristic 단위·단위 변환·길이·notify/indicate·authorization·
   malformed 데이터·bond 삭제 권한·동시 두 link 상태 격리를 기능별로 검증한다.
-- [ ] iBeacon·Eddystone·BTHome의 advertiser/observer 예제, payload encoder/decoder·filter·변조/길이 경계와
+- [x] iBeacon·Eddystone·BTHome의 advertiser/observer 예제, payload encoder/decoder·filter·변조/길이 경계와
   profile 요구사항을 제공한다. 실제 센서가 없으면 명시적 synthetic 측정값으로 protocol을 검증한다.
-- [ ] Generic GATT/NUS·peripheral/central·동시 role·periodic/PAwR·보안·DFU 등 기존 사용자 예제를
+  착수 exact `5f79ba69…`의 Host/build 부분 PASS 뒤 최종 exact `4ebd4952…`에서 두 보드 광고
+  600건, 세 형식 전환 90회, semantic error·drop 0과 종료 자원 0을 확인했다.
+- [x] Generic GATT/NUS·peripheral/central·동시 role·periodic/PAwR·보안·DFU 등 기존 사용자 예제를
   새 catalog에 연결하고 동일 기능을 중복 새 구현으로 계산하지 않는다.
-- [ ] [ARF-04A](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의 기존 API 기반
+- [x] [ARF-04A](<01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의 기존 API 기반
   목적별 Fabric 예제를 연결한다. Buffered NUS·PWM pool 구현은 해당 ARF owner로 유지하고,
   ARF-01 role-budget은 M32-W04로 이관한 resource preset을 사용한다.
-- [ ] `M33-PROFILE-01`, `M33-BEACON-01`의 하위 case를 profile·역할별로 만들고 두/세 보드 HIL을 수행한다.
+- [x] `M33-PROFILE-01`, `M33-BEACON-01`의 하위 case를 profile·역할별로 만들고 두/세 보드 HIL을 수행한다.
+  Exact `4ebd49521d4a6578beac91ebddbd1bf39d679db4`와 W02 완료 원장에서 Host 68 PASS·환경 비적용 1 SKIP,
+  profile target 5/5, beacon target 2/2, 공개 W02 예제 9/9 build를 PASS했다. Standard 3보드는
+  7 profile·두 link·malformed·BMS scoped 삭제, native fresh→restored는 역할별 L4 3/3과
+  OTS/CGMS·취소/재접속을 검증했다. 시험 소유 bond만 각 1개 정리했고 기존 목록은 보존했다.
+  Apple/Google·외장 peer 실기는 사용자 후속 `NOT_RUN`, BMS 재부팅 영속성과 native 두 번째 peer·
+  장시간 soak는 W06 분모다. 상세는 [298번 완료 기록](<04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md>)과
+  [exact evidence](<04_검증 기록/evidence/m33-w02-exact-4ebd4952>)에 있다.
 
 ### M33-W03 — 외부 ecosystem와 companion
 
-- [ ] Fast Pair input device·locator tag의 고정 nRF54L15 sample 대응 template·profile·pairing/advertising·
+- [x] Fast Pair input device·locator tag의 고정 nRF54L15 sample 대응 template·profile·pairing/advertising·
   account key 저장·삭제·provisioning 경로를 제공한다.
-- [ ] Google model ID/credential·계정·partner 요구를 저장소 밖 입력으로 분리하고 placeholder/누락 입력을
+- [x] Google model ID/credential·계정·partner 요구를 저장소 밖 입력으로 분리하고 placeholder/누락 입력을
   fail-closed로 거부한다. 인증/승인 절차를 build 또는 sample 실행으로 완료 처리하지 않는다.
-- [ ] ANCS client·AMS client의 discovery·subscription·attribute/control·bond/reconnect 예제를 제공한다.
-- [ ] iOS/macOS·Android·Windows/Linux BLE peer의 pairing/bond/HID UX를 실제 기능별 적용 표에 배정한다.
-- [ ] 실제 Apple/Google 제품에 사용할 기능·예제·설정을 완성하고 자동 가능한 Host parser/semantic·
+- [x] ANCS client·AMS client의 discovery·subscription·attribute/control·bond/reconnect 예제를 제공한다.
+- [x] iOS/macOS·Android·Windows/Linux BLE peer의 pairing/bond/HID UX를 실제 기능별 적용 표에 배정한다.
+- [x] 실제 Apple/Google 제품에 사용할 기능·예제·설정을 완성하고 자동 가능한 Host parser/semantic·
   target/Arduino build·scripted peer 시험을 수행한다. 실제 운용·제품 상호운용은 사용자 후속이며
   `NOT_RUN`으로 기록하고 M33 개발·릴리스 필수 gate에서 제외한다. 빈 success stub으로 완료하지 않는다.
-- [ ] 사용자용 실제 peer 검증 절차에 모델/OS/앱/adapter·기능 지원성·설정·수동 단계·timeout·보안
+- [x] 사용자용 실제 peer 검증 절차에 모델/OS/앱/adapter·기능 지원성·설정·수동 단계·timeout·보안
   결과 양식을 제공한다. 사용자 후속 결과가 도착하기 전에도 필수 구현·자동 검사를 완료하면 W03을 마감할 수 있다.
-- [ ] `M33-ECOSYSTEM-01`에 Fast Pair/ANCS/AMS/OS UX의 독립 하위 case와 unavailable/unsupported 이유를 남긴다.
+- [x] `M33-ECOSYSTEM-01`에 Fast Pair input/locator, ANCS, AMS, access, EnOcean/MDS template, OS UX의
+  7개 독립 하위 case를 남겼다. Exact `17182660f8c1c1f4a9f6773b13fcfa453f65e1fc`에서 Host 13/13,
+  공개 예제 2/2, native template 4/4, 두 보드 scripted-peer HIL 9/9와 시험 소유 bond cleanup 2/2를
+  PASS했다. 실제 Apple/Google·EnOcean·Memfault·외부 audio 제품은 사용자 후속 `NOT_RUN`이고,
+  상세는 [299번 완료 기록](<04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md>)과
+  [exact evidence](<04_검증 기록/evidence/m33-w03-exact-17182660>)에 있다.
 
 ### M33-W04 — DTM/HCI와 특수 application
 
-- [ ] Direct Test Mode의 고정 nRF54L15 sample을 Arduino에서 선택·build할 수 있는 독립 test profile 또는
+- [x] Direct Test Mode의 고정 nRF54L15 sample을 Arduino에서 선택·build할 수 있는 독립 test profile 또는
   application template로 제공한다. HCI 방식 등 upstream transport별 실제 NU54DK route를 판정한다.
-- [ ] 고정 NCS/Zephyr의 HCI controller/Host transport sample을 inventory하고 UART/외부 Host 등 적용
+- [x] 고정 NCS/Zephyr의 HCI controller/Host transport sample을 inventory하고 UART/외부 Host 등 적용
   가능한 경로를 예제로 제공한다. nRF54L15 native USB가 필요한 경로는 비적용 사유를 명시한다.
-- [ ] 정상 BLE stack과 DTM/raw controller의 RADIO·clock·UART·buffer 동시 소유를 차단한다.
-- [ ] Command parser·지원 command·길이/range 오류·timeout·stop/restart·transport 누락 negative를 구현한다.
-- [ ] UART DTM protocol 전용 경로에 console/debug log를 섞지 않는다. 보드 2대를 TX/RX로 실행하고
+- [x] 정상 BLE stack과 DTM/raw controller의 RADIO·clock·UART·buffer 동시 소유를 차단한다.
+- [x] Command parser·지원 command·길이/range 오류·timeout·stop/restart·transport 누락 negative를 구현한다.
+- [x] UART DTM protocol 전용 경로에 console/debug log를 섞지 않는다. 보드 2대를 TX/RX로 실행하고
   유한 시험 종료의 packet reporting event에서 수신 수를 검증한 뒤 역할을 교대한다. 채널·PHY·payload·
   반복 수·timeout·수신 수의 정량 기준을 고정한다. 세 번째 보드는 별도 격리하고 임의 송신하지 않는다.
-- [ ] 보드만으로 관측 가능한 command/response·실제 수신 counter를 검증하고 외부 tester·sniffer가 필요한 RF 측정은
+- [x] 보드만으로 관측 가능한 command/response·실제 수신 counter를 검증하고 외부 tester·sniffer가 필요한 RF 측정은
   `NOT RUN`/범위 밖으로 남긴다. DTM build를 RF 인증·감도·출력 측정 PASS로 표시하지 않는다.
-- [ ] `M33-DIAG-01`의 template build/negative/장비별 runtime case를 제공한다.
+- [x] `M33-DIAG-01`의 template build/negative/장비별 runtime case를 제공한다. Exact `e3a663d629bcc22fb3222b99c456fda6c8e2c312`에서
+  route build 10/10, Host diagnostics 46/46, readiness 15/15, two-wire 12/12와 H4 12/12를 PASS했다.
+  외부 HCI adapter 5개와 RF tester는 사용자 후속 `NOT_RUN`이며 [300번 완료 기록](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>)과
+  [exact evidence](<04_검증 기록/evidence/m33-w04-exact-e3a663d6>)에 상세가 있다.
 
 ### M33-W05 — 예제 품질과 설치 경로
 
-- [ ] 공개 Arduino 예제 단일 원본을 `libraries/*/examples`에 두고 역할별 sketch와 필요한 companion
+- [x] 공개 Arduino 예제 단일 원본을 `libraries/*/examples`에 두고 역할별 sketch와 필요한 companion
   runner/config를 연결한다. 독립 application template는 별도 위치·빌드 방식을 catalog에 명시한다.
-- [ ] 모든 예제에 목표 기능, upstream path/revision, 필요한 보드 수와 역할, Tools profile/Kconfig,
+- [x] 모든 예제에 목표 기능, upstream path/revision, 필요한 보드 수와 역할, Tools profile/Kconfig,
   예상 출력·종료/재시작·보안·제한·negative·증거 ID를 작성한다.
-- [ ] 마이크·스피커·코덱·외장 장치용 adapter/설정·실사용 예제·연결 안내와 자동 가능한 검사를
+- [x] 설치 예제 204개 모두에 목적·준비물·설정·실행 순서·성공 출력·흔한 오류·다음 예제의 7개 안내
+  필드를 제공한다. `Start Here` 12개 시나리오는 초보자 요약을 추가하고, 나머지도 29개 기능별 Recipe와
+  전체 Reference에서 고립되지 않게 연결한다.
+- [x] 마이크·스피커·코덱·외장 장치용 adapter/설정·실사용 예제·연결 안내와 자동 가능한 검사를
   owner 결과에서 대조한다. 실물 운용·검증은 사용자 후속 `NOT_RUN`·릴리스 비차단으로 표시하고
   합성 PCM/data PASS를 실제 외장 I/O 검증으로 확대하지 않는다.
-- [ ] 초급 예제는 유한하고 작은 기능을 보여 주며 고급 예제는 callback/loop·소유권·buffer·동시성·
+- [x] 초급 예제는 유한하고 작은 기능을 보여 주며 고급 예제는 callback/loop·소유권·buffer·동시성·
   timeout·실험적 선택의 책임을 설명한다. 한국어 Doxygen·Allman·탭 4칸·제어문 괄호 규칙을 적용한다.
-- [ ] 실제 package에 포함된 예제 발견 목록과 catalog를 자동 대조하고 한 역할 누락·필요 profile 누락·
+- [x] 실제 package에 포함된 예제 발견 목록과 catalog를 자동 대조하고 한 역할 누락·필요 profile 누락·
   템플릿 placeholder·금지된 Host 절대 경로를 검출한다.
-- [ ] Clean 설치본의 전체 예제 compile, 기대 실패 profile 조합, upload 대상 선택·serial 관측 절차를 검증한다.
-- [ ] Runtime 예제에는 build-only 예제와 다른 실행 판정을 남기고 물리 보드가 없는 CI는 compile 결과로 기록한다.
-- [ ] `M33-EXAMPLE-01`에 catalog 분모·발견 분모·compile 분모·각 role runtime 분모를 따로 기록한다.
+- [x] Clean 설치본의 전체 예제 compile, 기대 실패 profile 조합, upload 대상 선택·serial 관측 절차를 검증한다.
+- [x] Runtime 예제에는 build-only 예제와 다른 실행 판정을 남기고 물리 보드가 없는 CI는 compile 결과로 기록한다.
+- [x] `M33-EXAMPLE-01`에 catalog 분모·발견 분모·compile 분모·각 role runtime 분모를 따로 기록한다.
+  Exact `5f9b2257e2d9630fc919d9cd6508f918d93207cc`의 source와 독립 clean 설치 checkout에서
+  catalog·발견·compile을 각각 204/204, 잘못된 profile 9/9, 문서화 role 372/372로 마감했다.
+  W05 Host·계약·공개 경계 unit 72/72과 예제 감사 24 library·204 example·issue 0도 PASS했다.
+  Compile은 물리 runtime이 아니며 외장 장치·제품 peer 실기는 `NOT_RUN`으로 유지한다. 상세는
+  [301번 완료 기록](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>)과
+  [exact evidence](<04_검증 기록/evidence/m33-w05-exact-5f9b2257>)에 있다.
 
 ### M33-W06 — 자원·회귀·상호운용
+
+**상태: 미완료·기존 실행 중단·재설계 구현 미착수.** 다음 설계 기준은
+[W06 파이프라인 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)다.
+개발 탐색과 최종 완료 검증을 분리하되 아래 완료 조건과 분모는 줄이지 않는다.
+
+| 완료용 gate | 요구 |
+| --- | --- |
+| 입력 | 같은 clean source S, 고정 board/SDK/toolchain·runner·실제 image |
+| build/runtime/stage | 141 build · 실제 runtime 9 · stage/validate 150 |
+| 기능·자원·자동 peer | 33 + 8 + 8 = 49개 전체 group |
+| 장시간 검증 | 별도 세 보드 1,800초 soak |
+| 최종 마감 | 전체 Host·SDK risk 7개·qualification 3개·지원표·strict closure |
+
+최신 구현 `f9f1cd28…`의 e11은 clean Host 63 suite/564 test/skip 0과 ecosystem 역할 build 2개를
+통과했지만 원격 전체 build는 사용자 전환 요청으로 취소했다. 이 source의 runtime/matrix/soak는 미실행이다.
+과거 e10의 11/49 group은 전체 W06 진행률이 아니며 새 source의 PASS로 승계하지 않는다.
 
 - [ ] M28~M32의 connection/adv/sync/ISO/Mesh/CoC/EATT/CS buffer·RAM/RRAM·thread·radio budget을
   profile별로 합치고 허용·거부 조합을 검증한다.
@@ -169,8 +243,33 @@ W02~W04는 M31/M32의 해당 API/profile가 준비되는 순서대로 병행한�
 - [ ] Apple/Google·외부 제품의 실제 interop 행은 사용자 후속으로 인계한다. 구현·자동 가능한 semantic/
   scripted peer 검사와 실제 제품 interop의 분모를 나누고 후속 실기 부재로 W06/릴리스를 차단하지 않는다.
 - [ ] `M33-REG-01`, `M33-RESOURCE-01`, `M33-INTEROP-01`에 exact image·profile·peer 결과를 연결한다.
-- [ ] Bluetooth qualification의 Host/controller/Mesh 적용성·component 근거·제품별 추가 절차를 조사해
-  별도 문서에 적는다. Component 자격과 제품 자격·예제 사용 가능성을 서로 구분한다.
+- [x] Bluetooth qualification의 Host/controller/Mesh 적용성·component 근거·제품별 추가 절차를
+  [별도 문서](<00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md>)에 기록했다. NCS 3.4.0
+  Host·Controller는 공식 표의 `Planned`, Mesh는 DN 미기재 상태이며 제품 자격은 `NOT_ASSESSED`다.
+  Component 상태 기록과 제품 자격·예제 사용 가능성을 서로 승격하지 않는다.
+
+
+#### 재설계 내부 작업 — 모두 미착수
+
+- [ ] R1: 전체 입력·runner·oracle·소비 파일·비용 지도와 새 schema를 확정한다.
+- [ ] R2: 보드 없는 계획·판정·중단/재개·손상 주입 회귀를 통과한다.
+- [ ] R3: 작은 전달 bundle과 한 그룹의 build→smoke→cleanup→resume를 실제 연결한다.
+- [ ] R4: 모든 group의 짧은 탐색과 고위험 구성 전환을 검증하고 결함을 해결한다.
+- [ ] R5: 영향 선택·안전한 cache/보존·시간 측정의 정합성을 검증한다.
+- [ ] R6: clean S에서 위 필수 전체 gate를 통과하고 완료 문서를 마감한다.
+
+R1~R6은 별도 M33 작업 분모가 아니다. 긴 실기는 새 구현·회귀를 검증한 뒤 재개한다.
+이번 요청은 기존 실행 정리·문서 작성까지이며 완료 후 보고한다.
+
+#### 과거 실행과 실패 기록
+
+source별 긴 일지는 이 TODO에 반복하지 않는다. 삭제 전 C 자료와 94bb halt 수정은
+[302번](<04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>),
+D 재개·cache·경로·orphan GATT·UART 경계 교정은
+[303번](<04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md>),
+이번 f9/e11 중단·문서 감사는 [304번](<04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md>)을 따른다.
+축약 전 TODO는 Git `f9f1cd283ee39bcf0609e047473e0e8c5c9930c1`에 보존돼 있다.
+실패 원본·기존 판정·완료 TODO는 수정하지 않으며 과거 경로의 현재 존재를 가정하지 않는다.
 
 ### M33-W07 — 후속 Host 확대·HOST-W08와 release candidate
 
@@ -244,6 +343,10 @@ timeout·packet/object 분모·허용 loss/latency·복구 한계·즉시 중단
 - Probe UID 원문을 채팅·문서·로그에 노출하거나 저장하지 않는다. SHA-256 identity·serial·role·
   firmware revision을 시험 직전 대조한다. 여러 probe 임의 선택·자동 mass erase/recover·전체 flash
   초기화·임의 GPIO·전원 차단을 하지 않는다.
+- W02~W06 연속 진행과 디버거 활용에 대한 사용자 승인은 exact image sector program·software reset·
+  halt/resume·read-only audit와 안전 runner 실행을 포함한다. `--authorize-*`는 그 범위를 증거에 남기는
+  실행 gate이며 반복 승인 요청 사유가 아니다. 필요한 fresh fixture도 승인된 runner로 재생성한다.
+  실제 사용자 조작이나 금지 작업이 필요하지 않은데 별도 허가를 요청해 자동 진행을 중단하지 않는다.
 - 실패/HOLD/NOT RUN 원본과 과거 tag/Release/asset은 보존한다. 후속 성공을 같은 원본에 덮어쓰지 않는다.
 - M33 계획과 v0.6.0 버전 배정은 공개 승인이 아니다. 승인 가능한 exact 결과가 준비되면 공개 범위를 확정하고,
   세 Host 정식 지원에 필요한 실제 Host 행이 비어 있으면 해당 공개 gate를 미완료로 유지한다.

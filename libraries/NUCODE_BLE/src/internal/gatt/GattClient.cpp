@@ -75,8 +75,8 @@ namespace nucode::ble::internal::gatt
         for (ClientState &state : clientStates())
         {
             k_spinlock_key_t key = k_spin_lock(&state.client_token_lock);
-            const bool matches = state.connection_handle == connection &&
-                                 state.gatt_connection != nullptr;
+            const bool matches =
+                state.connection_handle == connection && state.gatt_connection != nullptr;
             k_spin_unlock(&state.client_token_lock, key);
             if (matches)
             {
@@ -188,9 +188,9 @@ namespace nucode::ble::internal::gatt
     BLERemoteDescriptor copyRemoteDescriptor(ClientState &state, std::size_t index) noexcept
     {
         k_spinlock_key_t key = k_spin_lock(&state.client_state_lock);
-        const BLERemoteDescriptor descriptor =
-            index < state.remote_descriptor_count ? state.remote_descriptors[index]
-                                                  : BLERemoteDescriptor{};
+        const BLERemoteDescriptor descriptor = index < state.remote_descriptor_count
+                                                   ? state.remote_descriptors[index]
+                                                   : BLERemoteDescriptor{};
         k_spin_unlock(&state.client_state_lock, key);
         return descriptor;
     }
@@ -316,10 +316,17 @@ namespace nucode::ble::internal::gatt
             return BT_GATT_ITER_STOP;
         }
         const auto *value = static_cast<const struct bt_gatt_chrc *>(attribute->user_data);
-        if (value == nullptr || value->value_handle == 0U)
+        ZephyrUuid expected_uuid;
+        const struct bt_uuid *expected = expected_uuid.assign(state->target_characteristic_uuid);
+        if (value == nullptr || value->uuid == nullptr || expected == nullptr ||
+            value->value_handle == 0U)
         {
             failClient(*state, -EINVAL);
             return BT_GATT_ITER_STOP;
+        }
+        if (bt_uuid_cmp(value->uuid, expected) != 0)
+        {
+            return BT_GATT_ITER_CONTINUE;
         }
         k_spinlock_key_t key = k_spin_lock(&state->client_state_lock);
         GattAccess::set(state->remote_characteristic, state->target_characteristic_uuid,
@@ -351,9 +358,9 @@ namespace nucode::ble::internal::gatt
         return BT_GATT_ITER_STOP;
     }
 
-    std::uint8_t descriptorBoundaryDiscovered(
-        struct bt_conn *connection, const struct bt_gatt_attr *attribute,
-        struct bt_gatt_discover_params *parameters) noexcept
+    std::uint8_t descriptorBoundaryDiscovered(struct bt_conn *connection,
+                                              const struct bt_gatt_attr *attribute,
+                                              struct bt_gatt_discover_params *parameters) noexcept
     {
         ClientState *state = findDiscoveryState(parameters);
         if (state == nullptr || !validClientOperation(*state, connection))
@@ -372,9 +379,9 @@ namespace nucode::ble::internal::gatt
             failClient(*state, -ENOENT);
             return BT_GATT_ITER_STOP;
         }
-        state->descriptor_end_handle =
-            attribute == nullptr ? service.endHandle()
-                                 : static_cast<std::uint16_t>(attribute->handle - 1U);
+        state->descriptor_end_handle = attribute == nullptr
+                                           ? service.endHandle()
+                                           : static_cast<std::uint16_t>(attribute->handle - 1U);
         if (state->descriptor_end_handle <= characteristic.valueHandle())
         {
             failClient(*state, -ENOENT);
@@ -466,11 +473,11 @@ namespace nucode::ble::internal::gatt
         state->read_multiple = false;
         clearClientOperationToken(*state);
         atomic_set(&state->client_busy_value, 0);
-        static_cast<void>(queueClientEvent(
-            *state,
-            read_multiple ? BLEGattClientEvent::read_multiple_complete
-                          : BLEGattClientEvent::read_complete,
-            state->read_data, completed_length));
+        static_cast<void>(queueClientEvent(*state,
+                                           read_multiple
+                                               ? BLEGattClientEvent::read_multiple_complete
+                                               : BLEGattClientEvent::read_complete,
+                                           state->read_data, completed_length));
         atomic_set(&state->client_operation_bearer,
                    static_cast<atomic_val_t>(BLEGattBearer::unenhanced));
         return BT_GATT_ITER_STOP;
@@ -520,8 +527,8 @@ namespace nucode::ble::internal::gatt
                 else
                 {
                     internal::recordError(BLEError::driver_error, persist_result, true);
-                    static_cast<void>(bt_conn_disconnect(
-                        connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
+                    static_cast<void>(
+                        bt_conn_disconnect(connection, BT_HCI_ERR_REMOTE_USER_TERM_CONN));
                 }
             }
             return;
@@ -599,8 +606,8 @@ namespace nucode::ble::internal::gatt
 
     void continueCharacteristicDiscovery(ClientState &state) noexcept
     {
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
-            state.connection_handle);
+        struct bt_conn *connection =
+            nucode::ble::internal::referenceConnection(state.connection_handle);
         if (connection == nullptr)
         {
             failClient(state, -ENOTCONN);
@@ -646,8 +653,8 @@ namespace nucode::ble::internal::gatt
             return;
         }
 
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
-            state.connection_handle);
+        struct bt_conn *connection =
+            nucode::ble::internal::referenceConnection(state.connection_handle);
         if (connection == nullptr)
         {
             failClient(state, -ENOTCONN);
@@ -671,8 +678,7 @@ namespace nucode::ble::internal::gatt
         state.discovery_parameters.start_handle = characteristic.valueHandle() + 1U;
         state.discovery_parameters.end_handle = service.endHandle();
         state.discovery_parameters.type = BT_GATT_DISCOVER_DESCRIPTOR;
-        atomic_set(&state.client_stage,
-                   static_cast<atomic_val_t>(ClientStage::discovering_ccc));
+        atomic_set(&state.client_stage, static_cast<atomic_val_t>(ClientStage::discovering_ccc));
         const int result = bt_gatt_discover(connection, &state.discovery_parameters);
         bt_conn_unref(connection);
         if (result < 0)
@@ -704,8 +710,7 @@ namespace nucode::ble::internal::gatt
                 continueCccDiscovery(state);
                 continue;
             }
-            if (atomic_cas(&state.client_stage,
-                           static_cast<atomic_val_t>(ClientStage::ccc_found),
+            if (atomic_cas(&state.client_stage, static_cast<atomic_val_t>(ClientStage::ccc_found),
                            static_cast<atomic_val_t>(ClientStage::ready)))
             {
                 clearClientOperationToken(state);
@@ -717,8 +722,8 @@ namespace nucode::ble::internal::gatt
 
     void continueDescriptorDiscovery(ClientState &state) noexcept
     {
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
-            state.connection_handle);
+        struct bt_conn *connection =
+            nucode::ble::internal::referenceConnection(state.connection_handle);
         if (connection == nullptr || !validClientOperation(state, connection))
         {
             if (connection != nullptr)
@@ -729,8 +734,7 @@ namespace nucode::ble::internal::gatt
             return;
         }
         const BLERemoteCharacteristic characteristic = copyRemoteCharacteristic(state);
-        if (!characteristic.valid() ||
-            state.descriptor_end_handle <= characteristic.valueHandle())
+        if (!characteristic.valid() || state.descriptor_end_handle <= characteristic.valueHandle())
         {
             bt_conn_unref(connection);
             failClient(state, -ENOENT);
@@ -753,8 +757,8 @@ namespace nucode::ble::internal::gatt
 
     bool validWriteCommandPayload(ClientState &state, std::size_t length) noexcept
     {
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
-            state.connection_handle);
+        struct bt_conn *connection =
+            nucode::ble::internal::referenceConnection(state.connection_handle);
         if (connection == nullptr)
         {
             nucode::ble::internal::recordError(BLEError::not_connected, -ENOTCONN, true);
@@ -792,8 +796,8 @@ namespace nucode::ble::internal::gatt
             nucode::ble::internal::recordError(BLEError::already_started, -EALREADY, true);
             return false;
         }
-        struct bt_conn *connection = nucode::ble::internal::referenceConnection(
-            state.connection_handle);
+        struct bt_conn *connection =
+            nucode::ble::internal::referenceConnection(state.connection_handle);
         if (connection == nullptr)
         {
             atomic_set(&state.client_busy_value, 0);
@@ -894,8 +898,7 @@ namespace nucode::ble
         return discover(legacyConnectionHandle(), service_uuid, characteristic_uuid);
     }
 
-    bool GattClient::discover(BLEConnectionHandle connection_handle,
-                              const BLEUuid &service_uuid,
+    bool GattClient::discover(BLEConnectionHandle connection_handle, const BLEUuid &service_uuid,
                               const BLEUuid &characteristic_uuid) noexcept
     {
         if (!internal::requireThreadContext())
@@ -1001,8 +1004,8 @@ namespace nucode::ble
         return remoteCharacteristic(legacyConnectionHandle());
     }
 
-    BLERemoteCharacteristic GattClient::remoteCharacteristic(
-        BLEConnectionHandle connection) const noexcept
+    BLERemoteCharacteristic
+    GattClient::remoteCharacteristic(BLEConnectionHandle connection) const noexcept
     {
         ClientState *state = findClientState(connection);
         return state == nullptr ? BLERemoteCharacteristic{} : copyRemoteCharacteristic(*state);
@@ -1041,8 +1044,8 @@ namespace nucode::ble
                 break;
             }
         }
-        const bool has_capacity = already_stored ||
-                                  state->remote_descriptor_count < maximum_descriptors;
+        const bool has_capacity =
+            already_stored || state->remote_descriptor_count < maximum_descriptors;
         k_spin_unlock(&state->client_state_lock, key);
         if (!has_capacity)
         {
@@ -1701,8 +1704,7 @@ namespace nucode::ble
 #endif
     }
 
-    bool Eatt::connect(BLEConnectionHandle connection_handle,
-                       std::size_t bearer_count) noexcept
+    bool Eatt::connect(BLEConnectionHandle connection_handle, std::size_t bearer_count) noexcept
     {
         if (!internal::requireThreadContext())
         {

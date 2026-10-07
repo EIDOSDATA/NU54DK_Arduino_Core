@@ -91,6 +91,10 @@ class M29BleMultiTests(unittest.TestCase):
             'fail("cross_link_coc_event")',
             "client_connection != information.connection",
             'Serial.print("|cross_link=0|payload_errors=0|dropped_events=0")',
+            'stop_prefix[] = "M29W07D|1|STOP|nonce="',
+            "driveCleanup()",
+            'Serial.print("|active_links=0|pending_operations=0|buffers=0|status=pass")',
+            "resetSessionState()",
         ):
             self.assertIn(token, target)
         self.assertNotIn("BLEAdvertising.addServiceUuid(service_uuid)", target)
@@ -142,23 +146,53 @@ class M29BleMultiTests(unittest.TestCase):
         for token in (
             "validate_source_clean",
             "validate_build_record",
-            "validate_three_role_session",
+            "validate_three_role_campaign",
             "ThreadPoolExecutor(max_workers=3)",
             "with ExitStack() as stack:",
             '"m29_multi_01_status": "passed"',
+            "CYCLE_COUNT",
+            "serial_closed",
+            "discover_endpoint_sha256",
         ):
             self.assertIn(token, runner)
+        self.assertNotIn('"daplink_uid"', runner)
+        self.assertNotIn("--peripheral-board-id", runner)
         self.assertLess(
             runner.index("for role in ROLES:\n            if flash_backend"),
             runner.index("with ExitStack() as stack:"),
         )
         for token in (
             'PROTOCOL = "M29W07D|1"',
+            "CYCLE_COUNT = 20",
+            "parse_role_campaign",
             "non-ASCII UART noise",
             "actual != expected",
             "mixed.connections != 2",
         ):
             self.assertIn(token, protocol)
+
+    def test_m28_m29_native_runners_serialize_only_probe_hashes(self) -> None:
+        """! @brief W06 native runner의 evidence·CLI에서 raw probe UID를 제거합니다. """
+
+        names = (
+            "m28_ble_2board.py",
+            "m28_ble_3board.py",
+            "m29_ble_long.py",
+            "m29_ble_long_write.py",
+            "m29_ble_descriptor.py",
+            "m29_ble_cache.py",
+            "m29_ble_coc.py",
+            "m29_ble_signed_eatt.py",
+            "m29_ble_multi.py",
+        )
+        for name in names:
+            with self.subTest(name=name):
+                source = (ROOT / "tests/hil/nu54dk" / name).read_text(
+                    encoding="utf-8"
+                )
+                self.assertNotIn('"daplink_uid"', source)
+                self.assertNotIn("--peripheral-board-id", source)
+                self.assertIn("probe_sha256", source)
 
 
 if __name__ == "__main__":

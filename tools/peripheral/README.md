@@ -46,8 +46,10 @@ BLE 작업은 별도 [M28 readiness](../../variants/nu54dk/m28-ble-readiness.jso
 문서나 생성기 실행만으로 상태를 승격하지 않는다. 다중 Host의 범위·단계는
 [후속 Host 계약](<../../00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
 v0.5.0은 Windows 10/11 x64 지원 릴리스다. 미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의
-M32는 W01~W12 12/12 완료, M33은 0/8 미착수이며 M32 지원 후보는 `not_published`로 유지한다.
-Ubuntu/macOS의 OS별 최종 gate와 HOST-W04~HOST-W08 사용자 보류는 별도 상태다.
+M32는 W01~W12 12/12, M33은 W01~W05 5/8 완료이며 M32 지원 후보는 `not_published`로 유지한다.
+M33-W06은 미완료·사용자 요청으로 중단한 상태이며 새 채팅의 재개 지점은
+[M33 인계](../../00_Docs/M33_HANDOFF.md)를 따른다. HOST는 3/8이며 W04 이후는 M33-W06 완료 후
+순차 진행한다. Ubuntu/macOS의 OS별 최종 실물 gate는 별도로 유지한다.
 M27의 PASS나 생성기 성공을 후속 BLE·Host 시험의 PASS로 재사용하지 않는다.
 
 [개선 마일스톤](<../../00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)의

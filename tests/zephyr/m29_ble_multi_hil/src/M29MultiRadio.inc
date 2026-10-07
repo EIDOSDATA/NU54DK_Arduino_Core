@@ -45,6 +45,7 @@
         {
             return false;
         }
+        advertising_started = true;
         Serial.print(protocol);
         Serial.print("|ADVERTISE|role=");
         Serial.print(roleName());

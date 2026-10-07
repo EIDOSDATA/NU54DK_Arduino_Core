@@ -340,7 +340,7 @@ M29의 실제 예제명과 완료·잔여 상태는
 ### M31 v0.5.0과 M32·M33 v0.6.0의 예제 구현·검증 TODO
 
 이전 stable 30개와 v0.5.0 stable 113개는 서로 다른 패키지 목록이다. 다음 표는 단계별 예제 계약이다.
-M31과 M32는 완료했고 M32는 W01~W12 12/12, M33은 미착수다. W08 BLOB·signed MDFU,
+M31과 M32는 완료했고 M32는 W01~W12 12/12, M33은 W01~W05 5/8 완료다. W08 BLOB·signed MDFU,
 W10 공존, W11 exact 회귀·soak와 W12 정합성 감사·인계를 완료했다. 과거 W08 FAIL은 당시 기록으로 보존한다. 상세 feature·role은
 [전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
@@ -357,8 +357,11 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 | M31-W08 및 정식 공개 — 완료 | W07 설치 role 예제·제공 경로/제한, Windows package·설치·RC smoke와 별도 stable 승격·공개 완료 |
 | M32-W02~W05 — 완료·미공개 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget; 고정 Host 미지원 경계 유지 |
 | M32-W06~W10 — 완료·미공개 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 검증한 세 내부 공존 조합 |
-| M33-W02~W04 — 계획 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
-| M33-W05~W08 — v0.6.0 계획 | 추가 role 예제·ARF-04A·후속 기능 회귀·설치·지원표 마감 |
+| M33-W02 — 완료·미공개 | iBeacon/Eddystone UID/BTHome와 OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, 공개 예제 9/9 build와 두/세 보드 exact HIL PASS; 외부 peer는 후속 `NOT_RUN` |
+| M33-W03 — 완료·미공개 | Fast Pair input/locator·ANCS/AMS·EnOcean/MDS template와 scripted-peer HIL PASS; 실제 외부 제품은 후속 `NOT_RUN` |
+| M33-W04 — 완료·미공개 | HCI/DTM profile/template와 two-wire/H4 실제 12/12씩 PASS |
+| M33-W05 — 완료·미공개 | 12개 Start Here·29개 Recipe·204개 Reference, clean 설치 발견·compile 204/204와 negative 9/9 PASS |
+| M33-W06~W08 — v0.6.0 계획 | 후속 기능 회귀·자원·상호운용·설치·지원표 마감 |
 
 다음은 모든 예제 owner에 적용하는 반복 검증 계약이다. 완료율 체크리스트가 아니며 M31의 완료
 증거와 M32/M33의 현재 진행 상태는 위 TODO에서 각각 관리한다.

@@ -199,9 +199,18 @@ class TmapGmapHilContractTest(unittest.TestCase):
     def test_adjacent_arduino_build_manifest_is_preferred_and_bound_to_hex(self) -> None:
         core_revision = "a" * 40
         board_revision = "b" * 40
+        expected_revisions = {
+            "NUCODE_CORE_REVISION": core_revision,
+            "NUCODE_BOARD_REVISION": board_revision,
+            "NUCODE_NCS_REVISION":
+                "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+            "NUCODE_ZEPHYR_REVISION":
+                "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        }
         with tempfile.TemporaryDirectory(prefix="nu54-w03-10-build-record-") as directory:
             root = Path(directory) / "build" / "TelephonyMediaGateway"
             root.mkdir(parents=True)
+            platform_root = (Path(directory) / "platform").resolve()
             image = root / "TelephonyMediaGateway.ino.hex"
             image.write_bytes(b":00000001FF\n")
             record = image.with_suffix(".nu54-build.json")
@@ -216,39 +225,127 @@ class TmapGmapHilContractTest(unittest.TestCase):
                 "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
                 "cache": {
                     "input_manifest": {
+                        "adapter": {
+                            "embedded_core_revision": core_revision,
+                        },
+                        "board_package": {
+                            "revision": board_revision,
+                        },
+                        "ncs": {
+                            "nrf_revision": expected_revisions[
+                                "NUCODE_NCS_REVISION"
+                            ],
+                            "zephyr_revision": expected_revisions[
+                                "NUCODE_ZEPHYR_REVISION"
+                            ],
+                        },
+                        "configuration": {
+                            "selected_features": [],
+                        },
                         "toolchain": {
                             "bundle_id": "dcbdc366a1",
                             "compiler": "arm-zephyr-eabi-g++.exe 14.3.0",
                         }
                     }
                 },
-                "source_inputs": {
-                    "m31_audio_revisions": {
-                        "NUCODE_CORE_REVISION": core_revision,
-                        "NUCODE_BOARD_REVISION": board_revision,
-                        "NUCODE_NCS_REVISION":
-                            "99553055607b2e9885fbc80ccd11fa9da81c2df0",
-                        "NUCODE_ZEPHYR_REVISION":
-                            "bf801e4e3d19e1ffa76164346480cb7734dd2800",
-                    }
+                "context": {
+                    "platform_root": platform_root.as_posix(),
+                    "selected_libraries": [],
                 },
+                "source_inputs": {},
             }
-            record.write_text(json.dumps(document), encoding="utf-8")
             (root.parent / "nucode_arduino_core_build.yml").write_text(
                 "invalid legacy record", encoding="utf-8"
             )
 
-            result = MODULE.validate_build_record(
+            revision_families = (
+                ("NUCODE_BLE_ISO", "nucode.ble.iso", "m31_iso_revisions"),
+                ("NUCODE_BLE_Audio", "nucode.ble.audio", "m31_audio_revisions"),
+                (
+                    "NUCODE_BLE_DirectionFinding",
+                    "nucode.ble.direction_finding",
+                    "m31_df_revisions",
+                ),
+                (
+                    "NUCODE_BLE_ChannelSounding",
+                    "nucode.ble.channel_sounding",
+                    "m31_cs_revisions",
+                ),
+            )
+            for library, feature_id, revision_key in revision_families:
+                with self.subTest(revision_key=revision_key):
+                    document["context"]["selected_libraries"] = [library]
+                    document["cache"]["input_manifest"]["configuration"][
+                        "selected_features"
+                    ] = [{"id": feature_id}]
+                    document["source_inputs"] = {
+                        "sources": [{
+                            "logical_identity":
+                                f"platform:libraries/{library}/src/fixture.cpp",
+                            "source_path": (
+                                platform_root / "libraries" / library
+                                / "src/fixture.cpp"
+                            ).as_posix(),
+                        }],
+                        revision_key: expected_revisions
+                    }
+                    record.write_text(json.dumps(document), encoding="utf-8")
+
+                    result = MODULE.validate_build_record(
+                        image, core_revision, board_revision, root
+                    )
+
+                    self.assertEqual(result["record_name"], record.name)
+                    self.assertEqual(result["record_format"], "nu54-build-json")
+                    self.assertEqual(
+                        result["hex_sha256"],
+                        document["artifacts"]["hex"]["sha256"],
+                    )
+
+            selected = (
+                (
+                    "NUCODE_BLE_Audio",
+                    "nucode.ble.audio",
+                    "m31_audio_revisions",
+                ),
+                (
+                    "NUCODE_BLE_ChannelSounding",
+                    "nucode.ble.channel_sounding",
+                    "m31_cs_revisions",
+                ),
+            )
+            document["context"]["selected_libraries"] = [
+                library for library, _feature_id, _revision_key in selected
+            ]
+            document["cache"]["input_manifest"]["configuration"][
+                "selected_features"
+            ] = [
+                {"id": feature_id}
+                for _library, feature_id, _revision_key in selected
+            ]
+            document["source_inputs"] = {
+                "sources": [{
+                    "logical_identity":
+                        f"platform:libraries/{library}/src/fixture.cpp",
+                    "source_path": (
+                        platform_root / "libraries" / library
+                        / "src/fixture.cpp"
+                    ).as_posix(),
+                } for library, _feature_id, _revision_key in selected],
+                **{
+                    revision_key: expected_revisions
+                    for _library, _feature_id, revision_key in selected
+                },
+            }
+            record.write_text(json.dumps(document), encoding="utf-8")
+            MODULE.validate_build_record(
                 image, core_revision, board_revision, root
             )
-
-            self.assertEqual(result["record_name"], record.name)
-            self.assertEqual(result["record_format"], "nu54-build-json")
-            self.assertEqual(result["hex_sha256"], document["artifacts"]["hex"]["sha256"])
 
     def test_adjacent_arduino_build_manifest_rejects_stale_hex_digest(self) -> None:
         with tempfile.TemporaryDirectory(prefix="nu54-w03-10-build-record-") as directory:
             root = Path(directory)
+            platform_root = (root / "platform").resolve()
             image = root / "TelephonyMediaGateway.ino.hex"
             image.write_bytes(b":00000001FF\n")
             record = image.with_suffix(".nu54-build.json")
@@ -263,13 +360,40 @@ class TmapGmapHilContractTest(unittest.TestCase):
                 "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
                 "cache": {
                     "input_manifest": {
+                        "adapter": {
+                            "embedded_core_revision": "a" * 40,
+                        },
+                        "board_package": {
+                            "revision": "b" * 40,
+                        },
+                        "ncs": {
+                            "nrf_revision":
+                                "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+                            "zephyr_revision":
+                                "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+                        },
+                        "configuration": {
+                            "selected_features": [{"id": "nucode.ble.audio"}],
+                        },
                         "toolchain": {
                             "bundle_id": "dcbdc366a1",
                             "compiler": "arm-zephyr-eabi-g++.exe 14.3.0",
                         }
                     }
                 },
+                "context": {
+                    "platform_root": platform_root.as_posix(),
+                    "selected_libraries": ["NUCODE_BLE_Audio"],
+                },
                 "source_inputs": {
+                    "sources": [{
+                        "logical_identity":
+                            "platform:libraries/NUCODE_BLE_Audio/src/fixture.cpp",
+                        "source_path": (
+                            platform_root
+                            / "libraries/NUCODE_BLE_Audio/src/fixture.cpp"
+                        ).as_posix(),
+                    }],
                     "m31_audio_revisions": {
                         "NUCODE_CORE_REVISION": "a" * 40,
                         "NUCODE_BOARD_REVISION": "b" * 40,
@@ -283,6 +407,186 @@ class TmapGmapHilContractTest(unittest.TestCase):
             record.write_text(json.dumps(document), encoding="utf-8")
 
             with self.assertRaises(RuntimeError):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["artifacts"]["hex"]["sha256"] = hashlib.sha256(
+                image.read_bytes()
+            ).hexdigest()
+            document["source_inputs"]["m31_audio_revisions"][
+                "NUCODE_CORE_REVISION"
+            ] = "c" * 40
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "revision 불일치"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            expected_revisions = {
+                "NUCODE_CORE_REVISION": "a" * 40,
+                "NUCODE_BOARD_REVISION": "b" * 40,
+                "NUCODE_NCS_REVISION":
+                    "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+                "NUCODE_ZEPHYR_REVISION":
+                    "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+            }
+            document["context"]["selected_libraries"] = ["NUCODE_BLE"]
+            document["cache"]["input_manifest"]["configuration"][
+                "selected_features"
+            ] = [{"id": "nucode.ble.nus"}]
+            document["source_inputs"] = {
+                "sources": [{
+                    "logical_identity":
+                        "platform:libraries/NUCODE_BLE/src/fixture.cpp",
+                    "source_path": (
+                        platform_root / "libraries/NUCODE_BLE/src/fixture.cpp"
+                    ).as_posix(),
+                }],
+            }
+            record.write_text(json.dumps(document), encoding="utf-8")
+            MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["context"]["selected_libraries"] = [
+                "NUCODE_BLE_ChannelSounding"
+            ]
+            document["source_inputs"] = {
+                "sources": [{
+                    "logical_identity":
+                        "platform:libraries/NUCODE_BLE_ChannelSounding/"
+                        "src/fixture.cpp",
+                    "source_path": (
+                        platform_root
+                        / "libraries/NUCODE_BLE_ChannelSounding/src/fixture.cpp"
+                    ).as_posix(),
+                }],
+                "m31_cs_revisions": expected_revisions,
+            }
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "selected library/cache feature"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["cache"]["input_manifest"]["configuration"][
+                "selected_features"
+            ] = [{"id": "nucode.ble.channel_sounding"}]
+            document["source_inputs"].pop("m31_cs_revisions")
+            document["source_inputs"]["m31_audio_revisions"] = expected_revisions
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "selected library/revision"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["context"]["selected_libraries"] = [
+                "NUCODE_BLE_Audio", "NUCODE_BLE_ChannelSounding"
+            ]
+            document["cache"]["input_manifest"]["configuration"][
+                "selected_features"
+            ] = [
+                {"id": "nucode.ble.audio"},
+                {"id": "nucode.ble.channel_sounding"},
+            ]
+            document["source_inputs"] = {
+                "sources": [
+                    {
+                        "logical_identity":
+                            "platform:libraries/NUCODE_BLE_Audio/"
+                            "src/fixture.cpp",
+                        "source_path": (
+                            platform_root
+                            / "libraries/NUCODE_BLE_Audio/src/fixture.cpp"
+                        ).as_posix(),
+                    },
+                    {
+                        "logical_identity":
+                            "platform:libraries/NUCODE_BLE_ChannelSounding/"
+                            "src/fixture.cpp",
+                        "source_path": (
+                            platform_root
+                            / "libraries/NUCODE_BLE_ChannelSounding/"
+                            "src/fixture.cpp"
+                        ).as_posix(),
+                    },
+                ],
+                "m31_cs_revisions": expected_revisions,
+            }
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "selected library/revision"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["source_inputs"]["m31_audio_revisions"] = expected_revisions
+            document["cache"]["input_manifest"]["configuration"][
+                "selected_features"
+            ] = [{"id": "nucode.ble.audio"}]
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "selected library/cache feature"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["cache"]["input_manifest"]["configuration"][
+                "selected_features"
+            ] = [
+                {"id": "nucode.ble.audio"},
+                {"id": "nucode.ble.channel_sounding"},
+                {"id": "nucode.ble.iso"},
+            ]
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "selected library/cache feature"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["cache"]["input_manifest"]["configuration"][
+                "selected_features"
+            ] = [
+                {"id": "nucode.ble.audio"},
+                {"id": "nucode.ble.channel_sounding"},
+            ]
+            document["source_inputs"]["m31_iso_revisions"] = expected_revisions
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "selected library/revision"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["source_inputs"].pop("m31_iso_revisions")
+            document["source_inputs"]["m31_typo_revisions"] = expected_revisions
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "알 수 없는 revision family"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["source_inputs"].pop("m31_typo_revisions")
+            document["source_inputs"]["m31_cs_revisions"] = {
+                **expected_revisions,
+                "UNDECLARED_REVISION": "d" * 40,
+            }
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "revision 불일치"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["source_inputs"]["m31_cs_revisions"] = expected_revisions
+            document["cache"]["input_manifest"]["ncs"]["nrf_revision"] = (
+                "e" * 40
+            )
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "cache revision 불일치"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["cache"]["input_manifest"]["ncs"]["nrf_revision"] = (
+                expected_revisions["NUCODE_NCS_REVISION"]
+            )
+            document["source_inputs"]["sources"][0]["source_path"] = (
+                platform_root
+                / "libraries/NUCODE_BLE_ChannelSounding/src/spoof.cpp"
+            ).as_posix()
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "source identity/path"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["source_inputs"]["sources"][0]["source_path"] = (
+                platform_root / "libraries/NUCODE_BLE_Audio/src/spoof.cpp"
+            ).as_posix()
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "source identity/path"):
+                MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+            document["source_inputs"]["sources"][0]["source_path"] = (
+                platform_root / "libraries/NUCODE_BLE_Audio/src/fixture.cpp"
+            ).as_posix()
+            document["source_inputs"]["sources"] = [
+                document["source_inputs"]["sources"][0]
+            ]
+            record.write_text(json.dumps(document), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "selected library/source graph"):
                 MODULE.validate_build_record(image, "a" * 40, "b" * 40, root)
 
     @staticmethod

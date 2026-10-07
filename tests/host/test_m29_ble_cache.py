@@ -169,6 +169,18 @@ class M29BleCacheTests(unittest.TestCase):
         ):
             self.assertIn(token, central)
 
+    def test_reboot_restores_state_without_automatic_rf_restart(self) -> None:
+        """! @brief 복원 직후 RF를 보류하고 exact Host 재개만 허용합니다. """
+
+        setup = self.target.split("void setup()", 1)[1]
+        resumed = setup.split("    if (resumed)\n", 1)[1].split("    else\n", 1)[0]
+        self.assertIn("resume_pending = true;", resumed)
+        self.assertNotIn("startAdvertising", resumed)
+        self.assertNotIn("scan_pending = true", resumed)
+        self.assertIn("::strncmp(command + prefix_length, nonce, nonce_text_length)", self.target)
+        self.assertIn('fail("resume_record")', self.target)
+        self.assertIn('"|RESUME_READY|role="', self.target)
+
 
 if __name__ == "__main__":
     unittest.main()

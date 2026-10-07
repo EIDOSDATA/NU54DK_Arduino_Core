@@ -1,11 +1,16 @@
 # M32 실행 TODO — v0.6.0 최신 BLE 제어·Mesh 1.1·무선 공존
 
+> **완료·동결 기록 — 2026-10-05:** 완료 결과와 증거를 보존하며 후속 진행 상태를 동기화하거나
+> 매 작업마다 전체를 다시 읽지 않는다. 관련 과거 근거가 필요할 때만 참조한다.
+> 현행 진행은 [M33 TODO](TODO_M33.md)·[제품 계획](TODO_v0.6.0.md), 재개는
+> [M33 인계](M33_HANDOFF.md), Host 요구·진행은 [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M33과 함께 후속 Bluetooth 확장 제품선 구성 |
 | 현재 구현 상태 | **12/12 완료 — W12 정합성 감사와 후속 인계까지 마감** |
 | 하위 gate | M32-A Controller/Host·Nordic 확장, M32-B Mesh, M32-C 최소 radio·공존 |
-| 선행·병행 계획 | M31의 controller/resource 계약 인계; HOST-W07은 Host 트랙 재개 후 독립 진행 |
+| 선행·후속 인계 | M31의 controller/resource 계약 인계; HOST-W07은 다중 Host 계약의 독립 범위 |
 | 고정 기준 | NCS `v3.4.0`, [CI lock](../tools/ci/ncs-3.4.0.lock.json)의 Zephyr·toolchain revision |
 | 최종 실기 장비 | NU54DK 3개; W11 preflight 당시 AHB debug 접근 가능. 새 실기 전 mapping·접근 상태 재확인 |
 | 최종 갱신일 | 2026-10-03 |
@@ -24,8 +29,10 @@ PASS했다. W10 세 내부 공존 조합도 protocol별 4,000/4,000 exact PASS�
 사용자의 2026-10-02 재개 지시에 따라 W08부터 W12까지 순차 완료했다. W09 최신 clean HEAD
 회귀, W10 공존 exact HIL, W11 전체 closure, W12 정합성 감사를 PASS했다. 차단 진단 뒤 CTRL-AP ERASEALL과 기존
 flash 삭제를 명시적으로 승인받았지만 최종 실기 preflight에서는 세 보드 AHB debug가 열려 있어
-ERASEALL은 필요하지 않았고 실행하지 않았다. M32는 마감했고 다음 기능 작업은 M33-W01이다.
-**HOST-W04~W08은 계속 사용자 보류**이며 M32 진행 지시를 Host 재개 승인으로 해석하지 않는다.
+ERASEALL은 필요하지 않았고 실행하지 않았다. M32는 마감했다. 후속 M33의 진행은
+[M33 TODO](TODO_M33.md), 재개 지점은 [M33 인계](M33_HANDOFF.md), HOST-W04~W08 요구·진행은
+[다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
+당시 M32 진행 지시는 별개 Host의 재개 승인으로 해석하지 않았다.
 
 최종 구현 source `49099e74fec60566f8708e8398d6c1def86dd6d6`의
 [Software Gates](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/37099299097)는 9/9 성공했다.
@@ -33,7 +40,7 @@ ERASEALL은 필요하지 않았고 실행하지 않았다. M32는 마감했고 �
 `unsupported`이며 M32 기능 PASS에 합산하지 않는다. 문서 정비와 main squash 통합은
 [295번 기록](<04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)을 따른다.
 
-현재 설치·지원 버전은 v0.5.0이고 M32/M33은 미공개 v0.6.0 제품선이다.
+동결 당시 설치·지원 버전은 v0.5.0이고 M32/M33은 미공개 v0.6.0 제품선이다.
 NCS v3.4.0·제품 SDC·board/toolchain pin은 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은
 NCS v3.4.1 전체 전환만 수행하며 [SDK 변경·개발 영향](<00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)의
 조건부 위험과 회귀 항목을 인계한다. 버전 배정은 구현 완료·실물 시험·공개 승인이 아니다.
@@ -384,7 +391,7 @@ ERASEALL은 이번 exact 실행에서 필요하지 않았고 실행하지 않았
 
 자동 정합성 감사·지원 승격 gate·후속 인계는
 [287번 기록](<04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>)이 소유한다. HOST-W07은
-별도 분모로 사용자 보류를 유지하며 M32를 차단하지 않는다. W11 exact software·12-family HIL·
+별도 분모로 인계했고 M32를 차단하지 않았다. 현재 진행은 다중 Host 계약을 따른다. W11 exact software·12-family HIL·
 signed MDFU·soak는 PASS했다. W12의 문서·원장·예제·지원 후보·후속 인계 최종 정합성 감사도
 PASS했으며 M32는 **12/12 완료**다.
 

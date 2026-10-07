@@ -1,0 +1,435 @@
+name: M33 W06 Exact Build Shards
+
+on:
+  push:
+    branches:
+      - Dev-0.6.0-M33
+    paths:
+      - ".github/workflows/m33-w06-build-shards.yml"
+      - ".gitmodules"
+      - ".gitattributes"
+      - "board_package/NU54DK_Zephyr_DTS"
+      - "boards.txt"
+      - "platform.txt"
+      - "post_install.bat"
+      - "package_nucode_nu54dk*.json"
+      - "tools/ci/m33_w06*"
+      - "tools/ci/ncs-3.4.0.lock.json"
+      - "tools/ci/run_zephyr_build.py"
+      - "tools/ci/cmake/**"
+      - "tests/host/test_build_matrix_runner.py"
+      - "tools/ci/verify_ci_lock.py"
+      - "tools/bluetooth/m33_contract.py"
+      - "tools/bluetooth/m33_regression.py"
+      - "tools/bluetooth/m33_execution.py"
+      - "tests/host/test_m33_execution.py"
+      - "tests/host/test_m33_w06_runtime_fixture.py"
+      - "tests/host/test_m33_regression.py"
+      - "tests/host/test_m29_ble_cache.py"
+      - "tests/host/test_m29_ble_cache_parser.py"
+      - "tools/bluetooth/m33_diagnostics.py"
+      - "tools/bluetooth/m33_diagnostics_campaign.py"
+      - "tools/bluetooth/m33_ecosystem_hil.py"
+      - "tools/nu54-builder/**"
+      - "tools/nu54-prerequisites/**"
+      - "tests/hil/nu54dk/**"
+      - "tests/zephyr/**"
+      - "tests/arduino-cli/**"
+      - "libraries/**"
+      - "cores/**"
+      - "variants/**"
+      - "!variants/nu54dk/m33-release-readiness.json"
+      - "templates/**"
+      - "dts/**"
+      - "zephyr/**"
+      - "third_party/**"
+  workflow_dispatch:
+    inputs:
+      target_source_sha:
+        description: Optional exact 40-character source revision; empty uses the triggering SHA
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m33-w06-build-${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'workflow_dispatch' && inputs.target_source_sha || github.sha }}
+  cancel-in-progress: false
+
+env:
+  TARGET_SOURCE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.target_source_sha || github.sha }}
+  NUCODE_NCS_INSTALL_ROOT: D:\ncs
+  NUCODE_NCS_ROOT: D:\ncs\v3.4.0
+  NUCODE_TOOLCHAIN_ROOT: D:\ncs\toolchains\dcbdc366a1
+  NUCODE_PREREQUISITE_STATE_ROOT: D:\nu54-prerequisites
+  W06_SHARD_COUNT: 4
+
+jobs:
+  plan:
+    name: Freeze exact W06 plan and shard contract
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.TARGET_SOURCE_SHA }}
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Verify target identity and derive cache key
+        id: lock
+        shell: powershell
+        run: |
+          if ($env:TARGET_SOURCE_SHA -notmatch '^[0-9a-f]{40}$') {
+            throw 'TARGET_SOURCE_SHA must be a full lowercase SHA.'
+          }
+          $head = (& git rev-parse HEAD).Trim()
+          if ($head -ne $env:TARGET_SOURCE_SHA) {
+            throw "Exact checkout mismatch: head=$head expected=$env:TARGET_SOURCE_SHA"
+          }
+          python tools/ci/verify_ci_lock.py --github-output
+      - name: Check every campaign preparation before heavy builds
+        shell: pwsh
+        env:
+          PYTHONUTF8: "1"
+          PYTHONIOENCODING: utf-8
+        run: |
+          New-Item -ItemType Directory -Path D:\m33-w06-plan -Force | Out-Null
+          python -B -m unittest discover -s tests/host -p test_m33_regression.py `
+            -k native_adapter_registry -v *> D:\m33-w06-plan\preflight-campaigns.log
+          $campaignExit = $LASTEXITCODE
+          Get-Content D:\m33-w06-plan\preflight-campaigns.log
+          if ($campaignExit -ne 0)
+          {
+            throw 'Source-only 48-campaign / 49-group preparation regression failed.'
+          }
+          python -B -m unittest discover -s tests/host -p test_m33_w06_artifacts.py `
+            -k board_ -v *> D:\m33-w06-plan\preflight-inventory.log
+          $inventoryExit = $LASTEXITCODE
+          Get-Content D:\m33-w06-plan\preflight-inventory.log
+          if ($inventoryExit -ne 0)
+          {
+            throw 'Source-only APP/AUX inventory regression failed.'
+          }
+          python -B -m unittest discover -s tests/host -p test_m33_profile_campaign.py `
+            -v *> D:\m33-w06-plan\preflight-profile-phases.log
+          $profileExit = $LASTEXITCODE
+          Get-Content D:\m33-w06-plan\preflight-profile-phases.log
+          if ($profileExit -ne 0)
+          {
+            throw 'Source-only 40/60-phase file execution regression failed.'
+          }
+          python -B -m unittest discover -s tests/host -p test_m29_ble_cache*.py `
+            -v *> D:\m33-w06-plan\preflight-cache-boundary.log
+          $cacheExit = $LASTEXITCODE
+          Get-Content D:\m33-w06-plan\preflight-cache-boundary.log
+          if ($cacheExit -ne 0)
+          {
+            throw 'Source-only cache reboot handshake/parser regression failed.'
+          }
+      - name: Restore Windows Builder cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v3
+      - name: Restore exact NCS and toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            D:\ncs
+            D:\nu54-prerequisites
+          key: ${{ steps.lock.outputs.windows_cache_key }}-ncs-toolchain-v3
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+      - name: Verify installed SDK revisions
+        run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+      - name: Verify live M33 readiness and W05 exact evidence
+        run: python tools/bluetooth/m33_contract.py --sdk-root "$env:NUCODE_NCS_ROOT" --check
+      - name: Freeze plan and four-shard action/recipe contract
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path D:\m33-w06-plan -Force | Out-Null
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          python tools/bluetooth/m33_regression.py snapshot `
+            --output D:\m33-w06-plan\m33-w06-prerequisites.json
+          $prerequisites = Get-Content D:\m33-w06-plan\m33-w06-prerequisites.json -Raw | ConvertFrom-Json
+          if ($prerequisites.source_revision -ne $env:TARGET_SOURCE_SHA -or
+              -not $prerequisites.source_clean -or
+              @($prerequisites.prerequisite_blockers).Count -ne 0) {
+            throw 'W02-W05 exact prerequisites are incomplete for this source revision.'
+          }
+          python tools/ci/m33_w06_artifacts.py plan `
+            --sdk-root $env:NUCODE_NCS_ROOT `
+            --toolchain-root $env:NUCODE_TOOLCHAIN_ROOT `
+            --revision $env:TARGET_SOURCE_SHA `
+            --output D:\m33-w06-plan\m33-w06-artifact-plan.json
+          New-Item -ItemType Directory -Path D:\m33-w06-action-model -Force | Out-Null
+          'model-only: true' | Set-Content -LiteralPath D:\m33-w06-action-model\arduino-cli.yaml -Encoding utf8
+          python tools/ci/m33_w06_artifacts.py shard-plan `
+            --plan D:\m33-w06-plan\m33-w06-artifact-plan.json `
+            --work-root D:\m33-w06-action-model\work `
+            --arduino-cli $cli `
+            --arduino-config D:\m33-w06-action-model\arduino-cli.yaml `
+            --shard-count $env:W06_SHARD_COUNT `
+            --sdk-root $env:NUCODE_NCS_ROOT `
+            --toolchain-root $env:NUCODE_TOOLCHAIN_ROOT `
+            --output D:\m33-w06-plan\m33-w06-build-shard-plan.json
+          @(
+            'SCHEMA=m33-w06-transfer-v1',
+            "RUN_ID=$env:GITHUB_RUN_ID",
+            "RUN_ATTEMPT=$env:GITHUB_RUN_ATTEMPT",
+            'SHARD_COUNT=4',
+            'AGGREGATE_ONLY_SUFFICIENT=0',
+            "SHARD_0=m33-w06-build-shard-0-$env:GITHUB_RUN_ID-attempt-$env:GITHUB_RUN_ATTEMPT",
+            "SHARD_1=m33-w06-build-shard-1-$env:GITHUB_RUN_ID-attempt-$env:GITHUB_RUN_ATTEMPT",
+            "SHARD_2=m33-w06-build-shard-2-$env:GITHUB_RUN_ID-attempt-$env:GITHUB_RUN_ATTEMPT",
+            "SHARD_3=m33-w06-build-shard-3-$env:GITHUB_RUN_ID-attempt-$env:GITHUB_RUN_ATTEMPT"
+          ) | Set-Content -LiteralPath D:\m33-w06-plan\TRANSFER-CONTRACT.txt -Encoding ascii
+      - name: Upload immutable W06 plan
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m33-w06-plan-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: D:\m33-w06-plan
+          if-no-files-found: error
+          retention-days: 14
+
+  build:
+    name: Build-only shard ${{ matrix.shard }} of 4
+    needs: plan
+    runs-on: windows-2025
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.TARGET_SOURCE_SHA }}
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Download immutable W06 plan
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m33-w06-plan-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: D:\m33-w06-plan
+      - name: Verify target identity and derive cache key
+        id: lock
+        shell: powershell
+        run: |
+          if ($env:TARGET_SOURCE_SHA -notmatch '^[0-9a-f]{40}$') {
+            throw 'TARGET_SOURCE_SHA must be a full lowercase SHA.'
+          }
+          $head = (& git rev-parse HEAD).Trim()
+          if ($head -ne $env:TARGET_SOURCE_SHA) {
+            throw "Exact checkout mismatch: head=$head expected=$env:TARGET_SOURCE_SHA"
+          }
+          python tools/ci/verify_ci_lock.py --github-output
+      - name: Restore Windows Builder cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v3
+      - name: Restore exact NCS and toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            D:\ncs
+            D:\nu54-prerequisites
+          key: ${{ steps.lock.outputs.windows_cache_key }}-ncs-toolchain-v3
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+      - name: Verify installed SDK revisions
+        run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+      - name: Build assigned shard with isolated action roots
+        shell: powershell
+        run: |
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          python tools/ci/m33_w06_artifacts.py prepare-arduino `
+            --plan D:\m33-w06-plan\m33-w06-artifact-plan.json `
+            --sdk-root $env:NUCODE_NCS_ROOT `
+            --toolchain-root $env:NUCODE_TOOLCHAIN_ROOT `
+            --output-root D:\m33-w06-arduino-shard-${{ matrix.shard }}
+          python tools/ci/m33_w06_artifacts.py build-shard `
+            --plan D:\m33-w06-plan\m33-w06-artifact-plan.json `
+            --shard-plan D:\m33-w06-plan\m33-w06-build-shard-plan.json `
+            --shard-index ${{ matrix.shard }} `
+            --work-root D:\m33-w06-shard-${{ matrix.shard }} `
+            --output D:\m33-w06-shard-${{ matrix.shard }}\m33-w06-shard-${{ matrix.shard }}.json `
+            --arduino-cli $cli `
+            --arduino-config D:\m33-w06-arduino-shard-${{ matrix.shard }}\arduino-cli.yaml `
+            --timeout-seconds 10800 `
+            --max-workers 2 `
+            --run-id $env:GITHUB_RUN_ID `
+            --run-attempt $env:GITHUB_RUN_ATTEMPT `
+            --sdk-root $env:NUCODE_NCS_ROOT `
+            --toolchain-root $env:NUCODE_TOOLCHAIN_ROOT
+      - name: Upload immutable shard output and evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m33-w06-build-shard-${{ matrix.shard }}-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: D:\m33-w06-shard-${{ matrix.shard }}
+          if-no-files-found: warn
+          include-hidden-files: true
+          compression-level: 0
+          retention-days: 14
+
+  aggregate:
+    name: Aggregate exact W06 build-only evidence
+    needs: [plan, build]
+    if: always()
+    runs-on: windows-2025
+    timeout-minutes: 60
+    steps:
+      - name: Reject incomplete upstream jobs before setup
+        shell: pwsh
+        env:
+          PLAN_RESULT: ${{ needs.plan.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          if ($env:PLAN_RESULT -ne 'success' -or $env:BUILD_RESULT -ne 'success')
+          {
+            throw "W06 plan/build jobs did not all succeed: plan=$env:PLAN_RESULT build=$env:BUILD_RESULT"
+          }
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.TARGET_SOURCE_SHA }}
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Set up Arduino CLI 1.5.1
+        uses: arduino/setup-arduino-cli@81d310742121c928ea9c8bbd407b4217b432ae02
+        with:
+          version: 1.5.1
+      - name: Download immutable W06 plan
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m33-w06-plan-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: D:\m33-w06-plan
+      - name: Download all build shards without merging roots
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: m33-w06-build-shard-*-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: D:\m33-w06-shards
+      - name: Verify target identity and derive cache key
+        id: lock
+        shell: powershell
+        run: |
+          if ($env:TARGET_SOURCE_SHA -notmatch '^[0-9a-f]{40}$') {
+            throw 'TARGET_SOURCE_SHA must be a full lowercase SHA.'
+          }
+          $head = (& git rev-parse HEAD).Trim()
+          if ($head -ne $env:TARGET_SOURCE_SHA) {
+            throw "Exact checkout mismatch: head=$head expected=$env:TARGET_SOURCE_SHA"
+          }
+          python tools/ci/verify_ci_lock.py --github-output
+      - name: Restore Windows Builder cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~\AppData\Local\NUCODE\NU54DK_Arduino_Core
+          key: ${{ steps.lock.outputs.windows_cache_key }}-builder-v3
+      - name: Restore exact NCS and toolchain cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            D:\ncs
+            D:\nu54-prerequisites
+          key: ${{ steps.lock.outputs.windows_cache_key }}-ncs-toolchain-v3
+      - name: Install or verify exact Nordic prerequisites
+        shell: powershell
+        run: >-
+          powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+          -File .\tools\nu54-prerequisites\install-nordic.ps1
+          -PlatformRoot .
+          -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
+      - name: Verify installed SDK revisions
+        run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+      - name: Reject incomplete jobs and aggregate all 150 slots
+        shell: powershell
+        env:
+          PLAN_RESULT: ${{ needs.plan.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          if ($env:PLAN_RESULT -ne 'success' -or $env:BUILD_RESULT -ne 'success') {
+            throw "W06 plan/build jobs did not all succeed: plan=$env:PLAN_RESULT build=$env:BUILD_RESULT"
+          }
+          $cli = (Get-Command arduino-cli.exe -ErrorAction Stop).Source
+          New-Item -ItemType Directory -Path D:\m33-w06-aggregate-action-model -Force | Out-Null
+          'model-only: true' | Set-Content -LiteralPath D:\m33-w06-aggregate-action-model\arduino-cli.yaml -Encoding utf8
+          python tools/ci/m33_w06_artifacts.py aggregate-shards `
+            --plan D:\m33-w06-plan\m33-w06-artifact-plan.json `
+            --shard-plan D:\m33-w06-plan\m33-w06-build-shard-plan.json `
+            --shards-root D:\m33-w06-shards `
+            --work-root D:\m33-w06-aggregate-action-model\work `
+            --arduino-cli $cli `
+            --arduino-config D:\m33-w06-aggregate-action-model\arduino-cli.yaml `
+            --index-output D:\m33-w06-shards\m33-w06-build-index.json `
+            --runtime-inputs-output D:\m33-w06-shards\m33-w06-runtime-inputs.json `
+            --output D:\m33-w06-shards\m33-w06-ci-build-aggregate.json `
+            --transfer-contract D:\m33-w06-plan\TRANSFER-CONTRACT.txt `
+            --sdk-root $env:NUCODE_NCS_ROOT `
+            --toolchain-root $env:NUCODE_TOOLCHAIN_ROOT
+      - name: Stage build-only control evidence and explicit transfer contract
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path D:\m33-w06-aggregate -Force | Out-Null
+          foreach ($name in @(
+            'm33-w06-ci-build-aggregate.json',
+            'm33-w06-build-index.json',
+            'm33-w06-runtime-inputs.json'
+          )) {
+            $source = Join-Path 'D:\m33-w06-shards' $name
+            Copy-Item -LiteralPath $source -Destination D:\m33-w06-aggregate
+          }
+          foreach ($name in @(
+            'm33-w06-artifact-plan.json',
+            'm33-w06-build-shard-plan.json',
+            'TRANSFER-CONTRACT.txt'
+          )) {
+            $source = Join-Path 'D:\m33-w06-plan' $name
+            Copy-Item -LiteralPath $source -Destination D:\m33-w06-aggregate
+          }
+      - name: Upload control evidence requiring all four byte-bearing shards
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m33-w06-build-aggregate-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: D:\m33-w06-aggregate
+          if-no-files-found: error
+          retention-days: 14

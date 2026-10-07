@@ -60,11 +60,14 @@ class M31CapabilityParserTests(unittest.TestCase):
         self.assertFalse(result.controller_bits["raw_iq_rx"])
         self.assertFalse(any(result.host_config.values()))
 
-    def test_register_query_timeout_is_bounded_for_three_probe_runs(self) -> None:
-        """! @brief 병렬 빌드 중에도 DP/AP 조회 시간을 제한된 60초로 확보합니다. """
+    def test_register_query_uses_hash_only_in_process_backend(self) -> None:
+        """! @brief DP/AP 조회가 raw UID subprocess 대신 SHA 기반 API를 사용합니다. """
+
         runner = RUNNER_PATH.read_text(encoding="utf-8")
-        self.assertIn("REGISTER_QUERY_TIMEOUT_SECONDS = 60", runner)
-        self.assertIn("timeout=REGISTER_QUERY_TIMEOUT_SECONDS", runner)
+        self.assertIn("collect_register_identity_sha256", runner)
+        self.assertIn("collect_register_identity_backend(digest, volume)", runner)
+        self.assertNotIn('"--uid"', runner)
+        self.assertNotIn("PYOCD_LAUNCHER", runner)
 
     def test_wrong_nonce_and_revision_are_rejected(self) -> None:
         """! @brief 다른 attempt/source의 serial 출력을 재사용하지 않습니다. """

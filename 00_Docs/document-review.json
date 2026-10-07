@@ -1,6 +1,963 @@
 {
   "schema_version": 9,
   "review_date": "2026-10-03",
+  "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
+  "follow_up_reviews": [
+    {
+      "review_date": "2026-10-07",
+      "purpose": "사용자의 문서 정비 후 추가 요청에 따른 M33 전용 이력 squash와 원본 복구 안내",
+      "baseline_commit": "84c5f4d85c08312d7ce0ff12e2e70b31bdf6564c",
+      "branch": "Dev-0.6.0-M33",
+      "scope": {
+        "main_parent": "314c04f2b3e342df5aafa7ba8d950643e9124fe6",
+        "original_commit_count": 87,
+        "squashed_commit_count": 1,
+        "implementation_changes": false,
+        "updated_existing_markdown": 4,
+        "main_release_tags_unchanged": true,
+        "w06_implementation_or_hil_resumed": false
+      },
+      "backup": {
+        "path": "D:/w06/archive/git-history-20261007/M33-presquash-84c5f4d8.bundle",
+        "sha256": "b95cbd07520c080c76c0a15bd03b480668a1ed79add8e13bbd300c7d25e7b6c5",
+        "bytes": 152774333,
+        "original_tree": "f7013e13afb0c372c37df03b1ac257a20fcc8f02",
+        "complete_history": true,
+        "verification": "git bundle verify PASS; independent bare restore, git fsck --full and original tree identity PASS"
+      },
+      "checks": {
+        "markdown": "506 files UTF-8/local-link PASS",
+        "whitespace": "git diff --check PASS",
+        "changed_scope": "Only four history/handoff Markdown documents plus this append-only audit entry; firmware/config/submodule/evidence unchanged",
+        "ci": "History/documentation-only commit uses [skip ci]; no target build/HIL claimed for new SHA"
+      },
+      "push_policy": {
+        "remote_ref": "refs/heads/Dev-0.6.0-M33",
+        "expected_old": "84c5f4d85c08312d7ce0ff12e2e70b31bdf6564c",
+        "method": "Explicit --force-with-lease; final new SHA and remote equality reported after execution"
+      },
+      "documents": [
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "73d61004822a69d3b84a4bd17b1bd2478ce1b327b5524698e234fdf73f7aed0c"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "de877fff79d8be366dcc9e0c98e6a07b8112c12aa613859bb17177c2b7f645d9"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "2c94c359e1e65e8b004c6e107df3a6626f38e3dd70a8b70c2af64e03dc2b231c"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "41c2c7104942ffea1aeb2c4c4fbe7bac8daf2c424a0c0736241bacbcfe941c6f"
+        }
+      ]
+    },
+    {
+      "review_date": "2026-10-07",
+      "baseline_commit": "f9f1cd283ee39bcf0609e047473e0e8c5c9930c1",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "사용자 요청으로 기존 W06 실행을 정리하고 저장소 문서 전수 검사·현행 안내 축약·W06 파이프라인 재설계 문서를 작성. 새 구조 구현·HIL은 재개하지 않음.",
+      "scope": {
+        "repository_markdown_before": 505,
+        "repository_markdown_after": 506,
+        "board_submodule_read_only_markdown": 6,
+        "all_markdown_after": 512,
+        "updated_existing_markdown": 26,
+        "added_markdown": 2,
+        "deleted_markdown": 1,
+        "frozen_completed_todos_modified": 0,
+        "source_or_sdk_changes": false,
+        "review_depth": "모든 Markdown UTF-8/로컬 링크/제목·절/정규화 hash/완전 중복/현행 지시 관련 문장 전수 검사. 변경한 현행 안내·계약·재설계 본문 검토; 나머지는 범위·참조와 이전 감사 hash 대조. 역사 기술 판정 전체의 새 실험·외부 URL 전수 최신성 재조사는 아님.",
+        "hash_method": "실제 파일 strict UTF-8, CRLF/CR을 LF로 정규화한 SHA-256. 이 JSON은 Markdown manifest에서 제외. 고정 board gitlink의 Markdown 6개 포함.",
+        "full_historical_technical_revalidation": false,
+        "classification_counts": {
+          "current_or_historical_reference": 109,
+          "historical_evidence": 305,
+          "version_bound_release": 82,
+          "frozen_completed_todo": 6,
+          "external_read_only": 8,
+          "generated_or_catalog": 2
+        }
+      },
+      "execution_stop": {
+        "source_revision": "f9f1cd283ee39bcf0609e047473e0e8c5c9930c1",
+        "actions_run": 37581357663,
+        "attempt": 1,
+        "conclusion": "cancelled",
+        "reason": "User requested documentation/design transition",
+        "board_result": "Three boards actually HALTED before/after, RADIO idle; not firmware STOP or f9 runtime PASS.",
+        "evidence": "00_Docs/04_검증 기록/evidence/m33-w06-docs-20261007/execution-stop.json",
+        "long_build_or_hil_restarted": false
+      },
+      "current_state": {
+        "m33": "5/8; W06 incomplete",
+        "host": "3/8; W04+ not started",
+        "new_design": "00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md",
+        "new_implementation": "NOT_STARTED"
+      },
+      "checks": {
+        "markdown_local_links": "PASS: 506 repository + 6 board Markdown; missing 0",
+        "exact_content_duplicates": 0,
+        "contracts": "M31/M32/M33 --check PASS",
+        "generated": "Peripheral 5 contracts/4 generators, coverage render, example guidance 204 PASS",
+        "host": "Readiness 31 + W06 artifacts 43 tests PASS",
+        "completion_todos_board_code_sdk_release_preserved": true,
+        "remote_build_for_docs": "Intentionally not run; documentation-only commit uses CI skip marker because existing W06 paths match Markdown."
+      },
+      "preservation": {
+        "artifact_zip_deletion": false,
+        "historical_release_evidence": "Preserved",
+        "completed_todo_hashes": [
+          {
+            "path": "00_Docs/TODO_M31.md",
+            "sha256_utf8_lf": "50a62a30c2aea1e358901edf338628217f2af72b459316295a328f790429de3b"
+          },
+          {
+            "path": "00_Docs/TODO_M32.md",
+            "sha256_utf8_lf": "601d82ba403d653ad92f3d53d7fc3b22d963bb8037e41985fbe45d1c02aa236c"
+          },
+          {
+            "path": "00_Docs/TODO_v0.4.0.md",
+            "sha256_utf8_lf": "f53804aa77329a123f253f374a3041142bd416779469fc6ad3970fa4e13c87e4"
+          },
+          {
+            "path": "00_Docs/TODO_v0.4.1.md",
+            "sha256_utf8_lf": "c6da227635e4632d08205547b8a6399de4fc8a49eb6785a511e03c08b9fcfb08"
+          },
+          {
+            "path": "00_Docs/TODO_v0.5.0-RC2.md",
+            "sha256_utf8_lf": "3adfca431bc9a5ef576cd4e2fa729a045a7b218dd06f3684a9a4808e33bd7b6d"
+          },
+          {
+            "path": "00_Docs/TODO_v0.5.0.md",
+            "sha256_utf8_lf": "f02fbaa2f2dc096c717f4686bf7d7dfd261af65abc76fd1391276a213d0cc593"
+          }
+        ],
+        "deleted_documents": [
+          {
+            "path": "tools/ci/m33_w05_github_actions.md",
+            "sha256_utf8_lf": "4350ca15cb545d4ff385c4da0c4fb03452a54440b673fc812f98802a571ca8ce",
+            "moved_content_to": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md#7-m33-w05-설치-예제-actions--기존-도구-reference",
+            "recovery_commit": "f9f1cd283ee39bcf0609e047473e0e8c5c9930c1"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+          "sha256_utf8_lf": "e7aad6b9344e2b50cd426abb8968cd6cf2d46049d523802c73c120f234532929",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md",
+          "sha256_utf8_lf": "a0dfafa59839d522ac18bdbbb4ed579065f41de505bb414783ef644b72922cdc",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/99_최초_리팩토링_설계안_참고.md",
+          "sha256_utf8_lf": "337cff7aa041293a78eb7d7e7010c7bfa48dec04a1d0bf8d6512a269555ba97a",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md",
+          "sha256_utf8_lf": "f53e20573eb36dbaebd69667c6dfcaf7341e3eff09188e488d2ed26b957dc36d",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md",
+          "sha256_utf8_lf": "dcab788f6db979d5c1dc5e26abc30aad1c6bab63aa1dbf1ea1a8d6ec37b46c4a",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/23_M33_전체_예제_원장과_릴리스_계약.md",
+          "sha256_utf8_lf": "a43ea97785af3892f83c87b92dad67862768d9d9f51b301b0b0b35470ccc267d",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/04_빌드_캐시와_산출물.md",
+          "sha256_utf8_lf": "d6279c18a436aec8de89c0929d27ce23518db9fee3768612c2305fad73023e2c",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+          "sha256_utf8_lf": "78f41398b26a3750708ef0d14d2c0c823f4b5b2b2d657c65a28da56ea208f588",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md",
+          "sha256_utf8_lf": "2237aac614ea5a2f475c5edb92242664c90d3bb318e4a6d5b33b42edb1450084",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+          "sha256_utf8_lf": "fb64e0b032336ecd41065fee2ff49accf255b922ef9127e09d4825681f6d9d0e",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md",
+          "sha256_utf8_lf": "b7fc013da3f1b96a11c94710e518897a6807d7dafcd5b773927eef3be5f2358a",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md",
+          "sha256_utf8_lf": "a28459caaa1237c74fd40c5077533a4620bb7ab8ee866b6beb5acbd85f84b53b",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "5e2227ee5a304f2f94ab8a3ef0070e0aa72a20a95022010f438879c9402876ed",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/05_릴리스/README.md",
+          "sha256_utf8_lf": "f58d94f266b1ef48feeb2a5891b25c62ebd2dfbe2463d55581a12b45f5b46776",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "91f90a3404669af02195e5f3e6e5dae84d6c46d8b2e43b4f061fd0e19c0d1cf8",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "c17d9c1154f248a30f169d893bcd57aa41dfc2b4fdf767fa7ee7111d4e48da17",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "a67e2a2a72ac0c69ca901feecaa5bcb53fb344d8c844414a70260654a85880d1",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "d1e1962413286c10f85d4957cd6cb33d72ec6d795c5a082fb9eef38978664282",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "e597c9628e16d7ff3a797bd8c629c80bccc25982e4dc5b154ab5d1009b149fbc",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "e754e6c1d67ded5a6e54cbc76806039083aadb97129a3c8ac7b6758d16e92085",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "c0424c5ce7f7add89b0891b3d016e1771da9f15322bb7755572f6a0b9c0d04fd",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "30e87159607ac6b33477558523712508e9f586976fe95301cc6920f7cfc36821",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_Companion/README.md",
+          "sha256_utf8_lf": "619523ed1efe1a58539c3fb3fc27f8af576c538d0bbeac97f7097423e5a221ed",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "1bbbd5aa0ba47459c4fce2db29de6d442d2b7f940e58b0e011c1fe9b9e44e86e",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "tests/hil/nu54dk/README.md",
+          "sha256_utf8_lf": "9c996e363911cebe01c39d29e6e3cd4ff3779b9fc2fcab7589542a28004f20f2",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "tests/zephyr/m33_ecosystem_hil/README.md",
+          "sha256_utf8_lf": "6f49aa9943b0a194f1fab365e95614b7922a51354b046cc55e0f4068ec0df8c7",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "tests/zephyr/m33_profile_hil/README.md",
+          "sha256_utf8_lf": "d9ca3fe61e32ca6be970cf4969df81763e2ba79c992d31553cd8786b39cf2c2e",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        },
+        {
+          "path": "tools/ci/m33_w06_artifacts.md",
+          "sha256_utf8_lf": "615a635a7b04faa82f08472bc63dbf56388fde4f058908e8db42ec19f061cf68",
+          "review_depth": "full_changed_text_and_contract_boundary_review"
+        }
+      ],
+      "check_logs": [
+        {
+          "file": "artifact-tests.log",
+          "sha256": "cc9c91e89f395208b3b86adc016c7889422bdcaa65921499fcc83a1414c3da65"
+        },
+        {
+          "file": "coverage.log",
+          "sha256": "742e36d42b2603b9d48e14809c15a17d895e33aae666f3b6d8328c61962fa732"
+        },
+        {
+          "file": "docs.log",
+          "sha256": "c5fae2883a90c3b0666391566479a849121a02e254c3aefe9eedad6bce492ff8"
+        },
+        {
+          "file": "examples.log",
+          "sha256": "d753b37078b06924f58abd38aa2f81310e5b8a05e726731f4f69ef7fc69f90d9"
+        },
+        {
+          "file": "generated.log",
+          "sha256": "e547b7c74f679cefba135fd6e2fd6852bd29aa2ad28154d0c3d048aa160c9928"
+        },
+        {
+          "file": "m31-contract.log",
+          "sha256": "9597d99f9ef5ca5a49056aaaf8c4be5f69a6651db8cf8da62003eae16eb56690"
+        },
+        {
+          "file": "m32-contract.log",
+          "sha256": "f4b8945e2c264df1475e37da0e6b9d9e47cd7b85cbfdc974c3086b27721abeff"
+        },
+        {
+          "file": "m33-contract.log",
+          "sha256": "a7ac90aadcf047579bd9385076c8656dbb9d608a7467a7197bf52b17b9432901"
+        },
+        {
+          "file": "readiness-tests.log",
+          "sha256": "039d54a67509386050bc05a5ac2b1c5f3afb56788bd52b271bc8d631fa3dffa5"
+        }
+      ]
+    },
+    {
+      "review_date": "2026-10-05",
+      "baseline_commit": "94bb730c783f90cd7aeeb3e68b13da458c2b9459",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "사용자 로컬 작업 자료 삭제 통보 및 단일 에이전트 선호를 반영한 새 채팅 인계 갱신. 문서만 변경·커밋·푸시하며 구현·target build·HIL은 재개하지 않음.",
+      "scope": {
+        "updated_existing_markdown": 11,
+        "added_markdown": 0,
+        "deleted_markdown": 0,
+        "frozen_completed_todos_modified": 0,
+        "hash_checked_markdown": 11,
+        "review_depth": "현행 AGENTS·인계·TODO·실행 안내 및 302번 후속 가용성 갱신. 저장소 Markdown 키워드/참조 검색, 최신 구현 diff·기존 미커밋 diff 읽기, 로컬 경로 존재와 원격 Actions API 점검. 과거 전체 기술 판정 재감사가 아님.",
+        "hash_method": "Staged Git blob content: strict UTF-8, CRLF/CR normalized to LF, SHA-256. This JSON excluded. tools/ci/m33_w06_artifacts.md hash excludes pre-existing unstaged 7-to-8 test-count edit."
+      },
+      "execution_policy": {
+        "agents": "One primary agent; no subagents or multi-chat/worktree delegation unless the user requests otherwise.",
+        "local_heavy_jobs": "One build/HIL job at a time.",
+        "github_actions": "Existing build shards and read-only result queries remain allowed; CI build is not physical PASS."
+      },
+      "availability": {
+        "missing_paths": [
+          "C:\\n54w06s19\\source-lf",
+          "C:\\n54w06o19",
+          "C:\\n54w06diag-profile-portable",
+          "C:\\n54w06diag-profile-portable-output-4",
+          "C:\\n54w06s4",
+          "C:\\n54w06s5"
+        ],
+        "present_paths": [
+          "C:\\Users\\eidos\\GitHub\\NU54DK_Arduino_Core",
+          "C:\\ncs\\v3.4.0",
+          "C:\\ncs\\toolchains\\dcbdc366a1"
+        ],
+        "bundle_checks": [
+          {
+            "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-10-02\\di-x20\\outputs\\M32-history-0c2af5bd.bundle",
+            "sha256": "12e3f96ae50d30ac721bf43fdc217b7819ff7b388e046d622326d013ff99bdb1",
+            "result": "Present; current SHA-256 matches previous record"
+          },
+          {
+            "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-10-03\\m33-c-users-eidos-github-nu54dk\\work\\m33-docs-presquash-12637a30.bundle",
+            "sha256": "cc75117047e8214fe440250891dfe95097cb56921a0f6b10e26f8885919f0e13",
+            "result": "Present; current SHA-256 matches previous record"
+          }
+        ],
+        "limits": "No universal claim about all C: files. SDK directory presence is not a new pin/tool validation. Board/SSH/Mac/symlink capability not checked in this documentation task.",
+        "recovery": "Choose exact source first; verify matching run/attempt, availability/access and artifact hashes before transfer/reaggregation into a new short root. Local-only runtime/cleanup cannot be fabricated or inferred from old hashes."
+      },
+      "current_state": {
+        "m33": "5/8, W01-W05 complete; W06 incomplete",
+        "host": "3/8; no HOST-W04 before W06 completion",
+        "implementation_source": "94bb730c783f90cd7aeeb3e68b13da458c2b9459",
+        "implementation_change": "Bounded debugger halt/state transition wait is committed; final physical resolution not established here.",
+        "historical_source": "6867d4d86ccdedfe448ef3e454c64a77f5cab82c",
+        "historical_evidence": "141 build/59-suite 487-test and halt failure preserved as previously recorded; local original roots now missing.",
+        "no_new_completion": true
+      },
+      "preservation": {
+        "existing_uncommitted_changes_at_start": [
+          {
+            "path": "tests/hil/nu54dk/m33_profile_idle_fixture.py",
+            "sha256": "8d278ad27397ef4bcbffdc87b75d9d1540a4caeee1309951bf7728b02e90d1e9"
+          },
+          {
+            "path": "tests/host/test_m33_w06_runtime_fixture.py",
+            "sha256": "903cdfaaa09577e1b8d2c31886f9978914336d630990f6032e82b9d02981380b"
+          },
+          {
+            "path": "tools/bluetooth/m33_regression.py",
+            "sha256": "7d589814f3c78a35f10b49300169b4e724abc2a3d89bad0494221741f61a594a"
+          },
+          {
+            "path": "tools/ci/m33_w06_artifacts.md",
+            "sha256": "fd8d2df09e7143d3f3e5d64e9769bff1a7959373f5a6427084d7707d4dee2078"
+          }
+        ],
+        "policy": "Preserve three implementation/test files byte-for-byte. Partially stage only new restart-policy hunk in tools/ci/m33_w06_artifacts.md; leave user's suite count 7-to-8 edit unstaged with associated code.",
+        "completed_todos": "Six frozen TODOs unchanged.",
+        "historical_audits": "Existing ledger entries and 302 sections 1-6 preserved; 302 gains a scoped availability notice and section 7.",
+        "git_history": "Normal new documentation commit only; no further squash or force push.",
+        "sdk_board_hardware": "No SDK/submodule/board/settings changes."
+      },
+      "checks": [
+        {
+          "name": "Markdown UTF-8/local links",
+          "result": "PASS",
+          "command": "py -3 tools/ci/run_m12_gate.py docs",
+          "count": 504
+        },
+        {
+          "name": "M33 readiness contract unit",
+          "result": "PASS",
+          "command": "py -3 -m unittest discover -s tests/host -p test_m33_readiness_contract.py",
+          "count": 28,
+          "limits": "Documentation-related contract check on current working tree, not full exact Host/HIL or validation of pre-existing uncommitted work."
+        },
+        {
+          "name": "Whitespace",
+          "result": "PASS",
+          "command": "git diff --check; git diff --cached --check"
+        },
+        {
+          "name": "Staged documentation normalized hashes",
+          "result": "PASS",
+          "count": 11
+        },
+        {
+          "name": "Actions API observation",
+          "result": "SUCCESS",
+          "run_id": 37287774267,
+          "run_attempt": 1,
+          "head_sha": "94bb730c783f90cd7aeeb3e68b13da458c2b9459",
+          "artifact_count": 6,
+          "expired_artifacts": 0,
+          "limits": "Metadata-only observation; no artifact download or byte validation. Six artifacts of historical run 37265515608 also unexpired at lookup."
+        }
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md",
+          "sha256_utf8_lf": "a399e1091fe6633b42b2020ded3187afd3cd8bef0452449543f0562b14f381a9",
+          "bytes_utf8_lf": 17651
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "2bf3ceab642130b2f70e9e295bd5442ccb3321d4b49cce28f60a126b018a3c48",
+          "bytes_utf8_lf": 46668
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "07cd9ed681c03f7b30197035ccd4ff6c4ea2e57d1d1824b522eff905d10012d0",
+          "bytes_utf8_lf": 11892
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "f3cb18f6eabf1fe4e7504874709a77a6d3f897281aeeaa05eb5b28cbe5d65824",
+          "bytes_utf8_lf": 47543
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "e86c70d1c88c3fefa65bf7ef1e35c83cec1514ffefc74007afb76220d8275bc7",
+          "bytes_utf8_lf": 14511
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "d57b07ec7332fb1cb5406368ba6ab8cbcbac89bc34715ce8659d26467f13f5a2",
+          "bytes_utf8_lf": 46709
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "e54ad7c8e66691efa0fd810be2aca1923aaa3d36b8e481ccc7c53ce060d0240b",
+          "bytes_utf8_lf": 9227
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "411e34873c3b3f85365b68ddb94d4dae4c55bc5442635ece8a968e885f7cf9c7",
+          "bytes_utf8_lf": 16802
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "cce84e30ba7d275517483b37791e60d20b69190afff02d51571c3d04a38531f3",
+          "bytes_utf8_lf": 8845
+        },
+        {
+          "path": "tests/hil/nu54dk/README.md",
+          "sha256_utf8_lf": "1a0bd65a68128389b046039db1da1291bf3075d0f77d576459f4a11565810d7b",
+          "bytes_utf8_lf": 90743
+        },
+        {
+          "path": "tools/ci/m33_w06_artifacts.md",
+          "sha256_utf8_lf": "686765d926d2529f0ae1fccb1a536ae0824d60d5f245e608895e8a1b59690d47",
+          "bytes_utf8_lf": 27173
+        }
+      ]
+    },
+    {
+      "review_date": "2026-10-05",
+      "baseline_commit": "12637a308a72ce49631f0ef6c1cfde250da6174d",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "사용자 요청에 따른 완료 TODO 6개 동결·활성 문서 분리, 직전 인계 문서 commit과 이번 정리만 squash. W06 구현·target build·보드 시험은 재개하지 않음.",
+      "scope": {
+        "updated_existing_markdown": 11,
+        "added_markdown": 0,
+        "deleted_markdown": 0,
+        "frozen_completed_todos": 6,
+        "preserved_completed_checkboxes": 154,
+        "hash_checked_markdown": 11,
+        "review_depth": "완료 TODO·현행 진입 지침·직접 참조 테스트·변경 heading inbound 참조 점검. 기존 전체 감사 snapshot과 당시 판정은 보존.",
+        "hash_method": "Strict UTF-8, CRLF/CR normalized to LF, SHA-256. This JSON excluded."
+      },
+      "policy": {
+        "frozen_paths": [
+          "00_Docs/TODO_v0.4.0.md",
+          "00_Docs/TODO_v0.4.1.md",
+          "00_Docs/TODO_v0.5.0-RC2.md",
+          "00_Docs/TODO_v0.5.0.md",
+          "00_Docs/TODO_M31.md",
+          "00_Docs/TODO_M32.md"
+        ],
+        "current_todos": [
+          "00_Docs/TODO_M33.md",
+          "00_Docs/TODO_v0.6.0.md"
+        ],
+        "future_todo": "00_Docs/TODO_v0.7.0.md",
+        "rule": "완료 TODO는 상시 전체 읽기·진행률 동기화·정기 갱신 대상에서 제외. 관련 증거만 참조하고 실제 오류 정정 또는 사용자 명시 요청 범위에서만 수정.",
+        "retention_reason": "완료 근거·문서 링크·M28/M29/M30 본문 검사·M33 원장 baseline evidence·v0.4.0 생성기 경로 유지."
+      },
+      "preservation": {
+        "squash_scope": "12637a30 documentation handoff plus this documentation cleanup only",
+        "unchanged_parent": "6867d4d86ccdedfe448ef3e454c64a77f5cab82c",
+        "backup_bundle": "C:\\Users\\eidos\\Documents\\Codex\\2026-10-03\\m33-c-users-eidos-github-nu54dk\\work\\m33-docs-presquash-12637a30.bundle",
+        "backup_bundle_sha256": "cc75117047e8214fe440250891dfe95097cb56921a0f6b10e26f8885919f0e13",
+        "backup_prerequisite": "6867d4d86ccdedfe448ef3e454c64a77f5cab82c",
+        "backup_verified": true,
+        "state": "M33 W01-W05 5/8; W06 incomplete, user stopped. HOST 3/8. NCS 3.4.0 unchanged.",
+        "evidence": "No historical PASS/FAIL/HOLD/NOT_RUN changes; exact source clone and raw evidence retained.",
+        "remote_guard": "Push only to Dev-0.6.0-M33 with explicit force-with-lease against 12637a308a72ce49631f0ef6c1cfde250da6174d. Final remote identity/CI observation reported after push."
+      },
+      "checks": [
+        {
+          "name": "Markdown UTF-8/local links",
+          "result": "PASS",
+          "command": "py -3 tools/ci/run_m12_gate.py docs",
+          "count": 504,
+          "limits": "Gate checks local file links, not web URLs/heading anchors. Changed heading inbound references were separately searched; none found."
+        },
+        {
+          "name": "Affected readiness unit suites",
+          "result": "PASS",
+          "counts": {
+            "M28": 8,
+            "M29": 8,
+            "M30": 7,
+            "M33": 28
+          },
+          "total": 51,
+          "command": "py -3 -m unittest discover -s tests/host -p test_m{28,29,30}_readiness.py; M33 pattern test_m33_readiness_contract.py (each pattern executed separately)",
+          "limits": "No target build or physical HIL."
+        },
+        {
+          "name": "Whitespace",
+          "result": "PASS",
+          "command": "git diff --check"
+        },
+        {
+          "name": "Completed TODO preservation",
+          "result": "PASS",
+          "completed_checkboxes": 154,
+          "unchecked_checkboxes": 0,
+          "v050_required_assertion_tokens": 12
+        },
+        {
+          "name": "Document normalized hashes",
+          "result": "PASS",
+          "count": 11
+        },
+        {
+          "name": "Independent documentation review",
+          "result": "PASS",
+          "limits": "Read-only review of freeze policy, evidence boundaries and changed heading references."
+        }
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "50bd617dca361b1e4bf7e8a3e72d0624148659849148512369eb8dcae9b6f907",
+          "bytes_utf8_lf": 11300
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "b2e4ba65d6351c8c93e172db4bc26fca2a2b0c1e4db6f9aa7b11e284bcee6734",
+          "bytes_utf8_lf": 44166
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "e66a73f81fbd2498c0d2ec5f36aa736b0fe3239334d58df60204080d383c014a",
+          "bytes_utf8_lf": 14280
+        },
+        {
+          "path": "00_Docs/TODO_M31.md",
+          "sha256_utf8_lf": "50a62a30c2aea1e358901edf338628217f2af72b459316295a328f790429de3b",
+          "bytes_utf8_lf": 46074
+        },
+        {
+          "path": "00_Docs/TODO_M32.md",
+          "sha256_utf8_lf": "601d82ba403d653ad92f3d53d7fc3b22d963bb8037e41985fbe45d1c02aa236c",
+          "bytes_utf8_lf": 40348
+        },
+        {
+          "path": "00_Docs/TODO_v0.4.0.md",
+          "sha256_utf8_lf": "f53804aa77329a123f253f374a3041142bd416779469fc6ad3970fa4e13c87e4",
+          "bytes_utf8_lf": 32611
+        },
+        {
+          "path": "00_Docs/TODO_v0.4.1.md",
+          "sha256_utf8_lf": "c6da227635e4632d08205547b8a6399de4fc8a49eb6785a511e03c08b9fcfb08",
+          "bytes_utf8_lf": 2864
+        },
+        {
+          "path": "00_Docs/TODO_v0.5.0-RC2.md",
+          "sha256_utf8_lf": "3adfca431bc9a5ef576cd4e2fa729a045a7b218dd06f3684a9a4808e33bd7b6d",
+          "bytes_utf8_lf": 25377
+        },
+        {
+          "path": "00_Docs/TODO_v0.5.0.md",
+          "sha256_utf8_lf": "f02fbaa2f2dc096c717f4686bf7d7dfd261af65abc76fd1391276a213d0cc593",
+          "bytes_utf8_lf": 30539
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "fab9b433ed5d92198995a83be226856b97bea91b3b0b44716c5787fed17d2793",
+          "bytes_utf8_lf": 15474
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "a60ff64fa51c19272a3072c1eb739413708989cfbb0755ed3d03e14da1150d2c",
+          "bytes_utf8_lf": 8361
+        }
+      ]
+    },
+    {
+      "review_date": "2026-10-05",
+      "baseline_commit": "6867d4d86ccdedfe448ef3e454c64a77f5cab82c",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "사용자 정지 이후 새 채팅 인계를 위한 문서 갱신·커밋·푸시. 구현·build·보드 시험은 재개하지 않음.",
+      "handoff": "00_Docs/M33_HANDOFF.md",
+      "checkpoint": "00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md",
+      "scope": {
+        "tracked_main_markdown_read_at_start": 503,
+        "submodule_markdown_read": 6,
+        "baseline_main_bytes_utf8_lf": 4543090,
+        "updated_existing_markdown": 20,
+        "added_markdown": 1,
+        "deleted_markdown": 0,
+        "hash_checked_markdown": 21,
+        "review_depth": "전체 Markdown strict UTF-8 본문 읽기·정책/상태 키워드 자동 전수 검사. AGENTS·현행 TODO·인계·계약·SDK 기록·296~301 및 변경 문맥은 본문/증거 대조. 모든 역사 문단의 기술 결과 재검증을 뜻하지 않음.",
+        "hash_method": "Strict UTF-8, CRLF/CR normalized to LF, SHA-256. This JSON excluded."
+      },
+      "current_state": {
+        "m32": "12/12 completed; original history local bundle preserved",
+        "m33": "W01-W05 5/8 complete; W06 incomplete, stopped by user, awaiting explicit resume in new chat",
+        "host": "3/8; HOST-W04 onward must not begin before M33-W06 completion",
+        "sdk": "NCS 3.4.0; board and toolchain unchanged",
+        "verified_source": "6867d4d86ccdedfe448ef3e454c64a77f5cab82c",
+        "preserved_source": "C:\\n54w06s19\\source-lf",
+        "local_evidence": "C:\\n54w06o19",
+        "actions_run": 37265515608,
+        "actions_attempt": 1,
+        "actions_result": "SUCCESS; 141 build slots; not HIL",
+        "exact_host_result": "PASS: 59 suites, 487 tests, skipped 0",
+        "runtime_result": "FAIL: client readback halt failed; cause not yet confirmed",
+        "remaining": "9 runtime slots, stage/validate, 49 physical groups, 1800-second soak, risks and closure; Windows symlink permission unresolved",
+        "publication": "v0.6.0 not published; stable/source version remains 0.5.0; no publication authority"
+      },
+      "preservation": {
+        "historical_audit_and_evidence": "preserved; no historical PASS/FAIL/HOLD/NOT_RUN reclassification",
+        "source_and_hardware": "no implementation, SDK/submodule, board or environment-setting changes",
+        "exact_source_boundary": "documentation commit follows verified source; prior build/Host results are not reattributed to the new HEAD",
+        "directories": "no cleanup/deletion; exact clones and raw evidence retained"
+      },
+      "checks": [
+        {
+          "name": "Markdown UTF-8/local links",
+          "result": "PASS",
+          "command": "py -3 tools/ci/run_m12_gate.py docs",
+          "count": 504,
+          "limits": "Local file links only; heading anchors and web URLs not checked by this gate."
+        },
+        {
+          "name": "Whitespace",
+          "result": "PASS",
+          "command": "git diff --check"
+        },
+        {
+          "name": "Document normalized hashes",
+          "result": "PASS",
+          "count": 21
+        },
+        {
+          "name": "Local raw evidence cross-check",
+          "result": "PASS",
+          "files": 8,
+          "artifact_zip_hashes": 6,
+          "limits": "Read-only evidence audit, not a new HIL execution."
+        },
+        {
+          "name": "Remote Actions verified source",
+          "result": "SUCCESS",
+          "head_sha": "6867d4d86ccdedfe448ef3e454c64a77f5cab82c",
+          "run_id": 37265515608,
+          "run_attempt": 1,
+          "limits": "Exact old source only; current documentation commit CI is reported separately after push."
+        }
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+          "sha256_utf8_lf": "1749016e6659448d25283334682789f4991ba8cd09b084bfb4a3f35867bb4b9b",
+          "bytes_utf8_lf": 49431
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md",
+          "sha256_utf8_lf": "8c0e7f6974ef5e5bfd20212da282fd2e6d7647876daf0271497a86e82a675fb7",
+          "bytes_utf8_lf": 70506
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/23_M33_전체_예제_원장과_릴리스_계약.md",
+          "sha256_utf8_lf": "a87ebcc9db6d084065bc0d101adc78c5a58bd2813fe5001a64cb87cae79b303d",
+          "bytes_utf8_lf": 14662
+        },
+        {
+          "path": "00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md",
+          "sha256_utf8_lf": "233e7f80d6588759b7d58642d2ab719a382577a827393061275bdec3cc311ed6",
+          "bytes_utf8_lf": 14376
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "0e72c33f3d04d5f36530219d4960503d852d719c1b62a7d7e8598f17cc993a61",
+          "bytes_utf8_lf": 46614
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "d6d1389c0ef457f3c33832fd75135fe55bc8fc7396ccf5c07d92158ba3de9a9d",
+          "bytes_utf8_lf": 10322
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "9f542f4a43dea5e85a9b6cf2a7208f49b4dcd9fec9e53afcf05935e5edf2fc79",
+          "bytes_utf8_lf": 42315
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "5b01b715569235d832e5ded20dd952e30791ccad160494e589ffc74ca70b52bd",
+          "bytes_utf8_lf": 12752
+        },
+        {
+          "path": "00_Docs/TODO_M31.md",
+          "sha256_utf8_lf": "bd1934b0a97f5443fbe2081e203e5ffff90bf8fd42dd9e6982da186e77f959f8",
+          "bytes_utf8_lf": 46173
+        },
+        {
+          "path": "00_Docs/TODO_M32.md",
+          "sha256_utf8_lf": "28e77b2607f1aa7c9e1c2e433608a8e36d4917bd56980e9eb34cc231cea9f193",
+          "bytes_utf8_lf": 39853
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "0baee10d72e41c921016fdb71e9d0e2af595d392ebef2e4e7222400993142807",
+          "bytes_utf8_lf": 46447
+        },
+        {
+          "path": "00_Docs/TODO_v0.5.0.md",
+          "sha256_utf8_lf": "bc3d9bccda9f6261fcbff3c22106672bcbad8aed6f5cb806720367c89620c28f",
+          "bytes_utf8_lf": 30039
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "dc54cc66615e6037933f5614afa5e9274a5f4e5985667407a977f87cea72d7d6",
+          "bytes_utf8_lf": 8879
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "c75b8b8acd5988c6097c8515e228712fda8288d43d32b4a23b5274bd588b5b04",
+          "bytes_utf8_lf": 14884
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "6806bfc9114c81959b0476fc2c74df67b52a400af2fbfb39e678160e82cf202b",
+          "bytes_utf8_lf": 7449
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "818201a049ba5b05205a7401cd8ed5979ea15ae9af3402d4e5821acd7324c234",
+          "bytes_utf8_lf": 10508
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "02e0da73bde26eb0a1393d0488ea33413d5f8f0496c2353985a4fc97d7b3e0ba",
+          "bytes_utf8_lf": 13679
+        },
+        {
+          "path": "tests/hil/nu54dk/README.md",
+          "sha256_utf8_lf": "fb5f2e0132d13ff85e38dcb94bcd277c0d91d094887836f66b776ca1544a7ce4",
+          "bytes_utf8_lf": 90514
+        },
+        {
+          "path": "tools/ci/m33_w06_artifacts.md",
+          "sha256_utf8_lf": "8ee74858f957eb2e4deaaa09d1e285813262ae995d720adcf0853b62de5cf8d5",
+          "bytes_utf8_lf": 26558
+        },
+        {
+          "path": "tools/peripheral/README.md",
+          "sha256_utf8_lf": "e7fb2eeb884f5063d5f66793f119ceb594987f4b6bd192469af22a8615b79f8b",
+          "bytes_utf8_lf": 5231
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "fd24a9570b6c645009db200ffd2f21ac24262ddbcc3579aacd993bb835920014",
+          "bytes_utf8_lf": 4125
+        }
+      ]
+    },
+    {
+      "review_date": "2026-10-03",
+      "baseline_commit": "ce689fd2c14b7fd8f04cbdeafafb6b0fe7c72d9c",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "M33 전체 실행 순서와 새 채팅 복사용 지시문 작성, 현재 브랜치·M32 로컬 bundle 안내 정합화",
+      "handoff": "00_Docs/M33_HANDOFF.md",
+      "scope": {
+        "updated_existing_markdown": 12,
+        "added_markdown": 1,
+        "unchanged_host_contract_hash_checked": 1,
+        "hash_checked_markdown": 14,
+        "deleted_markdown": 0,
+        "review_depth": "새 인계서 전문·복사용 지시문과 기존 문서 변경 문맥·관련 계약 대조. 과거 감사·번호별 기록·실기 판정은 변경하지 않음.",
+        "hash_method": "Strict UTF-8, CRLF/CR normalized to LF, SHA-256. This JSON excluded."
+      },
+      "current_state": {
+        "working_branch": "Dev-0.6.0-M33",
+        "branch_base": "314c04f2b3e342df5aafa7ba8d950643e9124fe6",
+        "m32": "12/12 completed; local and remote Dev-0.6.0-M32 deleted by user request",
+        "m33": "0/8 not started",
+        "host": "3/8 completed; resume HOST-W04 only after M33-W06; no parallel Host development",
+        "sdk": "NCS v3.4.0; board/toolchain unchanged",
+        "source_version": "0.5.0",
+        "stable": "v0.5.0 Windows",
+        "m32_backup": {
+          "storage": "local Git bundle, not committed or uploaded to GitHub",
+          "path": "C:\\Users\\eidos\\Documents\\Codex\\2026-10-02\\di-x20\\outputs\\M32-history-0c2af5bd.bundle",
+          "tip": "0c2af5bdd561c7d271dd21041e2294aba0ea6005",
+          "bytes": 149421813,
+          "sha256": "12e3f96ae50d30ac721bf43fdc217b7819ff7b388e046d622326d013ff99bdb1",
+          "bundle_verify": "PASS; complete history"
+        }
+      },
+      "checks": [
+        {
+          "name": "Markdown UTF-8/local links",
+          "result": "PASS",
+          "command": "python tools/ci/run_m12_gate.py docs",
+          "count": 479
+        },
+        {
+          "name": "Whitespace",
+          "result": "PASS",
+          "command": "git diff --check"
+        },
+        {
+          "name": "Scoped normalized document hashes",
+          "result": "PASS",
+          "count": 14
+        },
+        {
+          "name": "Remote CI result",
+          "result": "NOT_CHECKED",
+          "reason": "Latest explicit user instruction; no CI status query or wait, no workflow disabling"
+        }
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+          "sha256_utf8_lf": "b69325a5256a595f222758efd31e933c2a803105479aa0eb328b6e972cadf5a8",
+          "bytes_utf8_lf": 49227
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md",
+          "sha256_utf8_lf": "7f8ac3281326a2f1e2a9504f740b73fc071a8efca0cc2f8af1c26697ee498e32",
+          "bytes_utf8_lf": 21888
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md",
+          "sha256_utf8_lf": "e219bb967dfd71f60db367dac34d1d3e063329aa752034a6c561812225b4ce20",
+          "bytes_utf8_lf": 10028
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "3e742d7bc3df5c159b581890c507654d524cef464c6221aeb995d1a957a15f89",
+          "bytes_utf8_lf": 19416
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "461568360f6bcc52103072adcb04b463d5bfd3576becb210bd787711e3c5f664",
+          "bytes_utf8_lf": 45245
+        },
+        {
+          "path": "00_Docs/05_릴리스/README.md",
+          "sha256_utf8_lf": "465d8b4da8548e8bd7db2c6fbfdde8b81f60e30cdbc1f1fe7689c1f12a17f0e4",
+          "bytes_utf8_lf": 4488
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "7999615acfdf09d53b61393cda7fac3538c64a416ab19eaabc6cf42a8ddc7de5",
+          "bytes_utf8_lf": 9256
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "3fb3d2c29f9f252c8964f4e941fad1bdb9f39e3b9134fa9b40642157df81f114",
+          "bytes_utf8_lf": 14772
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "9c91c1f9ae85387e778675db2af28b98d780c7496a33a9815050e86e48ac071e",
+          "bytes_utf8_lf": 11878
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "08ab10c741a21a6788602d2b97dc59db3488b8004d29ee74e317c5f77f6cab7c",
+          "bytes_utf8_lf": 24888
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "5dd0eab961d2409aa9c42d23b85c277ce86ea70e5ad280fb8a02cb4e58407a9d",
+          "bytes_utf8_lf": 7845
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "202c233323f82d1afe34168774cff9d0a2b5bb4963de5bc5bd1ed1032b836681",
+          "bytes_utf8_lf": 13328
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "e18623d507aec765e78a43511b21305ee12e020001fe976f169170b1274cea48",
+          "bytes_utf8_lf": 7204
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "14b9b331a35c912ef8d98de20fd16f6c40af0dfe4337005022aaa6c3874fa549",
+          "bytes_utf8_lf": 13336
+        }
+      ]
+    }
+  ],
   "purpose": "M32 완료 후 전체 문서를 목록·구조·현재 안내 관점에서 검토하고 중복/낡은 진행 지시를 정리한다. 문서 commit 후 원본 Dev 이력을 보존한 squash merge로 main을 갱신한다.",
   "baseline": {
     "branch": "Dev-0.6.0-M32",

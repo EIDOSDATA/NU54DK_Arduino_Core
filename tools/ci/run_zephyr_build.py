@@ -247,6 +247,8 @@ SUITE_GROUPS = {
         ("m32_regression_soak_hil", "nucode.m32.regression_soak_hil.peripheral"),
         ("m32_regression_soak_hil", "nucode.m32.regression_soak_hil.mixed"),
         ("m32_regression_soak_hil", "nucode.m32.regression_soak_hil.central"),
+        ("m33_ecosystem_hil", "nucode.m33.ecosystem.client"),
+        ("m33_ecosystem_hil", "nucode.m33.ecosystem.peer"),
     ),
 }
 SUITES = tuple(suite for group in SUITE_GROUPS.values() for suite in group)
@@ -501,6 +503,7 @@ def run_build(
         raise BuildFailure("checkout된 board submodule이 M12 lock과 다릅니다.")
     command: list[str | Path] = [
         sys.executable,
+        "-B",
         "-I",
         workspace / "zephyr" / "scripts" / "twister",
     ]
@@ -516,6 +519,7 @@ def run_build(
             "--ninja",
             "--short-build-path",
             "--detailed-test-id",
+            "--inline-logs",
             "--jobs",
             str(jobs),
             "--outdir",
@@ -526,6 +530,8 @@ def run_build(
             f"EXTRA_ZEPHYR_MODULES={REPOSITORY.as_posix()}",
             "--extra-args",
             "USE_CCACHE=0",
+            "--extra-args",
+            f"ZephyrAppConfiguration_ROOT={(REPOSITORY / 'tools/ci/cmake').as_posix()}",
         )
     )
     for _directory, scenario in suites_to_build:
@@ -533,6 +539,8 @@ def run_build(
     environment = dict(os.environ)
     environment["ZEPHYR_BASE"] = str(workspace / "zephyr")
     environment["CCACHE_DISABLE"] = "1"
+    ## @note sysbuild의 하위 CMake에도 basic_settings보다 먼저 같은 공식 package hook을 적용합니다.
+    environment["ZephyrAppConfiguration_ROOT"] = (REPOSITORY / "tools/ci/cmake").as_posix()
     print(f"[M12-ZEPHYR] exec: {subprocess.list2cmdline([str(item) for item in command])}")
     result = subprocess.run(command, cwd=workspace, env=environment, check=False)
     if result.returncode != 0:

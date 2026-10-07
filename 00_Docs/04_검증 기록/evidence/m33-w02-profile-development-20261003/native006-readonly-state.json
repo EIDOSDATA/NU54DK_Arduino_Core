@@ -1,0 +1,233 @@
+{
+  "method": "read-only attach, no halt/reset/resume; current post-STOP state only",
+  "observed_utc": "2026-10-03T16:24:08.493244+00:00",
+  "roles": {
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "2444500e3aefdf2abe86d5fa9142d510b4e3c7285096b21e4aeb79ef4191a8cf",
+      "elf_sha256": "dd5335bbea5f886acf9d9ac79f3fd06a6400452ed19c4ad54256f57d0be6167a",
+      "load_ranges": [
+        {
+          "start": 0,
+          "length": 1148,
+          "sha256": "cdc1abf461172c55a0f92b98bf6f46dc9e6f43443995ce9df5b4cc430b5beffc"
+        },
+        {
+          "start": 1152,
+          "length": 293676,
+          "sha256": "5d0eaea02db7821ba49fd684da242fa48442ba63abfc5460e3172b36672013a3"
+        }
+      ],
+      "registers": {
+        "RESETREAS": 1,
+        "DHCSR": 18087937,
+        "DFSR": 2,
+        "CFSR": 0,
+        "HFSR": 0,
+        "DWT_PCSR": 228438
+      },
+      "ram": {
+        "curr_tick": {
+          "address": 536898936,
+          "size": 8,
+          "sha256": "a9432340094bb866941b276f465f33010bffdd921af283ef75d1b88fd5219709",
+          "hex": "91c5eb0000000000"
+        },
+        "subscriptions": {
+          "address": 536965948,
+          "size": 80,
+          "sha256": "5b6fb58e61fa475939767d68a446f97f1bff02c0e5935a3ea8bb51e6515783d8",
+          "list_head_tail_words": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "(anonymous namespace)::nonce": {
+          "address": 536968669,
+          "size": 33,
+          "sha256": "0d5083fb3f4353decf58e53a4c9cb4ff4591386823b38d0216b6ff288d9dceb1",
+          "hex": "353236363566613461326631346161623237373437656637373061656532633100"
+        },
+        "(anonymous namespace)::started": {
+          "address": 536968652,
+          "size": 1,
+          "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          "hex": "01"
+        },
+        "(anonymous namespace)::cleanup_complete": {
+          "address": 536968646,
+          "size": 1,
+          "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          "hex": "01"
+        },
+        "(anonymous namespace)::stop_reported": {
+          "address": 536968644,
+          "size": 1,
+          "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          "hex": "01"
+        },
+        "(anonymous namespace)::failed": {
+          "address": 536968651,
+          "size": 1,
+          "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          "hex": "01"
+        },
+        "(anonymous namespace)::watchdog_channel": {
+          "address": 536876392,
+          "size": 4,
+          "sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+          "hex": "ffffffff"
+        },
+        "(anonymous namespace)::authenticated_links": {
+          "address": 536899012,
+          "size": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece",
+          "hex": "02000000"
+        }
+      }
+    },
+    "client": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "7815d3bf3b5d56cf5e9dc3ab9b8c4d8fd5eaf62f47abf7101d37bd673813419b",
+      "elf_sha256": "58a9dd157938027e3ac86813aafc3d7c177176da9cf3e867e32f09f600a9f0a8",
+      "load_ranges": [
+        {
+          "start": 0,
+          "length": 1148,
+          "sha256": "72eaedfc33ab8cd98ff37d4beba0dd844a6327549c0351bf402b37af99f655e0"
+        },
+        {
+          "start": 1152,
+          "length": 255100,
+          "sha256": "6366ac4feac0c715a81310c2f455bcfbb775cd93f58f82468580608c6dd41cff"
+        }
+      ],
+      "registers": {
+        "RESETREAS": 1,
+        "DHCSR": 18087937,
+        "DFSR": 0,
+        "CFSR": 0,
+        "HFSR": 0,
+        "DWT_PCSR": 190214
+      },
+      "ram": {
+        "curr_tick": {
+          "address": 536894224,
+          "size": 8,
+          "sha256": "8f7972aa291a1f07c04ba5a923206a0d0ce02a11e25b8e35a3d20b5717943b6e",
+          "hex": "8ccc990000000000"
+        },
+        "subscriptions": {
+          "address": 536960988,
+          "size": 80,
+          "sha256": "5b6fb58e61fa475939767d68a446f97f1bff02c0e5935a3ea8bb51e6515783d8",
+          "list_head_tail_words": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "(anonymous namespace)::nonce": {
+          "address": 536963199,
+          "size": 33,
+          "sha256": "0d5083fb3f4353decf58e53a4c9cb4ff4591386823b38d0216b6ff288d9dceb1",
+          "hex": "353236363566613461326631346161623237373437656637373061656532633100"
+        },
+        "(anonymous namespace)::started": {
+          "address": 536963182,
+          "size": 1,
+          "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+          "hex": "00"
+        },
+        "(anonymous namespace)::cleanup_complete": {
+          "address": 536963176,
+          "size": 1,
+          "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          "hex": "01"
+        },
+        "(anonymous namespace)::stop_reported": {
+          "address": 536963174,
+          "size": 1,
+          "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          "hex": "01"
+        },
+        "(anonymous namespace)::failed": {
+          "address": 536963181,
+          "size": 1,
+          "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+          "hex": "00"
+        },
+        "(anonymous namespace)::watchdog_channel": {
+          "address": 536877456,
+          "size": 4,
+          "sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+          "hex": "ffffffff"
+        },
+        "(anonymous namespace)::native_sessions": {
+          "address": 536894328,
+          "size": 4,
+          "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+          "hex": "00000000"
+        },
+        "(anonymous namespace)::authenticated_links": {
+          "address": 536894300,
+          "size": 4,
+          "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+          "hex": "00000000"
+        },
+        "nucode::ble::profiles::(anonymous namespace)::client": {
+          "address": 536887872,
+          "size": 280,
+          "sha256": "1f6c9de2e555d5d589e1149fed58f9cbcc101739df97d4a4d694a13f1242c5b9",
+          "hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "nucode::ble::profiles::(anonymous namespace)::client_connection": {
+          "address": 536959644,
+          "size": 4,
+          "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+          "hex": "00000000"
+        },
+        "nucode::ble::profiles::(anonymous namespace)::operation_pending": {
+          "address": 536959640,
+          "size": 4,
+          "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+          "hex": "00000000"
+        },
+        "nucode::ble::profiles::(anonymous namespace)::subscribed": {
+          "address": 536964290,
+          "size": 1,
+          "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+          "hex": "00"
+        }
+      }
+    }
+  },
+  "interpretation": "RESETREAS is sticky and no pre-run baseline was captured. A zeroed client application state after logged activity is evidence of a reset but does not alone identify the original stuck PC. Current PC/list state is post-reset, not the lost hang state."
+}
