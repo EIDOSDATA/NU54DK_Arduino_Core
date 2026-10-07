@@ -1,9 +1,9 @@
 # M33-W06 exact target artifact 준비 계획
 
-> **현재 사용 범위 — 2026-10-07:** 기존 W06 자동 실행을 정리하고
-> [검증 파이프라인 재설계](<../../00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를 준비한다.
-> 이 문서는 아직 유효한 **기존 도구의 명령·증거 계약 reference**이며 새 구현의 실행 지시가 아니다.
-> 새 구조·short mode·축소 bundle은 미구현이다. 현재 상태는 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따른다.
+> **현재 사용 범위 — 2026-10-07:** [검증 파이프라인 재설계](<../../00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)의
+> R1·R2를 구현했다. 새 inventory·mode plan·증거 경계와 개발 전용 최소 native bundle은
+> `m33_w06_pipeline.py`가 소유한다. 실제 build/runtime/stage/HIL/closure는 아래 기존 production
+> 도구를 그대로 사용하며, 최소 bundle이나 fake transport 결과를 최종 W06 PASS로 승격하지 않는다.
 
 > **2026-10-05 재개 정책:** 주 에이전트 1개로 순차 처리하며 하위 에이전트는 생성하지 않는다.
 > 기존 Actions shard는 허용하되 로컬 무거운 build/HIL은 한 번에 하나만 실행한다.
@@ -21,6 +21,33 @@
 준비·검증 절차를 설명한다. 이 도구는 target을 flash하지 않으며 mass erase, unlock,
 recover를 호출하지 않는다. NCS는 `v3.4.0`, Windows toolchain은 `dcbdc366a1`이다.
 도구의 build 병렬 상한은 2개지만 이번 D 작업의 로컬 무거운 build/HIL은 1개로 제한한다.
+
+## 0. 재설계 inventory·mode·증거 경계
+
+먼저 exact artifact plan에서 48 campaign, 49 group, build 141/runtime 9/stage 150과 실제
+runner·adapter·oracle·소비 파일 지도를 만든다. `development_smoke`는 명시적으로 생략을 기록할 수
+있지만 `final`은 49 group 전체 선택만 허용한다. fake transport와 최소 bundle은 항상
+`evidence_class=DEVELOPMENT`, `completion_eligible=false`이며 `--completion` 검증을 통과하지 못한다.
+
+```text
+python tools/ci/m33_w06_pipeline.py inventory \
+  --artifact-plan <외부-root>/m33-w06-artifact-plan.json \
+  --output <외부-root>/m33-w06-pipeline-inventory.json
+python tools/ci/m33_w06_pipeline.py plan \
+  --inventory <외부-root>/m33-w06-pipeline-inventory.json \
+  --mode development_smoke \
+  --group families:gatt_cache \
+  --output <외부-root>/m33-w06-development-plan.json
+python tools/ci/m33_w06_pipeline.py plan \
+  --inventory <외부-root>/m33-w06-pipeline-inventory.json \
+  --mode final \
+  --output <외부-root>/m33-w06-final-plan.json
+```
+
+R3에서 native target 하나만 이동할 때는 `bundle --campaign <campaign-id>`로 새 root를 만들고,
+`validate-bundle` 뒤 다른 D root에 `import-bundle`, `validate-import`를 순서대로 실행한다. manifest에
+없는 추가 파일, byte 변조, root 밖 alias, runtime/Arduino slot은 거부한다. 이 이동 검증은 실제
+보드의 prepare→smoke→cleanup→resume와 별개이며 그 물리 경로가 통과하기 전 R3 완료가 아니다.
 
 W05 전체 build는 완료돼 있다. 아래 명령은 기존 W06 도구의 재현용 reference다. 도구는 plan 생성,
 build-only 실행, exact index와 runtime-input template 생성, staging, 재검증까지 제공한다. 어떤
@@ -422,18 +449,19 @@ NCS 3.4.0·toolchain pin은 그대로 유지한다.
 
 ### 8.3 Host regression을 기존 bundle에 추가
 
-물리 campaign과 soak가 끝난 뒤 Host 회귀를 실행한다. 이 도구는 **63개 suite**를 각각 별도
+물리 campaign과 soak가 끝난 뒤 Host 회귀를 실행한다. 이 도구는 **64개 suite**를 각각 별도
 subprocess로 실행하며, verbose test ID count/SHA-256 계약에는
 `test_m33_w06_artifacts.py` 43개, `test_m33_w06_runtime_fixture.py` 15개,
-`test_m33_execution.py` 21개, `test_m33_regression.py` 75개가 포함된다.
+`test_m33_w06_pipeline.py` 20개, `test_m33_execution.py` 21개,
+`test_m33_regression.py` 75개가 포함된다.
 `test_build_matrix_runner.py` 11개와 `test_m33_profile_campaign.py` 4개를 포함한
 GATT-cache source 10개·strict parser/실제 collector 16개를 포함한
-전체 분모는 63-suite / 564-test이며
+전체 분모는 64-suite / 584-test이며
 `<bundle>`의 기존 campaign/soak 파일은 보존한다.
 Actions plan도 무거운 shard build 전에 48개 campaign의 argv/board binding과 49개 group의
 prepare→validator, APP/AUX inventory의 source-only 회귀를 검사한다. 이 단위 회귀는 실제
 보드 연결·image·runtime PASS가 아니며 로컬의 exact artifact 실기 전 점검을 대체하지 않는다.
-반면 예정된 `result.json` 또는 63개 `*.log` 중 하나라도 이미 있으면 어떤 Host subprocess도
+반면 예정된 `result.json` 또는 64개 `*.log` 중 하나라도 이미 있으면 어떤 Host subprocess도
 시작하기 전에 전체를 거부한다.
 
 ```text
@@ -497,7 +525,7 @@ python tools/bluetooth/m33_regression.py validate \
 ```
 
 assembler와 validator는 새 시험을 실행하거나 PASS를 만들지 않는다. 같은 bundle의 SHA-256 byte,
-current clean exact S, 33+8+8 actual group, 1,800초 soak, 63-suite Host, raw campaign에서 재도출한
+current clean exact S, 33+8+8 actual group, 1,800초 soak, 64-suite Host, raw campaign에서 재도출한
 7 SDK risk, 3 qualification 행만 검사한다. Apple/Google 제품 peer와 Windows/Ubuntu/macOS 실물
 matrix는 `NOT_RUN`으로 보존한다. 누락·중복·부분 evidence, source/lock drift, 기존 output 덮어쓰기는
 closure 파일을 쓰기 전에 거부한다.
