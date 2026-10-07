@@ -510,7 +510,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m33_regression.py": (75, "54bbbca5f902fa5e0be74eb6ba891b71664e3d0d89107efd0edfdaa1e098f651"),
     "test_m33_sdk_risk_hil.py": (19, "cc8720169bcf3076bd6f2c9cb73d3f039fd6d92478b052fceadc804eb21d71b9"),
     "test_m33_w06_artifacts.py": (43, "e51b08b2ce8459ffdd56d3d85c2fd065db428ea1c557abd6f94fe1dc97ee784b"),
-    "test_m33_w06_pipeline.py": (20, "05d0048220c6bb8d7637441731a200a755f3ee2206f5b7dd9b33b165cfe223a2"),
+    "test_m33_w06_pipeline.py": (20, "46462a2c6b3b604a4e2730a68140632d2b831681d6856fc85fd3dea18b6cff26"),
     "test_m33_w06_runtime_fixture.py": (15, "ed6c8c1aeaab847d4820bf0bd61f7e1535137c464843bdf431d5878d986cc7c7"),
     "test_m33_execution.py": (21, "e4e8f1fe120c1a0d6d3adaa9fe0bdf8aa84750233a1a25519f8c5b823efc0476"),
     "test_r12_ble_gap.py": (1, "b0be325128d4c2af4bf954768dc153d8ee2b9b3f53cf62863267b2c1a13f34bc"),
