@@ -60,6 +60,14 @@ Core, board, `nrf`, `zephyr` 네 checkout 중 하나라도 추적되지 않은 �
 dirty이면 plan을 만들지 않는다. 같은 네 checkout의 revision과 porcelain-clean 상태는 build
 시작 전, 실패 종료, 성공 종료 시점에 각각 다시 검증한다.
 
+Windows build에서 승인된 Zephyr patch는 build 동안에만 적용한다. patch manager는 종료 시
+reverse patch 결과만 신뢰하지 않고 대상 파일의 적용 전 byte를 정확히 복원해야 한다. 따라서
+Git의 줄바꿈 변환 설정과 관계없이 LF/CRLF까지 원본과 같아야 하며, 후속 diagnostics의
+porcelain-clean 검사를 통과하지 못하면 해당 build는 실패다.
+같은 상위 build 안에서 병렬 실행되는 diagnostics는 고정 patchset 환경값, 승인 파일 집합,
+reverse-apply 검사를 모두 통과한 Zephyr checkout만 예외로 허용한다. Core·board·`nrf`의 dirty
+상태나 승인 파일 밖의 Zephyr 변경은 계속 거부한다.
+
 ```text
 python tools/ci/m33_w06_artifacts.py plan \
   --sdk-root C:/ncs/v3.4.0 \
@@ -453,10 +461,10 @@ NCS 3.4.0·toolchain pin은 그대로 유지한다.
 subprocess로 실행하며, verbose test ID count/SHA-256 계약에는
 `test_m33_w06_artifacts.py` 43개, `test_m33_w06_runtime_fixture.py` 15개,
 `test_m33_w06_pipeline.py` 20개, `test_m33_execution.py` 21개,
-`test_m33_regression.py` 75개가 포함된다.
-`test_build_matrix_runner.py` 11개와 `test_m33_profile_campaign.py` 4개를 포함한
+`test_m33_regression.py` 78개가 포함된다.
+`test_build_matrix_runner.py` 12개와 `test_m33_profile_campaign.py` 4개를 포함한
 GATT-cache source 10개·strict parser/실제 collector 16개를 포함한
-전체 분모는 64-suite / 584-test이며
+전체 분모는 64-suite / 597-test이며
 `<bundle>`의 기존 campaign/soak 파일은 보존한다.
 Actions plan도 무거운 shard build 전에 48개 campaign의 argv/board binding과 49개 group의
 prepare→validator, APP/AUX inventory의 source-only 회귀를 검사한다. 이 단위 회귀는 실제
@@ -464,7 +472,16 @@ prepare→validator, APP/AUX inventory의 source-only 회귀를 검사한다. �
 반면 예정된 `result.json` 또는 64개 `*.log` 중 하나라도 이미 있으면 어떤 Host subprocess도
 시작하기 전에 전체를 거부한다.
 
-```text
+Windows에서는 NCS bundled Python 자체를 Host runner로 쓰지 않는다. 현재 고정 환경은 시스템
+Python 3.12에 NCS의 순수 Python package 경로만 보태고, MSYS2 UCRT64 compiler와 runtime을
+같은 `PATH`에서 제공한다. compiler 실행 파일 절대경로만 지정하고 UCRT64를 `PATH`에서 빼면
+compiler DLL을 찾지 못해 빈 stderr와 exit 1이 남으므로 아래 네 환경값을 한 단위로 설정한다.
+
+```powershell
+$env:PATH = 'C:\msys64\ucrt64\bin;' + $env:PATH
+$env:PYTHONPATH = 'C:\ncs\toolchains\dcbdc366a1\opt\bin\Lib\site-packages'
+$env:CXX = 'C:\msys64\ucrt64\bin\g++.exe'
+$env:CC = 'C:\msys64\ucrt64\bin\gcc.exe'
 python tools/bluetooth/m33_regression.py host --output <bundle>
 ```
 

@@ -32,6 +32,21 @@
     "license_expression": "NOASSERTION"
   },
   "zephyr": {
+    "patches": [
+      {
+        "applies_to_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+        "files": [
+          "subsys/bluetooth/mesh/friend.c",
+          "subsys/bluetooth/mesh/lpn.h",
+          "subsys/bluetooth/mesh/net.h",
+          "subsys/bluetooth/mesh/transport.c"
+        ],
+        "path": "tools/nu54-builder/sdk-patches/zephyr/3564414a3b27-friend-clear-confirm.patch",
+        "sha256": "5b63939ee86d71e0e43da84ca61dccb2c2dce2691e1370eaa49c8224c16bcd65",
+        "upstream_repository": "https://github.com/zephyrproject-rtos/zephyr",
+        "upstream_revision": "3564414a3b27ae52718efe5244261ebd00102f56"
+      }
+    ],
     "repository": "https://github.com/nrfconnect/sdk-zephyr",
     "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
     "version": "4.4.0"

@@ -90,17 +90,32 @@ def validate_cycle(
     metrics: dict[str, dict[str, int]] = {}
     for role in ROLES:
         role_records = records.get(role, [])
-        if tuple(record.get("event") for record in role_records) != expected:
+        invalid_records = [
+            record for record in role_records
+            if record.get("event") == "RX_INVALID"
+        ]
+        semantic_records = [
+            record for record in role_records
+            if record.get("event") != "RX_INVALID"
+        ]
+        if role == "central" and invalid_records:
+            raise CisAclRiskFailure("central invalid receive telemetry mismatch")
+        if role == "peripheral" and (
+            len(invalid_records) > 4 or
+            any(record.get("nonce") != nonce for record in invalid_records)
+        ):
+            raise CisAclRiskFailure("peripheral invalid receive telemetry mismatch")
+        if tuple(record.get("event") for record in semantic_records) != expected:
             raise CisAclRiskFailure(f"{role} event sequence mismatch")
-        if any(record.get("nonce") != nonce for record in role_records):
+        if any(record.get("nonce") != nonce for record in semantic_records):
             raise CisAclRiskFailure(f"{role} nonce mismatch")
-        if role_records[0].get("role") != role:
+        if semantic_records[0].get("role") != role:
             raise CisAclRiskFailure(f"{role} BEGIN mismatch")
-        identity_record = role_records[1]
+        identity_record = semantic_records[1]
         if any(identity_record.get(key) != value for key, value in vars(identity).items()):
             raise CisAclRiskFailure(f"{role} image identity mismatch")
-        active = role_records[4]
-        stopped = role_records[-1]
+        active = semantic_records[4]
+        stopped = semantic_records[-1]
         if active.get("role") != role or stopped.get("role") != role:
             raise CisAclRiskFailure(f"{role} risk role mismatch")
         active_nse = number(active, "nse", 31)
@@ -404,13 +419,13 @@ def execute(args: argparse.Namespace) -> dict:
                 ports["central"].write(abort)
                 ports["central"].flush()
                 collect_until(ports, records, transcript, "RISK_STOPPED", 35.0)
+                active_nonce = None
                 cycles.append({
                     "cycle": cycle + 1,
                     "nonce": nonce,
                     "status": "PASS",
                     "roles": validate_cycle(records, nonce, identity),
                 })
-                active_nonce = None
             status = "PASS_CANDIDATE" if dirty else "PASS"
     except Exception as error:
         reason = f"{type(error).__name__}: {error}"

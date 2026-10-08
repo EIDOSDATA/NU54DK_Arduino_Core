@@ -42,6 +42,7 @@ from .environment import compiler_version, tool_environment
 from .locking import build_lock, operating_system_lock
 from .installed_platform import requires_platform_copy
 from .paths import build_cache_root, cache_workspace, local_cache_root, positive_environment_integer
+from .sdk_patch_support import patchset_sha256
 
 
 ## @brief M9 cache key에 사용할 canonical input manifest를 생성합니다.
@@ -70,6 +71,7 @@ def cache_input_manifest(
         "third_party/ArduinoCore-API",
         "tools/nu54-builder/src",
         "tools/nu54-builder/templates",
+        "tools/nu54-builder/sdk-patches",
         "tools/nu54-prerequisites",
     )
     board_inputs = ("boards/nucode/nu54dk",)
@@ -139,6 +141,7 @@ def cache_input_manifest(
             "zephyr_revision": exact_git_revision(
                 zephyr_root, **revision_arguments
             ),
+            "zephyr_patchset_sha256": patchset_sha256(platform_root),
             "zephyr_version_file": optional_file_sha256(zephyr_root / "VERSION"),
         },
         "toolchain": {

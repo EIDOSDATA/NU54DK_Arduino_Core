@@ -135,6 +135,9 @@ namespace nucode::mesh
         /** @brief 사용자 event callback을 등록합니다. */
         void onEvent(ManagementEventCallback callback, void *context = nullptr) noexcept;
 
+        /** @brief provisioned node에서 PB-Remote server bearer를 활성화합니다. */
+        [[nodiscard]] bool enableRemoteProvisioningServer() noexcept;
+
         /** @brief 원격 서버에서 unprovisioned device scan을 시작합니다. */
         [[nodiscard]] bool startRemoteScan(const ManagementTarget &server,
                                            std::uint8_t timeout_seconds,

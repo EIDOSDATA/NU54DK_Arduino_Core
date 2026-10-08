@@ -47,6 +47,10 @@ from m33_sdk_risk_common import (  # noqa: E402
     validate_programming_receipt,
 )
 from m6_serial_echo import import_pyserial  # noqa: E402
+from m30_ble_dfu import (  # noqa: E402
+    M30DfuFailure,
+    validate_mcuboot_public_key,
+)
 from m32_ble_capability_run import (  # noqa: E402
     collect_register_identity_sha256,
     discover,
@@ -391,9 +395,17 @@ def validate_domains(root: Path) -> None:
     )
     if [name for name, _directory in entries] != [APPLICATION_DOMAIN, BOOT_DOMAIN]:
         raise MeshDfuFailure(f"sysbuild domain 구성이 다릅니다: {entries!r}")
+    root_match = re.search(r"(?m)^build_dir: (.+)$", text)
+    if root_match is None:
+        raise MeshDfuFailure("sysbuild root build_dir가 없습니다")
+    declared_root = Path(root_match.group(1).strip())
+    if not declared_root.is_absolute():
+        raise MeshDfuFailure("sysbuild root build_dir가 절대 경로가 아닙니다")
     for name, directory in entries:
-        if Path(directory.strip()).resolve() != (root / name).resolve():
-            raise MeshDfuFailure(f"{name} build_dir가 exact sysbuild root와 다릅니다")
+        declared = Path(directory.strip())
+        if (not declared.is_absolute() or declared.parent != declared_root or
+                declared.name != name or not (root / name).is_dir()):
+            raise MeshDfuFailure(f"{name} build_dir 논리 identity가 다릅니다")
     match = re.search(r"(?ms)^flash_order:\r?\n((?:  - [a-z0-9_]+\r?\n?)+)", text)
     if match is None:
         raise MeshDfuFailure("domains.yaml에 flash_order가 없습니다")
@@ -435,8 +447,16 @@ def collect_build(
         ),
     )
     key_match = re.search(r'^CONFIG_BOOT_SIGNATURE_KEY_FILE="(.+)"$', boot_config, re.M)
-    if key_match is None or Path(key_match.group(1)).resolve() != signing_key:
-        raise MeshDfuFailure(f"{role} MCUboot signing key identity가 다릅니다")
+    if key_match is None:
+        raise MeshDfuFailure(f"{role} MCUboot signing key identity가 없습니다")
+    try:
+        public_key_sha256 = validate_mcuboot_public_key(
+            boot, key_match.group(1), signing_key
+        )
+    except M30DfuFailure as error:
+        raise MeshDfuFailure(
+            f"{role} MCUboot signing key identity가 다릅니다: {error}"
+        ) from error
 
     signed_hex = immutable_image(app / "zephyr/zephyr.signed.hex", None)
     raw_bin = immutable_image(app / "zephyr/zephyr.bin", None)
@@ -445,10 +465,6 @@ def collect_build(
     build_record = validate_build_record(
         signed_hex.path, core_revision, board_revision, APPLICATION_ROOT
     )
-    public_key = boot / "zephyr/autogen-pubkey.c"
-    if not public_key.is_file() or public_key.stat().st_size <= 0:
-        raise MeshDfuFailure(f"{role} MCUboot public key source가 없습니다")
-
     candidate_sha256: str | None = None
     candidate_size: int | None = None
     if role != "candidate":
@@ -465,7 +481,7 @@ def collect_build(
         signed_hex=signed_hex,
         signed_bin=immutable_image(app / "zephyr/zephyr.signed.bin", expected_version),
         raw_bin=raw_bin,
-        public_key_sha256=file_sha256(public_key),
+        public_key_sha256=public_key_sha256,
         build_record=build_record,
         candidate_sha256=candidate_sha256,
         candidate_size=candidate_size,

@@ -218,6 +218,11 @@
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            markCleanupActivity();
+            return;
+        }
         if (session_finished || !session_started || !scan_started || peer_found ||
             !result.connectable || result.scan_response || !validRfPeer(result))
         {
@@ -232,6 +237,11 @@
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            markCleanupActivity();
+            return;
+        }
         if (!session_started || session_finished)
         {
             return;
@@ -280,6 +290,11 @@
         static_cast<void>(characteristic);
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            markCleanupActivity();
+            return;
+        }
         if (!session_started || session_finished ||
             information.event != nucode::ble::BLECharacteristicEvent::written)
         {

@@ -964,8 +964,8 @@ class M33W06ArtifactTests(unittest.TestCase):
         with self.assertRaisesRegex(artifacts.ArtifactFailure, "soak"):
             artifacts.validate_plan(changed)
 
-    def test_source_lock_rejects_each_dirty_checkout(self) -> None:
-        """! @brief Core 외 board·nrf·zephyr dirty 상태도 각각 거부합니다. """
+    def test_source_lock_rejects_each_content_dirty_checkout(self) -> None:
+        """! @brief Core 외 board·nrf·zephyr의 실제 내용 변경도 각각 거부합니다. """
 
         lock = artifacts.strict_json(ROOT / "tools/ci/ncs-3.4.0.lock.json")
         revisions = {
@@ -978,8 +978,10 @@ class M33W06ArtifactTests(unittest.TestCase):
             with self.subTest(dirty_checkout=dirty_checkout):
                 def fake_git(checkout: Path, *arguments: str) -> str:
                     resolved = checkout.resolve()
-                    if arguments[0] == "status":
+                    if arguments[0] == "diff":
                         return " M dirty" if resolved == dirty_checkout else ""
+                    if arguments[0] == "ls-files":
+                        return ""
                     if arguments[0] == "rev-parse":
                         return revisions[resolved]
                     if arguments[0] == "ls-tree":
@@ -2711,6 +2713,14 @@ class M33W06ArtifactTests(unittest.TestCase):
         self.assertEqual(
             rows[("m31_iso_combined", "hex-receiver")]["recipe"]["scenario"],
             "nucode.m31.iso_bis.receiver",
+        )
+        self.assertEqual(
+            rows[("m31_iso_bis", "hex-source")]["recipe"]["scenario"],
+            "nucode.m31.iso_bis_encrypted.source",
+        )
+        self.assertEqual(
+            rows[("m31_iso_bis", "hex-receiver")]["recipe"]["scenario"],
+            "nucode.m31.iso_bis_encrypted.receiver",
         )
 
     def test_partial_index_is_rejected(self) -> None:

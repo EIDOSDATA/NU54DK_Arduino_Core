@@ -400,6 +400,7 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             "collect_register_identity_sha256",
             "flash_image_pyocd_sha256",
             "probe_sha256(endpoint.board_id)",
+            "ready_replay_settle_seconds=0.75",
             'target not in ("nRF54L15", "unsupported target")',
         ):
             self.assertIn(value, runner)

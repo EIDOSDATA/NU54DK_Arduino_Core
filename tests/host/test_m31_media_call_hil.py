@@ -13,6 +13,9 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 HIL = ROOT / "tests/hil/nu54dk"
+ZEPHYR_PATCHSET_SHA256 = (
+    "0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf"
+)
 if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
@@ -51,6 +54,7 @@ def write_arduino_manifest(image: Path, core_revision: str, board_revision: str,
                         "99553055607b2e9885fbc80ccd11fa9da81c2df0",
                     "zephyr_revision":
                         "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+                    "zephyr_patchset_sha256": ZEPHYR_PATCHSET_SHA256,
                 },
                 "configuration": {
                     "selected_features": [{"id": "nucode.ble.audio"}],
@@ -295,6 +299,48 @@ class MediaCallHilContractTests(unittest.TestCase):
 
             with self.assertRaises(RuntimeError):
                 RUNNER.validate_build_record(image, "a" * 40, "b" * 40, root)
+
+    def test_adjacent_arduino_manifest_accepts_preserved_relocation_suffix(self) -> None:
+        """! @brief CI artifact root가 이동해도 builds 이하 논리 경로는 승인합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="nu54-w06-relocation-") as directory:
+            root = Path(directory)
+            image = root / "download" / "builds" / "arduino-1234" / "Client.ino.hex"
+            image.parent.mkdir(parents=True)
+            image.write_bytes(b":00000001FF\n")
+            record = write_arduino_manifest(image, "a" * 40, "b" * 40)
+            document = json.loads(record.read_text(encoding="utf-8"))
+            document["artifacts"]["hex"]["path"] = (
+                Path("D:/ci-root/builds/arduino-1234/Client.ino.hex").as_posix()
+            )
+            record.write_text(json.dumps(document), encoding="utf-8")
+
+            result = RUNNER.validate_build_record(
+                image, "a" * 40, "b" * 40, root
+            )
+
+            self.assertEqual(hashlib.sha256(image.read_bytes()).hexdigest(),
+                             result["hex_sha256"])
+
+    def test_adjacent_arduino_manifest_rejects_changed_relocation_suffix(self) -> None:
+        """! @brief relocation 시 build identity나 파일명이 바뀌면 거부합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="nu54-w06-relocation-") as directory:
+            root = Path(directory)
+            image = root / "download" / "builds" / "arduino-1234" / "Client.ino.hex"
+            image.parent.mkdir(parents=True)
+            image.write_bytes(b":00000001FF\n")
+            record = write_arduino_manifest(image, "a" * 40, "b" * 40)
+            document = json.loads(record.read_text(encoding="utf-8"))
+            document["artifacts"]["hex"]["path"] = (
+                Path("D:/ci-root/builds/arduino-other/Other.ino.hex").as_posix()
+            )
+            record.write_text(json.dumps(document), encoding="utf-8")
+
+            with self.assertRaisesRegex(RuntimeError, "HEX 불일치"):
+                RUNNER.validate_build_record(
+                    image, "a" * 40, "b" * 40, root
+                )
 
     def test_public_examples_expose_negative_and_notification_oracles(self) -> None:
         """! @brief HIL이 Zephyr가 아닌 공개 Serial/API 흐름만 사용함을 고정합니다. """

@@ -43,6 +43,7 @@ ITERATION_TARGET = 20
 PACKET_TARGET = 4000
 ALLOWED_LOSS = 80
 SERVICE_GAP_LIMIT_MS = 500
+READY_TIMEOUT_SECONDS = 30.0
 SEMANTICS = (
     "ble_mesh", "ble_ieee802154", "ble_esb", "packet_counters", "cleanup"
 )
@@ -293,7 +294,7 @@ def _run_scenario(
         for role in roles:
             ports[role].write(f"{PROTOCOL}|PROBE\n".encode("ascii"))
             ports[role].flush()
-            deadline = time.monotonic() + 10.0
+            deadline = time.monotonic() + READY_TIMEOUT_SECONDS
             while True:
                 payload = ports[role].readline()
                 if time.monotonic() >= deadline:

@@ -67,6 +67,21 @@ class M30BleBondHilTests(unittest.TestCase):
         self.assertIn("CONFIG_BT_EXT_ADV=y", configuration)
         self.assertIn("CONFIG_BT_EXT_ADV_MAX_ADV_SET=1", configuration)
 
+    def test_rpa_restart_waits_for_controller_resource_release(self) -> None:
+        """! @brief RPA 회전 stop 뒤 -ENOMEM을 bounded 재시도로 흡수합니다. """
+
+        target = (
+            ROOT / "tests/zephyr/m30_ble_bond_hil/src/main.cpp"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "rpa_start_pending = true;",
+            "action_due_ms = now + 100;",
+            "BLEDevice.lastDriverError() == -ENOMEM",
+            "now < rpa_restart_deadline_ms",
+            'fail("privacy-rpa-timeout-restore")',
+        ):
+            self.assertIn(token, target)
+
     def test_runner_checks_migration_after_first_restored_connection(self) -> None:
         """! @brief resume READY 전에는 0, 최종 restored link 뒤에는 1을 요구합니다. """
 

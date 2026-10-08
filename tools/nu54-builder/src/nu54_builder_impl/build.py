@@ -83,6 +83,31 @@ from .source_graph import (
     selected_bundled_libraries,
     write_source_manifest,
 )
+from .sdk_patch_support import applied_sdk_patches, patch_environment
+
+
+def run_patched_progress_command(
+    command: Sequence[str | Path],
+    *,
+    platform_root: Path,
+    zephyr_base: Path,
+    cwd: Path,
+    environment: dict[str, str],
+    log_path: Path,
+    stage: str,
+    worker_count: int,
+) -> Any:
+    """! @brief 한 Zephyr 명령에 고정 SDK patch를 적용하고 종료 시 복구합니다. """
+
+    with applied_sdk_patches(platform_root, zephyr_base, environment):
+        return run_progress_command(
+            command,
+            cwd=cwd,
+            environment=environment,
+            log_path=log_path,
+            stage=stage,
+            worker_count=worker_count,
+        )
 
 
 ## @brief west configure command를 cache 정책에 맞게 생성합니다.
@@ -350,6 +375,7 @@ def prepare(args: argparse.Namespace) -> BuildContext:
     paths["state_root"].mkdir(parents=True, exist_ok=True)
     worker_count = build_worker_count()
     child_environment = build_environment(tools["environment"], worker_count)
+    child_environment.update(patch_environment(platform_root))
     configure_log = paths["state_root"] / "logs" / "configure.log"
 
     with build_lock(paths["state_root"], operation="prepare-session"):
@@ -433,10 +459,12 @@ def prepare(args: argparse.Namespace) -> BuildContext:
                     first_configure_complete=False,
                 )
                 try:
-                    configure_result = run_progress_command(
+                    configure_result = run_patched_progress_command(
                         configure_command(
                             paths, args, tools, board_root.resolve(), pristine=True
                         ),
+                        platform_root=platform_root,
+                        zephyr_base=Path(tools["zephyr_base"]),
                         cwd=west_build_working_directory(paths),
                         environment=child_environment,
                         log_path=configure_log,
@@ -607,14 +635,19 @@ def migrate_feature_workspace(
         configure_seconds = 0.0
         if not reusable:
             child_environment = build_environment(tools["environment"], worker_count)
+            child_environment.update(
+                patch_environment(session_paths["platform_root"])
+            )
             progress_message(
                 f"[NU54 2/5] Zephyr 구성 준비: selected-features, "
                 f"작업자 {worker_count}개"
             )
             transition_cache_state(workspace, cache_key, "configuring", first_configure_complete=False, configure_reason="selected-features")
             try:
-                configure_result = run_progress_command(
+                configure_result = run_patched_progress_command(
                     configure_command(paths, args, tools, board_root, pristine=True),
+                    platform_root=session_paths["platform_root"],
+                    zephyr_base=Path(tools["zephyr_base"]),
                     cwd=west_build_working_directory(paths),
                     environment=child_environment,
                     log_path=configure_log,
@@ -668,6 +701,7 @@ def link(args: argparse.Namespace) -> None:
     output_manifest = session_paths["build_path"] / f"{args.project_name}.nu54-build.json"
     worker_count = build_worker_count()
     child_environment = build_environment(tools["environment"], worker_count)
+    child_environment.update(patch_environment(session_paths["platform_root"]))
     build_log = session_paths["state_root"] / "logs" / "build.log"
 
     with build_lock(session_paths["state_root"], operation="link-session"):
@@ -771,7 +805,7 @@ def link(args: argparse.Namespace) -> None:
             build_targets = 0
             try:
                 if manifest_changed:
-                    configure_result = run_progress_command(
+                    configure_result = run_patched_progress_command(
                         configure_command(
                             paths,
                             args,
@@ -779,6 +813,8 @@ def link(args: argparse.Namespace) -> None:
                             canonical_path(context["board_root"]),
                             pristine=False,
                         ),
+                        platform_root=session_paths["platform_root"],
+                        zephyr_base=Path(tools["zephyr_base"]),
                         cwd=west_build_working_directory(paths),
                         environment=child_environment,
                         log_path=build_log,
@@ -792,7 +828,7 @@ def link(args: argparse.Namespace) -> None:
                     f"[NU54 3/5] 소스 컴파일 중: 작업자 {worker_count}개, "
                     f"전체 log {build_log}"
                 )
-                build_result = run_progress_command(
+                build_result = run_patched_progress_command(
                     [
                         tools["west"],
                         "-z",
@@ -801,6 +837,8 @@ def link(args: argparse.Namespace) -> None:
                         "-d",
                         paths["zephyr_build"],
                     ],
+                    platform_root=session_paths["platform_root"],
+                    zephyr_base=Path(tools["zephyr_base"]),
                     cwd=west_build_working_directory(paths),
                     environment=child_environment,
                     log_path=build_log,

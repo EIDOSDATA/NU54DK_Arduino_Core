@@ -149,6 +149,15 @@
                ::strcmp(nonce_start + MultiPayload::nonce_text_length, core_suffix) == 0;
     }
 
+    /** @brief cleanup 중 관측한 비동기 event 시각을 안정화 fence에 반영합니다. */
+    void markCleanupActivity()
+    {
+        if (cleanup_requested)
+        {
+            cleanup_quiet_since = k_uptime_get();
+        }
+    }
+
     /** @brief cleanup 완료 뒤 다음 독립 session을 위해 모든 local 상태를 초기화합니다. */
     void resetSessionState()
     {
@@ -175,6 +184,7 @@
         server_echo_pending = false;
         session_deadline = 0;
         cleanup_deadline = 0;
+        cleanup_quiet_since = 0;
         progress_reported = 0U;
         client_gatt_completed = 0U;
         client_coc_sent = 0U;

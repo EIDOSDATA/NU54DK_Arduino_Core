@@ -12,6 +12,7 @@
         checkCallbackContext();
         if (cleanup_requested)
         {
+            markCleanupActivity();
             if (information.event == nucode::ble::BLEEvent::disconnected)
             {
                 if (information.connection == client_connection)
@@ -88,6 +89,7 @@
         checkCallbackContext();
         if (cleanup_requested)
         {
+            markCleanupActivity();
             if (information.event == nucode::ble::BLEL2capEvent::disconnected)
             {
                 if (information.channel == client_channel)

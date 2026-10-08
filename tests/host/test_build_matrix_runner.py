@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from contextlib import nullcontext
 import importlib.util
 import json
 from pathlib import Path
@@ -202,6 +203,21 @@ class BuildMatrixRunnerTests(unittest.TestCase):
                 mock.patch.object(ZEPHYR, "validate_report"),
                 mock.patch.object(ZEPHYR, "validate_m15_lfxo"),
                 mock.patch.object(ZEPHYR, "validate_m16_role_builds", return_value=[]),
+                mock.patch.object(
+                    ZEPHYR.LOCK_MODULE.SDK_PATCH_MODULE,
+                    "applied_zephyr_patches",
+                    return_value=nullcontext(()),
+                ),
+                mock.patch.object(
+                    ZEPHYR.LOCK_MODULE.SDK_PATCH_MODULE,
+                    "approved_zephyr_patches",
+                    return_value=(),
+                ),
+                mock.patch.object(
+                    ZEPHYR.LOCK_MODULE.SDK_PATCH_MODULE,
+                    "patchset_sha256",
+                    return_value="0" * 64,
+                ),
                 mock.patch("builtins.print"),
                 mock.patch.object(
                     ZEPHYR.subprocess, "run",
@@ -226,6 +242,28 @@ class BuildMatrixRunnerTests(unittest.TestCase):
         self.assertIn('set(USER_CACHE_DIR "${APPLICATION_BINARY_DIR}/.cache"', config)
         self.assertIn('set(ZEPHYR_TOOLCHAIN_CAPABILITY_CACHE_DIR', config)
         self.assertIn('NOT IS_ABSOLUTE "${APPLICATION_BINARY_DIR}"', config)
+
+    def test_sdk_patch_cleanup_compares_content_instead_of_windows_stat(self) -> None:
+        """! @brief SDK 복구 판정은 CRLF·mtime stat이 아니라 실제 내용 변경을 검사합니다. """
+
+        manager = ZEPHYR.LOCK_MODULE.SDK_PATCH_MODULE
+        with mock.patch.object(
+            manager,
+            "_git",
+            side_effect=("", "staged.txt\n", "untracked.txt\n"),
+        ) as git:
+            self.assertEqual(
+                ("staged.txt", "untracked.txt"),
+                manager._content_changes(Path("sdk/zephyr")),
+            )
+        self.assertEqual(
+            [
+                ("diff", "--name-only", "--diff-filter=ACMDRTUXB"),
+                ("diff", "--cached", "--name-only", "--diff-filter=ACMDRTUXB"),
+                ("ls-files", "--others", "--exclude-standard"),
+            ],
+            [call.args[1] for call in git.call_args_list],
+        )
 
     ## @brief 실패한 Twister suite의 이름·상태·사유가 즉시 표시됩니다.
     def test_zephyr_failure_summary_identifies_scenario(self) -> None:

@@ -147,6 +147,10 @@ class M30BleOobBondTests(unittest.TestCase):
             "BT_SECURITY_FLAG_OOB",
             "connection_attempted",
             '::strcmp(verb, "REJECT")',
+            "clear_ack_pending = true",
+            "if (clearing && clear_ack_pending)",
+            "completeClearRound();",
+            'fail("clear-pending")',
         ):
             self.assertIn(token, target, token)
 

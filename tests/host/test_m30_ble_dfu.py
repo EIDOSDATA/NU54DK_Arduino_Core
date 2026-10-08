@@ -217,6 +217,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
             signed_hex.write_text(":00000001FF\n", encoding="ascii")
             with mock.patch.object(
                 HIL_RUNNER, "validate_build_record", return_value={}
+            ), mock.patch.object(
+                HIL_RUNNER, "validate_mcuboot_public_key", return_value="1" * 64
             ), mock.patch.object(HIL_RUNNER, "git_revision", return_value="b" * 40):
                 build = HIL_RUNNER.collect_central_build(
                     str(root), core_revision, trust_key.resolve()
@@ -224,7 +226,44 @@ class M30SecureBleDfuTests(unittest.TestCase):
             self.assertEqual(build.boot_hex.resolve(), boot_hex.resolve())
             self.assertEqual(build.signed_hex.resolve(), signed_hex.resolve())
             self.assertIn("bootloader_config_sha256", build.record)
+            self.assertEqual("1" * 64,
+                             build.record["bootloader_public_key_sha256"])
             self.assertIn("domains_sha256", build.record)
+
+    def test_relocated_mcuboot_key_path_binds_generated_public_key(self) -> None:
+        """! @brief 과거 절대 경로 대신 생성 public key byte를 현재 trust key와 결합합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-key-relocation-") as directory:
+            root = Path(directory) / "ncs"
+            trust_key = (
+                root / "v3.4.0/bootloader/mcuboot/root-ec-p256.pem"
+            )
+            imgtool = trust_key.parent / "scripts/imgtool.py"
+            python = (
+                root / "toolchains" / HIL_RUNNER.TOOLCHAIN_BUNDLE_ID /
+                "opt/bin/python.exe"
+            )
+            boot = Path(directory) / "relocated-build" / "mcuboot"
+            public_key = boot / "zephyr/autogen-pubkey.c"
+            for path in (trust_key, imgtool, python, public_key):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"fixture")
+            expected = b"const unsigned char ecdsa_pub_key[] = { 1 };\n"
+            public_key.write_bytes(expected)
+            completed = mock.Mock(returncode=0, stdout=expected, stderr=b"")
+            with mock.patch.object(
+                    HIL_RUNNER, "imgtool_environment", return_value={}), \
+                    mock.patch.object(
+                        HIL_RUNNER.subprocess, "run", return_value=completed
+                    ) as run:
+                digest = HIL_RUNNER.validate_mcuboot_public_key(
+                    boot,
+                    "D:/ncs/v3.4.0/bootloader/mcuboot/root-ec-p256.pem",
+                    trust_key,
+                )
+            self.assertEqual(HIL_RUNNER.file_sha256(public_key), digest)
+            self.assertEqual("getpub", run.call_args.args[0][2])
+            self.assertEqual(str(trust_key.resolve()), run.call_args.args[0][-1])
 
     def test_build_record_pins_the_bundled_gnu_compiler_identity(self) -> None:
         """! @brief build record의 compiler ID·version과 Toolchain bundle을 함께 고정합니다. """
@@ -245,6 +284,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 f"  board_source_sha256: '{digest}'\n"
                 "  ncs_revision: '99553055607b'\n"
                 "  zephyr_revision: 'bf801e4e3d19'\n"
+                "  zephyr_patchset_sha256: '0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf'\n"
                 "  board: 'nrf54l15dk'\n"
                 "  board_qualifiers: 'nrf54l15/cpuapp/nu54dk'\n"
                 "  toolchain_variant: 'zephyr'\n"

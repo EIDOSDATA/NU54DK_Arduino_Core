@@ -913,6 +913,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             flash_timeout=args.flash_timeout,
             result_timeout=timeout,
             flash_backend=args.flash_backend,
+            ready_replay_settle_seconds=0.75,
         )
         for role in ROLES:
             validate_image_unchanged(

@@ -36,6 +36,7 @@ from v04_protocol import ProbeLocks  # noqa: E402
 ROLES = ("central", "peripheral")
 APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m31_iso_cis_hil"
 SEMANTICS = ("cis_sdu", "active_acl_teardown", "bounded_cleanup")
+INTER_CYCLE_SETTLE_SECONDS = 1.0
 
 
 class IsoExecutionFailure(RuntimeError):
@@ -199,6 +200,8 @@ def execute(args: argparse.Namespace) -> dict:
                             active_roles.discard(role)
                             stopped_roles.add(role)
                             break
+                if cycle + 1 < 20:
+                    time.sleep(INTER_CYCLE_SETTLE_SECONDS)
             raw = ("\n".join(transcript) + "\n").encode("ascii", errors="replace")
             if dirty:
                 measured = parse_cis_transcript(raw, nonces, identity)

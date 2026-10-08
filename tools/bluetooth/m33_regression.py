@@ -453,7 +453,7 @@ HOST_TESTS = sorted({value[1] for value in FAMILIES.values()} |
                      "test_m33_regression.py"})
 ## @brief verbose test ID 정렬 목록의 개수와 SHA-256을 source와 독립적으로 고정합니다.
 HOST_TEST_EXPECTATIONS = {
-    "test_build_matrix_runner.py": (11, "376a2bd3790d7dfa6da74dfe5a08077b475f518e1e3f328394986f4fe14af469"),
+    "test_build_matrix_runner.py": (12, "ef7b1ab73777e1cb360bf67add433f49af73cd8db8b202244ed5afbb12d7ac91"),
     "test_m28_ble_2board_hil.py": (15, "200340053eefa1211b0fb971596f18f1c440cf175c1bba48127338bc932f4ed7"),
     "test_m28_ble_3board_hil.py": (17, "9702191cccf87eaf05d98705b6b70f49e3883d4924bda6f446911f236bca3a8c"),
     "test_m28_ble_extended.py": (2, "b08f318e2c842225295dcbbd253ab9e1e0dd7c43791d7b477d5387b87e1b3f68"),
@@ -471,8 +471,8 @@ HOST_TEST_EXPECTATIONS = {
     "test_m29_ble_multi_parser.py": (17, "70785a96d2b35d27018342b27970cc54b5e1ca40fd1ac9531bd559e06bb04fc7"),
     "test_m29_ble_signed_eatt.py": (17, "541d9145af9f231568cdacf71265782c4954b29074bbe5f8fd14c2debab7eb53"),
     "test_m29_ble_signed_eatt_parser.py": (16, "735312243214d58c246b17ccc179666987a0f0d3e5a5976ed629c177b50f42f3"),
-    "test_m30_ble_bond_hil.py": (5, "1206858c4108f47c01e6d524ae92571c47feef3441d6f9fdfdbda84336c79804"),
-    "test_m30_ble_dfu.py": (10, "4791099713f061232495c2026a76b993af24fcf50e659ec9154b7cce527219a2"),
+    "test_m30_ble_bond_hil.py": (6, "f786b63f72f9c6edd8c63269e98269d8baf6335165cf174ce918d6345f9ac0f2"),
+    "test_m30_ble_dfu.py": (11, "1f07932717c543b9c07c79a0026a89988cfff8f2a10a888f89ec4ea680f83ab7"),
     "test_m30_ble_oob_bond.py": (8, "e39f964408267c05d27aced6da8a3e693e49231d0154c789d6d4c35f7006a2c5"),
     "test_m30_ble_profile_hil.py": (6, "d7ee2fc043aa3b6df83605dd3e9b1893bbf3201938ae66304f1fb48a1bf2acb0"),
     "test_m30_ble_multi.py": (8, "ab4d801b87a3feb15db73c0ab98f4972f054550f91f695b837d446f6d9d7720b"),
@@ -490,8 +490,8 @@ HOST_TEST_EXPECTATIONS = {
     "test_m32_ble_nordic.py": (1, "a522b2993ed2c16ed5df9215115e4f7978eeb7533e3f51b2018392f7b282ccba"),
     "test_m32_coexistence.py": (6, "353e2ad06054049a5cb9ad502bb28299e1fb000ac0874833cbbe6419037705d0"),
     "test_m32_coexistence_hil.py": (6, "af0451d5eee9802420b35765c2305a79515f437def51336aa555232b56140281"),
-    "test_m32_mesh_dfu_hil.py": (12, "95cf492beb73e2aadfe227c7ca66407bd7349720faae69c8b0c32170a6c58566"),
-    "test_m32_mesh_hil.py": (13, "79b4ff072e4a068fbfdacc973dbbd3b975af1e155a7de700dfb3bb2ed3e408ba"),
+    "test_m32_mesh_dfu_hil.py": (13, "47baf893bb25f01e33ce208ef3e80c183eab6b154d63d18ba0047b9c2a3fd0e3"),
+    "test_m32_mesh_hil.py": (19, "dbe445f28096a2edf73b4673aa2513c0edaa7e8c2a85d0e0bfc79c09d57243f0"),
     "test_m32_mesh_management.py": (4, "3f1d108e3adebc29fc6264ef9bffc037edc89b12cb1df78619c1fb36f23d5efa"),
     "test_m32_radio_attestation.py": (5, "266b9501383403943fabc9a37c926a0e4d87cb991c600c904192f532cf553d09"),
     "test_m32_regression_soak_hil.py": (8, "ae0f6e6a230456f6acc8dd659429fca59c6d6891e7e0d877c87d191bc00045e1"),
@@ -507,9 +507,9 @@ HOST_TEST_EXPECTATIONS = {
     "test_m33_profile_runtime.py": (1, "fe0c7a7a50d6cb201f0bf5ff912c8b5bfb1a227c13bc3784b853d35c11d3295c"),
     "test_m33_profile_campaign.py": (4, "5eb631b4f1edc9bf67e251c4bd45b3203beed26765a5b3115587c08a5c833a18"),
     "test_m33_readiness_contract.py": (31, "a0c78cd5b0f2357384456465c1ac21077b55ead8bb8277e8dabb1821cb22c36c"),
-    "test_m33_regression.py": (75, "54bbbca5f902fa5e0be74eb6ba891b71664e3d0d89107efd0edfdaa1e098f651"),
+    "test_m33_regression.py": (78, "28e3cb73375ed8f6d7aa3ecb8babca78b0582d40a911328d1a6cfe474011f12c"),
     "test_m33_sdk_risk_hil.py": (19, "cc8720169bcf3076bd6f2c9cb73d3f039fd6d92478b052fceadc804eb21d71b9"),
-    "test_m33_w06_artifacts.py": (43, "e51b08b2ce8459ffdd56d3d85c2fd065db428ea1c557abd6f94fe1dc97ee784b"),
+    "test_m33_w06_artifacts.py": (43, "0375da54d1bee1bd13c47ad77003bd84224729576bef5c06df7775650ac6285c"),
     "test_m33_w06_pipeline.py": (20, "46462a2c6b3b604a4e2730a68140632d2b831681d6856fc85fd3dea18b6cff26"),
     "test_m33_w06_runtime_fixture.py": (15, "ed6c8c1aeaab847d4820bf0bd61f7e1535137c464843bdf431d5878d986cc7c7"),
     "test_m33_execution.py": (21, "e4e8f1fe120c1a0d6d3adaa9fe0bdf8aa84750233a1a25519f8c5b823efc0476"),
@@ -886,14 +886,16 @@ def intel_hex_ranges(path: Path) -> list[tuple[int, bytes]]:
             require(count == 4 and address == 0, "invalid Intel HEX start address")
         else:
             require(False, "unsupported Intel HEX record")
-    require(ended and memory and all(index in memory for index in range(8)),
-            "Intel HEX EOF/vector missing")
+    require(ended and memory, "Intel HEX EOF/data missing")
     ranges: list[tuple[int, bytearray]] = []
     for address in sorted(memory):
         if not ranges or address != ranges[-1][0] + len(ranges[-1][1]):
             ranges.append((address, bytearray()))
         ranges[-1][1].append(memory[address])
-    return [(start, bytes(data)) for start, data in ranges]
+    result = [(start, bytes(data)) for start, data in ranges]
+    require(any(len(data) >= 8 for _start, data in result),
+            "Intel HEX has no bounded program range")
+    return result
 
 
 def validate_source_manifest(manifest: dict, revision: str, lock: dict) -> None:

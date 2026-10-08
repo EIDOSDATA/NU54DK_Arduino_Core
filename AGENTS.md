@@ -16,6 +16,16 @@
 
 ## 단일 에이전트와 로컬 작업 자료 — 2026-10-05 후속 결정
 
+- **2026-10-08 W06 연속 완료·전수 조사 운영 결정:** W06 완료까지 중단하지 않고
+  계속한다. 동일한 clean exact source로 실행하는 전수 조사는 개별 기능 실패에서 중단하거나
+  즉시 source를 수정하지 않는다. 안전 cleanup이 확인되는 한 계획한 나머지 group을 끝까지
+  실행하고, 각 실패의 첫 raw 오류·입력·attempt·cleanup을 append-only로 보존한다. 전수 조사
+  종료 후 중복 원인과 영향 범위를 분류해 한 번에 일괄 수정한다. 제품·시험·판정 code가
+  바뀌 새 source S는 build 141, runtime 9, stage 150, production 49 group, soak 1,800초,
+  Host 64 suite/597 test, risk 7개, qualification 3개와 closure를 처음부터 다시 검증한다.
+  이전 source의 PASS를 새 S의 최종 PASS로 재사용하지 않는다. 단, STOP·자원 반환·probe 상태를
+  확인하지 못한 안전 실패는 `SAFETY_HOLD`로 다음 dispatch를 막는다. 이 결정이 아래의
+  2026-10-07 중단·문서 전수 결정보다 우선한다.
 - **2026-10-07 문서 정비 후 추가 요청:** 현재 `Dev-0.6.0-M33`의 main 이후 이력을 squash하고 push한다.
   원본 87개 commit은 검증한 D의 독립 bundle에 보존한다. [이력 보관](00_Docs/M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash)을 따른다.
   main·release·tag는 바꾸지 않으며 이 승인은 추가 squash나 W06 구현·실기 재개까지 확대되지 않는다.
@@ -114,6 +124,9 @@
 ## 검증·문서 원칙
 
 - Host·mock·build 통과나 범위 결정은 물리 PASS가 아닙니다. source·image·조건·결과를 결합해 기록합니다.
+- 동일 exact source의 전수 검증은 개별 실패를 발견하기 위한 조사와 수정 후 최종 완료 검증을
+  분리합니다. 조사 중에는 하나의 실패를 이유로 나머지 대상을 생략하거나 source를 교체하지
+  않습니다. 전수 결과를 고정한 뒤 일괄 수정하고, 새 exact source로 필수 분모 전체를 재실행합니다.
 - 공개 자산과 과거 PASS/FAIL/HOLD/NOT RUN 원본을 보존합니다. 생성 문서는 JSON·생성기를 고쳐 재생성합니다.
 - SDK·third-party·board submodule은 임의 수정하지 않습니다. 문서 경로 변경 시 들어오는 링크도 함께 고칩니다.
 - 2026-09-08 소유자 승인 이력 정리·v0.3.0 미만 공급 종료는 완료된 예외입니다. 반복 실행 허가가 아닙니다.

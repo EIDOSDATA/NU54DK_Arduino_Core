@@ -45,6 +45,7 @@ namespace
     constexpr std::uint32_t required_operations = 1000U;
     constexpr std::int64_t session_timeout_ms = 900000;
     constexpr std::int64_t cleanup_timeout_ms = 30000;
+    constexpr std::int64_t cleanup_quiet_ms = 1000;
     constexpr std::uint8_t peripheral_marker = 0xa1U;
     constexpr std::uint8_t mixed_marker = 0xb2U;
 
@@ -80,6 +81,7 @@ namespace
     bool server_echo_pending = false;
     std::int64_t session_deadline = 0;
     std::int64_t cleanup_deadline = 0;
+    std::int64_t cleanup_quiet_since = 0;
     std::uint32_t progress_reported = 0U;
     std::uint32_t client_gatt_completed = 0U;
     std::uint32_t client_coc_sent = 0U;

@@ -580,10 +580,15 @@ def _prepared_arguments(expected: dict, boards: dict[str, dict],
             add("--output", str(native))
     else:
         raise ValueError("registered runner has no deterministic output option")
+    resolved_toolchain = toolchain.resolve()
+    if (campaign_id == "m33_diagnostics_build" and
+            resolved_toolchain.name.casefold() == "zephyr-sdk" and
+            resolved_toolchain.parent.name.casefold() == "opt"):
+        resolved_toolchain = resolved_toolchain.parents[1]
     add("--sdk-root", str(sdk_root.resolve()))
     add("--sdk", str(sdk_root.resolve()))
-    add("--toolchain", str(toolchain.resolve()))
-    add("--toolchain-root", str(toolchain.resolve()))
+    add("--toolchain", str(resolved_toolchain))
+    add("--toolchain-root", str(resolved_toolchain))
     add("--expected-core-revision", revision)
     add("--core-revision", revision)
     add("--cycles", str(expected["minimum_cycles"]))
@@ -1567,6 +1572,23 @@ def _validate_restored_watcher_transcript(path: Path, revision: str,
     ), "restored watcher STOPPED record mismatch")
 
 
+def _valid_post_reset_state(value: dict) -> bool:
+    """! @brief software reset 뒤 RUNNING/SLEEPING 상태 복원을 판정합니다. """
+
+    if not isinstance(value, dict) or set(value) != {
+            "pre_state", "post_state", "resumed", "restored"}:
+        return False
+    pre_state = value["pre_state"]
+    post_state = value["post_state"]
+    return (
+        pre_state in {"RUNNING", "SLEEPING"} and
+        post_state in {"RUNNING", "SLEEPING"} and
+        readback_state_restored(pre_state, post_state) and
+        value["resumed"] is True and
+        value["restored"] is True
+    )
+
+
 def _validate_state_restore_receipt(path: Path, expected: dict, row: dict,
                                     revision: str, root: Path = ROOT) -> dict:
     """! @brief pre-run sector program·readback·상태 복원 receipt를 재검증합니다. """
@@ -1679,13 +1701,9 @@ def _validate_state_restore_receipt(path: Path, expected: dict, row: dict,
         }
     require(receipt["post_reset"] == reset_states and
             set(reset_states) == set(plan["roles"]) and
-            all(value == {
-                "pre_state": "RUNNING",
-                "post_state": "RUNNING",
-                "resumed": True,
-                "restored": True,
-            } for value in reset_states.values()),
-            "pre-run software reset did not leave every role RUNNING")
+            all(_valid_post_reset_state(value)
+                for value in reset_states.values()),
+            "pre-run software reset did not restore every active role")
     require(receipt["action_order"] == _restore_action_order(plan),
             "pre-run state restore action order mismatch")
     if plan["mode"] in {"third_idle", "ecosystem_isolated"}:
@@ -1802,13 +1820,9 @@ def _restore_campaign_state(expected: dict, row: dict, native_path: Path,
         }
         for role in plan["roles"]
     }
-    require(all(value == {
-        "pre_state": "RUNNING",
-        "post_state": "RUNNING",
-        "resumed": True,
-        "restored": True,
-    } for value in post_reset.values()),
-            "software reset did not leave every restored role RUNNING")
+    require(all(_valid_post_reset_state(value)
+                for value in post_reset.values()),
+            "software reset did not restore every active role")
     if plan["mode"] in {"third_idle", "ecosystem_isolated"}:
         transcript_path = receipt_path.with_name(
             f"{receipt_path.stem}.third.transcript.log"
@@ -3575,14 +3589,15 @@ def _validate_native_schema(native: dict, native_path: Path,
     if family == "legacy_hil":
         require(native.get("status") == "passed" and
                 isinstance(native.get("boards"), (dict, int)) and
-                isinstance(native.get("results", native.get("cases")), (dict, list)),
+                isinstance(native.get(
+                    "results", native.get("cases", native.get("cycles"))
+                ), (dict, list, int)),
                 "legacy native evidence did not pass its recorded denominator")
     elif family == "modern_hil":
         require(native.get("status") == expected_status and
                 native.get("source_clean") is True and
                 isinstance(native.get("boards"), (dict, list)) and
-                isinstance(native.get("results", native.get("cycles", native.get("measured"))),
-                           (dict, list, int)),
+                isinstance(native.get("m33_dispatch_attestation"), dict),
                 "modern native evidence did not pass its recorded denominator")
     elif family == "flat_hil":
         require(native.get("status") == expected_status and
@@ -3728,6 +3743,64 @@ def _validate_exact_program_row(row: dict, native_path: Path,
     }
 
 
+def _stable_program_identity(row: dict) -> dict:
+    """! @brief CPU 순간 상태가 반영된 readback digest를 빼고 program 정체성을 만듭니다. """
+
+    require(isinstance(row, dict) and "readback_sha256" in row,
+            "program identity row mismatch")
+    return {
+        key: value
+        for key, value in row.items()
+        if key != "readback_sha256"
+    }
+
+
+def _dispatcher_program_hardware(native_path: Path, expected: dict,
+                                 hardware: list[dict]) -> list[dict] | None:
+    """! @brief 저장된 dispatcher sidecar를 실제 byte에서 다시 검증합니다. """
+
+    if not expected["roles"]:
+        return []
+    stem = native_path.stem + ".dispatcher"
+    first = native_path.with_name(f"{stem}.{expected['roles'][0]}.image.hex")
+    if not first.is_file():
+        return None
+    by_role = {row["role"]: row for row in hardware}
+    require(set(by_role) == set(expected["roles"]),
+            "dispatcher child hardware role denominator mismatch")
+    regenerated = []
+    for role in expected["roles"]:
+        flat = by_role[role]
+        row = {
+            "role": role,
+            "probe_sha256": flat["probe_sha256"],
+            "image": {
+                "path": f"{stem}.{role}.image.hex",
+                "sha256": flat["image_sha256"],
+            },
+            "build_record": {
+                "path": f"{stem}.{role}.build-record",
+                "sha256": flat["build_record_sha256"],
+            },
+            "flash": {
+                "mode": flat["program_mode"],
+                "programmed_bytes": flat["programmed_bytes"],
+                "erase": flat["erase"],
+                "auto_unlock": flat["auto_unlock"],
+                "mass_erase": flat["mass_erase"],
+                "automatic_recover": flat["automatic_recover"],
+            },
+            "readback": {
+                "path": f"{stem}.{role}.readback.json",
+                "sha256": flat["readback_sha256"],
+            },
+        }
+        regenerated.append(_validate_exact_program_row(
+            row, native_path, role
+        ))
+    return regenerated
+
+
 def _validate_native_attestation(native: dict, native_path: Path, expected: dict,
                                  revision: str, cycles: int,
                                  hardware_override: list[dict] | None = None) -> list[dict]:
@@ -3811,9 +3884,10 @@ def _adapt_native_evidence(native_path: Path, child_path: Path, expected: dict,
             hardware_override=central_hardware
         )
         require(
-            {row["role"]: row for row in hardware} ==
-            {row["role"]: row for row in declared_hardware},
-            "dispatcher live readback differs from native program attestation",
+            {row["role"]: _stable_program_identity(row) for row in hardware} ==
+            {row["role"]: _stable_program_identity(row)
+             for row in declared_hardware},
+            "dispatcher program identity differs from native attestation",
         )
     child = {
         "schema_version": 1,
@@ -3858,46 +3932,33 @@ def revalidate_stored_campaign_bundle(child_path: Path, expected: dict,
     _validate_native_schema(native, native_path, expected, revision)
     attestation = native.get("m33_dispatch_attestation")
     if isinstance(attestation, dict):
-        regenerated = _validate_native_attestation(
+        declared = _validate_native_attestation(
             native, native_path, expected, revision, cycles
         )
+        dispatcher = _dispatcher_program_hardware(
+            native_path, expected, hardware
+        )
+        if dispatcher is None:
+            regenerated = declared
+        else:
+            require(dispatcher == hardware,
+                    "stored campaign child differs from dispatcher program bytes")
+            require(
+                {row["role"]: _stable_program_identity(row)
+                 for row in dispatcher} ==
+                {row["role"]: _stable_program_identity(row)
+                 for row in declared},
+                "dispatcher program identity differs from native attestation",
+            )
+            regenerated = dispatcher
     elif not expected["roles"]:
         regenerated = []
     else:
-        rows = []
-        by_role = {row["role"]: row for row in hardware}
-        dispatcher = native_path.with_name(
-            native_path.stem + ".dispatcher.json"
+        regenerated = _dispatcher_program_hardware(
+            native_path, expected, hardware
         )
-        for role in expected["roles"]:
-            flat = by_role[role]
-            stem = dispatcher.stem
-            row = {
-                "role": role,
-                "probe_sha256": flat["probe_sha256"],
-                "image": {
-                    "path": f"{stem}.{role}.image.hex",
-                    "sha256": flat["image_sha256"],
-                },
-                "build_record": {
-                    "path": f"{stem}.{role}.build-record",
-                    "sha256": flat["build_record_sha256"],
-                },
-                "flash": {
-                    "mode": flat["program_mode"],
-                    "programmed_bytes": flat["programmed_bytes"],
-                    "erase": flat["erase"],
-                    "auto_unlock": flat["auto_unlock"],
-                    "mass_erase": flat["mass_erase"],
-                    "automatic_recover": flat["automatic_recover"],
-                },
-                "readback": {
-                    "path": f"{stem}.{role}.readback.json",
-                    "sha256": flat["readback_sha256"],
-                },
-            }
-            rows.append(_validate_exact_program_row(row, native_path, role))
-        regenerated = rows
+        require(regenerated is not None,
+                "stored dispatcher program sidecars are missing")
     require(regenerated == hardware,
             "stored campaign child differs from raw native/program bytes")
     return hardware

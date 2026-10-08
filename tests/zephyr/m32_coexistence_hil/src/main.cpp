@@ -60,6 +60,7 @@ namespace
     constexpr std::uint32_t mesh_acknowledgment_retry_limit = 3U;
     constexpr std::int64_t mesh_acknowledgment_timeout_ms = 300;
     constexpr std::int64_t mesh_ble_payload_delay_ms = 30000;
+    constexpr std::uint32_t ble_reconnect_discovery_miss_limit = 2U;
     constexpr std::int64_t session_timeout_ms = 600000;
     constexpr std::uint32_t ble_magic = 0x58454F43U;
     constexpr std::size_t ble_frame_size = 16U;
@@ -102,6 +103,7 @@ namespace
     bool disconnect_requested = false;
     bool disconnect_seen = false;
     bool reconnect_seen = false;
+    std::uint32_t ble_reconnect_discovery_misses = 0U;
     std::uint32_t ble_sent = 0U;
     std::int64_t ble_start_not_before_ms = 0;
 #elif defined(NUCODE_M32_COEX_RADIO_PEER)
@@ -313,7 +315,14 @@ namespace
         }
         else if (event == nucode::ble::Event::error)
         {
-            fail("ble_event", BLESerial.lastDriverError());
+            const int error = BLESerial.lastDriverError();
+            if (disconnect_requested && !reconnect_seen && error == -ENOENT &&
+                ble_reconnect_discovery_misses < ble_reconnect_discovery_miss_limit)
+            {
+                ++ble_reconnect_discovery_misses;
+                return;
+            }
+            fail("ble_event", error);
         }
 #endif
     }
@@ -464,6 +473,7 @@ namespace
         disconnect_requested = false;
         disconnect_seen = false;
         reconnect_seen = false;
+        ble_reconnect_discovery_misses = 0U;
         ble_sent = 0U;
         ble_start_not_before_ms = 0;
 #elif defined(NUCODE_M32_COEX_RADIO_PEER)

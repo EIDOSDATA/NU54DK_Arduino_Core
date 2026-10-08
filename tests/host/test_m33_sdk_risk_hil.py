@@ -379,6 +379,25 @@ class CisAclRiskTests(unittest.TestCase):
                 with self.assertRaises(CIS.CisAclRiskFailure):
                     CIS.validate_cycle(changed, nonce, identity)
 
+        with_telemetry = copy.deepcopy(records)
+        with_telemetry["peripheral"].insert(
+            5,
+            {"event": "RX_INVALID", "nonce": nonce, "seq": "30",
+             "flags": "12", "len": "0"},
+        )
+        self.assertEqual(
+            CIS.validate_cycle(with_telemetry, nonce, identity), metrics
+        )
+        with_telemetry["central"].insert(
+            5,
+            {"event": "RX_INVALID", "nonce": nonce, "seq": "30",
+             "flags": "12", "len": "0"},
+        )
+        with self.assertRaisesRegex(
+            CIS.CisAclRiskFailure, "central invalid receive"
+        ):
+            CIS.validate_cycle(with_telemetry, nonce, identity)
+
     def test_firmware_has_distinct_risk_commands_and_cpu_load(self) -> None:
         """! @brief 정상 20-cycle protocol과 분리된 위험 경로만 ACL을 먼저 종료합니다. """
         source = (
@@ -408,25 +427,33 @@ class CisAclRiskTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn('ports["central"].write(abort)', runner)
         self.assertNotIn('ports["peripheral"].write(abort)', runner)
+        self.assertLess(
+            runner.index("active_nonce = None"),
+            runner.index("CIS.validate_cycle")
+            if "CIS.validate_cycle" in runner
+            else runner.index("validate_cycle(records, nonce, identity)"),
+        )
 
 
 class MeshFriendClearRiskTests(unittest.TestCase):
     """! @brief TTL=0 Friend Clear Confirm의 실제 callback·시간 경계를 검사합니다. """
 
     def test_both_mesh_nodes_require_confirm_before_first_retry(self) -> None:
-        """! @brief node만 1초 이내 PASS를 요구하고 provisioner는 비적용으로 분리합니다. """
+        """! @brief node만 첫 재시도 전 PASS를 요구하고 provisioner는 비적용으로 분리합니다. """
+        limit = MESH.FRIEND_CLEAR_LIMIT_MS
         for role in ("node_a", "node_b"):
             self.assertEqual(
                 MESH._validate_friend_clear(
                     role,
                     {"cleanup": "pass", "friend_clear": "pass",
-                     "friend_clear_peer_ack": "pass", "friend_clear_ms": "999"},
+                     "friend_clear_peer_ack": "pass",
+                     "friend_clear_ms": str(limit)},
                 ),
-                {"status": "pass", "latency_ms": 999},
+                {"status": "pass", "latency_ms": limit},
             )
             for field, value in (("friend_clear", "not_run"),
                                  ("friend_clear_peer_ack", "not_run"),
-                                 ("friend_clear_ms", "1001")):
+                                 ("friend_clear_ms", str(limit + 1))):
                 with self.subTest(role=role, field=field):
                     record = {"cleanup": "pass", "friend_clear": "pass",
                               "friend_clear_peer_ack": "pass",
@@ -450,7 +477,10 @@ class MeshFriendClearRiskTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("BT_MESH_FRIEND_CB_DEFINE", source)
         self.assertIn("BT_MESH_LPN_CB_DEFINE", source)
-        self.assertIn("friend_clear_confirm_timeout_ms = 1000", source)
+        self.assertIn(
+            f"friend_clear_confirm_timeout_ms = {MESH.FRIEND_CLEAR_LIMIT_MS}",
+            source,
+        )
         self.assertIn("atomic_get(&friendship_terminated) == 0", source)
         self.assertIn('fail("friend_clear_confirm_timeout")', source)
         self.assertIn("|FRIEND_CLEAR_PEER|role=node_b", source)

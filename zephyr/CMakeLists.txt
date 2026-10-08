@@ -33,6 +33,23 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     "${NUCODE_ARDUINO_CORE_ROOT}/third_party/ArduinoCore-API"
   )
 
+  if(DEFINED ENV{NUCODE_ZEPHYR_PATCHSET_SHA256})
+    set(NUCODE_ZEPHYR_PATCHSET_SHA256
+      "$ENV{NUCODE_ZEPHYR_PATCHSET_SHA256}"
+    )
+    string(LENGTH "${NUCODE_ZEPHYR_PATCHSET_SHA256}"
+      NUCODE_ZEPHYR_PATCHSET_LENGTH
+    )
+    if(NOT NUCODE_ZEPHYR_PATCHSET_LENGTH EQUAL 64 OR
+       NOT NUCODE_ZEPHYR_PATCHSET_SHA256 MATCHES "^[0-9a-f]+$")
+      message(FATAL_ERROR
+        "NUCODE_ZEPHYR_PATCHSET_SHA256 must be a lowercase SHA-256"
+      )
+    endif()
+  else()
+    set(NUCODE_ZEPHYR_PATCHSET_SHA256 "unbound")
+  endif()
+
   if(NOT EXISTS "${NUCODE_ARDUINO_API_ROOT}/api/ArduinoAPI.h")
     message(FATAL_ERROR
       "Vendored ArduinoCore-API 1.5.2 is missing; this Core checkout or package is incomplete"

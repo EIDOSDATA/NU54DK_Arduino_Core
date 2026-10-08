@@ -32,6 +32,25 @@ class M32MeshHilTests(unittest.TestCase):
         with self.assertRaisesRegex(runner.MeshExecutionFailure, "invalid integer"):
             runner._integer({"acknowledged": "-1"}, "acknowledged")
 
+    def test_friend_clear_limit_precedes_the_first_sdk_retry(self) -> None:
+        """! @brief 첫 SDK 재시도 직전까지만 Friend Clear 성공으로 판정합니다. """
+        fields = {
+            "cleanup": "pass",
+            "friend_clear": "pass",
+            "friend_clear_peer_ack": "pass",
+            "friend_clear_ms": str(runner.FRIEND_CLEAR_LIMIT_MS),
+        }
+        self.assertEqual(
+            {"status": "pass", "latency_ms": runner.FRIEND_CLEAR_LIMIT_MS},
+            runner._validate_friend_clear("node_b", fields),
+        )
+        fields["friend_clear_ms"] = str(runner.FRIEND_CLEAR_LIMIT_MS + 1)
+        with self.assertRaisesRegex(
+            runner.MeshExecutionFailure, "Friend Clear peer-ack boundary"
+        ):
+            runner._validate_friend_clear("node_b", fields)
+        self.assertLess(runner.FRIEND_CLEAR_LIMIT_MS, 1100)
+
     def test_capacity_preflight_accounts_for_local_provisioner(self) -> None:
         """! @brief node slot에서 local 한 칸을 제외하고 remote 용량을 판정합니다. """
         fields = {
@@ -102,18 +121,83 @@ class M32MeshHilTests(unittest.TestCase):
         )
 
     def test_acknowledged_traffic_has_bounded_retransmission(self) -> None:
-        """! @brief 무선 ACK 손실은 세 번까지만 재전송하고 중복 응답 시간을 분리합니다. """
+        """! @brief 무선 ACK 손실은 같은 TID로 여섯 번까지만 재전송합니다. """
         source = (
             REPOSITORY / "tests" / "zephyr" / "m32_mesh_hil" / "src" / "main.cpp"
         ).read_text(encoding="utf-8")
         for token in (
             "message_ack_timeout_ms = 2000",
-            "message_retry_limit = 3U",
+            "message_retry_limit = 6U",
             "message_response_drain_ms = 50",
+            "expected_transaction_id",
+            "expected_state, true,\n                                      expected_transaction_id",
             'fail("model_ack_timeout", -ETIMEDOUT)',
             "++message_retries;",
         ):
             self.assertIn(token, source)
+        self.assertIn("record.payload[0] > 1U", source)
+        self.assertIn(
+            "record.address != expected_source ||\n"
+            "                (record.payload[0] != 0U) != expected_state",
+            source,
+        )
+
+    def test_lpn_traffic_uses_bounded_friend_polling(self) -> None:
+        """! @brief 고밀도 traffic HIL은 자동 poll 사이에 bounded poll을 촉진합니다. """
+        configuration = (
+            REPOSITORY / "tests" / "zephyr" / "m32_mesh_hil" / "prj.conf"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "CONFIG_BT_MESH_LPN_AUTO=n",
+            "CONFIG_BT_MESH_LPN_RETRY_TIMEOUT=2",
+            "CONFIG_BT_MESH_LPN_POLL_TIMEOUT=100",
+            "CONFIG_BT_MESH_LPN_INIT_POLL_TIMEOUT=10",
+        ):
+            self.assertIn(token, configuration)
+        source = (
+            REPOSITORY / "tests" / "zephyr" / "m32_mesh_hil" / "src" / "main.cpp"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "friend_poll_interval_ms = 250",
+            "void driveFriendPoll()",
+            "NUCODEMesh.lastDriverError() != -EAGAIN",
+            "driveFriendPoll();",
+        ):
+            self.assertIn(token, source)
+
+    def test_friend_role_stays_active_until_clear_peer_ack(self) -> None:
+        """! @brief Friend 역할은 Clear peer ACK 뒤에만 relay와 bearer를 내립니다. """
+        source = (
+            REPOSITORY / "tests" / "zephyr" / "m32_mesh_hil" / "src" / "main.cpp"
+        ).read_text(encoding="utf-8")
+        arm = source.index("atomic_set(&feature_disable_requested, 1);")
+        peer_ack = source.index("atomic_get(&friend_clear_peer_acknowledged) == 0")
+        relay_off = source.index("NUCODEMesh.setFeature(Feature::relay, false)")
+        friend_off = source.index("NUCODEMesh.setFeature(Feature::friend_node, false)")
+        self.assertLess(arm, peer_ack)
+        self.assertLess(peer_ack, relay_off)
+        self.assertLess(relay_off, friend_off)
+        self.assertNotIn("bt_mesh_net_transmit_set", source)
+
+    def test_friend_clear_uses_locked_upstream_sdk_patch(self) -> None:
+        """! @brief Friend Clear SDK 결함은 고정된 upstream patch로만 보정합니다. """
+        source = (
+            REPOSITORY / "tests" / "zephyr" / "m32_mesh_hil" / "src" / "main.cpp"
+        ).read_text(encoding="utf-8")
+        backend = (
+            REPOSITORY / "libraries" / "NUCODE_BLE_Mesh" / "src" /
+            "NUCODE_BLE_Mesh.cpp"
+        ).read_text(encoding="utf-8")
+        patch = (
+            REPOSITORY / "tools" / "nu54-builder" / "sdk-patches" / "zephyr" /
+            "3564414a3b27-friend-clear-confirm.patch"
+        ).read_text(encoding="utf-8")
+        self.assertIn("error = bt_mesh_lpn_set(enabled);", backend)
+        self.assertNotIn("bt_mesh_scan_enable", backend)
+        self.assertNotIn("bt_mesh_net_transmit_set", source)
+        self.assertIn("friend_clear(frnd);", patch)
+        self.assertIn("frnd->pending_cfm = 1U;", patch)
+        self.assertIn("!bt_mesh_lpn_clearing()", patch)
 
     def test_configuration_status_loss_has_bounded_retry(self) -> None:
         """! @brief 멱등 Configuration 작업은 timeout에만 세 번까지 재시도합니다. """
@@ -165,6 +249,17 @@ class M32MeshHilTests(unittest.TestCase):
         )
         self.assertFalse(first["resumed_from_previous_cleanup"])
         self.assertTrue(later["resumed_from_previous_cleanup"])
+        provisioner = runner._validate_cleared(
+            "provisioner",
+            {
+                "provisioned": "1",
+                "settings_reset": "pass",
+                "resumed": "0",
+                "unprovisioned_rejected": "0",
+            },
+            1,
+        )
+        self.assertEqual(1, provisioner["provisioned"])
         with self.assertRaisesRegex(runner.MeshExecutionFailure, "resume mismatch"):
             runner._validate_cleared(
                 "node_a",
@@ -181,9 +276,34 @@ class M32MeshHilTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         host = (HIL / "m32_mesh_run.py").read_text(encoding="utf-8")
         self.assertLess(target.index("bt_mesh_resume()"), target.index("NUCODEMesh.reset()"))
-        self.assertIn("|provisioned=0|settings_reset=pass|resumed=", target)
+        self.assertIn('fail("clear_lost_local_provisioning")', target)
+        self.assertIn('Serial.print(NUCODEMesh.provisioned() ? 1 : 0);', target)
         self.assertIn("CYCLE_TARGET = 20", host)
         self.assertIn('dispatch_attestation(\n                    "m32_mesh"', host)
+
+    def test_development_only_allows_a_bounded_single_cycle_rerun(self) -> None:
+        """! @brief 요청된 1회 재검증이 production 20회 분모를 낮추지 않습니다. """
+
+        self.assertEqual(1, runner.validate_cycle_target(1, True))
+        self.assertEqual(
+            runner.CYCLE_TARGET,
+            runner.validate_cycle_target(runner.CYCLE_TARGET, False),
+        )
+        for invalid in (0, runner.CYCLE_TARGET + 1):
+            with self.assertRaises(runner.MeshExecutionFailure):
+                runner.validate_cycle_target(invalid, True)
+        with self.assertRaisesRegex(
+            runner.MeshExecutionFailure, "production Mesh HIL"
+        ):
+            runner.validate_cycle_target(1, False)
+
+    def test_runner_drains_traffic_before_friend_clear(self) -> None:
+        """! @brief 마지막 network retransmit 뒤 Friend Clear를 시작합니다. """
+        source = (HIL / "m32_mesh_run.py").read_text(encoding="utf-8")
+        drain = "time.sleep(POST_TRAFFIC_DRAIN_SECONDS)"
+        cleanup = "cleanup = cleanup_ports(ports, nonce, identity.core, transcript)"
+        self.assertIn("POST_TRAFFIC_DRAIN_SECONDS = 1.0", source)
+        self.assertLess(source.index(drain), source.index(cleanup))
 
     def test_twenty_cycle_raw_validator_rechecks_semantics_and_cleanup(self) -> None:
         """! @brief attestation 전 20회 raw 범위와 역할별 실제 분모를 다시 판정합니다. """
@@ -243,7 +363,7 @@ class M32MeshHilTests(unittest.TestCase):
                     "transcript_sha256": hashlib.sha256(raw).hexdigest(),
                     "cleared": {
                         role: {
-                            "provisioned": 0,
+                            "provisioned": int(role == "provisioner"),
                             "settings_reset": "PASS",
                             "resumed_from_previous_cleanup": cycle > 1,
                             "unprovisioned_access_rejected": (

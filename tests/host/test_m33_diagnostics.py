@@ -137,6 +137,25 @@ class DiagnosticsTests(unittest.TestCase):
             self.assertNotIn("recover", " ".join(argv))
         spi = DIAG.build_plan("spi", Path("sdk"), Path("toolchain"), Path("build"))
         self.assertTrue(any("spi.overlay" in argument for argument in spi))
+        records = ({"files": ["patched.c"], "path": "approved.patch"},)
+        with mock.patch.dict(
+                DIAG.os.environ,
+                {
+                    "NUCODE_ZEPHYR_PATCHES_APPLIED": "1",
+                    "NUCODE_ZEPHYR_PATCHSET_SHA256": "locked-patchset",
+                },
+                clear=False), mock.patch.object(
+                    DIAG.SDK_PATCH_MODULE, "approved_zephyr_patches",
+                    return_value=records), mock.patch.object(
+                    DIAG.SDK_PATCH_MODULE, "patchset_sha256",
+                    return_value="locked-patchset"), mock.patch.object(
+                    DIAG.SDK_PATCH_MODULE, "_content_changes",
+                    return_value=("patched.c",)), mock.patch.object(
+                    DIAG.subprocess, "run",
+                    return_value=SimpleNamespace(returncode=0)):
+            self.assertTrue(DIAG.approved_patched_checkout(Path("zephyr")))
+            DIAG.os.environ["NUCODE_ZEPHYR_PATCHSET_SHA256"] = "wrong"
+            self.assertFalse(DIAG.approved_patched_checkout(Path("zephyr")))
 
     def test_reuse_build_root_rejects_protected_and_overlapping_paths(self):
         """! @brief 재사용 build root가 source·SDK·toolchain·output과 겹치면 build 전에 거부합니다. """

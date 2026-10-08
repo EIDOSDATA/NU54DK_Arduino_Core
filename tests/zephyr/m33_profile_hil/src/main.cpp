@@ -69,6 +69,14 @@ namespace
     bool bms_persistence_fresh_mode = false, bms_persistence_restored_mode = false;
     bool bms_restored_candidate = false, bms_restored_verified = false;
     unsigned bms_persistence_preserved = 0U, bms_persistence_restored = 0U;
+    bool hub_security_started = false;
+#if !defined(M33_PROFILE_NATIVE)
+    constexpr size_t stale_recovery_capacity = 2U;
+    BLEConnectionHandle stale_recovery_links[stale_recovery_capacity] = {};
+    PeerAddress stale_recovery_addresses[stale_recovery_capacity] = {};
+    bool stale_recovery_disconnected[stale_recovery_capacity] = {};
+    size_t stale_recovery_count = 0U;
+#endif
     SensorService clock_service(Kind::current_time), temperature(Kind::thermometer),
         cycling(Kind::cycling), running(Kind::running), elapsed(Kind::elapsed_time);
     SensorService *sensors[] = {&clock_service, &temperature, &cycling, &running, &elapsed};
@@ -346,6 +354,81 @@ namespace
         }
         return unchanged && added_found;
     }
+#if !defined(M33_PROFILE_NATIVE)
+    /** @brief fresh 실행에서 현재 연결 상대의 stale bond 또는 상대측 정리만 한 번 복구합니다. */
+    bool recoverStaleBond(const SecurityEventRecord &event)
+    {
+        if (!bms_persistence_fresh_mode || !event.connection.valid() ||
+            !startup_bonds_valid)
+        {
+            return false;
+        }
+        for (size_t index = 0U; index < stale_recovery_count; ++index)
+        {
+            if (stale_recovery_links[index] == event.connection)
+            {
+                return true;
+            }
+            if (sameAddress(stale_recovery_addresses[index], event.peer))
+            {
+                return BLEConnection.connected(stale_recovery_links[index]);
+            }
+        }
+        if (stale_recovery_count >= stale_recovery_capacity)
+        {
+            fail("|reason=stale-bond-retry-capacity");
+            return true;
+        }
+        const bool local_stale = startupContains(event.peer);
+        if (local_stale &&
+            (!BLESecurity.eraseBond(event.peer) ||
+             !startupBondsWithout(event.peer)))
+        {
+            fail("|reason=stale-bond-scoped-delete");
+            return true;
+        }
+        stale_recovery_links[stale_recovery_count] = event.connection;
+        stale_recovery_addresses[stale_recovery_count] = event.peer;
+        stale_recovery_disconnected[stale_recovery_count] = false;
+        ++stale_recovery_count;
+        if (local_stale)
+        {
+            snapshotBonds();
+        }
+        char detail[96];
+        snprintf(detail, sizeof(detail),
+                 "|reason=%s|count=%u|remaining=%u",
+                 local_stale ? "stale-bond-pruned" : "stale-bond-peer-retry",
+                 static_cast<unsigned>(stale_recovery_count),
+                 static_cast<unsigned>(startup_bond_count));
+        record("PROGRESS", detail);
+        if (BLEConnection.connected(event.connection) &&
+            !BLEConnection.disconnect(event.connection) &&
+            BLEConnection.connected(event.connection))
+        {
+            fail("|reason=stale-bond-disconnect");
+        }
+        return true;
+    }
+
+    /** @brief stale bond 정리로 요청한 disconnect인지 한 번만 소비합니다. */
+    bool consumeStaleDisconnect(BLEConnectionHandle connection)
+    {
+        for (size_t index = 0U; index < stale_recovery_count; ++index)
+        {
+            if (stale_recovery_links[index] == connection)
+            {
+                if (stale_recovery_disconnected[index])
+                {
+                    return false;
+                }
+                stale_recovery_disconnected[index] = true;
+                return true;
+            }
+        }
+        return false;
+    }
+#endif
     /** @brief test backend에서 실제 link별 CCC를 읽어 구독되지 않은 전송 폭주를 막습니다. */
     bool subscribed(unsigned slot, unsigned profile)
     {
@@ -1055,8 +1138,10 @@ namespace
         }
         char detail[180];
         snprintf(detail, sizeof(detail),
-                 "|reason=security-event|security_event=%u|level=%u|same_peer=%u|peer_valid=%u",
+                 "|reason=security-event|security_event=%u|level=%u|security_reason=%u|"
+                 "same_peer=%u|peer_valid=%u",
                  static_cast<unsigned>(event.event), static_cast<unsigned>(event.level),
+                 static_cast<unsigned>(event.reason),
                  event.connection == peer ? 1U : 0U, peer.valid() ? 1U : 0U);
         record("PROGRESS", detail);
         if (event.event == SecurityEvent::pairing_requested)
@@ -1081,6 +1166,27 @@ namespace
                 fail("|reason=pairing-accept");
             }
         }
+#if !defined(M33_PROFILE_NATIVE)
+        if (bms_persistence_fresh_mode &&
+            event.event == SecurityEvent::bond_restored_candidate)
+        {
+            if (!recoverStaleBond(event))
+            {
+                fail("|reason=stale-bond-candidate-missing");
+            }
+            return;
+        }
+        if (event.event == SecurityEvent::pairing_failed ||
+            event.event == SecurityEvent::timeout ||
+            event.event == SecurityEvent::error)
+        {
+            if (!recoverStaleBond(event))
+            {
+                fail("|reason=standard-authentication");
+            }
+            return;
+        }
+#endif
 #if defined(M33_PROFILE_NATIVE)
         if (event.event == SecurityEvent::passkey_display)
         {
@@ -1352,6 +1458,15 @@ namespace
         if (event.connection == peer && event.event == SecurityEvent::security_changed &&
             event.level >= SecurityLevel::encrypted && !hub_advertised)
         {
+            if (bms_persistence_fresh_mode)
+            {
+                snapshotBonds();
+                if (!startup_bonds_valid || !startupContains(event.peer))
+                {
+                    fail("|reason=hub-fresh-bond-missing");
+                    return;
+                }
+            }
             if (advertise())
             {
                 hub_advertised = true;
@@ -1451,7 +1566,6 @@ namespace
         }
 #endif
 #if defined(M33_PROFILE_SERVER)
-        static bool hub_started = false;
         if (event.event == BLEEvent::connected)
         {
 #if defined(M33_PROFILE_NATIVE)
@@ -1479,9 +1593,9 @@ namespace
             {
                 maximum_links = BLEConnection.count();
             }
-            if (event.connection == peer && !hub_started)
+            if (event.connection == peer && !hub_security_started)
             {
-                hub_started = true;
+                hub_security_started = true;
                 if (!BLESecurity.requestSecurity(peer))
                 {
                     fail("|reason=watcher-security");
@@ -1527,6 +1641,34 @@ namespace
             }
         }
 #endif
+#if !defined(M33_PROFILE_NATIVE)
+        if (event.event == BLEEvent::disconnected &&
+            consumeStaleDisconnect(event.connection))
+        {
+            if (event.connection == peer)
+            {
+                peer = {};
+                hub_security_started = false;
+                if (!BLEScan.start(true))
+                {
+                    fail("|reason=stale-bond-hub-rescan");
+                    return;
+                }
+                record("PROGRESS", "|reason=stale-bond-hub-rescan");
+            }
+            else
+            {
+                hub_advertised = advertise();
+                if (!hub_advertised)
+                {
+                    fail("|reason=stale-bond-hub-readvertise");
+                    return;
+                }
+                record("PROGRESS", "|reason=stale-bond-hub-readvertise");
+            }
+            return;
+        }
+#endif
         if (event.event == BLEEvent::disconnected && event.connection == peer)
         {
             stateRecord("FAIL", "hub-watcher-disconnected");
@@ -1542,6 +1684,29 @@ namespace
                 return;
             }
             bms_disconnect_seen = true;
+        }
+#endif
+#if !defined(M33_PROFILE_NATIVE)
+        if (event.event == BLEEvent::disconnected &&
+            consumeStaleDisconnect(event.connection))
+        {
+            peer = {};
+#if defined(M33_PROFILE_WATCHER)
+            if (!advertise())
+            {
+                fail("|reason=stale-bond-watcher-readvertise");
+                return;
+            }
+            record("PROGRESS", "|reason=stale-bond-watcher-readvertise");
+#else
+            if (!BLEScan.start(true))
+            {
+                fail("|reason=stale-bond-client-rescan");
+                return;
+            }
+            record("PROGRESS", "|reason=stale-bond-client-rescan");
+#endif
+            return;
         }
 #endif
 #if defined(M33_PROFILE_WATCHER)
@@ -1641,6 +1806,14 @@ namespace
             !bms_persistence_restored_mode)
         {
             return false;
+        }
+        stale_recovery_count = 0U;
+        hub_security_started = false;
+        for (size_t index = 0U; index < stale_recovery_capacity; ++index)
+        {
+            stale_recovery_links[index] = {};
+            stale_recovery_addresses[index] = {};
+            stale_recovery_disconnected[index] = false;
         }
 #endif
         for (size_t i = 0U; i < 32U; ++i)
@@ -2327,7 +2500,15 @@ void loop()
                 }
                 if (!sensors[profile]->send(connection))
                 {
-                    fail("|reason=subscribed-send");
+                    const int error = BLEDevice.lastDriverError();
+                    if (error == -EBUSY || error == -EAGAIN || error == -ENOMEM)
+                    {
+                        continue;
+                    }
+                    char detail[72];
+                    snprintf(detail, sizeof(detail),
+                             "|reason=subscribed-send|ble_driver=%d", error);
+                    fail(detail);
                     return;
                 }
                 ++sensor_sent[slot][profile];

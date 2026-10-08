@@ -42,6 +42,7 @@ namespace
     constexpr std::int64_t security_request_delay_ms = 500;
     constexpr std::int64_t session_timeout_ms = 1200000;
     constexpr std::int64_t cleanup_timeout_ms = 30000;
+    constexpr std::int64_t cleanup_quiet_ms = 1000;
 
     char command[160] = {};
     std::size_t command_length = 0U;
@@ -63,6 +64,7 @@ namespace
     bool advertising_started = false;
     bool link_reported = false;
     std::int64_t security_request_due_ms = 0;
+    std::int64_t cleanup_quiet_since = 0;
     std::int64_t session_deadline = 0;
     std::int64_t cleanup_deadline = 0;
     std::uint32_t client_operations = 0U;
@@ -247,6 +249,7 @@ namespace
         advertising_started = false;
         link_reported = false;
         security_request_due_ms = 0;
+        cleanup_quiet_since = 0;
         session_deadline = 0;
         cleanup_deadline = 0;
         client_operations = 0U;
@@ -409,6 +412,11 @@ namespace
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            cleanup_quiet_since = k_uptime_get();
+            return;
+        }
         if (!session_started || session_finished || !scan_started || peer_found ||
             connection_attempted || !result.connectable || result.scan_response ||
             !validRfPeer(result))
@@ -426,6 +434,7 @@ namespace
         checkCallbackContext();
         if (cleanup_requested)
         {
+            cleanup_quiet_since = k_uptime_get();
             if (information.event == nucode::ble::BLEEvent::disconnected)
             {
                 if (information.connection == client_connection)
@@ -494,6 +503,11 @@ namespace
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            cleanup_quiet_since = k_uptime_get();
+            return;
+        }
         if (!session_started || session_finished)
         {
             return;
@@ -716,6 +730,7 @@ namespace
             return;
         }
         cleanup_requested = true;
+        cleanup_quiet_since = 0;
         cleanup_deadline = k_uptime_get() + cleanup_timeout_ms;
     }
 
@@ -751,7 +766,16 @@ namespace
         }
         const bool links_zero = !client_connection.valid() && !server_connection.valid();
         const bool pending_zero = !client_security_pending;
-        if (links_zero && pending_zero)
+        const std::int64_t now = k_uptime_get();
+        if (!links_zero || !pending_zero)
+        {
+            cleanup_quiet_since = 0;
+        }
+        else if (cleanup_quiet_since == 0)
+        {
+            cleanup_quiet_since = now;
+        }
+        else if (now - cleanup_quiet_since >= cleanup_quiet_ms)
         {
             Serial.print(protocol);
             Serial.print("|CLEANUP|role=");
@@ -762,7 +786,7 @@ namespace
             resetSessionState();
             return;
         }
-        if (k_uptime_get() >= cleanup_deadline)
+        if (now >= cleanup_deadline)
         {
             Serial.print(protocol);
             Serial.print("|FAIL|role=");

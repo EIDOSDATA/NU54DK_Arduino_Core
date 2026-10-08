@@ -80,6 +80,8 @@ class M30BleMultiTests(unittest.TestCase):
             'Serial.print("|cross_link=0|security_errors=0|key_size_errors=0")',
             'stop_prefix[] = "M30W07|1|STOP|nonce="',
             "driveCleanup()",
+            "cleanup_quiet_ms = 1000",
+            "now - cleanup_quiet_since >= cleanup_quiet_ms",
             'Serial.print("|active_links=0|pending_operations=0|buffers=0|status=pass")',
             "resetSessionState()",
         ):

@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import ast
 from concurrent.futures import Future, ThreadPoolExecutor
+from contextlib import nullcontext
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -22,6 +24,15 @@ from typing import Any, Callable, Sequence
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 LOCK_PATH = Path(__file__).with_name("ncs-3.4.0.lock.json")
+SDK_PATCH_MODULE_PATH = (
+    REPOSITORY / "tools/nu54-builder/src/nu54_builder_impl/sdk_patches.py"
+)
+SDK_PATCH_SPEC = importlib.util.spec_from_file_location(
+    "nucode_w06_sdk_patches", SDK_PATCH_MODULE_PATH
+)
+assert SDK_PATCH_SPEC and SDK_PATCH_SPEC.loader
+SDK_PATCH_MODULE = importlib.util.module_from_spec(SDK_PATCH_SPEC)
+SDK_PATCH_SPEC.loader.exec_module(SDK_PATCH_MODULE)
 REGISTRY_PATH = REPOSITORY / "tools/bluetooth/m33_regression.py"
 BOARD_ROOT = REPOSITORY / "board_package/NU54DK_Zephyr_DTS"
 BOARD_TARGET = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
@@ -108,8 +119,8 @@ SCENARIO_OVERRIDES = {
     ("m30_profiles", "central-image"): "nucode.m30.profile.c",
     ("m30_dfu", "peripheral-image"): "nucode.m30.dfu.peripheral",
     ("m30_dfu", "central-image"): "nucode.m30.dfu.central",
-    ("m31_iso_bis", "hex-source"): "nucode.m31.iso_bis.source",
-    ("m31_iso_bis", "hex-receiver"): "nucode.m31.iso_bis.receiver",
+    ("m31_iso_bis", "hex-source"): "nucode.m31.iso_bis_encrypted.source",
+    ("m31_iso_bis", "hex-receiver"): "nucode.m31.iso_bis_encrypted.receiver",
     ("m31_iso_combined", "hex-peer"): "nucode.m31.iso_combined.peer",
     ("m31_iso_combined", "hex-combined"): "nucode.m31.iso_combined.central",
     ("m31_iso_combined", "hex-receiver"): "nucode.m31.iso_bis.receiver",
@@ -364,6 +375,22 @@ def git_output(repository: Path, *arguments: str) -> str:
     return result.stdout.strip()
 
 
+def git_content_changes(repository: Path) -> tuple[str, ...]:
+    """! @brief Windows stat 오판을 제외한 staged·tracked·untracked 변경을 반환합니다. """
+
+    paths: set[str] = set()
+    commands = (
+        ("diff", "--name-only", "--diff-filter=ACMDRTUXB"),
+        ("diff", "--cached", "--name-only", "--diff-filter=ACMDRTUXB"),
+        ("ls-files", "--others", "--exclude-standard"),
+    )
+    for command in commands:
+        paths.update(
+            value for value in git_output(repository, *command).splitlines() if value
+        )
+    return tuple(sorted(paths))
+
+
 def validate_source_lock(
     repository: Path,
     sdk_root: Path,
@@ -392,9 +419,7 @@ def validate_source_lock(
         "zephyr": zephyr_root,
     }
     for label, checkout in checkouts.items():
-        dirty = git_output(
-            checkout, "status", "--porcelain=v1", "--untracked-files=all"
-        )
+        dirty = git_content_changes(checkout)
         require(not dirty, f"W06 artifact 준비에는 clean exact {label} source가 필요합니다")
     board_revision = git_output(board_root, "rev-parse", "HEAD").lower()
     ncs_revision = git_output(nrf_root, "rev-parse", "HEAD").lower()
@@ -417,6 +442,9 @@ def validate_source_lock(
         "ncs_clean": True,
         "zephyr_revision": zephyr_revision,
         "zephyr_clean": True,
+        "zephyr_patches": list(
+            SDK_PATCH_MODULE.approved_zephyr_patches(lock)
+        ),
         "toolchain_bundle_id": bundle,
         "sdk_root": sdk_root.as_posix(),
         "toolchain_root": toolchain_root.as_posix(),
@@ -2577,6 +2605,21 @@ def execute_build_actions(
     return [receipt_by_index[index] for index in range(len(actions))]
 
 
+def bind_sdk_patch_environment(
+    actions: Sequence[dict[str, Any]], lock: dict[str, Any]
+) -> tuple[dict[str, Any], ...]:
+    """! @brief 상위 patch context와 모든 하위 builder를 같은 patch 집합에 묶습니다. """
+
+    records = SDK_PATCH_MODULE.approved_zephyr_patches(lock)
+    digest = SDK_PATCH_MODULE.patchset_sha256(records)
+    for action in actions:
+        environment = action.get("environment")
+        require(isinstance(environment, dict), "build action environment가 없습니다")
+        environment["NUCODE_ZEPHYR_PATCHSET_SHA256"] = digest
+        environment["NUCODE_ZEPHYR_PATCHES_APPLIED"] = "1"
+    return records
+
+
 def unique_file(paths: Sequence[Path], label: str) -> Path:
     """! @brief 정확히 하나인 nonempty file을 반환합니다. """
 
@@ -3263,9 +3306,19 @@ def build_from_plan(
             arduino_config.resolve(),
             fqbn_prefix,
         )
-        receipts = execute_build_actions(
-            actions, work_root, timeout_seconds, max_workers, executor
+        sdk_lock = strict_json(LOCK_PATH)
+        bind_sdk_patch_environment(actions, sdk_lock)
+        patch_context = (
+            SDK_PATCH_MODULE.applied_zephyr_patches(
+                sdk_root, sdk_lock
+            )
+            if (sdk_root / "zephyr").is_dir()
+            else nullcontext(())
         )
+        with patch_context:
+            receipts = execute_build_actions(
+                actions, work_root, timeout_seconds, max_workers, executor
+            )
         entries = entry_resolver(plan, actions)
         index = {
             "schema_version": 1,
@@ -3743,6 +3796,8 @@ def build_shard_from_plan(
         plan, work_root, sdk_root, toolchain_root,
         arduino_cli.resolve(), arduino_config.resolve(), fqbn_prefix,
     )
+    sdk_lock = strict_json(LOCK_PATH)
+    bind_sdk_patch_environment(actions, sdk_lock)
     validate_build_shard_plan(shard_plan, plan, actions, shard_count)
     assignments = [
         row for row in shard_plan["assignments"]
@@ -3759,10 +3814,18 @@ def build_shard_from_plan(
         for row in assignments for slot in row["slots"]
     }
     try:
-        receipts = execute_build_actions(
-            selected_actions, work_root, timeout_seconds,
-            max_workers, executor,
+        patch_context = (
+            SDK_PATCH_MODULE.applied_zephyr_patches(
+                sdk_root, sdk_lock
+            )
+            if (sdk_root / "zephyr").is_dir()
+            else nullcontext(())
         )
+        with patch_context:
+            receipts = execute_build_actions(
+                selected_actions, work_root, timeout_seconds,
+                max_workers, executor,
+            )
         partial_plan = partial_build_plan(plan, slot_keys)
         entries = entry_resolver(partial_plan, selected_actions)
         partial_index = {
@@ -5789,6 +5852,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except ArtifactFailure as error:
+    except (ArtifactFailure, SDK_PATCH_MODULE.PatchFailure) as error:
         print(f"M33_W06_ARTIFACT_FAIL: {error}", file=sys.stderr)
         raise SystemExit(1) from error

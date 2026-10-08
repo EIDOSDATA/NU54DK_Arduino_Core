@@ -1,21 +1,23 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-07**. 사용자가 현재 M33 브랜치에서 새 검증 파이프라인을 구현하고
-W06 완료까지 진행하도록 요청했다. R1·R2 구현과 보드 없는 회귀를 통과했으며, 보존·동기화 기준은
-아래 이력 보관 절을 따른다.
+최종 갱신: **2026-10-08**. 사용자가 현재 M33 브랜치에서 W06 완료까지 중단 없이
+진행하도록 요청했다. R1·R2와 R3 실물 수직 연결, exact source `c21b2716…`의 49개 group
+전수 조사와 건너뛴 하위 campaign 조사를 완료했다. 현재는 고정한 전체 결함을 일괄 수정하고
+영향받은 기능을 표적검증 중이다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
 ## 1. 지금의 정본
 
 | 항목 | 상태 |
 | --- | --- |
-| 작업 저장소 | `D:\w06\src` |
+| 작업 저장소 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`; build·artifact·실행·log·cache·tmp는 `D:\w06` 전용 |
 | 브랜치 | `Dev-0.6.0-M33`, origin의 같은 브랜치 추적; 사용자 요청으로 main 이후 87개 commit을 하나로 정리 |
+| 현재 전수 조사 source | clean `c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a`; 독립 clone `D:\w06\runs\source-c21b2716` |
 | squash 전 구현 source | `f9f1cd283ee39bcf0609e047473e0e8c5c9930c1`; 원본 시험의 identity, 현재 HEAD와 구분 |
 | board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | SDK·toolchain | NCS 3.4.0 / `dcbdc366a1`; C 설치본은 읽기 입력 전용 |
 | 완료 상태 | M32 12/12, M33 W01~W05 **5/8**, HOST **3/8** |
-| W06 | 미완료; R1·R2 완료, R3 실제 수직 연결부터 진행 |
+| W06 | 미완료; R1·R2·R3 PASS, 수정 전 전수 조사 PASS 16 / FAIL 33, P2 일괄 수정·표적검증 중 |
 | 현재 제품 | Windows stable/source version 0.5.0; v0.6.0 미공개 |
 
 현재 HEAD는 위 구현 내용과 문서 정비를 포함한 squash 결과다. 기존 결과의 source를 새 SHA로 바꾸지 않는다.
@@ -35,19 +37,32 @@ W06 완료까지 진행하도록 요청했다. R1·R2 구현과 보드 없는 �
 이는 프로그램의 STOP 완료나 f9 firmware 실행 PASS가 아니다. 이후 장치 상태는 다시 확인해야 한다.
 정리·자료 가용성·검사 원본은 [304번](<04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md>)을 따른다.
 
-## 3. 재개할 때의 순서
+2026-10-08 exact `c21b2716…`에서 Actions build 141, runtime 9, stage 150, Host 64 suite/584 test,
+R3 bundle export/import/relocation과 실물 20-cycle cleanup/resume를 통과했다. production matrix는
+1~13 group PASS 후 14번 `families:pairing_security`의 round 전환 경계에서 FAIL했다. 해당 수정안은
+미커밋으로 보류한 채 동일 clean source의 15~49 group을 `D:\w06\r\survey22`에 append-only로
+끝까지 실행했다. 최종 group 집계는 PASS 16 / FAIL 33이다. group 내부 fail-fast 때문에
+건너뛴 하위 campaign도 `D:\w06\r\survey23-skipped`에서 별도로 실행해 자료를 채웠다. 이 조사
+PASS/FAIL은 새 최종 source의 완료 증거가 아니다.
 
-1. [AGENTS](../AGENTS.md), [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>),
-   [M33 TODO](TODO_M33.md)의 W06 절을 읽는다. 먼저 새 구현 작업의 재개 지시를 확인한다.
-2. 실제 D 저장소와 source/board/SDK/toolchain, Python/CLI·symlink·디스크 여유를 확인한다.
-3. 기존 registry·runner·oracle·artifact 소비 파일과 비용을 매핑하는 **R1**부터 시작한다.
-4. 보드 없는 planner/schema/중단·재개 주입 시험 **R2**를 통과시킨다.
-5. 한 그룹의 end-to-end **R3** → 전체 short pass **R4** → 영향 선택/보존/계측 **R5**를 구현·검증한다.
-6. 결함 수정 후 clean S를 고정하고 **R6**에서 기존 W06 필수 전체 검증·closure를 수행한다.
+현재 미커밋 수정본은 Host 64 suite / 597 test / skip 0을 통과했다. 수정 전 Mesh image로
+`friend_clear_confirm_timeout`을 한 번 재현했고, 공식 Zephyr 수정 3564414a3b27…을 NCS 3.4.0
+고정 patch로 적용한 새 세 역할 image는 build 3/3과 1-cycle 표적검증 뒤 **20/20 cycle**
+Friend Clear·traffic·cleanup을 통과했다. dirty 개발 source의 `PASS_CANDIDATE`이므로 clean S의
+최종 분모로 승격하지 않으며, 나머지 영향 회귀와 clean S 전체 검증은 아직 완료 전이다.
 
-현재 `D:\w06\tools\Continue-W06.ps1` 등을 그대로 실행하는 것은 위 재설계 순서가 아니다.
-기존 도구는 역사 evidence 검증·비교용으로 보존하며 새 파이프라인이 구현됐다고 가정하지 않는다.
-[기존 artifact 안내](../tools/ci/m33_w06_artifacts.md)는 현재 구현의 reference다.
+## 3. 현재 연속 실행 순서
+
+1. 고정한 전체 실패 목록에서 중복 원인과 공통 수명주기 경계를 합쳐 일괄 수정한다.
+2. 수정 단위별 Host·대상 build·실물 표적검증을 수행한다. 이때 비싼 49개 전체 실행을 반복하지 않는다.
+3. 영향 회귀가 안정되면 수정 code·계약을 검증하고 clean source **S**로 커밋한다.
+4. 새 S에서 로컬 build 141 → runtime 9 → stage 150 → R3 → production 49 group →
+   1,800초 soak → Host 64/597 → risk 7·qualification 3 → strict closure를 처음부터 재실행한다.
+5. 로컬 전체가 통과한 S를 push하고 GitHub Actions artifact의 source·hash·provenance와 최종 재현성을 확인한다.
+6. 허용 경로의 기록·문서만 후속 commit **C**로 갱신하고 S→C 계약·push를 확인한다.
+
+실행 정본은 저장소의 `tests/hil/nu54dk/m33_regression_run.py`와 registry·evidence 계약이다.
+[기존 artifact 안내](../tools/ci/m33_w06_artifacts.md)는 전달·복원 reference로 사용한다.
 
 ## 4. D 자료와 보존
 
@@ -105,6 +120,14 @@ M32 브랜치는 삭제됐고 최종 내용은 M33 분기 기준 main에 남아 
 
 - 주 에이전트 하나, 하위 에이전트·다중 채팅/작업 트리 없음. 로컬 무거운 build/HIL은 하나씩.
 - NCS 3.4.0 유지. 3.4.1은 v0.7.0 전용. SDK·board·공개 API를 문서 정비로 바꾸지 않는다.
+- NCS 3.4.0의 확정된 SDK 결함을 보정해야 하면 공식 upstream patch의 byte·base revision·변경 파일을
+  lock에 고정하고 build 동안만 적용·원상복구한다. Windows CRLF로 stat만 바뀐 경우도 있으므로 staged·
+  정규화 tracked diff·untracked 파일을 함께 검사하며 `git status` 한 줄만으로 SDK 오염을 단정하지 않는다.
+- 현재 승인 patch는 NCS 3.4.1 조사에서 확인한 Zephyr
+  3564414a3b27ae52718efe5244261ebd00102f56 한 건이다. 배포 자산은
+  tools/nu54-builder/sdk-patches/zephyr/3564414a3b27-friend-clear-confirm.patch,
+  patchset SHA-256은 0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf다.
+  build record나 Arduino manifest에 이 값이 없으면 W06 exact image로 승격하지 않는다.
 - 승인된 정상 sector program·software reset·halt/resume는 재개 범위에서 수행할 수 있다.
   erase/unlock/recover 허용 이력은 일반 자동 retry 허가가 아니며 필요성을 먼저 진단한다.
 - 현재 보드 연결·결선·firmware·STOP은 과거 기록으로 추정하지 않는다. symlink 권한 우회·임의 승격 금지.

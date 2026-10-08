@@ -57,6 +57,10 @@ class M30BlePairTests(unittest.TestCase):
             "ble_driver_error",
             '::strcmp(verb, "IDENTIFY")',
             "reportReady()",
+            "clear_ack_pending = true",
+            "if (clearing && clear_ack_pending)",
+            "completeClearRound();",
+            'fail("clear-pending")',
         ):
             self.assertIn(token, source, token)
 
@@ -123,6 +127,8 @@ class M30BlePairTests(unittest.TestCase):
         self.assertIn("validate_board_revision(board_revision)", source)
         self.assertIn('send_command(ports[role], "IDENTIFY"', source)
         self.assertIn("ready_nonces[role]", source)
+        self.assertIn("deadline = time.monotonic() + result_timeout", source)
+        self.assertNotIn("deadline = started + args.result_timeout", source)
         self.assertIn('"power_cut_injected": False', source)
         self.assertIn('"mass_erase_or_recover": False', source)
         self.assertIn("30.0 <= args.result_timeout <= 600.0", source)

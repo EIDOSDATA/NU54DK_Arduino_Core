@@ -446,7 +446,7 @@ def execute_case(
     case: CapabilityCase,
     baud: int,
     flash_timeout: float,
-    deadline: float,
+    result_timeout: float,
     captures: dict[str, bytearray],
 ) -> tuple[
     list[dict[str, Any]],
@@ -474,6 +474,7 @@ def execute_case(
         }
         flash_results = {role: future.result() for role, future in futures.items()}
     time.sleep(0.5)
+    deadline = time.monotonic() + result_timeout
 
     pending = {"peripheral": bytearray(), "central": bytearray()}
     with ExitStack() as stack:
@@ -717,7 +718,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
         for case in CASES
     }
     started = time.monotonic()
-    deadline = started + args.result_timeout
     case_results: list[dict[str, Any]] = []
     program_phases: list[dict[str, Any]] = []
     cleanup_records: list[dict[str, Any]] = []
@@ -732,7 +732,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 case,
                 args.baud,
                 args.flash_timeout,
-                deadline,
+                args.result_timeout,
                 captures,
             )
             exact_program, phase_record = complete_program_phase(

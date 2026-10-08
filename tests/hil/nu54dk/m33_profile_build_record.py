@@ -15,7 +15,10 @@ from ble_pair_hil_common import git_revision
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = "nucode-m33-profile-build-v1"
 SOURCE_ROOTS = (ROOT / "libraries/NUCODE_BLE_Profiles", ROOT / "tests/zephyr/m33_profile_hil")
-SOURCE_FILES = (ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",)
+SOURCE_FILES = (
+    ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattClient.cpp",
+    ROOT / "libraries/NUCODE_BLE/src/internal/gatt/GattServer.cpp",
+)
 
 
 def digest(path: Path) -> str:

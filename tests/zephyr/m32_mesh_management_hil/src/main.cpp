@@ -35,6 +35,11 @@ namespace
     constexpr std::uint32_t iteration_target = 10U;
     constexpr std::uint32_t operation_target = 350U;
     constexpr std::int64_t session_timeout_ms = 900000;
+    constexpr std::uint8_t remote_scan_timeout_seconds = 20U;
+    constexpr std::int64_t remote_scan_grace_ms = 5000;
+    constexpr std::uint8_t remote_scan_attempt_limit = 5U;
+    constexpr std::int64_t remote_provision_timeout_ms = 120000;
+    constexpr std::uint8_t remote_provision_attempt_limit = 3U;
     constexpr std::int64_t provisioning_settle_ms = 1500;
 
     static_assert(CONFIG_BT_MESH_CDB_NODE_COUNT >= 3,
@@ -53,6 +58,10 @@ namespace
     constexpr std::uint8_t application_key[16] = {
         0x32U, 0x07U, 0x54U, 0x15U, 0xA5U, 0x5AU, 0x11U, 0x22U,
         0x33U, 0x44U, 0x55U, 0x66U, 0x77U, 0x88U, 0x99U, 0xAAU,
+    };
+    constexpr std::uint8_t expected_target_uuid[16] = {
+        0x32U, 0x07U, 0x54U, 0x15U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0xB2U,
     };
     constexpr std::uint32_t configuration_retry_limit = 3U;
     constexpr std::int64_t configuration_retry_delay_ms = 500;
@@ -73,9 +82,14 @@ namespace
     bool server_discovered = false;
     bool server_provision_pending = false;
     bool server_added = false;
+    bool server_transport_checked = false;
     bool remote_scan_started = false;
+    std::uint8_t remote_scan_attempts = 0U;
+    std::int64_t remote_scan_deadline_ms = 0;
     bool remote_target_discovered = false;
     bool remote_provision_started = false;
+    std::uint8_t remote_provision_attempts = 0U;
+    std::int64_t remote_provision_deadline_ms = 0;
     bool target_added = false;
     bool negatives_complete = false;
     std::uint32_t provisioning_links_closed = 0U;
@@ -203,6 +217,11 @@ namespace
         {
             server_provision_pending = false;
             ++provisioning_links_closed;
+            if (remote_provision_started && !target_added)
+            {
+                remote_provision_started = false;
+                remote_provision_deadline_ms = 0;
+            }
             management_not_before_ms = k_uptime_get() + provisioning_settle_ms;
         }
 #else
@@ -218,12 +237,16 @@ namespace
     {
 #if defined(NUCODE_M32_MESH11_CLIENT)
         if (record.event == ManagementEvent::remote_device &&
-            record.remote.server.address == server_address &&
-            record.remote.uuid[15] == 0xB2U)
+            record.remote.server.address == server_address)
         {
-            ::memcpy(target_uuid, record.remote.uuid, sizeof(target_uuid));
-            remote_target_discovered = true;
             ++remote_reports;
+            if (::memcmp(record.remote.uuid, expected_target_uuid,
+                         sizeof(expected_target_uuid)) == 0)
+            {
+                ::memcpy(target_uuid, record.remote.uuid,
+                         sizeof(target_uuid));
+                remote_target_discovered = true;
+            }
         }
 #else
         static_cast<void>(record);
@@ -245,9 +268,14 @@ namespace
         server_discovered = false;
         server_provision_pending = false;
         server_added = false;
+        server_transport_checked = false;
         remote_scan_started = false;
+        remote_scan_attempts = 0U;
+        remote_scan_deadline_ms = 0;
         remote_target_discovered = false;
         remote_provision_started = false;
+        remote_provision_attempts = 0U;
+        remote_provision_deadline_ms = 0;
         target_added = false;
         negatives_complete = false;
         provisioning_links_closed = 0U;
@@ -400,26 +428,73 @@ namespace
         }
         ManagementTarget server{};
         server.address = server_address;
+        if (!server_transport_checked)
+        {
+            SarTransmitter transmitter{};
+            if (!NUCODEMeshManagement.getSarTransmitter(server, transmitter))
+            {
+                fail("server_transport",
+                     NUCODEMeshManagement.lastDriverError());
+                return;
+            }
+            server_transport_checked = true;
+            management_not_before_ms =
+                k_uptime_get() + provisioning_settle_ms;
+            return;
+        }
+        if (remote_scan_started && !remote_target_discovered &&
+            k_uptime_get() >= remote_scan_deadline_ms)
+        {
+            remote_scan_started = false;
+            if (remote_scan_attempts >= remote_scan_attempt_limit)
+            {
+                fail("remote_scan_exhausted", -ETIMEDOUT);
+                return;
+            }
+            management_not_before_ms =
+                k_uptime_get() + provisioning_settle_ms;
+            return;
+        }
         if (!remote_scan_started)
         {
             remote_scan_started = NUCODEMeshManagement.startRemoteScan(
-                server, 20U, 1U, nullptr);
+                server, remote_scan_timeout_seconds, 1U,
+                expected_target_uuid);
             if (!remote_scan_started)
             {
                 fail("remote_scan", NUCODEMeshManagement.lastDriverError());
+                return;
             }
+            ++remote_scan_attempts;
+            remote_scan_deadline_ms =
+                k_uptime_get() +
+                static_cast<std::int64_t>(remote_scan_timeout_seconds) * 1000 +
+                remote_scan_grace_ms;
+            return;
+        }
+        if (remote_provision_started && !target_added &&
+            k_uptime_get() >= remote_provision_deadline_ms)
+        {
+            fail("remote_provision_timeout", -ETIMEDOUT);
             return;
         }
         if (remote_target_discovered && !remote_provision_started)
         {
-            if (!NUCODEMeshManagement.stopRemoteScan(server) ||
-                !NUCODEMeshManagement.provisionRemote(server, target_uuid,
+            if (remote_provision_attempts >= remote_provision_attempt_limit)
+            {
+                fail("remote_provision_exhausted", -ETIMEDOUT);
+                return;
+            }
+            if (!NUCODEMeshManagement.provisionRemote(server, target_uuid,
                                                        target_address))
             {
                 fail("remote_provision", NUCODEMeshManagement.lastDriverError());
                 return;
             }
             remote_provision_started = true;
+            ++remote_provision_attempts;
+            remote_provision_deadline_ms =
+                k_uptime_get() + remote_provision_timeout_ms;
         }
     }
 
@@ -614,10 +689,10 @@ namespace
         Serial.print(iterations);
         Serial.print("|operations=");
         Serial.print(operations);
-        Serial.print("|links_closed=");
-        Serial.print(provisioning_links_closed);
         Serial.print("|remote_reports=");
         Serial.print(remote_reports);
+        Serial.print("|links_closed=");
+        Serial.print(provisioning_links_closed);
         Serial.print("|malformed_rejected=1|out_of_range_rejected=1");
         Serial.print("|replay_rejected=1|wrong_subnet_rejected=1|recovery=pass");
         printSuffix();
@@ -636,6 +711,14 @@ namespace
         {
             return;
         }
+#if defined(NUCODE_M32_MESH11_SERVER)
+        if (!NUCODEMeshManagement.enableRemoteProvisioningServer())
+        {
+            fail("remote_server_enable",
+                 NUCODEMeshManagement.lastDriverError());
+            return;
+        }
+#endif
         Serial.print(protocol);
         Serial.print("|RESULT|role=");
         Serial.print(roleName());
@@ -669,6 +752,12 @@ namespace
         Serial.print(iterations);
         Serial.print("|operations=");
         Serial.print(operations);
+        Serial.print("|remote_reports=");
+        Serial.print(remote_reports);
+        Serial.print("|remote_started=");
+        Serial.print(remote_provision_started ? 1 : 0);
+        Serial.print("|remote_attempts=");
+        Serial.print(remote_provision_attempts);
 #else
         Serial.print("|provisioned=");
         Serial.print(NUCODEMesh.provisioned() ? 1 : 0);

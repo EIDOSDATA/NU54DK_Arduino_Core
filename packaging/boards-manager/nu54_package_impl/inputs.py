@@ -119,7 +119,10 @@ def include_core_path(path: str) -> bool:
     if root in {"cores", "dts", "libraries", "third_party", "variants", "zephyr"}:
         return True
     if root == "tools":
-        return len(pure.parts) >= 2 and pure.parts[1] in {"nu54-builder", "nu54-prerequisites"}
+        return len(pure.parts) >= 2 and pure.parts[1] in {
+            "nu54-builder",
+            "nu54-prerequisites",
+        }
     return False
 
 

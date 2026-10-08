@@ -64,6 +64,33 @@ ARDUINO_REVISION_FEATURES = {
 }
 
 
+def locked_zephyr_patchset_sha256() -> str:
+    """! @brief SDK lock에 고정된 patch byte SHA 집합의 결합 SHA-256을 반환합니다. """
+
+    lock = json.loads(
+        (REPOSITORY / "tools/ci/ncs-3.4.0.lock.json").read_text(encoding="utf-8")
+    )
+    records = lock["zephyr"]["patches"]
+    allowed = (
+        REPOSITORY / "tools/nu54-builder/sdk-patches/zephyr"
+    ).resolve()
+    for record in records:
+        patch = (REPOSITORY / record["path"]).resolve()
+        digest = record["sha256"]
+        if (
+            not patch.is_relative_to(allowed)
+            or re.fullmatch(r"[0-9a-f]{64}", digest) is None
+            or not patch.is_file()
+            or file_sha256(patch) != digest
+        ):
+            raise RuntimeError(f"SDK patch byte 계약이 잘못됐습니다: {record['path']}")
+    joined = "".join(record["sha256"] for record in records)
+    return hashlib.sha256(joined.encode("ascii")).hexdigest()
+
+
+ZEPHYR_PATCHSET_SHA256 = locked_zephyr_patchset_sha256()
+
+
 class BlePairHilFailure(RuntimeError):
     """! @brief M19/M20 pair HIL의 fail-closed 오류를 나타냅니다. """
 
@@ -853,20 +880,55 @@ def validate_arduino_build_manifest(
             "Arduino build manifest cache revision 불일치: "
             f"actual={cache_revisions}, expected={expected_revisions}"
         )
+    patchset = nested(
+        "cache", "input_manifest", "ncs", "zephyr_patchset_sha256"
+    )
+    if patchset != ZEPHYR_PATCHSET_SHA256:
+        raise BlePairHilFailure(
+            f"Arduino build manifest SDK patch 집합 불일치: {patchset}"
+        )
 
     image_artifact = nested("artifacts", "hex")
     if not isinstance(image_artifact, dict):
         raise BlePairHilFailure("Arduino build manifest의 HEX artifact 형식이 잘못됐습니다.")
     image_digest = file_sha256(image)
+    recorded_path_value = image_artifact.get("path")
+    if not isinstance(recorded_path_value, str) or not recorded_path_value:
+        raise BlePairHilFailure("Arduino build manifest HEX path 형식이 잘못됐습니다.")
+    recorded_path = Path(recorded_path_value)
+    if not recorded_path.is_absolute():
+        raise BlePairHilFailure("Arduino build manifest HEX path가 절대 경로가 아닙니다.")
+    recorded_resolved = recorded_path.resolve()
+    image_resolved = image.resolve()
+
+    def build_suffix(path: Path) -> tuple[str, ...] | None:
+        """! @brief CI root 이동에도 보존되는 builds 이하 논리 경로를 반환합니다. """
+
+        parts = path.parts
+        indexes = [
+            index for index, part in enumerate(parts)
+            if part.casefold() == "builds"
+        ]
+        if len(indexes) != 1:
+            return None
+        return tuple(part.casefold() for part in parts[indexes[0]:])
+
+    if recorded_resolved != image_resolved:
+        recorded_suffix = build_suffix(recorded_resolved)
+        image_suffix = build_suffix(image_resolved)
+        if (recorded_suffix is None or image_suffix is None or
+                recorded_suffix != image_suffix):
+            raise BlePairHilFailure(
+                "Arduino build manifest HEX 불일치: "
+                f"path={recorded_resolved.as_posix()}, "
+                f"expected={image_resolved.as_posix()}"
+            )
     expected_artifact = {
-        "path": image.resolve().as_posix(),
         "sha256": image_digest,
         "size": image.stat().st_size,
     }
     for key, expected in expected_artifact.items():
         actual = image_artifact.get(key)
-        if key == "path" and isinstance(actual, str):
-            actual = Path(actual).resolve().as_posix()
         if actual != expected:
             raise BlePairHilFailure(
                 f"Arduino build manifest HEX 불일치: {key}={actual}, expected={expected}"
@@ -887,6 +949,7 @@ def validate_arduino_build_manifest(
         "board_revision": board_revision,
         "ncs_revision": expected_revisions["NUCODE_NCS_REVISION"],
         "zephyr_revision": expected_revisions["NUCODE_ZEPHYR_REVISION"],
+        "zephyr_patchset_sha256": patchset,
         "board": "nrf54l15dk",
         "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
         "toolchain_bundle_id": bundle,
@@ -904,6 +967,8 @@ def validate_build_record(
     core_revision: str,
     board_revision: str,
     application_root: Path,
+    *,
+    allow_dirty: bool = False,
 ) -> dict[str, str]:
     arduino_record_path = image.with_suffix(".nu54-build.json")
     if arduino_record_path.is_file():
@@ -928,6 +993,7 @@ def validate_build_record(
         "board_source_sha256",
         "ncs_revision",
         "zephyr_revision",
+        "zephyr_patchset_sha256",
         "board",
         "board_qualifiers",
         "toolchain_variant",
@@ -940,14 +1006,19 @@ def validate_build_record(
         "board_revision": board_revision[:12],
         "ncs_revision": "99553055607b",
         "zephyr_revision": "bf801e4e3d19",
+        "zephyr_patchset_sha256": ZEPHYR_PATCHSET_SHA256,
         "board": "nrf54l15dk",
         "board_qualifiers": "nrf54l15/cpuapp/nu54dk",
         "toolchain_variant": "zephyr",
     }
     for key, expected_value in expected.items():
-        if values[key] != expected_value:
+        actual_value = values[key]
+        accepted_values = {expected_value}
+        if key == "core_revision" and allow_dirty:
+            accepted_values.add(f"{expected_value}-dirty")
+        if actual_value not in accepted_values:
             raise BlePairHilFailure(
-                f"build record 불일치: {key}={values[key]}, expected={expected_value}"
+                f"build record 불일치: {key}={actual_value}, expected={expected_value}"
             )
     toolchain_path = values["toolchain_path"].replace("\\", "/").casefold()
     expected_toolchain_suffix = "/toolchains/dcbdc366a1/opt/zephyr-sdk"

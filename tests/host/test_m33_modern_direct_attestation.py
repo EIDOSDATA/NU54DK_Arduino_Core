@@ -93,6 +93,9 @@ class ModernDirectAttestationTest(unittest.TestCase):
             {"cycles": 20, "starts": 20, "stops": 20, "invalid_rejected": 20},
         )
         assert_cycles(self, df_records, 20, df.SEMANTICS)
+        cis_runner = (HIL / "m31_iso_cis_run.py").read_text(encoding="utf-8")
+        self.assertIn("INTER_CYCLE_SETTLE_SECONDS = 1.0", cis_runner)
+        self.assertIn("time.sleep(INTER_CYCLE_SETTLE_SECONDS)", cis_runner)
 
     def test_power_advertising_privacy_and_ead_cycles(self) -> None:
         """! @brief W04 aggregate가 내부 20 sequence를 정확히 닫는지 확인합니다. """

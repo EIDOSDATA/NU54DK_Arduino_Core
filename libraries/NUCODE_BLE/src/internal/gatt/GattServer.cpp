@@ -911,7 +911,7 @@ namespace nucode::ble
         ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::notification);
         if (context == nullptr)
         {
-            internal::recordError(BLEError::busy, -EBUSY, true);
+            internal::recordError(BLEError::busy, -EBUSY, false);
             return false;
         }
         const struct bt_gatt_attr *attribute =
@@ -959,7 +959,9 @@ namespace nucode::ble
         if (result < 0)
         {
             releaseServerTxContext(*context);
-            internal::recordError(BLEError::driver_error, result, true);
+            const bool transient = result == -EBUSY || result == -EAGAIN || result == -ENOMEM;
+            internal::recordError(transient ? BLEError::busy : BLEError::driver_error,
+                                  result, !transient);
             return false;
         }
         return true;
@@ -1018,7 +1020,7 @@ namespace nucode::ble
         ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::indication);
         if (context == nullptr)
         {
-            internal::recordError(BLEError::busy, -EBUSY, true);
+            internal::recordError(BLEError::busy, -EBUSY, false);
             return false;
         }
         const struct bt_gatt_attr *attribute =
@@ -1065,7 +1067,9 @@ namespace nucode::ble
         if (result < 0)
         {
             releaseServerTxContext(*context);
-            internal::recordError(BLEError::driver_error, result, true);
+            const bool transient = result == -EBUSY || result == -EAGAIN || result == -ENOMEM;
+            internal::recordError(transient ? BLEError::busy : BLEError::driver_error,
+                                  result, !transient);
             return false;
         }
         return true;

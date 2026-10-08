@@ -40,6 +40,28 @@ class M32MeshDfuHilTests(unittest.TestCase):
         with self.assertRaisesRegex(runner.MeshDfuFailure, "target fault"):
             runner.reject_target_fault("target_a", "Fatal error")
 
+    def test_domains_accepts_relocated_sysbuild_root(self) -> None:
+        """! @brief artifact 이동 뒤에도 원래 domain 상대 identity를 검증합니다. """
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "downloaded-sysbuild"
+            for name in (runner.APPLICATION_DOMAIN, runner.BOOT_DOMAIN):
+                (root / name).mkdir(parents=True)
+            root.joinpath("domains.yaml").write_text(
+                "default: m32_mesh_dfu_hil\n"
+                "build_dir: D:/ci/twister_links/test_7\n"
+                "domains:\n"
+                "  - name: m32_mesh_dfu_hil\n"
+                "    build_dir: D:/ci/twister_links/test_7/m32_mesh_dfu_hil\n"
+                "  - name: mcuboot\n"
+                "    build_dir: D:/ci/twister_links/test_7/mcuboot\n"
+                "flash_order:\n"
+                "  - mcuboot\n"
+                "  - m32_mesh_dfu_hil\n",
+                encoding="utf-8",
+            )
+            runner.validate_domains(root)
+
     def test_mcuboot_version_parser(self) -> None:
         """! @brief MCUboot v1 header에서 exact semantic version을 읽습니다. """
 

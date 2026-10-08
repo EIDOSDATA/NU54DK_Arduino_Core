@@ -21,6 +21,7 @@
 #include <zephyr/net_buf.h>
 #include <zephyr/sys/atomic.h>
 
+#include <errno.h>
 #include <string.h>
 
 extern "C"
@@ -97,6 +98,34 @@ namespace nucode::mesh
                 return fail(ManagementError::driver_error, error);
             }
             return success();
+        }
+
+        /** @brief Remote Provisioning 상태를 안정적인 errno 경계로 변환합니다. */
+        int remoteStatusError(enum bt_mesh_rpr_status status) noexcept
+        {
+            switch (status)
+            {
+                case BT_MESH_RPR_SUCCESS:
+                {
+                    return 0;
+                }
+                case BT_MESH_RPR_ERR_SCANNING_CANNOT_START:
+                {
+                    return -EAGAIN;
+                }
+                case BT_MESH_RPR_ERR_INVALID_STATE:
+                {
+                    return -EALREADY;
+                }
+                case BT_MESH_RPR_ERR_LIMITED_RESOURCES:
+                {
+                    return -ENOMEM;
+                }
+                default:
+                {
+                    return -EREMOTE;
+                }
+            }
         }
 
         bt_mesh_rpr_node remoteServer(const ManagementTarget &target) noexcept
@@ -313,6 +342,24 @@ namespace nucode::mesh
         management_context.callback_context = context;
     }
 
+    bool MeshManagement::enableRemoteProvisioningServer() noexcept
+    {
+        if (!requireStarted())
+        {
+            return false;
+        }
+        if (!bt_mesh_is_provisioned())
+        {
+            return fail(ManagementError::driver_error, -EAGAIN);
+        }
+        const int error = bt_mesh_prov_enable(BT_MESH_PROV_REMOTE);
+        if (error == -EALREADY)
+        {
+            return success();
+        }
+        return complete(error);
+    }
+
     bool MeshManagement::startRemoteScan(const ManagementTarget &server,
                                          std::uint8_t timeout_seconds,
                                          std::uint8_t maximum_devices,
@@ -329,9 +376,23 @@ namespace nucode::mesh
         }
         const bt_mesh_rpr_node native_server = remoteServer(server);
         bt_mesh_rpr_scan_status status{};
-        return complete(bt_mesh_rpr_scan_start(nucode_mesh_remote_provisioning_client(),
-                                               &native_server, uuid, timeout_seconds,
-                                               maximum_devices, &status));
+        const int error = bt_mesh_rpr_scan_start(
+            nucode_mesh_remote_provisioning_client(), &native_server, uuid,
+            timeout_seconds, maximum_devices, &status);
+        if (error != 0)
+        {
+            return complete(error);
+        }
+        if (status.status != BT_MESH_RPR_SUCCESS)
+        {
+            return fail(ManagementError::driver_error,
+                        remoteStatusError(status.status));
+        }
+        if (status.scan == BT_MESH_RPR_SCAN_IDLE)
+        {
+            return fail(ManagementError::driver_error, -EAGAIN);
+        }
+        return success();
     }
 
     bool MeshManagement::stopRemoteScan(const ManagementTarget &server) noexcept
@@ -342,8 +403,22 @@ namespace nucode::mesh
         }
         const bt_mesh_rpr_node native_server = remoteServer(server);
         bt_mesh_rpr_scan_status status{};
-        return complete(bt_mesh_rpr_scan_stop(nucode_mesh_remote_provisioning_client(),
-                                              &native_server, &status));
+        const int error = bt_mesh_rpr_scan_stop(
+            nucode_mesh_remote_provisioning_client(), &native_server, &status);
+        if (error != 0)
+        {
+            return complete(error);
+        }
+        if (status.status != BT_MESH_RPR_SUCCESS)
+        {
+            return fail(ManagementError::driver_error,
+                        remoteStatusError(status.status));
+        }
+        if (status.scan != BT_MESH_RPR_SCAN_IDLE)
+        {
+            return fail(ManagementError::driver_error, -EBUSY);
+        }
+        return success();
     }
 
     bool MeshManagement::closeRemoteLink(const ManagementTarget &server) noexcept

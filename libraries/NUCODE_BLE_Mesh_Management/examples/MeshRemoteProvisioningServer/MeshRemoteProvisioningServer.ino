@@ -65,6 +65,8 @@
 
 #include <NUCODE_BLE_Mesh_Management.h>
 
+bool remote_server_ready = false;
+
 void setup()
 {
     Serial.begin(115200);
@@ -76,11 +78,23 @@ void setup()
         Serial.println("Remote provisioning server start failed");
         return;
     }
-    Serial.println("Remote Provisioning Server ready");
 }
 
 void loop()
 {
     NUCODEMesh.poll();
     NUCODEMeshManagement.poll();
+    if (!remote_server_ready && NUCODEMesh.provisioned())
+    {
+        remote_server_ready =
+            NUCODEMeshManagement.enableRemoteProvisioningServer();
+        if (remote_server_ready)
+        {
+            Serial.println("Remote Provisioning Server ready");
+        }
+        else
+        {
+            Serial.println("Remote provisioning server start failed");
+        }
+    }
 }

@@ -113,7 +113,8 @@ class ProfileHilTests(unittest.TestCase):
         server = {"passkey_events": passkeys, "object_writes": "3", "single_link": "1",
                   "native_links": "3", "native_disconnects": "2", "authenticated_links": "3"}
         return {"schema": "nucode-m33-profile-hil-v1", "family": "native",
-                "status": "PASS", "reason": None, "late_failures": [],
+                "status": "PASS", "development": False,
+                "reason": None, "late_failures": [],
                 "native_security_phase": phase, "native_prior_evidence_sha256": prior,
                 "native_security": cls.native_security(phase),
                 "results": {"client": result}, "server": server, "cleanup": cleanup,
@@ -265,8 +266,33 @@ class ProfileHilTests(unittest.TestCase):
                                      ("image", {**original, "sha256": "f" * 64}),
                                      ("development", {**original, "development": True})):
                     server_path.write_text(json.dumps(change), encoding="utf-8")
-                    with self.subTest(name=name), self.assertRaises(ValueError):
-                        load_build_identities(paths, "native", boards)
+                    if name == "development":
+                        originals = {}
+                        for role, filename in paths:
+                            record_path = Path(filename)
+                            originals[role] = record_path.read_bytes()
+                            record = json.loads(
+                                record_path.read_text(encoding="utf-8")
+                            )
+                            record["development"] = True
+                            record_path.write_text(
+                                json.dumps(record), encoding="utf-8"
+                            )
+                        try:
+                            with self.subTest(name=name):
+                                self.assertEqual(
+                                    set(load_build_identities(
+                                        paths, "native", boards,
+                                        development=True,
+                                    )),
+                                    set(boards),
+                                )
+                        finally:
+                            for role, filename in paths:
+                                Path(filename).write_bytes(originals[role])
+                    else:
+                        with self.subTest(name=name), self.assertRaises(ValueError):
+                            load_build_identities(paths, "native", boards)
                     server_path.write_text(json.dumps(original), encoding="utf-8")
                 source.write_bytes(b"tampered")
                 with self.assertRaisesRegex(ValueError, "source hash"):
@@ -372,7 +398,8 @@ class ProfileHilTests(unittest.TestCase):
                           for index, (role, board) in enumerate(boards.items(), 1)}
             evidence = {
                 "schema": "nucode-m33-profile-hil-v1", "family": "standard",
-                "status": "PASS", "reason": None, "late_failures": [],
+                "status": "PASS", "development": False,
+                "reason": None, "late_failures": [],
                 "bms_persistence_phase": "fresh", "bms_prior_evidence_sha256": None,
                 "revisions": revisions, "boards": boards, "build_identity": identities,
                 "results": {
@@ -517,6 +544,16 @@ class ProfileHilTests(unittest.TestCase):
         self.assertIn("startupBondsWithout(identity_primary_address)", scoped)
         self.assertIn("second_peer_preserved=1", scoped)
         self.assertNotIn("eraseAll", scoped)
+
+        stale = source.split("bool recoverStaleBond(", 1)[1].split(
+            "bool consumeStaleDisconnect(", 1
+        )[0]
+        self.assertIn("bms_persistence_fresh_mode", stale)
+        self.assertIn("startupContains(event.peer)", stale)
+        self.assertIn("BLESecurity.eraseBond(event.peer)", stale)
+        self.assertIn("startupBondsWithout(event.peer)", stale)
+        self.assertIn("stale_recovery_capacity", stale)
+        self.assertNotIn("eraseAll", stale)
 
     def test_target_reject_pair_orders(self):
         root = Path(__file__).resolve().parents[2]
@@ -805,10 +842,10 @@ class ProfileHilTests(unittest.TestCase):
         """! @brief identity 단계 전환이 복원과 bond 불변 증거 없이는 진행되지 않는지 검사합니다. """
         primary = {key: "1" for key in
                    ("restored", "candidate", "verified", "existing_unchanged")}
-        primary.update(passkey_events="0", peer_distinct="0", startup_bonds="2")
+        primary.update(passkey_events="0", peer_distinct="0", startup_bonds="1")
         validate_identity_readiness("server", primary, False)
-        validate_identity_readiness("client", {**primary, "startup_bonds": "1"}, False)
-        second = {**primary, "peer_distinct": "1"}
+        validate_identity_readiness("client", primary, False)
+        second = {**primary, "peer_distinct": "1", "startup_bonds": "2"}
         validate_identity_readiness("server", second, True)
         validate_identity_readiness("watcher", {**second, "startup_bonds": "1"}, True)
         for name, role, value, is_second in (

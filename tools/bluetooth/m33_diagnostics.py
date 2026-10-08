@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from contextlib import ExitStack, contextmanager, redirect_stderr, redirect_stdout
 import hashlib
+import importlib.util
 import io
 import json
 import logging
@@ -23,6 +24,15 @@ from datetime import datetime, timezone
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES = ROOT / "templates/bluetooth/diagnostics"
 LOCK = json.loads((ROOT / "tools/ci/ncs-3.4.0.lock.json").read_text(encoding="utf-8"))
+SDK_PATCH_MODULE_PATH = (
+    ROOT / "tools/nu54-builder/src/nu54_builder_impl/sdk_patches.py"
+)
+SDK_PATCH_SPEC = importlib.util.spec_from_file_location(
+    "nucode_m33_diagnostics_sdk_patches", SDK_PATCH_MODULE_PATH
+)
+assert SDK_PATCH_SPEC and SDK_PATCH_SPEC.loader
+SDK_PATCH_MODULE = importlib.util.module_from_spec(SDK_PATCH_SPEC)
+SDK_PATCH_SPEC.loader.exec_module(SDK_PATCH_MODULE)
 BOARD = "nrf54l15dk/nrf54l15/cpuapp/nu54dk"
 IDENTITY_FILES = ("CMakeLists.txt", "Kconfig", "prj.conf", "hci.conf", "app.overlay", "src/main.c", "src/protocol.h")
 ## @brief NCS 3.4.0 MDK nrf54l15_global.h/types.h의 secure RADIO 주소와 write-only task입니다.
@@ -128,6 +138,33 @@ def checkout_clean(path: Path) -> bool:
     ).strip()
 
 
+def approved_patched_checkout(path: Path) -> bool:
+    """! @brief 상위 build가 적용한 고정 Zephyr patch checkout을 검증합니다. """
+
+    if os.environ.get("NUCODE_ZEPHYR_PATCHES_APPLIED") != "1":
+        return False
+    records = SDK_PATCH_MODULE.approved_zephyr_patches(LOCK)
+    digest = SDK_PATCH_MODULE.patchset_sha256(records)
+    if os.environ.get("NUCODE_ZEPHYR_PATCHSET_SHA256") != digest:
+        return False
+    actual = set(SDK_PATCH_MODULE._content_changes(path))
+    expected = {item for record in records for item in record["files"]}
+    if actual != expected:
+        return False
+    for record in records:
+        patch = (ROOT / record["path"]).resolve()
+        result = subprocess.run(
+            ["git", "-C", str(path), "apply", "--check", "--reverse",
+             "--whitespace=error-all", str(patch)],
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        if result.returncode != 0:
+            return False
+    return True
+
+
 def validate_locked_sources(sdk: Path) -> dict[str, str]:
     """! @brief Core·NCS 3.4.0·Zephyr·board revision과 clean 상태를 고정합니다. """
 
@@ -141,7 +178,10 @@ def validate_locked_sources(sdk: Path) -> dict[str, str]:
     expected = {name: LOCK[name]["revision"] for name in ("ncs", "zephyr", "board")}
     if any(revisions[name] != value for name, value in expected.items()):
         raise ValueError("고정 NCS 3.4.0/Zephyr/board revision과 다릅니다")
-    if any(not checkout_clean(path) for path in paths.values()):
+    ordinary = (paths["core"], paths["ncs"], paths["board"])
+    zephyr_clean = checkout_clean(paths["zephyr"])
+    if (any(not checkout_clean(path) for path in ordinary)
+            or (not zephyr_clean and not approved_patched_checkout(paths["zephyr"]))):
         raise ValueError("진단 build source checkout에 변경이 있습니다")
     return revisions
 

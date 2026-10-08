@@ -15,6 +15,9 @@ from unittest.mock import patch
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 RUNNER = REPOSITORY / "tests/hil/nu54dk/m31_tmap_gmap_run.py"
+ZEPHYR_PATCHSET_SHA256 = (
+    "0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf"
+)
 SPEC = importlib.util.spec_from_file_location("m31_tmap_gmap_run", RUNNER)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -238,6 +241,7 @@ class TmapGmapHilContractTest(unittest.TestCase):
                             "zephyr_revision": expected_revisions[
                                 "NUCODE_ZEPHYR_REVISION"
                             ],
+                            "zephyr_patchset_sha256": ZEPHYR_PATCHSET_SHA256,
                         },
                         "configuration": {
                             "selected_features": [],
@@ -371,6 +375,7 @@ class TmapGmapHilContractTest(unittest.TestCase):
                                 "99553055607b2e9885fbc80ccd11fa9da81c2df0",
                             "zephyr_revision":
                                 "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+                            "zephyr_patchset_sha256": ZEPHYR_PATCHSET_SHA256,
                         },
                         "configuration": {
                             "selected_features": [{"id": "nucode.ble.audio"}],

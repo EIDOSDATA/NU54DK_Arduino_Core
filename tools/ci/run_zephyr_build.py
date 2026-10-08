@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 import hashlib
 import importlib.util
 import json
@@ -493,7 +494,7 @@ def run_build(
     lock: dict[str, Any],
     suites_to_build: Sequence[tuple[str, str]] = SUITES,
     jobs: int = 2,
-) -> list[dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     LOCK_MODULE.validate_workspace(workspace, lock)
     validate_outdir_path(outdir)
     if outdir.exists():
@@ -541,16 +542,39 @@ def run_build(
     environment["CCACHE_DISABLE"] = "1"
     ## @note sysbuild의 하위 CMake에도 basic_settings보다 먼저 같은 공식 package hook을 적용합니다.
     environment["ZephyrAppConfiguration_ROOT"] = (REPOSITORY / "tools/ci/cmake").as_posix()
+    approved_patches = LOCK_MODULE.SDK_PATCH_MODULE.approved_zephyr_patches(lock)
+    environment["NUCODE_ZEPHYR_PATCHSET_SHA256"] = (
+        LOCK_MODULE.SDK_PATCH_MODULE.patchset_sha256(approved_patches)
+    )
     print(f"[M12-ZEPHYR] exec: {subprocess.list2cmdline([str(item) for item in command])}")
-    result = subprocess.run(command, cwd=workspace, env=environment, check=False)
-    if result.returncode != 0:
-        summary = failure_summary(outdir / "twister.json")
-        raise BuildFailure(
-            f"Twister가 종료 코드 {result.returncode}로 실패했습니다. 실패 위치: {summary}"
+    if os.environ.get("NUCODE_ZEPHYR_PATCHES_APPLIED") == "1":
+        actual = set(
+            LOCK_MODULE.SDK_PATCH_MODULE._content_changes(workspace / "zephyr")
         )
-    validate_report(outdir / "twister.json", suites_to_build)
-    validate_m15_lfxo(outdir, suites_to_build)
-    return validate_m16_role_builds(outdir, suites_to_build)
+        expected = {
+            path for record in approved_patches for path in record["files"]
+        }
+        if actual != expected:
+            raise BuildFailure(
+                "상위 builder가 적용한 Zephyr patch 파일 집합이 lock과 다릅니다"
+            )
+        patch_context = nullcontext(approved_patches)
+    else:
+        patch_context = LOCK_MODULE.SDK_PATCH_MODULE.applied_zephyr_patches(
+            workspace, lock
+        )
+    with patch_context as patches:
+        result = subprocess.run(command, cwd=workspace, env=environment, check=False)
+        if result.returncode != 0:
+            summary = failure_summary(outdir / "twister.json")
+            raise BuildFailure(
+                f"Twister가 종료 코드 {result.returncode}로 실패했습니다. "
+                f"실패 위치: {summary}"
+            )
+        validate_report(outdir / "twister.json", suites_to_build)
+        validate_m15_lfxo(outdir, suites_to_build)
+        role_builds = validate_m16_role_builds(outdir, suites_to_build)
+    return role_builds, list(patches)
 
 
 def select_suites(group: str, requested: Sequence[str] = ()) -> tuple[tuple[str, str], ...]:
@@ -648,7 +672,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     outdir = args.outdir.resolve()
     outdir.parent.mkdir(parents=True, exist_ok=True)
     selected_suites = select_suites(args.group, args.suite)
-    m16_role_builds = run_build(
+    m16_role_builds, zephyr_patches = run_build(
         workspace, outdir, lock, selected_suites, args.jobs
     )
     serial_source_builds = validate_serial_source_builds(outdir, selected_suites)
@@ -664,6 +688,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "serial_source_builds": serial_source_builds,
         "ncs_revision": lock["ncs"]["revision"],
         "zephyr_revision": lock["zephyr"]["revision"],
+        "zephyr_patches": zephyr_patches,
         "container_digest": lock["linux_toolchain_container"]["digest"],
     }
     (outdir / "m12-build-evidence.json").write_text(
@@ -682,6 +707,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (BuildFailure, LOCK_MODULE.LockFailure) as error:
+    except (
+        BuildFailure,
+        LOCK_MODULE.LockFailure,
+        LOCK_MODULE.SDK_PATCH_MODULE.PatchFailure,
+    ) as error:
         print(f"M12_ZEPHYR_BUILD_FAIL: {error}", file=sys.stderr)
         raise SystemExit(1) from error

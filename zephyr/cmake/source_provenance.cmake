@@ -245,6 +245,9 @@ build_info(vendor-specific nucode-arduino-core ncs-revision
 build_info(vendor-specific nucode-arduino-core zephyr-revision
   VALUE "${NUCODE_ZEPHYR_REVISION}"
 )
+build_info(vendor-specific nucode-arduino-core zephyr-patchset-sha256
+  VALUE "${NUCODE_ZEPHYR_PATCHSET_SHA256}"
+)
 build_info(vendor-specific nucode-arduino-core cxx-compiler
   VALUE "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}"
 )

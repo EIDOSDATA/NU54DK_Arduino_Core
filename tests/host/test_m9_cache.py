@@ -143,7 +143,11 @@ class M9CacheContractTests(unittest.TestCase):
             "schema_version": 1,
             "target": {"fqbn": "nucode:zephyr:nu54dk", "board": "nu54dk"},
             "board_package": {"revision": "board-a", "content": "sha256:board-a"},
-            "ncs": {"nrf_revision": "nrf-a", "zephyr_revision": "zephyr-a"},
+            "ncs": {
+                "nrf_revision": "nrf-a",
+                "zephyr_revision": "zephyr-a",
+                "zephyr_patchset_sha256": "patch-a",
+            },
             "toolchain": {"bundle_id": "bundle-a", "compiler": "gcc-a"},
         }
         baseline_key = MODULE.cache_key_for_manifest(baseline)
@@ -152,6 +156,7 @@ class M9CacheContractTests(unittest.TestCase):
             ("board_package", "content", "sha256:board-b"),
             ("ncs", "nrf_revision", "nrf-b"),
             ("ncs", "zephyr_revision", "zephyr-b"),
+            ("ncs", "zephyr_patchset_sha256", "patch-b"),
             ("toolchain", "bundle_id", "bundle-b"),
             ("toolchain", "compiler", "gcc-b"),
         )
@@ -221,6 +226,11 @@ class M9CacheContractTests(unittest.TestCase):
                 mock.patch.object(
                     MODULE.implementation.cache, "compiler_version", return_value=compiler_identity
                 ),
+                mock.patch.object(
+                    MODULE.implementation.cache,
+                    "patchset_sha256",
+                    return_value="0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf",
+                ),
             ):
                 return MODULE.cache_input_manifest(
                     paths, args, tools, selected_libraries
@@ -234,6 +244,10 @@ class M9CacheContractTests(unittest.TestCase):
         self.assertEqual(baseline["board_package"]["revision"], "a" * 40)
         self.assertEqual(baseline["ncs"]["nrf_revision"], "b" * 40)
         self.assertEqual(baseline["ncs"]["zephyr_revision"], "c" * 40)
+        self.assertEqual(
+            baseline["ncs"]["zephyr_patchset_sha256"],
+            "0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf",
+        )
         self.assertEqual(baseline["toolchain"]["compiler"], "gcc-a")
 
         board_file.write_text("board=b\n", encoding="utf-8")

@@ -93,6 +93,9 @@ class M29BleMultiTests(unittest.TestCase):
             'Serial.print("|cross_link=0|payload_errors=0|dropped_events=0")',
             'stop_prefix[] = "M29W07D|1|STOP|nonce="',
             "driveCleanup()",
+            "cleanup_quiet_ms = 1000",
+            "markCleanupActivity()",
+            "now - cleanup_quiet_since >= cleanup_quiet_ms",
             'Serial.print("|active_links=0|pending_operations=0|buffers=0|status=pass")',
             "resetSessionState()",
         ):

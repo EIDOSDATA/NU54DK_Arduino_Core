@@ -44,6 +44,7 @@
             return;
         }
         cleanup_requested = true;
+        cleanup_quiet_since = 0;
         cleanup_deadline = k_uptime_get() + cleanup_timeout_ms;
     }
 
@@ -90,7 +91,16 @@
                                   !server_echo_pending;
         const bool buffers_zero =
             BLEL2cap.availableForWrite() == nucode::ble::L2capCoc::transmit_buffers;
-        if (links_zero && pending_zero && buffers_zero)
+        const std::int64_t now = k_uptime_get();
+        if (!links_zero || !pending_zero || !buffers_zero)
+        {
+            cleanup_quiet_since = 0;
+        }
+        else if (cleanup_quiet_since == 0)
+        {
+            cleanup_quiet_since = now;
+        }
+        else if (now - cleanup_quiet_since >= cleanup_quiet_ms)
         {
             Serial.print(protocol);
             Serial.print("|CLEANUP|role=");
@@ -101,7 +111,7 @@
             resetSessionState();
             return;
         }
-        if (k_uptime_get() >= cleanup_deadline)
+        if (now >= cleanup_deadline)
         {
             Serial.print(protocol);
             Serial.print("|FAIL|role=");

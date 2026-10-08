@@ -541,6 +541,20 @@ class RegressionTests(unittest.TestCase):
         body = bytes([len(data)]) + address.to_bytes(2, "big") + bytes([kind]) + data
         return ":" + (body + bytes([(-sum(body)) & 0xff])).hex().upper()
 
+    def test_intel_hex_ranges_accepts_relocated_application_load_address(self):
+        """! @brief MCUboot application처럼 0이 아닌 load address의 program range를 허용합니다. """
+
+        with tempfile.TemporaryDirectory() as temporary:
+            image = Path(temporary) / "signed-application.hex"
+            payload = bytes(range(16))
+            image.write_text(
+                self.hex_record(0, 2, bytes.fromhex("1000")) + "\n" +
+                self.hex_record(0, 0, payload) + "\n" +
+                self.hex_record(0, 1) + "\n",
+                encoding="ascii",
+            )
+            self.assertEqual([(0x10000, payload)], MODULE.intel_hex_ranges(image))
+
     def image_fixture(self, base, role, revision):
         """! @brief parser 단위 시험용 실제 HEX·readback·flash 결합 fixture를 만듭니다. """
         lock = MODULE.read_json(ROOT / "tools/ci/ncs-3.4.0.lock.json")
@@ -1829,6 +1843,28 @@ class RegressionTests(unittest.TestCase):
         self.assertIn('"mass_erase": False', source)
         self.assertNotIn("chip_erase", source)
 
+    def test_post_reset_state_accepts_active_sleep_and_rejects_halt(self):
+        """! @brief debugger 상태 복원은 RUNNING과 SLEEPING만 허용합니다. """
+
+        self.assertTrue(RUNNER._valid_post_reset_state({
+            "pre_state": "RUNNING",
+            "post_state": "RUNNING",
+            "resumed": True,
+            "restored": True,
+        }))
+        self.assertTrue(RUNNER._valid_post_reset_state({
+            "pre_state": "SLEEPING",
+            "post_state": "RUNNING",
+            "resumed": True,
+            "restored": True,
+        }))
+        self.assertFalse(RUNNER._valid_post_reset_state({
+            "pre_state": "HALTED",
+            "post_state": "HALTED",
+            "resumed": False,
+            "restored": True,
+        }))
+
     def test_pre_run_restore_fixture_programs_resets_reads_back_and_audits(self):
         """! @brief 보드 없는 fixture로 direct/third 복원 순서와 receipt를 검증합니다. """
 
@@ -2099,7 +2135,7 @@ class RegressionTests(unittest.TestCase):
                     receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
                     with mock.patch.object(
                             RUNNER, "_state_restore_plan", return_value=plan):
-                        with self.assertRaisesRegex(ValueError, "RUNNING"):
+                        with self.assertRaisesRegex(ValueError, "active"):
                             RUNNER._validate_state_restore_receipt(
                                 receipt_path, expected, {}, REVISION, ROOT
                             )
@@ -2528,6 +2564,22 @@ class RegressionTests(unittest.TestCase):
                 )
                 validator.assert_called_once()
 
+    def test_diagnostics_build_receives_windows_toolchain_bundle_root(self):
+        """! @brief zephyr-sdk 경로를 진단 build용 Windows bundle root로 정규화합니다. """
+
+        expected = MODULE.campaign_plan(
+            "families", "diagnostic_templates"
+        )["campaigns"][1]
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle = root / "dcbdc366a1"
+            _subcommand, arguments, _native = RUNNER._prepared_arguments(
+                expected, {}, root / "artifacts", root / "output",
+                root / "sdk", bundle / "opt" / "zephyr-sdk", REVISION
+            )
+        values = RUNNER._argument_values(arguments)
+        self.assertEqual([[str(bundle.resolve())]], values["--toolchain"])
+
     def test_native_adapter_registry_and_schema_families_are_fail_closed(self):
         """! @brief 48개 campaign adapter와 7개 native schema의 원시 분모·byte 경계를 검증합니다. """
         self.assertEqual(set(MODULE.CAMPAIGNS), set(RUNNER.NATIVE_ADAPTER_REGISTRY))
@@ -2644,11 +2696,10 @@ class RegressionTests(unittest.TestCase):
                 }
                 if family == "legacy_hil":
                     native = {"status": "passed", "core_revision": REVISION,
-                              "boards": {}, "results": {}}
+                              "boards": {}, "cycles": cycles}
                 elif family == "modern_hil":
                     native = {"status": "PASS", "source_clean": True,
-                              "identity": {"core": REVISION}, "boards": {},
-                              "results": {}}
+                              "identity": {"core": REVISION}, "boards": {}}
                 elif family == "flat_hil":
                     native = {"status": "ARDUINO_BAP_DUPLEX_STOP_RELEASE_PASS",
                               "source_clean": True, "core_revision": REVISION}

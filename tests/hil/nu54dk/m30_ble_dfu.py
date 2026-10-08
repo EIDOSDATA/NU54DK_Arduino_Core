@@ -85,6 +85,9 @@ NEGATIVE_ATTEMPTS = 20
 BASE_VERSION = (0, 0, 0, 0)
 FINAL_VERSION = (10, 0, 0, 0)
 UNCONFIRMED_VERSION = (11, 0, 0, 0)
+TOOLCHAIN_BUNDLE_ID = json.loads(
+    (REPOSITORY / "tools/ci/ncs-3.4.0.lock.json").read_text(encoding="utf-8")
+)["windows_toolchain"]["bundle_id"]
 
 
 class M30DfuFailure(RuntimeError):
@@ -418,6 +421,47 @@ def validate_domains(root: Path) -> None:
         raise M30DfuFailure("sysbuild flash_order가 bootloader→application이 아닙니다.")
 
 
+def validate_mcuboot_public_key(boot: Path, configured_key_value: str,
+                                trust_key: Path) -> str:
+    """! @brief relocated build의 생성 public key를 현재 trust key에서 재생성해 비교합니다. """
+
+    configured_key = Path(configured_key_value)
+    if not configured_key.is_absolute():
+        raise M30DfuFailure("MCUboot signing key 경로가 절대 경로가 아닙니다.")
+    public_key = boot / "zephyr/autogen-pubkey.c"
+    if not public_key.is_file() or public_key.stat().st_size <= 0:
+        raise M30DfuFailure("MCUboot 생성 public key source가 없습니다.")
+    trust_key = trust_key.resolve()
+    imgtool = trust_key.parent / "scripts/imgtool.py"
+    toolchain = (
+        trust_key.parents[2].parent / "toolchains" / TOOLCHAIN_BUNDLE_ID
+    )
+    imgtool_python = toolchain / "opt/bin/python.exe"
+    if not trust_key.is_file() or not imgtool.is_file() or not imgtool_python.is_file():
+        raise M30DfuFailure("현재 trust key의 imgtool 실행 환경을 찾지 못했습니다.")
+    try:
+        result = subprocess.run(
+            (
+                str(imgtool_python), str(imgtool), "getpub", "-k",
+                str(trust_key),
+            ),
+            capture_output=True,
+            timeout=30.0,
+            check=False,
+            env=imgtool_environment(imgtool_python),
+        )
+    except (OSError, subprocess.TimeoutExpired, M30BootFailure) as error:
+        raise M30DfuFailure(f"MCUboot public key 재생성 실패: {error}") from error
+    if result.returncode != 0:
+        message = (result.stdout + result.stderr).decode(
+            "utf-8", errors="backslashreplace"
+        )
+        raise M30DfuFailure(f"MCUboot public key 재생성 실패: {message}")
+    if public_key.read_bytes() != result.stdout:
+        raise M30DfuFailure("MCUboot public-key build identity가 trust key와 다릅니다.")
+    return file_sha256(public_key)
+
+
 def collect_peripheral_build(
     argument: str, core_revision: str, trust_key: Path, auto_confirm: int
 ) -> PeripheralBuild:
@@ -448,8 +492,11 @@ def collect_peripheral_build(
         ),
     )
     key_match = re.search(r'^CONFIG_BOOT_SIGNATURE_KEY_FILE="(.+)"$', boot_config, re.M)
-    if key_match is None or Path(key_match.group(1)).resolve() != trust_key:
-        raise M30DfuFailure("MCUboot public-key build identity가 trust key와 다릅니다.")
+    if key_match is None:
+        raise M30DfuFailure("MCUboot public-key build identity가 없습니다.")
+    public_key_sha256 = validate_mcuboot_public_key(
+        boot, key_match.group(1), trust_key
+    )
     require_text_tokens(
         app / "build.ninja",
         (
@@ -476,9 +523,6 @@ def collect_peripheral_build(
             "domains_sha256": file_sha256(root / "domains.yaml"),
         }
     )
-    public_key = boot / "zephyr/autogen-pubkey.c"
-    if not public_key.is_file():
-        raise M30DfuFailure("MCUboot 생성 public key source가 없습니다.")
     return PeripheralBuild(
         root,
         boot / "zephyr/zephyr.hex",
@@ -486,7 +530,7 @@ def collect_peripheral_build(
         raw,
         auto_confirm,
         record,
-        file_sha256(public_key),
+        public_key_sha256,
     )
 
 
@@ -520,8 +564,11 @@ def collect_central_build(
     key_match = re.search(
         r'^CONFIG_BOOT_SIGNATURE_KEY_FILE="(.+)"$', boot_config, re.M
     )
-    if key_match is None or Path(key_match.group(1)).resolve() != trust_key:
-        raise M30DfuFailure("Central MCUboot build identity가 trust key와 다릅니다.")
+    if key_match is None:
+        raise M30DfuFailure("Central MCUboot build identity가 없습니다.")
+    public_key_sha256 = validate_mcuboot_public_key(
+        boot, key_match.group(1), trust_key
+    )
     ninja = require_text_tokens(
         app / "build.ninja",
         (f'M30_DFU_CORE_REVISION=\\"{core_revision}\\"',),
@@ -543,6 +590,7 @@ def collect_central_build(
             "application_config_sha256": file_sha256(app / "zephyr/.config"),
             "application_build_ninja_sha256": file_sha256(app / "build.ninja"),
             "bootloader_config_sha256": file_sha256(boot / "zephyr/.config"),
+            "bootloader_public_key_sha256": public_key_sha256,
             "domains_sha256": file_sha256(root / "domains.yaml"),
         }
     )

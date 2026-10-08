@@ -382,6 +382,13 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             mock.patch.object(MODULE.implementation.environment, "compiler_version", return_value="fixture-gcc"),
             mock.patch.object(MODULE.implementation.cache, "exact_git_revision", side_effect=revision),
             mock.patch.object(MODULE.implementation.cache, "compiler_version", return_value="fixture-gcc"),
+            mock.patch.object(
+                MODULE.implementation.cache,
+                "patchset_sha256",
+                return_value=(
+                    "0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf"
+                ),
+            ),
         ):
             MODULE.validate_packaged_prerequisites(
                 self.platform, self.ncs_root, self.toolchain

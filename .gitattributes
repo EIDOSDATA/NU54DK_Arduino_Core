@@ -4,6 +4,7 @@
 # Exact build source byte는 Windows 전역 autocrlf 설정과 무관하게 LF로 고정합니다.
 # 과거 00_Docs/evidence 원본은 이 범위에 넣지 않습니다.
 tools/** text=auto eol=lf
+tools/nu54-builder/sdk-patches/**/*.patch -whitespace
 tests/** text=auto eol=lf
 cores/** text=auto eol=lf
 libraries/** text=auto eol=lf

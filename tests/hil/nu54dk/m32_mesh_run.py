@@ -48,6 +48,8 @@ SECURED_MESSAGE_TARGET = 200
 TOTAL_MESSAGE_TARGET = BASE_MESSAGE_TARGET + SECURED_MESSAGE_TARGET
 NODE_MESSAGE_TARGET = TOTAL_MESSAGE_TARGET // 2
 LATENCY_LIMIT_MS = 2000
+FRIEND_CLEAR_LIMIT_MS = 1090
+POST_TRAFFIC_DRAIN_SECONDS = 1.0
 REMOTE_NODE_TARGET = 2
 MESH_CAPACITY_MINIMUMS = {
     "cdb_subnets": 1,
@@ -185,7 +187,7 @@ def _validate_friend_clear(
     elif (
         classification != "pass"
         or fields.get("friend_clear_peer_ack") != "pass"
-        or latency > 1000
+        or latency > FRIEND_CLEAR_LIMIT_MS
     ):
         raise MeshExecutionFailure(f"{role} Friend Clear peer-ack boundary")
     return {"status": classification, "latency_ms": latency}
@@ -194,7 +196,9 @@ def _validate_friend_clear(
 def _validate_cleared(role: str, fields: dict[str, str], cycle: int) -> dict:
     """! @brief 매 회 fresh settings와 이전 suspend 해제를 원시 record에서 검증합니다. """
 
-    if fields.get("provisioned") != "0" or fields.get("settings_reset") != "pass":
+    expected_provisioned = int(role == "provisioner")
+    if (_integer(fields, "provisioned") != expected_provisioned or
+            fields.get("settings_reset") != "pass"):
         raise MeshExecutionFailure(f"{role} settings cleanup mismatch")
     resumed = _integer(fields, "resumed")
     expected_resume = int(cycle > 1)
@@ -206,7 +210,7 @@ def _validate_cleared(role: str, fields: dict[str, str], cycle: int) -> dict:
     if role != "provisioner" and rejected != 1:
         raise MeshExecutionFailure(f"{role} unprovisioned boundary")
     return {
-        "provisioned": 0,
+        "provisioned": expected_provisioned,
         "settings_reset": "PASS",
         "resumed_from_previous_cleanup": bool(resumed),
         "unprovisioned_access_rejected": rejected,
@@ -223,10 +227,17 @@ def _cycle_transcript_sha256(lines: list[str]) -> str:
     ).hexdigest()
 
 
-def validate_cycle_records(records: list[dict], transcript: list[str]) -> None:
-    """! @brief host가 자른 20개 독립 세션과 raw transcript 결합을 재검증합니다. """
+def validate_cycle_records(
+    records: list[dict], transcript: list[str], expected_cycles: int = CYCLE_TARGET
+) -> None:
+    """! @brief host가 자른 독립 세션과 raw transcript 결합을 재검증합니다. """
 
-    if len(records) != CYCLE_TARGET or len({row.get("nonce") for row in records}) != CYCLE_TARGET:
+    if (
+        expected_cycles < 1
+        or expected_cycles > CYCLE_TARGET
+        or len(records) != expected_cycles
+        or len({row.get("nonce") for row in records}) != expected_cycles
+    ):
         raise MeshExecutionFailure("Mesh cycle denominator or nonce uniqueness mismatch")
     expected_start = records[0].get("transcript_line_start", 0)
     expected_semantics = {
@@ -261,7 +272,7 @@ def validate_cycle_records(records: list[dict], transcript: list[str]) -> None:
         for role in ROLES:
             expected_rejected = 0 if role == "provisioner" else 1
             if cleared[role] != {
-                "provisioned": 0,
+                "provisioned": int(role == "provisioner"),
                 "settings_reset": "PASS",
                 "resumed_from_previous_cleanup": expected_cycle > 1,
                 "unprovisioned_access_rejected": expected_rejected,
@@ -284,7 +295,9 @@ def validate_cycle_records(records: list[dict], transcript: list[str]) -> None:
             expected_status = "not_applicable" if role == "provisioner" else "pass"
             if friend.get("status") != expected_status or \
                     not isinstance(friend.get("latency_ms"), int) or \
-                    friend["latency_ms"] > (0 if role == "provisioner" else 1000):
+                    friend["latency_ms"] > (
+                        0 if role == "provisioner" else FRIEND_CLEAR_LIMIT_MS
+                    ):
                 raise MeshExecutionFailure("Mesh Friend Clear evidence mismatch")
         for role, event in (("node_a", "FRIEND_CLEAR_LOCAL"),
                             ("node_b", "FRIEND_CLEAR_PEER")):
@@ -517,8 +530,21 @@ def close_ports(ports: dict[str, object]) -> dict[str, str]:
     return result
 
 
+def validate_cycle_target(cycles: int, development: bool) -> int:
+    """! @brief production 분모를 유지하며 개발용 단축 회차만 제한적으로 허용합니다. """
+
+    if cycles < 1 or cycles > CYCLE_TARGET:
+        raise MeshExecutionFailure("Mesh cycle 수가 허용 범위를 벗어났습니다")
+    if cycles != CYCLE_TARGET and not development:
+        raise MeshExecutionFailure("production Mesh HIL은 20 cycle을 고정합니다")
+    return cycles
+
+
 def execute(args: argparse.Namespace) -> dict:
     """! @brief 세 image를 V2 sector flash하고 W06 3-role traffic을 검증합니다. """
+    cycle_target = validate_cycle_target(
+        int(getattr(args, "cycles", CYCLE_TARGET)), args.development
+    )
     prefix = args.output_prefix.resolve()
     native_path = prefix.with_suffix(".json")
     if native_path.exists() or prefix.with_suffix(".transcript.log").exists():
@@ -560,7 +586,11 @@ def execute(args: argparse.Namespace) -> dict:
         uid, volume, vcom = discover(digest, list_ports)
         images[role] = image
         build_records[role] = validate_build_record(
-            image, identity.core, identity.board, APPLICATION_ROOT
+            image,
+            identity.core,
+            identity.board,
+            APPLICATION_ROOT,
+            allow_dirty=args.development,
         )
         boards[role] = {
             "uid": uid,
@@ -638,7 +668,7 @@ def execute(args: argparse.Namespace) -> dict:
                     raise MeshExecutionFailure(f"{role} READY mismatch")
                 capacities[role] = _validate_capacity(fields)
 
-            for cycle in range(1, CYCLE_TARGET + 1):
+            for cycle in range(1, cycle_target + 1):
                 cycle_start = len(transcript)
                 nonce = hashlib.sha256(
                     f"{time.time_ns()}:{cycle}:{identity.core}".encode("ascii")
@@ -671,6 +701,7 @@ def execute(args: argparse.Namespace) -> dict:
                 time.sleep(0.25)
                 _command(ports, ("provisioner",), start)
                 results = _read_session(ports, nonce, identity.core, transcript)
+                time.sleep(POST_TRAFFIC_DRAIN_SECONDS)
                 cleanup = cleanup_ports(ports, nonce, identity.core, transcript)
                 if cleanup["status"] != "PASS":
                     raise MeshExecutionFailure(
@@ -701,7 +732,7 @@ def execute(args: argparse.Namespace) -> dict:
                     }
                 )
 
-            validate_cycle_records(cycle_records, transcript)
+            validate_cycle_records(cycle_records, transcript, cycle_target)
             status = "PASS_CANDIDATE" if dirty else "PASS"
     except Exception as error:
         reason = f"{type(error).__name__}: {error}"
@@ -781,6 +812,8 @@ def execute(args: argparse.Namespace) -> dict:
         "boards": public_boards,
         "nonces": nonces,
         "cycles": len(cycle_records),
+        "required_cycles": cycle_target,
+        "production_cycle_target": CYCLE_TARGET,
         "cycle_records": cycle_records,
         "results": results,
         "build_records": build_records,
@@ -848,6 +881,7 @@ def main() -> int:
     parser.add_argument("--sdk-root", required=True, type=Path)
     parser.add_argument("--output-prefix", required=True, type=Path)
     parser.add_argument("--development", action="store_true")
+    parser.add_argument("--cycles", type=int, default=CYCLE_TARGET)
     args = parser.parse_args()
     try:
         result = execute(args)

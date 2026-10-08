@@ -90,7 +90,8 @@ def resolve_build_record_artifact(path: Path, value: object,
 
 def validate_build_record_identity(path: Path, family: str, role: str,
                                    image_sha256: str,
-                                   revision: str | None = None) -> dict[str, str]:
+                                   revision: str | None = None,
+                                   development: bool = False) -> dict[str, str]:
     """! @brief copied build record의 image·provenance·source byte를 재검증합니다. """
     path = path.resolve()
     record = json.loads(path.read_text(encoding="utf-8"))
@@ -98,7 +99,7 @@ def validate_build_record_identity(path: Path, family: str, role: str,
     if (record.get("schema") != "nucode-m33-profile-build-v1"
             or record.get("source_revision") != expected_revision
             or record.get("role") != role or record.get("family") != family
-            or record.get("development") is not False
+            or record.get("development") is not development
             or record.get("sha256") != image_sha256):
         raise ValueError("build record family/role mismatch")
     record_image = resolve_build_record_artifact(
@@ -163,7 +164,8 @@ def validate_build_record_identity(path: Path, family: str, role: str,
 
 
 def load_build_identities(entries: list[list[str]] | None, family: str,
-                          boards: dict, native_second_peer: bool = False) -> dict[str, dict[str, str]]:
+                          boards: dict, native_second_peer: bool = False,
+                          development: bool = False) -> dict[str, dict[str, str]]:
     """! @brief 실행 image를 source snapshot이 있는 exact build record에 결합합니다. """
     if entries is None or len(entries) != 3:
         raise ValueError("profile run requires three exact build records")
@@ -181,7 +183,8 @@ def load_build_identities(entries: list[list[str]] | None, family: str,
         if image_path != Path(boards[role]["image"]).resolve():
             raise ValueError("build record image path mismatch")
         records[role] = validate_build_record_identity(
-            path, expected_family, role, boards[role]["image_sha256"]
+            path, expected_family, role, boards[role]["image_sha256"],
+            development=development,
         )
     if set(records) != set(boards):
         raise ValueError("build record role set mismatch")
@@ -370,14 +373,16 @@ def validate_exact_program_bundle(path: Path, evidence: dict) -> None:
 
 
 def validate_native_predecessor(path: Path, revisions: dict, boards: dict,
-                                build_identity: dict, expected_phase: str = "fresh") -> str:
+                                build_identity: dict, expected_phase: str = "fresh",
+                                development: bool = False) -> str:
     """! @brief native 후속 실행을 직전 성공 증거와 exact image/source에 결합합니다. """
     raw = path.read_bytes()
     evidence = json.loads(raw)
     if (evidence.get("schema") != "nucode-m33-profile-hil-v1"
             or evidence.get("family") != "native"
             or evidence.get("native_security_phase") != expected_phase
-            or evidence.get("status") != "PASS"
+            or evidence.get("status") != ("DEVELOPMENT_PASS" if development else "PASS")
+            or evidence.get("development") is not development
             or evidence.get("reason") is not None
             or evidence.get("late_failures") != []
             or evidence.get("revisions") != revisions):
@@ -412,7 +417,8 @@ def validate_native_predecessor(path: Path, revisions: dict, boards: dict,
 
 
 def validate_bms_predecessor(path: Path, revisions: dict, boards: dict,
-                             build_identity: dict) -> str:
+                             build_identity: dict,
+                             development: bool = False) -> str:
     """! @brief BMS restored 실행을 fresh 보존 성공과 같은 image/probe에 결합합니다. """
     raw = path.read_bytes()
     evidence = json.loads(raw)
@@ -421,7 +427,8 @@ def validate_bms_predecessor(path: Path, revisions: dict, boards: dict,
     if (evidence.get("schema") != "nucode-m33-profile-hil-v1"
             or evidence.get("family") != "standard"
             or evidence.get("bms_persistence_phase") != "fresh"
-            or evidence.get("status") != "PASS"
+            or evidence.get("status") != ("DEVELOPMENT_PASS" if development else "PASS")
+            or evidence.get("development") is not development
             or evidence.get("reason") is not None or evidence.get("late_failures") != []
             or evidence.get("bms_prior_evidence_sha256") is not None
             or evidence.get("revisions") != revisions
@@ -560,7 +567,7 @@ def validate_identity_readiness(role: str, value: dict[str, str], second: bool) 
             or value.get("passkey_events") != "0"
             or value.get("peer_distinct") != expected_distinct):
         raise ValueError("native identity readiness denominator")
-    minimum_bonds = 2 if role == "server" else 1
+    minimum_bonds = 2 if role == "server" and second else 1
     try:
         if int(value.get("startup_bonds", -1)) < minimum_bonds:
             raise ValueError("native identity startup bond denominator")
@@ -731,16 +738,17 @@ def execute(args: argparse.Namespace) -> dict:
     if len({board["uid"] for board in boards.values()}) != len(boards):
         raise ValueError("roles must map to distinct physical probes")
     build_identity = load_build_identities(args.build_record, args.family, boards,
-                                           native_second_peer)
+                                           native_second_peer, bool(dirty))
     predecessor_sha256 = None
     if args.native_prior_evidence is not None:
         predecessor_sha256 = validate_native_predecessor(
             args.native_prior_evidence.resolve(), revisions, boards, build_identity,
-            "restored" if native_second_peer else "fresh")
+            "restored" if native_second_peer else "fresh", bool(dirty))
     bms_predecessor_sha256 = None
     if args.bms_prior_evidence is not None:
         bms_predecessor_sha256 = validate_bms_predecessor(
-            args.bms_prior_evidence.resolve(), revisions, boards, build_identity)
+            args.bms_prior_evidence.resolve(), revisions, boards, build_identity,
+            bool(dirty))
     if not args.execute:
         return {"status": "NOT_RUN", "reason": "preflight only; --execute authorizes selected image sector flash",
                 "family": args.family, "native_security_phase": args.native_security_phase,
