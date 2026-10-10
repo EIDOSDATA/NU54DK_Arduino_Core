@@ -545,15 +545,27 @@ class ProfileHilTests(unittest.TestCase):
         self.assertIn("second_peer_preserved=1", scoped)
         self.assertNotIn("eraseAll", scoped)
 
+        stale_gate = source.split("bool staleRecoveryEnabled()", 1)[1].split(
+            "void resetNativeCleanupRecovery()", 1
+        )[0]
+        self.assertIn("bms_persistence_fresh_mode", stale_gate)
+        self.assertIn("native_cleanup_mode", stale_gate)
         stale = source.split("bool recoverStaleBond(", 1)[1].split(
             "bool consumeStaleDisconnect(", 1
         )[0]
-        self.assertIn("bms_persistence_fresh_mode", stale)
-        self.assertIn("startupContains(event.peer)", stale)
-        self.assertIn("BLESecurity.eraseBond(event.peer)", stale)
-        self.assertIn("startupBondsWithout(event.peer)", stale)
+        self.assertIn("startupContains(address)", stale)
+        self.assertIn("BLESecurity.eraseBond(address)", stale)
+        self.assertIn("startupBondsWithout(address)", stale)
         self.assertIn("stale_recovery_capacity", stale)
+        self.assertIn("restartNativeCleanupRecovery", stale)
         self.assertNotIn("eraseAll", stale)
+        self.assertIn("staleRecoveryPending(event.connection)", source)
+        self.assertIn("if (native_cleanup_mode && native_cleanup_requested)", source)
+        self.assertIn("if (native_cleanup_mode && recoverStaleBond(event))", source)
+        client_submit = source.split(
+            "if (event.connection == peer && event.event == BLEEvent::connected", 1
+        )[1].split("if (event.connection == peer && event.event == BLEEvent::disconnected", 1)[0]
+        self.assertIn("recoverStaleBond(peer, native_cleanup_address)", client_submit)
 
     def test_target_reject_pair_orders(self):
         root = Path(__file__).resolve().parents[2]

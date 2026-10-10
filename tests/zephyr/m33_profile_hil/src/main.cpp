@@ -70,13 +70,11 @@ namespace
     bool bms_restored_candidate = false, bms_restored_verified = false;
     unsigned bms_persistence_preserved = 0U, bms_persistence_restored = 0U;
     bool hub_security_started = false;
-#if !defined(M33_PROFILE_NATIVE)
     constexpr size_t stale_recovery_capacity = 2U;
     BLEConnectionHandle stale_recovery_links[stale_recovery_capacity] = {};
     PeerAddress stale_recovery_addresses[stale_recovery_capacity] = {};
     bool stale_recovery_disconnected[stale_recovery_capacity] = {};
     size_t stale_recovery_count = 0U;
-#endif
     SensorService clock_service(Kind::current_time), temperature(Kind::thermometer),
         cycling(Kind::cycling), running(Kind::running), elapsed(Kind::elapsed_time);
     SensorService *sensors[] = {&clock_service, &temperature, &cycling, &running, &elapsed};
@@ -277,6 +275,17 @@ namespace
     {
         return left.type == right.type && memcmp(left.value, right.value, sizeof(left.value)) == 0;
     }
+    /** @brief GAP identity 주소를 security bond 주소 형식으로 복사합니다. */
+    bool copyPeerAddress(const BLEAddress &source, PeerAddress &destination)
+    {
+        if (!source.valid())
+        {
+            return false;
+        }
+        destination.type = source.type() == BLEAddress::Type::public_address ? 0U : 1U;
+        memcpy(destination.value, source.data(), sizeof(destination.value));
+        return true;
+    }
     /** @brief 이전 boot의 bond를 삭제 대상으로 오인하지 않도록 연결 전 목록을 고정합니다. */
     void snapshotBonds()
     {
@@ -354,22 +363,76 @@ namespace
         }
         return unchanged && added_found;
     }
-#if !defined(M33_PROFILE_NATIVE)
-    /** @brief fresh 실행에서 현재 연결 상대의 stale bond 또는 상대측 정리만 한 번 복구합니다. */
-    bool recoverStaleBond(const SecurityEventRecord &event)
+    bool advertise();
+    /** @brief 현재 profile 실행에서 peer 한정 stale bond 복구가 허용되는지 반환합니다. */
+    bool staleRecoveryEnabled()
     {
-        if (!bms_persistence_fresh_mode || !event.connection.valid() ||
-            !startup_bonds_valid)
+#if defined(M33_PROFILE_NATIVE)
+        return native_cleanup_mode && !native_cleanup_ready &&
+               !native_cleanup_requested;
+#else
+        return bms_persistence_fresh_mode;
+#endif
+    }
+    /** @brief native cleanup 재연결 전에 link 종속 상태만 초기화합니다. */
+    void resetNativeCleanupRecovery()
+    {
+#if defined(M33_PROFILE_NATIVE)
+        native_cleanup_ready = false;
+        native_cleanup_requested = false;
+        native_cleanup_disconnected = false;
+        native_cleanup_fresh = false;
+        native_cleanup_restored = false;
+        native_cleanup_candidate = false;
+        native_cleanup_verified = false;
+        native_cleanup_authenticated = false;
+        native_cleanup_peer_valid = false;
+        native_cleanup_link = {};
+        native_cleanup_address = {};
+        native_disconnect_expected = false;
+        authenticated_link = {};
+        authenticated_links = 0U;
+        passkey_events = 0U;
+        peer = {};
+#endif
+    }
+    /** @brief stale cleanup link가 끝난 뒤 역할에 맞게 광고 또는 scan을 한 번 재개합니다. */
+    bool restartNativeCleanupRecovery()
+    {
+#if defined(M33_PROFILE_NATIVE)
+        resetNativeCleanupRecovery();
+#if defined(M33_PROFILE_SERVER)
+        const bool restarted = advertise();
+#elif defined(M33_PROFILE_WATCHER)
+        const bool restarted = false;
+#else
+        const bool restarted = BLEScan.start(true);
+#endif
+        if (!restarted)
+        {
+            fail("|reason=native-cleanup-stale-restart");
+            return false;
+        }
+        record("PROGRESS", "|reason=native-cleanup-stale-retry");
+        return true;
+#else
+        return false;
+#endif
+    }
+    /** @brief fresh 실행에서 현재 연결 상대의 stale bond 또는 상대측 정리만 한 번 복구합니다. */
+    bool recoverStaleBond(BLEConnectionHandle connection, const PeerAddress &address)
+    {
+        if (!staleRecoveryEnabled() || !connection.valid() || !startup_bonds_valid)
         {
             return false;
         }
         for (size_t index = 0U; index < stale_recovery_count; ++index)
         {
-            if (stale_recovery_links[index] == event.connection)
+            if (stale_recovery_links[index] == connection)
             {
                 return true;
             }
-            if (sameAddress(stale_recovery_addresses[index], event.peer))
+            if (sameAddress(stale_recovery_addresses[index], address))
             {
                 return BLEConnection.connected(stale_recovery_links[index]);
             }
@@ -379,17 +442,18 @@ namespace
             fail("|reason=stale-bond-retry-capacity");
             return true;
         }
-        const bool local_stale = startupContains(event.peer);
+        const bool local_stale = startupContains(address);
         if (local_stale &&
-            (!BLESecurity.eraseBond(event.peer) ||
-             !startupBondsWithout(event.peer)))
+            (!BLESecurity.eraseBond(address) ||
+             !startupBondsWithout(address)))
         {
             fail("|reason=stale-bond-scoped-delete");
             return true;
         }
-        stale_recovery_links[stale_recovery_count] = event.connection;
-        stale_recovery_addresses[stale_recovery_count] = event.peer;
-        stale_recovery_disconnected[stale_recovery_count] = false;
+        const size_t recovery_index = stale_recovery_count;
+        stale_recovery_links[recovery_index] = connection;
+        stale_recovery_addresses[recovery_index] = address;
+        stale_recovery_disconnected[recovery_index] = false;
         ++stale_recovery_count;
         if (local_stale)
         {
@@ -402,13 +466,38 @@ namespace
                  static_cast<unsigned>(stale_recovery_count),
                  static_cast<unsigned>(startup_bond_count));
         record("PROGRESS", detail);
-        if (BLEConnection.connected(event.connection) &&
-            !BLEConnection.disconnect(event.connection) &&
-            BLEConnection.connected(event.connection))
+        if (BLEConnection.connected(connection) &&
+            !BLEConnection.disconnect(connection) &&
+            BLEConnection.connected(connection))
         {
             fail("|reason=stale-bond-disconnect");
         }
+#if defined(M33_PROFILE_NATIVE)
+        else if (!BLEConnection.connected(connection))
+        {
+            stale_recovery_disconnected[recovery_index] = true;
+            static_cast<void>(restartNativeCleanupRecovery());
+        }
+#endif
         return true;
+    }
+    /** @brief security event의 link와 peer를 stale bond 복구 입력으로 전달합니다. */
+    bool recoverStaleBond(const SecurityEventRecord &event)
+    {
+        return recoverStaleBond(event.connection, event.peer);
+    }
+
+    /** @brief stale bond 복구 대상으로 격리한 이전 link인지 확인합니다. */
+    bool staleRecoveryPending(BLEConnectionHandle connection)
+    {
+        for (size_t index = 0U; index < stale_recovery_count; ++index)
+        {
+            if (stale_recovery_links[index] == connection)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** @brief stale bond 정리로 요청한 disconnect인지 한 번만 소비합니다. */
@@ -420,7 +509,11 @@ namespace
             {
                 if (stale_recovery_disconnected[index])
                 {
+#if defined(M33_PROFILE_NATIVE)
+                    return native_cleanup_mode;
+#else
                     return false;
+#endif
                 }
                 stale_recovery_disconnected[index] = true;
                 return true;
@@ -428,7 +521,6 @@ namespace
         }
         return false;
     }
-#endif
     /** @brief test backend에서 실제 link별 CCC를 읽어 구독되지 않은 전송 폭주를 막습니다. */
     bool subscribed(unsigned slot, unsigned profile)
     {
@@ -1129,7 +1221,6 @@ namespace
             move_next = true;
         }
     }
-    bool advertise();
     void onSecurity(const SecurityEventRecord &event, void *)
     {
         if (cleanup_requested)
@@ -1188,6 +1279,10 @@ namespace
         }
 #endif
 #if defined(M33_PROFILE_NATIVE)
+        if (native_cleanup_mode && staleRecoveryPending(event.connection))
+        {
+            return;
+        }
         if (event.event == SecurityEvent::passkey_display)
         {
             if (event.passkey != native_test_passkey)
@@ -1215,6 +1310,14 @@ namespace
         if (event.event == SecurityEvent::pairing_failed || event.event == SecurityEvent::timeout ||
             event.event == SecurityEvent::error)
         {
+            if (native_cleanup_mode && native_cleanup_requested)
+            {
+                return;
+            }
+            if (native_cleanup_mode && recoverStaleBond(event))
+            {
+                return;
+            }
             fail("|reason=native-authentication");
             return;
         }
@@ -1557,6 +1660,22 @@ namespace
             record("PROGRESS", detail);
         }
 #if defined(M33_PROFILE_NATIVE)
+        if (native_cleanup_mode && event.event == BLEEvent::disconnected)
+        {
+            for (size_t recovery = 0U; recovery < stale_recovery_count; ++recovery)
+            {
+                if (stale_recovery_links[recovery] == event.connection)
+                {
+                    ++native_disconnects;
+                    if (!stale_recovery_disconnected[recovery])
+                    {
+                        stale_recovery_disconnected[recovery] = true;
+                        static_cast<void>(restartNativeCleanupRecovery());
+                    }
+                    return;
+                }
+            }
+        }
         if (native_cleanup_mode && event.event == BLEEvent::disconnected &&
             event.connection == native_cleanup_link)
         {
@@ -1579,12 +1698,18 @@ namespace
                 else
                 {
                     native_cleanup_link = event.connection;
+                    native_cleanup_peer_valid = copyPeerAddress(
+                        BLEConnection.peerAddress(event.connection), native_cleanup_address);
                 }
                 if (!BLESecurity.requestSecurity(event.connection))
                 {
-                    fail(native_cleanup_mode
-                             ? "|reason=native-cleanup-security-submit"
-                             : "|reason=identity-security-submit");
+                    if (!native_cleanup_mode || !native_cleanup_peer_valid ||
+                        !recoverStaleBond(event.connection, native_cleanup_address))
+                    {
+                        fail(native_cleanup_mode
+                                 ? "|reason=native-cleanup-security-submit"
+                                 : "|reason=identity-security-submit");
+                    }
                 }
                 return;
             }
@@ -1716,10 +1841,27 @@ namespace
         }
 #endif
 #if !defined(M33_PROFILE_WATCHER)
-        if (event.connection == peer && event.event == BLEEvent::connected &&
-            !BLESecurity.requestSecurity(peer))
+        if (event.connection == peer && event.event == BLEEvent::connected)
         {
-            fail("|reason=security-submit");
+#if defined(M33_PROFILE_NATIVE)
+            if (native_cleanup_mode)
+            {
+                native_cleanup_peer_valid = copyPeerAddress(
+                    BLEConnection.peerAddress(peer), native_cleanup_address);
+            }
+#endif
+            if (!BLESecurity.requestSecurity(peer))
+            {
+#if defined(M33_PROFILE_NATIVE)
+                if (!native_cleanup_mode || !native_cleanup_peer_valid ||
+                    !recoverStaleBond(peer, native_cleanup_address))
+                {
+                    fail("|reason=security-submit");
+                }
+#else
+                fail("|reason=security-submit");
+#endif
+            }
         }
 #endif
         if (event.connection == peer && event.event == BLEEvent::disconnected && !done
@@ -1807,6 +1949,7 @@ namespace
         {
             return false;
         }
+#endif
         stale_recovery_count = 0U;
         hub_security_started = false;
         for (size_t index = 0U; index < stale_recovery_capacity; ++index)
@@ -1815,7 +1958,6 @@ namespace
             stale_recovery_addresses[index] = {};
             stale_recovery_disconnected[index] = false;
         }
-#endif
         for (size_t i = 0U; i < 32U; ++i)
         {
             const char digit = value[i];

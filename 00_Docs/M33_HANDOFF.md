@@ -1,9 +1,9 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-08**. 사용자가 현재 M33 브랜치에서 W06 완료까지 중단 없이
+최종 갱신: **2026-10-10**. 사용자가 현재 M33 브랜치에서 W06 완료까지 중단 없이
 진행하도록 요청했다. R1·R2와 R3 실물 수직 연결, exact source `c21b2716…`의 49개 group
-전수 조사와 건너뛴 하위 campaign 조사를 완료했다. 현재는 고정한 전체 결함을 일괄 수정하고
-영향받은 기능을 표적검증 중이다.
+전수 조사와 건너뛴 하위 campaign 조사를 완료했다. 고정한 전체 결함의 일괄 수정과 영향받은
+기능의 표적검증을 통과했으며, 현재 clean source S 고정과 전체 분모 재실행을 준비 중이다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
 ## 1. 지금의 정본
@@ -17,7 +17,7 @@
 | board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | SDK·toolchain | NCS 3.4.0 / `dcbdc366a1`; C 설치본은 읽기 입력 전용 |
 | 완료 상태 | M32 12/12, M33 W01~W05 **5/8**, HOST **3/8** |
-| W06 | 미완료; R1·R2·R3 PASS, 수정 전 전수 조사 PASS 16 / FAIL 33, P2 일괄 수정·표적검증 중 |
+| W06 | 미완료; R1·R2·R3 PASS, 수정 전 전수 조사 PASS 16 / FAIL 33, P2 일괄 수정·표적검증 PASS, clean S 전체 재검증 전 |
 | 현재 제품 | Windows stable/source version 0.5.0; v0.6.0 미공개 |
 
 현재 HEAD는 위 구현 내용과 문서 정비를 포함한 squash 결과다. 기존 결과의 source를 새 SHA로 바꾸지 않는다.
@@ -50,6 +50,15 @@ PASS/FAIL은 새 최종 source의 완료 증거가 아니다.
 고정 patch로 적용한 새 세 역할 image는 build 3/3과 1-cycle 표적검증 뒤 **20/20 cycle**
 Friend Clear·traffic·cleanup을 통과했다. dirty 개발 source의 `PASS_CANDIDATE`이므로 clean S의
 최종 분모로 승격하지 않으며, 나머지 영향 회귀와 clean S 전체 검증은 아직 완료 전이다.
+
+2026-10-10 native cleanup runtime 표적검증에서는 이전 실패가 남긴 비대칭 bond를 실제로
+복구했다. 첫 개발 attempt는 peer 한정 stale bond 삭제 뒤 격리한 이전 link의 지연
+`bond_restored_candidate`를 identity 실패로 잘못 판정했다. 이를 이전 link와 새 연결의 판정에서
+분리하고 역할별 광고/scan을 유한 1회 재개하도록 수정한 두 번째 attempt는 양쪽 fresh pairing,
+authenticated level 4, scoped bond 삭제, 기존 bond 불변, STOP 자원 0으로 `DEVELOPMENT_PASS`했다.
+실패·성공 transcript SHA-256은 각각 `5c35654d246e137550cd327a694915a6c0283f322b2357cacd95b9ac644576cc`,
+`665aa126a2dcc70e08f523161e63d7932b80b4da65f6c8dddb550ff0a8bc0455`다. 전체 bond 삭제·무한
+재시도·지연 event 전역 무시는 사용하지 않았다. 이 결과도 clean S의 최종 49-group 증거는 아니다.
 
 ## 3. 현재 연속 실행 순서
 
