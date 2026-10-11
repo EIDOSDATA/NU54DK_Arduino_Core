@@ -1027,7 +1027,7 @@ def recipe_for_artifact(
         if campaign_id == "m30_dfu":
             selector_by_name = {
                 "peripheral-build-outdir": "nucode.m30.dfu.peripheral",
-                "unconfirmed-build-outdir": "nucode.m30.power.unconfirmed",
+                "unconfirmed-build-outdir": "nucode.m30.dfu.unconfirmed",
                 "central-build-outdir": "nucode.m30.dfu.central",
             }
             selectors = [selector_by_name[name]] if name in selector_by_name else []

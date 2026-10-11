@@ -186,6 +186,7 @@ SUITE_GROUPS = {
         ("m30_ble_multi_hil", "nucode.m30.multi.central"),
     ),
     "v0.6.0": (
+        ("m30_ble_dfu_hil", "nucode.m30.dfu.unconfirmed"),
         ("m32_ble_capability", "nucode.m32.ble_capability.baseline_sdc"),
         ("m32_ble_capability", "nucode.m32.ble_capability.extended_sdc"),
         ("m32_ble_power_contract", "nucode.m32.ble_power_contract"),
