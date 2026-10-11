@@ -3344,6 +3344,88 @@ class RegressionTests(unittest.TestCase):
             inspect.getsource(common.clear_nrf54l_rram_pyocd_sha256),
         )
 
+    def test_rram_erase_fills_and_verifies_the_exact_range(self):
+        """! @brief nRF54L RRAM erase가 요청 범위 전체를 0xff로 채우는지 검증합니다. """
+
+        import ble_pair_hil_common as common
+
+        class Target:
+            """! @brief RRAM write와 readback을 기록하는 최소 target fixture입니다. """
+
+            def __init__(self):
+                self.memory = bytearray(0x200)
+                self.write_addresses = []
+                self.halted = False
+                self.resumed = False
+
+            def halt(self):
+                """! @brief target halt를 기록합니다. """
+
+                self.halted = True
+
+            def resume(self):
+                """! @brief target resume을 기록합니다. """
+
+                self.resumed = True
+
+            def write32(self, address, value):
+                """! @brief RRAM write-enable 외 register 쓰기를 거부합니다. """
+
+                self.assert_equal(0x5004B500, address)
+                self.assert_equal(1, value)
+
+            def read32(self, address):
+                """! @brief 활성화된 RRAM write-enable 값을 반환합니다. """
+
+                self.assert_equal(0x5004B500, address)
+                return 1
+
+            def write_memory_block32(self, address, words):
+                """! @brief 요청된 0x100 byte RRAM 블록을 fixture에 반영합니다. """
+
+                offset = address - 0x1000
+                payload = b"".join(word.to_bytes(4, "little") for word in words)
+                self.write_addresses.append(address)
+                self.memory[offset:offset + len(payload)] = payload
+
+            def read_memory_block8(self, address, length):
+                """! @brief fixture의 지정 RRAM 범위를 반환합니다. """
+
+                offset = address - 0x1000
+                return list(self.memory[offset:offset + length])
+
+            @staticmethod
+            def assert_equal(expected, actual):
+                """! @brief 잘못된 register 접근을 즉시 실패시킵니다. """
+
+                if expected != actual:
+                    raise AssertionError((expected, actual))
+
+        class Session:
+            """! @brief fake target을 제공하는 최소 session fixture입니다. """
+
+            def __init__(self, target):
+                self.target = target
+
+        target = Target()
+
+        def run(_digest, _deadline, operation):
+            """! @brief 실제 probe 대신 한 session에서 erase callback을 실행합니다. """
+
+            operation(object(), Session(target))
+
+        with mock.patch.object(
+                common, "_run_flash_session_with_retry", side_effect=run):
+            result = common.erase_nrf54l_rram_pyocd_sha256(
+                "secondary", "a" * 64, 0x1000, 0x200, 5.0
+            )
+
+        self.assertEqual("nrf54l-rram-fill-verified", result["mode"])
+        self.assertEqual([0x1000, 0x1100], target.write_addresses)
+        self.assertEqual(b"\xff" * 0x200, bytes(target.memory))
+        self.assertTrue(target.halted)
+        self.assertTrue(target.resumed)
+
     def test_automatic_peer_is_generated_from_same_campaign_flow(self):
         """! @brief scripted peer는 선행 파일 없이 실제 campaign PASS 뒤에만 생성합니다. """
 

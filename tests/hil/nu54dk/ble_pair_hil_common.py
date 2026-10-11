@@ -455,18 +455,17 @@ def erase_nrf54l_rram_pyocd_sha256(
     size: int,
     timeout_seconds: float,
 ) -> dict[str, int | str]:
-    """! @brief SHA-256 live probe로 지정 RRAM sector만 erase하고 전 byte를 검증합니다. """
+    """! @brief SHA-256 live probe로 지정 RRAM 범위만 지우고 전 byte를 검증합니다. """
 
     if not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
-            start < 0 or size <= 0:
+            start < 0 or size <= 0 or \
+            start % 4 != 0 or size % 0x100 != 0:
         raise BlePairHilFailure("RRAM sector erase 범위와 timeout이 잘못됐습니다.")
     deadline = time.monotonic() + timeout_seconds
     observed_digest: str | None = None
     try:
-        from pyocd.flash.eraser import FlashEraser
-
         def erase(backend: Any, session: Any) -> None:
-            """! @brief 한 session에서 sector erase와 전 byte readback을 완료합니다. """
+            """! @brief 한 session에서 RRAM 범위 초기화와 전 byte readback을 완료합니다. """
 
             nonlocal observed_digest
             observed_hash = hashlib.sha256()
@@ -474,11 +473,18 @@ def erase_nrf54l_rram_pyocd_sha256(
             try:
                 if time.monotonic() >= deadline:
                     raise BlePairHilFailure(f"{role} RRAM sector erase timeout")
-                FlashEraser(session, FlashEraser.Mode.SECTOR).erase(
-                    [(start, start + size)]
-                )
                 session.target.halt()
                 halted = True
+                session.target.write32(0x5004B500, 1)
+                if session.target.read32(0x5004B500) & 1 == 0:
+                    raise BlePairHilFailure(
+                        f"{role} RRAM write-enable 확인이 실패했습니다."
+                    )
+                words = [0xFFFFFFFF] * (0x100 // 4)
+                for address in range(start, start + size, 0x100):
+                    if time.monotonic() >= deadline:
+                        raise BlePairHilFailure(f"{role} RRAM sector erase timeout")
+                    session.target.write_memory_block32(address, words)
                 for address in range(start, start + size, 0x1000):
                     if time.monotonic() >= deadline:
                         raise BlePairHilFailure(f"{role} RRAM sector erase timeout")
@@ -505,7 +511,7 @@ def erase_nrf54l_rram_pyocd_sha256(
     if observed_digest != expected_hash:
         raise BlePairHilFailure(f"{role} RRAM sector erase digest가 다릅니다.")
     return {
-        "mode": "pyocd-sector-erase-verified",
+        "mode": "nrf54l-rram-fill-verified",
         "start": start,
         "end_exclusive": start + size,
         "bytes": size,
