@@ -177,7 +177,7 @@ class M28TwoBoardHilParserTests(unittest.TestCase):
             source,
         )
         self.assertIn("std::uint8_t response[23] = {};", source)
-        self.assertIn("response_subevent = report.subevent;", source)
+        self.assertIn("(report.subevent + 1U) % 4U", source)
         self.assertIn('Serial.print("M28_PAWR_DIAG:received=");', source)
         self.assertIn("pawr_subevent_counts[response.subevent]", source)
         self.assertIn("pawr_slot_counts[response.response_slot]", source)
