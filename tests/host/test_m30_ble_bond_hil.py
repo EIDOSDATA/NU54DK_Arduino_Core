@@ -78,6 +78,10 @@ class M30BleBondHilTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         for token in (
             "rpa_start_pending = true;",
+            "rpa_retry_error_pending = true;",
+            "if (rpa_retry_error_pending &&",
+            "rpa_retry_error_pending = false;",
+            "BLEDevice.lastError() == nucode::ble::BLEError::driver_error",
             "action_due_ms = now + 100;",
             "BLEDevice.lastDriverError() == -ENOMEM",
             "now < rpa_restart_deadline_ms",

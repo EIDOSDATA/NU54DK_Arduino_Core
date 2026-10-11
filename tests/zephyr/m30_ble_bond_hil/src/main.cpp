@@ -83,6 +83,7 @@ namespace
     bool restart_pending = false;
     [[maybe_unused]] bool rpa_restart_pending = false;
     [[maybe_unused]] bool rpa_start_pending = false;
+    [[maybe_unused]] bool rpa_retry_error_pending = false;
     [[maybe_unused]] bool rpa_reported = false;
     bool reboot_pending = false;
     bool stale_rejected = false;
@@ -591,6 +592,15 @@ namespace
         else if (information.event == nucode::ble::BLEEvent::error &&
                  phase != Phase::stale)
         {
+#if !defined(NUCODE_M30_BOND_CENTRAL)
+            if (rpa_retry_error_pending &&
+                BLEDevice.lastError() == nucode::ble::BLEError::driver_error &&
+                BLEDevice.lastDriverError() == -ENOMEM)
+            {
+                rpa_retry_error_pending = false;
+                return;
+            }
+#endif
             fail("gap-error");
         }
     }
@@ -993,6 +1003,7 @@ namespace
             else if (BLEDevice.lastDriverError() == -ENOMEM &&
                      now < rpa_restart_deadline_ms)
             {
+                rpa_retry_error_pending = true;
                 action_due_ms = now + 100;
             }
             else
