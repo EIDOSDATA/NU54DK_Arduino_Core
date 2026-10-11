@@ -42,7 +42,8 @@ namespace
     constexpr std::int64_t security_delay_ms = 300;
     constexpr std::int64_t scan_retry_ms = 100;
     constexpr std::int64_t scan_retry_timeout_ms = 30000;
-    constexpr std::int64_t protocol_timeout_ms = 2400000;
+    constexpr unsigned long serial_baud_rate = 1000000UL;
+    constexpr std::int64_t protocol_idle_timeout_ms = 180000;
 
     char nonce[nonce_characters + 1U] = {};
     std::uint8_t nonce_binary[nonce_bytes] = {};
@@ -55,6 +56,12 @@ namespace
     nucode::ble::BLEConnectionHandle connection_handle = {};
     std::int64_t security_due_ms = 0;
     std::int64_t deadline_ms = 0;
+
+    /** @brief 유효 명령 사이의 유한 idle watchdog을 갱신합니다. */
+    void refreshProtocolDeadline()
+    {
+        deadline_ms = k_uptime_get() + protocol_idle_timeout_ms;
+    }
 
     /** @brief compile-time image 역할을 반환합니다. */
     const char *roleName()
@@ -859,7 +866,7 @@ namespace
                 return;
             }
             started = true;
-            deadline_ms = k_uptime_get() + protocol_timeout_ms;
+            refreshProtocolDeadline();
 #if defined(NUCODE_M30_DFU_PERIPHERAL)
             if (!startAdvertising())
             {
@@ -914,6 +921,10 @@ namespace
                 command[command_length] = '\0';
                 executeCommand(command);
                 command_length = 0U;
+                if (started && !failed)
+                {
+                    refreshProtocolDeadline();
+                }
                 return;
             }
             if (command_length + 1U >= sizeof(command))
@@ -931,7 +942,7 @@ namespace
 /** @brief DFU image·보안·BLE role을 초기화합니다. */
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(serial_baud_rate);
 #if defined(NUCODE_M30_DFU_PERIPHERAL)
 #if defined(NUCODE_M30_DFU_POWER_HIL)
     image_management_callback.callback = onImageManagementEvent;

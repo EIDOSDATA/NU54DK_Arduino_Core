@@ -101,6 +101,17 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertEqual(HIL_RUNNER.PRIMARY_FLASH_AREA_ID, 1)
         self.assertNotIn("power_cut", source.casefold())
 
+    def test_hil_transport_preserves_negative_denominator_with_bounded_idle(self) -> None:
+        """! @brief 20회 독립 거부가 phase 상한 안에서 유한 watchdog을 유지하는지 검사합니다. """
+
+        source = (HIL_TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        self.assertEqual(HIL_RUNNER.DFU_BAUD_RATE, 1000000)
+        self.assertIn("serial_baud_rate = 1000000UL", source)
+        self.assertIn("protocol_idle_timeout_ms = 180000", source)
+        self.assertIn("Serial.begin(serial_baud_rate)", source)
+        self.assertIn("refreshProtocolDeadline();", source)
+        self.assertNotIn("protocol_timeout_ms = 2400000", source)
+
     def test_hil_runner_waits_for_disconnect_before_restarting_peripheral(self) -> None:
         """! @brief reset 응답 직후 이전 application에 START를 보내는 경쟁을 방지합니다. """
 

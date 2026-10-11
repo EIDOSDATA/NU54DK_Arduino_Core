@@ -27,7 +27,6 @@ if str(HIL_DIRECTORY) not in sys.path:
 from ble_pair_hil_common import (  # noqa: E402
     BOARD_ROOT,
     BlePairHilFailure,
-    DEFAULT_BAUD_RATE,
     REPOSITORY,
     RoleEndpoint,
     discover_endpoint,
@@ -44,6 +43,7 @@ from m30_ble_dfu import (  # noqa: E402
     APPLICATION_ROOT,
     BASE_VERSION,
     CentralBuild,
+    DFU_BAUD_RATE,
     DfuSession,
     ImageArtifact,
     MAX_SMP_PACKET,
@@ -192,7 +192,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
     parser.add_argument("--central-port", default="auto")
-    parser.add_argument("--baud", type=int, default=DEFAULT_BAUD_RATE)
+    parser.add_argument("--baud", type=int, default=DFU_BAUD_RATE)
     parser.add_argument("--flash-timeout", type=float, default=120.0)
     parser.add_argument("--phase-timeout", type=float, default=1800.0)
     parser.add_argument("--power-cycle-timeout", type=float, default=120.0)

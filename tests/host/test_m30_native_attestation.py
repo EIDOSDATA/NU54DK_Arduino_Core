@@ -571,7 +571,7 @@ class M30NativeAttestationTests(unittest.TestCase):
             serial_module,
             SimpleNamespace(port_name="COM1"),
             SimpleNamespace(port_name="COM2"),
-            115200,
+            dfu.DFU_BAUD_RATE,
             "12" * 16,
             "a" * 40,
         )

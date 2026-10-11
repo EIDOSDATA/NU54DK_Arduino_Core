@@ -27,7 +27,6 @@ if str(HIL_DIRECTORY) not in sys.path:
 from ble_pair_hil_common import (  # noqa: E402
     BOARD_ROOT,
     BlePairHilFailure,
-    DEFAULT_BAUD_RATE,
     REPOSITORY,
     RoleEndpoint,
     clear_nrf54l_rram_pyocd_sha256,
@@ -82,6 +81,7 @@ MAX_SMP_PACKET = 244
 MAX_TRANSCRIPT_BYTES = 8 * 1024 * 1024
 POSITIVE_UPDATES = 10
 NEGATIVE_ATTEMPTS = 20
+DFU_BAUD_RATE = 1000000
 BASE_VERSION = (0, 0, 0, 0)
 FINAL_VERSION = (10, 0, 0, 0)
 UNCONFIRMED_VERSION = (11, 0, 0, 0)
@@ -164,7 +164,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
     parser.add_argument("--central-port", default="auto")
-    parser.add_argument("--baud", type=int, default=DEFAULT_BAUD_RATE)
+    parser.add_argument("--baud", type=int, default=DFU_BAUD_RATE)
     parser.add_argument("--flash-timeout", type=float, default=120.0)
     parser.add_argument("--phase-timeout", type=float, default=1200.0)
     parser.add_argument("--trust-signing-key", required=True)
@@ -769,8 +769,8 @@ class DfuSession:
         nonce: str,
         core_revision: str,
     ) -> None:
-        if baud != DEFAULT_BAUD_RATE:
-            raise M30DfuFailure(f"M30 DFU는 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
+        if baud != DFU_BAUD_RATE:
+            raise M30DfuFailure(f"M30 DFU는 {DFU_BAUD_RATE} baud만 허용합니다.")
         self.serial_module = serial_module
         self.endpoints = {"peripheral": peripheral, "central": central}
         self.baud = baud
