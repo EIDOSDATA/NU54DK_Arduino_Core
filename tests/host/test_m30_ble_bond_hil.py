@@ -1,9 +1,12 @@
 """! @brief M30-BOND-01 runner의 final protocol parser를 검증합니다. """
 
 from importlib.util import module_from_spec, spec_from_file_location
+import json
 from pathlib import Path
 import sys
+from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -100,6 +103,121 @@ class M30BleBondHilTests(unittest.TestCase):
         )
         self.assertIn("M30_BOND_PROGRESS={decoded}", runner)
         self.assertIn('peripheral_path.write_bytes(captures["peripheral"])', runner)
+
+    def test_flash_roles_are_sequential_and_hash_bound(self) -> None:
+        """! @brief 두 역할 flash 순서와 exact HEX hash 결합을 고정합니다. """
+
+        class FlashComplete(RuntimeError):
+            """! @brief flash 후 UART 단계 진입을 차단하는 시험 전용 예외입니다. """
+
+        endpoints = {
+            "peripheral": BOND.RoleEndpoint(
+                "a" * 32, SimpleNamespace(root=Path("e:/")), "COM5"
+            ),
+            "central": BOND.RoleEndpoint(
+                "b" * 32, SimpleNamespace(root=Path("f:/")), "COM18"
+            ),
+        }
+        images = {
+            role: BOND.ImageInput(Path(f"{role}.hex"), 4, character * 64, {})
+            for role, character in (("peripheral", "1"), ("central", "2"))
+        }
+        captures = {"peripheral": bytearray(), "central": bytearray()}
+        calls = []
+
+        def flash(role, probe, path, timeout, *, expected_sha256):
+            """! @brief 실제 접근 없이 순서와 immutable 입력만 기록합니다. """
+
+            calls.append((role, probe, path, timeout, expected_sha256))
+            return "pyocd-sector-sw-reset", "4"
+
+        with mock.patch.object(
+            BOND, "flash_image_pyocd_sha256", side_effect=flash
+        ), mock.patch.object(BOND.time, "sleep", side_effect=FlashComplete):
+            with self.assertRaises(FlashComplete):
+                BOND.execute_hil(
+                    None,
+                    endpoints,
+                    images,
+                    BOND.DEFAULT_BAUD_RATE,
+                    120.0,
+                    600.0,
+                    "a" * 40,
+                    "01" * 16,
+                    captures,
+                )
+
+        self.assertEqual([call[0] for call in calls], ["peripheral", "central"])
+        for role, _probe, path, timeout, expected_sha256 in calls:
+            self.assertEqual(path, images[role].path)
+            self.assertEqual(timeout, 120.0)
+            self.assertEqual(expected_sha256, images[role].sha256)
+            records = [
+                json.loads(line.split(b"|", 2)[2])
+                for line in captures[role].splitlines()
+            ]
+            self.assertEqual(
+                [record["stage"] for record in records],
+                ["FLASH_CALL_ENTER", "FLASH_CALL_RETURNED"],
+            )
+            self.assertTrue(
+                all(record["cleanup"] == "UNVERIFIED" for record in records)
+            )
+
+    def test_first_flash_error_stops_the_second_role(self) -> None:
+        """! @brief 첫 flash 예외를 보존하고 central 접근을 금지합니다. """
+
+        endpoints = {
+            "peripheral": BOND.RoleEndpoint(
+                "a" * 32, SimpleNamespace(root=Path("e:/")), "COM5"
+            ),
+            "central": BOND.RoleEndpoint(
+                "b" * 32, SimpleNamespace(root=Path("f:/")), "COM18"
+            ),
+        }
+        images = {
+            role: BOND.ImageInput(Path(f"{role}.hex"), 4, character * 64, {})
+            for role, character in (("peripheral", "1"), ("central", "2"))
+        }
+        captures = {"peripheral": bytearray(), "central": bytearray()}
+        first_error = RuntimeError("first flash failure")
+        calls = []
+
+        def flash(role, _probe, _path, _timeout, *, expected_sha256):
+            """! @brief 첫 역할에서 고정 예외를 주입합니다. """
+
+            calls.append((role, expected_sha256))
+            raise first_error
+
+        with mock.patch.object(
+            BOND, "flash_image_pyocd_sha256", side_effect=flash
+        ):
+            with self.assertRaises(RuntimeError) as caught:
+                BOND.execute_hil(
+                    None,
+                    endpoints,
+                    images,
+                    BOND.DEFAULT_BAUD_RATE,
+                    120.0,
+                    600.0,
+                    "a" * 40,
+                    "01" * 16,
+                    captures,
+                )
+
+        self.assertIs(caught.exception, first_error)
+        self.assertEqual(calls, [("peripheral", "1" * 64)])
+        self.assertEqual(captures["central"], b"")
+        records = [
+            json.loads(line.split(b"|", 2)[2])
+            for line in captures["peripheral"].splitlines()
+        ]
+        self.assertEqual(
+            [record["stage"] for record in records],
+            ["FLASH_CALL_ENTER", "FLASH_CALL_ERROR"],
+        )
+        self.assertEqual(records[-1]["first_error_type"], "RuntimeError")
+        self.assertEqual(records[-1]["cleanup"], "UNVERIFIED")
 
 
 if __name__ == "__main__":

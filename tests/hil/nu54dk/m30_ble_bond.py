@@ -347,20 +347,76 @@ def execute_hil(
 
     if baud != DEFAULT_BAUD_RATE:
         raise M30BondFailure(f"M30-BOND-01은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        futures = {
-            role: executor.submit(
-                flash_image_pyocd_sha256,
-                role,
-                hashlib.sha256(
-                    endpoints[role].board_id.encode("ascii")
-                ).hexdigest(),
-                images[role].path,
-                flash_timeout,
-            )
-            for role in endpoints
+    flash_results = {}
+    for role in ("peripheral", "central"):
+        image = images[role]
+        probe_digest = hashlib.sha256(
+            endpoints[role].board_id.encode("ascii")
+        ).hexdigest()
+        started = time.monotonic()
+        host_record = {
+            "phase": "bond",
+            "role": role,
+            "probe_sha256": probe_digest,
+            "image_sha256": image.sha256,
+            "timeout_seconds": flash_timeout,
+            "stage": "FLASH_CALL_ENTER",
+            "hardware_access": "POSSIBLE",
+            "program_reset": "UNCONFIRMED",
+            "cleanup": "UNVERIFIED",
+            "next_dispatch": "SAFETY_HOLD_UNTIL_NATIVE_CLEANUP",
         }
-        flash_results = {role: future.result() for role, future in futures.items()}
+        ## @brief 호출 전 역할을 기록하되 target ACK나 cleanup 성공으로 취급하지 않습니다.
+        captures[role].extend(
+            (
+                "HOST_FLASH|1|"
+                + json.dumps(host_record, ensure_ascii=True, sort_keys=True)
+                + "\n"
+            ).encode("ascii")
+        )
+        try:
+            flash_results[role] = flash_image_pyocd_sha256(
+                role,
+                probe_digest,
+                image.path,
+                flash_timeout,
+                expected_sha256=image.sha256,
+            )
+        except BaseException as error:
+            host_record.update(
+                {
+                    "stage": "FLASH_CALL_ERROR",
+                    "elapsed_seconds": time.monotonic() - started,
+                    "first_error_type": type(error).__name__,
+                    "first_error_sha256": hashlib.sha256(
+                        str(error).encode("utf-8", errors="backslashreplace")
+                    ).hexdigest(),
+                }
+            )
+            captures[role].extend(
+                (
+                    "HOST_FLASH|1|"
+                    + json.dumps(host_record, ensure_ascii=True, sort_keys=True)
+                    + "\n"
+                ).encode("ascii")
+            )
+            raise
+        host_record.update(
+            {
+                "stage": "FLASH_CALL_RETURNED",
+                "elapsed_seconds": time.monotonic() - started,
+                "program_reset": "RETURNED_NOT_READBACK_VERIFIED",
+                "sequence": flash_results[role][0],
+                "programmed_bytes": flash_results[role][1],
+            }
+        )
+        captures[role].extend(
+            (
+                "HOST_FLASH|1|"
+                + json.dumps(host_record, ensure_ascii=True, sort_keys=True)
+                + "\n"
+            ).encode("ascii")
+        )
     time.sleep(0.5)
 
     pending = {"peripheral": bytearray(), "central": bytearray()}
