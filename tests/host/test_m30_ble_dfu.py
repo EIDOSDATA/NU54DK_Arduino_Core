@@ -208,6 +208,9 @@ class M30SecureBleDfuTests(unittest.TestCase):
         source = HIL_RUNNER_PATH.read_text(encoding="utf-8")
         self.assertEqual(HIL_RUNNER.POSITIVE_UPDATES, 10)
         self.assertEqual(HIL_RUNNER.NEGATIVE_ATTEMPTS, 20)
+        self.assertGreaterEqual(
+            HIL_RUNNER.MAX_TRANSCRIPT_BYTES, 32 * 1024 * 1024
+        )
         for name in ("unsigned", "wrong_key", "corrupt", "truncated", "downgrade"):
             self.assertIn(f'"{name}"', source)
         self.assertIn('"power_cut_injected": False', source)
