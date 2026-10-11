@@ -71,6 +71,11 @@ namespace
     bool protocol_finished = false;
     bool callback_context_valid = true;
     bool link_reported = false;
+    /** @brief FAIL 진단용 main-thread 관측 수이며 기능 판정에는 사용하지 않습니다. */
+    std::uint32_t connected_event_count = 0U;
+    /** @brief MTU 요청 호출/수락 여부만 보존하며 완료 성공을 의미하지 않습니다. */
+    bool mtu_request_attempted = false;
+    bool mtu_request_accepted = false;
     [[maybe_unused]] bool disconnect_requested = false;
     Phase phase = Phase::waiting;
     struct k_thread *setup_thread = nullptr;
@@ -102,8 +107,15 @@ namespace
         Serial.print(M29_LONG_WRITE_CORE_REVISION);
     }
 
-    /** @brief 첫 실패를 고정 protocol로 출력하고 추가 동작을 중단합니다. */
-    void fail(const char *stage, int code = 0)
+    /**
+     * @brief 첫 실패를 고정 protocol로 출력하고 추가 동작을 중단합니다.
+     * @param stage 최초 실패 단계입니다.
+     * @param code 호출자가 관측한 오류 값이며 오류 도메인을 추정하지 않습니다.
+     * @param gap_information GAP 오류 때만 선택적으로 출력하는 callback 관측값입니다.
+     * @note 진단값은 현재 공개 API 관측이며 queued 오류의 원인 snapshot이 아닙니다.
+     */
+    void fail(const char *stage, int code = 0,
+              const nucode::ble::BLEEventInfo *gap_information = nullptr)
     {
         if (protocol_finished)
         {
@@ -116,6 +128,40 @@ namespace
         Serial.print(stage == nullptr ? "unknown" : stage);
         Serial.print("|code=");
         Serial.print(code);
+        if (gap_information != nullptr)
+        {
+            Serial.print("|diag=gap-v1|phase=");
+            Serial.print(static_cast<unsigned int>(phase));
+            Serial.print("|connected_events=");
+            Serial.print(connected_event_count);
+            Serial.print("|mtu_requested=");
+            Serial.print(mtu_request_attempted ? 1 : 0);
+            Serial.print("|mtu_accepted=");
+            Serial.print(mtu_request_accepted ? 1 : 0);
+            Serial.print("|event_role=");
+            Serial.print(static_cast<unsigned int>(gap_information->role));
+            Serial.print("|event_reason=");
+            Serial.print(static_cast<unsigned int>(gap_information->reason));
+            Serial.print("|event_handle=");
+            Serial.print(gap_information->connection.valid() ? 1 : 0);
+            Serial.print("|handle_valid=");
+            Serial.print(connection_handle.valid() ? 1 : 0);
+            Serial.print("|same_handle=");
+            Serial.print(gap_information->connection.valid() &&
+                                 gap_information->connection == connection_handle
+                             ? 1
+                             : 0);
+            Serial.print("|connected=");
+            Serial.print(BLEConnection.connected(connection_handle) ? 1 : 0);
+            Serial.print("|mtu=");
+            Serial.print(BLEConnection.mtu(connection_handle));
+            Serial.print("|link_reported=");
+            Serial.print(link_reported ? 1 : 0);
+            Serial.print("|global_error=");
+            Serial.print(static_cast<unsigned int>(BLEDevice.lastError()));
+            Serial.print("|dropped=");
+            Serial.print(BLEDevice.droppedEvents());
+        }
         printSuffix();
         Serial.println();
         protocol_finished = true;
@@ -440,11 +486,12 @@ namespace
         }
         if (information.event == nucode::ble::BLEEvent::error)
         {
-            fail("gap_error", BLEDevice.lastDriverError());
+            fail("gap_error", BLEDevice.lastDriverError(), &information);
             return;
         }
         if (information.event == nucode::ble::BLEEvent::connected)
         {
+            ++connected_event_count;
             connection_handle = information.connection;
             if (!connection_handle.valid())
             {
@@ -462,7 +509,9 @@ namespace
             }
             phase = Phase::mtu;
 #if defined(NUCODE_M29_LONG_WRITE_CENTRAL)
-            if (!BLEConnection.requestMtu(connection_handle))
+            mtu_request_attempted = true;
+            mtu_request_accepted = BLEConnection.requestMtu(connection_handle);
+            if (!mtu_request_accepted)
             {
                 fail("mtu_request");
             }

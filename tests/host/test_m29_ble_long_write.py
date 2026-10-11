@@ -98,6 +98,12 @@ class M29BleLongWriteTests(unittest.TestCase):
             "partial_commit",
             "BLEClient.write(connection_handle, payload, sizeof(payload))",
             "BLEClient.read(connection_handle)",
+            'Serial.print("|diag=gap-v1|phase=")',
+            "connected_event_count",
+            "mtu_request_attempted",
+            "mtu_request_accepted",
+            "BLEConnection.connected(connection_handle)",
+            "BLEDevice.droppedEvents()",
         ):
             self.assertIn(token, target, token)
         self.assertIn('PROTOCOL = "M29W03|1"', runner)
