@@ -120,6 +120,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertIn("protocol_idle_timeout_ms = 180000", source)
         self.assertIn("Serial.begin(serial_baud_rate)", source)
         self.assertIn("refreshProtocolDeadline();", source)
+        self.assertIn('Serial.print("|TX_REJECT|role=central|reason=")', source)
+        self.assertNotIn('fail("tx-header-length")', source)
         self.assertNotIn("protocol_timeout_ms = 2400000", source)
 
     def test_hil_build_rejects_console_baud_drift(self) -> None:
@@ -186,6 +188,25 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertEqual(HIL_RUNNER.cbor_decode(encoded), value)
         with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "trailing"):
             HIL_RUNNER.cbor_decode(encoded + b"\x00")
+
+    def test_hil_runner_retries_only_explicit_pre_write_reject(self) -> None:
+        """! @brief BLE write 전 exact TX_REJECT만 같은 SMP packet으로 재전송합니다. """
+
+        session = object.__new__(HIL_RUNNER.DfuSession)
+        session.sequence = 0
+        session.tx_retries = 0
+        session.send_line = mock.Mock()
+        response = struct.pack(">BBHHBB", 0x0B, 0, 1, 1, 0, 1) + b"\xa0"
+        session.wait_rx = mock.Mock(side_effect=(None, response))
+
+        result = session.transaction(2, 1, 1, {}, 1.0)
+
+        self.assertEqual(result.payload, {})
+        self.assertEqual(session.tx_retries, 1)
+        self.assertEqual(session.send_line.call_count, 2)
+        self.assertEqual(
+            session.send_line.call_args_list[0], session.send_line.call_args_list[1]
+        )
 
     def test_hil_runner_parses_exact_mcuboot_hash_tlv(self) -> None:
         """! @brief version과 SHA-256 TLV를 header 경계에서 읽습니다. """

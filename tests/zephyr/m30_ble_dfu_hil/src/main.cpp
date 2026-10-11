@@ -519,6 +519,16 @@ namespace
         return -1;
     }
 
+    /** @brief BLE write 전에 손상된 VCOM TX를 Host의 bounded 재전송 대상으로 보고합니다. */
+    void rejectSmp(const char *reason)
+    {
+        Serial.print(protocol);
+        Serial.print("|TX_REJECT|role=central|reason=");
+        Serial.print(reason);
+        printSuffix();
+        Serial.println();
+    }
+
     /** @brief hex SMP request를 실제 authenticated GATT write로 전송합니다. */
     void sendSmp(const char *hex)
     {
@@ -533,7 +543,7 @@ namespace
         if (characters < 16U || characters > sizeof(packet) * 2U ||
             (characters % 2U) != 0U)
         {
-            fail("tx-length");
+            rejectSmp("tx-length");
             return;
         }
         const std::size_t packet_length = characters / 2U;
@@ -543,14 +553,14 @@ namespace
             const int low = hexNibble(hex[index * 2U + 1U]);
             if (high < 0 || low < 0)
             {
-                fail("tx-hex");
+                rejectSmp("tx-hex");
                 return;
             }
             packet[index] = static_cast<std::uint8_t>((high << 4U) | low);
         }
         if (8U + sys_get_be16(&packet[2]) != packet_length)
         {
-            fail("tx-header-length");
+            rejectSmp("tx-header-length");
             return;
         }
         struct bt_conn *connection =

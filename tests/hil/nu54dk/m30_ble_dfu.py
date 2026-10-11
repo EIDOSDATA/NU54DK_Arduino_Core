@@ -82,6 +82,7 @@ POSITIVE_UPDATES = 10
 NEGATIVE_ATTEMPTS = 20
 ## @brief 정상 10회·negative 5종 20회·rollback의 full-image 응답을 bounded 보존합니다.
 MAX_TRANSCRIPT_BYTES = 32 * 1024 * 1024
+MAX_TX_RETRIES = 3
 DFU_BAUD_RATE = 460800
 BASE_VERSION = (0, 0, 0, 0)
 FINAL_VERSION = (10, 0, 0, 0)
@@ -776,6 +777,11 @@ RX_PATTERN = re.compile(
     rb"^M30DFU\|1\|RX\|role=central\|data=([0-9a-f]+)"
     rb"\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
 )
+TX_REJECT_PATTERN = re.compile(
+    rb"^M30DFU\|1\|TX_REJECT\|role=central"
+    rb"\|reason=(tx-length|tx-hex|tx-header-length)"
+    rb"\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
+)
 UNLINK_PATTERN = re.compile(
     rb"^M30DFU\|1\|UNLINK\|role=central"
     rb"\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
@@ -806,6 +812,7 @@ class DfuSession:
         self.pending = {"peripheral": bytearray(), "central": bytearray()}
         self.capture = {"peripheral": bytearray(), "central": bytearray()}
         self.sequence = 0
+        self.tx_retries = 0
         self.central_started = False
         self.cleanup = {role: "NOT_RUN" for role in ("peripheral", "central")}
 
@@ -1012,20 +1019,27 @@ class DfuSession:
         self.wait_link("central", deadline)
         return boot
 
-    def wait_rx(self, deadline: float) -> bytes:
-        """! @brief exact nonce·revision의 SMP response bytes를 반환합니다. """
+    def wait_rx(self, deadline: float) -> bytes | None:
+        """! @brief exact SMP response 또는 BLE write 전 TX 거부를 반환합니다. """
 
         while True:
             line = self.checked_line("central", deadline)
             match = RX_PATTERN.fullmatch(line)
-            if match is None:
-                continue
-            if match.group(2).decode("ascii") != self.nonce or match.group(3).decode("ascii") != self.core_revision:
-                raise M30DfuFailure("SMP RX identity가 다릅니다.")
-            try:
-                return bytes.fromhex(match.group(1).decode("ascii"))
-            except ValueError as error:
-                raise M30DfuFailure("SMP RX hex가 잘못됐습니다.") from error
+            if match is not None:
+                if match.group(2).decode("ascii") != self.nonce or match.group(3).decode("ascii") != self.core_revision:
+                    raise M30DfuFailure("SMP RX identity가 다릅니다.")
+                try:
+                    return bytes.fromhex(match.group(1).decode("ascii"))
+                except ValueError as error:
+                    raise M30DfuFailure("SMP RX hex가 잘못됐습니다.") from error
+            reject = TX_REJECT_PATTERN.fullmatch(line)
+            if reject is not None:
+                if (
+                    reject.group(2).decode("ascii") != self.nonce
+                    or reject.group(3).decode("ascii") != self.core_revision
+                ):
+                    raise M30DfuFailure("SMP TX_REJECT identity가 다릅니다.")
+                return None
 
     def wait_unlink(self, deadline: float) -> None:
         """! @brief reset response 뒤 기존 Peripheral 연결 종료를 확인합니다. """
@@ -1059,8 +1073,18 @@ class DfuSession:
         packet = struct.pack(">BBHHBB", first, 0, len(encoded), group, sequence, command_id) + encoded
         if len(packet) > MAX_SMP_PACKET:
             raise M30DfuFailure(f"SMP request가 ATT payload를 넘습니다: {len(packet)}")
-        self.send_line("central", f"M30DFU|1|TX|{packet.hex()}")
-        response = self.wait_rx(deadline)
+        command = f"M30DFU|1|TX|{packet.hex()}"
+        response = None
+        for retry in range(MAX_TX_RETRIES + 1):
+            self.send_line("central", command)
+            response = self.wait_rx(deadline)
+            if response is not None:
+                break
+            if retry >= MAX_TX_RETRIES:
+                raise M30DfuFailure("SMP TX_REJECT 재전송 상한을 넘었습니다.")
+            self.tx_retries += 1
+        if response is None:
+            raise M30DfuFailure("SMP response가 없습니다.")
         if len(response) < 8:
             raise M30DfuFailure("SMP response가 header보다 짧습니다.")
         response_first, flags, length, response_group, response_sequence, response_id = struct.unpack(
@@ -1875,6 +1899,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "encryption_key_size": 16,
             "att_mtu": 247,
             "host_to_ble_bridge": "NU54DK-central-vcom",
+            "tx_retries": session.tx_retries,
         },
         "power_cut_injected": False,
         "physical_power_loss_claim": False,
