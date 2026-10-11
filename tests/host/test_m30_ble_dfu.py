@@ -106,10 +106,17 @@ class M30SecureBleDfuTests(unittest.TestCase):
 
         source = (HIL_TARGET / "src/main.cpp").read_text(encoding="utf-8")
         overlay = (HIL_TARGET / "app.overlay").read_text(encoding="utf-8")
+        central_configuration = (HIL_TARGET / "central.conf").read_text(
+            encoding="utf-8"
+        )
         self.assertEqual(HIL_RUNNER.DFU_BAUD_RATE, 1000000)
         self.assertIn("serial_baud_rate = 1000000UL", source)
         self.assertIn("&uart20", overlay)
         self.assertIn("current-speed = <1000000>;", overlay)
+        self.assertIn(
+            "CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE=1024",
+            central_configuration,
+        )
         self.assertIn("protocol_idle_timeout_ms = 180000", source)
         self.assertIn("Serial.begin(serial_baud_rate)", source)
         self.assertIn("refreshProtocolDeadline();", source)
@@ -244,7 +251,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 "CONFIG_BOOTLOADER_MCUBOOT=y\n"
                 "CONFIG_BT_SMP_SC_PAIR_ONLY=y\n"
                 "CONFIG_BT_SMP_MIN_ENC_KEY_SIZE=16\n"
-                "CONFIG_BT_L2CAP_TX_MTU=247\n",
+                "CONFIG_BT_L2CAP_TX_MTU=247\n"
+                "CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE=1024\n",
                 encoding="utf-8",
             )
             (boot / "zephyr/.config").write_text(

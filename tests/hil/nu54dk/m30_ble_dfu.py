@@ -573,6 +573,7 @@ def collect_central_build(
             "CONFIG_BT_SMP_SC_PAIR_ONLY=y",
             "CONFIG_BT_SMP_MIN_ENC_KEY_SIZE=16",
             "CONFIG_BT_L2CAP_TX_MTU=247",
+            "CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE=1024",
         ),
     )
     boot_config = require_text_tokens(
