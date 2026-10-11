@@ -323,6 +323,28 @@ def collect_result(
     return parse_result(line, role, nonce, core_revision)
 
 
+def flash_roles_sequential(
+    endpoints: dict[str, RoleEndpoint],
+    images: dict[str, ImageInput],
+    timeout_seconds: float,
+    label: str | None = None,
+) -> dict[str, tuple[str, str]]:
+    """! @brief 공유 pyOCD 출력을 쓰는 두 role을 정해진 순서로 flash합니다. """
+
+    results: dict[str, tuple[str, str]] = {}
+    for role in ROLES:
+        image = images[role]
+        flash_role = role if label is None else f"{role}-{label}"
+        results[role] = flash_image_pyocd_sha256(
+            flash_role,
+            hashlib.sha256(endpoints[role].board_id.encode("ascii")).hexdigest(),
+            image.path,
+            timeout_seconds,
+            expected_sha256=image.sha256,
+        )
+    return results
+
+
 def execute_hil(
     serial_module: Any,
     endpoints: dict[str, RoleEndpoint],
@@ -344,20 +366,11 @@ def execute_hil(
         raise M30ProfileFailure(
             f"M30-PROFILE-01은 {DEFAULT_BAUD_RATE} baud만 허용합니다."
         )
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        futures = {
-            role: executor.submit(
-                flash_image_pyocd_sha256,
-                role,
-                hashlib.sha256(
-                    endpoints[role].board_id.encode("ascii")
-                ).hexdigest(),
-                images[role].path,
-                flash_timeout,
-            )
-            for role in endpoints
-        }
-        flash_results = {role: future.result() for role, future in futures.items()}
+    flash_results = flash_roles_sequential(
+        endpoints,
+        images,
+        flash_timeout,
+    )
     time.sleep(0.5)
 
     pending = {"peripheral": bytearray(), "central": bytearray()}
@@ -557,21 +570,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
         central_path.write_bytes(captures["central"])
         cleanup_status = "PASS"
         try:
-            with ThreadPoolExecutor(max_workers=2) as executor:
-                cleanup_futures = {
-                    role: executor.submit(
-                        flash_image_pyocd_sha256,
-                        f"{role}-failure-cleanup",
-                        hashlib.sha256(
-                            endpoints[role].board_id.encode("ascii")
-                        ).hexdigest(),
-                        images[role].path,
-                        min(args.flash_timeout, 60.0),
-                    )
-                    for role in ROLES
-                }
-                for future in cleanup_futures.values():
-                    future.result()
+            flash_roles_sequential(
+                endpoints,
+                images,
+                min(args.flash_timeout, 60.0),
+                "failure-cleanup",
+            )
         except Exception as cleanup_error:
             cleanup_status = f"FAIL:{type(cleanup_error).__name__}"
         raise M30ProfileFailure(
@@ -581,22 +585,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
     peripheral_path.write_bytes(captures["peripheral"])
     central_path.write_bytes(captures["central"])
     try:
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            futures = {
-                role: executor.submit(
-                    flash_image_pyocd_sha256,
-                    f"{role}-cleanup",
-                    hashlib.sha256(
-                        endpoints[role].board_id.encode("ascii")
-                    ).hexdigest(),
-                    images[role].path,
-                    args.flash_timeout,
-                )
-                for role in ROLES
-            }
-            cleanup_flash_results = {
-                role: future.result() for role, future in futures.items()
-            }
+        cleanup_flash_results = flash_roles_sequential(
+            endpoints,
+            images,
+            args.flash_timeout,
+            "cleanup",
+        )
         exact_program, program_phase = complete_program_phase(
             REPOSITORY,
             core_revision,
