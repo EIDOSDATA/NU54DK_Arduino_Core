@@ -1,9 +1,11 @@
 """! @brief M30-PAIR-01 target와 strict runner 계약을 검증합니다. """
 from importlib.util import module_from_spec, spec_from_file_location
+import json
 from pathlib import Path
 import sys
 from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -132,6 +134,127 @@ class M30BlePairTests(unittest.TestCase):
         self.assertIn('"power_cut_injected": False', source)
         self.assertIn('"mass_erase_or_recover": False', source)
         self.assertIn("30.0 <= args.result_timeout <= 600.0", source)
+
+    def test_flash_roles_are_sequential_and_hash_bound(self) -> None:
+        """! @brief 두 역할이 순차 실행되고 각 HEX hash가 호출에 결합됩니다. """
+
+        class FlashComplete(RuntimeError):
+            """! @brief flash 이후 UART 단계 진입을 차단하는 시험 전용 예외입니다. """
+
+        case = PAIR.CASES[0]
+        endpoints = {
+            "peripheral": PAIR.RoleEndpoint(
+                "a" * 32, SimpleNamespace(root=Path("e:/")), "COM5"
+            ),
+            "central": PAIR.RoleEndpoint(
+                "b" * 32, SimpleNamespace(root=Path("f:/")), "COM18"
+            ),
+        }
+        images = {
+            (case.slug, role): PAIR.ImageInput(
+                Path(f"{role}.hex"), 4, character * 64, {}
+            )
+            for role, character in (("peripheral", "1"), ("central", "2"))
+        }
+        captures = {"peripheral": bytearray(), "central": bytearray()}
+        calls = []
+
+        def flash(role, probe, path, timeout, *, expected_sha256):
+            """! @brief 실제 접근 없이 순서와 immutable 입력만 기록합니다. """
+
+            calls.append((role, probe, path, timeout, expected_sha256))
+            return "pyocd-sector-sw-reset", "4"
+
+        with mock.patch.object(
+            PAIR, "flash_image_pyocd_sha256", side_effect=flash
+        ), mock.patch.object(PAIR.time, "sleep", side_effect=FlashComplete):
+            with self.assertRaises(FlashComplete):
+                PAIR.execute_case(
+                    None,
+                    endpoints["peripheral"],
+                    endpoints["central"],
+                    images,
+                    case,
+                    PAIR.DEFAULT_BAUD_RATE,
+                    120.0,
+                    600.0,
+                    captures,
+                )
+
+        self.assertEqual([call[0] for call in calls], ["peripheral", "central"])
+        for role, _probe, path, timeout, expected_sha256 in calls:
+            self.assertEqual(path, images[(case.slug, role)].path)
+            self.assertEqual(timeout, 120.0)
+            self.assertEqual(expected_sha256, images[(case.slug, role)].sha256)
+            records = [
+                json.loads(line.split(b"|", 2)[2])
+                for line in captures[role].splitlines()
+            ]
+            self.assertEqual(
+                [record["stage"] for record in records],
+                ["FLASH_CALL_ENTER", "FLASH_CALL_RETURNED"],
+            )
+            self.assertTrue(
+                all(record["cleanup"] == "UNVERIFIED" for record in records)
+            )
+
+    def test_first_flash_error_stops_the_second_role(self) -> None:
+        """! @brief 첫 flash 예외를 보존하고 다음 역할 접근을 금지합니다. """
+
+        case = PAIR.CASES[0]
+        endpoints = {
+            "peripheral": PAIR.RoleEndpoint(
+                "a" * 32, SimpleNamespace(root=Path("e:/")), "COM5"
+            ),
+            "central": PAIR.RoleEndpoint(
+                "b" * 32, SimpleNamespace(root=Path("f:/")), "COM18"
+            ),
+        }
+        images = {
+            (case.slug, role): PAIR.ImageInput(
+                Path(f"{role}.hex"), 4, character * 64, {}
+            )
+            for role, character in (("peripheral", "1"), ("central", "2"))
+        }
+        captures = {"peripheral": bytearray(), "central": bytearray()}
+        first_error = RuntimeError("first flash failure")
+        calls = []
+
+        def flash(role, _probe, _path, _timeout, *, expected_sha256):
+            """! @brief 첫 역할에서 고정 예외를 주입합니다. """
+
+            calls.append((role, expected_sha256))
+            raise first_error
+
+        with mock.patch.object(
+            PAIR, "flash_image_pyocd_sha256", side_effect=flash
+        ):
+            with self.assertRaises(RuntimeError) as caught:
+                PAIR.execute_case(
+                    None,
+                    endpoints["peripheral"],
+                    endpoints["central"],
+                    images,
+                    case,
+                    PAIR.DEFAULT_BAUD_RATE,
+                    120.0,
+                    600.0,
+                    captures,
+                )
+
+        self.assertIs(caught.exception, first_error)
+        self.assertEqual(calls, [("peripheral", "1" * 64)])
+        self.assertEqual(captures["central"], b"")
+        records = [
+            json.loads(line.split(b"|", 2)[2])
+            for line in captures["peripheral"].splitlines()
+        ]
+        self.assertEqual(
+            [record["stage"] for record in records],
+            ["FLASH_CALL_ENTER", "FLASH_CALL_ERROR"],
+        )
+        self.assertEqual(records[-1]["first_error_type"], "RuntimeError")
+        self.assertEqual(records[-1]["cleanup"], "UNVERIFIED")
 
 
 if __name__ == "__main__":
