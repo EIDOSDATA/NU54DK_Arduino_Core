@@ -105,12 +105,42 @@ class M30SecureBleDfuTests(unittest.TestCase):
         """! @brief 20회 독립 거부가 phase 상한 안에서 유한 watchdog을 유지하는지 검사합니다. """
 
         source = (HIL_TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        overlay = (HIL_TARGET / "app.overlay").read_text(encoding="utf-8")
         self.assertEqual(HIL_RUNNER.DFU_BAUD_RATE, 1000000)
         self.assertIn("serial_baud_rate = 1000000UL", source)
+        self.assertIn("&uart20", overlay)
+        self.assertIn("current-speed = <1000000>;", overlay)
         self.assertIn("protocol_idle_timeout_ms = 180000", source)
         self.assertIn("Serial.begin(serial_baud_rate)", source)
         self.assertIn("refreshProtocolDeadline();", source)
         self.assertNotIn("protocol_timeout_ms = 2400000", source)
+
+    def test_hil_build_rejects_console_baud_drift(self) -> None:
+        """! @brief 생성 DTS가 relay baud와 다르면 build 입력을 거부합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-dfu-dts-") as directory:
+            app = Path(directory)
+            zephyr = app / "zephyr"
+            zephyr.mkdir()
+            devicetree = zephyr / "zephyr.dts"
+            devicetree.write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0xf4240 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
+            HIL_RUNNER.validate_console_transport(app)
+            devicetree.write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0x1c200 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                    HIL_RUNNER.M30DfuFailure, "1000000 baud"):
+                HIL_RUNNER.validate_console_transport(app)
 
     def test_hil_runner_waits_for_disconnect_before_restarting_peripheral(self) -> None:
         """! @brief reset 응답 직후 이전 application에 START를 보내는 경쟁을 방지합니다. """
@@ -187,6 +217,13 @@ class M30SecureBleDfuTests(unittest.TestCase):
             boot = root / HIL_RUNNER.BOOT_DOMAIN
             (app / "zephyr").mkdir(parents=True)
             (boot / "zephyr").mkdir(parents=True)
+            (app / "zephyr/zephyr.dts").write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0xf4240 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
             core_revision = "a" * 40
             trust_key = root / "trust.pem"
             trust_key.write_text("test-key\n", encoding="ascii")

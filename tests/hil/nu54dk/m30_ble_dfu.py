@@ -462,6 +462,27 @@ def validate_mcuboot_public_key(boot: Path, configured_key_value: str,
     return file_sha256(public_key)
 
 
+def validate_console_transport(app: Path) -> None:
+    """! @brief 생성 DTS의 DAPLink console과 DFU relay baud 일치를 검증합니다. """
+
+    devicetree = (app / "zephyr/zephyr.dts").read_text(encoding="utf-8")
+    match = re.search(
+        r"uart20:\s+uart@[^\s{]+\s*\{(?P<body>.*?)^\s*\};",
+        devicetree,
+        re.MULTILINE | re.DOTALL,
+    )
+    if (
+        "zephyr,console = &uart20;" not in devicetree
+        or match is None
+        or re.search(
+            r"\bcurrent-speed\s*=\s*<\s*(?:0xf4240|1000000)\s*>;",
+            match.group("body"),
+        )
+        is None
+    ):
+        raise M30DfuFailure("DFU DAPLink console가 1000000 baud가 아닙니다.")
+
+
 def collect_peripheral_build(
     argument: str, core_revision: str, trust_key: Path, auto_confirm: int
 ) -> PeripheralBuild:
@@ -471,6 +492,7 @@ def collect_peripheral_build(
     validate_domains(root)
     app = root / APPLICATION_DOMAIN
     boot = root / BOOT_DOMAIN
+    validate_console_transport(app)
     require_text_tokens(
         app / "zephyr/.config",
         (
@@ -543,6 +565,7 @@ def collect_central_build(
     validate_domains(root)
     app = root / APPLICATION_DOMAIN
     boot = root / BOOT_DOMAIN
+    validate_console_transport(app)
     require_text_tokens(
         app / "zephyr/.config",
         (
