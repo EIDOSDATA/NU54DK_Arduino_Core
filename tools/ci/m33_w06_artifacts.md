@@ -1,21 +1,15 @@
 # M33-W06 exact target artifact 준비 계획
 
-> **현재 사용 범위 — 2026-10-07:** [검증 파이프라인 재설계](<../../00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)의
-> R1·R2를 구현했다. 새 inventory·mode plan·증거 경계와 개발 전용 최소 native bundle은
-> `m33_w06_pipeline.py`가 소유한다. 실제 build/runtime/stage/HIL/closure는 아래 기존 production
-> 도구를 그대로 사용하며, 최소 bundle이나 fake transport 결과를 최종 W06 PASS로 승격하지 않는다.
+> **현재 사용 범위 — 2026-10-11:** 아래 명령은 도구 reference이며 지금 전체 실행하라는 지시가 아니다.
+> 현재는 문서 정리·검사·commit/push다. 이후 실패 하나에 필요한 수정과 로컬 해당 항목 검증을
+> 실제 PASS까지 진행한 뒤 다음 실패로 이동한다. 전체 49개·Actions·최종 gate를 매 수정에 실행하지 않는다.
+> 실행 범위·원본 조사·미실행 항목은 [M33 인계](../../00_Docs/M33_HANDOFF.md), 개발/최종 검증 구분은
+> [검증 설계](<../../00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를 따른다.
 
-> **2026-10-05 재개 정책:** 주 에이전트 1개로 순차 처리하며 하위 에이전트는 생성하지 않는다.
-> 기존 Actions shard는 허용하되 로컬 무거운 build/HIL은 한 번에 하나만 실행한다.
-> 사용자가 이전 로컬 작업 자료를 삭제했으므로 옛 clone/result/index 경로를 그대로 사용하지 않는다.
-> 실제 source·미커밋 변경·도구·권한을 확인하고 필요한 동일 exact artifact를 새 root에 복구하거나 재생성한다.
-> 현재 상태·원격 run과 자료 가용성은 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따른다.
-
-> **2026-10-07:** 현재 checkout은 `D:\w06\src`, 모든 새 실행·증거·cache·임시는 `D:\w06` 아래다.
-> C의 설치된 SDK/toolchain은 읽기 입력으로만 사용한다. 로컬 build는 `--max-workers 1`로 실행한다.
-> runtime producer는 같은 root에서 build 역할별 완료 byte를 재검증해 재사용하고, 실패한 물리
-> fixture chain은 새 append-only attempt에서 cleanup부터 실행한다. 완성 결과의 손상이나 SAFETY
-> 실패는 자동 retry하지 않는다. `.build-stages`·`.runtime-stages`와 원본 command log를 함께 보존한다.
+> checkout은 `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`, 새 build·실행·cache·tmp는 `D:\w06`이다.
+> SDK/toolchain pin을 유지하고 실제 source·미커밋 변경·image·장치를 확인한다. 실기 writer와 무거운
+> 로컬 작업은 하나이며 build는 `--max-workers 1`이다. 실패 원본과 `.build-stages`·`.runtime-stages`를
+> 보존하고 SAFETY 실패를 자동 retry하지 않는다. 개발 후보·fake transport 결과는 최종 PASS가 아니다.
 
 이 문서는 `tools/ci/m33_w06_artifacts.py`가 만드는 48개 campaign과 별도 3-role soak artifact root의
 준비·검증 절차를 설명한다. 이 도구는 target을 flash하지 않으며 mass erase, unlock,
@@ -125,7 +119,7 @@ python tools/ci/m33_w06_artifacts.py build \
   --arduino-config <외부-새-경로>/arduino/arduino-cli.yaml \
   --fqbn-prefix nucode:zephyr:nu54dk \
   --timeout-seconds 3600 \
-  --max-workers 2
+  --max-workers 1
 ```
 
 `--max-workers`는 서로 다른 output과 action별 cache를 쓰는 독립 action만 동시에 실행한다. 기본은
@@ -400,7 +394,12 @@ scripted campaign 전부가 같은 dispatcher 실행에서 최소 20회 PASS한 
 `peer_support_discovery` sidecar와 `peer_result`를 생성한다. 이것은 개발용 scripted peer 근거이며
 Apple/Google 제품 또는 Ubuntu/macOS 실물 상호운용 PASS로 승격하지 않는다.
 
-## 8. exact S 전체 실행 순서
+## 8. 별도 최종 단계의 exact S 전체 실행 reference
+
+이 절은 실패별 집중 수정 loop에 사용하지 않는다. 특히 아래 `execute-matrix`는 전체 49개를
+실행하므로 한 실패를 수정할 때 자동 호출하지 않는다. 문서의 64 suite / 597 test는 d909의
+기존 registry 계약이며, 외부 미적용 후보의 정적 74 / 862와 섞지 않는다. 실제 최종 source의
+분모는 registry와 test ID로 다시 검증하고 미실행 검사를 PASS로 기록하지 않는다.
 
 W05가 완료되고 위 `plan → prepare-arduino → build → board-inventory → runtime input 결합 → stage
 → validate`가 모두 끝난 뒤에도 같은 40자리 Core HEAD와 clean 상태를 유지한다. 아래 `<bundle>`은

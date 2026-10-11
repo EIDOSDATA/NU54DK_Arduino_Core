@@ -1,0 +1,3101 @@
+{
+  "kind": "documentation_audit_not_functional_test",
+  "schema_version": 1,
+  "review_date": "2026-10-11",
+  "baseline": "d9090f22c258303660c3bb6d288b7580c0d2a453",
+  "scope": "Git tracked/unignored Markdown and reStructuredText, board submodule read-only included",
+  "limits": "All files UTF-8/hash/local-file-links/duplicate checked. Current-policy passages reviewed separately. No historical technical revalidation, external URL freshness, or anchor validation.",
+  "repository_documents": 507,
+  "board_documents": 6,
+  "total_documents": 513,
+  "local_file_links_checked": 5864,
+  "categories": {
+    "current_or_reference": 111,
+    "historical_evidence": 306,
+    "version_bound_release": 82,
+    "frozen_completed_todo": 6,
+    "external_read_only": 8
+  },
+  "exact_duplicates": [],
+  "failures": [],
+  "documents": [
+    {
+      "path": "00_Docs/00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md",
+      "sha256_utf8_lf": "bc0e9fb42e9fab38ad709f0ce45ecd829beef271f130f4d245eded32463aed6d",
+      "lines": 365,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/00_사전 리서치/02_Arduino_구성_프로필과_예제_노출_결정.md",
+      "sha256_utf8_lf": "a4df0a4e2cbc8e4cdb94e11338337131702ec351cc01346d5fa16511e26ad424",
+      "lines": 214,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md",
+      "sha256_utf8_lf": "fac6193efc866799f7605f05bc73d34908bc0cb97f8a17a3a2d250eb0c429e63",
+      "lines": 201,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md",
+      "sha256_utf8_lf": "2da95c4036bd01b7edeec0e56ce0613ef213f4aaab38bb740cc60fc4bc622f9a",
+      "lines": 88,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/01_저장소_폴더_구조.md",
+      "sha256_utf8_lf": "238e93d61e4477126900571db8cc756a8fc5fd21e509360b7a14f601154dc12d",
+      "lines": 343,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+      "sha256_utf8_lf": "bdaa80d23f6d892574079b8a0ac3f4a3a9fcb66fa6955973afa6571aa85a970d",
+      "lines": 606,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/03_핀과_Variant_설계.md",
+      "sha256_utf8_lf": "36cc1b6b38d49bbcfa33d908f94dcde43ffbc62d002428369fbf42dd82f3e761",
+      "lines": 248,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md",
+      "sha256_utf8_lf": "9d2869e341df006ccd7c274343e585e64542d573e0f53e0ba899878afd34948c",
+      "lines": 273,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/05_v0.2.0_구현_마일스톤.md",
+      "sha256_utf8_lf": "80959e7aeff6ebb3e801ea9f2edf57fe1728e7eb1298faa2b53ed3b2c6bb2fc9",
+      "lines": 126,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md",
+      "sha256_utf8_lf": "fa40f06d84876ba561f47a5b883dd70ed4570d5d5d10ef9c04442a618d674cd2",
+      "lines": 257,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md",
+      "sha256_utf8_lf": "852171efb1a55ea6a39b398b653af6d5f1302daf3faa0186a9405eba0154a6a9",
+      "lines": 541,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md",
+      "sha256_utf8_lf": "f5102d6ac98355167582f69ef1bc88666381e1d23541e02d0609babe5a325cdd",
+      "lines": 638,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/09_M23_Peripheral_인스턴스_매트릭스.md",
+      "sha256_utf8_lf": "5ec8bedc0c0851f7ac9c4f225125727a7ed1b4a32cc05d80b853666f225a2b5a",
+      "lines": 126,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md",
+      "sha256_utf8_lf": "2754532a7ee1230a388329afcc99d56dcd988bdd8240960bc442fb9b81124c13",
+      "lines": 243,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/11_M26_System_Peripheral_지원_경계.md",
+      "sha256_utf8_lf": "44f1033ed5b931ce05bc0790bef7f6f7754e3e8027177b19993b7b409f4a6d98",
+      "lines": 52,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/12_v0.4.0_기능_시험_목록.md",
+      "sha256_utf8_lf": "263c57da001b29b293eaba4bd4aed5c20b1b1837ce03d371d5f358a467062056",
+      "lines": 341,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md",
+      "sha256_utf8_lf": "88b6b9508bcad8623f0c9b4efb623fad9c01ead35681823b6fe00d42a8b42a96",
+      "lines": 85,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/01_진단_비교와_최종_판단.md",
+      "sha256_utf8_lf": "3f8bcdd7d61f288a8e41fb6831d31bf815c1135e7b4199ea98ca3d6c3ab6b0a3",
+      "lines": 202,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/02_리팩토링_통합_실행계획.md",
+      "sha256_utf8_lf": "85e5de0d7e3719707f567f15d158fb1467781722f2afbd21b86e78f8edaf5da5",
+      "lines": 425,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/03_리팩토링_착수_시점_및_운영계획.md",
+      "sha256_utf8_lf": "d3fd61983780e800c2cd1be103858bd98834d039d4ecf3d5c8b5816e50db219c",
+      "lines": 374,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/04_리팩토링_작업지시서_및_검증기록.md",
+      "sha256_utf8_lf": "765f3169a2f47599df01abd3341f2aef1f4a9fa7b97d4838d8250263992f0fc1",
+      "lines": 270,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/05_리팩토링_진행_체크리스트.md",
+      "sha256_utf8_lf": "1f815f630705732b896396136d618d3716a6e4d39ef9b82a3c028b1c96bab8f0",
+      "lines": 162,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/99_최초_리팩토링_설계안_참고.md",
+      "sha256_utf8_lf": "337cff7aa041293a78eb7d7e7010c7bfa48dec04a1d0bf8d6512a269555ba97a",
+      "lines": 2035,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md",
+      "sha256_utf8_lf": "49ea742c7593dacaa4d8a5a0cded1c1e93a66aeb997405486815d93cb41676a4",
+      "lines": 62,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md",
+      "sha256_utf8_lf": "dc832f3e7b5bf8452f4fa6c046b05a2fb490087f9a1af94ded0fc76b94e53d1c",
+      "lines": 279,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md",
+      "sha256_utf8_lf": "e74bf6d317468756226e9df1017853d3c15e3b1f5faffb83b0b5548887cb6c2c",
+      "lines": 244,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md",
+      "sha256_utf8_lf": "20c0f8c569c3e9d20253a9fd4ec79e098a66c214a1545acb0e7424831fd9ef33",
+      "lines": 161,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md",
+      "sha256_utf8_lf": "e4cbd38ccea236f58fa5d7ada8fcab8b7aa3336aaf878af83eb4a6dc76e694eb",
+      "lines": 198,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md",
+      "sha256_utf8_lf": "3d5a67ba60d7e6e6b78e85b4c0ea86c045279cfd075370c33cc8a227fe70829a",
+      "lines": 583,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md",
+      "sha256_utf8_lf": "3f19c100aea0f693bae470c840e885d917ad6ca9f431ea25fff709fc085cc298",
+      "lines": 157,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
+      "sha256_utf8_lf": "c6c2c5e97d2ab19efddc6d0eb2035ed9b2ead4969ab8b44d13a79209c2a6f491",
+      "lines": 368,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/22_M32_BLE_Mesh_무선_착수_계약.md",
+      "sha256_utf8_lf": "e219bb967dfd71f60db367dac34d1d3e063329aa752034a6c561812225b4ce20",
+      "lines": 149,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/01_아두이노 코어 설계/23_M33_전체_예제_원장과_릴리스_계약.md",
+      "sha256_utf8_lf": "0214b6c9266a7ec2778b41f226e5f3b86075d313863b382c0659e234ff7b63e8",
+      "lines": 220,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/01_West_Native_Blink_PoC.md",
+      "sha256_utf8_lf": "c1daa6ffcee16e77f442ed5e9a1a2116ea93152d63539cde6d5e72ae3e7de405",
+      "lines": 140,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
+      "sha256_utf8_lf": "9dc2173aa622fcf48059348be7f222c53d53f669cd191b9eda971f7289aab6cb",
+      "lines": 360,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
+      "sha256_utf8_lf": "46c4c4dfdbfeaf6a2198f898581b690aa2a641f7c30d00cff3e736f78283295e",
+      "lines": 328,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/04_빌드_캐시와_산출물.md",
+      "sha256_utf8_lf": "cbe934b3c68d81fce3317b03fa4aef6a182c67e14450f113f2556a5f5aa7d546",
+      "lines": 287,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/05_업로드와_디버그.md",
+      "sha256_utf8_lf": "4145331def78cb3a80d8dbc73053daf0d6b97b6260a07ac3190e40faa5a865a5",
+      "lines": 173,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md",
+      "sha256_utf8_lf": "9b6c7f8e3e0aa0f01dc559b348e0961f50ca3c15b401e5ca8d5197ff7ca79a7a",
+      "lines": 130,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
+      "sha256_utf8_lf": "a795bc63ff49da511fb99c384b7c56962338d14c7715e494da1536dda39d69a6",
+      "lines": 408,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+      "sha256_utf8_lf": "045008024e35cdb1bb70a61b17e8ee701814ce21dc17399f01413d4145f05e75",
+      "lines": 381,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md",
+      "sha256_utf8_lf": "47bc58fbc01fb9d9e81c36435a71312c3f8b8f5a600f7de0d9a6dc04c5d8c741",
+      "lines": 570,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+      "sha256_utf8_lf": "3e742d7bc3df5c159b581890c507654d524cef464c6221aeb995d1a957a15f89",
+      "lines": 219,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md",
+      "sha256_utf8_lf": "40d18537226f32d21fa530703e4d636ba9b861c670e36899ee8d3048eeb62ef7",
+      "lines": 301,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/01_Arduino_Runtime_설계.md",
+      "sha256_utf8_lf": "a888b0cc5cc7e6324bdc0b6d9c6ba8c84fa1bbf19454ae11d12342b9952e9a57",
+      "lines": 208,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/02_GPIO와_시간_API.md",
+      "sha256_utf8_lf": "d73b03176c63ee27061e06e5b08680d9c92c8a3dca8e202346d9b45fec428f62",
+      "lines": 242,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/03_주변장치_API.md",
+      "sha256_utf8_lf": "0c326513a62172594070177bf01e2c36654cf9433aa467e0a1e7732d29fa97ea",
+      "lines": 350,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+      "sha256_utf8_lf": "fb64e0b032336ecd41065fee2ff49accf255b922ef9127e09d4825681f6d9d0e",
+      "lines": 330,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/05_NU54DK_Board_System_API.md",
+      "sha256_utf8_lf": "46c05b39f1d33f4a5cadcfe34f9476f221cc21a37c75ef7dc5936cc074533633",
+      "lines": 271,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/06_BLE_NUS_API.md",
+      "sha256_utf8_lf": "831f23635ff3aa88139c17fc1407228cad6b618652a4ee86db1304c7be880e8c",
+      "lines": 215,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/07_BLE_Core_GAP_API.md",
+      "sha256_utf8_lf": "7ada828992b82756690fb3ec1c9a2e4e64b0a36d4966e2ac936407dbd18922ad",
+      "lines": 205,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/08_BLE_범용_GATT_API.md",
+      "sha256_utf8_lf": "56bcf0b0e987265ca3c250d5663f4d1c07d76d73f800c8cfa6fc44190c35f955",
+      "lines": 188,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/09_BLE_보안과_표준_Profile_API.md",
+      "sha256_utf8_lf": "9833e4ab8d18f794b203c0759f2a6d88c916f990866fe25800d81bdcde7ce6ff",
+      "lines": 236,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/03_펌웨어 설계/10_Arduino_Storage_API.md",
+      "sha256_utf8_lf": "82b5af904b7f551c0d3df096b29eea8bdb1f1945d6a44532b0d5a1757a0aa86e",
+      "lines": 205,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/01_M1_도구와_보드_기준선.md",
+      "sha256_utf8_lf": "1df8979be453949949c947e4273ed9c7209836d1137c83d2df57f13bed36f95f",
+      "lines": 235,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/02_M2_Zephyr_Module과_Runtime_기준선.md",
+      "sha256_utf8_lf": "19a754e9d1b65e5c60a2d6b005136de7cdb74692263996026410479c7e903e91",
+      "lines": 393,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/03_M3_GPIO_시간과_Scheduler_기준선.md",
+      "sha256_utf8_lf": "c37ad466b8b6a54acd40be4ac07397f59404435af2149913df86d383877c1e53",
+      "lines": 451,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/04_M4_ArduinoCore_API_계약_기준선.md",
+      "sha256_utf8_lf": "4f8afcb4669ca231854686c7a6b0b665aaccd95a316f3b6f56a4d3af7d3c82dd",
+      "lines": 198,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/05_M5_Arduino_CLI_Build_Adapter_기준선.md",
+      "sha256_utf8_lf": "1d6fca309bd2055b5797902e44511f712840950b6397ecb7486eeb48fc6b2f4c",
+      "lines": 243,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/06_M6_기본_Arduino_API_Serial과_인터럽트_기준선.md",
+      "sha256_utf8_lf": "ea1e0bc5e21fbe0b671857caabc2d7664a2c82fea0e68b06514da53ce5bbd25a",
+      "lines": 312,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/07_M7_Wire_SPI_ADC_PWM_기준선.md",
+      "sha256_utf8_lf": "4af14db684ca256b19052f21e65c82d371e4522b79482f5837da2c743fb65e6f",
+      "lines": 406,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/08_M8_업로드와_디버그_기준선.md",
+      "sha256_utf8_lf": "68147a026b7832c27b1945531c3a774998635305104d8d8a227ab5b59c883bbb",
+      "lines": 295,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/09_M9_증분_빌드_캐시와_재현성_기준선.md",
+      "sha256_utf8_lf": "5a8b5be231c88051034bd2a81a7c5fc9d1017b7ba049d609146f9e5475bcc25d",
+      "lines": 263,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/100_T12_공통_기능_묶음과_T13_조합_확정.md",
+      "sha256_utf8_lf": "cc6cad908b0bf4b01a9ed7e960ca546459ff31a9be376ea62a643858daf25e11",
+      "lines": 367,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/101_T12_QDEC_누산_누락_원인_분리.md",
+      "sha256_utf8_lf": "ed46dd683f4455f1b1a71f42c95470a83d3ae0a5d1313459f4c2f19c31a86354",
+      "lines": 295,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/102_개발_문서_전수_검토와_마일스톤_체크포인트.md",
+      "sha256_utf8_lf": "9330254b5c265c4089939d63c55d9cc8cacd9a72548c89928774f12db06363a1",
+      "lines": 127,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/103_TIMER_기능_완료와_T13_진행_경계.md",
+      "sha256_utf8_lf": "1b676332c787e88fde39e6c3609e729333798915425c56861b0664ea10e19221",
+      "lines": 99,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/104_T13_S_복구_동시_안정성_검증.md",
+      "sha256_utf8_lf": "69a80dc4716d7df6f7c79df45e48d96ef9784aed2b8da8bd102acaa00f841fa8",
+      "lines": 767,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/105_T13_S_GPIO_전수_결선_진단.md",
+      "sha256_utf8_lf": "d872914349157a08376fdb4c7fb6c687dfacbe9afda4c76988b899005edad730",
+      "lines": 103,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md",
+      "sha256_utf8_lf": "3a44dfaf3191333cc0ce931ef39ec7f4a7970fd180a626a0bf01c4e9d625deb2",
+      "lines": 81,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/107_T13_S_자동_진행과_System_OFF_계획.md",
+      "sha256_utf8_lf": "f28e4263dfd9d474fae7966b67f76de480080ec0d1a2ff887b29392a05a8b8c8",
+      "lines": 230,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/108_T13_S_자동_실행_종료와_재개_항목.md",
+      "sha256_utf8_lf": "6c6f3619fdddcf1b0b388c987cfc5ac02f60e5ddf6255cd0f2759808c3d7194b",
+      "lines": 100,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/109_T13_S_세_복구_묶음_재검증.md",
+      "sha256_utf8_lf": "bed5bd163ca4499058c7a8167d23689e9d66acbf4a141669fc5f9dab4b914be9",
+      "lines": 255,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/10_M10_Boards_Manager_패키징과_Clean_Windows_기준선.md",
+      "sha256_utf8_lf": "3d26df7f5f3b68862f11a14bd4bf93d998168de0b8eacc945d5b7e59d606b917",
+      "lines": 261,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/110_문서_정리와_T13_S_잔여_재개.md",
+      "sha256_utf8_lf": "cfc1322d94f3620156332edd388ab24cb761b932a1f7dc262b4fd7be56e05cfc",
+      "lines": 390,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/111_T13_S_I2S_완료와_SPIS_연속_버퍼_교정.md",
+      "sha256_utf8_lf": "450e61bc7b51335f119cc6f96c3751acc29f5bc309bfc1eab4a66248bd0f468b",
+      "lines": 94,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/112_T13_S_SPI_TWI_완료와_System_OFF_원인.md",
+      "sha256_utf8_lf": "6f8d78062c25bd87e09563d2e66a76e7bd43fa50f3d6e415b18cbf5f04d55ab2",
+      "lines": 90,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/113_T13_S_범위_종료와_U_준비.md",
+      "sha256_utf8_lf": "594015edd1946f23400a66c99e40e9d7032c32ee48f945062ed3449118bdb537",
+      "lines": 103,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/114_전체_문서_정비와_남은_마일스톤.md",
+      "sha256_utf8_lf": "215b233d1d5592a8cd38f00e2f958898d70c56bcb4b0e4cc5bb2625002a5b288",
+      "lines": 144,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/115_T13_U_UART00_완료와_T13_종료.md",
+      "sha256_utf8_lf": "ffc05f234b719667a32e4428d9bfefb8d58307f80a6688d9b759d7d39aabc923",
+      "lines": 94,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/116_T14_자원_충돌_판정과_PWM_식별_교정.md",
+      "sha256_utf8_lf": "d0cec038ad6368e87f2315c22cab43ec3cdbebb34836865c159701c5f9c683d0",
+      "lines": 74,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/117_T15_지원_범위와_Physical_Gate_확정.md",
+      "sha256_utf8_lf": "db934ad96a229f58a48a3e052c912373ecc23842f7ad85a249bb6fc406c15fa8",
+      "lines": 90,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/118_T16_Peripheral_Fabric_설치_통합.md",
+      "sha256_utf8_lf": "cfc5684c6d15c56191ae5550cf2e00dedaa95da02f630bf42c18709f834ee2e1",
+      "lines": 70,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/119_T17_문서와_지원_매트릭스_정리.md",
+      "sha256_utf8_lf": "4a36388d38d11ccc76f2da58d3573d6fe2ab723181f71ac8d8d217538dc19352",
+      "lines": 76,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/11_M11_v0.1.0_rc1_릴리스_후보_기준선.md",
+      "sha256_utf8_lf": "08b6170a9e45c4bc7bdf95ea14aec9bd7c23e9ac884674a6e0e037f941d3bf52",
+      "lines": 241,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/120_T18_stable_공개_절차와_승인_차단.md",
+      "sha256_utf8_lf": "067cc7db1c6b67c45a4314ffd220cb9104075d386cb03b4b6fd19fd85a28f547",
+      "lines": 100,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/121_T19_RC_소스_고정과_전체_회귀.md",
+      "sha256_utf8_lf": "2ad0676f7d0faf45a89633c72fe436f491a8ea25ee9cf127e32a9d419b757085",
+      "lines": 101,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/122_T20_RC_설치_수명주기와_실제_Upload.md",
+      "sha256_utf8_lf": "b1578ddc3e9ec2467338bfa893a3ca6b699a860f5a55a94ee979d67659909e2d",
+      "lines": 86,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/123_T21_stable_패키지와_최종_검사.md",
+      "sha256_utf8_lf": "5f8a535646b5ac4bb962c4ff5b8a48170787136efe6970e1246d9c61c5174d25",
+      "lines": 83,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/124_T22전_QDEC_지원_범위_재확정.md",
+      "sha256_utf8_lf": "645027dc2c04d156485f6ab84ceec7ad039a0d673841509d0c30b749a57e4cfd",
+      "lines": 90,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md",
+      "sha256_utf8_lf": "7d798c37944f85a5bbeebc6f78887fc0feae1eba8d951a28cbcad79c884a1060",
+      "lines": 118,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/126_정식_공개_후_문서_전수_정비.md",
+      "sha256_utf8_lf": "0ca785bd09640cd24e0a4a1251b9de93e4d8799657174abf1a863787c0f702d3",
+      "lines": 108,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/127_후속_마일스톤_지원_경계와_착수_계획_정비.md",
+      "sha256_utf8_lf": "b3d3d299e23ef0a9045efeaac5595bcd3a3931017909c403bc59fcae0cfae871",
+      "lines": 69,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/128_Nordic_설치_복구_검증_로그_교정.md",
+      "sha256_utf8_lf": "059df140e907f5ad8c7e19cfb1d61c871a809f90c62c3074b05633dcc2dff5df",
+      "lines": 94,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md",
+      "sha256_utf8_lf": "f362391307885e99007c7dcbbbd394c998faf9724df1662fb87baa3940d18cfd",
+      "lines": 120,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/12_M11_v0.1.0_rc2_공개_후_수동_검증.md",
+      "sha256_utf8_lf": "8b2a9f6dd765a2846d3e708d18d3ea77bfca5fef88c0a23209a8715402b33eb0",
+      "lines": 53,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/130_개발문서_전수감사와_M28_착수_준비.md",
+      "sha256_utf8_lf": "db3d8f74a718b055b3388d76956f7e202c1fb3ddd35b8c97bc647c4d6274da02",
+      "lines": 116,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/131_M28_W01_Capability_image와_Host_target_준비.md",
+      "sha256_utf8_lf": "91772ac058689d1d83859617527399614eb0cbf29fb36ec8acc7bdb7c8ffb921",
+      "lines": 89,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/132_M28_W01_실제_HCI_capability_완료.md",
+      "sha256_utf8_lf": "b08da3d806368b438c327eafd7e2dc9fdca2e7e5d1ded16b365c030cb53b014c",
+      "lines": 77,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/133_M28_W01_CI_container_revision_교정.md",
+      "sha256_utf8_lf": "2222e5a352a942702249f6595d6cee8c266fed5e3669c3ee08070eeff0c607cf",
+      "lines": 37,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/134_M28_W02_2-slot_generation_link_기반.md",
+      "sha256_utf8_lf": "5c5037b0d1002f7828a9e00466abd639a8de426e54ffb8cb4067beca6a706699",
+      "lines": 59,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/135_M28_W03_확장_광고와_스캔.md",
+      "sha256_utf8_lf": "f26c40790294123db4ed17b108016ab3262f0b1c74ad7ceefd34152094c76b89",
+      "lines": 52,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/136_M28_W04_periodic_sync_PAST.md",
+      "sha256_utf8_lf": "e2667ac1965e67e48fb49ecb03b9c054811ec834258160e31edb40353b6e2609",
+      "lines": 40,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/137_M28_W05_PAwR_advertiser_scanner.md",
+      "sha256_utf8_lf": "5d6d1ef3e189b0c75f53998dfa9a9858e81ce351ee37ddc48dbf3ee81375b178",
+      "lines": 36,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/138_M28_W06_privacy_RPA_link_control.md",
+      "sha256_utf8_lf": "182c2f4a8ce687f32b065ec3fc22e7ee341295435a62356172b086d49a4cdb72",
+      "lines": 39,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/139_M28_W07_2보드_HIL_자동화_준비.md",
+      "sha256_utf8_lf": "3ab8b65f8053e2606e8086de2161a33cebe9114b42db4320f1337859e8202812",
+      "lines": 48,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/13_v0.1.0_정식_릴리스_공개_기록.md",
+      "sha256_utf8_lf": "014bd4476da3d54d918713334251f853fde8de2c5a86ec9f427524fc50ccd78d",
+      "lines": 60,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md",
+      "sha256_utf8_lf": "48f395cc3e19e9d96de05acbcb57c561876403c294129f17921e694e0fc136b8",
+      "lines": 136,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/141_M29_W01_ATT_GATT_L2CAP_capability.md",
+      "sha256_utf8_lf": "666f135e239bb5b6cb99815fe8971c79746430a93e52804975a13e9a6f0acd74",
+      "lines": 67,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/142_M29_W02_link별_GATT_long_read.md",
+      "sha256_utf8_lf": "dc035cb62998c65e5167e95a50b61d126c373339956cd406e2053d3f8c16bc0a",
+      "lines": 99,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/143_M29_W03_long_reliable_write.md",
+      "sha256_utf8_lf": "70b2d0655473c676c12aa0606db69844912475e9206cd9b3f1b22a2d8618a289",
+      "lines": 112,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/144_M29_W04_descriptor_authorization_read_multiple.md",
+      "sha256_utf8_lf": "ca8f2ba6b76447669b89588500820b940e1fdef0856a2082842925921186f774",
+      "lines": 130,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/145_M29_W05_robust_GATT_cache_migration.md",
+      "sha256_utf8_lf": "39139bc0a4f479582fae1269d4573f2bf36fc1badde7f7e2297ae31b6c56237d",
+      "lines": 122,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/146_M29_W06_LE_CoC_credit_buffers.md",
+      "sha256_utf8_lf": "39d013503fb87ff4db5e05576f45d4974a098f5675c815407b8dfd03f4f36399",
+      "lines": 108,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/147_M29_W07_Signed_Write_EATT_HIL_준비.md",
+      "sha256_utf8_lf": "d4f3ef5499b5b5f3b475f67f2a3be338d50e03a0fa0d2f9adb6aa43c32862919",
+      "lines": 284,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/148_개발문서_전수검토와_README_개선.md",
+      "sha256_utf8_lf": "11875e0b7143601aa7a29e8f057d2df8142c073428f1bf0d86b1fa7b6b8be2f1",
+      "lines": 92,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/149_M29_W07_3보드_회귀_상호운용과_W08_완료.md",
+      "sha256_utf8_lf": "6d418a3aff99d042536abd43187ee7d754a557a254d1e905c49b43af21d27b65",
+      "lines": 145,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/14_M12_CI_CD_기준선.md",
+      "sha256_utf8_lf": "5f764ea2128532e429b85effc5a3ce078dd102736dfecdeed0181589cb1372f5",
+      "lines": 254,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/150_v0.5.0_다중_Host_지원_계획_정비.md",
+      "sha256_utf8_lf": "f275ef5a9d2cbe0541549469850ed394954588021e1ab3fc67dbbfa54f72d98c",
+      "lines": 66,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/151_M30_W01_계약과_HOST_W01_W03_기반.md",
+      "sha256_utf8_lf": "a39f3d114213f87aa9b8ffbdf611771e0a0ddc8a4a151ea2f8622b45314afcc0",
+      "lines": 54,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/152_M30_W01_capability_실기_완료.md",
+      "sha256_utf8_lf": "1323ceaa2668950a3508d16abc1f4d7c4ff5318c997c74e5aead8844cb47552f",
+      "lines": 53,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/153_M30_W02_link별_security와_IO_5종_완료.md",
+      "sha256_utf8_lf": "02c9f3e9c440687d320a9070e527426045a05a7dd61303dddb25ae5a6585aeb5",
+      "lines": 84,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/154_M30_W03_유선_OOB_bond_privacy_NFC_adapter_완료.md",
+      "sha256_utf8_lf": "b2eefc9df4c4f96429b9587c3281ec868fd00100ee50a8ddc1ca9829c153c1bc",
+      "lines": 93,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/155_M30_W04_7개_BLE_profile_완료.md",
+      "sha256_utf8_lf": "b8a913bfff4742fe746825c5d85660a4ecdb8aabb0ddbd7617cfd41ece108aa3",
+      "lines": 68,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/156_M30_W05_MCUboot_layout_signing_완료.md",
+      "sha256_utf8_lf": "adf5e48337c313cb8fe654a182df32734a6fa513dbdd6e88561c089c38eb7bc1",
+      "lines": 74,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/157_M30_W06_secure_BLE_DFU_negative_rollback_완료.md",
+      "sha256_utf8_lf": "a62e500e1d1f7f2bf94d8e2adb6ee4202458c956fac2c7dccf7f9b60dd1d936e",
+      "lines": 91,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/158_M30_W07_3보드_secure_multi_link_완료.md",
+      "sha256_utf8_lf": "06e808e7d29f7fa634d93cfb8d4631fe4378abeb86368d050337ece45712c7b4",
+      "lines": 84,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/159_M30_W08_전원_HIL_주입_직전_준비.md",
+      "sha256_utf8_lf": "18dfbc04eaa4a01e3099be5eb73f890fad73f210fdee77f3c1040b029df67e80",
+      "lines": 71,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/15_M13_구성_프로필_검증.md",
+      "sha256_utf8_lf": "a779eded843b2c6b7be58ba6f139e59c7aa6f866d6da58dcc4c761ec364e5006",
+      "lines": 78,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/160_전체_문서_검토와_마일스톤_개정.md",
+      "sha256_utf8_lf": "3ba9624d1515e86a78b68bcfe1a7fad379ceabf8f2521ccc40e6ab0563e20623",
+      "lines": 134,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md",
+      "sha256_utf8_lf": "d77d64e2316b20f48367e7cf8733b7b9bd2799c779199bbb822bc399acf34737",
+      "lines": 83,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/162_전체_문서_정비와_M31_TODO.md",
+      "sha256_utf8_lf": "92b600286fe8d15dce9e939e37a598efe4295282b7b0ae7d3e289f7c34fd7c23",
+      "lines": 99,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/163_Bluetooth_전체_기능_예제와_마일스톤_재배치.md",
+      "sha256_utf8_lf": "dfa5a6f0639d35267e97a444921c875b61af7ee91aa220c89f3a2c84e530b226",
+      "lines": 103,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/164_사용자_후속_검증_범위와_DF_IQ_인계.md",
+      "sha256_utf8_lf": "21afe58423c659ea8276f218922caf81e78d78785239f6f7446a18c35a854186",
+      "lines": 131,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/165_M31_W01_착수와_W02_CIS_개발_후보.md",
+      "sha256_utf8_lf": "3b6a739107899596c3d947b667bb8e11ec125033832aa3ac87b3134b1e54432a",
+      "lines": 159,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/166_M31_W02_3보드_CIS_BIS_통합_실기.md",
+      "sha256_utf8_lf": "4a6d1c4c1f90dedfdaaeeb639c088e401a9fe493fe694662c400bbf896d15377",
+      "lines": 56,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/167_M31_W02_설치_Arduino_ISO_예제_완료.md",
+      "sha256_utf8_lf": "7bed7048fb7dd0d8492eabde4dbe5ffc9d3647336dbbe7d3fa4e4908e3182a40",
+      "lines": 75,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/168_M31_W03_LC3_공개_API_실기_진행.md",
+      "sha256_utf8_lf": "ab0d5924517d550df3ea4ad31f32be60f45ab13cec5c16cdf42f2d1e66d29d84",
+      "lines": 34,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/169_M31_W03_NCS_Audio_샘플_NU54DK_빌드.md",
+      "sha256_utf8_lf": "cb7dbb0f558a1d684c6602830aacf550b099c2d3e71bf1c279e814257bdd2bfe",
+      "lines": 32,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/16_M14_Core_API와_Variant_기준선.md",
+      "sha256_utf8_lf": "efd19170f0605bd923a9cc79c9da5c7ab3144b8ac098bf4f766421408d817b7e",
+      "lines": 345,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/170_M31_W04_DF_CTE_송신_진행.md",
+      "sha256_utf8_lf": "e5f96d36d60bda928a7b547ea2c9d56bef7d93e1e10c2ff51638dbac9855f776",
+      "lines": 41,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/171_M31_W05_CS_native_2보드_착수.md",
+      "sha256_utf8_lf": "8e8520445c593f0d129d3dda6a0b5071bb1c99faa00379d07ad23051b97247fb",
+      "lines": 39,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/172_M31_W04_DF_기본안테나_IQ_수신_진단.md",
+      "sha256_utf8_lf": "ea4fe70ee64bc77cf3e531c9f96d7af8ecaa10e3794269c8e1237f3efa33cef3",
+      "lines": 50,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/173_M31_W05_RAS_native_100회_진단.md",
+      "sha256_utf8_lf": "dd8e9d372516ae29d0ad083d656e64ec2484b5d2abe6534a882109fe6e4abab5",
+      "lines": 33,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/174_M31_W04_연결_CTE_응답_실기.md",
+      "sha256_utf8_lf": "3b2449ae3d865bc3acb58894ca2caa86b43250da7ab1de2bebfb46936a2e380a",
+      "lines": 28,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/175_M31_W05_Arduino_RAS_reflector_100회_진단.md",
+      "sha256_utf8_lf": "b013c1481f4e9101364e9ca15bcb2717fa6b691bbe81f6240c6ff0384c1d6687",
+      "lines": 30,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/176_M31_W05_Arduino_RAS_initiator_100회와_재시작_진단.md",
+      "sha256_utf8_lf": "a02c177b386e55def8db27e4fc8c6e60daf1afae47a73718cff34cbb6e620e57",
+      "lines": 56,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/177_M31_W05_RAS_재연결과_3보드_peer_분리_진단.md",
+      "sha256_utf8_lf": "0446356cf90a060f00a837916652af7616c30acf1f026433cfb9c7c01d1366b9",
+      "lines": 63,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/178_M31_W04_연결_AoA_수신_Host_Controller_경계.md",
+      "sha256_utf8_lf": "6ea59c5c8b4b3e91846f5683f389c5fc9d95c8635bbf0bec45aef183fe455db7",
+      "lines": 37,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/179_M31_W05_RAS_UUID_위장_peer_거부_20회.md",
+      "sha256_utf8_lf": "4c68867548a1830fe053802d7c99a48bdfaa7c7e6bf917fba59db137b636dbc5",
+      "lines": 39,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/17_M15_NU54DK_Board_System_기준선.md",
+      "sha256_utf8_lf": "4f76fbd6cfeae8d9376def52df15d0ab52cebc3f21c8d02249908f79c08dcbef",
+      "lines": 260,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/180_M31_W05_미암호화_RAS_Features_읽기_거부_20회.md",
+      "sha256_utf8_lf": "fa0de3969a30720fa4b11e58fb5f4cc3696d208625673854a5f0b5ad5ce8c76e",
+      "lines": 36,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/181_M31_W03_native_BAP_LC3_실제_무선_전송.md",
+      "sha256_utf8_lf": "c6c83cff069420d7d6f539899185249a8d252f10b27588646d77762d53e35880",
+      "lines": 45,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/182_M31_W03_Arduino_BAP_unicast_LC3_sink_실기.md",
+      "sha256_utf8_lf": "e21aec3211004a575cbb51e4cc01bf6da67084686a9edecb081619828a44000f",
+      "lines": 46,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/183_M31_W03_Arduino_BAP_unicast_LC3_두_역할_실기.md",
+      "sha256_utf8_lf": "ef2623796c0ef67e9f0cab41407099b2a03b1d83215ce57645f74076bcc3c359",
+      "lines": 44,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/184_M31_W03_Arduino_BAP_unicast_재시작_복구_20회.md",
+      "sha256_utf8_lf": "ab5a33e2a4cb5b32c5d25acacb0d17fe25020a7eb16058f02a04ec7d77dd9500",
+      "lines": 45,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/185_M31_W03_Arduino_BAP_stop_release_20회.md",
+      "sha256_utf8_lf": "31ed062770a60c00ba266cc5af0fcdd58385246730ed26d502cbf93a0eee38de",
+      "lines": 44,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/186_M31_W03_Arduino_BAP_잘못된_상태_거부_40회.md",
+      "sha256_utf8_lf": "c993654b0e98823d3d620e80b29daeb86630eb575c8a6e8288df9b96958b6729",
+      "lines": 30,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/187_M31_W03_Arduino_BAP_원격_codec_QoS_거부_각_20회.md",
+      "sha256_utf8_lf": "3c2010f3dcb24a9e91fd903244fa09f2705789b32d564c0dadfc6d0f111f37c2",
+      "lines": 51,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/188_M31_W03_Arduino_BAP_원격_잘못된_ASE_상태_거부_20회.md",
+      "sha256_utf8_lf": "cb0b9ecea64c9f6bac8d085cd08a4febba89a12b865aa4a88c002baefbac8534",
+      "lines": 40,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/189_M31_W03_Arduino_BAP_양방향_서버_실기.md",
+      "sha256_utf8_lf": "5b8ef68a0c2a95ac2ff62fcc014fd0fcec3549d5d730eb5c9a58fb65ab8a2e26",
+      "lines": 43,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/18_M16_BLE_NUS_기준선.md",
+      "sha256_utf8_lf": "7364c54c25758b284b177b4fa9f115252b3ec7e068713067324d402889e90f94",
+      "lines": 165,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/190_M31_W03_Arduino_BAP_양방향_클라이언트_및_회귀.md",
+      "sha256_utf8_lf": "fb6620e5c375911894e886688bfd8a38aa3b2c82a4163fdee4ab289f61770375",
+      "lines": 61,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/191_M31_W02_공개_ISO_예제_재점검.md",
+      "sha256_utf8_lf": "130c0bb0866d8a2a0dc439d7ddf1fd137f7635c8956b83d7971a7383b8c33a7f",
+      "lines": 51,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/192_M31_W02_공개_CIS_사용자_SDU_실기.md",
+      "sha256_utf8_lf": "0e1a2cec146fb204a74d6ad32270f9881eedb142cff73482b0de38e4445afb99",
+      "lines": 40,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/193_M31_W02_공개_BIS_사용자_SDU_실기.md",
+      "sha256_utf8_lf": "3d71217e317509433e94a356884e0992dab4bf5a4d6005468e9db1fb6d66fe55",
+      "lines": 41,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/194_M31_W02_공개_암호화_BIS_사용자_SDU_실기.md",
+      "sha256_utf8_lf": "031c44b9b5d1a41bb7c125d1569e21d1912b335f0132d53e506b43a0ec275df7",
+      "lines": 42,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/195_M31_W02_공개_BIS_시각동기_사용자_SDU_실기.md",
+      "sha256_utf8_lf": "3575eb65a8a308e67738326e534db2b1190486be34dbafa8b95068a473afa0ec",
+      "lines": 34,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/196_M31_W02_공개_CIS_BIS_세_보드_사용자_SDU_실기.md",
+      "sha256_utf8_lf": "42037bbb6b573d891400945dcba98f84396aac115a76d31830ea7a8b4fc061b9",
+      "lines": 38,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/197_M31_W02_공개_API_암호화_BIS_오류_후_복구.md",
+      "sha256_utf8_lf": "4127f1d45d862a2ffe598ef26caac143863f8aefbdbb42fdc40093e954161c4c",
+      "lines": 29,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/198_M31_W02_공개_BIS_sync_loss_재시작_복구.md",
+      "sha256_utf8_lf": "eceb77c7288f86d06817ee14156a2f0836bf7fa811de0d1b40cea781e83a482e",
+      "lines": 27,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md",
+      "sha256_utf8_lf": "5c390425684e633b40db84544ac0d83b0a25ec350ce886e5bb03218214eedc59",
+      "lines": 52,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md",
+      "sha256_utf8_lf": "596814a68a2f5552873f5f129afceaf2dc0a1066a2bc0dca17160e864900099c",
+      "lines": 197,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/200_M31_다른_PC_작업_인계.md",
+      "sha256_utf8_lf": "b43b0982f67850d888218aac211d4d6c8e2ecfe932ea1bab46df9ca15ace0a39",
+      "lines": 109,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/201_M31_W03_Arduino_BAP_broadcast_비암호화와_재가입.md",
+      "sha256_utf8_lf": "773a8c7afa81f6206fe83042137922675d64329d6e8eb4ad4735ec4a417ec732",
+      "lines": 61,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/202_M31_W03_Arduino_BAP_broadcast_암호화와_negative_완료.md",
+      "sha256_utf8_lf": "7d759872f9c06d964a77087f100141a18fca354d2577b2845718c2cdc6b52b3a",
+      "lines": 64,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/203_M31_W03_Arduino_BASS_3역할과_복구.md",
+      "sha256_utf8_lf": "21a532665cd4cbca7957a51d9e969c0c67204a9abbe3370fbc73958e6340ea66",
+      "lines": 77,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/204_M31_W03_Arduino_CAP_3역할과_broadcast_복구.md",
+      "sha256_utf8_lf": "1578383ecbba5636c61fb3fcc746b542f01ab91f037cd69fd9c71abf0e378b0c",
+      "lines": 76,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/205_M31_W03_Arduino_CAP_unicast_반복_실기.md",
+      "sha256_utf8_lf": "10a39063d970bdb79521735c1baea4b6e539187c4317d0fce120ca7adb17f982",
+      "lines": 97,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/208_M31_W03_Arduino_Audio_Control_완료.md",
+      "sha256_utf8_lf": "80d5862fefcb3b4ba18f121e28768a755af2af8f10de8a07031c9a1f938a54d2",
+      "lines": 62,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/209_M31_W03_Arduino_CSIP_완료.md",
+      "sha256_utf8_lf": "e0dfabb04a708bed0628fe0a6f49102a18f5428c9de2d5b4d6a45139d3479cce",
+      "lines": 65,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/20_M18_v0.2.0_rc1_공개_검증과_rc2_교정.md",
+      "sha256_utf8_lf": "10daae17dd2031aa57611d6ff578ac3a8e4394da5f02d5bd2791bb0a34cdbe7d",
+      "lines": 159,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/210_M31_W03_Arduino_PBP_완료.md",
+      "sha256_utf8_lf": "f310da5182d2d5d780b125a26491571762904c371a61b1a1fbd3577d1733549e",
+      "lines": 62,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/211_M31_W03_Arduino_Media_Call_Control_완료.md",
+      "sha256_utf8_lf": "d9d29628ee664d2c257766025b5dbd1a0b6e6b1c5354903e1e6c0a973b2e1b31",
+      "lines": 85,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/212_M31_W03_Arduino_TMAP_GMAP_완료.md",
+      "sha256_utf8_lf": "09789d3e5ea976b91038824c996047de412fed2fceec3bc6af2e341df997951c",
+      "lines": 67,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/213_M31_W03_Arduino_HAP_HAS_완료.md",
+      "sha256_utf8_lf": "856847bb85238a0d14241a8812bf6fc2b192e40658a1198ccd7f96d3fb1fe67a",
+      "lines": 62,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md",
+      "sha256_utf8_lf": "78ff6ff208846019c5de8c1350d5e7deec2b4f3d6065ca8221a7c0825fbbdabf",
+      "lines": 81,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/215_M31_W03_이력과_문서_정비.md",
+      "sha256_utf8_lf": "baa976a8b886efb2512330e7e89d4f8ed35998f2c780f83915e6f5a6431cd8a6",
+      "lines": 65,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/216_M31_W04_연결_AoA_Controller_IQ_Event_진단.md",
+      "sha256_utf8_lf": "e8b7c09da886dadff475e04fda7a600309c52236742608c1ba2d1c4bbc370216",
+      "lines": 82,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/217_M31_W05_비암호화_RAS_ATT_오류_진단.md",
+      "sha256_utf8_lf": "1846193fa582ccb8a4ebbbf72c4cf035f0dfe4068bd035088b5ba82aad814abe",
+      "lines": 46,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/218_M31_W05_flash_직후_RAS_복구_재검증.md",
+      "sha256_utf8_lf": "65ecd4304e5706dd13dd526b8df6c106d012fe217a97933cc7e0e6ec2bbca62a",
+      "lines": 46,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/219_M31_W06_메모리_점유_감사와_최적화_계약.md",
+      "sha256_utf8_lf": "251b74931c2c41bc5799970774f1ba625d6441910d65eb315d7825031d40edf2",
+      "lines": 219,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/21_v0.2.0_정식_릴리스_공개_기록.md",
+      "sha256_utf8_lf": "c8d8cf3107a3d92d0e49889e6941a7158f1887f4015a996fd47fb7007b87e3fc",
+      "lines": 131,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/220_M31_릴리스_전환과_문서_전수_정비.md",
+      "sha256_utf8_lf": "6809fb1db2ff3bb7cd212884d52bf7ba89ceecda4ed21792a4df4f2aa4bd2b55",
+      "lines": 117,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/221_main_마일스톤별_이력_정리.md",
+      "sha256_utf8_lf": "ae6518d9a65a630db299a90737ba5ff170f1bbb0e331c86f0e7c254a2c1220bb",
+      "lines": 88,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/222_M31_메모리_최적화_P0_완료.md",
+      "sha256_utf8_lf": "2d94adf3839554e3e8d0dccfd366be426821f3cc97cfd76e748207235fdd2398",
+      "lines": 91,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/223_M31_메모리_최적화_P1_GPIO_상태_절감.md",
+      "sha256_utf8_lf": "ac37b02f25a968f765eb55bd0092869f14074087b918ef3b48ad447d62c4f67f",
+      "lines": 53,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/224_M31_메모리_최적화_P1_UART20_lease_절감.md",
+      "sha256_utf8_lf": "b2ad82836a7e3407530fda6b88f97e45359de76c50bab87ee19eaa52f0b06ed5",
+      "lines": 47,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/225_M31_메모리_최적화_P1_Runtime_Route_절감.md",
+      "sha256_utf8_lf": "04c1b4b07f3fe0d7c72f642ceeddc3c819857fc7e6bec027f4116b942cf4dc46",
+      "lines": 59,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/226_M31_메모리_최적화_P1_Resource_Table_정렬.md",
+      "sha256_utf8_lf": "f1e006869e50d36630a936fda017cb09fd6c949759f637ea91de28d3790cb773",
+      "lines": 51,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/227_M31_메모리_최적화_P1_CoC_GATT_분리.md",
+      "sha256_utf8_lf": "f38cbe516a1aacadbcfdaa0cca21d58116e9780de64b47949a9d34e231c61dba",
+      "lines": 58,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/228_M31_메모리_최적화_P1_GATT_Schema_Capacity.md",
+      "sha256_utf8_lf": "f1bfa3ab011bbe2195c913e6e8890fd017d6a7a09a98f12714d5929dcab6e1a8",
+      "lines": 61,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/229_M31_메모리_최적화_P1_GATT_Client_Context.md",
+      "sha256_utf8_lf": "0a179101fb5bf2aa10e4a958290c1fdc848bd6b173da4821c883d85cc8a09ad6",
+      "lines": 54,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/22_AC-01_GPIO_호환성_검증.md",
+      "sha256_utf8_lf": "7b2c1ac616e6222a4887cf3e838e0cd2f3bad8fa3ed5e75c1c50868ec40d9c8b",
+      "lines": 226,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/230_M31_메모리_최적화_P1_GATT_Event_Payload.md",
+      "sha256_utf8_lf": "4ebaa8cc2849035f15dd1463c5f946701b2926ce1fc8586779272d6437adc8dc",
+      "lines": 60,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/231_M31_메모리_최적화_P1_GATT_TX_Payload.md",
+      "sha256_utf8_lf": "534d41c83c4ce27453cd4ceb32e7c983c4965958503a75bce25614c80ea6f3a4",
+      "lines": 62,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/232_M31_메모리_최적화_P1_GATT_Inline_Value.md",
+      "sha256_utf8_lf": "bd5e704b8ab3a149fad940d5fc2af015a006bd511de707cae2e7823abc27529b",
+      "lines": 61,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/233_M31_메모리_최적화_P1_GATT_방향_분리.md",
+      "sha256_utf8_lf": "5be70e6f3f21023869c35e6641130488f4cfc85dc95df339f0401dbbb61a7bf1",
+      "lines": 76,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/234_M31_메모리_최적화_P1_GATT_Shared_TX_Pool.md",
+      "sha256_utf8_lf": "c3d79d115ccc80670863484c98cca3b2b99ae35d9116831cc303b756de319298",
+      "lines": 66,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/235_M31_메모리_최적화_P1_GATT_Client_Payload_Buffer.md",
+      "sha256_utf8_lf": "ea8b4cdfc7f1e75c1e8e90090e8e63d9a694ff1722e354714b65d3be6ff33307",
+      "lines": 47,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/236_M31_메모리_최적화_P1_역할별_잔여_Pool_감사.md",
+      "sha256_utf8_lf": "d76102d0764d9c00953d77146128fdaa45de9d6381ac84d48eeb73c3d1124944",
+      "lines": 54,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/237_M31_메모리_최적화_P1_정적_저장소_완료.md",
+      "sha256_utf8_lf": "2ad3abded5f3803416e1878a6809d1c6d87e932534d30b3c7a4078c97c53e505",
+      "lines": 62,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md",
+      "sha256_utf8_lf": "79c2b0acb8fe858363e54d0c1dfaca0b0d82c2b2b60b1612a74f74432a4db36b",
+      "lines": 106,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/239_M31_메모리_최적화_P2_CoC_CS_계측.md",
+      "sha256_utf8_lf": "1c3e0e963d1438409753d0a8e0be3ebcb1c3e1380162087c33b3946dd0ae43c7",
+      "lines": 110,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/23_M19_BLE_Core_GAP_검증.md",
+      "sha256_utf8_lf": "688806961139cf044f501f71d8025931cc310f60cba9cdc9482f71b5c499aefb",
+      "lines": 133,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/240_M31_메모리_최적화_P2_ISO_CIS_BIS_실기_계측.md",
+      "sha256_utf8_lf": "75fcbb05d9f570420b6a0a1a56063280feae7561254f1c5dd0d7823f24fa09d4",
+      "lines": 83,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/241_M31_메모리_최적화_P2_Audio_unicast_실기_계측.md",
+      "sha256_utf8_lf": "dba8612c2407b6eeae866894fe590b9bae26e37c13385669d0064dbb2e55ba30",
+      "lines": 73,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/242_M31_메모리_최적화_P2_DF_beacon_TX_계측.md",
+      "sha256_utf8_lf": "cf2cdb2c249bec0e916fdac95d5c552e98512994097487088e93ee92f0b986b4",
+      "lines": 45,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/243_M31_메모리_최적화_P2_Audio_broadcast_실기_계측.md",
+      "sha256_utf8_lf": "1d938ec4f91cb5d8b44b6cd29286be32a747baa6a2d7029618609b01a60843c3",
+      "lines": 87,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/244_M31_P2_DF_연결_IQ_진단.md",
+      "sha256_utf8_lf": "e4fba7d50b26d12d584503820e92ca8ea716e48b1ead8f6ce73a9453582591db",
+      "lines": 50,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/245_M31_P2_CS_장기_연속성_진단.md",
+      "sha256_utf8_lf": "0c056c107cf35e966e29c87f3b081539637b214a06f13abecd55e4b29851663a",
+      "lines": 118,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/246_M31_P2_DF_연결_IQ_메모리_계측.md",
+      "sha256_utf8_lf": "569689d2aaf90321ccd399dc5d5f16afe8a868ebe71bbea27c7bf955d86b119d",
+      "lines": 58,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/247_M31_P2_DF_connectionless_재진단과_보류.md",
+      "sha256_utf8_lf": "eb4b23b9658fe1d8766ad97e0370f72163416f5f1a0a9ec2f34004e8062f6f58",
+      "lines": 67,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/248_M31_P2_SDC_pool_정적_경계_감사.md",
+      "sha256_utf8_lf": "9e2b7857ce5620e930f6ad329728fb1456f5fbdd8741f06eef572529ffd163fc",
+      "lines": 57,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/249_M31_P2_문서_정합성_감사.md",
+      "sha256_utf8_lf": "590a2076878a2c006439d84ceabe7783a811ef9954ac65a61707f12aa843f95f",
+      "lines": 40,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/24_M20_범용_GATT_검증.md",
+      "sha256_utf8_lf": "1cf502090394eb90e8bf0e3d60cad5533cb69dada66af9b6be5454a154b422ac",
+      "lines": 127,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/250_M31_P2_native_CS_비교와_DF_재진단.md",
+      "sha256_utf8_lf": "61db9aa48bbb71594f2b136fbd2163015dfebfc9e0b02586d3290e36e0889dec",
+      "lines": 144,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/251_M31_P2_CoC_재연결_메모리_계측.md",
+      "sha256_utf8_lf": "7e26326bbbff704aeca88ffab298f1d1181c43f22c02878d9851fcc7f4b0d4a6",
+      "lines": 77,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/252_M31_P2_CS_장절차_반복계수_경계_진단.md",
+      "sha256_utf8_lf": "64ac6023ed9d9502f466ee375e087a9f4deaaeb7b3879abf956d259a7d2ff62b",
+      "lines": 69,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/253_M31_P2_Audio_broadcast_재가입_메모리_계측.md",
+      "sha256_utf8_lf": "5e4fb589e694ff3dd6f5ce48d04a3c507dfd1ebf306dd7919876409d775d8dcd",
+      "lines": 74,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/254_M31_P2_Audio_unicast_재연결_메모리_계측.md",
+      "sha256_utf8_lf": "6657434e670a03df231865858f6318ba8b0fac2f837b8e8eefeb195e6b91c1da",
+      "lines": 98,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/255_M31_P2_CS_256_step_분할_RAS_진단.md",
+      "sha256_utf8_lf": "728012aa63aba1c1a89f9a7a4bfa0b7dd522fde18c4262fb7a776db16e8db976",
+      "lines": 99,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/256_M31_P2_DF_sync_대기_취소_진단.md",
+      "sha256_utf8_lf": "e7575888fedec73b13df7eedb40d1cbf440d2f1c7a584cf491e78899e14faa04",
+      "lines": 73,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/257_M31_P2_CoC_송신_버퍼_부하와_복구.md",
+      "sha256_utf8_lf": "07adb76a120e1f8be126f78f541fbd71ca351ce73a223c22d1393dad80fadbe5",
+      "lines": 41,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/258_M31_P2_Audio_양방향_장시간과_종료_복구.md",
+      "sha256_utf8_lf": "5317fd45ba0594e852135707a9031d177597479dcad571528502b8a902a5324f",
+      "lines": 60,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md",
+      "sha256_utf8_lf": "e8ef0a0a3a14ce9c047060b35cd715dc133e44f935df9c0cd21f07ee0f42c0e8",
+      "lines": 77,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/25_M21_BLE_보안과_표준_Profile_검증.md",
+      "sha256_utf8_lf": "464c081da97dc5679b49a1088a974f4e052829b09f16ff35918be262e0553cae",
+      "lines": 423,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/260_M31_P2_CS_누락_분류와_256_step_장시간.md",
+      "sha256_utf8_lf": "c0d8e7103654c8fededdd062238a104af54a02aeb8b4a5e93ae831ff1630f864",
+      "lines": 89,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/261_P2_잔여_세_축_확정과_문서_전수_정비.md",
+      "sha256_utf8_lf": "baa313641d5f820cebe2fc7e0c1b804fcb25bcb8db44799aff943560557dc81a",
+      "lines": 84,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md",
+      "sha256_utf8_lf": "7f6587613e3118adf79179737cbf9caede268c8a3fa30539b95dbba69f4bd121",
+      "lines": 147,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/263_M31_W04_Direction_Finding_완료.md",
+      "sha256_utf8_lf": "23200291bd31abc767b9858877ba1735610ef7084ba0801761b1eb1676f96fa5",
+      "lines": 72,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/264_M31_W05_Channel_Sounding_완료.md",
+      "sha256_utf8_lf": "ca2669a3e227f7182efebbc79975482a8ad75a749c6e470a91d1e4c42133852d",
+      "lines": 94,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/265_M31_W06_자원_수명주기와_영향_회귀_완료.md",
+      "sha256_utf8_lf": "3df0a5195a215f9c158f725fe0e958123762bf63f5b8e8e72c4ab29b11788871",
+      "lines": 105,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/266_M31_W07_설치_예제와_3보드_역할_HIL_완료.md",
+      "sha256_utf8_lf": "ef8c0dffaf1a0f68a0b3c94bd170939909547ef181c3f09e5f942e093b642ad1",
+      "lines": 85,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md",
+      "sha256_utf8_lf": "705c21bcdc6f1a216ad5c107cbb67c699641b6d2b9fb76c8ee34956699428368",
+      "lines": 104,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/268_v0.5.0-rc.1_공개와_다운로드_smoke.md",
+      "sha256_utf8_lf": "434131f0092686819fa5a244e49ec28f32505deacc846263631b154f09649aae",
+      "lines": 54,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/269_공개_RC_이력_Squash와_문서_전수_정비.md",
+      "sha256_utf8_lf": "6900c613453cd492535d1e1749cebf135c1908d65e99ddf673bd9cc95b84d9dc",
+      "lines": 84,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/26_AC-02A_핀과_주변장치_소유권_기준선.md",
+      "sha256_utf8_lf": "dc813409297f6c47b3b965083ec5eea30b865fbd7db8bb51317bf8ea4c43e939",
+      "lines": 172,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/270_main_RC_통합_Squash와_문서_동기화.md",
+      "sha256_utf8_lf": "412ff24d48677f3dc58d2deec0dec49d910ed16f22aa613b13655415acae68ce",
+      "lines": 69,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/271_v0.5.0-rc.2_사용자경험_교정과_검증.md",
+      "sha256_utf8_lf": "eca93019cfc3d3183222a76dcfdd074b0de53c661de1d17686c8b58c48e688c3",
+      "lines": 155,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md",
+      "sha256_utf8_lf": "45e96ec7eabdf2d7050c1a8560a50dc0abbb84c7787d4e7755de065371a2c74c",
+      "lines": 100,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md",
+      "sha256_utf8_lf": "715de1bb7ada037591fe8b59de4f54e8a5576b6eb0b50196d60e8ba138b171c9",
+      "lines": 81,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md",
+      "sha256_utf8_lf": "8ac532dddf3963abe4f5b2eb69e0fc2247c042825b9c0170e5cd604ad5470faf",
+      "lines": 58,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/275_v0.5.0_공개_후_문서_전수_재검토.md",
+      "sha256_utf8_lf": "16b03d34d67b8f61339345b3cd15c694820ae9b903082c21d622651cb9f75483",
+      "lines": 65,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/276_v0.6.0_후속_버전_배정과_문서_동기화.md",
+      "sha256_utf8_lf": "dd8e8191263726c1e257c919fcc2a283e0dc94bc2038a66ca12f41ec1c5dadaf",
+      "lines": 63,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/277_M32_W01_capability_자원_시험_계약_완료.md",
+      "sha256_utf8_lf": "8b03ad266e916d169018a9911e2a8ba9790371da35648e3a5ffe766cb3620b6d",
+      "lines": 51,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/278_M32_W02_LE_Power_Control_Path_Loss_완료.md",
+      "sha256_utf8_lf": "d01148f7ce114c72300021f2d888d7dcfa1c988963c3a740333ddc343f455333",
+      "lines": 60,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/279_M32_W03_W04_software와_HIL_blocker.md",
+      "sha256_utf8_lf": "58a87fc2125574670a22d8a105175eca6b824910ea2dcf150e160104431e6a07",
+      "lines": 67,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/27_AC-02B_Peripheral_Analog_runtime_기준선.md",
+      "sha256_utf8_lf": "b6b2a6ac554aee49bb36e02bd97317afe7f9552c53dde704013ef03ef28a69ee",
+      "lines": 254,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md",
+      "sha256_utf8_lf": "3891adf69aa0bca1a46b5d13f93738a26284ad234ce8b2f36065f5abbbe19758",
+      "lines": 66,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/281_M32_W06_Mesh_기반_software와_HIL_blocker.md",
+      "sha256_utf8_lf": "3cd57c287662ff28c54ae1605219f7534bfda28736469ec6846d57c424c7b054",
+      "lines": 140,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/282_M32_W07_Mesh_1.1_software와_HIL_blocker.md",
+      "sha256_utf8_lf": "5b24bfa281ff8351e74c5324a420e0769ec20c936fde00261f4333c87559c5e2",
+      "lines": 105,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md",
+      "sha256_utf8_lf": "a7b828409649a98eb5c1f208ccbede2870a6789f5f3904dcbb34576237d2c20c",
+      "lines": 154,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/284_M32_W09_802154_ESB_software와_HIL_blocker.md",
+      "sha256_utf8_lf": "bd4921d11b364245b8cf662ecc1cac3ec0c37ee1a95dd3688adcef89ca28a384",
+      "lines": 95,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/285_M32_W10_무선_공존_software와_HIL_blocker.md",
+      "sha256_utf8_lf": "236ba2be304a7fa560a6b348b0f32c5a78b8196e3e8480801c97148ad0434f6d",
+      "lines": 280,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/286_M32_W11_software_회귀와_HIL_soak_blocker.md",
+      "sha256_utf8_lf": "a88562d4d74391b5ac412c06762284c5140c0aae2386ffe10603c847ff13c095",
+      "lines": 123,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md",
+      "sha256_utf8_lf": "153893cf69affea4d0d4a9b99256673c6987c353195baeadba40d045efe8462c",
+      "lines": 91,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/288_M32_W03_연결_timing_feature_exact_HIL_완료.md",
+      "sha256_utf8_lf": "fb203a4de8e438bdb5536ef68dc585c3c236114b99764c5cfb47ed29e1ec7c92",
+      "lines": 44,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/289_M32_W04_EAD_exact_HIL_진척.md",
+      "sha256_utf8_lf": "28bdcb4001db092b85b844dbc7507e3b9da57169082174c14b6db43d1a0506ff",
+      "lines": 56,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/28_AC-03_Storage와_Library_호환성_기준선.md",
+      "sha256_utf8_lf": "8da84c84c5773b0b794c6e25d1decaf1d2a9e1a86c37977f2bed8bd8fb83bd92",
+      "lines": 139,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/290_M32_W04_광고_identity_privacy_exact_HIL_완료.md",
+      "sha256_utf8_lf": "314ea2b1d50903022f2475e077cefe1edf7aebc70971b6eee20fee836e61a3e2",
+      "lines": 94,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/291_M32_W06_second_node_provisioning_FAIL과_재부팅_인계.md",
+      "sha256_utf8_lf": "ebf8403e6dff6ce978365d85e1e5cdf8be9b905aa04f2a07e15069920880e355",
+      "lines": 55,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/292_문서_전수_검토와_NCS_3.4.1_영향.md",
+      "sha256_utf8_lf": "e85d2c5d11f2244234dfbfa0b2f00723dea8e2f4c514be978cdc35c8995bf7d0",
+      "lines": 94,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md",
+      "sha256_utf8_lf": "92cd56923de77ef12d00dc1f3b6a9b7443f1f0ea7cde8f83662358478033831e",
+      "lines": 72,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md",
+      "sha256_utf8_lf": "3c3fe003cc3ebc87a3f1b27d690cb2a979f9b16bea508bfaf14ea234b44cd51e",
+      "lines": 144,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md",
+      "sha256_utf8_lf": "afa0e6281d8bfc8b542f00a554ce4b12989a48b856197dab077e058e440e8bd6",
+      "lines": 61,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/296_M33_W01_전체_예제_원장과_릴리스_계약.md",
+      "sha256_utf8_lf": "6ceb8403681a06688cba14c4064f02c75640c1683fcf0c6b23f5c6fd03391386",
+      "lines": 89,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/297_M33_W02_Beacon_코덱과_예제_착수.md",
+      "sha256_utf8_lf": "85ccbaaf3aec719d93174a3870802e1224d15276b7443139b20e0afab64fc2bc",
+      "lines": 77,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/298_M33_W02_표준_GATT_Beacon_완료.md",
+      "sha256_utf8_lf": "b6886af07741a050a10a7a2abf97423bef09b682fce25cead78127bffebab4cc",
+      "lines": 116,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md",
+      "sha256_utf8_lf": "1b7d01c06efae4e560319589affcbf8384da9f3c78a1083223bf6172b0d9ed33",
+      "lines": 87,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/29_M22_v0.3.0_rc1_통합_릴리스_기준선.md",
+      "sha256_utf8_lf": "287bdd9c05316b0c62f96e7dcbcbebd5b05d39fa3b7333d1089be8d6e1374a23",
+      "lines": 174,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md",
+      "sha256_utf8_lf": "6541222b8075ffd8cc0046f08d65535a039e84767b8489eef0b5f06cda0ecdae",
+      "lines": 84,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md",
+      "sha256_utf8_lf": "64ecb57d4f9e3dbe031bb13a759aa94e2fe7961fe00f8debc7880b8295d953cf",
+      "lines": 85,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md",
+      "sha256_utf8_lf": "a399e1091fe6633b42b2020ded3187afd3cd8bef0452449543f0562b14f381a9",
+      "lines": 205,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md",
+      "sha256_utf8_lf": "b7fc013da3f1b96a11c94710e518897a6807d7dafcd5b773927eef3be5f2358a",
+      "lines": 540,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md",
+      "sha256_utf8_lf": "a28459caaa1237c74fd40c5077533a4620bb7ab8ee866b6beb5acbd85f84b53b",
+      "lines": 116,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/305_M33_W06_집중_수정_정책과_문서_전수_정리.md",
+      "sha256_utf8_lf": "3a8feed728dcd81111a2e01e5687e9ab20171b6905e344014d46710d34bbc812",
+      "lines": 60,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/30_M22_v0.3.0_rc2_통합_릴리스_기준선.md",
+      "sha256_utf8_lf": "b2b5d19c1965e698c15aeae1d05e71b2b39970b411260ffffbc1799cd4ff61ef",
+      "lines": 152,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/31_M22_v0.3.0_rc3_검증과_stable_인계.md",
+      "sha256_utf8_lf": "87c6cfb680a84ab6e1fda0e13a9db77dd2bc9c02a16a8d18b3fda48c78ab103e",
+      "lines": 102,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md",
+      "sha256_utf8_lf": "9d41f0b0b88472ac9dc94ab46a939809fdc07b54be5051462e5ee1a097c3bc32",
+      "lines": 130,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/33_M23_Peripheral_Inventory와_공통_소유권_기준선.md",
+      "sha256_utf8_lf": "ed215fcb9e856d7a252f315c9e69d4f18a390b3e2064467694d0a2ebba694732",
+      "lines": 133,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/34_M24_Serial_Fabric_경로와_API_계약_기준선.md",
+      "sha256_utf8_lf": "95e341d5896cbc5d84094ad3ad968d06ea1784ed23ed0b082eb5f872f1a8e239",
+      "lines": 145,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/35_M24_Serial_Fabric_공통_backend_기준선.md",
+      "sha256_utf8_lf": "27128b5a91ca21db1a9b0773a141922e109606160fbe9cde8dce8419ea4dd307",
+      "lines": 72,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/36_M24_Serial_Fabric_adapter와_온보드_HIL_준비.md",
+      "sha256_utf8_lf": "4c65e1a3991eeaf8e102851d405cb6f376f2a3ad6e23d268c84725a1c4af2a15",
+      "lines": 76,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/37_M25_Analog_Event_Stream_Fabric과_온보드_HIL_준비.md",
+      "sha256_utf8_lf": "8d1fcf1f1e6e212fe05cc6f00be241afd69b75a1e457b7674a9108bb14bdcf18",
+      "lines": 71,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/38_M26_System_Peripheral_판정과_온보드_HIL_준비.md",
+      "sha256_utf8_lf": "ee11fd5ec6dbbefc2946b30351fa1e78a3db11ba88906eec642594646331ac9b",
+      "lines": 68,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/39_M27_v0.4.0_rc1_자동_준비와_HOLD.md",
+      "sha256_utf8_lf": "2986ff4c186f5c19caf70782b8893a506185f7f88116f65c58d3cd6c477fcd84",
+      "lines": 104,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/40_M24_M26_온보드_재개와_USB_UART_진단.md",
+      "sha256_utf8_lf": "30bbb0845f840097c442c349b6d1cedc3467497f077d3403d24d431748a27ebb",
+      "lines": 81,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/41_M24_M26_온보드_protocol_교정과_실기_재검증.md",
+      "sha256_utf8_lf": "a62b9460d9941ab46e9b3c12a79f784bd394d888cdc6530717dd6bbba6f48ff1",
+      "lines": 123,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md",
+      "sha256_utf8_lf": "196f3869f42353635d082bacab53246d8fe3d483e8f97ef77be8be94ce89d41f",
+      "lines": 98,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/43_v0.4.0_시험_준비와_구현_대조.md",
+      "sha256_utf8_lf": "3413e42d399e5ded8ff37be30e2588298341352b2bc2b68a3c087c39a7f59a44",
+      "lines": 538,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/44_M24_Fixture_101_UART_실기_검증.md",
+      "sha256_utf8_lf": "65743085fefd529441d739e2f49a0b6dff994582efc1a973918e108c2dff529f",
+      "lines": 101,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/45_M24_Fixture_102_UART_실기_검증.md",
+      "sha256_utf8_lf": "0cb6b2f2d466f614b217f9507062b83c03384c55ecc292fe45957fc711b27bef",
+      "lines": 94,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/46_M24_Fixture_103_UART_실기_검증.md",
+      "sha256_utf8_lf": "4389deececb47e54eaba09b846eda39d228eb4010a1e2bf6c7251f37198670ae",
+      "lines": 122,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/47_M24_Fixture_201_SPI_실기_검증.md",
+      "sha256_utf8_lf": "b323f68ad5d1cec5845503dbbeb33d14d65865b2c9b36950a9fcc2dc3d473d35",
+      "lines": 124,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/48_M24_Fixture_202_SPI_실기_검증.md",
+      "sha256_utf8_lf": "8525ede4835a0d6066a369be05228431b13424a667fa9e177fc3e085d42c5264",
+      "lines": 96,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/49_M24_Fixture_203_SPI_실기_검증.md",
+      "sha256_utf8_lf": "84acb76122be7303fc7811233fc621b77bdcc1736d58f322f89cb44ab3982196",
+      "lines": 93,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/50_M24_Fixture_301_TWI_실기_검증.md",
+      "sha256_utf8_lf": "9ab5a0303a457ea755e5173f1693e9720a286c737644fa604751ee2ad22e5a1c",
+      "lines": 109,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/51_R00_리팩토링_기준선.md",
+      "sha256_utf8_lf": "df9f7e049ed746791647b4b09df436103d08f399aafefefaf4502cf3a83e6ffd",
+      "lines": 208,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/52_R01_CMake_source_소속_교정.md",
+      "sha256_utf8_lf": "6ffc12514c1aac9b017cb620cd30fd61707252f1896c24636bfc70baa463dae8",
+      "lines": 50,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/53_R02_Serial_완료와_DMA_수명주기.md",
+      "sha256_utf8_lf": "b67e1f639f64a35fe14835c602ea8a193b04a78e484cd4d6756b60f458d8f2b9",
+      "lines": 88,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/54_R03_Analog_Stream_ISR_정지_동기화.md",
+      "sha256_utf8_lf": "7b45e496b7cfd3b3cbd79a3f05df4b73a268fd2d456de56545793dd93d49dfcc",
+      "lines": 70,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/55_R04_File_공유_slot_수명주기.md",
+      "sha256_utf8_lf": "683b6596d4dc051412d03e1b6838b01a37813ad328ed105485c4b0bd11b61378",
+      "lines": 50,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/56_R05_Core_소스와_패키지_identity.md",
+      "sha256_utf8_lf": "2b3b8aa63173ca468022e7a10a99110813beacd1858a2d194ec16636cdd75e28",
+      "lines": 56,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/57_R06_builder_모듈과_설치_경로.md",
+      "sha256_utf8_lf": "8fc13f1a8f7bc5afbbe8a405f52d32c48b4a2aa3072f4870d3b2c700edda828c",
+      "lines": 137,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/58_R07_EventFabric_책임_분할.md",
+      "sha256_utf8_lf": "68c7d4ea7cc60bcc51d1e7af3eb97f86f926e0a4abcce19323a4f5db60a82457",
+      "lines": 71,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/59_R08_자원과_경로_수명주기.md",
+      "sha256_utf8_lf": "b8eb9b6b59b25eb6fdd2460f9fb951537516ef21bacc19abad780f74b520f607",
+      "lines": 88,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/60_R09_Arduino_SPI_경계.md",
+      "sha256_utf8_lf": "a44c8c7b580deeeae6ed05b5276acfd2733b6a9f491cf538736b8806d51ecf11",
+      "lines": 63,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/61_R10_Serial_Fabric_동시_호출.md",
+      "sha256_utf8_lf": "836fa064cfb454a3aa076d73a474b94a165a34aa8dbd05c4c9032596ae49eb5c",
+      "lines": 114,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/62_R11_Analog_Stream_peripheral_분리.md",
+      "sha256_utf8_lf": "ec7956a42542768385e10a22cc04bc8db06c64084b9cf9b1a59720f35985820c",
+      "lines": 74,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/63_R12_BLE_Storage_수명주기.md",
+      "sha256_utf8_lf": "c154f3d59bb43f425c53906f0c650bf70798ee0502fd89ce2ccac174d9c3fb41",
+      "lines": 230,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/64_R13_도구_정책_build_구조.md",
+      "sha256_utf8_lf": "ce1173c99299b1668fe2354c36407e5e94f4b187f0aaf03f8439039693e580c7",
+      "lines": 286,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/65_R13_후속_USB_무배선_실기와_정리.md",
+      "sha256_utf8_lf": "891a9ad74a6863aa8bd9d8c41feaea59ebafa38c206425c93ed42f9469b3236e",
+      "lines": 129,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/66_T09_UART_유휴_bias와_BLE_회귀.md",
+      "sha256_utf8_lf": "b0fa781b744b7e8386baab9044639fac293456e08b0cb63b078404a7ce3bf485",
+      "lines": 152,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/67_T11_Fixture_101_current_source_UART_회귀.md",
+      "sha256_utf8_lf": "213fe28f7aa892577d3dd51d8506daf393a8c71416edb02c8fc9def6d984520f",
+      "lines": 120,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/68_T11_Fixture_102_current_source_UART_회귀.md",
+      "sha256_utf8_lf": "361f053f491d9ca0fac508a6e6b4b1efca3357d72d5b9fcd83aa73d7941c8017",
+      "lines": 114,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/69_T11_Fixture_103_current_source_UART_회귀.md",
+      "sha256_utf8_lf": "8a682e314e5d2b483ce262f7f2bece7328c04e850a23fd2f358851b60e940670",
+      "lines": 140,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/70_T11_Fixture_201_current_source_SPI_회귀.md",
+      "sha256_utf8_lf": "ffa47d10125dbee646dc7e8c3d40169e82a96da7cae9ed40c470a919b1277d36",
+      "lines": 126,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/71_T11_Fixture_202_current_source_SPI_회귀.md",
+      "sha256_utf8_lf": "007b2c95fcbecde7cfbc4cefb2e09c4cf62e29e110064d83b800a5785188abac",
+      "lines": 134,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/72_T11_Fixture_203_current_source_SPI_회귀.md",
+      "sha256_utf8_lf": "463e4c66211ec48ce9fbf2a495bf0c800c48fa3e52ddc1ffba26300059c461a3",
+      "lines": 143,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/73_T11_Fixture_301_current_source_TWI_회귀.md",
+      "sha256_utf8_lf": "7d63d34eb0454571fcb6c13e7645160570533db9183e22b0392726c708e7c6d7",
+      "lines": 128,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/74_T12_Fixture_401_current_source_PWM_ADC_검증.md",
+      "sha256_utf8_lf": "1f103c59ff1ad58411540992a98ef1ed038cd402f9cc66e05b1e38207db1e6d2",
+      "lines": 110,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/75_T12_Fixture_402_current_source_PWM_ADC_검증.md",
+      "sha256_utf8_lf": "0d1164eef4153cfa835a14dea6dba895f0948845392732640383423084cb996f",
+      "lines": 101,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/76_T12_Fixture_403_current_source_PWM_ADC_검증.md",
+      "sha256_utf8_lf": "1bd77b5eed1b369f2fbd9626cd1a2294d67e698d539a14d11e4af7b1ee700811",
+      "lines": 101,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/77_T12_Fixture_404_current_source_PWM_ADC_검증.md",
+      "sha256_utf8_lf": "f56f7a7af0eaea09843d975b9527a028406394efcfdfbbf9d59c75347154c685",
+      "lines": 101,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/78_T12_Fixture_405_current_source_공유_AIN4_검증.md",
+      "sha256_utf8_lf": "d3515b3018cb30c5f76dabde79f393bbdb318c00b7bab47e6b633fb991912b20",
+      "lines": 116,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/79_T12_Fixture_406_current_source_공유_AIN5_검증.md",
+      "sha256_utf8_lf": "925695e9af06402e439933fb6aa3610b513376275d1d2cb45bee48a99c392993",
+      "lines": 129,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/80_T12_Fixture_407_준비와_Host_실행_차단.md",
+      "sha256_utf8_lf": "4bcea474dac4180914fa3e633d84c7c3961dbfbe3b3491070055ddba37458f55",
+      "lines": 116,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/81_T12_Fixture_407_Host_재개와_검증.md",
+      "sha256_utf8_lf": "80e369fba3709372b46a0223bc54523a2002570a5fc7ec85fffd638609af2c5c",
+      "lines": 107,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/82_T12_Fixture_407_current_source_공유_AIN6_검증.md",
+      "sha256_utf8_lf": "c0522fa2bcac1289fb3893ee901c9d91901d8f12b4d5e669d5410eb0b26db40f",
+      "lines": 105,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/83_T12_Fixture_408_current_source_PWM_ADC_검증.md",
+      "sha256_utf8_lf": "7e5eb98738489fabe2629325814c4ec919e0b821264785bdc66ecb4f04f1874e",
+      "lines": 111,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/84_T12_Fixture_420_current_source_QDEC_검증.md",
+      "sha256_utf8_lf": "01735a58ec64c75b50b9184ad6c052818ba193453ebd5ab83014cdc947350993",
+      "lines": 98,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/85_T12_Fixture_420_current_source_QDEC_재검증.md",
+      "sha256_utf8_lf": "29f96c9588e253434d78c72e2e072e974d55aa541b30467db0a10d8235c4baae",
+      "lines": 89,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/86_T12_Fixture_430_current_source_I2S_검증.md",
+      "sha256_utf8_lf": "c00b5a745591d25919b05d3e570928e250eeada305b123e0979d2b0f1f04b0fd",
+      "lines": 68,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/87_T12_Fixture_430_current_source_I2S_재검증.md",
+      "sha256_utf8_lf": "ed45585fc4043c70e4f6c23ea393baae2a6da4c6fe67cafa11f029ef0dc57281",
+      "lines": 88,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/88_T12_Fixture_440_current_source_PDM_검증.md",
+      "sha256_utf8_lf": "fe27fc67b777a6900cb9cc5ddf438f8c6fad01d718a33d03ac1374b2d77d76a7",
+      "lines": 87,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/89_T12_Fixture_440_clock_gate_분리_진단.md",
+      "sha256_utf8_lf": "5172bad3c148c2be32261e7c512afdad833524fcb0f846f3ab3b9a94c0f58c31",
+      "lines": 74,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/90_T12_Fixture_440_재결선과_PDM_위상_진단.md",
+      "sha256_utf8_lf": "5946bfcc4474662597cd91660597f7088078490bf522db2091716bdab2077e53",
+      "lines": 54,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/91_T12_Fixture_440_PDM_밀도와_연속_DMA_검증.md",
+      "sha256_utf8_lf": "e433618a585a670644b57b60cf74ed1552ea1deee4780dd283312f05ca3c5fe9",
+      "lines": 54,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/92_T12_Fixture_440_PDM_연속_전체_검증.md",
+      "sha256_utf8_lf": "ea4218b026f2563a1c1c5918c12f8dd596666e5ace3fa629d6fe432720b24182",
+      "lines": 43,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/93_Host_재검증과_T12_이후_남은_작업.md",
+      "sha256_utf8_lf": "16ec33e616b60495ebbe03eaf688784589d02fbafafcf14a066e495febac58b4",
+      "lines": 64,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/94_T14_PWM_지연_시작_취소와_무점퍼_검증.md",
+      "sha256_utf8_lf": "6c1b82cfeb08c9b7f60258307bf13a7b3b586ef8b26917a0e5729f4994473e82",
+      "lines": 185,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/95_T12_내부_ADC_TIMER_이벤트_무점퍼_검증.md",
+      "sha256_utf8_lf": "c0f3d4d86027964b8edda6e5759fdc90ce1f56f85038fded40451bab94b11aea",
+      "lines": 87,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/96_새_PC_인수와_T12_PWM_peer_capture_준비.md",
+      "sha256_utf8_lf": "e45564abd51a8f1cb89641551115b96a3a0ee7932e1834cfd0b77eaa67990bb7",
+      "lines": 127,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/97_T12_PWM_peer_capture_첫_240조건_검증.md",
+      "sha256_utf8_lf": "b55ad59c8ca5cde1672513d53d0102734dcc04c01f6df7d0f8e19bd0ae3582eb",
+      "lines": 105,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/98_T13_단독_안정성_3분_기준_조정.md",
+      "sha256_utf8_lf": "a73f5fc699cdda5e8cd7e2b3a95b1c56fd9af3e50321b247b473c44887c917b9",
+      "lines": 44,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/99_공통_결선_검사와_승인_전_자동_진행_계획.md",
+      "sha256_utf8_lf": "76d466c493e0ae5d090d9923773065c275c0145f9d26dff27fa782f4d614f4dd",
+      "lines": 95,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/README.md",
+      "sha256_utf8_lf": "ee0bba1fd5e75850a6ae44e14fd02196c680f4c3d3dcb97bb40780e8facd2a87",
+      "lines": 453,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/evidence/m29-w07-08cc52d6-signed-eatt/diagnostic.md",
+      "sha256_utf8_lf": "48c22dc608269f165b089a6d4bf8acc103b314bbac0b9bcfc8e8c723e9a1a1fe",
+      "lines": 19,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/evidence/m33-w03-exact-17182660/README.md",
+      "sha256_utf8_lf": "f8438654f321ce98e6ed5b078ccb59936f18734dfa12eb83c74bb6e58e2ad327",
+      "lines": 59,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/04_검증 기록/evidence/m33-w04-exact-e3a663d6/README.md",
+      "sha256_utf8_lf": "388024e80a35f86d4258ee2650859fe339763f53bfdb571e8173e26e1c6481e9",
+      "lines": 39,
+      "category": "historical_evidence"
+    },
+    {
+      "path": "00_Docs/05_릴리스/README.md",
+      "sha256_utf8_lf": "563f6b8455722e81038862eb0a56cd4bca0181c2e85796680c77f5761fae40a6",
+      "lines": 75,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "5020b417fa35534ff4e2f34e4b4b05002c65b602146e09e1a7a9c36ea182cd89",
+      "lines": 81,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/MIGRATION.md",
+      "sha256_utf8_lf": "c27fced7dada29a04aaad614c881fb722524e96962703dcab40f975d8e28f249",
+      "lines": 25,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/README.md",
+      "sha256_utf8_lf": "200df61ef8b314f6f9d82a2f3f679945180baf50958303602f8c6729963d72e0",
+      "lines": 27,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "b3ff0db2ba15161825884e20f6e9a88bb501220306162778088cc7cc6c4ac60b",
+      "lines": 89,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "60f2677ac67c566e34ad530b791e12aa295eb23272ebbefa0efe1542eaf4df28",
+      "lines": 105,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.1/WITHDRAWAL.md",
+      "sha256_utf8_lf": "e9afe53b5c1ee02f5be2bc84fd5f56f2b913cda8b54d5d24efc8bec17e057eb0",
+      "lines": 76,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "07ee924ee20ea38a1c2f408f937f3d5afeadb521c2d44c32ec666e8801675f0b",
+      "lines": 83,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/MIGRATION.md",
+      "sha256_utf8_lf": "075b24b8d25d3477f0ec08d3a95d99affe5b306e01638cb23d3419b90109f0a0",
+      "lines": 25,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/README.md",
+      "sha256_utf8_lf": "ded551e7f128000bd8c83265914bd7f19dac0d9d5b3a2ae94db09634552a747d",
+      "lines": 26,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "3022094ac7b2426e0beea8e3b7bbc8b760fcead9db377d724b576c223ad6f851",
+      "lines": 98,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0-rc.2/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "bc15ab70769512ebe87101361ebd43f4ac94176ee20d6c8317c51ccea07436e3",
+      "lines": 95,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "0952f6881c2d6db6fac51ef00e2024f453ec2589004b455a532ab340912ce830",
+      "lines": 59,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/MIGRATION.md",
+      "sha256_utf8_lf": "835e7071f46fb4372c051676e67bd4a87dccc0a0e6734e007d10c80165c5e5a3",
+      "lines": 25,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/README.md",
+      "sha256_utf8_lf": "e125fcf20df8449fb53e36c24ba95fac6846521702b7e9519dd3fd7f7d571854",
+      "lines": 26,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "ad9e8cde8d42003bc4eea4bd238c11f907c45aecb8cfc8bcb45eb5b8895173c4",
+      "lines": 72,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.1.0/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "bd77dedf89b641b8e6d09da36a8a7d6e6e3b262160c7231c2f914c48f26bd17a",
+      "lines": 52,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "5d2781c7f7e224416e374e29358cb67b432264a47f5cbda07baa16b6f3152d52",
+      "lines": 138,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/MIGRATION.md",
+      "sha256_utf8_lf": "e34d37fe85d6460e143aeeffcc2672af47443b2bb47f82d7486a3ea242ef0a3c",
+      "lines": 25,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/README.md",
+      "sha256_utf8_lf": "9bbd9e3d4f5584caa11fb9cbd9a4857b98fa59f9bb1d5403b0091562675061e3",
+      "lines": 142,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "6f80660e77a1734eab6bdb996d1f770c53799ebf19847e850100a6bf44980467",
+      "lines": 159,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.2.0/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "c0f8cc38be698bf9c556ba37c71cbb1ae3d957b4d4a10a02a2daa463791a5ed4",
+      "lines": 183,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/CLEANROOM_ABORT.md",
+      "sha256_utf8_lf": "98740d6091213448d5db6c87baf06353cc8cdacf496c900899e2bc9707a1e45c",
+      "lines": 134,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "957843c58884c2b90c44b456b9f45a320b13ede93441bd8ef22c03fb60dc4344",
+      "lines": 67,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/MIGRATION.md",
+      "sha256_utf8_lf": "10b5bcb316fc62baf916efdfa9e222d378ef7f40b0935db171e3c1584766f2c9",
+      "lines": 26,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/README.md",
+      "sha256_utf8_lf": "629a8e24876afd094157a70d798052da4e5a6fef2b2d74d65f9cdd49ff8eb6c9",
+      "lines": 63,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "a5c8b8e99c6138e94d277e4ea35db29d74bbc1f58d751f46673172e3178acb4b",
+      "lines": 80,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/TESTING.md",
+      "sha256_utf8_lf": "f6d99ce56a136bd65840767df818c37d6843a79b5af6e6d1c3560974b599e128",
+      "lines": 137,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.1/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "e4740a5b3007414c8d25e37e4eb4f1b00ee70fe2ed244872aa79458d4b7fd289",
+      "lines": 97,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "b25ee1450e4454393c593cf3559f9cfd44cf5a99e249e1486b370f345f4e5185",
+      "lines": 84,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/MIGRATION.md",
+      "sha256_utf8_lf": "1bf545e0276d4c009c2a2702f59c3d300448b5d36a759df682ff754986504c47",
+      "lines": 25,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/README.md",
+      "sha256_utf8_lf": "ae38f97bcb99d65f63d1fc4c3f1beb7dc63ced263386d4f48378e915fe55ecfa",
+      "lines": 90,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "c55b62dca4ea734f34723d3fadbf956745782890c8c47a2ca15e1e7ee595f088",
+      "lines": 95,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/TESTING.md",
+      "sha256_utf8_lf": "60389e685ba8fe913f2026cee2e3e81bac78bd435c1d9864edc4214cac713b36",
+      "lines": 151,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.2/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "f1493ed30a33021fd241c7959baf39f0c2e2b73bf32bc38384ef3ac831fcc2bd",
+      "lines": 112,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "e598429f92affd6e2abf89338d62d6a3a34c575524417556ea20cdfb9362c6d0",
+      "lines": 80,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/MIGRATION.md",
+      "sha256_utf8_lf": "e0801674b3e96fc784bdb60a0e1be63a7c4a5ba7c2f119331823c21d7163e75c",
+      "lines": 25,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/README.md",
+      "sha256_utf8_lf": "b2399c9044ac5321f38ae9679e6bbb770d3055a0e3c1546fc35ce02c7ccb3ed9",
+      "lines": 90,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "806dd41633209450ab5c3d04112d9e9c796bee796815c818d0e5c8d669fd2e4f",
+      "lines": 101,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/TESTING.md",
+      "sha256_utf8_lf": "413ae17bba8ad7c1405563cb440e3e26d22cf37c005de540d78448b5dc2a2990",
+      "lines": 143,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0-rc.3/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "0ad41b842576b896e13516771766d316dd0776b0f27121ba5ab1b0967dbed6e3",
+      "lines": 127,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "cb50fc159df3897a7108f9324a4faec8c1357c31ef55e0035c1b04c4c8d8dc63",
+      "lines": 66,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/MIGRATION.md",
+      "sha256_utf8_lf": "022d75d3240d2df736b4cbc2958be3e91ce32c63ebe36c932d0dcd63b7f20180",
+      "lines": 51,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/README.md",
+      "sha256_utf8_lf": "396413fab9d8ab6b1a90baa7dd59940753da720a7f9bd735832c399d0ad12bb4",
+      "lines": 104,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "f61e25fc81bb637aef784a6c3a428c09011f8480e35dbeb71909777963c7e211",
+      "lines": 68,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/TESTING.md",
+      "sha256_utf8_lf": "944193c3fc6a28174e52735faf9d14bfe55100f9c68d1a98c0679707361e0d70",
+      "lines": 58,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.3.0/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "c2046a2f04f77be42d9de205593618ca79cd92b9082ccab9177fd7a778dc7ec2",
+      "lines": 103,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "ff014040fea765703f646cca2af857298b1f207170ce15b17681cc35f4b32c75",
+      "lines": 31,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/MIGRATION.md",
+      "sha256_utf8_lf": "92a447a2daadba99e38bcbcc664254c0d0efbe1a3427d7bbee38ede3b98c8353",
+      "lines": 55,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/README.md",
+      "sha256_utf8_lf": "3be3e10ada82cdb7ad1b20dc94dde582770189858d3c3978f54028dfb037bab6",
+      "lines": 84,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "f4f56b16f4cdbb2e64b6de9feee0ca23b425ff7f2b6efdc0de37c2a6d1c5c4c7",
+      "lines": 40,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/TESTING.md",
+      "sha256_utf8_lf": "0b614acedd0aedeb4cda1261bc4d4679d9c03c49be581051a715067e8bdabed2",
+      "lines": 44,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0-rc.1/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "237dac3b3a2e65ecf55584fadba6afda46a97f42479d784ea873f5179fa9ee71",
+      "lines": 47,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "0a1399ffe64fa84c6aae76614ed07f948a25e70b165f9ec1cc975e55e54d0b78",
+      "lines": 35,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/MIGRATION.md",
+      "sha256_utf8_lf": "3d40724ea6fec8c9a2374aafbd038d2cc489921b8b7a72eb31d87be8b7010d10",
+      "lines": 47,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/README.md",
+      "sha256_utf8_lf": "525a5572ab6eecd7aeb6aea230966a329c51ffde6dffdd66280d64d7fa2cee37",
+      "lines": 71,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "8bf5397ca75279ebcfd9c6a2c03d701480f98c6dcc20f397e167308283046c20",
+      "lines": 42,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/TESTING.md",
+      "sha256_utf8_lf": "dc3e47a8445e7937ea46f041bdbdf779e5254b7aff2ccbad7af555b002dc9c8f",
+      "lines": 53,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.0/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "708d8e6e8874a02c125fdd81a28fc817faefea027932797dd6d96a15361ad3d1",
+      "lines": 47,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "4c379ac1e82c07002f31151eb2a4e496c4d3a3d9ef77607ca57377fc1705bc9c",
+      "lines": 23,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/MIGRATION.md",
+      "sha256_utf8_lf": "3a7c0eaa8431c029a7b308154bb15cc16a2317e1414ce3829b06ebfd66a893bf",
+      "lines": 24,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/README.md",
+      "sha256_utf8_lf": "c68a109f1a85782fe49a021747ce036b2aada1edec8ac2511d88436bfba0c666",
+      "lines": 57,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "dda47a16d3013a2b377e48714453786c67c39c41e124bbe20c269f1ec9d264d5",
+      "lines": 23,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/TESTING.md",
+      "sha256_utf8_lf": "a4af098916845b129fd0aa0815f58bfd4311f6952b64012031808c48b85c4640",
+      "lines": 22,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.4.1/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "9767e988f13528b15485d63a67726221fad2da9fa26798ef9b0d8c83d7f8ff77",
+      "lines": 35,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.1/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "869b7cb4a6669d0a4b473d7d1235c1a1a40b613ae0520b99cdef466bf8f288f6",
+      "lines": 29,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.1/MIGRATION.md",
+      "sha256_utf8_lf": "50f8830c4e154f87941066318bf00c442c7d9d6cc69c04b7992e5927a4f5e04e",
+      "lines": 42,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.1/README.md",
+      "sha256_utf8_lf": "b6a19799a75d5e9e92bf61e3315d293dcebd23e3b7adf6ba80284daabff5514c",
+      "lines": 70,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.1/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "ff31e10a769383d3edcc5100e15f130e481dcdd06407586b3f26c1e5e32149cb",
+      "lines": 45,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.1/TESTING.md",
+      "sha256_utf8_lf": "4dbc9f799975e2d68b2cd80781eed0096b82bc56056a1add210d6a0fd33dfca7",
+      "lines": 41,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.1/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "fc18a9c1a88032e32595bd20274164a18eb9439b123a2cf4457fa095a1322bcf",
+      "lines": 52,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.2/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "234dfe2cf1411c51aabd412bab1d43c4c7e5770246512615186de919b29783a2",
+      "lines": 42,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.2/MIGRATION.md",
+      "sha256_utf8_lf": "48d0fec39a184867b992fc613d3f180be76c57d773d95ba1f136d690c09faf92",
+      "lines": 35,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.2/README.md",
+      "sha256_utf8_lf": "a91b31bfdca2a76fba601d9317415b4bc1fe367a9b9178c7276238280ba5d3ef",
+      "lines": 69,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.2/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "051c1d4f725486fff47f74c44ab0da7b3ec119e1bc6c8c60f26565cb9ae8533e",
+      "lines": 32,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.2/TESTING.md",
+      "sha256_utf8_lf": "b2f1b271a51779fc3cb2553b1e05c04e6f0aeae5c7e69ee8e8099652e9d1c138",
+      "lines": 63,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0-rc.2/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "c50ff1f1e685689f677cbd3dee0a23bc5946130ddc29aff76960bd1979d0406a",
+      "lines": 37,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0/KNOWN_ISSUES.md",
+      "sha256_utf8_lf": "bc8628b8f155e6cb581d41c2fa3592d959d1af6ba236f2daa67805041e10cc85",
+      "lines": 21,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0/MIGRATION.md",
+      "sha256_utf8_lf": "10064f0b944fb34987f8f8c99ec3cf097dc09277ffa6b86220352ffde788021e",
+      "lines": 24,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0/README.md",
+      "sha256_utf8_lf": "69f4521571a05d17fb67936552ad4064a63551116b23d767700d0bb63d0df5e8",
+      "lines": 57,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0/RELEASE_NOTES.md",
+      "sha256_utf8_lf": "b3c15dcc8cc3edb313fc0e6a790cb463b37192cc14f9092bfdb18b5b87e814a7",
+      "lines": 32,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0/TESTING.md",
+      "sha256_utf8_lf": "34c44cfecd07f9d420d01e2eb9348e2f33578436e21ed22f69c96c8e610b0b0a",
+      "lines": 38,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/05_릴리스/v0.5.0/TROUBLESHOOTING.md",
+      "sha256_utf8_lf": "8b7047b377cd97c2d566ec0fb818c4673c590f4d55c5ec40c1464b8346879eda",
+      "lines": 35,
+      "category": "version_bound_release"
+    },
+    {
+      "path": "00_Docs/HANDOFF.md",
+      "sha256_utf8_lf": "51c16cb2513f88509d149ee01a53a0d30290587495817030abd4e7101bca816e",
+      "lines": 55,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/M33_HANDOFF.md",
+      "sha256_utf8_lf": "a4131bbfc8a4dc6fc45e449119698c30c67abea8ff87d3b1f3a6309609d9d90e",
+      "lines": 180,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/README.md",
+      "sha256_utf8_lf": "4f4d755a78fb0d9968272596856feaa34597a33562ad02a4cc11a2b7c5f664c7",
+      "lines": 169,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/TODO_M31.md",
+      "sha256_utf8_lf": "50a62a30c2aea1e358901edf338628217f2af72b459316295a328f790429de3b",
+      "lines": 356,
+      "category": "frozen_completed_todo"
+    },
+    {
+      "path": "00_Docs/TODO_M32.md",
+      "sha256_utf8_lf": "601d82ba403d653ad92f3d53d7fc3b22d963bb8037e41985fbe45d1c02aa236c",
+      "lines": 443,
+      "category": "frozen_completed_todo"
+    },
+    {
+      "path": "00_Docs/TODO_M33.md",
+      "sha256_utf8_lf": "4bbeabc0f5815917bf2898532a1c8d6c4126bd5ceae3ed76a7eaf216832e2b6d",
+      "lines": 352,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/TODO_v0.4.0.md",
+      "sha256_utf8_lf": "f53804aa77329a123f253f374a3041142bd416779469fc6ad3970fa4e13c87e4",
+      "lines": 351,
+      "category": "frozen_completed_todo"
+    },
+    {
+      "path": "00_Docs/TODO_v0.4.1.md",
+      "sha256_utf8_lf": "c6da227635e4632d08205547b8a6399de4fc8a49eb6785a511e03c08b9fcfb08",
+      "lines": 39,
+      "category": "frozen_completed_todo"
+    },
+    {
+      "path": "00_Docs/TODO_v0.5.0-RC2.md",
+      "sha256_utf8_lf": "3adfca431bc9a5ef576cd4e2fa729a045a7b218dd06f3684a9a4808e33bd7b6d",
+      "lines": 283,
+      "category": "frozen_completed_todo"
+    },
+    {
+      "path": "00_Docs/TODO_v0.5.0.md",
+      "sha256_utf8_lf": "f02fbaa2f2dc096c717f4686bf7d7dfd261af65abc76fd1391276a213d0cc593",
+      "lines": 294,
+      "category": "frozen_completed_todo"
+    },
+    {
+      "path": "00_Docs/TODO_v0.6.0.md",
+      "sha256_utf8_lf": "507884559c39c6cc17045fa465c91c8cd4a536b6ad2be02b735a874343e22737",
+      "lines": 112,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "00_Docs/TODO_v0.7.0.md",
+      "sha256_utf8_lf": "dd2d99a8313f7093b656a45f41079f338bc4fdcd5076728c9d1a013217aedc45",
+      "lines": 135,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256_utf8_lf": "9cdb1d0f9d76a36a134d5f4e6272fa81e404be17b1e56650ff7825c90b2e3881",
+      "lines": 179,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256_utf8_lf": "f7a4e32949a960a8ccecab51c9e90e41ebe73abb1c8208e41e35fee9827ddd6e",
+      "lines": 137,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "README.md",
+      "sha256_utf8_lf": "531656a1e8f1cd18ccc852a36e8de26827c489778eb4d5ae00ee21fe4726ad4b",
+      "lines": 188,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "coverage/ncs-v3.4.0/generated/summary.md",
+      "sha256_utf8_lf": "d39249858e56c5a2a4215e651c62810d1b36125d597cca2fdc4b0580c831a637",
+      "lines": 34,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/EXAMPLES.md",
+      "sha256_utf8_lf": "328ffcb89de7b767f4499fc21fefb5fa49caa3a6524f81fe125cc49adf3f8298",
+      "lines": 402,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Audio/examples/README.md",
+      "sha256_utf8_lf": "09d996b80ed8d6f244438baf8d6e54f138e520b64e55729c512c61fd69d79bd0",
+      "lines": 327,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/README.md",
+      "sha256_utf8_lf": "5d060128b6831ccff9d8e970224390413516eea49e4a4dd1f8abd4dcfcbadccc",
+      "lines": 27,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/README.md",
+      "sha256_utf8_lf": "45d4ef65d7b9e24023dfff615a8ee8a5ce833e516d8430f04da222161f4c9e76",
+      "lines": 24,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Companion/README.md",
+      "sha256_utf8_lf": "619523ed1efe1a58539c3fb3fc27f8af576c538d0bbeac97f7097423e5a221ed",
+      "lines": 130,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_DFU/examples/README.md",
+      "sha256_utf8_lf": "3cc35607192b37fc0e49ba66bb07a0048f0fd10ebe244441a1284973b79a6423",
+      "lines": 27,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/README.md",
+      "sha256_utf8_lf": "998b76f03113169177d8fd46dc67ee5e6816df12c48d17a5a7e2ecbe1e73aebc",
+      "lines": 32,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_DirectionFinding/examples/README.md",
+      "sha256_utf8_lf": "3591d579da76e87bc6c942dc52b834af38ceb5b2fe987abaaf8cef3aa2999402",
+      "lines": 30,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_ISO/examples/README.md",
+      "sha256_utf8_lf": "f8efde2b046ae2c9f6a1ac8a02282df045bdcb082ee8d1eba3d7d96dad0f4e41",
+      "lines": 67,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Mesh_Update/extras/외부_flash_적용_안내.md",
+      "sha256_utf8_lf": "40ee5cb56c7b88a027f2467777c8be56795d4dc16a9a565e20d2d07e699e9504",
+      "lines": 21,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_BLE_Profiles/README.md",
+      "sha256_utf8_lf": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+      "lines": 144,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/AdcContinuousDma/README.md",
+      "sha256_utf8_lf": "148b56e6545e52f959c0551b2e090071f12132add3268967997eee0340a15e4c",
+      "lines": 48,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/PwmSequencePlayback/README.md",
+      "sha256_utf8_lf": "3638761d5bc5dd068d70843d19be2bff99cbd9410d8f51dcb9b121395c7583aa",
+      "lines": 45,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/ResourceConflictDemo/README.md",
+      "sha256_utf8_lf": "15c00481b7a092c750e55ca95b6a6119a246aeee258408ed28013bd9b4db72f1",
+      "lines": 45,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/SpiAsyncLoopback/README.md",
+      "sha256_utf8_lf": "a86a85da7771a99a4c1e84564ef04747d01288849667ae1b26e3601f74f99f0b",
+      "lines": 45,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/TwisTargetDoubleBuffer/README.md",
+      "sha256_utf8_lf": "9a1a33d889cbc57d7bb918e823700786ad627fe0dd75153ff688f55b11d1f33d",
+      "lines": 45,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "libraries/NUCODE_Peripheral_Fabric/examples/UarteAsyncEcho/README.md",
+      "sha256_utf8_lf": "4d976421fb8984687f9cc6c745899bd7a8cd27a174765a174aceb12c44b5aab2",
+      "lines": 45,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "packaging/boards-manager/README.md",
+      "sha256_utf8_lf": "1bbbd5aa0ba47459c4fce2db29de6d442d2b7f940e58b0e011c1fe9b9e44e86e",
+      "lines": 144,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "templates/bluetooth/diagnostics/README.md",
+      "sha256_utf8_lf": "14660c49e1a549c757c775b1e8e3ce99b325edc90ecc8c34574e565e8a842f49",
+      "lines": 262,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/COMMON_WIRING.md",
+      "sha256_utf8_lf": "2f9eb40510a6fd24a175a10dce08d6e43de13d6bcf4583994144509c019c1767",
+      "lines": 125,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/README.md",
+      "sha256_utf8_lf": "b6dbaa61d1d5e5b6173ed5057d5ceef7f393254cd3f061da29394ed8444df61a",
+      "lines": 1198,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_PLAN.md",
+      "sha256_utf8_lf": "8c2cce259f29f7a5a7119fed5989c59fad01831787857bfc6fa688ffbf099385",
+      "lines": 233,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_POWER.md",
+      "sha256_utf8_lf": "ba95442d3f179e5ae7452d1ddd291a3b5300ebb8a0ed5bba0e1516eb5238d76c",
+      "lines": 139,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/T13_RECOVERY.md",
+      "sha256_utf8_lf": "c48507e088161e0a5796dbaf8297c1efa45dfe546181eb959e2406176a3c2ac0",
+      "lines": 432,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/BapNativeLc3/README.md",
+      "sha256_utf8_lf": "d7ddf5acaa27ea9ef3ca4f91212285f13751dd249aba64174734c792505ece75",
+      "lines": 13,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/BapNegativeClient/README.md",
+      "sha256_utf8_lf": "53296c2cf689314ea28c09ece50051b045517951fbfff9dcae03f87b925644d0",
+      "lines": 23,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/NordicRasComparison/README.md",
+      "sha256_utf8_lf": "e52eb43a71107f0515546d707743961231b4db09ab7581d18c4dc115ae165fa7",
+      "lines": 25,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/P2CocCreditPeer/README.md",
+      "sha256_utf8_lf": "63fa0f531383c80905b036dcfe9b2677abd558d3c180799c614c0ebde31a8ab7",
+      "lines": 19,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/hil/nu54dk/fixtures/P2NativeAudioComparison/README.md",
+      "sha256_utf8_lf": "5cd0add948f321e80ae8eb97dd99ac5d68f4ecf807849894fda77cad5781c1c2",
+      "lines": 16,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/zephyr/m25_nojumper_hil/README.md",
+      "sha256_utf8_lf": "c9fdb93dcbb10e935b828f563c9f76e6f9bb8cbe8d829a708e95a9117bd86402",
+      "lines": 68,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/zephyr/m31_df_connected_receiver/README.md",
+      "sha256_utf8_lf": "82d3c263f0d4e63a8dd716208f32abb96d0752a88b1e388277cf4f6a8abc8a97",
+      "lines": 42,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/zephyr/m31_df_receiver/README.md",
+      "sha256_utf8_lf": "4f3cec90f4694212040e056d10c8203b02579293d036784c78e2dcf604495ad8",
+      "lines": 25,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/zephyr/m33_ecosystem_hil/README.md",
+      "sha256_utf8_lf": "6f49aa9943b0a194f1fab365e95614b7922a51354b046cc55e0f4068ec0df8c7",
+      "lines": 63,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tests/zephyr/m33_profile_hil/README.md",
+      "sha256_utf8_lf": "0c30f3854996bf95b50366db8e6905640ea3f79efd5e812aa9d0ba2ba416947b",
+      "lines": 202,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "third_party/ArduinoCore-API/README.md",
+      "sha256_utf8_lf": "2d9812d0e1ee222c73ba39ff959bb5e933b60c7b7b5b85b0ccc5d1ada97fd7a5",
+      "lines": 95,
+      "category": "external_read_only"
+    },
+    {
+      "path": "third_party/THIRD_PARTY_NOTICES.md",
+      "sha256_utf8_lf": "b9360db1689b4dec26b2ae5bfe73e64b0f0a397cbc7f1a2b8ba05d2431a2d757",
+      "lines": 29,
+      "category": "external_read_only"
+    },
+    {
+      "path": "tools/ci/m33_w06_artifacts.md",
+      "sha256_utf8_lf": "b3f0de0ba11f01e387d9a0ff0785393c7ea074be40d493c2dd3092387844095f",
+      "lines": 578,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/format/README.md",
+      "sha256_utf8_lf": "7a1ce66ae65bae11bbf4094e5952fd5642a65fdd039da5c1952cdbb934574bf6",
+      "lines": 30,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/nu54-prerequisites/README.md",
+      "sha256_utf8_lf": "520729d26bf71ff175eb559c780cbd18f4305f3e11030e0ef1ce4d3cb92c233a",
+      "lines": 54,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/peripheral/README.md",
+      "sha256_utf8_lf": "e7fb2eeb884f5063d5f66793f119ceb594987f4b6bd192469af22a8615b79f8b",
+      "lines": 62,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/release/M11_README.md",
+      "sha256_utf8_lf": "55b68d301fa0c3bdf85a66c81fecde5a1f3c5891d5672c4c6380ee3d97101764",
+      "lines": 260,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/release/M18_README.md",
+      "sha256_utf8_lf": "ea2f1a74467e8f8199f578e68bef55500f3f85d62ee01a4c8e7383a07eb6d6cc",
+      "lines": 116,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/release/M22_README.md",
+      "sha256_utf8_lf": "df5b6c4f3c970e5d7d5a4529de561c96d866faecbfed53fff47b66a95c0cd113",
+      "lines": 70,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/release/M27_README.md",
+      "sha256_utf8_lf": "29ad75580690c28c7ad1f26d284df25f240b1a2f6cfcb7e1e702e3d9d94566fb",
+      "lines": 147,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/release/README.md",
+      "sha256_utf8_lf": "fd24a9570b6c645009db200ffd2f21ac24262ddbcc3579aacd993bb835920014",
+      "lines": 51,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/remote-windows/README.md",
+      "sha256_utf8_lf": "d6620858ca0ef57d24bcdb0ba40bf602cb684feb19a98b7b87e928859d425a3e",
+      "lines": 86,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "tools/remote-windows/m10/README.md",
+      "sha256_utf8_lf": "814a11a90433dedc2b9d94150a8635c6359ca5e832e6615cd094146d4c01b2e0",
+      "lines": 114,
+      "category": "current_or_reference"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/01_BOARD_DEVELOPMENT.md",
+      "sha256_utf8_lf": "28b40d816b63f9ca8f4e0d25aecf3cf6d7dfc946dacf5510f538c718278d9457",
+      "lines": 727,
+      "category": "external_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/02_NRF54L15DK_DELTA.md",
+      "sha256_utf8_lf": "ca6b0c79ded316194fd290be184f07b4598c3e352d89d6a7e828cd4ded9b7439",
+      "lines": 352,
+      "category": "external_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/03_PINOUT.md",
+      "sha256_utf8_lf": "4ecccce963e329736234cfd87a514959589593b358c04e109a0f58e5e9271be9",
+      "lines": 125,
+      "category": "external_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/04_HARDWARE_NOTES.md",
+      "sha256_utf8_lf": "ea6713b21073bc06fd1e8274eaca2ea79b24d091e4ad2ea83e23c584ef4fc727",
+      "lines": 264,
+      "category": "external_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/00_Docs/README.md",
+      "sha256_utf8_lf": "853e5cc9e609041d828696a3ef15f3690d12abc3fa266202b3f2d04bd431e115",
+      "lines": 87,
+      "category": "external_read_only"
+    },
+    {
+      "path": "board_package/NU54DK_Zephyr_DTS/README.md",
+      "sha256_utf8_lf": "de1cb38e58e1454c939745a81a7b5085dbacf76aebb0893bface553e91a8003e",
+      "lines": 110,
+      "category": "external_read_only"
+    }
+  ]
+}

@@ -34,7 +34,7 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 | 제품선·트랙 | 현재 상태 | 다음 작업 |
 | --- | --- | --- |
 | v0.5.0 | Windows stable 공개·지원 | 공개 tag와 manifest의 source SHA로 패키지 재현 |
-| [v0.6.0](../TODO_v0.6.0.md) | M32 **12/12 완료**, M33 **5/8**, 미공개 | 기존 W06 실행 정리 후 [검증 체계 재설계 준비](<../02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) |
+| [v0.6.0](../TODO_v0.6.0.md) | M32 **12/12 완료**, M33 **5/8**, 미공개 | W06 실패별 집중 검증; 현재 범위는 [M33 인계](../M33_HANDOFF.md) |
 | Host | HOST-W01~W03 완료, W04~W08은 M33-W06 완료 전까지 착수 대기 | W06 완료 후 순차 이식, RC 단계에서 OS별 실물 지원 gate 수행 |
 | [v0.7.0](../TODO_v0.7.0.md) | SDK-W01~W06 **0/6** | NCS v3.4.0 → v3.4.1 전체 전환만 수행 |
 
@@ -61,6 +61,8 @@ M32 기능은 현재 stable 패키지에 포함되지 않으며, v0.6.0 공개�
 | v0.3.0-rc.1 | [RC1 문서](v0.3.0-rc.1/README.md), [clean-room 중단](v0.3.0-rc.1/CLEANROOM_ABORT.md) |
 | v0.2.0 | [릴리스 문서](v0.2.0/README.md) |
 | v0.1.0 | [릴리스 문서](v0.1.0/README.md) |
+| v0.1.0-rc.2 | [RC2 문서](v0.1.0-rc.2/README.md) — 초기 후보 이력, 지원·공급 종료 |
+| v0.1.0-rc.1 | [RC1 문서](v0.1.0-rc.1/README.md) — 철회된 초기 후보 이력 |
 
 ## 검증 수치와 자산 보존
 

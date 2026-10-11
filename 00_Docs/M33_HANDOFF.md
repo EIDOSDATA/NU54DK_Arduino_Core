@@ -1,9 +1,10 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-10**. 사용자가 현재 M33 브랜치에서 W06 완료까지 중단 없이
-진행하도록 요청했다. R1·R2와 R3 실물 수직 연결, exact source `c21b2716…`의 49개 group
-전수 조사와 건너뛴 하위 campaign 조사를 완료했다. 고정한 전체 결함의 일괄 수정과 영향받은
-기능의 표적검증을 통과했으며, 현재 clean source S 고정과 전체 분모 재실행을 준비 중이다.
+최종 갱신: **2026-10-11**. 현재 요청은 문서 전수 검토·정리·검사 후 같은 브랜치의
+commit/push다. 이 문서 작업 중 코드 수정·build·실기는 보류한다. 이후 실패 수정은
+**한 항목 수정 → 로컬 해당 항목 재검증 → 실제 PASS 확인 → 다음 실패** 순서다.
+전수조사 완료·대규모 일괄 수정·전체 49개·Actions를 개별 수정의 선행조건으로 삼지 않는다.
+W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범위를 우선한다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
 ## 1. 지금의 정본
@@ -12,17 +13,35 @@
 | --- | --- |
 | 작업 저장소 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`; build·artifact·실행·log·cache·tmp는 `D:\w06` 전용 |
 | 브랜치 | `Dev-0.6.0-M33`, origin의 같은 브랜치 추적; 사용자 요청으로 main 이후 87개 commit을 하나로 정리 |
-| 현재 전수 조사 source | clean `c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a`; 독립 clone `D:\w06\runs\source-c21b2716` |
+| 현재 개발 기준 source | `d9090f22c258303660c3bb6d288b7580c0d2a453`; 이번 문서 commit의 부모 기준선이며 최종 검증 완료 source가 아님 |
+| 첫 전수 조사 | `c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a`: 49개 중 PASS 16 / FAIL 33, 후속 source의 PASS로 승계하지 않음 |
 | squash 전 구현 source | `f9f1cd283ee39bcf0609e047473e0e8c5c9930c1`; 원본 시험의 identity, 현재 HEAD와 구분 |
 | board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
 | SDK·toolchain | NCS 3.4.0 / `dcbdc366a1`; C 설치본은 읽기 입력 전용 |
 | 완료 상태 | M32 12/12, M33 W01~W05 **5/8**, HOST **3/8** |
-| W06 | 미완료; R1·R2·R3 PASS, 수정 전 전수 조사 PASS 16 / FAIL 33, P2 일괄 수정·표적검증 PASS, clean S 전체 재검증 전 |
+| W06 | 미완료; d909 조사 40개 그룹 판정: PASS 17 / FAIL 23. 40번 하위 일부·41~49번·19/22번 누락 범위 미완료 |
 | 현재 제품 | Windows stable/source version 0.5.0; v0.6.0 미공개 |
 
-현재 HEAD는 위 구현 내용과 문서 정비를 포함한 squash 결과다. 기존 결과의 source를 새 SHA로 바꾸지 않는다.
+기존 결과의 source를 이번 문서 commit SHA로 바꾸지 않는다. d909 조사 당시 작업 트리는 clean이었다.
 재개 시 HEAD·원격·미커밋 변경·submodule을 실제 확인한다.
 이전 미커밋 idle-fixture 4개 변경은 이미 이력에 반영됐으며 현재 다시 적용할 미커밋 패치가 아니다.
+
+### 2026-10-11 중단 지점과 개발 후보
+
+- d909 원본 조사: 40개 판정 / 17 PASS / 23 FAIL. 40번의 ecosystem 하위 campaign,
+  41~49번 9개 그룹, 19번·22번에서 건너뛴 하위 8개는 남아 있다. 49개 완료로 보고하지 않는다.
+- 40번 native의 첫 cycle fresh/restored는 PASS였으나 second-peer의 `security-submit` 및
+  후속 인증 실패로 종료했다. 원래 FAIL과 cleanup HOLD는 보존한다.
+- 뒤의 독립 idle 복구는 2026-10-11 19:47:29 KST 종료했다. 저장된 commit 해시와 종료 journal을
+  확인했고 19:52 KST 관련 실행 프로세스는 0개였다. 이는 재개 시 현재 보드 안전 상태를 대신하지 않는다.
+- 자세한 로컬 상태는 `D:\w06\d909-survey-continuation.current.json`, 원본 실행은
+  `D:\w06\d909-final-matrix`, 후속 원본 자료는 `D:\w06\d909-survey-*`에 보존한다.
+- `D:\w06\proposals`의 수정 후보는 **저장소 미적용**이다. ORDERED51 및 추가 후보 전체를
+  일괄 적용하지 말고 현재 실패에 필요한 부분만 재검토한다. 외부 후보 검사를 제품 PASS로 세지 않는다.
+- 외부 ORDERED50 Host 검사 결과는 828개 시작 / 827 성공 / 환경 오류 1개다. 전체 PASS가 아니다.
+  추가 후보의 74 suite / 862 ID는 등록 예정 정적 분모이며 전체 실행 결과가 아니다.
+- 첫 집중 대상은 5번 `privacy`: PAwR 송신 예약 100개 대비 수신 93개로 실패했다.
+  원인은 아직 확정하지 않았으며 수정 후 PASS도 없다. 기준을 낮춰 해결하지 않는다.
 
 ## 2. 정리한 실행과 남은 검증
 
@@ -45,7 +64,7 @@ R3 bundle export/import/relocation과 실물 20-cycle cleanup/resume를 통과�
 건너뛴 하위 campaign도 `D:\w06\r\survey23-skipped`에서 별도로 실행해 자료를 채웠다. 이 조사
 PASS/FAIL은 새 최종 source의 완료 증거가 아니다.
 
-현재 미커밋 수정본은 Host 64 suite / 597 test / skip 0을 통과했다. 수정 전 Mesh image로
+당시 개발 수정본은 Host 64 suite / 597 test / skip 0을 통과했다. 수정 전 Mesh image로
 `friend_clear_confirm_timeout`을 한 번 재현했고, 공식 Zephyr 수정 3564414a3b27…을 NCS 3.4.0
 고정 patch로 적용한 새 세 역할 image는 build 3/3과 1-cycle 표적검증 뒤 **20/20 cycle**
 Friend Clear·traffic·cleanup을 통과했다. dirty 개발 source의 `PASS_CANDIDATE`이므로 clean S의
@@ -62,13 +81,18 @@ authenticated level 4, scoped bond 삭제, 기존 bond 불변, STOP 자원 0으�
 
 ## 3. 현재 연속 실행 순서
 
-1. 고정한 전체 실패 목록에서 중복 원인과 공통 수명주기 경계를 합쳐 일괄 수정한다.
-2. 수정 단위별 Host·대상 build·실물 표적검증을 수행한다. 이때 비싼 49개 전체 실행을 반복하지 않는다.
-3. 영향 회귀가 안정되면 수정 code·계약을 검증하고 clean source **S**로 커밋한다.
-4. 새 S에서 로컬 build 141 → runtime 9 → stage 150 → R3 → production 49 group →
-   1,800초 soak → Host 64/597 → risk 7·qualification 3 → strict closure를 처음부터 재실행한다.
-5. 로컬 전체가 통과한 S를 push하고 GitHub Actions artifact의 source·hash·provenance와 최종 재현성을 확인한다.
-6. 허용 경로의 기록·문서만 후속 commit **C**로 갱신하고 S→C 계약·push를 확인한다.
+1. 이번 문서 전수 검토·정리를 마치고 문서/링크·보존 범위 검사 후 같은 브랜치에 commit/push한다.
+   기존 미푸시 코드 commit 2개도 함께 원격에 포함된다. `[skip ci]`로 공식 대규모 빌드는 유예하며,
+   이 개발 push를 최종 source 또는 W06 완료 승인으로 해석하지 않는다.
+2. 실패 수정 재개 시 한 항목만 선택하고 원본 오류·합격 기준·필요 변경 범위를 고정한다.
+3. 그 항목에 필요한 코드만 수정하고 로컬 단위 검사·필요 역할 build·같은 항목 실기를 실행한다.
+4. 실패하면 같은 항목에서 근거를 보강해 수정·재검증한다. 실제 PASS 확인 후 다음 실패로 이동한다.
+   공통 코드의 직접 영향 회귀는 포함하되 관련 없는 실패·전체 49개를 동시에 진행하지 않는다.
+5. 전체 49개·Actions·1,800초 soak·최종 Host·risk 7·qualification 3·closure는 별도 최종 단계다.
+   개별 개발 PASS만으로 생략하거나 완료로 표시하지 않는다. 최종 Host 분모는 당시 registry에서 검증한다.
+
+첫 조사 16/33, 현재 중단 조사 17/23, 앞으로의 수정 후 결과를 별도 집계한다. 새 결과로 과거 FAIL을
+덮어쓰지 않으며, 알 수 없는 원인을 SDK 결함이나 상태 오염으로 단정하지 않는다.
 
 실행 정본은 저장소의 `tests/hil/nu54dk/m33_regression_run.py`와 registry·evidence 계약이다.
 [기존 artifact 안내](../tools/ci/m33_w06_artifacts.md)는 전달·복원 reference로 사용한다.
@@ -127,7 +151,8 @@ M32 브랜치는 삭제됐고 최종 내용은 M33 분기 기준 main에 남아 
 
 ## 5. 변하지 않는 경계
 
-- 주 에이전트 하나, 하위 에이전트·다중 채팅/작업 트리 없음. 로컬 무거운 build/HIL은 하나씩.
+- 실기 writer와 로컬 무거운 build/HIL은 하나씩. 이번에 승인한 병렬 문서/파일 검토는 허용하되
+  다른 실패의 수정·실기를 동시에 벌이지 않는다. 후속 병렬 범위는 최신 사용자 지시를 따른다.
 - NCS 3.4.0 유지. 3.4.1은 v0.7.0 전용. SDK·board·공개 API를 문서 정비로 바꾸지 않는다.
 - NCS 3.4.0의 확정된 SDK 결함을 보정해야 하면 공식 upstream patch의 byte·base revision·변경 파일을
   lock에 고정하고 build 동안만 적용·원상복구한다. Windows CRLF로 stat만 바뀐 경우도 있으므로 staged·

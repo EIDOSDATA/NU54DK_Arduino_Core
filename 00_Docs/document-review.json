@@ -4,6 +4,39 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "review_date": "2026-10-11",
+      "baseline_commit": "d9090f22c258303660c3bb6d288b7580c0d2a453",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "사용자 요청으로 문서 전수 검토·현행 운영 정책 정리·삭제 판단·문서 검사 후 일반 commit/push. 코드·build·HIL은 보류.",
+      "execution_policy": "실패 한 항목 선택 → 필요한 코드 수정 → 로컬 단위·대상 build·해당 실기 검증 → 실제 PASS 후 다음 실패. 전체49·Actions·대규모 일괄패치를 매 수정에 시작하지 않음.",
+      "scope": {
+        "review_depth": "모든 Markdown의 UTF-8·로컬 파일 링크·LF 정규화 SHA·중복·현행 지시 검색, 현행 정책과 변경 본문·삭제 후보 집중 검토. 모든 과거 기술 사실 재실험·외부 URL 최신성·anchor 검사는 아님.",
+        "updated_existing_markdown": 21,
+        "added_markdown": 1,
+        "deleted_markdown": 0,
+        "frozen_completed_todos_modified": 0,
+        "code_sdk_board_changes": false,
+        "target_build_or_hil": "NOT_RUN"
+      },
+      "current_state": {
+        "first_survey": {"source": "c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a", "pass": 16, "fail": 33},
+        "d909_survey": {"group_verdicts": 40, "pass": 17, "fail": 23, "unstarted_groups": 9, "group40_child_pending": true, "group19_22_skipped_scopes": 8},
+        "first_focus": "group5 privacy / PAwR received93 of100; cause unconfirmed; changed-source HIL NOT_RUN",
+        "m33_completed": "5/8",
+        "host_completed": "3/8",
+        "w06_complete": false
+      },
+      "preservation": "원본 FAIL/HOLD/NOT_RUN·raw·완료TODO6개·기존 검증 본문·버전별 릴리스·SDK/board 보존. 삭제할 고유근거 없는 문서는 없으며 폐기된 현행 실행 문단만 정리.",
+      "manifest": "00_Docs/04_검증 기록/evidence/m33-w06-docs-20261011/all-markdown-review.json",
+      "report": "00_Docs/04_검증 기록/305_M33_W06_집중_수정_정책과_문서_전수_정리.md",
+      "checks": {
+        "markdown_and_manifest": "최종 목록·해시·검사 결과는 manifest 참조; 이는 기능 검증이 아님",
+        "whitespace": "git diff --check",
+        "ci": "[skip ci]로 공식 대규모 build 유예; CI PASS 주장 없음"
+      },
+      "push_policy": "사용자가 현재브랜치 commit/push 명시 승인. 기존 ahead2 코드 이력도 포함한 일반 fast-forward만; force/squash/main/tag/release 변경 금지. 최종 remote SHA 확인 후 보고."
+    },
+    {
       "review_date": "2026-10-07",
       "purpose": "사용자의 문서 정비 후 추가 요청에 따른 M33 전용 이력 squash와 원본 복구 안내",
       "baseline_commit": "84c5f4d85c08312d7ce0ff12e2e70b31bdf6564c",

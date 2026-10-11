@@ -1,8 +1,10 @@
 # CI/CD와 재현 빌드 — v0.5.0 지원과 개발 main 회귀
 
 W06 전용 build/artifact/개발 smoke/최종 검증의 다음 구조는
-[재설계 문서](11_M33_W06_검증_파이프라인_재설계.md)에서 관리한다. 아직 미구현이며
-기존 workflow·stable gate와 구분한다. 문서 수정만으로 CI shard 수나 캐시 계약을 바꾸지 않는다.
+[재설계 문서](11_M33_W06_검증_파이프라인_재설계.md)에서 관리한다. 현재 실행 범위는
+[M33 인계](../M33_HANDOFF.md)를 따르며 기존 workflow·stable gate와 구분한다.
+이번 문서 commit/push는 `[skip ci]`로 대규모 빌드를 유예하며 CI PASS를 주장하지 않는다.
+문서 수정만으로 CI shard 수나 캐시 계약을 바꾸지 않는다.
 
 2026-09-26 사용자 승인으로 M31-W08 Windows RC 검증은 GitHub Actions에서 8개 설치 예제 shard와
 별도 lifecycle job을 병렬 실행했다. 과거 문서·이력 정리 때의 CI 생략은 당시 이력으로 보존하며
