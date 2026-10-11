@@ -84,6 +84,7 @@ namespace
     [[maybe_unused]] bool rpa_restart_pending = false;
     [[maybe_unused]] bool rpa_start_pending = false;
     [[maybe_unused]] bool rpa_retry_error_pending = false;
+    [[maybe_unused]] int rpa_retry_driver_error = 0;
     [[maybe_unused]] bool rpa_reported = false;
     bool reboot_pending = false;
     bool stale_rejected = false;
@@ -594,10 +595,14 @@ namespace
         {
 #if !defined(NUCODE_M30_BOND_CENTRAL)
             if (rpa_retry_error_pending &&
-                BLEDevice.lastError() == nucode::ble::BLEError::driver_error &&
-                BLEDevice.lastDriverError() == -ENOMEM)
+                BLEDevice.lastDriverError() == rpa_retry_driver_error &&
+                ((rpa_retry_driver_error == -ENOMEM &&
+                  BLEDevice.lastError() == nucode::ble::BLEError::driver_error) ||
+                 (rpa_retry_driver_error == -EALREADY &&
+                  BLEDevice.lastError() == nucode::ble::BLEError::already_started)))
             {
                 rpa_retry_error_pending = false;
+                rpa_retry_driver_error = 0;
                 return;
             }
 #endif
@@ -1004,7 +1009,16 @@ namespace
                      now < rpa_restart_deadline_ms)
             {
                 rpa_retry_error_pending = true;
+                rpa_retry_driver_error = -ENOMEM;
                 action_due_ms = now + 100;
+            }
+            else if (BLEDevice.lastError() == nucode::ble::BLEError::already_started &&
+                     BLEDevice.lastDriverError() == -EALREADY &&
+                     BLEExtendedAdvertising.running(advertising_set))
+            {
+                rpa_retry_error_pending = true;
+                rpa_retry_driver_error = -EALREADY;
+                rpa_start_pending = false;
             }
             else
             {
