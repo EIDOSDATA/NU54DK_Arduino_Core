@@ -2723,6 +2723,69 @@ class M33W06ArtifactTests(unittest.TestCase):
             "nucode.m31.iso_bis_encrypted.receiver",
         )
 
+        ## @brief 기존 DFU 두 slot만 signed application을 선택합니다.
+        keys = [("m30_dfu", f"{role}-image") for role in ("peripheral", "central")]
+        keys.append(("m31_iso_bis", "hex-source"))
+        partial = artifacts.partial_build_plan(self.plan, set(keys))
+        with tempfile.TemporaryDirectory(prefix="m33-dfu-signed-") as directory:
+            root = Path(directory)
+            actions, unsigned, signed = [], {}, {}
+            for key in keys:
+                recipe = rows[key]["recipe"]
+                scenario = recipe["scenario"]
+                action = {
+                    "kind": "twister",
+                    "scenarios": [scenario],
+                    "output": str(root / key[1]),
+                }
+                actions.append(action)
+                application = (
+                    Path(action["output"])
+                    / artifacts.PLATFORM_DIRECTORY
+                    / artifacts.TOOLCHAIN_DIRECTORY
+                    / scenario
+                    / Path(recipe["application"]).name
+                )
+                (application / "zephyr").mkdir(parents=True)
+                (application / "nucode_arduino_core_build.yml").write_text(
+                    "fixture provenance\n", encoding="utf-8"
+                )
+                unsigned[key] = application / "zephyr/zephyr.hex"
+                signed[key] = application / "zephyr/zephyr.signed.hex"
+                unsigned[key].write_bytes(b"unsigned mock HEX")
+                signed[key].write_bytes(b"signed mock HEX")
+            resolved = {
+                (item["campaign_id"], item["name"]): Path(item["path"])
+                for item in artifacts.resolve_build_entries(partial, actions)
+            }
+            self.assertEqual(set(keys), set(resolved))
+            for key in keys:
+                with self.subTest(campaign=key[0], role=key[1]):
+                    expected = signed[key] if key[0] == "m30_dfu" else unsigned[key]
+                    self.assertEqual(expected.resolve(), resolved[key])
+            for key in keys[:2]:
+                with self.subTest(missing_signed=key[1]):
+                    payload = signed[key].read_bytes()
+                    signed[key].unlink()
+                    with self.assertRaises(artifacts.ArtifactFailure):
+                        artifacts.resolve_build_entries(partial, actions)
+                    signed[key].write_bytes(payload)
+                with self.subTest(empty_signed=key[1]):
+                    signed[key].write_bytes(b"")
+                    with self.assertRaises(artifacts.ArtifactFailure):
+                        artifacts.resolve_build_entries(partial, actions)
+                    signed[key].write_bytes(payload)
+            key = keys[0]
+            application = signed[key].parent.parent
+            duplicate = application / "nested" / application.name
+            (duplicate / "zephyr").mkdir(parents=True)
+            (duplicate / "nucode_arduino_core_build.yml").write_text(
+                "duplicate fixture\n", encoding="utf-8"
+            )
+            (duplicate / "zephyr/zephyr.signed.hex").write_bytes(b"duplicate")
+            with self.assertRaises(artifacts.ArtifactFailure):
+                artifacts.resolve_build_entries(partial, actions)
+
     def test_partial_index_is_rejected(self) -> None:
         """! @brief 한 역할이라도 빠진 build index를 거부합니다. """
 

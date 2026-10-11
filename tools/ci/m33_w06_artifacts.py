@@ -2637,13 +2637,23 @@ def twister_scenario_root(action: dict[str, Any], scenario: str) -> Path:
     return root.resolve()
 
 
-def twister_image(action: dict[str, Any], scenario: str, application: str) -> Path:
-    """! @brief scenario에서 application build record와 인접한 primary HEX를 찾습니다. """
+def twister_image(
+    action: dict[str, Any],
+    scenario: str,
+    application: str,
+    *,
+    signed: bool = False,
+) -> Path:
+    """! @brief scenario에서 build record와 인접한 요청 형식의 HEX를 찾습니다.
+    @param signed 참이면 signed HEX만 선택하고 unsigned 대체를 금지합니다.
+    """
 
     root = twister_scenario_root(action, scenario)
     application_name = Path(application).name
     candidates = []
-    for image in root.rglob("zephyr.hex"):
+    ## @brief DFU program slot은 같은 application의 signed HEX만 선택합니다.
+    image_name = "zephyr.signed.hex" if signed else "zephyr.hex"
+    for image in root.rglob(image_name):
         record = image.parent.parent / "nucode_arduino_core_build.yml"
         if record.is_file() and application_name in image.parts:
             candidates.append(image)
@@ -2746,6 +2756,13 @@ def resolve_build_entries(
             if artifact["kind"] == "target_image":
                 if key[0] == SOAK_ARTIFACT_ID:
                     resolved[key] = twister_soak_image(action, recipe["scenario"])
+                elif key[0] == "m30_dfu":
+                    resolved[key] = twister_image(
+                        action,
+                        recipe["scenario"],
+                        recipe["application"],
+                        signed=True,
+                    )
                 else:
                     resolved[key] = twister_image(action, recipe["scenario"], recipe["application"])
             else:
