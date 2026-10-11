@@ -149,6 +149,9 @@ class M30BleOobBondTests(unittest.TestCase):
             '::strcmp(verb, "REJECT")',
             "clear_ack_pending = true",
             "if (clearing && clear_ack_pending)",
+            "disconnectAlreadyComplete()",
+            "BLEDevice.lastError() == nucode::ble::BLEError::not_connected",
+            "BLEDevice.lastDriverError() == -ENOTCONN",
             "completeClearRound();",
             'fail("clear-pending")',
         ):

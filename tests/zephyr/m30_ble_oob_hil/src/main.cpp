@@ -14,6 +14,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -217,6 +218,13 @@ namespace
         Serial.print(BLESecurity.bondCount());
         Serial.print("|nonce=");
         Serial.println(nonce);
+    }
+
+    /** @brief peer가 먼저 종료한 link를 멱등 cleanup 완료 상태로 판정합니다. */
+    bool disconnectAlreadyComplete()
+    {
+        return BLEDevice.lastError() == nucode::ble::BLEError::not_connected &&
+               BLEDevice.lastDriverError() == -ENOTCONN;
     }
 
     /** @brief local OOB 생성과 frame/NDEF round-trip 뒤 raw frame을 Host에 전달합니다. */
@@ -563,9 +571,16 @@ namespace
             clear_ack_pending = true;
             if (!BLEConnection.disconnect(connection_handle))
             {
-                clear_ack_pending = false;
-                clearing = false;
-                fail("clear-disconnect");
+                if (disconnectAlreadyComplete())
+                {
+                    completeClearRound();
+                }
+                else
+                {
+                    clear_ack_pending = false;
+                    clearing = false;
+                    fail("clear-disconnect");
+                }
             }
             return;
         }
