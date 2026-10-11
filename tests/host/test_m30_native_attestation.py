@@ -695,6 +695,18 @@ class M30NativeAttestationTests(unittest.TestCase):
                 native, native_path, {"phase": ("peripheral",)}
             )
 
+            readback["pre_state"] = "SLEEPING"
+            readback["post_state"] = "RUNNING"
+            readback_path.write_text(
+                json.dumps(readback, sort_keys=True), encoding="utf-8"
+            )
+            native["program_phases"][0]["hardware"][0]["readback"] = reference(
+                readback_path
+            )
+            adapter.validate_program_phases(
+                native, native_path, {"phase": ("peripheral",)}
+            )
+
             identity = native["program_phases"][0]["hardware"][0][
                 "build_identity"
             ]

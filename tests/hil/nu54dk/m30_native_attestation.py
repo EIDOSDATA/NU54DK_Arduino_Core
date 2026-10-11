@@ -16,10 +16,12 @@ from typing import Any, Sequence
 HIL_DIRECTORY = Path(__file__).resolve().parent
 
 from m33_sdk_risk_common import (  # noqa: E402
+    ACTIVE_TARGET_STATES,
     copy_program_inputs,
     dispatch_attestation,
     exact_program_evidence,
     intel_hex_ranges,
+    readback_state_restored,
     readback_programmed_images,
     require_exact_clean_source,
     reserve_sidecars,
@@ -1064,10 +1066,14 @@ def validate_program_phases(
                 or readback.get("image_sha256") != _digest(image)
                 or readback.get("backend") != "pyocd-live-target"
                 or readback.get("halted") is not True
-                or pre_state not in {"RUNNING", "HALTED"}
-                or readback.get("post_state") != pre_state
+                or pre_state not in ACTIVE_TARGET_STATES | {"HALTED"}
+                or not readback_state_restored(
+                    pre_state, readback.get("post_state")
+                )
                 or readback.get("restored") is not True
-                or readback.get("resumed") is not (pre_state == "RUNNING")
+                or readback.get("resumed") is not (
+                    pre_state in ACTIVE_TARGET_STATES
+                )
                 or not isinstance(ranges, list)
                 or len(ranges) != len(expected_ranges)
                 or any(
