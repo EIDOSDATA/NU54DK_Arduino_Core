@@ -279,6 +279,13 @@ def parse_role_transcript(
                 )
         local_counter = current_local
         remote_counter = current_remote
+        if role == "central":
+            cursor = _take_exact(
+                lines,
+                cursor,
+                f"{PROTOCOL}|CLOSE_ACCEPTED|role=central|mode=sign".encode("ascii")
+                + _suffix(iteration, nonce, core_revision),
+            )
         take_end("sign", iteration)
 
     take_reboot_and_ready(1)
@@ -536,6 +543,123 @@ def _reboot_pair(
             future.result()
 
 
+def _collect_signed_barrier(
+    ports: dict[str, Any],
+    pending: dict[str, bytearray],
+    captures: dict[str, bytearray],
+    nonce: str,
+    core_revision: str,
+    iteration: int,
+    deadline: float,
+    expected_end: dict[str, bytes],
+) -> None:
+    """! @brief 양측 실제 SIGN과 counter를 확인한 뒤 중앙 CLOSE·양측 END를 요구합니다. """
+
+    _validate_identity(nonce, core_revision, "central")
+    if not 1 <= iteration <= SIGN_REBOOTS:
+        raise BlePairHilFailure("W07 SIGN barrier iteration이 1..20 범위를 벗어났습니다.")
+    suffix = _suffix(iteration, nonce, core_revision)
+    stop_event = threading.Event()
+    barrier_lock = threading.Lock()
+    observed_signs: set[str] = set()
+    close_sent = False
+    first_error: list[Exception] = []
+
+    def read_record(role: str) -> bytes:
+        line = read_line(
+            ports[role], pending[role], captures[role], deadline, stop_event=stop_event
+        )
+        print(f"[{role}] {line.decode('ascii', errors='backslashreplace')}")
+        if line.startswith(f"{PROTOCOL}|FAIL|".encode("ascii")):
+            raise BlePairHilFailure(f"{role} target 실패: {line!r}")
+        return line
+
+    def expect(role: str, expected: bytes) -> None:
+        line = read_record(role)
+        if line != expected:
+            raise BlePairHilFailure(
+                f"{role} W07 SIGN barrier record 불일치: 기대={expected!r}, 실제={line!r}"
+            )
+
+    def collect(role: str) -> None:
+        nonlocal close_sent
+        try:
+            if role == "central":
+                expect(
+                    role,
+                    f"{PROTOCOL}|BEGIN|role=central|mode=sign".encode("ascii") + suffix,
+                )
+                expect(
+                    role,
+                    f"{PROTOCOL}|SCAN|role=central|mode=sign|status=pass".encode("ascii") + suffix,
+                )
+            attempt = 0
+            while True:
+                line = read_record(role)
+                if not line.startswith(f"{PROTOCOL}|RETRY|".encode("ascii")):
+                    break
+                attempt += 1
+                expected_retry = (
+                    f"{PROTOCOL}|RETRY|role={role}|reason=62|attempt={attempt}".encode("ascii")
+                    + suffix
+                )
+                if attempt > MAX_CONNECTION_RETRIES or line != expected_retry:
+                    raise BlePairHilFailure(f"{role} W07 SIGN barrier retry 불일치: {line!r}")
+            local_counter = iteration if role == "central" else 0
+            remote_counter = iteration if role == "peripheral" else 0
+            expected_sign = (
+                f"{PROTOCOL}|SIGN|role={role}|writes=1|local_counter={local_counter}"
+                f"|remote_counter={remote_counter}".encode("ascii")
+                + suffix
+            )
+            if line != expected_sign:
+                raise BlePairHilFailure(
+                    f"{role} W07 SIGN barrier counter/identity 불일치: {line!r}"
+                )
+            with barrier_lock:
+                if first_error or stop_event.is_set():
+                    raise BlePairHilFailure("W07 SIGN barrier가 이전 실패로 취소되었습니다.")
+                observed_signs.add(role)
+                if len(observed_signs) == 2:
+                    if time.monotonic() >= deadline:
+                        raise BlePairHilFailure("W07 SIGN barrier CLOSE 전에 timeout입니다.")
+                    _write_line(
+                        ports["central"],
+                        f"{PROTOCOL}|CLOSE|mode=sign|iteration={iteration}|nonce={nonce}|"
+                        f"core={core_revision}",
+                    )
+                    close_sent = True
+            if role == "central":
+                expect(
+                    role,
+                    f"{PROTOCOL}|CLOSE_ACCEPTED|role=central|mode=sign".encode("ascii") + suffix,
+                )
+            line = read_record(role)
+            with barrier_lock:
+                if not close_sent:
+                    raise BlePairHilFailure(f"{role} W07 SIGN barrier CLOSE 이전 END입니다.")
+            if line != expected_end[role]:
+                raise BlePairHilFailure(f"{role} W07 SIGN barrier END 불일치: {line!r}")
+        except Exception as error:
+            with barrier_lock:
+                if not first_error:
+                    first_error.append(error)
+            stop_event.set()
+            raise
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [executor.submit(collect, role) for role in ("peripheral", "central")]
+        for future in futures:
+            try:
+                future.result()
+            except Exception:
+                pass
+    if first_error:
+        raise first_error[0]
+    if not close_sent or observed_signs != {"peripheral", "central"}:
+        raise BlePairHilFailure("W07 SIGN barrier가 양측 SIGN/CLOSE를 완료하지 못했습니다.")
+
+
 def _run_session(
     ports: dict[str, Any],
     pending: dict[str, bytearray],
@@ -583,6 +707,11 @@ def _run_session(
         + suffix
         for role in ("peripheral", "central")
     }
+    if mode == "sign":
+        _collect_signed_barrier(
+            ports, pending, captures, nonce, core_revision, iteration, deadline, expected_end
+        )
+        return
     stop_event = threading.Event()
 
     def collect(role: str) -> None:

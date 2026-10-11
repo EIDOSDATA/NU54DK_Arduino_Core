@@ -73,13 +73,17 @@ def build_transcript(role: str) -> bytes:
                 f"{PROTOCOL}|SCAN|role=central|mode=sign|status=pass"
                 f"{_suffix(iteration)}"
             )
-        lines.extend(
-            (
-                f"{PROTOCOL}|SIGN|role={role}|writes=1|local_counter={local_counter}|"
-                f"remote_counter={remote_counter}{_suffix(iteration)}",
-                f"{PROTOCOL}|END|role={role}|mode=sign|status=pass|"
-                f"callback_context=pass{_suffix(iteration)}",
+        lines.append(
+            f"{PROTOCOL}|SIGN|role={role}|writes=1|local_counter={local_counter}|"
+            f"remote_counter={remote_counter}{_suffix(iteration)}"
+        )
+        if role == "central":
+            lines.append(
+                f"{PROTOCOL}|CLOSE_ACCEPTED|role=central|mode=sign{_suffix(iteration)}"
             )
+        lines.append(
+            f"{PROTOCOL}|END|role={role}|mode=sign|status=pass|"
+            f"callback_context=pass{_suffix(iteration)}"
         )
     if role == "central":
         local_counter += 1
@@ -263,6 +267,43 @@ class M29BleSignedEattParserTests(unittest.TestCase):
         ).encode("ascii")
         with self.assertRaises(BlePairHilFailure):
             parse_role_transcript(b"\n".join(lines) + b"\n", NONCE, REVISION, "central")
+
+    def test_rejects_missing_stale_duplicate_or_reordered_close_ack(self):
+        """! @brief 각 중앙 SIGN의 exact CLOSE 수락은 END 앞에서 한 번만 필요합니다. """
+        valid = build_transcript("central").splitlines()
+        position = next(index for index, line in enumerate(valid) if b"|CLOSE_ACCEPTED|" in line)
+        ack = valid[position]
+        cases = {
+            "missing": [],
+            "duplicate": [ack, ack],
+            "nonce": [ack.replace(NONCE.encode(), b"f" * 32)],
+            "core": [ack.replace(REVISION.encode(), b"0" * 40)],
+            "iteration": [ack.replace(b"iteration=1|", b"iteration=2|")],
+            "role": [ack.replace(b"role=central", b"role=peripheral")],
+            "mode": [ack.replace(b"mode=sign", b"mode=pair")],
+        }
+        for name, replacement in cases.items():
+            with self.subTest(case=name):
+                lines = valid[:position] + replacement + valid[position + 1:]
+                with self.assertRaises(BlePairHilFailure):
+                    parse_role_transcript(b"\n".join(lines) + b"\n", NONCE, REVISION, "central")
+        for offset in (-1, 1):
+            with self.subTest(reorder=offset):
+                lines = list(valid)
+                lines[position], lines[position + offset] = lines[position + offset], lines[position]
+                with self.assertRaises(BlePairHilFailure):
+                    parse_role_transcript(b"\n".join(lines) + b"\n", NONCE, REVISION, "central")
+
+    def test_rejects_peripheral_close_ack(self):
+        """! @brief 중앙 전용 수락 record를 주변 역할 증거로 허용하지 않습니다. """
+        lines = build_transcript("peripheral").splitlines()
+        position = next(index for index, line in enumerate(lines) if b"|SIGN|" in line) + 1
+        lines.insert(
+            position,
+            (f"{PROTOCOL}|CLOSE_ACCEPTED|role=peripheral|mode=sign{_suffix(1)}").encode(),
+        )
+        with self.assertRaises(BlePairHilFailure):
+            parse_role_transcript(b"\n".join(lines) + b"\n", NONCE, REVISION, "peripheral")
 
     def test_rejects_end_trailing_record(self):
         transcript = build_transcript("central") + b"M29W07|1|EXTRA\n"
