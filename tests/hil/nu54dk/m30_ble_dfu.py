@@ -1619,6 +1619,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 args.probe_peripheral_sha256,
                 confirmed.boot_hex,
                 args.flash_timeout,
+                reset_and_halt_before_program=True,
             )
             flash_results["peripheral_primary"] = flash_image_pyocd_sha256(
                 "peripheral-primary",
@@ -1631,6 +1632,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 args.probe_central_sha256,
                 central.boot_hex,
                 args.flash_timeout,
+                reset_and_halt_before_program=True,
             )
             flash_results["central_primary"] = flash_image_pyocd_sha256(
                 "central-primary",

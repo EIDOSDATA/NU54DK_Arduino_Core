@@ -3344,6 +3344,77 @@ class RegressionTests(unittest.TestCase):
             inspect.getsource(common.clear_nrf54l_rram_pyocd_sha256),
         )
 
+    def test_bootloader_flash_resets_and_halts_before_program(self):
+        """! @brief vector 소거 전 reset-and-halt로 기존 앱 interrupt를 차단합니다. """
+
+        import ble_pair_hil_common as common
+
+        events = []
+
+        class Target:
+            """! @brief reset·halt·resume 순서를 기록하는 target fixture입니다. """
+
+            def reset_and_halt(self, *, reset_type):
+                """! @brief 승인된 software reset 종류를 기록합니다. """
+
+                events.append(("reset_and_halt", reset_type))
+
+            @staticmethod
+            def get_state():
+                """! @brief reset 후 HALTED 상태를 반환합니다. """
+
+                return type("State", (), {"name": "HALTED"})()
+
+        class Backend:
+            """! @brief program과 실행 순서를 기록하는 backend fixture입니다. """
+
+            target_type = type(
+                "TargetType",
+                (),
+                {"ResetType": type("ResetType", (), {"SYSRESETREQ": "software"})},
+            )
+
+            @staticmethod
+            def program(_session, _image):
+                """! @brief sector program 호출을 기록합니다. """
+
+                events.append(("program", None))
+
+            @staticmethod
+            def start(_session):
+                """! @brief program 후 실행 호출을 기록합니다. """
+
+                events.append(("start", None))
+
+        session = type("Session", (), {"target": Target()})()
+
+        def run(_digest, _deadline, operation):
+            """! @brief 실제 probe 대신 고정 session에서 callback을 실행합니다. """
+
+            operation(Backend(), session)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            image = Path(temporary) / "bootloader.hex"
+            image.write_text(
+                self.hex_record(0, 0, b"12345678") + "\n" +
+                self.hex_record(0, 1) + "\n",
+                encoding="ascii",
+            )
+            with mock.patch.object(
+                    common, "_run_flash_session_with_retry", side_effect=run):
+                common.flash_image_pyocd_sha256(
+                    "bootloader",
+                    "a" * 64,
+                    image,
+                    5.0,
+                    reset_and_halt_before_program=True,
+                )
+
+        self.assertEqual(
+            [("reset_and_halt", "software"), ("program", None), ("start", None)],
+            events,
+        )
+
     def test_rram_erase_fills_and_verifies_the_exact_range(self):
         """! @brief nRF54L RRAM erase가 요청 범위 전체를 0xff로 채우는지 검증합니다. """
 
