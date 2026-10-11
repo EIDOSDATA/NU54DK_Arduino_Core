@@ -81,7 +81,7 @@ MAX_SMP_PACKET = 244
 MAX_TRANSCRIPT_BYTES = 8 * 1024 * 1024
 POSITIVE_UPDATES = 10
 NEGATIVE_ATTEMPTS = 20
-DFU_BAUD_RATE = 1000000
+DFU_BAUD_RATE = 460800
 BASE_VERSION = (0, 0, 0, 0)
 FINAL_VERSION = (10, 0, 0, 0)
 UNCONFIRMED_VERSION = (11, 0, 0, 0)
@@ -475,12 +475,12 @@ def validate_console_transport(app: Path) -> None:
         "zephyr,console = &uart20;" not in devicetree
         or match is None
         or re.search(
-            r"\bcurrent-speed\s*=\s*<\s*(?:0xf4240|1000000)\s*>;",
+            r"\bcurrent-speed\s*=\s*<\s*(?:0x70800|460800)\s*>;",
             match.group("body"),
         )
         is None
     ):
-        raise M30DfuFailure("DFU DAPLink console가 1000000 baud가 아닙니다.")
+        raise M30DfuFailure("DFU DAPLink console가 460800 baud가 아닙니다.")
 
 
 def collect_peripheral_build(

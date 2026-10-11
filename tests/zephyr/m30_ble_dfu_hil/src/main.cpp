@@ -42,7 +42,7 @@ namespace
     constexpr std::int64_t security_delay_ms = 300;
     constexpr std::int64_t scan_retry_ms = 100;
     constexpr std::int64_t scan_retry_timeout_ms = 30000;
-    constexpr unsigned long serial_baud_rate = 1000000UL;
+    constexpr unsigned long serial_baud_rate = 460800UL;
     constexpr std::int64_t protocol_idle_timeout_ms = 180000;
 
     char nonce[nonce_characters + 1U] = {};

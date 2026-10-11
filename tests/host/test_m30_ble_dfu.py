@@ -109,10 +109,10 @@ class M30SecureBleDfuTests(unittest.TestCase):
         central_configuration = (HIL_TARGET / "central.conf").read_text(
             encoding="utf-8"
         )
-        self.assertEqual(HIL_RUNNER.DFU_BAUD_RATE, 1000000)
-        self.assertIn("serial_baud_rate = 1000000UL", source)
+        self.assertEqual(HIL_RUNNER.DFU_BAUD_RATE, 460800)
+        self.assertIn("serial_baud_rate = 460800UL", source)
         self.assertIn("&uart20", overlay)
-        self.assertIn("current-speed = <1000000>;", overlay)
+        self.assertIn("current-speed = <460800>;", overlay)
         self.assertIn(
             "CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE=1024",
             central_configuration,
@@ -133,7 +133,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
             devicetree.write_text(
                 "/ { chosen { zephyr,console = &uart20; }; };\n"
                 "uart20: uart@c6000 {\n"
-                "    current-speed = < 0xf4240 >;\n"
+                "    current-speed = < 0x70800 >;\n"
                 "};\n",
                 encoding="utf-8",
             )
@@ -146,7 +146,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(
-                    HIL_RUNNER.M30DfuFailure, "1000000 baud"):
+                    HIL_RUNNER.M30DfuFailure, "460800 baud"):
                 HIL_RUNNER.validate_console_transport(app)
 
     def test_hil_runner_waits_for_disconnect_before_restarting_peripheral(self) -> None:
@@ -227,7 +227,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
             (app / "zephyr/zephyr.dts").write_text(
                 "/ { chosen { zephyr,console = &uart20; }; };\n"
                 "uart20: uart@c6000 {\n"
-                "    current-speed = < 0xf4240 >;\n"
+                "    current-speed = < 0x70800 >;\n"
                 "};\n",
                 encoding="utf-8",
             )
