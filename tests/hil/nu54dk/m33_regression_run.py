@@ -1992,7 +1992,7 @@ def _central_program_hardware(expected: dict, row: dict,
 
         argument_values = _argument_values(row["arguments"])
         applications = {
-            role: ROOT / application
+            role: ROOT / application["path"]
             for role, application in zip(
                 expected["roles"], expected["applications"], strict=True
             )

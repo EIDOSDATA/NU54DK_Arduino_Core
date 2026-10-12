@@ -1843,6 +1843,45 @@ class RegressionTests(unittest.TestCase):
         self.assertIn('"mass_erase": False', source)
         self.assertNotIn("chip_erase", source)
 
+    def test_bap_central_program_uses_normalized_application_path(self):
+        """! @brief BAP dispatcher가 해시 객체의 path로 build record를 검증합니다. """
+
+        import ble_pair_hil_common
+
+        expected = MODULE.campaign_plan("families", "le_audio")["campaigns"][0]
+        self.assertIsInstance(expected["applications"][0], dict)
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            arguments = []
+            boards = []
+            for role in expected["roles"]:
+                image = base / f"{role}.hex"
+                image.write_text(":00000001FF\n", encoding="ascii")
+                arguments.append({
+                    "option": f"--{role}-image",
+                    "values": [str(image)],
+                })
+                boards.append({
+                    "role": role,
+                    "probe_sha256": hashlib.sha256(role.encode("ascii")).hexdigest(),
+                })
+            native = base / "native.json"
+            native.write_text(json.dumps({
+                "core_revision": REVISION,
+                "build_records": {},
+            }), encoding="utf-8")
+            row = {"arguments": arguments, "boards": boards}
+            with mock.patch.object(
+                    ble_pair_hil_common, "validate_build_record",
+                    side_effect=RuntimeError("application path captured")
+            ) as validate:
+                with self.assertRaisesRegex(RuntimeError, "application path captured"):
+                    RUNNER._central_program_hardware(expected, row, native)
+            self.assertEqual(
+                ROOT / expected["applications"][0]["path"],
+                validate.call_args.args[3],
+            )
+
     def test_post_reset_state_accepts_active_sleep_and_rejects_halt(self):
         """! @brief debugger 상태 복원은 RUNNING과 SLEEPING만 허용합니다. """
 
