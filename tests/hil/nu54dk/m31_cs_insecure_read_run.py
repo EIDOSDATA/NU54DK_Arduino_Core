@@ -167,11 +167,11 @@ def main():
                 reflector.reset_input_buffer()
                 record["reflector_flash"] = flash_image_pyocd(
                     "cs_reflector", reflector_uid, args.reflector_image,
-                    120.0, hardware_reset=True
+                    120.0, defer_reset=True
                 )
                 record["client_flash"] = flash_image_pyocd(
                     "cs_insecure_client", client_uid, args.client_image,
-                    120.0, hardware_reset=True
+                    120.0, defer_reset=True
                 )
                 flash_results = {
                     "client": record["client_flash"],
@@ -179,6 +179,7 @@ def main():
                 }
                 client.reset_input_buffer()
                 reflector.reset_input_buffer()
+                ## @brief 두 target의 program 완료 뒤 단일 부팅 경계를 시작합니다.
                 hardware_reset(args.reflector_probe_sha256)
                 hardware_reset(args.client_probe_sha256)
                 started = time.monotonic()

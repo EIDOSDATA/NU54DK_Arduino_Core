@@ -225,6 +225,24 @@ class M31CsNegativeAttestationTests(unittest.TestCase):
                 self.assertNotIn("--unlock", source)
                 self.assertNotIn(" recover ", source.lower())
 
+    def test_insecure_read_defers_both_images_until_reset_barrier(self) -> None:
+        """! @brief 자동 연결 fixture 두 개가 program 사이에 먼저 실행되지 않게 고정합니다. """
+
+        source = (HIL / "m31_cs_insecure_read_run.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(source.count("defer_reset=True"), 2)
+        self.assertNotIn("hardware_reset=True", source)
+        final_program = source.rfind("defer_reset=True")
+        reflector_reset = source.find(
+            "hardware_reset(args.reflector_probe_sha256)", final_program
+        )
+        client_reset = source.find(
+            "hardware_reset(args.client_probe_sha256)", reflector_reset
+        )
+        self.assertGreater(reflector_reset, final_program)
+        self.assertGreater(client_reset, reflector_reset)
+
 
 if __name__ == "__main__":
     unittest.main()
