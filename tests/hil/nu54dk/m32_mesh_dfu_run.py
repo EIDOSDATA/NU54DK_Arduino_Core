@@ -1194,6 +1194,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 builds[role].boot_hex.path,
                 args.flash_timeout,
                 defer_reset=True,
+                reset_and_halt_before_program=True,
             )
             flash_results[f"{role}_base"] = flash_image_pyocd_sha256(
                 f"{role}-signed-base",

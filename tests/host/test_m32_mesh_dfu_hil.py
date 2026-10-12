@@ -335,6 +335,7 @@ class M32MeshDfuHilTests(unittest.TestCase):
             "erase_nrf54l_rram_pyocd_sha256",
             "reset_target_pyocd_sha256",
             "defer_reset=True",
+            "reset_and_halt_before_program=True",
             "clear_nrf54l_rram_pyocd_sha256",
             "access_preserving_reset",
             "validate_source_clean",
