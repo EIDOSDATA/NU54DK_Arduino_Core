@@ -157,7 +157,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 HIL_RUNNER.validate_console_transport(app)
 
     def test_hil_runner_waits_for_disconnect_before_restarting_peripheral(self) -> None:
-        """! @brief reset 응답 직후 이전 application에 START를 보내는 경쟁을 방지합니다. """
+        """! @brief reset 뒤 VCOM 보호 시간을 거쳐 새 application에 START를 보냅니다. """
 
         source = HIL_RUNNER_PATH.read_text(encoding="utf-8")
         reset_body = source.split("def reset_and_reconnect", 1)[1].split(
@@ -165,8 +165,13 @@ class M30SecureBleDfuTests(unittest.TestCase):
         )[0]
         self.assertLess(
             reset_body.index("self.wait_unlink(deadline)"),
+            reset_body.index("guard_deadline = time.monotonic()"),
+        )
+        self.assertLess(
+            reset_body.index("guard_deadline = time.monotonic()"),
             reset_body.index("self.reconnect(deadline)"),
         )
+        self.assertGreaterEqual(HIL_RUNNER.POST_RESET_COMMAND_GUARD_SECONDS, 2.0)
         reconnect_body = source.split("def reconnect", 1)[1].split(
             "def wait_rx", 1
         )[0]

@@ -84,6 +84,7 @@ NEGATIVE_ATTEMPTS = 20
 MAX_TRANSCRIPT_BYTES = 32 * 1024 * 1024
 MAX_TX_RETRIES = 3
 DFU_BAUD_RATE = 460800
+POST_RESET_COMMAND_GUARD_SECONDS = 2.0
 BASE_VERSION = (0, 0, 0, 0)
 FINAL_VERSION = (10, 0, 0, 0)
 UNCONFIRMED_VERSION = (11, 0, 0, 0)
@@ -1206,6 +1207,14 @@ class DfuSession:
 
         self.require_success(self.transaction(2, 0, 5, {}, deadline), "OS reset")
         self.wait_unlink(deadline)
+        guard_deadline = time.monotonic() + POST_RESET_COMMAND_GUARD_SECONDS
+        if guard_deadline > deadline:
+            raise M30DfuFailure("peripheral reset 명령 보호 시간 전에 phase가 만료됩니다.")
+        while True:
+            remaining = guard_deadline - time.monotonic()
+            if remaining <= 0.0:
+                break
+            time.sleep(min(0.05, remaining))
         return self.reconnect(deadline)
 
 
