@@ -179,6 +179,14 @@ class M31CsNegativeAttestationTests(unittest.TestCase):
         }
         rows = MODULE.build_wrong_peer_records(record, phase_cleanup)
         self.assertEqual(len(rows), 100)
+        record["procedures"] = 102
+        record["initiator_lines"][100:100] = [
+            "CS_RAW counter=100 local=2 peer=2 rtt=1 tone=1 valid_rtt=1",
+            "CS_RAW counter=101 local=2 peer=2 rtt=1 tone=1 valid_rtt=1",
+        ]
+        self.assertEqual(
+            len(MODULE.build_wrong_peer_records(record, phase_cleanup)), 100
+        )
         record["wrong_peer_lines"].append("CS wrong peer connected")
         with self.assertRaises(MODULE.CsNegativeAttestationFailure):
             MODULE.build_wrong_peer_records(record, phase_cleanup)
@@ -242,6 +250,22 @@ class M31CsNegativeAttestationTests(unittest.TestCase):
         )
         self.assertGreater(reflector_reset, final_program)
         self.assertGreater(client_reset, reflector_reset)
+
+    def test_wrong_peer_defers_three_images_until_reset_barrier(self) -> None:
+        """! @brief 세 image 사이의 선행 실행과 stale UART 혼입을 금지합니다. """
+
+        source = (HIL / "m31_cs_wrong_peer_run.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(source.count("defer_reset=True"), 1)
+        self.assertNotIn("hardware_reset=True", source)
+        final_program = source.find("defer_reset=True")
+        clear = source.find("port.reset_input_buffer()", final_program)
+        reset_loop = source.find(
+            'for role in ("wrong_peer", "reflector", "initiator"):', clear
+        )
+        self.assertGreater(clear, final_program)
+        self.assertGreater(reset_loop, clear)
 
 
 if __name__ == "__main__":

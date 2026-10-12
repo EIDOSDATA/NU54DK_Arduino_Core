@@ -434,11 +434,31 @@ def build_wrong_peer_records(
         match = raw_pattern.fullmatch(line)
         if match is not None:
             raw.append(tuple(map(int, match.groups())))
+    counters = [row[0] for row in raw]
+    all_lines = [
+        line
+        for role in spec.roles
+        for line in record.get(f"{role}_lines", [])
+    ]
+    fault_markers = (
+        "hard fault",
+        "mpu fault",
+        "bus fault",
+        "usage fault",
+        "fatal error",
+        "stack overflow",
+    )
     if (
         record.get("test") != "same_name_wrong_service_third_peer"
-        or record.get("procedures") != 100
-        or [row[0] for row in raw] != list(range(100))
+        or record.get("procedures") != len(raw)
+        or len(raw) < spec.cycles
+        or counters != list(range(len(raw)))
         or any(row[1] != row[2] for row in raw)
+        or any(
+            marker in line.lower()
+            for line in all_lines
+            for marker in fault_markers
+        )
         or not any(
             line == "CS wrong peer advertising"
             for line in record.get("wrong_peer_lines", [])

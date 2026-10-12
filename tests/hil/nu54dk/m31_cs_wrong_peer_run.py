@@ -27,10 +27,19 @@ from m31_cs_negative_attestation import (  # noqa: E402
     phase_contract,
     prepare_program_phase,
 )
+from m31_cs_ras_pair_run import hardware_reset  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
 
 ROLES = ("initiator", "reflector", "wrong_peer")
+FAULT_MARKERS = (
+    "hard fault",
+    "mpu fault",
+    "bus fault",
+    "usage fault",
+    "fatal error",
+    "stack overflow",
+)
 APPLICATION_ROOTS = {
     "initiator": (
         REPOSITORY
@@ -62,6 +71,8 @@ def _capture(
             if role == "wrong_peer" and "CS wrong peer advertising" in line:
                 line = "CS wrong peer advertising"
             record[f"{role}_lines"].append(line[:400])
+            if any(marker in line.lower() for marker in FAULT_MARKERS):
+                raise RuntimeError(f"{role} target fault")
             if role == "wrong_peer" and "wrong peer connected" in line:
                 raise RuntimeError("wrong peer accepted")
         if not progressed:
@@ -213,8 +224,13 @@ def main() -> int:
                         role_map[role][0],
                         images[role],
                         120.0,
-                        hardware_reset=True,
+                        defer_reset=True,
                     )
+                for port in opened_ports.values():
+                    port.reset_input_buffer()
+                ## @brief 세 target의 program 완료 뒤 third·reflector·initiator를 시작합니다.
+                for role in ("wrong_peer", "reflector", "initiator"):
+                    hardware_reset(getattr(args, f"{role}_probe_sha256"))
 
                 started = time.monotonic()
                 deadline = started + 120.0
@@ -222,14 +238,17 @@ def main() -> int:
                     time.monotonic() < deadline
                     and record["procedures"] < 100
                 ):
-                    before = len(record["initiator_lines"])
                     _capture(opened_ports, record, 0.05)
-                    record["procedures"] += sum(
+                    record["procedures"] = sum(
                         line.startswith("CS_RAW counter=")
-                        for line in record["initiator_lines"][before:]
+                        for line in record["initiator_lines"]
                     )
                 record["elapsed_s"] = round(time.monotonic() - started, 3)
                 cleanup = _cleanup(opened_ports, record)
+                record["procedures"] = sum(
+                    line.startswith("CS_RAW counter=")
+                    for line in record["initiator_lines"]
+                )
             finally:
                 if opened_ports and not cleanup:
                     cleanup = _cleanup(opened_ports, record)
