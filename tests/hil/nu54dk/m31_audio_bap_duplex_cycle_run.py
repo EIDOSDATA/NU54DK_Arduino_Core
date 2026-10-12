@@ -152,16 +152,18 @@ def validate_cycle_records(record: dict, cycles: int) -> None:
 
 
 def _observe_server_disconnect(state: dict, events: dict,
-                               streaming: bool, stop_requested: bool) -> None:
-    """! @brief 현재 streaming 종료에 속하는 server disconnect만 기록합니다. """
+                               streaming: bool, stop_requested: bool) -> bool:
+    """! @brief 현재 streaming 종료에 속하는 server disconnect만 보존합니다. """
 
     state["server_disconnected"] = True
     if stop_requested:
         if events["server"]:
             raise RuntimeError("duplicate server disconnect after client stop")
         events["server"].append("disconnected")
+        return True
     elif streaming:
         raise RuntimeError("server disconnected before client stop")
+    return False
 
 
 def _append_line(record: dict, role: str, line: str) -> str:
@@ -384,9 +386,11 @@ def main() -> int:
                                     client_rx = max(client_rx, count)
                             else:
                                 if "LE Audio duplex peer disconnected" in line:
-                                    _observe_server_disconnect(
+                                    if not _observe_server_disconnect(
                                         state, events, streaming, stop_requested
-                                    )
+                                    ):
+                                        record["server_lines"].pop()
+                                        continue
                                 match = SERVER_SENT.search(line)
                                 if match:
                                     server_tx = max(server_tx, int(match.group(1)))

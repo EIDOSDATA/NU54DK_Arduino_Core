@@ -105,7 +105,9 @@ class FlatEvidenceTests(unittest.TestCase):
 
         state = {"server_disconnected": False}
         events = {"server": []}
-        BAP._observe_server_disconnect(state, events, False, False)
+        self.assertFalse(BAP._observe_server_disconnect(
+            state, events, False, False
+        ))
         self.assertTrue(state["server_disconnected"])
         self.assertEqual([], events["server"])
 
@@ -114,7 +116,9 @@ class FlatEvidenceTests(unittest.TestCase):
             BAP._observe_server_disconnect(state, events, True, False)
 
         state["server_disconnected"] = False
-        BAP._observe_server_disconnect(state, events, True, True)
+        self.assertTrue(BAP._observe_server_disconnect(
+            state, events, True, True
+        ))
         self.assertTrue(state["server_disconnected"])
         self.assertEqual(["disconnected"], events["server"])
         with self.assertRaisesRegex(RuntimeError, "duplicate"):
