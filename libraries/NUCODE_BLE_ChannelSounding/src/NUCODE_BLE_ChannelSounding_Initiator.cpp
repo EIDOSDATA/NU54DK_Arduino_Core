@@ -526,7 +526,8 @@ namespace nucode::ble::cs
         else
         {
             const int result = bt_conn_set_security(native_connection, BT_SECURITY_L2);
-            if (result != 0)
+            /** @brief 재연결 시 이미 진행 중인 bond 암호화는 완료 callback을 기다립니다. */
+            if ((result != 0) && (result != -EBUSY))
             {
                 end();
                 return record(Error::controller_error, result);

@@ -10,6 +10,10 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 MODULE_PATH = ROOT / "tests/hil/nu54dk/m31_cs_ras_pair_run.py"
+INITIATOR_PATH = (
+    ROOT / "libraries/NUCODE_BLE_ChannelSounding/src/"
+           "NUCODE_BLE_ChannelSounding_Initiator.cpp"
+)
 SPEC = importlib.util.spec_from_file_location("m31_cs_ras_pair_run_test", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -45,6 +49,22 @@ class M31CsCounterPolicyTests(unittest.TestCase):
         MODULE.record_counter_transition(0xFFFF, 0, gaps)
 
         self.assertEqual(gaps, [])
+
+    def test_reconnect_waits_for_ongoing_bond_security(self) -> None:
+        """! @brief 재연결의 -EBUSY 보안 요청은 실패가 아니라 callback 대기입니다. """
+
+        source = INITIATOR_PATH.read_text(encoding="utf-8")
+        begin = source.index("Error RasInitiator::begin(")
+        poll = source.index("void RasInitiator::poll(", begin)
+        body = source[begin:poll]
+        self.assertIn(
+            "if ((result != 0) && (result != -EBUSY))",
+            body,
+        )
+        self.assertLess(
+            body.index("bt_conn_set_security"),
+            body.index("result != -EBUSY"),
+        )
 
 
 if __name__ == "__main__":
