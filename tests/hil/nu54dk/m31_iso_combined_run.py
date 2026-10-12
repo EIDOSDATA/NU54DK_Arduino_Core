@@ -168,12 +168,13 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if len({board["uid"] for board in boards.values()}) != 3:
         raise CombinedFailure("3 role을 서로 다른 probe에 매핑해야 합니다")
-    images = {role: boards[role]["image"] for role in ROLES}
+    image_paths = {role: boards[role]["image"] for role in ROLES}
+    image_hashes = {role: boards[role]["image_sha256"] for role in ROLES}
     sidecars: dict = {}
     build_records: dict = {}
     if not dirty:
         sidecars, build_records = prepare_direct_program(
-            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            prefix.with_suffix(".json"), ROLES, image_paths, identity.core,
             identity.board, APPLICATION_ROOTS,
         )
     transcript: list[str] = []
@@ -241,7 +242,6 @@ def execute(args: argparse.Namespace) -> dict:
                         for role, board in boards.items()
                     }
                     raw = ("\n".join(transcript) + "\n").encode("ascii")
-                    images = {role: board["image_sha256"] for role, board in boards.items()}
                     measured = validate_combined_envelope({
                         "source_clean": True,
                         "test_id": "M31-ISO-01:bis_cis_combined",
@@ -250,7 +250,7 @@ def execute(args: argparse.Namespace) -> dict:
                         "boards": public_boards,
                         "nonces": nonces,
                         "transcript": raw,
-                    }, images, identity)
+                    }, image_hashes, identity)
                     status = "PASS"
             else:
                 status = "DEV_PROBE"
@@ -273,7 +273,7 @@ def execute(args: argparse.Namespace) -> dict:
             )
         if status == "PASS":
             exact_program = complete_direct_program(
-                CORE, identity.core, ROLES, images,
+                CORE, identity.core, ROLES, image_paths,
                 {role: boards[role]["uid"] for role in ROLES},
                 {role: boards[role]["probe_sha256"] for role in ROLES},
                 sidecars,

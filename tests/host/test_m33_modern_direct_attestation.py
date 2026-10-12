@@ -152,6 +152,29 @@ class ModernDirectAttestationTest(unittest.TestCase):
         with self.assertRaises(combined.CombinedFailure):
             combined.build_dispatch_cycle_records(nonces, measured)
 
+    def test_combined_keeps_image_paths_separate_from_hashes(self) -> None:
+        """! @brief exact readback 경로 맵을 envelope SHA 맵으로 덮어쓰지 않습니다. """
+
+        runner = (HIL / "m31_iso_combined_run.py").read_text(encoding="utf-8")
+        self.assertIn(
+            'image_paths = {role: boards[role]["image"] for role in ROLES}',
+            runner,
+        )
+        self.assertIn(
+            'image_hashes = {role: boards[role]["image_sha256"] for role in ROLES}',
+            runner,
+        )
+        self.assertIn(
+            'prefix.with_suffix(".json"), ROLES, image_paths, identity.core,',
+            runner,
+        )
+        self.assertIn("}, image_hashes, identity)", runner)
+        self.assertIn("CORE, identity.core, ROLES, image_paths,", runner)
+        self.assertNotIn(
+            'images = {role: board["image_sha256"] for role, board in boards.items()}',
+            runner,
+        )
+
     def test_cis_dispatch_failure_remains_failed_and_preserves_save_path(self) -> None:
         """! @brief attestation 실패를 예외 탈출 대신 redacted FAIL로 보존합니다. """
 
