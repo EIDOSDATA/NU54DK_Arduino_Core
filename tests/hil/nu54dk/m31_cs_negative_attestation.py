@@ -427,7 +427,9 @@ def build_wrong_peer_records(
     spec = PHASES["wrong_peer"]
     _cleanup_rows(cleanup, spec)
     raw_pattern = re.compile(
-        r"CS_RAW counter=(\d+) local=(\d+) peer=(\d+) .*valid_rtt=([1-9]\d*)"
+        r"CS_RAW counter=(\d+) local=(\d+) peer=(\d+) "
+        r"rtt=\d+ tone=\d+ valid_rtt=([1-9]\d*) "
+        r"distance_m=-?\d+\.\d{3}"
     )
     raw = []
     for line in record.get("initiator_lines", []):

@@ -168,7 +168,8 @@ class M31CsNegativeAttestationTests(unittest.TestCase):
             "test": "same_name_wrong_service_third_peer",
             "procedures": 100,
             "initiator_lines": [
-                f"CS_RAW counter={index} local=2 peer=2 rtt=1 tone=1 valid_rtt=1"
+                f"CS_RAW counter={index} local=2 peer=2 rtt=1 tone=1 "
+                "valid_rtt=1 distance_m=0.000"
                 for index in range(100)
             ] + ["CS procedures stop requested", "CS initiator disconnected"],
             "reflector_lines": [
@@ -181,8 +182,10 @@ class M31CsNegativeAttestationTests(unittest.TestCase):
         self.assertEqual(len(rows), 100)
         record["procedures"] = 102
         record["initiator_lines"][100:100] = [
-            "CS_RAW counter=100 local=2 peer=2 rtt=1 tone=1 valid_rtt=1",
-            "CS_RAW counter=101 local=2 peer=2 rtt=1 tone=1 valid_rtt=1",
+            "CS_RAW counter=100 local=2 peer=2 rtt=1 tone=1 "
+            "valid_rtt=1 distance_m=0.000",
+            "CS_RAW counter=101 local=2 peer=2 rtt=1 tone=1 "
+            "valid_rtt=1 distance_m=0.000",
         ]
         self.assertEqual(
             len(MODULE.build_wrong_peer_records(record, phase_cleanup)), 100
