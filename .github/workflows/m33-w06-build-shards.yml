@@ -16,6 +16,7 @@ on:
       - "tools/ci/m33_w06*"
       - "tools/ci/ncs-3.4.0.lock.json"
       - "tools/ci/run_zephyr_build.py"
+      - "tools/ci/m32_mesh_dfu_build.py"
       - "tools/ci/cmake/**"
       - "tests/host/test_build_matrix_runner.py"
       - "tools/ci/verify_ci_lock.py"

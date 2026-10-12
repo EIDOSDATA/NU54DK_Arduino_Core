@@ -1033,7 +1033,12 @@ def recipe_for_artifact(
             selectors = [selector_by_name[name]] if name in selector_by_name else []
         elif campaign_id == "m32_mesh_dfu":
             role = name.removeprefix("build-").replace("-", "_")
-            selectors = [f"nucode.m32.mesh_dfu_hil.{role}"]
+            return {
+                "builder": "m32_mesh_dfu_build.py",
+                "application": application,
+                "role": role,
+                "jobs": 2,
+            }
         else:
             selectors = [scenario for scenario, root in scenarios.items() if root == application]
         return {
@@ -1627,7 +1632,7 @@ def create_build_actions(
         })
     for key, recipe in sorted(recipes.items()):
         builder = recipe["builder"]
-        if builder == "run_zephyr_build.py":
+        if builder in {"run_zephyr_build.py", "m32_mesh_dfu_build.py"}:
             continue
         if builder == "west_direct":
             output = work_root / "builds" / f"west-{key[:12]}"
@@ -1722,6 +1727,30 @@ def create_build_actions(
             "precreate_output": False,
             "environment": {},
             "routes": build_routes,
+            "jobs": 2,
+        })
+    mesh_roles = {
+        recipe["role"] for recipe in recipes.values()
+        if recipe["builder"] == "m32_mesh_dfu_build.py"
+    }
+    if mesh_roles:
+        require(mesh_roles == {"candidate", "distributor", "target_a", "target_b"},
+                "Mesh DFU build는 네 역할의 단일 byte-binding 단위여야 합니다")
+        output = work_root / "builds" / "mesh-dfu-bound"
+        actions.append({
+            "id": "mesh-dfu-bound",
+            "kind": "mesh_dfu_bound",
+            "command": [
+                str(python), "-B", str(repository / "tools/ci/m32_mesh_dfu_build.py"),
+                "--workspace", str(sdk_root), "--outdir", str(output),
+                "--toolchain-root", str(bundle_root),
+                "--expected-core", plan["source"]["source_revision"], "--jobs", "2",
+            ],
+            "cwd": str(repository),
+            "output": str(output),
+            "precreate_output": False,
+            "environment": {**zephyr_environment, "PYTHONHOME": str(python.parent),
+                            "PYTHONNOUSERSITE": "1"},
             "jobs": 2,
         })
     profile_records: set[tuple[str, str, str]] = set()
@@ -1852,6 +1881,8 @@ def build_slot_action_owners(
                 owner = recipe_actions.get(recipe_key(recipe))
         elif builder == "arduino-cli":
             owner = recipe_actions.get(recipe_key(recipe))
+        elif builder == "m32_mesh_dfu_build.py":
+            owner = "mesh-dfu-bound"
         elif builder == "m33_diagnostics.py":
             owner = ("diagnostics-dtm"
                      if key[0] == "m33_diagnostics_dtm"
@@ -2784,6 +2815,11 @@ def resolve_build_entries(
             image = Path(str(record.get("artifacts", {}).get("hex", {}).get("path", ""))).resolve()
             require(image.is_file(), f"Arduino primary HEX가 없습니다: {key}")
             resolved[key] = image
+        elif builder == "m32_mesh_dfu_build.py":
+            mesh_actions = [action for action in actions
+                            if action["kind"] == "mesh_dfu_bound"]
+            require(len(mesh_actions) == 1, "Mesh DFU build action이 유일하지 않습니다")
+            resolved[key] = Path(mesh_actions[0]["output"]) / recipe["role"]
         elif builder == "m33_diagnostics.py":
             if key[0] == "m33_diagnostics_dtm" and \
                     artifact["kind"] == "build_record":
@@ -5076,6 +5112,11 @@ def validate_build_tree_binding(source: Path, name: str, recipe: dict[str, Any])
                     and (source / "domains.yaml").is_file(),
                     f"exact sysbuild tree가 scenario와 다릅니다: {name}:{scenario}",
                 )
+    elif builder == "m32_mesh_dfu_build.py":
+        role = name.removeprefix("build-").replace("-", "_")
+        require(role == recipe.get("role") and source.name == role
+                and (source / "domains.yaml").is_file(),
+                f"Mesh DFU exact build tree 역할이 다릅니다: {name}")
     elif builder == "m33_diagnostics.py":
         routes = recipe.get("routes")
         require(isinstance(routes, list) and routes, "diagnostics route가 없습니다")
@@ -5154,6 +5195,52 @@ def validate_soak_build_provenance(
         raise ArtifactFailure(
             f"soak runner build provenance가 다릅니다: {role}: {error}"
         ) from error
+
+
+def validate_mesh_dfu_bindings(roots: dict[str, Path]) -> dict[str, Any]:
+    """! @brief 네 역할의 실제 candidate 바이트와 root cache binding을 엄격히 대조합니다. """
+
+    roles = ("candidate", "distributor", "target_a", "target_b")
+    require(set(roots) == set(roles),
+            "Mesh DFU candidate binding의 네 역할이 완전하지 않습니다")
+    candidate = roots["candidate"] / \
+        "m32_mesh_dfu_hil/zephyr/zephyr.signed.bin"
+    require(candidate.is_file() and candidate.stat().st_size > 1,
+            "Mesh DFU signed candidate가 없거나 비어 있습니다")
+    candidate_bytes = candidate.read_bytes()
+    candidate_sha256 = hashlib.sha256(candidate_bytes).hexdigest()
+    candidate_size = len(candidate_bytes)
+    require(candidate_sha256 != "0" * 64,
+            "Mesh DFU candidate placeholder를 수락하지 않습니다")
+    cache_hashes = {}
+    for role in roles:
+        cache_path = roots[role] / "CMakeCache.txt"
+        try:
+            cache = cache_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as error:
+            raise ArtifactFailure(
+                f"Mesh DFU {role} cache를 읽지 못했습니다"
+            ) from error
+        required = {"M32_MDFU_ROLE": role}
+        if role != "candidate":
+            required.update({
+                "M32_MDFU_CANDIDATE_SHA256": candidate_sha256,
+                "M32_MDFU_CANDIDATE_SIZE": str(candidate_size),
+            })
+        for key, value in required.items():
+            values = re.findall(
+                rf"(?m)^{re.escape(key)}:[^=\r\n]+=([^\r\n]*)$", cache
+            )
+            require(values == [value],
+                    f"Mesh DFU {role} {key} binding이 다릅니다")
+        cache_hashes[role] = file_sha256(cache_path)
+    require(candidate.read_bytes() == candidate_bytes,
+            "Mesh DFU candidate가 binding 검사 중 변경됐습니다")
+    return {
+        "candidate_sha256": candidate_sha256,
+        "candidate_size": candidate_size,
+        "cache_sha256": cache_hashes,
+    }
 
 
 def validate_index(
@@ -5249,6 +5336,13 @@ def validate_index(
         else:
             source = Path(entry["path"]).resolve()
         resolved_sources[key] = source
+    mesh_roots = {
+        key[1].removeprefix("build-").replace("-", "_"): path
+        for key, path in resolved_sources.items()
+        if key[0] == "m32_mesh_dfu"
+    }
+    if mesh_roots:
+        validate_mesh_dfu_bindings(mesh_roots)
     validated = []
     image_hashes: dict[str, dict[str, str]] = {}
     for key, artifact in expected.items():

@@ -1397,6 +1397,24 @@ class M33W06ArtifactTests(unittest.TestCase):
             self.assertEqual(
                 len({row["cache_root"] for row in actions}), len(actions)
             )
+            mesh_actions = [
+                action for action in actions
+                if action["kind"] == "mesh_dfu_bound"
+            ]
+            self.assertEqual(1, len(mesh_actions))
+            self.assertIn(
+                str(artifacts.REPOSITORY / "tools/ci/m32_mesh_dfu_build.py"),
+                mesh_actions[0]["command"],
+            )
+            self.assertEqual(
+                "1", mesh_actions[0]["environment"]["PYTHONNOUSERSITE"]
+            )
+            owners = artifacts.build_slot_action_owners(self.plan, actions)
+            mesh_owners = {
+                owner for key, owner in owners.items()
+                if key[0] == "m32_mesh_dfu"
+            }
+            self.assertEqual({"mesh-dfu-bound"}, mesh_owners)
             twister = [
                 action for action in actions if action["kind"] == "twister"
             ]
