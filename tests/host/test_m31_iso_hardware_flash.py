@@ -75,8 +75,8 @@ class M31IsoHardwareFlashTests(unittest.TestCase):
         self.assertEqual("attach", reset_command[reset_command.index("--connect") + 1])
         self.assertEqual("sw", reset_command[reset_command.index("--method") + 1])
 
-    def test_combined_exact_requires_hardware_reset_evidence(self) -> None:
-        """! @brief 결합 HIL 완료 승격에서 명시적 hardware reset 근거를 요구합니다. """
+    def test_combined_exact_requires_software_reset_evidence(self) -> None:
+        """! @brief 결합 HIL 완료 승격에서 명시적 software reset 근거를 요구합니다. """
         identity = combined.ExpectedIdentity("a" * 40, "b" * 40, "c" * 40, "d" * 40)
         images = {"peer": "1" * 64, "combined": "2" * 64, "receiver": "3" * 64}
         envelope = {
@@ -88,7 +88,7 @@ class M31IsoHardwareFlashTests(unittest.TestCase):
                 role: {
                     "image_sha256": images[role],
                     "probe_sha256": str(index) * 64,
-                    "flash_mode": "pyocd-sector-hw-reset",
+                    "flash_mode": "pyocd-sector-sw-reset",
                 }
                 for index, role in enumerate(images, 4)
             },
