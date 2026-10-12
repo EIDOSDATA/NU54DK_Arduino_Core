@@ -1882,6 +1882,35 @@ class RegressionTests(unittest.TestCase):
                 validate.call_args.args[3],
             )
 
+    def test_bap_flash_provenance_accepts_exact_runtime_record(self):
+        """! @brief BAP flash-only 생성기의 list 기록을 안전 속성으로 정규화합니다. """
+
+        with tempfile.TemporaryDirectory() as temporary:
+            image = Path(temporary) / "client.hex"
+            image.write_text(":00000001FF\n", encoding="ascii")
+            probe = hashlib.sha256(b"client").hexdigest()
+            record = {
+                "status": "FLASH_PREPARED",
+                "client_probe_sha256": probe,
+                "client_image_sha256": MODULE.digest(image),
+                "client_flash": ["pyocd-sector-sw-reset", "4096"],
+            }
+            self.assertEqual(
+                ("pyocd-sector-sw-reset", 4096),
+                RUNNER._bap_flash_provenance(record, "client", probe, image),
+            )
+            for changed in (
+                    ["pyocd-sector", "4096"],
+                    ["pyocd-sector-sw-reset", "0"],
+                    {"mode": "pyocd-sector-sw-reset", "bytes": "4096"}):
+                invalid = copy.deepcopy(record)
+                invalid["client_flash"] = changed
+                with self.subTest(changed=changed), self.assertRaisesRegex(
+                        ValueError, "BAP prepared sector flash"):
+                    RUNNER._bap_flash_provenance(
+                        invalid, "client", probe, image
+                    )
+
     def test_post_reset_state_accepts_active_sleep_and_rejects_halt(self):
         """! @brief debugger 상태 복원은 RUNNING과 SLEEPING만 허용합니다. """
 

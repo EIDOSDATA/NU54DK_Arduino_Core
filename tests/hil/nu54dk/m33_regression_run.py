@@ -1933,6 +1933,22 @@ def _campaign_probe_authority(plan: dict | None, native_path: Path):
             authority.close()
 
 
+def _bap_flash_provenance(record: dict, role: str, probe_sha256: str,
+                          image: Path) -> tuple[str, int]:
+    """! @brief BAP flash-only 기록의 sector program 출처를 검증합니다. """
+
+    flash = record.get(f"{role}_flash")
+    require(record.get("status") == "FLASH_PREPARED" and
+            record.get(f"{role}_probe_sha256") == probe_sha256 and
+            record.get(f"{role}_image_sha256") == digest(image) and
+            isinstance(flash, list) and len(flash) == 2 and
+            flash[0] == "pyocd-sector-sw-reset" and
+            isinstance(flash[1], str) and flash[1].isdecimal() and
+            int(flash[1]) > 0,
+            "BAP prepared sector flash mismatch")
+    return flash[0], int(flash[1])
+
+
 def _central_program_hardware(expected: dict, row: dict,
                               native_path: Path) -> list[dict]:
     """! @brief direct HEX군을 live probe hash에 결합해 same-process readback합니다. """
@@ -2030,18 +2046,9 @@ def _central_program_hardware(expected: dict, row: dict,
                 flash_record = json.loads(
                     flash_path.read_text(encoding="utf-8-sig")
                 )
-                flash = flash_record.get(f"{role}_flash", {})
-                require(flash_record.get("status") == "FLASH_PREPARED" and
-                        flash_record.get(f"{role}_probe_sha256") == probes[role] and
-                        flash_record.get(f"{role}_image_sha256") == digest(images[role]) and
-                        flash_record.get("auto_unlock") is False and
-                        flash_record.get("erase") == "sector" and
-                        isinstance(flash.get("mode"), str) and
-                        flash["mode"].startswith("pyocd-sector") and
-                        integer(flash.get("bytes"), 1),
-                        "BAP prepared sector flash mismatch")
-                mode = flash["mode"]
-                programmed_bytes = flash["bytes"]
+                mode, programmed_bytes = _bap_flash_provenance(
+                    flash_record, role, probes[role], images[role]
+                )
             else:
                 flash = native.get(f"{role}_flash")
                 require(isinstance(flash, list) and len(flash) == 2 and
